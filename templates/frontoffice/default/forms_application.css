@@ -1,0 +1,218 @@
+/*
+	Copyright (c) 2002-2007 Netlor
+	Copyright (c) 2007-2008 Ovensia
+	Contributors hold Copyright (c) to their code submissions.
+
+	This file is part of Ploopi.
+
+	Ploopi is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	Ploopi is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Ploopi; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+.form_title {
+font-size:16px;
+font-weight:bold;
+padding-bottom:5px;
+}
+
+.form_description {
+padding-bottom:5px;
+}
+
+div.form_row {
+font-size:11px;
+clear: both;
+padding-top: 4px;
+width:475px;
+}
+
+div.form_row_validate {
+  clear: both;
+  padding-top: 5px;
+  width:475px;
+  text-align:right;
+}
+
+div.form_row span.label {
+  float: left;
+  width: 100px;
+  text-align: right;
+  }
+
+.form_sep_level1 {
+  font-weight:bold;
+  font-size:1.3em;
+  float:left;
+  text-align:left;
+  }
+.form_sep_level2 {
+  font-weight:bold;
+  font-size:1.1em;
+  float:left;
+  text-align:left;
+  }
+.form_sep_level3 {
+  font-weight:bold;
+  }
+.form_sep_level4 {
+  font-weight:bold;
+  }
+.form_sep_level5 {
+  font-weight:bold;
+  }
+
+div.form_row span.field {
+  float: right;
+  width: 370px;
+  text-align: left;
+  }
+
+div.form_row_description {
+font-size:11px;
+clear: both;
+padding-top: 4px;
+width:480px;
+}
+
+div.form_row span {
+  float: right;
+  width: 370px;
+  text-align: left;
+}
+
+div.form_row_validate input
+{
+	font-size:11px;
+	border-left: 4px solid #cccccc;
+	border-right: 1px solid #cccccc;
+	border-top: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+	padding: 2px 10px 2px 5px;
+	color: #353739;
+	text-align:center;
+	width:100px;
+}
+
+div.form_row_validate input:hover
+{
+	border-left: 4px solid #93203f;
+	border-right: 1px solid #93203f;
+	border-top: 1px solid #93203f;
+	border-bottom: 1px solid #93203f;
+	padding: 2px 10px 2px 5px;
+	color: #353739;
+	text-align:center;
+	background-color:#e0e0e0;
+}
+
+div.form_checkzone {
+	clear:both;
+	float:left;
+}
+
+div.form_checkvalue {
+	float:left;
+	font-size:11px;
+	color: #000000;
+}
+
+.form_text {
+	font-size:11px;
+	color: #000000;
+	width: 350px;
+	padding: 2px;
+	border: 1px solid #cccccc;
+	border-left: 4px solid #cccccc;
+	background-color: #fafafa;
+}
+
+.form_text:focus {
+	border: 1px solid #93203f;
+	border-left: 4px solid #93203f;
+	background-color: #eaeaea;
+}
+
+.form_select {
+	font-size:11px;
+	color: #000000;
+	width: 350px;
+	padding: 2px;
+	border: 1px solid #cccccc;
+	border-left: 4px solid #cccccc;
+	background-color: #fafafa;
+}
+
+.form_select:focus {
+	border: 1px solid #93203f;
+	border-left: 4px solid #93203f;
+}
+
+.form_select option {
+	border-left: 4px solid #cccccc;
+	padding-left:4px;
+}
+
+.form_select option:hover {
+	border-left: 4px solid #93203f;
+	padding-left:4px;
+}
+
+.form_color {
+	font-size:11px;
+	color: #000000;
+	width: 350px;
+	padding: 2px;
+	border: 1px solid #cccccc;
+	border-left: 4px solid #cccccc;
+	background-color: #fafafa;
+}
+
+.form_color:focus {
+	border: 1px solid #93203f;
+	border-left: 4px solid #93203f;
+}
+
+.form_color option {
+	border-left: 4px solid #cccccc;
+	padding-left:4px;
+}
+
+.form_color option:hover {
+	border-left: 4px solid #93203f;
+	padding-left:4px;
+}
+
+
+.form_textarea {
+	font-size:11px;
+	color: #000000;
+	width: 350px;
+	height: 100px;
+	padding: 2px;
+	border: 1px solid #cccccc;
+	border-left: 4px solid #cccccc;
+	background-color: #fafafa;
+}
+
+.form_textarea:focus {
+	border: 1px solid #93203f;
+	border-left: 4px solid #93203f;
+	background-color: #eaeaea;
+}
+
+.form_checkbox {
+}
+
+.form_radio {
+}
+

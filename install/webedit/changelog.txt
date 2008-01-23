@@ -1,0 +1,119 @@
+== Module WebEdit - version 1.2 ====================================================
+
+2008-01-06  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Mise à niveau sécurité
+ * Migration Ploopi
+ * Héritage des droits de publication pour les sous-rubriques
+ * Intégration d'un backend RSS public sur le site complet et les rubriques
+ * Mise à jour de la Métabase
+
+== Module WebEdit - version 1.12 ====================================================
+
+2008-01-03  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Correction d'un bug lors de la visualisation des articles en backoffice pour les non administrateurs.
+
+== Module WebEdit - version 1.11 ====================================================
+
+2007-11-13  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Mise à jour consécutive à l'intégration de la nouvelle version de FCKEditor (2.5)
+
+== Module WebEdit - version 1.10 ====================================================
+
+2007-11-12  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Correction d'un bug lors de la création d'un lien. N'ouvre pas la liste des articles. (szsic)
+ * Correction d'un bug lors de l'intégration d'un objet DIMS. Erreur SQL. (szsic)
+
+== Module WebEdit - version 1.09 ====================================================
+
+2007-11-07  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Mise à jour importante concernant la stabilité des enregistrements d'articles. La procédure d'enregistrement a été revue et sécurisée. Une alerte a également été ajoutée si un problème d'enregistrement est supposé.
+ * Gestion d'un historique de modifications sur les articles permettant de recharger rapidement une ancienne version
+ * Ajout d'un champ "description" utilisé pour le référencement (variable template : {PAGE_DESCRIPTION})
+ * Réagencement des champs pour plus de lisibilité
+
+== Module WebEdit - version 1.08 ====================================================
+
+2007-11-02  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Le module change de nom ! WCE devient WebEdit
+
+== Module WCE - version 1.07 ====================================================
+
+2007-10-18  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Amélioration de l'interface de modification d'un article pour une meilleure lisibilité et une meilleure compatibilité avec IE6
+
+2007-10-17  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Gestion des rewrite_rules sur les liens 'rubriques' et 'articles', pas encore dans les liens internes du contenu - Optimisation pour le référencement
+ * Ajout d'une série de boutons pour enregistrer/publier l'article au dessus de l'éditeur (ceux du bas sont peu visibles)
+ * Ajout d'un champ mots-clés sur l'article
+ * Proposition autoamtique des mots clés les plus intéressants en rapport avec le contenu de l'article
+
+2007-10-15  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Possibilité de founir un template différent en édition (plus adapté à FCKEditor) pour remplacer les fichiers templates par défaut index.tpl, home.tpl et search.tpl
+   Il suffit d'ajouter au dossier template les fichiers suivants fck_index.tpl, fck_home.tpl, fck_search.tpl
+
+2007-10-10  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Possibilité de fournir dans le template une liste de styles, une feuille de style pour l'édition et un fichier de modèles pour FCKEditor
+   Emplacement des fichiers :
+   ./template/frontoffice/<dossier_template>/fckeditor/fck_editorarea.css
+   ./template/frontoffice/<dossier_template>/fckeditor/fckstyles.xml
+   ./template/frontoffice/<dossier_template>/fckeditor/fcktemplates.xml
+   Vous trouverez un exemple complet dans ./template/frontoffice/ovensia_officiel
+
+== Module WCE - version 1.05 ====================================================
+
+2007-09-25  Stéphane Escaich  <stephane@escaich.fr>
+
+ * Ajout du caractère ~ pour visualiser les fichiers hors ligne (dont les dates ne sont pas valides)
+
+== Module WCE - version 1.04 ====================================================
+
+2007-09-18  Stéphane Escaich  <stephane@escaich.fr>
+
+ * Correction d'un bug sur la gestion des droits du bouton supprimer de la liste des articles dans une rubrique
+ * Correction d'un bug sur le choix du fichier home.tpl lorsqu'aucun article n'est défini en page d'accueil et que la racine est vide.
+
+== Module WCE - version 1.03 ====================================================
+
+2007-09-17  Stéphane Escaich  <stephane@escaich.fr>
+
+ * Correction d'un bug sur le choix du fichier home.tpl pour la homepage du site lors du rendu de prévisualisation
+ * Optimisations et corrections sur le moteur de rendu
+ * Ajout de la possibilité pour le propriétaire d'un article à l'état de brouillon non publié de l'effacer
+
+== Module WCE - version 1.02 ====================================================
+
+2007-09-17  Stéphane Escaich  <stephane@escaich.fr>
+
+ * Modification du fichier de configuration de fckeditor pour régler le comportement de la touche "Enter"
+
+== Module WCE - version 1.01 ====================================================
+
+2007-09-13  Stéphane Escaich  <stephane@escaich.fr>
+
+ * Correction de plusieurs bugs dans la gestion des validateurs
+
+== Module WCE - version 1.0 ====================================================
+
+2007-09-12  Stéphane Escaich  <stephane@escaich.fr>
+
+ * Correction d'un bug d'affichage du formulaire de modification d'une rubrique sous Firefox/Linux uniquement (testé sous Debian/Ubuntu)
+ * Correction d'un problème de codage de caractère sur le fichier d'installation "description.xml"
+
+2007-09-06  Stéphane Escaich  <stephane@escaich.fr>
+
+ * Possibilités de tris sur la liste des articles dans la modification d'une rubrique
+
+2007-09-03  Stéphane Escaich  <stephane@escaich.fr>
+
+ * Correction d'un bug dans display.php qui affectait la validation d'un article
+

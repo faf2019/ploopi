@@ -1,0 +1,18 @@
+Classes PEAR requises :
+
+	Cache_Lite
+	HTTP_Request
+	Spreadsheet_Excel_Writer
+	XML_Feed_Parser
+
+Installation sous Debian Etch :
+
+	apt-get install php-pear
+	pear install --alldeps Cache_Lite Spreadsheet_Excel_Writer HTTP_Request XML_Feed_Parser Xml_Beautifier OLE-0.6.1 Spreadsheet_Excel_Writer-0.9.1
+
+	pecl install stem
+
+Vérifier que le fichier de configuration de php contienne bien le path vers les classes PEAR.
+Sous Debian Etch, la directive include_path doit contenir la valeur suivante :
+
+	include_path = ".:/usr/share/php"

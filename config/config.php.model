@@ -1,0 +1,85 @@
+<?php
+/*
+	Copyright (c) 2002-2007 Netlor
+	Copyright (c) 2007-2008 Ovensia
+	Contributors hold Copyright (c) to their code submissions.
+
+	This file is part of Ploopi.
+
+	Ploopi is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	Ploopi is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Ploopi; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+$http_host = (isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : '';
+
+switch($http_host)
+{
+	default:
+		define ('_PLOOPI_SQL_LAYER','mysql');
+
+		define ('_PLOOPI_DB_SERVER','<DB_SERVER>');
+		define ('_PLOOPI_DB_LOGIN','<DB_LOGIN>');
+		define ('_PLOOPI_DB_PASSWORD','<DB_PASSWORD>');
+		define ('_PLOOPI_DB_DATABASE','<DB_DATABASE>');
+
+		define ('_PLOOPI_PATHDATA', realpath('./data/'));
+		define ('_PLOOPI_MAXFILESIZE', '16777216');
+
+		define ('_PLOOPI_USE_CGIUPLOAD', true);
+		define ('_PLOOPI_CGI_PATH', './cgi');
+		define ('_PLOOPI_CGI_UPLOADTMP', '/tmp');
+
+		define ('_PLOOPI_SESSIONTIME','3600'); // time in second
+		define ('_PLOOPI_USE_DBSESSION', <USE_DBSESSION>); // true if session stored into database
+
+		define ('_PLOOPI_DEBUGMODE', false);
+		define ('_PLOOPI_DISPLAY_ERRORS', true);
+		define ('_PLOOPI_MAIL_ERRORS', false);
+		define ('_PLOOPI_ADMINMAIL', 'webmaster@mydomain.com');
+		define ('_PLOOPI_ERROR_REPORTING', E_ALL); //  E_ALL E_ERROR  E_WARNING  E_PARSE  E_NOTICE
+
+		define ('_PLOOPI_ACTIVELOG', false);
+
+		define ('_PLOOPI_URL_ENCODE', <URL_ENCODE>);
+		define ('_PLOOPI_SECRETKEY', '<SECRETKEY>');
+		define ('_PLOOPI_FINGERPRINT', 	md5(dirname($_SERVER['SCRIPT_FILENAME']).'/'._PLOOPI_DB_SERVER.'/'._PLOOPI_DB_DATABASE));
+
+		define ('_PLOOPI_FRONTOFFICE', <FRONTOFFICE>); // true if frontoffice is activated
+		define ('_PLOOPI_FRONTOFFICE_REWRITERULE', <REWRITERULE>); // true if frontoffice rewrite rules are activated
+
+		define ('_PLOOPI_DEFAULT_TEMPLATE', 'ploopi');
+
+		define ('_PLOOPI_USE_COMPLEXE_PASSWORD', false);
+
+		define ('_PLOOPI_DEFAULT_TIMEZONE', 1); // GMT +1
+
+		// PEAR
+		define ('_PLOOPI_PEARPATH', '<PEARPATH>');
+
+		// INTERNET PROXY
+		define ('_PLOOPI_INTERNETPROXY_HOST', '<INTERNETPROXY_HOST>');
+		define ('_PLOOPI_INTERNETPROXY_PORT', '<INTERNETPROXY_PORT>');
+		define ('_PLOOPI_INTERNETPROXY_USER', '<INTERNETPROXY_USER>');
+		define ('_PLOOPI_INTERNETPROXY_PASS', '<INTERNETPROXY_PASS>');
+
+		// DOCUMENT INDEXATION
+		define ('_PLOOPI_INDEXATION_WORDSEPARATORS', " :;,.!?'^`'\"«»~-_|()[]{}<>\$£µ&#§@%=+/*\\/\n\r");
+		define ('_PLOOPI_INDEXATION_WORDMINLENGHT', 2);
+		define ('_PLOOPI_INDEXATION_WORDMAXLENGHT', 50);
+		define ('_PLOOPI_INDEXATION_COMMONWORDS_FR', './config/commonwords_fr.txt');
+		define ('_PLOOPI_INDEXATION_RATIOMIN', 0.01);
+		define ('_PLOOPI_INDEXATION_KEYWORDSMAXPCENT', 75);
+	break;
+}
+?>

@@ -1,0 +1,150 @@
+/*
+	Copyright (c) 2002-2007 Netlor
+	Copyright (c) 2007-2008 Ovensia
+	Contributors hold Copyright (c) to their code submissions.
+
+	This file is part of Ploopi.
+
+	Ploopi is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	Ploopi is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Ploopi; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+div.webedit_tree {
+	float:left;
+	width:20%;
+}
+
+div.webedit_tree .treejoin {
+	background:url('../img/join.png') top left no-repeat;
+}
+
+div.webedit_tree .treejoinbottom {
+	background:url('../img/joinbottom.png') top left repeat-y;
+}
+
+div.webedit_tree .treeminus {
+	background:url('../img/minus.png') top left no-repeat;
+}
+
+div.webedit_tree .treeminusbottom {
+	background:url('../img/minusbottom.png') top left no-repeat;
+}
+
+div.webedit_tree .treeplus {
+	background:url('../img/plus.png') top left no-repeat;
+}
+
+div.webedit_tree .treeplusbottom {
+	background:url('../img/plusbottom.png') top left no-repeat;
+}
+
+div.webedit_tree .treeempty {
+	background:url('../img/empty.png') top left repeat-y;
+}
+
+div.webedit_tree .treeline {
+	background:url('../img/line.png') top left repeat-y;
+}
+
+div.webedit_tree_padding {
+	padding:4px;
+	overflow:auto;
+}
+
+div.webedit_tree_node {
+
+}
+
+div.webedit_tree_node img {
+	display:block;
+	float:left;
+}
+
+div.webedit_tree_node a {
+	line-height:18px;
+	height:18px;
+}
+
+
+div.webedit_main {
+	overflow:auto;
+	border-left:1px solid #c0c0c0;
+	background-color:#cbdaff;
+}
+
+div.webedit_main2 {
+	overflow:auto;
+	border-left:1px solid #c0c0c0;
+	background-color:#f0f0f0;
+}
+
+
+div.webedit_main_form {
+}
+
+div.webedit_form_row {
+	clear:both;
+	padding-top:2px;
+	width:310px;
+}
+
+div.webedit_form_label {
+	float:left;
+	width:100px;
+	text-align:right;
+	padding:2px 4px;
+}
+
+div.webedit_form_input {
+	float:left;
+	text-align:left;
+}
+
+div.webedit_form_buttons {
+	float:right;
+	text-align:right;
+}
+
+p.webedit_lienimage {
+	margin:0;
+}
+
+p.webedit_lienimage img, span {
+	vertical-align: middle;
+	display: inline-block;
+	border:0;
+}
+
+p.webedit_lienimage span {
+   padding-left: 5px;
+}
+
+
+div.webedit_row {
+	clear:both;
+	overflow:auto;
+}
+
+#webedit_legende {
+	clear:both;
+	margin:10px 0;
+	padding:4px;
+	background-color:#f0f0f0;
+	border-top:1px solid #c0c0c0;
+	border-bottom:1px solid #c0c0c0;
+	overflow:auto;
+}
+
+#webedit_suggestions sup {
+font-size:8px;
+}

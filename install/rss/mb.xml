@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
+<ploopi>
+	<ploopi_mb_object>
+		<row>
+			<id>1</id>
+			<label>Flux RSS</label>
+			<script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;op=display_news&amp;news_id=&lt;IDRECORD&gt;</script>
+		</row>
+	</ploopi_mb_object>
+	<ploopi_mb_object>
+		<row>
+			<id>2</id>
+			<label>Actualité RSS</label>
+			<script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;op=display_news&amp;news_id=&lt;IDRECORD&gt;</script>
+		</row>
+	</ploopi_mb_object>
+	<ploopi_mb_wce_object>
+		<row>
+			<id>1</id>
+			<label>Flux</label>
+			<script>?op='display'</script>
+			<select_id>id</select_id>
+			<select_label>title</select_label>
+			<select_table>ploopi_mod_rss_feed</select_table>
+		</row>
+	</ploopi_mb_wce_object>
+	<ploopi_mb_table>
+		<row>
+			<name>ploopi_mod_rss_cat</name>
+			<label>cat</label>
+			<visible>1</visible>
+		</row>
+
+		<row>
+			<name>ploopi_mod_rss_entry</name>
+			<label>entry</label>
+			<visible>1</visible>
+		</row>
+		<row>
+			<name>ploopi_mod_rss_feed</name>
+
+			<label>feed</label>
+			<visible>1</visible>
+		</row>
+		<row>
+			<name>ploopi_mod_rss_pref</name>
+			<label>pref</label>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<name>ploopi_mod_rss_request</name>
+			<label>request</label>
+			<visible>1</visible>
+		</row>
+	</ploopi_mb_table>
+
+	<ploopi_mb_field>
+		<row>
+			<tablename>ploopi_mod_rss_cat</tablename>
+			<name>id</name>
+			<label>id</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_cat</tablename>
+			<name>description</name>
+			<label>description</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_cat</tablename>
+			<name>timestamp</name>
+			<label>timestamp</label>
+			<type>bigint(14) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_cat</tablename>
+			<name>title</name>
+			<label>title</label>
+			<type>varchar(100)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_cat</tablename>
+			<name>id_user</name>
+			<label>id_user</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_cat</tablename>
+			<name>id_workspace</name>
+			<label>id_workspace</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_cat</tablename>
+			<name>id_module</name>
+			<label>id_module</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_entry</tablename>
+			<name>id</name>
+			<label>id</label>
+			<type>varchar(255)</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_entry</tablename>
+			<name>id_feed</name>
+			<label>id_feed</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_entry</tablename>
+			<name>timestp</name>
+			<label>timestp</label>
+			<type>bigint(14) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_entry</tablename>
+			<name>title</name>
+			<label>title</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_entry</tablename>
+			<name>link</name>
+			<label>link</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_entry</tablename>
+			<name>author</name>
+			<label>author</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_entry</tablename>
+			<name>subtitle</name>
+			<label>subtitle</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_entry</tablename>
+			<name>category</name>
+			<label>category</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_entry</tablename>
+			<name>content</name>
+			<label>content</label>
+			<type>longtext</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_entry</tablename>
+			<name>published</name>
+			<label>published</label>
+			<type>varchar(14)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>id</name>
+			<label>id</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>url</name>
+			<label>url</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>title</name>
+			<label>title</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>link</name>
+			<label>link</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>subtitle</name>
+			<label>subtitle</label>
+			<type>mediumtext</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>author</name>
+			<label>author</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>updated</name>
+			<label>updated</label>
+			<type>bigint(14) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>default</name>
+			<label>default</label>
+			<type>tinyint(1) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>lastvisit</name>
+			<label>lastvisit</label>
+			<type>varchar(14)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>revisit</name>
+			<label>revisit</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>updating_cache</name>
+			<label>updating_cache</label>
+			<type>tinyint(1) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>error</name>
+			<label>error</label>
+			<type>tinyint(1) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>id_cat</name>
+			<label>id_cat</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>id_user</name>
+			<label>id_user</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>id_workspace</name>
+			<label>id_workspace</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_feed</tablename>
+			<name>id_module</name>
+			<label>id_module</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_pref</tablename>
+			<name>id_module</name>
+			<label>id_module</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_pref</tablename>
+			<name>id_user</name>
+			<label>id_user</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_pref</tablename>
+			<name>id_feed</name>
+			<label>id_feed</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_request</tablename>
+			<name>id</name>
+			<label>id</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_request</tablename>
+			<name>request</name>
+			<label>request</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_request</tablename>
+			<name>id_cat</name>
+			<label>id_cat</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_request</tablename>
+			<name>id_user</name>
+			<label>id_user</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_request</tablename>
+			<name>id_workspace</name>
+			<label>id_workspace</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_rss_request</tablename>
+			<name>id_module</name>
+			<label>id_module</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+	</ploopi_mb_field>
+	<ploopi_mb_schema>
+		<row>
+			<tablesrc>ploopi_mod_rss_cat</tablesrc>
+			<tabledest>ploopi_user</tabledest>
+		</row>
+		<row>
+
+			<tablesrc>ploopi_mod_rss_cat</tablesrc>
+			<tabledest>ploopi_workspace</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_cat</tablesrc>
+			<tabledest>ploopi_module</tabledest>
+		</row>
+
+		<row>
+			<tablesrc>ploopi_mod_rss_entry</tablesrc>
+			<tabledest>ploopi_mod_rss_feed</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_feed</tablesrc>
+			<tabledest>ploopi_mod_rss_cat</tabledest>
+
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_feed</tablesrc>
+			<tabledest>ploopi_user</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_feed</tablesrc>
+
+			<tabledest>ploopi_workspace</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_feed</tablesrc>
+			<tabledest>ploopi_module</tabledest>
+		</row>
+		<row>
+
+			<tablesrc>ploopi_mod_rss_pref</tablesrc>
+			<tabledest>ploopi_module</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_pref</tablesrc>
+			<tabledest>ploopi_user</tabledest>
+		</row>
+
+		<row>
+			<tablesrc>ploopi_mod_rss_pref</tablesrc>
+			<tabledest>ploopi_mod_rss_feed</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_request</tablesrc>
+			<tabledest>ploopi_mod_rss_cat</tabledest>
+
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_request</tablesrc>
+			<tabledest>ploopi_user</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_request</tablesrc>
+
+			<tabledest>ploopi_workspace</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_request</tablesrc>
+			<tabledest>ploopi_module</tabledest>
+		</row>
+	</ploopi_mb_schema>
+
+	<ploopi_mb_relation>
+		<row>
+			<tablesrc>ploopi_mod_rss_cat</tablesrc>
+			<fieldsrc>id_user</fieldsrc>
+			<tabledest>ploopi_user</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+
+		<row>
+			<tablesrc>ploopi_mod_rss_cat</tablesrc>
+			<fieldsrc>id_workspace</fieldsrc>
+			<tabledest>ploopi_workspace</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+
+			<tablesrc>ploopi_mod_rss_cat</tablesrc>
+			<fieldsrc>id_module</fieldsrc>
+			<tabledest>ploopi_module</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_entry</tablesrc>
+
+			<fieldsrc>id_feed</fieldsrc>
+			<tabledest>ploopi_mod_rss_feed</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_feed</tablesrc>
+			<fieldsrc>id_cat</fieldsrc>
+
+			<tabledest>ploopi_mod_rss_cat</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_feed</tablesrc>
+			<fieldsrc>id_user</fieldsrc>
+			<tabledest>ploopi_user</tabledest>
+
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_feed</tablesrc>
+			<fieldsrc>id_workspace</fieldsrc>
+			<tabledest>ploopi_workspace</tabledest>
+			<fielddest>id</fielddest>
+
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_feed</tablesrc>
+			<fieldsrc>id_module</fieldsrc>
+			<tabledest>ploopi_module</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+
+		<row>
+			<tablesrc>ploopi_mod_rss_pref</tablesrc>
+			<fieldsrc>id_module</fieldsrc>
+			<tabledest>ploopi_module</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+
+			<tablesrc>ploopi_mod_rss_pref</tablesrc>
+			<fieldsrc>id_user</fieldsrc>
+			<tabledest>ploopi_user</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_pref</tablesrc>
+
+			<fieldsrc>id_feed</fieldsrc>
+			<tabledest>ploopi_mod_rss_feed</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_request</tablesrc>
+			<fieldsrc>id_cat</fieldsrc>
+
+			<tabledest>ploopi_mod_rss_cat</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_request</tablesrc>
+			<fieldsrc>id_user</fieldsrc>
+			<tabledest>ploopi_user</tabledest>
+
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_request</tablesrc>
+			<fieldsrc>id_workspace</fieldsrc>
+			<tabledest>ploopi_workspace</tabledest>
+			<fielddest>id</fielddest>
+
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_rss_request</tablesrc>
+			<fieldsrc>id_module</fieldsrc>
+			<tabledest>ploopi_module</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+
+	</ploopi_mb_relation>
+</ploopi>
+

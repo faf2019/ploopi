@@ -1,0 +1,40 @@
+# Attention, ce fichier est une configuration generique qu'il convient d'adapter a  votre environnement.
+# Il existe des configurations plus solides que vous pouvez utiliser si vous pouvez directement modifier le fichier de configuration d'apache.
+
+DirectoryIndex index.html index.php
+Options +FollowSymLinks -Indexes
+
+<IfModule mod_php4.c>
+	AddType application/x-httpd-php .php
+
+	php_flag magic_quotes_gpc Off
+	php_flag register_globals Off
+	php_value include_path .
+</IfModule>
+
+<IfModule mod_php5.c>
+	AddType application/x-httpd-php .php
+
+	php_flag magic_quotes_gpc Off
+	php_flag register_globals Off
+	php_value include_path .
+</IfModule>
+
+<IfModule rewrite_module>
+	RewriteEngine on
+
+	# Changez cette valeur si PLOOPI est installe dans un sous dossier du site (ex : /test )
+	RewriteBase /
+
+	# Quelques restrictions d'acces
+	RewriteRule ^modules/.*\.php$ - [F]
+	RewriteRule ^lib/.*\.php$ - [F]
+	RewriteRule ^FCKeditor/.*\.php$ - [F]
+	RewriteRule ^(bin/|data/|db/|include/|install/|pear/)(.*)$ - [F]
+
+	# Regles de reecriture pour la partie FrontOffice
+	RewriteRule ^(.*)-h([0-9]*)a([0-9]*).html(.*)$ index.php?headingid=$2&articleid=$3$4 [L]
+	RewriteRule ^(.*)-h([0-9]*).html(.*)$ index.php?headingid=$2$3 [L]
+	RewriteRule ^(.*)-a([0-9]*).html(.*)$ index.php?articleid=$2$3 [L]
+</IfModule>
+

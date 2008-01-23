@@ -1,0 +1,103 @@
+/*
+	Copyright (c) 2002-2007 Netlor
+	Copyright (c) 2007-2008 Ovensia
+	Contributors hold Copyright (c) to their code submissions.
+
+	This file is part of Ploopi.
+
+	Ploopi is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	Ploopi is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Ploopi; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+div.viewlist {
+overflow-x:auto;
+overflow-y:hidden;
+width:100%;
+}
+
+table.viewlist {
+padding:0px;
+margin:2px 0 6px 2px;
+border:1px solid #c0c0c0;
+border-collapse:collapse;
+}
+
+table.viewlist td, table.viewlist  th {
+border:1px solid #c0c0c0;
+}
+
+table.viewlist tr {
+}
+
+table.viewlist tr:hover {
+background-color:#d8d8d8;
+}
+
+table.viewlist th {
+padding:0;
+}
+
+table.viewlist th a {
+display:block;
+padding:2px 4px;
+text-decoration:none;
+white-space:nowrap;
+text-align:left;
+}
+
+table.viewlist th a:hover {
+background-color:#d0d0d0;
+text-decoration:none;
+}
+
+table.viewlist th a.selected {
+background-color:#c0c0c0;
+}
+
+table.viewlist th a img {
+}
+
+table.viewlist td {
+padding:2px 4px;
+white-space:nowrap;
+}
+
+table.viewlist td.data {
+
+}
+
+div#forms_filter_box {
+background-color:#e8e8e8;
+border-bottom:1px solid #a0a0a0;
+overflow:auto;
+padding:2px;
+}
+
+div#forms_filter_box p {
+margin:0;
+padding:2px 4px;
+}
+
+div#forms_info_box {
+background-color:#f0f0f0;
+border-bottom:1px solid #a0a0a0;
+overflow:auto;
+padding:4px;
+}
+
+div#forms_archive_box {
+background-color:#e8e8e8;
+border-bottom:1px solid #a0a0a0;
+overflow:auto;
+padding:2px;
+}

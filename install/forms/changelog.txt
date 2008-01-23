@@ -1,0 +1,65 @@
+== Module FORMS - version 2.0 ====================================================
+
+2008-01-09  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Utilisation du moteur de template pour afficher le formulaire d'ajout/modif d'un enregistrement (le template par défaut est dans le dossier ./modules/forms/templates/default)
+ * [DEV] Ajout d'une fonction permettant l'utilisation de formulaires depuis un autre module : forms_display($id_form, $id_module, $id_object, $id_record, $rights = array(), $options = array());
+ * Mise à niveau sécurité
+ * Migration Ploopi
+ * Modifications sur la structure SQL (nom des tables & clés étrangères)
+ * Mise à jour de la Métabase
+
+== Module FORMS - version 1.99 ====================================================
+
+2007-12-06  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Réécriture des interfaces d'administration pour supprimer la mise en page type TABLEAU
+ * Amélioration de l'ergonomie et du look&feel
+ * Optimisation de l'affichage des données en mode "liste"
+ * Ajout des fonctions d'archivage depuis le mode "liste".
+
+== Module FORMS - version 1.49 ====================================================
+
+2007-11-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un bug sur les droits de suppression (màj 1.48)
+
+== Module FORMS - version 1.48 ====================================================
+
+2007-11-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Possibilité de supprimer (défintivement) les données d'un formulaire depuis l'interface utilisateur avec un rôle adapté. La suppression s'adapte au filtre appliqué et à la vue dont l'utilisateur dispose sur les données.
+
+== Module FORMS - version 1.47 ====================================================
+
+2007-11-02  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un bug sur les droits du menu "Administration", apparaissait dès que l'utilisateur avait une action
+ * Ajout d'un paramètre "jusqu'à date" pour l'archivage de données
+ * Possibilité de supprimer (défintivement) les données d'un formulaire
+
+== Module FORMS - version 1.46 ====================================================
+
+2007-10-09  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Ajout des propriétés TABINDEX et REQUIRED au niveau du moteur de template du module formulaire (pour intégration dans frontoffice)
+
+== Module FORMS - version 1.45 ====================================================
+
+2007-10-04  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un problème de mise en page en mode liste pour les formulaires composés de beaucoup de champs
+
+2007-10-02  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Ajout d'un patch SQL pour corriger des problèmes antérieurs de mise à jour
+ * Ajout de la possibilité pour l'administrateur de supprimer n'importe quel enregistrement du formulaire quelque soit la vue sur les données
+
+== Module FORMS - version 1.43 ====================================================
+
+2007-09-04  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Ajout d'une option "Visible lors d'une intégration en objet WCE" sur un champ de formulaire (non opérationnel)
+ * Correction d'un bug d'affichage du calendrier lors de la saisie d'un enregistrement de type "date"
+
+

@@ -1,0 +1,28 @@
+== Module DIRECTORY - version 1.20 ====================================================
+
+2008-01-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à niveau sécurité
+ * Migration Ploopi
+ * Lifting des interfaces
+ * Correction de plusieurs bugs dans l'affichage des espaces de rattachement d'un utilisateur
+ * Correction de plusieurs bugs dans la recherche
+ * Mise à jour de la Métabase
+
+== Module DIRECTORY - version 1.12 ====================================================
+
+2007-10-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'un paramètre permettant de gérer ou non "Mes Favoris"
+ * Ajout d'un paramètre permettant de gérer ou non "Mes Contacts"
+ * Ajout d'un paramètre permettant de gérer ou non "Mon Espace"
+ * Ajout d'un paramètre permettant de gérer ou non "Utilisateurs"
+ * Ajout d'un paramètre permettant d'accéder ou non à la "Recherche"
+
+== Module DIRECTORY - version 1.11 ====================================================
+
+2007-09-25  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Correction de plusieurs bugs au niveau de la recherche (erreurs de construction SQL)
+ * Correction d'un bug dans l'affichage des utilisateurs de l'espace courant
+ * Correction d'un bug d'affichage des titres de rubriques (problème avec le fichier de langue)

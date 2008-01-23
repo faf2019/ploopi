@@ -1,0 +1,3 @@
+Ploopi est un fork de DIMS, produit open source diffusé par la société Netlor sous licence GPL.
+Les codes sources de Ploopi sont fournis avec les copyrights suivants :
+Copyright (c) NETLOR 2002-2007 / Copyright (c) OVENSIA 2007-2008

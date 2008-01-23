@@ -1,0 +1,41 @@
+* FCKEditor 2.5.1
+  path : ./FCKeditor
+  url : http://www.fckeditor.net
+  license : GPL / LGPL / MPL
+  copyright : Frederico Caldeira Knabben
+
+* cupload 1.0
+  path : ./lib/cupload
+  url : http://www.pkconcept.net
+  license : MPL
+  copyright : P.E. Baroiller
+
+* inputfilter  1.2.2_php4/php5
+  path : ./lib/inputfilter
+  url : http://www.phpclasses.org/browse/package/2189.html
+  license : GPL
+  copyright : Daniel Morris
+
+* pclzip 1.44
+  path : ./lib/pclzip
+  url : http://www.prototypejs.org
+  license : MIT
+  copyright : Vincent Blavet
+
+* prototype 1.6.0
+  path : ./lib/prototype
+  url : http://www.prototypejs.org
+  license : MIT
+  copyright : Sam Stephenson
+
+* rssgenesis 1.1
+  path : ./lib/rssgenesis
+  url : http://rssgenesis.sourceforge.net
+  license : LGPL
+  copyright : Yannick Lefebvre
+
+* PHPDIG 1.8.7
+  path : ./phpdig
+  url : http://www.phpdig.net
+  licence : GPL
+  copyright : Antoine Bajolet, Charter

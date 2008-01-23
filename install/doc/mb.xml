@@ -1,0 +1,948 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
+<ploopi>
+	<ploopi_mb_object>
+	<row>
+		<id>1</id>
+		<label>Dossier</label>
+		<script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;currentfolder=&lt;IDRECORD&gt;</script>
+	</row>
+	<row>
+		<id>2</id>
+		<label>Fichier</label>
+		<script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;op=file_modify&amp;docfile_md5id=&lt;IDRECORD&gt;</script>
+	</row>
+	<row>
+		<id>3</id>
+		<label>Fichier à Valider</label>
+		<script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;currentfolder=&lt;IDRECORD&gt;</script>
+		</row>
+	</ploopi_mb_object>
+	<ploopi_mb_table>
+		<row>
+			<name>ploopi_mod_doc_ext</name>
+			<label>ext</label>
+			<visible>1</visible>
+		</row>
+
+		<row>
+			<name>ploopi_mod_doc_file</name>
+			<label>file</label>
+			<visible>1</visible>
+		</row>
+		<row>
+			<name>ploopi_mod_doc_file_draft</name>
+
+			<label>file_draft</label>
+			<visible>1</visible>
+		</row>
+		<row>
+			<name>ploopi_mod_doc_file_history</name>
+			<label>file_history</label>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<name>ploopi_mod_doc_folder</name>
+			<label>folder</label>
+			<visible>1</visible>
+		</row>
+		<row>
+
+			<name>ploopi_mod_doc_keyword</name>
+			<label>keyword</label>
+			<visible>1</visible>
+		</row>
+		<row>
+			<name>ploopi_mod_doc_keyword_file</name>
+			<label>keyword_file</label>
+
+			<visible>1</visible>
+		</row>
+		<row>
+			<name>ploopi_mod_doc_meta</name>
+			<label>meta</label>
+			<visible>1</visible>
+		</row>
+
+		<row>
+			<name>ploopi_mod_doc_parser</name>
+			<label>parser</label>
+			<visible>1</visible>
+		</row>
+	</ploopi_mb_table>
+	<ploopi_mb_field>
+
+		<row>
+			<tablename>ploopi_mod_doc_ext</tablename>
+			<name>ext</name>
+			<label>ext</label>
+			<type>varchar(10)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_ext</tablename>
+			<name>filetype</name>
+			<label>filetype</label>
+			<type>varchar(16)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>id</name>
+			<label>id</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>md5id</name>
+			<label>md5id</label>
+			<type>char(32)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>name</name>
+			<label>name</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>description</name>
+			<label>description</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>timestp_create</name>
+			<label>timestp_create</label>
+			<type>bigint(14)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>timestp_modify</name>
+			<label>timestp_modify</label>
+			<type>bigint(14)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>size</name>
+			<label>size</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>readonly</name>
+			<label>readonly</label>
+			<type>tinyint(1) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>extension</name>
+			<label>extension</label>
+			<type>varchar(20)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>parents</name>
+			<label>parents</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>content</name>
+			<label>content</label>
+			<type>longtext</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>nbclick</name>
+			<label>nbclick</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>version</name>
+			<label>version</label>
+			<type>int(10)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>metadata</name>
+			<label>metadata</label>
+			<type>longtext</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>words_overall</name>
+			<label>words_overall</label>
+			<type>int(10)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>words_indexed</name>
+			<label>words_indexed</label>
+			<type>int(10)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>id_folder</name>
+			<label>id_folder</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>id_user_modify</name>
+			<label>id_user_modify</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>id_user</name>
+			<label>id_user</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>id_workspace</name>
+			<label>id_workspace</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file</tablename>
+			<name>id_module</name>
+			<label>id_module</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>id</name>
+			<label>id</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>md5id</name>
+			<label>md5id</label>
+			<type>char(32)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>id_docfile</name>
+			<label>id_docfile</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>name</name>
+			<label>name</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>description</name>
+			<label>description</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>timestp_create</name>
+			<label>timestp_create</label>
+			<type>bigint(14)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>size</name>
+			<label>size</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>readonly</name>
+			<label>readonly</label>
+			<type>tinyint(1) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>extension</name>
+			<label>extension</label>
+			<type>varchar(20)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>parents</name>
+			<label>parents</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>id_folder</name>
+			<label>id_folder</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>id_user_modify</name>
+			<label>id_user_modify</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>id_user</name>
+			<label>id_user</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>id_workspace</name>
+			<label>id_workspace</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_draft</tablename>
+			<name>id_module</name>
+			<label>id_module</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_history</tablename>
+			<name>id_docfile</name>
+			<label>id_docfile</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_history</tablename>
+			<name>name</name>
+			<label>name</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_history</tablename>
+			<name>description</name>
+			<label>description</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_history</tablename>
+			<name>timestp_create</name>
+			<label>timestp_create</label>
+			<type>bigint(14)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_history</tablename>
+			<name>timestp_modify</name>
+			<label>timestp_modify</label>
+			<type>bigint(14)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_history</tablename>
+			<name>size</name>
+			<label>size</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_history</tablename>
+			<name>version</name>
+			<label>version</label>
+			<type>int(10)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_history</tablename>
+			<name>extension</name>
+			<label>extension</label>
+			<type>varchar(20)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_history</tablename>
+			<name>id_user_modify</name>
+			<label>id_user_modify</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_file_history</tablename>
+			<name>id_module</name>
+			<label>id_module</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>id</name>
+			<label>id</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>name</name>
+			<label>name</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>description</name>
+			<label>description</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>foldertype</name>
+			<label>foldertype</label>
+			<type>varchar(16)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>readonly</name>
+			<label>readonly</label>
+			<type>tinyint(1) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>readonly_content</name>
+			<label>readonly_content</label>
+			<type>tinyint(1) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>parents</name>
+			<label>parents</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>timestp_create</name>
+			<label>timestp_create</label>
+			<type>bigint(14)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>timestp_modify</name>
+			<label>timestp_modify</label>
+			<type>bigint(14)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>nbelements</name>
+			<label>nbelements</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>published</name>
+			<label>published</label>
+			<type>tinyint(1) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>waiting_validation</name>
+			<label>waiting_validation</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>id_folder</name>
+			<label>id_folder</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>id_user_modify</name>
+			<label>id_user_modify</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>id_user</name>
+			<label>id_user</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>id_workspace</name>
+			<label>id_workspace</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_folder</tablename>
+			<name>id_module</name>
+			<label>id_module</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_keyword</tablename>
+			<name>id</name>
+			<label>id</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_keyword</tablename>
+			<name>keyword</name>
+			<label>keyword</label>
+			<type>varchar(32)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_keyword</tablename>
+			<name>twoletters</name>
+			<label>twoletters</label>
+			<type>char(2)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_keyword</tablename>
+			<name>id_module</name>
+			<label>id_module</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_keyword_file</tablename>
+			<name>id_file</name>
+			<label>id_file</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_keyword_file</tablename>
+			<name>id_keyword</name>
+			<label>id_keyword</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_keyword_file</tablename>
+			<name>weight</name>
+			<label>weight</label>
+			<type>mediumint(5) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_keyword_file</tablename>
+			<name>meta</name>
+			<label>meta</label>
+			<type>tinyint(1) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_keyword_file</tablename>
+			<name>id_module</name>
+			<label>id_module</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_meta</tablename>
+			<name>id_file</name>
+			<label>id_file</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_meta</tablename>
+			<name>meta</name>
+			<label>meta</label>
+			<type>varchar(32)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_meta</tablename>
+			<name>value</name>
+			<label>value</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_parser</tablename>
+			<name>id</name>
+			<label>id</label>
+			<type>int(10)</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_parser</tablename>
+			<name>label</name>
+			<label>label</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_parser</tablename>
+			<name>path</name>
+			<label>path</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_doc_parser</tablename>
+			<name>extension</name>
+			<label>extension</label>
+			<type>varchar(10)</type>
+			<visible>1</visible>
+
+		</row>
+	</ploopi_mb_field>
+	<ploopi_mb_schema>
+		<row>
+			<tablesrc>ploopi_mod_doc_file</tablesrc>
+			<tabledest>ploopi_mod_doc_folder</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_file</tablesrc>
+			<tabledest>ploopi_user</tabledest>
+		</row>
+
+		<row>
+			<tablesrc>ploopi_mod_doc_file</tablesrc>
+			<tabledest>ploopi_workspace</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_file</tablesrc>
+			<tabledest>ploopi_module</tabledest>
+
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_file_draft</tablesrc>
+			<tabledest>ploopi_mod_doc_docfile</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_file_draft</tablesrc>
+
+			<tabledest>ploopi_mod_doc_folder</tabledest>
+		</row>
+		<row>
+
+			<tablesrc>ploopi_mod_doc_file_draft</tablesrc>
+			<tabledest>ploopi_user</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_file_draft</tablesrc>
+			<tabledest>ploopi_workspace</tabledest>
+		</row>
+
+		<row>
+			<tablesrc>ploopi_mod_doc_file_draft</tablesrc>
+			<tabledest>ploopi_module</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_file_history</tablesrc>
+			<tabledest>ploopi_mod_doc_docfile</tabledest>
+
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_file_history</tablesrc>
+
+			<tabledest>ploopi_module</tabledest>
+		</row>
+		<row>
+
+			<tablesrc>ploopi_mod_doc_folder</tablesrc>
+			<tabledest>ploopi_user</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_folder</tablesrc>
+			<tabledest>ploopi_workspace</tabledest>
+		</row>
+
+		<row>
+			<tablesrc>ploopi_mod_doc_folder</tablesrc>
+			<tabledest>ploopi_module</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_keyword</tablesrc>
+			<tabledest>ploopi_module</tabledest>
+
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_keyword_file</tablesrc>
+			<tabledest>ploopi_mod_doc_file</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_keyword_file</tablesrc>
+
+			<tabledest>ploopi_mod_doc_keyword</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_keyword_file</tablesrc>
+			<tabledest>ploopi_module</tabledest>
+		</row>
+		<row>
+
+			<tablesrc>ploopi_mod_doc_meta</tablesrc>
+			<tabledest>ploopi_mod_doc_file</tabledest>
+		</row>
+	</ploopi_mb_schema>
+	<ploopi_mb_relation>
+		<row>
+			<tablesrc>ploopi_mod_doc_file</tablesrc>
+
+			<fieldsrc>id_folder</fieldsrc>
+			<tabledest>ploopi_mod_doc_folder</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_file</tablesrc>
+			<fieldsrc>id_user</fieldsrc>
+			<tabledest>ploopi_user</tabledest>
+
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_file</tablesrc>
+			<fieldsrc>id_workspace</fieldsrc>
+			<tabledest>ploopi_workspace</tabledest>
+			<fielddest>id</fielddest>
+
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_file</tablesrc>
+			<fieldsrc>id_module</fieldsrc>
+			<tabledest>ploopi_module</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+
+		<row>
+			<tablesrc>ploopi_mod_doc_file_draft</tablesrc>
+			<fieldsrc>id_docfile</fieldsrc>
+			<tabledest>ploopi_mod_doc_docfile</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+
+			<tablesrc>ploopi_mod_doc_file_draft</tablesrc>
+			<fieldsrc>id_folder</fieldsrc>
+			<tabledest>ploopi_mod_doc_folder</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_file_draft</tablesrc>
+			<fieldsrc>id_user</fieldsrc>
+
+			<tabledest>ploopi_user</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_file_draft</tablesrc>
+			<fieldsrc>id_workspace</fieldsrc>
+			<tabledest>ploopi_workspace</tabledest>
+
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_file_draft</tablesrc>
+			<fieldsrc>id_module</fieldsrc>
+			<tabledest>ploopi_module</tabledest>
+			<fielddest>id</fielddest>
+
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_file_history</tablesrc>
+			<fieldsrc>id_docfile</fieldsrc>
+			<tabledest>ploopi_mod_doc_docfile</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+
+		<row>
+
+			<tablesrc>ploopi_mod_doc_file_history</tablesrc>
+			<fieldsrc>id_module</fieldsrc>
+			<tabledest>ploopi_module</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_folder</tablesrc>
+			<fieldsrc>id_user</fieldsrc>
+
+			<tabledest>ploopi_user</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_folder</tablesrc>
+			<fieldsrc>id_workspace</fieldsrc>
+			<tabledest>ploopi_workspace</tabledest>
+
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_folder</tablesrc>
+			<fieldsrc>id_module</fieldsrc>
+			<tabledest>ploopi_module</tabledest>
+			<fielddest>id</fielddest>
+
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_keyword</tablesrc>
+			<fieldsrc>id_module</fieldsrc>
+			<tabledest>ploopi_module</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+
+		<row>
+			<tablesrc>ploopi_mod_doc_keyword_file</tablesrc>
+			<fieldsrc>id_file</fieldsrc>
+			<tabledest>ploopi_mod_doc_file</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+
+			<tablesrc>ploopi_mod_doc_keyword_file</tablesrc>
+			<fieldsrc>id_keyword</fieldsrc>
+			<tabledest>ploopi_mod_doc_keyword</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_keyword_file</tablesrc>
+
+			<fieldsrc>id_module</fieldsrc>
+			<tabledest>ploopi_module</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_doc_meta</tablesrc>
+			<fieldsrc>id_file</fieldsrc>
+
+			<tabledest>ploopi_mod_doc_file</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+	</ploopi_mb_relation>
+</ploopi>
+

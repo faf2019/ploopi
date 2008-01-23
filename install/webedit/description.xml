@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ploopi>
+	<moduletype>
+		<label>webedit</label>
+		<version>1.20</version>
+		<author>Netlor / Ovensia</author>
+		<date>20080106000000</date>
+		<publicparam>1</publicparam>
+		<description>Editeur de Contenus Web</description>
+		<paramtype>
+			<name>showmenu</name>
+			<label>Visible dans les modules</label>
+			<default_value>1</default_value>
+			<public>1</public>
+			<description/>
+			<paramchoice>
+				<value>1</value>
+				<displayed_value>oui</displayed_value>
+			</paramchoice>
+			<paramchoice>
+				<value>0</value>
+				<displayed_value>non</displayed_value>
+			</paramchoice>
+		</paramtype>
+		<paramtype>
+			<name>showblock</name>
+			<label>Afficher le bloc</label>
+			<default_value>1</default_value>
+			<public>1</public>
+			<description/>
+			<paramchoice>
+				<value>1</value>
+				<displayed_value>oui</displayed_value>
+			</paramchoice>
+			<paramchoice>
+				<value>0</value>
+				<displayed_value>non</displayed_value>
+			</paramchoice>
+		</paramtype>
+		<action>
+			<id_action>1</id_action>
+			<label>Gérer les Articles</label>
+		</action>
+		<action>
+			<id_action>2</id_action>
+			<label>Publier les Articles</label>
+		</action>
+		<action>
+			<id_action>3</id_action>
+			<label>Gérer les Rubriques</label>
+		</action>
+		<action>
+			<id_action>4</id_action>
+			<label>Gérer les Validateurs</label>
+		</action>
+	</moduletype>
+</ploopi>

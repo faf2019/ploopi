@@ -1,0 +1,231 @@
+/*
+	Copyright (c) 2002-2007 Netlor
+	Copyright (c) 2007-2008 Ovensia
+	Contributors hold Copyright (c) to their code submissions.
+
+	This file is part of Ploopi.
+
+	Ploopi is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	Ploopi is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Ploopi; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+body {
+padding: 0;
+margin: 0;
+font: 76% tahoma, verdana, sans-serif;
+background: #e0e0e0;
+color: #303030;
+}
+
+a {
+text-decoration: none;
+color: #93203f;
+}
+
+a:hover {
+text-decoration: underline;
+}
+
+a.headlink {
+text-decoration: none;
+color: #000000;
+}
+
+a.headlink:hover {
+text-decoration: none;
+}
+
+form {
+padding:0px;
+margin:0px;
+}
+
+a.article_module_title {
+display:block;
+padding:4px;
+border-bottom:1px #d0d0d0 solid;
+font-size:14px;
+font-weight:bold;
+}
+
+.heading_menu {
+width:200px;
+vertical-align:top;
+background-color:#f0f0f0;
+border-right:1px #d0d0d0 solid;
+}
+
+.article_menu {
+padding:4px;
+background-color:#f8f8f8;
+border-bottom:1px #d0d0d0 solid;
+height:20px;
+}
+
+.article_content {
+padding:4px;
+}
+
+a.heading1 {
+display:block;
+font-size:14px;
+border-bottom:1px #d0d0d0 solid;
+padding:2px 4px;
+background-color:#f8f8f8;
+text-decoration:none;
+}
+
+a.heading1:hover {
+background-color:#fcfcfc;
+text-decoration:none;
+}
+
+a.heading1selected {
+display:block;
+font-size:14px;
+border-bottom:1px #d0d0d0 solid;
+padding:2px 4px;
+background-color:#eeeeee;
+text-decoration:none;
+}
+
+a.heading1selected:hover {
+background-color:#eeeeee;
+text-decoration:none;
+}
+
+a.heading2 {
+display:block;
+font-size:12px;
+border-bottom:1px #d0d0d0 solid;
+padding:2px 4px 2px 14px;
+background-color:#f8f8f8;
+text-decoration:none;
+}
+
+a.heading2:hover {
+background-color:#fcfcfc;
+text-decoration:none;
+}
+
+a.heading2selected {
+display:block;
+font-size:12px;
+border-bottom:1px #d0d0d0 solid;
+padding:2px 4px 2px 14px;
+background-color:#eeeeee;
+text-decoration:none;
+}
+
+a.heading2selected:hover {
+background-color:#eeeeee;
+text-decoration:none;
+}
+
+
+a.heading3 {
+display:block;
+font-size:10px;
+border-bottom:1px #d0d0d0 solid;
+padding:2px 4px 2px 24px;
+background-color:#f8f8f8;
+text-decoration:none;
+}
+
+a.heading3:hover {
+background-color:#fcfcfc;
+text-decoration:none;
+}
+
+a.heading3selected {
+display:block;
+font-size:10px;
+border-bottom:1px #d0d0d0 solid;
+padding:2px 4px 2px 24px;
+background-color:#eeeeee;
+text-decoration:none;
+}
+
+a.heading3selected:hover {
+background-color:#eeeeee;
+text-decoration:none;
+}
+
+a.article {
+display:block;
+float:left;
+padding:2px;
+margin-right:2px;
+border: 1px #d0d0d0 solid;
+background-color:#f8f8f8;
+text-decoration:none;
+}
+
+a.article:hover {
+background-color:#fcfcfc;
+text-decoration:none;
+}
+
+a.articleselected {
+display:block;
+float:left;
+padding:2px;
+margin-right:2px;
+font-weight:bold;
+border: 1px #d0d0d0 solid;
+background-color:#eeeeee;
+text-decoration:none;
+}
+
+a.articleselected:hover {
+background-color:#eeeeee;
+text-decoration:none;
+}
+
+
+.article_title {
+font-size:14px;
+font-weight:bold;
+padding:4px 2px 0px 0px;
+}
+
+
+.article_desc {
+font-size:10px;
+padding:2px 0px;
+}
+
+/* RSS */
+
+.rss_title
+{
+	font-weight: bold;
+	background: #e0e0e0 url(images/corner.gif) top right no-repeat;
+	border-left: 4px solid #e2001a;
+	padding: 2px 2px 2px 6px;
+	margin: 10px 0 0 0;
+}
+
+.rss_description
+{
+	background-color: #fafafa;
+	border-left: 4px solid #e2001a;
+	padding: 2px 2px 2px 6px;
+}
+
+.rss_source
+{
+	background-color: #f0f0f0;
+	border-left: 4px solid #e2001a;
+	padding: 2px 2px 2px 6px;
+}

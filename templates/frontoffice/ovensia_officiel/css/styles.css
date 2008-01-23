@@ -1,0 +1,378 @@
+/*
+	Copyright (c) 2002-2007 Netlor
+	Copyright (c) 2007-2008 Ovensia
+	Contributors hold Copyright (c) to their code submissions.
+
+	This file is part of Ploopi.
+
+	Ploopi is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	Ploopi is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Ploopi; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+body, table, td {
+font: 12px Verdana,Tahoma,Arial,sans-serif;
+color: #688c3d;
+/*color:#415826;*/
+}
+
+body {
+margin: 0 auto;
+padding: 0;
+background: #60a1da url(../gfx/fond.png) top center repeat-x;
+}
+
+form {
+margin:0;
+padding:0;
+}
+
+p, ul, li {
+margin-top: 0px;
+margin-bottom: 0px;
+}
+
+table {
+padding:0px;
+margin:2px;
+border:1px solid #c0c0c0;
+border-collapse:collapse;
+}
+
+td {
+padding:2px;
+}
+
+
+a {
+color: #688c3d;
+}
+
+a:hover {
+color: #202020;
+}
+
+
+
+#entete {
+margin: 20px auto 0 auto;
+width: 778px;
+overflow:auto;
+color: #3d678b;
+text-align:right;
+height:20px;
+line-height:20px;
+font-size:0.8em;
+}
+
+#entete a {
+color: #3d678b;
+}
+
+#entete a:hover {
+color: #202020;
+}
+
+#page {
+background: #ffffff;
+margin: 0 auto;
+width: 778px;
+background: url(../gfx/page_fond.png) top left repeat-y;
+}
+
+#page_haut {
+height:10px;
+font-size:0.1em;
+background: url(../gfx/page_haut.png) top left no-repeat;
+}
+
+#page_bas {
+height:10px;
+font-size:0.1em;
+background: url(../gfx/page_bas.png) top left no-repeat;
+}
+
+#page_inner {
+padding:20px;
+margin:0 1px;
+background: url(../gfx/degrade.png) 0 130px no-repeat;
+overflow:auto;
+}
+
+#page_menu {
+margin:10px 0 30px 5px;
+overflow:auto;
+}
+
+#page_menu a {
+display:block;
+float:left;
+padding:0 20px;
+}
+
+#page_menu img {
+display:block;
+float:left;
+border:0;
+}
+
+#title {
+height:136px;
+}
+
+#slogan {
+margin-top:55px;
+float:right;
+width:270px;
+font-size:1.2em;
+font-weight:bold;
+letter-spacing: -0.05em;
+text-transform:uppercase;
+}
+
+#logo {
+display:block;
+float:left;
+}
+
+#pages {
+clear:both;
+margin-top:-30px;
+font-size:1em;
+line-height:3em;
+height:3em;
+}
+
+#pages a {
+font-weight:bold;
+}
+
+#pages a.selected {
+color:#000000;
+}
+
+#path {
+clear:both;
+font-size:0.8em;
+}
+
+#lastupdate {
+float:right;
+}
+
+#page_main {
+margin:10px 0 0 0;
+color: #688c3d;
+overflow:auto;
+}
+
+#page_main h1 {
+font-size:1.3em;
+}
+
+#page_content {
+margin-right:230px;
+}
+
+#page_lastupdate {
+text-align:right;
+margin:10px 0;
+font-size:0.8em;
+}
+
+#menu_vertical {
+width:216px;
+float:right;
+color:#415826;
+}
+
+#recherche {
+height:50px;
+font-size:0.9em;
+font-weight:bold;
+}
+
+#recherche fieldset {
+border: 1px solid #d0d0d0;
+background-color: #f0f0f0;
+padding:4px;
+margin:0px;
+}
+
+#recherche_field {
+width:70%;
+margin-right:2px;
+border:1px solid #c0c0c0;
+padding-left:2px;
+font-size:0.9em;
+}
+
+#recherche_button {
+width:20%;
+border:1px solid #a0a0a0;
+font-size:0.9em;
+}
+
+.actubox_bg {
+display:block;
+}
+
+.actubox {
+margin:-235px 15px 10px 17px;
+}
+
+#actubox h1 {
+font-size:1.2em;
+margin:2px 0;
+}
+
+#articles {
+margin-bottom:40px;
+}
+
+#articles a {
+display:block;
+margin-top:6px;
+text-decoration:none;
+overflow:auto;
+}
+
+#articles a:hover {
+color: #202020;
+}
+
+#articles a.selected {
+color: #202020;
+}
+
+.news {
+margin-bottom:10px;
+}
+
+.news .title {
+font-weight:bold;
+
+}
+.news .date {
+font-size:0.8em;
+}
+
+.news .content {
+font-size:0.9em;
+}
+
+
+.rssfeed {
+margin-bottom:10px;
+}
+
+.rssfeed a {
+display:block;
+margin-top:6px;
+text-decoration:none;
+overflow:auto;
+}
+
+.rssfeed a:hover {
+color: #202020;
+}
+
+.rssfeedtitle {
+font-weight:bold;
+}
+
+
+
+
+
+#menubas {
+overflow:auto;
+font-size:0.8em;
+font-weight:bold;
+text-transform:uppercase;
+margin-top:1em;
+text-align:center;
+}
+
+#menubas a {
+padding:0 10px;
+text-decoration:none;
+}
+
+#pied {
+margin: 3px auto;
+width: 778px;
+clear:both;
+overflow:auto;
+color: #3d678b;
+text-align:right;
+font-size:0.8em;
+}
+
+#pied a {
+color: #3d678b;
+}
+
+#pied a:hover {
+color: #202020;
+}
+
+
+#execinfo {
+margin-top:10px;
+}
+
+
+.fck_title1 {
+font-size:16px;
+font-weight:bold;
+}
+
+.fck_title2 {
+font-size:14px;
+font-weight:bold;
+}
+
+.fck_title3 {
+font-size:12px;
+font-weight:bold;
+}
+
+.fck_normal {
+font: 12px Verdana,Tahoma,Arial,sans-serif;
+color: #688c3d;
+}
+
+.fck_image_left {
+float:left;
+margin:5px 5px 5px 0;
+}
+
+.fck_image_right {
+float:right;
+margin:5px 0 5px 5px;
+}
+
+.fck_quote {
+border: #c0c0c0 2px solid;
+padding: 5px;
+margin: 5px 0;
+color: #404040;
+font-family: 'Courier New' , Monospace;
+background-color: #f0f0f0;
+overflow-x:scroll;
+white-space:nowrap;
+width:95%;
+}
+
+.fck_ruler {
+}

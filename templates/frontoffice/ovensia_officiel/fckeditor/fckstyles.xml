@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Styles>
+	<Style name="Titre 1" element="h1">
+		<Attribute name="class" value="fck_title1" />
+	</Style>
+	<Style name="Titre 2" element="h2">
+		<Attribute name="class" value="fck_title2" />
+	</Style>
+	<Style name="Titre 3" element="h3">
+		<Attribute name="class" value="fck_title3" />
+	</Style>
+	<Style name="Texte normal" element="span">
+		<Attribute name="class" value="fck_normal" />
+	</Style>
+	<Style name="Citation" element="div">
+		<Attribute name="class" value="fck_quote" />
+	</Style>
+	<Style name="Séparation" element="hr">
+		<Attribute name="class" value="fck_ruler" />
+	</Style>
+	<Style name="Image à gauche" element="img">
+		<Attribute name="class" value="fck_image_left" />
+	</Style>
+	<Style name="Image à droite" element="img">
+		<Attribute name="class" value="fck_image_right" />
+	</Style>
+</Styles>

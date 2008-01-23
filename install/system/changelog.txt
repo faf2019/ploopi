@@ -1,0 +1,184 @@
+== Ploopi - version 1.0 alpha 1 ===============================================
+
+2008-01-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Nouveaux paramètres de configuration :
+	define ('_PLOOPI_USE_CGIUPLOAD', true);			// Booléen, activation du mode 'upload CGI'
+	define ('_PLOOPI_CGI_PATH', './cgi');			// Dossier CGI
+	define ('_PLOOPI_CGI_UPLOADTMP', '/tmp');		// Dossier temporaire pour l'upload CGI
+	define ('_PLOOPI_USE_DBSESSION', true); 		// Booléen, activation du stockage des sessions en Base de donnée (à la place du handler standard sur le système de fichier)
+	define ('_PLOOPI_SECRETKEY', 'ploopi');			// Phrase secrète utilisée pour le stockage des mots de passe (sert pour une partie du SALT) et pour le cryptage des URL
+	define ('_PLOOPI_PEARPATH', '/usr/share/php');	// Chemin physique contenant les classes PEAR. Peut être remplacé par " realpath('./pear'); " si votre package de Ploopi intègre directement les classes PEAR.
+	define ('_PLOOPI_INTERNETPROXY_HOST', '');		// Paramètres du Proxy d'accès Internet : adresse du serveur
+	define ('_PLOOPI_INTERNETPROXY_PORT', '');		// Paramètres du Proxy d'accès Internet : port du serveur
+	define ('_PLOOPI_INTERNETPROXY_USER', '');		// Paramètres du Proxy d'accès Internet : nom d'utilisateur
+	define ('_PLOOPI_INTERNETPROXY_PASS', '');		// Paramètres du Proxy d'accès Internet : mot de passe
+
+ * Nouvelle procédure d'installation (temporaire) pour prendre en compte les nouveaux paramètres de configuration
+ * Mise à jour de FCKEditor (2.5Beta => 2.5.1)
+ * Module Système : Optimisations d'affichage pour l'arborescence des groupes et espaces de travail (Temps/6)
+ * Module Système : Correction d'un bug sur l'application de l'héritage des groupes. Des utilisateurs n'étaient ainsi pas visibles dans certains groupes.
+ * Module Système : Rénovation quasi-complète des interfaces "Système" et "Espaces de Travail"
+ * Module Système : Nouvelle organisation dans la gestion des rôles
+ * Module Système : Synthèse Outils & Logs dans Outils
+ * Module Système : Outil de diagnostic plus complet
+ * Module Système : Correction d'un bug lors du chargement des objets WebEdit suite à une mise à jour d'un module. La référence de l'objet était modifiée et l'intégration de l'objet dans un article WebEdit ne fonctionnait plus.
+ * Tickets : Correction de bugs, mise en évidence des citations, possibilité de modifier/supprimer un ticket, affichage de la date/heure de dernière modification d'un ticket
+ * Annotations : Réécriture des fonctionnalités d'enregistrement/suppression en ajax.
+ * Paramètres : L'utilisateur peut désormais modifier certains paramètres de modules depuis l'onglet "Mon Profil".
+ * Général : remplacement des appels 'die()' par 'ploopi_die()' qui permet de sauvegarder la session et de fermer la connexion à la base de données proprement.
+
+ * SECURITE :
+ 	 * Identification / Mots de Passe : nouvelle méthode de stockage des mots de passe => md5(_PLOOPI_PASSWORDSALT.'/'.login.'/'.md5(password))
+	 * Général : réorganisation dans la structure des fichiers.
+	 	- Le dossier racine ne contient que les points d'entrée de l'application
+	 		=> index.php, admin.php, admin-light.php, index-light.php, index-quick.php, cron.php, rss.php
+	 		Seuls ces fichiers doivent pouvoir être exécuté directement
+	 	- Le dossier ./include ne contient plus que des fichiers php et n'a plus besoin d'être accessible depuis l'extérieur
+	 	- Les fichiers .js du dossier ./include ont été déplacés dans ./js
+	 	- Le Dossier ./config a été ajouté. Il contient le script d'installation './config/install.php' et le fichier de configuration './config/config.php'. Ce dossier doit être accessible en écriture lors de la phase d'installation automatique.
+	 * Général : Nouvel handler de session (optionnel) permettant de stocker le contenu des session en base de données (activé par défaut). /!\ Attention la perte de performance n'est pas négligeable (5 à 10% voir plus en fonction de la taille de session).
+	 * Général : Nouvelle méthode (addslashes) de la classe ploopi_db permettant de filtrer le contenu d'une variable (simple ou tableau) en vue d'une utilisation SQL.
+	 * Général : Filtrage automatique (et générique... ne remplace pas un filtrage spécifique) des variables $_GET, $_POST, $_REQUEST, $_COOKIE, $_SERVER + correction automatique des contenus si la directive magic_quotes_gpc est activée
+	 * Général : Suppression du système d'affectation automatique des variables superglobales ($_POST, $_GET, $_REQUEST, $_COOKIE) en variables (imitation du mécanisme de la directive register_globals)
+	 * .htaccess : mise à jour du fichier à la racine du portail pour augmenter les restrictions d'accès. L'exécution d'un fichier php dans les dossiers "modules", "lib", "FCKEditor" est par exemple interdit. De même les dossiers "bin", "data", "db", "include", "install", "pear" ne sont pas accessibles.
+
+== DIMS - version 3.0RC6c ====================================================
+
+2007-11-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Le module WCE change de nom ! WCE devient WebEdit
+   ATTENTION, durant la phase de mise à jour vous pourriez avoir des erreurs (blocs jaunes), c'est normal.
+   1. Appliquer la mise à jour du portail 3.0RC6c
+   2. Connectez vous avec un compte administrateur système
+   3. Allez dans Administration Générale > Système pour mettre à jour le module WebEdit
+ * Correction de plusieurs bugs dans l'affichage des groupes et espaces de travail : problèmes d'ouverture de sous arbres, problèmes de cohérence dans les noeuds ouverts
+ * Optimisation du parser SQL de la procédure d'installation d'un module. La précédente était trop lente et générait des erreurs lors du chargement de fichiers SQL dont la taille dépassait 2/3 Mo
+
+2007-10-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à jour des templates 'ovensia' et 'ovensia_officiel'
+
+2007-10-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug dans le script d'extraction de contenu d'un document OpenOffice (./bin/oo2txt.sh).
+   Le script tentait d'écrire dans le dossier racine de DIMS. Désormais il écrit dans un sous-dossier du dossier /tmp
+ * Correction d'un bug lié à l'installation d'un module ayant un paramètre sans valeur par défaut
+ * Correction d'un bug lors de la suppression (ou le détachement) d'un utilisateur d'un espace de travail
+ * Ajout d'un fichier .htaccess à la racine du portail :
+ 	- améliorer la sécurité
+ 	- modifier des paramètres de php à la volée
+ 	- gérer les rewrite_rules du portail (option non activée par défaut, cf ./include/config.php)
+ * Déplacement de certains paramètres d'indexation au niveau du fichier de configuration du portail (paramètres communs à l'ensemble des modules) :
+   define ('_DIMS_INDEXATION_WORDSEPARATORS', " :;,.!?'^`\'~-_|()[]{}<>\$£µ&#§@%=+/*\n\r");
+   define ('_DIMS_INDEXATION_WORDMINLENGHT', 2);
+   define ('_DIMS_INDEXATION_WORDMAXLENGHT', 50);
+   define ('_DIMS_INDEXATION_COMMONWORDS_FR', './include/commonwords_fr.txt');
+   /!\ Pensez à mettre à jour le fichier de configuration (./include/config.php) si ces paramètres ne sont pas présents !
+
+2007-10-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+ * Modification de FCKEditor pour gérer un nouveau paramètre FCKConfig.LinkArticle (booléen) permet d'activer ou non la possibilité de faire des liens vers un article depuis l'éditeur.
+   Fichiers impactés :
+   ./FCKEditor/editor/dialog/fck_link.html
+   ./FCKEditor/editor/dialog/fck_link/fck_link.js
+ * Ajout de la fonction dims_getmimetype($filename) qui renvoit le type mime en fonction du nom d'un fichier
+ * Modification de la fonction dims_downloadfile($filepath, $destfilename, $deletefile = false, $attachment = true) pour une meilleure prise en compte des types mime
+ * Modification de la fonction dims_documents($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $id_user = -1, $id_workspace = -1, $id_module = -1)
+   qui prend un nouveau paramètre '$params' pour modifier le comportement par défaut de l'affichage des documents.
+   $params est un tableau pouvant contenir les valeurs suivantes :
+   $params = array(	'ROOT_NAME' => 'Racine', 	// Nom de la racine des dossiers
+   					'ATTACHEMENT' => true );	// booléen pour déterminer le mode de téléchargement des fichiers
+
+2007-10-10  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Modification de la fonction javascript dims_showpopup(message, w, e, origine, id) qui peut maintenant être appelée plusieurs fois pour ouvrir plusieurs popups (ajout du paramètre id permettant d'identifier le popup pour le piloter)
+ * Modification de la fonction javascript dims_hidepopup(id) qui prend désormais en option un identifiant de popup.
+ * Ajout de la fonction javascript dims_hideallpopups() qui permet de fermer tous les popups ouverts (par dims_showpopup)
+ * Modification du template backoffice pour supprimer le <div id="dims_popup"></div> utilisé par l'ancienne fonction dims_showpopup. Ce div n'a plus d'utilité car les popups sont créés dynamiquement.
+   Modification de la feuille de styles ./css/skin.css du template : remplacement de #dims_popup par .dims_popup (les occurrences de popups peuvent désormais être multiples)
+
+== DIMS - version 3.0RC6b ====================================================
+
+2007-10-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Optimisation de la mise en page des paramètres au niveau système et au niveau d'un espace de travail
+ * Ajout d'un nouveau template frontoffice 'ovensia' valide XHTML 1.0 Strict / CSS 2 / W3C WCAG niveau 3 (accessibilité) testé sans bug sur IE6 / IE7 / FF2 / OP9
+ * Correction d'un bug dans la gestion des paramètres par défaut lors de la mise à jour d'un module
+ * Optimisation de la méthode fetchrow() de la classe dims_db : posait des problèmes de lenteur, notamment lors de la connexion d'un utilisateur
+ * Modification de type pour le champ "default_value" de la table "dims_param_type" de varchar(255) à TEXT (65k caractères)
+ * Modification de type pour le champ "value" de la table "dims_param_default" de varchar(255) à TEXT (65k caractères)
+ * Modification de type pour le champ "value" de la table "dims_param_group" de varchar(255) à TEXT (65k caractères)
+ * Modification de type pour le champ "value" de la table "dims_param_user" de varchar(255) à TEXT (65k caractères)
+
+== DIMS - version 3.0RC6 ====================================================
+
+2007-09-25  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Correctifs CSS pour IE7
+ * Correction de la fonction javascript dims_checkall (./include/functions.js)
+ * Modification du comportement du calendrier qui déclenche dorénavant l'évènement "onchange" du champ ciblé lors du choix de la date
+ * Correction d'un bug dans la gestion du rattachement d'un groupe d'utilisateur à un espace : on voyait le groupe 'système' alors que ça ne doit pas être possible
+ * Correctifs d'un bug dans le script SQL d'installation (installation vierge)
+
+== DIMS - version 3.0RC5d ====================================================
+
+2007-09-17  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Correction de la fonction de téléchargement (dims_downloadfile dans ./include/functions/filesystem.php) pour gérer correctement le type "mime" du fichier
+ * Mofication de la configuration par défaut de phpdig pour activer automatiquement l'indexation des fichiers PDF/DOC
+
+== DIMS - version 3.0RC5c ====================================================
+
+2007-09-13  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Correction d'un bug lors de la mise à jour des paramètres d'un module
+ * Correction d'un bug dans l'affichage des tickets (tickets vides dans certaines conditions d'utilisation)
+
+== DIMS - version 3.0RC5b ====================================================
+
+2007-09-12  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Correction d'un bug lors de l'activation d'un espace de travail frontoffice alors que cet espace ne porte aucun module WCE (plantage frontoffice)
+ * Correction d'un bug dans les parsers XML d'installation de modules. Sur certains systèmes, il est nécessaire de forcer le paramètre d'encodage de caractère (ISO-8859-1) car la lecture du fichier XML s'effectue par défaut en UTF-8
+
+== DIMS - version 3.0RC5 ====================================================
+
+2007-09-10  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Correction d'un bug dans l'expiration des mots de passe, la date est correctement prise en compte
+ * Amélioration du formulaire de modification d'un utilisateur (calendrier, tabindex, etc.)
+
+2007-09-07  Stéphane Escaich  <stephane@escaich.fr>
+
+ * Intégration d'un moteur de template pour le formatage du mail attaché à un ticket (inclure un fichier mail.tpl dans le template backoffice utilisé)
+ * Ajout d'un lien sur l'objet lié dans un mail attaché à un ticket
+ * Modification du processus de connexion d'un utilisateur pour permettre la redirection vers une URL interne au portail (utile entre autre pour les objets liés dans les mails)
+
+2007-09-05  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Ajout d'une fonction javascript dims_ajaxloader(div) qui permet d'afficher une image de chargement dans un élément avec son ID
+ * Ajout d'une fonction javascript dims_innerHTML(div, html) qui permet via Prototype de copier du contenu HTML dans un élément avec son ID mais également d'exécuter le code javascript inclus.
+ * Ajout d'une fonction javascript dims_window_onload_stock(func) qui permet de "stocker" une fonction javascript à exécuter au chargement de la page
+ * Ajout d'une fonction javascript dims_window_onload_launch() qui permet d'exécuter au chargement de la page les fonctions javascript "stockées"
+ * Correction de bugs dans les fonctions javascript dims_xmlhttprequest*() empêchant l'exécution en parallèle d'appels Ajax
+ * Correction de bugs dans l'envoi de tickets en mode non connecté (depuis cron par exemple)
+ * Correction d'un bug lors du choix d'utilisateurs dans le système de workflow
+ * Correction d'un bug lors du choix d'utilisateurs dans le système de partage
+
+2007-08-30  Benjamin Ganivet ~ Netlor <benjamin@netlor.fr>
+
+ * Correction d'un bug lors du choix d'utilisateurs dans le système de workflow
+ * Correction d'un bug lors de la suppression d'un utilisateur (ne le supprimait par réellement)
+
+2007-08-28  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Ajout d'une méthode d'affichage de tableau évolué (uniquement en div, tris sur colonnes, etc..) dans la classe skin : skin::display_array($columns, $values, $array_id, $options)
+ * Intégration de la librairie javascript Prototype
+ * Optimisation du code javascript du DIMS suite à l'intégration de la librairie Prototype
+ * Ajout d'une fonction javascript dims_skin_array_refresh(array_id, array_orderby) liée à la méthode d'affichage de tableau vue ci-dessus et qui permet de rafraichir l'affichage d'un tableau (pour le trier par exemple)
+ * Ajout d'une fonction javascript dims_skin_dims_skin_ie_resizearrays_refresh() liée à la méthode d'affichage de tableau. Permet de compenser un bug d'affichage avec IE6
+ * Correction d'un bug dans le fichier ./include/import_gpr.php lors de l'utilisation du système d'encodage d'url : ne remplissait pas la variable global $_REQUEST
+ * Réécriture en Ajax du système d'annotations
+ * Modification du système d'appels de fonctions inter-module (variable $dims_op) permettant aux modules de communiquer plus facilement
+ * Correction de bugs dans le processus de connexion et de chargement de session (./include/start.php)
+

@@ -1,0 +1,347 @@
+/*
+	Copyright (c) 2002-2007 Netlor
+	Copyright (c) 2007-2008 Ovensia
+	Contributors hold Copyright (c) to their code submissions.
+
+	This file is part of Ploopi.
+
+	Ploopi is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	Ploopi is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Ploopi; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+body, table, td {
+font: 12px Verdana,Tahoma,Arial,sans-serif;
+color: #688c3d;
+/*color:#415826;*/
+}
+
+body {
+margin: 0 auto;
+padding: 0;
+background: #60a1da url(../gfx/fond.png) top center repeat-x;
+}
+
+form {
+margin:0;
+padding:0;
+}
+
+p, ul, li {
+margin-top: 0px;
+margin-bottom: 0px;
+}
+
+table {
+padding:0px;
+margin:2px;
+border:1px solid #c0c0c0;
+border-collapse:collapse;
+}
+
+td {
+padding:2px;
+}
+
+a {
+color: #688c3d;
+}
+
+a:hover {
+color: #202020;
+}
+
+p, ul, li {
+margin-top: 0px;
+margin-bottom: 0px;
+}
+
+table {
+padding:0px;
+margin:2px;
+border:1px solid #c0c0c0;
+border-collapse:collapse;
+}
+
+td {
+padding:2px;
+}
+
+
+#entete {
+margin: 20px auto 0 auto;
+width: 778px;
+overflow:auto;
+color: #3d678b;
+text-align:right;
+height:20px;
+line-height:20px;
+font-size:0.8em;
+}
+
+#entete a {
+color: #3d678b;
+}
+
+#entete a:hover {
+color: #202020;
+}
+
+#page {
+background: #ffffff;
+margin: 0 auto;
+width: 778px;
+background: url(../gfx/page_fond.png) top left repeat-y;
+}
+
+#page_haut {
+height:10px;
+font-size:0.1em;
+background: url(../gfx/page_haut.png) top left no-repeat;
+}
+
+#page_bas {
+height:10px;
+font-size:0.1em;
+background: url(../gfx/page_bas.png) top left no-repeat;
+}
+
+#page_inner {
+padding:20px;
+margin:0 1px;
+background: url(../gfx/degrade.png) 0 6em no-repeat;
+}
+
+#page_menu {
+line-height:1.4em;
+height:1.4em;
+overflow:auto;
+font-size:1.1em;
+font-weight:bold;
+text-transform:uppercase;
+margin-bottom:1em;
+}
+
+#page_menu a {
+padding:0 10px;
+text-decoration:none;
+}
+
+#page_menu a.selected {
+color:#000000;
+}
+
+#title {
+position:relative;
+height:5em;
+}
+
+#maintitletrans {
+position:absolute;
+left:0.1em;
+font-size:3em;
+font-weight:bold;
+text-transform:uppercase;
+letter-spacing: -0.05em;
+color:#e0e0e0;
+}
+
+#maintitle {
+position:absolute;
+top:0.6em;
+left:-0.1em;
+font-size:1.8em;
+font-weight:bold;
+text-transform:uppercase;
+}
+
+#subtitle {
+position:absolute;
+top:2.6em;
+left:-0.1em;
+font-size:1.1em;
+font-weight:bold;
+text-transform:uppercase;
+}
+
+#pages {
+clear:both;
+font-size:1em;
+line-height:3em;
+height:3m;
+}
+
+#pages a {
+font-weight:bold;
+}
+
+#pages a.selected {
+color:#000000;
+}
+
+#path {
+font-size:0.8em;
+}
+
+#lastupdate {
+float:right;
+}
+
+#page_main {
+margin:10px 0 0 0;
+color: #688c3d;
+overflow:auto;
+}
+
+#page_main h1 {
+font-size:1.3em;
+}
+
+#page_content {
+margin-right:230px;
+}
+
+#page_lastupdate {
+text-align:right;
+margin:10px 0;
+font-size:0.8em;
+}
+
+#menu_vertical {
+width:216px;
+float:right;
+background: url(../gfx/actubox.png) 0 50px no-repeat;
+color:#415826;
+}
+
+#recherche {
+height:50px;
+font-size:0.9em;
+font-weight:bold;
+}
+
+#recherche fieldset {
+border: 1px solid #d0d0d0;
+background-color: #f0f0f0;
+padding:4px;
+margin:0px;
+}
+	
+#recherche_field {
+width:70%;
+margin-right:2px;
+border:1px solid #c0c0c0;
+padding-left:2px;
+font-size:0.9em;
+}
+
+#recherche_button {
+width:20%;
+border:1px solid #a0a0a0;
+font-size:0.9em;
+}
+
+#actubox {
+margin:15px 15px 10px 17px;
+}
+
+#actubox h1 {
+font-size:1.3em;
+}
+
+.news_date {
+font-size:0.8em;
+}
+
+.news_content {
+font-size:0.9em;
+}
+
+#menubas {
+overflow:auto;
+font-size:0.8em;
+font-weight:bold;
+text-transform:uppercase;
+margin-top:1em;
+text-align:center;
+}
+
+#menubas a {
+padding:0 10px;
+text-decoration:none;
+}
+
+#pied {
+margin: 3px auto;
+width: 778px;
+clear:both;
+overflow:auto;
+color: #3d678b;
+text-align:right;
+font-size:0.8em;
+}
+
+#pied a {
+color: #3d678b;
+}
+
+#pied a:hover {
+color: #202020;
+}
+
+
+#execinfo {
+margin-top:10px;
+}
+
+
+.fck_title1 {
+font-size:1.5em;
+margin-bottom:4px;
+}
+
+.fck_title2 {
+font-size:1.3em;
+margin-bottom:4px;
+}
+
+.fck_title3 {
+font-size:1.1em;
+margin-bottom:4px;
+}
+
+.fck_normal {
+font: 12px Verdana,Tahoma,Arial,sans-serif;
+color: #688c3d;
+}
+
+.fck_image_left {
+float:left;
+margin:5px 5px 5px 0;
+}
+
+.fck_image_right {
+float:right;
+margin:5px 0 5px 5px;
+}
+
+.fck_quote {
+border: #c0c0c0 1px solid;
+padding: 5px;
+margin: 5px 0;
+color: #808080;
+font-family: 'Courier New' , Monospace;
+background-color: #fffff0;
+}
+
+.fck_ruler {
+}

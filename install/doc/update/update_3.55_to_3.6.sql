@@ -1,0 +1,9 @@
+RENAME TABLE `dims_mod_doc_ext` TO `ploopi_mod_doc_ext`;
+RENAME TABLE `dims_mod_doc_file` TO `ploopi_mod_doc_file`;
+RENAME TABLE `dims_mod_doc_file_draft` TO `ploopi_mod_doc_file_draft`;
+RENAME TABLE `dims_mod_doc_file_history` TO `ploopi_mod_doc_file_history`;
+RENAME TABLE `dims_mod_doc_folder` TO `ploopi_mod_doc_folder`;
+RENAME TABLE `dims_mod_doc_keyword` TO `ploopi_mod_doc_keyword`;
+RENAME TABLE `dims_mod_doc_keyword_file` TO `ploopi_mod_doc_keyword_file`;
+RENAME TABLE `dims_mod_doc_meta` TO `ploopi_mod_doc_meta`;
+RENAME TABLE `dims_mod_doc_parser` TO `ploopi_mod_doc_parser`;

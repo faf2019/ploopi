@@ -1,0 +1,12 @@
+== Module RSS - version 1.20 ====================================================
+
+2008-01-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Mise à niveau sécurité
+ * Migration Ploopi
+ * Lifting des interfaces
+ * Utilisation de la classe XML_Feed_Parser de la librairie PEAR en remplacement de la classe XML_RSS
+   => Meilleur support des formats RSS 0.9, RSS 1.0, RSS 1.1, RSS 2.0, ATOM
+ * Meilleur support des flux UTF-8 pour certains flux mal encodés (incluant des caractères non UTF-8)
+ * Modifications sur la structure SQL (nom des tables & clés étrangères)
+ * Mise à jour de la Métabase

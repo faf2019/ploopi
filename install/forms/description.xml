@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ploopi>
+   <moduletype>
+	  <label>forms</label>
+	  <version>2.0</version>
+	  <author>Netlor / Ovensia</author>
+	  <date>20071212000000</date>
+      <publicparam>1</publicparam>
+      <description>Gestion de Formulaires</description>
+      <paramtype>
+         <name>showmenu</name>
+         <label>Visible dans les modules</label>
+         <default_value>1</default_value>
+         <public>1</public>
+         <description/>
+         <paramchoice>
+            <value>1</value>
+            <displayed_value>oui</displayed_value>
+         </paramchoice>
+         <paramchoice>
+            <value>0</value>
+            <displayed_value>non</displayed_value>
+         </paramchoice>
+      </paramtype>
+      <paramtype>
+         <name>showblock</name>
+         <label>Afficher le bloc</label>
+         <default_value>1</default_value>
+         <public>1</public>
+         <description/>
+         <paramchoice>
+            <value>1</value>
+            <displayed_value>oui</displayed_value>
+         </paramchoice>
+         <paramchoice>
+            <value>0</value>
+            <displayed_value>non</displayed_value>
+         </paramchoice>
+      </paramtype>
+      <paramtype>
+         <name>forms_export_csvextension</name>
+         <label>Extension du Fichier</label>
+         <default_value>csv</default_value>
+         <public>0</public>
+         <description/>
+      </paramtype>
+      <paramtype>
+         <name>forms_export_fieldseparator</name>
+         <label>Séparateur de Champs</label>
+         <default_value>;</default_value>
+         <public>0</public>
+         <description/>
+      </paramtype>
+      <paramtype>
+         <name>forms_export_lineseparator</name>
+         <label>Séparateur de Ligne</label>
+         <default_value>(cr)(lf)</default_value>
+         <public>0</public>
+         <description/>
+      </paramtype>
+      <paramtype>
+         <name>forms_export_textseparator</name>
+         <label>Séparateur Texte</label>
+         <default_value>"</default_value>
+         <public>0</public>
+         <description/>
+      </paramtype>
+      <action>
+         <id_action>1</id_action>
+         <label>Créer des Formulaires</label>
+      </action>
+      <action>
+         <id_action>2</id_action>
+         <label>Saisir des Données</label>
+      </action>
+      <action>
+         <id_action>3</id_action>
+         <label>Exporter des Données</label>
+      </action>
+      <action>
+         <id_action>4</id_action>
+         <label>Filtrer des Données</label>
+      </action>
+      <action>
+         <id_action>5</id_action>
+         <label>Supprimer des Données</label>
+      </action>
+      <action>
+         <id_action>6</id_action>
+         <label>Paramétrer l'archivage</label>
+      </action>
+  </moduletype>
+</ploopi>

@@ -1,0 +1,3 @@
+DIMS Ceci est mon site !    utilisateur : mot de passe : Mot de passe perdu ? Administration Générale
+TEST !! TEST !!! Designed by Netlor | Powered by Dims 3.0RC2 2.99h | Get
+Firefox  size: 4.08 kB | render: 55 ms | sql: 8 q 13 %  

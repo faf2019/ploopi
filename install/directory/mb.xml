@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no"?>
+<ploopi>
+	<ploopi_mb_table>
+		<row>
+			<name>ploopi_mod_directory_contact</name>
+			<label>contact</label>
+			<visible>1</visible>
+		</row>
+
+		<row>
+			<name>ploopi_mod_directory_favorites</name>
+			<label>favorites</label>
+			<visible>1</visible>
+		</row>
+	</ploopi_mb_table>
+	<ploopi_mb_field>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>id</name>
+			<label>id</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>lastname</name>
+			<label>lastname</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>firstname</name>
+			<label>firstname</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>service</name>
+			<label>service</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>function</name>
+			<label>function</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>phone</name>
+			<label>phone</label>
+			<type>varchar(32)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>mobile</name>
+			<label>mobile</label>
+			<type>varchar(32)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>fax</name>
+			<label>fax</label>
+			<type>varchar(32)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>email</name>
+			<label>email</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>address</name>
+			<label>address</label>
+			<type>varchar(255)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>postalcode</name>
+			<label>postalcode</label>
+			<type>varchar(32)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>city</name>
+			<label>city</label>
+			<type>varchar(64)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>country</name>
+			<label>country</label>
+			<type>varchar(64)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>comments</name>
+			<label>comments</label>
+			<type>longtext</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>level</name>
+			<label>level</label>
+			<type>varchar(10)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>id_dims_user</name>
+			<label>id_dims_user</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>date_create</name>
+			<label>date_create</label>
+			<type>varchar(14)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>date_modify</name>
+			<label>date_modify</label>
+			<type>varchar(14)</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>id_user</name>
+			<label>id_user</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>id_workspace</name>
+			<label>id_workspace</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_contact</tablename>
+			<name>id_module</name>
+			<label>id_module</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_favorites</tablename>
+			<name>id_contact</name>
+			<label>id_contact</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_favorites</tablename>
+			<name>id_user</name>
+			<label>id_user</label>
+			<type>int(10) unsigned</type>
+			<visible>0</visible>
+
+		</row>
+		<row>
+			<tablename>ploopi_mod_directory_favorites</tablename>
+			<name>id_ploopi_user</name>
+			<label>id_ploopi_user</label>
+			<type>int(10) unsigned</type>
+			<visible>1</visible>
+
+		</row>
+	</ploopi_mb_field>
+	<ploopi_mb_schema>
+		<row>
+
+			<tablesrc>ploopi_mod_directory_contact</tablesrc>
+			<tabledest>ploopi_user</tabledest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_directory_contact</tablesrc>
+			<tabledest>ploopi_workspace</tabledest>
+		</row>
+
+		<row>
+			<tablesrc>ploopi_mod_directory_contact</tablesrc>
+			<tabledest>ploopi_module</tabledest>
+		</row>
+	</ploopi_mb_schema>
+	<ploopi_mb_relation>
+		<row>
+			<tablesrc>ploopi_mod_directory_contact</tablesrc>
+			<fieldsrc>id_user</fieldsrc>
+			<tabledest>ploopi_user</tabledest>
+
+			<fielddest>id</fielddest>
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_directory_contact</tablesrc>
+			<fieldsrc>id_workspace</fieldsrc>
+			<tabledest>ploopi_workspace</tabledest>
+			<fielddest>id</fielddest>
+
+		</row>
+		<row>
+			<tablesrc>ploopi_mod_directory_contact</tablesrc>
+			<fieldsrc>id_module</fieldsrc>
+			<tabledest>ploopi_module</tabledest>
+			<fielddest>id</fielddest>
+		</row>
+	</ploopi_mb_relation>
+</ploopi>
+

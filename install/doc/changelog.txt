@@ -1,0 +1,112 @@
+== Module DOC - version 3.6 ====================================================
+
+2008-01-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à niveau sécurité
+ * Migration Ploopi
+ * Possibilité de déposer plusieurs fichiers en une seule fois.
+ * Amélioration des fonctionnalités de recherche. Mise en session des précédents critères de recherche.
+ * Optimisation de l'utilisation des sessions pour l'affichage et le tri des dossiers/fichiers.
+ * Intégration d'un nouveau mécanisme d'upload de fichiers optionnel permettant l'envoi de gros fichiers et l'affichage temps réel de la progression du transfert, du fichier en cours de transfert et de la vitesse d'émission. Ce mécanisme doit être activé dans le fichier de configuration de PLOOPI avec les directives suivantes :
+
+	define ('_PLOOPI_USE_CGIUPLOAD', true); 	// active ou non le nouveau mécanisme d'upload
+	define ('_PLOOPI_CGI_PATH', 'cgi');	// indique le dossier contenu le CGI (chemin relatif à la racine de PLOOPI)
+	define ('_PLOOPI_CGI_UPLOADTMP', '/tmp');	// indique le chemin physique (absolu) sur le serveur, où seront stockés les fichiers en cours d'upload.
+
+   Ce nouveau mécanisme utilise un CGI écrit en php. Il nécessite donc l'installation du client php (php-cli). Il nécessite également une configuration particulière d'Apache pour que le dossier cgi soit "autorisé à exécuter" des scripts.
+   Voici par exemple une configuration type permettant à Apache d'exécuter le script CGI d'upload inclus dans PLOOPI :
+
+	ScriptAlias /cgi/ /var/www/mon_ploopi/cgi/
+	<Directory "/var/www/mon_ploopi/cgi/">
+		AllowOverride None
+		Options ExecCGI -MultiViews +SymLinksIfOwnerMatch
+		Order allow,deny
+		Allow from all
+	</Directory>
+
+	Si PLOOPI n'est pas installé en VirtualHost mais dans un sous-dossier ( http://domaine/mon_ploopi/ ), il faut adapter la ligne ScriptAlias :
+
+	ScriptAlias /mon_ploopi/cgi/ /var/www/mon_ploopi/cgi/
+
+ * Mise à jour de la Métabase
+
+== Module DOC - version 3.55 ====================================================
+
+2007-10-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Déplacement de certains paramètres d'indexation au niveau du fichier de configuration du portail (paramètres communs à l'ensemble des modules) :
+   define ('_DIMS_INDEXATION_WORDSEPARATORS', " :;,.!?'^`\'~-_|()[]{}<>\$£µ&#§@%=+/*\n\r");
+   define ('_DIMS_INDEXATION_WORDMINLENGHT', 2);
+   define ('_DIMS_INDEXATION_WORDMAXLENGHT', 50);
+   define ('_DIMS_INDEXATION_COMMONWORDS_FR', './include/commonwords_fr.txt');
+
+2007-10-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un problème d'affichage des dossiers lors de l'intégration d'une image ou d'un fichier avec FCKEditor
+   Les dossiers sont maintenant triés par ordre alphabétique et par lien de parenté
+ * Correction d'un bug d'affichage pour le lien 'Administration'. N'apparaît désormais plus que pour les utilisateurs disposant d'un rôle avec l'action 0 (Gestionnaire du module)
+ * Ajout de la propriété "Lecture Seule" sur les fichiers (accessible au propriétaire ou à l'admin système)
+ * Ajout d'un bouton pour ré-indéxer un fichier (sur le formulaire du fichier)
+ * Modification de l'attribution des droits pour permettre à l'admin système d'accéder à tous les fichiers/dossiers
+ * Correction d'un bug dans la recherche (problème de définition de constante)
+ * Amélioration du moteur d'indexation (impacts sur la recherche) :
+   - Prise en compte de certains metas, du nom de fichier et des commentaires
+   - Ajout d'un nouveau paramètre 'Occurence minimale d'un mot dans un document (%)' qui détermine à partir de quel seuil d'apparition en %age dans un document un mot doit être indéxé
+
+== Module DOC - version 3.54 ====================================================
+
+2007-10-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug dans l'affichage du chemin des dossiers (affichage désordonné dans certains cas)
+ * Ajout d'un paramètre permettant de définir la longueur minimale d'un mot à indéxer
+ * Ajout d'un paramètre permettant de définir la longueur maximale d'un mot à indéxer
+ * Ajout d'un paramètre permettant de définir le pourcentage de mots à indéxer dans un document
+ * Ajout d'un paramètre permettant de définir la liste des caractères séparateurs de mots
+ * Ajout d'un paramètre permettant d'afficher ou non le lien vers la racine des documents (dans le menu)
+ * Ajout d'un paramètre permettant de modifier l'intitulé du lien vers la racine des documents (dans le menu)
+ * Ajout d'un paramètre permettant d'afficher ou non le lien vers la recherche (dans le menu)
+ * Intégration des nouveaux paramètres
+
+== Module DOC - version 3.53 ====================================================
+
+2007-09-25  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Correction d'un bug d'affichage des sous-dossiers publics quand l'utilisateur n'est pas le propriétaire du dossier
+
+== Module DOC - version 3.52 ====================================================
+
+2007-09-13  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Correction d'un bug lorsque le lien depuis un mail n'est plus valide (fichier et/ou dossier effacé)
+
+== Module DOC - version 3.51 ====================================================
+
+2007-09-12  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Ajout d'un nouveau paramètre "Afficher les Raccourcis à la Racine" qui permet de choisir s'il les sous-dossiers partagés ou publics apparaissent en raccourci à la racine des documents de l'utilisateur
+ * Ajout d'un nouveau paramètre "Afficher les Icones dans le menu" qui permet d'activer ou non l'affichage des icones de dossiers dans le menu (block)
+ * Correction d'un bug dans le menu concernant l'affichage des dossiers dans le menu (pour les validateurs uniquement)
+
+== Module DOC - version 3.50 ====================================================
+
+2007-09-06  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Correction d'un bug lors d'un appel AJAX depuis une iframe affectant le chargement des annotations après enregistrement d'un dossier ou d'un fichier
+
+2007-09-04  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Légende des icônes plus complète
+ * Corrections css (nettoyage du fichier, ajout de qques classes)
+ * Le propriétaire d'un dossier partagé/public ne le voit plus en lien depuis sa racine de documents
+
+2007-08-29  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Ajout d'une interface d'administration
+ * Gestion d'une gestion de parsers de documents
+ * Indexation des contenus et des metadonnées
+ * Affichage des metadonnées et d'une liste des mots les plus fréquents sur l'interface de modification d'un fichier
+ * Correction d'un bug lors du partage d'un sous-dossier à l'intérieur d'un dossier non partagé
+ * Correction de plusieurs bugs lors de la création et la publication d'un dossier non vide
+ * Correction d'un bug concernant l'action "Créer un Fichier" (non prise en compte)
+ * Intégration d'AJAX pour fluidifier l'interface
+
