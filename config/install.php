@@ -178,7 +178,7 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 			echo 	'
 					<b>FELICITATION</b>
 					<br>
-					<br>L\'installation est maintenant terminée.
+					<br>L\'installation est maintenant terminï¿½e.
 					<br>
 					<br><b>Vous devez maintenant supprimer (ou renommer) le fichier ./config/install.php</b>
 					<br>
@@ -216,13 +216,13 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 					if ($db->isconnected()) $dbok = true;
 					else
 					{
-						echo 'Impossible de créer la base de données « '.$_POST['db_database'].' ».<br><a href="install.php" class="link">Retour</a>';
+						echo 'Impossible de crï¿½er la base de donnï¿½es ï¿½ '.$_POST['db_database'].' ï¿½.<br><a href="install.php" class="link">Retour</a>';
 					}
 				}
 			}
 			else
 			{
-				echo 'Les paramètres de connexion à la base de données sont erronés.<br><a href="install.php" class="link">Retour</a>';
+				echo 'Les paramï¿½tres de connexion ï¿½ la base de donnï¿½es sont erronï¿½s.<br><a href="install.php" class="link">Retour</a>';
 			}
 
 			if($dbok)
@@ -307,15 +307,15 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 
 								ploopi_redirect("install.php?end");
 							}
-							else ploopi_die('Impossible d\'écrire le fichier de configuration.<br><a href="install.php" class="link">Retour</a>');
+							else ploopi_die('Impossible d\'ï¿½crire le fichier de configuration.<br><a href="install.php" class="link">Retour</a>');
 						}
-						else ploopi_die('Impossible d\'écrire le fichier de configuration.<br><a href="install.php" class="link">Retour</a>');
+						else ploopi_die('Impossible d\'ï¿½crire le fichier de configuration.<br><a href="install.php" class="link">Retour</a>');
 
 						fclose($f);
 					}
-					else ploopi_die('Fichier "modèle" inaccessible.<br><a href="install.php" class="link">Retour</a>');
+					else ploopi_die('Fichier "modï¿½le" inaccessible.<br><a href="install.php" class="link">Retour</a>');
 				}
-				else ploopi_die('Fichier "modèle" inexistant.<br><a href="install.php" class="link">Retour</a>');
+				else ploopi_die('Fichier "modï¿½le" inexistant.<br><a href="install.php" class="link">Retour</a>');
 			}
 
 
@@ -326,8 +326,8 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 			{
 				?>
 				<div class="error">
-				<b />/!\ Il existe déjà un fichier de configuration</b>
-				<br />Vous devriez supprimer ou renommer le fichier « ./config/install.php »
+				<b />/!\ Il existe dï¿½jï¿½ un fichier de configuration</b>
+				<br />Vous devriez supprimer ou renommer le fichier ï¿½ ./config/install.php ï¿½
 				</div>
 				<?
 			}
@@ -336,7 +336,7 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 			{
 			?>
 				<div class="error">
-				/!\ Certains paramètres sont erronés ou manquants
+				/!\ Certains paramï¿½tres sont erronï¿½s ou manquants
 				</div>
 			<?
 			}
@@ -349,7 +349,7 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 					<td class="title" colspan="2">Installation de PLOOPI <? echo _PLOOPI_VERSION; ?></td>
 				</tr>
 				<tr>
-					<td class="title2" colspan="2">Paramétrage « Base de Données »</td>
+					<td class="title2" colspan="2">Paramï¿½trage ï¿½ Base de Donnï¿½es ï¿½</td>
 				</tr>
 				<tr>
 					<td class="fieldtitle"><sup>* </sup>Serveur:</td>
@@ -368,7 +368,7 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 					<td class="field"><input type="password" name="db_password" value="<? echo empty($_POST['db_password']) ? '' : htmlentities($_POST['db_password']); ?>" class="field" /></td>
 				</tr>
 				<tr>
-					<td class="title2" colspan="2">Paramétrage « PLOOPI »</td>
+					<td class="title2" colspan="2">Paramï¿½trage ï¿½ PLOOPI ï¿½</td>
 				</tr>
 				<tr>
 					<td class="fieldtitle"><sup>* </sup>Login Administrateur:</td>
@@ -379,8 +379,8 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 					<td class="field"><input type="text" name="admin_password" value="<? echo empty($_POST['admin_password']) ? 'admin' : htmlentities($_POST['admin_password']); ?>" class="field" /></td>
 				</tr>
 				<tr>
-					<td class="fieldtitle"><sup>* </sup>Phrase Secrète:</td>
-					<td class="field"><input type="text" name="secretkey" value="<? echo empty($_POST['secretkey']) ? 'ma phrase secrète' : htmlentities($_POST['secretkey']); ?>" class="field" /></td>
+					<td class="fieldtitle"><sup>* </sup>Phrase Secrï¿½te:</td>
+					<td class="field"><input type="text" name="secretkey" value="<? echo empty($_POST['secretkey']) ? 'ma phrase secrï¿½te' : htmlentities($_POST['secretkey']); ?>" class="field" /></td>
 				</tr>
 				<tr>
 					<td class="fieldtitle">Encodage des URL visibles:</td>
@@ -405,7 +405,7 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 					<td class="field"><input type="text" name="pearpath" value="<? echo empty($_POST['pearpath']) ? '/usr/share/php' : htmlentities($_POST['pearpath']); ?>" class="field" /></td>
 				</tr>
 				<tr>
-					<td class="title2" colspan="2">Paramétrage « FrontOffice »</td>
+					<td class="title2" colspan="2">Paramï¿½trage ï¿½ FrontOffice ï¿½</td>
 				</tr>
 				<tr>
 					<td class="fieldtitle">Activation:</td>
@@ -417,7 +417,7 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 					</td>
 				</tr>
 				<tr>
-					<td class="fieldtitle">Réécriture d'URL:</td>
+					<td class="fieldtitle">Rï¿½ï¿½criture d'URL:</td>
 					<td class="field">
 						<select class="field" name="rewriterule">
 							<option value="true" <? echo (!empty($_POST['rewriterule']) && $_POST['rewriterule']) ? 'selected' : ''; ?>>oui</option>
@@ -426,7 +426,7 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 					</td>
 				</tr>
 				<tr>
-					<td class="title2" colspan="2">Paramétrage « Proxy Internet » (option)</td>
+					<td class="title2" colspan="2">Paramï¿½trage ï¿½ Proxy Internet ï¿½ (option)</td>
 				</tr>
 				<tr>
 					<td class="fieldtitle">Adresse:</td>
@@ -459,7 +459,7 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 						else
 						{
 						?>
-						<td class="warning" colspan="2">Le dossier « <? echo realpath ('./config'); ?> »<br>n'est pas accessible en écriture par Apache.<br>Impossible de continuer la procédure d'installation</td>
+						<td class="warning" colspan="2">Le dossier ï¿½ <? echo realpath ('./config'); ?> ï¿½<br>n'est pas accessible en ï¿½criture par Apache.<br>Impossible de continuer la procï¿½dure d'installation</td>
 						<?
 						}
 					?>
@@ -471,11 +471,11 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 
 			<table cellpadding="4" cellspacing="1" class="table">
 				<tr>
-					<td class="title">Pré-requis</td>
+					<td class="title">Prï¿½-requis</td>
 				</tr>
 				<tr>
 					<td class="field">
-					Ploopi v<? echo _PLOOPI_VERSION; ?> nécessite pour fonctionner correctement les applicatifs serveurs suivants :
+					Ploopi v<? echo _PLOOPI_VERSION; ?> nï¿½cessite pour fonctionner correctement les applicatifs serveurs suivants :
 					<br />- <a class="link" href="http://fr.wikipedia.org/wiki/Apache_HTTP_Server" target="_blank">Apache</a> 1.3+ ou 2.+
 					<br />- <a class="link" href="http://fr.wikipedia.org/wiki/PHP_hypertext_preprocessor" target="_blank">PHP</a> 5.+
 					<br />- <a class="link" href="http://fr.wikipedia.org/wiki/Mysql" target="_blank">MySQL</a> 5.+
@@ -494,3 +494,5 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 ?>
 </body>
 </html>
+
+// Test de svn
