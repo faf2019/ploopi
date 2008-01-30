@@ -494,5 +494,3 @@ if (file_exists('./config/config.php')) ploopi_redirect('../');
 ?>
 </body>
 </html>
-
-// Test de svn
