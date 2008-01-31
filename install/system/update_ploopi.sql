@@ -93,6 +93,7 @@ RENAME TABLE `ploopi_param_group`  TO `ploopi_param_workspace` ;
 ALTER TABLE `ploopi_param_workspace` CHANGE `id_group` `id_workspace` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
 
 ALTER TABLE `ploopi_mb_wce_object` CHANGE `id` `id` INT( 11 ) UNSIGNED NOT NULL;
+ALTER TABLE `ploopi_mb_wce_object` DROP PRIMARY KEY
 ALTER TABLE `ploopi_mb_wce_object` ADD PRIMARY KEY ( `id` , `id_module_type` ) ;
 
 ALTER TABLE `ploopi_mb_table` DROP INDEX `nom_2`;

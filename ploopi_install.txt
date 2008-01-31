@@ -3,11 +3,18 @@ Ploopi 1.0 - Prérequis
 
 Avant de démarrer l'installation de PLOOPI, vous devez vérifier que vous disposez des versions logicielles suivantes :
 - Apache 1.3x ou 2.x
-- PHP 4.3x ou 5.x
-- MySQL 4.x ou 5.x
+- PHP 5.x
+- MySQL 5.x
 
-Vous pouvez très facilement installer les paquets prérequis de PLOOPI sous Debian :
-apt-get install apache2 mysql-server php5 php5-mysql php5-gd php5-cli php5-mcrypt catdoc xpdf-utils jhead unrtf unzip zip 
+Vous pouvez très facilement installer les paquets prérequis de PLOOPI sous Debian (en root) :
+
+# Apache/MySQL/PHP
+apt-get install apache2 mysql-server php5 php5-mysql php5-gd php5-cli php5-mcrypt php-pear
+pear install --alldeps Cache_Lite HTTP_Request XML_Feed_Parser Xml_Beautifier OLE-0.6.1 Spreadsheet_Excel_Writer-0.9.1
+pecl install stem
+
+# Outils pour l'extraction de contenus (gestion de documents)
+catdoc xpdf-utils jhead unrtf unzip zip
 
 PLOOPI 1.0 - Installation
 -----------------------
@@ -102,9 +109,9 @@ Il est par contre nécessaire de disposer de l'interpréteur php en ligne de comma
 PLOOPI 1.0 - Configuration .htaccess
 ------------------------------------
 
-Un fichier .htaccess est fourni. Ce fichier peut ne pas être interprété par Apache. 
+Un fichier .htaccess est fourni. Ce fichier peut ne pas être interprété par Apache.
 Vérifiez pour cela que la directive AllowOverride n'est pas configurée à "None".
-Il peut être nécessaire de d'adapter le fichier .htaccess à votre configuration. 
+Il peut être nécessaire de d'adapter le fichier .htaccess à votre configuration.
 Notamment la directive RewriteBase qui doit être adapté au dossier contenant ploopi.
 Si vous utilisez un virtual host vous pouvez laisser la configuration par défaut.
 Si vous utilisez ploopi en sous dossier d'un site existant, indiquez le chemin relatif de ce dossier dans la directive RewriteBase.

@@ -222,13 +222,17 @@ function ploopi_gettimestampdetail($mytimestamp)
 */
 function ploopi_createtimestamp()
 {
-	return date("YmdHis");
+	return date(_PLOOPI_TIMESTAMPFORMAT_MYSQL);
 }
-
 
 function ploopi_unixtimestamp2local($mytimestamp)
 {
 	return(date(_PLOOPI_DATEFORMAT,$mytimestamp).' '.date(_PLOOPI_TIMEFORMAT,$mytimestamp));
+}
+
+function ploopi_unixtimestamp2timestamp($mytimestamp)
+{
+	return(date(_PLOOPI_TIMESTAMPFORMAT_MYSQL,$mytimestamp));
 }
 
 /**

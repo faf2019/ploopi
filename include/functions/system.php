@@ -34,7 +34,11 @@ function ploopi_die($var = '')
 {
 	global $db;
 
-	if (!empty($var)) ploopi_print_r($var);
+	if (!empty($var))
+	{
+		if (is_string($var)) echo $var;
+		else ploopi_print_r($var);
+	}
 
 	session_write_close();
 	if (!empty($db) && $db->isconnected()) $db->close();
@@ -75,7 +79,7 @@ function ploopi_array_map($func, $var)
 */
 function ploopi_init_module($moduletype)
 {
-	
+
 	if (!defined("_PLOOPI_INITMODULE_$moduletype"))
 	{
 		define("_PLOOPI_INITMODULE_$moduletype",	1);

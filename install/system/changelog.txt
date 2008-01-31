@@ -28,6 +28,12 @@
  * Paramètres : L'utilisateur peut désormais modifier certains paramètres de modules depuis l'onglet "Mon Profil".
  * Général : remplacement des appels 'die()' par 'ploopi_die()' qui permet de sauvegarder la session et de fermer la connexion à la base de données proprement.
 
+ * Moteur de recherche global
+	- Création d'un moteur d'indexation capable d'automatiser l'analyse du contenu des enregistrements inclus dans les modules (nécessite l'ajout de quelques fonctions dans le code des modules).
+	- Intégration d'une interface de recherche permettant de retrouver les éléments indexés et de proposer un lien direct vers les éléments ainsi trouvés
+	- Algorithmes d'indexation et de recherche assez avancés : racinisation (lemmisation) des mots, calcul du poids des mots, prise en compte des metas, utilisation d'une liste noire, etc...
+	- Respect des droits utilisateurs & partages
+
  * SECURITE :
  	 * Identification / Mots de Passe : nouvelle méthode de stockage des mots de passe => md5(_PLOOPI_PASSWORDSALT.'/'.login.'/'.md5(password))
 	 * Général : réorganisation dans la structure des fichiers.

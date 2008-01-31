@@ -29,6 +29,32 @@ $groups = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
 
 switch($op)
 {
+	case 'reindex':
+		if (ploopi_isactionallowed(0))
+		{
+			$sql = 	"
+					SELECT 		e.*,
+								f.id_cat
+					FROM 		ploopi_mod_rss_entry e
+
+					INNER JOIN	ploopi_mod_rss_feed f
+					ON			f.id = e.id_feed
+
+					WHERE 		e.id_module = {$_SESSION['ploopi']['moduleid']}
+					";
+
+			$rs = $db->query($sql);
+
+			while ($row = $db->fetchrow($rs))
+			{
+				$ts = ploopi_unixtimestamp2timestamp($row['published']);
+				ploopi_search_create_index(_RSS_OBJECT_NEWS_ENTRY, sprintf("%06d%06d%s", $row['id_cat'], $row['id_feed'], $row['id']), $row['title'], strip_tags(html_entity_decode($row['content'])), strip_tags(html_entity_decode("{$row['title']} {$row['subtitle']} {$row['author']}")), true, $ts, $ts, $row['id_user'], $row['id_workspace'], $row['id_module'] );
+			}
+		}
+
+		ploopi_redirect("{$scriptenv}?end");
+	break;
+
 	case 'rsscat_save':
 		if (ploopi_isactionallowed(_RSS_ACTION_CATMODIFY) || ploopi_isactionallowed(_RSS_ACTION_CATCREATE))
 		{
@@ -179,6 +205,13 @@ if (ploopi_isactionallowed(_RSS_ACTION_CATADD))
 								);
 }
 
+if (ploopi_isactionallowed(0))
+{
+	$tabs['tabTools'] = array(	'title' => _RSS_LABEL_TOOLS,
+								'url' => "{$scriptenv}?rssTabItem=tabTools"
+								);
+}
+
 if (!empty($_GET['rssTabItem'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'] = $_GET['rssTabItem'];
 if (!isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'] = '';
 
@@ -213,6 +246,13 @@ switch($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])
 			$rssfeed->init_description();
 			$rssfeed->fields['revisit'] = '3600';
 			include('./modules/rss/admin_rssfeed_form.php');
+		}
+	break;
+
+	case 'tabTools':
+		if (ploopi_isactionallowed(0))
+		{
+			include('./modules/rss/admin_tools.php');
 		}
 	break;
 }

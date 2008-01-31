@@ -32,6 +32,16 @@ if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'])) $_SESSIO
 
 if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 {
+	/* Mini Algo
+	 *
+	 * 1. On extrait les racines (stem) et mots clés (keyword) de la requête de recherche
+	 * 2. On effectue deux recherches. Une sur les racines, l'autre sur les mots clés.
+	 * 3. On traite les résultats de recherche en indiquant pour chaque élément de réponse la pertinence (relevance) totale, le nombre de liens (mot clé  ou stem / élément)
+	 * 4. On calcule ensuite le ratio mots clés trouvés / mots clés cherchés
+	 * 5. On calcule ensuite la pertinence moyenne avec cette formule : ((pertinence totale)/(mots clés trouvés))*(ratio mots clés trouvés)
+	 *
+	 * */
+
 
 	$arrObjectTypes = array();
 	$arrRelevance = array();
@@ -57,7 +67,6 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 		$arrObjectTypes[$row['module_id']]['objects'][$row['id']] = array('label' => $row['label'], 'script' => $row['script']);
 	}
 
-
 	// contruction du filtre de recherche
 	if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace']) && is_numeric($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace'])) $arrSearch[] = "e.id_workspace = {$_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace']}";
 
@@ -65,6 +74,9 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 
 	// on récupère la liste des racines contenues dans la liste des mots clés
 	list($arrStems) = ploopi_getwords($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'], true, true);
+
+	// on récupère la liste des mots contenus dans la liste des mots clés
+	list($arrKeywords) = ploopi_getwords($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'], true, false);
 
 	// pour chaque racine (stem), on cherche les occurences d'éléments correspondants
 	foreach($arrStems as $stem => $occ)
@@ -92,16 +104,71 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 			{
 				$arrRelevance[$row['id']] = $row;
 				$arrRelevance[$row['id']]['count'] = 1;
+				$arrRelevance[$row['id']]['kw'] = array();
+				$arrRelevance[$row['id']]['stem'] = array();
 			}
 			else
 			{
 				$arrRelevance[$row['id']]['relevance'] += $row['relevance'];
 				$arrRelevance[$row['id']]['count'] ++;
 			}
+			$arrRelevance[$row['id']]['stem'][$stem] = 1;
+		}
+	}
+
+	// pour chaque mot, on cherche les occurences d'éléments correspondants
+	foreach($arrKeywords as $kw => $occ)
+	{
+		$sql = 	"
+				SELECT		ke.relevance,
+							e.*,
+							k.keyword
+
+				FROM		ploopi_index_keyword k,
+							ploopi_index_keyword_element ke,
+							ploopi_index_element e
+
+				WHERE		e.id = ke.id_element
+				AND			k.id = ke.id_keyword
+				AND			k.keyword like '".$db->addslashes($kw)."%'
+				{$strSearch}
+				";
+
+
+		$db->query($sql);
+
+		while ($row = $db->fetchrow())
+		{
+			// relevance = relevance * ratio de similarité entre les 2 chaines
+			$row['relevance'] *= (strlen($kw)/strlen($row['keyword']));
+			unset($row['keyword']);
+
+			if (!isset($arrRelevance[$row['id']]))
+			{
+				$arrRelevance[$row['id']] = $row;
+				$arrRelevance[$row['id']]['count'] = 1;
+				$arrRelevance[$row['id']]['kw'] = array();
+				$arrRelevance[$row['id']]['stem'] = array();
+			}
+			else
+			{
+				$arrRelevance[$row['id']]['relevance'] += $row['relevance'];
+				$arrRelevance[$row['id']]['count'] ++;
+			}
+
+			$arrRelevance[$row['id']]['kw'][$kw] = 1;
 		}
 	}
 
 	// on trie les éléments par pertinence (relevance)
+	arsort($arrRelevance);
+
+	foreach($arrRelevance as $key => $element)
+	{
+		$arrRelevance[$key]['kw_ratio'] = (sizeof($arrRelevance[$key]['kw'])+sizeof($arrRelevance[$key]['stem'])) / (sizeof($arrKeywords)+sizeof($arrStems));
+		$arrRelevance[$key]['relevance'] = ($arrRelevance[$key]['relevance']/$arrRelevance[$key]['count']) * $arrRelevance[$key]['kw_ratio'];
+	}
+
 	arsort($arrRelevance);
 
 	if (empty($arrRelevance))
@@ -118,8 +185,9 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 		$values = array();
 		$c = 0;
 
-		$columns['left']['relevance'] 		= array('label' => 'Pertinance', 'width' => 100, 'options' => array('sort' => true));
+		$columns['left']['relevance'] 		= array('label' => 'Pertinence', 'width' => 100, 'options' => array('sort' => true));
 		$columns['auto']['label'] 			= array('label' => 'Libellé', 'options' => array('sort' => true));
+		$columns['right']['timestp'] 		= array('label' => 'Indexé le', 'width' => '90', 'options' => array('sort' => true));
 		$columns['right']['workspace'] 		= array('label' => 'Espace', 'width' => '120', 'options' => array('sort' => true));
 		$columns['right']['module'] 		= array('label' => 'Module', 'width' => '120', 'options' => array('sort' => true));
 		$columns['right']['object_type'] 	= array('label' => 'Type d\'Objet', 'width' => '120', 'options' => array('sort' => true));
@@ -146,16 +214,17 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 												$arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['script']
 											);
 
-				$rel = $row['relevance']/sizeof($arrStems);
+				$rel = $row['relevance'];
 
 				$values[$c]['values']['relevance'] = array('label' => sprintf("%d %%", $rel), 'sort_label' => $rel);
 				$values[$c]['values']['label'] = array('label' => $row['label']);
+				$values[$c]['values']['timestp'] = array('label' => $l_timestp_lastindex['date'], 'sort_label' => $row['timestp_lastindex']);
 				$values[$c]['values']['workspace'] = array('label' => $_SESSION['ploopi']['workspaces'][$row['id_workspace']]['label']);
 				$values[$c]['values']['module'] = array('label' => $arrObjectTypes[$row['id_module']]['label']);
 				$values[$c]['values']['object_type'] = array('label' => $arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['label']);
 
 				$values[$c]['description'] = $row['label'];
-				$values[$c]['link'] = ploopi_urlencode("{$scriptenv}?ploopi_mainmenu=1&{$object_script}");
+				$values[$c]['link'] = ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}");
 				$values[$c]['style'] = '';
 			}
 

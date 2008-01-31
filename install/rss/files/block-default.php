@@ -112,7 +112,7 @@ if ($strFeedsOptions != '')
 	$block->addcontent($content);
 }
 
-if ($_SESSION['ploopi']['connected']) $block->addmenu('<b>'._RSS_LABEL_SEARCH.'</b>', ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&public_rssfeed_id={$block_rssfeed_id}"));
+if ($_SESSION['ploopi']['connected']) $block->addmenu('<b>'._RSS_LABEL_SEARCH.'</b>', ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"));
 
 
 if (ploopi_isactionallowed(-1,$_SESSION['ploopi']['workspaceid'],$menu_moduleid))

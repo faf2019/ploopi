@@ -133,5 +133,4 @@ function ploopi_errorhandler($errno, $errstr, $errfile, $errline, $vars)
 }
 
 set_error_handler("ploopi_errorhandler");
-
 ?>

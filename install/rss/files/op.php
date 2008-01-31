@@ -1,6 +1,5 @@
 <?php
 /*
-	Copyright (c) 2002-2007 Netlor
 	Copyright (c) 2007-2008 Ovensia
 	Contributors hold Copyright (c) to their code submissions.
 
@@ -31,8 +30,9 @@ if (ploopi_ismoduleallowed('rss'))
 
 			if (isset($_GET['rsscat_id']) && is_numeric($_GET['rsscat_id']))
 			{
-				$_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id'] = $_GET['rsscat_id'];
-				unset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id']);
+				if ($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id'] == $_GET['rsscat_id']) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id'] = ''; // reset
+				else $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id'] = $_GET['rsscat_id'];
+				$_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'] = '';
 			}
 
 			$wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
@@ -49,8 +49,6 @@ if (ploopi_ismoduleallowed('rss'))
 
 			$db->query($sql);
 			$arrCat = $db->getarray();
-
-
 
 			$array_columns = array();
 			$array_values = array();
@@ -77,7 +75,7 @@ if (ploopi_ismoduleallowed('rss'))
 			?>
 			<h1>Catégories de Flux</h1>
 			<?
-			$skin->display_array($array_columns, $array_values, 'array_rssexplorer_catlist', array('height' => 150, 'sortable' => true, 'orderby_default' => 'title'));
+			$skin->display_array($array_columns, $array_values, 'array_rssexplorer_catlist', array('height' => 200, 'sortable' => true, 'orderby_default' => 'title'));
 			echo $skin->close_simplebloc();
 
 			ploopi_die();
@@ -87,10 +85,13 @@ if (ploopi_ismoduleallowed('rss'))
 		case 'rss_explorer_feedlist_get':
 			ploopi_init_module('rss');
 
-			if (isset($_GET['rsscat_id']) && is_numeric($_GET['rsscat_id'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id'] = $_GET['rsscat_id'];
-			if (!isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id'])) ploopi_die();
+			if ($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id'] == '') ploopi_die();
 
-			if (isset($_GET['rssfeed_id']) && is_numeric($_GET['rssfeed_id'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'] = $_GET['rssfeed_id'];
+			if (isset($_GET['rssfeed_id']) && is_numeric($_GET['rssfeed_id']))
+			{
+				if ($_GET['rssfeed_id'] == $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id']) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'] = ''; // reset
+				else $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'] = $_GET['rssfeed_id'];
+			}
 
 			$wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
 
@@ -115,11 +116,11 @@ if (ploopi_ismoduleallowed('rss'))
 			$c = 0;
 			foreach($arrFeed as $feed)
 			{
-				$array_values[$c]['values']['title'] = array('label' => $feed['title']);
+				$array_values[$c]['values']['title'] = array('label' => strip_tags($feed['title'], '<b><i>'));
 				$array_values[$c]['description'] = $feed['title'];
 
 				$array_values[$c]['link'] = "javascript:void(0);";
-				$array_values[$c]['onclick'] = "javascript:rss_explorer_feedlist_choose({$_GET['rsscat_id']}, {$feed['id']})";
+				$array_values[$c]['onclick'] = "javascript:rss_explorer_feedlist_choose({$feed['id']})";
 
 				if (isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id']) && $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'] == $feed['id']) $array_values[$c]['style'] = 'background-color:#ffe0e0;';
 				$c++;
@@ -129,7 +130,7 @@ if (ploopi_ismoduleallowed('rss'))
 			?>
 			<h1>Liste des Flux</h1>
 			<?
-			$skin->display_array($array_columns, $array_values, 'array_rssexplorer_feedlist', array('height' => 150, 'sortable' => true, 'orderby_default' => 'title'));
+			$skin->display_array($array_columns, $array_values, 'array_rssexplorer_feedlist', array('height' => 250, 'sortable' => true, 'orderby_default' => 'title'));
 			echo $skin->close_simplebloc();
 
 			ploopi_die();
@@ -138,15 +139,45 @@ if (ploopi_ismoduleallowed('rss'))
 		case 'rss_explorer_feed_get':
 			ploopi_init_module('rss');
 
-			if (isset($_GET['rsscat_id']) && is_numeric($_GET['rsscat_id'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id'] = $_GET['rsscat_id'];
-			if (isset($_GET['rssfeed_id']) && is_numeric($_GET['rssfeed_id'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'] = $_GET['rssfeed_id'];
+			if (isset($_GET['rss_search_kw']) && $_GET['rss_search_kw'] != '%%undefined%%') $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rss_search_kw'] = $_GET['rss_search_kw'];
 
 			$wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
 
 			$rsscat_id = (isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id'])) ? $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id'] : '';
 			$rssfeed_id = (isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'])) ? $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'] : '';
+			$rss_search_kw = (isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rss_search_kw'])) ? $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rss_search_kw'] : '';
 
 			$arrWhere = array();
+
+			if (!empty($rss_search_kw))
+			{
+				if (substr($rss_search_kw,0,6) == 'entry:') // direct access to entry
+				{
+					$arrWhere[] = "entry.id = '".substr($rss_search_kw,-32,32)."'";
+				}
+				else
+				{
+					$id_record = '';
+					if ($rsscat_id != '') $id_record = sprintf("%06d", $rsscat_id);
+					if ($rssfeed_id != '') $id_record .= sprintf("%06d", $rssfeed_id);
+
+					$arrRelevance = ploopi_search(_RSS_OBJECT_NEWS_ENTRY , $rss_search_kw, $id_record, array('orderby' => 'relevance', 'sort' => 'DESC', 'relevance_min' => 10));
+
+					$i = 0;
+					$arrEntries = array();
+
+					while ($i<25 && $i<sizeof($arrRelevance))
+					{
+						$e = current($arrRelevance);
+						$arrEntries[] = substr($e['id_record'],-32,32);
+						next($arrRelevance);
+						$i++;
+					}
+
+					$arrWhere[] = "entry.id IN ('".implode("','", $arrEntries)."')";
+				}
+			}
+
 			if ($rsscat_id != '') $arrWhere[] = "IFNULL(cat.id, 0) = {$rsscat_id}";
 			if ($rssfeed_id != '') $arrWhere[] = "feed.id = {$rssfeed_id}";
 
@@ -170,7 +201,7 @@ if (ploopi_ismoduleallowed('rss'))
 					{$where}
 
 					ORDER BY	entry.published DESC
-					LIMIT		0,50
+					LIMIT		0,25
 					";
 
 			$db->query($sql);
@@ -208,22 +239,29 @@ if (ploopi_ismoduleallowed('rss'))
 				{
 					?>
 					<div class="rss_entry">
-						<a class="rss_entry<? echo (++$numrow)%2; ?>" href="<? echo $entry['link']; ?>" target="_blank"><b><? echo $entry['title']; ?></b><br /><? echo ploopi_unixtimestamp2local($entry['published']); ?> &#149; <? echo $entry['titlefeed']; ?>
+						<a class="rss_entry<? echo (++$numrow)%2; ?>" href="<? echo $entry['link']; ?>" target="_blank">
+							<b><? echo strip_tags($entry['title'], '<b><i>'); ?></b>
+							<br /><i><? echo ploopi_unixtimestamp2local($entry['published']); ?> &#149; <? echo $entry['titlefeed']; ?></i>
 						<?
 						if (!empty($entry['subtitle']))
 						{
 							?>
-							<br /><? echo $entry['subtitle']; ?>
+							<br /><? echo strip_tags($entry['subtitle'], '<b><i>'); ?>
 							<?
 						}
 						if (!empty($entry['content']))
 						{
 							?>
-							<br /><? echo $entry['content']; ?>
+							<br /><? echo strip_tags($entry['content'], '<b><i>'); ?>
 							<?
 						}
 						?>
 						</a>
+					</div>
+					<div class="rss_entry_annotation">
+					<?
+					ploopi_annotation(_RSS_OBJECT_NEWS_ENTRY, $entry['id'], strip_tags($entry['title'], '<b><i>'));
+					?>
 					</div>
 					<?
 				}

@@ -20,8 +20,6 @@
 	along with Ploopi; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
 
 class skin_common
 {
@@ -107,10 +105,10 @@ class skin_common
 
 		$res = 	"
 				<div class=\"toolbar\">
-					<div class=\"toolbar_left\">$icons_content_left</div>
-					<div class=\"toolbar_right\">$icons_content_right</div>
+					<div class=\"toolbar_left\">{$icons_content_left}</div>
+					<div class=\"toolbar_right\">{$icons_content_right}</div>
 				</div>
-			";
+				";
 
 		return $res;
 	}
@@ -160,16 +158,9 @@ class skin_common
 					";
 		}
 
-		//if ($sel) $res ="<TD WIDTH=\"".$icon['width']."\" ALIGN=CENTER><FONT CLASS=TabSel><A CLASS=TabSel HREF=\"".$icon['url']."\">".$icon['title']."</A></TD>";
-		//else $res ="<TD WIDTH=\"".$icon['width']."\" BGCOLOR=\"".$this->values['colsec']."\" ALIGN=CENTER><A CLASS=Tab HREF=\"".$icon['url']."\">".$icon['title']."</A></TD>";
 		return $res;
 	}
 
-
-
-
-
-	/* public */
 	function create_tabs($w,$tabs,&$tabsel)
 	{
 
@@ -188,7 +179,6 @@ class skin_common
 		return $res;
 	}
 
-	/* private */
 	function create_tab($tab,$sel)
 	{
 		if (!empty($tab['width'])) $style = "style=\"width:{$tab['width']}px;\"";
@@ -199,235 +189,13 @@ class skin_common
 		return $res;
 	}
 
-
 	function create_menu($title, $link, $id_help='', $target='', $urlencode = true)
 	{
-
 		if ($urlencode) $link = ploopi_urlencode($link);
-
-		/*
-		$res = "
-			<TR>
-				<TD ALIGN=\"LEFT\" VALIGN=\"MIDDLE\">
-				<TABLE CELLPADDING=\"0\" CELLSPACING=\"0\" WIDTH=\"100%\">
-				<TR>
-					<BULLET>
-					<TD VALIGN=\"MIDDLE\" <ID_HELP> ALIGN=\"".$this->values['menu_align']."\"><A <ID_HELP> <TARGET> HREF=\"{$link}\" CLASS=\"Menu\">$title</A></TD>
-				</TR>
-				</TABLE>
-				</TD>
-			</TR>
-			";
-
-		if ($this->values['menu_bullet']) $res = str_replace("<BULLET>","<TD VALIGN=MIDDLE ALIGN=CENTER WIDTH=\"".$this->values['menu_bullet_width']."\"><IMG SRC=\"".$this->values['path']."/bullet".$this->values['img_extension']."\"</TD>",$res);
-		else $res = str_replace("<BULLET>","",$res);
-
-		if ($id_help!='') $res = str_replace("<ID_HELP>","ID=\"$id_help\"",$res);
-		else $res = str_replace("<ID_HELP>","",$res);
-
-		if ($target!='') $res = str_replace("<TARGET>","TARGET=\"$target\"",$res);
-		else $res = str_replace("<TARGET>","",$res);
-
-		return $res;
-		*/
-	}
-
-
-	function create_menutitle($title,$w)
-	{
-
-	}
-
-
-	function create_menusubtitle($title, $id_help = '')
-	{
-		/*
-		if ($this->values['menusubtitle_align']=='left') $title = $title;
-		if ($this->values['menusubtitle_align']=='right') $title = $title;
-
-		$res = "<TR><TD <ID_HELP> CLASS=MenuSubTitle ALIGN=\"".$this->values['menusubtitle_align']."\" VALIGN=MIDDLE>$title</TD></TR>\n";
-
-		if ($id_help!='') $res = str_replace("<ID_HELP>","ID=\"$id_help\"",$res);
-		else $res = str_replace("<ID_HELP>","",$res);
-
-		return $res;
-		*/
-	}
-
-	function create_sep()
-	{
-		// unused
 	}
 
 
 
-
-	/**
-	*******************************************************************************
-	//* TITLES METHODS
-	function open_menubloc()
-	{
-		return $this->top('100%').$this->left()."<TABLE CELLPADDING=\"0\" CELLSPACING=\"0\" WIDTH=\"100%\">";
-	}
-
-	/**
-	*
-	*
-	* @return html code to display
-	*
-	**/
-
-	function close_menubloc()
-	{
-		return "<TR><TD ALIGN=LEFT VALIGN=MIDDLE><IMG SRC=\"./skins/blank.gif\" WIDTH=\"1\" HEIGHT=\"1\"></TD></TR></TABLE>".$this->right().$this->bottom(5);//$this->under('100%',5);
-	}
-
-	/**
-	*******************************************************************************
-	* DESKTOP METHODS
-	*******************************************************************************
-	**/
-
-	function create_desktop($w, $icons, $ipl = 5) // $ipl = icon per line
-	{
-		$icons_content = '';
-		$nbic = 0;
-
-		foreach($icons as $icon)
-		{
-			if (!($nbic % $ipl)) $icons_content .= '</tr><tr>';
-			$icon['width'] = 100/$ipl;
-			$icons_content .= $this->create_desktopicon($icon);
-			$nbic++;
-		}
-
-		$icons_content .= '<td>&nbsp;</td>';
-
-		$res = 	"
-				<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">
-				<tr>
-					$icons_content
-				</tr>
-				</table>
-				";
-
-		return $res;
-	}
-
-	function create_desktopicon($icon)
-	{
-		$confirm = isset($icon['confirm']);
-
-		if (isset($icon['id_help']) && $icon['id_help'] != '') $id_help = "ID=\"$icon[id_help]\"";
-		else $id_help = '';
-
-		if (!isset($icon['url'])) $icon['url'] = '';
-
-		$admin = '';
-		if (isset($icon['admin_url']))
-		{
-			$admin = "<tr><td style=\"color:#880000;\" $id_help align=\"center\" valign=\"middle\" onclick=\"javascript:document.location.href='".ploopi_urlencode($icon['admin_url'])."'\" onmouseout=\"javascript:this.style.cursor='default'\" onmouseover=\"javascript:this.style.cursor='pointer'\">Administration</td></tr>";
-			if ($icon['url'] == '') $icon['url'] = $icon['admin_url'];
-		}
-
-		if ($confirm) $onclick = "ploopi_confirmlink('".ploopi_urlencode($icon['url'])."','{$icon['confirm']}')";
-		else $onclick = "document.location.href='".ploopi_urlencode($icon['url'])."'";
-
-		if (!isset($icon['description'])) $icon['description'] = '';
-
-
-		$res =	"
-				<td width=\"{$icon['width']}%\" align=\"center\" valign=\"top\"  >
-					<table cellspacing=\"1\" cellpadding=\"2\" width=\"100%\">
-					<tr>
-						<td $id_help align=\"center\" valign=\"top\" onclick=\"javascript:$onclick\" onmouseout=\"javascript:this.style.cursor='default'\" onmouseover=\"javascript:this.style.cursor='pointer'\">
-						<img $id_help alt=\"".strip_tags($icon['title'])."\" border=\"0\" src=\"{$icon['icon']}\">
-						</td>
-					</tr>
-					<tr>
-						<td $id_help align=\"center\" valign=\"middle\"  onclick=\"javascript:$onclick\" onmouseout=\"javascript:this.style.cursor='default'\" onmouseover=\"javascript:this.style.cursor='pointer'\">
-						<b>{$icon['title']}</b>
-						<br>{$icon['description']}
-						</td>
-					</tr>
-					$admin
-					</table>
-				</td>
-				";
-
-		//if ($sel) $res ="<TD WIDTH=\"".$icon['width']."\" ALIGN=CENTER><FONT CLASS=TabSel><A CLASS=TabSel HREF=\"".$icon['url']."\">".$icon['title']."</A></TD>";
-		//else $res ="<TD WIDTH=\"".$icon['width']."\" BGCOLOR=\"".$this->values['colsec']."\" ALIGN=CENTER><A CLASS=Tab HREF=\"".$icon['url']."\">".$icon['title']."</A></TD>";
-		return $res;
-	}
-
-
-
-
-	function create_desktoptoolbar($w, $icons, $ipl = 10) // $ipl = icon per line
-	{
-		$icons_content = '';
-		$nbic = 0;
-
-		foreach($icons as $icon)
-		{
-			$icons_content .= $this->create_desktoptoolbaricon($icon);
-			$nbic++;
-		}
-
-		$icons_content .= '<td>&nbsp;</td>';
-
-		$res = 	"
-				<table cellspacing=\"0\" cellpadding=\"0\">
-				<tr>
-					$icons_content
-				</tr>
-				</table>
-				";
-
-		return $res;
-	}
-
-	function create_desktoptoolbaricon($icon)
-	{
-		$confirm = isset($icon['confirm']);
-
-		if (isset($icon['id_help']) && $icon['id_help'] != '') $id_help = "ID=\"$icon[id_help]\"";
-		else $id_help = '';
-
-		if (!isset($icon['url'])) $icon['url'] = '';
-
-		$admin = '';
-		if (isset($icon['admin_url']))
-		{
-			$admin = "<td style=\"color:#880000;\" $id_help align=\"center\" valign=\"middle\" onclick=\"javascript:document.location.href='".ploopi_urlencode($icon['admin_url'])."'\" onmouseout=\"javascript:this.style.cursor='default'\" onmouseover=\"javascript:this.style.cursor='pointer'\">(Admin)</td>";
-			if ($icon['url'] == '') $icon['url'] = $icon['admin_url'];
-		}
-
-		if ($confirm) $onclick = "ploopi_confirmlink('".ploopi_urlencode($icon['url'])."','{$icon['confirm']}')";
-		else $onclick = "document.location.href='".ploopi_urlencode($icon['url'])."'";
-
-		if (!isset($icon['description'])) $icon['description'] = '';
-
-		$res =	"
-				<td align=\"center\" valign=\"top\">
-					<table cellspacing=\"1\" cellpadding=\"2\">
-					<tr>
-						<td $id_help align=\"center\" valign=\"top\" onclick=\"javascript:$onclick\" onmouseout=\"javascript:this.style.cursor='default'\" onmouseover=\"javascript:this.style.cursor='pointer'\">
-						<img $id_help alt=\"".strip_tags($icon['title'])."\" border=\"0\" src=\"{$icon['icontoolbar']}\">
-						</td>
-						<td $id_help align=\"left\" valign=\"middle\" onclick=\"javascript:$onclick\" onmouseout=\"javascript:this.style.cursor='default'\" onmouseover=\"javascript:this.style.cursor='pointer'\">
-						<b>{$icon['title']}</b>
-						</td>
-						$admin
-					</tr>
-					</table>
-				</td>
-				";
-
-		//if ($sel) $res ="<TD WIDTH=\"".$icon['width']."\" ALIGN=CENTER><FONT CLASS=TabSel><A CLASS=TabSel HREF=\"".$icon['url']."\">".$icon['title']."</A></TD>";
-		//else $res ="<TD WIDTH=\"".$icon['width']."\" BGCOLOR=\"".$this->values['colsec']."\" ALIGN=CENTER><A CLASS=Tab HREF=\"".$icon['url']."\">".$icon['title']."</A></TD>";
-		return $res;
-	}
 
 	function array_sort($a,$b)
 	{
@@ -445,8 +213,17 @@ class skin_common
 	{
 		if (empty($array_id)) $array_id = md5(uniqid(rand(), true));
 
-		//if (!isset($_SESSION['ploopi']['arrays'][$array_id]))
-		$_SESSION['ploopi']['arrays'][$array_id] = array('columns' => $columns, 'values' => $values, 'options' => $options, 'orderby' => '', 'sort' => '');
+		$sort = $orderby = '';
+
+		if (!empty($_SESSION['ploopi']['arrays'][$array_id]))
+		{
+			// preserve orderby & sort values
+			$orderby = $_SESSION['ploopi']['arrays'][$array_id]['orderby'];
+			$sort = $_SESSION['ploopi']['arrays'][$array_id]['sort'];
+		}
+
+		$_SESSION['ploopi']['arrays'][$array_id] = array('columns' => $columns, 'values' => $values, 'options' => $options, 'orderby' => $orderby, 'sort' => $sort);
+
 		$array = &$_SESSION['ploopi']['arrays'][$array_id];
 
 		if (!empty($array['options']['sortable']) && $array['options']['sortable'])
@@ -723,7 +500,6 @@ class skin_common
 
 		<script type="text/javascript">
 			ploopi_skin_array_renderupdate('<? echo $array_id; ?>');
-				//ploopi_window_onload_stock(function () {ploopi_skin_array_renderupdate('<? echo $array_id; ?>');});
 		</script>
 		<?
 	}

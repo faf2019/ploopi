@@ -477,7 +477,7 @@ if (isset($ploopi_op))
 			?>
 			<a name="annotation_<? echo $_GET['id_annotation']; ?>" style="display:none;"></a>
 			<div style="overflow:hidden;">
-				<a id="annotations_count_<? echo $_GET['id_annotation']; ?>" class="ploopi_annotation_viewlist" href="#annotation_<? echo $_GET['id_annotation']; ?>" onclick="javascript:ploopi_getelem('annotations_list_<? echo $_GET['id_annotation']; ?>').style.display=(ploopi_getelem('annotations_list_<? echo $_GET['id_annotation']; ?>').style.display=='block') ? 'none' : 'block'; ploopi_xmlhttprequest('index-light.php','ploopi_op=annotation_show&object_id=<? echo $_GET['id_annotation']; ?>');return false;"><img border="0" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/annotation.png"><span><? echo $nbanno; ?> annotation(s)</span></a>
+				<a id="annotations_count_<? echo $_GET['id_annotation']; ?>" class="ploopi_annotation_viewlist" href="#annotation_<? echo $_GET['id_annotation']; ?>" onclick="javascript:ploopi_getelem('annotations_list_<? echo $_GET['id_annotation']; ?>').style.display=(ploopi_getelem('annotations_list_<? echo $_GET['id_annotation']; ?>').style.display=='block') ? 'none' : 'block'; ploopi_xmlhttprequest('index-light.php','ploopi_op=annotation_show&object_id=<? echo $_GET['id_annotation']; ?>');return false;"><img border="0" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/annotation.png"><span><? echo $nbanno; ?> annotation<? echo ($nbanno>1) ? 's' : ''; ?></span></a>
 
 				<div style="display:<? echo ($annotation_show) ? 'block' : 'none'; ?>;" id="annotations_list_<? echo $_GET['id_annotation']; ?>">
 
@@ -581,7 +581,7 @@ if (isset($ploopi_op))
 						<div style="padding:2px 4px;"><input type="text" class="text" style="width:99%;" name="ploopi_annotationtags" id="ploopi_annotationtags_<? echo $_GET['id_annotation']; ?>" autocomplete="off"></div>
 						<div style="padding:2px 4px;" id="tagsfound_<? echo $_GET['id_annotation']; ?>"></div>
 						<div style="padding:2px 4px;">Commentaire:</div>
-						<div style="padding:2px 4px;"><textarea class="text" style="width:99%;" rows="10" name="ploopi_annotation_content"></textarea></div>
+						<div style="padding:2px 4px;"><textarea class="text" style="width:99%;" rows="4" name="ploopi_annotation_content"></textarea></div>
 
 						<div style="padding:2px 4px;text-align:right;">
 							<input type="button" onclick="ploopi_getelem('form_annotation_<? echo $_GET['id_annotation']; ?>').ploopi_op.value=''; ploopi_getelem('form_annotation_<? echo $_GET['id_annotation']; ?>').submit()" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>">

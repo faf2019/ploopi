@@ -199,7 +199,7 @@ else
 						<input style="width:100px;" class="text" type="text" name="webedit_article_reference" value="<? echo $article->fields['reference']; ?>" tabindex="1" />
 						<?
 					}
-					else echo '<span>'.htmlentities($article->fields['reference']).'</span>';
+					else echo '<span>'.htmlentities($article->fields['reference'], ENT_QUOTES).'</span>';
 					?>
 				</p>
 				<p>
@@ -211,7 +211,7 @@ else
 						<input class="text" type="text" name="webedit_article_title" value="<? echo $article->fields['title']; ?>" tabindex="2" />
 						<?
 					}
-					else echo '<span>'.htmlentities($article->fields['title']).'</span>';
+					else echo '<span>'.htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
 					?>
 				</p>
 				<div style="padding:2px;"><strong>Optimisation du Référencement (balises meta):</strong></div>
@@ -224,7 +224,7 @@ else
 						<input class="text" type="text" name="webedit_article_metatitle" id="webedit_article_metatitle" value="<? echo $article->fields['metatitle']; ?>" tabindex="2" />
 						<?
 					}
-					else echo '<span>'.htmlentities($article->fields['metatitle']).'</span>';
+					else echo '<span>'.htmlentities($article->fields['metatitle'], ENT_QUOTES).'</span>';
 					?>
 				</p>
 				<p>
@@ -236,7 +236,7 @@ else
 						<input class="text" type="text" name="webedit_article_metakeywords" id="webedit_article_metakeywords" value="<? echo $article->fields['metakeywords']; ?>" tabindex="2" />
 						<?
 					}
-					else echo '<span>'.htmlentities($article->fields['metakeywords']).'</span>';
+					else echo '<span>'.htmlentities($article->fields['metakeywords'], ENT_QUOTES).'</span>';
 					?>
 				</p>
 				<?
@@ -266,7 +266,7 @@ else
 					if (!$readonly)
 					{
 						?>
-						<textarea class="text" name="webedit_article_metadescription" style="height:50px;"><? echo htmlentities($article->fields['metadescription']); ?></textarea>
+						<textarea class="text" name="webedit_article_metadescription" style="height:50px;"><? echo htmlentities($article->fields['metadescription'], ENT_QUOTES); ?></textarea>
 						<?
 					}
 					else echo '<span>'.htmlentities($article->fields['metadescription']).'</span>';
@@ -279,7 +279,7 @@ else
 					if (!$readonly)
 					{
 						?>
-						<input class="text" type="text" name="webedit_article_tags" id="webedit_article_tags" value="<? echo htmlentities($article->fields['tags']); ?>" />
+						<input class="text" type="text" name="webedit_article_tags" id="webedit_article_tags" value="<? echo htmlentities($article->fields['tags'], ENT_QUOTES); ?>" />
 						<?
 					}
 					else echo '<span>'.htmlentities($article->fields['tags']).'</span>';
@@ -295,7 +295,7 @@ else
 					if (!$readonly)
 					{
 						?>
-						<input class="text" type="text" name="webedit_article_author" value="<? echo htmlentities($article->fields['author']); ?>" tabindex="3" />
+						<input class="text" type="text" name="webedit_article_author" value="<? echo htmlentities($article->fields['author'], ENT_QUOTES); ?>" tabindex="3" />
 						<?
 					}
 					else echo '<span>'.htmlentities($article->fields['author']).'</span>';
@@ -311,7 +311,7 @@ else
 						<a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('webedit_article_timestp', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
 						<?
 					}
-					else echo '<span>'.htmlentities($article_timestp).'</span>';
+					else echo '<span>'.htmlentities($article_timestp, ENT_QUOTES).'</span>';
 					?>
 				</p>
 				<p>
@@ -320,10 +320,10 @@ else
 					if (!$readonly)
 					{
 						?>
-						<input style="width:100px;" class="text" type="text" name="webedit_article_version" value="<? echo $article->fields['version']; ?>" tabindex="5" />
+						<input style="width:100px;" class="text" type="text" name="webedit_article_version" value="<? echo htmlentities($article->fields['version'], ENT_QUOTES); ?>" tabindex="5" />
 						<?
 					}
-					else echo '<span>'.htmlentities($article->fields['version']).'</span>';
+					else echo '<span>'.htmlentities($article->fields['version'], ENT_QUOTES).'</span>';
 					?>
 				</p>
 				<p>
@@ -332,10 +332,10 @@ else
 					if (!$readonly)
 					{
 						?>
-						<input style="width:40px;" class="text" type="text" name="webedit_art_position" value="<? echo $article->fields['position']; ?>" tabindex="11" />
+						<input style="width:40px;" class="text" type="text" name="webedit_art_position" value="<? echo htmlentities($article->fields['position'], ENT_QUOTES); ?>" tabindex="11" />
 						<?
 					}
-					else echo '<span>'.htmlentities($article->fields['position']).'</span>';
+					else echo '<span>'.htmlentities($article->fields['position'], ENT_QUOTES).'</span>';
 					?>
 				</p>
 				<p>
@@ -369,11 +369,11 @@ else
 					if (!$readonly)
 					{
 						?>
-						<input style="width:100px;" class="text" type="text" name="webedit_article_timestp_published" id="webedit_article_timestp_published" value="<? echo $article_timestp_published; ?>" tabindex="13" />
+						<input style="width:100px;" class="text" type="text" name="webedit_article_timestp_published" id="webedit_article_timestp_published" value="<? echo htmlentities($article_timestp_published, ENT_QUOTES); ?>" tabindex="13" />
 						<a href="#" onclick="javascript:ploopi_calendar_open('webedit_article_timestp_published', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
 						<?
 					}
-					else echo '<span>'.htmlentities($article_timestp).'</span>';
+					else echo '<span>'.htmlentities($article_timestp, ENT_QUOTES).'</span>';
 					?>
 				</p>
 				<p>
@@ -382,11 +382,11 @@ else
 					if (!$readonly)
 					{
 						?>
-						<input style="width:100px;" class="text" type="text" name="webedit_article_timestp_unpublished" id="webedit_article_timestp_unpublished" value="<? echo $article_timestp_unpublished; ?>" tabindex="14" />
+						<input style="width:100px;" class="text" type="text" name="webedit_article_timestp_unpublished" id="webedit_article_timestp_unpublished" value="<? echo htmlentities($article_timestp_unpublished, ENT_QUOTES); ?>" tabindex="14" />
 						<a href="#" onclick="javascript:ploopi_calendar_open('webedit_article_timestp_unpublished', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
 						<?
 					}
-					else echo '<span>'.htmlentities($article_timestp).'</span>';
+					else echo '<span>'.htmlentities($article_timestp, ENT_QUOTES).'</span>';
 					?>
 				</p>
 				<?

@@ -22,17 +22,30 @@
 */
 
 echo $skin->open_simplebloc(_RSS_LABEL_FEEDEXPLORER);
+
+if (!isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'] = '';
+if (!isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id'] = '';
+
+if (isset($_REQUEST['rss_search_kw'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rss_search_kw'] = $_REQUEST['rss_search_kw'];
+$rss_search_kw = (isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rss_search_kw'])) ? $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rss_search_kw'] : '';
+
+if (substr($rss_search_kw,0,6) == 'entry:') $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'] = $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id'] = '';
+
 ?>
 <div style="float:right;width:60%;">
-	<div id="rss_explorer_feed">
-	</div>
+	<div id="rss_explorer_feed"></div>
 </div>
 
 <div style="float:left;width:40%;">
-	<div id="rss_explorer_catlist">
+	<div id="rss_explorer_search">
+	<? echo $skin->open_simplebloc(); ?>
+	<form action="" method="post" onsubmit="javascript:rss_explorer_feed_get(this.rss_search_kw.value); return false;">
+	<div style="padding:4px;font-weight:bold;">Mots Clés : <input type="text" class="text" name="rss_search_kw" value="<? echo htmlentities($rss_search_kw, ENT_QUOTES); ?>"/>&nbsp;<input type="submit" class="button" value="Filtrer"></div>
+	<? echo $skin->close_simplebloc(); ?>
 	</div>
-	<div id="rss_explorer_feedlist">
-	</div>
+	</form>
+	<div id="rss_explorer_catlist"></div>
+	<div id="rss_explorer_feedlist"></div>
 </div>
 
 <script type="text/javascript">
@@ -41,7 +54,7 @@ ploopi_window_onload_stock(rss_explorer_catlist_get);
 if (isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id']))
 {
 	?>
-	ploopi_window_onload_stock(function() {rss_explorer_feedlist_get(<? echo $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id']; ?>);});
+	ploopi_window_onload_stock(rss_explorer_feedlist_get);
 	<?
 }
 ?>

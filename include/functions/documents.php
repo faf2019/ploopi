@@ -51,16 +51,17 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
 	if (empty($params['ATTACHEMENT'])) $params['ATTACHEMENT'] = true;
 	if (empty($params['FIELDS'])) $params['FIELDS'] = array();
 
-	$_SESSION['documents']['id_object'] = $id_object;
-	$_SESSION['documents']['id_record'] = $id_record;
-	$_SESSION['documents']['id_user'] = $id_user;
-	$_SESSION['documents']['id_workspace'] = $id_workspace;
-	$_SESSION['documents']['id_module'] = $id_module;
-	$_SESSION['documents']['documents_id'] = $documents_id;
-	$_SESSION['documents']['mode'] = ''; // peut valoir 'selectfile'
-	$_SESSION['documents']['root_name'] = $params['ROOT_NAME'];
-	$_SESSION['documents']['attachement'] = $params['ATTACHEMENT'];
-	$_SESSION['documents']['fields'] = $params['FIELDS'];
+	$_SESSION['documents'] = array (	'id_object'		=> $id_object,
+										'id_record'		=> $id_record,
+										'id_user'		=> $id_user,
+										'id_workspace'	=> $id_workspace,
+										'id_module'		=> $id_module,
+										'documents_id'	=> $documents_id,
+										'mode'			=> '', // peut valoir 'selectfile'
+										'root_name'		=> $params['ROOT_NAME'],
+										'attachement'	=> $params['ATTACHEMENT'],
+										'fields'		=> $params['FIELDS']
+									);
 
 
 	$_SESSION['documents']['rights'] = $rights;

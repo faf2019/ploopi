@@ -44,54 +44,5 @@ define ('_RSS_LABEL_FEEDS', 		'Flux');
 
 define ('_RSS_LABEL_SEARCH', 		'Consultation avancée');
 define ('_RSS_LABEL_ADMIN', 		'Administration');
-
-/*
-define ('_RSS_LABELTAB_', 	'Catégories');
-define ('_RSS_LABELTAB_CATEGORIES', 	'Catégories');
-define ('_RSS_LABELTAB_ADD', 		'Nouveau Flux RSS');
-define ('_RSS_LABELTAB_MODIFY', 	'Liste des Flux RSS');
-
-define ('_RSS_LABELTAB_EXPLORER', 	'Explorateur');
-define ('_RSS_LABELTAB_SEARCHES', 	'Recherches');
-
-
-define ('_RSS_LABEL_TITLE', 		'Titre');
-define ('_RSS_LABEL_DESCRIPTION', 	'Description');
-define ('_RSS_LABEL_CONTENT', 		'Contenu');
-define ('_RSS_LABEL_CATEGORY', 		'Catégorie');
-define ('_RSS_LABEL_NOCATEGORY', 	'(Aucune Catégorie)');
-define ('_RSS_LABEL_URL', 		'Lien');
-define ('_RSS_LABEL_DEFAULT', 		'Flux par Défaut');
-define ('_RSS_LABEL_OTHERFEEDS', 	'Autres Flux');
-
-define ('_RSS_LABEL_UPDATE_OUTDATED_FEEDS', 	'Mettre à jour les Flux d\'Information périmés');
-define ('_RSS_LABEL_DELETE_UNAVAILABLE_FEEDS', 	'Supprimer les Flux d\'Information non valides');
-define ('_RSS_LABEL_UPDATE_ALL_FEEDS', 		'Mettre à jour tous les Flux d\'Information');
-define ('_RSS_LABEL_MYSEARCHES', 	'Mes Recherches');
-define ('_RSS_LABEL_REQUEST', 		'Requête');
-
-
-
-define ('_RSS_LABEL_ALLRSS', 		'Tous les Flux RSS');
-
-define ('_RSS_ADVANCEDPARAMS', 	'Paramètres avancés');
-
-define ('_RSSCAT_CREATE', 	'Ajouter une Catégorie');
-define ('_RSSCAT_LIST', 	'Liste des Catégories');
-define ('_RSSCAT_MODIFY', 	'Modifier la Catégorie \'LABEL\'');
-
-
-define ('_RSS_ADD', 		'Ajouter un Flux RSS');
-define ('_RSS_MODIFY', 		'Modifier le Flux RSS \'LABEL\'');
-define ('_RSS_LIST', 		'Liste des Flux RSS');
-
-define ('_RSS_ACTIONHISTORY', 	'Historique des actions');
-define ('_RSS_LABEL_DATE', 	'Date');
-define ('_RSS_LABEL_USER', 	'Utilisateur');
-define ('_RSS_LABEL_ACTION',	'Action');
-
-define ('_RSSCAT_LABEL_DELETE_CONFIRM',	'Êtes-vous certain de vouloir supprimer cette catégorie ?');
-
-define ('_RSS_LABEL_MANAGECONTENT', 'Gestion des Flux');
-*/
+define ('_RSS_LABEL_TOOLS', 		'Outils');
 ?>

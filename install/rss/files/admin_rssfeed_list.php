@@ -56,8 +56,8 @@ while ($fields = $db->fetchrow($result))
 
 	if (empty($actions)) $actions = '&nbsp;';
 
-	$array_values[$c]['values']['subtitle'] = array('label' => $fields['subtitle']);
-	$array_values[$c]['values']['title'] = array('label' => $fields['title']);
+	$array_values[$c]['values']['subtitle'] = array('label' => strip_tags($fields['subtitle'], '<b><i>'));
+	$array_values[$c]['values']['title'] = array('label' => strip_tags($fields['title'], '<b><i>'));
 	$array_values[$c]['values']['revisit'] = array('label' => (isset($rss_revisit_values[$fields['revisit']])) ? $rss_revisit_values[$fields['revisit']] : '', 'sort_label' => (isset($rss_revisit_values[$fields['revisit']])) ? $fields['revisit'] : '');
 	$array_values[$c]['values']['default'] = array('label' => ($fields['default']) ? _PLOOPI_YES : _PLOOPI_NO);
 	$array_values[$c]['values']['category'] = array('label' => $fields['titlecat']);
