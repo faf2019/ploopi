@@ -45,8 +45,8 @@ while ($rssfeed_fields = $db->fetchrow($rssfeed_result))
 		if (!$rss_feed->isuptodate()) $rss_feed->updatecache();
 
 		$template_body->assign_block_vars('rssfeed', array(
-				'TITLE' => $rss_feed->fields['title'],
-				'SUBTITLE' => $rss_feed->fields['subtitle'],
+				'TITLE' => strip_tags($rss_feed->fields['title'],'<b><i>'),
+				'SUBTITLE' => strip_tags($rss_feed->fields['subtitle'],'<b><i>'),
 				'LINK' => $rss_feed->fields['link']
 				));
 
@@ -63,8 +63,8 @@ while ($rssfeed_fields = $db->fetchrow($rssfeed_result))
 		while($rsscache_fields = $db->fetchrow($rsscache_result))
 		{
 			$template_body->assign_block_vars('rssfeed.rssentry', array(
-						'TITLE' => htmlentities($rsscache_fields['title']),
-						'SUBTITLE' => htmlentities($rsscache_fields['subtitle']),
+						'TITLE' => strip_tags($rsscache_fields['title'],'<b><i>'),
+						'SUBTITLE' => strip_tags($rsscache_fields['subtitle'],'<b><i>'),
 						'DATE' => date(_PLOOPI_DATEFORMAT,$rsscache_fields['published']),
 						'TIME' => date(_PLOOPI_TIMEFORMAT,$rsscache_fields['published']),
 						'PUBLISHED_DATE' => date(_PLOOPI_DATEFORMAT,$rsscache_fields['published']),

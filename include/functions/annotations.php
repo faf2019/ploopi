@@ -59,6 +59,7 @@ function ploopi_annotation($id_object, $id_record, $object_label = '')
 														'id_record' => $id_record,
 														'object_label' => $object_label
 													);
+	session_write_close();
 
 	?>
 	<div id="ploopiannotation_<? echo $id_annotation; ?>"></div>

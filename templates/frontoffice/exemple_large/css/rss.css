@@ -19,34 +19,26 @@
 	along with Ploopi; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-.news {
-clear:both;
+
+.rss_entry {
+margin-bottom:10px;
 }
 
-.news h1 {
-font-size:1.1em;
-background-color:#f4f4f4;
-border-bottom:2px solid #cccccc;
-padding:2px 4px;
-margin-bottom:1px;
+.rss_entry_title {
+	font-size:1.2em;
+	font-weight:bold;
+	text-decoration:none;
 }
 
-.news p {
-clear:both;
-overflow:auto;
+
+.rss_entry_subtitle {
+	font-size:0.1.1em;
 }
 
-.news_cat {
-float:left;
-font-size:0.9em;
+.rss_entry_published {
+	font-size:0.8em;
 }
 
-.news_author {
-float:right;
-font-size:0.9em;
-}
-
-.news_source {
-float:right;
-font-size:0.9em;
+.rss_entry p {
+	padding:4px;
 }

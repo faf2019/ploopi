@@ -29,7 +29,7 @@ Screen layout: */
 #thr {
 	background: white;
 	border: 1px solid black;
-	
+
 }
 body, table, td {
 font: 12px Verdana,Tahoma,Arial,sans-serif;
@@ -38,7 +38,7 @@ font: 12px Verdana,Tahoma,Arial,sans-serif;
 body {
 margin: 0 auto;
 padding: 0;
-background: #f4f4f4 url(gfx/bg.gif) top center repeat-y;
+background: #f4f4f4 url(../gfx/bg.gif) top center repeat-y;
 }
 
 form {
@@ -50,15 +50,15 @@ padding:0;
 background: #ffffff;
 color: #303030;
 margin: 0 auto;
-width: 760px;
+width: 984px;
 }
 
 #header {
 margin-bottom: 10px;
 margin-top: 10px;
 border: 0;
-background-image:url(gfx/front.jpg);
-width:760px;
+background-image:url(../gfx/front.jpg);
+width:984px;
 height:200px;
 position:relative;
 }
@@ -70,6 +70,41 @@ left:10px;
 color:#ffffff;
 opacity:0.9;
 font-size: 4em;
+}
+
+#login {
+position:relative;
+float:right;
+margin:0 10px;
+width:130px;
+padding:2px;
+border:1px solid #ffffff;
+background-color:#e0e0e0;
+color:#286ea0;
+font-size:11px;
+}
+
+#login label {
+display:block;
+margin-top:2px;
+font-weight:bold;
+}
+
+
+#login input {
+display:block;
+font-size:11px;
+border:1px solid #286ea0;
+width:110px;
+padding:0 2px;
+text-align:left;
+}
+
+#login input.button {
+background-color:#286ea0;
+color:#ffffff;
+margin-top:4px;
+width:116px;
 }
 
 #path, #pathtrans {
@@ -98,7 +133,7 @@ text-decoration: none;
 color: #808080;
 padding: 0.5em 0.2em;
 }
-	
+
 #path a:hover {
 display: block;
 text-decoration: none;

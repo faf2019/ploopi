@@ -128,7 +128,7 @@
 									<div><i>{rssfeed.rssentry.SUBTITLE}</i></div>
 									<div style="font-size:0.8em;margin-top:2px;">{rssfeed.rssentry.PUBLISHED_DATE} {rssfeed.rssentry.PUBLISHED_TIME}</div>
 								</a>
-							<!-- END rsscache -->
+							<!-- END rssentry -->
 						</div>
 						<!-- END rssfeed -->
 					</div>

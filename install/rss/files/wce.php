@@ -82,10 +82,10 @@ if ($tplfile != '')
 
 					$template_rss->assign_block_vars('rss_entry',array(
 								'ID' => $fields['id'],
-								'TITLE' => $fields['title'],
-								'SUBTITLE' => ploopi_make_links($fields['subtitle']),
-								'DESCRIPTION' => ploopi_make_links($fields['subtitle']),
-								'CONTENT' => $fields['content'],
+								'TITLE' => strip_tags($fields['title'], '<b><i>'),
+								'SUBTITLE' => strip_tags($fields['subtitle'], '<b><i><a>'),
+								'DESCRIPTION' => strip_tags($fields['subtitle'], '<b><i><a>'),
+								'CONTENT' => strip_tags($fields['content'], '<b><i><a>'),
 								'LINK' => $fields['link'],
 								'FEED_TITLE' => $fields['feed_title'],
 								'FEED_LINK' => $fields['feed_link'],

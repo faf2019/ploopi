@@ -1,53 +1,40 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
-
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=iso-8859-15" />
-	<meta name="description" content="{WORKSPACE_META_DESCRITPION} {PAGE_DESCRIPTION}" />
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+	<meta name="description" content="{WORKSPACE_META_DESCRIPTION} {PAGE_DESCRIPTION}" />
 	<meta name="keywords" content="{PAGE_ALLKEYWORDS}" />
 	<meta name="author" content="{WORKSPACE_META_AUTHOR}" />
 	<meta name="copyright" content="{WORKSPACE_META_COPYRIGHT}" />
 	<meta name="robots" content="{WORKSPACE_META_ROBOTS}" />
 
+	<title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
 
-	<link rel="icon" href="{TEMPLATE_PATH}/gfx/favicon.png" type="image/png" />
-	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/styles.css" media="screen" title="styles" />
-	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/rss.css" media="screen" title="styles" />
-	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/agenda.css" media="screen" title="styles" />
-	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/forms.css" media="screen" title="styles" />
-	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/news.css" media="screen" title="styles" />
+	<link rel="alternate" type="application/rss+xml" href="{SITE_RSSFEED_URL}" title="{SITE_RSSFEED_TITLE}">
+	<link rel="alternate" type="application/rss+xml" href="{HEADING_RSSFEED_URL}" title="{HEADING_RSSFEED_TITLE}">
+
+	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
+	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/forms.css" media="screen" />
+	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/rss.css" media="screen" />
+	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/news.css" media="screen" />
 
 	<!--[if lte IE 7]>
-	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/styles_ie.css" media="screen" title="styles" />
+	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles_ie.css" media="screen" />
 	<![endif]-->
-	
-	<script type="text/javascript" src="./include/prototype.js"></script>
-	<script type="text/javascript" src="./include/functions.js"></script>
+
+	<!--[if lte IE 6]>
+	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/png.css" media="screen" />
+	<![endif]-->
+
+	<!-- BEGIN ploopi_js -->
+		<script type="text/javascript" src="{ploopi_js.PATH}"></script>
+	<!-- END module_js -->
 	<script type="text/javascript">
 	//<!--
 	{ADDITIONAL_JAVASCRIPT}
-
-	var lstmsg = new Array();
-	lstmsg[0] = "L'adresse mèl n'est pas valide.\nIl n'y a pas de caractère @\nUne adresse mèl valide est du type \"adresse@domaine.com\"";
-	lstmsg[1] = "L'adresse mèl n'est pas valide.\nIl ne peut pas y avoir un point (.) juste après @\nUne adresse mèl valide est du type \"adresse@domaine.com\"";
-	lstmsg[2] = "L'adresse mèl n'est pas valide.\nL'adresse mèl ne peut pas finir par un point (.)\nUne adresse mèl valide est du type \"adresse@domaine.com\"";
-	lstmsg[3] = "L'adresse mèl n'est pas valide.\nL'adresse mèl ne peut pas contenir 2 points (.) qui se suivent.\nUne adresse mèl valide est du type \"adresse@domaine.com\"";
-	lstmsg[4] = "Le champ '<FIELD_LABEL>' ne doit pas être vide";
-	lstmsg[5] = "Le champ '<FIELD_LABEL>' doit être un nombre entier valide";
-	lstmsg[6] = "Le champ '<FIELD_LABEL>' doit être un nombre réel valide";
-	lstmsg[7] = "Le champ '<FIELD_LABEL>' doit être une date valide";
-	lstmsg[8] = "Le champ '<FIELD_LABEL>' doit être une heure valide";
-	lstmsg[9] = "Vous devez sélectionner une valeur pour le champ '<FIELD_LABEL>'";
-	lstmsg[10] = "Le champ '<FIELD_LABEL>' doit être une couleur valide (#ffff00 / jaune / yellow)";
-
-	var error_bgcolor = "#FFAAAA";
-
 	//-->
 	</script>
 
-
-
-	<title>{SITE_TITLE} - {PAGE_TITLE} - {HEADING1_TITLE}</title>
 </head>
 
 <body>
@@ -76,7 +63,7 @@
 						<input type="text" alt="recherche" id="recherche_field" name="query_string" value="{PAGE_QUERYSTRING}" style="width:70%;margin-right:2px;border:1px solid #c0c0c0;padding-left:2px;font-size:10px;"><input type="submit" value="go" style="width:20%;border:1px solid #a0a0a0;background-color:#e0e0e0;font-size:10px;">
 						</form>
 					</div>
-					
+
 					<!-- BEGIN root1 -->
 						<!-- BEGIN heading1 -->
 						<a class="r1h1{root1.heading1.SEL}" href="{root1.heading1.LINK}" {root1.heading1.LINK_TARGET}>{root1.heading1.LABEL}</a>
@@ -85,20 +72,21 @@
 
 					<!-- BEGIN rssfeed -->
 					<div class="rssfeed">
-						<a class="rssfeedtitle" href="{rssfeed.LINK}">{rssfeed.TITLE}</a>
-						<!-- BEGIN rsscache -->
-							<a class="rsscache" href="{rssfeed.rsscache.LINK}" target="_blank">
-								<div>{rssfeed.rsscache.TITLE}</div>
-								<div style="font-size:0.8em;margin-top:2px;">{rssfeed.rsscache.DATE} // {rssfeed.rsscache.TIME}</div>
+						<a class="rssfeedtitle" href="{rssfeed.LINK}">{rssfeed.TITLE}<br /><i>{rssfeed.SUBTITLE}</i></a>
+						<!-- BEGIN rssentry -->
+							<a title="{rssfeed.rssentry.TITLE}" class="rsscache" href="{rssfeed.rssentry.LINK}" target="_blank">
+								<div><b>{rssfeed.rssentry.TITLE}</b></div>
+								<div><i>{rssfeed.rssentry.SUBTITLE}</i></div>
+								<div style="font-size:0.8em;margin-top:2px;">{rssfeed.rssentry.PUBLISHED_DATE} {rssfeed.rssentry.PUBLISHED_TIME}</div>
 							</a>
-						<!-- END rsscache -->
+						<!-- END rssentry -->
 					</div>
 					<!-- END rssfeed -->
 				</div>
 			</div>
 
 			<div id="content">
-				
+
 				<div id="pagemenu">
 					<!-- BEGIN page -->
 					<a class="page{page.SEL}" href="{page.LINK}">{page.LABEL}</a>
@@ -110,14 +98,14 @@
 					<h2>{PAGE_TITLE}</h2>
 					{PAGE_CONTENT}
 					<!-- END switch_content_page -->
-					
+
 					<!-- BEGIN switch_content_phpdig -->
 					<h2>Résultat de la recherche</h2>
 					{PHPDIG_RESULT}
 					<!-- END switch_content_phpdig -->
-					
+
 				</div>
-				
+
 				</div>
 		</div>
 

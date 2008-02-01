@@ -40,7 +40,18 @@
 <body>
 	<div id="wrap">
 		<div id="header">
-			<div id="title">{SITE_TITLE}</div>
+			<div id="title">
+				<div id="login">
+					<form action="admin.php" method="post">
+						<label>Utilisateur:</label>
+						<input type="text" value="" name="ploopi_login" />
+						<label>Mot de Passe:</label>
+						<input type="password" value="" name="ploopi_password" />
+						<input type="submit" class="button" value="&raquo; Connexion" />
+					</form>
+				</div>
+				{SITE_TITLE}
+			</div>
 			<div id="path">
 				<!-- BEGIN path -->
 					<a href="{path.LINK}">&raquo;&nbsp;{path.LABEL}</a>

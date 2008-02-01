@@ -7,7 +7,7 @@
 			<script>?op='display'</script>
 			<select_id>id</select_id>
 			<select_label>label</select_label>
-			<select_table>ploopi_mod_forms</select_table>
+			<select_table>ploopi_mod_forms_form</select_table>
 		</row>
 	</ploopi_mb_wce_object>
 	<ploopi_mb_table>

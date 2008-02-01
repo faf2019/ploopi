@@ -80,7 +80,7 @@ if ($block_rssfeed_id)
 
 	if (!$rss_feed->isuptodate()) $rss_feed->updatecache();
 
-	$block->addmenu("<b>{$rss_feed->fields['title']}</b>".(!empty($rss_feed->fields['subtitle']) ? '<br /><i>'.$rss_feed->fields['subtitle'].'</i>' : ''), $rss_feed->fields['link'], '', '_blank');
+	$block->addmenu("<b>{$rss_feed->fields['title']}</b>".(!empty($rss_feed->fields['subtitle']) ? '<br /><i>'.strip_tags($rss_feed->fields['subtitle'], '<b><i>').'</i>' : ''), $rss_feed->fields['link'], '', '_blank');
 
 	$rssentry_select = 	"
 						SELECT 		ploopi_mod_rss_entry.*
@@ -94,7 +94,7 @@ if ($block_rssfeed_id)
 	while($rssentry_row = $db->fetchrow($rssentry_result))
 	{
 		$ld = ploopi_timestamp2local($rssentry_row['timestp']);
-		$block->addmenu("{$rssentry_row['title']}<br />".ploopi_unixtimestamp2local($rssentry_row['published']), $rssentry_row['link'], '', '_blank');
+		$block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.ploopi_unixtimestamp2local($rssentry_row['published']), $rssentry_row['link'], '', '_blank');
 	}
 
 }
