@@ -20,8 +20,7 @@
 	along with Ploopi; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 $user = new user();
 
 if (!empty($_GET['user_id'])) $user->open($_GET['user_id']);
@@ -32,9 +31,9 @@ $user_date_expire = (!empty($user->fields['date_expire']) && $user->fields['date
 if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 {
 	$workspace_user = new workspace_user();
-	if (!empty($workspaceid) && !empty($user_id))
+	if (!empty($workspaceid) && !empty($_GET['user_id']))
 	{
-		$workspace_user->open($workspaceid, $user_id);
+		$workspace_user->open($workspaceid, $_GET['user_id']);
 	}
 	else
 	{
@@ -73,9 +72,11 @@ if (isset($_SESSION['module_system']) && !empty($_SESSION['module_system']))
 
 <?
 
-if (isset($error))
+if (isset($_REQUEST['error']))
 {
-	switch($error)
+	$error = '';
+
+	switch($_REQUEST['error'])
 	{
 		case 'password':
 			$error = ploopi_nl2br(_SYSTEM_MSG_PASSWORDERROR);
@@ -94,7 +95,7 @@ if (isset($error))
 	<?
 }
 ?>
-	<div class="ploopi_form" style="float:left;width:49%;">
+	<div class="ploopi_form" style="float:left;width:50%;">
 		<div style="padding:2px;">
 			<p>
 				<label><? echo _SYSTEM_LABEL_LASTNAME; ?>:</label>
@@ -142,7 +143,7 @@ if (isset($error))
 			</p>
 		</div>
 	</div>
-	<div style="float:left;width:49%" class="ploopi_form">
+	<div style="float:left;width:50%;" class="ploopi_form">
 		<div style="padding:2px;">
 			<p>
 				<label><? echo _SYSTEM_LABEL_LOGIN; ?>:</label>
@@ -211,8 +212,8 @@ if (isset($error))
 			if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 			{
 				?>
-				<p>
-					<label><? echo _SYSTEM_LABEL_LEVEL; ?>:</label>
+				<p style="margin-top:2px;padding:4px 0;border:2px solid #a0a0a0;background-color:#c0c0c0;">
+					<label style="font-weight:bold;"><? echo _SYSTEM_LABEL_LEVEL; ?>:</label>
 					<select class="select" name="userworkspace_adminlevel" tabindex="30">
 					<?
 					foreach ($ploopi_system_levels as $id => $label)
@@ -223,24 +224,6 @@ if (isset($error))
 							echo "<option $sel value=\"$id\">$label</option>";
 						}
 						// user / group admin
-					}
-					?>
-					</select>
-				</p>
-				<p>
-					<label><? echo _SYSTEM_LABEL_USER_PROFILE; ?>:</label>
-					<select class="select" name="userworkspace_id_profile" tabindex="31">
-					<?
-					$workspace = new workspace();
-					$workspace->open($workspaceid);
-					$ownprofiles = $workspace->getprofiles();
-
-					echo "<option value=\"-1\" >"._SYSTEM_LABEL_USER_UNDEFINED."</option>";
-
-					foreach ($ownprofiles as $id => $profile)
-					{
-						if ($workspace_user->fields['id_profile'] == $profile['id']) echo "<option value=\"".$id."\" selected>".$profile['label']."</option>";
-						else echo "<option value=\"".$id."\">".$profile['label']."</option>";
 					}
 					?>
 					</select>

@@ -20,8 +20,6 @@
 	along with Ploopi; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
 
 if ($_SESSION['ploopi']['connected'])
 {
@@ -476,12 +474,11 @@ if ($_SESSION['ploopi']['connected'])
 				$readonly = false;
 				if (!empty($currentfolder))
 				{
-					if (!$docfolder->open($currentfolder))
+					if (!$docfolder->open($currentfolder)) $currentfolder = 0;
+					else
 					{
-						$currentfolder = 0;
-						$docfolder->open($currentfolder);
+						$readonly = ($docfolder->fields['readonly_content'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']);
 					}
-					$readonly = ($docfolder->fields['readonly_content'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']);
 				}
 				?>
 
@@ -642,7 +639,7 @@ if ($_SESSION['ploopi']['connected'])
 			<div id="doc_browser"></div>
 			<script type="text/javascript">
 				<?
-				if (!empty($_GET['docfile_md5id']))
+				if (!empty($_GET['docfile_md5id'])) // ouverture directe d'un fichier (lien externe au module)
 				{
 					$docfile = new docfile();
 					if ($docfile->openmd5($_GET['docfile_md5id']))

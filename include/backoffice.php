@@ -189,13 +189,11 @@ if ($_SESSION['ploopi']['connected'])
 		'USER_LASTNAME' 		=> $_SESSION['ploopi']['user']['lastname'],
 		'USER_EMAIL' 			=> $_SESSION['ploopi']['user']['email'],
 
-		'MAINMENU_SHOWMYGROUPS_URL'		=> ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYGROUPS),
 		'MAINMENU_SHOWPROFILE_URL'		=> ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_PROFILE),
 		'MAINMENU_SHOWANNOTATIONS_URL'	=> ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_ANNOTATIONS),
 		'MAINMENU_SHOWTICKETS_URL'		=> ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_TICKETS),
 		'MAINMENU_SHOWSEARCH_URL'		=> ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_SEARCH),
 
-		'MAINMENU_SHOWMYGROUPS_SEL'		=> ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYGROUPS) ? 'selected' : '',
 		'MAINMENU_SHOWPROFILE_SEL'		=> ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_PROFILE) ? 'selected' : '',
 		'MAINMENU_SHOWANNOTATIONS_SEL'	=> ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_ANNOTATIONS) ? 'selected' : '',
 		'MAINMENU_SHOWTICKETS_SEL'		=> ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_TICKETS) ? 'selected' : '',

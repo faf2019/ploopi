@@ -1583,3 +1583,11 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2008-01-21 18:42:33
+
+ALTER TABLE `ploopi_tag` CHANGE `tag` `tag` CHAR( 32 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+ALTER TABLE `ploopi_tag` ADD INDEX ( `id_user` );
+ALTER TABLE `ploopi_tag` ADD INDEX ( `tag` );
+ALTER TABLE `ploopi_tag` ADD `tag_clean` CHAR( 32 ) NOT NULL AFTER `tag` ;
+ALTER TABLE `ploopi_annotation` ADD `id_element` CHAR( 32 ) NOT NULL DEFAULT '0' AFTER `id_workspace` ;
+UPDATE `ploopi_annotation` SET id_element = MD5(CONCAT(LPAD(id_module,4,'0'), LPAD(id_object,4,'0'), id_record));
+

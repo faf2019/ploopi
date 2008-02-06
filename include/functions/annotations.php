@@ -20,8 +20,7 @@
 	along with Ploopi; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 function ploopi_get_nbannotation($id_object, $id_record, $id_user = -1, $id_workspace = -1, $id_module = -1)
 {
 	global $db;
@@ -59,8 +58,6 @@ function ploopi_annotation($id_object, $id_record, $object_label = '')
 														'id_record' => $id_record,
 														'object_label' => $object_label
 													);
-	session_write_close();
-
 	?>
 	<div id="ploopiannotation_<? echo $id_annotation; ?>"></div>
 	<script type="text/javascript">

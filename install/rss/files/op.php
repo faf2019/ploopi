@@ -147,6 +147,8 @@ if (ploopi_ismoduleallowed('rss'))
 			$rssfeed_id = (isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'])) ? $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'] : '';
 			$rss_search_kw = (isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rss_search_kw'])) ? $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rss_search_kw'] : '';
 
+			$is_search = false;
+
 			$arrWhere = array();
 
 			if (!empty($rss_search_kw))
@@ -157,24 +159,26 @@ if (ploopi_ismoduleallowed('rss'))
 				}
 				else
 				{
+					$is_search = true;
+
 					$id_record = '';
 					if ($rsscat_id != '') $id_record = sprintf("%06d", $rsscat_id);
 					if ($rssfeed_id != '') $id_record .= sprintf("%06d", $rssfeed_id);
 
-					$arrRelevance = ploopi_search(_RSS_OBJECT_NEWS_ENTRY , $rss_search_kw, $id_record, array('orderby' => 'relevance', 'sort' => 'DESC', 'relevance_min' => 10));
+					$arrRelevance = ploopi_search($rss_search_kw, _RSS_OBJECT_NEWS_ENTRY, $id_record, $_SESSION['ploopi']['moduleid'], array('orderby' => 'relevance', 'sort' => 'DESC', 'relevance_min' => 10));
 
 					$i = 0;
-					$arrEntries = array();
+					$arrEntryId = array();
 
 					while ($i<25 && $i<sizeof($arrRelevance))
 					{
 						$e = current($arrRelevance);
-						$arrEntries[] = substr($e['id_record'],-32,32);
+						$arrEntryId[substr($e['id_record'],-32,32)] = $e['id_record'];
 						next($arrRelevance);
 						$i++;
 					}
 
-					$arrWhere[] = "entry.id IN ('".implode("','", $arrEntries)."')";
+					$arrWhere[] = "entry.id IN ('".implode("','", array_keys($arrEntryId))."')";
 				}
 			}
 
@@ -186,7 +190,7 @@ if (ploopi_ismoduleallowed('rss'))
 			$sql = 	"
 					SELECT 		entry.*,
 								feed.title as titlefeed,
-								IFNULL(cat.id, 0) as idcat,
+								IFNULL(cat.id, 0) as id_cat,
 								IFNULL(cat.title, '"._RSS_LABEL_NOCATEGORY."') as titlecat
 					FROM 		ploopi_mod_rss_entry entry
 
@@ -237,9 +241,34 @@ if (ploopi_ismoduleallowed('rss'))
 				<?
 				foreach($arrEntry as $entry)
 				{
+					if ($is_search)
+					{
+						$rel = $arrRelevance[$arrEntryId[$entry['id']]]['relevance'];
+
+						$blue = 128;
+						if ($rel>=50)
+						{
+							$red = 255-($blue*($rel-50))/50;
+							$green = 255;
+						}
+						else
+						{
+							$red = 255;
+							$green = (255-$blue)+($blue*$rel)/50;
+						}
+
+						$color = sprintf("%02X%02X%02X",$red,$green,$blue);
+					}
+
 					?>
 					<div class="rss_entry">
 						<a class="rss_entry<? echo (++$numrow)%2; ?>" href="<? echo $entry['link']; ?>" target="_blank">
+							<?
+							if ($is_search)
+							{
+								?><span style="float:right;border:1px solid #a0a0a0;background-color:#<? echo $color; ?>;margin:4px;padding:4px;font-weight:bold;"><? printf("%d %%", $rel); ?></span><?
+							}
+							?>
 							<b><? echo strip_tags($entry['title'], '<b><i>'); ?></b>
 							<br /><i><? echo ploopi_unixtimestamp2local($entry['published']); ?> &#149; <? echo $entry['titlefeed']; ?></i>
 						<?
@@ -260,7 +289,7 @@ if (ploopi_ismoduleallowed('rss'))
 					</div>
 					<div class="rss_entry_annotation">
 					<?
-					ploopi_annotation(_RSS_OBJECT_NEWS_ENTRY, $entry['id'], strip_tags($entry['title'], '<b><i>'));
+					ploopi_annotation(_RSS_OBJECT_NEWS_ENTRY, sprintf("%06d%06d%s", $entry['id_cat'], $entry['id_feed'], $entry['id']), strip_tags($entry['title'], '<b><i>'));
 					?>
 					</div>
 					<?

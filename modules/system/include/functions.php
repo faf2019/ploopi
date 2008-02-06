@@ -20,8 +20,7 @@
 	along with Ploopi; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 function system_mergegroups($array1, $array2)
 {
 	foreach($array2 as $k => $v) $array1[$k] = $v;
@@ -127,7 +126,6 @@ function system_getgroups()
 function system_getworkspaces()
 {
 	global $db;
-	global $workspaceid;
 
 	if (empty($_SESSION['system']['workspaces']))
 	{
@@ -169,7 +167,7 @@ function system_getworkspaces()
 */
 
 
-function system_build_tree($typetree, $from_wid = 0, $from_gid = 0, $str = '')
+function system_build_tree($typetree, $from_wid = 1, $from_gid = 0, $str = '')
 {
 	global $scriptenv;
 	global $workspaces;
@@ -185,8 +183,6 @@ function system_build_tree($typetree, $from_wid = 0, $from_gid = 0, $str = '')
 	switch($typetree)
 	{
 		case 'workspaces':
-			if ($from_wid == 0) $from_wid = 1;
-
 			$html = '';
 
 			if (isset($workspaces['tree'][$from_wid]))
@@ -234,10 +230,10 @@ function system_build_tree($typetree, $from_wid = 0, $from_gid = 0, $str = '')
 					$icon = ($workspace['web']) ? 'workspace-web' : 'workspace';
 					$new_str = ''; // decalage pour les noeuds suivants
 
-					if ($workspace['depth'] == 2 || $workspace['id'] == $from_wid) {}
+
+					if ($workspace['depth'] == 2 || $workspace['id'] == $_SESSION['ploopi']['workspaceid']) {/* racine */}
 					else
 					{
-
 						if (!$islast) $new_str = $str.'s'; // |
 						else $new_str = $str.'b';  // (vide)
 
@@ -245,7 +241,6 @@ function system_build_tree($typetree, $from_wid = 0, $from_gid = 0, $str = '')
 
 						$last = 'joinbottom';
 						if ($islast) $last = 'join';
-
 
 						if (isset($workspaces['tree'][$wid]) || isset($groups['workspace_tree'][$wid]))
 						{
@@ -276,7 +271,7 @@ function system_build_tree($typetree, $from_wid = 0, $from_gid = 0, $str = '')
 
 					$display = ($html_rec == '') ? 'none' : 'block';
 
-					if ($workspace['depth'] <= 2) $marginleft = 0;
+					if ($workspace['depth'] == 2 || $workspace['id'] == $_SESSION['ploopi']['workspaceid']) $marginleft = 0;
 					else $marginleft = 19;
 
 					$html .=	"

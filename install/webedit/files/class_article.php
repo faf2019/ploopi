@@ -49,15 +49,11 @@ class webedit_article extends data_object
 	{
 		if (empty($this->fields['metatitle'])) $this->fields['metatitle'] = $this->fields['title'];
 
+		if (empty($this->fields['timestp'])) $this->fields['timestp'] = ploopi_createtimestamp();
+
 		$res = parent::save();
 		if ($this->tablename == 'ploopi_mod_webedit_article_draft' && $this->fields['content'] != $this->original_content)
 		{
-			/* CALCUL DE SIMILARITE :
-			$pcent = '';
-			ploopi_print_r(similar_text(trim($this->original_content),trim($this->fields['content']),$pcent));
-			echo $pcent;
-			*/
-
 			$article_backup = new webedit_article_backup();
 			$article_backup->fields['id_article'] = $this->fields['id'];
 			$article_backup->fields['content'] = $this->fields['content'];
@@ -115,7 +111,7 @@ class webedit_article extends data_object
 			$article->fields['position'] = $this->fields['position'];
 			$article->save();
 
-			ploopi_search_create_index(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $article->fields['id'], $article->fields['title'], strip_tags(html_entity_decode($article->fields['content'])), "{$article->fields['metatitle']} {$article->fields['metakeywords']} {$article->fields['metadescription']}", true);
+			ploopi_search_create_index(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $article->fields['id'], $article->fields['title'], strip_tags(html_entity_decode($article->fields['content'])), "{$article->fields['metatitle']} {$article->fields['metakeywords']} {$article->fields['metadescription']}", true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
 
 
 			// update article positions

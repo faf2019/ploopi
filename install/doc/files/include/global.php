@@ -165,4 +165,41 @@ function doc_max_formsize()
 	if (_PLOOPI_USE_CGIUPLOAD) return(0);
 	else return(intval(ini_get('post_max_size')*1024));
 }
+
+
+function doc_record_isenabled($id_object, $id_record, $id_module)
+{
+	$enabled = false;
+
+	switch($id_object)
+	{
+		case _DOC_OBJECT_FILE;
+			include_once './modules/doc/class_docfile.php';
+			include_once './modules/doc/class_docfolder.php';
+
+			$objFile = new docfile();
+			if ($objFile->openmd5($id_record))
+			{
+				//ploopi_print_r($objFile);
+
+				if ($objFile->fields['id_user'] == $_SESSION['ploopi']['userid']) $enabled = true;
+				else
+				{
+					$objFolder = new docfolder();
+					if ($objFolder->open($objFile->fields['id_folder']))
+					{
+						if ($objFolder->fields['foldertype'] == 'public') $enabled = true;
+						else
+						{
+							doc_getshares($id_module);
+							if (in_array($objFile->fields['id_folder'], $_SESSION['doc'][$id_module]['shares']['folders'])) $enabled = true;
+						}
+					}
+				}
+			}
+		break;
+	}
+
+	return($enabled);
+}
 ?>

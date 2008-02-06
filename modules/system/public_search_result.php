@@ -51,10 +51,18 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 
 	// on construit $arrObjectTypes, la liste des objets ploopi
 	$db->query(	'
-				SELECT 		mbo.*, m.id as module_id, m.label as module_label
+				SELECT 		mbo.*,
+							m.id as module_id,
+							m.label as module_label,
+							mt.label as module_type
+
 				FROM 		ploopi_mb_object mbo
+
 				INNER JOIN	ploopi_module m
 				ON			m.id_module_type = mbo.id_module_type
+
+				INNER JOIN	ploopi_module_type mt
+				ON			mt.id = mbo.id_module_type
 				');
 
 	while ($row = $db->fetchrow())
@@ -62,114 +70,13 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 		if (empty($arrObjectTypes[$row['module_id']]))
 		{
 			$arrObjectTypes[$row['module_id']]['label'] = $row['module_label'];
+			$arrObjectTypes[$row['module_id']]['type'] = $row['module_type'];
 			$arrObjectTypes[$row['module_id']]['objects'] = array();
 		}
 		$arrObjectTypes[$row['module_id']]['objects'][$row['id']] = array('label' => $row['label'], 'script' => $row['script']);
 	}
 
-	// contruction du filtre de recherche
-	if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace']) && is_numeric($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace'])) $arrSearch[] = "e.id_workspace = {$_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace']}";
-
-	$strSearch = (empty($arrSearch)) ? '' : ' AND '.implode(' AND ',$arrSearch);
-
-	// on récupère la liste des racines contenues dans la liste des mots clés
-	list($arrStems) = ploopi_getwords($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'], true, true);
-
-	// on récupère la liste des mots contenus dans la liste des mots clés
-	list($arrKeywords) = ploopi_getwords($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'], true, false);
-
-	// pour chaque racine (stem), on cherche les occurences d'éléments correspondants
-	foreach($arrStems as $stem => $occ)
-	{
-		$sql = 	"
-				SELECT		se.relevance,
-							e.*
-
-				FROM		ploopi_index_stem s,
-							ploopi_index_stem_element se,
-							ploopi_index_element e
-
-				WHERE		e.id = se.id_element
-				AND			s.id = se.id_stem
-				AND			s.stem = '".$db->addslashes($stem)."'
-				{$strSearch}
-				";
-
-
-		$db->query($sql);
-
-		while ($row = $db->fetchrow())
-		{
-			if (!isset($arrRelevance[$row['id']]))
-			{
-				$arrRelevance[$row['id']] = $row;
-				$arrRelevance[$row['id']]['count'] = 1;
-				$arrRelevance[$row['id']]['kw'] = array();
-				$arrRelevance[$row['id']]['stem'] = array();
-			}
-			else
-			{
-				$arrRelevance[$row['id']]['relevance'] += $row['relevance'];
-				$arrRelevance[$row['id']]['count'] ++;
-			}
-			$arrRelevance[$row['id']]['stem'][$stem] = 1;
-		}
-	}
-
-	// pour chaque mot, on cherche les occurences d'éléments correspondants
-	foreach($arrKeywords as $kw => $occ)
-	{
-		$sql = 	"
-				SELECT		ke.relevance,
-							e.*,
-							k.keyword
-
-				FROM		ploopi_index_keyword k,
-							ploopi_index_keyword_element ke,
-							ploopi_index_element e
-
-				WHERE		e.id = ke.id_element
-				AND			k.id = ke.id_keyword
-				AND			k.keyword like '".$db->addslashes($kw)."%'
-				{$strSearch}
-				";
-
-
-		$db->query($sql);
-
-		while ($row = $db->fetchrow())
-		{
-			// relevance = relevance * ratio de similarité entre les 2 chaines
-			$row['relevance'] *= (strlen($kw)/strlen($row['keyword']));
-			unset($row['keyword']);
-
-			if (!isset($arrRelevance[$row['id']]))
-			{
-				$arrRelevance[$row['id']] = $row;
-				$arrRelevance[$row['id']]['count'] = 1;
-				$arrRelevance[$row['id']]['kw'] = array();
-				$arrRelevance[$row['id']]['stem'] = array();
-			}
-			else
-			{
-				$arrRelevance[$row['id']]['relevance'] += $row['relevance'];
-				$arrRelevance[$row['id']]['count'] ++;
-			}
-
-			$arrRelevance[$row['id']]['kw'][$kw] = 1;
-		}
-	}
-
-	// on trie les éléments par pertinence (relevance)
-	arsort($arrRelevance);
-
-	foreach($arrRelevance as $key => $element)
-	{
-		$arrRelevance[$key]['kw_ratio'] = (sizeof($arrRelevance[$key]['kw'])+sizeof($arrRelevance[$key]['stem'])) / (sizeof($arrKeywords)+sizeof($arrStems));
-		$arrRelevance[$key]['relevance'] = ($arrRelevance[$key]['relevance']/$arrRelevance[$key]['count']) * $arrRelevance[$key]['kw_ratio'];
-	}
-
-	arsort($arrRelevance);
+	$arrRelevance = ploopi_search($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'], '', '', '');
 
 	if (empty($arrRelevance))
 	{
@@ -185,18 +92,52 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 		$values = array();
 		$c = 0;
 
-		$columns['left']['relevance'] 		= array('label' => 'Pertinence', 'width' => 100, 'options' => array('sort' => true));
+		$columns['left']['relevance'] 		= array('label' => 'Pert.', 'width' => 65, 'options' => array('sort' => true));
 		$columns['auto']['label'] 			= array('label' => 'Libellé', 'options' => array('sort' => true));
-		$columns['right']['timestp'] 		= array('label' => 'Indexé le', 'width' => '90', 'options' => array('sort' => true));
+		$columns['right']['timestp_lastindex'] 		= array('label' => 'Indexé le', 'width' => '90', 'options' => array('sort' => true));
+		$columns['right']['timestp_create'] 		= array('label' => 'Ajouté le', 'width' => '140', 'options' => array('sort' => true));
+		$columns['right']['user'] 			= array('label' => 'Utilisateur', 'width' => '120', 'options' => array('sort' => true));
 		$columns['right']['workspace'] 		= array('label' => 'Espace', 'width' => '120', 'options' => array('sort' => true));
 		$columns['right']['module'] 		= array('label' => 'Module', 'width' => '120', 'options' => array('sort' => true));
 		$columns['right']['object_type'] 	= array('label' => 'Type d\'Objet', 'width' => '120', 'options' => array('sort' => true));
 
-		// DISPLAY FILES
+		// on parcourt le tableau des réponses
 		foreach ($arrRelevance as $row)
 		{
-			if (!empty($arrObjectTypes[$row['id_module']]))
+			$type = $arrObjectTypes[$row['id_module']]['type'];
+
+			$objUser = new user();
+			$strUserName = ($objUser->open($row['id_user'])) ? "{$objUser->fields['firstname']} {$objUser->fields['lastname']}" : '';
+
+			// inclusion des fonctions/constantes proposées par le module
+			ploopi_init_module($type);
+
+			// on cherche si on fonction de validation d'objet existe pour ce module
+			$boolRecordIsEnabled = true;
+			$funcRecordIsEnabled = "{$type}_record_isenabled";
+			if (function_exists($funcRecordIsEnabled))
 			{
+				// si la fonction existe, on l'appelle pour chaque enregistrement
+				$boolRecordIsEnabled = $funcRecordIsEnabled($row['id_object'], $row['id_record'], $row['id_module']);
+			}
+
+			if ($boolRecordIsEnabled && !empty($arrObjectTypes[$row['id_module']]))
+			{
+				$blue = 128;
+				if ($row['relevance']>=50)
+				{
+					$red = 255-($blue*($row['relevance']-50))/50;
+					$green = 255;
+				}
+				else
+				{
+					$red = 255;
+					$green = (255-$blue)+($blue*$row['relevance'])/50;
+				}
+
+				$color = sprintf("%02X%02X%02X",$red,$green,$blue);
+
+
 				$l_timestp_lastindex = ploopi_timestamp2local($row['timestp_lastindex']);
 				$l_timestp_create = ploopi_timestamp2local($row['timestp_create']);
 
@@ -214,11 +155,11 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 												$arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['script']
 											);
 
-				$rel = $row['relevance'];
-
-				$values[$c]['values']['relevance'] = array('label' => sprintf("%d %%", $rel), 'sort_label' => $rel);
+				$values[$c]['values']['relevance'] = array('label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $row['relevance']), 'sort_label' => $row['relevance']);
 				$values[$c]['values']['label'] = array('label' => $row['label']);
-				$values[$c]['values']['timestp'] = array('label' => $l_timestp_lastindex['date'], 'sort_label' => $row['timestp_lastindex']);
+				$values[$c]['values']['timestp_lastindex'] = array('label' => $l_timestp_lastindex['date'], 'sort_label' => $row['timestp_lastindex']);
+				$values[$c]['values']['timestp_create'] = array('label' => $l_timestp_create['date'].' '.$l_timestp_create['time'], 'sort_label' => $row['timestp_create']);
+				$values[$c]['values']['user'] = array('label' => $strUserName);
 				$values[$c]['values']['workspace'] = array('label' => $_SESSION['ploopi']['workspaces'][$row['id_workspace']]['label']);
 				$values[$c]['values']['module'] = array('label' => $arrObjectTypes[$row['id_module']]['label']);
 				$values[$c]['values']['object_type'] = array('label' => $arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['label']);

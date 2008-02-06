@@ -20,8 +20,7 @@
 	along with Ploopi; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 include_once('./include/classes/class_data_object.php');
 include_once('./modules/system/class_annotation_tag.php');
 include_once('./modules/system/class_tag.php');
@@ -44,15 +43,16 @@ class annotation extends data_object
 	{
 		global $db;
 
-		$id_tag = 0;
-
-		$tags = preg_split('/(,)|( )/',$this->tags,-1,PREG_SPLIT_NO_EMPTY);
+		$this->fields['id_element'] = ploopi_search_generate_id($this->fields['id_module'], $this->fields['id_object'], $this->fields['id_record']);
 
 		$id_annotation = parent::save();
 
+		$tags = preg_split('/(,)|( )/',$this->tags,-1,PREG_SPLIT_NO_EMPTY);
 		foreach($tags as $tag)
 		{
 			$tag = trim($tag);
+
+			$tag_clean = preg_replace("/[^a-zA-Z0-9]/","",ploopi_convertaccents($tag));
 
 			$select = "SELECT id FROM ploopi_tag WHERE tag = '".$db->addslashes($tag)."' AND id_user = {$this->fields['id_user']}";
 			$rs = $db->query($select);
@@ -60,6 +60,7 @@ class annotation extends data_object
 			{
 				$objtag = new tag();
 				$objtag->fields['tag'] = $tag;
+				$objtag->fields['tag_clean'] = $tag_clean;
 				$objtag->fields['id_user'] = $this->fields['id_user'];
 				$id_tag = $objtag->save();
 			}

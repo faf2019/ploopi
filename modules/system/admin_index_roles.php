@@ -20,11 +20,8 @@
 	along with Ploopi; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 include_once './modules/system/class_role.php';
-
-
 
 switch($op)
 {
@@ -84,7 +81,7 @@ if (!isset($_SESSION['system']['roleTabItem'])) $_SESSION['system']['roleTabItem
 
 echo $skin->create_tabs('',$tabs, $_SESSION['system']['roleTabItem']);
 
-echo $skin->open_simplebloc('');
+echo $skin->open_simplebloc();
 
 switch($_SESSION['system']['roleTabItem'])
 {

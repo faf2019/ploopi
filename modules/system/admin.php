@@ -68,17 +68,10 @@ else
 				$workspaceid = $_SESSION['system']['workspaceid'];
 			}
 
-			if (empty($groupid) && empty($workspaceid))
-			{
-				// lecture session
-				$groupid = $_SESSION['system']['groupid'];
-				$workspaceid = $_SESSION['system']['workspaceid'];
-			}
-
 			// toujours rien de sélectionné => recherche workspaceid par défaut
 			if (empty($groupid) && empty($workspaceid))
 			{
-				if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER && $_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN) $_SESSION['system_workspaceid'] = $_SESSION['ploopi']['workspaceid'];
+				if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER && $_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN) $workspaceid = $_SESSION['ploopi']['workspaceid'];
 				else $workspaceid = $workspaces['tree'][1][0];
 			}
 

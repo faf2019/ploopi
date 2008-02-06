@@ -1,3 +1,11 @@
+== Ploopi - version 1.0 alpha 2 ===============================================
+
+2008-02-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correctif d'un bug dans la gestion des espaces de travail quand l'utilisateur était Administrateur d'Espace ou Gestionaire d'Espace
+ * Correctif d'un bug sur la création des sous-espaces
+ * Mise en valeur du champ "niveau" dans la fiche utilisateur
+
 == Ploopi - version 1.0 alpha 1 ===============================================
 
 2008-01-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

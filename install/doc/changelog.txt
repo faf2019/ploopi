@@ -1,5 +1,11 @@
 == Module DOC - version 3.6 ====================================================
 
+2008-02-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correctif dans l'historique
+ * Mise à jour du moteur de recherche pour prendre en compte le moteur de recherche intégral de ploopi
+ * Ajout d'une fonction ( doc_record_isenabled($id_object, $id_record, $id_module) ) permettant au moteur de recherche intégral de connaître la disponibilité d'un document pour un utilisateur (en fonction des partages entre autre)
+
 2008-01-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Mise à niveau sécurité

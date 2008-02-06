@@ -56,10 +56,6 @@ if (isset($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']))
 														'options' => array('sort' => true)
 														);
 
-				$array_columns['right']['action'] = array(	'label' => '&nbsp;',
-															'width' => '20'
-															);
-
 				$array_columns['right']['taille'] = array(	'label' => 'Taille',
 															'width' => '80',
 															'options' => array('sort' => true)
@@ -146,7 +142,7 @@ if (isset($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']))
 			$array_values = array();
 
 			$array_columns['right']['ratio'] = array(	'label' => 'Ratio',
-														'width' => '50',
+														'width' => '60',
 														'options' => array('sort' => true)
 														);
 
@@ -160,16 +156,16 @@ if (isset($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']))
 															'options' => array('sort' => true)
 															);
 
-			$array_columns['right']['stem'] = array(	'label' => 'racine',
+			$array_columns['right']['stem'] = array(	'label' => 'Racine',
 														'width' => '100',
 														'options' => array('sort' => true)
 														);
 
-			$array_columns['auto']['keyword'] = array(	'label' => 'mot clé',
+			$array_columns['auto']['keyword'] = array(	'label' => 'Mot Clé',
 														'options' => array('sort' => true)
 														);
 
-			$index = ploopi_search_get_index(_DOC_OBJECT_FILE, $docfile->fields['id']);
+			$index = ploopi_search_get_index(_DOC_OBJECT_FILE, $docfile->fields['md5id']);
 
 			//ploopi_print_r($index);
 

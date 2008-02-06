@@ -20,8 +20,7 @@
 	along with Ploopi; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 ///////////////////////////////////////////////////////////////////////////
 // START PLOOPI ENGINE
 ///////////////////////////////////////////////////////////////////////////
@@ -36,7 +35,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mode'] == 'admin')
 	$skin = new skin();
 	$template_body = new Template($_SESSION['ploopi']['template_path']);
 
-	$template_body->set_filenames(array('body' => "popup.tpl"));
+	$template_body->set_filenames(array('body' => "light.tpl"));
 
 	// PLOOPI JS
 	$template_body->assign_block_vars('ploopi_js',array('PATH' => "./lib/prototype/prototype.pack.js"));

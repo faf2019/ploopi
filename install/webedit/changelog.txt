@@ -1,5 +1,10 @@
 == Module WebEdit - version 1.2 ====================================================
 
+2008-02-06  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Ajout d'une fonction ( webedit_record_isenabled($id_object, $id_record, $id_module) ) permettant au moteur de recherche intégral de connaître la disponibilité d'un article pour un utilisateur (en fonction des dates de publication par ex.)
+ * Correction d'un bug lors de la suppression d'une racine
+
 2008-01-06  Stéphane Escaich  <stephane@ovensia.fr>
 
  * Mise à niveau sécurité

@@ -554,4 +554,31 @@ function webedit_getobjectcontent($matches)
 	}
 	return($content);
 }
+
+
+function webedit_record_isenabled($id_object, $id_record, $id_module)
+{
+	$enabled = false;
+
+	switch($id_object)
+	{
+		case _WEBEDIT_OBJECT_ARTICLE_PUBLIC;
+			include_once './modules/webedit/class_article.php';
+
+			$article = new webedit_article();
+			if ($article->open($id_record))
+			{
+				$today = ploopi_createtimestamp();
+				if (	($article->fields['timestp_published'] <= $today || empty($article->fields['timestp_published'])) &&
+						($article->fields['timestp_unpublished'] >= $today || empty($article->fields['timestp_unpublished']))
+					)
+				{
+					$enabled = true;
+				}
+			}
+		break;
+	}
+
+	return($enabled);
+}
 ?>

@@ -35,60 +35,25 @@ if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']
 if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'] = '';
 if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'] = '';
 
+
 if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 {
-	$shares = ploopi_shares_get($_SESSION['ploopi']['userid']);
-
-	$list_sharedfolder = array();
-	$list_sharedfile = array();
-	foreach($shares as $sh)
-	{
-		if ($sh['id_object'] == _DOC_OBJECT_FOLDER) $list_sharedfolder[] = $sh['id_record'];
-		if ($sh['id_object'] == _DOC_OBJECT_FILE) $list_sharedfile[] = $sh['id_record'];
-	}
+	doc_getshares();
 
 	$docfolder_readonly_content = false;
 
-	$where = (!empty($list_sharedfile)) ? ' OR f.id IN ('.implode(',', $list_sharedfile).')' : '';
+	$where = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['shares']['files'])) ? ' OR f.id IN ('.implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['shares']['files']).')' : '';
 
 	$search = array();
-	$relevance = array();
+	$arrRelevance = array();
 
 	if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 	{
-		list($stems) = ploopi_getwords($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'], true, true);
-
-		foreach($stems as $stem => $occ)
-		{
-			$sql = 	"
-					SELECT		e.id_record,
-								se.relevance
-
-					FROM		ploopi_index_stem s,
-								ploopi_index_stem_element se,
-								ploopi_index_element e
-
-					WHERE		e.id = se.id_element
-					AND			s.id = se.id_stem
-					AND			s.stem = '".$db->addslashes($stem)."'
-					AND			e.id_object = "._DOC_OBJECT_FILE."
-					";
-
-			$db->query($sql);
-
-			while ($row = $db->fetchrow())
-			{
-				if (!isset($relevance[$row['id_record']])) $relevance[$row['id_record']] = array('relevance' => 0, 'count' => 0);
-				$relevance[$row['id_record']]['relevance'] += $row['relevance'];
-				$relevance[$row['id_record']]['count'] ++;
-			}
-		}
-
-		if (!empty($relevance)) $search[] = " f.id IN (".implode(',',array_keys($relevance)).") ";
-		else $search[] = " f.id = -1";
+		$arrRelevance = ploopi_search($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'], _DOC_OBJECT_FILE, '', $_SESSION['ploopi']['moduleid']);
 	}
 
-	arsort($relevance);
+	if (!empty($arrRelevance)) $search[] = " f.md5id IN ('".implode("','",array_keys($arrRelevance))."') ";
+	else $search[] = " f.id = -1";
 
 	if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_name'])) $search[] = " f.name LIKE '%".$db->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_name']))."%' ";
 	if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])) $search[] = " e.filetype LIKE '%".$db->addslashes($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])."%' ";
@@ -142,7 +107,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 
 		$folder_list = (!empty($folder_list_array)) ? 'OR f.id_folder IN ('.implode(',',$folder_list_array).')' : '';
 
-		$file_list = (!empty($list_sharedfile)) ? ' OR f.id IN ('.implode(',', $list_sharedfile).')' : '';
+		$file_list = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['shares']['files'])) ? ' OR f.id IN ('.implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['shares']['files']).')' : '';
 
 		$sql = 	"
 				SELECT 		f.*,
@@ -183,7 +148,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 			$values = array();
 			$c = 0;
 
-			$columns['left']['pert'] = array('label' => '', 'width' => '50', 'options' => array('sort' => true));
+			$columns['left']['pert'] = array('label' => '', 'width' => '65', 'options' => array('sort' => true));
 			$columns['auto']['nom'] = array('label' => 'Nom', 'options' => array('sort' => true));
 			$columns['right']['taille'] = array('label' => 'Taille', 'width' => '90', 'options' => array('sort' => true));
 			$columns['right']['dossier'] = array('label' => 'Dossier', 'width' => '120', 'options' => array('sort' => true));
@@ -240,9 +205,22 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 							<a title=\"Télécharger (ZIP)\" style=\"display:block;float:right;\" href=\"".ploopi_urlencode("{$scriptenv}?op=doc_filedownloadzip&docfile_md5id={$row['md5id']}")."\"><img src=\"./modules/doc/img/ico_download_zip.png\" /></a>
 							";
 
-				$pert = $relevance[$row['id']]['relevance']/(sizeof($stems));
+				$blue = 128;
+				if ($arrRelevance[$row['md5id']]['relevance']>=50)
+				{
+					$red = 255-($blue*($arrRelevance[$row['md5id']]['relevance']-50))/50;
+					$green = 255;
+				}
+				else
+				{
+					$red = 255;
+					$green = (255-$blue)+($blue*$arrRelevance[$row['md5id']]['relevance'])/50;
+				}
 
-				$values[$c]['values']['pert'] = array('label' => sprintf("%d %%", $pert), 'sort_label' => $pert, 'style' => 'text-align:right;background-color:#ffffff;');
+				$color = sprintf("%02X%02X%02X",$red,$green,$blue);
+
+
+				$values[$c]['values']['pert'] = array('label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $arrRelevance[$row['md5id']]['relevance']), 'sort_label' => $arrRelevance[$row['md5id']]['relevance']);
 				$values[$c]['values']['nom'] = array('label' => "<img src=\"./modules/doc/img/mimetypes/{$ico}\" /><span>&nbsp;{$row['name']}</span>");
 				$values[$c]['values']['taille'] = array('label' => "{$ksize} ko", 'style' => 'text-align:right');
 				$values[$c]['values']['dossier'] = array('label' => "<img src=\"./modules/doc/img/{$icofolder}.png\" /><span>&nbsp;{$row['fd_name']}</span>");

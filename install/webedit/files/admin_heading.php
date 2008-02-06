@@ -29,20 +29,20 @@ $heading->open($headingid);
 	if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT))
 	{
 		?>
-		<a style="text-decoration:none;float:right;" href="<? echo "$scriptenv?op=article_addnew"; ?>">&nbsp;Ajouter un article</a>
+		<a style="text-decoration:none;float:right;" href="<? echo "{$scriptenv}?op=article_addnew"; ?>">&nbsp;Ajouter un article</a>
 		<img style="float:right;border:0px;" src="./modules/webedit/img/doc_add.png">
 		<?
 	}
 	if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
 	{
 		?>
-		<a style="text-decoration:none;float:right;padding-right:6px;" href="<? echo "$scriptenv?op=heading_addnew"; ?>">&nbsp;Ajouter une sous-rubrique</a>
+		<a style="text-decoration:none;float:right;padding-right:6px;" href="<? echo "{$scriptenv}?op=heading_addnew"; ?>">&nbsp;Ajouter une sous-rubrique</a>
 		<img style="float:right;border:0px;" src="./modules/webedit/img/folder_add.png">
 		<?
 		if ($heading->fields['depth'] == 1) // root
 		{
 			?>
-			<a style="text-decoration:none;float:right;padding-right:6px;" href="<? echo "$scriptenv?op=heading_addroot"; ?>">&nbsp;Ajouter une racine</a>
+			<a style="text-decoration:none;float:right;padding-right:6px;" href="<? echo "{$scriptenv}?op=heading_addroot"; ?>">&nbsp;Ajouter une racine</a>
 			<img style="float:right;border:0px;" src="./modules/webedit/img/folder_add.png">
 			<?
 		}
@@ -52,7 +52,7 @@ $heading->open($headingid);
 	if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) && !($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1))
 	{
 		?>
-		<a style="text-decoration:none;float:right;padding-right:6px;" href="javascript:ploopi_confirmlink('<? echo "$scriptenv?op=heading_delete"; ?>','<? echo _PLOOPI_CONFIRM; ?>');">&nbsp;Supprimer cette rubrique</a>
+		<a style="text-decoration:none;float:right;padding-right:6px;" href="javascript:ploopi_confirmlink('<? echo "{$scriptenv}?op=heading_delete"; ?>','<? echo _PLOOPI_CONFIRM; ?>');">&nbsp;Supprimer cette rubrique</a>
 		<img style="float:right;border:0px;" src="./modules/webedit/img/folder_del.png">
 		<?
 	}
@@ -111,6 +111,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
 						?>
 						<option value=""><? echo $webedit_template_name; ?></option>
 						<?
+						$webedit_templates = webedit_gettemplates();
 						foreach ($webedit_templates as $tpl)
 						{
 							?>

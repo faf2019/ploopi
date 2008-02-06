@@ -1,6 +1,5 @@
 <?php
 /*
-	Copyright (c) 2002-2007 Netlor
 	Copyright (c) 2007-2008 Ovensia
 	Contributors hold Copyright (c) to their code submissions.
 
@@ -20,8 +19,7 @@
 	along with Ploopi; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 $parents = str_replace(';',',',$workspace->fields['parents']);
 
 // on recherche les rôles des modules de l'espace sélectionné (ou hérités des espaces parents)

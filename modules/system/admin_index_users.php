@@ -78,11 +78,16 @@ switch($op)
 		}
 
 
+		$reload = ''; // reloadsession or not ?
+
 		if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES && !empty($workspaceid))
 		{
 			// modify profile/adminlevel for current workspace/user
 			$workspace_user = new workspace_user();
 			$workspace_user->open($workspaceid, $user->fields['id']);
+
+			if (!empty($_POST['userworkspace_adminlevel']) && $workspace_user->fields['adminlevel'] != $_POST['userworkspace_adminlevel']) $reload = '&reloadsession';
+
 			$workspace_user->setvalues($_POST,'userworkspace_');
 			$workspace_user->save();
 		}
@@ -94,7 +99,8 @@ switch($op)
 			$group_user->save();
 		}
 
-		if ($passwordok) ploopi_redirect("$scriptenv?wspToolbarItem=tabUsers&usrTabItem=tabUserList&alphaTabItem=".(ord(strtolower($user->fields['lastname']))-96));
+
+		if ($passwordok) ploopi_redirect("{$scriptenv}?wspToolbarItem=tabUsers&usrTabItem=tabUserList&alphaTabItem=".(ord(strtolower($user->fields['lastname']))-96).$reload);
 		else ploopi_redirect("$scriptenv?op=modify_user&user_id=".$user->fields['id']."&error=password");
 	break;
 }
@@ -173,7 +179,7 @@ switch($_SESSION['system']['usrTabItem'])
 					$workspace_group->open($workspaceid,$_POST['orgid']);
 					$workspace_group->setvalues($_POST,'workspacegroup_');
 					$workspace_group->save();
-					ploopi_redirect("$scriptenv?reloadsession");
+					ploopi_redirect("{$scriptenv}?reloadsession");
 				}
 				else ploopi_redirect($scriptenv);
 			break;
@@ -384,6 +390,7 @@ switch($_SESSION['system']['usrTabItem'])
 
 		switch($op)
 		{
+			/*
 			case "save_user":
 				$newuser = false;
 
@@ -444,6 +451,7 @@ switch($_SESSION['system']['usrTabItem'])
 				if ($passwordok) ploopi_redirect("$scriptenv?system_usertabid="._SYSTEM_TAB_tabUserList."&alpha=".(ord(strtolower($user->fields['lastname']))-96));
 				else ploopi_redirect("$scriptenv?op=modify_user&user_id=".$user->fields['id']."&error=password");
 			break;
+			**/
 
 
 			case 'modify_user':

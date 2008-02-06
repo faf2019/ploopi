@@ -28,39 +28,30 @@ include_once './modules/webedit/class_heading.php';
 global $headingid;
 global $articleid;
 
-$op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
-
-// set type (draft ?)
-//if (isset($_GET['ploopi_moduletabid'])) $_SESSION['article'][$_SESSION['ploopi']['moduleid']]['type'] = $_GET['ploopi_moduletabid'];
+if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = '';
+if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = '';
+if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'] = 'draft';
+if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display'] = 'block';
 
 if (isset($_GET['type'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'] = $_GET['type'];
-if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'] = 'draft';
-
-if (!empty($_GET['headingid']) && is_numeric($_GET['headingid']))
-{
-	// reset articleid if new headingid
-	if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] != $_GET['headingid']) unset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid']);
-	$_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = $_GET['headingid'];
-
-	if (empty($_GET['articleid'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = '';
-}
-
-if (!empty($_GET['articleid']) && is_numeric($_GET['articleid'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = $_GET['articleid'];
-
-
-if (empty($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = '';
-if (empty($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = '';
-
 
 $headingid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'];
 $articleid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'];
 $type = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'];
 
-if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display'] = 'block';
+if (!empty($_GET['headingid']) && is_numeric($_GET['headingid']))
+{
+	$headingid = $_GET['headingid'];
 
-$webedit_templates = webedit_gettemplates();
+	// reset articleid if new headingid
+	if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] != $headingid) unset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid']);
 
-if (!isset($op)) $op = '';
+	$_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = $headingid;
+}
+
+if (!empty($_GET['articleid']) && is_numeric($_GET['articleid'])) $articleid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = $_GET['articleid'];
+
+$op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
 switch($op)
 {
@@ -110,7 +101,7 @@ switch($op)
 
 			ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
 
-			ploopi_redirect("$scriptenv?headingid=$headingid");
+			ploopi_redirect("{$scriptenv}?headingid={$headingid}");
 		}
 		else ploopi_redirect($scriptenv);
 	break;
@@ -202,9 +193,9 @@ switch($op)
 			{
 				$heading->delete(); // you don't have to delete the root heading
 				ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
-				ploopi_redirect("$scriptenv?headingid={$heading->fields['id_heading']}");
+				ploopi_redirect("{$scriptenv}?headingid={$heading->fields['id_heading']}");
 			}
-			else ploopi_redirect("$scriptenv");
+			else ploopi_redirect($scriptenv);
 		}
 	break;
 
@@ -375,6 +366,8 @@ switch($op)
 	// ===============
 
 	default :
+
+
 		if ($op == 'article_modify')
 		{
 			$article = new webedit_article($type);
@@ -407,6 +400,21 @@ switch($op)
 					<?
 					$headings = webedit_getheadings();
 					$articles = webedit_getarticles();
+
+					if (empty($headingid) || !isset($headings['list'][$headingid])) $headingid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = $headings['tree'][0][0];
+
+					if (!empty($_GET['headingid']) && is_numeric($_GET['headingid']))
+					{
+						$headingid = $_GET['headingid'];
+						if (!isset($headings['list'][$headingid])) $headingid = $headings['tree'][0][0]; // id n'existe pas
+
+						// reset articleid if new headingid
+						if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] != $headingid) unset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid']);
+
+						$_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = $headingid;
+					}
+
+					if (!empty($_GET['articleid']) && is_numeric($_GET['articleid'])) $articleid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = $_GET['articleid'];
 
 					if (empty($headingid)) $headingid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = $headings['tree'][0][0];
 

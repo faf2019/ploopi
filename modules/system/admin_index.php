@@ -247,26 +247,28 @@ switch ($_SESSION['system']['level'])
 							unset($_SESSION['system']['groups']);
 							unset($_SESSION['system']['workspaces']);
 
-							ploopi_redirect("$scriptenv?groupid=$group_id&reloadsession");
+							ploopi_redirect("{$scriptenv}?groupid={$group_id}&reloadsession");
 						break;
 
 
 						case 'save_workspace' :
+
 							$workspace = new workspace();
 							if (!empty($_POST['workspace_id']) && is_numeric($_POST['workspace_id'])) $workspace->open($_POST['workspace_id']);
 
-							if (!empty($_POST['parent_id']))
+							$workspace->setvalues($_POST,'workspace_');
+
+							if (!empty($_POST['workspace_id_workspace']))
 							{
 								$parent_workspace = new workspace();
-								$parent_workspace->open($_POST['parent_id']);
-								$workspace->fields['id_workspace'] = $_POST['parent_id'];
-								$workspace->fields['parents'] = "{$parent_parents};{$_POST['parent_id']}";
+								$parent_workspace->open($_POST['workspace_id_workspace']);
+								$workspace->fields['parents'] = "{$parent_workspace->fields['parents']};{$_POST['workspace_id_workspace']}";
 							}
-							$workspace->setvalues($_POST,'workspace_');
 
 							if (empty($_POST['workspace_admin'])) $workspace->fields['admin'] = 0;
 							if (empty($_POST['workspace_web'])) $workspace->fields['web'] = 0;
 							if (empty($_POST['workspace_mustdefinerule'])) $workspace->fields['mustdefinerule'] = 0;
+
 
 							$workspace_id = $workspace->save();
 
@@ -452,9 +454,9 @@ switch ($_SESSION['system']['level'])
 								$module_workspace->fields['id_module'] = $module_id;
 								$module_workspace->fields['id_workspace'] = $workspace_id;
 								$module_workspace->save();
-								if ($admin_redirect) ploopi_redirect("$scriptenv?reloadsession");
+								if ($admin_redirect) ploopi_redirect("{$scriptenv}?reloadsession");
 							}
-							else ploopi_redirect("$scriptenv?reloadsession");
+							else ploopi_redirect("{$scriptenv}?reloadsession");
 						break;
 
 						case 'switch_active':
@@ -484,7 +486,7 @@ switch ($_SESSION['system']['level'])
 								$module_workspace = new module_workspace();
 								$module_workspace->open($workspaceid,$_GET['moduleid']);
 								$module_workspace->changeposition('up');
-								ploopi_redirect("$scriptenv?reloadsession");
+								ploopi_redirect("{$scriptenv}?reloadsession");
 							}
 							else ploopi_redirect($scriptenv);
 						break;
@@ -495,23 +497,24 @@ switch ($_SESSION['system']['level'])
 								$module_workspace = new module_workspace();
 								$module_workspace->open($workspaceid,$_GET['moduleid']);
 								$module_workspace->changeposition('down');
-								ploopi_redirect("$scriptenv?reloadsession");
+								ploopi_redirect("{$scriptenv}?reloadsession");
 							}
 							else ploopi_redirect($scriptenv);
 						break;
 
 						case 'unlinkinstance' :
-							if (!empty($_POST['moduleid']) && is_numeric($_POST['moduleid']))
+							if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
 							{
 								$module = new module();
-								$module->open($moduleid);
+								$module->open($_GET['moduleid']);
 								ploopi_create_user_action_log(_SYSTEM_ACTION_UNLINKMODULE, $module->fields['label']);
 
 								$module_workspace = new module_workspace();
-								$module_workspace->open($workspaceid,$moduleid);
+								$module_workspace->open($workspaceid,$_GET['moduleid']);
 								$module_workspace->delete();
-								ploopi_redirect("$scriptenv?reloadsession");
+								ploopi_redirect("{$scriptenv}?reloadsession");
 							}
+							else ploopi_redirect($scriptenv);
 						break;
 
 						case 'save_module_props' :
@@ -529,19 +532,6 @@ switch ($_SESSION['system']['level'])
 								ploopi_redirect("{$scriptenv}?moduleid={$module->fields['id']}&reloadsession");
 							}
 							else ploopi_redirect($scriptenv);
-						break;
-
-						case 'save_module_params' :
-							$module = new module();
-							$module->open($moduleid);
-							ploopi_create_user_action_log(_SYSTEM_ACTION_PARAMMODULE, $module->fields['label']);
-
-							$param_module = new param();
-							$param_module->open($moduleid);
-							$param_module->setvalues($HTTP_POST_VARS);
-							$param_module->save();
-
-							ploopi_redirect("$scriptenv?moduleid=$moduleid&reloadsession");
 						break;
 
 						case 'delete' :
@@ -579,16 +569,19 @@ switch ($_SESSION['system']['level'])
 						break;
 
 						case 'apply_heritage' :
-							$children = $workspace->getworkspacechildrenlite();
-
-							foreach($children as $idchildren)
+							if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
 							{
-								$module_workspace = new module_workspace();
-								$module_workspace->open($idchildren,$moduleid);
-								$module_workspace->save();
-							}
-							ploopi_redirect("$scriptenv?op=modify&moduleid=$moduleid#modify");
+								$children = $workspace->getworkspacechildrenlite();
 
+								foreach($children as $idchildren)
+								{
+									$module_workspace = new module_workspace();
+									$module_workspace->open($idchildren,$moduleid);
+									$module_workspace->save();
+								}
+								ploopi_redirect("{$scriptenv}?op=modify&moduleid={$moduleid}#modify");
+							}
+							else ploopi_redirect($scriptenv);
 						break;
 
 						case 'modify':

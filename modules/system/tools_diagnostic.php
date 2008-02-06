@@ -20,8 +20,7 @@
 	along with Ploopi; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 echo $skin->open_simplebloc(_SYSTEM_LABEL_DIAGNOSTIC);
 
 
@@ -94,7 +93,7 @@ foreach($array_path as $key => $path)
 
 		case 'modules':
 			$bullet = ($testok) ? 'green' : 'orange';
-			$comment .= "\nIl n'est pas possible d'installer des modules dans cette configuration.";
+			$comment .= ($testok) ? '' : "\nIl n'est pas possible d'installer des modules dans cette configuration.";
 		break;
 	}
 
@@ -186,7 +185,7 @@ $upload_max_filesize =  intval(ini_get('upload_max_filesize')*1024);
 $post_max_size = intval(ini_get('post_max_size')*1024);
 
 // Test la taille max d'upload de fichier
-echo $fmax = (_PLOOPI_USE_CGIUPLOAD) ? $ploopi_maxfilesize : min($ploopi_maxfilesize, $upload_max_filesize, $post_max_size);
+$fmax = (_PLOOPI_USE_CGIUPLOAD) ? $ploopi_maxfilesize : min($ploopi_maxfilesize, $upload_max_filesize, $post_max_size);
 
 $testok = 1;
 if ($fmax < 2048) $testok = 3; // 2 Mo
