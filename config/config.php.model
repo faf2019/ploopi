@@ -26,14 +26,14 @@ $http_host = (isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : '';
 switch($http_host)
 {
 	default:
-		define ('_PLOOPI_SQL_LAYER','mysql');
+		define ('_PLOOPI_SQL_LAYER','<DB_TYPE>');
 
 		define ('_PLOOPI_DB_SERVER','<DB_SERVER>');
 		define ('_PLOOPI_DB_LOGIN','<DB_LOGIN>');
 		define ('_PLOOPI_DB_PASSWORD','<DB_PASSWORD>');
 		define ('_PLOOPI_DB_DATABASE','<DB_DATABASE>');
 
-		define ('_PLOOPI_PATHDATA', realpath('./data/'));
+		define ('_PLOOPI_PATHDATA', realpath('<DATAPATH>'));
 		define ('_PLOOPI_MAXFILESIZE', '16777216');
 
 		define ('_PLOOPI_USE_CGIUPLOAD', true);

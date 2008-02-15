@@ -1,496 +1,788 @@
 <?php
-/*
-	Copyright (c) 2002-2007 Netlor
-	Copyright (c) 2007-2008 Ovensia
-	Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+session_start();
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+define ('_PLOOPI_ERROR_REPORTING', E_ALL);
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+/**
+ * Init parameter for installation
+ */
+chdir('..');
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+//Inclusion/Requirement
+require_once './include/errors.php';
+require_once './include/global.php';
+require_once './include/classes/class_template.php';
+
+require_once './config/install/functions.inc.php';
+
+// Systeme Request
+$arrInstallRequestSys = array(
+  'apache'    => '1.3',
+  'php'       => '5.1'
+);
+
+$arrParamPhp = array(
+  'magic_quotes_gpc'    => 0,
+  'memory_limit'        => 128,
+  'post_max_size'       => 16,
+  'upload_max_filesize' => 16
+);
+
+// DataBase Request
+$arrInstallRequestDB = array(
+  'mysql'         => array('name' => 'MySQL','version' => '5','php' => 'mysql_connect', 'pdo' => 'PDO_MYSQL')
+);
+//  'postgresql'    => array('name' => 'PostgreSQL','version' => '7','php' => 'pg_connect','pdo' => 'PDO_PGSQL')
+
+// $arrInstallRequestDB Cleaner with pdo driver available (or function php ;-) )
+$arrInstallRequestDBTempo = array();
+foreach($arrInstallRequestDB as $type => $detail)
+{
+  if(extension_loaded($detail['pdo']) || function_exists($detail['php']))
+    $arrInstallRequestDBTempo[$type] = $detail;
+}
+$arrInstallRequestDB = $arrInstallRequestDBTempo;
+unset($arrInstallRequestDBTempo);
+
+//To convert language send by navigator to filename
+$arrInstallConvertLanguages = array(
+  'fr'    => 'french',
+  'en'    => 'english'
+);
+
+$booInstallAddButtonRefresh = false; // if true, add Refresh button in template
+$booInstallJamButtonNext = false; // if true, jam next button in template
+
+//Clean / init
+$arrInfos = array(); 
+
+//init tab param
+if(!isset($_SESSION['install'])) {
+  // in order of apparaition in file 'config.php.model'
+  $_SESSION['install'] = array(
+    '<DB_TYPE>'         => 'mysql',           // ok
+    '<DB_SERVER>'       => 'localhost',       // ok
+    '<DB_LOGIN>'        => 'root',            // ok
+    '<DB_PASSWORD>'     => '',                // ok
+    '<DB_DATABASE>'     => '',                // ok
+    '<DATAPATH>'        => './data',          // ok
+    '<USE_DBSESSION>'   => true,              // ok
+    '<URL_ENCODE>'      => true,              // ok
+    '<SECRETKEY>'       => 'ma phrase secrete', // ok
+    '<FRONTOFFICE>'     => true,              // ok
+    '<REWRITERULE>'     => true,              // ok
+    '<PEARPATH>'        => '/usr/share/php',  // ok
+    '<INTERNETPROXY_HOST>' => '',
+    '<INTERNETPROXY_PORT>' => '',
+    '<INTERNETPROXY_USER>' => '',
+    '<INTERNETPROXY_PASS>' => '',
+    // Not in config.php
+    '<ADMIN_LOGIN>'     => 'admin',           // ok
+    '<ADMIN_PASSWORD>'  => 'admin',           // ok
+    '<ADMIN_MAIL>'      => '',                // ok
+    '<LANGUAGE>'        => 'french',          // ok
+    '<SITE_NAME>'       => 'PLOOPI',          // ok
+    '<TIME_ZONE>'       => '1',
+    '<AUTO_UPDATE>'     => true,
+    'replace_database'  => false,
+    'level_validate'    => 0
+    );
+}
+/**
+ * LANGUAGE
+ */
+// Select message translation
+if(isset($_POST['language'])) $_SESSION['install']['<LANGUAGE>'] = $_POST['language'];
+if(!file_exists('./config/install/lang/'.$_SESSION['install']['<LANGUAGE>'].'.php'))
+{
+  $_SESSION['install']['<LANGUAGE>'] = catch_language_navigator($convert_languages,'french');
+}
+// Include message translation (or not...)
+if($_SESSION['install']['<LANGUAGE>'] != false && file_exists('./config/install/lang/'.$_SESSION['install']['<LANGUAGE>'].'.php'))
+{
+  require_once './config/install/lang/'.$_SESSION['install']['<LANGUAGE>'].'.php';
+}
+else
+{
+  unset($_SESSION['install']['<LANGUAGE>']);
+}
+
+/**
+ * All stages of installation
+ */
+$arrInstallAllStages = array(
+1 => _PLOOPI_INSTALL_LANGUAGE_AND_CTRL,
+_PLOOPI_INSTALL_PARAM_INSTALL,
+_PLOOPI_INSTALL_PARAM_DB,
+_PLOOPI_INSTALL_END
+);
+
+/**
+ * Stages
+ */
+// Error No javascript !!!
+if(isset($_POST['nojs'])) $_POST['stage'] = 1; 
+
+// Select installation stage
+if(!isset($_POST['stage'])) $_POST['stage'] = 1;
+
+// Control if the new level is good (if the user he's not a cheater)
+if($_POST['stage']>$_SESSION['install']['level_validate']+1)
+{
+  $_POST['stage'] = $_SESSION['install']['level_validate'];
+}
+else
+{
+  $_SESSION['install']['level_validate'] = $_POST['stage'];
+}
+
+// Controle previous stage
 
 
 ob_start();
-session_start();
-session_destroy();
-$_SESSION = array();
 
-define ('_PLOOPI_DISPLAY_ERRORS', true);
-define ('_PLOOPI_ERROR_REPORTING', E_ALL);
+/**
+ * Template
+ */
+// Select template
+$objInstallTemplate = new Template('./templates/install');
+$objInstallTemplate->set_filenames(array('install' => 'install.tpl'));
 
-chdir('..');
+/****************************************************************************************/
 
-include './include/errors.php';
-include './include/global.php';
-include './db/class_db_mysql.php';
+/**
+ * LEVEL OF INSTALLATION / TRAITEMENT
+ * 
+ * $infos[] must contain :
+ *   id        = used for div id
+ *   state     = only for test (true if status is ok, false else)
+ *   title     = root for message (title,mess AND warning) used for translate
+ *   form      = formulaire use to get information
+ *   title_replace = array width all text to replace %1,%2,... in title
+ *   mess_replace  = " in mess
+ *   warn_replace  = " in warn
+ *   form_hidden = 1  -> Form hidden width JS
+ *                 0  -> Form visible WIDTH JS
+ *                 not declare -> Form visible without JS
+ *   form      = Array content one a few arrays with two or three datas : 
+ *                - label for field
+ *                - input with html code form input (use class="form_input")
+ *                - js (optionnal) if exist a javascrit control will be created for this form. 
+ * 								Contain ploopi_validatefield line
+ */
 
-if (file_exists('./config/config.php')) ploopi_redirect('../');
+/**
+ * STAGE 1 = Choose Language + Control requested ------------------------------------------------------
+ */ 
+if($_POST['stage']>=1)
+{
+  if(isset($_POST['dir_pear'])) $_SESSION['install']['<PEARPATH>'] = ploopi_del_end_slashe(trim($_POST['dir_pear']));
+  
+  // Control APACHE
+  $arrInstallInfos[] = array(
+            'id'        => 'div_apache',
+            'state'     => version_compare(ploopi_apache_get_version(),$arrInstallRequestSys['apache'],'>='),
+            'title'     => '_PLOOPI_INSTALL_APACHE',
+            'mess_replace' => array(_PLOOPI_INSTALL_REQUIRED.$arrInstallRequestSys['apache'],_PLOOPI_INSTALL_INSTALLED.ploopi_apache_get_version()) 
+  );
+  // Control PHP
+  $arrInstallInfos[] = array(
+            'id'        => 'div_php',
+            'state'     => version_compare(phpversion(),$arrInstallRequestSys['php'],">="),
+            'title'     => '_PLOOPI_INSTALL_PHP', 
+            'mess_replace' => array(_PLOOPI_INSTALL_REQUIRED.$arrInstallRequestSys['php'],
+                                    _PLOOPI_INSTALL_INSTALLED.phpversion(),
+                                    ((intval(ini_get('magic_quotes_gpc')) == $arrParamPhp['magic_quotes_gpc']) ? 'OFF' : '<font style="color:red;">ON</font>'),
+                                    ((intval(ini_get('memory_limit')) >= $arrParamPhp['memory_limit']) ? ini_get('memory_limit') : '<font style="color:red;">'.ini_get('memory_limit').'</font>'),
+                                    ((intval(ini_get('post_max_size')) >= $arrParamPhp['post_max_size']) ? ini_get('post_max_size') : '<font style="color:red;">'.ini_get('post_max_size').'</font>'),
+                                    ((intval(ini_get('upload_max_filesize')) >= $arrParamPhp['upload_max_filesize']) ? ini_get('upload_max_filesize') : '<font style="color:red;">'.ini_get('upload_max_filesize').'</font>'))
+  );
+
+  // Control extension GD
+  $arrInstallInfos[] = array('id' => 'div_gd', 'state' => extension_loaded('gd'), 'title' => '_PLOOPI_INSTALL_GD');
+  // Control extention mCrypt
+  $arrInstallInfos[] = array('id' => 'div_mcrypt', 'state' => extension_loaded('mcrypt'), 'title' => '_PLOOPI_INSTALL_MCRYPT');
+  // Control extention mCrypt
+  $arrInstallInfos[] = array('id' => 'div_pdo', 'state' => extension_loaded('PDO'), 'title' => '_PLOOPI_INSTALL_PDO');
+  // Control extension Stem
+  $arrInstallInfos[] = array('id' => 'div_stem', 'state' => extension_loaded('stem'), 'title' => '_PLOOPI_INSTALL_STEM');
+  // Control Pear extension
+  ini_restore ('include_path');
+  if(file_exists($_SESSION['install']['<PEARPATH>'].'/PEAR.php'))
+  {
+    if(!strpos(ini_get('include_path'),$_SESSION['install']['<PEARPATH>'])) ini_set('include_path',ini_get('include_path').':'.$_SESSION['install']['<PEARPATH>']);
+    include_once 'PEAR.php';
+    $arrInstallInfos[] = array('id' => 'div_pear',
+                     'state' => true,
+                     'title' => '_PLOOPI_INSTALL_PEAR',
+                     'form'    => array( array('label' => _PLOOPI_INSTALL_SELECT_PEAR,
+                                               'input' => '<input name="dir_pear" id="dir_pear" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<PEARPATH>'].'"/>',
+                                               'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SELECT_PEAR_JS).'\',form.dir_pear,\'string\')'
+                                              )
+                                     )
+                    );
+    // Control packages pear's : PEAR_info, XML_Feed_Parser, Xml_Beautifier, OLE-0.6.1, Spreadsheet_Excel_Writer-0.9.1
+    // PEAR_info
+    if(file_exists($_SESSION['install']['<PEARPATH>'].'/PEAR/Info.php'))
+    {
+      include_once 'PEAR/Info.php';
+      $arrInstallInfos[] = array('id' => 'div_pear_info', 'state' => true, 'title' => '_PLOOPI_INSTALL_PEAR_INFO');
+      $packPEAR = new PEAR_Info(); // Class PEAR_Info for test if modules pear are installed 
+      // Cache_Lite
+      $arrInstallInfos[] = array('id' => 'div_pear_Cache_Lite', 'state' => $packPEAR->packageInstalled('Cache_Lite'), 'title' => '_PLOOPI_INSTALL_PEAR_CACHE_LITE');
+      // HTTP_Request
+      $arrInstallInfos[] = array('id' => 'div_pear_HTTP_Request', 'state' => $packPEAR->packageInstalled('HTTP_Request'), 'title' => '_PLOOPI_INSTALL_PEAR_HTTP_REQUEST');
+      // XML_Feed_Parser
+      $arrInstallInfos[] = array('id' => 'div_pear_XML_Feed_Parser', 'state' => $packPEAR->packageInstalled('XML_Feed_Parser'), 'title' => '_PLOOPI_INSTALL_PEAR_XML_FEED_PARSER');
+      // Xml_Beautifier
+      $arrInstallInfos[] = array('id' => 'div_pear_Xml_Beautifier', 'state' => $packPEAR->packageInstalled('Xml_Beautifier'), 'title' => '_PLOOPI_INSTALL_PEAR_XML_BEAUTIFIER');
+      // OLE-0.6.1
+      $arrInstallInfos[] = array('id' => 'div_pear_OLE', 'state' => $packPEAR->packageInstalled('OLE'), 'title' => '_PLOOPI_INSTALL_PEAR_OLE');
+      // Spreadsheet_Excel_Writer-0.9.1
+      $arrInstallInfos[] = array('id' => 'div_pear_Spreadsheet_Excel_Writer', 'state' => $packPEAR->packageInstalled('Spreadsheet_Excel_Writer'), 'title' => '_PLOOPI_INSTALL_PEAR_SPREADSHEET_EXCEL_WRITER');
+    }
+    else // PEAR_Info not installed
+    {
+      $arrInstallInfos[] = array('id' => 'div_pear_info', 'state' => false, 'title' => '_PLOOPI_INSTALL_PEAR_INFO');
+    }
+  }
+  else // PEAR not installed
+  {
+    $arrInstallInfos[] = array('id' => 'div_pear',
+                     'state' => false,
+                     'title' => '_PLOOPI_INSTALL_PEAR',
+                     'form'    => array( array('label' => _PLOOPI_INSTALL_SELECT_PEAR,
+                                               'input' => '<input name="dir_pear" id="dir_pear" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<PEARPATH>'].'"/>',
+                                               'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SELECT_PEAR_JS).'\',form.dir_pear,\'string\')'
+                                              )
+                                       )
+                     );
+  }
+  // test or re-test and stop at the courant stage if an error is detected
+  if(ploopi_find_error_install($arrInstallInfos))
+  {
+    $_POST['stage']=1;
+  }
+  elseif($_POST['stage']>1) 
+  {
+    unset($arrInstallInfos);
+  }
+
+  // features of stage 1 (at the end for eventual comeback)
+  if($_POST['stage']==1)
+  {    
+/* 
+    // List languages
+    $arrInstallListLanguages = ploopi_list_language_enable('./config/install/lang/');
+    $objInstallTemplate->assign_block_vars('stage1',array(
+        'TEXT'              => _PLOOPI_INSTALL_TEXT,
+        'CHOOSE_LANGUAGE'   => _PLOOPI_INSTALL_CHOOSE_LANGUAGE,
+    ));
+    // Block languages
+    foreach($arrInstallListLanguages as $strInstallLanguage)
+    {
+      $strInstallLanguageSelected = ($_SESSION['install']['<LANGUAGE>']==$strInstallLanguage) ? 'selected' : '';
+      $objInstallTemplate->assign_block_vars('stage1.languages',array(
+                    'LANGUAGE' => $strInstallLanguage,
+                    'SELECTED' => $strInstallLanguageSelected
+      ));
+    }
+*/
+  }
+} // end stage 1
+
+/**
+ * STAGE 2 = Control requested ------------------------------------------------------
+ */
+if($_POST['stage']>=2)
+{
+  if(isset($_POST['dir_data']))      $_SESSION['install']['<DATAPATH>'] = ploopi_del_end_slashe(trim($_POST['dir_data']));
+  if(isset($_POST['log_admin']))     $_SESSION['install']['<ADMIN_LOGIN>'] = trim($_POST['log_admin']);
+  if(isset($_POST['pass_admin']))    $_SESSION['install']['<ADMIN_PASSWORD>'] = trim($_POST['pass_admin']);
+  if(isset($_POST['secret']))        $_SESSION['install']['<SECRETKEY>'] = trim($_POST['secret']);
+  if(isset($_POST['email_admin']))   $_SESSION['install']['<ADMIN_MAIL>'] = trim($_POST['email_admin']);
+  if(isset($_POST['url_encode']))    $_SESSION['install']['<URL_ENCODE>'] = ($_POST['url_encode']=='true' ? true : false);
+  if(isset($_POST['session_bdd']))   $_SESSION['install']['<USE_DBSESSION>'] = ($_POST['session_bdd']=='true' ? true : false);
+  if(isset($_POST['front_active']))  $_SESSION['install']['<FRONTOFFICE>'] = ($_POST['front_active']=='true' ? true : false);
+  if(isset($_POST['front_rewrite'])) $_SESSION['install']['<REWRITERULE>'] = ($_POST['front_rewrite']=='true' ? true : false);
+  if(isset($_POST['proxy_host']))    $_SESSION['install']['<INTERNETPROXY_HOST>'] = trim($_POST['proxy_host']);
+  if(isset($_POST['proxy_port']))    $_SESSION['install']['<INTERNETPROXY_PORT>'] = intval($_POST['proxy_port']);
+  if(isset($_POST['proxy_user']))    $_SESSION['install']['<INTERNETPROXY_USER>'] = trim($_POST['proxy_user']);
+  if(isset($_POST['proxy_pass']))    $_SESSION['install']['<INTERNETPROXY_PASS>'] = trim($_POST['proxy_pass']);
+  
+  // Control config directories are writable
+  if(!is_writable('./config'))
+    $arrInstallInfos[] = array('id' => 'div_config', 'state' => false, 'title' => '_PLOOPI_INSTALL_CONFIG_WRITE');
+  // Control if config.php.modle exist
+  if(!file_exists('./config/config.php.model') || !is_readable('./config/config.php.model'))
+    $arrInstallInfos[] = array('id' => 'div_config_model', 'state' => false, 'title' => '_PLOOPI_INSTALL_CONFIG_MODEL');
+  // Control if file sql is ok
+  if(!file_exists('./install/system/ploopi.sql') || !is_readable('./install/system/ploopi.sql'))
+  $arrInstallInfos[] = array('id' => 'div_config', 'state' => false, 'title' => '_PLOOPI_INSTALL_SQL_FILE');
+  
+  
+  if ($_SESSION['install']['<URL_ENCODE>']==true)
+  { $strInstallUrlEncodeTrue = 'selected';$strUrlEncodeFalse = ''; }
+  else  
+  { $strInstallUrlEncodeTrue = '';$strUrlEncodeFalse = 'selected'; }
+  if($_SESSION['install']['<USE_DBSESSION>']==true)
+  { $strInstallSessionBddTrue = 'selected';$strInstallSessionBddFalse = ''; }
+  else
+  { $strInstallSessionBddTrue = '';$strInstallSessionBddFalse = 'selected'; }
+  if($_SESSION['install']['<FRONTOFFICE>']==true)
+  { $strInstallFrontEncodeTrue = 'selected';$strInstallFrontEncodeFalse = ''; }
+  else
+  { $strInstallFrontEncodeTrue = '';$strInstallFrontEncodeFalse = 'selected'; }
+  if($_SESSION['install']['<REWRITERULE>']==true)
+  { $strInstallFrontRewriteTrue = 'selected';$strInstallFrontRewriteFalse = ''; }
+  else
+  { $strInstallFrontRewriteTrue = '';$strInstallFrontRewriteFalse = 'selected'; }
+  
+  // test if data Folder no exist
+  if(!is_dir($_SESSION['install']['<DATAPATH>'])) 
+  {
+    $arrInstallInfos[] = array(
+            'id'      => 'div_data',
+            'state'   => false,
+            'title'   => '_PLOOPI_INSTALL_DATA_EXIST',
+            'title_replace' => array($_SESSION['install']['<DATAPATH>']),
+            'mess_replace' => array($_SESSION['install']['<DATAPATH>']),
+            'warn_replace' => array($_SESSION['install']['<DATAPATH>']),
+            'form'    => array( array('label'  => _PLOOPI_INSTALL_SELECT_DATA,
+                                      'input' => '<input name="dir_data" id="dir_data" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<DATAPATH>'].'"/>',
+                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SELECT_DATA_JS).'\',form.dir_data,\'string\')' 
+                                     )
+                              )
+                    );
+  }
+  else //Folder exist. Writable / no writable ?
+  {
+    $arrInstallInfos[] = array(
+            'id'      => 'div_data',
+            'state'   => is_writable($_SESSION['install']['<DATAPATH>']),
+            'title'    => '_PLOOPI_INSTALL_DATA_WRITE', 
+            'title_replace' => array($_SESSION['install']['<DATAPATH>']),
+            'mess_replace' => array($_SESSION['install']['<DATAPATH>'],_PLOOPI_INSTALL_SELECT_DATA_INFO_PLACE.ploopi_human_size(disk_free_space($_SESSION['install']['<DATAPATH>']))),
+            'warn_replace' => array($_SESSION['install']['<DATAPATH>']),
+            'form'    => array( array('label' => _PLOOPI_INSTALL_SELECT_DATA,
+                                      'input' => '<input name="dir_data" id="dir_data" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<DATAPATH>'].'"/>',
+                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SELECT_DATA_JS).'\',form.dir_data,\'string\')' 
+                                     )
+                              )
+                    );
+  }
+  
+  // Personal informations 
+  $arrInstallInfos[] = array('id' => 'div_title_param_ploopi',
+           'title' => '_PLOOPI_INSTALL_PARAM_PLOOPI',
+           'form'    => array( array('label' => _PLOOPI_INSTALL_SITE_NAME,
+                                     'input' => '<input name="site_name" id="site_name" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<SITE_NAME>'].'"/>',
+                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SITE_NAME_JS).'\',form.site_name,\'string\')' 
+                                    ),
+                               array('label' => _PLOOPI_INSTALL_ADMIN_LOGIN,
+                                     'input' => '<input name="log_admin" id="log_admin" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<ADMIN_LOGIN>'].'"/>',
+                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_ADMIN_LOGIN_JS).'\',form.log_admin,\'string\')' 
+                                    ),
+                               array('label' => _PLOOPI_INSTALL_ADMIN_PWD,
+                                     'input' => '<input name="pass_admin" id="pass_admin" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<ADMIN_PASSWORD>'].'"/>',
+                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_ADMIN_PWD_JS).'\',form.pass_admin,\'string\')' 
+                                    ),
+                               array('label' => _PLOOPI_INSTALL_SECRET_SENTENCE,
+                                     'input' => '<input name="secret" id="secret" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<SECRETKEY>'].'"/>',
+                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SECRET_SENTENCE_JS).'\',form.secret,\'string\')' 
+                                    ),
+                               array('label' => _PLOOPI_INSTALL_ADMIN_MAIL,
+                                     'input' => '<input name="email_admin" id="email_admin" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<ADMIN_MAIL>'].'"/>',
+                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_ADMIN_MAIL_JS).'\',form.email_admin,\'emptyemail\')' 
+                                    ),
+                               array('label' => _PLOOPI_INSTALL_URL_ENCODE,
+                                     'input' => '<select name="url_encode" id="url_encode" tabindex="%tabIndex%">
+                                                   <option value="true" '.$strInstallUrlEncodeTrue.'>'._PLOOPI_INSTALL_YES.'</option>
+                                                   <option value="false" '.$strInstallUrlEncodeFalse.'>'._PLOOPI_INSTALL_NO.'</option>
+                                                 </select>'
+                                    ),
+                               array('label' => _PLOOPI_INSTALL_SESSION_BDD,
+                                     'input' => '<select name="session_bdd" id="session_bdd" tabindex="%tabIndex%">
+                                                   <option value="true" '.$strInstallSessionBddTrue.'>'._PLOOPI_INSTALL_YES.'</option>
+                                                   <option value="false" '.$strInstallSessionBddFalse.'>'._PLOOPI_INSTALL_NO.'</option>
+                                                 </select>'
+                                    )
+                             )
+                   );
+  // FrontOffice and rewrite
+  $arrInstallInfos[] = array('id' => 'div_title_frontoffice',
+           'title' => '_PLOOPI_INSTALL_FRONT_OFFICE',
+           'form'    => array( array('label' => _PLOOPI_INSTALL_FRONT_ACTIVE,
+                                     'input' => '<select name="front_active" id="front_active" tabindex="%tabIndex%">
+                                                   <option value="true" '.$strInstallFrontActiveTrue.'>'._PLOOPI_INSTALL_YES.'</option>
+                                                   <option value="false" '.$strInstallFrontActiveFalse.'>'._PLOOPI_INSTALL_NO.'</option>
+                                                 </select>'
+                                    ),
+                               array('label' => _PLOOPI_INSTALL_FRONT_REWRITE,
+                                     'input' => '<select name="front_rewrite" id="front_rewrite" tabindex="%tabIndex%">
+                                                   <option value="true" '.$strInstallFrontActiveTrue.'>'._PLOOPI_INSTALL_YES.'</option>
+                                                   <option value="false" '.$strInstallFrontActiveFalse.'>'._PLOOPI_INSTALL_NO.'</option>
+                                                 </select>'
+                                    )
+                             )
+                   );
+
+  // Test internet connection
+  $booFormHidden = ($_POST['div_connect_form_hidden']=="1") ? true : false; 
+  require_once 'HTTP/Request.php';
+  $strTestUrl = 'http://www.ovensia.fr';
+  $objRequest = new HTTP_Request($testurl, array('timeout', 1000));
+  
+  if ($_SESSION['install']['<INTERNETPROXY_HOST>'] != '')
+  {
+  	$objRequest->setProxy( $_SESSION['install']['<INTERNETPROXY_HOST>'],
+  						   $_SESSION['install']['<INTERNETPROXY_PORT>'],
+  						   $_SESSION['install']['<INTERNETPROXY_USER>'],
+  						   $_SESSION['install']['<INTERNETPROXY_PASS>']
+  						 );
+  	$booFormHidden = '0';
+  }
+  else
+  	$booFormHidden = '1';
+    
+  // All form hidden or not
+  $arrInstallInfos[] = array('id' => 'div_connect', 
+                             'state' => $objRequest->sendRequest(), 
+                             'title' => '_PLOOPI_INSTALL_WEB_CONNECT',
+                             'form_hidden' => $booFormHidden,
+    			             'form'  => array( array('label' => _PLOOPI_INSTALL_PROXY_HOST,
+                                                     'input' => '<input name="proxy_host" id="proxy_host" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<INTERNETPROXY_HOST>'].'"/>'
+                                                    ),
+                                               array('label' => _PLOOPI_INSTALL_PROXY_PORT,
+                                                     'input' => '<input name="proxy_port" id="proxy_port" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<INTERNETPROXY_PORT>'].'"/>'
+                                                    ),
+                                               array('label' => _PLOOPI_INSTALL_PROXY_USER,
+                                                     'input' => '<input name="proxy_user" id="proxy_user" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<INTERNETPROXY_USER>'].'"/>'
+                                                     ),
+                                               array('label' => _PLOOPI_INSTALL_PROXY_PASS,
+                                                     'input' => '<input name="proxy_pass" id="proxy_pass" type="password" tabindex="%tabIndex%" value="'.$_SESSION['install']['<INTERNETPROXY_PASS>'].'"/>'
+                                                    )
+                                             )
+                            );
+                   
+  // test or re-test and stop at the courant stage if an error is detected
+  if(ploopi_find_error_install($arrInstallInfos))
+  {
+    $_POST['stage']=2;
+  }
+  elseif($_POST['stage']>2) 
+  {
+    unset($arrInstallInfos);
+  }
+
+  // features of stage 2 (at the end for eventual comeback)
+  if($_POST['stage']==2)
+  {
+    $objInstallTemplate->assign_block_vars('stage2',array(
+        'TEXT' => _PLOOPI_INSTALL_TEXT
+    ));
+  }
+} // end stage 2
+  
+/**
+ * STAGE 3 = Parameter for DB -------------------------------------------------------
+ */
+if($_POST['stage']>=3)
+{
+  if(isset($_POST['db_type']))     $_SESSION['install']['<DB_TYPE>'] = $_POST['db_type'];
+  if(isset($_POST['db_server']))   $_SESSION['install']['<DB_SERVER>'] = trim($_POST['db_server']);
+  if(isset($_POST['db_login']))    $_SESSION['install']['<DB_LOGIN>'] = trim($_POST['db_login']);
+  if(isset($_POST['db_pwd']))      $_SESSION['install']['<DB_PASSWORD>'] = trim($_POST['db_pwd']);
+  if(isset($_POST['db_database_name'])) $_SESSION['install']['<DB_DATABASE>'] = trim($_POST['db_database_name']);
+  $_SESSION['install']['<DB_DATABASE>'] = str_replace(' ','_',$_SESSION['install']['<DB_DATABASE>']);
+  // database reserved by mysql. Dont' Touch !
+  if($_SESSION['install']['<DB_TYPE>'] == 'mysql' && ($_SESSION['install']['<DB_DATABASE>'] === 'information_schema' || $_SESSION['install']['<DB_DATABASE>'] === 'mysql'))
+    $_SESSION['install']['<DB_DATABASE>'] = '';
+  // Replace database !
+  $_SESSION['install']['replace_database'] = (isset($_POST['del_exist']) && intval($_POST['del_exist'])==1) ? true : false;
+
+  // make a database menu
+  $strInstallListTypeDb='';
+  foreach($arrInstallRequestDB as $strInstallTypeDB => $arrDetail)
+  {
+    //if $strInstallTypeDB == 'mysql' && (function_exists('mysql_connect') || ()
+    $strInstallSelected = ($strInstallTypeDB == $_SESSION['install']['<DB_TYPE>']) ? 'selected' : '';
+    $strInstallListTypeDb .= '<option value="'.$strInstallTypeDB.'" '.$strInstallSelected.'>'.$arrDetail['name'].' (>='.$arrDetail['version'].')</option>';
+  }
+  
+  //ATTENTION : some information in the last $arrInstallInfos will be modify 
+  $intInstallInfos = count($arrInstallInfos);
+
+  // Principal Form for database configuration ($intInstallInfos used to modify this $arrInstallInfos) 
+  $arrInstallInfos[$intInstallInfos] = array('id' => 'div_title_database',
+            'state'   => true,
+            'title' => '_PLOOPI_INSTALL_DATA_BASE',
+            'title_replace' => array($arrInstallRequestDB[$_SESSION['install']['<DB_TYPE>']]['name']),
+            'mess_replace' => array('',''),
+            'warn_replace' => array(''),
+  			'form'    => array( array('label' => _PLOOPI_INSTALL_DB_TYPE,
+                                      'input' => '<select name="db_type" id="db_type" tabindex="%tabIndex%">'.$strInstallListTypeDb.'</select>'
+                                     ),
+                                array('label' => _PLOOPI_INSTALL_DB_SERVER,
+                                      'input' => '<input name="db_server" id="db_server" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<DB_SERVER>'].'"/>',
+                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_DB_SERVER_JS).'\',form.db_server,\'string\')'
+                                     ),
+                                array('label' => _PLOOPI_INSTALL_DB_LOGIN,
+                                      'input' => '<input name="db_login" id="db_login" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<DB_LOGIN>'].'"/>',
+                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_DB_LOGIN_JS).'\',form.db_login,\'string\')'
+                                     ),
+                                array('label' => _PLOOPI_INSTALL_DB_PWD,
+                                      'input' => '<input name="db_pwd" id="db_pwd" type="password" tabindex="%tabIndex%" value="'.$_SESSION['install']['<DB_PASSWORD>'].'"/>'
+                                     )
+                              )
+                  );
+  
+  $booFindDbListe = false;
+  // test type database connection and get the list of database
+  $strInstallSelected = ($_SESSION['install']['<DB_DATABASE>'] == '') ? 'selected' : '';
+  if(file_exists('./config/install/install_'.$_SESSION['install']['<DB_TYPE>'].'.inc.php'))
+  {
+      include_once './config/install/install_'.$_SESSION['install']['<DB_TYPE>'].'.inc.php';
+      //ALL DATABASE TESTS
+      if(!ploopi_Test_Database(&$arrInstallInfos,$intInstallInfos,$arrInstallRequestDB)) $booInstallJamButtonNext = true;
+  }
+  else
+  {
+    $arrInstallInfos[$intInstallInfos]['state'] = false;
+    $arrInstallInfos[$intInstallInfos]['warn_replace'] = array(_PLOOPI_INSTALL_DB_ERR_TEST);
+  }
+
+  // test or re-test and stop at the courant stage if an error is detected
+  if(ploopi_find_error_install($arrInstallInfos))
+  {
+    $_POST['stage']=3;
+  }
+  elseif($_POST['stage']>3) 
+  {
+    unset($arrInstallInfos);
+  }
+} // end stage 3
+  
+/**
+ * STAGE 4 = Final --------------------------------------------------
+ */
+if($_POST['stage']>=4)
+{
+  if(file_exists('./config/install/install_ploopi.inc.php'))
+  {
+    include_once './config/install/install_ploopi.inc.php';
+    // Create Site
+    if(!ploopi_create_site())
+    {
+      // Installation Error
+      $arrInstallInfos[] = array('id' => 'div_err_install', 'state' => False, 'title' => '_PLOOPI_INSTALL_ERR_INSTALL');
+    }
+    else
+    {
+      // End Message
+      $objInstallTemplate->assign_block_vars('stage4',array('TEXT' => _PLOOPI_INSTALL_END_OK));
+      unset($_SESSION['install']);
+    }
+  }
+  else
+  {
+      // File Install_ploopi.inc.php not found !
+      $arrInstallInfos[] = array('id' => 'div_err_install', 'state' => False, 'title' => '_PLOOPI_INSTALL_ERR_FILE_INSTALL');
+  }
+  
+  // test or re-test and stop at the courant stage if an error is detected
+  if(ploopi_find_error_install($arrInstallInfos))
+  {
+    $_POST['stage']=4;
+  }
+  elseif($_POST['stage']>4) 
+  {
+    unset($arrInstallInfos);
+  }
+} // end stage 4
+  
+/****************************************************************************************/
+
+/**
+ * Generator for template => 
+ *  management of infos, Suggest and warning
+ * 
+ * !!! Don't touch !!! It is automatic '^_^
+ */
+
+// Global tag for template
+$objInstallTemplate->assign_vars(array(
+  'PAGE_TITLE'        => _PLOOPI_INSTALL_TITLE.' v'._PLOOPI_VERSION,
+  'TEMPLATE_PATH'     => '../templates/install',
+  'JS_MESS'           => _PLOOPI_INSTALL_JAVASCRIPT,
+  'JS_ERROR'          => _PLOOPI_ERROR_JAVASCRIPT,
+  'ICON_ERROR'        => _PLOOPI_INSTALL_ICO_ERROR,
+  'STAGE'             => $_POST['stage']
+));
+
+// Creation of the menu
+foreach($arrInstallAllStages as $strInstallNumStage => $strInstallLibStage)
+{
+  $strInstallClassStage = (intval($_POST['stage'])>=intval($strInstallNumStage)) ? 'menu_ok' : 'menu';
+  $objInstallTemplate->assign_block_vars('menu',array(
+    'LEVEL' => $strInstallNumStage,
+    'NAME'  => $strInstallLibStage,
+    'CLASS' => $strInstallClassStage
+  ));
+}
+//init form control
+$strInstallFormControlJS = '';
+
+$booInstallError = false; // test if error detected in next tests
+$intTabIndex = 0;
+// transformation of the array $infos to template
+if(isset($arrInstallInfos))
+{
+  foreach($arrInstallInfos as $arrInstallInfo)
+  {
+    // title
+    $strInstallTplTitleTxt = (defined($arrInstallInfo['title'])) ? trim(constant($arrInstallInfo['title'])) : trim($arrInstallInfo['title']);
+    // Info/Suggest Message
+    $strInstallTplMessTxt = (defined($arrInstallInfo['title'].'_MESS')) ? trim(constant($arrInstallInfo['title'].'_MESS')) : '';
+    // Error message
+    if(!isset($arrInstallInfo['state'])) // NO Test
+    {
+      // no icon and no Warning message
+      $strInstallTplIcon = '';
+      $strInstallTplWarningTxt = '';
+    }
+    elseif($arrInstallInfo['state']==false) // state traitement
+      {
+        $booInstallError = true;
+        // Icon Error
+        $strInstallTplIcon = _PLOOPI_INSTALL_ICO_ERROR;
+        // Warning message
+        $strInstallTplWarningTxt = (defined($arrInstallInfo['title'].'_WARNING')) ? trim(constant($arrInstallInfo['title'].'_WARNING')) : '';
+      }
+      else
+      {
+        // Icon Valid
+        $strInstallTplIcon = _PLOOPI_INSTALL_ICO_OK;
+        // no Warning message
+        $strInstallTplWarningTxt = '';
+      }
+    // Remplace 
+    if(isset($arrInstallInfo['title_replace']) && $strInstallTplTitleTxt !== '') $strInstallTplTitleTxt = ploopi_str_replace($strInstallTplTitleTxt,$arrInstallInfo['title_replace'],true);   
+    if(isset($arrInstallInfo['mess_replace']) && $strInstallTplMessTxt !== '')  $strInstallTplMessTxt = ploopi_str_replace($strInstallTplMessTxt,$arrInstallInfo['mess_replace'],true);   
+    if(isset($arrInstallInfo['warn_replace']) && $strInstallTplWarningTxt !== '')  $strInstallTplWarningTxt = ploopi_str_replace($strInstallTplWarningTxt,$arrInstallInfo['warn_replace'],true);   
+
+    // Class title
+    $strInstallTplTitleClass = (isset($arrInstallInfo['state']) && $arrInstallInfo['state'] === false) ? 'info_error' : 'info_valid';
+//    // Class Form
+//    $strInstallTplFormClass = ($strInstallTplFormTxt != '') ? 'info_form' : 'info_noform';
+    // Class Mess
+    $strInstallTplMessClass = ($strInstallTplMessTxt != '') ? 'info_mess' : 'info_nomess';
+    // Class Warning 
+    $strInstallTplWarningClass =  ($strInstallTplWarningTxt != '') ? 'info_warning' : 'info_nowarning';
+
+    $strClassForm = 'noform';
+    $strJsForm = '';
+    $strInfoFormHidden = '';
+    // form Exist - Hidden or Not ?
+    if(isset($arrInstallInfo['form']))
+    {
+      $strClassForm = 'form';
+      if(isset($arrInstallInfo['form_hidden']))
+      {
+        $strClassForm = ($arrInstallInfo['form_hidden']==true) ? 'hideform' : 'form';
+        $strInstallTplTitleTxt .= '&nbsp;>&nbsp;<a class="more_param" href="javascript:changeHideView(\''.$arrInstallInfo['id'].'_form\');">'._PLOOPI_INSTALL_MORE_PARAM.'</a>';
+      }
+    }
+    // Set Template
+    $objInstallTemplate->assign_block_vars('infos',array(
+        'ID'              => $arrInstallInfo['id'],
+        'TITLE'           => $strInstallTplTitleTxt,
+        'CLASS_TITLE'     => $strInstallTplTitleClass,
+        'MESS'            => $strInstallTplMessTxt,
+        'CLASS_MESS'      => $strInstallTplMessClass,
+        'WARNING'         => $strInstallTplWarningTxt,
+        'CLASS_WARNING'   => $strInstallTplWarningClass,
+        'ID_FORM'         => $arrInstallInfo['id'].'_form',
+        'CLASS_FORM'      => $strClassForm
+    ));
+    // Add Form to template      
+    if(isset($arrInstallInfo['form']))
+    {
+      foreach($arrInstallInfo['form'] as $arrInstallForm)
+      {
+        $strInstallFormLibClass  = 'label';
+        $strInstallFormFieldClass = 'field'; 
+        if(isset($arrInstallForm['js']))
+        { 
+          $strInstallFormControlJS .= 'if ('.$arrInstallForm['js'].')';
+          $strInstallFormLibClass = 'label_must';
+          $strInstallFormFieldClass = 'field_must';
+        }
+        $intTabIndex++;
+        $arrInstallForm['input'] = str_replace('%tabIndex%',$intTabIndex,$arrInstallForm['input']);
+        $objInstallTemplate->assign_block_vars('infos.form_install', array(
+                'LABEL'        => $arrInstallForm['label'],
+                'CLASS_LABEL'  => $strInstallFormLibClass,
+                'FIELD'        => $arrInstallForm['input'],
+                'CLASS_FIELD'  => $strInstallFormFieldClass
+              ));        
+      }
+    }    
+    
+    // State Icon
+    if($strInstallTplIcon !== '') $objInstallTemplate->assign_block_vars('infos.state_icon', array('ICON' => $strInstallTplIcon));
+    // Icon for link to url "more info"
+    if(defined($arrInstallInfo['title'].'_URL_INFO')) $objInstallTemplate->assign_block_vars('infos.url_info', array('URL' => constant($arrInstallInfo['title'].'_URL_INFO'), 'URL_ICON' => _PLOOPI_INSTALL_URL_ICO));
+    
+  }
+}
+
+// Add javascript for control form 
+if($strInstallFormControlJS !== '')
+{
+  $objInstallTemplate->assign_vars(array('ADD_VALIDATEFIELD'  => 'javascript:return form_validate(this);',
+                               'ADDITIONAL_JAVASCRIPT_CTRL'   => 'function form_validate(form) {'.$strInstallFormControlJS.' return(true); return(false);}',
+                               'ADD_MESS_FIELD_MUST'          => _PLOOPI_INSTALL_FIELD_MUST
+                              ));
+}
+else
+{
+  $objInstallTemplate->assign_var('ADD_VALIDATEFIELD','javascript:return true;');
+}
+
+if($_POST['stage'] < count($arrInstallAllStages))
+{
+  /**
+   *  Management of buttons next, previous and refresh
+   */
+  // Next or End ?
+  $strLabelButton = ($_POST['stage']<count($arrInstallAllStages)-1) ? _PLOOPI_INSTALL_NEXT_BUTTON : _PLOOPI_INSTALL_FINISH_BUTTON;
+  // Button Enable or disable
+  $strDisableButton = ($booInstallError == false && $booInstallJamButtonNext == false) ? '' : 'disabled="true"';
+  $intTabINdex++;
+  $objInstallTemplate->assign_block_vars('next_button',array('NEXT_BUTTON' => $strLabelButton, 'NEXT_BUTTON_DISABLE' => $strDisableButton, 'TABINDEX' => $intTabIndex));
+  
+  // If error(s) found or button refresh forced or template contain a form => add button refresh
+  if($booInstallError || $booInstallAddButtonRefresh || $strInstallFormControlJS !== '') 
+  {
+    $intTabINdex++;
+    $objInstallTemplate->assign_block_vars('refresh_button',array('REFRESH_BUTTON' => _PLOOPI_INSTALL_REFRESH_BUTTON, 'TABINDEX' => $intTabIndex));
+  }
+  $intTabINdex++;
+  if($_POST['stage']>1) $objInstallTemplate->assign_block_vars('prec_button',array('PREC_BUTTON' => _PLOOPI_INSTALL_PREC_BUTTON, 'TABINDEX' => $intTabIndex));
+}
+// For debug use it
+//$template->assign_block_vars('debug',array('INFO' => ''));
+
+$objInstallTemplate->pparse('install');
+
+ob_end_flush();
+
+//echo '<div style="clear:both;background-color:#ffffff;">';
+//if(isset($_POST)) echo '$_POST';ploopi_print_r($_POST);
+//if(isset($arrInstallInfos)) echo '$infos';ploopi_print_r($arrInstallInfos);
+//if(isset($_SESSION)) echo '$_SESSION';ploopi_print_r($_SESSION);
+//echo '</div>';
+
 ?>
-
-<html>
-<head>
-	<title>Installation de PLOOPI v<? echo _PLOOPI_VERSION; ?></title>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<style type="text/css">
-	body
-	{
-		font-family: Tahoma, Helvetica, Verdana, Arial, sans-serif;
-		font-size: 11px;
-		font-weight: none;
-		color:#000000;
-		margin: 0px 0px 0px 0px;
-	}
-
-	table
-	{
-		font-family: Tahoma, Helvetica, Verdana, Arial, sans-serif;
-		font-size: 11px;
-		font-weight: none;
-		color:#000000;
-		margin: 0px 0px 0px 0px;
-	}
-
-	td.field
-	{
-		background-color:#FFFFFF;
-		font-family: Tahoma, Helvetica, Verdana, Arial, sans-serif;
-		font-size: 11px;
-		font-weight: none;
-		color:#000000;
-		text-align:left;
-	}
-
-	td.fieldvalidate
-	{
-		background-color:#FFFFFF;
-		font-family: Tahoma, Helvetica, Verdana, Arial, sans-serif;
-		font-size: 11px;
-		font-weight: none;
-		color:#000000;
-		text-align:right;
-	}
-
-	td.fieldtitle
-	{
-		background-color:#FFFFFF;
-		font-family: Tahoma, Helvetica, Verdana, Arial, sans-serif;
-		font-size: 11px;
-		font-weight: bold;
-		color:#000000;
-		text-align:right;
-	}
-
-	td.title
-	{
-		background-color:#DDDDDD;
-		font-size: 12px;
-		font-weight: bold;
-	}
-
-	td.title2
-	{
-		background-color:#F0F0F0;
-		font-size: 11px;
-		font-weight: bold;
-	}
-
-	td.warning
-	{
-		background-color:#FFFFFF;
-		font-family: Tahoma, Helvetica, Verdana, Arial, sans-serif;
-		font-size: 11px;
-		font-weight: bold;
-		color:#880000;
-		text-align:left;
-	}
-
-	table.table
-	{
-		background-color:#000000;
-	}
-
-	input.field
-	{
-		background-color:#FFFFFF;
-		font-family: Tahoma, Helvetica, Verdana, Arial, sans-serif;
-		font-size: 11px;
-		font-weight: none;
-		color:#000000;
-		text-align:left;
-		border-style: solid;
-		border-width: 1px;
-		border-color: #AAAAAA;
-		padding: 2px;
-	}
-
-	input.button
-	{
-		background-color:#DDDDDD;
-		font-family: Tahoma, Helvetica, Verdana, Arial, sans-serif;
-		font-size: 11px;
-		font-weight: none;
-		color:#000000;
-		text-align:center;
-		border-style: solid;
-		border-width: 1px;
-		border-color: #000000;
-		padding: 2px;
-	}
-
-	a.link
-	{
-		color:#002BB8;
-		text-decoration:none;
-	}
-
-	a.link:hover
-	{
-		text-decoration:underline;
-	}
-
-	.error
-	{
-		color:#a60000;
-		font-weight:bold;
-		padding:10px;
-	}
-	</style>
-</head>
-<body>
-<table width="100%" height="100%">
-	<tr>
-		<td align="center" valign="middle">
-		<?
-		if (isset($_GET['end']))
-		{
-			echo 	'
-					<b>FELICITATION</b>
-					<br>
-					<br>L\'installation est maintenant terminée.
-					<br>
-					<br><b>Vous devez maintenant supprimer (ou renommer) le fichier ./config/install.php</b>
-					<br>
-					<br>vous pouvez vous connecter en utilisant votre compte "Administrateur"
-					(login : admin / mot de passe : admin)
-					<br>
-					<br><a href="../index.php" class="link">Continuer</a>
-					';
-		}
-		elseif (	isset($_POST['install'])
-				&&	!empty($_POST['db_server'])
-				&& 	!empty($_POST['db_database'])
-				&& 	!empty($_POST['db_login'])
-				&& 	isset($_POST['db_password'])
-				&& 	!empty($_POST['admin_login'])
-				&& 	!empty($_POST['admin_password'])
-				&& 	!empty($_POST['secretkey'])
-				&& 	!empty($_POST['pearpath'])
-				)
-		{
-
-			$admin_password = empty($_POST['admin_password']) ? 'admin' : $_POST['admin_password'];
-
-			$dbok = false;
-
-			$db = new ploopi_db($_POST['db_server'], $_POST['db_login'], $_POST['db_password']);
-			if($db->connection_id) // connexion ok
-			{
-				// try selecting database
-				if ($db->selectdb($_POST['db_database'])) $dbok = true;
-				else
-				{
-					$db->query("CREATE DATABASE {$_POST['db_database']}");
-					$db = new ploopi_db($_POST['db_server'], $_POST['db_login'], $_POST['db_password'], $_POST['db_database']);
-					if ($db->isconnected()) $dbok = true;
-					else
-					{
-						echo 'Impossible de créer la base de données « '.$_POST['db_database'].' ».<br><a href="install.php" class="link">Retour</a>';
-					}
-				}
-			}
-			else
-			{
-				echo 'Les paramètres de connexion à la base de données sont erronés.<br><a href="install.php" class="link">Retour</a>';
-			}
-
-			if($dbok)
-			{
-				$model_file = './config/config.php.model';
-				$config_file = './config/config.php';
-				$sql_file = './install/system/ploopi.sql';
-				$content = '';
-
-				if (file_exists($model_file))
-				{
-					if ($f = fopen( $model_file, "r" ))
-					{
-						while (!feof($f)) $content .= fgets($f, 4096);
-						fclose($f);
-
-						$tags = array(	'<DB_SERVER>',
-										'<DB_DATABASE>',
-										'<DB_LOGIN>',
-										'<DB_PASSWORD>',
-										'<USE_DBSESSION>',
-										'<URL_ENCODE>',
-										'<SECRETKEY>',
-										'<FRONTOFFICE>',
-										'<REWRITERULE>',
-										'<PEARPATH>',
-										'<INTERNETPROXY_HOST>',
-										'<INTERNETPROXY_PORT>',
-										'<INTERNETPROXY_USER>',
-										'<INTERNETPROXY_PASS>'
-									);
-						$replacements = array(	$_POST['db_server'],
-												$_POST['db_database'],
-												$_POST['db_login'],
-												$_POST['db_password'],
-												($_POST['use_dbsession']) ? 'true' : 'false',
-												($_POST['url_encode']) ? 'true' : 'false',
-												$_POST['secretkey'],
-												($_POST['frontoffice']) ? 'true' : 'false',
-												($_POST['rewriterule']) ? 'true' : 'false',
-												$_POST['pearpath'],
-												$_POST['proxy_host'],
-												$_POST['proxy_port'],
-												$_POST['proxy_user'],
-												$_POST['proxy_pass']
-											);
-
-
-						$content = str_replace($tags, $replacements, $content);
-
-						if (is_writable('./config') && (is_writable('./config/config.php') || !file_exists('./config/config.php')))
-						{
-							if ($fc = fopen( $config_file, "w" ))
-							{
-								fwrite($fc, $content);
-								fclose($fc);
-
-								if (file_exists($sql_file))
-								{
-									$requests = array();
-									$sql = '';
-
-									$fs = fopen ($sql_file, "r");
-									while (!feof($fs))
-									{
-										$sql .= fgets($fs, 4096);
-									}
-									fclose ($fs);
-
-									$sql = trim($sql);
-									$requests = explode(";\n",$sql);
-
-									foreach ($requests AS $key => $request)
-									{
-										$request = trim($request);
-										if ($request!='') $db->query($request);
-									}
-
-									$db->query("UPDATE `ploopi_user` SET `login` = '".$_POST['admin_login']."', `password` = '".md5("{$_POST['secretkey']}/{$_POST['admin_login']}/".md5($admin_password))."' WHERE  `login` = 'admin'");
-								}
-								else ploopi_die('Fichier SQL inexistant.<br><a href="install.php" class="link">Retour</a>');
-
-								ploopi_redirect("install.php?end");
-							}
-							else ploopi_die('Impossible d\'écrire le fichier de configuration.<br><a href="install.php" class="link">Retour</a>');
-						}
-						else ploopi_die('Impossible d\'écrire le fichier de configuration.<br><a href="install.php" class="link">Retour</a>');
-
-						fclose($f);
-					}
-					else ploopi_die('Fichier "modèle" inaccessible.<br><a href="install.php" class="link">Retour</a>');
-				}
-				else ploopi_die('Fichier "modèle" inexistant.<br><a href="install.php" class="link">Retour</a>');
-			}
-
-
-		}
-		else
-		{
-			if (file_exists('config.php'))
-			{
-				?>
-				<div class="error">
-				<b />/!\ Il existe déjà un fichier de configuration</b>
-				<br />Vous devriez supprimer ou renommer le fichier « ./config/install.php »
-				</div>
-				<?
-			}
-
-			if (isset($_POST['install']))
-			{
-			?>
-				<div class="error">
-				/!\ Certains paramètres sont erronés ou manquants
-				</div>
-			<?
-			}
-			?>
-
-			<table cellpadding="4" cellspacing="1" class="table">
-				<form action="install.php" method="post">
-				<input type="hidden" name="install" value="" />
-				<tr>
-					<td class="title" colspan="2">Installation de PLOOPI <? echo _PLOOPI_VERSION; ?></td>
-				</tr>
-				<tr>
-					<td class="title2" colspan="2">Paramétrage « Base de Données »</td>
-				</tr>
-				<tr>
-					<td class="fieldtitle"><sup>* </sup>Serveur:</td>
-					<td class="field"><input type="text" name="db_server" value="<? echo empty($_POST['db_server']) ? 'localhost' : htmlentities($_POST['db_server']); ?>" class="field" /></td>
-				</tr>
-				<tr>
-					<td class="fieldtitle"><sup>* </sup>Nom de la Base:</td>
-					<td class="field"><input type="text" name="db_database" value="<? echo empty($_POST['db_database']) ? 'ploopi' : htmlentities($_POST['db_database']); ?>" class="field" /></td>
-				</tr>
-				<tr>
-					<td class="fieldtitle"><sup>* </sup>Utilisateur:</td>
-					<td class="field"><input type="text" name="db_login" value="<? echo empty($_POST['db_login']) ? 'root' : htmlentities($_POST['db_login']); ?>" class="field" /></td>
-				</tr>
-				<tr>
-					<td class="fieldtitle">Mot de Passe:</td>
-					<td class="field"><input type="password" name="db_password" value="<? echo empty($_POST['db_password']) ? '' : htmlentities($_POST['db_password']); ?>" class="field" /></td>
-				</tr>
-				<tr>
-					<td class="title2" colspan="2">Paramétrage « PLOOPI »</td>
-				</tr>
-				<tr>
-					<td class="fieldtitle"><sup>* </sup>Login Administrateur:</td>
-					<td class="field"><input type="text" name="admin_login" value="<? echo empty($_POST['admin_login']) ? 'admin' : htmlentities($_POST['admin_login']); ?>" class="field" /></td>
-				</tr>
-				<tr>
-					<td class="fieldtitle"><sup>* </sup>Mot de Passe Administrateur:</td>
-					<td class="field"><input type="text" name="admin_password" value="<? echo empty($_POST['admin_password']) ? 'admin' : htmlentities($_POST['admin_password']); ?>" class="field" /></td>
-				</tr>
-				<tr>
-					<td class="fieldtitle"><sup>* </sup>Phrase Secrète:</td>
-					<td class="field"><input type="text" name="secretkey" value="<? echo empty($_POST['secretkey']) ? 'ma phrase secrète' : htmlentities($_POST['secretkey']); ?>" class="field" /></td>
-				</tr>
-				<tr>
-					<td class="fieldtitle">Encodage des URL visibles:</td>
-					<td class="field">
-						<select class="field" name="url_encode">
-							<option value="true" <? echo (empty($_POST['url_encode']) || $_POST['url_encode']) ? 'selected' : ''; ?>>oui</option>
-							<option value="false" <? echo (!empty($_POST['url_encode']) && !$_POST['url_encode']) ? 'selected' : ''; ?>>non</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td class="fieldtitle">Stocker les Sessions en BDD:</td>
-					<td class="field">
-						<select class="field" name="use_dbsession">
-							<option value="true" <? echo (empty($_POST['use_dbsession']) || $_POST['use_dbsession']) ? 'selected' : ''; ?>>oui</option>
-							<option value="false" <? echo (!empty($_POST['use_dbsession']) && !$_POST['use_dbsession']) ? 'selected' : ''; ?>>non</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td class="fieldtitle"><sup>* </sup>Dossier PEAR:</td>
-					<td class="field"><input type="text" name="pearpath" value="<? echo empty($_POST['pearpath']) ? '/usr/share/php' : htmlentities($_POST['pearpath']); ?>" class="field" /></td>
-				</tr>
-				<tr>
-					<td class="title2" colspan="2">Paramétrage « FrontOffice »</td>
-				</tr>
-				<tr>
-					<td class="fieldtitle">Activation:</td>
-					<td class="field">
-						<select class="field" name="frontoffice">
-							<option value="true" <? echo (empty($_POST['frontoffice']) || $_POST['frontoffice']) ? 'selected' : ''; ?>>oui</option>
-							<option value="false" <? echo (!empty($_POST['frontoffice']) && !$_POST['frontoffice']) ? 'selected' : ''; ?>>non</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td class="fieldtitle">Réécriture d'URL:</td>
-					<td class="field">
-						<select class="field" name="rewriterule">
-							<option value="true" <? echo (!empty($_POST['rewriterule']) && $_POST['rewriterule']) ? 'selected' : ''; ?>>oui</option>
-							<option value="false" <? echo (empty($_POST['rewriterule']) || !$_POST['rewriterule']) ? 'selected' : ''; ?>>non</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td class="title2" colspan="2">Paramétrage « Proxy Internet » (option)</td>
-				</tr>
-				<tr>
-					<td class="fieldtitle">Adresse:</td>
-					<td class="field"><input type="text" name="proxy_host" value="<? echo (empty($_POST['proxy_host'])) ? '' : htmlentities($_POST['proxy_host']); ?>" class="field" /></td>
-				</tr>
-				<tr>
-					<td class="fieldtitle">Port:</td>
-					<td class="field"><input type="text" name="proxy_port" value="<? echo (empty($_POST['proxy_port'])) ? '' : htmlentities($_POST['proxy_port']); ?>" class="field" /></td>
-				</tr>
-				<tr>
-					<td class="fieldtitle">Utilisateur:</td>
-					<td class="field"><input type="text" name="proxy_user" value="<? echo (empty($_POST['proxy_user'])) ? '' : htmlentities($_POST['proxy_user']); ?>" class="field" /></td>
-				</tr>
-				<tr>
-					<td class="fieldtitle">Mot de Passe:</td>
-					<td class="field"><input type="text" name="proxy_pass" value="<? echo (empty($_POST['proxy_pass'])) ? '' : htmlentities($_POST['proxy_pass']); ?>" class="field" /></td>
-				</tr>
-				<!--tr>
-					<td class="fieldtitle">Activation Site CMS:</td>
-					<td class="field"><input type="checkbox" name="activecms"></td>
-				</tr-->
-				<tr>
-					<?
-						if (is_writable('./config'))
-						{
-						?>
-						<td class="fieldvalidate" colspan="2"><sup>* </sup>Champs obligatoires&nbsp;&nbsp;<input type="submit" value="Installer" class="button"></td>
-						<?
-						}
-						else
-						{
-						?>
-						<td class="warning" colspan="2">Le dossier « <? echo realpath ('./config'); ?> »<br>n'est pas accessible en écriture par Apache.<br>Impossible de continuer la procédure d'installation</td>
-						<?
-						}
-					?>
-				</tr>
-				</form>
-			</table>
-
-			<br>
-
-			<table cellpadding="4" cellspacing="1" class="table">
-				<tr>
-					<td class="title">Pré-requis</td>
-				</tr>
-				<tr>
-					<td class="field">
-					Ploopi v<? echo _PLOOPI_VERSION; ?> nécessite pour fonctionner correctement les applicatifs serveurs suivants :
-					<br />- <a class="link" href="http://fr.wikipedia.org/wiki/Apache_HTTP_Server" target="_blank">Apache</a> 1.3+ ou 2.+
-					<br />- <a class="link" href="http://fr.wikipedia.org/wiki/PHP_hypertext_preprocessor" target="_blank">PHP</a> 5.+
-					<br />- <a class="link" href="http://fr.wikipedia.org/wiki/Mysql" target="_blank">MySQL</a> 5.+
-					</td>
-				</tr>
-			</table>
-
-			<br>
-			<?
-		}
-		?>
-		</td>
-	</tr>
-</table>
-<?
-?>
-</body>
-</html>
