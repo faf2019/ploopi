@@ -12,7 +12,7 @@ chdir('..');
 //Inclusion/Requirement
 require_once './include/errors.php';
 require_once './include/global.php';
-require_once './include/classes/class_template.php';
+require_once './lib/template/template.php';
 
 require_once './config/install/functions.inc.php';
 
@@ -55,7 +55,7 @@ $booInstallAddButtonRefresh = false; // if true, add Refresh button in template
 $booInstallJamButtonNext = false; // if true, jam next button in template
 
 //Clean / init
-$arrInfos = array(); 
+$arrInfos = array();
 
 //init tab param
 if(!isset($_SESSION['install'])) {
@@ -122,7 +122,7 @@ _PLOOPI_INSTALL_END
  * Stages
  */
 // Error No javascript !!!
-if(isset($_POST['nojs'])) $_POST['stage'] = 1; 
+if(isset($_POST['nojs'])) $_POST['stage'] = 1;
 
 // Select installation stage
 if(!isset($_POST['stage'])) $_POST['stage'] = 1;
@@ -153,7 +153,7 @@ $objInstallTemplate->set_filenames(array('install' => 'install.tpl'));
 
 /**
  * LEVEL OF INSTALLATION / TRAITEMENT
- * 
+ *
  * $infos[] must contain :
  *   id        = used for div id
  *   state     = only for test (true if status is ok, false else)
@@ -165,32 +165,32 @@ $objInstallTemplate->set_filenames(array('install' => 'install.tpl'));
  *   form_hidden = 1  -> Form hidden width JS
  *                 0  -> Form visible WIDTH JS
  *                 not declare -> Form visible without JS
- *   form      = Array content one a few arrays with two or three datas : 
+ *   form      = Array content one a few arrays with two or three datas :
  *                - label for field
  *                - input with html code form input (use class="form_input")
- *                - js (optionnal) if exist a javascrit control will be created for this form. 
- * 								Contain ploopi_validatefield line
+ *                - js (optionnal) if exist a javascrit control will be created for this form.
+ *                              Contain ploopi_validatefield line
  */
 
 /**
  * STAGE 1 = Choose Language + Control requested ------------------------------------------------------
- */ 
+ */
 if($_POST['stage']>=1)
 {
   if(isset($_POST['dir_pear'])) $_SESSION['install']['<PEARPATH>'] = ploopi_del_end_slashe(trim($_POST['dir_pear']));
-  
+
   // Control APACHE
   $arrInstallInfos[] = array(
             'id'        => 'div_apache',
             'state'     => version_compare(ploopi_apache_get_version(),$arrInstallRequestSys['apache'],'>='),
             'title'     => '_PLOOPI_INSTALL_APACHE',
-            'mess_replace' => array(_PLOOPI_INSTALL_REQUIRED.$arrInstallRequestSys['apache'],_PLOOPI_INSTALL_INSTALLED.ploopi_apache_get_version()) 
+            'mess_replace' => array(_PLOOPI_INSTALL_REQUIRED.$arrInstallRequestSys['apache'],_PLOOPI_INSTALL_INSTALLED.ploopi_apache_get_version())
   );
   // Control PHP
   $arrInstallInfos[] = array(
             'id'        => 'div_php',
             'state'     => version_compare(phpversion(),$arrInstallRequestSys['php'],">="),
-            'title'     => '_PLOOPI_INSTALL_PHP', 
+            'title'     => '_PLOOPI_INSTALL_PHP',
             'mess_replace' => array(_PLOOPI_INSTALL_REQUIRED.$arrInstallRequestSys['php'],
                                     _PLOOPI_INSTALL_INSTALLED.phpversion(),
                                     ((intval(ini_get('magic_quotes_gpc')) == $arrParamPhp['magic_quotes_gpc']) ? 'OFF' : '<font style="color:red;">ON</font>'),
@@ -228,7 +228,7 @@ if($_POST['stage']>=1)
     {
       include_once 'PEAR/Info.php';
       $arrInstallInfos[] = array('id' => 'div_pear_info', 'state' => true, 'title' => '_PLOOPI_INSTALL_PEAR_INFO');
-      $packPEAR = new PEAR_Info(); // Class PEAR_Info for test if modules pear are installed 
+      $packPEAR = new PEAR_Info(); // Class PEAR_Info for test if modules pear are installed
       // Cache_Lite
       $arrInstallInfos[] = array('id' => 'div_pear_Cache_Lite', 'state' => $packPEAR->packageInstalled('Cache_Lite'), 'title' => '_PLOOPI_INSTALL_PEAR_CACHE_LITE');
       // HTTP_Request
@@ -264,15 +264,15 @@ if($_POST['stage']>=1)
   {
     $_POST['stage']=1;
   }
-  elseif($_POST['stage']>1) 
+  elseif($_POST['stage']>1)
   {
     unset($arrInstallInfos);
   }
 
   // features of stage 1 (at the end for eventual comeback)
   if($_POST['stage']==1)
-  {    
-/* 
+  {
+/*
     // List languages
     $arrInstallListLanguages = ploopi_list_language_enable('./config/install/lang/');
     $objInstallTemplate->assign_block_vars('stage1',array(
@@ -310,7 +310,7 @@ if($_POST['stage']>=2)
   if(isset($_POST['proxy_port']))    $_SESSION['install']['<INTERNETPROXY_PORT>'] = intval($_POST['proxy_port']);
   if(isset($_POST['proxy_user']))    $_SESSION['install']['<INTERNETPROXY_USER>'] = trim($_POST['proxy_user']);
   if(isset($_POST['proxy_pass']))    $_SESSION['install']['<INTERNETPROXY_PASS>'] = trim($_POST['proxy_pass']);
-  
+
   // Control config directories are writable
   if(!is_writable('./config'))
     $arrInstallInfos[] = array('id' => 'div_config', 'state' => false, 'title' => '_PLOOPI_INSTALL_CONFIG_WRITE');
@@ -320,11 +320,11 @@ if($_POST['stage']>=2)
   // Control if file sql is ok
   if(!file_exists('./install/system/ploopi.sql') || !is_readable('./install/system/ploopi.sql'))
   $arrInstallInfos[] = array('id' => 'div_config', 'state' => false, 'title' => '_PLOOPI_INSTALL_SQL_FILE');
-  
-  
+
+
   if ($_SESSION['install']['<URL_ENCODE>']==true)
   { $strInstallUrlEncodeTrue = 'selected';$strUrlEncodeFalse = ''; }
-  else  
+  else
   { $strInstallUrlEncodeTrue = '';$strUrlEncodeFalse = 'selected'; }
   if($_SESSION['install']['<USE_DBSESSION>']==true)
   { $strInstallSessionBddTrue = 'selected';$strInstallSessionBddFalse = ''; }
@@ -338,9 +338,9 @@ if($_POST['stage']>=2)
   { $strInstallFrontRewriteTrue = 'selected';$strInstallFrontRewriteFalse = ''; }
   else
   { $strInstallFrontRewriteTrue = '';$strInstallFrontRewriteFalse = 'selected'; }
-  
+
   // test if data Folder no exist
-  if(!is_dir($_SESSION['install']['<DATAPATH>'])) 
+  if(!is_dir($_SESSION['install']['<DATAPATH>']))
   {
     $arrInstallInfos[] = array(
             'id'      => 'div_data',
@@ -351,7 +351,7 @@ if($_POST['stage']>=2)
             'warn_replace' => array($_SESSION['install']['<DATAPATH>']),
             'form'    => array( array('label'  => _PLOOPI_INSTALL_SELECT_DATA,
                                       'input' => '<input name="dir_data" id="dir_data" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<DATAPATH>'].'"/>',
-                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SELECT_DATA_JS).'\',form.dir_data,\'string\')' 
+                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SELECT_DATA_JS).'\',form.dir_data,\'string\')'
                                      )
                               )
                     );
@@ -361,40 +361,40 @@ if($_POST['stage']>=2)
     $arrInstallInfos[] = array(
             'id'      => 'div_data',
             'state'   => is_writable($_SESSION['install']['<DATAPATH>']),
-            'title'    => '_PLOOPI_INSTALL_DATA_WRITE', 
+            'title'    => '_PLOOPI_INSTALL_DATA_WRITE',
             'title_replace' => array($_SESSION['install']['<DATAPATH>']),
             'mess_replace' => array($_SESSION['install']['<DATAPATH>'],_PLOOPI_INSTALL_SELECT_DATA_INFO_PLACE.ploopi_human_size(disk_free_space($_SESSION['install']['<DATAPATH>']))),
             'warn_replace' => array($_SESSION['install']['<DATAPATH>']),
             'form'    => array( array('label' => _PLOOPI_INSTALL_SELECT_DATA,
                                       'input' => '<input name="dir_data" id="dir_data" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<DATAPATH>'].'"/>',
-                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SELECT_DATA_JS).'\',form.dir_data,\'string\')' 
+                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SELECT_DATA_JS).'\',form.dir_data,\'string\')'
                                      )
                               )
                     );
   }
-  
-  // Personal informations 
+
+  // Personal informations
   $arrInstallInfos[] = array('id' => 'div_title_param_ploopi',
            'title' => '_PLOOPI_INSTALL_PARAM_PLOOPI',
            'form'    => array( array('label' => _PLOOPI_INSTALL_SITE_NAME,
                                      'input' => '<input name="site_name" id="site_name" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<SITE_NAME>'].'"/>',
-                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SITE_NAME_JS).'\',form.site_name,\'string\')' 
+                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SITE_NAME_JS).'\',form.site_name,\'string\')'
                                     ),
                                array('label' => _PLOOPI_INSTALL_ADMIN_LOGIN,
                                      'input' => '<input name="log_admin" id="log_admin" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<ADMIN_LOGIN>'].'"/>',
-                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_ADMIN_LOGIN_JS).'\',form.log_admin,\'string\')' 
+                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_ADMIN_LOGIN_JS).'\',form.log_admin,\'string\')'
                                     ),
                                array('label' => _PLOOPI_INSTALL_ADMIN_PWD,
                                      'input' => '<input name="pass_admin" id="pass_admin" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<ADMIN_PASSWORD>'].'"/>',
-                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_ADMIN_PWD_JS).'\',form.pass_admin,\'string\')' 
+                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_ADMIN_PWD_JS).'\',form.pass_admin,\'string\')'
                                     ),
                                array('label' => _PLOOPI_INSTALL_SECRET_SENTENCE,
                                      'input' => '<input name="secret" id="secret" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<SECRETKEY>'].'"/>',
-                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SECRET_SENTENCE_JS).'\',form.secret,\'string\')' 
+                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SECRET_SENTENCE_JS).'\',form.secret,\'string\')'
                                     ),
                                array('label' => _PLOOPI_INSTALL_ADMIN_MAIL,
                                      'input' => '<input name="email_admin" id="email_admin" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<ADMIN_MAIL>'].'"/>',
-                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_ADMIN_MAIL_JS).'\',form.email_admin,\'emptyemail\')' 
+                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_ADMIN_MAIL_JS).'\',form.email_admin,\'emptyemail\')'
                                     ),
                                array('label' => _PLOOPI_INSTALL_URL_ENCODE,
                                      'input' => '<select name="url_encode" id="url_encode" tabindex="%tabIndex%">
@@ -429,29 +429,29 @@ if($_POST['stage']>=2)
                    );
 
   // Test internet connection
-  $booFormHidden = ($_POST['div_connect_form_hidden']=="1") ? true : false; 
+  $booFormHidden = ($_POST['div_connect_form_hidden']=="1") ? true : false;
   require_once 'HTTP/Request.php';
   $strTestUrl = 'http://www.ovensia.fr';
   $objRequest = new HTTP_Request($testurl, array('timeout', 1000));
-  
+
   if ($_SESSION['install']['<INTERNETPROXY_HOST>'] != '')
   {
-  	$objRequest->setProxy( $_SESSION['install']['<INTERNETPROXY_HOST>'],
-  						   $_SESSION['install']['<INTERNETPROXY_PORT>'],
-  						   $_SESSION['install']['<INTERNETPROXY_USER>'],
-  						   $_SESSION['install']['<INTERNETPROXY_PASS>']
-  						 );
-  	$booFormHidden = '0';
+    $objRequest->setProxy( $_SESSION['install']['<INTERNETPROXY_HOST>'],
+                           $_SESSION['install']['<INTERNETPROXY_PORT>'],
+                           $_SESSION['install']['<INTERNETPROXY_USER>'],
+                           $_SESSION['install']['<INTERNETPROXY_PASS>']
+                         );
+    $booFormHidden = '0';
   }
   else
-  	$booFormHidden = '1';
-    
+    $booFormHidden = '1';
+
   // All form hidden or not
-  $arrInstallInfos[] = array('id' => 'div_connect', 
-                             'state' => $objRequest->sendRequest(), 
+  $arrInstallInfos[] = array('id' => 'div_connect',
+                             'state' => $objRequest->sendRequest(),
                              'title' => '_PLOOPI_INSTALL_WEB_CONNECT',
                              'form_hidden' => $booFormHidden,
-    			             'form'  => array( array('label' => _PLOOPI_INSTALL_PROXY_HOST,
+                             'form'  => array( array('label' => _PLOOPI_INSTALL_PROXY_HOST,
                                                      'input' => '<input name="proxy_host" id="proxy_host" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<INTERNETPROXY_HOST>'].'"/>'
                                                     ),
                                                array('label' => _PLOOPI_INSTALL_PROXY_PORT,
@@ -465,13 +465,13 @@ if($_POST['stage']>=2)
                                                     )
                                              )
                             );
-                   
+
   // test or re-test and stop at the courant stage if an error is detected
   if(ploopi_find_error_install($arrInstallInfos))
   {
     $_POST['stage']=2;
   }
-  elseif($_POST['stage']>2) 
+  elseif($_POST['stage']>2)
   {
     unset($arrInstallInfos);
   }
@@ -484,7 +484,7 @@ if($_POST['stage']>=2)
     ));
   }
 } // end stage 2
-  
+
 /**
  * STAGE 3 = Parameter for DB -------------------------------------------------------
  */
@@ -510,18 +510,18 @@ if($_POST['stage']>=3)
     $strInstallSelected = ($strInstallTypeDB == $_SESSION['install']['<DB_TYPE>']) ? 'selected' : '';
     $strInstallListTypeDb .= '<option value="'.$strInstallTypeDB.'" '.$strInstallSelected.'>'.$arrDetail['name'].' (>='.$arrDetail['version'].')</option>';
   }
-  
-  //ATTENTION : some information in the last $arrInstallInfos will be modify 
+
+  //ATTENTION : some information in the last $arrInstallInfos will be modify
   $intInstallInfos = count($arrInstallInfos);
 
-  // Principal Form for database configuration ($intInstallInfos used to modify this $arrInstallInfos) 
+  // Principal Form for database configuration ($intInstallInfos used to modify this $arrInstallInfos)
   $arrInstallInfos[$intInstallInfos] = array('id' => 'div_title_database',
             'state'   => true,
             'title' => '_PLOOPI_INSTALL_DATA_BASE',
             'title_replace' => array($arrInstallRequestDB[$_SESSION['install']['<DB_TYPE>']]['name']),
             'mess_replace' => array('',''),
             'warn_replace' => array(''),
-  			'form'    => array( array('label' => _PLOOPI_INSTALL_DB_TYPE,
+            'form'    => array( array('label' => _PLOOPI_INSTALL_DB_TYPE,
                                       'input' => '<select name="db_type" id="db_type" tabindex="%tabIndex%">'.$strInstallListTypeDb.'</select>'
                                      ),
                                 array('label' => _PLOOPI_INSTALL_DB_SERVER,
@@ -537,7 +537,7 @@ if($_POST['stage']>=3)
                                      )
                               )
                   );
-  
+
   $booFindDbListe = false;
   // test type database connection and get the list of database
   $strInstallSelected = ($_SESSION['install']['<DB_DATABASE>'] == '') ? 'selected' : '';
@@ -558,12 +558,12 @@ if($_POST['stage']>=3)
   {
     $_POST['stage']=3;
   }
-  elseif($_POST['stage']>3) 
+  elseif($_POST['stage']>3)
   {
     unset($arrInstallInfos);
   }
 } // end stage 3
-  
+
 /**
  * STAGE 4 = Final --------------------------------------------------
  */
@@ -590,24 +590,24 @@ if($_POST['stage']>=4)
       // File Install_ploopi.inc.php not found !
       $arrInstallInfos[] = array('id' => 'div_err_install', 'state' => False, 'title' => '_PLOOPI_INSTALL_ERR_FILE_INSTALL');
   }
-  
+
   // test or re-test and stop at the courant stage if an error is detected
   if(ploopi_find_error_install($arrInstallInfos))
   {
     $_POST['stage']=4;
   }
-  elseif($_POST['stage']>4) 
+  elseif($_POST['stage']>4)
   {
     unset($arrInstallInfos);
   }
 } // end stage 4
-  
+
 /****************************************************************************************/
 
 /**
- * Generator for template => 
+ * Generator for template =>
  *  management of infos, Suggest and warning
- * 
+ *
  * !!! Don't touch !!! It is automatic '^_^
  */
 
@@ -667,10 +667,10 @@ if(isset($arrInstallInfos))
         // no Warning message
         $strInstallTplWarningTxt = '';
       }
-    // Remplace 
-    if(isset($arrInstallInfo['title_replace']) && $strInstallTplTitleTxt !== '') $strInstallTplTitleTxt = ploopi_str_replace($strInstallTplTitleTxt,$arrInstallInfo['title_replace'],true);   
-    if(isset($arrInstallInfo['mess_replace']) && $strInstallTplMessTxt !== '')  $strInstallTplMessTxt = ploopi_str_replace($strInstallTplMessTxt,$arrInstallInfo['mess_replace'],true);   
-    if(isset($arrInstallInfo['warn_replace']) && $strInstallTplWarningTxt !== '')  $strInstallTplWarningTxt = ploopi_str_replace($strInstallTplWarningTxt,$arrInstallInfo['warn_replace'],true);   
+    // Remplace
+    if(isset($arrInstallInfo['title_replace']) && $strInstallTplTitleTxt !== '') $strInstallTplTitleTxt = ploopi_str_replace($strInstallTplTitleTxt,$arrInstallInfo['title_replace'],true);
+    if(isset($arrInstallInfo['mess_replace']) && $strInstallTplMessTxt !== '')  $strInstallTplMessTxt = ploopi_str_replace($strInstallTplMessTxt,$arrInstallInfo['mess_replace'],true);
+    if(isset($arrInstallInfo['warn_replace']) && $strInstallTplWarningTxt !== '')  $strInstallTplWarningTxt = ploopi_str_replace($strInstallTplWarningTxt,$arrInstallInfo['warn_replace'],true);
 
     // Class title
     $strInstallTplTitleClass = (isset($arrInstallInfo['state']) && $arrInstallInfo['state'] === false) ? 'info_error' : 'info_valid';
@@ -678,7 +678,7 @@ if(isset($arrInstallInfos))
 //    $strInstallTplFormClass = ($strInstallTplFormTxt != '') ? 'info_form' : 'info_noform';
     // Class Mess
     $strInstallTplMessClass = ($strInstallTplMessTxt != '') ? 'info_mess' : 'info_nomess';
-    // Class Warning 
+    // Class Warning
     $strInstallTplWarningClass =  ($strInstallTplWarningTxt != '') ? 'info_warning' : 'info_nowarning';
 
     $strClassForm = 'noform';
@@ -706,15 +706,15 @@ if(isset($arrInstallInfos))
         'ID_FORM'         => $arrInstallInfo['id'].'_form',
         'CLASS_FORM'      => $strClassForm
     ));
-    // Add Form to template      
+    // Add Form to template
     if(isset($arrInstallInfo['form']))
     {
       foreach($arrInstallInfo['form'] as $arrInstallForm)
       {
         $strInstallFormLibClass  = 'label';
-        $strInstallFormFieldClass = 'field'; 
+        $strInstallFormFieldClass = 'field';
         if(isset($arrInstallForm['js']))
-        { 
+        {
           $strInstallFormControlJS .= 'if ('.$arrInstallForm['js'].')';
           $strInstallFormLibClass = 'label_must';
           $strInstallFormFieldClass = 'field_must';
@@ -726,19 +726,19 @@ if(isset($arrInstallInfos))
                 'CLASS_LABEL'  => $strInstallFormLibClass,
                 'FIELD'        => $arrInstallForm['input'],
                 'CLASS_FIELD'  => $strInstallFormFieldClass
-              ));        
+              ));
       }
-    }    
-    
+    }
+
     // State Icon
     if($strInstallTplIcon !== '') $objInstallTemplate->assign_block_vars('infos.state_icon', array('ICON' => $strInstallTplIcon));
     // Icon for link to url "more info"
     if(defined($arrInstallInfo['title'].'_URL_INFO')) $objInstallTemplate->assign_block_vars('infos.url_info', array('URL' => constant($arrInstallInfo['title'].'_URL_INFO'), 'URL_ICON' => _PLOOPI_INSTALL_URL_ICO));
-    
+
   }
 }
 
-// Add javascript for control form 
+// Add javascript for control form
 if($strInstallFormControlJS !== '')
 {
   $objInstallTemplate->assign_vars(array('ADD_VALIDATEFIELD'  => 'javascript:return form_validate(this);',
@@ -762,9 +762,9 @@ if($_POST['stage'] < count($arrInstallAllStages))
   $strDisableButton = ($booInstallError == false && $booInstallJamButtonNext == false) ? '' : 'disabled="true"';
   $intTabINdex++;
   $objInstallTemplate->assign_block_vars('next_button',array('NEXT_BUTTON' => $strLabelButton, 'NEXT_BUTTON_DISABLE' => $strDisableButton, 'TABINDEX' => $intTabIndex));
-  
+
   // If error(s) found or button refresh forced or template contain a form => add button refresh
-  if($booInstallError || $booInstallAddButtonRefresh || $strInstallFormControlJS !== '') 
+  if($booInstallError || $booInstallAddButtonRefresh || $strInstallFormControlJS !== '')
   {
     $intTabINdex++;
     $objInstallTemplate->assign_block_vars('refresh_button',array('REFRESH_BUTTON' => _PLOOPI_INSTALL_REFRESH_BUTTON, 'TABINDEX' => $intTabIndex));
