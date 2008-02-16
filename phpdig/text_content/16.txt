@@ -1,7 +1,0 @@
-  dims.fr :: Connexion Présentation Documentation Communauté Télécharger A
-Propos  Forums de la communauté dims.fr  Retour | FAQ | Connexion | Rechercher | Profil | Liste des Membres | Liste
-des Membres | S'enregistrer dims.fr Index du Forum  Veuillez entrer votre nom d'utilisateur et votre mot de passe pour vous
-connecter. Nom d'utilisateur: Mot de passe: Se connecter automatiquement à
-chaque visite: J'ai oublié mon mot de passe  Solaris 1.13 phpBB theme/template 2003 - 2006 Jakob Persson readme Powered
-by phpBB 2001, 2002 phpBB Group Traduction par : phpBB-fr.com  size: 3.72 kio | render: 28 ms | sql: 5q 14% // coded, designed & hosted by
-netlor.fr // powered by dims v3  
