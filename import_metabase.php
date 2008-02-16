@@ -19,7 +19,7 @@ include_once './include/import_gpr.php';
 include_once './include/classes/class_data_object.php';
 
 // initialize DIMS
-include_once './include/global.php'; 		// load ploopi global functions & constants
+include_once './include/global.php';        // load ploopi global functions & constants
 
 if (file_exists('./db/class_db_'._PLOOPI_SQL_LAYER.'.php')) include_once './db/class_db_'._PLOOPI_SQL_LAYER.'.php';
 
@@ -57,160 +57,158 @@ $xml_schema = '<ploopi_mb_schema>';
 // ON PARCOURS TOUTES LES TABLES
 while($table = $db->fetchrow($result, MYSQL_NUM))
 {
-	if (strstr($table[0], $filtre))
-	{
+    if (strstr($table[0], $filtre))
+    {
 
-		$libelle = substr($table[0],strlen($filtre));
-		$visible=1;
+        $libelle = substr($table[0],strlen($filtre));
+        $visible=1;
 
-		$xml_tables .= 	"
-						<row>
-							<name>{$table[0]}</name>
-							<label>{$libelle}</label>
-							<visible>1</visible>
-						</row>
-						";
+        $xml_tables .=  "
+                        <row>
+                            <name>{$table[0]}</name>
+                            <label>{$libelle}</label>
+                            <visible>1</visible>
+                        </row>
+                        ";
 
-		$array_tables[$table[0]] = $table[0];
+        $array_tables[$table[0]] = $table[0];
 
-		$sql ="SHOW columns from `$table[0]`";
-		$result2=$db->query($sql);
+        $sql ="SHOW columns from `$table[0]`";
+        $result2=$db->query($sql);
 
-		// ON PARCOURT TOUS LES CHAMPS DE LA TABLE COURANTE
-		while($champ = $db->fetchrow($result2, MYSQL_NUM))
-		{
-			if ($champ[0] == 'id_module' || $champ[0] == 'id_workspace' || $champ[0] == 'id_user' || $champ[0] == 'id') $visible = 0;
-			else $visible = 1;
+        // ON PARCOURT TOUS LES CHAMPS DE LA TABLE COURANTE
+        while($champ = $db->fetchrow($result2, MYSQL_NUM))
+        {
+            if ($champ[0] == 'id_module' || $champ[0] == 'id_workspace' || $champ[0] == 'id_user' || $champ[0] == 'id') $visible = 0;
+            else $visible = 1;
 
-			$xml_fields .= 	"
-							<row>
-								<tablename>{$table[0]}</tablename>
-								<name>{$champ[0]}</name>
-								<label>{$champ[0]}</label>
-								<type>{$champ[1]}</type>
-								<visible>$visible</visible>
-							</row>
-							";
-			$array_fields[$table[0]][$champ[0]] = $champ;
-		}
-	}
+            $xml_fields .=  "
+                            <row>
+                                <tablename>{$table[0]}</tablename>
+                                <name>{$champ[0]}</name>
+                                <label>{$champ[0]}</label>
+                                <type>{$champ[1]}</type>
+                                <visible>$visible</visible>
+                            </row>
+                            ";
+            $array_fields[$table[0]][$champ[0]] = $champ;
+        }
+    }
 }
 
 foreach($array_fields as $tablename => $fields)
 {
-	foreach($fields as $fieldname => $detail)
-	{
-		switch($fieldname)
-		{
-			// cas particuliers, clés étrangères connues
-			case 'id_user':
-				$xml_relations .= 	"
-									<row>
-										<tablesrc>{$tablename}</tablesrc>
-										<fieldsrc>{$fieldname}</fieldsrc>
-										<tabledest>ploopi_user</tabledest>
-										<fielddest>id</fielddest>
-									</row>
-									";
+    foreach($fields as $fieldname => $detail)
+    {
+        switch($fieldname)
+        {
+            // cas particuliers, clés étrangères connues
+            case 'id_user':
+                $xml_relations .=   "
+                                    <row>
+                                        <tablesrc>{$tablename}</tablesrc>
+                                        <fieldsrc>{$fieldname}</fieldsrc>
+                                        <tabledest>ploopi_user</tabledest>
+                                        <fielddest>id</fielddest>
+                                    </row>
+                                    ";
 
-				$xml_schema .= 	"
-								<row>
-									<tablesrc>{$tablename}</tablesrc>
-									<tabledest>ploopi_user</tabledest>
-								</row>
-								";
-			break;
+                $xml_schema .=  "
+                                <row>
+                                    <tablesrc>{$tablename}</tablesrc>
+                                    <tabledest>ploopi_user</tabledest>
+                                </row>
+                                ";
+            break;
 
-			case 'id_module':
-				$xml_relations .= 	"
-									<row>
-										<tablesrc>{$tablename}</tablesrc>
-										<fieldsrc>{$fieldname}</fieldsrc>
-										<tabledest>ploopi_module</tabledest>
-										<fielddest>id</fielddest>
-									</row>
-									";
+            case 'id_module':
+                $xml_relations .=   "
+                                    <row>
+                                        <tablesrc>{$tablename}</tablesrc>
+                                        <fieldsrc>{$fieldname}</fieldsrc>
+                                        <tabledest>ploopi_module</tabledest>
+                                        <fielddest>id</fielddest>
+                                    </row>
+                                    ";
 
-				$xml_schema .= 	"
-								<row>
-									<tablesrc>{$tablename}</tablesrc>
-									<tabledest>ploopi_module</tabledest>
-								</row>
-								";
-			break;
+                $xml_schema .=  "
+                                <row>
+                                    <tablesrc>{$tablename}</tablesrc>
+                                    <tabledest>ploopi_module</tabledest>
+                                </row>
+                                ";
+            break;
 
-			case 'id_workspace':
-				$xml_relations .= 	"
-									<row>
-										<tablesrc>{$tablename}</tablesrc>
-										<fieldsrc>{$fieldname}</fieldsrc>
-										<tabledest>ploopi_workspace</tabledest>
-										<fielddest>id</fielddest>
-									</row>
-									";
+            case 'id_workspace':
+                $xml_relations .=   "
+                                    <row>
+                                        <tablesrc>{$tablename}</tablesrc>
+                                        <fieldsrc>{$fieldname}</fieldsrc>
+                                        <tabledest>ploopi_workspace</tabledest>
+                                        <fielddest>id</fielddest>
+                                    </row>
+                                    ";
 
-				$xml_schema .= 	"
-								<row>
-									<tablesrc>{$tablename}</tablesrc>
-									<tabledest>ploopi_workspace</tabledest>
-								</row>
-								";
-			break;
+                $xml_schema .=  "
+                                <row>
+                                    <tablesrc>{$tablename}</tablesrc>
+                                    <tabledest>ploopi_workspace</tabledest>
+                                </row>
+                                ";
+            break;
 
-			default:
-				// autres clés
+            default:
+                // autres clés
 
-				if (substr($fieldname, -3, 3) == '_id')
-				{
-					$tablename_dest = $filtre.substr($fieldname,0,strlen($fieldname)-3);
+                if (substr($fieldname, -3, 3) == '_id')
+                {
+                    $tablename_dest = $filtre.substr($fieldname,0,strlen($fieldname)-3);
 
-					if ($tablename != $tablename_dest) // on évite les tables liées sur elles-mêmes : non géré dans dbreport
-					{
-						$xml_relations .= 	"
-											<row>
-												<tablesrc>{$tablename}</tablesrc>
-												<fieldsrc>{$fieldname}</fieldsrc>
-												<tabledest>{$tablename_dest}</tabledest>
-												<fielddest>id</fielddest>
-											</row>
-											";
+                    if ($tablename != $tablename_dest) // on évite les tables liées sur elles-mêmes : non géré dans dbreport
+                    {
+                        $xml_relations .=   "
+                                            <row>
+                                                <tablesrc>{$tablename}</tablesrc>
+                                                <fieldsrc>{$fieldname}</fieldsrc>
+                                                <tabledest>{$tablename_dest}</tabledest>
+                                                <fielddest>id</fielddest>
+                                            </row>
+                                            ";
 
-						$xml_schema .= 	"
-										<row>
-											<tablesrc>{$tablename}</tablesrc>
-											<tabledest>{$tablename_dest}</tabledest>
-										</row>
-										";
-					}
-				}
-				if (substr($fieldname, 0, 3) == 'id_') // champs commençant par "id_"
-				{
-					$tablename_dest = $filtre.substr($fieldname,3,strlen($fieldname)-3);
+                        $xml_schema .=  "
+                                        <row>
+                                            <tablesrc>{$tablename}</tablesrc>
+                                            <tabledest>{$tablename_dest}</tabledest>
+                                        </row>
+                                        ";
+                    }
+                }
+                if (substr($fieldname, 0, 3) == 'id_') // champs commençant par "id_"
+                {
+                    $tablename_dest = $filtre.substr($fieldname,3,strlen($fieldname)-3);
 
-					if ($tablename != $tablename_dest) // on évite les tables liées sur elles-mêmes : non géré dans dbreport
-					{
-						$xml_relations .= 	"
-											<row>
-												<tablesrc>{$tablename}</tablesrc>
-												<fieldsrc>{$fieldname}</fieldsrc>
-												<tabledest>{$tablename_dest}</tabledest>
-												<fielddest>id</fielddest>
-											</row>
-											";
+                    if ($tablename != $tablename_dest) // on évite les tables liées sur elles-mêmes : non géré dans dbreport
+                    {
+                        $xml_relations .=   "
+                                            <row>
+                                                <tablesrc>{$tablename}</tablesrc>
+                                                <fieldsrc>{$fieldname}</fieldsrc>
+                                                <tabledest>{$tablename_dest}</tabledest>
+                                                <fielddest>id</fielddest>
+                                            </row>
+                                            ";
 
-						$xml_schema .= 	"
-										<row>
-											<tablesrc>{$tablename}</tablesrc>
-											<tabledest>{$tablename_dest}</tabledest>
-										</row>
-										";
-					}
-				}
-			break;
-		}
-
-
-	}
+                        $xml_schema .=  "
+                                        <row>
+                                            <tablesrc>{$tablename}</tablesrc>
+                                            <tabledest>{$tablename_dest}</tabledest>
+                                        </row>
+                                        ";
+                    }
+                }
+            break;
+        }
+    }
 }
 
 $xml_tables .= '</ploopi_mb_table>';
@@ -219,14 +217,14 @@ $xml_relations .= '</ploopi_mb_relation>';
 $xml_schema .= '</ploopi_mb_schema>';
 
 
-$xml = 	"
-		<ploopi>
-			{$xml_tables}
-			{$xml_fields}
-			{$xml_schema}
-			{$xml_relations}
-		</ploopi>
-		";
+$xml =  "
+        <ploopi>
+            {$xml_tables}
+            {$xml_fields}
+            {$xml_schema}
+            {$xml_relations}
+        </ploopi>
+        ";
 
 require_once 'XML/Beautifier.php'; // new pear XML, XML_Util & XML_Beautifier packages
 $fmt = new XML_Beautifier();

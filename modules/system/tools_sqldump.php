@@ -1,24 +1,24 @@
 <?php
 /*
-	Copyright (c) 2002-2007 Netlor
-	Copyright (c) 2007-2008 Ovensia
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 ?>
 <?
@@ -98,7 +98,7 @@ function get_table_content($db, $table, $handler)
     $i = 0;
     while($row = $db->fetchrow($result,MYSQL_NUM))
     {
-		if (!ini_get('safe_mode')) @set_time_limit(60);
+        if (!ini_get('safe_mode')) @set_time_limit(60);
         $table_list = "(";
 
         for($j=0; $j<$db->numfields($result);$j++)
@@ -191,14 +191,14 @@ else
 
         echo get_table_def($db, $table, $crlf).";$crlf$crlf";
 
-		$strDumpingData = '';
+        $strDumpingData = '';
 
-		print "#$crlf";
-		print "# $strDumpingData '$table'$crlf";
-		print "#$crlf";
-		print $crlf;
+        print "#$crlf";
+        print "# $strDumpingData '$table'$crlf";
+        print "#$crlf";
+        print $crlf;
 
-		get_table_content($db, $table, "my_handler");
+        get_table_content($db, $table, "my_handler");
         $i++;
     }
 }

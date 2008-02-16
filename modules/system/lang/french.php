@@ -1,24 +1,24 @@
 <?php
 /*
-	Copyright (c) 2002-2007 Netlor
-	Copyright (c) 2007-2008 Ovensia
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 ?>
 <?
@@ -174,65 +174,65 @@ define ('_SYSTEM_LABEL_META', 'META Informations');
 //define ('_SYSTEM_LABEL_HERITAGES', 'Héritages');
 define ('_SYSTEM_LABEL_USEDMODULES', 'Modules utilisés');
 
-define ('_SYSTEM_LABEL_GROUP_CODE', 		'Code');
-define ('_SYSTEM_LABEL_GROUP_NAME', 		'Nom');
-define ('_SYSTEM_LABEL_GROUP_FATHER', 		'Groupe Père');
-define ('_SYSTEM_LABEL_GROUP_SYSTEM', 		'Système');
-define ('_SYSTEM_LABEL_GROUP_SKIN', 	'Habillage');
-define ('_SYSTEM_LABEL_GROUP_ALLOWEDIP', 	'IP Autorisées');
-define ('_SYSTEM_LABEL_GROUP_ALLOWEDMAC', 	'Adresses MAC Autorisées');
-define ('_SYSTEM_LABEL_GROUP_WEBDOMAIN', 	'Domaine WEB');
-define ('_SYSTEM_LABEL_GROUP_MUSTDEFINERULE',	'Rôle obligatoire pour l\'accès à cet espace');
-define ('_SYSTEM_LABEL_GROUP_ACCESSMODE',	'Type d\'accès');
-define ('_SYSTEM_LABEL_GROUP_ADMIN',		'Activation du Backoffice');
-define ('_SYSTEM_LABEL_GROUP_WEB',		'Activation du Frontoffice');
-define ('_SYSTEM_LABEL_GROUP_ACCESSWARNING',	'(nécessite au moins un domaine)');
-define ('_SYSTEM_LABEL_GROUP_SHARED', 		'Partagé');
+define ('_SYSTEM_LABEL_GROUP_CODE',         'Code');
+define ('_SYSTEM_LABEL_GROUP_NAME',         'Nom');
+define ('_SYSTEM_LABEL_GROUP_FATHER',       'Groupe Père');
+define ('_SYSTEM_LABEL_GROUP_SYSTEM',       'Système');
+define ('_SYSTEM_LABEL_GROUP_SKIN',     'Habillage');
+define ('_SYSTEM_LABEL_GROUP_ALLOWEDIP',    'IP Autorisées');
+define ('_SYSTEM_LABEL_GROUP_ALLOWEDMAC',   'Adresses MAC Autorisées');
+define ('_SYSTEM_LABEL_GROUP_WEBDOMAIN',    'Domaine WEB');
+define ('_SYSTEM_LABEL_GROUP_MUSTDEFINERULE',   'Rôle obligatoire pour l\'accès à cet espace');
+define ('_SYSTEM_LABEL_GROUP_ACCESSMODE',   'Type d\'accès');
+define ('_SYSTEM_LABEL_GROUP_ADMIN',        'Activation du Backoffice');
+define ('_SYSTEM_LABEL_GROUP_WEB',      'Activation du Frontoffice');
+define ('_SYSTEM_LABEL_GROUP_ACCESSWARNING',    '(nécessite au moins un domaine)');
+define ('_SYSTEM_LABEL_GROUP_SHARED',       'Partagé');
 
-define ('_SYSTEM_LABEL_USER_PROFILE',		'Profil par défaut');
-define ('_SYSTEM_LABEL_USER_UNDEFINED',		'Non défini');
-define ('_SYSTEM_LABEL_GROUP_WEBDOMAINLIST',	'Liste des domaines Frontoffice');
-define ('_SYSTEM_LABEL_GROUP_ADMINDOMAINLIST',	'Liste des domaines Backoffice');
+define ('_SYSTEM_LABEL_USER_PROFILE',       'Profil par défaut');
+define ('_SYSTEM_LABEL_USER_UNDEFINED',     'Non défini');
+define ('_SYSTEM_LABEL_GROUP_WEBDOMAINLIST',    'Liste des domaines Frontoffice');
+define ('_SYSTEM_LABEL_GROUP_ADMINDOMAINLIST',  'Liste des domaines Backoffice');
 
 
-define ('_SYSTEM_LABEL_CREATE_CLONE',		'Cloner');
-define ('_SYSTEM_LABEL_CREATE_CHILD',		'Créer');
-define ('_SYSTEM_LABEL_CREATE_GROUP',		'Créer un Groupe');
-define ('_SYSTEM_LABEL_DELETE_GROUP',		'Supprimer');
+define ('_SYSTEM_LABEL_CREATE_CLONE',       'Cloner');
+define ('_SYSTEM_LABEL_CREATE_CHILD',       'Créer');
+define ('_SYSTEM_LABEL_CREATE_GROUP',       'Créer un Groupe');
+define ('_SYSTEM_LABEL_DELETE_GROUP',       'Supprimer');
 
-define ('_SYSTEM_LABEL_CREATE_CLONE_WORKSPACE',		'Cloner');
-define ('_SYSTEM_LABEL_CREATE_CHILD_WORKSPACE',		'Créer');
-define ('_SYSTEM_LABEL_DELETE_WORKSPACE',		'Supprimer');
+define ('_SYSTEM_LABEL_CREATE_CLONE_WORKSPACE',     'Cloner');
+define ('_SYSTEM_LABEL_CREATE_CHILD_WORKSPACE',     'Créer');
+define ('_SYSTEM_LABEL_DELETE_WORKSPACE',       'Supprimer');
 
-define ('_SYSTEM_LABEL_GROUP_MODULES_MANAGEMENT', 	'Gestion des Modules du Groupe [ <GROUP> ]');
-define ('_SYSTEM_LABEL_GROUP_ROLES_MANAGEMENT', 	'Gestion des Rôles du Groupe [ <GROUP> ]');
-define ('_SYSTEM_LABEL_GROUP_AVAILABLE_MODULES', 	'Modules disponibles dans cet Espace');
-define ('_SYSTEM_LABEL_GROUP_USABLE_MODULES', 		'Modules utilisables pour cet Espace');
-define ('_SYSTEM_LABEL_MODULE_PROPERTIES', 		'Propriétés du Module [ <MODULE> ]');
-define ('_SYSTEM_LABEL_MODULE_PARAMS', 			'Paramètres du Module [ <MODULE> ]');
-define ('_SYSTEM_LABEL_MODULE_ROLES', 			'Module « <MODULE> »');
-define ('_SYSTEM_LABEL_PROFILES_AVAILABLE', 		'Profils disponibles dans ce Groupe');
+define ('_SYSTEM_LABEL_GROUP_MODULES_MANAGEMENT',   'Gestion des Modules du Groupe [ <GROUP> ]');
+define ('_SYSTEM_LABEL_GROUP_ROLES_MANAGEMENT',     'Gestion des Rôles du Groupe [ <GROUP> ]');
+define ('_SYSTEM_LABEL_GROUP_AVAILABLE_MODULES',    'Modules disponibles dans cet Espace');
+define ('_SYSTEM_LABEL_GROUP_USABLE_MODULES',       'Modules utilisables pour cet Espace');
+define ('_SYSTEM_LABEL_MODULE_PROPERTIES',      'Propriétés du Module [ <MODULE> ]');
+define ('_SYSTEM_LABEL_MODULE_PARAMS',          'Paramètres du Module [ <MODULE> ]');
+define ('_SYSTEM_LABEL_MODULE_ROLES',           'Module « <MODULE> »');
+define ('_SYSTEM_LABEL_PROFILES_AVAILABLE',         'Profils disponibles dans ce Groupe');
 
-define ('_SYSTEM_LABEL_MYPROFILE', 		        'Mon Profil');
+define ('_SYSTEM_LABEL_MYPROFILE',              'Mon Profil');
 define ('_SYSTEM_LABEL_MYDATAS',                        'Mes Informations');
 define ('_SYSTEM_LABEL_MYACCOUNT',                        'Mon Compte');
-define ('_SYSTEM_LABEL_ABOUT', 		        'A Propos');
+define ('_SYSTEM_LABEL_ABOUT',              'A Propos');
 
-define ('_SYSTEM_LABEL_MODULE_ADMINISTRATOR', 		'Gestionnaire du Module');
+define ('_SYSTEM_LABEL_MODULE_ADMINISTRATOR',       'Gestionnaire du Module');
 
-define ('_SYSTEM_LABEL_SYSTEM_AVAILABLE_MODULES', 	'Modules disponibles');
-define ('_SYSTEM_LABEL_SYSTEM_USABLE_MODULES', 		'Modules utilisables');
+define ('_SYSTEM_LABEL_SYSTEM_AVAILABLE_MODULES',   'Modules disponibles');
+define ('_SYSTEM_LABEL_SYSTEM_USABLE_MODULES',      'Modules utilisables');
 
-define ('_SYSTEM_LABEL_DEFAULT_PROFILE', 		'Profil par défaut');
+define ('_SYSTEM_LABEL_DEFAULT_PROFILE',        'Profil par défaut');
 
-define ('_SYSTEM_LABEL_NO_MODULE_DEFINED', 		'Aucun module défini pour ce groupe');
-define ('_SYSTEM_LABEL_NO_USER_DEFINED', 		'Aucun utilisateur défini pour ce groupe');
-define ('_SYSTEM_LABEL_NO_ROLE_DEFINED', 		'Aucun rôle défini pour ce module');
-define ('_SYSTEM_LABEL_ROLE_LIST', 			'Liste des rôles pour cet espace');
-define ('_SYSTEM_LABEL_MODIFY_ROLE_ASSIGNMENT', 	'Modifier l\'affectation des Rôles');
+define ('_SYSTEM_LABEL_NO_MODULE_DEFINED',      'Aucun module défini pour ce groupe');
+define ('_SYSTEM_LABEL_NO_USER_DEFINED',        'Aucun utilisateur défini pour ce groupe');
+define ('_SYSTEM_LABEL_NO_ROLE_DEFINED',        'Aucun rôle défini pour ce module');
+define ('_SYSTEM_LABEL_ROLE_LIST',          'Liste des rôles pour cet espace');
+define ('_SYSTEM_LABEL_MODIFY_ROLE_ASSIGNMENT',     'Modifier l\'affectation des Rôles');
 
-define ('_SYSTEM_LABEL_COMMENTARY', 	'Commentaire');
-define ('_SYSTEM_LABEL_RESULT', 	'Résultat');
+define ('_SYSTEM_LABEL_COMMENTARY',     'Commentaire');
+define ('_SYSTEM_LABEL_RESULT',     'Résultat');
 
 
 define ('_SYSTEM_MSG_CONFIRMGROUPDELETE', 'Êtes-vous certain de vouloir\nsupprimer ce Groupe ?');
@@ -292,11 +292,11 @@ define ('_SYSTEM_LABEL_CLEANDB', 'Nettoyage BD');
 define ('_SYSTEM_LABEL_UPDATEUSERAUTO', 'MAJ users');
 define ('_SYSTEM_LABEL_ACTIONHISTORY', 'Logs Historique des Actions');
 
-define ('_SYSTEM_LABEL_HOMEPAGECONTENT', 	'Contenu de la Page d\'Accueil');
-define ('_SYSTEM_LABEL_PREVIEW', 		'Prévisualiser');
-define ('_SYSTEM_LABEL_ADDLINE', 		'Ajouter une ligne');
-define ('_SYSTEM_LABEL_ADDCOLUMN', 		'Ajouter une colonne');
-define ('_SYSTEM_LABEL_NBCOLUMNS', 		'Nombre de colonnes');
+define ('_SYSTEM_LABEL_HOMEPAGECONTENT',    'Contenu de la Page d\'Accueil');
+define ('_SYSTEM_LABEL_PREVIEW',        'Prévisualiser');
+define ('_SYSTEM_LABEL_ADDLINE',        'Ajouter une ligne');
+define ('_SYSTEM_LABEL_ADDCOLUMN',      'Ajouter une colonne');
+define ('_SYSTEM_LABEL_NBCOLUMNS',      'Nombre de colonnes');
 define ('_SYSTEM_LABEL_TITLE', 'Titre');
 define ('_SYSTEM_LABEL_MODULE', 'Module');
 define ('_SYSTEM_LABEL_UNDEFINEDCONTENT', 'Contenu non défini');

@@ -5,11 +5,11 @@
   
   // STARTS
   if ($_GET['rssversion']) {
-		$rss = new rssGenesis($_GET['rssversion']);
+        $rss = new rssGenesis($_GET['rssversion']);
   }
   else
   {
-		$rss = new rssGenesis();
+        $rss = new rssGenesis();
   }
   
   // CHANNEL
@@ -24,9 +24,9 @@
                                   null, // Rating
                                   "auto", // PubDate
                                   "auto", // Last Build Date
-								  "Test", // Category
+                                  "Test", // Category
                                   null, // Docs
-								  null, // Time to Live
+                                  null, // Time to Live
                                   null, // Skip Days
                                   null // Skip Hours
                                 );
@@ -46,8 +46,8 @@
                              "First Link", // Title
                              "http://www.google.com/", // Link
                              "First description...", // Description
-							 "01/01/2006", //Publication Date
-							 "Test" // Category							 
+                             "01/01/2006", //Publication Date
+                             "Test" // Category                          
                            );
   
   // ITEM
@@ -55,8 +55,8 @@
                              "Second Link", // Title
                              "http://www.php.net/", // Link
                              "Second description...", // Description
-							 "02/14/2006", //Publication Date
-							 "Test" // Category				
+                             "02/14/2006", //Publication Date
+                             "Test" // Category             
                            );
   
   // ITEM
@@ -64,8 +64,8 @@
                              "Third Link", // Title
                              "http://rssgenesis.sourceforge.net/", // Link
                              "Third description...", // Description
-							 "03/25/2006", //Publication Date
-							 "Test" // Category				
+                             "03/25/2006", //Publication Date
+                             "Test" // Category             
                            );
   
   // INPUT

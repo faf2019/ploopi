@@ -37,47 +37,47 @@ error_bgcolor = "#FCE6D6";
 
 <!-- BEGIN switch_user_logged_out -->
 <div id="login">
-	<form name="formlogin" action="admin.php" method="post" {PLOOPI_TEST_MAC}>
-	<table>
-		<tr>
-			<td align="right"><label for="ploopi_login">login</label>:</td>
-			<td><input type="text" id="ploopi_login" name="ploopi_login" size="10" /></td>
-		</tr>
-		<tr>
-			<td align="right"><label for="ploopi_password">password</label>:</td>
-			<td><input type="password" id="ploopi_password" name="ploopi_password" size="10" /></td>
-		</tr>
-		<tr>
-			<td colspan="2" align="right">
-				<input type="submit" value="connexion"  class="button" />
-			</td>
-		</tr>
-	</table>
-	</form>
+    <form name="formlogin" action="admin.php" method="post" {PLOOPI_TEST_MAC}>
+    <table>
+        <tr>
+            <td align="right"><label for="ploopi_login">login</label>:</td>
+            <td><input type="text" id="ploopi_login" name="ploopi_login" size="10" /></td>
+        </tr>
+        <tr>
+            <td align="right"><label for="ploopi_password">password</label>:</td>
+            <td><input type="password" id="ploopi_password" name="ploopi_password" size="10" /></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <input type="submit" value="connexion"  class="button" />
+            </td>
+        </tr>
+    </table>
+    </form>
 </div>
 <!-- END switch_user_logged_out -->
 
 <!-- BEGIN switch_user_logged_in -->
 <div id="mainmenu">
-	Bonjour <b>{USER_FIRSTNAME} {USER_LASTNAME}</b>
-	<!-- BEGIN workgroup -->
-		&#149;&nbsp;<a class="{switch_user_logged_in.workgroup.SELECTED}" href="{switch_user_logged_in.workgroup.URL}">{switch_user_logged_in.workgroup.TITLE}</a>
-	<!-- END workgroup -->
-	&#149;&nbsp;<a class="{MAINMENU_SHOWTICKETS_SEL}" href="{MAINMENU_SHOWTICKETS_URL}">Mes Tickets</a>
-	&#149;&nbsp;<a class="{MAINMENU_SHOWANNOTATIONS_SEL}" href="{MAINMENU_SHOWANNOTATIONS_URL}">Mes Annotations</a>
-	&#149;&nbsp;<a class="{MAINMENU_SHOWPROFILE_SEL}" href="{MAINMENU_SHOWPROFILE_URL}">Mon Profil</a>
-	&#149;&nbsp;<a href="{USER_DECONNECT}">Déconnexion</a>
+    Bonjour <b>{USER_FIRSTNAME} {USER_LASTNAME}</b>
+    <!-- BEGIN workgroup -->
+        &#149;&nbsp;<a class="{switch_user_logged_in.workgroup.SELECTED}" href="{switch_user_logged_in.workgroup.URL}">{switch_user_logged_in.workgroup.TITLE}</a>
+    <!-- END workgroup -->
+    &#149;&nbsp;<a class="{MAINMENU_SHOWTICKETS_SEL}" href="{MAINMENU_SHOWTICKETS_URL}">Mes Tickets</a>
+    &#149;&nbsp;<a class="{MAINMENU_SHOWANNOTATIONS_SEL}" href="{MAINMENU_SHOWANNOTATIONS_URL}">Mes Annotations</a>
+    &#149;&nbsp;<a class="{MAINMENU_SHOWPROFILE_SEL}" href="{MAINMENU_SHOWPROFILE_URL}">Mon Profil</a>
+    &#149;&nbsp;<a href="{USER_DECONNECT}">Déconnexion</a>
 </div>
 <!-- END switch_user_logged_in -->
 
 <!-- BEGIN switch_blockmenu -->
 <div id="block_modules">
 <!-- BEGIN blocktype -->
-	<!-- BEGIN block -->
-		<tr>
-			&#149;&nbsp;<a CLASS="{switch_blockmenu.blocktype.block.CLASS}" href="{switch_blockmenu.blocktype.block.URL}">{switch_blockmenu.blocktype.block.TITLE}</a>
-		</tr>
-	<!-- END block -->
+    <!-- BEGIN block -->
+        <tr>
+            &#149;&nbsp;<a CLASS="{switch_blockmenu.blocktype.block.CLASS}" href="{switch_blockmenu.blocktype.block.URL}">{switch_blockmenu.blocktype.block.TITLE}</a>
+        </tr>
+    <!-- END block -->
 <!-- END blocktype -->
 </div>
 <!-- END switch_blockmenu -->

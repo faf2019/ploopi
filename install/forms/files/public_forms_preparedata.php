@@ -1,24 +1,24 @@
 <?php
 /*
-	Copyright (c) 2002-2007 Netlor
-	Copyright (c) 2007-2008 Ovensia
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 ?>
 <?
@@ -47,21 +47,21 @@ $lmax = 1;
 // GET FILTER PARAMS
 if (ploopi_isactionallowed(_FORMS_ACTION_FILTER))
 {
-	for ($l=1;$l<=$lmax;$l++)
-	{
-		if(isset($_POST["filter_field_{$l}"])) $_SESSION['forms'][$forms_id]["filter_field_{$l}"] = $_POST["filter_field_{$l}"];
-		if(isset($_POST["filter_op_{$l}"])) $_SESSION['forms'][$forms_id]["filter_op_{$l}"] = $_POST["filter_op_{$l}"];
-		if(isset($_POST["filter_value_{$l}"])) $_SESSION['forms'][$forms_id]["filter_value_{$l}"] = $_POST["filter_value_{$l}"];
+    for ($l=1;$l<=$lmax;$l++)
+    {
+        if(isset($_POST["filter_field_{$l}"])) $_SESSION['forms'][$forms_id]["filter_field_{$l}"] = $_POST["filter_field_{$l}"];
+        if(isset($_POST["filter_op_{$l}"])) $_SESSION['forms'][$forms_id]["filter_op_{$l}"] = $_POST["filter_op_{$l}"];
+        if(isset($_POST["filter_value_{$l}"])) $_SESSION['forms'][$forms_id]["filter_value_{$l}"] = $_POST["filter_value_{$l}"];
 
-		if (!isset($_SESSION['forms'][$forms_id]["filter_field_{$l}"])) $_SESSION['forms'][$forms_id]["filter_field_{$l}"] = '';
-		if (!isset($_SESSION['forms'][$forms_id]["filter_op_{$l}"])) $_SESSION['forms'][$forms_id]["filter_op_{$l}"] = '';
-		if (!isset($_SESSION['forms'][$forms_id]["filter_value_{$l}"])) $_SESSION['forms'][$forms_id]["filter_value_{$l}"] = '';
-		elseif ($_SESSION['forms'][$forms_id]["filter_value_{$l}"] != '') $lmax++; // on adapte le nombre de filtre en fonction des filtres déjà utilisés
+        if (!isset($_SESSION['forms'][$forms_id]["filter_field_{$l}"])) $_SESSION['forms'][$forms_id]["filter_field_{$l}"] = '';
+        if (!isset($_SESSION['forms'][$forms_id]["filter_op_{$l}"])) $_SESSION['forms'][$forms_id]["filter_op_{$l}"] = '';
+        if (!isset($_SESSION['forms'][$forms_id]["filter_value_{$l}"])) $_SESSION['forms'][$forms_id]["filter_value_{$l}"] = '';
+        elseif ($_SESSION['forms'][$forms_id]["filter_value_{$l}"] != '') $lmax++; // on adapte le nombre de filtre en fonction des filtres déjà utilisés
 
-		${"filter_field_{$l}"} = $_SESSION['forms'][$forms_id]["filter_field_{$l}"];
-		${"filter_op_{$l}"} = $_SESSION['forms'][$forms_id]["filter_op_{$l}"];
-		${"filter_value_{$l}"} = $_SESSION['forms'][$forms_id]["filter_value_{$l}"];
-	}
+        ${"filter_field_{$l}"} = $_SESSION['forms'][$forms_id]["filter_field_{$l}"];
+        ${"filter_op_{$l}"} = $_SESSION['forms'][$forms_id]["filter_op_{$l}"];
+        ${"filter_value_{$l}"} = $_SESSION['forms'][$forms_id]["filter_value_{$l}"];
+    }
 }
 
 
@@ -71,18 +71,18 @@ $workspaces = forms_viewworkspaces($_SESSION['ploopi']['moduleid'], $_SESSION['p
 
 // INIT ARRAY TITLES
 $data_title = array();
-$data_title['datevalidation'] 	= array ('label' => _FORMS_DATEVALIDATION, 'sep' => 0, 'type' => '', 'format' => '');
-$data_title['user'] 			= array ('label' => _FORMS_USER, 'sep' => 0, 'type' => '', 'format' => '');
-$data_title['group'] 			= array ('label' => _FORMS_GROUP, 'sep' => 0, 'type' => '', 'format' => '');
-$data_title['ip'] 				= array ('label' => _FORMS_IP, 'sep' => 0, 'type' => '', 'format' => '');
+$data_title['datevalidation']   = array ('label' => _FORMS_DATEVALIDATION, 'sep' => 0, 'type' => '', 'format' => '');
+$data_title['user']             = array ('label' => _FORMS_USER, 'sep' => 0, 'type' => '', 'format' => '');
+$data_title['group']            = array ('label' => _FORMS_GROUP, 'sep' => 0, 'type' => '', 'format' => '');
+$data_title['ip']               = array ('label' => _FORMS_IP, 'sep' => 0, 'type' => '', 'format' => '');
 
 // GET FORM FIELDS
-$sql = 	"
-		SELECT 	*
-		FROM 	ploopi_mod_forms_field
-		WHERE 	id_form = {$forms_id}
-		ORDER BY position
-		";
+$sql =  "
+        SELECT  *
+        FROM    ploopi_mod_forms_field
+        WHERE   id_form = {$forms_id}
+        ORDER BY position
+        ";
 
 $db->query($sql);
 
@@ -90,44 +90,44 @@ $array_fields = array();
 
 while ($fields = $db->fetchrow())
 {
-	if (!$fields['separator'])
-	{
-		$array_fields[$fields['id']] = $fields;
-	}
-	$data_title[$fields['id']]['label'] = $fields['name'];
-	$data_title[$fields['id']]['sep'] = $fields['separator'];
-	$data_title[$fields['id']]['seplev'] = $fields['separator_level'];
-	$data_title[$fields['id']]['type'] = $fields['type'];
-	$data_title[$fields['id']]['format'] = $fields['format'];
+    if (!$fields['separator'])
+    {
+        $array_fields[$fields['id']] = $fields;
+    }
+    $data_title[$fields['id']]['label'] = $fields['name'];
+    $data_title[$fields['id']]['sep'] = $fields['separator'];
+    $data_title[$fields['id']]['seplev'] = $fields['separator_level'];
+    $data_title[$fields['id']]['type'] = $fields['type'];
+    $data_title[$fields['id']]['format'] = $fields['format'];
 }
 
 
-$select = 	"
-			SELECT 		fr.*,
-						u.id as userid,
-						u.firstname,
-						u.lastname,
-						u.login,
-						g.id as workspaceid,
-						g.code,
-						g.label as g_label,
-						m.label as m_label
+$select =   "
+            SELECT      fr.*,
+                        u.id as userid,
+                        u.firstname,
+                        u.lastname,
+                        u.login,
+                        g.id as workspaceid,
+                        g.code,
+                        g.label as g_label,
+                        m.label as m_label
 
-			FROM		ploopi_mod_forms_reply fr
+            FROM        ploopi_mod_forms_reply fr
 
-			INNER JOIN	ploopi_module m
-			ON			fr.id_module = m.id
-			AND			m.id = {$_SESSION['ploopi']['moduleid']}
+            INNER JOIN  ploopi_module m
+            ON          fr.id_module = m.id
+            AND         m.id = {$_SESSION['ploopi']['moduleid']}
 
-			LEFT JOIN 	ploopi_user u
-			ON 			fr.id_user = u.id
+            LEFT JOIN   ploopi_user u
+            ON          fr.id_user = u.id
 
-			LEFT JOIN 	ploopi_workspace g
-			ON 			fr.id_workspace = g.id
+            LEFT JOIN   ploopi_workspace g
+            ON          fr.id_workspace = g.id
 
-			WHERE	fr.id_form = $forms_id
-			AND		fr.id_workspace IN ({$workspaces})
-			";
+            WHERE   fr.id_form = $forms_id
+            AND     fr.id_workspace IN ({$workspaces})
+            ";
 
 $rs = $db->query($select);
 
@@ -135,61 +135,61 @@ $rs = $db->query($select);
 $data = array();
 while ($fields = $db->fetchrow($rs))
 {
-	$c = $fields['id'];
+    $c = $fields['id'];
 
-	$data[$c] = array();
+    $data[$c] = array();
 
-	$data[$c]['datevalidation'] = $fields['date_validation'];
-	$data[$c]['user'] = $fields['login'];
-	$data[$c]['group'] = $fields['g_label'];
-	$data[$c]['ip'] = $fields['ip'];
+    $data[$c]['datevalidation'] = $fields['date_validation'];
+    $data[$c]['user'] = $fields['login'];
+    $data[$c]['group'] = $fields['g_label'];
+    $data[$c]['ip'] = $fields['ip'];
 
-	/*
-	$data[$c]['userid'] = $fields['userid'];
-	$data[$c]['workspaceid'] = $fields['workspaceid'];
-	*/
+    /*
+    $data[$c]['userid'] = $fields['userid'];
+    $data[$c]['workspaceid'] = $fields['workspaceid'];
+    */
 
-	$sql = 	"
-			SELECT 	rf.*, f.type
-			FROM 	ploopi_mod_forms_reply_field rf,
-					ploopi_mod_forms_field f
-			WHERE 	rf.id_reply = {$fields['id']}
-			AND		f.id = rf.id_field
-			AND		f.separator = 0
-			";
+    $sql =  "
+            SELECT  rf.*, f.type
+            FROM    ploopi_mod_forms_reply_field rf,
+                    ploopi_mod_forms_field f
+            WHERE   rf.id_reply = {$fields['id']}
+            AND     f.id = rf.id_field
+            AND     f.separator = 0
+            ";
 
-	$rs_replies = $db->query($sql);
+    $rs_replies = $db->query($sql);
 
-	$array_values = array();
+    $array_values = array();
 
-	while ($fields_replies = $db->fetchrow($rs_replies))
-	{
-		$array_values[$fields_replies['id_field']] = $fields_replies;
-	}
-	//ploopi_print_r($array_values);
+    while ($fields_replies = $db->fetchrow($rs_replies))
+    {
+        $array_values[$fields_replies['id_field']] = $fields_replies;
+    }
+    //ploopi_print_r($array_values);
 
-	foreach($array_fields as $key => $value)
-	{
-		$data[$c][$key] = (isset($array_values[$key]['value'])) ? str_replace('"','\'',$array_values[$key]['value']) : '';
-	}
+    foreach($array_fields as $key => $value)
+    {
+        $data[$c][$key] = (isset($array_values[$key]['value'])) ? str_replace('"','\'',$array_values[$key]['value']) : '';
+    }
 
-	foreach($array_fields as $key => $value)
-	{
-		$data[$c][$key] = (isset($array_values[$key]['value'])) ? $array_values[$key]['value'] : '';
-		if ($data_title[$key]['format'] == 'date') $data[$c][$key] = ploopi_local2timestamp(substr($data[$c][$key],0,10), '00:00:00');
-	}
+    foreach($array_fields as $key => $value)
+    {
+        $data[$c][$key] = (isset($array_values[$key]['value'])) ? $array_values[$key]['value'] : '';
+        if ($data_title[$key]['format'] == 'date') $data[$c][$key] = ploopi_local2timestamp(substr($data[$c][$key],0,10), '00:00:00');
+    }
 
 }
 // compare 2 chaines en ordre naturel
 function compare($a, $b)
 {
-	global $forms_id;
+    global $forms_id;
 
-	$orderby = $_SESSION['forms'][$forms_id]['orderby'];
-	$option = $_SESSION['forms'][$forms_id]['option'];
+    $orderby = $_SESSION['forms'][$forms_id]['orderby'];
+    $option = $_SESSION['forms'][$forms_id]['option'];
 
-	if ($option == 'DESC') return strnatcasecmp($b[$orderby], $a[$orderby]);
-	else return strnatcasecmp($a[$orderby], $b[$orderby]);
+    if ($option == 'DESC') return strnatcasecmp($b[$orderby], $a[$orderby]);
+    else return strnatcasecmp($a[$orderby], $b[$orderby]);
 }
 
 uasort($data, "compare");
@@ -201,117 +201,117 @@ $actual_ts = ploopi_createtimestamp();
 
 foreach ($data as $reply_id => $detail)
 {
-	$filter_ok = true;
-	if (	!$_SESSION['forms'][$forms_id]["unlockbackup"] &&
-			(
-				($forms->fields['autobackup'] > 0 && ploopi_timestamp_add($detail['datevalidation'], 0, 0, 0, 0, $forms->fields['autobackup']) < $actual_ts)
-			||	(!empty($forms->fields['autobackup_date']) && $detail['datevalidation'] < ploopi_timestamp_add($forms->fields['autobackup_date'], 0, 0, 0, 0, 1, 0))
-			)
-		)
-	{
-		$filter_ok = false;
-	}
-	else
-	{
-		for ($l=1;$l<=$lmax;$l++)
-		{
-			if($filter_ok && isset(${"filter_field_{$l}"}) && ${"filter_field_{$l}"} != '')
-			{
-				// cas particulier du champ automatique "datevalidation" qui enregistre la date de création au format timestamp
-				if (${"filter_field_{$l}"} == 'datevalidation')
-				{
-					$val1 = substr($detail[${"filter_field_{$l}"}],0,8).'000000';
-					$val2 = ploopi_local2timestamp(${"filter_value_{$l}"});
-				}
-				else
-				{
-					// cas particulier du format date (on suppose que les données sont saisies au format date FR
-					if (isset($data_title[${"filter_field_{$l}"}]['format']) && $data_title[${"filter_field_{$l}"}]['format'] == 'date')
-					{
-						$val1 = ploopi_local2timestamp($detail[${"filter_field_{$l}"}]);
-						$val2 = ploopi_local2timestamp(${"filter_value_{$l}"});
-					}
-					else
-					{
-						$val1 = strtoupper(forms_convertchars($detail[${"filter_field_{$l}"}]));
-						$val2 = strtoupper(forms_convertchars(${"filter_value_{$l}"}));
-					}
-				}
+    $filter_ok = true;
+    if (    !$_SESSION['forms'][$forms_id]["unlockbackup"] &&
+            (
+                ($forms->fields['autobackup'] > 0 && ploopi_timestamp_add($detail['datevalidation'], 0, 0, 0, 0, $forms->fields['autobackup']) < $actual_ts)
+            ||  (!empty($forms->fields['autobackup_date']) && $detail['datevalidation'] < ploopi_timestamp_add($forms->fields['autobackup_date'], 0, 0, 0, 0, 1, 0))
+            )
+        )
+    {
+        $filter_ok = false;
+    }
+    else
+    {
+        for ($l=1;$l<=$lmax;$l++)
+        {
+            if($filter_ok && isset(${"filter_field_{$l}"}) && ${"filter_field_{$l}"} != '')
+            {
+                // cas particulier du champ automatique "datevalidation" qui enregistre la date de création au format timestamp
+                if (${"filter_field_{$l}"} == 'datevalidation')
+                {
+                    $val1 = substr($detail[${"filter_field_{$l}"}],0,8).'000000';
+                    $val2 = ploopi_local2timestamp(${"filter_value_{$l}"});
+                }
+                else
+                {
+                    // cas particulier du format date (on suppose que les données sont saisies au format date FR
+                    if (isset($data_title[${"filter_field_{$l}"}]['format']) && $data_title[${"filter_field_{$l}"}]['format'] == 'date')
+                    {
+                        $val1 = ploopi_local2timestamp($detail[${"filter_field_{$l}"}]);
+                        $val2 = ploopi_local2timestamp(${"filter_value_{$l}"});
+                    }
+                    else
+                    {
+                        $val1 = strtoupper(forms_convertchars($detail[${"filter_field_{$l}"}]));
+                        $val2 = strtoupper(forms_convertchars(${"filter_value_{$l}"}));
+                    }
+                }
 
-				if ($val2 != '')
-				{
-					switch(${"filter_op_{$l}"})
-					{
-						case '=':
-							$list_values = split(';',$val2);
-							$filter_ok = false;
-							foreach($list_values as $val2) $filter_ok = $filter_ok || ($val1 == $val2);
-						break;
+                if ($val2 != '')
+                {
+                    switch(${"filter_op_{$l}"})
+                    {
+                        case '=':
+                            $list_values = split(';',$val2);
+                            $filter_ok = false;
+                            foreach($list_values as $val2) $filter_ok = $filter_ok || ($val1 == $val2);
+                        break;
 
-						case '>':
-							$filter_ok = ($val1 > $val2);
-						break;
+                        case '>':
+                            $filter_ok = ($val1 > $val2);
+                        break;
 
-						case '<':
-							$filter_ok = ($val1 < $val2);
-						break;
+                        case '<':
+                            $filter_ok = ($val1 < $val2);
+                        break;
 
-						case '>=':
-							$filter_ok = ($val1 >= $val2);
-						break;
+                        case '>=':
+                            $filter_ok = ($val1 >= $val2);
+                        break;
 
-						case '<=':
-							$filter_ok = ($val1 <= $val2);
-						break;
+                        case '<=':
+                            $filter_ok = ($val1 <= $val2);
+                        break;
 
-						case 'like':
-							$list_values = split(';',$val2);
-							$filter_ok = false;
-							foreach($list_values as $val2) $filter_ok = $filter_ok || strstr($val1,$val2);
-						break;
+                        case 'like':
+                            $list_values = split(';',$val2);
+                            $filter_ok = false;
+                            foreach($list_values as $val2) $filter_ok = $filter_ok || strstr($val1,$val2);
+                        break;
 
-						case 'begin':
-							$list_values = split(';',$val2);
-							$filter_ok = false;
-							foreach($list_values as $val2) $filter_ok = $filter_ok || (strpos($val1,$val2) === 0);
-						break;
-					}
-				}
-				else $filter_ok = true;
-			}
-		}
+                        case 'begin':
+                            $list_values = split(';',$val2);
+                            $filter_ok = false;
+                            foreach($list_values as $val2) $filter_ok = $filter_ok || (strpos($val1,$val2) === 0);
+                        break;
+                    }
+                }
+                else $filter_ok = true;
+            }
+        }
 
-		foreach($detail as $key => $value)
-		{
-			//ploopi_print_r($data_title);
-			if ($key == 'datevalidation')
-			{
-				$ldate = ploopi_timestamp2local($value);
-				$detail[$key] = "{$ldate['date']} {$ldate['time']}";
-			}
-			elseif ($data_title[$key]['format'] == 'date' && !empty($value))
-			{
-				$ldate = ploopi_timestamp2local($value);
-				$detail[$key] = $ldate['date'];
-			}
-		}
-	}
-	if ($filter_ok) $export[$reply_id] = $detail;
+        foreach($detail as $key => $value)
+        {
+            //ploopi_print_r($data_title);
+            if ($key == 'datevalidation')
+            {
+                $ldate = ploopi_timestamp2local($value);
+                $detail[$key] = "{$ldate['date']} {$ldate['time']}";
+            }
+            elseif ($data_title[$key]['format'] == 'date' && !empty($value))
+            {
+                $ldate = ploopi_timestamp2local($value);
+                $detail[$key] = $ldate['date'];
+            }
+        }
+    }
+    if ($filter_ok) $export[$reply_id] = $detail;
 }
 
 
 if ($op == 'forms_deletedata' && ploopi_isactionallowed(_FORMS_ACTION_DELETE) && !empty($export))
 {
-	$sql_delete = 	"
-					DELETE	r, rf
-					FROM 	ploopi_mod_forms_reply r,
-							ploopi_mod_forms_reply_field rf
-					WHERE 	r.id IN (".implode(',',array_keys($export)).")
-					AND		r.id = rf.id_reply
-					";
+    $sql_delete =   "
+                    DELETE  r, rf
+                    FROM    ploopi_mod_forms_reply r,
+                            ploopi_mod_forms_reply_field rf
+                    WHERE   r.id IN (".implode(',',array_keys($export)).")
+                    AND     r.id = rf.id_reply
+                    ";
 
-	$db->query($sql_delete);
-	ploopi_redirect("{$scriptenv}?op=filter&forms_id={$forms_id}");
+    $db->query($sql_delete);
+    ploopi_redirect("{$scriptenv}?op=filter&forms_id={$forms_id}");
 }
 
 

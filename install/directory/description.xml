@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>directory</label>
-	  <version>1.20</version>
+      <version>1.20</version>
       <author>Netlor / Ovensia</author>
-	  <date>200801100000000</date>
+      <date>200801100000000</date>
       <publicparam>1</publicparam>
       <description>Annuaire des Utilisateurs</description>
       <paramtype>

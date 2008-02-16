@@ -1,136 +1,136 @@
 /*
-	Copyright (c) 2002-2007 Netlor
-	Copyright (c) 2007-2008 Ovensia
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 div.ploopi_workflow_title {
-	font-weight:bold;
-	padding:4px;
-	background-color:#ffc3b2;
+    font-weight:bold;
+    padding:4px;
+    background-color:#ffc3b2;
 }
 
 a.ploopi_workflow_title {
-	display:block;
-	font-weight:bold;
-	padding:4px;
-	background-color:#ffc3b2;
-	text-decoration:none;
+    display:block;
+    font-weight:bold;
+    padding:4px;
+    background-color:#ffc3b2;
+    text-decoration:none;
 }
 
 a.ploopi_workflow_title:hover {
-	text-decoration:none;
+    text-decoration:none;
 }
 
 .ploopi_workflow_search_form {
-	padding:4px;
-	background-color:#ffded9;
+    padding:4px;
+    background-color:#ffded9;
 }
 
 .ploopi_workflow_authorizedlist {
-	padding:4px;
-	background-color:#ffded9;
+    padding:4px;
+    background-color:#ffded9;
 }
 
 .ploopi_workflow_select_workgroup {
-	font-weight:bold;
-	background-color:#e0e0e0;
-	border-bottom:1px solid #c0c0c0;
-	padding:1px;
+    font-weight:bold;
+    background-color:#e0e0e0;
+    border-bottom:1px solid #c0c0c0;
+    padding:1px;
 }
 
 .ploopi_workflow_select_workgroup span {
-	margin-left:4px;
+    margin-left:4px;
 }
 
 .ploopi_workflow_select_user {
-	display:block;
-	background-color:#f0f0f0;
-	border-bottom:1px solid #c0c0c0;
-	color:#404040;
-	padding:1px 1px 1px 20px;
-	text-decoration:none;
+    display:block;
+    background-color:#f0f0f0;
+    border-bottom:1px solid #c0c0c0;
+    color:#404040;
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
 }
 
 .ploopi_workflow_select_user:hover {
-	text-decoration:none;
-	background-color:#ffe2d9;
-	color:#000000;
+    text-decoration:none;
+    background-color:#ffe2d9;
+    color:#000000;
 }
 
 .ploopi_workflow_select_user span {
-	padding-left:4px;
+    padding-left:4px;
 }
 
 
 .ploopi_workflow_select_usergroup {
-	font-weight:bold;
-	background-color:#e8e8e8;
-	border-bottom:1px solid #c0c0c0;
-	padding:1px 1px 1px 20px;
+    font-weight:bold;
+    background-color:#e8e8e8;
+    border-bottom:1px solid #c0c0c0;
+    padding:1px 1px 1px 20px;
 }
 
 .ploopi_workflow_select_usergroup span {
-	padding-left:4px;
+    padding-left:4px;
 }
 
 .ploopi_workflow_select_usergroup_user {
-	display:block;
-	background-color:#f0f0f0;
-	border-bottom:1px solid #c0c0c0;
-	color:#404040;
-	padding:1px 1px 1px 40px;
-	text-decoration:none;
+    display:block;
+    background-color:#f0f0f0;
+    border-bottom:1px solid #c0c0c0;
+    color:#404040;
+    padding:1px 1px 1px 40px;
+    text-decoration:none;
 }
 
 .ploopi_workflow_select_usergroup_user:hover {
-	text-decoration:none;
-	background-color:#ffe2d9;
-	color:#000000;
+    text-decoration:none;
+    background-color:#ffe2d9;
+    color:#000000;
 }
 
 .ploopi_workflow_select_usergroup_user span {
-	padding-left:4px;
+    padding-left:4px;
 }
 
 .ploopi_workflow_select_legend {
-	padding:2px 1px;
-	text-align:right;
+    padding:2px 1px;
+    text-align:right;
 }
 .ploopi_workflow_select_legend span {
-	padding:0 4px;
+    padding:0 4px;
 }
 
 .ploopi_workflow_select_empty {
-	padding:4px;
+    padding:4px;
 }
 .ploopi_workflow_select_empty span {
-	padding:0 4px;
+    padding:0 4px;
 }
 
 a.ploopi_workflow_delete_user {
-	text-decoration:none;
+    text-decoration:none;
 }
 
 a.ploopi_workflow_delete_user:hover {
-	text-decoration:none;
+    text-decoration:none;
 }
 
 a.ploopi_workflow_delete_user img {
-	border:0;
+    border:0;
 }

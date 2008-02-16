@@ -28,7 +28,7 @@ table[border="0"] > tbody > tr > td, table[border="0"] > tbody > tr > th,
 table[border="0"] > thead > tr > td, table[border="0"] > thead > tr > th,
 table[border="0"] > tfoot > tr > td, table[border="0"] > tfoot > tr > th
 {
-	border: #d3d3d3 1px dotted ;
+    border: #d3d3d3 1px dotted ;
 }
 
 /* For tables with no "border" attribute set */
@@ -38,5 +38,5 @@ table:not([border]) > tbody > tr > td, table:not([border]) > tbody > tr > th,
 table:not([border]) > thead > tr > td, table:not([border]) > thead > tr > th,
 table:not([border]) > tfoot > tr > td, table:not([border]) > tfoot > tr > th
 {
-	border: #d3d3d3 1px dotted ;
+    border: #d3d3d3 1px dotted ;
 }

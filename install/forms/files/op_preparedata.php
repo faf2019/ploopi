@@ -1,24 +1,24 @@
 <?php
 /*
-	Copyright (c) 2002-2007 Netlor
-	Copyright (c) 2007-2008 Ovensia
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 ?>
 <?
@@ -36,24 +36,24 @@ $data_title = array();
 
 if ($_SESSION['forms'][$_GET['forms_fuid']]['options']['object_display'])
 {
-	$data_title['object'] 	= array ('label' => $_SESSION['forms'][$_GET['forms_fuid']]['options']['object_label'], 'sep' => 0, 'type' => '', 'format' => '');
+    $data_title['object']   = array ('label' => $_SESSION['forms'][$_GET['forms_fuid']]['options']['object_label'], 'sep' => 0, 'type' => '', 'format' => '');
 }
 
-$data_title['datevalidation'] 	= array ('label' => _FORMS_DATEVALIDATION, 'sep' => 0, 'type' => '', 'format' => '');
-$data_title['user'] 			= array ('label' => _FORMS_USER, 'sep' => 0, 'type' => '', 'format' => '');
-$data_title['group'] 			= array ('label' => _FORMS_GROUP, 'sep' => 0, 'type' => '', 'format' => '');
-$data_title['ip'] 				= array ('label' => _FORMS_IP, 'sep' => 0, 'type' => '', 'format' => '');
+$data_title['datevalidation']   = array ('label' => _FORMS_DATEVALIDATION, 'sep' => 0, 'type' => '', 'format' => '');
+$data_title['user']             = array ('label' => _FORMS_USER, 'sep' => 0, 'type' => '', 'format' => '');
+$data_title['group']            = array ('label' => _FORMS_GROUP, 'sep' => 0, 'type' => '', 'format' => '');
+$data_title['ip']               = array ('label' => _FORMS_IP, 'sep' => 0, 'type' => '', 'format' => '');
 
 
 //if ($forms->fields['option_displaygroup'])
 //$data[0][3] = _FORMS_MODULE;
 
-$sql = 	"
-		SELECT 	*
-		FROM 	ploopi_mod_forms_field
-		WHERE 	id_form = {$id_form}
-		ORDER BY position
-		";
+$sql =  "
+        SELECT  *
+        FROM    ploopi_mod_forms_field
+        WHERE   id_form = {$id_form}
+        ORDER BY position
+        ";
 
 $db->query($sql);
 
@@ -61,15 +61,15 @@ $array_fields = array();
 
 while ($fields = $db->fetchrow())
 {
-	if (!$fields['separator'])
-	{
-		$array_fields[$fields['id']] = $fields;
-	}
-	$data_title[$fields['id']]['label'] = $fields['name'];
-	$data_title[$fields['id']]['sep'] = $fields['separator'];
-	$data_title[$fields['id']]['seplev'] = $fields['separator_level'];
-	$data_title[$fields['id']]['type'] = $fields['type'];
-	$data_title[$fields['id']]['format'] = $fields['format'];
+    if (!$fields['separator'])
+    {
+        $array_fields[$fields['id']] = $fields;
+    }
+    $data_title[$fields['id']]['label'] = $fields['name'];
+    $data_title[$fields['id']]['sep'] = $fields['separator'];
+    $data_title[$fields['id']]['seplev'] = $fields['separator_level'];
+    $data_title[$fields['id']]['type'] = $fields['type'];
+    $data_title[$fields['id']]['format'] = $fields['format'];
 }
 
 $search_pattern = array();
@@ -79,30 +79,30 @@ $search_pattern[] = "fr.id_object = {$_SESSION['forms'][$_GET['forms_fuid']]['id
 if ($_SESSION['forms'][$_GET['forms_fuid']]['options']['filter_mode'] == 'like') $search_pattern[] = "fr.id_record LIKE '".$db->addslashes($_SESSION['forms'][$_GET['forms_fuid']]['id_record'])."%'";
 else $search_pattern[] = "fr.id_record = '".$db->addslashes($_SESSION['forms'][$_GET['forms_fuid']]['id_record'])."'";
 
-$select = 	"
-			SELECT 		fr.*,
-						u.id as userid,
-						u.firstname,
-						u.lastname,
-						u.login,
-						g.id as workspaceid,
-						g.code,
-						g.label as g_label,
-						m.label as m_label
+$select =   "
+            SELECT      fr.*,
+                        u.id as userid,
+                        u.firstname,
+                        u.lastname,
+                        u.login,
+                        g.id as workspaceid,
+                        g.code,
+                        g.label as g_label,
+                        m.label as m_label
 
-			FROM		ploopi_mod_forms_reply fr
+            FROM        ploopi_mod_forms_reply fr
 
-			INNER JOIN	ploopi_module m
-			ON			fr.id_module = m.id
-			AND			m.id = {$id_module}
+            INNER JOIN  ploopi_module m
+            ON          fr.id_module = m.id
+            AND         m.id = {$id_module}
 
-			LEFT JOIN 	ploopi_user u
-			ON 			fr.id_user = u.id
+            LEFT JOIN   ploopi_user u
+            ON          fr.id_user = u.id
 
-			LEFT JOIN 	ploopi_workspace g
-			ON 			fr.id_workspace = g.id
+            LEFT JOIN   ploopi_workspace g
+            ON          fr.id_workspace = g.id
 
-			WHERE	".implode(' AND ', $search_pattern);
+            WHERE   ".implode(' AND ', $search_pattern);
 
 $rs = $db->query($select);
 
@@ -110,57 +110,57 @@ $rs = $db->query($select);
 $data = array();
 while ($fields = $db->fetchrow($rs))
 {
-	$c = $fields['id'];
+    $c = $fields['id'];
 
-	$data[$c] = array();
+    $data[$c] = array();
 
-	if ($_SESSION['forms'][$_GET['forms_fuid']]['options']['object_display'])
-	{
-		$data[$c]['object'] = $fields['id_record'];
-	}
+    if ($_SESSION['forms'][$_GET['forms_fuid']]['options']['object_display'])
+    {
+        $data[$c]['object'] = $fields['id_record'];
+    }
 
-	$data[$c]['datevalidation'] = $fields['date_validation'];
-	$data[$c]['user'] = $fields['login'];
-	$data[$c]['group'] = $fields['g_label'];
-	$data[$c]['ip'] = $fields['ip'];
+    $data[$c]['datevalidation'] = $fields['date_validation'];
+    $data[$c]['user'] = $fields['login'];
+    $data[$c]['group'] = $fields['g_label'];
+    $data[$c]['ip'] = $fields['ip'];
 
 /*
- * 	$data[$c]['userid'] = $fields['userid'];
-	$data[$c]['workspaceid'] = $fields['workspaceid'];
+ *  $data[$c]['userid'] = $fields['userid'];
+    $data[$c]['workspaceid'] = $fields['workspaceid'];
 */
-	$sql = 	"
-			SELECT 	rf.*, f.type
-			FROM 	ploopi_mod_forms_reply_field rf,
-					ploopi_mod_forms_field f
-			WHERE 	rf.id_reply = {$fields['id']}
-			AND		f.id = rf.id_field
-			AND		f.separator = 0
-			";
+    $sql =  "
+            SELECT  rf.*, f.type
+            FROM    ploopi_mod_forms_reply_field rf,
+                    ploopi_mod_forms_field f
+            WHERE   rf.id_reply = {$fields['id']}
+            AND     f.id = rf.id_field
+            AND     f.separator = 0
+            ";
 
-	$rs_replies = $db->query($sql);
+    $rs_replies = $db->query($sql);
 
-	$array_values = array();
+    $array_values = array();
 
-	while ($fields_replies = $db->fetchrow($rs_replies))
-	{
-		$array_values[$fields_replies['id_field']] = $fields_replies;
-	}
+    while ($fields_replies = $db->fetchrow($rs_replies))
+    {
+        $array_values[$fields_replies['id_field']] = $fields_replies;
+    }
 
-	foreach($array_fields as $key => $value)
-	{
-		$data[$c][$key] = (isset($array_values[$key]['value'])) ? $array_values[$key]['value'] : '';
-		if ($data_title[$key]['format'] == 'date') $data[$c][$key] = ploopi_local2timestamp(substr($data[$c][$key],0,10), '00:00:00');
-	}
+    foreach($array_fields as $key => $value)
+    {
+        $data[$c][$key] = (isset($array_values[$key]['value'])) ? $array_values[$key]['value'] : '';
+        if ($data_title[$key]['format'] == 'date') $data[$c][$key] = ploopi_local2timestamp(substr($data[$c][$key],0,10), '00:00:00');
+    }
 
 }
 // compare 2 chaines en ordre naturel
 function compare($a, $b)
 {
-	global $orderby;
-	global $option;
+    global $orderby;
+    global $option;
 
-	if ($option == 'DESC') return strnatcasecmp($b[$orderby], $a[$orderby]);
-	else return strnatcasecmp($a[$orderby], $b[$orderby]);
+    if ($option == 'DESC') return strnatcasecmp($b[$orderby], $a[$orderby]);
+    else return strnatcasecmp($a[$orderby], $b[$orderby]);
 }
 
 uasort($data, "compare");
@@ -169,25 +169,25 @@ uasort($data, "compare");
 // Formatage des données (dates)
 foreach ($data as $reply_id => $detail)
 {
-	foreach($detail as $key => $value)
-	{
-		if ($key == 'object')
-		{
-			// affectation d'une valeur à l'objet (si définie)
-			if (isset($_SESSION['forms'][$_GET['forms_fuid']]['options']['object_values'][$value])) $data[$reply_id][$key] = $_SESSION['forms'][$_GET['forms_fuid']]['options']['object_values'][$value];
-		}
+    foreach($detail as $key => $value)
+    {
+        if ($key == 'object')
+        {
+            // affectation d'une valeur à l'objet (si définie)
+            if (isset($_SESSION['forms'][$_GET['forms_fuid']]['options']['object_values'][$value])) $data[$reply_id][$key] = $_SESSION['forms'][$_GET['forms_fuid']]['options']['object_values'][$value];
+        }
 
-		if ($key == 'datevalidation')
-		{
-			$ldate = ploopi_timestamp2local($value);
-			$data[$reply_id][$key] = "{$ldate['date']} {$ldate['time']}";
-		}
-		elseif ($data_title[$key]['format'] == 'date' && !empty($value))
-		{
-			$ldate = ploopi_timestamp2local($value);
-			$data[$reply_id][$key] = $ldate['date'];
-		}
-	}
+        if ($key == 'datevalidation')
+        {
+            $ldate = ploopi_timestamp2local($value);
+            $data[$reply_id][$key] = "{$ldate['date']} {$ldate['time']}";
+        }
+        elseif ($data_title[$key]['format'] == 'date' && !empty($value))
+        {
+            $ldate = ploopi_timestamp2local($value);
+            $data[$reply_id][$key] = $ldate['date'];
+        }
+    }
 }
 
 

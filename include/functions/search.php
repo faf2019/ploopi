@@ -1,23 +1,23 @@
 <?php
 /*
-	Copyright (c) 2007-2008 Ovensia
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 include_once './include/classes/class_index_element.php';
@@ -29,7 +29,7 @@ include_once './include/classes/class_index_stem_element.php';
 
 function ploopi_search_generate_id($id_module, $id_object, $id_record)
 {
-	return(md5(sprintf("%04d%04d%s", $id_module, $id_object, $id_record)));
+    return(md5(sprintf("%04d%04d%s", $id_module, $id_object, $id_record)));
 }
 
 /*
@@ -38,531 +38,514 @@ function ploopi_search_generate_id($id_module, $id_object, $id_record)
 
 function ploopi_search_remove_index($id_object, $id_record, $id_module = -1)
 {
-	global $db;
+    global $db;
 
-	if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
-	$id_element = ploopi_search_generate_id($id_module,$id_object,$id_record);
+    if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
+    $id_element = ploopi_search_generate_id($id_module,$id_object,$id_record);
 
-	$db->query("DELETE FROM ploopi_index_element WHERE id = '{$id_element}'");
-	$db->query("DELETE FROM ploopi_index_keyword_element WHERE id_element = '{$id_element}'");
-	$db->query("DELETE FROM ploopi_index_stem_element WHERE id_element = '{$id_element}'");
+    $db->query("DELETE FROM ploopi_index_element WHERE id = '{$id_element}'");
+    $db->query("DELETE FROM ploopi_index_keyword_element WHERE id_element = '{$id_element}'");
+    $db->query("DELETE FROM ploopi_index_stem_element WHERE id_element = '{$id_element}'");
 }
 
 function ploopi_search_create_index_annotation($id_object, $id_record, $tags, $id_module = -1)
 {
-	global $db;
-	if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
+    global $db;
+    if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
 
-	$id_element = ploopi_search_generate_id($id_module,$id_object,$id_record);
+    $id_element = ploopi_search_generate_id($id_module,$id_object,$id_record);
 
-	list($arrKeywords) = ploopi_getwords($tags, true, false);
+    list($arrKeywords) = ploopi_getwords($tags, true, false);
 
 
-	foreach($arrKeywords as $kw)
-	{
-		// on calcule le hash md5
-		$kw_md5 = md5($kw);
+    foreach($arrKeywords as $kw)
+    {
+        // on calcule le hash md5
+        $kw_md5 = md5($kw);
 
-		// enregistrement du mot clÈ si n'existe pas dÈj‡
-		$db->query("SELECT id FROM ploopi_index_keyword WHERE id = '{$kw_md5}'");
-		if (!$db->numrows())
-		{
-			$objKw = new index_keyword();
-			$objKw->fields['id'] = $kw_md5;
-			$objKw->fields['keyword'] = $kw;
-			$objKw->fields['id_stem'] = $stem_md5;
-			$objKw->save();
-		}
+        // enregistrement du mot clÈ si n'existe pas dÈj‡
+        $db->query("SELECT id FROM ploopi_index_keyword WHERE id = '{$kw_md5}'");
+        if (!$db->numrows())
+        {
+            $objKw = new index_keyword();
+            $objKw->fields['id'] = $kw_md5;
+            $objKw->fields['keyword'] = $kw;
+            $objKw->fields['id_stem'] = $stem_md5;
+            $objKw->save();
+        }
 
-		// enregistrement du lien mot clÈ <-> enregistrement
-		$objKwElement = new index_keyword_element();
-		$objKwElement->fields['id_keyword'] = $kw_md5;
-		$objKwElement->fields['id_element'] = $id_element;
-		$objKwElement->fields['weight'] = $kw_weight;
-		$objKwElement->fields['ratio'] = (empty($kw['meta'])) ? ((empty($words_overall)) ? 0 : ($kw_weight / $words_overall)*100) : 1;
-		$objKwElement->fields['relevance'] = (empty($kw['meta'])) ? ($kw_weight*100)/$max_weight : 100;
-		$objKwElement->save();
+        // enregistrement du lien mot clÈ <-> enregistrement
+        $objKwElement = new index_keyword_element();
+        $objKwElement->fields['id_keyword'] = $kw_md5;
+        $objKwElement->fields['id_element'] = $id_element;
+        $objKwElement->fields['weight'] = $kw_weight;
+        $objKwElement->fields['ratio'] = (empty($kw['meta'])) ? ((empty($words_overall)) ? 0 : ($kw_weight / $words_overall)*100) : 1;
+        $objKwElement->fields['relevance'] = (empty($kw['meta'])) ? ($kw_weight*100)/$max_weight : 100;
+        $objKwElement->save();
 
-	}
+    }
 }
 
 function ploopi_search_create_index($id_object, $id_record, $label, $content, $meta = '', $usecommonwords = true, $timestp_create = 0, $timestp_modify = 0, $id_user = -1, $id_workspace = -1, $id_module = -1, $debug = false)
 {
-	// TESTS :
-	// http://ploopidev/admin-light.php?op=doc_fileindex&currentfolder=9&docfile_md5id=a9a7aba316abf25e65f01a320698baa3
-	// http://ploopidev/admin-light.php?op=doc_fileindex&currentfolder=9&docfile_md5id=e2472480adc4de03ea45862b9e487930
+    // TESTS :
+    // http://ploopidev/admin-light.php?op=doc_fileindex&currentfolder=9&docfile_md5id=a9a7aba316abf25e65f01a320698baa3
+    // http://ploopidev/admin-light.php?op=doc_fileindex&currentfolder=9&docfile_md5id=e2472480adc4de03ea45862b9e487930
 
-	global $db;
-	global $ploopi_timer;
+    global $db;
+    global $ploopi_timer;
 
-	if ($id_user == -1 && !empty($_SESSION['ploopi']['userid'])) $id_user = $_SESSION['ploopi']['userid'];
-	if ($id_workspace == -1 && !empty($_SESSION['ploopi']['workspaceid'])) $id_workspace = $_SESSION['ploopi']['workspaceid'];
-	if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
+    if ($id_user == -1 && !empty($_SESSION['ploopi']['userid'])) $id_user = $_SESSION['ploopi']['userid'];
+    if ($id_workspace == -1 && !empty($_SESSION['ploopi']['workspaceid'])) $id_workspace = $_SESSION['ploopi']['workspaceid'];
+    if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
 
-	$id_element = ploopi_search_generate_id($id_module,$id_object,$id_record);
+    $id_element = ploopi_search_generate_id($id_module,$id_object,$id_record);
 
-	$words = array();
-	$words_indexed = $words_overall = 0;
+    $words = array();
+    $words_indexed = $words_overall = 0;
 
-	if ($usecommonwords && !isset($_SESSION['ploopi']['commonwords']) && file_exists(_PLOOPI_INDEXATION_COMMONWORDS_FR) )
-	{
-		$filecontent = '';
-		$handle = @fopen(_PLOOPI_INDEXATION_COMMONWORDS_FR, 'r');
-		if ($handle)
-		{
-			while (!feof($handle)) $filecontent .= fgets($handle);
-			fclose($handle);
-		}
+    if ($usecommonwords && !isset($_SESSION['ploopi']['commonwords']) && file_exists(_PLOOPI_INDEXATION_COMMONWORDS_FR) )
+    {
+        $filecontent = '';
+        $handle = @fopen(_PLOOPI_INDEXATION_COMMONWORDS_FR, 'r');
+        if ($handle)
+        {
+            while (!feof($handle)) $filecontent .= fgets($handle);
+            fclose($handle);
+        }
 
-		$_SESSION['ploopi']['commonwords'] = array_flip(split("[\n]", str_replace("\r",'',$filecontent)));
-	}
+        $_SESSION['ploopi']['commonwords'] = array_flip(split("[\n]", str_replace("\r",'',$filecontent)));
+    }
 
-	if (empty($_SESSION['ploopi']['commonwords'])) $_SESSION['ploopi']['commonwords'] = array();
-
-
-	// TRAITEMENT DU CONTENT
-	for ($kw = strtok($content, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
-	{
-		// mot en minuscule avec accents
-		$kw = trim(mb_strtolower($kw),"\x0..\x20\xa0");
-
-		// mot en minuscule sans accent et sans caractËre parasite
-		$kw_clean = preg_replace("/[^a-zA-Z0-9]/","",ploopi_convertaccents($kw));
-
-		// on vÈrifie qu'il n'est pas dans la liste des mots ‡ exclure
-		if (!isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
-		{
-			// on vÈrifie sa taille
-			$len = strlen($kw);
-			if ($len >= _PLOOPI_INDEXATION_WORDMINLENGHT && $len <= _PLOOPI_INDEXATION_WORDMAXLENGHT)
-			{
-				// dÈtermination du lemme (racine)
-				$kw_stem = stem_french($kw);
-
-				if (!isset($words[$kw_stem])) $words[$kw_stem]['weight'] = 1;
-				else $words[$kw_stem]['weight']++;
-
-				if (!isset($words[$kw_stem]['words'][$kw_clean])) $words[$kw_stem]['words'][$kw_clean]['weight'] = 1;
-				else $words[$kw_stem]['words'][$kw_clean]['weight']++;
-
-				$words_indexed++;
-			}
-		}
-		$words_overall++;
-	}
-
-	// tri des lemmes par poids
-	arsort($words);
-
-	$stem = current($words);
-	$max_weight = $stem['weight'];
-
-	// TRAITEMENT DES METAS
-	for ($kw = strtok($meta, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
-	{
-		// mot en minuscule avec accents
-		$kw = trim(mb_strtolower($kw),"\x0..\x20\xa0");
-
-		// mot en minuscule sans accent et sans caractËre parasite
-		$kw_clean = preg_replace("/[^a-zA-Z0-9]/","",ploopi_convertaccents($kw));
-
-		// on vÈrifie qu'il n'est pas dans la liste des mots ‡ exclure
-		if (!isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
-		{
-			// on vÈrifie sa taille
-			$len = strlen($kw);
-			if ($len >= _PLOOPI_INDEXATION_WORDMINLENGHT && $len <= _PLOOPI_INDEXATION_WORDMAXLENGHT)
-			{
-				// dÈtermination du lemme (racine)
-				$kw_stem = stem_french($kw);
-
-				$words[$kw_stem]['weight'] = _PLOOPI_INDEXATION_METAWEIGHT;
-				$words[$kw_stem]['meta'] = 1;
-
-				$words[$kw_stem]['words'][$kw_clean]['weight'] = _PLOOPI_INDEXATION_METAWEIGHT;
-				$words[$kw_stem]['words'][$kw_clean]['meta'] = 1;
-			}
-		}
-	}
-
-	// tri des lemmes par poids
-	arsort($words);
-
-	if ($debug) printf("<br />GETWORDS: %0.2f",$ploopi_timer->getexectime()*1000);
-
-	// nettoyage index
-	ploopi_search_remove_index($id_object, $id_record);
-	if ($debug) printf("<br />REMOVE INDEX: %0.2f",$ploopi_timer->getexectime()*1000);
+    if (empty($_SESSION['ploopi']['commonwords'])) $_SESSION['ploopi']['commonwords'] = array();
 
 
-	$stem = current($words);
-	$stem_ratio = (empty($words_overall)) ? 0 : ($stem['weight']*100 / $words_overall);
+    // TRAITEMENT DU CONTENT
+    for ($kw = strtok($content, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
+    {
+        // mot en minuscule avec accents
+        $kw = trim(mb_strtolower($kw),"\x0..\x20\xa0");
 
-	$max_stem = (_PLOOPI_INDEXATION_KEYWORDSMAXPCENT) ? (sizeof($words)*_PLOOPI_INDEXATION_KEYWORDSMAXPCENT)/100 : sizeof($words);
+        // mot en minuscule sans accent et sans caractËre parasite
+        $kw_clean = preg_replace("/[^a-zA-Z0-9]/","",ploopi_convertaccents($kw));
 
-	$objElement = new index_element();
-	$objElement->fields['id'] = $id_element;
-	$objElement->fields['id_object'] = $id_object;
-	$objElement->fields['id_record'] = $id_record;
-	$objElement->fields['label'] = $label;
-	$objElement->fields['id_user'] = $id_user;
-	$objElement->fields['id_workspace'] = $id_workspace;
-	$objElement->fields['id_module'] = $id_module;
-	$objElement->fields['timestp_create'] = $timestp_create;
-	$objElement->fields['timestp_modify'] = $timestp_modify;
-	$objElement->fields['timestp_lastindex'] = ploopi_createtimestamp();
-	$objElement->save();
+        // on vÈrifie qu'il n'est pas dans la liste des mots ‡ exclure
+        if (!isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
+        {
+            // on vÈrifie sa taille
+            $len = strlen($kw);
+            if ($len >= _PLOOPI_INDEXATION_WORDMINLENGHT && $len <= _PLOOPI_INDEXATION_WORDMAXLENGHT)
+            {
+                // dÈtermination du lemme (racine)
+                $kw_stem = stem_french($kw);
 
-	for ($i = 1; $i <= $max_stem && $stem_ratio >= _PLOOPI_INDEXATION_RATIOMIN; $i++)
-	{
-		// on calcule le hash md5
-		$stem_value = key($words);
-		$stem_md5 = md5($stem_value);
+                if (!isset($words[$kw_stem])) $words[$kw_stem] = array('weight' => 1, 'meta' => 0);
+                else $words[$kw_stem]['weight']++;
 
-		// enregistrement de la racine si n'existe pas dÈj‡
-		$db->query("SELECT id FROM ploopi_index_stem WHERE id = '{$stem_md5}'");
-		if (!$db->numrows())
-		{
-			$objStem = new index_stem();
-			$objStem->fields['id'] = $stem_md5;
-			$objStem->fields['stem'] = $stem_value;
-			$objStem->save();
-		}
+                if (!isset($words[$kw_stem]['words'][$kw_clean])) $words[$kw_stem]['words'][$kw_clean] = array('weight' => 1, 'meta' => 0);
+                else $words[$kw_stem]['words'][$kw_clean]['weight']++;
 
-		// enregistrement du lien racine <-> enregistrement
-		$objStemElement = new index_stem_element();
-		$objStemElement->fields['id_stem'] = $stem_md5;
-		$objStemElement->fields['id_element'] = $id_element;
-		$objStemElement->fields['weight'] = $stem['weight'];
-		$objStemElement->fields['ratio'] = (empty($stem['meta'])) ? $stem_ratio : 1;
-		$objStemElement->fields['relevance'] = (empty($stem['meta'])) ? ($stem['weight']*100)/$max_weight : 100;
-		$objStemElement->save();
+                $words_indexed++;
+            }
+        }
+        $words_overall++;
+    }
+
+    // tri des lemmes par poids
+    arsort($words);
+
+    $stem = current($words);
+    $max_weight = $stem['weight'];
+
+    // TRAITEMENT DES METAS
+    for ($kw = strtok($meta, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
+    {
+        // mot en minuscule avec accents
+        $kw = trim(mb_strtolower($kw),"\x0..\x20\xa0");
+
+        // mot en minuscule sans accent et sans caractËre parasite
+        $kw_clean = preg_replace("/[^a-zA-Z0-9]/","",ploopi_convertaccents($kw));
+
+        // on vÈrifie qu'il n'est pas dans la liste des mots ‡ exclure
+        if (!isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
+        {
+            // on vÈrifie sa taille
+            $len = strlen($kw);
+            if ($len >= _PLOOPI_INDEXATION_WORDMINLENGHT && $len <= _PLOOPI_INDEXATION_WORDMAXLENGHT)
+            {
+                // dÈtermination du lemme (racine)
+                $kw_stem = stem_french($kw);
+
+                $words[$kw_stem]['weight'] = _PLOOPI_INDEXATION_METAWEIGHT;
+                $words[$kw_stem]['meta'] = 1;
+
+                $words[$kw_stem]['words'][$kw_clean]['weight'] = _PLOOPI_INDEXATION_METAWEIGHT;
+                $words[$kw_stem]['words'][$kw_clean]['meta'] = 1;
+            }
+        }
+    }
+
+    // tri des lemmes par poids
+    arsort($words);
+
+    if ($debug) printf("<br />GETWORDS: %0.2f",$ploopi_timer->getexectime()*1000);
+
+    // nettoyage index
+    ploopi_search_remove_index($id_object, $id_record);
+    if ($debug) printf("<br />REMOVE INDEX: %0.2f",$ploopi_timer->getexectime()*1000);
 
 
-		foreach($stem['words'] as $kw_value => $kw)
-		{
-			$kw_weight = $kw['weight'];
+    $stem = current($words);
+    $stem_ratio = (empty($words_overall)) ? 1 : ($stem['weight']*100 / $words_overall);
 
-			// on calcule le hash md5
-			$kw_md5 = md5($kw_value);
+    $max_stem = (_PLOOPI_INDEXATION_KEYWORDSMAXPCENT) ? (sizeof($words)*_PLOOPI_INDEXATION_KEYWORDSMAXPCENT)/100 : sizeof($words);
 
-			// enregistrement du mot clÈ si n'existe pas dÈj‡
-			$db->query("SELECT id FROM ploopi_index_keyword WHERE id = '{$kw_md5}'");
-			if (!$db->numrows())
-			{
-				$objKw = new index_keyword();
-				$objKw->fields['id'] = $kw_md5;
-				$objKw->fields['keyword'] = $kw_value;
-				$objKw->fields['id_stem'] = $stem_md5;
-				$objKw->save();
-			}
+    $objElement = new index_element();
+    $objElement->fields['id'] = $id_element;
+    $objElement->fields['id_object'] = $id_object;
+    $objElement->fields['id_record'] = $id_record;
+    $objElement->fields['label'] = $label;
+    $objElement->fields['id_user'] = $id_user;
+    $objElement->fields['id_workspace'] = $id_workspace;
+    $objElement->fields['id_module'] = $id_module;
+    $objElement->fields['timestp_create'] = $timestp_create;
+    $objElement->fields['timestp_modify'] = $timestp_modify;
+    $objElement->fields['timestp_lastindex'] = ploopi_createtimestamp();
+    $objElement->save();
 
-			// enregistrement du lien mot clÈ <-> enregistrement
-			$objKwElement = new index_keyword_element();
-			$objKwElement->fields['id_keyword'] = $kw_md5;
-			$objKwElement->fields['id_element'] = $id_element;
-			$objKwElement->fields['weight'] = $kw_weight;
-			$objKwElement->fields['ratio'] = (empty($kw['meta'])) ? ((empty($words_overall)) ? 0 : ($kw_weight / $words_overall)*100) : 1;
-			$objKwElement->fields['relevance'] = (empty($kw['meta'])) ? ($kw_weight*100)/$max_weight : 100;
-			$objKwElement->save();
+    for ($i = 1; ($i <= $max_stem && $stem_ratio >= _PLOOPI_INDEXATION_RATIOMIN) || $stem['meta']; $i++)
+    {
+        // on calcule le hash md5
+        $stem_value = key($words);
+        $stem_md5 = md5($stem_value);
 
-		}
+        // enregistrement de la racine si n'existe pas dÈj‡
+        $db->query("SELECT id FROM ploopi_index_stem WHERE id = '{$stem_md5}'");
+        if (!$db->numrows())
+        {
+            $objStem = new index_stem();
+            $objStem->fields['id'] = $stem_md5;
+            $objStem->fields['stem'] = $stem_value;
+            $objStem->save();
+        }
 
-		$stem = next($words);
-		$stem_ratio = (empty($words_overall)) ? 0 : ($stem['weight'] / $words_overall)*100;
-	}
+        // enregistrement du lien racine <-> enregistrement
+        $objStemElement = new index_stem_element();
+        $objStemElement->fields['id_stem'] = $stem_md5;
+        $objStemElement->fields['id_element'] = $id_element;
+        $objStemElement->fields['weight'] = $stem['weight'];
+        $objStemElement->fields['ratio'] = (empty($stem['meta']) && $stem_ratio<1) ? $stem_ratio : 1;
+        $objStemElement->fields['relevance'] = (empty($stem['meta'])) ? ($stem['weight']*100)/$max_weight : 100;
+        $objStemElement->save();
 
-	if ($debug) printf("<br />KEYWORDS: %0.2f",$ploopi_timer->getexectime()*1000);
+
+        foreach($stem['words'] as $kw_value => $kw)
+        {
+            $kw_weight = $kw['weight'];
+            $kw_ratio = (empty($words_overall)) ? 1 : ($kw['weight']*100 / $words_overall);
+
+            // on calcule le hash md5
+            $kw_md5 = md5($kw_value);
+
+            // enregistrement du mot clÈ si n'existe pas dÈj‡
+            $db->query("SELECT id FROM ploopi_index_keyword WHERE id = '{$kw_md5}'");
+            if (!$db->numrows())
+            {
+                $objKw = new index_keyword();
+                $objKw->fields['id'] = $kw_md5;
+                $objKw->fields['keyword'] = $kw_value;
+                $objKw->fields['id_stem'] = $stem_md5;
+                $objKw->save();
+            }
+
+            // enregistrement du lien mot clÈ <-> enregistrement
+            $objKwElement = new index_keyword_element();
+            $objKwElement->fields['id_keyword'] = $kw_md5;
+            $objKwElement->fields['id_element'] = $id_element;
+            $objKwElement->fields['weight'] = $kw['weight'];
+            $objKwElement->fields['ratio'] = (empty($kw['meta']) && $kw_ratio<1) ? $kw_ratio : 1;
+            $objKwElement->fields['relevance'] = (empty($kw['meta'])) ? ($kw_weight*100)/$max_weight : 100;
+            $objKwElement->save();
+
+        }
+
+        $stem = next($words);
+        $stem_ratio = (empty($words_overall)) ? 1 : ($stem['weight'] / $words_overall)*100;
+    }
+
+    if ($debug) printf("<br />KEYWORDS: %0.2f",$ploopi_timer->getexectime()*1000);
 }
 
 
 function ploopi_search_get_index($id_object, $id_record, $limit = 100, $id_module = -1)
 {
-	global $db;
+    global $db;
 
-	$index = array();
+    $index = array();
 
-	if (is_numeric($limit))
-	{
-		if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
+    if (is_numeric($limit))
+    {
+        if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
 
-		$id_element = ploopi_search_generate_id($id_module,$id_object,$id_record);
+        $id_element = ploopi_search_generate_id($id_module,$id_object,$id_record);
 
-		$sql = 	"
-				SELECT 		k.keyword, ke.weight, ke.ratio, s.stem, se.relevance
+        $sql =  "
+                SELECT      k.keyword, ke.weight, ke.ratio, s.stem, se.relevance
 
-				FROM 		ploopi_index_keyword_element ke
+                FROM        ploopi_index_keyword_element ke
 
-				INNER JOIN	ploopi_index_keyword k
-				ON 			ke.id_keyword = k.id
+                INNER JOIN  ploopi_index_keyword k
+                ON          ke.id_keyword = k.id
 
-				INNER JOIN	ploopi_index_stem s
-				ON 			s.id = k.id_stem
+                INNER JOIN  ploopi_index_stem s
+                ON          s.id = k.id_stem
 
-				INNER JOIN	ploopi_index_stem_element se
-				ON 			se.id_stem = s.id
-				AND			se.id_element = '{$id_element}'
+                INNER JOIN  ploopi_index_stem_element se
+                ON          se.id_stem = s.id
+                AND         se.id_element = '{$id_element}'
 
-				WHERE		ke.id_element = '{$id_element}'
+                WHERE       ke.id_element = '{$id_element}'
 
-				ORDER BY	se.relevance DESC, ke.weight DESC, k.keyword
+                ORDER BY    se.relevance DESC, ke.weight DESC, k.keyword
 
-				LIMIT 		0,{$limit}
-			";
+                LIMIT       0,{$limit}
+            ";
 
-		$db->query($sql);
-		$index = $db->getarray();
+        $db->query($sql);
+        $index = $db->getarray();
 
 
-	}
+    }
 
-	return($index);
+    return($index);
 }
 
 
 function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, $options = null)
 {
-	global $db;
+    global $db;
 
-	if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module = $_SESSION['ploopi']['moduleid'];
+    if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module = $_SESSION['ploopi']['moduleid'];
 
-	// on rÈcupËre la liste des racines contenues dans la liste des mots clÈs
-	list($arrStems) = ploopi_getwords($keywords, true, true);
+    // on rÈcupËre la liste des racines contenues dans la liste des mots clÈs
+    list($arrStems) = ploopi_getwords($keywords, true, true);
 
-	// on rÈcupËre la liste des mots contenus dans la liste des mots clÈs
-	list($arrKeywords) = ploopi_getwords($keywords, true, false);
+    // on rÈcupËre la liste des mots contenus dans la liste des mots clÈs
+    list($arrKeywords) = ploopi_getwords($keywords, true, false);
 
-	$arrSearch = array();
-	$arrRelevance = array();
+    $arrSearch = array();
+    $arrRelevance = array();
 
-	if ($id_record != '') $arrSearch[] = "e.id_record LIKE '".$db->addslashes($id_record)."%'";
-	if ($id_object != '') $arrSearch[] = "e.id_object = {$id_object}";
-	if ($id_module != '')
-	{
-		$arrSearch[] = "e.id_module = {$id_module}";
-		$arrSearch[] = 'e.id_workspace IN ('.ploopi_viewworkspaces($id_module).')';
-	}
+    if ($id_record != '') $arrSearch[] = "e.id_record LIKE '".$db->addslashes($id_record)."%'";
+    if ($id_object != '') $arrSearch[] = "e.id_object = {$id_object}";
+    if ($id_module != '')
+    {
+        $arrSearch[] = "e.id_module = {$id_module}";
+        $arrSearch[] = 'e.id_workspace IN ('.ploopi_viewworkspaces($id_module).')';
+    }
 
-	$strSearch = (empty($arrSearch)) ? '' : ' AND '.implode(' AND ',$arrSearch);
+    $strSearch = (empty($arrSearch)) ? '' : ' AND '.implode(' AND ',$arrSearch);
 
-	$orderby = (isset($options['orderby'])) ? $options['orderby'] : '';
-	$sort = (isset($options['sort'])) ? $options['sort'] : 'DESC';
+    $orderby = (isset($options['orderby'])) ? $options['orderby'] : '';
+    $sort = (isset($options['sort'])) ? $options['sort'] : 'DESC';
 
+    // pour chaque racine (stem), on cherche les occurences d'ÈlÈments correspondants
+    foreach($arrStems as $stem => $occ)
+    {
+        $id_stem = md5($stem);
 
-	// pour chaque racine (stem), on cherche les occurences d'ÈlÈments correspondants
-	foreach($arrStems as $stem => $occ)
-	{
-		 $sql = 	"
-				SELECT		0 as sort_id,
-							se.relevance,
-							e.*
+        $sql =  "
+                SELECT      0 as sort_id,
+                            se.relevance,
+                            e.*
 
-				FROM		ploopi_index_stem s,
-							ploopi_index_stem_element se,
-							ploopi_index_element e
+                FROM        ploopi_index_stem_element se,
+                            ploopi_index_element e
 
-				WHERE		e.id = se.id_element
-				AND			s.id = se.id_stem
-				AND			s.stem = '".$db->addslashes($stem)."'
-				{$strSearch}
-				";
-
-
-		$db->query($sql);
-
-		while ($row = $db->fetchrow())
-		{
-			$id = ($id_module != '') ? $row['id_record'] : $row['id'];
-
-			if (!isset($arrRelevance[$id]))
-			{
-				switch($orderby)
-				{
-					case 'timestp_create':
-						$row['sort_id'] = $row['timestp_create'];
-					break;
-
-					default:
-					case 'relevance':
-						$row['sort_id'] = $row['relevance'];
-					break;
-				}
-
-				$arrRelevance[$id] = $row;
-				$arrRelevance[$id]['count'] = 1;
-				$arrRelevance[$id]['kw'] = array();
-				$arrRelevance[$id]['stem'] = array();
-			}
-			else
-			{
-				switch($orderby)
-				{
-					case 'timestp_create':
-					break;
-
-					default:
-					case 'relevance':
-						$row['sort_id'] += $row['relevance'];
-					break;
-				}
-
-				$arrRelevance[$id]['relevance'] += $row['relevance'];
-				$arrRelevance[$id]['count'] ++;
-			}
-			$arrRelevance[$id]['stem'][$stem] = 1;
-		}
-	}
-
-	// pour chaque mot, on cherche les occurences d'ÈlÈments correspondants
-	foreach($arrKeywords as $kw => $occ)
-	{
-		$sql = 	"
-				SELECT		0 as sort_id,
-							ke.relevance,
-							e.*,
-							k.keyword
-
-				FROM		ploopi_index_keyword k,
-							ploopi_index_keyword_element ke,
-							ploopi_index_element e
-
-				WHERE		e.id = ke.id_element
-				AND			k.id = ke.id_keyword
-				AND			k.keyword like '".$db->addslashes($kw)."%'
-				{$strSearch}
-				";
+                WHERE       e.id = se.id_element
+                AND         se.id_stem = '{$id_stem}'
+                {$strSearch}
+                ";
 
 
-		$db->query($sql);
+        $db->query($sql);
 
-		while ($row = $db->fetchrow())
-		{
-			$id = ($id_module != '') ? $row['id_record'] : $row['id'];
+        while ($row = $db->fetchrow())
+        {
+            $id = ($id_module != '') ? $row['id_record'] : $row['id'];
 
-			// relevance = relevance * ratio de similaritÈ entre les 2 chaines
-			$row['relevance'] *= (strlen($kw)/strlen($row['keyword']));
-			unset($row['keyword']);
+            if (!isset($arrRelevance[$id]))
+            {
+                switch($orderby)
+                {
+                    case 'timestp_create':
+                        $row['sort_id'] = $row['timestp_create'];
+                    break;
 
-			if (!isset($arrRelevance[$id]))
-			{
-				switch($orderby)
-				{
-					case 'timestp_create':
-						$row['sort_id'] = $row['timestp_create'];
-					break;
+                    default:
+                    case 'relevance':
+                        $row['sort_id'] = 0;
+                    break;
+                }
 
-					default:
-					case 'relevance':
-						$row['sort_id'] = $row['relevance'];
-					break;
-				}
+                $arrRelevance[$id] = $row;
+                $arrRelevance[$id]['count'] = 1;
+                $arrRelevance[$id]['kw'] = array();
+                $arrRelevance[$id]['stem'] = array();
+                $arrRelevance[$id]['keywords'] = array();
+            }
+            else
+            {
+                $arrRelevance[$id]['relevance'] += $row['relevance'];
+                $arrRelevance[$id]['count'] ++;
+            }
+            $arrRelevance[$id]['stem'][$stem] = 1;
+        }
+    }
 
-				$arrRelevance[$id] = $row;
-				$arrRelevance[$id]['count'] = 1;
-				$arrRelevance[$id]['kw'] = array();
-				$arrRelevance[$id]['stem'] = array();
-			}
-			else
-			{
-				switch($orderby)
-				{
-					case 'timestp_create':
-					break;
+    // pour chaque mot, on cherche les occurences d'ÈlÈments correspondants
+    foreach($arrKeywords as $kw => $occ)
+    {
+        $sql =  "
+                SELECT      0 as sort_id,
+                            ke.relevance,
+                            e.*,
+                            k.keyword
 
-					default:
-					case 'relevance':
-						$row['sort_id'] += $row['relevance'];
-					break;
-				}
+                FROM        ploopi_index_keyword k,
+                            ploopi_index_keyword_element ke,
+                            ploopi_index_element e
 
-				$arrRelevance[$id]['relevance'] += $row['relevance'];
-				$arrRelevance[$id]['count'] ++;
-			}
-
-			$arrRelevance[$id]['kw'][$kw] = 1;
-		}
+                WHERE       e.id = ke.id_element
+                AND         k.id = ke.id_keyword
+                AND         k.keyword like '".$db->addslashes($kw)."%'
+                {$strSearch}
+                ";
 
 
-		// recherche dans les annotations de l'utilisateur (considÈrÈ comme meta ?)
-		$sql = 	"
-				SELECT		0 as sort_id,
-							100 as relevance,
-							e.*,
-							t.tag_clean as keyword
+        $db->query($sql);
 
-				FROM		ploopi_annotation a,
-							ploopi_annotation_tag at,
-							ploopi_tag t,
-							ploopi_index_element e
+        while ($row = $db->fetchrow())
+        {
+            $id = ($id_module != '') ? $row['id_record'] : $row['id'];
 
-				WHERE		at.id_tag = t.id
-				AND			at.id_annotation = a.id
-				AND			a.id_element = e.id
-				AND			t.tag_clean like '".$db->addslashes($kw)."%'
-				{$strSearch}
-				";
+            // relevance = relevance * ratio de similaritÈ entre les 2 chaines
+            $row['relevance'] *= (strlen($kw)/strlen($row['keyword']));
 
-		$db->query($sql);
+            $keyword = $row['keyword'];
+            unset($row['keyword']);
 
-		while ($row = $db->fetchrow())
-		{
-			$id = ($id_module != '') ? $row['id_record'] : $row['id'];
+            if (!isset($arrRelevance[$id]))
+            {
+                switch($orderby)
+                {
+                    case 'timestp_create':
+                        $row['sort_id'] = $row['timestp_create'];
+                    break;
 
-			// relevance = relevance * ratio de similaritÈ entre les 2 chaines
-			$row['relevance'] *= (strlen($kw)/strlen($row['keyword']));
-			unset($row['keyword']);
+                    default:
+                    case 'relevance':
+                        $row['sort_id'] = 0;
+                    break;
+                }
 
-			if (!isset($arrRelevance[$id]))
-			{
-				switch($orderby)
-				{
-					case 'timestp_create':
-						$row['sort_id'] = $row['timestp_create'];
-					break;
+                $arrRelevance[$id] = $row;
+                $arrRelevance[$id]['count'] = 1;
+                $arrRelevance[$id]['kw'] = array();
+                $arrRelevance[$id]['stem'] = array();
+                $arrRelevance[$id]['keywords'] = array();
+            }
+            else
+            {
+                $arrRelevance[$id]['relevance'] += $row['relevance'];
+                $arrRelevance[$id]['count'] ++;
+            }
 
-					default:
-					case 'relevance':
-						$row['sort_id'] = $row['relevance'];
-					break;
-				}
+            $arrRelevance[$id]['kw'][$kw] = 1;
+            $arrRelevance[$id]['keywords'][$keyword] = 1;
+        }
 
-				$arrRelevance[$id] = $row;
-				$arrRelevance[$id]['count'] = 1;
-				$arrRelevance[$id]['kw'] = array();
-				$arrRelevance[$id]['stem'] = array();
-			}
-			else
-			{
-				switch($orderby)
-				{
-					case 'timestp_create':
-					break;
 
-					default:
-					case 'relevance':
-						$row['sort_id'] += $row['relevance'];
-					break;
-				}
+        // recherche dans les annotations de l'utilisateur (considÈrÈ comme meta ?)
+        $sql =  "
+                SELECT      0 as sort_id,
+                            100 as relevance,
+                            e.*,
+                            t.tag_clean as keyword
 
-				$arrRelevance[$id]['relevance'] += $row['relevance'];
-				$arrRelevance[$id]['count'] ++;
-			}
+                FROM        ploopi_annotation a,
+                            ploopi_annotation_tag at,
+                            ploopi_tag t,
+                            ploopi_index_element e
 
-			$arrRelevance[$id]['kw'][$kw] = 1;
-		}
+                WHERE       at.id_tag = t.id
+                AND         at.id_annotation = a.id
+                AND         a.id_element = e.id
+                AND         t.tag_clean like '".$db->addslashes($kw)."%'
+                {$strSearch}
+                ";
 
-	}
+        $db->query($sql);
 
-	foreach($arrRelevance as $key => $element)
-	{
-		$arrRelevance[$key]['kw_ratio'] = (sizeof($arrRelevance[$key]['kw'])+sizeof($arrRelevance[$key]['stem'])) / (sizeof($arrKeywords)+sizeof($arrStems));
-		$arrRelevance[$key]['relevance'] = ($arrRelevance[$key]['relevance']/$arrRelevance[$key]['count']) * $arrRelevance[$key]['kw_ratio'];
-	}
+        while ($row = $db->fetchrow())
+        {
+            $id = ($id_module != '') ? $row['id_record'] : $row['id'];
 
-	if ($sort == 'DESC') arsort($arrRelevance);
-	else asort($arrRelevance);
+            // relevance = relevance * ratio de similaritÈ entre les 2 chaines
+            $row['relevance'] *= (strlen($kw)/strlen($row['keyword']));
+            unset($row['keyword']);
 
-	return($arrRelevance);
+            if (!isset($arrRelevance[$id]))
+            {
+                switch($orderby)
+                {
+                    case 'timestp_create':
+                        $row['sort_id'] = $row['timestp_create'];
+                    break;
+
+                    default:
+                    case 'relevance':
+                        $row['sort_id'] = 0;
+                    break;
+                }
+
+                $arrRelevance[$id] = $row;
+                $arrRelevance[$id]['count'] = 1;
+                $arrRelevance[$id]['kw'] = array();
+                $arrRelevance[$id]['stem'] = array();
+            }
+            else
+            {
+                $arrRelevance[$id]['relevance'] += $row['relevance'];
+                $arrRelevance[$id]['count'] ++;
+            }
+
+            $arrRelevance[$id]['kw'][$kw] = 1;
+        }
+
+    }
+
+    foreach($arrRelevance as $key => $element)
+    {
+        $arrRelevance[$key]['kw_ratio'] = (sizeof($arrRelevance[$key]['kw'])+sizeof($arrRelevance[$key]['stem'])) / (sizeof($arrKeywords)+sizeof($arrStems));
+        $arrRelevance[$key]['relevance'] = ($arrRelevance[$key]['relevance']/$arrRelevance[$key]['count']) * $arrRelevance[$key]['kw_ratio'];
+
+        switch($orderby)
+        {
+            case 'timestp_create':
+            break;
+
+            default:
+            case 'relevance':
+                $arrRelevance[$key]['sort_id'] = $arrRelevance[$key]['relevance'];
+            break;
+        }
+    }
+
+    if ($sort == 'DESC') arsort($arrRelevance);
+    else asort($arrRelevance);
+
+    return($arrRelevance);
 }
 
 
@@ -575,50 +558,161 @@ function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, 
 
 function ploopi_getwords($content, $usecommonwords = true, $getstem = false)
 {
-	$words = array();
-	$words_indexed = $words_overall = 0;
+    $words = array();
+    $words_indexed = $words_overall = 0;
 
-	if ($usecommonwords && !isset($_SESSION['ploopi']['commonwords']) && file_exists(_PLOOPI_INDEXATION_COMMONWORDS_FR) )
-	{
-		$filecontent = '';
-		$handle = @fopen(_PLOOPI_INDEXATION_COMMONWORDS_FR, 'r');
-		if ($handle)
-		{
-			while (!feof($handle)) $filecontent .= fgets($handle);
-			fclose($handle);
-		}
+    if ($usecommonwords && !isset($_SESSION['ploopi']['commonwords']) && file_exists(_PLOOPI_INDEXATION_COMMONWORDS_FR) )
+    {
+        $filecontent = '';
+        $handle = @fopen(_PLOOPI_INDEXATION_COMMONWORDS_FR, 'r');
+        if ($handle)
+        {
+            while (!feof($handle)) $filecontent .= fgets($handle);
+            fclose($handle);
+        }
 
-		$_SESSION['ploopi']['commonwords'] = array_flip(split("[\n]", str_replace("\r",'',$filecontent)));
-	}
+        $_SESSION['ploopi']['commonwords'] = array_flip(split("[\n]", str_replace("\r",'',$filecontent)));
+    }
 
-	if (empty($_SESSION['ploopi']['commonwords'])) $_SESSION['ploopi']['commonwords'] = array();
+    if (empty($_SESSION['ploopi']['commonwords'])) $_SESSION['ploopi']['commonwords'] = array();
 
-	for ($kw = strtok($content, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
-	{
-		// remove empty characters
-		$kw = trim(mb_strtolower($kw),"\x0..\x20\xa0");
+    for ($kw = strtok($content, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
+    {
+        // remove empty characters
+        $kw = trim(mb_strtolower($kw),"\x0..\x20\xa0");
 
-		// only keep "normal" characters
-		$kw_clean = preg_replace("/[^a-zA-Z0-9]/","",ploopi_convertaccents($kw));
+        // only keep "normal" characters
+        $kw_clean = preg_replace("/[^a-zA-Z0-9]/","",ploopi_convertaccents($kw));
 
-		if (!isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
-		{
-			$len = strlen($kw_clean);
-			if ($len >= _PLOOPI_INDEXATION_WORDMINLENGHT && $len <= _PLOOPI_INDEXATION_WORDMAXLENGHT)
-			{
-				$kw = ($getstem) ? stem_french($kw) : $kw_clean;
+        if (!isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
+        {
+            $len = strlen($kw_clean);
+            if ($len >= _PLOOPI_INDEXATION_WORDMINLENGHT && $len <= _PLOOPI_INDEXATION_WORDMAXLENGHT)
+            {
+                $kw = ($getstem) ? stem_french($kw) : $kw_clean;
 
-				if (!isset($words[$kw])) $words[$kw] = 1;
-				else $words[$kw]++;
+                if (!isset($words[$kw])) $words[$kw] = 1;
+                else $words[$kw]++;
 
-				$words_indexed++;
-			}
-		}
-		$words_overall++;
-	}
+                $words_indexed++;
+            }
+        }
+        $words_overall++;
+    }
 
-	arsort($words);
+    arsort($words);
 
-	return(array($words, $words_indexed, $words_overall));
+    return(array($words, $words_indexed, $words_overall));
 }
+
+
+
+
+    function phpdigHighlight($ereg='',$string='')
+    {
+        if ($ereg) {
+            $string = @eregi_replace($ereg,"\\1<^#_>\\2</_#^>\\3",@eregi_replace($ereg,"\\1<^#_>\\2</_#^>\\3",$string));
+            $string = str_replace("^#_","span class=\"phpdigHighlight\"",str_replace("_#^","span",$string));
+            return $string;
+        }
+        else {
+            return $result;
+        }
+    }
+
+
+
+
+
+function ploopi_highlight($content, $words, $snippet_length = 150, $snippet_num = 3, $highlight_class = 'ploopi_highlight')
+{
+    // mainly inspired by the great source code of phpdig
+
+    // on calcule l'encodeur
+    $string_subst = 'A:¿¡¬√ƒ≈,a:‡·‚„‰Â,O:“”‘’÷ÿ,o:ÚÛÙıˆ¯,E:»… À,e:ËÈÍÎ,C:«,c:Á,I:ÃÕŒœ,i:ÏÌÓÔ,U:Ÿ⁄€‹,u:˘˙˚¸,Y:›,y:ˇ˝,N:—,n:Ò';
+
+    $arrEncoder = array();
+
+    $tempArray = explode(',',$string_subst);
+
+    $arrEncoder['str'] = '';
+    $arrEncoder['tr'] = '';
+    $arrEncoder['char'] = array();
+    $arrEncoder['ereg'] = array();
+
+    foreach ($tempArray as $tempSubstitution)
+    {
+        $chrs = explode(':',$tempSubstitution);
+        $arrEncoder['char'][strtolower($chrs[0])] = strtolower($chrs[0]);
+        settype($arrEncoder['ereg'][strtolower($chrs[0])],'string');
+        $arrEncoder['ereg'][strtolower($chrs[0])] .= $chrs[0].$chrs[1];
+        for($i=0; $i < strlen($chrs[1]); $i++)
+        {
+            $arrEncoder['str'] .= $chrs[1][$i];
+            $arrEncoder['tr']  .= $chrs[0];
+        }
+    }
+    foreach($arrEncoder['ereg'] as $id => $ereg)
+    {
+        $arrEncoder['ereg'][$id] = '['.$ereg.']';
+    }
+
+
+    $string = str_replace('\\','',implode('@#@',$words));
+
+    $string = str_replace('∆','ae',str_replace('Ê','ae',$string));
+    $string = strtr($string, $arrEncoder['str'], $arrEncoder['tr']);
+
+    $string = preg_quote(strtolower($string));
+    $string = str_replace($arrEncoder['char'],$arrEncoder['ereg'],$string);
+
+    $reg_strings = str_replace('@#@','|', $string);
+    $stop_regs = "[][(){}[:blank:]=&?!&#%\$£*@+%:;,/\.'\"]";
+    $reg_strings = "({$stop_regs}{1}|^)({$reg_strings})()";
+
+    $num_extracts = 0;
+    $c = 0;
+    $my_extract_size = $snippet_length;
+    $extract = '';
+
+    $content_size = strlen($content);
+
+    while (($num_extracts == 0) && ($my_extract_size <= $content_size))
+    {
+        while($num_extracts < $snippet_num && $extract_content = preg_replace("/([ ]{2,}|\n|\r|\r\n)/"," ",substr($content, $c*$snippet_length, $snippet_length)))
+        {
+            if(eregi($reg_strings,$extract_content))
+            {
+                $match_this_spot = eregi_replace($reg_strings,"\\1<\\2>\\3",$extract_content);
+                $first_bold_spot = strpos($match_this_spot,"<");
+                $first_bold_spot = max($first_bold_spot - round(($snippet_length/ 2),0), 0);
+                $extract_content = substr($extract_content,$first_bold_spot,$snippet_length);
+
+                $extract_content = @eregi_replace($reg_strings,"\\1<^#_>\\2</_#^>\\3",@eregi_replace($reg_strings,"\\1<^#_>\\2</_#^>\\3",$extract_content));
+                $extract_content = str_replace("^#_","span class=\"$highlight_class\"",str_replace("_#^","span",$extract_content));
+
+                $extract .= " ...{$extract_content}... ";
+                $num_extracts++;
+            }
+
+            $c++;
+        }
+
+        if ($my_extract_size < $content_size)
+        {
+            $my_extract_size *= 100;
+            if ($my_extract_size > $content_size)
+            {
+                $my_extract_size = $content_size;
+            }
+        }
+        else
+        {
+            $my_extract_size++;
+        }
+    }
+
+    return($extract);
+}
+
 ?>

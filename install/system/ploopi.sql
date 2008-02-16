@@ -1,8 +1,8 @@
 -- MySQL dump 10.11
 --
--- Host: localhost    Database: plootest
+-- Host: localhost    Database: ploopi_temp
 -- ------------------------------------------------------
--- Server version	5.0.32-Debian_7etch4
+-- Server version	5.0.32-Debian_7etch5
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -272,6 +272,7 @@ CREATE TABLE `ploopi_annotation` (
   `id_object` int(10) unsigned default '0',
   `id_user` int(10) unsigned default '0',
   `id_workspace` int(10) default NULL,
+  `id_element` char(32) NOT NULL default '0',
   `id_module` int(10) unsigned default '0',
   `id_module_type` int(10) default '0',
   PRIMARY KEY  (`id`),
@@ -464,7 +465,7 @@ CREATE TABLE `ploopi_group` (
 
 LOCK TABLES `ploopi_group` WRITE;
 /*!40000 ALTER TABLE `ploopi_group` DISABLE KEYS */;
-INSERT INTO `ploopi_group` VALUES (1,0,'system',1,1,'0',1,0,0),(3,1,'Groupe Principal',0,1,'0;1',2,1,0);
+INSERT INTO `ploopi_group` VALUES (1,0,'system',1,1,'0',1,0,0),(3,1,'Groupe Principal',0,1,'0;1',2,1,1);
 /*!40000 ALTER TABLE `ploopi_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -686,7 +687,7 @@ CREATE TABLE `ploopi_mb_action` (
 
 LOCK TABLES `ploopi_mb_action` WRITE;
 /*!40000 ALTER TABLE `ploopi_mb_action` DISABLE KEYS */;
-INSERT INTO `ploopi_mb_action` VALUES (1,1,'Installer un Module',NULL,0,0),(1,2,'DÃ©sinstaller un Module',NULL,0,0),(1,3,'Modifier les ParamÃštres d\'un Module',NULL,0,0),(1,4,'Instancier / Utiliser un Module',NULL,0,0),(1,5,'Modifier les PropriÃ©tÃ©s d\'un Module',NULL,0,0),(1,6,'Modifier la Page d\'Accueil',NULL,0,0),(1,7,'Installer un Skin',NULL,0,0),(1,8,'DÃ©sinstaller un Skin',NULL,0,0),(1,9,'CrÃ©er un Groupe',NULL,0,0),(1,10,'Modifier un Groupe',NULL,0,0),(1,11,'Supprimer un Groupe',NULL,0,0),(1,12,'Cloner un Groupe',NULL,0,0),(1,13,'CrÃ©er un RÃŽle',NULL,0,0),(1,14,'Modifier un RÃŽle',NULL,0,0),(1,15,'Supprimer un RÃŽle',NULL,0,0),(1,16,'CrÃ©er un Profil',NULL,0,0),(1,17,'Modifier un Profil',NULL,0,0),(1,18,'Supprimer un Profil',NULL,0,0),(1,19,'Ajouter un Utilisateur',NULL,0,0),(1,20,'Modifier un Utilisateur',NULL,0,0),(1,21,'Supprimer un Utilisateur',NULL,0,0),(1,22,'DÃ©tacher un Module',NULL,0,0),(1,23,'Supprimer un Module',NULL,0,0),(1,24,'Mettre Ã  jour la MÃ©tabase',NULL,0,0),(1,25,'Connexion Utilisateur',NULL,0,0),(1,26,'Erreur de Connexion',NULL,0,0),(1,27,'DÃ©placer un Utilisateur',NULL,0,0),(1,28,'Attacher un Utilisateur',NULL,0,0),(1,29,'DÃ©tacher un Utilisateur',NULL,0,0),(1,32,'Mettre Ã  jour un module',NULL,0,0);
+INSERT INTO `ploopi_mb_action` VALUES (1,1,'Installer un Module',NULL,0,0),(1,2,'Désinstaller un Module',NULL,0,0),(1,3,'Modifier les Paramètres d\'un Module',NULL,0,0),(1,4,'Instancier / Utiliser un Module',NULL,0,0),(1,5,'Modifier les Propriétés d\'un Module',NULL,0,0),(1,6,'Modifier la Page d\'Accueil',NULL,0,0),(1,7,'Installer un Skin',NULL,0,0),(1,8,'Désinstaller un Skin',NULL,0,0),(1,9,'Créer un Groupe',NULL,0,0),(1,10,'Modifier un Groupe',NULL,0,0),(1,11,'Supprimer un Groupe',NULL,0,0),(1,12,'Cloner un Groupe',NULL,0,0),(1,13,'Créer un Rôle',NULL,0,0),(1,14,'Modifier un Rôle',NULL,0,0),(1,15,'Supprimer un Rôle',NULL,0,0),(1,16,'Créer un Profil',NULL,0,0),(1,17,'Modifier un Profil',NULL,0,0),(1,18,'Supprimer un Profil',NULL,0,0),(1,19,'Ajouter un Utilisateur',NULL,0,0),(1,20,'Modifier un Utilisateur',NULL,0,0),(1,21,'Supprimer un Utilisateur',NULL,0,0),(1,22,'Détacher un Module',NULL,0,0),(1,23,'Supprimer un Module',NULL,0,0),(1,24,'Mettre à jour la Métabase',NULL,0,0),(1,25,'Connexion Utilisateur',NULL,0,0),(1,26,'Erreur de Connexion',NULL,0,0),(1,27,'Déplacer un Utilisateur',NULL,0,0),(1,28,'Attacher un Utilisateur',NULL,0,0),(1,29,'Détacher un Utilisateur',NULL,0,0),(1,32,'Mettre à  jour un module',NULL,0,0);
 /*!40000 ALTER TABLE `ploopi_mb_action` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -981,7 +982,7 @@ CREATE TABLE `ploopi_param_type` (
 
 LOCK TABLES `ploopi_param_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_param_type` DISABLE KEYS */;
-INSERT INTO `ploopi_param_type` VALUES (1,'system_recordstats','1',0,'','Enregistrement des stats'),(1,'system_usemacrules','0',0,'','Activer le filtrage par Adresse MAC'),(1,'system_language_default','french',0,'','Langage par dÃ©faut'),(1,'system_set_cache','0',0,'','Activer le Cache'),(1,'system_groupdepth0_label','',0,'','IntitulÃ© des Groupes de Profondeur 0'),(1,'system_groupdepth1_label','',0,'','IntitulÃ© des Groupes de Profondeur 1'),(1,'system_groupdepth2_label','',0,'','IntitulÃ© des Groupes de Profondeur 2'),(1,'system_groupdepth3_label','',0,'','IntitulÃ© des Groupes de Profondeur 3'),(1,'system_groupdepth4_label','',0,'','IntitulÃ© des Groupes de Profondeur 4'),(1,'system_groupdepth5_label','',0,'','IntitulÃ© des Groupes de Profondeur 5'),(1,'system_groupdepth6_label','',0,'','IntitulÃ© des Groupes de Profondeur 6'),(1,'system_groupdepth7_label','',0,'','IntitulÃ© des Groupes de Profondeur 7'),(1,'system_groupdepth8_label','',0,'','IntitulÃ© des Groupes de Profondeur 8'),(1,'system_groupdepth9_label','',0,'','IntitulÃ© des Groupes de Profondeur 9'),(1,'system_generate_htpasswd','1',0,'','GÃ©nÃ©rer un fichier htpasswd'),(1,'showblock','1',1,'','Afficher le bloc'),(1,'showmenu','1',1,'','Visible dans les modules'),(1,'system_use_profiles','0',0,NULL,'Utiliser les Profils (Utilisateurs)'),(1,'system_language','',1,NULL,'Langue du systÃšme'),(1,'system_same_login','0',0,NULL,'Utiliser des logins identiques (fortement dÃ©conseillÃ©)'),(1,'system_proxy_host','',0,'','Adresse du proxy pour les requÃªtes sortantes'),(1,'system_proxy_port','',0,'','Port du proxy pour les requÃªtes sortantes'),(1,'system_proxy_user','',0,'','Utilisateur du proxy pour les requÃªtes sortantes'),(1,'system_proxy_pass','',0,'','Mot de Passe du proxy pour les requÃªtes sortantes');
+INSERT INTO `ploopi_param_type` VALUES (1,'system_recordstats','1',0,'','Enregistrement des stats'),(1,'system_usemacrules','0',0,'','Activer le filtrage par Adresse MAC'),(1,'system_language_default','french',0,'','Langage par défaut'),(1,'system_set_cache','0',0,'','Activer le Cache'),(1,'system_generate_htpasswd','1',0,'','Générer un fichier htpasswd'),(1,'showblock','1',1,'','Afficher le bloc'),(1,'showmenu','1',1,'','Visible dans les modules'),(1,'system_use_profiles','0',0,NULL,'Utiliser les Profils (Utilisateurs)'),(1,'system_language','',1,NULL,'Langue du système'),(1,'system_same_login','0',0,NULL,'Utiliser des logins identiques (fortement déconseillé)'),(1,'system_proxy_host','',0,'','Adresse du proxy pour les requêtes sortantes'),(1,'system_proxy_port','',0,'','Port du proxy pour les requêtes sortantes'),(1,'system_proxy_user','',0,'','Utilisateur du proxy pour les requêtes sortantes'),(1,'system_proxy_pass','',0,'','Mot de Passe du proxy pour les requêtes sortantes');
 /*!40000 ALTER TABLE `ploopi_param_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1178,9 +1179,12 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_tag`;
 CREATE TABLE `ploopi_tag` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `tag` varchar(64) NOT NULL default '',
+  `tag` char(32) NOT NULL,
+  `tag_clean` char(32) NOT NULL,
   `id_user` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `id_user` (`id_user`),
+  KEY `tag` (`tag`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -1386,7 +1390,7 @@ CREATE TABLE `ploopi_user_type` (
 
 LOCK TABLES `ploopi_user_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_user_type` DISABLE KEYS */;
-INSERT INTO `ploopi_user_type` VALUES (1,'','Non dÃ©fini');
+INSERT INTO `ploopi_user_type` VALUES (1,'','Non d�fini');
 /*!40000 ALTER TABLE `ploopi_user_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1582,12 +1586,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-01-21 18:42:33
-
-ALTER TABLE `ploopi_tag` CHANGE `tag` `tag` CHAR( 32 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
-ALTER TABLE `ploopi_tag` ADD INDEX ( `id_user` );
-ALTER TABLE `ploopi_tag` ADD INDEX ( `tag` );
-ALTER TABLE `ploopi_tag` ADD `tag_clean` CHAR( 32 ) NOT NULL AFTER `tag` ;
-ALTER TABLE `ploopi_annotation` ADD `id_element` CHAR( 32 ) NOT NULL DEFAULT '0' AFTER `id_workspace` ;
-UPDATE `ploopi_annotation` SET id_element = MD5(CONCAT(LPAD(id_module,4,'0'), LPAD(id_object,4,'0'), id_record));
-
+-- Dump completed on 2008-02-12 18:40:19

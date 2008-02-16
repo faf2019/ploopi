@@ -1,46 +1,46 @@
 /*
-	Copyright (c) 2002-2007 Netlor
-	Copyright (c) 2007-2008 Ovensia
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 /*
  * FCKeditor - The text editor for internet
  * Copyright (C) 2003-2006 Frederico Caldeira Knabben
  * 
  * Licensed under the terms of the GNU Lesser General Public License:
- * 		http://www.opensource.org/licenses/lgpl-license.php
+ *      http://www.opensource.org/licenses/lgpl-license.php
  * 
  * For further information visit:
- * 		http://www.fckeditor.net/
+ *      http://www.fckeditor.net/
  * 
  * "Support Open Source software. What about a donation today?"
  * 
  * File Name: fck_editorarea.css
- * 	This is the default CSS file used by the editor area. It defines the
- * 	initial font of the editor and background color.
+ *  This is the default CSS file used by the editor area. It defines the
+ *  initial font of the editor and background color.
  * 
- * 	A user can configure the editor to use another CSS file. Just change
- * 	the value of the FCKConfig.EditorAreaCSS key in the configuration
- * 	file.
+ *  A user can configure the editor to use another CSS file. Just change
+ *  the value of the FCKConfig.EditorAreaCSS key in the configuration
+ *  file.
  * 
  * File Authors:
- * 		Frederico Caldeira Knabben (fredck@fckeditor.net)
+ *      Frederico Caldeira Knabben (fredck@fckeditor.net)
  */
 
 /*
@@ -50,36 +50,36 @@
 
 body
 {
-	padding: 5px 5px 5px 5px;
-	margin: 0px;
+    padding: 5px 5px 5px 5px;
+    margin: 0px;
 }
 
 body, td
 {
-	font-family: Arial, Verdana, Sans-Serif;
-	font-size: 12px;
+    font-family: Arial, Verdana, Sans-Serif;
+    font-size: 12px;
 }
 
 a
 {
-	color: #0000FF !important;	/* For Firefox... mark as important, otherwise it becomes black */
+    color: #0000FF !important;  /* For Firefox... mark as important, otherwise it becomes black */
 }
 
 h3
 {
-	color: #000080;
+    color: #000080;
 }
 
 /* 
-	Just uncomment the following block if you want to avoid spaces between 
-	paragraphs. Remember to apply the same style in your output front end page.
+    Just uncomment the following block if you want to avoid spaces between 
+    paragraphs. Remember to apply the same style in your output front end page.
 */
 
 /*
 P, UL, LI
 {
-	margin-top: 0px;
-	margin-bottom: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 */
 
@@ -91,22 +91,22 @@ P, UL, LI
 
 .Bold
 {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .Title
 {
-	font-weight: bold;
-	font-size: 18px;
-	color: #cc3300;
+    font-weight: bold;
+    font-size: 18px;
+    color: #cc3300;
 }
 
 .Code
 {
-	border: #8b4513 1px solid;
-	padding-right: 5px;
-	padding-left: 5px;
-	color: #000066;
-	font-family: 'Courier New' , Monospace;
-	background-color: #ff9933;
+    border: #8b4513 1px solid;
+    padding-right: 5px;
+    padding-left: 5px;
+    color: #000066;
+    font-family: 'Courier New' , Monospace;
+    background-color: #ff9933;
 }

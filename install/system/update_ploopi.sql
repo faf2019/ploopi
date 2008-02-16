@@ -170,3 +170,4 @@ ALTER TABLE `ploopi_tag` ADD `tag_clean` CHAR( 32 ) NOT NULL AFTER `tag` ;
 ALTER TABLE `ploopi_annotation` ADD `id_element` CHAR( 32 ) NOT NULL DEFAULT '0' AFTER `id_workspace` ;
 
 UPDATE `ploopi_annotation` SET id_element = MD5(CONCAT(LPAD(id_module,4,'0'), LPAD(id_object,4,'0'), id_record));
+UPDATE `ploopi_group` SET `shared` = '0' WHERE `ploopi_group`.`id` = 3 LIMIT 1;

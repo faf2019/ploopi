@@ -53,25 +53,25 @@
     
     // Holds input data //
     var $input_data = null;
-		
-	// Holds RSS Version
-	var $rssformat = "RSS20";
-	
-	// Constructor function for rssGenesis Class
-	// Valid values for the rssversion parameter are: RSS20, RSS091
-	function rssGenesis ($rssversion = "RSS20") {
-		$this->rssformat = $rssversion;
-		if ($rssversion == "RSS091")
-		{
-			$this->rss_header = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\r\n\r\n<!DOCTYPE rss PUBLIC \"-//Netscape Communications//DTD RSS 0.91//EN\" \"http://my.netscape.com/publish/formats/rss-0.91.dtd\">\r\n\r\n<rss version=\"0.91\">\r\n";
-			
-			$this->rss_channel = "\t<channel>\r\n\t\t<title>{channel_Title}</title>\r\n\t\t<link>{channel_Link}</link>\r\n\t\t<description>{channel_Description}</description>\r\n  <language>{channel_Language}</language>\r\n\t\t<copyright>{channel_Copyright}</copyright>\r\n\t\t<managingEditor>{channel_ManagingEditor}</managingEditor>\r\n\t\t<webMaster>{channel_WebMaster}</webMaster>\r\n\t\t<rating>{channel_Rating}</rating>\r\n\t\t<pubDate>{channel_PubDate}</pubDate>\r\n\t\t<lastBuildDate>{channel_LastBuildDate}</lastBuildDate>\r\n\t\t<docs>{channel_Docs}</docs>\r\n\t\t<skipDays>{channel_SkipDays}</skipDays>\r\n\t\t<skipHours>{channel_SkipHours}</skipHours>\r\n\r\n";
-			
-			$this->rss_image = "\t\t<image>\r\n\t\t\t<title>{image_Title}</title>\r\n\t\t\t<url>{image_Source}</url>\r\n\t\t\t<link>{image_Link}</link>\r\n\t\t\t<width>{image_Width}</width>\r\n\t\t\t<height>{image_Height}</height>\r\n\t\t\t<description>{image_Description}</description>\r\n\t\t\t</image>\r\n\r\n";
-			
-			$this->rss_item = "\t\t<item>\r\n\t\t\t<title>{item_Title}</title>\r\n\t\t\t<link>{item_Link}</link>\r\n\t\t\t<description>{item_Description}</description>\r\n\t\t\t</item>\r\n\r\n";
-		}
-	}
+        
+    // Holds RSS Version
+    var $rssformat = "RSS20";
+    
+    // Constructor function for rssGenesis Class
+    // Valid values for the rssversion parameter are: RSS20, RSS091
+    function rssGenesis ($rssversion = "RSS20") {
+        $this->rssformat = $rssversion;
+        if ($rssversion == "RSS091")
+        {
+            $this->rss_header = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\r\n\r\n<!DOCTYPE rss PUBLIC \"-//Netscape Communications//DTD RSS 0.91//EN\" \"http://my.netscape.com/publish/formats/rss-0.91.dtd\">\r\n\r\n<rss version=\"0.91\">\r\n";
+            
+            $this->rss_channel = "\t<channel>\r\n\t\t<title>{channel_Title}</title>\r\n\t\t<link>{channel_Link}</link>\r\n\t\t<description>{channel_Description}</description>\r\n  <language>{channel_Language}</language>\r\n\t\t<copyright>{channel_Copyright}</copyright>\r\n\t\t<managingEditor>{channel_ManagingEditor}</managingEditor>\r\n\t\t<webMaster>{channel_WebMaster}</webMaster>\r\n\t\t<rating>{channel_Rating}</rating>\r\n\t\t<pubDate>{channel_PubDate}</pubDate>\r\n\t\t<lastBuildDate>{channel_LastBuildDate}</lastBuildDate>\r\n\t\t<docs>{channel_Docs}</docs>\r\n\t\t<skipDays>{channel_SkipDays}</skipDays>\r\n\t\t<skipHours>{channel_SkipHours}</skipHours>\r\n\r\n";
+            
+            $this->rss_image = "\t\t<image>\r\n\t\t\t<title>{image_Title}</title>\r\n\t\t\t<url>{image_Source}</url>\r\n\t\t\t<link>{image_Link}</link>\r\n\t\t\t<width>{image_Width}</width>\r\n\t\t\t<height>{image_Height}</height>\r\n\t\t\t<description>{image_Description}</description>\r\n\t\t\t</image>\r\n\r\n";
+            
+            $this->rss_item = "\t\t<item>\r\n\t\t\t<title>{item_Title}</title>\r\n\t\t\t<link>{item_Link}</link>\r\n\t\t\t<description>{item_Description}</description>\r\n\t\t\t</item>\r\n\r\n";
+        }
+    }
     
     // Creates channel data handler //
     function setChannel ($title = "", $link = "", $description = "", $language = "", $copyright = "", $managingEditor = "", $webMaster = "", $rating = "", $pubDate = "", $lastBuildDate = "", $category = "", $docs = "", $timetolive = "", $skipDays = "", $skipHours = "") {
@@ -90,10 +90,10 @@
       $rating = ($rating == null) ? "" : $rating;
       $pubDate = ($pubDate == null) ? "" : $pubDate;
       $lastBuildDate = ($lastBuildDate == null) ? "" : $lastBuildDate;
-	  $category = ($category == null) ? "" : $category;
-	  $generator = ($generator == null) ? "" : $generator;
+      $category = ($category == null) ? "" : $category;
+      $generator = ($generator == null) ? "" : $generator;
       $docs = ($docs == null) ? "" : $docs;
-	  $timetolive = ($timetolive == null) ? "" : $timetolive;
+      $timetolive = ($timetolive == null) ? "" : $timetolive;
       $skipDays = ($skipDays == null) ? "" : $skipDays;
       $skipHours = ($skipHours == null) ? "" : $skipHours;
       // Null values become empty values // End
@@ -179,15 +179,15 @@
         $this->channel_data = ereg_replace ("\r\n\t\t<lastBuildDate>{channel_LastBuildDate}</lastBuildDate>", "", $this->channel_data);
       
       endif;
-	  
-	  if ($this->rssformat == "RSS20") {
-		  // Category parser // Optional data
-		  if (empty ($category)) :
-		  
-			$this->channel_data = ereg_replace ("\r\n\t\t<category>{channel_Category}</category>", "", $this->channel_data);
-		  
-		  endif;
-		}
+      
+      if ($this->rssformat == "RSS20") {
+          // Category parser // Optional data
+          if (empty ($category)) :
+          
+            $this->channel_data = ereg_replace ("\r\n\t\t<category>{channel_Category}</category>", "", $this->channel_data);
+          
+          endif;
+        }
       
       // Docs parser // Checks absolutes URIs
       if (!preg_match ("(^(ht|f)tp://)", $docs)) :
@@ -283,11 +283,11 @@
       
       // Inserts channel lastBuildDate // Replaces {channel_LastBuildDate}
       $this->channel_data = ereg_replace ("{channel_LastBuildDate}", $lastBuildDate, $this->channel_data);
-	  
-	  if ($this->rssformat == "RSS20") {
-		// Inserts channel category // Replaces {channel_Category}
-		$this->channel_data = ereg_replace ("{channel_Category}", $category, $this->channel_data);
-	  }
+      
+      if ($this->rssformat == "RSS20") {
+        // Inserts channel category // Replaces {channel_Category}
+        $this->channel_data = ereg_replace ("{channel_Category}", $category, $this->channel_data);
+      }
       
       // Inserts channel docs // Replaces {channel_Docs}
       $this->channel_data = ereg_replace ("{channel_Docs}", $docs, $this->channel_data);
@@ -340,10 +340,10 @@
         $width = $dimensions[0];
         
         $height = $dimensions[1];
-		
-		if ($this->rssformat == "RSS20") {
-			$this->image_data = ereg_replace ("\r\n\t\t\t<width>{image_Width}</width>\r\n\t\t\t<height>{image_Height}</height>", "", $this->image_data);
-		}
+        
+        if ($this->rssformat == "RSS20") {
+            $this->image_data = ereg_replace ("\r\n\t\t\t<width>{image_Width}</width>\r\n\t\t\t<height>{image_Height}</height>", "", $this->image_data);
+        }
       
       endif;
       
@@ -384,13 +384,13 @@
       $title = ($title == null) ? "" : $title;
       $link = ($link == null) ? "" : $link;
       $description = ($description == null) ? "" : $description;
-	  $pubdate = ($pubdate == null) ? "" : $pubdate;
-	  $category = ($category == null) ? "" : $category;
+      $pubdate = ($pubdate == null) ? "" : $pubdate;
+      $category = ($category == null) ? "" : $category;
       // Null values become empty values // End
-	  
-	  //Formats pubdate
-	  $mysqltimestamp = $pubdate;
-	  $pubdate = gmdate('D, d M Y H:i:s \G\M\T', strtotime($mysqltimestamp));
+      
+      //Formats pubdate
+      $mysqltimestamp = $pubdate;
+      $pubdate = gmdate('D, d M Y H:i:s \G\M\T', strtotime($mysqltimestamp));
       
       // Title parser // Convertes quotes and strips backslashes!
       $title = stripslashes (htmlspecialchars (trim ($title), ENT_QUOTES));
@@ -411,8 +411,8 @@
       
       // Description parser // Convertes quotes and strips backslashes!
       $description = stripslashes (htmlspecialchars (trim ($description), ENT_QUOTES));
-	  
-	  // Description parser // Convertes quotes and strips backslashes!
+      
+      // Description parser // Convertes quotes and strips backslashes!
       $category = stripslashes (htmlspecialchars (trim ($category), ENT_QUOTES));
       
       // Inserts item title // Replaces {item_Title}
@@ -423,13 +423,13 @@
       
       // Inserts item description // Replaces {item_Description}
       $temp = ereg_replace ("{item_Description}", $description, $temp);
-	  
-	  //Inserts publication date if feed is RSS20
-	  if ($this->rssformat == "RSS20") {
-			$temp = ereg_replace ("{item_PubDate}", $pubdate, $temp);
-			
-			$temp = ereg_replace ("{item_category}", $category, $temp);
-	  }
+      
+      //Inserts publication date if feed is RSS20
+      if ($this->rssformat == "RSS20") {
+            $temp = ereg_replace ("{item_PubDate}", $pubdate, $temp);
+            
+            $temp = ereg_replace ("{item_category}", $category, $temp);
+      }
       
       // Stores the new added item
       $this->item_data[] = $temp;

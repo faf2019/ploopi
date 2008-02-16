@@ -1,45 +1,45 @@
 /*
-	Copyright (c) 2002-2007 Netlor
-	Copyright (c) 2007-2008 Ovensia
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 /*
  * FCKeditor - The text editor for internet
  * Copyright (C) 2003-2006 Frederico Caldeira Knabben
  * 
  * Licensed under the terms of the GNU Lesser General Public License:
- * 		http://www.opensource.org/licenses/lgpl-license.php
+ *      http://www.opensource.org/licenses/lgpl-license.php
  * 
  * For further information visit:
- * 		http://www.fckeditor.net/
+ *      http://www.fckeditor.net/
  * 
  * "Support Open Source software. What about a donation today?"
  * 
  * File Name: fck_editor.css
- * 	Styles used by the editor IFRAME and Toolbar.
+ *  Styles used by the editor IFRAME and Toolbar.
  * 
  * File Authors:
- * 		Frederico Caldeira Knabben (fredck@fckeditor.net)
+ *      Frederico Caldeira Knabben (fredck@fckeditor.net)
  */
 
 /*
-	### Basic Editor IFRAME Styles.
+    ### Basic Editor IFRAME Styles.
 */
 
 body
@@ -62,7 +62,7 @@ body
 }
 
 /*
-	Toolbar
+    Toolbar
 */
 
 .TB_ToolbarSet, .TB_Expand, .TB_Collapse
@@ -85,7 +85,7 @@ body
 
 .TB_Toolbar
 {
-    display: inline-table;	/* inline = Opera jumping buttons bug */
+    display: inline-table;  /* inline = Opera jumping buttons bug */
 }
 
 .TB_Separator
@@ -144,7 +144,7 @@ body
 }
 
 /*
-	Toolbar Button
+    Toolbar Button
 */
 
 .TB_Button_On, .TB_Button_Off, .TB_Button_On_Over, .TB_Button_Off_Over, .TB_Button_Disabled
@@ -200,7 +200,7 @@ body
 
 .TB_Button_Off .TB_Button_Text
 {
-   	background-color: #efefde;  /* Needed because of a bug on Clear Type */
+    background-color: #efefde;  /* Needed because of a bug on Clear Type */
 }
 
 .TB_ConnectionLine
@@ -213,21 +213,21 @@ body
 
 .TB_Text
 {
-	height: 22px;
+    height: 22px;
 }
 
 .TB_Button_Off .TB_Text
 {
-   	background-color: #efefde ;  /* Needed because of a bug on ClearType */
+    background-color: #efefde ;  /* Needed because of a bug on ClearType */
 }
 
 .TB_Button_On_Over .TB_Text
 {
-   	background-color: #dff1ff ;  /* Needed because of a bug on ClearType */
+    background-color: #dff1ff ;  /* Needed because of a bug on ClearType */
 }
 
 /*
-	Menu
+    Menu
 */
 
 .MN_Menu
@@ -320,7 +320,7 @@ body
 }
 
 /*
-	### Panel Styles
+    ### Panel Styles
 */
 
 .FCK_Panel
@@ -337,7 +337,7 @@ body
 }
 
 /*
-	### Special Combos
+    ### Special Combos
 */
 
 .SC_Panel
@@ -443,7 +443,7 @@ body
 }
 
 /*
-	### Color Selector Panel
+    ### Color Selector Panel
 */
 
 .ColorBoxBorder

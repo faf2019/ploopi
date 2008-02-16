@@ -1,152 +1,152 @@
 /*
-	Copyright (c) 2002-2007 Netlor
-	Copyright (c) 2007-2008 Ovensia
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 /*
  * FCKeditor - The text editor for internet
  * Copyright (C) 2003-2006 Frederico Caldeira Knabben
  * 
  * Licensed under the terms of the GNU Lesser General Public License:
- * 		http://www.opensource.org/licenses/lgpl-license.php
+ *      http://www.opensource.org/licenses/lgpl-license.php
  * 
  * For further information visit:
- * 		http://www.fckeditor.net/
+ *      http://www.fckeditor.net/
  * 
  * "Support Open Source software. What about a donation today?"
  * 
  * File Name: fck_dialog.css
- * 	Styles used by the dialog boxes.
+ *  Styles used by the dialog boxes.
  * 
  * File Authors:
- * 		Frederico Caldeira Knabben (fredck@fckeditor.net)
+ *      Frederico Caldeira Knabben (fredck@fckeditor.net)
  */
 
 body
 {
-	margin: 0px;
-	padding: 10px;
+    margin: 0px;
+    padding: 10px;
 }
 
 body, td, input, select, textarea
 {
-	font-size: 11px;
-	font-family: 'Microsoft Sans Serif' , Arial, Helvetica, Verdana;
+    font-size: 11px;
+    font-family: 'Microsoft Sans Serif' , Arial, Helvetica, Verdana;
 }
 
 body, .BackColor
 {
-	background-color: #f0f0f0;
+    background-color: #f0f0f0;
 }
 
 .PopupBody
 {
-	margin: 0px;
-	padding: 0px;
+    margin: 0px;
+    padding: 0px;
 }
 
 .PopupTitle
 {
-	font-weight: bold;
-	font-size: 14pt;
-	color: #737357;
-	background-color: #e3e3c7;
-	padding: 3px 10px 3px 10px;
+    font-weight: bold;
+    font-size: 14pt;
+    color: #737357;
+    background-color: #e3e3c7;
+    padding: 3px 10px 3px 10px;
 }
 
 .PopupButtons
 {
-	border-top: #d5d59d 1px solid;
-	background-color: #e3e3c7;
-	padding: 7px 10px 7px 10px;
+    border-top: #d5d59d 1px solid;
+    background-color: #e3e3c7;
+    padding: 7px 10px 7px 10px;
 }
 
 .Button
 {
-	border-right: #737357 1px solid;
-	border-top: #737357 1px solid;
-	border-left: #737357 1px solid;
-	color: #3b3b1f;
-	border-bottom: #737357 1px solid;
-	background-color: #c7c78f;
+    border-right: #737357 1px solid;
+    border-top: #737357 1px solid;
+    border-left: #737357 1px solid;
+    color: #3b3b1f;
+    border-bottom: #737357 1px solid;
+    background-color: #c7c78f;
 }
 
 .DarkBackground
 {
-	background-color: #d7d79f;
+    background-color: #d7d79f;
 }
 
 .LightBackground
 {
-	background-color: #ffffbe;
+    background-color: #ffffbe;
 }
 
 .PopupTitleBorder
 {
-	border-bottom: #d5d59d 1px solid;
+    border-bottom: #d5d59d 1px solid;
 }
 
 .PopupTabArea
 {
-	color: #737357;
-	background-color: #e3e3c7;
+    color: #737357;
+    background-color: #e3e3c7;
 }
 
 .PopupTabEmptyArea
 {
-	padding-left: 10px ;
-	border-bottom: #d5d59d 1px solid;
+    padding-left: 10px ;
+    border-bottom: #d5d59d 1px solid;
 }
 
 .PopupTab, .PopupTabSelected
 {
-	border-right: #d5d59d 1px solid;
-	border-top: #d5d59d 1px solid;
-	border-left: #d5d59d 1px solid;
-	padding-right: 5px;
-	padding-left: 5px;
-	padding-bottom: 3px;
-	padding-top: 3px;
-	color: #737357;
+    border-right: #d5d59d 1px solid;
+    border-top: #d5d59d 1px solid;
+    border-left: #d5d59d 1px solid;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 3px;
+    padding-top: 3px;
+    color: #737357;
 }
 
 .PopupTab
 {
-	margin-top: 1px;
-	border-bottom: #d5d59d 1px solid;
-	cursor: pointer;
-	cursor: hand;
+    margin-top: 1px;
+    border-bottom: #d5d59d 1px solid;
+    cursor: pointer;
+    cursor: hand;
 }
 
 .PopupTabSelected
 {
-	font-weight:bold;
-	cursor: default;
-	padding-top: 4px;
-	border-bottom: #f1f1e3 1px solid;
-	background-color: #f1f1e3;
+    font-weight:bold;
+    cursor: default;
+    padding-top: 4px;
+    border-bottom: #f1f1e3 1px solid;
+    background-color: #f1f1e3;
 }
 
 .PopupSelectionBox
 {
-	border: #ff9933 1px solid !important;
-	background-color: #fffacd !important;
-	cursor: pointer;
-	cursor: hand;
+    border: #ff9933 1px solid !important;
+    background-color: #fffacd !important;
+    cursor: pointer;
+    cursor: hand;
 }

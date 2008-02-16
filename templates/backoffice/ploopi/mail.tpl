@@ -46,12 +46,12 @@ Bonjour,
 <br /><br />
 Vous avez reçu un nouveau ticket envoyé par <strong><a href="mailto:{USER_FROM_EMAIL}">{USER_FROM_NAME}</a></strong> depuis le site <a href="{HTTP_HOST}">{HTTP_HOST}</a> :
 <div id="mailcontent">
-	{MAIL_CONTENT}
-	<!-- BEGIN sw_linkedobject -->
-	<div id="linkedobject">
-		<span><strong>Objet lié</strong>: </span><a href="{OBJECT_URL}\">{MODULE_LABEL} / {OBJECT_TYPE} <b>"{OBJECT_LABEL}"</b></a>
-	</div>
-	<!-- END sw_linkedobject -->
+    {MAIL_CONTENT}
+    <!-- BEGIN sw_linkedobject -->
+    <div id="linkedobject">
+        <span><strong>Objet lié</strong>: </span><a href="{OBJECT_URL}\">{MODULE_LABEL} / {OBJECT_TYPE} <b>"{OBJECT_LABEL}"</b></a>
+    </div>
+    <!-- END sw_linkedobject -->
 </div>
 </body>
 </html>

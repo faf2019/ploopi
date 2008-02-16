@@ -1,171 +1,171 @@
 <?xml version="1.0" encoding="ISO-8859-15"?>
 <ploopi>
-	<moduletype>
-		<label>doc</label>
-		<version>3.6</version>
-		<author>Netlor / Ovensia</author>
-		<date>20080106000000</date>
-		<publicparam>1</publicparam>
-		<description>Gestion de Documents</description>
-		<paramtype>
-			<name>showmenu</name>
-			<label>Visible dans les modules</label>
-			<default_value>1</default_value>
-			<public>1</public>
-			<description/>
-			<paramchoice>
-				<value>1</value>
-				<displayed_value>oui</displayed_value>
-			</paramchoice>
-			<paramchoice>
-				<value>0</value>
-				<displayed_value>non</displayed_value>
-			</paramchoice>
-		</paramtype>
-		<paramtype>
-			<name>showblock</name>
-			<label>Afficher le bloc</label>
-			<default_value>1</default_value>
-			<public>1</public>
-			<description/>
-			<paramchoice>
-				<value>1</value>
-				<displayed_value>oui</displayed_value>
-			</paramchoice>
-			<paramchoice>
-				<value>0</value>
-				<displayed_value>non</displayed_value>
-			</paramchoice>
-		</paramtype>
-		<paramtype>
-			<name>doc_viewfoldersinblock</name>
-			<label>Afficher les Dossiers dans le menu</label>
-			<default_value>1</default_value>
-			<public>1</public>
-			<description/>
-			<paramchoice>
-				<value>1</value>
-				<displayed_value>oui</displayed_value>
-			</paramchoice>
-			<paramchoice>
-				<value>0</value>
-				<displayed_value>non</displayed_value>
-			</paramchoice>
-		</paramtype>
-		<paramtype>
-			<name>doc_viewiconsinblock</name>
-			<label>Afficher les Icones dans le menu</label>
-			<default_value>1</default_value>
-			<public>1</public>
-			<description/>
-			<paramchoice>
-				<value>1</value>
-				<displayed_value>oui</displayed_value>
-			</paramchoice>
-			<paramchoice>
-				<value>0</value>
-				<displayed_value>non</displayed_value>
-			</paramchoice>
-		</paramtype>
-		<paramtype>
-			<name>doc_displayshortcuts</name>
-			<label>Afficher les Raccourcis à la Racine</label>
-			<default_value>1</default_value>
-			<public>1</public>
-			<description/>
-			<paramchoice>
-				<value>1</value>
-				<displayed_value>oui</displayed_value>
-			</paramchoice>
-			<paramchoice>
-				<value>0</value>
-				<displayed_value>non</displayed_value>
-			</paramchoice>
-		</paramtype>
-		<paramtype>
-			<name>doc_displaysearch</name>
-			<label>Afficher le lien "Recherche"</label>
-			<default_value>1</default_value>
-			<public>1</public>
-			<description/>
-			<paramchoice>
-				<value>1</value>
-				<displayed_value>oui</displayed_value>
-			</paramchoice>
-			<paramchoice>
-				<value>0</value>
-				<displayed_value>non</displayed_value>
-			</paramchoice>
-		</paramtype>
-		<paramtype>
-			<name>doc_displayroot</name>
-			<label>Afficher le lien "Racine"</label>
-			<default_value>1</default_value>
-			<public>1</public>
-			<description/>
-			<paramchoice>
-				<value>1</value>
-				<displayed_value>oui</displayed_value>
-			</paramchoice>
-			<paramchoice>
-				<value>0</value>
-				<displayed_value>non</displayed_value>
-			</paramchoice>
-		</paramtype>
-		<paramtype>
-			<name>doc_rootlabel</name>
-			<label>Libelle du lien "Racine"</label>
-			<default_value>Mes Documents</default_value>
-			<public>1</public>
-			<description/>
-		</paramtype>
-		<paramtype>
-			<name>doc_index_maxwordspercent</name>
-			<label>Mots clés à indéxer dans un document (%)</label>
-			<default_value>50</default_value>
-			<public>1</public>
-			<description/>
-		</paramtype>
-		<paramtype>
-			<name>doc_index_minoccpercent</name>
-			<label>Occurence minimale d'un mot dans un document (%)</label>
-			<default_value>0.05</default_value>
-			<public>1</public>
-			<description/>
-		</paramtype>
-		<action>
-			<id_action>1</id_action>
-			<label>Ajouter un Dossier</label>
-			<id_object>1</id_object>
-		</action>
-		<action>
-			<id_action>2</id_action>
-			<label>Ajouter un Fichier</label>
-			<id_object>2</id_object>
-		</action>
-		<action>
-			<id_action>3</id_action>
-			<label>Modifier un Dossier</label>
-			<id_object>1</id_object>
-		</action>
-		<action>
-			<id_action>4</id_action>
-			<label>Modifier un Fichier</label>
-			<id_object>2</id_object>
-		</action>
-		<action>
-			<id_action>5</id_action>
-			<label>Supprimer un Dossier</label>
-			<id_object>1</id_object>
-		</action>
-		<action>
-			<id_action>6</id_action>
-			<label>Supprimer un Fichier</label>
-			<id_object>1</id_object>
-		</action>
-		<action>
-			<id_action>7</id_action>
-			<label>Gérer les Validateurs</label>
-			</action>
-	</moduletype>
+    <moduletype>
+        <label>doc</label>
+        <version>3.6</version>
+        <author>Netlor / Ovensia</author>
+        <date>20080206000000</date>
+        <publicparam>1</publicparam>
+        <description>Gestion de Documents</description>
+        <paramtype>
+            <name>showmenu</name>
+            <label>Visible dans les modules</label>
+            <default_value>1</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>1</value>
+                <displayed_value>oui</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>0</value>
+                <displayed_value>non</displayed_value>
+            </paramchoice>
+        </paramtype>
+        <paramtype>
+            <name>showblock</name>
+            <label>Afficher le bloc</label>
+            <default_value>1</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>1</value>
+                <displayed_value>oui</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>0</value>
+                <displayed_value>non</displayed_value>
+            </paramchoice>
+        </paramtype>
+        <paramtype>
+            <name>doc_viewfoldersinblock</name>
+            <label>Afficher les Dossiers dans le menu</label>
+            <default_value>1</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>1</value>
+                <displayed_value>oui</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>0</value>
+                <displayed_value>non</displayed_value>
+            </paramchoice>
+        </paramtype>
+        <paramtype>
+            <name>doc_viewiconsinblock</name>
+            <label>Afficher les Icones dans le menu</label>
+            <default_value>1</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>1</value>
+                <displayed_value>oui</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>0</value>
+                <displayed_value>non</displayed_value>
+            </paramchoice>
+        </paramtype>
+        <paramtype>
+            <name>doc_displayshortcuts</name>
+            <label>Afficher les Raccourcis à la Racine</label>
+            <default_value>1</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>1</value>
+                <displayed_value>oui</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>0</value>
+                <displayed_value>non</displayed_value>
+            </paramchoice>
+        </paramtype>
+        <paramtype>
+            <name>doc_displaysearch</name>
+            <label>Afficher le lien "Recherche"</label>
+            <default_value>1</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>1</value>
+                <displayed_value>oui</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>0</value>
+                <displayed_value>non</displayed_value>
+            </paramchoice>
+        </paramtype>
+        <paramtype>
+            <name>doc_displayroot</name>
+            <label>Afficher le lien "Racine"</label>
+            <default_value>1</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>1</value>
+                <displayed_value>oui</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>0</value>
+                <displayed_value>non</displayed_value>
+            </paramchoice>
+        </paramtype>
+        <paramtype>
+            <name>doc_rootlabel</name>
+            <label>Libelle du lien "Racine"</label>
+            <default_value>Mes Documents</default_value>
+            <public>1</public>
+            <description/>
+        </paramtype>
+        <paramtype>
+            <name>doc_index_maxwordspercent</name>
+            <label>Mots clés à indéxer dans un document (%)</label>
+            <default_value>50</default_value>
+            <public>1</public>
+            <description/>
+        </paramtype>
+        <paramtype>
+            <name>doc_index_minoccpercent</name>
+            <label>Occurence minimale d'un mot dans un document (%)</label>
+            <default_value>0.05</default_value>
+            <public>1</public>
+            <description/>
+        </paramtype>
+        <action>
+            <id_action>1</id_action>
+            <label>Ajouter un Dossier</label>
+            <id_object>1</id_object>
+        </action>
+        <action>
+            <id_action>2</id_action>
+            <label>Ajouter un Fichier</label>
+            <id_object>2</id_object>
+        </action>
+        <action>
+            <id_action>3</id_action>
+            <label>Modifier un Dossier</label>
+            <id_object>1</id_object>
+        </action>
+        <action>
+            <id_action>4</id_action>
+            <label>Modifier un Fichier</label>
+            <id_object>2</id_object>
+        </action>
+        <action>
+            <id_action>5</id_action>
+            <label>Supprimer un Dossier</label>
+            <id_object>1</id_object>
+        </action>
+        <action>
+            <id_action>6</id_action>
+            <label>Supprimer un Fichier</label>
+            <id_object>1</id_object>
+        </action>
+        <action>
+            <id_action>7</id_action>
+            <label>Gérer les Validateurs</label>
+            </action>
+    </moduletype>
 </ploopi>

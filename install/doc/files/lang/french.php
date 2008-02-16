@@ -1,24 +1,24 @@
 <?php
 /*
-	Copyright (c) 2002-2007 Netlor
-	Copyright (c) 2007-2008 Ovensia
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 ?>
 <?
@@ -33,13 +33,13 @@ define ('_DOC_LABEL_ADMIN', 'Administration');
 define ("_DOC_MSG_CONFIRMDELETEFILE", "Etes-vous sûr de vouloir supprimer ce fichier ?");
 define ("_DOC_MSG_CONFIRMDELETEFOLDER", "Etes-vous sûr de vouloir supprimer ce dossier ?");
 
-define ("_DOC_LABEL_ERROR_FOLDEREXISTS",		'<b>Erreur ! </b>Création du dossier impossible - le dossier existe déjà');
-define ("_DOC_LABEL_ERROR_UNAVAILABLEPATH",		'<b>Erreur ! </b>Création du dossier impossible - le chemin n\'est pas valide');
-define ("_DOC_LABEL_ERROR_FOLDERNOTWRITABLE",	'<b>Erreur ! </b>Création du dossier impossible - le répertoire physique n\'est pas accessible en écriture');
+define ("_DOC_LABEL_ERROR_FOLDEREXISTS",        '<b>Erreur ! </b>Création du dossier impossible - le dossier existe déjà');
+define ("_DOC_LABEL_ERROR_UNAVAILABLEPATH",     '<b>Erreur ! </b>Création du dossier impossible - le chemin n\'est pas valide');
+define ("_DOC_LABEL_ERROR_FOLDERNOTWRITABLE",   '<b>Erreur ! </b>Création du dossier impossible - le répertoire physique n\'est pas accessible en écriture');
 
-define ("_DOC_LABEL_ERROR_EMPTYFILE",			'<b>Erreur ! </b>Enregistrement du fichier impossible - le fichier est vide');
-define ("_DOC_LABEL_ERROR_FILENOTWRITABLE",		'<b>Erreur ! </b>Enregistrement du fichier impossible - le fichier n\'est pas accessible en écriture');
-define ("_DOC_LABEL_ERROR_MAXFILESIZE",			'<b>Erreur ! </b>Enregistrement du fichier impossible - le fichier est trop volumineux');
+define ("_DOC_LABEL_ERROR_EMPTYFILE",           '<b>Erreur ! </b>Enregistrement du fichier impossible - le fichier est vide');
+define ("_DOC_LABEL_ERROR_FILENOTWRITABLE",     '<b>Erreur ! </b>Enregistrement du fichier impossible - le fichier n\'est pas accessible en écriture');
+define ("_DOC_LABEL_ERROR_MAXFILESIZE",         '<b>Erreur ! </b>Enregistrement du fichier impossible - le fichier est trop volumineux');
 
 global $foldertypes;
 $foldertypes = array ('private' => 'Personnel', 'shared' => 'Partagé', 'public' => 'Public');

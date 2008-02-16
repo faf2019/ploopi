@@ -69,7 +69,7 @@ FCK.DTD = (function()
         h2: L,
         form: X(A, D, E, I),
         select: {optgroup:1, option:1},
-        font: J,		// Changed from L to J (see (1))
+        font: J,        // Changed from L to J (see (1))
         ins: P,
         menu: Q,
         abbr: L,
@@ -82,24 +82,24 @@ FCK.DTD = (function()
         li: P,
         input: {},
         iframe: P,
-        strong: J,		// Changed from L to J (see (1))
+        strong: J,      // Changed from L to J (see (1))
         textarea: N,
         noframes: P,
-        big: J,			// Changed from L to J (see (1))
-        small: J,		// Changed from L to J (see (1))
-        span: J,		// Changed from L to J (see (1))
+        big: J,         // Changed from L to J (see (1))
+        small: J,       // Changed from L to J (see (1))
+        span: J,        // Changed from L to J (see (1))
         hr: {},
         dt: L,
-        sub: J,			// Changed from L to J (see (1))
+        sub: J,         // Changed from L to J (see (1))
         optgroup: {option:1},
         param: {},
         bdo: L,
-        'var': J,		// Changed from L to J (see (1))
+        'var': J,       // Changed from L to J (see (1))
         div: P,
         object: O,
-        sup: J,			// Changed from L to J (see (1))
+        sup: J,         // Changed from L to J (see (1))
         dd: P,
-        strike: J,		// Changed from L to J (see (1))
+        strike: J,      // Changed from L to J (see (1))
         area: {},
         dir: Q,
         map: X({area:1, form:1, p:1}, A, F, E),
@@ -111,30 +111,30 @@ FCK.DTD = (function()
         thead: M,
         ul: Q,
         acronym: L,
-        b: J,			// Changed from L to J (see (1))
+        b: J,           // Changed from L to J (see (1))
         a: J,
         blockquote: P,
         caption: L,
-        i: J,			// Changed from L to J (see (1))
-        u: J,			// Changed from L to J (see (1))
+        i: J,           // Changed from L to J (see (1))
+        u: J,           // Changed from L to J (see (1))
         tbody: M,
         s: L,
         address: X(D, I),
-        tt: J,			// Changed from L to J (see (1))
+        tt: J,          // Changed from L to J (see (1))
         legend: L,
         q: L,
         pre: X(G, C),
         p: L,
-        em: J,			// Changed from L to J (see (1))
+        em: J,          // Changed from L to J (see (1))
         dfn: L
     } ;
 })() ;
 
 /*
-	Notes:
-	(1) According to the DTD, many elements, like <b> accept <a> elements
-	    inside of them. But, to produce better output results, we have manually
-	    changed the map to avoid breaking the links on pieces, having
-	    "<b>this is a </b><a><b>link</b> test</a>", instead of
-	    "<b>this is a <a>link</a></b><a> test</a>".
+    Notes:
+    (1) According to the DTD, many elements, like <b> accept <a> elements
+        inside of them. But, to produce better output results, we have manually
+        changed the map to avoid breaking the links on pieces, having
+        "<b>this is a </b><a><b>link</b> test</a>", instead of
+        "<b>this is a <a>link</a></b><a> test</a>".
 */

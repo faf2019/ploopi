@@ -56,7 +56,7 @@ class CUpload {
     list($chunk,$boundary) = split("boundary=",$_SERVER['CONTENT_TYPE']);
     $this->boundary=trim($boundary);
     $this->sid          = $_sId;
-    $this->postvars		= array();
+    $this->postvars     = array();
     $this->total_size   = $_SERVER['CONTENT_LENGTH'];
     $this->complete     = false;
     $this->content_type = $_SERVER['CONTENT_TYPE'];
@@ -108,10 +108,10 @@ class CUpload {
               }
               else
               {
-	            $rc = preg_match_all("/Content-Disposition: form-data; name=\"([^\"]*)\"\r\n\r\n(.*)\r\n/i", $header, $matchesF, PREG_OFFSET_CAPTURE);
-	            $fieldname = trim($matchesF[1][0][0]);
-	            $fieldvalue = trim($matchesF[2][0][0]);
-	            if (!empty($fieldname)) $this->postvars[$fieldname] = $fieldvalue;
+                $rc = preg_match_all("/Content-Disposition: form-data; name=\"([^\"]*)\"\r\n\r\n(.*)\r\n/i", $header, $matchesF, PREG_OFFSET_CAPTURE);
+                $fieldname = trim($matchesF[1][0][0]);
+                $fieldvalue = trim($matchesF[2][0][0]);
+                if (!empty($fieldname)) $this->postvars[$fieldname] = $fieldvalue;
               }
             }
           }
@@ -127,21 +127,21 @@ class CUpload {
   }
 
   function setcomplete() {
-  	if (!empty($this->files))
-		foreach($this->files as $_key => $_item) {
-		  $file = $_item['tmpname'];
-		  $filename=UPLOAD_PATH.$file;
-		  $fsize=filesize($filename);
-		  $pf=fopen($filename,'r+');
-		  fseek($pf,-2,SEEK_END);
-		  $eof = fread($pf,2);
-		  if($eof == "\x0d\x0a") {
-			ftruncate($pf,$fsize-2);
-			$fsize-=2;
-		  }
-		  fclose($pf);
-		  $this->files[$_key]['size'] = $fsize;
-		}
+    if (!empty($this->files))
+        foreach($this->files as $_key => $_item) {
+          $file = $_item['tmpname'];
+          $filename=UPLOAD_PATH.$file;
+          $fsize=filesize($filename);
+          $pf=fopen($filename,'r+');
+          fseek($pf,-2,SEEK_END);
+          $eof = fread($pf,2);
+          if($eof == "\x0d\x0a") {
+            ftruncate($pf,$fsize-2);
+            $fsize-=2;
+          }
+          fclose($pf);
+          $this->files[$_key]['size'] = $fsize;
+        }
     $this->complete=true;
     $this->update=0;
     $this->append_progress();

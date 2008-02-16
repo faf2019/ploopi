@@ -24,18 +24,18 @@
 
 function AddSelectOption( selectElement, optionText, optionValue )
 {
-	var oOption = document.createElement("OPTION") ;
+    var oOption = document.createElement("OPTION") ;
 
-	oOption.text	= optionText ;
-	oOption.value	= optionValue ;
+    oOption.text    = optionText ;
+    oOption.value   = optionValue ;
 
-	selectElement.options.add(oOption) ;
+    selectElement.options.add(oOption) ;
 
-	return oOption ;
+    return oOption ;
 }
 
-var oConnector	= window.parent.oConnector ;
-var oIcons		= window.parent.oIcons ;
+var oConnector  = window.parent.oConnector ;
+var oIcons      = window.parent.oIcons ;
 
 
 function StringBuilder( value )

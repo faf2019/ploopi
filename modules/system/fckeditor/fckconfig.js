@@ -25,10 +25,10 @@
  */
 
 FCKConfig.ToolbarSets["Default"] = [
-	['Bold','Italic','Underline'],['TextColor','BGColor'],['FontSize'],
-	'/',
-	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
-	['OrderedList','UnorderedList'],
-	['Cut','Copy','Paste'],
-	['Undo','Redo']
+    ['Bold','Italic','Underline'],['TextColor','BGColor'],['FontSize'],
+    '/',
+    ['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
+    ['OrderedList','UnorderedList'],
+    ['Cut','Copy','Paste'],
+    ['Undo','Redo']
 ] ;

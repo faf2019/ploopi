@@ -24,35 +24,35 @@
 
 function RemoveFromStart( $sourceString, $charToRemove )
 {
-	$sPattern = '|^' . $charToRemove . '+|' ;
-	return preg_replace( $sPattern, '', $sourceString ) ;
+    $sPattern = '|^' . $charToRemove . '+|' ;
+    return preg_replace( $sPattern, '', $sourceString ) ;
 }
 
 function RemoveFromEnd( $sourceString, $charToRemove )
 {
-	$sPattern = '|' . $charToRemove . '+$|' ;
-	return preg_replace( $sPattern, '', $sourceString ) ;
+    $sPattern = '|' . $charToRemove . '+$|' ;
+    return preg_replace( $sPattern, '', $sourceString ) ;
 }
 
 function ConvertToXmlAttribute( $value )
 {
-	if ( defined( 'PHP_OS' ) ) 
-	{
-		$os = PHP_OS ;
-	}
-	else
-	{
-		$os = php_uname() ;
-	}
-	
-	if ( strtoupper( substr( $os, 0, 3 ) ) === 'WIN' ) 
-	{
-		return ( utf8_encode( htmlspecialchars( $value ) ) ) ;
-	} 
-	else 
-	{
-		return ( htmlspecialchars( $value ) ) ;
-	}	
+    if ( defined( 'PHP_OS' ) ) 
+    {
+        $os = PHP_OS ;
+    }
+    else
+    {
+        $os = php_uname() ;
+    }
+    
+    if ( strtoupper( substr( $os, 0, 3 ) ) === 'WIN' ) 
+    {
+        return ( utf8_encode( htmlspecialchars( $value ) ) ) ;
+    } 
+    else 
+    {
+        return ( htmlspecialchars( $value ) ) ;
+    }   
 }
 
 /**
@@ -64,16 +64,16 @@ function ConvertToXmlAttribute( $value )
  */
 function IsHtmlExtension( $ext, $htmlExtensions )
 {
-	if ( !$htmlExtensions || !is_array( $htmlExtensions ) )
-	{
-		return false ;
-	}
-	$lcaseHtmlExtensions = array() ;
-	foreach ( $htmlExtensions as $key => $val )
-	{
-		$lcaseHtmlExtensions[$key] = strtolower( $val ) ;
-	}
-	return in_array( $ext, $lcaseHtmlExtensions ) ;
+    if ( !$htmlExtensions || !is_array( $htmlExtensions ) )
+    {
+        return false ;
+    }
+    $lcaseHtmlExtensions = array() ;
+    foreach ( $htmlExtensions as $key => $val )
+    {
+        $lcaseHtmlExtensions[$key] = strtolower( $val ) ;
+    }
+    return in_array( $ext, $lcaseHtmlExtensions ) ;
 }
 
 /**
@@ -86,55 +86,55 @@ function IsHtmlExtension( $ext, $htmlExtensions )
  */ 
 function DetectHtml( $filePath )
 {
-	$fp = fopen( $filePath, 'rb' ) ;
-	$chunk = fread( $fp, 1024 ) ;
-	fclose( $fp ) ;
+    $fp = fopen( $filePath, 'rb' ) ;
+    $chunk = fread( $fp, 1024 ) ;
+    fclose( $fp ) ;
 
-	$chunk = strtolower( $chunk ) ;
+    $chunk = strtolower( $chunk ) ;
 
-	if (!$chunk) 
-	{
-		return false ;
-	}
+    if (!$chunk) 
+    {
+        return false ;
+    }
 
-	$chunk = trim( $chunk ) ;
+    $chunk = trim( $chunk ) ;
 
-	if ( preg_match( "/<!DOCTYPE\W*X?HTML/sim", $chunk ) ) 
-	{
-		return true;
-	}	
+    if ( preg_match( "/<!DOCTYPE\W*X?HTML/sim", $chunk ) ) 
+    {
+        return true;
+    }   
 
-	$tags = array( '<body', '<head', '<html', '<img', '<pre', '<script', '<table', '<title' ) ;
+    $tags = array( '<body', '<head', '<html', '<img', '<pre', '<script', '<table', '<title' ) ;
 
-	foreach( $tags as $tag ) 
-	{
-		if( false !== strpos( $chunk, $tag ) ) 
-		{
-			return true ;
-		}
-	}
+    foreach( $tags as $tag ) 
+    {
+        if( false !== strpos( $chunk, $tag ) ) 
+        {
+            return true ;
+        }
+    }
 
-	//type = javascript
-	if ( preg_match( '!type\s*=\s*[\'"]?\s*(?:\w*/)?(?:ecma|java)!sim', $chunk ) ) 
-	{
-		return true ;
-	}
+    //type = javascript
+    if ( preg_match( '!type\s*=\s*[\'"]?\s*(?:\w*/)?(?:ecma|java)!sim', $chunk ) ) 
+    {
+        return true ;
+    }
 
-	//href = javascript
-	//src = javascript
-	//data = javascript
-	if ( preg_match( '!(?:href|src|data)\s*=\s*[\'"]?\s*(?:ecma|java)script:!sim', $chunk ) )
-	{
-		return true ;
-	}
-	
-	//url(javascript
-	if ( preg_match( '!url\s*\(\s*[\'"]?\s*(?:ecma|java)script:!sim', $chunk ) ) 
-	{
-		return true ;
-	}			
+    //href = javascript
+    //src = javascript
+    //data = javascript
+    if ( preg_match( '!(?:href|src|data)\s*=\s*[\'"]?\s*(?:ecma|java)script:!sim', $chunk ) )
+    {
+        return true ;
+    }
+    
+    //url(javascript
+    if ( preg_match( '!url\s*\(\s*[\'"]?\s*(?:ecma|java)script:!sim', $chunk ) ) 
+    {
+        return true ;
+    }           
 
-	return false ;	
+    return false ;  
 }
 
 /**
@@ -149,37 +149,37 @@ function DetectHtml( $filePath )
  */ 
 function IsImageValid( $filePath, $extension )
 {
-	$imageCheckExtensions = array('gif', 'jpeg', 'jpg', 'png', 'swf', 'psd', 'bmp', 'iff');
+    $imageCheckExtensions = array('gif', 'jpeg', 'jpg', 'png', 'swf', 'psd', 'bmp', 'iff');
 
-	// version_compare is available since PHP4 >= 4.0.7
-	if ( function_exists( 'version_compare' ) ) {
-		$sCurrentVersion = phpversion();
-		if ( version_compare( $sCurrentVersion, "4.2.0" ) >= 0 ) {
-			$imageCheckExtensions[] = "tiff";
-			$imageCheckExtensions[] = "tif";
-		}
-		if ( version_compare( $sCurrentVersion, "4.3.0" ) >= 0 ) {
-			$imageCheckExtensions[] = "swc";
-		}
-		if ( version_compare( $sCurrentVersion, "4.3.2" ) >= 0 ) {
-			$imageCheckExtensions[] = "jpc";
-			$imageCheckExtensions[] = "jp2";
-			$imageCheckExtensions[] = "jpx";
-			$imageCheckExtensions[] = "jb2";
-			$imageCheckExtensions[] = "xbm";
-			$imageCheckExtensions[] = "wbmp";
-		}
-	}
-	
-	if ( !in_array( $extension, $imageCheckExtensions ) ) {
-		return true;
-	}
-	
-	if ( @getimagesize( $filePath ) === false ) {
-		return false ;
-	}		
-	
-	return true;
+    // version_compare is available since PHP4 >= 4.0.7
+    if ( function_exists( 'version_compare' ) ) {
+        $sCurrentVersion = phpversion();
+        if ( version_compare( $sCurrentVersion, "4.2.0" ) >= 0 ) {
+            $imageCheckExtensions[] = "tiff";
+            $imageCheckExtensions[] = "tif";
+        }
+        if ( version_compare( $sCurrentVersion, "4.3.0" ) >= 0 ) {
+            $imageCheckExtensions[] = "swc";
+        }
+        if ( version_compare( $sCurrentVersion, "4.3.2" ) >= 0 ) {
+            $imageCheckExtensions[] = "jpc";
+            $imageCheckExtensions[] = "jp2";
+            $imageCheckExtensions[] = "jpx";
+            $imageCheckExtensions[] = "jb2";
+            $imageCheckExtensions[] = "xbm";
+            $imageCheckExtensions[] = "wbmp";
+        }
+    }
+    
+    if ( !in_array( $extension, $imageCheckExtensions ) ) {
+        return true;
+    }
+    
+    if ( @getimagesize( $filePath ) === false ) {
+        return false ;
+    }       
+    
+    return true;
 }
 
 ?>

@@ -1,0 +1,46 @@
+#search_result {
+overflow:hidden;
+}
+
+#search_result a {
+display:block;
+text-decoration:none;
+margin-bottom:12px;
+}
+
+#search_result a:hover {
+text-decoration:none;
+}
+
+#search_result h2 {
+display:block;
+margin:0 0 4px 0;
+padding:0;
+font-size:12px;
+font-weight:bold;
+}
+
+#search_result h2 .relevance {
+font-weight:normal;
+font-size:9px;
+margin-left:10px;
+color:#a0a0a0;
+}
+
+#search_result .extract {
+margin-left:10px;
+}
+
+#search_result .link {
+margin:4px 0 0 10px;
+font-style:italic;
+color:#303030;
+}
+
+.ploopi_highlight
+{
+    font-weight: bolder;
+    background-color:#ffffaa;
+    padding:0 2px;
+    border-bottom:1px dotted #c0c0c0;
+}

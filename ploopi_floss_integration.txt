@@ -34,8 +34,8 @@
   license : LGPL
   copyright : Yannick Lefebvre
 
-* PHPDIG 1.8.7
-  path : ./phpdig
-  url : http://www.phpdig.net
+* PHPBB / Template class 1.10.2.5
+  path : ./lib/template
+  url : http://www.phpbb.com
   licence : GPL
-  copyright : Antoine Bajolet, Charter
+  copyright : The phpBB Group

@@ -1,32 +1,33 @@
 /*
-	Copyright (c) 2002-2007 Netlor
-	Copyright (c) 2007-2008 Ovensia
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 div.system_tree {
-	float:left;
-	width:250px;
+    float:left;
+    width:250px;
 }
 
 div.system_tree_padding {
-	padding:4px;
-	overflow:auto;
+    padding:4px;
+    overflow:auto;
 }
 
 
@@ -34,45 +35,44 @@ div.system_tree_node {
 }
 
 div.system_tree_node img {
-	display:block;
-	float:left;
+    display:block;
+    float:left;
 }
 
 div.system_tree_node a {
-	line-height:18px;
-	height:18px;
+    line-height:18px;
+    height:18px;
 }
 
 
 div.system_main {
-	overflow:hidden;
-	border-left:1px solid #c0c0c0;
-	padding:4px;
+    overflow:hidden;
+    padding:4px;
 }
 
 div.system_group_icons {
-	float:right;
-	width:150px;
-	background-color:#f0f0f0;
-	height:100%;
+    float:right;
+    width:150px;
+    background-color:#f0f0f0;
+    height:100%;
 }
 
 div.system_group_icons_padding {
-	padding:4px;
-	overflow:auto;
+    padding:4px;
+    overflow:auto;
 }
 
 div.system_group_main {
-	overflow:hidden;
-	border-right:1px solid #c0c0c0;
+    overflow:hidden;
+    border-right:1px solid #c0c0c0;
 }
 
 .system_wce_warning {
-	margin:4px;
-	padding:2px 4px;
-	border:1px solid #c0c0c0;
-	background-color:#f0f0f0;
-	overflow:auto;
+    margin:4px;
+    padding:2px 4px;
+    border:1px solid #c0c0c0;
+    background-color:#f0f0f0;
+    overflow:auto;
 }
 
 
@@ -94,7 +94,7 @@ text-decoration:none;
 }
 
 .system_roleusers img, .system_roleusers span {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 
 .system_roleusers span {
@@ -102,80 +102,80 @@ text-decoration:none;
 }
 
 .system_roleusers_detail {
-	background-color:#f0f0f0;
-	border-bottom:2px solid #a0a0a0;
+    background-color:#f0f0f0;
+    border-bottom:2px solid #a0a0a0;
 }
 
 .system_roleusers_title {
-	font-weight:bold;
-	padding:4px;
-	background-color:#e8e8e8;
-	border-top:1px solid #c0c0c0;
+    font-weight:bold;
+    padding:4px;
+    background-color:#e8e8e8;
+    border-top:1px solid #c0c0c0;
 }
 
 a.system_roleusers_title {
-	display:block;
-	text-decoration:none;
+    display:block;
+    text-decoration:none;
 }
 
 a.system_roleusers_title:hover {
-	text-decoration:none;
+    text-decoration:none;
 }
 
 .system_roleusers_search_form {
-	padding:4px;
+    padding:4px;
 }
 
 .system_roleusers_list {
 }
 
 .system_roleusers_select_empty {
-	padding:4px;
+    padding:4px;
 }
 .system_roleusers_select_empty span {
-	padding:0 4px;
+    padding:0 4px;
 }
 
 .system_roleusers_select {
-	display:block;
-	background-color:#f0f0f0;
-	border-top:1px solid #d0d0d0;
-	color:#404040;
-	padding:3px 1px 3px 8px;
-	text-decoration:none;
+    display:block;
+    background-color:#f0f0f0;
+    border-top:1px solid #d0d0d0;
+    color:#404040;
+    padding:3px 1px 3px 8px;
+    text-decoration:none;
 }
 
 .system_roleusers_select:hover {
-	text-decoration:none;
-	background-color:#a0a0a0;
-	color:#ffffff;
+    text-decoration:none;
+    background-color:#a0a0a0;
+    color:#ffffff;
 }
 
 .system_roleusers_select span {
-	padding-left:4px;
+    padding-left:4px;
 }
 
 .system_roleusers_legend {
-	padding:2px 1px;
-	text-align:right;
+    padding:2px 1px;
+    text-align:right;
 }
 
 .system_roleusers_legend span {
-	padding:0 4px;
+    padding:0 4px;
 }
 
 
 
 /*
 a.system_roleusers_delete_user {
-	text-decoration:none;
+    text-decoration:none;
 }
 
 a.system_roleusers_delete_user:hover {
-	text-decoration:none;
+    text-decoration:none;
 }
 
 a.system_roleusers_delete_user img {
-	border:0;
+    border:0;
 }
 */

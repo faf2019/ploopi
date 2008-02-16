@@ -1,302 +1,302 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
 <ploopi>
-	<ploopi_mb_object>
-		<row>
-			<id>1</id>
-			<label>News</label>
-			<script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;op=display_news&amp;news_id=&lt;IDRECORD&gt;</script>
-		</row>
-	</ploopi_mb_object>
-	<ploopi_mb_wce_object>
-		<row>
-			<id>1</id>
-			<label>Affichage des News</label>
-			<script>?op='display'</script>
-		</row>
-	</ploopi_mb_wce_object>
-	<ploopi_mb_table>
-		<row>
-			<name>ploopi_mod_news_cat</name>
-			<label>cat</label>
-			<visible>1</visible>
-		</row>
+    <ploopi_mb_object>
+        <row>
+            <id>1</id>
+            <label>News</label>
+            <script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;op=display_news&amp;news_id=&lt;IDRECORD&gt;</script>
+        </row>
+    </ploopi_mb_object>
+    <ploopi_mb_wce_object>
+        <row>
+            <id>1</id>
+            <label>Affichage des News</label>
+            <script>?op='display'</script>
+        </row>
+    </ploopi_mb_wce_object>
+    <ploopi_mb_table>
+        <row>
+            <name>ploopi_mod_news_cat</name>
+            <label>cat</label>
+            <visible>1</visible>
+        </row>
 
-		<row>
-			<name>ploopi_mod_news_entry</name>
-			<label>entry</label>
-			<visible>1</visible>
-		</row>
-	</ploopi_mb_table>
-	<ploopi_mb_field>
+        <row>
+            <name>ploopi_mod_news_entry</name>
+            <label>entry</label>
+            <visible>1</visible>
+        </row>
+    </ploopi_mb_table>
+    <ploopi_mb_field>
 
-		<row>
-			<tablename>ploopi_mod_news_cat</tablename>
-			<name>id</name>
-			<label>id</label>
-			<type>int(10) unsigned</type>
-			<visible>0</visible>
+        <row>
+            <tablename>ploopi_mod_news_cat</tablename>
+            <name>id</name>
+            <label>id</label>
+            <type>int(10) unsigned</type>
+            <visible>0</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_cat</tablename>
-			<name>description</name>
-			<label>description</label>
-			<type>varchar(255)</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_cat</tablename>
+            <name>description</name>
+            <label>description</label>
+            <type>varchar(255)</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_cat</tablename>
-			<name>id_module</name>
-			<label>id_module</label>
-			<type>int(10) unsigned</type>
-			<visible>0</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_cat</tablename>
+            <name>id_module</name>
+            <label>id_module</label>
+            <type>int(10) unsigned</type>
+            <visible>0</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_cat</tablename>
-			<name>id_user</name>
-			<label>id_user</label>
-			<type>tinyint(10) unsigned</type>
-			<visible>0</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_cat</tablename>
+            <name>id_user</name>
+            <label>id_user</label>
+            <type>tinyint(10) unsigned</type>
+            <visible>0</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_cat</tablename>
-			<name>date_create</name>
-			<label>date_create</label>
-			<type>datetime</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_cat</tablename>
+            <name>date_create</name>
+            <label>date_create</label>
+            <type>datetime</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_cat</tablename>
-			<name>date_modify</name>
-			<label>date_modify</label>
-			<type>datetime</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_cat</tablename>
+            <name>date_modify</name>
+            <label>date_modify</label>
+            <type>datetime</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_cat</tablename>
-			<name>title</name>
-			<label>title</label>
-			<type>varchar(100)</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_cat</tablename>
+            <name>title</name>
+            <label>title</label>
+            <type>varchar(100)</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_cat</tablename>
-			<name>id_workspace</name>
-			<label>id_workspace</label>
-			<type>int(10) unsigned</type>
-			<visible>0</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_cat</tablename>
+            <name>id_workspace</name>
+            <label>id_workspace</label>
+            <type>int(10) unsigned</type>
+            <visible>0</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>id</name>
-			<label>id</label>
-			<type>int(10) unsigned</type>
-			<visible>0</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>id</name>
+            <label>id</label>
+            <type>int(10) unsigned</type>
+            <visible>0</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>id_cat</name>
-			<label>id_cat</label>
-			<type>int(10) unsigned</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>id_cat</name>
+            <label>id_cat</label>
+            <type>int(10) unsigned</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>title</name>
-			<label>title</label>
-			<type>varchar(100)</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>title</name>
+            <label>title</label>
+            <type>varchar(100)</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>resume</name>
-			<label>resume</label>
-			<type>varchar(255)</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>resume</name>
+            <label>resume</label>
+            <type>varchar(255)</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>content</name>
-			<label>content</label>
-			<type>longtext</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>content</name>
+            <label>content</label>
+            <type>longtext</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>url</name>
-			<label>url</label>
-			<type>varchar(100)</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>url</name>
+            <label>url</label>
+            <type>varchar(100)</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>urltitle</name>
-			<label>urltitle</label>
-			<type>varchar(100)</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>urltitle</name>
+            <label>urltitle</label>
+            <type>varchar(100)</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>source</name>
-			<label>source</label>
-			<type>varchar(100)</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>source</name>
+            <label>source</label>
+            <type>varchar(100)</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>published</name>
-			<label>published</label>
-			<type>tinyint(1) unsigned</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>published</name>
+            <label>published</label>
+            <type>tinyint(1) unsigned</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>id_module</name>
-			<label>id_module</label>
-			<type>int(10) unsigned</type>
-			<visible>0</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>id_module</name>
+            <label>id_module</label>
+            <type>int(10) unsigned</type>
+            <visible>0</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>id_user</name>
-			<label>id_user</label>
-			<type>int(10) unsigned</type>
-			<visible>0</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>id_user</name>
+            <label>id_user</label>
+            <type>int(10) unsigned</type>
+            <visible>0</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>date_publish</name>
-			<label>date_publish</label>
-			<type>varchar(14)</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>date_publish</name>
+            <label>date_publish</label>
+            <type>varchar(14)</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>hot</name>
-			<label>hot</label>
-			<type>tinyint(1) unsigned</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>hot</name>
+            <label>hot</label>
+            <type>tinyint(1) unsigned</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>nbclick</name>
-			<label>nbclick</label>
-			<type>int(10) unsigned</type>
-			<visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>nbclick</name>
+            <label>nbclick</label>
+            <type>int(10) unsigned</type>
+            <visible>1</visible>
 
-		</row>
-		<row>
-			<tablename>ploopi_mod_news_entry</tablename>
-			<name>id_workspace</name>
-			<label>id_workspace</label>
-			<type>int(10) unsigned</type>
-			<visible>0</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_news_entry</tablename>
+            <name>id_workspace</name>
+            <label>id_workspace</label>
+            <type>int(10) unsigned</type>
+            <visible>0</visible>
 
-		</row>
-	</ploopi_mb_field>
-	<ploopi_mb_schema>
-		<row>
-			<tablesrc>ploopi_mod_news_cat</tablesrc>
-			<tabledest>ploopi_module</tabledest>
-		</row>
-		<row>
+        </row>
+    </ploopi_mb_field>
+    <ploopi_mb_schema>
+        <row>
+            <tablesrc>ploopi_mod_news_cat</tablesrc>
+            <tabledest>ploopi_module</tabledest>
+        </row>
+        <row>
 
-			<tablesrc>ploopi_mod_news_cat</tablesrc>
-			<tabledest>ploopi_user</tabledest>
-		</row>
-		<row>
-			<tablesrc>ploopi_mod_news_cat</tablesrc>
-			<tabledest>ploopi_workspace</tabledest>
-		</row>
+            <tablesrc>ploopi_mod_news_cat</tablesrc>
+            <tabledest>ploopi_user</tabledest>
+        </row>
+        <row>
+            <tablesrc>ploopi_mod_news_cat</tablesrc>
+            <tabledest>ploopi_workspace</tabledest>
+        </row>
 
-		<row>
-			<tablesrc>ploopi_mod_news_entry</tablesrc>
-			<tabledest>ploopi_mod_news_cat</tabledest>
-		</row>
-		<row>
-			<tablesrc>ploopi_mod_news_entry</tablesrc>
-			<tabledest>ploopi_module</tabledest>
+        <row>
+            <tablesrc>ploopi_mod_news_entry</tablesrc>
+            <tabledest>ploopi_mod_news_cat</tabledest>
+        </row>
+        <row>
+            <tablesrc>ploopi_mod_news_entry</tablesrc>
+            <tabledest>ploopi_module</tabledest>
 
-		</row>
-		<row>
-			<tablesrc>ploopi_mod_news_entry</tablesrc>
-			<tabledest>ploopi_user</tabledest>
-		</row>
-		<row>
-			<tablesrc>ploopi_mod_news_entry</tablesrc>
+        </row>
+        <row>
+            <tablesrc>ploopi_mod_news_entry</tablesrc>
+            <tabledest>ploopi_user</tabledest>
+        </row>
+        <row>
+            <tablesrc>ploopi_mod_news_entry</tablesrc>
 
-			<tabledest>ploopi_workspace</tabledest>
-		</row>
-	</ploopi_mb_schema>
-	<ploopi_mb_relation>
-		<row>
-			<tablesrc>ploopi_mod_news_cat</tablesrc>
-			<fieldsrc>id_module</fieldsrc>
+            <tabledest>ploopi_workspace</tabledest>
+        </row>
+    </ploopi_mb_schema>
+    <ploopi_mb_relation>
+        <row>
+            <tablesrc>ploopi_mod_news_cat</tablesrc>
+            <fieldsrc>id_module</fieldsrc>
 
-			<tabledest>ploopi_module</tabledest>
-			<fielddest>id</fielddest>
-		</row>
-		<row>
-			<tablesrc>ploopi_mod_news_cat</tablesrc>
-			<fieldsrc>id_user</fieldsrc>
-			<tabledest>ploopi_user</tabledest>
+            <tabledest>ploopi_module</tabledest>
+            <fielddest>id</fielddest>
+        </row>
+        <row>
+            <tablesrc>ploopi_mod_news_cat</tablesrc>
+            <fieldsrc>id_user</fieldsrc>
+            <tabledest>ploopi_user</tabledest>
 
-			<fielddest>id</fielddest>
-		</row>
-		<row>
-			<tablesrc>ploopi_mod_news_cat</tablesrc>
-			<fieldsrc>id_workspace</fieldsrc>
-			<tabledest>ploopi_workspace</tabledest>
-			<fielddest>id</fielddest>
+            <fielddest>id</fielddest>
+        </row>
+        <row>
+            <tablesrc>ploopi_mod_news_cat</tablesrc>
+            <fieldsrc>id_workspace</fieldsrc>
+            <tabledest>ploopi_workspace</tabledest>
+            <fielddest>id</fielddest>
 
-		</row>
-		<row>
-			<tablesrc>ploopi_mod_news_entry</tablesrc>
-			<fieldsrc>id_cat</fieldsrc>
-			<tabledest>ploopi_mod_news_cat</tabledest>
-			<fielddest>id</fielddest>
-		</row>
+        </row>
+        <row>
+            <tablesrc>ploopi_mod_news_entry</tablesrc>
+            <fieldsrc>id_cat</fieldsrc>
+            <tabledest>ploopi_mod_news_cat</tabledest>
+            <fielddest>id</fielddest>
+        </row>
 
-		<row>
-			<tablesrc>ploopi_mod_news_entry</tablesrc>
-			<fieldsrc>id_module</fieldsrc>
-			<tabledest>ploopi_module</tabledest>
-			<fielddest>id</fielddest>
-		</row>
-		<row>
+        <row>
+            <tablesrc>ploopi_mod_news_entry</tablesrc>
+            <fieldsrc>id_module</fieldsrc>
+            <tabledest>ploopi_module</tabledest>
+            <fielddest>id</fielddest>
+        </row>
+        <row>
 
-			<tablesrc>ploopi_mod_news_entry</tablesrc>
-			<fieldsrc>id_user</fieldsrc>
-			<tabledest>ploopi_user</tabledest>
-			<fielddest>id</fielddest>
-		</row>
-		<row>
-			<tablesrc>ploopi_mod_news_entry</tablesrc>
+            <tablesrc>ploopi_mod_news_entry</tablesrc>
+            <fieldsrc>id_user</fieldsrc>
+            <tabledest>ploopi_user</tabledest>
+            <fielddest>id</fielddest>
+        </row>
+        <row>
+            <tablesrc>ploopi_mod_news_entry</tablesrc>
 
-			<fieldsrc>id_workspace</fieldsrc>
-			<tabledest>ploopi_workspace</tabledest>
-			<fielddest>id</fielddest>
-		</row>
-	</ploopi_mb_relation>
+            <fieldsrc>id_workspace</fieldsrc>
+            <tabledest>ploopi_workspace</tabledest>
+            <fielddest>id</fielddest>
+        </row>
+    </ploopi_mb_relation>
 </ploopi>
 
