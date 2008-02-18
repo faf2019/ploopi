@@ -27,7 +27,7 @@ include_once './modules/forms/class_form.php';
 include_once './modules/forms/class_field.php';
 include_once './modules/forms/class_reply.php';
 include_once './modules/forms/class_reply_field.php';
-include_once './include/classes/class_template.php';
+include_once './lib/template/template.php';
 
 
 global $field_formats; // from forms/include/global.php

@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 ploopi_init_module('news');
 
 include_once './modules/news/class_news_entry.php';
@@ -77,6 +76,8 @@ switch($op)
         else $news->setuwm();
 
         $news->setvalues($_POST,'news_');
+
+        if (isset($_POST['fck_news_content'])) $news->fields['content'] = $_POST['fck_news_content'];
 
         if (isset($_POST['news_date_publish'])) $news->fields['date_publish'] = ploopi_local2timestamp($_POST['news_date_publish'], $_POST['newsx_time_publish']);
 
