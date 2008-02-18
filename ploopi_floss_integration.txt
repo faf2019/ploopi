@@ -16,10 +16,10 @@
   license : GPL
   copyright : Daniel Morris
 
-* pclzip 1.44
+* pclzip 2.6
   path : ./lib/pclzip
-  url : http://www.prototypejs.org
-  license : MIT
+  url : http://www.phpconcept.net/pclzip/index.php
+  license : LGPL
   copyright : Vincent Blavet
 
 * prototype 1.6.0

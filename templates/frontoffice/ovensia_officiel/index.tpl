@@ -35,7 +35,7 @@
 
     <!-- BEGIN ploopi_js -->
         <script type="text/javascript" src="{ploopi_js.PATH}"></script>
-    <!-- END module_js -->
+    <!-- END ploopi_js -->
     <script type="text/javascript">
     //<!--
     {ADDITIONAL_JAVASCRIPT}

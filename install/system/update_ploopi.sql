@@ -93,7 +93,7 @@ RENAME TABLE `ploopi_param_group`  TO `ploopi_param_workspace` ;
 ALTER TABLE `ploopi_param_workspace` CHANGE `id_group` `id_workspace` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
 
 ALTER TABLE `ploopi_mb_wce_object` CHANGE `id` `id` INT( 11 ) UNSIGNED NOT NULL;
-ALTER TABLE `ploopi_mb_wce_object` DROP PRIMARY KEY
+ALTER TABLE `ploopi_mb_wce_object` DROP PRIMARY KEY;
 ALTER TABLE `ploopi_mb_wce_object` ADD PRIMARY KEY ( `id` , `id_module_type` ) ;
 
 ALTER TABLE `ploopi_mb_table` DROP INDEX `nom_2`;
@@ -171,3 +171,5 @@ ALTER TABLE `ploopi_annotation` ADD `id_element` CHAR( 32 ) NOT NULL DEFAULT '0'
 
 UPDATE `ploopi_annotation` SET id_element = MD5(CONCAT(LPAD(id_module,4,'0'), LPAD(id_object,4,'0'), id_record));
 UPDATE `ploopi_group` SET `shared` = '0' WHERE `ploopi_group`.`id` = 3 LIMIT 1;
+
+DROP TABLE `phpdig_clicks`, `phpdig_engine`, `phpdig_excludes`, `phpdig_includes`, `phpdig_keywords`, `phpdig_logs`, `phpdig_sites`, `phpdig_site_page`, `phpdig_spider`, `phpdig_tempspider`;
