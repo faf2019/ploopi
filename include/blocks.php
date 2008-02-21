@@ -72,28 +72,22 @@ switch ($_SESSION['ploopi']['mainmenu'])
 
                 foreach($modules as $key => $menu_moduleid)
                 {
-                    // TEST IF SHOWABLE BLOCK
-                    if (isset($_SESSION["ploopi"]["modules"][$menu_moduleid]['showblock']))
+                    if ($_SESSION['ploopi']['modules'][$menu_moduleid]['active'])
                     {
+                        $modtype = $_SESSION['ploopi']['modules'][$menu_moduleid]['moduletype'];
+                        $blockpath = "./modules/{$modtype}/block-default.php";
 
-                        if ($_SESSION['ploopi']['modules'][$menu_moduleid]['showblock']
-                            &&  $_SESSION['ploopi']['modules'][$menu_moduleid]['active'])
-                        {
-                            $modtype = $_SESSION['ploopi']['modules'][$menu_moduleid]['moduletype'];
-                            $blockpath = "./modules/{$modtype}/block-default.php";
+                        $arrModules[$modtype] = $modtype;
 
-                            $arrModules[$modtype] = $modtype;
-
-                            $arrBlock[$modtype][$menu_moduleid] = array(
-                                                                                'title'=> $_SESSION['ploopi']['modules'][$menu_moduleid]['label'],
-                                                                                'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"),
-                                                                                'file' => $blockpath
-                                                                            );
-                            $block = new block();
-                            include($blockpath);
-                            $arrBlock[$modtype][$menu_moduleid]['menu'] = $block->getmenu();
-                            $arrBlock[$modtype][$menu_moduleid]['content'] = $block->getcontent();
-                        }
+                        $arrBlock[$modtype][$menu_moduleid] = array(
+                                                                            'title'=> $_SESSION['ploopi']['modules'][$menu_moduleid]['label'],
+                                                                            'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"),
+                                                                            'file' => $blockpath
+                                                                        );
+                        $block = new block();
+                        include($blockpath);
+                        $arrBlock[$modtype][$menu_moduleid]['menu'] = $block->getmenu();
+                        $arrBlock[$modtype][$menu_moduleid]['content'] = $block->getcontent();
                     }
                 }
             }

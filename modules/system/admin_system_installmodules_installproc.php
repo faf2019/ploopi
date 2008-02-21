@@ -116,7 +116,6 @@ else
                                                 'version'       => $pt['version'][0],
                                                 'author'        => $pt['author'][0],
                                                 'date'          => $pt['date'][0],
-                                                'publicparam'   => $pt['publicparam'][0],
                                                 'description'   => $pt['description'][0]
                                             );
 

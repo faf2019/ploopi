@@ -173,3 +173,7 @@ UPDATE `ploopi_annotation` SET id_element = MD5(CONCAT(LPAD(id_module,4,'0'), LP
 UPDATE `ploopi_group` SET `shared` = '0' WHERE `ploopi_group`.`id` = 3 LIMIT 1;
 
 DROP TABLE `phpdig_clicks`, `phpdig_engine`, `phpdig_excludes`, `phpdig_includes`, `phpdig_keywords`, `phpdig_logs`, `phpdig_sites`, `phpdig_site_page`, `phpdig_spider`, `phpdig_tempspider`;
+
+
+ALTER TABLE `ploopi_workspace_user` ADD INDEX ( `id_workspace` );
+ALTER TABLE `ploopi_group_user` ADD INDEX ( `id_user` );

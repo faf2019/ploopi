@@ -381,13 +381,10 @@ switch($_SESSION['directory']['directoryTabItem'])
         $result = array();
         if (!$_SESSION['directory']['search']['group'])
         {
-
             $sql =  "
                     SELECT  ploopi_mod_directory_contact.*, 'contact' as usertype, '' as login
                     FROM    ploopi_mod_directory_contact
-                    WHERE   (ploopi_mod_directory_contact.id_user = {$_SESSION['ploopi']['userid']}
-                    OR      ploopi_mod_directory_contact.id_workspace = {$_SESSION['ploopi']['workspaceid']}
-                    OR      ploopi_mod_directory_contact.id_workspace IN ($groups))
+                    WHERE   ploopi_mod_directory_contact.id_user = {$_SESSION['ploopi']['userid']}
                     ";
 
             if ($_SESSION['directory']['search']['fulltext'])
@@ -400,7 +397,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                     $word = $db->addslashes($word);
 
                     if ($words != "") $words .= " ";
-                    $words .= "+$word*";
+                    $words .= "+{$word}*";
                 }
 
                 $sql .= " AND ( MATCH(lastname,firstname,service,function,city,country) AGAINST ('{$words}' IN BOOLEAN MODE)) ";

@@ -323,125 +323,105 @@ if ($ploopi_initsession)
         while ($fields = $db->fetchrow()) $workspaces[$fields['id_workspace']]['webeditmoduleid'] = $fields['id_module'];
     }
 
-    $_SESSION['ploopi']['workspaces'] = $workspaces;
-}
+    //$_SESSION['ploopi']['workspaces'] = $workspaces;
 
-///////////////////////////////////////////////////////////////////////////
-// LOAD USER PROFILE
-///////////////////////////////////////////////////////////////////////////
+    if (isset($_SESSION['ploopi']['hosts']['web'][0])) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['web'][0]] = $workspaces[$_SESSION['ploopi']['hosts']['web'][0]];
+    if (isset($_SESSION['ploopi']['hosts']['admin'][0])) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['admin'][0]] = $workspaces[$_SESSION['ploopi']['hosts']['admin'][0]];
 
-if ($ploopi_initsession && $_SESSION['ploopi']['userid'] != 0)
-{
-    include_once ('./include/load_param.php');
+    ///////////////////////////////////////////////////////////////////////////
+    // LOAD USER PROFILE
+    ///////////////////////////////////////////////////////////////////////////
 
-    $user = new user();
-    $user->open($_SESSION['ploopi']['userid']);
-    $_SESSION['ploopi']['user'] = $user->fields;
-
-    $_SESSION['ploopi']['actions'] = array();
-    $user->getactions($_SESSION['ploopi']['actions']);
-
-    // get all workspaces of current user
-    $workspaces = $user->getworkspaces();
-
-    $workspace = new workspace();
-    $workspace->fields['id'] = _PLOOPI_SYSTEMGROUP;
-    $_SESSION['ploopi']['system_modules'] = $workspace->getmodules(TRUE);
-
-    $workspace_allowed = 0;
-
-    foreach ($workspaces as $wid => $fields)
+    if ($_SESSION['ploopi']['userid'] != 0)
     {
-        //if (isset($_SESSION['ploopi']['workspaces'][$wid]) || (isset($workspaces_notallowed[$wid]) && $fields['adminlevel'] == _PLOOPI_ID_LEVEL_SYSTEMADMIN)) // workspace allowed for current host
-        if (in_array($wid,$_SESSION['ploopi']['hosts']['admin']) || $fields['adminlevel'] == _PLOOPI_ID_LEVEL_SYSTEMADMIN)
+        include_once ('./include/load_param.php');
+
+        $user = new user();
+        $user->open($_SESSION['ploopi']['userid']);
+        $_SESSION['ploopi']['user'] = $user->fields;
+
+        $_SESSION['ploopi']['actions'] = array();
+        $user->getactions($_SESSION['ploopi']['actions']);
+
+        // get all workspaces of current user
+        $user_workspaces = $user->getworkspaces();
+
+        $workspace = new workspace();
+        $workspace->fields['id'] = _PLOOPI_SYSTEMGROUP;
+        $_SESSION['ploopi']['system_modules'] = $workspace->getmodules(TRUE);
+
+        $workspace_allowed = 0;
+
+        foreach ($user_workspaces as $wid => $fields)
         {
-            $adminlevel = $fields['adminlevel'];
-
-            $workspace = new workspace();
-            $workspace->fields = $fields;
-
-            $iprules = ploopi_getiprules($fields['iprules']);
-            $macrules = $fields['macrules'];
-
-            $workspace_ok = $ip_ok = $mac_ok = false;
-
-            // test ip rules if existing for current group
-            $ip_ok = ploopi_isipvalid($iprules);
-
-            // test mac rules if existing for current group
-            if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_usemacrules'] && $macrules)
+            if (in_array($wid,$_SESSION['ploopi']['hosts']['admin']) || $fields['adminlevel'] == _PLOOPI_ID_LEVEL_SYSTEMADMIN)
             {
-                foreach($macrules as $macaddress)
-                {
-                    $macaddress = str_replace(array('-','.','/',',',';',':',' '),'',$macaddress);
-                    if (in_array($macaddress, $_SESSION['ploopi']['usermac'])) $mac_ok = true;
-                }
-            }
-            else $mac_ok = true;
+                $adminlevel = $fields['adminlevel'];
 
-            $workspace_ok = (($ip_ok && $mac_ok));
+                $workspace = new workspace();
+                $workspace->fields = $fields;
 
-            if ($workspace_ok)
-            {
-                if (!empty($fields['groups']))
+                $iprules = ploopi_getiprules($fields['iprules']);
+
+                if (ploopi_isipvalid($iprules))
                 {
-                    foreach($fields['groups'] as $idg)
+                    if (!empty($fields['groups']))
                     {
-                        $grp = new group();
-                        if ($grp->open($idg)) $grp->getactions($_SESSION['ploopi']['actions']);
+                        foreach($fields['groups'] as $idg)
+                        {
+                            $grp = new group();
+                            if ($grp->open($idg)) $grp->getactions($_SESSION['ploopi']['actions']);
+                        }
+                    }
+
+                    $workspace_ok = true;
+
+                    if ($workspace->fields['mustdefinerule']) $workspace_ok = (isset($_SESSION['ploopi']['actions'][$wid])  || ($gu_exists && $group_user->fields['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN));
+
+                    if ($workspace_ok)
+                    {
+                        //$_SESSION['ploopi']['workspaces'][$gid] = $fields;
+                        $_SESSION['ploopi']['workspaces'][$wid] = $workspaces[$wid];
+                        $_SESSION['ploopi']['workspaces'][$wid]['adminlevel']  = $adminlevel;
+                        $_SESSION['ploopi']['workspaces'][$wid]['children']  = $workspace->getworkspacechildrenlite();
+                        $_SESSION['ploopi']['workspaces'][$wid]['parents'] = explode(';',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
+                        $_SESSION['ploopi']['workspaces'][$wid]['brothers']  = $workspace->getworkspacebrotherslite();
+                        $_SESSION['ploopi']['workspaces'][$wid]['list_parents'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
+                        $_SESSION['ploopi']['workspaces'][$wid]['list_children'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['children']);
+                        $_SESSION['ploopi']['workspaces'][$wid]['list_brothers'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['brothers']);
+                        $_SESSION['ploopi']['workspaces'][$wid]['modules'] = $workspace->getmodules(true);
+
+                        $workspace_allowed++;
                     }
                 }
-
-                if ($workspace->fields['mustdefinerule']) $workspace_ok = (isset($_SESSION['ploopi']['actions'][$wid])  || ($gu_exists && $group_user->fields['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN));
-
-                if ($workspace_ok)
-                {
-                    //$_SESSION['ploopi']['workspaces'][$gid] = $fields;
-                    $_SESSION['ploopi']['workspaces'][$wid]['adminlevel']  = $adminlevel;
-                    $_SESSION['ploopi']['workspaces'][$wid]['children']  = $workspace->getworkspacechildrenlite();
-                    $_SESSION['ploopi']['workspaces'][$wid]['parents'] = explode(';',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
-                    $_SESSION['ploopi']['workspaces'][$wid]['brothers']  = $workspace->getworkspacebrotherslite();
-                    $_SESSION['ploopi']['workspaces'][$wid]['list_parents'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
-                    $_SESSION['ploopi']['workspaces'][$wid]['list_children'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['children']);
-                    $_SESSION['ploopi']['workspaces'][$wid]['list_brothers'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['brothers']);
-                    $_SESSION['ploopi']['workspaces'][$wid]['modules'] = $workspace->getmodules(true);
-
-                    $workspace_allowed++;
-                }
             }
         }
-    }
 
-    if (!$workspace_allowed)
-    {
-        session_destroy();
-        ploopi_redirect("{$scriptenv}?ploopi_errorcode="._PLOOPI_ERROR_NOWORKSPACEDEFINED);
-    }
 
-    // sorting workspaces by depth
-    uksort ($_SESSION['ploopi']['workspaces'], 'ploopi_workspace_sort');
-
-    // create a list with allowed workspaces only
-    $_SESSION['ploopi']['workspaces_allowed'] = array();
-    foreach($_SESSION['ploopi']['workspaces'] as $workspace)
-    {
-        if (!empty($workspace['adminlevel']))
+        if (!$workspace_allowed)
         {
-            $_SESSION['ploopi']['workspaces_allowed'][] = $workspace['id'];
-
-            // get users & groups
-
+            session_destroy();
+            ploopi_redirect("{$scriptenv}?ploopi_errorcode="._PLOOPI_ERROR_NOWORKSPACEDEFINED);
         }
+
+        // sorting workspaces by depth
+        uksort ($_SESSION['ploopi']['workspaces'], 'ploopi_workspace_sort');
+
+        // create a list with allowed workspaces only
+        $_SESSION['ploopi']['workspaces_allowed'] = array();
+        foreach($_SESSION['ploopi']['workspaces'] as $workspace)
+        {
+            if (!empty($workspace['adminlevel'])) $_SESSION['ploopi']['workspaces_allowed'][] = $workspace['id'];
+        }
+
+        if (!isset($_GET['reloadsession'])) $ploopi_mainmenu = _PLOOPI_MENU_MYGROUPS;
     }
 
-    if (!isset($_GET['reloadsession'])) $ploopi_mainmenu = _PLOOPI_MENU_MYGROUPS;
 }
 
 if (!$_SESSION['ploopi']['paramloaded']) include_once ('./include/load_param.php');
 
-
 if (!empty($login_redirect)) ploopi_redirect($login_redirect, false);
-
 
 ///////////////////////////////////////////////////////////////////////////
 // SWITCH FRONT/BACK ON script filename
@@ -474,8 +454,9 @@ switch($_SESSION['ploopi']['scriptname'])
                     $workspace = new workspace();
                     $workspace->open($wid);
 
+                    $_SESSION['ploopi']['workspaces'][$wid] = $workspaces[$wid];
                     $_SESSION['ploopi']['workspaces'][$wid] = array_merge($_SESSION['ploopi']['workspaces'][$wid], $workspace->fields);
-                    //$_SESSION['ploopi']['workspaces'][$gid] = $group->fields;
+
                     $_SESSION['ploopi']['workspaces'][$wid]['children']  = $workspace->getworkspacechildrenlite('web');
 
                     if ($_SESSION['ploopi']['workspaces'][$wid]['parents'] != '')
@@ -504,11 +485,8 @@ switch($_SESSION['ploopi']['scriptname'])
                 if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['webeditmoduleid']))
                 {
                     $_SESSION['ploopi']['webeditmoduleid'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['webeditmoduleid'];
-                    // TEST A VALIDER
                     $_SESSION['ploopi']['moduleid'] = $_SESSION['ploopi']['webeditmoduleid'];
                 }
-
-                //getdomaininfo($_SESSION['ploopi']['cmsmoduleid'], $_SERVER['HTTP_HOST'],$cms_description,$cms_keywords,$cms_conception);
             }
         }
 
@@ -542,19 +520,12 @@ if ($_SESSION['ploopi']['mode'] == 'admin')
         if (isset($ploopi_mainmenu)) // new main menu selected
         {
             $_SESSION['ploopi']['mainmenu'] = $ploopi_mainmenu;
-            $_SESSION['ploopi']['workspaceid'] = '';
 
-            if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYGROUPS)
-            {
-                $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['workspaces_allowed'][0];
-                // load params
-                ploopi_loadparams();
-            }
-            else
-            {
-                // set default workspaceid for some vars (meta, title)
-                $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['admin'][0];
-            }
+            reset($_SESSION['ploopi']['workspaces']);
+            $wsp = current($_SESSION['ploopi']['workspaces']);
+            $_SESSION['ploopi']['workspaceid'] = $wsp['id'];
+
+            if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYGROUPS) ploopi_loadparams();
 
             $_SESSION['ploopi']['moduleid'] = '';
             $_SESSION['ploopi']['action'] = 'public';

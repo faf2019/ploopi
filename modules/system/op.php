@@ -584,7 +584,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 switch($ploopi_op)
                 {
                     case 'system_roleusers':
-                        if (empty($_GET['system_roleusers_roleid'])) ploopi_die();
+                        if (empty($_GET['system_roleusers_roleid']) || !is_numeric($_GET['system_roleusers_roleid'])) ploopi_die();
 
                         $sql =  "
                                 SELECT      u.*
@@ -592,7 +592,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 INNER JOIN  ploopi_user u
                                 ON          u.id = wur.id_user
                                 WHERE       wur.id_role = {$_GET['system_roleusers_roleid']}
-                                AND         wur.id_workspace = {$_SESSION['ploopi']['workspaceid']}
+                                AND         wur.id_workspace = {$_SESSION['system']['workspaceid']}
                                 ";
 
                         $db->query($sql);
@@ -604,7 +604,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 INNER JOIN  ploopi_group g
                                 ON          g.id = wgr.id_group
                                 WHERE       wgr.id_role = {$_GET['system_roleusers_roleid']}
-                                AND         wgr.id_workspace = {$_SESSION['ploopi']['workspaceid']}
+                                AND         wgr.id_workspace = {$_SESSION['system']['workspaceid']}
                                 ";
 
                         $db->query($sql);
@@ -666,9 +666,14 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                         $wur = new workspace_user_role();
 
-                        if ($wur->open($_GET['system_roleusers_userid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid'])) $wur->delete();
+                        $reload = '';
+                        if ($wur->open($_GET['system_roleusers_userid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid']))
+                        {
+                            $wur->delete();
+                            $reload = '&reloadsession';
+                        }
 
-                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
+                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}{$reload}");
                     break;
 
                     // suppression de l'affectation d'un rôle à un groupe
@@ -679,28 +684,37 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                         $wgr = new workspace_group_role();
 
-                        if ($wgr->open($_GET['system_roleusers_groupid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid'])) $wgr->delete();
+                        $reload = '';
+                        if ($wgr->open($_GET['system_roleusers_groupid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid']))
+                        {
+                            $wgr->delete();
+                            $reload = '&reloadsession';
+                        }
 
-                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
+                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}{$reload}");
                     break;
 
                     // affectation d'un rôle à un utilisateur
                     case 'system_roleusers_select_user':
+
                         if (empty($_GET['system_roleusers_userid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi_die();
+
 
                         include_once './modules/system/class_workspace_user_role.php';
 
                         $wur = new workspace_user_role();
 
+                        $reload = '';
                         if (!$wur->open($_GET['system_roleusers_userid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid']))
                         {
                             $wur->fields['id_user'] = $_GET['system_roleusers_userid'];
                             $wur->fields['id_workspace'] = $_SESSION['system']['workspaceid'];
                             $wur->fields['id_role'] = $_GET['system_roleusers_roleid'];
                             $wur->save();
+                            $reload = '&reloadsession';
                         }
 
-                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
+                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}{$reload}");
                     break;
 
                     // affectation d'un rôle à un groupe
@@ -711,19 +725,31 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                         $wgr = new workspace_group_role();
 
+                        $reload = '';
                         if (!$wgr->open($_GET['system_roleusers_groupid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid']))
                         {
                             $wgr->fields['id_group'] = $_GET['system_roleusers_groupid'];
                             $wgr->fields['id_workspace'] = $_SESSION['system']['workspaceid'];
                             $wgr->fields['id_role'] = $_GET['system_roleusers_roleid'];
                             $wgr->save();
+                            $reload = '&reloadsession';
                         }
 
-                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
+                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}{$reload}");
                     break;
 
                     // résultat de la recherche utilisateurs / groupes
                     case 'system_roleusers_search':
+
+                        $where_user = $where_group = '';
+
+                        if (!empty($_GET['system_roleusers_filter']))
+                        {
+                            $search = $db->addslashes($_GET['system_roleusers_filter']);
+                            $where_user = "WHERE u.lastname LIKE '{$search}%' OR u.firstname LIKE '{$search}%'";
+                            $where_group = "WHERE g.label LIKE '{$search}%'";
+                        }
+
                         $sql =  "
                                 SELECT      u.id,
                                             u.lastname,
@@ -736,6 +762,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 INNER JOIN  ploopi_workspace_user wu
                                 ON          wu.id_user = u.id
                                 AND         wu.id_workspace = {$_SESSION['ploopi']['workspaceid']}
+
+                                {$where_user}
 
                                 ORDER BY    u.lastname, u.firstname
                                 ";
@@ -753,6 +781,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 INNER JOIN  ploopi_workspace_group wg
                                 ON          wg.id_group = g.id
                                 AND         wg.id_workspace = {$_SESSION['ploopi']['workspaceid']}
+
+                                {$where_group}
 
                                 ORDER BY    g.label
                                 ";

@@ -30,8 +30,9 @@ if (isset($ploopi_op))
     switch($ploopi_op)
     {
         case 'ploopi_switchdisplay':
+            if (!empty($_GET['id'])) $_SESSION['ploopi']['switchdisplay'][$_GET['id']] = $_GET['display'];
             if (!$_SESSION['ploopi']['connected']) ploopi_die();
-            $_SESSION['ploopi']['switchdisplay'][$_GET['id']] = $_GET['display'];
+            ploopi_die();
         break;
 
         case 'ploopi_checkpasswordvalidity':

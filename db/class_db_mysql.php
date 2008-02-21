@@ -262,12 +262,12 @@ class ploopi_db
                 {
                     $query .= $sql_line;
 
-                    // on vérifie que la ligne est une requête valide
+                    // on verifie que la ligne est une requete valide
                     if(preg_match("/(.*);/", $sql_line))
                     {
                         $query = substr($query, 0, strlen($query)-1);
 
-                        // et on exécute !
+                        // et on execute !
                         $this->query($query);
                         $query = "";
                     }
@@ -278,25 +278,6 @@ class ploopi_db
         }
         else return(false);
     }
-
-
-    function multiplequeries_old($queries)
-    {
-
-        $queries = trim($queries);
-        $array_query = explode(';',$queries);
-
-        foreach ($array_query AS $key => $query)
-        {
-            $query = trim($query);
-            if ($query!='')
-            {
-                $this->query($query);
-            }
-        }
-    }
-
-
 
     /**
     * execute a SQL query

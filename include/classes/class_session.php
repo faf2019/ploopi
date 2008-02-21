@@ -30,13 +30,13 @@ class ploopi_session
     function read($id)
     {
         global $db;
-        return ($db->query("SELECT data FROM ploopi_session WHERE id = '".$db->addslashes($id)."'") && $record = $db->fetchrow()) ? $record['data'] : '';
+        return ($db->query("SELECT data FROM ploopi_session WHERE id = '".$db->addslashes($id)."'") && $record = $db->fetchrow()) ? gzuncompress($record['data']) : '';
     }
 
     function write($id, $data)
     {
         global $db;
-        return $db->query("REPLACE INTO ploopi_session VALUES ('".$db->addslashes($id)."', '".$db->addslashes(time())."', '".$db->addslashes($data)."')");
+        return $db->query("REPLACE INTO ploopi_session VALUES ('".$db->addslashes($id)."', '".$db->addslashes(time())."', '".$db->addslashes(gzcompress($data))."')");
     }
 
     function destroy($id)

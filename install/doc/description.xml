@@ -8,36 +8,6 @@
         <publicparam>1</publicparam>
         <description>Gestion de Documents</description>
         <paramtype>
-            <name>showmenu</name>
-            <label>Visible dans les modules</label>
-            <default_value>1</default_value>
-            <public>1</public>
-            <description/>
-            <paramchoice>
-                <value>1</value>
-                <displayed_value>oui</displayed_value>
-            </paramchoice>
-            <paramchoice>
-                <value>0</value>
-                <displayed_value>non</displayed_value>
-            </paramchoice>
-        </paramtype>
-        <paramtype>
-            <name>showblock</name>
-            <label>Afficher le bloc</label>
-            <default_value>1</default_value>
-            <public>1</public>
-            <description/>
-            <paramchoice>
-                <value>1</value>
-                <displayed_value>oui</displayed_value>
-            </paramchoice>
-            <paramchoice>
-                <value>0</value>
-                <displayed_value>non</displayed_value>
-            </paramchoice>
-        </paramtype>
-        <paramtype>
             <name>doc_viewfoldersinblock</name>
             <label>Afficher les Dossiers dans le menu</label>
             <default_value>1</default_value>

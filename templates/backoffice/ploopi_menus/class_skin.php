@@ -106,7 +106,7 @@ class skin extends skin_common
 
     function popup($title, $content, $popupid = '', $title2 = '')
     {
-        $res = $this->open_simplebloc($title, 'margin:0px;','','<a title="Fermer" class="ploopi_popup_close" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');"><img alt="Fermer" style="display:block;float:right;margin:2px;" src="'.$this->values['path'].'/ihm/close_popup.png"></a>');
+        $res = $this->open_simplebloc($title, 'margin:0px;','','<a title="Fermer" class="ploopi_popup_close" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');"><img alt="Fermer" style="display:block;float:right;margin:2px;" src="'.$this->values['path'].'/template/close_popup.png"></a>');
         $res .= $content;
         $res .= $this->close_simplebloc();
 

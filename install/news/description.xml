@@ -8,36 +8,6 @@
       <publicparam>1</publicparam>
       <description>Gestion d'Actualités</description>
       <paramtype>
-         <name>showmenu</name>
-         <label>Visible dans les modules</label>
-         <default_value>1</default_value>
-         <public>1</public>
-         <description/>
-         <paramchoice>
-            <value>1</value>
-            <displayed_value>oui</displayed_value>
-         </paramchoice>
-         <paramchoice>
-            <value>0</value>
-            <displayed_value>non</displayed_value>
-         </paramchoice>
-      </paramtype>
-      <paramtype>
-         <name>showblock</name>
-         <label>Afficher le bloc</label>
-         <default_value>1</default_value>
-         <public>1</public>
-         <description/>
-         <paramchoice>
-            <value>1</value>
-            <displayed_value>oui</displayed_value>
-         </paramchoice>
-         <paramchoice>
-            <value>0</value>
-            <displayed_value>non</displayed_value>
-         </paramchoice>
-      </paramtype>
-      <paramtype>
          <name>nbnewsdisplay</name>
          <label>Nombre d'actualités affichées</label>
          <default_value>5</default_value>
