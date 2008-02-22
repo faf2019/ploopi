@@ -75,7 +75,7 @@ function ploopi_switchfocus()
 // FCK richtext editor
 function ploopi_fckeditor($field,$value,$w,$h)
 {
-    include_once('./FCKeditor/editor/fckeditor.php') ;
+    include_once './FCKeditor/editor/fckeditor.php' ;
 
     $oFCKeditor = new FCKeditor("fck_".$field) ;
 

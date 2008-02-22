@@ -21,7 +21,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once('class_xmlrss.php');
+include_once 'class_xmlrss.php';
 
 class rss_feed extends data_object
 {
@@ -62,9 +62,9 @@ class rss_feed extends data_object
 
 function updatecache()
 {
-    include_once('./modules/rss/class_xmlrss.php');
-    include_once('./modules/rss/class_rss_entry.php');
-    include_once('./modules/rss/class_rss_feed.php');
+    include_once './modules/rss/class_xmlrss.php';
+    include_once './modules/rss/class_rss_entry.php';
+    include_once './modules/rss/class_rss_feed.php';
     global $db;
 
     $xmlrss = new xmlrss($this->fields['url']);

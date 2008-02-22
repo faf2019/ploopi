@@ -23,9 +23,9 @@
 
 ploopi_init_module('rss');
 
-include_once('./modules/rss/class_rss_feed.php');
+include_once './modules/rss/class_rss_feed.php';
 include_once './lib/template/template.php';
-//include_once('./modules/rss/class_rssrequest.php');
+//include_once './modules/rss/class_rssrequest.php';
 
 if (!empty($_REQUEST['op'])) $op = $_REQUEST['op'];
 

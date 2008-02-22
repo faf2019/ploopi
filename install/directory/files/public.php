@@ -22,8 +22,8 @@
 */
 
 ploopi_init_module('directory');
-include_once('./modules/directory/class_directory_contact.php');
-include_once('./modules/directory/class_directory_favorites.php');
+include_once './modules/directory/class_directory_contact.php';
+include_once './modules/directory/class_directory_favorites.php';
 
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
@@ -145,7 +145,7 @@ if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_s
 }
 elseif ($_SESSION['directory']['directoryTabItem'] == 'tabSearch') $_SESSION['directory']['directoryTabItem'] = '';
 
-echo $skin->create_tabs('',$tabs,$_SESSION['directory']['directoryTabItem']);
+echo $skin->create_tabs($tabs,$_SESSION['directory']['directoryTabItem']);
 
 switch($op)
 {
@@ -156,7 +156,7 @@ switch($op)
             $directory_contact->open($_GET['contact_id']);
 
             echo $skin->open_simplebloc($title.' / '._DIRECTORY_MODIFYCONTACT);
-            include('./modules/directory/public_directory_form.php');
+            include './modules/directory/public_directory_form.php';
             echo $skin->close_simplebloc();
         }
         else ploopi_redirect($scriptenv);
@@ -166,13 +166,13 @@ switch($op)
         if (        (!empty($_GET['contact_id']) && is_numeric($_GET['contact_id']))
                 ||  (!empty($_GET['user_id']) && is_numeric($_GET['user_id']))
             )
-            include('./modules/directory/public_directory_view.php');
+            include './modules/directory/public_directory_view.php';
         else
             ploopi_redirect($scriptenv);
     break;
 
     default:
-        include('./modules/directory/public_directory.php');
+        include './modules/directory/public_directory.php';
     break;
 
 }

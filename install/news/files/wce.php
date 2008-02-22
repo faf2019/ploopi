@@ -23,8 +23,8 @@
 
 ploopi_init_module('news');
 
-include_once('./modules/news/class_news_entry.php');
-include_once('./modules/news/class_news_cat.php');
+include_once './modules/news/class_news_entry.php';
+include_once './modules/news/class_news_cat.php';
 
 global $articleid;
 global $headingid;

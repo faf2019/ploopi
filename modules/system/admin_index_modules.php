@@ -119,10 +119,10 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
     <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
     <TR BGCOLOR="<? echo $skin->values['bgline1']; ?>">
         <TD ALIGN="CENTER">
-        <TABLE WIDTH="100%" CELLPADDING="2" CELLSPACING="1">
         <FORM NAME="form_modify_module" ACTION="<? echo $scriptenv; ?>" METHOD="POST">
         <INPUT TYPE="HIDDEN" NAME="op" VALUE="save_module_props">
         <INPUT TYPE="HIDDEN" NAME="moduleid" VALUE="<? echo $module->fields['id']; ?>">
+        <TABLE WIDTH="100%" CELLPADDING="2" CELLSPACING="1">
         <TR BGCOLOR="<? echo $skin->values['bgline2']; ?>">
             <TD ALIGN="RIGHT"><B><? echo _SYSTEM_LABEL_MODULENAME; ?>:&nbsp;</B></TD>
             <TD ALIGN="LEFT"><INPUT class="text" TYPE="Text" SIZE=30 MAXLENGTH=100 NAME="module_label" VALUE="<? echo htmlentities($module->fields['label']); ?>"></TD>
@@ -133,8 +133,8 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
             <TD>
             <INPUT TYPE="Radio" <? if ($module->fields['active']) echo "checked" ?> VALUE="1" NAME="module_active"><? echo _PLOOPI_YES; ?>
             <INPUT TYPE="Radio" <? if (!$module->fields['active']) echo "checked" ?> VALUE="0" NAME="module_active"><? echo _PLOOPI_NO; ?>
-            <TD ALIGN="LEFT"><I><? echo _SYSTEM_EXPLAIN_ACTIVE; ?></I></TD>
             </TD>
+            <TD ALIGN="LEFT"><I><? echo _SYSTEM_EXPLAIN_ACTIVE; ?></I></TD>
         </TR>
         <TR BGCOLOR="<? echo $skin->values['bgline2']; ?>">
             <TD ALIGN="RIGHT"><B><? echo _SYSTEM_LABEL_AUTOCONNECT; ?>:&nbsp;</B></TD>
@@ -197,8 +197,8 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 <INPUT TYPE="Submit" class="flatbutton" VALUE="<? echo _PLOOPI_SAVE; ?>">
             </TD>
         </TR>
-        </FORM>
         </TABLE>
+        </FORM>
 
         </TD>
     </TR>

@@ -23,7 +23,7 @@
 ?>
 <?
 ploopi_init_module('system');
-include_once('./modules/system/class_user.php');
+include_once './modules/system/class_user.php';
 
 if (!isset($op)) $op = '';
 

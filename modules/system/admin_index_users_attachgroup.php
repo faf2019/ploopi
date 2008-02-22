@@ -52,7 +52,7 @@ else
 
     $tabs_char[99] = array('title' => "&nbsp;tous&nbsp;", 'url' => "{$scriptenv}?alphaTabItem=99");
 
-    echo $skin->create_tabs('',$tabs_char,$alphaTabItem);
+    echo $skin->create_tabs($tabs_char,$alphaTabItem);
     ?>
 </div>
 

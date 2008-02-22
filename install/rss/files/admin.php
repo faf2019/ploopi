@@ -58,7 +58,7 @@ switch($op)
     case 'rsscat_save':
         if (ploopi_isactionallowed(_RSS_ACTION_CATMODIFY) || ploopi_isactionallowed(_RSS_ACTION_CATCREATE))
         {
-            include_once('./modules/rss/class_rss_cat.php');
+            include_once './modules/rss/class_rss_cat.php';
             $rsscat = new rss_cat();
 
             if (!empty($_POST['rsscat_id']) && is_numeric($_POST['rsscat_id']) && ploopi_isactionallowed(_RSS_ACTION_CATMODIFY)) $rsscat->open($_POST['rsscat_id']);
@@ -76,7 +76,7 @@ switch($op)
     case 'rsscat_delete':
         if (ploopi_isactionallowed(_RSS_ACTION_CATDELETE))
         {
-            include_once('./modules/rss/class_rss_cat.php');
+            include_once './modules/rss/class_rss_cat.php';
             $rsscat = new rss_cat();
             if (!empty($_GET['rsscat_id']) && is_numeric($_GET['rsscat_id']) && $rsscat->open($_GET['rsscat_id']))
             {
@@ -90,7 +90,7 @@ switch($op)
     case 'rssfeed_save':
         if (ploopi_isactionallowed(_RSS_ACTION_FEEDMODIFY) || ploopi_isactionallowed(_RSS_ACTION_FEEDCREATE))
         {
-            include_once('./modules/rss/class_rss_feed.php');
+            include_once './modules/rss/class_rss_feed.php';
             $rssfeed = new rss_feed();
 
             if (!empty($_POST['rssfeed_id']) && is_numeric($_POST['rssfeed_id']) && ploopi_isactionallowed(_RSS_ACTION_FEEDMODIFY)) $rssfeed->open($_POST['rssfeed_id']);
@@ -216,43 +216,43 @@ if (!empty($_GET['rssTabItem'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid'
 if (!isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'] = '';
 
 echo $skin->create_pagetitle(str_replace("LABEL",$_SESSION['ploopi']['modulelabel'],_RSS_PAGE_TITLE));
-echo $skin->create_tabs('',$tabs,$_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem']);
+echo $skin->create_tabs($tabs,$_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem']);
 
 switch($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])
 {
     case 'tabCatList':
-        include('./modules/rss/admin_rsscat_list.php');
+        include './modules/rss/admin_rsscat_list.php';
     break;
 
     case 'tabCatAdd':
         if (ploopi_isactionallowed(_RSS_ACTION_CATADD))
         {
-            include_once('./modules/rss/class_rss_cat.php');
+            include_once './modules/rss/class_rss_cat.php';
             $rsscat = new rss_cat();
             $rsscat->init_description();
-            include('./modules/rss/admin_rsscat_form.php');
+            include './modules/rss/admin_rsscat_form.php';
         }
     break;
 
     case 'tabFeedList':
-        include('./modules/rss/admin_rssfeed_list.php');
+        include './modules/rss/admin_rssfeed_list.php';
     break;
 
     case 'tabFeedAdd':
         if (ploopi_isactionallowed(_RSS_ACTION_FEEDADD))
         {
-            include_once('./modules/rss/class_rss_feed.php');
+            include_once './modules/rss/class_rss_feed.php';
             $rssfeed = new rss_feed();
             $rssfeed->init_description();
             $rssfeed->fields['revisit'] = '3600';
-            include('./modules/rss/admin_rssfeed_form.php');
+            include './modules/rss/admin_rssfeed_form.php';
         }
     break;
 
     case 'tabTools':
         if (ploopi_isactionallowed(0))
         {
-            include('./modules/rss/admin_tools.php');
+            include './modules/rss/admin_tools.php';
         }
     break;
 }

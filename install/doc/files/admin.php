@@ -23,12 +23,12 @@
 
 if (ploopi_isactionallowed(0, $_SESSION['ploopi']['workspaceid'], $_SESSION['ploopi']['moduleid']))
 {
-    include_once('./modules/doc/class_docfile.php');
-    include_once('./modules/doc/class_docfolder.php');
-    include_once('./modules/doc/class_docparser.php');
-    include_once('./modules/doc/class_docmeta.php');
-    include_once('./modules/doc/class_dockeyword.php');
-    include_once('./modules/doc/class_dockeywordfile.php');
+    include_once './modules/doc/class_docfile.php';
+    include_once './modules/doc/class_docfolder.php';
+    include_once './modules/doc/class_docparser.php';
+    include_once './modules/doc/class_docmeta.php';
+    include_once './modules/doc/class_dockeyword.php';
+    include_once './modules/doc/class_dockeywordfile.php';
 
     $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
@@ -37,7 +37,7 @@ if (ploopi_isactionallowed(0, $_SESSION['ploopi']['workspaceid'], $_SESSION['plo
     $tabs[_DOC_TAB_STATS] = array('title' => 'Statistiques', 'url' => "{$scriptenv}?ploopi_moduletabid="._DOC_TAB_STATS);
 
     echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
-    echo $skin->create_tabs('',$tabs,$_SESSION['ploopi']['moduletabid']);
+    echo $skin->create_tabs($tabs,$_SESSION['ploopi']['moduletabid']);
 
     switch($_SESSION['ploopi']['moduletabid'])
     {
@@ -63,7 +63,7 @@ if (ploopi_isactionallowed(0, $_SESSION['ploopi']['workspaceid'], $_SESSION['plo
 
                 case 'docpaser_modify':
                 default:
-                    include('./modules/doc/admin_docparser_list.php');
+                    include './modules/doc/admin_docparser_list.php';
                 break;
             }
         break;

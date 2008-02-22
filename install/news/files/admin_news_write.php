@@ -89,7 +89,7 @@ else echo $skin->open_simplebloc(str_replace("LABEL",$news->fields['title'],_NEW
 </div>
 <div style="padding:0 2px;">
 <?
-include_once('./FCKeditor/fckeditor.php') ;
+include_once './FCKeditor/fckeditor.php' ;
 
 $oFCKeditor = new FCKeditor('fck_news_content') ;
 

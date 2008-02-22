@@ -79,7 +79,7 @@ $tabs['tabRoleUsers'] = array ( 'title' => _SYSTEM_LABELTAB_ROLEUSERS,
 if (!empty($_GET['roleTabItem']))  $_SESSION['system']['roleTabItem'] = $_GET['roleTabItem'];
 if (!isset($_SESSION['system']['roleTabItem'])) $_SESSION['system']['roleTabItem'] = '';
 
-echo $skin->create_tabs('',$tabs, $_SESSION['system']['roleTabItem']);
+echo $skin->create_tabs($tabs, $_SESSION['system']['roleTabItem']);
 
 echo $skin->open_simplebloc();
 
@@ -89,22 +89,22 @@ switch($_SESSION['system']['roleTabItem'])
         switch($op)
         {
             case 'modify_role':
-                include('./modules/system/admin_index_roles_form.php');
+                include './modules/system/admin_index_roles_form.php';
             break;
 
             default:
-                include('./modules/system/admin_index_roles_management.php');
+                include './modules/system/admin_index_roles_management.php';
             break;
 
         }
     break;
 
     case 'tabRoleAdd':
-        include('./modules/system/admin_index_roles_form.php');
+        include './modules/system/admin_index_roles_form.php';
     break;
 
     case 'tabRoleUsers':
-        include('./modules/system/admin_index_roles_assignment.php');
+        include './modules/system/admin_index_roles_assignment.php';
     break;
 }
 

@@ -38,7 +38,7 @@ $ploopi_timer->start();
 
 if (!file_exists('./config/config.php'))
 {
-    include_once('./config/install.php');
+    include_once './config/install.php';
     ploopi_die();
 }
 include_once './config/config.php'; // load config (mysql, path, etc.)
@@ -193,7 +193,7 @@ if ($_SESSION['ploopi']['mode'] != 'web')
     $_SESSION['ploopi']['mode'] = 'web';
 
 
-    include_once ('./include/load_param.php');
+    include './include/load_param.php';
     ploopi_loadparams();
 }
 ?>

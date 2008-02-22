@@ -42,7 +42,7 @@ function forms_field_validate(form)
     t = form.field_type;
     if (t.value == 'select' || t.value == 'radio' || t.value == 'checkbox' || t.value == 'color')
     {
-        for (i=0;i<form.f_values.length;i++)
+        for (i = 0; i < form.f_values.length; i++)
         {
             if (form.field_values.value != '') form.field_values.value += '||';
             form.field_values.value += form.f_values[i].value;

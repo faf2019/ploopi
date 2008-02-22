@@ -49,7 +49,7 @@ $template_body->assign_block_vars('ploopi_js',array('PATH' => "./lib/prototype/p
 $template_body->assign_block_vars('ploopi_js',array('PATH' => "./js/functions.pack.js"));
 
 ob_start();
-include('./include/javascript.php');
+include './include/javascript.php';
 $additional_javascript = ob_get_contents();
 @ob_end_clean();
 
@@ -58,7 +58,7 @@ if ($_SESSION['ploopi']['connected'])
 {
     // GET MODULE ADDITIONAL HEAD
     ob_start();
-    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/head.php")) include("./modules/{$_SESSION['ploopi']['moduletype']}/include/head.php");
+    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/head.php")) include "./modules/{$_SESSION['ploopi']['moduletype']}/include/head.php";
     $additional_head = ob_get_contents();
     @ob_end_clean();
 
@@ -80,7 +80,7 @@ if ($_SESSION['ploopi']['connected'])
 
 
     // GET BLOCKS
-    include_once('./include/blocks.php');
+    include_once './include/blocks.php';
 
     foreach($arrModules as $modtype)
     {
@@ -88,7 +88,7 @@ if ($_SESSION['ploopi']['connected'])
         if (file_exists("./modules/{$modtype}/include/javascript.php"))
         {
             ob_start();
-            include("./modules/{$modtype}/include/javascript.php");
+            include "./modules/{$modtype}/include/javascript.php";
             $additional_javascript .= ob_get_contents();
             @ob_end_clean();
         }
@@ -169,11 +169,11 @@ if ($_SESSION['ploopi']['connected'])
     {
         if ($_SESSION['ploopi']['action'] == 'admin')
         {
-            if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/admin.php")) include_once("./modules/{$_SESSION['ploopi']['moduletype']}/admin.php");
+            if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/admin.php")) include_once "./modules/{$_SESSION['ploopi']['moduletype']}/admin.php";
         }
         else
         {
-            if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/public.php")) include_once("./modules/{$_SESSION['ploopi']['moduletype']}/public.php");
+            if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/public.php")) include_once "./modules/{$_SESSION['ploopi']['moduletype']}/public.php";
         }
 
     }

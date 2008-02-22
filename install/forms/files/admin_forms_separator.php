@@ -82,7 +82,7 @@ if (!$field->new)
 
 <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;padding:4px;overflow:auto;text-align:right;">
     <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?op=forms_modify&forms_id={$_GET['forms_id']}"); ?>'">
-    <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>"></td>
+    <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
 </div>
 </form>
 

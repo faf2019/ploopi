@@ -22,7 +22,7 @@
 */
 ?>
 <?
-include_once('./modules/system/class_workspace_user_role.php');
+include_once './modules/system/class_workspace_user_role.php';
 
 class workspace_user extends data_object
 {
@@ -115,7 +115,7 @@ class workspace_user extends data_object
             $admin_moduleid = $fields['id'];
 
             echo "<br><b>&laquo; {$fields['label']} &raquo;</b> ({$fields['moduletype']})<br>";
-            if (file_exists("./modules/{$fields['moduletype']}/include/admin_user_delete.php")) include("./modules/{$fields['moduletype']}/include/admin_user_delete.php");
+            if (file_exists("./modules/{$fields['moduletype']}/include/admin_user_delete.php")) include "./modules/{$fields['moduletype']}/include/admin_user_delete.php";
         }
 
         parent::delete();

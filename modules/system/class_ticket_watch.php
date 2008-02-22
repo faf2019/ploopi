@@ -22,7 +22,7 @@
 */
 ?>
 <?
-include_once('./include/classes/class_data_object.php');
+include_once './include/classes/class_data_object.php';
 
 class ticket_watch extends data_object
 {

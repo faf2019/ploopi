@@ -21,10 +21,10 @@
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 ?>
-<TABLE CELLPADDING="2" CELLSPACING="1" ALIGN="CENTER">
 <FORM NAME="form_modify_group" ACTION="<? echo $scriptenv ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="op" VALUE="save_group">
 <INPUT TYPE="HIDDEN" NAME="org_id" VALUE="<? echo $org_id; ?>">
+<TABLE CELLPADDING="2" CELLSPACING="1" ALIGN="CENTER">
 <TR>
 	<TD ALIGN=RIGHT><? echo _SYSTEM_LABEL_LEVEL; ?>:&nbsp;</TD>
 	<TD ALIGN=LEFT>
@@ -67,5 +67,5 @@
 		<INPUT TYPE="Submit" class="flatbutton" VALUE="<? echo _PLOOPI_SAVE; ?>">
 	</TD>
 </TR>
-</FORM>
 </TABLE>
+</FORM>

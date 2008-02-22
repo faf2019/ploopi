@@ -22,7 +22,7 @@
 */
 ?>
 <?
-include_once('./modules/system/class_workspace_group_role.php');
+include_once './modules/system/class_workspace_group_role.php';
 
 class workspace_group extends data_object
 {
@@ -113,7 +113,7 @@ class workspace_group extends data_object
             $admin_moduleid = $fields['id'];
 
             echo "<br><b>« {$fields['label']} »</b> ({$fields['moduletype']})<br>";
-            if (file_exists("./modules/{$fields['moduletype']}/include/admin_org_delete.php")) include("./modules/{$fields['moduletype']}/include/admin_org_delete.php");
+            if (file_exists("./modules/{$fields['moduletype']}/include/admin_org_delete.php")) include "./modules/{$fields['moduletype']}/include/admin_org_delete.php";
         }
         parent::delete();
     }

@@ -22,8 +22,8 @@
 */
 ?>
 <?
-include_once('./include/classes/class_data_object.php');
-include_once('./modules/system/class_role_action.php');
+include_once './include/classes/class_data_object.php';
+include_once './modules/system/class_role_action.php';
 
 class mb_action extends data_object
 {

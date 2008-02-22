@@ -31,7 +31,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
          * */
 
         case 'tickets_delete':
-            include_once('./modules/system/class_ticket.php');
+            include_once './modules/system/class_ticket.php';
 
             if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
             {
@@ -53,7 +53,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         $ticket->save();
                     }
 
-                    include_once('./modules/system/class_ticket_dest.php');
+                    include_once './modules/system/class_ticket_dest.php';
                     $ticket_dest = new ticket_dest();
                     if ($ticket_dest->open($_SESSION['ploopi']['userid'], $ticket_id))
                     {
@@ -67,11 +67,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
         break;
 
         case 'tickets_send':
-            include_once('./modules/system/class_ticket.php');
+            include_once './modules/system/class_ticket.php';
             $ticket = new ticket();
             if (isset($_POST['ticket_id']) && is_numeric($_POST['ticket_id']) && isset($_POST['fck_ticket_message']) && $ticket->open($_POST['ticket_id']))
             {
-                include_once('./modules/system/class_ticket_dest.php');
+                include_once './modules/system/class_ticket_dest.php';
 
                 $root_ticket = new ticket();
                 if ($ticket->fields['root_id'] && $root_ticket->open($ticket->fields['root_id']))
@@ -145,7 +145,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 <tr>
                     <td>
                     <?
-                    include_once('./FCKeditor/fckeditor.php') ;
+                    include_once './FCKeditor/fckeditor.php' ;
 
                     $oFCKeditor = new FCKeditor('fck_ticket_message') ;
 
@@ -226,7 +226,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     <tr>
                         <td>
                         <?
-                        include_once('./FCKeditor/fckeditor.php') ;
+                        include_once './FCKeditor/fckeditor.php' ;
 
                         $oFCKeditor = new FCKeditor('fck_ticket_message') ;
 
@@ -264,7 +264,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
         break;
 
         case 'tickets_modify_next':
-            include_once('./modules/system/class_ticket.php');
+            include_once './modules/system/class_ticket.php';
             $ticket = new ticket();
             if (isset($_POST['ticket_id']) && is_numeric($_POST['ticket_id']) && isset($_POST['fck_ticket_message']) && $ticket->open($_POST['ticket_id']))
             {
@@ -441,7 +441,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
             foreach($_SESSION['ploopi']['tickets']['users_selected'] as $user_id)
             {
-                include_once('./modules/system/class_user.php');
+                include_once './modules/system/class_user.php';
 
                 $user = new user();
                 $user->open($user_id);
@@ -461,13 +461,13 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
 
         case 'tickets_open':
-            include_once('./modules/system/class_ticket.php');
+            include_once './modules/system/class_ticket.php';
             $ticket = new ticket();
 
             if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']) && $ticket->open($_GET['ticket_id']))
             {
-                include_once('./modules/system/class_ticket_watch.php');
-                include_once('./modules/system/class_ticket_status.php');
+                include_once './modules/system/class_ticket_watch.php';
+                include_once './modules/system/class_ticket_status.php';
 
                 $ticket_status = new ticket_status();
 
@@ -549,7 +549,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
         break;
 
         case 'tickets_validate':
-            include_once('./modules/system/class_ticket_status.php');
+            include_once './modules/system/class_ticket_status.php';
             $ticket_status = new ticket_status();
 
             if (!empty($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
@@ -573,7 +573,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
          * */
 
         case 'system_search':
-            include_once('./modules/system/public_search_result.php');
+            include_once './modules/system/public_search_result.php';
             ploopi_die();
         break;
 

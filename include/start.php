@@ -334,7 +334,7 @@ if ($ploopi_initsession)
 
     if ($_SESSION['ploopi']['userid'] != 0)
     {
-        include_once ('./include/load_param.php');
+        include './include/load_param.php';
 
         $user = new user();
         $user->open($_SESSION['ploopi']['userid']);
@@ -419,7 +419,7 @@ if ($ploopi_initsession)
 
 }
 
-if (!$_SESSION['ploopi']['paramloaded']) include_once ('./include/load_param.php');
+if (!$_SESSION['ploopi']['paramloaded']) include './include/load_param.php';
 
 if (!empty($login_redirect)) ploopi_redirect($login_redirect, false);
 
@@ -710,7 +710,7 @@ if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language'] != 
 else include_once "./lang/french.php"; // default language file (french)
 
 // LANGUAGES LIST
-include_once('./modules/system/class_param_type.php');
+include_once './modules/system/class_param_type.php';
 $param_type = new param_type();
 //if (!isset($_SESSION['ploopi']['languages'])) $_SESSION['ploopi']['languages'] = $param_type->getallchoices(_PLOOPI_PARAMTYPE_LANGUAGE);
 

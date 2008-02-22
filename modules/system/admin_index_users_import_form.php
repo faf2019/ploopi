@@ -65,5 +65,5 @@
             Dans le cas contraire, ils seront encryptés en MD5.
         </td>
     </tr>
-</form>
 </table>
+</form>

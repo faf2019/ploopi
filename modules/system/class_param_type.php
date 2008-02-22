@@ -21,8 +21,8 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once('./include/classes/class_data_object.php');
-include_once('./modules/system/class_param_choice.php');
+include_once './include/classes/class_data_object.php';
+include_once './modules/system/class_param_choice.php';
 
 class param_type extends data_object
 {

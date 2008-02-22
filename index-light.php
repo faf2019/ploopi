@@ -79,8 +79,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mode'] == 'admin')
 
     // GET MODULE ADDITIONAL JS
     ob_start();
-    include('./include/javascript.php');
-    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/javascript.php")) include("./modules/{$_SESSION['ploopi']['moduletype']}/include/javascript.php");
+    include './include/javascript.php';
+    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/javascript.php")) include "./modules/{$_SESSION['ploopi']['moduletype']}/include/javascript.php";
     $additional_javascript = ob_get_contents();
     @ob_end_clean();
 
@@ -91,11 +91,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mode'] == 'admin')
     {
         if ($_SESSION['ploopi']['action'] == 'admin')
         {
-            if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/admin.php")) include_once("./modules/{$_SESSION['ploopi']['moduletype']}/admin.php");
+            if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/admin.php")) include_once "./modules/{$_SESSION['ploopi']['moduletype']}/admin.php";
         }
         else
         {
-            if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/public.php")) include_once("./modules/{$_SESSION['ploopi']['moduletype']}/public.php");
+            if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/public.php")) include_once "./modules/{$_SESSION['ploopi']['moduletype']}/public.php";
         }
 
     }

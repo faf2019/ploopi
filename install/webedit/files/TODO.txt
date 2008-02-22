@@ -1,2 +1,0 @@
-- Si changement de position puis publication, modifier la position des autres pages sans "republier"
-- 

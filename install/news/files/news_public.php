@@ -27,10 +27,20 @@ if (!$ploopi_cache->start("news_public"))
     
     echo $skin->create_pagetitle($_SESSION['session_env']['modulelabel'],'100%');
     
-    $select = 
-    "SELECT ploopi_mod_news_entry.*, ploopi_mod_news_cat.name as titlecat 
-    FROM ploopi_mod_news_entry LEFT JOIN ploopi_mod_news_cat ON ploopi_mod_news_cat.id = ploopi_mod_news_entry.id_cat 
-    WHERE ploopi_mod_news_entry.id_module = $_SESSION['session_env']['moduleid'] ORDER BY titlecat, ploopi_mod_news_entry.name";
+    $select =   "
+                SELECT      ploopi_mod_news_entry.*, 
+                            ploopi_mod_news_cat.name as titlecat 
+                
+                FROM        ploopi_mod_news_entry 
+
+                LEFT JOIN   ploopi_mod_news_cat 
+                ON          ploopi_mod_news_cat.id = ploopi_mod_news_entry.id_cat
+                
+                WHERE       ploopi_mod_news_entry.id_module = {$_SESSION['session_env']['moduleid']} 
+                
+                ORDER BY    titlecat, 
+                            ploopi_mod_news_entry.name
+                ";
     
     $result = $db->query($select);
     

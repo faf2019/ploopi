@@ -21,9 +21,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once('./include/classes/class_data_object.php');
-include_once('./modules/system/class_group_user.php');
-include_once('./modules/system/class_workspace_user.php');
+include_once './include/classes/class_data_object.php';
+include_once './modules/system/class_group_user.php';
+include_once './modules/system/class_workspace_user.php';
 
 class user extends data_object
 {
@@ -200,7 +200,7 @@ class user extends data_object
             $admin_moduleid = $fields['id'];
 
             echo "<br><b>« {$fields['label']} »</b> ({$fields['moduletype']})<br>";
-            if (file_exists("./modules/{$fields['moduletype']}/include/admin_user_create.php")) include("./modules/{$fields['moduletype']}/include/admin_user_create.php");
+            if (file_exists("./modules/{$fields['moduletype']}/include/admin_user_create.php")) include "./modules/{$fields['moduletype']}/include/admin_user_create.php";
         }
 
     }

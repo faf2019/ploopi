@@ -547,7 +547,7 @@ function webedit_getobjectcontent($matches)
                 foreach ($tab as $key => $value) eval("$".$value.";");
 
                 ob_start();
-                include("./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php");
+                include "./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php";
                 $content .= ob_get_contents();
                 ob_end_clean();
             }

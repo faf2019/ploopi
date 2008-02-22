@@ -74,7 +74,7 @@ while($rssfeed_row = $db->fetchrow($rssfeed_result))
 
 if ($block_rssfeed_id)
 {
-    include_once('./modules/rss/class_rss_feed.php');
+    include_once './modules/rss/class_rss_feed.php';
     $rss_feed = new rss_feed();
     $rss_feed->open($block_rssfeed_id);
 

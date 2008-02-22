@@ -138,14 +138,14 @@ switch($op)
         if (!isset($_SESSION['news']['newsTabItem'])) $_SESSION['news']['newsTabItem'] = '';
 
         echo $skin->create_pagetitle(str_replace("LABEL",$_SESSION['ploopi']['modulelabel'],_NEWS_PAGE_TITLE));
-        echo $skin->create_tabs('',$tabs,$_SESSION['news']['newsTabItem']);
+        echo $skin->create_tabs($tabs,$_SESSION['news']['newsTabItem']);
 
         switch($op)
         {
             case 'modify_newscat':
                 $newscat = new newscat();
                 $newscat->open($newscat_id);
-                include('./modules/news/admin_newscat_modify.php');
+                include './modules/news/admin_newscat_modify.php';
             break;
 
             default:
@@ -153,20 +153,20 @@ switch($op)
                 {
                     case 'tabNewsModify':
                         $news = new news();
-                        include('./modules/news/admin_news_modify.php');
+                        include './modules/news/admin_news_modify.php';
                     break;
 
                     case 'tabNewsWrite':
                         $news = new news();
                         $news->init_description();
-                        include('./modules/news/admin_news_write.php');
+                        include './modules/news/admin_news_write.php';
                     break;
 
                     case 'tabNewsCatModify':
                         if (ploopi_isactionallowed(_NEWS_ACTION_MANAGECAT))
                         {
                             $newscat = new newscat();
-                            include('./modules/news/admin_newscat_modify.php');
+                            include './modules/news/admin_newscat_modify.php';
                         }
                     break;
 
@@ -175,7 +175,7 @@ switch($op)
                         {
                             $newscat = new newscat();
                             $newscat->init_description();
-                            include('./modules/news/admin_newscat_write.php');
+                            include './modules/news/admin_newscat_write.php';
                         }
                     break;
                 }

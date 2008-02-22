@@ -22,7 +22,7 @@
 */
 ?>
 <?
-include_once('./include/classes/class_data_object.php');
+include_once './include/classes/class_data_object.php';
 
 class homepage_column extends data_object
 {

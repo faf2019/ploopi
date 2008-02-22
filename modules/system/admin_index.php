@@ -56,92 +56,88 @@ switch ($_SESSION['system']['level'])
         if (!empty($_GET['wspToolbarItem']))  $_SESSION['system']['wspToolbarItem'] = $_GET['wspToolbarItem'];
         if (!isset($_SESSION['system']['wspToolbarItem'])) $_SESSION['system']['wspToolbarItem'] = '';
         echo $skin->create_toolbar($toolbar,$_SESSION['system']['wspToolbarItem']);
-        ?>
-        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-            <td align="left" valign="top">
-            <?
 
-            switch($_SESSION['system']['wspToolbarItem'])
-            {
-                // ---------------
-                // ONGLET "GROUPE"
-                // ---------------
-                case 'tabGroups':
-                    switch($op)
-                    {
-                        case 'save_group' :
-                            $group = new group();
+        switch($_SESSION['system']['wspToolbarItem'])
+        {
+            // ---------------
+            // ONGLET "GROUPE"
+            // ---------------
+            case 'tabGroups':
+                switch($op)
+                {
+                    case 'save_group' :
+                        $group = new group();
 
-                            if (!empty($_POST['group_id']) && is_numeric($_POST['group_id'])) $group->open($_POST['group_id']);
+                        if (!empty($_POST['group_id']) && is_numeric($_POST['group_id'])) $group->open($_POST['group_id']);
 
-                            if (!empty($_POST['group_id_group']) && is_numeric($_POST['group_id_group']))
-                            {
-                                $parent_group = new group();
-                                $parent_group->open($_POST['group_id_group']);
-                                $group->fields['parents'] = "{$parent_group->fields['parents']};{$_POST['group_id_group']}";
-                            }
+                        if (!empty($_POST['group_id_group']) && is_numeric($_POST['group_id_group']))
+                        {
+                            $parent_group = new group();
+                            $parent_group->open($_POST['group_id_group']);
+                            $group->fields['parents'] = "{$parent_group->fields['parents']};{$_POST['group_id_group']}";
+                        }
 
-                            $group->setvalues($_POST,'group_');
-                            if (empty($_POST['group_shared'])) $group->fields['shared'] = 0;
+                        $group->setvalues($_POST,'group_');
+                        if (empty($_POST['group_shared'])) $group->fields['shared'] = 0;
 
-                            $group_id = $group->save();
+                        $group_id = $group->save();
 
-                            if ($group->new) ploopi_create_user_action_log(_SYSTEM_ACTION_CREATEGROUP, "{$group->fields['label']} ({$group_id})");
-                            else ploopi_create_user_action_log(_SYSTEM_ACTION_MODIFYGROUP, "{$group->fields['label']} ({$group_id})");
+                        if ($group->new) ploopi_create_user_action_log(_SYSTEM_ACTION_CREATEGROUP, "{$group->fields['label']} ({$group_id})");
+                        else ploopi_create_user_action_log(_SYSTEM_ACTION_MODIFYGROUP, "{$group->fields['label']} ({$group_id})");
+
+                        unset($_SESSION['system']['groups']);
+                        unset($_SESSION['system']['workspaces']);
+
+                        ploopi_redirect("{$scriptenv}?groupid={$group_id}&reloadsession");
+                    break;
+
+                    case 'child' :
+                        include './modules/system/admin_index_group_add.php';
+                    break;
+
+                    case 'clone' :
+                        $clone = $group->createclone();
+                        $groupid = $clone->save();
+                        ploopi_create_user_action_log(_SYSTEM_ACTION_CLONEGROUP, "{$clone->fields['label']} ({$groupid})");
+
+                        unset($_SESSION['system']['groups']);
+                        unset($_SESSION['system']['workspaces']);
+
+                        ploopi_redirect("{$scriptenv}?groupid={$groupid}");
+                    break;
+
+                    case 'delete' :
+                        $sizeof_groups = sizeof($group->getgroupchildrenlite());
+                        $sizeof_users = sizeof($group->getusers());
+                        if (!$sizeof_groups && !$sizeof_users)
+                        {
+                            ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEGROUP, "{$group->fields['label']} ({$group->fields['id_group']})");
+                            $group->delete();
 
                             unset($_SESSION['system']['groups']);
                             unset($_SESSION['system']['workspaces']);
 
-                            ploopi_redirect("{$scriptenv}?groupid={$group_id}&reloadsession");
-                        break;
+                            if(!empty($group->fields['id_workspace'])) ploopi_redirect("{$scriptenv}?workspaceid={$group->fields['id_workspace']}");
+                            else ploopi_redirect("{$scriptenv}?groupid={$group->fields['id_group']}");
+                        }
 
-                        case 'child' :
-                            include './modules/system/admin_index_group_add.php';
-                        break;
+                        ploopi_redirect($scriptenv);
+                    break;
 
-                        case 'clone' :
-                            $clone = $group->createclone();
-                            $groupid = $clone->save();
-                            ploopi_create_user_action_log(_SYSTEM_ACTION_CLONEGROUP, "{$clone->fields['label']} ({$groupid})");
-
-                            unset($_SESSION['system']['groups']);
-                            unset($_SESSION['system']['workspaces']);
-
-                            ploopi_redirect("{$scriptenv}?groupid={$groupid}");
-                        break;
-
-                        case 'delete' :
-                            $sizeof_groups = sizeof($group->getgroupchildrenlite());
-                            $sizeof_users = sizeof($group->getusers());
-                            if (!$sizeof_groups && !$sizeof_users)
-                            {
-                                ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEGROUP, "{$group->fields['label']} ({$group->fields['id_group']})");
-                                $group->delete();
-
-                                unset($_SESSION['system']['groups']);
-                                unset($_SESSION['system']['workspaces']);
-
-                                if(!empty($group->fields['id_workspace'])) ploopi_redirect("{$scriptenv}?workspaceid={$group->fields['id_workspace']}");
-                                else ploopi_redirect("{$scriptenv}?groupid={$group->fields['id_group']}");
-                            }
-
-                            ploopi_redirect($scriptenv);
-                        break;
-
-                        default :
-                            include_once './modules/system/admin_index_group.php';
-                        break;
-                    }
-                BREAK;
-                // ---------------------
-                // USER MANAGEMENT
-                // ---------------------
-                case 'tabUsers':
-                    include_once './modules/system/admin_index_users.php';
-                break;
-            } // switch
-        break;
+                    default :
+                        include_once './modules/system/admin_index_group.php';
+                    break;
+                }
+            break;
+            
+            // ---------------------
+            // USER MANAGEMENT
+            // ---------------------
+            case 'tabUsers':
+                include_once './modules/system/admin_index_users.php';
+            break;
+        } // switch
+    break;
 
     case _SYSTEM_WORKSPACES :
         $workspace = new workspace();
@@ -205,206 +201,72 @@ switch ($_SESSION['system']['level'])
         if (!empty($_GET['wspToolbarItem']))  $_SESSION['system']['wspToolbarItem'] = $_GET['wspToolbarItem'];
         if (!isset($_SESSION['system']['wspToolbarItem'])) $_SESSION['system']['wspToolbarItem'] = '';
         echo $skin->create_toolbar($toolbar,$_SESSION['system']['wspToolbarItem']);
-        ?>
-        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-            <td align="left" valign="top">
-            <?
 
-            switch($_SESSION['system']['wspToolbarItem'])
-            {
-                // ---------------
-                // ONGLET "ESPACE DE TRAVAIL"
-                // ---------------
-                case 'tabWorkspaces':
-                    switch($op)
-                    {
-                        case 'save_group' :
-                            $group = new group();
+        switch($_SESSION['system']['wspToolbarItem'])
+        {
+            // ---------------
+            // ONGLET "ESPACE DE TRAVAIL"
+            // ---------------
+            case 'tabWorkspaces':
+                switch($op)
+                {
+                    case 'save_group' :
+                        $group = new group();
 
-                            $group->setvalues($_POST,'group_');
-                            if (empty($_POST['group_shared'])) $group->fields['shared'] = 0;
-                            $group->fields['id_group'] = 1;
-                            $group->fields['id_workspace'] = $workspaceid;
-                            $group->fields['parents'] = '0;1';
+                        $group->setvalues($_POST,'group_');
+                        if (empty($_POST['group_shared'])) $group->fields['shared'] = 0;
+                        $group->fields['id_group'] = 1;
+                        $group->fields['id_workspace'] = $workspaceid;
+                        $group->fields['parents'] = '0;1';
 
-                            $group_id = $group->save();
+                        $group_id = $group->save();
 
-                            ploopi_create_user_action_log(_SYSTEM_ACTION_CREATEGROUP, "{$group->fields['label']} ($group_id)");
+                        ploopi_create_user_action_log(_SYSTEM_ACTION_CREATEGROUP, "{$group->fields['label']} ($group_id)");
 
-                            unset($_SESSION['system']['groups']);
-                            unset($_SESSION['system']['workspaces']);
+                        unset($_SESSION['system']['groups']);
+                        unset($_SESSION['system']['workspaces']);
 
-                            ploopi_redirect("{$scriptenv}?groupid={$group_id}&reloadsession");
-                        break;
+                        ploopi_redirect("{$scriptenv}?groupid={$group_id}&reloadsession");
+                    break;
 
 
-                        case 'save_workspace' :
+                    case 'save_workspace' :
 
-                            $workspace = new workspace();
-                            if (!empty($_POST['workspace_id']) && is_numeric($_POST['workspace_id'])) $workspace->open($_POST['workspace_id']);
+                        $workspace = new workspace();
+                        if (!empty($_POST['workspace_id']) && is_numeric($_POST['workspace_id'])) $workspace->open($_POST['workspace_id']);
 
-                            $workspace->setvalues($_POST,'workspace_');
+                        $workspace->setvalues($_POST,'workspace_');
 
-                            if (!empty($_POST['workspace_id_workspace']))
-                            {
-                                $parent_workspace = new workspace();
-                                $parent_workspace->open($_POST['workspace_id_workspace']);
-                                $workspace->fields['parents'] = "{$parent_workspace->fields['parents']};{$_POST['workspace_id_workspace']}";
-                            }
+                        if (!empty($_POST['workspace_id_workspace']))
+                        {
+                            $parent_workspace = new workspace();
+                            $parent_workspace->open($_POST['workspace_id_workspace']);
+                            $workspace->fields['parents'] = "{$parent_workspace->fields['parents']};{$_POST['workspace_id_workspace']}";
+                        }
 
-                            if (empty($_POST['workspace_admin'])) $workspace->fields['admin'] = 0;
-                            if (empty($_POST['workspace_web'])) $workspace->fields['web'] = 0;
-                            if (empty($_POST['workspace_mustdefinerule'])) $workspace->fields['mustdefinerule'] = 0;
+                        if (empty($_POST['workspace_admin'])) $workspace->fields['admin'] = 0;
+                        if (empty($_POST['workspace_web'])) $workspace->fields['web'] = 0;
+                        if (empty($_POST['workspace_mustdefinerule'])) $workspace->fields['mustdefinerule'] = 0;
 
 
-                            $workspace_id = $workspace->save();
+                        $workspace_id = $workspace->save();
 
-                            if ($workspace->new) ploopi_create_user_action_log(_SYSTEM_ACTION_CREATEWORKSPACE, "{$workspace->fields['label']} ({$workspace_id})");
-                            else ploopi_create_user_action_log(_SYSTEM_ACTION_MODIFYWORKSPACE, "{$workspace->fields['label']} ({$workspace_id})");
+                        if ($workspace->new) ploopi_create_user_action_log(_SYSTEM_ACTION_CREATEWORKSPACE, "{$workspace->fields['label']} ({$workspace_id})");
+                        else ploopi_create_user_action_log(_SYSTEM_ACTION_MODIFYWORKSPACE, "{$workspace->fields['label']} ({$workspace_id})");
 
-                            system_updateparents();
+                        system_updateparents();
 
-                            foreach($heritedmodule as $instance)
-                            {
-                                $data = explode(',',$instance);
-                                $instancetype = $data[0];
-                                if ($instancetype == 'NEW')
-                                {
-                                    $moduletype_id = $data[1];
-                                    $module_type = new module_type();
-                                    $module_type->open($moduletype_id);
-
-                                    ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
-
-                                    $module = $module_type->createinstance($workspace_id);
-                                    $module_id = $module->save();
-
-                                    $module_workspace = new module_workspace();
-                                    $module_workspace->fields['id_module'] = $module_id;
-                                    $module_workspace->fields['id_workspace'] = $workspace_id;
-                                    $module_workspace->save();
-                                }
-                                elseif ($instancetype == 'SHARED')
-                                {
-                                    $module_id = $data[1];
-                                    $module = new module();
-                                    $module->open($module_id);
-
-                                    ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module->fields['label']);
-
-                                    $module_workspace = new module_workspace();
-                                    $module_workspace->fields['id_module'] = $module_id;
-                                    $module_workspace->fields['id_workspace'] = $workspace_id;
-                                    $module_workspace->save();
-                                }
-                            }
-
-                            unset($_SESSION['system']['groups']);
-                            unset($_SESSION['system']['workspaces']);
-
-                            ploopi_redirect("{$scriptenv}?workspaceid={$workspace_id}&reloadsession");
-                        break;
-
-                        case 'groupchild':
-                            include './modules/system/admin_index_group_add.php';
-                        break;
-
-                        case 'child' :
-                            include './modules/system/admin_index_workspace_add.php';
-                        break;
-
-                        case 'clone' :
-                            $clone = $workspace->createclone();
-                            $workspaceid = $clone->save();
-                            ploopi_create_user_action_log(_SYSTEM_ACTION_CLONEGROUP, "{$clone->fields['label']} ($workspaceid)");
-
-                            // get father
-
-                            if ($father = $workspace->getfather())
-                            {
-                                $modules = $father->getsharedmodules(TRUE);
-
-                                // inherit shared modules from father to clone (brother) of current group
-                                foreach($modules as $moduleid => $module)
-                                {
-                                    $module_workspace = new module_workspace();
-                                    $module_workspace->fields['id_workspace'] = $workspaceid;
-                                    $module_workspace->fields['id_module'] = $moduleid;
-                                    $module_workspace->save();
-                                }
-                            }
-
-                            unset($_SESSION['system']['groups']);
-                            unset($_SESSION['system']['workspaces']);
-
-                            ploopi_redirect("$scriptenv?workspaceid=$workspaceid");
-                        break;
-
-                        case 'delete' :
-                            $sizeof_workspaces = sizeof($workspace->getworkspacechildrenlite());
-                            $sizeof_users = sizeof($workspace->getusers());
-                            if (!$sizeof_workspaces && !$sizeof_users)
-                            {
-                                $modules = $workspace->getmodules();
-
-                                foreach ($modules AS $moduleid => $moduleinfos)
-                                {
-                                    $module = new module();
-                                    $module->open($moduleid);
-
-                                    // Si le module appartient au groupe, on supprime le module
-                                    if ($moduleinfos['instanceworkspace'] == $workspaceid)
-                                    {
-                                        $module->delete();
-                                    }
-                                    else
-                                    {
-                                        $module->unlink($workspaceid);
-                                    }
-                                }
-
-                                $idfather = $workspace->fields['id_workspace'];
-                                ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEGROUP, "{$workspace->fields['label']} ({$workspace->fields['id_workspace']})");
-                                $workspace->delete();
-
-                                unset($_SESSION['system']['groups']);
-                                unset($_SESSION['system']['workspaces']);
-
-                                ploopi_redirect("$scriptenv?workspaceid=$idfather");
-                            }
-                            else ploopi_redirect($scriptenv);
-                        break;
-
-                        default :
-                            include_once './modules/system/admin_index_workspace.php';
-                        break;
-                    }
-                break;
-
-                case 'tabModules':
-                    switch ($op)
-                    {
-                        case 'add' :
-                            if (empty($_GET['instance'])) ploopi_redirect($scriptenv);
-
-                            global $admin_redirect;
-                            $admin_redirect = true;
-
-                            //  create new instance or attach existing instance to current group
-                            $data = explode(',',$_GET['instance']);
+                        foreach($heritedmodule as $instance)
+                        {
+                            $data = explode(',',$instance);
                             $instancetype = $data[0];
-                            $workspace_id = $data[1];
                             if ($instancetype == 'NEW')
                             {
-                                $moduletype_id = $data[2];
+                                $moduletype_id = $data[1];
                                 $module_type = new module_type();
                                 $module_type->open($moduletype_id);
 
                                 ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
-
-                                echo $skin->open_simplebloc(str_replace('<LABEL>',$module_type->fields['label'],_SYSTEM_LABEL_MODULEINSTANCIATION),'100%');
-                                echo "<TABLE CELLPADDING=\"2\" CELLSPACING=\"1\"><TR><TD>";
 
                                 $module = $module_type->createinstance($workspace_id);
                                 $module_id = $module->save();
@@ -413,216 +275,348 @@ switch ($_SESSION['system']['level'])
                                 $module_workspace->fields['id_module'] = $module_id;
                                 $module_workspace->fields['id_workspace'] = $workspace_id;
                                 $module_workspace->save();
-
-                                if ($admin_redirect) ploopi_redirect("$scriptenv?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify");
-                                else
-                                {
-                                    ?>
-                                            </TD>
-                                        </TR>
-                                        <TR>
-                                            <TD ALIGN="RIGHT">
-                                            <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<? echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<? echo "$scriptenv?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify"; ?>'">
-                                            </TD>
-                                        </TR>
-                                        </TABLE>
-                                    <?
-                                    echo $skin->close_simplebloc();
-                                }
                             }
                             elseif ($instancetype == 'SHARED')
                             {
+                                $module_id = $data[1];
                                 $module = new module();
                                 $module->open($module_id);
 
                                 ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module->fields['label']);
 
-                                $module_id = $data[2];
                                 $module_workspace = new module_workspace();
                                 $module_workspace->fields['id_module'] = $module_id;
                                 $module_workspace->fields['id_workspace'] = $workspace_id;
                                 $module_workspace->save();
-                                if ($admin_redirect) ploopi_redirect("{$scriptenv}?reloadsession");
                             }
-                            else ploopi_redirect("{$scriptenv}?reloadsession");
-                        break;
+                        }
 
-                        case 'switch_active':
-                        case 'switch_public':
-                        case 'switch_shared':
-                        case 'switch_herited':
-                            if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
-                            {
-                                $module = new module();
-                                $module->open($_GET['moduleid']);
-                                ploopi_create_user_action_log(_SYSTEM_ACTION_PARAMMODULE, $module->fields['label']);
+                        unset($_SESSION['system']['groups']);
+                        unset($_SESSION['system']['workspaces']);
 
-                                if ($op == 'switch_active') $module->fields['active'] = ($module->fields['active']+1)%2;
-                                if ($op == 'switch_public') $module->fields['public'] = ($module->fields['public']+1)%2;
-                                if ($op == 'switch_shared') $module->fields['shared'] = ($module->fields['shared']+1)%2;
-                                if ($op == 'switch_herited') $module->fields['herited'] = ($module->fields['herited']+1)%2;
+                        ploopi_redirect("{$scriptenv}?workspaceid={$workspace_id}&reloadsession");
+                    break;
 
-                                $module->save();
-                                ploopi_redirect("{$scriptenv}?reloadsession");
-                            }
-                            else ploopi_redirect($scriptenv);
-                        break;
+                    case 'groupchild':
+                        include './modules/system/admin_index_group_add.php';
+                    break;
 
-                        case 'moveup' :
-                            if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
-                            {
-                                $module_workspace = new module_workspace();
-                                $module_workspace->open($workspaceid,$_GET['moduleid']);
-                                $module_workspace->changeposition('up');
-                                ploopi_redirect("{$scriptenv}?reloadsession");
-                            }
-                            else ploopi_redirect($scriptenv);
-                        break;
+                    case 'child' :
+                        include './modules/system/admin_index_workspace_add.php';
+                    break;
 
-                        case 'movedown' :
-                            if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
+                    case 'clone' :
+                        $clone = $workspace->createclone();
+                        $workspaceid = $clone->save();
+                        ploopi_create_user_action_log(_SYSTEM_ACTION_CLONEGROUP, "{$clone->fields['label']} ($workspaceid)");
+
+                        // get father
+
+                        if ($father = $workspace->getfather())
+                        {
+                            $modules = $father->getsharedmodules(TRUE);
+
+                            // inherit shared modules from father to clone (brother) of current group
+                            foreach($modules as $moduleid => $module)
                             {
                                 $module_workspace = new module_workspace();
-                                $module_workspace->open($workspaceid,$_GET['moduleid']);
-                                $module_workspace->changeposition('down');
-                                ploopi_redirect("{$scriptenv}?reloadsession");
+                                $module_workspace->fields['id_workspace'] = $workspaceid;
+                                $module_workspace->fields['id_module'] = $moduleid;
+                                $module_workspace->save();
                             }
-                            else ploopi_redirect($scriptenv);
-                        break;
+                        }
 
-                        case 'unlinkinstance' :
-                            if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
+                        unset($_SESSION['system']['groups']);
+                        unset($_SESSION['system']['workspaces']);
+
+                        ploopi_redirect("$scriptenv?workspaceid=$workspaceid");
+                    break;
+
+                    case 'delete' :
+                        $sizeof_workspaces = sizeof($workspace->getworkspacechildrenlite());
+                        $sizeof_users = sizeof($workspace->getusers());
+                        if (!$sizeof_workspaces && !$sizeof_users)
+                        {
+                            $modules = $workspace->getmodules();
+
+                            foreach ($modules AS $moduleid => $moduleinfos)
                             {
                                 $module = new module();
-                                $module->open($_GET['moduleid']);
-                                ploopi_create_user_action_log(_SYSTEM_ACTION_UNLINKMODULE, $module->fields['label']);
+                                $module->open($moduleid);
 
-                                $module_workspace = new module_workspace();
-                                $module_workspace->open($workspaceid,$_GET['moduleid']);
-                                $module_workspace->delete();
-                                ploopi_redirect("{$scriptenv}?reloadsession");
-                            }
-                            else ploopi_redirect($scriptenv);
-                        break;
-
-                        case 'save_module_props' :
-                            if (!empty($_POST['moduleid']) && is_numeric($_POST['moduleid']))
-                            {
-                                $module = new module();
-                                $module->open($_POST['moduleid']);
-                                ploopi_create_user_action_log(_SYSTEM_ACTION_CONFIGUREMODULE, $module->fields['label']);
-
-                                $module->setvalues($_POST,'module_');
-                                if (!isset($_POST['module_transverseview'])) $module->fields['transverseview'] = 0;
-                                if (!$module->fields['shared']) $module->fields['herited'] = 0;
-                                $module->save();
-
-                                ploopi_redirect("{$scriptenv}?moduleid={$module->fields['id']}&reloadsession");
-                            }
-                            else ploopi_redirect($scriptenv);
-                        break;
-
-                        case 'delete' :
-                            if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
-                            {
-                                global $admin_redirect;
-                                $admin_redirect = true;
-
-                                $module = new module();
-                                $module->open($_GET['moduleid']);
-
-                                ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEMODULE, $module->fields['label']);
-
-                                echo $skin->open_simplebloc(str_replace('<LABEL>',$module->fields['label'],_SYSTEM_LABEL_MODULEDELETE));
-                                echo "<TABLE CELLPADDING=\"2\" CELLSPACING=\"1\"><TR><TD>";
-
-                                $module->delete();
-
-                                if ($admin_redirect) ploopi_redirect("$scriptenv?reloadsession");
+                                // Si le module appartient au groupe, on supprime le module
+                                if ($moduleinfos['instanceworkspace'] == $workspaceid)
+                                {
+                                    $module->delete();
+                                }
                                 else
                                 {
-                                    ?>
-                                            </TD>
-                                        </TR>
-                                        <TR>
-                                            <TD ALIGN="RIGHT">
-                                            <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<? echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<? echo "$scriptenv?reloadsession"; ?>'">
-                                            </TD>
-                                        </TR>
-                                        </TABLE>
-                                    <?
-                                    echo $skin->close_simplebloc();
+                                    $module->unlink($workspaceid);
                                 }
                             }
-                        break;
 
-                        case 'apply_heritage' :
-                            if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
+                            $idfather = $workspace->fields['id_workspace'];
+                            ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEGROUP, "{$workspace->fields['label']} ({$workspace->fields['id_workspace']})");
+                            $workspace->delete();
+
+                            unset($_SESSION['system']['groups']);
+                            unset($_SESSION['system']['workspaces']);
+
+                            ploopi_redirect("$scriptenv?workspaceid=$idfather");
+                        }
+                        else ploopi_redirect($scriptenv);
+                    break;
+
+                    default :
+                        include_once './modules/system/admin_index_workspace.php';
+                    break;
+                }
+            break;
+
+            case 'tabModules':
+                switch ($op)
+                {
+                    case 'add' :
+                        if (empty($_GET['instance'])) ploopi_redirect($scriptenv);
+
+                        global $admin_redirect;
+                        $admin_redirect = true;
+
+                        //  create new instance or attach existing instance to current group
+                        $data = explode(',',$_GET['instance']);
+                        $instancetype = $data[0];
+                        $workspace_id = $data[1];
+                        if ($instancetype == 'NEW')
+                        {
+                            $moduletype_id = $data[2];
+                            $module_type = new module_type();
+                            $module_type->open($moduletype_id);
+
+                            ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
+
+                            echo $skin->open_simplebloc(str_replace('<LABEL>',$module_type->fields['label'],_SYSTEM_LABEL_MODULEINSTANCIATION),'100%');
+                            ?>
+                            <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
+                            <?
+
+                            $module = $module_type->createinstance($workspace_id);
+                            $module_id = $module->save();
+
+                            $module_workspace = new module_workspace();
+                            $module_workspace->fields['id_module'] = $module_id;
+                            $module_workspace->fields['id_workspace'] = $workspace_id;
+                            $module_workspace->save();
+
+                            if ($admin_redirect) ploopi_redirect("$scriptenv?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify");
+                            else
                             {
-                                $children = $workspace->getworkspacechildrenlite();
-
-                                foreach($children as $idchildren)
-                                {
-                                    $module_workspace = new module_workspace();
-                                    $module_workspace->open($idchildren,$moduleid);
-                                    $module_workspace->save();
-                                }
-                                ploopi_redirect("{$scriptenv}?op=modify&moduleid={$moduleid}#modify");
+                                ?>
+                                        </TD>
+                                    </TR>
+                                    <TR>
+                                        <TD ALIGN="RIGHT">
+                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<? echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<? echo "$scriptenv?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify"; ?>'">
+                                        </TD>
+                                    </TR>
+                                    </TABLE>
+                                <?
+                                echo $skin->close_simplebloc();
                             }
-                            else ploopi_redirect($scriptenv);
-                        break;
+                        }
+                        elseif ($instancetype == 'SHARED')
+                        {
+                            $module = new module();
+                            $module->open($module_id);
 
-                        case 'modify':
-                        default :
-                            include_once './modules/system/admin_index_modules.php';
-                        break;
+                            ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module->fields['label']);
 
-                    }
-                break;
+                            $module_id = $data[2];
+                            $module_workspace = new module_workspace();
+                            $module_workspace->fields['id_module'] = $module_id;
+                            $module_workspace->fields['id_workspace'] = $workspace_id;
+                            $module_workspace->save();
+                            if ($admin_redirect) ploopi_redirect("{$scriptenv}?reloadsession");
+                        }
+                        else ploopi_redirect("{$scriptenv}?reloadsession");
+                    break;
 
-                case 'tabParams' :
-                    $param_module = new param();
+                    case 'switch_active':
+                    case 'switch_public':
+                    case 'switch_shared':
+                    case 'switch_herited':
+                        if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
+                        {
+                            $module = new module();
+                            $module->open($_GET['moduleid']);
+                            ploopi_create_user_action_log(_SYSTEM_ACTION_PARAMMODULE, $module->fields['label']);
 
-                    switch($op)
-                    {
-                        case "save":
+                            if ($op == 'switch_active') $module->fields['active'] = ($module->fields['active']+1)%2;
+                            if ($op == 'switch_public') $module->fields['public'] = ($module->fields['public']+1)%2;
+                            if ($op == 'switch_shared') $module->fields['shared'] = ($module->fields['shared']+1)%2;
+                            if ($op == 'switch_herited') $module->fields['herited'] = ($module->fields['herited']+1)%2;
 
-                            if (!empty($_POST['idmodule']) && is_numeric($_POST['idmodule']))
+                            $module->save();
+                            ploopi_redirect("{$scriptenv}?reloadsession");
+                        }
+                        else ploopi_redirect($scriptenv);
+                    break;
+
+                    case 'moveup' :
+                        if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
+                        {
+                            $module_workspace = new module_workspace();
+                            $module_workspace->open($workspaceid,$_GET['moduleid']);
+                            $module_workspace->changeposition('up');
+                            ploopi_redirect("{$scriptenv}?reloadsession");
+                        }
+                        else ploopi_redirect($scriptenv);
+                    break;
+
+                    case 'movedown' :
+                        if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
+                        {
+                            $module_workspace = new module_workspace();
+                            $module_workspace->open($workspaceid,$_GET['moduleid']);
+                            $module_workspace->changeposition('down');
+                            ploopi_redirect("{$scriptenv}?reloadsession");
+                        }
+                        else ploopi_redirect($scriptenv);
+                    break;
+
+                    case 'unlinkinstance' :
+                        if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
+                        {
+                            $module = new module();
+                            $module->open($_GET['moduleid']);
+                            ploopi_create_user_action_log(_SYSTEM_ACTION_UNLINKMODULE, $module->fields['label']);
+
+                            $module_workspace = new module_workspace();
+                            $module_workspace->open($workspaceid,$_GET['moduleid']);
+                            $module_workspace->delete();
+                            ploopi_redirect("{$scriptenv}?reloadsession");
+                        }
+                        else ploopi_redirect($scriptenv);
+                    break;
+
+                    case 'save_module_props' :
+                        if (!empty($_POST['moduleid']) && is_numeric($_POST['moduleid']))
+                        {
+                            $module = new module();
+                            $module->open($_POST['moduleid']);
+                            ploopi_create_user_action_log(_SYSTEM_ACTION_CONFIGUREMODULE, $module->fields['label']);
+
+                            $module->setvalues($_POST,'module_');
+                            if (!isset($_POST['module_transverseview'])) $module->fields['transverseview'] = 0;
+                            if (!$module->fields['shared']) $module->fields['herited'] = 0;
+                            $module->save();
+
+                            ploopi_redirect("{$scriptenv}?moduleid={$module->fields['id']}&reloadsession");
+                        }
+                        else ploopi_redirect($scriptenv);
+                    break;
+
+                    case 'delete' :
+                        if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
+                        {
+                            global $admin_redirect;
+                            $admin_redirect = true;
+
+                            $module = new module();
+                            $module->open($_GET['moduleid']);
+
+                            ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEMODULE, $module->fields['label']);
+
+                            echo $skin->open_simplebloc(str_replace('<LABEL>',$module->fields['label'],_SYSTEM_LABEL_MODULEDELETE));
+                            ?>
+                            <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
+                            <?
+                            
+                            $module->delete();
+
+                            if ($admin_redirect) ploopi_redirect("$scriptenv?reloadsession");
+                            else
                             {
-                                $module = new module();
-                                $module->open($_POST['idmodule']);
-                                ploopi_create_user_action_log(_SYSTEM_ACTION_PARAMMODULE, $module->fields['label']);
-
-                                $param_module->open($_POST['idmodule'], $workspaceid);
-                                $param_module->setvalues($_POST);
-                                $param_module->save();
-
-                                ploopi_redirect("{$scriptenv}?idmodule={$_POST['idmodule']}&reloadsession");
+                                ?>
+                                        </TD>
+                                    </TR>
+                                    <TR>
+                                        <TD ALIGN="RIGHT">
+                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<? echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<? echo "$scriptenv?reloadsession"; ?>'">
+                                        </TD>
+                                    </TR>
+                                    </TABLE>
+                                <?
+                                echo $skin->close_simplebloc();
                             }
-                        break;
+                        }
+                    break;
 
-                        default:
-                            include_once './modules/system/admin_index_param.php';
-                        break;
-                    }
-                break;
+                    case 'apply_heritage' :
+                        if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
+                        {
+                            $children = $workspace->getworkspacechildrenlite();
 
-                case 'tabRoles':
-                    include_once './modules/system/admin_index_roles.php';
-                break;
+                            foreach($children as $idchildren)
+                            {
+                                $module_workspace = new module_workspace();
+                                $module_workspace->open($idchildren,$moduleid);
+                                $module_workspace->save();
+                            }
+                            ploopi_redirect("{$scriptenv}?op=modify&moduleid={$moduleid}#modify");
+                        }
+                        else ploopi_redirect($scriptenv);
+                    break;
+
+                    case 'modify':
+                    default :
+                        include_once './modules/system/admin_index_modules.php';
+                    break;
+
+                }
+            break;
+
+            case 'tabParams' :
+                $param_module = new param();
+
+                switch($op)
+                {
+                    case "save":
+
+                        if (!empty($_POST['idmodule']) && is_numeric($_POST['idmodule']))
+                        {
+                            $module = new module();
+                            $module->open($_POST['idmodule']);
+                            ploopi_create_user_action_log(_SYSTEM_ACTION_PARAMMODULE, $module->fields['label']);
+
+                            $param_module->open($_POST['idmodule'], $workspaceid);
+                            $param_module->setvalues($_POST);
+                            $param_module->save();
+
+                            ploopi_redirect("{$scriptenv}?idmodule={$_POST['idmodule']}&reloadsession");
+                        }
+                    break;
+
+                    default:
+                        include_once './modules/system/admin_index_param.php';
+                    break;
+                }
+            break;
+
+            case 'tabRoles':
+                include_once './modules/system/admin_index_roles.php';
+            break;
 
 
-                // ---------------------
-                // USER MANAGEMENT
-                // ---------------------
-                case 'tabUsers':
-                    include_once './modules/system/admin_index_users.php';
-                break;
+            // ---------------------
+            // USER MANAGEMENT
+            // ---------------------
+            case 'tabUsers':
+                include_once './modules/system/admin_index_users.php';
+            break;
 
-            } // switch
-        break;
+        } // switch
+    break;
+    
 }//switch
-    ?>
-    </td>
-</tr>
-</table>
+?>
+

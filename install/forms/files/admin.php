@@ -34,7 +34,7 @@ $tabs['formlist'] = array('title' => _FORMS_LABELTAB_LIST, 'url' => "{$scriptenv
 $tabs['formadd'] = array('title' => _FORMS_LABELTAB_ADD, 'url' => "{$scriptenv}?ploopi_moduletabid=formadd");
 
 echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
-echo $skin->create_tabs('',$tabs,$_SESSION['ploopi']['moduletabid']);
+echo $skin->create_tabs($tabs,$_SESSION['ploopi']['moduletabid']);
 
 switch($op)
 {
@@ -333,7 +333,7 @@ switch($op)
         {
             $forms = new forms();
             $forms->open($_GET['forms_id']);
-            include('./modules/forms/public_forms_export.php');
+            include './modules/forms/public_forms_export.php';
         }
         else ploopi_redirect($scriptenv);
     break;
@@ -350,7 +350,7 @@ switch($_SESSION['ploopi']['moduletabid'])
             case 'forms_field_add':
             case 'forms_field_modify':
             case 'forms_modify':
-                include('./modules/forms/admin_forms_modify.php');
+                include './modules/forms/admin_forms_modify.php';
             break;
 
             case 'forms_preview':
@@ -358,13 +358,13 @@ switch($_SESSION['ploopi']['moduletabid'])
 
                 if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id']))
                 {
-                    include('./modules/forms/public_forms_display.php');
+                    include './modules/forms/public_forms_display.php';
                 }
                 else ploopi_redirect($scriptenv);
             break;
 
             default:
-                include('./modules/forms/admin_forms_list.php');
+                include './modules/forms/admin_forms_list.php';
             break;
         }
     break;
@@ -373,7 +373,7 @@ switch($_SESSION['ploopi']['moduletabid'])
         switch($op)
         {
             default:
-                include('./modules/forms/admin_forms_modify.php');
+                include './modules/forms/admin_forms_modify.php';
             break;
         }
     break;

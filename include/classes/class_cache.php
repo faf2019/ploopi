@@ -22,7 +22,7 @@
 */
 
 // NEEDS PEAR PACKAGE
-@include_once('Cache/Lite/Output.php');
+@include_once 'Cache/Lite/Output.php';
 
 global $ploopi_cache_activated;
 global $ploopi_cache_written;

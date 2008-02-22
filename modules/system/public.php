@@ -38,7 +38,7 @@ switch($_SESSION['ploopi']['mainmenu'])
     break;
 
     case _PLOOPI_MENU_PROFILE:
-        include_once('./include/classes/class_param.php');
+        include_once './include/classes/class_param.php';
 
 
         $param_module = new param($db->connection_id);
@@ -58,18 +58,18 @@ switch($_SESSION['ploopi']['mainmenu'])
                     $param_module->save();
 
                     // reload all module params of current user in session
-                    include('./include/load_param.php');
+                    include './include/load_param.php';
                     ploopi_redirect("{$scriptenv}?op=param&idmodule={$_POST['idmodule']}");
                 }
                 else ploopi_redirect($scriptenv);
             break;
 
             case 'param':
-                include('./modules/system/public_module_param.php');
+                include './modules/system/public_module_param.php';
             break;
 
             case 'actions':
-                include('./modules/system/public_actions.php');
+                include './modules/system/public_actions.php';
             break;
 
             case 'save_user':
@@ -97,7 +97,7 @@ switch($_SESSION['ploopi']['mainmenu'])
             default:
                 $user = new user();
                 $user->open($_SESSION['ploopi']['userid']);
-                include('./modules/system/public_user.php');
+                include './modules/system/public_user.php';
             break;
 
         }

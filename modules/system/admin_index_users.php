@@ -22,9 +22,9 @@
 */
 ?>
 <?
-include_once('./modules/system/class_user.php');
-include_once('./modules/system/class_user_type.php');
-include_once('./modules/system/class_workspace_group.php');
+include_once './modules/system/class_user.php';
+include_once './modules/system/class_user_type.php';
+include_once './modules/system/class_workspace_group.php';
 
 switch($op)
 {
@@ -151,7 +151,7 @@ if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
 if (!empty($_GET['usrTabItem']))  $_SESSION['system']['usrTabItem'] = $_GET['usrTabItem'];
 if (!isset($_SESSION['system']['usrTabItem'])) $_SESSION['system']['usrTabItem'] = '';
 
-echo $skin->create_tabs('',$tabs, $_SESSION['system']['usrTabItem']);
+echo $skin->create_tabs($tabs, $_SESSION['system']['usrTabItem']);
 echo $skin->open_simplebloc('');
 
 switch($_SESSION['system']['usrTabItem'])
@@ -166,7 +166,7 @@ switch($_SESSION['system']['usrTabItem'])
                     $org->open($_GET['orgid']);
                     $workspace_group = new workspace_group();
                     $workspace_group->open($workspaceid,$_GET['orgid']);
-                    include('./modules/system/admin_index_group_form.php');
+                    include './modules/system/admin_index_group_form.php';
                 }
                 else ploopi_redirect($scriptenv);
             break;
@@ -196,7 +196,7 @@ switch($_SESSION['system']['usrTabItem'])
             break;
 
             default:
-                include('./modules/system/admin_index_users_grouplist.php');
+                include './modules/system/admin_index_users_grouplist.php';
             break;
         }
 
@@ -219,7 +219,7 @@ switch($_SESSION['system']['usrTabItem'])
             break;
 
             default:
-                include('./modules/system/admin_index_users_attachgroup.php');
+                include './modules/system/admin_index_users_attachgroup.php';
             break;
         }
     break;
@@ -254,7 +254,7 @@ switch($_SESSION['system']['usrTabItem'])
             break;
 
             default:
-                include('./modules/system/admin_index_users_attachlist.php');
+                include './modules/system/admin_index_users_attachlist.php';
             break;
         }
     break;
@@ -271,7 +271,7 @@ switch($_SESSION['system']['usrTabItem'])
                     $user->open($_GET['user_id']);
                     $group_user = new group_user();
                     $group_user->open($groupid,$_GET['user_id']);
-                    include('./modules/system/admin_index_users_form.php');
+                    include './modules/system/admin_index_users_form.php';
                 }
                 else ploopi_redirect($scriptenv);
             break;
@@ -379,7 +379,7 @@ switch($_SESSION['system']['usrTabItem'])
             break;
 
             default:
-                include('./modules/system/admin_index_users_list.php');
+                include './modules/system/admin_index_users_list.php';
             break;
 
         }
@@ -391,14 +391,14 @@ switch($_SESSION['system']['usrTabItem'])
         switch($op)
         {
             case 'modify_user':
-                if (!empty($_GET['user_id']) && is_numeric($_GET['user_id'])) include('./modules/system/admin_index_users_form.php');
+                if (!empty($_GET['user_id']) && is_numeric($_GET['user_id'])) include './modules/system/admin_index_users_form.php';
                 else ploopi_redirect($scriptenv);
             break;
 
             default:
                 $user->init_description();
                 $user->fields['id']=-1;
-                include('./modules/system/admin_index_users_form.php');
+                include './modules/system/admin_index_users_form.php';
             break;
         }
     break;

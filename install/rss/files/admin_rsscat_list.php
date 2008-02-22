@@ -67,7 +67,7 @@ echo $skin->close_simplebloc();
 
 if (!empty($_GET['rsscat_id']) && is_numeric($_GET['rsscat_id']))
 {
-    include_once('./modules/rss/class_rss_cat.php');
+    include_once './modules/rss/class_rss_cat.php';
     $rsscat = new rss_cat();
     $rsscat->open($_GET['rsscat_id']);
     include_once 'admin_rsscat_form.php';

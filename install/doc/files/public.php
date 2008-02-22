@@ -187,7 +187,7 @@ if ($_SESSION['ploopi']['connected'])
                 if (_PLOOPI_USE_CGIUPLOAD && !empty($_GET['sid']))
                 {
                     define ('UPLOAD_PATH', _PLOOPI_CGI_UPLOADTMP.'/');
-                    include('./lib/cupload/Cupload.class.php');
+                    include './lib/cupload/Cupload.class.php';
 
                     $_sId = $_GET['sid'];
                     $uploader = & new CUploadSentinel;

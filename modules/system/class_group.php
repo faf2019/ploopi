@@ -21,9 +21,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once('./modules/system/class_workspace_group.php');
-include_once("./modules/system/include/functions.php");
-//include_once('./modules/system/include/global.php');
+include_once './modules/system/class_workspace_group.php';
+include_once "./modules/system/include/functions.php";
+//include_once './modules/system/include/global.php';
 
 class group extends data_object
 {

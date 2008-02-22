@@ -20,9 +20,8 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-echo $skin->open_simplebloc(_FORMS_LIST, '100%');
+
+echo $skin->open_simplebloc(_FORMS_LIST);
 
 $date_today = ploopi_createtimestamp();
 
@@ -55,8 +54,8 @@ while ($fields = $db->fetchrow())
     if ($first) $first = false;
     ?>
     <table cellpadding="2" cellspacing="1">
-        <tr><td><a style="font-size:18px;font-weight:bold;" href="<? echo "$scriptenv?op=forms_viewreplies&forms_id={$fields['id']}"; ?>"><? echo $fields['label']; ?></a></td></tr>
-        <tr><td><? echo nl2br($fields['description']); ?></h2></td></tr>
+        <tr><td><a style="font-size:18px;font-weight:bold;" href="<? echo "{$scriptenv}?op=forms_viewreplies&forms_id={$fields['id']}"; ?>"><? echo $fields['label']; ?></a></td></tr>
+        <tr><td><? echo nl2br($fields['description']); ?></td></tr>
         <tr>
             <td>
             <strong>» <a href="<? echo "$scriptenv?op=forms_viewreplies&forms_id={$fields['id']}"; ?>"><? echo _FORMS_FILL; ?></a></strong>

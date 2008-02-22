@@ -41,9 +41,9 @@ if (substr($rss_search_kw,0,6) == 'entry:') $_SESSION['rss'][$_SESSION['ploopi']
     <? echo $skin->open_simplebloc(); ?>
     <form action="" method="post" onsubmit="javascript:rss_explorer_feed_get(this.rss_search_kw.value); return false;">
     <div style="padding:4px;font-weight:bold;">Mots Clés : <input type="text" class="text" name="rss_search_kw" value="<? echo htmlentities($rss_search_kw, ENT_QUOTES); ?>"/>&nbsp;<input type="submit" class="button" value="Filtrer"></div>
+    </form>
     <? echo $skin->close_simplebloc(); ?>
     </div>
-    </form>
     <div id="rss_explorer_catlist"></div>
     <div id="rss_explorer_feedlist"></div>
 </div>

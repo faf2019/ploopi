@@ -22,8 +22,8 @@
 */
 ?>
 <?
-include_once('./include/classes/class_data_object.php');
-include_once('./modules/system/class_homepage_column.php');
+include_once './include/classes/class_data_object.php';
+include_once './modules/system/class_homepage_column.php';
 
 class homepage_line extends data_object
 {

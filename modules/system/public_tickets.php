@@ -64,7 +64,7 @@ switch($sort)
 }
 
 // vérification du droit de visualisation des personnes concernées
-include_once("./modules/system/class_user.php");
+include_once "./modules/system/class_user.php";
 $usr=new user();
 $usr->open($_SESSION['ploopi']['userid']);
 // liste des users visibles par le user courant

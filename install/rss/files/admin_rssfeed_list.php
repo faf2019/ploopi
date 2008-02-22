@@ -78,7 +78,7 @@ echo $skin->close_simplebloc();
 
 if (!empty($_GET['rssfeed_id']) && is_numeric($_GET['rssfeed_id']))
 {
-    include_once('./modules/rss/class_rss_feed.php');
+    include_once './modules/rss/class_rss_feed.php';
     $rssfeed = new rss_feed();
     $rssfeed->open($_GET['rssfeed_id']);
     include_once 'admin_rssfeed_form.php';

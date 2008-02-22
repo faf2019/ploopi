@@ -1,5 +1,5 @@
 <?
-	include_once ('./modules/system/class_user.php');
+	include './modules/system/class_user.php';
 	$user = new user();
 	$user->open($user_id);
 ?>

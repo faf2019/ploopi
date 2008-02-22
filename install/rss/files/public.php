@@ -40,12 +40,12 @@ if (!empty($_GET['rssTabItem'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid'
 if (!isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'] = '';
 
 echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
-echo $skin->create_tabs('',$tabs,$_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem']);
+echo $skin->create_tabs($tabs,$_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem']);
 
 switch($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])
 {
     case 'tabExplorer':
-        include('./modules/rss/public_explorer.php');
+        include './modules/rss/public_explorer.php';
     break;
 
     case 'tabSearches':
@@ -82,7 +82,7 @@ switch($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])
             break;
 
             default:
-                include('./modules/rss/rss_searches.php');
+                include './modules/rss/rss_searches.php';
             break;
         }
     break;

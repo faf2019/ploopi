@@ -37,9 +37,9 @@ foreach($_SESSION['ploopi']['modules'] as $instance)
 if(!$isdoc) ploopi_die('<b><font color="red">Module DOC absent</font></b>');
 else
 {
-    include_once('./modules/doc/class_docfile.php');
-    include_once('./modules/doc/class_docfolder.php');
-    include_once('./modules/system/class_workspace.php');
+    include_once './modules/doc/class_docfile.php';
+    include_once './modules/doc/class_docfolder.php';
+    include_once './modules/system/class_workspace.php';
     ploopi_init_module('doc');
 }
 

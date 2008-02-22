@@ -360,7 +360,7 @@ else
                 ?>
                 <script type="text/javascript" src="./FCKeditor/fckeditor.js"></script>
                 <?
-                include_once('./FCKeditor/fckeditor.php') ;
+                include_once './FCKeditor/fckeditor.php' ;
 
                 $oFCKeditor = new FCKeditor('fck_webedit_article_content') ;
 
@@ -476,7 +476,7 @@ if (!empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]
                                 )
                             );
 
-            if (file_exists("./modules/{$_SESSION['ploopi']['modules'][$template_moduleid]['moduletype']}/template.php")) include_once("./modules/{$_SESSION['ploopi']['modules'][$template_moduleid]['moduletype']}/template.php");
+            if (file_exists("./modules/{$_SESSION['ploopi']['modules'][$template_moduleid]['moduletype']}/template.php")) include_once "./modules/{$_SESSION['ploopi']['modules'][$template_moduleid]['moduletype']}/template.php";
         }
 
     }
@@ -509,7 +509,7 @@ else
 // GET MODULE ADDITIONAL JS
 ob_start();
 // buffer flushing
-include('./include/javascript.php');
+include './include/javascript.php';
 
 if ($webedit_mode != 'display')
 {

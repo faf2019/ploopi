@@ -43,7 +43,7 @@ switch($op)
 {
     case 'display':
         $forms_id  = $obj['object_id'];
-        include_once('./modules/forms/wce_forms_display.php');
+        include_once './modules/forms/wce_forms_display.php';
     break;
 
     case 'saveform':

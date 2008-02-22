@@ -88,8 +88,8 @@ switch($_SESSION['directory']['directoryTabItem'])
 
         ?>
         <div style="padding:4px;background-color:#f0f0f0;border-bottom:2px solid #c0c0c0;">
-            <table cellpadding="2" cellspacing="1">
             <form action="<? echo $scriptenv; ?>" method="post">
+            <table cellpadding="2" cellspacing="1">
             <input type="hidden" name="op" value="search">
             <tr>
                 <td align="right"><? echo _DIRECTORY_NAME; ?>: </td>
@@ -112,8 +112,8 @@ switch($_SESSION['directory']['directoryTabItem'])
                 <td><input type="text" class="text" size="20" name="fulltext" value="<? echo $_SESSION['directory']['search']['fulltext']; ?>" /></td>
                 <td colspan="4" align="right"><input type="submit" class="button" value="<? echo _PLOOPI_SEARCH; ?>"></td>
             </tr>
-            </form>
             </table>
+            </form>
         </div>
         <?
     break;

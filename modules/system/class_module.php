@@ -22,9 +22,9 @@
 */
 ?>
 <?
-include_once('./include/classes/class_data_object.php');
-include_once('./modules/system/class_module_workspace.php');
-include_once('./modules/system/class_homepage_column.php');
+include_once './include/classes/class_data_object.php';
+include_once './modules/system/class_module_workspace.php';
+include_once './modules/system/class_homepage_column.php';
 
 class module extends data_object
 {
@@ -61,8 +61,8 @@ class module extends data_object
 
             $admin_moduleid = $this->fields['id'];
             // script to execute to create specific module data
-            if (file_exists("./modules/$fields[label]/include/create.php")) include("./modules/$fields[label]/include/create.php");
-            elseif (file_exists("./modules/$fields[label]/include/admin_instance_create.php")) include("./modules/$fields[label]/include/admin_instance_create.php");
+            if (file_exists("./modules/$fields[label]/include/create.php")) include "./modules/$fields[label]/include/create.php";
+            elseif (file_exists("./modules/$fields[label]/include/admin_instance_create.php")) include "./modules/$fields[label]/include/admin_instance_create.php";
         }
         else $res = parent::save();
 
@@ -82,8 +82,8 @@ class module extends data_object
             {
                 $admin_moduleid = $this->fields['id'];
                 // script to execute to delete specific module data
-                if (file_exists("./modules/$fields[label]/include/delete.php")) include("./modules/$fields[label]/include/delete.php");
-                elseif (file_exists("./modules/$fields[label]/include/admin_instance_delete.php")) include("./modules/$fields[label]/include/admin_instance_delete.php");
+                if (file_exists("./modules/$fields[label]/include/delete.php")) include "./modules/$fields[label]/include/delete.php";
+                elseif (file_exists("./modules/$fields[label]/include/admin_instance_delete.php")) include "./modules/$fields[label]/include/admin_instance_delete.php";
             }
 
             // delete all module_workspace

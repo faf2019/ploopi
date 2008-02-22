@@ -21,9 +21,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once('./include/classes/class_data_object.php');
-include_once('./modules/system/class_annotation_tag.php');
-include_once('./modules/system/class_tag.php');
+include_once './include/classes/class_data_object.php';
+include_once './modules/system/class_annotation_tag.php';
+include_once './modules/system/class_tag.php';
 
 class annotation extends data_object
 {

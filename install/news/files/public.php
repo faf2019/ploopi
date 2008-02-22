@@ -24,8 +24,8 @@
 <?
 ploopi_init_module('news');
 
-include_once('./modules/news/class_news_entry.php');
-include_once('./modules/news/class_news_cat.php');
+include_once './modules/news/class_news_entry.php';
+include_once './modules/news/class_news_cat.php';
 
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
@@ -34,11 +34,11 @@ $news = new news();
 switch($op)
 {
     case 'display_news':
-        include('./modules/news/news_public_display.php');
+        include './modules/news/news_public_display.php';
     break;
 
     default:
-        include('./modules/news/news_public_list.php');
+        include './modules/news/news_public_list.php';
     break;
 }
 ?>

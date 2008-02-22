@@ -23,7 +23,7 @@
 ?>
 <?
 ploopi_init_module('news');
-include_once('./modules/news/class_news_entry.php');
+include_once './modules/news/class_news_entry.php';
 
 if (isset($newsid))
 {

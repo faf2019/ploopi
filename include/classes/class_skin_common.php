@@ -161,7 +161,7 @@ class skin_common
         return $res;
     }
 
-    function create_tabs($w, $tabs,&$tabsel)
+    function create_tabs($tabs,&$tabsel)
     {
 
         $res = "<div class=\"tabs\">";

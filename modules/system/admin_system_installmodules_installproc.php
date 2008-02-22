@@ -297,6 +297,5 @@ else
     <input type="submit" class="flatbutton" value="<? echo _PLOOPI_CONTINUE; ?>">
     </form>
 </div>
-</form>
 
 <? echo $skin->close_simplebloc(); ?>

@@ -29,7 +29,7 @@ function ploopi_cache_start($id, $lifetime = _PLOOPI_CACHE_DEFAULT_LIFETIME)
     if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_set_cache'])
     {
         global $ploopi_cache_output;
-        include_once('Cache/Lite/Output.php');
+        include_once 'Cache/Lite/Output.php';
 
         $id .= "_{$_SESSION['ploopi']['workspaceid']}";
 

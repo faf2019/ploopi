@@ -101,5 +101,4 @@ elseif (!empty($_GET['user_id']))
         <input type="button" class="button" value="<? echo _PLOOPI_BACK; ?>" onclick="javascript:history.go(-1);" tabindex="120" />
     </div>
 </div>
-</form>
 <? echo $skin->close_simplebloc(); ?>

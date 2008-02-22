@@ -20,11 +20,10 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 if (empty($_GET['uninstallidmoduletype'])) ploopi_redirect($scriptenv);
 
-include_once('./modules/system/class_module_type.php');
+include_once './modules/system/class_module_type.php';
 
 $module_type = new module_type();
 $module_type->open($_GET['uninstallidmoduletype']);
@@ -33,7 +32,7 @@ ploopi_create_user_action_log(_SYSTEM_ACTION_UNINSTALLMODULE, $module_type->fiel
 
 if (!empty($module_type->fields['label']))
 {
-    if (file_exists("./modules/{$module_type->fields['label']}/include/admin_uninstall.php")) include("./modules/{$module_type->fields['label']}/include/admin_uninstall.php");
+    if (file_exists("./modules/{$module_type->fields['label']}/include/admin_uninstall.php")) include "./modules/{$module_type->fields['label']}/include/admin_uninstall.php";
 
     // DELETE FILES
     $filestodelete = "./modules/".$module_type->fields['label'];

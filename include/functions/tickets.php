@@ -49,7 +49,7 @@ function ploopi_tickets_selectusers($show_message = false, $userlist = null, $wi
                 <tr>
                     <td>Recherche destinataires:&nbsp;&nbsp;</td>
                     <td><input type="text" id="ploopi_ticket_userfilter" class="text">&nbsp;</td>
-                    <td><img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=tickets_search_users&ploopi_ticket_userfilter='+ploopi_getelem('ploopi_ticket_userfilter').value,'','div_ticket_search_result');" style="border:0px" src="./img/icon_loupe.png"></a></td>
+                    <td><img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=tickets_search_users&ploopi_ticket_userfilter='+ploopi_getelem('ploopi_ticket_userfilter').value,'','div_ticket_search_result');" style="border:0px" src="./img/icon_loupe.png"></td>
                 </tr>
             </table>
             </td>

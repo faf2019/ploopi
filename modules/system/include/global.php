@@ -96,5 +96,5 @@ define ('_SYSTEM_ACTION_MODIFYWORKSPACE',   40);
 define ('_SYSTEM_ACTION_DELETEWORKSPACE',   41);
 define ('_SYSTEM_ACTION_CLONEWORKSPACE',    42);
 
-include_once("./modules/system/include/functions.php");
+include_once "./modules/system/include/functions.php";
 ?>

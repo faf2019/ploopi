@@ -22,7 +22,7 @@
 */
 ?>
 <?
-include_once('./modules/system/class_log.php');
+include_once './modules/system/class_log.php';
 
 $log_browserlist = array(
             '1'=>'robot',

@@ -77,7 +77,7 @@ switch($op)
             include_once './modules/forms/public_forms_preparedata.php';
 
             $id_module = $_SESSION['ploopi']['moduleid'];
-            include('./modules/forms/public_forms_export.php');
+            include './modules/forms/public_forms_export.php';
         }
     break;
 
@@ -107,7 +107,7 @@ switch($op)
             {
                 if (ploopi_set_flag('forms_nbclick',$_GET['forms_id'])) $forms->fields['viewed']++;
                 $forms->save();
-                include('./modules/forms/public_forms_display.php');
+                include './modules/forms/public_forms_display.php';
             }
             else ploopi_redirect($scriptenv);
         }
@@ -255,7 +255,7 @@ switch($op)
     break;
 
     default:
-        include('./modules/forms/public_forms_list.php');
+        include './modules/forms/public_forms_list.php';
     break;
 }
 ?>

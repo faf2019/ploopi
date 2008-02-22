@@ -22,7 +22,7 @@
 */
 ?>
 <?
-include_once('./include/classes/class_data_object.php');
+include_once './include/classes/class_data_object.php';
 
 class group_user_role extends data_object
 {

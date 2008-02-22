@@ -22,7 +22,7 @@
 */
 ?>
 <?
-include_once('./modules/system/class_workspace_user_role.php');
+include_once './modules/system/class_workspace_user_role.php';
 
 class group_user extends data_object
 {

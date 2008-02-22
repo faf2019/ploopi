@@ -37,7 +37,7 @@ chdir (dirname($_SERVER['SCRIPT_FILENAME']));
 
 if (!file_exists('./config/config.php'))
 {
-    include_once('./config/install.php');
+    include_once './config/install.php';
     ploopi_die();
 }
 include_once './config/config.php'; // load config (mysql, path, etc.)

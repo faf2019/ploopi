@@ -441,10 +441,10 @@ switch($op)
                         <img style="float:left;display:block;" src="./modules/webedit/img/doc2.png"><span>Article non publié</span>
                     </p>
                     <p class="ploopi_va" style="clear:both;">
-                        <div style="float:left;width:16px;text-align:center;color:#ff0000;font-weight:bold;">*</div><span>Attente de validation</span>
+                        <span style="float:left;width:16px;text-align:center;color:#ff0000;font-weight:bold;">*</span><span>Attente de validation</span>
                     </p>
                     <p class="ploopi_va" style="clear:both;">
-                        <div style="float:left;width:16px;text-align:center;color:#ff0000;font-weight:bold;">~</div><span>Hors ligne</span>
+                        <span style="float:left;width:16px;text-align:center;color:#ff0000;font-weight:bold;">~</span><span>Hors ligne</span>
                     </p>
                 </div>
             </div>

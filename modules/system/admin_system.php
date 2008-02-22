@@ -61,20 +61,20 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
             switch($op)
             {
                 case 'update':
-                    include("./modules/system/admin_system_installmodules_updateproc.php");
+                    include './modules/system/admin_system_installmodules_updateproc.php';
                 break;
 
                 case 'install':
-                    include("./modules/system/admin_system_installmodules_installproc.php");
+                    include './modules/system/admin_system_installmodules_installproc.php';
                 break;
 
                 case 'uninstall':
                     global $admin_redirect;
                     $admin_redirect = true;
 
-                    include("./modules/system/admin_system_installmodules_uninstallproc.php");
+                    include './modules/system/admin_system_installmodules_uninstallproc.php"';
 
-                    if ($admin_redirect) ploopi_redirect("$scriptenv?reloadsession");
+                    if ($admin_redirect) ploopi_redirect("{$scriptenv}?reloadsession");
                     else
                     {
                         ?>
@@ -93,31 +93,9 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                 break;
 
                 case 'addnewmodule':
-                    include("./modules/system/admin_system_addnewmodule.php");
+                    include './modules/system/admin_system_addnewmodule.php';
                     //ploopi_redirect("$scriptenv");
                 break;
-
-                /*
-                case 'uploadmodule':
-                    // zip file ?
-                    if (strstr($_FILES['system_modulefile']['name'],'.zip'))
-                    {
-                        ploopi_print_r($_FILES);
-                        $install_path = realpath('.')._PLOOPI_SEP.'install'._PLOOPI_SEP;
-                        $newpath = $install_path.$_FILES['system_modulefile']['name'];
-
-                        if (move_uploaded_file($_FILES['system_modulefile']['tmp_name'],$newpath))
-                        {
-                            //unzip
-                            exec("unzip -o -qq $newpath -d $install_path");
-                            exec("chmod -R 755 $install_path");
-                            //delete
-                            unlink($newpath);
-                        }
-                    }
-                    ploopi_redirect("$scriptenv");
-                break;
-                */
 
                 // update metabase
                 case 'updatemb':
@@ -127,7 +105,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                         global $idmoduletype;
                         $idmoduletype = $_GET['idmoduletype'];
 
-                        include_once ('./modules/system/xmlparser_mb.php');
+                        include './modules/system/xmlparser_mb.php';
 
                         ploopi_create_user_action_log(_SYSTEM_ACTION_UPDATEMETABASE, $module_type->fields['label']);
 
@@ -161,7 +139,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                 break;
 
                 default:
-                    include('./modules/system/admin_system_installmodules.php');
+                    include './modules/system/admin_system_installmodules.php';
                 break;
 
             }
@@ -200,36 +178,36 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                 break;
 
                 case "diagnostic":
-                    include("./modules/system/tools_diagnostic.php");
+                    include "./modules/system/tools_diagnostic.php";
                 break;
 
                 case "sqldump":
-                    include("./modules/system/tools_sqldump.php");
+                    include "./modules/system/tools_sqldump.php";
                 break;
 
                 case "zip":
-                    include("./modules/system/tools_zip.php");
+                    include "./modules/system/tools_zip.php";
                 break;
 
                 case "backup":
-                    include("./modules/system/tools_backup.php");
+                    include "./modules/system/tools_backup.php";
                 break;
 
                 case "cleandb":
-                    include("./modules/system/tools_cleandb.php");
+                    include "./modules/system/tools_cleandb.php";
                     ploopi_redirect("$scriptenv");
                 break;
 
                 case "connectedusers":
-                    include("./modules/system/logs_connectedusers.php");
+                    include "./modules/system/logs_connectedusers.php";
                 break;
 
                 case "actionhistory":
-                    include("./modules/system/logs_actionhistory.php");
+                    include "./modules/system/logs_actionhistory.php";
                 break;
 
                 default:
-                    include('./modules/system/admin_system_tools.php');
+                    include './modules/system/admin_system_tools.php';
                 break;
 
             }

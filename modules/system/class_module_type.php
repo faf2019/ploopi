@@ -20,12 +20,11 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-include_once('./include/classes/class_data_object.php');
-include_once('./modules/system/class_param_type.php');
-include_once('./modules/system/class_module.php');
-include_once('./modules/system/class_mb_action.php');
+
+include_once './include/classes/class_data_object.php';
+include_once './modules/system/class_param_type.php';
+include_once './modules/system/class_module.php';
+include_once './modules/system/class_mb_action.php';
 
 class module_type extends data_object
 {

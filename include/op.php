@@ -56,7 +56,7 @@ if (isset($ploopi_op))
 
             foreach($_SESSION['ploopi']['workflow']['users_selected'] as $user_id)
             {
-                include_once('./modules/system/class_user.php');
+                include_once './modules/system/class_user.php';
 
                 $user = new user();
                 $user->open($user_id);
@@ -270,7 +270,7 @@ if (isset($ploopi_op))
 
             foreach($_SESSION['ploopi']['shares']['users_selected'] as $user_id)
             {
-                include_once('./modules/system/class_user.php');
+                include_once './modules/system/class_user.php';
 
                 $user = new user();
                 $user->open($user_id);
@@ -818,7 +818,7 @@ if (isset($ploopi_op))
             <form action="" onsubmit="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=favorites_save&favorite_id_object=<? echo $id_object; ?>&favorite_id_record=<? echo $id_record; ?>&favorite_label='+this.favorite_label.value+'&favorite_id_heading='+this.favorite_id_heading.value+'&fav_new_heading='+this.fav_new_heading.value,'','ploopi_popup');setTimeout('ploopi_hidepopup()', 1500);return(false);">
             <table style="padding:0px;padding-bottom:10px;width:100%;" cellspacing="0">
             <tr>
-                <td style="padding:2px; font-weight:bold;">Ajout aux favoris</strong></td>
+                <td style="padding:2px; font-weight:bold;">Ajout aux favoris</td>
                 <td style="padding:2px;text-align:right;"><a href="javascript:ploopi_hidepopup();">Fermer</a></td>
             </tr>
             </table>
@@ -1057,8 +1057,8 @@ if (isset($ploopi_op))
         case 'documents_browser':
             if (!$_SESSION['ploopi']['connected']) ploopi_die();
 
-            include_once('./include/classes/class_documentsfolder.php');
-            include_once('./include/classes/class_documentsfile.php');
+            include_once './include/classes/class_documentsfolder.php';
+            include_once './include/classes/class_documentsfile.php';
 
             if (isset($_REQUEST['currentfolder'])) $currentfolder = $_REQUEST['currentfolder'];
             if (isset($_REQUEST['mode'])) $_SESSION['documents']['mode'] = $_REQUEST['mode'];
@@ -1438,7 +1438,7 @@ if (isset($ploopi_op))
 
             if (!empty($_GET['documentsfile_id']))
             {
-                include_once('./include/classes/class_documentsfile.php');
+                include_once './include/classes/class_documentsfile.php';
 
                 $documentsfile = new documentsfile();
                 $documentsfile->open($_GET['documentsfile_id']);
@@ -1461,7 +1461,7 @@ if (isset($ploopi_op))
             if (!empty($_GET['documentsfile_id']))
             {
                 include_once './lib/pclzip-2-5/pclzip.lib.php';
-                include_once('./include/classes/class_documentsfile.php');
+                include_once './include/classes/class_documentsfile.php';
 
                 $documentsfile = new documentsfile();
                 $documentsfile->open($_GET['documentsfile_id']);
@@ -1493,7 +1493,7 @@ if (isset($ploopi_op))
         case 'documents_savefolder':
             if (!$_SESSION['ploopi']['connected']) ploopi_die();
 
-            include_once('./include/classes/class_documentsfolder.php');
+            include_once './include/classes/class_documentsfolder.php';
             $documentsfolder = new documentsfolder();
 
             if (!empty($_POST['documentsfolder_id']))
@@ -1525,7 +1525,7 @@ if (isset($ploopi_op))
         case 'documents_openfolder':
             if (!$_SESSION['ploopi']['connected']) ploopi_die();
 
-            include_once('./include/classes/class_documentsfolder.php');
+            include_once './include/classes/class_documentsfolder.php';
             $documentsfolder = new documentsfolder();
 
             if (empty($_GET['documentsfolder_id']))
@@ -1581,7 +1581,7 @@ if (isset($ploopi_op))
         case 'documents_savefile':
             if (!$_SESSION['ploopi']['connected']) ploopi_die();
 
-            include_once('./include/classes/class_documentsfile.php');
+            include_once './include/classes/class_documentsfile.php';
             $documentsfile = new documentsfile();
 
             if (!empty($_POST['documentsfile_id'])) $documentsfile->open($_POST['documentsfile_id']);
@@ -1619,7 +1619,7 @@ if (isset($ploopi_op))
         case 'documents_openfile':
             if (!$_SESSION['ploopi']['connected']) ploopi_die();
 
-            include_once('./include/classes/class_documentsfile.php');
+            include_once './include/classes/class_documentsfile.php';
             $documentsfile = new documentsfile();
 
             if (empty($_GET['documentsfile_id']))
@@ -1711,7 +1711,7 @@ if (isset($ploopi_op))
 
             if (!empty($_GET['documentsfile_id']))
             {
-                include_once('./include/classes/class_documentsfile.php');
+                include_once './include/classes/class_documentsfile.php';
 
                 $documentsfile = new documentsfile();
                 $documentsfile->open($_GET['documentsfile_id']);
@@ -1727,7 +1727,7 @@ if (isset($ploopi_op))
 
             if (!empty($_GET['documentsfolder_id']))
             {
-                include_once('./include/classes/class_documentsfolder.php');
+                include_once './include/classes/class_documentsfolder.php';
 
                 $documentsfolder = new documentsfolder();
                 $documentsfolder->open($_GET['documentsfolder_id']);
