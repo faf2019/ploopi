@@ -131,7 +131,7 @@ switch($ploopi_op)
             $content = ob_get_contents();
             ob_end_clean();
 
-            echo $skin->popup($forms->fields['label'], $content, 'popup_forms_openreply');
+            echo $skin->create_popup($forms->fields['label'], $content, 'popup_forms_openreply');
         }
         ploopi_die();
     break;

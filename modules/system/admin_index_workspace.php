@@ -122,7 +122,6 @@ echo $skin->open_simplebloc();
     }
 
     $templatelist_back = ploopi_getavailabletemplates('backoffice');
-    $templatelist_front = ploopi_getavailabletemplates('frontoffice');
     ?>
     <form name="" action="<? echo $scriptenv; ?>" method="POST" onsubmit="javascript:return system_workspace_validate(this);">
     <input type="hidden" name="op" value="save_workspace">
@@ -182,19 +181,6 @@ echo $skin->open_simplebloc();
                 <label><? echo _SYSTEM_LABEL_GROUP_WEB; ?>:</label>
                 <input style="width:16px;" type="checkbox" name="workspace_web" <? if($workspace->fields['web']) echo "checked"; ?> value="1">
             </p>
-            <!--p>
-                <label><? echo _SYSTEM_LABEL_GROUP_SKIN; ?>:</label>
-                <select class="select" name="workspace_web_template">
-                    <option value=""><? echo _PLOOPI_NONE; ?></option>
-                    <?
-                    foreach($templatelist_front as $index => $tpl_name)
-                    {
-                        $sel = ($tpl_name == $workspace->fields['web_template']) ? 'selected' : '';
-                        echo "<option $sel>$tpl_name</option>";
-                    }
-                    ?>
-                </select>
-            </p-->
             <p>
                 <label><? echo _SYSTEM_LABEL_GROUP_WEBDOMAINLIST; ?>:</label>
                 <textarea class="text" name="workspace_web_domainlist"><? echo $workspace->fields['web_domainlist']; ?></textarea>

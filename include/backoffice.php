@@ -45,8 +45,12 @@ else
  * inclusion des scripts JS
  * */
 
-$template_body->assign_block_vars('ploopi_js',array('PATH' => "./lib/prototype/prototype.pack.js"));
+//$template_body->assign_block_vars('ploopi_js',array('PATH' => "./lib/prototype/prototype.pack.js"));
+//$template_body->assign_block_vars('ploopi_js',array('PATH' => "./lib/toolman/toolman.pack.js"));
+//$template_body->assign_block_vars('ploopi_js',array('PATH' => "./lib/scriptaculous/scriptaculous.js?load=effects,dragdrop"));
+$template_body->assign_block_vars('ploopi_js',array('PATH' => "./lib/protaculous/protoculous-packer.js"));
 $template_body->assign_block_vars('ploopi_js',array('PATH' => "./js/functions.pack.js"));
+
 
 ob_start();
 include './include/javascript.php';

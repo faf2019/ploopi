@@ -387,8 +387,10 @@ function ploopi_getavailabletemplates($type = 'frontoffice')
     {
         $tplpath=realpath($basepath._PLOOPI_SEP.$template);
 
-        if ($template != '.' && $template != '..' && is_dir($tplpath) && file_exists($tplpath._PLOOPI_SEP.'index.tpl')) $templates[] = $template;
+        if ((substr($template, 0, 1) != '.') && is_dir($tplpath) && file_exists($tplpath._PLOOPI_SEP.'index.tpl')) $templates[] = $template;
     }
+    
+    sort($templates);
 
     return($templates);
 }

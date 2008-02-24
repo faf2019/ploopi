@@ -194,7 +194,14 @@ class skin_common
         if ($urlencode) $link = ploopi_urlencode($link);
     }
 
+    function create_popup($title, $content, $popupid = '')
+    {
+        $res = $this->open_simplebloc($title, 'margin:0px;','','<a title="Fermer" class="ploopi_popup_close" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');">Fermer</a>');
+        $res .= $content;
+        $res .= $this->close_simplebloc();
 
+        return($res);
+    }
 
 
     function array_sort($a,$b)

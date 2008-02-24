@@ -212,8 +212,8 @@ switch($op)
 
     case 'heading_selectredirect':
         ob_end_clean();
+        ob_start();
         ?>
-        <div style="padding:4px;background-color:#d0d0d0;border-bottom:1px solid #c0c0c0;font-weight:bold;">Choix d'une page</div>
         <div style="padding:4px;height:150px;overflow:auto;">
         <?
         $headings = webedit_getheadings();
@@ -221,8 +221,12 @@ switch($op)
         echo webedit_build_tree($headings, $articles, 0, '', 'selectredirect');
         ?>
         </div>
-        <div style="padding:4px;background-color:#d0d0d0;border-top:1px solid #c0c0c0;text-align:right;"><a href="javascript:ploopi_hidepopup();">Fermer</a></div>
         <?
+        $content = ob_get_contents();
+        ob_end_clean();
+        
+        echo $skin->create_popup('Choix d\'une page', $content, 'webedit_popup_selectredirect');
+
         ploopi_die();
     break;
 
@@ -449,9 +453,6 @@ switch($op)
                 </div>
             </div>
             <div class="webedit_main">
-                <a style="display:block;float:left;padding:2px;"  title="Agrandir/Rétrécir" href="#" onclick="javascript:ploopi_switchdisplay('webedit_tree');ploopi_switchdisplay('webedit_article_options');ploopi_xmlhttprequest('admin-light.php', 'op=xml_switchdisplay&display='+ploopi_getelem('webedit_tree').style.display, true);">
-                    <img src="./modules/webedit/img/fullscreen.png">
-                </a>
                 <div class="webedit_main2">
                 <?
                 if ($op == 'article_addnew' || $op == 'article_modify') include_once './modules/webedit/admin_article.php';

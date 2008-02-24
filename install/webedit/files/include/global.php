@@ -227,11 +227,11 @@ function webedit_build_tree($headings, $articles, $fromhid = 0, $str = '', $opti
                 // used for fckeditor and link redirect on heading
                 case 'selectredirect':
                 case 'selectlink':
-                    $link = $link_div ="<a name=\"heading{$hid}\" onclick=\"javascript:webedit_showheading('{$option}{$hid}','{$new_str}&option={$option}');\" href=\"javascript:void(0);\">";
+                    $link = $link_div ="<a name=\"heading{$hid}\" onclick=\"javascript:webedit_showheading('{$hid}','{$new_str}','{$option}');\" href=\"javascript:void(0);\">";
                 break;
 
                 default:
-                    $link_div ="<a name=\"heading{$hid}\" onclick=\"javascript:webedit_showheading('{$option}{$hid}', '{$new_str}');\" href=\"javascript:void(0);\">";
+                    $link_div ="<a name=\"heading{$hid}\" onclick=\"javascript:webedit_showheading('{$hid}', '{$new_str}', '{$option}');\" href=\"javascript:void(0);\">";
                     $link = '<a style="font-weight:'.$style_sel.'" href="'.ploopi_urlencode("admin.php?headingid={$heading['id']}").'">';
                 break;
             }
@@ -313,7 +313,7 @@ function webedit_build_tree($headings, $articles, $fromhid = 0, $str = '', $opti
             {
                 // used for fckeditor and link redirect on heading
                 case 'selectredirect':
-                    $link = "<a name=\"article{$aid}\" href=\"javascript:void(0);\" onclick=\"javascript:ploopi_getelem('webedit_heading_linkedpage').value = '{$aid}';ploopi_getelem('linkedpage_displayed').value = '".$db->addslashes($article['title'])."';ploopi_hidepopup();\">";
+                    $link = "<a name=\"article{$aid}\" href=\"javascript:void(0);\" onclick=\"javascript:ploopi_getelem('webedit_heading_linkedpage').value = '{$aid}';ploopi_getelem('linkedpage_displayed').value = '".addslashes($article['title'])."';ploopi_hidepopup('webedit_popup_selectredirect');\">";
                 break;
 
                 case 'selectlink':
@@ -510,12 +510,14 @@ function webedit_gettemplates()
 
     while ($tpl = @readdir($pdir))
     {
-        if ($tpl != '.' && $tpl != '..' && is_dir(_WEBEDIT_TEMPLATES_PATH."/{$tpl}"))
+        if ((substr($tpl, 0, 1) != '.') && is_dir(_WEBEDIT_TEMPLATES_PATH."/{$tpl}"))
         {
             $webedit_templates[] = $tpl;
         }
     }
 
+    sort($webedit_templates);
+    
     return($webedit_templates);
 }
 

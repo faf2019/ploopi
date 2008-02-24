@@ -66,5 +66,5 @@
 <?
 $content = ob_get_contents();
 ob_end_clean();
-echo $skin->popup('Légende', $content, 'dochelp');
+echo $skin->create_popup('Légende', $content, 'dochelp');
 ?>

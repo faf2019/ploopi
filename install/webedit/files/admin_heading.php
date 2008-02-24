@@ -30,20 +30,20 @@ $heading->open($headingid);
     {
         ?>
         <a style="text-decoration:none;float:right;" href="<? echo "{$scriptenv}?op=article_addnew"; ?>">&nbsp;Ajouter un article</a>
-        <img style="float:right;border:0px;" src="./modules/webedit/img/doc_add.png">
+        <img style="float:right;border:0px;cursor:pointer;" onclick="javascript:document.location.href='<? echo "{$scriptenv}?op=article_addnew"; ?>';" src="./modules/webedit/img/doc_add.png">
         <?
     }
     if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
     {
         ?>
         <a style="text-decoration:none;float:right;padding-right:6px;" href="<? echo "{$scriptenv}?op=heading_addnew"; ?>">&nbsp;Ajouter une sous-rubrique</a>
-        <img style="float:right;border:0px;" src="./modules/webedit/img/folder_add.png">
+        <img style="float:right;border:0px;cursor:pointer;" onclick="javascript:document.location.href='<? echo "{$scriptenv}?op=heading_addnew"; ?>';" src="./modules/webedit/img/folder_add.png">
         <?
         if ($heading->fields['depth'] == 1) // root
         {
             ?>
             <a style="text-decoration:none;float:right;padding-right:6px;" href="<? echo "{$scriptenv}?op=heading_addroot"; ?>">&nbsp;Ajouter une racine</a>
-            <img style="float:right;border:0px;" src="./modules/webedit/img/folder_add.png">
+            <img style="float:right;border:0px;cursor:pointer;" onclick="javascript:document.location.href='<? echo "{$scriptenv}?op=heading_addroot"; ?>';" src="./modules/webedit/img/folder_add.png">
             <?
         }
     }
@@ -52,13 +52,15 @@ $heading->open($headingid);
     if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) && !($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1))
     {
         ?>
-        <a style="text-decoration:none;float:right;padding-right:6px;" href="javascript:ploopi_confirmlink('<? echo "{$scriptenv}?op=heading_delete"; ?>','<? echo _PLOOPI_CONFIRM; ?>');">&nbsp;Supprimer cette rubrique</a>
-        <img style="float:right;border:0px;" src="./modules/webedit/img/folder_del.png">
+        <a style="text-decoration:none;float:right;padding-right:6px;" href="javascript:void(0);" onclick="javascript:ploopi_confirmlink('<? echo "{$scriptenv}?op=heading_delete"; ?>','<? echo _PLOOPI_CONFIRM; ?>');">&nbsp;Supprimer cette rubrique</a>
+        <img style="float:right;border:0px;cursor:pointer;" src="./modules/webedit/img/folder_del.png" onclick="javascript:ploopi_confirmlink('<? echo "{$scriptenv}?op=heading_delete"; ?>','<? echo _PLOOPI_CONFIRM; ?>');">
         <?
     }
 
     ?>
-    <b>Propriété de la rubrique &laquo; <? echo $heading->fields['label']; ?> &raquo;</b>
+    <img title="Agrandir/Réduire" alt="Agrandir/Réduire" style="cursor:pointer;" onclick="javascript:ploopi_switchdisplay('webedit_tree');ploopi_switchdisplay('webedit_article_options');ploopi_xmlhttprequest('admin-light.php', 'op=xml_switchdisplay&display='+ploopi_getelem('webedit_tree').style.display, true);" src="./modules/webedit/img/fullscreen.png">
+    
+    <span style="font-weight:bold;">Propriété de la rubrique &laquo; <? echo $heading->fields['label']; ?> &raquo;</span>
 </p>
 
 <?
@@ -196,7 +198,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                     ?>
                     <input type="hidden" id="webedit_heading_linkedpage" name="webedit_heading_linkedpage" value="<? echo $heading->fields['linkedpage']; ?>">
                     <input type="text" readonly class="text" style="width:100px;" id="linkedpage_displayed" value="<? echo $article_title; ?>">
-                    <input type="button" class="button" style="width:70px;" value="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','op=heading_selectredirect',false),300,event,'click');" tabindex="6" />
+                    <input type="button" class="button" style="width:70px;" value="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','op=heading_selectredirect',false), 300, event, 'click', 'webedit_popup_selectredirect');" tabindex="6" />
                     <input type="button" class="button" style="width:70px;" value="Effacer" onclick="javascript:ploopi_getelem('webedit_heading_linkedpage').value='';ploopi_getelem('linkedpage_displayed').value='';" tabindex="7" />
                     <?
                 }

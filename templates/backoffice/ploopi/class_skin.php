@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once "./include/classes/class_skin_common.php";
+include_once './include/classes/class_skin_common.php';
 
 class skin extends skin_common
 {
@@ -34,7 +34,7 @@ class skin extends skin_common
         if (strlen($style)>0) $res = "<div class=\"simplebloc\" style=\"{$style}\">";
         else $res = "<div class=\"simplebloc\">";
 
-        if ($title!=null) $res .= "<div class=\"simplebloc_title\" style=\"{$styletitle}\"><p>{$additionnal_title}{$title}</p></div>";
+        if ($title!=null) $res .= "<div class=\"simplebloc_title\" id=\"handle\" style=\"{$styletitle}\"><div class=\"simplebloc_titleleft\">{$additionnal_title}{$title}</div></div>";
 
         $res .= '<div class="simplebloc_content">';
 
@@ -103,13 +103,28 @@ class skin extends skin_common
     }
 
 
-    function popup($title, $content, $popupid = '', $title2 = '')
+    function create_popup($title, $content, $popupid = 'ploopi_popup')
     {
-        $res = $this->open_simplebloc($title, 'margin:0px;','','<a title="Fermer" class="ploopi_popup_close" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');"><img alt="Fermer" style="display:block;float:right;margin:2px;" src="'.$this->values['path'].'/template/close_popup.png"></a>');
-        $res .= $content;
-        $res .= $this->close_simplebloc();
+        $res =  '
+                <div class="simplebloc" style="margin:0;">
+                    <div class="simplebloc_title">
+                        <div class="simplebloc_titleleft">
+                            <img alt="Fermer" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
+                            <div style="overflow:auto;cursor:move;" id="handle_'.$popupid.'">'.$title.'</div>
+                        </div>
+                    </div>
+                    <div class="simplebloc_content">'.$content.'</div>
+                    <div class="simplebloc_footer"></div>
+                </div>
+                <script type="text/javascript">
+                new Draggable(\''.$popupid.'\', {handle: \'handle_'.$popupid.'\'});
+                </script>        
+                ';
 
         return($res);
     }
 }
+
+//                            
+
 ?>

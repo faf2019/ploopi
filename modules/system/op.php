@@ -108,6 +108,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
         case 'tickets_new':
             if (!$_SESSION['ploopi']['connected']) ploopi_die();
+            
+            ob_start();
             ?>
             <div id="tickets_new">
                 <form method="post" action="admin.php">
@@ -173,13 +175,18 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 <tr>
                     <td style="text-align:right;">
                         <input type="submit" class="flatbutton" value="Envoyer" style="font-weight:bold;">
-                        <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="$('system_popupticket').style.visibility='hidden';">
+                        <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="ploopi_hidepopup('system_popupticket');">
                     </td>
                 </tr>
                 </table>
                 </form>
             </div>
             <?
+            $content = ob_get_contents();
+            ob_end_clean();
+            
+            echo $skin->create_popup('Nouveau ticket', $content, 'system_popupticket');
+            
             ploopi_die();
         break;
 

@@ -81,9 +81,8 @@ text-align:left;
 overflow:auto;
 }
 
-.simplebloc_title p {
+.simplebloc_titleleft {
 background: url(../img/template/bloc_titre.png) top left no-repeat;
-margin:0;
 padding:0 4px;
 height:20px;
 line-height:20px;

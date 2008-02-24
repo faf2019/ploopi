@@ -19,21 +19,24 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-function webedit_showheading(hid,str)
+
+function webedit_showheading(hid, str, option)
 {
-    elt = $('webedit_plus'+hid);
+    if (typeof(option) == 'undefined') var option = '';
+    
+    
+    elt = $('webedit_plus'+option+hid);
 
     if (elt.style.background.indexOf('plusbottom') != -1) elt.style.background = elt.style.background.replace('plusbottom', 'minusbottom');
     else  if (elt.style.background.indexOf('minusbottom')  != -1) elt.style.background = elt.style.background.replace('minusbottom', 'plusbottom');
     else  if (elt.style.background.indexOf('plus')  != -1) elt.style.background = elt.style.background.replace('plus', 'minus');
     else  if (elt.style.background.indexOf('minus')  != -1) elt.style.background = elt.style.background.replace('minus', 'plus');
 
-
-    if (elt = $('webedit_dest'+hid))
+    if (elt = $('webedit_dest'+option+hid))
     {
         if (elt.style.display == 'none')
         {
-            if (elt.innerHTML.length < 20) ploopi_xmlhttprequest_todiv('admin-light.php','op=xml_detail_heading&hid='+hid+'&str='+str,'','webedit_dest'+hid);
+            if (elt.innerHTML.length < 10) ploopi_xmlhttprequest_todiv('admin-light.php','op=xml_detail_heading&hid='+hid+'&str='+str+'&option='+option,'','webedit_dest'+option+hid);
             elt.style.display='block';
         }
         else

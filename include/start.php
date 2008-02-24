@@ -207,15 +207,6 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
 
         $ploopi_mainmenu = _PLOOPI_MENU_MYGROUPS; // set main menu to MYGROUPS
 
-        if (isset($ploopi_usermac))
-        {
-            $_SESSION['ploopi']['usermac'] = split(' ',trim($ploopi_usermac));
-            foreach($_SESSION['ploopi']['usermac'] as $key => $value)
-            {
-                $_SESSION['ploopi']['usermac'][$key] = str_replace(array("-",".","/",",",";",":"," "),"",$value);
-            }
-        }
-
         $ploopi_initsession = true;
 
         ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_OK, $ploopi_login,_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
@@ -416,7 +407,30 @@ if ($ploopi_initsession)
 
         if (!isset($_GET['reloadsession'])) $ploopi_mainmenu = _PLOOPI_MENU_MYGROUPS;
     }
+    
+    
+    
+    $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['web'][0];
+    
+    if (isset($_SESSION['ploopi']['hosts']['web'][0]))
+    {
+        $wid = $_SESSION['ploopi']['hosts']['web'][0];
 
+        if (!isset($_SESSION['ploopi']['workspaces'][$wid]))
+        {
+            $workspace = new workspace();
+            $workspace->open($wid);
+            
+            $_SESSION['ploopi']['workspaces'][$wid] = $workspaces[$wid];
+            $_SESSION['ploopi']['workspaces'][$wid]['children']  = $workspace->getworkspacechildrenlite();
+            $_SESSION['ploopi']['workspaces'][$wid]['parents'] = explode(';',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
+            $_SESSION['ploopi']['workspaces'][$wid]['brothers']  = $workspace->getworkspacebrotherslite();
+            $_SESSION['ploopi']['workspaces'][$wid]['list_parents'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
+            $_SESSION['ploopi']['workspaces'][$wid]['list_children'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['children']);
+            $_SESSION['ploopi']['workspaces'][$wid]['list_brothers'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['brothers']);
+            $_SESSION['ploopi']['workspaces'][$wid]['modules'] = $workspace->getmodules(true);
+        }
+    }
 }
 
 if (!$_SESSION['ploopi']['paramloaded']) include './include/load_param.php';
@@ -448,39 +462,6 @@ switch($_SESSION['ploopi']['scriptname'])
             if ($_SESSION['ploopi']['mode'] != $newmode && $newmode == 'web')
             {
                 $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['web'][0];
-
-                foreach($_SESSION['ploopi']['hosts']['web'] as $wid)
-                {
-                    $workspace = new workspace();
-                    $workspace->open($wid);
-
-                    $_SESSION['ploopi']['workspaces'][$wid] = $workspaces[$wid];
-                    $_SESSION['ploopi']['workspaces'][$wid] = array_merge($_SESSION['ploopi']['workspaces'][$wid], $workspace->fields);
-
-                    $_SESSION['ploopi']['workspaces'][$wid]['children']  = $workspace->getworkspacechildrenlite('web');
-
-                    if ($_SESSION['ploopi']['workspaces'][$wid]['parents'] != '')
-                    {
-                        $select = "SELECT * from ploopi_workspace WHERE id in (".str_replace(';',',',$_SESSION['ploopi']['workspaces'][$wid]['parents']).") AND web = 1";
-                        $db->query($select);
-
-                        $_SESSION['ploopi']['workspaces'][$wid]['parents'] = array();
-                        while ($row = $db->fetchrow())
-                        {
-                            $dom_array = split("\r\n", $row['web_domainlist']);
-                            foreach($dom_array as $dom)
-                            {
-                                if ($_SERVER['HTTP_HOST'] == $dom) $_SESSION['ploopi']['workspaces'][$wid]['parents'][] = $row['id'];
-                            }
-                        }
-                    }
-
-                    $_SESSION['ploopi']['workspaces'][$wid]['brothers']  = $workspace->getworkspacebrotherslite('web',$_SERVER['HTTP_HOST']);
-                    $_SESSION['ploopi']['workspaces'][$wid]['list_parents'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
-                    $_SESSION['ploopi']['workspaces'][$wid]['list_children'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['children']);
-                    $_SESSION['ploopi']['workspaces'][$wid]['list_brothers'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['brothers']);
-                    $_SESSION['ploopi']['workspaces'][$wid]['modules'] = $workspace->getmodules(true);
-                }
 
                 if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['webeditmoduleid']))
                 {

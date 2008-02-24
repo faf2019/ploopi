@@ -22,11 +22,23 @@
   license : LGPL
   copyright : Vincent Blavet
 
-* prototype 1.6.0
+* prototype 1.6.0.2
   path : ./lib/prototype
   url : http://www.prototypejs.org
   license : MIT
   copyright : Sam Stephenson
+
+* scriptaculous 1.8.1
+  path : ./lib/protaculous
+  url : http://script.aculo.us
+  license : MIT
+  copyright : Thomas Fuchs
+
+* protaculous 2.18 (prototype 1.6.0.2 + scriptaculous 1.8.1)
+  path : ./lib/protaculous
+  url : http://groups.google.com/group/prototype-core
+  licence : ?
+  copyright : ?
 
 * rssgenesis 1.1
   path : ./lib/rssgenesis
@@ -39,3 +51,9 @@
   url : http://www.phpbb.com
   licence : GPL
   copyright : The phpBB Group
+
+* Toolman
+  path : ./lib/toolman
+  url : http://tool-man.org/
+  licence : /lib/toolman/LICENSE.txt
+  copyright : Tim Taylor Consulting

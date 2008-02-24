@@ -36,7 +36,7 @@ margin: 0;
 }
 
 body.index {
-background:url(../img/ihm/bg.gif) top left repeat-x;
+background:url(../img/template/bg.gif) top left repeat-x;
 color: #303030;
 position: relative;
 }
@@ -87,7 +87,7 @@ padding: 4px;
 width:230px;
 margin:25px auto;
 border:1px solid #193c1c;
-background:#e8e9e9 url(../img/ihm/bloc_fond.png) 0px 22px no-repeat;
+background:#e8e9e9 url(../img/template/bloc_fond.png) 0px 22px no-repeat;
 padding:0px;
 font-weight:bold;
 }
@@ -98,7 +98,7 @@ overflow:auto;
 }
 
 .loginbox_title {
-background:#193c1c url(../img/ihm/bloc_titre_fond.png) top left repeat-x;
+background:#193c1c url(../img/template/bloc_titre_fond.png) top left repeat-x;
 color: #ffffff;
 font-variant:small-caps;
 font-weight:bold;
@@ -109,7 +109,7 @@ padding-bottom:2px;
 }
 
 .loginbox_title p {
-background: url(../img/ihm/bloc_titre.png) top left no-repeat;
+background: url(../img/template/bloc_titre.png) top left no-repeat;
 margin:0;
 padding:0 4px;
 height:20px;
@@ -117,7 +117,7 @@ line-height:20px;
 }
 
 .loginbox_footer {
-background:#f0f0f0 url(../img/ihm/bloc_titre_fond.png) 0px -10px repeat-x;
+background:#f0f0f0 url(../img/template/bloc_titre_fond.png) 0px -10px repeat-x;
 height:6px;
 font-size:1px;
 }
@@ -131,7 +131,7 @@ font-size:1px;
 border-width:2px 0;
 border-color:#193c1c;
 border-style:solid;
-background:#7d917f url(../img/ihm/menu_fond.png) 0 0 repeat;
+background:#7d917f url(../img/template/menu_fond.png) 0 0 repeat;
 color: #000000;
 line-height:20px;
 overflow:auto;
@@ -223,11 +223,11 @@ margin-right:2px;
 overflow:hidden;
 margin-bottom:2px;
 border:1px solid #193c1c;
-background:#e8e9e9 url(../img/ihm/bloc_fond.png) 0 20px no-repeat;
+background:#e8e9e9 url(../img/template/bloc_fond.png) 0 20px no-repeat;
 }
 
 .module_title {
-background:#193c1c url(../img/ihm/bloc_titre_fond.png) top left repeat-x;
+background:#193c1c url(../img/template/bloc_titre_fond.png) top left repeat-x;
 color: #ffffff;
 font-variant:small-caps;
 font-weight:bold;
@@ -239,7 +239,7 @@ text-align:left;
 }
 
 .module_title p {
-background: url(../img/ihm/bloc_titre.png) top left no-repeat;
+background: url(../img/template/bloc_titre.png) top left no-repeat;
 margin:0;
 padding:0 4px;
 height:20px;
@@ -253,7 +253,7 @@ text-decoration:none;
 }
 
 .module_footer {
-background:#f0f0f0 url(../img/ihm/bloc_titre_fond.png) 0px -10px repeat-x;
+background:#f0f0f0 url(../img/template/bloc_titre_fond.png) 0px -10px repeat-x;
 height:6px;
 font-size:1px;
 }
