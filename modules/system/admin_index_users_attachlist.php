@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 // Affichage des utilisateurs "rattachables" au groupe ou à l'espace courant
 
 if (isset($_POST['reset'])) $pattern = '';
@@ -106,12 +105,12 @@ if ($alphaTabItem == 99) // tous ou recherche
     if ($pattern != '')
     {
         $pattern = $db->addslashes($pattern);
-        $where[] .=  "(ploopi_user.lastname LIKE '%{$pattern}%' OR ploopi_user.firstname LIKE '%{$pattern}%' OR ploopi_user.login LIKE '%{$pattern}%')";
+        $where[] .=  "(u.lastname LIKE '%{$pattern}%' OR u.firstname LIKE '%{$pattern}%' OR u.login LIKE '%{$pattern}%')";
     }
 }
 else
 {
-    $where[] = "ploopi_user.lastname LIKE '".chr($alphaTabItem+96)."%'";
+    $where[] = "u.lastname LIKE '".chr($alphaTabItem+96)."%'";
 }
 
 switch ($_SESSION['system']['level'])

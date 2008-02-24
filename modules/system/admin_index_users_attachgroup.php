@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 // Affichage des groupes "rattachables" à l'espace courant
 
 if (isset($_POST['reset'])) $pattern = '';

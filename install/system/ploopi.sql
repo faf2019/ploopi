@@ -1,6 +1,6 @@
 -- MySQL dump 10.11
 --
--- Host: localhost    Database: ploopi_temp
+-- Host: localhost    Database: ploopi_install_iso
 -- ------------------------------------------------------
 -- Server version	5.0.32-Debian_7etch5
 
@@ -14,246 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `phpdig_clicks`
---
-
-DROP TABLE IF EXISTS `phpdig_clicks`;
-CREATE TABLE `phpdig_clicks` (
-  `c_num` mediumint(9) NOT NULL,
-  `c_url` varchar(255) NOT NULL default '',
-  `c_val` varchar(255) NOT NULL default '',
-  `c_time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `phpdig_clicks`
---
-
-LOCK TABLES `phpdig_clicks` WRITE;
-/*!40000 ALTER TABLE `phpdig_clicks` DISABLE KEYS */;
-/*!40000 ALTER TABLE `phpdig_clicks` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `phpdig_engine`
---
-
-DROP TABLE IF EXISTS `phpdig_engine`;
-CREATE TABLE `phpdig_engine` (
-  `spider_id` mediumint(9) NOT NULL default '0',
-  `key_id` mediumint(9) NOT NULL default '0',
-  `weight` smallint(4) NOT NULL default '0',
-  KEY `key_id` (`key_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `phpdig_engine`
---
-
-LOCK TABLES `phpdig_engine` WRITE;
-/*!40000 ALTER TABLE `phpdig_engine` DISABLE KEYS */;
-/*!40000 ALTER TABLE `phpdig_engine` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `phpdig_excludes`
---
-
-DROP TABLE IF EXISTS `phpdig_excludes`;
-CREATE TABLE `phpdig_excludes` (
-  `ex_id` mediumint(11) NOT NULL auto_increment,
-  `ex_site_id` mediumint(9) NOT NULL,
-  `ex_path` text NOT NULL,
-  PRIMARY KEY  (`ex_id`),
-  KEY `ex_site_id` (`ex_site_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `phpdig_excludes`
---
-
-LOCK TABLES `phpdig_excludes` WRITE;
-/*!40000 ALTER TABLE `phpdig_excludes` DISABLE KEYS */;
-/*!40000 ALTER TABLE `phpdig_excludes` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `phpdig_includes`
---
-
-DROP TABLE IF EXISTS `phpdig_includes`;
-CREATE TABLE `phpdig_includes` (
-  `in_id` mediumint(11) NOT NULL auto_increment,
-  `in_site_id` mediumint(9) NOT NULL,
-  `in_path` text NOT NULL,
-  PRIMARY KEY  (`in_id`),
-  KEY `in_site_id` (`in_site_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `phpdig_includes`
---
-
-LOCK TABLES `phpdig_includes` WRITE;
-/*!40000 ALTER TABLE `phpdig_includes` DISABLE KEYS */;
-/*!40000 ALTER TABLE `phpdig_includes` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `phpdig_keywords`
---
-
-DROP TABLE IF EXISTS `phpdig_keywords`;
-CREATE TABLE `phpdig_keywords` (
-  `key_id` int(9) NOT NULL auto_increment,
-  `twoletters` char(2) NOT NULL,
-  `keyword` varchar(64) NOT NULL,
-  PRIMARY KEY  (`key_id`),
-  UNIQUE KEY `keyword` (`keyword`),
-  KEY `twoletters` (`twoletters`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `phpdig_keywords`
---
-
-LOCK TABLES `phpdig_keywords` WRITE;
-/*!40000 ALTER TABLE `phpdig_keywords` DISABLE KEYS */;
-/*!40000 ALTER TABLE `phpdig_keywords` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `phpdig_logs`
---
-
-DROP TABLE IF EXISTS `phpdig_logs`;
-CREATE TABLE `phpdig_logs` (
-  `l_id` mediumint(9) NOT NULL auto_increment,
-  `l_includes` varchar(255) NOT NULL default '',
-  `l_excludes` varchar(127) default NULL,
-  `l_num` mediumint(9) default NULL,
-  `l_mode` char(1) default NULL,
-  `l_ts` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `l_time` float NOT NULL default '0',
-  PRIMARY KEY  (`l_id`),
-  KEY `l_includes` (`l_includes`),
-  KEY `l_excludes` (`l_excludes`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `phpdig_logs`
---
-
-LOCK TABLES `phpdig_logs` WRITE;
-/*!40000 ALTER TABLE `phpdig_logs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `phpdig_logs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `phpdig_site_page`
---
-
-DROP TABLE IF EXISTS `phpdig_site_page`;
-CREATE TABLE `phpdig_site_page` (
-  `site_id` int(4) NOT NULL,
-  `days` int(4) NOT NULL default '0',
-  `links` int(4) NOT NULL default '5',
-  `depth` int(4) NOT NULL default '5',
-  PRIMARY KEY  (`site_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `phpdig_site_page`
---
-
-LOCK TABLES `phpdig_site_page` WRITE;
-/*!40000 ALTER TABLE `phpdig_site_page` DISABLE KEYS */;
-/*!40000 ALTER TABLE `phpdig_site_page` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `phpdig_sites`
---
-
-DROP TABLE IF EXISTS `phpdig_sites`;
-CREATE TABLE `phpdig_sites` (
-  `site_id` mediumint(9) NOT NULL auto_increment,
-  `site_url` varchar(127) NOT NULL,
-  `upddate` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `username` varchar(32) default NULL,
-  `password` varchar(32) default NULL,
-  `port` smallint(6) default NULL,
-  `locked` tinyint(1) NOT NULL default '0',
-  `stopped` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`site_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `phpdig_sites`
---
-
-LOCK TABLES `phpdig_sites` WRITE;
-/*!40000 ALTER TABLE `phpdig_sites` DISABLE KEYS */;
-/*!40000 ALTER TABLE `phpdig_sites` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `phpdig_spider`
---
-
-DROP TABLE IF EXISTS `phpdig_spider`;
-CREATE TABLE `phpdig_spider` (
-  `spider_id` mediumint(9) NOT NULL auto_increment,
-  `file` varchar(127) NOT NULL,
-  `first_words` mediumtext NOT NULL,
-  `upddate` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `md5` varchar(50) default NULL,
-  `site_id` mediumint(9) NOT NULL default '0',
-  `path` varchar(127) NOT NULL,
-  `num_words` int(11) NOT NULL default '1',
-  `last_modified` timestamp NOT NULL default '0000-00-00 00:00:00',
-  `filesize` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`spider_id`),
-  KEY `site_id` (`site_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `phpdig_spider`
---
-
-LOCK TABLES `phpdig_spider` WRITE;
-/*!40000 ALTER TABLE `phpdig_spider` DISABLE KEYS */;
-/*!40000 ALTER TABLE `phpdig_spider` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `phpdig_tempspider`
---
-
-DROP TABLE IF EXISTS `phpdig_tempspider`;
-CREATE TABLE `phpdig_tempspider` (
-  `file` text NOT NULL,
-  `id` mediumint(11) NOT NULL auto_increment,
-  `level` tinyint(6) NOT NULL default '0',
-  `path` text NOT NULL,
-  `site_id` mediumint(9) NOT NULL default '0',
-  `indexed` tinyint(1) NOT NULL default '0',
-  `upddate` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `error` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `site_id` (`site_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `phpdig_tempspider`
---
-
-LOCK TABLES `phpdig_tempspider` WRITE;
-/*!40000 ALTER TABLE `phpdig_tempspider` DISABLE KEYS */;
-/*!40000 ALTER TABLE `phpdig_tempspider` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ploopi_annotation`
@@ -860,7 +620,7 @@ CREATE TABLE `ploopi_module` (
 
 LOCK TABLES `ploopi_module` WRITE;
 /*!40000 ALTER TABLE `ploopi_module` DISABLE KEYS */;
-INSERT INTO `ploopi_module` VALUES (1,'SystÃšme',1,0,1,0,0,0,0,1,0,0);
+INSERT INTO `ploopi_module` VALUES (1,'Système',1,0,1,0,0,0,0,1,0,0);
 /*!40000 ALTER TABLE `ploopi_module` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -887,7 +647,7 @@ CREATE TABLE `ploopi_module_type` (
 
 LOCK TABLES `ploopi_module_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_module_type` DISABLE KEYS */;
-INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.0 Alpha 1','Netlor Concept','20070330000000');
+INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.0 alpha 3','Ovensia / Netlor','20080224000000');
 /*!40000 ALTER TABLE `ploopi_module_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1390,7 +1150,7 @@ CREATE TABLE `ploopi_user_type` (
 
 LOCK TABLES `ploopi_user_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_user_type` DISABLE KEYS */;
-INSERT INTO `ploopi_user_type` VALUES (1,'','Non d�fini');
+INSERT INTO `ploopi_user_type` VALUES (1,'','Non d?fini');
 /*!40000 ALTER TABLE `ploopi_user_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1586,4 +1346,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-02-12 18:40:19
+-- Dump completed on 2008-02-24 22:44:25

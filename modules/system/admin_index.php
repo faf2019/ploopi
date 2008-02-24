@@ -256,7 +256,7 @@ switch ($_SESSION['system']['level'])
 
                         system_updateparents();
 
-                        foreach($heritedmodule as $instance)
+                        foreach($_POST['heritedmodule'] as $instance)
                         {
                             $data = explode(',',$instance);
                             $instancetype = $data[0];
