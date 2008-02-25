@@ -408,10 +408,6 @@ if ($ploopi_initsession)
         if (!isset($_GET['reloadsession'])) $ploopi_mainmenu = _PLOOPI_MENU_MYGROUPS;
     }
     
-    
-    
-    $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['web'][0];
-    
     if (isset($_SESSION['ploopi']['hosts']['web'][0]))
     {
         $wid = $_SESSION['ploopi']['hosts']['web'][0];
