@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 function ploopi_documents_getid($id_object, $id_record, $id_module = -1)
 {
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
@@ -84,18 +83,21 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
         $documentsfolder->fields['id_workspace'] = $_SESSION['documents']['id_workspace'];
         $currentfolder = $documentsfolder->save();
 
-        foreach ($default_folders as $foldername)
+        if (is_array($default_folders))
         {
-            $documentsfolder = new documentsfolder();
-            $documentsfolder->fields['id_folder'] = $currentfolder;
-            $documentsfolder->fields['id_object'] = $_SESSION['documents']['id_object'];
-            $documentsfolder->fields['id_record'] = $_SESSION['documents']['id_record'];
-            $documentsfolder->fields['id_module'] = $_SESSION['documents']['id_module'];
-            $documentsfolder->fields['id_user'] = $_SESSION['documents']['id_user'];
-            $documentsfolder->fields['id_workspace'] = $_SESSION['documents']['id_workspace'];
-            $documentsfolder->fields['name'] = $foldername;
-            $documentsfolder->fields['system'] = 1;
-            $documentsfolder->save();
+            foreach ($default_folders as $foldername)
+            {
+                $documentsfolder = new documentsfolder();
+                $documentsfolder->fields['id_folder'] = $currentfolder;
+                $documentsfolder->fields['id_object'] = $_SESSION['documents']['id_object'];
+                $documentsfolder->fields['id_record'] = $_SESSION['documents']['id_record'];
+                $documentsfolder->fields['id_module'] = $_SESSION['documents']['id_module'];
+                $documentsfolder->fields['id_user'] = $_SESSION['documents']['id_user'];
+                $documentsfolder->fields['id_workspace'] = $_SESSION['documents']['id_workspace'];
+                $documentsfolder->fields['name'] = $foldername;
+                $documentsfolder->fields['system'] = 1;
+                $documentsfolder->save();
+            }
         }
     }
     ?>
@@ -144,7 +146,7 @@ function ploopi_documents_countelements($id_folder)
     return($c);
 }
 
-function ploopi_documents_getfiles($id_object, $id_record, $id_folder)
+function ploopi_documents_getfiles($id_object, $id_record, $id_folder = 0)
 {
     global $db;
 
