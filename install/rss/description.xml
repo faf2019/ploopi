@@ -2,41 +2,10 @@
 <ploopi>
     <moduletype>
         <label>rss</label>
-        <version>1.20</version>
+        <version>1.201</version>
         <author>Netlor / Ovensia</author>
-        <date>20080206000000</date>
-        <publicparam>1</publicparam>
+        <date>20080225000000</date>
         <description>Gestion de Flux RSS</description>
-        <paramtype>
-            <name>showmenu</name>
-            <label>Visible dans les modules</label>
-            <default_value>1</default_value>
-            <public>1</public>
-            <description/>
-            <paramchoice>
-                <value>1</value>
-                <displayed_value>oui</displayed_value>
-            </paramchoice>
-            <paramchoice>
-                <value>0</value>
-                <displayed_value>non</displayed_value>
-            </paramchoice>
-            </paramtype>
-        <paramtype>
-            <name>showblock</name>
-            <label>Afficher le bloc</label>
-            <default_value>1</default_value>
-            <public>1</public>
-            <description/>
-            <paramchoice>
-                <value>1</value>
-                <displayed_value>oui</displayed_value>
-            </paramchoice>
-            <paramchoice>
-                <value>0</value>
-                <displayed_value>non</displayed_value>
-            </paramchoice>
-        </paramtype>
         <paramtype>
             <name>nbitemdisplay</name>
             <label>Nombre de liens affichés</label>

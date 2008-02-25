@@ -2,10 +2,9 @@
 <ploopi>
     <moduletype>
         <label>doc</label>
-        <version>3.6</version>
+        <version>3.61</version>
         <author>Netlor / Ovensia</author>
         <date>20080206000000</date>
-        <publicparam>1</publicparam>
         <description>Gestion de Documents</description>
         <paramtype>
             <name>doc_viewfoldersinblock</name>

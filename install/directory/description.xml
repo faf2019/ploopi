@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>directory</label>
-      <version>1.20</version>
+      <version>1.201</version>
       <author>Netlor / Ovensia</author>
-      <date>200801100000000</date>
+      <date>200802250000000</date>
       <description>Annuaire des Utilisateurs</description>
       <paramtype>
          <name>directory_myfavorites</name>
