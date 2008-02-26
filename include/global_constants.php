@@ -96,14 +96,7 @@ define ('_PLOOPI_ID_LEVEL_GROUPMANAGER',    15);
 define ('_PLOOPI_ID_LEVEL_GROUPADMIN',      20);
 define ('_PLOOPI_ID_LEVEL_SYSTEMADMIN',     99);
 
-define('PHPDIG_DB_PREFIX', 'phpdig_');
-if (defined('_PLOOPI_DB_SERVER')) define('PHPDIG_DB_HOST', _PLOOPI_DB_SERVER);
-if (defined('_PLOOPI_DB_LOGIN')) define('PHPDIG_DB_USER', _PLOOPI_DB_LOGIN);
-if (defined('_PLOOPI_DB_PASSWORD')) define('PHPDIG_DB_PASS', _PLOOPI_DB_PASSWORD);
-if (defined('_PLOOPI_DB_DATABASE')) define('PHPDIG_DB_NAME', _PLOOPI_DB_DATABASE);
-
 define('_PLOOPI_INDEXATION_METAWEIGHT',     999999);
-
 
 global $scriptenv;
 $scriptenv = basename($_SERVER['SCRIPT_FILENAME']);
