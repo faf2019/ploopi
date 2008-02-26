@@ -52,8 +52,9 @@ include_once './include/errors.php';
 // LOAD GLOBALS, VARS & FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////
 include_once './include/global_constants.php';
-include_once './include/functions/system.php';
 include_once './include/functions/session.php';
+include_once './include/functions/string.php';
+include_once './include/functions/system.php';
 
 ///////////////////////////////////////////////////////////////////////////
 // VARIABLE FILTER
