@@ -33,22 +33,12 @@ function ploopi_print_r($var)
 function ploopi_die($var = '')
 {
     global $db;
-    global $ploopi_errors_msg;
-    global $ploopi_errors_vars;
-    global $ploopi_errors_nb;
-    global $ploopi_errors_level;
-    global $ploopi_errortype;
-    global $ploopi_errorlevel;
 
     if (!empty($var))
     {
         if (is_string($var)) echo $var;
         else ploopi_print_r($var);
     }
-
-    if ($ploopi_errors_level && _PLOOPI_MAIL_ERRORS && _PLOOPI_ADMINMAIL != '') mail(_PLOOPI_ADMINMAIL,"[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$_SERVER['HTTP_HOST']}]", "$ploopi_errors_nb erreur(s) sur $ploopi_errors_msg\n\nDUMP:\n$ploopi_errors_vars");
-    if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG)  include './modules/system/hit.php';
-    
     
     session_write_close();
     if (!empty($db) && $db->isconnected()) $db->close();
