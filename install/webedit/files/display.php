@@ -547,7 +547,7 @@ $lastupdate = ($lastupdate = webedit_getlastupdate()) ? ploopi_timestamp2local($
 list($keywords) = ploopi_getwords("{$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']} {$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_keywords']} {$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']}");
 
 // PLOOPI JS
-$template_body->assign_block_vars('ploopi_js',array('PATH' => "./lib/prototype/prototype.pack.js"));
+$template_body->assign_block_vars('ploopi_js',array('PATH' => "./lib/protoculous/protoculous-packer.js"));
 $template_body->assign_block_vars('ploopi_js',array('PATH' => "./js/functions.pack.js"));
 
 $template_body->assign_vars(array(

@@ -62,13 +62,23 @@ while ($rssfeed_fields = $db->fetchrow($rssfeed_result))
 
         while($rsscache_fields = $db->fetchrow($rsscache_result))
         {
+            if (!empty($rsscache_fields['published']) && is_numeric($rsscache_fields['published']))
+            {
+                $published_date = date(_PLOOPI_DATEFORMAT,$rsscache_fields['published']);
+                $published_time = date(_PLOOPI_TIMEFORMAT,$rsscache_fields['published']);
+            }
+            else
+            {
+                $published_date = $published_time = '';
+            }
+            
             $template_body->assign_block_vars('rssfeed.rssentry', array(
                         'TITLE' => strip_tags($rsscache_fields['title'],'<b><i>'),
                         'SUBTITLE' => strip_tags($rsscache_fields['subtitle'],'<b><i>'),
-                        'DATE' => date(_PLOOPI_DATEFORMAT,$rsscache_fields['published']),
-                        'TIME' => date(_PLOOPI_TIMEFORMAT,$rsscache_fields['published']),
-                        'PUBLISHED_DATE' => date(_PLOOPI_DATEFORMAT,$rsscache_fields['published']),
-                        'PUBLISHED_TIME' => date(_PLOOPI_TIMEFORMAT,$rsscache_fields['published']),
+                        'DATE' => $published_date,
+                        'TIME' => $published_time,
+                        'PUBLISHED_DATE' => $published_date,
+                        'PUBLISHED_TIME' => $published_time,
                         'LINK' => $rsscache_fields['link']
                         ));
         }

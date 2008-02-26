@@ -93,8 +93,9 @@ if ($block_rssfeed_id)
 
     while($rssentry_row = $db->fetchrow($rssentry_result))
     {
-        $ld = ploopi_timestamp2local($rssentry_row['timestp']);
-        $block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.ploopi_unixtimestamp2local($rssentry_row['published']), $rssentry_row['link'], '', '_blank');
+        $ld = (!empty($rssentry_row['published']) && is_numeric($rssentry_row['published'])) ? ploopi_unixtimestamp2local($rssentry_row['published']) : '';
+
+        $block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.$ld, $rssentry_row['link'], '', '_blank');        
     }
 
 }
