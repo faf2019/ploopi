@@ -37,7 +37,7 @@ $template_body = new Template($_SESSION['ploopi']['template_path']);
 if (!empty($_GET['ploopi_tpl']) && file_exists("{$_SESSION['ploopi']['template_path']}/{$_GET['ploopi_tpl']}.tpl")) $template_body->set_filenames(array('body' => "{$_GET['ploopi_tpl']}.tpl"));
 else
 {
-    if ($_SESSION['ploopi']['browser']['pda']) $template_body->set_filenames(array('body' => 'pda.tpl'));
+    if (isset($_SESSION['ploopi']['browser']['pda']) && $_SESSION['ploopi']['browser']['pda']) $template_body->set_filenames(array('body' => 'pda.tpl'));
     else $template_body->set_filenames(array('body' => 'index.tpl'));
 }
 

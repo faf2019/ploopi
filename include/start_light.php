@@ -28,14 +28,6 @@ include './include/start_common.php';
 ///////////////////////////////////////////////////////////////////////////
 include_once './modules/system/class_workspace.php';
 
-///////////////////////////////////////////////////////////////////////////
-// LOAD GLOBALS, VARS & FUNCTIONS
-///////////////////////////////////////////////////////////////////////////
-include_once './include/global_constants.php';
-include_once './include/functions/system.php';
-include_once './include/functions/session.php';
-
-
 if ($ploopi_initsession) include './include/start_initsession.php';
 
 switch($_SESSION['ploopi']['scriptname'])
