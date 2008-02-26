@@ -59,18 +59,5 @@ if (isset($_REQUEST['ploopi_moduleid']))
 }
 else ploopi_h404();
 
-$time = round($ploopi_timer->getexectime(),3);
-$time = sprintf("%d",$time*1000);
-
-$sql_time = round($db->exectime_queries,3);
-$sql_time = sprintf("%d",$sql_time*1000);
-
-$sql_p100 = round(($sql_time*100)/$time,0);
-$php_p100 = 100 - $sql_p100;
-
-//echo "{$time} {$sql_p100}";
-
-//ploopi_print_r($_SESSION);
-
-
+ploopi_die();
 ?>

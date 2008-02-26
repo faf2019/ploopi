@@ -177,3 +177,7 @@ DROP TABLE `phpdig_clicks`, `phpdig_engine`, `phpdig_excludes`, `phpdig_includes
 
 ALTER TABLE `ploopi_workspace_user` ADD INDEX ( `id_workspace` );
 ALTER TABLE `ploopi_group_user` ADD INDEX ( `id_user` );
+
+ALTER TABLE `ploopi_log` CHANGE `dims_userid` `ploopi_userid` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `dims_workspaceid` `ploopi_workspaceid` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `dims_moduleid` `ploopi_moduleid` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';

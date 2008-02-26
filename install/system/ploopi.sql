@@ -1347,3 +1347,7 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2008-02-24 22:44:25
+
+ALTER TABLE `ploopi_log` CHANGE `dims_userid` `ploopi_userid` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `dims_workspaceid` `ploopi_workspaceid` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `dims_moduleid` `ploopi_moduleid` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';

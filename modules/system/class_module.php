@@ -20,11 +20,9 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 include_once './include/classes/class_data_object.php';
 include_once './modules/system/class_module_workspace.php';
-include_once './modules/system/class_homepage_column.php';
 
 class module extends data_object
 {

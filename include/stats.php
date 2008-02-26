@@ -20,8 +20,9 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+global $ploopi_stats;
+
 $ploopi_stats = array();
 
 if (isset($ploopi_content)) $ploopi_stats['pagesize'] = strlen($ploopi_content);

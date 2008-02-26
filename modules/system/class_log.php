@@ -20,24 +20,11 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-/**
-* @author   NETLOR CONCEPT
-* @version      1.0
-* @package      log
-* @access   public
-*/
 
-class log extends PLOOPI_DATA_OBJECT
-{   
-    /**
-    * Class constructor
-    *
-    * @param int $connection_id 
-    * @access public
-    **/
-    
+include_once './include/classes/class_data_object.php';
+
+class log extends data_object
+{
     function log()
     {
         parent::data_object('ploopi_log');

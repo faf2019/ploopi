@@ -114,9 +114,5 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mode'] == 'admin')
 
 include_once './include/stats.php';
 
-if ($ploopi_errors_level && _PLOOPI_MAIL_ERRORS && _PLOOPI_ADMINMAIL != '') echo mail(_PLOOPI_ADMINMAIL,"[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$_SERVER['HTTP_HOST']}]", "$ploopi_errors_nb erreur(s) sur $ploopi_errors_msg\n\nDUMP:\n$ploopi_errors_vars");
-if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG)  include './modules/system/hit.php';
-
-session_write_close();
-$db->close();
+ploopi_die();
 ?>

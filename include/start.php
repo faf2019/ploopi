@@ -4,7 +4,7 @@
     Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
-    This file is part of Ploopi.
+    This file is part of Ploopi.work
 
     Ploopi is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,102 +21,11 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-ob_start();
-
-///////////////////////////////////////////////////////////////////////////
-// START TIMER
-///////////////////////////////////////////////////////////////////////////
-
-include_once './include/classes/class_timer.php' ;
-$ploopi_timer = new timer();
-$ploopi_timer->start();
-
-///////////////////////////////////////////////////////////////////////////
-// LOAD PLOOPI CONFIG
-///////////////////////////////////////////////////////////////////////////
-
-if (!file_exists('./config/config.php'))
-{
-    header("Location: ./config/install.php");
-    ploopi_die();
-}
-include_once './config/config.php'; // load config (mysql, path, etc.)
-
-///////////////////////////////////////////////////////////////////////////
-// INITIALIZE ERROR HANDLER
-///////////////////////////////////////////////////////////////////////////
-
-include_once './include/errors.php';
-
-///////////////////////////////////////////////////////////////////////////
-// LOAD GLOBALS, VARS & FUNCTIONS
-///////////////////////////////////////////////////////////////////////////
-include_once './include/global.php';
-
-///////////////////////////////////////////////////////////////////////////
-// VARIABLE FILTER
-///////////////////////////////////////////////////////////////////////////
-include_once './include/import_gpr.php';
-
-// set default header
-include_once './include/header.php';
-
-///////////////////////////////////////////////////////////////////////////
-// DB CONNECT
-///////////////////////////////////////////////////////////////////////////
-
-if (file_exists('./db/class_db_'._PLOOPI_SQL_LAYER.'.php')) include_once './db/class_db_'._PLOOPI_SQL_LAYER.'.php';
-
-global $db;
-
-$db = new ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
-if(!$db->connection_id) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
-
-///////////////////////////////////////////////////////////////////////////
-// INITIALIZE SESSION HANDLER
-///////////////////////////////////////////////////////////////////////////
-
-if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
-{
-    include_once './include/classes/class_session.php' ;
-
-    ini_set('session.save_handler', 'user');
-    $session = new ploopi_session();
-    session_set_save_handler(   array($session, 'open'),
-                                array($session, 'close'),
-                                array($session, 'read'),
-                                array($session, 'write'),
-                                array($session, 'destroy'),
-                                array($session, 'gc')
-                            );
-}
-
-
-session_start();
-
-$ploopi_initsession = false;
-
-if (empty($_SESSION) || ($_SESSION['ploopi']['host'] != $_SERVER['HTTP_HOST']))  { ploopi_session_reset(); $ploopi_initsession = true; }
-
-ploopi_session_update();
-
-///////////////////////////////////////////////////////////////////////////
-// LOGOUT
-///////////////////////////////////////////////////////////////////////////
-if (isset($_REQUEST['ploopi_logout']))
-{
-    session_destroy();
-    session_write_close();
-    $db->close();
-
-    header("location: {$scriptenv}");
-}
+include './include/start_common.php';
 
 ///////////////////////////////////////////////////////////////////////////
 // INCLUDES MAIN CLASSES
 ///////////////////////////////////////////////////////////////////////////
-
-include_once './include/classes/class_data_object.php';
 include_once './include/classes/class_user_action_log.php' ;
 include_once './include/classes/class_param.php';
 include_once './include/classes/class_connecteduser.php';
@@ -224,100 +133,7 @@ $ploopi_initsession |= isset($_GET['reloadsession']);
 
 if ($ploopi_initsession)
 {
-    ///////////////////////////////////////////////////////////////////////////
-    // GET WORKSPACES (FOR THIS DOMAIN)
-    // on en profite pour appliquer l'héritage implicite des domaines pour les sous-espaces de travail
-    ///////////////////////////////////////////////////////////////////////////
-
-    $select = "SELECT * FROM ploopi_workspace where system = 0 order by depth";
-    $db->query($select);
-
-    $workspaces = array();
-
-    while ($fields = $db->fetchrow())
-    {
-        $web_domain_array = split("\r\n",$fields['web_domainlist']);
-        $admin_domain_array = split("\r\n",$fields['admin_domainlist']);
-
-        $workspaces[$fields['id']] = $fields;
-        $workspaces[$fields['id']]['parents_array'] = split(';',$workspaces[$fields['id']]['parents']);
-        $workspaces[$fields['id']]['web_domain_array'] = $web_domain_array;
-        $workspaces[$fields['id']]['admin_domain_array'] = $admin_domain_array;
-
-        if (trim($workspaces[$fields['id']]['web_domainlist']) == '')
-        {
-            $p_array = $workspaces[$fields['id']]['parents_array'];
-            for ($i=sizeof($p_array)-1;$i>=0;$i--)
-            {
-                if (isset($workspaces[$p_array[$i]]) && trim($workspaces[$p_array[$i]]['web_domainlist']) != '')
-                {
-                    $workspaces[$fields['id']]['web_domainlist'] = $workspaces[$p_array[$i]]['web_domainlist'];
-                    $workspaces[$fields['id']]['web_domain_array'] = $workspaces[$p_array[$i]]['web_domain_array'];
-                    break;
-                }
-            }
-        }
-
-        if (trim($workspaces[$fields['id']]['admin_domainlist']) == '')
-        {
-            $p_array = $workspaces[$fields['id']]['parents_array'];
-            for ($i=sizeof($p_array)-1;$i>=0;$i--)
-            {
-                if (isset($workspaces[$p_array[$i]]) && trim($workspaces[$p_array[$i]]['admin_domainlist']) != '')
-                {
-                    $workspaces[$fields['id']]['admin_domainlist'] = $workspaces[$p_array[$i]]['admin_domainlist'];
-                    $workspaces[$fields['id']]['admin_domain_array'] = $workspaces[$p_array[$i]]['admin_domain_array'];
-                    break;
-                }
-            }
-        }
-    }
-
-    $_SESSION['ploopi']['allworkspaces'] = implode(',', array_keys($workspaces));
-
-    $host_array = array($_SESSION['ploopi']['host'], '*');
-    $_SESSION['ploopi']['hosts'] = array('web' => array(), 'admin' => array());
-
-    // on garde les id de groupes autorisés en fonction du domaine courant
-    foreach($workspaces as $gid => $grp)
-    {
-        foreach($grp['web_domain_array'] as $domain)
-        {
-            if ($workspaces[$gid]['web'] && sizeof(array_intersect($workspaces[$gid]['web_domain_array'], $host_array)) && !in_array($gid, $_SESSION['ploopi']['hosts']['web'])) $_SESSION['ploopi']['hosts']['web'][] = $gid;
-            //if ($workspaces[$gid]['web'] && !in_array($gid, $_SESSION['ploopi']['hosts']['web'])) $_SESSION['ploopi']['hosts']['web'][] = $gid;
-        }
-        foreach($grp['admin_domain_array'] as $domain)
-        {
-            if ($workspaces[$gid]['admin'] && sizeof(array_intersect($workspaces[$gid]['admin_domain_array'], $host_array)) && !in_array($gid, $_SESSION['ploopi']['hosts']['admin'])) $_SESSION['ploopi']['hosts']['admin'][] = $gid;
-            //if ($workspaces[$gid]['admin'] && !in_array($gid, $_SESSION['ploopi']['hosts']['admin'])) $_SESSION['ploopi']['hosts']['admin'][] = $gid;
-        }
-    }
-
-    $webgroups = implode(',', $_SESSION['ploopi']['hosts']['web']);
-
-    if ($webgroups != '')
-    {
-        // recherche des modules "WEBEDIT"
-        $db->query( "
-                    select      ploopi_module_workspace.id_module,
-                                ploopi_module_workspace.id_workspace
-                    from        ploopi_module,
-                                ploopi_module_type,
-                                ploopi_module_workspace
-
-                    where       ploopi_module.id_module_type = ploopi_module_type.id
-                    and         (ploopi_module_type.label = 'webedit')
-                    and         ploopi_module.id = ploopi_module_workspace.id_module
-                    and         ploopi_module_workspace.id_workspace IN ({$webgroups})
-                    ");
-
-        while ($fields = $db->fetchrow()) $workspaces[$fields['id_workspace']]['webeditmoduleid'] = $fields['id_module'];
-    }
-
-    //$_SESSION['ploopi']['workspaces'] = $workspaces;
-
-    if (isset($_SESSION['ploopi']['hosts']['web'][0])) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['web'][0]] = $workspaces[$_SESSION['ploopi']['hosts']['web'][0]];
-    if (isset($_SESSION['ploopi']['hosts']['admin'][0])) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['admin'][0]] = $workspaces[$_SESSION['ploopi']['hosts']['admin'][0]];
+    include './include/start_initsession.php';
 
     ///////////////////////////////////////////////////////////////////////////
     // LOAD USER PROFILE
@@ -388,7 +204,6 @@ if ($ploopi_initsession)
             }
         }
 
-
         if (!$workspace_allowed)
         {
             session_destroy();
@@ -406,26 +221,6 @@ if ($ploopi_initsession)
         }
 
         if (!isset($_GET['reloadsession'])) $ploopi_mainmenu = _PLOOPI_MENU_MYGROUPS;
-    }
-    
-    if (isset($_SESSION['ploopi']['hosts']['web'][0]))
-    {
-        $wid = $_SESSION['ploopi']['hosts']['web'][0];
-
-        if (!isset($_SESSION['ploopi']['workspaces'][$wid]))
-        {
-            $workspace = new workspace();
-            $workspace->open($wid);
-            
-            $_SESSION['ploopi']['workspaces'][$wid] = $workspaces[$wid];
-            $_SESSION['ploopi']['workspaces'][$wid]['children']  = $workspace->getworkspacechildrenlite();
-            $_SESSION['ploopi']['workspaces'][$wid]['parents'] = explode(';',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
-            $_SESSION['ploopi']['workspaces'][$wid]['brothers']  = $workspace->getworkspacebrotherslite();
-            $_SESSION['ploopi']['workspaces'][$wid]['list_parents'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
-            $_SESSION['ploopi']['workspaces'][$wid]['list_children'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['children']);
-            $_SESSION['ploopi']['workspaces'][$wid]['list_brothers'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['brothers']);
-            $_SESSION['ploopi']['workspaces'][$wid]['modules'] = $workspace->getmodules(true);
-        }
     }
 }
 
@@ -447,22 +242,39 @@ switch($_SESSION['ploopi']['scriptname'])
     case 'index.php':
         if ((!empty($_GET['webedit_mode'])) && $_SESSION['ploopi']['connected'])
         {
-            // cas spécial du mode de rendu public du module WCE (on utilise le rendu frontoffice sans activer tout le processus)
+            // cas spécial du mode de rendu public du module Webedit (on utilise le rendu frontoffice sans activer tout le processus)
             $newmode = 'web';
         }
         else
         {
-            $newmode = (_PLOOPI_FRONTOFFICE && is_dir('./modules/webedit/') && isset($_SESSION['ploopi']['hosts']['web'][0]) && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['web'][0]]['webeditmoduleid'])) ? 'web' : 'admin';
+            $newmode = (_PLOOPI_FRONTOFFICE && is_dir('./modules/webedit/') && isset($_SESSION['ploopi']['hosts']['web'][0])) ? 'web' : 'admin';
 
-            //$_SESSION['ploopi']['workspaceid']
             if ($_SESSION['ploopi']['mode'] != $newmode && $newmode == 'web')
             {
-                $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['web'][0];
-
-                if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['webeditmoduleid']))
+                if (!isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['web'][0]]['webeditmoduleid']))
                 {
-                    $_SESSION['ploopi']['webeditmoduleid'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['webeditmoduleid'];
-                    $_SESSION['ploopi']['moduleid'] = $_SESSION['ploopi']['webeditmoduleid'];
+                    // on cherche le module webedit
+                    $db->query( "
+                                select      ploopi_module_workspace.id_module
+                                            
+                                from        ploopi_module,
+                                            ploopi_module_type,
+                                            ploopi_module_workspace
+            
+                                where       ploopi_module.id_module_type = ploopi_module_type.id
+                                and         (ploopi_module_type.label = 'webedit')
+                                and         ploopi_module.id = ploopi_module_workspace.id_module
+                                and         ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['hosts']['web'][0]}
+                                ");
+            
+                    if ($fields = $db->fetchrow()) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['web'][0]]['webeditmoduleid'] = $fields['id_module'];
+                    else $newmode == 'admin';
+                }
+                
+                if ($newmode == 'web')
+                {
+                    $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['web'][0];
+                    $_SESSION['ploopi']['moduleid'] = $_SESSION['ploopi']['webeditmoduleid'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['webeditmoduleid'];
                 }
             }
         }
@@ -672,7 +484,7 @@ if ($_SESSION['ploopi']['mode'] == 'admin')
 }
 
 
-// kind of shortcuts for admin & workspaceid
+// shortcuts for admin & workspaceid
 if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['adminlevel'])) $_SESSION['ploopi']['adminlevel'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['adminlevel'];
 else $_SESSION['ploopi']['adminlevel'] = 0;
 
