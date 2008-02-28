@@ -68,27 +68,34 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
         // parse previous uri to detect "ploopi_mainmenu" param
         // if "ploopi_mainmenu" param then redirect after connect
 
-        /* DESACTIVE TANT QUE NON SECURISE
+        // parse previous uri to detect "ploopi_mainmenu" param
+        // if "ploopi_mainmenu" param then redirect after connect
+
         if (!empty($_SESSION['ploopi']['uri']))
         {
             $_uri = (empty($_SERVER['QUERY_STRING'])) ? '' : "{$scriptenv}?{$_SERVER['QUERY_STRING']}";
             $_purl = parse_url($_SESSION['ploopi']['uri']);
             $_params = array();
-
+            
             foreach(explode('&',$_purl['query']) as $param)
             {
                 if (strstr($param, '=')) list($key, $value) = explode('=',$param);
                 else {$key = $param; $value = '';}
-
-                //$_params[$key]=$ifilter->process($value);
+        
+                $_REQUEST[$key] = $_GET[$key] = ploopi_filtervar($value);
+                
                 if ($key == 'ploopi_url')
                 {
-                    foreach(explode('&',base64_decode($_params['ploopi_url'])) as $param)
+                    require_once './include/classes/class_cipher.php';
+                    $cipher = new ploopi_cipher();
+                    $ploopi_url = $cipher->decrypt($_GET['ploopi_url']);
+                
+                    foreach(explode('&',$ploopi_url) as $param)
                     {
                         if (strstr($param, '=')) list($key, $value) = explode('=',$param);
                         else {$key = $param; $value = '';}
-
-                        //$_params[$key]=$ifilter->process($value);
+                
+                        $_REQUEST[$key] = $_GET[$key] = ploopi_filtervar($value);
                     }
                 }
             }
@@ -98,8 +105,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
             unset($_purl);
             unset($_params);
         }
-        */
-
+        
         ploopi_session_reset();
         $ploopi_initsession = true;
 
