@@ -102,6 +102,8 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
         $columns['right']['object_type']    = array('label' => 'Type d\'Objet', 'width' => '120', 'options' => array('sort' => true));
 
         // on parcourt le tableau des réponses
+        
+
         foreach ($arrRelevance as $row)
         {
             $type = $arrObjectTypes[$row['id_module']]['type'];
@@ -154,13 +156,16 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
                                                 ),
                                                 $arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['script']
                                             );
+                                            
+                $objWorkspace = new workspace();
+                $strWorkspaceLabel = ($objWorkspace->open($row['id_workspace'])) ? $objWorkspace->fields['label'] : '';
 
                 $values[$c]['values']['relevance'] = array('label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $row['relevance']), 'sort_label' => $row['relevance']);
                 $values[$c]['values']['label'] = array('label' => $row['label']);
                 $values[$c]['values']['timestp_lastindex'] = array('label' => $l_timestp_lastindex['date'], 'sort_label' => $row['timestp_lastindex']);
                 $values[$c]['values']['timestp_create'] = array('label' => $l_timestp_create['date'].' '.$l_timestp_create['time'], 'sort_label' => $row['timestp_create']);
                 $values[$c]['values']['user'] = array('label' => $strUserName);
-                $values[$c]['values']['workspace'] = array('label' => $_SESSION['ploopi']['workspaces'][$row['id_workspace']]['label']);
+                $values[$c]['values']['workspace'] = array('label' => $strWorkspaceLabel);
                 $values[$c]['values']['module'] = array('label' => $arrObjectTypes[$row['id_module']]['label']);
                 $values[$c]['values']['object_type'] = array('label' => $arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['label']);
 

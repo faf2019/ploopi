@@ -233,6 +233,7 @@ $template_body->assign_vars(array(
     'WORKSPACE_META_COPYRIGHT'      => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_copyright']),
     'WORKSPACE_META_ROBOTS'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_robots']),
     'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
+    'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
     'ADDITIONAL_JAVASCRIPT'         => $additional_javascript,
     'PLOOPI_ERROR'                  => (!empty($_GET['ploopi_errorcode'])) ? $ploopi_errormsg[$_GET['ploopi_errorcode']] : '',
     'PLOOPI_VERSION'                    => _PLOOPI_VERSION
