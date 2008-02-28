@@ -33,6 +33,7 @@ if ($ploopi_initsession) include './include/start_initsession.php';
 switch($_SESSION['ploopi']['scriptname'])
 {
     case 'cron.php':
+    case 'webservice.php':
         $_SESSION['ploopi']['mode'] = 'admin';
     break;
 
