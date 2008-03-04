@@ -251,8 +251,7 @@ if (!$readonly)
     <script type="text/javascript">
     document.docfolder_form.docfolder_name.focus();
     </script>
-    <iframe name="doc_folderform_iframe" src="./img/blank.gif" style="width:500px;height:500px;display:block;"></iframe>
-    <!-- iframe name="doc_folderform_iframe" src="./img/blank.gif" style="width:0;height:0;display:none;"></iframe-->
+    <iframe name="doc_folderform_iframe" src="./img/blank.gif" style="width:0;height:0;display:none;"></iframe>
     <?
 }
 
