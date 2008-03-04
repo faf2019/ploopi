@@ -1,5 +1,5 @@
+<?php
 /*
-    Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
@@ -19,12 +19,14 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-@import url(main.css);
-@import url(annotations.css);
-@import url(calendar.css);
-@import url(documents.css);
-@import url(shares.css);
-@import url(skin.css);
-@import url(subscriptions.css);
-@import url(tickets.css);
-@import url(workflow.css);
+
+include_once './include/classes/class_data_object.php';
+
+class subscription_action extends data_object
+{
+    function subscription_action()
+    {
+        parent::data_object('ploopi_subscription_action', 'id_subscription', 'id_action');
+    }
+}
+?>

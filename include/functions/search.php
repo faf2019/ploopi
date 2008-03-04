@@ -324,7 +324,7 @@ function ploopi_search_get_index($id_object, $id_record, $limit = 100, $id_modul
 function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, $options = null)
 {
     global $db;
-
+    
     if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module = $_SESSION['ploopi']['moduleid'];
 
     // on récupère la liste des racines contenues dans la liste des mots clés
@@ -335,6 +335,7 @@ function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, 
 
     $arrSearch = array();
     $arrRelevance = array();
+    $arrElements = array();
 
     if ($id_record != '') $arrSearch[] = "e.id_record LIKE '".$db->addslashes($id_record)."%'";
     if ($id_object != '') $arrSearch[] = "e.id_object = {$id_object}";
@@ -346,70 +347,53 @@ function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, 
 
     $strSearch = (empty($arrSearch)) ? '' : ' AND '.implode(' AND ',$arrSearch);
 
-    $orderby = (isset($options['orderby'])) ? $options['orderby'] : '';
+    $orderby = (empty($options['orderby'])) ? 'relevance' : $options['orderby'];
     $sort = (isset($options['sort'])) ? $options['sort'] : 'DESC';
+    
+    $limit = (isset($options['limit'])) ? $options['limit'] : 200;
 
     // pour chaque racine (stem), on cherche les occurences d'éléments correspondants
     foreach($arrStems as $stem => $occ)
     {
         $id_stem = md5($stem);
+        
+        $towl = substr($stem,0,2);
 
         $sql =  "
-                SELECT      0 as sort_id,
-                            se.relevance,
-                            e.*
-
+                SELECT      e.*,
+                            se.relevance
+                            
                 FROM        ploopi_index_stem_element se,
                             ploopi_index_element e
 
                 WHERE       e.id = se.id_element
                 AND         se.id_stem = '{$id_stem}'
                 {$strSearch}
+
+                ORDER BY {$orderby} {$sort}
                 ";
-
-
+                
         $db->query($sql);
-
+        
         while ($row = $db->fetchrow())
         {
             $id = ($id_module != '') ? $row['id_record'] : $row['id'];
-
-            if (!isset($arrRelevance[$id]))
-            {
-                switch($orderby)
-                {
-                    case 'timestp_create':
-                        $row['sort_id'] = $row['timestp_create'];
-                    break;
-
-                    default:
-                    case 'relevance':
-                        $row['sort_id'] = 0;
-                    break;
-                }
-
-                $arrRelevance[$id] = $row;
-                $arrRelevance[$id]['count'] = 1;
-                $arrRelevance[$id]['kw'] = array();
-                $arrRelevance[$id]['stem'] = array();
-                $arrRelevance[$id]['keywords'] = array();
-            }
-            else
-            {
-                $arrRelevance[$id]['relevance'] += $row['relevance'];
-                $arrRelevance[$id]['count'] ++;
-            }
-            $arrRelevance[$id]['stem'][$stem] = 1;
+            
+            $arrElements[$id] = $row;
+            $arrRelevance[$id]['relevance'] = $row['relevance'];
+            $arrRelevance[$id]['count'] = 1;
+            $arrRelevance[$id]['kw'] = array();
+            $arrRelevance[$id]['stem'] = array($stem => 1); 
         }
     }
 
+    
     // pour chaque mot, on cherche les occurences d'éléments correspondants
     foreach($arrKeywords as $kw => $occ)
     {
         $sql =  "
-                SELECT      0 as sort_id,
+                SELECT      e.*,
                             ke.relevance,
-                            e.*,
                             k.keyword
 
                 FROM        ploopi_index_keyword k,
@@ -420,9 +404,10 @@ function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, 
                 AND         k.id = ke.id_keyword
                 AND         k.keyword like '".$db->addslashes($kw)."%'
                 {$strSearch}
+                
+                ORDER BY {$orderby} {$sort}
                 ";
-
-
+                
         $db->query($sql);
 
         while ($row = $db->fetchrow())
@@ -432,28 +417,13 @@ function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, 
             // relevance = relevance * ratio de similarité entre les 2 chaines
             $row['relevance'] *= (strlen($kw)/strlen($row['keyword']));
 
-            $keyword = $row['keyword'];
-            unset($row['keyword']);
-
-            if (!isset($arrRelevance[$id]))
+            if (!isset($arrElements[$id]))
             {
-                switch($orderby)
-                {
-                    case 'timestp_create':
-                        $row['sort_id'] = $row['timestp_create'];
-                    break;
-
-                    default:
-                    case 'relevance':
-                        $row['sort_id'] = 0;
-                    break;
-                }
-
-                $arrRelevance[$id] = $row;
+                $arrElements[$id] = $row;
+                $arrRelevance[$id]['relevance'] = $row['relevance'];
                 $arrRelevance[$id]['count'] = 1;
                 $arrRelevance[$id]['kw'] = array();
-                $arrRelevance[$id]['stem'] = array();
-                $arrRelevance[$id]['keywords'] = array();
+                $arrRelevance[$id]['stem'] = array(); 
             }
             else
             {
@@ -462,15 +432,13 @@ function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, 
             }
 
             $arrRelevance[$id]['kw'][$kw] = 1;
-            $arrRelevance[$id]['keywords'][$keyword] = 1;
         }
 
-
+        
         // recherche dans les annotations de l'utilisateur (considéré comme meta ?)
         $sql =  "
-                SELECT      0 as sort_id,
+                SELECT      e.*,
                             100 as relevance,
-                            e.*,
                             t.tag_clean as keyword
 
                 FROM        ploopi_annotation a,
@@ -482,7 +450,10 @@ function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, 
                 AND         at.id_annotation = a.id
                 AND         a.id_element = e.id
                 AND         t.tag_clean like '".$db->addslashes($kw)."%'
+                
                 {$strSearch}
+                
+                ORDER BY {$orderby} {$sort}
                 ";
 
         $db->query($sql);
@@ -493,26 +464,14 @@ function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, 
 
             // relevance = relevance * ratio de similarité entre les 2 chaines
             $row['relevance'] *= (strlen($kw)/strlen($row['keyword']));
-            unset($row['keyword']);
 
-            if (!isset($arrRelevance[$id]))
+            if (!isset($arrElements[$id]))
             {
-                switch($orderby)
-                {
-                    case 'timestp_create':
-                        $row['sort_id'] = $row['timestp_create'];
-                    break;
-
-                    default:
-                    case 'relevance':
-                        $row['sort_id'] = 0;
-                    break;
-                }
-
-                $arrRelevance[$id] = $row;
+                $arrElements[$id] = $row;
+                $arrRelevance[$id]['relevance'] = $row['relevance'];
                 $arrRelevance[$id]['count'] = 1;
                 $arrRelevance[$id]['kw'] = array();
-                $arrRelevance[$id]['stem'] = array();
+                $arrRelevance[$id]['stem'] = array(); 
             }
             else
             {
@@ -524,28 +483,26 @@ function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, 
         }
 
     }
-
+    
     foreach($arrRelevance as $key => $element)
     {
         $arrRelevance[$key]['kw_ratio'] = (sizeof($arrRelevance[$key]['kw'])+sizeof($arrRelevance[$key]['stem'])) / (sizeof($arrKeywords)+sizeof($arrStems));
         $arrRelevance[$key]['relevance'] = ($arrRelevance[$key]['relevance']/$arrRelevance[$key]['count']) * $arrRelevance[$key]['kw_ratio'];
-
-        switch($orderby)
-        {
-            case 'timestp_create':
-            break;
-
-            default:
-            case 'relevance':
-                $arrRelevance[$key]['sort_id'] = $arrRelevance[$key]['relevance'];
-            break;
-        }
     }
-
-    if ($sort == 'DESC') arsort($arrRelevance);
-    else asort($arrRelevance);
-
-    return($arrRelevance);
+    
+    // tri du résultat en fonction du champ et de l'ordre
+    $compare_sign = ($sort == 'DESC') ? '>' : '<';  
+    uasort($arrRelevance, create_function('$a,$b', 'return $b[\''.$orderby.'\'] '.$compare_sign.' $a[\''.$orderby.'\'];'));
+    
+    
+    $c = 0;
+    while (current($arrRelevance) !== FALSE && $c++ < $limit)
+    {
+        $arrResult[key($arrRelevance)] = array_merge($arrElements[key($arrRelevance)], $arrRelevance[key($arrRelevance)]);
+        next($arrRelevance);
+    }
+    
+    return($arrResult);
 }
 
 
@@ -604,25 +561,6 @@ function ploopi_getwords($content, $usecommonwords = true, $getstem = false)
 
     return(array($words, $words_indexed, $words_overall));
 }
-
-
-
-
-    function phpdigHighlight($ereg='',$string='')
-    {
-        if ($ereg) {
-            $string = @eregi_replace($ereg,"\\1<^#_>\\2</_#^>\\3",@eregi_replace($ereg,"\\1<^#_>\\2</_#^>\\3",$string));
-            $string = str_replace("^#_","span class=\"phpdigHighlight\"",str_replace("_#^","span",$string));
-            return $string;
-        }
-        else {
-            return $result;
-        }
-    }
-
-
-
-
 
 function ploopi_highlight($content, $words, $snippet_length = 150, $snippet_num = 3, $highlight_class = 'ploopi_highlight')
 {

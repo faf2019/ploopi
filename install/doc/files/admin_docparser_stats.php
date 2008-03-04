@@ -53,6 +53,25 @@ $array_values[$c]['style'] = '';
 $c++;
 
 $db->query("SELECT count(*) as nb FROM ploopi_mod_doc_keyword WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
+echo "
+            SELECT  count(ke.id_keyword) as nb
+            FROM    ploopi_index_element e,
+                    ploopi_index_keyword_element ke
+
+            WHERE   e.id_module = {$_SESSION['ploopi']['moduleid']}
+            AND     e.id_object = "._DOC_OBJECT_FILE."
+            AND     ke.id_element = e.id
+            ";
+
+            $db->query( "
+            SELECT  count(ke.id_keyword) as nb
+            FROM    ploopi_index_element e,
+                    ploopi_index_keyword_element ke
+
+            WHERE   e.id_module = {$_SESSION['ploopi']['moduleid']}
+            AND     e.id_object = "._DOC_OBJECT_FILE."
+            AND     ke.id_element = e.id
+            ");
 $row = $db->fetchrow();
 
 $nbkw = $row['nb'];

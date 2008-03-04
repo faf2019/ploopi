@@ -128,6 +128,7 @@ div.doc_fileform_title {
     font-weight:bold;
     background-color:#e0e0e0;
     border-bottom:1px solid #c0c0c0;
+    overflow:auto;
     padding:4px;
 }
 

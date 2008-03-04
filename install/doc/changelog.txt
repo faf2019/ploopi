@@ -1,4 +1,10 @@
-== Module DOC - version 3.6 ====================================================
+== Module DOC - version 3.7 ====================================================
+
+2008-03-04  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Ajout du sytème d'abonnement sur les actions (ajout/modif/suppression) des dossiers et des fichiers
+ 
+ == Module DOC - version 3.6 ====================================================
 
 2008-02-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 

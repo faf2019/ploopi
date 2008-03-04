@@ -71,6 +71,26 @@ class docfolder extends data_object
         return($ret);
     }
     
+    
+    function isEnabled()
+    {
+        $booFolderEnabled = false;
+        
+        if ($this->fields['id_user'] == $_SESSION['ploopi']['userid']) $booFolderEnabled = true;
+        else
+        {
+            if ($this->fields['foldertype'] == 'public') $booFolderEnabled = true;
+            else
+            {
+                doc_getshares();
+                if (in_array($this->fields['id'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['shares']['folders'])) $booFolderEnabled = true;
+            }
+        }
+
+        return($booFolderEnabled);
+    }
+    
+    
     function delete()
     {
         global $db;

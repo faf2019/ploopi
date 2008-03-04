@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?php
+
 doc_getworkflow();
 
 $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']);
@@ -417,5 +416,5 @@ while ($row = $db->fetchrow())
 
 $skin->display_array($columns, $values, 'doc_explorer', array('sortable' => true, 'orderby_default' => 'label'));
 
-if (!empty($currentfolder)) ploopi_annotation(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], $docfolder->fields['name']);
+if (!empty($currentfolder)) include './modules/doc/public_folder_actions.php';
 ?>

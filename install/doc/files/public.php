@@ -23,7 +23,6 @@
 
 if ($_SESSION['ploopi']['connected'])
 {
-
     ploopi_init_module('doc');
 
     include_once './modules/doc/class_docfile.php';
@@ -94,6 +93,7 @@ if ($_SESSION['ploopi']['connected'])
         break;
 
         case 'doc_filedownload':
+        case 'doc_fileview':
             if (!empty($_GET['docfile_md5id']))
             {
                 $docfile = new docfile();
@@ -104,12 +104,12 @@ if ($_SESSION['ploopi']['connected'])
                     include_once './modules/doc/class_docfilehistory.php';
                     $docfilehistory = new docfilehistory();
                     $docfilehistory->open($docfile->fields['id'], $_GET['version']);
-                    if (file_exists($docfilehistory->getfilepath())) ploopi_downloadfile($docfilehistory->getfilepath(),$docfilehistory->fields['name']);
+                    if (file_exists($docfilehistory->getfilepath())) ploopi_downloadfile($docfilehistory->getfilepath(), $docfilehistory->fields['name'], false, ($op != 'doc_fileview'));
                 }
                 else
                 {
-                    if (file_exists($docfile->getfilepath())) ploopi_downloadfile($docfile->getfilepath(),$docfile->fields['name']);
-                    else if (file_exists($docfile->getfilepath_deprecated())) ploopi_downloadfile($docfile->getfilepath_deprecated(),$docfile->fields['name']);
+                    if (file_exists($docfile->getfilepath())) ploopi_downloadfile($docfile->getfilepath(), $docfile->fields['name'], false, ($op != 'doc_fileview'));
+                    else if (file_exists($docfile->getfilepath_deprecated())) ploopi_downloadfile($docfile->getfilepath_deprecated(), $docfile->fields['name'], false, ($op != 'doc_fileview'));
                 }
             }
 
@@ -145,16 +145,39 @@ if ($_SESSION['ploopi']['connected'])
                 // on vérifie que l'utilisateur a bien le droit de supprimer ce fichier (en fonction du statut du dossier parent)
                 $docfolder_readonly_content = false;
 
+                $docfolder = new docfolder();
+
                 if (!empty($docfile->fields['id_folder']))
                 {
-                    $docfolder_parent = new docfolder();
-                    $docfolder_parent->open($docfile->fields['id_folder']);
-                    $docfolder_readonly_content = ($docfolder_parent->fields['readonly_content'] && $docfolder_parent->fields['id_user'] != $_SESSION['ploopi']['userid']);
+                    $docfolder->open($docfile->fields['id_folder']);
+                    $docfolder_readonly_content = ($docfolder->fields['readonly_content'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']);
                 }
 
                 if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_DELETEFILE) && (!$docfolder_readonly_content || $docfile->fields['id_user'] == $_SESSION['ploopi']['userid'])))
                 {
                     $error = $docfile->delete();
+                    
+                    if (!empty($docfile->fields['id_folder']) && $docfolder->fields['foldertype'] != 'private') 
+                    {
+                        // on n'est ni à la racine (pas d'abonnement sur la racine)
+                        // ni sur un dossier privé
+                        /* DEBUT ABONNEMENT */
+            
+                        // on construit la liste des objets parents (y compris l'objet courant)
+                        $arrFolderList = split(',', "{$docfolder->fields['parents']},{$docfolder->fields['id']}");
+
+                        // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
+                        $arrUsers = array();
+                        foreach ($arrFolderList as $intObjectId)
+                            $arrUsers += ploopi_subscription_getusers(_DOC_OBJECT_FOLDER, $intObjectId, array(_DOC_ACTION_MODIFYFILE, _DOC_ACTION_DELETEFILE));
+                        
+                        // on envoie le ticket de notification d'action sur l'objet
+                        ploopi_subscription_notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_DELETEFILE, $docfile->fields['name'], array_keys($arrUsers), 'Cet objet à été supprimé');
+                        
+                        /* FIN ABONNEMENT */
+                    }
+                 
+                    
                     ploopi_create_user_action_log(_DOC_ACTION_DELETEFILE, $docfile->fields['id']);
                     ploopi_redirect("{$scriptenv}?op=doc_explorer&currentfolder=$currentfolder&error=$error");
                 }
@@ -253,7 +276,30 @@ if ($_SESSION['ploopi']['connected'])
                                     ploopi_tickets_send("Demande de validation du document <strong>\"{$docfile->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyé suite à une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce document pour le valider en cliquant sur le lien ci-dessous.", true, 0, _DOC_OBJECT_FILEDRAFT, $currentfolder, $docfile->fields['name']);
                                 }
 
-                                if (!$error) ploopi_create_user_action_log(_DOC_ACTION_ADDFILE, $docfile->fields['id']);
+                                if (!$error) 
+                                {
+                                    if (!$draft)
+                                    {
+                                        $docfolder = new docfolder();
+                                        $docfolder->open($currentfolder);
+                                        
+                                        /* DEBUT ABONNEMENT */
+                            
+                                        // on construit la liste des objets parents (y compris l'objet courant)
+                                        $arrFolderList = split(',', "{$docfolder->fields['parents']},{$docfolder->fields['id']}");
+                            
+                                        // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
+                                        $arrUsers = array();
+                                        foreach ($arrFolderList as $intObjectId)
+                                            $arrUsers += ploopi_subscription_getusers(_DOC_OBJECT_FOLDER, $intObjectId, array(_DOC_ACTION_ADDFILE, _DOC_ACTION_MODIFYFILE));
+                                        
+                                        // on envoie le ticket de notification d'action sur l'objet
+                                        ploopi_subscription_notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_ADDFILE, $docfile->fields['name'], array_keys($arrUsers), 'Cet objet à été créé');
+                                        
+                                        /* FIN ABONNEMENT */                                        
+                                    }
+                                    ploopi_create_user_action_log(_DOC_ACTION_ADDFILE, $docfile->fields['id']);
+                                }
                             }
                         }
                     }
@@ -295,7 +341,27 @@ if ($_SESSION['ploopi']['connected'])
 
                     $error = $docfile->save();
 
-                    if (!$error) ploopi_create_user_action_log(_DOC_ACTION_MODIFYFILE, $docfile_id);
+                    if (!$error) 
+                    {
+                        if (!$draft)
+                        {
+                            /* DEBUT ABONNEMENT */
+                
+                            // on construit la liste des objets parents (y compris l'objet courant)
+                            $arrFolderList = split(',', "{$docfolder->fields['parents']},{$docfolder->fields['id']}");
+                
+                            // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
+                            $arrUsers = array();
+                            foreach ($arrFolderList as $intObjectId)
+                                $arrUsers += ploopi_subscription_getusers(_DOC_OBJECT_FOLDER, $intObjectId, array(_DOC_ACTION_MODIFYFILE));
+                            
+                            // on envoie le ticket de notification d'action sur l'objet
+                            ploopi_subscription_notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_MODIFYFILE, $docfile->fields['name'], array_keys($arrUsers), 'Cet objet à été créé');
+                            
+                            /* FIN ABONNEMENT */                                        
+                        }
+                        ploopi_create_user_action_log(_DOC_ACTION_MODIFYFILE, $docfile_id);
+                    }
 
                     ?>
                     <script type="text/javascript">
@@ -337,6 +403,21 @@ if ($_SESSION['ploopi']['connected'])
                     $docfolder = new docfolder();
                     $docfolder->open($_GET['docfolder_id']);
                     $docfolder->publish();
+                    
+                    /* DEBUT ABONNEMENT */
+        
+                    // on construit la liste des objets parents (y compris l'objet courant)
+                    $arrFolderList = split(',', "{$docfolder->fields['parents']},{$docfolder->fields['id']}");
+        
+                    // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
+                    $arrUsers = array();
+                    foreach ($arrFolderList as $intObjectId)
+                        $arrUsers += ploopi_subscription_getusers(_DOC_OBJECT_FOLDER, $intObjectId, array(_DOC_ACTION_MODIFYFOLDER));
+                    
+                    // on envoie le ticket de notification d'action sur l'objet
+                    ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrUsers), 'Cet objet à été publié');
+                    
+                    /* FIN ABONNEMENT */
                 }
             }
 
@@ -364,6 +445,22 @@ if ($_SESSION['ploopi']['connected'])
                 $readonly = (($docfolder->fields['readonly'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']) || $docfolder_readonly_content);
                 if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_DELETEFOLDER) && (!$readonly) && ($docfolder->fields['nbelements'] == 0)))
                 {
+                    /* DEBUT ABONNEMENT */
+        
+                    // on construit la liste des objets parents (y compris l'objet courant)
+                    $arrFolderList = split(',', "{$docfolder->fields['parents']},{$docfolder->fields['id']}");
+    
+                    // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
+                    $arrUsers = array();
+                    foreach ($arrFolderList as $intObjectId)
+                        $arrUsers += ploopi_subscription_getusers(_DOC_OBJECT_FOLDER, $intObjectId, array(_DOC_ACTION_DELETEFOLDER, _DOC_ACTION_MODIFYFOLDER));
+                    
+                    // on envoie le ticket de notification d'action sur l'objet
+                    ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_DELETEFOLDER, $docfolder->fields['name'], array_keys($arrUsers), 'Cet objet à été supprimé');
+                    
+                    /* FIN ABONNEMENT */
+
+                
                     $docfolder->delete();
                     ploopi_create_user_action_log(_DOC_ACTION_DELETEFOLDER, $docfolder->fields['id']);
                 }
@@ -382,14 +479,35 @@ if ($_SESSION['ploopi']['connected'])
                 if (empty($_POST['docfolder_readonly'])) $docfolder->fields['readonly'] = 0;
                 if (empty($_POST['docfolder_readonly_content'])) $docfolder->fields['readonly_content'] = 0;
                 $docfolder->save();
+                
+                /* DEBUT ABONNEMENT */
+    
+                // on construit la liste des objets parents (y compris l'objet courant)
+                $arrFolderList = split(',', "{$docfolder->fields['parents']},{$docfolder->fields['id']}");
+
+                // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
+                $arrUsers = array();
+                foreach ($arrFolderList as $intObjectId)
+                    $arrUsers += ploopi_subscription_getusers(_DOC_OBJECT_FOLDER, $intObjectId, array(_DOC_ACTION_MODIFYFOLDER));
+                
+                // on envoie le ticket de notification d'action sur l'objet
+                ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrUsers), 'Cet objet à été modifié');
+                
+                /* FIN ABONNEMENT */
+
+                // SHARES
                 ploopi_shares_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
                 doc_resetshares();
+
+                // WORKFLOW
                 ploopi_workflow_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
                 doc_resetworkflow();
+                
+                // LOG
                 ploopi_create_user_action_log(_DOC_ACTION_MODIFYFOLDER, $docfolder->fields['id']);
                 ?>
                 <script type="text/javascript">
-                    window.parent.doc_browser_from_iframe(<? echo $docfolder->fields['id']; ?>);
+                    //window.parent.doc_browser_from_iframe(<? echo $docfolder->fields['id']; ?>);
                 </script>
                 <?
             }
@@ -423,10 +541,29 @@ if ($_SESSION['ploopi']['connected'])
                 }
 
                 $currentfolder = $docfolder->save();
+                
+                /* DEBUT ABONNEMENT */
+    
+                // on construit la liste des objets parents (y compris l'objet courant)
+                $arrFolderList = split(',', "{$docfolder->fields['parents']},{$docfolder->fields['id']}");
+
+                // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
+                $arrUsers = array();
+                foreach ($arrFolderList as $intObjectId)
+                    $arrUsers += ploopi_subscription_getusers(_DOC_OBJECT_FOLDER, $intObjectId, array(_DOC_ACTION_ADDFOLDER, _DOC_ACTION_MODIFYFOLDER));
+                
+                // on envoie le ticket de notification d'action sur l'objet
+                ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_ADDFOLDER, $docfolder->fields['name'], array_keys($arrUsers), 'Cet objet à été créé');
+                
+                /* FIN ABONNEMENT */
+                
+                
                 ploopi_shares_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
                 doc_resetshares();
+
                 ploopi_workflow_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
                 doc_resetworkflow();
+                
                 ploopi_create_user_action_log(_DOC_ACTION_ADDFOLDER, $docfolder->fields['id']);
                 ?>
                 <script type="text/javascript">
@@ -615,7 +752,6 @@ if ($_SESSION['ploopi']['connected'])
             ploopi_die();
         break;
 
-
         case 'doc_bd_search':
             echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
             echo $skin->open_simplebloc();
@@ -652,6 +788,8 @@ if ($_SESSION['ploopi']['connected'])
                 }
                 else
                 {
+                    $objFolder = new docfolder();
+                    if (empty($currentfolder) || !$objFolder->open($currentfolder) || !$objFolder->isEnabled()) $currentfolder = 0;
                     ?>
                     ploopi_window_onload_stock(function () {doc_browser(<? echo $currentfolder; ?>);});
                     <?

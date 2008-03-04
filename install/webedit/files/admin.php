@@ -129,9 +129,24 @@ switch($op)
 
             $headingid = $heading_new->save();
 
+            /* DEBUT ABONNEMENT */
+
+            // on construit la liste des objets parents (y compris l'objet courant)
+            $arrHeadingList = split(';', "{$heading->fields['parents']};{$heading->fields['id']}");
+            
+            // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
+            $arrUsers = array();
+            foreach ($arrHeadingList as $intObjectId)
+                $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
+            
+            // on envoie le ticket de notification d'action sur l'objet
+            ploopi_subscription_notify(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], _WEBEDIT_ACTION_CATEGORY_EDIT, $heading->fields['label'], array_keys($arrUsers), 'Cet objet à été créé');
+            
+            /* FIN ABONNEMENT */
+            
             ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
 
-            ploopi_redirect("{$scriptenv}?headingid={$headingid}");
+            //ploopi_redirect("{$scriptenv}?headingid={$headingid}");
         }
         else ploopi_redirect($scriptenv);
     break;
@@ -172,11 +187,26 @@ switch($op)
 
             if (empty($_POST['webedit_heading_visible'])) $heading->fields['visible'] = 0;
             if (empty($_POST['webedit_heading_url_window'])) $heading->fields['url_window'] = 0;
-
-
+            
             $heading->save();
-            ploopi_workflow_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
+            
+            /* DEBUT ABONNEMENT */
 
+            // on construit la liste des objets parents (y compris l'objet courant)
+            $arrHeadingList = split(';', "{$heading->fields['parents']};{$heading->fields['id']}");
+            
+            // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
+            $arrUsers = array();
+            foreach ($arrHeadingList as $intObjectId)
+                $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
+            
+            // on envoie le ticket de notification d'action sur l'objet
+            ploopi_subscription_notify(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], _WEBEDIT_ACTION_CATEGORY_EDIT, $heading->fields['label'], array_keys($arrUsers), 'Cet objet à été modifié');
+            
+            /* FIN ABONNEMENT */
+
+            ploopi_workflow_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
+            
             ploopi_redirect("{$scriptenv}?headingid={$headingid}");
         }
         else ploopi_redirect($scriptenv);
@@ -189,8 +219,23 @@ switch($op)
             $heading = new webedit_heading();
             $heading->open($headingid);
 
-            if (!($heading->fields['id_heading'] == 0 && $heading->fields['position'] ==1))
+            if (!($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1))
             {
+                /* DEBUT ABONNEMENT */
+                
+                // on construit la liste des objets parents (y compris l'objet courant)
+                $arrHeadingList = split(';', "{$heading->fields['parents']};{$heading->fields['id']}");
+                                
+                // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
+                $arrUsers = array();
+                foreach ($arrHeadingList as $intObjectId)
+                    $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
+                
+                // on envoie le ticket de notification d'action sur l'objet
+                ploopi_subscription_notify(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], _WEBEDIT_ACTION_CATEGORY_EDIT, $heading->fields['label'], array_keys($arrUsers), 'Cet objet à été supprimé');
+                
+                /* FIN ABONNEMENT */
+            
                 $heading->delete(); // you don't have to delete the root heading
                 ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
                 ploopi_redirect("{$scriptenv}?headingid={$heading->fields['id_heading']}");
@@ -236,6 +281,8 @@ switch($op)
         {
             $tablename = 'ploopi_mod_webedit_article';
             if ($type == 'draft') $tablename .= '_draft';
+            
+            $strTypeTicket = '';
 
             $article = new webedit_article($type);
             if (!empty($_POST['articleid']) && is_numeric($_POST['articleid']) && $article->open($_POST['articleid']))
@@ -268,6 +315,8 @@ switch($op)
             }
             else
             {
+                $strTypeTicket = 'new';
+                
                 $article->setuwm();
                 $select = "Select max(position) as maxpos from {$tablename} WHERE id_heading = {$headingid}";
                 $db->query($select);
@@ -301,12 +350,12 @@ switch($op)
             $wf = ploopi_workflow_get(_WEBEDIT_OBJECT_HEADING, $headingid);
             $wf_headingid = $headingid;
 
+            $objHeading = new webedit_heading();
+            $objHeading->open($headingid);
+            
             if (empty($wf)) // pas de validateur pour cette rubrique, on recherche sur les parents
             {
-                $heading = new webedit_heading();
-                $heading->open($headingid);
-
-                $parents = explode(';', $heading->fields['parents']);
+                $parents = explode(';', $objHeading->fields['parents']);
                 for ($i = sizeof($parents)-1; $i >= 0; $i--)
                 {
                     $wf = ploopi_workflow_get(_WEBEDIT_OBJECT_HEADING, $parents[$i]);
@@ -320,10 +369,47 @@ switch($op)
             {
                 $article->publish();
                 ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_PUBLISH, $articleid);
+                $strTypeTicket = 'published';
             }
 
             $articleid = $article->save();
+            
+            /* DEBUT ABONNEMENT */
+            
+            // on construit la liste des objets parents (y compris l'objet courant)
+            $arrHeadingList = split(';', "{$objHeading->fields['parents']};{$objHeading->fields['id']}");
+            
 
+            switch($strTypeTicket)
+            {
+                case 'new':
+                    $strMsg = 'Cet objet à été créé';
+                    $intActionId = _WEBEDIT_ACTION_ARTICLE_EDIT;
+                break;
+                    
+                case 'published':
+                    $strMsg = 'Cet objet à été publié';
+                    $intActionId = _WEBEDIT_ACTION_ARTICLE_PUBLISH;
+                break;
+                    
+                default:
+                    $strMsg = 'Cet objet à été modifié';
+                    $intActionId = _WEBEDIT_ACTION_ARTICLE_EDIT;
+                break;
+            }
+            
+            // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
+            $arrUsers = array();
+            foreach ($arrHeadingList as $intObjectId)
+                $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array($intActionId));
+            
+            $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, array($intActionId));
+            
+            // on envoie le ticket de notification d'action sur l'objet
+            ploopi_subscription_notify(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, $intActionId, $article->fields['title'], array_keys($arrUsers), $strMsg);
+            
+            /* FIN ABONNEMENT */
+            
             if ($sendtickets && !in_array($_SESSION['ploopi']['userid'],$wfusers))
             {
                 $_SESSION['ploopi']['tickets']['users_selected'] = $wfusers;
@@ -343,6 +429,27 @@ switch($op)
             $article = new webedit_article($type);
             if (!empty($_GET['articleid']) && is_numeric($_GET['articleid']) && $article->open($_GET['articleid']))
             {
+
+                /* DEBUT ABONNEMENT */
+                
+                $objHeading = new webedit_heading();
+                $objHeading->open($headingid);
+                
+                // on construit la liste des objets parents (y compris l'objet courant)
+                $arrHeadingList = split(';', "{$objHeading->fields['parents']};{$objHeading->fields['id']}");
+                
+                // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
+                $arrUsers = array();
+                foreach ($arrHeadingList as $intObjectId)
+                    $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_ARTICLE_EDIT, _WEBEDIT_ACTION_ARTICLE_PUBLISH));
+                
+                $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $_GET['articleid'], array(_WEBEDIT_ACTION_ARTICLE_EDIT, _WEBEDIT_ACTION_ARTICLE_PUBLISH));
+    
+                // on envoie le ticket de notification d'action sur l'objet
+                ploopi_subscription_notify(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, _WEBEDIT_ACTION_ARTICLE_EDIT, $article->fields['title'], array_keys($arrUsers), 'Cet objet à été supprimé');
+                
+                /* FIN ABONNEMENT */                
+                
                 $article->delete();
                 ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $_GET['articleid']);
             }

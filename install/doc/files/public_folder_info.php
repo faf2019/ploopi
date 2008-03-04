@@ -23,9 +23,11 @@
 ?>
 <div class="doc_folderinfo">
 <? 
+$objFolder = new docfolder();
+if (empty($currentfolder) || !$objFolder->open($currentfolder) || !$objFolder->isEnabled()) $currentfolder = 0;
+
 if (!empty($currentfolder)) 
 {
-        
     //if (ploopi_isactionallowed(_DOC_ACTION_MODIFYFOLDER) && (!$docfolder->fields['readonly'] || $_SESSION['ploopi']['userid'] == $docfolder->fields['id_user']))
     //{
         ?>

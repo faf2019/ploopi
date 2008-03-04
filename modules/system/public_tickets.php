@@ -92,16 +92,18 @@ $sql =  "
                     t.count_replies,
                     t.id_user AS sender_uid,
 
-                    u.login,
-                    u.firstname,
-                    u.lastname,
+                    u.id as sender_user_id,
+                    IFNULL(u.login, 'system') as login,
+                    IFNULL(u.firstname, 'Système') as firstname,
+                    IFNULL(u.lastname, '') as lastname,
 
                     tw.notify,
 
                     td.id_user,
 
                     m.label as module_name,
-
+                    mt.label as module_type,
+                    
                     o.label as object_name,
                     o.script
 
@@ -120,6 +122,9 @@ $sql =  "
         LEFT JOIN   ploopi_module m
         ON          t.id_module = m.id
 
+        LEFT JOIN   ploopi_module_type mt
+        ON          mt.id = m.id_module_type
+        
         LEFT JOIN   ploopi_mb_object o
         ON          t.id_object = o.id
         AND         m.id_module_type = o.id_module_type
@@ -359,6 +364,12 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                     else
                     {
                         $username = "{$fields['firstname']} {$fields['lastname']}";
+                        
+                        if (is_null($fields['sender_user_id'])) // system ticket
+                        {
+                            $username = "<i>{$username}</i>";
+                        }
+                        
                         if ($fields['needed_validation'] == 1 && $fields['sender_uid'] != $_SESSION['ploopi']['userid'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][_PLOOPI_TICKETS_DONE]))
                         {
                             ?><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" alt="vous devez valider ce message !"><?
@@ -454,10 +465,34 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                 <?
                 if ($fields['id_record'] != '')
                 {
+                    // on cherche si on fonction de validation d'objet existe pour ce module
+                    ploopi_init_module($fields['module_type']);
+                    
+                    $boolRecordIsEnabled = true;
+                    $funcRecordIsEnabled = "{$fields['module_type']}_record_isenabled";
+                    if (function_exists($funcRecordIsEnabled))
+                    {
+                        // si la fonction existe, on l'appelle pour chaque enregistrement
+                        $boolRecordIsEnabled = $funcRecordIsEnabled($fields['id_object'], $fields['id_record'], $fields['id_module']);
+                    }
                     ?>
                     <div class="system_tickets_buttons">
                         <p class="ploopi_va">
-                            <span><strong>Objet lié</strong>: </span><a href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu=1&{$object_script}"); ?>"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/link.png"><? echo "{$fields['module_name']} / {$fields['object_name']} <b>\"{$fields['object_label']}\"</b>"; ?></a>
+                            <span><strong>Objet lié</strong>: </span>
+                            <?
+                            if($boolRecordIsEnabled)
+                            {
+                                ?>
+                                <a href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu=1&{$object_script}"); ?>"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/link.png"><? echo "{$fields['module_name']} / {$fields['object_name']} <b>\"{$fields['object_label']}\"</b>"; ?></a>
+                                <?
+                            }
+                            else
+                            {
+                                ?>
+                                <span style="font-weight:bold;color:#a60000;">Vous ne pouvez pas ouvrir cet objet</span>
+                                <?
+                            }
+                            ?>
                         </p>
                     </div>
                     <?

@@ -173,6 +173,25 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
 
     switch($id_object)
     {
+        case _DOC_OBJECT_FOLDER;
+            include_once './modules/doc/class_docfolder.php';
+            
+            $objFolder = new docfolder();
+            if ($objFolder->open($id_record))
+            {
+                if ($objFolder->fields['id_user'] == $_SESSION['ploopi']['userid']) $enabled = true;
+                else
+                {
+                    if ($objFolder->fields['foldertype'] == 'public') $enabled = true;
+                    else
+                    {
+                        doc_getshares($id_module);
+                        if (in_array($id_record, $_SESSION['doc'][$id_module]['shares']['folders'])) $enabled = true;
+                    }
+                }
+            }
+        break;
+        
         case _DOC_OBJECT_FILE;
             include_once './modules/doc/class_docfile.php';
             include_once './modules/doc/class_docfolder.php';

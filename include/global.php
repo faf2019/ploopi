@@ -40,6 +40,7 @@ include_once './include/functions/session.php';
 include_once './include/functions/shares.php';
 include_once './include/functions/system.php';
 include_once './include/functions/string.php';
+include_once './include/functions/subscriptions.php';
 include_once './include/functions/tickets.php';
 include_once './include/functions/workflow.php';
 ?>

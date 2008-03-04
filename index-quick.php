@@ -21,44 +21,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-ob_start();
-
-include_once './config/config.php'; // load config (mysql, path, etc.)
-include_once './include/errors.php';
-
-include_once './include/import_gpr.php';
-
-// set default header
-include_once './include/header.php';
-
-// initialize PLOOPI
-if (file_exists('./db/class_db_'._PLOOPI_SQL_LAYER.'.php')) include_once './db/class_db_'._PLOOPI_SQL_LAYER.'.php';
-
-$db = new ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
-if(!$db->connection_id) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
-
-///////////////////////////////////////////////////////////////////////////
-// INITIALIZE SESSION HANDLER
-///////////////////////////////////////////////////////////////////////////
-
-include_once './include/classes/class_session.php' ;
-ini_set('session.save_handler', 'user');
-
-$session = new ploopi_session();
-
-session_set_save_handler(   array($session, 'open'),
-                            array($session, 'close'),
-                            array($session, 'read'),
-                            array($session, 'write'),
-                            array($session, 'destroy'),
-                            array($session, 'gc')
-                        );
-
-session_start();
-
-// PLOOPI OP
-include_once './include/op.php';
-
-session_write_close();
-$db->close();
+include './include/start_common.php';
+include './include/op.php';
+ploopi_die();
 ?>

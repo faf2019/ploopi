@@ -78,7 +78,7 @@ function ploopi_tickets_selectusers($show_message = false, $userlist = null, $wi
     }
 }
 
-function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery_notification = 0, $id_object = '', $id_record = '', $object_label = '')
+function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery_notification = 0, $id_object = '', $id_record = '', $object_label = '', $system = false)
 {
     include_once './modules/system/class_user.php';
     include_once './modules/system/class_ticket.php';
@@ -97,6 +97,8 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
         $id_group = $_SESSION['ploopi']['workspaceid'];
         $id_module = $_SESSION['ploopi']['moduleid'];
         $id_module_type = $_SESSION['ploopi']['moduletypeid'];
+        
+        if ($system) $id_user = 0;
     }
     else
     {

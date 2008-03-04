@@ -71,7 +71,7 @@ if (ploopi_isactionallowed(0, $_SESSION['ploopi']['workspaceid'], $_SESSION['plo
         case _DOC_TAB_INDEX:
             switch($op)
             {
-                case "execute":
+                case 'execute':
                     include './modules/doc/admin_docparser_execute.php';
                 break;
 

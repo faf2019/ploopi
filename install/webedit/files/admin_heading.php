@@ -319,7 +319,7 @@ foreach($wf as $value) $wfusers[] = $value['id_workflow'];
 
 ?>
 <div style="clear:both;padding:4px;">
-    <strong>Validateurs <? if ($wf_headingid != $headingid) echo "(Hérités de {$headings['list'][$wf_headingid]['label']})"; ?></strong>:
+    <strong>Validateurs <? if ($wf_headingid != $headingid) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("{$scriptenv}?headingid={$wf_headingid}")."\">{$headings['list'][$wf_headingid]['label']}</a> &raquo;)"; ?></strong>:
     <?
     if (!empty($wfusers))
     {
@@ -360,96 +360,120 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
 }
 ?>
 
-
-<p class="ploopi_va" style="background-color:#e0e0e0;border-top:1px solid #c0c0c0;border-bottom:1px solid #c0c0c0;padding:4px 6px;overflow:auto;">
-    <?
-    if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT))
-    {
-        ?>
-            <a style="float:right;text-decoration:none;" href="<? echo "$scriptenv?op=article_addnew"; ?>">&nbsp;Ajouter un article</a>
-            <img style="float:right;border:0px;" src="./modules/webedit/img/doc_add.png">
+<div style="margin:0 4px 4px 4px;border-style:solid;border-width:1px 1px 0 1px;border-color:#c0c0c0;">
+    <p class="ploopi_va" style="background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;padding:4px 6px;overflow:auto;">
         <?
+        if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT))
+        {
+            ?>
+                <a style="float:right;text-decoration:none;" href="<? echo "$scriptenv?op=article_addnew"; ?>">&nbsp;Ajouter un article</a>
+                <img style="float:right;border:0px;" src="./modules/webedit/img/doc_add.png">
+            <?
+        }
+        ?>
+        <b>Liste des articles de la rubrique &laquo; <? echo $heading->fields['label'] ?> &raquo;</b>
+    </p>
+    <?
+    $articles_columns = array();
+    
+    $articles_columns['auto']['titre'] = array('label' => 'Titre', 'options' => array('sort' => true));
+    $articles_columns['right']['auteur'] = array('label' => 'Auteur', 'width' => '130', 'options' => array('sort' => true));
+    $articles_columns['right']['misenligne'] = array('label' => 'Mise en ligne', 'width' => '140');
+    $articles_columns['right']['vers'] = array('label' => 'Vers.', 'width' => '60', 'options' => array('sort' => true));
+    $articles_columns['right']['date'] = array('label' => 'Date', 'width' => '80', 'options' => array('sort' => true));
+    
+    $articles_columns['left']['pos'] = array('label' => 'P.', 'width' => '35', 'options' => array('sort' => true));
+    $articles_columns['left']['ref'] = array('label' => 'Ref.', 'width' => '60', 'options' => array('sort' => true));
+    
+    $articles_columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '22');
+    
+    $articles_values = array();
+    
+    $c = 0;
+    
+    if (!empty($articles['tree'][$headingid]))
+    {
+        foreach($articles['tree'][$headingid] as $key => $idart)
+        {
+            $row = $articles['list'][$idart];
+    
+            $color = (!isset($color) || $color == 2) ? 1 : 2;
+            $ldate = (!empty($row['timestp'])) ? ploopi_timestamp2local($row['timestp']) : array('date' => '', 'time' => '');
+    
+            $timestp_local = (!empty($row['timestp'])) ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
+            $timestp_published_local = (!empty($row['timestp_published'])) ? ploopi_timestamp2local($row['timestp_published']) : array('date' => '');
+            $timestp_unpublished_local = (!empty($row['timestp_unpublished'])) ? ploopi_timestamp2local($row['timestp_unpublished']) : array('date' => '');
+    
+            $published = (!empty($timestp_published_local['date'])) ? "à partir du {$timestp_published_local['date']}" : '';
+            $published .= (!empty($timestp_unpublished_local['date'])) ? (empty($published) ? '' : '<br />')."jusqu'au {$timestp_unpublished_local['date']}" : '';
+    
+            $art_title = ($row['status'] == 'wait') ? "{$row['title']} *" : $row['title'];
+    
+            $articles_values[$c]['values']['date'] = array('label' => $timestp_local['date'], 'style' => '', 'sort_label' => $row['timestp']);
+            $articles_values[$c]['values']['pos'] = array('label' => $row['position'], 'style' => '');
+            $articles_values[$c]['values']['ref'] = array('label' => $row['reference'], 'style' => '');
+            $articles_values[$c]['values']['titre'] = array('label' => "<img src=\"./modules/webedit/img/doc{$articles['list'][$row['id']]['new_version']}.png\"><span>{$art_title}</span>", 'style' => '');
+            $articles_values[$c]['values']['vers'] = array('label' => $row['version'], 'style' => '');
+            $articles_values[$c]['values']['misenligne'] = array('label' => $published, 'style' => '');
+            $articles_values[$c]['values']['auteur'] = array('label' => $row['author'], 'style' => '');
+    
+            //if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_PUBLISH) || in_array($_SESSION['ploopi']['userid'],$wfusers))
+            if (in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
+            {
+                $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" href=\"javascript:ploopi_confirmlink('{$scriptenv}?op=article_delete&articleid={$row['id']}','Êtes-vous certain de vouloir supprimer l\'article &laquo; ".addslashes($row['title'])." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
+            }
+            else $articles_values[$c]['values']['actions'] = array('label' => '&nbsp;', 'style' => '');
+    
+            $articles_values[$c]['description'] = $row['title'];
+            $articles_values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=article_modify&articleid={$row['id']}");
+            $articles_values[$c]['style'] = '';
+    
+            $c++;
+        }
     }
+    
+    switch($heading->fields['sortmode'])
+    {
+        case 'bydate':
+            $options = array('sortable' => true, 'orderby_default' => 'date', 'sort_default' => 'DESC');
+        break;
+    
+        case 'bydaterev':
+            $options = array('sortable' => true, 'orderby_default' => 'date');
+        break;
+    
+        case 'bypos':
+        default:
+            $options = array('sortable' => true, 'orderby_default' => 'pos');
+        break;
+    }
+    
+    
+    $skin->display_array($articles_columns, $articles_values, 'webedit_articlelist', $options);
     ?>
-    <b>Liste des articles</b>
-</p>
-
+</div>
 
 <?
-$articles_columns = array();
-
-$articles_columns['auto']['titre'] = array('label' => 'Titre', 'options' => array('sort' => true));
-$articles_columns['right']['auteur'] = array('label' => 'Auteur', 'width' => '130', 'options' => array('sort' => true));
-$articles_columns['right']['misenligne'] = array('label' => 'Mise en ligne', 'width' => '140');
-$articles_columns['right']['vers'] = array('label' => 'Vers.', 'width' => '60', 'options' => array('sort' => true));
-$articles_columns['right']['date'] = array('label' => 'Date', 'width' => '80', 'options' => array('sort' => true));
-
-$articles_columns['left']['pos'] = array('label' => 'P.', 'width' => '35', 'options' => array('sort' => true));
-$articles_columns['left']['ref'] = array('label' => 'Ref.', 'width' => '60', 'options' => array('sort' => true));
-
-$articles_columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '22');
-
-$articles_values = array();
-
-$c = 0;
-
-if (!empty($articles['tree'][$headingid]))
+$parents = explode(';', $heading->fields['parents']);
+for ($i = 0; $i < sizeof($parents); $i++)
 {
-    foreach($articles['tree'][$headingid] as $key => $idart)
+    if (ploopi_subscription_subscribed(_WEBEDIT_OBJECT_HEADING, $parents[$i]))
     {
-        $row = $articles['list'][$idart];
-
-        $color = (!isset($color) || $color == 2) ? 1 : 2;
-        $ldate = (!empty($row['timestp'])) ? ploopi_timestamp2local($row['timestp']) : array('date' => '', 'time' => '');
-
-        $timestp_local = (!empty($row['timestp'])) ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
-        $timestp_published_local = (!empty($row['timestp_published'])) ? ploopi_timestamp2local($row['timestp_published']) : array('date' => '');
-        $timestp_unpublished_local = (!empty($row['timestp_unpublished'])) ? ploopi_timestamp2local($row['timestp_unpublished']) : array('date' => '');
-
-        $published = (!empty($timestp_published_local['date'])) ? "à partir du {$timestp_published_local['date']}" : '';
-        $published .= (!empty($timestp_unpublished_local['date'])) ? (empty($published) ? '' : '<br />')."jusqu'au {$timestp_unpublished_local['date']}" : '';
-
-        $art_title = ($row['status'] == 'wait') ? "{$row['title']} *" : $row['title'];
-
-        $articles_values[$c]['values']['date'] = array('label' => $timestp_local['date'], 'style' => '', 'sort_label' => $row['timestp']);
-        $articles_values[$c]['values']['pos'] = array('label' => $row['position'], 'style' => '');
-        $articles_values[$c]['values']['ref'] = array('label' => $row['reference'], 'style' => '');
-        $articles_values[$c]['values']['titre'] = array('label' => "<img src=\"./modules/webedit/img/doc{$articles['list'][$row['id']]['new_version']}.png\"><span>{$art_title}</span>", 'style' => '');
-        $articles_values[$c]['values']['vers'] = array('label' => $row['version'], 'style' => '');
-        $articles_values[$c]['values']['misenligne'] = array('label' => $published, 'style' => '');
-        $articles_values[$c]['values']['auteur'] = array('label' => $row['author'], 'style' => '');
-
-        //if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_PUBLISH) || in_array($_SESSION['ploopi']['userid'],$wfusers))
-        if (in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
-        {
-            $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" href=\"javascript:ploopi_confirmlink('{$scriptenv}?op=article_delete&articleid={$row['id']}','Êtes-vous certain de vouloir supprimer l\'article &laquo; ".addslashes($row['title'])." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
-        }
-        else $articles_values[$c]['values']['actions'] = array('label' => '&nbsp;', 'style' => '');
-
-        $articles_values[$c]['description'] = $row['title'];
-        $articles_values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=article_modify&articleid={$row['id']}");
-        $articles_values[$c]['style'] = '';
-
-        $c++;
+        ?>
+        <div style="padding:2px 4px;font-weight:bold;">
+        Vous héritez de l'abonnement à &laquo; <a href="<? echo ploopi_urlencode("{$scriptenv}?headingid={$parents[$i]}"); ?>"><? echo $headings['list'][$parents[$i]]['label']; ?></a> &raquo; 
+        </div>
+        <?
     }
 }
 
-switch($heading->fields['sortmode'])
-{
-    case 'bydate':
-        $options = array('sortable' => true, 'orderby_default' => 'date', 'sort_default' => 'DESC');
-    break;
+$arrAllowedActions = array( _WEBEDIT_ACTION_ARTICLE_EDIT,
+                            _WEBEDIT_ACTION_ARTICLE_PUBLISH,
+                            _WEBEDIT_ACTION_CATEGORY_EDIT
+                         );
 
-    case 'bydaterev':
-        $options = array('sortable' => true, 'orderby_default' => 'date');
-    break;
-
-    case 'bypos':
-    default:
-        $options = array('sortable' => true, 'orderby_default' => 'pos');
-    break;
-}
-
-
-$skin->display_array($articles_columns, $articles_values, 'webedit_articlelist', $options);
+ploopi_subscription(_WEBEDIT_OBJECT_HEADING, $headingid, $arrAllowedActions, "à &laquo; {$heading->fields['label']} &raquo;"); 
 ?>
+<div style="border-top:1px solid #c0c0c0;">
+<? ploopi_annotation(_WEBEDIT_OBJECT_HEADING, $headingid, $heading->fields['label']); ?>
+</div>

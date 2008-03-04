@@ -29,19 +29,15 @@ if (isset($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']))
 {
     // on vérifie que l'utilisateur a bien le droit de modifier ce fichier (en fonction du statut du dossier parent)
     $readonly = !(ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_MODIFYFILE) && ((!$docfolder_readonly_content && !$docfile->fields['readonly']) || $docfile->fields['id_user'] == $_SESSION['ploopi']['userid'])));
-    if ($readonly)
-    {
-        ?>
-        <div class="doc_fileform_title">Consultation d'un Fichier (lecture seule)</div>
-        <?
-    }
-    else
-    {
-        ?>
-        <div class="doc_fileform_title">Modification d'un Fichier</div>
-        <?
-    }
+    $title = ($readonly) ? '(lecture seule)' : ''
     ?>
+    <div class="doc_fileform_title">
+        <a title="Télécharger ZIP" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("{$scriptenv}?op=doc_filedownloadzip&docfile_md5id={$docfile->fields['md5id']}"); ?>">Télécharger ZIP</a>
+        <a title="Télécharger" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("{$scriptenv}?op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>">Télécharger</a>
+        <a title="Ouvrir" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("{$scriptenv}?op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>" target="_blank">Ouvrir</a>
+        <? echo htmlentities($docfile->fields['name'])." {$title}"; ?>
+    </div>
+
     <div class="doc_fileform_main">
 
         <div class="doc_moreinfo">
@@ -212,7 +208,6 @@ else
 
 if (!$readonly)
 {
-
     doc_getworkflow();
     $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']);
 
@@ -389,10 +384,34 @@ if (!$readonly)
 
 if (!$newfile)
 {
+    ?>                             
+    <div style="border-bottom:1px solid #c0c0c0;">
+    <?
+    if ($docfolder->fields['foldertype'] != 'private')
+    {
+        $arrAllowedActions = array( _DOC_ACTION_MODIFYFILE,
+                                    _DOC_ACTION_DELETEFILE
+                                 );
+                                 
+        $parents = explode(',', "{$docfolder->fields['parents']},{$docfolder->fields['id']}");
+        for ($i = 0; $i < sizeof($parents); $i++)
+        {
+            if (ploopi_subscription_subscribed(_DOC_OBJECT_FOLDER, $parents[$i]))
+            {
+                $objDocFolderSub = new docfolder();
+                $objDocFolderSub->open($parents[$i])
+                ?>
+                <div style="padding:2px 4px;font-weight:bold;">
+                Vous héritez de l'abonnement à &laquo; <a href="javascript:void(0);" onclick="javascript:doc_browser('<? echo $parents[$i]; ?>');"><? echo $objDocFolderSub->fields['name']; ?></a> &raquo; 
+                </div>
+                <?
+            }
+        }
+        ploopi_subscription(_DOC_OBJECT_FILE, $docfile->fields['md5id'], $arrAllowedActions);
+    }
     ?>
-    <div style="clear:both;">
-    <? ploopi_annotation(_DOC_OBJECT_FILE, $docfile->fields['md5id'], $docfile->fields['name']); ?>
     </div>
     <?
+    ploopi_annotation(_DOC_OBJECT_FILE, $docfile->fields['md5id'], $docfile->fields['name']);
 }
 ?>

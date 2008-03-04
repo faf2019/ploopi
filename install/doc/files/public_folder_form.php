@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?php
+
 $newfolder = false;
 
 $docfolder = new docfolder();
@@ -252,9 +251,10 @@ if (!$readonly)
     <script type="text/javascript">
     document.docfolder_form.docfolder_name.focus();
     </script>
-    <iframe name="doc_folderform_iframe" src="./img/blank.gif" style="width:0;height:0;visibility:hidden;display:none;"></iframe>
+    <iframe name="doc_folderform_iframe" src="./img/blank.gif" style="width:500px;height:500px;display:block;"></iframe>
+    <!-- iframe name="doc_folderform_iframe" src="./img/blank.gif" style="width:0;height:0;display:none;"></iframe-->
     <?
 }
 
-if (!$newfolder) ploopi_annotation(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], $docfolder->fields['name']);
+if (!$newfolder) include './modules/doc/public_folder_actions.php';
 ?>

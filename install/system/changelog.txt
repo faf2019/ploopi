@@ -1,3 +1,22 @@
+== Ploopi - version 1.0 alpha 4 ===============================================
+
+2008-02-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * correctifs de bugs
+ * ajout d'un système d'abonnement aux objets/actions
+
+== Ploopi - version 1.0 alpha 3 ===============================================
+
+2008-02-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * correctifs de bugs
+
+== Ploopi - version 1.0 alpha 2 ===============================================
+
+2008-02-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* correctifs de bugs
+
 == Ploopi - version 1.0 alpha 1 ===============================================
 
 2008-01-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
