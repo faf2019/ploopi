@@ -21,11 +21,11 @@
 */
 @import url(main.css);
 @import url(main_large.css);
-@import url(skin.css);
 @import url(annotations.css);
-@import url(tickets.css);
-@import url(shares.css);
-@import url(workflow.css);
 @import url(calendar.css);
 @import url(documents.css);
-@import url(synergi.css);
+@import url(shares.css);
+@import url(skin.css);
+@import url(subscriptions.css);
+@import url(tickets.css);
+@import url(workflow.css);
