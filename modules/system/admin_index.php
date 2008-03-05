@@ -559,10 +559,10 @@ switch ($_SESSION['system']['level'])
                             foreach($children as $idchildren)
                             {
                                 $module_workspace = new module_workspace();
-                                $module_workspace->open($idchildren,$moduleid);
+                                $module_workspace->open($idchildren,$_GET['moduleid']);
                                 $module_workspace->save();
                             }
-                            ploopi_redirect("{$scriptenv}?op=modify&moduleid={$moduleid}#modify");
+                            ploopi_redirect("{$scriptenv}?op=modify&moduleid={$_GET['moduleid']}#modify");
                         }
                         else ploopi_redirect($scriptenv);
                     break;
