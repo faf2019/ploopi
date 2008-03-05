@@ -31,7 +31,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
          * */
 
         case 'tickets_delete':
-            include_once './modules/system/class_ticket.php';
+            include_once('./modules/system/class_ticket.php');
 
             if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
             {
@@ -53,7 +53,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         $ticket->save();
                     }
 
-                    include_once './modules/system/class_ticket_dest.php';
+                    include_once('./modules/system/class_ticket_dest.php');
                     $ticket_dest = new ticket_dest();
                     if ($ticket_dest->open($_SESSION['ploopi']['userid'], $ticket_id))
                     {
@@ -67,11 +67,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
         break;
 
         case 'tickets_send':
-            include_once './modules/system/class_ticket.php';
+            include_once('./modules/system/class_ticket.php');
             $ticket = new ticket();
             if (isset($_POST['ticket_id']) && is_numeric($_POST['ticket_id']) && isset($_POST['fck_ticket_message']) && $ticket->open($_POST['ticket_id']))
             {
-                include_once './modules/system/class_ticket_dest.php';
+                include_once('./modules/system/class_ticket_dest.php');
 
                 $root_ticket = new ticket();
                 if ($ticket->fields['root_id'] && $root_ticket->open($ticket->fields['root_id']))
@@ -108,8 +108,6 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
         case 'tickets_new':
             if (!$_SESSION['ploopi']['connected']) ploopi_die();
-            
-            ob_start();
             ?>
             <div id="tickets_new">
                 <form method="post" action="admin.php">
@@ -147,7 +145,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 <tr>
                     <td>
                     <?
-                    include_once './FCKeditor/fckeditor.php' ;
+                    include_once('./FCKeditor/fckeditor.php') ;
 
                     $oFCKeditor = new FCKeditor('fck_ticket_message') ;
 
@@ -175,18 +173,13 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 <tr>
                     <td style="text-align:right;">
                         <input type="submit" class="flatbutton" value="Envoyer" style="font-weight:bold;">
-                        <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="ploopi_hidepopup('system_popupticket');">
+                        <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="$('system_popupticket').style.visibility='hidden';">
                     </td>
                 </tr>
                 </table>
                 </form>
             </div>
             <?
-            $content = ob_get_contents();
-            ob_end_clean();
-            
-            echo $skin->create_popup('Nouveau ticket', $content, 'system_popupticket');
-            
             ploopi_die();
         break;
 
@@ -233,7 +226,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     <tr>
                         <td>
                         <?
-                        include_once './FCKeditor/fckeditor.php' ;
+                        include_once('./FCKeditor/fckeditor.php') ;
 
                         $oFCKeditor = new FCKeditor('fck_ticket_message') ;
 
@@ -271,7 +264,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
         break;
 
         case 'tickets_modify_next':
-            include_once './modules/system/class_ticket.php';
+            include_once('./modules/system/class_ticket.php');
             $ticket = new ticket();
             if (isset($_POST['ticket_id']) && is_numeric($_POST['ticket_id']) && isset($_POST['fck_ticket_message']) && $ticket->open($_POST['ticket_id']))
             {
@@ -448,7 +441,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
             foreach($_SESSION['ploopi']['tickets']['users_selected'] as $user_id)
             {
-                include_once './modules/system/class_user.php';
+                include_once('./modules/system/class_user.php');
 
                 $user = new user();
                 $user->open($user_id);
@@ -468,13 +461,13 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
 
         case 'tickets_open':
-            include_once './modules/system/class_ticket.php';
+            include_once('./modules/system/class_ticket.php');
             $ticket = new ticket();
 
             if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']) && $ticket->open($_GET['ticket_id']))
             {
-                include_once './modules/system/class_ticket_watch.php';
-                include_once './modules/system/class_ticket_status.php';
+                include_once('./modules/system/class_ticket_watch.php');
+                include_once('./modules/system/class_ticket_status.php');
 
                 $ticket_status = new ticket_status();
 
@@ -556,7 +549,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
         break;
 
         case 'tickets_validate':
-            include_once './modules/system/class_ticket_status.php';
+            include_once('./modules/system/class_ticket_status.php');
             $ticket_status = new ticket_status();
 
             if (!empty($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
@@ -580,7 +573,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
          * */
 
         case 'system_search':
-            include_once './modules/system/public_search_result.php';
+            include_once('./modules/system/public_search_result.php');
             ploopi_die();
         break;
 
@@ -591,7 +584,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 switch($ploopi_op)
                 {
                     case 'system_roleusers':
-                        if (empty($_GET['system_roleusers_roleid']) || !is_numeric($_GET['system_roleusers_roleid'])) ploopi_die();
+                        if (empty($_GET['system_roleusers_roleid'])) ploopi_die();
 
                         $sql =  "
                                 SELECT      u.*
@@ -599,7 +592,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 INNER JOIN  ploopi_user u
                                 ON          u.id = wur.id_user
                                 WHERE       wur.id_role = {$_GET['system_roleusers_roleid']}
-                                AND         wur.id_workspace = {$_SESSION['system']['workspaceid']}
+                                AND         wur.id_workspace = {$_SESSION['ploopi']['workspaceid']}
                                 ";
 
                         $db->query($sql);
@@ -611,7 +604,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 INNER JOIN  ploopi_group g
                                 ON          g.id = wgr.id_group
                                 WHERE       wgr.id_role = {$_GET['system_roleusers_roleid']}
-                                AND         wgr.id_workspace = {$_SESSION['system']['workspaceid']}
+                                AND         wgr.id_workspace = {$_SESSION['ploopi']['workspaceid']}
                                 ";
 
                         $db->query($sql);
@@ -673,14 +666,9 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                         $wur = new workspace_user_role();
 
-                        $reload = '';
-                        if ($wur->open($_GET['system_roleusers_userid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid']))
-                        {
-                            $wur->delete();
-                            $reload = '&reloadsession';
-                        }
+                        if ($wur->open($_GET['system_roleusers_userid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid'])) $wur->delete();
 
-                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}{$reload}");
+                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
                     // suppression de l'affectation d'un rôle à un groupe
@@ -691,37 +679,28 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                         $wgr = new workspace_group_role();
 
-                        $reload = '';
-                        if ($wgr->open($_GET['system_roleusers_groupid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid']))
-                        {
-                            $wgr->delete();
-                            $reload = '&reloadsession';
-                        }
+                        if ($wgr->open($_GET['system_roleusers_groupid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid'])) $wgr->delete();
 
-                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}{$reload}");
+                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
                     // affectation d'un rôle à un utilisateur
                     case 'system_roleusers_select_user':
-
                         if (empty($_GET['system_roleusers_userid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi_die();
-
 
                         include_once './modules/system/class_workspace_user_role.php';
 
                         $wur = new workspace_user_role();
 
-                        $reload = '';
                         if (!$wur->open($_GET['system_roleusers_userid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid']))
                         {
                             $wur->fields['id_user'] = $_GET['system_roleusers_userid'];
                             $wur->fields['id_workspace'] = $_SESSION['system']['workspaceid'];
                             $wur->fields['id_role'] = $_GET['system_roleusers_roleid'];
                             $wur->save();
-                            $reload = '&reloadsession';
                         }
 
-                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}{$reload}");
+                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
                     // affectation d'un rôle à un groupe
@@ -732,31 +711,19 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                         $wgr = new workspace_group_role();
 
-                        $reload = '';
                         if (!$wgr->open($_GET['system_roleusers_groupid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid']))
                         {
                             $wgr->fields['id_group'] = $_GET['system_roleusers_groupid'];
                             $wgr->fields['id_workspace'] = $_SESSION['system']['workspaceid'];
                             $wgr->fields['id_role'] = $_GET['system_roleusers_roleid'];
                             $wgr->save();
-                            $reload = '&reloadsession';
                         }
 
-                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}{$reload}");
+                        ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
                     // résultat de la recherche utilisateurs / groupes
                     case 'system_roleusers_search':
-
-                        $where_user = $where_group = '';
-
-                        if (!empty($_GET['system_roleusers_filter']))
-                        {
-                            $search = $db->addslashes($_GET['system_roleusers_filter']);
-                            $where_user = "WHERE u.lastname LIKE '{$search}%' OR u.firstname LIKE '{$search}%'";
-                            $where_group = "WHERE g.label LIKE '{$search}%'";
-                        }
-
                         $sql =  "
                                 SELECT      u.id,
                                             u.lastname,
@@ -768,9 +735,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                                 INNER JOIN  ploopi_workspace_user wu
                                 ON          wu.id_user = u.id
-                                AND         wu.id_workspace = {$_SESSION['ploopi']['workspaceid']}
-
-                                {$where_user}
+                                AND         wu.id_workspace = {$_SESSION['system']['workspaceid']}
 
                                 ORDER BY    u.lastname, u.firstname
                                 ";
@@ -787,9 +752,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                                 INNER JOIN  ploopi_workspace_group wg
                                 ON          wg.id_group = g.id
-                                AND         wg.id_workspace = {$_SESSION['ploopi']['workspaceid']}
-
-                                {$where_group}
+                                AND         wg.id_workspace = {$_SESSION['system']['workspaceid']}
 
                                 ORDER BY    g.label
                                 ";

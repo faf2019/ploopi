@@ -321,9 +321,7 @@ if ($_SESSION['ploopi']['mode'] == 'admin')
         {
             $_SESSION['ploopi']['mainmenu'] = $ploopi_mainmenu;
 
-            reset($_SESSION['ploopi']['workspaces']);
-            $wsp = current($_SESSION['ploopi']['workspaces']);
-            $_SESSION['ploopi']['workspaceid'] = $wsp['id'];
+            $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['workspaces_allowed'][0];
 
             if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYGROUPS) ploopi_loadparams();
 
