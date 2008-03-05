@@ -279,7 +279,7 @@ switch($_SESSION['ploopi']['scriptname'])
                                 ");
             
                     if ($fields = $db->fetchrow()) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['web'][0]]['webeditmoduleid'] = $fields['id_module'];
-                    else $newmode == 'admin';
+                    else $newmode = 'admin';
                 }
                 
                 if ($newmode == 'web')

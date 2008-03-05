@@ -30,21 +30,6 @@ div.system_tree_padding {
     overflow:auto;
 }
 
-
-div.system_tree_node {
-}
-
-div.system_tree_node img {
-    display:block;
-    float:left;
-}
-
-div.system_tree_node a {
-    line-height:18px;
-    height:18px;
-}
-
-
 div.system_main {
     overflow:hidden;
     padding:4px;

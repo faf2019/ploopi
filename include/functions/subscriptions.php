@@ -20,31 +20,6 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-/*// Abonnement d'un utilisateur à un objet d'un module
-function ploopi_subscribeuser($id_object, $actions = null, $id_user = -1, $id_module = -1)
-{
-   
-}
-
-
-function ploopi_issubscribed($id_object = -1, $id_action = -1, $id_user = -1, $id_module = -1)
-{
-    global $db;
-    
-    if ($id_user == -1) $id_user = $_SESSION['ploopi']['user_id'];
-    if ($id_module == -1) $id_user = $_SESSION['ploopi']['module_id'];
-    
-    $sql = 'SELECT * FROM ploopi_subscription WHERE id_user = {$id_user} AND id_module = {$id_module}';
-    
-    if ($id_object != -1) $sql .= " AND (id_object = {$id_object} OR id_object = -1)";
-    if ($id_action != -1) $sql .= " AND (id_action = {$id_action} OR id_action = -1)";
-    
-    $db->query($sql);
-    
-    return ($db->numrows() > 0);    
-}
-*/
-
 function ploopi_subscription($id_object, $id_record, $allowedactions = null, $optional_title = '')
 {
     $ploopi_subscription_id = md5("{$_SESSION['ploopi']['moduleid']}_{$_SESSION['ploopi']['userid']}_{$id_object}_".addslashes($id_record));

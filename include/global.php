@@ -27,7 +27,6 @@ include_once './include/functions/annotations.php';
 include_once './include/functions/browser.php';
 include_once './include/functions/cache.php';
 include_once './include/functions/date.php';
-include_once './include/functions/display.php';
 include_once './include/functions/documents.php';
 include_once './include/functions/filesystem.php';
 include_once './include/functions/filter.php';

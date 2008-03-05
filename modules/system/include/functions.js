@@ -25,12 +25,10 @@ function system_showgroup(typetree, gid, str)
     if (typetree == 'groups') dest = 'g'+gid;
     else dest = 'w'+gid;
 
-    elt = $(dest+'_plus');
-
-    if (elt.style.background.indexOf('plusbottom') != -1) elt.style.background = elt.style.background.replace('plusbottom', 'minusbottom');
-    else if (elt.style.background.indexOf('minusbottom')  != -1) elt.style.background = elt.style.background.replace('minusbottom', 'plusbottom');
-    else if (elt.style.background.indexOf('plus')  != -1) elt.style.background = elt.style.background.replace('plus', 'minus');
-    else if (elt.style.background.indexOf('minus')  != -1) elt.style.background = elt.style.background.replace('minus', 'plus');
+    elt = $('n'+dest);
+    
+    if (elt.src.indexOf('plus')  != -1) elt.src = elt.src.replace('plus', 'minus');
+    else if (elt.src.indexOf('minus')  != -1) elt.src = elt.src.replace('minus', 'plus');
 
     if ($(dest))
     {

@@ -100,16 +100,16 @@ else
             if ($op == 'xml_detail_group')
             {
                 ob_end_clean();
-                if (!empty($_GET['typetree']) && !empty($_GET['gid']) && !empty($_GET['str']))
+                if (!empty($_GET['typetree']) && !empty($_GET['gid']))
                 {
                     switch($_GET['typetree'])
                     {
                         case 'workspaces':
-                            echo system_build_tree('workspaces', $_GET['gid'], 0, $_GET['str']);
+                            echo system_build_tree('workspaces', $_GET['gid'], 0);
                         break;
 
                         case 'groups':
-                            echo system_build_tree('groups', 0, $_GET['gid'], $_GET['str']);
+                            echo system_build_tree('groups', 0, $_GET['gid']);
                         break;
                     }
                 }

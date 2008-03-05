@@ -160,7 +160,6 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                     $oFCKeditor->Config['CustomConfigurationsPath'] = "{$basepath}/modules/system/fckeditor/fckconfig.js"  ;
                     $oFCKeditor->Config['EditorAreaCSS'] = "{$basepath}/modules/system/fckeditor/fck_editorarea.css" ;
-                    $oFCKeditor->Config['BaseHref'] = "http://{$_SERVER['HTTP_HOST']}{$basepath}/";
                     $oFCKeditor->Create('FCKeditor_1') ;
                     ?>
                     </td>
@@ -244,7 +243,6 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                         $oFCKeditor->Config['CustomConfigurationsPath'] = "{$basepath}/modules/system/fckeditor/fckconfig.js"  ;
                         $oFCKeditor->Config['EditorAreaCSS'] = "{$basepath}/modules/system/fckeditor/fck_editorarea.css" ;
-                        $oFCKeditor->Config['BaseHref'] = "http://{$_SERVER['HTTP_HOST']}{$basepath}/";
                         $oFCKeditor->Create('FCKeditor_1') ;
                         ?>
                         </td>

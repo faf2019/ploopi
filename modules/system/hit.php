@@ -32,9 +32,9 @@ $log->fields['remote_port'] = $_SERVER['REMOTE_PORT'];
 $log->fields['script_filename'] = $_SERVER['SCRIPT_FILENAME'];
 $log->fields['script_name'] = $_SERVER['SCRIPT_NAME'];
 $log->fields['request_uri'] = $_SERVER['REQUEST_URI'];
-$log->fields['ploopi_moduleid'] = $_SESSION['ploopi']['moduleid'];
-$log->fields['ploopi_userid'] = $_SESSION['ploopi']['userid'];
-$log->fields['ploopi_workspaceid'] = $_SESSION['ploopi']['workspaceid'];
+$log->fields['ploopi_moduleid'] = (empty($_SESSION['ploopi']['moduleid'])) ? 0 : $_SESSION['ploopi']['moduleid'];
+$log->fields['ploopi_userid'] = (empty($_SESSION['ploopi']['userid'])) ? 0 : $_SESSION['ploopi']['userid'];
+$log->fields['ploopi_workspaceid'] = (empty($_SESSION['ploopi']['workspaceid'])) ? 0 : $_SESSION['ploopi']['workspaceid'];;
 
 $systemdate = ploopi_getdatetimedetail();
 $log->fields['date_year'] = $systemdate[_PLOOPI_DATE_YEAR];
