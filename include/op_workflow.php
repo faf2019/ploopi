@@ -85,7 +85,8 @@ switch($ploopi_op)
             }
         }
 
-        $userfilter = "u.login LIKE '%".$db->addslashes($_GET['ploopi_workflow_userfilter'])."%'";
+        $cleanedfilter = $db->addslashes($_GET['ploopi_workflow_userfilter']);
+        $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
 
         // recherche des utilisateurs "admininstrateur d'espace" ou disposant d'une action particuliere dans le module
         $option_u = ($id_action != -1) ?

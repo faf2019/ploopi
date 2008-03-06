@@ -87,8 +87,9 @@ switch($ploopi_op)
             }
         }
 
-        $userfilter = "u.login LIKE '%".$db->addslashes($_GET['ploopi_shares_userfilter'])."%'";
-
+        $cleanedfilter = $db->addslashes($_GET['ploopi_shares_userfilter']);
+        $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
+        
         // recherche des utilisateurs "admininstrateur d'espace" ou disposant d'une action particuliere dans le module
         $query_u =  "
                     SELECT      distinct(u.id), u.login, u.firstname, u.lastname, wu.id_workspace
