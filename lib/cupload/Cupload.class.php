@@ -21,24 +21,28 @@ class CUploadSentinel {
   function __init($_sId) {
     $this->lockfile = UPLOAD_PATH.$_sId.'.lock';
     if(file_exists($this->lockfile)) {
-      $pf=fopen($this->lockfile,'rb');
-#      @flock($fp, LOCK_SH);
-      $_status = fread($pf,4096);
-#      @flock($fp, LOCK_UN);
-      fclose($pf);
-      $_status = unserialize($_status);
-      $this->total_size   = @ $_status['total_size'];
-      $this->complete     = @ ($_status['complete']?"1":"0");
-      $this->received     = @ $_status['received'];
-      $this->current      = @ $_status['current'];
-      $this->start_time   = @ $_status['start_time'];
-      $this->elapsed_time = @ $_status['elapsed_time'];
-      if (!empty($_status['files'])) $this->files        = @ $_status['files'];
-      if($this->total_size>0)  $this->percent = sprintf('%5.2f',($this->received * 100) / $this->total_size);
-      $_total_time = ($this->elapsed_time-$this->start_time);
-      if($_total_time>0) {
-        $this->speed = sprintf('%5.2f',(($this->received) / $_total_time)/1024);
-      } else $this->speed=-1;
+      $pf=@fopen($this->lockfile,'rb');
+      if (is_resource($pf))
+      { 
+        @flock($pf, LOCK_SH);
+        $_status = fread($pf,4096);
+        @flock($pf, LOCK_UN);
+        fclose($pf);
+        $_status = unserialize($_status);
+        $this->total_size   = @ $_status['total_size'];
+        $this->complete     = @ ($_status['complete']?"1":"0");
+        $this->received     = @ $_status['received'];
+        $this->current      = @ $_status['current'];
+        $this->start_time   = @ $_status['start_time'];
+        $this->elapsed_time = @ $_status['elapsed_time'];
+        if (!empty($_status['files'])) $this->files        = @ $_status['files'];
+        if($this->total_size>0)  $this->percent = sprintf('%5.2f',($this->received * 100) / $this->total_size);
+        $_total_time = ($this->elapsed_time-$this->start_time);
+        if($_total_time>0) {
+          $this->speed = sprintf('%5.2f',(($this->received) / $_total_time)/1024);
+        } else $this->speed=-1;
+      }
+      else $this->error = 'notfound';
     }
     else $this->error = 'notfound';
   }

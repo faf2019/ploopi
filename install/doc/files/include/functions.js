@@ -74,33 +74,38 @@ function doc_upload(sid)
         $('doc_progressbar').style.display = 'block';
 
         rc = ploopi_xmlhttprequest('index-quick.php', 'ploopi_op=doc_getstatus&sid='+sid);
-        if (rc == 'notfound')
+        if (rc=='')
         {
+            $('doc_progressbar_bg').style.width = ($('doc_progressbar').offsetWidth-2)+'px';
+            $('doc_progressbar_txt').innerHTML = '<b>Terminé</b>';
         }
         else
         {
-            if (rc=='')
+            if (rc == 'notfound')
             {
-                $('doc_progressbar_bg').style.width = ($('doc_progressbar').offsetWidth-2)+'px';
-                $('doc_progressbar_txt').innerHTML = '<b>Terminé</b>';
             }
             else
             {
-	            rc = rc.split('|');
-	
-	            // 0 : taille uploadée
-	            // 1 : taille totale
-	            // 2 : ?
-	            // 3 : fichier en cours d'upload
-	            // 4 : vitesse ko/s
-	            // 5 : % avancement
-	
-	            $('doc_progressbar_bg').style.width = ((($('doc_progressbar').offsetWidth-2)*rc[5])/100)+'px';
-	            $('doc_progressbar_txt').innerHTML = '<b>'+rc[5]+'%</b> ('+rc[0]+'/'+rc[1]+'ko)<br /><b>'+rc[3]+'</b>';
-                setTimeout('doc_upload(\''+sid+'\');',500);
-	        }
-        }
+                rc = rc.split('|');
 
+                //alert(rc.length);
+     
+                if (rc.length == 6)
+                {
+		            // 0 : taille uploadée
+		            // 1 : taille totale
+		            // 2 : ?
+		            // 3 : fichier en cours d'upload
+		            // 4 : vitesse ko/s
+		            // 5 : % avancement
+            
+                    $('doc_progressbar_bg').style.width = ((($('doc_progressbar').offsetWidth-2)*rc[5])/100)+'px';
+                    $('doc_progressbar_txt').innerHTML = '<b>'+rc[5]+'%</b> ('+rc[0]+'/'+rc[1]+'ko)<br />Envoi de <b>'+rc[3]+'</b> à <i>'+rc[4]+' ko/s</i>';
+                }
+                
+                setTimeout('doc_upload(\''+sid+'\');',500);
+            }
+        }
     }
 }
 

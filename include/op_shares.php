@@ -184,14 +184,17 @@ switch($ploopi_op)
                                     <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><? echo $list['groups'][$id_grp]['label'];  ?></span></p>
                                 </div>
                                 <?
-                                foreach($list['groups'][$id_grp]['users'] as $id_user)
+                                if (!empty($list['groups'][$id_grp]['users']))
                                 {
-                                    $user = &$list['users'][$id_user];
-                                    ?>
-                                    <a class="ploopi_shares_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=shares_select_user&user_id=<? echo $id_user; ?>','','div_shares_users_selected');">
-                                        <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['firstname']} {$user['lastname']} ({$user['login']})"; ?></span></p>
-                                    </a>
-                                    <?
+                                    foreach($list['groups'][$id_grp]['users'] as $id_user)
+                                    {
+                                        $user = &$list['users'][$id_user];
+                                        ?>
+                                        <a class="ploopi_shares_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=shares_select_user&user_id=<? echo $id_user; ?>','','div_shares_users_selected');">
+                                            <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['firstname']} {$user['lastname']} ({$user['login']})"; ?></span></p>
+                                        </a>
+                                        <?
+                                    }
                                 }
                             }
                         }
