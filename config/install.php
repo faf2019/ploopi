@@ -1,4 +1,25 @@
 <?php
+/*
+	Copyright (c) 2007-2008 Ovensia
+	Copyright (c) 2008 HeXad
+	Contributors hold Copyright (c) to their code submissions.
+
+	This file is part of Ploopi.
+
+	Ploopi is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	Ploopi is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Ploopi; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
 
 session_start();
 
@@ -67,6 +88,7 @@ if(!isset($_SESSION['install'])) {
     '<DB_PASSWORD>'     => '',                // ok
     '<DB_DATABASE>'     => '',                // ok
     '<DATAPATH>'        => './data',          // ok
+    '<TMPPATH>'         => '/tmp',            //
     '<USE_DBSESSION>'   => true,              // ok
     '<URL_ENCODE>'      => true,              // ok
     '<SECRETKEY>'       => 'ma phrase secrete', // ok
@@ -297,7 +319,9 @@ if($_POST['stage']>=1)
  */
 if($_POST['stage']>=2)
 {
+  /* if(isset($_POST['site_name']))     $_SESSION['install']['<SITE_NAME>'] = trim($_POST['site_name']); */
   if(isset($_POST['dir_data']))      $_SESSION['install']['<DATAPATH>'] = ploopi_del_end_slashe(trim($_POST['dir_data']));
+  if(isset($_POST['dir_tmp']))       $_SESSION['install']['<TMPPATH>'] = ploopi_del_end_slashe(trim($_POST['dir_tmp']));
   if(isset($_POST['log_admin']))     $_SESSION['install']['<ADMIN_LOGIN>'] = trim($_POST['log_admin']);
   if(isset($_POST['pass_admin']))    $_SESSION['install']['<ADMIN_PASSWORD>'] = trim($_POST['pass_admin']);
   if(isset($_POST['secret']))        $_SESSION['install']['<SECRETKEY>'] = trim($_POST['secret']);
@@ -373,13 +397,47 @@ if($_POST['stage']>=2)
                     );
   }
 
+  // test if TMP Folder no exist
+  if(!is_dir($_SESSION['install']['<TMPPATH>']))
+  {
+    $arrInstallInfos[] = array(
+            'id'      => 'div_tmp',
+            'state'   => false,
+            'title'   => '_PLOOPI_INSTALL_TMP_EXIST',
+            'title_replace' => array($_SESSION['install']['<TMPPATH>']),
+            'mess_replace' => array($_SESSION['install']['<TMPPATH>']),
+            'warn_replace' => array($_SESSION['install']['<TMPPATH>']),
+            'form'    => array( array('label'  => _PLOOPI_INSTALL_SELECT_TMP,
+                                      'input' => '<input name="dir_tmp" id="dir_tmp" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<TMPPATH>'].'"/>',
+                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SELECT_TMP_JS).'\',form.dir_tmp,\'string\')'
+                                     )
+                              )
+                    );
+  }
+  else //Folder exist. Writable / no writable ?
+  {
+    $arrInstallInfos[] = array(
+            'id'      => 'div_tmp',
+            'state'   => is_writable($_SESSION['install']['<TMPPATH>']),
+            'title'    => '_PLOOPI_INSTALL_TMP_WRITE',
+            'title_replace' => array($_SESSION['install']['<TMPPATH>']),
+            'mess_replace' => array(ploopi_human_size(disk_free_space($_SESSION['install']['<TMPPATH>']))),
+            'warn_replace' => array($_SESSION['install']['<TMPPATH>']),
+            'form'    => array( array('label' => _PLOOPI_INSTALL_SELECT_TMP,
+                                      'input' => '<input name="dir_tmp" id="dir_tmp" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<TMPPATH>'].'"/>',
+                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SELECT_TMP_JS).'\',form.dir_tmp,\'string\')'
+                                     )
+                              )
+                    );
+  }
+  
   // Personal informations
   $arrInstallInfos[] = array('id' => 'div_title_param_ploopi',
            'title' => '_PLOOPI_INSTALL_PARAM_PLOOPI',
-           'form'    => array( array('label' => _PLOOPI_INSTALL_SITE_NAME,
+           'form'    => array( /* array('label' => _PLOOPI_INSTALL_SITE_NAME,
                                      'input' => '<input name="site_name" id="site_name" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<SITE_NAME>'].'"/>',
                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SITE_NAME_JS).'\',form.site_name,\'string\')'
-                                    ),
+                                    ),*/
                                array('label' => _PLOOPI_INSTALL_ADMIN_LOGIN,
                                      'input' => '<input name="log_admin" id="log_admin" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<ADMIN_LOGIN>'].'"/>',
                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_ADMIN_LOGIN_JS).'\',form.log_admin,\'string\')'
@@ -545,7 +603,7 @@ if($_POST['stage']>=3)
   {
       include_once './config/install/install_'.$_SESSION['install']['<DB_TYPE>'].'.inc.php';
       //ALL DATABASE TESTS
-      ploopi_Test_Database(&$arrInstallInfos,$intInstallInfos,$arrInstallRequestDB); 
+      ploopi_Test_Database(&$arrInstallInfos,$intInstallInfos,$arrInstallRequestDB);
   }
   else
   {

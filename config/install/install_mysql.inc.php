@@ -1,4 +1,34 @@
 <?php
+/*
+	Copyright (c) 2007-2008 Ovensia
+	Copyright (c) 2008 HeXad
+	Contributors hold Copyright (c) to their code submissions.
+
+	This file is part of Ploopi.
+
+	Ploopi is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	Ploopi is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Ploopi; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/**
+ * Test all base functions in Mysql
+ *
+ * @param array $arrInstallInfos
+ * @param integer $intInstallInfos
+ * @param array $arrInstallRequestDB
+ * @return true/false
+ */
 function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallRequestDB)
 {
   //Connect to server (Not connected to database !!!)
@@ -59,7 +89,7 @@ function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallReque
     }
 
     //If database name is ok
-    if($_SESSION['install']['<DB_DATABASE>'] !== '')
+    if(trim($_SESSION['install']['<DB_DATABASE>']) != '')
     {
       if(!$booFindDbListe) // The database NO exist
       {
@@ -174,6 +204,12 @@ function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallReque
                                    'warn_replace' => array($_SESSION['install']['<DB_DATABASE>'],$_SESSION['install']['<DB_LOGIN>']));
         $intRequest = null;
       }
+    }
+    else
+    {
+      $arrInstallInfos[$intInstallInfos]['state'] = false;
+      $arrInstallInfos[$intInstallInfos]['warn_replace'] = array(_PLOOPI_INSTALL_DB_ERR_NAME_DB);
+      return false;
     }
   }
   return true;

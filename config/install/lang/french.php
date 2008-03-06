@@ -1,4 +1,26 @@
 <?php
+/*
+	Copyright (c) 2007-2008 Ovensia
+	Copyright (c) 2008 HeXad
+	Contributors hold Copyright (c) to their code submissions.
+
+	This file is part of Ploopi.
+
+	Ploopi is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	Ploopi is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Ploopi; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
 //Installation
 define ('_PLOOPI_INSTALL_TITLE',            'Installation PLOOPI');
 
@@ -110,6 +132,17 @@ define ('_PLOOPI_INSTALL_DATA_WRITE',        'Ecriture des données dans le réper
 define ('_PLOOPI_INSTALL_DATA_WRITE_MESS',   'Le répertoire %1s contiendra tous vos fichiers (hors base de données). Il est donc fortement conseillé de localiser ce répertoire hors de ploopi et sur un disque sécurisé (raid, sauvegardes régulières,..)%2s');
 define ('_PLOOPI_INSTALL_DATA_WRITE_WARNING','Vous devez donner à apache les droits en écriture sur le répertoire %1s');
 define ('_PLOOPI_INSTALL_SELECT_DATA_INFO_PLACE', '<br/>Ce répertoire dispose de ');
+
+// TMP Directory
+define ('_PLOOPI_INSTALL_SELECT_TMP',       '<sup>* </sup>Répertoire temporaire :');
+define ('_PLOOPI_INSTALL_SELECT_TMP_JS',    'Répertoire temporaire');
+
+define ('_PLOOPI_INSTALL_TMP_EXIST',        'Ecriture de données dans le répertoire %1s');
+define ('_PLOOPI_INSTALL_TMP_EXIST_WARNING','Le répertoire %1s n\'existe pas ou n\'est pas un répertoire');
+
+define ('_PLOOPI_INSTALL_TMP_WRITE',        'Ecriture de données dans le répertoire %1s');
+define ('_PLOOPI_INSTALL_TMP_WRITE_MESS',   'Ce répertoire dispose de %1s');
+define ('_PLOOPI_INSTALL_TMP_WRITE_WARNING','Vous devez donner à apache les droits en écriture sur le répertoire %1s');
 
 define ('_PLOOPI_INSTALL_PARAM_PLOOPI',      'Paramétrage « PLOOPI »');
 
