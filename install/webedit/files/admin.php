@@ -146,7 +146,7 @@ switch($op)
             
             ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
 
-            //ploopi_redirect("{$scriptenv}?headingid={$headingid}");
+            ploopi_redirect("{$scriptenv}?headingid={$headingid}");
         }
         else ploopi_redirect($scriptenv);
     break;

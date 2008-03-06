@@ -72,7 +72,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                     global $admin_redirect;
                     $admin_redirect = true;
 
-                    include './modules/system/admin_system_installmodules_uninstallproc.php"';
+                    include './modules/system/admin_system_installmodules_uninstallproc.php';
 
                     if ($admin_redirect) ploopi_redirect("{$scriptenv}?reloadsession");
                     else

@@ -10,10 +10,14 @@ class CUploadSentinel {
   var $percent      = 0;
   var $start_time   = 0;
   var $elapsed_time = 0;
-
+  var $error        = '';
+  
   function clear() {
-    @unlink($this->lockfile);
+       if(file_exists($this->lockfile)) {
+            @unlink($this->lockfile);
+       }
   }
+  
   function __init($_sId) {
     $this->lockfile = UPLOAD_PATH.$_sId.'.lock';
     if(file_exists($this->lockfile)) {
@@ -36,6 +40,7 @@ class CUploadSentinel {
         $this->speed = sprintf('%5.2f',(($this->received) / $_total_time)/1024);
       } else $this->speed=-1;
     }
+    else $this->error = 'notfound';
   }
 }
 
@@ -51,6 +56,7 @@ class CUpload {
   var $received     = 0;
   var $update       = 0;
   var $lockfile     = '';
+  var $error        = '';
 
   function __init($_sId) {
     list($chunk,$boundary) = split("boundary=",$_SERVER['CONTENT_TYPE']);
@@ -102,9 +108,13 @@ class CUpload {
               $filename = basename($filename);
 
               if(!empty($filename)) {
-                # create tmp file for upped file
-                $tmpname = $this->appendFile($fieldname,$filename,$filetype);
-                $_file   = fopen(UPLOAD_PATH.$tmpname,'wb');
+                if (is_dir(UPLOAD_PATH) && is_writable(UPLOAD_PATH)) 
+                {
+                    # create tmp file for upped file
+                    $tmpname = $this->appendFile($fieldname,$filename,$filetype);
+                    $_file = fopen(UPLOAD_PATH.$tmpname,'wb');
+                }
+                else $_file = null;
               }
               else
               {
@@ -177,6 +187,7 @@ class CUpload {
       'current'      => $this->current,
       'start_time'   => $this->start_time,
       'elapsed_time' => $this->elapsed_time,
+      'error'        => '',
     );
     if($this->complete) {
       # store file upload result.
@@ -184,11 +195,15 @@ class CUpload {
     }
     $_status = serialize($_status);
 
-    $fp=fopen($this->lockfile,'wb');
-  #  @flock($fp, LOCK_EX|LOCK_NB);
-    fwrite($fp,$_status);
-  #  @flock($fp, LOCK_UN);
-    fclose($fp);
+    if (is_dir(UPLOAD_PATH) && is_writable(UPLOAD_PATH))
+    {
+        $fp=fopen($this->lockfile,'wb');
+      #  @flock($fp, LOCK_EX|LOCK_NB);
+        fwrite($fp,$_status);
+      #  @flock($fp, LOCK_UN);
+        fclose($fp);
+    }
+    else $this->error = 'notwritable';
   }
 
   function getmicrotime() {

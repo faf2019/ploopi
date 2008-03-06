@@ -19,9 +19,13 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+var doc_upload_error = false;
+
 function doc_folder_validate(form, tovalidate)
 {
     next = false;
+    doc_upload_error = false;
 
     if (ploopi_validatefield('Nom du Dossier', form.docfolder_name, 'string'))
     if (tovalidate)
@@ -70,27 +74,33 @@ function doc_upload(sid)
         $('doc_progressbar').style.display = 'block';
 
         rc = ploopi_xmlhttprequest('index-quick.php', 'ploopi_op=doc_getstatus&sid='+sid);
-        if (rc!='')
+        if (rc == 'notfound')
         {
-            rc = rc.split('|');
-
-            // 0 : taille uploadée
-            // 1 : taille totale
-            // 2 : ?
-            // 3 : fichier en cours d'upload
-            // 4 : vitesse ko/s
-            // 5 : % avancement
-
-            $('doc_progressbar_bg').style.width = ((($('doc_progressbar').offsetWidth-2)*rc[5])/100)+'px';
-            $('doc_progressbar_txt').innerHTML = '<b>'+rc[5]+'%</b> ('+rc[0]+'/'+rc[1]+'ko)<br /><b>'+rc[3]+'</b>';
         }
         else
         {
-            $('doc_progressbar_bg').style.width = ($('doc_progressbar').offsetWidth-2)+'px';
-            $('doc_progressbar_txt').innerHTML = '<b>Terminé</b>';
+            if (rc=='')
+            {
+                $('doc_progressbar_bg').style.width = ($('doc_progressbar').offsetWidth-2)+'px';
+                $('doc_progressbar_txt').innerHTML = '<b>Terminé</b>';
+            }
+            else
+            {
+	            rc = rc.split('|');
+	
+	            // 0 : taille uploadée
+	            // 1 : taille totale
+	            // 2 : ?
+	            // 3 : fichier en cours d'upload
+	            // 4 : vitesse ko/s
+	            // 5 : % avancement
+	
+	            $('doc_progressbar_bg').style.width = ((($('doc_progressbar').offsetWidth-2)*rc[5])/100)+'px';
+	            $('doc_progressbar_txt').innerHTML = '<b>'+rc[5]+'%</b> ('+rc[0]+'/'+rc[1]+'ko)<br /><b>'+rc[3]+'</b>';
+                setTimeout('doc_upload(\''+sid+'\');',500);
+	        }
         }
 
-        setTimeout('doc_upload(\''+sid+'\');',500);
     }
 }
 

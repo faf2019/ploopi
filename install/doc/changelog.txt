@@ -1,3 +1,9 @@
+== Module DOC - version 3.71 ====================================================
+
+2008-03-06  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Amélioration de la détection d'erreur sur l'upload de fichier lors de l'utilisation du CGI
+
 == Module DOC - version 3.7 ====================================================
 
 2008-03-04  Stéphane Escaich  <stephane@ovensia.fr>

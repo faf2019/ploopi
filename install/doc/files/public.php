@@ -198,17 +198,26 @@ if ($_SESSION['ploopi']['connected'])
         break;
 
         case 'doc_filesave':
-
             $draft = false;
-
+            
             if (isset($currentfolder))
             {
-
                 // en mode CGI, il faut récupérer les infos des fichiers uploadés (via le fichier lock)
                 // cf class Cupload
                 // on écrit tout dans $_FILES pour retomber sur nos pieds dans la suite des traitements
                 if (_PLOOPI_USE_CGIUPLOAD && !empty($_GET['sid']))
                 {
+                    if (!empty($_GET['error']) && $_GET['error'] == 'notwritable') 
+                    {
+                        ?>
+                        <script type="text/javascript">
+                            alert("Problème lors de l'envoi du fichier\nvérifiez le paramètrage du dossier temporaire d'upload");
+                            window.parent.doc_browser_from_iframe(<? echo $currentfolder; ?>);
+                        </script>
+                        <?
+                        ploopi_die();
+                    }
+                    
                     define ('UPLOAD_PATH', _PLOOPI_CGI_UPLOADTMP.'/');
                     include './lib/cupload/Cupload.class.php';
 

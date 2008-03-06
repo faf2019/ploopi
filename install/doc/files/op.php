@@ -28,7 +28,8 @@ if (ploopi_ismoduleallowed('doc'))
     switch($ploopi_op)
     {
         case 'doc_getstatus':
-            define ('UPLOAD_PATH', _PLOOPI_CGI_UPLOADTMP.'/');
+            if (substr(_PLOOPI_CGI_UPLOADTMP, -1, 1) != '/') define ('UPLOAD_PATH', _PLOOPI_CGI_UPLOADTMP.'/');
+            else define ('UPLOAD_PATH', _PLOOPI_CGI_UPLOADTMP);
             include_once './lib/cupload/status.php';
             ploopi_die();
         break;

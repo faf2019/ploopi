@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 define ('_PLOOPI_TICKETS_NONE',     0);
 define ('_PLOOPI_TICKETS_OPENED',   1);
 define ('_PLOOPI_TICKETS_DONE',     2);
@@ -127,7 +126,7 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
 
         $email_message = ploopi_make_links($message);
 
-        $http_host = dirname($_SERVER['HTTP_REFERER']);
+        $http_host = (empty($_SERVER['HTTP_REFERER'])) ? '' : dirname($_SERVER['HTTP_REFERER']);
 
         if ($id_object != '' && $id_record != '' && $id_module_type != 0)
         {

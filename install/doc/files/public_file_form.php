@@ -377,7 +377,7 @@ if (!$readonly)
 if (!$readonly)
 {
     ?>
-    <iframe name="doc_fileform_iframe" src="./img/blank.gif" style="width:0;height:0;visibility:hidden;display:none;"></iframe>
+    <iframe name="doc_fileform_iframe" src="./img/blank.gif" style="width:0;height:0;display:none;"></iframe>
     <?
 }
 

@@ -28,15 +28,20 @@ include './lib/cupload/Cupload.class.php';
 $_sId = $_GET['sid'];
 $uploader = & new CUploadSentinel;
 $uploader->__init($_sId);
-$_total_size = trim(sprintf('%10.2f',$uploader->total_size/1024));
-$_complete   = $uploader->complete;
-$_received   = trim(sprintf('%10.2f',$uploader->received/1024));
-$_current    = $uploader->current;
-$_speed      = $uploader->speed;
-$_percent    = $uploader->percent;
-if($_total_size>0) {
-  $output = $_received.'|'.$_total_size.'|'.$_complete.'|'.$_current.'|'.$_speed.'|'.$_percent;
-} else $output="";
+if (empty($uploader->error))
+{
+    $_total_size = trim(sprintf('%10.2f',$uploader->total_size/1024));
+    $_complete   = $uploader->complete;
+    $_received   = trim(sprintf('%10.2f',$uploader->received/1024));
+    $_current    = $uploader->current;
+    $_speed      = $uploader->speed;
+    $_percent    = $uploader->percent;
+    if($_total_size>0) {
+      $output = $_received.'|'.$_total_size.'|'.$_complete.'|'.$_current.'|'.$_speed.'|'.$_percent;
+    } else $output='';
+}
+else $output = $uploader->error;
+
 header('Content-Length: '.strlen($output));         // now headers to resolve browser cache problems
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');

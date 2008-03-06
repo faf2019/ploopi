@@ -35,7 +35,8 @@
 include '../config/config.php';
 include '../lib/cupload/Cupload.class.php';
 
-define ('UPLOAD_PATH', _PLOOPI_CGI_UPLOADTMP.'/');
+if (substr(_PLOOPI_CGI_UPLOADTMP, -1, 1) != '/') define ('UPLOAD_PATH', _PLOOPI_CGI_UPLOADTMP.'/');
+else define ('UPLOAD_PATH', _PLOOPI_CGI_UPLOADTMP);
 
 $_getvars = array();
 $_queryparams = array();
@@ -46,60 +47,60 @@ $_args = explode('&',$_args);
 
 foreach($_args as $_value)
 {
-	$_arg = explode('=',$_value);
-	$_getvars[$_arg[0]] = urldecode($_arg[1]);
+    $_arg = explode('=',$_value);
+    $_getvars[$_arg[0]] = urldecode($_arg[1]);
 }
 
 echo "Content-type: text/html\n\n";
 
 if (isset($_getvars['test']))
 {
-	echo "ok";
-	die();
+    echo 'ok';
+    die();
 }
 
 if(!empty($_getvars['sid']))
 {
-	# get passed values from post form ( content_lengt, content_type, ... )
-	$uploader = & new CUpload;
-	$uploader->__init($_getvars['sid']);
-	# upload process
-	$uploader->processInput();
-	# check is there was an error or not
-	if(!$uploader->check_complete())
-	{
-		# error redirect
-		//echo '<META HTTP-EQUIV=Refresh CONTENT="0; URL=/upload_php/error.php?'.$_query.'&'.$_redirect.'">';
-	}
-	$uploader->setcomplete();
+    # get passed values from post form ( content_length, content_type, ... )
+    $uploader = & new CUpload;
+    $uploader->__init($_getvars['sid']);
+    # upload process
+    $uploader->processInput();
 
-	# force page refresh, this script may not process anything else than uploading files.
-	# build _FILES array.
-	//echo '<pre>'; print_r($uploader->postvars);echo '</pre>';
-	//echo '<pre>'; print_r($_getvars);echo '</pre>';
+    $_query = '';
 
-	if (!empty($uploader->postvars['redirect']))
-	{
-		$_query = urldecode($uploader->postvars['redirect']);
+    if (!empty($uploader->postvars['redirect']))
+    {
+        $_query = urldecode($uploader->postvars['redirect']);
 
-		$_queryparams[] = 'sid='.urlencode($_getvars['sid']);
+        $_queryparams[] = 'sid='.urlencode($_getvars['sid']);
 
-		foreach($uploader->postvars as $key => $value)
-		{
-			if ($key != 'sid' && $key != 'redirect' && $key != 'MAX_FILE_SIZE') $_queryparams[] = "{$key}=".urlencode($value);
-		}
+        foreach($uploader->postvars as $key => $value)
+        {
+            if ($key != 'sid' && $key != 'redirect' && $key != 'MAX_FILE_SIZE') $_queryparams[] = "{$key}=".urlencode($value);
+        }
 
-		if (!empty($_queryparams)) $_query .= '?'.implode('&',$_queryparams);
+        if (!empty($_queryparams)) $_query .= '?'.implode('&',$_queryparams);
+    }
 
-		echo '<META HTTP-EQUIV=Refresh CONTENT="0; URL='.$_query.'">';
-	}
 
-	die();
+    # check is there was an error or not
+    if(!$uploader->check_complete())
+    {
+        $_query .= '&notcomplete';
+    }
+    else
+    {
+        $uploader->setcomplete();
+    }
+
+    # force page refresh, this script may not process anything else than uploading files.
+    if (!empty($uploader->postvars['redirect']))
+    {
+        if (!empty($uploader->error)) $_query .= '&error='.urlencode($uploader->error);
+        echo '<META HTTP-EQUIV=Refresh CONTENT="0; URL='.$_query.'">';
+    }
 }
-else
-{
-	echo "Chargement impossible";
-	die();
-}
-
+else echo 'Chargement impossible';
+die();
 ?>
