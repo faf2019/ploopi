@@ -1,3 +1,10 @@
+== Module WebEdit - version 1.35 ===================================================
+
+2008-03-07  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Amélioration de l'intégration de FCKEditor (problème de BasePath avec IE corrigé)
+ * Correction d'un bug sur la création de liens vers des articles dans l'éditeur
+
 == Module WebEdit - version 1.301 ==================================================
 
 2008-03-06  Stéphane Escaich  <stephane@ovensia.fr>

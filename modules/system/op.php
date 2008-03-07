@@ -108,6 +108,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
         case 'tickets_new':
             if (!$_SESSION['ploopi']['connected']) ploopi_die();
+
+            ob_start();
             ?>
             <div id="tickets_new">
                 <form method="post" action="admin.php">
@@ -149,17 +151,14 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                     $oFCKeditor = new FCKeditor('fck_ticket_message') ;
 
-                    $basepath = dirname($_SERVER['HTTP_REFERER']); // compatible with proxy rewrite
-                    if ($basepath == '/') $basepath = '';
-
-                    $oFCKeditor->BasePath   = "{$basepath}/FCKeditor/";
+                    $oFCKeditor->BasePath   = "./FCKeditor/";
 
                     // width & height
                     $oFCKeditor->Width='100%';
                     $oFCKeditor->Height='200';
 
-                    $oFCKeditor->Config['CustomConfigurationsPath'] = "{$basepath}/modules/system/fckeditor/fckconfig.js"  ;
-                    $oFCKeditor->Config['EditorAreaCSS'] = "{$basepath}/modules/system/fckeditor/fck_editorarea.css" ;
+                    $oFCKeditor->Config['CustomConfigurationsPath'] = "../../modules/system/fckeditor/fckconfig.js"  ;
+                    $oFCKeditor->Config['EditorAreaCSS'] = "../../modules/system/fckeditor/fck_editorarea.css" ;
                     $oFCKeditor->Create('FCKeditor_1') ;
                     ?>
                     </td>
@@ -172,19 +171,24 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 <tr>
                     <td style="text-align:right;">
                         <input type="submit" class="flatbutton" value="Envoyer" style="font-weight:bold;">
-                        <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="$('system_popupticket').style.visibility='hidden';">
+                        <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('system_popupticket');">
                     </td>
                 </tr>
                 </table>
                 </form>
             </div>
             <?
+            $content = ob_get_contents();
+            ob_end_clean();
+            echo $skin->create_popup('Tickets', $content, 'system_popupticket');
             ploopi_die();
         break;
 
         case 'tickets_replyto':
         case 'tickets_modify':
-            ob_end_clean();
+            if (!$_SESSION['ploopi']['connected']) ploopi_die();
+            
+            ob_start();
             include_once './modules/system/class_ticket.php';
             $ticket = new ticket();
 
@@ -229,10 +233,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                         $oFCKeditor = new FCKeditor('fck_ticket_message') ;
 
-                        $basepath = dirname($_SERVER['HTTP_REFERER']); // compatible with proxy rewrite
-                        if ($basepath == '/') $basepath = '';
-
-                        $oFCKeditor->BasePath = "{$basepath}/FCKeditor/";
+                        $oFCKeditor->BasePath = "./FCKeditor/";
 
                         // default value
                         $oFCKeditor->Value = $ticket->fields['message'];
@@ -241,8 +242,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         $oFCKeditor->Width='100%';
                         $oFCKeditor->Height='200';
 
-                        $oFCKeditor->Config['CustomConfigurationsPath'] = "{$basepath}/modules/system/fckeditor/fckconfig.js"  ;
-                        $oFCKeditor->Config['EditorAreaCSS'] = "{$basepath}/modules/system/fckeditor/fck_editorarea.css" ;
+                        $oFCKeditor->Config['CustomConfigurationsPath'] = "../../modules/system/fckeditor/fckconfig.js"  ;
+                        $oFCKeditor->Config['EditorAreaCSS'] = "../../modules/system/fckeditor/fck_editorarea.css" ;
                         $oFCKeditor->Create('FCKeditor_1') ;
                         ?>
                         </td>
@@ -250,7 +251,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     <tr>
                         <td style="text-align:right;">
                             <input type="submit" class="flatbutton" value="<? echo $button_value; ?>" style="font-weight:bold;">
-                            <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="$('system_popupticket').style.visibility='hidden';">
+                            <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('system_popupticket');">
                         </td>
                     </tr>
                     </table>
@@ -258,6 +259,9 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 </div>
                 <?
             }
+            $content = ob_get_contents();
+            ob_end_clean();
+            echo $skin->create_popup('Tickets', $content, 'system_popupticket');
             ploopi_die();
         break;
 

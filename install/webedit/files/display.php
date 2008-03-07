@@ -357,18 +357,11 @@ else
             if (!$readonly)
             {
                 ob_start();
-                ?>
-                <script type="text/javascript" src="./FCKeditor/fckeditor.js"></script>
-                <?
                 include_once './FCKeditor/fckeditor.php' ;
 
                 $oFCKeditor = new FCKeditor('fck_webedit_article_content') ;
 
-                $basepath = dirname($_SERVER['HTTP_REFERER']); // compatible with proxy rewrite
-                if ($basepath == '/') $basepath = '';
-
-
-                $oFCKeditor->BasePath = "{$basepath}/FCKeditor/";
+                $oFCKeditor->BasePath = './FCKeditor/';
 
                 // default value
                 $oFCKeditor->Value= $article->fields['content'];
@@ -377,24 +370,21 @@ else
                 $oFCKeditor->Width='100%';
                 $oFCKeditor->Height='500';
 
-                $oFCKeditor->Config['CustomConfigurationsPath'] = "{$basepath}/modules/webedit/fckeditor/fckconfig.js"  ;
-                $oFCKeditor->Config['ToolbarLocation'] = 'Out:parent(xToolbar)' ;
-                $oFCKeditor->Config['SkinPath'] = "{$basepath}/modules/webedit/fckeditor/skins/default/";
+                $oFCKeditor->Config['CustomConfigurationsPath'] = '../../modules/webedit/fckeditor/fckconfig.js';
+                $oFCKeditor->Config['ToolbarLocation'] = 'Out:parent(xToolbar)';
+                $oFCKeditor->Config['SkinPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/skins/default/';
+                
+                if (file_exists("{$template_path}/fckeditor/fck_editorarea.css")) $oFCKeditor->Config['EditorAreaCSS'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fck_editorarea.css';
 
+                if (file_exists("{$template_path}/fckeditor/fcktemplates.xml")) $oFCKeditor->Config['TemplatesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fcktemplates.xml';
 
-                if (file_exists("{$template_path}/fckeditor/fck_editorarea.css")) $oFCKeditor->Config['EditorAreaCSS'] = $basepath . substr($template_path,1) . '/fckeditor/fck_editorarea.css';
+                if (file_exists("{$template_path}/fckeditor/fckstyles.xml")) $oFCKeditor->Config['StylesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fckstyles.xml';
 
-                if (file_exists("{$template_path}/fckeditor/fcktemplates.xml")) $oFCKeditor->Config['TemplatesXmlPath'] = $basepath . substr($template_path,1) . '/fckeditor/fcktemplates.xml';
+                $oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH;
 
-                if (file_exists("{$template_path}/fckeditor/fckstyles.xml")) $oFCKeditor->Config['StylesXmlPath'] = $basepath . substr($template_path,1) . '/fckeditor/fckstyles.xml';
+                $oFCKeditor->Config['PluginsPath'] = '../../modules/webedit/fckeditor/plugins/';
 
-
-                $oFCKeditor->Config['BaseHref'] = "{$basepath}/";
-
-                $oFCKeditor->PluginsPath = "{$basepath}/modules/webedit/fckeditor/plugins/" ;
-                $oFCKeditor->Config['PluginsPath'] = "{$basepath}/modules/webedit/fckeditor/plugins/" ;
-
-                $oFCKeditor->ToolbarSet = 'User';
+                $oFCKeditor->ToolbarSet = 'Default';
 
                 // render
                 $oFCKeditor->Create('FCKeditor_1') ;
@@ -402,16 +392,6 @@ else
                 $editor = ob_get_contents();
                 ob_end_clean();
             }
-
-            /*
-            $heading = new webedit_heading();
-            $heading->open($headingid);
-            $parents = split(';',$article_heading->fields['parents']);
-            if (isset($parents[0])) unset($parents[0]);
-            $parents[] = $headingid;
-
-            $nav = implode('-',$parents);
-            */
         }
 
         $template_body->assign_block_vars("switch_content_page", array());

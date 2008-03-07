@@ -101,6 +101,8 @@ define('_PLOOPI_INDEXATION_METAWEIGHT',     999999);
 global $scriptenv;
 $scriptenv = basename($_SERVER['SCRIPT_FILENAME']);
 
+if (!defined ('_PLOOPI_BASEPATH')) define ('_PLOOPI_BASEPATH', ((!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://').((!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']).((!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') ? ":{$_SERVER['SERVER_PORT']}" : '').((!empty($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] != '') ? dirname($_SERVER['SCRIPT_NAME']) : '/')); 
+
 define ('_PLOOPI_SERVER_OSTYPE', (substr(PHP_OS, 0, 3) == 'WIN') ? 'windows' : 'unix');
 
 switch(_PLOOPI_SERVER_OSTYPE)

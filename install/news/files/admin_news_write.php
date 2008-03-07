@@ -93,10 +93,7 @@ include_once './FCKeditor/fckeditor.php' ;
 
 $oFCKeditor = new FCKeditor('fck_news_content') ;
 
-$basepath = dirname($_SERVER['HTTP_REFERER']); // compatible with proxy rewrite
-if ($basepath == '/') $basepath = '';
-
-$oFCKeditor->BasePath = "{$basepath}/FCKeditor/";
+$oFCKeditor->BasePath = './FCKeditor/';
 
 // default value
 $oFCKeditor->Value = $news->fields['content'];
@@ -105,10 +102,9 @@ $oFCKeditor->Value = $news->fields['content'];
 $oFCKeditor->Width='100%';
 $oFCKeditor->Height='350';
 
-$oFCKeditor->Config['CustomConfigurationsPath'] = "{$basepath}/modules/news/fckeditor/fckconfig.js"  ;
-$oFCKeditor->Config['SkinPath'] = "{$basepath}/modules/news/fckeditor/skins/default/" ;
-$oFCKeditor->Config['EditorAreaCSS'] = "{$basepath}/modules/news/fckeditor/fck_editorarea.css" ;
-$oFCKeditor->Config['BaseHref'] = "{$basepath}/";
+$oFCKeditor->Config['CustomConfigurationsPath'] = "../../modules/news/fckeditor/fckconfig.js"  ;
+$oFCKeditor->Config['EditorAreaCSS'] = "../../modules/news/fckeditor/fck_editorarea.css" ;
+$oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH;
 $oFCKeditor->Create('FCKeditor_1') ;
 ?>
 </div>

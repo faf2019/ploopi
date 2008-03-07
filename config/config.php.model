@@ -34,8 +34,8 @@ switch($http_host)
 		define ('_PLOOPI_DB_PASSWORD','<DB_PASSWORD>');
 		define ('_PLOOPI_DB_DATABASE','<DB_DATABASE>');
     
-    define ('_PLOOPI_BASEPATH', '<BASEPATH>');
-		
+        define ('_PLOOPI_BASEPATH', '<BASEPATH>');
+
 		define ('_PLOOPI_PATHDATA', realpath('<DATAPATH>'));
 		define ('_PLOOPI_MAXFILESIZE', '16777216');
 
