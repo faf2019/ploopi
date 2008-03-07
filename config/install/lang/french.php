@@ -146,6 +146,8 @@ define ('_PLOOPI_INSTALL_TMP_WRITE_WARNING','Vous devez donner à apache les droi
 
 define ('_PLOOPI_INSTALL_PARAM_PLOOPI',      'Paramétrage « PLOOPI »');
 
+define ('_PLOOPI_INSTALL_URL_BASE',          '<sup>* </sup>Adresse de votre site:');
+define ('_PLOOPI_INSTALL_URL_BASE_JS',       'Adresse du site');
 define ('_PLOOPI_INSTALL_SITE_NAME',         '<sup>* </sup>Nom du site:');
 define ('_PLOOPI_INSTALL_SITE_NAME_JS',      'Nom du site');
 define ('_PLOOPI_INSTALL_ADMIN_LOGIN',       '<sup>* </sup>Login Administrateur:');

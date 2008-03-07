@@ -23,6 +23,12 @@
 
 session_start();
 
+if (file_exists('./config.php'))
+{
+  echo ('<dir style="text-align:center;color:red;">Config exist !<br>You must delete ./config/install.php !</dir>');
+  die();
+}
+
 define ('_PLOOPI_ERROR_REPORTING', E_ALL);
 
 /**
@@ -87,8 +93,9 @@ if(!isset($_SESSION['install'])) {
     '<DB_LOGIN>'        => 'root',            // ok
     '<DB_PASSWORD>'     => '',                // ok
     '<DB_DATABASE>'     => '',                // ok
+    '<BASEPATH>'        => ((!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://').((!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']).((!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') ? ":{$_SERVER['SERVER_PORT']}" : '').((!empty($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] != '') ? dirname($_SERVER['SCRIPT_NAME']) : '/'), 
     '<DATAPATH>'        => './data',          // ok
-    '<TMPPATH>'         => '/tmp',            //
+    '<TMPPATH>'         => '/tmp',            // ok
     '<USE_DBSESSION>'   => true,              // ok
     '<URL_ENCODE>'      => true,              // ok
     '<SECRETKEY>'       => 'ma phrase secrete', // ok
@@ -320,6 +327,7 @@ if($_POST['stage']>=1)
 if($_POST['stage']>=2)
 {
   /* if(isset($_POST['site_name']))     $_SESSION['install']['<SITE_NAME>'] = trim($_POST['site_name']); */
+  if(isset($_POST['url_base']))      $_SESSION['install']['<BASEPATH>'] = trim($_POST['url_base']);
   if(isset($_POST['dir_data']))      $_SESSION['install']['<DATAPATH>'] = ploopi_del_end_slashe(trim($_POST['dir_data']));
   if(isset($_POST['dir_tmp']))       $_SESSION['install']['<TMPPATH>'] = ploopi_del_end_slashe(trim($_POST['dir_tmp']));
   if(isset($_POST['log_admin']))     $_SESSION['install']['<ADMIN_LOGIN>'] = trim($_POST['log_admin']);
@@ -335,6 +343,12 @@ if($_POST['stage']>=2)
   if(isset($_POST['proxy_user']))    $_SESSION['install']['<INTERNETPROXY_USER>'] = trim($_POST['proxy_user']);
   if(isset($_POST['proxy_pass']))    $_SESSION['install']['<INTERNETPROXY_PASS>'] = trim($_POST['proxy_pass']);
 
+  // clean the base path
+  while(substr($_SESSION['install']['<BASEPATH>'],-1)=='/') 
+    $_SESSION['install']['<BASEPATH>'] = substr($_SESSION['install']['<BASEPATH>'],0,-1);
+  while(substr($_SESSION['install']['<BASEPATH>'],-7)=='/config') 
+    $_SESSION['install']['<BASEPATH>'] = substr($_SESSION['install']['<BASEPATH>'],0,-7);
+  
   // Control config directories are writable
   if(!is_writable('./config'))
     $arrInstallInfos[] = array('id' => 'div_config', 'state' => false, 'title' => '_PLOOPI_INSTALL_CONFIG_WRITE');
@@ -438,6 +452,10 @@ if($_POST['stage']>=2)
                                      'input' => '<input name="site_name" id="site_name" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<SITE_NAME>'].'"/>',
                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SITE_NAME_JS).'\',form.site_name,\'string\')'
                                     ),*/
+                               array('label' => _PLOOPI_INSTALL_URL_BASE,
+                                     'input' => '<input name="url_base" id="url_base" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<BASEPATH>'].'"/>',
+                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_URL_BASE_JS).'\',form.url_base,\'string\')'
+                                    ),
                                array('label' => _PLOOPI_INSTALL_ADMIN_LOGIN,
                                      'input' => '<input name="log_admin" id="log_admin" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<ADMIN_LOGIN>'].'"/>',
                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_ADMIN_LOGIN_JS).'\',form.log_admin,\'string\')'
