@@ -201,7 +201,7 @@ if (isset($ploopi_op))
                     if ($currentday == $selectedday) $class = 'class="calendar_day_selected"';
                     elseif ($currentday == $today) $class = 'class="calendar_day_today"';
                     ?>
-                        <div class="calendar_day"><a <? echo $class; ?> href="javascript:void(0);" onclick="javascript:ploopi_getelem('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');var e = document.createEvent('HTMLEvents');e.initEvent('change', false, false);$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').dispatchEvent(e);"><? echo $d; ?></a></div>
+                        <div class="calendar_day"><a <? echo $class; ?> href="javascript:void(0);" onclick="javascript:ploopi_getelem('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_calendar_dispatchevent('<? echo $_SESSION['calendar']['inputfield_id']; ?>');"><? echo $d; ?></a></div>
                     <?
 
                     if ($weekday == 7) echo '</div>';
@@ -223,7 +223,7 @@ if (isset($ploopi_op))
                 $localdate = ploopi_timestamp2local(sprintf("%04d%02d%02d000000", date('Y'), date('n'), date('j')));
                 ?>
                 <div class="calendar_row" style="height:1.2em;">
-                    <a style="display:block;float:left;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:ploopi_getelem('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');var e = document.createEvent('HTMLEvents');e.initEvent('change', false, false);$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').dispatchEvent(e);">Aujourd'hui</a>
+                    <a style="display:block;float:left;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:ploopi_getelem('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_calendar_dispatchevent('<? echo $_SESSION['calendar']['inputfield_id']; ?>');">Aujourd'hui</a>
                     <a style="display:block;float:right;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup('ploopi_popup_calendar');">Fermer</a>
                 </div>
             </div>

@@ -943,6 +943,20 @@ function ploopi_calendar_open(inputfield_id, event)
     ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','ploopi_op=calendar_open&selected_date='+$(inputfield_id).value+'&inputfield_id='+inputfield_id),164,event,'click','ploopi_popup_calendar');
 }
 
+function ploopi_calendar_dispatchevent(inputfield_id)
+{
+    if (Prototype.Browser.IE)
+    {
+        $(inputfield_id).fireEvent('onChange');
+    }
+    else
+    {
+        var e = document.createEvent('HTMLEvents');
+        e.initEvent('change', false, false);
+        $(inputfield_id).dispatchEvent(e);
+    }
+}
+
 /* COLORPICKER FUNCTIONS */
 
 var rgb, hsv;

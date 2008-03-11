@@ -27,10 +27,9 @@ echo $skin->open_simplebloc($title);
 <? echo $desc; ?>
 </div>
 
-
 <div style="overflow:hidden;">
-<?
 
+<?
 // get user favorites
 // ==================
 
@@ -149,11 +148,19 @@ switch($_SESSION['directory']['directoryTabItem'])
         {
             $email = ($row['email']) ? '<img src="./modules/directory/img/ico_email.png">' : '';
 
-            $actions = '<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_view&contact_id={$row['id']}").'"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
-            $actions .= '<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_modify&contact_id={$row['id']}").'"><img title="Modifier" src="./modules/directory/img/ico_modify.png"></a>';
-            $actions .= '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("{$scriptenv}?op=directory_delete&contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>';
-            if (ploopi_isactionallowed(_DIRECTORY_ACTION_MYFAVORITES) && (!isset($favorites["contact_{$row['id']}"]))) $actions .='<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_favorites_add&contact_id={$row['id']}").'"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
+            
+            $actions =  '
+                        <a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>
+                        <a href="'.ploopi_urlencode("{$scriptenv}?op=directory_modify&contact_id={$row['id']}").'"><img title="Modifier" src="./modules/directory/img/ico_modify.png"></a>
+                        <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("{$scriptenv}?op=directory_delete&contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>
+                        ';
 
+            if (ploopi_isactionallowed(_DIRECTORY_ACTION_MYFAVORITES)) 
+            {
+                if (!isset($favorites["contact_{$row['id']}"])) $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
+                else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
+            }
+            
             $values[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
             $values[$c]['values']['service'] = array('label' => $row['service']);
             $values[$c]['values']['function'] = array('label' => $row['function']);
@@ -162,7 +169,8 @@ switch($_SESSION['directory']['directoryTabItem'])
             $values[$c]['values']['actions'] = array('label' => $actions);
 
             $values[$c]['description'] = "{$row['lastname']} {$row['firstname']}";
-            $values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=directory_view&contact_id={$row['id']}");
+            $values[$c]['link'] = 'javascript:void(0);';
+            $values[$c]['onclick'] = "javascript:directory_view(event, '', '{$row['id']}');";
             $values[$c]['style'] = '';
 
             $c++;
@@ -217,10 +225,13 @@ switch($_SESSION['directory']['directoryTabItem'])
         {
             $email = ($row['email']) ? '<img src="./modules/directory/img/ico_email.png">' : '';
 
-            $actions = '<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_view&user_id={$row['id']}").'"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
+            $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
+
             if (ploopi_isactionallowed(_DIRECTORY_ACTION_MYFAVORITES))
             {
-                if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_favorites_add&user_id={$row['id']}").'"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
+                //if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_favorites_add&user_id={$row['id']}").'"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
+                if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\');"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
+                else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
             }
 
             // on va chercher les espaces auxquels l'utilisateur peut accéder
@@ -238,7 +249,6 @@ switch($_SESSION['directory']['directoryTabItem'])
             // on met tout ça dans une chaine
             $workspaces_list = implode(', ',$workspaces_list);
 
-
             $values[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
             $values[$c]['values']['login'] = array('label' => $row['login']);
             $values[$c]['values']['groups'] = array('label' => $workspaces_list);
@@ -249,7 +259,8 @@ switch($_SESSION['directory']['directoryTabItem'])
             $values[$c]['values']['actions'] = array('label' => $actions);
 
             $values[$c]['description'] = "{$row['lastname']} {$row['firstname']}";
-            $values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=directory_view&user_id={$row['id']}");
+            $values[$c]['link'] = 'javascript:void(0);';
+            $values[$c]['onclick'] = "javascript:directory_view(event, '{$row['id']}', '');";            
             $values[$c]['style'] = '';
 
             $c++;
@@ -263,102 +274,62 @@ switch($_SESSION['directory']['directoryTabItem'])
      * ========= */
 
     case 'tabFavorites':
-        $columns = array();
-        $values = array();
+        
+        if (!empty($_GET['directory_favorites_id_list']) && is_numeric($_GET['directory_favorites_id_list'])) $_SESSION['directory']['id_list'] = $_GET['directory_favorites_id_list'];
+        if (!isset($_SESSION['directory']['id_list'])) $_SESSION['directory']['id_list'] = 0;
 
-        $columns['auto']['groups'] = array('label' => _DIRECTORY_GROUPS,    'options' => array('sort' => true));
-        $columns['left']['type'] = array('label' => _DIRECTORY_TYPE,        'width' => 90, 'options' => array('sort' => true));
-        $columns['left']['name'] = array('label' => _DIRECTORY_NAME,        'width' => 150, 'options' => array('sort' => true));
-        $columns['left']['login'] = array('label' => _DIRECTORY_LOGIN,      'width' => 100, 'options' => array('sort' => true));
-        $columns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
-        $columns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
-        $columns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
-        $columns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
-        $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '42');
-
-
-        $result = array();
-
-        $sql =  "
-                SELECT  ploopi_mod_directory_contact.*, 'contact' as usertype, '' as login
-                FROM    ploopi_mod_directory_contact,
-                        ploopi_mod_directory_favorites
-                WHERE   ploopi_mod_directory_favorites.id_user = {$_SESSION['ploopi']['userid']}
-                AND     ploopi_mod_directory_favorites.id_contact = ploopi_mod_directory_contact.id
-                ";
-
-        $db->query($sql);
-        while ($row = $db->fetchrow()) $result[] = $row;
-
-        $sql =  "
-                SELECT  ploopi_user.*,
-                        'user' as usertype
-                FROM    ploopi_user,
-                        ploopi_mod_directory_favorites
-                WHERE   ploopi_mod_directory_favorites.id_user = {$_SESSION['ploopi']['userid']}
-                AND     ploopi_mod_directory_favorites.id_ploopi_user = ploopi_user.id
-                ";
-
-        $db->query($sql);
-        while ($row = $db->fetchrow()) $result[] = $row;
-
-        $c = 0;
-        foreach($result as $row)
-        {
-            $email = ($row['email']) ? '<img src="./modules/directory/img/ico_email.png">' : '';
-
-            switch ($row['usertype'])
-            {
-                case 'user':
-                    $field_id = 'user_id';
-                    $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_users'])) ? _DIRECTORY_USERS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_users'];
-                    if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_favorites_add&user_id={$row['id']}").'"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
-
-                    // on va chercher les espaces auxquels l'utilisateur peut accéder
-                    $user = new user();
-                    $user->open($row['id']);
-                    $user_ws = $user->getworkspaces();
-
-                    // on met les libellés dans un tableau
-                    $workspaces_list = array();
-                    foreach($user_ws as $ws) $workspaces_list[sprintf("%04d%s", $ws['depth'], $ws['label'])] = $ws['label'];
-
-                    // on trie par profondeur + libellé
-                    ksort($workspaces_list);
-
-                    // on met tout ça dans une chaine
-                    $workspaces_list = implode(', ',$workspaces_list);
-                break;
-
-                case 'contact':
-                    $field_id = 'contact_id';
-                    $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'];
-                    if (!isset($favorites["contact_{$row['id']}"])) $actions .='<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_favorites_add&contact_id={$row['id']}").'"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
-                    $workspaces_list = '';
-                break;
-            }
-
-            $actions = '<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_view&{$field_id}={$row['id']}").'"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
-            $actions .= '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("{$scriptenv}?op=directory_favorites_delete&{$field_id}={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETEFAVORITES.'\')"><img title="Supprimer" src="./modules/directory/img/ico_cut.png"></a>';
-
-            $values[$c]['values']['type'] = array('label' => $level_display);
-            $values[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
-            $values[$c]['values']['login'] = array('label' => $row['login']);
-            $values[$c]['values']['groups'] = array('label' => $workspaces_list);
-            $values[$c]['values']['service'] = array('label' => $row['service']);
-            $values[$c]['values']['function'] = array('label' => $row['function']);
-            $values[$c]['values']['phone'] = array('label' => $row['phone']);
-            $values[$c]['values']['email'] = array('label' => $email);
-            $values[$c]['values']['actions'] = array('label' => $actions);
-
-            $values[$c]['description'] = "{$row['lastname']} {$row['firstname']}";
-            $values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=directory_view&{$field_id}={$row['id']}");
-            $values[$c]['style'] = '';
-
-            $c++;
-        }
-
-        $skin->display_array($columns, $values, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
+        $id_list = $_SESSION['directory']['id_list'];
+        ?>
+        <div style="padding:4px;background-color:#d8d8d8;border-bottom:2px solid #c0c0c0;">
+            <p class="ploopi_va">
+                <span>Choix de la liste à afficher :</span>
+                <select class="select" onchange="javascript:directory_list_change(this);" id="directory_favorites_id_list">
+                <option value="0">(tous)</option>
+                <?
+                // get lists
+                $sql =  "
+                        SELECT      l.*, IF(ISNULL(f.id_list),0,count(*)) as nbfav 
+                        
+                        FROM        ploopi_mod_directory_list l
+                        
+                        LEFT JOIN   ploopi_mod_directory_favorites f
+                        ON          f.id_list = l.id
+                        
+                        WHERE       l.id_module = {$_SESSION['ploopi']['moduleid']} 
+                        AND         l.id_workspace = {$_SESSION['ploopi']['workspaceid']} 
+                        AND         l.id_user = {$_SESSION['ploopi']['userid']} 
+                        
+                        GROUP BY    l.id
+                        
+                        ORDER BY    l.label
+                        ";
+                        
+                $db->query($sql);
+                $arrLists = $db->getarray();
+                foreach($arrLists as $row)
+                {
+                    ?>
+                    <option <? if ($id_list == $row['id']) echo 'selected'; ?> value="<? echo $row['id']; ?>"><? echo $row['label']; ?> (<? echo $row['nbfav']; ?> fav)</option>
+                    <?
+                }
+                ?>
+                </select>
+                <img src="./modules/directory/img/ico_newlist.png" title="Ajouter une liste" onclick="javascript:directory_list_addnew(event);" style="cursor:pointer;"/>
+                <img src="./modules/directory/img/ico_modify.png" title="Modifier la liste sélectionnée" onclick="javascript:directory_list_modify(event);" style="cursor:pointer;display:<? echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_modify_link" />
+                <img src="./modules/directory/img/ico_delete.png" title="Supprimer la liste sélectionnée" onclick="javascript:ploopi_confirmlink('<? echo "{$scriptenv}?op=directory_list_delete&directory_favorites_id_list="; ?>'+$('directory_favorites_id_list').value, 'Êtes vous certain de vouloir supprimer cette liste ?');" style="cursor:pointer;display:<? echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_delete_link" />
+                
+                <?
+                if (empty($arrLists))
+                {
+                    ?><span><i>Attention, vous devez ajouter au moins une liste pour gérer vos favoris !</i></span><?
+                }
+                ?>
+            </p>
+        </div>
+        <div id="directory_favorites_list">
+            <? include_once './modules/directory/public_favorites.php'; ?>
+        </div>
+        <?
     break;
 
     /* SEARCH
@@ -458,12 +429,18 @@ switch($_SESSION['directory']['directoryTabItem'])
                 switch ($row['usertype'])
                 {
                     case 'user':
-                        $field_id = 'user_id';
                         $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_users'])) ? _DIRECTORY_USERS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_users'];
 
-                        $actions = '<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_view&{$field_id}={$row['id']}").'"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
-                        if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_favorites_add&user_id={$row['id']}").'"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
+                        $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
+                        $actions =  '<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_view&user_id={$row['id']}").'"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
 
+                        if (ploopi_isactionallowed(_DIRECTORY_ACTION_MYFAVORITES)) 
+                        {
+                            if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\', \'\');"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
+                            else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\', \'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
+                        }
+                        
+            
                         // on va chercher les espaces auxquels l'utilisateur peut accéder
                         $user = new user();
                         $user->open($row['id']);
@@ -478,15 +455,26 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                         // on met tout ça dans une chaine
                         $workspaces_list = implode(', ',$workspaces_list);
+
+                        $values[$c]['link'] = 'javascript:void(0);';
+                        $values[$c]['onclick'] = "javascript:directory_view(event, '{$row['id']}', '');";
                     break;
 
                     case 'contact':
-                        $field_id = 'contact_id';
+                        $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
+
+                        if (ploopi_isactionallowed(_DIRECTORY_ACTION_MYFAVORITES)) 
+                        {
+                            if (!isset($favorites["contact_{$row['id']}"])) $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
+                            else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
+                        }
+                        
                         $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'];
 
-                        $actions = '<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_view&{$field_id}={$row['id']}").'"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
-                        if (!isset($favorites["contact_{$row['id']}"])) $actions .='<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_favorites_add&contact_id={$row['id']}").'"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
                         $workspaces_list = '';
+                        
+                        $values[$c]['link'] = 'javascript:void(0);';
+                        $values[$c]['onclick'] = "javascript:directory_view(event, '', '{$row['id']}');";
                     break;
                 }
 
@@ -501,7 +489,6 @@ switch($_SESSION['directory']['directoryTabItem'])
                 $values[$c]['values']['actions'] = array('label' => $actions);
 
                 $values[$c]['description'] = "{$row['lastname']} {$row['firstname']}";
-                $values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=directory_view&{$field_id}={$row['id']}");
                 $values[$c]['style'] = '';
 
                 $c++;
@@ -524,6 +511,7 @@ switch($_SESSION['directory']['directoryTabItem'])
     {
         ?>
         <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_fav_add.png" /><span><? echo _DIRECTORY_LEGEND_FAVADD; ?></span>
+        <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_fav_modify.png" /><span><? echo _DIRECTORY_LEGEND_FAVMODIFY; ?></span>
         <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_cut.png" /><span><? echo _DIRECTORY_LEGEND_FAVDEL; ?></span>
         <?
     }

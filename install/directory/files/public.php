@@ -48,34 +48,47 @@ switch($op)
     break;
 
     case 'directory_favorites_add':
-        $directory_favorites = new directory_favorites();
-        if (!empty($_GET['user_id']) && is_numeric($_GET['user_id']))
+        if (!empty($_POST['directory_favorites_id_list']) && is_array($_POST['directory_favorites_id_list']))
         {
-            $directory_favorites->open(0, $_SESSION['ploopi']['userid'], $_GET['user_id']);
-            $directory_favorites->save();
-        }
-        elseif (!empty($_GET['contact_id']) && is_numeric($_GET['contact_id']))
-        {
-            $directory_favorites->open($_GET['contact_id'], $_SESSION['ploopi']['userid'], 0);
-            $directory_favorites->save();
+            if (!empty($_POST['directory_favorites_id_user']) && is_numeric($_POST['directory_favorites_id_user']))
+            {
+                $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_ploopi_user = {$_POST['directory_favorites_id_user']} AND id_user = {$_SESSION['ploopi']['userid']} AND id_contact = 0");
+                foreach($_POST['directory_favorites_id_list'] as $id_list)
+                {
+                    if ($id_list > 0)
+                    {
+                        $directory_favorites = new directory_favorites();
+                        $directory_favorites->open(0, $_SESSION['ploopi']['userid'], $_POST['directory_favorites_id_user'], $id_list);
+                        $directory_favorites->save();
+                    }
+                }
+            }
+            elseif (!empty($_POST['directory_favorites_id_contact']) && is_numeric($_POST['directory_favorites_id_contact']))
+            {
+                $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_ploopi_user = 0 AND id_user = {$_SESSION['ploopi']['userid']} AND id_contact = {$_POST['directory_favorites_id_contact']}");
+                foreach($_POST['directory_favorites_id_list'] as $id_list)
+                {
+                    if ($id_list > 0)
+                    {
+                        $directory_favorites = new directory_favorites();
+                        $directory_favorites->open($_POST['directory_favorites_id_contact'], $_SESSION['ploopi']['userid'], 0, $id_list);
+                        $directory_favorites->save();
+                    }
+                }
+            }
         }
         ploopi_redirect($scriptenv);
     break;
 
-    case 'directory_favorites_delete':
-        if (!empty($_GET['contact_id']) && is_numeric($_GET['contact_id']))
+    case 'directory_list_delete':
+        if (!empty($_GET['directory_favorites_id_list']) && is_numeric($_GET['directory_favorites_id_list']))
         {
-            $directory_favorites = new directory_favorites();
-            if ($directory_favorites->open($_GET['contact_id'], $_SESSION['ploopi']['userid'], 0)) $directory_favorites->delete();
+            include_once './modules/directory/class_directory_list.php';
+            $directory_list = new directory_list();
+            if ($directory_list->open($_GET['directory_favorites_id_list'])) $directory_list->delete();
         }
-        elseif (!empty($_GET['user_id']) && is_numeric($_GET['user_id']))
-        {
-            $directory_favorites = new directory_favorites();
-            if ($directory_favorites->open(0, $_SESSION['ploopi']['userid'], $_GET['user_id'])) $directory_favorites->delete();
-        }
-        ploopi_redirect($scriptenv);
+        ploopi_redirect("{$scriptenv}?directoryTabItem=tabFavorites");
     break;
-
 }
 
 if (!empty($_GET['directoryTabItem'])) $_SESSION['directory']['directoryTabItem'] = $_GET['directoryTabItem'];
@@ -108,34 +121,32 @@ switch($_SESSION['directory']['directoryTabItem'])
 }
 
 
-if ($_SESSION['ploopi']['connected']) // user connected
+if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
 {
-    if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
-    {
-        $tabs['tabFavorites'] = array(  'title' => (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_myfavorites'])) ? _DIRECTORY_FAVORITES : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_myfavorites'],
-                                        'url'   => "{$scriptenv}?directoryTabItem=tabFavorites"
-                                    );
-    }
-    elseif ($_SESSION['directory']['directoryTabItem'] == 'tabFavorites') $_SESSION['directory']['directoryTabItem'] = '';
-
-    if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_mycontacts'])
-    {
-        $tabs['tabMycontacts'] = array( 'title' => (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'],
-                                        'url'   => "{$scriptenv}?directoryTabItem=tabMycontacts"
-                                        );
-    }
-    elseif ($_SESSION['directory']['directoryTabItem'] == 'tabMycontacts') $_SESSION['directory']['directoryTabItem'] = '';
-
-    if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_mygroup'])
-    {
-        $tabs['tabMygroup'] = array(    'title' => (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mygroup'])) ? _DIRECTORY_MYGROUP : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mygroup'],
-                                        'url'   => "{$scriptenv}?directoryTabItem=tabMygroup"
-                                    );
-    }
-    elseif ($_SESSION['directory']['directoryTabItem'] == 'tabMygroup') $_SESSION['directory']['directoryTabItem'] = '';
+    $tabs['tabFavorites'] = array(  'title' => (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_myfavorites'])) ? _DIRECTORY_FAVORITES : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_myfavorites'],
+                                    'url'   => "{$scriptenv}?directoryTabItem=tabFavorites"
+                                );
 }
+elseif ($_SESSION['directory']['directoryTabItem'] == 'tabFavorites') $_SESSION['directory']['directoryTabItem'] = '';
 
-elseif ($_SESSION['directory']['directoryTabItem'] == 'tabUsers') $_SESSION['directory']['directoryTabItem'] = '';
+if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_mycontacts'])
+{
+    $tabs['tabMycontacts'] = array( 'title' => (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'],
+                                    'url'   => "{$scriptenv}?directoryTabItem=tabMycontacts"
+                                    );
+}
+elseif ($_SESSION['directory']['directoryTabItem'] == 'tabMycontacts') $_SESSION['directory']['directoryTabItem'] = '';
+
+if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_mygroup'])
+{
+    $tabs['tabMygroup'] = array(    'title' => (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mygroup'])) ? _DIRECTORY_MYGROUP : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mygroup'],
+                                    'url'   => "{$scriptenv}?directoryTabItem=tabMygroup"
+                                );
+}
+elseif ($_SESSION['directory']['directoryTabItem'] == 'tabMygroup') $_SESSION['directory']['directoryTabItem'] = '';
+
+
+
 
 if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_search'])
 {
@@ -160,15 +171,6 @@ switch($op)
             echo $skin->close_simplebloc();
         }
         else ploopi_redirect($scriptenv);
-    break;
-
-    case 'directory_view':
-        if (        (!empty($_GET['contact_id']) && is_numeric($_GET['contact_id']))
-                ||  (!empty($_GET['user_id']) && is_numeric($_GET['user_id']))
-            )
-            include './modules/directory/public_directory_view.php';
-        else
-            ploopi_redirect($scriptenv);
     break;
 
     default:

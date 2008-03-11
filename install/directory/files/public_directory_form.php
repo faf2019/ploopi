@@ -30,7 +30,7 @@
         <div class="ploopi_form" style="padding:4px;">
             <p>
                 <label><? echo _DIRECTORY_NAME; ?>:</label>
-                <span><input type="text" class="text" name="directory_contact_lastname" value="<? echo htmlentities($directory_contact->fields['name']); ?>" tabindex="101" /></span>
+                <span><input type="text" class="text" name="directory_contact_lastname" value="<? echo htmlentities($directory_contact->fields['lastname']); ?>" tabindex="101" /></span>
             </p>
             <p>
                 <label><? echo _DIRECTORY_FIRSTNAME; ?>:</label>

@@ -20,34 +20,19 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-/**
-* @author   NETLOR CONCEPT
-* @version      1.0
-* @package      directory
-* @access   public
-*/
 
-class directory_contact extends data_object
+
+class directory_list extends data_object
 {   
-    /**
-    * Class constructor
-    *
-    * @param int $connection_id 
-    * @access public
-    **/
-    
-    function directory_contact()
+    function directory_list()
     {
-        parent::data_object('ploopi_mod_directory_contact');
+        parent::data_object('ploopi_mod_directory_list');
     }
     
     function delete()
     {
         global $db;
-        
-        $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_contact = {$this->fields['id']}");
+        $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_list = {$this->fields['id']}");
         parent::delete();
     }
 }

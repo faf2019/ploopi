@@ -21,22 +21,26 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-if (!empty($_GET['contact_id']))
+ob_start();
+
+include_once './modules/directory/class_directory_contact.php';
+
+if (!empty($_GET['directory_id_contact']))
 {
     $usr = new directory_contact();
-    $usr->open($_GET['contact_id']);
-    echo $skin->open_simplebloc($title.' / '._DIRECTORY_VIEWCONTACT);
+    $usr->open($_GET['directory_id_contact']);
+    $popup_title = _DIRECTORY_VIEWCONTACT;
 }
-elseif (!empty($_GET['user_id']))
+elseif (!empty($_GET['directory_id_user']))
 {
     $usr = new user();
-    $usr->open($_GET['user_id']);
-    echo $skin->open_simplebloc($title.' / '._DIRECTORY_VIEWUSER);
+    $usr->open($_GET['directory_id_user']);
+    $popup_title = _DIRECTORY_VIEWUSER;
 }
-
+else ploopi_die();
 ?>
 
-<div style="border-bottom:2px solid #c0c0c0;overflow:auto;">
+<div>
     <div style="float:left;width:50%;">
         <div class="ploopi_form" style="padding:4px;">
             <p>
@@ -97,8 +101,11 @@ elseif (!empty($_GET['user_id']))
             </p>
         </div>
     </div>
-    <div style="clear:both;padding:2px 4px;text-align:right;">
-        <input type="button" class="button" value="<? echo _PLOOPI_BACK; ?>" onclick="javascript:history.go(-1);" tabindex="120" />
-    </div>
 </div>
-<? echo $skin->close_simplebloc(); ?>
+
+<?
+$content = ob_get_contents();
+ob_end_clean();
+
+echo $skin->create_popup($popup_title, $content, "popup_directory_view{$_GET['directory_id_user']}_{$_GET['directory_id_contact']}");
+?>

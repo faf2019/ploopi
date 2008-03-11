@@ -70,7 +70,8 @@ define ('_DIRECTORY_LABEL_DELETE_USER', 'Suppression des données de l\'utilisate
 define ('_DIRECTORY_LEGEND_VIEW', 'Visualiser');
 define ('_DIRECTORY_LEGEND_MODIFY', 'Modifier');
 define ('_DIRECTORY_LEGEND_DELETE', 'Effacer');
-define ('_DIRECTORY_LEGEND_FAVADD', 'Ajouter aux Favoris');
+define ('_DIRECTORY_LEGEND_FAVADD', 'Ajouter à une liste de favoris');
+define ('_DIRECTORY_LEGEND_FAVMODIFY', 'Modifier l\'affectation à des listes');
 define ('_DIRECTORY_LEGEND_FAVDEL', 'Supprimer un Favori');
 define ('_DIRECTORY_LEGEND_EMAIL', 'Adresse Mel');
 

@@ -1,0 +1,18 @@
+.directory_checkbox {
+    padding:2px 4px;
+    overflow:auto;
+    clear:both;
+    cursor:pointer;
+    line-height:18px;
+}
+
+.directory_checkbox input {
+    display:block;
+    float:left;
+    cursor:pointer;
+}
+
+.directory_checkbox span {
+    display:block;
+    margin-left:24px;
+}
