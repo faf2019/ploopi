@@ -1,4 +1,10 @@
-== Module DIRECTORY - version 1.301 ====================================================
+== Module DIRECTORY - version 1.302 ====================================================
+
+2008-03-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'une image manquante
+ 
+ == Module DIRECTORY - version 1.301 ====================================================
 
 2008-03-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
