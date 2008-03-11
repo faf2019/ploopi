@@ -22,6 +22,7 @@
 */
 
 global $ploopi_stats;
+global $ploopi_timer;
 
 $ploopi_stats = array();
 

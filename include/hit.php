@@ -21,6 +21,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+include_once './include/functions/date.php';
 include_once './modules/system/class_log.php';
 
 $log = new log();
@@ -37,17 +38,10 @@ $log->fields['ploopi_userid'] = (empty($_SESSION['ploopi']['userid'])) ? 0 : $_S
 $log->fields['ploopi_workspaceid'] = (empty($_SESSION['ploopi']['workspaceid'])) ? 0 : $_SESSION['ploopi']['workspaceid'];;
 $log->fields['ts'] = ploopi_createtimestamp();
 
-/*
+require_once 'Net/UserAgent/Detect.php';
 
-implémenter pear / Net_UserAgent_Detect
-
-$log->fields['browser'] = $log_browserlist[$browser[0]].' '.$browser[1];
-$log->fields['system'] = $log_systemlist[$system];
-
- */
-
-$log->fields['browser'] = '';
-$log->fields['system'] = '';
+$log->fields['browser'] = Net_UserAgent_Detect::getBrowserString();
+$log->fields['system'] = Net_UserAgent_Detect::getOSString();
 
 if (empty($ploopi_stats)) include './include/stats.php';
 

@@ -185,72 +185,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
         case 'workspaces':
             $html = '';
 
-            if (isset($workspaces['tree'][$from_wid]))
-            {
-                $c=0;
-                foreach($workspaces['tree'][$from_wid] as $wid)
-                {
-                    $workspace = $workspaces['list'][$wid];
-                    $isworkspacesel = (!empty($workspaceid) && ($workspaceid == $wid));
-
-                    $gselparents = (isset($workspacesel)) ? explode(';',$workspacesel['parents'].';'.$workspacesel['id']) : explode(';',$groupsel['parents_workspace'].';g'.$groupsel['id']);
-                    $currentparents = explode(';',$workspace['parents'].';'.$workspace['id']);
-
-                    // workspace opened if parents array intersects
-                    $isworkspaceopened = sizeof(array_intersect_assoc($gselparents, $currentparents)) == sizeof($currentparents);
-
-                    $islast = ((!isset($workspaces['tree'][$from_wid]) || $c == sizeof($workspaces['tree'][$from_wid])-1) && !isset($groups['workspace_tree'][$from_wid]));
-
-                    $node = '';
-                    $bg = '';
-
-                    if ($isworkspacesel) $style_sel = 'bold';
-                    else $style_sel = 'none';
-
-                    $icon = ($workspace['web']) ? 'workspace-web' : 'workspace';
-
-                    if ($workspace['depth'] == 2 || $workspace['id'] == $_SESSION['ploopi']['workspaceid']) {/* racine */}
-                    else
-                    {
-                        $typenode = 'join';
-                        if (isset($workspaces['tree'][$wid]) || isset($groups['workspace_tree'][$wid]))
-                        {
-                            if ($isworkspacesel || $isworkspaceopened) $typenode = 'minus';
-                            else $typenode = 'plus';
-                        }
-
-                        if (!$islast) 
-                        {
-                            $typenode .= 'bottom';
-                            $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/system/treeview/line.png) 0 0 repeat-y;";
-                        }
-                        
-                        $node = "<a onclick=\"javascript:system_showgroup('workspaces', '{$wid}', '');\" href=\"javascript:void(0);\"><img id=\"nw{$workspace['id']}\" style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/system/treeview/{$typenode}.png\" /></a>";
-                    }
-
-                    $html_rec = '';
-                    if ($isworkspacesel || $isworkspaceopened || $workspace['depth'] == 2)  $html_rec .= system_build_tree('workspaces', $wid, 0);
-
-                    $display = ($html_rec == '') ? 'none' : 'block';
-
-                    if ($workspace['depth'] == 2 || $workspace['id'] == $_SESSION['ploopi']['workspaceid']) $marginleft = 0;
-                    else $marginleft = 20;
-
-                    $html .=    "
-                                <div style=\"overflow:auto;{$bg}\">
-                                    <div>
-                                        {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/system/treeview/{$icon}.png\" />
-                                        <span style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;\">
-                                            <a style=\"font-weight:{$style_sel};\" href=\"".ploopi_urlencode("admin.php?workspaceid={$workspace['id']}")."\">{$workspace['label']}</a>
-                                        </span>
-                                    </div>
-                                    <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"w{$workspace['id']}\">{$html_rec}</div>
-                                </div>
-                                ";
-                    $c++;
-                }
-            }
-            
+            // groups
             if (isset($groups['workspace_tree'][$from_wid]))
             {
                 $c=0;
@@ -266,8 +201,8 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
 
                     // group opened if parents array intersects
                     $isgroupopened = sizeof(array_intersect_assoc($gselparents, $testparents)) == sizeof($testparents);
-                    $islast = (!isset($groups['workspace_tree'][$from_wid]) || $c == sizeof($groups['workspace_tree'][$from_wid])-1);
-
+                    $islast = ((!isset($groups['tree'][$from_wid]) || $c == sizeof($groups['tree'][$from_wid])-1) && !isset($workspaces['tree'][$from_wid]));
+                    
                     $node = '';
                     $bg = '';
                     
@@ -319,6 +254,74 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                     $c++;
                 }
             }
+            
+            // workspaces
+            if (isset($workspaces['tree'][$from_wid]))
+            {
+                $c=0;
+                foreach($workspaces['tree'][$from_wid] as $wid)
+                {
+                    $workspace = $workspaces['list'][$wid];
+                    $isworkspacesel = (!empty($workspaceid) && ($workspaceid == $wid));
+
+                    $gselparents = (isset($workspacesel)) ? explode(';',$workspacesel['parents'].';'.$workspacesel['id']) : explode(';',$groupsel['parents_workspace'].';g'.$groupsel['id']);
+                    $currentparents = explode(';',$workspace['parents'].';'.$workspace['id']);
+
+                    // workspace opened if parents array intersects
+                    $isworkspaceopened = sizeof(array_intersect_assoc($gselparents, $currentparents)) == sizeof($currentparents);
+
+                    $islast = (!isset($workspaces['tree'][$from_wid]) || $c == sizeof($workspaces['tree'][$from_wid])-1);
+
+                    $node = '';
+                    $bg = '';
+
+                    if ($isworkspacesel) $style_sel = 'bold';
+                    else $style_sel = 'none';
+
+                    $icon = ($workspace['web']) ? 'workspace-web' : 'workspace';
+
+                    if ($workspace['depth'] == 2 || $workspace['id'] == $_SESSION['ploopi']['workspaceid']) {/* racine */}
+                    else
+                    {
+                        $typenode = 'join';
+                        if (isset($workspaces['tree'][$wid]) || isset($groups['workspace_tree'][$wid]))
+                        {
+                            if ($isworkspacesel || $isworkspaceopened) $typenode = 'minus';
+                            else $typenode = 'plus';
+                        }
+
+                        if (!$islast) 
+                        {
+                            $typenode .= 'bottom';
+                            $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/system/treeview/line.png) 0 0 repeat-y;";
+                        }
+                        
+                        $node = "<a onclick=\"javascript:system_showgroup('workspaces', '{$wid}', '');\" href=\"javascript:void(0);\"><img id=\"nw{$workspace['id']}\" style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/system/treeview/{$typenode}.png\" /></a>";
+                    }
+
+                    $html_rec = '';
+                    if ($isworkspacesel || $isworkspaceopened || $workspace['depth'] == 2)  $html_rec .= system_build_tree('workspaces', $wid, 0);
+
+                    $display = ($html_rec == '') ? 'none' : 'block';
+
+                    if ($workspace['depth'] == 2 || $workspace['id'] == $_SESSION['ploopi']['workspaceid']) $marginleft = 0;
+                    else $marginleft = 20;
+
+                    $html .=    "
+                                <div style=\"overflow:auto;{$bg}\">
+                                    <div>
+                                        {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/system/treeview/{$icon}.png\" />
+                                        <span style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;\">
+                                            <a style=\"font-weight:{$style_sel};\" href=\"".ploopi_urlencode("admin.php?workspaceid={$workspace['id']}")."\">{$workspace['label']}</a>
+                                        </span>
+                                    </div>
+                                    <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"w{$workspace['id']}\">{$html_rec}</div>
+                                </div>
+                                ";
+                    $c++;
+                }
+            }
+            
         break;
 
         case 'groups':
