@@ -1,4 +1,10 @@
-== Module DIRECTORY - version 1.30 ====================================================
+== Module DIRECTORY - version 1.301 ====================================================
+
+2008-03-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug sur l'activation des favoris (paramètre du module)
+ 
+ == Module DIRECTORY - version 1.30 ====================================================
 
 2008-03-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 

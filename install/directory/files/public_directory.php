@@ -155,7 +155,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("{$scriptenv}?op=directory_delete&contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>
                         ';
 
-            if (ploopi_isactionallowed(_DIRECTORY_ACTION_MYFAVORITES)) 
+            if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites']) 
             {
                 if (!isset($favorites["contact_{$row['id']}"])) $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
                 else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
@@ -227,7 +227,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
             $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
 
-            if (ploopi_isactionallowed(_DIRECTORY_ACTION_MYFAVORITES))
+            if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
             {
                 //if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_favorites_add&user_id={$row['id']}").'"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
                 if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\');"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
@@ -434,7 +434,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
                         $actions =  '<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_view&user_id={$row['id']}").'"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
 
-                        if (ploopi_isactionallowed(_DIRECTORY_ACTION_MYFAVORITES)) 
+                        if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
                         {
                             if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\', \'\');"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
                             else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\', \'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
@@ -463,7 +463,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                     case 'contact':
                         $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
 
-                        if (ploopi_isactionallowed(_DIRECTORY_ACTION_MYFAVORITES)) 
+                        if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites']) 
                         {
                             if (!isset($favorites["contact_{$row['id']}"])) $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
                             else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
@@ -507,7 +507,7 @@ switch($_SESSION['directory']['directoryTabItem'])
     <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_modify.png" /><span><? echo _DIRECTORY_LEGEND_MODIFY; ?></span>
     <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_delete.png" /><span><? echo _DIRECTORY_LEGEND_DELETE; ?></span>
     <?
-    if (ploopi_isactionallowed(_DIRECTORY_ACTION_MYFAVORITES))
+    if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
     {
         ?>
         <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_fav_add.png" /><span><? echo _DIRECTORY_LEGEND_FAVADD; ?></span>
