@@ -1388,3 +1388,14 @@ CREATE TABLE IF NOT EXISTS `ploopi_subscription_action` (
   KEY `id_action` (`id_action`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+ALTER TABLE `ploopi_log` ADD `ts` BIGINT( 14 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `system` ;
+ALTER TABLE `ploopi_log`
+  DROP `date_year`,
+  DROP `date_month`,
+  DROP `date_day`,
+  DROP `date_hour`,
+  DROP `date_minute`,
+  DROP `date_second`;
+  
+
+

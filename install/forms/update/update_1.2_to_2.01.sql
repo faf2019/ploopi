@@ -1,14 +1,9 @@
-INSERT INTO dims_param_type (id, id_module_type, label, default_value, public, description, displayed_label) SELECT NULL, id, 'forms_export_csvextension', 'csv', 0, '', 'Extension du Fichier' from dims_module_type where label = 'forms';
-INSERT INTO dims_param_type (id, id_module_type, label, default_value, public, description, displayed_label) SELECT NULL, id, 'forms_export_fieldseparator', ';', 0, '', 'Séparateur de Champs' from dims_module_type where label = 'forms';
-INSERT INTO dims_param_type (id, id_module_type, label, default_value, public, description, displayed_label) SELECT NULL, id, 'forms_export_lineseparator', '(cr)(lf)', 0, '', 'Séparateur de Ligne' from dims_module_type where label = 'forms';
-INSERT INTO dims_param_type (id, id_module_type, label, default_value, public, description, displayed_label) SELECT NULL, id, 'forms_export_textseparator', '"', 0, '', 'Séparateur Texte' from dims_module_type where label = 'forms';
-
 ALTER TABLE `dims_mod_forms_reply_field` ADD INDEX ( `id_reply` );
 ALTER TABLE `dims_mod_forms_reply_field` ADD INDEX ( `id_forms` );
 ALTER TABLE `dims_mod_forms_reply_field` ADD INDEX ( `id_field` );
 
 ALTER TABLE `dims_mod_forms` ADD `option_modify` VARCHAR( 16 ) NOT NULL DEFAULT 'nobody' AFTER `typeform` ;
-ALTER TABLE `dims_mod_forms` ADD `option_view` VARCHAR( 16 ) NOT NULL DEFAULT 'global' AFTER `option_modify` ;
+ ALTER TABLE `dims_mod_forms` ADD `option_view` VARCHAR( 16 ) NOT NULL DEFAULT 'global' AFTER `option_modify` ;
 
 ALTER TABLE `dims_mod_forms` DROP `option_userview` ,
 DROP `option_usermodify` ,
@@ -18,7 +13,8 @@ DROP `option_allview` ,
 DROP `option_allmodify` ;
 
 ALTER TABLE `dims_mod_forms_field` ADD `interline` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
-
+ALTER TABLE `dims_mod_forms` CHANGE `id_group` `id_workspace` INT( 10 ) UNSIGNED NULL DEFAULT '0';
+ALTER TABLE `dims_mod_forms_reply` CHANGE `id_group` `id_workspace` TINYINT( 3 ) UNSIGNED NULL DEFAULT '0';
 ALTER TABLE `dims_mod_forms` CHANGE `id_group` `id_workspace` INT( 10 ) UNSIGNED NULL DEFAULT '0';
 ALTER TABLE `dims_mod_forms_reply` CHANGE `id_group` `id_workspace` TINYINT( 3 ) UNSIGNED NULL DEFAULT '0';
 ALTER TABLE `dims_mod_forms_field` DROP `option_cmsgroupby`, DROP `option_cmsorderby`, DROP `option_cmsdisplaylabel`, DROP `option_cmsshowfilter`;
@@ -38,3 +34,13 @@ ALTER TABLE `dims_mod_forms_field` ADD INDEX ( `id_forms` );
 ALTER TABLE `dims_mod_forms` ADD `autobackup_date` BIGINT( 14 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `autobackup` ;
 ALTER TABLE `dims_mod_forms_reply` ADD `id_record` VARCHAR( 255 ) NOT NULL ,
 ADD `id_object` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
+
+RENAME TABLE `dims_mod_forms` TO `ploopi_mod_forms`;
+RENAME TABLE `dims_mod_forms_field` TO `ploopi_mod_forms_field`;
+RENAME TABLE `dims_mod_forms_reply` TO `ploopi_mod_forms_reply`;
+RENAME TABLE `dims_mod_forms_reply_field` TO `ploopi_mod_forms_reply_field`;
+
+RENAME TABLE `ploopi_mod_forms` TO `ploopi_mod_forms_form` ;
+ALTER TABLE `ploopi_mod_forms_field` CHANGE `id_forms` `id_form` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `ploopi_mod_forms_reply` CHANGE `id_forms` `id_form` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `ploopi_mod_forms_reply_field` CHANGE `id_forms` `id_form` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
