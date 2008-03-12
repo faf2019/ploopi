@@ -38,8 +38,26 @@ function ploopi_isactionallowed($actionid = -1, $workspaceid = -1, $moduleid = -
     if ($workspaceid == -1) $workspaceid = $_SESSION['ploopi']['workspaceid']; // get session value if not defined
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid']; // get session value if not defined
 
-    if ($actionid == -1) return (ploopi_isadmin($workspaceid) || isset($_SESSION['ploopi']['actions'][$workspaceid][$moduleid]));
-    else return (ploopi_isadmin($workspaceid) || isset($_SESSION['ploopi']['actions'][$workspaceid][$moduleid][$actionid]));
+    $booAllowed = false;
+    
+    if (ploopi_isadmin($workspaceid)) $booAllowed = true;
+    else
+    {
+        if (is_array($actionid))
+        {
+            foreach($actionid as $aid)
+            {
+                $booAllowed = $booAllowed || isset($_SESSION['ploopi']['actions'][$workspaceid][$moduleid][$aid]);
+            }
+        }
+        else
+        {
+            if ($actionid == -1) $booAllowed = isset($_SESSION['ploopi']['actions'][$workspaceid][$moduleid]);
+            else $booAllowed = isset($_SESSION['ploopi']['actions'][$workspaceid][$moduleid][$actionid]);
+        }
+    }
+    
+    return($booAllowed);
 }
 
 function ploopi_ismoduleallowed($moduletype, $moduleid = -1, $workspaceid = -1)
