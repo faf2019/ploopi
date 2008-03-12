@@ -594,7 +594,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 INNER JOIN  ploopi_user u
                                 ON          u.id = wur.id_user
                                 WHERE       wur.id_role = {$_GET['system_roleusers_roleid']}
-                                AND         wur.id_workspace = {$_SESSION['ploopi']['workspaceid']}
+                                AND         wur.id_workspace = {$_SESSION['system']['workspaceid']}
                                 ";
 
                         $db->query($sql);
@@ -606,7 +606,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 INNER JOIN  ploopi_group g
                                 ON          g.id = wgr.id_group
                                 WHERE       wgr.id_role = {$_GET['system_roleusers_roleid']}
-                                AND         wgr.id_workspace = {$_SESSION['ploopi']['workspaceid']}
+                                AND         wgr.id_workspace = {$_SESSION['system']['workspaceid']}
                                 ";
 
                         $db->query($sql);

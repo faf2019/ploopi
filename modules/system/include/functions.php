@@ -201,8 +201,8 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
 
                     // group opened if parents array intersects
                     $isgroupopened = sizeof(array_intersect_assoc($gselparents, $testparents)) == sizeof($testparents);
-                    $islast = ((!isset($groups['tree'][$from_wid]) || $c == sizeof($groups['tree'][$from_wid])-1) && !isset($workspaces['tree'][$from_wid]));
-                    
+                    $islast = ((!isset($groups['workspace_tree'][$from_wid]) || $c == sizeof($groups['workspace_tree'][$from_wid])-1) && !isset($workspaces['tree'][$from_wid]));
+
                     $node = '';
                     $bg = '';
                     
