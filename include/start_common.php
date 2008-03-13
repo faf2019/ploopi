@@ -110,8 +110,6 @@ if (isset($_REQUEST['ploopi_logout']))
 {
     session_destroy();
     session_write_close();
-    $db->close();
-
     header("location: {$scriptenv}");
 }
 
