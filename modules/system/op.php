@@ -724,8 +724,13 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
-                    // résultat de la recherche utilisateurs / groupes
+   // résultat de la recherche utilisateurs / groupes
                     case 'system_roleusers_search':
+                        if (!isset($_GET['system_roleusers_filter'])) ploopi_die();
+                        
+                        $cleanedfilter = $db->addslashes($_GET['system_roleusers_filter']);
+                        $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
+                        
                         $sql =  "
                                 SELECT      u.id,
                                             u.lastname,
@@ -738,6 +743,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 INNER JOIN  ploopi_workspace_user wu
                                 ON          wu.id_user = u.id
                                 AND         wu.id_workspace = {$_SESSION['system']['workspaceid']}
+                                WHERE       {$userfilter}
 
                                 ORDER BY    u.lastname, u.firstname
                                 ";
@@ -745,6 +751,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         $db->query($sql);
                         $users = $db->getarray();
 
+                        $groupfilter = "g.label LIKE '%{$cleanedfilter}%'";
+                        
                         $sql =  "
                                 SELECT      g.id,
                                             g.label,
@@ -755,7 +763,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 INNER JOIN  ploopi_workspace_group wg
                                 ON          wg.id_group = g.id
                                 AND         wg.id_workspace = {$_SESSION['system']['workspaceid']}
-
+                                WHERE       {$groupfilter}
+                                
                                 ORDER BY    g.label
                                 ";
 
@@ -810,7 +819,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                         ploopi_die();
                     break;
-
+                    
                 }
             }
         break;

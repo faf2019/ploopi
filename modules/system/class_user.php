@@ -37,11 +37,12 @@ class user extends data_object
     function delete()
     {
         global $db;
-
+        
         // delete all group_user => delete module data (cf $group_user->delete())
         $select = "SELECT * FROM ploopi_group_user WHERE id_user = {$this->fields['id']}";
-        $db->query($select);
-        while($fields=$db->fetchrow())
+
+        $rs = $db->query($select);
+        while($fields = $db->fetchrow($rs))
         {
             $group_user = new group_user();
             $group_user->open($fields['id_group'], $fields['id_user']);
@@ -49,8 +50,8 @@ class user extends data_object
         }
 
         $select = "SELECT * FROM ploopi_workspace_user WHERE id_user = {$this->fields['id']}";
-        $db->query($select);
-        while($fields=$db->fetchrow())
+        $rs = $db->query($select);
+        while($fields = $db->fetchrow($rs))
         {
             $workspace_user = new workspace_user();
             $workspace_user->open($fields['id_workspace'], $fields['id_user']);

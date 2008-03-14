@@ -282,27 +282,30 @@ switch($_SESSION['system']['usrTabItem'])
                     global $admin_redirect;
                     $admin_redirect = true;
 
-                    $user->open($_GET['user_id']);
-                    if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($user->fields['login'], '', true);
-
-                    ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']})");
-
-                    ?>
-                    <div style="padding:4px;">
-                        <div style="font-weight:bold;">
-                            <? echo str_replace('<LABEL>',$user->fields['login'],_SYSTEM_LABEL_USERDELETE); ?>
+                    if ($user->open($_GET['user_id']))
+                    {
+                        if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($user->fields['login'], '', true);
+    
+                        ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']})");
+    
+                        ?>
+                        <div style="padding:4px;">
+                            <div style="font-weight:bold;">
+                                <? echo str_replace('<LABEL>',$user->fields['login'],_SYSTEM_LABEL_USERDELETE); ?>
+                            </div>
+                            <?
+    
+                            $user->delete();
+                            if ($admin_redirect) ploopi_redirect("{$scriptenv}?reloadsession");
+    
+                            ?>
+                            <div style="text-align:right;">
+                                <input type="button" class="button" value="<? echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<? echo "{$scriptenv}?reloadsession"; ?>'">
+                            </div>
                         </div>
                         <?
-
-                        $user->delete();
-                        if ($admin_redirect) ploopi_redirect("{$scriptenv}?reloadsession");
-
-                        ?>
-                        <div style="text-align:right;">
-                            <input type="button" class="button" value="<? echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<? echo "{$scriptenv}?reloadsession"; ?>'">
-                        </div>
-                    </div>
-                    <?
+                    }
+                    else ploopi_redirect($scriptenv);
                 }
                 else ploopi_redirect($scriptenv);
             break;
