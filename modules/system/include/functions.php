@@ -174,7 +174,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
     global $groups;
     global $workspaceid;
     global $groupid;
-
+    
     $html = '';
 
     if (!empty($workspaceid) && isset($workspaces['list'][$workspaceid])) $workspacesel = $workspaces['list'][$workspaceid];
@@ -202,7 +202,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                     // group opened if parents array intersects
                     $isgroupopened = sizeof(array_intersect_assoc($gselparents, $testparents)) == sizeof($testparents);
                     $islast = ((!isset($groups['workspace_tree'][$from_wid]) || $c == sizeof($groups['workspace_tree'][$from_wid])-1) && !isset($workspaces['tree'][$from_wid]));
-
+                    
                     $node = '';
                     $bg = '';
                     
@@ -280,7 +280,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
 
                     $icon = ($workspace['web']) ? 'workspace-web' : 'workspace';
 
-                    if ($workspace['depth'] == 2 || $workspace['id'] == $_SESSION['ploopi']['workspaceid']) {/* racine */}
+                    if ($workspace['depth'] == 2 || ($workspace['id'] == $_SESSION['ploopi']['workspaceid'] && $_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN)) {/* racine */}
                     else
                     {
                         $typenode = 'join';
@@ -304,7 +304,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
 
                     $display = ($html_rec == '') ? 'none' : 'block';
 
-                    if ($workspace['depth'] == 2 || $workspace['id'] == $_SESSION['ploopi']['workspaceid']) $marginleft = 0;
+                    if ($workspace['depth'] == 2 || ($workspace['id'] == $_SESSION['ploopi']['workspaceid']  && $_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN)) $marginleft = 0;
                     else $marginleft = 20;
 
                     $html .=    "

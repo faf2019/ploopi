@@ -392,9 +392,13 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
             }
             fclose($fp);
         }
-        else ploopi_die('error can not open file');
-
-        if ($deletefile) unlink($filepath);
+        else 
+        {
+            header('Content-type: text/html; charset=iso-8859-1');
+            ploopi_die('Impossible d\'ouvrir le fichier');
+        }
+        
+        //if ($deletefile && is_writable($filepath)) @unlink($filepath);
 
         ploopi_die();
 

@@ -29,7 +29,15 @@ function ploopi_workflow_selectusers($id_object = -1, $id_record = -1, $id_modul
 
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
-    $db->query("SELECT id_workflow FROM ploopi_workflow WHERE id_object = {$id_object} AND id_record = '".$db->addslashes($id_record)."' AND id_module = {$id_module}");
+    $sl =   "
+            SELECT  id_workflow 
+            FROM    ploopi_workflow 
+            WHERE   id_object = {$id_object} 
+            AND     id_record = '".$db->addslashes($id_record)."' 
+            AND     id_module = {$id_module}
+            ";
+    
+    $db->query($sql);
     while ($row = $db->fetchrow())
     {
         $_SESSION['ploopi']['workflow']['users_selected'][$row['id_workflow']] = $row['id_workflow'];

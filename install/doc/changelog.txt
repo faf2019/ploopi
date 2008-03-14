@@ -1,3 +1,9 @@
+== Module DOC - version 3.72 ====================================================
+
+2008-03-13  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Correction d'un bug d'affichage si le propriétaire du document est supprimé
+
 == Module DOC - version 3.71 ====================================================
 
 2008-03-06  Stéphane Escaich  <stephane@ovensia.fr>

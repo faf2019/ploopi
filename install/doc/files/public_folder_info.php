@@ -57,8 +57,8 @@ if (!empty($currentfolder))
             <?
             include_once './modules/system/class_user.php';
             $user = new user();
-            $user->open($docfolder->fields['id_user']);
-            echo $user->fields['login'];
+            if ($user->open($docfolder->fields['id_user'])) echo $user->fields['login'];
+            else echo '<i>supprimé</i>';
             ?>
         </p>
     </div>

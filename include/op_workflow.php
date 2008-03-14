@@ -34,15 +34,17 @@ switch($ploopi_op)
             include_once './modules/system/class_user.php';
 
             $user = new user();
-            $user->open($user_id);
-            ?>
-            <p class="ploopi_va" style="padding:2px;">
-                <a class="ploopi_workflow_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=workflow_select_user&remove_user_id=<? echo $user->fields['id']; ?>','','div_workflow_users_selected');">
-                    <img src="./img/icon_delete.gif">
-                    <span><? echo "{$user->fields['firstname']} {$user->fields['lastname']} ({$user->fields['login']})"; ?></span>
-                </a>
-            </p>
-            <?
+            if ($user->open($user_id))
+            {
+                ?>
+                <p class="ploopi_va" style="padding:2px;">
+                    <a class="ploopi_workflow_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=workflow_select_user&remove_user_id=<? echo $user->fields['id']; ?>','','div_workflow_users_selected');">
+                        <img src="./img/icon_delete.gif">
+                        <span><? echo "{$user->fields['firstname']} {$user->fields['lastname']} ({$user->fields['login']})"; ?></span>
+                    </a>
+                </p>
+                <?
+            }
         }
         ploopi_die();
     break;
