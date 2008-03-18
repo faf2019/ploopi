@@ -30,20 +30,22 @@ function ploopi_print_r($var)
     echo '<pre style="text-align:left;">'.htmlentities($content).'</pre>';
 }
 
-function ploopi_die($var = '')
+function ploopi_die($var = '', $flush = true)
 {
     global $db;
     global $ploopi_errors_level;
 
-    $ploopi_content = '';
-    while ($ob_content = trim(ob_get_contents()))
+    if ($flush)
     {
-        $ploopi_content = $ob_content;
-        ob_end_clean();
+        $ploopi_content = '';
+        while ($ob_content = trim(ob_get_contents()))
+        {
+            $ploopi_content = $ob_content;
+            ob_end_clean();
+        }
+        
+        echo $ploopi_content;
     }
-    
-    echo $ploopi_content;
-    
     
     if (!empty($ploopi_errors_level) && $ploopi_errors_level && defined('_PLOOPI_MAIL_ERRORS') && _PLOOPI_MAIL_ERRORS && defined('_PLOOPI_ADMINMAIL') && _PLOOPI_ADMINMAIL != '') mail(_PLOOPI_ADMINMAIL,"[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$_SERVER['HTTP_HOST']}]", "$ploopi_errors_nb erreur(s) sur $ploopi_errors_msg\n\nDUMP:\n$ploopi_errors_vars");
     if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG)  include './include/hit.php';

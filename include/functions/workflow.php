@@ -29,7 +29,7 @@ function ploopi_workflow_selectusers($id_object = -1, $id_record = -1, $id_modul
 
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
-    $sl =   "
+    $sql =   "
             SELECT  id_workflow 
             FROM    ploopi_workflow 
             WHERE   id_object = {$id_object} 
@@ -94,14 +94,16 @@ function ploopi_workflow_save($id_object = -1, $id_record = -1, $id_module = -1)
         {
             $workflow = new workflow();
             $workflow->fields = array(  'id_module'     => $id_module,
-                                    'id_record'     => $id_record,
-                                    'id_object'     => $id_object,
-                                    'type_workflow'     => 'user',
-                                    'id_workflow'       => $id_user
+                                        'id_record'     => $id_record,
+                                        'id_object'     => $id_object,
+                                        'type_workflow' => 'user',
+                                        'id_workflow'   => $id_user
                                 );
             $workflow->save();
 
         }
+        
+        unset($_SESSION['ploopi']['workflow']['users_selected']);
     }
 }
 

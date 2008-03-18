@@ -1265,14 +1265,14 @@ function ploopi_colorpicker_open(inputfield_id, event)
 
 function ploopi_documents_openfolder(currentfolder, documentsfolder_id, event)
 {
-    ploopi_showpopup('',300,event,'click');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=documents_openfolder&currentfolder='+currentfolder+'&documentsfolder_id='+documentsfolder_id,'','ploopi_popup');
+    ploopi_showpopup('', 300, event, 'click', 'ploopi_documents_openfolder_popup');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=documents_openfolder&currentfolder='+currentfolder+'&documentsfolder_id='+documentsfolder_id,'','ploopi_documents_openfolder_popup');
 }
 
 function ploopi_documents_openfile(currentfolder, documentsfile_id, event)
 {
-    ploopi_showpopup('',380,event,'click');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=documents_openfile&currentfolder='+currentfolder+'&documentsfile_id='+documentsfile_id,'','ploopi_popup');
+    ploopi_showpopup('', 380, event, 'click', 'ploopi_documents_openfile_popup');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=documents_openfile&currentfolder='+currentfolder+'&documentsfile_id='+documentsfile_id,'','ploopi_documents_openfile_popup');
 }
 
 function ploopi_documents_deletefile(currentfolder, documents_id, documentsfile_id)
@@ -1315,7 +1315,7 @@ function ploopi_documents_validate(form)
 function ploopi_documents_popup(id_object, id_record, id_module, destfield, event)
 {
     var documents_id = ploopi_base64_encode(id_module+'_'+id_object+'_'+ploopi_addslashes(id_record)+'_popup');
-    ploopi_showpopup('<div style="height:200px;overflow:auto;"><div id="ploopidocuments_'+documents_id+'">'+ploopi_xmlhttprequest('admin-light.php','ploopi_op=documents_selectfile&id_object='+id_object+'&id_record='+id_record+'&documents_id='+documents_id+'&destfield='+destfield)+'</div></div><div style="padding:2px;text-align:right"><a href="javascript:void(0);" onclick="javascript:ploopi_hidepopup();">Fermer</a></div>',600,event);
+    ploopi_showpopup(''+ploopi_xmlhttprequest('admin-light.php','ploopi_op=documents_selectfile&id_object='+id_object+'&id_record='+id_record+'&documents_id='+documents_id+'&destfield='+destfield)+'', 600, event, 'click', 'ploopi_documents_popup');
 }
 
 // This code was written by Tyler Akins and has been placed in the

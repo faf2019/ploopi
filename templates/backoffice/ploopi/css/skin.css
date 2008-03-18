@@ -163,7 +163,7 @@ border: 1px solid #000000;
 background: #f8f8f8;
 }
 
-input.flatbutton, input.button {
+input.flatbutton, input.button, button {
 border: 1px solid #193c1c;
 background:#7a8f7c url(../img/template/bouton.png) top left repeat-x;
 color: #000000;
@@ -172,15 +172,12 @@ padding:0 2px;
 cursor: pointer;
 }
 
-input.flatbutton:hover, input.button:hover {
-/*
-background:#7a8f7c url(../img/template/bouton_hover.png) top left repeat-x;
-*/
+input.flatbutton:hover, input.button:hover, button:hover {
 background:#aab7ab;
 }
 
-input.flatbutton[type='submit'], input.button[type='submit'] {
-    font-weight:bold;
+input.flatbutton[type='submit'], input.button[type='submit'], button[type='submit'] {
+font-weight:bold;
 }
 
 .toolbar {
@@ -461,11 +458,21 @@ a.ploopi_form_title * {
     cursor:pointer;
 }
 
-.error {
-color:#a60000;
-font-weight:bold;
+p.ploopi_checkbox {
+    margin:0;
+    cursor:pointer;
 }
 
+p.ploopi_checkbox img, p.ploopi_checkbox span, p.ploopi_checkbox input, p.ploopi_checkbox select, p.ploopi_checkbox a {
+    display: inline-block;
+    vertical-align: middle;
+    cursor:pointer;
+}
+
+.error {
+    color:#a60000;
+    font-weight:bold;
+}
 
 .Title td {
     font-weight:bold;

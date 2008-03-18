@@ -21,25 +21,6 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-###############################################################################
-#
-# copy / delete functions
-#
-###############################################################################
-
-/**
-* recursive copy of src folder into dest folder
-*
-* @param string path to source file
-* @param string path to destination file
-* @param int chmod'like
-* @return boolean
-*
-* @version 2.09
-* @since 0.1
-*
-* @category files manipulations
-*/
 function ploopi_copydir($src , $dest, $mask = 0750)
 {
     $ok = true;
@@ -284,7 +265,36 @@ function ploopi_getmimetype($filename)
         'scd' => 'application/x-msschedule',
         'trm' => 'application/x-msterminal',
         'wri' => 'application/x-mswrite',
+    
+        //open office
+        'sxw' => 'application/vnd.sun.xml.writer', 
+        'stw' => 'application/vnd.sun.xml.writer.template',
+        'sxg' => 'application/vnd.sun.xml.writer.global',
+        'sxc' => 'application/vnd.sun.xml.calc',
+        'stc' => 'application/vnd.sun.xml.calc.template', 
+        'sxi' => 'application/vnd.sun.xml.impress',
+        'sti' => 'application/vnd.sun.xml.impress.template', 
+        'sxd' => 'application/vnd.sun.xml.draw',
+        'std' => 'application/vnd.sun.xml.draw.template', 
+        'sxm' => 'application/vnd.sun.xml.math',
 
+        'odt' => 'application/vnd.oasis.opendocument.text',
+        'otm' => 'application/vnd.oasis.opendocument.text-master',
+        'ott' => 'application/vnd.oasis.opendocument.text-template',
+        'odc' => 'application/vnd.oasis.opendocument.chart',
+        'otc' => 'application/vnd.oasis.opendocument.chart-template',
+        'odf' => 'application/vnd.oasis.opendocument.formula',
+        'otf' => 'application/vnd.oasis.opendocument.formula-template',
+        'odg' => 'application/vnd.oasis.opendocument.graphics',
+        'otg' => 'application/vnd.oasis.opendocument.graphics-template',
+        'odi' => 'application/vnd.oasis.opendocument.image',
+        'oti' => 'application/vnd.oasis.opendocument.image-template',
+        'odp' => 'application/vnd.oasis.opendocument.presentation',
+        'otp' => 'application/vnd.oasis.opendocument.presentation-template',
+        'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+        'ots' => 'application/vnd.oasis.opendocument.spreadsheet-template',
+        'oth' => 'application/vnd.oasis.opendocument.text-web',
+    
         //texte enrichi
         'rtf' => 'text/rtf',
         'rtx' => 'text/richtext',
@@ -340,9 +350,8 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
     if (file_exists($filepath))
     {
         while (ob_get_contents()) @ob_end_clean();
-        @set_time_limit(3600);
+        @set_time_limit(0);
 
-        // new download function works with IE6+SSL(http://fr.php.net/manual/fr/function.header.php#65404)
         $filepath = rawurldecode($filepath);
         $size = filesize($filepath);
 
@@ -353,42 +362,20 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
         if ($attachment) header("Content-disposition: attachment; filename=\"{$destfilename}\"");
         else header("Content-disposition: inline; filename=\"{$destfilename}\"");
 
-        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Expires: Sat, 1 Jan 2000 05:00:00 GMT');
         header('Accept-Ranges: bytes');
         header('Cache-control: private');
         header('Pragma: private');
-
-        //  multipart-download and resume-download
-        if (isset($_SERVER['HTTP_RANGE']))
-        {
-            list($a, $range) = explode("=",$_SERVER['HTTP_RANGE']);
-            str_replace($range, "-", $range);
-            $size2 = $size - 1;
-            $new_length = $size - $range;
-            header("HTTP/1.1 206 Partial Content");
-            header("Content-Length: {$new_length}");
-            header("Content-Range: bytes {$range}{$size2}/{$size}");
-        }
-        else
-        {
-            $size2 = $size-1;
-            header("Content-Length: {$size}");
-        }
+        header('Content-length: '.$size);
 
         $chunksize = 1*(1024*1024);
 
-        $bytes_send = 0;
-
         if ($fp = fopen($filepath, 'r'))
         {
-            if(isset($_SERVER['HTTP_RANGE'])) fseek($fp, $range);
-
-            while(!feof($fp) and (connection_status()==0))
+            while(!feof($fp) && connection_status() == 0) 
             {
-                $buffer = fread($fp, $chunksize);
-                print($buffer);
+                echo fread($fp, $chunksize);
                 flush();
-                $bytes_send += strlen($buffer);
             }
             fclose($fp);
         }
@@ -398,9 +385,9 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
             ploopi_die('Impossible d\'ouvrir le fichier');
         }
         
-        //if ($deletefile && is_writable($filepath)) @unlink($filepath);
-
-        ploopi_die();
+        if ($deletefile && is_writable($filepath)) @unlink($filepath);
+        
+        ploopi_die('', false);
 
     }
     else return(false);

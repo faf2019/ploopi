@@ -39,6 +39,10 @@ switch($ploopi_op)
         $_SESSION['documents']['mode'] = 'selectfile';
         $_SESSION['documents']['destfield'] = $_GET['destfield'];
 
+        ?>
+        <div id="ploopidocuments_<? echo $_SESSION['documents']['documents_id']; ?>">
+        <?
+        
     case 'documents_browser':
         if (!$_SESSION['ploopi']['connected']) ploopi_die();
 
@@ -66,7 +70,6 @@ switch($ploopi_op)
                 $currentfolder = $documentsfolder->save();
             }
         }
-
         ?>
 
         <div class="documents_browser">
@@ -388,7 +391,7 @@ switch($ploopi_op)
                 if ($_SESSION['documents']['mode'] == 'selectfile')
                 {
                     $documents_file_values[$i]['link'] = 'javascript:void(0);';
-                    $documents_file_values[$i]['onclick'] = "javascript:ploopi_getelem('{$_SESSION['documents']['destfield']}').value='{$row['name']}';ploopi_getelem('{$_SESSION['documents']['destfield']}_id').value='{$row['id']}';ploopi_hidepopup();";
+                    $documents_file_values[$i]['onclick'] = "javascript:ploopi_getelem('{$_SESSION['documents']['destfield']}').value='{$row['name']}';ploopi_getelem('{$_SESSION['documents']['destfield']}_id').value='{$row['id']}';ploopi_hidepopup('ploopi_documents_popup');";
                 }
                 else $documents_file_values[$i]['link'] = ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['id']}&attachement=".$_SESSION['documents']['attachement']);
 
@@ -404,6 +407,18 @@ switch($ploopi_op)
             ?>
         </div>
         <?
+        
+        if ($ploopi_op == 'documents_selectfile')
+        {
+            ?>
+            </div>
+            <?
+            $content = ob_get_contents();
+            ob_end_clean();
+        
+            echo $skin->create_popup('Explorateur de fichiers', $content, 'ploopi_documents_popup');
+        }
+        
         ploopi_die();
     break;
 
@@ -445,7 +460,7 @@ switch($ploopi_op)
 
         if (!empty($_GET['documentsfile_id']))
         {
-            include_once './lib/pclzip-2-5/pclzip.lib.php';
+            include_once './lib/pclzip/pclzip.lib.php';
             include_once './include/classes/class_documentsfile.php';
 
             $documentsfile = new documentsfile();
@@ -501,7 +516,7 @@ switch($ploopi_op)
         ?>
         <script type="text/javascript">
             window.parent.ploopi_documents_browser('<? echo $_POST['currentfolder']; ?>', '<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $_SESSION['documents']['mode']; ?>')
-            window.parent.ploopi_hidepopup();
+            window.parent.ploopi_hidepopup('ploopi_documents_openfolder_popup');
         </script>
         <?
         ploopi_die();
@@ -516,16 +531,12 @@ switch($ploopi_op)
         if (empty($_GET['documentsfolder_id']))
         {
             $documentsfolder->init_description();
-            ?>
-            <div class="documents_formtitle">Nouveau Dossier</div>
-            <?
+            $title = "Nouveau Dossier";
         }
         else
         {
             $documentsfolder->open($_GET['documentsfolder_id']);
-            ?>
-            <div class="documents_formtitle">Modification du Dossier</div>
-            <?
+            $title = "Modification du Dossier";
         }
         ?>
         <form id="documents_folderform" action="admin-light.php" method="post" target="documents_folderform_iframe" enctype="multipart/form-data">
@@ -552,7 +563,7 @@ switch($ploopi_op)
                 </p>
             </div>
             <div class="documents_formcontent" style="text-align:right;padding:4px;">
-                <input type="button" class="flatbutton" style="width:100px;" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup();">
+                <input type="button" class="flatbutton" style="width:100px;" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('ploopi_documents_openfolder_popup');">
                 <input type="submit" class="flatbutton" style="width:100px;" value="<? echo _PLOOPI_SAVE; ?>">
                 <!-- onclick="javascript:ploopi_hidepopup();ploopi_documents_browser('<? echo $_GET['currentfolder']; ?>', '<? echo $_SESSION['documents']['documents_id']; ?>')" -->
             </div>
@@ -560,6 +571,10 @@ switch($ploopi_op)
         </form>
         <iframe name="documents_folderform_iframe" src="./img/blank.gif" style="width:0;height:0;visibility:hidden;display:none;"></iframe>
         <?
+        $content = ob_get_contents();
+        ob_end_clean();
+    
+        echo $skin->create_popup($title, $content, 'ploopi_documents_openfolder_popup');
         ploopi_die();
     break;
 
@@ -595,7 +610,7 @@ switch($ploopi_op)
         ?>
         <script type="text/javascript">
             window.parent.ploopi_documents_browser('<? echo $_POST['currentfolder']; ?>', '<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $_SESSION['documents']['mode']; ?>')
-            window.parent.ploopi_hidepopup();
+            window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
         </script>
         <?
         ploopi_die();
@@ -610,17 +625,12 @@ switch($ploopi_op)
         if (empty($_GET['documentsfile_id']))
         {
             $documentsfile->init_description();
-            ?>
-            <div class="documents_formtitle">Nouveau Fichier</div>
-            <?
+            $title = "Nouveau Fichier";
         }
         else
         {
             $documentsfile->open($_GET['documentsfile_id']);
-            ?>
-            <div class="documents_formtitle">Modification du Fichier</div>
-            <?
-
+            $title = "Modification du Fichier";
         }
 
         $ldate = ($documentsfile->fields['timestp_file']!=0 && $documentsfile->fields['timestp_file']!='') ? ploopi_timestamp2local($documentsfile->fields['timestp_file']) : array('date' => '');
@@ -681,13 +691,17 @@ switch($ploopi_op)
                 </p>
             </div>
             <div class="documents_formcontent" style="text-align:right;padding:4px;">
-                <input type="button" class="flatbutton" style="width:100px;" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup();">
+                <input type="button" class="flatbutton" style="width:100px;" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('ploopi_documents_openfile_popup');">
                 <input type="submit" class="flatbutton" style="width:100px;" value="<? echo _PLOOPI_SAVE; ?>" tabindex="7">
             </div>
         </div>
         </form>
         <iframe name="documents_fileform_iframe" src="./img/blank.gif" style="width:0;height:0;visibility:hidden;display:none;"></iframe>
         <?
+        $content = ob_get_contents();
+        ob_end_clean();
+    
+        echo $skin->create_popup($title, $content, 'ploopi_documents_openfile_popup');
         ploopi_die();
     break;
 

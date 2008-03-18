@@ -19,15 +19,12 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 /******************
   MAIN LAYOUT
-
-  #93203f => #304066
-  #e2001a => #4E68A6
-
 *******************/
 
-body, form, table, td, input, select, textarea {
+body, form, table, td, input, select, textarea, button {
 font: 11px tahoma, verdana, sans-serif;
 }
 
