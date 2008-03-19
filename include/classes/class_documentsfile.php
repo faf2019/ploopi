@@ -231,43 +231,14 @@ class documentsfile extends data_object
     {
         return($this->getbasepath()._PLOOPI_SEP."{$this->fields['id']}.{$this->fields['extension']}");
     }
-
-    function getwebpath()
-    {
-        return(_PLOOPI_WEBPATHDATA."doc-{$this->fields['id_module']}/{$this->fields['id']}/{$this->fields['id']}.{$this->fields['extension']}");
-    }
     
     function getcontent()
     {
         global $db;
+    }
 
-        /*if (file_exists($this->getpath().$this->fields['name']))
-        {
-            $sql =  "
-                    SELECT  dp.path
-                    FROM    ploopi_mod_docext de,
-                            ploopi_mod_doc_param dp
-                    WHERE   de.ext = '".strtolower($this->fields['extension'])."'
-                    AND     dp.ext_id = de.id
-                    ";
-
-            $db->query($sql);
-            if ($fields = $db->fetchrow())
-            {
-                $this->fields['content'] = '';
-                $tabres = array();
-                $pathexec = str_replace(" ","\ ",$this->getpath().$this->fields['name']);
-                //echo $fields['path']." ".$pathexec,$tabres;
-                exec($fields['path']." \"{$pathexec}\"",$tabres);
-                foreach($tabres as $key => $value)
-                {
-                    if ($value!="")
-                    {
-                        $this->fields['content'].=strtolower($value)."\n";
-                    }
-                }
-            }
-        }
-        */
+    function geturl($attachement = true)
+    {
+        return(ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$this->fields['id']}&attachement={$attachement}"));
     }
 }

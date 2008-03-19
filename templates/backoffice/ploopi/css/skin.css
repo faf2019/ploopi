@@ -129,7 +129,7 @@ border: 1px solid #000000;
 background: #f8f8f8;
 }
 
-select.select option,optgroup {
+select.select option, select.select optgroup {
 background: #f8f8f8;
 }
 
