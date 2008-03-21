@@ -138,7 +138,7 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
         if ($html) $msg .= "Content-type: text/html; charset=iso-8859-1\r\n\r\n";
         else $msg .= "Content-type: text/plain; charset=iso-8859-1\r\n\r\n";
 
-        $msg .= "$message\r\n";
+        $msg .= "$message\r\n\r\n";
         
         foreach($files as $filename)
         {
@@ -154,8 +154,8 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
             
                 $msg .= "--{$boundary}\r\n";
                 $msg .= "Content-type:{$mime_type};name=".basename($filename)."\r\n";
-                $msg .= "Content-transfer-encoding:base64\r\n";
-                $msg .= "{$content}\r\n";
+                $msg .= "Content-transfer-encoding:base64\r\n\r\n";
+                $msg .= "{$content}\r\n\r\n";
             }
         }
         

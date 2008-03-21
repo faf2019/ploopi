@@ -144,16 +144,18 @@ class module_type extends data_object
     }
 
 
-     function getactions()
+     function getactions($role_enabled = 1)
      {
         global $db;
 
         $actions = array();
 
+        
         $select =   "
                 SELECT      *
                 FROM        ploopi_mb_action
                 WHERE       id_module_type = {$this->fields['id']}
+                AND         role_enabled = {$role_enabled}
                 ORDER BY    id_action
                 ";
 

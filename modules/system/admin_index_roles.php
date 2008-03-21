@@ -44,7 +44,7 @@ switch($op)
 
         $isnew = $role->new;
 
-        if ($isnew) $role->fields['id_workspace'] = $_SESSION['ploopi']['workspaceid'];
+        if ($isnew) $role->fields['id_workspace'] = $workspaceid;
 
         $role->setvalues($_POST,'role_');
         if (empty($_POST['role_shared'])) $role->fields['shared'] = 0;

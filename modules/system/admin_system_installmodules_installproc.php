@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 include_once './modules/system/xmlparser_mod.php';
 include_once './modules/system/xmlparser_mb.php';
 include_once './include/classes/class_xml2array.php';
@@ -178,8 +177,9 @@ else
                         $mb_action->fields = array( 'id_module_type'    => $module_type->fields['id'],
                                                     'id_action' => $value['id_action'][0],
                                                     'label' => $value['label'][0],
-                                                    'id_object' => (!empty($value['id_object'][0])) ? $value['id_object'][0] : 0
-                                                );
+                                                    'id_object' => (isset($value['id_object'][0])) ? $value['id_object'][0] : 0,
+                                                    'role_enabled' => (isset($value['role_enabled'][0])) ? $value['role_enabled'][0] : 1
+                        );
                         $mb_action->save();
                     }
                 }

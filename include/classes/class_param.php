@@ -93,10 +93,11 @@ class param
 
                         WHERE       pg.id_module = {$moduleid}
                         AND         pg.id_workspace = {$this->workspaceid}
-                        AND         pt.public = 1
-                        ORDER BY    pt.label
                         ";
 
+            if ($public) $select .= " AND pt.public = 1";
+            $select .= " ORDER BY pt.label";
+                        
             $answer = $db->query($select);
             while ($fields = $db->fetchrow($answer))
             {

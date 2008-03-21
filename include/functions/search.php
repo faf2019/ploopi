@@ -495,8 +495,10 @@ function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, 
     uasort($arrRelevance, create_function('$a,$b', 'return $b[\''.$orderby.'\'] '.$compare_sign.' $a[\''.$orderby.'\'];'));
     
     
+    $arrResult = array();
+    
     $c = 0;
-    while (current($arrRelevance) !== FALSE && $c++ < $limit)
+    while (current($arrRelevance) !== false && $c++ < $limit)
     {
         $arrResult[key($arrRelevance)] = array_merge($arrElements[key($arrRelevance)], $arrRelevance[key($arrRelevance)]);
         next($arrRelevance);

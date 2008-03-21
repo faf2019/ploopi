@@ -20,15 +20,17 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 if (!empty($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
 
 echo $skin->open_simplebloc(_SYSTEM_MODULESELECTED);
 ?>
 <div style="padding:4px;">
 <?
-if (empty($_SESSION['ploopi']['workspaces'][$workspaceid]['modules']))
+// get modules
+$modules = $workspace->getmodules();
+
+if (empty($modules))
 {
     ?>
     Aucun module pour cet espace
@@ -40,13 +42,12 @@ else
     <form id="form_modparam" action="<? echo $scriptenv; ?>" method="post">
         <select class="select" name="idmodule" onchange="javascript:$('form_modparam').submit();">
         <?
-        foreach($_SESSION['ploopi']['workspaces'][$workspaceid]['modules'] as $idm)
+        foreach($modules as $idm => $mod)
         {
-            $mod = &$_SESSION['ploopi']['modules'][$idm];
-
+            
             if (empty($idmodule)) $idmodule = $idm;
             ?>
-                <option <? if ($idmodule == $idm) echo 'selected'; ?> value="<? echo $idm; ?>"><? echo "{$mod['label']} ({$mod['moduletype']})"; ?></option>
+                <option <? if ($idmodule == $idm) echo 'selected'; ?> value="<? echo $idm; ?>"><? echo "{$mod['instancename']} ({$mod['label']})"; ?></option>
             <?
         }
         ?>
@@ -64,7 +65,7 @@ if (isset($idmodule))
     echo $skin->open_simplebloc(_SYSTEM_MODULEPARAM);
 
     $param_module->open($idmodule, $workspaceid);
-
+    
     if (isset($param_module->tabparam))
     {
         ?>

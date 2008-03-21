@@ -39,6 +39,7 @@ $select =   "
                         m.viewmode,
                         m.transverseview,
                         m.id_module_type,
+                        m.id_workspace,
                         mt.label as moduletype
 
             FROM        ploopi_module m

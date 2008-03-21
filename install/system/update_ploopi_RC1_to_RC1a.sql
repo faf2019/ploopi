@@ -8,4 +8,3 @@ ALTER TABLE `ploopi_log`
   DROP `date_hour`,
   DROP `date_minute`,
   DROP `date_second`;
-  

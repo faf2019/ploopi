@@ -210,7 +210,8 @@ else
                         $mb_action->fields = array( 'id_module_type'    => $module_type->fields['id'],
                                                     'id_action' => $value['id_action'][0],
                                                     'label' => $value['label'][0],
-                                                    'id_object' => (!empty($value['id_object'][0])) ? $value['id_object'][0] : 0
+                                                    'id_object' => (isset($value['id_object'][0])) ? $value['id_object'][0] : 0,
+                                                    'role_enabled' => (isset($value['role_enabled'][0])) ? $value['role_enabled'][0] : 1
                                                 );
                         $mb_action->save();
                     }
