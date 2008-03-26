@@ -270,6 +270,8 @@ if($_POST['stage']>=1)
       $arrInstallInfos[] = array('id' => 'div_pear_OLE', 'state' => $packPEAR->packageInstalled('OLE'), 'title' => '_PLOOPI_INSTALL_PEAR_OLE');
       // Spreadsheet_Excel_Writer-0.9.1
       $arrInstallInfos[] = array('id' => 'div_pear_Spreadsheet_Excel_Writer', 'state' => $packPEAR->packageInstalled('Spreadsheet_Excel_Writer'), 'title' => '_PLOOPI_INSTALL_PEAR_SPREADSHEET_EXCEL_WRITER');
+      // Net_UserAgent_Detect
+      $arrInstallInfos[] = array('id' => 'div_pear_Net_UserAgent_Detect', 'state' => $packPEAR->packageInstalled('Net_UserAgent_Detect'), 'title' => '_PLOOPI_INSTALL_PEAR_NET_USERAGENT_DETECT');
     }
     else // PEAR_Info not installed
     {
