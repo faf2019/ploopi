@@ -48,12 +48,10 @@ else
 $template_body->assign_block_vars('ploopi_js',array('PATH' => "./lib/protoculous/protoculous-packer.js"));
 $template_body->assign_block_vars('ploopi_js',array('PATH' => "./js/functions.pack.js"));
 
-
 ob_start();
 include './include/javascript.php';
 $additional_javascript = ob_get_contents();
 @ob_end_clean();
-
 
 if ($_SESSION['ploopi']['connected'])
 {
@@ -166,6 +164,7 @@ if ($_SESSION['ploopi']['connected'])
     }
 
     ob_start();
+    
     if (!empty($_SESSION['ploopi']['moduletype']))
     {
         if ($_SESSION['ploopi']['action'] == 'admin')
@@ -178,8 +177,9 @@ if ($_SESSION['ploopi']['connected'])
         }
 
     }
+    
     $page_content = ob_get_contents();
-    @ob_end_clean();
+    ob_end_clean();
 
     $template_body->assign_vars(array(
         'PAGE_CONTENT'          => $page_content,
@@ -220,8 +220,6 @@ else
     }
 }
 
-
-
 $template_body->assign_vars(array(
     'TEMPLATE_PATH'                 => $_SESSION['ploopi']['template_path'],
     'WORKSPACE_LABEL'               => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']),
@@ -240,35 +238,5 @@ $template_body->assign_vars(array(
     )
 );
 
-
 $template_body->pparse('body');
-
-$ploopi_content = trim(ob_get_contents());
-
-// clean main buffer
-ob_end_clean();
-session_write_close();
-
-include_once './include/stats.php';
-
-$array_tags = array(    '<PLOOPI_PAGE_SIZE>',
-                        '<PLOOPI_EXEC_TIME>',
-                        '<PLOOPI_PHP_P100>',
-                        '<PLOOPI_SQL_P100>',
-                        '<PLOOPI_NUMQUERIES>',
-                        '<PLOOPI_SESSION_SIZE>'
-                    );
-
-$array_values = array(  sprintf("%.02f",$ploopi_stats['pagesize']/1024),
-                        $ploopi_stats['total_exectime'],
-                        $ploopi_stats['php_ratiotime'],
-                        $ploopi_stats['sql_ratiotime'],
-                        $ploopi_stats['numqueries'],
-                        sprintf("%.02f",$ploopi_stats['sessionsize']/1024)
-                    );
-
-$ploopi_content = str_replace($array_tags, $array_values, $ploopi_content);
-
-// main buffer flushing
-echo $ploopi_content;
 ?>

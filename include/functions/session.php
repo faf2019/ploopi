@@ -88,7 +88,7 @@ function ploopi_session_update()
         ploopi_redirect("{$scriptenv}?ploopi_errorcode="._PLOOPI_ERROR_SESSIONINVALID);
     }
 
-    $_SESSION['ploopi']['currentrequesttime'] = mktime();
+    $_SESSION['ploopi']['currentrequesttime'] = time();
     if (empty($_SESSION['ploopi']['lastrequesttime'])) $_SESSION['ploopi']['lastrequesttime'] = $_SESSION['ploopi']['currentrequesttime'];
 
     $diff = $_SESSION['ploopi']['currentrequesttime'] - $_SESSION['ploopi']['lastrequesttime'];

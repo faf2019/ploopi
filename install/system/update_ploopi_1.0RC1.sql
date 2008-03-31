@@ -38,3 +38,5 @@ CREATE TABLE IF NOT EXISTS `ploopi_subscription_action` (
   KEY `id_action` (`id_action`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+
+UPDATE `ploopi_module_type` SET `version` = '1.0RC1', `author` = 'Ovensia', `date` = '20080328000000' WHERE `ploopi_module_type`.`id` = 1;

@@ -21,42 +21,51 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-function ploopi_print_r($var)
+function ploopi_print_r($var, $return = false)
 {
-    ob_start();
-    print_r($var);
-    $content = ob_get_contents();
-    ob_end_clean();
-    echo '<pre style="text-align:left;">'.htmlentities($content).'</pre>';
+    $p = '<pre style="text-align:left;">'.print_r($var, true).'</pre>';
+    if($return) return($p);
+    else echo $p;
 }
 
-function ploopi_die($var = '', $flush = true)
+function ploopi_die($var = null, $flush = true)
 {
     global $db;
+
+    global $ploopi_errorlevel;
     global $ploopi_errors_level;
+    global $ploopi_errors_nb;
+    global $ploopi_errors_msg;    
 
-    if ($flush)
-    {
-        $ploopi_content = '';
-        while ($ob_content = trim(ob_get_contents()))
-        {
-            $ploopi_content = $ob_content;
-            ob_end_clean();
-        }
-        
-        echo $ploopi_content;
-    }
+    if ($flush) while (ob_get_level()>0) ob_end_flush();
     
-    if (!empty($ploopi_errors_level) && $ploopi_errors_level && defined('_PLOOPI_MAIL_ERRORS') && _PLOOPI_MAIL_ERRORS && defined('_PLOOPI_ADMINMAIL') && _PLOOPI_ADMINMAIL != '') mail(_PLOOPI_ADMINMAIL,"[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$_SERVER['HTTP_HOST']}]", "$ploopi_errors_nb erreur(s) sur $ploopi_errors_msg\n\nDUMP:\n$ploopi_errors_vars");
-    if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG)  include './include/hit.php';
-
-    if (!empty($var))
+    if (    
+        !empty($ploopi_errors_level) &&  
+        $ploopi_errors_level &&
+        defined('_PLOOPI_MAIL_ERRORS') && 
+        _PLOOPI_MAIL_ERRORS  &&
+        defined('_PLOOPI_ADMINMAIL') &&
+        _PLOOPI_ADMINMAIL != ''
+        )
+    {
+        mail(   _PLOOPI_ADMINMAIL,
+                "[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$_SERVER['HTTP_HOST']}]",
+                "{$ploopi_errors_nb} erreur(s) sur {$ploopi_errors_msg}".
+                "\n_SERVER:\n".print_r($_SERVER, true).
+                "\n_POST:\n".print_r($_POST, true).
+                "\n_GET:\n".print_r($_GET, true).
+                "\n_SESSION:\n".print_r($_SESSION, true)
+            );
+    }  
+    
+    if (!is_null($var))
     {
         if (is_string($var)) echo $var;
         else ploopi_print_r($var);
     }
     
     session_write_close();
+    
     if (!empty($db) && $db->isconnected()) $db->close();
 
     die();
@@ -71,7 +80,7 @@ function ploopi_redirect($link, $urlencode = true)
     session_write_close();
     if (!empty($db) && $db->isconnected()) $db->close();
 
-    ob_end_clean();
+    while(ob_get_level()>0) ob_end_clean();
     header("Location: $link");
     exit();
 }
@@ -95,16 +104,16 @@ function ploopi_array_map($func, $var)
 function ploopi_init_module($moduletype)
 {
 
-    if (!defined("_PLOOPI_INITMODULE_$moduletype"))
+    if (!defined("_PLOOPI_INITMODULE_{$moduletype}"))
     {
-        define("_PLOOPI_INITMODULE_$moduletype",    1);
+        define("_PLOOPI_INITMODULE_{$moduletype}",    1);
 
 
         global $ploopi_help;
 
-        $defaultlanguagefile = "./modules/$moduletype/lang/french.php";
-        $languagefile = "./modules/$moduletype/lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php";
-        $globalfile = "./modules/$moduletype/include/global.php";
+        $defaultlanguagefile = "./modules/{$moduletype}/lang/french.php";
+        $languagefile = "./modules/{$moduletype}/lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php";
+        $globalfile = "./modules/{$moduletype}/include/global.php";
 
         if (file_exists($defaultlanguagefile))
         {
@@ -418,4 +427,110 @@ function ploopi_workspace_sort($a,$b)
 
 function ploopi_h404() { header("HTTP/1.0 404 Not Found"); }
 
+
+/*
+ * Gère la sortie du buffer principal
+ * -> met à jour le rendu final en mettant à jour les variables d'éxection
+ * -> écrit dans le log 
+ */
+
+function ploopi_ob_callback($buffer)
+{
+    global $ploopi_timer;
+    global $db;
+    
+    $ploopi_stats = array();
+    
+    if (isset($buffer)) $ploopi_stats['pagesize'] = strlen($buffer);
+    else $ploopi_stats['pagesize'] = 0;
+    
+    if (isset($db))
+    {
+        $ploopi_stats['numqueries'] = $db->num_queries;
+        $ploopi_stats['sql_exectime'] = round($db->exectime_queries*1000,0);
+    }
+    else
+    {
+        $ploopi_stats['numqueries'] = 0;
+        $ploopi_stats['sql_exectime'] = 0;
+    }
+    
+    if (isset($ploopi_timer))
+    {
+        $ploopi_stats['total_exectime'] = round($ploopi_timer->getexectime()*1000,0);
+        $ploopi_stats['sql_ratiotime'] = round(($ploopi_stats['sql_exectime']*100)/$ploopi_stats['total_exectime'] ,0);
+        $ploopi_stats['php_ratiotime'] = 100 - $ploopi_stats['sql_ratiotime'];
+    }
+    else
+    {
+        $ploopi_stats['total_exectime'] = 0;
+        $ploopi_stats['sql_ratiotime'] = 0;
+        $ploopi_stats['php_ratiotime'] = 0;
+    }
+    
+    if (isset($_SESSION))
+    {
+        $ploopi_stats['sessionsize'] = strlen(session_encode());
+    }
+    else
+    {
+        $ploopi_stats['sessionsize'] = 0;
+    }
+    
+    $array_tags = array(    '<PLOOPI_PAGE_SIZE>',
+                            '<PLOOPI_EXEC_TIME>',
+                            '<PLOOPI_PHP_P100>',
+                            '<PLOOPI_SQL_P100>',
+                            '<PLOOPI_NUMQUERIES>',
+                            '<PLOOPI_SESSION_SIZE>'
+                        );
+    
+    $array_values = array(  sprintf("%.02f",$ploopi_stats['pagesize']/1024),
+                            $ploopi_stats['total_exectime'],
+                            $ploopi_stats['php_ratiotime'],
+                            $ploopi_stats['sql_ratiotime'],
+                            $ploopi_stats['numqueries'],
+                            sprintf("%.02f",$ploopi_stats['sessionsize']/1024)
+                        );
+                    
+
+                        
+    if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG && isset($db))
+    {
+        include_once './include/functions/date.php';
+        include_once './modules/system/class_log.php';
+        
+        $log = new log();
+        
+        $log->fields['request_method'] = $_SERVER['REQUEST_METHOD'];
+        $log->fields['query_string'] = $_SERVER['QUERY_STRING'];
+        $log->fields['remote_addr'] = implode(',', ploopi_getip());
+        $log->fields['remote_port'] = $_SERVER['REMOTE_PORT'];
+        $log->fields['script_filename'] = $_SERVER['SCRIPT_FILENAME'];
+        $log->fields['script_name'] = $_SERVER['SCRIPT_NAME'];
+        $log->fields['request_uri'] = $_SERVER['REQUEST_URI'];
+        $log->fields['ploopi_moduleid'] = (empty($_SESSION['ploopi']['moduleid'])) ? 0 : $_SESSION['ploopi']['moduleid'];
+        $log->fields['ploopi_userid'] = (empty($_SESSION['ploopi']['userid'])) ? 0 : $_SESSION['ploopi']['userid'];
+        $log->fields['ploopi_workspaceid'] = (empty($_SESSION['ploopi']['workspaceid'])) ? 0 : $_SESSION['ploopi']['workspaceid'];;
+        $log->fields['ts'] = ploopi_createtimestamp();
+        
+        require_once 'Net/UserAgent/Detect.php';
+        
+        $log->fields['browser'] = Net_UserAgent_Detect::getBrowserString();
+        $log->fields['system'] = Net_UserAgent_Detect::getOSString();
+        
+        //if (empty($ploopi_stats)) include './include/stats.php';
+        
+        $log->fields['total_exec_time'] = $ploopi_stats['total_exectime'];
+        $log->fields['sql_exec_time'] = $ploopi_stats['sql_exectime'];
+        $log->fields['sql_percent_time'] = $ploopi_stats['sql_ratiotime'];
+        $log->fields['php_percent_time'] = $ploopi_stats['php_ratiotime'];
+        $log->fields['numqueries'] = $ploopi_stats['numqueries'];
+        $log->fields['page_size'] = $ploopi_stats['pagesize'];
+        
+        $log->save();
+    }
+                            
+    return trim(str_replace($array_tags, $array_values, $buffer));
+}
 ?>

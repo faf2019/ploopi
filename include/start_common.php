@@ -21,8 +21,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-ob_start();
-
+ob_start(create_function('$buffer', 'return ploopi_ob_callback($buffer);'));
 ///////////////////////////////////////////////////////////////////////////
 // START TIMER
 ///////////////////////////////////////////////////////////////////////////
@@ -118,5 +117,4 @@ if (isset($_REQUEST['ploopi_logout']))
 ///////////////////////////////////////////////////////////////////////////
 
 include_once './include/classes/class_data_object.php';
-
 ?>

@@ -1,3 +1,21 @@
+== Ploopi - version 1.0 RC1 ===================================================
+
+2008-03-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * correctifs dans la gestion des paramètres au niveau des espaces de travail
+ * mise à jour de la gestion interne des documents
+ * correctifs et mise à jour sur la suppression des utilisateurs
+ * correctif lors de la déconnexion d'un utilisateur (trop long)
+ * possibilité de passer une liste d'actions (tableau) dans la fonction ploopi_isactionallowed
+ * correctif sur l'affichage des rôles attribués 
+ * mise à jour de le la procédure d'installation (nouvelles variables de configuration, nouveaux tests) 
+ * mise à jour du CGI d'upload pour une meilleure gestion des erreurs
+ * amélioration de la recherche d'utilisateurs dans les partages
+ * amélioration de la recherche d'utilisateurs dans le workflow
+ * amélioration du calendrier pour pouvoir avancer/reculer d'un an
+ * mise à jour des templates
+ * mise à jour des modules
+
 == Ploopi - version 1.0 alpha 4 ===============================================
 
 2008-02-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

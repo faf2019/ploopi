@@ -25,6 +25,21 @@ $toolbar = array();
 
 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
 {
+    $strSysVersion = '';
+
+    $db->query('SELECT version FROM ploopi_module_type WHERE id = 1');
+    $row = $db->fetchrow();
+    
+    if (strcmp(_PLOOPI_VERSION, $row['version']))
+    {
+        $strSysVersion = $row['version'];
+        $toolbar['systemupdate'] = array(
+                                            'title' => _SYSTEM_LABELICON_SYSTEMUPDATE,
+                                            'url'   => "{$scriptenv}?sysToolbarItem=systemupdate",
+                                            'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemupdate.png"
+                                        );
+    }
+    
     $toolbar['install'] = array(
                                         'title' => _SYSTEM_LABELICON_INSTALLMODULES,
                                         'url'   => "{$scriptenv}?sysToolbarItem=install",
@@ -54,6 +69,10 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
     <?
     switch($_SESSION['system']['sysToolbarItem'])
     {
+        case 'systemupdate':
+            if (!empty($strSysVersion)) include './modules/system/admin_system_update.php';
+        break;
+        
         // ---------------------------------
         // ONGLET "INSTALLATION DE MODULES"
         // ---------------------------------
@@ -148,7 +167,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
         case 'tools':
             switch($op)
             {
-                case "phpinfo":
+                case 'phpinfo':
                     ob_start();
                     phpinfo();
 
@@ -177,32 +196,38 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
 
                 break;
 
-                case "diagnostic":
+                case 'serverload':
+                    echo $skin->open_simplebloc(_SYSTEM_LABEL_DIAGNOSTIC);
+                    ?>
+                    <div id="system_serverload">
+                    <? include './modules/system/tools_serverload.php'; ?>
+                    </div>
+                    <script type="text/javascript">system_serverload();</script>
+                    <?
+                    echo $skin->close_simplebloc();
+                break;
+                
+                case 'diagnostic':
                     include "./modules/system/tools_diagnostic.php";
                 break;
 
-                case "sqldump":
+                case 'sqldump':
                     include "./modules/system/tools_sqldump.php";
                 break;
 
-                case "zip":
+                case 'zip':
                     include "./modules/system/tools_zip.php";
                 break;
 
-                case "backup":
+                case 'backup':
                     include "./modules/system/tools_backup.php";
                 break;
 
-                case "cleandb":
-                    include "./modules/system/tools_cleandb.php";
-                    ploopi_redirect("$scriptenv");
-                break;
-
-                case "connectedusers":
+                case 'connectedusers':
                     include "./modules/system/logs_connectedusers.php";
                 break;
 
-                case "actionhistory":
+                case 'actionhistory':
                     include "./modules/system/logs_actionhistory.php";
                 break;
 

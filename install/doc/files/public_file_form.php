@@ -215,7 +215,7 @@ if (!$readonly)
     {
         $sid = doc_guid();
         ?>
-        <form enctype="multipart/form-data" action="<? echo _PLOOPI_CGI_PATH; ?>/upload.cgi?sid=<? echo $sid; ?>" method="post" onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>, '<? echo $sid; ?>', '<? echo _PLOOPI_CGI_PATH; ?>');" target="doc_fileform_iframe">
+        <form method="post" enctype="multipart/form-data" action="<? echo _PLOOPI_CGI_PATH; ?>/upload.cgi?sid=<? echo $sid; ?>" onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>, '<? echo $sid; ?>', '<? echo _PLOOPI_CGI_PATH; ?>');" target="doc_fileform_iframe">
         <input type="hidden" name="op" value="doc_filesave">
         <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
         <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
@@ -225,7 +225,7 @@ if (!$readonly)
     else
     {
         ?>
-        <form name="docfile_form" action="<? echo $scriptenv; ?>" method="post" enctype="multipart/form-data"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" target="doc_fileform_iframe">
+        <form method="post" enctype="multipart/form-data" action="<? echo $scriptenv; ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" target="doc_fileform_iframe">
         <input type="hidden" name="op" value="doc_filesave">
         <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
         <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
@@ -267,10 +267,14 @@ $max_filesize = doc_max_filesize();
         include_once './modules/system/class_user.php';
 
         $user = new user();
-        $user->open($docfile->fields['id_user']);
-
         $user_modify = new user();
-        $user_modify->open($docfile->fields['id_user_modify']);
+        
+        if ($user->open($docfile->fields['id_user'])) $user_login = $user->fields['login'];
+        else $user_login = "<i>supprimé</i>";
+
+        if ($user_modify->open($docfile->fields['id_user_modify'])) $user_modify_login = $user->fields['login'];
+        else $user_modify_login = "<i>supprimé</i>";
+        
         $ldate_modify = (!empty($docfile->fields['timestp_modify'])) ? ploopi_timestamp2local($docfile->fields['timestp_modify']) : array('date' => '', 'time' => '');
         //echo $user->fields['login'];
         ?>
@@ -297,11 +301,11 @@ $max_filesize = doc_max_filesize();
         </p>
         <p>
             <label>Propriétaire:</label>
-            <span><? echo $user->fields['login']; ?></span>
+            <span><? echo $user_login; ?></span>
         </p>
         <p>
             <label>Modifié par:</label>
-            <span><? echo $user_modify->fields['login']; ?></span>
+            <span><? echo $user_modify_login; ?></span>
         </p>
         <p>
             <label>Dernière modification:</label>
@@ -377,7 +381,7 @@ if (!$readonly)
 if (!$readonly)
 {
     ?>
-    <iframe name="doc_fileform_iframe" src="./img/blank.gif" style="width:0;height:0;display:none;"></iframe>
+    <iframe name="doc_fileform_iframe" src="./img/blank.gif" style="display:none;"></iframe>
     <?
 }
 

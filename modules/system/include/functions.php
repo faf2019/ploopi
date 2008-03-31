@@ -578,4 +578,29 @@ function system_tickets_displayresponses($parents, $tickets, $rootid)
         <?
     }
 }
+
+
+function system_serverload_getcolor($min, $max, $x)
+{
+    $mil = ($min+$max)/2;
+
+    $r = 0;
+    $v = 0;
+    $b = 128;
+
+    if ($x<=$mil)
+    {
+        $v = 255;
+        $r = 127+($x*128)/$mil;
+    }
+    else
+    {
+        $r = 255;
+        if ($x>$max) $v = 127;
+        else $v = 127+(($max-$x)*128)/$mil;
+    }
+
+    return $color = sprintf("#%02x%02x%02x",$r,$v,$b);
+}
+
 ?>

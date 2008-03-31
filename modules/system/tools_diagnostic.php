@@ -105,49 +105,59 @@ foreach($array_path as $key => $path)
 
 }
 
-/* TEST 2 - Connectivité internet */
 
-require_once 'HTTP/Request.php';
+/* TEST 2 - config PHP */
 
-$testurl = 'http://www.ovensia.fr';
+$testpear = (file_exists(_PLOOPI_PEARPATH.'/PEAR.php'));
 
-$request = new HTTP_Request($testurl, array('timeout', 1000));
+$comment = ($testpear) ? 'PEAR est correctement configuré.' : 'Vous devez modifier le chemin vers PEAR.';
+$bullet = ($testpear) ? 'green' : 'red';
 
-if (_PLOOPI_INTERNETPROXY_HOST != '')
-{
-    $request->setProxy( _PLOOPI_INTERNETPROXY_HOST,
-                        _PLOOPI_INTERNETPROXY_PORT,
-                        _PLOOPI_INTERNETPROXY_USER,
-                        _PLOOPI_INTERNETPROXY_PASS
-                        );
-}
-
-$comment = 'Connexion internet ouverte';
-$testok = true;
-$res = $request->sendRequest();
-
-if ($res !== true)
-{
-    $comment = "Problème de connexion internet\nPLOOPI n'a pas pu se connecter sur {$testurl}";
-    if ($_SESSION['ploopi']['modules'][1]['system_proxy_host'] != '') $comment .= "\nen utilisant les paramètres Proxy suivants :\nproxy_host: {$_SESSION['ploopi']['modules'][1]['system_proxy_host']}, proxy_port: {$_SESSION['ploopi']['modules'][1]['system_proxy_port']}, proxy_user: {$_SESSION['ploopi']['modules'][1]['system_proxy_user']}, proxy_pass: {$_SESSION['ploopi']['modules'][1]['system_proxy_pass']}";
-
-    $testok = false;
-}
-
-$bullet = ($testok) ? 'green' : 'red';
-
-$values[$c]['values']['function']   = array('label' => htmlentities("Connexion internet"));
-$values[$c]['values']['desc']       = array('label' => ploopi_nl2br(htmlentities("Certains modules de PLOOPI ont besoin de se connecter à internet. Ce test vous indique si le serveur arrive à ouvrir une connexion internet.")), 'style' => '');
-$values[$c]['values']['comment']    = array('label' => ploopi_nl2br(htmlentities($comment)), 'style' => '');
+$values[$c]['values']['function']   = array('label' => "PEAR");
+$values[$c]['values']['desc']       = array('label' => ploopi_nl2br("Le framework PEAR est indispensable au bon fonctionnement de Ploopi."), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi_nl2br($comment), 'style' => '');
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
+if ($testpear)
+{
+    $testpearinfo = (file_exists(_PLOOPI_PEARPATH.'/PEAR/Info.php'));
 
-/* TEST 3 - config PHP */
+    $comment = ($testpearinfo) ? 'PEAR_info est installé.' : 'Vous devez installer la classe PEAR PEAR_info.';
+    $bullet = ($testpearinfo) ? 'green' : 'red';
+
+    $values[$c]['values']['function']   = array('label' => "PEAR - PEAR_info");
+    $values[$c]['values']['desc']       = array('label' => ploopi_nl2br("La classe PEAR_info n'est pas installée. Pour l'installer, faites &laquo; pear install --alldeps PEAR_info &raquo;."), 'style' => '');
+    $values[$c]['values']['comment']    = array('label' => ploopi_nl2br($comment), 'style' => '');
+    $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
+    $c++;
+
+    if ($testpearinfo)
+    {
+        @require_once 'PEAR/Info.php';
+        $packPEAR = new PEAR_Info(); // Class PEAR_Info for test if modules pear are installed
+
+        $arrPearClasses = array('Cache_Lite', 'HTTP_Request', 'XML_Feed_Parser', 'Xml_Beautifier', 'OLE', 'Spreadsheet_Excel_Writer');
+        
+        foreach($arrPearClasses as $strPearClass)
+        {
+            $testok = $packPEAR->packageInstalled($strPearClass);
+
+            $comment = ($testok) ? "{$strPearClass} est installé." : "Vous devez installer la classe PEAR {$strPearClass}.";
+            $bullet = ($testok) ? 'green' : 'orange';
+
+            $values[$c]['values']['function']   = array('label' => "PEAR - {$strPearClass}");
+            $values[$c]['values']['desc']       = array('label' => ploopi_nl2br("La classe {$strPearClass} n'est pas installée. Pour l'installer, faites &laquo; pear install --alldeps {$strPearClass} &raquo;."), 'style' => '');
+            $values[$c]['values']['comment']    = array('label' => ploopi_nl2br($comment));
+            $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />");
+            $c++;
+        }
+    }
+}
 
 $testok = !get_magic_quotes_gpc();
 
-$comment = ($testok) ? 'La directive est correctement configurée' : 'Vous devriez modifier la valeur de cette directive';
+$comment = ($testok) ? 'La directive est correctement configurée.' : 'Vous devriez modifier la valeur de cette directive.';
 $bullet = ($testok) ? 'green' : 'orange';
 
 $values[$c]['values']['function']   = array('label' => htmlentities("PHP - magic_quote_gpc"));
@@ -170,7 +180,7 @@ $c++;
 
 $testok = !ini_get('display_errors');
 
-$comment = ($testok) ? 'La directive est correctement configurée' : 'Vous devriez modifier la valeur de cette directive';
+$comment = ($testok) ? 'La directive est correctement configurée.' : 'Vous devriez modifier la valeur de cette directive.';
 $bullet = ($testok) ? 'green' : 'orange';
 
 $values[$c]['values']['function']   = array('label' => htmlentities("PHP - display_errors"));
@@ -179,6 +189,20 @@ $values[$c]['values']['comment']    = array('label' => ploopi_nl2br(htmlentities
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
+
+$mem = intval(ini_get('memory_limit'));
+$testok = $mem >= 128;
+
+$comment = ($testok) ? 'La directive est correctement configurée.' : 'Vous devriez modifier la valeur de cette directive.';
+$bullet = ($testok) ? 'green' : 'orange';
+
+$comment .= " (Valeur actuelle : {$mem} Mio)";
+
+$values[$c]['values']['function']   = array('label' => htmlentities("PHP - memory_limit"));
+$values[$c]['values']['desc']       = array('label' => ploopi_nl2br(htmlentities("La directive php 'memory_limit' est utile pour les scripts qui consomment beaucoup de mémoire (comme l'indexation des documents ou le moteur de recherche).")), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi_nl2br(htmlentities($comment)), 'style' => '');
+$values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
+$c++;
 
 $ploopi_maxfilesize = sprintf('%.02f', _PLOOPI_MAXFILESIZE/1024);
 $upload_max_filesize =  intval(ini_get('upload_max_filesize')*1024);
@@ -222,6 +246,78 @@ $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['p
 $c++;
 
 
+$testok = extension_loaded('gd');
+
+$comment = ($testok) ? 'L\'extension &laquo; gd &raquo; est activée.' : 'Vous devriez activer l\'extension &laquo; gd &raquo;.';
+$bullet = ($testok) ? 'green' : 'red';
+
+$values[$c]['values']['function']   = array('label' => "PHP Extension - gd");
+$values[$c]['values']['desc']       = array('label' => ploopi_nl2br("L'extension &laquo; gd &raquo; permet de traiter les images."), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi_nl2br($comment), 'style' => '');
+$values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
+$c++;
+
+$testok = extension_loaded('mcrypt');
+
+
+$comment = ($testok) ? 'L\'extension &laquo; mcrypt &raquo; est activée.' : 'Vous devriez activer l\'extension &laquo; mcrypt &raquo;.';
+$bullet = ($testok) ? 'green' : 'red';
+
+$values[$c]['values']['function']   = array('label' => "PHP Extension - mcrypt");
+$values[$c]['values']['desc']       = array('label' => ploopi_nl2br("L'extension &laquo; mcrypt &raquo; permet de générer les url encodées."), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi_nl2br($comment), 'style' => '');
+$values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
+$c++;
+
+$comment = ($testok) ? 'L\'extension &laquo; stem &raquo; est activée.' : 'Vous devriez activer l\'extension &laquo; stem &raquo;.';
+$bullet = ($testok) ? 'green' : 'red';
+
+$values[$c]['values']['function']   = array('label' => "PHP Extension - stem");
+$values[$c]['values']['desc']       = array('label' => ploopi_nl2br("L'extension &laquo; stem &raquo; permet d'indexer certains contenus."), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi_nl2br($comment), 'style' => '');
+$values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
+$c++;
+
+
+/* TEST 3 - Connectivité internet */
+if ($testpear)
+{
+    @require_once 'HTTP/Request.php';
+
+    $testurl = 'http://www.ovensia.fr';
+
+    $request = new HTTP_Request($testurl, array('timeout', 20000));
+
+    if (_PLOOPI_INTERNETPROXY_HOST != '')
+    {
+        $request->setProxy( _PLOOPI_INTERNETPROXY_HOST,
+                            _PLOOPI_INTERNETPROXY_PORT,
+                            _PLOOPI_INTERNETPROXY_USER,
+                            _PLOOPI_INTERNETPROXY_PASS
+                            );
+    }
+
+    $comment = 'Connexion internet ouverte.';
+    $testok = true;
+    $res = $request->sendRequest();
+}
+else $res = false;
+
+if ($res !== true)
+{
+    $comment = "Problème de connexion internet.\nPLOOPI n'a pas pu se connecter sur <a title=\"{$testurl}\" href=\"{$testurl}\">{$testurl}</a>.";
+    if ($_SESSION['ploopi']['modules'][1]['system_proxy_host'] != '') $comment .= "\nen utilisant les paramètres Proxy suivants :\nproxy_host: {$_SESSION['ploopi']['modules'][1]['system_proxy_host']}, proxy_port: {$_SESSION['ploopi']['modules'][1]['system_proxy_port']}, proxy_user: {$_SESSION['ploopi']['modules'][1]['system_proxy_user']}, proxy_pass: {$_SESSION['ploopi']['modules'][1]['system_proxy_pass']}";
+
+    $testok = false;
+}
+
+$bullet = ($testok) ? 'green' : 'red';
+
+$values[$c]['values']['function']   = array('label' => htmlentities("Connexion internet"));
+$values[$c]['values']['desc']       = array('label' => ploopi_nl2br(htmlentities("Certains modules de PLOOPI ont besoin de se connecter à internet. Ce test vous indique si le serveur arrive à ouvrir une connexion internet.")), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi_nl2br(htmlentities($comment)), 'style' => '');
+$values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
+$c++;
 
 
 $skin->display_array($columns, $values, 'array_diagnostic', array('sortable' => true, 'orderby_default' => 'function'));

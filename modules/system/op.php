@@ -820,6 +820,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         ploopi_die();
                     break;
                     
+                    case 'system_serverload':
+                        include './modules/system/tools_serverload.php';
+                        ploopi_die();
+                    break;
+                    
                 }
             }
         break;

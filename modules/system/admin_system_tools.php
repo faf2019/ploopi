@@ -56,6 +56,12 @@ $values[$c]['description'] = _SYSTEM_EXPLAIN_CONNECTEDUSERS;
 $values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=connectedusers");
 $c++;
 
+$values[$c]['values']['tool'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/tools/tool_serverload.png\"><span>&nbsp;"._SYSTEM_LABEL_SERVERLOAD."</span>", 'style' => '', 'sort_label' => _SYSTEM_LABEL_SERVERLOAD);
+$values[$c]['values']['desc'] = array('label' => _SYSTEM_EXPLAIN_SERVERLOAD, 'style' => '');
+$values[$c]['description'] = _SYSTEM_EXPLAIN_SERVERLOAD;
+$values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=serverload");
+$c++;
+
 $values[$c]['values']['tool'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/tools/tool_logactions.png\"><span>&nbsp;"._SYSTEM_LABEL_ACTIONHISTORY."</span>", 'style' => '', 'sort_label' => _SYSTEM_LABEL_ACTIONHISTORY);
 $values[$c]['values']['desc'] = array('label' => _SYSTEM_EXPLAIN_ACTIONHISTORY, 'style' => '');
 $values[$c]['description'] = _SYSTEM_EXPLAIN_ACTIONHISTORY;

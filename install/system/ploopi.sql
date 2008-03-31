@@ -1,6 +1,6 @@
 -- MySQL dump 10.11
 --
--- Host: localhost    Database: ploopi_install_iso
+-- Host: localhost    Database: ploopi_clean_sql_1
 -- ------------------------------------------------------
 -- Server version	5.0.32-Debian_7etch5
 
@@ -257,15 +257,15 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_index_element`;
 CREATE TABLE `ploopi_index_element` (
   `id` char(32) NOT NULL,
-  `id_record` varchar(255) NOT NULL,
-  `id_object` int(10) unsigned NOT NULL default '0',
-  `label` varchar(255) NOT NULL,
+  `id_record` char(64) NOT NULL,
+  `id_object` smallint(5) unsigned NOT NULL default '0',
+  `label` char(128) NOT NULL,
   `timestp_create` bigint(14) unsigned NOT NULL default '0',
   `timestp_modify` bigint(14) unsigned NOT NULL default '0',
   `timestp_lastindex` bigint(14) unsigned NOT NULL default '0',
-  `id_user` int(10) unsigned NOT NULL default '0',
-  `id_workspace` int(10) unsigned NOT NULL default '0',
-  `id_module` int(10) unsigned NOT NULL default '0',
+  `id_user` smallint(5) unsigned NOT NULL default '0',
+  `id_workspace` smallint(5) unsigned NOT NULL default '0',
+  `id_module` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `id_module` (`id_module`),
   KEY `id_workspace` (`id_workspace`),
@@ -321,9 +321,9 @@ DROP TABLE IF EXISTS `ploopi_index_keyword_element`;
 CREATE TABLE `ploopi_index_keyword_element` (
   `id_keyword` char(32) NOT NULL default '0',
   `id_element` char(32) NOT NULL,
-  `weight` int(10) unsigned NOT NULL default '0',
+  `weight` mediumint(10) unsigned NOT NULL default '0',
   `ratio` float unsigned NOT NULL default '0',
-  `relevance` int(10) unsigned NOT NULL default '0',
+  `relevance` tinyint(3) unsigned NOT NULL default '0',
   KEY `id_keyword` (`id_keyword`),
   KEY `id_element` (`id_element`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -366,9 +366,9 @@ DROP TABLE IF EXISTS `ploopi_index_stem_element`;
 CREATE TABLE `ploopi_index_stem_element` (
   `id_stem` char(32) NOT NULL default '0',
   `id_element` char(32) NOT NULL,
-  `weight` int(10) unsigned NOT NULL default '0',
+  `weight` mediumint(10) unsigned NOT NULL default '0',
   `ratio` float unsigned NOT NULL default '0',
-  `relevance` int(10) unsigned NOT NULL default '0',
+  `relevance` tinyint(3) unsigned NOT NULL default '0',
   KEY `id_stem` (`id_stem`),
   KEY `id_element` (`id_element`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -397,17 +397,12 @@ CREATE TABLE `ploopi_log` (
   `path_translated` varchar(255) default NULL,
   `script_name` varchar(255) default NULL,
   `request_uri` varchar(255) default NULL,
-  `dims_userid` int(10) default NULL,
-  `dims_workspaceid` int(10) default NULL,
-  `dims_moduleid` int(10) default NULL,
+  `ploopi_userid` int(10) unsigned NOT NULL default '0',
+  `ploopi_workspaceid` int(10) unsigned NOT NULL default '0',
+  `ploopi_moduleid` int(10) unsigned NOT NULL default '0',
   `browser` varchar(64) default NULL,
   `system` varchar(64) default NULL,
-  `date_year` int(10) default NULL,
-  `date_month` int(10) default NULL,
-  `date_day` int(10) default NULL,
-  `date_hour` int(10) default NULL,
-  `date_minute` int(10) default NULL,
-  `date_second` int(10) default NULL,
+  `ts` bigint(14) unsigned NOT NULL default '0',
   `total_exec_time` int(10) unsigned default '0',
   `sql_exec_time` int(10) unsigned default '0',
   `sql_percent_time` int(10) unsigned default '0',
@@ -438,6 +433,7 @@ CREATE TABLE `ploopi_mb_action` (
   `description` varchar(255) default NULL,
   `id_workspace` int(10) default NULL,
   `id_object` int(10) unsigned NOT NULL default '0',
+  `role_enabled` tinyint(1) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id_action`,`id_module_type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -447,7 +443,7 @@ CREATE TABLE `ploopi_mb_action` (
 
 LOCK TABLES `ploopi_mb_action` WRITE;
 /*!40000 ALTER TABLE `ploopi_mb_action` DISABLE KEYS */;
-INSERT INTO `ploopi_mb_action` VALUES (1,1,'Installer un Module',NULL,0,0),(1,2,'Désinstaller un Module',NULL,0,0),(1,3,'Modifier les Paramètres d\'un Module',NULL,0,0),(1,4,'Instancier / Utiliser un Module',NULL,0,0),(1,5,'Modifier les Propriétés d\'un Module',NULL,0,0),(1,6,'Modifier la Page d\'Accueil',NULL,0,0),(1,7,'Installer un Skin',NULL,0,0),(1,8,'Désinstaller un Skin',NULL,0,0),(1,9,'Créer un Groupe',NULL,0,0),(1,10,'Modifier un Groupe',NULL,0,0),(1,11,'Supprimer un Groupe',NULL,0,0),(1,12,'Cloner un Groupe',NULL,0,0),(1,13,'Créer un Rôle',NULL,0,0),(1,14,'Modifier un Rôle',NULL,0,0),(1,15,'Supprimer un Rôle',NULL,0,0),(1,16,'Créer un Profil',NULL,0,0),(1,17,'Modifier un Profil',NULL,0,0),(1,18,'Supprimer un Profil',NULL,0,0),(1,19,'Ajouter un Utilisateur',NULL,0,0),(1,20,'Modifier un Utilisateur',NULL,0,0),(1,21,'Supprimer un Utilisateur',NULL,0,0),(1,22,'Détacher un Module',NULL,0,0),(1,23,'Supprimer un Module',NULL,0,0),(1,24,'Mettre à jour la Métabase',NULL,0,0),(1,25,'Connexion Utilisateur',NULL,0,0),(1,26,'Erreur de Connexion',NULL,0,0),(1,27,'Déplacer un Utilisateur',NULL,0,0),(1,28,'Attacher un Utilisateur',NULL,0,0),(1,29,'Détacher un Utilisateur',NULL,0,0),(1,32,'Mettre à  jour un module',NULL,0,0);
+INSERT INTO `ploopi_mb_action` VALUES (1,1,'Installer un Module',NULL,0,0,1),(1,2,'Désinstaller un Module',NULL,0,0,1),(1,3,'Modifier les Paramètres d\'un Module',NULL,0,0,1),(1,4,'Instancier / Utiliser un Module',NULL,0,0,1),(1,5,'Modifier les Propriétés d\'un Module',NULL,0,0,1),(1,6,'Modifier la Page d\'Accueil',NULL,0,0,1),(1,7,'Installer un Skin',NULL,0,0,1),(1,8,'Désinstaller un Skin',NULL,0,0,1),(1,9,'Créer un Groupe',NULL,0,0,1),(1,10,'Modifier un Groupe',NULL,0,0,1),(1,11,'Supprimer un Groupe',NULL,0,0,1),(1,12,'Cloner un Groupe',NULL,0,0,1),(1,13,'Créer un Rôle',NULL,0,0,1),(1,14,'Modifier un Rôle',NULL,0,0,1),(1,15,'Supprimer un Rôle',NULL,0,0,1),(1,16,'Créer un Profil',NULL,0,0,1),(1,17,'Modifier un Profil',NULL,0,0,1),(1,18,'Supprimer un Profil',NULL,0,0,1),(1,19,'Ajouter un Utilisateur',NULL,0,0,1),(1,20,'Modifier un Utilisateur',NULL,0,0,1),(1,21,'Supprimer un Utilisateur',NULL,0,0,1),(1,22,'Détacher un Module',NULL,0,0,1),(1,23,'Supprimer un Module',NULL,0,0,1),(1,24,'Mettre à jour la Métabase',NULL,0,0,1),(1,25,'Connexion Utilisateur',NULL,0,0,1),(1,26,'Erreur de Connexion',NULL,0,0,1),(1,27,'Déplacer un Utilisateur',NULL,0,0,1),(1,28,'Attacher un Utilisateur',NULL,0,0,1),(1,29,'Détacher un Utilisateur',NULL,0,0,1),(1,32,'Mettre à  jour un module',NULL,0,0,1);
 /*!40000 ALTER TABLE `ploopi_mb_action` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -717,7 +713,7 @@ CREATE TABLE `ploopi_param_default` (
 
 LOCK TABLES `ploopi_param_default` WRITE;
 /*!40000 ALTER TABLE `ploopi_param_default` DISABLE KEYS */;
-INSERT INTO `ploopi_param_default` VALUES (1,'system_recordstats','0',1),(1,'system_usemacrules','0',1),(1,'system_set_cache','0',1),(1,'system_generate_htpasswd','0',1),(1,'system_use_profiles','0',1),(1,'system_language','french',1),(1,'system_same_login','0',1),(1,'system_proxy_host','',1),(1,'system_proxy_port','',1),(1,'system_proxy_user','',1),(1,'system_proxy_pass','',1);
+INSERT INTO `ploopi_param_default` VALUES (1,'system_generate_htpasswd','0',1),(1,'system_language','french',1);
 /*!40000 ALTER TABLE `ploopi_param_default` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -742,7 +738,7 @@ CREATE TABLE `ploopi_param_type` (
 
 LOCK TABLES `ploopi_param_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_param_type` DISABLE KEYS */;
-INSERT INTO `ploopi_param_type` VALUES (1,'system_recordstats','1',0,'','Enregistrement des stats'),(1,'system_usemacrules','0',0,'','Activer le filtrage par Adresse MAC'),(1,'system_language_default','french',0,'','Langage par défaut'),(1,'system_set_cache','0',0,'','Activer le Cache'),(1,'system_generate_htpasswd','1',0,'','Générer un fichier htpasswd'),(1,'showblock','1',1,'','Afficher le bloc'),(1,'showmenu','1',1,'','Visible dans les modules'),(1,'system_use_profiles','0',0,NULL,'Utiliser les Profils (Utilisateurs)'),(1,'system_language','',1,NULL,'Langue du système'),(1,'system_same_login','0',0,NULL,'Utiliser des logins identiques (fortement déconseillé)'),(1,'system_proxy_host','',0,'','Adresse du proxy pour les requêtes sortantes'),(1,'system_proxy_port','',0,'','Port du proxy pour les requêtes sortantes'),(1,'system_proxy_user','',0,'','Utilisateur du proxy pour les requêtes sortantes'),(1,'system_proxy_pass','',0,'','Mot de Passe du proxy pour les requêtes sortantes');
+INSERT INTO `ploopi_param_type` VALUES (1,'system_generate_htpasswd','1',0,'','Générer un fichier htpasswd'),(1,'system_language','',1,'','Langue du système');
 /*!40000 ALTER TABLE `ploopi_param_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -795,31 +791,6 @@ LOCK TABLES `ploopi_param_workspace` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `ploopi_profile`
---
-
-DROP TABLE IF EXISTS `ploopi_profile`;
-CREATE TABLE `ploopi_profile` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `id_workspace` int(10) default NULL,
-  `label` varchar(255) NOT NULL default '',
-  `description` blob,
-  `def` tinyint(1) unsigned NOT NULL default '0',
-  `shared` tinyint(1) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `ploopi_profile`
---
-
-LOCK TABLES `ploopi_profile` WRITE;
-/*!40000 ALTER TABLE `ploopi_profile` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ploopi_profile` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ploopi_role`
 --
 
@@ -863,26 +834,6 @@ CREATE TABLE `ploopi_role_action` (
 LOCK TABLES `ploopi_role_action` WRITE;
 /*!40000 ALTER TABLE `ploopi_role_action` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ploopi_role_action` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `ploopi_role_profile`
---
-
-DROP TABLE IF EXISTS `ploopi_role_profile`;
-CREATE TABLE `ploopi_role_profile` (
-  `id_role` int(10) unsigned NOT NULL default '0',
-  `id_profile` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id_profile`,`id_role`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `ploopi_role_profile`
---
-
-LOCK TABLES `ploopi_role_profile` WRITE;
-/*!40000 ALTER TABLE `ploopi_role_profile` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ploopi_role_profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -930,6 +881,55 @@ CREATE TABLE `ploopi_share` (
 LOCK TABLES `ploopi_share` WRITE;
 /*!40000 ALTER TABLE `ploopi_share` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ploopi_share` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ploopi_subscription`
+--
+
+DROP TABLE IF EXISTS `ploopi_subscription`;
+CREATE TABLE `ploopi_subscription` (
+  `id` char(32) NOT NULL,
+  `id_module` int(10) unsigned NOT NULL default '0',
+  `id_object` int(10) NOT NULL default '0',
+  `id_record` varchar(255) NOT NULL,
+  `id_user` int(10) unsigned NOT NULL default '0',
+  `allactions` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `id_module` (`id_module`),
+  KEY `id_object` (`id_object`),
+  KEY `id_user` (`id_user`),
+  KEY `id_action` (`allactions`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ploopi_subscription`
+--
+
+LOCK TABLES `ploopi_subscription` WRITE;
+/*!40000 ALTER TABLE `ploopi_subscription` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ploopi_subscription` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ploopi_subscription_action`
+--
+
+DROP TABLE IF EXISTS `ploopi_subscription_action`;
+CREATE TABLE `ploopi_subscription_action` (
+  `id_subscription` char(32) NOT NULL,
+  `id_action` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id_subscription`,`id_action`),
+  KEY `id_action` (`id_action`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ploopi_subscription_action`
+--
+
+LOCK TABLES `ploopi_subscription_action` WRITE;
+/*!40000 ALTER TABLE `ploopi_subscription_action` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ploopi_subscription_action` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1131,58 +1131,6 @@ LOCK TABLES `ploopi_user_action_log` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `ploopi_user_type`
---
-
-DROP TABLE IF EXISTS `ploopi_user_type`;
-CREATE TABLE `ploopi_user_type` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `label` varchar(255) default NULL,
-  `displayed_label` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `id` (`id`),
-  KEY `id_2` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `ploopi_user_type`
---
-
-LOCK TABLES `ploopi_user_type` WRITE;
-/*!40000 ALTER TABLE `ploopi_user_type` DISABLE KEYS */;
-INSERT INTO `ploopi_user_type` VALUES (1,'','Non d?fini');
-/*!40000 ALTER TABLE `ploopi_user_type` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `ploopi_user_type_fields`
---
-
-DROP TABLE IF EXISTS `ploopi_user_type_fields`;
-CREATE TABLE `ploopi_user_type_fields` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `id_type` int(10) unsigned NOT NULL default '0',
-  `label` varchar(100) NOT NULL default '',
-  `type_field` varchar(100) NOT NULL default '',
-  `size_field` int(10) unsigned default NULL,
-  `pos` int(10) unsigned default '0',
-  `valeurs` longtext,
-  `displayed_label` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `id` (`id`),
-  KEY `id_2` (`id`,`id_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `ploopi_user_type_fields`
---
-
-LOCK TABLES `ploopi_user_type_fields` WRITE;
-/*!40000 ALTER TABLE `ploopi_user_type_fields` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ploopi_user_type_fields` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ploopi_workflow`
 --
 
@@ -1346,56 +1294,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-02-24 22:44:25
-
-ALTER TABLE `ploopi_log` CHANGE `dims_userid` `ploopi_userid` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
-CHANGE `dims_workspaceid` `ploopi_workspaceid` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
-CHANGE `dims_moduleid` `ploopi_moduleid` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
-
-ALTER TABLE `ploopi_index_stem_element` CHANGE `weight` `weight` MEDIUMINT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
-CHANGE `relevance` `relevance` TINYINT( 3 ) UNSIGNED NOT NULL DEFAULT '0';
-
-ALTER TABLE `ploopi_index_element` CHANGE `id_record` `id_record` CHAR( 64 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
-CHANGE `id_object` `id_object` SMALLINT( 5 ) UNSIGNED NOT NULL DEFAULT '0',
-CHANGE `label` `label` CHAR( 128 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
-CHANGE `id_user` `id_user` SMALLINT( 5 ) UNSIGNED NOT NULL DEFAULT '0',
-CHANGE `id_workspace` `id_workspace` SMALLINT( 5 ) UNSIGNED NOT NULL DEFAULT '0',
-CHANGE `id_module` `id_module` SMALLINT( 5 ) UNSIGNED NOT NULL DEFAULT '0';
-
-ALTER TABLE `ploopi_index_keyword_element` CHANGE `weight` `weight` MEDIUMINT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
-CHANGE `relevance` `relevance` TINYINT( 3 ) UNSIGNED NOT NULL DEFAULT '0';
-
-DROP TABLE IF EXISTS `ploopi_subscription`;
-CREATE TABLE IF NOT EXISTS `ploopi_subscription` (
-  `id` char(32) NOT NULL,
-  `id_module` int(10) unsigned NOT NULL default '0',
-  `id_object` int(10) NOT NULL default '0',
-  `id_record` varchar(255) NOT NULL,
-  `id_user` int(10) unsigned NOT NULL default '0',
-  `allactions` tinyint(1) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `id_module` (`id_module`),
-  KEY `id_object` (`id_object`),
-  KEY `id_user` (`id_user`),
-  KEY `id_action` (`allactions`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-DROP TABLE IF EXISTS `ploopi_subscription_action`;
-CREATE TABLE IF NOT EXISTS `ploopi_subscription_action` (
-  `id_subscription` char(32) NOT NULL,
-  `id_action` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id_subscription`,`id_action`),
-  KEY `id_action` (`id_action`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-ALTER TABLE `ploopi_log` ADD `ts` BIGINT( 14 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `system` ;
-ALTER TABLE `ploopi_log`
-  DROP `date_year`,
-  DROP `date_month`,
-  DROP `date_day`,
-  DROP `date_hour`,
-  DROP `date_minute`,
-  DROP `date_second`;
-  
-ALTER TABLE `ploopi_mb_action` ADD `role_enabled` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1';
-
+-- Dump completed on 2008-03-30 20:28:24

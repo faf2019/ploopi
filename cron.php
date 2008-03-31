@@ -27,7 +27,7 @@
 // * * * * * wget -q -O /dev/null http://localhost/.../cron.php 2>&1
 // * * * * * lynx -dump http://localhost/.../cron.php > /dev/null 2>&1
 
-include_once './include/start_light.php';
+include_once './include/start.php';
 
 $cron_rs = $db->query(  "
                         SELECT      ploopi_module.id,

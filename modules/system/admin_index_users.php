@@ -23,7 +23,6 @@
 ?>
 <?
 include_once './modules/system/class_user.php';
-include_once './modules/system/class_user_type.php';
 include_once './modules/system/class_workspace_group.php';
 
 switch($op)

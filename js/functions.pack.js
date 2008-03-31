@@ -1576,7 +1576,7 @@ function ploopi_annotation_delete(id_annotation, id)
 
 function ploopi_annotation_validate(form)
 {
-    if (ploopi_validatefield('Titre',form.ploopi_annotation_title,"string")) return true;
+    if (ploopi_validatefield('Titre',form.ploopi_annotationtags,"string")) return true;
 
     return false;
 }

@@ -8,3 +8,5 @@ ALTER TABLE `ploopi_log`
   DROP `date_hour`,
   DROP `date_minute`,
   DROP `date_second`;
+  
+UPDATE `ploopi_module_type` SET `version` = '1.0RC1a', `author` = 'Ovensia', `date` = '20080328000000' WHERE `ploopi_module_type`.`id` = 1;

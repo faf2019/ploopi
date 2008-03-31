@@ -99,27 +99,13 @@ switch($ploopi_op)
                 $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2;
 
                 $private = '';
-                if ($fields['private']) $private = 'Privé';
+                if ($fields['private']) $private = '<div style="float:right;font-weight:bold;color:#a60000;">[ Privé ]</div>';
 
                 ?>
                 <div class="ploopi_annotations_row_<? echo $numrow; ?>">
-                    <div>
-                        <div style="float:right;padding:2px 4px;">par <strong><? echo "{$fields['firstname']} {$fields['lastname']}"; ?></strong> le <? echo $ldate['date']; ?> à <? echo $ldate['time']; ?> <? echo $private; ?></div>
-                        <div style="padding:2px 4px;"><strong><? echo htmlentities($fields['title']); ?></strong></div>
-                    </div>
-                    <div style="clear:both;padding:2px 4px;"><? echo ploopi_make_links(ploopi_nl2br(htmlentities($fields['content']))); ?></div>
-                    <div style="clear:both;">
-                        <?
-                        if ($fields['id_user'] == $_SESSION['ploopi']['userid'])
-                        {
-                            ?>
-                            <div style="float:right;padding:2px 4px;">
-                                <a href="javascript:ploopi_annotation_delete('<? echo $_GET['id_annotation']; ?>', '<? echo $fields['id']; ?>');">supprimer</a>
-                            </div>
-                            <?
-                        }
-                        ?>
-                        <div style="padding:2px 4px;">
+                    <div style="padding:2px 4px;">
+                        <? echo $private; ?>
+                        <div style="float:right;padding:0 4px;">par <strong><? echo "{$fields['firstname']} {$fields['lastname']}"; ?></strong> le <? echo $ldate['date']; ?> à <? echo $ldate['time']; ?></div>
                         <?
                         if (isset($anno['tags']) && is_array($anno['tags']))
                         {
@@ -132,7 +118,21 @@ switch($ploopi_op)
                             }
                         }
                         ?>
-                        </div>
+                    </div>
+                    <div style="clear:both;padding:2px 4px;">
+                        <? echo ploopi_make_links(ploopi_nl2br(htmlentities($fields['content']))); ?>
+                    </div>
+                    <div style="clear:both;">
+                        <?
+                        if ($fields['id_user'] == $_SESSION['ploopi']['userid'])
+                        {
+                            ?>
+                            <div style="float:right;padding:2px 4px;">
+                                <a href="javascript:ploopi_annotation_delete('<? echo $_GET['id_annotation']; ?>', '<? echo $fields['id']; ?>');">supprimer</a>
+                            </div>
+                            <?
+                        }
+                        ?>
                     </div>
                 </div>
                 <?
@@ -151,8 +151,6 @@ switch($ploopi_op)
 
                     <div class="ploopi_annotations_titleform">Ajout d'une Annotation <? echo (isset($ploopi_annotation_private)) ? 'privée' : ''; ?></div>
                     <div style="padding:2px 4px;"><input type="checkbox" name="ploopi_annotation_private" value="1">Privée (visible par vous uniquement)</div>
-                    <div style="padding:2px 4px;">Titre:</div>
-                    <div style="padding:2px 4px;"><input type="text" class="text" style="width:99%;" name="ploopi_annotation_title"></div>
                     <div style="padding:2px 4px;">Tags:</div>
                     <div style="padding:2px 4px;"><input type="text" class="text" style="width:99%;" name="ploopi_annotationtags" id="ploopi_annotationtags_<? echo $_GET['id_annotation']; ?>" autocomplete="off"></div>
                     <div style="padding:2px 4px;" id="tagsfound_<? echo $_GET['id_annotation']; ?>"></div>
@@ -170,7 +168,7 @@ switch($ploopi_op)
             ?>
             </div>
         </div>
-        <iframe name="form_annotation_target_<? echo $_GET['id_annotation']; ?>" src="./img/blank.gif" style="width:0;height:0;display:none;"></iframe>
+        <iframe name="form_annotation_target_<? echo $_GET['id_annotation']; ?>" src="./img/blank.gif" style="display:none;"></iframe>
 
         <script type="text/javascript">
             ploopi_annotation_tag_init('<? echo $_GET['id_annotation']; ?>');

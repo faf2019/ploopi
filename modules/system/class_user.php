@@ -38,9 +38,11 @@ class user extends data_object
     {
         global $db;
         
-        // delete all group_user => delete module data (cf $group_user->delete())
+        $db->query("DELETE * FROM ploopi_workflow WHERE type_workflow = 'user' AND id_workflow = {$this->fields['id']}");
+        $db->query("DELETE * FROM ploopi_param_user WHERE id_user = {$this->fields['id']}");
+        $db->query("DELETE * FROM ploopi_workspace_user_role WHERE id_user = {$this->fields['id']}");
+        
         $select = "SELECT * FROM ploopi_group_user WHERE id_user = {$this->fields['id']}";
-
         $rs = $db->query($select);
         while($fields = $db->fetchrow($rs))
         {

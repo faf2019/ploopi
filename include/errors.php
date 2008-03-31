@@ -20,22 +20,19 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 //if (defined('_PLOOPI_ERROR_REPORTING')) {error_reporting(_PLOOPI_ERROR_REPORTING);}
 if (!defined('_PLOOPI_DISPLAY_ERRORS')) define('_PLOOPI_DISPLAY_ERRORS', false);
 if (!defined('_PLOOPI_MAIL_ERRORS')) define('_PLOOPI_MAIL_ERRORS', false);
 if (!defined('_PLOOPI_ADMINMAIL')) define('_PLOOPI_ADMINMAIL', '');
 
 global $ploopi_errors_msg;
-global $ploopi_errors_vars;
 global $ploopi_errors_nb;
 global $ploopi_errors_level;
 global $ploopi_errortype;
 global $ploopi_errorlevel;
 
 $ploopi_errors_msg = '';
-$ploopi_errors_vars = '';
 $ploopi_errors_nb = 0;
 $ploopi_errors_level = 0;
 
@@ -64,12 +61,11 @@ function ploopi_errorhandler($errno, $errstr, $errfile, $errline, $vars)
 {
     global $ploopi_errors_msg;
     global $ploopi_errors_nb;
-    global $ploopi_errors_vars;
     global $ploopi_errors_level;
 
     global $ploopi_errortype;
     global $ploopi_errorlevel;
-
+    
     // translate error_level into "readable" array
     $bit = _PLOOPI_ERROR_REPORTING;
     $res = array();
@@ -83,8 +79,6 @@ function ploopi_errorhandler($errno, $errstr, $errfile, $errline, $vars)
        $bit = $bit - $end;
     }
 
-
-
     // if error in error reporting levels
     if (in_array($errno,$res))
     {
@@ -97,11 +91,6 @@ function ploopi_errorhandler($errno, $errstr, $errfile, $errline, $vars)
 
         $ploopi_errors_msg .= "\nType d'erreur : {$ploopi_errortype[$errno]}\nMessage : $errstr\nFichier : $errfile\nLigne : $errline\n";
 
-        ob_start();
-        print_r($vars);
-        $ploopi_errors_vars = ob_get_contents();
-        ob_end_clean();
-
         if (_PLOOPI_DISPLAY_ERRORS)
         {
             // display message
@@ -110,13 +99,9 @@ function ploopi_errorhandler($errno, $errstr, $errfile, $errline, $vars)
                     <b>{$ploopi_errortype[$errno]}</b> <span>$errstr</span> dans <b>$errfile</b> à la ligne <b>$errline</b>
                     </div>
                     ";
-
-            if ($errno == E_ERROR || $errno == E_PARSE || $errno == E_USER_ERROR)
-            {
-                if (_PLOOPI_MAIL_ERRORS && _PLOOPI_ADMINMAIL != '') mail(_PLOOPI_ADMINMAIL,"[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$_SERVER['HTTP_HOST']}]", "$ploopi_errors_nb erreur(s) sur $ploopi_errors_msg\n\nDUMP:\n$ploopi_errors_vars");
-                ploopi_die();
-            }
-
+                    
+            // critical error
+            if ($errno == E_ERROR || $errno == E_PARSE || $errno == E_USER_ERROR) ploopi_die();
         }
         else
         {
@@ -125,12 +110,11 @@ function ploopi_errorhandler($errno, $errstr, $errfile, $errline, $vars)
             {
                 while (@ob_end_clean());
                 echo '<html><body><div align="center">Une erreur est survenue sur le site.<br />Contactez l\'administrateur.</div></body></html>';
-                if (_PLOOPI_MAIL_ERRORS && _PLOOPI_ADMINMAIL != '') mail(_PLOOPI_ADMINMAIL,"[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$_SERVER['HTTP_HOST']}]", "$ploopi_errors_nb erreur(s) sur $ploopi_errors_msg\n\nDUMP:\n$ploopi_errors_vars");
                 ploopi_die();
             }
         }
     }
 }
 
-set_error_handler("ploopi_errorhandler");
+set_error_handler('ploopi_errorhandler');
 ?>

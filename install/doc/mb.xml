@@ -14,7 +14,7 @@
     <row>
         <id>3</id>
         <label>Fichier à Valider</label>
-        <script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;currentfolder=&lt;IDRECORD&gt;</script>
+        <script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;op=filedraft_validate&amp;docfiledraft_md5id=&lt;IDRECORD&gt;</script>
         </row>
     </ploopi_mb_object>
     <ploopi_mb_table>

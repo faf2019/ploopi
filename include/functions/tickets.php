@@ -126,7 +126,7 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
 
         $email_message = ploopi_make_links($message);
 
-        $http_host = (empty($_SERVER['HTTP_REFERER'])) ? '' : dirname($_SERVER['HTTP_REFERER']);
+        $http_host = (empty($_SERVER['HTTP_HOST'])) ? '' : $_SERVER['HTTP_HOST'];
 
         if ($id_object != '' && $id_record != '' && $id_module_type != 0)
         {

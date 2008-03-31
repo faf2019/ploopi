@@ -349,7 +349,7 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
 
     if (file_exists($filepath))
     {
-        while (ob_get_contents()) @ob_end_clean();
+        while (ob_get_level()>0) @ob_end_clean();
         @set_time_limit(0);
 
         $filepath = rawurldecode($filepath);

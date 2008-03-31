@@ -217,6 +217,27 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
                 }
             }
         break;
+        
+        case _DOC_OBJECT_FILEDRAFT:
+            include_once './modules/doc/class_docfiledraft.php';
+            include_once './modules/doc/class_docfolder.php';
+
+            // ok si propriétaire du fichier ou validateur du dossier
+            $objFile = new docfiledraft();
+            if ($objFile->openmd5($id_record))
+            {
+                if ($objFile->fields['id_user'] == $_SESSION['ploopi']['userid']) $enabled = true;
+                else
+                {
+                    $objFolder = new docfolder();
+                    if ($objFolder->open($objFile->fields['id_folder']))
+                    {
+                        doc_getworkflow($objFile->fields['id_module']);
+                        $enabled = in_array($objFile->fields['id_folder'], $_SESSION['doc'][$objFile->fields['id_module']]['workflow']['folders']);
+                    }
+                }
+            }
+        break;
     }
 
     return($enabled);

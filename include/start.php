@@ -4,7 +4,7 @@
     Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
-    This file is part of Ploopi.work
+    This file is part of Ploopi.
 
     Ploopi is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -52,13 +52,10 @@ if (isset($_REQUEST['ploopi_password'])) $ploopi_password = $_REQUEST['ploopi_pa
 if ((!empty($ploopi_login) && !empty($ploopi_password)))
 {
     $sql =  "
-            SELECT      ploopi_user.*,
-                        ploopi_user_type.label as type
+            SELECT      *
             FROM        ploopi_user
-            LEFT JOIN   ploopi_user_type
-            ON          ploopi_user.id_type = ploopi_user_type.id
-            WHERE       ploopi_user.login = '".$db->addslashes($ploopi_login)."'
-            AND         ploopi_user.password = '".md5(_PLOOPI_SECRETKEY."/{$ploopi_login}/".md5($ploopi_password))."'
+            WHERE       login = '".$db->addslashes($ploopi_login)."'
+            AND         password = '".md5(_PLOOPI_SECRETKEY."/{$ploopi_login}/".md5($ploopi_password))."'
             ";
 
     $db->query($sql);
@@ -123,7 +120,6 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
         $_SESSION['ploopi']['connected']    = 1;
         $_SESSION['ploopi']['login']        = $fields['login'];
         $_SESSION['ploopi']['userid']   = $fields['id'];
-        $_SESSION['ploopi']['usertype']     = $fields['type'];
 
         $ploopi_mainmenu = _PLOOPI_MENU_MYGROUPS; // set main menu to MYGROUPS
 

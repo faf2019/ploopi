@@ -135,3 +135,17 @@ function system_search_next()
     ploopi_ajaxloader('system_search_result');
     ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=system_search&system_search_keywords='+$('system_search_keywords').value+'&system_search_workspace='+$('system_search_workspace').value+'&system_search_date1='+$('system_search_date1').value+'&system_search_date2='+$('system_search_date2').value,'','system_search_result');
 }
+
+function system_serverload()
+{
+    pe_serverload = new PeriodicalExecuter(function(pe) {
+        $('system_serverload_loading').style.visibility = 'visible';
+        new Ajax.Request('admin-light.php?ploopi_op=system_serverload',
+            {
+                method:     'get',
+                encoding:   'iso-8859-15',
+                onSuccess:  function(transport) {$('system_serverload').innerHTML =  transport.responseText;}
+            }
+        );
+    }, 15);
+}

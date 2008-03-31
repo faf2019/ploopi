@@ -180,7 +180,7 @@ if (!empty($ticket_list))
     {
         if (!isset($tickets[$fields['id_ticket']]['dest'][$fields['id']]))
         {
-            $tickets[$fields['id_ticket']]['dest'][$fields['id']] = array( 'login' => $fields['login'], 'firstname' => $fields['firstname'], 'lastname' => $fields['lastname']);
+            $tickets[$fields['id_ticket']]['dest'][$fields['id']] = (!is_null($fields['login'])) ? array( 'login' => $fields['login'], 'firstname' => $fields['firstname'], 'lastname' => $fields['lastname']) : array( 'login' => '<i>Supprimé</i>', 'firstname' => '', 'lastname' => '<i>Supprimé</i>');
         }
 
         $tickets[$fields['id_ticket']]['dest'][$fields['id']]['status'][$fields['status']] = $fields['timestp'];

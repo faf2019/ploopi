@@ -24,6 +24,7 @@
 <?
 define ('_SYSTEM_PAGE_TITLE', 'Administration Générale');
 define ('_SYSTEM_LABEL_SYSTEM', 'SYSTEME');
+define ('_SYSTEM_LABELICON_SYSTEMUPDATE', 'Mise à jour Système');
 define ('_SYSTEM_LABELICON_INSTALLMODULES', 'Installation');
 define ('_SYSTEM_LABELICON_MODULES', 'Modules');
 define ('_SYSTEM_LABELICON_PARAMS', 'Paramètres');
@@ -40,6 +41,8 @@ define ('_SYSTEM_HOSTNAME', 'Nom de Domaine');
 define ('_SYSTEM_NEWHOSTNAME', 'Nouveau Nom de Domaine');
 define ('_SYSTEM_HOSTSELECTED', 'Domaine sélectionné');
 define ('_SYSTEM_HOSTPARAMS', 'Paramètres du Domaine');
+
+define ('_SYSTEM_UPDATE', 'Mise à jour du Système');
 
 define ('_SYSTEM_MODULESELECTED', 'Module sélectionné');
 define ('_SYSTEM_MODULEPARAM', 'Paramètres du Module');
@@ -261,15 +264,6 @@ define ('_SYSTEM_MSG_CANTCOPYGROUP', 'Vous n\\\'avez pas les droits suffisants p
 
 
 
-define ('_SYSTEM_EXPLAIN_PHPINFO', 'L\'outil « PhpInfo » affiche la configuration PHP du serveur');
-define ('_SYSTEM_EXPLAIN_DIAGNOSTIC', 'L\'outil « Diagnostic » vérifie quelques éléments sources d\'erreur courantes pouvant entraîner des dysfonctionnements de PLOOPI');
-define ('_SYSTEM_EXPLAIN_CONNECTEDUSERS', 'L\'outil « Utilisateurs Connectés » affiche la liste des utilisateurs connectés au site en temps réel');
-define ('_SYSTEM_EXPLAIN_SQLDUMP', 'L\'outil « SqlDump » vous permet de télécharger les données dans un fichier SQL. Attention cette fonctionnalité ne remplace pas un dump classique. Il est également recommandé de n\'utiliser cette fonctionnalité que sur des petites bases de données.');
-define ('_SYSTEM_EXPLAIN_ZIP', 'L\'outil « Zip » vous permet de télécharger les sources de PLOOPI dans un fichier ZIP');
-define ('_SYSTEM_EXPLAIN_BACKUP', 'L\'outil « Sauvegarde » vous permet de créer une sauvegarde complète du système (données + sources) afin de les restaurer à une date ultérieure');
-define ('_SYSTEM_EXPLAIN_CLEANDB', 'L\'outil « Nettoyage BD » vous permet de nettoyer la base de donnée des données inutilisées');
-define ('_SYSTEM_EXPLAIN_UPDATEUSERAUTO', 'L\'outil « MAJ users » vous permet de mettre à jour l\'appartenance des utilisateurs dans les différents groupes définis, et ce en fonction des règles définies pour chaque groupe');
-define ('_SYSTEM_EXPLAIN_ACTIONHISTORY', 'L\'outil « Historique des Action » vous permet de consulter les actions effectuées par les utilisateurs');
 
 define ('_SYSTEM_EXPLAIN_ABOUT', 'Ploopi est un produit développé par la société <A TARGET=\'blank\' HREF=\'http://www.netlorconcept.com\'>Netlor Concept</A><br>Le logo ainsi que la marque sont déposés et appartiennent à la société Netlor Concept.');
 
@@ -282,15 +276,24 @@ define ('_SYSTEM_EXPLAIN_HERITED', 'Détermine si ce module est automatiquement h
 define ('_SYSTEM_EXPLAIN_ADMINRESTRICTED', 'Si l\'administration du module est restreinte, les administrateurs des sous-groupes qui utilisent ce module auront des droits limités');
 define ('_SYSTEM_EXPLAIN_VIEWMODE', 'Choix de la vue qu\'ont les utilisateurs sur les données du module, <b>Privée</b> : les données ne sont vues que par le groupe, <b>Descendante</b> : les données sont vues par le groupe et les sous-groupes (les données « descendent »), <b>Ascendante</b> : les données sont vues par le groupe et les groupes parents (les données « montent »), <b>Globale</b> : les données sont entièrement partagées');
 
-define ('_SYSTEM_LABEL_PHPINFO', 'PhpInfo');
-define ('_SYSTEM_LABEL_DIAGNOSTIC', 'Diagnostic');
-define ('_SYSTEM_LABEL_CONNECTEDUSERS', 'Logs Utilisateurs Connectés');
+define ('_SYSTEM_LABEL_PHPINFO', 'Config - PhpInfo');
+define ('_SYSTEM_LABEL_DIAGNOSTIC', 'Config - Diagnostic');
+define ('_SYSTEM_LABEL_CONNECTEDUSERS', 'Logs - Utilisateurs Connectés');
 define ('_SYSTEM_LABEL_SQLDUMP', 'SqlDump');
 define ('_SYSTEM_LABEL_ZIP', 'Zip');
 define ('_SYSTEM_LABEL_BACKUP', 'Sauvegarde');
-define ('_SYSTEM_LABEL_CLEANDB', 'Nettoyage BD');
-define ('_SYSTEM_LABEL_UPDATEUSERAUTO', 'MAJ users');
-define ('_SYSTEM_LABEL_ACTIONHISTORY', 'Logs Historique des Actions');
+define ('_SYSTEM_LABEL_ACTIONHISTORY', 'Logs - Historique des Actions');
+define ('_SYSTEM_LABEL_SERVERLOAD', 'Logs - Charge du Serveur');
+
+define ('_SYSTEM_EXPLAIN_PHPINFO', 'L\'outil « '._SYSTEM_LABEL_PHPINFO.' » affiche la configuration PHP du serveur');
+define ('_SYSTEM_EXPLAIN_DIAGNOSTIC', 'L\'outil « '._SYSTEM_LABEL_DIAGNOSTIC.' » vérifie quelques sources d\'erreurs courantes pouvant entraîner des dysfonctionnements de PLOOPI');
+define ('_SYSTEM_EXPLAIN_CONNECTEDUSERS', 'L\'outil « '._SYSTEM_LABEL_CONNECTEDUSERS.' » affiche la liste des utilisateurs connectés au site en temps réel');
+define ('_SYSTEM_EXPLAIN_SQLDUMP', 'L\'outil « '._SYSTEM_LABEL_SQLDUMP.' » vous permet de télécharger les données dans un fichier SQL. Attention cette fonctionnalité ne remplace pas un dump classique. Il est également recommandé de n\'utiliser cette fonctionnalité que sur des petites bases de données.');
+define ('_SYSTEM_EXPLAIN_ZIP', 'L\'outil « Zip » vous permet de télécharger les sources de PLOOPI dans un fichier ZIP');
+define ('_SYSTEM_EXPLAIN_BACKUP', 'L\'outil « Sauvegarde » vous permet de créer une sauvegarde complète du système (données + sources) afin de les restaurer à une date ultérieure');
+define ('_SYSTEM_EXPLAIN_ACTIONHISTORY', 'L\'outil « '._SYSTEM_LABEL_ACTIONHISTORY.' » vous permet de consulter les actions effectuées par les utilisateurs');
+define ('_SYSTEM_EXPLAIN_SERVERLOAD', 'L\'outil « '._SYSTEM_LABEL_SERVERLOAD.' » affiche la charge du serveur sur plusieurs intervalles de temps');
+
 
 define ('_SYSTEM_LABEL_HOMEPAGECONTENT',    'Contenu de la Page d\'Accueil');
 define ('_SYSTEM_LABEL_PREVIEW',        'Prévisualiser');

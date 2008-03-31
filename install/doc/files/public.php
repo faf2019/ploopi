@@ -179,11 +179,11 @@ if ($_SESSION['ploopi']['connected'])
                  
                     
                     ploopi_create_user_action_log(_DOC_ACTION_DELETEFILE, $docfile->fields['id']);
-                    ploopi_redirect("{$scriptenv}?op=doc_explorer&currentfolder=$currentfolder&error=$error");
+                    ploopi_redirect("{$scriptenv}?op=doc_explorer&currentfolder={$currentfolder}&error={$error}");
                 }
             }
 
-            ploopi_redirect("{$scriptenv}?op=doc_explorer&currentfolder=$currentfolder");
+            ploopi_redirect("{$scriptenv}?op=doc_explorer&currentfolder={$currentfolder}");
         break;
 
         case 'doc_fileindex':
@@ -282,7 +282,7 @@ if ($_SESSION['ploopi']['connected'])
                                 if ($draft)
                                 {
                                     $_SESSION['ploopi']['tickets']['users_selected'] = $wfusers;
-                                    ploopi_tickets_send("Demande de validation du document <strong>\"{$docfile->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyé suite à une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce document pour le valider en cliquant sur le lien ci-dessous.", true, 0, _DOC_OBJECT_FILEDRAFT, $currentfolder, $docfile->fields['name']);
+                                    ploopi_tickets_send("Demande de validation du document <strong>\"{$docfile->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyé suite à une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce document pour le valider en cliquant sur le lien ci-dessous.", true, 0, _DOC_OBJECT_FILEDRAFT, $docfile->fields['md5id'], $docfile->fields['name']);
                                 }
 
                                 if (!$error) 
@@ -377,14 +377,17 @@ if ($_SESSION['ploopi']['connected'])
                         window.parent.doc_browser_from_iframe(<? echo $currentfolder; ?>);
                     </script>
                     <?
+                    ploopi_die();
                 }
-
                 ?>
                 <script type="text/javascript">
                     window.parent.doc_browser_from_iframe(<? echo $_POST['currentfolder']; ?>);
                 </script>
                 <?
+                ploopi_die();
             }
+            
+            ploopi_die();
         break;
 
         case 'doc_filepublish':
@@ -784,6 +787,18 @@ if ($_SESSION['ploopi']['connected'])
             <div id="doc_browser"></div>
             <script type="text/javascript">
                 <?
+                if (!empty($_GET['docfiledraft_md5id'])) // ouverture directe d'un fichier (lien externe au module)
+                {
+                    $docfile = new docfiledraft();
+                    if ($docfile->openmd5($_GET['docfiledraft_md5id']))
+                    {
+                        $currentfolder = $docfile->fields['id_folder'];
+                        ?>
+                        ploopi_window_onload_stock(function () {doc_browser(<? echo $currentfolder; ?>);});
+                        <?
+                    }
+                }
+                
                 if (!empty($_GET['docfile_md5id'])) // ouverture directe d'un fichier (lien externe au module)
                 {
                     $docfile = new docfile();
