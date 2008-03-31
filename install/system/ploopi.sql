@@ -689,7 +689,7 @@ CREATE TABLE `ploopi_param_choice` (
 
 LOCK TABLES `ploopi_param_choice` WRITE;
 /*!40000 ALTER TABLE `ploopi_param_choice` DISABLE KEYS */;
-INSERT INTO `ploopi_param_choice` VALUES (1,'system_usemacrules','0','non'),(1,'system_usemacrules','1','oui'),(1,'system_recordstats','0','non'),(1,'system_recordstats','1','oui'),(1,'system_set_cache','0','non'),(1,'system_set_cache','1','oui'),(1,'system_generate_htpasswd','0','non'),(1,'system_generate_htpasswd','1','oui'),(1,'system_use_profiles','0','non'),(1,'system_use_profiles','1','oui'),(1,'system_same_login','1','oui'),(1,'system_same_login','0','non');
+INSERT INTO `ploopi_param_choice` VALUES (1,'system_generate_htpasswd','0','non'),(1,'system_generate_htpasswd','1','oui');
 /*!40000 ALTER TABLE `ploopi_param_choice` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1294,4 +1294,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-03-30 20:28:24
+-- Dump completed on 2008-03-31  9:07:28
