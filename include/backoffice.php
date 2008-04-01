@@ -60,11 +60,46 @@ if ($_SESSION['ploopi']['connected'])
     if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/head.php")) include "./modules/{$_SESSION['ploopi']['moduletype']}/include/head.php";
     $additional_head = ob_get_contents();
     @ob_end_clean();
-
+    
     include_once './include/op.php';
 
-    $template_body->assign_block_vars('switch_user_logged_in', array());
+    // GET MODULE ADDITIONAL JS
+    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/javascript.php"))
+    {
+        ob_start();
+        include "./modules/{$_SESSION['ploopi']['moduletype']}/include/javascript.php";
+        $additional_javascript .= ob_get_contents();
+        @ob_end_clean();
+    }
 
+    // GET MODULE ADDITIONAL JS
+    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/functions.js"))
+    {
+        $template_body->assign_block_vars('module_js',array(
+                                                    'PATH' => "./modules/{$_SESSION['ploopi']['moduletype']}/include/functions.js"
+                                                )
+                                        );
+    }
+    
+    // GET MODULE STYLE
+    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/styles.css"))
+    {
+        $template_body->assign_block_vars('module_css',array(
+                                                    'PATH' => "./modules/{$_SESSION['ploopi']['moduletype']}/include/styles.css"
+                                                )
+                                        );
+    }
+
+    // GET MODULE STYLE FOR IE
+    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/styles_ie.css"))
+    {
+        $template_body->assign_block_vars('module_css_ie',array(
+                                                    'PATH' => "./modules/{$_SESSION['ploopi']['moduletype']}/include/styles_ie.css"
+                                                )
+                                        );
+    }
+    
+    $template_body->assign_block_vars('switch_user_logged_in', array());
 
     // GET WORKSPACES
     foreach ($_SESSION['ploopi']['workspaces_allowed'] as $key)
@@ -72,7 +107,7 @@ if ($_SESSION['ploopi']['connected'])
         $template_body->assign_block_vars('switch_user_logged_in.workspace',array(
                                             'TITLE' => $_SESSION['ploopi']['workspaces'][$key]['label'],
                                             'URL' => ploopi_urlencode("{$scriptenv}?ploopi_workspaceid={$key}"),
-                                            'SELECTED' => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYGROUPS && $key == $_SESSION['ploopi']['workspaceid']) ? 'selected' : ''
+                                            'SELECTED' => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $key == $_SESSION['ploopi']['workspaceid']) ? 'selected' : ''
                                             )
                                     );
     }
@@ -81,6 +116,7 @@ if ($_SESSION['ploopi']['connected'])
     // GET BLOCKS
     include_once './include/blocks.php';
 
+    /* TESTING
     foreach($arrModules as $modtype)
     {
         // GET ADDITIONAL JS
@@ -116,7 +152,8 @@ if ($_SESSION['ploopi']['connected'])
                                             );
         }
     }
-
+    */
+    
 
     if (!empty($arrBlock))
     {
@@ -189,15 +226,25 @@ if ($_SESSION['ploopi']['connected'])
         'USER_FIRSTNAME'        => $_SESSION['ploopi']['user']['firstname'],
         'USER_LASTNAME'         => $_SESSION['ploopi']['user']['lastname'],
         'USER_EMAIL'            => $_SESSION['ploopi']['user']['email'],
-
-        'MAINMENU_SHOWPROFILE_URL'      => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_PROFILE),
-        'MAINMENU_SHOWANNOTATIONS_URL'  => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_ANNOTATIONS),
-        'MAINMENU_SHOWTICKETS_URL'      => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_TICKETS),
+    
+        'USER_WORKSPACE'        => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE),
+        'USER_WORKSPACE_SEL'    => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE) ? 'selected' : '',
+    
+        'MAINMENU_PROFILE'          => _PLOOPI_LABEL_MYPROFILE,
+        'MAINMENU_ANNOTATIONS'      => _PLOOPI_LABEL_MYANNOTATIONS,
+        'MAINMENU_TICKETS'          => _PLOOPI_LABEL_MYTICKETS,
+        'MAINMENU_SEARCH'           => _PLOOPI_LABEL_SEARCH,
+        'MAINMENU_DISCONNECTION'    => _PLOOPI_LABEL_DISCONNECTION,
+    
+    
+        'MAINMENU_SHOWPROFILE_URL'      => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE.'&op=profile'),
+        'MAINMENU_SHOWANNOTATIONS_URL'  => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE.'&op=annotations'),
+        'MAINMENU_SHOWTICKETS_URL'      => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE.'&op=tickets'),
         'MAINMENU_SHOWSEARCH_URL'       => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_SEARCH),
 
-        'MAINMENU_SHOWPROFILE_SEL'      => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_PROFILE) ? 'selected' : '',
-        'MAINMENU_SHOWANNOTATIONS_SEL'  => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_ANNOTATIONS) ? 'selected' : '',
-        'MAINMENU_SHOWTICKETS_SEL'      => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_TICKETS) ? 'selected' : '',
+        'MAINMENU_SHOWPROFILE_SEL'      => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'profile') ? 'selected' : '',
+        'MAINMENU_SHOWANNOTATIONS_SEL'  => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'annotations') ? 'selected' : '',
+        'MAINMENU_SHOWTICKETS_SEL'      => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'tickets') ? 'selected' : '',
         'MAINMENU_SHOWSEARCH_SEL'       => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_SEARCH) ? 'selected' : '',
 
         'SEARCH_KEYWORDS'               => (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'])) ? $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'] : '',

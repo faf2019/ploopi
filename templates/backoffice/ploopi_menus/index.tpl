@@ -167,10 +167,10 @@
         <img src="{TEMPLATE_PATH}/img/template/bandeau_droit.png" style="position:absolute;top:0;right:0px;" usemap="#map" border="0" />
 
         <map name="map">
-        <area shape="rect" coords="5,15,102,45" alt="Mes Tickets" href="{MAINMENU_SHOWTICKETS_URL}" />
-        <area shape="rect" coords="6,54,121,79" alt="Mes Annotations" href="{MAINMENU_SHOWANNOTATIONS_URL}" />
-        <area shape="rect" coords="75,84,151,105" alt="Mon Profil" href="{MAINMENU_SHOWPROFILE_URL}" />
-        <area shape="rect" coords="205,80,292,99" alt="Déconnexion" href="{USER_DECONNECT}" />
+        <area shape="rect" coords="5,15,102,45" alt="{MAINMENU_TICKETS}" href="{MAINMENU_SHOWTICKETS_URL}" />
+        <area shape="rect" coords="6,54,121,79" alt="{MAINMENU_ANNOTATIONS}" href="{MAINMENU_SHOWANNOTATIONS_URL}" />
+        <area shape="rect" coords="75,84,151,105" alt="{MAINMENU_PROFILE" href="{MAINMENU_SHOWPROFILE_URL}" />
+        <area shape="rect" coords="205,80,292,99" alt="{MAINMENU_DISCONNECTION}" href="{USER_DECONNECT}" />
         </map>
 
         <div id="menu_horizontal">
@@ -188,10 +188,10 @@
                 <img id="choix_style_short" alt="Réduire" title="Réduire" style="cursor:pointer;" src="{TEMPLATE_PATH}/img/template/view-restore.png" onclick="cacher();setActiveStyleSheet('short');" />
                 <span>Bienvenue <b>{USER_FIRSTNAME} {USER_LASTNAME}</b>, choisissez votre espace :</span>
                 <select class="select" onchange="javascript:if (this.value!='') document.location.href = this.value;" style="width:150px;">
-                <option value="">(Choisir un espace)</option>
                 <!-- BEGIN workspace -->
                     <option value="{switch_user_logged_in.workspace.URL}" {switch_user_logged_in.workspace.SELECTED}>{switch_user_logged_in.workspace.TITLE}</option>
                 <!-- END workspace -->
+                <option value="{USER_WORKSPACE}" {USER_WORKSPACE_SEL}>(Mon Espace)</option>
                 </select>
             </p>
         </div>
@@ -203,7 +203,7 @@
 
         <div id="recherche">
             <form method="post" id="form_recherche" action="{MAINMENU_SHOWSEARCH_URL}">
-                Recherche:
+                {MAINMENU_SEARCH}:
                 <p class="ploopi_va">
                     <input type="text" name="system_search_keywords" class="text" value="{SEARCH_KEYWORDS}">&nbsp;<a href="javascript:void(0);" onclick="$('form_recherche').submit();"><img src="{TEMPLATE_PATH}/img/template/search.png" value="Recherche"></a>
                 </p>

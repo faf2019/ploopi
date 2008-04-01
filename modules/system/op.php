@@ -63,7 +63,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 }
             }
 
-            ploopi_redirect($scriptenv);
+            ploopi_redirect("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets");
         break;
 
         case 'tickets_send':
@@ -103,7 +103,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 }
             }
 
-            ploopi_redirect($scriptenv);
+            ploopi_redirect("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets");
         break;
 
         case 'tickets_new':
@@ -199,6 +199,9 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     $ticket->fields['title'] = "RE: {$ticket->fields['title']}";
                     $nextop = 'tickets_send';
                     $button_value = 'Envoyer';
+
+                    if (isset($_GET['quoted'])) $ticket->fields['message'] = '<div class="system_tickets_quoted_user">Message de <b>'.$strUserName.'</b> :</div><div class="system_tickets_quoted_message">'.$ticket->fields['message'].'</div>';
+                    else $ticket->fields['message'] = '';
                 }
                 else
                 {
@@ -212,8 +215,6 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 $strUserName = ($objUser->open($ticket->fields['id_user'])) ? "{$objUser->fields['firstname']} {$objUser->fields['lastname']}" : 'Inconnu';
 
 
-                // default value
-                if (isset($_GET['quoted'])) $ticket->fields['message'] = '<div class="system_tickets_quoted_user">Message de <b>'.$strUserName.'</b> :</div><div class="system_tickets_quoted_message">'.$ticket->fields['message'].'</div>';
 
                 ?>
                 <div id="tickets_new">
@@ -277,7 +278,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 $ticket->save();
             }
 
-            ploopi_redirect($scriptenv);
+            ploopi_redirect("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets");
         break;
 
 
@@ -564,7 +565,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     $ticket_status->save();
                 }
             }
-            ploopi_redirect('admin.php');
+            ploopi_redirect("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets");
         break;
 
 

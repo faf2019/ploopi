@@ -684,7 +684,7 @@ function ploopi_addslashes(str)
 
 var ploopi_nbpopup = 0;
 
-function ploopi_showpopup(message, w, e, origine, id)
+function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy)
 {
     var ploopi_popup;
 
@@ -706,28 +706,50 @@ function ploopi_showpopup(message, w, e, origine, id)
     }
     else ploopi_popup = $(id);
 
-    msg = message;
-    if (w == '') w = 200;
-
-    if (!origine) var origine = '';
-
-    if (!e) var e = window.event;
-
-    if (e.pageX || e.pageY) {
-        posx = e.pageX;
-        posy = e.pageY;
-    }
-    else if (e.clientX || e.clientY) {
-        posx = e.clientX + document.body.scrollLeft;
-        posy = e.clientY + document.body.scrollTop;
-    }
 
     w = parseInt(w);
+    if (!w) w = 200;
+
+    posx = 0;
+    posy = 0;
+    
+    pposx = parseInt(pposx);
+    pposy = parseInt(pposy);
+
+    if (pposx) posx = pposx; 
+    if (pposy) posy = pposy;
+     
+    if(e) // event ok
+    {
+        if (e.pageX || e.pageY) {
+            posx = e.pageX;
+            posy = e.pageY;
+        }
+        else if (e.clientX || e.clientY) {
+            posx = e.clientX + document.body.scrollLeft;
+            posy = e.clientY + document.body.scrollTop;
+        }
+    }
+    else 
+    {    
+        switch(centered)
+        {
+           case false:
+           break;
+
+           default:
+           case true:
+                var p_width = parseInt(document.body.offsetWidth);
+                var p_left = parseInt(document.body.scrollLeft);
+                var posx = (p_width/2)-(w/2)+p_left;
+            break;
+        }
+    }
 
     with (ploopi_popup.style)
     {
         //ploopi_popup.innerHTML = msg+' '+posx+','+posy;
-        ploopi_innerHTML(id, msg);
+        ploopi_innerHTML(id, popup_content);
 
         tmpleft = parseInt(posx) + 20;
         tmptop = parseInt(posy);
@@ -753,9 +775,16 @@ function ploopi_hidepopup(id)
 
     if ($(id))
     {
-        new Effect.Fade(id, { duration: 0.3});
-        //var bodys = document.getElementsByTagName('body');
-        //bodys[0].removeChild($(id));
+        new Effect.Fade(id,
+                { 
+                    duration: 0.3,
+                    afterFinish:function() 
+                    {
+                        var bodys = document.getElementsByTagName('body');
+                        bodys[0].removeChild($(id));
+                    }
+                }
+             );
     }
 }
 

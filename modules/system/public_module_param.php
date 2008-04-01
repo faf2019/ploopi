@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 if (!empty($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
 
 echo $skin->open_simplebloc(_SYSTEM_MODULESELECTED);
@@ -77,6 +76,7 @@ if (isset($idmodule))
 {
     echo $skin->open_simplebloc(_SYSTEM_MODULEPARAM);
 
+    $param_module = new param();
     $param_module->open($idmodule, 0, $_SESSION['ploopi']['userid'], 1);
 
     if (isset($param_module->tabparam))

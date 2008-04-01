@@ -53,23 +53,20 @@ define ('_PLOOPI_UNKNOWNUSER', 'Utilisateur inconnu');
 
 define ('_PLOOPI_USER', 'Utilisateur');
 define ('_PLOOPI_LABEL_MODULES', 'Modules');
-define ('_PLOOPI_LABEL_MYDATAS', 'Mes Informations');
-define ('_PLOOPI_LABEL_MYACCOUNT', 'Mon Compte');
+
+define ('_PLOOPI_LABEL_MYDATA', 'Mes Informations');
+define ('_PLOOPI_LABEL_MYPROFILE', 'Mon Profil');
 define ('_PLOOPI_LABEL_MYPARAMS', 'Mes Paramètres');
-define ('_PLOOPI_LABEL_ANNOTATION', 'Commentaires');
+define ('_PLOOPI_LABEL_MYANNOTATIONS', 'Mes Annotations');
+define ('_PLOOPI_LABEL_MYTICKETS', 'Mes Messages');
+define ('_PLOOPI_LABEL_MYWORKSPACE', 'Mon Espace');
+define ('_PLOOPI_LABEL_WORKSPACES', 'Espaces de Travail');
+define ('_PLOOPI_LABEL_SEARCH', 'Recherche');
 
 define ('_PLOOPI_LABEL_LOGIN', 'Login');
 define ('_PLOOPI_LABEL_PASSWORD', 'Password');
-define ('_PLOOPI_LABEL_GROUP', 'Gpe');
 define ('_PLOOPI_LABEL_DISCONNECTION', 'Déconnexion');
-define ('_PLOOPI_LABEL_HOME', 'Accueil');
-define ('_PLOOPI_LABEL_MYGROUPS', 'Espaces de Travail');
-define ('_PLOOPI_LABEL_MYPROFILE', 'Mon Profil');
-define ('_PLOOPI_LABEL_FAVORITES', 'Mes Favoris');
-define ('_PLOOPI_LABEL_TICKETS', 'Mes Messages');
 define ('_PLOOPI_LABEL_ABOUT', 'A Propos');
-define ('_PLOOPI_LABEL_PRINT', 'Imprimer');
-define ('_PLOOPI_LABEL_HELP', 'Aide');
 define ('_PLOOPI_LABEL_USERS', 'Utilisateurs');
 define ('_PLOOPI_LABEL_CONNECTEDUSERS', 'Connecté(s)');
 define ('_PLOOPI_LABEL_ANONYMOUSUSERS', 'Anonyme(s)');

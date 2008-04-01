@@ -47,7 +47,7 @@ else
 
     $modpath = "./install/{$_GET['installmoduletype']}";
 
-    $sqlfile =      "{$modpath}/update/update_{$_GET['updatefrom']}_to_{$_GET['updateto']}.sql";
+    $sqlpath =      "{$modpath}/update";
     $xmlfile_desc = "{$modpath}/description.xml";
     $xmlfile_ploopi = "{$modpath}/data_ploopi.xml";
     $xmlfile_mod =  "{$modpath}/data_mod.xml";
@@ -55,6 +55,30 @@ else
     $srcfiles =     "{$modpath}/files";
     $destfiles =    "./modules/{$_GET['installmoduletype']}";
 
+    
+    $arrSqlUpdates = array();
+    
+    if (is_dir($sqlpath))
+    {
+        $dir = @opendir($sqlpath);
+        while($file = readdir($dir))
+        {
+            if (is_file("{$sqlpath}/{$file}"))
+            {
+                $matches = array();
+                if (preg_match("@^update_(.*).sql@i", $file, $matches))
+                {
+                    if (!empty($matches[1]) && strcmp($matches[1], $_GET['updatefrom']) > 0 && strcmp($matches[1], $_GET['updateto']) <= 0)
+                    {
+                        $arrSqlUpdates[$matches[1]] = $matches[0];
+                    }
+                }
+            }
+        }
+    }
+    
+    ksort($arrSqlUpdates);
+    
     $critical_error = false;
 
     $rapport = array();
@@ -241,16 +265,19 @@ else
             // OPERATION 3 : Mise à jour SQL
             // =============
             $testok = true;
-            $detail = '';
+            $detail = array();
 
-            if (file_exists($sqlfile))
+            foreach($arrSqlUpdates as $sqlfile)
             {
-                $db->multiplequeries(file_get_contents($sqlfile));
-                $detail = "Fichier '{$sqlfile}' importé";
+                if (file_exists("{$sqlpath}/{$sqlfile}"))
+                {
+                    $db->multiplequeries(file_get_contents("{$sqlpath}/{$sqlfile}"));
+                    $detail[] = "Fichier '{$sqlfile}' importé";
+                }
+                else $detail[] = "Fichier '{$sqlfile}' non trouvé";
             }
-            else $detail = "Fichier '{$sqlfile}' non trouvé";
 
-            $rapport[] = array('operation' => 'Création des tables/champs', 'detail' => $detail, 'res' => $testok);
+            $rapport[] = array('operation' => 'Mise à jour des tables/champs', 'detail' => implode('<br />', $detail), 'res' => $testok);
 
 
             // =============
@@ -298,8 +325,8 @@ else
     foreach($rapport as $op_detail)
     {
         $bullet = ($op_detail['res']) ? 'green' : 'red';
-        $values[$c]['values']['operation'] = array('label' => htmlentities($op_detail['operation']));
-        $values[$c]['values']['detail'] = array('label' => htmlentities($op_detail['detail']));
+        $values[$c]['values']['operation'] = array('label' => $op_detail['operation']);
+        $values[$c]['values']['detail'] = array('label' => $op_detail['detail']);
         $values[$c]['values']['result'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />");
 
         $c++;

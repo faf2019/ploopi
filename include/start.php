@@ -121,7 +121,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
         $_SESSION['ploopi']['login']        = $fields['login'];
         $_SESSION['ploopi']['userid']   = $fields['id'];
 
-        $ploopi_mainmenu = _PLOOPI_MENU_MYGROUPS; // set main menu to MYGROUPS
+        $ploopi_mainmenu = _PLOOPI_MENU_WORKSPACES;
 
         $ploopi_initsession = true;
 
@@ -227,7 +227,7 @@ if ($ploopi_initsession)
             if (!empty($workspace['adminlevel'])) $_SESSION['ploopi']['workspaces_allowed'][] = $workspace['id'];
         }
 
-        if (!isset($_GET['reloadsession'])) $ploopi_mainmenu = _PLOOPI_MENU_MYGROUPS;
+        if (!isset($_GET['reloadsession'])) $ploopi_mainmenu = _PLOOPI_MENU_WORKSPACES;
     }
 }
 
@@ -319,7 +319,7 @@ if ($_SESSION['ploopi']['mode'] == 'admin')
 
             $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['workspaces_allowed'][0];
 
-            if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYGROUPS) ploopi_loadparams();
+            if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES) ploopi_loadparams();
 
             $_SESSION['ploopi']['moduleid'] = '';
             $_SESSION['ploopi']['action'] = 'public';
@@ -331,11 +331,9 @@ if ($_SESSION['ploopi']['mode'] == 'admin')
 
             switch($_SESSION['ploopi']['mainmenu'])
             {
-                case _PLOOPI_MENU_PROFILE:
-                case _PLOOPI_MENU_ANNOTATIONS:
-                case _PLOOPI_MENU_TICKETS:
+                case _PLOOPI_MENU_MYWORKSPACE:
                 case _PLOOPI_MENU_SEARCH:
-                case _PLOOPI_MENU_ABOUT:
+                //case _PLOOPI_MENU_ABOUT:
                     $ploopi_moduleid = _PLOOPI_MODULE_SYSTEM;
                     $ploopi_action = 'public';
                 break;
@@ -348,7 +346,7 @@ if ($_SESSION['ploopi']['mode'] == 'admin')
 
         if (isset($ploopi_workspaceid) && isset($_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['adminlevel']) && $_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['admin']) // new group selected
         {
-            $_SESSION['ploopi']['mainmenu'] = _PLOOPI_MENU_MYGROUPS;
+            $_SESSION['ploopi']['mainmenu'] = _PLOOPI_MENU_WORKSPACES;
             $_SESSION['ploopi']['workspaceid'] = $ploopi_workspaceid;
             $_SESSION['ploopi']['moduleid'] = '';
             $_SESSION['ploopi']['action'] = 'public';

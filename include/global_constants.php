@@ -41,11 +41,13 @@ define ('_PLOOPI_CACHE_DEFAULT_LIFETIME',   '60');
 
 define ('_PLOOPI_SYSTEMGROUP',      '1'); // virtual system group
 define ('_PLOOPI_MODULE_SYSTEM',    '1');
-define ('_PLOOPI_NOGROUP',          '-1');
+define ('_PLOOPI_NOWORKSPACE',      '-1');
 
 define ('_PLOOPI_MENU_HOME',        0);
-define ('_PLOOPI_MENU_MYGROUPS',    1);
-define ('_PLOOPI_MENU_PROFILE',     2);
+//define ('_PLOOPI_MENU_MYGROUPS',    1);
+//define ('_PLOOPI_MENU_PROFILE',     2);
+define ('_PLOOPI_MENU_WORKSPACES',  1);
+define ('_PLOOPI_MENU_MYWORKSPACE', 2);
 define ('_PLOOPI_MENU_ABOUT',       3);
 define ('_PLOOPI_MENU_ANNOTATIONS', 4);
 define ('_PLOOPI_MENU_TICKETS',     5);

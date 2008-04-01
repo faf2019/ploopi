@@ -157,7 +157,7 @@ switch($ploopi_op)
             $_SESSION['documents'][$_SESSION['documents']['documents_id']]['sort'] = $sort_option;
 
             $sort_img = '';
-            if (!empty($sort_option)) $sort_img = ($sort_option == 'DESC') ? '<img src="./modules/agrid/img/arrow_down.png">' : '<img src="./modules/agrid/img/arrow_up.png">';
+            if (!empty($sort_option)) $sort_img = ($sort_option == 'DESC') ? '<img src="'.$_SESSION['ploopi']['template_path'].'/img/arrays/arrow_down.png">' : '<img src="'.$_SESSION['ploopi']['template_path'].'/img/arrays/arrow_up.png">';
 
             $documents_columns = array();
 

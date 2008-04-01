@@ -42,7 +42,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mode'] == 'admin')
     $template_body->assign_block_vars('ploopi_js',array('PATH' => "./js/functions.pack.js"));
 
     // GET MODULES STYLES & JS
-    if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYGROUPS && $_SESSION['ploopi']['workspaceid'] != _PLOOPI_NOGROUP && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
+    if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $_SESSION['ploopi']['workspaceid'] != _PLOOPI_NOWORKSPACE && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
     {
         foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $key => $mid)
         {

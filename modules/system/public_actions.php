@@ -20,60 +20,71 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<? echo $skin->open_simplebloc(_SYSTEM_LABEL_MYDATAS,'100%'); ?>
+echo $skin->create_pagetitle(_PLOOPI_LABEL_MYDATA);
 
-<TABLE CELLPADDING="2" CELLSPACING="1">
-<?
-$select = "SELECT * FROM ploopi_mb_action";
-$db->query($select);
-while ($fields = $db->fetchrow()) $actions[$fields['id_module_type']][$fields['id_action']] = $fields;
+$red = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_red.png\">";
+$green = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_green.png\">";
+
+$arrActions = array();
+
+$db->query("SELECT * FROM ploopi_mb_action");
+while ($fields = $db->fetchrow()) $arrActions[$fields['id_module_type']][$fields['id_action']] = $fields;
+
+$num_array = 0;
 
 foreach ($_SESSION['ploopi']['workspaces'] as $group)
 {
     if (!empty($group['adminlevel']) && $group['id'] != _PLOOPI_SYSTEMGROUP)
     {
+        echo $skin->open_simplebloc("Espace « {$group['label']} »");
+        
+        $columns = array();
+        $values = array();
+        $c = 0;
+        
+        $columns['left']['module']       = array('label' => 'Module', 'width' => '250', 'options' => array('sort' => true));
+        $columns['auto']['actions']     = array('label' => 'Actions');
+        
+        /*
+         * 
         ?>
-        <TR bgcolor="<? echo $skin->values['bgline2']; ?>">
-            <TD COLSPAN="2"><b>Espace « <? echo $group['label']; ?> »</b></TD>
-        </TR>
         <TR bgcolor="<? echo $skin->values['bgline1']; ?>">
             <TD>Niveau Utilisateur :</TD>
             <TD><? echo $ploopi_system_levels[$group['adminlevel']]; ?></TD>
         </TR>
             
         <?
+*/
+
+        
         if (isset($group['modules']))
-        foreach ($group['modules'] as $moduleid)
         {
-            ?>
-            <TR bgcolor="<? echo $skin->values['bgline1']; ?>">
-                <TD VALIGN="top">Module « <? echo $_SESSION['ploopi']['modules'][$moduleid]['label']; ?> »</TD>
-                <TD VALIGN="top">
-                    <TABLE CELLPADDING="0" CELLSPACING="1">
-                    
-                        <?
-                        $red = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_red.png\">";
-                        $green = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_green.png\">";
-                        
-                        if (!empty($actions[$_SESSION['ploopi']['modules'][$moduleid]['id_module_type']]))
-                            foreach($actions[$_SESSION['ploopi']['modules'][$moduleid]['id_module_type']] as $id => $action)
-                            {
-                                $puce = ploopi_isactionallowed($id, $group['id'], $moduleid) ? $green : $red;
-                                echo    "<tr>
-                                            <td>{$puce}</td>
-                                            <td>{$action['label']}</td>
-                                        </tr>";
-                            }
-                        ?>
-                    </TABLE>
-                </TD>
-            </TR>
-            <?
+            foreach ($group['modules'] as $moduleid)
+            {
+                $strActions = '';
+                
+                if (!empty($arrActions[$_SESSION['ploopi']['modules'][$moduleid]['id_module_type']]))
+                {
+                    foreach($arrActions[$_SESSION['ploopi']['modules'][$moduleid]['id_module_type']] as $id => $action)
+                    {   
+                        $puce = ploopi_isactionallowed($id, $group['id'], $moduleid) ? $green : $red;
+                        $strActions .= "<p class=\"ploopi_va\">{$puce}<span>{$action['label']}</span></p>";
+                    }
+                }
+                
+                if ($strActions == '') $strActions = 'Aucune action pour ce module';
+
+                $values[$c]['values']['module'] = array('label' => $_SESSION['ploopi']['modules'][$moduleid]['label']);
+                $values[$c]['values']['actions'] = array('label' => $strActions);
+            
+                $values[$c]['description'] = '';
+                $c++;
+            }
         }
+
+        $skin->display_array($columns, $values, 'system_actions_list'.$num_array);
+        echo $skin->close_simplebloc();
+        $num_array++;
     }
 }
 ?>
-</TABLE>
-<? //ploopi_print_r($_SESSION); ?>
-<? echo $skin->close_simplebloc(); ?>

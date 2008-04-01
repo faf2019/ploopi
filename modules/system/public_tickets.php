@@ -225,7 +225,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
             for ($p = 1; $p <= $nbpage; $p++)
             {
                 ?>
-                <a class="system_tickets_page<? if ($p==$page) echo '_sel'; ?>" href="<? echo "{$scriptenv}?page={$p}"; ?>"><? echo $p; ?></a>
+                <a class="system_tickets_page<? if ($p==$page) echo '_sel'; ?>" href="<? echo "{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&page={$p}"; ?>"><? echo $p; ?></a>
                 <?
             }
             ?>
@@ -236,20 +236,20 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
 
 
     <div>
-        <div>
-            [ <a href="javascript:void(0);" onclick="javascript:system_tickets_new(event);">Nouveau ticket</a> ]
-        </div>
+        <p class="ploopi_va">
+            <a href="javascript:void(0);" onclick="javascript:system_tickets_new(event);"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/email.gif" /><span>&nbsp;Nouveau ticket</span></a>
+        </p>
         <div>
             <b>Filtre:</b>
-            <a <? if ($filtertype=='all') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_TICKETS."&filtertype=all"); ?>">Tous</a>&nbsp;-
-            <a <? if ($filtertype=='mytickets') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_TICKETS."&filtertype=mytickets"); ?>">Mes tickets</a>&nbsp;-
-            <a <? if ($filtertype=='waitingvalidation') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_TICKETS."&filtertype=waitingvalidation"); ?>">Tickets en attente de validation</a>&nbsp;-
-            <a <? if ($filtertype=='tovalidate') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_TICKETS."&filtertype=tovalidate"); ?>">Tickets à valider</a>
+            <a <? if ($filtertype=='all') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=all"); ?>">Tous</a>&nbsp;-
+            <a <? if ($filtertype=='mytickets') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=mytickets"); ?>">Mes tickets</a>&nbsp;-
+            <a <? if ($filtertype=='waitingvalidation') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=waitingvalidation"); ?>">Tickets en attente de validation</a>&nbsp;-
+            <a <? if ($filtertype=='tovalidate') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=tovalidate"); ?>">Tickets à valider</a>
         </div>
         <div>
             <b>Tri:</b>
-            <a <? if ($sort=='dateticket') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_TICKETS."&sort=dateticket"); ?>">Date des messages</a>&nbsp;-
-            <a <? if ($sort=='datereply') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_TICKETS."&sort=datereply"); ?>">Date des réponses</a>&nbsp;
+            <a <? if ($sort=='dateticket') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=dateticket"); ?>">Date des messages</a>&nbsp;-
+            <a <? if ($sort=='datereply') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=datereply"); ?>">Date des réponses</a>&nbsp;
         </div>
     </div>
 

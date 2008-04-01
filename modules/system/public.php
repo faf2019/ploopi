@@ -23,12 +23,15 @@
 
 ploopi_init_module('system');
 
+$op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
+
 switch($_SESSION['ploopi']['mainmenu'])
 {
     case _PLOOPI_MENU_SEARCH:
         include_once 'public_search.php';
     break;
 
+    /*
     case _PLOOPI_MENU_TICKETS:
         include_once 'public_tickets.php';
     break;
@@ -36,23 +39,23 @@ switch($_SESSION['ploopi']['mainmenu'])
     case _PLOOPI_MENU_ANNOTATIONS:
         include_once 'public_annotations.php';
     break;
-
-    case _PLOOPI_MENU_PROFILE:
-        include_once './include/classes/class_param.php';
-
-
-        $param_module = new param($db->connection_id);
-
-
-        $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
-
-        echo $skin->create_pagetitle(_SYSTEM_LABEL_MYPROFILE);
+*/
+    case _PLOOPI_MENU_MYWORKSPACE:
 
         switch($op)
         {
+            case 'tickets':
+                include './modules/system/public_tickets.php';
+            break;
+            
+            case 'annotations':
+                include './modules/system/public_annotations.php';
+            break;
+            
             case 'paramsave':
                 if (!empty($_POST['idmodule']) && is_numeric($_POST['idmodule']))
                 {
+                    $param_module = new param();
                     $param_module->open($_POST['idmodule'],0,$_SESSION['ploopi']['userid'], 1);
                     $param_module->setvalues($_POST);
                     $param_module->save();
@@ -65,6 +68,7 @@ switch($_SESSION['ploopi']['mainmenu'])
             break;
 
             case 'param':
+                echo $skin->create_pagetitle(_PLOOPI_LABEL_MYPARAMS);
                 include './modules/system/public_module_param.php';
             break;
 
@@ -94,7 +98,10 @@ switch($_SESSION['ploopi']['mainmenu'])
                 else ploopi_redirect("{$scriptenv}?op=user&error=password");
             break;
 
-            default:
+            case 'profile':
+                
+                echo $skin->create_pagetitle(_SYSTEM_LABEL_MYPROFILE);
+                
                 $user = new user();
                 $user->open($_SESSION['ploopi']['userid']);
                 include './modules/system/public_user.php';
@@ -102,51 +109,5 @@ switch($_SESSION['ploopi']['mainmenu'])
 
         }
     break;
-
-    case _PLOOPI_MENU_ABOUT:
-        switch($op)
-        {
-            default:
-                echo $skin->open_simplebloc("PLOOPI "._PLOOPI_VERSION,'100%');
-                ?>
-                <TABLE CELLPADDING="2" CELLSPACING="1">
-                <TR>
-                    <TD>
-                    <? echo _SYSTEM_EXPLAIN_ABOUT; ?>
-                    </TD>
-                </TR>
-                <?
-                if (file_exists('./whatsnew.txt'))
-                {
-                    ?>
-                    <TR>
-                        <TD>
-                        <br>
-                        <b>Changelog : </b>
-                        <?
-                        $handle = fopen('./whatsnew.txt','r');
-                        $contents = '';
-                        while (!feof($handle))
-                        {
-                            $contents .= fread($handle, 8192);
-                        }
-                        echo nl2br($contents);
-                        ?>
-                        </TD>
-                    </TR>
-                    <?
-                }
-                ?>
-                </TABLE>
-                <?
-                echo $skin->close_simplebloc();
-            break;
-
-
-        }
-
-    break;
-
-
 }
 ?>

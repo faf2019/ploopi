@@ -116,15 +116,15 @@
         <!-- BEGIN workspace -->
             <a class="{switch_user_logged_in.workspace.SELECTED}" href="{switch_user_logged_in.workspace.URL}">{switch_user_logged_in.workspace.TITLE}</a>
         <!-- END workspace -->
-        <a class="{MAINMENU_SHOWTICKETS_SEL}" href="{MAINMENU_SHOWTICKETS_URL}">Mes Tickets
+        <a class="{MAINMENU_SHOWTICKETS_SEL}" href="{MAINMENU_SHOWTICKETS_URL}">{MAINMENU_TICKETS}
         <!-- BEGIN sw_newtickets -->
-        <!--span style="font-weight:bold;">({NEWTICKETS})</span-->
+        ({NEWTICKETS})
         <!-- END sw_newtickets -->
         </a>
-        <a class="{MAINMENU_SHOWANNOTATIONS_SEL}" href="{MAINMENU_SHOWANNOTATIONS_URL}">Mes Annotations</a>
-        <a class="{MAINMENU_SHOWPROFILE_SEL}" href="{MAINMENU_SHOWPROFILE_URL}">Mon Profil</a>
-        <a class="{MAINMENU_SHOWSEARCH_SEL}" href="{MAINMENU_SHOWSEARCH_URL}">Recherche</a>
-        <a href="{USER_DECONNECT}">Déconnexion</a>
+        <a class="{MAINMENU_SHOWANNOTATIONS_SEL}" href="{MAINMENU_SHOWANNOTATIONS_URL}">{MAINMENU_ANNOTATIONS}</a>
+        <a class="{MAINMENU_SHOWPROFILE_SEL}" href="{MAINMENU_SHOWPROFILE_URL}">{MAINMENU_PROFILE}</a>
+        <a class="{MAINMENU_SHOWSEARCH_SEL}" href="{MAINMENU_SHOWSEARCH_URL}">{MAINMENU_SEARCH}</a>
+        <a href="{USER_DECONNECT}">{MAINMENU_DISCONNECTION}</a>
     </div>
 
     <div id="container2">
