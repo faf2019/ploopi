@@ -1,4 +1,3 @@
-<?php
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
@@ -20,20 +19,39 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-
-function news_validate(form)
-{
-    if (ploopi_validatefield("<? echo _NEWS_LABEL_TITLE; ?>",form.news_title,"string")) return true;
-
-    return false;
+#system_annotations_list {
+height:1%;
+overflow: visible; 
 }
 
-function newscat_validate(form)
-{
-    if (ploopi_validatefield("<? echo _NEWS_LABEL_TITLE; ?>",form.newscat_title,"string")) return true;
-
-    return false;
+#system_annotations_tags {
+margin-left:-3px;
 }
 
+#system_annotations_titlebar {
+height:1%;
+overflow: visible; 
+}
 
+.system_annotations_row {
+height:1%;
+overflow: visible; 
+}
+
+.ploopi_annotations_row {
+height:1%;
+overflow: visible; 
+}
+
+a.system_annotations_tag {
+height:24px;
+line-height:24px;
+}
+
+.ploopi_annotation_viewlist img, .ploopi_annotation_viewlist span { 
+    display: inline-block; 
+}
+
+.ploopi_annotations_titleform img, .ploopi_annotations_titleform span { 
+    display: inline-block; 
+}

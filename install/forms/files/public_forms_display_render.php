@@ -20,8 +20,6 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
 
 $template_forms->assign_vars(array(
             'FORM_TITLE' => htmlentities($forms->fields['label']),
@@ -66,6 +64,8 @@ while ($fields = $db->fetchrow($rs_fields))
         }
         else $value = (isset($replies[$fields['id']][0])) ? $replies[$fields['id']][0] : '';
 
+        //ploopi_print_r($fields);
+        
         $template_forms->assign_block_vars('formfields.switch_field',array(
                     'ID' => $fields['id'],
                     'LABELID' => 'field_'.$fields['id'],
@@ -76,6 +76,7 @@ while ($fields = $db->fetchrow($rs_fields))
                     'INTERLINE' => $fields['interline'],
                     'VALUE' => htmlentities($value),
                     'TABINDEX' => 1000+$fields['position'],
+                    'MAXLENGTH' => $fields['maxlength'],
                     'CONTENT' => ''
                     )
                 );

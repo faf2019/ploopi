@@ -1,4 +1,3 @@
-<?php
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
@@ -20,12 +19,36 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-$help = array(
-            'forms_01' => 'Message de test 1',
-            'forms_01' => 'Permet de créer un nouveau Dossier <A HREF="http://www.yahoo.fr">yahoo.fr</A>',
-            'forms_01' => 'Message de test 3',
-            'forms_01' => 'Message de test 4'
-        );
-?>
+
+#header {
+height: 1%;
+overflow: visible;
+}
+
+#page_content {
+height: 1%;
+overflow: visible;
+}
+
+#container2 {
+height: 1%;
+overflow: visible;
+}
+
+#block_modules {
+margin-right:0px;
+}
+
+
+#login input, #login label, #login span, #login a {
+   display: inline-block;
+}
+
+#footer span, #footer a {
+   display: inline-block;
+}
+
+.module_content {
+overflow:visible;
+height:1%;
+}

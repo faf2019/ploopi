@@ -20,9 +20,8 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?php
-ploopi_init_module('doc');
+
+ploopi_init_module('doc', false, false, false);
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
 {
@@ -33,7 +32,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
     // affichage des raccourcis ? (pour partages + public)
     $option_shortcuts = ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_displayshortcuts']) ? '' : 'AND f.id_folder = 0';
 
-    // dossiers partagés
+    // dossiers partag�s
     $where = (!empty($_SESSION['doc'][$menu_moduleid]['shares']['folders'])) ? ' OR (f.id IN ('.implode(',', $_SESSION['doc'][$menu_moduleid]['shares']['folders']).") AND f.id_user <> {$_SESSION['ploopi']['userid']} {$option_shortcuts})" : '';
 
     // dossiers dont l'utilisateur connecté est le validateur

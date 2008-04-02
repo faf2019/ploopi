@@ -114,10 +114,16 @@ switch($op)
     break;
 
     case 'delete_news':
-        $news = new news();
-        $news->open($news_id);
-        ploopi_create_user_action_log(_NEWS_ACTION_DELETE, $news->fields['id']);
-        $news->delete();
+        if (!empty($_GET['news_id']) && is_numeric($_GET['news_id']) && ploopi_isactionallowed(_NEWS_ACTION_DELETE))
+        {
+            $news = new news();
+            if ($news->open($_GET['news_id']))
+            {
+                ploopi_create_user_action_log(_NEWS_ACTION_DELETE, $news->fields['id']);
+                $news->delete();
+            }
+        }
+        
         ploopi_redirect("$scriptenv");
     break;
 

@@ -101,32 +101,117 @@ function ploopi_array_map($func, $var)
 *
 * @category module/group management
 */
-function ploopi_init_module($moduletype)
+function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
 {
-
-    if (!defined("_PLOOPI_INITMODULE_{$moduletype}"))
+    global $ploopi_additional_head;
+    global $ploopi_additional_javascript;
+    global $template_body;
+    
+    $strModulePath = "./modules/{$moduletype}";
+    
+    if (is_dir($strModulePath))
     {
-        define("_PLOOPI_INITMODULE_{$moduletype}",    1);
-
-
-        global $ploopi_help;
-
-        $defaultlanguagefile = "./modules/{$moduletype}/lang/french.php";
-        $languagefile = "./modules/{$moduletype}/lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php";
-        $globalfile = "./modules/{$moduletype}/include/global.php";
-
-        if (file_exists($defaultlanguagefile))
+        if (!defined("_PLOOPI_INITMODULE_{$moduletype}"))
         {
-            include_once($defaultlanguagefile);
+            define("_PLOOPI_INITMODULE_{$moduletype}",    1);
+            
+            $defaultlanguagefile = "{$strModulePath}/lang/french.php";
+            $languagefile = "{$strModulePath}/lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php";
+            $globalfile = "{$strModulePath}/include/global.php";
+    
+            if (file_exists($defaultlanguagefile))
+            {
+                include_once($defaultlanguagefile);
+            }
+    
+            if ($languagefile != 'french' && file_exists($languagefile))
+            {
+                include_once($languagefile);
+            }
+            if (file_exists($globalfile))
+            {
+                include_once($globalfile);
+            }
         }
-
-        if ($languagefile != 'french' && file_exists($languagefile))
+        
+        if ($head)
         {
-            include_once($languagefile);
+            if (!defined("_PLOOPI_INITMODULE_HEAD_{$moduletype}"))
+            {
+                define("_PLOOPI_INITMODULE_HEAD_{$moduletype}",    1);
+                
+                $headfile = "{$strModulePath}/include/head.php";
+    
+                // GET MODULE ADDITIONAL HEAD
+                if (file_exists($headfile)) 
+                {
+                    ob_start();
+                    include $headfile;
+                    $ploopi_additional_head .= ob_get_contents();
+                    @ob_end_clean();
+                }
+            }
         }
-        if (file_exists($globalfile))
+        
+        if ($js)
         {
-            include_once($globalfile);
+            if (!defined("_PLOOPI_INITMODULE_JS_{$moduletype}"))
+            {
+                define("_PLOOPI_INITMODULE_JS_{$moduletype}",    1);
+                
+                $jsfile_php = "{$strModulePath}/include/javascript.php";
+                $jsfile = "{$strModulePath}/include/functions.js";
+                
+                // GET MODULE ADDITIONAL JS
+                if (file_exists($jsfile_php))
+                {
+                    ob_start();
+                    include $jsfile;
+                    $ploopi_additional_javascript .= ob_get_contents();
+                    @ob_end_clean();
+                }
+                
+                // GET MODULE ADDITIONAL JS
+                if (file_exists($jsfile))
+                {
+                    $template_body->assign_block_vars(  'module_js',
+                                                        array(
+                                                        'PATH' => $jsfile
+                                                        )
+                                                    );
+                }
+            }
+        }
+        
+        if ($css)
+        {
+            if (!defined("_PLOOPI_INITMODULE_CSS_{$moduletype}"))
+            {
+                define("_PLOOPI_INITMODULE_CSS_{$moduletype}",    1);
+            
+                $cssfile = "{$strModulePath}/include/styles.css";
+                $cssfile_ie = "{$strModulePath}/include/styles_ie.css";
+                
+                // GET MODULE STYLE
+                if (file_exists($cssfile))
+                {
+                    $template_body->assign_block_vars(  'module_css',
+                                                        array(
+                                                        'PATH' => $cssfile
+                                                        )
+                                                    );
+                }
+        
+                // GET MODULE STYLE FOR IE
+                if (file_exists($cssfile_ie))
+                {
+                    $template_body->assign_block_vars(  'module_css_ie',
+                                                        array(
+                                                        'PATH' => $cssfile_ie
+                                                        )
+                                                    );
+                }
+            }
         }
     }
 }

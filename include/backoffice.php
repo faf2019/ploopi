@@ -48,56 +48,18 @@ else
 $template_body->assign_block_vars('ploopi_js',array('PATH' => "./lib/protoculous/protoculous-packer.js"));
 $template_body->assign_block_vars('ploopi_js',array('PATH' => "./js/functions.pack.js"));
 
+$ploopi_additional_head = '';
+$ploopi_additional_javascript = '';
+
 ob_start();
 include './include/javascript.php';
-$additional_javascript = ob_get_contents();
+$ploopi_additional_javascript = ob_get_contents();
 @ob_end_clean();
 
 if ($_SESSION['ploopi']['connected'])
 {
-    // GET MODULE ADDITIONAL HEAD
-    ob_start();
-    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/head.php")) include "./modules/{$_SESSION['ploopi']['moduletype']}/include/head.php";
-    $additional_head = ob_get_contents();
-    @ob_end_clean();
-    
     include_once './include/op.php';
 
-    // GET MODULE ADDITIONAL JS
-    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/javascript.php"))
-    {
-        ob_start();
-        include "./modules/{$_SESSION['ploopi']['moduletype']}/include/javascript.php";
-        $additional_javascript .= ob_get_contents();
-        @ob_end_clean();
-    }
-
-    // GET MODULE ADDITIONAL JS
-    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/functions.js"))
-    {
-        $template_body->assign_block_vars('module_js',array(
-                                                    'PATH' => "./modules/{$_SESSION['ploopi']['moduletype']}/include/functions.js"
-                                                )
-                                        );
-    }
-    
-    // GET MODULE STYLE
-    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/styles.css"))
-    {
-        $template_body->assign_block_vars('module_css',array(
-                                                    'PATH' => "./modules/{$_SESSION['ploopi']['moduletype']}/include/styles.css"
-                                                )
-                                        );
-    }
-
-    // GET MODULE STYLE FOR IE
-    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/styles_ie.css"))
-    {
-        $template_body->assign_block_vars('module_css_ie',array(
-                                                    'PATH' => "./modules/{$_SESSION['ploopi']['moduletype']}/include/styles_ie.css"
-                                                )
-                                        );
-    }
     
     $template_body->assign_block_vars('switch_user_logged_in', array());
 
@@ -112,48 +74,8 @@ if ($_SESSION['ploopi']['connected'])
                                     );
     }
 
-
     // GET BLOCKS
     include_once './include/blocks.php';
-
-    /* TESTING
-    foreach($arrModules as $modtype)
-    {
-        // GET ADDITIONAL JS
-        if (file_exists("./modules/{$modtype}/include/javascript.php"))
-        {
-            ob_start();
-            include "./modules/{$modtype}/include/javascript.php";
-            $additional_javascript .= ob_get_contents();
-            @ob_end_clean();
-        }
-
-        if (file_exists("./modules/{$modtype}/include/styles.css"))
-        {
-            $template_body->assign_block_vars('module_css',array(
-                                                        'PATH' => "./modules/{$modtype}/include/styles.css"
-                                                    )
-                                            );
-        }
-
-        if (file_exists("./modules/{$modtype}/include/styles_ie.css"))
-        {
-            $template_body->assign_block_vars('module_css_ie',array(
-                                                        'PATH' => "./modules/{$modtype}/include/styles_ie.css"
-                                                    )
-                                            );
-        }
-
-        if (file_exists("./modules/{$modtype}/include/functions.js"))
-        {
-            $template_body->assign_block_vars('module_js',array(
-                                                        'PATH' => "./modules/{$modtype}/include/functions.js"
-                                                    )
-                                            );
-        }
-    }
-    */
-    
 
     if (!empty($arrBlock))
     {
@@ -220,7 +142,7 @@ if ($_SESSION['ploopi']['connected'])
 
     $template_body->assign_vars(array(
         'PAGE_CONTENT'          => $page_content,
-        'ADDITIONAL_HEAD'       => $additional_head,
+        'ADDITIONAL_HEAD'       => $ploopi_additional_head,
 
         'USER_LOGIN'            => $_SESSION['ploopi']['login'],
         'USER_FIRSTNAME'        => $_SESSION['ploopi']['user']['firstname'],
@@ -279,7 +201,7 @@ $template_body->assign_vars(array(
     'WORKSPACE_META_ROBOTS'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_robots']),
     'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
     'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
-    'ADDITIONAL_JAVASCRIPT'         => $additional_javascript,
+    'ADDITIONAL_JAVASCRIPT'         => $ploopi_additional_javascript,
     'PLOOPI_ERROR'                  => (!empty($_GET['ploopi_errorcode'])) ? $ploopi_errormsg[$_GET['ploopi_errorcode']] : '',
     'PLOOPI_VERSION'                    => _PLOOPI_VERSION
     )

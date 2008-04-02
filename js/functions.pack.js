@@ -49,7 +49,6 @@ function ploopi_window_onunload_launch()
     }
 }
 
-
 function ploopi_openwin(url,w,h,name)
 {
    var top = (screen.height-(h+60))/2;

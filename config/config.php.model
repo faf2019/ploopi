@@ -47,12 +47,12 @@ switch($http_host)
 		define ('_PLOOPI_USE_DBSESSION', <USE_DBSESSION>); // true if session stored into database
 
 		define ('_PLOOPI_DEBUGMODE', false);
-		define ('_PLOOPI_DISPLAY_ERRORS', true);
+		define ('_PLOOPI_DISPLAY_ERRORS', false);
 		define ('_PLOOPI_MAIL_ERRORS', false);
 		define ('_PLOOPI_ADMINMAIL', 'webmaster@mydomain.com');
-		define ('_PLOOPI_ERROR_REPORTING', E_ALL); //  E_ALL E_ERROR  E_WARNING  E_PARSE  E_NOTICE
+		define ('_PLOOPI_ERROR_REPORTING', E_ALL ^ E_NOTICE); //  E_ALL E_ERROR  E_WARNING  E_PARSE  E_NOTICE
 
-		define ('_PLOOPI_ACTIVELOG', false);
+		define ('_PLOOPI_ACTIVELOG', true);
 
 		define ('_PLOOPI_URL_ENCODE', <URL_ENCODE>);
 		define ('_PLOOPI_SECRETKEY', '<SECRETKEY>');

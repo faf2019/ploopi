@@ -19,10 +19,10 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-@import url(main_ie.css);
-@import url(skin_ie.css);
-@import url(annotations_ie.css);
-@import url(tickets_ie.css);
-@import url(shares_ie.css);
-@import url(calendar_ie.css);
-@import url(documents_ie.css);
+@import url(ie_main.css);
+@import url(ie_skin.css);
+@import url(ie_annotations.css);
+@import url(ie_tickets.css);
+@import url(ie_shares.css);
+@import url(ie_calendar.css);
+@import url(ie_documents.css);

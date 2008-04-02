@@ -20,9 +20,9 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-ploopi_init_module('webedit');
+
+ploopi_init_module('webedit', false, false, false);
+
 $block->addmenu('Voir les articles', ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public", ($_SESSION['ploopi']['moduleid']==$menu_moduleid && $_SESSION['ploopi']['action'] == 'public')));
 if (ploopi_isactionallowed(-1,$_SESSION['ploopi']['workspaceid'],$menu_moduleid))
 {

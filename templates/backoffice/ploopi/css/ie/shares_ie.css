@@ -1,4 +1,3 @@
-<?php
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
@@ -20,20 +19,4 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-
-function news_validate(form)
-{
-    if (ploopi_validatefield("<? echo _NEWS_LABEL_TITLE; ?>",form.news_title,"string")) return true;
-
-    return false;
-}
-
-function newscat_validate(form)
-{
-    if (ploopi_validatefield("<? echo _NEWS_LABEL_TITLE; ?>",form.newscat_title,"string")) return true;
-
-    return false;
-}
-
 

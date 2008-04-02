@@ -20,7 +20,7 @@
                         <!-- END switch_autoincrement -->
 
                         <!-- BEGIN switch_text -->
-                        <input type="text" class="text" id="{formfields.switch_field.LABELID}" name="{formfields.switch_field.NAME}" value="{formfields.switch_field.VALUE}" tabindex="{formfields.switch_field.TABINDEX}" />
+                        <input type="text" class="text" id="{formfields.switch_field.LABELID}" name="{formfields.switch_field.NAME}" value="{formfields.switch_field.VALUE}" maxlength="{formfields.switch_field.MAXLENGTH}" tabindex="{formfields.switch_field.TABINDEX}" />
                         <!-- END switch_text -->
 
                         <!-- BEGIN switch_text_date -->

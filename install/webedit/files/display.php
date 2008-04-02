@@ -558,33 +558,5 @@ $template_body->assign_vars(array(
     )
 );
 
-ob_start();
 $template_body->pparse('body');
-$ploopi_content = ob_get_contents();
-ob_end_clean();
-
-session_write_close();
-
-include_once './include/stats.php';
-
-$array_tags = array(    '<PLOOPI_PAGE_SIZE>',
-                        '<PLOOPI_EXEC_TIME>',
-                        '<PLOOPI_PHP_P100>',
-                        '<PLOOPI_SQL_P100>',
-                        '<PLOOPI_NUMQUERIES>',
-                        '<PLOOPI_SESSION_SIZE>'
-                    );
-
-$array_values = array(  sprintf("%.02f",$ploopi_stats['pagesize']/1024),
-                        $ploopi_stats['total_exectime'],
-                        $ploopi_stats['php_ratiotime'],
-                        $ploopi_stats['sql_ratiotime'],
-                        $ploopi_stats['numqueries'],
-                        sprintf("%.02f",$ploopi_stats['sessionsize']/1024)
-                    );
-
-$ploopi_content = str_replace($array_tags, $array_values, $ploopi_content);
-
-// buffer flushing
-echo $ploopi_content;
 ?>

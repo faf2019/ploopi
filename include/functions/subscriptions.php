@@ -34,7 +34,7 @@ function ploopi_subscription($id_object, $id_record, $allowedactions = null, $op
     ?>
     <div id="ploopi_subscription_<? echo $ploopi_subscription_id; ?>"></div>
     <script type="text/javascript">
-        ploopi_subscription('<? echo $ploopi_subscription_id; ?>');
+        ploopi_window_onload_stock(function () {ploopi_subscription('<? echo $ploopi_subscription_id; ?>')});
     </script>
     <?    
 }
