@@ -166,7 +166,7 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
                 if (file_exists($jsfile_php))
                 {
                     ob_start();
-                    include $jsfile;
+                    include $jsfile_php;
                     $ploopi_additional_javascript .= ob_get_contents();
                     @ob_end_clean();
                 }
