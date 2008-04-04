@@ -188,6 +188,22 @@ padding-right:4px;
     text-decoration:none;
 }
 
+.system_tickets_legend {
+    clear:both;
+    padding:4px;
+    overflow:auto;
+}
+
+.system_tickets_legend img {
+    float:left;
+    margin-left:10px;
+    margin-right:2px;
+}
+
+.system_tickets_legend div {
+    float:left;
+}
+
 #tickets_new {
     padding:4px;
     background-color:#f8f8f8;

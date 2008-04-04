@@ -18,7 +18,7 @@
 
     <link rel="icon" href="{TEMPLATE_PATH}/img/favicon.png" type="image/png" />
 
-    <link type="text/css" rel="stylesheet" title="short" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
     <link type="text/css" rel="alternate stylesheet" title="large" href="{TEMPLATE_PATH}/css/styles_large.css" media="screen" />
 
     <!-- BEGIN module_css -->

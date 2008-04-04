@@ -19,13 +19,39 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-@import url(main.css);
-@import url(main_large.css);
-@import url(annotations.css);
-@import url(calendar.css);
-@import url(documents.css);
-@import url(shares.css);
-@import url(skin.css);
-@import url(subscriptions.css);
-@import url(tickets.css);
-@import url(workflow.css);
+
+body.index {
+margin:0;
+padding:0;
+background:#8fa090;
+position:relative;
+}
+
+
+#container_in {
+margin:0;
+width:100%;
+}
+
+#container_out {
+margin:0;
+width:100%;
+}
+
+
+#choix_style_short {
+visibility:visible;
+display:inline;
+cursor:pointer;
+}
+
+#choix_style_large {
+visibility:hidden;
+display:none;
+cursor:pointer;
+}
+
+#footer {
+margin:0;
+width:100%;
+}

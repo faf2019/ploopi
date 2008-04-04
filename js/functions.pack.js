@@ -747,8 +747,7 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy)
 
     with (ploopi_popup.style)
     {
-        //ploopi_popup.innerHTML = msg+' '+posx+','+posy;
-        ploopi_innerHTML(id, popup_content);
+        if (typeof(popup_content) != 'undefined') ploopi_innerHTML(id, popup_content);
 
         tmpleft = parseInt(posx) + 20;
         tmptop = parseInt(posy);
@@ -766,6 +765,55 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy)
     }
 
     new Effect.Appear(id, { duration: 0.4, from: 0.0, to: 1 });
+}
+
+function ploopi_movepopup(id, e, pposx, pposy, popup_content)
+{
+    var ploopi_popup;
+
+    if (!id) id = 'ploopi_popup';
+    
+    ploopi_popup = $(id);
+
+    posx = 0;
+    posy = 0;
+    
+    pposx = parseInt(pposx);
+    pposy = parseInt(pposy);
+
+    if (pposx) posx = pposx; 
+    if (pposy) posy = pposy;
+     
+    if(e) // event ok
+    {
+        if (e.pageX || e.pageY) {
+            posx = e.pageX;
+            posy = e.pageY;
+        }
+        else if (e.clientX || e.clientY) {
+            posx = e.clientX + document.body.scrollLeft;
+            posy = e.clientY + document.body.scrollTop;
+        }
+    }
+    
+    with (ploopi_popup.style)
+    {
+        ploopi_innerHTML(id, popup_content);
+
+        tmpleft = parseInt(posx) + 20;
+        tmptop = parseInt(posy);
+
+        w = parseInt(ploopi_popup.offsetWidth);
+
+        if (20 + w + parseInt(tmpleft) > parseInt(document.body.offsetWidth))
+        {
+            tmpleft = parseInt(tmpleft) - w - 40;
+        }
+
+        left = tmpleft+'px';
+        top = tmptop+'px';
+    }    
+    
 }
 
 function ploopi_hidepopup(id)
