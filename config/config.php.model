@@ -82,7 +82,7 @@ switch($http_host)
 		define ('_PLOOPI_INDEXATION_WORDMAXLENGHT', 50);
 		define ('_PLOOPI_INDEXATION_COMMONWORDS_FR', './config/commonwords_fr.txt');
 		define ('_PLOOPI_INDEXATION_RATIOMIN', 0.01);
-		define ('_PLOOPI_INDEXATION_KEYWORDSMAXPCENT', 75);
+		define ('_PLOOPI_INDEXATION_KEYWORDSMAXPCENT', 100);
 	break;
 }
 ?>

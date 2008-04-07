@@ -225,15 +225,6 @@
         <!-- END block -->
     <!-- END switch_blockmenu -->
 
-    <!--div id="header">
-        <p>Bienvenue&nbsp;<b>{USER_FIRSTNAME}&nbsp;{USER_LASTNAME}</b></p>
-        <!-- BEGIN workspace -->
-            <a class="{switch_user_logged_in.workspace.SELECTED}" href="{switch_user_logged_in.workspace.URL}">{switch_user_logged_in.workspace.TITLE}</a>
-        <!-- END workspace -->
-    </div-->
-
-
-
     <div id="container2">
         <div id="module_haut"><div></div></div>
         <div id="module_fond">

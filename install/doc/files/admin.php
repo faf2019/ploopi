@@ -21,7 +21,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-if (ploopi_isactionallowed(0, $_SESSION['ploopi']['workspaceid'], $_SESSION['ploopi']['moduleid']))
+ploopi_init_module('doc');
+
+if (ploopi_isactionallowed(_DOC_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid'], $_SESSION['ploopi']['moduleid']))
 {
     include_once './modules/doc/class_docfile.php';
     include_once './modules/doc/class_docfolder.php';

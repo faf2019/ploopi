@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>doc</label>
-        <version>3.74</version>
+        <version>3.75</version>
         <author>Netlor / Ovensia</author>
-        <date>20080402000000</date>
+        <date>20080406000000</date>
         <description>Gestion de Documents</description>
         <paramtype>
             <name>doc_viewfoldersinblock</name>
@@ -135,6 +135,10 @@
         <action>
             <id_action>7</id_action>
             <label>Gérer les Validateurs</label>
-            </action>
+        </action>
+        <action>
+            <id_action>99</id_action>
+            <label>Administrer (parsers, indexation, stats)</label>
+        </action>
     </moduletype>
 </ploopi>

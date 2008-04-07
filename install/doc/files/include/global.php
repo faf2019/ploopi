@@ -32,6 +32,7 @@ define ('_DOC_ACTION_MODIFYFILE',   4);
 define ('_DOC_ACTION_DELETEFOLDER', 5);
 define ('_DOC_ACTION_DELETEFILE',   6);
 define ('_DOC_ACTION_WORKFLOW_MANAGE',  7);
+define ('_DOC_ACTION_ADMIN',  99);
 
 define('_DOC_OBJECT_FOLDER',    1);
 define('_DOC_OBJECT_FILE',      2);

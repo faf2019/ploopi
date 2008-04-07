@@ -1,3 +1,10 @@
+== Module DOC - version 3.75 ====================================================
+
+2008-04-06  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Ajout d'une action 'administrer'
+ * Mise à jour de l'onglet "Statistiques"
+
 == Module DOC - version 3.72 ====================================================
 
 2008-03-13  Stéphane Escaich  <stephane@ovensia.fr>

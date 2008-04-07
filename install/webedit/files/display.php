@@ -269,8 +269,6 @@ if ($query_string != '') // recherche
 
     $arrRelevance = ploopi_search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, '', $_SESSION['ploopi']['moduleid']);
 
-    //ploopi_print_r($arrRelevance);
-    
     foreach($arrRelevance as $key => $result)
     {
         $objArticle = new webedit_article();
@@ -281,7 +279,7 @@ if ($query_string != '') // recherche
 
             $cleaned_content = strip_tags(html_entity_decode($objArticle->fields['content']));
 
-            $extract = ploopi_highlight($cleaned_content, array_keys($result['keywords']));
+            $extract = ploopi_highlight($cleaned_content, array_keys($result['kw']));
 
             $size = sprintf("%.02f", strlen($cleaned_content)/1024);
 

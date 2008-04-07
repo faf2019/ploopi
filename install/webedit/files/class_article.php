@@ -76,10 +76,14 @@ class webedit_article extends data_object
             $article->open($this->fields['id']);
             $article->delete();
         }
+        else
+        {
+            ploopi_search_remove_index(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id']);
+        }
 
         parent::delete();
     }
-
+    
     function publish()
     {
         global $db;

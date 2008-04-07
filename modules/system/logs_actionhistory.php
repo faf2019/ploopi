@@ -175,7 +175,7 @@ $row = $db->fetchrow();
 $count = $row['c'];
 
 ?>
-<div style="padding:4px;border-bottom:1px solid #c0c0c0;background:#e0e0e0;"><b><? echo $count; ?> élément(s) trouvés</b> <? if ($count > $maxres) { ?>- Affichage des <? echo $maxres; ?> premiers résultats<? } ?></div>
+<div style="padding:4px;border-bottom:1px solid #c0c0c0;background:#e0e0e0;"><b><? echo $count; ?> élément(s) trouvés</b> <? if ($count > $maxres) { ?>- Affichage des <? echo $maxres; ?> résultats les plus récents<? } ?> - Utilisez les filtres ci-dessus pour des résultats plus précis</div>
 <?
 
 $sql =  "
@@ -190,6 +190,7 @@ $sql =  "
         ON          ploopi_user_action_log.id_action = ploopi_mb_action.id_action
         AND         ploopi_mb_action.id_module_type = ploopi_module.id_module_type
         {$wheresql}
+        ORDER BY    timestp DESC
         LIMIT       0,{$maxres}
         ";
 

@@ -20,11 +20,10 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 echo $skin->open_simplebloc('Statistiques');
 ?>
-<div class="doc_admin_titlebar">Quelques chiffres</div>
+<div class="doc_admin_titlebar"><b>Quelques chiffres</b></div>
 <?
 $array_columns = array();
 $array_values = array();
@@ -52,70 +51,52 @@ $array_values[$c]['link'] = '';
 $array_values[$c]['style'] = '';
 $c++;
 
-$db->query("SELECT count(*) as nb FROM ploopi_mod_doc_keyword WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-echo "
+$db->query( "
             SELECT  count(ke.id_keyword) as nb
             FROM    ploopi_index_element e,
                     ploopi_index_keyword_element ke
-
+            
             WHERE   e.id_module = {$_SESSION['ploopi']['moduleid']}
             AND     e.id_object = "._DOC_OBJECT_FILE."
             AND     ke.id_element = e.id
-            ";
-
-            $db->query( "
-            SELECT  count(ke.id_keyword) as nb
-            FROM    ploopi_index_element e,
-                    ploopi_index_keyword_element ke
-
-            WHERE   e.id_module = {$_SESSION['ploopi']['moduleid']}
-            AND     e.id_object = "._DOC_OBJECT_FILE."
-            AND     ke.id_element = e.id
+            AND     ke.weight = 999999
             ");
+
 $row = $db->fetchrow();
 
-$nbkw = $row['nb'];
-
-$array_values[$c]['values']['indicateur']   = array('label' => 'Mots clés uniques', 'style' => '');
+$array_values[$c]['values']['indicateur']   = array('label' => 'Metas indexés', 'style' => '');
 $array_values[$c]['values']['nombre']       = array('label' => $row['nb'], 'style' => '');
-$array_values[$c]['description'] = 'Mots clés différents';
+$array_values[$c]['description'] = 'Metas indexés';
 $array_values[$c]['link'] = '';
 $array_values[$c]['style'] = '';
 $c++;
 
-$db->query("SELECT count(*) as nb FROM ploopi_mod_doc_keyword_file WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
+$db->query( "
+            SELECT  sum(ke.weight) as total_weight
+            FROM    ploopi_index_element e,
+                    ploopi_index_keyword_element ke
+            
+            WHERE   e.id_module = {$_SESSION['ploopi']['moduleid']}
+            AND     e.id_object = "._DOC_OBJECT_FILE."
+            AND     ke.id_element = e.id
+            AND     ke.weight <> 999999
+            ");
+
 $row = $db->fetchrow();
 
-$array_values[$c]['values']['indicateur']   = array('label' => 'Mots clés', 'style' => '');
-$array_values[$c]['values']['nombre']       = array('label' => $row['nb'], 'style' => '');
-$array_values[$c]['description'] = 'Mots clés';
-$array_values[$c]['link'] = '';
-$array_values[$c]['style'] = '';
-$c++;
-
-$db->query("SELECT sum(words_overall) as wo, sum(words_indexed) as wi FROM ploopi_mod_doc_file WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-$row = $db->fetchrow();
-
-$total_weight = $row['wo'];
-
-$array_values[$c]['values']['indicateur']   = array('label' => 'Mots', 'style' => '');
-$array_values[$c]['values']['nombre']       = array('label' => $row['wo'], 'style' => '');
-$array_values[$c]['description'] = 'Mots';
-$array_values[$c]['link'] = '';
-$array_values[$c]['style'] = '';
-$c++;
+$total_weight = $row['total_weight'];
 
 $array_values[$c]['values']['indicateur']   = array('label' => 'Mots indexés', 'style' => '');
-$array_values[$c]['values']['nombre']       = array('label' => $row['wi'], 'style' => '');
+$array_values[$c]['values']['nombre']       = array('label' => $row['total_weight'], 'style' => '');
 $array_values[$c]['description'] = 'Mots indexés';
 $array_values[$c]['link'] = '';
 $array_values[$c]['style'] = '';
 $c++;
 
-$skin->display_array($array_columns, $array_values, 'docparser_stats', array('height' => 100, 'sortable' => true));
+$skin->display_array($array_columns, $array_values, 'docparser_stats', array('height' => 100));
 ?>
 
-<div class="doc_admin_titlebar">Mots les plus fréquents</div>
+<div class="doc_admin_titlebar"><b>Mots les plus fréquents</b></div>
 <?
 $array_columns = array();
 $array_values = array();
@@ -145,10 +126,19 @@ $array_columns['auto']['mot'] = array(  'label' => 'Mot',
                                         );
 
 $sql =  "
-        SELECT      k.id, k.keyword, sum(kf.weight) as w
-        FROM        ploopi_mod_doc_keyword_file kf
-        INNER JOIN  ploopi_mod_doc_keyword k ON k.id = kf.id_keyword
-        WHERE       kf.id_module = {$_SESSION['ploopi']['moduleid']}
+        SELECT  k.keyword,
+                sum(ke.weight) as w
+        
+        FROM    ploopi_index_element e,
+                ploopi_index_keyword_element ke,
+                ploopi_index_keyword k
+        
+        WHERE   e.id_module = {$_SESSION['ploopi']['moduleid']}
+        AND     e.id_object = "._DOC_OBJECT_FILE."
+        AND     ke.id_element = e.id
+        AND     ke.weight <> 999999
+        AND     k.id = ke.id_keyword
+            
         GROUP BY    k.id
         ORDER BY    w DESC
         LIMIT 0,50
@@ -159,7 +149,7 @@ $db->query($sql);
 $c = 1;
 while ($row = $db->fetchrow())
 {
-    $weight = ($total_weight == 0) ? 0 : number_format(($row['w']*100)/$total_weight,3);
+    $weight = ($total_weight == 0) ? 0 : number_format(($row['w']*100)/$total_weight,2);
 
     $array_values[$c]['values']['pos']  = array('label' => $c, 'style' => '');
     $array_values[$c]['values']['pcent']    = array('label' => $weight, 'style' => '');
