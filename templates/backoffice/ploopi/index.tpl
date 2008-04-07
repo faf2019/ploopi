@@ -34,7 +34,7 @@
 
     <link rel="icon" href="{TEMPLATE_PATH}/img/favicon.png" type="image/png" />
 
-    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.pack.css" media="screen" />
 
     <!-- BEGIN module_css -->
     <link type="text/css" rel="stylesheet" href="{module_css.PATH}" media="screen" />
@@ -42,7 +42,7 @@
 
     <!--[if lte IE 6]>
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/png.css" media="screen" title="png" />
-    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles_ie.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles_ie.pack.css" media="screen" />
     <!-- BEGIN module_css_ie -->
     <link type="text/css" rel="stylesheet" href="{module_css_ie.PATH}" media="screen" />
     <!-- END module_css_ie -->
