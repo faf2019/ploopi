@@ -44,9 +44,7 @@
             <?
         }
     }
-    ?>
 
-    <?
     $numrows = sizeof($data);
 
     if ($forms->fields['nbline'] > 0 && $numrows > $forms->fields['nbline'])
@@ -207,7 +205,7 @@
                         switch($data_title[$key]['type'])
                         {
                             case 'file':
-                                if ($value != '') $value = $value.'<a href="'."{$scriptenv}?op=download_file&forms_id={$id_form}&reply_id={$reply_id}&field_id={$key}".'"><img style="border:0px" src="./modules/forms/img/link.gif"></a>';
+                                if ($value != '') $value = $value.'<a href="'.ploopi_urlencode("{$scriptenv}?ploopi_op=forms_download_file&forms_fuid={$_GET['forms_fuid']}&reply_id={$reply_id}&field_id={$key}").'"><img style="border:0px" src="./modules/forms/img/link.gif"></a>';
                             break;
 
                             case 'color':

@@ -79,11 +79,30 @@ if (ploopi_ismoduleallowed('forms'))
 
 switch($ploopi_op)
 {
+    case 'forms_download_file':
+        if (!empty($_GET['forms_fuid']) && isset($_SESSION['forms'][$_GET['forms_fuid']]))
+        {
+            $id_form = $_SESSION['forms'][$_GET['forms_fuid']]['id_form'];
+            $id_module = $_SESSION['forms'][$_GET['forms_fuid']]['id_module'];
+            
+            if (!empty($_GET['reply_id']) && !empty($_GET['field_id']) && is_numeric($_GET['reply_id']) && is_numeric($_GET['field_id']))
+            {
+                include_once './modules/forms/class_reply_field.php';
+                $reply_field = new reply_field();
+                if ($reply_field->open($_GET['reply_id'], $_GET['field_id']))
+                {
+                    $path = _PLOOPI_PATHDATA._PLOOPI_SEP.'forms-'.$id_module._PLOOPI_SEP.$reply_field->fields['id_form']._PLOOPI_SEP.$_GET['reply_id']._PLOOPI_SEP;
+                    ploopi_downloadfile("{$path}{$reply_field->fields['value']}", $reply_field->fields['value']);
+                }
+            }
+        }
+        ploopi_die();
+    break;
+    
     case 'forms_display':
         if (!empty($_GET['forms_fuid']) && isset($_SESSION['forms'][$_GET['forms_fuid']]))
         {
-            include_once './modules/forms/include/global.php';
-            include_once './modules/forms/lang/french.php';
+            ploopi_init_module('forms', false, false, false);
             include_once './modules/forms/class_form.php';
 
             $id_form = $_SESSION['forms'][$_GET['forms_fuid']]['id_form'];
@@ -98,8 +117,7 @@ switch($ploopi_op)
     case 'forms_export':
         if (!empty($_GET['forms_fuid']) && isset($_SESSION['forms'][$_GET['forms_fuid']]))
         {
-            include_once './modules/forms/include/global.php';
-            include_once './modules/forms/lang/french.php';
+            ploopi_init_module('forms', false, false, false);
             include_once './modules/forms/class_form.php';
 
             $id_form = $_SESSION['forms'][$_GET['forms_fuid']]['id_form'];
@@ -115,8 +133,7 @@ switch($ploopi_op)
         if (!empty($_GET['forms_fuid']) && isset($_SESSION['forms'][$_GET['forms_fuid']]))
         {
             ob_start();
-            include_once './modules/forms/include/global.php';
-            include_once './modules/forms/lang/french.php';
+            ploopi_init_module('forms', false, false, false);
             include_once './modules/forms/class_form.php';
 
             $reply_id = $_GET['forms_reply_id'];
@@ -141,8 +158,7 @@ switch($ploopi_op)
         if (!empty($_POST['forms_fuid']) && isset($_SESSION['forms'][$_POST['forms_fuid']]))
         {
             ob_start();
-            include_once './modules/forms/include/global.php';
-            include_once './modules/forms/lang/french.php';
+            ploopi_init_module('forms', false, false, false);
             include_once './modules/forms/class_form.php';
             include_once './modules/forms/class_reply.php';
             include_once './modules/forms/class_reply_field.php';

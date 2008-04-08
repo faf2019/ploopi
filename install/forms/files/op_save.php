@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 $forms = new forms();
 $forms->open($id_form);
 $email_array = array();
@@ -71,11 +70,11 @@ while ($fields = $db->fetchrow($rs_fields))
     $fieldok = false;
     $error = false;
 
-    if ($fields['type'] == 'file' && isset($_FILES['field_'.$fields['id']]['name']))
+    if ($fields['type'] == 'file' && !empty($_FILES['field_'.$fields['id']]['name']))
     {
         $fieldok = true;
         $value = $_FILES['field_'.$fields['id']]['name'];
-        $path = _PLOOPI_PATHDATA.'forms-'.$id_module._PLOOPI_SEP.$id_form._PLOOPI_SEP.$reply->fields['id']._PLOOPI_SEP;
+        $path = _PLOOPI_PATHDATA._PLOOPI_SEP.'forms-'.$id_module._PLOOPI_SEP.$id_form._PLOOPI_SEP.$reply->fields['id']._PLOOPI_SEP;
         $error = ($_FILES['field_'.$fields['id']]['size'] > _PLOOPI_MAXFILESIZE);
 
         if (!$error)
