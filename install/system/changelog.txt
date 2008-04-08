@@ -1,3 +1,14 @@
+== Ploopi - version 1.0 RC2 ===================================================
+
+2008-04-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * intégration FCKEditor 2.6
+ * compression des fichiers JS/CSS (templates + ploopi)
+ * optimisations dans les inclusions des dépendances des modules (JS/CSS notamment)
+ * correctifs divers
+ * nouveau système de mise à jour du portail
+ * mise à jour des modules
+ 
 == Ploopi - version 1.0 RC1 ===================================================
 
 2008-03-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

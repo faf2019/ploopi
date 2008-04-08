@@ -208,7 +208,7 @@ if (isset($ploopi_op))
                 ?>
                 <div class="calendar_row" style="height:1.2em;">
                     <a style="display:block;float:left;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_calendar_dispatchevent('<? echo $_SESSION['calendar']['inputfield_id']; ?>');">Aujourd'hui</a>
-                    <a style="display:block;float:right;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:$('ploopi_popup_calendar');">Fermer</a>
+                    <a style="display:block;float:right;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup('ploopi_popup_calendar');">Fermer</a>
                 </div>
             </div>
             <?

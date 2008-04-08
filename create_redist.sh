@@ -1,5 +1,5 @@
 #!/bin/sh
-export DEST=ploopi_1.0RC1
+export DEST=ploopi_1.0RC2
 export YUIVER='-2.3.4'
 
 #################################

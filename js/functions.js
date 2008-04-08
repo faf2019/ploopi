@@ -727,7 +727,7 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy)
         ploopi_popup.setAttribute('class', 'ploopi_popup');
         ploopi_popup.setAttribute('className', 'ploopi_popup'); // IE
         ploopi_popup.setAttribute('id', id);
-        ploopi_popup.setAttribute('style', 'z-index:'+(69000+ploopi_nbpopup)+';');
+        ploopi_popup.setAttribute('style', 'z-index:'+(1000+ploopi_nbpopup)+';');
         ploopi_popup.style.display = 'none';
 
         bodys[0].appendChild(ploopi_popup);

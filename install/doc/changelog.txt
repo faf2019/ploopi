@@ -1,3 +1,9 @@
+== Module DOC - version 3.76 ====================================================
+
+2008-04-08  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Compression des fichiers JS/CSS
+ 
 == Module DOC - version 3.75 ====================================================
 
 2008-04-06  Stéphane Escaich  <stephane@ovensia.fr>

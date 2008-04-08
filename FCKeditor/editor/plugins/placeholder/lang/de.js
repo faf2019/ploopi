@@ -1,6 +1,6 @@
 ﻿/*
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net
- * Copyright (C) 2003-2007 Frederico Caldeira Knabben
+ * Copyright (C) 2003-2008 Frederico Caldeira Knabben
  *
  * == BEGIN LICENSE ==
  *
@@ -20,8 +20,8 @@
  *
  * Placholder German language file.
  */
-FCKLang.PlaceholderBtn          = 'Einfügen/editieren Platzhalter' ;
-FCKLang.PlaceholderDlgTitle     = 'Platzhalter Eigenschaften' ;
-FCKLang.PlaceholderDlgName      = 'Platzhalter Name' ;
-FCKLang.PlaceholderErrNoName    = 'Bitte den Namen des Platzhalters schreiben' ;
-FCKLang.PlaceholderErrNameInUse = 'Der angegebene Namen ist schon in Gebrauch' ;
+FCKLang.PlaceholderBtn			= 'Einfügen/editieren Platzhalter' ;
+FCKLang.PlaceholderDlgTitle		= 'Platzhalter Eigenschaften' ;
+FCKLang.PlaceholderDlgName		= 'Platzhalter Name' ;
+FCKLang.PlaceholderErrNoName	= 'Bitte den Namen des Platzhalters schreiben' ;
+FCKLang.PlaceholderErrNameInUse	= 'Der angegebene Namen ist schon in Gebrauch' ;

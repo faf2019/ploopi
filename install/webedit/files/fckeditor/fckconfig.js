@@ -36,3 +36,5 @@ FCKConfig.FlashBrowser = true ;
 FCKConfig.FlashBrowserURL = "../../../admin-light.php?ploopi_op=doc_selectflash";
 FCKConfig.FlashBrowserWindowWidth  = 600 ;  // 70% ;
 FCKConfig.FlashBrowserWindowHeight = 350 ;  // 70% ;
+
+FCKConfig.CustomStyles = { };

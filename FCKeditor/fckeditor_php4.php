@@ -1,7 +1,7 @@
 <?php
 /*
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net
- * Copyright (C) 2003-2007 Frederico Caldeira Knabben
+ * Copyright (C) 2003-2008 Frederico Caldeira Knabben
  *
  * == BEGIN LICENSE ==
  *
@@ -27,121 +27,190 @@
 
 class FCKeditor
 {
-    var $InstanceName ;
-    var $BasePath ;
-    var $Width ;
-    var $Height ;
-    var $ToolbarSet ;
-    var $Value ;
-    var $Config ;
+	/**
+	 * Name of the FCKeditor instance.
+	 *
+	 * @access protected
+	 * @var string
+	 */
+	var $InstanceName ;
+	/**
+	 * Path to FCKeditor relative to the document root.
+	 *
+	 * @var string
+	 */
+	var $BasePath ;
+	/**
+	 * Width of the FCKeditor.
+	 * Examples: 100%, 600
+	 *
+	 * @var mixed
+	 */
+	var $Width ;
+	/**
+	 * Height of the FCKeditor.
+	 * Examples: 400, 50%
+	 *
+	 * @var mixed
+	 */
+	var $Height ;
+	/**
+	 * Name of the toolbar to load.
+	 *
+	 * @var string
+	 */
+	var $ToolbarSet ;
+	/**
+	 * Initial value.
+	 *
+	 * @var string
+	 */
+	var $Value ;
+	/**
+	 * This is where additional configuration can be passed.
+	 * Example:
+	 * $oFCKeditor->Config['EnterMode'] = 'br';
+	 *
+	 * @var array
+	 */
+	var $Config ;
 
-    // PHP 4 Constructor
-    function FCKeditor( $instanceName )
-    {
-        $this->InstanceName = $instanceName ;
-        $this->BasePath     = '/fckeditor/' ;
-        $this->Width        = '100%' ;
-        $this->Height       = '200' ;
-        $this->ToolbarSet   = 'Default' ;
-        $this->Value        = '' ;
+	/**
+	 * Main Constructor.
+	 * Refer to the _samples/php directory for examples.
+	 *
+	 * @param string $instanceName
+	 */
+	function FCKeditor( $instanceName )
+	{
+		$this->InstanceName	= $instanceName ;
+		$this->BasePath		= '/fckeditor/' ;
+		$this->Width		= '100%' ;
+		$this->Height		= '200' ;
+		$this->ToolbarSet	= 'Default' ;
+		$this->Value		= '' ;
 
-        $this->Config       = array() ;
-    }
+		$this->Config		= array() ;
+	}
 
-    function Create()
-    {
-        echo $this->CreateHtml() ;
-    }
+	/**
+	 * Display FCKeditor.
+	 *
+	 */
+	function Create()
+	{
+		echo $this->CreateHtml() ;
+	}
 
-    function CreateHtml()
-    {
-        $HtmlValue = htmlspecialchars( $this->Value ) ;
+	/**
+	 * Return the HTML code required to run FCKeditor.
+	 *
+	 * @return string
+	 */
+	function CreateHtml()
+	{
+		$HtmlValue = htmlspecialchars( $this->Value ) ;
 
-        $Html = '<div>' ;
-        
-        if ( !isset( $_GET ) ) {
-            global $HTTP_GET_VARS ;
-            $_GET = $HTTP_GET_VARS ;
-        }
+		$Html = '' ;
 
-        if ( $this->IsCompatible() )
-        {
-            if ( isset( $_GET['fcksource'] ) && $_GET['fcksource'] == "true" )
-                $File = 'fckeditor.original.html' ;
-            else
-                $File = 'fckeditor.html' ;
+		if ( !isset( $_GET ) ) {
+			global $HTTP_GET_VARS ;
+			$_GET = $HTTP_GET_VARS ;
+		}
 
-            $Link = "{$this->BasePath}editor/{$File}?InstanceName={$this->InstanceName}" ;
+		if ( $this->IsCompatible() )
+		{
+			if ( isset( $_GET['fcksource'] ) && $_GET['fcksource'] == "true" )
+				$File = 'fckeditor.original.html' ;
+			else
+				$File = 'fckeditor.html' ;
 
-            if ( $this->ToolbarSet != '' )
-                $Link .= "&amp;Toolbar={$this->ToolbarSet}" ;
+			$Link = "{$this->BasePath}editor/{$File}?InstanceName={$this->InstanceName}" ;
 
-            // Render the linked hidden field.
-            $Html .= "<input type=\"hidden\" id=\"{$this->InstanceName}\" name=\"{$this->InstanceName}\" value=\"{$HtmlValue}\" style=\"display:none\" />" ;
+			if ( $this->ToolbarSet != '' )
+				$Link .= "&amp;Toolbar={$this->ToolbarSet}" ;
 
-            // Render the configurations hidden field.
-            $Html .= "<input type=\"hidden\" id=\"{$this->InstanceName}___Config\" value=\"" . $this->GetConfigFieldString() . "\" style=\"display:none\" />" ;
+			// Render the linked hidden field.
+			$Html .= "<input type=\"hidden\" id=\"{$this->InstanceName}\" name=\"{$this->InstanceName}\" value=\"{$HtmlValue}\" style=\"display:none\" />" ;
 
-            // Render the editor IFRAME.
-            $Html .= "<iframe id=\"{$this->InstanceName}___Frame\" src=\"{$Link}\" width=\"{$this->Width}\" height=\"{$this->Height}\" frameborder=\"0\" scrolling=\"no\"></iframe>" ;
-        }
-        else
-        {
-            if ( strpos( $this->Width, '%' ) === false )
-                $WidthCSS = $this->Width . 'px' ;
-            else
-                $WidthCSS = $this->Width ;
+			// Render the configurations hidden field.
+			$Html .= "<input type=\"hidden\" id=\"{$this->InstanceName}___Config\" value=\"" . $this->GetConfigFieldString() . "\" style=\"display:none\" />" ;
 
-            if ( strpos( $this->Height, '%' ) === false )
-                $HeightCSS = $this->Height . 'px' ;
-            else
-                $HeightCSS = $this->Height ;
+			// Render the editor IFRAME.
+			$Html .= "<iframe id=\"{$this->InstanceName}___Frame\" src=\"{$Link}\" width=\"{$this->Width}\" height=\"{$this->Height}\" frameborder=\"0\" scrolling=\"no\"></iframe>" ;
+		}
+		else
+		{
+			if ( strpos( $this->Width, '%' ) === false )
+				$WidthCSS = $this->Width . 'px' ;
+			else
+				$WidthCSS = $this->Width ;
 
-            $Html .= "<textarea name=\"{$this->InstanceName}\" rows=\"4\" cols=\"40\" style=\"width: {$WidthCSS}; height: {$HeightCSS}\">{$HtmlValue}</textarea>" ;
-        }
+			if ( strpos( $this->Height, '%' ) === false )
+				$HeightCSS = $this->Height . 'px' ;
+			else
+				$HeightCSS = $this->Height ;
 
-        $Html .= '</div>' ;
+			$Html .= "<textarea name=\"{$this->InstanceName}\" rows=\"4\" cols=\"40\" style=\"width: {$WidthCSS}; height: {$HeightCSS}\">{$HtmlValue}</textarea>" ;
+		}
 
-        return $Html ;
-    }
+		return $Html ;
+	}
 
-    function IsCompatible()
-    {
-        return FCKeditor_IsCompatibleBrowser() ;
-    }
+	/**
+	 * Returns true if browser is compatible with FCKeditor.
+	 *
+	 * @return boolean
+	 */
+	function IsCompatible()
+	{
+		return FCKeditor_IsCompatibleBrowser() ;
+	}
 
-    function GetConfigFieldString()
-    {
-        $sParams = '' ;
-        $bFirst = true ;
+	/**
+	 * Get settings from Config array as a single string.
+	 *
+	 * @access protected
+	 * @return string
+	 */
+	function GetConfigFieldString()
+	{
+		$sParams = '' ;
+		$bFirst = true ;
 
-        foreach ( $this->Config as $sKey => $sValue )
-        {
-            if ( $bFirst == false )
-                $sParams .= '&amp;' ;
-            else
-                $bFirst = false ;
+		foreach ( $this->Config as $sKey => $sValue )
+		{
+			if ( $bFirst == false )
+				$sParams .= '&amp;' ;
+			else
+				$bFirst = false ;
 
-            if ( $sValue === true )
-                $sParams .= $this->EncodeConfig( $sKey ) . '=true' ;
-            else if ( $sValue === false )
-                $sParams .= $this->EncodeConfig( $sKey ) . '=false' ;
-            else
-                $sParams .= $this->EncodeConfig( $sKey ) . '=' . $this->EncodeConfig( $sValue ) ;
-        }
+			if ( $sValue === true )
+				$sParams .= $this->EncodeConfig( $sKey ) . '=true' ;
+			else if ( $sValue === false )
+				$sParams .= $this->EncodeConfig( $sKey ) . '=false' ;
+			else
+				$sParams .= $this->EncodeConfig( $sKey ) . '=' . $this->EncodeConfig( $sValue ) ;
+		}
 
-        return $sParams ;
-    }
+		return $sParams ;
+	}
 
-    function EncodeConfig( $valueToEncode )
-    {
-        $chars = array(
-            '&' => '%26',
-            '=' => '%3D',
-            '"' => '%22' ) ;
+	/**
+	 * Encode characters that may break the configuration string
+	 * generated by GetConfigFieldString().
+	 *
+	 * @access protected
+	 * @param string $valueToEncode
+	 * @return string
+	 */
+	function EncodeConfig( $valueToEncode )
+	{
+		$chars = array(
+			'&' => '%26',
+			'=' => '%3D',
+			'"' => '%22' ) ;
 
-        return strtr( $valueToEncode,  $chars ) ;
-    }
+		return strtr( $valueToEncode,  $chars ) ;
+	}
 }
-
-?>

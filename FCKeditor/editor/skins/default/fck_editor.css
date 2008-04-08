@@ -1,6 +1,6 @@
 /*
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net
- * Copyright (C) 2003-2007 Frederico Caldeira Knabben
+ * Copyright (C) 2003-2008 Frederico Caldeira Knabben
  *
  * == BEGIN LICENSE ==
  *
@@ -22,14 +22,14 @@
  */
 
 /*
-    ### Basic Editor IFRAME Styles.
+	### Basic Editor IFRAME Styles.
 */
 
 body
 {
-    padding: 1px;
-    margin: 0;
-    background-color: #ffffff;
+	padding: 1px;
+	margin: 0;
+	background-color: #ffffff;
 }
 
 #xEditingArea
@@ -45,7 +45,7 @@ body
 }
 
 /*
-    Toolbar
+	Toolbar
 */
 
 .TB_ToolbarSet, .TB_Expand, .TB_Collapse
@@ -68,8 +68,8 @@ body
 
 .TB_Toolbar
 {
-    height: 24px;
-    display: inline-table;  /* inline = Opera jumping buttons bug */
+	height: 24px;
+    display: inline-table;	/* inline = Opera jumping buttons bug */
 }
 
 .TB_Separator
@@ -128,7 +128,7 @@ body
 }
 
 /*
-    Toolbar Button
+	Toolbar Button
 */
 
 .TB_Button_On, .TB_Button_Off, .TB_Button_On_Over, .TB_Button_Off_Over, .TB_Button_Disabled
@@ -184,7 +184,7 @@ body
 
 .TB_Button_Off .TB_Button_Text
 {
-    background-color: #efefde;  /* Needed because of a bug on Clear Type */
+   	background-color: #efefde;  /* Needed because of a bug on Clear Type */
 }
 
 .TB_ConnectionLine
@@ -197,21 +197,21 @@ body
 
 .TB_Text
 {
-    height: 22px;
+	height: 22px;
 }
 
 .TB_Button_Off .TB_Text
 {
-    background-color: #efefde ;  /* Needed because of a bug on ClearType */
+   	background-color: #efefde ;  /* Needed because of a bug on ClearType */
 }
 
 .TB_Button_On_Over .TB_Text
 {
-    background-color: #dff1ff ;  /* Needed because of a bug on ClearType */
+   	background-color: #dff1ff ;  /* Needed because of a bug on ClearType */
 }
 
 /*
-    Menu
+	Menu
 */
 
 .MN_Menu
@@ -304,7 +304,7 @@ body
 }
 
 /*
-    ### Panel Styles
+	### Panel Styles
 */
 
 .FCK_Panel
@@ -321,7 +321,7 @@ body
 }
 
 /*
-    ### Special Combos
+	### Special Combos
 */
 
 .SC_Panel
@@ -409,7 +409,7 @@ body
     background-repeat: no-repeat;
 }
 
-.SC_FieldDisabled .SC_FieldButton, .SC_FieldDisabled .SC_FieldCaption
+.SC_FieldDisabled .SC_FieldButton, .SC_FieldDisabled .SC_FieldCaption, .SC_FieldDisabled .TB_ButtonType_Text
 {
     opacity: 0.30; /* Safari, Opera and Mozilla */
     filter: gray() alpha(opacity=30); /* IE */ /* -moz-opacity: 0.30; Mozilla (Old) */
@@ -426,7 +426,7 @@ body
 }
 
 /*
-    ### Color Selector Panel
+	### Color Selector Panel
 */
 
 .ColorBoxBorder

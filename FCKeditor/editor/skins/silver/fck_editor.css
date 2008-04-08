@@ -1,6 +1,6 @@
 /*
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net
- * Copyright (C) 2003-2007 Frederico Caldeira Knabben
+ * Copyright (C) 2003-2008 Frederico Caldeira Knabben
  *
  * == BEGIN LICENSE ==
  *
@@ -22,49 +22,49 @@
  */
 
 /*
-    ### Basic Editor IFRAME Styles.
+	### Basic Editor IFRAME Styles.
 */
 
 body
 {
-    padding: 1px;
-    margin: 0;
-    background-color: #ffffff;
+	padding: 1px;
+	margin: 0;
+	background-color: #ffffff;
 }
 
 #xEditingArea
 {
-    border: #696969 1px solid;
+	border: #696969 1px solid;
 }
 
 .SourceField
 {
-    padding: 5px;
-    margin: 0px;
-    font-family: Monospace;
+	padding: 5px;
+	margin: 0px;
+	font-family: Monospace;
 }
 
 /*
-    Toolbar
+	Toolbar
 */
 
 .TB_ToolbarSet, .TB_Expand, .TB_Collapse
 {
     cursor: default;
-    background-color: #f7f7f7;
+	background-color: #f7f7f7;
 }
 
 .TB_ToolbarSet
 {
-    padding: 1px;
-    border-top: #efefde 1px outset;
-    border-bottom: #efefde 1px outset;
+	padding: 1px;
+	border-top: #efefde 1px outset;
+	border-bottom: #efefde 1px outset;
 }
 
 .TB_ToolbarSet TD
 {
-    font-size: 11px;
-    font-family: 'Microsoft Sans Serif' , Tahoma, Arial, Verdana, Sans-Serif;
+	font-size: 11px;
+	font-family: 'Microsoft Sans Serif' , Tahoma, Arial, Verdana, Sans-Serif;
 }
 
 .TB_Toolbar
@@ -93,63 +93,63 @@ body
 
 .TB_End
 {
-    display: none;
+	display: none;
 }
 
 .TB_ExpandImg
 {
-    background-image: url(images/toolbar.expand.gif);
-    background-repeat: no-repeat;
+	background-image: url(images/toolbar.expand.gif);
+	background-repeat: no-repeat;
 }
 
 .TB_CollapseImg
 {
-    background-image: url(images/toolbar.collapse.gif);
-    background-repeat: no-repeat;
+	background-image: url(images/toolbar.collapse.gif);
+	background-repeat: no-repeat;
 }
 
 .TB_SideBorder
 {
-    background-color: #696969;
+	background-color: #696969;
 }
 
 .TB_Expand, .TB_Collapse
 {
-    padding: 2px 2px 2px 2px;
-    border: #efefde 1px outset;
+	padding: 2px 2px 2px 2px;
+	border: #efefde 1px outset;
 }
 
 .TB_Collapse
 {
-    border: #efefde 1px outset;
-    width: 5px;
+	border: #efefde 1px outset;
+	width: 5px;
 }
 
 .TB_Break
 {
-    height: 27px;
+	height: 27px;
 }
 
 /*
-    Toolbar Button
+	Toolbar Button
 */
 
 .TB_Button_On, .TB_Button_Off, .TB_Button_On_Over, .TB_Button_Off_Over, .TB_Button_Disabled
 {
-    padding: 1px ;
-    margin:1px;
-    height: 21px;
+	padding: 1px ;
+	margin:1px;
+	height: 21px;
 }
 
 .TB_Button_On, .TB_Button_Off, .TB_Button_On_Over, .TB_Button_Off_Over, .TB_Button_Disabled
 {
-    border: #cec6b5 1px solid;
+	border: #cec6b5 1px solid;
 }
 
 .TB_Button_On
 {
-    border-color: #316ac5;
-    background-color: #c1d2ee;
+	border-color: #316ac5;
+	background-color: #c1d2ee;
 }
 
 .TB_Button_On_Over, .TB_Button_Off_Over
@@ -160,14 +160,14 @@ body
 
 .TB_Button_Off
 {
-    background: #efefef url(images/toolbar.buttonbg.gif) repeat-x;
+	background: #efefef url(images/toolbar.buttonbg.gif) repeat-x;
 }
 
 .TB_Button_Off, .TB_Combo_Off
 {
-    opacity: 0.70; /* Safari, Opera and Mozilla */
-    filter: alpha(opacity=70); /* IE */
-    /* -moz-opacity: 0.70; Mozilla (Old) */
+	opacity: 0.70; /* Safari, Opera and Mozilla */
+	filter: alpha(opacity=70); /* IE */
+	/* -moz-opacity: 0.70; Mozilla (Old) */
 }
 
 .TB_Button_Disabled
@@ -218,7 +218,7 @@ body
 }
 
 /*
-    Menu
+	Menu
 */
 
 .MN_Menu
@@ -311,7 +311,7 @@ body
 }
 
 /*
-    ### Panel Styles
+	### Panel Styles
 */
 
 .FCK_Panel
@@ -328,7 +328,7 @@ body
 }
 
 /*
-    ### Special Combos
+	### Special Combos
 */
 
 .SC_Panel
@@ -418,7 +418,7 @@ body
     background-repeat: no-repeat;
 }
 
-.SC_FieldDisabled .SC_FieldButton, .SC_FieldDisabled .SC_FieldCaption
+.SC_FieldDisabled .SC_FieldButton, .SC_FieldDisabled .SC_FieldCaption, .SC_FieldDisabled .TB_ButtonType_Text
 {
     opacity: 0.30; /* Safari, Opera and Mozilla */
     filter: gray() alpha(opacity=30); /* IE */ /* -moz-opacity: 0.30; Mozilla (Old) */
@@ -435,7 +435,7 @@ body
 }
 
 /*
-    ### Color Selector Panel
+	### Color Selector Panel
 */
 
 .ColorBoxBorder

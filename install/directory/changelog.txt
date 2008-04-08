@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 1.31 ====================================================
+
+2008-04-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Compression des fichiers JS/CSS
+ 
 == Module DIRECTORY - version 1.302 ====================================================
 
 2008-03-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

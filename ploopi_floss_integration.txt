@@ -1,4 +1,4 @@
-* FCKEditor 2.5.1
+* FCKEditor 2.6
   path : ./FCKeditor
   url : http://www.fckeditor.net
   license : GPL / LGPL / MPL
@@ -22,23 +22,23 @@
   license : LGPL
   copyright : Vincent Blavet
 
-* prototype 1.6.0.2
-  path : ./lib/prototype
-  url : http://www.prototypejs.org
-  license : MIT
-  copyright : Sam Stephenson
-
-* scriptaculous 1.8.1
-  path : ./lib/protaculous
-  url : http://script.aculo.us
-  license : MIT
-  copyright : Thomas Fuchs
-
-* protaculous 2.18 (prototype 1.6.0.2 + scriptaculous 1.8.1)
+* protaculous 2.19b (prototype 1.6.0.2 + scriptaculous 1.8.1)
   path : ./lib/protaculous
   url : http://groups.google.com/group/prototype-core
   licence : ?
   copyright : ?
+
+    * prototype 1.6.0.2
+      path : ./lib/prototype
+      url : http://www.prototypejs.org
+      license : MIT
+      copyright : Sam Stephenson
+    
+    * scriptaculous 1.8.1
+      path : ./lib/protaculous
+      url : http://script.aculo.us
+      license : MIT
+      copyright : Thomas Fuchs
 
 * rssgenesis 1.1
   path : ./lib/rssgenesis

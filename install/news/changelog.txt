@@ -1,3 +1,10 @@
+== Module NEWS - version 2.37 ====================================================
+
+2008-04-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Intégration FCKEditor 2.6
+ * Compression des fichiers JS/CSS
+
 == Module NEWS - version 2.35 ====================================================
 
 2008-03-07  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

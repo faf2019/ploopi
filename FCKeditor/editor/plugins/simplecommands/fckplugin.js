@@ -1,6 +1,6 @@
 ﻿/*
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net
- * Copyright (C) 2003-2007 Frederico Caldeira Knabben
+ * Copyright (C) 2003-2008 Frederico Caldeira Knabben
  *
  * == BEGIN LICENSE ==
  *
@@ -22,8 +22,8 @@
  * not show the box.
  */
 
-FCKToolbarItems.RegisterItem( 'SourceSimple'    , new FCKToolbarButton( 'Source', FCKLang.Source, null, FCK_TOOLBARITEM_ONLYICON, true, true, 1 ) ) ;
-FCKToolbarItems.RegisterItem( 'StyleSimple'     , new FCKToolbarStyleCombo( null, FCK_TOOLBARITEM_ONLYTEXT ) ) ;
-FCKToolbarItems.RegisterItem( 'FontNameSimple'  , new FCKToolbarFontsCombo( null, FCK_TOOLBARITEM_ONLYTEXT ) ) ;
-FCKToolbarItems.RegisterItem( 'FontSizeSimple'  , new FCKToolbarFontSizeCombo( null, FCK_TOOLBARITEM_ONLYTEXT ) ) ;
+FCKToolbarItems.RegisterItem( 'SourceSimple'	, new FCKToolbarButton( 'Source', FCKLang.Source, null, FCK_TOOLBARITEM_ONLYICON, true, true, 1 ) ) ;
+FCKToolbarItems.RegisterItem( 'StyleSimple'		, new FCKToolbarStyleCombo( null, FCK_TOOLBARITEM_ONLYTEXT ) ) ;
+FCKToolbarItems.RegisterItem( 'FontNameSimple'	, new FCKToolbarFontsCombo( null, FCK_TOOLBARITEM_ONLYTEXT ) ) ;
+FCKToolbarItems.RegisterItem( 'FontSizeSimple'	, new FCKToolbarFontSizeCombo( null, FCK_TOOLBARITEM_ONLYTEXT ) ) ;
 FCKToolbarItems.RegisterItem( 'FontFormatSimple', new FCKToolbarFontFormatCombo( null, FCK_TOOLBARITEM_ONLYTEXT ) ) ;

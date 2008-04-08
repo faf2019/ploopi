@@ -38,7 +38,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mode'] == 'admin')
     $template_body->set_filenames(array('body' => "light.tpl"));
 
     // PLOOPI JS
-    $template_body->assign_block_vars('ploopi_js',array('PATH' => "./lib/prototype/prototype.pack.js"));
+    $template_body->assign_block_vars('ploopi_js',array('PATH' => "./lib/protoculous/protoculous-packer.js"));
     $template_body->assign_block_vars('ploopi_js',array('PATH' => "./js/functions.pack.js"));
 
     // GET MODULES STYLES & JS

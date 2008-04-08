@@ -370,7 +370,7 @@ else
 
                 $oFCKeditor->Config['CustomConfigurationsPath'] = '../../modules/webedit/fckeditor/fckconfig.js';
                 $oFCKeditor->Config['ToolbarLocation'] = 'Out:parent(xToolbar)';
-                $oFCKeditor->Config['SkinPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/skins/default/';
+                //$oFCKeditor->Config['SkinPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/skins/default/';
                 
                 if (file_exists("{$template_path}/fckeditor/fck_editorarea.css")) $oFCKeditor->Config['EditorAreaCSS'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fck_editorarea.css';
 
