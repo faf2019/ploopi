@@ -20,8 +20,6 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
 
 $pubdate_start = ($forms->fields['pubdate_start']) ? ploopi_timestamp2local($forms->fields['pubdate_start']) : array('date' => '');
 $pubdate_end = ($forms->fields['pubdate_end']) ? ploopi_timestamp2local($forms->fields['pubdate_end']) : array('date' => '');
@@ -224,7 +222,7 @@ if (file_exists("./modules/forms/templates/{$template_name}/index.tpl"))
 
     $hiddenvars = array();
     $hiddenvars[] = array('name' => 'ploopi_op', 'value' => 'forms_save');
-    $hiddenvars[] = array('name' => 'forms_id', 'value' => $forms->fiels['id']);
+    $hiddenvars[] = array('name' => 'forms_id', 'value' => $forms->fields['id']);
     $hiddenvars[] = array('name' => 'forms_fuid', 'value' => $_GET['forms_fuid']);
     $hiddenvars[] = array('name' => 'forms_reply_id', 'value' => $reply_id);
 
@@ -243,6 +241,19 @@ if (file_exists("./modules/forms/templates/{$template_name}/index.tpl"))
                 )
             );
 
+    $template_forms->assign_block_vars('formbuttons', array(
+                'TYPE' => 'button',
+                'VALUE' => 'Fermer',
+                'OPTION' => 'onclick="javascript:ploopi_hidepopup(\'popup_forms_openreply\');"'
+                )
+            );
+            
+    $template_forms->assign_block_vars('formbuttons', array(
+                'TYPE' => 'submit',
+                'VALUE' => 'Enregistrer'
+                )
+            );
+            
     include './modules/forms/public_forms_display_render.php';
     $template_forms->pparse('forms_display');
 }

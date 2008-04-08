@@ -74,7 +74,7 @@ while ($fields = $db->fetchrow($rs_fields))
                     'INTERLINE' => $fields['interline'],
                     'VALUE' => htmlentities($value),
                     'TABINDEX' => 1000+$fields['position'],
-                    'MAXLENGTH' => $fields['maxlength'],
+                    'MAXLENGTH' => (empty($fields['maxlength'])) ? '255' : $fields['maxlength'],
                     'CONTENT' => ''
                     )
                 );
@@ -206,13 +206,12 @@ while ($fields = $db->fetchrow($rs_fields))
             break;
 
             case 'file':
-                
                 $template_forms->assign_block_vars('formfields.switch_field.switch_file', array());
                 if (!empty($replies[$fields['id']][0]))
                 {
                     $template_forms->assign_block_vars('formfields.switch_field.switch_file.switch_filename', array());
                 }
-                break;
+            break;
 
             case 'color':
                 $template_forms->assign_block_vars('formfields.switch_field.switch_color', array());

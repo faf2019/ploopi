@@ -79,6 +79,7 @@ while ($fields = $db->fetchrow($rs_fields))
                     'INTERLINE' => $fields['interline'],
                     'VALUE' => htmlentities($value),
                     'TABINDEX' => 1000+$fields['position'],
+                    'MAXLENGTH' => (empty($fields['maxlength'])) ? '255' : $fields['maxlength'],
                     'CONTENT' => ''
                     )
                 );
@@ -123,6 +124,12 @@ while ($fields = $db->fetchrow($rs_fields))
 
             case 'select':
                 $template_forms->assign_block_vars('formfields.switch_field.switch_select', array());
+                
+                $template_forms->assign_block_vars('formfields.switch_field.switch_select.values', array(
+                    'VALUE' => '', 'SELECTED' => ''
+                    )
+                );
+                
                 foreach($values as $value)
                 {
                     $template_forms->assign_block_vars('formfields.switch_field.switch_select.values', array(
@@ -152,37 +159,73 @@ while ($fields = $db->fetchrow($rs_fields))
 
             case 'checkbox':
                 $template_forms->assign_block_vars('formfields.switch_field.switch_checkbox', array());
-                foreach($values as $value)
+
+                $c_size = ceil(sizeof($values) / $fields['cols']);
+                
+                for ($c = 1; $c<=$fields['cols']; $c++) // columns
                 {
-                    $template_forms->assign_block_vars('formfields.switch_field.switch_checkbox.values', array(
-                        'VALUE' => $value,
-                        'NAME' => "field_{$fields['id']}[]",
-                        'CHECKED' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'checked' : ''
+                    $template_forms->assign_block_vars('formfields.switch_field.switch_checkbox.columns', array(
+                        'WIDTH' => 100 / $fields['cols']
                         )
                     );
+                    
+                    for ($d = ($c-1)*$c_size; $d < ($c)*$c_size && isset($values[$d]); $d++)
+                    {
+                        $value = $values[$d];
+                        
+                        $template_forms->assign_block_vars('formfields.switch_field.switch_checkbox.columns.values', array(
+                            'ID' => $d,
+                            'VALUE' => $value,
+                            'NAME' => "field_{$fields['id']}[]",
+                            'CHECKED' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'checked' : ''
+                            )
+                        );
+                    }
                 }
             break;
 
             case 'radio':
                 $template_forms->assign_block_vars('formfields.switch_field.switch_radio', array());
-                foreach($values as $value)
+                
+                $c_size = ceil(sizeof($values) / $fields['cols']);
+                
+                for ($c = 1; $c<=$fields['cols']; $c++) // columns
                 {
-                    $template_forms->assign_block_vars('formfields.switch_field.switch_radio.values', array(
-                        'VALUE' => $value,
-                        'NAME' => "field_{$fields['id']}[]",
-                        'CHECKED' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'checked' : ''
+                    $template_forms->assign_block_vars('formfields.switch_field.switch_radio.columns', array(
+                        'WIDTH' => 100 / $fields['cols']
                         )
                     );
+                    
+                    for ($d = ($c-1)*$c_size; $d < ($c)*$c_size && isset($values[$d]); $d++)
+                    {
+                        $value = $values[$d];
+                        $template_forms->assign_block_vars('formfields.switch_field.switch_radio.columns.values', array(
+                            'ID' => $d,
+                            'VALUE' => $value,
+                            'NAME' => "field_{$fields['id']}[]",
+                            'CHECKED' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'checked' : ''
+                            )
+                        );
+                    }
                 }
             break;
-
+            
             case 'file':
                 $template_forms->assign_block_vars('formfields.switch_field.switch_file', array());
+                if (!empty($replies[$fields['id']][0]))
+                {
+                    $template_forms->assign_block_vars('formfields.switch_field.switch_file.switch_filename', array());
+                }
             break;
 
             case 'color':
                 $template_forms->assign_block_vars('formfields.switch_field.switch_color', array());
 
+                $template_forms->assign_block_vars('formfields.switch_field.switch_color.values', array(
+                    'VALUE' => '', 'SELECTED' => ''
+                    )
+                );
+                
                 foreach($values as $value)
                 {
                     $template_forms->assign_block_vars('formfields.switch_field.switch_color.values', array(

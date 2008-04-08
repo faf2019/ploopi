@@ -91,7 +91,7 @@ while ($fields = $db->fetchrow($rs_fields))
                     'INTERLINE' => $fields['interline'],
                     'VALUE' => $value,
                     'TABINDEX' => 1000+$fields['position'],
-                    'MAXLENGTH' => $fields['maxlength'],
+                    'MAXLENGTH' => (empty($fields['maxlength'])) ? '255' : $fields['maxlength'],
                     'CONTENT' => ''
                     )
                 );

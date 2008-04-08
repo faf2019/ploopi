@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!--
-    Ploopi ~ Template pour Ploopi
-    Copyright (c) 2007 Ovensia
+    Ploopi_Menus ~ Template pour Ploopi
+    Copyright (c) 2007-2008 Ovensia
 
     This file is part of Ploopi.
 
@@ -17,7 +17,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Foobar; if not, write to the Free Software
+    along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
     -->
 
@@ -34,7 +34,7 @@
 
     <link rel="icon" href="{TEMPLATE_PATH}/img/favicon.png" type="image/png" />
 
-    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.pack.css" media="screen" />
 
     <!-- BEGIN module_css -->
     <link type="text/css" rel="stylesheet" href="{module_css.PATH}" media="screen" />
@@ -42,7 +42,7 @@
 
     <!--[if lte IE 6]>
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/png.css" media="screen" title="png" />
-    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles_ie.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles_ie.pack.css" media="screen" />
     <!-- BEGIN module_css_ie -->
     <link type="text/css" rel="stylesheet" href="{module_css_ie.PATH}" media="screen" />
     <!-- END module_css_ie -->
