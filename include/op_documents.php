@@ -28,7 +28,6 @@ switch($ploopi_op)
     /***********************/
 
     case 'documents_selectfile':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
 
         $_SESSION['documents']['id_object'] = $_GET['id_object'];
         $_SESSION['documents']['id_record'] = $_GET['id_record'];
@@ -44,8 +43,6 @@ switch($ploopi_op)
         <?
         
     case 'documents_browser':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         include_once './include/classes/class_documentsfolder.php';
         include_once './include/classes/class_documentsfile.php';
 
@@ -423,8 +420,6 @@ switch($ploopi_op)
     break;
 
     case 'documents_popup':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         //include_once './include/functions/documents.php';
         //ploopi_documents($_GET['id_object'], $_GET['id_record']);
         ?>
@@ -434,8 +429,6 @@ switch($ploopi_op)
     break;
 
     case 'documents_downloadfile':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         if (!empty($_GET['documentsfile_id']))
         {
             include_once './include/classes/class_documentsfile.php';
@@ -453,8 +446,6 @@ switch($ploopi_op)
     break;
 
     case 'documents_downloadfile_zip':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         $zip_path = ploopi_documents_getpath()._PLOOPI_SEP.'zip';
         if (!is_dir($zip_path)) mkdir($zip_path);
 
@@ -491,8 +482,6 @@ switch($ploopi_op)
     break;
 
     case 'documents_savefolder':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         include_once './include/classes/class_documentsfolder.php';
         $documentsfolder = new documentsfolder();
 
@@ -523,8 +512,6 @@ switch($ploopi_op)
     break;
 
     case 'documents_openfolder':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         include_once './include/classes/class_documentsfolder.php';
         $documentsfolder = new documentsfolder();
 
@@ -579,8 +566,6 @@ switch($ploopi_op)
     break;
 
     case 'documents_savefile':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         include_once './include/classes/class_documentsfile.php';
         $documentsfile = new documentsfile();
 
@@ -617,8 +602,6 @@ switch($ploopi_op)
     break;
 
     case 'documents_openfile':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         include_once './include/classes/class_documentsfile.php';
         $documentsfile = new documentsfile();
 
@@ -706,8 +689,6 @@ switch($ploopi_op)
     break;
 
     case 'documents_deletefile':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         if (!empty($_GET['documentsfile_id']))
         {
             include_once './include/classes/class_documentsfile.php';
@@ -722,8 +703,6 @@ switch($ploopi_op)
     break;
 
     case 'documents_deletefolder':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         if (!empty($_GET['documentsfolder_id']))
         {
             include_once './include/classes/class_documentsfolder.php';

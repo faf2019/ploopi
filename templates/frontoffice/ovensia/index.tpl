@@ -11,14 +11,8 @@
 
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
 
-    <script type="text/javascript" src="./include/functions.js"></script>
-    <script type="text/javascript">
-    //<!--
-    {ADDITIONAL_JAVASCRIPT}
-    //-->
-    </script>
-
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/forms.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/rss.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/news.css" media="screen" />
@@ -26,11 +20,21 @@
 
     <!--[if lte IE 7]>
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles_ie.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar_ie.css" media="screen" />
     <![endif]-->
     <!--[if lte IE 6]>
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/png.css" media="screen" />
     <![endif]-->
 
+    <!-- BEGIN ploopi_js -->
+        <script type="text/javascript" src="{ploopi_js.PATH}"></script>
+    <!-- END ploopi_js -->
+    
+    <script type="text/javascript">
+    //<!--
+    {ADDITIONAL_JAVASCRIPT}
+    //-->
+    </script>
 </head>
 
 <body>

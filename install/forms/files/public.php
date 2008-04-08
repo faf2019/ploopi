@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 ploopi_init_module('forms');
 include_once './modules/forms/class_form.php';
 include_once './modules/forms/class_field.php';
@@ -169,13 +168,14 @@ switch($op)
                 $fieldok = false;
                 $error = false;
 
-                if ($fields['type'] == 'file' && isset($_FILES['field_'.$fields['id']]['name']))
+                if ($fields['type'] == 'file' && !empty($_FILES['field_'.$fields['id']]['name']))
                 {
                     $fieldok = true;
                     $value = $_FILES['field_'.$fields['id']]['name'];
                     $path = _PLOOPI_PATHDATA._PLOOPI_SEP.'forms-'.$_SESSION['ploopi']['moduleid']._PLOOPI_SEP.$forms->fields['id']._PLOOPI_SEP.$reply->fields['id']._PLOOPI_SEP;
                     $error = ($_FILES['field_'.$fields['id']]['size'] > _PLOOPI_MAXFILESIZE);
 
+                    
                     if (!$error)
                     {
                         ploopi_makedir($path);
@@ -215,7 +215,7 @@ switch($op)
                 }
 
 
-                if ($fieldok = true)
+                if ($fieldok)
                 {
                     $reply_field = new reply_field();
                     if (isset($_POST['forms_reply_id']))
@@ -251,7 +251,10 @@ switch($op)
 
             ploopi_redirect("{$scriptenv}?op=forms_viewreplies&forms_id={$forms->fields['id']}");
         }
-        else ploopi_redirect($scriptenv);
+        else 
+        {
+            ploopi_redirect($scriptenv);
+        }
     break;
 
     default:

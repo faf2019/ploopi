@@ -87,6 +87,34 @@ function ploopi_switchdisplay(id)
     if (e) e.style.display = (e.style.display == 'none') ? 'block' : 'none';
 }
 
+// clic sur une zone checkbox/radio
+// génère un event équivalent au clic direct sur l'élément
+
+function ploopi_checkbox_click(inputfield_id)
+{
+    if (Prototype.Browser.IE)
+    {
+        switch ($(inputfield_id).type)
+        {
+            case 'radio':
+                $(inputfield_id).checked = true; 
+            break;
+            
+            default:
+                $(inputfield_id).checked = !$(inputfield_id).checked; 
+            break;
+        }       
+        
+        $(inputfield_id).fireEvent('onchange');
+    }
+    else
+    {
+        var e = document.createEvent('MouseEvents');
+        e.initEvent('click', false, false);
+        $(inputfield_id).dispatchEvent(e);
+    }
+}
+
 /**
  * A class to parse color values
  * @author Stoyan Stefanov <sstoo@gmail.com>
@@ -398,7 +426,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
         if (field_type == 'selected')
         {
             msg = lstmsg[9];
-            ok = (field_object.selectedIndex > 0);
+            ok = (field_object.selectedIndex > 0 && field_object.value != '');
         }
 
         if (field_type == 'checked')
@@ -686,6 +714,7 @@ var ploopi_nbpopup = 0;
 function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy)
 {
     var ploopi_popup;
+    var active_effect = false;
 
     if (!id) id = 'ploopi_popup';
 
@@ -702,6 +731,8 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy)
         ploopi_popup.style.display = 'none';
 
         bodys[0].appendChild(ploopi_popup);
+        
+        active_effect = true;
     }
     else ploopi_popup = $(id);
 
@@ -764,7 +795,7 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy)
         top = tmptop+'px';
     }
 
-    new Effect.Appear(id, { duration: 0.4, from: 0.0, to: 1 });
+    if (active_effect) new Effect.Appear(id, { duration: 0.4, from: 0.0, to: 1 });
 }
 
 function ploopi_movepopup(id, e, pposx, pposy, popup_content)
@@ -1016,7 +1047,7 @@ function ploopi_innerHTML(div, html)
 
 function ploopi_calendar_open(inputfield_id, event)
 {
-    ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','ploopi_op=calendar_open&selected_date='+$(inputfield_id).value+'&inputfield_id='+inputfield_id),164,event,'click','ploopi_popup_calendar');
+    ploopi_showpopup(ploopi_xmlhttprequest('index-light.php','ploopi_op=calendar_open&selected_date='+$(inputfield_id).value+'&inputfield_id='+inputfield_id),164,event,'click','ploopi_popup_calendar');
 }
 
 function ploopi_calendar_dispatchevent(inputfield_id)

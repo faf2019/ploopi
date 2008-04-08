@@ -98,7 +98,7 @@ session_start();
 
 $ploopi_initsession = false;
 
-if (empty($_SESSION) || ($_SESSION['ploopi']['host'] != $_SERVER['HTTP_HOST']))  { ploopi_session_reset(); $ploopi_initsession = true; }
+if (empty($_SESSION) || (!empty($_SESSION['ploopi']['host']) && $_SESSION['ploopi']['host'] != $_SERVER['HTTP_HOST']))  { ploopi_session_reset(); $ploopi_initsession = true; }
 
 ploopi_session_update();
 

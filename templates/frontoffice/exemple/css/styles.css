@@ -26,13 +26,8 @@ Version: 1.0
 
 Screen layout: */
 
-#thr {
-    background: white;
-    border: 1px solid black;
-
-}
-body, table, td {
-font: 12px Verdana,Tahoma,Arial,sans-serif;
+body, table, td, form, input, select, textarea, button {
+font: 11px Verdana,Tahoma,Arial,sans-serif;
 }
 
 body {
@@ -231,13 +226,6 @@ margin: 0 0 0.5em 0;
 #content h3 {
 font-size: 1.2em;
 margin: 0 0 0 0;
-}
-
-#content img {
-padding: 1px;
-display:inline;
-background: #cccccc;
-border: 2px solid #f0f0f0;
 }
 
 #pagecontent {

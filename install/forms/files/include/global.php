@@ -181,7 +181,7 @@ function forms_display($id_form, $id_module, $id_object, $id_record, $rights = a
 
     if (!isset($options['height'])) $options['height'] = 0;
     if (!isset($options['filter_mode'])) $options['filter_mode'] = 'default'; // or 'like'
-    if (!isset($options['display_object'])) $options['display_object'] = false;
+    if (!isset($options['object_display'])) $options['object_display'] = false;
     if (!isset($options['object_label'])) $options['object_label'] = 'Objet Lié';
     if (!isset($options['object_values'])) $options['object_values'] = array();
 

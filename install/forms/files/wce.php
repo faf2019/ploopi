@@ -86,7 +86,7 @@ switch($op)
                 {
                     $fieldok = true;
                     $value = $_FILES['field_'.$fields['id']]['name'];
-                    $path = _PLOOPI_PATHDATA.'forms-'.$obj['module_id']._PLOOPI_SEP.$_POST['forms_id']._PLOOPI_SEP.$reply->fields['id']._PLOOPI_SEP;
+                    echo $path = _PLOOPI_PATHDATA._PLOOPI_SEP.'forms-'.$obj['module_id']._PLOOPI_SEP.$_POST['forms_id']._PLOOPI_SEP.$reply->fields['id']._PLOOPI_SEP;
                     $error = ($_FILES['field_'.$fields['id']]['size'] > _PLOOPI_MAXFILESIZE);
 
                     if (!$error)
@@ -117,7 +117,7 @@ switch($op)
                 }
                 else
                 {
-                    if ($fields['type'] == 'autoincrement' && $isnew) // not in form => need to be calculated
+                    if ($fields['type'] == 'autoincrement') // not in form => need to be calculated
                     {
                         $fieldok = true;
                         $select = "SELECT max(value*1) as maxinc FROM ploopi_mod_forms_reply_field WHERE id_form = '{$_POST['forms_id']}' AND id_field = '{$fields['id']}'";
@@ -127,7 +127,7 @@ switch($op)
                     }
                 }
 
-                if ($fieldok = true)
+                if ($fieldok == true)
                 {
                     $reply_field = new reply_field();
                     if (isset($reply_id))
@@ -139,7 +139,7 @@ switch($op)
                     $reply_field->fields['id_form'] = $_POST['forms_id'];
                     $reply_field->fields['id_reply'] = $reply->fields['id'];
 
-                    if (!(($fields['type'] == 'autoincrement' || $fields['type'] == 'file') && $value == '')) $reply_field->fields['value'] = $value;
+                    $reply_field->fields['value'] = (!(($fields['type'] == 'autoincrement' || $fields['type'] == 'file') && $value == '')) ? $value : '';
 
                     $reply_field->save();
 

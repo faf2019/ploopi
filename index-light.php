@@ -111,6 +111,10 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mode'] == 'admin')
 
     $template_body->pparse('body');
 }
+else
+{
+    include_once './include/op.php';
+}
 
 ploopi_die();
 ?>

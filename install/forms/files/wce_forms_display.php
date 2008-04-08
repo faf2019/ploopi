@@ -92,6 +92,16 @@ function form_validate(form)
                 }
             break;
 
+
+            case 'file':
+                if ($fields['option_needed'])
+                {
+                    ?>
+                    if (ploopi_validatefield('<? echo addslashes($fields['name']); ?>', form.field_<? echo $fields['id']; ?>, 'string'))
+                    <?
+                }
+            break;
+            
             case 'select':
             case 'color':
                 if ($fields['option_needed'])

@@ -24,8 +24,6 @@
 switch($ploopi_op)
 {
     case 'annotation':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         if (empty($_GET['id_annotation'])) ploopi_die();
 
         $id_object = $_SESSION['annotations'][$_GET['id_annotation']]['id_object'];
@@ -138,34 +136,28 @@ switch($ploopi_op)
                 <?
             }
 
-            if ($_SESSION['ploopi']['connected'])
-            {
-                $id_module_type = (isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']])) ? $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type'] : 0;
+            $id_module_type = (isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']])) ? $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type'] : 0;
 
-                $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2;
-                ?>
-                <div class="ploopi_annotations_row_<? echo $numrow; ?>">
-                    <form action="" method="post" id="form_annotation_<? echo $_GET['id_annotation']; ?>" target="form_annotation_target_<? echo $_GET['id_annotation']; ?>" onsubmit="return ploopi_annotation_validate(this);">
-                    <input type="hidden" name="ploopi_op" value="annotation_save">
-                    <input type="hidden" name="id_annotation" value="<? echo $_GET['id_annotation']; ?>">
-
-                    <div class="ploopi_annotations_titleform">Ajout d'une Annotation <? echo (isset($ploopi_annotation_private)) ? 'privée' : ''; ?></div>
-                    <div style="padding:2px 4px;"><input type="checkbox" name="ploopi_annotation_private" value="1">Privée (visible par vous uniquement)</div>
-                    <div style="padding:2px 4px;">Tags:</div>
-                    <div style="padding:2px 4px;"><input type="text" class="text" style="width:99%;" name="ploopi_annotationtags" id="ploopi_annotationtags_<? echo $_GET['id_annotation']; ?>" autocomplete="off"></div>
-                    <div style="padding:2px 4px;" id="tagsfound_<? echo $_GET['id_annotation']; ?>"></div>
-                    <div style="padding:2px 4px;">Commentaire:</div>
-                    <div style="padding:2px 4px;"><textarea class="text" style="width:99%;" rows="4" name="ploopi_annotation_content"></textarea></div>
-
-                    <div style="padding:2px 4px;text-align:right;">
-                        <input type="button" onclick="ploopi_getelem('form_annotation_<? echo $_GET['id_annotation']; ?>').ploopi_op.value=''; ploopi_getelem('form_annotation_<? echo $_GET['id_annotation']; ?>').submit()" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>">
-                        <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
-                    </div>
-                    </form>
-                </div>
-                <?
-            }
+            $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2;
             ?>
+            <div class="ploopi_annotations_row_<? echo $numrow; ?>">
+                <form action="" method="post" id="form_annotation_<? echo $_GET['id_annotation']; ?>" target="form_annotation_target_<? echo $_GET['id_annotation']; ?>" onsubmit="return ploopi_annotation_validate(this);">
+                <input type="hidden" name="ploopi_op" value="annotation_save">
+                <input type="hidden" name="id_annotation" value="<? echo $_GET['id_annotation']; ?>">
+
+                <div class="ploopi_annotations_titleform">Ajout d'une Annotation <? echo (isset($ploopi_annotation_private)) ? 'privée' : ''; ?></div>
+                <div style="padding:2px 4px;"><input type="checkbox" name="ploopi_annotation_private" value="1">Privée (visible par vous uniquement)</div>
+                <div style="padding:2px 4px;">Tags:</div>
+                <div style="padding:2px 4px;"><input type="text" class="text" style="width:99%;" name="ploopi_annotationtags" id="ploopi_annotationtags_<? echo $_GET['id_annotation']; ?>" autocomplete="off"></div>
+                <div style="padding:2px 4px;" id="tagsfound_<? echo $_GET['id_annotation']; ?>"></div>
+                <div style="padding:2px 4px;">Commentaire:</div>
+                <div style="padding:2px 4px;"><textarea class="text" style="width:99%;" rows="4" name="ploopi_annotation_content"></textarea></div>
+
+                <div style="padding:2px 4px;text-align:right;">
+                    <input type="button" onclick="ploopi_getelem('form_annotation_<? echo $_GET['id_annotation']; ?>').ploopi_op.value=''; ploopi_getelem('form_annotation_<? echo $_GET['id_annotation']; ?>').submit()" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>">
+                    <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+                </div>
+                </form>
             </div>
         </div>
         <iframe name="form_annotation_target_<? echo $_GET['id_annotation']; ?>" src="./img/blank.gif" style="display:none;"></iframe>
@@ -178,8 +170,6 @@ switch($ploopi_op)
     break;
 
     case 'annotation_taghistory':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         ?>
         <div class="ploopi_annotation_popup">
         <?
@@ -265,8 +255,6 @@ switch($ploopi_op)
     break;
 
     case 'annotation_searchtags':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         if (!empty($_GET['tag']))
         {
             $select =   "
@@ -294,8 +282,6 @@ switch($ploopi_op)
     break;
 
     case 'annotation_delete':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         include_once './include/classes/class_annotation.php';
         $annotation = new annotation();
 
@@ -306,8 +292,6 @@ switch($ploopi_op)
     break;
 
     case 'annotation_save':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         if (!empty($_POST['id_annotation']))
         {
             include_once './include/classes/class_annotation.php';
@@ -338,8 +322,6 @@ switch($ploopi_op)
     break;
 
     case 'annotation_show':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         if (isset($_GET['object_id']))
         {
             if (isset($_SESSION['ploopi']['annotations']['show'][$_GET['object_id']])) unset($_SESSION['ploopi']['annotations']['show'][$_GET['object_id']]);

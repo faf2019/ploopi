@@ -25,38 +25,12 @@ include_once './include/functions/rights.php';
 
 if (isset($_REQUEST['ploopi_op'])) $ploopi_op = $_REQUEST['ploopi_op'];
 
+
 if (isset($ploopi_op))
 {
-    include_once './include/op_annotations.php';
-    include_once './include/op_documents.php';
-    include_once './include/op_shares.php';
-    include_once './include/op_subscriptions.php';
-    include_once './include/op_workflow.php';
-    
     switch($ploopi_op)
     {
-        case 'ploopi_switchdisplay':
-            if (!empty($_GET['id'])) $_SESSION['ploopi']['switchdisplay'][$_GET['id']] = $_GET['display'];
-            if (!$_SESSION['ploopi']['connected']) ploopi_die();
-            ploopi_die();
-        break;
-
-        case 'ploopi_checkpasswordvalidity':
-            if (!$_SESSION['ploopi']['connected'] || !isset($_GET['password'])) ploopi_die();
-            if (_PLOOPI_USE_COMPLEXE_PASSWORD) echo ploopi_checkpasswordvalidity($_GET['password']);
-            else echo true;
-            ploopi_die();
-        break;
-
-        case 'ploopi_skin_array_refresh':
-            if (!$_SESSION['ploopi']['connected']) ploopi_die();
-            $skin->display_array_refresh($_GET['array_id'], $_GET['array_orderby']);
-            ploopi_die();
-        break;
-
         case 'colorpicker_open':
-            if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
             ?>
             <div style="overflow:hidden;padding:2px;background-color:#ffffff;z-index:1;">
                 <div style="margin-bottom:2px;overflow:hidden;">
@@ -77,14 +51,16 @@ if (isset($ploopi_op))
             <?
             ploopi_die();
         break;
-
+    
         case 'calendar_open':
-            if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
             $month = date('n');
             $year = date('Y');
-
-            if (isset($_GET['selected_date']))
+            
+            if (!empty($_GET['inputfield_id'])) $_SESSION['calendar']['inputfield_id'] = $_GET['inputfield_id'];
+            
+            if (empty($_SESSION['calendar']['inputfield_id'])) ploopi_die();
+            
+            if (!empty($_GET['selected_date']))
             {
                 $sel_day = $sel_month = $sel_year = 0;
 
@@ -115,23 +91,26 @@ if (isset($ploopi_op))
                     break;
                 }
 
-                $_SESSION['calendar'] = array(
-                                            'selected_month'    => $sel_month,
-                                            'selected_day'      => $sel_day,
-                                            'selected_year'     => $sel_year
-                                        );
+                $_SESSION['calendar']['selected_month'] = $sel_month;
+                $_SESSION['calendar']['selected_day'] = $sel_day;
+                $_SESSION['calendar']['selected_year'] = $sel_year;
             }
             elseif (isset($_GET['calendar_month']) && isset($_GET['calendar_year']))
             {
-                    $month = $_GET['calendar_month'];
-                    $year = $_GET['calendar_year'];
+                $month = $_GET['calendar_month'];
+                $year = $_GET['calendar_year'];
+            }
+            
+            if (empty($_SESSION['calendar']['selected_day']))
+            {
+                $_SESSION['calendar']['selected_month'] = date('n');
+                $_SESSION['calendar']['selected_day'] = date('d');
+                $_SESSION['calendar']['selected_year'] = date('Y');
             }
 
             settype($day,'integer');
             settype($month,'integer');
             settype($year,'integer');
-
-            if (isset($_GET['inputfield_id'])) $_SESSION['calendar']['inputfield_id'] = $_GET['inputfield_id'];
 
             $selectedday = mktime(0,0,0,$_SESSION['calendar']['selected_month'], $_SESSION['calendar']['selected_day'], $_SESSION['calendar']['selected_year']);
             $today = mktime(0,0,0,date('n'),date('j'),date('Y'));
@@ -146,16 +125,21 @@ if (isset($ploopi_op))
 
             $prev_year = $year - ($prev_month == 12);
             $next_year = $year + ($next_month == 1);
+            
+            
+            if ($_SESSION['ploopi']['mode'] == 'admin' && !empty($_SESSION['ploopi']['template_path'])) $strIconsPath = $_SESSION['ploopi']['template_path'];
+            else $strIconsPath = '.';
+             
             ?>
             <div id="calendar">
                 <div class="calendar_row">
                     <div class="calendar_arrow" style="float:right;">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=calendar_open&calendar_month=<? echo $next_month; ?>&calendar_year=<? echo $next_year; ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/calendar/next.png"></a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=calendar_open&calendar_month=<? echo $month; ?>&calendar_year=<? echo ($year+1); ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/calendar/nextx2.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<? echo $scriptenv; ?>','ploopi_op=calendar_open&calendar_month=<? echo $next_month; ?>&calendar_year=<? echo $next_year; ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/next.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<? echo $scriptenv; ?>','ploopi_op=calendar_open&calendar_month=<? echo $month; ?>&calendar_year=<? echo ($year+1); ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/nextx2.png"></a>
                     </div>
                     <div class="calendar_arrow" style="float:left;">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=calendar_open&calendar_month=<? echo $month; ?>&calendar_year=<? echo ($year-1); ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/calendar/prevx2.png"></a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=calendar_open&calendar_month=<? echo $prev_month; ?>&calendar_year=<? echo $prev_year; ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/calendar/prev.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<? echo $scriptenv; ?>','ploopi_op=calendar_open&calendar_month=<? echo $month; ?>&calendar_year=<? echo ($year-1); ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/prevx2.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<? echo $scriptenv; ?>','ploopi_op=calendar_open&calendar_month=<? echo $prev_month; ?>&calendar_year=<? echo $prev_year; ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/prev.png"></a>
                     </div>
                     <div class="calendar_month">
                         <? echo "{$ploopi_agenda_months[$month]}<br />{$year}"; ?>
@@ -201,7 +185,7 @@ if (isset($ploopi_op))
                     if ($currentday == $selectedday) $class = 'class="calendar_day_selected"';
                     elseif ($currentday == $today) $class = 'class="calendar_day_today"';
                     ?>
-                        <div class="calendar_day"><a <? echo $class; ?> href="javascript:void(0);" onclick="javascript:ploopi_getelem('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_calendar_dispatchevent('<? echo $_SESSION['calendar']['inputfield_id']; ?>');"><? echo $d; ?></a></div>
+                        <div class="calendar_day"><a <? echo $class; ?> href="javascript:void(0);" onclick="javascript:$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_calendar_dispatchevent('<? echo $_SESSION['calendar']['inputfield_id']; ?>');"><? echo $d; ?></a></div>
                     <?
 
                     if ($weekday == 7) echo '</div>';
@@ -223,35 +207,64 @@ if (isset($ploopi_op))
                 $localdate = ploopi_timestamp2local(sprintf("%04d%02d%02d000000", date('Y'), date('n'), date('j')));
                 ?>
                 <div class="calendar_row" style="height:1.2em;">
-                    <a style="display:block;float:left;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:ploopi_getelem('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_calendar_dispatchevent('<? echo $_SESSION['calendar']['inputfield_id']; ?>');">Aujourd'hui</a>
-                    <a style="display:block;float:right;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup('ploopi_popup_calendar');">Fermer</a>
+                    <a style="display:block;float:left;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_calendar_dispatchevent('<? echo $_SESSION['calendar']['inputfield_id']; ?>');">Aujourd'hui</a>
+                    <a style="display:block;float:right;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:$('ploopi_popup_calendar');">Fermer</a>
                 </div>
             </div>
             <?
             ploopi_die();
         break;
-
-        default: // look for ploopi_op in modules
-            if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
-            {
-                foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $idm)
-                {
-                    if (isset($_SESSION['ploopi']['modules'][$idm]))
-                    {
-                        if ($_SESSION['ploopi']['modules'][$idm]['active'])
-                        {
-                            $ploopi_mod_opfile = "./modules/{$_SESSION['ploopi']['modules'][$idm]['moduletype']}/op.php";
-                            if (file_exists($ploopi_mod_opfile)) include_once $ploopi_mod_opfile;
-                        }
-                    }
-
-                }
-            }
-            include_once "./modules/system/op.php";
-        break;
     }
 
-    //ploopi_die('fonction non définie');
-}
 
+    if ($_SESSION['ploopi']['connected'])
+    {
+        include_once './include/op_annotations.php';
+        include_once './include/op_documents.php';
+        include_once './include/op_shares.php';
+        include_once './include/op_subscriptions.php';
+        include_once './include/op_workflow.php';
+        
+        switch($ploopi_op)
+        {
+            case 'ploopi_switchdisplay':
+                if (!empty($_GET['id'])) $_SESSION['ploopi']['switchdisplay'][$_GET['id']] = $_GET['display'];
+                ploopi_die();
+            break;
+    
+            case 'ploopi_checkpasswordvalidity':
+                if (!isset($_GET['password'])) ploopi_die();
+                if (_PLOOPI_USE_COMPLEXE_PASSWORD) echo ploopi_checkpasswordvalidity($_GET['password']);
+                else echo true;
+                ploopi_die();
+            break;
+    
+            case 'ploopi_skin_array_refresh':
+                $skin->display_array_refresh($_GET['array_id'], $_GET['array_orderby']);
+                ploopi_die();
+            break;
+    
+            default: // look for ploopi_op in modules
+                if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
+                {
+                    foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $idm)
+                    {
+                        if (isset($_SESSION['ploopi']['modules'][$idm]))
+                        {
+                            if ($_SESSION['ploopi']['modules'][$idm]['active'])
+                            {
+                                $ploopi_mod_opfile = "./modules/{$_SESSION['ploopi']['modules'][$idm]['moduletype']}/op.php";
+                                if (file_exists($ploopi_mod_opfile)) include_once $ploopi_mod_opfile;
+                            }
+                        }
+    
+                    }
+                }
+                include_once "./modules/system/op.php";
+            break;
+        }
+    
+        //ploopi_die('fonction non définie');
+    }
+}
 ?>

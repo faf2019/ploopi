@@ -18,11 +18,18 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 body, table, td {
 font: 12px Verdana,Tahoma,Arial,sans-serif;
 color: #688c3d;
-/*color:#415826;*/
 }
+
+
+form, input, select, textarea, button {
+font: 11px Verdana,Tahoma,Arial,sans-serif;
+color: #688c3d;
+}
+		
 
 body {
 margin: 0 auto;

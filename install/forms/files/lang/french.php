@@ -59,7 +59,7 @@ define ('_FORMS_NBLINE',    'Nb Ligne/Page');
 
 
 define ('_FORMS_PREVIEW',       'Aperçu');
-define ('_FORMS_VIEWRESULT',        'Voir les Résultats');
+define ('_FORMS_VIEWRESULT',        'Voir l\'interface utilisateur');
 define ('_FORMS_VIEWLIST',      'Mode Liste');
 
 define ('_FORMS_FILTER',        'Filtre');

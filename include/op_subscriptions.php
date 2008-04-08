@@ -24,8 +24,6 @@
 switch($ploopi_op)
 {
     case 'subscription':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-        
         if (empty($_GET['ploopi_subscription_id'])) ploopi_die();
         
         include_once './include/classes/class_subscription.php';
@@ -157,8 +155,6 @@ switch($ploopi_op)
     
     
     case 'subscription_save':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         $strNext = '';
         if (!empty($_POST['ploopi_subscription_id']))
         {

@@ -24,8 +24,6 @@
 switch($ploopi_op)
 {
     case 'shares_select_user':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         if (isset($_GET['user_id'])) $_SESSION['ploopi']['shares']['users_selected'][$_GET['user_id']] = $_GET['user_id'];
         if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['shares']['users_selected'][$_GET['remove_user_id']]);
 
@@ -50,8 +48,6 @@ switch($ploopi_op)
     break;
 
     case 'shares_search_users':
-        if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
         //$listgroup = array();
         include_once './modules/system/class_group.php';
         include_once './modules/system/class_workspace.php';

@@ -419,17 +419,16 @@ vertical-align: middle;
     padding: 0 .5em 0 0;
 }
 
-
-.ploopi_form p .checkbox {
-    width:14px;
-}
-
 .ploopi_form p input[type='text'],
 .ploopi_form p input[type='password'],
 .ploopi_form p select,
 .ploopi_form p textarea,
 .ploopi_form p span {
     width: 65%;
+}
+
+.ploopi_form p input.checkbox {
+    width:14px;
 }
 
 .ploopi_form p span {
@@ -439,6 +438,16 @@ vertical-align: middle;
 .ploopi_form p textarea{
     height: 6em;
 }
+
+.ploopi_form p span.checkbox {
+    cursor:pointer;
+    width:100%;
+}
+
+.ploopi_form p span.checkbox img, .ploopi_form p span.checkbox input {
+    cursor:pointer;
+}
+
 
 .ploopi_form_title {
     display:block;

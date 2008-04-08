@@ -1,4 +1,3 @@
-<?php
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
@@ -20,10 +19,18 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+.calendar_day div {
+    width:20px;
+    height:20px;
+    line-height:18px;
+    border:1px solid #d8d8d8;
+}
 
-include_once './include/start.php';
-include_once './include/op.php';
-include_once ($_SESSION['ploopi']['mode'] == 'web') ? './include/frontoffice.php' : './include/backoffice.php';
-
-ploopi_die();
-?>
+.calendar_day a {
+    display:block;
+    text-decoration:none;
+    width:20px;
+    height:20px;
+    line-height:18px;
+    border:1px solid #c0c0c0;
+}

@@ -1,3 +1,17 @@
+== Module FORMS - version 2.10 ====================================================
+
+2008-04-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Gestion du maxlength sur les champs texte
+ * Ajout du calendrier sur les champs date en frontoffice (nécessite calendar.css et calendar_ie.css)
+ * Correction d'un bug affectant le numéro auto lors de la modification d'un enregistrement 
+ * Correction d'un bug affectant le champ 'fichier' lors de la modification d'un enregistrement 
+ * Correction d'un bug sur l'upload de fichiers
+ * Plus de couleur par défaut dans la liste
+ * Plus de choix par défaut dans la liste
+ * Correction de problèmes d'affichage du template backoffice sous IE
+ * Gestion multicolonne des cases à cocher et boutons radio (attention, nécessaite une modification du template frontoffice)
+ 
 == Module FORMS - version 2.0 ====================================================
 
 2008-01-09  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

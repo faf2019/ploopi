@@ -2,51 +2,44 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=iso-8859-15" />
-	<meta name="description" content="{WORKSPACE_META_DESCRITPION} {PAGE_DESCRIPTION}" />
-	<meta name="keywords" content="{PAGE_ALLKEYWORDS}" />
-	<meta name="author" content="{WORKSPACE_META_AUTHOR}" />
-	<meta name="copyright" content="{WORKSPACE_META_COPYRIGHT}" />
-	<meta name="robots" content="{WORKSPACE_META_ROBOTS}" />
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <meta name="description" content="{WORKSPACE_META_DESCRIPTION} {PAGE_DESCRIPTION}" />
+    <meta name="keywords" content="{PAGE_ALLKEYWORDS}" />
+    <meta name="author" content="{WORKSPACE_META_AUTHOR}" />
+    <meta name="copyright" content="{WORKSPACE_META_COPYRIGHT}" />
+    <meta name="robots" content="{WORKSPACE_META_ROBOTS}" />
+
+    <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
+
+    <link rel="alternate" type="application/rss+xml" href="{SITE_RSSFEED_URL}" title="{SITE_RSSFEED_TITLE}">
+    <link rel="alternate" type="application/rss+xml" href="{HEADING_RSSFEED_URL}" title="{HEADING_RSSFEED_TITLE}">
+
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/forms.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/rss.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/news.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/search.css" media="screen" />
+
+    <!--[if lte IE 7]>
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar_ie.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles_ie.css" media="screen" />
+    <![endif]-->
 
 
-	<link rel="icon" href="{TEMPLATE_PATH}/gfx/favicon.png" type="image/png" />
-	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/styles.css" media="screen" title="styles" />
-	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/rss.css" media="screen" title="styles" />
-	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/agenda.css" media="screen" title="styles" />
-	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/forms.css" media="screen" title="styles" />
-	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/news.css" media="screen" title="styles" />
+    <!--[if lte IE 6]>
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/png.css" media="screen" />
+    <![endif]-->
 
-	<!--[if lte IE 7]>
-	<link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/styles_ie.css" media="screen" title="styles" />
-	<![endif]-->
-	
-	<script type="text/javascript" src="./include/prototype.js"></script>
-	<script type="text/javascript" src="./include/functions.js"></script>
-	<script type="text/javascript">
-	//<!--
-	{ADDITIONAL_JAVASCRIPT}
+    <!-- BEGIN ploopi_js -->
+        <script type="text/javascript" src="{ploopi_js.PATH}"></script>
+    <!-- END module_js -->
+    <script type="text/javascript">
+    //<!--
+    {ADDITIONAL_JAVASCRIPT}
+    //-->
+    </script>
 
-	var lstmsg = new Array();
-	lstmsg[0] = "L'adresse mèl n'est pas valide.\nIl n'y a pas de caractère @\nUne adresse mèl valide est du type \"adresse@domaine.com\"";
-	lstmsg[1] = "L'adresse mèl n'est pas valide.\nIl ne peut pas y avoir un point (.) juste après @\nUne adresse mèl valide est du type \"adresse@domaine.com\"";
-	lstmsg[2] = "L'adresse mèl n'est pas valide.\nL'adresse mèl ne peut pas finir par un point (.)\nUne adresse mèl valide est du type \"adresse@domaine.com\"";
-	lstmsg[3] = "L'adresse mèl n'est pas valide.\nL'adresse mèl ne peut pas contenir 2 points (.) qui se suivent.\nUne adresse mèl valide est du type \"adresse@domaine.com\"";
-	lstmsg[4] = "Le champ '<FIELD_LABEL>' ne doit pas être vide";
-	lstmsg[5] = "Le champ '<FIELD_LABEL>' doit être un nombre entier valide";
-	lstmsg[6] = "Le champ '<FIELD_LABEL>' doit être un nombre réel valide";
-	lstmsg[7] = "Le champ '<FIELD_LABEL>' doit être une date valide";
-	lstmsg[8] = "Le champ '<FIELD_LABEL>' doit être une heure valide";
-	lstmsg[9] = "Vous devez sélectionner une valeur pour le champ '<FIELD_LABEL>'";
-	lstmsg[10] = "Le champ '<FIELD_LABEL>' doit être une couleur valide (#ffff00 / jaune / yellow)";
-
-	var error_bgcolor = "#FFAAAA";
-
-	//-->
-	</script>
-
-
-	<title>{SITE_TITLE} - {PAGE_TITLE} - {HEADING1_TITLE}</title>
 </head>
 
 <body>
