@@ -63,20 +63,22 @@ function system_roleusers(roleid)
 
 function system_roleusers_search(roleid)
 {
-    ploopi_ajaxloader('system_roleusers_search_result'+roleid);
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=system_roleusers_search&system_roleusers_roleid='+roleid+'&system_roleusers_filter='+$('system_roleusers_filter'+roleid).value,'','system_roleusers_search_result'+roleid);
+    ploopi_ajaxloader('system_roleusers_search_result');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=system_roleusers_search&system_roleusers_roleid='+roleid+'&system_roleusers_filter='+$('system_roleusers_filter').value,'','system_roleusers_search_result');
 }
 
 function system_roleusers_select(roleid, userid, type)
 {
-    ploopi_ajaxloader('system_roleusers_list'+roleid);
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=system_roleusers_select_'+type+'&system_roleusers_roleid='+roleid+'&system_roleusers_'+type+'id='+userid,'','system_roleusers_list'+roleid);
+    ploopi_ajaxloader('system_roleusers_list');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=system_roleusers_select_'+type+'&system_roleusers_roleid='+roleid+'&system_roleusers_'+type+'id='+userid,'','system_roleusers_list');
+    alert('Le rôle a été attribué');
 }
 
 function system_roleusers_delete(roleid, userid, type)
 {
-    ploopi_ajaxloader('system_roleusers_list'+roleid);
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=system_roleusers_delete_'+type+'&system_roleusers_roleid='+roleid+'&system_roleusers_'+type+'id='+userid,'','system_roleusers_list'+roleid);
+    ploopi_ajaxloader('system_roleusers_list');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=system_roleusers_delete_'+type+'&system_roleusers_roleid='+roleid+'&system_roleusers_'+type+'id='+userid,'','system_roleusers_list');
+    alert('L\'attriution du rôle a été retirée');
 }
 
 

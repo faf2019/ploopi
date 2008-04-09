@@ -20,6 +20,8 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+echo $skin->open_simplebloc();
+
 $parents = str_replace(';',',',$workspace->fields['parents']);
 
 // on recherche les rôles des modules de l'espace sélectionné (ou hérités des espaces parents)
@@ -58,7 +60,7 @@ $c = 0;
 $columns['auto']['desc']        = array('label' => 'Description', 'options' => array('sort' => true));
 $columns['left']['module']      = array('label' => 'Module', 'width' => '120', 'options' => array('sort' => true));
 $columns['left']['role']        = array('label' => 'Rôle', 'width' => '120', 'options' => array('sort' => true));
-$columns['right']['shared']     = array('label' => 'Par.', 'width' => '40');
+$columns['right']['shared']     = array('label' => 'Partagé', 'width' => '65');
 $columns['right']['origine']    = array('label' => 'Origine', 'width' => '120', 'options' => array('sort' => true));
 $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '44');
 
@@ -86,4 +88,6 @@ while($row = $db->fetchrow())
 }
 
 $skin->display_array($columns, $values, 'array_roles', array('sortable' => true, 'orderby_default' => 'module'));
+
+echo $skin->close_simplebloc();
 ?>

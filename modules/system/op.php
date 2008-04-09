@@ -588,79 +588,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 {
                     case 'system_roleusers':
                         if (empty($_GET['system_roleusers_roleid'])) ploopi_die();
-
-                        $sql =  "
-                                SELECT      u.*
-                                FROM        ploopi_workspace_user_role wur
-                                INNER JOIN  ploopi_user u
-                                ON          u.id = wur.id_user
-                                WHERE       wur.id_role = {$_GET['system_roleusers_roleid']}
-                                AND         wur.id_workspace = {$_SESSION['system']['workspaceid']}
-                                ";
-
-                        $db->query($sql);
-                        $users = $db->getarray();
-
-                        $sql =  "
-                                SELECT      g.*
-                                FROM        ploopi_workspace_group_role wgr
-                                INNER JOIN  ploopi_group g
-                                ON          g.id = wgr.id_group
-                                WHERE       wgr.id_role = {$_GET['system_roleusers_roleid']}
-                                AND         wgr.id_workspace = {$_SESSION['system']['workspaceid']}
-                                ";
-
-                        $db->query($sql);
-                        $groups = $db->getarray();
-
-                        if (empty($groups) && empty($users))
-                        {
-                            ?>
-                            <div class="system_roleusers_title">Aucun utilisateur ou groupe affecté à ce rôle, utilisez la recherche pour en ajouter</div>
-                            <?
-                        }
-
-                        if (!empty($groups))
-                        {
-                            ?>
-                            <div class="system_roleusers_title">Groupes affectés à ce rôle:</div>
-                            <?
-                        }
-
-                        foreach($groups as $group)
-                        {
-                            ?>
-                            <a class="system_roleusers_select" href="javascript:void(0);" onclick="javascript:system_roleusers_delete(<? echo $_GET['system_roleusers_roleid']; ?>, <? echo $group['id']; ?>, 'group');">
-                                <p class="ploopi_va">
-                                    <img src="./img/icon_delete.gif">
-                                    <span><? echo "{$group['label']}"; ?></span>
-                                </p>
-                            </a>
-                            <?
-                        }
-
-                        if (!empty($users))
-                        {
-                            ?>
-                            <div class="system_roleusers_title">Utilisateurs affectés à ce rôle:</div>
-                            <?
-                        }
-
-                        foreach($users as $user)
-                        {
-                            ?>
-                            <a class="system_roleusers_select" href="javascript:void(0);" onclick="javascript:system_roleusers_delete(<? echo $_GET['system_roleusers_roleid']; ?>, <? echo $user['id']; ?>, 'user');">
-                                <p class="ploopi_va">
-                                    <img src="./img/icon_delete.gif">
-                                    <span><? echo "{$user['firstname']} {$user['lastname']} ({$user['login']})"; ?></span>
-                                </p>
-                            </a>
-                            <?
-                        }
-
+                        $roleid = $_GET['system_roleusers_roleid'];
+                        include './modules/system/admin_index_roles_assignment_list.php';
                         ploopi_die();
                     break;
-
+                                            
                     // suppression de l'affectation d'un rôle à un utilisateur
                     case 'system_roleusers_delete_user':
                         if (empty($_GET['system_roleusers_userid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi_die();
@@ -672,6 +604,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         if ($wur->open($_GET['system_roleusers_userid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid'])) $wur->delete();
 
                         ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
+                        //ploopi_redirect("admin.php?op=assign_role&roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
                     // suppression de l'affectation d'un rôle à un groupe
@@ -685,6 +618,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         if ($wgr->open($_GET['system_roleusers_groupid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid'])) $wgr->delete();
 
                         ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
+                        //ploopi_redirect("admin.php?op=assign_role&roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
                     // affectation d'un rôle à un utilisateur
@@ -725,7 +659,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         ploopi_redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
-   // résultat de la recherche utilisateurs / groupes
+                    // résultat de la recherche utilisateurs / groupes
                     case 'system_roleusers_search':
                         if (!isset($_GET['system_roleusers_filter'])) ploopi_die();
                         
@@ -775,9 +709,10 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         if (empty($users) && empty($groups))
                         {
                             ?>
-                            <div class="system_roleusers_select_empty">
-                                <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_noway.png"><span>aucun utilisateur/groupe trouv&eacute;</span></p>
-                            </div>
+                            <p class="ploopi_va" style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
+                                <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_noway.png">
+                                <span>aucun utilisateur/groupe trouv&eacute;</span>
+                            </p>
                             <?
                         }
                         else
@@ -790,7 +725,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 foreach($groups as $group)
                                 {
                                     ?>
-                                    <a class="system_roleusers_select" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<? echo $_GET['system_roleusers_roleid']; ?>, <? echo $group['id']; ?>, 'group');">
+                                    <a class="system_roleusers_select" title="Sélectionner ce groupe et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<? echo $_GET['system_roleusers_roleid']; ?>, <? echo $group['id']; ?>, 'group');">
                                         <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><? echo "{$group['label']}"; ?></span></p>
                                     </a>
                                     <?
@@ -801,7 +736,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 foreach($users as $user)
                                 {
                                     ?>
-                                    <a class="system_roleusers_select" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<? echo $_GET['system_roleusers_roleid']; ?>, <? echo $user['id']; ?>, 'user');">
+                                    <a class="system_roleusers_select" title="Sélectionner cet utilisateur et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<? echo $_GET['system_roleusers_roleid']; ?>, <? echo $user['id']; ?>, 'user');">
                                         <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['firstname']} {$user['lastname']} ({$user['login']})"; ?></span></p>
                                     </a>
                                     <?
@@ -810,9 +745,13 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 </div>
                             </div>
                             <div class="system_roleusers_legend">
-                                <p class="ploopi_va">
+                                <p class="ploopi_va" style="float:right;">
+                                    <span style="font-weight:bold;">Légende:</span>
                                     <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span>Groupe d'Utilisateur</span>
                                     <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span>Utilisateur</span>
+                                </p>
+                                <p class="ploopi_va" style="float:left;">
+                                    <span>Cliquez sur un utilisateur ou un groupe pour l'ajouter</span>
                                 </p>
                             </div>
                             <?

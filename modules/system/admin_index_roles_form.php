@@ -20,8 +20,10 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<? $modules = $workspace->getmodules();?>
+
+echo $skin->open_simplebloc();
+
+$modules = $workspace->getmodules();?>
 
 <div style="padding:4px;">
     <div style="margin-bottom:4px;">Module concerné :</div>
@@ -121,3 +123,6 @@
     }
     ?>
 </div>
+<?
+echo $skin->close_simplebloc();
+?>

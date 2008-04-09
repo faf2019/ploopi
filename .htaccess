@@ -36,10 +36,10 @@ Options +FollowSymLinks -Indexes
 </files>
 
 <IfModule rewrite_module>
-	RewriteEngine on
+    RewriteEngine on
 
-	# Changez cette valeur si PLOOPI est installe dans un sous dossier du site (ex : /test )
-	RewriteBase /
+    # Changez cette valeur si PLOOPI est installe dans un sous dossier du site (ex : /test )
+    RewriteBase /
 
     #Check to see if browser can accept gzip files.
     ReWriteCond %{HTTP:accept-encoding} gzip

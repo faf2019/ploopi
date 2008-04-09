@@ -61,7 +61,7 @@ function ploopi_annotation($id_object, $id_record, $object_label = '')
     ?>
     <div id="ploopiannotation_<? echo $id_annotation; ?>"></div>
     <script type="text/javascript">
-        ploopi_annotation('<? echo $id_annotation; ?>');
+        ploopi_window_onload_stock(function() {ploopi_annotation('<? echo $id_annotation; ?>');});
     </script>
     <?
 }

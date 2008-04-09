@@ -81,7 +81,7 @@ if (!isset($_SESSION['system']['roleTabItem'])) $_SESSION['system']['roleTabItem
 
 echo $skin->create_tabs($tabs, $_SESSION['system']['roleTabItem']);
 
-echo $skin->open_simplebloc();
+
 
 switch($_SESSION['system']['roleTabItem'])
 {
@@ -107,7 +107,4 @@ switch($_SESSION['system']['roleTabItem'])
         include './modules/system/admin_index_roles_assignment.php';
     break;
 }
-
-
-echo $skin->close_simplebloc();
 ?>

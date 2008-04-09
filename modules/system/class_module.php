@@ -80,8 +80,8 @@ class module extends data_object
             {
                 $admin_moduleid = $this->fields['id'];
                 // script to execute to delete specific module data
-                if (file_exists("./modules/$fields[label]/include/delete.php")) include "./modules/$fields[label]/include/delete.php";
-                elseif (file_exists("./modules/$fields[label]/include/admin_instance_delete.php")) include "./modules/$fields[label]/include/admin_instance_delete.php";
+                if (file_exists("./modules/{$fields['label']}/include/delete.php")) include "./modules/{$fields['label']}/include/delete.php";
+                elseif (file_exists("./modules/{$fields['label']}/include/admin_instance_delete.php")) include "./modules/{$fields['label']}/include/admin_instance_delete.php";
             }
 
             // delete all module_workspace
@@ -94,19 +94,38 @@ class module extends data_object
                 $module_workspace->delete();
             }
 
-            // delete params (default & user)
-
-            $delete = "DELETE FROM ploopi_param_default WHERE id_module = " . $this->fields['id'];
+            // delete params (default, workspace, user)
+            $delete = "DELETE FROM ploopi_param_default WHERE id_module = '{$this->fields['id']}'";
             $db->query($delete);
 
-            $delete = "DELETE FROM ploopi_param_user WHERE id_module = " . $this->fields['id'];
+            $delete = "DELETE FROM ploopi_param_workspace WHERE id_module = '{$this->fields['id']}'";
+            $db->query($delete);
+            
+            $delete = "DELETE FROM ploopi_param_user WHERE id_module = '{$this->fields['id']}'";
+            $db->query($delete);
+
+            // delete roles
+            $delete = "DELETE FROM ploopi_role WHERE id_module = '{$this->fields['id']}'";
+            $db->query($delete);
+            
+            // delete shares
+            $delete = "DELETE FROM ploopi_share WHERE id_module = '{$this->fields['id']}'";
+            $db->query($delete);
+            
+            // delete subscription
+            $delete = "DELETE FROM ploopi_subscription WHERE id_module = '{$this->fields['id']}'";
+            $db->query($delete);
+                    
+            // delete workflow
+            $delete = "DELETE FROM ploopi_workflow WHERE id_module = '{$this->fields['id']}'";
             $db->query($delete);
         }
 
         parent::delete();
 
     }
-
+    
+    
     function getallworkspaces()
     {
         global $db;

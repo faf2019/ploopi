@@ -91,22 +91,6 @@ text-decoration:none;
     border-bottom:2px solid #a0a0a0;
 }
 
-.system_roleusers_title {
-    font-weight:bold;
-    padding:4px;
-    background-color:#e8e8e8;
-    border-top:1px solid #c0c0c0;
-}
-
-a.system_roleusers_title {
-    display:block;
-    text-decoration:none;
-}
-
-a.system_roleusers_title:hover {
-    text-decoration:none;
-}
-
 .system_roleusers_search_form {
     padding:4px;
 }
@@ -114,17 +98,10 @@ a.system_roleusers_title:hover {
 .system_roleusers_list {
 }
 
-.system_roleusers_select_empty {
-    padding:4px;
-}
-.system_roleusers_select_empty span {
-    padding:0 4px;
-}
-
 .system_roleusers_select {
     display:block;
     background-color:#f0f0f0;
-    border-top:1px solid #d0d0d0;
+    border-bottom:1px solid #d0d0d0;
     color:#404040;
     padding:3px 1px 3px 8px;
     text-decoration:none;
@@ -132,8 +109,7 @@ a.system_roleusers_title:hover {
 
 .system_roleusers_select:hover {
     text-decoration:none;
-    background-color:#a0a0a0;
-    color:#ffffff;
+    background-color:#d0d0d0;
 }
 
 .system_roleusers_select span {
@@ -141,8 +117,10 @@ a.system_roleusers_title:hover {
 }
 
 .system_roleusers_legend {
-    padding:2px 1px;
-    text-align:right;
+    padding:4px;
+    border-bottom:1px solid #c0c0c0;
+    background-color:#e0e0e0;
+    overflow:auto;
 }
 
 .system_roleusers_legend span {

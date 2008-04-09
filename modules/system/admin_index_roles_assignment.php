@@ -20,6 +20,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+echo $skin->open_simplebloc();
+
+$arrRole = null;
+
 $parents = str_replace(';',',',$workspace->fields['parents']);
 
 // on recherche les rôles des modules de l'espace sélectionné (ou hérités des espaces parents)
@@ -50,31 +54,60 @@ $sql =  "
 
 $db->query($sql);
 
-?>
-<div style="overflow:hidden;">
-<?
+
+$columns = array();
+$values = array();
+$c = 0;
+
+$columns['auto']['desc']        = array('label' => 'Description', 'options' => array('sort' => true));
+$columns['left']['module']      = array('label' => 'Module', 'width' => '120', 'options' => array('sort' => true));
+$columns['left']['role']        = array('label' => 'Rôle', 'width' => '120', 'options' => array('sort' => true));
+$columns['right']['shared']     = array('label' => 'Partagé', 'width' => '65');
+$columns['right']['origine']    = array('label' => 'Origine', 'width' => '120', 'options' => array('sort' => true));
+
 while($row = $db->fetchrow())
 {
+    $values[$c]['values']['desc']       = array('label' => $row['description']);
+    $values[$c]['values']['module']     = array('label' => $row['module_label']);
+    $values[$c]['values']['role']       = array('label' => $row['label']);
+    $values[$c]['values']['shared']     = array('label' => '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/p_'.(($row['shared'] ? 'green' : 'red')).'.png">');
+    $values[$c]['values']['origine']    = array('label' => $row['origine']);
+
+    if ($op == 'assign_role' && !empty($_GET['roleid']) && is_numeric($_GET['roleid']) && $_GET['roleid'] == $row['id'])
+    {
+        $values[$c]['style'] = 'background-color:#ffe0e0;';
+        $arrRole = $row;
+    }
+    
+    $values[$c]['description'] = 'Attribuer ce rôle';
+    $values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=assign_role&roleid={$row['id']}");
+    $c++;
+}
+
+$skin->display_array($columns, $values, 'array_roles', array('sortable' => true, 'orderby_default' => 'module', 'height' => 100));
+
+echo $skin->close_simplebloc();
+
+if ($op == 'assign_role' && !empty($_GET['roleid']) && is_numeric($_GET['roleid']))
+{
+    echo $skin->open_simplebloc("Gestion des attributions du rôle &laquo; {$arrRole['label']} &raquo; du module &laquo; {$arrRole['module_label']} &raquo;");
     ?>
-    <a class="system_roleusers" href="javascript:void(0);" onclick="javascript:system_roleusers(<? echo $row['id']; ?>);">
-        <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_role.png" />
-        <span><? echo "{$row['label']} de {$row['module_label']} ({$row['module_type']})"; ?></span>
-    </a>
-
-    <div class="system_roleusers_detail" id="system_roleusers_detail<? echo $row['id']; ?>" style="display:none;">
-        <div class="system_roleusers_search_form">
-            <p class="ploopi_va">
-                <span>Recherche groupes/utilisateurs:&nbsp;</span>
-                <input type="text" id="system_roleusers_filter<? echo $row['id']; ?>" class="text">
-                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="javascript:system_roleusers_search(<? echo $row['id']; ?>);" style="border:0px" src="<? echo "{$_SESSION['ploopi']['template_path']}/img/workflow/search.png"; ?>">
-            </p>
-        </div>
-        <div id="system_roleusers_search_result<? echo $row['id']; ?>"></div>
-
-        <div class="system_roleusers_list" id="system_roleusers_list<? echo $row['id']; ?>">
-        </div>
+    
+    <p class="ploopi_va" style="padding:4px; background-color:#e0e0e0; border-bottom:1px solid #c0c0c0;">
+        <span style="font-weight:bold;">Rechercher un utilisateur ou un groupe :</span> 
+        <input type="text" id="system_roleusers_filter" class="text">
+        <img style="cursor:pointer;" onclick="javascript:system_roleusers_search(<? echo $_GET['roleid']; ?>);" src="<? echo "{$_SESSION['ploopi']['template_path']}/img/workflow/search.png"; ?>">
+    </p>
+   
+    <div id="system_roleusers_search_result"></div>
+   
+    <div id="system_roleusers_list">
+    <?
+    $roleid = $_GET['roleid'];
+    include './modules/system/admin_index_roles_assignment_list.php';
+    ?>
     </div>
     <?
+    echo $skin->close_simplebloc();
 }
 ?>
-</div>
