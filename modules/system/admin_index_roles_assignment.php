@@ -61,7 +61,7 @@ $c = 0;
 
 $columns['auto']['desc']        = array('label' => 'Description', 'options' => array('sort' => true));
 $columns['left']['module']      = array('label' => 'Module', 'width' => '120', 'options' => array('sort' => true));
-$columns['left']['role']        = array('label' => 'Rôle', 'width' => '120', 'options' => array('sort' => true));
+$columns['left']['role']        = array('label' => 'Rôle', 'width' => '200', 'options' => array('sort' => true));
 $columns['right']['shared']     = array('label' => 'Partagé', 'width' => '65');
 $columns['right']['origine']    = array('label' => 'Origine', 'width' => '120', 'options' => array('sort' => true));
 
@@ -84,7 +84,7 @@ while($row = $db->fetchrow())
     $c++;
 }
 
-$skin->display_array($columns, $values, 'array_roles', array('sortable' => true, 'orderby_default' => 'module', 'height' => 100));
+$skin->display_array($columns, $values, 'array_roles', array('sortable' => true, 'orderby_default' => 'module', 'height' => 150));
 
 echo $skin->close_simplebloc();
 
