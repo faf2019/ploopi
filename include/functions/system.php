@@ -536,7 +536,6 @@ function ploopi_ob_callback($buffer)
     global $ploopi_timer;
     global $db;
     
-    
     // try to get content-type 
     $content_type = 'text/html';
     $headers = headers_list();
@@ -544,9 +543,9 @@ function ploopi_ob_callback($buffer)
     foreach($headers as $property)
     {
         $matches = array();
-        if (preg_match("@^Content-type:(.*);@i", $property, $matches))
+        if (preg_match('/Content-type:(.*)(;|)/i', $property, $matches))
         {
-            $content_type = strtolower($matches[1]);
+            $content_type = strtolower(trim($matches[1]));
         }
     }
     
