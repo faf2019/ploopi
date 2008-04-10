@@ -345,7 +345,6 @@ text-decoration: none;
 
 #page_content {
 overflow: auto;
-background:url(../img/template/module_centre.png) 0 0 repeat-y;
 min-height:400px;
 padding:0 10px;
 }
