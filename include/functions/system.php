@@ -512,6 +512,18 @@ function ploopi_workspace_sort($a,$b)
 
 function ploopi_h404() { header("HTTP/1.0 404 Not Found"); }
 
+/*
+ * Détecte si le navigateur supporte la compression gzip
+ * http://www.tellinya.com/read/2007/09/09/106.html
+ * 
+ */
+
+function ploopi_accepts_gzip()
+{
+    $accept = str_replace(" ","", strtolower($_SERVER['HTTP_ACCEPT_ENCODING']));
+    $accept = explode(",",$accept);
+    return in_array("gzip",$accept);
+}
 
 /*
  * Gère la sortie du buffer principal
@@ -524,6 +536,22 @@ function ploopi_ob_callback($buffer)
     global $ploopi_timer;
     global $db;
     
+    
+    // try to get content-type 
+    $content_type = 'text/html';
+    $headers = headers_list();
+
+    foreach($headers as $property)
+    {
+        $matches = array();
+        if (preg_match("@^Content-type:(.*);@i", $property, $matches))
+        {
+            $content_type = strtolower($matches[1]);
+        }
+    }
+    
+    if (_PLOOPI_USE_OUTPUT_COMPRESSION && $content_type == 'text/html') $buffer = preg_replace("/\s+/"," ",$buffer);
+ 
     $ploopi_stats = array();
     
     if (isset($buffer)) $ploopi_stats['pagesize'] = strlen($buffer);
@@ -561,6 +589,7 @@ function ploopi_ob_callback($buffer)
     {
         $ploopi_stats['sessionsize'] = 0;
     }
+    
     
     $array_tags = array(    '<PLOOPI_PAGE_SIZE>',
                             '<PLOOPI_EXEC_TIME>',
@@ -616,6 +645,13 @@ function ploopi_ob_callback($buffer)
         $log->save();
     }
                             
-    return trim(str_replace($array_tags, $array_values, $buffer));
+    $buffer = str_replace($array_tags, $array_values, $buffer);
+    
+    if (_PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && $content_type == 'text/html')
+    {  
+        header("Content-Encoding: gzip");
+        return gzencode($buffer);
+    }
+    else return($buffer);
 }
 ?>
