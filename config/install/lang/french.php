@@ -146,6 +146,18 @@ define ('_PLOOPI_INSTALL_TMP_WRITE',        'Ecriture de données dans le réperto
 define ('_PLOOPI_INSTALL_TMP_WRITE_MESS',   'Ce répertoire dispose de %1s');
 define ('_PLOOPI_INSTALL_TMP_WRITE_WARNING','Vous devez donner à apache les droits en écriture sur le répertoire %1s');
 
+// CGI SECTION
+define ('_PLOOPI_INSTALL_CGI_NO_EXIST',         'Utilisation des scripts CGI');
+define ('_PLOOPI_INSTALL_CGI_NO_EXIST_WARNING', 'Le répertoire %1s n\'existe pas ou n\'est pas un répertoire');
+
+define ('_PLOOPI_INSTALL_CGI_EXIST',            'Utilisation des scripts CGI');
+define ('_PLOOPI_INSTALL_CGI_EXIST_WARNING',    'Vous devez donner à apache les droits en lecture sur le répertoire %1s');
+
+define ('_PLOOPI_INSTALL_CGI_ACTIVE',        'Activation des CGI');
+
+define ('_PLOOPI_INSTALL_CGI_PATH',          '<sup>* </sup>Répertoire CGI (mettre ./cgi par défaut) :');
+define ('_PLOOPI_INSTALL_CGI_PATH_JS',       'Répertoire CGI');
+
 define ('_PLOOPI_INSTALL_PARAM_PLOOPI',      'Paramétrage « PLOOPI »');
 
 define ('_PLOOPI_INSTALL_URL_BASE',          '<sup>* </sup>Adresse de votre site:');

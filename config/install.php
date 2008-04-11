@@ -96,6 +96,8 @@ if(!isset($_SESSION['install'])) {
     '<BASEPATH>'        => ((!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://').((!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']).((!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') ? ":{$_SERVER['SERVER_PORT']}" : '').((!empty($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] != '') ? dirname($_SERVER['SCRIPT_NAME']) : '/'), 
     '<DATAPATH>'        => './data',          // ok
     '<TMPPATH>'         => '/tmp',            // ok
+    '<CGI>'             => false,             // ok
+    '<CGIPATH>'         => './cgi',           // ok
     '<USE_DBSESSION>'   => true,              // ok
     '<URL_ENCODE>'      => true,              // ok
     '<SECRETKEY>'       => 'ma phrase secrete', // ok
@@ -332,6 +334,8 @@ if($_POST['stage']>=2)
   if(isset($_POST['url_base']))      $_SESSION['install']['<BASEPATH>'] = trim($_POST['url_base']);
   if(isset($_POST['dir_data']))      $_SESSION['install']['<DATAPATH>'] = ploopi_del_end_slashe(trim($_POST['dir_data']));
   if(isset($_POST['dir_tmp']))       $_SESSION['install']['<TMPPATH>'] = ploopi_del_end_slashe(trim($_POST['dir_tmp']));
+  if(isset($_POST['cgi_active']))    $_SESSION['install']['<CGI>'] = ($_POST['cgi_active']=='true' ? true : false);
+  if(isset($_POST['dir_cgi']))       $_SESSION['install']['<CGIPATH>'] = ploopi_del_end_slashe(trim($_POST['dir_cgi']));
   if(isset($_POST['log_admin']))     $_SESSION['install']['<ADMIN_LOGIN>'] = trim($_POST['log_admin']);
   if(isset($_POST['pass_admin']))    $_SESSION['install']['<ADMIN_PASSWORD>'] = trim($_POST['pass_admin']);
   if(isset($_POST['secret']))        $_SESSION['install']['<SECRETKEY>'] = trim($_POST['secret']);
@@ -350,7 +354,7 @@ if($_POST['stage']>=2)
     $_SESSION['install']['<BASEPATH>'] = substr($_SESSION['install']['<BASEPATH>'],0,-1);
   while(substr($_SESSION['install']['<BASEPATH>'],-7)=='/config') 
     $_SESSION['install']['<BASEPATH>'] = substr($_SESSION['install']['<BASEPATH>'],0,-7);
-  
+    
   // Control config directories are writable
   if(!is_writable('./config'))
     $arrInstallInfos[] = array('id' => 'div_config', 'state' => false, 'title' => '_PLOOPI_INSTALL_CONFIG_WRITE');
@@ -361,7 +365,15 @@ if($_POST['stage']>=2)
   if(!file_exists('./install/system/ploopi.sql') || !is_readable('./install/system/ploopi.sql'))
   $arrInstallInfos[] = array('id' => 'div_config', 'state' => false, 'title' => '_PLOOPI_INSTALL_SQL_FILE');
 
-
+  //Path CGI
+  if($_SESSION['install']['<CGI>']==false && $_SESSION['install']['<CGIPATH>'] == '') 
+    $_SESSION['install']['<CGIPATH>'] == './cgi';
+  
+  // Select yes/No
+  if ($_SESSION['install']['<CGI>']==true)
+  { $strInstallCgiActiveTrue = 'selected';$strInstallCgiActiveFalse = ''; }
+  else
+  { $strInstallCgiActiveTrue = '';$strInstallCgiActiveFalse = 'selected'; }
   if ($_SESSION['install']['<URL_ENCODE>']==true)
   { $strInstallUrlEncodeTrue = 'selected';$strUrlEncodeFalse = ''; }
   else
@@ -446,7 +458,53 @@ if($_POST['stage']>=2)
                               )
                     );
   }
-  
+    // test if TMP Folder no exist
+  if((!is_dir($_SESSION['install']['<CGIPATH>'])) && ($_SESSION['install']['<CGI>'] == true))
+  {
+    // CGI Use and Path
+    $arrInstallInfos[] = array(
+              'id' => 'div_title_cgi',
+              'title' => '_PLOOPI_INSTALL_CGI_NO_EXIST',
+              'state'   => false,
+              'title_replace' => array($_SESSION['install']['<CGIPATH>']),
+              'mess_replace' => array($_SESSION['install']['<CGIPATH>']),
+              'warn_replace' => array($_SESSION['install']['<CGIPATH>']),
+              'form'    => array( array('label' => _PLOOPI_INSTALL_CGI_ACTIVE,
+                                       'input' => '<select name="cgi_active" id="cgi_active" tabindex="%tabIndex%">
+                                                     <option value="true" '.$strInstallCgiActiveTrue.'>'._PLOOPI_INSTALL_YES.'</option>
+                                                     <option value="false" '.$strInstallCgiActiveFalse.'>'._PLOOPI_INSTALL_NO.'</option>
+                                                   </select>'
+                                      ),
+                                 array('label' => _PLOOPI_INSTALL_CGI_PATH,
+                                        'input' => '<input name="dir_cgi" id="dir_cgi" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<CGIPATH>'].'"/>',
+                                        'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SELECT_CGI_JS).'\',form.dir_cgi,\'string\')'
+                                       )
+                               )
+                     );
+  }
+  else
+  {
+    // CGI Use and Path
+    $arrInstallInfos[] = array(
+              'id' => 'div_title_cgi',
+              'title' => '_PLOOPI_INSTALL_CGI_EXIST',
+              'state'   => (($_SESSION['install']['<CGIPATH>'] != '' && is_readable($_SESSION['install']['<CGIPATH>'])) || $_SESSION['install']['<CGI>'] == false),
+              'title_replace' => array($_SESSION['install']['<CGIPATH>']),
+              'mess_replace' => array($_SESSION['install']['<CGIPATH>']),
+              'warn_replace' => array($_SESSION['install']['<CGIPATH>']),
+              'form'    => array( array('label' => _PLOOPI_INSTALL_CGI_ACTIVE,
+                                       'input' => '<select name="cgi_active" id="cgi_active" tabindex="%tabIndex%">
+                                                     <option value="true" '.$strInstallCgiActiveTrue.'>'._PLOOPI_INSTALL_YES.'</option>
+                                                     <option value="false" '.$strInstallCgiActiveFalse.'>'._PLOOPI_INSTALL_NO.'</option>
+                                                   </select>'
+                                      ),
+                                 array('label' => _PLOOPI_INSTALL_CGI_PATH,
+                                        'input' => '<input name="dir_cgi" id="dir_cgi" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<CGIPATH>'].'"/>',
+                                        'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SELECT_CGI_JS).'\',form.dir_cgi,\'string\')'
+                                       )
+                               )
+                     );    
+  }
   // Personal informations
   $arrInstallInfos[] = array('id' => 'div_title_param_ploopi',
            'title' => '_PLOOPI_INSTALL_PARAM_PLOOPI',
@@ -505,7 +563,7 @@ if($_POST['stage']>=2)
                                     )
                              )
                    );
-
+                   
   // Test internet connection
   $booFormHidden = ($_POST['div_connect_form_hidden']=="1") ? true : false;
   require_once 'HTTP/Request.php';
@@ -786,9 +844,9 @@ if(isset($arrInstallInfos))
       {
         $strInstallFormLibClass  = 'label';
         $strInstallFormFieldClass = 'field';
-        if(isset($arrInstallForm['js']))
+        if(isset($arrInstallForm['js']) && trim($arrInstallForm['js']) != '')
         {
-          $strInstallFormControlJS .= 'if ('.$arrInstallForm['js'].')';
+          $strInstallFormControlJS .= 'if ('.$arrInstallForm['js'].')'."\r\n";
           $strInstallFormLibClass = 'label_must';
           $strInstallFormFieldClass = 'field_must';
         }
@@ -815,7 +873,7 @@ if(isset($arrInstallInfos))
 if($strInstallFormControlJS !== '')
 {
   $objInstallTemplate->assign_vars(array('ADD_VALIDATEFIELD'  => 'javascript:return form_validate(this);',
-                               'ADDITIONAL_JAVASCRIPT_CTRL'   => 'function form_validate(form) {'.$strInstallFormControlJS.' return(true); return(false);}',
+                               'ADDITIONAL_JAVASCRIPT_CTRL'   => 'function form_validate(form) {'."\r\n".$strInstallFormControlJS.' return(true);'."\r\n".'return(false);'."\r\n".'}',
                                'ADD_MESS_FIELD_MUST'          => _PLOOPI_INSTALL_FIELD_MUST
                               ));
 }

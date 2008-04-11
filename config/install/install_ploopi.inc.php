@@ -71,7 +71,7 @@ function ploopi_create_site($arrInstallInfos)
   {
     if(substr($strTag,0,1)=='<' && substr($strTag,-1,1)=='>')
     {
-      if($strTag=='<USE_DBSESSION>' || $strTag=='<URL_ENCODE>' || $strTag=='<FRONTOFFICE>' || $strTag=='<REWRITERULE>')
+      if($strTag=='<USE_DBSESSION>' || $strTag=='<URL_ENCODE>' || $strTag=='<FRONTOFFICE>' || $strTag=='<REWRITERULE>' || $strTag=='<CGI>')
       {
         $strValue = ($strValue) ? 'true' : 'false';
       }
