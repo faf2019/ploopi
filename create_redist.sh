@@ -65,6 +65,7 @@ cp -r templates/install $DEST/templates/
 
 find $DEST -name .svn -print0 | xargs -0 rm -rf
 find $DEST -name "*.*~" | xargs rm
+find $DEST -name "Thumbs.db" | xargs rm
 
 ####################
 # compression js
@@ -96,13 +97,16 @@ cd $DEST
 # on remet a plat les droits
 #################################
 
-find . -type d | xargs chmod 750
-find . -type f | xargs chmod 640
+chown -R www-data:www-data .
+
+find . -type d | xargs chmod 550
+find . -type f | xargs chmod 440
 
 find {data,config,modules} -type d | xargs chmod 770
 find {data,config,modules} -type f | xargs chmod 660
 
-find bin -type f | xargs chmod 770
+find bin -type f | xargs chmod 550
+chmod 550 ./cgi/upload.cgi
 
 cd ..
 

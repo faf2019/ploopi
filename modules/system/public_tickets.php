@@ -236,10 +236,13 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
 
 
     <div>
-        <p class="ploopi_va">
-            <a href="javascript:void(0);" onclick="javascript:system_tickets_new(event);"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/email.gif" /><span>&nbsp;Nouveau ticket</span></a>
-        </p>
-        <div>
+        <a id="system_tickets_new" href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, true);">
+            <p class="ploopi_va">
+               <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/email.gif" /><span>&nbsp;Nouveau ticket</span>
+            </p>
+        </a>
+        
+        <div style="clear:both;">
             <b>Filtre:</b>
             <a <? if ($filtertype=='all') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=all"); ?>">Tous</a>&nbsp;-
             <a <? if ($filtertype=='mytickets') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=mytickets"); ?>">Mes tickets</a>&nbsp;-

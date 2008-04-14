@@ -1,3 +1,9 @@
+== Module DOC - version 3.77 ====================================================
+
+2008-04-14  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Possibilité d'envoyer un ticket depuis un document (le document est alors lié au ticket)
+ 
 == Module DOC - version 3.76 ====================================================
 
 2008-04-08  Stéphane Escaich  <stephane@ovensia.fr>

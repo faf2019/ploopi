@@ -25,56 +25,21 @@ define ('_PLOOPI_TICKETS_NONE',     0);
 define ('_PLOOPI_TICKETS_OPENED',   1);
 define ('_PLOOPI_TICKETS_DONE',     2);
 
-function ploopi_tickets_selectusers($show_message = false, $userlist = null, $width = 500)
+function ploopi_tickets_selectusers()
 {
     if (isset($_SESSION['ploopi']['tickets']['users_selected'])) unset($_SESSION['ploopi']['tickets']['users_selected']);
     ?>
-    <table cellpadding="0" cellspacing="0" style="width:<? echo $width; ?>;">
+    <p class="ploopi_va">
+        <span>Recherche destinataires:</span>
+        <input type="text" id="ploopi_ticket_userfilter" class="text">
+        <img style="cursor:pointer;" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=tickets_search_users&ploopi_ticket_userfilter='+ploopi_getelem('ploopi_ticket_userfilter').value,'','div_ticket_search_result');" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/search.png">
+    </p>
+    <div id="div_ticket_search_result" style="padding:2px 0 6px 0;">
+    </div>
+    <div style="font-weight:bold;">Destinataires qui vont recevoir un message :</div>
+    <div id="div_ticket_users_selected" style="padding:2px 0 0 0;">
+    </div>
     <?
-    if ($show_message)
-    {
-        ?>
-        <tr>
-            <td><textarea name="ploopi_ticket_message" class="text" style="width:<? echo $width-10; ?>px;height:50px"></textarea></td>
-        </tr>
-        <?
-    }
-    if (is_null($userlist))
-    {
-        ?>
-        <tr>
-            <td>
-            <table style="padding:2px 0 0 0" cellspacing="0">
-                <tr>
-                    <td>Recherche destinataires:&nbsp;&nbsp;</td>
-                    <td><input type="text" id="ploopi_ticket_userfilter" class="text">&nbsp;</td>
-                    <td><img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=tickets_search_users&ploopi_ticket_userfilter='+ploopi_getelem('ploopi_ticket_userfilter').value,'','div_ticket_search_result');" style="border:0px" src="./img/icon_loupe.png"></td>
-                </tr>
-            </table>
-            </td>
-        </tr>
-        <?
-    }
-    else
-    {
-        foreach($userlist as $userid)
-        {
-            $_SESSION['ploopi']['tickets']['users_selected'][$userid] = $userid;
-        }
-    }
-    ?>
-    </table>
-    <?
-    if (is_null($userlist))
-    {
-        ?>
-        <div id="div_ticket_search_result" style="padding:2px 0 6px 0;">
-        </div>
-        Destinataires qui vont recevoir un message :
-        <div id="div_ticket_users_selected" style="padding:2px 0 0 0;">
-        </div>
-        <?
-    }
 }
 
 function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery_notification = 0, $id_object = '', $id_record = '', $object_label = '', $system = false)
@@ -218,10 +183,4 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
     }
 
 }
-
-function ploopi_tickets_new($id_object = '', $id_record = '', $object_label = '')
-{
-    return('<a href="#" onclick="javascript:ploopi_tickets_new(event, '.$id_object.',\''.addslashes($id_record).'\',\''.addslashes(addslashes($object_label)).'\');"><img style="border:0px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/email_read.png"></a>');
-}
-
 ?>

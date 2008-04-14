@@ -35,9 +35,9 @@ if (isset($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']))
         <a title="Télécharger ZIP" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("{$scriptenv}?op=doc_filedownloadzip&docfile_md5id={$docfile->fields['md5id']}"); ?>">Télécharger ZIP</a>
         <a title="Télécharger" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("{$scriptenv}?op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>">Télécharger</a>
         <a title="Ouvrir" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("{$scriptenv}?op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>" target="_blank">Ouvrir</a>
+        <a title="Envoyer un ticket" style="display:block;float:right;margin-left:10px;" href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, '<? echo _DOC_OBJECT_FILE ?>','<? echo $docfile->fields['md5id']; ?>', '<? echo $docfile->fields['name']; ?>');">Envoyer un ticket</a>
         <? echo htmlentities($docfile->fields['name'])." {$title}"; ?>
     </div>
-
     <div class="doc_fileform_main">
 
         <div class="doc_moreinfo">
@@ -419,3 +419,4 @@ if (!$newfile)
     ploopi_annotation(_DOC_OBJECT_FILE, $docfile->fields['md5id'], $docfile->fields['name']);
 }
 ?>
+

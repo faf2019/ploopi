@@ -104,14 +104,7 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     <div id="ploopidocuments_<? echo $documents_id; ?>">
     </div>
     <script type="text/javascript">
-        /*
-        function ploopi_documents_browser<? echo $ploopi_documents_idinstance; ?>_onload()
-        {
-            ploopi_documents_browser('','<? echo $documents_id; ?>','', '', true);
-        }
-        ploopi_window_onload_stock(ploopi_documents_browser<? echo $ploopi_documents_idinstance; ?>_onload);
-        */
-        ploopi_documents_browser('','<? echo $documents_id; ?>','', '', true);
+        ploopi_window_onload_stock(function () { ploopi_documents_browser('','<? echo $documents_id; ?>','', '', true); });
     </script>
     <?
 }

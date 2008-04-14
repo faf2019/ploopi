@@ -138,6 +138,11 @@ while ($fields = $db->fetchrow($rs_fields))
             case 'tablelink':
                 $template_forms->assign_block_vars('formfields.switch_field.switch_select', array());
 
+                $template_forms->assign_block_vars('formfields.switch_field.switch_select.values', array(
+                    'VALUE' => '', 'SELECTED' => ''
+                    )
+                );
+                
                 $select = "SELECT distinct(value) FROM ploopi_mod_forms_reply_field WHERE id_field = '{$values[0]}' AND value <> ''";
                 $rs_detail = $db->query($select);
 

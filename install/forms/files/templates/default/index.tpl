@@ -47,7 +47,7 @@
 	                                <!-- BEGIN columns -->
                                     <span style="float:left;width:{formfields.switch_field.switch_checkbox.columns.WIDTH}%">
 		                                <!-- BEGIN values -->
-		                                    <span class="checkbox" onclick="javascript:ploopi_checkbox_click('{formfields.switch_field.LABELID}_{formfields.switch_field.switch_checkbox.columns.values.ID}');">
+		                                    <span class="checkbox" onclick="javascript:ploopi_checkbox_click(event, '{formfields.switch_field.LABELID}_{formfields.switch_field.switch_checkbox.columns.values.ID}');">
 		                                        <input {formfields.switch_field.switch_checkbox.columns.values.CHECKED} type="checkbox" style="width:14px;" name="{formfields.switch_field.switch_checkbox.columns.values.NAME}" id="{formfields.switch_field.LABELID}_{formfields.switch_field.switch_checkbox.columns.values.ID}" value="{formfields.switch_field.switch_checkbox.columns.values.VALUE}" />
 		                                        {formfields.switch_field.switch_checkbox.columns.values.VALUE}
 		                                    </span>
@@ -62,7 +62,7 @@
                                     <!-- BEGIN columns -->
                                     <span style="float:left;width:{formfields.switch_field.switch_radio.columns.WIDTH}%">
                                         <!-- BEGIN values -->
-                                            <span class="checkbox" onclick="javascript:ploopi_checkbox_click('{formfields.switch_field.LABELID}_{formfields.switch_field.switch_radio.columns.values.ID}');">
+                                            <span class="checkbox" onclick="javascript:ploopi_checkbox_click(event, '{formfields.switch_field.LABELID}_{formfields.switch_field.switch_radio.columns.values.ID}');">
                                                 <input {formfields.switch_field.switch_radio.columns.values.CHECKED} type="radio" style="width:14px;" name="{formfields.switch_field.switch_radio.columns.values.NAME}" id="{formfields.switch_field.LABELID}_{formfields.switch_field.switch_radio.columns.values.ID}" value="{formfields.switch_field.switch_radio.columns.values.VALUE}" />
                                                 {formfields.switch_field.switch_radio.columns.values.VALUE}
                                             </span>

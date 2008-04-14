@@ -20,21 +20,47 @@ Options +FollowSymLinks -Indexes
 	php_value include_path .
 </IfModule>
 
+<files *.svg.gz>
+    AddType "text/javascript" .gz
+    AddEncoding gzip .gz
+</files>
+
+<files *.js.gz>
+    AddType "text/javascript" .gz
+    AddEncoding gzip .gz
+</files>
+
+<files *.css.gz>
+    AddType "text/css" .gz
+    AddEncoding gzip .gz
+</files>
+
 <IfModule rewrite_module>
-	RewriteEngine on
+    RewriteEngine on
 
-	# Changez cette valeur si PLOOPI est installe dans un sous dossier du site (ex : /test )
-	RewriteBase /
+    # Changez cette valeur si PLOOPI est installe dans un sous dossier du site (ex : /test )
+    RewriteBase /
 
-	# Quelques restrictions d'acces
-	RewriteRule ^modules/.*\.php$ - [F]
-	RewriteRule ^lib/.*\.php$ - [F]
-	RewriteRule ^FCKeditor/.*\.php$ - [F]
-	RewriteRule ^(bin/|data/|db/|include/|install/|pear/)(.*)$ - [F]
+    #Check to see if browser can accept gzip files.
+    ReWriteCond %{HTTP:accept-encoding} gzip
+    RewriteCond %{HTTP_USER_AGENT} !Safari
+    #make sure there's no trailing .gz on the url
+    ReWriteCond %{REQUEST_FILENAME} !^.+\.gz$
+    #check to see if a .gz version of the file exists.
+    #RewriteCond %{REQUEST_FILENAME}.gz -f
+    #All conditions met so add .gz to URL filename (invisibly)
+    #RewriteRule ^(.+) $1.gz [QSA,L]
 
-	# Regles de reecriture pour la partie FrontOffice
-	RewriteRule ^(.*)-h([0-9]*)a([0-9]*).html(.*)$ index.php?headingid=$2&articleid=$3$4 [L]
-	RewriteRule ^(.*)-h([0-9]*).html(.*)$ index.php?headingid=$2$3 [L]
-	RewriteRule ^(.*)-a([0-9]*).html(.*)$ index.php?articleid=$2$3 [L]
+
+    # Quelques restrictions d'acces
+    RewriteRule ^modules/.*\.php$ - [F]
+    RewriteRule ^lib/.*\.php$ - [F]
+    RewriteRule ^FCKeditor/.*\.php$ - [F]
+    RewriteRule ^(bin/|data/|db/|include/|install/|pear/)(.*)$ - [F]
+
+    # Regles de reecriture pour la partie FrontOffice
+    RewriteRule ^(.*)-h([0-9]*)a([0-9]*).html(.*)$ index.php?headingid=$2&articleid=$3$4 [L]
+    RewriteRule ^(.*)-h([0-9]*).html(.*)$ index.php?headingid=$2$3 [L]
+    RewriteRule ^(.*)-a([0-9]*).html(.*)$ index.php?articleid=$2$3 [L]
 </IfModule>
 

@@ -1,5 +1,12 @@
 == Module FORMS - version 2.13 ====================================================
 
+2008-04-11  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction sur le fonctionnement des checkbox/radio
+ * Pas de valeur par défaut dans une liste liée à un champ d'un autre formulaire
+ 
+== Module FORMS - version 2.13 ====================================================
+
 2008-04-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Compression des fichiers JS/CSS

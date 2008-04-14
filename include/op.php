@@ -224,6 +224,7 @@ if (isset($ploopi_op))
         include_once './include/op_shares.php';
         include_once './include/op_subscriptions.php';
         include_once './include/op_workflow.php';
+        include_once './include/op_tickets.php';
         
         switch($ploopi_op)
         {
@@ -244,6 +245,135 @@ if (isset($ploopi_op))
                 ploopi_die();
             break;
     
+            case 'ploopi_getobjects':
+                ob_start();
+                ?>
+                <script language="javascript">
+        
+                var oEditor = window.parent.InnerDialogLoaded() ;
+                var FCKLang = oEditor.FCKLang ;
+                var FCKPlaceholders = oEditor.FCKPlaceholders ;
+        
+                window.onload = function ()
+                {
+                    // First of all, translate the dialog box texts
+                    oEditor.FCKLanguageManager.TranslatePage( document ) ;
+        
+                    LoadSelected() ;
+        
+                    // Show the "Ok" button.
+                    window.parent.SetOkButton( true ) ;
+                }
+        
+                var eSelected = oEditor.FCKSelection.GetSelectedElement() ;
+        
+                function LoadSelected()
+                {
+                    if ( !eSelected )
+                        return ;
+        
+                    var info = eSelected._fckplaceholder.split("/");
+                    var sValue = info[0];
+        
+                    if ( eSelected.tagName == 'SPAN' && eSelected._fckplaceholder )
+                    {
+                        var obj = document.getElementById('ploopi_webedit_objects');
+                        for (i=0;i<obj.length;i++) if (obj[i].value == sValue) obj.selectedIndex = i;
+                    }
+                    else
+                        eSelected == null ;
+                }
+        
+                function Ok()
+                {
+                    var obj = document.getElementById('ploopi_webedit_objects');
+        
+                    var sValue = obj[obj.selectedIndex].value+'/'+obj[obj.selectedIndex].text ;
+        
+                    if ( eSelected && eSelected._fckplaceholder == sValue )
+                        return true ;
+        
+                    if ( sValue.length == 0 )
+                    {
+                        alert( FCKLang.PlaceholderErrNoName ) ;
+                        return false ;
+                    }
+        
+                    if ( FCKPlaceholders.Exist( sValue ) )
+                    {
+                        alert( FCKLang.PlaceholderErrNameInUse ) ;
+                        return false ;
+                    }
+        
+                    FCKPlaceholders.Add( sValue ) ;
+                    return true ;
+                }
+        
+                </script>
+        
+                <div style="padding:4px 0;">Choix d'un objet PLOOPI à insérer dans la page :</div>
+                <?
+                $select_object =    "
+                                    SELECT  ploopi_mb_wce_object.*,
+                                            ploopi_module.label as module_label,
+                                            ploopi_module.id as module_id
+        
+                                    FROM    ploopi_mb_wce_object,
+                                            ploopi_module,
+                                            ploopi_module_workspace
+        
+                                    WHERE   ploopi_mb_wce_object.id_module_type = ploopi_module.id_module_type
+                                    AND     ploopi_module_workspace.id_module = ploopi_module.id
+                                    AND     ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['workspaceid']}
+                                    ";
+        
+                $result_object = $db->query($select_object);
+                while ($fields_object = $db->fetchrow($result_object))
+                {
+                    if ($fields_object['select_label'] != '')
+                    {
+                        $select = "select {$fields_object['select_id']}, {$fields_object['select_label']} from {$fields_object['select_table']} where id_module = {$fields_object['module_id']}";
+                        $db->query($select);
+        
+                        while ($fields = $db->fetchrow())
+                        {
+                            $fields_object['object_label'] = $fields[$fields_object['select_label']];
+                            $array_modules["{$fields_object['id']},{$fields_object['module_id']},{$fields[$fields_object['select_id']]}"] = $fields_object;
+                        }
+                    }
+                    else $array_modules["{$fields_object['id']},{$fields_object['module_id']}"] = $fields_object;
+                }
+                ?>
+                <select id="ploopi_webedit_objects" style="width:100%;">
+                    <option value="0">(aucun)</option>
+                    <?
+                    foreach($array_modules as $key => $value)
+                    {
+                        //if ($fields_column['id_object'] == $key) $sel = 'selected';
+                        //else $sel = '';
+                        $sel = '';
+                        ?>
+                        <option <? echo $sel; ?> value="<? echo $key; ?>"><? echo "{$value['module_label']} » {$value['label']}"; if (!empty($value['object_label'])) echo " » {$value['object_label']}"; ?></option>
+                        <?
+                    }
+                    ?>
+                </select>
+                <?
+                $main_content = ob_get_contents();
+                @ob_end_clean();
+        
+                $template_body->assign_vars(array(
+                    'TEMPLATE_PATH'         => $_SESSION['ploopi']['template_path'],
+                    'ADDITIONAL_JAVASCRIPT' => $additional_javascript,
+                    'PAGE_CONTENT'          => $main_content
+                    )
+                );
+        
+                $template_body->pparse('body');
+                ploopi_die();
+            break;
+                    
+            
             default: // look for ploopi_op in modules
                 if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
                 {

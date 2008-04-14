@@ -128,8 +128,21 @@ text-decoration:none;
 }
 
 
+#system_tickets_new {
+    text-decoration:none;
+    border:1px solid #c0c0c0;
+    background-color:#f8f8f8;
+    padding:2px 4px;
+    margin:2px 0;
+    display:block;
+    float:left;
+}
 
-/*
+#system_tickets_new:hover {
+    background-color:#e0e0e0;
+}
+
+	/*
 a.system_roleusers_delete_user {
     text-decoration:none;
 }

@@ -31,6 +31,7 @@ define ("_FORMS_ACTION_EXPORT",     3);
 define ("_FORMS_ACTION_FILTER",     4);
 define ("_FORMS_ACTION_DELETE",     5);
 define ("_FORMS_ACTION_BACKUP",     6);
+define ("_FORMS_ACTION_ADMIN",     7);
 
 global $field_types;
 global $field_formats;

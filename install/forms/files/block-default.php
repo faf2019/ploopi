@@ -42,7 +42,7 @@ while ($forms_fields = $db->fetchrow($forms_result))
     $block->addmenu($forms_fields['label'], ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=forms_viewreplies&forms_id={$forms_fields['id']}"));
 }
 
-if (ploopi_isactionallowed(0,$_SESSION['ploopi']['workspaceid'],$menu_moduleid))
+if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
 {
     $block->addmenu('<b>'._FORMS_ADMIN.'</b>', ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"));
 }

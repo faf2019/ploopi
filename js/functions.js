@@ -90,29 +90,37 @@ function ploopi_switchdisplay(id)
 // clic sur une zone checkbox/radio
 // génère un event équivalent au clic direct sur l'élément
 
-function ploopi_checkbox_click(inputfield_id)
+function ploopi_checkbox_click(e, inputfield_id)
 {
-    if (Prototype.Browser.IE)
+    src = (e.srcElement) ? e.srcElement : e.target;
+    
+    if (typeof(src.id) == 'undefined' || src.id != inputfield_id)
     {
-        switch ($(inputfield_id).type)
-        {
-            case 'radio':
-                $(inputfield_id).checked = true; 
-            break;
-            
-            default:
-                $(inputfield_id).checked = !$(inputfield_id).checked; 
-            break;
-        }       
-        
-        $(inputfield_id).fireEvent('onchange');
+	    if (Prototype.Browser.IE)
+	    {
+	        switch ($(inputfield_id).type)
+	        {
+	            case 'radio':
+	                $(inputfield_id).checked = true; 
+	            break;
+	            
+	            default:
+	                $(inputfield_id).checked = !$(inputfield_id).checked; 
+	            break;
+	        }      
+	        
+	        $(inputfield_id).fireEvent('onchange');
+	    }
+	    else
+	    {
+	        
+	        var e = document.createEvent('MouseEvents');
+	        e.initEvent('click', false, false);
+	        $(inputfield_id).dispatchEvent(e);
+	    }
     }
-    else
-    {
-        var e = document.createEvent('MouseEvents');
-        e.initEvent('click', false, false);
-        $(inputfield_id).dispatchEvent(e);
-    }
+    
+    
 }
 
 /**
@@ -1722,6 +1730,20 @@ function ploopi_skin_array_renderupdate(array_id)
 
 
     //$('ploopi_explorer_main_<? echo $array_id; ?>').style.visibility = 'visible';
+}
+
+function ploopi_tickets_new(event, id_object, id_record, object_label, reload)
+{
+    var data = '';
+
+    if (object_label) data += '&ploopi_tickets_object_label='+object_label;
+    if (id_object) data += '&ploopi_tickets_id_object='+id_object;
+    if (id_record) data += '&ploopi_tickets_id_record='+id_record;
+    if (reload) data += '&ploopi_tickets_reload='+reload;
+
+    ploopi_showpopup('',550,event,'click', 'system_popupticket');
+    ploopi_ajaxloader('system_popupticket');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=tickets_new'+data,'','system_popupticket');
 }
 
 function ploopi_skin_array_refresh(array_id, array_orderby)

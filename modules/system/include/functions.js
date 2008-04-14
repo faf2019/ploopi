@@ -84,24 +84,6 @@ function system_roleusers_delete(roleid, userid, type)
 
 /* TICKETS FUNCTIONS */
 
-function system_tickets_search_users(filter)
-{
-    ploopi_getxmlhttp_ext('index-light.php','ploopi_op=tickets_search_users&ploopi_ticket_userfilter='+filter,0,'div_ticket_search_result');
-}
-
-function system_tickets_new(event, id_object, id_record, object_label)
-{
-    var data = '';
-
-    if (object_label) data += '&object_label='+object_label;
-    if (id_object) data += '&id_object='+id_object;
-    if (id_record) data += '&id_record='+id_record;
-
-    ploopi_showpopup('',400,event,'click', 'system_popupticket');
-    ploopi_ajaxloader('system_popupticket');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=tickets_new'+data,'','system_popupticket');
-}
-
 function system_tickets_display(ticket_id, opened, isroot, tpl_path)
 {
     disp = $('tickets_detail_'+ticket_id);
