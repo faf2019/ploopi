@@ -269,6 +269,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
     <div style="float:right;width:160px;">Derniere réponse</div>
     <div style="float:right;width:40px;">Vu</div>
     <div style="float:right;width:40px;">Rep</div>
+    <div style="float:right;width:20px;">A</div>
     <div>Titre</div>
 </div>
 
@@ -385,6 +386,16 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                     <div class="system_tickets_date"><? echo $lastreply_timestp['date']; ?> à <? echo $lastreply_timestp['time']; ?></div>
                     <div class="system_tickets_count"><? echo $fields['count_read']; ?></div>
                     <div class="system_tickets_count"><? echo $fields['count_replies']; ?></div>
+                    <div class="system_tickets_attachment">
+                        <?
+                        if ($fields['id_record'] != '')
+                        {
+                            ?>
+                            <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/attachment.png" />
+                            <?
+                        }
+                        ?>
+                    </div>
                     <div class="system_tickets_title" id="tickets_title_<? echo $fields['id']; ?>" <? if (empty($fields['status'])) echo 'style="font-weight:bold;"'; ?>>
                         <? echo ploopi_strcut($fields['title'],100); ?>
                     </div>
@@ -481,6 +492,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                     ?>
                     <div class="system_tickets_buttons">
                         <p class="ploopi_va">
+                            <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/attachment.png" />
                             <span><strong>Objet lié</strong>: </span>
                             <?
                             if($boolRecordIsEnabled)
@@ -541,5 +553,6 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
     <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_red.png" /><span>&nbsp;non lu&nbsp;&nbsp;</span>
     <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_blue.png" /><span>&nbsp;lu&nbsp;&nbsp;</span>
     <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_green.png" /><span>&nbsp;validé&nbsp;&nbsp;</span>
+    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/attachment.png" /><span>&nbsp;objet lié&nbsp;&nbsp;</span>
 </p>
 <? echo $skin->close_simplebloc(); ?>

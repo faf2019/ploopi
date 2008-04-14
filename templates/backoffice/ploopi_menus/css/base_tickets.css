@@ -77,6 +77,13 @@ width:40px;
 padding:2px 0;
 }
 
+.system_tickets_attachment {
+float:right;
+text-align:center;
+width:20px;
+padding:2px 0;
+}
+
 .system_tickets_title {
 }
 

@@ -74,10 +74,10 @@ switch($ploopi_op)
             </div>
             
             <?
-            if (isset($_GET['object_label']))
+            if (isset($_GET['ploopi_tickets_object_label']))
             {
                 ?>
-                <div><b>Objet lié</b>: <? echo htmlentities($_GET['object_label']); ?></div>
+                <div><b>Objet lié</b>: <? echo htmlentities($_GET['ploopi_tickets_object_label']); ?></div>
                 <?
             }
             ?>
