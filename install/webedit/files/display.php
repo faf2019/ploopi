@@ -368,7 +368,7 @@ else
                 $oFCKeditor->Width='100%';
                 $oFCKeditor->Height='500';
 
-                $oFCKeditor->Config['CustomConfigurationsPath'] = '../../modules/webedit/fckeditor/fckconfig.js';
+                $oFCKeditor->Config['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/fckconfig.js';
                 $oFCKeditor->Config['ToolbarLocation'] = 'Out:parent(xToolbar)';
                 //$oFCKeditor->Config['SkinPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/skins/default/';
                 
@@ -380,7 +380,7 @@ else
 
                 $oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH;
 
-                $oFCKeditor->Config['PluginsPath'] = '../../modules/webedit/fckeditor/plugins/';
+                //$oFCKeditor->Config['PluginsPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/plugins/';
 
                 $oFCKeditor->ToolbarSet = 'Default';
 

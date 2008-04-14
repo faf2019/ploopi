@@ -21,7 +21,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define ('_PLOOPI_VERSION', '1.0RC2');
+define ('_PLOOPI_VERSION', '1.0RC2b');
 
 define ('_PLOOPI_MSG_DBERROR',          'Database connection error, please contact administrator');
 

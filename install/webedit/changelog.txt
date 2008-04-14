@@ -1,3 +1,10 @@
+== Module WebEdit - version 1.39 ===================================================
+
+2008-04-14  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Externalisation du plugin "ploopiobject"
+ * Correctifs de chemins pour le chargement de FCKEditor
+ 
 == Module WebEdit - version 1.38 ===================================================
 
 2008-04-08  Stéphane Escaich  <stephane@ovensia.fr>

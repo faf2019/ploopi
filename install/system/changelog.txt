@@ -1,3 +1,33 @@
+== Ploopi - version 1.0 RC2b ===================================================
+
+2008-04-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+  - Correction d'un bug sur le téléchargement des fichiers (problème de détection du content-type si la compression est activée)
+  - Intégration du plugin "ploopiobject" au dossier 'FCKEditor'
+  - Ajout d'une icone pour les tickets contenant des objets liés
+  - Possibilité d'envoyer un ticket depuis un module avec un objet lié
+
+* Install
+  - Possibilité d'activer le mode 'CGIUPLOAD'
+  - Possibilité de paramétrer le chemin utilisé par le mode 'CGIUPLOAD'
+
+* Templates
+  - Mise à jour des templates backoffice (tickets)
+  - Mise à jour des templates frontoffice (correctifs forms.tpl)
+
+* Module Doc
+  - Possibilité d'envoyer un ticket depuis un fichier (le fichier étant lié au ticket en tant qu'objet)
+
+* Module Forms
+  - Correctifs sur l'affichage des checkbox/radio
+  - Possibilité de ne pas choisir de valeur sur un champ de type "Lien vers formulaire"
+
+* Module WebEdit
+  - Externalisation du plugin "ploopiobject"
+      - Correctifs sur les chemins d'intégration de FCKEditor
+
+ 
 == Ploopi - version 1.0 RC2 ===================================================
 
 2008-04-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
