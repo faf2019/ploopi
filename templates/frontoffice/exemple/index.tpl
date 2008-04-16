@@ -20,13 +20,10 @@
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/news.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/search.css" media="screen" />
 
-    <!--[if lte IE 7]>
-    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar_ie.css" media="screen" />
-    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles_ie.css" media="screen" />
-    <![endif]-->
-
     <!--[if lte IE 6]>
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/png.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar_ie.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles_ie.css" media="screen" />
     <![endif]-->
 
     <!-- BEGIN ploopi_js -->
@@ -45,12 +42,26 @@
         <div id="header">
             <div id="title">{SITE_TITLE}</div>
             <div id="path">
-                <!-- BEGIN path -->
-                    <a href="{path.LINK}">&raquo;&nbsp;{path.LABEL}</a>
-                <!-- END path -->
+                <a href="./">&raquo;&nbsp;Accueil</a>
+                <!-- BEGIN switch_heading1 -->
+                <a href="{switch_heading1.LINK}">&raquo;&nbsp;{switch_heading1.LABEL}</a>
+                <!-- END switch_heading1 -->
+                <!-- BEGIN switch_heading2 -->
+                <a href="{switch_heading2.LINK}">&raquo;&nbsp;{switch_heading2.LABEL}</a>
+                <!-- END switch_heading2 -->
+                <!-- BEGIN switch_heading3 -->
+                <a href="{switch_heading3.LINK}">&raquo;&nbsp;{switch_heading3.LABEL}</a>
+                <!-- END switch_heading3 -->
+                <!-- BEGIN switch_heading4 -->
+                <a href="{switch_heading4.LINK}">&raquo;&nbsp;{switch_heading4.LABEL}</a>
+                <!-- END switch_heading4 -->
+                <!-- BEGIN switch_heading5 -->
+                <a href="{switch_heading5.LINK}">&raquo;&nbsp;{switch_heading5.LABEL}</a>
+                <!-- END switch_heading5 -->
+    
                 <!-- BEGIN switch_content_page -->
                     <a href="#">&raquo;&nbsp;{PAGE_TITLE}</a>
-                <!-- END switch_content_page -->
+                <!-- END switch_content_page -->            
             </div>
             <div id="pathtrans">
             </div>
@@ -114,6 +125,22 @@
                         <h2>{PAGE_TITLE}</h2>
                         {PAGE_CONTENT}
                     <!-- END switch_content_page -->
+                    
+                    <!-- BEGIN switch_content_heading -->
+                        <!-- BEGIN subheading1 -->
+                            <a class="subheading1" href="{switch_content_heading.subheading1.LINK}">
+	                            <img src="{TEMPLATE_PATH}/gfx/folder.png" />
+	                            <span>{switch_content_heading.subheading1.LABEL}</span>
+                            </a>
+                            <div id="subheading2">
+                            <!-- BEGIN subheading2 -->
+                                &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp; 
+                            <!-- END subheading2 -->
+                            </div>
+                            
+                        <!-- END subheading1 -->
+                    <!-- END switch_content_heading -->
+                                        
                 </div>
             </div>
         </div>

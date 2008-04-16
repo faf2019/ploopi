@@ -67,7 +67,7 @@ function system_user_validate(form, isnew)
                     rep = ploopi_xmlhttprequest('admin.php', 'ploopi_op=ploopi_checkpasswordvalidity&password='+form.usernewpass.value)
                     if (rep == 0)
                     {
-                        alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractères,\nun caractère minuscule,\nun caractère majuscule,\nun chiffre et un caractère de ponctuation\nex:D!m5Ne7lor');
+                        alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractères,\nun caractère minuscule,\nun caractère majuscule,\nun chiffre et un caractère de ponctuation\nex:Pl00p!Rocks');
                     }
                     else return true;
                 }

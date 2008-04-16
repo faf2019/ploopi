@@ -119,7 +119,7 @@ function ploopi_workflow_get($id_object = -1, $id_record = -1,  $id_module = -1,
     if ($id_object != -1) $sql .= " AND id_object = {$id_object}";
     if ($id_record != -1) $sql .= " AND id_record = '".$db->addslashes($id_record)."'";
     if ($id_user != -1) $sql .= " AND id_workflow = {$id_user} AND type_workflow = 'user'";
-
+    
     $db->query($sql);
 
     while ($row = $db->fetchrow())

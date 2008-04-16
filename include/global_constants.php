@@ -22,6 +22,7 @@
 */
 
 define ('_PLOOPI_VERSION', '1.0RC2b');
+define ('_PLOOPI_REVISION', '80415');
 
 define ('_PLOOPI_MSG_DBERROR',          'Database connection error, please contact administrator');
 
@@ -43,9 +44,6 @@ define ('_PLOOPI_SYSTEMGROUP',      '1'); // virtual system group
 define ('_PLOOPI_MODULE_SYSTEM',    '1');
 define ('_PLOOPI_NOWORKSPACE',      '-1');
 
-define ('_PLOOPI_MENU_HOME',        0);
-//define ('_PLOOPI_MENU_MYGROUPS',    1);
-//define ('_PLOOPI_MENU_PROFILE',     2);
 define ('_PLOOPI_MENU_WORKSPACES',  1);
 define ('_PLOOPI_MENU_MYWORKSPACE', 2);
 define ('_PLOOPI_MENU_ABOUT',       3);

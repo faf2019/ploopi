@@ -1,3 +1,9 @@
+== Module WebEdit - version 1.40 ===================================================
+
+2008-04-16  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Possibilité de choisir plusieurs types de contenu pour une rubrique : lien vers le 1er article, lien vers un article au choix, lien vers une url, affichage des sous-rubriques
+
 == Module WebEdit - version 1.39 ===================================================
 
 2008-04-14  Stéphane Escaich  <stephane@ovensia.fr>

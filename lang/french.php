@@ -41,7 +41,7 @@ define ('_PLOOPI_NO', 'Non');
 define ('_PLOOPI_CONFIRM', 'Êtes-vous certain ?');
 
 define ('_PLOOPI_MODULE_MANAGEMENT', 'Administration des Modules');
-define ('_PLOOPI_GENERAL_ADMINISTRATION', 'Administration Générale');
+define ('_PLOOPI_GENERAL_ADMINISTRATION', 'Administration');
 define ('_PLOOPI_ADMIN_USERS', 'Utilisateurs');
 define ('_PLOOPI_ADMIN_MODULES', 'Modules');
 define ('_PLOOPI_ADMIN_MESSAGES', 'Messages');

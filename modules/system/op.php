@@ -321,8 +321,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         else
                         {
                             ?>
-                            <div style="height:200px;overflow:auto;border-bottom:1px solid #c0c0c0;">
-                                <div style="overflow:hidden">
+                            <div id="system_roleusers_result">
                                 <?
                                 // pour chaque groupe
                                 foreach($groups as $group)
@@ -345,13 +344,12 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                     <?
                                 }
                                 ?>
-                                </div>
                             </div>
-                            <div class="system_roleusers_legend">
+                            <div id="system_roleusers_legend">
                                 <p class="ploopi_va" style="float:right;">
-                                    <span style="font-weight:bold;">Légende:</span>
-                                    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span>Groupe d'Utilisateur</span>
-                                    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span>Utilisateur</span>
+                                    <span style="font-weight:bold;">Légende:&nbsp;&nbsp;&nbsp;</span>
+                                    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span>&nbsp;Groupe d'Utilisateur&nbsp;&nbsp;</span>
+                                    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span>&nbsp;Utilisateur</span>
                                 </p>
                                 <p class="ploopi_va" style="float:left;">
                                     <span>Cliquez sur un utilisateur ou un groupe pour l'ajouter</span>
@@ -365,6 +363,35 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     
                     case 'system_serverload':
                         include './modules/system/tools_serverload.php';
+                        ploopi_die();
+                    break;
+                    
+                    case 'system_tools_phpinfo':
+                        phpinfo();
+                        ?>
+                        <script type="text/javascript">
+                        function system_autofit_iframe()
+                        {
+                            try
+                            {
+                                if (document.getElementById || !window.opera && !document.mimeType && document.all && document.getElementById)
+                                {
+                                    height = this.document.body.scrollHeight + 50;
+                                    if (height < 400) height = 400;
+                                    parent.document.getElementById('system_tools_phpinfo').style.height = height + 'px';
+                                }
+                            }
+                            catch (e)
+                            {
+                                height = this.document.body.offsetHeight;
+                                if (height < 400) height = 400;
+                                parent.document.getElementById('system_tools_phpinfo').style.height = height + 'px';
+                            }
+                        }
+                    
+                        window.onload = function() { system_autofit_iframe();};
+                        </script>
+                        <?
                         ploopi_die();
                     break;
                     

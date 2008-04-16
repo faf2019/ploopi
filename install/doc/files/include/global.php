@@ -133,7 +133,7 @@ function doc_getworkflow($id_module = -1)
     if (empty($_SESSION['doc'][$id_module]['workflow']))
     {
         $_SESSION['doc'][$id_module]['workflow'] = array('folders' => array());
-        foreach(ploopi_workflow_get(_DOC_OBJECT_FOLDER, -1, -1, $_SESSION['ploopi']['userid']) as $wf)
+        foreach(ploopi_workflow_get(_DOC_OBJECT_FOLDER, -1, $id_module, $_SESSION['ploopi']['userid']) as $wf)
         {
             $_SESSION['doc'][$id_module]['workflow']['folders'][] = $wf['id_record'];
         }

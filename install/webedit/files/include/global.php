@@ -313,7 +313,7 @@ function webedit_build_tree($headings, $articles, $fromhid = 0, $str = '', $opti
             {
                 // used for fckeditor and link redirect on heading
                 case 'selectredirect':
-                    $link = "<a name=\"article{$aid}\" href=\"javascript:void(0);\" onclick=\"javascript:ploopi_getelem('webedit_heading_linkedpage').value = '{$aid}';ploopi_getelem('linkedpage_displayed').value = '".addslashes($article['title'])."';ploopi_hidepopup('webedit_popup_selectredirect');\">";
+                    $link = "<a name=\"article{$aid}\" href=\"javascript:void(0);\" onclick=\"javascript:$('webedit_heading_linkedpage').value = '{$aid}';$('linkedpage_displayed').value = '".addslashes($article['title'])."';ploopi_checkbox_click(event, 'heading_content_type_article_redirect');ploopi_hidepopup('webedit_popup_selectredirect');\">";
                 break;
 
                 case 'selectlink':
@@ -364,20 +364,24 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
     global $recursive_mode;
     global $webedit_mode;
     global $scriptenv;
-
+    
     if (isset($headings['tree'][$hid]))
     {
+        /*
         if (isset($headings['list'][$hid]))
         {
             if ($headings['list'][$hid]['depth'] == 0) $localvar = "sw_root{$headings['list'][$hid]['position']}";
             else $localvar = "{$var}sw_heading{$headings['list'][$hid]['depth']}";
+            
+            echo '<br />'.$localvar;
 
             $template_body->assign_block_vars($localvar , array());
+            
         }
+        */
 
         foreach($headings['tree'][$hid] as $id)
         {
-
             $detail = $headings['list'][$id];
 
             $depth = $detail['depth'] - 1;
@@ -390,19 +394,6 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
                 $localvar = "{$var}heading{$depth}";
             }
             $locallink = ($link!='') ? "{$link}-{$id}" : "{$id}";
-
-            /*
-            switch($mode)
-            {
-                case 'edit';
-                    $script = "$scriptenv?headingid={$id}";
-                break;
-
-                case 'render';
-                    $script = "$scriptenv?nav={$locallink}";
-                break;
-            }
-            */
 
             switch($webedit_mode)
             {
@@ -431,6 +422,8 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
                     'LINK' => $script
                     ));
 
+                /* Déprécié : remplacé par le bloc ci-dessous */
+                $template_body->assign_var("HEADING{$depth}_TITLE",         $detail['label']);
                 $template_body->assign_var("HEADING{$depth}_TITLE",         $detail['label']);
                 $template_body->assign_var("HEADING{$depth}_ID",            $id);
                 $template_body->assign_var("HEADING{$depth}_POSITION",      $detail['position']);
@@ -438,18 +431,28 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
                 $template_body->assign_var("HEADING{$depth}_DESCRIPTION",   $detail['description']);
                 $template_body->assign_var("HEADING{$depth}_FREE1",         $detail['free1']);
                 $template_body->assign_var("HEADING{$depth}_FREE2",         $detail['free2']);
-
+                    
+                $template_body->assign_block_vars("switch_heading{$depth}" , array(
+                    'DEPTH' => $depth,
+                    'ID' => $detail['id'],
+                    'LABEL' => $detail['label'],
+                    'POSITION' => $detail['position'],
+                    'DESCRIPTION' => $detail['description'],
+                    'LINK' => $script,
+                    'LINK_TARGET' => ($detail['url_window']) ? 'target="_blank"' : '',
+                    'SEL' => $sel,
+                    'POSX' => $detail['posx'],
+                    'POSY' => $detail['posy'],
+                    'COLOR' => $detail['color'],
+                    'FREE1' => $detail['free1'],
+                    'FREE2' => $detail['free2']
+                    ));
+                              
                 $sel = 'selected';
             }
-
+            
             if ($detail['visible'])
             {
-                if (!empty($detail['url']))
-                {
-                    $script = $detail['url'];
-                    if (_PLOOPI_FRONTOFFICE_REWRITERULE) $script = ploopi_urlrewrite($script, $detail['label']);
-                }
-
                 $template_body->assign_block_vars($localvar , array(
                     'DEPTH' => $depth,
                     'ID' => $detail['id'],
@@ -487,6 +490,67 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
 
     }
 }
+
+
+
+function webedit_template_assign_headings($headings, $hid, $depth = 1, $var = 'switch_content_heading.', $link = '')
+{
+    global $template_body;
+    global $webedit_mode;
+    global $scriptenv;
+    
+    if (isset($headings['tree'][$hid]))
+    {
+        foreach($headings['tree'][$hid] as $id)
+        {
+            $detail = $headings['list'][$id];
+
+            $localvar = "{$var}subheading{$depth}";
+
+            $locallink = ($link!='') ? "{$link}-{$id}" : "{$id}";
+
+            switch($webedit_mode)
+            {
+                case 'edit';
+                    $script = "javascript:window.parent.document.location.href='admin.php?headingid={$id}';";
+                break;
+
+                case 'render';
+                    $script = "index.php?webedit_mode=render&moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$id}";
+                break;
+
+                default:
+                case 'display';
+                    $script = "index.php?headingid={$id}";
+                    if (_PLOOPI_FRONTOFFICE_REWRITERULE) $script = ploopi_urlrewrite($script, $detail['label']);
+                break;
+            }
+
+            if ($detail['visible'])
+            {
+                $template_body->assign_block_vars($localvar , array(
+                    'DEPTH' => $depth,
+                    'ID' => $detail['id'],
+                    'LABEL' => $detail['label'],
+                    'POSITION' => $detail['position'],
+                    'DESCRIPTION' => $detail['description'],
+                    'LINK' => $script,
+                    'LINK_TARGET' => ($detail['url_window']) ? 'target="_blank"' : '',
+                    'POSX' => $detail['posx'],
+                    'POSY' => $detail['posy'],
+                    'COLOR' => $detail['color'],
+                    'FREE1' => $detail['free1'],
+                    'FREE2' => $detail['free2']
+                    ));
+                    
+                    
+
+                if (isset($headings['tree'][$id])) webedit_template_assign_headings(&$headings, $id, $depth+1, "{$localvar}.", $locallink);
+            }
+        }
+    }
+}
+
 
 
 function webedit_getrootid()

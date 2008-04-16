@@ -45,8 +45,8 @@ else
  * inclusion des scripts JS
  * */
 
-$template_body->assign_block_vars('ploopi_js',array('PATH' => "./lib/protoculous/protoculous-packer.js"));
-$template_body->assign_block_vars('ploopi_js',array('PATH' => "./js/functions.pack.js"));
+$template_body->assign_block_vars('ploopi_js', array('PATH' => './lib/protoculous/protoculous-packer.js?v='.urlencode(_PLOOPI_VERSION).'&r='._PLOOPI_REVISION));
+$template_body->assign_block_vars('ploopi_js', array('PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION).'&r='._PLOOPI_REVISION));
 
 $ploopi_additional_head = '';
 $ploopi_additional_javascript = '';
@@ -59,7 +59,6 @@ $ploopi_additional_javascript = ob_get_contents();
 if ($_SESSION['ploopi']['connected'])
 {
     include_once './include/op.php';
-
     
     $template_body->assign_block_vars('switch_user_logged_in', array());
 
@@ -77,46 +76,47 @@ if ($_SESSION['ploopi']['connected'])
     // GET BLOCKS
     include_once './include/blocks.php';
 
-    if (!empty($arrBlock))
+    if (!empty($arrBlocks) || $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES)
     {
         $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu',array());
+    }
+    
+    if (!empty($arrBlocks))
+    {
 
-        foreach($arrBlock as $blocktype => $blockmod)
+        foreach($arrBlocks as $idmod => $mod)
         {
-            foreach($blockmod as $idmod => $mod)
+            if (empty($mod['url'])) $mod['url'] = '';
+
+            // CAS 1 : liste standard de modules
+            $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block',array(
+                                            'ID' => $idmod,
+                                            'TITLE' => $mod['title'],
+                                            'URL' => $mod['url'],
+                                            'DESCRIPTION' => '',
+                                            'SELECTED' => ($idmod == $_SESSION['ploopi']['moduleid']) ? 'selected' : ''
+                                            )
+                                    );
+            if (!empty($mod['content']))
             {
-                if (empty($mod['url'])) $mod['url'] = '';
-
-                // CAS 1 : liste standard de modules
-                $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block',array(
-                                                'ID' => $idmod,
-                                                'TITLE' => $mod['title'],
-                                                'URL' => $mod['url'],
-                                                'DESCRIPTION' => '',
-                                                'SELECTED' => ($idmod == $_SESSION['ploopi']['moduleid']) ? 'selected' : ''
-                                                )
-                                        );
-                if (!empty($mod['content']))
-                {
-                    $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block.switch_content',array(
-                                                        'CONTENT' => $mod['content']
-                                                        )
-                                                );
-                }
-
-
-                if (isset($mod['menu']))
-                {
-                    foreach($mod['menu'] as $menu)
-                    {
-                        $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block.menu',array(
-                                                        'LABEL' => $menu['label'],
-                                                        'URL' => $menu['url'],
-                                                        'SELECTED' => (!empty($menu['selected']) && $menu['selected']) ? 'selected' : '',
-                                                        'TARGET' => (!empty($menu['target'])) ? $menu['target'] : ''
-                                                        )
+                $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block.switch_content',array(
+                                                    'CONTENT' => $mod['content']
+                                                    )
                                             );
-                    }
+            }
+
+
+            if (isset($mod['menu']))
+            {
+                foreach($mod['menu'] as $menu)
+                {
+                    $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block.menu',array(
+                                                    'LABEL' => $menu['label'],
+                                                    'URL' => $menu['url'],
+                                                    'SELECTED' => (!empty($menu['selected']) && $menu['selected']) ? 'selected' : '',
+                                                    'TARGET' => (!empty($menu['target'])) ? $menu['target'] : ''
+                                                    )
+                                        );
                 }
             }
         }
@@ -139,6 +139,8 @@ if ($_SESSION['ploopi']['connected'])
     
     $page_content = ob_get_contents();
     ob_end_clean();
+    
+    list($newtickets, $lastticket) = ploopi_tickets_getnew();
 
     $template_body->assign_vars(array(
         'PAGE_CONTENT'          => $page_content,
@@ -162,7 +164,8 @@ if ($_SESSION['ploopi']['connected'])
         'MAINMENU_SHOWPROFILE_URL'      => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE.'&op=profile'),
         'MAINMENU_SHOWANNOTATIONS_URL'  => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE.'&op=annotations'),
         'MAINMENU_SHOWTICKETS_URL'      => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE.'&op=tickets'),
-        'MAINMENU_SHOWSEARCH_URL'       => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_SEARCH),
+        'MAINMENU_SHOWSEARCH_URL'       => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public&op=search'),
+
 
         'MAINMENU_SHOWPROFILE_SEL'      => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'profile') ? 'selected' : '',
         'MAINMENU_SHOWANNOTATIONS_SEL'  => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'annotations') ? 'selected' : '',
@@ -171,14 +174,22 @@ if ($_SESSION['ploopi']['connected'])
 
         'SEARCH_KEYWORDS'               => (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'])) ? $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'] : '',
 
-        'NEWTICKETS'            => $_SESSION['ploopi']['newtickets'],
+        'NEWTICKETS'                => $newtickets,
+        'LAST_NEWTICKET'            => $lastticket,
         'SHOW_BLOCKMENU'            => (!empty($_SESSION['ploopi']['switchdisplay']['block_modules'])) ? $_SESSION['ploopi']['switchdisplay']['block_modules'] : 'block',
 
         'USER_DECONNECT'        => ploopi_urlencode("$scriptenv?ploopi_logout")
         )
     );
 
-    if ($_SESSION['ploopi']['newtickets']) $template_body->assign_block_vars('switch_user_logged_in.sw_newtickets', array());
+    if ($newtickets) $template_body->assign_block_vars('switch_user_logged_in.switch_newtickets', array());
+    
+    if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES) 
+    {
+        $template_body->assign_block_vars('switch_user_logged_in.switch_search', array());
+        $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_search', array());
+    }
+    
 }
 else
 {
@@ -206,6 +217,7 @@ $template_body->assign_vars(array(
     'PLOOPI_VERSION'                    => _PLOOPI_VERSION
     )
 );
+
 
 $template_body->pparse('body');
 ?>

@@ -29,7 +29,7 @@ text-decoration: underline;
 border:1px solid #c0c0c0;
 padding:4px;
 margin:12px 0;
-background-color:#f0f0ff;
+background-color:#fff;
 }
 
 #linkedobject {
@@ -49,7 +49,7 @@ Vous avez reçu un nouveau ticket envoyé par <strong><a href="mailto:{USER_FROM_E
     {MAIL_CONTENT}
     <!-- BEGIN sw_linkedobject -->
     <div id="linkedobject">
-        <span><strong>Objet lié</strong>: </span><a href="{OBJECT_URL}\">{MODULE_LABEL} / {OBJECT_TYPE} <b>"{OBJECT_LABEL}"</b></a>
+        <span><strong>Objet lié</strong>: </span><a href="{OBJECT_URL}">{MODULE_LABEL} / {OBJECT_TYPE} <b>"{OBJECT_LABEL}"</b></a>
     </div>
     <!-- END sw_linkedobject -->
 </div>

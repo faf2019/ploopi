@@ -295,7 +295,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
     for  ($i=0; $i<$nb_tickets_page && !empty($ticket); $i++)
     {
         $fields = $ticket;
-
+        
         $object_script = str_replace(
                                         array(
                                             '<IDRECORD>',

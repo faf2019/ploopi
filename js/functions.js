@@ -1746,6 +1746,51 @@ function ploopi_tickets_new(event, id_object, id_record, object_label, reload)
     ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=tickets_new'+data,'','system_popupticket');
 }
 
+/* Rafraichissement de la zone indiquant le nombre de tickets non lus + alerte sur nouveau ticket */
+function ploopi_tickets_refresh(lastnewticket, timeout, str_left, str_right)
+{
+	var intPloopiLastNewTicket = lastnewticket;
+	var boolAlert = false;
+	
+    if (typeof(str_left) == 'undefined') str_left = '';
+    if (typeof(str_right) == 'undefined') str_right = '';
+
+	new PeriodicalExecuter( function(pe) { 
+	    new Ajax.Request('index-quick.php?ploopi_op=tickets_getnum',
+	        {
+	            method:     'get',
+	            encoding:   'iso-8859-15',
+	            onSuccess:  function(transport) { 
+	                             var res = transport.responseText.split(',');
+	                             if (res.length == 2)
+	                             {
+	                                 var nb = parseInt(res[0],10);
+	                                 var last = parseInt(res[1],10);
+	                                 
+	                                 $('tpl_ploopi_tickets_new').innerHTML =  str_left+nb+str_right;
+	                                 
+	                                 if (last > intPloopiLastNewTicket && !boolAlert)
+	                                 {
+	                                     ploopi_tickets_alert();
+	                                     boolAlert = true;
+	                                 }
+	                                 intPloopiLastNewTicket = last;
+	                             }
+	                        }
+	        }
+	    ); 
+	}
+	,timeout
+	); 
+}
+
+function ploopi_tickets_alert()
+{
+	ploopi_showpopup('', 350, null, true, 'popup_tickets_new_alert', 0, 200);
+    ploopi_ajaxloader('popup_tickets_new_alert');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=tickets_alert','','popup_tickets_new_alert');
+}
+
 function ploopi_skin_array_refresh(array_id, array_orderby)
 {
     ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=ploopi_skin_array_refresh&array_id='+array_id+'&array_orderby='+array_orderby,'','ploopi_explorer_main_'+array_id);

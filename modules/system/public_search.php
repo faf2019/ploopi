@@ -22,11 +22,13 @@
 
 if (isset($_REQUEST['system_search_keywords']))     $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'] = $_REQUEST['system_search_keywords'];
 if (isset($_REQUEST['system_search_workspace']))    $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace'] = $_REQUEST['system_search_workspace'];
+if (isset($_REQUEST['system_search_module']))       $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'] = $_REQUEST['system_search_module'];
 if (isset($_REQUEST['system_search_date1']))    $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date1'] = $_REQUEST['system_search_date1'];
 if (isset($_REQUEST['system_search_date2']))    $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'] = $_REQUEST['system_search_date2'];
 
 if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'] = '';
 if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace'] = '';
+if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'] = '';
 if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date1'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date1'] = '';
 if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'] = '';
 
@@ -38,20 +40,26 @@ echo $skin->open_simplebloc();
 <div class="dims_va" style="padding:4px;">
     <span>Mots Clés:</span>
     <input type="text" class="text" name="system_search_keywords" id="system_search_keywords" value="<? echo htmlentities($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']); ?>" />
-    <span>Espace:</span>
-    <select class="select" name="system_search_workspace" id="system_search_workspace" />
+    
+    <span>Module:</span>
+    <select class="select" name="system_search_module" id="system_search_module" />
     <option value="">(tous)</option>
     <?
-    foreach ($_SESSION['ploopi']['workspaces_allowed'] as $key)
+    // on parcourt la liste des modules de l'espace courant
+    $arrAvailableModules = array();
+    foreach ($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $modid)
     {
-        ?>
-        <option value="<? echo $key; ?>" <? if ($key == $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace']) echo 'selected'; ?>><? echo htmlentities($_SESSION['ploopi']['workspaces'][$key]['label']); ?></option>
-        <?
-
+        $arrMod = &$_SESSION['ploopi']['modules'][$modid];
+        if ($arrMod['active'])
+        {
+            $arrAvailableModules[] = $modid;
+            ?>
+            <option value="<? echo $modid; ?>" <? if ($modid == $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module']) echo 'selected'; ?>><? echo htmlentities($arrMod['label']); ?></option>
+            <?
+        }
     }
     ?>
     </select>
-
 
     <input type="hidden" class="text" name="system_search_date1" id="system_search_date1" />
     <input type="hidden" class="text" name="system_search_date2" id="system_search_date2" />

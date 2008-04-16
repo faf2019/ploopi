@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 ##############################################################################
 #
 # string functions
@@ -78,17 +77,22 @@ function ploopi_urlrewrite($url, $title = '')
 {
     $title_replacement = str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '_');
     $title = urlencode(ploopi_convertaccents(strtolower(strtr(trim($title), _PLOOPI_INDEXATION_WORDSEPARATORS, $title_replacement))));
+    
+    $patterns = array('/__+/', '/_$/');
+    $replacements = array('_', '');
 
+    $title = preg_replace($patterns, $replacements, $title);
+    
+    $patterns = array();
     $patterns[0] = '/index.php\?headingid=([0-9]*)&articleid=([0-9]*)/';
     $patterns[1] = '/index.php\?headingid=([0-9]*)/';
     $patterns[2] = '/index.php\?articleid=([0-9]*)/';
-    $patterns[3] = '/__+/';
-
+    
+    $replacements = array();
     $replacements[0] = $title.'-h$1a$2.html';
     $replacements[1] = $title.'-h$1.html';
     $replacements[2] = $title.'-a$1.html';
-    $replacements[3] = '_';
-
+    
     return preg_replace($patterns, $replacements, $url);
 }
 

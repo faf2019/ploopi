@@ -218,6 +218,32 @@ border-right:2px solid #286ea0;
 color: #286ea0;
 }
 
+/* vertical alignement : IE / FF / Opera */
+.subheading1 {
+margin:0;
+text-decoration:none;
+display:block;
+font-weight:bold;
+}
+
+.subheading1 img, .subheading1 span {
+display: inline-block;
+vertical-align: middle;
+text-decoration:none;
+border:0;
+cursor:pointer;
+}
+
+.subheading1:hover {
+text-decoration:none;
+color:#404040;
+}
+
+#subheading2 a:hover {
+text-decoration:none;
+color:#404040;
+}
+	
 .rssfeed {
 margin-top:10px;
 }
@@ -264,6 +290,8 @@ margin: 0 0 0 0;
 
 #pagecontent {
 clear:both;
+overflow:hidden;
+min-height:350px;
 }
 
 h3 {

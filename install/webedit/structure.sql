@@ -94,3 +94,5 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_heading` (
   UNIQUE KEY `id` (`id`),
   KEY `id_2` (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+
+ALTER TABLE `ploopi_mod_webedit_heading` ADD `content_type` CHAR( 16 ) NOT NULL DEFAULT 'article_first' AFTER `position` ;

@@ -48,6 +48,7 @@ function ploopi_session_reset()
                     'hosts'         => array(),
                     'groups'        => array(),
                     'modules'       => array(),
+                    'moduletypes'   => array(),
                     'allworkspaces' => '',
 
                     'currentrequesttime'    => mktime(),
@@ -114,10 +115,9 @@ function ploopi_getiprules($rules)
     $ip1 = 0;
     $ip2 = 0;
 
-
     if ($rules == '')
     {
-        return FALSE;
+        return false;
     }
 
     //------------------------

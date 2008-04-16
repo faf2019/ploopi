@@ -22,11 +22,13 @@
 
 if (isset($_REQUEST['system_search_keywords']))     $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'] = $_REQUEST['system_search_keywords'];
 if (isset($_REQUEST['system_search_workspace']))    $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace'] = $_REQUEST['system_search_workspace'];
+if (isset($_REQUEST['system_search_module']))       $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'] = $_REQUEST['system_search_module'];
 if (isset($_REQUEST['system_search_date1']))    $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date1'] = $_REQUEST['system_search_date1'];
 if (isset($_REQUEST['system_search_date2']))    $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'] = $_REQUEST['system_search_date2'];
 
 if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'] = '';
 if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace'] = '';
+if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'] = '';
 if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date1'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date1'] = '';
 if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'] = '';
 
@@ -48,6 +50,13 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
     $arrStems = array();
     $arrSearch = array();
 
+    // on parcourt la liste des modules de l'espace courant
+    $arrAvailableModules = array();
+    foreach ($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $modid)
+    {
+        if ($_SESSION['ploopi']['modules'][$modid]['active']) $arrAvailableModules[] = $modid;
+    }
+    
 
     // on construit $arrObjectTypes, la liste des objets ploopi
     $db->query( '
@@ -60,6 +69,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 
                 INNER JOIN  ploopi_module m
                 ON          m.id_module_type = mbo.id_module_type
+                AND         m.id IN ('.implode(',', $arrAvailableModules).')
 
                 INNER JOIN  ploopi_module_type mt
                 ON          mt.id = mbo.id_module_type
@@ -76,7 +86,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
         $arrObjectTypes[$row['module_id']]['objects'][$row['id']] = array('label' => $row['label'], 'script' => $row['script']);
     }
 
-    $arrRelevance = ploopi_search($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'], '', '', '');
+    $arrRelevance = ploopi_search($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'], '', '', (empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'])) ? $arrAvailableModules : $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module']);
 
     if (empty($arrRelevance))
     {
@@ -106,7 +116,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 
         foreach ($arrRelevance as $row)
         {
-            if (isset($arrObjectTypes[$row['id_module']]))
+            if (isset($arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]))
             {
                 $type = $arrObjectTypes[$row['id_module']]['type'];
     
@@ -114,7 +124,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
                 $strUserName = ($objUser->open($row['id_user'])) ? "{$objUser->fields['firstname']} {$objUser->fields['lastname']}" : '';
     
                 // inclusion des fonctions/constantes proposées par le module
-                ploopi_init_module($type);
+                ploopi_init_module($type, false, false, false);
     
                 // on cherche si on fonction de validation d'objet existe pour ce module
                 $boolRecordIsEnabled = true;

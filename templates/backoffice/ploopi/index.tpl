@@ -117,13 +117,14 @@
             <a class="{switch_user_logged_in.workspace.SELECTED}" href="{switch_user_logged_in.workspace.URL}">{switch_user_logged_in.workspace.TITLE}</a>
         <!-- END workspace -->
         <a class="{MAINMENU_SHOWTICKETS_SEL}" href="{MAINMENU_SHOWTICKETS_URL}">{MAINMENU_TICKETS}
-        <!-- BEGIN sw_newtickets -->
+        <em id="tpl_ploopi_tickets_new">
+        <!-- BEGIN switch_newtickets -->
         ({NEWTICKETS})
-        <!-- END sw_newtickets -->
+        <!-- END switch_newtickets -->
+        </em>
         </a>
         <a class="{MAINMENU_SHOWANNOTATIONS_SEL}" href="{MAINMENU_SHOWANNOTATIONS_URL}">{MAINMENU_ANNOTATIONS}</a>
         <a class="{MAINMENU_SHOWPROFILE_SEL}" href="{MAINMENU_SHOWPROFILE_URL}">{MAINMENU_PROFILE}</a>
-        <a class="{MAINMENU_SHOWSEARCH_SEL}" href="{MAINMENU_SHOWSEARCH_URL}">{MAINMENU_SEARCH}</a>
         <a href="{USER_DECONNECT}">{MAINMENU_DISCONNECTION}</a>
     </div>
 
@@ -131,6 +132,24 @@
         <div style="clear:both;">
             <!-- BEGIN switch_blockmenu -->
             <div id="block_modules" style="display:{SHOW_BLOCKMENU}">
+
+                <!-- BEGIN switch_search -->
+                <div class="module_block">
+                    <div class="module_title">
+                        <p>{MAINMENU_SEARCH}</p>
+                    </div>
+                    <form method="post" id="form_recherche" action="{MAINMENU_SHOWSEARCH_URL}">
+                    <div class="module_content">
+                        <p class="ploopi_va" style="padding:2px;">
+                            <input type="text" name="system_search_keywords" class="text" style="width:120px;" value="{SEARCH_KEYWORDS}">
+                            <img src="{TEMPLATE_PATH}/img/template/search.png" value="Recherche" style="cursor:pointer;" onclick="$('form_recherche').submit();">
+                        </p>
+                    </div>
+                    </form>
+                    <div class="module_footer"></div>
+                </div>
+                <!-- END switch_search -->
+                
                 <!-- BEGIN block -->
                 <div class="module_block">
                     <div class="module_title">
@@ -162,11 +181,17 @@
 [ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko ] Template:&nbsp;<a href="http://ovensia.fr">Ovensia</a>&nbsp;|&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi {PLOOPI_VERSION}</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>
 </p>
 
+<!-- BEGIN switch_user_logged_out -->
 <script type="text/javascript">
-//<!--
-if ($('ploopi_login')) $('ploopi_login').focus();
-//-->
+ploopi_window_onload_stock(function() { if ($('ploopi_login')) $('ploopi_login').focus(); } );
 </script>
+<!-- END switch_user_logged_out -->
+
+<!-- BEGIN switch_user_logged_in -->
+<script type="text/javascript">
+ploopi_window_onload_stock(function() { ploopi_tickets_refresh({LAST_NEWTICKET}, 30, '(', ')'); } );
+</script>
+<!-- END switch_user_logged_in -->
 
 </body>
 </html>

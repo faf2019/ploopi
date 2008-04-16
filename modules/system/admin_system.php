@@ -168,32 +168,11 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
             switch($op)
             {
                 case 'phpinfo':
-                    ob_start();
-                    phpinfo();
-
-                    preg_match ('%<style type="text/css">(.*?)</style>.*?(<body>.*</body>)%s', ob_get_clean(), $matches);
-
-                    # $matches [1]; # Style information
-                    # $matches [2]; # Body information
-
                     echo $skin->open_simplebloc(_SYSTEM_LABEL_PHPINFO);
-                    echo "<div class='phpinfodisplay'><style type='text/css'>\n",
-                        join( "\n",
-                            array_map(
-                                create_function(
-                                    '$i',
-                                    'return ".phpinfodisplay " . preg_replace( "/,/", ",.phpinfodisplay ", $i );'
-                                    ),
-                                preg_split( '/\n/', $matches[1] )
-                                )
-                            ),
-                        "</style>\n",
-                        $matches[2],
-                        "\n</div>\n";
-
+                    ?>
+                    <iframe id="system_tools_phpinfo" style="border:0;width:100%;height:400px;margin:0;padding:0;" src="<? echo "admin-light.php?ploopi_op=system_tools_phpinfo"; ?>"></iframe>                    
+                    <?
                     echo $skin->close_simplebloc();
-
-
                 break;
 
                 case 'serverload':
@@ -246,7 +225,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
 
             switch($op)
             {
-                case "save":
+                case 'save':
                     if (!empty($_POST['idmodule']) && is_numeric($_POST['idmodule']))
                     {
                         $module = new module();

@@ -217,6 +217,7 @@
             <h2>{WORKSPACE_META_DESCRIPTION}</h2>
         </div>
 
+        <!-- BEGIN switch_search -->
         <div id="recherche">
             <form method="post" id="form_recherche" action="{MAINMENU_SHOWSEARCH_URL}">
                 {MAINMENU_SEARCH}:
@@ -225,6 +226,7 @@
                 </p>
             </form>
         </div>
+        <!-- END switch_search -->
     </div>
 
     <!-- BEGIN switch_blockmenu -->
@@ -262,11 +264,10 @@
 [ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko ] Template:&nbsp;<a href="http://ovensia.fr">Ovensia</a>&nbsp;|&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi {PLOOPI_VERSION}</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>&nbsp;
 </p>
 
+<!-- BEGIN switch_user_logged_out -->
 <script type="text/javascript">
-//<!--
-if ($('ploopi_login')) $('ploopi_login').focus();
-//-->
+ploopi_window_onload_stock(function() { if ($('ploopi_login')) $('ploopi_login').focus(); } );
 </script>
-
+<!-- END switch_user_logged_out -->
 </body>
 </html>

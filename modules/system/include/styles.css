@@ -95,7 +95,11 @@ text-decoration:none;
     padding:4px;
 }
 
-.system_roleusers_list {
+#system_roleusers_result {
+	height:200px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    border-bottom:1px solid #c0c0c0;
 }
 
 .system_roleusers_select {
@@ -116,7 +120,7 @@ text-decoration:none;
     padding-left:4px;
 }
 
-.system_roleusers_legend {
+#system_roleusers_legend {
     padding:4px;
     border-bottom:1px solid #c0c0c0;
     background-color:#e0e0e0;
@@ -141,17 +145,3 @@ text-decoration:none;
 #system_tickets_new:hover {
     background-color:#e0e0e0;
 }
-
-	/*
-a.system_roleusers_delete_user {
-    text-decoration:none;
-}
-
-a.system_roleusers_delete_user:hover {
-    text-decoration:none;
-}
-
-a.system_roleusers_delete_user img {
-    border:0;
-}
-*/

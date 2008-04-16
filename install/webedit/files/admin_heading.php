@@ -24,6 +24,7 @@
 $heading = new webedit_heading();
 $heading->open($headingid);
 ?>
+
 <p class="ploopi_va" style="background-color:#e0e0e0;padding:6px;border-bottom:1px solid #c0c0c0;">
     <?
     if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT))
@@ -74,8 +75,9 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
 ?>
 
 <div class="webedit_main_form">
-    <div class="ploopi_form" style="float:left;width:50%;">
+    <div class="ploopi_form" style="float:left;width:45%;">
         <div style="padding:2px;">
+            <p style="font-weight:bold;">Propriétés:</p>
             <p>
                 <label>Libellé:</label>
                 <?
@@ -146,7 +148,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
 
             </p>
             <p>
-                <label for="webedit_heading_visible"><strong>Visible:</strong></label>
+                <label for="webedit_heading_visible" style="cursor:pointer;"><strong>Visible:</strong></label>
                 <?
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
@@ -155,6 +157,18 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                     <?
                 }
                 else echo ($heading->fields['visible']) ? 'oui' : 'non';
+                ?>
+            </p>
+            <p>
+                <label for="webedit_heading_url_window" style="cursor:pointer;">Ouvrir une nouvelle fenêtre:</label>
+                <?
+                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+                {
+                    ?>
+                    <input type="checkbox" name="webedit_heading_url_window" id="webedit_heading_url_window" style="width:14px;" value="1" <? if ($heading->fields['url_window']) echo 'checked'; ?> tabindex="9" />
+                    <?
+                }
+                else echo ($heading->fields['url_window']) ? 'oui' : 'non';
                 ?>
             </p>
             <p>
@@ -179,56 +193,64 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
             </p>
         </div>
     </div>
-    <div class="ploopi_form" style="float:left;width:49%;">
+    <div class="ploopi_form" style="float:left;width:54%;">
         <div style="padding:2px;">
+            <p style="font-weight:bold;">Contenu:</p>
+            
             <p>
-                <?
-                if (!empty($heading->fields['linkedpage']))
-                {
-                    $article = new webedit_article('draft');
-                    $article->open($heading->fields['linkedpage']);
-                    $article_title = $article->fields['title'];
-                }
-                else $article_title = '';
-                ?>
-                <label>Redirection vers un article:</label>
-                <?
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
-                {
-                    ?>
-                    <input type="hidden" id="webedit_heading_linkedpage" name="webedit_heading_linkedpage" value="<? echo $heading->fields['linkedpage']; ?>">
-                    <input type="text" readonly class="text" style="width:100px;" id="linkedpage_displayed" value="<? echo $article_title; ?>">
-                    <input type="button" class="button" style="width:70px;" value="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','op=heading_selectredirect',false), 300, event, 'click', 'webedit_popup_selectredirect');" tabindex="6" />
-                    <input type="button" class="button" style="width:70px;" value="Effacer" onclick="javascript:ploopi_getelem('webedit_heading_linkedpage').value='';ploopi_getelem('linkedpage_displayed').value='';" tabindex="7" />
+                <label>Type de Contenu:</label>
+                <span>
+                    <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_article_first');">
+                        <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="article_first" id="heading_content_type_article_first" <? if ($heading->fields['content_type'] == 'article_first') echo 'checked'; ?> />Afficher le premier article
+                    </div>
+                    <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_article_redirect');">
+                        <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="article_redirect" id="heading_content_type_article_redirect" <? if ($heading->fields['content_type'] == 'article_redirect') echo 'checked'; ?> />Redirection vers un article
+                    </div>
+                    <div style="padding-left:20px;">
                     <?
-                }
-                else echo $article_title;
-                ?>
-            </p>
-            <p>
-                <label>Redirection vers une url:</label>
-                <?
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
-                {
+                    if (!empty($heading->fields['linkedpage']))
+                    {
+                        $article = new webedit_article('draft');
+                        $article->open($heading->fields['linkedpage']);
+                        $article_title = $article->fields['title'];
+                    }
+                    else $article_title = '';
+                    
+                    if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+                    {
+                        ?>
+                        <input type="hidden" id="webedit_heading_linkedpage" name="webedit_heading_linkedpage" value="<? echo $heading->fields['linkedpage']; ?>">
+                        <input type="text" readonly class="text" style="width:150px;" id="linkedpage_displayed" value="<? echo $article_title; ?>">
+                        <img src="./modules/webedit/img/ico_choose_article.png" style="cursor:pointer;" title="Choisir un article" alt="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','op=heading_selectredirect',false), 300, event, 'click', 'webedit_popup_selectredirect');" />
+                        <img src="./modules/webedit/img/ico_clear_article.png" style="cursor:pointer;" title="Effacer la redirection" alt="Choisir" onclick="javascript:ploopi_getelem('webedit_heading_linkedpage').value='';ploopi_getelem('linkedpage_displayed').value='';" />
+                        <!--input type="button" class="button" style="width:70px;" value="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','op=heading_selectredirect',false), 300, event, 'click', 'webedit_popup_selectredirect');" tabindex="6" />
+                        <input type="button" class="button" style="width:70px;" value="Effacer" onclick="javascript:ploopi_getelem('webedit_heading_linkedpage').value='';ploopi_getelem('linkedpage_displayed').value='';" tabindex="7" />
+                          -->
+                          <?
+                    }
+                    else echo $article_title;
                     ?>
-                    <input type="text" class="text" name="webedit_heading_url"  value="<? echo htmlentities($heading->fields['url']); ?>" tabindex="8" />
+                    </div>
+                    <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_url_redirect');">
+                        <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="url_redirect" id="heading_content_type_url_redirect" <? if ($heading->fields['content_type'] == 'url_redirect') echo 'checked'; ?> />Redirection vers une URL
+                    </div>
+                    <div style="padding-left:20px;">
                     <?
-                }
-                else echo '<span>'.htmlentities($heading->fields['url']).'</span>';
-                ?>
-            </p>
-            <p>
-                <label for="webedit_heading_url_window">Nouvelle fenêtre:</label>
-                <?
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
-                {
+                    if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+                    {
+                        ?>
+                        <input type="text" class="text" name="webedit_heading_url" style="width:95%;" value="<? echo htmlentities($heading->fields['url']); ?>" onkeyup="javascript:if (this.value.length>0 && !$('heading_content_type_url_redirect').checked) ploopi_checkbox_click(event, 'heading_content_type_url_redirect');" tabindex="8" />
+                        <?
+                    }
+                    else echo '<span>'.htmlentities($heading->fields['url']).'</span>';
                     ?>
-                    <input type="checkbox" name="webedit_heading_url_window" id="webedit_heading_url_window" style="width:14px;" value="1" <? if ($heading->fields['url_window']) echo 'checked'; ?> tabindex="9" />
-                    <?
-                }
-                else echo ($heading->fields['url_window']) ? 'oui' : 'non';
-                ?>
+                    </div>
+                    <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_headings');">
+                        <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="headings" id="heading_content_type_headings" <? if ($heading->fields['content_type'] == 'headings') echo 'checked'; ?> />Afficher les sous-rubriques
+                    </div>
+                </span>
             </p>
+            <p style="font-weight:bold;">Paramètres spécifiques:</p>
             <p>
                 <label>Couleur:</label>
                 <?

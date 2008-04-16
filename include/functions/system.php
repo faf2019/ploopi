@@ -37,8 +37,6 @@ function ploopi_die($var = null, $flush = true)
     global $ploopi_errors_nb;
     global $ploopi_errors_msg;    
 
-    if ($flush) while (ob_get_level()>0) ob_end_flush();
-    
     if (    
         !empty($ploopi_errors_level) &&  
         $ploopi_errors_level &&
@@ -63,6 +61,8 @@ function ploopi_die($var = null, $flush = true)
         if (is_string($var)) echo $var;
         else ploopi_print_r($var);
     }
+    
+    if ($flush) while (ob_get_level()>0) ob_end_flush();
     
     session_write_close();
     
@@ -111,6 +111,8 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
     
     if (is_dir($strModulePath))
     {
+        $version = (empty($_SESSION['ploopi']['moduletypes'][$moduletype]['version'])) ? '' : '?v='.urlencode($_SESSION['ploopi']['moduletypes'][$moduletype]['version']);
+
         if (!defined("_PLOOPI_INITMODULE_{$moduletype}"))
         {
             define("_PLOOPI_INITMODULE_{$moduletype}",    1);
@@ -176,7 +178,7 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
                 {
                     $template_body->assign_block_vars(  'module_js',
                                                         array(
-                                                        'PATH' => $jsfile
+                                                        'PATH' => "{$jsfile}{$version}"
                                                         )
                                                     );
                 }
@@ -197,7 +199,7 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
                 {
                     $template_body->assign_block_vars(  'module_css',
                                                         array(
-                                                        'PATH' => $cssfile
+                                                        'PATH' => "{$cssfile}{$version}"
                                                         )
                                                     );
                 }
@@ -207,7 +209,7 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
                 {
                     $template_body->assign_block_vars(  'module_css_ie',
                                                         array(
-                                                        'PATH' => $cssfile_ie
+                                                        'PATH' => "{$cssfile_ie}{$version}"
                                                         )
                                                     );
                 }
@@ -543,9 +545,11 @@ function ploopi_ob_callback($buffer)
     foreach($headers as $property)
     {
         $matches = array();
-        if (preg_match('/Content-type:(.*)(;|)/i', $property, $matches))
+
+        if (preg_match('/Content-type:((.*);(.*)|(.*))/i', $property, $matches))
         {
-            $content_type = strtolower(trim($matches[1]));
+            $content_type = (empty($matches[2])) ? $matches[1] : $matches[2]; 
+            $content_type = strtolower(trim($content_type));
         }
     }
     
@@ -588,25 +592,6 @@ function ploopi_ob_callback($buffer)
     {
         $ploopi_stats['sessionsize'] = 0;
     }
-    
-    
-    $array_tags = array(    '<PLOOPI_PAGE_SIZE>',
-                            '<PLOOPI_EXEC_TIME>',
-                            '<PLOOPI_PHP_P100>',
-                            '<PLOOPI_SQL_P100>',
-                            '<PLOOPI_NUMQUERIES>',
-                            '<PLOOPI_SESSION_SIZE>'
-                        );
-    
-    $array_values = array(  sprintf("%.02f",$ploopi_stats['pagesize']/1024),
-                            $ploopi_stats['total_exectime'],
-                            $ploopi_stats['php_ratiotime'],
-                            $ploopi_stats['sql_ratiotime'],
-                            $ploopi_stats['numqueries'],
-                            sprintf("%.02f",$ploopi_stats['sessionsize']/1024)
-                        );
-                    
-
                         
     if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG && isset($db))
     {
@@ -644,7 +629,26 @@ function ploopi_ob_callback($buffer)
         $log->save();
     }
                             
-    $buffer = str_replace($array_tags, $array_values, $buffer);
+    if ($content_type == 'text/html')
+    {
+        $array_tags = array(    '<PLOOPI_PAGE_SIZE>',
+                                '<PLOOPI_EXEC_TIME>',
+                                '<PLOOPI_PHP_P100>',
+                                '<PLOOPI_SQL_P100>',
+                                '<PLOOPI_NUMQUERIES>',
+                                '<PLOOPI_SESSION_SIZE>'
+                            );
+        
+        $array_values = array(  sprintf("%.02f",$ploopi_stats['pagesize']/1024),
+                                $ploopi_stats['total_exectime'],
+                                $ploopi_stats['php_ratiotime'],
+                                $ploopi_stats['sql_ratiotime'],
+                                $ploopi_stats['numqueries'],
+                                sprintf("%.02f",$ploopi_stats['sessionsize']/1024)
+                            );
+        
+        $buffer = trim(str_replace($array_tags, $array_values, $buffer));
+    }
     
     if (_PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && $content_type == 'text/html')
     {  
@@ -652,5 +656,6 @@ function ploopi_ob_callback($buffer)
         return gzencode($buffer);
     }
     else return($buffer);
+    
 }
 ?>

@@ -27,8 +27,14 @@ $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
 switch($_SESSION['ploopi']['mainmenu'])
 {
-    case _PLOOPI_MENU_SEARCH:
-        include_once 'public_search.php';
+    case _PLOOPI_MENU_WORKSPACES:
+        switch($op)
+        {
+            case 'search':
+            default:
+                include_once 'public_search.php';
+            break;
+        }
     break;
 
     /*

@@ -21,10 +21,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$arrBlock = array();
-$arrModules = array();
-
-$arrModules['system'] = 'system';
+$arrBlocks = array();
 
 switch ($_SESSION['ploopi']['mainmenu'])
 {
@@ -39,29 +36,29 @@ switch ($_SESSION['ploopi']['mainmenu'])
             {
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER)
                 {
-                    $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['title'] = _PLOOPI_GENERAL_ADMINISTRATION;
+                    $arrBlocks[_PLOOPI_MODULE_SYSTEM]['title'] = _PLOOPI_GENERAL_ADMINISTRATION;
                     if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
                     {
-                        $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['url'] = ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=admin&system_level=system');
+                        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['url'] = ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=admin&system_level=system');
                     }
                     else
                     {
-                        $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['url'] = ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=admin&system_level='._SYSTEM_WORKSPACES);
+                        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['url'] = ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=admin&system_level='._SYSTEM_WORKSPACES);
                     }
 
-                    $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['description'] = 'Installation des Modules, Paramétrage, Monitoring';
-                    $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['admin'] = true;
+                    $arrBlocks[_PLOOPI_MODULE_SYSTEM]['description'] = 'Installation des Modules, Paramétrage, Monitoring';
+                    $arrBlocks[_PLOOPI_MODULE_SYSTEM]['admin'] = true;
 
                     if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
                     {
-                        $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_ADMIN_SYSTEM,
-                                                                    'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM."&ploopi_action=admin&system_level=system")
-                                                                    );
+                        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_ADMIN_SYSTEM,
+                                                                                'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM."&ploopi_action=admin&system_level=system")
+                                                                                );
                     }
 
-                    $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_ADMIN_WORKSPACES,
-                                                                'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM."&ploopi_action=admin&system_level="._SYSTEM_WORKSPACES)
-                                                                );
+                    $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_ADMIN_WORKSPACES,
+                                                                            'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM."&ploopi_action=admin&system_level="._SYSTEM_WORKSPACES)
+                                                                            );
                 }
             }
 
@@ -77,17 +74,15 @@ switch ($_SESSION['ploopi']['mainmenu'])
                         $modtype = $_SESSION['ploopi']['modules'][$menu_moduleid]['moduletype'];
                         $blockpath = "./modules/{$modtype}/block-default.php";
 
-                        $arrModules[$modtype] = $modtype;
-
-                        $arrBlock[$modtype][$menu_moduleid] = array(
+                        $arrBlocks[$menu_moduleid] = array(
                                                                             'title'=> $_SESSION['ploopi']['modules'][$menu_moduleid]['label'],
                                                                             'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"),
                                                                             'file' => $blockpath
                                                                         );
                         $block = new block();
                         include($blockpath);
-                        $arrBlock[$modtype][$menu_moduleid]['menu'] = $block->getmenu();
-                        $arrBlock[$modtype][$menu_moduleid]['content'] = $block->getcontent();
+                        $arrBlocks[$menu_moduleid]['menu'] = $block->getmenu();
+                        $arrBlocks[$menu_moduleid]['content'] = $block->getcontent();
                     }
                 }
             }
@@ -96,23 +91,25 @@ switch ($_SESSION['ploopi']['mainmenu'])
     break;
 
     case _PLOOPI_MENU_MYWORKSPACE:
-        $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['title'] = _PLOOPI_LABEL_MYWORKSPACE;
-        $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['url'] = ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public&op=user');
-        $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['description'] = 'Profil utilisateur';
+        $arrBlocks[_PLOOPI_MODULE_SYSTEM] = array(
+                                                    'title'     =>_PLOOPI_LABEL_MYWORKSPACE,
+                                                    'url'       => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public&op=user'),
+                                                    'description' => 'Profil utilisateur'
+                                                    );
 
-        $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_LABEL_MYTICKETS,
+        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_LABEL_MYTICKETS,
                                                                         'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public&op=tickets')
                                                                         );
-        $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_LABEL_MYANNOTATIONS,
+        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_LABEL_MYANNOTATIONS,
                                                                         'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public&op=annotations')
                                                                         );
-        $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_LABEL_MYPROFILE,
+        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_LABEL_MYPROFILE,
                                                                         'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public&op=profile')
                                                                         );
-        $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_LABEL_MYDATA,
+        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_LABEL_MYDATA,
                                                                         'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public&op=actions')
                                                                         );
-        $arrBlock['system'][_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_LABEL_MYPARAMS,
+        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_LABEL_MYPARAMS,
                                                                         'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public&op=param')
                                                                         );
     break;

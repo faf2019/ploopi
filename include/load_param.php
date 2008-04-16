@@ -20,13 +20,13 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 ///////////////////////////////////////////////////////////////////////////
 // LOAD MODULES & GLOBAL PARAMS
 ///////////////////////////////////////////////////////////////////////////
 
 $_SESSION['ploopi']['modules'] = Array();
+$_SESSION['ploopi']['moduletypes'] = Array();
 
 // get modules
 $select =   "
@@ -40,7 +40,10 @@ $select =   "
                         m.transverseview,
                         m.id_module_type,
                         m.id_workspace,
-                        mt.label as moduletype
+                        mt.label as moduletype,
+                        mt.version,
+                        mt.author,
+                        mt.date
 
             FROM        ploopi_module m
 
@@ -50,6 +53,10 @@ $select =   "
 $db->query($select);
 while ($fields = $db->fetchrow())
 {
+    if (empty($_SESSION['ploopi']['moduletypes'][$fields['moduletype']])) 
+    {
+        $_SESSION['ploopi']['moduletypes'][$fields['moduletype']] = array('version' => $fields['version'], 'author' => $fields['author'], 'date' => $fields['date']);
+    }
     $_SESSION['ploopi']['modules'][$fields['id']] = $fields;
 }
 

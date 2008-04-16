@@ -58,7 +58,7 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
     if (!empty($_SESSION['ploopi']['userid']))
     {
         $id_user = $_SESSION['ploopi']['userid'];
-        $id_group = $_SESSION['ploopi']['workspaceid'];
+        $id_workspace = $_SESSION['ploopi']['workspaceid'];
         $id_module = $_SESSION['ploopi']['moduleid'];
         $id_module_type = $_SESSION['ploopi']['moduletypeid'];
         
@@ -66,7 +66,7 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
     }
     else
     {
-        $id_user = $id_group = $id_module = $id_module_type = 0;
+        $id_user = $id_workspace = $id_module = $id_module_type = 0;
     }
 
     if (isset($_SESSION['ploopi']['tickets']['users_selected']))
@@ -79,6 +79,7 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
         $ticket->fields['id_object'] = $id_object;
         $ticket->fields['id_record'] = $id_record;
         $ticket->fields['id_module'] = $id_module;
+        $ticket->fields['id_workspace'] = $id_workspace;
         $ticket->fields['id_user'] = $id_user;
         $ticket->fields['object_label'] = $object_label;
         $ticket->fields['title'] = $title;
@@ -91,8 +92,6 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
 
         $email_message = ploopi_make_links($message);
 
-        $http_host = (empty($_SERVER['HTTP_HOST'])) ? '' : $_SERVER['HTTP_HOST'];
-
         if ($id_object != '' && $id_record != '' && $id_module_type != 0)
         {
             $tplmail->assign_block_vars('sw_linkedobject',array());
@@ -100,10 +99,21 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
             $mb_object = new mb_object();
             $mb_object->open($id_object, $id_module_type);
 
-            $object_script = str_replace('<IDRECORD>',$id_record,$mb_object->fields['script']);
-            $object_script = str_replace('<IDMODULE>',$id_module,$object_script);
+            $object_script = str_replace(
+                                        array(
+                                            '<IDRECORD>',
+                                            '<IDMODULE>',
+                                            '<IDWORKSPACE>'
+                                        ),
+                                        array(
+                                            $id_record,
+                                            $id_module,
+                                            $id_workspace
+                                        ),
+                                        $mb_object->fields['script']
+                            );
 
-            $url = "{$http_host}/".ploopi_urlencode("admin.php?ploopi_mainmenu=1&ploopi_workspaceid={$id_group}&{$object_script}");
+            $url = _PLOOPI_BASEPATH.'/'.ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}");
 
             $tplmail->assign_vars(array(
                 'OBJECT_URL' => $url,
@@ -138,21 +148,15 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
             }
         }
 
-        $email_subject = "[{$http_host}] - Nouveau ticket de {$email_from[0]['name']} : {$title}";
+        $email_subject = strip_tags("[TICKET] - {$title}");
 
         $tplmail->assign_vars(array(
-            'USER_FROM_NAME' => $email_from[0]['name'],
+            'USER_FROM_NAME' => $email_from[0]['name'].' ['._PLOOPI_BASEPATH.']',
             'USER_FROM_EMAIL' => $email_from[0]['address'],
-            'HTTP_HOST' => $http_host,
+            'HTTP_HOST' => _PLOOPI_BASEPATH,
             'MAIL_CONTENT' => $email_message
             )
         );
-
-
-        /*$email_message = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
-<body>Bonjour,<br /><br />Vous avez reçu un nouveau ticket envoyé par <strong>'.$email_from[0]['name'].'</strong> depuis le site <a href="'.$http_host.'">'.$http_host.'</a> : <br /><hr /><br />'.$email_message.'</body></html>';
-*/
 
         ob_start();
         $tplmail->pparse('mail');
@@ -183,4 +187,37 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
     }
 
 }
+
+function ploopi_tickets_getnew()
+{
+    global $db;
+    
+    $sql =  "
+            SELECT      t.id
+
+            FROM        ploopi_ticket t
+
+            INNER JOIN  ploopi_ticket_dest td
+            ON          td.id_ticket = t.id
+
+            LEFT JOIN   ploopi_ticket_watch tw
+            ON          tw.id_ticket = t.id
+            AND         tw.id_user = {$_SESSION['ploopi']['userid']}
+
+            WHERE       ((t.id_user = {$_SESSION['ploopi']['userid']} AND t.deleted = 0) OR (td.id_user = {$_SESSION['ploopi']['userid']} AND td.deleted = 0))
+            AND         isnull(tw.notify)
+
+            GROUP BY t.id
+            ORDER BY t.id DESC
+            ";
+
+    $rs = $db->query($sql);
+    
+    $tickets_new = $db->numrows($rs);
+    
+    $tickets_lastid = ($row = $db->fetchrow()) ? $row['id'] : 0;
+
+    return(array($tickets_new, $tickets_lastid));
+}
 ?>
+

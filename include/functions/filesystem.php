@@ -367,6 +367,7 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
         header('Cache-control: private');
         header('Pragma: private');
         header('Content-length: '.$size);
+        header("Content-Encoding:");
 
         $chunksize = 1*(1024*1024);
 
@@ -386,8 +387,8 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
         }
         
         if ($deletefile && is_writable($filepath)) @unlink($filepath);
-        
-        ploopi_die('', false);
+
+    ploopi_die('', false);
 
     }
     else return(false);

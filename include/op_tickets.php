@@ -23,6 +23,27 @@
 
 switch($ploopi_op)
 {
+    case 'tickets_getnum':
+        include_once './include/functions/tickets.php';
+        list($newtickets, $lastticket) = ploopi_tickets_getnew();
+        echo "{$newtickets},{$lastticket}";
+        ploopi_die();
+    break;
+    
+    case 'tickets_alert':
+        ob_start();
+        ?>
+        <p class="ploopi_va" style="padding:4px;">
+            <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/newmail.png">
+            <a href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets"); ?>"><b>Vous avez reçu un nouveau ticket !</b></a>
+        </p>
+        <?
+        $content = ob_get_contents();
+        ob_end_clean();
+        echo $skin->create_popup('Nouveau Ticket !', $content, 'popup_tickets_new_alert');
+        ploopi_die();
+    break;
+        
     case 'tickets_new':
         if (!$_SESSION['ploopi']['connected']) ploopi_die();
 

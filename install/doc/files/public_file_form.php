@@ -21,11 +21,79 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$newfile = false;
-
+$newfile = true;
 $docfile = new docfile();
 
-if (isset($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']))
+$max_formsize = doc_max_formsize();
+$max_filesize = doc_max_filesize();
+
+$newfile = !(isset($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']));
+
+if ($newfile)
+{
+    $docfile->init_description();
+    ?>
+    <div class="doc_fileform_title">Nouveau Fichier</div>
+    <div class="doc_fileform_main">
+        <?
+        doc_getworkflow();
+        $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']);
+    
+        if (_PLOOPI_USE_CGIUPLOAD)
+        {
+            $sid = doc_guid();
+            ?>
+            <form method="post" enctype="multipart/form-data" action="<? echo _PLOOPI_CGI_PATH; ?>/upload.cgi?sid=<? echo $sid; ?>" onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>, '<? echo $sid; ?>', '<? echo _PLOOPI_CGI_PATH; ?>');" target="doc_fileform_iframe">
+            <input type="hidden" name="op" value="doc_filesave">
+            <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
+            <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
+            <input type="hidden" name="redirect" value="../admin.php">
+            <?
+        }
+        else
+        {
+            ?>
+            <form method="post" enctype="multipart/form-data" action="<? echo $scriptenv; ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" target="doc_fileform_iframe">
+            <input type="hidden" name="op" value="doc_filesave">
+            <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
+            <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
+            <?
+        }
+        ?>
+        <input type="hidden" name="MAX_FILE_SIZE" value="<? echo $max_filesize*1024; ?>">
+        <div style="padding:2px;">
+            <div style="padding:2px;font-weight:bold;">Fichiers : </div>
+            <?
+            for ($i=0;$i<5;$i++)
+            {
+                ?>
+                <p class="ploopi_va" style="margin-bottom:2px;">
+                    <input type="file" class="text" name="docfile_file_<? echo $i; ?>" />&nbsp;<input type="text" style="width:300px;" maxlength="100" class="text" name="docfile_description_<? echo $i; ?>" />
+                    <input type="checkbox" name="docfile_readonly_<? echo $i; ?>" id="docfile_readonly_<? echo $i; ?>" value="1">
+                    <span style="cursor:pointer;" onclick="javascript:$('docfile_readonly_<? echo $i; ?>').checked = !$('docfile_readonly_<? echo $i; ?>').checked;">Lecture Seule</span>
+                </p>
+                <?
+            }
+            ?>
+        
+            <div id="doc_progressbar" style="display:none;"><div id="doc_progressbar_bg"></div></div>
+            <div id="doc_progressbar_txt"></div>
+        
+            <div>Taille maxi autorisée par fichier : <b><? echo ($max_filesize) ? "{$max_filesize} ko" : 'pas de limite'; ?></b></div>
+            <div>Taille maxi autorisée par envoi : <b><? echo ($max_formsize) ? "{$max_formsize} ko" : 'pas de limite'; ?></b></div>
+            
+            <div style="padding:4px;text-align:right;">
+                <input type="button" class="flatbutton" value="<? echo _PLOOPI_BACK; ?>" onclick="javascript:doc_explorer(<? echo $currentfolder; ?>);">
+                <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+            </div>
+        </div>
+        </form>
+        <iframe name="doc_fileform_iframe" src="./img/blank.gif" style="display:none;"></iframe>
+    </div>
+    <?
+    
+}
+else
 {
     // on vérifie que l'utilisateur a bien le droit de modifier ce fichier (en fonction du statut du dossier parent)
     $readonly = !(ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_MODIFYFILE) && ((!$docfolder_readonly_content && !$docfile->fields['readonly']) || $docfile->fields['id_user'] == $_SESSION['ploopi']['userid'])));
@@ -38,6 +106,7 @@ if (isset($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']))
         <a title="Envoyer un ticket" style="display:block;float:right;margin-left:10px;" href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, '<? echo _DOC_OBJECT_FILE ?>','<? echo $docfile->fields['md5id']; ?>', '<? echo $docfile->fields['name']; ?>');">Envoyer un ticket</a>
         <? echo htmlentities($docfile->fields['name'])." {$title}"; ?>
     </div>
+    
     <div class="doc_fileform_main">
 
         <div class="doc_moreinfo">
@@ -193,202 +262,152 @@ if (isset($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']))
             </div>
             <? echo $skin->close_simplebloc(); ?>
         </div>
-    <?
-}
-else
-{
-    $newfile = true;
-    $docfile->init_description();
-    $readonly = false;
-    ?>
-    <div class="doc_fileform_title">Nouveau Fichier</div>
-    <div class="doc_fileform_main">
-    <?
-}
-
-if (!$readonly)
-{
-    doc_getworkflow();
-    $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']);
-
-    if (_PLOOPI_USE_CGIUPLOAD)
-    {
-        $sid = doc_guid();
-        ?>
-        <form method="post" enctype="multipart/form-data" action="<? echo _PLOOPI_CGI_PATH; ?>/upload.cgi?sid=<? echo $sid; ?>" onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>, '<? echo $sid; ?>', '<? echo _PLOOPI_CGI_PATH; ?>');" target="doc_fileform_iframe">
-        <input type="hidden" name="op" value="doc_filesave">
-        <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
-        <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
-        <input type="hidden" name="redirect" value="../admin.php">
-        <?
-    }
-    else
-    {
-        ?>
-        <form method="post" enctype="multipart/form-data" action="<? echo $scriptenv; ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" target="doc_fileform_iframe">
-        <input type="hidden" name="op" value="doc_filesave">
-        <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
-        <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
-        <?
-    }
-}
-$max_formsize = doc_max_formsize();
-$max_filesize = doc_max_filesize();
-?>
-<input type="hidden" name="MAX_FILE_SIZE" value="<? echo $max_filesize*1024; ?>">
-    <?
-    if ($newfile)
-    {
-        ?>
-        <div style="padding:2px;">
-        <div style="padding:2px;font-weight:bold;">Fichiers : </div>
-        <?
-        for ($i=0;$i<5;$i++)
-        {
-            ?>
-            <p class="ploopi_va" style="margin-bottom:2px;">
-                <input type="file" class="text" name="docfile_file_<? echo $i; ?>" />&nbsp;<input type="text" style="width:300px;" maxlength="100" class="text" name="docfile_description_<? echo $i; ?>" />
-                <input type="checkbox" name="docfile_readonly_<? echo $i; ?>" id="docfile_readonly_<? echo $i; ?>" value="1">
-                <span style="cursor:pointer;" onclick="javascript:$('docfile_readonly_<? echo $i; ?>').checked = !$('docfile_readonly_<? echo $i; ?>').checked;">Lecture Seule</span>
-            </p>
-            <?
-        }
-        ?>
-
-        <div id="doc_progressbar" style="display:none;"><div id="doc_progressbar_bg"></div></div>
-        <div id="doc_progressbar_txt"></div>
-
-        <div>Taille maxi autorisée par fichier : <b><? echo ($max_filesize) ? "{$max_filesize} ko" : 'pas de limite'; ?></b></div>
-        <div>Taille maxi autorisée par envoi : <b><? echo ($max_formsize) ? "{$max_formsize} ko" : 'pas de limite'; ?></b></div>
-        <?
-    }
-    else
-    {
-        include_once './modules/system/class_user.php';
-
-        $user = new user();
-        $user_modify = new user();
         
-        if ($user->open($docfile->fields['id_user'])) $user_login = $user->fields['login'];
-        else $user_login = "<i>supprimé</i>";
-
-        if ($user_modify->open($docfile->fields['id_user_modify'])) $user_modify_login = $user->fields['login'];
-        else $user_modify_login = "<i>supprimé</i>";
         
-        $ldate_modify = (!empty($docfile->fields['timestp_modify'])) ? ploopi_timestamp2local($docfile->fields['timestp_modify']) : array('date' => '', 'time' => '');
-        //echo $user->fields['login'];
-        ?>
-        <div class="ploopi_form" style="padding:2px;">
-        <p>
-            <label>Nom du Fichier:</label>
+        <div>
             <?
-            if ($readonly) echo htmlentities($docfile->fields['name']);
-            else
+            if (!$readonly)
+            {
+                doc_getworkflow();
+                $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']);
+            
+                if (_PLOOPI_USE_CGIUPLOAD)
+                {
+                    $sid = doc_guid();
+                    ?>
+                    <form method="post" enctype="multipart/form-data" action="<? echo _PLOOPI_CGI_PATH; ?>/upload.cgi?sid=<? echo $sid; ?>" onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>, '<? echo $sid; ?>', '<? echo _PLOOPI_CGI_PATH; ?>');" target="doc_fileform_iframe">
+                    <input type="hidden" name="op" value="doc_filesave">
+                    <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
+                    <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
+                    <input type="hidden" name="redirect" value="../admin.php">
+                    <?
+                }
+                else
+                {
+                    ?>
+                    <form method="post" enctype="multipart/form-data" action="<? echo $scriptenv; ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" target="doc_fileform_iframe">
+                    <input type="hidden" name="op" value="doc_filesave">
+                    <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
+                    <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
+                    <?
+                }
+                ?>
+                <input type="hidden" name="MAX_FILE_SIZE" value="<? echo $max_filesize*1024; ?>">
+                <?
+            }
+    
+            include_once './modules/system/class_user.php';
+    
+            $user = new user();
+            $user_modify = new user();
+            
+            if ($user->open($docfile->fields['id_user'])) $user_login = $user->fields['login'];
+            else $user_login = "<i>supprimé</i>";
+    
+            if ($user_modify->open($docfile->fields['id_user_modify'])) $user_modify_login = $user->fields['login'];
+            else $user_modify_login = "<i>supprimé</i>";
+            
+            $ldate_modify = (!empty($docfile->fields['timestp_modify'])) ? ploopi_timestamp2local($docfile->fields['timestp_modify']) : array('date' => '', 'time' => '');
+            //echo $user->fields['login'];
+            ?>
+            <div class="ploopi_form" style="padding:2px;">
+                <p>
+                    <label>Nom du Fichier:</label>
+                    <?
+                    if ($readonly) echo htmlentities($docfile->fields['name']);
+                    else
+                    {
+                        ?>
+                        <input type="text" class="text" name="docfile_name" value="<? echo htmlentities($docfile->fields['name']); ?>">
+                        <?
+                    }
+                    ?>
+                </p>
+                <p>
+                    <label>Version:</label>
+                    <span><? echo $docfile->fields['version']; ?></span>
+                </p>
+                <p>
+                    <label>Taille:</label>
+                    <span><? printf("%0.2f kio", ($docfile->fields['size']/1024)); ?></span>
+                </p>
+                <p>
+                    <label>Propriétaire:</label>
+                    <span><? echo $user_login; ?></span>
+                </p>
+                <p>
+                    <label>Modifié par:</label>
+                    <span><? echo $user_modify_login; ?></span>
+                </p>
+                <p>
+                    <label>Dernière modification:</label>
+                    <span><? echo "{$ldate_modify['date']} {$ldate_modify['time']}"; ?></span>
+                </p>
+                <p class="checkbox">
+                    <label>Lecture Seule:</label>
+                    <?
+                    if ($readonly) echo ($docfile->fields['readonly']) ? 'oui' : 'non';
+                    else
+                    {
+                        ?>
+                        <input type="checkbox" class="checkbox" name="docfile_readonly" value="1" <? if ($docfile->fields['readonly']) echo 'checked'; ?>>
+                        <?
+                    }
+                    ?>
+                </p>
+                <p>
+                    <label>Commentaire:</label>
+                    <?
+                    if ($readonly) echo ploopi_nl2br(htmlentities($docfile->fields['description']));
+                    else
+                    {
+                        ?>
+                        <textarea class="text" name="docfile_description"><? echo htmlentities($docfile->fields['description']); ?></textarea>
+                        <?
+                    }
+                    ?>
+                </p>
+                <?
+                if (!$readonly)
+                {
+                    ?>
+                    <p>
+                        <label>Déposer une nouvelle Version:</label>
+                        <input type="file" class="text" name="docfile_file">
+                    </p>
+                    <div id="doc_progressbar" style="display:none;"><div id="doc_progressbar_bg"></div></div>
+                    <div id="doc_progressbar_txt"></div>
+                    <?
+                }
+                
+                ?>
+            </div>   
+                 
+            <div style="padding:4px;text-align:right;">
+                <input type="button" class="flatbutton" value="<? echo _PLOOPI_BACK; ?>" onclick="javascript:doc_explorer(<? echo $currentfolder; ?>);">
+                <?
+                if (!$readonly)
+                {
+                    ?>
+                    <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+                    <input type="button" class="flatbutton" value="Ré-indéxer" onclick="javascript:doc_fileindex(<? echo $currentfolder; ?>, '<? echo $_GET['docfile_md5id']; ?>');">
+                    <?
+                }
+                ?>
+            </div>
+            <?
+            if (!$readonly)
             {
                 ?>
-                <input type="text" class="text" name="docfile_name" value="<? echo htmlentities($docfile->fields['name']); ?>">
+                </form>
+                <iframe name="doc_fileform_iframe" src="./img/blank.gif" style="display:none;"></iframe>
                 <?
             }
             ?>
-        </p>
-        <p>
-            <label>Version:</label>
-            <span><? echo $docfile->fields['version']; ?></span>
-        </p>
-        <p>
-            <label>Taille:</label>
-            <span><? printf("%0.2f kio", ($docfile->fields['size']/1024)); ?></span>
-        </p>
-        <p>
-            <label>Propriétaire:</label>
-            <span><? echo $user_login; ?></span>
-        </p>
-        <p>
-            <label>Modifié par:</label>
-            <span><? echo $user_modify_login; ?></span>
-        </p>
-        <p>
-            <label>Dernière modification:</label>
-            <span><? echo "{$ldate_modify['date']} {$ldate_modify['time']}"; ?></span>
-        </p>
-        <p>
-            <label>Lecture Seule:</label>
-            <?
-            if ($readonly) echo ($docfile->fields['readonly']) ? 'oui' : 'non';
-            else
-            {
-                ?>
-                <input type="checkbox" name="docfile_readonly" value="1" <? if ($docfile->fields['readonly']) echo 'checked'; ?>>
-                <?
-            }
-            ?>
-        </p>
-        <p>
-            <label>Commentaire:</label>
-            <?
-            if ($readonly) echo ploopi_nl2br(htmlentities($docfile->fields['description']));
-            else
-            {
-                ?>
-                <textarea class="text" name="docfile_description"><? echo htmlentities($docfile->fields['description']); ?></textarea>
-                <?
-            }
-            ?>
-        </p>
-        <?
-        if (!$readonly)
-        {
-            ?>
-            <p>
-                <label>Déposer une nouvelle Version:</label>
-                <input type="file" class="text" name="docfile_file">
-            </p>
-            <div id="doc_progressbar" style="display:none;"><div id="doc_progressbar_bg"></div></div>
-            <div id="doc_progressbar_txt"></div>
-            <?
-        }
-    }
-    ?>
-    <div style="padding:4px;text-align:right;">
-        <input type="button" class="flatbutton" value="<? echo _PLOOPI_BACK; ?>" onclick="javascript:doc_explorer(<? echo $currentfolder; ?>);">
-        <?
-        if (!$readonly)
-        {
-            ?>
-            <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
-            <?
-            if (!$newfile)
-            {
-                ?>
-                <input type="button" class="flatbutton" value="Ré-indéxer" onclick="javascript:doc_fileindex(<? echo $currentfolder; ?>, '<? echo $_GET['docfile_md5id']; ?>');">
-                <?
-            }
-        }
-        ?>
+        </div>
+    
     </div>
-</div>
-<?
-if (!$readonly)
-{
-    ?>
-    </form>
-    <?
-}
-?>
-</div>
 
-<?
-if (!$readonly)
-{
-    ?>
-    <iframe name="doc_fileform_iframe" src="./img/blank.gif" style="display:none;"></iframe>
-    <?
-}
-
-
-if (!$newfile)
-{
-    ?>                             
     <div style="border-bottom:1px solid #c0c0c0;">
     <?
     if ($docfolder->fields['foldertype'] != 'private')
@@ -419,4 +438,3 @@ if (!$newfile)
     ploopi_annotation(_DOC_OBJECT_FILE, $docfile->fields['md5id'], $docfile->fields['name']);
 }
 ?>
-

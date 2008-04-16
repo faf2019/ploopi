@@ -339,10 +339,18 @@ function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, 
 
     if ($id_record != '') $arrSearch[] = "e.id_record LIKE '".$db->addslashes($id_record)."%'";
     if ($id_object != '') $arrSearch[] = "e.id_object = {$id_object}";
-    if ($id_module != '')
+    if (!empty($id_module))
     {
-        $arrSearch[] = "e.id_module = {$id_module}";
-        $arrSearch[] = 'e.id_workspace IN ('.ploopi_viewworkspaces($id_module).')';
+        if (is_array($id_module))
+        {
+            $arrSearch[] = "e.id_module IN (".implode(',',$id_module).")";
+        }
+        else
+        {
+            $arrSearch[] = "e.id_module = {$id_module}";
+        }
+        
+        //$arrSearch[] = 'e.id_workspace IN ('.ploopi_viewworkspaces($id_module).')';
     }
 
     $strSearch = (empty($arrSearch)) ? '' : ' AND '.implode(' AND ',$arrSearch);

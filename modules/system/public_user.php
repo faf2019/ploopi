@@ -30,7 +30,8 @@ function user_validate(form)
         if (form.usernewpass_confirm.value == form.usernewpass.value && form.usernewpass.value == '') return true;
         else
         {
-            rep = ploopi_xmlhttprequest('admin-light.php', 'ploopi_op=ploopi_checkpasswordvalidity&password='+form.usernewpass.value)
+            rep = ploopi_xmlhttprequest('admin-light.php', 'ploopi_op=ploopi_checkpasswordvalidity&password='+form.usernewpass.value);
+            
             if (rep == 0)
             {
                 alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractères,\nun caractère minuscule,\nun caractère majuscule,\nun chiffre et un caractère de ponctuation');
