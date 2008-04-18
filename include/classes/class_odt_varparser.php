@@ -78,10 +78,11 @@ class odt_varparser
         // remplacement des variables template
         $data = str_replace(array_keys($this->vars), array_values($this->vars), $data);
 
-        // gestion du \n \r
+        // traitement des \n \r
         $data = preg_replace("/\r\n|\n|\r/", "</{$tag[0]}><{$tag[0]} {$tag[1]}>", $data);
-
-
+        // traitement des espaces
+        $data = preg_replace_callback('/\s\s+/',create_function('$matches','if (strlen($matches[0])>1) return(\' <text:s text:c="\'.(strlen($matches[0])-1).\'"/>\'); else return(\' \');'), $data);
+        
         $this->parsed_data .= $data;
     }
 

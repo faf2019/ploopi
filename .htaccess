@@ -21,7 +21,7 @@ Options +FollowSymLinks -Indexes
 </IfModule>
 
 <files *.svg.gz>
-    AddType "text/javascript" .gz
+    AddType "image/svg+xml" .gz
     AddEncoding gzip .gz
 </files>
 
@@ -47,9 +47,9 @@ Options +FollowSymLinks -Indexes
     # make sure there's no trailing .gz on the url
     ReWriteCond %{REQUEST_FILENAME} !^.+\.gz$
     # Vérifie si une version .gz du fichier existe
-    # RewriteCond %{REQUEST_FILENAME}.gz -f
+    RewriteCond %{REQUEST_FILENAME}.gz -f
     # Si toutes les conditions sont remplies on ajoute .gz à l'url du fichier (de manière transparente)
-    # RewriteRule ^(.+) $1.gz [QSA,L]
+    RewriteRule ^(.+) $1.gz [QSA,L]
 
 	# Quelques restrictions d'acces
 	RewriteRule ^modules/.*\.php$ - [F]

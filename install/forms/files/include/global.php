@@ -166,7 +166,7 @@ function forms_getfuid($id_form, $id_module, $id_object, $id_record)
 
 function forms_display($id_form, $id_module, $id_object, $id_record, $rights = array(), $options = array())
 {
-    $fuid = forms_getfuid($id_form, $id_module, $id_object, $id_record);
+    $forms_fuid = forms_getfuid($id_form, $id_module, $id_object, $id_record);
 
     // le tableau rights peut contenir les valeurs suivantes :
     //
@@ -186,18 +186,43 @@ function forms_display($id_form, $id_module, $id_object, $id_record, $rights = a
     if (!isset($options['object_label'])) $options['object_label'] = 'Objet Lié';
     if (!isset($options['object_values'])) $options['object_values'] = array();
 
-    $_SESSION['forms'][$fuid]['id_form'] = $id_form;
-    $_SESSION['forms'][$fuid]['id_object'] = $id_object;
-    $_SESSION['forms'][$fuid]['id_record'] = $id_record;
-    $_SESSION['forms'][$fuid]['id_module'] = $id_module;
-    $_SESSION['forms'][$fuid]['rights'] = $rights;
-    $_SESSION['forms'][$fuid]['options'] = $options;
+    $_SESSION['forms'][$forms_fuid]['id_form'] = $id_form;
+    $_SESSION['forms'][$forms_fuid]['id_object'] = $id_object;
+    $_SESSION['forms'][$forms_fuid]['id_record'] = $id_record;
+    $_SESSION['forms'][$forms_fuid]['id_module'] = $id_module;
+    $_SESSION['forms'][$forms_fuid]['rights'] = $rights;
+    $_SESSION['forms'][$forms_fuid]['options'] = $options;
 
     ?>
-    <div id="form_<? echo $fuid; ?>"></div>
+    <div id="form_<? echo $forms_fuid; ?>"></div>
     <script type="text/javascript">
-        ploopi_window_onload_stock(function () {forms_display('<? echo $fuid; ?>');});
+        ploopi_window_onload_stock(function () {forms_display('<? echo $forms_fuid; ?>');});
     </script>
     <?
+}
+
+
+function forms_getdata($id_form, $id_module, $id_object, $id_record, $options = array())
+{
+    include_once './modules/forms/class_form.php';
+    
+    global $db;
+    
+    $forms_fuid = forms_getfuid($id_form, $id_module, $id_object, $id_record);
+    
+    $_SESSION['forms'][$forms_fuid]['id_form'] = $id_form;
+    $_SESSION['forms'][$forms_fuid]['id_object'] = $id_object;
+    $_SESSION['forms'][$forms_fuid]['id_record'] = $id_record;
+    $_SESSION['forms'][$forms_fuid]['id_module'] = $id_module;
+        
+    if (!isset($options['filter_mode'])) $options['filter_mode'] = 'default'; // or 'like'
+    if (!isset($options['object_display'])) $options['object_display'] = false;
+    if (!isset($options['object_label'])) $options['object_label'] = 'Objet Lié';
+    if (!isset($options['object_values'])) $options['object_values'] = array();
+
+
+    include './modules/forms/op_preparedata.php';
+    
+    return(array($data_title, $data));
 }
 ?>

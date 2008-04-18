@@ -34,9 +34,9 @@ $workspaces = forms_viewworkspaces($id_module, $_SESSION['ploopi']['workspaceid'
 
 $data_title = array();
 
-if ($_SESSION['forms'][$_GET['forms_fuid']]['options']['object_display'])
+if ($_SESSION['forms'][$forms_fuid]['options']['object_display'])
 {
-    $data_title['object']   = array ('label' => $_SESSION['forms'][$_GET['forms_fuid']]['options']['object_label'], 'sep' => 0, 'type' => '', 'format' => '');
+    $data_title['object']   = array ('label' => $_SESSION['forms'][$forms_fuid]['options']['object_label'], 'sep' => 0, 'type' => '', 'format' => '');
 }
 
 $data_title['datevalidation']   = array ('label' => _FORMS_DATEVALIDATION, 'sep' => 0, 'type' => '', 'format' => '');
@@ -75,9 +75,9 @@ while ($fields = $db->fetchrow())
 $search_pattern = array();
 $search_pattern[] = "fr.id_form = {$id_form}";
 $search_pattern[] = "fr.id_workspace IN ({$workspaces})";
-$search_pattern[] = "fr.id_object = {$_SESSION['forms'][$_GET['forms_fuid']]['id_object']}";
-if ($_SESSION['forms'][$_GET['forms_fuid']]['options']['filter_mode'] == 'like') $search_pattern[] = "fr.id_record LIKE '".$db->addslashes($_SESSION['forms'][$_GET['forms_fuid']]['id_record'])."%'";
-else $search_pattern[] = "fr.id_record = '".$db->addslashes($_SESSION['forms'][$_GET['forms_fuid']]['id_record'])."'";
+$search_pattern[] = "fr.id_object = {$_SESSION['forms'][$forms_fuid]['id_object']}";
+if ($_SESSION['forms'][$forms_fuid]['options']['filter_mode'] == 'like') $search_pattern[] = "fr.id_record LIKE '".$db->addslashes($_SESSION['forms'][$forms_fuid]['id_record'])."%'";
+else $search_pattern[] = "fr.id_record = '".$db->addslashes($_SESSION['forms'][$forms_fuid]['id_record'])."'";
 
 $select =   "
             SELECT      fr.*,
@@ -114,7 +114,7 @@ while ($fields = $db->fetchrow($rs))
 
     $data[$c] = array();
 
-    if ($_SESSION['forms'][$_GET['forms_fuid']]['options']['object_display'])
+    if ($_SESSION['forms'][$forms_fuid]['options']['object_display'])
     {
         $data[$c]['object'] = $fields['id_record'];
     }
@@ -153,18 +153,9 @@ while ($fields = $db->fetchrow($rs))
     }
 
 }
-// compare 2 chaines en ordre naturel
-function compare($a, $b)
-{
-    global $orderby;
-    global $option;
 
-    if ($option == 'DESC') return strnatcasecmp($b[$orderby], $a[$orderby]);
-    else return strnatcasecmp($a[$orderby], $b[$orderby]);
-}
-
-uasort($data, "compare");
-
+// strnatcascmp sur $data
+uasort($data, create_function('$a,$b', '$orderby = "'.$orderby.'";$option = "'.$option.'";$res=($option == "DESC")?strnatcasecmp($b[$orderby], $a[$orderby]):strnatcasecmp($a[$orderby], $b[$orderby]);return($res);'));
 
 // Formatage des données (dates)
 foreach ($data as $reply_id => $detail)
@@ -174,7 +165,7 @@ foreach ($data as $reply_id => $detail)
         if ($key == 'object')
         {
             // affectation d'une valeur à l'objet (si définie)
-            if (isset($_SESSION['forms'][$_GET['forms_fuid']]['options']['object_values'][$value])) $data[$reply_id][$key] = $_SESSION['forms'][$_GET['forms_fuid']]['options']['object_values'][$value];
+            if (isset($_SESSION['forms'][$forms_fuid]['options']['object_values'][$value])) $data[$reply_id][$key] = $_SESSION['forms'][$forms_fuid]['options']['object_values'][$value];
         }
 
         if ($key == 'datevalidation')
@@ -189,11 +180,4 @@ foreach ($data as $reply_id => $detail)
         }
     }
 }
-
-
-/*
- * ploopi_print_r($data);
-
- * ploopi_print_r($data_title);
-*/
 ?>

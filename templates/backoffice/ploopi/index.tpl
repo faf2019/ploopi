@@ -118,9 +118,7 @@
         <!-- END workspace -->
         <a class="{MAINMENU_SHOWTICKETS_SEL}" href="{MAINMENU_SHOWTICKETS_URL}">{MAINMENU_TICKETS}
         <em id="tpl_ploopi_tickets_new">
-        <!-- BEGIN switch_newtickets -->
         ({NEWTICKETS})
-        <!-- END switch_newtickets -->
         </em>
         </a>
         <a class="{MAINMENU_SHOWANNOTATIONS_SEL}" href="{MAINMENU_SHOWANNOTATIONS_URL}">{MAINMENU_ANNOTATIONS}</a>

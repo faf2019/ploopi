@@ -1,3 +1,15 @@
+== Module FORMS - version 2.15 =====================================================
+
+2008-04-17  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Ajout d'une fonction d'export de données forms_getdata()
+
+== Module FORMS - version 2.141 ====================================================
+
+2008-04-16  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un pb de chargement d'image manquante
+
 == Module FORMS - version 2.13 ====================================================
 
 2008-04-11  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

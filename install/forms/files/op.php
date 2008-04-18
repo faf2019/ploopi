@@ -105,6 +105,7 @@ switch($ploopi_op)
             ploopi_init_module('forms', false, false, false);
             include_once './modules/forms/class_form.php';
 
+            $forms_fuid = $_GET['forms_fuid'];
             $id_form = $_SESSION['forms'][$_GET['forms_fuid']]['id_form'];
             $id_module = $_SESSION['forms'][$_GET['forms_fuid']]['id_module'];
 
@@ -120,6 +121,7 @@ switch($ploopi_op)
             ploopi_init_module('forms', false, false, false);
             include_once './modules/forms/class_form.php';
 
+            $forms_fuid = $_GET['forms_fuid'];
             $id_form = $_SESSION['forms'][$_GET['forms_fuid']]['id_form'];
             $id_module = $_SESSION['forms'][$_GET['forms_fuid']]['id_module'];
 

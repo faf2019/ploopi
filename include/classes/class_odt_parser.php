@@ -57,11 +57,11 @@ class odt_parser
     }
 
     // conversion des espaces au "format" OpenDocument, sinon ils ne sont pas interprétés
-    function _convert_spaces($matches)
+    /*function _convert_spaces($matches)
     {
         if (strlen($matches[0])>1) return(' <text:s text:c="'.(strlen($matches[0])-1).'"/>');
         else return(' ');
-    }
+    }*/
 
     // encodage utf8 + xml
     function _utf8_encode($value)
@@ -76,9 +76,7 @@ class odt_parser
     {
         $value = html_entity_decode($value, ENT_QUOTES, 'ISO-8859-15');
         $value = $this->_utf8_encode($value);
-        $value = preg_replace_callback('/\s\s+/',array('self','_convert_spaces'),$value);
-
-
+        //$value = preg_replace_callback('/\s\s+/',array('self','_convert_spaces'),$value);
         //$value = str_replace('&amp;','aamp;',$value);
         return($value);
     }
@@ -134,6 +132,7 @@ class odt_parser
                     $this->content_xml = str_replace('{'.$blockname.'}', $tpl_res, $this->content_xml);
                 }
             }
+
             // le reste
             $varparser = new odt_varparser();
             $varparser->parse($this->content_xml, $this->vars);
