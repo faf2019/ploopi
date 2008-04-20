@@ -512,6 +512,7 @@ switch($ploopi_op)
     break;
 
     case 'documents_openfolder':
+        ob_start();
         include_once './include/classes/class_documentsfolder.php';
         $documentsfolder = new documentsfolder();
 
@@ -602,6 +603,7 @@ switch($ploopi_op)
     break;
 
     case 'documents_openfile':
+        ob_start();
         include_once './include/classes/class_documentsfile.php';
         $documentsfile = new documentsfile();
 
