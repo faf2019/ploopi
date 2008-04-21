@@ -40,7 +40,7 @@ switch($http_host)
 		define ('_PLOOPI_MAXFILESIZE', '16777216');
 
 		define ('_PLOOPI_USE_CGIUPLOAD', <CGI>);
-		define ('_PLOOPI_CGI_PATH', realpath('<CGIPATH>'));
+		define ('_PLOOPI_CGI_PATH', '<CGIPATH>');
 		define ('_PLOOPI_CGI_UPLOADTMP', realpath('<TMPPATH>'));
 
 		define ('_PLOOPI_SESSIONTIME','3600'); // time in second
