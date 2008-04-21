@@ -24,7 +24,7 @@
 //Installation
 define ('_PLOOPI_INSTALL_TITLE',            'Installation PLOOPI');
 
-define ('_PLOOPI_INSTALL_TEXT',             'Bienvenu dans l\'installation de PLOOPI...');
+define ('_PLOOPI_INSTALL_TEXT',             'Bienvenue dans l\'installation de PLOOPI...');
 
 define ('_PLOOPI_INSTALL_YES',              'oui');
 define ('_PLOOPI_INSTALL_NO',               'non');
@@ -39,9 +39,9 @@ define ('_PLOOPI_INSTALL_MORE_PARAM',       'Paramétrage avancé - cliquez ici.')
 // Menu
 // define ('_PLOOPI_INSTALL_LANGUAGE_AND_CTRL','Sélection du langage et contrôle des minimums requis');
 define ('_PLOOPI_INSTALL_LANGUAGE_AND_CTRL','Contrôle des minimums requis');
-define ('_PLOOPI_INSTALL_PARAM_INSTALL',    'Paramétrages de l\'installation');
-define ('_PLOOPI_INSTALL_PARAM_DB',         'Paramétrage de la Base de donnés');
-define ('_PLOOPI_INSTALL_END',              'Installation Terminé');
+define ('_PLOOPI_INSTALL_PARAM_INSTALL',    'Paramétrage de l\'installation');
+define ('_PLOOPI_INSTALL_PARAM_DB',         'Paramétrage de la Base de données');
+define ('_PLOOPI_INSTALL_END',              'Installation Terminée');
 
 // Button
 define ('_PLOOPI_INSTALL_NEXT_BUTTON',      'Etape suivante >>');
@@ -120,7 +120,7 @@ define ('_PLOOPI_INSTALL_CONFIG_WRITE',          'Ecriture dans le répertoire "c
 define ('_PLOOPI_INSTALL_CONFIG_WRITE_WARNING',  'Vous devez donner à apache les droits en écriture sur le répertoire "./config"');
 
 define ('_PLOOPI_INSTALL_CONFIG_MODEL',          'Contrôle du fichier modèle de configuration');
-define ('_PLOOPI_INSTALL_CONFIG_MODEL_WARNING',  'Le fichier config.php.model est manquant ou ne peut être lu.');
+define ('_PLOOPI_INSTALL_CONFIG_MODEL_WARNING',  'Le fichier config.php.model est manquant ou ne peut pas être lu.');
 
 // Data Directory
 define ('_PLOOPI_INSTALL_SELECT_DATA',       '<sup>* </sup>Répertoire d\'enregistrement des fichiers:');
@@ -208,11 +208,11 @@ define ('_PLOOPI_INSTALL_DB_DATABASE_SELECT_NEW',   '-- Nouvelle Base --');
 
 define ('_PLOOPI_INSTALL_DB_ERR_CONNECT',    'Impossible de se connecter à la base');
 define ('_PLOOPI_INSTALL_DB_ERR_TEST',       'Impossible de réaliser les tests nécessaires');
-define ('_PLOOPI_INSTALL_DB_ERR_NAME_DB',    'Le nom de la base de donnée doit être renseigné');
+define ('_PLOOPI_INSTALL_DB_ERR_NAME_DB',    'Le nom de la base de données doit être renseigné');
 
 define ('_PLOOPI_INSTALL_DATA_BASE_CREATE_DB',        'Création de la base de données \'%1s\'');
 //define ('_PLOOPI_INSTALL_DATA_BASE_CREATE_DB_WARNING','Pour créer la nouvelle base de donnée \'%1s\', le compte \'%2s\' doit avoir des droits de \'CREATE DATABASE\'.');
-define ('_PLOOPI_INSTALL_DATA_BASE_USE',              'Utilisation de la base de donnée \'%1s\'');
+define ('_PLOOPI_INSTALL_DATA_BASE_USE',              'Utilisation de la base de données \'%1s\'');
 //define ('_PLOOPI_INSTALL_DATA_BASE_USE_WARNING',      'Impossible d\'utiliser la base de donnée \'%1s\'');
 define ('_PLOOPI_INSTALL_DATA_BASE_PLOOPI_EXIST',     'Attention %1s contient des données d\'un autre site ploopi.');
 define ('_PLOOPI_INSTALL_DATA_BASE_PLOOPI_EXIST_FIELD', 'Ecraser la base existante ?');
