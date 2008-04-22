@@ -45,7 +45,7 @@ echo $skin->open_simplebloc('Salle de discussion');
 <p id="chat_inputbox" class="ploopi_va">
     <span>&nbsp;Nouveau message&nbsp;:&nbsp;</span>
     <input type="text" class="text" id="chat_msg" />
-    <input type="submit" class="button" value="Envoyer" />
+    <input type="submit" class="button" id="chat_msg_submit" value="Envoyer" />
 </p>
 </form>
 

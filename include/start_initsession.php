@@ -34,8 +34,8 @@ $workspaces = array();
 
 while ($fields = $db->fetchrow())
 {
-    $web_domain_array = split("\r\n",$fields['web_domainlist']);
-    $admin_domain_array = split("\r\n",$fields['admin_domainlist']);
+    $web_domain_array = split("\r\n",preg_replace('/\s*/','', $fields['web_domainlist']));
+    $admin_domain_array = split("\r\n",preg_replace('/\s*/','', $fields['admin_domainlist']));
 
     $workspaces[$fields['id']] = $fields;
     $workspaces[$fields['id']]['parents_array'] = split(';',$workspaces[$fields['id']]['parents']);

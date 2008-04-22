@@ -159,7 +159,7 @@ if ($ploopi_initsession)
 
         // get all workspaces of current user
         $user_workspaces = $user->getworkspaces();
-
+        
         $workspace = new workspace();
         $workspace->fields['id'] = _PLOOPI_SYSTEMGROUP;
         $_SESSION['ploopi']['system_modules'] = $workspace->getmodules(TRUE);

@@ -29,7 +29,7 @@ if (ploopi_ismoduleallowed('chat'))
             include_once './include/functions/date.php';
             ploopi_init_module('chat', false, false, false);
             
-            $arrData = array('connected' => array(), 'msg' => array(), 'lastmsgid' => 0);
+            $arrData = array('connected' => array(), 'msg' => array(), 'lastmsgid' => -1);
             
             // mise à jour de la liste des utilisateurs connectés
             chat_connected_update();
@@ -55,7 +55,7 @@ if (ploopi_ismoduleallowed('chat'))
             
             $arrData['connected'] = $db->getarray();
             
-            if (isset($_POST['chat_last_msg_id']) && is_numeric($_POST['chat_last_msg_id']) && $_POST['chat_last_msg_id'] > 0)
+            if (isset($_POST['chat_last_msg_id']) && is_numeric($_POST['chat_last_msg_id']) && $_POST['chat_last_msg_id'] > -1)
             {
                 // on récupère la liste des nouveaux messages
                 $sql =  "

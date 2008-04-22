@@ -19,9 +19,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-var chat_last_msg_id = 0;   // id du dernier message reçu, permet de ne demander que les messages non reçus
+var chat_last_msg_id = -1;   // id du dernier message reçu, permet de ne demander que les messages non reçus
 var chat_pe_refresh = null; // timer pour le rafraichissement auto
 var chat_pe_refresh_ts = 2; // tps en seconde entre chaque rafraichissement
+var chat_msg_sending = false; // à vrai si envoi d'un msg en cours
 
 /* 
  * Rafraichissement auto du chat au chargement de la page (onload)
@@ -56,7 +57,7 @@ function chat_refresh()
                             {
                                 if (json['connected'])
                                 {
-                                    // Suppresion de la liste des utilisateurs connectés
+                                    // Suppression de la liste des utilisateurs connectés
                                     // On recherche tous les éléments en fonction du sélecteur css
                                     $$('#chat_userbox_list div.chat_userprofile').each(function(item) {
                                         $('chat_userbox_list').removeChild(item);  
@@ -131,26 +132,33 @@ function chat_refresh()
 
 function chat_msg_send()
 {
-    chat_pe_refresh.stop();
     
-    new Ajax.Request('index-quick.php',
-        {
-            method:     'post',
-            parameters: {ploopi_op: 'chat_msg_send', chat_msg: $('chat_msg').value},
-            encoding:   'iso-8859-15',
-            onSuccess:  function(transport) 
-            {
-            	$('chat_msg').value = '';
-            	$('chat_msg').focus
-                chat_refresh();
-                chat_pe_refresh = new PeriodicalExecuter(function(pe) { chat_refresh(); }, chat_pe_refresh_ts);
-            },
-            onException: function(xhr, e)
-			{
-                chat_refresh();
-                chat_pe_refresh = new PeriodicalExecuter(function(pe) { chat_refresh(); }, chat_pe_refresh_ts);
-			    //alert(e);
-			}
-        }
-    );
+    if (!chat_msg_sending && $('chat_msg').value != '')
+    {
+    	chat_msg_sending = true;
+	    chat_pe_refresh.stop();
+	    
+	    new Ajax.Request('index-quick.php',
+	        {
+	            method:     'post',
+	            parameters: {ploopi_op: 'chat_msg_send', chat_msg: $('chat_msg').value},
+	            encoding:   'iso-8859-15',
+	            onSuccess:  function(transport) 
+	            {
+	            	$('chat_msg').value = '';
+	            	$('chat_msg').focus
+	                chat_refresh();
+	                chat_pe_refresh = new PeriodicalExecuter(function(pe) { chat_refresh(); }, chat_pe_refresh_ts);
+	                chat_msg_sending = false;
+	            },
+	            onException: function(xhr, e)
+				{
+	                chat_refresh();
+	                chat_pe_refresh = new PeriodicalExecuter(function(pe) { chat_refresh(); }, chat_pe_refresh_ts);
+	                chat_msg_sending = false;
+				    //alert(e);
+				}
+	        }
+	    );
+    }
 }
