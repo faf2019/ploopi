@@ -504,7 +504,7 @@ switch($ploopi_op)
         }
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<? echo $_POST['currentfolder']; ?>', '<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $_SESSION['documents']['mode']; ?>')
+            window.parent.ploopi_documents_browser('<? echo $_POST['currentfolder']; ?>', '<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $_SESSION['documents']['mode']; ?>');
             window.parent.ploopi_hidepopup('ploopi_documents_openfolder_popup');
         </script>
         <?
@@ -595,7 +595,7 @@ switch($ploopi_op)
         $error = $documentsfile->save();
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<? echo $_POST['currentfolder']; ?>', '<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $_SESSION['documents']['mode']; ?>')
+            window.parent.ploopi_documents_browser('<? echo $_POST['currentfolder']; ?>', '<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $_SESSION['documents']['mode']; ?>');
             window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
         </script>
         <?
