@@ -482,7 +482,7 @@ else
     <?
     if ($type == 'draft')
     {
-        if (in_array($_SESSION['ploopi']['userid'],$wfusers))
+        if ($op != 'article_addnew' && in_array($_SESSION['ploopi']['userid'],$wfusers))
         {
             ?>
             <input class="flatbutton" style="font-weight:bold;" type="submit" name="publish" value="Publier">
@@ -524,7 +524,7 @@ else
     <?
     if ($type == 'draft')
     {
-        if (in_array($_SESSION['ploopi']['userid'],$wfusers))
+        if ($op != 'article_addnew' && in_array($_SESSION['ploopi']['userid'],$wfusers))
         {
             ?>
             <input class="flatbutton" style="font-weight:bold;" type="submit" name="publish" value="Publier">

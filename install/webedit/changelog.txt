@@ -1,3 +1,10 @@
+== Module WebEdit - version 1.41 ===================================================
+
+2008-04-22  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Ajout du type 'plan de site ' comme contenu de rubrique
+ * Evolution du type 'affichage des sous-rubriques' : ajout des articles de la rubrique courante
+
 == Module WebEdit - version 1.40 ===================================================
 
 2008-04-16  Stéphane Escaich  <stephane@ovensia.fr>

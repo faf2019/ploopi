@@ -19,6 +19,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 div.webedit_tree {
     float:left;
     width:20%;
@@ -146,5 +147,46 @@ div.webedit_row {
 }
 
 #webedit_suggestions sup {
-font-size:8px;
+    font-size:8px;
+}
+
+
+
+/* FORMULAIRES */
+
+.webedit_form {
+    overflow:hidden;
+}
+
+.webedit_form p {
+	clear:both;
+	overflow:auto;
+	margin:0;
+	padding:2px 0;
+}
+
+.webedit_form p label {
+	display:block;
+	float: left;
+	margin-left:2px;
+	width: 30%;
+	text-align: right;
+}
+
+.webedit_form p span {
+	margin-left:5px;
+	float:left;
+}
+
+.webedit_form p fieldset {
+	border:1px solid #a0a0a0;
+	padding:0;
+	margin:0 5px;
+	background-color:#e8e8e8;
+}
+
+.webedit_form p legend {
+	font-weight:bold;
+	margin-bottom:2px;
+	margin-left:4px;
 }

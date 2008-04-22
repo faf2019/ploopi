@@ -493,7 +493,7 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
 
 
 
-function webedit_template_assign_headings($headings, $hid, $depth = 1, $var = 'switch_content_heading.', $link = '')
+function webedit_template_assign_headings($headings, $hid, $var = 'switch_content_heading.', $prefix = 'subheading', $depth = 1, $link = '')
 {
     global $template_body;
     global $webedit_mode;
@@ -505,7 +505,7 @@ function webedit_template_assign_headings($headings, $hid, $depth = 1, $var = 's
         {
             $detail = $headings['list'][$id];
 
-            $localvar = "{$var}subheading{$depth}";
+            $localvar = "{$var}{$prefix}{$depth}";
 
             $locallink = ($link!='') ? "{$link}-{$id}" : "{$id}";
 
@@ -545,7 +545,7 @@ function webedit_template_assign_headings($headings, $hid, $depth = 1, $var = 's
                     
                     
 
-                if (isset($headings['tree'][$id])) webedit_template_assign_headings(&$headings, $id, $depth+1, "{$localvar}.", $locallink);
+                if (isset($headings['tree'][$id])) webedit_template_assign_headings(&$headings, $id, "{$localvar}.", $prefix, $depth+1, $locallink);
             }
         }
     }
@@ -635,6 +635,12 @@ function webedit_record_isenabled($id_object, $id_record, $id_module)
             $article = new webedit_article();
             if ($article->open($id_record)) return($article->isenabled());
         break;
+
+        case _WEBEDIT_ACTION_ARTICLE_EDIT;
+            //if (ploopi_isactionallowed(-1,$_SESSION['ploopi']['workspaceid'],$menu_moduleid))
+            $enabled = true;
+        break;
+        
     }
 
     return($enabled);

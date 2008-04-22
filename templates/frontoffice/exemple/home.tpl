@@ -119,6 +119,13 @@
 					<!-- END switch_content_phpdig -->
 					
                     <!-- BEGIN switch_content_heading -->
+                        <!-- BEGIN page -->
+                            <a class="headings_page" href="{switch_content_heading.page.LINK}">
+                                <img src="{TEMPLATE_PATH}/gfx/page.png" />
+                                <span><b>{switch_content_heading.page.LABEL}</b><br />{switch_content_heading.page.DATE}</span>
+                            </a>
+                        <!-- END page -->
+
                         <!-- BEGIN subheading1 -->
                             <a class="subheading1" href="{switch_content_heading.subheading1.LINK}">
                                 <img src="{TEMPLATE_PATH}/gfx/folder.png" />
@@ -132,6 +139,35 @@
                             
                         <!-- END subheading1 -->
                     <!-- END switch_content_heading -->
+                    
+                    <!-- BEGIN switch_content_sitemap -->
+                        <h2>Plan du site</h2>
+                        <div id="sitemap">
+                            <!-- BEGIN heading0 -->
+                                <a href="{switch_content_sitemap.heading0.LINK}">{switch_content_sitemap.heading0.LABEL}</a>
+                                <div class="sitemap_heading1">
+                                    <!-- BEGIN heading1 -->
+                                        <a href="{switch_content_sitemap.heading0.heading1.LINK}">{switch_content_sitemap.heading0.heading1.LABEL}</a>
+                                        <div class="sitemap_heading2">
+                                            <!-- BEGIN heading2 -->
+                                                <a href="{switch_content_sitemap.heading0.heading1.heading2.LINK}">{switch_content_sitemap.heading0.heading1.heading2.LABEL}</a>
+                                                <div class="sitemap_heading3">
+                                                <!-- BEGIN heading3 -->
+                                                    <a href="{switch_content_sitemap.heading0.heading1.heading2.heading3.LINK}">{switch_content_sitemap.heading0.heading1.heading2.heading3.LABEL}</a>
+                                                    <div class="sitemap_heading4">
+                                                    <!-- BEGIN heading4 -->
+                                                        <a href="{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LINK}">{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LABEL}</a>
+                                                    <!-- END heading3 -->
+                                                    </div>
+                                                <!-- END heading3 -->
+                                                </div>
+                                            <!-- END heading2 -->
+                                        </div>
+                                    <!-- END heading1 -->
+                                </div>
+                            <!-- END heading0 -->
+                        </div>
+                    <!-- END switch_content_sitemap -->                    
 					
 				</div>
 			</div>

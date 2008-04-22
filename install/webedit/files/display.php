@@ -175,6 +175,19 @@ webedit_template_assign($headings, $array_nav, 0, '', 0);
 
 if ($query_string == '') // affichage standard rubrique/page
 {
+    
+    if($headings['list'][$headingid]['content_type'] == 'headings' && empty($articleid)) // affichage rubriques
+    {
+       $template_body->assign_block_vars('switch_content_heading', array());
+       webedit_template_assign_headings($headings, $headingid);
+    }    
+    
+    if($headings['list'][$headingid]['content_type'] == 'sitemap' && empty($articleid)) // affichage plan de site
+    {
+       $template_body->assign_block_vars('switch_content_sitemap', array());
+       webedit_template_assign_headings($headings, 0, 'switch_content_sitemap.', 'heading', 0);
+    }    
+    
     // détermination du type de tri des articles
     switch($headings['list'][$headingid]['sortmode'])
     {
@@ -271,7 +284,7 @@ if ($query_string == '') // affichage standard rubrique/page
                 $ldate_lastupdate = ($row['lastupdate_timestp']!='') ? ploopi_timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
                 $ldate_timestp = ($row['timestp']!='') ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
     
-                $template_body->assign_block_vars('page',array(
+                $var_tpl_page = array(
                     'REFERENCE'     => htmlentities($row['reference']),
                     'LABEL'         => htmlentities($row['title']),
                     'CONTENT'       => htmlentities($row['content']),
@@ -285,7 +298,15 @@ if ($query_string == '') // affichage standard rubrique/page
                     'LINK'          => $script,
                     'POSITION'      => $row['position'],
                     'SEL'           => $sel
-                ));
+                );
+                
+                $template_body->assign_block_vars('page', $var_tpl_page);
+                
+                if ($headings['list'][$headingid]['content_type'] == 'headings' && empty($articleid)) // affichage rubriques
+                {
+                    $template_body->assign_block_vars('switch_content_heading.page', $var_tpl_page);
+                }
+                
     
                 if ($numvisart < $nbvisart) $template_body->assign_block_vars('page.sw_separator',array());
             }
@@ -295,10 +316,10 @@ if ($query_string == '') // affichage standard rubrique/page
     // fichier template par défaut
     $template_file = 'index.tpl';
 
-    // cas particulier ou aucun article en page d'accueil
+    // si homepage et home.tpl existe alors on le prend
     if (empty($articleid) && !empty($headingid) && $headings['tree'][0][0] == $headingid && file_exists("./templates/frontoffice/{$template_name}/home.tpl")) $template_file = 'home.tpl';
 
-    if (!empty($articleid))
+    if (!empty($articleid)) // article à afficher
     {
         $content = '';
         $ishomepage = false;
@@ -420,17 +441,7 @@ if ($query_string == '') // affichage standard rubrique/page
                                     )
                                 );
     }
-    else
-    {
-        if ($headings['list'][$headingid]['content_type'] == 'headings') // affichage rubriques
-        {
-            $template_body->assign_block_vars("switch_content_heading", array());
-            
-            
-            webedit_template_assign_headings($headings, $headingid);
-            
-        }
-    }
+
     
 }
 else // RECHERCHE
