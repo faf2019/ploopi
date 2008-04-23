@@ -60,8 +60,7 @@
 
     <script type="text/javascript" src="{TEMPLATE_PATH}/js/styleswitcher.js"></script>
 
-    <script type="text/javascript">
-    //<!--
+ <script type="text/javascript">
     {ADDITIONAL_JAVASCRIPT}
 
     <!-- BEGIN switch_user_logged_in -->
@@ -72,12 +71,11 @@
         {
             while (obj.offsetParent)
             {
-                curleft += obj.offsetLeft
+                curleft += obj.offsetLeft;
                 obj = obj.offsetParent;
             }
         }
-        else if (obj.x)
-            curleft += obj.x;
+        else if (obj.x) curleft += obj.x;
         return curleft;
     }
 
@@ -88,12 +86,11 @@
         {
             while (obj.offsetParent)
             {
-                curtop += obj.offsetTop
+                curtop += obj.offsetTop;
                 obj = obj.offsetParent;
             }
         }
-        else if (obj.y)
-            curtop += obj.y;
+        else if (obj.y) curtop += obj.y;
         return curtop;
     }
 
@@ -101,8 +98,8 @@
     {
         cible = $(blockid);
 
-        if (!action) { cible.style.visibility = 'hidden'; } // cacher
-        else // afficher
+        if (!action) cible.style.visibility = 'hidden'; 
+        else
         {
             x = 0;
             y = 0;
@@ -113,8 +110,8 @@
             }
             if (cible.innerHTML.length > 60)
             {
-                if (x!=0) cible.style.left = x+'px';
-                if (y!=0) cible.style.top = (y+22)+'px';//decaler de 22 px vers le bas
+                if (x!=0) cible.style.left = (x-2)+'px';
+                if (y!=0) cible.style.top = (y+22)+'px';
                 cible.style.visibility = 'visible';
             }
         }
@@ -130,7 +127,6 @@
         <!-- END switch_blockmenu -->
     }
     <!-- END switch_user_logged_in -->
-    //-->
     </script>
 
     {ADDITIONAL_HEAD}

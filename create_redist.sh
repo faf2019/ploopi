@@ -1,6 +1,6 @@
 #!/bin/sh
-export DEST=ploopi_1.0RC2c
-export YUIVER='-2.3.4'
+export DEST=ploopi_1.0RC3
+export YUIVER='-2.3.5'
 
 #################################
 # on cree le dossier
@@ -33,6 +33,7 @@ rm $DEST/config/config.php
 
 mkdir $DEST/install
 #cp -r install/agenda $DEST/install
+cp -r install/chat $DEST/install
 cp -r install/directory $DEST/install
 cp -r install/doc $DEST/install
 cp -r install/forms $DEST/install

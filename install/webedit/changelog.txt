@@ -1,3 +1,9 @@
+== Module WebEdit - version 1.411 ===================================================
+
+2008-04-23  Stéphane Escaich  <stephane@ovensia.fr>
+
+ * Correction d'un bug sur l'affichage des articles par date
+
 == Module WebEdit - version 1.41 ===================================================
 
 2008-04-22  Stéphane Escaich  <stephane@ovensia.fr>

@@ -192,11 +192,11 @@ if ($query_string == '') // affichage standard rubrique/page
     switch($headings['list'][$headingid]['sortmode'])
     {
         case 'bydate':
-            $article_orderby = 'timestp DESC';
+            $article_orderby = 'timestp DESC, id DESC';
         break;
     
         case 'bydaterev':
-            $article_orderby = 'timestp';
+            $article_orderby = 'timestp, id';
         break;
     
         case 'bypos':

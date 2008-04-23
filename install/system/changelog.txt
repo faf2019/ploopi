@@ -1,3 +1,45 @@
+== Ploopi - version 1.0 RC3 ===================================================
+
+2008-04-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+  - Correctif sur la fonctionnalité "documents" lors de son utilisation avec l'activation du mode "compression"
+  - Procédure d'installation : corrections dans le fichier de langue french.php
+  - Procédure d'installation : Correction d'un problème dans le fichier modèle de configuration (CGIPATH)
+  - Correctif javascript dans la gestion interne des documents
+
+* Module Chat
+  - Ajout d'un module expérimental "chat" de discussion instantanée
+  
+* Module WebEdit
+  - Nouvelle version (plan de site)
+
+* Templates Frontoffice
+  - Mise à jour des templates exemple* pour intégrer la nouvelle fonctionnalité du module webedit
+
+== Ploopi - version 1.0 RC2c ===================================================
+
+2008-04-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+    
+* Ploopi
+  - Mise à jour automatique du nombre de tickets non lus (si le template le supporte)
+  - Affichage d'un popup si un nouveau message a été reçu
+  - Correctif sur la prise en charge de la compression des pages
+  - Parser ODT : Correctifs sur la gestion des CRLF
+  - Suppression fichier .htaccess
+  - Mise à jour fichier .htaccess_modele
+  - Correctif javascript sur le module système (bug quand la compression est activée)
+
+* Module Webedit
+  - Possibilité d'afficher les sous-rubriques à la place du contenu de l'article
+
+* Module Forms
+  - intégration d'une nouvelle fonction d'export de données
+  - correction des fonctionnalités d'intégration dans un autre module
+
+* Templates Frontoffice
+  - Mise à jour des templates exemple* pour intégrer la nouvelle fonctionnalité du module webedit
+
 == Ploopi - version 1.0 RC2b ===================================================
 
 2008-04-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

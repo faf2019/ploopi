@@ -30,6 +30,7 @@ body {
   /* background: #60a1da url(../gfx/fond.png) top center repeat-x; */
 }
 
+
 form {
   margin: 0;
   padding: 0;
@@ -53,8 +54,12 @@ a:hover {
   margin: 0 auto;
   width: 778px;
   background: url(../gfx/page_fond.png) top left repeat-y;
+  display:block;
 }
 
+#error {
+  display:none;
+}
 #entete {
   margin: 20px auto 0 auto;
   width: 778px;

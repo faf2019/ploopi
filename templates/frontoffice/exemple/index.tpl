@@ -164,7 +164,7 @@
                                                     <div class="sitemap_heading4">
 	                                                <!-- BEGIN heading4 -->
 	                                                    <a href="{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LINK}">{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LABEL}</a>
-	                                                <!-- END heading3 -->
+	                                                <!-- END heading4 -->
                                                     </div>
 	                                            <!-- END heading3 -->
                                                 </div>
