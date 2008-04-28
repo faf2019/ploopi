@@ -38,6 +38,8 @@ switch($ploopi_op)
         $_SESSION['documents']['mode'] = 'selectfile';
         $_SESSION['documents']['destfield'] = $_GET['destfield'];
 
+        ob_start();
+        
         ?>
         <div id="ploopidocuments_<? echo $_SESSION['documents']['documents_id']; ?>">
         <?

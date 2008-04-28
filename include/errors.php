@@ -47,7 +47,9 @@ $ploopi_errortype = array (
                             E_COMPILE_WARNING => 'Compile Warning',
                             E_USER_ERROR     => 'User Error',
                             E_USER_WARNING   => 'User Warning',
-                            E_USER_NOTICE    => 'User Notice'
+                            E_USER_NOTICE    => 'User Notice',
+                            E_STRICT         => 'Strict Notice',
+                            E_RECOVERABLE_ERROR => 'Recoverable Error'
                             );
 
 $ploopi_errorlevel = array (
@@ -89,14 +91,33 @@ function ploopi_errorhandler($errno, $errstr, $errfile, $errline, $vars)
 
         if ($ploopi_errors_msg == '') $ploopi_errors_msg  = "[{$_SERVER['HTTP_HOST']}] le ".date("d-m-Y H:i:s (T)")."\n\nVersion PHP : ".PHP_VERSION."\nOS : ".PHP_OS."\n\n";
 
-        $ploopi_errors_msg .= "\nType d'erreur : {$ploopi_errortype[$errno]}\nMessage : $errstr\nFichier : $errfile\nLigne : $errline\n";
-
+        $ploopi_errors_msg .= "\nType d'erreur : {$ploopi_errortype[$errno]}\nMessage : $errstr\n";
+        
+        $arrTrace = debug_backtrace();
+        if (_PLOOPI_DISPLAY_ERRORS) $strErrorStack = '';
+        
+        // parse debug trace
+        $s = sizeof($arrTrace);
+        for ($key = $s-1; $key>=0; $key--)
+        {
+            if (!empty($arrTrace[$key]['file']) && !empty($arrTrace[$key]['line'])) 
+            {
+                $ploopi_errors_msg .= sprintf("Fichier : %s \nLigne : %s\n", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
+                if (_PLOOPI_DISPLAY_ERRORS) $strErrorStack .= sprintf("<div style=\"margin-left:10px;\">at <strong>%s</strong>  <em>line %d</em></div>", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
+            }
+        }
+        
+            
         if (_PLOOPI_DISPLAY_ERRORS)
         {
             // display message
             echo    "
                     <div class=\"ploopi_error\">
-                    <b>{$ploopi_errortype[$errno]}</b> <span>$errstr</span> dans <b>$errfile</b> à la ligne <b>$errline</b>
+                        <div>
+                        <strong>{$ploopi_errortype[$errno]}</strong>
+                        <br /><span>{$errstr}</span>
+                        </div>
+                        {$strErrorStack}
                     </div>
                     ";
                     
