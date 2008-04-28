@@ -201,7 +201,8 @@ if (isset($ploopi_op))
                         <?
                     }
 
-                    echo '</div>';
+                    echo '</div>';        ploopi_die('la');
+                    
                 }
 
                 $localdate = ploopi_timestamp2local(sprintf("%04d%02d%02d000000", date('Y'), date('n'), date('j')));
@@ -225,6 +226,8 @@ if (isset($ploopi_op))
         include_once './include/op_subscriptions.php';
         include_once './include/op_workflow.php';
         include_once './include/op_tickets.php';
+        include_once './modules/system/op.php';
+        
         
         switch($ploopi_op)
         {
@@ -372,29 +375,25 @@ if (isset($ploopi_op))
                 $template_body->pparse('body');
                 ploopi_die();
             break;
-                    
-            
-            default: // look for ploopi_op in modules
-                if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
-                {
-                    foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $idm)
-                    {
-                        if (isset($_SESSION['ploopi']['modules'][$idm]))
-                        {
-                            if ($_SESSION['ploopi']['modules'][$idm]['active'])
-                            {
-                                $ploopi_mod_opfile = "./modules/{$_SESSION['ploopi']['modules'][$idm]['moduletype']}/op.php";
-                                if (file_exists($ploopi_mod_opfile)) include_once $ploopi_mod_opfile;
-                            }
-                        }
-    
-                    }
-                }
-                include_once "./modules/system/op.php";
-            break;
         }
-    
-        //ploopi_die('fonction non définie');
+        
     }
+    
+    if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
+    {
+        foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $idm)
+        {
+            if (isset($_SESSION['ploopi']['modules'][$idm]))
+            {
+                if ($_SESSION['ploopi']['modules'][$idm]['active'])
+                {
+                    $ploopi_mod_opfile = "./modules/{$_SESSION['ploopi']['modules'][$idm]['moduletype']}/op.php";
+                    if (file_exists($ploopi_mod_opfile)) include_once $ploopi_mod_opfile;
+                }
+            }
+
+        }
+    }
+
 }
 ?>

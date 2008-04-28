@@ -66,8 +66,6 @@ switch($http_host)
 		define ('_PLOOPI_USE_COMPLEXE_PASSWORD', false);
         define ('_PLOOPI_USE_OUTPUT_COMPRESSION', true);
 
-		define ('_PLOOPI_DEFAULT_TIMEZONE', 1); // GMT +1
-
 		// PEAR
 		define ('_PLOOPI_PEARPATH', '<PEARPATH>');
 

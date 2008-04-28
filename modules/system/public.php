@@ -85,6 +85,10 @@ switch($_SESSION['ploopi']['mainmenu'])
             case 'save_user':
                 $user = new user();
                 $user->open($_SESSION['ploopi']['userid']);
+                
+                if (!isset($_POST['user_ticketsbyemail'])) $user->fields['ticketsbyemail'] = 0;
+                if (!isset($_POST['user_servertimezone'])) $user->fields['servertimezone'] = 0;
+                
                 $user->setvalues($_POST,'user_');
 
                 // affectation nouveau password
@@ -100,16 +104,15 @@ switch($_SESSION['ploopi']['mainmenu'])
                 }
 
                 $user->save();
-                if ($passwordok) ploopi_redirect("{$scriptenv}?op=user&reloadsession");
-                else ploopi_redirect("{$scriptenv}?op=user&error=password");
+                if ($passwordok) ploopi_redirect("{$scriptenv}?op=profile&reloadsession");
+                else ploopi_redirect("{$scriptenv}?op=profile&error=password");
             break;
 
             case 'profile':
                 
                 echo $skin->create_pagetitle(_SYSTEM_LABEL_MYPROFILE);
                 
-                $user = new user();
-                $user->open($_SESSION['ploopi']['userid']);
+                
                 include './modules/system/public_user.php';
             break;
 

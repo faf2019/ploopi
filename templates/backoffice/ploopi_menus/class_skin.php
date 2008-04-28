@@ -108,6 +108,7 @@ class skin extends skin_common
     {
         $res =  '
                 <div class="simplebloc" style="margin:0;">
+                    <a name="anchor_'.$popupid.'"></a>
                     <div class="simplebloc_title">
                         <div class="simplebloc_titleleft">
                             <img alt="Fermer" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
@@ -118,7 +119,8 @@ class skin extends skin_common
                     <div class="simplebloc_footer"></div>
                 </div>
                 <script type="text/javascript">
-                new Draggable(\''.$popupid.'\', {handle: \'handle_'.$popupid.'\'});
+                new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\'});
+                document.location.href=\'#anchor_'.$popupid.'\';
                 </script>        
                 ';
 

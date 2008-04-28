@@ -26,6 +26,12 @@ $user = new user();
 if (!empty($_GET['user_id'])) $user->open($_GET['user_id']);
 else $user->init_description();
 
+// detect server timezone
+$date = date_create();
+$server_timezone = date_timezone_get($date);
+$server_timezoneid = timezone_name_get($server_timezone);
+if (empty($user->fields['timezone'])) $user->fields['timezone'] = $server_timezoneid;
+
 $user_date_expire = (!empty($user->fields['date_expire']) && $user->fields['date_expire'] != '00000000000000') ? ploopi_timestamp2local($user->fields['date_expire']) : array('date' => '');
 
 if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
@@ -178,21 +184,67 @@ if (isset($_REQUEST['error']))
                 <label><? echo _SYSTEM_LABEL_EMAIL; ?>:</label>
                 <input type="text" class="text" name="user_email"  value="<? echo htmlentities($user->fields['email']); ?>" tabindex="24" />
             </p>
-            <p>
+            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_ticketsbyemail');">
                 <label><? echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
-                <input style="width:16px;" type="checkbox" name="user_ticketsbyemail" value="1" <? if ($user->fields['ticketsbyemail']) echo 'checked'; ?> tabindex="25" />
+                <input style="width:16px;" type="checkbox" id="user_ticketsbyemail" name="user_ticketsbyemail" value="1" <? if ($user->fields['ticketsbyemail']) echo 'checked'; ?> tabindex="25" />
             </p>
-            <p>
+            
+            <?
+            // get server offset
+            $offset = timezone_offset_get($server_timezone, $date);
+            
+            $s = ($offset>0) ? '+' : '-';
+            
+            $hh = floor(abs($offset) / 3600);
+            $mm = floor((abs($offset) % 3600) / 60);            
+            ?>
+
+            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_servertimezone');">
+                <label><? echo _SYSTEM_LABEL_SERVERTIMEZONE; ?>:</label>
+                <span>
+                    <input style="width:16px;" type="checkbox" id="user_servertimezone" name="user_servertimezone" value="1" <? if ($user->fields['servertimezone']) echo 'checked'; ?> tabindex="25" onchange="$('user_timezone_choice').style.display = (this.checked) ? 'none' : 'block';"/>
+                    <? echo "{$server_timezoneid} (". (($offset == 0) ? 'UTC' : sprintf("GMT %s%02dh%02d",$s, $hh, $mm)). ")"; ?>
+                </span>
+            </p>
+
+            <p id="user_timezone_choice" style="display:<? echo ($user->fields['servertimezone']) ? 'none' : 'block'; ?>">
                 <label><? echo _SYSTEM_LABEL_TIMEZONE; ?>:</label>
+                <?
+                $timezone_abbreviations = timezone_abbreviations_list();
+                //ploopi_print_r($timezone_abbreviations);
+                
+                foreach($timezone_abbreviations as $value)
+                {
+                    foreach($value as $key => $value)
+                    {
+                        if (!empty($value['timezone_id']) && strpos($value['timezone_id'], '/') !== false) 
+                        {
+                            $offset = timezone_offset_get(timezone_open($value['timezone_id']), $date);
+                            
+                            //don't use $value['offset'] !;
+                            
+                            $s = ($offset>0) ? '+' : '-';
+                            
+                            $hh = floor(abs($offset) / 3600);
+                            $mm = floor((abs($offset) % 3600) / 60);
+                            
+                            $arrZones[$value['timezone_id']] = array(   'offset' => $offset,
+                                                                        'label' => str_replace(array('/', '_'), array(' / ', ' '), $value['timezone_id']),
+                                                                        'offset_display' => ($offset == 0) ? 'UTC' : sprintf("GMT %s%02dh%02d",$s, $hh, $mm)
+                                                                    );
+                        }
+                    }
+                }
+
+                ksort($arrZones);
+                
+                ?>
                 <select class="select" name="user_timezone"  tabindex="26">
                 <?
-                $tz_selected = ($user->fields['timezone'] != '') ? $user->fields['timezone'] : _PLOOPI_DEFAULT_TIMEZONE;
-
-                foreach ($ploopi_timezone as $t => $label)
+                foreach ($arrZones as $key => $value)
                 {
-
                     ?>
-                    <option value="<? echo $t; ?>" <? if ($t == $tz_selected) echo 'selected'; ?>><? echo $label; ?></option>
+                    <option value="<? echo htmlentities($key); ?>" <? if ($user->fields['timezone'] == $key) echo 'selected'; ?>><? echo htmlentities($value['label']); ?> (<? echo $value['offset_display']; ?>)</option>
                     <?
                 }
                 ?>

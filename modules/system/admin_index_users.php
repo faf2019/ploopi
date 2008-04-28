@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 include_once './modules/system/class_user.php';
 include_once './modules/system/class_workspace_group.php';
 
@@ -49,7 +48,8 @@ switch($op)
         }
 
         if (!isset($_POST['user_ticketsbyemail'])) $user->fields['ticketsbyemail'] = 0;
-        if (!empty($_POST['user_date_expire'])) echo $_POST['user_date_expire'] = ploopi_local2timestamp($_POST['user_date_expire']);
+        if (!isset($_POST['user_servertimezone'])) $user->fields['servertimezone'] = 0;
+        if (!empty($_POST['user_date_expire'])) $_POST['user_date_expire'] = ploopi_local2timestamp($_POST['user_date_expire']);
 
         $user->setvalues($_POST,'user_');
 

@@ -451,6 +451,14 @@ vertical-align: middle;
     cursor:pointer;
 }
 
+.ploopi_form p.checkbox {
+    cursor:pointer;
+    width:100%;
+}
+
+.ploopi_form p.checkbox label, .ploopi_form p.checkbox img, .ploopi_form p.checkbox input {
+    cursor:pointer;
+}
 
 .ploopi_form_title {
     display:block;

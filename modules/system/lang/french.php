@@ -150,6 +150,7 @@ define ('_SYSTEM_LABEL_MOBILE', 'Tél. Portable');
 define ('_SYSTEM_LABEL_FAX', 'Fax');
 define ('_SYSTEM_LABEL_EMAIL', 'Mèl');
 define ('_SYSTEM_LABEL_TICKETSBYEMAIL', 'Copie des tickets par Mèl');
+define ('_SYSTEM_LABEL_SERVERTIMEZONE', 'Synchronisé avec le fuseau horaire du serveur');
 define ('_SYSTEM_LABEL_FUNCTION', 'Fonction');
 define ('_SYSTEM_LABEL_SERVICE', 'Service');
 define ('_SYSTEM_LABEL_COLOR', 'Couleur');
