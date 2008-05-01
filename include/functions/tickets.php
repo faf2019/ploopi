@@ -25,9 +25,15 @@ define ('_PLOOPI_TICKETS_NONE',     0);
 define ('_PLOOPI_TICKETS_OPENED',   1);
 define ('_PLOOPI_TICKETS_DONE',     2);
 
-function ploopi_tickets_selectusers()
+function ploopi_tickets_selectusers($id_user = null)
 {
     if (isset($_SESSION['ploopi']['tickets']['users_selected'])) unset($_SESSION['ploopi']['tickets']['users_selected']);
+    
+    if (!empty($id_user))
+    {
+        if (is_array($id_user)) foreach($id_user as $idu) $_SESSION['ploopi']['tickets']['users_selected'][] = $idu;
+        else $_SESSION['ploopi']['tickets']['users_selected'][] = $id_user;
+    }
     ?>
     <p class="ploopi_va">
         <span>Recherche destinataires:</span>
@@ -38,6 +44,7 @@ function ploopi_tickets_selectusers()
     </div>
     <div style="font-weight:bold;">Destinataires qui vont recevoir un message :</div>
     <div id="div_ticket_users_selected" style="padding:2px 0 0 0;">
+    <? ploopi_tickets_displayusers(); ?>
     </div>
     <?
 }
@@ -48,6 +55,8 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
     include_once './modules/system/class_ticket.php';
     include_once './modules/system/class_ticket_dest.php';
     include_once './modules/system/class_mb_object.php';
+    
+    global $basepath;
 
     /*if ($message == '')
     {
@@ -113,7 +122,7 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
                                         $mb_object->fields['script']
                             );
 
-            $url = _PLOOPI_BASEPATH.'/'.ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}");
+            $url = $basepath.'/'.ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}");
 
             $tplmail->assign_vars(array(
                 'OBJECT_URL' => $url,
@@ -151,9 +160,9 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
         $email_subject = strip_tags("[TICKET] - {$title}");
 
         $tplmail->assign_vars(array(
-            'USER_FROM_NAME' => $email_from[0]['name'].' ['._PLOOPI_BASEPATH.']',
+            'USER_FROM_NAME' => $email_from[0]['name'].' ['.$basepath.']',
             'USER_FROM_EMAIL' => $email_from[0]['address'],
-            'HTTP_HOST' => _PLOOPI_BASEPATH,
+            'HTTP_HOST' => $basepath,
             'MAIL_CONTENT' => $email_message
             )
         );
@@ -218,6 +227,30 @@ function ploopi_tickets_getnew()
     $tickets_lastid = ($row = $db->fetchrow()) ? $row['id'] : 0;
 
     return(array($tickets_new, $tickets_lastid));
+}
+
+
+function ploopi_tickets_displayusers()
+{
+    global $skin;
+    
+    foreach($_SESSION['ploopi']['tickets']['users_selected'] as $user_id)
+    {
+        include_once('./modules/system/class_user.php');
+
+        $user = new user();
+        $user->open($user_id);
+
+        $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
+        ?>
+        <p class="ploopi_va" style="padding:2px;">
+            <a class="system_tickets_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=tickets_select_user&remove_user_id=<? echo $user->fields['id']; ?>','','div_ticket_users_selected');">
+                <img src="./img/icon_delete.gif">
+                <span><? echo "{$user->fields['lastname']} {$user->fields['firstname']} (Cliquez pour supprimer)"; ?></span>
+            </a>
+        </p>
+        <?
+    }
 }
 ?>
 

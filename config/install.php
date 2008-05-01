@@ -512,10 +512,10 @@ if($_POST['stage']>=2)
                                      'input' => '<input name="site_name" id="site_name" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<SITE_NAME>'].'"/>',
                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SITE_NAME_JS).'\',form.site_name,\'string\')'
                                     ),*/
-                               array('label' => _PLOOPI_INSTALL_URL_BASE,
+                               /*array('label' => _PLOOPI_INSTALL_URL_BASE,
                                      'input' => '<input name="url_base" id="url_base" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<BASEPATH>'].'"/>',
                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_URL_BASE_JS).'\',form.url_base,\'string\')'
-                                    ),
+                                    ),*/
                                array('label' => _PLOOPI_INSTALL_ADMIN_LOGIN,
                                      'input' => '<input name="log_admin" id="log_admin" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<ADMIN_LOGIN>'].'"/>',
                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_ADMIN_LOGIN_JS).'\',form.log_admin,\'string\')'

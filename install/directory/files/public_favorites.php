@@ -31,8 +31,8 @@ $values = array();
 $columns['auto']['groups'] = array('label' => _DIRECTORY_GROUPS,    'options' => array('sort' => true));
 $columns['left']['type'] = array('label' => _DIRECTORY_TYPE,        'width' => 90, 'options' => array('sort' => true));
 $columns['left']['name'] = array('label' => _DIRECTORY_NAME,        'width' => 150, 'options' => array('sort' => true));
-$columns['left']['login'] = array('label' => _DIRECTORY_LOGIN,      'width' => 100, 'options' => array('sort' => true));
 $columns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+$columns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
 $columns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
 $columns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
 $columns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
@@ -77,13 +77,14 @@ while ($row = $db->fetchrow()) $result[] = $row;
 $c = 0;
 foreach($result as $row)
 {
-    $email = ($row['email']) ? '<img src="./modules/directory/img/ico_email.png">' : '';
+    $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
+    $ticket = '';
     
     switch ($row['usertype'])
     {
         case 'user':
             $actions =  '
-                        <a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>
                         <a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\', \'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>
                         ';
             
@@ -107,6 +108,7 @@ foreach($result as $row)
 
             $values[$c]['link'] = 'javascript:void(0);';
             $values[$c]['onclick'] = "javascript:directory_view(event, '{$row['id']}', '');";
+            $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img src="./modules/directory/img/ico_ticket.png"></a>';
         break;
 
         case 'contact':
@@ -126,12 +128,12 @@ foreach($result as $row)
     
     $values[$c]['values']['type'] = array('label' => $level_display);
     $values[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
-    $values[$c]['values']['login'] = array('label' => $row['login']);
     $values[$c]['values']['groups'] = array('label' => $workspaces_list);
     $values[$c]['values']['service'] = array('label' => $row['service']);
     $values[$c]['values']['function'] = array('label' => $row['function']);
     $values[$c]['values']['phone'] = array('label' => $row['phone']);
     $values[$c]['values']['email'] = array('label' => $email);
+    $values[$c]['values']['ticket'] = array('label' => $ticket);
     $values[$c]['values']['actions'] = array('label' => $actions);
 
     $values[$c]['description'] = "{$row['lastname']} {$row['firstname']}";

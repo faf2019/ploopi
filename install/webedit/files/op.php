@@ -21,46 +21,49 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-switch($_REQUEST['ploopi_op'])
+if ($_SESSION['ploopi']['connected'])
 {
-    case 'webedit_selectlink':
-    case 'webedit_detail_heading';
-        ob_start();
-        include_once './modules/webedit/fck_link.php';
-        $main_content = ob_get_contents();
-        @ob_end_clean();
-
-        $template_body->assign_vars(array(
-            'TEMPLATE_PATH'         => $_SESSION['ploopi']['template_path'],
-            'ADDITIONAL_JAVASCRIPT' => $additional_javascript,
-            'PAGE_CONTENT'          => $main_content
-            )
-        );
-
-        $template_body->assign_block_vars('module_css',array(
-                                                    'PATH' => "./modules/webedit/include/styles.css"
-                                                )
-                                        );
-
-        $template_body->assign_block_vars('module_css_ie',array(
-                                                    'PATH' => "./modules/webedit/include/styles_ie.css"
-                                                )
-                                        );
-
-
-        $template_body->pparse('body');
-        ploopi_die();
-    break;
-
-
-    case 'webedit_getbackup':
-        include_once './modules/webedit/class_article_backup.php';
-
-        $article_backup = new webedit_article_backup();
-        if (!empty($_GET['backup_id_article']) && !empty($_GET['backup_timestp']) && is_numeric($_GET['backup_id_article']) && is_numeric($_GET['backup_timestp']) && $article_backup->open($_GET['backup_id_article'],$_GET['backup_timestp']))
-        {
-            echo $article_backup->fields['content'];
-        }
-        ploopi_die();
-    break;
+    switch($_REQUEST['ploopi_op'])
+    {
+        case 'webedit_selectlink':
+        case 'webedit_detail_heading';
+            ob_start();
+            include_once './modules/webedit/fck_link.php';
+            $main_content = ob_get_contents();
+            @ob_end_clean();
+    
+            $template_body->assign_vars(array(
+                'TEMPLATE_PATH'         => $_SESSION['ploopi']['template_path'],
+                'ADDITIONAL_JAVASCRIPT' => $additional_javascript,
+                'PAGE_CONTENT'          => $main_content
+                )
+            );
+    
+            $template_body->assign_block_vars('module_css',array(
+                                                        'PATH' => "./modules/webedit/include/styles.css"
+                                                    )
+                                            );
+    
+            $template_body->assign_block_vars('module_css_ie',array(
+                                                        'PATH' => "./modules/webedit/include/styles_ie.css"
+                                                    )
+                                            );
+    
+    
+            $template_body->pparse('body');
+            ploopi_die();
+        break;
+    
+    
+        case 'webedit_getbackup':
+            include_once './modules/webedit/class_article_backup.php';
+    
+            $article_backup = new webedit_article_backup();
+            if (!empty($_GET['backup_id_article']) && !empty($_GET['backup_timestp']) && is_numeric($_GET['backup_id_article']) && is_numeric($_GET['backup_timestp']) && $article_backup->open($_GET['backup_id_article'],$_GET['backup_timestp']))
+            {
+                echo $article_backup->fields['content'];
+            }
+            ploopi_die();
+        break;
+    }
 }

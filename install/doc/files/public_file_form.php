@@ -301,11 +301,11 @@ else
             $user = new user();
             $user_modify = new user();
             
-            if ($user->open($docfile->fields['id_user'])) $user_login = $user->fields['login'];
-            else $user_login = "<i>supprimé</i>";
+            if ($user->open($docfile->fields['id_user'])) $user_name = "{$user->fields['lastname']} {$user->fields['firstname']}";
+            else $user_name = "<i>supprimé</i>";
     
-            if ($user_modify->open($docfile->fields['id_user_modify'])) $user_modify_login = $user->fields['login'];
-            else $user_modify_login = "<i>supprimé</i>";
+            if ($user_modify->open($docfile->fields['id_user_modify'])) $user_modify_name = "{$user->fields['lastname']} {$user->fields['firstname']}";
+            else $user_modify_name = "<i>supprimé</i>";
             
             $ldate_modify = (!empty($docfile->fields['timestp_modify'])) ? ploopi_timestamp2local($docfile->fields['timestp_modify']) : array('date' => '', 'time' => '');
             //echo $user->fields['login'];
@@ -333,24 +333,24 @@ else
                 </p>
                 <p>
                     <label>Propriétaire:</label>
-                    <span><? echo $user_login; ?></span>
+                    <span><? echo $user_name; ?></span>
                 </p>
                 <p>
                     <label>Modifié par:</label>
-                    <span><? echo $user_modify_login; ?></span>
+                    <span><? echo $user_modify_name; ?></span>
                 </p>
                 <p>
                     <label>Dernière modification:</label>
                     <span><? echo "{$ldate_modify['date']} {$ldate_modify['time']}"; ?></span>
                 </p>
-                <p class="checkbox">
+                <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_readonly');">
                     <label>Lecture Seule:</label>
                     <?
                     if ($readonly) echo ($docfile->fields['readonly']) ? 'oui' : 'non';
                     else
                     {
                         ?>
-                        <input type="checkbox" class="checkbox" name="docfile_readonly" value="1" <? if ($docfile->fields['readonly']) echo 'checked'; ?>>
+                        <input type="checkbox" class="checkbox" id="docfile_readonly" name="docfile_readonly" value="1" <? if ($docfile->fields['readonly']) echo 'checked'; ?>>
                         <?
                     }
                     ?>

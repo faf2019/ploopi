@@ -46,11 +46,18 @@ switch($ploopi_op)
         
     case 'tickets_new':
         if (!$_SESSION['ploopi']['connected']) ploopi_die();
-
+        
         ob_start();
         ?>
+        <script type="text/javascript">
+            ploopi_tickets_validate = function (form)
+            {
+                return (ploopi_validatefield('Titre',form.ticket_title,'string'));
+            };
+        </script>
+        
         <div id="tickets_new">
-            <form method="post" action="admin.php" target="ploopi_tickets_send">
+            <form method="post" action="admin.php" target="ploopi_tickets_send" onsubmit="javascript:return ploopi_tickets_validate(this);};">
             <input type="hidden" name="ploopi_op" value="tickets_send">
             <input type="hidden" name="ploopi_tickets_reload" value="<? if (!empty($_GET['ploopi_tickets_reload'])) echo $_GET['ploopi_tickets_reload']; ?>">
             <?
@@ -103,11 +110,13 @@ switch($ploopi_op)
             }
             ?>
             <p class="ploopi_va" style="padding:4px 0; cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'ticket_needed_validation');">
-                <input type="checkbox" name="ticket_needed_validation" id="ticket_needed_validation" style="cursor:pointer;" value="1"><span>Validation requise</span>
+                <input type="checkbox" name="ticket_needed_validation" id="ticket_needed_validation" style="cursor:pointer;" value="1"><span>Validation requise (optionnel, permet d'obliger le destinataire à valider le ticket)</span>
             </p>
 
             <div style="padding:8px 4px;margin:4px 0;background-color:#f0f0f0;border:1px solid #c0c0c0;">
-                <? ploopi_tickets_selectusers(); ?>
+                <? 
+                ploopi_tickets_selectusers((empty($_GET['ploopi_tickets_id_user'])) ? null : $_GET['ploopi_tickets_id_user']);
+                ?>
             </div>
             <div style="text-align:right;">
                     <input type="submit" class="flatbutton" value="Envoyer" style="font-weight:bold;">
@@ -128,6 +137,7 @@ switch($ploopi_op)
         if (!$_SESSION['ploopi']['connected']) ploopi_die();
         
         ob_start();
+
         include_once './modules/system/class_ticket.php';
         $ticket = new ticket();
 
@@ -135,11 +145,16 @@ switch($ploopi_op)
         {
             if ($ploopi_op == 'tickets_replyto')
             {
+                include_once './modules/system/class_user.php';
+    
+                $objUser = new user();
+                $strUserName = ($objUser->open($ticket->fields['id_user'])) ? "{$objUser->fields['lastname']} {$objUser->fields['firstname']}" : 'Inconnu';
+                
                 $ticket->fields['title'] = "RE: {$ticket->fields['title']}";
                 $nextop = 'tickets_send';
                 $button_value = 'Envoyer';
 
-                if (isset($_GET['quoted'])) $ticket->fields['message'] = '<div class="system_tickets_quoted_user">Message de <b>'.$strUserName.'</b> :</div><div class="system_tickets_quoted_message">'.$ticket->fields['message'].'</div>';
+                if (isset($_GET['quoted'])) $ticket->fields['message'] = '<div class="system_tickets_quoted_user">Ticket de <b>'.$strUserName.'</b> :</div><div class="system_tickets_quoted_message">'.$ticket->fields['message'].'</div>';
                 else $ticket->fields['message'] = '';
             }
             else
@@ -148,26 +163,30 @@ switch($ploopi_op)
                 $button_value = 'Modifier';
             }
 
-            include_once './modules/system/class_user.php';
-
-            $objUser = new user();
-            $strUserName = ($objUser->open($ticket->fields['id_user'])) ? "{$objUser->fields['firstname']} {$objUser->fields['lastname']}" : 'Inconnu';
-
-
-
             ?>
+            <script type="text/javascript">
+                ploopi_tickets_validate = function (form)
+                {
+                    return (ploopi_validatefield('Titre',form.ticket_title,'string'));
+                };
+            </script>
             <div id="tickets_new">
-                <form method="post" action="admin.php">
+                <form method="post" action="admin.php" onsubmit="javascript:return ploopi_tickets_validate(this);};">
                 <input type="hidden" name="ploopi_op" value="<? echo $nextop; ?>">
                 <input type="hidden" name="ticket_id" value="<? echo $_GET['ticket_id']; ?>">
-                <table cellpadding="2" cellspacing="0" style="width:100%">
-                <tr><td style="font-weight:bold;">Titre</td></tr>
-                <tr>
-                    <td><input type="text" name="ticket_title" class="text" value="<? echo htmlentities($ticket->fields['title']); ?>" style="width:380px"></td>
-                </tr>
-                <tr><td style="font-weight:bold;">Message</td></tr>
-                <tr>
-                    <td>
+                <?
+                if ($ploopi_op == 'tickets_replyto')
+                {
+                    ?>
+                    <div><span>Destinataire : </span><span style="font-weight:bold;"><? echo $strUserName; ?></span></div>
+                    <?
+                }
+                ?>
+
+                <div style="font-weight:bold;">Titre</div>
+                <div><input type="text" name="ticket_title" class="text" value="<? echo htmlentities($ticket->fields['title']); ?>" style="width:98%"></div>
+                <div style="font-weight:bold;">Message</div>
+                <div>
                     <?
                     include_once('./FCKeditor/fckeditor.php') ;
 
@@ -186,15 +205,11 @@ switch($ploopi_op)
                     $oFCKeditor->Config['EditorAreaCSS'] = "../../modules/system/fckeditor/fck_editorarea.css" ;
                     $oFCKeditor->Create('FCKeditor_1') ;
                     ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="text-align:right;">
+                </div>
+                <div style="text-align:right;">
                         <input type="submit" class="flatbutton" value="<? echo $button_value; ?>" style="font-weight:bold;">
                         <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('system_popupticket');">
-                    </td>
-                </tr>
-                </table>
+                </div>
                 </form>
             </div>
             <?
@@ -228,24 +243,9 @@ switch($ploopi_op)
         if (isset($_GET['user_id'])) $_SESSION['ploopi']['tickets']['users_selected'][$_GET['user_id']] = $_GET['user_id'];
         if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['tickets']['users_selected'][$_GET['remove_user_id']]);
 
+        ploopi_tickets_displayusers();
+        
 
-        foreach($_SESSION['ploopi']['tickets']['users_selected'] as $user_id)
-        {
-            include_once('./modules/system/class_user.php');
-
-            $user = new user();
-            $user->open($user_id);
-
-            $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
-            ?>
-            <p class="ploopi_va" style="padding:2px;">
-                <a class="system_tickets_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=tickets_select_user&remove_user_id=<? echo $user->fields['id']; ?>','','div_ticket_users_selected');">
-                    <img src="./img/icon_delete.gif">
-                    <span><? echo "{$user->fields['firstname']} {$user->fields['lastname']} ({$user->fields['login']})"; ?></span>
-                </a>
-            </p>
-            <?
-        }
         ploopi_die();
     break;
 
@@ -263,6 +263,9 @@ switch($ploopi_op)
             $list = array();
             $list['work'] = array();
             $list['org'] = array();
+            
+            $filtered_search_field = $db->addslashes($_GET['ploopi_ticket_userfilter']);
+            $search_pattern = "AND (u.login LIKE '%{$filtered_search_field}%' OR u.lastname LIKE '%{$filtered_search_field}%' OR u.firstname LIKE '%{$filtered_search_field}%') ";
 
             // construction de la liste des groupes de travail et des groupes d'utilisateurs rattachés (pour l'utilisateur courant)
             foreach ($_SESSION['ploopi']['workspaces'] as $grp) // pour chaque groupe de travail
@@ -294,8 +297,8 @@ switch($ploopi_op)
                             WHERE       u.id = wu.id_user
                             AND         w.id = wu.id_workspace
                             AND         wu.id_workspace IN (".implode(',',array_keys($list['work'])).")
-                            AND         u.login LIKE '%".$db->addslashes($_GET['ploopi_ticket_userfilter'])."%'
-
+                            {$search_pattern}
+                            ORDER BY    u.lastname, u.firstname, u.login
                             ";
 
 
@@ -334,7 +337,7 @@ switch($ploopi_op)
                         {
                             ?>
                             <a class="system_tickets_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=tickets_select_user&user_id=<? echo $id_user; ?>','','div_ticket_users_selected');">
-                                <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['firstname']} {$user['lastname']} ({$user['login']})"; ?></span></p>
+                                <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
                             </a>
                             <?
                         }
@@ -358,7 +361,8 @@ switch($ploopi_op)
                             AND         g.id = wg.id_group
                             AND         g.id = gu.id_group
                             AND         gu.id_group = wg.id_group
-                            AND         u.login LIKE '%".$db->addslashes($_GET['ploopi_ticket_userfilter'])."%'
+                            {$search_pattern}
+                            ORDER BY    u.lastname, u.firstname, u.login
                             ";
 
 
@@ -382,7 +386,7 @@ switch($ploopi_op)
                             {
                                 ?>
                                 <a class="system_tickets_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=tickets_select_user&user_id=<? echo $id_user; ?>','','div_ticket_users_selected');">
-                                    <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['firstname']} {$user['lastname']} ({$user['login']})"; ?></span></p>
+                                    <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
                                 </a>
                                 <?
                             }

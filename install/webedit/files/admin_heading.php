@@ -380,7 +380,7 @@ foreach($wf as $value) $wfusers[] = $value['id_workflow'];
     <?
     if (!empty($wfusers))
     {
-        $sql = "SELECT login FROM ploopi_user WHERE id in (".implode(',',$wfusers).") ORDER BY lastname, firstname";
+        $sql = "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$wfusers).") ORDER BY lastname, firstname";
         $db->query($sql);
         $arrUsers = $db->getarray();
         echo (empty($arrUsers)) ? 'Aucune accréditation' : implode(', ', $arrUsers);

@@ -49,6 +49,7 @@ define ('_DIRECTORY_PHONE', 'Téléphone');
 define ('_DIRECTORY_MOBILE', 'Tél. Portable');
 define ('_DIRECTORY_FAX', 'Fax');
 define ('_DIRECTORY_EMAIL', 'Mèl');
+define ('_DIRECTORY_TICKET', 'Ticket');
 define ('_DIRECTORY_ADDRESS', 'Adresse');
 define ('_DIRECTORY_POSTALCODE', 'Code Postal');
 define ('_DIRECTORY_CITY', 'Ville');
@@ -73,6 +74,7 @@ define ('_DIRECTORY_LEGEND_DELETE', 'Effacer');
 define ('_DIRECTORY_LEGEND_FAVADD', 'Ajouter à une liste de favoris');
 define ('_DIRECTORY_LEGEND_FAVMODIFY', 'Modifier l\'affectation à des listes');
 define ('_DIRECTORY_LEGEND_FAVDEL', 'Supprimer un Favori');
-define ('_DIRECTORY_LEGEND_EMAIL', 'Adresse Mel');
+define ('_DIRECTORY_LEGEND_EMAIL', 'Envoyer un Courriel');
+define ('_DIRECTORY_LEGEND_TICKET', 'Envoyer un Ticket');
 
 ?>

@@ -1,6 +1,10 @@
 #!/bin/sh
-export DEST=ploopi_1.0RC3
-export YUIVER='-2.3.5'
+export DEST=ploopi_1.0RC3b
+
+#################################
+# compression des fichiers
+#################################
+./compress.sh
 
 #################################
 # on cree le dossier
@@ -60,39 +64,15 @@ cp -r templates/backoffice/ploopi $DEST/templates/backoffice
 cp -r templates/backoffice/ploopi_menus $DEST/templates/backoffice
 cp -r templates/install $DEST/templates/
 
+cd $DEST
+
 #############
 # nettoyage #
 #############
 
-find $DEST -name .svn -print0 | xargs -0 rm -rf
-find $DEST -name "*.*~" | xargs rm
-find $DEST -name "Thumbs.db" | xargs rm
-
-####################
-# compression js
-####################
-
-java -jar yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-15 js/functions.pack.js > $DEST/js/functions.pack.js
-
-####################
-# compression css
-####################
-
-for template in {$DEST/templates/backoffice/ploopi*}; do
-    if [ -d $template ]; then
-
-        cat $template/css/base_*.css > $template/css/styles_unpack.css
-        cat $template/css/ie_*.css > $template/css/styles_ie_unpack.css
-
-        java -jar yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-15 $template/css/styles_unpack.css > $template/css/styles.css
-        java -jar yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-15 $template/css/styles_ie_unpack.css > $template/css/styles_ie.css
-
-        rm -rf $template/css/*unpack*
-
-    fi
-done
-
-cd $DEST
+find . -name ".svn" -print0 | xargs -0 rm -rf
+find . -name "*.*~" | xargs -0 rm -rf
+find . -name "Thumbs.db" | xargs -0 rm -rf
 
 #################################
 # on remet a plat les droits

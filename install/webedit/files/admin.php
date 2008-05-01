@@ -279,37 +279,39 @@ switch($op)
     case 'article_save':
         if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) && $type == 'draft')
         {
-            $tablename = 'ploopi_mod_webedit_article';
-            if ($type == 'draft') $tablename .= '_draft';
+            $tablename = 'ploopi_mod_webedit_article_draft';
             
             $strTypeTicket = '';
 
-            $article = new webedit_article($type);
+            $article = new webedit_article('draft');
             if (!empty($_POST['articleid']) && is_numeric($_POST['articleid']) && $article->open($_POST['articleid']))
             {
-                $newposition = $_POST['webedit_art_position'];
-                if ($newposition != $article->fields['position']) // nouvelle position définie
+                if (isset($_POST['webedit_art_position']))
                 {
-                    if ($newposition<1) $newposition=1;
-                    else
+                    $newposition = $_POST['webedit_art_position'];
+                    if ($newposition != $article->fields['position']) // nouvelle position définie
                     {
-                        $select = "Select max(position) as maxpos from {$tablename} where id_heading = {$headingid}";
-                        $db->query($select);
-                        $fields = $db->fetchrow();
-                        if ($newposition > $fields['maxpos']) $newposition = $fields['maxpos'];
+                        if ($newposition<1) $newposition=1;
+                        else
+                        {
+                            $select = "Select max(position) as maxpos from {$tablename} where id_heading = {$headingid}";
+                            $db->query($select);
+                            $fields = $db->fetchrow();
+                            if ($newposition > $fields['maxpos']) $newposition = $fields['maxpos'];
+                        }
+    
+                        $db->query("update {$tablename} set position=0 where position={$article->fields['position']} AND id_heading = {$article->fields['id_heading']}");
+                        if ($newposition > $article->fields['position'])
+                        {
+                            $db->query("update {$tablename} set position=position-1 where position BETWEEN ".($article->fields['position']-1)." AND {$newposition} AND id_heading = {$article->fields['id_heading']}");
+                        }
+                        else
+                        {
+                            $db->query("update {$tablename} set position=position+1 where position BETWEEN {$newposition} AND ".($article->fields['position']-1)." AND id_heading = {$article->fields['id_heading']}");
+                        }
+                        $db->query("update {$tablename} set position={$newposition} where position=0 AND id_heading = {$article->fields['id_heading']}");
+                        $article->fields['position'] = $newposition;
                     }
-
-                    $db->query("update {$tablename} set position=0 where position={$article->fields['position']} AND id_heading = {$article->fields['id_heading']}");
-                    if ($newposition > $article->fields['position'])
-                    {
-                        $db->query("update {$tablename} set position=position-1 where position BETWEEN ".($article->fields['position']-1)." AND {$newposition} AND id_heading = {$article->fields['id_heading']}");
-                    }
-                    else
-                    {
-                        $db->query("update {$tablename} set position=position+1 where position BETWEEN {$newposition} AND ".($article->fields['position']-1)." AND id_heading = {$article->fields['id_heading']}");
-                    }
-                    $db->query("update {$tablename} set position={$newposition} where position=0 AND id_heading = {$article->fields['id_heading']}");
-                    $article->fields['position'] = $newposition;
                 }
 
             }
@@ -324,27 +326,32 @@ switch($op)
                 $maxpos = $fields['maxpos'];
                 if (!is_numeric($maxpos)) $maxpos = 0;
                 $article->fields['position'] = $maxpos+1;
+                $article->fields['id_heading'] = $headingid;
             }
 
             $sendtickets = ($type == 'draft' && $_POST['webedit_article_status'] == 'wait' && $article->fields['status'] != $_POST['webedit_article_status']);
+            
+            if ($article->fields['status'] != 'wait') // article modifiable
+            {
+                $article->setvalues($_POST,'webedit_article_');
+                if (isset($_POST['fck_webedit_article_content'])) $article->fields['content'] = $_POST['fck_webedit_article_content'];
+                
+                $article->fields['timestp'] = ploopi_local2timestamp($_POST['webedit_article_timestp']);
+                
+                $article->fields['timestp_published'] = ploopi_local2timestamp($_POST['webedit_article_timestp_published']);
+                $article->fields['timestp_unpublished'] = ploopi_local2timestamp($_POST['webedit_article_timestp_unpublished']);
 
-            $article->setvalues($_POST,'webedit_article_');
+                $article->fields['lastupdate_timestp'] = ploopi_createtimestamp();
+                $article->fields['lastupdate_id_user'] = $_SESSION['ploopi']['userid'];
+                
+                if (empty($_POST['webedit_article_visible'])) $article->fields['visible'] = 0;
+                if (empty($_POST['webedit_article_comments_allowed'])) $article->fields['comments_allowed'] = 0;
+                //if (isset($_POST['webedit_article_timestp_published'])) $article->fields['timestp_published'] = ploopi_local2timestamp($_POST['webedit_article_timestp_published']);
+                //if (isset($_POST['webedit_article_timestp_unpublished'])) $article->fields['timestp_unpublished'] = ploopi_local2timestamp($_POST['webedit_article_timestp_unpublished']);
+            }
+            else $article->setvalues($_POST,'webedit_article_');
 
-
-            if (isset($_POST['fck_webedit_article_content'])) $article->fields['content'] = $_POST['fck_webedit_article_content'];
-
-            $article->fields['timestp'] = ploopi_local2timestamp($_POST['webedit_article_timestp']);
-            if (isset($_POST['webedit_article_timestp_published'])) $article->fields['timestp_published'] = ploopi_local2timestamp($_POST['webedit_article_timestp_published']);
-            if (isset($_POST['webedit_article_timestp_unpublished'])) $article->fields['timestp_unpublished'] = ploopi_local2timestamp($_POST['webedit_article_timestp_unpublished']);
-
-            $article->fields['lastupdate_timestp'] = ploopi_createtimestamp();
-            $article->fields['lastupdate_id_user'] = $_SESSION['ploopi']['userid'];
-
-            if (empty($_POST['webedit_article_visible'])) $article->fields['visible'] = 0;
-            if (empty($_POST['webedit_article_comments_allowed'])) $article->fields['comments_allowed'] = 0;
-
-            $article->fields['id_heading'] = $headingid;
-
+            
             // get workflow validators
             $wfusers = array();
             $wf = ploopi_workflow_get(_WEBEDIT_OBJECT_HEADING, $headingid);

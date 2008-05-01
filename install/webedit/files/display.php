@@ -363,6 +363,7 @@ if ($query_string == '') // affichage standard rubrique/page
             if (!$readonly)
             {
                 ob_start();
+                
                 include_once './FCKeditor/fckeditor.php' ;
 
                 $oFCKeditor = new FCKeditor('fck_webedit_article_content') ;
@@ -376,19 +377,16 @@ if ($query_string == '') // affichage standard rubrique/page
                 $oFCKeditor->Width='100%';
                 $oFCKeditor->Height='500';
 
-                $oFCKeditor->Config['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/fckconfig.js';
+                $oFCKeditor->Config['CustomConfigurationsPath'] = $basepath.'/modules/webedit/fckeditor/fckconfig.js';
                 $oFCKeditor->Config['ToolbarLocation'] = 'Out:parent(xToolbar)';
-                //$oFCKeditor->Config['SkinPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/skins/default/';
+                $oFCKeditor->Config['BaseHref'] = $basepath.'/';
+                $oFCKeditor->Config['SkinPath'] = $basepath.'/modules/webedit/fckeditor/skins/default/';
                 
-                if (file_exists("{$template_path}/fckeditor/fck_editorarea.css")) $oFCKeditor->Config['EditorAreaCSS'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fck_editorarea.css';
+                if (file_exists("{$template_path}/fckeditor/fck_editorarea.css")) $oFCKeditor->Config['EditorAreaCSS'] = $basepath . substr($template_path,1) . '/fckeditor/fck_editorarea.css';
 
-                if (file_exists("{$template_path}/fckeditor/fcktemplates.xml")) $oFCKeditor->Config['TemplatesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fcktemplates.xml';
+                if (file_exists("{$template_path}/fckeditor/fcktemplates.xml")) $oFCKeditor->Config['TemplatesXmlPath'] = $basepath . substr($template_path,1) . '/fckeditor/fcktemplates.xml';
 
-                if (file_exists("{$template_path}/fckeditor/fckstyles.xml")) $oFCKeditor->Config['StylesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fckstyles.xml';
-
-                $oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH;
-
-                //$oFCKeditor->Config['PluginsPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/plugins/';
+                if (file_exists("{$template_path}/fckeditor/fckstyles.xml")) $oFCKeditor->Config['StylesXmlPath'] = $basepath . substr($template_path,1) . '/fckeditor/fckstyles.xml';
 
                 $oFCKeditor->ToolbarSet = 'Default';
 

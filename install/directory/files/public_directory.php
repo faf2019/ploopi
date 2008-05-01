@@ -146,11 +146,10 @@ switch($_SESSION['directory']['directoryTabItem'])
         $c = 0;
         while ($row = $db->fetchrow())
         {
-            $email = ($row['email']) ? '<img src="./modules/directory/img/ico_email.png">' : '';
+            $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
 
-            
             $actions =  '
-                        <a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>
                         <a href="'.ploopi_urlencode("{$scriptenv}?op=directory_modify&contact_id={$row['id']}").'"><img title="Modifier" src="./modules/directory/img/ico_modify.png"></a>
                         <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("{$scriptenv}?op=directory_delete&contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>
                         ';
@@ -169,9 +168,9 @@ switch($_SESSION['directory']['directoryTabItem'])
             $values[$c]['values']['actions'] = array('label' => $actions);
 
             $values[$c]['description'] = "{$row['lastname']} {$row['firstname']}";
-            $values[$c]['link'] = 'javascript:void(0);';
-            $values[$c]['onclick'] = "javascript:directory_view(event, '', '{$row['id']}');";
-            $values[$c]['style'] = '';
+            //$values[$c]['link'] = 'javascript:void(0);';
+            //$values[$c]['onclick'] = "javascript:directory_view(event, '', '{$row['id']}');";
+            //$values[$c]['style'] = '';
 
             $c++;
         }
@@ -188,8 +187,8 @@ switch($_SESSION['directory']['directoryTabItem'])
 
         $columns['auto']['groups'] = array('label' => _DIRECTORY_GROUPS,    'options' => array('sort' => true));
         $columns['left']['name'] = array('label' => _DIRECTORY_NAME,        'width' => 150, 'options' => array('sort' => true));
-        $columns['left']['login'] = array('label' => _DIRECTORY_LOGIN,      'width' => 100, 'options' => array('sort' => true));
         $columns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+        $columns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
         $columns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
         $columns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
         $columns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
@@ -223,9 +222,10 @@ switch($_SESSION['directory']['directoryTabItem'])
         $c = 0;
         while ($row = $db->fetchrow($res))
         {
-            $email = ($row['email']) ? '<img src="./modules/directory/img/ico_email.png">' : '';
-
-            $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
+            $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
+            $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img src="./modules/directory/img/ico_ticket.png"></a>';
+            
+            $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>';
 
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
             {
@@ -250,12 +250,12 @@ switch($_SESSION['directory']['directoryTabItem'])
             $workspaces_list = implode(', ',$workspaces_list);
 
             $values[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
-            $values[$c]['values']['login'] = array('label' => $row['login']);
             $values[$c]['values']['groups'] = array('label' => $workspaces_list);
             $values[$c]['values']['service'] = array('label' => $row['service']);
             $values[$c]['values']['function'] = array('label' => $row['function']);
             $values[$c]['values']['phone'] = array('label' => $row['phone']);
             $values[$c]['values']['email'] = array('label' => $email);
+            $values[$c]['values']['ticket'] = array('label' => $ticket);
             $values[$c]['values']['actions'] = array('label' => $actions);
 
             $values[$c]['description'] = "{$row['lastname']} {$row['firstname']}";
@@ -314,9 +314,15 @@ switch($_SESSION['directory']['directoryTabItem'])
                 }
                 ?>
                 </select>
-                <img src="./modules/directory/img/ico_newlist.png" title="Ajouter une liste" onclick="javascript:directory_list_addnew(event);" style="cursor:pointer;"/>
-                <img src="./modules/directory/img/ico_modify.png" title="Modifier la liste sélectionnée" onclick="javascript:directory_list_modify(event);" style="cursor:pointer;display:<? echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_modify_link" />
-                <img src="./modules/directory/img/ico_delete.png" title="Supprimer la liste sélectionnée" onclick="javascript:ploopi_confirmlink('<? echo "{$scriptenv}?op=directory_list_delete&directory_favorites_id_list="; ?>'+$('directory_favorites_id_list').value, 'Êtes vous certain de vouloir supprimer cette liste ?');" style="cursor:pointer;display:<? echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_delete_link" />
+                <span onclick="javascript:directory_list_addnew(event);" style="cursor:pointer;">
+                    <img src="./modules/directory/img/ico_newlist.png" title="Ajouter une liste" /><span style="margin:0 10px 0 2px;">Ajouter une liste</span>
+                </span>
+                <span onclick="javascript:directory_list_modify(event);" style="cursor:pointer;display:<? echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_modify_link" >
+                    <img src="./modules/directory/img/ico_modify.png" title="Modifier la liste sélectionnée"  /><span style="margin:0 10px 0 2px;">Modifier la liste sélectionnée</span>
+                </span>
+                <span onclick="javascript:ploopi_confirmlink('<? echo "{$scriptenv}?op=directory_list_delete&directory_favorites_id_list="; ?>'+$('directory_favorites_id_list').value, 'Êtes vous certain de vouloir supprimer cette liste ?');" style="cursor:pointer;display:<? echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_delete_link">
+                    <img src="./modules/directory/img/ico_delete.png" title="Supprimer la liste sélectionnée" /><span style="margin:0 10px 0 2px;">Supprimer la liste sélectionnée</span>
+                </span>
                 
                 <?
                 if (empty($arrLists))
@@ -342,8 +348,8 @@ switch($_SESSION['directory']['directoryTabItem'])
         $columns['auto']['groups'] = array('label' => _DIRECTORY_GROUPS,    'options' => array('sort' => true));
         $columns['left']['type'] = array('label' => _DIRECTORY_TYPE,        'width' => 90, 'options' => array('sort' => true));
         $columns['left']['name'] = array('label' => _DIRECTORY_NAME,        'width' => 150, 'options' => array('sort' => true));
-        $columns['left']['login'] = array('label' => _DIRECTORY_LOGIN,      'width' => 100, 'options' => array('sort' => true));
         $columns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+        $columns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
         $columns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
         $columns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
         $columns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
@@ -423,16 +429,15 @@ switch($_SESSION['directory']['directoryTabItem'])
             $c = 0;
             foreach($result as $row)
             {
-                $email = ($row['email']) ? '<img src="./modules/directory/img/ico_email.png">' : '';
-
+                $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
+                $ticket = '';
 
                 switch ($row['usertype'])
                 {
                     case 'user':
                         $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_users'])) ? _DIRECTORY_USERS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_users'];
 
-                        $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
-                        $actions =  '<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_view&user_id={$row['id']}").'"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
+                        $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>';
 
                         if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
                         {
@@ -456,12 +461,14 @@ switch($_SESSION['directory']['directoryTabItem'])
                         // on met tout ça dans une chaine
                         $workspaces_list = implode(', ',$workspaces_list);
 
-                        $values[$c]['link'] = 'javascript:void(0);';
-                        $values[$c]['onclick'] = "javascript:directory_view(event, '{$row['id']}', '');";
+                        //$values[$c]['link'] = 'javascript:void(0);';
+                        //$values[$c]['onclick'] = "javascript:directory_view(event, '{$row['id']}', '');";
+                        
+                        $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img src="./modules/directory/img/ico_ticket.png"></a>';
                     break;
 
                     case 'contact':
-                        $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>';
+                        $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>';
 
                         if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites']) 
                         {
@@ -473,19 +480,19 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                         $workspaces_list = '';
                         
-                        $values[$c]['link'] = 'javascript:void(0);';
-                        $values[$c]['onclick'] = "javascript:directory_view(event, '', '{$row['id']}');";
+                        //$values[$c]['link'] = 'javascript:void(0);';
+                        //$values[$c]['onclick'] = "javascript:directory_view(event, '', '{$row['id']}');";
                     break;
                 }
 
                 $values[$c]['values']['type'] = array('label' => $level_display);
                 $values[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
-                $values[$c]['values']['login'] = array('label' => $row['login']);
                 $values[$c]['values']['groups'] = array('label' => $workspaces_list);
                 $values[$c]['values']['service'] = array('label' => $row['service']);
                 $values[$c]['values']['function'] = array('label' => $row['function']);
                 $values[$c]['values']['phone'] = array('label' => $row['phone']);
                 $values[$c]['values']['email'] = array('label' => $email);
+                $values[$c]['values']['ticket'] = array('label' => $ticket);
                 $values[$c]['values']['actions'] = array('label' => $actions);
 
                 $values[$c]['description'] = "{$row['lastname']} {$row['firstname']}";
@@ -512,11 +519,11 @@ switch($_SESSION['directory']['directoryTabItem'])
         ?>
         <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_fav_add.png" /><span><? echo _DIRECTORY_LEGEND_FAVADD; ?></span>
         <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_fav_modify.png" /><span><? echo _DIRECTORY_LEGEND_FAVMODIFY; ?></span>
-        <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_cut.png" /><span><? echo _DIRECTORY_LEGEND_FAVDEL; ?></span>
         <?
     }
     ?>
     <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_email.png" /><span><? echo _DIRECTORY_LEGEND_EMAIL; ?></span>
+    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_ticket.png" /><span><? echo _DIRECTORY_LEGEND_TICKET; ?></span>
 </p>
 
 <? echo $skin->close_simplebloc(); ?>

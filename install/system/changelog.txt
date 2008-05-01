@@ -1,3 +1,29 @@
+== Ploopi - version 1.0 RC3b ===================================================
+
+2008-04-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+   
+* Ploopi
+  - Possibilité de choisir le fuseau horaire par utilisateur (au lieu du décalage en heures)
+  - Correctifs sur la gestion du profil utilisateur (fuseau horaire, copie des tickets par mail)
+  - Suppression du paramètrage de fuseau horaire dans le fichier de configuration
+  - Correction d'un problème de bufferisation dans la gestion interne des documents
+  - Amélioration de l'affichage des erreurs (pile d'erreur complète)
+  - Meilleure compression html des contenus bufferisés
+
+* Templates 
+  - Mise à jour des templates backoffice
+  - Correction d'un bug dans le template 'ploopi_menu' (uniquement en activant la compression du buffer de sortie)
+  - Correction d'un bug dans les templates frontoffice exemple* (erreur de variable lors d'une fermeture de bloc)
+
+* Doc, Forms, Directory
+  - Mise à jour de sécurité consécutive à une modification au niveau de Ploopi
+
+* WebEdit
+  - Correction d'un bug sur tri par date des articles (si date identique)
+
+* Install 
+  - Ajout d'une détection de mauvais paramétrage de la directive RewriteBase (test)
+  
 == Ploopi - version 1.0 RC3 ===================================================
 
 2008-04-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

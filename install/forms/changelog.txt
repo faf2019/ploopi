@@ -1,3 +1,9 @@
+== Module FORMS - version 2.16 =====================================================
+
+2008-04-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correctif de sécurité sur op.php suite à modification sur op.php principal
+ 
 == Module FORMS - version 2.15 =====================================================
 
 2008-04-17  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

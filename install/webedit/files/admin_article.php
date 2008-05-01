@@ -374,7 +374,7 @@ else
                         <a href="#" onclick="javascript:ploopi_calendar_open('webedit_article_timestp_published', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
                         <?
                     }
-                    else echo '<span>'.htmlentities($article_timestp, ENT_QUOTES).'</span>';
+                    else echo '<span>'.htmlentities($article_timestp_published, ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -387,7 +387,7 @@ else
                         <a href="#" onclick="javascript:ploopi_calendar_open('webedit_article_timestp_unpublished', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
                         <?
                     }
-                    else echo '<span>'.htmlentities($article_timestp, ENT_QUOTES).'</span>';
+                    else echo '<span>'.htmlentities($article_timestp_unpublished, ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <?

@@ -1,3 +1,10 @@
+== Module FORMS - version 3.78 =====================================================
+
+2008-04-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correctif de sécurité sur op.php suite à modification sur op.php principal
+ * Uniformisation nom/prénom, suppression de l'affichage du login
+ 
 == Module DOC - version 3.77 ====================================================
 
 2008-04-14  Stéphane Escaich  <stephane@ovensia.fr>

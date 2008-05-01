@@ -1,3 +1,12 @@
+== Module DIRECTORY - version 1.32 ====================================================
+
+2008-05-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correctif de sécurité sur op.php suite à modification sur op.php principal
+ * Modification sur l'ordre des onglets
+ * Ajout d'un lien "envoyer un ticket" et d'un lien "envoyer un courriel"
+ * Evolutions ergonomiques mineures
+ 
 == Module DIRECTORY - version 1.31 ====================================================
 
 2008-04-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

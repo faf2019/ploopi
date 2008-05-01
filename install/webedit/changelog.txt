@@ -1,3 +1,12 @@
+== Module WebEdit - version 1.42 ===================================================
+
+2008-04-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Personnalisation du skin pour l'édition
+ * Correctifs sur l'intégration de FCKEditor (basehref, basepath)
+ * Correctif de sécurité sur op.php suite à modification sur op.php principal
+ * Correctif lors de la sauvegarde d'un article (perte de données lors du passage "attente de validation" / "modifiable")
+ 
 == Module WebEdit - version 1.411 ===================================================
 
 2008-04-23  Stéphane Escaich  <stephane@ovensia.fr>

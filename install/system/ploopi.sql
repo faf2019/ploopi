@@ -639,7 +639,7 @@ CREATE TABLE `ploopi_module_type` (
 
 LOCK TABLES `ploopi_module_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_module_type` DISABLE KEYS */;
-INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.0RC3','Ovensia / Netlor','20080422000000');
+INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.0RC3b','Ovensia / Netlor','20080428000000');
 /*!40000 ALTER TABLE `ploopi_module_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1291,3 +1291,6 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2008-04-09 17:02:24
+
+ALTER TABLE `ploopi_user` CHANGE `timezone` `timezone` VARCHAR( 64 ) NOT NULL;
+ALTER TABLE `ploopi_user` ADD `servertimezone` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1' AFTER `ticketsbyemail` ;

@@ -1721,18 +1721,10 @@ function ploopi_skin_array_renderupdate(array_id)
         {
             columns[j].style.height = $('ploopi_explorer_main_'+array_id).offsetHeight+'px'
         }
-
-        /*
-        $('#ploopi_explorer_main_'+array_id+' > .ploopi_explorer_column_right').css("height", $('#ploopi_explorer_main_'+array_id)[0].offsetHeight+'px');
-        $('#ploopi_explorer_main_'+array_id+' > .ploopi_explorer_column_left').css("height", $('#ploopi_explorer_main_'+array_id)[0].offsetHeight+'px');
-        */
     }
-
-
-    //$('ploopi_explorer_main_<? echo $array_id; ?>').style.visibility = 'visible';
 }
 
-function ploopi_tickets_new(event, id_object, id_record, object_label, reload)
+function ploopi_tickets_new(event, id_object, id_record, object_label, id_user, reload)
 {
     var data = '';
 
@@ -1740,6 +1732,7 @@ function ploopi_tickets_new(event, id_object, id_record, object_label, reload)
     if (id_object) data += '&ploopi_tickets_id_object='+id_object;
     if (id_record) data += '&ploopi_tickets_id_record='+id_record;
     if (reload) data += '&ploopi_tickets_reload='+reload;
+    if (id_user) data += '&ploopi_tickets_id_user='+id_user;
 
     ploopi_showpopup('',550,event,'click', 'system_popupticket');
     ploopi_ajaxloader('system_popupticket');

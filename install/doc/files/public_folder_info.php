@@ -57,7 +57,7 @@ if (!empty($currentfolder))
             <?
             include_once './modules/system/class_user.php';
             $user = new user();
-            if ($user->open($docfolder->fields['id_user'])) echo $user->fields['login'];
+            if ($user->open($docfolder->fields['id_user'])) echo "{$user->fields['lastname']} {$user->fields['firstname']}";
             else echo '<i>supprimé</i>';
             ?>
         </p>
@@ -77,19 +77,10 @@ if (!empty($currentfolder))
                 $users = array();
                 if (!empty($shusers))
                 {
-                    $sql = "SELECT id,login,lastname,firstname FROM ploopi_user WHERE id in (".implode(',',$shusers).") ORDER BY lastname, firstname";
+                    $sql = "SELECT concat(lastname, ' ', firstname) FROM ploopi_user WHERE id in (".implode(',',$shusers).") ORDER BY lastname, firstname";
                     $db->query($sql);
-                    while ($row = $db->fetchrow()) $users[$row['id']] = $row;
-                    
-                    if (sizeof($users))
-                    {
-                        $c=1;
-                        foreach($users as $user)
-                        {
-                            echo "{$user['login']}";
-                            if ($c++<sizeof($users)) echo ', ';
-                        }
-                    }
+                    $arrUsers = $db->getarray();
+                    if (!empty($arrUsers)) echo implode(', ', $arrUsers);
                     else echo "Aucun partage";
                 }
                 else echo "Aucun partage";
@@ -113,19 +104,11 @@ if (!empty($currentfolder))
                 $users = array();
                 if (!empty($wfusers))
                 {
-                    $sql = "SELECT id,login,lastname,firstname FROM ploopi_user WHERE id in (".implode(',',$wfusers).") ORDER BY lastname, firstname";
+                    $sql = "SELECT concat(lastname, ' ', firstname) FROM ploopi_user WHERE id in (".implode(',',$wfusers).") ORDER BY lastname, firstname";
                     $db->query($sql);
-                    while ($row = $db->fetchrow()) $users[$row['id']] = $row;
-                    
-                    if (!empty($users))
-                    {
-                        $c=1;
-                        foreach($users as $user)
-                        {
-                            echo "{$user['login']}";
-                            if ($c++<sizeof($users)) echo ', ';
-                        }
-                    }
+
+                    $arrUsers = $db->getarray();
+                    if (!empty($arrUsers)) echo implode(', ', $arrUsers);
                     else echo "Aucune accréditation";
                 }
                 else echo "Aucune accréditation";

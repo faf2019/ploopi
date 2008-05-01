@@ -121,22 +121,6 @@ switch($_SESSION['directory']['directoryTabItem'])
 }
 
 
-if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
-{
-    $tabs['tabFavorites'] = array(  'title' => (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_myfavorites'])) ? _DIRECTORY_FAVORITES : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_myfavorites'],
-                                    'url'   => "{$scriptenv}?directoryTabItem=tabFavorites"
-                                );
-}
-elseif ($_SESSION['directory']['directoryTabItem'] == 'tabFavorites') $_SESSION['directory']['directoryTabItem'] = '';
-
-if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_mycontacts'])
-{
-    $tabs['tabMycontacts'] = array( 'title' => (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'],
-                                    'url'   => "{$scriptenv}?directoryTabItem=tabMycontacts"
-                                    );
-}
-elseif ($_SESSION['directory']['directoryTabItem'] == 'tabMycontacts') $_SESSION['directory']['directoryTabItem'] = '';
-
 if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_mygroup'])
 {
     $tabs['tabMygroup'] = array(    'title' => (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mygroup'])) ? _DIRECTORY_MYGROUP : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mygroup'],
@@ -146,6 +130,22 @@ if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_m
 elseif ($_SESSION['directory']['directoryTabItem'] == 'tabMygroup') $_SESSION['directory']['directoryTabItem'] = '';
 
 
+if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_mycontacts'])
+{
+    $tabs['tabMycontacts'] = array( 'title' => (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'],
+                                    'url'   => "{$scriptenv}?directoryTabItem=tabMycontacts"
+                                    );
+}
+elseif ($_SESSION['directory']['directoryTabItem'] == 'tabMycontacts') $_SESSION['directory']['directoryTabItem'] = '';
+
+
+if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
+{
+    $tabs['tabFavorites'] = array(  'title' => (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_myfavorites'])) ? _DIRECTORY_FAVORITES : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_myfavorites'],
+                                    'url'   => "{$scriptenv}?directoryTabItem=tabFavorites"
+                                );
+}
+elseif ($_SESSION['directory']['directoryTabItem'] == 'tabFavorites') $_SESSION['directory']['directoryTabItem'] = '';
 
 
 if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_search'])

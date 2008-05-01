@@ -71,18 +71,15 @@ function ploopi_die($var = null, $flush = true)
     die();
 }
 
-function ploopi_redirect($link, $urlencode = true)
+function ploopi_redirect($link, $urlencode = true, $internal = true)
 {
-    global $db;
+    global $basepath;
 
     if ($urlencode) $link = ploopi_urlencode($link);
+    if ($internal) $link = "{$basepath}/{$link}";
 
-    session_write_close();
-    if (!empty($db) && $db->isconnected()) $db->close();
-
-    while(ob_get_level()>0) ob_end_clean();
-    header("Location: $link");
-    exit();
+    header("Location: {$link}");
+    ploopi_die();
 }
 
 function ploopi_array_map($func, $var)
@@ -527,6 +524,7 @@ function ploopi_accepts_gzip()
     return in_array("gzip",$accept);
 }
 
+
 /*
  * Gère la sortie du buffer principal
  * -> met à jour le rendu final en mettant à jour les variables d'éxection
@@ -553,7 +551,11 @@ function ploopi_ob_callback($buffer)
         }
     }
     
-    if (_PLOOPI_USE_OUTPUT_COMPRESSION && $content_type == 'text/html') $buffer = preg_replace("/\s+/"," ",$buffer);
+    if (_PLOOPI_USE_OUTPUT_COMPRESSION && $content_type == 'text/html') 
+    {
+        // compress html
+        $buffer = preg_replace(array('/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'), array('>','<','\\1'), $buffer);
+    }
  
     $ploopi_stats = array();
     

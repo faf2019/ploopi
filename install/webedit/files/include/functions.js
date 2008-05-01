@@ -69,17 +69,21 @@ function webedit_article_validate(form, article_type, article_status, validator)
 
     if (next)
     {
-        var fck_instance = $('webedit_frame_editor').contentWindow.FCKeditorAPI.GetInstance('fck_webedit_article_content');
-
-        // get fckeditor content
-        $('fck_webedit_article_content').value = fck_instance.GetData(true)
-
-        if (ploopi_validatefield('Titre', form.webedit_article_title, 'string'))
-        if ($('fck_webedit_article_content').value == '')
+        if (article_status == 'wait') return true;
+        else
         {
-            if (confirm("ATTENTION !! Cet article semble vide.\n\n Si vous l'enregistrez, vous perdrez tout son contenu\n\nÊtes-vous malgré tout certain de vouloir enregistrer cet article ?")) return true;
-        }
-        else return true;
+	        var fck_instance = $('webedit_frame_editor').contentWindow.FCKeditorAPI.GetInstance('fck_webedit_article_content');
+	
+	        // get fckeditor content
+	        $('fck_webedit_article_content').value = fck_instance.GetData(true)
+	
+	        if (ploopi_validatefield('Titre', form.webedit_article_title, 'string'))
+	        if ($('fck_webedit_article_content').value == '')
+	        {
+	            if (confirm("ATTENTION !! Cet article semble vide.\n\n Si vous l'enregistrez, vous perdrez tout son contenu\n\nÊtes-vous malgré tout certain de vouloir enregistrer cet article ?")) return true;
+	        }
+	        else return true;
+	    }
     }
 
     return false;

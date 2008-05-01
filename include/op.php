@@ -259,14 +259,14 @@ if (isset($ploopi_op))
         
                 window.onload = function ()
                 {
-                    // First of all, translate the dialog box texts
+                    /* First of all, translate the dialog box texts */
                     oEditor.FCKLanguageManager.TranslatePage( document ) ;
         
                     LoadSelected() ;
         
-                    // Show the "Ok" button.
+                    /* Show the "Ok" button. */
                     window.parent.SetOkButton( true ) ;
-                }
+                };
         
                 var eSelected = oEditor.FCKSelection.GetSelectedElement() ;
         

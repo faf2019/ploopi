@@ -193,10 +193,10 @@
     </div>
     <div id="error">
         La feuille de style n'a pas pu être chargée correctement.
-        <br />Vous devriez vérifier le paramétrage de la directive <em>RewriteBase</em> pour qu'elle pointe sur la racine de votre site.
+        <br />Vous devriez vérifier la valeur de la directive <em>RewriteBase</em> (dans le fichier <em>.htaccess</em>) pour qu'elle pointe sur la racine de votre site.
         <br /><br />Par exemple, si votre URL d'accès à Ploopi est de la forme http://mondomaine/ploopi/ , vous devez paramétrer <em>RewriteBase</em> de la manière suivante :
         <br />
-        <pre>RewriteBase /</pre>
+        <pre>RewriteBase /ploopi</pre>
     </div>
 </body>
 </html>

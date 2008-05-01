@@ -23,16 +23,6 @@
 
 ploopi_init_module('directory', false, false, false);
 
-if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_myfavorites'])
-{
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_myfavorites'])) ? _DIRECTORY_FAVORITES : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_myfavorites'],ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabFavorites"));
-}
-
-if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_mycontacts'])
-{
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mycontacts'],ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabMycontacts"));
-}
-
 if ($_SESSION["ploopi"]["workspaceid"] > 0)  // group selected
 {
     if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_mygroup'])
@@ -40,6 +30,16 @@ if ($_SESSION["ploopi"]["workspaceid"] > 0)  // group selected
     {
         $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mygroup'])) ? _DIRECTORY_MYGROUP : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mygroup'],ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabMygroup"));
     }
+}
+
+if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_mycontacts'])
+{
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mycontacts'],ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabMycontacts"));
+}
+
+if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_myfavorites'])
+{
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_myfavorites'])) ? _DIRECTORY_FAVORITES : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_myfavorites'],ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabFavorites"));
 }
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_search'])

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export YUIVER='-2.3.4'
+export YUIVER='-2.3.5'
 
 echo "COMPRESSION DU FICHIER functions.js"
 java -jar yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-15 js/functions.js > js/functions.pack.js
@@ -23,8 +23,6 @@ for template in ./templates/backoffice/ploopi*; do
     fi
 done
 
-
-#!/bin/sh
 for i in $( find ./FCKeditor ./modules ./templates/frontoffice \( -name '*.js' -or -name '*.css' \) -type f )
 do
     gzip -cf $i > $i.gz

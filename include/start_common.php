@@ -96,12 +96,6 @@ if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
 
 session_start();
 
-$ploopi_initsession = false;
-
-if (empty($_SESSION) || (!empty($_SESSION['ploopi']['host']) && $_SESSION['ploopi']['host'] != $_SERVER['HTTP_HOST']))  { ploopi_session_reset(); $ploopi_initsession = true; }
-
-ploopi_session_update();
-
 ///////////////////////////////////////////////////////////////////////////
 // LOGOUT
 ///////////////////////////////////////////////////////////////////////////
@@ -109,8 +103,17 @@ if (isset($_REQUEST['ploopi_logout']))
 {
     session_destroy();
     session_write_close();
-    header("location: {$scriptenv}");
+    header("Location: {$basepath}/{$scriptenv}");
+    ploopi_die();
 }
+
+
+$ploopi_initsession = false;
+
+if (empty($_SESSION) || (!empty($_SESSION['ploopi']['host']) && $_SESSION['ploopi']['host'] != $_SERVER['HTTP_HOST']))  { ploopi_session_reset(); $ploopi_initsession = true; }
+
+ploopi_session_update();
+
 
 ///////////////////////////////////////////////////////////////////////////
 // INCLUDES MAIN CLASSES
