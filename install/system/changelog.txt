@@ -1,6 +1,6 @@
 == Ploopi - version 1.0 RC3b ===================================================
 
-2008-04-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-05-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
    
 * Ploopi
   - Possibilité de choisir le fuseau horaire par utilisateur (au lieu du décalage en heures)
@@ -9,20 +9,40 @@
   - Correction d'un problème de bufferisation dans la gestion interne des documents
   - Amélioration de l'affichage des erreurs (pile d'erreur complète)
   - Meilleure compression html des contenus bufferisés
+  - Validateurs : uniformisation nom/prénom
+  - Partages : uniformisation nom/prénom
+  - Tickets : uniformisation nom/prénom
+  - Correctif sur la fonction ploopi_redirect()
+  - Correctif sur la fonctionnalité 'logout' (problème de redirection)
+  - Ajout d'une variable globale $basepath contenant l'url de base du portail (notamment pour FCKEditor & ploopi_redirect)
 
 * Templates 
   - Mise à jour des templates backoffice
   - Correction d'un bug dans le template 'ploopi_menu' (uniquement en activant la compression du buffer de sortie)
   - Correction d'un bug dans les templates frontoffice exemple* (erreur de variable lors d'une fermeture de bloc)
 
-* Doc, Forms, Directory
+* Doc
   - Mise à jour de sécurité consécutive à une modification au niveau de Ploopi
+  - Uniformisation de l'affichage nom/prénom/login
+  - Correction d'un problème de téléchargement de documents pour les utilisateurs non connectés (frontoffice)
+    
+* Directory
+  - Mise à jour de sécurité consécutive à une modification au niveau de Ploopi
+  - Changement d'ordre des onglets
+  - Suppression affichage login
+  - Correction d'un bug dans l'ajout/modification d'une liste de favoris
+  - Lien "tickets"
+  - Lien "courriel"
 
 * WebEdit
   - Correction d'un bug sur tri par date des articles (si date identique)
-
-* Install 
+  - Correction d'un bug sur la validation d'article
+  - Meilleure intégration de FCKEditor
+  
+* Install / Config
   - Ajout d'une détection de mauvais paramétrage de la directive RewriteBase (test)
+  - Suppression du paramètre _BASEPATH
+  - Détection automatique du problème de configuration de la directive 'RewriteBase' du fichier .htaccess
   
 == Ploopi - version 1.0 RC3 ===================================================
 

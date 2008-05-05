@@ -201,7 +201,7 @@ if (isset($ploopi_op))
                         <?
                     }
 
-                    echo '</div>';        ploopi_die('la');
+                    echo '</div>';
                     
                 }
 

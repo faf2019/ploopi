@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 ##############################################################################
 #
 # Date / Time functions
@@ -244,7 +243,7 @@ function ploopi_unixtimestamp2timestamp($mytimestamp)
 * @version 2.09
 * @since 0.1
 *
-* @category date/time manipulations
+* @category date/time manipulationsploopi_timestamp_add
 *
 * @uses ploopi_gettimestampdetail()
 */
@@ -344,51 +343,102 @@ function ploopi_timestamp_add($timestp, $h=0, $mn=0, $s=0, $m=0, $d=0, $y=0)
                                                     ));
 }
 
+/**
+* Crée un timestamp pour un fuseau horaire donné
+*
+* @param string timezone_name : 'user', 'server', timezone valide
+* @return timestamp AAAAMMJJHHMMSS
+*
+*/
 
-
-function ploopi_gmt_timestamp()
+function ploopi_tz_createtimestamp($timezone_name = 'UTC')
 {
-    // renvoie le timestamp de Greenwich
-    return(ploopi_timestamp_add(ploopi_createtimestamp(), 0, 0, -date('Z'), 0, 0, 0));
+    switch($timezone_name)
+    {
+        case 'user':
+            $timezone_name = $_SESSION['ploopi']['user']['timezone'];
+        break;
+        
+        case 'server':
+            $timezone_name = $_SESSION['ploopi']['timezone'];
+        break;
+    }
+
+    return(date_format(date_create(null, timezone_open($timezone_name)), _PLOOPI_TIMESTAMPFORMAT_MYSQL));
 }
 
-// renvoie le timezone du serveur (par rapport Ã  Greenwich)
-function ploopi_tz()
+/**
+* Convertit un timestamp d'un fuseau à un autre
+*
+* @param int ts : timestamp
+* @param string timezone_name_src : 'user', 'server', timezone valide
+* @param string timezone_name_dst : 'user', 'server', timezone valide
+* @return timestamp AAAAMMJJHHMMSS
+*
+*/
+
+function ploopi_tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezone_name_dst = 'UTC')
 {
-    return(date('Z')/3600);
+    switch($timezone_name_src)
+    {
+        case 'user':
+            $timezone_name_src = $_SESSION['ploopi']['user']['timezone'];
+        break;
+        
+        case 'server':
+            $timezone_name_src = $_SESSION['ploopi']['timezone'];
+        break;
+    }
+    
+    switch($timezone_name_dst)
+    {
+        case 'user':
+            $timezone_name_dst = $_SESSION['ploopi']['user']['timezone'];
+        break;
+        
+        case 'server':
+            $timezone_name_dst = $_SESSION['ploopi']['timezone'];
+        break;
+    }
+    
+    $default_tz = date_default_timezone_get();
+
+    // on cherche les 2 fuseaux
+    $tz_src = timezone_open($timezone_name_src);
+    $tz_dst = timezone_open($timezone_name_dst);
+    
+    // on parse le timestamp 'mysql' pour créer un timestamp unix
+    ereg(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $ts, $tsregs);
+    
+    // on crée l'objet date sur le fuseau source
+    date_default_timezone_set($timezone_name_src);
+    $date = date_create('@'.mktime($tsregs[4], $tsregs[5], $tsregs[6], $tsregs[2], $tsregs[3], $tsregs[1]));
+    date_default_timezone_set($default_tz);
+    
+    /* BUG ?? ne fonctionne pas
+     * $date = date_create('@'.mktime($tsregs[4], $tsregs[5], $tsregs[6], $tsregs[2], $tsregs[3], $tsregs[1]), $tz_src);
+     */
+    
+    // changement de fuseau horaire (dest)
+    date_timezone_set($date, $tz_dst);
+
+    // on renvoie la date formatée timestamp mysql
+    return(date_format($date, _PLOOPI_TIMESTAMPFORMAT_MYSQL));
 }
 
-// renvoie le timestamp 'local' en fonction du timezone
-function ploopi_tz_timestamp($timezone, $gmt_timestamp = 0)
+function ploopi_tz_getutc($timezone_name = 'UTC')
 {
-    if ($timezone == 'server') $timezone = ploopi_tz();
+    switch($timezone_name)
+    {
+        case 'user':
+            $timezone_name = $_SESSION['ploopi']['user']['timezone'];
+        break;
+        
+        case 'server':
+            $timezone_name = $_SESSION['ploopi']['timezone'];
+        break;
+    }
 
-    if (!$gmt_timestamp) $gmt_timestamp = ploopi_gmt_timestamp();
-    return(ploopi_timestamp_add($gmt_timestamp, 0, 0, $timezone*3600, 0, 0, 0));
+    return('UTC '.date_format(date_create(null, timezone_open($timezone_name)), "P"));
 }
-
-function ploopi_formatgmt($timezone)
-{
-    return(sprintf("%s%02d:%02d", ($timezone>=0) ? '+' : '-', floor(abs($timezone)),(fmod(abs($timezone),1)*60)));
-}
-
-function ploopi_tz_timestamp2local($ts, $timezone = 0, $light = false)
-{
-    if ($timezone === 'server') $timezone = ploopi_tz();
-    if ($timezone === 0) $timezone = $_SESSION['ploopi']['user']['timezone'];
-
-    $localdate = ploopi_timestamp2local(ploopi_tz_timestamp($timezone, $ts));
-
-    if ($light) return(substr($localdate['date'],0,5).' '.substr($localdate['time'],0,5));
-    else return($localdate['date'].' '.substr($localdate['time'],0,5).' (GMT '.ploopi_formatgmt($timezone).')');
-}
-
-function ploopi_tz_local2timestamp($date, $heure = '', $timezone = 0)
-{
-    if ($timezone === 'paris') $timezone = ploopi_tz();
-    if ($timezone === 0) $timezone = $_SESSION['ploopi']['user']['timezone'];
-
-    return(ploopi_tz_timestamp(-$timezone, ploopi_local2timestamp($date, $heure)));
-}
-
 ?>

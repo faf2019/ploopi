@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 class xml2array
 {
 
@@ -44,7 +43,8 @@ class xml2array
 
         $this->xmlarray['root'] = array();
         $this->node_stack[] = &$this->xmlarray['root'];
-
+        $this->node_stack[] = &$this->xmlarray['root attributes'];
+        
         // parse the data and free the parser...
         if (xml_parse($this->parser, $xmlcontent))
         {
@@ -75,15 +75,42 @@ class xml2array
     function startElement($parser, $name, $attrs)
     {
         $this->currentdata = '';
-        $this->node_stack[] = &$this->node_stack[sizeof($this->node_stack)-1][$name][];
+        
+        $s = (sizeof($this->node_stack)-2);
+        
+        $this->node_stack[] = &$this->node_stack[$s][$name][];
+        $this->node_stack[] = &$this->node_stack[$s]["{$name} attributes"][];
+        
+        if (!empty($attrs)) $this->node_stack[$s+3] = $attrs;
     }
 
     function endElement($parser, $name)
     {
-        if (trim($this->currentdata) != '') $this->node_stack[(sizeof($this->node_stack)-1)] = $this->currentdata;
+        if (trim($this->currentdata) != '') $this->node_stack[(sizeof($this->node_stack)-2)] = $this->currentdata;
+        array_pop($this->node_stack);
         array_pop($this->node_stack);
         $this->currentdata = '';
     }
+    
+    
+    /*
+    function startElement($parser, $name, $attrs)
+    {
+        $this->currentdata = '';
+        
+        $s = (sizeof($this->node_stack)-1)/2;
+        $this->node_stack[] = &$this->node_stack[$s][$name][];
+        $this->node_stack[] = &$this->node_stack[$s]["{$name} attributes"][];
+        $this->node_stack[(sizeof($this->node_stack)-1)] = $attrs;
+    }
+
+    function endElement($parser, $name)
+    {
+        if (trim($this->currentdata) != '') $this->node_stack[(sizeof($this->node_stack)-2)] = $this->currentdata;
+        array_pop($this->node_stack);
+        $this->currentdata = '';
+    }    
+    */    
 
     function characterData($parser, $data)
     {

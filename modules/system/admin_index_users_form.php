@@ -203,7 +203,7 @@ if (isset($_REQUEST['error']))
                 <label><? echo _SYSTEM_LABEL_SERVERTIMEZONE; ?>:</label>
                 <span>
                     <input style="width:16px;" type="checkbox" id="user_servertimezone" name="user_servertimezone" value="1" <? if ($user->fields['servertimezone']) echo 'checked'; ?> tabindex="25" onchange="$('user_timezone_choice').style.display = (this.checked) ? 'none' : 'block';"/>
-                    <? echo "{$server_timezoneid} (". (($offset == 0) ? 'UTC' : sprintf("GMT %s%02dh%02d",$s, $hh, $mm)). ")"; ?>
+                    <? echo "{$server_timezoneid} (". (($offset == 0) ? 'UTC' : sprintf("UTC %s%02dh%02d",$s, $hh, $mm)). ")"; ?>
                 </span>
             </p>
 

@@ -100,7 +100,7 @@ if ($query_string == '') // affichage standard rubrique/page
             break;
                 
             case 'url_redirect':
-                if (!empty($headings['list'][$headingid]['url'])) ploopi_redirect($headings['list'][$headingid]['url']);
+                if (!empty($headings['list'][$headingid]['url'])) ploopi_redirect($headings['list'][$headingid]['url'], false, false);
             break;
             
             

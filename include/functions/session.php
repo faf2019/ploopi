@@ -73,6 +73,8 @@ function ploopi_session_reset()
 
                     'fingerprint'   => _PLOOPI_FINGERPRINT,
 
+                    'timezone'      => timezone_name_get(date_timezone_get(date_create())),
+    
                     'browser'       => (function_exists('ploopi_detect_browser')) ? ploopi_detect_browser($_SERVER['HTTP_USER_AGENT']) : array()
                 );
 

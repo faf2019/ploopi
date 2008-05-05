@@ -554,7 +554,8 @@ function ploopi_ob_callback($buffer)
     if (_PLOOPI_USE_OUTPUT_COMPRESSION && $content_type == 'text/html') 
     {
         // compress html
-        $buffer = preg_replace(array('/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'), array('>','<','\\1'), $buffer);
+        // ATTENTION pose problème avec TEXTAREA & JS
+        // $buffer = preg_replace(array('/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'), array('>','<','\\1'), $buffer);
     }
  
     $ploopi_stats = array();
