@@ -154,7 +154,7 @@ if ($ploopi_initsession)
         $user->open($_SESSION['ploopi']['userid']);
         $_SESSION['ploopi']['user'] = $user->fields;
 
-        if ($_SESSION['ploopi']['user']['timezone']) $_SESSION['ploopi']['user']['timezone'] = $_SESSION['ploopi']['timezone'];
+        if ($_SESSION['ploopi']['user']['servertimezone']) $_SESSION['ploopi']['user']['timezone'] = $_SESSION['ploopi']['timezone'];
         
         $_SESSION['ploopi']['actions'] = array();
         $user->getactions($_SESSION['ploopi']['actions']);
