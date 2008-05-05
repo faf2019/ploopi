@@ -44,7 +44,7 @@ function ploopi_tickets_selectusers($id_user = null)
     </div>
     <div style="font-weight:bold;">Destinataires qui vont recevoir un message :</div>
     <div id="div_ticket_users_selected" style="padding:2px 0 0 0;">
-    <? ploopi_tickets_displayusers(); ?>
+    <? if (!empty($_SESSION['ploopi']['tickets']['users_selected'])) ploopi_tickets_displayusers(); ?>
     </div>
     <?
 }
@@ -234,22 +234,25 @@ function ploopi_tickets_displayusers()
 {
     global $skin;
     
-    foreach($_SESSION['ploopi']['tickets']['users_selected'] as $user_id)
+    if (!empty($_SESSION['ploopi']['tickets']['users_selected']))
     {
-        include_once('./modules/system/class_user.php');
-
-        $user = new user();
-        $user->open($user_id);
-
-        $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
-        ?>
-        <p class="ploopi_va" style="padding:2px;">
-            <a class="system_tickets_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=tickets_select_user&remove_user_id=<? echo $user->fields['id']; ?>','','div_ticket_users_selected');">
-                <img src="./img/icon_delete.gif">
-                <span><? echo "{$user->fields['lastname']} {$user->fields['firstname']} (Cliquez pour supprimer)"; ?></span>
-            </a>
-        </p>
-        <?
+        foreach($_SESSION['ploopi']['tickets']['users_selected'] as $user_id)
+        {
+            include_once('./modules/system/class_user.php');
+    
+            $user = new user();
+            $user->open($user_id);
+    
+            $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
+            ?>
+            <p class="ploopi_va" style="padding:2px;">
+                <a class="system_tickets_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=tickets_select_user&remove_user_id=<? echo $user->fields['id']; ?>','','div_ticket_users_selected');">
+                    <img src="./img/icon_delete.gif">
+                    <span><? echo "{$user->fields['lastname']} {$user->fields['firstname']} (Cliquez pour supprimer)"; ?></span>
+                </a>
+            </p>
+            <?
+        }
     }
 }
 ?>
