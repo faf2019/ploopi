@@ -83,6 +83,9 @@ if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
     include_once './include/classes/class_session.php' ;
 
     ini_set('session.save_handler', 'user');
+    ini_set('session.gc_probability', 100);
+    ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);
+    
     $session = new ploopi_session();
     session_set_save_handler(   array($session, 'open'),
                                 array($session, 'close'),
@@ -93,7 +96,6 @@ if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
                             );
 }
 
-
 session_start();
 
 ///////////////////////////////////////////////////////////////////////////
@@ -101,11 +103,13 @@ session_start();
 ///////////////////////////////////////////////////////////////////////////
 if (isset($_REQUEST['ploopi_logout']))
 {
+    $_SESSION = array();
+    session_regenerate_id(true);
     session_destroy();
-    session_write_close();
     header("Location: {$basepath}/{$scriptenv}");
     ploopi_die();
 }
+
 
 
 $ploopi_initsession = false;

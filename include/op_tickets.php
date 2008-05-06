@@ -171,9 +171,10 @@ switch($ploopi_op)
                 };
             </script>
             <div id="tickets_new">
-                <form method="post" action="admin.php" onsubmit="javascript:return ploopi_tickets_validate(this);};">
+                <form method="post" action="admin.php" target="ploopi_tickets_send" onsubmit="javascript:return ploopi_tickets_validate(this);};">
                 <input type="hidden" name="ploopi_op" value="<? echo $nextop; ?>">
                 <input type="hidden" name="ticket_id" value="<? echo $_GET['ticket_id']; ?>">
+                <input type="hidden" name="ploopi_tickets_reload" value="1">
                 <?
                 if ($ploopi_op == 'tickets_replyto')
                 {
@@ -211,6 +212,7 @@ switch($ploopi_op)
                         <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('system_popupticket');">
                 </div>
                 </form>
+                <iframe name="ploopi_tickets_send" style="display:none;"></iframe>
             </div>
             <?
         }
@@ -220,6 +222,71 @@ switch($ploopi_op)
         ploopi_die();
     break;
 
+    case 'tickets_send':
+        include_once('./modules/system/class_ticket.php');
+        $ticket = new ticket();
+        if (isset($_POST['ticket_id']) && is_numeric($_POST['ticket_id']) && isset($_POST['fck_ticket_message']) && $ticket->open($_POST['ticket_id']))
+        {
+            include_once('./modules/system/class_ticket_dest.php');
+
+            $root_ticket = new ticket();
+            if ($ticket->fields['root_id'] && $root_ticket->open($ticket->fields['root_id']))
+            {
+                $root_ticket->fields['count_replies']++;
+                $root_ticket->fields['lastreply_timestp'] = ploopi_createtimestamp();
+                $root_ticket->save();
+            }
+
+            $response = new ticket();
+            $response->fields = $ticket->fields;
+            $response->fields['id'] = '';
+            $response->fields['title'] = $_POST['ticket_title'];
+            $response->fields['message'] = $_POST['fck_ticket_message'];
+            $response->fields['id_user'] = $_SESSION['ploopi']['userid'];
+            $response->fields['timestp'] = ploopi_createtimestamp();
+            $response->fields['lastreply_timestp'] = $response->fields['timestp'];
+            $response->fields['parent_id'] = $_POST['ticket_id'];
+            $response->fields['root_id'] = $ticket->fields['root_id'];
+            $id_resp = $response->save();
+
+            $db->query("DELETE FROM ploopi_ticket_watch WHERE id_ticket = {$ticket->fields['root_id']} AND id_user <> {$_SESSION['ploopi']['userid']}");
+        }
+        else
+        {
+            if (!empty($_POST['ticket_title']) && isset($_POST['fck_ticket_message']))
+            {
+                if (!empty($_POST['ploopi_tickets_id_object']) && !empty($_POST['ploopi_tickets_id_record']) && !empty($_POST['ploopi_tickets_object_label']))
+                {
+                    ploopi_tickets_send($_POST['ticket_title'], $_POST['fck_ticket_message'], isset($_POST['ticket_needed_validation']) ? $_POST['ticket_needed_validation'] : 0, isset($_POST['ticket_delivery_notification']) ? $_POST['ticket_delivery_notification'] : 0, $_POST['ploopi_tickets_id_object'], $_POST['ploopi_tickets_id_record'], $_POST['ploopi_tickets_object_label']);
+                }
+                else
+                {
+                    ploopi_tickets_send($_POST['ticket_title'], $_POST['fck_ticket_message'], isset($_POST['ticket_needed_validation']) ? $_POST['ticket_needed_validation'] : 0, isset($_POST['ticket_delivery_notification']) ? $_POST['ticket_delivery_notification'] : 0);
+                }
+            }
+        }
+
+        if (!empty($_POST['ploopi_tickets_reload']) && $_POST['ploopi_tickets_reload'])
+        {
+            ?>
+            <script type="text/javascript">
+                window.parent.location.href = '<? echo ploopi_urlencode('admin.php?ploopi_mainmenu='._PLOOPI_MENU_MYWORKSPACE.'&op=tickets'); ?>';
+            </script>
+            <?
+        }
+        else
+        {
+            ?>
+            <script type="text/javascript">
+                window.parent.ploopi_hidepopup('system_popupticket');
+            </script>
+            <?
+        }
+        
+        ploopi_die();
+    break;
+    
+    
     case 'tickets_modify_next':
         include_once('./modules/system/class_ticket.php');
         $ticket = new ticket();
@@ -412,68 +479,5 @@ switch($ploopi_op)
         ploopi_die();
     break;
 
-    case 'tickets_send':
-        include_once('./modules/system/class_ticket.php');
-        $ticket = new ticket();
-        if (isset($_POST['ticket_id']) && is_numeric($_POST['ticket_id']) && isset($_POST['fck_ticket_message']) && $ticket->open($_POST['ticket_id']))
-        {
-            include_once('./modules/system/class_ticket_dest.php');
-
-            $root_ticket = new ticket();
-            if ($ticket->fields['root_id'] && $root_ticket->open($ticket->fields['root_id']))
-            {
-                $root_ticket->fields['count_replies']++;
-                $root_ticket->fields['lastreply_timestp'] = ploopi_createtimestamp();
-                $root_ticket->save();
-            }
-
-            $response = new ticket();
-            $response->fields = $ticket->fields;
-            $response->fields['id'] = '';
-            $response->fields['title'] = $_POST['ticket_title'];
-            $response->fields['message'] = $_POST['fck_ticket_message'];
-            $response->fields['id_user'] = $_SESSION['ploopi']['userid'];
-            $response->fields['timestp'] = ploopi_createtimestamp();
-            $response->fields['lastreply_timestp'] = $response->fields['timestp'];
-            $response->fields['parent_id'] = $_POST['ticket_id'];
-            $response->fields['root_id'] = $ticket->fields['root_id'];
-            $id_resp = $response->save();
-
-            $db->query("DELETE FROM ploopi_ticket_watch WHERE id_ticket = {$ticket->fields['root_id']} AND id_user <> {$_SESSION['ploopi']['userid']}");
-        }
-        else
-        {
-            if (!empty($_POST['ticket_title']) && isset($_POST['fck_ticket_message']))
-            {
-                if (!empty($_POST['ploopi_tickets_id_object']) && !empty($_POST['ploopi_tickets_id_record']) && !empty($_POST['ploopi_tickets_object_label']))
-                {
-                    ploopi_tickets_send($_POST['ticket_title'], $_POST['fck_ticket_message'], isset($_POST['ticket_needed_validation']) ? $_POST['ticket_needed_validation'] : 0, isset($_POST['ticket_delivery_notification']) ? $_POST['ticket_delivery_notification'] : 0, $_POST['ploopi_tickets_id_object'], $_POST['ploopi_tickets_id_record'], $_POST['ploopi_tickets_object_label']);
-                }
-                else
-                {
-                    ploopi_tickets_send($_POST['ticket_title'], $_POST['fck_ticket_message'], isset($_POST['ticket_needed_validation']) ? $_POST['ticket_needed_validation'] : 0, isset($_POST['ticket_delivery_notification']) ? $_POST['ticket_delivery_notification'] : 0);
-                }
-            }
-        }
-
-        if (!empty($_POST['ploopi_tickets_reload']) && $_POST['ploopi_tickets_reload'])
-        {
-            ?>
-            <script type="text/javascript">
-                window.parent.document.location.reload();
-            </script>
-            <?
-        }
-        else
-        {
-            ?>
-            <script type="text/javascript">
-                window.parent.ploopi_hidepopup('system_popupticket');
-            </script>
-            <?
-        }
-        
-        ploopi_die();
-    break;
 }
 ?>

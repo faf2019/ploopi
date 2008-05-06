@@ -48,8 +48,7 @@ class ploopi_session
     function gc($max)
     {
         global $db;
-        $old = time() - $max;
-        return $db->query("DELETE FROM ploopi_session WHERE access < '".$db->addslashes($old)."'");
+        return $db->query("DELETE FROM ploopi_session WHERE access < '".$db->addslashes((time() - $max))."'");
     }
 }
 ?>

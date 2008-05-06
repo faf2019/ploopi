@@ -24,6 +24,7 @@
 function ploopi_session_reset()
 {
     global $scriptenv;
+    
 
     // session_destroy();
     $_SESSION['ploopi'] = array(
@@ -87,6 +88,7 @@ function ploopi_session_update()
 
     if (!isset($_SESSION['ploopi']['fingerprint']) || $_SESSION['ploopi']['fingerprint'] != _PLOOPI_FINGERPRINT) // problème d'empreinte, session invalide
     {
+        session_regenerate_id(true);
         session_destroy();
         ploopi_redirect("{$scriptenv}?ploopi_errorcode="._PLOOPI_ERROR_SESSIONINVALID);
     }
@@ -98,6 +100,7 @@ function ploopi_session_update()
 
     if ($diff > _PLOOPI_SESSIONTIME && _PLOOPI_SESSIONTIME != '' && _PLOOPI_SESSIONTIME != 0)
     {
+        session_regenerate_id(true);
         session_destroy();
         ploopi_redirect("{$scriptenv}?ploopi_errorcode="._PLOOPI_ERROR_SESSIONEXPIRE);
     }
