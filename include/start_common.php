@@ -83,7 +83,7 @@ if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
     include_once './include/classes/class_session.php' ;
 
     ini_set('session.save_handler', 'user');
-    ini_set('session.gc_probability', 100);
+    ini_set('session.gc_probability', 10);
     ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);
     
     $session = new ploopi_session();
