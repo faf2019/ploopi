@@ -24,7 +24,11 @@
 $user = new user();
 
 if (!empty($_GET['user_id'])) $user->open($_GET['user_id']);
-else $user->init_description();
+else 
+{
+    $user->init_description();
+    $user->fields['servertimezone'] = 1;
+}
 
 // detect server timezone
 $date = date_create();

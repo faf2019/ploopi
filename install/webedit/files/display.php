@@ -137,7 +137,7 @@ if ($query_string == '') // affichage standard rubrique/page
             if ($webedit_mode != 'edit')
             {
                 $article = new webedit_article($type);
-                if (!$article->open($articleid))
+                if (!$article->open($articleid) || empty($headings['list'][$headingid]))
                 {
                     unset($articleid);
                     // renvoi à la racine
@@ -293,6 +293,8 @@ if ($query_string == '') // affichage standard rubrique/page
                     'DATE'          => htmlentities($ldate_timestp['date']),
                     'LASTUPDATE_DATE' => htmlentities($ldate_lastupdate['date']),
                     'LASTUPDATE_TIME' => htmlentities($ldate_lastupdate['time']),
+                    'DATE_PUB'   => $ldate_pub['date'],
+                    'DATE_UNPUB' => $ldate_unpub['date'],
                     'TIMESTP_PUB'   => $ldate_pub['date'],
                     'TIMESTP_UNPUB' => $ldate_unpub['date'],
                     'LINK'          => $script,
@@ -448,6 +450,8 @@ else // RECHERCHE
     $template_body->assign_block_vars("switch_search", array());
 
     $arrRelevance = ploopi_search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, '', $_SESSION['ploopi']['moduleid']);
+    
+    $responses = 0;
 
     foreach($arrRelevance as $key => $result)
     {
@@ -480,8 +484,20 @@ else // RECHERCHE
                 'LINK' => $script
                 )
             );
+            
+            $responses++;
         }
     }
+    
+    if ($responses == 0) // pas de réponse valide !
+    {
+        $template_body->assign_block_vars('switch_search.switch_notfound',array());
+    }
+    
+    $template_body->assign_vars(array(
+                                'SEARCH_RESPONSES' => $responses
+                                )
+                            );
 }
 
 

@@ -118,6 +118,10 @@
                                 <div class="link">&raquo; {switch_search.result.LINK} ({switch_search.result.SIZE} ko)</div>
                             </a>
                         <!-- END result -->
+                        
+                        <!-- BEGIN switch_notfound -->
+                            Aucun résultat pour cette recherche
+                        <!-- END switch_notfound -->
                     </div>
                     <!-- END switch_search -->
 

@@ -1,3 +1,11 @@
+== Module WebEdit - version 1.43 ===================================================
+
+2008-05-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Meilleure gestion de la suppression d'une rubrique (ne supprimait pas les sous-rubriques + articles associés)
+ * Ajout du bloc conditionnel switch_notfound en variable frontoffice
+ * Ajout de la variable frontoffice SEARCH_RESPONSES
+
 == Module WebEdit - version 1.42 ===================================================
 
 2008-04-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

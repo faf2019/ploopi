@@ -20,13 +20,42 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 class webedit_heading extends data_object
 {
     function webedit_heading()
     {
         parent::data_object('ploopi_mod_webedit_heading');
+    }
+    
+    
+    function delete()
+    {
+        include_once './modules/webedit/class_article.php';
+        
+        global $db;
+        
+        // suppression des sous-rubriques
+        $rs1 = $db->query("SELECT id FROM ploopi_mod_webedit_heading WHERE id_heading = {$this->fields['id']}");
+        
+        while ($row = $db->fetchrow($rs1))
+        {
+            $h = new webedit_heading();
+            $h->open($row['id']);
+            $h->delete();
+        }
+        
+        // suppression des brouillons de la rubrique (les articles avec)
+        $rs2 = $db->query("SELECT id FROM ploopi_mod_webedit_article_draft WHERE id_heading = {$this->fields['id']}");
+        
+        while ($row = $db->fetchrow($rs2))
+        {
+            $a = new webedit_article('draft');
+            $a->open($row['id']);
+            $a->delete();
+        }
+        
+        parent::delete();
     }
 }
 ?>

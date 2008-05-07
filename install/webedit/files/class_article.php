@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 include_once './modules/webedit/class_article_backup.php';
 
 class webedit_article extends data_object
@@ -68,8 +67,10 @@ class webedit_article extends data_object
     {
         global $db;
 
+        // mise à jour de la position des autres articles de la rubrique
         $db->query("UPDATE {$this->tablename} SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
-
+        
+        // si brouillon, suppression de l'article associé
         if ($this->tablename == 'ploopi_mod_webedit_article_draft')
         {
             $article = new webedit_article();
@@ -78,6 +79,10 @@ class webedit_article extends data_object
         }
         else
         {
+            // suppression des sauvegardes
+            $db->query("DELETE FROM ploopi_mod_webedit_article_backup WHERE id_article = {$this->fields['id']}");
+            
+            // suppression de l'index
             ploopi_search_remove_index(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id']);
         }
 
@@ -136,10 +141,15 @@ class webedit_article extends data_object
 
     function isenabled()
     {
+        include_once './modules/webedit/class_heading.php';
+
+        $heading = new webedit_heading();
+        
         $today = ploopi_createtimestamp();
         return (
                     ($this->fields['timestp_published'] <= $today || empty($this->fields['timestp_published'])) &&
-                    ($this->fields['timestp_unpublished'] >= $today || empty($this->fields['timestp_unpublished']))
+                    ($this->fields['timestp_unpublished'] >= $today || empty($this->fields['timestp_unpublished'])) &&
+                    $heading->open($this->fields['id_heading'])
                 );
     }
 }
