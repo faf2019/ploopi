@@ -200,17 +200,14 @@ class group extends data_object
                     SELECT  ploopi_user.*
 
                     FROM    ploopi_user,
-                        ploopi_group_user
+                            ploopi_group_user
 
                     WHERE   ploopi_group_user.id_group = {$this->fields['id']}
                     AND     ploopi_group_user.id_user = ploopi_user.id
                     ";
         $result = $db->query($select);
 
-        while ($fields = $db->fetchrow($result,MYSQL_ASSOC))
-        {
-            $users[$fields['id']] = $fields;
-        }
+        while ($fields = $db->fetchrow($result)) $users[$fields['id']] = $fields;
 
         return $users;
     }

@@ -198,7 +198,6 @@ class workspace extends data_object
 
         $users = array();
 
-        // Requête1
         $select =   "
                     SELECT  ploopi_user.*,
                             ploopi_workspace_user.adminlevel
@@ -211,10 +210,8 @@ class workspace extends data_object
                     ";
         $result = $db->query($select);
 
-        while ($fields = $db->fetchrow($result))
-        {
-            $users[$fields['id']] = $fields;
-        }
+        while ($fields = $db->fetchrow($result)) $users[$fields['id']] = $fields;
+
 
         return $users;
     }
