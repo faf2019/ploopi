@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 1.321 ====================================================
+
+2008-05-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à jour du fichier de langue
+
 == Module DIRECTORY - version 1.32 ====================================================
 
 2008-05-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

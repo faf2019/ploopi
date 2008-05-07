@@ -72,14 +72,14 @@ switch($ploopi_op)
                     ?>
                     <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi_subscription_checkaction('<? echo $_GET['ploopi_subscription_id']; ?>', -1);">
                         <input type="checkbox" class="checkbox" id="ploopi_subscription_unsubscribe" name="ploopi_subscription_unsubscribe" value="1" onclick="javascript:ploopi_subscription_checkaction('<? echo $_GET['ploopi_subscription_id']; ?>', -1);" />
-                        <span class="ploopi_subscription_unsubscribe">Désabonner</span>
+                        <span class="ploopi_subscription_unsubscribe"><? echo _PLOOPI_LABEL_SUBSCRIPTION_UNSUSCRIBE; ?></span>
                     </div>            
                     <?
                 }
                 ?>
                 <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi_subscription_checkaction('<? echo $_GET['ploopi_subscription_id']; ?>', 0);">
                     <input type="checkbox" class="checkbox" id="ploopi_subscription_action_0" name="ploopi_subscription_action[]" value="0" onclick="javascript:ploopi_subscription_checkaction('<? echo $_GET['ploopi_subscription_id']; ?>', 0);" <? echo $strChecked; ?> />
-                    <span style="font-weight:bold;">Toutes les actions</span>
+                    <span style="font-weight:bold;"><? echo _PLOOPI_LABEL_SUBSCRIPTION_ALLACTIONS; ?></span>
                 </div>            
                 <?
                 
@@ -120,27 +120,20 @@ switch($ploopi_op)
                     {
                         case 'subscribed':
                             ?>
-                            <div class="subscription_saved">
-                            Abonnement enregistré
-                            </div>
+                            <div class="subscription_saved"><? echo _PLOOPI_LABEL_SUBSCRIPTION_SAVED; ?></div>
                             <?
                         break;
                         
                         case 'unsubscribed':
                             ?>
-                            <div class="subscription_canceled">
-                            Désabonnement enregistré
-                            </div>
+                            <div class="subscription_canceled"><? echo _PLOOPI_LABEL_SUBSCRIPTION_DELETE; ?></div>
                             <?
                         break;
                     }
                 }
                 ?>
             </div>
-            <div style="padding:4px;">
-                Sélectionnez les actions pour lesquelles vous souhaitez être abonné.
-                <br />L'abonnement vous permet de recevoir un ticket lorsqu'une action est effectuée sur un objet ou un ensemble d'objets hérités.
-                </div>
+            <div style="padding:4px;"><? echo _PLOOPI_LABEL_SUBSCRIPTION_DESCIPTION; ?></div>
             <div style="clear:both;padding:4px;text-align:right;">
                 <input type="button" onclick="ploopi_getelem('form_subscription_<? echo $_GET['ploopi_subscription_id']; ?>').ploopi_op.value=''; ploopi_getelem('form_subscription_<? echo $_GET['ploopi_subscription_id']; ?>').submit()" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>">
                 <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">

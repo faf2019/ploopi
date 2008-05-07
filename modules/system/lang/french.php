@@ -20,8 +20,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 define ('_SYSTEM_PAGE_TITLE', 'Administration');
 define ('_SYSTEM_LABEL_SYSTEM', 'SYSTEME');
 define ('_SYSTEM_LABELICON_SYSTEMUPDATE', 'Mise à jour Système');
@@ -149,7 +148,7 @@ define ('_SYSTEM_LABEL_PHONE', 'Téléphone');
 define ('_SYSTEM_LABEL_MOBILE', 'Tél. Portable');
 define ('_SYSTEM_LABEL_FAX', 'Fax');
 define ('_SYSTEM_LABEL_EMAIL', 'Mèl');
-define ('_SYSTEM_LABEL_TICKETSBYEMAIL', 'Copie des tickets par Mèl');
+define ('_SYSTEM_LABEL_TICKETSBYEMAIL', 'Copie des messages par Mèl');
 define ('_SYSTEM_LABEL_SERVERTIMEZONE', 'Synchronisé avec le fuseau horaire du serveur');
 define ('_SYSTEM_LABEL_FUNCTION', 'Fonction');
 define ('_SYSTEM_LABEL_SERVICE', 'Service');
@@ -313,8 +312,8 @@ define ('_SYSTEM_LABEL_MODULEPARAMETERS', 'Paramètres des Modules');
 define ('_SYSTEM_LABEL_BACKTODEFAULTPAGE', 'Revenir à la page par défaut');
 define ('_SYSTEM_LABEL_MODIFYMYHOMEPAGE', 'Modifier ma page d\'accueil');
 
-define ('_SYSTEM_LABEL_MODULEINSTANCIATION', 'Instanctiation d\'un Module « <LABEL> »');
-define ('_SYSTEM_LABEL_MODULEDELETE', 'Suppresion du Module « <LABEL> »');
+define ('_SYSTEM_LABEL_MODULEINSTANCIATION', 'Instanciation d\'un Module « <LABEL> »');
+define ('_SYSTEM_LABEL_MODULEDELETE', 'Suppression du Module « <LABEL> »');
 define ('_SYSTEM_LABEL_MODULEUNINSTALL', 'Déinstallation du Module « <LABEL> »');
 define ('_SYSTEM_LABEL_USERDETACH', 'Suppression de l\'utilisateur « <LABELUSER> » du groupe « <LABELGROUP> »');
 define ('_SYSTEM_LABEL_USERDELETE', 'Suppression de l\'utilisateur « <LABEL> »');
@@ -324,6 +323,12 @@ define ('_SYSTEM_LABEL_USERCREATE', 'Création de l\'utilisateur « <LABEL> »');
 define ('_SYSTEM_LABEL_IMPORTSRC', 'Source d\'import');
 
 
-define ('_SYSTEM_LABEL_TICKETS', 'Tickets');
+define ('_SYSTEM_LABEL_TICKETS', 'Messages');
 define ('_SYSTEM_LABEL_SEARCH', 'Recherche');
+
+
+define ('_SYSTEM_LABEL_MYTICKETS', 'Mes messages');
+define ('_SYSTEM_LABEL_TICKETS_WAITINGVALIDATION', 'Messages en attente de validation');
+define ('_SYSTEM_LABEL_TICKETS_TOVALIDATE', 'Messages à valider');
+
 ?>

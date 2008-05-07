@@ -36,13 +36,13 @@ function ploopi_tickets_selectusers($id_user = null)
     }
     ?>
     <p class="ploopi_va">
-        <span>Recherche destinataires:</span>
+        <span><? echo _PLOOPI_LABEL_TICKET_RECIPIENTSEARCH; ?>:</span>
         <input type="text" id="ploopi_ticket_userfilter" class="text">
         <img style="cursor:pointer;" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=tickets_search_users&ploopi_ticket_userfilter='+ploopi_getelem('ploopi_ticket_userfilter').value,'','div_ticket_search_result');" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/search.png">
     </p>
     <div id="div_ticket_search_result" style="padding:2px 0 6px 0;">
     </div>
-    <div style="font-weight:bold;">Destinataires qui vont recevoir un message :</div>
+    <div style="font-weight:bold;"><? echo _PLOOPI_LABEL_TICKET_RECIPIENTS ?>:</div>
     <div id="div_ticket_users_selected" style="padding:2px 0 0 0;">
     <? if (!empty($_SESSION['ploopi']['tickets']['users_selected'])) ploopi_tickets_displayusers(); ?>
     </div>
@@ -248,7 +248,7 @@ function ploopi_tickets_displayusers()
             <p class="ploopi_va" style="padding:2px;">
                 <a class="system_tickets_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=tickets_select_user&remove_user_id=<? echo $user->fields['id']; ?>','','div_ticket_users_selected');">
                     <img src="./img/icon_delete.gif">
-                    <span><? echo "{$user->fields['lastname']} {$user->fields['firstname']} (Cliquez pour supprimer)"; ?></span>
+                    <span><? echo "{$user->fields['lastname']} {$user->fields['firstname']} ("._PLOOPI_LABEL_TICKET_DELETERECIPIENT.')'; ?></span>
                 </a>
             </p>
             <?

@@ -77,7 +77,7 @@ while ($row = $db->fetchrow()) $result[] = $row;
 $c = 0;
 foreach($result as $row)
 {
-    $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
+    $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img title="'._DIRECTORY_SEND_EMAIL.'" src="./modules/directory/img/ico_email.png"></a>' : '';
     $ticket = '';
     
     switch ($row['usertype'])
@@ -108,7 +108,7 @@ foreach($result as $row)
 
             $values[$c]['link'] = 'javascript:void(0);';
             $values[$c]['onclick'] = "javascript:directory_view(event, '{$row['id']}', '');";
-            $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img src="./modules/directory/img/ico_ticket.png"></a>';
+            $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
         break;
 
         case 'contact':

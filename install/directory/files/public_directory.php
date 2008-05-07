@@ -146,7 +146,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         $c = 0;
         while ($row = $db->fetchrow())
         {
-            $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
+            $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img title="'._DIRECTORY_SEND_EMAIL.'" src="./modules/directory/img/ico_email.png"></a>' : '';
 
             $actions =  '
                         <a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>
@@ -166,11 +166,6 @@ switch($_SESSION['directory']['directoryTabItem'])
             $values[$c]['values']['phone'] = array('label' => $row['phone']);
             $values[$c]['values']['email'] = array('label' => $email);
             $values[$c]['values']['actions'] = array('label' => $actions);
-
-            $values[$c]['description'] = "{$row['lastname']} {$row['firstname']}";
-            //$values[$c]['link'] = 'javascript:void(0);';
-            //$values[$c]['onclick'] = "javascript:directory_view(event, '', '{$row['id']}');";
-            //$values[$c]['style'] = '';
 
             $c++;
         }
@@ -222,8 +217,8 @@ switch($_SESSION['directory']['directoryTabItem'])
         $c = 0;
         while ($row = $db->fetchrow($res))
         {
-            $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
-            $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img src="./modules/directory/img/ico_ticket.png"></a>';
+            $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img title="'._DIRECTORY_SEND_EMAIL.'" src="./modules/directory/img/ico_email.png"></a>' : '';
+            $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
             
             $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>';
 
@@ -257,11 +252,6 @@ switch($_SESSION['directory']['directoryTabItem'])
             $values[$c]['values']['email'] = array('label' => $email);
             $values[$c]['values']['ticket'] = array('label' => $ticket);
             $values[$c]['values']['actions'] = array('label' => $actions);
-
-            $values[$c]['description'] = "{$row['lastname']} {$row['firstname']}";
-            $values[$c]['link'] = 'javascript:void(0);';
-            $values[$c]['onclick'] = "javascript:directory_view(event, '{$row['id']}', '');";            
-            $values[$c]['style'] = '';
 
             $c++;
         }
@@ -429,7 +419,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $c = 0;
             foreach($result as $row)
             {
-                $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
+                $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img title="'._DIRECTORY_SEND_EMAIL.'" src="./modules/directory/img/ico_email.png"></a>' : '';
                 $ticket = '';
 
                 switch ($row['usertype'])
@@ -460,11 +450,8 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                         // on met tout ça dans une chaine
                         $workspaces_list = implode(', ',$workspaces_list);
-
-                        //$values[$c]['link'] = 'javascript:void(0);';
-                        //$values[$c]['onclick'] = "javascript:directory_view(event, '{$row['id']}', '');";
                         
-                        $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img src="./modules/directory/img/ico_ticket.png"></a>';
+                        $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
                     break;
 
                     case 'contact':
@@ -479,9 +466,6 @@ switch($_SESSION['directory']['directoryTabItem'])
                         $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'];
 
                         $workspaces_list = '';
-                        
-                        //$values[$c]['link'] = 'javascript:void(0);';
-                        //$values[$c]['onclick'] = "javascript:directory_view(event, '', '{$row['id']}');";
                     break;
                 }
 
@@ -494,9 +478,6 @@ switch($_SESSION['directory']['directoryTabItem'])
                 $values[$c]['values']['email'] = array('label' => $email);
                 $values[$c]['values']['ticket'] = array('label' => $ticket);
                 $values[$c]['values']['actions'] = array('label' => $actions);
-
-                $values[$c]['description'] = "{$row['lastname']} {$row['firstname']}";
-                $values[$c]['style'] = '';
 
                 $c++;
             }

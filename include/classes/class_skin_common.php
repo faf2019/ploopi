@@ -456,9 +456,10 @@ class skin_common
 
                         if (!empty($v['link']) || !empty($v['onclick']))
                         {
-                            $onclick = (empty($v['onclick'])) ? '' : " onclick=\"{$v['onclick']}\"";
+                            $onclick = (empty($v['onclick'])) ? '' : "onclick=\"{$v['onclick']}\"";
+                            $title = (empty($v['description'])) ? '' : 'title="'.htmlentities($v['description']).'"';
                             ?>
-                            <a class="ploopi_explorer_link" title="<? echo $v['description']; ?>" href="<? echo $v['link']; ?>"<? echo $onclick ; ?> <? if (!empty($v['style'])) echo "style=\"{$v['style']}\""; ?> <? echo $option; ?>>
+                            <a class="ploopi_explorer_link" href="<? echo $v['link']; ?>" <? echo $title ; ?> <? echo $onclick ; ?> <? if (!empty($v['style'])) echo "style=\"{$v['style']}\""; ?> <? echo $option; ?>>
                             <?
                         }
                         if (!empty($array['columns']['right']))

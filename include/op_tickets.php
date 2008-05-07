@@ -80,9 +80,9 @@ switch($ploopi_op)
                 <?
             }
             ?>
-            <div style="font-weight:bold;">Titre</div>
+            <div style="font-weight:bold;"><? echo _PLOOPI_LABEL_TICKET_TITLE; ?></div>
             <div><input type="text" name="ticket_title" class="text" value="" style="width:98%"></div>
-            <div style="font-weight:bold;">Message</div>
+            <div style="font-weight:bold;"><? echo _PLOOPI_LABEL_TICKET_MESSAGE; ?></div>
             <div>
                 <?
                 include_once('./FCKeditor/fckeditor.php') ;
@@ -105,12 +105,12 @@ switch($ploopi_op)
             if (isset($_GET['ploopi_tickets_object_label']))
             {
                 ?>
-                <div><b>Objet lié</b>: <? echo htmlentities($_GET['ploopi_tickets_object_label']); ?></div>
+                <div><b><? echo _PLOOPI_LABEL_TICKET_LINKEDOBJECT; ?></b>: <? echo htmlentities($_GET['ploopi_tickets_object_label']); ?></div>
                 <?
             }
             ?>
             <p class="ploopi_va" style="padding:4px 0; cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'ticket_needed_validation');">
-                <input type="checkbox" name="ticket_needed_validation" id="ticket_needed_validation" style="cursor:pointer;" value="1"><span>Validation requise (optionnel, permet d'obliger le destinataire à valider le ticket)</span>
+                <input type="checkbox" name="ticket_needed_validation" id="ticket_needed_validation" style="cursor:pointer;" value="1"><span><? echo _PLOOPI_LABEL_TICKET_VALIDATIONREQUIRED; ?></span>
             </p>
 
             <div style="padding:8px 4px;margin:4px 0;background-color:#f0f0f0;border:1px solid #c0c0c0;">
@@ -128,7 +128,7 @@ switch($ploopi_op)
         <?
         $content = ob_get_contents();
         ob_end_clean();
-        echo $skin->create_popup('Nouveau ticket', $content, 'system_popupticket');
+        echo $skin->create_popup(_PLOOPI_LABEL_NEWTICKET, $content, 'system_popupticket');
         ploopi_die();
     break;
 
@@ -148,12 +148,13 @@ switch($ploopi_op)
                 include_once './modules/system/class_user.php';
     
                 $objUser = new user();
-                $strUserName = ($objUser->open($ticket->fields['id_user'])) ? "{$objUser->fields['lastname']} {$objUser->fields['firstname']}" : 'Inconnu';
+                $strUserName = ($objUser->open($ticket->fields['id_user'])) ? "{$objUser->fields['lastname']} {$objUser->fields['firstname']}" : _PLOOPI_LABEL_TICKET_UNKNOWN_USER;
                 
                 $ticket->fields['title'] = "RE: {$ticket->fields['title']}";
                 $nextop = 'tickets_send';
                 $button_value = 'Envoyer';
-
+                $popup_title = _PLOOPI_LABEL_TICKET_RESPONSE;
+                
                 if (isset($_GET['quoted'])) $ticket->fields['message'] = '<div class="system_tickets_quoted_user">Ticket de <b>'.$strUserName.'</b> :</div><div class="system_tickets_quoted_message">'.$ticket->fields['message'].'</div>';
                 else $ticket->fields['message'] = '';
             }
@@ -161,6 +162,7 @@ switch($ploopi_op)
             {
                 $nextop = 'tickets_modify_next';
                 $button_value = 'Modifier';
+                $popup_title = _PLOOPI_LABEL_TICKET_MODIFICATION;
             }
 
             ?>
@@ -179,14 +181,14 @@ switch($ploopi_op)
                 if ($ploopi_op == 'tickets_replyto')
                 {
                     ?>
-                    <div><span>Destinataire : </span><span style="font-weight:bold;"><? echo $strUserName; ?></span></div>
+                    <div><span><? echo _PLOOPI_LABEL_TICKET_RECIPIENT; ?> : </span><span style="font-weight:bold;"><? echo $strUserName; ?></span></div>
                     <?
                 }
                 ?>
 
-                <div style="font-weight:bold;">Titre</div>
+                <div style="font-weight:bold;"><? echo _PLOOPI_LABEL_TICKET_TITLE; ?></div>
                 <div><input type="text" name="ticket_title" class="text" value="<? echo htmlentities($ticket->fields['title']); ?>" style="width:98%"></div>
-                <div style="font-weight:bold;">Message</div>
+                <div style="font-weight:bold;"><? echo _PLOOPI_LABEL_TICKET_MESSAGE; ?></div>
                 <div>
                     <?
                     include_once('./FCKeditor/fckeditor.php') ;
@@ -218,7 +220,7 @@ switch($ploopi_op)
         }
         $content = ob_get_contents();
         ob_end_clean();
-        echo $skin->create_popup('Tickets', $content, 'system_popupticket');
+        echo $skin->create_popup($popup_title, $content, 'system_popupticket');
         ploopi_die();
     break;
 
@@ -320,7 +322,7 @@ switch($ploopi_op)
     case 'tickets_search_users':
         if (!$_SESSION['ploopi']['connected']) ploopi_die();
         ?>
-        <div style="height:100px;overflow-y:auto;overflow-x:hidden;border:1px solid #c0c0c0;">
+        <div style="height:150px;overflow-y:auto;overflow-x:hidden;border:1px solid #c0c0c0;">
         <?
             $listgroup = array();
             include_once './modules/system/class_group.php';

@@ -238,16 +238,16 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
     <div>
         <a id="system_tickets_new" href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, null, true);">
             <p class="ploopi_va">
-               <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/email.gif" /><span>&nbsp;Nouveau ticket</span>
+               <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/email.gif" /><span>&nbsp;<? echo _PLOOPI_LABEL_NEWTICKET; ?></span>
             </p>
         </a>
         
         <div style="clear:both;">
             <b>Filtre:</b>
             <a <? if ($filtertype=='all') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=all"); ?>">Tous</a>&nbsp;-
-            <a <? if ($filtertype=='mytickets') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=mytickets"); ?>">Mes tickets</a>&nbsp;-
-            <a <? if ($filtertype=='waitingvalidation') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=waitingvalidation"); ?>">Tickets en attente de validation</a>&nbsp;-
-            <a <? if ($filtertype=='tovalidate') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=tovalidate"); ?>">Tickets à valider</a>
+            <a <? if ($filtertype=='mytickets') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=mytickets"); ?>"><? echo _SYSTEM_LABEL_MYTICKETS; ?></a>&nbsp;-
+            <a <? if ($filtertype=='waitingvalidation') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=waitingvalidation"); ?>"><? echo _SYSTEM_LABEL_TICKETS_WAITINGVALIDATION; ?></a>&nbsp;-
+            <a <? if ($filtertype=='tovalidate') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=tovalidate"); ?>"><? echo _SYSTEM_LABEL_TICKETS_TOVALIDATE; ?></a>
         </div>
         <div>
             <b>Tri:</b>
@@ -410,7 +410,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                     {
                         ?>
                         <div class="system_tickets_user">
-                            <b>Destinataires:</b>
+                            <b><? echo _PLOOPI_LABEL_TICKET_RECIPIENTS; ?>:</b>
                             <?
                             foreach ($fields['dest'] as $iddest => $dest)
                             {

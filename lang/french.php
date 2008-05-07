@@ -44,7 +44,7 @@ define ('_PLOOPI_MODULE_MANAGEMENT', 'Administration des Modules');
 define ('_PLOOPI_GENERAL_ADMINISTRATION', 'Administration');
 define ('_PLOOPI_ADMIN_USERS', 'Utilisateurs');
 define ('_PLOOPI_ADMIN_MODULES', 'Modules');
-define ('_PLOOPI_ADMIN_TICKETS', 'Tickets');
+define ('_PLOOPI_ADMIN_TICKETS', 'Messages');
 define ('_PLOOPI_ADMIN_SYSTEM', 'Système');
 define ('_PLOOPI_ADMIN_WORKSPACES', 'Espaces de Travail');
 define ('_PLOOPI_ADMIN_GROUPS', 'Groupes d\'Utilisateurs');
@@ -58,7 +58,7 @@ define ('_PLOOPI_LABEL_MYDATA', 'Mes Informations');
 define ('_PLOOPI_LABEL_MYPROFILE', 'Mon Profil');
 define ('_PLOOPI_LABEL_MYPARAMS', 'Mes Paramètres');
 define ('_PLOOPI_LABEL_MYANNOTATIONS', 'Mes Annotations');
-define ('_PLOOPI_LABEL_MYTICKETS', 'Mes Tickets');
+define ('_PLOOPI_LABEL_MYTICKETS', 'Mes Messages');
 define ('_PLOOPI_LABEL_MYWORKSPACE', 'Mon Espace');
 define ('_PLOOPI_LABEL_WORKSPACES', 'Espaces de Travail');
 define ('_PLOOPI_LABEL_SEARCH', 'Recherche');
@@ -98,6 +98,27 @@ define ('_PLOOPI_JS_DATE_ERROR',    "Le champ '<FIELD_LABEL>' doit être une date
 define ('_PLOOPI_JS_TIME_ERROR',    "Le champ '<FIELD_LABEL>' doit être une heure valide");
 define ('_PLOOPI_JS_CHECK_ERROR',   "Vous devez sélectionner une valeur pour le champ '<FIELD_LABEL>'");
 define ('_PLOOPI_JS_COLOR_ERROR',   "Le champ '<FIELD_LABEL>' doit être une couleur valide (#ffff00 / jaune / yellow)");
+
+define ('_PLOOPI_LABEL_NEWTICKET', 'Nouveau message');
+define ('_PLOOPI_LABEL_TICKET_VALIDATIONREQUIRED', 'Validation requise<br />(optionnel, permet de demander au(x) destinataire(s) de valider le message)');
+define ('_PLOOPI_LABEL_TICKET_LINKEDOBJECT', 'Objet lié');
+define ('_PLOOPI_LABEL_TICKET_TITLE', 'Titre');
+define ('_PLOOPI_LABEL_TICKET_MESSAGE', 'Message');
+define ('_PLOOPI_LABEL_TICKET_RECIPIENT', 'Destinataire');
+define ('_PLOOPI_LABEL_TICKET_RECIPIENTS', 'Destinataires');
+define ('_PLOOPI_LABEL_TICKET_MODIFICATION', 'Modification d\'un message');
+define ('_PLOOPI_LABEL_TICKET_RESPONSE', 'Réponse à un message');
+define ('_PLOOPI_LABEL_TICKET_UNKNOWN_USER', 'Utilisateur inconnu');
+define ('_PLOOPI_LABEL_TICKET_RECIPIENTSEARCH', 'Recherche destinataires');
+define ('_PLOOPI_LABEL_TICKET_DELETERECIPIENT', 'Supprimer ce destinataire');
+
+
+define ('_PLOOPI_LABEL_SUBSCRIPTION_DESCIPTION', 'Sélectionnez les actions pour lesquelles vous souhaitez être abonné.<br />L\'abonnement vous permet de recevoir un message lorsqu\'une action est effectuée sur un objet ou un ensemble d\'objets hérités.');
+define ('_PLOOPI_LABEL_SUBSCRIPTION_SAVED', 'Abonnement enregistré');
+define ('_PLOOPI_LABEL_SUBSCRIPTION_DELETE', 'Désabonnement enregistré');
+define ('_PLOOPI_LABEL_SUBSCRIPTION_ALLACTIONS', 'Toutes les actions');
+define ('_PLOOPI_LABEL_SUBSCRIPTION_UNSUSCRIBE', 'Se désabonner');
+
 
 
 global $ploopi_agenda_days;
