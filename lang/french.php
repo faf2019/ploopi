@@ -112,6 +112,11 @@ define ('_PLOOPI_LABEL_TICKET_UNKNOWN_USER', 'Utilisateur inconnu');
 define ('_PLOOPI_LABEL_TICKET_RECIPIENTSEARCH', 'Recherche destinataires');
 define ('_PLOOPI_LABEL_TICKET_DELETERECIPIENT', 'Supprimer ce destinataire');
 
+define ('_PLOOPI_LABEL_TICKET_DELETE_CHECKED', 'Supprimer les messages sélectionnés');
+define ('_PLOOPI_LABEL_TICKET_CONFIRMDELETE', 'Êtes-vous certain de vouloir supprimer ce message ?');
+define ('_PLOOPI_LABEL_TICKET_CONFIRMDELETE_CHECKED', 'Êtes-vous certain de vouloir supprimer les messages cochés ?');
+
+
 
 define ('_PLOOPI_LABEL_SUBSCRIPTION_DESCIPTION', 'Sélectionnez les actions pour lesquelles vous souhaitez être abonné.<br />L\'abonnement vous permet de recevoir un message lorsqu\'une action est effectuée sur un objet ou un ensemble d\'objets hérités.');
 define ('_PLOOPI_LABEL_SUBSCRIPTION_SAVED', 'Abonnement enregistré');

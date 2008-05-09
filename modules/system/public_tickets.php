@@ -528,7 +528,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                         if (!($fields['needed_validation'] > 0 && $fields['sender_uid'] != $_SESSION['ploopi']['userid'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][_PLOOPI_TICKETS_DONE])))
                         {
                             ?>
-                            <a href="javascript:ploopi_confirmlink('<? echo "{$scriptenv}?ploopi_op=tickets_delete&ticket_id={$fields['id']}"; ?>','Êtes-vous certain de vouloir supprimer ce ticket ?');"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_delete.png">Supprimer</a>
+                            <a href="javascript:ploopi_confirmlink('<? echo "{$scriptenv}?ploopi_op=tickets_delete&ticket_id={$fields['id']}"; ?>','<? echo addslashes(_PLOOPI_LABEL_TICKET_CONFIRMDELETE); ?>');"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_delete.png">Supprimer</a>
                             <?
                         }
                         ?>
@@ -545,7 +545,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
 </form>
 
 <p class="ploopi_va" style="padding:2px;">
-    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/arrow_all.png" /><span>&nbsp;</span><a href="javascript:void(0);" onclick="javascript:if (confirm('Êtes-vous certain de vouloir supprimer les tickets cochés ?')) document.form_tickets_delete.submit();">Supprimer les tickets sélectionnés</a>
+    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/arrow_all.png" /><span>&nbsp;</span><a href="javascript:void(0);" onclick="javascript:if (confirm('<? echo addslashes(_PLOOPI_LABEL_TICKET_CONFIRMDELETE_CHECKED); ?>')) document.form_tickets_delete.submit();"><? echo _PLOOPI_LABEL_TICKET_DELETE_CHECKED; ?></a>
     <span>&nbsp;&nbsp;//&nbsp;Légende:&nbsp;&nbsp;</span>
     <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_read.png" /><span>&nbsp;déjà vu&nbsp;&nbsp;</span>
     <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_new.png" /><span>&nbsp;nouveau&nbsp;&nbsp;</span>
