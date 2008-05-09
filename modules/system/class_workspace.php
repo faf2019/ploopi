@@ -212,10 +212,57 @@ class workspace extends data_object
 
         while ($fields = $db->fetchrow($result)) $users[$fields['id']] = $fields;
 
-
         return $users;
     }
 
+    function getallusers()
+    {
+        global $db;
+
+        $users = array();
+        
+        $arrChildren = array();
+        $arrChildren = $this->getworkspacechildrenlite();
+        $arrChildren[] = $this->fields['id'];
+        
+        $select =   "
+                    SELECT  u.*
+                    
+                    FROM    ploopi_user u,
+                            ploopi_workspace_user wu
+                            
+                    WHERE   wu.id_workspace IN (".implode(', ', $arrChildren).")
+                    AND     wu.id_user = u.id
+                    
+                    GROUP BY u.id
+                    ";
+
+        $result = $db->query($select);
+
+        while ($fields = $db->fetchrow($result)) $users[$fields['id']] = $fields;
+
+    
+        $select =   "
+                    SELECT  u.*
+                                                    
+                    FROM    ploopi_user u,
+                            ploopi_workspace_group wg,
+                            ploopi_group_user gu
+                            
+                    WHERE   wg.id_workspace IN (".implode(', ', $arrChildren).")
+                    AND     wg.id_group = gu.id_group
+                    AND     gu.id_user = u.id
+
+                    GROUP BY u.id
+                    ";
+
+        $result = $db->query($select);
+
+        while ($fields = $db->fetchrow($result)) $users[$fields['id']] = $fields;
+        
+        return($users);
+    }
+            
     function getgroups($getchildren = false)
     {
         global $db;
@@ -364,6 +411,5 @@ class workspace extends data_object
         }
         return $modules;
     }
-
 }
 ?>

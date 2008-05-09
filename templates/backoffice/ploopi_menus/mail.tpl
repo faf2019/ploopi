@@ -44,7 +44,7 @@ background-color:#fff0f0;
 <body>
 Bonjour,
 <br /><br />
-Vous avez reçu un nouveau ticket envoyé par <strong><a href="mailto:{USER_FROM_EMAIL}">{USER_FROM_NAME}</a></strong> depuis le site <a href="{HTTP_HOST}">{HTTP_HOST}</a> :
+Vous avez reçu un nouveau message envoyé par <strong><a href="mailto:{USER_FROM_EMAIL}">{USER_FROM_NAME}</a></strong> depuis le site <a href="{HTTP_HOST}">{HTTP_HOST}</a> :
 <div id="mailcontent">
     {MAIL_CONTENT}
     <!-- BEGIN sw_linkedobject -->
