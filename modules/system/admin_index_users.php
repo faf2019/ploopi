@@ -230,6 +230,7 @@ switch($_SESSION['system']['usrTabItem'])
             case 'attach_user':
                 if (isset($_GET['userid']) && is_numeric($_GET['userid']))
                 {
+                    $alphaTabItem = isset($_GET['alphaTabItem']) ? $_GET['alphaTabItem'] : '';
                     switch ($_SESSION['system']['level'])
                     {
                         case _SYSTEM_GROUPS :
@@ -237,7 +238,7 @@ switch($_SESSION['system']['usrTabItem'])
                             $user->open($_GET['userid']);
                             $user->attachtogroup($groupid);
                             ploopi_create_user_action_log(_SYSTEM_ACTION_ATTACHUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']}) => {$group->fields['label']} (id:$groupid)");
-                            ploopi_redirect("{$scriptenv}?reloadsession");
+                            ploopi_redirect("{$scriptenv}?reloadsession&alphaTabItem={$alphaTabItem}");
                         break;
 
                         case _SYSTEM_WORKSPACES :
@@ -245,7 +246,7 @@ switch($_SESSION['system']['usrTabItem'])
                             $user->open($_GET['userid']);
                             $user->attachtoworkspace($workspaceid);
                             ploopi_create_user_action_log(_SYSTEM_ACTION_ATTACHUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']}) => {$workspace->fields['label']} (id:$workspaceid)");
-                            ploopi_redirect("{$scriptenv}?reloadsession");
+                            ploopi_redirect("{$scriptenv}?reloadsession&alphaTabItem={$alphaTabItem}");
                         break;
                     }
                 }

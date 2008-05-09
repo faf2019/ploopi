@@ -115,7 +115,7 @@ while ($fields = $db->fetchrow($result))
 
     $values[$c]['values']['label']      = array('label' => htmlentities($fields['label']));
     $values[$c]['values']['parents']    = array('label' => htmlentities($str_parents));
-    $values[$c]['values']['actions']    = array('label' => '<a href="'.ploopi_urlencode("{$scriptenv}?op=attach_group&orgid={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
+    $values[$c]['values']['actions']    = array('label' => '<a href="'.ploopi_urlencode("{$scriptenv}?op=attach_group&orgid={$fields['id']}&alphaTabItem={$alphaTabItem}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
 
     $c++;
 }

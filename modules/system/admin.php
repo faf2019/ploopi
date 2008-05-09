@@ -119,7 +119,7 @@ else
             echo $skin->create_pagetitle(_SYSTEM_PAGE_TITLE);
             echo $skin->open_simplebloc(_PLOOPI_ADMIN_WORKSPACES);
             ?>
-            <div>
+            <div style="overflow:auto;">
                 <div class="system_tree">
                     <div class="system_tree_padding">
                         <?
