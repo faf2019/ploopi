@@ -21,6 +21,15 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Opérations sur les annotations
+ *
+ * @package ploopi
+ * @subpackage annotation
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 switch($ploopi_op)
 {
     case 'annotation':
@@ -38,7 +47,7 @@ switch($ploopi_op)
         if (isset($_GET['id_tag']) && is_numeric($_GET['id_tag']))
         {
             include_once './include/global.php';
-            include_once './modules/system/class_tag.php';
+            include_once './include/classes/class_tag.php';
 
             $tag = new tag();
             $tag->open($_GET['id_tag']);

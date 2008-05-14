@@ -21,6 +21,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Modifie les entêtes HTTP envoyées.
+ * Modifie notamment la gestion du cache (no-cache)
+ * 
+ * @package ploopi
+ * @subpackage start
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 header('Expires: ' . gmdate("D, d M Y H:i:s") . " GMT");
 header('Last-Modified: ' . gmdate("D, d M Y H:i:s"));
 header('Cache-Control: no-cache, must-revalidate');

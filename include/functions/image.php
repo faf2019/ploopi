@@ -20,114 +20,144 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Fonctions de manipulation d'images.
+ * Redimensionnement, changement de format.
+ *
+ * @package ploopi
+ * @subpackage image
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
+
+/**
+ * Redimensionne une image et l'enregistre dans un fichier ou la renvoie vers le navigateur
+ *
+ * @param string $imagefile chemin vers le fichier image
+ * @param float $coef ratio de redimensionnement de l'image destination
+ * @param int $wmax largeur max de l'image destination
+ * @param int $hmax hauteur max de l'image destination
+ * @param string $format format de l'image destination (jpg, png, gif)
+ * @param int $nbcolor taille de la palette de l'image destination
+ * @param string $filename nom du fichier image destination, si vide renvoit l'image vers le navigateur
+ * @return boolean true si redimensionnement ok 
+ * 
+ * @link http://fr.php.net/manual/fr/ref.image.php
+ */
 
 function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format = '', $nbcolor = 0, $filename = '')
 {
-  //$c = new ploopi_cache($imagefile, 8640000, _PLOOPI_PATHDATA._PLOOPI_SEP.'cache'._PLOOPI_SEP);
-  //if (!$c->start())
-  //{
-  
-  $filename_array = explode('.',$imagefile);
-  $extension = strtolower($filename_array[sizeof($filename_array)-1]);
-
-  switch($extension)
-  {
-    case 'jpg':
-    case 'jpeg':
-      $imgsrc = ImageCreateFromJPEG($imagefile);
-    break;
-
-    case 'png':
-      $imgsrc = ImageCreateFromPng($imagefile);
-    break;
-
-    case 'gif':
-      $imgsrc = imagecreatefromgif($imagefile);
-    break;
-
-    default:
-      return(0);
-    break;
-  }
-
-  $w = imagesx($imgsrc);
-  $h = imagesy($imgsrc);
-
-  if (!$coef) // no coef defined
-  {
-    if ($wmax) $coef = $w/$wmax;
-    if ($hmax && $h/$hmax > $coef) $coef = $h/$hmax;
-  }
-
-  $wdest = $w/$coef;
-  $hdest = $h/$coef;
-
-  $imgdest = imagecreatetruecolor ($wdest, $hdest);
-
-  imagecopyresampled($imgdest, $imgsrc, 0, 0, 0, 0, $wdest, $hdest, $w, $h);
-
-  if ($nbcolor) imagetruecolortopalette($imgdest, true, $nbcolor);
-
-  if($format != '')
-  {
-    $extension = $format;
-    $imagefile = substr($imagefile,0,strlen($imagefile) - strlen(ploopi_file_getextension($imagefile)) + 1);
-  }
-
-  if($filename == '')
-  {
-    header("Content-Type: image/$extension");
-    header("Content-Disposition: inline; filename=$imagefile");
-
+    //$c = new ploopi_cache($imagefile, 8640000, _PLOOPI_PATHDATA._PLOOPI_SEP.'cache'._PLOOPI_SEP);
+    //if (!$c->start())
+    //{
+    
+    $imagefile_name = basename($imagefile);
+    $extension = ploopi_file_getextension($imagefile_name);
+    
     switch($extension)
     {
         case 'jpg':
         case 'jpeg':
-        imagejpeg($imgdest);
+          $imgsrc = ImageCreateFromJPEG($imagefile);
         break;
-
+        
         case 'png':
-        imagepng($imgdest);
+          $imgsrc = ImageCreateFromPng($imagefile);
         break;
-
+        
         case 'gif':
-        imagepng($imgdest);
+          $imgsrc = imagecreatefromgif($imagefile);
         break;
-
+        
         default:
-        return(0);
+          return(false);
         break;
     }
-  }
-  else
-  {
-    switch($extension)
+    
+    $w = imagesx($imgsrc);
+    $h = imagesy($imgsrc);
+    
+    if (!$coef) // no coef defined
     {
-        case 'jpg':
-        case 'jpeg':
-        imagejpeg($imgdest,$filename);
-        break;
-
-        case 'png':
-        imagepng($imgdest,$filename);
-        break;
-
-        case 'gif':
-        imagepng($imgdest,$filename);
-        break;
-
-        default:
-        return(0);
-        break;
+        if ($wmax) $coef = $w/$wmax;
+        if ($hmax && $h/$hmax > $coef) $coef = $h/$hmax;
     }
-  }
-
-  //$c->end();
-  //}
-
-return(1);
+    
+    $wdest = $w/$coef;
+    $hdest = $h/$coef;
+    
+    $imgdest = imagecreatetruecolor ($wdest, $hdest);
+    
+    imagecopyresampled($imgdest, $imgsrc, 0, 0, 0, 0, $wdest, $hdest, $w, $h);
+    
+    if ($nbcolor) imagetruecolortopalette($imgdest, true, $nbcolor);
+    
+    if($format != '')
+    {
+        $extension = $format;
+        $imagefile = substr($imagefile,0,strlen($imagefile) - strlen(ploopi_file_getextension($imagefile)) + 1);
+    }
+    
+    if($filename == '')
+    {
+        header("Content-Type: image/{$extension}");
+        header("Content-Disposition: inline; filename=\"{$imagefile_name}\"");
+        
+        switch($extension)
+        {
+            case 'jpg':
+            case 'jpeg':
+              imagejpeg($imgdest);
+            break;
+        
+            case 'png':
+                imagepng($imgdest);
+            break;
+        
+            case 'gif':
+                imagepng($imgdest);
+            break;
+        
+            default:
+                return(false);
+            break;
+        }
+    }
+    else
+    {
+        $path = dirname($filename);
+        $exists = file_exists($filename);
+        if (is_writable($path) && (!$exists || ($exists && is_writable($filename))))
+        {
+            switch($extension)
+            {
+                case 'jpg':
+                case 'jpeg':
+                    imagejpeg($imgdest, $filename);
+                break;
+            
+                case 'png':
+                    imagepng($imgdest, $filename);
+                break;
+            
+                case 'gif':
+                    imagepng($imgdest, $filename);
+                break;
+            
+                default:
+                    return(false);
+                break;
+            }
+        }
+        else return(false);
+    }
+    
+    //$c->end();
+    //}
+    
+    return(true);
 }
 
 

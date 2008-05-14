@@ -21,6 +21,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Script de chargement de l'environnement Ploopi, version allégée utilisée pour les scripts cron.php, webservice.php, rss.php
+ * Attention l'environnement chargé est minimal !
+ * 
+ * @package ploopi
+ * @subpackage start
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 include './include/start_common.php';
 
 ///////////////////////////////////////////////////////////////////////////

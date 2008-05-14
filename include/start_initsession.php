@@ -21,6 +21,15 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Partie commune des scripts de chargement de l'environnement Ploopi (start.php, start-light.php).
+ * Concerne le chargement des espaces de travail (avec application du filtrage par nom de domaine)
+ *  
+ * @package ploopi
+ * @subpackage start
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
 
 ///////////////////////////////////////////////////////////////////////////
 // GET WORKSPACES (FOR THIS DOMAIN)

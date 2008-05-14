@@ -21,6 +21,18 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Script de chargement de l'environnement Ploopi.
+ * Charge les constantes génériques, les fonctions et classes principales.
+ * Connecte l'utilisateur, initialise la session, charge les paramètres.
+ * 
+ * @package ploopi
+ * @subpackage start
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
+
 include './include/start_common.php';
 
 ///////////////////////////////////////////////////////////////////////////
@@ -122,8 +134,6 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
         $_SESSION['ploopi']['userid']   = $fields['id'];
 
         $ploopi_mainmenu = _PLOOPI_MENU_WORKSPACES;
-
-        $ploopi_initsession = true;
 
         ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_OK, $ploopi_login,_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
     }
@@ -516,7 +526,7 @@ if (session_id()!='')
     $connecteduser = new connecteduser();
     $connecteduser->open(session_id());
     $connecteduser->fields['sid'] = session_id();
-    $connecteduser->fields['ip'] = implode(',', $_SESSION['ploopi']['remoteip']);
+    $connecteduser->fields['ip'] = implode(',', $_SESSION['ploopi']['remote_ip']);
     $connecteduser->fields['domain'] = (empty($_SESSION['ploopi']['host'])) ? '' : $_SESSION['ploopi']['host'];
     $connecteduser->fields['timestp'] = ploopi_createtimestamp();
     $connecteduser->fields['user_id'] = $_SESSION['ploopi']['userid'];

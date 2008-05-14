@@ -20,6 +20,18 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+/**
+ * Définition de quelques variables javascript liées à php
+ * 
+ * @package ploopi
+ * @subpackage javascript
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ * 
+ * @todo trouver une autre solution...
+ */
+
 ?>
 defaultStatus = '<? echo addslashes($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']); ?>';
 

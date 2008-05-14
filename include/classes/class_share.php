@@ -20,22 +20,23 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 include_once './include/classes/class_data_object.php';
+
+/**
+ * Accès à la table ploopi_share 
+ * 
+ * @package ploopi
+ * @subpackage share
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
 
 class share extends data_object
 {
-
-    /**
-    * Class constructor
-    *
-    * @access public
-    **/
     function share()
     {
         parent::data_object('ploopi_share','id');
     }
-
 }
 ?>

@@ -20,6 +20,25 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fonctions de gestion des abonnements sur un enregistrement d'un objet.
+ * Permet à un utilisateur d'être averti des modifications d'un objet.
+ *
+ * @package ploopi
+ * @subpackage subscription
+ * @copyright Ovensia
+ * @license GPL
+ */
+
+/**
+ * Insère le bloc d'abonnement pour un enregistrement d'un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param mixed $allowedactions tableau des actions auxquelle on peut s'abonner
+ * @param string $optional_title titre optionnel
+ */
+
 function ploopi_subscription($id_object, $id_record, $allowedactions = null, $optional_title = '')
 {
     $ploopi_subscription_id = md5("{$_SESSION['ploopi']['moduleid']}_{$_SESSION['ploopi']['userid']}_{$id_object}_".addslashes($id_record));
@@ -37,6 +56,13 @@ function ploopi_subscription($id_object, $id_record, $allowedactions = null, $op
     </div>
     <?    
 }
+
+/**
+ * Rafraichit le bloc d'abonnement pour un enregistrement d'un objet
+ *
+ * @param string identifiant du bloc d'abonnement
+ * @param string $next 'suscribed' / 'unsubscribed'
+ */
 
 function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
 {
@@ -162,6 +188,15 @@ function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
     
 }
 
+/**
+ * Détermine si l'utilisateur courant est abonné à un objet, un enregistrement ou une action.
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_action identifiant de l'action
+ * @return boolean true si l'utilisateur est abonné
+ */
+
 function ploopi_subscription_subscribed($id_object, $id_record, $id_action = -1)
 {
     global $db;
@@ -187,6 +222,15 @@ function ploopi_subscription_subscribed($id_object, $id_record, $id_action = -1)
     $row = $db->fetchrow();
     return ($row['c']>0);    
 }
+
+/**
+ * Renvoie un tableau des utilisateurs abonnés à une objet, un enregistrement et une liste d'action
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param array $arrActionIds tableau d'identifiant d'actions
+ * @return array tableau d'utilisateurs abonnés
+ */
 
 function ploopi_subscription_getusers($id_object, $id_record, $arrActionIds = null)
 {
@@ -222,6 +266,16 @@ function ploopi_subscription_getusers($id_object, $id_record, $arrActionIds = nu
     return($arrUsers);
 }
 
+/**
+ * Envoie une notification par ticket
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_action identifiant de l'action
+ * @param string $object_title titre de l'objet
+ * @param array $arrUsers tableau des destinataires (utilisateurs)
+ * @param string $message contenu du message
+ */
 
 function ploopi_subscription_notify($id_object, $id_record, $id_action, $object_title, $arrUsers, $message = '')
 {

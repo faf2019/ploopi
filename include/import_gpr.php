@@ -20,11 +20,21 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-/* FILTRAGE DES SUPERGLOBALES GET/POST/REQUEST/COOKIE/SERVER  */
 
-include_once './include/functions/filter.php';
+/**
+ * Filtre les superglobales $_GET / $_POST / $_REQUEST / $_COOKIE / $_SERVER
+ * Déchiffre l'URL si elle est chiffrée.
+ * 
+ * @package ploopi
+ * @subpackage security
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ * 
+ * @see ploopi_filtervar
+ * @see ploopi_cipher
+ */
+
+include_once './include/functions/security.php';
 
 if (!empty($_GET['ploopi_url']))
 {

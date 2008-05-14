@@ -21,6 +21,15 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Opérations sur le workflow
+ *
+ * @package ploopi
+ * @subpackage workflow
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 switch($ploopi_op)
 {
     case 'workflow_select_user':

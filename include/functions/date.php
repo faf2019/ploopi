@@ -21,70 +21,52 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-##############################################################################
-#
-# Date / Time functions
-#
-##############################################################################
+/**
+ * Fonction de base pour le traitement des dates, des timestamps MYSQL et des fuseaux horaires.
+ * Conversion de formats, conversion de fuseaux, calculs...
+ * 
+ * @package ploopi
+ * @subpackage date
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
 
 
 /**
-* ! description !
-*
-* @return string returns current DATE in localized format according to the _PLOOPI_DATEFORMAT constant
-*
-* @version 2.09
-* @since 0.1
-*
-* @category date/time manipulations
-*/
-function ploopi_getdate() {return date(_PLOOPI_DATEFORMAT);}
+ * Retourne la date du serveur au format local (_PLOOPI_TIMEFORMAT)
+ *
+ * @return string date au format local
+ */
+
+function ploopi_getdate() {return date(v);}
 
 /**
-* ! description !
-*
-* @return string returns current TIME in localized format according to the _PLOOPI_DATEFORMAT constant
-*
-* @version 2.09
-* @since 0.1
-*
-* @category date/time manipulations
-*/
+ * Retourne l'heure au format local (_PLOOPI_TIMEFORMAT)
+ *
+ * @return string heure au format local
+ */
+
 function ploopi_gettime() {return date(_PLOOPI_TIMEFORMAT);}
 
 /**
-* ! description !
-*
-* @return string returns current TIME in MySQL timestamp format
-*
-* @version 2.09
-* @since 0.1
-*
-* @category date/time manipulations
-*/
-function ploopi_getdatetime() {return date(_PLOOPI_DATETIMEFORMAT_MYSQL);}
+ * Vérifie le format de la date en fonction du format local
+ *
+ * @param string $mydate date à vérifier
+ * @return boolean true si le format de la date est valide
+ */
 
-/**
-* ! description !
-*
-* @param string date in localized format
-* @return string returns the param date in localized format according to the _PLOOPI_DATEFORMAT constant
-*
-* @version 2.09
-* @since 0.1
-*
-* @category date/time manipulations
-*/
 function ploopi_dateverify($mydate)
 {
     switch(_PLOOPI_DATEFORMAT)
     {
         case _PLOOPI_DATEFORMAT_FR:
-            return ereg(_PLOOPI_DATEFORMAT_EREG_FR, $mydate, $regs);
+            return (ereg(_PLOOPI_DATEFORMAT_EREG_FR, $mydate, $regs) !== false);
         break;
+        
         case _PLOOPI_DATEFORMAT_US:
-            return ereg(_PLOOPI_DATEFORMAT_EREG_US, $mydate, $regs);
+            return (ereg(_PLOOPI_DATEFORMAT_EREG_US, $mydate, $regs) !== false);
         break;
+
         default:
             return false;
         break;
@@ -92,117 +74,27 @@ function ploopi_dateverify($mydate)
 }
 
 /**
-* ! description !
-*
-* @param string time
-* @return string returns the param time in localized format according to the _PLOOPI_DATEFORMAT constant
-*
-* @version 2.09
-* @since 0.1
-*
-* @category date/time manipulations
-*/
-function ploopi_timeverify($mytime) {return ereg(_PLOOPI_TIMEFORMAT_EREG, $mytime, $regs);}
+ * Vérifie le format de l'heure en fonction du format local
+ *
+ * @param string $mytime heure à vérifier
+ * @return boolean true si le format de l'heure est valide
+ */
+
+function ploopi_timeverify($mytime) {return (ereg(_PLOOPI_TIMEFORMAT_EREG, $mytime, $regs) !== false);}
 
 /**
-* ! description !
-*
-* @param string date
-* @param string time
-* @return string returns param'd date and time in "DATETIME" format
-*
-* @version 2.09
-* @since 0.1
-*
-* @category date/time manipulations
-*
-* @uses ploopi_dateverify()
-*/
-function ploopi_local2datetime($mydate,$mytime)
-{
-    // verify local format
-    if (ploopi_dateverify($mydate) && ploopi_timeverify($mytime))
-    {
-        ereg(_PLOOPI_TIMEFORMAT_EREG, $mytime, $timeregs);
-        switch(_PLOOPI_DATEFORMAT)
-        {
-            case _PLOOPI_DATEFORMAT_FR:
-                ereg(_PLOOPI_DATEFORMAT_EREG_FR, $mydate, $dateregs);
-                $mydatetime = date(_PLOOPI_DATETIMEFORMAT_MYSQL, mktime($timeregs[1],$timeregs[2],$timeregs[3],$dateregs[2],$dateregs[1],$dateregs[3]));
-            break;
-            case _PLOOPI_DATEFORMAT_US:
-                ereg(_PLOOPI_DATEFORMAT_EREG_US, $mydate, $dateregs);
-                $mydatetime = date(_PLOOPI_DATETIMEFORMAT_MYSQL, mktime($timeregs[1],$timeregs[2],$timeregs[3],$dateregs[2],$dateregs[3],$dateregs[1]));
-            break;
-        }
-
-        return($mydatetime);
-    }
-    else return(false);
-}
-
-/**
-* ! description !
-*
-* @param string date
-* @return string returns param'd "DATETIME" in localized human readable form
-*
-* @version 2.09
-* @since 0.1
-*
-* @category date/time manipulations
-*/
-function ploopi_datetime2local($mydatetime)
-{
-    $mydate = Array();
-
-    // verify mysql format
-    if (ereg(_PLOOPI_DATETIMEFORMAT_MYSQL_EREG, $mydatetime, $regs))
-    {
-        $mydate['date'] = date(_PLOOPI_DATEFORMAT, mktime($regs[4],$regs[5],$regs[6],$regs[2],$regs[3],$regs[1]));
-        $mydate['time'] = date(_PLOOPI_TIMEFORMAT, mktime($regs[4],$regs[5],$regs[6],$regs[2],$regs[3],$regs[1]));
-        return($mydate);
-    }
-    else return(false);
-}
-
-//
-/*
-$regs[_PLOOPI_DATE_YEAR] => Year
-$regs[_PLOOPI_DATE_MONTH] => Month
-$regs[_PLOOPI_DATE_DAY] => Day
-$regs[_PLOOPI_DATE_HOUR] => Hour
-$regs[_PLOOPI_DATE_MINUTE] => Minute
-$regs[_PLOOPI_DATE_SECOND] => Second
-*/
-
-/**
-* Get detailled datetime in a tab
-*
-* @return array returns current date/time details in an array
-*
-* @version 2.09
-* @since 0.1
-*
-* @category date/time manipulations
-*/
-function ploopi_getdatetimedetail()
-{
-    ereg(_PLOOPI_DATETIMEFORMAT_MYSQL_EREG, date(_PLOOPI_DATETIMEFORMAT_MYSQL), $regs);
-    return $regs;
-}
-
-/**
-* ! description !
-*
-* @param string timestamp
-* @return array returns param'd timestamp details in an array
-*
-* @version 2.09
-* @since 0.1
-*
-* @category date/time manipulations
-*/
+ * Renvoie le détail d'un timestamp au format MYSQL (AAAAMMJJhhmmss) sous forme d'un tableau 
+ * $regs[_PLOOPI_DATE_YEAR] => Year
+ * $regs[_PLOOPI_DATE_MONTH] => Month
+ * $regs[_PLOOPI_DATE_DAY] => Day
+ * $regs[_PLOOPI_DATE_HOUR] => Hour
+ * $regs[_PLOOPI_DATE_MINUTE] => Minute
+ * $regs[_PLOOPI_DATE_SECOND] => Second
+ *
+ * @param string $mytimestamp
+ * @return array tableau contenant le détail de la date
+ */
+ 
 function ploopi_gettimestampdetail($mytimestamp)
 {
     ereg(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $mytimestamp, $regs);
@@ -210,43 +102,38 @@ function ploopi_gettimestampdetail($mytimestamp)
 }
 
 /**
-* ! description !
-*
-* @return string returns current timestamp
-*
-* @version 2.09
-* @since 0.1
-*
-* @category date/time manipulations
-*/
-function ploopi_createtimestamp()
-{
-    return date(_PLOOPI_TIMESTAMPFORMAT_MYSQL);
-}
+ * Crée un timestamp de la date du serveur au format MYSQL (AAAAMMJJhhmmss)
+ *
+ * @return string
+ */
 
-function ploopi_unixtimestamp2local($mytimestamp)
-{
-    return(date(_PLOOPI_DATEFORMAT,$mytimestamp).' '.date(_PLOOPI_TIMEFORMAT,$mytimestamp));
-}
-
-function ploopi_unixtimestamp2timestamp($mytimestamp)
-{
-    return(date(_PLOOPI_TIMESTAMPFORMAT_MYSQL,$mytimestamp));
-}
+function ploopi_createtimestamp() { return date(_PLOOPI_TIMESTAMPFORMAT_MYSQL); }
 
 /**
-* ! description !
-*
-* @param string timestamp
-* @return array returns a 2 dimensions array with param'd timestamp converted to localized date/time format
-*
-* @version 2.09
-* @since 0.1
-*
-* @category date/time manipulationsploopi_timestamp_add
-*
-* @uses ploopi_gettimestampdetail()
-*/
+ * Renvoie un timestamp UNIX au format local (_PLOOPI_TIMEFORMAT)
+ *
+ * @param int $mytimestamp timestamp UNIX
+ * @return string date au format local
+ */
+
+function ploopi_unixtimestamp2local($mytimestamp) { return(date(_PLOOPI_DATEFORMAT,$mytimestamp).' '.date(_PLOOPI_TIMEFORMAT,$mytimestamp)); }
+
+/**
+ * Convertit un timestamp UNIX en timestamp MYSQL (AAAAMMJJhhmmss)
+ *
+ * @param int $mytimestamp timestamp UNIX
+ * @return string timestamp MYSQL
+ */
+  
+ function ploopi_unixtimestamp2timestamp($mytimestamp) { return(date(_PLOOPI_TIMESTAMPFORMAT_MYSQL,$mytimestamp)); }
+
+/**
+ * Convertit un timestamp MYSQL (AAAAMMJJhhmmss) au format local (date+heure)
+ *
+ * @param string $mytimestamp
+ * @return array tableau associatif contenant la date et l'heure : Array('date' => '', 'time' => '');
+ */
+ 
 function ploopi_timestamp2local($mytimestamp)
 {
     // Output array declaration
@@ -292,19 +179,13 @@ function ploopi_timestamp2local($mytimestamp)
 }
 
 /**
-* Convert local date & time to datetime mysql
-*
-* @param string date
-* @param string time
-* @return string returns param'd date and time in a MySQL datetime format
-*
-* @version 2.09
-* @since 0.1
-*
-* @category date/time manipulations
-*
-* @uses ploopi_dateverify()
-*/
+ * Convertit un date locale au format timestamp MYSQL (AAAAMMJJhhmmss)
+ *
+ * @param string $mydate date au format local
+ * @param string $mytime heure au format local (optionnel, par défaut '00:00:00')
+ * @return string timestamp MYSQL
+ */
+
 function ploopi_local2timestamp($mydate,$mytime = '00:00:00')
 {
     // verify local format
@@ -329,6 +210,18 @@ function ploopi_local2timestamp($mydate,$mytime = '00:00:00')
     else return(false);
 }
 
+/**
+ * Ajoute un durée (positive ou négative) à un timestamp MYSQL (AAAAMMJJhhmmss)
+ *
+ * @param string $timestp timestamp MYSQL
+ * @param int $h nombre d'heures à ajouter
+ * @param int $mn nombre de minutes à ajouter 
+ * @param int $s nombre de secondes à ajouter
+ * @param int $m nombre de mois à ajouter
+ * @param int $d nombre de jours à ajouter
+ * @param int $y nombre d'année à ajouter
+ * @return string timestamp MYSQL mis à jour
+ */
 
 function ploopi_timestamp_add($timestp, $h=0, $mn=0, $s=0, $m=0, $d=0, $y=0)
 {
@@ -344,12 +237,17 @@ function ploopi_timestamp_add($timestp, $h=0, $mn=0, $s=0, $m=0, $d=0, $y=0)
 }
 
 /**
-* Crée un timestamp pour un fuseau horaire donné
-*
-* @param string timezone_name : 'user', 'server', timezone valide
-* @return timestamp AAAAMMJJHHMMSS
-*
-*/
+ * Crée le timestamp MYSQL (AAAAMMJJhhmmss) de la date actuelle pour un fuseau horaire donné (par défaut UTC+0)
+ *
+ * @param string $timezone_name identifiant du fuseau horaire (par défaut 'UTC') ou 'user' ou 'server' 
+ * @return timestamp timestamp au format MYSQL 
+ *
+ * @copyright Ovensia
+ * @license GPL
+ * 
+ * @link http://fr.php.net/timezones
+ * @see timezone_identifiers_list
+ */
 
 function ploopi_tz_createtimestamp($timezone_name = 'UTC')
 {
@@ -368,14 +266,19 @@ function ploopi_tz_createtimestamp($timezone_name = 'UTC')
 }
 
 /**
-* Convertit un timestamp d'un fuseau à un autre
-*
-* @param int ts : timestamp
-* @param string timezone_name_src : 'user', 'server', timezone valide
-* @param string timezone_name_dst : 'user', 'server', timezone valide
-* @return timestamp AAAAMMJJHHMMSS
-*
-*/
+ * Convertit un timestamp MYSQL (AAAAMMJJhhmmss) d'un fuseau à un autre
+ *
+ * @param string $ts timestamp au format MYSQL
+ * @param unknown_type identifiant du fuseau horaire d'origine ou 'user' ou 'server' 
+ * @param unknown_type identifiant du fuseau horaire de destination ou 'user' ou 'server' 
+ * @return string timestamp au format MYSQL AAAAMMJJHHMMSS
+ *
+ * @copyright Ovensia
+ * @license GPL
+ * 
+ * @link http://fr.php.net/timezones
+ * @see timezone_identifiers_list
+ */
 
 function ploopi_tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezone_name_dst = 'UTC')
 {
@@ -425,6 +328,19 @@ function ploopi_tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezon
     // on renvoie la date formatée timestamp mysql
     return(date_format($date, _PLOOPI_TIMESTAMPFORMAT_MYSQL));
 }
+
+/**
+ * Renvoie une chaine indiquant le décalage d'un fuseau par rapport à l'heure UTC. Ex : UTC +02:00
+ *
+ * @param string identifiant du fuseau horaire ou 'user' ou 'server'
+ * @return string chaine UTC formatée
+ *
+ * @copyright Ovensia
+ * @license GPL
+ * 
+ * @link http://fr.php.net/timezones
+ * @see timezone_identifiers_list
+ */
 
 function ploopi_tz_getutc($timezone_name = 'UTC')
 {

@@ -21,9 +21,14 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-///////////////////////////////////////////////////////////////////////////
-// LOAD MODULES & GLOBAL PARAMS
-///////////////////////////////////////////////////////////////////////////
+/**
+ * Chargement des paramètres des modules
+ *
+ * @package ploopi
+ * @subpackage param
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
 
 $_SESSION['ploopi']['modules'] = Array();
 $_SESSION['ploopi']['moduletypes'] = Array();

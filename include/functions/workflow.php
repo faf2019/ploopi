@@ -21,6 +21,25 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fonctions de gestion du workflow interne (attention concept de workflow très léger).
+ * Permet de gérer des validateurs sur un enregistrement d'un objet.
+  * 
+ * @package ploopi
+ * @subpackage workflow
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
+/**
+ * Insère le bloc de sélection des validateurs pour un enregistrement d'un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_module identifiant du module
+ * @param unknown_type $id_action identifiant de l'action requise
+ */
+
 function ploopi_workflow_selectusers($id_object = -1, $id_record = -1, $id_module = -1, $id_action = -1)
 {
     global $db;
@@ -79,6 +98,15 @@ function ploopi_workflow_selectusers($id_object = -1, $id_record = -1, $id_modul
     <?
 }
 
+
+/**
+ * Enregistre les validateurs pour un enregistrement d'un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_module identifiant du module
+ */
+ 
 function ploopi_workflow_save($id_object = -1, $id_record = -1, $id_module = -1)
 {
     global $db;
@@ -106,6 +134,16 @@ function ploopi_workflow_save($id_object = -1, $id_record = -1, $id_module = -1)
         unset($_SESSION['ploopi']['workflow']['users_selected']);
     }
 }
+
+/**
+ * Renvoie les informations du workflow en fonction d'un utilisateur, d'un objet ou d'un enregistrement
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_module identifiant du module
+ * @param int $id_user identifiant de l'utilisateur
+ * @return array workflow
+ */
 
 function ploopi_workflow_get($id_object = -1, $id_record = -1,  $id_module = -1, $id_user = -1)
 {

@@ -19,8 +19,16 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Classe permettant de traiter les variables simples d'un modèle de document ODT
+ * 
+ * @package ploopi
+ * @subpackage odt
+ * @copyright Ovensia
+ * @license GPL
+ */
+
 class odt_varparser
 {
     private $vars = array();

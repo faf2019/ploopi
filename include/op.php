@@ -21,7 +21,17 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once './include/functions/rights.php';
+/**
+ * Opérations génériques.
+ * Calendrier, Colorpicker...
+ * 
+ * @package ploopi
+ * @subpackage global
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
+include_once './include/functions/security.php';
 
 if (isset($_REQUEST['ploopi_op'])) $ploopi_op = $_REQUEST['ploopi_op'];
 
@@ -108,9 +118,9 @@ if (isset($ploopi_op))
                 $_SESSION['calendar']['selected_year'] = date('Y');
             }
 
-            settype($day,'integer');
-            settype($month,'integer');
-            settype($year,'integer');
+            settype($day,'int');
+            settype($month,'int');
+            settype($year,'int');
 
             $selectedday = mktime(0,0,0,$_SESSION['calendar']['selected_month'], $_SESSION['calendar']['selected_day'], $_SESSION['calendar']['selected_year']);
             $today = mktime(0,0,0,date('n'),date('j'),date('Y'));

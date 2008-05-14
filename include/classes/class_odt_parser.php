@@ -23,6 +23,17 @@
 require_once 'class_odt_blockparser.php';
 require_once 'class_odt_varparser.php';
 
+/**
+ * Classe permettant de générer un document bureautique (ODT, DOC, PDT, etc.) à partir d'un modèle ODT.
+ * Cette classe fonctionne comme un moteur de template.
+ * Il est possible de définir de variables ou des blocs de variables qui seront ensuite remplacées dans le modèle via un parser XML.
+ * 
+ * @package ploopi
+ * @subpackage odt
+ * @copyright Ovensia
+ * @license GPL
+ */
+
 class odt_parser
 {
     private $filename;

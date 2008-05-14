@@ -21,33 +21,49 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-function ploopi_copydir($src , $dest, $mask = 0750)
+/**
+ * Fonction d'accès à l'espace physique de stockage.
+ * Création de dossier, copie de fichiers, téléchargement de fichiers...
+ * 
+ * @package ploopi
+ * @subpackage filesystem
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
+/**
+ * Copie récursive du contenu d'un dossier source vers un dossier destination
+ *
+ * @param string $src dossier source
+ * @param string $dest dossier destination
+ * @param string $mode 
+ * @return boolean true si pas de problème de copie
+ */
+
+function ploopi_copydir($src , $dest, $folder_mode = 0750, $file_mode = 0640)
 {
     $ok = true;
+
     $folder=opendir($src);
 
-    if (!file_exists($dest))
-    {
-        mkdir($dest, $mask);
-        //chmod($dest, $mask);
-    }
+    if (!file_exists($dest)) mkdir($dest, $folder_mode);
 
     while ($file = readdir($folder))
     {
         $l = array('.', '..');
-        if (!in_array( $file, $l))
+        if (!in_array($file, $l))
         {
-            if (is_dir($src."/".$file))
+            if (is_dir("{$src}/{$file}"))
             {
-                $ok = ploopi_copydir("$src/$file", "$dest/$file", $mask);
+                $ok = ploopi_copydir("{$src}/{$file}", "{$dest}/{$file}", $folder_mode = 0750, $file_mode = 0640);
             }
             else
             {
                 // test if writable
-                if (!(file_exists("$dest/$file") && !is_writable("$dest/$file")))
+                if (!(file_exists("$dest/$file") && !is_writable("{$dest}/{$file}")))
                 {
-                    copy("$src/$file", "$dest/$file");
-                    //chmod("$dest/$file", $mask);
+                    copy("{$src}/{$file}", "{$dest}/{$file}");
+                    chmod("{$dest}/{$file}", $file_mode);
                 }
                 else $ok = false;
             }
@@ -57,16 +73,11 @@ function ploopi_copydir($src , $dest, $mask = 0750)
 }
 
 /**
-* recursive delete of folder
-*
-* @param string path to delete
-* @return void
-*
-* @version 2.09
-* @since 0.1
-*
-* @category files manipulations
-*/
+ * Suppression récursive du contenu d'un dossier source vers un dossier destination
+ *
+ * @param string dossier à supprimer
+ */
+
 function ploopi_deletedir($src)
 {
     if (file_exists($src))
@@ -78,13 +89,13 @@ function ploopi_deletedir($src)
             $l = array('.', '..');
             if (!in_array( $file, $l))
             {
-                if (is_dir($src."/".$file))
+                if (is_dir("{$src}/{$file}"))
                 {
-                    ploopi_deletedir("$src/$file");
+                    ploopi_deletedir("{$src}/{$file}");
                 }
                 else
                 {
-                    unlink("$src/$file");
+                    unlink("{$src}/{$file}");
                 }
             }
         }
@@ -94,35 +105,37 @@ function ploopi_deletedir($src)
 }
 
 /**
-* recursive create of folder
-*
-* @param string path to create
-* @return void
-*
-* @version 2.09
-* @since 0.1
-*
-* @category files manipulations
-*/
+ * Création récursive d'un dossier
+ *
+ * @param string chemin à créer
+ */
 
-function ploopi_makedir($path)
+function ploopi_makedir($path, $mode = 0750)
 {
     $array_folder = explode(_PLOOPI_SEP, $path);
     $old_path = '';
+
     foreach($array_folder as $current_path)
     {
         if ($current_path != '')
         {
             $current_path = $old_path. _PLOOPI_SEP .$current_path;
 
-            if (!is_dir($current_path)) mkdir ($current_path, 0750);
+            if (!is_dir($current_path)) mkdir ($current_path, $mode);
 
             $old_path = $current_path;
         }
     }
-    return $current_path;
 }
 
+/**
+ * Renvoie le type mime du fichier en fonction de son extension (mais pas par rapport au contenu)
+ *
+ * @param string $filename chemin du fichier
+ * @return string type mime
+ * 
+ * @see ploopi_downloadfile
+ */
 
 function ploopi_getmimetype($filename)
 {
@@ -343,6 +356,19 @@ function ploopi_getmimetype($filename)
     return($mimetype);
 }
 
+/**
+ * Téléchargement d'un fichier vers le navigateur. Complète automatiquement les entêtes en renseignant notamment le type mime.
+ *
+ * @param string $filepath chemin physique du fichier
+ * @param string $destfilename nom du fichier tel qu'il apparaîtra au moment du téléchargement
+ * @param boolean $deletefile true si le fichier doit être supprimé après téléchargement
+ * @param boolean $attachment true si le fichier doit être envoyé en "attachment", false si il doit être envoyé "inline"
+ * @return boolean false si le fichier n'existe pas, rien sinon
+ * 
+ * @see ploopi_getmimetype
+ * @see ploopi_file_getextension
+ */
+
 function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $attachment = true)
 {
     //if (substr($path,-1) == '/') $path = substr($path, 0, strlen($path)-1);
@@ -388,27 +414,25 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
         
         if ($deletefile && is_writable($filepath)) @unlink($filepath);
 
-    ploopi_die('', false);
+        ploopi_die(null, false);
 
     }
     else return(false);
 }
 
+/**
+ * Extrait l'extension d'un fichier
+ *
+ * @param string $filename chemin physique du dossier
+ * @return string extension du fichier
+ * 
+ * @see ploopi_downloadfile
+ */
+
 function ploopi_file_getextension($filename)
 {
     $filename_array = explode('.',$filename);
     return(strtolower($filename_array[sizeof($filename_array)-1]));
-}
-
-function ploopi_unzip($zip_file, $src_dir, $extract_dir)
-{
-    $cwd = getcwd();
-    copy($src_dir . "/" . $zip_file, $extract_dir . "/" . $zip_file);
-    chdir($extract_dir);
-    shell_exec("unzip $zip_file");
-    shell_exec("rm $zip_file");
-    shell_exec("chmod -R 777 *");
-    chdir($cwd);
 }
 
 ?>

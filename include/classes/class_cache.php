@@ -21,7 +21,6 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// NEEDS PEAR PACKAGE
 @include_once 'Cache/Lite/Output.php';
 
 global $ploopi_cache_activated;
@@ -32,7 +31,17 @@ $ploopi_cache_activated = $_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM][
 $ploopi_cache_written = 0;
 $ploopi_cache_read = 0;
 
-class ploopi_cache  extends Cache_Lite_Output
+
+/**
+ * Classe de gestion de la mise en cache
+ * 
+ * @package ploopi
+ * @subpackage cache
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
+class ploopi_cache extends Cache_Lite_Output
 {
     var $cache_id;
 

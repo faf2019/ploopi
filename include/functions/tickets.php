@@ -21,10 +21,27 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion des tickets (messagerie interne).
+ * gestion des destinataires, envoi, etc... 
+ * 
+ * @package ploopi
+ * @subpackage ticket
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 define ('_PLOOPI_TICKETS_NONE',     0);
 define ('_PLOOPI_TICKETS_OPENED',   1);
 define ('_PLOOPI_TICKETS_DONE',     2);
 
+
+/**
+ * Insère un bloc pour la sélection de destinataires
+ *
+ * @param mixed $id_user identifiant utilisateur ou tableau d'utilisateurs présélectionnés
+ */
+ 
 function ploopi_tickets_selectusers($id_user = null)
 {
     if (isset($_SESSION['ploopi']['tickets']['users_selected'])) unset($_SESSION['ploopi']['tickets']['users_selected']);
@@ -49,6 +66,20 @@ function ploopi_tickets_selectusers($id_user = null)
     <?
 }
 
+
+/**
+ * Envoie un ticket
+ *
+ * @param string $title titre du ticket
+ * @param string $message contenu du ticket
+ * @param boolean $needed_validation true si le ticket nécessite une validation
+ * @param boolean $delivery_notification true si l'émetteur doit être averti de la lecture du message
+ * @param int $id_object identifiant de l'objet lié
+ * @param string $id_record identifiant de l'enregistrement lié
+ * @param string $object_label libellé de l'enregistrement lié
+ * @param boolean $system true s'il s'agit d'un ticket émis par le système
+ */
+
 function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery_notification = 0, $id_object = '', $id_record = '', $object_label = '', $system = false)
 {
     include_once './modules/system/class_user.php';
@@ -57,12 +88,6 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
     include_once './modules/system/class_mb_object.php';
     
     global $basepath;
-
-    /*if ($message == '')
-    {
-        if (isset($_POST['ploopi_ticket_message'])) $message = $_POST['ploopi_ticket_message'];
-        if (isset($_GET['ploopi_ticket_message'])) $message = $_GET['ploopi_ticket_message'];
-    }*/
 
     if (!empty($_SESSION['ploopi']['userid']))
     {
@@ -131,8 +156,6 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
                 'MODULE_LABEL' => $_SESSION['ploopi']['modules'][$id_module]['label']
                 )
             );
-
-            //$email_message .="<br /><br /><span><strong>Objet lié</strong>: </span><a href=\"{$url}\">{$_SESSION['ploopi']['modules'][$id_module]['label']} / {$mb_object->fields['label']} <b>\"{$object_label}\"</b></a>";
         }
 
         if ($id_user == 0)
@@ -197,6 +220,15 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
 
 }
 
+/**
+ * Renvoie l'identifiant du dernier ticket reçu par l'utilisateur connecté et le nombre de nouveaux tickets
+ *
+ * @return array indice 0 : nombre nouveau tickets, 1 : id du dernier ticket
+ * 
+ * @copyright Ovensia
+ * @license GPL
+ */
+ 
 function ploopi_tickets_getnew()
 {
     global $db;
@@ -229,6 +261,9 @@ function ploopi_tickets_getnew()
     return(array($tickets_new, $tickets_lastid));
 }
 
+/**
+ * Insère un bloc pour afficher les destinataires d'un ticket et les supprimer
+ */
 
 function ploopi_tickets_displayusers()
 {

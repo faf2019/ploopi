@@ -20,11 +20,18 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Classe d'accès à la table ploopi_connecteduser
+ * 
+ * @package ploopi
+ * @subpackage log
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 class connecteduser extends data_object
 {
-
     function connecteduser()
     {
         parent::data_object('ploopi_connecteduser','sid');

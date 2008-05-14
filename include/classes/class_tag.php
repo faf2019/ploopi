@@ -20,23 +20,23 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 include_once './include/classes/class_data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_tag
+ * 
+ * @package ploopi
+ * @subpackage annotation
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
 
 class tag extends data_object
 {
-
-    /**
-    * Class constructor
-    *
-    * @param int $idconnexion
-    * @access public
-    **/
     function tag()
     {
         parent::data_object('ploopi_tag','id');
     }
-
 }
 ?>

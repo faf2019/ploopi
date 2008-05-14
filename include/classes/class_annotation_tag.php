@@ -23,15 +23,17 @@
 
 include_once './include/classes/class_data_object.php';
 
+/**
+ * Classe d'accès à la table ploopi_annotation_tag
+ * 
+ * @package ploopi
+ * @subpackage annotation
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 class annotation_tag extends data_object
 {
-
-    /**
-    * Class constructor
-    *
-    * @param int $idconnexion
-    * @access public
-    **/
     function annotation_tag()
     {
         parent::data_object('ploopi_annotation_tag','id_annotation','id_tag');

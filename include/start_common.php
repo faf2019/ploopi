@@ -21,6 +21,23 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Partie commune des scripts de chargement de l'environnement Ploopi (start.php, start-light.php).
+ * Démarrage du timer principal.
+ * Chargement du fichier de config.
+ * Chargement du handler de gestion du buffer.
+ * Chargement du handler de gestion des erreurs.
+ * Chargement du handler de gestion des sessions.
+ * Filtrage des variables $POST, $GET, $COOKIE, $SERVER.
+ * Connexion à la base de données.
+ * Mise à jour de la session
+ * 
+ * @package ploopi
+ * @subpackage start
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 ob_start(create_function('$buffer', 'return ploopi_ob_callback($buffer);'));
 ///////////////////////////////////////////////////////////////////////////
 // START TIMER
@@ -45,7 +62,8 @@ include_once './config/config.php'; // load config (mysql, path, etc.)
 // INITIALIZE ERROR HANDLER
 ///////////////////////////////////////////////////////////////////////////
 
-include_once './include/errors.php';
+include_once './include/functions/errors.php';
+set_error_handler('ploopi_errorhandler');
 
 ///////////////////////////////////////////////////////////////////////////
 // LOAD GLOBALS, VARS & FUNCTIONS

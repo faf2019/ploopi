@@ -20,8 +20,16 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Gestion du timer d'exécution
+ * 
+ * @package ploopi
+ * @subpackage timer
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 class timer
 {
     var $start;

@@ -21,6 +21,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Initialisation du rendu frontoffice. 
+ * Chargement du module WebEdit. 
+ * 
+ * @package ploopi
+ * @subpackage frontoffice
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 ploopi_init_module('webedit', false, false, false);
 include './modules/webedit/display.php';
 ?>

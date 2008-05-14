@@ -20,6 +20,25 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fonctions de recherche et d'indexation de contenu.
+ * Extraction des mots clés d'un texte, gestion des METAs, mise en valeur des mots clés recherchés, suppression des mots communs.
+ * Utilisation de la technique de lemmisation (racinisation).
+ * 
+ * @see index_element
+ * @see index_keyword
+ * @see index_keyword_element
+ * @see index_stem
+ * @see index_stem_element
+ *
+ * @link http://pecl.php.net/package/stem
+ * 
+ * @package ploopi
+ * @subpackage search
+ * @copyright Ovensia
+ * @license GPL
+ */
+
 include_once './include/classes/class_index_element.php';
 include_once './include/classes/class_index_keyword.php';
 include_once './include/classes/class_index_keyword_element.php';
@@ -27,14 +46,29 @@ include_once './include/classes/class_index_stem.php';
 include_once './include/classes/class_index_stem_element.php';
 
 
+/**
+ * Génération d'un identifiant unique pour un enregistrement d'un objet
+ *
+ * @param int $id_module identifiant du module
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @return string identifiant unique de l'enregistrement (hash MD5, 32 caractères)
+ * 
+ * @see md5
+ */
+
 function ploopi_search_generate_id($id_module, $id_object, $id_record)
 {
     return(md5(sprintf("%04d%04d%s", $id_module, $id_object, $id_record)));
 }
 
-/*
- * Supprime les mots clés associés à un enregistrement d'un objet
- * */
+/**
+ * Supprime l'index (mots clés) associé à un enregistrement d'un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_module identifiant du module (optionnel)
+ */
 
 function ploopi_search_remove_index($id_object, $id_record, $id_module = -1)
 {
@@ -48,6 +82,15 @@ function ploopi_search_remove_index($id_object, $id_record, $id_module = -1)
     $db->query("DELETE FROM ploopi_index_stem_element WHERE id_element = '{$id_element}'");
 }
 
+/**
+ * Alimente l'index d'un enregistrement d'un objet avec les annotations liées
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param string $tags chaîne contenant les mots clés de l'annotation
+ * @param int $id_module identifiant du module (optionnel)
+ */
+
 function ploopi_search_create_index_annotation($id_object, $id_record, $tags, $id_module = -1)
 {
     global $db;
@@ -56,7 +99,6 @@ function ploopi_search_create_index_annotation($id_object, $id_record, $tags, $i
     $id_element = ploopi_search_generate_id($id_module,$id_object,$id_record);
 
     list($arrKeywords) = ploopi_getwords($tags, true, false);
-
 
     foreach($arrKeywords as $kw)
     {
@@ -85,6 +127,41 @@ function ploopi_search_create_index_annotation($id_object, $id_record, $tags, $i
 
     }
 }
+
+/**
+ * Création de l'index d'un enregistrement d'un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param string $label libellé de l'objet
+ * @param string $content contenu de l'objet à indéxer
+ * @param string $meta chaîne contenant des METAs informations (le poids accordé sera maximal)
+ * @param boolean $usecommonwords true si la liste des mots communs doit être utilisée (les mots communs seront dans ce cas retirés) 
+ * @param int $timestp_create date/heure de création au format timestamp MYSQL 
+ * @param int $timestp_modify date/heure de modification au format timestamp MYSQL
+ * @param int $id_user identifiant de l'utilisateur
+ * @param int $id_workspace identifiant de l'espace
+ * @param int $id_module identifiant du module
+ * @param boolean $debug true si le mode 'debug' est activé
+ * 
+ * @see index_element
+ * @see index_keyword
+ * @see index_keyword_element
+ * @see index_stem
+ * @see index_stem_element
+ * 
+ * @see _PLOOPI_INDEXATION_COMMONWORDS_FR
+ * @see _PLOOPI_INDEXATION_WORDSEPARATORS
+ * @see _PLOOPI_INDEXATION_WORDMINLENGHT
+ * @see _PLOOPI_INDEXATION_WORDMAXLENGHT
+ * @see _PLOOPI_INDEXATION_METAWEIGHT
+ * @see _PLOOPI_INDEXATION_KEYWORDSMAXPCENT
+ * 
+ * @see ploopi_search_generate_id
+ * @see ploopi_convertaccents
+ * 
+ * @link http://pecl.php.net/package/stem
+ */
 
 function ploopi_search_create_index($id_object, $id_record, $label, $content, $meta = '', $usecommonwords = true, $timestp_create = 0, $timestp_modify = 0, $id_user = -1, $id_workspace = -1, $id_module = -1, $debug = false)
 {
@@ -276,6 +353,17 @@ function ploopi_search_create_index($id_object, $id_record, $label, $content, $m
     if ($debug) printf("<br />KEYWORDS: %0.2f",$ploopi_timer->getexectime()*1000);
 }
 
+/**
+ * Renvoie l'index associé à un enregistrement d'un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $limit nombre de lignes renvoyées
+ * @param int $id_module identifiant du module (optionnel)
+ * @return array tableau contenant l'index de l'enregistrement
+ * 
+ * @see ploopi_search_generate_id
+ */
 
 function ploopi_search_get_index($id_object, $id_record, $limit = 100, $id_module = -1)
 {
@@ -313,15 +401,23 @@ function ploopi_search_get_index($id_object, $id_record, $limit = 100, $id_modul
 
         $db->query($sql);
         $index = $db->getarray();
-
-
     }
 
     return($index);
 }
 
+/**
+ * Effectue une recherche d'un ou plusieurs mots dans l'index
+ *
+ * @param string $keywords mots clés recherchés
+ * @param int $id_object identifiant de l'objet recherché (optionnel)
+ * @param string $id_record masque d'enregistrement recherché, recherche de type abc% (optionnel)
+ * @param mixed $id_module identifiant du module ou tableau d'idenfiants de modules (optionnel)
+ * @param array $options tableau des options de recherche : 'orderby', 'sort', 'limit' (optionnel)
+ * @return array tableau contenant le résultat de la recherche
+ */
 
-function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, $options = null)
+function ploopi_search($keywords, $id_object = -1, $id_record = '', $id_module = null, $options = null)
 {
     global $db;
     
@@ -338,7 +434,8 @@ function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, 
     $arrElements = array();
 
     if ($id_record != '') $arrSearch[] = "e.id_record LIKE '".$db->addslashes($id_record)."%'";
-    if ($id_object != '') $arrSearch[] = "e.id_object = {$id_object}";
+    if ($id_object != -1) $arrSearch[] = "e.id_object = {$id_object}";
+    
     if (!empty($id_module))
     {
         if (is_array($id_module))
@@ -515,13 +612,23 @@ function ploopi_search($keywords, $id_object, $id_record = '', $id_module = -1, 
     return($arrResult);
 }
 
-
-
-
-/*
- * Extrait les mots clés d'un texte
- * $usecommonwords : oui si on veut exclure la liste des mots communs
- * */
+/**
+ * Extrait les mots clés ou racines d'un texte
+ *
+ * @param string $content contenu du texte à analyser
+ * @param boolean $usecommonwords true si la liste des mots communs doit être utilisée.
+ * @param boolean $getstem true si la méthode de lemmisation/racinisation doit être utilisée
+ * @return tableau de mots clés ou de racines
+ * 
+ * @see _PLOOPI_INDEXATION_COMMONWORDS_FR
+ * @see _PLOOPI_INDEXATION_WORDSEPARATORS
+ * @see _PLOOPI_INDEXATION_WORDMINLENGHT
+ * @see _PLOOPI_INDEXATION_WORDMAXLENGHT
+ * 
+ * @see ploopi_convertaccents
+ * 
+ * @link http://pecl.php.net/package/stem
+ */
 
 function ploopi_getwords($content, $usecommonwords = true, $getstem = false)
 {
@@ -572,10 +679,20 @@ function ploopi_getwords($content, $usecommonwords = true, $getstem = false)
     return(array($words, $words_indexed, $words_overall));
 }
 
+/**
+ * Met en valeur les mots recherchés dans un texte et génère des extraits.
+ * Grandement inspiré du code de phpdig.
+ *
+ * @param string $content contenu du texte
+ * @param string $words mots recherchés
+ * @param int $snippet_length longueur de l'extrait
+ * @param int $snippet_num nombre d'extraits
+ * @param string $highlight_class classe css utilisée pour la mise en valeur des mots
+ * @return string extraits avec les mots clés
+ */
+
 function ploopi_highlight($content, $words, $snippet_length = 150, $snippet_num = 3, $highlight_class = 'ploopi_highlight')
 {
-    // mainly inspired by the great source code of phpdig
-
     // on calcule l'encodeur
     $string_subst = 'A:ÀÁÂÃÄÅ,a:àáâãäå,O:ÒÓÔÕÖØ,o:òóôõöø,E:ÈÉÊË,e:èéêë,C:Ç,c:ç,I:ÌÍÎÏ,i:ìíîï,U:ÙÚÛÜ,u:ùúûü,Y:Ý,y:ÿý,N:Ñ,n:ñ';
 

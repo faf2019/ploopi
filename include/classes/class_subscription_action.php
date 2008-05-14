@@ -22,6 +22,15 @@
 
 include_once './include/classes/class_data_object.php';
 
+/**
+ * Accès à la table ploopi_subscription_action 
+ * 
+ * @package ploopi
+ * @subpackage subscription
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 class subscription_action extends data_object
 {
     function subscription_action()

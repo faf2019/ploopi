@@ -21,11 +21,28 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fonctions de mise à jour du contenu de la session
+ * 
+ * @package ploopi
+ * @subpackage session
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
+include_once './include/functions/ip.php';
+
+
+/**
+ * Réinitialise la session
+ */
+
 function ploopi_session_reset()
 {
     global $scriptenv;
     
-
+    require_once 'Net/UserAgent/Detect.php';
+        
     // session_destroy();
     $_SESSION['ploopi'] = array(
                     'login'         => '',
@@ -40,7 +57,10 @@ function ploopi_session_reset()
                     'paramloaded'   => false,
                     'mode'          => 'admin',
 
-                    'remoteip'      => ploopi_getip(),
+                    'remote_ip'      => ploopi_getip(),
+                    'remote_browser' => Net_UserAgent_Detect::getBrowserString(),
+                    'remote_system'  => Net_UserAgent_Detect::getOSString(),
+                    
                     'host'          => $_SERVER['HTTP_HOST'],
                     'scriptname'    => $scriptenv,
 
@@ -74,13 +94,14 @@ function ploopi_session_reset()
 
                     'fingerprint'   => _PLOOPI_FINGERPRINT,
 
-                    'timezone'      => timezone_name_get(date_timezone_get(date_create())),
+                    'timezone'      => timezone_name_get(date_timezone_get(date_create()))
     
-                    'browser'       => (function_exists('ploopi_detect_browser')) ? ploopi_detect_browser($_SERVER['HTTP_USER_AGENT']) : array()
-                );
-
-    if (isset($_SESSION['ploopi']['browser']['PDA_NAME'])) $_SESSION['ploopi']['browser']['pda'] = ($_SESSION['ploopi']['browser']['PDA_NAME'] != '');
+    );
 }
+
+/**
+ * Met à jour les données et vérifie la validité de la session 
+ */
 
 function ploopi_session_update()
 {
@@ -107,83 +128,9 @@ function ploopi_session_update()
     else
     {
         $_SESSION['ploopi']['lastrequesttime'] = $_SESSION['ploopi']['currentrequesttime'];
-        $_SESSION['ploopi']['remoteip'] = ploopi_getip();
+        $_SESSION['ploopi']['remote_ip'] = ploopi_getip();
     }
 
     $_SESSION['ploopi']['scriptname'] = $scriptenv;
 }
-
-function ploopi_getiprules($rules)
-{
-    $intervals = array();
-    $iprules = array();
-    $ip1 = 0;
-    $ip2 = 0;
-
-    if ($rules == '')
-    {
-        return false;
-    }
-
-    //------------------------
-    // string conversion
-    //------------------------
-    $intervals = explode(';',$rules);
-
-    foreach ($intervals as $interval)
-    {
-        $ips = explode('-',trim($interval));
-
-        if (count($ips) == 1)
-        {
-            $ips[0] = trim($ips[0]);
-            if (strpos($ips[0],"*") !== false)
-            {
-                $ip1 = str_replace('*','0',$ips[0]);
-                $ip2 = str_replace('*','255',$ips[0]);
-            }
-            else
-            {
-                $ip1 = $ip2 = $ips[0];
-            }
-        }
-        elseif (count($ips) == 2)
-        {
-            $ip1 = trim($ips[0]);
-            $ip2 = trim($ips[1]);
-        }
-
-        $ip1 = ip2long($ip1);
-        $ip2 = ip2long($ip2);
-
-        $iprules[$ip1] = $ip2;
-    }
-
-
-    return $iprules;
-}
-
-function ploopi_isipvalid($iprules)
-{
-    $ip_ok = false;
-
-    if ($iprules)
-    {
-        $userip = ip2long($_SERVER['REMOTE_ADDR']);
-        foreach($iprules as $startip => $endip)
-        {
-            if ($userip >= $startip && $userip <= $endip) $ip_ok = true;
-        }
-    }
-    else $ip_ok = true;
-
-    return($ip_ok);
-}
-
-
-
-
-
-
-
 ?>

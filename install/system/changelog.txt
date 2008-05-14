@@ -1,3 +1,41 @@
+== Ploopi - version 1.0 RC3c ===================================================
+
+2008-05-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+    
+* Ploopi    
+  - Système : Modification lors du rattachement d'un utilisateur/groupe à un espace => redirection sur l'onglet sélectionné.
+  - Système : Correction d'un bug d'affichage sur le bloc de l'arbre des espaces/groupes.
+  - Système : Ajout d'une méthode de la classe workspace pour renvoyer la liste complète des utilisateurs directs et indirects (sous-espaces, sous-groupes)
+  - Système : Correction d'un bug lors de la création d'un sous espace si aucun module hérité.
+  - Système : Mise à jour SQL (index)
+  - Système : modification dans la liste des fuseaux horaires d'un utilisateur
+  - Abonnements : modification du premier chargement (suppression de l'appel ajax, remplacé par un appel direct à une fonction)
+  - Annotations : modification du premier chargement (suppression de l'appel ajax, remplacé par un appel direct à une fonction)
+  - Sessions : Correctifs dans la gestion des sessions : prise en compte du paramètre de durée de session interne à ploopi, regénération d'un nouvel id de session après avoir détruit une session
+  - Sessions : Modification de la proba d'exec du garbage collector (100 => 10)
+  - Tickets : Correction d'un bug sur l'ouverture du popup "nouveau ticket" (problème avec une liste vide de destinataires)
+  - Tickets : Correctif lors de l'envoi d'une réponse à un ticket (renvoyait une page blanche)
+  - Tickets : Modifications d'intitulés tickets/messages.
+  - Tickets : Mise à jour du fichier de langue
+  - Correction d'un bug dans start.php (servertimezone => timezone)
+  - modification de la classe xml2array : prise en compte des attributs
+  - nouvelles fonctions date (ploopi_tz) pour la gestion des fuseaux horaires
+  
+* Templates 
+  - Modification intitulé 'ticket' dans les templates 'ploopi*' (mail.tpl)
+
+* Directory
+  - Modifications d'intitulés tickets/messages.
+  - Mise à jour du fichier de langue
+
+* Doc
+  - Modifications d'intitulés tickets/messages.
+  - Mise à jour du fichier de langue
+
+* WebEdit :
+  - Meilleure gestion de la suppression des rubriques
+  - Ajout de variables frontoffice (cf http://redmine.ploopi.org/wiki/ploopi/Cr%C3%A9ation_d'un_template_FrontOffice)
+
 == Ploopi - version 1.0 RC3b ===================================================
 
 2008-05-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

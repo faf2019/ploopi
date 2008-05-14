@@ -21,6 +21,15 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Définition des constantes générique utilisées par PLOOPI 
+ * 
+ * @package ploopi
+ * @subpackage global
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 define ('_PLOOPI_VERSION', '1.0RC3c');
 define ('_PLOOPI_REVISION', '80507');
 
@@ -97,6 +106,12 @@ define ('_PLOOPI_ID_LEVEL_GROUPADMIN',      20);
 define ('_PLOOPI_ID_LEVEL_SYSTEMADMIN',     99);
 
 define('_PLOOPI_INDEXATION_METAWEIGHT',     999999);
+
+// ERROR HANDLER
+//if (defined('_PLOOPI_ERROR_REPORTING')) {error_reporting(_PLOOPI_ERROR_REPORTING);}
+if (!defined('_PLOOPI_DISPLAY_ERRORS')) define('_PLOOPI_DISPLAY_ERRORS', false);
+if (!defined('_PLOOPI_MAIL_ERRORS')) define('_PLOOPI_MAIL_ERRORS', false);
+if (!defined('_PLOOPI_ADMINMAIL')) define('_PLOOPI_ADMINMAIL', '');
 
 global $basepath;
 global $scriptenv;

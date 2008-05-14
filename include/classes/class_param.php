@@ -21,6 +21,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Classe de gestion des paramètres des modules.
+ * Cette classe permet de lire/enregistrer les paramètres système/espace/utilisateur de chaque module.
+ * 
+ * @package ploopi
+ * @subpackage param
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 class param
 {
     var $moduleid;

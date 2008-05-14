@@ -114,7 +114,7 @@
       $description = stripslashes (htmlspecialchars (trim ($description), ENT_QUOTES));
 
       // Description parser // Empty descriptions not allowed
-      $description = (empty ($description)) ? "A basic and simple RSS Feed!" : $description;
+      $description = (empty ($description)) ? "" : $description;
 
       // Language parser // Only [-A-Za-z]
       if ((preg_match ("([^-A-Za-z])", $language)) or (empty ($language))) :

@@ -21,33 +21,39 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-##############################################################################
-#
-# string functions
-#
-##############################################################################
+/**
+ * Fonction de manipulation de chaînes.
+ * Conversion, découpage, réécriture, etc..
+ * 
+ * @package ploopi
+ * @subpackage string
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
 
-function ploopi_nl2br($text)
+/**
+ * Insère un retour à la ligne HTML à chaque nouvelle ligne, améliore le comportement de la fonction php nl2br()
+ *
+ * @param string $str
+ * @return string chaîne modifiée
+ */
+
+function ploopi_nl2br($str)
 {
-   return preg_replace("/\r\n|\n|\r/", "<br />", $text);
+   return preg_replace("/\r\n|\n|\r/", "<br />", $str);
 }
 
 /**
-* ! description !
-*
-* @param string string to cut
-* @param int length of string to keep
-* @return string param'd string first n chars
-*
-* @version 2.09
-* @since 0.1
-*
-* @category string manipulations
-*/
+ * Coupe une chaîne à la longueur désirée et ajoute '...'
+ *
+ * @param string $str chaîne à couper
+ * @param string $len longueur maximale de la chaîne
+ * @param string $mode détermine ou couper la chaîne : 'left', 'middle' 
+ * @return string chaîne modifiée
+ */
+
 function ploopi_strcut($str,$len = 30, $mode = 'left')
 {
-    // mode = 'left' / 'middle'
-
     if (strlen($str)>$len)
     {
         switch($mode)
@@ -65,14 +71,29 @@ function ploopi_strcut($str,$len = 30, $mode = 'left')
     return($str);
 }
 
-// convert all accentuated caracters in string
-function ploopi_convertaccents($content)
+/**
+ * Convertit tous les caractères accentués en caractères non accentués en préservant les majuscules/minuscules
+ *
+ * @param string $str chaîne à convertir
+ * @return string chaîne modifiée
+ */
+ 
+function ploopi_convertaccents($str)
 {
-    return (strtr($content, "¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿÞ",
+    return (strtr($str, "¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿÞ",
                   "YuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyys"));
 }
 
-// rewrite url for being used with apache's mod_rewrite
+
+
+/**
+ * Réécrit une URL selon les règles de réécriture utilisée par ploopi
+ *
+ * @param string $url URL à réécrire
+ * @param string $title titre à insérer dans la nouvelle URL
+ * @return string URL réécrite
+ */
+ 
 function ploopi_urlrewrite($url, $title = '')
 {
     $title_replacement = str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '_');
@@ -97,45 +118,23 @@ function ploopi_urlrewrite($url, $title = '')
 }
 
 
-// crypt + base64(safe)
-function ploopi_urlencode($url)
-{
-    if (defined('_PLOOPI_URL_ENCODE') && _PLOOPI_URL_ENCODE)
-    {
-        require_once './include/classes/class_cipher.php';
-        if (strstr($url,'?')) list($script, $params) = explode('?', $url, 2);
-        else {$script = $url; $params = '';}
-        $cipher = new ploopi_cipher();
-        return("{$script}?ploopi_url=".urlencode($cipher->crypt($params)));
-    }
-    else return($url);
-}
 
-function ploopi_base64_encode($string)
-{
-    // base64 safe encoding
-    // thx to massimo dot scamarcia at gmail dot com
-    // Php version of perl's MIME::Base64::URLSafe, that provides an url-safe base64 string encoding/decoding (compatible with python base64's urlsafe methods)
-    $string = base64_encode($string);
-    $string = str_replace(array('+','/','='), array('-','_',''), $string);
-    return($string);
-}
+/**
+ * Encode les caractères spéciaux d'une chaîne pour qu'elle puisse être intégrée dans un document XML
+ *
+ * @param string $str chaîne brute
+ * @return string chaîne encodée
+ */
+ 
+function ploopi_xmlencode($str) { return str_replace(array("&", ">", "<", "\""), array("&amp;", "&gt;", "&lt;", "&quot;"), $str); }
 
-function ploopi_base64_decode($string)
-{
-    $string = str_replace(array('-','_'),array('+','/'),$string);
-    $mod4 = strlen($string) % 4;
-    if ($mod4) $string .= substr('====', $mod4);
-    return base64_decode($string);
-}
+/**
+ * Rend les liens d'un texte cliquables
+ *
+ * @param string $text le texte à traiter
+ * @return string le texte modifié
+ */
 
-// encode data before being inserted into XML document
-function ploopi_xmlencode($str)
-{
-    return str_replace(array("&", ">", "<", "\""), array("&amp;", "&gt;", "&lt;", "&quot;"), $str);
-}
-
-// marten_berglund at hotmail dot com (php.net)
 function ploopi_make_links($text)
 {
     $text = preg_replace(
@@ -156,10 +155,18 @@ function ploopi_make_links($text)
     return $text;
 }
 
+/**
+ * Encode et affiche une variable au format JSON et modifie les entêtes du document. Compatible x-json
+ *
+ * @param mixed $var variable à encoder
+ * 
+ * @copyright Ovensia
+ * @license GPL
+ */
 
-function ploopi_print_json($str)
+function ploopi_print_json($var)
 {
-    $json = json_encode($str);
+    $json = json_encode($var);
     if (strlen($json)>4096) { header("Content-Type: test/x-json"); echo $json; }
     else header("x-json: {$json}");
 }

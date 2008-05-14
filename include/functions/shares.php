@@ -20,8 +20,24 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Fonctions de gestion des partages sur des enregistrements d'objets.
+ *
+ * @package ploopi
+ * @subpackage share
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
+/**
+ * Insère le bloc de partage pour un enregistrement d'un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_module identifiant du module
+ */
+
 function ploopi_shares_selectusers($id_object = -1, $id_record = -1, $id_module = -1)
 {
     global $db;
@@ -70,6 +86,14 @@ function ploopi_shares_selectusers($id_object = -1, $id_record = -1, $id_module 
     <?
 }
 
+/**
+ * Enregistre les partages sélectionnés pour un enregistrement d'un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_module identifiant du module
+ */
+
 function ploopi_shares_save($id_object = -1, $id_record = -1, $id_module = -1)
 {
     global $db;
@@ -96,6 +120,16 @@ function ploopi_shares_save($id_object = -1, $id_record = -1, $id_module = -1)
     }
 }
 
+/**
+ * Renvoie les partages pour un utilisateur, un objet, un enregistrement d'un module
+ *
+ * @param int $id_user identifiant de l'utilisateur
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_module identifiant du module
+ * @return array tableau contenant la liste des partages
+ */
+ 
 function ploopi_shares_get($id_user = -1, $id_object = -1, $id_record = -1,  $id_module = -1)
 {
     global $db;

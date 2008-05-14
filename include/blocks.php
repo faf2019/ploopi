@@ -21,6 +21,15 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Chargement des blocs de menus en fonction de l'espace de travail sélectionné
+ *  
+ * @package ploopi
+ * @subpackage backoffice
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 $arrBlocks = array();
 
 switch ($_SESSION['ploopi']['mainmenu'])

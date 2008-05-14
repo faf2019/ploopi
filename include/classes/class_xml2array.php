@@ -21,6 +21,15 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Conversion d'un flux de données XML en tableau PHP 
+ * 
+ * @package ploopi
+ * @subpackage xml
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 class xml2array
 {
 
@@ -91,26 +100,6 @@ class xml2array
         array_pop($this->node_stack);
         $this->currentdata = '';
     }
-    
-    
-    /*
-    function startElement($parser, $name, $attrs)
-    {
-        $this->currentdata = '';
-        
-        $s = (sizeof($this->node_stack)-1)/2;
-        $this->node_stack[] = &$this->node_stack[$s][$name][];
-        $this->node_stack[] = &$this->node_stack[$s]["{$name} attributes"][];
-        $this->node_stack[(sizeof($this->node_stack)-1)] = $attrs;
-    }
-
-    function endElement($parser, $name)
-    {
-        if (trim($this->currentdata) != '') $this->node_stack[(sizeof($this->node_stack)-2)] = $this->currentdata;
-        array_pop($this->node_stack);
-        $this->currentdata = '';
-    }    
-    */    
 
     function characterData($parser, $data)
     {

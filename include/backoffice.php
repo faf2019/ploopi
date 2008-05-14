@@ -21,6 +21,21 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Initialisation du rendu backoffice. 
+ * Initialisation du moteur de template.
+ * Initialisation du moteur de skin.
+ * Définition des variables templates générales.
+ * Insertion des blocs.
+ * Inclusions JS/CSS.
+ * Appel du module.
+ *  
+ * @package ploopi
+ * @subpackage backoffice
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 include_once './include/classes/class_block.php';
 include_once './lib/template/template.php';
 
@@ -37,7 +52,7 @@ $template_body = new Template($_SESSION['ploopi']['template_path']);
 if (!empty($_GET['ploopi_tpl']) && file_exists("{$_SESSION['ploopi']['template_path']}/{$_GET['ploopi_tpl']}.tpl")) $template_body->set_filenames(array('body' => "{$_GET['ploopi_tpl']}.tpl"));
 else
 {
-    if (isset($_SESSION['ploopi']['browser']['pda']) && $_SESSION['ploopi']['browser']['pda']) $template_body->set_filenames(array('body' => 'pda.tpl'));
+    if (isset($_SESSION['ploopi']['remote_pda']) && $_SESSION['ploopi']['remote_pda']) $template_body->set_filenames(array('body' => 'pda.tpl'));
     else $template_body->set_filenames(array('body' => 'index.tpl'));
 }
 
@@ -47,6 +62,7 @@ else
 
 $template_body->assign_block_vars('ploopi_js', array('PATH' => './lib/protoculous/protoculous-packer.js?v='.urlencode(_PLOOPI_VERSION).'&r='._PLOOPI_REVISION));
 $template_body->assign_block_vars('ploopi_js', array('PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION).'&r='._PLOOPI_REVISION));
+$template_body->assign_block_vars('ploopi_js', array('PATH' => './js/javascript.php?v='.urlencode(_PLOOPI_VERSION).'&r='._PLOOPI_REVISION));
 
 $ploopi_additional_head = '';
 $ploopi_additional_javascript = '';

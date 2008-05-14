@@ -21,6 +21,28 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fonction de gestion des annotations.
+ * Permet de gérer un bloc d'annotations associé à un enregistrement d'un objet.
+ * Permet de laisser un commentaire et des mots clés (tags) sur sur un objet
+ * 
+ * @package ploopi
+ * @subpackage annotation
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
+/**
+ * Renvoie le nombre d'annotation sur un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_user identifiant de l'utilisateur
+ * @param int $id_workspace identifiant de l'espace
+ * @param int $id_module identifiant du module
+ * @return int nombre d'annotation
+ */
+
 function ploopi_get_nbannotation($id_object, $id_record, $id_user = -1, $id_workspace = -1, $id_module = -1)
 {
     global $db;
@@ -46,6 +68,14 @@ function ploopi_get_nbannotation($id_object, $id_record, $id_user = -1, $id_work
     return($nbanno);
 }
 
+/**
+ * Insère le bloc d'annotation pour un enregistrement d'un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param string $object_label libellé de l'objet
+ */
+
 function ploopi_annotation($id_object, $id_record, $object_label = '')
 {
     global $ploopi_annotation_private;
@@ -60,16 +90,16 @@ function ploopi_annotation($id_object, $id_record, $object_label = '')
                                                     );
     ?>
     <div id="ploopiannotation_<? echo $id_annotation; ?>">
-    <?
-        ploopi_annotation_refresh($id_annotation);
-    ?>
+    <? ploopi_annotation_refresh($id_annotation); ?>
     </div>
-    <!--script type="text/javascript">
-        ploopi_window_onload_stock(function() {ploopi_annotation('<? echo $id_annotation; ?>');});
-    </script-->
     <?
 }
 
+/**
+ * Rafraichit le bloc d'annotation pour un enregistrement d'un objet
+ *
+ * @param string $id_annotation identifiant du bloc d'annotation
+ */
 
 function ploopi_annotation_refresh($id_annotation)
 {

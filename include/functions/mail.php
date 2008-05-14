@@ -21,6 +21,32 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fonctions d'envoi de mail
+ *
+ * @package ploopi
+ * @subpackage mail
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
+/**
+ * Envoie un mail. Gère les emetteurs multiples, les destinataires multiples, le CC multiple, le BCC multiple, le REPLYTO multiple, les pièces jointes, les messages au format HTML.
+ *
+ * @param mixed $from tableau indexé contenant les emetteurs, chaque emetteur est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email. 
+ * @param mixed $to tableau indexé contenant les destinataires, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email. 
+ * @param string $subject le sujet du message.
+ * @param string $message le contenu du message.
+ * @param mixed $cc tableau indexé contenant les destinataires en copie, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+ * @param mixed $bcc tableau indexé contenant les destinataires en copie cachée, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+ * @param mixed $replyto tableau indexé contenant les destinataires de la réponse, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+ * @param array $files tableau indexé de chemins vers des fichiers à joindre au message.
+ * @param boolean $html true si le message doit être envoyé au format HTML.
+ * 
+ * @see ploopi_checkemail
+ * @see mail
+ */
+
 function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = null, $replyto = null, $files = null, $html = true)
 {
     // from : Array('name','address')
@@ -29,7 +55,6 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     // bcc : Array('name','address')
     // replyto : Array('name','address')
     // files : Array
-
 
     $str_to = '';
     if (is_array($to))
@@ -177,6 +202,13 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
 
 }
 
+/**
+ * Génère une version HTML d'un tableau php multidimensionnel (formulaire par exemple)
+ *
+ * @param array $form tableau à convertir au format HTML
+ * @return string code HTML du tableau
+ */
+
 function ploopi_form2html($form)
 {
     $content = '';
@@ -208,41 +240,54 @@ function ploopi_form2html($form)
     return($content);
 }
 
-function ploopi_send_form($from, $to, $subject, $form, $cc = null, $bcc = null)
+/**
+ * Envoie un formulaire (ou un tableau) par mail. Gère les emetteurs multiples, les destinataires multiples, le CC multiple, le BCC multiple, le REPLYTO multiple
+ *
+ * @param mixed $from tableau indexé contenant les emetteurs, chaque emetteur est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email. 
+ * @param mixed $to tableau indexé contenant les destinataires, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email. 
+ * @param string $subject le sujet du message.
+ * @param string $message le contenu du message.
+ * @param mixed $cc tableau indexé contenant les destinataires en copie, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+ * @param mixed $bcc tableau indexé contenant les destinataires en copie cachée, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+ * @param mixed $replyto tableau indexé contenant les destinataires de la réponse, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+ */
+
+function ploopi_send_form($from, $to, $subject, $form, $cc = null, $bcc = null, $replyto = null)
 {
-
-    // form['field'] = value
-
     $content = ploopi_form2html($form);
 
-    /* message */
     $message =  "
-            <html>
-            <head>
-            <title>$subject</title>
-            </head>
-            <body>
-            <table cellpadding='3' cellspacing='1' bgcolor='#000000'>
-            $content
-            </table>
-            </body>
-            </html>
-            ";
+                <html>
+                    <head>
+                        <title>{$subject}</title>
+                    </head>
+                    <body>
+                        <table cellpadding=\"3\" cellspacing=\"1\" bgcolor=\"#000000\">
+                            {$content}
+                        </table>
+                    </body>
+                </html>
+                ";
 
-    return(ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = null));
+    return(ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = null, $replyto = null));
 }
 
 
+/**
+ * Valide une adresse email (format uniquement) selon les RFC 2822 et 1035
+ * 
+ * @param string $email adresse email à valider
+ * @return boolean true si l'adresse est considérée comme valide
+ * 
+ * @copyright  bobocop (arobase) bobocop (point) cz
+ * 
+ * @link http://www.faqs.org/rfcs/rfc2822.html
+ * @link http://www.faqs.org/rfcs/rfc1035.html
+ * @link http://atranchant.developpez.com/code/validation/
+ */
+
 function ploopi_checkemail($email)
 {
-    // Auteur : bobocop (arobase) bobocop (point) cz
-    // Traduction des commentaires par mathieu
-    // http://atranchant.developpez.com/code/validation/
-    
-    // Le code suivant est la version du 2 mai 2005 qui respecte les RFC 2822 et 1035
-    // http://www.faqs.org/rfcs/rfc2822.html
-    // http://www.faqs.org/rfcs/rfc1035.html
-    
     $atom   = '[-a-z0-9!#$%&\'*+\\/=?^_`{|}~]';   // caractères autorisés avant l'arobase
     $domain = '([a-z0-9]([-a-z0-9]*[a-z0-9]+)?)'; // caractères autorisés après l'arobase (nom de domaine)
                                    

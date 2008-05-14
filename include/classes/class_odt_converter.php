@@ -19,9 +19,17 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 require_once 'HTTP/Request.php';
+
+/**
+ * Classe permettant de convertir un document ODT en PDF, DOC, SXW, RTF, etc... via le webservice JODConverter
+ * 
+ * @package ploopi
+ * @subpackage odt
+ * @copyright Ovensia
+ * @license GPL
+ */
 
 class odt_converter
 {

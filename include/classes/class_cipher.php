@@ -21,6 +21,15 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Classe de chiffrement/déchiffrement (basé sur mcrypt), notamment utilisée pour chiffrer les URL
+ * 
+ * @package ploopi
+ * @subpackage crypt
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 class ploopi_cipher
 {
     var $key, $iv, $cipher;

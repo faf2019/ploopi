@@ -21,20 +21,44 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion de l'affichage des modules.
+ * Regroupe des méthodes génériques pour afficher bloc, menus, onglets, barre d'outils, popups, etc...
+ * 
+ * @package ploopi
+ * @subpackage skin
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 class skin_common
 {
-
+    
+    /**
+     * Constructeur de la classe skin
+     *
+     * @param string $skin nom du skin (nom du dossier)
+     * @return skin_common
+     */
+    
     function skin_common($skin)
     {
         $this->values = array();
-        $this->values['path'] = "./templates/backoffice/$skin/img";
-        $this->values['inifile'] = "./templates/backoffice/$skin/skin.ini";
-        if (file_exists($this->values['inifile']))
-        {
-            $this->values = array_merge($this->values,parse_ini_file($this->values['inifile']));
-        }
+        $this->values['path'] = "./templates/backoffice/{$skin}/img";
+        $this->values['inifile'] = "./templates/backoffice/{$skin}/skin.ini";
+        if (file_exists($this->values['inifile'])) $this->values = array_merge($this->values,parse_ini_file($this->values['inifile']));
     }
 
+    /**
+     * Créé un haut de bloc
+     *
+     * @param string $title titre du bloc
+     * @param string $style styles optionnels du bloc
+     * @param string $styletitle styles optionnels du titre
+     * @param srting $additionnal_title titre additionnel
+     * @return string code html de l'entête du bloc
+     */
+    
     function open_simplebloc($title = '', $style = '', $styletitle = '', $additionnal_title = '')
     {
         if (strlen($style)>0) $res = "<div class=\"simplebloc\" style=\"{$style}\">";
@@ -47,11 +71,26 @@ class skin_common
         return $res;
     }
 
+    /**
+     * Créé un bas de bloc (ferme le dernier bloc ouvert) 
+     *
+     * @return string code html du pied du bloc
+     */
+    
     function close_simplebloc()
     {
         return '</div></div>';
     }
 
+    
+    /**
+     * Crée un titre de page
+     *
+     * @param string $title titre de la page
+     * @param string $style styles optionnels
+     * @return string code html du titre
+     */
+    
     function create_pagetitle($title, $style = '')
     {
         if (strlen($style)>0) $res = "<div class=\"pagetitle\" style=\"{$style}\">$title</div>";
@@ -61,6 +100,16 @@ class skin_common
     }
 
 
+    /**
+     * Crée une barre d'outils (icones)
+     *
+     * @param array $icons tableau associatif d'icones (propriétés : title, url, icon, width, confirm, javascript)
+     * @param string $iconsel clé de l'icone sélectionnée (par référence), sélectionne par défaut la première icone
+     * @param boolean $sel true si la sélection est gérée, par défaut tru
+     * @param boolean $vertical true si l'affichage est vertical, par défaut false
+     * @return string code html de la barre d'outils
+     */
+    
     function create_toolbar($icons, &$iconsel, $sel = true, $vertical = false)
     {
         if (!isset($icons[$iconsel])) $iconsel = -1;
@@ -113,6 +162,16 @@ class skin_common
         return $res;
     }
 
+    /**
+     * Crée une icone pour la barre d'outils
+     *
+     * @param array $icon icone à afficher (propriétés : title, url, icon, width, confirm, javascript)
+     * @param boolean $sel true si l'icone est sélectionnée
+     * @param string $key clé (propriété id) de l'icone
+     * @param boolean $vertical true si l'affichage est vertical
+     * @return string code html de l'icone
+     */
+    
     function create_icon($icon, $sel, $key, $vertical)
     {
         $confirm = isset($icon['confirm']);
@@ -149,7 +208,7 @@ class skin_common
         else
         {
             $res =  "
-                    <div class=\"{$class}\" id=\"{$key}\" {$style}>
+                    <distringv class=\"{$class}\" id=\"{$key}\" {$style}>
                         <a href=\"javascript:void(0);\" onclick=\"javascript:{$onclick};return false;\">
                             <div class=\"toolbar_icon_image\">$image</div>
                             <div class=\"toolbar_icon_title\">$title</div>
@@ -161,7 +220,15 @@ class skin_common
         return $res;
     }
 
-    function create_tabs($tabs,&$tabsel)
+    /**
+     * Crée une barre d'onglets
+     *
+     * @param array $tabs tableau associatif d'onglets (propriétés : title, url, width)
+     * @param string $tabsel clé de l'onglet sélectionné (par référence), sélectionne par défaut le premier onglet
+     * @return string code html de la barre d'onglets
+     */
+    
+    function create_tabs($tabs, &$tabsel)
     {
 
         $res = "<div class=\"tabs\">";
@@ -179,7 +246,15 @@ class skin_common
         return $res;
     }
 
-    function create_tab($tab,$sel)
+    /**
+     * Crée un onglet
+     *
+     * @param array $tab onglet (propriétés : title, url, width)
+     * @param boolean $sel true si l'onglet est sélectionné
+     * @return string code html de l'onglet
+     */
+    
+    function create_tab($tab, $sel)
     {
         if (!empty($tab['width'])) $style = "style=\"width:{$tab['width']}px;\"";
         else $style = '';
@@ -189,11 +264,15 @@ class skin_common
         return $res;
     }
 
-    function create_menu($title, $link, $id_help='', $target='', $urlencode = true)
-    {
-        if ($urlencode) $link = ploopi_urlencode($link);
-    }
-
+    /**
+     * Crée un faux popup (div)
+     *
+     * @param string $title titre du popup
+     * @param string $content contenu du popup (html)
+     * @param string $popupid id du popup (propriété html id)
+     * @return string code html du popup
+     */
+    
     function create_popup($title, $content, $popupid = '')
     {
         $res = $this->open_simplebloc($title, 'margin:0px;','','<a title="Fermer" class="ploopi_popup_close" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');">Fermer</a>');
@@ -204,6 +283,14 @@ class skin_common
     }
 
 
+    /**
+     * Trie le tableau avancé
+     *
+     * @param array $a valeur a
+     * @param array $b valeur b
+     * @return boolean
+     */
+    
     function array_sort($a,$b)
     {
         $a_label = isset($this->array_values[$a]['values'][$this->array_orderby]['sort_label']) ? 'sort_label' : 'label';
@@ -216,6 +303,34 @@ class skin_common
         else return($b_val>$a_val);
     }
 
+    /**
+     * Affiche un tableau avancé
+     *
+     * @param array $columns définition des colonnes
+     * @param array $values contenu du tableau
+     * @param string $array_id identifiant du tableau
+     * @param array $options options d'affichage
+     * 
+     * propriétés des colonnes : label, width, styles, options
+     * propriétés des valeurs : label, style, sort_label
+     * propriétés des options : height, sortable, orderby_default, sort_default
+     * 
+     * @example $array_columns = array();
+     * $array_values = array();
+     * 
+     * $array_columns['left']['colonne1'] = array('label' => 'Colonne 1', 'width' => '100', 'options' => array('sort' => true));
+     * $array_columns['right']['colonne2'] = array('label' => 'Colonne 2', 'width' => '100','options' => array('sort' => true));
+     * $array_columns['auto']['colonneauto'] = array('label' => 'Colonne Auto', 'options' => array('sort' => true));
+     * 
+     * $c = 0;
+     * 
+     * $array_values[$c]['values']['colonne1'] = array('label' => 'valeur1');
+     * $array_values[$c]['values']['colonne2'] = array('label' => 'valeur2', 'style' => 'text-align:right');
+     * $array_values[$c]['values']['colonneauto'] = array('label' => 'valeur3', 'sort_label' => '3');
+     * 
+     * $skin->display_array($array_columns, $array_values, 'id_tableau', array('height' => 200, 'sortable' => true, 'orderby_default' => 'valeur3', 'sort_default' => 'DESC'));
+     */
+    
     function display_array($columns, $values, $array_id = null, $options = null)
     {
         if (empty($array_id)) $array_id = md5(uniqid(rand(), true));
@@ -282,6 +397,13 @@ class skin_common
 
     }
 
+    /**
+     * Rafraichit l'affichage d'un tableau avancé
+     *
+     * @param string $array_id id du tableau
+     * @param string $orderby colonne de tri
+     */
+    
     function display_array_refresh($array_id, $orderby = null)
     {
         $array = &$_SESSION['ploopi']['arrays'][$array_id];
@@ -322,8 +444,6 @@ class skin_common
             $sort_img = ($array['sort'] == 'DESC') ? "<img src=\"{$this->values['path']}/arrays/arrow_down.png\">" : "<img src=\"{$this->values['path']}/arrays/arrow_up.png\">";
         }
 
-        ?>
-        <?
         $i = 0;
         $w = 0;
         if (!empty($array['columns']['actions_right']))
@@ -429,9 +549,6 @@ class skin_common
                 ?>
             </div>
 
-            <?
-
-            ?>
             <div <? if (!empty($array['options']['height'])) echo "style=\"height:{$array['options']['height']}px;overflow:auto;\""; ?> id="ploopi_explorer_values_outer_<? echo $array_id; ?>">
 
                 <div id="ploopi_explorer_values_inner_<? echo $array_id; ?>">

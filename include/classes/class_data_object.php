@@ -22,21 +22,14 @@
 */
 
 /**
-* Generic data object class. Allow object-oriented database records manipulation.
-*
-* @version 2.09
-* @since 0.1
-*
-* @access public
-* @abstract
-*
-* @package includes
-* @subpackage data object
-*
-* @author Netlor Concept
-* @copyright © 2003 Netlor Concept
-* @license http://www.netlorconcept.com
-*/
+ * Classe générique d'accès aux données.
+ * Permet la manipulation d'enregistrements de base de données sous forme d'objets.
+ *
+ * @package ploopi
+ * @subpackage database
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
 
 class data_object
 {

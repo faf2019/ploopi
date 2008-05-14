@@ -20,14 +20,16 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 /**
-* @author   NETLOR CONCEPT
-* @version      1.0
-* @package      System
-* @access   public
-*/
+ * Classe d'accès à la table ploopi_user_action_log
+ * 
+ * @package ploopi
+ * @subpackage log
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 
 class user_action_log extends data_object
 {

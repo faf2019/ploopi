@@ -22,18 +22,21 @@
 */
 
 include_once './include/classes/class_data_object.php';
-include_once './modules/system/class_annotation_tag.php';
-include_once './modules/system/class_tag.php';
+include_once './include/classes/class_annotation_tag.php';
+include_once './include/classes/class_tag.php';
+
+/**
+ * Classe d'accès à la table ploopi_annotation
+ * 
+ * @package ploopi
+ * @subpackage annotation
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
 
 class annotation extends data_object
 {
 
-    /**
-    * Class constructor
-    *
-    * @param int $idconnexion
-    * @access public
-    **/
     function annotation()
     {
         parent::data_object('ploopi_annotation','id');

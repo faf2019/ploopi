@@ -20,22 +20,23 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 include_once './include/classes/class_data_object.php';
+
+/**
+ * Accès à la table ploopi_workflow 
+ * 
+ * @package ploopi
+ * @subpackage workflow
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
 
 class workflow extends data_object
 {
-
-    /**
-    * Class constructor
-    *
-    * @access public
-    **/
     function workflow()
     {
         parent::data_object('ploopi_workflow','id');
     }
-
 }
 ?>

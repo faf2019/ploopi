@@ -21,12 +21,43 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fonctions de base du coeur de Ploopi
+ * 
+ * @package ploopi
+ * @subpackage system
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
+/**
+ * Affiche des informations lisibles pour une variable php (basé sur la fonction php print_r())
+ *
+ * @param mixed $var variable à afficher
+ * @param boolean $return true si le contenu doit être retourné, false si le contenu doit être affiché (false par défaut)
+ * @return mixed rien si $return = false, sinon les informations lisibles de la variable (html)
+ */
+
 function ploopi_print_r($var, $return = false)
 {
     $p = '<pre style="text-align:left;">'.print_r($var, true).'</pre>';
     if($return) return($p);
     else echo $p;
 }
+
+/**
+ * Affiche un message et termine le script courant (basé sur la fonction php die()).
+ * Peut envoyer un mail contenant les erreurs rencontrées durant l'exécution du script.
+ * Peut vider le buffer en cours.
+ * Ferme la session en cours.
+ * Ferme la connexion à la base de données (si ouverte).
+ *
+ * @param mixed $var variable à afficher
+ * @param boolean $flush true si la sortie doit être vidée (true par défaut)
+ * 
+ * @copyright Ovensia
+ * @license GPL
+ */
 
 function ploopi_die($var = null, $flush = true)
 {
@@ -71,6 +102,14 @@ function ploopi_die($var = null, $flush = true)
     die();
 }
 
+/**
+ * Redirige le script vers une url et termine le script courant
+ *
+ * @param string $link URL de redirection
+ * @param boolean $urlencode true si l'URL doit être chiffrée (true par défaut)
+ * @param boolean $internal true si la redirection est interne au site (true par défaut)
+ */
+
 function ploopi_redirect($link, $urlencode = true, $internal = true)
 {
     global $basepath;
@@ -82,22 +121,19 @@ function ploopi_redirect($link, $urlencode = true, $internal = true)
     ploopi_die();
 }
 
-function ploopi_array_map($func, $var)
-{
-    if (is_array($var)) { foreach($var as $key => $value) $var[$key] = ploopi_array_map($func, $value); return $var; } else return($func($var));
-}
-
 /**
-* ! description !
-*
-* @param string module type
-* @return void
-*
-* @version 2.09
-* @since 0.1
-*
-* @category module/group management
-*/
+ * Charge l'environnement du module : variables globales, constantes, fonctions.
+ * En option : fichiers javascript, feuilles de styles, entêtes (head)
+ *
+ * @param string $moduletype nom du module
+ * @param boolean $js true si les fichiers javascript doivent être chargés
+ * @param boolean $css true si les feuilles de style doivent être chargées
+ * @param boolean $head true si l'entête doit être chargée
+ *
+ * @copyright Ovensia
+ * @license GPL
+ */
+
 function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
 {
     global $ploopi_additional_head;
@@ -216,6 +252,10 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
 }
 
 
+/**
+ * Chargement des paramètres des modules
+ */
+
 function ploopi_loadparams()
 {
     // load params
@@ -227,30 +267,19 @@ function ploopi_loadparams()
     }
 }
 
-
 /**
-* listing groups IDs for a given module instance depending on it's view policy (PRIVATE/DESC/ASC/GLOBAL)
-*
-* @param int module instance id
-* @return string comma serparated list of group IDs
-*
-* @version 2.10
-* @since 0.1
-*
-* @category module/group management
-*/
-function ploopi_viewworkspaces($moduleid = -1, $mode = '')
+ * Retourne la liste des espaces affectés par la vue du module (ascendante/descendante/globale/privée/transversale)
+ *
+ * @param int $moduleid identifiant du module
+ * @return string chaine contenant la liste des espaces séparés par une virgule
+ */
+
+function ploopi_viewworkspaces($moduleid = -1)
 {
 
-    if ($mode == 'web')
-    {
-        $current_workspaceid = $_SESSION['ploopi']['webworkspaceid'];
-    }
-    else
-    {
-        if ($_SESSION['ploopi']['workspaceid'] == '') $current_workspaceid = _PLOOPI_SYSTEMGROUP; // HOME PAGE / NO GROUP;
-        else $current_workspaceid = $_SESSION['ploopi']['workspaceid'];
-    }
+    if ($_SESSION['ploopi']['workspaceid'] == '') $current_workspaceid = _PLOOPI_SYSTEMGROUP; // HOME PAGE / NO GROUP;
+    else $current_workspaceid = $_SESSION['ploopi']['workspaceid'];
+
     $workspaces = '';
 
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid']; // get session value if not defined
@@ -284,40 +313,23 @@ function ploopi_viewworkspaces($moduleid = -1, $mode = '')
         if ($workspaces!='') $workspaces.=',';
         $workspaces .= $_SESSION['ploopi']['workspaces'][$current_workspaceid]['list_brothers'];
     }
-    if ($mode == 'web')
-    {
-        $array_workspaces = explode(',',$workspaces);
-        // filtrer sur les groupes web public !!!! (pas fait)
-        $workspaces = implode(',',$array_workspaces);
-    }
+
     return $workspaces;
 }
 
-
-
 /**
-* listing groups IDs for a given module instance depending on it's view policy (PRIVATE/DESC/ASC/GLOBAL)
-*
-* @param int module instance id
-* @return string comma serparated list of group IDs
-*
-* @version 1.0
-* @since 2.99
-*
-* @category module/group management
-*/
-function ploopi_viewworkspaces_inv($moduleid = -1, $mode = '')
+ * Retourne la liste des espaces inversement affectés par la vue du module (ascendante/descendante/globale/privée/transversale)
+ *
+ * @param int $moduleid identifiant du module
+ * @return string chaine contenant la liste des espaces séparés par une virgule
+ */
+
+function ploopi_viewworkspaces_inv($moduleid = -1)
 {
 
-    if ($mode == 'web')
-    {
-        $current_workspaceid = $_SESSION['ploopi']['webworkspaceid'];
-    }
-    else
-    {
-        if ($_SESSION['ploopi']['workspaceid'] == '') $current_workspaceid = _PLOOPI_SYSTEMGROUP; // HOME PAGE / NO GROUP;
-        else $current_workspaceid = $_SESSION['ploopi']['workspaceid'];
-    }
+    if ($_SESSION['ploopi']['workspaceid'] == '') $current_workspaceid = _PLOOPI_SYSTEMGROUP; // HOME PAGE / NO GROUP;
+    else $current_workspaceid = $_SESSION['ploopi']['workspaceid'];
+
     $workspaces = '';
 
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid']; // get session value if not defined
@@ -351,144 +363,45 @@ function ploopi_viewworkspaces_inv($moduleid = -1, $mode = '')
         if ($workspaces!='') $workspaces.=',';
         $workspaces .= $_SESSION['ploopi']['workspaces'][$current_workspaceid]['list_brothers'];
     }
-    if ($mode == 'web')
-    {
-        $array_workspaces = explode(',',$workspaces);
-        // filtrer sur les groupes web public !!!! (pas fait)
-        $workspaces = implode(',',$array_workspaces);
-    }
+
     return $workspaces;
 }
 
-
-
-// return an array with ip in values
-function ploopi_getip($wan_only = false)
-{
-    $ip = '';
-    $ret = array();
-
-    if (getenv("HTTP_CLIENT_IP")) $ip = getenv("HTTP_CLIENT_IP");
-    elseif(getenv("HTTP_X_FORWARDED_FOR")) $ip = getenv("HTTP_X_FORWARDED_FOR");
-    else $ip = getenv("REMOTE_ADDR");
-
-    $ip_list = explode(',', $ip);
-
-    foreach($ip_list as $ip)
-    {
-        if (ereg("^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$", $ip) && sprintf("%u",ip2long($ip)) != sprintf("%u",ip2long('255.255.255.255')))
-        {
-            if (
-                    !$wan_only ||
-                    !(  (sprintf("%u",ip2long('10.0.0.0')) <= sprintf("%u",ip2long($ip)) && sprintf("%u",ip2long($ip)) <= sprintf("%u",ip2long('10.255.255.255')))
-                    ||  (sprintf("%u",ip2long('172.16.0.0')) <= sprintf("%u",ip2long($ip)) && sprintf("%u",ip2long($ip)) <= sprintf("%u",ip2long('172.31.255.255')))
-                    ||  (sprintf("%u",ip2long('192.168.0.0')) <= sprintf("%u",ip2long($ip)) && sprintf("%u",ip2long($ip)) <= sprintf("%u",ip2long('192.168.255.255')))
-                    ||  (sprintf("%u",ip2long('169.254.0.0')) <= sprintf("%u",ip2long($ip)) && sprintf("%u",ip2long($ip)) <= sprintf("%u",ip2long('169.254.255.255')))
-                    )
-                )
-            {
-                $ret[] = $ip;
-            }
-        }
-    }
-
-    return $ret;
-}
-
-
-function ploopi_htpasswd($pass)
-{
-    return (crypt(trim($pass),CRYPT_STD_DES));
-}
-
-
 /**
-* set a value to a specific var in current web session only if var exist
-*
-* @param string value name
-* @param mixed value to be set
-* @return bool TRUE if var exist, FALSE otherwise
-*
-* @version 2.09
-* @since 0.1
-*
-* @category session management
-*/
-function ploopi_set_flag($var,$value)
+ * Vérifie si un drapeau a été posé et met à jour le drapeau
+ *
+ * @param string $var type de drapeau
+ * @param string $value valeur à tester
+ * @return bool
+ */
+
+function ploopi_set_flag($var, $value)
 {
-    if (!isset($_SESSION[$var])) $_SESSION[$var]='';
-    if (!strstr($_SESSION[$var],"[$value]"))
+    if (!isset($_SESSION['flags'][$var])) $_SESSION['flags'][$var] = array();;
+
+    if (!isset($_SESSION['flags'][$var][$value]))
     {
-        $_SESSION[$var].="[$value]";
+        $_SESSION['flags'][$var][$value] = 1;
         return(true);
     }
     else return(false);
 }
 
-function ploopi_setugm($object) {return(ploopi_setuwm($object));}
-
-function ploopi_setuwm($object)
-{
-    $object->fields['id_user'] = $_SESSION['ploopi']['userid'] ;
-    $object->fields['id_workspace'] = $_SESSION['ploopi']['workspaceid'];
-    $object->fields['id_module'] = $_SESSION['ploopi']['moduleid'];
-    return($object);
-}
-
-
-
-function ploopi_error($msg)
-{
-  global $skin;
-
-  echo $skin->open_simplebloc(_PLOOPI_ERROR);
-  echo "<p align=\"center\"><b><br>$msg<br><br></b></p>";
-  echo $skin->close_simplebloc();
-}
 
 /**
-* list available skins
-*
-* @return array skin(s) list
-*
-* @version 2.09
-* @since 0.1
-*
-* @category HTML styles management
-*/
-function ploopi_getavailableskins()
-{
-    clearstatcache();
-
-    $skins = array();
-    $ptrDir = @opendir('./skins');
-
-    while ($skin = @readdir($ptrDir))
-    {
-        if ($skin != '.' && $skin != '..' && is_dir("./skins/$skin"))
-        {
-            $skins[] = $skin;
-        }
-    }
-
-    return($skins);
-}
-
-/**
-* list available templates
-*
-* @return array template(s) list
-*
-* @version 1.00
-* @since 0.1
-*
-* @category HTML styles management
-*/
+ * Renvoie un tableau des templates disponibles (frontoffice ou backoffice)
+ *
+ * @param string $type au choix entre 'frontoffice' et 'backoffice', par défaut 'frontoffice'
+ * @return array tableau des templates disponibles
+ */
+ 
 function ploopi_getavailabletemplates($type = 'frontoffice')
 {
     $templates = array();
     $basepath = '.'._PLOOPI_SEP.'templates'._PLOOPI_SEP.$type;
 
+    clearstatcache();
+    
     $p = @opendir(realpath($basepath));
 
     while ($template = @readdir($p))
@@ -503,32 +416,34 @@ function ploopi_getavailabletemplates($type = 'frontoffice')
     return($templates);
 }
 
-
-function ploopi_workspace_sort($a,$b)
-{
-    return (intval($_SESSION['ploopi']['workspaces'][$b]['depth'])<intval($_SESSION['ploopi']['workspaces'][$a]['depth']));
-}
-
-function ploopi_h404() { header("HTTP/1.0 404 Not Found"); }
-
-/*
+/**
  * Détecte si le navigateur supporte la compression gzip
- * http://www.tellinya.com/read/2007/09/09/106.html
+ *
+ * @return boolean true si le navigateur supporte la compression gzip
  * 
+ * @copyright tellinya.com
+ * @license GPL
+ * 
+ * @link http://www.tellinya.com/read/2007/09/09/106.html
  */
 
 function ploopi_accepts_gzip()
 {
-    $accept = str_replace(" ","", strtolower($_SERVER['HTTP_ACCEPT_ENCODING']));
-    $accept = explode(",",$accept);
-    return in_array("gzip",$accept);
+    return in_array('gzip', explode(',', str_replace(' ', '', strtolower($_SERVER['HTTP_ACCEPT_ENCODING']))));
 }
 
 
-/*
- * Gère la sortie du buffer principal
- * -> met à jour le rendu final en mettant à jour les variables d'éxection
- * -> écrit dans le log 
+/**
+ * Gère la sortie du buffer principal.
+ * Met à jour le rendu final en mettant à jour les variables d'éxection.
+ * Compresse éventuellement le contenu.
+ * Ecrit dans le log.
+ *
+ * @param string $buffer contenu du buffer de sortie 
+ * @return string buffer modifié
+ * 
+ * @see _PLOOPI_USE_OUTPUT_COMPRESSION
+ * @see ob_start
  */
 
 function ploopi_ob_callback($buffer)
@@ -620,8 +535,6 @@ function ploopi_ob_callback($buffer)
         $log->fields['browser'] = Net_UserAgent_Detect::getBrowserString();
         $log->fields['system'] = Net_UserAgent_Detect::getOSString();
         
-        //if (empty($ploopi_stats)) include './include/stats.php';
-        
         $log->fields['total_exec_time'] = $ploopi_stats['total_exectime'];
         $log->fields['sql_exec_time'] = $ploopi_stats['sql_exectime'];
         $log->fields['sql_percent_time'] = $ploopi_stats['sql_ratiotime'];
@@ -661,4 +574,42 @@ function ploopi_ob_callback($buffer)
     else return($buffer);
     
 }
+
+
+/**
+ * Applique récursivement une fonction sur les éléments d'un tableau
+ *
+ * @param callback $func fonction à appliquer sur le tableau
+ * @param array $var variable à modifier
+ * @return array le tableau modifié
+ * 
+ * @copyright Ovensia
+ * @license GPL
+ * 
+ * @see array_map
+ */
+
+function ploopi_array_map($func, $var)
+{
+    if (is_array($var)) { foreach($var as $key => $value) $var[$key] = ploopi_array_map($func, $value); return $var; } else return($func($var));
+}
+
+/**
+ * Renvoie une erreur 404 dans les entêtes
+ * 
+ * @copyright Ovensia
+ * @license GPL
+ * 
+ * @see header
+ */
+
+function ploopi_h404() { header("HTTP/1.0 404 Not Found"); }
+
+
+
+function ploopi_workspace_sort($a,$b)
+{
+    return (intval($_SESSION['ploopi']['workspaces'][$b]['depth'])<intval($_SESSION['ploopi']['workspaces'][$a]['depth']));
+}
+
 ?>

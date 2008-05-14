@@ -20,8 +20,16 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Classe de gestion des blocs de menus
+ * 
+ * @package ploopi
+ * @subpackage template
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 class block
 {
     var $menu;

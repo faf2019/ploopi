@@ -22,6 +22,15 @@
 
 include_once './include/classes/class_data_object.php';
 
+/**
+ * Classe d'accès à la table ploopi_index_element
+ * 
+ * @package ploopi
+ * @subpackage search
+ * @copyright Ovensia
+ * @license GPL
+ */
+
 class index_element extends data_object
 {
     function index_element()

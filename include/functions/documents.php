@@ -21,12 +21,47 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion d'un bloc de document associé à un enregistrement d'un objet.
+ * Permet notamment de gérer des pièces jointes à n'importe quel objet de ploopi.
+ * 
+ * @package ploopi
+ * @subpackage document
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
+
+/**
+ * Renvoie l'identifiant d'un bloc de documents pour un enregistrement d'un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_module identifiant du module
+ * @return string identifiant du bloc de documents
+ * 
+ * @see md5
+ */
+
 function ploopi_documents_getid($id_object, $id_record, $id_module = -1)
 {
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
-    return base64_encode("{$id_module}_{$id_object}_".addslashes($id_record));
+    return md5("{$id_module}_{$id_object}_".addslashes($id_record));
 }
+
+/**
+ * Insère un bloc de documents pour un enregistrement d'un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param array $rights tableau définissant les droits 'DOCUMENT_CREATE':boolean, 'DOCUMENT_MODIFY':boolean, 'DOCUMENT_DELETE':boolean, 'FOLDER_CREATE':boolean, 'FOLDER_MODIFY':boolean, 'FOLDER_DELETE': boolean
+ * @param array $default_folders tableau définissant les sous-dossiers par défaut à créer
+ * @param array $params tableau définissant les paramètres du bloc 'ROOT_NAME':string, 'ATTACHEMENT':boolean, 'FIELDS':array 
+ * @param int $id_user identifiant de l'utilisateur
+ * @param int $id_workspace identifiant de l'espace
+ * @param int $id_module identifiant du module
+ */
 
 function ploopi_documents($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $id_user = -1, $id_workspace = -1, $id_module = -1)
 {
@@ -42,7 +77,6 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
 
     // generate documents id
     $documents_id = ploopi_documents_getid($id_object, $id_record, $id_module);
-    //base64_encode("{$id_module}_{$id_object}_".addslashes($id_record));
 
     if (empty($rights)) $rights['DOCUMENT_CREATE'] = $rights['DOCUMENT_MODIFY'] = $rights['DOCUMENT_DELETE'] = $rights['FOLDER_CREATE'] = $rights['FOLDER_MODIFY'] = $rights['FOLDER_DELETE'] = true;
 
@@ -109,6 +143,14 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     <?
 }
 
+
+/**
+ * Renvoie le dossier de stockage des documents
+ *
+ * @param boolean indique si le dossier doit être créé
+ * @return string chemin physique relatif du dossier de stockage
+ */
+
 function ploopi_documents_getpath($createpath = false)
 {
     $path = _PLOOPI_PATHDATA._PLOOPI_SEP."documents";
@@ -123,6 +165,13 @@ function ploopi_documents_getpath($createpath = false)
 
     return($path);
 }
+
+/**
+ * Renvoie le nombre d'éléments d'un dossier
+ *
+ * @param int $id_folder identifiant du dossier
+ * @return int nombre d'élément du dossier
+ */
 
 function ploopi_documents_countelements($id_folder)
 {
@@ -139,6 +188,15 @@ function ploopi_documents_countelements($id_folder)
     return($c);
 }
 
+/**
+ * Renvoie un tableau de fichiers attachés à enregistrement d'un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_folder identifiant du sous-dossier (optionnel)
+ * @return array tableau contenant le nom des fichiers
+ */
+
 function ploopi_documents_getfiles($id_object, $id_record, $id_folder = 0)
 {
     global $db;
@@ -152,6 +210,14 @@ function ploopi_documents_getfiles($id_object, $id_record, $id_folder = 0)
     return($files);
 }
 
+/**
+ * Renvoie un tableau de dossiers attachés à un enregistrement d'un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @return array tableau contenant le nom des dossiers
+ */
+ 
 function ploopi_documents_getfolders($id_object, $id_record)
 {
     global $db;
@@ -160,10 +226,7 @@ function ploopi_documents_getfolders($id_object, $id_record)
 
     $db->query("SELECT * FROM ploopi_documents_folder WHERE id_object = '{$id_object}' AND id_record = '{$id_record}' ORDER BY name");
 
-    while ($row = $db->fetchrow())
-    {
-        $folders[$row['id_folder']][] = $row;
-    }
+    while ($row = $db->fetchrow()) $folders[$row['id_folder']][] = $row;
 
     return($folders);
 }

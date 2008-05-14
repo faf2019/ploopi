@@ -20,29 +20,27 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-
-###############################################################################
-#
-# user actions management
-#
-###############################################################################
 
 /**
-* ! description !
-*
-* @param int $id_action
-* @param int $id_record
-* @param int $id_module_type
-* @param int $id_module
-* @return void
-*
-* @version 2.09
-* @since 0.1
-*
-* @category user action management
-*/
+ * Gestion des actions utilisateur.
+ * Lecture/Ecriture dans le log des actions exécutées, récupération de la liste des utilisateurs pouvant exécuter une action déterminée.
+ * 
+ * @package ploopi
+ * @subpackage action
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
+
+/**
+ * Enregistre le log d'une action utilisateur
+ *
+ * @param int $id_action identifiant de l'action
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_module_type identifiant du type de module
+ * @param int $id_module identifiant du module
+ */
+
 function ploopi_create_user_action_log($id_action, $id_record, $id_module_type = -1, $id_module = -1)
 {
     global $db;
@@ -62,19 +60,18 @@ function ploopi_create_user_action_log($id_action, $id_record, $id_module_type =
 }
 
 /**
-* ! description !
-*
-* @param int $id_record
-* @param int $id_action
-* @param int $id_module_type
-* @param int $id_module
-* @return int $user_action
-*
-* @version 2.09
-* @since 0.1
-*
-* @category user action management
-*/
+ * Renvoie le log pour une action ou un objet
+ *
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_object identifiant de l'objet
+ * @param int $id_action identifiant de l'action
+ * @param int $id_module_type identifiant du type de module 
+ * @param int $id_module identifiant du module
+ * @param int $limit_offset valeur inférieur de la clause LIMIT
+ * @param int $limit_count nombre de lignes de log à renvoyer
+ * @return array tableau contenant la liste des actions
+ */
+
 function ploopi_get_user_action_log($id_record, $id_object = -1, $id_action = -1, $id_module_type = -1, $id_module = -1, $limit_offset = 0, $limit_count = 25)
 {
     global $db;
@@ -125,6 +122,14 @@ function ploopi_get_user_action_log($id_record, $id_object = -1, $id_action = -1
 
     return($user_action);
 }
+
+/**
+ * Renvoie un tableau des utilisateurs qui peuvent exécuter une action
+ *
+ * @param int $id_action identifiant de l'action
+ * @param int $id_module_type identifiant du type de module
+ * @return array tableau des utilisateurs (tableau indexé d'id)
+ */
 
 function ploopi_actions_getusers($id_action, $id_module_type = -1)
 {

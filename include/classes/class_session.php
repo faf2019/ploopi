@@ -21,11 +21,27 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Classe de gestion des sessions PHP avec une base de données
+ * 
+ * @package ploopi
+ * @subpackage session
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
+
 class ploopi_session
 {
     function open() {}
 
     function close() {}
+
+    /**
+     * Chargement de la session depuis la base de données.
+     * Utilisé par le gestionnaire de session de Ploopi.
+     * 
+     * @param string $id identifiant de la session
+     */
 
     function read($id)
     {
@@ -33,18 +49,41 @@ class ploopi_session
         return ($db->query("SELECT data FROM ploopi_session WHERE id = '".$db->addslashes($id)."'") && $record = $db->fetchrow()) ? gzuncompress($record['data']) : '';
     }
 
+    /**
+     * Ecriture de la session dans la base de données.
+     * Utilisé par le gestionnaire de session de Ploopi.
+     *
+     * @param string $id identifiant de la session
+     * @param string $data données de la session
+     */
+    
     function write($id, $data)
     {
         global $db;
         return $db->query("REPLACE INTO ploopi_session VALUES ('".$db->addslashes($id)."', '".$db->addslashes(time())."', '".$db->addslashes(gzcompress($data))."')");
     }
 
+
+    /**
+     * Suppression de la session dans la base de données.
+     * Utilisé par le gestionnaire de session de Ploopi.
+     * 
+     * @param string $id identifiant de la session
+     */
+    
     function destroy($id)
     {
         global $db;
         return $db->query("DELETE FROM ploopi_session WHERE id = '".$db->addslashes($id)."'");
     }
 
+    /**
+     * Suppression des sessions périmées (Garbage collector).
+     * Utilisé par le gestionnaire de session de Ploopi.
+     * 
+     * @param int $max durée d'une session en secondes
+     */
+    
     function gc($max)
     {
         global $db;

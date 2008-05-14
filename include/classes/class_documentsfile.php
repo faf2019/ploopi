@@ -20,9 +20,17 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 include_once './include/classes/class_documentsfolder.php';
+
+/**
+ * Classe de gestion des documents (ne pas confondre avec le module DOC)
+ * 
+ * @package ploopi
+ * @subpackage document
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
 
 class documentsfile extends data_object
 {

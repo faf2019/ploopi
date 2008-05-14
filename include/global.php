@@ -21,18 +21,25 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Inclusions générales des fonctions et constantes génériques  
+ * 
+ * @package ploopi
+ * @subpackage global
+ * @copyright Ovensia
+ * @license GPL
+ */
+
 include_once './include/global_constants.php';
 include_once './include/functions/actions.php';
 include_once './include/functions/annotations.php';
-include_once './include/functions/browser.php';
-include_once './include/functions/cache.php';
+include_once './include/functions/crypt.php';
 include_once './include/functions/date.php';
 include_once './include/functions/documents.php';
 include_once './include/functions/filesystem.php';
-include_once './include/functions/filter.php';
 include_once './include/functions/image.php';
+include_once './include/functions/ip.php';
 include_once './include/functions/mail.php';
-include_once './include/functions/rights.php';
 include_once './include/functions/search.php';
 include_once './include/functions/security.php';
 include_once './include/functions/session.php';

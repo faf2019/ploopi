@@ -21,10 +21,14 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-//if (defined('_PLOOPI_ERROR_REPORTING')) {error_reporting(_PLOOPI_ERROR_REPORTING);}
-if (!defined('_PLOOPI_DISPLAY_ERRORS')) define('_PLOOPI_DISPLAY_ERRORS', false);
-if (!defined('_PLOOPI_MAIL_ERRORS')) define('_PLOOPI_MAIL_ERRORS', false);
-if (!defined('_PLOOPI_ADMINMAIL')) define('_PLOOPI_ADMINMAIL', '');
+/**
+ * Gestion des erreurs
+ * 
+ * @package ploopi
+ * @subpackage error
+ * @copyright Netlor, Ovensia
+ * @license GPL
+ */
 
 global $ploopi_errors_msg;
 global $ploopi_errors_nb;
@@ -59,6 +63,19 @@ $ploopi_errorlevel = array (
                             );
 
 
+/**
+ * Gestionnaire d'erreur de Ploopi.
+ * 
+ * @param int $errno le niveau d'erreur
+ * @param string $errstr le message d'erreur
+ * @param string $errfile le nom du fichier dans lequel l'erreur a été identifiée
+ * @param int $errline le numéro de ligne à laquelle l'erreur a été identifiée
+ * @param array $vars tableau avec toutes les variables qui existaient lorsque l'erreur a été déclenchée
+ * 
+ * @see _PLOOPI_DISPLAY_ERRORS
+ * @see _PLOOPI_ERROR_REPORTING
+ */
+                            
 function ploopi_errorhandler($errno, $errstr, $errfile, $errline, $vars)
 {
     global $ploopi_errors_msg;
@@ -136,6 +153,4 @@ function ploopi_errorhandler($errno, $errstr, $errfile, $errline, $vars)
         }
     }
 }
-
-set_error_handler('ploopi_errorhandler');
 ?>
