@@ -20,9 +20,23 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-ob_end_clean();
+
+/**
+ * Outil permettant de créer un dump SQL de la base de données sans passer par les outils en ligne de commande.
+ * Attention, ce script n'est pas adaptés aux grosses bases de données.
+ * 
+ * @package system
+ * @subpackage system_tools
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Nettoyage des buffers actifs
+ */
+ploopi_ob_clean();
+
 if (!ini_get('safe_mode')) @set_time_limit(0);
 $crlf="\n";
 

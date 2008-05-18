@@ -21,6 +21,27 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Affichage du formulaire de modification d'un fichier
+ * 
+ * @package doc
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see _PLOOPI_USE_CGIUPLOAD
+ * @see _DOC_OBJECT_FILE
+ * 
+ * @see doc_getworkflow
+ * @see ploopi_subscription
+ * @see ploopi_annotation
+ */
+
+/**
+ * On traite d'abord le cas d'un nouveau fichier (ou plusieurs nouveaux fichiers...), puis la modification d'un fichier
+ */
+
 $newfile = true;
 $docfile = new docfile();
 
@@ -29,16 +50,29 @@ $max_filesize = doc_max_filesize();
 
 $newfile = !(isset($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']));
 
+/**
+ * Nouveaux fichiers à déposer
+ */
+
 if ($newfile)
 {
+    /**
+     * Initialisation de l'objet docfile
+     */
+    
     $docfile->init_description();
     ?>
     <div class="doc_fileform_title">Nouveau Fichier</div>
     <div class="doc_fileform_main">
         <?
+        /**
+         * Chargement du workflow
+         */
+        
         doc_getworkflow();
         $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']);
     
+        
         if (_PLOOPI_USE_CGIUPLOAD)
         {
             $sid = doc_guid();
@@ -95,7 +129,10 @@ if ($newfile)
 }
 else
 {
-    // on vérifie que l'utilisateur a bien le droit de modifier ce fichier (en fonction du statut du dossier parent)
+    /**
+     * on vérifie que l'utilisateur a bien le droit de modifier ce fichier (en fonction du statut du dossier parent)
+     */ 
+    
     $readonly = !(ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_MODIFYFILE) && ((!$docfolder_readonly_content && !$docfile->fields['readonly']) || $docfile->fields['id_user'] == $_SESSION['ploopi']['userid'])));
     $title = ($readonly) ? '(lecture seule)' : ''
     ?>
@@ -296,7 +333,7 @@ else
                 <?
             }
     
-            include_once './modules/system/class_user.php';
+            include_once './include/classes/user.php';
     
             $user = new user();
             $user_modify = new user();
@@ -410,7 +447,7 @@ else
 
     <div style="border-bottom:1px solid #c0c0c0;">
     <?
-    if ($docfolder->fields['foldertype'] != 'private')
+    if (isset($docfolder->fields['foldertype']) && $docfolder->fields['foldertype'] != 'private')
     {
         $arrAllowedActions = array( _DOC_ACTION_MODIFYFILE,
                                     _DOC_ACTION_DELETEFILE

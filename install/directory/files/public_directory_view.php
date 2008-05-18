@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Affichage d'un contact
+ *
+ * @package directory
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Création d'un buffer pour alimenter un popup
+ */
+
 ob_start();
 
 include_once './modules/directory/class_directory_contact.php';
@@ -104,8 +118,16 @@ else ploopi_die();
 </div>
 
 <?
+/**
+ * On récupère le contenu du buffer
+ */
+
 $content = ob_get_contents();
 ob_end_clean();
+
+/**
+ * On affiche le popup
+ */
 
 echo $skin->create_popup($popup_title, $content, "popup_directory_view{$_GET['directory_id_user']}_{$_GET['directory_id_contact']}");
 ?>

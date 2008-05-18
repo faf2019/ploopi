@@ -21,9 +21,26 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Opérations
+ *
+ * @package directory
+ * @subpackage op
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Si on est connecté
+ */
+
 if ($_SESSION['ploopi']['connected'])
 {
-    // on verifie qu'on est bien dans le module Directory
+    /**
+     * On verifie qu'on est bien dans le module Directory 
+     */
+    
     if (ploopi_ismoduleallowed('directory'))
     {
         switch($ploopi_op)

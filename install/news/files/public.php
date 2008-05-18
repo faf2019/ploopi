@@ -20,8 +20,21 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Partie publique du module
+ *
+ * @package news
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module
+ */
+
 ploopi_init_module('news');
 
 include_once './modules/news/class_news_entry.php';

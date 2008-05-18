@@ -21,9 +21,26 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Opérations
+ *
+ * @package forms
+ * @subpackage op
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Opérations pour les utilisateurs connectés uniquement
+ */
+
 if ($_SESSION['ploopi']['connected'])
 {
-    // on vérifie qu'on est bien dans le module FORMS.
+    /**
+     * On vérifie qu'on est bien dans le module FORMS.
+     */
+    
     if (ploopi_ismoduleallowed('forms'))
     {
         switch($ploopi_op)
@@ -38,7 +55,7 @@ if ($_SESSION['ploopi']['connected'])
             break;
     
             case 'forms_delete_data':
-                include_once './modules/forms/include/global.php';
+                include_once './modules/form./include/start/global.php';
     
                 if (ploopi_isactionallowed(_FORMS_ACTION_BACKUP))
                 {
@@ -77,6 +94,10 @@ if ($_SESSION['ploopi']['connected'])
             break;
         }
     }
+    
+    /**
+     * Autres opérations
+     */
     
     switch($ploopi_op)
     {
@@ -143,7 +164,7 @@ if ($_SESSION['ploopi']['connected'])
                 $id_form = $_SESSION['forms'][$_GET['forms_fuid']]['id_form'];
                 $id_module = $_SESSION['forms'][$_GET['forms_fuid']]['id_module'];
     
-                $forms = new forms();
+                $forms = new form();
                 $forms->open($id_form);
     
                 include_once './modules/forms/op_display.php';

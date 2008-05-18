@@ -21,17 +21,28 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Interface d'administration du module
+ *
+ * @package doc
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module
+ */
+
 ploopi_init_module('doc');
 
-if (ploopi_isactionallowed(_DOC_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid'], $_SESSION['ploopi']['moduleid']))
-{
-    include_once './modules/doc/class_docfile.php';
-    include_once './modules/doc/class_docfolder.php';
-    include_once './modules/doc/class_docparser.php';
-    include_once './modules/doc/class_docmeta.php';
-    include_once './modules/doc/class_dockeyword.php';
-    include_once './modules/doc/class_dockeywordfile.php';
+/**
+ * On vérifie que l'utilisateur est administrateur du module
+ */
 
+if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
+{
     $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
     $tabs[_DOC_TAB_PARSERS] = array('title' => 'Gestion des parsers', 'url' => "{$scriptenv}?ploopi_moduletabid="._DOC_TAB_PARSERS);
@@ -48,6 +59,7 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid']
             {
                 // save
                 case 'docparser_save':
+                    include_once './modules/doc/class_docparser.php';
                     $docparser = new docparser();
                     if (isset($_POST['docparser_id'])) $docparser->open($_POST['docparser_id']);
                     $docparser->setvalues($_POST,'docparser_');
@@ -57,6 +69,7 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid']
 
                 // delete
                 case 'docparser_delete':
+                    include_once './modules/doc/class_docparser.php';
                     $docparser = new docparser();
                     $docparser->open($_GET['docparser_id']);
                     $docparser->delete();

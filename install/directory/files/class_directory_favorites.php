@@ -21,8 +21,40 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion des favoris
+ *
+ * @package directory
+ * @subpackage favorites
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_directory_favorites
+ *
+ * @package directory
+ * @subpackage favorites
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
 class directory_favorites extends data_object
-{
+{    
+    /**
+     * Constructeur de la classe
+     *
+     * @return directory_favorites
+     */
+    
     function directory_favorites()
     {
         parent::data_object('ploopi_mod_directory_favorites','id_contact','id_user','id_ploopi_user', 'id_list');

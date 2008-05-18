@@ -20,6 +20,20 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+/**
+ * Modification d'un contact
+ *
+ * @package directory
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Formulaire de modification d'un contact
+ */
 ?>
 
 <form action="<? echo $scriptenv; ?>" method="post">

@@ -28,7 +28,8 @@
  * @package ploopi
  * @subpackage workflow
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 /**
@@ -110,7 +111,7 @@ function ploopi_workflow_selectusers($id_object = -1, $id_record = -1, $id_modul
 function ploopi_workflow_save($id_object = -1, $id_record = -1, $id_module = -1)
 {
     global $db;
-    include_once './include/classes/class_workflow.php';
+    include_once './include/classes/workflow.php';
 
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 

@@ -21,6 +21,21 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Point d'entrée pour le frontoffice.
+ * Renvoie vers le backoffice si le frontoffice n'est pas activé.
+ *
+ * @package ploopi
+ * @subpackage index
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Chargement de l'environnement
+ */
+
 include_once './include/start.php';
 include_once './include/op.php';
 include_once ($_SESSION['ploopi']['mode'] == 'web') ? './include/frontoffice.php' : './include/backoffice.php';

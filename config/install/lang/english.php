@@ -21,7 +21,20 @@
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-//Installation
+/**
+ * Fichier de langue 'anglais' utilisé durant la procédure d'installation de Ploopi.
+ * 
+ * @package ploopi
+ * @subpackage install
+ * @copyright Ovensia, Hexad
+ * @license GNU General Public License (GPL)
+ * @author Xavier Toussaint
+ */
+
+/**
+ * Définition des constantes
+ */
+
 define ('_PLOOPI_INSTALL_TEXT',             'Welcome in the installation of PLOOPI...');
 
 define ('_PLOOPI_INSTALL_TITLE',            'PLOOPI Installation');

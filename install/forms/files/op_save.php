@@ -21,8 +21,29 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$forms = new forms();
+/**
+ * Sauvegarde d'un enregistrement d'un formulaire
+ *
+ * @package forms
+ * @subpackage op
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see ploopi_send_form
+ */
+
+/**
+ * Ouverture du formulaire
+ */
+
+$forms = new form();
 $forms->open($id_form);
+
+/**
+ * Tableau contenant les données du mail à envoyer
+ */
+
 $email_array = array();
 
 $isnew = false;
@@ -64,12 +85,19 @@ $sql =  "
 
 $rs_fields = $db->query($sql);
 
+/**
+ * Pour chaque champs du formulaire
+ */
+
 while ($fields = $db->fetchrow($rs_fields))
 {
     $value = '';
     $fieldok = false;
     $error = false;
 
+    /**
+     * Champs de type fichier, on va devoir déposer le fichier 
+     */
     if ($fields['type'] == 'file' && !empty($_FILES['field_'.$fields['id']]['name']))
     {
         $fieldok = true;
@@ -83,13 +111,15 @@ while ($fields = $db->fetchrow($rs_fields))
             if (file_exists($path) && is_writable($path))
             {
                 move_uploaded_file($_FILES['field_'.$fields['id']]['tmp_name'], $path.$value);
-                {
-                    chmod($path.$value, 0777);
-                }
+                chmod($path.$value, 0640);
             }
         }
     }
 
+    /**
+     * Pour tous les champs (sauf autoincrement)
+     */
+    
     if (isset($_POST['field_'.$fields['id']]))
     {
         $fieldok = true;
@@ -105,6 +135,10 @@ while ($fields = $db->fetchrow($rs_fields))
     }
     else
     {
+        /**
+         * Calcul de l'autoincrement s'il s'agit d'un nouvel enregistrement
+         */
+        
         if ($fields['type'] == 'autoincrement' && $isnew) // not in form => need to be calculated
         {
             $fieldok = true;
@@ -144,6 +178,10 @@ if ($forms->fields['email'] != '')
         $from[0] = array('name' => $email, 'address' => $email);
         $to[] = array('name' => $email, 'address' => $email);
     }
+    /**
+     * Envoi du formulaire par mail
+     */
+    
     ploopi_send_form($from, $to, $email_array['Formulaire']['Titre'], $email_array);
 }
 

@@ -21,7 +21,25 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Interface d'administration du module
+ *
+ * @package forms
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module
+ */
+
 ploopi_init_module('forms');
+
+/**
+ * On vérifie que l'utilisateur connecté est admin du module
+ */
 
 if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
 {
@@ -44,12 +62,9 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
         case 'forms_generate_tables':
         case 'forms_generate_tables_from_list':
             // needed to generate Metabase
-            include_once './modules/system/class_mb_table.php';
-            include_once './modules/system/class_mb_field.php';
-            include_once './modules/system/class_mb_schema.php';
-            include_once './modules/system/class_mb_relation.php';
+            include_once './include/classes/mb.php';
     
-            $forms = new forms();
+            $forms = new form();
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id']))
             {
                 $data_object = new data_object('form_'.forms_createphysicalname($forms->fields['label']),null);
@@ -101,7 +116,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                         $objfield = new field();
                         $objfield->open($field['values']);
     
-                        $objform = new forms();
+                        $objform = new form();
                         $objform->open($objfield->fields['id_form']);
     
                         $mb_schema = new mb_schema();
@@ -198,7 +213,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
         break;
         */
         case 'forms_save':
-            $forms = new forms();
+            $forms = new form();
             if (!empty($_POST['forms_id']) && is_numeric($_POST['forms_id'])) $forms->open($_POST['forms_id']);
             $forms->setvalues($_POST,'forms_');
             $forms->fields['pubdate_start'] = ploopi_local2timestamp($forms->fields['pubdate_start']);
@@ -213,14 +228,14 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
     
             $forms->fields['autobackup_date'] = ploopi_local2timestamp($forms->fields['autobackup_date']);
     
-            $forms->setugm();
+            $forms->setuwm();
             $forms->save();
     
             ploopi_redirect("{$scriptenv}?ploopi_moduletabid=formlist&op=forms_modify&forms_id={$forms->fields['id']}");
         break;
     
         case 'forms_delete':
-            $forms = new forms();
+            $forms = new form();
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id'])) $forms->delete();
             ploopi_redirect($scriptenv);
         break;
@@ -333,7 +348,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
         case "export":
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
             {
-                $forms = new forms();
+                $forms = new form();
                 $forms->open($_GET['forms_id']);
                 include './modules/forms/public_forms_export.php';
             }
@@ -356,7 +371,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                 break;
     
                 case 'forms_preview':
-                    $forms = new forms();
+                    $forms = new form();
     
                     if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id']))
                     {

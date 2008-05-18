@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Interface d'administration du module.
+ * 
+ * @package news
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module
+ */
+
 ploopi_init_module('news');
 
 include_once './modules/news/class_news_entry.php';

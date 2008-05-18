@@ -21,10 +21,33 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Préparation à l'affichage d'un formulaire
+ *
+ * @package forms
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * On récupère l'idenfiant de la réponse (s'il existe).
+ */
+
 $reply_id = (isset($_REQUEST['reply_id'])) ? $_REQUEST['reply_id'] : '';
+
+/**
+ * On récupère les dates de publication du formulaire
+ */
 
 $pubdate_start = ($forms->fields['pubdate_start']) ? ploopi_timestamp2local($forms->fields['pubdate_start']) : array('date' => '');
 $pubdate_end = ($forms->fields['pubdate_end']) ? ploopi_timestamp2local($forms->fields['pubdate_end']) : array('date' => '');
+
+/**
+ * Petite astuce pour générer une chaîne contenant une fonction javascript créée dynamiquement.
+ * Cette fonction va permettre de valider un formulaire.
+ */
 
 ob_start();
 ?>
@@ -129,6 +152,11 @@ function form_validate(form)
 var result = form_validate(this);
 
 <?
+/**
+ * La fonction est récupérée puis nettoyée (suppression \n \r \t), 
+ * puis on utilise une variable javascript pour la déclarer dans la page du client.
+ */
+
 $jsfunc = preg_replace("/(\r\n|\n|\r|\t)+/", ' ', ob_get_contents());
 ob_end_clean();
 ?>
@@ -139,6 +167,10 @@ ob_end_clean();
 </script>
 
 <?
+/**
+ * On va chercher (s'il existe) le contenu du formulaire.
+ */
+
 $replies = array(); //réponses déjà saisies
 
 if (!empty($reply_id))

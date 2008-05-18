@@ -21,14 +21,32 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-doc_getworkflow();
+/**
+ * Affichage de l'explorateur de documents
+ * 
+ * @package doc
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
+/**
+ * Charge le workflow
+ */
+
+doc_getworkflow();
 $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']);
 
+/**
+ * Charge les partages
+ */
+
+doc_getshare();
+
+
 $columns = array();
-
 $values = array();
-
 
 $columns['left']['ico']         = array('label' => '&nbsp;', 'width' => '22');
 $columns['auto']['label']       = array('label' => 'Nom', 'options' => array('sort' => true));
@@ -42,7 +60,6 @@ $columns['actions_right']['actions'] = array('label' => 'Actions', 'width' => '9
 
 $c = 0;
 
-doc_getshares();
 
 // affichage des raccourcis ? (pour partages + public à la racine)
 if ($currentfolder)
@@ -57,11 +74,14 @@ else
 }
 
 // dossiers partagés
-$list_shared_folders = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['shares']['folders'])) ? ' OR (f.id IN ('.implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['shares']['folders']).") AND f.id_user <> {$_SESSION['ploopi']['userid']} {$option_shortcuts})" : '';
+$list_shared_folders = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) ? ' OR (f.id IN ('.implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders']).") AND f.id_user <> {$_SESSION['ploopi']['userid']} {$option_shortcuts})" : '';
 
 // dossiers dont l'utilisateur connecté est le validateur
 $list_wf_folders = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders'])) ? implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']) : '';
-$list_wf_folders_option = ($list_wf_folders != '') ? " OR f_val.id_folder IN ({$list_wf_folders}) " : '';
+$list_wf_folders_option = ($list_wf_fo/**
+ * Charge les partages
+ */
+lders != '') ? " OR f_val.id_folder IN ({$list_wf_folders}) " : '';
 
 $sql =  "
         SELECT      f.*,

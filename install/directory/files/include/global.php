@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fonctions, constantes, variables globales
+ *
+ * @package directory
+ * @subpackage global
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Définition des constantes
+ */
+
 define ('_DIRECTORY_MANAGE_GROUP',  1);
 define ('_DIRECTORY_MANAGE_COMMON', 2);
 

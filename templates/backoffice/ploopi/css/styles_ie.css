@@ -21,8 +21,8 @@
 */
 @import url(ie_main.css);
 @import url(ie_skin.css);
-@import url(ie_annotations.css);
+@import url(ie_annotation.css);
 @import url(ie_tickets.css);
-@import url(ie_shares.css);
+@import url(ie_share.css);
 @import url(ie_calendar.css);
 @import url(ie_documents.css);

@@ -20,8 +20,17 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Affichage des données d'un formulaire
+ *
+ * @package forms
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
 echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '100%');
 ?>
 

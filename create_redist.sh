@@ -1,5 +1,5 @@
 #!/bin/sh
-export DEST=ploopi_1.0RC3c
+export DEST=ploopi_1.0
 
 #################################
 # compression des fichiers
@@ -18,7 +18,7 @@ mkdir $DEST
 
 cp *.php $DEST
 cp .htaccess_modele $DEST/.htaccess
-cp ploopi_*.txt $DEST
+cp {CHANGELOG,COPYRIGHT,FLOSS,INSTALL,LICENSE} $DEST
 
 cp -r bin $DEST
 

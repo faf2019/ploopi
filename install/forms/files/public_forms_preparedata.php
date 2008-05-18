@@ -20,11 +20,24 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Préparation des données d'un formulaire pour affichage ou export
+ *
+ * @package forms
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * On ouvre le formulaire.
+ * Si l'identifiant n'est pas valide => redirection.
+ */
 global $forms_id;
 
-$forms = new forms();
+$forms = new form();
 
 if (!empty($_REQUEST['forms_id']) && is_numeric($_REQUEST['forms_id']) && $forms->open($_REQUEST['forms_id'])) $forms_id = $_REQUEST['forms_id'];
 else ploopi_redirect($scriptenv);
@@ -233,8 +246,8 @@ foreach ($data as $reply_id => $detail)
                     }
                     else
                     {
-                        $val1 = strtoupper(forms_convertchars($detail[${"filter_field_{$l}"}]));
-                        $val2 = strtoupper(forms_convertchars(${"filter_value_{$l}"}));
+                        $val1 = strtoupper(ploopi_convertaccents($detail[${"filter_field_{$l}"}]));
+                        $val2 = strtoupper(ploopi_convertaccents(${"filter_value_{$l}"}));
                     }
                 }
 

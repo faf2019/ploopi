@@ -27,26 +27,12 @@
  * @package ploopi
  * @subpackage system
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 /**
- * Affiche des informations lisibles pour une variable php (basé sur la fonction php print_r())
- *
- * @param mixed $var variable à afficher
- * @param boolean $return true si le contenu doit être retourné, false si le contenu doit être affiché (false par défaut)
- * @return mixed rien si $return = false, sinon les informations lisibles de la variable (html)
- */
-
-function ploopi_print_r($var, $return = false)
-{
-    $p = '<pre style="text-align:left;">'.print_r($var, true).'</pre>';
-    if($return) return($p);
-    else echo $p;
-}
-
-/**
- * Affiche un message et termine le script courant (basé sur la fonction php die()).
+ * Affiche un message et termine le script courant.
  * Peut envoyer un mail contenant les erreurs rencontrées durant l'exécution du script.
  * Peut vider le buffer en cours.
  * Ferme la session en cours.
@@ -56,17 +42,21 @@ function ploopi_print_r($var, $return = false)
  * @param boolean $flush true si la sortie doit être vidée (true par défaut)
  * 
  * @copyright Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see die
+ * @see ploopi_print_r
  */
 
 function ploopi_die($var = null, $flush = true)
 {
-    global $db;
-
     global $ploopi_errorlevel;
     global $ploopi_errors_level;
     global $ploopi_errors_nb;
     global $ploopi_errors_msg;    
+    
+    global $ploopi_timer;
 
     if (    
         !empty($ploopi_errors_level) &&  
@@ -87,19 +77,214 @@ function ploopi_die($var = null, $flush = true)
             );
     }  
     
+    
     if (!is_null($var))
     {
         if (is_string($var)) echo $var;
         else ploopi_print_r($var);
     }
     
-    if ($flush) while (ob_get_level()>0) ob_end_flush();
-    
     session_write_close();
     
+    global $db;
     if (!empty($db) && $db->isconnected()) $db->close();
-
+    
+    if ($flush) while (ob_get_level()>1) ob_end_flush();
+    
     die();
+}
+
+/**
+ * Détecte si le navigateur supporte la compression gzip
+ *
+ * @return boolean true si le navigateur supporte la compression gzip
+ * 
+ * @copyright tellinya.com
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @link http://www.tellinya.com/read/2007/09/09/106.html
+ */
+
+function ploopi_accepts_gzip()
+{
+    return in_array('gzip', explode(',', str_replace(' ', '', strtolower($_SERVER['HTTP_ACCEPT_ENCODING']))));
+}
+
+/**
+ * Gère la sortie du buffer principal.
+ * Met à jour le rendu final en mettant à jour les variables d'éxection.
+ * Compresse éventuellement le contenu.
+ * Ecrit dans le log.
+ *
+ * @param string $buffer contenu du buffer de sortie 
+ * @return string buffer modifié
+ * 
+ * @see _PLOOPI_USE_OUTPUT_COMPRESSION
+ * @see ob_start
+ */
+
+function ploopi_ob_callback($buffer)
+{
+    global $ploopi_timer;
+    global $db;
+    
+    //DEBUG
+    $f = fopen('./tmp/ob.data', 'w');
+    fwrite($f, "buffer\n".gettype($ploopi_timer));
+    
+    // try to get content-type 
+    $content_type = 'text/html';
+    $headers = headers_list();
+
+    foreach($headers as $property)
+    {
+        $matches = array();
+
+        if (preg_match('/Content-type:((.*);(.*)|(.*))/i', $property, $matches))
+        {
+            $content_type = (empty($matches[2])) ? $matches[1] : $matches[2]; 
+            $content_type = strtolower(trim($content_type));
+        }
+    }
+    
+    if (_PLOOPI_USE_OUTPUT_COMPRESSION && $content_type == 'text/html') 
+    {
+        // compress html
+        // ATTENTION pose problème avec TEXTAREA & JS
+        // $buffer = preg_replace(array('/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'), array('>','<','\\1'), $buffer);
+    }
+ 
+    $ploopi_stats = array();
+    
+    if (isset($buffer)) $ploopi_stats['pagesize'] = strlen($buffer);
+    else $ploopi_stats['pagesize'] = 0;
+    
+    if (isset($db))
+    {
+        $ploopi_stats['numqueries'] = $db->num_queries;
+        $ploopi_stats['sql_exectime'] = round($db->exectime_queries*1000,0);
+    }
+    else
+    {
+        $ploopi_stats['numqueries'] = 0;
+        $ploopi_stats['sql_exectime'] = 0;
+    }
+    
+    if (isset($ploopi_timer))
+    {
+        $ploopi_stats['total_exectime'] = round($ploopi_timer->getexectime()*1000,0);
+        $ploopi_stats['sql_ratiotime'] = round(($ploopi_stats['sql_exectime']*100)/$ploopi_stats['total_exectime'] ,0);
+        $ploopi_stats['php_ratiotime'] = 100 - $ploopi_stats['sql_ratiotime'];
+    }
+    else
+    {
+        $ploopi_stats['total_exectime'] = 0;
+        $ploopi_stats['sql_ratiotime'] = 0;
+        $ploopi_stats['php_ratiotime'] = 0;
+    }
+    
+    if (isset($_SESSION))
+    {
+        $ploopi_stats['sessionsize'] = strlen(session_encode());
+    }
+    else
+    {
+        $ploopi_stats['sessionsize'] = 0;
+    }
+                        
+    if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG && isset($db))
+    {
+        include_once './include/functions/date.php';
+        include_once './include/classes/log.php';
+        
+        $log = new log();
+        
+        $log->fields['request_method'] = $_SERVER['REQUEST_METHOD'];
+        $log->fields['query_string'] = $_SERVER['QUERY_STRING'];
+        $log->fields['remote_addr'] = implode(',', ploopi_getip());
+        $log->fields['remote_port'] = $_SERVER['REMOTE_PORT'];
+        $log->fields['script_filename'] = $_SERVER['SCRIPT_FILENAME'];
+        $log->fields['script_name'] = $_SERVER['SCRIPT_NAME'];
+        $log->fields['request_uri'] = $_SERVER['REQUEST_URI'];
+        $log->fields['ploopi_moduleid'] = (empty($_SESSION['ploopi']['moduleid'])) ? 0 : $_SESSION['ploopi']['moduleid'];
+        $log->fields['ploopi_userid'] = (empty($_SESSION['ploopi']['userid'])) ? 0 : $_SESSION['ploopi']['userid'];
+        $log->fields['ploopi_workspaceid'] = (empty($_SESSION['ploopi']['workspaceid'])) ? 0 : $_SESSION['ploopi']['workspaceid'];;
+        $log->fields['ts'] = ploopi_createtimestamp();
+        
+        require_once 'Net/UserAgent/Detect.php';
+        
+        $log->fields['browser'] = Net_UserAgent_Detect::getBrowserString();
+        $log->fields['system'] = Net_UserAgent_Detect::getOSString();
+        
+        $log->fields['total_exec_time'] = $ploopi_stats['total_exectime'];
+        $log->fields['sql_exec_time'] = $ploopi_stats['sql_exectime'];
+        $log->fields['sql_percent_time'] = $ploopi_stats['sql_ratiotime'];
+        $log->fields['php_percent_time'] = $ploopi_stats['php_ratiotime'];
+        $log->fields['numqueries'] = $ploopi_stats['numqueries'];
+        $log->fields['page_size'] = $ploopi_stats['pagesize'];
+        
+        $log->save();
+    }
+                            
+    if ($content_type == 'text/html')
+    {
+        $array_tags = array(    '<PLOOPI_PAGE_SIZE>',
+                                '<PLOOPI_EXEC_TIME>',
+                                '<PLOOPI_PHP_P100>',
+                                '<PLOOPI_SQL_P100>',
+                                '<PLOOPI_NUMQUERIES>',
+                                '<PLOOPI_SESSION_SIZE>'
+                            );
+        
+        $array_values = array(  sprintf("%.02f",$ploopi_stats['pagesize']/1024),
+                                $ploopi_stats['total_exectime'],
+                                $ploopi_stats['php_ratiotime'],
+                                $ploopi_stats['sql_ratiotime'],
+                                $ploopi_stats['numqueries'],
+                                sprintf("%.02f",$ploopi_stats['sessionsize']/1024)
+                            );
+        
+        $buffer = trim(str_replace($array_tags, $array_values, $buffer));
+    }
+    
+    if (_PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && $content_type == 'text/html')
+    {  
+        header("Content-Encoding: gzip");
+        return gzencode($buffer);
+    }
+    else return($buffer);
+    
+}
+
+/**
+ * Affiche des informations lisibles pour une variable php (basé sur la fonction php print_r())
+ *
+ * @param mixed $var variable à afficher
+ * @param boolean $return true si le contenu doit être retourné, false si le contenu doit être affiché (false par défaut)
+ * @return mixed rien si $return = false, sinon les informations lisibles de la variable (html)
+ */
+
+function ploopi_print_r($var, $return = false)
+{
+    $p = '<pre style="text-align:left;">'.print_r($var, true).'</pre>';
+    if($return) return($p);
+    else echo $p;
+}
+
+/**
+ * Vide les buffers de sortie ouverts en préservant le buffer principal
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see ploopi_ob_callback
+ */
+
+function ploopi_ob_clean()
+{
+    while (ob_get_level()>1) @ob_end_clean();
+    if (ob_get_level() == 1) ob_clean();
 }
 
 /**
@@ -112,6 +297,8 @@ function ploopi_die($var = null, $flush = true)
 
 function ploopi_redirect($link, $urlencode = true, $internal = true)
 {
+    include_once './include/functions/crypt.php';
+    
     global $basepath;
 
     if ($urlencode) $link = ploopi_urlencode($link);
@@ -131,7 +318,8 @@ function ploopi_redirect($link, $urlencode = true, $internal = true)
  * @param boolean $head true si l'entête doit être chargée
  *
  * @copyright Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
@@ -153,20 +341,12 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
             $defaultlanguagefile = "{$strModulePath}/lang/french.php";
             $languagefile = "{$strModulePath}/lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php";
             $globalfile = "{$strModulePath}/include/global.php";
+            
+            if (file_exists($defaultlanguagefile)) include_once($defaultlanguagefile);
     
-            if (file_exists($defaultlanguagefile))
-            {
-                include_once($defaultlanguagefile);
-            }
-    
-            if ($languagefile != 'french' && file_exists($languagefile))
-            {
-                include_once($languagefile);
-            }
-            if (file_exists($globalfile))
-            {
-                include_once($globalfile);
-            }
+            if ($languagefile != 'french' && file_exists($languagefile)) include_once($languagefile);
+
+            if (file_exists($globalfile)) include_once($globalfile);
         }
         
         if ($head)
@@ -417,166 +597,6 @@ function ploopi_getavailabletemplates($type = 'frontoffice')
 }
 
 /**
- * Détecte si le navigateur supporte la compression gzip
- *
- * @return boolean true si le navigateur supporte la compression gzip
- * 
- * @copyright tellinya.com
- * @license GPL
- * 
- * @link http://www.tellinya.com/read/2007/09/09/106.html
- */
-
-function ploopi_accepts_gzip()
-{
-    return in_array('gzip', explode(',', str_replace(' ', '', strtolower($_SERVER['HTTP_ACCEPT_ENCODING']))));
-}
-
-
-/**
- * Gère la sortie du buffer principal.
- * Met à jour le rendu final en mettant à jour les variables d'éxection.
- * Compresse éventuellement le contenu.
- * Ecrit dans le log.
- *
- * @param string $buffer contenu du buffer de sortie 
- * @return string buffer modifié
- * 
- * @see _PLOOPI_USE_OUTPUT_COMPRESSION
- * @see ob_start
- */
-
-function ploopi_ob_callback($buffer)
-{
-    global $ploopi_timer;
-    global $db;
-    
-    // try to get content-type 
-    $content_type = 'text/html';
-    $headers = headers_list();
-
-    foreach($headers as $property)
-    {
-        $matches = array();
-
-        if (preg_match('/Content-type:((.*);(.*)|(.*))/i', $property, $matches))
-        {
-            $content_type = (empty($matches[2])) ? $matches[1] : $matches[2]; 
-            $content_type = strtolower(trim($content_type));
-        }
-    }
-    
-    if (_PLOOPI_USE_OUTPUT_COMPRESSION && $content_type == 'text/html') 
-    {
-        // compress html
-        // ATTENTION pose problème avec TEXTAREA & JS
-        // $buffer = preg_replace(array('/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'), array('>','<','\\1'), $buffer);
-    }
- 
-    $ploopi_stats = array();
-    
-    if (isset($buffer)) $ploopi_stats['pagesize'] = strlen($buffer);
-    else $ploopi_stats['pagesize'] = 0;
-    
-    if (isset($db))
-    {
-        $ploopi_stats['numqueries'] = $db->num_queries;
-        $ploopi_stats['sql_exectime'] = round($db->exectime_queries*1000,0);
-    }
-    else
-    {
-        $ploopi_stats['numqueries'] = 0;
-        $ploopi_stats['sql_exectime'] = 0;
-    }
-    
-    if (isset($ploopi_timer))
-    {
-        $ploopi_stats['total_exectime'] = round($ploopi_timer->getexectime()*1000,0);
-        $ploopi_stats['sql_ratiotime'] = round(($ploopi_stats['sql_exectime']*100)/$ploopi_stats['total_exectime'] ,0);
-        $ploopi_stats['php_ratiotime'] = 100 - $ploopi_stats['sql_ratiotime'];
-    }
-    else
-    {
-        $ploopi_stats['total_exectime'] = 0;
-        $ploopi_stats['sql_ratiotime'] = 0;
-        $ploopi_stats['php_ratiotime'] = 0;
-    }
-    
-    if (isset($_SESSION))
-    {
-        $ploopi_stats['sessionsize'] = strlen(session_encode());
-    }
-    else
-    {
-        $ploopi_stats['sessionsize'] = 0;
-    }
-                        
-    if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG && isset($db))
-    {
-        include_once './include/functions/date.php';
-        include_once './modules/system/class_log.php';
-        
-        $log = new log();
-        
-        $log->fields['request_method'] = $_SERVER['REQUEST_METHOD'];
-        $log->fields['query_string'] = $_SERVER['QUERY_STRING'];
-        $log->fields['remote_addr'] = implode(',', ploopi_getip());
-        $log->fields['remote_port'] = $_SERVER['REMOTE_PORT'];
-        $log->fields['script_filename'] = $_SERVER['SCRIPT_FILENAME'];
-        $log->fields['script_name'] = $_SERVER['SCRIPT_NAME'];
-        $log->fields['request_uri'] = $_SERVER['REQUEST_URI'];
-        $log->fields['ploopi_moduleid'] = (empty($_SESSION['ploopi']['moduleid'])) ? 0 : $_SESSION['ploopi']['moduleid'];
-        $log->fields['ploopi_userid'] = (empty($_SESSION['ploopi']['userid'])) ? 0 : $_SESSION['ploopi']['userid'];
-        $log->fields['ploopi_workspaceid'] = (empty($_SESSION['ploopi']['workspaceid'])) ? 0 : $_SESSION['ploopi']['workspaceid'];;
-        $log->fields['ts'] = ploopi_createtimestamp();
-        
-        require_once 'Net/UserAgent/Detect.php';
-        
-        $log->fields['browser'] = Net_UserAgent_Detect::getBrowserString();
-        $log->fields['system'] = Net_UserAgent_Detect::getOSString();
-        
-        $log->fields['total_exec_time'] = $ploopi_stats['total_exectime'];
-        $log->fields['sql_exec_time'] = $ploopi_stats['sql_exectime'];
-        $log->fields['sql_percent_time'] = $ploopi_stats['sql_ratiotime'];
-        $log->fields['php_percent_time'] = $ploopi_stats['php_ratiotime'];
-        $log->fields['numqueries'] = $ploopi_stats['numqueries'];
-        $log->fields['page_size'] = $ploopi_stats['pagesize'];
-        
-        $log->save();
-    }
-                            
-    if ($content_type == 'text/html')
-    {
-        $array_tags = array(    '<PLOOPI_PAGE_SIZE>',
-                                '<PLOOPI_EXEC_TIME>',
-                                '<PLOOPI_PHP_P100>',
-                                '<PLOOPI_SQL_P100>',
-                                '<PLOOPI_NUMQUERIES>',
-                                '<PLOOPI_SESSION_SIZE>'
-                            );
-        
-        $array_values = array(  sprintf("%.02f",$ploopi_stats['pagesize']/1024),
-                                $ploopi_stats['total_exectime'],
-                                $ploopi_stats['php_ratiotime'],
-                                $ploopi_stats['sql_ratiotime'],
-                                $ploopi_stats['numqueries'],
-                                sprintf("%.02f",$ploopi_stats['sessionsize']/1024)
-                            );
-        
-        $buffer = trim(str_replace($array_tags, $array_values, $buffer));
-    }
-    
-    if (_PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && $content_type == 'text/html')
-    {  
-        header("Content-Encoding: gzip");
-        return gzencode($buffer);
-    }
-    else return($buffer);
-    
-}
-
-
-/**
  * Applique récursivement une fonction sur les éléments d'un tableau
  *
  * @param callback $func fonction à appliquer sur le tableau
@@ -584,7 +604,8 @@ function ploopi_ob_callback($buffer)
  * @return array le tableau modifié
  * 
  * @copyright Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  * 
  * @see array_map
  */
@@ -598,7 +619,8 @@ function ploopi_array_map($func, $var)
  * Renvoie une erreur 404 dans les entêtes
  * 
  * @copyright Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  * 
  * @see header
  */

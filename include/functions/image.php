@@ -28,7 +28,8 @@
  * @package ploopi
  * @subpackage image
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 

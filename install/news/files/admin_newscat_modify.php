@@ -20,9 +20,26 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Administration des catégories - liste 
+ *
+ * @package news
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Ouverture du bloc
+ */
+
 echo $skin->open_simplebloc(_NEWS_LIST);
+
+/**
+ * Initialisation du tableau contenant les catégories
+ */
 
 $array_columns = array();
 
@@ -64,6 +81,9 @@ echo $skin->close_simplebloc();
 ?>
 
 <?
+/**
+ * Modification d'une catégorie
+ */
 if (!empty($_GET['newscat_id']) && is_numeric($_GET['newscat_id']))
 {
     $newscat->open($_GET['newscat_id']);

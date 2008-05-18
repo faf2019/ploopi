@@ -20,8 +20,24 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+/**
+ * Interface de modification d'un groupe d'utilisateurs.
+ * Permet de copier/cloner/supprimer.
+ *
+ * @package system
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Affichage du bloc
+ */
+
+echo $skin->open_simplebloc(); 
 ?>
-<? echo $skin->open_simplebloc(); ?>
 
 <div>
     <div class="system_group_icons">

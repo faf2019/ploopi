@@ -27,7 +27,8 @@
  * @package ploopi
  * @subpackage javascript
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  * 
  * @todo trouver une autre solution...
  */

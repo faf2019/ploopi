@@ -21,6 +21,24 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fichier de langue 'français' du portail
+ * 
+ * @package ploopi
+ * @subpackage lang
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @global array $ploopi_agenda_days tableau des jours en français
+ * @global array $ploopi_agenda_months tableau des mois en français
+ * @global array $ploopi_errormsg tableau des messages d'erreur
+ */
+
+/**
+ * Définition des constantes
+ */
+
 define ('_PLOOPI_ADD', 'Ajouter');
 define ('_PLOOPI_MODIFY', 'Modifier');
 define ('_PLOOPI_DELETE', 'Supprimer');
@@ -126,9 +144,19 @@ define ('_PLOOPI_LABEL_SUBSCRIPTION_UNSUSCRIBE', 'Se désabonner');
 
 
 
+/**
+ * Tableau des jours en français
+ */
 global $ploopi_agenda_days;
+
+/**
+ * Tableau des mois en français
+ */
 global $ploopi_agenda_months;
-global $ploopi_timezone;
+
+/**
+ * Tableau des messages d'erreur
+ */
 global $ploopi_errormsg;
 
 $ploopi_agenda_days[1] = 'Lundi';

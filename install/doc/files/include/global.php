@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fonctions, constantes, variables globales
+ *
+ * @package doc
+ * @subpackage global
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Définition des constantes
+ */
+
 define ('_DOC_TAB_PARSERS',     1);
 define ('_DOC_TAB_INDEX',       2);
 define ('_DOC_TAB_STATS',       3);
@@ -42,6 +56,12 @@ define('_DOC_ERROR_MAXFILESIZE',        100);
 define('_DOC_ERROR_FILENOTWRITABLE',    101);
 define('_DOC_ERROR_EMPTYFILE',          102);
 
+
+/**
+ * Retourne un identifiant unique pour l'upload des fichiers
+ *
+ * @return string guid
+ */
 
 function doc_guid()
 {
@@ -71,6 +91,14 @@ function doc_guid()
     return $wid;
 }
 
+/**
+ * Retourne le chemin de stockage des fichiers
+ *
+ * @param int $id_module identifiant du module
+ * @param unknown_type $createpath
+ * @return unknown
+ */
+
 function doc_getpath($id_module = -1, $createpath = false)
 {
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
@@ -88,6 +116,13 @@ function doc_getpath($id_module = -1, $createpath = false)
     return($path);
 }
 
+/**
+ * Retourne le nombre d'éléments (fichiers/dossiers) d'un dossier
+ *
+ * @param int $id_folder identifiant du dossier
+ * @return int nombre d'éléments
+ */
+
 function doc_countelements($id_folder)
 {
     global $db;
@@ -102,29 +137,53 @@ function doc_countelements($id_folder)
 
     return($c);
 }
+/**
+ * Chargement des partages en session (pour éviter les multiples rechargements)
+ *
+ * @param int $id_module identifiant du module
+ * 
+ * @see ploopi_share_get
+ * @see _DOC_OBJECT_FOLDER
+ * @see _DOC_OBJECT_FILE
+ */
 
-function doc_getshares($id_module = -1)
+function doc_getshare($id_module = -1)
 {
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
-    if (empty($_SESSION['doc'][$id_module]['shares']))
+    if (empty($_SESSION['doc'][$id_module]['share']))
     {
-        $_SESSION['doc'][$id_module]['shares'] = array('folders' => array(), 'files' => array());
+        $_SESSION['doc'][$id_module]['share'] = array('folders' => array(), 'files' => array());
 
-        foreach(ploopi_shares_get($_SESSION['ploopi']['userid'], -1, -1, $id_module) as $sh)
+        foreach(ploopi_share_get($_SESSION['ploopi']['userid'], -1, -1, $id_module) as $sh)
         {
-            if ($sh['id_object'] == _DOC_OBJECT_FOLDER) $_SESSION['doc'][$id_module]['shares']['folders'][] = $sh['id_record'];
-            if ($sh['id_object'] == _DOC_OBJECT_FILE) $_SESSION['doc'][$id_module]['shares']['files'][] = $sh['id_record'];
+            if ($sh['id_object'] == _DOC_OBJECT_FOLDER) $_SESSION['doc'][$id_module]['share']['folders'][] = $sh['id_record'];
+            if ($sh['id_object'] == _DOC_OBJECT_FILE) $_SESSION['doc'][$id_module]['share']['files'][] = $sh['id_record'];
         }
     }
 }
 
-function doc_resetshares($id_module = -1)
+/**
+ * Supprime le chargement des partages de la session
+ *
+ * @param int $id_module identifiant du module
+ */
+
+function doc_resetshare($id_module = -1)
 {
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
-    unset($_SESSION['doc'][$id_module]['shares']);
+    unset($_SESSION['doc'][$id_module]['share']);
 }
+
+/**
+ * Chargement du workflow en session (pour éviter les multiples rechargements)
+ *
+ * @param int $id_module identifiant du module
+ * 
+ * @see ploopi_workflow_get
+ * @see _DOC_OBJECT_FOLDER
+ */
 
 function doc_getworkflow($id_module = -1)
 {
@@ -140,6 +199,12 @@ function doc_getworkflow($id_module = -1)
     }
 }
 
+/**
+ * Supprime le chargement du workflow de la session
+ *
+ * @param int $id_module identifiant du module
+ */
+
 function doc_resetworkflow($id_module = -1)
 {
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
@@ -148,9 +213,17 @@ function doc_resetworkflow($id_module = -1)
 }
 
 
+/**
+ * Retourne la taille maximale d'un fichier uploadable
+ *
+ * @return int taille maximale en ko
+ * 
+ * @see _PLOOPI_MAXFILESIZE
+ * @see _PLOOPI_USE_CGIUPLOAD
+ */
 function doc_max_filesize()
 {
-    $ploopi_maxfilesize = sprintf('%.02f', _PLOOPI_MAXFILESIZE/1024);
+    $ploopi_maxfilesize = sprintf('%d', _PLOOPI_MAXFILESIZE/1024);
 
     if (_PLOOPI_USE_CGIUPLOAD) return($ploopi_maxfilesize);
     else
@@ -161,12 +234,35 @@ function doc_max_filesize()
     }
 }
 
+/**
+ * Retourne la taille maximale qu'un formulaire peut accepter en POST
+ *
+ * @return int taille maximale en ko
+ * 
+ * @see _PLOOPI_USE_CGIUPLOAD
+ */
+
 function doc_max_formsize()
 {
     if (_PLOOPI_USE_CGIUPLOAD) return(0);
     else return(intval(ini_get('post_max_size')*1024));
 }
 
+/**
+ * Vérifie qu'un enregistrement d'un objet est accessible dans un certain contexte par un utilisateur
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_module identifiant du module
+ * @return boolean true si l'enregistrement est accessible
+ * 
+ * @see _DOC_OBJECT_FOLDER
+ * @see _DOC_OBJECT_FILE
+ * @see _DOC_OBJECT_FILEDRAFT
+ * 
+ * @see doc_getshare
+ * @see doc_getworkflow
+ */
 
 function doc_record_isenabled($id_object, $id_record, $id_module)
 {
@@ -186,8 +282,8 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
                     if ($objFolder->fields['foldertype'] == 'public') $enabled = true;
                     else
                     {
-                        doc_getshares($id_module);
-                        if (in_array($id_record, $_SESSION['doc'][$id_module]['shares']['folders'])) $enabled = true;
+                        doc_getshare($id_module);
+                        if (in_array($id_record, $_SESSION['doc'][$id_module]['share']['folders'])) $enabled = true;
                     }
                 }
             }
@@ -211,8 +307,8 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
                         if ($objFolder->fields['foldertype'] == 'public') $enabled = true;
                         else
                         {
-                            doc_getshares($id_module);
-                            if (in_array($objFile->fields['id_folder'], $_SESSION['doc'][$id_module]['shares']['folders'])) $enabled = true;
+                            doc_getshare($id_module);
+                            if (in_array($objFile->fields['id_folder'], $_SESSION['doc'][$id_module]['share']['folders'])) $enabled = true;
                         }
                     }
                 }

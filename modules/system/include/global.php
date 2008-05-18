@@ -21,7 +21,25 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+
+/**
+ * Fonctions, constantes, variables globales
+ *
+ * @package system
+ * @subpackage global
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Objet : Espace de travail
+ */
 define ('_SYSTEM_OBJECT_WORKSPACE',     1);
+
+/**
+ * Objet : Groupe d'utilisateurs
+ */
 define ('_SYSTEM_OBJECT_GROUP',     2);
 
 define ('_SYSTEM_ICON_SYSTEM_INSTALLMODULES', 'system_installmodules');

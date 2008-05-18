@@ -21,6 +21,24 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Affichage du bloc d'abonnement et du bloc d'annotation sur un dossier
+ *
+ * @package doc
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see _DOC_OBJECT_FOLDER
+ * @see ploopi_subscription_subscribed
+ * @see ploopi_subscription
+ * @see ploopi_annotation
+ */
+
+/**
+ * On affiche d'abord le bloc d'abonnement seulement si le dossier n'est pas privé/personnel
+ */
 ?>
 <div style="border-bottom:1px solid #c0c0c0;">
 <?
@@ -52,4 +70,8 @@ if ($docfolder->fields['foldertype'] != 'private')
 }
 ?>
 </div>
-<? ploopi_annotation(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], $docfolder->fields['name']); ?>
+<? 
+/**
+ * Affichage du bloc d'annotations
+ */
+ploopi_annotation(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], $docfolder->fields['name']); ?>

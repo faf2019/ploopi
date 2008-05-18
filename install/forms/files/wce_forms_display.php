@@ -21,12 +21,32 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$forms = new forms();
+/**
+ * Préparation de l'affichage d'un formulaire dans une page de contenu (WebEdit)
+ *
+ * @package forms
+ * @subpackage wce
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Ouverture du formulaire
+ */
+$forms = new form();
 $forms->open($forms_id);
 
+/**
+ * Récupération des dates de publication
+ */
 $pubdate_start = ($forms->fields['pubdate_start']) ? ploopi_timestamp2local($forms->fields['pubdate_start']) : array('date' => '');
 $pubdate_end = ($forms->fields['pubdate_end']) ? ploopi_timestamp2local($forms->fields['pubdate_end']) : array('date' => '');
 
+/**
+ * Petite astuce pour générer une chaîne contenant une fonction javascript créée dynamiquement.
+ * Cette fonction va permettre de valider un formulaire.
+ */
 
 ob_start();
 ?>
@@ -132,6 +152,11 @@ function form_validate(form)
 var result = form_validate(this);
 
 <?
+/**
+ * La fonction est récupérée puis nettoyée (suppression \n \r \t), 
+ * puis on utilise une variable javascript pour la déclarer dans la page du client.
+ */
+
 $jsfunc = preg_replace("/(\r\n|\n|\r|\t)+/", ' ', ob_get_contents());
 ob_end_clean();
 ?>
@@ -225,14 +250,20 @@ $sql =  "
 
 $rs_fields = $db->query($sql);
 
+/**
+ * Initialisation du moteur de template
+ */
 
-//include './modules/forms/cms_forms_model_application.php';
 $template_forms = new Template("./templates/frontoffice/$template_name");
 if (file_exists("./templates/frontoffice/{$template_name}/forms.tpl"))
 {
     global $template_body;
 
     $template_forms->set_filenames(array('forms_display' => "forms.tpl"));
+    
+    /**
+     * Suite du rendu
+     */
     include './modules/forms/wce_forms_render.php';
     $template_forms->pparse('forms_display');
 }

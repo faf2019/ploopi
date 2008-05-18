@@ -21,13 +21,25 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Indexation des documents
+ *
+ * @package doc
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+
+/**
+ * On modifie la durée d'exécution maximum du script
+ */
+
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
-/*
-$db->query("DELETE FROM `ploopi_mod_doc_keyword` WHERE id_module = {$_SESSION['ploopi']['moduleid']}"); 
-$db->query("DELETE FROM `ploopi_mod_doc_keyword_file` WHERE id_module = {$_SESSION['ploopi']['moduleid']}"); 
-*/
-
+include_once './modules/doc/class_docfile.php';
+                    
 echo $skin->open_simplebloc('Indexation');
 ?>
 <div style="padding:4px;">

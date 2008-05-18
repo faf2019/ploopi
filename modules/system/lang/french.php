@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fichier de langue 'français'
+ * 
+ * @package system
+ * @subpackage lang
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Définition des constantes
+ */
+
 define ('_SYSTEM_PAGE_TITLE', 'Administration');
 define ('_SYSTEM_LABEL_SYSTEM', 'SYSTEME');
 define ('_SYSTEM_LABELICON_SYSTEMUPDATE', 'Mise à jour Système');

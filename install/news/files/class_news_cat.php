@@ -20,24 +20,40 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 /**
-* @author   NETLOR CONCEPT
-* @version      1.0
-* @package      news
-* @access   public
-*/
+ * Gestion des catégories
+ *
+ * @package news
+ * @subpackage category
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_news_cat
+ *
+ * @package news
+ * @subpackage category
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
 class newscat extends data_object
 {
-
     /**
-    * Class constructor
-    *
-    * @param int $connection_id 
-    * @access public
-    **/
+     * Contructeur de la classe
+     *
+     * @return newscat
+     */
     
     function newscat()
     {

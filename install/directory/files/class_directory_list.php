@@ -21,13 +21,48 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion des listes de favoris
+ *
+ * @package directory
+ * @subpackage favorites
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_directory_list
+ *
+ * @package directory
+ * @subpackage favorites
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
 class directory_list extends data_object
 {   
+    /**
+     * Constructeur de la classe
+     *
+     * @return directory_list
+     */
+    
     function directory_list()
     {
         parent::data_object('ploopi_mod_directory_list');
     }
+    
+    /**
+     * Supprime la liste de favoris et les favoris associés
+     */
     
     function delete()
     {

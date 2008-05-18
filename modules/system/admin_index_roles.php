@@ -21,7 +21,21 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once './modules/system/class_role.php';
+/**
+ * Gestion des rôles 
+ *
+ * @package system
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion des classes de gestion des roles
+ */
+
+include_once './include/classes/role.php';
 
 switch($op)
 {

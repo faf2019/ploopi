@@ -20,6 +20,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Point d'entrée pour l'affichage des flux rss
+ *
+ * @package ploopi
+ * @subpackage rss
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Chargement de l'environnement
+ */
+
 include_once './include/start_light.php';
 
 // La requête doit forcément porter sur un module valide
@@ -30,7 +44,7 @@ if (isset($_REQUEST['ploopi_moduleid']))
     if ($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'][$ploopi_moduleid])
     {
         /*
-        include_once './modules/system/class_module.php';
+        include_once './include/classes/module.php';
         $module = new module();
         $module->open($ploopi_moduleid);
         ploopi_print_r($module->fields);

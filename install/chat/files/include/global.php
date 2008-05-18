@@ -20,7 +20,33 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('_CHAT_CONNECTION_TIMEOUT', 5); // temps en secondes au bout duquel l'utilisateur est déconnecté si on ne reçoit aucune demande
+/**
+ * Fonctions, constantes, variables globales
+ *
+ * @package chat
+ * @subpackage global
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Temps en secondes au bout duquel l'utilisateur est déconnecté si on ne reçoit aucune demande
+ */
+
+define('_CHAT_CONNECTION_TIMEOUT', 5); 
+
+/**
+ * Mise à jour des utilisateurs connectés
+ *
+ * @package chat
+ * @subpackage global
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see chat_connected
+ */
 
 function chat_connected_update()
 {

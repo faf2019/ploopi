@@ -21,22 +21,43 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-if (!ploopi_ismanager())ploopi_die();
+/**
+ * Gestion de l'interface générale et des accès aux différentes interfaces d'administration
+ * 
+ * @package system
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Si l'utilisateur n'est pas gestionnaire, il n'a rien à faire ici => []
+ */
+
+if (!ploopi_ismanager()) ploopi_die();
 else
 {
+    /**
+     * Initialisation du module
+     */
+    
     ploopi_init_module('system');
 
-    include_once './modules/system/class_group.php';
-    include_once './modules/system/class_user.php';
-    include_once './modules/system/class_group_user.php';
-    include_once './modules/system/class_module_type.php';
-    include_once './modules/system/class_module_group.php';
+    include_once './include/classes/group.php';
+    include_once './include/classes/user.php';
+    include_once './include/classes/module.php';
 
     if (!empty($_REQUEST['system_level'])) $_SESSION['system']['level'] = $_REQUEST['system_level'];
     $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
     switch($_SESSION['system']['level'])
     {
+        /**
+         * Historiquement les 2 cas étaient séparés (groupes d'utilisateurs / espaces de travail)
+         * Ils ne le sont plus.
+         */
+        
         case _SYSTEM_GROUPS:
         case _SYSTEM_WORKSPACES:
 
@@ -139,15 +160,22 @@ else
             echo $skin->close_simplebloc();
         break;
 
+        /**
+         * Point d'entrée vers l'interface d'administration "système"
+         */
         case 'system':
-            echo $skin->create_pagetitle(_SYSTEM_PAGE_TITLE);
-            echo $skin->open_simplebloc(_PLOOPI_ADMIN_SYSTEM);
-            ?>
-            <div class="system_main">
-            <? include_once './modules/system/admin_system.php'; ?>
-            </div>
-            <?
-            echo $skin->close_simplebloc();
+            if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
+            {
+                echo $skin->create_pagetitle(_SYSTEM_PAGE_TITLE);
+                echo $skin->open_simplebloc(_PLOOPI_ADMIN_SYSTEM);
+                ?>
+                <div class="system_main">
+                <? include_once './modules/system/admin_system.php'; ?>
+                </div>
+                <?
+                echo $skin->close_simplebloc();
+            }
+            else ploopi_redirect("{$scriptenv}?system_level="._SYSTEM_WORKSPACES);
         break;
     }
 

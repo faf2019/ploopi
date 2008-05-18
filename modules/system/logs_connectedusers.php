@@ -20,8 +20,20 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Affichage temps réel du log 'utilisateurs connectés'
+ * 
+ * @package system
+ * @subpackage system
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Ouverture du bloc
+ */
 echo $skin->open_simplebloc(_SYSTEM_LABEL_CONNECTEDUSERS);
 
 if (isset($_GET['monitoring'])) header("Refresh: {$_GET['monitoring']}; URL=".ploopi_urlencode("{$scriptenv}?op=connectedusers&monitoring={$_GET['monitoring']}"));

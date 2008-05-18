@@ -20,11 +20,29 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-include_once './modules/system/class_user.php';
+
+/**
+ * Affichage de la liste des news
+ *
+ * @package news
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe utilisateur
+ */
+
+include_once './include/classes/user.php';
 
 echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+
+/**
+ * Recherche des news du module
+ */
+
 $select =   "
             SELECT      ploopi_mod_news_entry.*,
                         IFNULL(ploopi_mod_news_cat.title, '"._NEWS_LABEL_UNKNOWN."') as titlecat
@@ -84,7 +102,12 @@ if ($db->numrows()>0)
 }
 else
 {
-    echo $skin->open_simplebloc('');
+    echo $skin->open_simplebloc();
+    ?>
+    <div class="news">
+        <div>Aucune news</div>
+    </div>
+    <?
     echo $skin->close_simplebloc();
 }
 ?>

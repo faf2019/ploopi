@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Administration - ajout/modification d'une catégorie de flux
+ * 
+ * @package rss
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Formulaire d'ajout/modification d'une catégorie de flux
+ */
+
 if ($rsscat->new) echo $skin->open_simplebloc(_RSS_LABEL_CATADD);
 else echo $skin->open_simplebloc(str_replace('LABEL',$rsscat->fields['title'],_RSS_LABEL_CATMODIFY));
 ?>

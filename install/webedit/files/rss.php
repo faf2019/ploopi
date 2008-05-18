@@ -20,50 +20,52 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Affichage du backend rss des pages publiées en frontoffice
+ *
+ * @package webedit
+ * @subpackage rss
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusions des fonctions sur les dates et les chaînes (l'appel via rss.php est minimal, les fonctions ne sont donc pas déjà incluses)
+ */
 include_once './include/functions/date.php';
 include_once './include/functions/string.php';
+
+/**
+ * La classe heading
+ */
+include_once './modules/webedit/class_heading.php';
+
+/**
+ * RSSGenesis qui permet de générer le flux
+ */
 require './lib/rssgenesis/rss.genesis.php';
 
 $module_name =  $row['label'];
 
 $today = ploopi_createtimestamp();
 
-
-$protocol = (!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://';
-$hostname = (!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
-$port = (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') ? ":{$_SERVER['SERVER_PORT']}" : '';
-$path = (!empty($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] != '') ? dirname($_SERVER['SCRIPT_NAME']) : '/';
-$baseurl = "{$protocol}{$hostname}{$port}{$path}";
-
-
 if (isset($_REQUEST['headingid']))
 {
-    $where = " AND id_heading = {$headingid} ";
-    $feed_title = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title'];
-    $feed_url = $baseurl;
+    $objHeading = new webedit_heading();
+    $objHeading->open($_REQUEST['headingid']);
+    
+    $where = " AND id_heading = {$_REQUEST['headingid']} ";
+    $feed_title = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title'].' - '.$objHeading->fields['label'];
+    $feed_description = $objHeading->fields['description'];
 }
 else
 {
     $where = '';
     $feed_title = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title'];
-    $feed_url = $baseurl;
+    $feed_description = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_description'];
 }
-/*
-    'TEMPLATE_PATH'                 => $template_path,
-    'ADDITIONAL_JAVASCRIPT'         => $additional_javascript,
-    'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
-    'SITE_TITLE'                    => htmlentities(),
-    'WORKSPACE_TITLE'               => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
-    'WORKSPACE_META_DESCRIPTION'    => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_description']),
-    'WORKSPACE_META_KEYWORDS'       => implode(', ', array_keys($keywords)),
-    'WORKSPACE_META_AUTHOR'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']),
-    'WORKSPACE_META_COPYRIGHT'      => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_copyright']),
-    'WORKSPACE_META_ROBOTS'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_robots']),
-    'PAGE_QUERYSTRING'              => $query_string,
-    'NAV'                           => $nav,
-*/
 
 
 $select =   "
@@ -86,8 +88,8 @@ $rss = new rssGenesis();
 // CHANNEL
 $rss->setChannel (
                               ploopi_xmlencode(utf8_encode($feed_title)), // Title
-                              ploopi_xmlencode($feed_url), // Link
-                              ploopi_xmlencode(utf8_encode($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_description'])), // Description
+                              ploopi_xmlencode($basepath), // Link
+                              ploopi_xmlencode(utf8_encode($feed_description)), // Description
                               'fr', // Language
                               ploopi_xmlencode(utf8_encode($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_copyright'])), // Copyright
                               null, // Managing Editor
@@ -116,12 +118,12 @@ foreach($items as $key => $item)
     $pubdate = substr($item['timestp'],0,4).'/'.substr($item['timestp'],4,2).'/'.substr($item['timestp'],6,2);
 
     $rss->addItem (
-                             ploopi_xmlencode(utf8_encode($item['title'])), // Title
-                             ploopi_xmlencode("{$baseurl}{$url}"), // Link
-                             ploopi_xmlencode(utf8_encode($item['metadescription'])), // Description
-                             $pubdate, //Publication Date
-                             '' // Category
-                           );
+                     ploopi_xmlencode(utf8_encode($item['title'])), // Title
+                     ploopi_xmlencode("{$basepath}/{$url}"), // Link
+                     ploopi_xmlencode(utf8_encode($item['metadescription'])), // Description
+                     $pubdate, //Publication Date
+                     '' // Category
+                   );
 }
 
 

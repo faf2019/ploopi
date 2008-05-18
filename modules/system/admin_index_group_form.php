@@ -20,7 +20,24 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+/**
+ * Modification du rattachement d'un groupe d'utilisateur à un espace (permet de modifier le niveau)
+ *
+ * @package system
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @todo supprimer les <table>
+ */
+
+/**
+ * Affichage du formulaire de modification du niveau de rattachement
+ */
 ?>
+
 <FORM NAME="form_modify_group" ACTION="<? echo $scriptenv ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="op" VALUE="save_group">
 <INPUT TYPE="HIDDEN" NAME="orgid" VALUE="<? echo $org->fields['id']; ?>">

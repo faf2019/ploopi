@@ -28,7 +28,8 @@
  * @package ploopi
  * @subpackage string
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 /**
@@ -161,7 +162,8 @@ function ploopi_make_links($text)
  * @param mixed $var variable à encoder
  * 
  * @copyright Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 function ploopi_print_json($var)

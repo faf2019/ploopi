@@ -22,64 +22,285 @@
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Définition des constantes de configuration utilisées par PLOOPI.
+ * Possibilité de dissocier la configuration par nom d'hôte.
+ * 
+ * @package ploopi
+ * @subpackage config
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Récupération du nom d'hôte si la variable existe (ce n'est pas le cas en ligne de commande)
+ */
 $http_host = (isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : '';
 
+/**
+ * Distinction des configurations par nom d'hôte
+ */
 switch($http_host)
 {
 	default:
+        /**
+         * Type de SGBD utilisé. Seul MySQL est supporté pour le moment.
+         */
+		
 		define ('_PLOOPI_SQL_LAYER','<DB_TYPE>');
 
-		define ('_PLOOPI_DB_SERVER','<DB_SERVER>');
+        /**
+         * Le serveur de base de données. 
+         * Il peut aussi inclure le numéro de port. 
+         * C'est-à-dire "hostname:port" ou le chemin vers le socket local, c'est-à-dire ":/path/to/socket" pour localhost.
+         */
+        
+        define ('_PLOOPI_DB_SERVER','<DB_SERVER>');
+        
+        /**
+         * Le nom de l'utilisateur pour la connexion à la base de données
+         */
+                 
 		define ('_PLOOPI_DB_LOGIN','<DB_LOGIN>');
+		
+        /**
+         * Le mot de l'utilisateur pour la connexion à la base de données
+         */		
+		
 		define ('_PLOOPI_DB_PASSWORD','<DB_PASSWORD>');
+
+        /**
+         * Le nom de la base de données
+         */
+         
 		define ('_PLOOPI_DB_DATABASE','<DB_DATABASE>');
     
-		define ('_PLOOPI_PATHDATA', realpath('<DATAPATH>'));
+        /**
+         * Le chemin physique vers le dossier des données (fichiers, images, etc..)
+         */
+    
+ 		define ('_PLOOPI_PATHDATA', realpath('<DATAPATH>'));
+
+        /**
+         * Taille maximum autorisée pour un fichier uploadé (octets).
+         * Vérifier également les directives de configuration de PHP : post_max_size & upload_max_filesize
+         * 
+         * @link http://fr.php.net/manual/fr/ini.core.php#ini.post-max-size
+         * @link http://fr.php.net/manual/fr/ini.core.php#ini.upload-max-filesize
+         */
+
 		define ('_PLOOPI_MAXFILESIZE', '16777216');
 
+        /**
+         * Active ou non l'utilisation d'un CGI pour l'upload avancés des fichiers.
+         * Cette fonctionnalité permet notamment de suivre précisément l'état de l'upload avec par exemple une barre d'avancement.
+         * Pour activer cette fonctionnalité, vous devez au préalable configuer correctement Apache pour que le cgi puisse s'éxecuter correctement.
+         * 
+         *    ScriptAlias /cgi/ /var/www/monploopi/cgi/
+         *    <Directory "/var/www/monploopi/cgi/">
+         *        AllowOverride None
+         *        Options ExecCGI -MultiViews +SymLinksIfOwnerMatch
+         *        Order allow,deny
+         *        Allow from all
+         *    </Directory>
+         */
+         
 		define ('_PLOOPI_USE_CGIUPLOAD', <CGI>);
+
+        /**
+         * Chemin relatif du dossier contenant les scripts CGI de Ploopi
+         */
+         
 		define ('_PLOOPI_CGI_PATH', '<CGIPATH>');
+		
+        /**
+         * Chemin absolu du dossier temporaire utilisé lors de l'upload de fichiers par le CGI.
+         * Ce chemin doit être accessible en écriture par le processus qui exécute Apache.
+         */
+         		
 		define ('_PLOOPI_CGI_UPLOADTMP', realpath('<TMPPATH>'));
 
-		define ('_PLOOPI_SESSIONTIME','3600'); // time in second
+        /**
+         * Durée maximum d'une session en secondes.
+         * Si vous utilisez le gestionnaire de session interne de Ploopi, c'est la seule valeur prise en compte.
+         * Si vous n'utilisez pas le gestionnaire interne, vérifiez la valeur de la directive session.gc_maxlifetime du fichier php.ini
+         * 
+         * @link http://fr.php.net/manual/fr/session.configuration.php#ini.session.gc-maxlifetime
+         */
+        
+        define ('_PLOOPI_SESSIONTIME','3600'); // time in second
+		
+        /**
+         * Active ou non le gestionnaire interne de session utilisant la base de données.
+         * Attention, l'activation de cette fonctionnalité peut dégrader les performances de l'application (impact faible)
+         */
+        		
 		define ('_PLOOPI_USE_DBSESSION', <USE_DBSESSION>); // true if session stored into database
 
-		define ('_PLOOPI_DEBUGMODE', false);
-		define ('_PLOOPI_DISPLAY_ERRORS', false);
-		define ('_PLOOPI_MAIL_ERRORS', false);
-		define ('_PLOOPI_ADMINMAIL', 'webmaster@mydomain.com');
-		define ('_PLOOPI_ERROR_REPORTING', E_ALL ^ E_NOTICE); //  E_ALL E_ERROR  E_WARNING  E_PARSE  E_NOTICE
+        /**
+         * Active ou non l'affichage des erreurs.
+         * Vérifiez également la valeur de la directive de configuration 'display_errors' du fichier php.ini
+         * Vous pouvez également paramétrer le niveau de reporting d'erreur avec la constante _PLOOPI_ERROR_REPORTING
+         *
+         * @see _PLOOPI_ERROR_REPORTING
+         *   
+         * @link http://fr.php.net/manual/fr/errorfunc.configuration.php#ini.display-errors
+         */
+        
+        define ('_PLOOPI_DISPLAY_ERRORS', false);
+        
+        /**
+         * Définit le niveau de sensibilité du gestionnaire d'erreur.
+         * Valeurs possibles : E_ALL, E_ERROR,  E_WARNING,  E_PARSE,  E_NOTICE
+         * 
+         * @link http://fr.php.net/manual/fr/errorfunc.constants.php
+         */
+        
+        define ('_PLOOPI_ERROR_REPORTING', E_ALL);  
+        
+        /**
+         * Active ou on l'envoi d'un mail si une erreur est rencontrée.
+         * Le mail envoyé est une synthèse de l'ensemble des erreurs rencontrées durant l'exécution de la page.
+         * L'adresse du destinataire est définie par la constante _PLOOPI_ADMINMAIL.
+         * 
+         * @see _PLOOPI_ADMINMAIL
+         */
+        
+        define ('_PLOOPI_MAIL_ERRORS', false);
+        
+        /**
+         * Adresse email de l'administrateur système du site.
+         * Cette adresse est utilisée pour l'envoi des mails d'erreurs, mais également pour l'envoi de tout message système.
+         *  
+         * @see _PLOOPI_MAIL_ERRORS
+         */
+        
+        define ('_PLOOPI_ADMINMAIL', 'webmaster@mydomain.com');		
+		
+        /**
+         * Active ou non le log interne
+         * Attention, en fonction du trafic du site, veillez à vider la table 'ploopi_log' régulièrement
+         */
 
 		define ('_PLOOPI_ACTIVELOG', true);
-
+        
+        /**
+         * Active ou non le chiffrement des URL
+         */
+        
 		define ('_PLOOPI_URL_ENCODE', <URL_ENCODE>);
+		
+        /**
+         * Clé secrète utilisée pour le chiffrement des URL et des mots de passe
+         */
+         		
 		define ('_PLOOPI_SECRETKEY', '<SECRETKEY>');
-		define ('_PLOOPI_FINGERPRINT', 	md5(dirname($_SERVER['SCRIPT_FILENAME']).'/'._PLOOPI_DB_SERVER.'/'._PLOOPI_DB_DATABASE));
+
+        /**
+         * Active ou non l'accès frontoffice.
+         * Si l'accès est activé, il faut également paramétrer un epsace de travail avec un module WebEdit pour que l'accès frontoffice soit définitivement activé.
+         */
 
 		define ('_PLOOPI_FRONTOFFICE', <FRONTOFFICE>); // true if frontoffice is activated
+		
+        /**
+         * Active ou non la réécriture de règle au niveau des url frontoffice générées par Ploopi.
+         * Attention pour que ces règles puissent être interprétées par Apache, n'oubliez pas d'activer le module 'Rewrite' et les règles de réécriture inverse.
+         *
+         * RewriteEngine on
+         * RewriteRule ^(.*)-h([0-9]*)a([0-9]*).html(.*)$ index.php?headingid=$2&articleid=$3$4 [L]
+         * RewriteRule ^(.*)-h([0-9]*).html(.*)$ index.php?headingid=$2$3 [L]
+         * RewriteRule ^(.*)-a([0-9]*).html(.*)$ index.php?articleid=$2$3 [L]
+         * 
+         * @link http://redmine.ploopi.org/wiki/ploopi/Installation_de_Ploopi
+         */
+         		
 		define ('_PLOOPI_FRONTOFFICE_REWRITERULE', <REWRITERULE>); // true if frontoffice rewrite rules are activated
+
+        /**
+         * Template backoffice par défaut (si le template utilisé n'existe pas)
+         */
 
 		define ('_PLOOPI_DEFAULT_TEMPLATE', 'ploopi');
 
-		define ('_PLOOPI_USE_COMPLEXE_PASSWORD', false);
+        /**
+         * Force l'utilisateur à utiliser un mot de passe complexe
+         */
+         
+         define ('_PLOOPI_USE_COMPLEXE_PASSWORD', false);
+		
+        /**
+         * Permet d'activer la compression gzip du buffer de sortie
+         */
+        		
         define ('_PLOOPI_USE_OUTPUT_COMPRESSION', true);
 
-		// PEAR
+        /**
+         * Chemin absolu vers le dossier contenant les librairies PEAR
+         */
+         
 		define ('_PLOOPI_PEARPATH', '<PEARPATH>');
+		
+        /**
+         * Nom d'hôte du serveur proxy pour l'accès internet
+         */     
+        
+        define ('_PLOOPI_INTERNETPROXY_HOST', '<INTERNETPROXY_HOST>');
+        
+        /**
+         * Port du serveur proxy pour l'accès internet
+         */     
+        
+        define ('_PLOOPI_INTERNETPROXY_PORT', '<INTERNETPROXY_PORT>');
 
-		// INTERNET PROXY
-		define ('_PLOOPI_INTERNETPROXY_HOST', '<INTERNETPROXY_HOST>');
-		define ('_PLOOPI_INTERNETPROXY_PORT', '<INTERNETPROXY_PORT>');
-		define ('_PLOOPI_INTERNETPROXY_USER', '<INTERNETPROXY_USER>');
-		define ('_PLOOPI_INTERNETPROXY_PASS', '<INTERNETPROXY_PASS>');
+        /**
+         * Nom d'utilisateur du serveur proxy pour l'accès internet
+         */     
+        
+        define ('_PLOOPI_INTERNETPROXY_USER', '<INTERNETPROXY_USER>');
 
-		// DOCUMENT INDEXATION
-		define ('_PLOOPI_INDEXATION_WORDSEPARATORS', " :;,.!?'^`'\"«»~-_|()[]{}<>\$£µ&#§@%=+/*\\/\n\r");
-		define ('_PLOOPI_INDEXATION_WORDMINLENGHT', 2);
-		define ('_PLOOPI_INDEXATION_WORDMAXLENGHT', 50);
-		define ('_PLOOPI_INDEXATION_COMMONWORDS_FR', './config/commonwords_fr.txt');
-		define ('_PLOOPI_INDEXATION_RATIOMIN', 0.01);
-		define ('_PLOOPI_INDEXATION_KEYWORDSMAXPCENT', 100);
+        /**
+         * Mot de passe du serveur proxy pour l'accès internet
+         */     
+        
+        define ('_PLOOPI_INTERNETPROXY_PASS', '<INTERNETPROXY_PASS>');		
+
+        /**
+         * Liste des séparateurs de mots (fonctions d'indexation)
+         */
+        
+        define ('_PLOOPI_INDEXATION_WORDSEPARATORS', " :;,.!?'^`'\"«»~-_|()[]{}<>\$£µ&#§@%=+/*\\/\n\r");
+        
+        /**
+         * Longueur minimale d'un mot indexable
+         */
+        
+        define ('_PLOOPI_INDEXATION_WORDMINLENGHT', 2);
+
+        /**
+         * Longueur maximale d'un mot indexable
+         */
+        
+        define ('_PLOOPI_INDEXATION_WORDMAXLENGHT', 50);
+        
+        /**
+         * Chemin relatif vers le fichier contenant la liste des mots communs
+         */
+        
+        define ('_PLOOPI_INDEXATION_COMMONWORDS_FR', './config/commonwords_fr.txt');
+
+        /**
+         * Pourcentage d'apparition minimum d'un mot pour qu'il soit indexable
+         */
+        
+        define ('_PLOOPI_INDEXATION_RATIOMIN', 0.01);
+        
+        /**
+         * Pourcentage de mots indexés dans un document (expérimental, laisser 100)
+         */
+        
+        define ('_PLOOPI_INDEXATION_KEYWORDSMAXPCENT', 100);
 	break;
 }
 ?>

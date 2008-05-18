@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion des objets insérables dans une page de contenu (WebEdit)
+ *
+ * @package forms
+ * @subpackage wce
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module
+ */
+
 ploopi_init_module('forms');
 
 include_once './modules/forms/class_form.php';
@@ -30,8 +44,8 @@ include_once './modules/forms/class_reply_field.php';
 include_once './lib/template/template.php';
 
 
-global $field_formats; // from forms/include/global.php
-global $field_operators; // from forms/include/global.php
+global $field_formats; // from form./include/start/global.php
+global $field_operators; // from form./include/start/global.php
 
 global $articleid;
 global $headingid;
@@ -47,7 +61,7 @@ switch($op)
     break;
 
     case 'saveform':
-        $forms = new forms();
+        $forms = new form();
         if (!empty($_POST['forms_id']) && is_numeric($_POST['forms_id']) && $forms->open($_POST['forms_id']))
         {
             $reply = new reply();
@@ -171,7 +185,7 @@ switch($op)
     break;
 
     case 'end':
-        $forms = new forms();
+        $forms = new form();
         $forms->open($obj['object_id']);
         ?>
         <div id="forms_response"><? echo nl2br($forms->fields['cms_response']); ?></div>

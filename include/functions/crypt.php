@@ -24,11 +24,12 @@
 /**
  * Fonctions permettant de mettre en place des mécanismes de chiffrement
  * Voir également la classe crypt.
- * .
+ *
  * @package ploopi
  * @subpackage crypt
  * @copyright Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  * 
  * @see ploopi_cipher
  */
@@ -61,7 +62,7 @@ function ploopi_urlencode($url)
 {
     if (defined('_PLOOPI_URL_ENCODE') && _PLOOPI_URL_ENCODE)
     {
-        require_once './include/classes/class_cipher.php';
+        require_once './include/classes/cipher.php';
         if (strstr($url,'?')) list($script, $params) = explode('?', $url, 2);
         else {$script = $url; $params = '';}
         $cipher = new ploopi_cipher();

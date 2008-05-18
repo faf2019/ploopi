@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Administration - modification d'un flux RSS
+ * 
+ * @package rss
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Formulaire d'ajout/modification d'un flux
+ */
+
 if ($rssfeed->new) echo $skin->open_simplebloc(_RSS_LABEL_FEEDADD);
 else echo $skin->open_simplebloc(str_replace('LABEL',$rssfeed->fields['title'],_RSS_LABEL_FEEDMODIFY));
 

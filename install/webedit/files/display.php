@@ -21,14 +21,32 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Moteur de rendu frontoffice
+ * 
+ * @package webedit
+ * @subpackage frontoffice
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @global Template $template_body template
+ * @global string $template_path chemin vers le template
+ * @global string $webedit_mode mode d'édition : edit (édition) / render (rendu backoffice) / display (rendu frontoffice)
+ */
+
 // webedit_mode : edit / render / display => mode édition / rendu backoffice / affichage frontoffice
 // readonly : true / false => article modifiable oui/non (charge fckeditor si false)
 // type : draft / online => type du document : brouillon / en ligne
-//
 
-// include template class
+/**
+ * Inclusion de la classe template (moteur du template)
+ */
 include_once './lib/template/template.php';
 
+/**
+ * Inclusion des classes du module
+ */
 include_once './modules/webedit/class_article.php';
 include_once './modules/webedit/class_heading.php';
 

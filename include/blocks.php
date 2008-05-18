@@ -27,7 +27,8 @@
  * @package ploopi
  * @subpackage backoffice
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 $arrBlocks = array();
@@ -81,7 +82,7 @@ switch ($_SESSION['ploopi']['mainmenu'])
                     if ($_SESSION['ploopi']['modules'][$menu_moduleid]['active'])
                     {
                         $modtype = $_SESSION['ploopi']['modules'][$menu_moduleid]['moduletype'];
-                        $blockpath = "./modules/{$modtype}/block-default.php";
+                        $blockpath = "./modules/{$modtype}/block.php";
 
                         $arrBlocks[$menu_moduleid] = array(
                                                                             'title'=> $_SESSION['ploopi']['modules'][$menu_moduleid]['label'],
@@ -110,7 +111,7 @@ switch ($_SESSION['ploopi']['mainmenu'])
                                                                         'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public&op=tickets')
                                                                         );
         $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_LABEL_MYANNOTATIONS,
-                                                                        'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public&op=annotations')
+                                                                        'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public&op=annotation')
                                                                         );
         $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   'label' => _PLOOPI_LABEL_MYPROFILE,
                                                                         'url' => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public&op=profile')

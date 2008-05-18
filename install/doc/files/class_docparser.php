@@ -20,19 +20,41 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-include_once './include/classes/class_data_object.php';
+
+/**
+ * Gestion des parsers de contenu 
+ *
+ * @package doc
+ * @subpackage parser
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_doc_parser
+ *
+ * @package doc
+ * @subpackage parser
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
 class docparser extends data_object
 {
     /**
-    * Class constructor
-    *
-    * @param int $connection_id 
-    * @access public
-    **/
-
+     * Constructeur de la classe
+     *
+     * @return docparser
+     */
+    
     function docparser()
     {
         parent::data_object('ploopi_mod_doc_parser','id');

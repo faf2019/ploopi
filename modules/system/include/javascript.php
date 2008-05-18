@@ -21,7 +21,22 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-ploopi_init_module('system');
+/**
+ * Fonctions javascript dynamique du module Système
+ * 
+ * @package system
+ * @subpackage javascript
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module
+ */
+
+ploopi_init_module('system', false, false, false);
+
 ?>
 function system_group_validate(form)
 {

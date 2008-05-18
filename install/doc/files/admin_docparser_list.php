@@ -20,8 +20,24 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+/**
+ * Gestion des parsers de documents
+ *
+ * @package doc
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * D'abord le mini formulaire d'ajout/modif, puis la liste des parsers existants
+ */
+
 echo $skin->open_simplebloc();
 
+include_once './modules/doc/class_docparser.php';
 $docparser = new docparser();
 
 if (isset($_GET['docparser_id'])) $docparser->open($_GET['docparser_id']);

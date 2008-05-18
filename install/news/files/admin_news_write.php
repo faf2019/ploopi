@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Administration des news - ajout/modification 
+ *
+ * @package news
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Affichage du titre en fonction du type d'opération (ajout/modif)
+ */
+
 if ($news->new) echo $skin->open_simplebloc(_NEWS_WRITE);
 else echo $skin->open_simplebloc(str_replace("LABEL",$news->fields['title'],_NEWS_MODIFY));
 ?>
@@ -89,6 +103,11 @@ else echo $skin->open_simplebloc(str_replace("LABEL",$news->fields['title'],_NEW
 </div>
 <div style="padding:0 2px;">
 <?
+
+/**
+ * Insertion de FCKeditor pour modifier le contenu de la news
+ */
+
 include_once './FCKeditor/fckeditor.php' ;
 
 $oFCKeditor = new FCKeditor('fck_news_content') ;
@@ -102,9 +121,9 @@ $oFCKeditor->Value = $news->fields['content'];
 $oFCKeditor->Width='100%';
 $oFCKeditor->Height='350';
 
-$oFCKeditor->Config['CustomConfigurationsPath'] = "../../modules/news/fckeditor/fckconfig.js"  ;
-$oFCKeditor->Config['EditorAreaCSS'] = "../../modules/news/fckeditor/fck_editorarea.css" ;
-$oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH;
+$oFCKeditor->Config['CustomConfigurationsPath'] = "{$basepath}/modules/news/fckeditor/fckconfig.js"  ;
+$oFCKeditor->Config['EditorAreaCSS'] = "{$basepath}/modules/news/fckeditor/fck_editorarea.css" ;
+$oFCKeditor->Config['BaseHref'] = $basepath.'/';
 $oFCKeditor->Create('FCKeditor_1') ;
 ?>
 </div>

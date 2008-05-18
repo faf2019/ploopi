@@ -21,7 +21,24 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Partie publique du module
+ *
+ * @package webedit
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module
+ */
 ploopi_init_module('webedit');
+
+/**
+ * Inclusions des classes du module
+ */
 include_once './modules/webedit/class_article.php';
 include_once './modules/webedit/class_heading.php';
 
@@ -30,6 +47,9 @@ if (!isset($op)) $op = '';
 switch($op)
 {
     case 'display_iframe':
+        /**
+         * Affichage de la partie frontoffice dans le portail (dans un iframe)
+         */
         include_once './modules/webedit/display.php';
     break;
 

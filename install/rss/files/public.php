@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Partie publique du module
+ *
+ * @package rss
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module
+ */
+
 ploopi_init_module('rss');
 
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
@@ -76,7 +90,7 @@ switch($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])
                 $rssrequest->fields['request'] = trim($rssrequest->fields['request'],' ');
                 $rssrequest->fields['id_cat'] = $rssrequest_id_cat;
 
-                $rssrequest = ploopi_setugm($rssrequest);
+                $rssrequest->setuwm();
                 $rssrequest->save();
                 ploopi_redirect("$scriptenv?op=show_request&rssrequest_id={$rssrequest->fields['id']}");
             break;

@@ -21,7 +21,25 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Administration des news - liste 
+ *
+ * @package news
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Ouverture du bloc
+ */
+
 echo $skin->open_simplebloc(_NEWS_LIST);
+
+/**
+ * Initialisation du tableau contenant les news
+ */
 
 $news_columns = array();
 
@@ -30,6 +48,10 @@ $news_columns['right']['published'] = array('label' => 'Publié', 'width' => 80, 
 $news_columns['right']['date'] = array('label' => 'Date', 'width' => 80, 'options' => array('sort' => true));
 $news_columns['right']['cat'] = array('label' => 'Catégorie', 'width' => 150, 'options' => array('sort' => true));
 $news_columns['actions_right']['actions'] = array('label' => 'Actions', 'width' => 60);
+
+/**
+ * Recherche des news du module
+ */
 
 $select =   "
             SELECT      ploopi_mod_news_entry.id,
@@ -56,9 +78,16 @@ while ($fields = $db->fetchrow($result))
     $titlecat = $fields['titlecat'];
     if (is_null($titlecat)) $titlecat = _NEWS_LABEL_NOCATEGORY;
 
+    /**
+     * Conversion timestamp en date locale
+     */
+    
     $localdate = ploopi_timestamp2local($fields['date_publish']);
 
-
+    /**
+     * Le champ 'hot' permet de mettre une news en avant
+     */
+    
     if ($fields['hot']) $hot = 'Style="color:'.$skin->values['colsec'].';background-color:'.$skin->values['colprim'].'"';
     else $hot = '';
 
@@ -93,6 +122,10 @@ echo $skin->close_simplebloc();
 ?>
 
 <?
+/**
+ * Modification d'une news
+ */
+
 if (!empty($_GET['news_id']) && is_numeric($_GET['news_id']))
 {
     $news->open($_GET['news_id']);

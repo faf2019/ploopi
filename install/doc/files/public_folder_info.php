@@ -20,6 +20,25 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+/**
+ * Affichage des informations sur un dossier
+ *
+ * @package doc
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see ploopi_share_get
+ * @see ploopi_workflow_get
+ * @see _DOC_OBJECT_FOLDER
+ */
+
+/**
+ * Si $currentfolder est empty (vide ou 0), c'est que l'on est dans le dossier personnel (racine)
+ */
+
 ?>
 <div class="doc_folderinfo">
 <? 
@@ -55,7 +74,7 @@ if (!empty($currentfolder))
             <strong>Propriétaire</strong>:
             <br />
             <?
-            include_once './modules/system/class_user.php';
+            include_once './include/classes/user.php';
             $user = new user();
             if ($user->open($docfolder->fields['id_user'])) echo "{$user->fields['lastname']} {$user->fields['firstname']}";
             else echo '<i>supprimé</i>';
@@ -63,6 +82,9 @@ if (!empty($currentfolder))
         </p>
     </div>
     <?
+    /**
+     * si dossier partagés, affichage des partages
+     */
     if ($docfolder->fields['foldertype'] == 'shared')
     {
         ?>
@@ -72,7 +94,7 @@ if (!empty($currentfolder))
                 <br />
                 <?
                 $shusers = array(); 
-                foreach(ploopi_shares_get(-1, _DOC_OBJECT_FOLDER, $currentfolder) as $value) $shusers[] = $value['id_share'];
+                foreach(ploopi_share_get(-1, _DOC_OBJECT_FOLDER, $currentfolder) as $value) $shusers[] = $value['id_share'];
 
                 $users = array();
                 if (!empty($shusers))
@@ -90,6 +112,9 @@ if (!empty($currentfolder))
         <?
     }
     
+    /**
+     * Pour les dossiers non privés, affichage des validateurs s'ils existent
+     */
     if ($docfolder->fields['foldertype'] != 'private')
     {
         ?>
@@ -120,6 +145,9 @@ if (!empty($currentfolder))
 }
 else
 {
+    /**
+     * Dossier personnel / racine
+     */
     ?>
     <div style="float:left;height:40px;">
         <p style="margin:0;padding:4px 0px 4px 8px;">

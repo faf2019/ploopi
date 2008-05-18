@@ -20,13 +20,28 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Interface de gestion des affectations de rôles 
+ *
+ * @package system
+ * @subpackage admin
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Ouverture du bloc
+ */
 echo $skin->open_simplebloc();
 
 $arrRole = null;
 
 $parents = str_replace(';',',',$workspace->fields['parents']);
 
-// on recherche les rôles des modules de l'espace sélectionné (ou hérités des espaces parents)
+/**
+ * On recherche les rôles des modules de l'espace sélectionné (ou hérités des espaces parents)
+ */
 $sql =  "
         SELECT      r.id,
                     r.label,

@@ -20,24 +20,80 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-define ("_FORMS_TAB_LIST", 0);
-define ("_FORMS_TAB_ADD", 1);
 
+/**
+ * Fonctions, constantes, variables globales
+ *
+ * @package forms
+ * @subpackage global
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Définition des constantes
+ */
+
+/**
+ * Action : Créer un formulaire
+ */
 define ("_FORMS_ACTION_CREATEFORM", 1);
+
+/**
+ * Action : Ajouter une réponse dans un formulaire
+ */
 define ("_FORMS_ACTION_ADDREPLY",   2);
+
+/**
+ * Action : Exporter les données d'un formulaire
+ */
 define ("_FORMS_ACTION_EXPORT",     3);
+
+/**
+ * Action : Filtrer les données d'un formulaire
+ */
 define ("_FORMS_ACTION_FILTER",     4);
+
+/**
+ * Action : Supprimer un formulaire
+ */
 define ("_FORMS_ACTION_DELETE",     5);
+
+/**
+ * Action : Gérer l'archivage des données d'un formulaire 
+ */
 define ("_FORMS_ACTION_BACKUP",     6);
+
+/**
+ * Action : Administer les formulaire
+ */
 define ("_FORMS_ACTION_ADMIN",     7);
 
+/**
+ * Définition des variables globales
+ */
+
+/**
+ * Types de champs (text, textarea, select, etc...)
+ */
 global $field_types;
+
+/**
+ * Formats de champs (string, integer, date, etc...) 
+ */
 global $field_formats;
+
+/**
+ * Opérateurs sur les champs (=, >, <, etc...)
+ */
 global $field_operators;
+
+/**
+ * Types de formulaire (cms, app)
+ */
 global $form_types;
-global $form_modeles;
+
 
 $field_types = array(   'text' => 'Texte Simple',
                         'textarea' => 'Texte Avancé',
@@ -72,60 +128,45 @@ $form_types = array(    'cms' => 'Formulaire pour Gestion de Contenu',
                         'app' => 'Application PLOOPI'
                     );
 
-$form_modeles = array(  'application' => 'Application',
-                        'application2c' => 'Application 2 col.',
-                        'application3c' => 'Application 3 col.',
-                        'application4c' => 'Application 4 col.'
-                    );
-
-function forms_convertchars($content)
-{
-    $chars = array("¥" => "Y", "µ" => "u", "À" => "A", "Á" => "A",
-                    "Â" => "A", "Ã" => "A", "Ä" => "A", "Å" => "A",
-                    "Æ" => "A", "Ç" => "C", "È" => "E", "É" => "E",
-                    "Ê" => "E", "Ë" => "E", "Ì" => "I", "Í" => "I",
-                    "Î" => "I", "Ï" => "I", "Ð" => "D", "Ñ" => "N",
-                    "Ò" => "O", "Ó" => "O", "Ô" => "O", "Õ" => "O",
-                    "Ö" => "O", "Ø" => "O", "Ù" => "U", "Ú" => "U",
-                    "Û" => "U", "Ü" => "U", "Ý" => "Y", "ß" => "s",
-                    "à" => "a", "á" => "a", "â" => "a", "ã" => "a",
-                    "ä" => "a", "å" => "a", "æ" => "a", "ç" => "c",
-                    "è" => "e", "é" => "e", "ê" => "e", "ë" => "e",
-                    "ì" => "i", "í" => "i", "î" => "i", "ï" => "i",
-                    "ð" => "o", "ñ" => "n", "ò" => "o", "ó" => "o",
-                    "ô" => "o", "õ" => "o", "ö" => "o", "ø" => "o",
-                    "ù" => "u", "ú" => "u", "û" => "u", "ü" => "u",
-                    "ý" => "y", "ÿ" => "y", "_" => " ", "-" => " ", "/" => " ");
-
-    return(strtr($content, $chars));
-}
-
-
+                    
+/**
+ * Crée le nom physique de la table en fonction du nom du formulaire
+ *
+ * @param string $name nom du formulaire
+ * @return string nom de la table
+ */
+                    
 function forms_createphysicalname($name)
 {
-    $chars = array("¥" => "Y", "µ" => "u", "À" => "A", "Á" => "A",
-                    "Â" => "A", "Ã" => "A", "Ä" => "A", "Å" => "A",
-                    "Æ" => "A", "Ç" => "C", "È" => "E", "É" => "E",
-                    "Ê" => "E", "Ë" => "E", "Ì" => "I", "Í" => "I",
-                    "Î" => "I", "Ï" => "I", "Ð" => "D", "Ñ" => "N",
-                    "Ò" => "O", "Ó" => "O", "Ô" => "O", "Õ" => "O",
-                    "Ö" => "O", "Ø" => "O", "Ù" => "U", "Ú" => "U",
-                    "Û" => "U", "Ü" => "U", "Ý" => "Y", "ß" => "s",
-                    "à" => "a", "á" => "a", "â" => "a", "ã" => "a",
-                    "ä" => "a", "å" => "a", "æ" => "a", "ç" => "c",
-                    "è" => "e", "é" => "e", "ê" => "e", "ë" => "e",
-                    "ì" => "i", "í" => "i", "î" => "i", "ï" => "i",
-                    "ð" => "o", "ñ" => "n", "ò" => "o", "ó" => "o",
-                    "ô" => "o", "õ" => "o", "ö" => "o", "ø" => "o",
-                    "ù" => "u", "ú" => "u", "û" => "u", "ü" => "u",
-                    "ý" => "y", "ÿ" => "y", " " => "_", "-" => "_");
+    /**
+     * Conversion des caractères non alphanum , conversion en minuscule, suppression des accents, suppression des espaces inutiles
+     */
+    
+    $name = ereg_replace("([^[:alnum:]|_]+)", "_", ploopi_convertaccents(strtolower(trim($name))));
+    
+    /**
+     * Suppression des '_' en trop
+     */
+    
+    $patterns = array('/__+/', '/_$/');
+    $replacements = array('_', '');
 
-    $name = ereg_replace("([^[:alnum:]|_]+)", "", strtr(strtolower(trim($name)), $chars));
-    if (strlen($name) && is_numeric($name{0})) $name  = "_$name";
+    $name = preg_replace($patterns, $replacements, $name);
+    
+    if (strlen($name) && is_numeric($name{0})) $name  = "_{$name}";
 
-    return(substr($name,0,32));
+    return(substr($name, 0, 32));
 }
 
+/**
+ * Retourne une liste d'identifiants d'espaces de travail.
+ * Application de la vue aux données d'un formulaire.
+ *
+ * @param int $moduleid identifiant du module
+ * @param int $workspaceid identifiant de l'espace de travail
+ * @param string $viewmode vue ('private, 'desc', 'asc', 'global')
+ * @return string liste d'identifiants d'espaces séparés par une virgule
+ */
 
 function forms_viewworkspaces($moduleid, $workspaceid, $viewmode)
 {
@@ -156,13 +197,38 @@ function forms_viewworkspaces($moduleid, $workspaceid, $viewmode)
     return $workspaces;
 }
 
+/**
+ * Génère l'identifiant unique du bloc formulaire appelé par un enregistrement d'un objet
+ *
+ * @param int $id_form identifiant du formulaire
+ * @param int $id_module identifiant du module appelant
+ * @param int $id_object identifiant de l'objet appelant
+ * @param string $id_record identifiant de l'enregistrement appelant
+ * @return string identifiant du bloc en md5
+ * 
+ * @see md5
+ */
+
 function forms_getfuid($id_form, $id_module, $id_object, $id_record)
 {
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
-    return base64_encode("{$id_form}_{$id_module}_{$id_object}_".addslashes($id_record));
+    return md5("{$id_form}_{$id_module}_{$id_object}_".addslashes($id_record));
 }
 
+
+/**
+ * Affiche un formulaire depuis un autre module
+ *
+ * @param int $id_form identifiant du formulaire
+ * @param int $id_module identifiant du module appelant
+ * @param int $id_object identifiant de l'objet appelant
+ * @param string $id_record identifiant de l'enregistrement appelant
+ * @param array $rights tableau des droits  (_FORMS_ACTION_ADDREPLY, _FORMS_ACTION_EXPORT, _FORMS_ACTION_DELETE, _FORMS_ACTION_MODIFY)
+ * @param array $options tableau des options (height:int, filter_mode:string, object_display:boolean, object_label:string, object_values:array)
+ * 
+ * @see forms_getfuid
+ */
 
 function forms_display($id_form, $id_module, $id_object, $id_record, $rights = array(), $options = array())
 {
@@ -201,6 +267,17 @@ function forms_display($id_form, $id_module, $id_object, $id_record, $rights = a
     <?
 }
 
+/**
+ * Retourne les données d'un formulaire dans un tableau (appel depuis un enregistrement d'un objet externe)
+ *
+ * @param int $id_form identifiant du formulaire
+ * @param int $id_module identifiant du module appelant
+ * @param int $id_object identifiant de l'objet appelant
+ * @param string $id_record identifiant de l'enregistrement appelant
+ * @param array $options tableau des options (filter_mode:string, object_display:boolean, object_label:string, object_values:array)
+ * 
+ * @return array tableau contenant le titre et les données
+ */
 
 function forms_getdata($id_form, $id_module, $id_object, $id_record, $options = array())
 {

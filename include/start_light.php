@@ -28,17 +28,23 @@
  * @package ploopi
  * @subpackage start
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
-include './include/start_common.php';
+/**
+ * Chargement de la partie commune de chargement de l'environnement
+ */
 
-///////////////////////////////////////////////////////////////////////////
-// INCLUDES MAIN CLASSES
-///////////////////////////////////////////////////////////////////////////
-include_once './modules/system/class_workspace.php';
+include './include/start/common.php';
 
-if ($ploopi_initsession) include './include/start_initsession.php';
+/**
+ * Chargement des classes principales (dans la version light, pas grand chose)
+ */
+
+include_once './include/classes/workspace.php';
+
+if ($ploopi_initsession) include './include/start/initsession.php';
 
 switch($_SESSION['ploopi']['scriptname'])
 {

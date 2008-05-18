@@ -27,7 +27,8 @@
  * @package ploopi
  * @subpackage session
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 include_once './include/functions/ip.php';

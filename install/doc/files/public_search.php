@@ -20,8 +20,21 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Interface de recherche
+ *
+ * @package doc
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Récupération des paramètres de recherche et remplissage de la variable session du module
+ */
+
 if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'] = '';
 if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] = '';
 if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user'] = '';
@@ -29,12 +42,19 @@ if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']
 if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'] = '';
 if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'] = '';
 
+/**
+ * On affiche les options si une option a été modifiée
+ */
 $show_options = (   !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype']) ||
                     !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']) ||
                     !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']) ||
                     !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']) ||
                     !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])
                 );
+
+/**
+ * Affichage du formulaire de recherche
+ */                
 ?>
 
 <form action="<? echo $scriptenv; ?>" onsubmit="javascript:doc_search_next();return false;" method="post">

@@ -20,10 +20,27 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * "Constructeur" de l'instance.
+ * Initialise les données du module lors de l'instanciation du module. 
+ *
+ * @package webedit
+ * @subpackage create
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe heading
+ */
+
 include_once './modules/webedit/class_heading.php';
 
+/**
+ * On crée la rubrique racine
+ */
 $webedit_heading = new webedit_heading();
 $webedit_heading->fields['label'] = 'Racine';
 $webedit_heading->fields['id_heading'] = 0;

@@ -20,12 +20,43 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-// DELETE ALL MODULE DATA
-$delete = "DELETE FROM ploopi_mod_rssfeed WHERE id_module = ".$this->fields['id'];
+
+/**
+ * Suppression des données relatives au module lors d'une suppression d'instance
+ *
+ * @package rss
+ * @subpackage delete
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Suppression des catégories
+ */
+
+$delete = "DELETE FROM ploopi_mod_rss_cat WHERE id_module = {$this->fields['id']}";
 $db->query($delete);
 
-$delete = "DELETE FROM ploopi_mod_rsscat WHERE id_module = ".$this->fields['id'];
+/**
+ * Suppression des flux
+ */
+
+$delete = "DELETE FROM ploopi_mod_rss_feed WHERE id_module = {$this->fields['id']}";
 $db->query($delete);
+
+/**
+ * Suppression des entrées
+ */
+
+$delete = "DELETE FROM ploopi_mod_rss_entry WHERE id_module = {$this->fields['id']}";
+$db->query($delete);
+
+/**
+ * Suppression des préférences
+ */
+
+$delete = "DELETE FROM ploopi_mod_rss_pref WHERE id_module = {$this->fields['id']}";
+$db->query($delete);
+
 ?>

@@ -20,10 +20,26 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Partie publique du module
+ *
+ * @package chat
+ * @subpackage public
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module
+ */
+
 ploopi_init_module('chat');
 
+/**
+ * mise à jour de la liste des utilisateurs connectés
+ */
 
-// mise à jour de la liste des utilisateurs connectés
 chat_connected_update();
 
 echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);

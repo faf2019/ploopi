@@ -21,13 +21,49 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion des préférences
+ *
+ * @package rss
+ * @subpackage pref
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_rss_pref
+ *
+ * @package rss
+ * @subpackage pref
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
 class rss_pref extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return rss_pref
+     */
+    
     function rss_pref()
     {
         parent::data_object('ploopi_mod_rss_pref','id_module','id_user','id_feed');
     }
 
+    /**
+     * Enregistre le flux favori (préférence) pour un utilisateur dans un module
+     */
+    
     function save()
     {
         global $db;

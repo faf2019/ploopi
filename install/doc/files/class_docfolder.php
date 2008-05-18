@@ -20,18 +20,41 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Gestion des dossiers
+ *
+ * @package doc
+ * @subpackage folder
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_doc_folder
+ *
+ * @package doc
+ * @subpackage folder
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
 class docfolder extends data_object
 {
-
     /**
-    * Class constructor
-    *
-    * @access public
-    **/
-
+     * Constructeur de la classe
+     *
+     * @return docfolder
+     */
+    
     function docfolder()
     {
         parent::data_object('ploopi_mod_doc_folder');
@@ -40,6 +63,15 @@ class docfolder extends data_object
         $this->fields['parents']=0;
     }
 
+    /**
+     * Enregistre le dossier.
+     * Les dossiers n'existent pas physiquement.
+     * Mise à jour du nombre d'élément du dossier parent. 
+     *
+     * @return int identifiant du dossier
+     * 
+     * @see doc_countelements
+     */
     function save()
     {
         if ($this->fields['id_folder'] != 0)
@@ -56,6 +88,12 @@ class docfolder extends data_object
         return ($ret);
     }
 
+    /**
+     * Publie le dossier et son contenu
+     *
+     * @return unknown
+     */
+    
     function publish()
     {
         global $db;
@@ -71,6 +109,11 @@ class docfolder extends data_object
         return($ret);
     }
     
+    /**
+     * Détermine si le dossier est accessible par l'utilisateur connecté
+     *
+     * @return boolean true si me dossier est accessible par l'utilisateur connecté
+     */
     
     function isEnabled()
     {
@@ -82,14 +125,18 @@ class docfolder extends data_object
             if ($this->fields['foldertype'] == 'public') $booFolderEnabled = true;
             else
             {
-                doc_getshares();
-                if (in_array($this->fields['id'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['shares']['folders'])) $booFolderEnabled = true;
+                doc_getshare();
+                if (in_array($this->fields['id'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) $booFolderEnabled = true;
             }
         }
 
         return($booFolderEnabled);
     }
     
+    /**
+     * Supprime le dossier.
+     * Supprime le contenu (fichiers+dossier)
+     */
     
     function delete()
     {

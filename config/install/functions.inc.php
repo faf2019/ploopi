@@ -22,6 +22,16 @@
 */
 
 /**
+ * Fonctions utilisées durant la procédure d'installation de Ploopi.
+ * 
+ * @package ploopi
+ * @subpackage install
+ * @copyright Ovensia, Hexad
+ * @license GNU General Public License (GPL)
+ * @author Xavier Toussaint
+ */
+
+/**
  * get the list of language available in $replg path (ex: french.php done french in the list)
  *
  * @param string $replg

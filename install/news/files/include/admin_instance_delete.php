@@ -20,10 +20,22 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-ploopi_init_module('news');
-// DELETE ALL MODULE DATA
+
+/**
+ * Suppression des données liées à l'instance du module
+ *
+ * @package news
+ * @subpackage instance_delete
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module
+ */
+ploopi_init_module('news', false, false, false);
+
 global $admin_redirect;
 
 $db->query("DELETE FROM ploopi_mod_news_entry WHERE id_module= $admin_moduleid");

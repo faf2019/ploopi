@@ -21,7 +21,27 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Interface d'administration du module
+ *
+ * @package webedit
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @global int $headingid identifiant de la rubrique sélectionnée
+ * @global int $articleid identifiant de l'article sélectionné
+ */
+
+/**
+ * Initialisation du module
+ */
 ploopi_init_module('webedit');
+
+/**
+ * Inclusion des classes du module
+ */
 include_once './modules/webedit/class_article.php';
 include_once './modules/webedit/class_heading.php';
 
@@ -65,7 +85,7 @@ switch($op)
         {
             $headings = webedit_getheadings();
             $articles = webedit_getarticles();
-            echo webedit_build_tree($headings, $articles, $_GET['hid'], (empty($_GET['str'])) ? '' : $_GET['str'], (empty($_GET['option'])) ? '' : $_GET['option']);
+            echo webedit_build_tree($_GET['hid'], (empty($_GET['str'])) ? '' : $_GET['str'], (empty($_GET['option'])) ? '' : $_GET['option']);
         }
         ploopi_die();
     break;
@@ -95,7 +115,7 @@ switch($op)
             $heading_new->fields['id_heading'] = 0;
             $heading_new->fields['parents'] = 0;
             $heading_new->fields['depth'] = 1;
-            $heading_new->setugm();
+            $heading_new->setuwm();
 
             $headingid = $heading_new->save();
 
@@ -125,7 +145,7 @@ switch($op)
             if (!is_numeric($maxpos)) $maxpos = 0;
             $heading_new->fields['position'] = $maxpos+1;
 
-            $heading_new->setugm();
+            $heading_new->setuwm();
 
             $headingid = $heading_new->save();
 
@@ -252,7 +272,7 @@ switch($op)
     case 'article_selectlink':
         $headings = webedit_getheadings();
         $articles = webedit_getarticles();
-        echo webedit_build_tree($headings, $articles, 0, '', 'selectlink');
+        echo webedit_build_tree(0, '', 'selectlink');
     break;
 
     case 'heading_selectredirect':
@@ -263,7 +283,7 @@ switch($op)
         <?
         $headings = webedit_getheadings();
         $articles = webedit_getarticles();
-        echo webedit_build_tree($headings, $articles, 0, '', 'selectredirect');
+        echo webedit_build_tree(0, '', 'selectredirect');
         ?>
         </div>
         <?
@@ -536,7 +556,7 @@ switch($op)
 
                     if (empty($headingid)) $headingid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = $headings['tree'][0][0];
 
-                    echo webedit_build_tree($headings, $articles);
+                    echo webedit_build_tree();
                     ?>
                 </div>
                 <div id="webedit_legende">

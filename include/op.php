@@ -28,13 +28,17 @@
  * @package ploopi
  * @subpackage global
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
-include_once './include/functions/security.php';
+/**
+ * inclusions fonctions système (ploopi_die...)
+ */
+
+include_once './include/functions/system.php';
 
 if (isset($_REQUEST['ploopi_op'])) $ploopi_op = $_REQUEST['ploopi_op'];
-
 
 if (isset($ploopi_op))
 {
@@ -230,14 +234,13 @@ if (isset($ploopi_op))
 
     if ($_SESSION['ploopi']['connected'])
     {
-        include_once './include/op_annotations.php';
-        include_once './include/op_documents.php';
-        include_once './include/op_shares.php';
-        include_once './include/op_subscriptions.php';
-        include_once './include/op_workflow.php';
-        include_once './include/op_tickets.php';
+        include_once './include/op/annotation.php';
+        include_once './include/op/documents.php';
+        include_once './include/op/share.php';
+        include_once './include/op/subscription.php';
+        include_once './include/op/workflow.php';
+        include_once './include/op/tickets.php';
         include_once './modules/system/op.php';
-        
         
         switch($ploopi_op)
         {

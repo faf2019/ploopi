@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Interface permettant de lister les formulaires
+ *
+ * @package forms
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du tableau contenant la liste des formulaires
+ */
+
 echo $skin->open_simplebloc();
 
 $array_columns = array();

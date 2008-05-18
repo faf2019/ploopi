@@ -21,24 +21,45 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once './modules/doc/class_docfilehistory.php';
-include_once './modules/doc/class_docmeta.php';
-include_once './modules/doc/class_dockeyword.php';
-include_once './modules/doc/class_dockeywordfile.php';
+/**
+ * Gestion des fichiers
+ *
+ * @package doc
+ * @subpackage file
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_doc_file.
+ * Gère l'enregistrement physique, l'extraction du contenu, l'indexation, la suppression.
+ *
+ * @package doc
+ * @subpackage file
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
 class docfile extends data_object
 {
-    /**
-    * Class constructor
-    *
-    * @param int $connection_id
-    * @access public
-    **/
-
     var $oldname;
     var $tmpfile;
     var $draftfile;
 
+    /**
+     * Constructeur de la classe
+     *
+     * @return docfile
+     */
+    
     function docfile()
     {
         parent::data_object('ploopi_mod_doc_file');
@@ -55,6 +76,13 @@ class docfile extends data_object
         $this->draftfile = null;
     }
 
+    /**
+     * Ouvre un document avec son identifiant MD5
+     * 
+     * @param unknown_type $id
+     * @return unknown
+     */    
+    
     function open($id)
     {
         $res = parent::open($id);
@@ -62,7 +90,13 @@ class docfile extends data_object
         return($res);
     }
 
-
+    /**
+     * Ouvre un document avec son identifiant MD5
+     *
+     * @param string $md5id identifiant MD5 du document
+     * @return boolean true si le document a été ouvert
+     */
+    
     function openmd5($md5id)
     {
         global $db;
@@ -72,6 +106,17 @@ class docfile extends data_object
         else return(false);
     }
 
+    /**
+     * Enregistre le document
+     *
+     * @return int numéro d'erreur
+     * 
+     * @see _DOC_ERROR_EMPTYFILE
+     * @see _DOC_ERROR_FILENOTWRITABLE
+     * @see _DOC_ERROR_MAXFILESIZE
+     * @see _PLOOPI_MAXFILESIZE
+     */
+    
     function save()
     {
         global $db;
@@ -82,7 +127,6 @@ class docfile extends data_object
 
         if ($this->new) // insert
         {
-
             if ($this->tmpfile == 'none' && $this->draftfile == 'none') $error = _DOC_ERROR_EMPTYFILE;
 
             if ($this->fields['size'] > _PLOOPI_MAXFILESIZE) $error = _DOC_ERROR_MAXFILESIZE;
@@ -247,14 +291,14 @@ class docfile extends data_object
         ploopi_search_remove_index(_DOC_OBJECT_FILE, $this->fields['id']);
     }
 
-
-    function getbasepath_deprecated()
-    {
-        $basepath = doc_getpath($this->fields['id_module'])._PLOOPI_SEP.$this->fields['id'];
-        ploopi_makedir($basepath);
-        return($basepath);
-    }
-
+    /**
+     * Retourne le chemin physique de stockage des documents et le crée s'il n'existe pas
+     *
+     * @return string chemin physique de stockage des documents
+     * 
+     * @see doc_getpath
+     */
+    
     function getbasepath()
     {
         $basepath = doc_getpath($this->fields['id_module'])._PLOOPI_SEP.substr($this->fields['timestp_create'],0,8);
@@ -262,21 +306,24 @@ class docfile extends data_object
         return($basepath);
     }
 
-    function getfilepath_deprecated()
-    {
-        return($this->getbasepath_deprecated()._PLOOPI_SEP."{$this->fields['id']}_{$this->fields['version']}.{$this->fields['extension']}");
-    }
+    /**
+     * Retourne le chemin physique de stockage du document
+     *
+     * @return string chemin physique de stockage du document
+     */
 
     function getfilepath()
     {
         return($this->getbasepath()._PLOOPI_SEP."{$this->fields['id']}_{$this->fields['version']}.{$this->fields['extension']}");
     }
 
-    function getwebpath()
-    {
-        return(_PLOOPI_WEBPATHDATA."doc-{$this->fields['id_module']}/{$this->fields['id']}/{$this->fields['id']}_{$this->fields['version']}.{$this->fields['extension']}");
-    }
-
+    
+    /**
+     * Retourne l'historique d'un fichier dans un tableau
+     *
+     * @return array historique d'un fichier indexé par version
+     */
+    
     function gethistory()
     {
         global $db;
@@ -311,8 +358,14 @@ class docfile extends data_object
         return($history);
     }
 
+    /**
+     * Crée un historique à partir de ce document
+     */
+    
     function createhistory()
     {
+        include_once './modules/doc/class_docfilehistory.php';
+                
         $docfilehistory = new docfilehistory();
         $docfilehistory->fields['id_docfile'] = $this->fields['id'];
         $docfilehistory->fields['version'] = $this->fields['version'];
@@ -327,8 +380,21 @@ class docfile extends data_object
         $docfilehistory->save();
     }
 
+    /**
+     * Indexe le document
+     *
+     * @param boolean $debug true si on veut afficher des informations de debug
+     * @return unknown
+     * 
+     * @see docmeta
+     * @see _DOC_OBJECT_FILE
+     * @see ploopi_search_create_index
+     */
+    
     function parse($debug = false)
     {
+        include_once './modules/doc/class_docmeta.php';
+        
         global $db;
 
         global $ploopi_timer;
@@ -421,6 +487,7 @@ class docfile extends data_object
                         if (!empty($meta_information))
                         {
                             $res_txt .= "<div style=\"background-color:#e0f0e0;border-bottom:1px solid #c0c0c0;padding:1px;\"><b>{$meta_information['1']}</b> = {$meta_information['2']}</div>";
+                            
                             $docmeta = new docmeta();
                             $docmeta->fields['id_file'] = $this->fields['id'];
                             $docmeta->fields['meta'] = trim(ucwords(str_replace('_',' ',$meta_information['1'])));

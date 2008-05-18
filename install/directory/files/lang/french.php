@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fichier de langue français
+ *
+ * @package directory
+ * @subpackage lang
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Définition des constantes
+ */
+
 define ('_DIRECTORY_FAVORITES', 'Favoris');
 define ('_DIRECTORY_MYCONTACTS', 'Contacts personnels');
 define ('_DIRECTORY_MYGROUP', 'Espace de Travail');

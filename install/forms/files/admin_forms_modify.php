@@ -21,7 +21,22 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$forms = new forms();
+/**
+ * Interface de modification d'un formulaire
+ *
+ * @package forms
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * On commence par vérifier si l'identifiant du formulaire est valide.
+ * Si ok => on l'ouvre. Sinon, nouveau formulaire.
+ */
+
+$forms = new form();
 
 if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
 {

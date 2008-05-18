@@ -20,16 +20,31 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
 
-// par dÃ©faut on prend le module WEBEDIT sur lequel on est dÃ©jÃ 
+/**
+ * Explorateur de rubriques/pages intégré à FCKeditor
+ * 
+ * @package webedit
+ * @subpackage fckeditor
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Ce script peut être appelé depuis le module WebEdit (lien vers un article) ou depuis un module externe (via FCKeditor).
+ * Il faut donc 'choisir' le moduleid de travail.
+ * Par défaut on prend le module WEBEDIT sur lequel on est déjà.
+ */
 if (isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['moduletype']) && $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['moduletype'] == 'webedit')
 {
     $webedit_idm = $_SESSION['ploopi']['moduleid'];
 }
-else // sinon on va chercher le 1er dispo dans les modules accessibles depuis l'espace de travail courant.
+else
 {
+    /**
+     * Sinon on va chercher le 1er dispo dans les modules accessibles depuis l'espace de travail courant.
+     */
     $webedit_idm = 0;
     foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $idm)
     {
@@ -39,18 +54,27 @@ else // sinon on va chercher le 1er dispo dans les modules accessibles depuis l'
 
 if ($webedit_idm)
 {
+    /**
+     * Initialisation du module
+     */
     ploopi_init_module('webedit');
 
+    /**
+     * Inclusion des classes du module
+     */
     include_once './modules/webedit/class_article.php';
     include_once './modules/webedit/class_heading.php';
 
+    /**
+     * Chargement des rubriques et articles
+     */
     $headings = webedit_getheadings($webedit_idm);
     $articles = webedit_getarticles($webedit_idm);
 
     switch($ploopi_op)
     {
         case 'webedit_detail_heading';
-            echo webedit_build_tree($headings, $articles, $_GET['hid'], $_GET['str'], (isset($_GET['option'])) ? $_GET['option'] : '');
+            echo webedit_build_tree($_GET['hid'], $_GET['str'], (isset($_GET['option'])) ? $_GET['option'] : '');
             ploopi_die();
         break;
 
@@ -85,7 +109,7 @@ if ($webedit_idm)
 
             </script>
             <?
-            echo webedit_build_tree($headings, $articles, 0, '', 'selectlink');
+            echo webedit_build_tree(0, '', 'selectlink');
         break;
     }
 

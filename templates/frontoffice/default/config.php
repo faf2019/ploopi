@@ -20,11 +20,19 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-// dÃ©finition des modes de parcours rÃ©cursifs en fonction de la profondeur de rubrique.
-// par dÃ©faut le moteur de template parcours les rubriques en largeur (toutes les rubriques, niveau par niveau)
-// pour certains besoins (menus dynamiques) on peut vouloir un parcours en profondeur des menus (disposer des sous menus pour chaque rubrique)
+
+/**
+ * Définition des modes de parcours récursifs en fonction de la profondeur de rubrique.
+ * Par défaut le moteur de template parcours les rubriques en largeur (toutes les rubriques, niveau par niveau)
+ * Pour certains besoins (menus dynamiques) on peut vouloir un parcours en profondeur des menus (disposer des sous menus pour chaque rubrique)
+ * 
+ * @package template
+ * @subpackage front_default
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
 $recursive_mode = array(    
                     '1' => 'prof',
                     '2' => 'prof',

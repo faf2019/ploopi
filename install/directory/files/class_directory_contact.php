@@ -21,12 +21,48 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion des contacts
+ *
+ * @package directory
+ * @subpackage contacts
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_directory_contact
+ *
+ * @package directory
+ * @subpackage contacts
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
 class directory_contact extends data_object
 {   
+    /**
+     * Constructeur de la classe
+     *
+     * @return directory_contact
+     */
+    
     function directory_contact()
     {
         parent::data_object('ploopi_mod_directory_contact');
     }
+    
+    /**
+     * Supprime le contact et les favoris associés
+     */
     
     function delete()
     {

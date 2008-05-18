@@ -17,7 +17,7 @@
 
  * Mise à niveau sécurité
  * Migration Ploopi
- * Intégration des annotations
+ * Intégration des annotation
  * Lifting des interfaces
  * Modifications sur la structure SQL (nom des tables & clés étrangères)
  * Mise à jour de la Métabase

@@ -29,31 +29,35 @@
  * @package ploopi
  * @subpackage start
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
+/**
+ * Chargement de la partie commune de chargement de l'environnement
+ */
 
-include './include/start_common.php';
+include './include/start/common.php';
 
-///////////////////////////////////////////////////////////////////////////
-// LOAD GLOBALS, VARS & FUNCTIONS
-///////////////////////////////////////////////////////////////////////////
-include_once './include/global.php';
+/**
+ * Chargement constantes, fonctions, var globales, etc.
+ */
 
-///////////////////////////////////////////////////////////////////////////
-// INCLUDES MAIN CLASSES
-///////////////////////////////////////////////////////////////////////////
-include_once './include/classes/class_user_action_log.php' ;
-include_once './include/classes/class_param.php';
-include_once './include/classes/class_connecteduser.php';
+include_once './include/start/global.php';
 
-include_once './modules/system/class_user.php';
-include_once './modules/system/class_group.php';
-include_once './modules/system/class_workspace.php';
+/**
+ * Chargement des classes principales (dans la version light, pas grand chose)
+ */
 
-///////////////////////////////////////////////////////////////////////////
-// LOGIN REQUEST
-///////////////////////////////////////////////////////////////////////////
+include_once './include/classes/user.php';
+include_once './include/classes/group.php';
+include_once './include/classes/workspace.php';
+include_once './include/classes/log.php' ;
+include_once './include/classes/param.php';
+
+/**
+ * Gestion de la connexion d'un utilisateur
+ */
 
 unset($ploopi_login);
 unset($ploopi_password);
@@ -95,7 +99,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
                 
                 if ($key == 'ploopi_url')
                 {
-                    require_once './include/classes/class_cipher.php';
+                    require_once './include/classes/cipher.php';
                     $cipher = new ploopi_cipher();
                     $ploopi_url = $cipher->decrypt($_GET['ploopi_url']);
                 
@@ -150,15 +154,15 @@ $ploopi_initsession |= isset($_GET['reloadsession']);
 
 if ($ploopi_initsession)
 {
-    include './include/start_initsession.php';
+    include './include/start/initsession.php';
 
-    ///////////////////////////////////////////////////////////////////////////
-    // LOAD USER PROFILE
-    ///////////////////////////////////////////////////////////////////////////
+    /**
+     * Chargement du profil utilisateur
+     */
 
     if ($_SESSION['ploopi']['userid'] != 0)
     {
-        include './include/load_param.php';
+        include './include/start/load_param.php';
 
         $user = new user();
         $user->open($_SESSION['ploopi']['userid']);
@@ -243,13 +247,13 @@ if ($ploopi_initsession)
     }
 }
 
-if (!$_SESSION['ploopi']['paramloaded']) include './include/load_param.php';
+if (!$_SESSION['ploopi']['paramloaded']) include './include/start/load_param.php';
 
 if (!empty($login_redirect)) ploopi_redirect($login_redirect, false);
 
-///////////////////////////////////////////////////////////////////////////
-// SWITCH FRONT/BACK ON script filename
-///////////////////////////////////////////////////////////////////////////
+/**
+ * Switch entre backoffice et frontoffice en fonction du nom du script appelant (admin.php/index.php)
+ */
 
 switch($_SESSION['ploopi']['scriptname'])
 {
@@ -488,7 +492,7 @@ if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language'] != 
 else include_once "./lang/french.php"; // default language file (french)
 
 // LANGUAGES LIST
-include_once './modules/system/class_param_type.php';
+include_once './include/classes/param.php';
 $param_type = new param_type();
 //if (!isset($_SESSION['ploopi']['languages'])) $_SESSION['ploopi']['languages'] = $param_type->getallchoices(_PLOOPI_PARAMTYPE_LANGUAGE);
 
@@ -506,13 +510,6 @@ $ploopi_system_levels = array(  _PLOOPI_ID_LEVEL_USER       => _PLOOPI_LEVEL_USE
                                 _PLOOPI_ID_LEVEL_GROUPADMIN     => _PLOOPI_LEVEL_GROUPADMIN,
                                 _PLOOPI_ID_LEVEL_SYSTEMADMIN    => _PLOOPI_LEVEL_SYSTEMADMIN
                             );
-
-/*
-// initialize cache
-include_once './include/classes/class_cache.php';
-$ploopi_cache = new cache();
-*/
-
 
 ///////////////////////////////////////////////////////////////////////////
 // UPDATE LIVE STATS

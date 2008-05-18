@@ -21,8 +21,21 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Procédure de mise à jour d'un module
+ * 
+ * @package system
+ * @subpackage system
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion des parsers XML
+ */
 include_once './modules/system/xmlparser_mb.php';
-include_once './include/classes/class_xml2array.php';
+include_once './include/classes/xml2array.php';
 
 if (empty($_GET['installmoduletype']) || empty($_GET['idmoduletype']) || empty($_GET['updatefrom']) || empty($_GET['updateto']) || !is_numeric($_GET['idmoduletype'])) ploopi_redirect("{$scriptenv}");
 
@@ -126,13 +139,9 @@ else
             {
                 $pt = &$xmlarray['root']['ploopi'][0]['moduletype'][0];
 
-                include_once './modules/system/class_module_type.php';
-                include_once './modules/system/class_param_type.php';
-                include_once './modules/system/class_param_choice.php';
-                include_once './modules/system/class_param_default.php';
-                include_once './modules/system/class_mb_action.php';
-                include_once './modules/system/class_mb_cms_object.php';
-
+                include_once './include/classes/module.php';
+                include_once './include/classes/param.php';
+                include_once './include/classes/mb.php';
 
                 $module_type = new module_type();
                 $module_type->open($_GET['idmoduletype']);

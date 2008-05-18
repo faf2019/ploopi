@@ -27,7 +27,8 @@
  * @package ploopi
  * @subpackage error
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 global $ploopi_errors_msg;

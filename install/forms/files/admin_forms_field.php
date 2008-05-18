@@ -20,8 +20,22 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Interface de modification d'un champ
+ *
+ * @package forms
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * On commence par vérifier si l'identifiant du champ est valide.
+ * Si ok => on l'ouvre. Sinon, nouveau champ.
+ */
+
 $field = new field();
 
 if (!empty($_GET['field_id']) && is_numeric($_GET['field_id'])) $field->open($_GET['field_id']);

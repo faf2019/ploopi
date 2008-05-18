@@ -20,16 +20,56 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Lecture des flux RSS
+ *
+ * @package rss
+ * @subpackage xml
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion des dépendances PEAR
+ */
+
 require_once 'HTTP/Request.php';
 require_once 'XML/Feed/Parser.php';
 
+/**
+ * Permet de lire le contenu d'un flux RSS à travers un proxy, puis d'en extraire le contenu.
+ *
+ * @package rss
+ * @subpackage xml
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see _PLOOPI_INTERNETPROXY_HOST
+ * @see _PLOOPI_INTERNETPROXY_PORT
+ * @see _PLOOPI_INTERNETPROXY_USER
+ * @see _PLOOPI_INTERNETPROXY_PASS
+ * 
+ * @link http://pear.php.net/package/HTTP_Request
+ * @link http://pear.php.net/package/XML_Feed_Parser
+ */
+
 class xmlrss
 {
+    /**
+     * Constructeur de la classe.
+     * Récupère le contenu du flux (via proxy si nécessaire)
+     *
+     * @param string $url URL du flux à parser
+     * @param int $moduleid identifiant du module
+     * @param string $srcenc codage source (flux)
+     * @param string $tgtenc codage destination (ce qu'on veut)
+     * @return xmlrss
+     */
+    
     function xmlrss($url, $moduleid = -1, $srcenc = null, $tgtenc = null)
     {
-        /*
-         * 1. GET FEED CONTENT WITH HTTP_REQUEST
-         **/
 
         $this->error = false;
         $this->charset = 'UTF-8';
@@ -88,23 +128,27 @@ class xmlrss
         }
     }
 
-
+    /**
+     * Convertit une chaîne UTF8 en ISO-8859-1//TRANSLIT.
+     * Méthode notamment utile pour traiter le contenu des flux RSS.
+     * Une conversion "classique" UTF8 => ISO-8859-1 ne suffit pas.
+     *
+     * @param string $str chaîne UTF8 à convertir
+     * @return string chaîne ISO-8859-1
+     */
+    
     function _convertstr($str)
     {
-        /*
-        if ($this->charset != 'ISO-8859-15' && $this->charset != 'ISO-8859-1')
-        {
-            $str = iconv($this->charset, 'ISO-8859-1//TRANSLIT', $str);
-            //$str = html_entity_decode(htmlentities($str, ENT_COMPAT, 'UTF-8'));
-        }
-        */
-
-        // /!\ XML_Feed_Parser remet tout en UTF-8...
-
         $str = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $str);
         return($str);
     }
 
+    /**
+     * Parse le flux.
+     *
+     * @link http://pear.php.net/package/XML_Feed_Parser
+     */
+    
     function parse()
     {
         $this->feed = array ('title' => '', 'entries' => array());

@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fonctions, constantes, variables globales
+ *
+ * @package rss
+ * @subpackage global
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Définition des constantes
+ */
+
 define ('_RSS_ACTION_FEEDADD',          1);
 define ('_RSS_ACTION_FEEDMODIFY',       2);
 define ('_RSS_ACTION_FEEDDELETE',       3);
@@ -31,6 +45,10 @@ define ('_RSS_ACTION_CATDELETE',        7);
 
 define ('_RSS_OBJECT_NEWS_FEED',        1);
 define ('_RSS_OBJECT_NEWS_ENTRY',       2);
+
+/**
+ * Définition de la liste des fréquences de rafraichissement
+ */
 
 global $rss_revisit_values;
 

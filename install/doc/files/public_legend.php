@@ -20,51 +20,75 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+/**
+ * Légende (popup)
+ *
+ * @package doc
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see skin::create_popup
+ */
+
+/**
+ * On démarre un buffer spécifique pour envoyer le contenu dans un popup
+ */
+
+ob_start();
 ?>
-<? ob_start(); ?>
 <div style="padding:2px;">
-<p class="ploopi_va">
-    <img src="./modules/doc/img/ico_home.png"><span> Racine</span>
-</p>
-<p class="ploopi_va">
-    <img src="./modules/doc/img/ico_newfolder.png"><span> Nouveau Dossier</span>
-</p>
-<p class="ploopi_va">
-    <img src="./modules/doc/img/ico_newfile.png"><span> Nouveau Fichier</span>
-</p>
-<p class="ploopi_va">
-    <img src="./modules/doc/img/ico_search.png"><span> Rechercher</span>
-</p>
-<p class="ploopi_va">
-    <img src="./modules/doc/img/ico_download.png"><span> Télécharger</span>
-</p>
-<p class="ploopi_va">
-    <img src="./modules/doc/img/ico_download_zip.png"><span> Télécharger (ZIP)</span>
-</p>
-<p class="ploopi_va">
-    <img src="./modules/doc/img/ico_modify.png"><span> Modifier</span>
-</p>
-<p class="ploopi_va">
-    <img src="./modules/doc/img/ico_trash.png"><span> Supprimer</span>
-</p>
-<p class="ploopi_va">
-    <img src="./modules/doc/img/ico_validate.png"><span> Valider</span>
-</p>
-<p class="ploopi_va">
-    <img src="./modules/doc/img/ico_folder_public.png"><span> Dossier Public</span>
-</p>
-<p class="ploopi_va">
-    <img src="./modules/doc/img/ico_folder_public_locked.png"><span> Dossier Public en Lecture Seule</span>
-</p>
-<p class="ploopi_va">
-    <img src="./modules/doc/img/ico_folder_shared.png"><span> Dossier Partagé</span>
-</p>
-<p class="ploopi_va">
-    <img src="./modules/doc/img/ico_folder_shared_locked.png"><span> Dossier Partagé en Lecture Seule</span>
-</p>
+    <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_home.png"><span> Racine</span>
+    </p>
+    <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_newfolder.png"><span> Nouveau Dossier</span>
+    </p>
+    <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_newfile.png"><span> Nouveau Fichier</span>
+    </p>
+    <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_search.png"><span> Rechercher</span>
+    </p>
+    <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_download.png"><span> Télécharger</span>
+    </p>
+    <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_download_zip.png"><span> Télécharger (ZIP)</span>
+    </p>
+    <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_modify.png"><span> Modifier</span>
+    </p>
+    <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_trash.png"><span> Supprimer</span>
+    </p>
+    <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_validate.png"><span> Valider</span>
+    </p>
+    <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_folder_public.png"><span> Dossier Public</span>
+    </p>
+    <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_folder_public_locked.png"><span> Dossier Public en Lecture Seule</span>
+    </p>
+    <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_folder_shared.png"><span> Dossier Partagé</span>
+    </p>
+    <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_folder_shared_locked.png"><span> Dossier Partagé en Lecture Seule</span>
+    </p>
 </div>
 <?
+/**
+ * On récupère le contenu du buffer et on supprime le buffer
+ */
 $content = ob_get_contents();
 ob_end_clean();
+
+/**
+ * Affichage du popup
+ */
 echo $skin->create_popup('Légende', $content, 'dochelp');
 ?>

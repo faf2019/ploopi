@@ -28,7 +28,8 @@
  * @package ploopi
  * @subpackage action
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 
@@ -43,6 +44,8 @@
 
 function ploopi_create_user_action_log($id_action, $id_record, $id_module_type = -1, $id_module = -1)
 {
+    include_once './include/classes/log.php';
+
     global $db;
 
     if ($id_module_type == -1) $id_module_type = $_SESSION['ploopi']['moduletypeid'];

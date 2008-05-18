@@ -21,12 +21,35 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion de la mise à jour automatique des flux via cron
+ * 
+ * @package rss
+ * @subpackage cron
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * inclusions de quelques dépendances (car l'environnement chargé par le script principal est très léger)
+ */
+
 include_once './include/functions/date.php';
 include_once './include/functions/string.php';
-include_once './include/functions/search.php';
+include_once './include/functions/search_index.php';
+
+/**
+ * Chargement de la classe principale de gestion des flux
+ */
+
 include_once './modules/rss/class_rss_feed.php';
 
-ploopi_init_module('rss');
+/**
+ * Initilialisation du module
+ */
+
+ploopi_init_module('rss', false, false, false);
 
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 

@@ -27,7 +27,8 @@
  * @package ploopi
  * @subpackage mail
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 /**

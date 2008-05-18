@@ -28,9 +28,15 @@
  * @package ploopi
  * @subpackage frontoffice
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module WebEdit
  */
 
 ploopi_init_module('webedit', false, false, false);
+
 include './modules/webedit/display.php';
 ?>

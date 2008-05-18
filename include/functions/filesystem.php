@@ -28,7 +28,8 @@
  * @package ploopi
  * @subpackage filesystem
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 /**
@@ -375,9 +376,10 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
 
     if (file_exists($filepath))
     {
-        while (ob_get_level()>0) @ob_end_clean();
+        ploopi_ob_clean();
+                
         @set_time_limit(0);
-
+        
         $filepath = rawurldecode($filepath);
         $size = filesize($filepath);
 

@@ -1,3 +1,9 @@
+== Module FORMS - version 3.80 =====================================================
+
+2008-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à jour des commentaires, nettoyage
+
 == Module FORMS - version 3.78 =====================================================
 
 2008-04-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -141,7 +147,7 @@
 
 2007-09-06  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
 
- * Correction d'un bug lors d'un appel AJAX depuis une iframe affectant le chargement des annotations après enregistrement d'un dossier ou d'un fichier
+ * Correction d'un bug lors d'un appel AJAX depuis une iframe affectant le chargement des annotation après enregistrement d'un dossier ou d'un fichier
 
 2007-09-04  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
 

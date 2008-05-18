@@ -21,8 +21,21 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once './modules/system/class_user.php';
-include_once './modules/system/class_workspace_group.php';
+/**
+ * Gestion des utilisateurs
+ *
+ * @package system
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion des classes de gestion des utilisateurs et d'espaces de travail
+ */
+include_once './include/classes/user.php';
+include_once './include/classes/workspace.php';
 
 switch($op)
 {
@@ -151,7 +164,7 @@ if (!empty($_GET['usrTabItem']))  $_SESSION['system']['usrTabItem'] = $_GET['usr
 if (!isset($_SESSION['system']['usrTabItem'])) $_SESSION['system']['usrTabItem'] = '';
 
 echo $skin->create_tabs($tabs, $_SESSION['system']['usrTabItem']);
-echo $skin->open_simplebloc('');
+echo $skin->open_simplebloc();
 
 switch($_SESSION['system']['usrTabItem'])
 {

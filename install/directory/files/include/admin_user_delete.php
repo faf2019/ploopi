@@ -20,18 +20,28 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-ploopi_init_module('directory');
+
+/**
+ * Suppression des données liées à l'utilisateur supprimé
+ *
+ * @package directory
+ * @subpackage user_delete
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Intialisation du module
+ */
+
+ploopi_init_module('directory', false, false, false);
 
 global $admin_redirect;
 
-//$admin_userid
-//$admin_workspaceid
-//$admin_module
-
-
-// DELETE ALL MODULE DATA FROM CURRENT USERID / GROUPID
+/**
+ * Suppression des contacts de l'utilisateur
+ */
 
 $db->query("DELETE FROM ploopi_mod_directory_contact WHERE id_user = {$admin_userid} AND id_workspace = {$admin_workspaceid} AND id_module = {$admin_moduleid}");
 

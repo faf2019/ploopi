@@ -20,9 +20,25 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-while (ob_get_contents()) @ob_end_clean();
+
+/**
+ * Export des données d'un formulaire aux formats XLS et CSV
+ *
+ * @package forms
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see ploopi_ob_clean
+ * @link http://pear.php.net/package/Spreadsheet_Excel_Writer
+ */
+
+/**
+ * On supprime tous les buffers autres que le buffer principal et on vide le buffer principal
+ */
+
+ploopi_ob_clean();
 
 if (!empty($_GET['forms_export_format']))
 {

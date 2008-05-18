@@ -20,6 +20,20 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+/**
+ * Affichage des données d'un formulaire (mode liste)
+ *
+ * @package forms
+ * @subpackage op
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * On affiche en haut un bandeau avec quelques outils (bouton ajouter)
+ */
 ?>
 <div id="forms_info_box">
     <?

@@ -21,44 +21,59 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion des interfaces d'administration "système"
+ * 
+ * @package system
+ * @subpackage system
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+
+/**
+ * Construction de la barre d'icones
+ */
+
 $toolbar = array();
 
-if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
+$strSysVersion = '';
+
+$db->query('SELECT version FROM ploopi_module_type WHERE id = 1');
+$row = $db->fetchrow();
+
+/**
+ * On compare la version des fichier (_PLOOPI_VERSION) avec celle de la base de données.
+ * Si les version ne concordent pas, on propose une mise à jour du système.
+ */
+if (strcmp(_PLOOPI_VERSION, $row['version']))
 {
-    $strSysVersion = '';
-
-    $db->query('SELECT version FROM ploopi_module_type WHERE id = 1');
-    $row = $db->fetchrow();
-    
-    if (strcmp(_PLOOPI_VERSION, $row['version']))
-    {
-        $strSysVersion = $row['version'];
-        $toolbar['systemupdate'] = array(
-                                            'title' => _SYSTEM_LABELICON_SYSTEMUPDATE,
-                                            'url'   => "{$scriptenv}?sysToolbarItem=systemupdate",
-                                            'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemupdate.png"
-                                        );
-    }
-    
-    $toolbar['install'] = array(
-                                        'title' => _SYSTEM_LABELICON_INSTALLMODULES,
-                                        'url'   => "{$scriptenv}?sysToolbarItem=install",
-                                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_install_module.png"
+    $strSysVersion = $row['version'];
+    $toolbar['systemupdate'] = array(
+                                        'title' => _SYSTEM_LABELICON_SYSTEMUPDATE,
+                                        'url'   => "{$scriptenv}?sysToolbarItem=systemupdate",
+                                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemupdate.png"
                                     );
-
-    $toolbar['params'] = array(
-                                        'title' => _SYSTEM_LABELICON_PARAMS,
-                                        'url'   => "{$scriptenv}?sysToolbarItem=params",
-                                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemparams.png"
-                                    );
-
-    $toolbar['tools'] = array(
-                                        'title' => _SYSTEM_LABELICON_TOOLS,
-                                        'url'   => "{$scriptenv}?sysToolbarItem=tools",
-                                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_tools.png"
-                                    );
-
 }
+
+$toolbar['install'] = array(
+                                    'title' => _SYSTEM_LABELICON_INSTALLMODULES,
+                                    'url'   => "{$scriptenv}?sysToolbarItem=install",
+                                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_install_module.png"
+                                );
+
+$toolbar['params'] = array(
+                                    'title' => _SYSTEM_LABELICON_PARAMS,
+                                    'url'   => "{$scriptenv}?sysToolbarItem=params",
+                                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemparams.png"
+                                );
+
+$toolbar['tools'] = array(
+                                    'title' => _SYSTEM_LABELICON_TOOLS,
+                                    'url'   => "{$scriptenv}?sysToolbarItem=tools",
+                                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_tools.png"
+                                );
 
 if (!empty($_GET['sysToolbarItem']))  $_SESSION['system']['sysToolbarItem'] = $_GET['sysToolbarItem'];
 if (!isset($_SESSION['system']['sysToolbarItem'])) $_SESSION['system']['sysToolbarItem'] = '';
@@ -192,10 +207,6 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
 
                 case 'sqldump':
                     include "./modules/system/tools_sqldump.php";
-                break;
-
-                case 'zip':
-                    include "./modules/system/tools_zip.php";
                 break;
 
                 case 'backup':

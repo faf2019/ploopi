@@ -20,10 +20,24 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-// Test if a DOC module is present
-// -------------------------------
+
+/**
+ * Explorateur de documents intégré à FCKeditor
+ * 
+ * @package doc
+ * @subpackage fckeditor
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+
+/**
+ * On commence par tester si une instance du module DOC est présente.
+ * Car le module peut être installé mais pas instancié !
+ * 
+ */
+
 $isdoc = false;
 foreach($_SESSION['ploopi']['modules'] as $instance)
 {
@@ -39,7 +53,7 @@ else
 {
     include_once './modules/doc/class_docfile.php';
     include_once './modules/doc/class_docfolder.php';
-    include_once './modules/system/class_workspace.php';
+    include_once './include/classes/workspace.php';
     ploopi_init_module('doc');
 }
 
@@ -116,140 +130,6 @@ echo $skin->open_simplebloc();
     ?>
     </select>
 </div>
-
-
-
-<?
-
-
-// build dir sel for all modules available
-
-/*
-$select =   "
-        SELECT  distinct doc.id,
-                doc.md5id,
-                doc.name,
-                doc.size,
-                doc.id_folder,
-                doc.id_module
-        FROM    ploopi_mod_doc_file doc,
-                ploopi_mod_doc_folder fold,
-                ploopi_module,
-                ploopi_module_type,
-                ploopi_module_workspace
-
-        WHERE   doc.id_module = ploopi_module.id
-        AND     ploopi_module_workspace.id_module = ploopi_module.id
-        AND     ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['workspaceid']}
-        AND     ploopi_module.id_module_type = ploopi_module_type.id
-        AND     ploopi_module_type.label = 'doc'
-        AND     doc.id_folder = fold.id
-        AND     fold.foldertype = 'public'
-
-        ORDER BY    doc.id_folder,
-                doc.id_module,
-                doc.name
-        ";
-
-$rs = $db->query($select);
-?>
-<script language="javascript">
-var lf = new Array();
-<?
-
-switch($ploopi_op)
-{
-    case 'doc_selectimage':
-        $filter_ext = array('jpg', 'gif', 'png', 'bmp');
-    break;
-
-    case 'doc_selectflash':
-        $filter_ext = array('swf');
-    break;
-
-    default:
-        $filter_ext = array();
-    break;
-}
-
-$i=0;
-while ($fields = $db->fetchrow($rs))
-{
-    if (empty($filter_ext) || in_array(ploopi_file_getextension($fields['name']),$filter_ext))
-    {
-        ?>
-        lf[<? echo $i; ?>]=new Array(8);
-        lf[<? echo $i; ?>][0]= "<? echo $fields['id']; ?>";
-        lf[<? echo $i; ?>][1]= "<? echo $fields['name']; ?>";
-        lf[<? echo $i; ?>][2]= "<? echo $fields['id_module']; ?>";
-        lf[<? echo $i; ?>][3]= "<? echo $fields['id_folder']; ?>";
-        lf[<? echo $i; ?>][4]= "<? echo ploopi_urlencode("./index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$fields['md5id']}"); ?>";
-        lf[<? echo $i; ?>][5]= "<? echo ploopi_urlencode("./index-quick.php?ploopi_op=doc_image_get&docfile_md5id={$fields['md5id']}&height=75"); ?>";
-        lf[<? echo $i; ?>][6]="<? printf("%.2f",round($fields['size']/1024,2)); ?>";
-
-        <?
-        $i++;
-    }
-}
-?>
-function switch_folder(idfolder)
-{
-    sr = ploopi_getelem('showroom');
-    sr.innerHTML = '';
-
-    for (i=0;i<lf.length;i++)
-    {
-        if (lf[i][3] == idfolder)
-        {
-            <?
-            switch ($ploopi_op)
-            {
-                case 'doc_selectimage':
-                ?>
-                    sr.innerHTML +=     '<a style="display:block;float:left;margin:0 10px 4px 0;border:1px solid #d0d0d0;background-color:#f0f0f0;font-size:0.8em;text-align:center;" href="#"onclick="javascript:ploopi_getelem(\'txtUrl\',opener.document).value=\''+lf[i][4]+'\';opener.UpdatePreview();window.close();">'+
-                                                '<div style="padding:2px;background-color:#ffffff;">'+
-                                                '<img height="75" src="'+lf[i][5]+'" />'+
-                                                '</div>'+
-                                                '<div style="padding:2px;font-weight:bold;">'+lf[i][1]+'</div>'+
-                                                '<div style="padding:2px;">'+lf[i][6]+' ko</div>'+
-                                            '</a>';
-                <?
-                break;
-
-                case 'doc_selectflash':
-                ?>
-                    extra = '&nbsp;';
-
-                    sr.innerHTML +=     '<a style="display:block;clear:both;margin:0;border-bottom:1px solid #d0d0d0;background-color:#f0f0f0;font-size:0.8em;overflow:auto;" href="#"onclick="javascript:ploopi_getelem(\'txtUrl\',opener.document).value=\''+lf[i][4]+'\';opener.UpdatePreview();window.close();">'+
-                                                '<div style="float:left;width:210px;padding:2px;font-weight:bold;text-align:left;background-color:<? echo $skin->values['bgline2']; ?>;">'+lf[i][1]+'</div>'+
-                                                '<div style="float:left;width:60px;padding:2px;text-align:right;background-color:<? echo $skin->values['bgline1']; ?>;">'+lf[i][6]+' ko</div>'+
-                                                '<div style="float:left;width:70px;padding:2px;text-align:right;background-color:<? echo $skin->values['bgline2']; ?>;">'+extra+'</div>'+
-                                            '</a>';
-                <?
-                break;
-
-                default:
-                    ?>
-                    extra = '&nbsp;';
-
-                    sr.innerHTML +=     '<a style="display:block;clear:both;margin:0;border-bottom:1px solid #d0d0d0;background-color:#f0f0f0;font-size:0.8em;overflow:auto;" href="#"onclick="javascript:ploopi_getelem(\'txtUrl\',opener.document).value=\''+lf[i][4]+'\';ploopi_getelem(\'cmbLinkProtocol\',opener.document).value=\'\';window.close();">'+
-                                                '<div style="float:left;width:210px;padding:2px;font-weight:bold;text-align:left;background-color:<? echo $skin->values['bgline2']; ?>;">'+lf[i][1]+'</div>'+
-                                                '<div style="float:left;width:60px;padding:2px;text-align:right;background-color:<? echo $skin->values['bgline1']; ?>;">'+lf[i][6]+' ko</div>'+
-                                                '<div style="float:left;width:70px;padding:2px;text-align:right;background-color:<? echo $skin->values['bgline2']; ?>;">'+extra+'</div>'+
-                                            '</a>';
-                    <?
-                break;
-            }
-            ?>
-        }
-    }
-}
-
-</script>
-</div>
-*
-*/
-?>
 
 <div id="doc_filebrowser" style="padding:4px;"></div>
 

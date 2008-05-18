@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Interface de gestion des tickets.
+ * Permet de consulter / envoyer / trier / supprimer les tickets
+ * 
+ * @package system
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Gestion du filtrage
+ */
 if (isset($_GET['filtertype'])) $_SESSION['tickets']['filtertype'] = $_GET['filtertype'];
 if (!isset($_SESSION['tickets']['filtertype'])) $_SESSION['tickets']['filtertype'] = 'all';
 $filtertype = $_SESSION['tickets']['filtertype'];
@@ -64,9 +78,11 @@ switch($sort)
 }
 
 // vérification du droit de visualisation des personnes concernées
-include_once "./modules/system/class_user.php";
+include_once './include/classes/user.php';
+
 $usr=new user();
 $usr->open($_SESSION['ploopi']['userid']);
+
 // liste des users visibles par le user courant
 $lstusers=$usr->getusersgroup();
 // liste des espaces de travail rattachés

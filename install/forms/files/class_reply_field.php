@@ -20,23 +20,40 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
 /**
-* @author   NETLOR CONCEPT
-* @version      1.0
-* @package      forms
-* @access   public
-*/
+ * Gestion des valeurs des réponses
+ *
+ * @package forms
+ * @subpackage reply
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_forms_reply_field
+ *
+ * @package forms
+ * @subpackage reply
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
 class reply_field extends data_object
 {   
     /**
-    * Class constructor
-    *
-    * @param int $connection_id 
-    * @access public
-    **/
+     * Constructeur de la classe
+     *
+     * @return reply_field
+     */
     
     function reply_field()
     {

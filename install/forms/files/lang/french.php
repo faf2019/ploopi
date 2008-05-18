@@ -20,8 +20,21 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Fichier de langue français
+ *
+ * @package forms
+ * @subpackage lang
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Définition des constantes
+ */
+
 define ('_FORMS_LABELTAB_LIST',     'Liste des Formulaires');
 define ('_FORMS_LABELTAB_ADD',  'Création d\'un Formulaire');
 

@@ -20,6 +20,23 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+/**
+ * Interface pour l'import d'utilisateurs par fichier csv.
+ * Attention probablement non fonctionnel.
+ *
+ * @package system
+ * @subpackage admin
+ * @copyright Netlor
+ * @license GNU General Public License (GPL)
+ * @author Benjamin Ganivet
+ * 
+ * @todo Améliorer l'interface et les fonctionnalités
+ */
+
+/**
+ * Formulaire d'import de fichier
+ */
 ?>
 <form action="<? echo $scriptenv; ?>" method="Post" enctype="multipart/form-data">
 <input type="Hidden" name="op" value="import">

@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Administration - gestion de la liste des flux RSS
+ * 
+ * @package rss
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Liste des flux
+ */
+
 echo $skin->open_simplebloc(_RSS_LABEL_FEEDLIST);
 
 $array_columns = array();

@@ -21,9 +21,25 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Procédure de désinstallation d'un module
+ * 
+ * @package system
+ * @subpackage system
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * On vérifie le contenu de la variable GET
+ */
 if (empty($_GET['uninstallidmoduletype'])) ploopi_redirect($scriptenv);
 
-include_once './modules/system/class_module_type.php';
+/**
+ * Inclusion des classes de gestion de modules
+ */
+include_once './include/classes/module.php';
 
 $module_type = new module_type();
 $module_type->open($_GET['uninstallidmoduletype']);

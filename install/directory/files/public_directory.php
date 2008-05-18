@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Affichage de l'annuaire
+ *
+ * @package directory
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Habillage global de l'annuaire
+ */
+
 echo $skin->open_simplebloc($title);
 ?>
 <div style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;">
@@ -28,10 +42,10 @@ echo $skin->open_simplebloc($title);
 </div>
 
 <div style="overflow:hidden;">
-
 <?
-// get user favorites
-// ==================
+/**
+ * On récupère les favoris
+ */
 
 $favorites = array();
 $sql =  "
@@ -50,6 +64,10 @@ while ($row = $db->fetchrow())
 
 switch($_SESSION['directory']['directoryTabItem'])
 {
+    /**
+     * Lien pour ajouter un nouveau contact
+     */
+    
     case 'tabMycontacts':
         $directory_contact = new directory_contact();
         $directory_contact->init_description();
@@ -66,6 +84,10 @@ switch($_SESSION['directory']['directoryTabItem'])
         <?
     break;
 
+    /**
+     * Affichage du formulaire de recherche
+     */
+    
     case 'tabSearch':
         if (isset($_POST['fulltext']))  $_SESSION['directory']['search']['fulltext'] = $_POST['fulltext'];
         if (isset($_POST['lastname']))  $_SESSION['directory']['search']['lastname'] = $_POST['lastname'];
@@ -121,9 +143,10 @@ switch($_SESSION['directory']['directoryTabItem'])
 
 switch($_SESSION['directory']['directoryTabItem'])
 {
-    /* CONTACTS
-     * ======== */
-
+    /**
+     * Affichage de l'onglet 'Mes Contacts'
+     */
+    
     case 'tabMycontacts':
         $columns = array();
         $values = array();
@@ -173,9 +196,10 @@ switch($_SESSION['directory']['directoryTabItem'])
         $skin->display_array($columns, $values, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
     break;
 
-    /* GROUPS
-     * ====== */
-
+    /**
+     * Affichage de l'onglet 'Mon Espace'
+     */
+    
     case 'tabMygroup':
         $columns = array();
         $values = array();
@@ -190,9 +214,11 @@ switch($_SESSION['directory']['directoryTabItem'])
         $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '42');
 
         // il faut chercher les groupes rattachés à l'espace !
-        include_once './modules/system/class_workspace.php';
+        include_once './include/classes/workspace.php';
+
         $workspace = new workspace();
         $workspace->fields['id'] = $_SESSION['ploopi']['workspaceid'];
+
         $groups = $workspace->getgroups(true);
         $list_groups = (sizeof($groups)) ? ' IN ('.implode(',',array_keys($groups)).') ' : ' = -1 ';
 
@@ -260,8 +286,9 @@ switch($_SESSION['directory']['directoryTabItem'])
 
     break;
 
-    /* FAVORITES
-     * ========= */
+    /**
+     * Affichage de l'onglet 'Mes Favoris'
+     */
 
     case 'tabFavorites':
         
@@ -328,9 +355,10 @@ switch($_SESSION['directory']['directoryTabItem'])
         <?
     break;
 
-    /* SEARCH
-     * ====== */
-
+    /**
+     * Affichage de l'onglet 'Recherche'
+     */
+    
     case 'tabSearch':
         $columns = array();
         $values = array();

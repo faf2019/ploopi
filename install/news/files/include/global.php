@@ -20,13 +20,48 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Fonctions, constantes, variables globales
+ *
+ * @package news
+ * @subpackage global
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Définition des constantes
+ */
+
+/**
+ * Action : Ajouter une news
+ */
 define ('_NEWS_ACTION_WRITE',       1);
+
+/**
+ * Action : Modifier une news
+ */
 define ('_NEWS_ACTION_MODIFY',      2);
+
+/**
+ * Action : Supprimer une news
+ */
 define ('_NEWS_ACTION_DELETE',      3);
+
+/**
+ * Action : Publier une news
+ */
 define ('_NEWS_ACTION_PUBLISH',     4);
+
+/**
+ * Action : Gérer les catégories
+ */
 define ('_NEWS_ACTION_MANAGECAT',   5);
 
+/**
+ * Objet NEWS
+ */
 define ('_NEWS_OBJECT_NEWS',        1);
 ?>

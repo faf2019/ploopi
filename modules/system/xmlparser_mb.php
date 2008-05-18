@@ -21,10 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once './modules/system/class_mb_table.php';
-include_once './modules/system/class_mb_field.php';
-include_once './modules/system/class_mb_schema.php';
-include_once './modules/system/class_mb_relation.php';
+/**
+ * Parser XML des fichiers de description de la métabase
+ * 
+ * @package system
+ * @subpackage system
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de classes de gestion de la métabase
+ */
+include_once './include/classes/mb.php';
 
 $globaldata = '';
 $datatype = '';

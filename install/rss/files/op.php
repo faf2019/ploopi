@@ -20,7 +20,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// on vérifie qu'on est bien dans le module RSS
+/**
+ * Opérations
+ *
+ * @package rss
+ * @subpackage op
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * On vérifie qu'on est bien dans le module RSS et on teste les différentes opérations possibles.
+ */
+
 if (ploopi_ismoduleallowed('rss'))
 {
     switch($ploopi_op)

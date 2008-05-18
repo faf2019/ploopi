@@ -24,11 +24,12 @@
 /**
  * Fonctions permettant de mettre en place des mécanismes de sécurité.
  * Validation de mots de passe, filtrage de contenu, vérification de droits.
- * .
+ *
  * @package ploopi
  * @subpackage security
  * @copyright Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 /**
@@ -55,7 +56,8 @@ function ploopi_checkpasswordvalidity($password, $min_length = 8, $max_length = 
  * @return mixed variable filtrée
  * 
  * @copyright Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 function ploopi_filtervar($var, $varname = '')

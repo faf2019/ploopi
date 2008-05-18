@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 1.33 ====================================================
+
+2008-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à jour des commentaires, nettoyage
+
 == Module DIRECTORY - version 1.321 ====================================================
 
 2008-05-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

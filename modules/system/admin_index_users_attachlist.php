@@ -21,7 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// Affichage des utilisateurs "rattachables" au groupe ou à l'espace courant
+/**
+ * Affichage des utilisateurs "rattachables" à l'espace de travail courant 
+ *
+ * @package system
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Gestion du filtrage.
+ * Il est possible de filtrer les utilisateurs par 'lettre'
+ */
 
 if (isset($_POST['reset'])) $pattern = '';
 else $pattern = (empty($_POST['pattern'])) ? '' : $_POST['pattern'];

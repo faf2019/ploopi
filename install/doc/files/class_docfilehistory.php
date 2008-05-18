@@ -20,27 +20,53 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Gestion de l'hitorique des fichiers
+ *
+ * @package doc
+ * @subpackage file
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_doc_file_history
+ *
+ * @package doc
+ * @subpackage file
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
 class docfilehistory extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return docfilehistory
+     */
+    
     function docfilehistory()
     {
         parent::data_object('ploopi_mod_doc_file_history', 'id_docfile', 'version');
     }
-
-    /*function getbasepath()
-    {
-        $basepath = doc_getpath($this->fields['id_module'])._PLOOPI_SEP.$this->fields['id_docfile'];
-        ploopi_makedir($basepath);
-        return($basepath);
-    }
-
-    function getfilepath()
-    {
-        return($this->getbasepath()._PLOOPI_SEP."{$this->fields['id_docfile']}_{$this->fields['version']}.{$this->fields['extension']}");
-    }*/
+    
+    /**
+     * Retourne le chemin physique de stockage des documents et le crée s'il n'existe pas
+     *
+     * @return string chemin physique de stockage des documents
+     * 
+     * @see doc_getpath
+     */
 
     function getbasepath()
     {
@@ -49,6 +75,12 @@ class docfilehistory extends data_object
         return($basepath);
     }
 
+    /**
+     * Retourne le chemin physique de stockage du document
+     *
+     * @return string chemin physique de stockage du document
+     */
+        
     function getfilepath()
     {
         return($this->getbasepath()._PLOOPI_SEP."{$this->fields['id_docfile']}_{$this->fields['version']}.{$this->fields['extension']}");

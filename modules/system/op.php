@@ -21,17 +21,28 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Opération du module 'Système'
+ * 
+ * @package system
+ * @subpackage op
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Opérations accessibles pour les utilisateurs connectés dans le module système
+ */
 if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOOPI_MODULE_SYSTEM)
 {
     switch($ploopi_op)
     {
-        /*
-         * TICKETS
-         *
-         * */
-
+        /**
+         * Opérations sur les tickets
+         */
         case 'tickets_delete':
-            include_once('./modules/system/class_ticket.php');
+            include_once './include/classes/ticket.php';
 
             if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
             {
@@ -53,7 +64,6 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         $ticket->save();
                     }
 
-                    include_once('./modules/system/class_ticket_dest.php');
                     $ticket_dest = new ticket_dest();
                     if ($ticket_dest->open($_SESSION['ploopi']['userid'], $ticket_id))
                     {
@@ -67,14 +77,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
         break;
 
         case 'tickets_open':
-            include_once('./modules/system/class_ticket.php');
+            include_once './include/classes/ticket.php';
             $ticket = new ticket();
 
             if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']) && $ticket->open($_GET['ticket_id']))
             {
-                include_once('./modules/system/class_ticket_watch.php');
-                include_once('./modules/system/class_ticket_status.php');
-
                 $ticket_status = new ticket_status();
 
                 if (!$ticket_status->open($_GET['ticket_id'], $_SESSION['ploopi']['userid'], _PLOOPI_TICKETS_OPENED))
@@ -155,7 +162,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
         break;
 
         case 'tickets_validate':
-            include_once('./modules/system/class_ticket_status.php');
+            include_once './include/classes/ticket.php';
+
             $ticket_status = new ticket_status();
 
             if (!empty($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
@@ -171,12 +179,9 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
             ploopi_redirect("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets");
         break;
 
-
-
-        /*
-         * SEARCH
-         *
-         * */
+        /**
+         * Moteur de recherche
+         */
 
         case 'system_search':
             include_once('./modules/system/public_search_result.php');
@@ -185,6 +190,9 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
 
         default:
+            /**
+             * Autres opérations nécessitant un niveau d'accrédiation plus élevé (gestionnaire)
+             */
             if (ploopi_ismanager())
             {
                 switch($ploopi_op)
@@ -200,7 +208,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     case 'system_roleusers_delete_user':
                         if (empty($_GET['system_roleusers_userid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi_die();
 
-                        include_once './modules/system/class_workspace_user_role.php';
+                        include_once './include/classes/workspace.php';
 
                         $wur = new workspace_user_role();
 
@@ -214,7 +222,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     case 'system_roleusers_delete_group':
                         if (empty($_GET['system_roleusers_groupid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi_die();
 
-                        include_once './modules/system/class_workspace_group_role.php';
+                        include_once './include/classes/workspace.php';
 
                         $wgr = new workspace_group_role();
 
@@ -228,7 +236,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     case 'system_roleusers_select_user':
                         if (empty($_GET['system_roleusers_userid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi_die();
 
-                        include_once './modules/system/class_workspace_user_role.php';
+                        include_once './include/classes/workspace.php';
 
                         $wur = new workspace_user_role();
 
@@ -247,7 +255,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     case 'system_roleusers_select_group':
                         if (empty($_GET['system_roleusers_groupid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi_die();
 
-                        include_once './modules/system/class_workspace_group_role.php';
+                        include_once './include/classes/workspace.php';
 
                         $wgr = new workspace_group_role();
 

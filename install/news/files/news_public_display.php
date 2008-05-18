@@ -20,13 +20,32 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Affichage d'une news
+ *
+ * @package news
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * On vérifie que l'identifiant de news est valide
+ */
+
 if (!empty($_GET['news_id']) && is_numeric($_GET['news_id']) && $news->open($_GET['news_id']))
 {
-    if (ploopi_set_flag('news_nbclick',$_GET['news_id'])) $news->fields['nbclick']++;
-    $news->save();
-
+    /**
+     * Flag de lecture
+     */
+    
+    if (ploopi_set_flag('news_nbclick',$_GET['news_id'])) 
+    {
+        $news->fields['nbclick']++;
+        $news->save();
+    }
 
     echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
     echo $skin->open_simplebloc($news->fields['title']);

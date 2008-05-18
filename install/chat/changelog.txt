@@ -1,0 +1,5 @@
+== Module CHAT - version 0.12 ====================================================
+
+2008-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à jour des commentaires, nettoyage

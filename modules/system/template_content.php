@@ -20,10 +20,25 @@
 	along with Ploopi; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Interfaces systèmes intégrables dans le template frontoffice (EXPERIMENTAL !)
+ *
+ * @package system
+ * @subpackage template
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @todo Finaliser/Tester/Renforcer
+ */
+
+/**
+ * Initialisation du module
+ */
+
 ploopi_init_module('system');
-include_once './modules/system/class_user.php';
+include_once './include/classes/user.php';
 
 if (!isset($op)) $op = '';
 

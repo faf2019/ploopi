@@ -21,7 +21,25 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include './include/start_common.php';
+/**
+ * Point d'entrée permettant de s'affranchir du moteur de template et du chargement des fonctions et classes génériques.
+ * Permet d'exécuter des opérations/fonctions plus rapidement. 
+ * Peut nécessiter par contre d'inclure manuellement certaines dépendances.
+ *
+ * @package ploopi
+ * @subpackage index
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see op
+ */
+
+/**
+ * Chargement de l'environnement
+ */
+
+include './include/start/common.php';
 include './include/op.php';
 ploopi_die();
 ?>

@@ -28,7 +28,8 @@
  * @package ploopi
  * @subpackage ticket
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 define ('_PLOOPI_TICKETS_NONE',     0);
@@ -82,10 +83,9 @@ function ploopi_tickets_selectusers($id_user = null)
 
 function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery_notification = 0, $id_object = '', $id_record = '', $object_label = '', $system = false)
 {
-    include_once './modules/system/class_user.php';
-    include_once './modules/system/class_ticket.php';
-    include_once './modules/system/class_ticket_dest.php';
-    include_once './modules/system/class_mb_object.php';
+    include_once './include/classes/user.php';
+    include_once './include/classes/ticket.php';
+    include_once './include/classes/mb.php';
     
     global $basepath;
 
@@ -226,7 +226,8 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
  * @return array indice 0 : nombre nouveau tickets, 1 : id du dernier ticket
  * 
  * @copyright Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
  
 function ploopi_tickets_getnew()
@@ -273,7 +274,7 @@ function ploopi_tickets_displayusers()
     {
         foreach($_SESSION['ploopi']['tickets']['users_selected'] as $user_id)
         {
-            include_once('./modules/system/class_user.php');
+            include_once './include/classes/user.php';
     
             $user = new user();
             $user->open($user_id);

@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Interface de modification d'un utilisateur 
+ *
+ * @package system
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Ouverture d'une instance de l'objet user
+ */
+
 $user = new user();
 
 if (!empty($_GET['user_id'])) $user->open($_GET['user_id']);

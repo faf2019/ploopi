@@ -21,10 +21,28 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Affichage des statistiques (notamment du moteur d'indexation)
+ *
+ * @package doc
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Affichage du bloc 'statistiques'
+ */
+
 echo $skin->open_simplebloc('Statistiques');
 ?>
 <div class="doc_admin_titlebar"><b>Quelques chiffres</b></div>
 <?
+/**
+ * Premier tableau 'Quelques chiffres'
+ */
+
 $array_columns = array();
 $array_values = array();
 
@@ -39,6 +57,10 @@ $array_columns['auto']['indicateur'] = array(   'label' => 'Indicateur',
 
 $c = 1;
 
+/**
+ * Recherche nombre de fichiers indexés
+ */
+
 $db->query("SELECT count(*) as nb FROM ploopi_mod_doc_file WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
 $row = $db->fetchrow();
 
@@ -50,6 +72,10 @@ $array_values[$c]['description'] = 'Fichiers indexés';
 $array_values[$c]['link'] = '';
 $array_values[$c]['style'] = '';
 $c++;
+
+/**
+ * Compte nombre de métas indexés
+ */
 
 $db->query( "
             SELECT  count(ke.id_keyword) as nb
@@ -70,6 +96,10 @@ $array_values[$c]['description'] = 'Metas indexés';
 $array_values[$c]['link'] = '';
 $array_values[$c]['style'] = '';
 $c++;
+
+/**
+ * Compte nombre de mots indexés
+ */
 
 $db->query( "
             SELECT  sum(ke.weight) as total_weight
@@ -98,6 +128,10 @@ $skin->display_array($array_columns, $array_values, 'docparser_stats', array('he
 
 <div class="doc_admin_titlebar"><b>Mots les plus fréquents</b></div>
 <?
+/**
+ * Deuxième tableau 'Mots les plus fréquents'
+ */
+
 $array_columns = array();
 $array_values = array();
 
@@ -124,6 +158,10 @@ $array_columns['right']['taille'] = array(  'label' => 'Taille',
 $array_columns['auto']['mot'] = array(  'label' => 'Mot', 
                                         'options' => array('sort' => true)
                                         );
+
+/**
+ * Recherche des mots les plus fréquents
+ */                                     
 
 $sql =  "
         SELECT  k.keyword,

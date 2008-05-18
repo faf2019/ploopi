@@ -21,7 +21,21 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Partie publique du module
+ *
+ * @package forms
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module
+ */
 ploopi_init_module('forms');
+
 include_once './modules/forms/class_form.php';
 include_once './modules/forms/class_field.php';
 include_once './modules/forms/class_reply.php';
@@ -36,7 +50,7 @@ echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
 switch($op)
 {
     case 'forms_save':
-        $forms = new forms();
+        $forms = new form();
         if (isset($_POST['forms_id']) && $_POST['forms_id'] != '')
         {
             $forms->open($_POST['forms_id']);
@@ -100,7 +114,7 @@ switch($op)
     case 'forms_reply_modify':
         if (ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY) || $op == 'forms_reply_display')
         {
-            $forms = new forms();
+            $forms = new form();
 
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id']))
             {
@@ -122,7 +136,7 @@ switch($op)
 
     // sauve un enregistrement du formulaire
     case 'forms_reply_save':
-        $forms = new forms();
+        $forms = new form();
         if (!empty($_POST['forms_id']) && is_numeric($_POST['forms_id']) && $forms->open($_POST['forms_id']))
         {
 
@@ -258,7 +272,7 @@ switch($op)
     break;
 
     default:
-        include './modules/forms/public_forms_list.php';
+        // anciennement la liste des formulaires
     break;
 }
 ?>

@@ -20,6 +20,21 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+/**
+ * Fonctions javascript dynamiques
+ *
+ * @package rss
+ * @subpackage javascript
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Fonctions javascript de validation de formulaire
+ */
+
 ?>
 
 function rssfeed_validate(form)

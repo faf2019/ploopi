@@ -20,6 +20,20 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+/**
+ * Interface publique de modification d'un profil utilisateur
+ * 
+ * @package system
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Fonction javascript de validation
+ */
 ?>
 <script type="text/javascript">
 function user_validate(form)
@@ -47,9 +61,12 @@ function user_validate(form)
 }
 </script>
 
-<? 
+<?
 echo $skin->open_simplebloc(_SYSTEM_LABEL_MYACCOUNT); 
 
+/**
+ * Ouverture de l'instance de l'utilisateur à modifier
+ */
 $user = new user();
 $user->open($_SESSION['ploopi']['userid']);
                 

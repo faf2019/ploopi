@@ -20,19 +20,52 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion des messages.
+ *
+ * @package chat
+ * @subpackage msg
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Classe d'accès à la table ploopi_mod_chat_msg
+ *
+ * @package chat
+ * @subpackage msg
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
 class chat_msg extends data_object
 {   
+    /**
+     * Constructeur de la classe
+     *
+     * @return chat_msg
+     */
+    
     function chat_msg()
     {
         parent::data_object('ploopi_mod_chat_msg');
     }
+    
+    /**
+     * Enregistrement
+     *
+     * @param string $content contenu du message
+     * @return int identifiant du message
+     */
     
     function save($content)
     {
         $this->fields['content'] = $content;
         $this->fields['timestp'] = ploopi_createtimestamp();
         parent::setuwm();
-        parent::save();
+        return(parent::save());
     }
 }
 ?>

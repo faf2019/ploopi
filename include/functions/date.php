@@ -28,7 +28,8 @@
  * @package ploopi
  * @subpackage date
  * @copyright Netlor, Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 
@@ -243,7 +244,8 @@ function ploopi_timestamp_add($timestp, $h=0, $mn=0, $s=0, $m=0, $d=0, $y=0)
  * @return timestamp timestamp au format MYSQL 
  *
  * @copyright Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  * 
  * @link http://fr.php.net/timezones
  * @see timezone_identifiers_list
@@ -274,7 +276,8 @@ function ploopi_tz_createtimestamp($timezone_name = 'UTC')
  * @return string timestamp au format MYSQL AAAAMMJJHHMMSS
  *
  * @copyright Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  * 
  * @link http://fr.php.net/timezones
  * @see timezone_identifiers_list
@@ -336,7 +339,8 @@ function ploopi_tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezon
  * @return string chaine UTC formatée
  *
  * @copyright Ovensia
- * @license GPL
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  * 
  * @link http://fr.php.net/timezones
  * @see timezone_identifiers_list

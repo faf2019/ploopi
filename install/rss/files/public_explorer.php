@@ -21,6 +21,21 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Explorateur de flux
+ *
+ * @package rss
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Affichage de l'explorateur sous forme de petits blocs.
+ * Les blocs sont ensuite remplis à l'aide de requêtes ajax.
+ */
+
 echo $skin->open_simplebloc(_RSS_LABEL_FEEDEXPLORER);
 
 if (!isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfeed_id'] = '';

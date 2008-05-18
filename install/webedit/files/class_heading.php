@@ -21,13 +21,48 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion des rubriques
+ *
+ * @package webedit
+ * @subpackage heading
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_webedit_heading
+ *
+ * @package webedit
+ * @subpackage heading
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
 class webedit_heading extends data_object
 {
+    /**
+     * Contructeur de la classe
+     *
+     * @return webedit_heading
+     */
+    
     function webedit_heading()
     {
         parent::data_object('ploopi_mod_webedit_heading');
     }
     
+    /**
+     * Supprime la rubrique et sont contenu (articles, sous-rubriques)
+     */
     
     function delete()
     {

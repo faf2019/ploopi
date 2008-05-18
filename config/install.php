@@ -21,8 +21,24 @@
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Procédure d'installation de Ploopi.
+ * 
+ * @package ploopi
+ * @subpackage install
+ * @copyright Ovensia, Hexad
+ * @license GNU General Public License (GPL)
+ * @author Xavier Toussaint
+ */
+
+/**
+ * Init Session
+ */
 session_start();
 
+/**
+ * On teste l'existence du fichier de configuration
+ */
 if (file_exists('./config.php'))
 {
   echo ('<dir style="text-align:center;color:red;">Config exist !<br>You must delete ./config/install.php !</dir>');
@@ -37,8 +53,10 @@ define ('_PLOOPI_ERROR_REPORTING', E_ALL);
 chdir('..');
 
 //Inclusion/Requirement
-require_once './include/errors.php';
-require_once './include/global.php';
+require_once './include/functions/errors.php';
+set_error_handler('ploopi_errorhandler');
+
+require_once './include/start/global.php';
 require_once './lib/template/template.php';
 
 require_once './config/install/functions.inc.php';

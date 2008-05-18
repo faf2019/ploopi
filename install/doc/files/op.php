@@ -21,14 +21,35 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Opérations
+ *
+ * @package doc
+ * @subpackage op
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Si l'utilisateur est connecté
+ */
+
 if ($_SESSION['ploopi']['connected'])
 {
-    // on verifie qu'on est bien dans le module DOC
+    /**
+     * On vérifie qu'on est bien dans le module DOC.
+     * Ces opérations ne peuvent être effectuées que depuis le module DOC.
+     */
+    
     if (ploopi_ismoduleallowed('doc'))
     {
         switch($ploopi_op)
         {
             case 'doc_getstatus':
+                /**
+                 * @ignore UPLOAD_PATH
+                 */
                 if (substr(_PLOOPI_CGI_UPLOADTMP, -1, 1) != '/') define ('UPLOAD_PATH', _PLOOPI_CGI_UPLOADTMP.'/');
                 else define ('UPLOAD_PATH', _PLOOPI_CGI_UPLOADTMP);
                 include_once './lib/cupload/status.php';
@@ -48,8 +69,9 @@ if ($_SESSION['ploopi']['connected'])
         }
     }
 
-    // public
-    
+    /**
+     * Autre opérations qui ne nécessite pas que l'on soit dans le module DOC
+     */
     switch($ploopi_op)
     {
         case 'doc_getfiles':
@@ -127,11 +149,11 @@ if ($_SESSION['ploopi']['connected'])
         break;
     
         case 'doc_image_get':
-            include_once './include/classes/class_data_object.php';
+            include_once './include/classes/data_object.php';
             include_once './include/functions/date.php';
             include_once './include/functions/filesystem.php';
             include_once './include/functions/image.php';
-            include_once './modules/doc/include/global.php';
+            include_once './modules/do./include/start/global.php';
             include_once './modules/doc/class_docfile.php';
     
             if (!empty($_GET['docfile_id']))
@@ -162,16 +184,20 @@ if ($_SESSION['ploopi']['connected'])
     }
 }
 
+/**
+ * Autres opérations publiques (utilisateur non connecté, frontoffice)
+ */
 
 switch($ploopi_op)
 {
     case 'doc_file_download':
-        include_once './include/global_constants.php';
-        include_once './include/classes/class_data_object.php';
+        include_once './include/start/global_constants.php';
+        include_once './include/classes/data_object.php';
         include_once './include/functions/date.php';
         include_once './include/functions/filesystem.php';
-        include_once './modules/doc/include/global.php';
         include_once './modules/doc/class_docfile.php';
+        
+        ploopi_init_module('doc', false, false, false);
 
         if (!empty($_GET['docfile_id']))
         {

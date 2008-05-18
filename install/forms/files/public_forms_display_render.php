@@ -21,6 +21,21 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Rendu d'un formulaire via le moteur de template
+ *
+ * @package forms
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Affectation des variables décrivant le formulaire.
+ * L'événement onsubmit du formulaire est géré grâce à la fonction eval qui va traiter la chaîne javascript contenant la fonction de validation (dynamique).
+ */
+
 $template_forms->assign_vars(array(
             'FORM_TITLE' => htmlentities($forms->fields['label']),
             'FORM_DESCRIPTION' => nl2br(htmlentities($forms->fields['description'])),
@@ -29,6 +44,10 @@ $template_forms->assign_vars(array(
             'FORM_WIDTH' => (empty($forms->fields['width']) || $forms->fields['width'] == '*') ? '100%' : "{$forms->fields['width']}px"
             )
         );
+
+/**
+ * On va créer un bloc pour chaque champ
+ */        
 
 while ($fields = $db->fetchrow($rs_fields))
 {

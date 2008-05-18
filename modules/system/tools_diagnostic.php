@@ -21,8 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_DIAGNOSTIC);
+/**
+ * Outil de diagnostic pour détecter d'éventuels problèmes de configuration/installation
+ * 
+ * @package system
+ * @subpackage system_tools
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
+/**
+ * Ouverture du bloc
+ */
+echo $skin->open_simplebloc(_SYSTEM_LABEL_DIAGNOSTIC);
 
 $columns = array();
 $values = array();

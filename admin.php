@@ -21,8 +21,23 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Point d'entrée pour le backoffice
+ *
+ * @package ploopi
+ * @subpackage index
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Chargement de l'environnement
+ */
+
 include_once './include/start.php';
 include_once './include/backoffice.php';
+
 
 ploopi_die();
 ?>

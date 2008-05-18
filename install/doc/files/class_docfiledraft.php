@@ -20,18 +20,55 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-include_once './modules/doc/class_docfile.php';
+
+/**
+ * Gestion des brouillons (fichiers en attente de validation)
+ *
+ * @package doc
+ * @subpackage file
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_doc_file_draft.
+ * Gère l'enregistrement physique, la publication.
+ *
+ * @package doc
+ * @subpackage file
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
 class docfiledraft extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return docfiledraft
+     */
+    
     function docfiledraft()
     {
         parent::data_object('ploopi_mod_doc_file_draft');
         $this->fields['timestp_create'] = ploopi_createtimestamp();
     }
 
+    /**
+     * Ouvre un brouillon de document avec son identifiant MD5
+     *
+     * @param string $md5id identifiant MD5 du document
+     * @return boolean true si le document a été ouvert
+     */
+    
     function openmd5($md5id)
     {
         global $db;
@@ -42,6 +79,17 @@ class docfiledraft extends data_object
     }
 
 
+    /**
+     * Enregistre le brouillon de document
+     *
+     * @return int numéro d'erreur
+     * 
+     * @see _DOC_ERROR_EMPTYFILE
+     * @see _DOC_ERROR_FILENOTWRITABLE
+     * @see _DOC_ERROR_MAXFILESIZE
+     * @see _PLOOPI_MAXFILESIZE
+     */
+    
     function save()
     {
         global $db;
@@ -84,21 +132,41 @@ class docfiledraft extends data_object
         return($error);
     }
 
-
+    /**
+     * Retourne le chemin physique de stockage des documents et le crée s'il n'existe pas
+     *
+     * @return string chemin physique de stockage des documents
+     * 
+     * @see doc_getpath
+     */
     function getbasepath()
     {
         $basepath = doc_getpath($this->fields['id_module'])._PLOOPI_SEP.'drafts'._PLOOPI_SEP.$this->fields['id'];
         ploopi_makedir($basepath);
         return($basepath);
     }
-
+    
+    /**
+     * Retourne le chemin physique de stockage du document
+     *
+     * @return string chemin physique de stockage du document
+     */
+    
     function getfilepath()
     {
         return($this->getbasepath()._PLOOPI_SEP."{$this->fields['id']}.{$this->fields['extension']}");
     }
 
+    /**
+     * Publie un brouillon de document et supprime le brouillon
+     * 
+     * @see docfile
+     */
+    
     function publish()
     {
+        include_once './modules/doc/class_docfile.php';
+        
         $docfile = new docfile();
 
         if ($this->fields['id_docfile'])

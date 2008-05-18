@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Affichage d'un objet news dans une page de contenu (WebEdit)
+ *
+ * @package news
+ * @subpackage wce
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du moteur de template.
+ * Chargement du template.
+ */
 
 $template_news = new Template("./templates/frontoffice/{$template_name}");
 if (file_exists("./templates/frontoffice/{$template_name}/news.tpl"))

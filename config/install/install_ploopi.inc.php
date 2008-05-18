@@ -22,11 +22,22 @@
 */
 
 /**
+ * Installation du portail
+ * 
+ * @package ploopi
+ * @subpackage install
+ * @copyright Ovensia, Hexad
+ * @license GNU General Public License (GPL)
+ * @author Xavier Toussaint
+ */
+
+/**
  * Create config.php + mount sql database for ploopi
  *
  * @param unknown_type $arrInstallInfos
  * @return unknown
  */
+
 function ploopi_create_site($arrInstallInfos)
 {
   try {

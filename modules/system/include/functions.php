@@ -21,6 +21,23 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fonctions du module Système
+ * 
+ * @package system
+ * @subpackage global
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ *
+ * @param unknown_type $array1
+ * @param unknown_type $array2
+ * @return unknown
+ */
+
 function system_mergegroups($array1, $array2)
 {
     foreach($array2 as $k => $v) $array1[$k] = $v;
@@ -162,10 +179,13 @@ function system_getworkspaces()
 
 
 /**
-* build recursively the whole groups tree
-*
-*/
-
+ * Construit l'arbre navigable des espaces/groupes
+ *
+ * @param unknown_type $typetree
+ * @param unknown_type $from_wid
+ * @param unknown_type $from_gid
+ * @return unknown
+ */
 
 function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
 {
@@ -458,7 +478,7 @@ function system_getinstalledmodules()
 
     $i = 0;
 
-    while ($moduletype = $db->fetchrow($result,MYSQL_ASSOC))
+    while ($moduletype = $db->fetchrow($result))
     {
         $modules[$moduletype['id']] = $moduletype;
     }

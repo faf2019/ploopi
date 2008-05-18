@@ -21,9 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-///////////////////////////////////////////////////////////////////////////
-// START PLOOPI ENGINE
-///////////////////////////////////////////////////////////////////////////
+/**
+ * Point d'entrée permettant de charger une version allégée du template (light.tpl).
+ * L'habillage général et les blocs ne sont pas affichés, uniquement le contenu du module.
+ *
+ * @package ploopi
+ * @subpackage index
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Chargement de l'environnement
+ */
 
 include_once './include/start.php';
 

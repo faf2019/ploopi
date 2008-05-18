@@ -21,6 +21,23 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion de l'import d'utilisateurs par fichier csv.
+ * Attention probablement non fonctionnel.
+ *
+ * @package system
+ * @subpackage admin
+ * @copyright Netlor
+ * @license GNU General Public License (GPL)
+ * @author Benjamin Ganivet
+ * 
+ * @todo Améliorer l'interface et les fonctionnalités
+ */
+
+/**
+ * On teste la présence d'un fichier
+ */
+
 if($_FILES['srcfile']['name'] != '')
 {
     $created = array();

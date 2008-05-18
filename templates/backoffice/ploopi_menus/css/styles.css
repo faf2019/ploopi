@@ -20,11 +20,11 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 @import url(base_main.css);
-@import url(base_annotations.css);
+@import url(base_annotation.css);
 @import url(base_calendar.css);
 @import url(base_documents.css);
-@import url(base_shares.css);
+@import url(base_share.css);
 @import url(base_skin.css);
-@import url(base_subscriptions.css);
+@import url(base_subscription.css);
 @import url(base_tickets.css);
 @import url(base_workflow.css);

@@ -20,14 +20,31 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Rendu d'un formulaire dans une page de contenu (WebEdit) via le moteur de template
+ *
+ * @package forms
+ * @subpackage wce
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Construction de l'url de validation
+ */
+
 $form_action_params = array();
 if (!empty($_REQUEST['headingid'])) $form_action_params[] = "headingid={$_REQUEST['headingid']}";
 if (!empty($_REQUEST['articleid'])) $form_action_params[] = "articleid={$_REQUEST['articleid']}";
 if (!empty($_REQUEST['wce_mode'])) $form_action_params[] = "wce_mode={$_REQUEST['wce_mode']}";
 
 $form_action = (!empty($form_action_params)) ? 'index.php?'.implode('&',$form_action_params) : 'index.php';
+
+/**
+ * Définition des variables décrivant le formulaire
+ */
 
 $template_forms->assign_vars(array(
             'FORM_ID' => $forms->fields['id'],
@@ -40,6 +57,9 @@ $template_forms->assign_vars(array(
             )
         );
 
+/**
+ * On crée un bloc par champ 
+ */        
 while ($fields = $db->fetchrow($rs_fields))
 {
     $template_forms->assign_block_vars('formfields', array());
@@ -55,13 +75,6 @@ while ($fields = $db->fetchrow($rs_fields))
     }
     else
     {
-        /*
-        @ob_start();
-        include './modules/forms/cms_forms_model_field.php';
-        $field_content = trim(ob_get_contents());
-        @ob_end_clean();
-        */
-
         $value = '';
 
         if ($fields['type'] == 'autoincrement')

@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion de la partie droite de l'interface d'administration des groupes d'utilisateurs et espaces de travail
+ * 
+ * @package system
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * switch principal entre groupes d'utilisateurs et espaces de travail
+ */
+
 switch ($_SESSION['system']['level'])
 {
     case _SYSTEM_GROUPS :

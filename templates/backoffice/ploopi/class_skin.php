@@ -20,7 +20,35 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once './include/classes/class_skin_common.php';
+/**
+ * Gestion du skin 'ploopi'
+ * 
+ * @package ploopi
+ * @subpackage skin
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see skin_common 
+ */
+
+/**
+ * inclusion de la classe parent
+ */
+
+include_once './include/classes/skin_common.php';
+
+/**
+ * Gestion de l'affichage du skin 'ploopi'
+ *
+ * @package ploopi
+ * @subpackage skin
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see skin_common 
+ */
 
 class skin extends skin_common
 {

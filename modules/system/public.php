@@ -21,6 +21,19 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Interface publique du module système (tickets, annotations, recherche, etc..)
+ * 
+ * @package system
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module
+ */
 ploopi_init_module('system');
 
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
@@ -43,7 +56,7 @@ switch($_SESSION['ploopi']['mainmenu'])
     break;
 
     case _PLOOPI_MENU_ANNOTATIONS:
-        include_once 'public_annotations.php';
+        include_once 'public_annotation.php';
     break;
 */
     case _PLOOPI_MENU_MYWORKSPACE:
@@ -54,8 +67,8 @@ switch($_SESSION['ploopi']['mainmenu'])
                 include './modules/system/public_tickets.php';
             break;
             
-            case 'annotations':
-                include './modules/system/public_annotations.php';
+            case 'annotation':
+                include './modules/system/public_annotation.php';
             break;
             
             case 'paramsave':

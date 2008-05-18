@@ -21,11 +21,24 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Procédure d'installation d'un module
+ * 
+ * @package system
+ * @subpackage system
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion des parsers XML
+ */
 include_once './modules/system/xmlparser_mod.php';
 include_once './modules/system/xmlparser_mb.php';
-include_once './include/classes/class_xml2array.php';
+include_once './include/classes/xml2array.php';
 
-if (empty($_GET['installmoduletype'])) ploopi_redirect("{$scriptenv}");
+if (empty($_GET['installmoduletype'])) ploopi_redirect($scriptenv);
 
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
@@ -59,9 +72,9 @@ else
 
     $rapport = array();
 
-    // =============
-    // OPERATION 1 : Copie des fichiers
-    // =============
+    /**
+     * OPERATION 1 : Copie des fichiers
+     */
     $testok = true;
     $detail = '';
     if (file_exists($srcfiles))
@@ -84,9 +97,9 @@ else
 
     if (!$critical_error)
     {
-        // =============
-        // OPERATION 2 : Chargement des paramètres/actions
-        // =============
+        /**
+         * OPERATION 2 : Chargement des paramètres/actions
+         */
         $testok = true;
         $detail = '';
 
@@ -102,12 +115,9 @@ else
             {
                 $pt = &$xmlarray['root']['ploopi'][0]['moduletype'][0];
 
-                include_once './modules/system/class_module_type.php';
-                include_once './modules/system/class_param_type.php';
-                include_once './modules/system/class_param_choice.php';
-                include_once './modules/system/class_mb_action.php';
-                include_once './modules/system/class_mb_cms_object.php';
-
+                include_once './include/classes/module.php';
+                include_once './include/classes/param.php';
+                include_once './include/classes/mb.php';
 
                 //ploopi_print_r($pt);
                 $module_type = new module_type();
@@ -206,9 +216,9 @@ else
         {
             ploopi_create_user_action_log(_SYSTEM_ACTION_INSTALLMODULE, $_GET['installmoduletype']);
 
-            // =============
-            // OPERATION 3 : Création des tables/champs
-            // =============
+            /**
+             * OPERATION 3 : Création des tables/champs
+             */
             $testok = true;
             $detail = '';
 
@@ -221,10 +231,9 @@ else
 
             $rapport[] = array('operation' => 'Création des tables/champs', 'detail' => $detail, 'res' => $testok);
 
-
-            // =============
-            // OPERATION 4 : Chargement des données spécifiques
-            // =============
+            /**
+             * OPERATION 4 : Chargement des données spécifiques
+             */
             $testok = true;
             $detail = '';
 
@@ -244,10 +253,9 @@ else
 
             $rapport[] = array('operation' => 'Chargement des données spécifiques', 'detail' => $detail, 'res' => $testok);
 
-
-            // =============
-            // OPERATION 5 : Chargement de la métabase
-            // =============
+            /**
+             * OPERATION 5 : Chargement de la métabase
+             */
             $testok = true;
             $detail = '';
 

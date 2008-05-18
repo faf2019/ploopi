@@ -20,8 +20,21 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Administration des catégories - ajout/modification  
+ *
+ * @package news
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Affichage du titre en fonction du type d'opération (ajout/modif)
+ */
+
 if ($newscat->new) echo $skin->open_simplebloc(_NEWSCAT_WRITE);
 else echo $skin->open_simplebloc(str_replace("LABEL",$newscat->fields['title'],_NEWSCAT_MODIFY));
 ?>

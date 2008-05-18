@@ -21,27 +21,87 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fonctions, constantes, variables globales
+ *
+ * @package webedit
+ * @subpackage global
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Définition des constantes
+ */
+
+/**
+ * Action : Editer/Modifier un article
+ */
 define ('_WEBEDIT_ACTION_ARTICLE_EDIT',         1);
+
+/**
+ * Action : Publier un article
+ */
 define ('_WEBEDIT_ACTION_ARTICLE_PUBLISH',      2);
+
+/**
+ * Action : Editer/Modifier une rubrique/catégorie
+ */
 define ('_WEBEDIT_ACTION_CATEGORY_EDIT',        3);
+
+/**
+ * Gérer les validateurs
+ */
 define ('_WEBEDIT_ACTION_WORKFLOW_MANAGE',      4);
 
+/**
+ * Objet : ARTICLE (admin)
+ */
 define ('_WEBEDIT_OBJECT_ARTICLE_ADMIN',        1);
+
+/**
+ * Objet : ARTICLE (public)
+ */
 define ('_WEBEDIT_OBJECT_ARTICLE_PUBLIC',       2);
+
+/**
+ * Objet : RUBRIQUE
+ */
 define ('_WEBEDIT_OBJECT_HEADING',              3);
 
+/**
+ * Chemin relatif du dossier de stockage des templates
+ */
 define ('_WEBEDIT_TEMPLATES_PATH',  './templates/frontoffice');
 
+
+/**
+ * Statuts d'articles (modifiable, à valider)
+ */
 global $article_status;
 $article_status = array(    'edit' => 'Modifiable',
                             'wait' => 'A Valider'
                         );
 
+
+/**
+ * Types de tris pour les articles
+ */
 global $heading_sortmodes;
 $heading_sortmodes = array( 'bypos' => 'par position croissante',
                             'bydate' => 'par date décroissante',
                             'bydaterev' => 'par date croissante'
                         );
+
+
+
+/**
+ * Retourne le timestamp (MYSQL) de dernière mise à jour
+ *
+ * @param int $moduleid identifiant du module
+ * @return string timestamp MYSQL
+ */
 
 function webedit_getlastupdate($moduleid = -1)
 {
@@ -60,6 +120,13 @@ function webedit_getlastupdate($moduleid = -1)
     if ($row = $db->fetchrow()) return($row['maxtimestp']);
     else return(0);
 }
+
+/**
+ * Retourne les rubriques du module sous forme d'un tableau
+ *
+ * @param int $moduleid identifiant du module
+ * @return array tableau de rubriques
+ */
 
 function webedit_getheadings($moduleid = -1)
 {
@@ -91,6 +158,13 @@ function webedit_getheadings($moduleid = -1)
 
     return($headings);
 }
+
+/**
+ * Retourne les articles du module sous forme d'un tableau
+ *
+ * @param int $moduleid identifiant du module
+ * @return array tableau d'articles
+ */
 
 function webedit_getarticles($moduleid = -1)
 {
@@ -149,11 +223,31 @@ function webedit_getarticles($moduleid = -1)
 * build recursively the whole heading tree
 *
 */
-function webedit_build_tree($headings, $articles, $fromhid = 0, $str = '', $option = '')
+
+/**
+ * Construit un arbre récursif pour la navigation dans les rubriques et les pages.
+ * 
+ * @param int $fromhid identifiant de la rubrique à partir de laquelle on affiche l'arbre
+ * @param string $str chaîne permettant de positionner les noeuds dans l'arbre (oui pas terrible... cf todo)
+ * @param string $option options d'affichage
+ * @return string l'arbre au format xhtml
+ * 
+ * @uses $headings
+ * @uses @articles
+ * @uses $headingid;
+ * @uses $articleid;
+ * 
+ * @todo Réécrire cette fonction sur le modèle de la fonction présente dans le module 'system'
+ */
+
+function webedit_build_tree($fromhid = 0, $str = '', $option = '')
 {
+    global $headings;
+    global $articles;
+    
     global $headingid;
     global $articleid;
-
+    
     global $scriptenv;
 
     switch($option)
@@ -256,7 +350,7 @@ function webedit_build_tree($headings, $articles, $fromhid = 0, $str = '', $opti
 
             $html_rec = '';
 
-            if ($isheadingsel || $isheadingopened || $heading['depth'] == 1 || !empty($articles['tree'][$hid])) $html_rec = webedit_build_tree($headings, $articles, $hid, $new_str, $option);
+            if ($isheadingsel || $isheadingopened || $heading['depth'] == 1 || !empty($articles['tree'][$hid])) $html_rec = webedit_build_tree($hid, $new_str, $option);
 
             $display = ($isheadingopened || $isheadingsel || $heading['depth'] == 1) ? 'block' : 'none';
 
@@ -357,6 +451,16 @@ function webedit_build_tree($headings, $articles, $fromhid = 0, $str = '', $opti
     return $html;
 }
 
+
+/**
+ * Traduit les rubriques en variables template en fonction de la position dans l'arbre des rubriques
+ *
+ * @param array $headings tableau contenant les rubriques
+ * @param array $nav tableau contenant les rubriques déjà sélectionnées
+ * @param int $hid identifiant de la rubrique à afficher
+ * @param string $var nom du bloc parent (template)
+ * @param string $link lien de la rubrique parent
+ */
 
 function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
 {
@@ -492,6 +596,16 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
 }
 
 
+/**
+ * Traduit les rubriques en variables template pour le contenu d'une page
+ *
+ * @param array $headings tableau contenant les rubriques
+ * @param int $hid identifiant de la rubrique à afficher
+ * @param string $var nom du bloc parent (template)
+ * @param string $prefix préfixe pour le nommage des blocs
+ * @param int $depth profondeur relative de la rubrique
+ * @param string $link lien de la rubrique parent
+ */
 
 function webedit_template_assign_headings($headings, $hid, $var = 'switch_content_heading.', $prefix = 'subheading', $depth = 1, $link = '')
 {
@@ -551,18 +665,11 @@ function webedit_template_assign_headings($headings, $hid, $var = 'switch_conten
     }
 }
 
-
-
-function webedit_getrootid()
-{
-    global $db;
-
-    $select = "SELECT * FROM ploopi_mod_webedit_heading WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND id_heading = 0";
-    $db->query($select);
-
-    if ($row = $db->fetchrow()) return($row['id']);
-    else return(0);
-}
+/**
+ * Retourne les templates frontoffice dans un tableau
+ *
+ * @return array tableau indexé contenant la liste triée des templates
+ */
 
 function webedit_gettemplates()
 {
@@ -584,6 +691,16 @@ function webedit_gettemplates()
     
     return($webedit_templates);
 }
+
+/**
+ * Gère l'insertion des objets dans le contenu d'une page.
+ * Cette fonction est appelée par la fonction php preg_replace_callback/
+ *
+ * @param array $matches tableau contenant les correspondances par rapport à l'expression régulière utilisée par la fonction appelante
+ * @return string contenu modifié
+ * 
+ * @see preg_replace_callback
+ */
 
 function webedit_getobjectcontent($matches)
 {
@@ -622,6 +739,15 @@ function webedit_getobjectcontent($matches)
     return($content);
 }
 
+/**
+ * Fonction permettant au moteur de recherche global de vérifier l'accessibilité d'un enregistrement d'un objet par un utilisateur.
+ * Chaque module peut disposer d'un fonction [module_name]_record_isenabled($id_object, $id_record, $id_module)
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_module identifiant du module
+ * @return boolean true si l'enregistrement est accessible
+ */
 
 function webedit_record_isenabled($id_object, $id_record, $id_module)
 {

@@ -20,6 +20,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Interface de gestion des rôles 
+ *
+ * @package system
+ * @subpackage admin
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Ouverture du bloc
+ */
+
 echo $skin->open_simplebloc();
 
 $parents = str_replace(';',',',$workspace->fields['parents']);

@@ -19,15 +19,54 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+/**
+ * Gestion des informations
+ *
+ * @package rss
+ * @subpackage entry
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ * Inclusion de la class rss_feed.
+ */
+
+include_once './include/classes/data_object.php';
 include_once './modules/rss/class_rss_feed.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_rss_entry
+ *
+ * @package rss
+ * @subpackage entry
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
 class rss_entry extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return rss_entry
+     */
+    
     function rss_entry()
     {
         parent::data_object('ploopi_mod_rss_entry', 'id');
     }
 
+    /**
+     * Enregistre une entrée d'un flux
+     *
+     * @return unknown
+     */
+    
     function save()
     {
         $ts = ploopi_unixtimestamp2timestamp($this->fields['published']);
@@ -39,6 +78,12 @@ class rss_entry extends data_object
         return(parent::save());
     }
 
+    /**
+     * Supprime une entrée d'un flux
+     *
+     * @return boolean true si suppression ok
+     */
+    
     function delete()
     {
         ploopi_search_remove_index(_RSS_OBJECT_NEWS_ENTRY, $this->fields['id']);

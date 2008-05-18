@@ -21,8 +21,19 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// Affichage des groupes "rattachables" à l'espace courant
+/**
+ * Affichage des groupes d'utilisateurs "rattachables" à l'espace de travail courant 
+ *
+ * @package system
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
+/**
+ * Gestion du filtrage
+ */
 if (isset($_POST['reset'])) $pattern = '';
 else $pattern = (empty($_POST['pattern'])) ? '' : $_POST['pattern'];
 

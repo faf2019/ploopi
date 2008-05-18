@@ -20,14 +20,29 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
+
+/**
+ * Préparation des données d'un formulaire pour affichage ou export
+ *
+ * @package forms
+ * @subpackage op
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see forms_viewworkspaces
+ */
+
+/**
+ * On récupère quelques variables GET
+ */
+
 $orderby = (!isset($_GET['orderby'])) ? 'datevalidation' : $_GET['orderby'];
 $option = (!isset($_GET['option'])) ? (( $orderby == 'datevalidation' ) ? 'DESC' : '' )  : $_GET['option'];
 
 $lmax = 1;
 
-$forms = new forms();
+$forms = new form();
 $forms->open($id_form);
 
 $workspaces = forms_viewworkspaces($id_module, $_SESSION['ploopi']['workspaceid'], $forms->fields['option_view']);

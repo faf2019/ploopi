@@ -21,8 +21,40 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion des catégories
+ *
+ * @package rss
+ * @subpackage category
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_rss_cat
+ *
+ * @package rss
+ * @subpackage category
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
 class rss_cat extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return rss_cat
+     */
+    
     function rss_cat()
     {
         parent::data_object('ploopi_mod_rss_cat');

@@ -21,11 +21,25 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// add the cron.php script into your cron table
-// ie:
-// * * * * * /usr/local/bin/php -f /var/www/ploopi/cron.php > /dev/null 2>&1
-// * * * * * wget -q -O /dev/null http://localhost/.../cron.php 2>&1
-// * * * * * lynx -dump http://localhost/.../cron.php > /dev/null 2>&1
+/**
+ * Point d'entrée les appels via CRON
+ *
+ * @package ploopi
+ * @subpackage cron
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * <code>
+ * * * * * * /usr/local/bin/php -f /var/www/ploopi/cron.php > /dev/null 2>&1
+ * * * * * * wget -q -O /dev/null http://localhost/.../cron.php 2>&1
+ * * * * * * lynx -dump http://localhost/.../cron.php > /dev/null 2>&1
+ * </code>
+ */
+
+/**
+ * Chargement de l'environnement
+ */
 
 include_once './include/start.php';
 

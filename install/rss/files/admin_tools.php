@@ -20,6 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Outils d'administration (réindexation pour le moment)
+ * 
+ * @package rss
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
 echo $skin->open_simplebloc(_RSS_LABEL_TOOLS);
 
 if (isset($_GET['end']))

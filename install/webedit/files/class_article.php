@@ -21,12 +21,49 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion des articles
+ *
+ * @package webedit
+ * @subpackage article
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Inclusion de la classe article_backup qui permet de gérer la sauvegarde des versions antérieures.
+ */
+
 include_once './modules/webedit/class_article_backup.php';
+
+/**
+ * Classe d'accès aux table ploopi_mod_webedit_article et ploopi_mod_webedit_article_draft
+ *
+ * @package webedit
+ * @subpackage article
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
 class webedit_article extends data_object
 {
     private $original_content;
 
+    /**
+     * Constructeur de la classe
+     *
+     * @param string $type type d'article ('draft' / '')
+     * @return webedit_article
+     */
+    
     function webedit_article($type = '')
     {
         if ($type == 'draft') parent::data_object('ploopi_mod_webedit_article_draft');

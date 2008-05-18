@@ -21,6 +21,19 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Opérations
+ *
+ * @package webedit
+ * @subpackage op
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Opérations accessibles pour les utilisateurs connectés
+ */
 if ($_SESSION['ploopi']['connected'])
 {
     switch($_REQUEST['ploopi_op'])

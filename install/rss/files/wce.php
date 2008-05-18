@@ -21,6 +21,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion des objets insérables dans une page de contenu (WebEdit)
+ * 
+ * @package rss
+ * @subpackage wce
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module
+ */
+
 ploopi_init_module('rss');
 
 include_once './modules/rss/class_rss_feed.php';

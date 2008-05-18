@@ -21,15 +21,27 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Partie publique du module
+ *
+ * @package directory
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Initialisation du module
+ */
 ploopi_init_module('directory');
-include_once './modules/directory/class_directory_contact.php';
-include_once './modules/directory/class_directory_favorites.php';
 
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
 switch($op)
 {
     case 'directory_save':
+        include_once './modules/directory/class_directory_contact.php';
         $directory_contact = new directory_contact();
         if (!empty($_POST['contact_id']) && is_numeric($_POST['contact_id'])) $directory_contact->open($_POST['contact_id']);
         $directory_contact->setvalues($_POST,'directory_contact_');
@@ -41,6 +53,7 @@ switch($op)
     case 'directory_delete':
         if (!empty($_GET['contact_id']) && is_numeric($_GET['contact_id']))
         {
+            include_once './modules/directory/class_directory_contact.php';
             $directory_contact = new directory_contact();
             if ($directory_contact->open($_GET['contact_id'])) $directory_contact->delete();
         }
@@ -50,6 +63,8 @@ switch($op)
     case 'directory_favorites_add':
         if (!empty($_POST['directory_favorites_id_list']) && is_array($_POST['directory_favorites_id_list']))
         {
+            include_once './modules/directory/class_directory_favorites.php';
+            
             if (!empty($_POST['directory_favorites_id_user']) && is_numeric($_POST['directory_favorites_id_user']))
             {
                 $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_ploopi_user = {$_POST['directory_favorites_id_user']} AND id_user = {$_SESSION['ploopi']['userid']} AND id_contact = 0");
@@ -163,6 +178,8 @@ switch($op)
     case 'directory_modify':
         if (!empty($_GET['contact_id']) && is_numeric($_GET['contact_id']))
         {
+            include_once './modules/directory/class_directory_contact.php';
+            
             $directory_contact = new directory_contact();
             $directory_contact->open($_GET['contact_id']);
 

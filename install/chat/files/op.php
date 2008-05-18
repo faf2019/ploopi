@@ -20,7 +20,20 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// on verifie qu'on est bien dans le module CHAT
+/**
+ * Opérations
+ *
+ * @package chat
+ * @subpackage op
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * On verifie qu'on est bien dans le module CHAT 
+ */
+
 if (ploopi_ismoduleallowed('chat'))
 {
     switch($ploopi_op)

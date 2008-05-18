@@ -20,29 +20,52 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-/**
-* @author   NETLOR CONCEPT
-* @version      1.0
-* @package      forms
-* @access   public
-*/
 
-class forms extends data_object
+/**
+ * Gestion des formulaires
+ *
+ * @package forms
+ * @subpackage form
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à la table ploopi_mod_forms_form
+ *
+ * @package forms
+ * @subpackage form
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+class form extends data_object
 {
     /**
-    * Class constructor
-    *
-    * @param int $connection_id
-    * @access public
-    **/
-
-    function forms()
+     * Constructeur de la classe
+     *
+     * @return form
+     */
+    
+    function form()
     {
         parent::data_object('ploopi_mod_forms_form');
     }
 
+    /**
+     * Enregistre le formulaire
+     *
+     * @return int indentifiant du formulaire
+     */
+    
     function save()
     {
         if ($this->fields['tablename'] == '') $this->fields['tablename'] = $this->fields['label'];
@@ -50,6 +73,12 @@ class forms extends data_object
         return(parent::save());
     }
 
+    /**
+     * Renvoie la liste des champs du formulaire 
+     *
+     * @return array tableau des champs indexé par les identifiants
+     */
+    
     function getfields()
     {
         global $db;

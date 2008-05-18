@@ -21,10 +21,29 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$newfolder = false;
+/**
+ * Affichage du formulaire de modification d'un dossier
+ *
+ * @package doc
+ * @subpackage public
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see doc_getworkflow
+ * @see ploopi_workflow_get
+ * @see _DOC_OBJECT_FOLDER
+ */
 
+/**
+ * Traitement différent pour ajout et modification de dossier
+ */
+$newfolder = false;
 $docfolder = new docfolder();
 
+/**
+ * Chargement du workflow
+ */
 doc_getworkflow();
 
 $wfusers = array();
@@ -215,7 +234,7 @@ else // creating
     {
         ?>
         <div id="doc_share" style="clear:both;<? echo ($docfolder->fields['foldertype'] == 'shared') ? 'display:block;' : 'display:none;'; ?>">
-            <? ploopi_shares_selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id']); ?>
+            <? ploopi_share_selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id']); ?>
         </div>
         <?
     }

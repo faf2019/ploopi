@@ -1,3 +1,9 @@
+== Module WebEdit - version 1.44 ===================================================
+
+2008-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à jour des commentaires, nettoyage
+ 
 == Module WebEdit - version 1.43 ===================================================
 
 2008-05-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -73,7 +79,7 @@
 2008-03-04  Stéphane Escaich  <stephane@ovensia.fr>
 
  * Ajout du sytème d'abonnement sur les actions (ajout/modif/suppression/publication) des rubriques et des articles
- * Ajout des annotations sur les rubriques
+ * Ajout des annotation sur les rubriques
 
 == Module WebEdit - version 1.2 ====================================================
 

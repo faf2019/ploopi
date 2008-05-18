@@ -20,12 +20,45 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Gestion des utilisateurs connectés.
+ *
+ * @package chat
+ * @subpackage connected
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Classe d'accès à la table ploopi_mod_chat_connected
+ *
+ * @package chat
+ * @subpackage connected
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
 class chat_connected extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return chat_connected
+     */
+    
     function chat_connected()
     {
         parent::data_object('ploopi_mod_chat_connected', 'id_user', 'id_module');
     }
+    
+    /**
+     * Ouverture
+     *
+     * @param int $id_user identifiant de l'utilisateur (optionnel)
+     * @param int $id_module identifiant du module (optionnel)
+     */
     
     function open($id_user = -1, $id_module = -1)
     {
@@ -34,6 +67,10 @@ class chat_connected extends data_object
         
         parent::open($id_user, $id_module);
     }
+    
+    /**
+     * Enregistrement
+     */
     
     function save()
     {

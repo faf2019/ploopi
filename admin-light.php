@@ -21,5 +21,21 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once 'index-light.php';
+/**
+ * Point d'entrée permettant de charger une version allégée du template (light.tpl).
+ * L'habillage général et les blocs ne sont pas affichés, uniquement le contenu du module.
+ *
+ * @package ploopi
+ * @subpackage index
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * redirection vers index-light.php
+ */
+
+include_once './index-light.php';
+
 ?>

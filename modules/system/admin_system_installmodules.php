@@ -21,6 +21,19 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Installation/Mise à jour/Désinstallation des modules
+ * 
+ * @package system
+ * @subpackage system
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+/**
+ * Ouverture du bloc
+ */
 echo $skin->open_simplebloc(_SYSTEM_LABEL_INSTALLEDMODULES);
 
 $tabmoduletype_installed = array();
@@ -29,7 +42,7 @@ $tabmoduletype_install = array();
 // get all modules in install folder
 if ($dir = @opendir("./install/"))
 {
-    include_once './include/classes/class_xml2array.php';
+    include_once './include/classes/xml2array.php';
 
     while($file = readdir($dir))
     {

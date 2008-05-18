@@ -388,7 +388,7 @@
  * Ajout d'une fonction javascript dims_skin_array_refresh(array_id, array_orderby) liée à la méthode d'affichage de tableau vue ci-dessus et qui permet de rafraichir l'affichage d'un tableau (pour le trier par exemple)
  * Ajout d'une fonction javascript dims_skin_dims_skin_ie_resizearrays_refresh() liée à la méthode d'affichage de tableau. Permet de compenser un bug d'affichage avec IE6
  * Correction d'un bug dans le fichier ./include/import_gpr.php lors de l'utilisation du système d'encodage d'url : ne remplissait pas la variable global $_REQUEST
- * Réécriture en Ajax du système d'annotations
+ * Réécriture en Ajax du système d'annotation
  * Modification du système d'appels de fonctions inter-module (variable $dims_op) permettant aux modules de communiquer plus facilement
  * Correction de bugs dans le processus de connexion et de chargement de session (./include/start.php)
 

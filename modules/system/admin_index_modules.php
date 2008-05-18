@@ -20,13 +20,33 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?
-// all available modules
+
+/**
+ * Interface de gestion des modules d'un espace de travail. 
+ * Permet d'instancier, hériter, modifier la configuration d'un module.
+ *
+ * @package system
+ * @subpackage admin
+ * @copyright Netlor, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @todo supprimer les <table>
+ */
+
+/**
+ * Tous les modules dispos
+ */
 $installedmodules = system_getinstalledmodules();
-// shared modules
+
+/**
+ * Modules partagés
+ */
 $sharedmodules = $workspace->getsharedmodules();
-// own modules
+
+/**
+ * Modules de cet espace
+ */
 $ownmodules = $workspace->getmodules();
 
 echo $skin->open_simplebloc(_SYSTEM_LABEL_GROUP_AVAILABLE_MODULES);
