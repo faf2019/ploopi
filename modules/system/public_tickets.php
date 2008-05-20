@@ -256,12 +256,39 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
 
 
     <div>
-        <a id="system_tickets_new" href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, null, true);">
+        <a id="system_tickets_button" href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, null, true);">
             <p class="ploopi_va">
-               <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/email.gif" /><span>&nbsp;<? echo _PLOOPI_LABEL_NEWTICKET; ?></span>
+               <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/newticket.png" /><span>&nbsp;<? echo _PLOOPI_LABEL_NEWTICKET; ?></span>
             </p>
         </a>
         
+        <a id="system_tickets_button" href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=incomingbox"); ?>" <? if ($filtertype=='incomingbox') echo 'style="font-weight:bold;"'; ?>>
+            <p class="ploopi_va">
+               <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/incomingbox.png" /><span>&nbsp;<? echo _SYSTEM_LABEL_TICKETS_INCOMINGBOX; ?></span>
+            </p>
+        </a>
+
+        <a id="system_tickets_button" href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=sendbox"); ?>" <? if ($filtertype=='sendbox') echo 'style="font-weight:bold;"'; ?>>
+            <p class="ploopi_va">
+               <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/sendbox.png" /><span>&nbsp;<? echo _SYSTEM_LABEL_TICKETS_SENDBOX; ?></span>
+            </p>
+        </a>
+
+        <a id="system_tickets_button" href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=all"); ?>" <? if ($filtertype=='all') echo 'style="font-weight:bold;"'; ?>>
+            <p class="ploopi_va">
+               <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/alltickets.png" /><span>&nbsp;<? echo _SYSTEM_LABEL_TICKETS_ALL; ?></span>
+            </p>
+        </a>
+
+        <div style="clear:both;text-align:right;">
+            <b>Tri:</b>
+            <a <? if ($sort=='dateticket') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=dateticket"); ?>">Date des messages</a>&nbsp;-
+            <a <? if ($sort=='datereply') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=datereply"); ?>">Date des réponses</a>&nbsp;
+        </div>
+
+        <?
+        /*
+         * Ancien filtage
         <div style="clear:both;">
             <b>Filtre:</b>
             <a <? if ($filtertype=='incomingbox') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=incomingbox"); ?>"><? echo _SYSTEM_LABEL_TICKETS_INCOMINGBOX; ?></a>&nbsp;-
@@ -274,6 +301,8 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
             <a <? if ($sort=='dateticket') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=dateticket"); ?>">Date des messages</a>&nbsp;-
             <a <? if ($sort=='datereply') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=datereply"); ?>">Date des réponses</a>&nbsp;
         </div>
+        */
+        ?>
     </div>
 
 
