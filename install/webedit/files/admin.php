@@ -528,7 +528,7 @@ switch($op)
             }
         }
 
-        echo $skin->create_pagetitle(str_replace("LABEL",$_SESSION['ploopi']['modulelabel'],_WEBEDIT_PAGE_TITLE);
+        echo $skin->create_pagetitle(str_replace("LABEL",$_SESSION['ploopi']['modulelabel'],_WEBEDIT_PAGE_TITLE));
         echo $skin->open_simplebloc();
 
         ?>

@@ -78,10 +78,7 @@ $list_shared_folders = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]
 
 // dossiers dont l'utilisateur connecté est le validateur
 $list_wf_folders = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders'])) ? implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']) : '';
-$list_wf_folders_option = ($list_wf_fo/**
- * Charge les partages
- */
-lders != '') ? " OR f_val.id_folder IN ({$list_wf_folders}) " : '';
+$list_wf_folders_option = ($list_wf_folders != '') ? " OR f_val.id_folder IN ({$list_wf_folders}) " : '';
 
 $sql =  "
         SELECT      f.*,

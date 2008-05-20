@@ -195,7 +195,7 @@ foreach($tabmoduletype_install as $label => $fields)
 }
 
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_NEWMODULEVERSIONS;
+echo $skin->open_simplebloc(_SYSTEM_LABEL_NEWMODULEVERSIONS);
 $skin->display_array($columns, $values, 'array_toupdate_modules', array('sortable' => true, 'orderby_default' => 'mtype'));
 echo $skin->close_simplebloc();
 
@@ -239,7 +239,7 @@ foreach($tabmoduletype_install as $label => $fields)
     }
 }
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_UNINSTALLEDMODULES;
+echo $skin->open_simplebloc(_SYSTEM_LABEL_UNINSTALLEDMODULES);
 $skin->display_array($columns, $values, 'array_new_modules', array('sortable' => true, 'orderby_default' => 'mtype'));
 echo $skin->close_simplebloc();
 ?>

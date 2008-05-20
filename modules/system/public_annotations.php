@@ -230,8 +230,8 @@ switch($op)
                 }
                 ?>
             </div>
-<?
-        echo $skin->close_simplebloc('';
+        <?
+        echo $skin->close_simplebloc();
     break;
 }
 ?>
