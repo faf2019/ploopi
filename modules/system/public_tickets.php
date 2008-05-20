@@ -36,7 +36,7 @@
  * Gestion du filtrage
  */
 if (isset($_GET['filtertype'])) $_SESSION['tickets']['filtertype'] = $_GET['filtertype'];
-if (!isset($_SESSION['tickets']['filtertype'])) $_SESSION['tickets']['filtertype'] = 'all';
+if (!isset($_SESSION['tickets']['filtertype'])) $_SESSION['tickets']['filtertype'] = 'incomingbox';
 $filtertype = $_SESSION['tickets']['filtertype'];
 
 if (isset($_GET['sort'])) $_SESSION['tickets']['sort'] = $_GET['sort'];
@@ -52,10 +52,14 @@ switch($filtertype)
     case 'all';
     break;
 
-    case 'mytickets':
+    case 'sendbox':
         $where = " AND u.id = {$_SESSION['ploopi']['userid']} ";
     break;
 
+    case 'incomingbox':
+        $where = " AND u.id != {$_SESSION['ploopi']['userid']} ";
+    break;
+    
     case 'tovalidate':
         $where = " AND t.id_user <> {$_SESSION['ploopi']['userid']} AND t.needed_validation > 0 AND t.status < "._PLOOPI_TICKETS_DONE;
     break;
@@ -260,12 +264,12 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
         
         <div style="clear:both;">
             <b>Filtre:</b>
+            <a <? if ($filtertype=='incomingbox') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=incomingbox"); ?>"><? echo _SYSTEM_LABEL_TICKETS_INCOMINGBOX; ?></a>&nbsp;-
+            <a <? if ($filtertype=='sendbox') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=sendbox"); ?>"><? echo _SYSTEM_LABEL_TICKETS_SENDBOX; ?></a>&nbsp;-
             <a <? if ($filtertype=='all') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=all"); ?>">Tous</a>&nbsp;-
-            <a <? if ($filtertype=='mytickets') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=mytickets"); ?>"><? echo _SYSTEM_LABEL_MYTICKETS; ?></a>&nbsp;-
             <a <? if ($filtertype=='waitingvalidation') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=waitingvalidation"); ?>"><? echo _SYSTEM_LABEL_TICKETS_WAITINGVALIDATION; ?></a>&nbsp;-
             <a <? if ($filtertype=='tovalidate') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=tovalidate"); ?>"><? echo _SYSTEM_LABEL_TICKETS_TOVALIDATE; ?></a>
-        </div>
-        <div>
+            &nbsp;&nbsp;
             <b>Tri:</b>
             <a <? if ($sort=='dateticket') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=dateticket"); ?>">Date des messages</a>&nbsp;-
             <a <? if ($sort=='datereply') echo 'style="font-weight:bold;"'; ?> href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=datereply"); ?>">Date des réponses</a>&nbsp;

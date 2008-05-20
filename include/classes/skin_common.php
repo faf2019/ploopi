@@ -45,7 +45,7 @@ class skin_common
 {
     
     /**
-     * Constructeur de la classe skin
+     * Constructeur de la classe skin_common
      *
      * @param string $skin nom du skin (nom du dossier)
      * @return skin_common
@@ -108,7 +108,6 @@ class skin_common
 
         return $res;
     }
-
 
     /**
      * Crée une barre d'outils (icones)

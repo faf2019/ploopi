@@ -49,8 +49,8 @@ function ploopi_tickets_selectusers($id_user = null)
     
     if (!empty($id_user))
     {
-        if (is_array($id_user)) foreach($id_user as $idu) $_SESSION['ploopi']['tickets']['users_selected'][] = $idu;
-        else $_SESSION['ploopi']['tickets']['users_selected'][] = $id_user;
+        if (is_array($id_user)) foreach($id_user as $idu) $_SESSION['ploopi']['tickets']['users_selected'][$idu] = $idu;
+        else $_SESSION['ploopi']['tickets']['users_selected'][$id_user] = $id_user;
     }
     ?>
     <p class="ploopi_va">

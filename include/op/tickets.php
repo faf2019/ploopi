@@ -319,9 +319,8 @@ switch($ploopi_op)
 
         if (isset($_GET['user_id'])) $_SESSION['ploopi']['tickets']['users_selected'][$_GET['user_id']] = $_GET['user_id'];
         if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['tickets']['users_selected'][$_GET['remove_user_id']]);
-
-        ploopi_tickets_displayusers();
         
+        ploopi_tickets_displayusers();
 
         ploopi_die();
     break;

@@ -130,8 +130,8 @@ function ploopi_ob_callback($buffer)
     global $db;
     
     //DEBUG
-    $f = fopen('./tmp/ob.data', 'w');
-    fwrite($f, "buffer\n".gettype($ploopi_timer));
+    //$f = fopen('./tmp/ob.data', 'w');
+    //fwrite($f, "buffer\n".gettype($ploopi_timer));
     
     // try to get content-type 
     $content_type = 'text/html';

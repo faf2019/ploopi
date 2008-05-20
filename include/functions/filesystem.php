@@ -37,7 +37,8 @@
  *
  * @param string $src dossier source
  * @param string $dest dossier destination
- * @param string $mode 
+ * @param string $folder_mode mode attribué aux dossiers
+ * @param string $file_mode mode attribué aux fichiers
  * @return boolean true si pas de problème de copie
  */
 

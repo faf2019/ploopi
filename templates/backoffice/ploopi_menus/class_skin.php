@@ -53,11 +53,27 @@ include_once './include/classes/skin_common.php';
 
 class skin extends skin_common
 {
+    /**
+     * Construction de la classe skin 'ploopi_menus'
+     *
+     * @return skin
+     */
+    
     function skin()
     {
         parent::skin_common('ploopi_menus');
     }
-
+    
+    /**
+     * Créé un haut de bloc
+     *
+     * @param string $title titre du bloc
+     * @param string $style styles optionnels du bloc
+     * @param string $styletitle styles optionnels du titre
+     * @param srting $additionnal_title titre additionnel
+     * @return string code html de l'entête du bloc
+     */
+    
     function open_simplebloc($title = '', $style = '', $styletitle = '', $additionnal_title = '')
     {
         if (strlen($style)>0) $res = "<div class=\"simplebloc\" style=\"{$style}\">";
@@ -70,10 +86,24 @@ class skin extends skin_common
         return $res;
     }
 
+    /**
+     * Créé un bas de bloc (ferme le dernier bloc ouvert) 
+     *
+     * @return string code html du pied du bloc
+     */
+
     function close_simplebloc()
     {
         return '</div><div class="simplebloc_footer"></div></div>';
     }
+
+    /**
+     * Crée un titre de page
+     *
+     * @param string $title titre de la page
+     * @param string $style styles optionnels
+     * @return string code html du titre
+     */
 
     function create_pagetitle($title, $style = '', $additionnal_title = '')
     {
@@ -82,6 +112,16 @@ class skin extends skin_common
 
         return $res;
     }
+
+    /**
+     * Crée une icone pour la barre d'outils
+     *
+     * @param array $icon icone à afficher (propriétés : title, url, icon, width, confirm, javascript)
+     * @param boolean $sel true si l'icone est sélectionnée
+     * @param string $key clé (propriété id) de l'icone
+     * @param boolean $vertical true si l'affichage est vertical
+     * @return string code html de l'icone
+     */
 
     function create_icon($icon, $sel, $key, $vertical)
     {
@@ -131,6 +171,14 @@ class skin extends skin_common
         return $res;
     }
 
+    /**
+     * Crée un faux popup (div)
+     *
+     * @param string $title titre du popup
+     * @param string $content contenu du popup (html)
+     * @param string $popupid id du popup (propriété html id)
+     * @return string code html du popup
+     */
 
     function create_popup($title, $content, $popupid = 'ploopi_popup')
     {
@@ -144,15 +192,17 @@ class skin extends skin_common
                         </div>
                     </div>
                     <div class="simplebloc_content">'.$content.'</div>
-                    <div class="simplebloc_footer"></div>
+                    <div class="simplebloc_footer" style="cursor:move;" id="handlebottom_'.$popupid.'"></div>
                 </div>
                 <script type="text/javascript">
-                new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\'});
+                new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\', });
+                new Draggable(\''.$popupid.'\', { handle: \'handlebottom_'.$popupid.'\'});
                 document.location.href=\'#anchor_'.$popupid.'\';
                 </script>        
                 ';
 
         return($res);
     }
+    
 }
 ?>
