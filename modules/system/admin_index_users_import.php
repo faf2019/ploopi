@@ -131,7 +131,7 @@ if($_FILES['srcfile']['name'] != '')
             <?
             if(count($created))
             {
-                echo $skin->open_simplebloc('Récapitulatif','100%');
+                echo $skin->open_simplebloc('Récapitulatif';
                     foreach($created as $login => $passwd)
                     {
                         echo "<table><tr><td><b>$login</b> : $passwd</td></tr></table>";
@@ -144,7 +144,7 @@ if($_FILES['srcfile']['name'] != '')
             <?
             if(count($errors))
             {
-                echo $skin->open_simplebloc('Erreurs','100%');
+                echo $skin->open_simplebloc('Erreurs';
                     foreach($errors as $login => $msg)
                     {
                         echo "<table><tr><td><b>$login</b> : $msg</td></tr></table>";

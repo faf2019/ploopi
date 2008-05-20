@@ -57,7 +57,7 @@ function ploopi_die($var = null, $flush = true)
     global $ploopi_errors_msg;    
     
     global $ploopi_timer;
-
+    
     if (    
         !empty($ploopi_errors_level) &&  
         $ploopi_errors_level &&
@@ -85,12 +85,12 @@ function ploopi_die($var = null, $flush = true)
     }
     
     session_write_close();
+
+    if ($flush) while (ob_get_level()>1) ob_end_flush();
     
     global $db;
     if (!empty($db) && $db->isconnected()) $db->close();
-    
-    if ($flush) while (ob_get_level()>1) ob_end_flush();
-    
+
     die();
 }
 

@@ -69,11 +69,18 @@ include_once './include/functions/errors.php';
 set_error_handler('ploopi_errorhandler');
 
 /**
- * Chargement des constantes, globales, fonctions
+ * Chargement des constantes, globales
  */
-include_once './include/start/global_constants.php';
+include_once './include/start/constants.php';
+
+/**
+ * Chargements des classes et fonctions principales 
+ * Attention de bien garder ces inclusions. Sinon problèmes avec ploopi_die et la gestion du buffer.
+ */
+include_once './include/classes/data_object.php';
+include_once './include/classes/log.php' ;
+include_once './include/functions/date.php';
 include_once './include/functions/session.php';
-include_once './include/functions/string.php';
 include_once './include/functions/system.php';
 
 /**
@@ -95,6 +102,7 @@ global $db;
 
 $db = new ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
 if(!$db->connection_id) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
+
 
 /**
  * Initialisation du gestionnaire de session
@@ -145,8 +153,4 @@ if (empty($_SESSION) || (!empty($_SESSION['ploopi']['host']) && $_SESSION['ploop
  */
 ploopi_session_update();
 
-/**
- * Inclusion de la classe data_objet
- */
-include_once './include/classes/data_object.php';
 ?>

@@ -36,12 +36,20 @@
  */
 ploopi_init_module('directory');
 
+/**
+ * Inclusion des classes du module
+ */
+
+include_once './modules/directory/class_directory_contact.php';
+include_once './modules/directory/class_directory_favorites.php';
+include_once './modules/directory/class_directory_list.php';
+
+
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
 switch($op)
 {
     case 'directory_save':
-        include_once './modules/directory/class_directory_contact.php';
         $directory_contact = new directory_contact();
         if (!empty($_POST['contact_id']) && is_numeric($_POST['contact_id'])) $directory_contact->open($_POST['contact_id']);
         $directory_contact->setvalues($_POST,'directory_contact_');
@@ -53,7 +61,6 @@ switch($op)
     case 'directory_delete':
         if (!empty($_GET['contact_id']) && is_numeric($_GET['contact_id']))
         {
-            include_once './modules/directory/class_directory_contact.php';
             $directory_contact = new directory_contact();
             if ($directory_contact->open($_GET['contact_id'])) $directory_contact->delete();
         }
@@ -63,8 +70,6 @@ switch($op)
     case 'directory_favorites_add':
         if (!empty($_POST['directory_favorites_id_list']) && is_array($_POST['directory_favorites_id_list']))
         {
-            include_once './modules/directory/class_directory_favorites.php';
-            
             if (!empty($_POST['directory_favorites_id_user']) && is_numeric($_POST['directory_favorites_id_user']))
             {
                 $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_ploopi_user = {$_POST['directory_favorites_id_user']} AND id_user = {$_SESSION['ploopi']['userid']} AND id_contact = 0");
@@ -98,7 +103,6 @@ switch($op)
     case 'directory_list_delete':
         if (!empty($_GET['directory_favorites_id_list']) && is_numeric($_GET['directory_favorites_id_list']))
         {
-            include_once './modules/directory/class_directory_list.php';
             $directory_list = new directory_list();
             if ($directory_list->open($_GET['directory_favorites_id_list'])) $directory_list->delete();
         }
@@ -178,8 +182,6 @@ switch($op)
     case 'directory_modify':
         if (!empty($_GET['contact_id']) && is_numeric($_GET['contact_id']))
         {
-            include_once './modules/directory/class_directory_contact.php';
-            
             $directory_contact = new directory_contact();
             $directory_contact->open($_GET['contact_id']);
 

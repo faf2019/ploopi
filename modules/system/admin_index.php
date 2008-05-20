@@ -270,38 +270,41 @@ switch ($_SESSION['system']['level'])
 
                         system_updateparents();
 
-                        foreach($_POST['heritedmodule'] as $instance)
+                        if (empty($_POST['workspace_id']) && isset($_POST['heritedmodule']))
                         {
-                            $data = explode(',',$instance);
-                            $instancetype = $data[0];
-                            if ($instancetype == 'NEW')
+                            foreach($_POST['heritedmodule'] as $instance)
                             {
-                                $moduletype_id = $data[1];
-                                $module_type = new module_type();
-                                $module_type->open($moduletype_id);
-
-                                ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
-
-                                $module = $module_type->createinstance($workspace_id);
-                                $module_id = $module->save();
-
-                                $module_workspace = new module_workspace();
-                                $module_workspace->fields['id_module'] = $module_id;
-                                $module_workspace->fields['id_workspace'] = $workspace_id;
-                                $module_workspace->save();
-                            }
-                            elseif ($instancetype == 'SHARED')
-                            {
-                                $module_id = $data[1];
-                                $module = new module();
-                                $module->open($module_id);
-
-                                ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module->fields['label']);
-
-                                $module_workspace = new module_workspace();
-                                $module_workspace->fields['id_module'] = $module_id;
-                                $module_workspace->fields['id_workspace'] = $workspace_id;
-                                $module_workspace->save();
+                                $data = explode(',',$instance);
+                                $instancetype = $data[0];
+                                if ($instancetype == 'NEW')
+                                {
+                                    $moduletype_id = $data[1];
+                                    $module_type = new module_type();
+                                    $module_type->open($moduletype_id);
+    
+                                    ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
+    
+                                    $module = $module_type->createinstance($workspace_id);
+                                    $module_id = $module->save();
+    
+                                    $module_workspace = new module_workspace();
+                                    $module_workspace->fields['id_module'] = $module_id;
+                                    $module_workspace->fields['id_workspace'] = $workspace_id;
+                                    $module_workspace->save();
+                                }
+                                elseif ($instancetype == 'SHARED')
+                                {
+                                    $module_id = $data[1];
+                                    $module = new module();
+                                    $module->open($module_id);
+    
+                                    ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module->fields['label']);
+    
+                                    $module_workspace = new module_workspace();
+                                    $module_workspace->fields['id_module'] = $module_id;
+                                    $module_workspace->fields['id_workspace'] = $workspace_id;
+                                    $module_workspace->save();
+                                }
                             }
                         }
 
@@ -408,7 +411,7 @@ switch ($_SESSION['system']['level'])
 
                             ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
 
-                            echo $skin->open_simplebloc(str_replace('<LABEL>',$module_type->fields['label'],_SYSTEM_LABEL_MODULEINSTANCIATION),'100%');
+                            echo $skin->open_simplebloc(str_replace('<LABEL>',$module_type->fields['label'],_SYSTEM_LABEL_MODULEINSTANCIATION);
                             ?>
                             <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
                             <?

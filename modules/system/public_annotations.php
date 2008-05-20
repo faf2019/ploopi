@@ -231,7 +231,7 @@ switch($op)
                 ?>
             </div>
 <?
-        echo $skin->close_simplebloc('','100%');
+        echo $skin->close_simplebloc('';
     break;
 }
 ?>

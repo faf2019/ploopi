@@ -151,6 +151,7 @@ switch($ploopi_op)
                 echo "{$fields['tag']};{$fields['c']}";
             }
         }
+        ploopi_die();
     break;
 
     case 'annotation_delete':

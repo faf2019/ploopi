@@ -44,6 +44,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
         case 'tickets_delete':
             include_once './include/classes/ticket.php';
 
+            $arrTickets = array();
+            
             if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
             {
                 $arrTickets[] = $_GET['ticket_id'];

@@ -68,7 +68,7 @@ if ($db->numrows()>0)
 
         $localdate = ploopi_timestamp2local($fields['date_publish']);
 
-        echo $skin->open_simplebloc($fields['title'],'100%');
+        echo $skin->open_simplebloc($fields['title'];
 
         ?>
         <div class="news">

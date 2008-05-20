@@ -40,20 +40,20 @@
 include './include/start/common.php';
 
 /**
- * Chargement constantes, fonctions, var globales, etc.
+ * Chargement fonctions génériques
  */
 
-include_once './include/start/global.php';
+include_once './include/start/functions.php';
 
 /**
- * Chargement des classes principales (dans la version light, pas grand chose)
+ * Chargement des classes principales
  */
 
 include_once './include/classes/user.php';
 include_once './include/classes/group.php';
 include_once './include/classes/workspace.php';
-include_once './include/classes/log.php' ;
 include_once './include/classes/param.php';
+
 
 /**
  * Gestion de la connexion d'un utilisateur
@@ -607,5 +607,4 @@ if ($ploopi_errornum)
 }
 
 $_SESSION['ploopi']['uri'] = (empty($_SERVER['QUERY_STRING'])) ? '' : "{$scriptenv}?{$_SERVER['QUERY_STRING']}";
-
 ?>

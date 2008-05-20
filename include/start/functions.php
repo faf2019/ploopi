@@ -50,7 +50,6 @@
  * @see workflow 
  */
 
-include_once './include/start/global_constants.php';
 include_once './include/functions/actions.php';
 include_once './include/functions/annotation.php';
 include_once './include/functions/crypt.php';

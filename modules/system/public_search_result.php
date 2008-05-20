@@ -104,7 +104,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
         $arrObjectTypes[$row['module_id']]['objects'][$row['id']] = array('label' => $row['label'], 'script' => $row['script']);
     }
 
-    $arrRelevance = ploopi_search($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'], '', '', (empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'])) ? $arrAvailableModules : $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module']);
+    $arrRelevance = ploopi_search($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'], -1, '', (empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'])) ? $arrAvailableModules : $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module']);
 
     if (empty($arrRelevance))
     {
