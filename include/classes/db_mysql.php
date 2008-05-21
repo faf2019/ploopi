@@ -27,7 +27,7 @@
  * @package ploopi
  * @subpackage database
  * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
+ * @license GNU General var License (GPL)
  * @author Stéphane Escaich
  */
 
@@ -38,7 +38,7 @@
  * @package ploopi
  * @subpackage database
  * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
+ * @license GNU General var License (GPL)
  * @author Stéphane Escaich
  */
 
@@ -134,7 +134,7 @@ class ploopi_db
      * @return mixed false si problème de connexion, id de connexion sinon
      */
     
-    function ploopi_db($server, $user, $password = '', $database = '', $persistency = false)
+    public function ploopi_db($server, $user, $password = '', $database = '', $persistency = false)
     {
         $this->persistency = $persistency;
         $this->user = $user;
@@ -191,7 +191,7 @@ class ploopi_db
      * @return boolean true si sélection ok
      */
     
-    function selectdb($database)
+    public function selectdb($database)
     {
         if (!$this->isconnected()) return false;
         
@@ -205,7 +205,7 @@ class ploopi_db
      * @return boolean true si la connexion est active, false sinon
      */
     
-    function isconnected()
+    public function isconnected()
     {
         return ($this->connection_id != 0);
     }
@@ -216,7 +216,7 @@ class ploopi_db
      * @return boolean true si la connexion a été fermée
      */
     
-    function close()
+    public function close()
     {
         if (!$this->isconnected()) return false;
         $this->timer_start();
@@ -239,7 +239,7 @@ class ploopi_db
      * @return mixed un pointeur sur le recordset (resource) ou false si la requête n'a pas pu être exécutée 
      */
     
-    function query($query = '')
+    public function query($query = '')
     {
         unset($this->query_result);
         
@@ -271,7 +271,7 @@ class ploopi_db
      * @param string $queries requêtes
      * @return boolean true si les requêtes ont pu être exécutées, false sinon
      */
-    function multiplequeries($queries)
+    public function multiplequeries($queries)
     {
         if (!$this->isconnected()) return false;
                 
@@ -308,7 +308,7 @@ class ploopi_db
      * @return mixed nombre de lignes dans le recordset ou false si le recordset n'est pas valide
      */
     
-    function numrows($query_id = 0)
+    public function numrows($query_id = 0)
     {
         if (!$this->isconnected()) return false;
                 
@@ -325,7 +325,7 @@ class ploopi_db
      * @return mixed l'enregistrement courant (sous forme d'un tableau associatif) ou false si le recordset n'est pas valide
      */
     
-    function fetchrow($query_id = 0)
+    public function fetchrow($query_id = 0)
     {
         if (!$this->isconnected()) return false;
                 
@@ -341,7 +341,7 @@ class ploopi_db
      * @return mixed dernier id inséré ou false si la connexion n'est pas valide
      */
     
-    function insertid()
+    public function insertid()
     {
         if (!$this->isconnected()) return false;
         return @mysql_insert_id($this->connection_id);
@@ -353,7 +353,7 @@ class ploopi_db
      * @return array tableau indexé contenant les tables de la base de données sélectionnée 
      */
     
-    function listtables()
+    public function listtables()
     {
         if (!$this->isconnected()) return false;
                 
@@ -369,7 +369,7 @@ class ploopi_db
      * @return mixed nombre de champs ou false si le recordset n'est pas valide
      */
     
-    function numfields($query_id = 0)
+    public function numfields($query_id = 0)
     {
         if (!$this->isconnected()) return false;
                 
@@ -387,7 +387,7 @@ class ploopi_db
      * @return mixed
      */
     
-    function fieldname($query_id = 0, $i)
+    public function fieldname($query_id = 0, $i)
     {
         if (!$this->isconnected()) return false;
         
@@ -404,7 +404,7 @@ class ploopi_db
      * @return mixed un tableau indexé contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
     
-    function getarray($query_id = 0)
+    public function getarray($query_id = 0)
     {
         if (!$this->isconnected()) return false;
         
@@ -419,8 +419,8 @@ class ploopi_db
                 $this->dataseek($query_id, 0);
                 while ($fields = $this->fetchrow($query_id))
                 {
-                    if (sizeof($fields) == 1) $array = $fields[key($fields)];
-                    else $array = $fields;
+                    if (sizeof($fields) == 1) $array[] = $fields[key($fields)];
+                    else $array[] = $fields;
                 }
             }
             return $array;
@@ -436,7 +436,7 @@ class ploopi_db
      * @return string une chaîne au format JSON contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
     
-    function getjson($query_id = 0, $utf8 = true)
+    public function getjson($query_id = 0, $utf8 = true)
     {
         if (!$this->isconnected()) return false;
         
@@ -470,7 +470,7 @@ class ploopi_db
      * @return boolean true si le déplacement a été effectué sinon false
      */
     
-    function dataseek($query_id = 0, $pos = 0)
+    public function dataseek($query_id = 0, $pos = 0)
     {
         if (!$this->isconnected()) return false;
         
@@ -487,7 +487,7 @@ class ploopi_db
      * @return mixed variable échappée ou false si la connexion est fermée
      */
     
-    function addslashes($var)
+    public function addslashes($var)
     {
         include_once './include/functions/system.php';
         
@@ -502,7 +502,7 @@ class ploopi_db
      * @see timer::start
      */
     
-    function timer_start()
+    public function timer_start()
     {
         if (class_exists('timer'))
         {
@@ -518,14 +518,18 @@ class ploopi_db
      * @see timer::getexectime
      */
     
-    function timer_stop()
+    public function timer_stop()
     {
         if (class_exists('timer'))
         {
             $this->exectime_queries += $this->db_timer->getexectime();
         }
     }
-
+    
+    public function get_num_queries() { return($this->num_queries); }
+    
+    public function get_exectime_queries() { return($this->exectime_queries); }
+    
 
 }
 ?>

@@ -162,8 +162,8 @@ function ploopi_ob_callback($buffer)
     
     if (isset($db))
     {
-        $ploopi_stats['numqueries'] = $db->num_queries;
-        $ploopi_stats['sql_exectime'] = round($db->exectime_queries*1000,0);
+        $ploopi_stats['numqueries'] = $db->get_num_queries();
+        $ploopi_stats['sql_exectime'] = round($db->get_exectime_queries()*1000,0);
     }
     else
     {
