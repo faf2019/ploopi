@@ -153,7 +153,7 @@ if ($_SESSION['ploopi']['connected'])
             include_once './include/functions/date.php';
             include_once './include/functions/filesystem.php';
             include_once './include/functions/image.php';
-            include_once './modules/do./include/start/global.php';
+            include_once './modules/doc/include/global.php';
             include_once './modules/doc/class_docfile.php';
     
             if (!empty($_GET['docfile_id']))
@@ -191,7 +191,7 @@ if ($_SESSION['ploopi']['connected'])
 switch($ploopi_op)
 {
     case 'doc_file_download':
-        include_once './include/start/global_constants.php';
+        include_once './include/start/constants.php';
         include_once './include/classes/data_object.php';
         include_once './include/functions/date.php';
         include_once './include/functions/filesystem.php';

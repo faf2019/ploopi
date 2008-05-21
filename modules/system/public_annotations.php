@@ -138,18 +138,18 @@ switch($op)
                 }
 
                 $rs = $db->query($select);
-                $annotation = array();
+                $arrAnnotations = array();
                 while ($row = $db->fetchrow($rs))
                 {
-                    if (!isset($annotation[$row['id']])) $annotation[$row['id']] = $row;
-                    if (!is_null($row['tag'])) $annotation[$row['id']]['tags'][$row['tagid']] = $row['tag'];
+                    if (!isset($arrAnnotations[$row['id']])) $arrAnnotations[$row['id']] = $row;
+                    if (!is_null($row['tag'])) $arrAnnotations[$row['id']]['tags'][$row['tagid']] = $row['tag'];
                 }
                 ?>
 
                 <div id="system_annotation_titlebar">
                 <?
                 $nb_anno_page = 10;
-                $numrows = sizeof($annotation);
+                $numrows = sizeof($arrAnnotations);
                 $nbpage = ($numrows - $numrows % $nb_anno_page) / $nb_anno_page + ($numrows % $nb_anno_page > 0);
 
                 if ($nbpage>0)
@@ -173,9 +173,9 @@ switch($op)
 
                 <?
                 // on se positionne sur le bon enregistrement
-                for ($i=0; $i<($page-1)*$nb_anno_page; $i++) next($annotation);
+                for ($i=0; $i<($page-1)*$nb_anno_page; $i++) next($arrAnnotations);
 
-                $annotation = current($annotation);
+                $annotation = current($arrAnnotations);
                 for  ($i=0; $i<$nb_anno_page && !empty($annotation); $i++)
                 {
                     $object_script = str_replace(
@@ -225,8 +225,8 @@ switch($op)
                         </div>
                     </div>
                     <?
-                    next($annotation);
-                    $annotation = current($annotation);
+                    next($arrAnnotations);
+                    $annotation = current($arrAnnotations);
                 }
                 ?>
             </div>

@@ -49,8 +49,38 @@
 
 class ploopi_cipher
 {
-    var $key, $iv, $cipher;
+    /**
+     * Clé secrète
+     *
+     * @var string
+     */
 
+    private $key;
+
+    /*
+     * Vecteur d'initialisation
+     * 
+     * @var string
+     */
+    
+    private $iv;
+    
+    /**
+     * Pointeur de chiffrement
+     *
+     * @var resource
+     */
+    
+    private $cipher;
+
+    /**
+     * Constructeur de la classe
+     *
+     * @param string $key clé secrète
+     * @param unknown_type $iv vecteur d'initialisation
+     * @return ploopi_cipher
+     */
+    
     function ploopi_cipher($key = '', $iv = '12345678')
     {
         $this->key = (empty($key)) ? _PLOOPI_SECRETKEY : $key;
@@ -58,20 +88,34 @@ class ploopi_cipher
         $this->cipher = mcrypt_module_open(MCRYPT_BLOWFISH,'','cbc','');
     }
 
-    function crypt($cc)
+    /**
+     * Chiffre une chaine
+     *
+     * @param string $str chaîne à chiffrer
+     * @return mixed chaîne chiffrée ou false si la chaîne est vide
+     */
+    
+    function crypt($str)
     {
-        if (!empty($cc))
+        if (!empty($str))
         {
             include_once './include/functions/crypt.php';
             
             mcrypt_generic_init($this->cipher, $this->key, $this->iv);
-            $encrypted = ploopi_base64_encode(mcrypt_generic($this->cipher,$cc));
+            $encrypted = ploopi_base64_encode(mcrypt_generic($this->cipher, $str));
             mcrypt_generic_deinit($this->cipher);
             return($encrypted);
         }
         else return(false);
     }
 
+    /**
+     * Déchiffre une chaîne
+     *
+     * @param string $encrypted chaîne chiffrée
+     * @return mixed chaîne déchiffrée ou false si la chaîne est vide
+     */
+    
     function decrypt($encrypted)
     {
         if (!empty($encrypted))

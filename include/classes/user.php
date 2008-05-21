@@ -84,19 +84,21 @@ class user extends data_object
     }
 
     /*
-     * Retourne l'ensemble des espaces auxquels l'utilisateurs est (plus ou moins directement) rattaché
-     * 1. Récupére les groupes auxquels l'utilisateur est rattaché
-     * 2. A partir des groupes, récupère les espaces auxquels les groupes sont rattachés directement ou pas (on regarde les parents)
-     * 3. Récupère les espaces auxquels l'utilisateur est directement rattaché
      * */
 
+    /**
+     * Retourne l'ensemble des espaces auxquels l'utilisateur est (plus ou moins directement) rattaché
+     * 1. Récupére les groupes auxquels l'utilisateur est rattaché.
+     * 2. A partir des groupes, récupère les espaces auxquels les groupes sont rattachés directement ou pas (on regarde les parents).
+     * 3. Récupère les espaces auxquels l'utilisateur est directement rattaché.
+     * @return unknown
+     */
     function getworkspaces()
     {
         global $db;
 
         $workspaces = array();
 
-        // get organisation groups
         // on récupère l'ensemble des groupes d'utilisateurs et leurs parents
         $groups = $this->getgroups();
 
@@ -151,7 +153,12 @@ class user extends data_object
         return $workspaces;
     }
 
-    /* Retourne l'ensemble des groupes auxquels l'utilisateurs est rattaché */
+    /**
+     * Retourne l'ensemble des groupes auxquels l'utilisateurs est rattaché
+     *
+     * @return unknown
+     */
+    
     function getgroups()
     {
         global $db;

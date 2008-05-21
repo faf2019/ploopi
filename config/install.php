@@ -56,7 +56,8 @@ chdir('..');
 require_once './include/functions/errors.php';
 set_error_handler('ploopi_errorhandler');
 
-require_once './include/start/global.php';
+require_once './include/start/constants.php';
+require_once './include/start/functions.php';
 require_once './lib/template/template.php';
 
 require_once './config/install/functions.inc.php';

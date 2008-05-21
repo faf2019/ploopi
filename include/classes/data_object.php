@@ -45,14 +45,16 @@
 class data_object
 {
     /**
-    * constructor
-    *
-    * @param int one or more database record ID
-    *
-    * @access public
-    *
-    * @uses init_description()
-    **/
+     * Constructeur de la classe
+     *
+     * @param string nom de la table
+     * @param string champ clé n°1
+     * @param string champ clé n°2
+     * @param string champ clé n°X
+     * 
+     * @return data_object
+     * 
+     */
 
     function data_object()
     {
@@ -87,19 +89,24 @@ class data_object
         $this->new = true;
     }
 
+    /**
+     * Permet de connexion à la base de données
+     *
+     * @param ressource $db objet de connexion à la base de données
+     */
+    
     function setdb($db)
     {
         $this->db = $db;
     }
 
+    
     /**
-    * set value for each field in recordset
-    *
-    * @param array $values array of field values as prefixed_fieldname => $value
-    * @param string $prefix prefix of field names
-    *
-    * @access private
-    **/
+     * Permet de mettre à jour les propriétés de l'objet (les champs de la table)
+     *
+     * @param array $values tableau associatif contenant les valeurs tel que "prefixe_nomduchamp" => "valeur"
+     * @param string $prefix préfixe utilisé
+     */
 
     function setvalues($values, $prefix)
     {
@@ -118,21 +125,17 @@ class data_object
     }
 
     /**
-    * Allow to open the data contains in the mysql data
-    *
-    * @param int none, one or more field to test.
-    * @return int number of records corresponding to the query
-    *
-    * @global object $db low level database access object
-    *
-    * @access private
-    */
-
+     * Ouvre un enregistrement de la table et met à jour l'objet
+     *
+     * @param mixed valeur du champ 1 de la clé
+     * @param mixed valeur du champ 2 de la clé
+     * @param mixed valeur du champ X de la clé
+     *
+     * @return int nombre d'enregistrements
+     */
+    
     function open() // id0, id1, id2, etc...
     {
-
-        //global $db;
-
         $numargs = func_num_args();
         if ($numargs > 0)
         {
@@ -152,30 +155,16 @@ class data_object
 
             if ($this->numrows>0) $this->new = false;
         }
-        else
-        {
-            $sql = "SELECT * FROM `{$this->tablename}`";
-            $this->resultid = $this->db->query($sql);
-            $this->numrows = $this->db->numrows($this->resultid);
-            $count = 0;
-            while ($row = $this->db->fetchrow($this->resultid))
-            {
-                $this->fields[$count++] = $row;
-            }
-        }
+        
         return $this->numrows;
     }
 
     /**
-    * Allow to save the difference with mysql data
-    *
-    * @return void
-    *
-    * @global object $db low level database access object
-    *
-    * @access private
-    */
-
+     * Insère ou met à jour l'enregistrement dans la base de données
+     *
+     * @return mixed valeur de la clé primaire
+     */
+    
     function save()
     {
 
@@ -233,12 +222,8 @@ class data_object
     }
 
     /**
-    * Allow to erase data in database
-    *
-    * @return void
-    *
-    * @access private
-    */
+     * Supprime l'enregistrement dans la base de données
+     */
 
     function delete()
     {
@@ -253,30 +238,20 @@ class data_object
         $this->sql = $sql;
     }
 
-
     /**
-    * get table description from the MySQL server
-    *
-    * @return void
-    *
-    * @global object $db low level database access object
-    *
-    * @access private
-    */
+     * Initialise les propriétés de l'objet avec la structure de la table
+     */
+
     function init_description()
     {
         $result = $this->db->query("describe `{$this->tablename}`");
         while ($fields = $this->db->fetchrow($result)) $this->fields[$fields['Field']] = '';
     }
 
-
     /**
-    * set user/group/module ids
-    *
-    * @return void
-    *
-    * @access public
-    */
+     * Met à jour les propriétés id_user, id_workspace, id_module de l'objet avec le contenu de la session
+     */
+    
     function setuwm()
     {
         $this->fields['id_user'] = $_SESSION['ploopi']['userid'] ;
@@ -285,13 +260,11 @@ class data_object
     }
 
     /**
-    * sql dump of object content
-    *
-    * @return string
-    *
-    * @access private
-    */
-
+     * Génère un dump SQL de l'enregistrement
+     *
+     * @return string dump SQL
+     */
+    
     function dump()
     {
         $listvalues='';
@@ -309,16 +282,14 @@ class data_object
         return ("INSERT INTO `{$this->tablename}` SET {$listvalues}");
     }
 
-
     /**
-    * template export of object content
-    *
-    * @return string
-    *
-    * @access private
-    */
-
-    function totemplate(&$tpl, $prefix)
+     * Génère des variables templates à partir des propriétés de l'objet
+     *
+     * @param Template $tpl template
+     * @param string $prefix préfixe à ajouter (optionnel)
+     */
+    
+    function totemplate(&$tpl, $prefix = '')
     {
         $array_vars = array();
         foreach($this->fields as $key => $value) $array_vars[strtoupper("{$prefix}{$key}")] = $value;
@@ -326,13 +297,11 @@ class data_object
     }
 
     /**
-    * get object sql structure
-    *
-    * @return string
-    *
-    * @access private
-    */
-
+     * Retourne le script SQL de création de la table
+     *
+     * @return string script SQL
+     */
+    
     function getsqlstructure()
     {
         $sql = "CREATE TABLE `{$this->tablename}` (";

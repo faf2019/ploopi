@@ -68,7 +68,7 @@ switch($_SESSION['ploopi']['mainmenu'])
             break;
             
             case 'annotation':
-                include './modules/system/public_annotation.php';
+                include './modules/system/public_annotations.php';
             break;
             
             case 'paramsave':

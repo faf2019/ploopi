@@ -44,27 +44,84 @@
 
 class ploopi_db
 {
-    var $persistency = true;
+    /**
+     * Détermine si la connexion est permanente
+     *
+     * @var boolean
+     */
+    
+    private $persistency;
 
-    var $user = '';
+    /**
+     * Nom d'utilisateur pour la connexion à la BDD
+     *
+     * @var string
+     */
+    
+    private $user;
 
-    var $password = '';
+    /**
+     * Mot de passe pour la connexion à la BDD
+     *
+     * @var string
+     */
+    
+    private $password;
 
-    var $server = '';
+    /**
+     * Nom du serveur (hôte, ip) pour la connexion à la BDD
+     *
+     * @var string
+     */
+    
+    private $server;
 
-    var $database = '';
+    /**
+     * Nom de la base de données pour la connexion à la BDD
+     *
+     * @var string
+     */
+    
+    private $database;
 
-    var $connection_id;
+    /**
+     * Identifiant de connexion MySQL
+     *
+     * @var ressource
+     */
+    
+    private $connection_id;
 
-    var $query_result;
+    /**
+     * Pointeur sur le résultat de la dernière requête exécutée
+     *
+     * @var ressource
+     */
+    
+    private $query_result;
 
-    var $num_queries = 0;
+    /**
+     * Compteur de requêtes exécutées
+     *
+     * @var int
+     */
+    
+    private $num_queries;
 
-    var $exectime_queries = 0;
+    /**
+     * Temps d'exécution SQL global depuis le début du script (en ms)
+     *
+     * @var int
+     */
+    private $exectime_queries;
 
-    var $array = array();
-
-    var $db_timer;
+    /**
+     * Timer d'exécution
+     *
+     * @var timer
+     */
+    
+    private $db_timer;
 
     /**
      * Constructeur de la classe. Connexion à une base de données, sélection de la base.
@@ -77,7 +134,7 @@ class ploopi_db
      * @return mixed false si problème de connexion, id de connexion sinon
      */
     
-    function ploopi_db($server, $user, $password, $database = '', $persistency = false)
+    function ploopi_db($server, $user, $password = '', $database = '', $persistency = false)
     {
         $this->persistency = $persistency;
         $this->user = $user;
@@ -85,6 +142,8 @@ class ploopi_db
         $this->server = $server;
         $this->database = $database;
         $this->connection_id = 0;
+        $this->num_queries = 0;
+        $this->exectime_queries = 0;
 
 
         if($this->persistency)
@@ -338,19 +397,6 @@ class ploopi_db
         else return false;
     }
 
-
-    /**
-    * retrieves the resultset in an array
-    *
-    * @return mixed If successful : array containing the query resultset, else : FALSE
-    *
-    * @param int query id
-    *
-    * @access public
-    *
-    * @uses query_result
-    */
-    
     /**
      * Retourne dans un tableau le contenu de la dernière requête ou du recordset passé en paramètre 
      *
@@ -366,18 +412,18 @@ class ploopi_db
 
         if($query_id)
         {
-            $this->array = array();
+            $array = array();
 
             if ($this->numrows())
             {
                 $this->dataseek($query_id, 0);
                 while ($fields = $this->fetchrow($query_id))
                 {
-                    if (sizeof($fields) == 1) $this->array[] = $fields[key($fields)];
-                    else $this->array[] = $fields;
+                    if (sizeof($fields) == 1) $array = $fields[key($fields)];
+                    else $array = $fields;
                 }
             }
-            return $this->array;
+            return $array;
         }
         else return false;
     }
@@ -398,7 +444,7 @@ class ploopi_db
 
         if($query_id)
         {
-            $this->array = array();
+            $array = array();
 
             if ($this->numrows())
             {
@@ -407,11 +453,11 @@ class ploopi_db
                 {
                     if ($utf8) foreach($fields as $key => $value) $fields[$key] = utf8_encode($value);
 
-                    if (sizeof($fields) == 1) $this->array[] = $fields[key($fields)];
-                    else $this->array[] = $fields;
+                    if (sizeof($fields) == 1) $array[] = $fields[key($fields)];
+                    else $array[] = $fields;
                 }
             }
-            return json_encode($this->array);
+            return json_encode($array);
         }
         else return false;
     }
@@ -449,6 +495,12 @@ class ploopi_db
         else return(false);
     }
 
+    /**
+     * Démarre le timer
+     * 
+     * @see timer
+     * @see timer::start
+     */
     
     function timer_start()
     {
@@ -459,6 +511,13 @@ class ploopi_db
         }
     }
 
+    /**
+     * Met à jour le temps d'exécution global avec le timer en cours
+     * 
+     * @see timer
+     * @see timer::getexectime
+     */
+    
     function timer_stop()
     {
         if (class_exists('timer'))

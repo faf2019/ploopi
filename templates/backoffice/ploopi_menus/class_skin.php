@@ -195,7 +195,7 @@ class skin extends skin_common
                     <div class="simplebloc_footer" style="cursor:move;" id="handlebottom_'.$popupid.'"></div>
                 </div>
                 <script type="text/javascript">
-                new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\', });
+                new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\'});
                 new Draggable(\''.$popupid.'\', { handle: \'handlebottom_'.$popupid.'\'});
                 document.location.href=\'#anchor_'.$popupid.'\';
                 </script>        

@@ -44,8 +44,8 @@ include_once './modules/forms/class_reply_field.php';
 include_once './lib/template/template.php';
 
 
-global $field_formats; // from form./include/start/global.php
-global $field_operators; // from form./include/start/global.php
+global $field_formats; // from form/include/global.php
+global $field_operators; // from form/include/global.php
 
 global $articleid;
 global $headingid;

@@ -47,7 +47,6 @@ switch($ploopi_op)
         <?
         if (isset($_GET['id_tag']) && is_numeric($_GET['id_tag']))
         {
-            include_once './include/start/global.php';
             include_once './include/classes/annotation.php';
 
             $tag = new tag();

@@ -210,7 +210,7 @@ switch($ploopi_op)
             {
                 $sort_column = ($orderby == 'ref') ? $sort_img : '';
                 $documents_columns['right'][6] = array( 'label' => '<span>Ref&nbsp;</span>'.$sort_column,
-                                                        'width' => '75',
+                                                        'width' => '100',
                                                         'onclick' => "ploopi_documents_browser('{$currentfolder}', '{$_SESSION['documents']['documents_id']}', '{$_SESSION['documents']['mode']}', 'ref',true);",
                                                         'style' => ($orderby == 'ref') ? 'background-color:#e0e0e0;' : ''
                                                         );
@@ -220,7 +220,7 @@ switch($ploopi_op)
             {
                 $sort_column = ($orderby == 'libelle') ? $sort_img : '';
                 $documents_columns['right'][7] = array( 'label' => '<span>Libellé&nbsp;</span>'.$sort_column,
-                                                        'width' => '110',
+                                                        'width' => '150',
                                                         'onclick' => "ploopi_documents_browser('{$currentfolder}', '{$_SESSION['documents']['documents_id']}', '{$_SESSION['documents']['mode']}', 'libelle',true);",
                                                         'style' => ($orderby == 'libelle') ? 'background-color:#e0e0e0;' : ''
                                                         );

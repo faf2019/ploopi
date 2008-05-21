@@ -101,7 +101,7 @@ if (file_exists('./include/classes/db_'._PLOOPI_SQL_LAYER.'.php')) include_once 
 global $db;
 
 $db = new ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
-if(!$db->connection_id) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
+if(!$db->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
 
 
 /**

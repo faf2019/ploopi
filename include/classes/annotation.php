@@ -46,11 +46,23 @@ include_once './include/classes/data_object.php';
 class annotation extends data_object
 {
 
+    /**
+     * Constructeur de la classe
+     *
+     * @return annotation
+     */
+    
     function annotation()
     {
         parent::data_object('ploopi_annotation','id');
     }
 
+    /**
+     * Enregistre l'annotation et les tags associés
+     *
+     * @return int identifiant de l'annotation
+     */
+    
     function save()
     {
         global $db;
@@ -88,6 +100,10 @@ class annotation extends data_object
     }
 
 
+    /**
+     * Supprime l'annotation
+     */
+    
     function delete()
     {
         global $db;
@@ -122,11 +138,21 @@ class annotation extends data_object
 
 class annotation_tag extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return annotation_tag
+     */
+    
     function annotation_tag()
     {
         parent::data_object('ploopi_annotation_tag','id_annotation','id_tag');
     }
 
+    /**
+     * Supprime le tag s'il n'est plus utilisé
+     */
+    
     function delete()
     {
         global $db;
@@ -163,6 +189,12 @@ class annotation_tag extends data_object
 
 class tag extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return tag
+     */
+    
     function tag()
     {
         parent::data_object('ploopi_tag','id');

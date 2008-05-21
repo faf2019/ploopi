@@ -43,7 +43,7 @@ $ploopi_cache_read = 0;
 
 
 /**
- * Classe de gestion de la mise en cache
+ * Classe de gestion du cache
  * 
  * @package ploopi
  * @subpackage cache
@@ -56,6 +56,14 @@ class ploopi_cache extends Cache_Lite_Output
 {
     var $cache_id;
 
+    /**
+     * Constructeur de la classe
+     *
+     * @param string $id identifiant du cache
+     * @param int $lifetime durée de vie du cache (en secondes)
+     * @return ploopi_cache
+     */
+    
     function ploopi_cache($id, $lifetime = _PLOOPI_CACHE_DEFAULT_LIFETIME)
     {
         global $ploopi_cache_activated;
@@ -67,6 +75,11 @@ class ploopi_cache extends Cache_Lite_Output
         }
     }
 
+    /**
+     * Retourne la date de dernière modification du cache
+     *
+     * @return int date/heure (format ?)
+     */
     function get_lastmodified()
     {
         global $ploopi_cache_activated;
@@ -81,6 +94,13 @@ class ploopi_cache extends Cache_Lite_Output
         return(0);
     }
 
+    /**
+     * Démarre une mise en cache
+     *
+     * @param boolean $force_caching true si la mise en cache est forcée
+     * @return mixed contenu du cache ou false si le cache est désactivé ou vide
+     */
+    
     function start($force_caching = false)
     {
         global $ploopi_cache_activated;
@@ -101,6 +121,10 @@ class ploopi_cache extends Cache_Lite_Output
 
     }
 
+    /**
+     * Termine la mise en cache
+     */
+    
     function end()
     {
         global $ploopi_cache_activated;

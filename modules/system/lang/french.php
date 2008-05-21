@@ -341,7 +341,7 @@ define ('_SYSTEM_LABEL_TICKETS', 'Messages');
 define ('_SYSTEM_LABEL_SEARCH', 'Recherche');
 
 
-define ('_SYSTEM_LABEL_MYTICKETS', 'Mes Message');
+define ('_SYSTEM_LABEL_MYTICKETS', 'Mes Messages');
 define ('_SYSTEM_LABEL_TICKETS_SENDBOX', 'Messsages envoyés');
 define ('_SYSTEM_LABEL_TICKETS_INCOMINGBOX', 'Messsages reçus');
 define ('_SYSTEM_LABEL_TICKETS_WAITINGVALIDATION', 'Messages en attente de validation');

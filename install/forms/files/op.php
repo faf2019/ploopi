@@ -55,7 +55,7 @@ if ($_SESSION['ploopi']['connected'])
             break;
     
             case 'forms_delete_data':
-                include_once './modules/form./include/start/global.php';
+                include_once './modules/form/include/global.php';
     
                 if (ploopi_isactionallowed(_FORMS_ACTION_BACKUP))
                 {
