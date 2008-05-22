@@ -57,7 +57,8 @@ switch($filtertype)
     break;
 
     case 'incomingbox':
-        $where = " AND ( u.id != {$_SESSION['ploopi']['userid']} OR isnull(u.id) )";
+        // $where = " AND ( u.id != {$_SESSION['ploopi']['userid']} OR isnull(u.id) OR td.id_user = {$_SESSION['ploopi']['userid']})";
+        $where = " AND td.id_user = {$_SESSION['ploopi']['userid']}";
     break;
     
     case 'tovalidate':
