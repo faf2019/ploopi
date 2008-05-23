@@ -55,6 +55,7 @@ function ploopi_die($var = null, $flush = true)
     global $ploopi_errors_level;
     global $ploopi_errors_nb;
     global $ploopi_errors_msg;    
+    global $db;
     
     global $ploopi_timer;
     
@@ -87,9 +88,6 @@ function ploopi_die($var = null, $flush = true)
     session_write_close();
 
     if ($flush) while (ob_get_level()>1) ob_end_flush();
-    
-    global $db;
-    if (!empty($db) && $db->isconnected()) $db->close();
 
     die();
 }
@@ -130,8 +128,8 @@ function ploopi_ob_callback($buffer)
     global $db;
     
     //DEBUG
-    //$f = fopen('./tmp/ob.data', 'w');
-    //fwrite($f, "buffer\n".gettype($ploopi_timer));
+    $f = fopen('./tmp/ob.data', 'w');
+    fwrite($f, "buffer\n".gettype($db)."\n".$db."\n");
     
     // try to get content-type 
     $content_type = 'text/html';
@@ -225,6 +223,7 @@ function ploopi_ob_callback($buffer)
         $log->fields['page_size'] = $ploopi_stats['pagesize'];
         
         $log->save();
+
     }
                             
     if ($content_type == 'text/html')
@@ -247,6 +246,8 @@ function ploopi_ob_callback($buffer)
         
         $buffer = trim(str_replace($array_tags, $array_values, $buffer));
     }
+    
+    if (!empty($db) && $db->isconnected()) $db->close();
     
     if (_PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && $content_type == 'text/html')
     {  
