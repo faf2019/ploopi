@@ -639,7 +639,7 @@ CREATE TABLE `ploopi_module_type` (
 
 LOCK TABLES `ploopi_module_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_module_type` DISABLE KEYS */;
-INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.0RC3c','Ovensia / Netlor','20080507000000');
+INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.0RC4','Ovensia / Netlor','20080526000000');
 /*!40000 ALTER TABLE `ploopi_module_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1297,3 +1297,11 @@ ALTER TABLE `ploopi_user` ADD `servertimezone` TINYINT( 1 ) UNSIGNED NOT NULL DE
 
 ALTER TABLE `ploopi_workspace` ADD INDEX ( `code` );
 ALTER TABLE `ploopi_workspace` ADD INDEX ( `id_workspace` );
+
+ALTER TABLE `ploopi_workspace` CHANGE `admin_template` `template` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `ploopi_workspace` DROP `web_template`;
+ALTER TABLE `ploopi_workspace` DROP `public`;
+ALTER TABLE `ploopi_workspace` CHANGE `admin_domainlist` `backoffice_domainlist` LONGTEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `ploopi_workspace` CHANGE `web_domainlist` `frontoffice_domainlist` LONGTEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `ploopi_workspace` CHANGE `admin` `backoffice` TINYINT( 1 ) UNSIGNED NULL DEFAULT '1';
+ALTER TABLE `ploopi_workspace` CHANGE `web` `frontoffice` TINYINT( 1 ) UNSIGNED NULL DEFAULT '0';

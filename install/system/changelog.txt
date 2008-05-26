@@ -1,3 +1,19 @@
+== Ploopi - version 1.0 RC4 ===================================================
+
+2008-05-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+ - Commentaires : mise à jour (format phpdoc)
+ - Refactoring : réorganisation des fichiers de classes, suppression de fichiers obsolètes, nommage des variables pour la gestion backoffice/frontoffice (suppression des appellations 'web' et 'admin')
+ - Tickets : Mise à jour pour arriver directement dans les messages reçus, pouvoir afficher les message envoyés.
+ - Tickets : nouvelles icones pour messages envoyés/reçus
+ - Système : Correction d'un problème de dépendance entraînant un bug de ploopi_die() dans certains contextes
+ - Système : Correction d'un bug dans l'intégration du moteur de recherche intégal
+ - Système : Correction d'un bug au niveau du switch backoffice/frontoffice (on perdait l'id module backoffice qui était remplacé par celui du module webedit du frontoffice)
+
+* Templates 
+  - Mise à jour des templates backoffice pour gérer une deuxième zone draggable sur les popups.
+
 == Ploopi - version 1.0 RC3c ===================================================
 
 2008-05-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

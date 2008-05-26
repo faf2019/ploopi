@@ -56,7 +56,7 @@ function ploopi_session_reset()
                     'connected'     => false,
                     'loginerror'    => false,
                     'paramloaded'   => false,
-                    'mode'          => 'admin',
+                    'mode'          => 'backoffice',
 
                     'remote_ip'      => ploopi_getip(),
                     'remote_browser' => Net_UserAgent_Detect::getBrowserString(),
@@ -85,6 +85,9 @@ function ploopi_session_reset()
                     'modulelabel'   =>  '',
                     'moduleicon'    =>  '',
 
+                    'backoffice'    =>  array('moduleid' => '', 'workspaceid' => ''),
+                    'frontoffice'   =>  array('moduleid' => '', 'workspaceid' => ''),
+                    
                     'defaultskin'   =>  '',
                     'template_name' =>  '',
                     'template_path' =>  '',

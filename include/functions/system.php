@@ -128,8 +128,8 @@ function ploopi_ob_callback($buffer)
     global $db;
     
     //DEBUG
-    $f = fopen('./tmp/ob.data', 'w');
-    fwrite($f, "buffer\n".gettype($db)."\n".$db."\n");
+    //$f = fopen('./tmp/ob.data', 'w');
+    //fwrite($f, "buffer\n".gettype($db)."\n".$db."\n");
     
     // try to get content-type 
     $content_type = 'text/html';

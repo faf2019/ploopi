@@ -44,37 +44,37 @@ $workspaces = array();
 
 while ($fields = $db->fetchrow())
 {
-    $web_domain_array = split("\r\n",preg_replace('/\s*/','', $fields['web_domainlist']));
-    $admin_domain_array = split("\r\n",preg_replace('/\s*/','', $fields['admin_domainlist']));
+    $frontoffice_domain_array = split("\r\n",preg_replace('/\s*/','', $fields['frontoffice_domainlist']));
+    $backoffice_domain_array = split("\r\n",preg_replace('/\s*/','', $fields['backoffice_domainlist']));
 
     $workspaces[$fields['id']] = $fields;
     $workspaces[$fields['id']]['parents_array'] = split(';',$workspaces[$fields['id']]['parents']);
-    $workspaces[$fields['id']]['web_domain_array'] = $web_domain_array;
-    $workspaces[$fields['id']]['admin_domain_array'] = $admin_domain_array;
+    $workspaces[$fields['id']]['frontoffice_domain_array'] = $frontoffice_domain_array;
+    $workspaces[$fields['id']]['backoffice_domain_array'] = $backoffice_domain_array;
 
-    if (trim($workspaces[$fields['id']]['web_domainlist']) == '')
+    if (trim($workspaces[$fields['id']]['frontoffice_domainlist']) == '')
     {
         $p_array = $workspaces[$fields['id']]['parents_array'];
         for ($i=sizeof($p_array)-1;$i>=0;$i--)
         {
-            if (isset($workspaces[$p_array[$i]]) && trim($workspaces[$p_array[$i]]['web_domainlist']) != '')
+            if (isset($workspaces[$p_array[$i]]) && trim($workspaces[$p_array[$i]]['frontoffice_domainlist']) != '')
             {
-                $workspaces[$fields['id']]['web_domainlist'] = $workspaces[$p_array[$i]]['web_domainlist'];
-                $workspaces[$fields['id']]['web_domain_array'] = $workspaces[$p_array[$i]]['web_domain_array'];
+                $workspaces[$fields['id']]['frontoffice_domainlist'] = $workspaces[$p_array[$i]]['frontoffice_domainlist'];
+                $workspaces[$fields['id']]['frontoffice_domain_array'] = $workspaces[$p_array[$i]]['frontoffice_domain_array'];
                 break;
             }
         }
     }
 
-    if (trim($workspaces[$fields['id']]['admin_domainlist']) == '')
+    if (trim($workspaces[$fields['id']]['backoffice_domainlist']) == '')
     {
         $p_array = $workspaces[$fields['id']]['parents_array'];
         for ($i=sizeof($p_array)-1;$i>=0;$i--)
         {
-            if (isset($workspaces[$p_array[$i]]) && trim($workspaces[$p_array[$i]]['admin_domainlist']) != '')
+            if (isset($workspaces[$p_array[$i]]) && trim($workspaces[$p_array[$i]]['backoffice_domainlist']) != '')
             {
-                $workspaces[$fields['id']]['admin_domainlist'] = $workspaces[$p_array[$i]]['admin_domainlist'];
-                $workspaces[$fields['id']]['admin_domain_array'] = $workspaces[$p_array[$i]]['admin_domain_array'];
+                $workspaces[$fields['id']]['backoffice_domainlist'] = $workspaces[$p_array[$i]]['backoffice_domainlist'];
+                $workspaces[$fields['id']]['backoffice_domain_array'] = $workspaces[$p_array[$i]]['backoffice_domain_array'];
                 break;
             }
         }
@@ -84,23 +84,23 @@ while ($fields = $db->fetchrow())
 $_SESSION['ploopi']['allworkspaces'] = implode(',', array_keys($workspaces));
 
 $host_array = array($_SESSION['ploopi']['host'], '*');
-$_SESSION['ploopi']['hosts'] = array('web' => array(), 'admin' => array());
+$_SESSION['ploopi']['hosts'] = array('frontoffice' => array(), 'backoffice' => array());
 
 // on garde les id de groupes autorisés en fonction du domaine courant
 foreach($workspaces as $gid => $grp)
 {
-    foreach($grp['web_domain_array'] as $domain)
+    foreach($grp['frontoffice_domain_array'] as $domain)
     {
-        if ($workspaces[$gid]['web'] && sizeof(array_intersect($workspaces[$gid]['web_domain_array'], $host_array)) && !in_array($gid, $_SESSION['ploopi']['hosts']['web'])) $_SESSION['ploopi']['hosts']['web'][] = $gid;
+        if ($workspaces[$gid]['frontoffice'] && sizeof(array_intersect($workspaces[$gid]['frontoffice_domain_array'], $host_array)) && !in_array($gid, $_SESSION['ploopi']['hosts']['frontoffice'])) $_SESSION['ploopi']['hosts']['frontoffice'][] = $gid;
     }
-    foreach($grp['admin_domain_array'] as $domain)
+    foreach($grp['backoffice_domain_array'] as $domain)
     {
-        if ($workspaces[$gid]['admin'] && sizeof(array_intersect($workspaces[$gid]['admin_domain_array'], $host_array)) && !in_array($gid, $_SESSION['ploopi']['hosts']['admin'])) $_SESSION['ploopi']['hosts']['admin'][] = $gid;
+        if ($workspaces[$gid]['backoffice'] && sizeof(array_intersect($workspaces[$gid]['backoffice_domain_array'], $host_array)) && !in_array($gid, $_SESSION['ploopi']['hosts']['backoffice'])) $_SESSION['ploopi']['hosts']['backoffice'][] = $gid;
     }
 }
 
-if (isset($_SESSION['ploopi']['hosts']['web'][0])) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['web'][0]] = $workspaces[$_SESSION['ploopi']['hosts']['web'][0]];
-if (isset($_SESSION['ploopi']['hosts']['admin'][0])) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['admin'][0]] = $workspaces[$_SESSION['ploopi']['hosts']['admin'][0]];
+if (isset($_SESSION['ploopi']['hosts']['frontoffice'][0])) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['frontoffice'][0]] = $workspaces[$_SESSION['ploopi']['hosts']['frontoffice'][0]];
+if (isset($_SESSION['ploopi']['hosts']['backoffice'][0])) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['backoffice'][0]] = $workspaces[$_SESSION['ploopi']['hosts']['backoffice'][0]];
 
 foreach($_SESSION['ploopi']['workspaces'] as $wid => $wsp)
 {

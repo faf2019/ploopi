@@ -258,8 +258,8 @@ switch ($_SESSION['system']['level'])
                             $workspace->fields['parents'] = "{$parent_workspace->fields['parents']};{$_POST['workspace_id_workspace']}";
                         }
 
-                        if (empty($_POST['workspace_admin'])) $workspace->fields['admin'] = 0;
-                        if (empty($_POST['workspace_web'])) $workspace->fields['web'] = 0;
+                        if (empty($_POST['workspace_backoffice'])) $workspace->fields['backoffice'] = 0;
+                        if (empty($_POST['workspace_frontoffice'])) $workspace->fields['frontoffice'] = 0;
                         if (empty($_POST['workspace_mustdefinerule'])) $workspace->fields['mustdefinerule'] = 0;
 
 

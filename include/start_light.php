@@ -50,27 +50,27 @@ switch($_SESSION['ploopi']['scriptname'])
 {
     case 'cron.php':
     case 'webservice.php':
-        $_SESSION['ploopi']['mode'] = 'admin';
+        $_SESSION['ploopi']['mode'] = 'backoffice';
     break;
 
     default:
     case 'rss.php':
-        $_SESSION['ploopi']['mode'] = 'web';
+        $_SESSION['ploopi']['mode'] = 'frontoffice';
     break;
 
 }
 
 switch ($_SESSION['ploopi']['mode'])
 {
-    case 'web':
-        if (isset($_SESSION['ploopi']['hosts']['web'][0]))
-            $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['web'][0];
+    case 'frontoffice':
+        if (isset($_SESSION['ploopi']['hosts']['frontoffice'][0]))
+            $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['frontoffice'][0];
         else ploopi_die();
     break;
     
-    case 'admin':
-        if (isset($_SESSION['ploopi']['hosts']['admin'][0]))
-            $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['admin'][0];
+    case 'backoffice':
+        if (isset($_SESSION['ploopi']['hosts']['backoffice'][0]))
+            $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['backoffice'][0];
         else ploopi_die();
         
         include './include/load_param.php';

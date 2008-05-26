@@ -76,16 +76,16 @@ echo $skin->open_simplebloc();
 <div class="ploopi_form" style="clear:both;padding:2px">
     <p>
         <label><? echo _SYSTEM_LABEL_GROUP_ADMIN; ?>:</label>
-        <input type="checkbox" name="workspace_admin" <? if($workspace->fields['admin']) echo "checked"; ?> value="1">
+        <input type="checkbox" name="workspace_backoffice" <? if($workspace->fields['backoffice']) echo "checked"; ?> value="1">
     </p>
     <p>
         <label><? echo _SYSTEM_LABEL_GROUP_SKIN; ?>:</label>
-        <select class="select" name="workspace_admin_template">
+        <select class="select" name="workspace_template">
             <option value=""><? echo _PLOOPI_NONE; ?></option>
             <?
             foreach($templatelist_back as $index => $tpl_name)
             {
-                $sel = ($tpl_name == $workspace->fields['admin_template']) ? 'selected' : '';
+                $sel = ($tpl_name == $workspace->fields['template']) ? 'selected' : '';
                 echo "<option $sel>$tpl_name</option>";
             }
             ?>
@@ -93,31 +93,18 @@ echo $skin->open_simplebloc();
     </p>
     <p>
         <label><? echo _SYSTEM_LABEL_GROUP_ADMINDOMAINLIST; ?>:</label>
-        <textarea class="text" name="workspace_admin_domainlist"><? echo $workspace->fields['admin_domainlist']; ?></textarea>
+        <textarea class="text" name="workspace_backoffice_domainlist"><? echo $workspace->fields['backoffice_domainlist']; ?></textarea>
     </p>
     <p>
         <label><? echo _SYSTEM_LABEL_GROUP_WEB; ?>:</label>
-        <input type="checkbox" name="workspace_web" <? if($workspace->fields['web']) echo "checked"; ?> value="1">
-    </p>
-    <p>
-        <label><? echo _SYSTEM_LABEL_GROUP_SKIN; ?>:</label>
-        <select class="select" name="workspace_web_template">
-            <option value=""><? echo _PLOOPI_NONE; ?></option>
-            <?
-            foreach($templatelist_front as $index => $tpl_name)
-            {
-                $sel = ($tpl_name == $workspace->fields['web_template']) ? 'selected' : '';
-                echo "<option $sel>$tpl_name</option>";
-            }
-            ?>
-        </select>
+        <input type="checkbox" name="workspace_frontoffice" <? if($workspace->fields['frontoffice']) echo "checked"; ?> value="1">
     </p>
     <p>
         <label><? echo _SYSTEM_LABEL_GROUP_WEBDOMAINLIST; ?>:</label>
-        <textarea class="text" name="workspace_web_domainlist"><? echo $workspace->fields['web_domainlist']; ?></textarea>
+        <textarea class="text" name="workspace_frontoffice_domainlist"><? echo $workspace->fields['frontoffice_domainlist']; ?></textarea>
     </p>
     <?
-    if ($workspace->fields['web'])
+    if ($workspace->fields['frontoffice'])
     {
         // check if cms used in this workgroup
         $cmsready = false;

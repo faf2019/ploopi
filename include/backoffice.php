@@ -67,7 +67,6 @@ else
 
 $template_body->assign_block_vars('ploopi_js', array('PATH' => './lib/protoculous/protoculous-packer.js?v='.urlencode(_PLOOPI_VERSION).'&r='._PLOOPI_REVISION));
 $template_body->assign_block_vars('ploopi_js', array('PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION).'&r='._PLOOPI_REVISION));
-$template_body->assign_block_vars('ploopi_js', array('PATH' => './js/javascript.php?v='.urlencode(_PLOOPI_VERSION).'&r='._PLOOPI_REVISION));
 
 $ploopi_additional_head = '';
 $ploopi_additional_javascript = '';

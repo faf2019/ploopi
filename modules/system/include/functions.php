@@ -298,7 +298,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                     if ($isworkspacesel) $style_sel = 'bold';
                     else $style_sel = 'none';
 
-                    $icon = ($workspace['web']) ? 'workspace-web' : 'workspace';
+                    $icon = ($workspace['frontoffice']) ? 'workspace-frontoffice' : 'workspace';
 
                     if ($workspace['depth'] == 2 || ($workspace['id'] == $_SESSION['ploopi']['workspaceid'] && $_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN)) {/* racine */}
                     else

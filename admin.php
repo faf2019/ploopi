@@ -38,6 +38,5 @@
 include_once './include/start.php';
 include_once './include/backoffice.php';
 
-
 ploopi_die();
 ?>

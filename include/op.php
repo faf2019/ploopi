@@ -131,8 +131,7 @@ if (isset($ploopi_op))
 
             $firstday = mktime(0,0,0,$month,1,$year);
 
-            $weekday = date('w', $firstday);
-            if ($weekday == 0) $weekday = 7;
+            $weekday = date('N', $firstday);
 
             $prev_month = ($month-1)%12+(($month-1)%12 == 0)*12;
             $next_month = ($month+1)%12+(($month+1)%12 == 0)*12;
@@ -141,7 +140,7 @@ if (isset($ploopi_op))
             $next_year = $year + ($next_month == 1);
             
             
-            if ($_SESSION['ploopi']['mode'] == 'admin' && !empty($_SESSION['ploopi']['template_path'])) $strIconsPath = $_SESSION['ploopi']['template_path'];
+            if ($_SESSION['ploopi']['mode'] == 'backoffice' && !empty($_SESSION['ploopi']['template_path'])) $strIconsPath = $_SESSION['ploopi']['template_path'];
             else $strIconsPath = '.';
              
             ?>
@@ -160,37 +159,55 @@ if (isset($ploopi_op))
                     </div>
                 </div>
                 <div class="calendar_row">
-                <?
-                foreach($ploopi_agenda_days as $d)
-                {
-                    ?>
-                    <div class="calendar_day"><? echo $d[0]; ?></div>
+                    <div class="calendar_day">&nbsp;</div>
                     <?
-                }
-                ?>
+                    for ($d=1; $d<=7; $d++)
+                    {
+                        ?>
+                        <div class="calendar_day"><? echo $ploopi_agenda_days[$d][0]; ?></div>
+                        <?
+                    }
+                    ?>
                 </div>
                 <?
                 if ($weekday > 1)
                 {
+                    $w = date('W', ploopi_timestamp2unixtimestamp(sprintf("%04d%02d01000000", $year, $month)));
                     ?>
                     <div class="calendar_row">
+                    <div class="calendar_week">s<? echo $w; ?></div>
                     <?
-                    for ($d = 1; $d < $weekday; $d++)
+                    for ($c = 1; $c < $weekday; $c++)
                     {
+                        /**
+                         * Affichage des derniers jours du mois précédent
+                         */
+                        
+                        $ts = ploopi_timestamp_add(sprintf("%04d%02d01000000", $year, $month), 0, 0, 0, 0, $c-$weekday);
+                        $localdate = ploopi_timestamp2local($ts);
+                        $d = intval(substr($ts, 6, 2), 10);
                         ?>
-                        <div class="calendar_day"><div>&nbsp;</div></div>
+                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_calendar_dispatchevent('<? echo $_SESSION['calendar']['inputfield_id']; ?>');"><? echo $d; ?></a></div>
                         <?
                     }
                 }
 
+                /**
+                 * Boucle principale sur tous les jours du mois à afficher
+                 */
                 for ($d = 1; $d <= date('t', $firstday) ; $d++)
                 {
                     if ($weekday == 8) $weekday = 1;
 
+                    /**
+                     * Chaque début de semaine = une nouvelle ligne
+                     */
                     if ($weekday == 1)
                     {
+                        $w = date('W', ploopi_timestamp2unixtimestamp(sprintf("%04d%02d%02d000000", $year, $month, $d)));
                         ?>
                         <div class="calendar_row">
+                        <div class="calendar_week">s<? echo $w; ?></div>
                         <?
                     }
                     $localdate = ploopi_timestamp2local(sprintf("%04d%02d%02d000000", $year, $month, $d));
@@ -202,16 +219,27 @@ if (isset($ploopi_op))
                         <div class="calendar_day"><a <? echo $class; ?> href="javascript:void(0);" onclick="javascript:$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_calendar_dispatchevent('<? echo $_SESSION['calendar']['inputfield_id']; ?>');"><? echo $d; ?></a></div>
                     <?
 
+                    /**
+                     * Chaque fin de semaine = fin de ligne
+                     */
                     if ($weekday == 7) echo '</div>';
+                    
                     $weekday++;
                 }
 
+                /**
+                 * Si le mois ne se termine pas un dimanche
+                 */
                 if ($weekday <= 7)
                 {
-                    for ($d = $weekday; $d <= 7 ; $d++)
+                    for ($c = $weekday; $c <= 7 ; $c++)
                     {
+                        
+                        $ts = ploopi_timestamp_add(sprintf("%04d%02d01000000", $year, $month), 0, 0, 0, 0, $c-$weekday);
+                        $localdate = ploopi_timestamp2local($ts);
+                        $d = intval(substr($ts, 6, 2), 10);
                         ?>
-                        <div class="calendar_day"><div>&nbsp;</div></div>
+                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_calendar_dispatchevent('<? echo $_SESSION['calendar']['inputfield_id']; ?>');"><? echo $d; ?></a></div>
                         <?
                     }
 

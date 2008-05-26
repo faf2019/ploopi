@@ -129,6 +129,29 @@ function ploopi_unixtimestamp2local($mytimestamp) { return(date(_PLOOPI_DATEFORM
  function ploopi_unixtimestamp2timestamp($mytimestamp) { return(date(_PLOOPI_TIMESTAMPFORMAT_MYSQL,$mytimestamp)); }
 
 /**
+ * Convertit un timestamp MYSQL (AAAAMMJJhhmmss) en timestamp UNIX 
+ *
+ * @param string $mytimestamp timestamp MYSQL
+ * @return int timestamp UNIX
+ */
+  
+ function ploopi_timestamp2unixtimestamp($mytimestamp) 
+ { 
+    $timestp_array = ploopi_gettimestampdetail($mytimestamp);
+
+    return(
+        mktime(
+            $timestp_array[_PLOOPI_DATE_HOUR],
+            $timestp_array[_PLOOPI_DATE_MINUTE],
+            $timestp_array[_PLOOPI_DATE_SECOND],
+            $timestp_array[_PLOOPI_DATE_MONTH],
+            $timestp_array[_PLOOPI_DATE_DAY],
+            $timestp_array[_PLOOPI_DATE_YEAR]
+        )
+    );
+ }
+ 
+/**
  * Convertit un timestamp MYSQL (AAAAMMJJhhmmss) au format local (date+heure)
  *
  * @param string $mytimestamp
@@ -228,13 +251,15 @@ function ploopi_timestamp_add($timestp, $h=0, $mn=0, $s=0, $m=0, $d=0, $y=0)
 {
     $timestp_array = ploopi_gettimestampdetail($timestp);
 
-    return date(_PLOOPI_TIMESTAMPFORMAT_MYSQL, mktime(  $timestp_array[_PLOOPI_DATE_HOUR]+$h,
-                                                        $timestp_array[_PLOOPI_DATE_MINUTE]+$mn,
-                                                        $timestp_array[_PLOOPI_DATE_SECOND]+$s,
-                                                        $timestp_array[_PLOOPI_DATE_MONTH]+$m,
-                                                        $timestp_array[_PLOOPI_DATE_DAY]+$d,
-                                                        $timestp_array[_PLOOPI_DATE_YEAR]+$y
-                                                    ));
+    return  date(_PLOOPI_TIMESTAMPFORMAT_MYSQL,  mktime(    
+                                                    $timestp_array[_PLOOPI_DATE_HOUR]+$h,
+                                                    $timestp_array[_PLOOPI_DATE_MINUTE]+$mn,
+                                                    $timestp_array[_PLOOPI_DATE_SECOND]+$s,
+                                                    $timestp_array[_PLOOPI_DATE_MONTH]+$m,
+                                                    $timestp_array[_PLOOPI_DATE_DAY]+$d,
+                                                    $timestp_array[_PLOOPI_DATE_YEAR]+$y
+                                                )
+            );
 }
 
 /**

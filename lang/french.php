@@ -159,13 +159,7 @@ global $ploopi_agenda_months;
  */
 global $ploopi_errormsg;
 
-$ploopi_agenda_days[1] = 'Lundi';
-$ploopi_agenda_days[2] = 'Mardi';
-$ploopi_agenda_days[3] = 'Mercredi';
-$ploopi_agenda_days[4] = 'Jeudi';
-$ploopi_agenda_days[5] = 'Vendredi';
-$ploopi_agenda_days[6] = 'Samedi';
-$ploopi_agenda_days[0] = 'Dimanche';
+$ploopi_agenda_days = array ('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'); 
 
 $ploopi_agenda_months[1] = 'Janvier';
 $ploopi_agenda_months[2] = 'Février';

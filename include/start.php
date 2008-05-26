@@ -184,7 +184,7 @@ if ($ploopi_initsession)
 
         foreach ($user_workspaces as $wid => $fields)
         {
-            if (in_array($wid,$_SESSION['ploopi']['hosts']['admin']) || $fields['adminlevel'] == _PLOOPI_ID_LEVEL_SYSTEMADMIN)
+            if (in_array($wid,$_SESSION['ploopi']['hosts']['backoffice']) || $fields['adminlevel'] == _PLOOPI_ID_LEVEL_SYSTEMADMIN)
             {
                 $adminlevel = $fields['adminlevel'];
 
@@ -259,22 +259,23 @@ switch($_SESSION['ploopi']['scriptname'])
 {
     case 'admin.php':
     case 'admin-light.php':
-        $_SESSION['ploopi']['mode'] = 'admin';
+        $_SESSION['ploopi']['mode'] = 'backoffice';
     break;
 
     case 'index.php':
         if ((!empty($_GET['webedit_mode'])) && $_SESSION['ploopi']['connected'])
         {
             // cas spécial du mode de rendu public du module Webedit (on utilise le rendu frontoffice sans activer tout le processus)
-            $newmode = 'web';
+            $newmode = 'frontoffice';
         }
         else
         {
-            $newmode = (_PLOOPI_FRONTOFFICE && is_dir('./modules/webedit/') && isset($_SESSION['ploopi']['hosts']['web'][0])) ? 'web' : 'admin';
+            $newmode = (_PLOOPI_FRONTOFFICE && is_dir('./modules/webedit/') && isset($_SESSION['ploopi']['hosts']['frontoffice'][0])) ? 'frontoffice' : 'backoffice';
 
-            if ($_SESSION['ploopi']['mode'] != $newmode && $newmode == 'web')
+            if ($_SESSION['ploopi']['mode'] != $newmode && $newmode == 'frontoffice')
             {
-                if (!isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['web'][0]]['webeditmoduleid']))
+            
+                if (!isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['frontoffice'][0]]['webeditmoduleid']))
                 {
                     // on cherche le module webedit
                     $db->query( "
@@ -287,17 +288,17 @@ switch($_SESSION['ploopi']['scriptname'])
                                 where       ploopi_module.id_module_type = ploopi_module_type.id
                                 and         (ploopi_module_type.label = 'webedit')
                                 and         ploopi_module.id = ploopi_module_workspace.id_module
-                                and         ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['hosts']['web'][0]}
+                                and         ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['hosts']['frontoffice'][0]}
                                 ");
             
-                    if ($fields = $db->fetchrow()) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['web'][0]]['webeditmoduleid'] = $fields['id_module'];
-                    else $newmode = 'admin';
+                    if ($fields = $db->fetchrow()) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['frontoffice'][0]]['webeditmoduleid'] = $fields['id_module'];
+                    else $newmode = 'backoffice';
                 }
                 
-                if ($newmode == 'web')
+                if ($newmode == 'frontoffice')
                 {
-                    $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['web'][0];
-                    $_SESSION['ploopi']['moduleid'] = $_SESSION['ploopi']['webeditmoduleid'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['webeditmoduleid'];
+                    $_SESSION['ploopi']['frontoffice']['workspaceid'] = $_SESSION['ploopi']['hosts']['frontoffice'][0];
+                    $_SESSION['ploopi']['frontoffice']['moduleid'] = $_SESSION['ploopi']['webeditmoduleid'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['frontoffice']['workspaceid']]['webeditmoduleid'];
                 }
             }
         }
@@ -312,7 +313,7 @@ switch($_SESSION['ploopi']['scriptname'])
 // ADMIN SWITCHES
 ///////////////////////////////////////////////////////////////////////////
 
-if ($_SESSION['ploopi']['mode'] == 'admin')
+if ($_SESSION['ploopi']['mode'] == 'backoffice')
 {
     if ($_SESSION['ploopi']['connected'])
     {
@@ -333,11 +334,11 @@ if ($_SESSION['ploopi']['mode'] == 'admin')
         {
             $_SESSION['ploopi']['mainmenu'] = $ploopi_mainmenu;
 
-            $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['workspaces_allowed'][0];
+            $_SESSION['ploopi']['backoffice']['workspaceid'] = $_SESSION['ploopi']['workspaces_allowed'][0];
 
             if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES) ploopi_loadparams();
 
-            $_SESSION['ploopi']['moduleid'] = '';
+            $_SESSION['ploopi']['backoffice']['moduleid'] = '';
             $_SESSION['ploopi']['action'] = 'public';
             $_SESSION['ploopi']['moduletabid'] = '';
             $_SESSION['ploopi']['moduleicon'] = '';
@@ -360,11 +361,11 @@ if ($_SESSION['ploopi']['mode'] == 'admin')
         // SWITCH WORKSPACE
         ///////////////////////////////////////////////////////////////////////////
 
-        if (isset($ploopi_workspaceid) && isset($_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['adminlevel']) && $_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['admin']) // new group selected
+        if (isset($ploopi_workspaceid) && isset($_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['adminlevel']) && $_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['backoffice']) // new group selected
         {
             $_SESSION['ploopi']['mainmenu'] = _PLOOPI_MENU_WORKSPACES;
-            $_SESSION['ploopi']['workspaceid'] = $ploopi_workspaceid;
-            $_SESSION['ploopi']['moduleid'] = '';
+            $_SESSION['ploopi']['backoffice']['workspaceid'] = $ploopi_workspaceid;
+            $_SESSION['ploopi']['backoffice']['moduleid'] = '';
             $_SESSION['ploopi']['action'] = 'public';
             $_SESSION['ploopi']['moduletabid'] = '';
             $_SESSION['ploopi']['moduleicon'] = '';
@@ -385,16 +386,16 @@ if ($_SESSION['ploopi']['mode'] == 'admin')
         // LOOK FOR AUTOCONNECT MODULE
         ///////////////////////////////////////////////////////////////////////////
 
-        if (!isset($ploopi_moduleid) && $_SESSION['ploopi']['moduleid'] == '' && !empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
+        if (!isset($ploopi_moduleid) && $_SESSION['ploopi']['backoffice']['moduleid'] == '' && !empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['modules']))
         {
-            $autoconnect_modules = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'];
-            $autoconnect_workspaceid = $_SESSION['ploopi']['workspaceid'];
+            $autoconnect_modules = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['modules'];
+            $autoconnect_workspaceid = $_SESSION['ploopi']['backoffice']['workspaceid'];
 
             foreach($autoconnect_modules as $id => $autoconnect_module_id)
             {
                 if ($_SESSION['ploopi']['modules'][$autoconnect_module_id]['active'] && $_SESSION['ploopi']['modules'][$autoconnect_module_id]['autoconnect'])
                 {
-                    if (($_SESSION['ploopi']['connected'] || (!$_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['modules'][$autoconnect_module_id]['public'])) && !isset($ploopi_moduleid) && $_SESSION['ploopi']['moduleid'] == '')
+                    if (($_SESSION['ploopi']['connected'] || (!$_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['modules'][$autoconnect_module_id]['public'])) && !isset($ploopi_moduleid) && $_SESSION['ploopi']['backoffice']['moduleid'] == '')
                     {
                         $ploopi_moduleid = $autoconnect_module_id;
                         $ploopi_action = 'public';
@@ -407,30 +408,33 @@ if ($_SESSION['ploopi']['mode'] == 'admin')
         // SWITCH MODULE
         ///////////////////////////////////////////////////////////////////////////
 
-        if (isset($ploopi_moduleid) && $ploopi_moduleid != $_SESSION['ploopi']['moduleid']) // new module selected
+        if (isset($ploopi_moduleid) && $ploopi_moduleid != $_SESSION['ploopi']['backoffice']['moduleid']) // new module selected
         {
-            $_SESSION['ploopi']['moduleid'] = $ploopi_moduleid;
+            $_SESSION['ploopi']['backoffice']['moduleid'] = $ploopi_moduleid;
             $_SESSION['ploopi']['moduletabid']  = '';
             $_SESSION['ploopi']['moduleicon']   = '';
-
-            $_SESSION['ploopi']['module_inter_id'] = '';
 
             /**
             * New module selected
             * => Load module informations
             */
 
-            $select =
-            "SELECT ploopi_module.id, ploopi_module.id_module_type, ploopi_module.label, ploopi_module_type.label AS module_type
-            FROM ploopi_module, ploopi_module_type
-            WHERE ploopi_module.id_module_type = ploopi_module_type.id
-            AND ploopi_module.id = ".$_SESSION['ploopi']['moduleid'];
+            $select =   "
+                        SELECT  ploopi_module.id, 
+                                ploopi_module.id_module_type, 
+                                ploopi_module.label, 
+                                ploopi_module_type.label AS module_type
+                        
+                        FROM    ploopi_module, 
+                                ploopi_module_type
+            
+                        WHERE   ploopi_module.id_module_type = ploopi_module_type.id
+                        AND     ploopi_module.id = {$_SESSION['ploopi']['backoffice']['moduleid']}
+                        ";
 
             $answer = $db->query($select);
             if ($fields = $db->fetchrow($answer))
             {
-                /* IMPORTANT */
-                /* USE IT TO KNOW INFORMATION ABOUT CURRENT SELECTED MODULE */
                 $_SESSION['ploopi']['moduletype'] = $fields['module_type'];
                 $_SESSION['ploopi']['moduletypeid'] = $fields['id_module_type'];
                 $_SESSION['ploopi']['modulelabel'] = $fields['label'];
@@ -452,30 +456,37 @@ if ($_SESSION['ploopi']['mode'] == 'admin')
         }
     }
 
-    if (empty($_SESSION['ploopi']['workspaceid'])) $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['admin'][0];
+    if (empty($_SESSION['ploopi']['backoffice']['workspaceid'])) $_SESSION['ploopi']['backoffice']['workspaceid'] = $_SESSION['ploopi']['hosts']['backoffice'][0];
 
     ///////////////////////////////////////////////////////////////////////////
     // CHOOSE TEMPLATE
     ///////////////////////////////////////////////////////////////////////////
 
-    //if (empty($_SESSION['ploopi']['defaultskin']) && isset($_SESSION['ploopi']['hosts']['admin'][0]))
-    if (isset($_SESSION['ploopi']['hosts']['admin'][0]))
+    //if (empty($_SESSION['ploopi']['defaultskin']) && isset($_SESSION['ploopi']['hosts']['backoffice'][0]))
+    if (isset($_SESSION['ploopi']['hosts']['backoffice'][0]))
     {
-        if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['admin'][0]]))
+        if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['backoffice'][0]]))
         {
-            $_SESSION['ploopi']['defaultskin'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['admin'][0]]['admin_template'];
+            $_SESSION['ploopi']['defaultskin'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['backoffice'][0]]['template'];
         }
     }
 
-    if ($_SESSION['ploopi']['workspaceid'] != '') $_SESSION['ploopi']['template_name'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['admin_template'];
+    if ($_SESSION['ploopi']['backoffice']['workspaceid'] != '') $_SESSION['ploopi']['template_name'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['template'];
     elseif ($_SESSION['ploopi']['defaultskin'] != '') $_SESSION['ploopi']['template_name'] = $_SESSION['ploopi']['defaultskin'];
 
     if (empty($_SESSION['ploopi']['template_name']) || !file_exists("./templates/backoffice/{$_SESSION['ploopi']['template_name']}")) $_SESSION['ploopi']['template_name'] = _PLOOPI_DEFAULT_TEMPLATE;
 
     $_SESSION['ploopi']['template_path'] = "./templates/backoffice/{$_SESSION['ploopi']['template_name']}";
-
+    
+    $_SESSION['ploopi']['moduleid'] = $_SESSION['ploopi']['backoffice']['moduleid'];
+    $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['backoffice']['workspaceid'];
+    
 }
-
+else
+{
+    $_SESSION['ploopi']['moduleid'] = $_SESSION['ploopi']['frontoffice']['moduleid'];
+    $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['frontoffice']['workspaceid'];
+}
 
 // shortcuts for admin & workspaceid
 if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['adminlevel'])) $_SESSION['ploopi']['adminlevel'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['adminlevel'];
@@ -565,13 +576,6 @@ if (!$_SESSION['ploopi']['connected'])
     {
         $ploopi_errornum = 3;
     }
-
-/*
-    if (!$ploopi_errornum && ($_SESSION['ploopi']['moduleid']!= '' && !$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['public']))
-    {
-        $ploopi_errornum = 4;
-    }
-*/
 
     if (!$ploopi_errornum && ($_SESSION['ploopi']['moduleid']!= '' && !$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['active']))
     {

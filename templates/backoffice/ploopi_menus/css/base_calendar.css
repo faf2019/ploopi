@@ -19,6 +19,7 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 #calendar {
     padding:4px;
     background-color:#f0f0f0;
@@ -27,6 +28,16 @@
 .calendar_row {
     clear:both;
     overflow:auto;
+}
+
+.calendar_week {
+    float:left;
+    width:28px;
+    height:22px;
+    line-height:22px;
+    text-align:center;
+    color:#606060;
+    font-size:0.9em;
 }
 
 .calendar_day {
@@ -70,6 +81,11 @@
     background-color:#ffffff;
 }
 
+.calendar_outmonth {
+    border:1px solid #d8d8d8;
+    color:#808080;
+}
+	
 .calendar_arrow {
     float:left;
     width:40px;

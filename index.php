@@ -38,7 +38,7 @@
 
 include_once './include/start.php';
 include_once './include/op.php';
-include_once ($_SESSION['ploopi']['mode'] == 'web') ? './include/frontoffice.php' : './include/backoffice.php';
+include_once ($_SESSION['ploopi']['mode'] == 'frontoffice') ? './include/frontoffice.php' : './include/backoffice.php';
 
 ploopi_die();
 ?>
