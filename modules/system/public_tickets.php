@@ -61,6 +61,7 @@ switch($filtertype)
         $where = " AND td.id_user = {$_SESSION['ploopi']['userid']}";
     break;
     
+    /*
     case 'tovalidate':
         $where = " AND t.id_user <> {$_SESSION['ploopi']['userid']} AND t.needed_validation > 0 AND t.status < "._PLOOPI_TICKETS_DONE;
     break;
@@ -68,6 +69,7 @@ switch($filtertype)
     case 'waitingvalidation':
         $where = " AND t.id_user = {$_SESSION['ploopi']['userid']} AND t.needed_validation > 0 AND t.status < "._PLOOPI_TICKETS_DONE;
     break;
+    */
 }
 
 $orderby = '';
@@ -333,7 +335,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
         $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
         ?>
         <div class="system_tickets_row" style="background-color:<? echo $color; ?>;text-align:center;">
-        Aucun ticket
+        <? echo _SYSTEM_LABEL_NOTICKETS; ?>
         </div>
         <?
     }

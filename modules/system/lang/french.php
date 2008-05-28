@@ -347,4 +347,6 @@ define ('_SYSTEM_LABEL_TICKETS_INCOMINGBOX', 'Messsages reçus');
 define ('_SYSTEM_LABEL_TICKETS_WAITINGVALIDATION', 'Messages en attente de validation');
 define ('_SYSTEM_LABEL_TICKETS_TOVALIDATE', 'Messages à valider');
 define ('_SYSTEM_LABEL_TICKETS_ALL', 'Tous les messages');
+define ('_SYSTEM_LABEL_NOTICKETS', 'Aucun message');
+
 ?>

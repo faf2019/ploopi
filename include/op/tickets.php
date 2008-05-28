@@ -45,12 +45,12 @@ switch($ploopi_op)
         ?>
         <p class="ploopi_va" style="padding:4px;">
             <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/newmail.png">
-            <a href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets"); ?>"><b>Vous avez reçu un nouveau ticket !</b></a>
+            <a href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets"); ?>"><b>Vous avez reçu un nouveau message !</b></a>
         </p>
         <?
         $content = ob_get_contents();
         ob_end_clean();
-        echo $skin->create_popup('Nouveau Ticket !', $content, 'popup_tickets_new_alert');
+        echo $skin->create_popup('Nouveau Message !', $content, 'popup_tickets_new_alert');
         ploopi_die();
     break;
         
@@ -119,9 +119,13 @@ switch($ploopi_op)
                 <?
             }
             ?>
+            <?
+            /*
             <p class="ploopi_va" style="padding:4px 0; cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'ticket_needed_validation');">
                 <input type="checkbox" name="ticket_needed_validation" id="ticket_needed_validation" style="cursor:pointer;" value="1"><span><? echo _PLOOPI_LABEL_TICKET_VALIDATIONREQUIRED; ?></span>
             </p>
+            */
+            ?>
 
             <div style="padding:8px 4px;margin:4px 0;background-color:#f0f0f0;border:1px solid #c0c0c0;">
                 <? 
@@ -348,7 +352,7 @@ switch($ploopi_op)
             // construction de la liste des groupes de travail et des groupes d'utilisateurs rattachés (pour l'utilisateur courant)
             foreach ($_SESSION['ploopi']['workspaces'] as $grp) // pour chaque groupe de travail
             {
-                if (isset($grp['adminlevel']) && $grp['admin'])
+                if (isset($grp['adminlevel']) && $grp['backoffice'])
                 {
                     $list['work'][$grp['id']]['label'] = $grp['label'];
                     $list['work'][$grp['id']]['org'] = array();
