@@ -1,3 +1,9 @@
+== Module FORMS - version 2.18 =====================================================
+
+2008-05-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug sur la gestion multipage lors de l'intégration d'un formulaire dans un objet externe (multipage inutile et supprimé)
+
 == Module FORMS - version 2.17 =====================================================
 
 2008-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

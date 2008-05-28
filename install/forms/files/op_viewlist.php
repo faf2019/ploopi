@@ -58,31 +58,6 @@
             <?
         }
     }
-
-    $numrows = sizeof($data);
-
-    if ($forms->fields['nbline'] > 0 && $numrows > $forms->fields['nbline'])
-    {
-        $numpages = (($numrows - ($numrows % $forms->fields['nbline'])) / $forms->fields['nbline']) + (($numrows % $forms->fields['nbline'])>0);
-        ?>
-        <div style="float:right">
-        <?
-        if ($_SESSION['forms']['page']>0)
-        {
-            echo "<input type\"button\" class=\"button\" value=\"««\" size=\"4\" OnClick=\"javascript:document.location.href='$scriptenv?op=viewlist&forms_id={$id_form}&page=".($_SESSION['forms']['page']-1)."'\">";
-        }
-        ?>
-        Page <? echo $_SESSION['forms']['page']+1; ?> / <? echo $numpages; ?>
-        <?
-        if ($_SESSION['forms']['page']+1<$numpages)
-        {
-            echo "<input type\"button\" class=\"button\" value=\"»»\" size=\"4\" OnClick=\"javascript:document.location.href='$scriptenv?op=viewlist&forms_id={$id_form}&page=".($_SESSION['forms']['page']+1)."'\">";
-            //echo "<a href=\"$scriptenv?page=".($page+1)."\">»»</a>";
-        }
-        ?>
-        </div>
-        <?
-    }
     ?>
     <div style="float:left;">
     Nombre d'Enregistrements : <b><? echo sizeof($data); ?></b>
@@ -172,98 +147,90 @@
     </tr>
 
     <?
-    $c=0;
-
     reset($data);
 
     foreach ($data as $reply_id => $detail)
     {
-        // filtre sur la page sélectionnée
-
-        if (($forms->fields['nbline'] == 0) || ($c >= ($_SESSION['forms']['page'])*$forms->fields['nbline'] && $c < ($_SESSION['forms']['page']+1)*$forms->fields['nbline']))
-        {
-            $color = (!isset($color) || $color == $skin->values['bgline1']) ? $skin->values['bgline2'] : $skin->values['bgline1'];
-            ?>
-            <tr bgcolor="<? echo $color; ?>">
-                <?
-                foreach ($detail as $key => $value)
+        $color = (!isset($color) || $color == $skin->values['bgline1']) ? $skin->values['bgline2'] : $skin->values['bgline1'];
+        ?>
+        <tr bgcolor="<? echo $color; ?>">
+            <?
+            foreach ($detail as $key => $value)
+            {
+                $display = false;
+                switch($key)
                 {
-                    $display = false;
-                    switch($key)
+                    case 'object':
+                        $display = $_SESSION['forms'][$_GET['forms_fuid']]['options']['object_display'];
+                    break;
+
+                    case 'datevalidation':
+                        $display = ($forms->fields['option_displaydate']);
+                    break;
+
+                    case 'user':
+                        $display = ($forms->fields['option_displayuser']);
+                    break;
+
+                    case 'group':
+                        $display = ($forms->fields['option_displaygroup']);
+                    break;
+
+                    case 'ip':
+                        $display = ($forms->fields['option_displayip']);
+                    break;
+
+                    default:
+                        $display = (isset($array_fields[$key]) && $array_fields[$key]['option_arrayview']);
+                    break;
+                }
+
+                if ($display)
+                {
+                    switch($data_title[$key]['type'])
                     {
-                        case 'object':
-                            $display = $_SESSION['forms'][$_GET['forms_fuid']]['options']['object_display'];
+                        case 'file':
+                            if ($value != '') $value = $value.'<a href="'.ploopi_urlencode("{$scriptenv}?ploopi_op=forms_download_file&forms_fuid={$_GET['forms_fuid']}&reply_id={$reply_id}&field_id={$key}").'"><img style="border:0px" src="./modules/forms/img/link.gif"></a>';
                         break;
 
-                        case 'datevalidation':
-                            $display = ($forms->fields['option_displaydate']);
-                        break;
-
-                        case 'user':
-                            $display = ($forms->fields['option_displayuser']);
-                        break;
-
-                        case 'group':
-                            $display = ($forms->fields['option_displaygroup']);
-                        break;
-
-                        case 'ip':
-                            $display = ($forms->fields['option_displayip']);
+                        case 'color':
+                            $value = '<div style="background-color:'.$value.';">&nbsp;&nbsp;</div>';
                         break;
 
                         default:
-                            $display = (isset($array_fields[$key]) && $array_fields[$key]['option_arrayview']);
+                            $value = str_replace('||','<br />',$value);
+                            $value = ploopi_make_links(ploopi_nl2br($value));
                         break;
                     }
-
-                    if ($display)
-                    {
-                        switch($data_title[$key]['type'])
-                        {
-                            case 'file':
-                                if ($value != '') $value = $value.'<a href="'.ploopi_urlencode("{$scriptenv}?ploopi_op=forms_download_file&forms_fuid={$_GET['forms_fuid']}&reply_id={$reply_id}&field_id={$key}").'"><img style="border:0px" src="./modules/forms/img/link.gif"></a>';
-                            break;
-
-                            case 'color':
-                                $value = '<div style="background-color:'.$value.';">&nbsp;&nbsp;</div>';
-                            break;
-
-                            default:
-                                $value = str_replace('||','<br />',$value);
-                                $value = ploopi_make_links(ploopi_nl2br($value));
-                            break;
-                        }
-                        echo "<td class=\"data\">{$value}</td>";
-                    }
+                    echo "<td class=\"data\">{$value}</td>";
                 }
-                $modify = ploopi_urlencode("$scriptenv?op=modify&forms_id={$id_form}&reply_id={$reply_id}");
-                $delete = ploopi_urlencode("$scriptenv?op=delete_reply&forms_id={$id_form}&reply_id={$reply_id}");
-                if ($_SESSION['ploopi']['action'] == 'public')
-                {
-                    ?>
-                    <td align="left" nowrap>
+            }
+            $modify = ploopi_urlencode("$scriptenv?op=modify&forms_id={$id_form}&reply_id={$reply_id}");
+            $delete = ploopi_urlencode("$scriptenv?op=delete_reply&forms_id={$id_form}&reply_id={$reply_id}");
+            if ($_SESSION['ploopi']['action'] == 'public')
+            {
+                ?>
+                <td align="left" nowrap>
+                    <?
+                    if ( $_SESSION['forms'][$_GET['forms_fuid']]['rights']['_FORMS_ACTION_ADDREPLY'] && (($forms->fields['option_modify'] == 'user' && $detail['userid'] == $_SESSION['ploopi']['userid']) || ($forms->fields['option_modify'] == 'group' && $detail['workspaceid'] == $_SESSION['ploopi']['workspaceid'])  || ($forms->fields['option_modify'] == 'all')))
+                    {
+                        ?>
+                        <a href="<? echo $modify; ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_modify.png"></a>
                         <?
-                        if ( $_SESSION['forms'][$_GET['forms_fuid']]['rights']['_FORMS_ACTION_ADDREPLY'] && (($forms->fields['option_modify'] == 'user' && $detail['userid'] == $_SESSION['ploopi']['userid']) || ($forms->fields['option_modify'] == 'group' && $detail['workspaceid'] == $_SESSION['ploopi']['workspaceid'])  || ($forms->fields['option_modify'] == 'all')))
+                        if ($_SESSION['forms'][$_GET['forms_fuid']]['rights']['_FORMS_ACTION_DELETE'])
                         {
                             ?>
-                            <a href="<? echo $modify; ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_modify.png"></a>
+                            <a href="javascript:ploopi_confirmlink('<? echo $delete; ?>','<? echo _PLOOPI_CONFIRM; ?>')"><img alt="supprimer" border="0" src="./modules/forms/img/ico_trash.png"></a>
                             <?
-                            if ($_SESSION['forms'][$_GET['forms_fuid']]['rights']['_FORMS_ACTION_DELETE'])
-                            {
-                                ?>
-                                <a href="javascript:ploopi_confirmlink('<? echo $delete; ?>','<? echo _PLOOPI_CONFIRM; ?>')"><img alt="supprimer" border="0" src="./modules/forms/img/ico_trash.png"></a>
-                                <?
-                            }
                         }
-                        ?>
-                    </td>
-                    <?
-                }
-                ?>
-            </tr>
-            <?
-        }
-        $c++;
+                    }
+                    ?>
+                </td>
+                <?
+            }
+            ?>
+        </tr>
+        <?
     }
     ?>
     </table>
