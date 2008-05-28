@@ -38,7 +38,7 @@
 
 include_once './include/start.php';
 
-if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mode'] == 'admin')
+if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mode'] == 'backoffice')
 {
     include_once './lib/template/template.php';
     include_once "{$_SESSION['ploopi']['template_path']}/class_skin.php";

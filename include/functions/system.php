@@ -388,7 +388,7 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
                 }
                 
                 // GET MODULE ADDITIONAL JS
-                if (file_exists($jsfile))
+                if (file_exists($jsfile) && isset($template_body))
                 {
                     $template_body->assign_block_vars(  'module_js',
                                                         array(
@@ -409,7 +409,7 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
                 $cssfile_ie = "{$strModulePath}/include/styles_ie.css";
                 
                 // GET MODULE STYLE
-                if (file_exists($cssfile))
+                if (file_exists($cssfile) && isset($template_body))
                 {
                     $template_body->assign_block_vars(  'module_css',
                                                         array(
@@ -419,7 +419,7 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
                 }
         
                 // GET MODULE STYLE FOR IE
-                if (file_exists($cssfile_ie))
+                if (file_exists($cssfile_ie) && isset($template_body))
                 {
                     $template_body->assign_block_vars(  'module_css_ie',
                                                         array(
@@ -431,7 +431,6 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
         }
     }
 }
-
 
 /**
  * Chargement des paramètres des modules

@@ -83,7 +83,7 @@ $columns['right']['origine']    = array('label' => 'Origine', 'width' => '120', 
 while($row = $db->fetchrow())
 {
     $values[$c]['values']['desc']       = array('label' => $row['description']);
-    $values[$c]['values']['module']     = array('label' => $row['module_label']);
+    $values[$c]['values']['module']     = array('label' => $row['module_label'], 'sort_label' => sprintf("%s_%s", $row['module_label'], $row['label']));
     $values[$c]['values']['role']       = array('label' => $row['label']);
     $values[$c]['values']['shared']     = array('label' => '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/p_'.(($row['shared'] ? 'green' : 'red')).'.png">');
     $values[$c]['values']['origine']    = array('label' => $row['origine']);

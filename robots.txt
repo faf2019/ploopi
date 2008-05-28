@@ -1,0 +1,14 @@
+User-agent: *
+Disallow: /bin/
+Disallow: /cgi/
+Disallow: /config/
+Disallow: /data/
+Disallow: /FCKeditor/
+Disallow: /img/
+Disallow: /include/
+Disallow: /install/
+Disallow: /js/
+Disallow: /lang/
+Disallow: /lib/
+Disallow: /modules/
+Disallow: /templates/
