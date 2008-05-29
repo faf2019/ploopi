@@ -420,6 +420,19 @@ text-decoration: none;
 color:#ffffff;
 }
 
+.module_menuselected {
+display:block;
+padding:2px 4px;
+border-top:1px solid #193c1c;
+color:#ffffff;
+background-color:#7d917f;
+text-decoration: none;
+}
+
+.module_menuselected:hover {
+text-decoration: none;
+}
+
 .module_content {
 overflow:auto;
 text-align:center;

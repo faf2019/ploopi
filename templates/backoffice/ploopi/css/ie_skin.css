@@ -120,6 +120,10 @@ a.ploopi_explorer_link {
     height:1%;
 }
 
+a.ploopi_explorer_link p, a.ploopi_explorer_link span, a.ploopi_explorer_link img {
+    cursor:pointer;
+}
+
 div.ploopi_explorer_line_1 {
     overflow:visible;
     height:1%;
