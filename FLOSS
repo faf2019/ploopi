@@ -51,9 +51,3 @@
   url : http://www.phpbb.com
   licence : GPL
   copyright : The phpBB Group
-
-* Toolman
-  path : ./lib/toolman
-  url : http://tool-man.org/
-  licence : /lib/toolman/LICENSE.txt
-  copyright : Tim Taylor Consulting

@@ -31,6 +31,10 @@
  * @author Stéphane Escaich
  */
 
+/**
+ * Inclusion de la classe parent.
+ */
+
 include_once './include/classes/data_object.php';
 
 /**
@@ -47,8 +51,12 @@ class documentsfile extends data_object
 {
     var $oldname;
     var $tmpfile;
-    var $draftfile;
 
+    /**
+     * Constructeur de la classe
+     *
+     * @return documentsfile
+     */
     function documentsfile()
     {
         parent::data_object('ploopi_documents_file');
@@ -62,11 +70,14 @@ class documentsfile extends data_object
         
         $this->oldname = '';
         $this->tmpfile = 'none';
-        $this->draftfile = 'none';
     }
 
-
-
+    /**
+     * Ouvre un document
+     *
+     * @param int $id identifiant du document
+     * @return boolean true si le document a été ouvert
+     */
     function open($id)
     {
         $res = parent::open($id);
@@ -74,6 +85,12 @@ class documentsfile extends data_object
         return($res);
     }
 
+    /**
+     * Enregistre le document.
+     * Gère la sauvegarde physique du fichier, le renommage, 
+     *
+     * @return int identifiant du document
+     */
     function save()
     {
         global $db;
@@ -84,8 +101,7 @@ class documentsfile extends data_object
 
         if ($this->new) // insert
         {
-
-            if ($this->tmpfile == 'none' && $this->draftfile == 'none') $error = _DOC_ERROR_EMPTYFILE;
+            if ($this->tmpfile == 'none') $error = _DOC_ERROR_EMPTYFILE;
 
             if ($this->fields['size']>_PLOOPI_MAXFILESIZE) $error = _DOC_ERROR_MAXFILESIZE;
 
@@ -102,20 +118,12 @@ class documentsfile extends data_object
 
                 if (!$error && is_writable($basepath))
                 {
-                    if ($this->draftfile != 'none')
-                    {
-                        if (!rename($this->draftfile, $filepath)) $error = _DOC_ERROR_FILENOTWRITABLE;
-                    }
-                    elseif ($this->tmpfile != 'none')
+                    if ($this->tmpfile != 'none')
                     {
                         if (!move_uploaded_file($this->tmpfile, $filepath)) $error = _DOC_ERROR_FILENOTWRITABLE;
                     }
                     
-                    if (!$error)
-                    {
-                        chmod($filepath, 0777);
-                        $this->getcontent();
-                    }
+                    if (!$error) chmod($filepath, 0640);
                 }
                 else $error = _DOC_ERROR_FILENOTWRITABLE;
             }
@@ -123,9 +131,7 @@ class documentsfile extends data_object
         }
         else // update
         {
-            //$this->getcontent();
-            
-            if ((!empty($this->tmpfile) && $this->tmpfile != 'none') || (!empty($this->draftfile) && $this->draftfile != 'none'))
+            if (!empty($this->tmpfile) && $this->tmpfile != 'none')
             {
                 if ($this->fields['size']>_PLOOPI_MAXFILESIZE) $error = _DOC_ERROR_MAXFILESIZE;
                 
@@ -140,34 +146,12 @@ class documentsfile extends data_object
                     
                     if (!$error)
                     {
-                        // on déplace l'ancien fichier
-                        /*
-                        if (file_exists($filepath) && is_writable($basepath)) 
-                        {
-                            rename($filepath, $filepath_vers);
-                            //$this->createhistory();
-                        }
-                        */
-
                         // on copie le nouveau
                         if (!$error && is_writable($basepath))
                         {
-                            if ($this->draftfile != 'none')
-                            {
-                                if (rename($this->draftfile, $filepath))
-                                {
-                                    chmod($filepath, 0777);
-                                    $this->getcontent();
-                                }
-                                else $error = _DOC_ERROR_FILENOTWRITABLE;
-                            }
                             if ($this->tmpfile != 'none')
                             {
-                                if (move_uploaded_file($this->tmpfile, $filepath))
-                                {
-                                    chmod($filepath, 0777);
-                                    $this->getcontent();
-                                }
+                                if (move_uploaded_file($this->tmpfile, $filepath)) chmod($filepath, 0640);
                                 else $error = _DOC_ERROR_FILENOTWRITABLE;
                             }
                         }
@@ -194,21 +178,13 @@ class documentsfile extends data_object
                     {
                         rename($filepath, $newfilepath);
                         $this->fields['extension'] = $newext;
-                        $this->getcontent();
                         parent::save();
                     }
                     else $error = _DOC_ERROR_FILENOTWRITABLE;
                 }
-                else
-                {
-                    $this->getcontent();
-                    parent::save();
-                }
+                else parent::save();
             }
-            else
-            {
-                parent::save();
-            }
+            else parent::save();
         }
 
         if ($this->fields['id_folder'] != 0)
@@ -222,7 +198,9 @@ class documentsfile extends data_object
         return($error);
     }
 
-
+    /**
+     * Supprime le document (physiquement et dans la base de données)
+     */
     function delete()
     {
         $filepath = $this->getfilepath();
@@ -239,6 +217,12 @@ class documentsfile extends data_object
         }
     }
     
+    /**
+     * Retourne le chemin physique de stockage du document.
+     * Crée le dossier si nécessaire.
+     *
+     * @return string chemin de stockage du document
+     */
     function getbasepath()
     {
         $basepath = ploopi_documents_getpath()._PLOOPI_SEP.substr($this->fields['timestp_create'],0,8);
@@ -246,16 +230,22 @@ class documentsfile extends data_object
         return($basepath);
     }
 
+    /**
+     * Retourne le chemin physique complet du fichier.
+     *
+     * @return string chemin du fichier
+     */
     function getfilepath()
     {
         return($this->getbasepath()._PLOOPI_SEP."{$this->fields['id']}.{$this->fields['extension']}");
     }
-    
-    function getcontent()
-    {
-        global $db;
-    }
 
+    /**
+     * Retourne l'URL permettant de télécharger le document
+     *
+     * @param boolean $attachement true si le fichier doit être "attaché"
+     * @return string URL de téléchargement
+     */
     function geturl($attachement = true)
     {
         return(ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$this->fields['id']}&attachement={$attachement}"));
@@ -274,6 +264,11 @@ class documentsfile extends data_object
 
 class documentsfolder extends data_object
 {
+    /**
+     * Contructeur de la classe
+     *
+     * @return documentsfolder
+     */
     function documentsfolder()
     {
         parent::data_object('ploopi_documents_folder');
@@ -282,6 +277,11 @@ class documentsfolder extends data_object
         $this->fields['parents']=0;
     }
 
+    /**
+     * Enregistre le dossier
+     *
+     * @return int identifiant du dossier
+     */
     function save()
     {
         if ($this->fields['id_folder'] != 0)
@@ -298,6 +298,10 @@ class documentsfolder extends data_object
         return ($ret);
     }
 
+    /**
+     * Supprime le dossier et son contenu.
+     * Met à jour les informations du dossier parent.
+     */
     function delete()
     {
         global $db;

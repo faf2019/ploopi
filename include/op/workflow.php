@@ -81,7 +81,7 @@ switch($ploopi_op)
             {
                 $grp = $_SESSION['ploopi']['workspaces'][$grpid];
 
-                if (isset($grp['adminlevel']) && $grp['admin'])
+                if (isset($grp['adminlevel']) && $grp['backoffice'])
                 {
                     $list['workspaces'][$grp['id']]['label'] = $grp['label'];
                     $list['workspaces'][$grp['id']]['groups'] = array();

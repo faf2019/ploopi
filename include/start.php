@@ -267,6 +267,8 @@ switch($_SESSION['ploopi']['scriptname'])
         {
             // cas spécial du mode de rendu public du module Webedit (on utilise le rendu frontoffice sans activer tout le processus)
             $newmode = 'frontoffice';
+            $_SESSION['ploopi']['frontoffice']['workspaceid'] = $_SESSION['ploopi']['backoffice']['workspaceid'];
+            $_SESSION['ploopi']['frontoffice']['moduleid'] = $_SESSION['ploopi']['backoffice']['moduleid'];
         }
         else
         {

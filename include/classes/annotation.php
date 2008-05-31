@@ -31,6 +31,10 @@
  * @author Stéphane Escaich
  */
 
+/**
+ * Inclusion de la classe parent.
+ */
+
 include_once './include/classes/data_object.php';
 
 /**

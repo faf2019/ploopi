@@ -21,8 +21,6 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once './include/classes/data_object.php';
-
 /**
  * Gestion des groupes d'utilisateurs.
  *  
@@ -33,6 +31,11 @@ include_once './include/classes/data_object.php';
  * @author Stéphane Escaich
  */
 
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_group
@@ -46,58 +49,42 @@ include_once './include/classes/data_object.php';
 
 class group extends data_object
 {
+    
+    /**
+     * Constructeur de la classe
+     *
+     * @return group
+     */
     function group()
     {
         parent::data_object('ploopi_group');
     }
 
+    /**
+     * Enregistre le groupe et met à jour le champ 'depth'
+     *
+     * @return int identifiant du groupe
+     */
     function save()
     {
         $this->fields['depth'] = sizeof(explode(';',$this->fields['parents']));
         return(parent::save());
     }
 
+    /**
+     * Supprime le groupe
+     */
     function delete()
     {
-
         global $db;
 
-        if ($this->fields['id']!=-1 && !$this->fields['system'])
+        if ($this->fields['id'] != -1 && !$this->fields['system'])
         {
-
-            $fatherid = $this->fields['id_group'];
-
-            // attach children to new father
-            $select =   "
-                    SELECT  ploopi_group.id
-                        FROM    ploopi_group
-                        WHERE   ploopi_group.id_group = ".$this->fields['id'];
-
-
-            $result = $db->query($select);
-
-            while ($child =  $db->fetchrow($result))
-            {
-                $update =   "
-                            UPDATE  ploopi_group
-                            SET     ploopi_group.id_group = $fatherid
-                            WHERE   ploopi_group.id = $child[id]
-                            ";
-
-                $db->query($update);
-            }
-
-            // update parents group
-            system_updateparents();
-
-
-            $delete = "DELETE FROM ploopi_group_user WHERE id_group = ".$this->fields['id'];
+            // supprime les rattachements groupes/utilisateurs
+            $delete = "DELETE FROM ploopi_group_user WHERE id_group = {$this->fields['id']}";
             $db->query($delete);
 
-            // penser à supprimer les users du groupe
-
             parent::delete();
-
         }
     }
 
@@ -233,11 +220,6 @@ class group extends data_object
         return($clone);
     }
 
-
-
-
-
-
     function attachtogroup($workspaceid)
     {
         include_once './include/classes/workspace.php';
@@ -288,13 +270,15 @@ class group extends data_object
 
 class group_user extends data_object
 {
-
+    /**
+     * Constructeur de la classe
+     *
+     * @return group_user
+     */
     function group_user()
     {
         parent::data_object('ploopi_group_user','id_group','id_user');
-
     }
-
 }
 
 ?>
