@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>rss</label>
-        <version>1.22</version>
+        <version>1.23</version>
         <author>Netlor / Ovensia</author>
-        <date>20080516000000</date>
+        <date>20080608000000</date>
         <description>Gestion de Flux RSS</description>
         <paramtype>
             <name>nbitemdisplay</name>
@@ -20,5 +20,29 @@
             <public>0</public>
             <description/>
         </paramtype>
+      <action>
+         <id_action>1</id_action>
+         <label>Ajouter un flux</label>
+      </action>
+      <action>
+         <id_action>2</id_action>
+         <label>Modifier un flux</label>
+      </action>
+      <action>
+         <id_action>3</id_action>
+         <label>Supprimer un flux</label>
+      </action>
+      <action>
+         <id_action>4</id_action>
+         <label>Ajouter une catégorie</label>
+      </action>
+      <action>
+         <id_action>5</id_action>
+         <label>Modifier une catégorie</label>
+      </action>
+      <action>
+         <id_action>6</id_action>
+         <label>Supprimer une catégorie</label>
+      </action>
     </moduletype>
 </ploopi>

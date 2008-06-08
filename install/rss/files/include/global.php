@@ -38,7 +38,6 @@
 define ('_RSS_ACTION_FEEDADD',          1);
 define ('_RSS_ACTION_FEEDMODIFY',       2);
 define ('_RSS_ACTION_FEEDDELETE',       3);
-define ('_RSS_ACTION_FEEDPUBLISH',      4);
 define ('_RSS_ACTION_CATADD',           5);
 define ('_RSS_ACTION_CATMODIFY',        6);
 define ('_RSS_ACTION_CATDELETE',        7);
