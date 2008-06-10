@@ -639,7 +639,7 @@ CREATE TABLE `ploopi_module_type` (
 
 LOCK TABLES `ploopi_module_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_module_type` DISABLE KEYS */;
-INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.0RC4','Ovensia / Netlor','20080526000000');
+INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.0RC4.1','Ovensia','20080610000000');
 /*!40000 ALTER TABLE `ploopi_module_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1305,3 +1305,27 @@ ALTER TABLE `ploopi_workspace` CHANGE `admin_domainlist` `backoffice_domainlist`
 ALTER TABLE `ploopi_workspace` CHANGE `web_domainlist` `frontoffice_domainlist` LONGTEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
 ALTER TABLE `ploopi_workspace` CHANGE `admin` `backoffice` TINYINT( 1 ) UNSIGNED NULL DEFAULT '1';
 ALTER TABLE `ploopi_workspace` CHANGE `web` `frontoffice` TINYINT( 1 ) UNSIGNED NULL DEFAULT '0';
+
+
+ALTER TABLE `ploopi_user` ADD `office` VARCHAR( 64 ) NOT NULL , ADD `civility` VARCHAR( 16 ) NOT NULL ;
+
+ALTER TABLE `ploopi_user` 
+CHANGE `lastname` `lastname` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, 
+CHANGE `firstname` `firstname` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, 
+CHANGE `login` `login` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, 
+CHANGE `password` `password` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, 
+CHANGE `date_creation` `date_creation` BIGINT(14) NOT NULL DEFAULT '0', 
+CHANGE `date_expire` `date_expire` BIGINT(14) NOT NULL DEFAULT '0', 
+CHANGE `email` `email` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, 
+CHANGE `phone` `phone` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, 
+CHANGE `fax` `fax` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, 
+CHANGE `comments` `comments` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, 
+CHANGE `address` `address` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, 
+CHANGE `mobile` `mobile` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, 
+CHANGE `service` `service` VARCHAR(64) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, 
+CHANGE `function` `function` VARCHAR(64) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, 
+CHANGE `postalcode` `postalcode` VARCHAR(16) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, 
+CHANGE `city` `city` VARCHAR(64) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, 
+CHANGE `country` `country` VARCHAR(64) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+
+ALTER TABLE `ploopi_user` DROP `id_type`, DROP `id_ldap`;

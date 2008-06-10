@@ -31,6 +31,10 @@
  * @author Stéphane Escaich
  */
 
+/**
+ * Inclusion de la classe parent
+ */
+
 include_once './include/classes/data_object.php';
 
 /**
@@ -63,6 +67,12 @@ class mb_schema extends data_object
 
 class mb_relation extends data_object
 {   
+    /**
+     * Constructeur de la classe
+     *
+     * @return mb_relation
+     */
+    
     function mb_relation()
     {
         parent::data_object('ploopi_mb_relation','tablesrc','fieldsrc','tabledest','fielddest','id_module_type');
@@ -81,11 +91,21 @@ class mb_relation extends data_object
 
 class mb_table extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return mb_table
+     */
+    
     function mb_table()
     {
         parent::data_object('ploopi_mb_table','name','id_module_type');
     }
 
+    /**
+     * Supprime la table ainsi que les champs, les relations et le schéma associés
+     */
+    
     function delete()
     {
         global $db;
@@ -109,6 +129,12 @@ class mb_table extends data_object
 
 class mb_field extends data_object
 {   
+    /**
+     * Constructeur de la classe
+     *
+     * @return mb_field
+     */
+    
     function mb_field()
     {
         parent::data_object('ploopi_mb_field','tablename','name');
@@ -127,6 +153,12 @@ class mb_field extends data_object
 
 class mb_object extends data_object
 {   
+    /**
+     * Constructeur de la classe
+     *
+     * @return mb_object
+     */
+    
     function mb_object()
     {
         parent::data_object('ploopi_mb_object', 'id', 'id_module_type');
@@ -145,6 +177,12 @@ class mb_object extends data_object
 
 class mb_wce_object extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return mb_wce_object
+     */
+    
     function mb_wce_object()
     {
         parent::data_object('ploopi_mb_wce_object');
@@ -164,16 +202,28 @@ class mb_wce_object extends data_object
 
 class mb_action extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return mb_action
+     */
+    
     function mb_action()
     {
         parent::data_object('ploopi_mb_action','id_module_type','id_action');
     }
 
+    /**
+     * Enregistre l'action
+     *
+     * @return int identifiant de l'action
+     */
+    
     function save()
     {
         global $db;
 
-        if ($this->new && ($this->fields['id_action'] == "" || $this->fields['id_action'] <= 0))
+        if ($this->new && ($this->fields['id_action'] == '' || $this->fields['id_action'] <= 0))
         {
             $answer = $db->query("select max(id_action) as maxi from ploopi_mb_action where id_module_type={$this->fields['id_module_type']}");
             $resfields=$db->fetchrow($answer);
@@ -182,6 +232,12 @@ class mb_action extends data_object
         return(parent::save());
     }
 
+    /**
+     * Supprime l'action
+     *
+     * @param boolean $preserve_data false si la suppression doit se faire en cascade (rôles associés). Par défaut : false.
+     */
+    
     function delete($preserve_data = false)
     {
         include_once './include/classes/role.php';
@@ -193,12 +249,12 @@ class mb_action extends data_object
             $select =   "
                         SELECT  *
                         FROM    ploopi_role_action
-                        WHERE   id_action = ".$this->fields['id_action']."
-                        AND     id_module_type = ".$this->fields['id_module_type']."
+                        WHERE   id_action = {$this->fields['id_action']}
+                        AND     id_module_type = {$this->fields['id_module_type']}
                         ";
 
-            $answer = $db->query($select);
-            while ($deletefields = $db->fetchrow($answer))
+            $rs = $db->query($select);
+            while ($deletefields = $db->fetchrow($rs))
             {
                 $role_action = new role_action();
                 $role_action->open($deletefields['id_role'],$this->fields['id_action'],$this->fields['id_module_type']);

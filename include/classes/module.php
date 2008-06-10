@@ -31,6 +31,10 @@
  * @author Stéphane Escaich
  */
 
+/**
+ * Inclusion de la classe parent.
+ */
+
 include_once './include/classes/data_object.php';
 
 /**
@@ -45,11 +49,22 @@ include_once './include/classes/data_object.php';
 
 class module extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return module
+     */
     function module()
     {
         parent::data_object('ploopi_module','id');
     }
 
+    /**
+     * Instancie/Modifie le module
+     *
+     * @return int identifiant du module
+     */
+    
     function save()
     {
         global $db;
@@ -79,6 +94,10 @@ class module extends data_object
         return($res);
     }
 
+    /**
+     * Supprime l'instance de module et les données associées : rôles, partages, abonnements, workflow, etc...
+     */
+    
     function delete()
     {
         include_once './include/classes/workspace.php';
@@ -139,6 +158,11 @@ class module extends data_object
 
     }
     
+    /**
+     * Retourne un tableau contenant les espaces de travail auxquels le module est rattaché
+     *
+     * @return array tableau des espaces de travail
+     */
     
     function getallworkspaces()
     {
@@ -155,71 +179,61 @@ class module extends data_object
         $result = $db->query($select);
         while ($fields = $db->fetchrow($result))
         {
-            $workspaces[$fields['id_group']] = $fields;
+            $workspaces[$fields['id_workspace']] = $fields;
         }
 
         return($workspaces);
     }
 
-    function getroles()
+    /**
+     * Retourne un tableau contenant les rôles basés sur le module
+     *
+     * @param boolean $shared true si on ne veut que les rôles partagés
+     * @return array tableau des rôles
+     */
+    
+    function getroles($shared = false)
     {
         global $db;
 
         $roles = array();
 
+        $where = ($shared) ? " AND ploopi_role.shared = 1 " : '';
+        
         $select =   "
                 SELECT      ploopi_role.*
                 FROM        ploopi_role
                 WHERE       ploopi_role.id_module = {$this->fields['id']}
+                {$where}
                 ORDER BY    ploopi_role.label
                 ";
 
         $result = $db->query($select);
 
-        while ($role = $db->fetchrow($result))
-        {
-            $roles[$role['id']] = $role;
-        }
+        while ($role = $db->fetchrow($result)) $roles[$role['id']] = $role;
 
         return $roles;
     }
 
-    function getrolesshared()
+    
+    /**
+     * Détache le module d'un espace de travail donné
+     *
+     * @param int $workspaceid identifiant de l'espace de travail
+     */
+    
+    function unlink($workspaceid)
     {
         global $db;
 
-        $roles = array();
-
-        $select =   "
-                SELECT      ploopi_role.*
-                FROM        ploopi_role
-                WHERE       ploopi_role.id_module = {$this->fields['id']}
-                AND     ploopi_role.shared=1
-                ORDER BY    ploopi_role.label
-                ";
-
-        $result = $db->query($select);
-
-        while ($role = $db->fetchrow($result))
-        {
-            $roles[$role['id']] = $role;
-        }
-
-        return $roles;
-    }
-
-
-    function unlink($idgroup)
-    {
-        global $db;
-
-        $delete =   "
-                DELETE FROM     ploopi_module_workspace
-                WHERE       ploopi_module_workspace.id_group = $idgroup
+        $sql =  "
+                DELETE 
+                FROM        ploopi_module_workspace
+                WHERE       ploopi_module_workspace.id_workspace = {$workspaceid}
                 AND         ploopi_module_workspace.id_module = {$this->fields['id']}
                 ";
 
-        $db->query($delete);
+        $db->query($sql);
     }
 
 
@@ -237,11 +251,21 @@ class module extends data_object
 
 class module_type extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return module_type
+     */
+    
     function module_type()
     {
         parent::data_object('ploopi_module_type');
     }
 
+    /**
+     * Supprime le type de module et les données associées : paramètres, modules, actions, métabase, etc..
+     */
+    
     function delete()
     {
         include_once './include/classes/mb.php';
@@ -252,8 +276,7 @@ class module_type extends data_object
 
         if ($this->fields['id']!=-1)
         {
-            $select = "SELECT * FROM ploopi_
-             WHERE id_module_type = ".$this->fields['id'];
+            $select = "SELECT * FROM ploopi_param_type WHERE id_module_type = {$this->fields['id']}";
             $answer = $db->query($select);
             while ($deletefields = $db->fetchrow($answer))
             {
@@ -264,7 +287,7 @@ class module_type extends data_object
 
             // delete modules
 
-            $select = "SELECT * FROM ploopi_module WHERE id_module_type = ".$this->fields['id'];
+            $select = "SELECT * FROM ploopi_module WHERE id_module_type = {$this->fields['id']}";
             $answer = $db->query($select);
             while ($deletefields = $db->fetchrow($answer))
             {
@@ -295,11 +318,14 @@ class module_type extends data_object
     }
 
 
+    /**
+     * Supprime les paramètres du type de module. Utilisé notamment pour la mise à jour des modules.
+     */
+    
     function delete_params()
     {
         include_once './include/classes/mb.php';
         include_once './include/classes/param.php';
-        // used for updating module
 
         global $db;
 
@@ -335,6 +361,15 @@ class module_type extends data_object
     }
 
 
+    /**
+     * Crée une instance de module à partir du type de module
+     *
+     * @param int $workspaceid identifiant de l'espace de travail auquel l'instance va être rattachée
+     * @return module module instancié 
+     * 
+     * @see module
+     */
+    
     function createinstance($workspaceid)
     {
         $position = 0;
@@ -351,27 +386,30 @@ class module_type extends data_object
         return($module);
     }
 
-    function getactions($role_enabled = 1)
+    /**
+     * Retourne un tableau contenant les actions proposées par le type de module
+     *
+     * @param boolean $role_enabled true si on ne veut que les actions autorisées pour la création de rôles
+     * @return array tableau des actions
+     */
+    
+    function getactions($role_enabled = true)
     {
         global $db;
         
         $actions = array();
         
-        
-        $select =   "
+        $sql =  "
                 SELECT      *
                 FROM        ploopi_mb_action
                 WHERE       id_module_type = {$this->fields['id']}
-                AND         role_enabled = {$role_enabled}
+                AND         role_enabled = ".(($role_enabled) ? '1' : '0')."
                 ORDER BY    id_action
                 ";
         
         $result = $db->query($select);
         
-        while ($action = $db->fetchrow($result))
-        {
-            $actions[$action['id_action']] = $action;
-        }
+        while ($action = $db->fetchrow($result)) $actions[$action['id_action']] = $action;
         
         return $actions;
     }

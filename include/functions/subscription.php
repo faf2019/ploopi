@@ -292,16 +292,17 @@ function ploopi_subscription_notify($id_object, $id_record, $id_action, $object_
         
         if ($message != '') $message = '<br /><br /><span style="color:#a60000;">'.$message.'</span>';
         
-        ploopi_tickets_send(   "Alerte abonnement : <i>{$objAction->fields['label']}</i> sur <b>{$object_title}</b> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", 
-                                "Ceci est un message automatique déclenché par un abonnement à l'action <i>{$objAction->fields['label']}</i> sur l'objet &laquo; <b>{$object_title}</b> &raquo; du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}
-                                {$message}<br /><br />Vous pouvez accéder à cet objet en cliquant sur le lien ci-dessous.", 
-                                false, 
-                                0, 
-                                $id_object, 
-                                $id_record, 
-                                $object_title,
-                                true
-                        );
+        ploopi_tickets_send(   
+            "Alerte abonnement : <i>{$objAction->fields['label']}</i> sur <b>{$object_title}</b> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", 
+            "Ceci est un message automatique déclenché par <em>{$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}</em> sur abonnement à l'action <em>{$objAction->fields['label']}</em> sur l'objet &laquo; <b>{$object_title}</b> &raquo; du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}.
+            {$message}<br /><br />Vous pouvez accéder à cet objet en cliquant sur le lien ci-dessous.", 
+            false, 
+            0, 
+            $id_object, 
+            $id_record, 
+            $object_title,
+            true
+            );
     }
 }
 ?>

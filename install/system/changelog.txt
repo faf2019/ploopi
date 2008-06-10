@@ -1,6 +1,6 @@
 == Ploopi - version 1.0 RC4 ===================================================
 
-2008-05-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-06-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Ploopi
  - Commentaires : mise à jour (format phpdoc)
@@ -10,7 +10,12 @@
  - Système : Correction d'un problème de dépendance entraînant un bug de ploopi_die() dans certains contextes
  - Système : Correction d'un bug dans l'intégration du moteur de recherche intégal
  - Système : Correction d'un bug au niveau du switch backoffice/frontoffice (on perdait l'id module backoffice qui était remplacé par celui du module webedit du frontoffice)
-
+ - Système : Amélioration des tris dans la gestion des rôles
+ - Mise à jour de la classe inputfilter qui posait des problèmes si le contenu des champs contenait <>
+ - Ajout d'un fichier robots.txt
+ - Workflow : Correction d'un bug sur le choix des utilisateurs
+ - Partages : Correction d'un bug sur le choix des utilisateurs
+ 
 * Templates 
   - Mise à jour des templates backoffice pour gérer une deuxième zone draggable sur les popups.
 

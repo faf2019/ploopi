@@ -91,7 +91,7 @@ $usr=new user();
 $usr->open($_SESSION['ploopi']['userid']);
 
 // liste des users visibles par le user courant
-$lstusers=$usr->getusersgroup();
+$lstusers=$usr->getgroups();
 // liste des espaces de travail rattachés
 $lstworkspace=array_keys($usr->getworkspaces());
 

@@ -50,7 +50,7 @@ $server_timezone = date_timezone_get($date);
 $server_timezoneid = timezone_name_get($server_timezone);
 if (empty($user->fields['timezone'])) $user->fields['timezone'] = $server_timezoneid;
 
-$user_date_expire = (!empty($user->fields['date_expire']) && $user->fields['date_expire'] != '00000000000000') ? ploopi_timestamp2local($user->fields['date_expire']) : array('date' => '');
+$user_date_expire = (!empty($user->fields['date_expire'])) ? ploopi_timestamp2local($user->fields['date_expire']) : array('date' => '');
 
 if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 {
@@ -78,6 +78,8 @@ if (isset($_SESSION['module_system']) && !empty($_SESSION['module_system']))
     $user->fields['address'] = $_SESSION['module_system']['user_address'];
     $user->fields['comments'] = $_SESSION['module_system']['user_comments'];
     $user->fields['id_type'] = $_SESSION['module_system']['user_id_type'];
+    $user->fields['civility'] = $_SESSION['module_system']['user_civility'];
+    $user->fields['office'] = $_SESSION['module_system']['user_office'];
     $workspace_user->fields['adminlevel'] = $_SESSION['module_system']['userworkspace_adminlevel'];
 
     //ploopi_print_r($user);
@@ -129,40 +131,58 @@ if (isset($_REQUEST['error']))
                 <input type="text" class="text" name="user_firstname"  value="<? echo htmlentities($user->fields['firstname']); ?>" tabindex="2" />
             </p>
             <p>
+                <label><? echo _SYSTEM_LABEL_CIVILITY; ?>:</label>
+                <select class="select" name="user_civility" style="width:100px;" tabindex="3">
+                    <option value=""></option>                
+                    <?
+                    foreach ($ploopi_civility as $value)
+                    {
+                        ?>
+                        <option value="<? echo htmlentities($value); ?>" <? if ($user->fields['civility'] == $value) echo 'selected'; ?>><? echo htmlentities($value); ?></option>
+                        <?
+                    }
+                    ?>
+                </select>
+            </p>
+            <p>
                 <label><? echo _SYSTEM_LABEL_SERVICE; ?>:</label>
-                <input type="text" class="text" name="user_service"  value="<? echo htmlentities($user->fields['service']); ?>" tabindex="3" />
+                <input type="text" class="text" name="user_service"  value="<? echo htmlentities($user->fields['service']); ?>" tabindex="4" />
+            </p>
+            <p>
+                <label><? echo _SYSTEM_LABEL_OFFICE; ?>:</label>
+                <input type="text" class="text" name="user_office"  value="<? echo htmlentities($user->fields['office']); ?>" tabindex="5" />
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_FUNCTION; ?>:</label>
-                <input type="text" class="text" name="user_function"  value="<? echo htmlentities($user->fields['function']); ?>" tabindex="4" />
+                <input type="text" class="text" name="user_function"  value="<? echo htmlentities($user->fields['function']); ?>" tabindex="6" />
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_PHONE; ?>:</label>
-                <input type="text" class="text" name="user_phone"  value="<? echo htmlentities($user->fields['phone']); ?>" tabindex="5" />
+                <input type="text" class="text" name="user_phone"  value="<? echo htmlentities($user->fields['phone']); ?>" tabindex="7" />
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_MOBILE; ?>:</label>
-                <input type="text" class="text" name="user_mobile"  value="<? echo htmlentities($user->fields['mobile']); ?>" tabindex="6" />
+                <input type="text" class="text" name="user_mobile"  value="<? echo htmlentities($user->fields['mobile']); ?>" tabindex="8" />
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_FAX; ?>:</label>
-                <input type="text" class="text" name="user_fax"  value="<? echo htmlentities($user->fields['fax']); ?>" tabindex="7" />
+                <input type="text" class="text" name="user_fax"  value="<? echo htmlentities($user->fields['fax']); ?>" tabindex="9" />
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_ADDRESS; ?>:</label>
-                <textarea class="text" name="user_address" tabindex="8"><? echo htmlentities($user->fields['address']); ?></textarea>
+                <textarea class="text" name="user_address" tabindex="10"><? echo htmlentities($user->fields['address']); ?></textarea>
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_POSTALCODE; ?>:</label>
-                <input type="text" class="text" name="user_postalcode"  value="<? echo htmlentities($user->fields['postalcode']); ?>" tabindex="9" />
+                <input type="text" class="text" name="user_postalcode"  value="<? echo htmlentities($user->fields['postalcode']); ?>" tabindex="11" />
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_CITY; ?>:</label>
-                <input type="text" class="text" name="user_city"  value="<? echo htmlentities($user->fields['city']); ?>" tabindex="10" />
+                <input type="text" class="text" name="user_city"  value="<? echo htmlentities($user->fields['city']); ?>" tabindex="12" />
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_COUNTRY; ?>:</label>
-                <input type="text" class="text" name="user_country"  value="<? echo htmlentities($user->fields['country']); ?>"  tabindex="11" />
+                <input type="text" class="text" name="user_country"  value="<? echo htmlentities($user->fields['country']); ?>"  tabindex="13" />
             </p>
         </div>
     </div>

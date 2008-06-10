@@ -48,8 +48,15 @@ class odt_varparser
     private $xml_data = array();
     private $parsed_data;
 
-
-    function odt_varparser()
+    /**
+     * Constructeur de la classe. Crée le parser.
+     *
+     * @return odt_varparser
+     * 
+     * @see xml_parser_create
+     */
+    
+    public function odt_varparser()
     {
         $this->xml_parser = xml_parser_create();
 
@@ -63,14 +70,30 @@ class odt_varparser
         xml_set_character_data_handler($this->xml_parser, "cdata");
     }
 
-    function parse($data, $vars)
+    /**
+     * Parse les données dans le but de remplacer des balises
+     *
+     * @param string $data données à parser
+     * @param array $vars tableau des balises à remplacer
+     * 
+     * @see xml_parse
+     */
+    
+    public function parse($data, $vars)
     {
         $this->vars = $vars;
         xml_parse($this->xml_parser, $data);
     }
 
-
-    function tag_open($parser, $tag, $attribs)
+    /**
+     * Gestionnaires de début de balise XML
+     *
+     * @param resource $parser parser XML
+     * @param string $tag balise XML
+     * @param string $attribs attributs de la balise XML
+     */
+    
+    private function tag_open($parser, $tag, $attribs)
     {
         // construction de la chaine de paramètres
         $params = array();
@@ -83,14 +106,31 @@ class odt_varparser
         $this->xmltags[] = array($tag, $params_str);
     }
 
-    function tag_close($parser, $tag)
+    /**
+     * Gestionnaires de fin de balise XML
+     *
+     * @param resource $parser parser XML
+     * @param string $tag balise XML
+     */
+    
+    private function tag_close($parser, $tag)
     {
         $this->parsed_data .= "</{$tag}>";
 
         array_pop($this->xmltags);
     }
 
-    function cdata($parser, $data)
+    /**
+     * Gestionnaire du flux de données, remplace les balises par leur valeur. Traite les espaces et les retours à la ligne.
+     *
+     * @param resource $parser parser XML
+     * @param string $data données
+     * 
+     * @uses preg_replace
+     * @uses preg_replace_callback
+     */
+    
+    private function cdata($parser, $data)
     {
         $tag = &$this->xmltags[sizeof($this->xmltags)-1];
 
@@ -105,7 +145,13 @@ class odt_varparser
         $this->parsed_data .= $data;
     }
 
-    function get_xml()
+    /**
+     * Retourne le contenu XML parsé
+     *
+     * @return string contenu XML parsé
+     */
+    
+    public function get_xml()
     {
         return($this->parsed_data);
     }
@@ -131,8 +177,15 @@ class odt_blockparser
     private $xml_data = array();
     private $parsed_data;
 
-
-    function odt_blockparser()
+    /**
+     * Constructeur de la classe. Crée le parser.
+     *
+     * @return odt_blockparser
+     * 
+     * @see xml_parser_create
+     */
+    
+    public function odt_blockparser()
     {
         $this->xml_parser = xml_parser_create();
 
@@ -146,14 +199,30 @@ class odt_blockparser
         xml_set_character_data_handler($this->xml_parser, "cdata");
     }
 
-    function parse($data, $blockvars)
+    /**
+     * Parse les données dans le but d'extraire des blocs identifiés (tableaux nommés)
+     *
+     * @param string $data
+     * @param array $blockvars tableau des blocs à extraire
+     * 
+     * @see xml_parse
+     */
+    
+    public function parse($data, $blockvars)
     {
         $this->blockvars = $blockvars;
         xml_parse($this->xml_parser, $data);
     }
 
-
-    function tag_open($parser, $tag, $attribs)
+    /**
+     * Gestionnaires de début de balise XML. On cherche les tableaux correspondant aux blocs.
+     *
+     * @param resource $parser parser XML
+     * @param string $tag balise XML
+     * @param string $attribs attributs de la balise XML
+     */
+    
+    private function tag_open($parser, $tag, $attribs)
     {
         switch($tag)
         {
@@ -194,7 +263,15 @@ class odt_blockparser
         if ($keep_content) $this->parsed_data .= ($params_str == '') ? "<{$tag}>" : "<{$tag} {$params_str}>";
     }
 
-    function tag_close($parser, $tag)
+    
+    /**
+     * Gestionnaires de fin de balise XML
+     *
+     * @param resource $parser parser XML
+     * @param string $tag balise XML
+     */
+        
+    private function tag_close($parser, $tag)
     {
         $keep_content = true;
 
@@ -228,7 +305,15 @@ class odt_blockparser
         array_pop($this->xmltags);
     }
 
-    function cdata($parser, $data)
+    
+    /**
+     * Gestionnaire du flux de données, récupère le contenu des blocs.
+     *
+     * @param resource $parser parser XML
+     * @param string $data données
+     */
+        
+    private function cdata($parser, $data)
     {
         $tag = &$this->xmltags[sizeof($this->xmltags)-1];
 
@@ -248,14 +333,24 @@ class odt_blockparser
 
     }
 
+    /**
+     * Retourne le contenu XML parsé
+     *
+     * @return string contenu XML parsé
+     */
 
-    function get_xml()
+    public function get_xml()
     {
         return($this->parsed_data);
     }
 
-
-    function get_blocktemplates()
+    /**
+     * Retourne les blocs et leur contenu
+     *
+     * @return unknown
+     */
+    
+    public function get_blocktemplates()
     {
         return($this->blocktemplates);
     }
@@ -266,7 +361,7 @@ class odt_blockparser
 /**
  * Classe permettant de générer un document bureautique (ODT, DOC, PDT, etc.) à partir d'un modèle ODT.
  * Cette classe fonctionne comme un moteur de template.
- * Il est possible de définir de variables ou des blocs de variables qui seront ensuite remplacées dans le modèle via un parser XML.
+ * Il est possible de définir des variables ou des blocs de variables qui seront ensuite remplacés dans le modèle via un parser XML.
  * 
  * @package ploopi
  * @subpackage odt
@@ -288,15 +383,20 @@ class odt_parser
     private $xml_data = array();
     private $parsed_content_xml;
 
-    // constructeur
-    // ouverture du fichier modèle ODT
-    // extraction des contenus XML (styles+content).
-    // /!\ des contenus sont dans styles.xml (entêtes notamment)
-    function odt_parser($filename)
+    /**
+     * Constructeur de la classe.
+     * Ouvre le fichier modèle ODT.
+     * Extrait les contenus XML (styles+content).
+     * 
+     * @param string $filename nom du fichier du modèle ODT
+     * @return odt_parser
+     */
+    
+    public function odt_parser($filename)
     {
         $this->filename = $filename;
         $zip = new ZipArchive();
-        if ($zip->open($this->filename) === TRUE)
+        if ($zip->open($this->filename) === true)
         {
             $this->content_xml = $zip->getFromName('content.xml');
             $this->styles_xml = $zip->getFromName('styles.xml');
@@ -308,52 +408,72 @@ class odt_parser
         }
     }
 
-    // conversion des espaces au "format" OpenDocument, sinon ils ne sont pas interprétés
-    /*function _convert_spaces($matches)
-    {
-        if (strlen($matches[0])>1) return(' <text:s text:c="'.(strlen($matches[0])-1).'"/>');
-        else return(' ');
-    }*/
+    /**
+     * Encode une chaîne en UTF8 pour être intégrée dans un document XML
+     *
+     * @param string $value chaîne brute
+     * @return string chaîne encodée
+     */
 
-    // encodage utf8 + xml
-    function _utf8_encode($value)
+    private function utf8_encode($value)
     {
-        // bug avec OpenOffice 2.3
-        //return(str_replace(array("&", ">", "<", "\""), array("&amp;", "&gt;", "&lt;", "&quot;"), iconv("ISO-8859-15", "UTF-8", $value)));
+        // bug avec OpenOffice 2.3 : & => &amp;
         return(str_replace(array("&", ">", "<", "\""), array("", "&gt;", "&lt;", "&quot;"), iconv("ISO-8859-15", "UTF-8", $value)));
     }
 
-    // nettoyage des variables qui sont fournies en ISO-8859-15 (non paramétrable pour notre besoin)
-    function _clean_var($value)
+    /**
+     * Nettoie une chaîne (décode les entités html) et l'encode en UTF8
+     *
+     * @param string $value chaîne brute
+     * @return string chaîne "nettoyée"
+     * 
+     * @see odt_parser::utf8_encode
+     */
+    private function clean_var($value)
     {
         $value = html_entity_decode($value, ENT_QUOTES, 'ISO-8859-15');
-        $value = $this->_utf8_encode($value);
-        //$value = preg_replace_callback('/\s\s+/',array('self','_convert_spaces'),$value);
-        //$value = str_replace('&amp;','aamp;',$value);
+        $value = $this->utf8_encode($value);
         return($value);
     }
 
-    // affectation d'une valeur pour une variable template
-    function set_var($key, $value, $clean = true)
+    /**
+     * Définit une variable template et lui affecte une valeur
+     *
+     * @param string $key nom de la variable
+     * @param string $value valeur
+     * @param boolean $clean true si le contenu de la valeur doit être nettoyée
+     * 
+     * @see odt_parser::clean_var
+     */
+    
+    public function set_var($key, $value, $clean = true)
     {
-        $this->vars['{'.$key.'}'] = ($clean) ? $this->_clean_var($value) : $value;
+        $this->vars['{'.$key.'}'] = ($clean) ? $this->clean_var($value) : $value;
     }
 
-    // affectation d'un bloc de valeurs  pour une variable template de type block
-    function set_blockvar($blockname, $block)
+    /**
+     * Définit une variable template de type bloc et lui affecte un tableau valeurs
+     *
+     * @param unknown_type $blockname
+     * @param unknown_type $block
+     */
+    
+    public function set_blockvar($blockname, $block)
     {
         $this->blockvars[$blockname] = array();
 
         foreach($block as $k => $v)
             foreach($v as $key => $value)
             {
-                $this->blockvars[$blockname][$k]['{'.$key.'}'] = $this->_clean_var($value);
+                $this->blockvars[$blockname][$k]['{'.$key.'}'] = $this->clean_var($value);
             }
     }
 
-    // partie principale
-    // traitement du document
-    function parse()
+    /**
+     * Parse le contenu du modèle et remplace les variables du template par leurs valeurs
+     */
+    
+    public function parse()
     {
         if ($this->content_xml != NULL || $this->styles_xml != NULL)
         {
@@ -372,7 +492,6 @@ class odt_parser
             {
                 if (isset($this->blockvars[$blockname]))
                 {
-
                     $tpl_res = '';
                     foreach($this->blockvars[$blockname] as $vars)
                     {
@@ -400,14 +519,24 @@ class odt_parser
         }
     }
 
-    // DEBUG / affichage des variables templates avec leurs valeurs
-    function print_vars()
+    /**
+     * DEBUG : affiche le contenu des variables du template
+     */
+    
+    public function print_vars()
     {
         ploopi_print_r($this->vars);
         ploopi_print_r($this->blockvars);
     }
 
-    // génération du document ODT finalisé
+    /**
+     * Enregistre le document ODT généré
+     *
+     * @param string $newfilename chemin du fichier de destination (ODT)
+     * 
+     * @see ZipArchive
+     */
+    
     function save($newfilename)
     {
         if ($newfilename != $this->filename)
@@ -441,17 +570,37 @@ class odt_parser
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
+ * 
+ * @link http://www.artofsolving.com/opensource/jodconverter
  */
 
 class odt_converter
 {
     var $url = '';
 
+    /**
+     * Constructeur de la classe.
+     *
+     * @param string $url URL du webservice JODConverter
+     * @return odt_converter
+     * 
+     * @link http://www.artofsolving.com/opensource/jodconverter
+     */
+    
     function odt_converter($url)
     {
         $this->url = "{$url}/service";
     }
 
+    /**
+     * Convertit un document dans un format qu'Open Office (ODT, DOC, etc.) peut lire dans un format qu'il peut écrire (PDF, DOC, SXW, RTF, HTML, etc...)
+     *
+     * @param string $inputData contenu du document ODT
+     * @param string $inputType type mime du document source
+     * @param string $outputType type mime du document destination
+     * @return string contenu du document généré
+     */
+    
     function convert($inputData, $inputType, $outputType) 
     {
         require_once 'HTTP/Request.php';
@@ -464,5 +613,4 @@ class odt_converter
         return $request->getResponseBody();
     }
 }
-
 ?>

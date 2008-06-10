@@ -34,12 +34,12 @@
 
 
 /**
- * Retourne la date du serveur au format local (_PLOOPI_TIMEFORMAT)
+ * Retourne la date du serveur au format local (_PLOOPI_DATEFORMAT)
  *
  * @return string date au format local
  */
 
-function ploopi_getdate() {return date(v);}
+function ploopi_getdate() {return date(_PLOOPI_DATEFORMAT);}
 
 /**
  * Retourne l'heure au format local (_PLOOPI_TIMEFORMAT)

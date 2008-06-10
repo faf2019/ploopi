@@ -31,6 +31,10 @@
  * @author Stéphane Escaich
  */
 
+/**
+ * Inclusion de la classe parent.
+ */
+
 include_once './include/classes/data_object.php';
 
 /**
@@ -45,13 +49,22 @@ include_once './include/classes/data_object.php';
 
 class user extends data_object
 {
-
+    /**
+     * Constructeur de la classe
+     *
+     * @return user
+     */
+    
     function user()
     {
         parent::data_object('ploopi_user');
         $this->fields['date_creation'] = ploopi_createtimestamp();
     }
 
+    /**
+     * Supprime l'utilisateur et les données associées : workflow, param, share, annotation, subscription, etc..
+     */
+    
     function delete()
     {
         include_once './include/classes/group.php';
@@ -59,18 +72,14 @@ class user extends data_object
         global $db;
         
         $db->query("DELETE * FROM ploopi_workflow WHERE type_workflow = 'user' AND id_workflow = {$this->fields['id']}");
+        $db->query("DELETE * FROM ploopi_share WHERE type_share = 'user' AND id_share = {$this->fields['id']}");
+        $db->query("DELETE * FROM ploopi_tag WHERE id_user = {$this->fields['id']}");
+        $db->query("DELETE * FROM ploopi_annotation WHERE id_user = {$this->fields['id']}");
         $db->query("DELETE * FROM ploopi_param_user WHERE id_user = {$this->fields['id']}");
         $db->query("DELETE * FROM ploopi_workspace_user_role WHERE id_user = {$this->fields['id']}");
+        $db->query("DELETE * FROM ploopi_group_user WHERE id_user = {$this->fields['id']}");
+        $db->query("DELETE * FROM ploopi_subscription WHERE id_user = {$this->fields['id']}");
         
-        $select = "SELECT * FROM ploopi_group_user WHERE id_user = {$this->fields['id']}";
-        $rs = $db->query($select);
-        while($fields = $db->fetchrow($rs))
-        {
-            $group_user = new group_user();
-            $group_user->open($fields['id_group'], $fields['id_user']);
-            $group_user->delete();
-        }
-
         $select = "SELECT * FROM ploopi_workspace_user WHERE id_user = {$this->fields['id']}";
         $rs = $db->query($select);
         while($fields = $db->fetchrow($rs))
@@ -83,18 +92,19 @@ class user extends data_object
         parent::delete();
     }
 
-    /*
-     * */
-
     /**
-     * Retourne l'ensemble des espaces auxquels l'utilisateur est (plus ou moins directement) rattaché
-     * 1. Récupére les groupes auxquels l'utilisateur est rattaché.
-     * 2. A partir des groupes, récupère les espaces auxquels les groupes sont rattachés directement ou pas (on regarde les parents).
-     * 3. Récupère les espaces auxquels l'utilisateur est directement rattaché.
-     * @return unknown
+     * Retourne un tableau contenant les espaces auxquels l'utilisateur est (plus ou moins directement) rattaché
+     *
+     * @return array tableau d'espaces
      */
     function getworkspaces()
     {
+        /**
+         * 1. Récupére les groupes auxquels l'utilisateur est rattaché.
+         * 2. A partir des groupes, récupère les espaces auxquels les groupes sont rattachés directement ou pas (on regarde les parents).
+         * 3. Récupère les espaces auxquels l'utilisateur est directement rattaché.
+         */
+        
         global $db;
 
         $workspaces = array();
@@ -154,9 +164,9 @@ class user extends data_object
     }
 
     /**
-     * Retourne l'ensemble des groupes auxquels l'utilisateurs est rattaché
+     * Retourne un tableau contenant les groupes auxquels l'utilisateur est rattaché
      *
-     * @return unknown
+     * @return array tableau de groupes
      */
     
     function getgroups()
@@ -189,6 +199,12 @@ class user extends data_object
         return $groups;
     }
 
+    /**
+     * Attache l'utilisateur à un groupe
+     *
+     * @param int $groupid identifiant du groupe
+     */
+    
     function attachtogroup($groupid)
     {
         include_once './include/classes/group.php';
@@ -199,10 +215,14 @@ class user extends data_object
         $group_user->fields['id_user'] = $this->fields['id'];
         $group_user->fields['id_group'] = $groupid;
         $group_user->save();
-
-
     }
 
+    /**
+     * Attache l'utilisateur à un espace de travail
+     *
+     * @param unknown_type $workspaceid
+     */
+    
     function attachtoworkspace($workspaceid)
     {
         global $db;
@@ -237,18 +257,14 @@ class user extends data_object
 
     }
 
-    function detachfromgroup($groupid)
-    {
-        include_once './include/classes/group.php';
-        
-        $group_user = new group_user();
-        $group_user->open($groupid,$this->fields['id']);
-        $group_user->delete();
-    }
-
+    /**
+     * Retourne un tableau contenant les actions triées pas espace de travail et module 
+     *
+     * @param array $actions tableau d'actions
+     */
+    
     function getactions(&$actions)
     {
-
         global $db;
 
         $select =   "
@@ -268,6 +284,12 @@ class user extends data_object
         while ($fields = $db->fetchrow($result)) $actions[$fields['id_workspace']][$fields['id_module']][$fields['id_action']] = true;
     }
 
+    /**
+     * Retourne un tableau contenant les utilisateurs "visibles" par l'utilisateur
+     *
+     * @return tableau d'utilisateurs
+     */
+    
     function getusersgroup()
     {
         global $db;
@@ -302,7 +324,4 @@ class user extends data_object
         return($usrlist);
     }
 }
-
-
-
 ?>

@@ -56,7 +56,7 @@ function ploopi_documents_getid($id_object, $id_record, $id_module = -1)
  *
  * @param int $id_object identifiant de l'objet
  * @param string $id_record identifiant de l'enregistrement
- * @param array $rights tableau définissant les droits 'DOCUMENT_CREATE':boolean, 'DOCUMENT_MODIFY':boolean, 'DOCUMENT_DELETE':boolean, 'FOLDER_CREATE':boolean, 'FOLDER_MODIFY':boolean, 'FOLDER_DELETE': boolean
+ * @param array $rights tableau définissant les droits 'DOCUMENT_CREATE':boolean, 'DOCUMENT_MODIFY':boolean, 'DOCUMENT_DELETE':boolean, 'FOLDER_CREATE':boolean, 'FOLDER_MODIFY':boolean, 'FOLDER_DELETE': boolean, 'SEARCH': boolean
  * @param array $default_folders tableau définissant les sous-dossiers par défaut à créer
  * @param array $params tableau définissant les paramètres du bloc 'ROOT_NAME':string, 'ATTACHEMENT':boolean, 'FIELDS':array 
  * @param int $id_user identifiant de l'utilisateur

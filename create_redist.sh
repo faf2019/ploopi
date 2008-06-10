@@ -1,5 +1,5 @@
 #!/bin/sh
-export DEST=ploopi_1.0
+export DEST=ploopi_1.0RC4
 
 #################################
 # compression des fichiers
@@ -27,7 +27,6 @@ cp data/index.html $DEST/data
 
 cp -r cgi $DEST
 cp -r config $DEST
-cp -r db $DEST
 cp -r FCKeditor $DEST
 cp -r img $DEST
 cp -r include $DEST

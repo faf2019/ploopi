@@ -88,10 +88,14 @@ switch($ploopi_op)
                 $documentsfolder = new documentsfolder();
 
                 if (!empty($currentfolder)) $documentsfolder->open($currentfolder);
-                ?>
 
-                <a title="Rechercher un Fichier" href="javascript:void(0);" style="float:right;"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_search.png"></a>
-                <?
+                if ($_SESSION['documents']['rights']['SEARCH'])
+                {
+                    ?>
+                    <a title="Rechercher un Fichier" href="javascript:void(0);" style="float:right;"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_search.png"></a>
+                    <?
+                }
+                
                 if (empty($_SESSION['documents']['mode']))
                 {
                     if ($_SESSION['documents']['rights']['DOCUMENT_CREATE'])

@@ -167,6 +167,8 @@ define ('_SYSTEM_LABEL_SERVERTIMEZONE', 'Synchronisé avec le fuseau horaire du s
 define ('_SYSTEM_LABEL_FUNCTION', 'Fonction');
 define ('_SYSTEM_LABEL_SERVICE', 'Service');
 define ('_SYSTEM_LABEL_COLOR', 'Couleur');
+define ('_SYSTEM_LABEL_OFFICE', 'Bureau');
+define ('_SYSTEM_LABEL_CIVILITY', 'Civilité');
 
 define ('_SYSTEM_LABEL_PARENTS', 'Parents');
 

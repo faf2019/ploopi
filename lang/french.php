@@ -159,6 +159,12 @@ global $ploopi_agenda_months;
  */
 global $ploopi_errormsg;
 
+/**
+ * Tableau des civilités
+ */
+global $ploopi_civility;
+
+
 $ploopi_agenda_days = array ('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'); 
 
 $ploopi_agenda_months[1] = 'Janvier';
@@ -173,6 +179,8 @@ $ploopi_agenda_months[9] = 'Septembre';
 $ploopi_agenda_months[10] = 'Octobre';
 $ploopi_agenda_months[11] = 'Novembre';
 $ploopi_agenda_months[12] = 'Décembre';
+
+$ploopi_civility = array ('M', 'Mme', 'Mlle'); 
 
 $ploopi_errormsg[_PLOOPI_ERROR_NOWORKSPACEDEFINED]  = 'Aucun espace de travail n\'est défini pour cet utilisateur';
 $ploopi_errormsg[_PLOOPI_ERROR_LOGINERROR]          = 'Utilisateur ou Mot de passe incorrect';
