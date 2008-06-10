@@ -407,7 +407,7 @@ class module_type extends data_object
                 ORDER BY    id_action
                 ";
         
-        $result = $db->query($select);
+        $result = $db->query($sql);
         
         while ($action = $db->fetchrow($result)) $actions[$action['id_action']] = $action;
         
