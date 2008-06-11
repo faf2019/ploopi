@@ -40,6 +40,17 @@
  */
 
 include './include/start/common.php';
+
+if (empty($_SESSION['ploopi']['mode'])) 
+{
+    include './include/start/initsession.php';
+    include './include/start/load_param.php';
+    if (!empty($_SESSION['ploopi']['hosts']['frontoffice'][0]))
+    {
+        $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['frontoffice']['workspaceid'] = $_SESSION['ploopi']['hosts']['frontoffice'][0];
+    }
+}
+    
 include './include/op.php';
 ploopi_die();
 ?>

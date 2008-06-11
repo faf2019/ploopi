@@ -56,7 +56,7 @@ switch($op)
             if (!isset($_POST['user_login'])) ploopi_redirect($scriptenv);
 
             // test si login deja existant
-            $db->query("SELECT id FROM ploopi_user WHERE {$testuser} login = '{$_POST['user_login']}'");
+            $db->query("SELECT id FROM ploopi_user WHERE login = '{$_POST['user_login']}'");
             if($db->numrows()) ploopi_redirect("{$scriptenv}?op=manage_account&error=login");
         }
 

@@ -32,6 +32,12 @@
  * @author Stéphane Escaich
  */
 
+/**
+ * Package workspace
+ */
+
+include_once './include/classes/workspace.php';
+
 ///////////////////////////////////////////////////////////////////////////
 // GET WORKSPACES (FOR THIS DOMAIN)
 // on en profite pour appliquer l'héritage implicite des domaines pour les sous-espaces de travail

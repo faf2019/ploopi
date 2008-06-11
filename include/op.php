@@ -420,6 +420,7 @@ if (isset($ploopi_op))
         
     }
     
+    //echo $_SESSION['ploopi']['workspaceid'];
     if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
     {
         foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $idm)

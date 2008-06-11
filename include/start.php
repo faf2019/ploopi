@@ -149,7 +149,15 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
     }
 }
 
-$ploopi_initsession |= isset($_GET['reloadsession']);
+/**
+ * Permet de forcer un rechargement de session
+ */
+$ploopi_initsession |= isset($_REQUEST['reloadsession']);
+
+/**
+ * Permet de gérer le cas ou la session est partiellement chargée (on passe d'abord par index-quick.php...)
+ */
+$ploopi_initsession |= empty($_SESSION['ploopi']['mode']);
 
 
 if ($ploopi_initsession)

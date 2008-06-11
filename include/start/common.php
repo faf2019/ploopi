@@ -152,5 +152,4 @@ if (empty($_SESSION) || (!empty($_SESSION['ploopi']['host']) && $_SESSION['ploop
  * Mise à jour des données de la session
  */
 ploopi_session_update();
-
 ?>

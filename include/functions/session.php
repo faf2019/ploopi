@@ -56,7 +56,7 @@ function ploopi_session_reset()
                     'connected'     => false,
                     'loginerror'    => false,
                     'paramloaded'   => false,
-                    'mode'          => 'backoffice',
+                    'mode'          => '',
 
                     'remote_ip'      => ploopi_getip(),
                     'remote_browser' => Net_UserAgent_Detect::getBrowserString(),
