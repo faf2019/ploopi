@@ -357,12 +357,18 @@ overflow:auto;
 
 /* vertical alignement : IE / FF / Opera */
 p.ploopi_va {
-margin:0;
+    margin:0;
 }
 
-p.ploopi_va img, p.ploopi_va span, p.ploopi_va input, p.ploopi_va select, p.ploopi_va a {
-display: inline-block;
-vertical-align: middle;
+p.ploopi_va img, 
+p.ploopi_va span, 
+p.ploopi_va strong, 
+p.ploopi_va em, 
+p.ploopi_va input, 
+p.ploopi_va select, 
+p.ploopi_va a {
+	display: inline-block;
+	vertical-align: middle;
 }
 
 .ploopi_form {
