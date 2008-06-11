@@ -296,7 +296,6 @@ function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
 
                     }
                 }
-                else alert('erreur');
             }
         }
     );

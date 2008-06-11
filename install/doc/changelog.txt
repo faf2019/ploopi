@@ -1,3 +1,9 @@
+== Module FORMS - version 3.81 =====================================================
+
+2008-06-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Affichage de l'URL publique du fichier (pour faciliter l'intégration d'un lien depuis une application externe)
+
 == Module FORMS - version 3.80 =====================================================
 
 2008-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

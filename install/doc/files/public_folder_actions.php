@@ -60,7 +60,7 @@ if ($docfolder->fields['foldertype'] != 'private')
             $objDocFolderSub = new docfolder();
             $objDocFolderSub->open($parents[$i])
             ?>
-            <div style="padding:2px 4px;font-weight:bold;">
+            <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
             Vous héritez de l'abonnement à &laquo; <a href="javascript:void(0);" onclick="javascript:doc_browser('<? echo $parents[$i]; ?>');"><? echo $objDocFolderSub->fields['name']; ?></a> &raquo; 
             </div>
             <?

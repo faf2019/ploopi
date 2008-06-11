@@ -199,6 +199,9 @@ switch($ploopi_op)
         
         ploopi_init_module('doc', false, false, false);
 
+        /*
+         * Ancienne méthode avec l'id
+         * 
         if (!empty($_GET['docfile_id']))
         {
             $docfile = new docfile();
@@ -207,7 +210,7 @@ switch($ploopi_op)
             if (file_exists($docfile->getfilepath())) ploopi_downloadfile($docfile->getfilepath(),$docfile->fields['name']);
             else if (file_exists($docfile->getfilepath_deprecated())) ploopi_downloadfile($docfile->getfilepath_deprecated(),$docfile->fields['name']);
         }
-
+        */
         if (!empty($_GET['docfile_md5id']))
         {
             $db->query("SELECT id FROM ploopi_mod_doc_file WHERE md5id = '".$db->addslashes($_GET['docfile_md5id'])."'");

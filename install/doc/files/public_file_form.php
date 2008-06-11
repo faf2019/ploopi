@@ -137,9 +137,9 @@ else
     $title = ($readonly) ? '(lecture seule)' : ''
     ?>
     <div class="doc_fileform_title">
-        <a title="Télécharger ZIP" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("{$scriptenv}?op=doc_filedownloadzip&docfile_md5id={$docfile->fields['md5id']}"); ?>">Télécharger ZIP</a>
-        <a title="Télécharger" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("{$scriptenv}?op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>">Télécharger</a>
-        <a title="Ouvrir" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("{$scriptenv}?op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>" target="_blank">Ouvrir</a>
+        <a title="Télécharger ZIP" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("admin-light.php?op=doc_filedownloadzip&docfile_md5id={$docfile->fields['md5id']}"); ?>">Télécharger ZIP</a>
+        <a title="Télécharger" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("admin-light.php?op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>">Télécharger</a>
+        <a title="Ouvrir" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("admin-light.php?op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>" target="_blank">Ouvrir</a>
         <a title="Envoyer un message" style="display:block;float:right;margin-left:10px;" href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, '<? echo _DOC_OBJECT_FILE ?>','<? echo $docfile->fields['md5id']; ?>', '<? echo $docfile->fields['name']; ?>');">Envoyer un message</a>
         <? echo htmlentities($docfile->fields['name'])." {$title}"; ?>
     </div>
@@ -443,8 +443,14 @@ else
             ?>
         </div>
     
+    <p class="ploopi_va" style="padding:4px;clear:both;">
+        <strong>URL publique du fichier :</strong>
+        <input type="text" class="text" style="width:600px;" readonly value="<? echo "{$basepath}/".ploopi_urlencode("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}"); ?>" />
+    </p>
+
     </div>
 
+    
     <div style="border-bottom:1px solid #c0c0c0;">
     <?
     if (isset($docfolder->fields['foldertype']) && $docfolder->fields['foldertype'] != 'private')
@@ -461,7 +467,7 @@ else
                 $objDocFolderSub = new docfolder();
                 $objDocFolderSub->open($parents[$i])
                 ?>
-                <div style="padding:2px 4px;font-weight:bold;">
+                <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
                 Vous héritez de l'abonnement à &laquo; <a href="javascript:void(0);" onclick="javascript:doc_browser('<? echo $parents[$i]; ?>');"><? echo $objDocFolderSub->fields['name']; ?></a> &raquo; 
                 </div>
                 <?
