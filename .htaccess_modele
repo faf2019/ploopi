@@ -61,5 +61,6 @@ Options +FollowSymLinks -Indexes
     RewriteRule ^(.*)-h([0-9]*)a([0-9]*).html(.*)$ index.php?headingid=$2&articleid=$3$4 [L]
     RewriteRule ^(.*)-h([0-9]*).html(.*)$ index.php?headingid=$2$3 [L]
     RewriteRule ^(.*)-a([0-9]*).html(.*)$ index.php?articleid=$2$3 [L]
+    RewriteRule ^tag-([a-zA-Z0-9]*).html(.*)$ index.php?query_tag=$1$2 [L]
 </IfModule>
 
