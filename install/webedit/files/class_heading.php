@@ -70,6 +70,9 @@ class webedit_heading extends data_object
         
         global $db;
         
+        // suppression des abonnements (frontoffice)
+        $db->query("DELETE FROM ploopi_mod_webedit_heading_subscriber WHERE id_heading = {$this->fields['id']}");
+        
         // suppression des sous-rubriques
         $rs1 = $db->query("SELECT id FROM ploopi_mod_webedit_heading WHERE id_heading = {$this->fields['id']}");
         

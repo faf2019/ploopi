@@ -31,6 +31,45 @@
  * @author Stéphane Escaich
  */
 
+
+switch($_REQUEST['ploopi_op'])
+{
+    case 'webedit_subscribe':
+        ploopi_init_module('webedit');
+        
+        $return = -1;
+        
+        if (!empty($_GET['headingid']) && is_numeric($_GET['headingid']) && !empty($_POST['subscription_headingid']) && is_numeric($_POST['subscription_headingid']))
+        {
+            if (!empty($_POST['subscription_email']) && ploopi_checkemail($_POST['subscription_email']))
+            {
+                include_once './modules/webedit/class_heading_subscriber.php';
+                
+                $subscriber = new webedit_heading_subscriber();
+                
+                if (!$subscriber->open($_POST['subscription_headingid'], $_POST['subscription_email']))
+                {
+                    $subscriber->fields['id_heading'] = $_POST['subscription_headingid'];
+                    $subscriber->fields['email'] = $_POST['subscription_email'];
+                    $subscriber->fields['validated'] = 1;
+                    $subscriber->fields['id_module'] = $_SESSION['ploopi']['moduleid'];
+                    $subscriber->save();
+                    $return = _WEBEDIT_SUBSCRIPTION_SUBSCRIBED;
+                }
+                else 
+                {
+                    $subscriber->delete();
+                    $return = _WEBEDIT_SUBSCRIPTION_UNSUBSCRIBED;
+                }
+            }
+            else $return = _WEBEDIT_SUBSCRIPTION_ERROR_EMAIL;
+        }
+        else $return = _WEBEDIT_SUBSCRIPTION_ERROR_FATAL;
+        
+        ploopi_redirect("index.php?headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&subscription_return={$return}");
+    break;
+}
+
 /**
  * Opérations accessibles pour les utilisateurs connectés
  */

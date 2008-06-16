@@ -56,6 +56,11 @@ define ('_WEBEDIT_ACTION_CATEGORY_EDIT',        3);
 define ('_WEBEDIT_ACTION_WORKFLOW_MANAGE',      4);
 
 /**
+ * Gérer les abonnés
+ */
+define ('_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE',   5);
+
+/**
  * Objet : ARTICLE (admin)
  */
 define ('_WEBEDIT_OBJECT_ARTICLE_ADMIN',        1);
@@ -73,7 +78,29 @@ define ('_WEBEDIT_OBJECT_HEADING',              3);
 /**
  * Chemin relatif du dossier de stockage des templates
  */
-define ('_WEBEDIT_TEMPLATES_PATH',  './templates/frontoffice');
+define ('_WEBEDIT_TEMPLATES_PATH', './templates/frontoffice');
+
+
+/**
+ * Enregistrement d'un abonné : OK
+ */
+define ('_WEBEDIT_SUBSCRIPTION_SUBSCRIBED', 1);
+
+/**
+ * Enregistrement d'un abonné : désabonné
+ */
+define ('_WEBEDIT_SUBSCRIPTION_UNSUBSCRIBED', 2);
+
+/**
+ * Enregistrement d'un abonné : adresse email invalide
+ */
+define ('_WEBEDIT_SUBSCRIPTION_ERROR_EMAIL', 9);
+
+/**
+ * Enregistrement d'un abonné : paramètre incorrect
+ */
+define ('_WEBEDIT_SUBSCRIPTION_ERROR_PARAM', 99);
+
 
 
 /**
@@ -511,8 +538,7 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
 
                 default:
                 case 'display';
-                    $script = "index.php?headingid={$id}";
-                    if (_PLOOPI_FRONTOFFICE_REWRITERULE) $script = ploopi_urlrewrite($script, $detail['label']);
+                    $script = ploopi_urlrewrite($script = "index.php?headingid={$id}", $detail['label']);
                 break;
             }
 
@@ -635,8 +661,7 @@ function webedit_template_assign_headings($headings, $hid, $var = 'switch_conten
 
                 default:
                 case 'display';
-                    $script = "index.php?headingid={$id}";
-                    if (_PLOOPI_FRONTOFFICE_REWRITERULE) $script = ploopi_urlrewrite($script, $detail['label']);
+                    $script = ploopi_urlrewrite($script = "index.php?headingid={$id}", $detail['label']);
                 break;
             }
 
@@ -657,8 +682,6 @@ function webedit_template_assign_headings($headings, $hid, $var = 'switch_conten
                     'FREE2' => $detail['free2']
                     ));
                     
-                    
-
                 if (isset($headings['tree'][$id])) webedit_template_assign_headings(&$headings, $id, "{$localvar}.", $prefix, $depth+1, $locallink);
             }
         }

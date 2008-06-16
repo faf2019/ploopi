@@ -44,6 +44,7 @@ ploopi_init_module('webedit');
  */
 include_once './modules/webedit/class_article.php';
 include_once './modules/webedit/class_heading.php';
+include_once './modules/webedit/class_heading_subscriber.php';
 
 global $headingid;
 global $articleid;
@@ -208,6 +209,9 @@ switch($op)
             if (empty($_POST['webedit_heading_visible'])) $heading->fields['visible'] = 0;
             if (empty($_POST['webedit_heading_url_window'])) $heading->fields['url_window'] = 0;
             
+            if (empty($_POST['webedit_heading_rssfeed_enabled'])) $heading->fields['rssfeed_enabled'] = 0;
+            if (empty($_POST['webedit_heading_subscription_enabled'])) $heading->fields['subscription_enabled'] = 0;
+            
             $heading->save();
             
             /* DEBUT ABONNEMENT */
@@ -306,6 +310,7 @@ switch($op)
             $article = new webedit_article('draft');
             if (!empty($_POST['articleid']) && is_numeric($_POST['articleid']) && $article->open($_POST['articleid']))
             {
+                // modification de la position d'un article
                 if (isset($_POST['webedit_art_position']))
                 {
                     $newposition = $_POST['webedit_art_position'];
@@ -335,7 +340,7 @@ switch($op)
                 }
 
             }
-            else
+            else // nouvel article
             {
                 $strTypeTicket = 'new';
                 
@@ -349,9 +354,21 @@ switch($op)
                 $article->fields['id_heading'] = $headingid;
             }
 
-            $sendtickets = ($type == 'draft' && $_POST['webedit_article_status'] == 'wait' && $article->fields['status'] != $_POST['webedit_article_status']);
+            /*
+             * On envoie un ticket pour validation si :
+             * brouillon + statut en attente + modification de statut
+             * 
+             * Note : l'envoi est effectué plus bas, après avoir cherché la liste des validateurs
+             */
+            $sendtickets = 
+                (
+                        $type == 'draft' 
+                    &&  $_POST['webedit_article_status'] == 'wait' 
+                    &&  $article->fields['status'] != $_POST['webedit_article_status']
+                );
             
-            if ($article->fields['status'] != 'wait') // article modifiable
+            // article modifiable, on enregistre les nouvelles données
+            if ($article->fields['status'] != 'wait') 
             {
                 $article->setvalues($_POST,'webedit_article_');
                 if (isset($_POST['fck_webedit_article_content'])) $article->fields['content'] = $_POST['fck_webedit_article_content'];
@@ -372,7 +389,7 @@ switch($op)
             else $article->setvalues($_POST,'webedit_article_');
 
             
-            // get workflow validators
+            // recherche la liste des validateurs de cette rubrique
             $wfusers = array();
             $wf = ploopi_workflow_get(_WEBEDIT_OBJECT_HEADING, $headingid);
             $wf_headingid = $headingid;
@@ -392,11 +409,13 @@ switch($op)
 
             foreach($wf as $value) $wfusers[] = $value['id_workflow'];
 
+            // action "publier" et l'utilisateur est un validateur => OK
             if (isset($_POST['publish']) && in_array($_SESSION['ploopi']['userid'],$wfusers))
             {
-                $article->publish();
+                $strTypeTicket = ($article->publish()) ? 'published_new' : 'published';
+                
                 ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_PUBLISH, $articleid);
-                $strTypeTicket = 'published';
+                
             }
 
             $articleid = $article->save();
@@ -415,8 +434,44 @@ switch($op)
                 break;
                     
                 case 'published':
+                case 'published_new':
                     $strMsg = 'Cet objet à été publié';
                     $intActionId = _WEBEDIT_ACTION_ARTICLE_PUBLISH;
+                    
+                    // Gestion des abonnés frontoffice
+                    $sql =  "
+                            SELECT  * 
+                            FROM    ploopi_mod_webedit_heading_subscriber 
+                            WHERE   id_module = {$_SESSION['ploopi']['moduleid']} 
+                            AND     id_heading IN (".implode(',', $arrHeadingList).")
+                            ";
+                    
+                    $db->query($sql);
+                    
+                    // envoi d'un mail à chaque abonné
+                    while ($row = $db->fetchrow())
+                    {
+                        $from[] = 
+                            array(
+                                'name' => $_SERVER['HTTP_HOST'], 
+                                'address' => (empty($_SESSION['ploopi']['user']['email'])) ? _PLOOPI_ADMINMAIL : $_SESSION['ploopi']['user']['email']
+                            );
+                        
+                        switch($strTypeTicket)
+                        {
+                            case 'published':
+                                $mail_title = "{$_SERVER['HTTP_HOST']} : modification d'un article";
+                                $mail_content = "Bonjour,\n\nvous recevez ce message car vous êtes abonné au site {$_SERVER['HTTP_HOST']}.\n\nUn article intitulé \"{$article->fields['title']}\" a été modifié.\n\nVous pouvez le consulter en cliquant sur ce lien : {$basepath}/".$article->geturl();
+                            break;  
+                            
+                            case 'published_new':
+                                $mail_title = "{$_SERVER['HTTP_HOST']} : publication d'un article";
+                                $mail_content = "Bonjour,\n\nvous recevez ce message car vous êtes abonné au site {$_SERVER['HTTP_HOST']}.\n\nUn nouvel article intitulé \"{$article->fields['title']}\" a été publié.\n\nVous pouvez le consulter en cliquant sur ce lien : {$basepath}/".$article->geturl();
+                            break;  
+                        }
+                        
+                        ploopi_send_mail($from, $row['email'], $mail_title, $mail_content, null, null, null, null, false);
+                    }
                 break;
                     
                 default:
@@ -437,6 +492,7 @@ switch($op)
             
             /* FIN ABONNEMENT */
             
+            // on envoie un ticket de demande de validation si l'utilisateur n'est pas un validateur
             if ($sendtickets && !in_array($_SESSION['ploopi']['userid'],$wfusers))
             {
                 $_SESSION['ploopi']['tickets']['users_selected'] = $wfusers;
@@ -481,7 +537,17 @@ switch($op)
                 ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $_GET['articleid']);
             }
         }
-        ploopi_redirect("$scriptenv");
+        ploopi_redirect($scriptenv);
+    break;
+    
+    case 'subscriber_delete':
+        if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE) && !empty($_GET['subscriber_email']))
+        {
+            $heading_subscriber = new webedit_heading_subscriber();
+            $heading_subscriber->open($headingid, $_GET['subscriber_email']);
+            $heading_subscriber->delete();
+        }        
+        ploopi_redirect($scriptenv);
     break;
 
     case 'display_iframe':

@@ -2,25 +2,29 @@
 <ploopi>
     <moduletype>
         <label>webedit</label>
-        <version>1.44</version>
+        <version>1.50</version>
         <author>Netlor / Ovensia</author>
-        <date>20080507000000</date>
+        <date>20080615000000</date>
         <description>Editeur de Contenus Web</description>
         <action>
             <id_action>1</id_action>
-            <label>Gérer les Articles</label>
+            <label>Gérer les articles</label>
         </action>
         <action>
             <id_action>2</id_action>
-            <label>Publier les Articles</label>
+            <label>Publier les articles</label>
         </action>
         <action>
             <id_action>3</id_action>
-            <label>Gérer les Rubriques</label>
+            <label>Gérer les rubriques</label>
         </action>
         <action>
             <id_action>4</id_action>
-            <label>Gérer les Validateurs</label>
+            <label>Gérer les validateurs</label>
+        </action>
+        <action>
+            <id_action>5</id_action>
+            <label>Gérer les abonnés</label>
         </action>
     </moduletype>
 </ploopi>

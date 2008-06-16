@@ -44,6 +44,17 @@ include_once './include/classes/data_object.php';
 include_once './modules/webedit/class_article_backup.php';
 
 /**
+ * Inclusion de la classe tag qui permet de gérer les étiquettes associées aux articles
+ */
+include_once './modules/webedit/class_tag.php';
+
+/**
+ * Inclusion de la classe article_tag qui permet de gérer les étiquettes associées aux articles
+ */
+include_once './modules/webedit/class_article_tag.php';
+
+
+/**
  * Classe d'accès aux table ploopi_mod_webedit_article et ploopi_mod_webedit_article_draft
  *
  * @package webedit
@@ -70,8 +81,17 @@ class webedit_article extends data_object
         else parent::data_object('ploopi_mod_webedit_article');
 
         $this->original_content = '';
+        $this->fields['status'] = 'wait';
+        $this->fields['content'] = '';
     }
 
+    /**
+     * Ouvre un article
+     *
+     * @param int $id identifiant de l'article
+     * @return boolean true si l'article a été ouvert
+     */    
+    
     function open($id)
     {
         $res = parent::open($id);
@@ -81,12 +101,23 @@ class webedit_article extends data_object
         return($res);
     }
 
+    /**
+     * Enregistre l'article
+     *
+     * @return int identifiant de l'article
+     */    
+    
     function save()
     {
         if (empty($this->fields['metatitle'])) $this->fields['metatitle'] = $this->fields['title'];
 
         if (empty($this->fields['timestp'])) $this->fields['timestp'] = ploopi_createtimestamp();
 
+        // Nettoyage des tags
+        // Note : les tags ne sont réellement enregistrés qu'à la publication
+        list($tags) = ploopi_getwords($this->fields['tags'], true, false, false);
+        $this->fields['tags'] = implode(' ', array_keys($tags));
+        
         $res = parent::save();
         if ($this->tablename == 'ploopi_mod_webedit_article_draft' && $this->fields['content'] != $this->original_content)
         {
@@ -99,7 +130,12 @@ class webedit_article extends data_object
         }
         return($res);
     }
+    
 
+    /**
+     * Supprime l'article et les données associées (sauvegardes, index du moteur de recherche)
+     */
+        
     function delete()
     {
         global $db;
@@ -126,6 +162,12 @@ class webedit_article extends data_object
         parent::delete();
     }
     
+    /**
+     * Publie un article (copie le contenu du brouillon dans l'article en ligne)
+     *
+     * @return boolean true s'il s'agit d'une première publication
+     */
+        
     function publish()
     {
         global $db;
@@ -133,8 +175,8 @@ class webedit_article extends data_object
         if ($this->tablename == 'ploopi_mod_webedit_article_draft')
         {
             $article = new webedit_article();
-            $article->open($this->fields['id']);
-
+            $new = !$article->open($this->fields['id']);
+            
             $article->fields['reference'] = $this->fields['reference'];
             $article->fields['title'] = $this->fields['title'];
             $article->fields['content'] = $this->fields['content'];
@@ -156,9 +198,34 @@ class webedit_article extends data_object
             $article->fields['id_workspace'] = $this->fields['id_workspace'];
             $article->fields['position'] = $this->fields['position'];
             $article->save();
+            
+            // suppression des liens article-tags existants
+            $sql = "DELETE FROM ploopi_mod_webedit_article_tag WHERE id_article = {$this->fields['id']}";
+            $db->query($sql);
+            
+            // récupération des tags
+            list($tags) = ploopi_getwords($this->fields['tags'], true, false, false);
+            $tags = array_keys($tags);
+            foreach($tags as $tag)
+            {
+                $select = "SELECT id FROM ploopi_mod_webedit_tag WHERE tag = '".$db->addslashes($tag)."' AND id_module = {$this->fields['id_module']}";
+                $rs = $db->query($select);
+                if (!($row = $db->fetchrow($rs)))
+                {
+                    $objTag = new webedit_tag();
+                    $objTag->fields['tag'] = $tag_clean;
+                    $objTag->fields['id_module'] = $this->fields['id_module'];
+                    $id_tag = $objTag->save();
+                }
+                else $id_tag = $row['id'];
+    
+                $objArticleTag = new webedit_article_tag();
+                $objArticleTag->fields['id_tag'] = $id_tag;
+                $objArticleTag->fields['id_article'] = $this->fields['id'];
+                $objArticleTag->save();
+            }
 
             ploopi_search_create_index(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $article->fields['id'], $article->fields['title'], strip_tags(html_entity_decode($article->fields['content'])), "{$article->fields['metatitle']} {$article->fields['metakeywords']} {$article->fields['metadescription']}", true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
-
 
             // update article positions
             $sql =  "
@@ -173,9 +240,19 @@ class webedit_article extends data_object
             $db->query($sql);
 
             $this->fields['status'] = 'edit';
+
+            return $new;
         }
+        
+        return -1;
     }
 
+    /**
+     * Détermine si l'accès à cet article est autorisé
+     *
+     * @return true si l'accès est autorisé
+     */
+    
     function isenabled()
     {
         include_once './modules/webedit/class_heading.php';
@@ -189,5 +266,40 @@ class webedit_article extends data_object
                     $heading->open($this->fields['id_heading'])
                 );
     }
+    
+    /**
+     * Retourne l'URL publique de l'article
+     *
+     * @return string url de l'article
+     */
+    
+    function geturl()
+    {
+        return(ploopi_urlrewrite("index.php?headingid={$this->fields['id_heading']}&articleid={$this->fields['id']}", $this->fields['metatitle']));
+    }
+    
+    /**
+     * Retourne un tableau contenant les tags (étiquettes) associés à l'article
+     *
+     * @return array tableau des tags
+     */
+    
+    function gettags()
+    {
+        global $db;
+        
+        $sql =  "
+                SELECT  t.* 
+                FROM    ploopi_mod_webedit_tag t,
+                        ploopi_mod_webedit_article_tag at
+                WHERE   t.id = at.id_tag
+                AND     at.id_article = {$this->fields['id']}
+                ";
+                
+        $db->query($sql);
+        
+        return($db->getarray());
+    }
+
 }
 ?>

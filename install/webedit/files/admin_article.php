@@ -470,16 +470,13 @@ else
     {
         ?>
         <br /><strong>Dernière modification le </strong><? echo $lastupdate_timestp; ?><strong> par </strong><? echo $lastupdate_user; ?>
-        <?
-        $url = "index.php?headingid={$headingid}&articleid={$articleid}";
-        if (_PLOOPI_FRONTOFFICE_REWRITERULE) $url = ploopi_urlrewrite($url, $article->fields['metatitle']);
-        ?>
         <br /><strong>Adresse de cette page : </strong>
         <?
         // si publié, on affiche un lien vers l'article
         if ($isnewversion == 2) echo 'article non publié';
         else
         {
+            $url = $article->geturl();
             ?><a href="<? echo $url; ?>" target="_blank"><? echo $url; ?></a><?
         }
     }

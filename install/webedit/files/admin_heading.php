@@ -163,7 +163,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="checkbox" name="webedit_heading_visible" id="webedit_heading_visible" style="width:14px;" value="1" <? if ($heading->fields['visible']) echo 'checked'; ?> tabindex="5" />
+                    <input type="checkbox" name="webedit_heading_visible" id="webedit_heading_visible" class="checkbox" value="1" <? if ($heading->fields['visible']) echo 'checked'; ?> tabindex="5" />
                     <?
                 }
                 else echo ($heading->fields['visible']) ? 'oui' : 'non';
@@ -175,7 +175,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="checkbox" name="webedit_heading_url_window" id="webedit_heading_url_window" style="width:14px;" value="1" <? if ($heading->fields['url_window']) echo 'checked'; ?> tabindex="9" />
+                    <input type="checkbox" name="webedit_heading_url_window" id="webedit_heading_url_window" class="checkbox" value="1" <? if ($heading->fields['url_window']) echo 'checked'; ?> tabindex="9" />
                     <?
                 }
                 else echo ($heading->fields['url_window']) ? 'oui' : 'non';
@@ -203,6 +203,30 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?><span><? echo $heading_sortmodes[$heading->fields['sortmode']]; ?></span><?
                 }
+                ?>
+            </p>
+            <p>
+                <label for="webedit_heading_rssfeed_enabled" style="cursor:pointer;">Fournir un flux RSS:</label>
+                <?
+                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+                {
+                    ?>
+                    <input type="checkbox" name="webedit_heading_rssfeed_enabled" id="webedit_heading_rssfeed_enabled" class="checkbox" value="1" <? if ($heading->fields['rssfeed_enabled']) echo 'checked'; ?> tabindex="9" />
+                    <?
+                }
+                else echo ($heading->fields['rssfeed_enabled']) ? 'oui' : 'non';
+                ?>
+            </p>
+            <p>
+                <label for="webedit_heading_subscription_enabled" style="cursor:pointer;">Autoriser les abonnements:</label>
+                <?
+                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+                {
+                    ?>
+                    <input type="checkbox" name="webedit_heading_subscription_enabled" id="webedit_heading_subscription_enabled" class="checkbox" value="1" <? if ($heading->fields['subscription_enabled']) echo 'checked'; ?> tabindex="9" />
+                    <?
+                }
+                else echo ($heading->fields['subscription_enabled']) ? 'oui' : 'non';
                 ?>
             </p>
         </div>
@@ -521,6 +545,77 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
 </div>
 
 <?
+if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des abonnés ?
+{
+    ?>
+    <div style="margin:0 4px 4px 4px;border-style:solid;border-width:1px 1px 0 1px;border-color:#c0c0c0;">
+        <p class="ploopi_va" style="background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;padding:4px 6px;overflow:auto;">
+            <b>Liste des abonnés frontoffice (anonymes) de la rubrique &laquo; <? echo $heading->fields['label'] ?> &raquo;</b>
+        </p>
+        <?
+        $subscribers_columns = array();
+        
+        $subscribers_columns['auto']['email'] = 
+            array(
+                'label' => 'Adresse email', 
+                'options' => array('sort' => true)
+            );
+        
+        $subscribers_columns['actions_right']['actions'] = 
+            array(
+                'label' => '&nbsp;', 
+                'width' => '22'
+            );
+        
+        $subscribers_values = array();
+        
+        $sql = "SELECT * FROM ploopi_mod_webedit_heading_subscriber WHERE id_heading = {$headingid} AND id_module = {$_SESSION['ploopi']['moduleid']}";
+        $db->query($sql);
+        
+        $c = 0;
+        
+        while ($row = $db->fetchrow())
+        {
+            $subscribers_values[$c]['values']['email'] = 
+                array(
+                    'label' => $row['email']
+                );
+                
+    
+            $subscribers_values[$c]['values']['actions'] = 
+                array(
+                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonné\" alt=\"Supprimer\" onclick=\"javascript:ploopi_confirmlink('{$scriptenv}?op=subscriber_delete&subscriber_email={$row['email']}','Êtes-vous certain de vouloir supprimer cet abonné ?');\" src=\"./modules/webedit/img/ico_delete.gif\"></a>", 
+                    'style' => 'text-align:center;'
+                );
+    
+            $subscribers_values[$c]['description'] = $row['email'];
+    
+            $c++;
+        }
+        
+        switch($heading->fields['sortmode'])
+        {
+            case 'bydate':
+                $options = array('sortable' => true, 'orderby_default' => 'date', 'sort_default' => 'DESC');
+            break;
+        
+            case 'bydaterev':
+                $options = array('sortable' => true, 'orderby_default' => 'date');
+            break;
+        
+            case 'bypos':
+            default:
+                $options = array('sortable' => true, 'orderby_default' => 'pos');
+            break;
+        }
+        
+        
+        $skin->display_array($subscribers_columns, $subscribers_values, 'webedit_subscribers', $options);
+        ?>
+    </div>
+    <?
+}
+
 $parents = explode(';', $heading->fields['parents']);
 for ($i = 0; $i < sizeof($parents); $i++)
 {

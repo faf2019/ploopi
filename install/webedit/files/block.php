@@ -45,6 +45,6 @@ $block->addmenu('Voir les articles', ploopi_urlencode("{$scriptenv}?ploopi_modul
 
 if (ploopi_isactionallowed(-1,$_SESSION['ploopi']['workspaceid'],$menu_moduleid))
 {
-    $block->addmenu('<b>Administration</b>', ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"));
+    $block->addmenu('<b>Gestion du contenu</b>', ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"));
 }
 ?>
