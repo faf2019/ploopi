@@ -44,12 +44,22 @@
 class xml2array
 {
 
-    var $parser;
-    var $node_stack = array();
-    var $xmlarray = array();
-    var $currentdata = '';
+    private $parser;
+    private $node_stack = array();
+    private $xmlarray = array();
+    private $currentdata = '';
 
-    function parse($xmlcontent="")
+    /**
+     * Parse une chaîne XML et retourne un tableau
+     *
+     * @param string $xmlcontent contenu xml sous forme d'un chaîne
+     * @return array tableau contenant les données ou false 
+     * 
+     * @see xml_parser_create
+     * @see xml_parse
+     */
+    
+    public function parse($xmlcontent="")
     {
         // set up a new XML parser to do all the work for us
         $this->parser = xml_parser_create('ISO-8859-1');
@@ -73,8 +83,16 @@ class xml2array
         }
         else return(false);
     }
-
-    function parseFile($filename)
+    
+    /**
+     * Parse un fichier XML et retourne un tableau
+     *
+     * @param string $filename chemin du fichier
+     * @return array tableau contenant les données ou false 
+     * 
+     * @see fopen
+     */
+    public function parseFile($filename)
     {
         $xmlcontent = '';
 
@@ -92,7 +110,15 @@ class xml2array
         else return(false);
     }
 
-    function startElement($parser, $name, $attrs)
+    /**
+     * Gestionnaire de début de balise XML
+     *
+     * @param resource $parser parser
+     * @param string $name balise XML
+     * @param string $attrs attributs de la balise XML
+     */
+    
+    private function startElement($parser, $name, $attrs)
     {
         $this->currentdata = '';
         
@@ -104,7 +130,14 @@ class xml2array
         if (!empty($attrs)) $this->node_stack[$s+3] = $attrs;
     }
 
-    function endElement($parser, $name)
+    /**
+     * Gestionnaire de fin de balise XML
+     *
+     * @param resource $parser parser
+     * @param string $name balise XML
+     */
+    
+    private function endElement($parser, $name)
     {
         if (trim($this->currentdata) != '') $this->node_stack[(sizeof($this->node_stack)-2)] = $this->currentdata;
         array_pop($this->node_stack);
@@ -112,7 +145,14 @@ class xml2array
         $this->currentdata = '';
     }
 
-    function characterData($parser, $data)
+    /**
+     * Gestionnaire de données XML
+     *
+     * @param resource $parser parser
+     * @param string $data contenu de la dernière balise ouverte
+     */
+    
+    private function characterData($parser, $data)
     {
         $this->currentdata .= $data;
     }

@@ -75,7 +75,7 @@ class annotation extends data_object
 
         $id_annotation = parent::save();
 
-        $tags = preg_split('/(,)|( )/',$this->tags,-1,PREG_SPLIT_NO_EMPTY);
+        $tags = preg_split('/(,)|( )/', $this->tags, -1, PREG_SPLIT_NO_EMPTY);
         foreach($tags as $tag)
         {
             $tag = trim($tag);

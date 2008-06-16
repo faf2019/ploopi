@@ -343,11 +343,11 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
             $languagefile = "{$strModulePath}/lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php";
             $globalfile = "{$strModulePath}/include/global.php";
             
+            if (file_exists($globalfile)) include_once($globalfile);
+            
             if (file_exists($defaultlanguagefile)) include_once($defaultlanguagefile);
     
             if ($languagefile != 'french' && file_exists($languagefile)) include_once($languagefile);
-
-            if (file_exists($globalfile)) include_once($globalfile);
         }
         
         if ($head)

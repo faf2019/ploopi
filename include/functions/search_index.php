@@ -614,6 +614,7 @@ function ploopi_search($keywords, $id_object = -1, $id_record = '', $id_module =
  * @param string $content contenu du texte à analyser
  * @param boolean $usecommonwords true si la liste des mots communs doit être utilisée.
  * @param boolean $getstem true si la méthode de lemmisation/racinisation doit être utilisée
+ * @param boolean $sort true si le résultat doit être trié par occurence d'apparition du mot 
  * @return tableau de mots clés ou de racines
  * 
  * @see _PLOOPI_INDEXATION_COMMONWORDS_FR
@@ -626,7 +627,7 @@ function ploopi_search($keywords, $id_object = -1, $id_record = '', $id_module =
  * @link http://pecl.php.net/package/stem
  */
 
-function ploopi_getwords($content, $usecommonwords = true, $getstem = false)
+function ploopi_getwords($content, $usecommonwords = true, $getstem = false, $sort = true)
 {
     $words = array();
     $words_indexed = $words_overall = 0;
@@ -670,7 +671,7 @@ function ploopi_getwords($content, $usecommonwords = true, $getstem = false)
         $words_overall++;
     }
 
-    arsort($words);
+    if ($sort) arsort($words);
 
     return(array($words, $words_indexed, $words_overall));
 }

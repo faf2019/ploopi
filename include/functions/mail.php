@@ -137,34 +137,34 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     $headers = '';
 
     // add "from" to headers
-    if (!empty($str_from)) $headers .= "From: $str_from \r\n";
+    if (!empty($str_from)) $headers .= "From: $str_from \n";
     // add "reply_to" to headers
-    if (!empty($str_replyto)) $headers .= "Reply-to: $str_replyto \r\n";
+    if (!empty($str_replyto)) $headers .= "Reply-to: $str_replyto \n";
     // add "cc" to headers
-    if (!empty($str_cc)) $headers .= "Cc: $str_cc \r\n";
+    if (!empty($str_cc)) $headers .= "Cc: $str_cc \n";
     // add "bcc" to headers
-    if (!empty($str_bcc)) $headers .= "Bcc: $str_bcc \r\n";
+    if (!empty($str_bcc)) $headers .= "Bcc: $str_bcc \n";
     
     
-    $headers .= "Date: ".date('r')."\r\n"; 
-    $headers .= "X-Priority: 1\r\n";
-    $headers .= "X-Mailer: Ploopi "._PLOOPI_VERSION."\r\n";
-    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Date: ".date('r')."\n"; 
+    $headers .= "X-Priority: 1\n";
+    $headers .= "X-Mailer: Ploopi "._PLOOPI_VERSION."\n";
+    $headers .= "MIME-Version: 1.0\n";
     
     $msg = '';
     
     if (!empty($files)) // Create multipart mail
     {
         $boundary = md5(uniqid(microtime(), true));
-        $headers .= "Content-type: multipart/mixed;boundary={$boundary}\r\n";
-        $headers .= "\r\n";
+        $headers .= "Content-type: multipart/mixed;boundary={$boundary}\n";
+        $headers .= "\n";
         
-        $msg .= "--{$boundary}\r\n";
+        $msg .= "--{$boundary}\n";
         
-        if ($html) $msg .= "Content-type: text/html; charset=iso-8859-1\r\n\r\n";
-        else $msg .= "Content-type: text/plain; charset=iso-8859-1\r\n\r\n";
+        if ($html) $msg .= "Content-type: text/html; charset=iso-8859-1\n";
+        else $msg .= "Content-type: text/plain; charset=iso-8859-1\n";
 
-        $msg .= "$message\r\n\r\n";
+        $msg .= "$message\n\n";
         
         foreach($files as $filename)
         {
@@ -178,10 +178,10 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
                 $content = chunk_split(base64_encode($content));
                 $f = fclose($handle);
             
-                $msg .= "--{$boundary}\r\n";
-                $msg .= "Content-type:{$mime_type};name=".basename($filename)."\r\n";
-                $msg .= "Content-transfer-encoding:base64\r\n\r\n";
-                $msg .= "{$content}\r\n\r\n";
+                $msg .= "--{$boundary}\n";
+                $msg .= "Content-type:{$mime_type};name=".basename($filename)."\n";
+                $msg .= "Content-transfer-encoding:base64\n";
+                $msg .= "{$content}\n";
             }
         }
         
@@ -189,15 +189,13 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     }
     else
     {
-        if ($html) $headers .= "Content-type: text/html; charset=iso-8859-1\r\n\r\n";
-        else $headers .= "Content-type: text/plain; charset=iso-8859-1\r\n\r\n";
-        //$header .= 'Content-transfer-encoding:8bit'."\r\n";
+        if ($html) $headers .= "Content-type: text/html; charset=iso-8859-1\n";
+        else $headers .= "Content-type: text/plain; charset=iso-8859-1\n";
+        //$header .= 'Content-transfer-encoding:8bit'."\n";
 
         $msg = $message;
     }
 
-    $headers .= "\r\n";
-    
      // send mail
     mail($str_to, $subject, $msg, $headers);
 

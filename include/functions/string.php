@@ -93,29 +93,38 @@ function ploopi_convertaccents($str)
  * @param string $url URL à réécrire
  * @param string $title titre à insérer dans la nouvelle URL
  * @return string URL réécrite
+ * 
+ * @see _PLOOPI_FRONTOFFICE_REWRITERULE
+ * @see ploopi_convertaccents
  */
  
 function ploopi_urlrewrite($url, $title = '')
 {
-    $title_replacement = str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '_');
-    $title = urlencode(ploopi_convertaccents(strtolower(strtr(trim($title), _PLOOPI_INDEXATION_WORDSEPARATORS, $title_replacement))));
+    if (defined('_PLOOPI_FRONTOFFICE_REWRITERULE') && _PLOOPI_FRONTOFFICE_REWRITERULE)
+    {
+        $title_replacement = str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '_');
+        $title = urlencode(ploopi_convertaccents(strtolower(strtr(trim($title), _PLOOPI_INDEXATION_WORDSEPARATORS, $title_replacement))));
+        
+        $patterns = array('/__+/', '/_$/');
+        $replacements = array('_', '');
     
-    $patterns = array('/__+/', '/_$/');
-    $replacements = array('_', '');
-
-    $title = preg_replace($patterns, $replacements, $title);
-    
-    $patterns = array();
-    $patterns[0] = '/index.php\?headingid=([0-9]*)&articleid=([0-9]*)/';
-    $patterns[1] = '/index.php\?headingid=([0-9]*)/';
-    $patterns[2] = '/index.php\?articleid=([0-9]*)/';
-    
-    $replacements = array();
-    $replacements[0] = $title.'-h$1a$2.html';
-    $replacements[1] = $title.'-h$1.html';
-    $replacements[2] = $title.'-a$1.html';
-    
-    return preg_replace($patterns, $replacements, $url);
+        $title = preg_replace($patterns, $replacements, $title);
+        
+        $patterns = array();
+        $patterns[0] = '/index.php\?headingid=([0-9]*)&articleid=([0-9]*)/';
+        $patterns[1] = '/index.php\?headingid=([0-9]*)/';
+        $patterns[2] = '/index.php\?articleid=([0-9]*)/';
+        $patterns[3] = '/index.php\?query_tag=([a-zA-Z0-9]*)/';
+        
+        $replacements = array();
+        $replacements[0] = $title.'-h$1a$2.html';
+        $replacements[1] = $title.'-h$1.html';
+        $replacements[2] = $title.'-a$1.html';
+        $replacements[3] = 'tag-$1.html';
+        
+        return preg_replace($patterns, $replacements, $url);
+    }
+    else return $url;
 }
 
 
@@ -169,7 +178,8 @@ function ploopi_make_links($text)
 function ploopi_print_json($var)
 {
     $json = json_encode($var);
-    if (strlen($json)>4096) { header("Content-Type: test/x-json"); echo $json; }
-    else header("x-json: {$json}");
+    header("Content-Type: text/x-json"); 
+    if (strlen($json)>4096) echo $json;
+    else header("X-Json: {$json}");
 }
 ?>
