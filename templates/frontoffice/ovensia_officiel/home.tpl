@@ -16,7 +16,9 @@
 
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
 
-    <link rel="alternate" type="application/rss+xml" href="{SITE_RSSFEED_URL}" title="{SITE_RSSFEED_TITLE}">
+    <!-- BEGIN switch_rssfeed_site -->
+    <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_site.URL}" title="{switch_rssfeed_site.TITLE}" />
+    <!-- END switch_rssfeed_site -->
 
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar.css" media="screen" />
@@ -92,20 +94,51 @@
             <div id="page_main">
 
                 <div id="menu_vertical">
-                    <div id="recherche">
+                    <div id="mini_form">
                         <form method="post" action="index.php">
                             <fieldset>
                                 <label for="recherche_field">Recherche:</label>
                                 <div>
-                                    <input type="text" title="Champ de recherche" alt="Champ de recherche" id="recherche_field" name="query_string" value="{PAGE_QUERYSTRING}" onfocus="javascript:this.value='';" />
-                                    <input type="submit" title="Bouton pour valider la recherche" id="recherche_button" value="go" />
+                                    <input type="text" title="Champ de recherche" alt="Champ de recherche" class="text" name="query_string" value="{PAGE_QUERYSTRING}" onfocus="javascript:this.value='';" />
+                                    <input type="submit" title="Bouton pour valider la recherche" class="button" value="go" />
                                 </div>
                             </fieldset>
                         </form>
                     </div>
+                    
+                    <!-- BEGIN switch_subscription -->
+                    <div id="mini_form">
+                        <form method="post" action="{switch_subscription.ACTION}">
+                            <fieldset>
+                                <label for="subscription_email">Abonnement:</label>
+                                <!-- BEGIN switch_response -->
+                                <div><strong>{switch_subscription.switch_response.CONTENT}</strong></div>
+                                <!-- END switch_response -->
+                                <p class="va">
+                                    <input type="radio" class="pointer" name="subscription_headingid" id="subscription_site" value="{switch_subscription.ROOTID}" checked /><label class="pointer" for="subscription_site">Site</label>
+                                    <input type="radio" class="pointer" name="subscription_headingid" id="subscription_heading" value="{switch_subscription.HEADINGID}" /><label class="pointer" for="subscription_heading">Rubrique</label>
+                                </p>
+                                <div>
+                                    <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="subscription_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" />
+                                    <input type="submit" title="Bouton pour valider la recherche" class="button" value="go" />
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <!-- END switch_subscription -->
 
-                    <img class="actubox_bg" src="{TEMPLATE_PATH}/gfx/actubox.png" alt="fond menu vertical" title="fond menu vertical" />
-                    <div class="actubox">
+                    <img class="box_bg" src="{TEMPLATE_PATH}/gfx/box.png" alt="fond menu vertical" title="fond menu vertical" />
+                    <div class="box">
+                        <h1>Nuage de tags</h1>
+                        <div id="tagcloud">
+	                        <!-- BEGIN tagcloud -->
+	                            <a href="{tagcloud.LINK}" class="{tagcloud.SELECTED}" title="Afficher les articles contenant le tag &laquo; {tagcloud.TAG} &raquo;" style="font-size:{tagcloud.SIZE}%;">{tagcloud.TAG}<sup>{tagcloud.OCCURENCE}</sup></a>
+	                        <!-- END tagcloud -->
+                        </div>
+                    </div>
+
+                    <img class="box_bg" src="{TEMPLATE_PATH}/gfx/box.png" alt="fond menu vertical" title="fond menu vertical" />
+                    <div class="box">
                         <h1>Actualités du Site</h1>
                         <!-- BEGIN news -->
                             <div class="news">
@@ -117,8 +150,8 @@
                         <!-- END news -->
                     </div>
 
-                    <img class="actubox_bg" src="{TEMPLATE_PATH}/gfx/actubox.png" alt="fond menu vertical" title="fond menu vertical" />
-                    <div class="actubox">
+                    <img class="box_bg" src="{TEMPLATE_PATH}/gfx/box.png" alt="fond menu vertical" title="fond menu vertical" />
+                    <div class="box">
                         <h1>Actualités du Web</h1>
                         <!-- BEGIN rssfeed -->
                         <div class="rssfeed">
@@ -139,7 +172,14 @@
                 <div id="page_content">
                     <!-- BEGIN switch_content_page -->
                         <h1>{PAGE_TITLE}</h1>
-                        {PAGE_CONTENT}
+                        <!-- BEGIN switch_tags -->
+	                        <p id="page_tags"><span>tags :</span>
+		                        <!-- BEGIN tag -->
+                                    <a title="Afficher les articles contenant le tag &laquo; {switch_content_page.switch_tags.tag.TAG} &raquo;" href="{switch_content_page.switch_tags.tag.LINK}">{switch_content_page.switch_tags.tag.TAG}</a>
+		                        <!-- END tag -->
+	                        </p>
+                        <!-- END switch_tags -->
+                        <div>{PAGE_CONTENT}</div>
                         <div id="page_lastupdate">Auteur: {PAGE_LASTUPDATE_USER_FIRSTNAME} {PAGE_LASTUPDATE_USER_LASTNAME} - Modifié le: {PAGE_LASTUPDATE_DATE} à {PAGE_LASTUPDATE_TIME}</div>
                     <!-- END switch_content_page -->
                 </div>

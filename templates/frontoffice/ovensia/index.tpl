@@ -11,6 +11,13 @@
 
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
 
+    <!-- BEGIN switch_rssfeed_site -->
+    <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_site.URL}" title="{switch_rssfeed_site.TITLE}" />
+    <!-- END switch_rssfeed_site -->
+    <!-- BEGIN switch_rssfeed_heading -->
+    <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_heading.URL}" title="{switch_rssfeed_heading.TITLE}" />
+    <!-- END switch_rssfeed_heading -->
+    
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/forms.css" media="screen" />
