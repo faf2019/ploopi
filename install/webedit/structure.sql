@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article` (
   `tags` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `lastupdate_timestp` (`lastupdate_timestp`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_article_backup`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article_backup` (
@@ -65,7 +65,15 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article_draft` (
   `status` varchar(16) NOT NULL default '',
   `tags` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `ploopi_mod_webedit_article_tag`;
+CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article_tag` (
+  `id_article` int(10) unsigned NOT NULL default '0',
+  `id_tag` int(10) unsigned NOT NULL default '0',
+  KEY `id_article` (`id_article`),
+  KEY `id_tag` (`id_tag`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_heading`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_heading` (
@@ -77,6 +85,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_heading` (
   `parents` varchar(255) NOT NULL default '',
   `depth` int(10) unsigned NOT NULL default '0',
   `position` int(10) unsigned NOT NULL default '0',
+  `content_type` char(16) NOT NULL default 'article_first',
   `color` varchar(32) NOT NULL,
   `posx` int(10) unsigned NOT NULL default '0',
   `posy` int(10) unsigned NOT NULL default '0',
@@ -85,6 +94,8 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_heading` (
   `url` varchar(255) NOT NULL,
   `url_window` tinyint(1) unsigned NOT NULL default '0',
   `sortmode` varchar(16) NOT NULL,
+  `feed_enabled` tinyint(1) unsigned NOT NULL default '1',
+  `subscription_enabled` tinyint(1) unsigned NOT NULL default '1',
   `free1` varchar(255) NOT NULL,
   `free2` varchar(255) NOT NULL,
   `id_module` tinyint(10) unsigned default '0',
@@ -93,6 +104,23 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_heading` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `id_2` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-ALTER TABLE `ploopi_mod_webedit_heading` ADD `content_type` CHAR( 16 ) NOT NULL DEFAULT 'article_first' AFTER `position` ;
+DROP TABLE IF EXISTS `ploopi_mod_webedit_heading_subscriber`;
+CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_heading_subscriber` (
+  `id_heading` int(10) unsigned NOT NULL default '0',
+  `email` varchar(255) NOT NULL,
+  `validated` tinyint(1) unsigned NOT NULL default '0',
+  `id_module` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id_heading`,`email`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `ploopi_mod_webedit_tag`;
+CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_tag` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `tag` varchar(64) NOT NULL,
+  `id_module` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `id_module` (`id_module`),
+  KEY `tag` (`tag`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
