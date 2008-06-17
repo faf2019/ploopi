@@ -2,20 +2,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-    <meta name="description" content="{WORKSPACE_META_DESCRIPTION} {PAGE_DESCRIPTION}" />
-    <meta name="keywords" content="{PAGE_ALLKEYWORDS}" />
+    <meta name="description" content="{WORKSPACE_META_DESCRIPTION} {PAGE_META_DESCRIPTION}" />
+    <meta name="keywords" content="{WORKSPACE_META_KEYWORDS}, {PAGE_META_KEYWORDS}" />
     <meta name="author" content="{WORKSPACE_META_AUTHOR}" />
     <meta name="copyright" content="{WORKSPACE_META_COPYRIGHT}" />
     <meta name="robots" content="{WORKSPACE_META_ROBOTS}" />
 
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
 
+    <!-- BEGIN switch_atomfeed_site -->
+    <link rel="alternate" type="application/atom+xml" href="{switch_atomfeed_site.URL}" title="ATOM - {switch_atomfeed_site.TITLE}" />
+    <!-- END switch_atomfeed_site -->
+    <!-- BEGIN switch_atomfeed_heading -->
+    <link rel="alternate" type="application/atom+xml" href="{switch_atomfeed_heading.URL}" title="ATOM - {switch_atomfeed_heading.TITLE}" />
+    <!-- END switch_atomfeed_site -->
+
     <!-- BEGIN switch_rssfeed_site -->
-    <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_site.URL}" title="{switch_rssfeed_site.TITLE}" />
+    <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_site.URL}" title="RSS - {switch_rssfeed_site.TITLE}" />
     <!-- END switch_rssfeed_site -->
     <!-- BEGIN switch_rssfeed_heading -->
-    <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_heading.URL}" title="{switch_rssfeed_heading.TITLE}" />
-    <!-- END switch_rssfeed_heading -->
+    <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_heading.URL}" title="RSS - {switch_rssfeed_heading.TITLE}" />
+    <!-- END switch_rssfeed_site -->
     
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar.css" media="screen" />
@@ -87,19 +94,48 @@
         <div id="main">
             <div id="mainmenu">
                 <div id="hmenu">
-                    <div style="margin-bottom:4px;">
-                        <label for="recherche_field">Recherche:</label>
+                    <div class="minibloc">
+                        <label for="recherche_field" class="title">Recherche:</label>
                         <form name="form_search" method="post" action="index.php">
-                        <input type="text" alt="recherche" id="recherche_field" name="query_string" value="{PAGE_QUERYSTRING}" style="width:70%;margin-right:2px;border:1px solid #c0c0c0;padding-left:2px;font-size:10px;"><input type="submit" value="go" style="width:20%;border:1px solid #a0a0a0;background-color:#e0e0e0;font-size:10px;">
+                        <input type="text" alt="recherche" id="recherche_field" name="query_string" value="{PAGE_QUERYSTRING}" class="text" />
+                        <input type="submit" value="go" class="button" />
                         </form>
                     </div>
 
+                    <div class="minibloc">
                     <!-- BEGIN root1 -->
                         <!-- BEGIN heading1 -->
                         <a class="r1h1{root1.heading1.SEL}" href="{root1.heading1.LINK}" {root1.heading1.LINK_TARGET}>{root1.heading1.LABEL}</a>
                         <!-- END heading1 -->
                     <!-- END root1 -->
+                    </div>
+                    
+                    <!-- BEGIN switch_subscription -->
+                    <div class="minibloc">
+                        <label for="subscription_email" class="title">Abonnement:</label>
+                        <!-- BEGIN switch_response -->
+                        <div class="response"><strong>{switch_subscription.switch_response.CONTENT}</strong></div>
+                        <!-- END switch_response -->
+                        <form method="post" action="{switch_subscription.ACTION}">
+                            <p class="va">
+                                <input type="radio" class="pointer" name="subscription_headingid" id="subscription_site" value="{switch_subscription.ROOTID}" /><label class="pointer" for="subscription_site">Site</label>
+                                <input type="radio" class="pointer" name="subscription_headingid" id="subscription_heading" value="{switch_subscription.HEADINGID}" checked /><label class="pointer" for="subscription_heading">Rubrique</label>
+                            </p>
+                            <div>
+                                <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="subscription_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" />
+                                <input type="submit" title="Bouton pour valider la recherche" class="button" value="go" />
+                            </div>
+                        </form>
+                    </div>
+                    <!-- END switch_subscription -->
 
+                    <div id="tagcloud_title">Nuage de tags:</div>
+                    <div id="tagcloud">
+                        <!-- BEGIN tagcloud -->
+                            <a href="{tagcloud.LINK}" class="{tagcloud.SELECTED}" title="Afficher les articles contenant le tag &laquo; {tagcloud.TAG} &raquo;" style="font-size:{tagcloud.SIZE}%;">{tagcloud.TAG}<sup>{tagcloud.OCCURENCE}</sup></a>
+                        <!-- END tagcloud -->
+                    </div>  
+                    
                     <!-- BEGIN rssfeed -->
                     <div class="rssfeed">
                         <a class="rssfeedtitle" href="{rssfeed.LINK}">{rssfeed.TITLE}<br /><i>{rssfeed.SUBTITLE}</i></a>
@@ -117,11 +153,13 @@
 
             <div id="content">
 
+                <!-- BEGIN switch_pages -->
                 <div id="pagemenu">
                     <!-- BEGIN page -->
-                    <a class="page{page.SEL}" href="{page.LINK}">{page.LABEL}</a>
+                    <a class="page{switch_pages.page.SEL}" href="{switch_pages.page.LINK}">{switch_pages.page.LABEL}</a>
                     <!-- END page -->
                 </div>
+                <!-- END switch_pages -->
 
                 <div id="pagecontent">
                     <!-- BEGIN switch_search -->
@@ -136,9 +174,28 @@
                         <!-- END result -->
                     </div>
                     <!-- END switch_search -->
-
+                    
+                    <!-- BEGIN switch_tagsearch -->
+                    <h2>Articles contenant le tag "{PAGE_QUERYTAG}"</h2>
+                    <div id="search_result">
+                        <!-- BEGIN result -->
+                            <a href="{switch_tagsearch.result.LINK}" title="Lien vers {switch_tagsearch.result.TITLE}">
+                                <h2>{switch_tagsearch.result.TITLE}</h2>
+                                <div class="link">&raquo; {switch_tagsearch.result.LINK} ({switch_tagsearch.result.SIZE} ko)</div>
+                            </a>
+                        <!-- END result -->
+                    </div>
+                    <!-- END switch_tagsearch -->
+                    
                     <!-- BEGIN switch_content_page -->
                         <h2>{PAGE_TITLE}</h2>
+                        <!-- BEGIN switch_tags -->
+                            <p id="page_tags"><span>tags :</span>
+                                <!-- BEGIN tag -->
+                                    <a title="Afficher les articles contenant le tag &laquo; {switch_content_page.switch_tags.tag.TAG} &raquo;" href="{switch_content_page.switch_tags.tag.LINK}">{switch_content_page.switch_tags.tag.TAG}</a>
+                                <!-- END tag -->
+                            </p>
+                        <!-- END switch_tags -->
                         {PAGE_CONTENT}
                     <!-- END switch_content_page -->
                     

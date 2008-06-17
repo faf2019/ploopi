@@ -106,6 +106,10 @@ color: #3d678b;
 color: #202020;
 }
 
+#tagcloud_title {
+margin:10px 0 4px 0;
+}
+
 #tagcloud {
 font-size:20px;
 position:relative;
@@ -136,7 +140,6 @@ color:#fff;
 #tagcloud sup {
 font-size:8px;
 }
-
 
 #page_tags {
 margin-bottom:10px;

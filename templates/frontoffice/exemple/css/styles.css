@@ -184,8 +184,6 @@ border-right:2px solid #286ea0;
 color: #286ea0;
 }
 
-
-/* vertical alignement : IE / FF / Opera */
 .subheading1 {
 margin:0;
 text-decoration:none;
@@ -211,7 +209,6 @@ text-decoration:none;
 color:#404040;
 }
 
-
 .headings_page {
 margin:6px 0;
 text-decoration:none;
@@ -229,6 +226,100 @@ cursor:pointer;
 .headings_page:hover {
 text-decoration:none;
 color:#404040;
+}
+
+p.va {
+margin:2px 0;
+}
+
+p.va img, 
+p.va span, 
+p.va label, 
+p.va strong, 
+p.va em, 
+p.va input, 
+p.va select, 
+p.va a {
+display: inline-block;
+vertical-align: middle;
+}
+
+.minibloc {
+margin-bottom:10px;
+}
+
+.minibloc .title {
+font-weight:bold;
+}
+
+.minibloc .text {
+width:70%;
+margin-right:2px;
+border:1px solid #c0c0c0;
+padding-left:2px;
+font-size:10px;
+}
+
+.minibloc .button {
+width:20%;
+border:1px solid #a0a0a0;
+background-color:#e0e0e0;
+font-size:10px;
+}
+
+.minibloc .response {
+color:#286ea0;
+}
+
+#tagcloud_title {
+margin:10px 0 4px 0;
+font-weight:bold;
+}
+
+#tagcloud {
+font-size:20px;
+position:relative;
+margin-bottom:10px;
+overflow:auto;
+}
+
+#tagcloud a {
+float:left;
+display:block;
+text-decoration:none;
+height:20px;
+line-height:20px;
+padding:2px;
+}
+
+#tagcloud a:hover {
+text-decoration:none;
+background-color:#286ea0;
+color:#fff;
+}
+
+#tagcloud a.selected {
+background-color:#286ea0;
+color:#fff;
+}
+
+#tagcloud sup {
+font-size:8px;
+}
+
+#page_tags {
+margin-bottom:10px;
+font-size:9px;
+}
+
+#page_tags span, 
+#page_tags a {
+display: inline-block;
+vertical-align: middle;
+}
+
+#page_tags a {
+font-style:italic;
 }
 
 #sitemap {

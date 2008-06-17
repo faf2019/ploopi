@@ -3,20 +3,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-    <meta name="description" content="{WORKSPACE_META_DESCRITPION} {PAGE_DESCRIPTION}" />
-    <meta name="keywords" content="{PAGE_ALLKEYWORDS}" />
+    <meta name="description" content="{WORKSPACE_META_DESCRIPTION} {PAGE_META_DESCRIPTION}" />
+    <meta name="keywords" content="{WORKSPACE_META_KEYWORDS}, {PAGE_META_KEYWORDS}" />
     <meta name="author" content="{WORKSPACE_META_AUTHOR}" />
     <meta name="copyright" content="{WORKSPACE_META_COPYRIGHT}" />
     <meta name="robots" content="{WORKSPACE_META_ROBOTS}" />
 
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
 
+    <!-- BEGIN switch_atomfeed_site -->
+    <link rel="alternate" type="application/atom+xml" href="{switch_atomfeed_site.URL}" title="ATOM - {switch_atomfeed_site.TITLE}" />
+    <!-- END switch_atomfeed_site -->
+    <!-- BEGIN switch_atomfeed_heading -->
+    <link rel="alternate" type="application/atom+xml" href="{switch_atomfeed_heading.URL}" title="ATOM - {switch_atomfeed_heading.TITLE}" />
+    <!-- END switch_atomfeed_site -->
+
     <!-- BEGIN switch_rssfeed_site -->
-    <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_site.URL}" title="{switch_rssfeed_site.TITLE}" />
+    <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_site.URL}" title="RSS - {switch_rssfeed_site.TITLE}" />
     <!-- END switch_rssfeed_site -->
     <!-- BEGIN switch_rssfeed_heading -->
-    <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_heading.URL}" title="{switch_rssfeed_heading.TITLE}" />
-    <!-- END switch_rssfeed_heading -->
+    <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_heading.URL}" title="RSS - {switch_rssfeed_heading.TITLE}" />
+    <!-- END switch_rssfeed_site -->
     
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar.css" media="screen" />
@@ -68,15 +75,17 @@
                 <div id="subtitle">{HEADING0_DESCRIPTION}</div>
             </div>
 
+            <!-- BEGIN switch_pages -->
             <div id="pages">
                 <!-- BEGIN page -->
-                    <a class="{page.SEL}" title="Lien vers la page {page.LABEL}" href="{page.LINK}">{page.LABEL}</a>
+                    <a class="{switch_pages.page.SEL}" title="Lien vers la page {switch_pages.page.LABEL}" href="{switch_pages.page.LINK}">{switch_pages.page.LABEL}</a>
                     <!-- BEGIN sw_separator -->
                     &nbsp;&#149;&nbsp;
                     <!-- END sw_separator -->
                 <!-- END page -->
                 &nbsp;
             </div>
+            <!-- END switch_pages -->
 
             <div id="path">
                 <div id="lastupdate">
@@ -92,26 +101,63 @@
             </div>
             <div id="page_main">
                 <div id="menu_vertical">
-                    <div id="recherche">
+                
+                    <div id="mini_form">
                         <form method="post" action="index.php">
                             <fieldset>
                                 <label for="recherche_field">Recherche:</label>
-                                <input type="text" title="Champ de recherche" alt="Champ de recherche" id="recherche_field" name="query_string" value="{PAGE_QUERYSTRING}" onfocus="javascript:this.value='';" />
-                                <input type="submit" title="Bouton pour valider la recherche" id="recherche_button" value="go" />
+                                <div>
+                                    <input type="text" title="Champ de recherche" alt="Champ de recherche" class="text" name="query_string" value="{PAGE_QUERYSTRING}" onfocus="javascript:this.value='';" />
+                                    <input type="submit" title="Bouton pour valider la recherche" class="button" value="go" />
+                                </div>
                             </fieldset>
                         </form>
                     </div>
-                    <div id="actubox">
-                        <h1>Actualités</h1>
-                        <marquee behavior="scroll" direction="up" width="100%" scrollamount="2"  scrolldelay="70" onmouseover="javascript:this.stop();" onmouseout="javascript:this.start();">
-                        <!-- BEGIN news -->
-                            <div><strong>{news.TITLE}</strong></div>
-                            <div class="news_date">le {news.DATE} à {news.TIME}</div>
-                            <div class="news_content">{news.CONTENT}</div>
-                            <div style="padding-bottom:4px;"><a href="{news.URL}" target="_blank">{news.URLTITLE}</a></div>
-                        <!-- END news -->
-                        </marquee>
+
+                    <img class="box_bg" src="{TEMPLATE_PATH}/gfx/box.png" alt="fond menu vertical" title="fond menu vertical" />
+                    <div class="box">
+                        <h1>Nuage de tags</h1>
+                        <div id="tagcloud">
+                            <!-- BEGIN tagcloud -->
+                                <a href="{tagcloud.LINK}" class="{tagcloud.SELECTED}" title="Afficher les articles contenant le tag &laquo; {tagcloud.TAG} &raquo;" style="font-size:{tagcloud.SIZE}%;">{tagcloud.TAG}<sup>{tagcloud.OCCURENCE}</sup></a>
+                            <!-- END tagcloud -->
+                        </div>
                     </div>
+                    
+                    <!-- BEGIN switch_subscription -->
+                    <div id="mini_form">
+                        <form method="post" action="{switch_subscription.ACTION}">
+                            <fieldset>
+                                <label for="subscription_email">Abonnement:</label>
+                                <!-- BEGIN switch_response -->
+                                <div><strong>{switch_subscription.switch_response.CONTENT}</strong></div>
+                                <!-- END switch_response -->
+                                <p class="va">
+                                    <input type="radio" class="pointer" name="subscription_headingid" id="subscription_site" value="{switch_subscription.ROOTID}" /><label class="pointer" for="subscription_site">Site</label>
+                                    <input type="radio" class="pointer" name="subscription_headingid" id="subscription_heading" value="{switch_subscription.HEADINGID}" checked /><label class="pointer" for="subscription_heading">Rubrique</label>
+                                </p>
+                                <div>
+                                    <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="subscription_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" />
+                                    <input type="submit" title="Bouton pour valider la recherche" class="button" value="go" />
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <!-- END switch_subscription -->      
+                                                            
+                    <img class="box_bg" src="{TEMPLATE_PATH}/gfx/box.png" alt="fond menu vertical" title="fond menu vertical" />
+                    <div class="box">
+                        <h1>Actualités</h1>
+						<marquee behavior="scroll" direction="up" width="100%" scrollamount="2"  scrolldelay="70" onmouseover="javascript:this.stop();" onmouseout="javascript:this.start();">
+						 <!-- BEGIN news -->
+						     <div><strong>{news.TITLE}</strong></div>
+						     <div class="news_date">le {news.DATE} à {news.TIME}</div>
+						     <div class="news_content">{news.CONTENT}</div>
+						     <div style="padding-bottom:4px;"><a href="{news.URL}" target="_blank">{news.URLTITLE}</a></div>
+						 <!-- END news -->
+						 </marquee>
+                    </div>
+
                 </div>
 
                 <div id="page_content">
@@ -128,8 +174,27 @@
                     </div>
                     <!-- END switch_search -->
 
+                    <!-- BEGIN switch_tagsearch -->
+                    <h1>Articles contenant le tag "{PAGE_QUERYTAG}"</h1>
+                    <div id="search_result">
+                        <!-- BEGIN result -->
+                            <a href="{switch_tagsearch.result.LINK}" title="Lien vers {switch_tagsearch.result.TITLE}">
+                                <h2>{switch_tagsearch.result.TITLE}</h2>
+                                <div class="link">&raquo; {switch_tagsearch.result.LINK} ({switch_tagsearch.result.SIZE} ko)</div>
+                            </a>
+                        <!-- END result -->
+                    </div>
+                    <!-- END switch_tagsearch -->
+
                     <!-- BEGIN switch_content_page -->
                         <h1>{PAGE_TITLE}</h1>
+                        <!-- BEGIN switch_tags -->
+                            <p id="page_tags"><span>tags :</span>
+                                <!-- BEGIN tag -->
+                                    <a title="Afficher les articles contenant le tag &laquo; {switch_content_page.switch_tags.tag.TAG} &raquo;" href="{switch_content_page.switch_tags.tag.LINK}">{switch_content_page.switch_tags.tag.TAG}</a>
+                                <!-- END tag -->
+                            </p>
+                        <!-- END switch_tags -->
                         {PAGE_CONTENT}
                         <div id="page_lastupdate">Dernière modification le {PAGE_LASTUPDATE_DATE} à {PAGE_LASTUPDATE_TIME}</div>
                     <!-- END switch_content_page -->

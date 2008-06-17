@@ -16,8 +16,12 @@
 
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
 
+    <!-- BEGIN switch_atomfeed_site -->
+    <link rel="alternate" type="application/atom+xml" href="{switch_atomfeed_site.URL}" title="ATOM - {switch_atomfeed_site.TITLE}" />
+    <!-- END switch_atomfeed_site -->
+
     <!-- BEGIN switch_rssfeed_site -->
-    <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_site.URL}" title="{switch_rssfeed_site.TITLE}" />
+    <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_site.URL}" title="RSS - {switch_rssfeed_site.TITLE}" />
     <!-- END switch_rssfeed_site -->
 
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
@@ -155,7 +159,7 @@
                         <h1>Actualités du Web</h1>
                         <!-- BEGIN rssfeed -->
                         <div class="rssfeed">
-                            <a class="rssfeedtitle" href="{rssfeed.LINK}">{rssfeed.TITLE}<br /><i>{rssfeed.SUBTITLE}</i></a>
+                            <a class="feedtitle" href="{rssfeed.LINK}">{rssfeed.TITLE}<br /><i>{rssfeed.SUBTITLE}</i></a>
                             <!-- BEGIN rssentry -->
                                 <a title="{rssfeed.rssentry.TITLE}" class="rsscache" href="{rssfeed.rssentry.LINK}" target="_blank">
                                     <div><b>{rssfeed.rssentry.TITLE}</b></div>
