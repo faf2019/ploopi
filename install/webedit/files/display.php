@@ -605,13 +605,21 @@ else // affichage standard rubrique/page
         }
     }
         
-    // Doit on afficher le flux rss de la rubrique ?
-    if (!$ishomepage && isset($headings['list'][$headingid]) && $headings['list'][$headingid]['rssfeed_enabled'])
+    // Doit on afficher le flux de la rubrique ?
+    if (!$ishomepage && isset($headings['list'][$headingid]) && $headings['list'][$headingid]['feed_enabled'])
     {
+        $template_body->assign_block_vars(
+            'switch_atomfeed_heading', 
+            array(
+                'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}&format=atom"),
+                'TITLE' => htmlentities($headings['list'][$headingid]['label']),
+            )
+        );
+        
         $template_body->assign_block_vars(
             'switch_rssfeed_heading', 
             array(
-                'URL' => ploopi_urlencode("rss.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}"),
+                'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}&format=rss"),
                 'TITLE' => htmlentities($headings['list'][$headingid]['label']),
             )
         );
@@ -747,13 +755,20 @@ $template_body->assign_block_vars(
     )
 );
 
-// Doit on afficher le flux rss du site ?
-if (isset($headings['list'][$headings['tree'][0][0]]) && $headings['list'][$headings['tree'][0][0]]['rssfeed_enabled'])
+// Doit on afficher le flux du site ?
+if (isset($headings['list'][$headings['tree'][0][0]]) && $headings['list'][$headings['tree'][0][0]]['feed_enabled'])
 {
+    $template_body->assign_block_vars(
+        'switch_atomfeed_site', 
+        array(
+            'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=atom"),
+            'TITLE' => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
+        )
+    );
     $template_body->assign_block_vars(
         'switch_rssfeed_site', 
         array(
-            'URL' => ploopi_urlencode("rss.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}"),
+            'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=rss"),
             'TITLE' => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
         )
     );

@@ -213,7 +213,7 @@ class webedit_article extends data_object
                 if (!($row = $db->fetchrow($rs)))
                 {
                     $objTag = new webedit_tag();
-                    $objTag->fields['tag'] = $tag_clean;
+                    $objTag->fields['tag'] = $tag;
                     $objTag->fields['id_module'] = $this->fields['id_module'];
                     $id_tag = $objTag->save();
                 }

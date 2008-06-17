@@ -206,15 +206,15 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 ?>
             </p>
             <p>
-                <label for="webedit_heading_rssfeed_enabled" style="cursor:pointer;">Fournir un flux RSS:</label>
+                <label for="webedit_heading_feed_enabled" style="cursor:pointer;">Fournir un flux RSS:</label>
                 <?
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="checkbox" name="webedit_heading_rssfeed_enabled" id="webedit_heading_rssfeed_enabled" class="checkbox" value="1" <? if ($heading->fields['rssfeed_enabled']) echo 'checked'; ?> tabindex="9" />
+                    <input type="checkbox" name="webedit_heading_feed_enabled" id="webedit_heading_feed_enabled" class="checkbox" value="1" <? if ($heading->fields['feed_enabled']) echo 'checked'; ?> tabindex="9" />
                     <?
                 }
-                else echo ($heading->fields['rssfeed_enabled']) ? 'oui' : 'non';
+                else echo ($heading->fields['feed_enabled']) ? 'oui' : 'non';
                 ?>
             </p>
             <p>

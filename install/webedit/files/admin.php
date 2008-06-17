@@ -209,7 +209,7 @@ switch($op)
             if (empty($_POST['webedit_heading_visible'])) $heading->fields['visible'] = 0;
             if (empty($_POST['webedit_heading_url_window'])) $heading->fields['url_window'] = 0;
             
-            if (empty($_POST['webedit_heading_rssfeed_enabled'])) $heading->fields['rssfeed_enabled'] = 0;
+            if (empty($_POST['webedit_heading_feed_enabled'])) $heading->fields['feed_enabled'] = 0;
             if (empty($_POST['webedit_heading_subscription_enabled'])) $heading->fields['subscription_enabled'] = 0;
             
             $heading->save();
