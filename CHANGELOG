@@ -1,3 +1,33 @@
+== Ploopi - version 1.0 RC5 ===================================================
+
+2008-06-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+ - Renommage des scripts rss.php en backend.php
+ - Remplacement de la librairie RssGenesis par Universal Feed Generator
+ - Mise à jour du fichier .htaccess modèle pour intégrer la gestion des URL de tags
+ - Correction d'un problème sur le téléchargement direct d'un fichier lorsque la session n'est pas initialisée
+ - Suppression d'un "notice" dans la gestion des utilisateurs
+ - Correction d'un bug sur la méthode getactions de la classe module_type
+ - Documentation du code
+
+* Templates 
+ - Mise à jour des templates frontoffice lié du module RSSe à la mise à jour du module WebEdit
+ 
+* WebEdit
+ - modification du backend permettant de proposer un flux ATOM et un flux RSS
+ - gestion des abonnements frontoffice sur rubriques ou sur site
+ - gestion des abonnés frontoffice depuis le backoffice (possibilité de les supprimer)
+ - flux optionnels sur rubriques
+ - possibilité d'ajouter des tags (étiquettes) sur un article
+ - possibilité d'insérer un nuage de tags en frontoffice
+ 
+* Doc 
+ - affichage de l'URL publique d'un fichier
+ 
+* Rss
+ - Gestion des actions
+   
 == Ploopi - version 1.0 RC4.1 ===================================================
 
 2008-06-10  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

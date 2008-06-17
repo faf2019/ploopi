@@ -1,3 +1,40 @@
+== Ploopi - version 1.0 RC5 ===================================================
+
+2008-06-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+ - Renommage des scripts rss.php en backend.php
+ - Remplacement de la librairie RssGenesis par Universal Feed Generator
+ - Mise à jour du fichier .htaccess modèle pour intégrer la gestion des URL de tags
+ - Correction d'un problème sur le téléchargement direct d'un fichier lorsque la session n'est pas initialisée
+ - Suppression d'un "notice" dans la gestion des utilisateurs
+ - Correction d'un bug sur la méthode getactions de la classe module_type
+ - Documentation du code
+
+* Templates 
+ - Mise à jour des templates frontoffice lié du module RSSe à la mise à jour du module WebEdit
+ 
+* WebEdit
+ - modification du backend permettant de proposer un flux ATOM et un flux RSS
+ - gestion des abonnements frontoffice sur rubriques ou sur site
+ - gestion des abonnés frontoffice depuis le backoffice (possibilité de les supprimer)
+ - flux optionnels sur rubriques
+ - possibilité d'ajouter des tags (étiquettes) sur un article
+ - possibilité d'insérer un nuage de tags en frontoffice
+ 
+* Doc 
+ - affichage de l'URL publique d'un fichier
+ 
+* Rss
+ - Gestion des actions
+   
+== Ploopi - version 1.0 RC4.1 ===================================================
+
+2008-06-10  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+ - Ajout des champs "civilité" et "bureau" sur la fiche utilisateur
+ 
 == Ploopi - version 1.0 RC4 ===================================================
 
 2008-06-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -228,16 +265,16 @@
 2008-01-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Nouveaux paramètres de configuration :
-	define ('_PLOOPI_USE_CGIUPLOAD', true);			// Booléen, activation du mode 'upload CGI'
-	define ('_PLOOPI_CGI_PATH', './cgi');			// Dossier CGI
-	define ('_PLOOPI_CGI_UPLOADTMP', '/tmp');		// Dossier temporaire pour l'upload CGI
-	define ('_PLOOPI_USE_DBSESSION', true); 		// Booléen, activation du stockage des sessions en Base de donnée (à la place du handler standard sur le système de fichier)
-	define ('_PLOOPI_SECRETKEY', 'ploopi');			// Phrase secrète utilisée pour le stockage des mots de passe (sert pour une partie du SALT) et pour le cryptage des URL
-	define ('_PLOOPI_PEARPATH', '/usr/share/php');	// Chemin physique contenant les classes PEAR. Peut être remplacé par " realpath('./pear'); " si votre package de Ploopi intègre directement les classes PEAR.
-	define ('_PLOOPI_INTERNETPROXY_HOST', '');		// Paramètres du Proxy d'accès Internet : adresse du serveur
-	define ('_PLOOPI_INTERNETPROXY_PORT', '');		// Paramètres du Proxy d'accès Internet : port du serveur
-	define ('_PLOOPI_INTERNETPROXY_USER', '');		// Paramètres du Proxy d'accès Internet : nom d'utilisateur
-	define ('_PLOOPI_INTERNETPROXY_PASS', '');		// Paramètres du Proxy d'accès Internet : mot de passe
+    define ('_PLOOPI_USE_CGIUPLOAD', true);         // Booléen, activation du mode 'upload CGI'
+    define ('_PLOOPI_CGI_PATH', './cgi');           // Dossier CGI
+    define ('_PLOOPI_CGI_UPLOADTMP', '/tmp');       // Dossier temporaire pour l'upload CGI
+    define ('_PLOOPI_USE_DBSESSION', true);         // Booléen, activation du stockage des sessions en Base de donnée (à la place du handler standard sur le système de fichier)
+    define ('_PLOOPI_SECRETKEY', 'ploopi');         // Phrase secrète utilisée pour le stockage des mots de passe (sert pour une partie du SALT) et pour le cryptage des URL
+    define ('_PLOOPI_PEARPATH', '/usr/share/php');  // Chemin physique contenant les classes PEAR. Peut être remplacé par " realpath('./pear'); " si votre package de Ploopi intègre directement les classes PEAR.
+    define ('_PLOOPI_INTERNETPROXY_HOST', '');      // Paramètres du Proxy d'accès Internet : adresse du serveur
+    define ('_PLOOPI_INTERNETPROXY_PORT', '');      // Paramètres du Proxy d'accès Internet : port du serveur
+    define ('_PLOOPI_INTERNETPROXY_USER', '');      // Paramètres du Proxy d'accès Internet : nom d'utilisateur
+    define ('_PLOOPI_INTERNETPROXY_PASS', '');      // Paramètres du Proxy d'accès Internet : mot de passe
 
  * Nouvelle procédure d'installation (temporaire) pour prendre en compte les nouveaux paramètres de configuration
  * Mise à jour de FCKEditor (2.5Beta => 2.5.1)
@@ -254,25 +291,25 @@
  * Général : remplacement des appels 'die()' par 'ploopi_die()' qui permet de sauvegarder la session et de fermer la connexion à la base de données proprement.
 
  * Moteur de recherche global
-	- Création d'un moteur d'indexation capable d'automatiser l'analyse du contenu des enregistrements inclus dans les modules (nécessite l'ajout de quelques fonctions dans le code des modules).
-	- Intégration d'une interface de recherche permettant de retrouver les éléments indexés et de proposer un lien direct vers les éléments ainsi trouvés
-	- Algorithmes d'indexation et de recherche assez avancés : racinisation (lemmisation) des mots, calcul du poids des mots, prise en compte des metas, utilisation d'une liste noire, etc...
-	- Respect des droits utilisateurs & partages
+    - Création d'un moteur d'indexation capable d'automatiser l'analyse du contenu des enregistrements inclus dans les modules (nécessite l'ajout de quelques fonctions dans le code des modules).
+    - Intégration d'une interface de recherche permettant de retrouver les éléments indexés et de proposer un lien direct vers les éléments ainsi trouvés
+    - Algorithmes d'indexation et de recherche assez avancés : racinisation (lemmisation) des mots, calcul du poids des mots, prise en compte des metas, utilisation d'une liste noire, etc...
+    - Respect des droits utilisateurs & partages
 
  * SECURITE :
- 	 * Identification / Mots de Passe : nouvelle méthode de stockage des mots de passe => md5(_PLOOPI_PASSWORDSALT.'/'.login.'/'.md5(password))
-	 * Général : réorganisation dans la structure des fichiers.
-	 	- Le dossier racine ne contient que les points d'entrée de l'application
-	 		=> index.php, admin.php, admin-light.php, index-light.php, index-quick.php, cron.php, rss.php
-	 		Seuls ces fichiers doivent pouvoir être exécuté directement
-	 	- Le dossier ./include ne contient plus que des fichiers php et n'a plus besoin d'être accessible depuis l'extérieur
-	 	- Les fichiers .js du dossier ./include ont été déplacés dans ./js
-	 	- Le Dossier ./config a été ajouté. Il contient le script d'installation './config/install.php' et le fichier de configuration './config/config.php'. Ce dossier doit être accessible en écriture lors de la phase d'installation automatique.
-	 * Général : Nouvel handler de session (optionnel) permettant de stocker le contenu des session en base de données (activé par défaut). /!\ Attention la perte de performance n'est pas négligeable (5 à 10% voir plus en fonction de la taille de session).
-	 * Général : Nouvelle méthode (addslashes) de la classe ploopi_db permettant de filtrer le contenu d'une variable (simple ou tableau) en vue d'une utilisation SQL.
-	 * Général : Filtrage automatique (et générique... ne remplace pas un filtrage spécifique) des variables $_GET, $_POST, $_REQUEST, $_COOKIE, $_SERVER + correction automatique des contenus si la directive magic_quotes_gpc est activée
-	 * Général : Suppression du système d'affectation automatique des variables superglobales ($_POST, $_GET, $_REQUEST, $_COOKIE) en variables (imitation du mécanisme de la directive register_globals)
-	 * .htaccess : mise à jour du fichier à la racine du portail pour augmenter les restrictions d'accès. L'exécution d'un fichier php dans les dossiers "modules", "lib", "FCKEditor" est par exemple interdit. De même les dossiers "bin", "data", "db", "include", "install", "pear" ne sont pas accessibles.
+     * Identification / Mots de Passe : nouvelle méthode de stockage des mots de passe => md5(_PLOOPI_PASSWORDSALT.'/'.login.'/'.md5(password))
+     * Général : réorganisation dans la structure des fichiers.
+        - Le dossier racine ne contient que les points d'entrée de l'application
+            => index.php, admin.php, admin-light.php, index-light.php, index-quick.php, cron.php, rss.php
+            Seuls ces fichiers doivent pouvoir être exécuté directement
+        - Le dossier ./include ne contient plus que des fichiers php et n'a plus besoin d'être accessible depuis l'extérieur
+        - Les fichiers .js du dossier ./include ont été déplacés dans ./js
+        - Le Dossier ./config a été ajouté. Il contient le script d'installation './config/install.php' et le fichier de configuration './config/config.php'. Ce dossier doit être accessible en écriture lors de la phase d'installation automatique.
+     * Général : Nouvel handler de session (optionnel) permettant de stocker le contenu des session en base de données (activé par défaut). /!\ Attention la perte de performance n'est pas négligeable (5 à 10% voir plus en fonction de la taille de session).
+     * Général : Nouvelle méthode (addslashes) de la classe ploopi_db permettant de filtrer le contenu d'une variable (simple ou tableau) en vue d'une utilisation SQL.
+     * Général : Filtrage automatique (et générique... ne remplace pas un filtrage spécifique) des variables $_GET, $_POST, $_REQUEST, $_COOKIE, $_SERVER + correction automatique des contenus si la directive magic_quotes_gpc est activée
+     * Général : Suppression du système d'affectation automatique des variables superglobales ($_POST, $_GET, $_REQUEST, $_COOKIE) en variables (imitation du mécanisme de la directive register_globals)
+     * .htaccess : mise à jour du fichier à la racine du portail pour augmenter les restrictions d'accès. L'exécution d'un fichier php dans les dossiers "modules", "lib", "FCKEditor" est par exemple interdit. De même les dossiers "bin", "data", "db", "include", "install", "pear" ne sont pas accessibles.
 
 == DIMS - version 3.0RC6c ====================================================
 
@@ -297,9 +334,9 @@
  * Correction d'un bug lié à l'installation d'un module ayant un paramètre sans valeur par défaut
  * Correction d'un bug lors de la suppression (ou le détachement) d'un utilisateur d'un espace de travail
  * Ajout d'un fichier .htaccess à la racine du portail :
- 	- améliorer la sécurité
- 	- modifier des paramètres de php à la volée
- 	- gérer les rewrite_rules du portail (option non activée par défaut, cf ./include/config.php)
+    - améliorer la sécurité
+    - modifier des paramètres de php à la volée
+    - gérer les rewrite_rules du portail (option non activée par défaut, cf ./include/config.php)
  * Déplacement de certains paramètres d'indexation au niveau du fichier de configuration du portail (paramètres communs à l'ensemble des modules) :
    define ('_DIMS_INDEXATION_WORDSEPARATORS', " :;,.!?'^`\'~-_|()[]{}<>\$£µ&#§@%=+/*\n\r");
    define ('_DIMS_INDEXATION_WORDMINLENGHT', 2);
@@ -317,8 +354,8 @@
  * Modification de la fonction dims_documents($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $id_user = -1, $id_workspace = -1, $id_module = -1)
    qui prend un nouveau paramètre '$params' pour modifier le comportement par défaut de l'affichage des documents.
    $params est un tableau pouvant contenir les valeurs suivantes :
-   $params = array(	'ROOT_NAME' => 'Racine', 	// Nom de la racine des dossiers
-   					'ATTACHEMENT' => true );	// booléen pour déterminer le mode de téléchargement des fichiers
+   $params = array( 'ROOT_NAME' => 'Racine',    // Nom de la racine des dossiers
+                    'ATTACHEMENT' => true );    // booléen pour déterminer le mode de téléchargement des fichiers
 
 2007-10-10  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 

@@ -280,7 +280,7 @@ font-weight:bold;
 font-size:20px;
 position:relative;
 margin-bottom:10px;
-overflow:auto;
+overflow:hidden;
 }
 
 #tagcloud a {
