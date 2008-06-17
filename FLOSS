@@ -40,11 +40,11 @@
       license : MIT
       copyright : Thomas Fuchs
 
-* rssgenesis 1.1
-  path : ./lib/rssgenesis
-  url : http://rssgenesis.sourceforge.net
-  license : LGPL
-  copyright : Yannick Lefebvre
+* PHP Universal Feed Generator
+  path : ./lib/feedwriter
+  url : http://www.ajaxray.com/projects/rss
+  license : BSD (? cf http://code.google.com/p/orchidframework/) 
+  copyright : Anis uddin Ahmad <anisniit@gmail.com>
 
 * PHPBB / Template class 1.10.2.5
   path : ./lib/template

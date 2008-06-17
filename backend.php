@@ -21,10 +21,10 @@
 */
 
 /**
- * Point d'entrée pour l'affichage des flux rss
+ * Point d'entrée pour l'affichage des flux
  *
  * @package ploopi
- * @subpackage rss
+ * @subpackage backend
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
@@ -60,10 +60,10 @@ if (isset($_REQUEST['ploopi_moduleid']))
 
         if ($row = $db->fetchrow())
         {
-            $rss_filepath = "./modules/{$row['labeltype']}/rss.php";
-            if (file_exists($rss_filepath))
+            $backend_filepath = "./modules/{$row['labeltype']}/backend.php";
+            if (file_exists($backend_filepath))
             {
-                include_once $rss_filepath;
+                include_once $backend_filepath;
             }
             else ploopi_h404();
         }
