@@ -287,18 +287,21 @@ class webedit_article extends data_object
     function gettags()
     {
         global $db;
-        
-        $sql =  "
-                SELECT  t.* 
-                FROM    ploopi_mod_webedit_tag t,
-                        ploopi_mod_webedit_article_tag at
-                WHERE   t.id = at.id_tag
-                AND     at.id_article = {$this->fields['id']}
-                ";
-                
-        $db->query($sql);
-        
-        return($db->getarray());
+        if (!$this->new)
+        {
+            $sql =  "
+                    SELECT  t.* 
+                    FROM    ploopi_mod_webedit_tag t,
+                            ploopi_mod_webedit_article_tag at
+                    WHERE   t.id = at.id_tag
+                    AND     at.id_article = {$this->fields['id']}
+                    ";
+                    
+            $db->query($sql);
+            
+            return($db->getarray());
+        }
+        else return(array());
     }
 
 }

@@ -1,18 +1,24 @@
+== Module WebEdit - version 1.5.0.beta3 ============================================
+
+2008-06-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug à l'ajout d'un article
+
 == Module WebEdit - version 1.5.0.beta2 ============================================
 
 2008-06-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * réécriture du backend RSS permettant désormais de proposer un flux au format ATOM 1.0 et un flux RSS 2.0
+ * Réécriture du backend RSS permettant désormais de proposer un flux au format ATOM 1.0 et un flux RSS 2.0
 
 == Module WebEdit - version 1.5.0.beta ============================================
 
 2008-06-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * gestion des abonnements frontoffice sur rubriques ou sur site
- * gestion des abonnés frontoffice depuis le backoffice (possibilité de les supprimer)
- * flux rss optionnels sur rubriques
- * possibilité d'ajouter des tags (étiquettes) sur un article
- * possibilité d'insérer un nuage de tags en frontoffice
+ * Gestion des abonnements frontoffice sur rubriques ou sur site
+ * Gestion des abonnés frontoffice depuis le backoffice (possibilité de les supprimer)
+ * Flux rss optionnels sur rubriques
+ * Possibilité d'ajouter des tags (étiquettes) sur un article
+ * Possibilité d'insérer un nuage de tags en frontoffice
  
 == Module WebEdit - version 1.44 ===================================================
 
