@@ -53,8 +53,11 @@
 <body>
     <div id="entete">
         <a href="./" title="Lien vers Accueil" accesskey="1" tabindex="1">Accueil</a>&nbsp;&#149;
-        <a href="#page_content" title="Lien vers le Contenu" accesskey="2" tabindex="2">Aller au Contenu</a>&nbsp;&#149;
-        <a href="#recherche" title="Lien vers le Moteur de Recherche" accesskey="C" tabindex="3">Aller au Moteur de recherche</a>&nbsp;&nbsp;
+        <!-- BEGIN root2 -->
+            <a href="{root2.LINK}" title="Lien vers Plan de site" accesskey="2" tabindex="2">Plan de site</a>&nbsp;&#149;
+        <!-- END root2 -->
+        <a href="#page_content" title="Lien vers le Contenu" accesskey="3" tabindex="3">Aller au Contenu</a>&nbsp;&#149;
+        <a href="#recherche" title="Lien vers le Moteur de Recherche" accesskey="C" tabindex="4">Aller au Moteur de recherche</a>&nbsp;&nbsp;
     </div>
     <div id="page">
         <div id="page_haut"></div>

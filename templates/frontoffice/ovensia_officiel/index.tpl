@@ -60,8 +60,11 @@
 <body>
     <div id="entete">
         <a href="./" title="Lien vers Accueil" accesskey="1" tabindex="1">Accueil</a>&nbsp;&#149;
-        <a href="#page_content" title="Lien vers le Contenu" accesskey="2" tabindex="2">Aller au Contenu</a>&nbsp;&#149;
-        <a href="#recherche" title="Lien vers le Moteur de Recherche" accesskey="C" tabindex="3">Aller au Moteur de recherche</a>&nbsp;&nbsp;
+        <!-- BEGIN root2 -->
+            <a href="{root2.LINK}" title="Lien vers Plan de site" accesskey="2" tabindex="2">Plan de site</a>&nbsp;&#149;
+        <!-- END root2 -->
+        <a href="#page_content" title="Lien vers le Contenu" accesskey="3" tabindex="3">Aller au Contenu</a>&nbsp;&#149;
+        <a href="#recherche" title="Lien vers le Moteur de Recherche" accesskey="C" tabindex="4">Aller au Moteur de recherche</a>&nbsp;&nbsp;
     </div>
     <div id="page">
         <div id="page_haut"></div>
@@ -191,6 +194,57 @@
                         <!-- END result -->
                     </div>
                     <!-- END switch_tagsearch -->
+
+                    <!-- BEGIN switch_content_heading -->
+                        <!-- BEGIN page -->
+                            <a class="headings_page" href="{switch_content_heading.page.LINK}">
+                                <img src="{TEMPLATE_PATH}/gfx/page.png" />
+                                <span><b>{switch_content_heading.page.LABEL}</b><br />{switch_content_heading.page.DATE}</span>
+                            </a>
+                        <!-- END page -->
+
+                        <!-- BEGIN subheading1 -->
+                            <a class="subheading1" href="{switch_content_heading.subheading1.LINK}">
+                                <img src="{TEMPLATE_PATH}/gfx/folder.png" />
+                                <span>{switch_content_heading.subheading1.LABEL}</span>
+                            </a>
+                            <div id="subheading2">
+                            <!-- BEGIN subheading2 -->
+                                &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp; 
+                            <!-- END subheading2 -->
+                            </div>
+                        <!-- END subheading1 -->
+                    <!-- END switch_content_heading -->
+
+                    <!-- BEGIN switch_content_sitemap -->
+                        <h2>Plan du site</h2>
+                        <div id="sitemap">
+                            <!-- BEGIN heading0 -->
+                                <a title="Lien vers {switch_content_sitemap.heading0.LABEL}" href="{switch_content_sitemap.heading0.LINK}">{switch_content_sitemap.heading0.LABEL}</a>
+                                <div class="sitemap_heading1">
+                                    <!-- BEGIN heading1 -->
+                                        <a title="Lien vers {switch_content_sitemap.heading0.heading1.LABEL}" href="{switch_content_sitemap.heading0.heading1.LINK}">{switch_content_sitemap.heading0.heading1.LABEL}</a>
+                                        <div class="sitemap_heading2">
+                                            <!-- BEGIN heading2 -->
+                                                <a title="Lien vers {switch_content_sitemap.heading0.heading1.heading2.LABEL}" href="{switch_content_sitemap.heading0.heading1.heading2.LINK}">{switch_content_sitemap.heading0.heading1.heading2.LABEL}</a>
+                                                <div class="sitemap_heading3">
+                                                <!-- BEGIN heading3 -->
+                                                    <a title="Lien vers {switch_content_sitemap.heading0.heading1.heading2.heading3.LABEL}" href="{switch_content_sitemap.heading0.heading1.heading2.heading3.LINK}">{switch_content_sitemap.heading0.heading1.heading2.heading3.LABEL}</a>
+                                                    <div class="sitemap_heading4">
+                                                    <!-- BEGIN heading4 -->
+                                                        <a title="Lien vers {switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LABEL}" href="{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LINK}">{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LABEL}</a>
+                                                    <!-- END heading4 -->
+                                                    </div>
+                                                <!-- END heading3 -->
+                                                </div>
+                                            <!-- END heading2 -->
+                                        </div>
+                                    <!-- END heading1 -->
+                                </div>
+                            <!-- END heading0 -->
+                        </div>
+                    <!-- END switch_content_sitemap -->
+
 
                     <!-- BEGIN switch_content_page -->
                         <h1>{PAGE_TITLE}</h1>
