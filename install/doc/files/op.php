@@ -80,7 +80,7 @@ if ($_SESSION['ploopi']['connected'])
                 switch($_GET['filter'])
                 {
                     case 'doc_selectimage':
-                        $filter_ext = array('jpg', 'gif', 'png', 'bmp');
+                        $filter_ext = array('jpg', 'jpeg', 'gif', 'png', 'bmp');
                     break;
     
                     case 'doc_selectflash':

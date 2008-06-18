@@ -35,7 +35,6 @@
 /**
  * On commence par tester si une instance du module DOC est présente.
  * Car le module peut être installé mais pas instancié !
- * 
  */
 
 $isdoc = false;
@@ -51,6 +50,9 @@ foreach($_SESSION['ploopi']['modules'] as $instance)
 if(!$isdoc) ploopi_die('<b><font color="red">Module DOC absent</font></b>');
 else
 {
+    /**
+     * Inclusion des classes nécessaires et initialisation du module
+     */
     include_once './modules/doc/class_docfile.php';
     include_once './modules/doc/class_docfolder.php';
     include_once './include/classes/workspace.php';

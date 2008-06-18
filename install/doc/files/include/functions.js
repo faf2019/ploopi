@@ -262,6 +262,8 @@ function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
             parameters: {'ploopi_op': 'doc_getfiles', 'idfolder': idfolder, 'filter': ploopi_op},
             onSuccess:  function(transport, json)
             {
+                if (!json && transport.responseText.isJSON()) json = transport.responseText.evalJSON();
+ 
                 if (json)
                 {
 
