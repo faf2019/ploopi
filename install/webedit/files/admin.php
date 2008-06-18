@@ -470,6 +470,8 @@ switch($op)
                             break;  
                         }
                         
+                        $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : {$basepath}/unsubscribe-".ploopi_base64_encode($row['email']).".html";
+                        
                         ploopi_send_mail($from, $row['email'], $mail_title, $mail_content, null, null, null, null, false);
                     }
                 break;

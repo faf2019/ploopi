@@ -110,7 +110,7 @@ else // affichage standard rubrique/page
                 ploopi_h404();
             }
         }
-    
+        
         switch($headings['list'][$headingid]['content_type'])
         {
             case 'article_redirect':
@@ -192,13 +192,17 @@ $template_path = _WEBEDIT_TEMPLATES_PATH."/$template_name";
 
 $template_body = new Template($template_path);
 
+// fichier template par défaut
+$template_file = 'index.tpl';
+
 if (file_exists("{$template_path}/config.php")) include_once "{$template_path}/config.php";
 
 webedit_template_assign($headings, $array_nav, 0, '', 0);
 
 if ($query_string != '') // recherche intégrale
 {
-    $template_file = (file_exists("./templates/frontoffice/{$template_name}/search.tpl")) ? 'search.tpl' : 'index.tpl';
+    if (file_exists("./templates/frontoffice/{$template_name}/search.tpl")) $template_file = 'search.tpl';
+    
     $template_body->assign_block_vars("switch_search", array());
 
     $arrRelevance = ploopi_search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, '', $_SESSION['ploopi']['moduleid']);
@@ -262,7 +266,8 @@ if ($query_string != '') // recherche intégrale
 }
 elseif($query_tag != '') // recherche par tag
 {
-    $template_file = (file_exists("./templates/frontoffice/{$template_name}/tagsearch.tpl")) ? 'tagsearch.tpl' : 'index.tpl';
+    if (file_exists("./templates/frontoffice/{$template_name}/search.tpl")) $template_file = 'search.tpl';
+    
     $template_body->assign_block_vars("switch_tagsearch", array());
     
     $sql =  "
@@ -391,7 +396,7 @@ else // affichage standard rubrique/page
         {
             // pas d'article sélectionné
             // choix du premier article par défaut (sauf si la rubrique affiche des sous-rubriques
-            if (empty($articleid) && $headings['list'][$headingid]['content_type'] != 'headings') $articleid = $row['id'];
+            if (empty($articleid) && $headings['list'][$headingid]['content_type'] != 'headings' && $headings['list'][$headingid]['content_type'] != 'sitemap') $articleid = $row['id'];
     
             if ($row['visible'])
             {
@@ -454,9 +459,6 @@ else // affichage standard rubrique/page
         }
     }
     
-    // fichier template par défaut
-    $template_file = 'index.tpl';
-
     $ishomepage = false;
     
     if (!empty($articleid)) // article à afficher
@@ -500,10 +502,6 @@ else // affichage standard rubrique/page
                 ploopi_h404();
             }
         }
-
-
-        if (isset($print)) $template_file = 'print.tpl';
-        elseif ($ishomepage && file_exists("./templates/frontoffice/{$template_name}/home.tpl")) $template_file = 'home.tpl';
 
         if ($webedit_mode == 'edit')
         {
@@ -604,6 +602,12 @@ else // affichage standard rubrique/page
             }
         }
     }
+    else 
+    {
+        // pas d'article par défaut, on teste si on est sur la rubrique d'accueil
+        
+        $ishomepage = (!empty($headingid) && $headings['tree'][0][0] == $headingid);
+    }
         
     // Doit on afficher le flux de la rubrique ?
     if (!$ishomepage && isset($headings['list'][$headingid]) && $headings['list'][$headingid]['feed_enabled'])
@@ -648,6 +652,9 @@ else // affichage standard rubrique/page
                 
         }
     }
+
+    // template de la home page
+    if ($ishomepage && file_exists("./templates/frontoffice/{$template_name}/home.tpl")) $template_file = 'home.tpl';
 }
 
 // load a specific template file in edition mode (if exists)
