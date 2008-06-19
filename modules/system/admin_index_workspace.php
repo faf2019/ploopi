@@ -56,7 +56,7 @@ echo $skin->open_simplebloc();
 
             $toolbar_workspace[] = array(
                                     'title'     => str_replace('<LABEL>','<br /><b>'.$childworkspace.'</b>', _SYSTEM_LABEL_CREATE_CHILD_WORKSPACE),
-                                    'url'       => "$scriptenv?op=child&gworkspaceid=$workspaceid",
+                                    'url'       => "admin.php?op=child&gworkspaceid=$workspaceid",
                                     'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_child.png",
                                 );
 
@@ -64,7 +64,7 @@ echo $skin->open_simplebloc();
             {
                 $toolbar_workspace[] = array(
                                         'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_CREATE_CLONE_WORKSPACE),
-                                        'url'       => $scriptenv,
+                                        'url'       => 'admin.php',
                                         'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_copy_gray.png",
                                         'confirm'   => _SYSTEM_MSG_CANTCOPYGROUP
                                     );
@@ -73,7 +73,7 @@ echo $skin->open_simplebloc();
             {
                 $toolbar_workspace[] = array(
                         'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_CREATE_CLONE_WORKSPACE),
-                        'url'       => "$scriptenv?op=clone&workspaceid=$workspaceid",
+                        'url'       => "admin.php?op=clone&workspaceid=$workspaceid",
                         'icon'      => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_copy.png",
                     );
             }
@@ -86,7 +86,7 @@ echo $skin->open_simplebloc();
             {
                 $toolbar_workspace[] = array(
                                         'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_DELETE_WORKSPACE),
-                                        'url'       => "$scriptenv?op=delete&workspaceid=$workspaceid",
+                                        'url'       => "admin.php?op=delete&workspaceid=$workspaceid",
                                         'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_delete.png",
                                     );
             }
@@ -100,7 +100,7 @@ echo $skin->open_simplebloc();
 
                     $toolbar_workspace[] = array(
                                             'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_DELETE_WORKSPACE),
-                                            'url'       => $scriptenv,
+                                            'url'       => 'admin.php',
                                             'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_delete_gray.png",
                                             'confirm'   => $msg
                                         );
@@ -110,7 +110,7 @@ echo $skin->open_simplebloc();
 
             $toolbar_workspace[] = array(
                                     'title'     => _SYSTEM_LABEL_CREATE_GROUP,
-                                    'url'       => "$scriptenv?op=groupchild&workspaceid=$workspaceid",
+                                    'url'       => "admin.php?op=groupchild&workspaceid=$workspaceid",
                                     'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_child.png",
                                 );
 
@@ -137,7 +137,7 @@ echo $skin->open_simplebloc();
 
     $templatelist_back = ploopi_getavailabletemplates('backoffice');
     ?>
-    <form name="" action="<? echo $scriptenv; ?>" method="POST" onsubmit="javascript:return system_workspace_validate(this);">
+    <form name="" action="<? echo ploopi_urlencode('admin.php'); ?>" method="POST" onsubmit="javascript:return system_workspace_validate(this);">
     <input type="hidden" name="op" value="save_workspace">
     <input type="hidden" name="workspace_id" value="<? echo $workspace->fields['id']; ?>">
 

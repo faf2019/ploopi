@@ -37,7 +37,7 @@
 include_once './modules/system/xmlparser_mb.php';
 include_once './include/classes/xml2array.php';
 
-if (empty($_GET['installmoduletype']) || empty($_GET['idmoduletype']) || empty($_GET['updatefrom']) || empty($_GET['updateto']) || !is_numeric($_GET['idmoduletype'])) ploopi_redirect("{$scriptenv}");
+if (empty($_GET['installmoduletype']) || empty($_GET['idmoduletype']) || empty($_GET['updatefrom']) || empty($_GET['updateto']) || !is_numeric($_GET['idmoduletype'])) ploopi_redirect("admin.php");
 
 global $idmoduletype;
 $idmoduletype = $_GET['idmoduletype'];
@@ -345,7 +345,7 @@ else
 }
 ?>
 <div style="padding:4px;text-align:right;">
-    <form action="<? echo ploopi_urlencode("{$scriptenv}?sysToolbarItem=install"); ?>" method="post">
+    <form action="<? echo ploopi_urlencode("admin.php?sysToolbarItem=install"); ?>" method="post">
     <input type="submit" class="flatbutton" value="<? echo _PLOOPI_CONTINUE; ?>">
     </form>
 </div>

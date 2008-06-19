@@ -1055,7 +1055,7 @@ function ploopi_innerHTML(div, html)
 
 function ploopi_calendar_open(inputfield_id, event)
 {
-    ploopi_showpopup(ploopi_xmlhttprequest('index-light.php', 'ploopi_op=calendar_open&selected_date='+$(inputfield_id).value+'&inputfield_id='+inputfield_id), 192, event, 'click', 'ploopi_popup_calendar');
+    ploopi_showpopup(ploopi_xmlhttprequest('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&selected_date='+$(inputfield_id).value+'&inputfield_id='+inputfield_id), 192, event, 'click', 'ploopi_popup_calendar');
 }
 
 function ploopi_calendar_dispatchevent(inputfield_id)
@@ -1381,23 +1381,23 @@ function ploopi_colorpicker_open(inputfield_id, event)
 function ploopi_documents_openfolder(currentfolder, documentsfolder_id, event)
 {
     ploopi_showpopup('', 300, event, 'click', 'ploopi_documents_openfolder_popup');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=documents_openfolder&currentfolder='+currentfolder+'&documentsfolder_id='+documentsfolder_id,'','ploopi_documents_openfolder_popup');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_openfolder&currentfolder='+currentfolder+'&documentsfolder_id='+documentsfolder_id,'','ploopi_documents_openfolder_popup');
 }
 
 function ploopi_documents_openfile(currentfolder, documentsfile_id, event)
 {
     ploopi_showpopup('', 380, event, 'click', 'ploopi_documents_openfile_popup');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=documents_openfile&currentfolder='+currentfolder+'&documentsfile_id='+documentsfile_id,'','ploopi_documents_openfile_popup');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_openfile&currentfolder='+currentfolder+'&documentsfile_id='+documentsfile_id,'','ploopi_documents_openfile_popup');
 }
 
 function ploopi_documents_deletefile(currentfolder, documents_id, documentsfile_id)
 {
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=documents_deletefile&currentfolder='+currentfolder+'&documentsfile_id='+documentsfile_id,'','ploopidocuments_'+documents_id);
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_deletefile&currentfolder='+currentfolder+'&documentsfile_id='+documentsfile_id,'','ploopidocuments_'+documents_id);
 }
 
 function ploopi_documents_deletefolder(currentfolder, documents_id, documentsfolder_id)
 {
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=documents_deletefolder&currentfolder='+currentfolder+'&documentsfolder_id='+documentsfolder_id,'','ploopidocuments_'+documents_id);
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_deletefolder&currentfolder='+currentfolder+'&documentsfolder_id='+documentsfolder_id,'','ploopidocuments_'+documents_id);
 }
 
 function ploopi_documents_browser(currentfolder, documents_id, mode, orderby, asynchronous)
@@ -1408,9 +1408,9 @@ function ploopi_documents_browser(currentfolder, documents_id, mode, orderby, as
     if (asynchronous)
     {
         ploopi_ajaxloader('ploopidocuments_'+documents_id);
-        ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=documents_browser&mode='+mode+'&currentfolder='+currentfolder+option,'','ploopidocuments_'+documents_id);
+        ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_browser&mode='+mode+'&currentfolder='+currentfolder+option,'','ploopidocuments_'+documents_id);
     }
-    else ploopi_innerHTML('ploopidocuments_'+documents_id, ploopi_xmlhttprequest('admin-light.php','ploopi_op=documents_browser&mode='+mode+'&currentfolder='+currentfolder+option));
+    else ploopi_innerHTML('ploopidocuments_'+documents_id, ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_browser&mode='+mode+'&currentfolder='+currentfolder+option));
 }
 
 function ploopi_documents_validate(form)
@@ -1430,7 +1430,7 @@ function ploopi_documents_validate(form)
 function ploopi_documents_popup(id_object, id_record, id_module, destfield, event)
 {
     var documents_id = ploopi_base64_encode(id_module+'_'+id_object+'_'+ploopi_addslashes(id_record)+'_popup');
-    ploopi_showpopup(''+ploopi_xmlhttprequest('admin-light.php','ploopi_op=documents_selectfile&id_object='+id_object+'&id_record='+id_record+'&documents_id='+documents_id+'&destfield='+destfield)+'', 600, event, 'click', 'ploopi_documents_popup');
+    ploopi_showpopup(''+ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_selectfile&id_object='+id_object+'&id_record='+id_record+'&documents_id='+documents_id+'&destfield='+destfield)+'', 600, event, 'click', 'ploopi_documents_popup');
 }
 
 // This code was written by Tyler Akins and has been placed in the
@@ -1503,7 +1503,7 @@ function ploopi_base64_decode(input) {
 function ploopi_subscription(ploopi_subscription_id, next)
 {
     if (typeof(next) == 'undefined') next = '';
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_op=subscription&ploopi_subscription_id='+ploopi_subscription_id+'&next='+next, '', 'ploopi_subscription_'+ploopi_subscription_id);
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=subscription&ploopi_subscription_id='+ploopi_subscription_id+'&next='+next, '', 'ploopi_subscription_'+ploopi_subscription_id);
 }
 
 function ploopi_subscription_checkaction(id_subscription, id_action)
@@ -1523,7 +1523,7 @@ function ploopi_subscription_checkaction(id_subscription, id_action)
 
 function ploopi_annotation(id_annotation)
 {
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_op=annotation&id_annotation='+id_annotation, '', 'ploopiannotation_'+id_annotation);
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation&id_annotation='+id_annotation, '', 'ploopiannotation_'+id_annotation);
 }
 
 var tag_timer;
@@ -1554,7 +1554,7 @@ function ploopi_annotation_tag_searchtimeout(id_annotation)
     // replace(/(^\s*)|(\s*$)/g,'') = TRIM
     list_tags = tag_search.split(' ');
 
-    if (list_tags.length>0) ploopi_xmlhttprequest_tofunction('index-quick.php','ploopi_op=annotation_searchtags&tag='+list_tags[list_tags.length-1],ploopi_annotation_tag_display,id_annotation);
+    if (list_tags.length>0) ploopi_xmlhttprequest_tofunction('index-quick.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_searchtags&tag='+list_tags[list_tags.length-1],ploopi_annotation_tag_display,id_annotation);
 }
 
 function ploopi_annotation_tag_display(result,ticket)
@@ -1685,7 +1685,7 @@ function ploopi_annotation_tag_complete(idrecord, idtag)
 
 function ploopi_annotation_delete(id_annotation, id)
 {
-    if (confirm('Êtes vous certain de vouloir supprimer cette annotation ?')) ploopi_xmlhttprequest('index-quick.php','ploopi_op=annotation_delete&ploopi_annotation_id='+id);
+    if (confirm('Êtes vous certain de vouloir supprimer cette annotation ?')) ploopi_xmlhttprequest('index-quick.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_delete&ploopi_annotation_id='+id);
     ploopi_annotation(id_annotation);
 }
 
@@ -1736,7 +1736,7 @@ function ploopi_tickets_new(event, id_object, id_record, object_label, id_user, 
 
     ploopi_showpopup('',550,event,'click', 'system_popupticket');
     ploopi_ajaxloader('system_popupticket');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=tickets_new'+data,'','system_popupticket');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_new'+data,'','system_popupticket');
 }
 
 /* Rafraichissement de la zone indiquant le nombre de tickets non lus + alerte sur nouveau ticket */
@@ -1781,12 +1781,12 @@ function ploopi_tickets_alert()
 {
 	ploopi_showpopup('', 350, null, true, 'popup_tickets_new_alert', 0, 200);
     ploopi_ajaxloader('popup_tickets_new_alert');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=tickets_alert','','popup_tickets_new_alert');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_alert','','popup_tickets_new_alert');
 }
 
 function ploopi_skin_array_refresh(array_id, array_orderby)
 {
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=ploopi_skin_array_refresh&array_id='+array_id+'&array_orderby='+array_orderby,'','ploopi_explorer_main_'+array_id);
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_skin_array_refresh&array_id='+array_id+'&array_orderby='+array_orderby,'','ploopi_explorer_main_'+array_id);
 }
 
 

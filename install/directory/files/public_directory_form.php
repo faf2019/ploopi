@@ -36,7 +36,7 @@
  */
 ?>
 
-<form action="<? echo $scriptenv; ?>" method="post">
+<form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
 <input type="hidden" name="op" value="directory_save">
 <input type="hidden" name="contact_id" value="<? echo $directory_contact->fields['id']; ?>">
 <div style="border-bottom:2px solid #c0c0c0;overflow:auto;">
@@ -101,7 +101,7 @@
         </div>
     </div>
     <div style="clear:both;padding:2px 4px;text-align:right;">
-        <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?directoryTabItem=tabMycontacts"); ?>';" tabindex="120" />
+        <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?directoryTabItem=tabMycontacts"); ?>';" tabindex="120" />
         <input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>" tabindex="119" />
     </div>
 </div>

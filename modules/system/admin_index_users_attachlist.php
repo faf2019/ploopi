@@ -93,15 +93,15 @@ else
     <?
     $tabs_char = array();
 
-    for($i=1;$i<27;$i++) $tabs_char[$i] = array('title' => chr($i+64), 'url' => "{$scriptenv}?alphaTabItem={$i}");
+    for($i=1;$i<27;$i++) $tabs_char[$i] = array('title' => chr($i+64), 'url' => "admin.php?alphaTabItem={$i}");
 
-    $tabs_char[99] = array('title' => "&nbsp;tous&nbsp;", 'url' => "{$scriptenv}?alphaTabItem=99");
+    $tabs_char[99] = array('title' => "&nbsp;tous&nbsp;", 'url' => "admin.php?alphaTabItem=99");
 
     echo $skin->create_tabs($tabs_char,$alphaTabItem);
     ?>
 </div>
 
-<form action="<? echo $scriptenv; ?>" method="post">
+<form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
 <p class="ploopi_va" style="padding:4px;border-bottom:2px solid #c0c0c0;">
     <span><? echo _SYSTEM_LABEL_USER; ?> :</span>
     <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<? echo htmlentities($pattern); ?>">
@@ -186,7 +186,7 @@ while ($fields = $db->fetchrow($result))
     if (!empty($groups))
     {
         $currentgroup = current($groups);
-        $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi_urlencode("{$scriptenv}?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.htmlentities($currentgroup['label']).'</a>');
+        $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.htmlentities($currentgroup['label']).'</a>');
         $service = $fields['service'];
     }
     else
@@ -198,7 +198,7 @@ while ($fields = $db->fetchrow($result))
     $values[$c]['values']['name']       = array('label' => htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
     $values[$c]['values']['login']      = array('label' => htmlentities($fields['login']));
     $values[$c]['values']['service']    = array('label' => htmlentities($service));
-    $values[$c]['values']['actions']    = array('label' => '<a style="float:left;display:block;margin:2px;" href="'.ploopi_urlencode("{$scriptenv}?op=attach_user&userid={$fields['id']}&alphaTabItem={$alphaTabItem}").'"><img style="float:left;display:block;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
+    $values[$c]['values']['actions']    = array('label' => '<a style="float:left;display:block;margin:2px;" href="'.ploopi_urlencode("admin.php?op=attach_user&userid={$fields['id']}&alphaTabItem={$alphaTabItem}").'"><img style="float:left;display:block;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
     $c++;
 }
 

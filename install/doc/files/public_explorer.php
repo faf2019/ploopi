@@ -315,8 +315,8 @@ while ($row = $db->fetchrow())
 
     $tools .=   "
                 <a title=\"Modifier\" style=\"display:block;float:right;\" href=\"javascript:void(0);\" onclick=\"javascript:doc_fileform({$row['id_folder']},'{$row['md5id']}');\"><img src=\"./modules/doc/img/ico_modify.png\" /></a>
-                <a title=\"Télécharger\" style=\"display:block;float:right;\" href=\"".ploopi_urlencode("{$scriptenv}?op=doc_filedownload&docfile_md5id={$row['md5id']}")."\"><img src=\"./modules/doc/img/ico_download.png\" /></a>
-                <a title=\"Télécharger (ZIP)\" style=\"display:block;float:right;\" href=\"".ploopi_urlencode("{$scriptenv}?op=doc_filedownloadzip&docfile_md5id={$row['md5id']}")."\"><img src=\"./modules/doc/img/ico_download_zip.png\" /></a>
+                <a title=\"Télécharger\" style=\"display:block;float:right;\" href=\"".ploopi_urlencode("admin.php?op=doc_filedownload&docfile_md5id={$row['md5id']}")."\"><img src=\"./modules/doc/img/ico_download.png\" /></a>
+                <a title=\"Télécharger (ZIP)\" style=\"display:block;float:right;\" href=\"".ploopi_urlencode("admin.php?op=doc_filedownloadzip&docfile_md5id={$row['md5id']}")."\"><img src=\"./modules/doc/img/ico_download_zip.png\" /></a>
                 ";
 
     $values[$c]['values']['ico']        = array('label' => "<img src=\"./modules/doc/img/mimetypes/{$ico}\" />");
@@ -329,7 +329,7 @@ while ($row = $db->fetchrow())
     $values[$c]['values']['actions']    = array('label' => $tools, 'style' => 'text-align:center');
 
     $values[$c]['description'] = $row['description'];
-    $values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=doc_filedownload&docfile_md5id={$row['md5id']}");
+    $values[$c]['link'] = ploopi_urlencode("admin.php?op=doc_filedownload&docfile_md5id={$row['md5id']}");
     $values[$c]['style'] = '';
     $c++;
 }
@@ -413,8 +413,8 @@ while ($row = $db->fetchrow())
     }
 
     $tools .=   "
-                <a title=\"Télécharger\" style=\"display:block;float:right;\" href=\"".ploopi_urlencode("{$scriptenv}?op=doc_filedownload&docfiledraft_md5id={$row['md5id']}")."\"><img src=\"./modules/doc/img/ico_download.png\" /></a>
-                <a title=\"Télécharger (ZIP)\" style=\"display:block;float:right;\" href=\"".ploopi_urlencode("{$scriptenv}?op=doc_filedownloadzip&docfiledraft_md5id={$row['md5id']}")."\"><img src=\"./modules/doc/img/ico_download_zip.png\" /></a>
+                <a title=\"Télécharger\" style=\"display:block;float:right;\" href=\"".ploopi_urlencode("admin.php?op=doc_filedownload&docfiledraft_md5id={$row['md5id']}")."\"><img src=\"./modules/doc/img/ico_download.png\" /></a>
+                <a title=\"Télécharger (ZIP)\" style=\"display:block;float:right;\" href=\"".ploopi_urlencode("admin.php?op=doc_filedownloadzip&docfiledraft_md5id={$row['md5id']}")."\"><img src=\"./modules/doc/img/ico_download_zip.png\" /></a>
                 ";
 
     $name = $row['name'];
@@ -430,7 +430,7 @@ while ($row = $db->fetchrow())
     $values[$c]['values']['actions']    = array('label' => $tools, 'style' => 'text-align:center');
 
     $values[$c]['description'] = $row['description'];
-    $values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=doc_filedownload&docfiledraft_md5id={$row['md5id']}");
+    $values[$c]['link'] = ploopi_urlencode("admin.php?op=doc_filedownload&docfiledraft_md5id={$row['md5id']}");
     $values[$c]['style'] = '';
     $c++;
 }

@@ -98,7 +98,7 @@
             <div id="page_main">
 
                 <div id="menu_vertical">
-                    <div id="mini_form">
+                    <div class="mini_form">
                         <form method="post" action="index.php">
                             <fieldset>
                                 <label for="recherche_field">Recherche:</label>
@@ -111,7 +111,7 @@
                     </div>
                     
                     <!-- BEGIN switch_subscription -->
-                    <div id="mini_form">
+                    <div class="mini_form">
                         <form method="post" action="{switch_subscription.ACTION}">
                             <fieldset>
                                 <label for="subscription_email">Abonnement:</label>
@@ -120,7 +120,7 @@
                                 <!-- END switch_response -->
                                 <p class="va">
                                     <input type="radio" class="pointer" name="subscription_headingid" id="subscription_site" value="{switch_subscription.ROOTID}" /><label class="pointer" for="subscription_site">Site</label>
-                                    <input type="radio" class="pointer" name="subscription_headingid" id="subscription_heading" value="{switch_subscription.HEADINGID}" checked /><label class="pointer" for="subscription_heading">Rubrique</label>
+                                    <input type="radio" class="pointer" name="subscription_headingid" id="subscription_heading" value="{switch_subscription.HEADINGID}" checked="checked" /><label class="pointer" for="subscription_heading">Rubrique</label>
                                 </p>
                                 <div>
                                     <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="subscription_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" />
@@ -163,7 +163,7 @@
                                 <div class="title">{news.TITLE}</div>
                                 <div class="date">le {news.DATE} à {news.TIME}</div>
                                 <div class="content">{news.CONTENT}</div>
-                                <!--div style="padding-bottom:4px;"><a href="{news.URL}" target="_blank">{news.URLTITLE}</a></div-->
+                                <!--div style="padding-bottom:4px;"><a href="{news.URL}">{news.URLTITLE}</a></div-->
                             </div>
                         <!-- END news -->
                     </div>

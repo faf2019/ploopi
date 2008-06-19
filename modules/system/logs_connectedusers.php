@@ -36,7 +36,7 @@
  */
 echo $skin->open_simplebloc(_SYSTEM_LABEL_CONNECTEDUSERS);
 
-if (isset($_GET['monitoring'])) header("Refresh: {$_GET['monitoring']}; URL=".ploopi_urlencode("{$scriptenv}?op=connectedusers&monitoring={$_GET['monitoring']}"));
+if (isset($_GET['monitoring'])) header("Refresh: {$_GET['monitoring']}; URL=".ploopi_urlencode("admin.php?op=connectedusers&monitoring={$_GET['monitoring']}"));
 
 $columns = array();
 $values = array();
@@ -95,14 +95,14 @@ $skin->display_array($columns, $values, 'array_connectedusers', array('sortable'
 if (isset($_GET['monitoring']))
 {
     ?>
-    <input type="button" class="button" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?op=connectedusers"); ?>'" value="Arrêter le  monitoring">
+    <input type="button" class="button" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=connectedusers"); ?>'" value="Arrêter le  monitoring">
     <?
 }
 else
 {
     ?>
     <input type="text" class="text" value="<? echo (isset($_GET['monitoring'])) ? $_GET['monitoring'] : 2; ?>" size="2" id="system_monitoring_delay">
-    <input type="button" class="button" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?op=connectedusers"); ?>&monitoring='+$('system_monitoring_delay').value;" value="Monitoring">
+    <input type="button" class="button" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=connectedusers"); ?>&monitoring='+$('system_monitoring_delay').value;" value="Monitoring">
     <?
 }
 ?>

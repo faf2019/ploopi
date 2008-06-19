@@ -39,7 +39,7 @@ if (!empty($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
 echo $skin->open_simplebloc(_SYSTEM_MODULESELECTED);
 ?>
 <div style="padding:4px;">
-<form id="form_modparam" action="<? echo $scriptenv; ?>" method="post">
+<form id="form_modparam" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
     <select class="select" name="idmodule" onchange="javascript:$('form_modparam').submit();">
     <?
     foreach($_SESSION['ploopi']['modules'] as $idm => $mod)
@@ -66,7 +66,7 @@ if (isset($idmodule))
     {
         ?>
         <div style="padding:4px;">
-            <form action="<? echo $scriptenv; ?>" method="post">
+            <form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
             <input type="hidden" name="op" value="save">
             <input type="hidden" name="idmodule" value="<? echo $idmodule; ?>">
             <div class="ploopi_form">

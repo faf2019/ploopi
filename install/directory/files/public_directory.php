@@ -109,7 +109,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
         ?>
         <div style="padding:4px;background-color:#f0f0f0;border-bottom:2px solid #c0c0c0;">
-            <form action="<? echo $scriptenv; ?>" method="post">
+            <form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
             <table cellpadding="2" cellspacing="1">
             <input type="hidden" name="op" value="search">
             <tr>
@@ -173,8 +173,8 @@ switch($_SESSION['directory']['directoryTabItem'])
 
             $actions =  '
                         <a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>
-                        <a href="'.ploopi_urlencode("{$scriptenv}?op=directory_modify&contact_id={$row['id']}").'"><img title="Modifier" src="./modules/directory/img/ico_modify.png"></a>
-                        <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("{$scriptenv}?op=directory_delete&contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>
+                        <a href="'.ploopi_urlencode("admin.php?op=directory_modify&contact_id={$row['id']}").'"><img title="Modifier" src="./modules/directory/img/ico_modify.png"></a>
+                        <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=directory_delete&contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>
                         ';
 
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites']) 
@@ -250,7 +250,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
             {
-                //if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="'.ploopi_urlencode("{$scriptenv}?op=directory_favorites_add&user_id={$row['id']}").'"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
+                //if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="'.ploopi_urlencode("admin.php?op=directory_favorites_add&user_id={$row['id']}").'"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
                 if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\');"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
                 else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
             }
@@ -337,7 +337,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 <span onclick="javascript:directory_list_modify(event);" style="cursor:pointer;display:<? echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_modify_link" >
                     <img src="./modules/directory/img/ico_modify.png" title="Modifier la liste sélectionnée"  /><span style="margin:0 10px 0 2px;">Modifier la liste sélectionnée</span>
                 </span>
-                <span onclick="javascript:ploopi_confirmlink('<? echo "{$scriptenv}?op=directory_list_delete&directory_favorites_id_list="; ?>'+$('directory_favorites_id_list').value, 'Êtes vous certain de vouloir supprimer cette liste ?');" style="cursor:pointer;display:<? echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_delete_link">
+                <span onclick="javascript:ploopi_confirmlink('<? echo "admin.php?op=directory_list_delete&directory_favorites_id_list="; ?>'+$('directory_favorites_id_list').value, 'Êtes vous certain de vouloir supprimer cette liste ?');" style="cursor:pointer;display:<? echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_delete_link">
                     <img src="./modules/directory/img/ico_delete.png" title="Supprimer la liste sélectionnée" /><span style="margin:0 10px 0 2px;">Supprimer la liste sélectionnée</span>
                 </span>
                 

@@ -58,7 +58,7 @@ class ploopi_session
     function read($id)
     {
         global $db;
-        return ($db->query("SELECT data FROM ploopi_session WHERE id = '".$db->addslashes($id)."'") && $record = $db->fetchrow()) ? gzuncompress($record['data']) : '';
+        return ($db->query("SELECT `data` FROM `ploopi_session` WHERE `id` = '".$db->addslashes($id)."'") && $record = $db->fetchrow()) ? gzuncompress($record['data']) : '';
     }
 
     /**
@@ -72,7 +72,7 @@ class ploopi_session
     function write($id, $data)
     {
         global $db;
-        return $db->query("REPLACE INTO ploopi_session VALUES ('".$db->addslashes($id)."', '".$db->addslashes(time())."', '".$db->addslashes(gzcompress($data))."')");
+        return $db->query("REPLACE INTO `ploopi_session` VALUES ('".$db->addslashes($id)."', '".$db->addslashes(time())."', '".$db->addslashes(gzcompress($data))."')");
     }
 
 
@@ -86,7 +86,7 @@ class ploopi_session
     function destroy($id)
     {
         global $db;
-        return $db->query("DELETE FROM ploopi_session WHERE id = '".$db->addslashes($id)."'");
+        return $db->query("DELETE FROM `ploopi_session` WHERE `id` = '".$db->addslashes($id)."'");
     }
 
     /**
@@ -99,7 +99,27 @@ class ploopi_session
     function gc($max)
     {
         global $db;
-        return $db->query("DELETE FROM ploopi_session WHERE access < '".$db->addslashes((time() - $max))."'");
+        return $db->query("DELETE FROM `ploopi_session` WHERE `access` < '".$db->addslashes((time() - $max))."'");
+    }
+    
+    
+    /**
+     * Regénère un identifiant de session
+     * 
+     * @see session_regenerate_id
+     */
+    
+    function regenerate_id()
+    {
+        if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
+        {
+            global $db;
+            $old_sess_id = session_id();
+            session_regenerate_id(false);
+            $new_sess_id = session_id();        
+            $db->query("UPDATE `ploopi_session` SET `id` = '".$db->addslashes($new_sess_id)."' WHERE `id` = '".$db->addslashes($old_sess_id)."'");
+        }
+        else session_regenerate_id(true);
     }
 }
 ?>

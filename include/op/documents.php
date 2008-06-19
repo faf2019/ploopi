@@ -396,8 +396,8 @@ switch($ploopi_op)
                 $documents_file_values[$i]['values'][6] = array('label' => $row['ref'], 'style' => '');
                 $documents_file_values[$i]['values'][7] = array('label' => $row['label'], 'style' => '');
                 $documents_file_values[$i]['values'][8] = array('label' => "{$ksize} ko", 'style' => '');
-                $documents_file_values[$i]['values'][9] = array('label' => $actions.'<a title="Télécharger" style="display:block;float:right;" href="'.ploopi_urlencode("{$scriptenv}?ploopi_op=documents_downloadfile&documentsfile_id={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download.png" /></a>
-                                                                                    <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi_urlencode("{$scriptenv}?ploopi_op=documents_downloadfile_zip&documentsfile_id={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download_zip.png" /></a>
+                $documents_file_values[$i]['values'][9] = array('label' => $actions.'<a title="Télécharger" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download.png" /></a>
+                                                                                    <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=documents_downloadfile_zip&documentsfile_id={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download_zip.png" /></a>
                                                                                     ', 'style' => '');
                 $documents_file_values[$i]['description'] = '';
                 if ($_SESSION['documents']['mode'] == 'selectfile')
@@ -716,7 +716,7 @@ switch($ploopi_op)
             $documentsfile->delete();
         }
 
-        ploopi_redirect("{$scriptenv}?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}");
+        ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}");
     break;
 
     case 'documents_deletefolder':
@@ -729,7 +729,7 @@ switch($ploopi_op)
 
             $documentsfolder->delete();
         }
-        ploopi_redirect("{$scriptenv}?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}");
+        ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}");
     break;
 }
 ?>

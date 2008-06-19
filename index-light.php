@@ -46,12 +46,25 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mode'] == 'backoffi
     $skin = new skin();
     $template_body = new Template($_SESSION['ploopi']['template_path']);
 
-    $template_body->set_filenames(array('body' => "light.tpl"));
+    $template_body->set_filenames(
+        array(
+            'body' => "light.tpl"
+        )
+    );
 
     // PLOOPI JS
-    $template_body->assign_block_vars('ploopi_js', array('PATH' => './lib/protoculous/protoculous-packer.js?v='.urlencode(_PLOOPI_VERSION).'&r='._PLOOPI_REVISION));
-    $template_body->assign_block_vars('ploopi_js', array('PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION).'&r='._PLOOPI_REVISION));
+    $template_body->assign_block_vars('ploopi_js', 
+        array(
+            'PATH' => './lib/protoculous/protoculous-packer.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+        )
+    );
     
+    $template_body->assign_block_vars('ploopi_js', 
+        array(
+            'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+        )
+    );
+
     // GET MODULES STYLES & JS
     if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $_SESSION['ploopi']['workspaceid'] != _PLOOPI_NOWORKSPACE && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
     {
@@ -63,26 +76,29 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mode'] == 'backoffi
 
                 if (file_exists("./modules/{$modtype}/include/styles.css"))
                 {
-                    $template_body->assign_block_vars('module_css',array(
-                                                                'PATH' => "./modules/{$modtype}/include/styles.css"
-                                                            )
-                                                    );
+                    $template_body->assign_block_vars('module_css',
+                        array(
+                            'PATH' => "./modules/{$modtype}/include/styles.css"
+                            )
+                        );
                 }
 
                 if (file_exists("./modules/{$modtype}/include/styles_ie.css"))
                 {
-                    $template_body->assign_block_vars('module_css_ie',array(
-                                                                'PATH' => "./modules/{$modtype}/include/styles_ie.css"
-                                                            )
-                                                    );
+                    $template_body->assign_block_vars('module_css_ie',
+                        array(
+                            'PATH' => "./modules/{$modtype}/include/styles_ie.css"
+                            )
+                        );
                 }
 
                 if (file_exists("./modules/{$modtype}/include/functions.js"))
                 {
-                    $template_body->assign_block_vars('module_js',array(
-                                                                'PATH' => "./modules/{$modtype}/include/functions.js"
-                                                            )
-                                                    );
+                    $template_body->assign_block_vars('module_js',
+                        array(
+                            'PATH' => "./modules/{$modtype}/include/functions.js"
+                        )
+                    );
                 }
             }
         }

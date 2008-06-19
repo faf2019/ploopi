@@ -39,7 +39,7 @@ if ($newscat->new) echo $skin->open_simplebloc(_NEWSCAT_WRITE);
 else echo $skin->open_simplebloc(str_replace("LABEL",$newscat->fields['title'],_NEWSCAT_MODIFY));
 ?>
 
-<form name="form_newscat" action="<? echo $scriptenv; ?>" method="post" onsubmit="return newscat_validate(this);">
+<form name="form_newscat" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return newscat_validate(this);">
 <input type="hidden" name="op" value="save_newscat">
 <input type="hidden" name="newscat_id" value="<? echo $newscat->fields['id']; ?>">
 <div class="ploopi_form">
@@ -55,7 +55,7 @@ else echo $skin->open_simplebloc(str_replace("LABEL",$newscat->fields['title'],_
     </div>
 </div>
 <div style="padding:2px;text-align:right;">
-    <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?newsTabItem=tabNewsCatModify"); ?>';" tabindex="103" />
+    <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?newsTabItem=tabNewsCatModify"); ?>';" tabindex="103" />
     <input type="reset" class="button" value="<? echo _PLOOPI_RESET; ?>" tabindex="104" />
     <input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>" tabindex="102" />
 </div>

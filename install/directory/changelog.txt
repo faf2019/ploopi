@@ -1,3 +1,10 @@
+== Module DIRECTORY - version 1.34 ====================================================
+
+2008-06-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à jour du système de liens (ploopi_env) lié à la mise à jour de Ploopi
+ * Ajout d'index sur les tables du module
+ 
 == Module DIRECTORY - version 1.33 ====================================================
 
 2008-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

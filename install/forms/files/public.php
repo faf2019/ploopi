@@ -57,9 +57,9 @@ switch($op)
             $forms->fields['autobackup'] = $_POST['forms_autobackup'];
             $forms->fields['autobackup_date'] = ploopi_local2timestamp($_POST['forms_autobackup_date']);
             $forms->save();
-            ploopi_redirect("{$scriptenv}?op=forms_viewreplies&forms_id={$_POST['forms_id']}");
+            ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$_POST['forms_id']}");
         }
-        ploopi_redirect($scriptenv);
+        ploopi_redirect('admin.php');
     break;
 
     case 'forms_download_file':
@@ -72,14 +72,14 @@ switch($op)
 
             if (!ploopi_downloadfile("{$path}{$reply_field->fields['value']}", $reply_field->fields['value']))
             {
-                if (!empty($_GET['forms_id']) && !empty($_GET['forms_id'])) ploopi_redirect("{$scriptenv}?op=forms_viewreplies&forms_id={$_GET['forms_id']}");
-                else ploopi_redirect($scriptenv);
+                if (!empty($_GET['forms_id']) && !empty($_GET['forms_id'])) ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$_GET['forms_id']}");
+                else ploopi_redirect('admin.php');
             }
         }
         else
         {
-            if (!empty($_GET['forms_id']) && !empty($_GET['forms_id'])) ploopi_redirect("{$scriptenv}?op=forms_viewreplies&forms_id={$_GET['forms_id']}");
-            else ploopi_redirect($scriptenv);
+            if (!empty($_GET['forms_id']) && !empty($_GET['forms_id'])) ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$_GET['forms_id']}");
+            else ploopi_redirect('admin.php');
         }
     break;
 
@@ -102,11 +102,11 @@ switch($op)
             if (!empty($_GET['reply_id']) && is_numeric($_GET['reply_id']) && $reply->open($_GET['reply_id']))
             {
                 $reply->delete();
-                ploopi_redirect("{$scriptenv}?op=forms_viewreplies&forms_id={$reply->fields['id_form']}");
+                ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$reply->fields['id_form']}");
             }
-            else ploopi_redirect($scriptenv);
+            else ploopi_redirect('admin.php');
         }
-        else ploopi_redirect($scriptenv);
+        else ploopi_redirect('admin.php');
     break;
 
     case 'forms_reply_display':
@@ -122,9 +122,9 @@ switch($op)
                 $forms->save();
                 include './modules/forms/public_forms_display.php';
             }
-            else ploopi_redirect($scriptenv);
+            else ploopi_redirect('admin.php');
         }
-        else ploopi_redirect($scriptenv);
+        else ploopi_redirect('admin.php');
     break;
 
     case 'forms_viewreplies':
@@ -263,11 +263,11 @@ switch($op)
             }
 
 
-            ploopi_redirect("{$scriptenv}?op=forms_viewreplies&forms_id={$forms->fields['id']}");
+            ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$forms->fields['id']}");
         }
         else 
         {
-            ploopi_redirect($scriptenv);
+            ploopi_redirect('admin.php');
         }
     break;
 

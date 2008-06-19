@@ -101,12 +101,12 @@
             <div id="page_main">
 
                 <div id="menu_vertical">
-                    <div id="mini_form">
+                    <div class="mini_form">
                         <form method="post" action="index.php">
                             <fieldset>
-                                <label for="recherche_field">Recherche:</label>
+                                <label for="query_string">Recherche:</label>
                                 <div>
-                                    <input type="text" title="Champ de recherche" alt="Champ de recherche" class="text" name="query_string" value="{PAGE_QUERYSTRING}" onfocus="javascript:this.value='';" />
+                                    <input type="text" title="Champ de recherche" alt="Champ de recherche" class="text" id="query_string" name="query_string" value="{PAGE_QUERYSTRING}" onfocus="javascript:this.value='';" />
                                     <input type="submit" title="Bouton pour valider la recherche" class="button" value="go" />
                                 </div>
                             </fieldset>
@@ -114,7 +114,7 @@
                     </div>
                     
                     <!-- BEGIN switch_subscription -->
-                    <div id="mini_form">
+                    <div class="mini_form">
                         <form method="post" action="{switch_subscription.ACTION}">
                             <fieldset>
                                 <label for="subscription_email">Abonnement:</label>
@@ -122,11 +122,11 @@
                                 <div><strong>{switch_subscription.switch_response.CONTENT}</strong></div>
                                 <!-- END switch_response -->
                                 <p class="va">
-                                    <input type="radio" class="pointer" name="subscription_headingid" id="subscription_site" value="{switch_subscription.ROOTID}" checked /><label class="pointer" for="subscription_site">Site</label>
+                                    <input type="radio" class="pointer" name="subscription_headingid" id="subscription_site" value="{switch_subscription.ROOTID}" checked="checked" /><label class="pointer" for="subscription_site">Site</label>
                                     <input type="radio" class="pointer" name="subscription_headingid" id="subscription_heading" value="{switch_subscription.HEADINGID}" /><label class="pointer" for="subscription_heading">Rubrique</label>
                                 </p>
                                 <div>
-                                    <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="subscription_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" />
+                                    <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="subscription_email" id="subscription_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" />
                                     <input type="submit" title="Bouton pour valider la recherche" class="button" value="go" />
                                 </div>
                             </fieldset>
@@ -152,7 +152,7 @@
                                 <div class="title">{news.TITLE}</div>
                                 <div class="date">le {news.DATE} à {news.TIME}</div>
                                 <div class="content">{news.CONTENT}</div>
-                                <!--div style="padding-bottom:4px;"><a href="{news.URL}" target="_blank">{news.URLTITLE}</a></div-->
+                                <!--div style="padding-bottom:4px;"><a href="{news.URL}">{news.URLTITLE}</a></div-->
                             </div>
                         <!-- END news -->
                     </div>
@@ -162,12 +162,12 @@
                         <h1>Actualités du Web</h1>
                         <!-- BEGIN rssfeed -->
                         <div class="rssfeed">
-                            <a class="feedtitle" href="{rssfeed.LINK}">{rssfeed.TITLE}<br /><i>{rssfeed.SUBTITLE}</i></a>
+                            <a class="feedtitle" href="{rssfeed.LINK}">{rssfeed.TITLE}<br /><em>{rssfeed.SUBTITLE}</em></a>
                             <!-- BEGIN rssentry -->
-                                <a title="{rssfeed.rssentry.TITLE}" class="rsscache" href="{rssfeed.rssentry.LINK}" target="_blank">
-                                    <div><b>{rssfeed.rssentry.TITLE}</b></div>
-                                    <div><i>{rssfeed.rssentry.SUBTITLE}</i></div>
-                                    <div style="font-size:0.8em;margin-top:2px;">{rssfeed.rssentry.PUBLISHED_DATE} {rssfeed.rssentry.PUBLISHED_TIME}</div>
+                                <a title="{rssfeed.rssentry.TITLE_CLEANED}" class="rsscache" href="{rssfeed.rssentry.LINK}">
+                                    <strong>{rssfeed.rssentry.TITLE}</strong>
+                                    <br /><em>{rssfeed.rssentry.SUBTITLE}</em>
+                                    <br />{rssfeed.rssentry.PUBLISHED_DATE} {rssfeed.rssentry.PUBLISHED_TIME}
                                 </a>
                             <!-- END rssentry -->
                         </div>

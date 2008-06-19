@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>chat</label>
-        <version>0.12</version>
+        <version>0.13</version>
         <author>Ovensia</author>
-        <date>20080516000000</date>
+        <date>20080619000000</date>
         <description>Discussion instantanée</description>
     </moduletype>
 </ploopi>

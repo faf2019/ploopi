@@ -141,7 +141,7 @@ if ($_SESSION['ploopi']['connected'])
                 $isfav = false;
                 foreach($arrLists as $row) if ($row['nbfav']>0) {$isfav = true; break;}
                 ?>
-                <form action="admin.php" method="post">
+                <form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
                     <input type="hidden" name="op" value="directory_favorites_add">
                     <input type="hidden" name="directory_favorites_id_user" value="<? if (!empty($_GET['directory_favorites_id_user'])) echo $_GET['directory_favorites_id_user']; ?>">
                     <input type="hidden" name="directory_favorites_id_contact" value="<? if (!empty($_GET['directory_favorites_id_contact'])) echo $_GET['directory_favorites_id_contact']; ?>">

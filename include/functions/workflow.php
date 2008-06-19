@@ -75,7 +75,7 @@ function ploopi_workflow_selectusers($id_object = -1, $id_record = -1, $id_modul
             <p class="ploopi_va">
                 <span>Recherche groupes/utilisateurs:&nbsp;</span>
                 <input type="text" id="ploopi_workflow_userfilter" class="text">
-                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('index-light.php','ploopi_op=workflow_search_users&ploopi_workflow_userfilter='+ploopi_getelem('ploopi_workflow_userfilter').value+'&id_action=<? echo $id_action; ?>','','div_workflow_search_result');" style="border:0px" src="<? echo "{$_SESSION['ploopi']['template_path']}/img/workflow/search.png"; ?>">
+                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('index-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=workflow_search_users&ploopi_workflow_userfilter='+ploopi_getelem('ploopi_workflow_userfilter').value+'&id_action=<? echo $id_action; ?>','','div_workflow_search_result');" style="border:0px" src="<? echo "{$_SESSION['ploopi']['template_path']}/img/workflow/search.png"; ?>">
             </p>
         </div>
         <div id="div_workflow_search_result"></div>
@@ -90,7 +90,7 @@ function ploopi_workflow_selectusers($id_object = -1, $id_record = -1, $id_modul
             ?>
             <script type="text/javascript">
                 ploopi_ajaxloader('div_workflow_users_selected');
-                ploopi_xmlhttprequest_todiv('index-light.php','ploopi_op=workflow_select_user','','div_workflow_users_selected');
+                ploopi_xmlhttprequest_todiv('index-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=workflow_select_user','','div_workflow_users_selected');
             </script>
             <?
         }

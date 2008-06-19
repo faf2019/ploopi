@@ -81,9 +81,9 @@ switch($_SESSION['ploopi']['mainmenu'])
 
                     // reload all module params of current user in session
                     include './include/load_param.php';
-                    ploopi_redirect("{$scriptenv}?op=param&idmodule={$_POST['idmodule']}");
+                    ploopi_redirect("admin.php?op=param&idmodule={$_POST['idmodule']}");
                 }
-                else ploopi_redirect($scriptenv);
+                else ploopi_redirect('admin.php');
             break;
 
             case 'param':
@@ -117,8 +117,8 @@ switch($_SESSION['ploopi']['mainmenu'])
                 }
 
                 $user->save();
-                if ($passwordok) ploopi_redirect("{$scriptenv}?op=profile&reloadsession");
-                else ploopi_redirect("{$scriptenv}?op=profile&error=password");
+                if ($passwordok) ploopi_redirect("admin.php?op=profile&reloadsession");
+                else ploopi_redirect("admin.php?op=profile&error=password");
             break;
 
             case 'profile':

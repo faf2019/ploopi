@@ -275,8 +275,6 @@ function webedit_build_tree($fromhid = 0, $str = '', $option = '')
     global $headingid;
     global $articleid;
     
-    global $scriptenv;
-
     switch($option)
     {
         // used for fckeditor and link redirect on heading
@@ -494,7 +492,7 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
     global $template_body;
     global $recursive_mode;
     global $webedit_mode;
-    global $scriptenv;
+    
     
     if (isset($headings['tree'][$hid]))
     {
@@ -637,7 +635,7 @@ function webedit_template_assign_headings($headings, $hid, $var = 'switch_conten
 {
     global $template_body;
     global $webedit_mode;
-    global $scriptenv;
+    
     
     if (isset($headings['tree'][$hid]))
     {

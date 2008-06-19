@@ -27,13 +27,13 @@
  * @subpackage block
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Audrey Gilbert
  */
 
 /**
  * Menu 'Discuter'
  */
 
-$block->addmenu('Discuter', ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"));
+$block->addmenu('Discuter', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"));
 ?>
 

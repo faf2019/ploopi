@@ -43,7 +43,7 @@ if (isset($_GET['end']))
 ?>
 
 <div style="padding:4px;">
-<input type="button" class="button" value="Ré-indéxer les flux" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?op=reindex"); ?>';">
+<input type="button" class="button" value="Ré-indéxer les flux" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=reindex"); ?>';">
 </div>
 
 

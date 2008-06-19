@@ -84,6 +84,11 @@ include_once './include/functions/session.php';
 include_once './include/functions/system.php';
 
 /**
+ * Gestionnaire de session par $db
+ */
+include_once './include/classes/session.php' ;
+
+/**
  * Filtrage des variables entrantes
  */
 include_once './include/start/import_gpr.php';
@@ -103,19 +108,19 @@ global $db;
 $db = new ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
 if(!$db->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
 
-
 /**
  * Initialisation du gestionnaire de session
  */
+global $session;
+$session = new ploopi_session();
+
 if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
 {
-    include_once './include/classes/session.php' ;
 
     ini_set('session.save_handler', 'user');
-    ini_set('session.gc_probability', 10);
+    ini_set('session.gc_probability', 0);
     ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);
     
-    $session = new ploopi_session();
     session_set_save_handler(   array($session, 'open'),
                                 array($session, 'close'),
                                 array($session, 'read'),
@@ -135,10 +140,10 @@ session_start();
  */
 if (isset($_REQUEST['ploopi_logout']))
 {
+    $session->regenerate_id();
     $_SESSION = array();
-    session_regenerate_id(true);
     session_destroy();
-    header("Location: {$basepath}/{$scriptenv}");
+    header('Location: '._PLOOPI_BASEPATH.'/'.basename($_SERVER['PHP_SELF']));
     ploopi_die();
 }
 

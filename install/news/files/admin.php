@@ -70,7 +70,7 @@ switch($op)
         $newscat->save();
         ploopi_create_user_action_log(_NEWS_ACTION_MANAGE, $newscat->fields['id']);
 
-        ploopi_redirect("{$scriptenv}?newsTabItem=tabNewsCatModify&newscat_id={$newscat->fields['id']}");
+        ploopi_redirect("admin.php?newsTabItem=tabNewsCatModify&newscat_id={$newscat->fields['id']}");
     break;
 
     case 'delete_newscat':
@@ -81,7 +81,7 @@ switch($op)
             ploopi_create_user_action_log(_NEWS_ACTION_MANAGE, $newscat->fields['id']);
             $newscat->delete();
         }
-        ploopi_redirect("{$scriptenv}?newsTabItem=tabNewsCatModify");
+        ploopi_redirect("admin.php?newsTabItem=tabNewsCatModify");
     break;
 
     case 'save_news':
@@ -100,7 +100,7 @@ switch($op)
         if ($news->new) ploopi_create_user_action_log(_NEWS_ACTION_WRITE, $news->fields['id']);
         else ploopi_create_user_action_log(_NEWS_ACTION_MODIFY, $news->fields['id']);
 
-        ploopi_redirect("{$scriptenv}?newsTabItem=tabNewsModify&news_id={$news->fields['id']}");
+        ploopi_redirect("admin.php?newsTabItem=tabNewsModify&news_id={$news->fields['id']}");
     break;
 
     case 'publish_news':
@@ -113,7 +113,7 @@ switch($op)
 
             ploopi_create_user_action_log(_NEWS_ACTION_PUBLISH, $news->fields['id']);
         }
-        ploopi_redirect("{$scriptenv}?newsTabItem=tabNewsModify");
+        ploopi_redirect("admin.php?newsTabItem=tabNewsModify");
     break;
 
     case 'withdraw_news':
@@ -124,7 +124,7 @@ switch($op)
             $news->fields['published'] = 0;
             $news->save();
         }
-        ploopi_redirect("{$scriptenv}?newsTabItem=tabNewsModify");
+        ploopi_redirect("admin.php?newsTabItem=tabNewsModify");
     break;
 
     case 'delete_news':
@@ -138,20 +138,20 @@ switch($op)
             }
         }
         
-        ploopi_redirect("$scriptenv");
+        ploopi_redirect("admin.php");
     break;
 
     default:
 
         if (ploopi_isactionallowed(_NEWS_ACTION_MODIFY) || ploopi_isactionallowed(_NEWS_ACTION_PUBLISH))
-            $tabs['tabNewsModify'] = array( 'title' => _NEWS_LABELTAB_NEWS, 'url' => "{$scriptenv}?newsTabItem=tabNewsModify");
+            $tabs['tabNewsModify'] = array( 'title' => _NEWS_LABELTAB_NEWS, 'url' => "admin.php?newsTabItem=tabNewsModify");
         if (ploopi_isactionallowed(_NEWS_ACTION_WRITE))
-            $tabs['tabNewsWrite'] = array('title'   => _NEWS_LABELTAB_NEWS_WRITE, 'url' => "{$scriptenv}?newsTabItem=tabNewsWrite");
+            $tabs['tabNewsWrite'] = array('title'   => _NEWS_LABELTAB_NEWS_WRITE, 'url' => "admin.php?newsTabItem=tabNewsWrite");
 
         if (ploopi_isactionallowed(_NEWS_ACTION_MANAGECAT))
         {
-            $tabs['tabNewsCatModify'] = array('title' => _NEWS_LABELTAB_CAT, 'url' => "{$scriptenv}?newsTabItem=tabNewsCatModify");
-            $tabs['tabNewsCatWrite'] = array('title' => _NEWS_LABELTAB_CAT_WRITE, 'url' => "{$scriptenv}?newsTabItem=tabNewsCatWrite");
+            $tabs['tabNewsCatModify'] = array('title' => _NEWS_LABELTAB_CAT, 'url' => "admin.php?newsTabItem=tabNewsCatModify");
+            $tabs['tabNewsCatWrite'] = array('title' => _NEWS_LABELTAB_CAT_WRITE, 'url' => "admin.php?newsTabItem=tabNewsCatWrite");
         }
 
         if (!empty($_GET['newsTabItem'])) $_SESSION['news']['newsTabItem'] = $_GET['newsTabItem'];
@@ -164,7 +164,6 @@ switch($op)
         {
             case 'modify_newscat':
                 $newscat = new newscat();
-                $newscat->open($newscat_id);
                 include './modules/news/admin_newscat_modify.php';
             break;
 

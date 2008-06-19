@@ -48,3 +48,10 @@ ALTER TABLE `ploopi_mod_directory_favorites` ADD `id_list` INT( 10 ) UNSIGNED NO
 ALTER TABLE `ploopi_mod_directory_favorites` DROP PRIMARY KEY;
 
 ALTER TABLE `ploopi_mod_directory_favorites` ADD PRIMARY KEY ( `id_contact` , `id_user` , `id_ploopi_user` , `id_list` ) ;
+
+ALTER TABLE `ploopi_mod_directory_contact` ADD INDEX ( `id_user` );
+ALTER TABLE `ploopi_mod_directory_contact` ADD INDEX ( `id_workspace` );
+ALTER TABLE `ploopi_mod_directory_contact` ADD INDEX ( `id_module` );
+ALTER TABLE `ploopi_mod_directory_list` ADD INDEX ( `id_user` );
+ALTER TABLE `ploopi_mod_directory_list` ADD INDEX ( `id_workspace` );
+ALTER TABLE `ploopi_mod_directory_list` ADD INDEX ( `id_module` );

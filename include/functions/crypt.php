@@ -58,17 +58,73 @@ function ploopi_htpasswd($pass)
  * @see urlencode
  */
 
-function ploopi_urlencode($url)
+function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null)
 {
+    $arrParsedURL = parse_url($url);
+
+    $arrParams = array();
+    
+    // on parse les paramètres de l'URL et on met tout ça dans un tableau associatif param => valeur
+    if (!empty($arrParsedURL['query']))
+    {
+        foreach(explode('&', $arrParsedURL['query']) as $param)
+        {
+            $arrParam = explode('=', $param);
+            if (sizeof($arrParam) > 0) $arrParams[$arrParam[0]] = (isset($arrParam[1])) ? $arrParam[1] : null;
+        }
+    }
+    
+    // si les paramètres optionnels sont passés à la fonction, on les rajoute au tableau
+    if (!empty($ploopi_mainmenu)) $arrParams['ploopi_mainmenu'] = $ploopi_mainmenu;
+    if (!empty($ploopi_workspaceid)) $arrParams['ploopi_workspaceid'] = $ploopi_workspaceid;
+    if (!empty($ploopi_moduleid)) $arrParams['ploopi_moduleid'] = $ploopi_moduleid;
+    if (!empty($ploopi_action)) $arrParams['ploopi_action'] = $ploopi_action;
+    
+        
+    // si des paramètres sont manquants, on va lire la valeur de la session
+    if (!isset($arrParams['ploopi_mainmenu'])) $arrParams['ploopi_mainmenu'] = (is_null($ploopi_mainmenu)) ? $_SESSION['ploopi']['mainmenu'] : '';
+    if (!isset($arrParams['ploopi_workspaceid'])) $arrParams['ploopi_workspaceid'] = (is_null($ploopi_workspaceid)) ? $_SESSION['ploopi']['workspaceid'] : '';
+    if (!isset($arrParams['ploopi_moduleid'])) $arrParams['ploopi_moduleid'] = (is_null($ploopi_moduleid)) ? $_SESSION['ploopi']['moduleid'] : '';
+    if (!isset($arrParams['ploopi_action'])) $arrParams['ploopi_action'] = (is_null($ploopi_action)) ? $_SESSION['ploopi']['action'] : '';
+
+    // on génère le "super" paramètre "ploopi_env" qui regroupe ploopi_mainmenu, ploopi_workspaceid, ploopi_moduleid, ploopi_action
+    $arrParams['ploopi_env'] = 
+        urlencode(
+            sprintf(
+                "%s,%s,%s,%s", 
+                $arrParams['ploopi_mainmenu'], 
+                $arrParams['ploopi_workspaceid'],
+                $arrParams['ploopi_moduleid'],
+                $arrParams['ploopi_action']
+            )
+        );
+    
+    // on supprime les paramètres superflus 
+    unset($arrParams['ploopi_mainmenu']);
+    unset($arrParams['ploopi_workspaceid']);
+    unset($arrParams['ploopi_moduleid']);
+    unset($arrParams['ploopi_action']);
+    
+    // on génère la chaine de paramètres
+    foreach($arrParams as $key => $value) $arrParams[$key] = (is_null($value)) ? $key : "{$key}={$value}";
+    $strParams = implode('&', $arrParams);
+    
+    //ploopi_print_r($strParams);
+    
     if (defined('_PLOOPI_URL_ENCODE') && _PLOOPI_URL_ENCODE)
     {
         require_once './include/classes/cipher.php';
-        if (strstr($url,'?')) list($script, $params) = explode('?', $url, 2);
-        else {$script = $url; $params = '';}
+        //if (strstr($url,'?')) list($script, $params) = explode('?', $url, 2);
+        //else {$script = $url; $params = '';}
         $cipher = new ploopi_cipher();
-        return("{$script}?ploopi_url=".urlencode($cipher->crypt($params)));
+        return("{$arrParsedURL['path']}?ploopi_url=".urlencode($cipher->crypt($strParams)));
     }
-    else return($url);
+    else 
+    {
+        $url = $arrParsedURL['path'];
+        if (!empty($strParams)) $url .= '?'.$strParams;
+        return($url);
+    }
 }
 
 /**

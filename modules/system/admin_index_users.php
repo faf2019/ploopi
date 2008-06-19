@@ -46,18 +46,18 @@ switch($op)
         if (!empty($_POST['user_id']))
         {
             // ne doit pas modifier le login !
-            if (isset($_POST['user_login'])) ploopi_redirect($scriptenv);
+            if (isset($_POST['user_login'])) ploopi_redirect('admin.php');
 
-            if (!is_numeric($_POST['user_id']) || !$user->open($_POST['user_id'])) ploopi_redirect($scriptenv);
+            if (!is_numeric($_POST['user_id']) || !$user->open($_POST['user_id'])) ploopi_redirect('admin.php');
         }
         else
         {
             // nouveau user
-            if (!isset($_POST['user_login'])) ploopi_redirect($scriptenv);
+            if (!isset($_POST['user_login'])) ploopi_redirect('admin.php');
 
             // test si login deja existant
             $db->query("SELECT id FROM ploopi_user WHERE login = '{$_POST['user_login']}'");
-            if($db->numrows()) ploopi_redirect("{$scriptenv}?op=manage_account&error=login");
+            if($db->numrows()) ploopi_redirect("admin.php?op=manage_account&error=login");
         }
 
         if (!isset($_POST['user_ticketsbyemail'])) $user->fields['ticketsbyemail'] = 0;
@@ -112,40 +112,40 @@ switch($op)
         }
 
 
-        if ($passwordok) ploopi_redirect("{$scriptenv}?wspToolbarItem=tabUsers&usrTabItem=tabUserList&alphaTabItem=".(ord(strtolower($user->fields['lastname']))-96).$reload);
-        else ploopi_redirect("$scriptenv?op=modify_user&user_id=".$user->fields['id']."&error=password");
+        if ($passwordok) ploopi_redirect("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&alphaTabItem=".(ord(strtolower($user->fields['lastname']))-96).$reload);
+        else ploopi_redirect("admin.php?op=modify_user&user_id=".$user->fields['id']."&error=password");
     break;
 }
 
 
 $tabs['tabUserList'] = array(   'title' => _SYSTEM_LABELTAB_USERLIST,
-                            'url' => "{$scriptenv}?usrTabItem=tabUserList"
+                            'url' => "admin.php?usrTabItem=tabUserList"
                         );
 
 if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
 {
     $tabs['tabUserAdd'] = array(    'title' => _SYSTEM_LABELTAB_USERADD,
-                                'url' => "{$scriptenv}?usrTabItem=tabUserAdd"
+                                'url' => "admin.php?usrTabItem=tabUserAdd"
                             );
 }
 
 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
 {
     $tabs['tabUserAttach'] = array( 'title' => _SYSTEM_LABELTAB_USERATTACH,
-                                    'url' => "{$scriptenv}?usrTabItem=tabUserAttach"
+                                    'url' => "admin.php?usrTabItem=tabUserAttach"
                                 );
 }
 
 if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 {
     $tabs['tabGroupList'] = array(  'title' => _SYSTEM_LABELTAB_GROUPLIST,
-                                'url' => "{$scriptenv}?usrTabItem=tabGroupList"
+                                'url' => "admin.php?usrTabItem=tabGroupList"
                             );
 
     if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
     {
         $tabs['tabGroupAttach'] = array(    'title' => _SYSTEM_LABELTAB_GROUPATTACH,
-                                        'url' => "{$scriptenv}?usrTabItem=tabGroupAttach"
+                                        'url' => "admin.php?usrTabItem=tabGroupAttach"
                                     );
     }
 }
@@ -155,7 +155,7 @@ if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
     if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
     {
         $tabs['tabUserImport'] = array( 'title' => _SYSTEM_LABELTAB_USERIMPORT,
-                                        'url' => "{$scriptenv}?usrTabItem=tabUserImport"
+                                        'url' => "admin.php?usrTabItem=tabUserImport"
                                     );
     }
 }
@@ -180,7 +180,7 @@ switch($_SESSION['system']['usrTabItem'])
                     $workspace_group->open($workspaceid,$_GET['orgid']);
                     include './modules/system/admin_index_group_form.php';
                 }
-                else ploopi_redirect($scriptenv);
+                else ploopi_redirect('admin.php');
             break;
 
             case 'save_group':
@@ -191,9 +191,9 @@ switch($_SESSION['system']['usrTabItem'])
                     $workspace_group->open($workspaceid,$_POST['orgid']);
                     $workspace_group->setvalues($_POST,'workspacegroup_');
                     $workspace_group->save();
-                    ploopi_redirect("{$scriptenv}?reloadsession");
+                    ploopi_redirect("admin.php?reloadsession");
                 }
-                else ploopi_redirect($scriptenv);
+                else ploopi_redirect('admin.php');
             break;
 
             case 'detach_group':
@@ -202,9 +202,9 @@ switch($_SESSION['system']['usrTabItem'])
                     $workspace_group = new workspace_group();
                     $workspace_group->open($workspaceid,$_GET['orgid']);
                     $workspace_group->delete();
-                    ploopi_redirect("{$scriptenv}?reloadsession");
+                    ploopi_redirect("admin.php?reloadsession");
                 }
-                else ploopi_redirect($scriptenv);
+                else ploopi_redirect('admin.php');
             break;
 
             default:
@@ -225,9 +225,9 @@ switch($_SESSION['system']['usrTabItem'])
                         $org->open($_GET['orgid']);
                         $org->attachtogroup($workspaceid);
                         ploopi_create_user_action_log(_SYSTEM_ACTION_ATTACHGROUP, "{$org->fields['label']} (id:{$org->fields['id']}) => {$workspace->fields['label']} (id:$workspaceid)");
-                        ploopi_redirect("{$scriptenv}?reloadsession");
+                        ploopi_redirect("admin.php?reloadsession");
                     }
-                    else ploopi_redirect($scriptenv);
+                    else ploopi_redirect('admin.php');
             break;
 
             default:
@@ -251,7 +251,7 @@ switch($_SESSION['system']['usrTabItem'])
                             $user->open($_GET['userid']);
                             $user->attachtogroup($groupid);
                             ploopi_create_user_action_log(_SYSTEM_ACTION_ATTACHUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']}) => {$group->fields['label']} (id:$groupid)");
-                            ploopi_redirect("{$scriptenv}?reloadsession&alphaTabItem={$alphaTabItem}");
+                            ploopi_redirect("admin.php?reloadsession&alphaTabItem={$alphaTabItem}");
                         break;
 
                         case _SYSTEM_WORKSPACES :
@@ -259,11 +259,11 @@ switch($_SESSION['system']['usrTabItem'])
                             $user->open($_GET['userid']);
                             $user->attachtoworkspace($workspaceid);
                             ploopi_create_user_action_log(_SYSTEM_ACTION_ATTACHUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']}) => {$workspace->fields['label']} (id:$workspaceid)");
-                            ploopi_redirect("{$scriptenv}?reloadsession&alphaTabItem={$alphaTabItem}");
+                            ploopi_redirect("admin.php?reloadsession&alphaTabItem={$alphaTabItem}");
                         break;
                     }
                 }
-                else ploopi_redirect($scriptenv);
+                else ploopi_redirect('admin.php');
             break;
 
             default:
@@ -286,7 +286,7 @@ switch($_SESSION['system']['usrTabItem'])
                     $group_user->open($groupid,$_GET['user_id']);
                     include './modules/system/admin_index_users_form.php';
                 }
-                else ploopi_redirect($scriptenv);
+                else ploopi_redirect('admin.php');
             break;
 
             case 'delete_user':
@@ -309,18 +309,18 @@ switch($_SESSION['system']['usrTabItem'])
                             <?
     
                             $user->delete();
-                            if ($admin_redirect) ploopi_redirect("{$scriptenv}?reloadsession");
+                            if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
     
                             ?>
                             <div style="text-align:right;">
-                                <input type="button" class="button" value="<? echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<? echo "{$scriptenv}?reloadsession"; ?>'">
+                                <input type="button" class="button" value="<? echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<? echo "admin.php?reloadsession"; ?>'">
                             </div>
                         </div>
                         <?
                     }
-                    else ploopi_redirect($scriptenv);
+                    else ploopi_redirect('admin.php');
                 }
-                else ploopi_redirect($scriptenv);
+                else ploopi_redirect('admin.php');
             break;
 
             case 'detach_user':
@@ -350,10 +350,10 @@ switch($_SESSION['system']['usrTabItem'])
                                 $group_user->open($groupid,$_GET['user_id']);
                                 $group_user->delete();
 
-                                if ($admin_redirect) ploopi_redirect("{$scriptenv}?reloadsession");
+                                if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
                                 ?>
                                 <div style="text-align:right;">
-                                    <input type="button" class="button" value="<? echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<? echo "{$scriptenv}?reloadsession"; ?>'">
+                                    <input type="button" class="button" value="<? echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<? echo "admin.php?reloadsession"; ?>'">
                                 </div>
                             </div>
                             <?
@@ -382,10 +382,10 @@ switch($_SESSION['system']['usrTabItem'])
                                 $workspace_user->open($workspaceid,$_GET['user_id']);
                                 $workspace_user->delete();
 
-                                if ($admin_redirect) ploopi_redirect("{$scriptenv}?reloadsession");
+                                if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
                                 ?>
                                 <div style="text-align:right;">
-                                    <input type="button" class="button" value="<? echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<? echo "{$scriptenv}?reloadsession"; ?>'">
+                                    <input type="button" class="button" value="<? echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<? echo "admin.php?reloadsession"; ?>'">
                                 </div>
                             </div>
                             <?
@@ -408,7 +408,7 @@ switch($_SESSION['system']['usrTabItem'])
         {
             case 'modify_user':
                 if (!empty($_GET['user_id']) && is_numeric($_GET['user_id'])) include './modules/system/admin_index_users_form.php';
-                else ploopi_redirect($scriptenv);
+                else ploopi_redirect('admin.php');
             break;
 
             default:

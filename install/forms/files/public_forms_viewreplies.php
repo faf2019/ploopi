@@ -41,11 +41,11 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
     {
         if (!isset($_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_filter_box'])) $_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_filter_box'] = 'none';
         ?>
-        <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_filter_box');ploopi_xmlhttprequest('index-quick.php', 'ploopi_op=forms_xml_switchdisplay&switch=forms_filter_box&display='+$('forms_filter_box').style.display, true);">
+        <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_filter_box');ploopi_xmlhttprequest('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_filter_box&display='+$('forms_filter_box').style.display, true);">
             Filtrage des données<sub style="font-weight:normal;">&nbsp;&nbsp;&nbsp;(cliquez pour ouvrir/fermer)</sub>
         </a>
         <div id="forms_filter_box"  style="display:<? echo $_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_filter_box']; ?>;">
-            <form style="margin:0;" id="filtre_frm" action="<? echo $scriptenv; ?>" method="post">
+            <form style="margin:0;" id="filtre_frm" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
             <input type="hidden" name="op" value="forms_filter">
             <input type="hidden" name="forms_id" value="<? echo $forms_id; ?>">
 
@@ -113,7 +113,7 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
                     <?
                 }
                 ?>
-                <input type="button" class="flatbutton" value="<? echo _PLOOPI_RESET; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?op=forms_viewreplies&forms_id={$forms_id}&reset"); ?>'">
+                <input type="button" class="flatbutton" value="<? echo _PLOOPI_RESET; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$forms_id}&reset"); ?>'">
                 <input type="submit" class="flatbutton" style="font-weight:bold" value="<? echo _PLOOPI_FILTER; ?>">
             </p>
             </form>
@@ -130,11 +130,11 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
     {
         $autobackup_date = ($forms->fields['autobackup_date']) ? ploopi_timestamp2local($forms->fields['autobackup_date']) : array('date' => '');
         ?>
-        <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_archive_box');ploopi_xmlhttprequest('index-quick.php', 'ploopi_op=forms_xml_switchdisplay&switch=forms_archive_box&display='+$('forms_archive_box').style.display, true);">
+        <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_archive_box');ploopi_xmlhttprequest('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_archive_box&display='+$('forms_archive_box').style.display, true);">
             Archivage automatique des données<sub style="font-weight:normal;">&nbsp;&nbsp;&nbsp;(cliquez pour ouvrir/fermer)</sub>
         </a>
         <div id="forms_archive_box" style="display:<? echo $_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_archive_box']; ?>;">
-            <form name="frm_modify" action="<? echo $scriptenv; ?>" method="post">
+            <form name="frm_modify" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
             <input type="hidden" name="op" value="forms_save">
             <input type="hidden" name="forms_id" value="<? echo $forms->fields['id']; ?>">
 
@@ -177,7 +177,7 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
             {
                 ?>
                 <div style="float:right;;margin-left:10px;">
-                    <input type="button" class="flatbutton" style="font-weight:bold" value="Ajouter un enregistrement" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?op=forms_reply_add&forms_id={$forms_id}"); ?>'">
+                    <input type="button" class="flatbutton" style="font-weight:bold" value="Ajouter un enregistrement" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=forms_reply_add&forms_id={$forms_id}"); ?>'">
                 </div>
                 <?
             }
@@ -195,14 +195,14 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
                 <div style="float:left;width:40px;"><?
                 if ($_SESSION['forms'][$forms->fields['id']]['page']>0)
                 {
-                    ?><input type="button" class="button" value="««" style="width:90%;" onclick="javascript:document.location.href='<? echo "{$scriptenv}?op=forms_viewreplies&forms_id={$forms->fields['id']}&page=".($_SESSION['forms'][$forms->fields['id']]['page']-1); ?>'"><?
+                    ?><input type="button" class="button" value="««" style="width:90%;" onclick="javascript:document.location.href='<? echo "admin.php?op=forms_viewreplies&forms_id={$forms->fields['id']}&page=".($_SESSION['forms'][$forms->fields['id']]['page']-1); ?>'"><?
                 }
                 ?></div>
                 <div style="float:left;margin:0 10px;">Page <? echo $_SESSION['forms'][$forms->fields['id']]['page']+1; ?> / <? echo $numpages; ?></div>
                 <div style="float:left;width:40px;"><?
                 if ($_SESSION['forms'][$forms->fields['id']]['page']+1<$numpages)
                 {
-                    ?><input type="button" class="button" value="»»" style="width:90%;" onclick="javascript:document.location.href='<? echo "{$scriptenv}?op=forms_viewreplies&forms_id={$forms->fields['id']}&page=".($_SESSION['forms'][$forms->fields['id']]['page']+1); ?>'"><?
+                    ?><input type="button" class="button" value="»»" style="width:90%;" onclick="javascript:document.location.href='<? echo "admin.php?op=forms_viewreplies&forms_id={$forms->fields['id']}&page=".($_SESSION['forms'][$forms->fields['id']]['page']+1); ?>'"><?
                 }
                 ?></div>
             </div>
@@ -218,8 +218,8 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
         {
             ?>
                 <div style="float:left;margin-left:10px;">
-                <a title="<? echo _FORMS_EXPORT; ?> XLS" href="<? echo ploopi_urlencode("{$scriptenv}?op=forms_export&forms_id={$forms_id}&forms_export_format=XLS"); ?>"><img border="0" alt="<? echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/download_xls.gif"></a>
-                <a title="<? echo _FORMS_EXPORT; ?> CSV" href="<? echo ploopi_urlencode("{$scriptenv}?op=forms_export&forms_id={$forms_id}&forms_export_format=CSV"); ?>"><img border="0" alt="<? echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/download_csv.gif"></a>
+                <a title="<? echo _FORMS_EXPORT; ?> XLS" href="<? echo ploopi_urlencode("admin.php?op=forms_export&forms_id={$forms_id}&forms_export_format=XLS"); ?>"><img border="0" alt="<? echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/download_xls.gif"></a>
+                <a title="<? echo _FORMS_EXPORT; ?> CSV" href="<? echo ploopi_urlencode("admin.php?op=forms_export&forms_id={$forms_id}&forms_export_format=CSV"); ?>"><img border="0" alt="<? echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/download_csv.gif"></a>
                 </div>
             <?
         }
@@ -272,7 +272,7 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
 
                     ?>
                     <th>
-                        <a <? echo $style_col; ?> href="<? echo ploopi_urlencode("{$scriptenv}?op=forms_viewreplies&forms_id={$forms_id}&orderby={$key}&option={$new_option}"); ?>">
+                        <a <? echo $style_col; ?> href="<? echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$forms_id}&orderby={$key}&option={$new_option}"); ?>">
                         <p class="ploopi_va">
                             <span><? echo $value; ?></span>
                             <img src="./modules/forms/img/<? echo $sort_cell; ?>.png">
@@ -335,7 +335,7 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
                             switch($data_title[$key]['type'])
                             {
                                 case 'file':
-                                    if ($value != '') $value = $value.'<a href="'.ploopi_urlencode("{$scriptenv}?op=forms_download_file&forms_id={$forms_id}&reply_id={$reply_id}&field_id={$key}").'"><img style="border:0px" src="./modules/forms/img/link.gif"></a>';
+                                    if ($value != '') $value = $value.'<a href="'.ploopi_urlencode("admin.php?op=forms_download_file&forms_id={$forms_id}&reply_id={$reply_id}&field_id={$key}").'"><img style="border:0px" src="./modules/forms/img/link.gif"></a>';
                                 break;
 
                                 case 'color':
@@ -350,9 +350,9 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
                             echo "<td class=\"data\">{$value}</td>";
                         }
                     }
-                    $modify = ploopi_urlencode("{$scriptenv}?op=forms_reply_modify&forms_id={$forms_id}&reply_id={$reply_id}");
-                    $delete = ploopi_urlencode("{$scriptenv}?op=forms_reply_delete&forms_id={$forms_id}&reply_id={$reply_id}");
-                    $display = ploopi_urlencode("{$scriptenv}?op=forms_reply_display&forms_id={$forms_id}&reply_id={$reply_id}");
+                    $modify = ploopi_urlencode("admin.php?op=forms_reply_modify&forms_id={$forms_id}&reply_id={$reply_id}");
+                    $delete = ploopi_urlencode("admin.php?op=forms_reply_delete&forms_id={$forms_id}&reply_id={$reply_id}");
+                    $display = ploopi_urlencode("admin.php?op=forms_reply_display&forms_id={$forms_id}&reply_id={$reply_id}");
                     if ($_SESSION['ploopi']['action'] == 'public')
                     {
                         ?>

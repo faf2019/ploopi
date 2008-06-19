@@ -45,7 +45,7 @@ else $field->init_description();
 echo $skin->open_simplebloc(_FORMS_SEPARATORMODIFICATION);
 ?>
 
-<form name="form_field" action="<? echo $scriptenv; ?>" method="post" onsubmit="javascript:return field_validate(this);">
+<form name="form_field" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return field_validate(this);">
 <input type="hidden" name="forms_id" value="<? echo $_GET['forms_id']; ?>">
 <?
 if (!$field->new)
@@ -97,7 +97,7 @@ if (!$field->new)
 </div>
 
 <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;padding:4px;overflow:auto;text-align:right;">
-    <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?op=forms_modify&forms_id={$_GET['forms_id']}"); ?>'">
+    <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}"); ?>'">
     <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
 </div>
 </form>

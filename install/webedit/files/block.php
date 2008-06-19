@@ -37,7 +37,7 @@
 
 ploopi_init_module('webedit', false, false, false);
 
-$block->addmenu('Voir les articles', ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public", ($_SESSION['ploopi']['moduleid']==$menu_moduleid && $_SESSION['ploopi']['action'] == 'public')));
+$block->addmenu('Voir les articles', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public", ($_SESSION['ploopi']['moduleid']==$menu_moduleid && $_SESSION['ploopi']['action'] == 'public')));
 
 /**
  * Il faut que l'utilisateur dispose au moins d'une action pour accéder à la partie 'admin'
@@ -45,6 +45,6 @@ $block->addmenu('Voir les articles', ploopi_urlencode("{$scriptenv}?ploopi_modul
 
 if (ploopi_isactionallowed(-1,$_SESSION['ploopi']['workspaceid'],$menu_moduleid))
 {
-    $block->addmenu('<b>Gestion du contenu</b>', ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"));
+    $block->addmenu('<b>Gestion du contenu</b>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"));
 }
 ?>

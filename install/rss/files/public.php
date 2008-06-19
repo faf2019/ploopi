@@ -40,13 +40,13 @@ ploopi_init_module('rss');
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
 $tabs['tabExplorer'] = array (  'title' => _RSS_LABEL_FEEDEXPLORER,
-                                'url'   => "{$scriptenv}?rssTabItem=tabExplorer"
+                                'url'   => "admin.php?rssTabItem=tabExplorer"
                             );
 
 if ($_SESSION['ploopi']['connected'])
 {
     $tabs['tabSearches'] = array (  'title' => _RSS_LABEL_FEEDSEARCHES,
-                                    'url'   => "{$scriptenv}?rssTabItem=tabSearches"
+                                    'url'   => "admin.php?rssTabItem=tabSearches"
                                 );
 }
 
@@ -69,7 +69,7 @@ switch($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])
                 $rssrequest = new rssrequest();
                 $rssrequest->open($rssrequest_id);
                 $rssrequest->delete();
-                ploopi_redirect("$scriptenv");
+                ploopi_redirect("admin.php");
             break;
 
             case 'save_request':
@@ -92,7 +92,7 @@ switch($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])
 
                 $rssrequest->setuwm();
                 $rssrequest->save();
-                ploopi_redirect("$scriptenv?op=show_request&rssrequest_id={$rssrequest->fields['id']}");
+                ploopi_redirect("admin.php?op=show_request&rssrequest_id={$rssrequest->fields['id']}");
             break;
 
             default:

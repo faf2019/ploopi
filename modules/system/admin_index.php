@@ -56,13 +56,13 @@ switch ($_SESSION['system']['level'])
         $toolbar = array();
         $toolbar['tabGroups'] = array(
                                             'title'     => _SYSTEM_LABELICON_GROUP,
-                                            'url'       => "{$scriptenv}?wspToolbarItem=tabGroups",
+                                            'url'       => "admin.php?wspToolbarItem=tabGroups",
                                             'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group.png"
                                         );
 
         $toolbar['tabUsers'] = array(
                                             'title'     => _SYSTEM_LABELICON_USERS,
-                                            'url'       => "{$scriptenv}?wspToolbarItem=tabUsers",
+                                            'url'       => "admin.php?wspToolbarItem=tabUsers",
                                             'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_user.png"
                                         );
 
@@ -102,7 +102,7 @@ switch ($_SESSION['system']['level'])
                         unset($_SESSION['system']['groups']);
                         unset($_SESSION['system']['workspaces']);
 
-                        ploopi_redirect("{$scriptenv}?groupid={$group_id}&reloadsession");
+                        ploopi_redirect("admin.php?groupid={$group_id}&reloadsession");
                     break;
 
                     case 'child' :
@@ -117,7 +117,7 @@ switch ($_SESSION['system']['level'])
                         unset($_SESSION['system']['groups']);
                         unset($_SESSION['system']['workspaces']);
 
-                        ploopi_redirect("{$scriptenv}?groupid={$groupid}");
+                        ploopi_redirect("admin.php?groupid={$groupid}");
                     break;
 
                     case 'delete' :
@@ -131,11 +131,11 @@ switch ($_SESSION['system']['level'])
                             unset($_SESSION['system']['groups']);
                             unset($_SESSION['system']['workspaces']);
 
-                            if(!empty($group->fields['id_workspace'])) ploopi_redirect("{$scriptenv}?workspaceid={$group->fields['id_workspace']}");
-                            else ploopi_redirect("{$scriptenv}?groupid={$group->fields['id_group']}");
+                            if(!empty($group->fields['id_workspace'])) ploopi_redirect("admin.php?workspaceid={$group->fields['id_workspace']}");
+                            else ploopi_redirect("admin.php?groupid={$group->fields['id_group']}");
                         }
 
-                        ploopi_redirect($scriptenv);
+                        ploopi_redirect('admin.php');
                     break;
 
                     default :
@@ -173,7 +173,7 @@ switch ($_SESSION['system']['level'])
         $toolbar = array();
         $toolbar['tabWorkspaces'] = array(
                                             'title'     => _SYSTEM_LABELICON_WORKSPACE,
-                                            'url'       => "{$scriptenv}?wspToolbarItem=tabWorkspaces",
+                                            'url'       => "admin.php?wspToolbarItem=tabWorkspaces",
                                             'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace.png"
                                         );
 
@@ -184,13 +184,13 @@ switch ($_SESSION['system']['level'])
 
                 $toolbar['tabModules'] = array(
                                                     'title'     => _SYSTEM_LABELICON_MODULES,
-                                                    'url'       => "{$scriptenv}?wspToolbarItem=tabModules",
+                                                    'url'       => "admin.php?wspToolbarItem=tabModules",
                                                     'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_module.png"
                                                 );
 
                 $toolbar['tabParams'] = array(
                                                     'title'     => _SYSTEM_LABELICON_PARAMS,
-                                                    'url'       => "{$scriptenv}?wspToolbarItem=tabParams",
+                                                    'url'       => "admin.php?wspToolbarItem=tabParams",
                                                     'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemparams.png"
                                                 );
         }
@@ -198,7 +198,7 @@ switch ($_SESSION['system']['level'])
 
         $toolbar['tabUsers'] = array(
                                             'title'     => _SYSTEM_LABELICON_USERS,
-                                            'url'       => "{$scriptenv}?wspToolbarItem=tabUsers",
+                                            'url'       => "admin.php?wspToolbarItem=tabUsers",
                                             'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_user.png"
                                         );
 
@@ -207,7 +207,7 @@ switch ($_SESSION['system']['level'])
 
                 $toolbar['tabRoles'] = array(
                                                     'title'     => _SYSTEM_LABELICON_ROLES,
-                                                    'url'       => "{$scriptenv}?wspToolbarItem=tabRoles",
+                                                    'url'       => "admin.php?wspToolbarItem=tabRoles",
                                                     'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_role.png"
                                                 );
         }
@@ -240,7 +240,7 @@ switch ($_SESSION['system']['level'])
                         unset($_SESSION['system']['groups']);
                         unset($_SESSION['system']['workspaces']);
 
-                        ploopi_redirect("{$scriptenv}?groupid={$group_id}&reloadsession");
+                        ploopi_redirect("admin.php?groupid={$group_id}&reloadsession");
                     break;
 
 
@@ -311,7 +311,7 @@ switch ($_SESSION['system']['level'])
                         unset($_SESSION['system']['groups']);
                         unset($_SESSION['system']['workspaces']);
 
-                        ploopi_redirect("{$scriptenv}?workspaceid={$workspace_id}&reloadsession");
+                        ploopi_redirect("admin.php?workspaceid={$workspace_id}&reloadsession");
                     break;
 
                     case 'groupchild':
@@ -346,7 +346,7 @@ switch ($_SESSION['system']['level'])
                         unset($_SESSION['system']['groups']);
                         unset($_SESSION['system']['workspaces']);
 
-                        ploopi_redirect("$scriptenv?workspaceid=$workspaceid");
+                        ploopi_redirect("admin.php?workspaceid=$workspaceid");
                     break;
 
                     case 'delete' :
@@ -379,9 +379,9 @@ switch ($_SESSION['system']['level'])
                             unset($_SESSION['system']['groups']);
                             unset($_SESSION['system']['workspaces']);
 
-                            ploopi_redirect("$scriptenv?workspaceid=$idfather");
+                            ploopi_redirect("admin.php?workspaceid=$idfather");
                         }
-                        else ploopi_redirect($scriptenv);
+                        else ploopi_redirect('admin.php');
                     break;
 
                     default :
@@ -394,7 +394,7 @@ switch ($_SESSION['system']['level'])
                 switch ($op)
                 {
                     case 'add' :
-                        if (empty($_GET['instance'])) ploopi_redirect($scriptenv);
+                        if (empty($_GET['instance'])) ploopi_redirect('admin.php');
 
                         global $admin_redirect;
                         $admin_redirect = true;
@@ -424,7 +424,7 @@ switch ($_SESSION['system']['level'])
                             $module_workspace->fields['id_workspace'] = $workspace_id;
                             $module_workspace->save();
 
-                            if ($admin_redirect) ploopi_redirect("$scriptenv?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify");
+                            if ($admin_redirect) ploopi_redirect("admin.php?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify");
                             else
                             {
                                 ?>
@@ -432,7 +432,7 @@ switch ($_SESSION['system']['level'])
                                     </TR>
                                     <TR>
                                         <TD ALIGN="RIGHT">
-                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<? echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<? echo "$scriptenv?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify"; ?>'">
+                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<? echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<? echo "admin.php?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify"; ?>'">
                                         </TD>
                                     </TR>
                                     </TABLE>
@@ -452,9 +452,9 @@ switch ($_SESSION['system']['level'])
                             $module_workspace->fields['id_module'] = $module_id;
                             $module_workspace->fields['id_workspace'] = $workspace_id;
                             $module_workspace->save();
-                            if ($admin_redirect) ploopi_redirect("{$scriptenv}?reloadsession");
+                            if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
                         }
-                        else ploopi_redirect("{$scriptenv}?reloadsession");
+                        else ploopi_redirect("admin.php?reloadsession");
                     break;
 
                     case 'switch_active':
@@ -473,9 +473,9 @@ switch ($_SESSION['system']['level'])
                             if ($op == 'switch_herited') $module->fields['herited'] = ($module->fields['herited']+1)%2;
 
                             $module->save();
-                            ploopi_redirect("{$scriptenv}?reloadsession");
+                            ploopi_redirect("admin.php?reloadsession");
                         }
-                        else ploopi_redirect($scriptenv);
+                        else ploopi_redirect('admin.php');
                     break;
 
                     case 'moveup' :
@@ -484,9 +484,9 @@ switch ($_SESSION['system']['level'])
                             $module_workspace = new module_workspace();
                             $module_workspace->open($workspaceid,$_GET['moduleid']);
                             $module_workspace->changeposition('up');
-                            ploopi_redirect("{$scriptenv}?reloadsession");
+                            ploopi_redirect("admin.php?reloadsession");
                         }
-                        else ploopi_redirect($scriptenv);
+                        else ploopi_redirect('admin.php');
                     break;
 
                     case 'movedown' :
@@ -495,9 +495,9 @@ switch ($_SESSION['system']['level'])
                             $module_workspace = new module_workspace();
                             $module_workspace->open($workspaceid,$_GET['moduleid']);
                             $module_workspace->changeposition('down');
-                            ploopi_redirect("{$scriptenv}?reloadsession");
+                            ploopi_redirect("admin.php?reloadsession");
                         }
-                        else ploopi_redirect($scriptenv);
+                        else ploopi_redirect('admin.php');
                     break;
 
                     case 'unlinkinstance' :
@@ -510,9 +510,9 @@ switch ($_SESSION['system']['level'])
                             $module_workspace = new module_workspace();
                             $module_workspace->open($workspaceid,$_GET['moduleid']);
                             $module_workspace->delete();
-                            ploopi_redirect("{$scriptenv}?reloadsession");
+                            ploopi_redirect("admin.php?reloadsession");
                         }
-                        else ploopi_redirect($scriptenv);
+                        else ploopi_redirect('admin.php');
                     break;
 
                     case 'save_module_props' :
@@ -527,9 +527,9 @@ switch ($_SESSION['system']['level'])
                             if (!$module->fields['shared']) $module->fields['herited'] = 0;
                             $module->save();
 
-                            ploopi_redirect("{$scriptenv}?moduleid={$module->fields['id']}&reloadsession");
+                            ploopi_redirect("admin.php?moduleid={$module->fields['id']}&reloadsession");
                         }
-                        else ploopi_redirect($scriptenv);
+                        else ploopi_redirect('admin.php');
                     break;
 
                     case 'delete' :
@@ -550,7 +550,7 @@ switch ($_SESSION['system']['level'])
                             
                             $module->delete();
 
-                            if ($admin_redirect) ploopi_redirect("$scriptenv?reloadsession");
+                            if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
                             else
                             {
                                 ?>
@@ -558,7 +558,7 @@ switch ($_SESSION['system']['level'])
                                     </TR>
                                     <TR>
                                         <TD ALIGN="RIGHT">
-                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<? echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<? echo "$scriptenv?reloadsession"; ?>'">
+                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<? echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<? echo "admin.php?reloadsession"; ?>'">
                                         </TD>
                                     </TR>
                                     </TABLE>
@@ -579,9 +579,9 @@ switch ($_SESSION['system']['level'])
                                 $module_workspace->open($idchildren,$_GET['moduleid']);
                                 $module_workspace->save();
                             }
-                            ploopi_redirect("{$scriptenv}?op=modify&moduleid={$_GET['moduleid']}#modify");
+                            ploopi_redirect("admin.php?op=modify&moduleid={$_GET['moduleid']}#modify");
                         }
-                        else ploopi_redirect($scriptenv);
+                        else ploopi_redirect('admin.php');
                     break;
 
                     case 'modify':
@@ -609,7 +609,7 @@ switch ($_SESSION['system']['level'])
                             $param_module->setvalues($_POST);
                             $param_module->save();
 
-                            ploopi_redirect("{$scriptenv}?idmodule={$_POST['idmodule']}&reloadsession");
+                            ploopi_redirect("admin.php?idmodule={$_POST['idmodule']}&reloadsession");
                         }
                     break;
 

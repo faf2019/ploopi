@@ -61,16 +61,26 @@ $array_values = array();
 $c = 0;
 while ($fields = $db->fetchrow($result))
 {
-    $array_values[$c]['values']['desc'] = array('label' => $fields['description']);
-    $array_values[$c]['values']['title'] = array('label' => $fields['title']);
-    $array_values[$c]['values']['actions'] = array('label' =>   "
-                                                            <a title=\"Modifier\" href=\"{$scriptenv}?op=modify_newscat&newscat_id={$fields['id']}\"><img alt=\"Modifier\" src=\"./modules/news/img/ico_modify.png\" /></a>
-                                                            <a title=\"Supprimer\" href=\"javascript:ploopi_confirmlink('{$scriptenv}?op=delete_newscat&newscat_id={$fields['id']}','Êtes-vous certain de vouloir supprimer cette catégorie ?');\"><img alt=\"Supprimer\" src=\"./modules/news/img/ico_trash.png\" /></a>
-                                                            ");
+    $array_values[$c]['values']['desc'] = 
+        array(
+            'label' => $fields['description']
+        );
+        
+    $array_values[$c]['values']['title'] = 
+        array(
+            'label' => $fields['title']
+        );
+        
+    $array_values[$c]['values']['actions'] = 
+        array(
+            'label' =>  '
+                        <a title="Modifier" href="'.ploopi_urlencode("admin.php?op=modify_newscat&newscat_id={$fields['id']}").'"><img alt="Modifier" src="./modules/news/img/ico_modify.png" /></a>
+                        <a title="Supprimer" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=delete_newscat&newscat_id={$fields['id']}").'\',\'Êtes-vous certain de vouloir supprimer cette catégorie ?\');"><img alt="Supprimer" src="./modules/news/img/ico_trash.png" /></a>
+                        ');
 
 
     $array_values[$c]['description'] = $fields['title'];
-    $array_values[$c]['link'] = "{$scriptenv}?op=modify_newscat&newscat_id={$fields['id']}";
+    $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=modify_newscat&newscat_id={$fields['id']}");
     if (!empty($_GET['newscat_id']) && $_GET['newscat_id'] == $fields['id']) $array_values[$c]['style'] = 'background-color:#ffe0e0;';
     else $array_values[$c]['style'] = '';
     $c++;
@@ -84,9 +94,8 @@ echo $skin->close_simplebloc();
 /**
  * Modification d'une catégorie
  */
-if (!empty($_GET['newscat_id']) && is_numeric($_GET['newscat_id']))
+if (!empty($_GET['newscat_id']) && is_numeric($_GET['newscat_id']) && $newscat->open($_GET['newscat_id']))
 {
-    $newscat->open($_GET['newscat_id']);
     include_once 'admin_newscat_write.php';
 }
 ?>

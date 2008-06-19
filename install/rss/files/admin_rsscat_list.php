@@ -39,9 +39,24 @@ echo $skin->open_simplebloc(_RSS_LABEL_CATLIST);
 
 $array_columns = array();
 
-$array_columns['auto']['desc'] = array('label' => _RSS_LABEL_DESCRIPTION, 'options' => array('sort' => true));
-$array_columns['left']['title'] = array('label' => _RSS_LABEL_TITLE, 'width' => 200, 'options' => array('sort' => true));
-$array_columns['actions_right']['actions'] = array('label' => 'Actions', 'width' => 60);
+$array_columns['auto']['desc'] = 
+    array(
+        'label' => _RSS_LABEL_DESCRIPTION, 
+        'options' => array('sort' => true)
+    );
+    
+$array_columns['left']['title'] = 
+    array(
+        'label' => _RSS_LABEL_TITLE, 
+        'width' => 200, 
+        'options' => array('sort' => true)
+    );
+    
+$array_columns['actions_right']['actions'] = 
+    array(
+        'label' => 'Actions', 
+        'width' => 60
+    );
 
 $select =   "
             SELECT  *
@@ -58,25 +73,46 @@ $c = 0;
 while ($fields = $db->fetchrow($result))
 {
     $actions = '';
-    if (ploopi_isactionallowed(_RSS_ACTION_CATMODIFY)) $actions .= "<a title=\"Modifier\" href=\"{$scriptenv}?op=rsscat_modify&rsscat_id={$fields['id']}\"><img alt=\"Modifier\" src=\"./modules/rss/img/ico_modify.png\" /></a>";
-    if (ploopi_isactionallowed(_RSS_ACTION_CATDELETE)) $actions .= "<a title=\"Supprimer\" href=\"javascript:ploopi_confirmlink('{$scriptenv}?op=rsscat_delete&rsscat_id={$fields['id']}','Êtes-vous certain de vouloir supprimer cette catégorie ?');\"><img alt=\"Supprimer\" src=\"./modules/rss/img/ico_trash.png\" /></a>";
+    if (ploopi_isactionallowed(_RSS_ACTION_CATMODIFY)) $actions .= '<a title="Modifier" href="'.ploopi_urlencode("admin.php?op=rsscat_modify&rsscat_id={$fields['id']}").'"><img alt="Modifier" src="./modules/rss/img/ico_modify.png" /></a>';
+    if (ploopi_isactionallowed(_RSS_ACTION_CATDELETE)) $actions .= '<a title="Supprimer" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=rsscat_delete&rsscat_id={$fields['id']}").'\',\'Êtes-vous certain de vouloir supprimer cette catégorie ?\');"><img alt="Supprimer" src="./modules/rss/img/ico_trash.png" /></a>';
 
     if (empty($actions)) $actions = '&nbsp;';
 
-    $array_values[$c]['values']['desc'] = array('label' => $fields['description']);
-    $array_values[$c]['values']['title'] = array('label' => $fields['title']);
-    $array_values[$c]['values']['actions'] = array('label' => $actions);
+    $array_values[$c]['values']['desc'] = 
+        array(
+            'label' => $fields['description']
+        );
+        
+    $array_values[$c]['values']['title'] = 
+        array(
+            'label' => $fields['title']
+        );
+        
+    $array_values[$c]['values']['actions'] = 
+        array(
+            'label' => $actions
+        );
 
     $array_values[$c]['description'] = $fields['title'];
 
-    if (ploopi_isactionallowed(_RSS_ACTION_CATMODIFY)) $array_values[$c]['link'] = "{$scriptenv}?op=rsscat_modify&rsscat_id={$fields['id']}";
+    if (ploopi_isactionallowed(_RSS_ACTION_CATMODIFY)) $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=rsscat_modify&rsscat_id={$fields['id']}");
 
     if (!empty($_GET['rsscat_id']) && $_GET['rsscat_id'] == $fields['id']) $array_values[$c]['style'] = 'background-color:#ffe0e0;';
     else $array_values[$c]['style'] = '';
     $c++;
 }
 
-$skin->display_array($array_columns, $array_values, 'array_rsscatlist', array('height' => 250, 'sortable' => true, 'orderby_default' => 'title'));
+$skin->display_array(
+    $array_columns, 
+    $array_values, 
+    'array_rsscatlist', 
+    array(
+        'height' => 250, 
+        'sortable' => true, 
+        'orderby_default' => 'title'
+    )
+);
+
 echo $skin->close_simplebloc();
 
 if (!empty($_GET['rsscat_id']) && is_numeric($_GET['rsscat_id']))

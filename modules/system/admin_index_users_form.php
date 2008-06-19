@@ -90,7 +90,7 @@ if (isset($_SESSION['module_system']) && !empty($_SESSION['module_system']))
 
 ?>
 
-<form name="form_modify_user" action="<? echo $scriptenv ?>" method="POST" enctype="multipart/form-data" onsubmit="javascript:return system_user_validate(this, <? echo ($user->new) ? 'true' : 'false'; ?>)">
+<form name="form_modify_user" action="<? echo ploopi_urlencode('admin.php'); ?>" method="POST" enctype="multipart/form-data" onsubmit="javascript:return system_user_validate(this, <? echo ($user->new) ? 'true' : 'false'; ?>)">
 <input type="hidden" name="op" value="save_user">
 <input type="hidden" name="user_id" value="<? if (!$user->new) echo $user->fields['id']; ?>">
 <div>

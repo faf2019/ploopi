@@ -98,20 +98,25 @@ while ($fields = $db->fetchrow($result))
 
     if (ploopi_isactionallowed(_NEWS_ACTION_PUBLISH))
     {
-        if ($fields['published']) $pub_link = "<a title=\"Retirer\" href=\"{$scriptenv}?op=withdraw_news&news_id={$fields['id']}\"><img alt=\"Retirer\" src=\"./modules/news/img/ico_withdraw.png\" /></a>";
-        else $pub_link = "<a title=\"Publier\" href=\"{$scriptenv}?op=publish_news&news_id={$fields['id']}\"><img alt=\"Publier\" src=\"./modules/news/img/ico_publish.png\" /></a>";
+        if ($fields['published']) 
+            $pub_link = '<a title="Retirer" href="'.ploopi_urlencode("admin.php?op=withdraw_news&news_id={$fields['id']}").'"><img alt="Retirer" src="./modules/news/img/ico_withdraw.png" /></a>';
+        else 
+            $pub_link = '<a title="Publier" href="'.ploopi_urlencode("admin.php?op=publish_news&news_id={$fields['id']}").'"><img alt="Publier" src="./modules/news/img/ico_publish.png" /></a>';
     }
     else $pub_link = '';
 
-    $news_values[$c]['values']['actions'] = array('label' =>    "
-                                                            <a title=\"Modifier\" href=\"{$scriptenv}?op=modify_news&news_id={$fields['id']}\"><img alt=\"Modifier\" src=\"./modules/news/img/ico_modify.png\" /></a>
-                                                            {$pub_link}
-                                                            <a title=\"Supprimer\" href=\"javascript:ploopi_confirmlink('{$scriptenv}?op=delete_news&news_id={$fields['id']}','Êtes-vous certain de vouloir supprimer cette actualité ?');\"><img alt=\"Supprimer\" src=\"./modules/news/img/ico_trash.png\" /></a>
-                                                            ", 'style' => '');
+    $news_values[$c]['values']['actions'] = 
+        array(
+            'label' =>  '
+                        <a title="Modifier" href="'.ploopi_urlencode("admin.php?op=modify_news&news_id={$fields['id']}").'"><img alt="Modifier" src="./modules/news/img/ico_modify.png" /></a>
+                        '.$pub_link.'
+                        <a title="Supprimer" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=delete_news&news_id={$fields['id']}").'\',\'Êtes-vous certain de vouloir supprimer cette actualité ?\');"><img alt="Supprimer" src="./modules/news/img/ico_trash.png" /></a>
+                        '
+        );
 
 
     $news_values[$c]['description'] = $fields['titlenews'];
-    $news_values[$c]['link'] = "{$scriptenv}?op=modify_news&news_id={$fields['id']}";
+    $news_values[$c]['link'] = ploopi_urlencode("admin.php?op=modify_news&news_id={$fields['id']}");
     if (!empty($_GET['news_id']) && $_GET['news_id'] == $fields['id']) $news_values[$c]['style'] = 'background-color:#ffe0e0;';
     else $news_values[$c]['style'] = '';
     $c++;
@@ -126,9 +131,8 @@ echo $skin->close_simplebloc();
  * Modification d'une news
  */
 
-if (!empty($_GET['news_id']) && is_numeric($_GET['news_id']))
+if (!empty($_GET['news_id']) && is_numeric($_GET['news_id']) && $news->open($_GET['news_id']))
 {
-    $news->open($_GET['news_id']);
     include_once 'admin_news_write.php';
 }
 ?>

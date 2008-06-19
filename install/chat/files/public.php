@@ -27,7 +27,7 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Audrey Gilbert
  */
 
 /**

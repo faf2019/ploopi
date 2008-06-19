@@ -79,19 +79,19 @@ foreach ($ownmodules AS $index => $module)
     // owner
     if ($module['instanceworkspace'] == $workspaceid)
     {
-        $modify = '<a href="'.ploopi_urlencode("{$scriptenv}?op=modify&moduleid={$module['instanceid']}").'#modify"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png"></a>';
-        $delete = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("{$scriptenv}?op=delete&moduleid={$module['instanceid']}").'\',\''._SYSTEM_MSG_CONFIRMMODULEDELETE.'\')"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png"></a>';
+        $modify = '<a href="'.ploopi_urlencode("admin.php?op=modify&moduleid={$module['instanceid']}").'#modify"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png"></a>';
+        $delete = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=delete&moduleid={$module['instanceid']}").'\',\''._SYSTEM_MSG_CONFIRMMODULEDELETE.'\')"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png"></a>';
     }
     else
     {
         $modify = '<img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png">';
         if ($module['adminrestricted']) $delete = '<img style="margin:0 2px;" src="./modules/system/img/ico_noway.gif">';
-        else $delete = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("{$scriptenv}?op=unlinkinstance&moduleid={$module['instanceid']}").'\',\''._SYSTEM_MSG_CONFIRMMODULEDETACH.'\')"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png"></a>';
+        else $delete = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=unlinkinstance&moduleid={$module['instanceid']}").'\',\''._SYSTEM_MSG_CONFIRMMODULEDETACH.'\')"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png"></a>';
     }
 
     $updown =   '
-                <a href="'.ploopi_urlencode("{$scriptenv}?op=movedown&moduleid={$module['instanceid']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/arrow_down.png"></a>
-                <a href="'.ploopi_urlencode("{$scriptenv}?op=moveup&moduleid={$module['instanceid']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/arrow_up.png"></a>
+                <a href="'.ploopi_urlencode("admin.php?op=movedown&moduleid={$module['instanceid']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/arrow_down.png"></a>
+                <a href="'.ploopi_urlencode("admin.php?op=moveup&moduleid={$module['instanceid']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/arrow_up.png"></a>
                 ';
 
     $viewmode = $ploopi_viewmodes[$module['viewmode']];
@@ -105,10 +105,10 @@ foreach ($ownmodules AS $index => $module)
 
     if ($module['instanceworkspace'] == $workspaceid)
     {
-        $values[$c]['values']['active'] = array('label' => '<a href="'.ploopi_urlencode("{$scriptenv}?op=switch_active&moduleid={$module['instanceid']}").'">'.$active.'</a>', 'sort_label' => ($module['active']) ? 1 : 0);
-        $values[$c]['values']['public'] = array('label' => '<a href="'.ploopi_urlencode("{$scriptenv}?op=switch_public&moduleid={$module['instanceid']}").'">'.$public.'</a>', 'sort_label' => ($module['public']) ? 1 : 0);
-        $values[$c]['values']['shared'] = array('label' => '<a href="'.ploopi_urlencode("{$scriptenv}?op=switch_shared&moduleid={$module['instanceid']}").'">'.$shared.'</a>', 'sort_label' => ($module['shared']) ? 1 : 0);
-        $values[$c]['values']['herited'] = array('label' => '<a href="'.ploopi_urlencode("{$scriptenv}?op=switch_herited&moduleid={$module['instanceid']}").'">'.$herited.'</a>', 'sort_label' => ($module['herited']) ? 1 : 0);
+        $values[$c]['values']['active'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=switch_active&moduleid={$module['instanceid']}").'">'.$active.'</a>', 'sort_label' => ($module['active']) ? 1 : 0);
+        $values[$c]['values']['public'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=switch_public&moduleid={$module['instanceid']}").'">'.$public.'</a>', 'sort_label' => ($module['public']) ? 1 : 0);
+        $values[$c]['values']['shared'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=switch_shared&moduleid={$module['instanceid']}").'">'.$shared.'</a>', 'sort_label' => ($module['shared']) ? 1 : 0);
+        $values[$c]['values']['herited'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=switch_herited&moduleid={$module['instanceid']}").'">'.$herited.'</a>', 'sort_label' => ($module['herited']) ? 1 : 0);
     }
     else
     {
@@ -139,7 +139,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
     <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
     <TR BGCOLOR="<? echo $skin->values['bgline1']; ?>">
         <TD ALIGN="CENTER">
-        <FORM NAME="form_modify_module" ACTION="<? echo $scriptenv; ?>" METHOD="POST">
+        <FORM NAME="form_modify_module" ACTION="admin.php" METHOD="POST">
         <INPUT TYPE="HIDDEN" NAME="op" VALUE="save_module_props">
         <INPUT TYPE="HIDDEN" NAME="moduleid" VALUE="<? echo $module->fields['id']; ?>">
         <TABLE WIDTH="100%" CELLPADDING="2" CELLSPACING="1">
@@ -178,7 +178,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
             <INPUT TYPE="Radio" <? if ($module->fields['herited']) echo "checked" ?> VALUE="1" NAME="module_herited"><? echo _PLOOPI_YES; ?>
             <INPUT TYPE="Radio" <? if (!$module->fields['herited']) echo "checked" ?> VALUE="0" NAME="module_herited"><? echo _PLOOPI_NO; ?>
             </TD>
-            <TD ALIGN="LEFT"><I><? echo _SYSTEM_EXPLAIN_HERITED; ?></I><br><a href="<? echo ploopi_urlencode("{$scriptenv}?op=apply_heritage&moduleid={$module->fields['id']}"); ?>"><? echo _SYSTEM_APPLYHERITAGE; ?></a></TD>
+            <TD ALIGN="LEFT"><I><? echo _SYSTEM_EXPLAIN_HERITED; ?></I><br><a href="<? echo ploopi_urlencode("admin.php?op=apply_heritage&moduleid={$module->fields['id']}"); ?>"><? echo _SYSTEM_APPLYHERITAGE; ?></a></TD>
         </TR>
         <TR BGCOLOR="<? echo $skin->values['bgline1']; ?>">
             <TD ALIGN="RIGHT"><B><? echo _SYSTEM_LABEL_ADMINRESTRICTED; ?>:&nbsp;</B></TD>
@@ -243,10 +243,10 @@ foreach ($sharedmodules AS $instanceid => $instance)
 {
     if (!array_key_exists($instanceid,$ownmodules))
     {
-        $desc = sprintf("<span>%s / <b>%s</b> partagé par <b></span><a href=\"%s\">%s</a></b>", htmlentities($instance['description']), htmlentities($instance['label']), ploopi_urlencode("{$scriptenv}?workspaceid={$instance['id_workspace']}"), htmlentities($instance['workspacelabel']));;
+        $desc = sprintf("<span>%s / <b>%s</b> partagé par <b></span><a href=\"%s\">%s</a></b>", htmlentities($instance['description']), htmlentities($instance['label']), ploopi_urlencode("admin.php?workspaceid={$instance['id_workspace']}"), htmlentities($instance['workspacelabel']));;
         $values[$c]['values']['type'] = array('label' => htmlentities($instance['moduletype']));
         $values[$c]['values']['desc'] = array('label' => $desc);
-        $values[$c]['values']['actions'] = array('label' => '<a href="'.ploopi_urlencode("{$scriptenv}?op=add&instance=SHARED,{$workspaceid},{$instanceid}").'">utiliser</a>', 'sort_label' => 0);
+        $values[$c]['values']['actions'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=add&instance=SHARED,{$workspaceid},{$instanceid}").'">utiliser</a>', 'sort_label' => 0);
         $c++;
     }
 }
@@ -255,7 +255,7 @@ foreach ($installedmodules AS $index => $moduletype)
 {
     $values[$c]['values']['type'] = array('label' => htmlentities($moduletype['label']));
     $values[$c]['values']['desc'] = array('label' => htmlentities($moduletype['description']));
-    $values[$c]['values']['actions'] = array('label' => '<a href="'.ploopi_urlencode("{$scriptenv}?op=add&instance=NEW,{$workspaceid},{$moduletype['id']}").'">instancier</a>', 'sort_label' => 1);
+    $values[$c]['values']['actions'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=add&instance=NEW,{$workspaceid},{$moduletype['id']}").'">instancier</a>', 'sort_label' => 1);
     $c++;
 }
 

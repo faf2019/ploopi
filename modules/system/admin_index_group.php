@@ -54,13 +54,13 @@ echo $skin->open_simplebloc();
             <?
             $toolbar_group[] = array(
                                     'title'     => str_replace('<LABEL>','<br /><b>'.$childgroup.'</b>', _SYSTEM_LABEL_CREATE_CHILD),
-                                    'url'       => "$scriptenv?op=child&groupid=$groupid",
+                                    'url'       => "admin.php?op=child&groupid=$groupid",
                                     'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_child.png"
                                 );
 
             $toolbar_group[] = array(
                                     'title'     => str_replace('<LABEL>','<br /><b>'.$currentgroup.'</b>', _SYSTEM_LABEL_CREATE_CLONE),
-                                    'url'       => "$scriptenv?op=clone&groupid=$groupid",
+                                    'url'       => "admin.php?op=clone&groupid=$groupid",
                                     'icon'      => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_copy.png"
                                 );
 
@@ -75,7 +75,7 @@ echo $skin->open_simplebloc();
             {
                 $toolbar_group[] = array(
                                         'title'     => str_replace('<LABEL>','<br /><b>'.$currentgroup.'</b>', _SYSTEM_LABEL_DELETE_GROUP),
-                                        'url'       => "$scriptenv?op=delete&groupid=$groupid",
+                                        'url'       => "admin.php?op=delete&groupid=$groupid",
                                         'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_delete.png",
                                         'confirm'   => _SYSTEM_MSG_CONFIRMGROUPDELETE
                                     );
@@ -90,7 +90,7 @@ echo $skin->open_simplebloc();
 
                     $toolbar_group[] = array(
                                             'title'     => str_replace('<LABEL>','<br /><b>'.$currentgroup.'</b>', _SYSTEM_LABEL_DELETE_GROUP),
-                                            'url'       => $scriptenv,
+                                            'url'       => 'admin.php',
                                             'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_delete_gray.png",
                                             'confirm'   => $msg
                                         );
@@ -121,7 +121,7 @@ echo $skin->open_simplebloc();
         $templatelist_back = ploopi_getavailabletemplates('backoffice');
         $templatelist_front = ploopi_getavailabletemplates('frontoffice');
         ?>
-        <form name="" action="<? echo $scriptenv; ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
+        <form name="" action="<? echo ploopi_urlencode('admin.php'); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
         <input type="hidden" name="op" value="save_group">
         <input type="hidden" name="group_id" value="<? echo $group->fields['id']; ?>">
 

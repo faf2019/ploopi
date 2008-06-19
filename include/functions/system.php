@@ -291,21 +291,19 @@ function ploopi_ob_clean()
 /**
  * Redirige le script vers une url et termine le script courant
  *
- * @param string $link URL de redirection
+ * @param string $url URL de redirection
  * @param boolean $urlencode true si l'URL doit être chiffrée (true par défaut)
  * @param boolean $internal true si la redirection est interne au site (true par défaut)
  */
 
-function ploopi_redirect($link, $urlencode = true, $internal = true)
+function ploopi_redirect($url, $urlencode = true, $internal = true)
 {
     include_once './include/functions/crypt.php';
     
-    global $basepath;
+    if ($urlencode) $url = ploopi_urlencode($url);
+    if ($internal) $url = _PLOOPI_BASEPATH.'/'.$url;
 
-    if ($urlencode) $link = ploopi_urlencode($link);
-    if ($internal) $link = "{$basepath}/{$link}";
-
-    header("Location: {$link}");
+    header("Location: {$url}");
     ploopi_die();
 }
 

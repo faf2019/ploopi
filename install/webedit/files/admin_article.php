@@ -113,7 +113,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
 <div style="background-color:#e0e0e0;padding:4px;border-bottom:1px solid #c0c0c0;">
     <p class="ploopi_va" style="font-weight:bold;">
 
-    <img title="Agrandir/Réduire" alt="Agrandir/Réduire" style="cursor:pointer;" onclick="javascript:ploopi_switchdisplay('webedit_tree');ploopi_switchdisplay('webedit_article_options');ploopi_xmlhttprequest('admin-light.php', 'op=xml_switchdisplay&display='+ploopi_getelem('webedit_tree').style.display, true);" src="./modules/webedit/img/fullscreen.png">
+    <img title="Agrandir/Réduire" alt="Agrandir/Réduire" style="cursor:pointer;" onclick="javascript:ploopi_switchdisplay('webedit_tree');ploopi_switchdisplay('webedit_article_options');ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&op=xml_switchdisplay&display='+ploopi_getelem('webedit_tree').style.display, true);" src="./modules/webedit/img/fullscreen.png">
     <img src="./modules/webedit/img/doc<? echo $isnewversion; ?>.png">
     <?
     echo "<span>{$title} - </span>";
@@ -151,7 +151,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
     </p>
 </div>
 
-<form name="form_webedit_article" style="margin:0;" action="<? echo $scriptenv; ?>" method="post" onsubmit="javascript:return webedit_article_validate(this,'<? echo $type; ?>','<? echo $article->fields['status']; ?>', <? echo (in_array($_SESSION['ploopi']['userid'],$wfusers)) ? 'true' : 'false'; ?>);">
+<form name="form_webedit_article" style="margin:0;" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return webedit_article_validate(this,'<? echo $type; ?>','<? echo $article->fields['status']; ?>', <? echo (in_array($_SESSION['ploopi']['userid'],$wfusers)) ? 'true' : 'false'; ?>);">
 <input type="hidden" name="op" value="article_save">
 <input type="hidden" name="articleid" id="articleid" value="<? echo $article->fields['id']; ?>">
 
@@ -183,14 +183,14 @@ if ($type == 'draft')
     if ($article_online->open($article->fields['id']))
     {
         ?>
-        <input type="button" class="flatbutton" value="Voir la Version en Ligne" onclick="javascript:document.location.href='<? echo "{$scriptenv}?op=article_modify&articleid={$articleid}&type=online"; ?>';">
+        <input type="button" class="flatbutton" value="Voir la Version en Ligne" onclick="javascript:document.location.href='<? echo "admin.php?op=article_modify&articleid={$articleid}&type=online"; ?>';">
         <?
     }
 }
 else
 {
     ?>
-    <input type="button" class="flatbutton" value="Modifier le Brouillon" onclick="javascript:document.location.href='<? echo "{$scriptenv}?op=article_modify&articleid={$articleid}&type=draft"; ?>';">
+    <input type="button" class="flatbutton" value="Modifier le Brouillon" onclick="javascript:document.location.href='<? echo "admin.php?op=article_modify&articleid={$articleid}&type=draft"; ?>';">
     Cette version n'est pas modifiable, vous devez d'abord modifier le brouillon puis publier l'article.
     <?
 }
@@ -502,12 +502,12 @@ else
     }
     ?>
     </div>
-    <input class="flatbutton" type="button" value="Retour" onclick="javascript:document.location.href='<? echo $scriptenv ?>';">
+    <input class="flatbutton" type="button" value="Retour" onclick="javascript:document.location.href='admin.php';">
     <?
     if ($op != 'article_addnew' && (in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
-        <input class="flatbutton" type="button" value="<? echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<? echo ploopi_urlencode("{$scriptenv}?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <? echo addslashes($article->fields['title']); ?> &raquo; ?');">
+        <input class="flatbutton" type="button" value="<? echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<? echo ploopi_urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <? echo addslashes($article->fields['title']); ?> &raquo; ?');">
         <?
     }
     ?>
@@ -544,12 +544,12 @@ else
     }
     ?>
     </div>
-    <input class="flatbutton" type="button" value="Retour" onclick="javascript:document.location.href='<? echo $scriptenv ?>';">
+    <input class="flatbutton" type="button" value="Retour" onclick="javascript:document.location.href='admin.php';">
     <?
     if ($op != 'article_addnew' && (in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
-        <input class="flatbutton" type="button" value="<? echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<? echo ploopi_urlencode("{$scriptenv}?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <? echo addslashes($article->fields['title']); ?> &raquo; ?');">
+        <input class="flatbutton" type="button" value="<? echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<? echo ploopi_urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <? echo addslashes($article->fields['title']); ?> &raquo; ?');">
         <?
     }
     ?>

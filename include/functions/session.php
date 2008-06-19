@@ -40,8 +40,6 @@ include_once './include/functions/ip.php';
 
 function ploopi_session_reset()
 {
-    global $scriptenv;
-    
     require_once 'Net/UserAgent/Detect.php';
         
     // session_destroy();
@@ -63,8 +61,9 @@ function ploopi_session_reset()
                     'remote_system'  => Net_UserAgent_Detect::getOSString(),
                     
                     'host'          => $_SERVER['HTTP_HOST'],
-                    'scriptname'    => $scriptenv,
-
+                    'scriptname'    => basename($_SERVER['PHP_SELF']),
+                    'env'           => '',
+    
                     'wcemoduleid'   => 0,
 
                     'hosts'         => array(),
@@ -109,13 +108,15 @@ function ploopi_session_reset()
 
 function ploopi_session_update()
 {
-    global $scriptenv;
+    global $session;
+
+    $scriptname = basename($_SERVER['PHP_SELF']);
 
     if (!isset($_SESSION['ploopi']['fingerprint']) || $_SESSION['ploopi']['fingerprint'] != _PLOOPI_FINGERPRINT) // problème d'empreinte, session invalide
     {
-        session_regenerate_id(true);
+        $session->regenerate_id();
         session_destroy();
-        ploopi_redirect("{$scriptenv}?ploopi_errorcode="._PLOOPI_ERROR_SESSIONINVALID);
+        ploopi_redirect("{$scriptname}?ploopi_errorcode="._PLOOPI_ERROR_SESSIONINVALID);
     }
 
     $_SESSION['ploopi']['currentrequesttime'] = time();
@@ -125,9 +126,9 @@ function ploopi_session_update()
 
     if ($diff > _PLOOPI_SESSIONTIME && _PLOOPI_SESSIONTIME != '' && _PLOOPI_SESSIONTIME != 0)
     {
-        session_regenerate_id(true);
+        $session->regenerate_id();
         session_destroy();
-        ploopi_redirect("{$scriptenv}?ploopi_errorcode="._PLOOPI_ERROR_SESSIONEXPIRE);
+        ploopi_redirect("{$scriptname}?ploopi_errorcode="._PLOOPI_ERROR_SESSIONEXPIRE);
     }
     else
     {
@@ -135,6 +136,6 @@ function ploopi_session_update()
         $_SESSION['ploopi']['remote_ip'] = ploopi_getip();
     }
 
-    $_SESSION['ploopi']['scriptname'] = $scriptenv;
+    $_SESSION['ploopi']['scriptname'] = $scriptname;
 }
 ?>

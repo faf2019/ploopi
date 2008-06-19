@@ -45,9 +45,9 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
 {
     $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
-    $tabs[_DOC_TAB_PARSERS] = array('title' => 'Gestion des parsers', 'url' => "{$scriptenv}?ploopi_moduletabid="._DOC_TAB_PARSERS);
-    $tabs[_DOC_TAB_INDEX] = array('title' => 'Indexation', 'url' => "{$scriptenv}?ploopi_moduletabid="._DOC_TAB_INDEX);
-    $tabs[_DOC_TAB_STATS] = array('title' => 'Statistiques', 'url' => "{$scriptenv}?ploopi_moduletabid="._DOC_TAB_STATS);
+    $tabs[_DOC_TAB_PARSERS] = array('title' => 'Gestion des parsers', 'url' => "admin.php?ploopi_moduletabid="._DOC_TAB_PARSERS);
+    $tabs[_DOC_TAB_INDEX] = array('title' => 'Indexation', 'url' => "admin.php?ploopi_moduletabid="._DOC_TAB_INDEX);
+    $tabs[_DOC_TAB_STATS] = array('title' => 'Statistiques', 'url' => "admin.php?ploopi_moduletabid="._DOC_TAB_STATS);
 
     echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
     echo $skin->create_tabs($tabs,$_SESSION['ploopi']['moduletabid']);
@@ -64,7 +64,7 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
                     if (isset($_POST['docparser_id'])) $docparser->open($_POST['docparser_id']);
                     $docparser->setvalues($_POST,'docparser_');
                     $docparser->save();
-                    ploopi_redirect("$scriptenv");
+                    ploopi_redirect("admin.php");
                 break;
 
                 // delete
@@ -73,7 +73,7 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
                     $docparser = new docparser();
                     $docparser->open($_GET['docparser_id']);
                     $docparser->delete();
-                    ploopi_redirect($scriptenv);
+                    ploopi_redirect('admin.php');
                 break;
 
                 case 'docpaser_modify':
@@ -94,7 +94,7 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
                     echo $skin->open_simplebloc('Indexation');
                     ?>
                     <div style="padding:4px;">
-                        <input type="button" class="button" value="Ré-Indexer" onclick="javascript:ploopi_confirmlink('<? echo $scriptenv; ?>?op=execute','Attention cette procédure va ré-indexer tous les fichiers. Le traitement peut être très long...');">&nbsp;Cette procédure permet de ré-indexer le contenu des documents du module.
+                        <input type="button" class="button" value="Ré-Indexer" onclick="javascript:ploopi_confirmlink('admin.php?op=execute','Attention cette procédure va ré-indexer tous les fichiers. Le traitement peut être très long...');">&nbsp;Cette procédure permet de ré-indexer le contenu des documents du module.
                     </div>
                     <?
                     echo $skin->close_simplebloc();

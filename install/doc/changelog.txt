@@ -1,6 +1,12 @@
+== Module FORMS - version 3.83 =====================================================
+
+2008-06-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à jour du système de liens (ploopi_env) lié à la mise à jour de Ploopi
+
 == Module FORMS - version 3.82 =====================================================
 
-2008-06-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-06-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correctif dans le mini explorateur pour FCKEditor : ne reconnaissait l'extension .jpeg comme format d'image valide
 

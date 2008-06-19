@@ -61,6 +61,8 @@ while ($rssfeed_fields = $db->fetchrow($rssfeed_result))
         $template_body->assign_block_vars('rssfeed', array(
                 'TITLE' => strip_tags($rss_feed->fields['title'],'<b><i>'),
                 'SUBTITLE' => strip_tags($rss_feed->fields['subtitle'],'<b><i>'),
+                'TITLE_CLEANED' => htmlentities(strip_tags($rss_feed->fields['title'])),
+                'SUBTITLE_CLEANED' => htmlentities(strip_tags($rss_feed->fields['subtitle'])),
                 'LINK' => $rss_feed->fields['link']
                 ));
 

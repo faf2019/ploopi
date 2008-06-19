@@ -175,7 +175,7 @@ else
                 <?
                 echo $skin->close_simplebloc();
             }
-            else ploopi_redirect("{$scriptenv}?system_level="._SYSTEM_WORKSPACES);
+            else ploopi_redirect("admin.php?system_level="._SYSTEM_WORKSPACES);
         break;
     }
 

@@ -1,3 +1,9 @@
+== Module RSS - version 1.24 ====================================================
+
+2008-06-19  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Mise à jour du système de liens (ploopi_env) lié à la mise à jour de Ploopi
+
 == Module RSS - version 1.22 ====================================================
 
 2008-05-16  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

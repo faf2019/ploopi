@@ -46,7 +46,7 @@ switch($op)
 
             <div id="system_annotation_tags">
                 <div id="system_annotation_titlebar">
-                    <b>Mes tags : </b><a href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation"); ?>">voir tous les tags</a>
+                    <b>Mes tags : </b><a href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation"); ?>">voir tous les tags</a>
                 </div>
                 <?
                 $select =   "
@@ -74,7 +74,7 @@ switch($op)
                 {
                     $size = $minsize + $maxsize * $tag['c'] / $max_c;
                     ?>
-                    <a title="utilisé <? echo $tag['c']; ?> fois" class="system_annotation_tag<? if (!empty($_GET['idtag']) && $_GET['idtag'] == $idt) echo 'sel'; ?>" style="font-size: <? echo $size; ?>px;" href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&idtag={$idt}"); ?>"><? echo htmlentities($tag['tag']); ?><span style="vertical-align: 4px; font-size: 7px"> <? echo $tag['c']; ?></span></a>
+                    <a title="utilisé <? echo $tag['c']; ?> fois" class="system_annotation_tag<? if (!empty($_GET['idtag']) && $_GET['idtag'] == $idt) echo 'sel'; ?>" style="font-size: <? echo $size; ?>px;" href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&idtag={$idt}"); ?>"><? echo htmlentities($tag['tag']); ?><span style="vertical-align: 4px; font-size: 7px"> <? echo $tag['c']; ?></span></a>
                     <?
                 }
 
@@ -161,7 +161,7 @@ switch($op)
                         for ($p = 1; $p <= $nbpage; $p++)
                         {
                             ?>
-                            <a class="system_annotation_page<? if ($p==$page) echo '_sel'; ?>" href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&page={$p}&idtag={$idtag}"); ?>"><? echo $p; ?></a>
+                            <a class="system_annotation_page<? if ($p==$page) echo '_sel'; ?>" href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&page={$p}&idtag={$idtag}"); ?>"><? echo $p; ?></a>
                             <?
                         }
                         ?>
@@ -196,7 +196,7 @@ switch($op)
                     ?>
                     <div class="system_annotation_row" style="background-color:<? echo $color; ?>">
                         <div class="system_annotation_title">
-                            <a href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu=1&{$object_script}"); ?>"><? echo htmlentities($annotation['object_label']); ?></a>
+                            <a href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><? echo htmlentities($annotation['object_label']); ?></a>
                         </div>
                         <div class="system_annotation_date">
                             le <? echo $ldate['date']; ?> à <? echo $ldate['time']; ?>
@@ -214,14 +214,14 @@ switch($op)
                             foreach($annotation['tags'] as $idtag => $tag)
                             {
                                 ?>
-                                <a href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&idtag={$idtag}"); ?>"><? echo htmlentities($tag); ?></a>
+                                <a href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&idtag={$idtag}"); ?>"><? echo htmlentities($tag); ?></a>
                                 <?
                             }
                         }
                         ?>
                         </div>
                         <div class="system_annotation_module">
-                            <a href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_mainmenu=1&{$object_script}"); ?>"><b><? echo $annotation['module_name']; ?></b>  / <? echo htmlentities($annotation['object_name']); ?></a>
+                            <a href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><b><? echo $annotation['module_name']; ?></b>  / <? echo htmlentities($annotation['object_name']); ?></a>
                         </div>
                     </div>
                     <?

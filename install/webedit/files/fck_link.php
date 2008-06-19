@@ -97,7 +97,7 @@ if ($webedit_idm)
                 {
                     if (elt.style.display == 'none')
                     {
-                        if (elt.innerHTML.length < 10) ploopi_xmlhttprequest_todiv('admin-light.php','op=xml_detail_heading&hid='+hid+'&str='+str+'&option='+option,'','webedit_dest'+option+hid);
+                        if (elt.innerHTML.length < 10) ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=xml_detail_heading&hid='+hid+'&str='+str+'&option='+option,'','webedit_dest'+option+hid);
                         elt.style.display='block';
                     }
                     else

@@ -86,7 +86,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
 
         if (!empty($_SESSION['ploopi']['uri']))
         {
-            $_uri = (empty($_SERVER['QUERY_STRING'])) ? '' : "{$scriptenv}?{$_SERVER['QUERY_STRING']}";
+            $_uri = (empty($_SERVER['QUERY_STRING'])) ? '' : "admin.php?{$_SERVER['QUERY_STRING']}";
             $_purl = parse_url($_SESSION['ploopi']['uri']);
             $_params = array();
             
@@ -130,7 +130,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
             {
                 ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $ploopi_login,_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
                 session_destroy();
-                ploopi_redirect("{$scriptenv}?ploopi_errorcode="._PLOOPI_ERROR_LOGINEXPIRE);
+                ploopi_redirect("admin.php?ploopi_errorcode="._PLOOPI_ERROR_LOGINEXPIRE);
             }
         }
         $_SESSION['ploopi']['connected']    = 1;
@@ -145,7 +145,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
     {
         ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $ploopi_login,_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
         session_destroy();
-        ploopi_redirect("{$scriptenv}?ploopi_errorcode="._PLOOPI_ERROR_LOGINERROR);
+        ploopi_redirect("admin.php?ploopi_errorcode="._PLOOPI_ERROR_LOGINERROR);
     }
 }
 
@@ -238,7 +238,7 @@ if ($ploopi_initsession)
         if (!$workspace_allowed)
         {
             session_destroy();
-            ploopi_redirect("{$scriptenv}?ploopi_errorcode="._PLOOPI_ERROR_NOWORKSPACEDEFINED);
+            ploopi_redirect("admin.php?ploopi_errorcode="._PLOOPI_ERROR_NOWORKSPACEDEFINED);
         }
 
         // sorting workspaces by depth
@@ -327,20 +327,50 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
 {
     if ($_SESSION['ploopi']['connected'])
     {
-        if (isset($_REQUEST['ploopi_mainmenu']))        $ploopi_mainmenu = $_REQUEST['ploopi_mainmenu'];
-        if (isset($_REQUEST['ploopi_workspaceid']))     $ploopi_workspaceid = $_REQUEST['ploopi_workspaceid'];
-        if (isset($_REQUEST['ploopi_webworkspaceid'])) $ploopi_webworkspaceid = $_REQUEST['ploopi_webworkspaceid'];
-        if (isset($_REQUEST['ploopi_moduleid']))        $ploopi_moduleid = $_REQUEST['ploopi_moduleid'];
-        if (isset($_REQUEST['ploopi_action']))      $ploopi_action = $_REQUEST['ploopi_action'];
-        if (isset($_REQUEST['ploopi_moduletabid']))     $ploopi_moduletabid = $_REQUEST['ploopi_moduletabid'];
-        if (isset($_REQUEST['ploopi_moduleicon']))  $ploopi_moduletabid = $_REQUEST['ploopi_moduleicon'];
+        if (isset($_REQUEST['ploopi_env']))
+        {
+            /**
+             * ploopi_env contient ploopi_mainmenu (int), ploopi_workspaceid (int), ploopi_moduleid (int), ploopi_action (string)
+             */
+            $arrEnv = explode(',', $_REQUEST['ploopi_env']);
+            
+            if (isset($arrEnv[0]) && is_numeric($arrEnv[0])) 
+                $ploopi_mainmenu = $arrEnv[0];
+                
+            if (isset($arrEnv[1]) && is_numeric($arrEnv[1]))
+                $ploopi_workspaceid = $arrEnv[1];
+            
+            if (isset($arrEnv[2]) && is_numeric($arrEnv[2]))
+                $ploopi_moduleid = $arrEnv[2];
+            
+            if (isset($arrEnv[3])) 
+                $ploopi_action = $arrEnv[3];
+        }
+        
+        if (isset($_REQUEST['ploopi_mainmenu']) && is_numeric($_REQUEST['ploopi_mainmenu']))
+            $ploopi_mainmenu = $_REQUEST['ploopi_mainmenu'];
+            
+        if (isset($_REQUEST['ploopi_workspaceid']) && is_numeric($_REQUEST['ploopi_workspaceid']))
+            $ploopi_workspaceid = $_REQUEST['ploopi_workspaceid'];
+        
+        if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid']))
+            $ploopi_moduleid = $_REQUEST['ploopi_moduleid'];
+        
+        if (isset($_REQUEST['ploopi_action']))
+            $ploopi_action = $_REQUEST['ploopi_action'];
+        
+        if (isset($_REQUEST['ploopi_moduletabid']))
+            $ploopi_moduletabid = $_REQUEST['ploopi_moduletabid'];
+            
+        if (isset($_REQUEST['ploopi_moduleicon']))
+            $ploopi_moduletabid = $_REQUEST['ploopi_moduleicon'];
 
 
         ///////////////////////////////////////////////////////////////////////////
         // SWITCH MAIN MENU (Workspaces, Profile, etc.)
         ///////////////////////////////////////////////////////////////////////////
 
-        if (isset($ploopi_mainmenu)) // new main menu selected
+        if (isset($ploopi_mainmenu) && $ploopi_mainmenu != $_SESSION['ploopi']['mainmenu']) // new main menu selected
         {
             $_SESSION['ploopi']['mainmenu'] = $ploopi_mainmenu;
 
@@ -371,7 +401,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
         // SWITCH WORKSPACE
         ///////////////////////////////////////////////////////////////////////////
 
-        if (isset($ploopi_workspaceid) && isset($_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['adminlevel']) && $_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['backoffice']) // new group selected
+        if (isset($ploopi_workspaceid) && $_SESSION['ploopi']['backoffice']['workspaceid'] != $ploopi_workspaceid && isset($_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['adminlevel']) && $_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['backoffice']) // new group selected
         {
             $_SESSION['ploopi']['mainmenu'] = _PLOOPI_MENU_WORKSPACES;
             $_SESSION['ploopi']['backoffice']['workspaceid'] = $ploopi_workspaceid;
@@ -385,11 +415,6 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
 
             // load params
             ploopi_loadparams();
-        }
-
-        if (isset($ploopi_webworkspaceid)) // new webgroup selected
-        {
-            $_SESSION['ploopi']['webworkspaceid'] = $ploopi_webworkspaceid;
         }
 
         ///////////////////////////////////////////////////////////////////////////
@@ -490,7 +515,6 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
     
     $_SESSION['ploopi']['moduleid'] = $_SESSION['ploopi']['backoffice']['moduleid'];
     $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['backoffice']['workspaceid'];
-    
 }
 else
 {
@@ -616,9 +640,17 @@ else
 if ($ploopi_errornum)
 {
     session_destroy();
-    echo "<html><body><div style=\"text-align:center;\"><br /><br /><h1>Erreur de sécurité</h1>reconnectez vous ou fermez votre navigateur ou contactez l'administrateur système<br /><br /><b>erreur : $ploopi_errornum</b><br /><br /><a href=\"$scriptenv\">continuer</a></div></body></html>";
+    echo "<html><body><div style=\"text-align:center;\"><br /><br /><h1>Erreur de sécurité</h1>reconnectez vous ou fermez votre navigateur ou contactez l'administrateur système<br /><br /><b>erreur : $ploopi_errornum</b><br /><br /><a href=\"admin.php\">continuer</a></div></body></html>";
     ploopi_die();
 }
 
-$_SESSION['ploopi']['uri'] = (empty($_SERVER['QUERY_STRING'])) ? '' : "{$scriptenv}?{$_SERVER['QUERY_STRING']}";
+$_SESSION['ploopi']['uri'] = (empty($_SERVER['QUERY_STRING'])) ? '' : "admin.php?{$_SERVER['QUERY_STRING']}";
+$_SESSION['ploopi']['env'] = 
+    sprintf(
+        "%s,%s,%s,%s", 
+        $_SESSION['ploopi']['mainmenu'], 
+        $_SESSION['ploopi']['workspaceid'],
+        $_SESSION['ploopi']['moduleid'],
+        $_SESSION['ploopi']['action']
+    );
 ?>

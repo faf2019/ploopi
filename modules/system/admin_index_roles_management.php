@@ -83,8 +83,8 @@ while($row = $db->fetchrow())
     if ($row['id_workspace'] == $workspaceid)
     {
         $actions =  '
-                    <a href="'.ploopi_urlencode("{$scriptenv}?op=modify_role&roleid={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" alt="'._SYSTEM_LABEL_MODIFY.'"></a>
-                    <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("{$scriptenv}?op=delete_role&roleid={$row['id']}").'\',\''._SYSTEM_MSG_CONFIRMROLEDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" alt="'._SYSTEM_LABEL_DELETE.'"></a>
+                    <a href="'.ploopi_urlencode("admin.php?op=modify_role&roleid={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" alt="'._SYSTEM_LABEL_MODIFY.'"></a>
+                    <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=delete_role&roleid={$row['id']}").'\',\''._SYSTEM_MSG_CONFIRMROLEDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" alt="'._SYSTEM_LABEL_DELETE.'"></a>
                     ';
     }
     else $actions = '&nbsp;';
@@ -97,7 +97,7 @@ while($row = $db->fetchrow())
     $values[$c]['values']['actions']    = array('label' => $actions);
 
     $values[$c]['description'] = $row['description'];
-    $values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=modify_role&roleid={$row['id']}");
+    $values[$c]['link'] = ploopi_urlencode("admin.php?op=modify_role&roleid={$row['id']}");
     $c++;
 }
 

@@ -1,3 +1,9 @@
+== Module FORMS - version 2.19 =====================================================
+
+2008-05-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à jour du système de liens (ploopi_env) lié à la mise à jour de Ploopi
+
 == Module FORMS - version 2.18 =====================================================
 
 2008-05-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

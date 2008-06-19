@@ -52,7 +52,7 @@ else $docparser->init_description();
 </div>
 
 <div id="docparser_form" class="doc_admin_form" style="display:<? echo (isset($_GET['docparser_id'])) ? 'block' : 'none'; ?>;">
-    <form action="<? echo $scriptenv; ?>" method="post">
+    <form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
     <input type="hidden" name="op" value="docparser_save">
     <input type="hidden" name="docparser_id" id="docparser_id" value="<? echo $docparser->fields['id']; ?>">
     <p class="ploopi_va">
@@ -105,8 +105,8 @@ $db->query($sql);
 $c = 0;
 while ($row = $db->fetchrow())
 {
-    $actions =  "<a title=\"Supprimer\" style=\"display:block;float:right;\" href=\"javascript:void(0);\" onclick=\"javascript:ploopi_confirmlink('{$scriptenv}?op=docparser_delete&docparser_id={$row['id']}','Êtes-vous certain de vouloir supprimer cette commande ?');\"><img src=\"./modules/doc/img/ico_trash.png\" /></a>
-                <a title=\"Modifier\" style=\"display:block;float:right;\" href=\"{$scriptenv}?op=docparser_modify&docparser_id={$row['id']}\"><img src=\"./modules/doc/img/ico_modify.png\" /></a>";
+    $actions =  "<a title=\"Supprimer\" style=\"display:block;float:right;\" href=\"javascript:void(0);\" onclick=\"javascript:ploopi_confirmlink('admin.php?op=docparser_delete&docparser_id={$row['id']}','Êtes-vous certain de vouloir supprimer cette commande ?');\"><img src=\"./modules/doc/img/ico_trash.png\" /></a>
+                <a title=\"Modifier\" style=\"display:block;float:right;\" href=\"admin.php?op=docparser_modify&docparser_id={$row['id']}\"><img src=\"./modules/doc/img/ico_modify.png\" /></a>";
 
     $ico = (file_exists("./modules/doc/img/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
 
@@ -115,7 +115,7 @@ while ($row = $db->fetchrow())
     $array_values[$c]['values']['path'] = array('label' => $row['path'], 'style' => '');
     $array_values[$c]['values']['actions'] = array('label' => $actions, 'style' => '');
     $array_values[$c]['description'] = $row['label'];
-    $array_values[$c]['link'] = "{$scriptenv}?op=docparser_modify&docparser_id={$row['id']}";
+    $array_values[$c]['link'] = "admin.php?op=docparser_modify&docparser_id={$row['id']}";
     $array_values[$c]['style'] = '';
     
     $c++;

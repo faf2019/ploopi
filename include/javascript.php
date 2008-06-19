@@ -36,6 +36,9 @@
 ?>
 defaultStatus = '<? echo addslashes($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']); ?>';
 
+_PLOOPI_ENV = '<? echo $_SESSION['ploopi']['env']; ?>';
+_PLOOPI_URL_ENCODE = <? echo (_PLOOPI_URL_ENCODE) ? 'true' : 'false'; ?>;
+
 var lstmsg = new Array();
 lstmsg[0] = "<? echo _PLOOPI_JS_EMAIL_ERROR_1 ?>";
 lstmsg[1] = "<? echo _PLOOPI_JS_EMAIL_ERROR_2 ?>";

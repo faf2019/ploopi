@@ -58,15 +58,15 @@ else
     <?
     $tabs_char = array();
 
-    for($i=1;$i<27;$i++) $tabs_char[$i] = array('title' => chr($i+64), 'url' => "{$scriptenv}?alphaTabItem={$i}");
+    for($i=1;$i<27;$i++) $tabs_char[$i] = array('title' => chr($i+64), 'url' => "admin.php?alphaTabItem={$i}");
 
-    $tabs_char[99] = array('title' => "&nbsp;tous&nbsp;", 'url' => "{$scriptenv}?alphaTabItem=99");
+    $tabs_char[99] = array('title' => "&nbsp;tous&nbsp;", 'url' => "admin.php?alphaTabItem=99");
 
     echo $skin->create_tabs($tabs_char,$alphaTabItem);
     ?>
 </div>
 
-<form action="<? echo $scriptenv; ?>" method="post">
+<form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
 <p class="ploopi_va" style="padding:4px;border-bottom:2px solid #c0c0c0;">
     <span><? echo _SYSTEM_LABEL_GROUP; ?> :</span>
     <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<? echo htmlentities($pattern); ?>">
@@ -126,7 +126,7 @@ while ($fields = $db->fetchrow($result))
 
     $values[$c]['values']['label']      = array('label' => htmlentities($fields['label']));
     $values[$c]['values']['parents']    = array('label' => htmlentities($str_parents));
-    $values[$c]['values']['actions']    = array('label' => '<a href="'.ploopi_urlencode("{$scriptenv}?op=attach_group&orgid={$fields['id']}&alphaTabItem={$alphaTabItem}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
+    $values[$c]['values']['actions']    = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=attach_group&orgid={$fields['id']}&alphaTabItem={$alphaTabItem}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
 
     $c++;
 }

@@ -52,26 +52,26 @@ if (strcmp(_PLOOPI_VERSION, $row['version']))
     $strSysVersion = $row['version'];
     $toolbar['systemupdate'] = array(
                                         'title' => _SYSTEM_LABELICON_SYSTEMUPDATE,
-                                        'url'   => "{$scriptenv}?sysToolbarItem=systemupdate",
+                                        'url'   => "admin.php?sysToolbarItem=systemupdate",
                                         'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemupdate.png"
                                     );
 }
 
 $toolbar['install'] = array(
                                     'title' => _SYSTEM_LABELICON_INSTALLMODULES,
-                                    'url'   => "{$scriptenv}?sysToolbarItem=install",
+                                    'url'   => "admin.php?sysToolbarItem=install",
                                     'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_install_module.png"
                                 );
 
 $toolbar['params'] = array(
                                     'title' => _SYSTEM_LABELICON_PARAMS,
-                                    'url'   => "{$scriptenv}?sysToolbarItem=params",
+                                    'url'   => "admin.php?sysToolbarItem=params",
                                     'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemparams.png"
                                 );
 
 $toolbar['tools'] = array(
                                     'title' => _SYSTEM_LABELICON_TOOLS,
-                                    'url'   => "{$scriptenv}?sysToolbarItem=tools",
+                                    'url'   => "admin.php?sysToolbarItem=tools",
                                     'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_tools.png"
                                 );
 
@@ -108,7 +108,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
 
                     include './modules/system/admin_system_installmodules_uninstallproc.php';
 
-                    if ($admin_redirect) ploopi_redirect("{$scriptenv}?reloadsession");
+                    if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
                     else
                     {
                         ?>
@@ -116,7 +116,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                             </TR>
                             <TR>
                                 <TD ALIGN="RIGHT">
-                                <INPUT TYPE="Button" CLASS="flatbutton" VALUE="<? echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<? echo "$scriptenv?reloadsession"; ?>'">
+                                <INPUT TYPE="Button" CLASS="flatbutton" VALUE="<? echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<? echo "admin.php?reloadsession"; ?>'">
                                 </TD>
                             </TR>
                             </TABLE>
@@ -128,7 +128,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
 
                 case 'addnewmodule':
                     include './modules/system/admin_system_addnewmodule.php';
-                    //ploopi_redirect("$scriptenv");
+                    //ploopi_redirect("admin.php");
                 break;
 
                 // update metabase
@@ -169,7 +169,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                         else $detail = "Fichier '{$mbfile}' non trouvé";
                     }
 
-                    ploopi_redirect($scriptenv);
+                    ploopi_redirect('admin.php');
                 break;
 
                 default:
@@ -247,9 +247,9 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                         $param_module->setvalues($_POST);
                         $param_module->save();
 
-                        ploopi_redirect("{$scriptenv}?idmodule={$_POST['idmodule']}&reloadsession");
+                        ploopi_redirect("admin.php?idmodule={$_POST['idmodule']}&reloadsession");
                     }
-                    else ploopi_redirect("$scriptenv");
+                    else ploopi_redirect("admin.php");
                 break;
 
                 default:

@@ -147,12 +147,12 @@ if (isset($ploopi_op))
             <div id="calendar">
                 <div class="calendar_row">
                     <div class="calendar_arrow" style="float:right;">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<? echo $scriptenv; ?>','ploopi_op=calendar_open&calendar_month=<? echo $next_month; ?>&calendar_year=<? echo $next_year; ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/next.png"></a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<? echo $scriptenv; ?>','ploopi_op=calendar_open&calendar_month=<? echo $month; ?>&calendar_year=<? echo ($year+1); ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/nextx2.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&calendar_month=<? echo $next_month; ?>&calendar_year=<? echo $next_year; ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/next.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&calendar_month=<? echo $month; ?>&calendar_year=<? echo ($year+1); ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/nextx2.png"></a>
                     </div>
                     <div class="calendar_arrow" style="float:left;">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<? echo $scriptenv; ?>','ploopi_op=calendar_open&calendar_month=<? echo $month; ?>&calendar_year=<? echo ($year-1); ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/prevx2.png"></a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<? echo $scriptenv; ?>','ploopi_op=calendar_open&calendar_month=<? echo $prev_month; ?>&calendar_year=<? echo $prev_year; ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/prev.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&calendar_month=<? echo $month; ?>&calendar_year=<? echo ($year-1); ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/prevx2.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&calendar_month=<? echo $prev_month; ?>&calendar_year=<? echo $prev_year; ?>','','ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/prev.png"></a>
                     </div>
                     <div class="calendar_month">
                         <? echo "{$ploopi_agenda_months[$month]}<br />{$year}"; ?>

@@ -66,7 +66,7 @@ switch($op)
             }
         }
 
-        ploopi_redirect("{$scriptenv}?end");
+        ploopi_redirect("admin.php?end");
     break;
 
     case 'rsscat_save':
@@ -84,7 +84,7 @@ switch($op)
             if ($rsscat->new) ploopi_create_user_action_log(_RSS_ACTION_CATCREATE, $rsscat->fields['id']);
             else ploopi_create_user_action_log(_RSS_ACTION_CATMODIFY, $rsscat->fields['id']);
         }
-        ploopi_redirect("{$scriptenv}?rssTabItem=tabCatList");
+        ploopi_redirect("admin.php?rssTabItem=tabCatList");
     break;
 
     case 'rsscat_delete':
@@ -98,7 +98,7 @@ switch($op)
                 $rsscat->delete();
             }
         }
-        ploopi_redirect($scriptenv);
+        ploopi_redirect('admin.php');
     break;
 
     case 'rssfeed_save':
@@ -117,7 +117,7 @@ switch($op)
             if ($rssfeed->new) ploopi_create_user_action_log(_RSS_ACTION_FEEDCREATE, $rssfeed->fields['id']);
             else ploopi_create_user_action_log(_RSS_ACTION_FEEDMODIFY, $rssfeed->fields['id']);
         }
-        ploopi_redirect("{$scriptenv}?rssTabItem=tabFeedModify&rssfeed_id={$rssfeed->fields['id']}");
+        ploopi_redirect("admin.php?rssTabItem=tabFeedModify&rssfeed_id={$rssfeed->fields['id']}");
     break;
 
     case 'rssfeed_delete':
@@ -128,7 +128,7 @@ switch($op)
             ploopi_create_user_action_log(_RSS_ACTION_DELETE, $rssfeed->fields['id']);
             $rssfeed->delete();
         }
-        ploopi_redirect($scriptenv);
+        ploopi_redirect('admin.php');
     break;
 
 
@@ -142,7 +142,7 @@ switch($op)
                     ";
 
         $result = $db->query($delete);
-        ploopi_redirect($scriptenv);
+        ploopi_redirect('admin.php');
 
     break;
 
@@ -166,7 +166,7 @@ switch($op)
             rss_updatecache($fields['id'], $fields['url']);
             echo "updated<BR>";
         }
-        ploopi_redirect($scriptenv);
+        ploopi_redirect('admin.php');
     break;
 
     case 'update_outdated_feeds':
@@ -193,7 +193,7 @@ switch($op)
             else echo "not updated<BR>";
         }
 
-        ploopi_redirect($scriptenv);
+        ploopi_redirect('admin.php');
     break;
 
 }
@@ -201,28 +201,28 @@ switch($op)
 
 
 $tabs['tabFeedList'] = array(   'title' => _RSS_LABEL_FEEDLIST,
-                                'url' => "{$scriptenv}?rssTabItem=tabFeedList"
+                                'url' => "admin.php?rssTabItem=tabFeedList"
                                 );
 
 $tabs['tabFeedAdd'] = array(    'title' => _RSS_LABEL_FEEDADD,
-                                'url' => "{$scriptenv}?rssTabItem=tabFeedAdd"
+                                'url' => "admin.php?rssTabItem=tabFeedAdd"
                             );
 
 $tabs['tabCatList'] = array(    'title' => _RSS_LABEL_CATLIST,
-                                'url' => "{$scriptenv}?rssTabItem=tabCatList"
+                                'url' => "admin.php?rssTabItem=tabCatList"
                                 );
 
 if (ploopi_isactionallowed(_RSS_ACTION_CATADD))
 {
     $tabs['tabCatAdd'] = array( 'title' => _RSS_LABEL_CATADD,
-                                'url' => "{$scriptenv}?rssTabItem=tabCatAdd"
+                                'url' => "admin.php?rssTabItem=tabCatAdd"
                                 );
 }
 
 if (ploopi_isactionallowed(0))
 {
     $tabs['tabTools'] = array(  'title' => _RSS_LABEL_TOOLS,
-                                'url' => "{$scriptenv}?rssTabItem=tabTools"
+                                'url' => "admin.php?rssTabItem=tabTools"
                                 );
 }
 

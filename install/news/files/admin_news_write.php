@@ -39,7 +39,7 @@ if ($news->new) echo $skin->open_simplebloc(_NEWS_WRITE);
 else echo $skin->open_simplebloc(str_replace("LABEL",$news->fields['title'],_NEWS_MODIFY));
 ?>
 
-<form name="form_news" action="<? echo $scriptenv; ?>" method="post" onsubmit="return news_validate(this);">
+<form name="form_news" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return news_validate(this);">
 <input type="hidden" name="op" value="save_news">
 <input type="hidden" name="news_id" value="<? echo $news->fields['id']; ?>">
 <div>
@@ -121,9 +121,9 @@ $oFCKeditor->Value = $news->fields['content'];
 $oFCKeditor->Width='100%';
 $oFCKeditor->Height='350';
 
-$oFCKeditor->Config['CustomConfigurationsPath'] = "{$basepath}/modules/news/fckeditor/fckconfig.js"  ;
-$oFCKeditor->Config['EditorAreaCSS'] = "{$basepath}/modules/news/fckeditor/fck_editorarea.css" ;
-$oFCKeditor->Config['BaseHref'] = $basepath.'/';
+$oFCKeditor->Config['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/news/fckeditor/fckconfig.js';
+$oFCKeditor->Config['EditorAreaCSS'] = _PLOOPI_BASEPATH.'/modules/news/fckeditor/fck_editorarea.css';
+$oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH.'/';
 $oFCKeditor->Create('FCKeditor_1') ;
 ?>
 </div>

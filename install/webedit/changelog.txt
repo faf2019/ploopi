@@ -1,3 +1,9 @@
+== Module WebEdit - version 1.5.1 ============================================
+
+2008-06-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à jour du système de liens (ploopi_env) lié à la mise à jour de Ploopi
+
 == Module WebEdit - version 1.5.0.rc1 ============================================
 
 2008-06-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

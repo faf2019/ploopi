@@ -78,7 +78,7 @@ if (!empty($_POST['historyoption']))
                     ";
             $db->query($sql);
 
-            ploopi_redirect("$scriptenv?op=actionhistory");
+            ploopi_redirect("admin.php?op=actionhistory");
         break;
 
         case 'exportcsv':
@@ -125,7 +125,7 @@ if (!empty($_POST['historyoption']))
 
 ?>
 
-<form action="<? echo $scriptenv; ?>" method="post" id="form_loghistory">
+<form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" id="form_loghistory">
 <input type="hidden" name="op" value="actionhistory">
 <input type="hidden" name="historyoption" id="historyoption" value="">
 <div style="border-bottom:2px solid #c0c0c0;padding:4px;">

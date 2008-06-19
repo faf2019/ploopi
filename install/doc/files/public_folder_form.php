@@ -102,7 +102,7 @@ else // creating
         if (!$readonly)
         {
             ?>
-            <form name="docfolder_form" action="<? echo $scriptenv; ?>"  onsubmit="javascript:return doc_folder_validate(this, <? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" method="post" enctype="multipart/form-data" target="doc_folderform_iframe">
+            <form name="docfolder_form" action="<? echo ploopi_urlencode('admin.php'); ?>"  onsubmit="javascript:return doc_folder_validate(this, <? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" method="post" enctype="multipart/form-data" target="doc_folderform_iframe">
             <input type="hidden" name="op" value="doc_foldersave">
             <input type="hidden" name="currentfolder" value="<? echo htmlentities($currentfolder); ?>">
             <?

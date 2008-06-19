@@ -40,21 +40,21 @@ $heading->open($headingid);
     if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT))
     {
         ?>
-        <a style="text-decoration:none;float:right;" href="<? echo "{$scriptenv}?op=article_addnew"; ?>">&nbsp;Ajouter un article</a>
-        <img style="float:right;border:0px;cursor:pointer;" onclick="javascript:document.location.href='<? echo "{$scriptenv}?op=article_addnew"; ?>';" src="./modules/webedit/img/doc_add.png">
+        <a style="text-decoration:none;float:right;" href="<? echo "admin.php?op=article_addnew"; ?>">&nbsp;Ajouter un article</a>
+        <img style="float:right;border:0px;cursor:pointer;" onclick="javascript:document.location.href='<? echo "admin.php?op=article_addnew"; ?>';" src="./modules/webedit/img/doc_add.png">
         <?
     }
     if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
     {
         ?>
-        <a style="text-decoration:none;float:right;padding-right:6px;" href="<? echo "{$scriptenv}?op=heading_addnew"; ?>">&nbsp;Ajouter une sous-rubrique</a>
-        <img style="float:right;border:0px;cursor:pointer;" onclick="javascript:document.location.href='<? echo "{$scriptenv}?op=heading_addnew"; ?>';" src="./modules/webedit/img/folder_add.png">
+        <a style="text-decoration:none;float:right;padding-right:6px;" href="<? echo "admin.php?op=heading_addnew"; ?>">&nbsp;Ajouter une sous-rubrique</a>
+        <img style="float:right;border:0px;cursor:pointer;" onclick="javascript:document.location.href='<? echo "admin.php?op=heading_addnew"; ?>';" src="./modules/webedit/img/folder_add.png">
         <?
         if ($heading->fields['depth'] == 1) // root
         {
             ?>
-            <a style="text-decoration:none;float:right;padding-right:6px;" href="<? echo "{$scriptenv}?op=heading_addroot"; ?>">&nbsp;Ajouter une racine</a>
-            <img style="float:right;border:0px;cursor:pointer;" onclick="javascript:document.location.href='<? echo "{$scriptenv}?op=heading_addroot"; ?>';" src="./modules/webedit/img/folder_add.png">
+            <a style="text-decoration:none;float:right;padding-right:6px;" href="<? echo "admin.php?op=heading_addroot"; ?>">&nbsp;Ajouter une racine</a>
+            <img style="float:right;border:0px;cursor:pointer;" onclick="javascript:document.location.href='<? echo "admin.php?op=heading_addroot"; ?>';" src="./modules/webedit/img/folder_add.png">
             <?
         }
     }
@@ -63,13 +63,13 @@ $heading->open($headingid);
     if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) && !($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1))
     {
         ?>
-        <a style="text-decoration:none;float:right;padding-right:6px;" href="javascript:void(0);" onclick="javascript:ploopi_confirmlink('<? echo "{$scriptenv}?op=heading_delete"; ?>','<? echo _PLOOPI_CONFIRM; ?>');">&nbsp;Supprimer cette rubrique</a>
-        <img style="float:right;border:0px;cursor:pointer;" src="./modules/webedit/img/folder_del.png" onclick="javascript:ploopi_confirmlink('<? echo "{$scriptenv}?op=heading_delete"; ?>','<? echo _PLOOPI_CONFIRM; ?>');">
+        <a style="text-decoration:none;float:right;padding-right:6px;" href="javascript:void(0);" onclick="javascript:ploopi_confirmlink('<? echo "admin.php?op=heading_delete"; ?>','<? echo _PLOOPI_CONFIRM; ?>');">&nbsp;Supprimer cette rubrique</a>
+        <img style="float:right;border:0px;cursor:pointer;" src="./modules/webedit/img/folder_del.png" onclick="javascript:ploopi_confirmlink('<? echo "admin.php?op=heading_delete"; ?>','<? echo _PLOOPI_CONFIRM; ?>');">
         <?
     }
 
     ?>
-    <img title="Agrandir/Réduire" alt="Agrandir/Réduire" style="cursor:pointer;" onclick="javascript:ploopi_switchdisplay('webedit_tree');ploopi_switchdisplay('webedit_article_options');ploopi_xmlhttprequest('admin-light.php', 'op=xml_switchdisplay&display='+ploopi_getelem('webedit_tree').style.display, true);" src="./modules/webedit/img/fullscreen.png">
+    <img title="Agrandir/Réduire" alt="Agrandir/Réduire" style="cursor:pointer;" onclick="javascript:ploopi_switchdisplay('webedit_tree');ploopi_switchdisplay('webedit_article_options');ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&op=xml_switchdisplay&display='+ploopi_getelem('webedit_tree').style.display, true);" src="./modules/webedit/img/fullscreen.png">
     
     <span style="font-weight:bold;">Propriété de la rubrique &laquo; <? echo $heading->fields['label']; ?> &raquo;</span>
 </p>
@@ -78,7 +78,7 @@ $heading->open($headingid);
 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
 {
     ?>
-    <form style="margin:0;" action="<? echo $scriptenv; ?>" method="post" onsubmit="javascript:return webedit_heading_validate(this);">
+    <form style="margin:0;" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return webedit_heading_validate(this);">
     <input type="hidden" name="op" value="heading_save">
     <?
 }
@@ -260,7 +260,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                             ?>
                             <input type="hidden" id="webedit_heading_linkedpage" name="webedit_heading_linkedpage" value="<? echo $heading->fields['linkedpage']; ?>">
                             <input type="text" readonly class="text" style="width:150px;" id="linkedpage_displayed" value="<? echo $article_title; ?>">
-                            <img src="./modules/webedit/img/ico_choose_article.png" style="cursor:pointer;" title="Choisir un article" alt="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','op=heading_selectredirect',false), 300, event, 'click', 'webedit_popup_selectredirect');" />
+                            <img src="./modules/webedit/img/ico_choose_article.png" style="cursor:pointer;" title="Choisir un article" alt="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=heading_selectredirect',false), 300, event, 'click', 'webedit_popup_selectredirect');" />
                             <img src="./modules/webedit/img/ico_clear_article.png" style="cursor:pointer;" title="Effacer la redirection" alt="Choisir" onclick="javascript:ploopi_getelem('webedit_heading_linkedpage').value='';ploopi_getelem('linkedpage_displayed').value='';" />
                         </div>
                         <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_url_redirect');">
@@ -410,7 +410,7 @@ foreach($wf as $value) $wfusers[] = $value['id_workflow'];
 
 ?>
 <div style="clear:both;padding:4px;">
-    <strong>Validateurs <? if ($wf_headingid != $headingid) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("{$scriptenv}?headingid={$wf_headingid}")."\">{$headings['list'][$wf_headingid]['label']}</a> &raquo;)"; ?></strong>:
+    <strong>Validateurs <? if ($wf_headingid != $headingid) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?headingid={$wf_headingid}")."\">{$headings['list'][$wf_headingid]['label']}</a> &raquo;)"; ?></strong>:
     <?
     if (!empty($wfusers))
     {
@@ -457,7 +457,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
         if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT))
         {
             ?>
-                <a style="float:right;text-decoration:none;" href="<? echo "$scriptenv?op=article_addnew"; ?>">&nbsp;Ajouter un article</a>
+                <a style="float:right;text-decoration:none;" href="<? echo "admin.php?op=article_addnew"; ?>">&nbsp;Ajouter un article</a>
                 <img style="float:right;border:0px;" src="./modules/webedit/img/doc_add.png">
             <?
         }
@@ -511,12 +511,12 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
             //if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_PUBLISH) || in_array($_SESSION['ploopi']['userid'],$wfusers))
             if (in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
             {
-                $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" href=\"javascript:ploopi_confirmlink('{$scriptenv}?op=article_delete&articleid={$row['id']}','Êtes-vous certain de vouloir supprimer l\'article &laquo; ".addslashes($row['title'])." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
+                $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" href=\"javascript:ploopi_confirmlink('admin.php?op=article_delete&articleid={$row['id']}','Êtes-vous certain de vouloir supprimer l\'article &laquo; ".addslashes($row['title'])." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
             }
             else $articles_values[$c]['values']['actions'] = array('label' => '&nbsp;', 'style' => '');
     
             $articles_values[$c]['description'] = $row['title'];
-            $articles_values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=article_modify&articleid={$row['id']}");
+            $articles_values[$c]['link'] = ploopi_urlencode("admin.php?op=article_modify&articleid={$row['id']}");
             $articles_values[$c]['style'] = '';
     
             $c++;
@@ -584,7 +584,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des a
     
             $subscribers_values[$c]['values']['actions'] = 
                 array(
-                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonné\" alt=\"Supprimer\" onclick=\"javascript:ploopi_confirmlink('{$scriptenv}?op=subscriber_delete&subscriber_email={$row['email']}','Êtes-vous certain de vouloir supprimer cet abonné ?');\" src=\"./modules/webedit/img/ico_delete.gif\"></a>", 
+                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonné\" alt=\"Supprimer\" onclick=\"javascript:ploopi_confirmlink('admin.php?op=subscriber_delete&subscriber_email={$row['email']}','Êtes-vous certain de vouloir supprimer cet abonné ?');\" src=\"./modules/webedit/img/ico_delete.gif\"></a>", 
                     'style' => 'text-align:center;'
                 );
     
@@ -623,7 +623,7 @@ for ($i = 0; $i < sizeof($parents); $i++)
     {
         ?>
         <div style="padding:2px 4px;font-weight:bold;">
-        Vous héritez de l'abonnement à &laquo; <a href="<? echo ploopi_urlencode("{$scriptenv}?headingid={$parents[$i]}"); ?>"><? echo $headings['list'][$parents[$i]]['label']; ?></a> &raquo; 
+        Vous héritez de l'abonnement à &laquo; <a href="<? echo ploopi_urlencode("admin.php?headingid={$parents[$i]}"); ?>"><? echo $headings['list'][$parents[$i]]['label']; ?></a> &raquo; 
         </div>
         <?
     }

@@ -70,11 +70,11 @@ while ($fields = $db->fetchrow())
     $pubdate_start = ($fields['pubdate_start']) ? ploopi_timestamp2local($fields['pubdate_start']) : array('date' => '');
     $pubdate_end = ($fields['pubdate_end']) ? ploopi_timestamp2local($fields['pubdate_end']) : array('date' => '');
 
-    $open = ploopi_urlencode("{$scriptenv}?op=forms_modify&forms_id={$fields['id']}");
-    $delete = ploopi_urlencode("{$scriptenv}?op=forms_delete&forms_id={$fields['id']}");
-    $preview = ploopi_urlencode("{$scriptenv}?op=forms_preview&forms_id={$fields['id']}");
-    $view = ploopi_urlencode("{$scriptenv}?ploopi_action=public&op=forms_viewreplies&forms_id={$fields['id']}");
-    $export = ploopi_urlencode("{$scriptenv}?op=export&forms_id={$fields['id']}");
+    $open = ploopi_urlencode("admin.php?op=forms_modify&forms_id={$fields['id']}");
+    $delete = ploopi_urlencode("admin.php?op=forms_delete&forms_id={$fields['id']}");
+    $preview = ploopi_urlencode("admin.php?op=forms_preview&forms_id={$fields['id']}");
+    $view = ploopi_urlencode("admin.php?ploopi_action=public&op=forms_viewreplies&forms_id={$fields['id']}");
+    $export = ploopi_urlencode("admin.php?op=export&forms_id={$fields['id']}");
 
 
     $array_values[$c]['values']['label']        = array('label' => $fields['label']);
@@ -88,7 +88,7 @@ while ($fields = $db->fetchrow())
         <a href="javascript:ploopi_confirmlink(\''.$delete.'\',\'Attention cette action va supprimer définitivement le formulaire. Êtes vous certain de vouloir continuer ?\')"><img border="0" src="./modules/forms/img/ico_trash.png"></a>');
 
 
-//      <a href="'.$scriptenv.'?op=forms_generate_tables_from_list&forms_id='.$fields['id'].'" title="Générer les données physiques du formulaire""><img src="./modules/forms/img/ico_renew.png" alt="Générer les données physiques du formulaire"></a>
+//      <a href="'.admin.php.'?op=forms_generate_tables_from_list&forms_id='.$fields['id'].'" title="Générer les données physiques du formulaire""><img src="./modules/forms/img/ico_renew.png" alt="Générer les données physiques du formulaire"></a>
 
     $array_values[$c]['description'] = "Ouvrir le Formulaire";
     $array_values[$c]['link'] = $open;

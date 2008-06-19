@@ -410,7 +410,7 @@ else // affichage standard rubrique/page
     
                     case 'render';
                         $script = "index.php?webedit_mode=render&moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}&articleid={$row['id']}";
-                        //$script = "$scriptenv?nav={$nav}&articleid={$row['id']}";
+                        //$script = "admin.php?nav={$nav}&articleid={$row['id']}";
                     break;
     
                     default:
@@ -522,16 +522,16 @@ else // affichage standard rubrique/page
                 $oFCKeditor->Width='100%';
                 $oFCKeditor->Height='500';
 
-                $oFCKeditor->Config['CustomConfigurationsPath'] = $basepath.'/modules/webedit/fckeditor/fckconfig.js';
+                $oFCKeditor->Config['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/fckconfig.js';
                 $oFCKeditor->Config['ToolbarLocation'] = 'Out:parent(xToolbar)';
-                $oFCKeditor->Config['BaseHref'] = $basepath.'/';
-                $oFCKeditor->Config['SkinPath'] = $basepath.'/modules/webedit/fckeditor/skins/default/';
+                $oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH.'/';
+                $oFCKeditor->Config['SkinPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/skins/default/';
                 
-                if (file_exists("{$template_path}/fckeditor/fck_editorarea.css")) $oFCKeditor->Config['EditorAreaCSS'] = $basepath . substr($template_path,1) . '/fckeditor/fck_editorarea.css';
+                if (file_exists("{$template_path}/fckeditor/fck_editorarea.css")) $oFCKeditor->Config['EditorAreaCSS'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fck_editorarea.css';
 
-                if (file_exists("{$template_path}/fckeditor/fcktemplates.xml")) $oFCKeditor->Config['TemplatesXmlPath'] = $basepath . substr($template_path,1) . '/fckeditor/fcktemplates.xml';
+                if (file_exists("{$template_path}/fckeditor/fcktemplates.xml")) $oFCKeditor->Config['TemplatesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fcktemplates.xml';
 
-                if (file_exists("{$template_path}/fckeditor/fckstyles.xml")) $oFCKeditor->Config['StylesXmlPath'] = $basepath . substr($template_path,1) . '/fckeditor/fckstyles.xml';
+                if (file_exists("{$template_path}/fckeditor/fckstyles.xml")) $oFCKeditor->Config['StylesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fckstyles.xml';
 
                 $oFCKeditor->ToolbarSet = 'Default';
 
@@ -751,14 +751,14 @@ list($keywords) = ploopi_getwords("{$_SESSION['ploopi']['workspaces'][$_SESSION[
 $template_body->assign_block_vars(
     'ploopi_js', 
     array(
-        'PATH' => './lib/protoculous/protoculous-packer.js?v='.urlencode(_PLOOPI_VERSION).'&r='._PLOOPI_REVISION
+        'PATH' => './lib/protoculous/protoculous-packer.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
     )
 );
     
 $template_body->assign_block_vars(
     'ploopi_js', 
     array(
-        'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION).'&r='._PLOOPI_REVISION
+        'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
     )
 );
 

@@ -88,7 +88,7 @@ switch($op)
         <b>Mise à jour terminée</b>
         </div>
         <div style="padding:4px;">
-        <button onclick="javascript:document.location.href='<? echo ploopi_urlencode($scriptenv); ?>';">Continuer</button>
+        <button onclick="javascript:document.location.href='<? echo ploopi_urlencode('admin.php'); ?>';">Continuer</button>
         </div>
         <?
     break;
@@ -102,7 +102,7 @@ switch($op)
         </div>
         
         <div style="padding:4px;">
-        <button onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?op=system_update_execute"); ?>';">Mettre à jour la Base de Données</button>
+        <button onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=system_update_execute"); ?>';">Mettre à jour la Base de Données</button>
         </div>
         <?
    break;

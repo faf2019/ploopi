@@ -38,7 +38,7 @@
 echo $skin->open_simplebloc();
 ?>
 
-<form name="" action="<? echo $scriptenv; ?>" method="POST" onsubmit="javascript:return system_workspace_validate(this);">
+<form name="" action="<? echo ploopi_urlencode('admin.php'); ?>" method="POST" onsubmit="javascript:return system_workspace_validate(this);">
 <input type="hidden" name="op" value="save_workspace">
 <input type="hidden" name="workspace_id_workspace" value="<? echo $workspace->fields['id']; ?>">
 

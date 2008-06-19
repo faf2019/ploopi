@@ -128,7 +128,7 @@ function ploopi_annotation_refresh($id_annotation)
     ?>
     <a name="annotation_<? echo $id_annotation; ?>" style="display:none;"></a>
     <div style="overflow:hidden;">
-        <a id="annotation_count_<? echo $id_annotation; ?>" class="ploopi_annotation_viewlist" href="javascript:void(0);" onclick="javascript:ploopi_getelem('annotation_list_<? echo $id_annotation; ?>').style.display=(ploopi_getelem('annotation_list_<? echo $id_annotation; ?>').style.display=='block') ? 'none' : 'block'; ploopi_xmlhttprequest('index-light.php','ploopi_op=annotation_show&object_id=<? echo $id_annotation; ?>');">
+        <a id="annotation_count_<? echo $id_annotation; ?>" class="ploopi_annotation_viewlist" href="javascript:void(0);" onclick="javascript:ploopi_getelem('annotation_list_<? echo $id_annotation; ?>').style.display=(ploopi_getelem('annotation_list_<? echo $id_annotation; ?>').style.display=='block') ? 'none' : 'block'; ploopi_xmlhttprequest('index-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_show&object_id=<? echo $id_annotation; ?>');">
             <img border="0" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/annotation.png">
             <span><? echo $nbanno; ?> annotation<? echo ($nbanno>1) ? 's' : ''; ?></span>
         </a>
@@ -189,7 +189,7 @@ function ploopi_annotation_refresh($id_annotation)
                             foreach($anno['tags'] as $idtag => $tag)
                             {
                                 ?>
-                                <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','400',event,'click');ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_op=annotation_taghistory&id_tag=<? echo $idtag; ?>','','ploopi_popup');return false;"><? echo htmlentities($tag); ?></a>
+                                <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','400',event,'click');ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_taghistory&id_tag=<? echo $idtag; ?>','','ploopi_popup');return false;"><? echo htmlentities($tag); ?></a>
                                 <?
                             }
                         }

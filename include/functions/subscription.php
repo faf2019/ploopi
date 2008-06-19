@@ -96,7 +96,7 @@ function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
 
     ?>
     <div style="overflow:hidden;">
-        <a id="annotation_count_<? echo $ploopi_subscription_id; ?>" class="ploopi_subscription_viewdetail" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('<? echo $div_id; ?>');ploopi_xmlhttprequest('admin-light.php','ploopi_op=ploopi_switchdisplay&id=<? echo $div_id ?>&display='+$('<? echo $div_id ?>').style.display);">
+        <a id="annotation_count_<? echo $ploopi_subscription_id; ?>" class="ploopi_subscription_viewdetail" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('<? echo $div_id; ?>');ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_switchdisplay&id=<? echo $div_id ?>&display='+$('<? echo $div_id ?>').style.display);">
             <img border="0" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/<? echo $strIconName; ?>.png">
             <span><? echo $strTitle; ?></span>
         </a>

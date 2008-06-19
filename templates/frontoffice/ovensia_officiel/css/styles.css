@@ -269,20 +269,20 @@ float:right;
 color:#415826;
 }
 
-#mini_form {
+.mini_form {
 font-size:0.9em;
 font-weight:bold;
 margin-bottom:4px;
 }
 
-#mini_form fieldset {
+.mini_form fieldset {
 border: 1px solid #d0d0d0;
 background-color: #f0f0f0;
 padding:4px;
 margin:0px;
 }
 
-#mini_form .text {
+.mini_form .text {
 width:70%;
 margin-right:2px;
 border:1px solid #c0c0c0;
@@ -290,7 +290,7 @@ padding-left:2px;
 font-size:0.9em;
 }
 
-#mini_form .button {
+.mini_form .button {
 width:20%;
 border:1px solid #a0a0a0;
 font-size:0.9em;

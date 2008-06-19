@@ -54,19 +54,32 @@ $skin = new skin();
 
 $template_body = new Template($_SESSION['ploopi']['template_path']);
 
-if (!empty($_GET['ploopi_tpl']) && file_exists("{$_SESSION['ploopi']['template_path']}/{$_GET['ploopi_tpl']}.tpl")) $template_body->set_filenames(array('body' => "{$_GET['ploopi_tpl']}.tpl"));
-else
-{
-    if (isset($_SESSION['ploopi']['remote_pda']) && $_SESSION['ploopi']['remote_pda']) $template_body->set_filenames(array('body' => 'pda.tpl'));
-    else $template_body->set_filenames(array('body' => 'index.tpl'));
-}
+$template_filename = 'index.tpl';
+ 
+if (!empty($_GET['ploopi_tpl']) && file_exists("{$_SESSION['ploopi']['template_path']}/{$_GET['ploopi_tpl']}.tpl")) $template_filename = "{$_GET['ploopi_tpl']}.tpl";
+else if (isset($_SESSION['ploopi']['remote_pda']) && $_SESSION['ploopi']['remote_pda'] && file_exists("{$_SESSION['ploopi']['template_path']}/pda.tpl")) $template_filename = 'pda.tpl';
+
+$template_body->set_filenames(
+    array(
+        'body' => $template_filename
+    )
+);
 
 /* INCLUSION JS
  * inclusion des scripts JS
  * */
 
-$template_body->assign_block_vars('ploopi_js', array('PATH' => './lib/protoculous/protoculous-packer.js?v='.urlencode(_PLOOPI_VERSION).'&r='._PLOOPI_REVISION));
-$template_body->assign_block_vars('ploopi_js', array('PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION).'&r='._PLOOPI_REVISION));
+$template_body->assign_block_vars('ploopi_js', 
+    array(
+        'PATH' => './lib/protoculous/protoculous-packer.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+    )
+);
+
+$template_body->assign_block_vars('ploopi_js', 
+    array(
+        'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+    )
+);
 
 $ploopi_additional_head = '';
 $ploopi_additional_javascript = '';
@@ -87,7 +100,7 @@ if ($_SESSION['ploopi']['connected'])
     {
         $template_body->assign_block_vars('switch_user_logged_in.workspace',array(
                                             'TITLE' => $_SESSION['ploopi']['workspaces'][$key]['label'],
-                                            'URL' => ploopi_urlencode("{$scriptenv}?ploopi_workspaceid={$key}"),
+                                            'URL' => ploopi_urlencode('admin.php', _PLOOPI_MENU_WORKSPACES, $key, '', ''),
                                             'SELECTED' => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $key == $_SESSION['ploopi']['workspaceid']) ? 'selected' : ''
                                             )
                                     );
@@ -171,7 +184,7 @@ if ($_SESSION['ploopi']['connected'])
         'USER_LASTNAME'         => $_SESSION['ploopi']['user']['lastname'],
         'USER_EMAIL'            => $_SESSION['ploopi']['user']['email'],
     
-        'USER_WORKSPACE'        => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE),
+        'USER_WORKSPACE'        => ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE),
         'USER_WORKSPACE_SEL'    => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE) ? 'selected' : '',
     
         'MAINMENU_PROFILE'          => _PLOOPI_LABEL_MYPROFILE,
@@ -181,10 +194,10 @@ if ($_SESSION['ploopi']['connected'])
         'MAINMENU_DISCONNECTION'    => _PLOOPI_LABEL_DISCONNECTION,
     
     
-        'MAINMENU_SHOWPROFILE_URL'      => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE.'&op=profile'),
-        'MAINMENU_SHOWANNOTATIONS_URL'  => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE.'&op=annotation'),
-        'MAINMENU_SHOWTICKETS_URL'      => ploopi_urlencode("{$scriptenv}?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE.'&op=tickets'),
-        'MAINMENU_SHOWSEARCH_URL'       => ploopi_urlencode("{$scriptenv}?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public&op=search'),
+        'MAINMENU_SHOWPROFILE_URL'      => ploopi_urlencode('admin.php?op=profile', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        'MAINMENU_SHOWANNOTATIONS_URL'  => ploopi_urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        'MAINMENU_SHOWTICKETS_URL'      => ploopi_urlencode('admin.php?op=tickets', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        'MAINMENU_SHOWSEARCH_URL'       => ploopi_urlencode('admin.php?op=search', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
 
 
         'MAINMENU_SHOWPROFILE_SEL'      => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'profile') ? 'selected' : '',
@@ -198,7 +211,7 @@ if ($_SESSION['ploopi']['connected'])
         'LAST_NEWTICKET'            => $lastticket,
         'SHOW_BLOCKMENU'            => (!empty($_SESSION['ploopi']['switchdisplay']['block_modules'])) ? $_SESSION['ploopi']['switchdisplay']['block_modules'] : 'block',
 
-        'USER_DECONNECT'        => ploopi_urlencode("$scriptenv?ploopi_logout")
+        'USER_DECONNECT'        => ploopi_urlencode("admin.php?ploopi_logout")
         )
     );
 

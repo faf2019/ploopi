@@ -1,3 +1,9 @@
+== Module NEWS - version 2.39 ====================================================
+
+2008-06-19  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Mise à jour du système de liens (ploopi_env) lié à la mise à jour de Ploopi
+
 == Module NEWS - version 2.37 ====================================================
 
 2008-04-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

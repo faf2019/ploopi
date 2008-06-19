@@ -40,7 +40,7 @@ global $forms_id;
 $forms = new form();
 
 if (!empty($_REQUEST['forms_id']) && is_numeric($_REQUEST['forms_id']) && $forms->open($_REQUEST['forms_id'])) $forms_id = $_REQUEST['forms_id'];
-else ploopi_redirect($scriptenv);
+else ploopi_redirect('admin.php');
 
 // GET GPC
 if (isset($_GET['reset']))  $_SESSION['forms'][$forms_id] = array();
@@ -324,7 +324,7 @@ if ($op == 'forms_deletedata' && ploopi_isactionallowed(_FORMS_ACTION_DELETE) &&
                     ";
 
     $db->query($sql_delete);
-    ploopi_redirect("{$scriptenv}?op=filter&forms_id={$forms_id}");
+    ploopi_redirect("admin.php?op=filter&forms_id={$forms_id}");
 }
 
 

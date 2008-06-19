@@ -53,12 +53,12 @@ $forms_result = $db->query($forms_select);
 
 while ($forms_fields = $db->fetchrow($forms_result))
 {
-    $block->addmenu($forms_fields['label'], ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=forms_viewreplies&forms_id={$forms_fields['id']}"));
+    $block->addmenu($forms_fields['label'], ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=forms_viewreplies&forms_id={$forms_fields['id']}"));
 }
 
 if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
 {
-    $block->addmenu('<b>'._FORMS_ADMIN.'</b>', ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"));
+    $block->addmenu('<b>'._FORMS_ADMIN.'</b>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"));
 }
 ?>
 

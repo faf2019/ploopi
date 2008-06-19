@@ -81,8 +81,13 @@ function ploopi_strcut($str,$len = 30, $mode = 'left')
  
 function ploopi_convertaccents($str)
 {
-    return (strtr($str, "¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝ‗אבגדהוזחטיךכלםמןנסעףפץצרשתûü‎ÿÞ",
-                  "YuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyys"));
+    return(
+        strtr(
+            $str, 
+            "¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝ‗אבגדהוזחטיךכלםמןנסעףפץצרשתûü‎ÿÞ",
+            "YuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyys"
+        )
+    );
 }
 
 

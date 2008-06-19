@@ -27,8 +27,15 @@
  * @subpackage msg
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Audrey Gilbert
  */
+
+/**
+ * Inclusion de la classe parent.
+ */
+
+include_once './include/classes/data_object.php';
+
 
 /**
  * Classe d'accès à la table ploopi_mod_chat_msg

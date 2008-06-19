@@ -67,15 +67,15 @@ else
     <?
     $tabs_char = array();
 
-    for($i=1;$i<27;$i++) $tabs_char[$i] = array('title' => chr($i+64), 'url' => "{$scriptenv}?alphaTabItem={$i}");
+    for($i=1;$i<27;$i++) $tabs_char[$i] = array('title' => chr($i+64), 'url' => "admin.php?alphaTabItem={$i}");
 
-    $tabs_char[99] = array('title' => "&nbsp;tous&nbsp;", 'url' => "{$scriptenv}?alphaTabItem=99");
+    $tabs_char[99] = array('title' => "&nbsp;tous&nbsp;", 'url' => "admin.php?alphaTabItem=99");
 
     echo $skin->create_tabs($tabs_char,$alphaTabItem);
     ?>
 </div>
 
-<form action="<? echo $scriptenv; ?>" method="post">
+<form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
 <p class="ploopi_va" style="padding:4px;border-bottom:2px solid #c0c0c0;">
     <span><? echo _SYSTEM_LABEL_USER; ?> :</span>
     <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<? echo htmlentities($pattern); ?>">
@@ -145,7 +145,7 @@ while ($fields = $db->fetchrow($result))
     $str_parents = '';
     foreach($array_parents as $parent) $str_parents .= ($str_parents == '') ? $parent['label']: " > {$parent['label']}";
 
-    $action = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("{$scriptenv}?op=detach_group&orgid={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMGROUPDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" alt="'._SYSTEM_LABEL_DETACH.'"></a>';
+    $action = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=detach_group&orgid={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMGROUPDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" alt="'._SYSTEM_LABEL_DETACH.'"></a>';
 
     $values[$c]['values']['label']      = array('label' => htmlentities($fields['label']));
     $values[$c]['values']['parents']    = array('label' => htmlentities($str_parents));
@@ -169,7 +169,7 @@ while ($fields = $db->fetchrow($result))
     $values[$c]['values']['adminlevel'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png\" />", 'sort_label' => $fields['adminlevel']);
 
     if ($_SESSION['ploopi']['adminlevel'] >= $fields['adminlevel'])
-        $manage_grp =   '<a href="'.ploopi_urlencode("{$scriptenv}?op=modify_group&orgid={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
+        $manage_grp =   '<a href="'.ploopi_urlencode("admin.php?op=modify_group&orgid={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
     else
         $manage_grp =   '<img src="'.$_SESSION['ploopi']['template_path'].'/img/ico_noway.gif" title=""><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png" title="">';
 

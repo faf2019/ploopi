@@ -38,7 +38,7 @@
  */
 ?>
 
-<FORM NAME="form_modify_group" ACTION="<? echo $scriptenv ?>" METHOD="POST">
+<FORM NAME="form_modify_group" ACTION="admin.php" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="op" VALUE="save_group">
 <INPUT TYPE="HIDDEN" NAME="orgid" VALUE="<? echo $org->fields['id']; ?>">
 <TABLE CELLPADDING="2" CELLSPACING="1" ALIGN="CENTER">

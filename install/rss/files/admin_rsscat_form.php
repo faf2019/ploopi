@@ -39,7 +39,7 @@ if ($rsscat->new) echo $skin->open_simplebloc(_RSS_LABEL_CATADD);
 else echo $skin->open_simplebloc(str_replace('LABEL',$rsscat->fields['title'],_RSS_LABEL_CATMODIFY));
 ?>
 
-<form name="form_rsscat" action="<? echo $scriptenv; ?>" method="post" onsubmit="return rsscat_validate(this);">
+<form name="form_rsscat" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return rsscat_validate(this);">
 <input type="hidden" name="op" value="rsscat_save">
 <input type="hidden" name="rsscat_id" value="<? echo $rsscat->fields['id']; ?>">
 <div class="ploopi_form">
@@ -55,7 +55,7 @@ else echo $skin->open_simplebloc(str_replace('LABEL',$rsscat->fields['title'],_R
     </div>
 </div>
 <div style="padding:2px;text-align:right;">
-    <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?rssTabItem=tabCatList"); ?>';" tabindex="103" />
+    <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?rssTabItem=tabCatList"); ?>';" tabindex="103" />
     <input type="reset" class="button" value="<? echo _PLOOPI_RESET; ?>" tabindex="104" />
     <input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>" tabindex="102" />
 </div>

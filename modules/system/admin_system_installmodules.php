@@ -135,9 +135,9 @@ while ($fields = $db->fetchrow($result))
     $values[$c]['values']['version'] = array('label' => $fields['version'], 'style' => '');
     $values[$c]['values']['date'] = array('label' => $ldate['date'], 'style' => '', 'sort_label' => $fields['date']);
     $values[$c]['values']['actions'] = array('label' => $has_actions, 'style' => 'text-align:center');
-    $values[$c]['values']['metabase'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("{$scriptenv}?op=updatemb&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMBUPDATE."')\">{$has_mb}</a>", 'style' => 'text-align:center');
+    $values[$c]['values']['metabase'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin.php?op=updatemb&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMBUPDATE."')\">{$has_mb}</a>", 'style' => 'text-align:center');
     $values[$c]['values']['wce'] = array('label' => $has_cmsop, 'style' => 'text-align:center');
-    $values[$c]['values']['action'] = array('label' => "<a href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("{$scriptenv}?op=uninstall&uninstallidmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMODULEUNINSTAL."')\">"._SYSTEM_LABEL_UNINSTALL."</a>", 'style' => 'text-align:center;');
+    $values[$c]['values']['action'] = array('label' => "<a href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin.php?op=uninstall&uninstallidmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMODULEUNINSTAL."')\">"._SYSTEM_LABEL_UNINSTALL."</a>", 'style' => 'text-align:center;');
 
     $values[$c]['description'] = $fields['description'];
     $values[$c]['link'] = '';
@@ -178,7 +178,7 @@ foreach($tabmoduletype_install as $label => $fields)
                 $values[$c]['values']['author'] = array('label' => $fields['author'], 'style' => '');
                 $values[$c]['values']['version'] = array('label' => $fields['version'], 'style' => '');
                 $values[$c]['values']['date'] = array('label' => $ldate['date'], 'style' => '', 'sort_label' => $fields['date']);
-                $values[$c]['values']['action'] = array('label' => "<a href=\"".ploopi_urlencode("{$scriptenv}?op=update&idmoduletype={$tabmoduletype_installed[$label]['id']}&installmoduletype={$tabmoduletype_install[$label]['label']}&updatefrom={$tabmoduletype_installed[$label]['version']}&updateto={$fields['version']}")."\">"._SYSTEM_LABEL_UPDATE."</a>", 'style' => 'text-align:center;');
+                $values[$c]['values']['action'] = array('label' => "<a href=\"".ploopi_urlencode("admin.php?op=update&idmoduletype={$tabmoduletype_installed[$label]['id']}&installmoduletype={$tabmoduletype_install[$label]['label']}&updatefrom={$tabmoduletype_installed[$label]['version']}&updateto={$fields['version']}")."\">"._SYSTEM_LABEL_UPDATE."</a>", 'style' => 'text-align:center;');
             }
             else
             {
@@ -224,7 +224,7 @@ foreach($tabmoduletype_install as $label => $fields)
             $values[$c]['values']['author'] = array('label' => $fields['author']);
             $values[$c]['values']['version'] = array('label' => $fields['version']);
             $values[$c]['values']['date'] = array('label' => $ldate['date']);
-            $values[$c]['values']['action'] = array('label' => "<a href=\"".ploopi_urlencode("{$scriptenv}?op=install&installmoduletype={$fields['label']}")."\">"._SYSTEM_LABEL_INSTALL."</a>", 'style' => 'text-align:center;');
+            $values[$c]['values']['action'] = array('label' => "<a href=\"".ploopi_urlencode("admin.php?op=install&installmoduletype={$fields['label']}")."\">"._SYSTEM_LABEL_INSTALL."</a>", 'style' => 'text-align:center;');
         }
         else
         {

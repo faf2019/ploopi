@@ -144,7 +144,7 @@ switch($op)
             $docfiledraft = new docfiledraft();
             $docfiledraft->openmd5($_GET['docfiledraft_md5id']);
             $error = $docfiledraft->delete();
-            ploopi_redirect("{$scriptenv}?op=doc_explorer&currentfolder=$currentfolder&error=$error");
+            ploopi_redirect("admin.php?op=doc_explorer&currentfolder=$currentfolder&error=$error");
         }
     break;
 
@@ -195,11 +195,11 @@ switch($op)
              
                 
                 ploopi_create_user_action_log(_DOC_ACTION_DELETEFILE, $docfile->fields['id']);
-                ploopi_redirect("{$scriptenv}?op=doc_explorer&currentfolder={$currentfolder}&error={$error}");
+                ploopi_redirect("admin.php?op=doc_explorer&currentfolder={$currentfolder}&error={$error}");
             }
         }
 
-        ploopi_redirect("{$scriptenv}?op=doc_explorer&currentfolder={$currentfolder}");
+        ploopi_redirect("admin.php?op=doc_explorer&currentfolder={$currentfolder}");
     break;
 
     case 'doc_fileindex':
@@ -211,7 +211,7 @@ switch($op)
             $docfile->parse();
             $docfile->save();
         }
-        ploopi_redirect("{$scriptenv}?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$_GET['docfile_md5id']}");
+        ploopi_redirect("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$_GET['docfile_md5id']}");
     break;
 
     case 'doc_filesave':
@@ -343,7 +343,7 @@ switch($op)
             else // mise à jour d'un (unique) fichier
             {
                 $docfile = new docfile();
-                if (!$docfile->openmd5($_REQUEST['docfile_md5id'])) ploopi_redirect($scriptenv);
+                if (!$docfile->openmd5($_REQUEST['docfile_md5id'])) ploopi_redirect('admin.php');
                 $docfile_id = $docfile->fields['id'];
 
                 if ($draft)
@@ -424,7 +424,7 @@ switch($op)
                 $docfiledraft->publish();
             }
         }
-        ploopi_redirect("{$scriptenv}?op=doc_explorer&currentfolder={$currentfolder}");
+        ploopi_redirect("admin.php?op=doc_explorer&currentfolder={$currentfolder}");
     break;
 
     case 'doc_folderpublish':
@@ -456,7 +456,7 @@ switch($op)
             }
         }
 
-        ploopi_redirect("{$scriptenv}?op=doc_explorer&currentfolder={$currentfolder}");
+        ploopi_redirect("admin.php?op=doc_explorer&currentfolder={$currentfolder}");
     break;
 
     case 'doc_folderdelete':
@@ -502,7 +502,7 @@ switch($op)
                 ploopi_create_user_action_log(_DOC_ACTION_DELETEFOLDER, $docfolder->fields['id']);
             }
 
-            ploopi_redirect("{$scriptenv}?op=doc_explorer&currentfolder={$currentfolder}");
+            ploopi_redirect("admin.php?op=doc_explorer&currentfolder={$currentfolder}");
         }
     break;
 

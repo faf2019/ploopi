@@ -53,7 +53,7 @@ $modules = $workspace->getmodules();
 
             if ($op == 'modify_role')
             {
-                if (empty($_GET['roleid']) || !is_numeric($_GET['roleid'])) ploopi_redirect($scriptenv);
+                if (empty($_GET['roleid']) || !is_numeric($_GET['roleid'])) ploopi_redirect('admin.php');
 
                 // ouverture du role
                 $role->open($_GET['roleid']);
@@ -61,7 +61,7 @@ $modules = $workspace->getmodules();
             }
             else
             {
-                if (empty($_POST['role_id_module']) || !is_numeric($_POST['role_id_module']) || !isset($modules[$_POST['role_id_module']])) ploopi_redirect($scriptenv);
+                if (empty($_POST['role_id_module']) || !is_numeric($_POST['role_id_module']) || !isset($modules[$_POST['role_id_module']])) ploopi_redirect('admin.php');
 
                 // nouveau role
                 $role->init_description();
@@ -73,7 +73,7 @@ $modules = $workspace->getmodules();
             ?>
             <div style="font-weight:bold;margin-bottom:4px;"><? echo "{$module['instancename']} ({$module['label']})"; ?></div>
 
-            <form action="<? echo $scriptenv; ?>" method="post" onsubmit="return role_validate(this);">
+            <form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return role_validate(this);">
             <input type="hidden" name="op" value="save_role">
             <input type="hidden" name="roleid" value="<? echo $role->fields['id']; ?>">
             <input type="hidden" name="role_id_module" value="<? echo $role->fields['id_module']; ?>">
@@ -107,7 +107,7 @@ $modules = $workspace->getmodules();
             }
             ?>
             <div style="padding:4px 2px;">
-                <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?roleTabItem=tabRoleManagement"); ?>';">
+                <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?roleTabItem=tabRoleManagement"); ?>';">
                 <input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>">
             </div>
             </form>
@@ -116,7 +116,7 @@ $modules = $workspace->getmodules();
 
         default:
             ?>
-            <form action="<? echo $scriptenv; ?>" method="post">
+            <form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
             <input type="hidden" name="op" value="add_role">
             <div style="margin-bottom:4px;">
                 <select class="select" name="role_id_module">
@@ -131,7 +131,7 @@ $modules = $workspace->getmodules();
                 </select>
             </div>
             <div style="padding:4px 2px;">
-                <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?roleTabItem=tabRoleManagement"); ?>';">
+                <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?roleTabItem=tabRoleManagement"); ?>';">
                 <input type="submit" class="button" value="Suivant">
             </div>
             </form>

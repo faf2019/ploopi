@@ -38,7 +38,7 @@ include_once './modules/system/xmlparser_mod.php';
 include_once './modules/system/xmlparser_mb.php';
 include_once './include/classes/xml2array.php';
 
-if (empty($_GET['installmoduletype'])) ploopi_redirect($scriptenv);
+if (empty($_GET['installmoduletype'])) ploopi_redirect('admin.php');
 
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
@@ -301,7 +301,7 @@ else
 }
 ?>
 <div style="padding:4px;text-align:right;">
-    <form action="<? echo ploopi_urlencode("{$scriptenv}?sysToolbarItem=install"); ?>" method="post">
+    <form action="<? echo ploopi_urlencode("admin.php?sysToolbarItem=install"); ?>" method="post">
     <input type="submit" class="flatbutton" value="<? echo _PLOOPI_CONTINUE; ?>">
     </form>
 </div>

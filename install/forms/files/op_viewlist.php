@@ -68,8 +68,8 @@
     {
         ?>
             <div style="float:left;margin-left:10px;">
-            <a title="<? echo _FORMS_EXPORT; ?> XLS" href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_op=forms_export&forms_fuid={$_GET['forms_fuid']}&forms_export_format=XLS&orderby={$orderby}&option={$option}"); ?>"><img border="0" alt="<? echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/download_xls.gif"></a>
-            <a title="<? echo _FORMS_EXPORT; ?> CSV" href="<? echo ploopi_urlencode("{$scriptenv}?ploopi_op=forms_export&forms_fuid={$_GET['forms_fuid']}&forms_export_format=CSV&orderby={$orderby}&option={$option}"); ?>"><img border="0" alt="<? echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/download_csv.gif"></a>
+            <a title="<? echo _FORMS_EXPORT; ?> XLS" href="<? echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_fuid={$_GET['forms_fuid']}&forms_export_format=XLS&orderby={$orderby}&option={$option}"); ?>"><img border="0" alt="<? echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/download_xls.gif"></a>
+            <a title="<? echo _FORMS_EXPORT; ?> CSV" href="<? echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_fuid={$_GET['forms_fuid']}&forms_export_format=CSV&orderby={$orderby}&option={$option}"); ?>"><img border="0" alt="<? echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/download_csv.gif"></a>
             </div>
         <?
     }
@@ -190,7 +190,7 @@
                     switch($data_title[$key]['type'])
                     {
                         case 'file':
-                            if ($value != '') $value = $value.'<a href="'.ploopi_urlencode("{$scriptenv}?ploopi_op=forms_download_file&forms_fuid={$_GET['forms_fuid']}&reply_id={$reply_id}&field_id={$key}").'"><img style="border:0px" src="./modules/forms/img/link.gif"></a>';
+                            if ($value != '') $value = $value.'<a href="'.ploopi_urlencode("admin.php?ploopi_op=forms_download_file&forms_fuid={$_GET['forms_fuid']}&reply_id={$reply_id}&field_id={$key}").'"><img style="border:0px" src="./modules/forms/img/link.gif"></a>';
                         break;
 
                         case 'color':
@@ -205,8 +205,8 @@
                     echo "<td class=\"data\">{$value}</td>";
                 }
             }
-            $modify = ploopi_urlencode("$scriptenv?op=modify&forms_id={$id_form}&reply_id={$reply_id}");
-            $delete = ploopi_urlencode("$scriptenv?op=delete_reply&forms_id={$id_form}&reply_id={$reply_id}");
+            $modify = ploopi_urlencode("admin.php?op=modify&forms_id={$id_form}&reply_id={$reply_id}");
+            $delete = ploopi_urlencode("admin.php?op=delete_reply&forms_id={$id_form}&reply_id={$reply_id}");
             if ($_SESSION['ploopi']['action'] == 'public')
             {
                 ?>

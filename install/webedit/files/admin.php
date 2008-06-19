@@ -122,9 +122,9 @@ switch($op)
 
             ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
 
-            ploopi_redirect("{$scriptenv}?headingid={$headingid}");
+            ploopi_redirect("admin.php?headingid={$headingid}");
         }
-        else ploopi_redirect($scriptenv);
+        else ploopi_redirect('admin.php');
     break;
 
     case 'heading_addnew':
@@ -167,9 +167,9 @@ switch($op)
             
             ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
 
-            ploopi_redirect("{$scriptenv}?headingid={$headingid}");
+            ploopi_redirect("admin.php?headingid={$headingid}");
         }
-        else ploopi_redirect($scriptenv);
+        else ploopi_redirect('admin.php');
     break;
 
 
@@ -231,9 +231,9 @@ switch($op)
 
             ploopi_workflow_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
             
-            ploopi_redirect("{$scriptenv}?headingid={$headingid}");
+            ploopi_redirect("admin.php?headingid={$headingid}");
         }
-        else ploopi_redirect($scriptenv);
+        else ploopi_redirect('admin.php');
 
     break;
 
@@ -262,9 +262,9 @@ switch($op)
             
                 $heading->delete(); // you don't have to delete the root heading
                 ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
-                ploopi_redirect("{$scriptenv}?headingid={$heading->fields['id_heading']}");
+                ploopi_redirect("admin.php?headingid={$heading->fields['id_heading']}");
             }
-            else ploopi_redirect($scriptenv);
+            else ploopi_redirect('admin.php');
         }
     break;
 
@@ -461,16 +461,16 @@ switch($op)
                         {
                             case 'published':
                                 $mail_title = "{$_SERVER['HTTP_HOST']} : modification d'un article";
-                                $mail_content = "Bonjour,\n\nvous recevez ce message car vous êtes abonné au site {$_SERVER['HTTP_HOST']}.\n\nUn article intitulé \"{$article->fields['title']}\" a été modifié.\n\nVous pouvez le consulter en cliquant sur ce lien : {$basepath}/".$article->geturl();
+                                $mail_content = "Bonjour,\n\nvous recevez ce message car vous êtes abonné au site {$_SERVER['HTTP_HOST']}.\n\nUn article intitulé \"{$article->fields['title']}\" a été modifié.\n\nVous pouvez le consulter en cliquant sur ce lien : "._PLOOPI_BASEPATH."/".$article->geturl();
                             break;  
                             
                             case 'published_new':
                                 $mail_title = "{$_SERVER['HTTP_HOST']} : publication d'un article";
-                                $mail_content = "Bonjour,\n\nvous recevez ce message car vous êtes abonné au site {$_SERVER['HTTP_HOST']}.\n\nUn nouvel article intitulé \"{$article->fields['title']}\" a été publié.\n\nVous pouvez le consulter en cliquant sur ce lien : {$basepath}/".$article->geturl();
+                                $mail_content = "Bonjour,\n\nvous recevez ce message car vous êtes abonné au site {$_SERVER['HTTP_HOST']}.\n\nUn nouvel article intitulé \"{$article->fields['title']}\" a été publié.\n\nVous pouvez le consulter en cliquant sur ce lien : "._PLOOPI_BASEPATH."/".$article->geturl();
                             break;  
                         }
                         
-                        $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : {$basepath}/unsubscribe-".ploopi_base64_encode($row['email']).".html";
+                        $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : "._PLOOPI_BASEPATH."/unsubscribe-".ploopi_base64_encode($row['email']).".html";
                         
                         ploopi_send_mail($from, $row['email'], $mail_title, $mail_content, null, null, null, null, false);
                     }
@@ -503,9 +503,9 @@ switch($op)
 
             if (!empty($_POST['articleid'])) ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
             else ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
-            ploopi_redirect("{$scriptenv}?op=article_modify&articleid={$articleid}");
+            ploopi_redirect("admin.php?op=article_modify&articleid={$articleid}");
         }
-        else ploopi_redirect($scriptenv);
+        else ploopi_redirect('admin.php');
     break;
 
     case 'article_delete':
@@ -539,7 +539,7 @@ switch($op)
                 ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $_GET['articleid']);
             }
         }
-        ploopi_redirect($scriptenv);
+        ploopi_redirect('admin.php');
     break;
     
     case 'subscriber_delete':
@@ -549,7 +549,7 @@ switch($op)
             $heading_subscriber->open($headingid, $_GET['subscriber_email']);
             $heading_subscriber->delete();
         }        
-        ploopi_redirect($scriptenv);
+        ploopi_redirect('admin.php');
     break;
 
     case 'display_iframe':
@@ -591,7 +591,7 @@ switch($op)
                 }
                 else // article inconnu
                 {
-                    ploopi_redirect($scriptenv);
+                    ploopi_redirect('admin.php');
                 }
             }
         }

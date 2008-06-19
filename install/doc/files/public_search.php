@@ -57,7 +57,7 @@ $show_options = (   !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['se
  */                
 ?>
 
-<form action="<? echo $scriptenv; ?>" onsubmit="javascript:doc_search_next();return false;" method="post">
+<form action="<? echo ploopi_urlencode('admin.php'); ?>" onsubmit="javascript:doc_search_next();return false;" method="post">
 <input type="hidden" name="op" value="search_next">
 <div class="doc_folderinfo">
     <div style="float:left;height:40px;">

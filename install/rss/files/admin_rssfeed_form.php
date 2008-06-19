@@ -50,7 +50,7 @@ $a_categories = $db->getarray();
 
 ?>
 
-<form name="form_rssfeed" action="<? echo $scriptenv; ?>" method="post" onsubmit="return rssfeed_validate(this);">
+<form name="form_rssfeed" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return rssfeed_validate(this);">
 <input type="hidden" name="op" value="rssfeed_save">
 <input type="hidden" name="rssfeed_id" value="<? echo $rssfeed->fields['id']; ?>">
 <div class="ploopi_form">
@@ -97,7 +97,7 @@ $a_categories = $db->getarray();
     </div>
 </div>
 <div style="padding:2px;text-align:right;">
-    <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?rssTabItem=tabFeedList"); ?>';" tabindex="103" />
+    <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?rssTabItem=tabFeedList"); ?>';" tabindex="103" />
     <input type="reset" class="button" value="<? echo _PLOOPI_RESET; ?>" tabindex="104" />
     <input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>" tabindex="102" />
 </div>

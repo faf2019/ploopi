@@ -46,9 +46,9 @@ switch($op)
             $role->open($_GET['roleid']);
             ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEROLE, "{$role->fields['label']} ({$role->fields['id']})");
             $role->delete();
-            ploopi_redirect("{$scriptenv}?roleTabItem=tabRoleManagement&reloadsession");
+            ploopi_redirect("admin.php?roleTabItem=tabRoleManagement&reloadsession");
         }
-        ploopi_redirect("{$scriptenv}?roleTabItem=tabRoleManagement");
+        ploopi_redirect("admin.php?roleTabItem=tabRoleManagement");
     break;
 
     case 'save_role':
@@ -68,10 +68,10 @@ switch($op)
         {
             $role->save($_POST['id_action'], $module->fields['id_module_type']);
             ploopi_create_user_action_log(($isnew) ?_SYSTEM_ACTION_CREATEROLE : _SYSTEM_ACTION_MODIFYROLE, "{$role->fields['label']} ({$role->fields['id']})");
-            ploopi_redirect("{$scriptenv}?roleTabItem=tabRoleManagement&reloadsession");
+            ploopi_redirect("admin.php?roleTabItem=tabRoleManagement&reloadsession");
         }
 
-        ploopi_redirect("{$scriptenv}?roleTabItem=tabRoleManagement");
+        ploopi_redirect("admin.php?roleTabItem=tabRoleManagement");
     break;
 }
 
@@ -82,13 +82,13 @@ if (isset($system_roletabid)) $_SESSION['system']['roletabid'] = $system_roletab
 if (!isset($_SESSION['system']['roletabid'])) $_SESSION['system']['roletabid'] = '';
 
 $tabs['tabRoleManagement'] = array (    'title' => _SYSTEM_LABELTAB_ROLEMANAGEMENT,
-                                        'url' => "{$scriptenv}?roleTabItem=tabRoleManagement");
+                                        'url' => "admin.php?roleTabItem=tabRoleManagement");
 
 $tabs['tabRoleAdd'] = array (   'title' => 'Ajouter un Rôle',
-                                'url' => "{$scriptenv}?roleTabItem=tabRoleAdd");
+                                'url' => "admin.php?roleTabItem=tabRoleAdd");
 
 $tabs['tabRoleUsers'] = array ( 'title' => _SYSTEM_LABELTAB_ROLEUSERS,
-                                        'url' => "{$scriptenv}?roleTabItem=tabRoleUsers");
+                                        'url' => "admin.php?roleTabItem=tabRoleUsers");
 
 if (!empty($_GET['roleTabItem']))  $_SESSION['system']['roleTabItem'] = $_GET['roleTabItem'];
 if (!isset($_SESSION['system']['roleTabItem'])) $_SESSION['system']['roleTabItem'] = '';

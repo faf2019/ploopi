@@ -19,6 +19,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fonctions javascript
+ *
+ * @package chat
+ * @subpackage js
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Audrey Gilbert
+ */
+
 var chat_last_msg_id = -1;   // id du dernier message reçu, permet de ne demander que les messages non reçus
 var chat_pe_refresh = null; // timer pour le rafraichissement auto
 var chat_pe_refresh_ts = 2; // tps en seconde entre chaque rafraichissement
@@ -48,7 +58,7 @@ function chat_refresh()
     new Ajax.Request('index-quick.php',
         {
             method:     'post',
-            parameters: {ploopi_op: 'chat_refresh', 'chat_last_msg_id': chat_last_msg_id},
+            parameters: {'ploopi_env': _PLOOPI_ENV, 'ploopi_op':  'chat_refresh', 'chat_last_msg_id': chat_last_msg_id},
             encoding:   'iso-8859-15',
             onSuccess:  function(transport, json) 
                         {
@@ -141,7 +151,7 @@ function chat_msg_send()
 	    new Ajax.Request('index-quick.php',
 	        {
 	            method:     'post',
-	            parameters: {ploopi_op: 'chat_msg_send', chat_msg: $('chat_msg').value},
+	            parameters: {'ploopi_env': _PLOOPI_ENV, 'ploopi_op':  'chat_msg_send', chat_msg: $('chat_msg').value},
 	            encoding:   'iso-8859-15',
 	            onSuccess:  function(transport) 
 	            {

@@ -97,9 +97,9 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
             if ($row['foldertype'] == 'shared') $ico .= '_shared';
             if ($row['foldertype'] == 'public') $ico .= '_public';
             if ($row['readonly']) $ico .= '_locked';
-            $block->addmenu("<p class=\"ploopi_va\"><img src=\"./modules/doc/img/{$ico}.png\" /><span>&nbsp;{$row['name']}</span></p>", ploopi_urlencode("{$scriptenv}?ploopi_moduleid=$menu_moduleid&ploopi_action=public&currentfolder={$row['id']}"));
+            $block->addmenu("<p class=\"ploopi_va\"><img src=\"./modules/doc/img/{$ico}.png\" /><span>&nbsp;{$row['name']}</span></p>", ploopi_urlencode("admin.php?ploopi_moduleid=$menu_moduleid&ploopi_action=public&currentfolder={$row['id']}"));
         }
-        else $block->addmenu($row['name'], ploopi_urlencode("{$scriptenv}?ploopi_moduleid=$menu_moduleid&ploopi_action=public&currentfolder={$row['id']}"));
+        else $block->addmenu($row['name'], ploopi_urlencode("admin.php?ploopi_moduleid=$menu_moduleid&ploopi_action=public&currentfolder={$row['id']}"));
 
     }
 
@@ -113,7 +113,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_displayroot'])
 {
     $label = (empty($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_rootlabel'])) ? _DOC_MYDOCUMENTS : $_SESSION['ploopi']['modules'][$menu_moduleid]['doc_rootlabel'];
-    $block->addmenu($label, ploopi_urlencode("{$scriptenv}?ploopi_moduleid=$menu_moduleid&ploopi_action=public"));
+    $block->addmenu($label, ploopi_urlencode("admin.php?ploopi_moduleid=$menu_moduleid&ploopi_action=public"));
 }
 
 /**
@@ -122,7 +122,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_displayroot'])
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_displaysearch'])
 {
-    $block->addmenu(_DOC_SEARCH, ploopi_urlencode("{$scriptenv}?ploopi_moduleid=$menu_moduleid&ploopi_action=public&op=doc_bd_search"));
+    $block->addmenu(_DOC_SEARCH, ploopi_urlencode("admin.php?ploopi_moduleid=$menu_moduleid&ploopi_action=public&op=doc_bd_search"));
 }
 
 /**
@@ -131,6 +131,6 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_displaysearch'])
 
 if (ploopi_isactionallowed(0, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
 {
-    $block->addmenu('<b>'._DOC_LABEL_ADMIN.'</b>', ploopi_urlencode("{$scriptenv}?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"));
+    $block->addmenu('<b>'._DOC_LABEL_ADMIN.'</b>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"));
 }
 ?>

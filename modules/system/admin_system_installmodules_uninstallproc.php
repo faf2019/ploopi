@@ -34,7 +34,7 @@
 /**
  * On vérifie le contenu de la variable GET
  */
-if (empty($_GET['uninstallidmoduletype'])) ploopi_redirect($scriptenv);
+if (empty($_GET['uninstallidmoduletype'])) ploopi_redirect('admin.php');
 
 /**
  * Inclusion des classes de gestion de modules

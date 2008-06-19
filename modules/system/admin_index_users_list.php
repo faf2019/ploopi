@@ -79,15 +79,15 @@ else
     <?
     $tabs_char = array();
 
-    for($i=1;$i<27;$i++) $tabs_char[$i] = array('title' => chr($i+64), 'url' => "{$scriptenv}?alphaTabItem={$i}");
+    for($i=1;$i<27;$i++) $tabs_char[$i] = array('title' => chr($i+64), 'url' => "admin.php?alphaTabItem={$i}");
 
-    $tabs_char[99] = array('title' => "&nbsp;tous&nbsp;", 'url' => "{$scriptenv}?alphaTabItem=99");
+    $tabs_char[99] = array('title' => "&nbsp;tous&nbsp;", 'url' => "admin.php?alphaTabItem=99");
 
     echo $skin->create_tabs($tabs_char,$alphaTabItem);
     ?>
 </div>
 
-<form action="<? echo $scriptenv; ?>" method="post">
+<form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
 <p class="ploopi_va" style="padding:4px;border-bottom:2px solid #c0c0c0;">
     <span><? echo _SYSTEM_LABEL_USER; ?> :</span>
     <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<? echo htmlentities($pattern); ?>">
@@ -191,13 +191,13 @@ while ($fields = $db->fetchrow($result))
     $groups = $user->getgroups();
     $currentgroup = current($groups);
 
-    $action = ' <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("{$scriptenv}?op=detach_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_LABEL_DETACH.'"></a>
-                <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("{$scriptenv}?op=delete_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>
+    $action = ' <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=detach_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_LABEL_DETACH.'"></a>
+                <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=delete_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>
                 ';
 
     $values[$c]['values']['name']       = array('label' => htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
     $values[$c]['values']['login']      = array('label' => htmlentities($fields['login']));
-    $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi_urlencode("{$scriptenv}?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.htmlentities($currentgroup['label']).'</a>');
+    $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.htmlentities($currentgroup['label']).'</a>');
     $values[$c]['values']['service']    = array('label' => htmlentities($fields['service']));
 
     switch ($_SESSION['system']['level'])
@@ -223,7 +223,7 @@ while ($fields = $db->fetchrow($result))
             $values[$c]['values']['adminlevel'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png\" />", 'sort_label' => $fields['adminlevel']);
 
             if ($_SESSION['ploopi']['adminlevel'] >= $fields['adminlevel'])
-                $manage_user =  '<a href="'.ploopi_urlencode("{$scriptenv}?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
+                $manage_user =  '<a href="'.ploopi_urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
             else
                 $manage_user =  '<img src="./modules/system/img/ico_noway.gif" title="">&nbsp;&nbsp;<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png" alt="">';
 
@@ -233,7 +233,7 @@ while ($fields = $db->fetchrow($result))
 
         case _SYSTEM_GROUPS :
 
-            $values[$c]['values']['actions']        = array('label' => '<a href="'.ploopi_urlencode("{$scriptenv}?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action);
+            $values[$c]['values']['actions']        = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action);
         break;
     }
 

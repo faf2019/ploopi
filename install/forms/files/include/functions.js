@@ -112,7 +112,7 @@ function forms_deletedata(form_id, event)
     {
         if (confirm('Êtes vous certain ?'))
         {
-            content = ploopi_xmlhttprequest('admin.php','ploopi_op=forms_delete_data&form_id='+form_id+'&form_delete_date='+$('forms_delete_date').value)
+            content = ploopi_xmlhttprequest('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_delete_data&form_id='+form_id+'&form_delete_date='+$('forms_delete_date').value)
             ploopi_showpopup(content,'',event,'click','forms_deletedata');
         }
     }
@@ -124,13 +124,13 @@ function forms_display(fuid, options)
 
     dest = 'form_'+fuid;
     ploopi_ajaxloader(dest);
-    ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=forms_display&forms_fuid='+fuid+options,'',dest);
+    ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_display&forms_fuid='+fuid+options,'',dest);
 }
 
 function forms_openreply(fuid, id_reply, event)
 {
     ploopi_showpopup(ploopi_ajaxloader_content,350,event,'click','popup_forms_openreply');
-    ploopi_xmlhttprequest_todiv('admin.php','ploopi_op=forms_openreply&forms_fuid='+fuid+'&forms_reply_id='+id_reply,'','popup_forms_openreply');
+    ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_openreply&forms_fuid='+fuid+'&forms_reply_id='+id_reply,'','popup_forms_openreply');
 }
 
 function forms_changetype(t)

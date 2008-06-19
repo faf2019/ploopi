@@ -50,8 +50,8 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
     
     $sqllimitgroup = ' AND ploopi_mod_forms_form.id_workspace IN ('.ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).')';
     
-    $tabs['formlist'] = array('title' => _FORMS_LABELTAB_LIST, 'url' => "{$scriptenv}?ploopi_moduletabid=formlist");
-    $tabs['formadd'] = array('title' => _FORMS_LABELTAB_ADD, 'url' => "{$scriptenv}?ploopi_moduletabid=formadd");
+    $tabs['formlist'] = array('title' => _FORMS_LABELTAB_LIST, 'url' => "admin.php?ploopi_moduletabid=formlist");
+    $tabs['formadd'] = array('title' => _FORMS_LABELTAB_ADD, 'url' => "admin.php?ploopi_moduletabid=formadd");
     
     echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
     echo $skin->create_tabs($tabs,$_SESSION['ploopi']['moduletabid']);
@@ -206,10 +206,10 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                     $db->query($data_object->dump());
                 }
     
-                if ($op == 'forms_generate_tables_from_list') ploopi_redirect("{$scriptenv}?forms_id={$forms->fields['id']}&termine");
-                else ploopi_redirect("{$scriptenv}?op=forms_modify&forms_id={$forms->fields['id']}&termine");
+                if ($op == 'forms_generate_tables_from_list') ploopi_redirect("admin.php?forms_id={$forms->fields['id']}&termine");
+                else ploopi_redirect("admin.php?op=forms_modify&forms_id={$forms->fields['id']}&termine");
             }
-            else ploopi_redirect($scriptenv);
+            else ploopi_redirect('admin.php');
         break;
         */
         case 'forms_save':
@@ -231,13 +231,13 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             $forms->setuwm();
             $forms->save();
     
-            ploopi_redirect("{$scriptenv}?ploopi_moduletabid=formlist&op=forms_modify&forms_id={$forms->fields['id']}");
+            ploopi_redirect("admin.php?ploopi_moduletabid=formlist&op=forms_modify&forms_id={$forms->fields['id']}");
         break;
     
         case 'forms_delete':
             $forms = new form();
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id'])) $forms->delete();
-            ploopi_redirect($scriptenv);
+            ploopi_redirect('admin.php');
         break;
     
         case 'forms_field_delete':
@@ -245,9 +245,9 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             {
                 $field = new field();
                 if ($field->open($_GET['field_id'])) $field->delete();
-                ploopi_redirect("{$scriptenv}?op=forms_modify&forms_id={$field->fields['id_form']}");
+                ploopi_redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}");
             }
-            else ploopi_redirect($scriptenv);
+            else ploopi_redirect('admin.php');
         break;
     
         case 'forms_field_save':
@@ -306,9 +306,9 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                     if (!isset($_POST['field_option_wceview'])) $field->fields['option_wceview'] = 0;
                 }
                 $field->save();
-                ploopi_redirect("{$scriptenv}?op=forms_modify&forms_id={$_POST['forms_id']}");
+                ploopi_redirect("admin.php?op=forms_modify&forms_id={$_POST['forms_id']}");
             }
-            else ploopi_redirect($scriptenv);
+            else ploopi_redirect('admin.php');
         break;
     
         case 'forms_field_moveup':
@@ -340,9 +340,9 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                         $db->query("update ploopi_mod_forms_field set position=".$field->fields['position']." where position=0 and id_form = {$field->fields['id_form']}");
                     }
                 }
-                ploopi_redirect("{$scriptenv}?op=forms_modify&forms_id={$field->fields['id_form']}");
+                ploopi_redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}");
             }
-            else ploopi_redirect($scriptenv);
+            else ploopi_redirect('admin.php');
         break;
     
         case "export":
@@ -352,7 +352,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                 $forms->open($_GET['forms_id']);
                 include './modules/forms/public_forms_export.php';
             }
-            else ploopi_redirect($scriptenv);
+            else ploopi_redirect('admin.php');
         break;
     
     }
@@ -377,7 +377,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                     {
                         include './modules/forms/public_forms_display.php';
                     }
-                    else ploopi_redirect($scriptenv);
+                    else ploopi_redirect('admin.php');
                 break;
     
                 default:

@@ -95,7 +95,7 @@ while($row = $db->fetchrow())
     }
     
     $values[$c]['description'] = 'Attribuer ce rôle';
-    $values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=assign_role&roleid={$row['id']}");
+    $values[$c]['link'] = ploopi_urlencode("admin.php?op=assign_role&roleid={$row['id']}");
     $c++;
 }
 

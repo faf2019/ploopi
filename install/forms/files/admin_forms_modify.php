@@ -62,7 +62,7 @@ $ptrdir = @opendir('./modules/forms/templates/');
 while ($dir = @readdir($ptrdir)) if ($dir != '.' && $dir != '..' && is_dir("./modules/forms/templates/{$dir}")) $forms_tpl[] = $dir;
 ?>
 
-<form name="frm_modify" action="<? echo $scriptenv; ?>" method="post" onsubmit="javascript:return forms_validate(this);">
+<form name="frm_modify" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return forms_validate(this);">
 <input type="hidden" name="op" value="forms_save" />
 <?
 if (!$forms->new)
@@ -90,7 +90,7 @@ if (!$forms->new)
     else
     {
         ?>
-        <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_modify_options');ploopi_xmlhttprequest('index-quick.php', 'ploopi_op=forms_xml_switchdisplay&switch=forms_modify_options&display='+$('forms_modify_options').style.display, true);">
+        <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_modify_options');ploopi_xmlhttprequest('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_modify_options&display='+$('forms_modify_options').style.display, true);">
             <span>Paramétrage du formulaire</span><span style="font-weight:normal;font-size:0.8em;margin-left:20px;">(cliquez pour ouvrir/fermer)</span>
         </a>
         <?
@@ -252,18 +252,18 @@ if (!$forms->new)
                 if (!$forms->new)
                 {
                     ?>
-                    <input type="button" class="flatbutton" style="font-weight:bold;" value="Générer les données physiques" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?op=forms_generate_tables&forms_id={$_GET['forms_id']}"); ?>'">
+                    <input type="button" class="flatbutton" style="font-weight:bold;" value="Générer les données physiques" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=forms_generate_tables&forms_id={$_GET['forms_id']}"); ?>'">
                     <?
                 }
                 */
                 ?>
-                <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?ploopi_moduletabid=formslist"); ?>'">
+                <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?ploopi_moduletabid=formslist"); ?>'">
                 <input type="reset" class="flatbutton" value="<? echo _PLOOPI_RESET; ?>">
                 <?
                 if (!$forms->new && false) //désactivé
                 {
                     ?>
-                    <input type="button" class="flatbutton" value="<? echo _FORMS_PREVIEW; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?op=forms_preview&forms_id={$_GET['forms_id']}"); ?>'">
+                    <input type="button" class="flatbutton" value="<? echo _FORMS_PREVIEW; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=forms_preview&forms_id={$_GET['forms_id']}"); ?>'">
                     <?
                 }
                 ?>
@@ -275,7 +275,7 @@ if (!$forms->new)
                 if (!$forms->new) //désactivé
                 {
                     ?>
-                        <input type="button" class="flatbutton" value="<? echo _FORMS_VIEWRESULT; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?ploopi_action=public&op=forms_viewreplies&forms_id={$_GET['forms_id']}"); ?>'">
+                        <input type="button" class="flatbutton" value="<? echo _FORMS_VIEWRESULT; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?ploopi_action=public&op=forms_viewreplies&forms_id={$_GET['forms_id']}"); ?>'">
                     <?
                 }
                 ?>
@@ -323,8 +323,8 @@ if (!$forms->new)
         default:
             ?>
             <div style="clear:both;background-color:#d0d0d0;overflow:auto;text-align:right;padding:4px;border-bottom:1px solid #a0a0a0;">
-                <input type="button" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?op=forms_separator_add&forms_id={$_GET['forms_id']}"); ?>#addform'" class="flatbutton" value="<? echo _FORMS_ADDSEPARATOR; ?>">
-                <input type="button" onclick="javascript:document.location.href='<? echo ploopi_urlencode("{$scriptenv}?op=forms_field_add&forms_id={$_GET['forms_id']}"); ?>#addform'" class="flatbutton" value="<? echo _FORMS_ADDFIELD; ?>">
+                <input type="button" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=forms_separator_add&forms_id={$_GET['forms_id']}"); ?>#addform'" class="flatbutton" value="<? echo _FORMS_ADDSEPARATOR; ?>">
+                <input type="button" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=forms_field_add&forms_id={$_GET['forms_id']}"); ?>#addform'" class="flatbutton" value="<? echo _FORMS_ADDFIELD; ?>">
             </div>
             <?
         break;
@@ -397,13 +397,13 @@ if (!$forms->new)
             $array_values[$c]['values']['array']        = array('label' =>  '&nbsp;');
             $array_values[$c]['values']['needed']       = array('label' =>  '&nbsp;');
             $array_values[$c]['values']['actions']      = array('label' => '
-                <a href="'.ploopi_urlencode("{$scriptenv}?op=forms_field_moveup&field_id={$fields['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
-                <a href="'.ploopi_urlencode("{$scriptenv}?op=forms_field_movedown&field_id={$fields['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
-                <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("{$scriptenv}?op=forms_field_delete&field_id={$fields['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
+                <a href="'.ploopi_urlencode("admin.php?op=forms_field_moveup&field_id={$fields['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
+                <a href="'.ploopi_urlencode("admin.php?op=forms_field_movedown&field_id={$fields['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
+                <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=forms_field_delete&field_id={$fields['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
             ');
 
             $array_values[$c]['description'] = 'Ouvrir le Séparateur &laquo; '.htmlentities($fields['name']).' &raquo;';
-            $array_values[$c]['link'] = ploopi_urlencode("{$scriptenv}?op=forms_separator_modify&forms_id={$_GET['forms_id']}&field_id={$fields['id']}");
+            $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=forms_separator_modify&forms_id={$_GET['forms_id']}&field_id={$fields['id']}");
 
         }
         else
@@ -414,14 +414,14 @@ if (!$forms->new)
             $array_values[$c]['values']['array']        = array('label' =>  '<img src="./modules/forms/img/'.((!$fields['option_arrayview']) ? 'un' : '').'checked.gif">');
             $array_values[$c]['values']['needed']       = array('label' =>  '<img src="./modules/forms/img/'.((!$fields['option_needed']) ? 'un' : '').'checked.gif">');
             $array_values[$c]['description'] = 'Ouvrir le Champ &laquo; '.htmlentities($fields['name']).' &raquo;';
-            $array_values[$c]['link'] = ploopi_urlencode("$scriptenv?op=forms_field_modify&forms_id={$_GET['forms_id']}&field_id={$fields['id']}");
+            $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=forms_field_modify&forms_id={$_GET['forms_id']}&field_id={$fields['id']}");
         }
 
         $array_values[$c]['values']['pos']      = array('label' =>  $fields['position']);
         $array_values[$c]['values']['actions']  = array('label' => '
-            <a href="'.ploopi_urlencode("{$scriptenv}?op=forms_field_moveup&forms_id={$_GET['forms_id']}&field_id={$fields['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
-            <a href="'.ploopi_urlencode("{$scriptenv}?op=forms_field_movedown&forms_id={$_GET['forms_id']}&field_id={$fields['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
-            <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("{$scriptenv}?op=forms_field_delete&forms_id={$_GET['forms_id']}&field_id={$fields['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
+            <a href="'.ploopi_urlencode("admin.php?op=forms_field_moveup&forms_id={$_GET['forms_id']}&field_id={$fields['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
+            <a href="'.ploopi_urlencode("admin.php?op=forms_field_movedown&forms_id={$_GET['forms_id']}&field_id={$fields['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
+            <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=forms_field_delete&forms_id={$_GET['forms_id']}&field_id={$fields['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
         ');
 
         if (isset($_GET['field_id']) && $fields['id'] == $_GET['field_id']) $array_values[$c]['style'] = 'background-color:#ffe0e0;';

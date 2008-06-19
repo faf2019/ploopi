@@ -44,7 +44,7 @@ function user_validate(form)
         if (form.usernewpass_confirm.value == form.usernewpass.value && form.usernewpass.value == '') return true;
         else
         {
-            rep = ploopi_xmlhttprequest('admin-light.php', 'ploopi_op=ploopi_checkpasswordvalidity&password='+form.usernewpass.value);
+            rep = ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+form.usernewpass.value);
             
             if (rep == 0)
             {
@@ -78,7 +78,7 @@ if (empty($user->fields['timezone'])) $user->fields['timezone'] = $server_timezo
 
 ?>
 
-<form name="form_modify_user" action="<? echo $scriptenv ?>" method="POST" enctype="multipart/form-data" onsubmit="javascript:return user_validate(this)">
+<form name="form_modify_user" action="<? echo ploopi_urlencode('admin.php'); ?>" method="POST" enctype="multipart/form-data" onsubmit="javascript:return user_validate(this)">
 <input type="hidden" name="op" value="save_user">
 <div>
 <?

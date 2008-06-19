@@ -53,7 +53,7 @@ if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'])) $_SESSIO
 echo $skin->create_pagetitle(_SYSTEM_LABEL_SEARCH);
 echo $skin->open_simplebloc();
 ?>
-<form action="<? echo $scriptenv; ?>" onsubmit="javascript:system_search_next();return false;" method="post">
+<form action="<? echo ploopi_urlencode('admin.php'); ?>" onsubmit="javascript:system_search_next();return false;" method="post">
 <input type="hidden" name="op" value="search_next">
 <div class="dims_va" style="padding:4px;">
     <span>Mots Clés:</span>

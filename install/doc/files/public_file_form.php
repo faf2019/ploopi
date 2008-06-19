@@ -87,7 +87,7 @@ if ($newfile)
         else
         {
             ?>
-            <form method="post" enctype="multipart/form-data" action="<? echo $scriptenv; ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" target="doc_fileform_iframe">
+            <form method="post" enctype="multipart/form-data" action="<? echo ploopi_urlencode('admin.php'); ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" target="doc_fileform_iframe">
             <input type="hidden" name="op" value="doc_filesave">
             <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
             <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
@@ -192,7 +192,7 @@ else
                     $array_values[$c]['values']['modif']    = array('label' => "{$ldate_modify['date']} {$ldate_modify['time']}", 'style' => '');
                     $array_values[$c]['values']['fichier']  = array('label' => $row['name'], 'style' => '');
                     $array_values[$c]['description'] = htmlentities("{$row['name']} ({$row['version']})");
-                    $array_values[$c]['link'] = "{$scriptenv}?op=doc_filedownload&docfile_md5id={$row['md5id']}&version={$row['version']}";
+                    $array_values[$c]['link'] = "admin.php?op=doc_filedownload&docfile_md5id={$row['md5id']}&version={$row['version']}";
                     $array_values[$c]['style'] = '';
                     $c++;
                 }
@@ -322,7 +322,7 @@ else
                 else
                 {
                     ?>
-                    <form method="post" enctype="multipart/form-data" action="<? echo $scriptenv; ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" target="doc_fileform_iframe">
+                    <form method="post" enctype="multipart/form-data" action="<? echo ploopi_urlencode('admin.php'); ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" target="doc_fileform_iframe">
                     <input type="hidden" name="op" value="doc_filesave">
                     <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
                     <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
