@@ -1,24 +1,24 @@
 <?php
 /*
-	Copyright (c) 2007-2008 Ovensia
-	Copyright (c) 2008 HeXad
-	Contributors hold Copyright (c) to their code submissions.
+  Copyright (c) 2007-2008 Ovensia
+  Copyright (c) 2008 HeXad
+  Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+  This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+  Ploopi is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+  Ploopi is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  You should have received a copy of the GNU General Public License
+  along with Ploopi; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 /**
@@ -136,7 +136,8 @@ if(!isset($_SESSION['install'])) {
     '<TIME_ZONE>'       => '1',
     '<AUTO_UPDATE>'     => true,
     'replace_database'  => false,
-    'level_validate'    => 0
+    'level_validate'    => 0,
+    'accept_license'    => false
     );
 }
 /**
@@ -162,7 +163,8 @@ else
  * All stages of installation
  */
 $arrInstallAllStages = array(
-1 => _PLOOPI_INSTALL_LANGUAGE_AND_CTRL,
+1 => _PLOOPI_INSTALL_LICENSE,
+_PLOOPI_INSTALL_LANGUAGE_AND_FIRST_CTRL,
 _PLOOPI_INSTALL_PARAM_INSTALL,
 _PLOOPI_INSTALL_PARAM_DB,
 _PLOOPI_INSTALL_END
@@ -172,7 +174,7 @@ _PLOOPI_INSTALL_END
  * Stages
  */
 // Error No javascript !!!
-if(isset($_POST['nojs'])) $_POST['stage'] = 1;
+if(isset($_POST['nojs'])) $_POST['stage'] = 2;
 
 // Select installation stage
 if(!isset($_POST['stage'])) $_POST['stage'] = 1;
@@ -186,9 +188,6 @@ else
 {
   $_SESSION['install']['level_validate'] = $_POST['stage'];
 }
-
-// Controle previous stage
-
 
 ob_start();
 
@@ -223,9 +222,66 @@ $objInstallTemplate->set_filenames(array('install' => 'install.tpl'));
  */
 
 /**
- * STAGE 1 = Choose Language + Control requested ------------------------------------------------------
+ * STAGE 1 = License GPL ------------------------------------------------------
  */
-if($_POST['stage']>=1)
+$stage = 1;
+if($_POST['stage']>=$stage)
+{
+  if(isset($_POST['accept_license']))    $_SESSION['install']['accept_license'] = ($_POST['accept_license']=='true' ? true : false);
+   
+  if ($_SESSION['install']['accept_license']==true)
+  { $strInstallAcceptLicenseYes = 'selected';$strInstallAcceptLicenseNo = ''; }
+  else
+  { $strInstallAcceptLicenseYes = '';$strInstallAcceptLicenseNo = 'selected'; }
+  
+   // Control Acceptation licence
+   $arrInstallInfos[] = array('id' => 'div_accept_license',
+           'title'   => _PLOOPI_INSTALL_LICENSE,
+           'state'   => $_SESSION['install']['accept_license'],
+           'form'    => array( array('label' => _PLOOPI_INSTALL_LICENSE_ACCEPT,
+                                     'input' => '<select name="accept_license" id="accept_license" tabindex="%tabIndex%">
+                                                   <option value="true" '.$strInstallAcceptLicenseYes.'>'._PLOOPI_INSTALL_YES.'</option>
+                                                   <option value="false" '.$strInstallAcceptLicenseNo.'>'._PLOOPI_INSTALL_NO.'</option>
+                                                 </select>' 
+                                    )
+                              )
+                            ); 
+                            
+  // test or re-test and stop at the courant stage if an error is detected
+  if(ploopi_find_error_install($arrInstallInfos))
+  {
+    $_POST['stage']=$stage;
+  }
+  elseif($_POST['stage']>$stage)
+  {
+     unset($arrInstallInfos);
+  }
+                              
+  // features of stage 1 (at the end for eventual comeback)
+  if($_POST['stage']==$stage)
+  {
+    $strTxtLicense = _PLOOPI_INSTALL_LICENSE_TXT;
+
+    if(file_exists('./LICENSE') && is_readable('./LICENSE'))
+    {
+       $strTxtLicense = file_get_contents('./LICENSE');
+       $strTxtLicense = htmlentities($strTxtLicense);
+       $strTxtLicense = str_replace("\n\n",'<br><br>',$strTxtLicense);
+       $strTxtLicense = str_replace("\n",' ',$strTxtLicense);
+    }
+    $objInstallTemplate->assign_block_vars('stage1',array(
+      'TEXT'    => _PLOOPI_INSTALL_WELCOME_TEXT,
+      
+      'LICENSE' => $strTxtLicense
+    ));
+  }
+}
+
+/**
+ * STAGE 2 = Choose Language + Control requested ------------------------------------------------------
+ */
+$stage++;
+if($_POST['stage']>=$stage)
 {
   if(isset($_POST['dir_pear'])) $_SESSION['install']['<PEARPATH>'] = ploopi_del_end_slashe(trim($_POST['dir_pear']));
 
@@ -314,40 +370,38 @@ if($_POST['stage']>=1)
   // test or re-test and stop at the courant stage if an error is detected
   if(ploopi_find_error_install($arrInstallInfos))
   {
-    $_POST['stage']=1;
+    $_POST['stage']=$stage;
   }
-  elseif($_POST['stage']>1)
+  elseif($_POST['stage']>$stage)
   {
-    unset($arrInstallInfos);
+     unset($arrInstallInfos);
   }
 
-  // features of stage 1 (at the end for eventual comeback)
-  if($_POST['stage']==1)
+  // features of stage 2 (at the end for eventual comeback)
+  if($_POST['stage']==$stage)
   {
-/*
     // List languages
     $arrInstallListLanguages = ploopi_list_language_enable('./config/install/lang/');
-    $objInstallTemplate->assign_block_vars('stage1',array(
-        'TEXT'              => _PLOOPI_INSTALL_TEXT,
+    $objInstallTemplate->assign_block_vars('stage2',array(
         'CHOOSE_LANGUAGE'   => _PLOOPI_INSTALL_CHOOSE_LANGUAGE,
     ));
     // Block languages
     foreach($arrInstallListLanguages as $strInstallLanguage)
     {
       $strInstallLanguageSelected = ($_SESSION['install']['<LANGUAGE>']==$strInstallLanguage) ? 'selected' : '';
-      $objInstallTemplate->assign_block_vars('stage1.languages',array(
+      $objInstallTemplate->assign_block_vars('stage2.languages',array(
                     'LANGUAGE' => $strInstallLanguage,
                     'SELECTED' => $strInstallLanguageSelected
       ));
     }
-*/
   }
-} // end stage 1
+} // end stage 2
 
 /**
- * STAGE 2 = Control requested ------------------------------------------------------
+ * STAGE 3 = Control requested ------------------------------------------------------
  */
-if($_POST['stage']>=2)
+$stage++;
+if($_POST['stage']>=$stage)
 {
   /* if(isset($_POST['site_name']))     $_SESSION['install']['<SITE_NAME>'] = trim($_POST['site_name']); */
   if(isset($_POST['url_base']))      $_SESSION['install']['<BASEPATH>'] = trim($_POST['url_base']);
@@ -624,26 +678,29 @@ if($_POST['stage']>=2)
   // test or re-test and stop at the courant stage if an error is detected
   if(ploopi_find_error_install($arrInstallInfos))
   {
-    $_POST['stage']=2;
+    $_POST['stage']=$stage;
   }
-  elseif($_POST['stage']>2)
+  elseif($_POST['stage']>$stage)
   {
     unset($arrInstallInfos);
   }
 
-  // features of stage 2 (at the end for eventual comeback)
-  if($_POST['stage']==2)
+  // features of stage 3 (at the end for eventual comeback)
+  if($_POST['stage']==$stage)
   {
-    $objInstallTemplate->assign_block_vars('stage2',array(
+    /* exemple :
+    $objInstallTemplate->assign_block_vars('stage3',array(
         'TEXT' => _PLOOPI_INSTALL_TEXT
     ));
+    */
   }
-} // end stage 2
+} // end stage 3
 
 /**
- * STAGE 3 = Parameter for DB -------------------------------------------------------
+ * STAGE 4 = Parameter for DB -------------------------------------------------------
  */
-if($_POST['stage']>=3)
+$stage++;
+if($_POST['stage']>=$stage)
 {
   if(isset($_POST['db_type']))     $_SESSION['install']['<DB_TYPE>'] = $_POST['db_type'];
   if(isset($_POST['db_server']))   $_SESSION['install']['<DB_SERVER>'] = trim($_POST['db_server']);
@@ -711,18 +768,19 @@ if($_POST['stage']>=3)
   // test or re-test and stop at the courant stage if an error is detected
   if(ploopi_find_error_install($arrInstallInfos))
   {
-    $_POST['stage']=3;
+    $_POST['stage']=$stage;
   }
-  elseif($_POST['stage']>3)
+  elseif($_POST['stage']>$stage)
   {
     unset($arrInstallInfos);
   }
-} // end stage 3
+} // end stage 4
 
 /**
- * STAGE 4 = Final --------------------------------------------------
+ * STAGE 5 = Final --------------------------------------------------
  */
-if($_POST['stage']>=4)
+$stage++;
+if($_POST['stage']>=$stage)
 {
   if(file_exists('./config/install/install_ploopi.inc.php'))
   {
@@ -744,13 +802,13 @@ if($_POST['stage']>=4)
   // test or re-test and stop at the courant stage if an error is detected
   if(ploopi_find_error_install($arrInstallInfos))
   {
-    $_POST['stage']=4;
+    $_POST['stage']=$stage;
   }
-  elseif($_POST['stage']>4)
+  elseif($_POST['stage']>$stage)
   {
     unset($arrInstallInfos);
   }
-} // end stage 4
+} // end stage 5
 
 /****************************************************************************************/
 

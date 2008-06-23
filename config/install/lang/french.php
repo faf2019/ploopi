@@ -38,7 +38,7 @@
 //Installation
 define ('_PLOOPI_INSTALL_TITLE',            'Installation PLOOPI');
 
-define ('_PLOOPI_INSTALL_TEXT',             'Bienvenue dans l\'installation de PLOOPI...');
+define ('_PLOOPI_INSTALL_WELCOME_TEXT',     'Bienvenue dans l\'installation de PLOOPI...');
 
 define ('_PLOOPI_INSTALL_YES',              'oui');
 define ('_PLOOPI_INSTALL_NO',               'non');
@@ -52,10 +52,11 @@ define ('_PLOOPI_INSTALL_MORE_PARAM',       'Paramétrage avancé - cliquez ici.')
 
 // Menu
 // define ('_PLOOPI_INSTALL_LANGUAGE_AND_CTRL','Sélection du langage et contrôle des minimums requis');
-define ('_PLOOPI_INSTALL_LANGUAGE_AND_CTRL','Contrôle des minimums requis');
-define ('_PLOOPI_INSTALL_PARAM_INSTALL',    'Paramétrage de l\'installation');
-define ('_PLOOPI_INSTALL_PARAM_DB',         'Paramétrage de la Base de données');
-define ('_PLOOPI_INSTALL_END',              'Installation Terminée');
+define ('_PLOOPI_INSTALL_LICENSE',                 'Licence');
+define ('_PLOOPI_INSTALL_LANGUAGE_AND_FIRST_CTRL', 'Contrôle des minimums requis');
+define ('_PLOOPI_INSTALL_PARAM_INSTALL',           'Paramétrage de l\'installation');
+define ('_PLOOPI_INSTALL_PARAM_DB',                'Paramétrage de la Base de données');
+define ('_PLOOPI_INSTALL_END',                     'Installation Terminée');
 
 // Button
 define ('_PLOOPI_INSTALL_NEXT_BUTTON',      'Etape suivante >>');
@@ -75,6 +76,15 @@ define ('_PLOOPI_INSTALL_FIELD_MUST',       '<sup>* </sup>Champs obligatoires');
 * Stage 1
 *********/
 /**
+* license GPL2
+*/
+define ('_PLOOPI_INSTALL_LICENSE_TXT',      '<br/><br/><center><h2><a href="http://www.gnu.org/licenses/gpl-2.0.txt" target="_blank">Ploopi est distribué sous licence GPL2<br/>Cliquez pour lire la licence en ligne</a></h2></center>');
+define ('_PLOOPI_INSTALL_LICENSE_ACCEPT',   'J\'accepte les termes de la licence');
+
+/*********
+* Stage 2
+*********/
+/**
 * Test Sample (only the first line is obligatory)
 * define ('_PLOOPI_INSTALL_MYTEST',         'Ecriture dans le répertoire "data"');
 * define ('_PLOOPI_INSTALL_MYTEST_MESS',    'Le répertoire data contiendra tous vos fichiers (hors base de données). Il est donc fortement conseillé de localiser "data" hors de ploopi et sur un disque sécurisé (raid, sauvegardes régulières,..)');
@@ -83,7 +93,6 @@ define ('_PLOOPI_INSTALL_FIELD_MUST',       '<sup>* </sup>Champs obligatoires');
 */
 
 define ('_PLOOPI_INSTALL_CHOOSE_LANGUAGE',       'Sélectionner le language d\'installation');
-
 define ('_PLOOPI_INSTALL_APACHE',                'Contrôle de version -> Serveur HTTPD APACHE');
 define ('_PLOOPI_INSTALL_APACHE_MESS',           '%1s / %2s');
 define ('_PLOOPI_INSTALL_APACHE_URL_INFO',       'http://httpd.apache.org/');
@@ -127,7 +136,7 @@ define ('_PLOOPI_INSTALL_PEAR_NET_USERAGENT_DETECT',      '---- Contrôle du pack
 // define ('_PLOOPI_INSTALL_PEAR_NET_USERAGENT_DETECT',   'http://www.ploopi.org/trac/wiki/PloopiInstall');
 
 /*********
-* Stage 2
+* Stage 3
 *********/
 
 define ('_PLOOPI_INSTALL_CONFIG_WRITE',          'Ecriture dans le répertoire "config"');
@@ -203,7 +212,7 @@ define ('_PLOOPI_INSTALL_PROXY_PASS',        'Mot de passe - Proxy');
 
 
 /*********
-* Stage 3
+* Stage 4
 *********/
 define ('_PLOOPI_INSTALL_DATA_BASE',         'Paramétrage de la base de donnée %1s');
 define ('_PLOOPI_INSTALL_DATA_BASE_MESS',    '%1s / %2s');

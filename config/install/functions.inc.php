@@ -209,7 +209,7 @@ function ploopi_del_end_slashe($myString) {
  * Transform a bytes value in humain value (KBytes, MBytes,...) with arround to 2 decimals
  *
  * @param integer $Bytes
- * @return string (ex: 27.20 GByteb)
+ * @return string (ex: 27.20 GByte)
  */
 function ploopi_human_size($Bytes)
 {

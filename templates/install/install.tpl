@@ -124,19 +124,24 @@
         <div id="pages">{PAGE_TITLE}<br /><br />
           <!-- BEGIN stage1 -->
             {stage1.TEXT}<br /><br />
-            {stage1.CHOOSE_LANGUAGE} : <select name="language" onchange="javascript:formSubmit('form_install',true,'stage',{STAGE},0);">
-            <!-- BEGIN languages -->
-              <option value="{stage1.languages.LANGUAGE}" {stage1.languages.SELECTED}>{stage1.languages.LANGUAGE}</option>
-            <!-- END languages -->
-            </select>
+            <div style="text-align: left; margin: 0 auto; width: 500px; height: 250px; overflow:auto; border: solid 1px black;">
+              {stage1.LICENSE}
+            </div>
           <!-- END stage1 -->
           <!-- BEGIN stage2 -->
+            {stage2.CHOOSE_LANGUAGE} : <select name="language" onchange="javascript:formSubmit('form_install',true,'stage',{STAGE},0);">
+            <!-- BEGIN languages -->
+              <option value="{stage2.languages.LANGUAGE}" {stage2.languages.SELECTED}>{stage2.languages.LANGUAGE}</option>
+            <!-- END languages -->
+            </select>
           <!-- END stage2 -->
           <!-- BEGIN stage3 -->
+            <!-- {stage3.TEXT} -->
           <!-- END stage3 -->
           <!-- BEGIN stage4 -->
-          {stage4.TEXT}
           <!-- END stage4 -->
+          <!-- BEGIN stage5 -->
+          <!-- END stage5 -->
           <!-- INFORMATIONS -->
           <div class="infos">
             <noscript>
