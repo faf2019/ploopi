@@ -445,7 +445,7 @@ else
     
     <p class="ploopi_va" style="padding:4px;clear:both;">
         <strong>URL publique du fichier :</strong>
-        <input type="text" class="text" style="width:600px;" readonly value="<? echo "{$basepath}/".ploopi_urlencode("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}"); ?>" />
+        <input type="text" class="text" style="width:600px;" readonly value="<? echo _PLOOPI_BASEPATH.'/'.ploopi_urlencode("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}"); ?>" />
     </p>
 
     </div>

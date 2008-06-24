@@ -277,7 +277,7 @@ CREATE TABLE `ploopi_mb_action` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 LOCK TABLES `ploopi_mb_action` WRITE;
 /*!40000 ALTER TABLE `ploopi_mb_action` DISABLE KEYS */;
-INSERT INTO `ploopi_mb_action` VALUES (1,1,'Installer un Module',NULL,0,0,1),(1,2,'DÃ©sinstaller un Module',NULL,0,0,1),(1,3,'Modifier les ParamÃ¨tres d\'un Module',NULL,0,0,1),(1,4,'Instancier / Utiliser un Module',NULL,0,0,1),(1,5,'Modifier les PropriÃ©tÃ©s d\'un Module',NULL,0,0,1),(1,6,'Modifier la Page d\'Accueil',NULL,0,0,1),(1,7,'Installer un Skin',NULL,0,0,1),(1,8,'DÃ©sinstaller un Skin',NULL,0,0,1),(1,9,'CrÃ©er un Groupe',NULL,0,0,1),(1,10,'Modifier un Groupe',NULL,0,0,1),(1,11,'Supprimer un Groupe',NULL,0,0,1),(1,12,'Cloner un Groupe',NULL,0,0,1),(1,13,'CrÃ©er un RÃ´le',NULL,0,0,1),(1,14,'Modifier un RÃ´le',NULL,0,0,1),(1,15,'Supprimer un RÃ´le',NULL,0,0,1),(1,16,'CrÃ©er un Profil',NULL,0,0,1),(1,17,'Modifier un Profil',NULL,0,0,1),(1,18,'Supprimer un Profil',NULL,0,0,1),(1,19,'Ajouter un Utilisateur',NULL,0,0,1),(1,20,'Modifier un Utilisateur',NULL,0,0,1),(1,21,'Supprimer un Utilisateur',NULL,0,0,1),(1,22,'DÃ©tacher un Module',NULL,0,0,1),(1,23,'Supprimer un Module',NULL,0,0,1),(1,24,'Mettre Ã  jour la MÃ©tabase',NULL,0,0,1),(1,25,'Connexion Utilisateur',NULL,0,0,1),(1,26,'Erreur de Connexion',NULL,0,0,1),(1,27,'DÃ©placer un Utilisateur',NULL,0,0,1),(1,28,'Attacher un Utilisateur',NULL,0,0,1),(1,29,'DÃ©tacher un Utilisateur',NULL,0,0,1),(1,32,'Mettre Ã   jour un module',NULL,0,0,1);
+INSERT INTO `ploopi_mb_action` VALUES (1,1,'Installer un Module',NULL,0,0,1),(1,2,'Désinstaller un Module',NULL,0,0,1),(1,3,'Modifier les Paramètres d\'un Module',NULL,0,0,1),(1,4,'Instancier / Utiliser un Module',NULL,0,0,1),(1,5,'Modifier les Propriétés d\'un Module',NULL,0,0,1),(1,6,'Modifier la Page d\'Accueil',NULL,0,0,1),(1,7,'Installer un Skin',NULL,0,0,1),(1,8,'Désinstaller un Skin',NULL,0,0,1),(1,9,'Créer un Groupe',NULL,0,0,1),(1,10,'Modifier un Groupe',NULL,0,0,1),(1,11,'Supprimer un Groupe',NULL,0,0,1),(1,12,'Cloner un Groupe',NULL,0,0,1),(1,13,'Créer un Rôle',NULL,0,0,1),(1,14,'Modifier un Rôle',NULL,0,0,1),(1,15,'Supprimer un Rôle',NULL,0,0,1),(1,16,'Créer un Profil',NULL,0,0,1),(1,17,'Modifier un Profil',NULL,0,0,1),(1,18,'Supprimer un Profil',NULL,0,0,1),(1,19,'Ajouter un Utilisateur',NULL,0,0,1),(1,20,'Modifier un Utilisateur',NULL,0,0,1),(1,21,'Supprimer un Utilisateur',NULL,0,0,1),(1,22,'Détacher un Module',NULL,0,0,1),(1,23,'Supprimer un Module',NULL,0,0,1),(1,24,'Mettre à jour la Métabase',NULL,0,0,1),(1,25,'Connexion Utilisateur',NULL,0,0,1),(1,26,'Erreur de Connexion',NULL,0,0,1),(1,27,'Déplacer un Utilisateur',NULL,0,0,1),(1,28,'Attacher un Utilisateur',NULL,0,0,1),(1,29,'Détacher un Utilisateur',NULL,0,0,1),(1,32,'Mettre à jour un module',NULL,0,0,1);
 /*!40000 ALTER TABLE `ploopi_mb_action` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_mb_field`;
@@ -376,7 +376,7 @@ CREATE TABLE `ploopi_module` (
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 LOCK TABLES `ploopi_module` WRITE;
 /*!40000 ALTER TABLE `ploopi_module` DISABLE KEYS */;
-INSERT INTO `ploopi_module` VALUES (1,'SystÃ¨me',1,0,1,0,0,0,0,1,0,0);
+INSERT INTO `ploopi_module` VALUES (1,'Système',1,0,1,0,0,0,0,1,0,0);
 /*!40000 ALTER TABLE `ploopi_module` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_module_type`;
@@ -448,7 +448,7 @@ CREATE TABLE `ploopi_param_type` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 LOCK TABLES `ploopi_param_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_param_type` DISABLE KEYS */;
-INSERT INTO `ploopi_param_type` VALUES (1,'system_generate_htpasswd','1',0,'','GÃ©nÃ©rer un fichier htpasswd'),(1,'system_language','',1,'','Langue du systÃ¨me');
+INSERT INTO `ploopi_param_type` VALUES (1,'system_generate_htpasswd','1',0,'','Générer un fichier htpasswd'),(1,'system_language','',1,'','Langue du système');
 /*!40000 ALTER TABLE `ploopi_param_type` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_param_user`;

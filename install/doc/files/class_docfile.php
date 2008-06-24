@@ -38,6 +38,12 @@
 include_once './include/classes/data_object.php';
 
 /**
+ * Inclusion de la classe docfolder.
+ */
+
+include_once './modules/doc/class_docfolder.php';
+
+/**
  * Classe d'accès à la table ploopi_mod_doc_file.
  * Gère l'enregistrement physique, l'extraction du contenu, l'indexation, la suppression.
  *

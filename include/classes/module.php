@@ -312,6 +312,7 @@ class module_type extends data_object
             $db->query("DELETE FROM ploopi_mb_schema WHERE id_module_type = {$this->fields['id']}");
             $db->query("DELETE FROM ploopi_mb_table WHERE id_module_type = {$this->fields['id']}");
             $db->query("DELETE FROM ploopi_mb_wce_object WHERE id_module_type = {$this->fields['id']}");
+            $db->query("DELETE FROM ploopi_mb_object WHERE id_module_type = {$this->fields['id']}");
         }
 
         parent::delete();
