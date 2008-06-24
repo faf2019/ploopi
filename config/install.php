@@ -269,7 +269,7 @@ if($_POST['stage']>=$stage)
        $strTxtLicense = str_replace("\n\n",'<br><br>',$strTxtLicense);
        $strTxtLicense = str_replace("\n",' ',$strTxtLicense);
     }
-    $objInstallTemplate->assign_block_vars('stage1',array(
+    $objInstallTemplate->assign_block_vars("stage$stage",array(
       'TEXT'    => _PLOOPI_INSTALL_WELCOME_TEXT,
       
       'LICENSE' => $strTxtLicense
@@ -383,14 +383,14 @@ if($_POST['stage']>=$stage)
     /*
     // List languages
     $arrInstallListLanguages = ploopi_list_language_enable('./config/install/lang/');
-    $objInstallTemplate->assign_block_vars('stage2',array(
+    $objInstallTemplate->assign_block_vars("stage$stage",array(
         'CHOOSE_LANGUAGE'   => _PLOOPI_INSTALL_CHOOSE_LANGUAGE,
     ));
     // Block languages
     foreach($arrInstallListLanguages as $strInstallLanguage)
     {
       $strInstallLanguageSelected = ($_SESSION['install']['<LANGUAGE>']==$strInstallLanguage) ? 'selected' : '';
-      $objInstallTemplate->assign_block_vars('stage2.languages',array(
+      $objInstallTemplate->assign_block_vars("stage$stage.languages",array(
                     'LANGUAGE' => $strInstallLanguage,
                     'SELECTED' => $strInstallLanguageSelected
       ));
@@ -691,7 +691,7 @@ if($_POST['stage']>=$stage)
   if($_POST['stage']==$stage)
   {
     /* exemple :
-    $objInstallTemplate->assign_block_vars('stage3',array(
+    $objInstallTemplate->assign_block_vars("stage$stage",array(
         'TEXT' => _PLOOPI_INSTALL_TEXT
     ));
     */
@@ -791,7 +791,7 @@ if($_POST['stage']>=$stage)
     if(ploopi_create_site(&$arrInstallInfos))
     {
       // End Message
-      $objInstallTemplate->assign_block_vars('stage4',array('TEXT' => _PLOOPI_INSTALL_END_OK));
+      $objInstallTemplate->assign_block_vars("stage$stage",array('TEXT' => _PLOOPI_INSTALL_END_OK));
       unset($_SESSION['install']);
     }
   }
@@ -800,7 +800,6 @@ if($_POST['stage']>=$stage)
       // File Install_ploopi.inc.php not found !
       $arrInstallInfos[] = array('id' => 'div_err_install', 'state' => False, 'title' => '_PLOOPI_INSTALL_ERR_FILE_INSTALL');
   }
-
   // test or re-test and stop at the courant stage if an error is detected
   if(ploopi_find_error_install($arrInstallInfos))
   {
@@ -811,6 +810,7 @@ if($_POST['stage']>=$stage)
     unset($arrInstallInfos);
   }
 } // end stage 5
+
 
 /****************************************************************************************/
 

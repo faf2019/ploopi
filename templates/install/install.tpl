@@ -136,11 +136,13 @@
             </select>
           <!-- END stage2 -->
           <!-- BEGIN stage3 -->
-            <!-- {stage3.TEXT} -->
+            {stage3.TEXT}
           <!-- END stage3 -->
           <!-- BEGIN stage4 -->
+            {stage4.TEXT}
           <!-- END stage4 -->
           <!-- BEGIN stage5 -->
+            {stage5.TEXT}
           <!-- END stage5 -->
           <!-- INFORMATIONS -->
           <div class="infos">
