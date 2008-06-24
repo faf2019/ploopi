@@ -105,17 +105,15 @@ define ('_PLOOPI_LEVEL_GROUPMANAGER',   'Gestionnaire d\'Espace');
 define ('_PLOOPI_LEVEL_GROUPADMIN',     'Administrateur d\'Espace');
 define ('_PLOOPI_LEVEL_SYSTEMADMIN',    'Administrateur Système');
 
-define ('_PLOOPI_JS_EMAIL_ERROR_1', "L'adresse mèl n'est pas valide.\\nIl n'y a pas de caractère @\\nUne adresse mèl valide est du type \\\'adresse@domaine.com\\\'");
-define ('_PLOOPI_JS_EMAIL_ERROR_2', "L'adresse mèl n'est pas valide.\\nIl ne peut pas y avoir un point (.) juste après @\\nUne adresse mèl valide est du type \\\'adresse@domaine.com\\\'");
-define ('_PLOOPI_JS_EMAIL_ERROR_3', "L'adresse mèl n'est pas valide.\\nL'adresse mèl ne peut pas finir par un point (.)\\nUne adresse mèl valide est du type \\\'adresse@domaine.com\\\'");
-define ('_PLOOPI_JS_EMAIL_ERROR_4', "L'adresse mèl n'est pas valide.\\nL'adresse mèl ne peut pas contenir 2 points (.) qui se suivent.\\nUne adresse mèl valide est du type \\\'adresse@domaine.com\\\'");
+define ('_PLOOPI_JS_EMAIL_ERROR', "L'adresse mèl n'est pas valide.\\nUne adresse mèl valide est du type \'adresse@domaine.com\'");
 define ('_PLOOPI_JS_STRING_ERROR',  "Le champ '<FIELD_LABEL>' ne doit pas être vide");
-define ('_PLOOPI_JS_INT_ERROR',     "Le champ '<FIELD_LABEL>' doit être un nombre entier valide");
-define ('_PLOOPI_JS_FLOAT_ERROR',   "Le champ '<FIELD_LABEL>' doit être un nombre réel valide");
-define ('_PLOOPI_JS_DATE_ERROR',    "Le champ '<FIELD_LABEL>' doit être une date valide");
+define ('_PLOOPI_JS_INT_ERROR',     "Le champ '<FIELD_LABEL>' doit être un nombre entier valide\\n(ex: 321 ou -321)");
+define ('_PLOOPI_JS_FLOAT_ERROR',   "Le champ '<FIELD_LABEL>' doit être un nombre réel valide\\n(ex: 123.45 ou -123.45)");
+define ('_PLOOPI_JS_DATE_ERROR',    "Le champ '<FIELD_LABEL>' doit être une date valide\\n(ex: 06/07/1977)");
 define ('_PLOOPI_JS_TIME_ERROR',    "Le champ '<FIELD_LABEL>' doit être une heure valide");
 define ('_PLOOPI_JS_CHECK_ERROR',   "Vous devez sélectionner une valeur pour le champ '<FIELD_LABEL>'");
-define ('_PLOOPI_JS_COLOR_ERROR',   "Le champ '<FIELD_LABEL>' doit être une couleur valide (#ffff00 / jaune / yellow)");
+define ('_PLOOPI_JS_COLOR_ERROR',   "Le champ '<FIELD_LABEL>' doit être une couleur valide\\n(ex: #ffff00 / jaune / yellow)");
+define ('_PLOOPI_JS_PHONE_ERROR',   "Le champ '<FIELD_LABEL>' doit être un numéro de téléphone valide\\n(ex: +33 1 02 03 04 05 ou 0102030405)");
 
 define ('_PLOOPI_LABEL_NEWTICKET', 'Nouveau message');
 define ('_PLOOPI_LABEL_TICKET_VALIDATIONREQUIRED', 'Validation requise<br />(optionnel, permet de demander au(x) destinataire(s) de valider le message)');

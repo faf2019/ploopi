@@ -40,10 +40,7 @@ _PLOOPI_ENV = '<? echo $_SESSION['ploopi']['env']; ?>';
 _PLOOPI_URL_ENCODE = <? echo (_PLOOPI_URL_ENCODE) ? 'true' : 'false'; ?>;
 
 var lstmsg = new Array();
-lstmsg[0] = "<? echo _PLOOPI_JS_EMAIL_ERROR_1 ?>";
-lstmsg[1] = "<? echo _PLOOPI_JS_EMAIL_ERROR_2 ?>";
-lstmsg[2] = "<? echo _PLOOPI_JS_EMAIL_ERROR_3 ?>";
-lstmsg[3] = "<? echo _PLOOPI_JS_EMAIL_ERROR_4 ?>";
+lstmsg[0] = "<? echo _PLOOPI_JS_EMAIL_ERROR ?>";
 lstmsg[4] = "<? echo _PLOOPI_JS_STRING_ERROR ?>";
 lstmsg[5] = "<? echo _PLOOPI_JS_INT_ERROR ?>";
 lstmsg[6] = "<? echo _PLOOPI_JS_FLOAT_ERROR ?>";
@@ -51,5 +48,6 @@ lstmsg[7] = "<? echo _PLOOPI_JS_DATE_ERROR ?>";
 lstmsg[8] = "<? echo _PLOOPI_JS_TIME_ERROR ?>";
 lstmsg[9] = "<? echo _PLOOPI_JS_CHECK_ERROR ?>";
 lstmsg[10] = "<? echo _PLOOPI_JS_COLOR_ERROR ?>";
+lstmsg[11] = "<? echo _PLOOPI_JS_PHONE_ERROR ?>";
 
 var error_bgcolor = "<? echo (isset($skin->values['colerror'])) ? $skin->values['colerror'] : "#FFAAAA"; ?>";

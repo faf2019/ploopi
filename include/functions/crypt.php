@@ -53,6 +53,10 @@ function ploopi_htpasswd($pass)
  * Chiffre une chaîne et l'encode en URL
  *
  * @param string $url URL en clair
+ * @param int $ploopi_mainmenu identifiant du menu principal actif (optionnel)
+ * @param int $ploopi_workspaceid identifiant de l'espace de travail actif (optionnel)
+ * @param int $ploopi_moduleid identifiant du module actif (optionnel)
+ * @param string $ploopi_action type d'action (optionnel)
  * @return string URL chiffrée
  * 
  * @see urlencode
@@ -61,6 +65,8 @@ function ploopi_htpasswd($pass)
 function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null)
 {
     $arrParsedURL = parse_url($url);
+    
+    if (!isset($arrParsedURL['path'])) return(false);
 
     $arrParams = array();
     
@@ -89,14 +95,12 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
 
     // on génère le "super" paramètre "ploopi_env" qui regroupe ploopi_mainmenu, ploopi_workspaceid, ploopi_moduleid, ploopi_action
     $arrParams['ploopi_env'] = 
-        urlencode(
-            sprintf(
-                "%s,%s,%s,%s", 
-                $arrParams['ploopi_mainmenu'], 
-                $arrParams['ploopi_workspaceid'],
-                $arrParams['ploopi_moduleid'],
-                $arrParams['ploopi_action']
-            )
+        sprintf(
+            "%s,%s,%s,%s", 
+            $arrParams['ploopi_mainmenu'], 
+            $arrParams['ploopi_workspaceid'],
+            $arrParams['ploopi_moduleid'],
+            $arrParams['ploopi_action']
         );
     
     // on supprime les paramètres superflus 
@@ -106,7 +110,13 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
     unset($arrParams['ploopi_action']);
     
     // on génère la chaine de paramètres
-    foreach($arrParams as $key => $value) $arrParams[$key] = (is_null($value)) ? $key : "{$key}={$value}";
+    foreach($arrParams as $key => $value) 
+    {
+        $arrParams[$key] = (is_null($value)) ? $key : "{$key}={$value}";
+        // si pas de chiffrage, on encode les paramètres
+        if (!defined('_PLOOPI_URL_ENCODE') || !_PLOOPI_URL_ENCODE) $arrParams[$key] = urlencode($arrParams[$key]);
+    }
+    
     $strParams = implode('&', $arrParams);
     
     //ploopi_print_r($strParams);
@@ -114,8 +124,6 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
     if (defined('_PLOOPI_URL_ENCODE') && _PLOOPI_URL_ENCODE)
     {
         require_once './include/classes/cipher.php';
-        //if (strstr($url,'?')) list($script, $params) = explode('?', $url, 2);
-        //else {$script = $url; $params = '';}
         $cipher = new ploopi_cipher();
         return("{$arrParsedURL['path']}?ploopi_url=".urlencode($cipher->crypt($strParams)));
     }

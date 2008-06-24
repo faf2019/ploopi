@@ -431,12 +431,15 @@ function ploopi_validatefield(field_label, field_object, field_type)
     if (field_object)
     {
         field_value = field_object.value;
+        
+        /* Vérifie qu'un élément de liste a été sélectionné */
         if (field_type == 'selected')
         {
             msg = lstmsg[9];
             ok = (field_object.selectedIndex > 0 && field_object.value != '');
         }
 
+        /* Vérifie qu'une checkbox (ou bouton radio) à été cochée */
         if (field_type == 'checked')
         {
             msg = lstmsg[9];
@@ -446,95 +449,24 @@ function ploopi_validatefield(field_label, field_object, field_type)
                 if (field_object[c].checked) ok = true;
             }
         }
-
-        if (field_type == 'email')
+        
+        /* Vérifie que le champ contient une numéro de téléphone valide */
+        if (field_type == 'phone' || field_type == 'emptyphone')
         {
-
-            var email = field_value;
-            var aroba = email.indexOf("@");
-
-            if (aroba == -1)
-            {
-                ok = false;
-                msg = lstmsg[0];
-            }
-
-            if (ok)
-            {
-                var point = email.indexOf(".", aroba);
-                if ((point == -1) || (point == (aroba + 1)))
-                {
-                    ok=false;
-                    msg = lstmsg[1];
-                }
-            }
-
-            if (ok)
-            {
-                var point = email.lastIndexOf(".");
-                if ((point + 1) == email.length)
-                {
-                    ok = false;
-                    msg = lstmsg[2];
-                }
-            }
-
-            if (ok)
-            {
-                point = email.indexOf("..")
-                if (point != -1)
-                {
-                    ok = false;
-                    msg = lstmsg[3];
-                }
-            }
+            ok = field_value.match(/^[0-9\(\)\+\ ]*$/);
+            if (field_type == 'phone') ok = ok && field_value.length > 0;
+            if (!ok) msg = lstmsg[11];
         }
 
-        if (field_type == 'emptyemail')
+        /* Vérifie que le champ contient une adresse email valide */
+        if (field_type == 'email' || field_type == 'emptyemail')
         {
-            if (field_value.length!=0)
-            {
-                var email = field_value;
-                var aroba = email.indexOf("@");
-
-                if (aroba == -1)
-                {
-                    ok = false;
-                    msg = lstmsg[0];
-                }
-
-                if (ok)
-                {
-                    var point = email.indexOf(".", aroba);
-                    if ((point == -1) || (point == (aroba + 1)))
-                    {
-                        ok=false;
-                        msg = lstmsg[1];
-                    }
-                }
-
-                if (ok)
-                {
-                    var point = email.lastIndexOf(".");
-                    if ((point + 1) == email.length)
-                    {
-                        ok = false;
-                        msg = lstmsg[2];
-                    }
-                }
-
-                if (ok)
-                {
-                    point = email.indexOf("..")
-                    if (point != -1)
-                    {
-                        ok = false;
-                        msg = lstmsg[3];
-                    }
-                }
-            }
+            ok = field_value.match(/^[a-z0-9._-]+@[a-z0-9.-]{2,}[.][a-z]{2,4}$/);
+            if (field_type == 'email') ok = ok && field_value.length > 0;
+            msg = lstmsg[0];
         }
 
+        /* Vérifie que le champ contient une couleur valide */
         if (field_type == 'color')
         {
             var color = new ploopi_rgbcolor(field_value);
@@ -542,136 +474,57 @@ function ploopi_validatefield(field_label, field_object, field_type)
             {
                 ok = false;
                 msg = lstmsg[10];
-                alert('ici');
             }
         }
 
+        /* Vérifie que le champ contient une chaîne non vide (espace non compris) */
         if (field_type == 'string')
         {
-            if (field_value.replace(/(^\s*)|(\s*$)/g,'').length==0)
-            {
-                ok = false;
-                msg = lstmsg[4];
-            }
+            ok = (field_value.replace(/(^\s*)|(\s*$)/g,'').length > 0)
+            if (!ok) msg = lstmsg[4];
         }
 
-        if (field_type == 'int')
+        /* Vérifie que le champ contient une valeur entière ou vide */
+        if (field_type == 'int' || field_type == 'emptyint')
         {
-            if (field_value.length==0 || field_value.length>12) ok = false;
-            for (i=0;i<field_value.length;i++)
-            {
-                if (field_value.charAt(i)<'0' || field_value.charAt(i)>'9') ok = false;
-            }
+            ok = field_value.match(/^\-?[0-9]*$/);
+            if (field_type == 'int') ok = ok && field_value.length > 0;
             if (!ok) msg = lstmsg[5];
         }
 
-        if (field_type == 'emptyint')
+        /* Vérifie que le champ contient une valeur réelle ou vide */
+        if (field_type == 'float' || field_type == 'emptyfloat')
         {
-            if (field_value.length>12) ok = false;
-            for (i=0;i<field_value.length;i++)
-            {
-                if (field_value.charAt(i)<'0' || field_value.charAt(i)>'9') ok = false;
-            }
-            if (!ok) msg = lstmsg[5];
-        }
-
-        if (field_type == 'float')
-        {
-            if (field_value.length==0) ok = false;
-            for (i=0;i<field_value.length;i++)
-            {
-                if (field_value.charAt(i)=='.' || field_value.charAt(i)==',') nbpoint++;
-                else if (field_value.charAt(i)<'0' || field_value.charAt(i)>'9') ok = false;
-            }
-            if (nbpoint>1) ok = false;
-
+            ok = field_value.match(/^(\+?((([0-9]+(\.)?)|([0-9]*\.[0-9]+))))$/);
+            if (field_type == 'float') ok = ok && field_value.length > 0;
             if (!ok) msg = lstmsg[6];
         }
 
-        if (field_type == 'emptyfloat')
+        /* Vérifie que le champ contient une date valide ou vide */
+        if (field_type == 'date' || field_type == 'emptydate')
         {
-            for (i=0;i<field_value.length;i++)
+            ok = field_value.match(/^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/);
+            if (ok && field_value.length > 0)
             {
-                if (field_value.charAt(i)=='.') nbpoint++;
-                if (field_value.charAt(i)<'0' || field_value.charAt(i)>'9') ok = false;
-            }
-            if (nbpoint>1) ok = false;
-
-            if (!ok) msg = lstmsg[6];
-        }
-
-        if (field_type == 'date')
-        {
-            var thedate = field_value.split("/");
-            if (thedate.length != 3 || isNaN(parseInt(thedate[0])) || isNaN(parseInt(thedate[1])) || isNaN(parseInt(thedate[2]))) thedate = field_value.split("-");
-            if (thedate.length != 3 || isNaN(parseInt(thedate[0])) || isNaN(parseInt(thedate[1])) || isNaN(parseInt(thedate[2]))) thedate = field_value.split(":");
-            if (thedate.length != 3 || isNaN(parseInt(thedate[0])) || isNaN(parseInt(thedate[1])) || isNaN(parseInt(thedate[2]))) ok = false;
-            if (ok)
-            {
-                var datetotest = new Date(eval(thedate[2]),eval(thedate[1])-1,eval(thedate[0]));
+                var date_split = field_value.split("/");
+                var datetotest = new Date(eval(date_split[2]), eval(date_split[1])-1, eval(date_split[0]));
                 var year = datetotest.getYear()
                 if ((Math.abs(year)+"").length < 4) year = year + 1900
-                ok = ((datetotest.getDate() == eval(thedate[0])) && (datetotest.getMonth() == eval(thedate[1])-1) && (year == eval(thedate[2])));
+                ok = ((datetotest.getDate() == eval(date_split[0])) && (datetotest.getMonth() == eval(date_split[1])-1) && (year == eval(date_split[2])));
             }
+            if (field_type == 'date') ok = ok && field_value.length > 0; 
             if (!ok) msg = lstmsg[7];
         }
 
-        if (field_type == 'time')
+        /* Vérifie que le champ contient une heure valide ou vide */
+        if (field_type == 'time' || field_type == 'emptytime')
         {
-            if (field_value.length!=5) ok = false;
-            else
-            {
-                h=field_value.substring(0,2);
-                m=field_value.substring(3,5);
-                if (parseInt(h)<0 || parseInt(h)>23) ok = false;
-                if (parseInt(m)<0 || parseInt(m)>59) ok = false;
-                madate=new Date(01,01,2000,h,m);
-                if (madate=="NaN" || field_value.charAt(2)!=':') ok = false;
-            }
+            ok = field_value.match(/^[0-9]{2}[:]{1}[0-9]{2}([:]{1}[0-9]{2})?$/);
+            if (field_type == 'time') ok = ok && field_value.length > 0; 
             if (!ok) msg = lstmsg[8];
         }
-
-        if (field_type=='emptydate')
-        {
-            if (field_value.length!=0)
-            {
-                var thedate = field_value.split("/");
-                if (thedate.length != 3 || isNaN(parseInt(thedate[0])) || isNaN(parseInt(thedate[1])) || isNaN(parseInt(thedate[2]))) thedate = field_value.split("-");
-                if (thedate.length != 3 || isNaN(parseInt(thedate[0])) || isNaN(parseInt(thedate[1])) || isNaN(parseInt(thedate[2]))) thedate = field_value.split(":");
-                if (thedate.length != 3 || isNaN(parseInt(thedate[0])) || isNaN(parseInt(thedate[1])) || isNaN(parseInt(thedate[2]))) ok = false;
-                if (ok)
-                {
-                    var datetotest = new Date(eval(thedate[2]),eval(thedate[1])-1,eval(thedate[0]));
-                    var year = datetotest.getYear()
-                    if ((Math.abs(year)+"").length < 4) year = year + 1900
-                    ok = ((datetotest.getDate() == eval(thedate[0])) && (datetotest.getMonth() == eval(thedate[1])-1) && (year == eval(thedate[2])));
-                }
-                if (!ok) msg = lstmsg[7];
-            }
-        }
-
-        if (field_type=='emptytime')
-        {
-            if (field_value.length!=0)
-            {
-                if (field_value.length!=5) ok = false;
-                else
-                {
-                    h=field_value.substring(0,2);
-                    m=field_value.substring(3,5);
-                    if (parseInt(h)<0 || parseInt(h)>23) ok = false;
-                    if (parseInt(m)<0 || parseInt(m)>59) ok = false;
-                    madate=new Date(01,01,2000,h,m);
-                    if (madate=="NaN" || field_value.charAt(2)!=':') ok = false;
-                }
-                if (!ok) msg = lstmsg[8];
-            }
-        }
     }
-    else
-    {
-        ok = false;
-    }
+    else ok = false;
 
     if (!ok)
     {
@@ -684,6 +537,28 @@ function ploopi_validatefield(field_label, field_object, field_type)
     }
 
     return (ok);
+}
+
+function ploopi_checkall(form, mask, value, byid)
+{
+    var len = form.elements.length;
+    var reg = new RegExp(mask,"g");
+
+    if (!byid) byid = false;
+
+    for (var i = 0; i < len; i++)
+    {
+        var e = form.elements[i];
+
+        if (byid)
+        {
+            if (e.id.match(reg)) e.checked = value;
+        }
+        else
+        {
+            if (e.name.match(reg)) e.checked = value;
+        }
+    }
 }
 
 function ploopi_checkall(form, mask, value, byid)
