@@ -380,6 +380,7 @@ if($_POST['stage']>=$stage)
   // features of stage 2 (at the end for eventual comeback)
   if($_POST['stage']==$stage)
   {
+    /*
     // List languages
     $arrInstallListLanguages = ploopi_list_language_enable('./config/install/lang/');
     $objInstallTemplate->assign_block_vars('stage2',array(
@@ -394,6 +395,7 @@ if($_POST['stage']>=$stage)
                     'SELECTED' => $strInstallLanguageSelected
       ));
     }
+    */
   }
 } // end stage 2
 
