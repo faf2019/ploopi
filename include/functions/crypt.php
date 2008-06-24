@@ -112,9 +112,10 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
     // on génère la chaine de paramètres
     foreach($arrParams as $key => $value) 
     {
-        $arrParams[$key] = (is_null($value)) ? $key : "{$key}={$value}";
         // si pas de chiffrage, on encode les paramètres
-        if (!defined('_PLOOPI_URL_ENCODE') || !_PLOOPI_URL_ENCODE) $arrParams[$key] = urlencode($arrParams[$key]);
+        if (!defined('_PLOOPI_URL_ENCODE') || !_PLOOPI_URL_ENCODE) $value = urlencode($value);
+        
+        $arrParams[$key] = (is_null($value)) ? $key : "{$key}={$value}";
     }
     
     $strParams = implode('&', $arrParams);

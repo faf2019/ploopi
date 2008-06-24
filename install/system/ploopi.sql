@@ -393,7 +393,7 @@ CREATE TABLE `ploopi_module_type` (
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 LOCK TABLES `ploopi_module_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_module_type` DISABLE KEYS */;
-INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.0RC5','Ovensia','20080617000000');
+INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.0RC6','Ovensia','20080624000000');
 /*!40000 ALTER TABLE `ploopi_module_type` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_module_workspace`;

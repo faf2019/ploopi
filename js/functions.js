@@ -453,17 +453,17 @@ function ploopi_validatefield(field_label, field_object, field_type)
         /* Vérifie que le champ contient une numéro de téléphone valide */
         if (field_type == 'phone' || field_type == 'emptyphone')
         {
-            ok = field_value.match(/^[0-9\(\)\+\ ]*$/);
-            if (field_type == 'phone') ok = ok && field_value.length > 0;
-            if (!ok) msg = lstmsg[11];
+            ok = field_value.match(/^\+?(\([0-9 ]+\))?[0-9 ]+$/);
+            if (field_type == 'emptyphone') ok = ok || field_value.length == 0;
+            if (!ok) msg = (field_type == 'phone' && field_value.length == 0) ? lstmsg[4] : lstmsg[11]; 
         }
 
         /* Vérifie que le champ contient une adresse email valide */
         if (field_type == 'email' || field_type == 'emptyemail')
         {
             ok = field_value.match(/^[a-z0-9._-]+@[a-z0-9.-]{2,}[.][a-z]{2,4}$/);
-            if (field_type == 'email') ok = ok && field_value.length > 0;
-            msg = lstmsg[0];
+            if (field_type == 'emptyemail') ok = ok || field_value.length == 0;
+            if (!ok) msg = (field_type == 'email' && field_value.length == 0) ? lstmsg[4] : lstmsg[0]; 
         }
 
         /* Vérifie que le champ contient une couleur valide */
@@ -487,17 +487,17 @@ function ploopi_validatefield(field_label, field_object, field_type)
         /* Vérifie que le champ contient une valeur entière ou vide */
         if (field_type == 'int' || field_type == 'emptyint')
         {
-            ok = field_value.match(/^\-?[0-9]*$/);
-            if (field_type == 'int') ok = ok && field_value.length > 0;
-            if (!ok) msg = lstmsg[5];
+            ok = field_value.match(/^(\-?[0-9]+)$/);
+            if (field_type == 'emptyint') ok = ok || field_value.length == 0;
+            if (!ok) msg = (field_type == 'int' && field_value.length == 0) ? lstmsg[4] : lstmsg[5]; 
         }
 
         /* Vérifie que le champ contient une valeur réelle ou vide */
         if (field_type == 'float' || field_type == 'emptyfloat')
         {
-            ok = field_value.match(/^(\+?((([0-9]+(\.)?)|([0-9]*\.[0-9]+))))$/);
-            if (field_type == 'float') ok = ok && field_value.length > 0;
-            if (!ok) msg = lstmsg[6];
+            ok = field_value.match(/^(\-?((([0-9]+(\.)?)|([0-9]*\.[0-9]+))))$/);
+            if (field_type == 'emptyfloat') ok = ok || field_value.length == 0;
+            if (!ok) msg = (field_type == 'float' && field_value.length == 0) ? lstmsg[4] : lstmsg[6]; 
         }
 
         /* Vérifie que le champ contient une date valide ou vide */
@@ -512,16 +512,17 @@ function ploopi_validatefield(field_label, field_object, field_type)
                 if ((Math.abs(year)+"").length < 4) year = year + 1900
                 ok = ((datetotest.getDate() == eval(date_split[0])) && (datetotest.getMonth() == eval(date_split[1])-1) && (year == eval(date_split[2])));
             }
-            if (field_type == 'date') ok = ok && field_value.length > 0; 
-            if (!ok) msg = lstmsg[7];
+
+            if (field_type == 'emptydate') ok = ok || field_value.length == 0; 
+            if (!ok) msg = (field_type == 'date' && field_value.length == 0) ? lstmsg[4] : lstmsg[7]; 
         }
 
         /* Vérifie que le champ contient une heure valide ou vide */
         if (field_type == 'time' || field_type == 'emptytime')
         {
             ok = field_value.match(/^[0-9]{2}[:]{1}[0-9]{2}([:]{1}[0-9]{2})?$/);
-            if (field_type == 'time') ok = ok && field_value.length > 0; 
-            if (!ok) msg = lstmsg[8];
+            if (field_type == 'emptytime') ok = ok || field_value.length == 0;
+            if (!ok) msg = (field_type == 'time' && field_value.length == 0) ? lstmsg[4] : lstmsg[8]; 
         }
     }
     else ok = false;

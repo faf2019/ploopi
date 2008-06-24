@@ -86,16 +86,19 @@ switch ($_SESSION['ploopi']['mainmenu'])
                     {
                         $modtype = $_SESSION['ploopi']['modules'][$menu_moduleid]['moduletype'];
                         $blockpath = "./modules/{$modtype}/block.php";
-
-                        $arrBlocks[$menu_moduleid] = array(
-                                                                            'title'=> $_SESSION['ploopi']['modules'][$menu_moduleid]['label'],
-                                                                            'url' => ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"),
-                                                                            'file' => $blockpath
-                                                                        );
-                        $block = new block();
-                        include($blockpath);
-                        $arrBlocks[$menu_moduleid]['menu'] = $block->getmenu();
-                        $arrBlocks[$menu_moduleid]['content'] = $block->getcontent();
+                        
+                        if (file_exists($blockpath))
+                        {
+                            $arrBlocks[$menu_moduleid] = array(
+                                                                                'title'=> $_SESSION['ploopi']['modules'][$menu_moduleid]['label'],
+                                                                                'url' => ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"),
+                                                                                'file' => $blockpath
+                                                                            );
+                            $block = new block();
+                            include($blockpath);
+                            $arrBlocks[$menu_moduleid]['menu'] = $block->getmenu();
+                            $arrBlocks[$menu_moduleid]['content'] = $block->getcontent();
+                        }
                     }
                 }
             }

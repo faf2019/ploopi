@@ -1,5 +1,5 @@
 #!/bin/sh
-export DEST=ploopi_1.0RC5
+export DEST=ploopi_1.0RC6
 
 #################################
 # compression des fichiers

@@ -1,3 +1,26 @@
+== Ploopi - version 1.0 RC6 ===================================================
+
+2008-06-24 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+ - Mise à jour importante pour la gestion du multi-onglet / multi-fenêtre / page précédente / page suivante
+ - Mise à jour de tous les modules (modification des liens pour la gestion multi-onglet)
+ - Suppression de la variable globale $scriptenv (utiliser admin.php à la place)
+ - Suppression de la variable globale $basepath (utiliser _PLOOPI_BASEPATH à la place)
+
+* WebEdit
+ - Correction d'un bug à la création d'un article
+ - Correction d'un bug de détection de homepage et chargement du fichier spécifique home.tpl
+ 
+* Doc
+ - Correctif dans le mini explorateur pour FCKEditor : ne reconnaissait l'extension .jpeg comme format d'image valide
+ 
+* Templates
+ - Mise à jour des templates frontoffice ovensia
+ 
+* Install
+  - Ajout de la page de licence GPL2 avec obligation d'acceptation des termes
+
 == Ploopi - version 1.0 RC5 ===================================================
 
 2008-06-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
