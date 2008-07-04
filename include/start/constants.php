@@ -114,11 +114,12 @@ if (!defined('_PLOOPI_DISPLAY_ERRORS')) define('_PLOOPI_DISPLAY_ERRORS', false);
 if (!defined('_PLOOPI_MAIL_ERRORS')) define('_PLOOPI_MAIL_ERRORS', false);
 if (!defined('_PLOOPI_ADMINMAIL')) define('_PLOOPI_ADMINMAIL', '');
 
-//global $basepath;
-//admin.php = basename($_SERVER['PHP_SELF']);
+// DOCUMENTS
+define('_PLOOPI_ERROR_MAXFILESIZE',        100);
+define('_PLOOPI_ERROR_FILENOTWRITABLE',    101);
+define('_PLOOPI_ERROR_EMPTYFILE',          102);
 
-define ('_PLOOPI_BASEPATH', ((!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://').((!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']).((!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') ? ":{$_SERVER['SERVER_PORT']}" : '').rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
-
+if (!defined ('_PLOOPI_BASEPATH')) define ('_PLOOPI_BASEPATH', ((!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://').((!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']).((!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') ? ":{$_SERVER['SERVER_PORT']}" : '').rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
 if (!defined ('_PLOOPI_USE_OUTPUT_COMPRESSION')) define ('_PLOOPI_USE_OUTPUT_COMPRESSION', false); 
 if (!defined ('_PLOOPI_FINGERPRINT')) define ('_PLOOPI_FINGERPRINT',  md5(dirname($_SERVER['SCRIPT_FILENAME']).'/'._PLOOPI_DB_SERVER.'/'._PLOOPI_DB_DATABASE));
 

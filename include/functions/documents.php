@@ -231,4 +231,62 @@ function ploopi_documents_getfolders($id_object, $id_record)
 
     return($folders);
 }
+
+/**
+ * Sauvegarde un fichier dans un dossier attaché à un enregistrement d'un objet
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param string $file chemin du fichier
+ * @param string $filename nom du fichier
+ * @param int $id_folder identifiant du dossier
+ * @param string $label libellé du fichier (optionnel)
+ * @param string $description description du fichier (optionnel)
+ * @param string $ref référence du fichier (optionnel)
+ * @param int $id_user identifiant du l'utilisateur (optionnel)
+ * @param int $id_workspace identifiant de l'espace de travail (optionnel)
+ * @param int $id_module identifiant du module (optionnel)
+ * 
+ * @copyright Ovensia
+ */
+
+function ploopi_documents_savefile($id_object, $id_record, $file, $filename, $id_folder, $label = '', $description = '', $ref = '', $id_user = null, $id_workspace = null, $id_module = null)
+{
+    if (file_exists($file))
+    {
+        include_once './include/classes/documents.php';
+        $documentsfile = new documentsfile();
+    
+        if (empty($id_user)) $id_user = $_SESSION['ploopi']['userid'];
+        if (empty($id_workspace)) $id_workspace = $_SESSION['ploopi']['workspaceid'];
+        if (empty($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
+    
+        
+        $documentsfile->fields['id_object'] = $id_object;
+        $documentsfile->fields['id_record'] = $id_record;
+        
+        $documentsfile->fields['name'] = $filename;
+        $documentsfile->fields['size'] = filesize($file);
+        $documentsfile->fields['extension'] = ploopi_file_getextension($filename);
+        $documentsfile->fields['label'] = $label;
+        $documentsfile->fields['description'] = $description;
+        $documentsfile->fields['ref'] = $ref;
+        
+        $documentsfile->fields['timestp_file'] = ploopi_createtimestamp();
+        $documentsfile->fields['timestp_create'] = $documentsfile->fields['timestp_file'];
+        $documentsfile->fields['timestp_modify'] = $documentsfile->fields['timestp_file']; 
+        
+        $documentsfile->fields['id_user'] = $id_user;
+        $documentsfile->fields['id_workspace'] = $id_workspace;
+        $documentsfile->fields['id_module'] = $id_module;
+        
+        $documentsfile->fields['id_folder'] = $id_folder;
+        
+        $documentsfile->fields['id_user_modify'] = $documentsfile->fields['id_user'];
+    
+        $documentsfile->setfile($file);
+        
+        $documentsfile->save();
+    }
+}
 ?>

@@ -49,15 +49,16 @@ include_once './include/classes/data_object.php';
 
 class documentsfile extends data_object
 {
-    var $oldname;
-    var $tmpfile;
-
+    private $oldname;
+    private $tmpfile;
+    private $file;
+    
     /**
      * Constructeur de la classe
      *
      * @return documentsfile
      */
-    function documentsfile()
+    public function documentsfile()
     {
         parent::data_object('ploopi_documents_file');
         $this->fields['id_user'] = 0;
@@ -70,6 +71,7 @@ class documentsfile extends data_object
         
         $this->oldname = '';
         $this->tmpfile = 'none';
+        $this->file = 'none';
     }
 
     /**
@@ -78,7 +80,7 @@ class documentsfile extends data_object
      * @param int $id identifiant du document
      * @return boolean true si le document a été ouvert
      */
-    function open($id)
+    public function open($id)
     {
         $res = parent::open($id);
         $this->oldname = $this->fields['name'];
@@ -87,11 +89,11 @@ class documentsfile extends data_object
 
     /**
      * Enregistre le document.
-     * Gère la sauvegarde physique du fichier, le renommage, 
+     * Gère la sauvegarde physique du fichier, le renommage.
      *
      * @return int identifiant du document
      */
-    function save()
+    public function save()
     {
         global $db;
         $error = 0;
@@ -101,9 +103,9 @@ class documentsfile extends data_object
 
         if ($this->new) // insert
         {
-            if ($this->tmpfile == 'none') $error = _DOC_ERROR_EMPTYFILE;
+            if ($this->tmpfile == 'none' && $this->file == 'none') $error = _PLOOPI_ERROR_EMPTYFILE;
 
-            if ($this->fields['size']>_PLOOPI_MAXFILESIZE) $error = _DOC_ERROR_MAXFILESIZE;
+            if ($this->fields['size']>_PLOOPI_MAXFILESIZE) $error = _PLOOPI_ERROR_MAXFILESIZE;
 
             if (!$error)
             {
@@ -114,18 +116,23 @@ class documentsfile extends data_object
                 $basepath = $this->getbasepath();
                 $filepath = $this->getfilepath();
 
-                if (file_exists($filepath) && !is_writable($filepath)) $error = _DOC_ERROR_FILENOTWRITABLE;
+                if (file_exists($filepath) && !is_writable($filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
 
                 if (!$error && is_writable($basepath))
                 {
                     if ($this->tmpfile != 'none')
                     {
-                        if (!move_uploaded_file($this->tmpfile, $filepath)) $error = _DOC_ERROR_FILENOTWRITABLE;
+                        if (!move_uploaded_file($this->tmpfile, $filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                    }
+                    
+                    if ($this->file != 'none')
+                    {
+                        if (!copy($this->file, $filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                     }
                     
                     if (!$error) chmod($filepath, 0640);
                 }
-                else $error = _DOC_ERROR_FILENOTWRITABLE;
+                else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
             }
 
         }
@@ -133,7 +140,7 @@ class documentsfile extends data_object
         {
             if (!empty($this->tmpfile) && $this->tmpfile != 'none')
             {
-                if ($this->fields['size']>_PLOOPI_MAXFILESIZE) $error = _DOC_ERROR_MAXFILESIZE;
+                if ($this->fields['size']>_PLOOPI_MAXFILESIZE) $error = _PLOOPI_ERROR_MAXFILESIZE;
                 
                 if (!$error)
                 {
@@ -142,7 +149,7 @@ class documentsfile extends data_object
                     $basepath = $this->getbasepath();
                     $filepath = $this->getfilepath();
                     
-                    if (file_exists($filepath) && !is_writable($filepath)) $error = _DOC_ERROR_FILENOTWRITABLE;
+                    if (file_exists($filepath) && !is_writable($filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                     
                     if (!$error)
                     {
@@ -152,10 +159,10 @@ class documentsfile extends data_object
                             if ($this->tmpfile != 'none')
                             {
                                 if (move_uploaded_file($this->tmpfile, $filepath)) chmod($filepath, 0640);
-                                else $error = _DOC_ERROR_FILENOTWRITABLE;
+                                else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                             }
                         }
-                        else $error = _DOC_ERROR_FILENOTWRITABLE;
+                        else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                     }
                 }
                 
@@ -180,7 +187,7 @@ class documentsfile extends data_object
                         $this->fields['extension'] = $newext;
                         parent::save();
                     }
-                    else $error = _DOC_ERROR_FILENOTWRITABLE;
+                    else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                 }
                 else parent::save();
             }
@@ -201,7 +208,7 @@ class documentsfile extends data_object
     /**
      * Supprime le document (physiquement et dans la base de données)
      */
-    function delete()
+    public function delete()
     {
         $filepath = $this->getfilepath();
         if (file_exists($filepath)) unlink($filepath);
@@ -223,7 +230,7 @@ class documentsfile extends data_object
      *
      * @return string chemin de stockage du document
      */
-    function getbasepath()
+    public function getbasepath()
     {
         $basepath = ploopi_documents_getpath()._PLOOPI_SEP.substr($this->fields['timestp_create'],0,8);
         ploopi_makedir($basepath);
@@ -235,7 +242,7 @@ class documentsfile extends data_object
      *
      * @return string chemin du fichier
      */
-    function getfilepath()
+    public function getfilepath()
     {
         return($this->getbasepath()._PLOOPI_SEP."{$this->fields['id']}.{$this->fields['extension']}");
     }
@@ -246,10 +253,34 @@ class documentsfile extends data_object
      * @param boolean $attachement true si le fichier doit être "attaché"
      * @return string URL de téléchargement
      */
-    function geturl($attachement = true)
+    public function geturl($attachement = true)
     {
         return(ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$this->fields['id']}&attachement={$attachement}"));
     }
+    
+    
+    /**
+     * Permet de définir l'emplacement du fichier manuellement (ajout uniquement)
+     *
+     * @param string $file chemin du fichier
+     */
+    
+    public function setfile($file)
+    {
+        $this->file = $file; 
+    }
+    
+    /**
+     * Permet de définir l'emplacement du fichier temporaire (après upload)
+     *
+     * @param string $file chemin du fichier
+     */
+    
+    public function settmpfile($file)
+    {
+        $this->tmpfile = $file; 
+    }
+    
 }
 
 /**
