@@ -107,8 +107,8 @@ class skin extends skin_common
 
     function create_pagetitle($title, $style = '', $additionnal_title = '')
     {
-        if (strlen($style)>0) $res = "<div class=\"pagetitle\" style=\"{$style}\"><p>{$additionnal_title}{$title}</p></div>";
-        else $res = "<div class=\"pagetitle\"><p>{$additionnal_title}{$title}</p></div>";
+        if (strlen($style)>0) $res = "<div class=\"pagetitle\" style=\"{$style}\"><p>{$additionnal_title}</p>{$title}</div>";
+        else $res = "<div class=\"pagetitle\"><p>{$additionnal_title}</p>{$title}</div>";
 
         return $res;
     }

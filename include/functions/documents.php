@@ -64,7 +64,7 @@ function ploopi_documents_getid($id_object, $id_record, $id_module = -1)
  * @param int $id_module identifiant du module
  */
 
-function ploopi_documents($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $id_user = -1, $id_workspace = -1, $id_module = -1)
+function ploopi_documents($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $load_doc = true, $id_user = -1, $id_workspace = -1, $id_module = -1)
 {
     global $db;
     global $ploopi_documents_idinstance;
@@ -138,10 +138,15 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     ?>
     <div id="ploopidocuments_<? echo $documents_id; ?>">
     </div>
-    <script type="text/javascript">
-        ploopi_window_onload_stock(function () { ploopi_documents_browser('','<? echo $documents_id; ?>','', '', true); });
-    </script>
     <?
+    if ($load_doc)
+    {
+        ?>
+        <script type="text/javascript">
+            ploopi_window_onload_stock(function () { ploopi_documents_browser('<? echo $documents_id; ?>', '', '', '', true); });
+        </script>
+        <?
+    }
 }
 
 

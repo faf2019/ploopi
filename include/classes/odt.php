@@ -251,7 +251,7 @@ class odt_blockparser
                 reset($this->blocktemplates);
                 foreach($this->blocktemplates as $blockname => &$tpl) if (!$tpl['end']) $tpl['depth']++;
 
-                if (isset($this->blockvars[$attribs['table:name']])) // si ce tableau correpond à un bloc
+                if (isset($attribs['table:name']) && isset($this->blockvars[$attribs['table:name']])) // si ce tableau correpond à un bloc
                 {
                     // initialisation du template de bloc
                     $this->blocktemplates[$attribs['table:name']] = array('content' => '', 'end' => 0, 'depth' => 0);

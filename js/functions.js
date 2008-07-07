@@ -1276,10 +1276,14 @@ function ploopi_documents_deletefolder(currentfolder, documents_id, documentsfol
     ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_deletefolder&currentfolder='+currentfolder+'&documentsfolder_id='+documentsfolder_id,'','ploopidocuments_'+documents_id);
 }
 
-function ploopi_documents_browser(currentfolder, documents_id, mode, orderby, asynchronous)
+function ploopi_documents_browser(documents_id, currentfolder, mode, orderby, asynchronous)
 {
-    if (!asynchronous) asynchronous = false;
-    var option = (orderby) ? '&orderby='+orderby : '';
+    if (typeof(currentfolder) == 'undefined') currentfolder = '';
+    if (typeof(asynchronous) == 'undefined') asynchronous = false;
+    if (typeof(orderby) == 'undefined') orderby = '';
+    if (typeof(mode) == 'undefined') mode = '';
+
+    var option = (orderby != '') ? '&orderby='+orderby : '';
 
     if (asynchronous)
     {
@@ -1572,21 +1576,34 @@ function ploopi_annotation_validate(form)
     return false;
 }
 
+
+/**
+ * Met à jour l'affichage des tableaux générés par la classe skin.
+ * Il faut corriger certains problèmes liés à l'affichage ou non d'une barre de défilement vertical.
+ * Il faut également corriger les lacunes de IE.
+ */
+ 
 function ploopi_skin_array_renderupdate(array_id)
 {
     greater = $('ploopi_explorer_values_inner_'+array_id).offsetHeight > $('ploopi_explorer_values_outer_'+array_id).offsetHeight;
-
+    
     if (greater)
     {
-        $('ploopi_explorer_title_'+array_id).innerHTML = '<div style=\'float:right;width:16px;\'>&nbsp;</div>'+$('ploopi_explorer_title_'+array_id).innerHTML;
-
-        columns = $('ploopi_explorer_main_'+array_id).getElementsByClassName('ploopi_explorer_column');
-        for (j=0;j<columns.length;j++)
+        if (typeof(ploopi_skin_array_renderupdate_done[array_id]) == 'undefined')
         {
-            if (columns[j].style.right != '')
+            $('ploopi_explorer_title_'+array_id).innerHTML = '<div style=\'float:right;width:16px;\'>&nbsp;</div>'+$('ploopi_explorer_title_'+array_id).innerHTML;
+    
+            columns = $('ploopi_explorer_main_'+array_id).getElementsByClassName('ploopi_explorer_column');
+            for (j=0;j<columns.length;j++)
             {
-                columns[j].style.right = (parseInt(columns[j].style.right)+16)+'px';
+                if (columns[j].style.right != '')
+                {
+                    diff = (Prototype.Browser.IE) ? 22 : 16;
+                    columns[j].style.right = (parseInt(columns[j].style.right)+diff)+'px';
+                }
             }
+            
+            ploopi_skin_array_renderupdate_done[array_id] = true;
         }
     }
 

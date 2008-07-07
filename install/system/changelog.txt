@@ -3,17 +3,23 @@
 2008-06-24 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Ploopi
- - Mise à jour importante pour la gestion du multi-onglet / multi-fenêtre / page précédente / page suivante
+ - Mise à jour importante permettant la navigation sur plusieurs modules différents en multi-onglet / multi-fenêtre.
+ - Modification du système de liens pour une meilleure prise en compte des boutons page précédente / page suivante
  - Mise à jour de tous les modules (modification des liens pour la gestion multi-onglet)
  - Suppression de la variable globale $scriptenv (utiliser admin.php à la place)
  - Suppression de la variable globale $basepath (utiliser _PLOOPI_BASEPATH à la place)
+ - Suppression des données de la table ploopi_mb_object à la désinstallation d'un module
+ - Correction d'un problème d'encodage du fichier d'installation ploopi.sql
+ - Optimisation de la fonction javascript de validation de formulaire ploopi_validatefield. Prise en compte des formats 'phone' et 'emptyphone'.
 
 * WebEdit
  - Correction d'un bug à la création d'un article
  - Correction d'un bug de détection de homepage et chargement du fichier spécifique home.tpl
  
 * Doc
- - Correctif dans le mini explorateur pour FCKEditor : ne reconnaissait l'extension .jpeg comme format d'image valide
+ - Correction dans le mini explorateur pour FCKEditor : ne reconnaissait l'extension .jpeg comme format d'image valide
+ - Correction d'un bug dans la procédure de réindexation
+ - Correction d'un bug dans l'affichage du lien direct de téléchargement d'un document
  
 * Templates
  - Mise à jour des templates frontoffice ovensia

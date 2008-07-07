@@ -110,7 +110,7 @@ switch($ploopi_op)
                     }
                 }
                 ?>
-                <a title="Aller au Dossier Racine" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_browser('','<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $_SESSION['documents']['mode']; ?>','',true);"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_home.png"></a>
+                <a title="Aller au Dossier Racine" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_browser('<? echo $_SESSION['documents']['documents_id']; ?>', '', '<? echo $_SESSION['documents']['mode']; ?>','',true);"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_home.png"></a>
 
                 <div>Emplacement :</div>
                 <?
@@ -126,7 +126,7 @@ switch($ploopi_op)
                         // change root name
                         $foldername = (!$row['id_folder']) ? $_SESSION['documents']['root_name'] : $row['name'];
                         ?>
-                        <a <? if ($currentfolder == $row['id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:ploopi_documents_browser('<? echo $row['id']; ?>', '<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $_SESSION['documents']['mode']; ?>','',true);">
+                        <a <? if ($currentfolder == $row['id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:ploopi_documents_browser('<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $row['id']; ?>', '<? echo $_SESSION['documents']['mode']; ?>','',true);">
                             <p class="ploopi_va">
                                 <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_folder.png" />
                                 <span><? echo $foldername; ?></span>
@@ -176,7 +176,7 @@ switch($ploopi_op)
 
             $sort_column = ($orderby == 'nom') ? $sort_img : '';
             $documents_columns['auto'][1] = array(  'label' => '<span>Nom&nbsp;</span>'.$sort_column,
-                                                    'onclick' => "ploopi_documents_browser('{$currentfolder}', '{$_SESSION['documents']['documents_id']}', '{$_SESSION['documents']['mode']}', 'nom',true);",
+                                                    'onclick' => "ploopi_documents_browser('{$_SESSION['documents']['documents_id']}', '{$currentfolder}', '{$_SESSION['documents']['mode']}', 'nom',true);",
                                                     'style' => ($orderby == 'nom') ? 'background-color:#e0e0e0;' : ''
                                                     );
 
@@ -185,7 +185,7 @@ switch($ploopi_op)
                 $sort_column = ($orderby == 'type') ? $sort_img : '';
                 $documents_columns['right'][3] = array( 'label' => '<span>Type&nbsp;</span>'.$sort_column,
                                                         'width' => '65',
-                                                        'onclick' => "ploopi_documents_browser('{$currentfolder}', '{$_SESSION['documents']['documents_id']}', '{$_SESSION['documents']['mode']}', 'type',true);",
+                                                        'onclick' => "ploopi_documents_browser('{$_SESSION['documents']['documents_id']}', '{$currentfolder}', '{$_SESSION['documents']['mode']}', 'type',true);",
                                                         'style' => ($orderby == 'type') ? 'background-color:#e0e0e0;' : ''
                                                         );
             }
@@ -195,7 +195,7 @@ switch($ploopi_op)
                 $sort_column = ($orderby == 'date_modif') ? $sort_img : '';
                 $documents_columns['right'][4] = array( 'label' => '<span>Date Modif&nbsp;</span>'.$sort_column,
                                                         'width' => '130',
-                                                        'onclick' => "ploopi_documents_browser('{$currentfolder}', '{$_SESSION['documents']['documents_id']}', '{$_SESSION['documents']['mode']}', 'date_modif',true);",
+                                                        'onclick' => "ploopi_documents_browser('{$_SESSION['documents']['documents_id']}', '{$currentfolder}', '{$_SESSION['documents']['mode']}', 'date_modif',true);",
                                                         'style' => ($orderby == 'date_modif') ? 'background-color:#e0e0e0;' : ''
                                                         );
             }
@@ -205,7 +205,7 @@ switch($ploopi_op)
                 $sort_column = ($orderby == 'date') ? $sort_img : '';
                 $documents_columns['right'][5] = array( 'label' => '<span>Date&nbsp;</span>'.$sort_column,
                                                         'width' => '80',
-                                                        'onclick' => "ploopi_documents_browser('{$currentfolder}', '{$_SESSION['documents']['documents_id']}', '{$_SESSION['documents']['mode']}', 'date',true);",
+                                                        'onclick' => "ploopi_documents_browser('{$_SESSION['documents']['documents_id']}', '{$currentfolder}', '{$_SESSION['documents']['mode']}', 'date',true);",
                                                         'style' => ($orderby == 'date') ? 'background-color:#e0e0e0;' : ''
                                                         );
             }
@@ -215,7 +215,7 @@ switch($ploopi_op)
                 $sort_column = ($orderby == 'ref') ? $sort_img : '';
                 $documents_columns['right'][6] = array( 'label' => '<span>Ref&nbsp;</span>'.$sort_column,
                                                         'width' => '100',
-                                                        'onclick' => "ploopi_documents_browser('{$currentfolder}', '{$_SESSION['documents']['documents_id']}', '{$_SESSION['documents']['mode']}', 'ref',true);",
+                                                        'onclick' => "ploopi_documents_browser('{$_SESSION['documents']['documents_id']}', '{$currentfolder}', '{$_SESSION['documents']['mode']}', 'ref',true);",
                                                         'style' => ($orderby == 'ref') ? 'background-color:#e0e0e0;' : ''
                                                         );
             }
@@ -225,7 +225,7 @@ switch($ploopi_op)
                 $sort_column = ($orderby == 'libelle') ? $sort_img : '';
                 $documents_columns['right'][7] = array( 'label' => '<span>Libellé&nbsp;</span>'.$sort_column,
                                                         'width' => '150',
-                                                        'onclick' => "ploopi_documents_browser('{$currentfolder}', '{$_SESSION['documents']['documents_id']}', '{$_SESSION['documents']['mode']}', 'libelle',true);",
+                                                        'onclick' => "ploopi_documents_browser('{$_SESSION['documents']['documents_id']}', '{$currentfolder}', '{$_SESSION['documents']['mode']}', 'libelle',true);",
                                                         'style' => ($orderby == 'libelle') ? 'background-color:#e0e0e0;' : ''
                                                         );
             }
@@ -235,7 +235,7 @@ switch($ploopi_op)
                 $sort_column = ($orderby == 'taille') ? $sort_img : '';
                 $documents_columns['right'][8] = array( 'label' => '<span>Taille&nbsp;</span>'.$sort_column,
                                                         'width' => '90',
-                                                        'onclick' => "ploopi_documents_browser('{$currentfolder}', '{$_SESSION['documents']['documents_id']}', '{$_SESSION['documents']['mode']}', 'taille',true);",
+                                                        'onclick' => "ploopi_documents_browser('{$_SESSION['documents']['documents_id']}', '{$currentfolder}', '{$_SESSION['documents']['mode']}', 'taille',true);",
                                                         'style' => ($orderby == 'taille') ? 'background-color:#e0e0e0;' : ''
                                                         );
             }
@@ -308,7 +308,7 @@ switch($ploopi_op)
 
                 $documents_folder_values[$i]['description'] = '';
                 $documents_folder_values[$i]['link'] = 'javascript:void(0);';
-                $documents_folder_values[$i]['option'] = 'onclick="javascript:ploopi_documents_browser(\''.$row['id'].'\',\''.$_SESSION['documents']['documents_id'].'\',\''.$_SESSION['documents']['mode'].'\',\'\',true);"';
+                $documents_folder_values[$i]['option'] = 'onclick="javascript:ploopi_documents_browser(\''.$_SESSION['documents']['documents_id'].'\',\''.$row['id'].'\',\''.$_SESSION['documents']['mode'].'\',\'\',true);"';
                 $documents_folder_values[$i]['style'] = '';
 
                 $i++;
@@ -519,7 +519,7 @@ switch($ploopi_op)
         }
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<? echo $_POST['currentfolder']; ?>', '<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $_SESSION['documents']['mode']; ?>');
+            window.parent.ploopi_documents_browser('<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $_POST['currentfolder']; ?>', '<? echo $_SESSION['documents']['mode']; ?>');
             window.parent.ploopi_hidepopup('ploopi_documents_openfolder_popup');
         </script>
         <?
@@ -568,7 +568,6 @@ switch($ploopi_op)
             <div class="documents_formcontent" style="text-align:right;padding:4px;">
                 <input type="button" class="flatbutton" style="width:100px;" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('ploopi_documents_openfolder_popup');">
                 <input type="submit" class="flatbutton" style="width:100px;" value="<? echo _PLOOPI_SAVE; ?>">
-                <!-- onclick="javascript:ploopi_hidepopup();ploopi_documents_browser('<? echo $_GET['currentfolder']; ?>', '<? echo $_SESSION['documents']['documents_id']; ?>')" -->
             </div>
         </div>
         </form>
@@ -610,7 +609,7 @@ switch($ploopi_op)
         $error = $documentsfile->save();
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<? echo $_POST['currentfolder']; ?>', '<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $_SESSION['documents']['mode']; ?>');
+            window.parent.ploopi_documents_browser('<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $_POST['currentfolder']; ?>', '<? echo $_SESSION['documents']['mode']; ?>');
             window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
         </script>
         <?

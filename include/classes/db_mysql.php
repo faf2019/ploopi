@@ -241,6 +241,8 @@ class ploopi_db
     
     public function query($query = '')
     {
+        if (empty($query)) return false;
+        
         unset($this->query_result);
         
         if (!$this->isconnected()) return false;
@@ -261,7 +263,7 @@ class ploopi_db
         }
 
         if($this->query_result) return $this->query_result;
-        else return (false);
+        else return false;
     }
 
 
