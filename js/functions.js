@@ -1576,6 +1576,7 @@ function ploopi_annotation_validate(form)
     return false;
 }
 
+ploopi_skin_array_renderupdate_done = new Array();
 
 /**
  * Met à jour l'affichage des tableaux générés par la classe skin.
