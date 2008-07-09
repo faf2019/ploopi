@@ -219,8 +219,8 @@ if ($query_string != '') // recherche intégrale
 
             $cleaned_content = strip_tags(html_entity_decode($objArticle->fields['content']));
 
-            $extract = ploopi_highlight($cleaned_content, array_keys($result['kw']));
-
+            $extract = ploopi_highlight($cleaned_content, array_merge(array_keys($result['kw']), array_keys($result['stem'])));
+ 
             $size = sprintf("%.02f", strlen($cleaned_content)/1024);
 
             $script = ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}", $objArticle->fields['metatitle']);

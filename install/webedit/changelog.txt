@@ -1,3 +1,9 @@
+== Module WebEdit - version 1.5.2 ============================================
+
+2008-07-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug dans l'affichage du résultat de recherche en frontoffice (ne prenait pas en compte les lemmes dans la colorisation des mots trouvés)
+
 == Module WebEdit - version 1.5.1 ============================================
 
 2008-06-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
