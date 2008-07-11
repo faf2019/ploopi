@@ -77,6 +77,24 @@ if ($_SESSION['ploopi']['connected'])
 {
     switch($_REQUEST['ploopi_op'])
     {
+        
+        case 'webedit_detail_heading':
+            ploopi_init_module('webedit');
+            if (!empty($_GET['hid']))
+            {
+                $option = (empty($_GET['option'])) ? '' : $_GET['option'];
+                
+                $treeview = webedit_gettreeview($option);
+                echo $skin->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['hid']);
+            }
+            ploopi_die();
+        break;
+    
+        case 'webedit_switchdisplay_treeview':
+            if (!empty($_GET['display'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display'] = $_GET['display'];
+            ploopi_die();
+        break;         
+        
         case 'webedit_selectlink':
         case 'webedit_detail_heading';
             ob_start();
@@ -105,8 +123,47 @@ if ($_SESSION['ploopi']['connected'])
             $template_body->pparse('body');
             ploopi_die();
         break;
+        
+        case 'webedit_heading_selectredirect':
+            ob_start();
+            ploopi_init_module('webedit');
+            ?>
+            <div style="padding:4px;height:150px;overflow:auto;">
+            <?
+            $treeview = webedit_gettreeview('selectredirect');
+            echo $skin->display_treeview($treeview['list'], $treeview['tree']);
+            ?>
+            </div>
+            <?
+            $content = ob_get_contents();
+            ob_end_clean();
+            
+            echo $skin->create_popup('Choix d\'une page', $content, 'webedit_popup_selectredirect');
     
+            ploopi_die();
+        break;
+        
+        case 'webedit_article_selectheading':
+            ob_start();
+            ploopi_init_module('webedit');
+            ?>
+            <div style="padding:4px;height:150px;overflow:auto;">
+            <?
+            $hid = (empty($_GET['hid'])) ? '' : 'hh'.$_GET['hid'];
+            
+            $treeview = webedit_gettreeview('selectheading');
+            echo $skin->display_treeview($treeview['list'], $treeview['tree'],$hid);
+            ?>
+            </div>
+            <?
+            $content = ob_get_contents();
+            ob_end_clean();
+            
+            echo $skin->create_popup('Choix d\'une rubrique de rattachement', $content, 'webedit_popup_selectheading');
     
+            ploopi_die();
+        break;
+        
         case 'webedit_getbackup':
             include_once './modules/webedit/class_article_backup.php';
     

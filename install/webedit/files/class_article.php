@@ -81,7 +81,7 @@ class webedit_article extends data_object
         else parent::data_object('ploopi_mod_webedit_article');
 
         $this->original_content = '';
-        $this->fields['status'] = 'wait';
+        $this->fields['status'] = 'edit';
         $this->fields['content'] = '';
     }
 

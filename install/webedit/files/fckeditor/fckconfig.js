@@ -16,6 +16,16 @@ FCKConfig.ToolbarSets["Default"] = [
     ['ShowBlocks']      // No comma for the last row.
 ] ;
 
+FCKConfig.ToolbarSets["Beginner"] = [
+    ['Cut','Copy','Paste','PasteText','PasteWord'],
+    ['Undo','Redo','-','SelectAll','RemoveFormat'],
+    ['Style'],
+    ['Bold','Italic','Underline'],
+    ['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
+    ['OrderedList','UnorderedList','-','Outdent','Indent'],
+    ['Link','Unlink'],
+    ['Image']
+] ;
 
 FCKConfig.EnterMode = 'br' ;            // p | div | br
 FCKConfig.ShiftEnterMode = 'p' ;    // p | div | br

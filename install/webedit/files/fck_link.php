@@ -79,37 +79,8 @@ if ($webedit_idm)
         break;
 
         case 'webedit_selectlink':
-            ?>
-            <script type="text/javascript">
-            function webedit_showheading(hid, str, option)
-            {
-                if (typeof(option) == 'undefined') var option = '';
-                
-                
-                elt = $('webedit_plus'+option+hid);
-            
-                if (elt.style.background.indexOf('plusbottom') != -1) elt.style.background = elt.style.background.replace('plusbottom', 'minusbottom');
-                else  if (elt.style.background.indexOf('minusbottom')  != -1) elt.style.background = elt.style.background.replace('minusbottom', 'plusbottom');
-                else  if (elt.style.background.indexOf('plus')  != -1) elt.style.background = elt.style.background.replace('plus', 'minus');
-                else  if (elt.style.background.indexOf('minus')  != -1) elt.style.background = elt.style.background.replace('minus', 'plus');
-            
-                if (elt = $('webedit_dest'+option+hid))
-                {
-                    if (elt.style.display == 'none')
-                    {
-                        if (elt.innerHTML.length < 10) ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=xml_detail_heading&hid='+hid+'&str='+str+'&option='+option,'','webedit_dest'+option+hid);
-                        elt.style.display='block';
-                    }
-                    else
-                    {
-                        elt.style.display='none';
-                    }
-                }
-            }
-
-            </script>
-            <?
-            echo webedit_build_tree(0, '', 'selectlink');
+            $treeview = webedit_gettreeview('selectlink');
+            echo $skin->display_treeview($treeview['list'], $treeview['tree']);
         break;
     }
 

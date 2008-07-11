@@ -149,6 +149,181 @@ function webedit_getlastupdate($moduleid = -1)
 }
 
 /**
+ * Retourne un tableau contenant les données nécessaire à l'affiche du treeview
+ * 
+ * @param string $option option d'affichage qui permet d'adapter le comportement des liens (l'arbre est utilisé de plusieurs manières)
+ * @param int $moduleid identifiant du module (optionnel)
+ * @return array tableau des données du treeview à afficher
+ * 
+ * @see skin::display_treeview
+ * 
+ */
+
+function webedit_gettreeview($option = '', $moduleid = -1)
+{
+    global $db;
+
+    if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
+
+
+    switch($option)
+    {
+        // déplacement d'un article vers une rubrique
+        case 'selectheading':
+            $prefix = 'h';
+        break;
+            
+        // redirection depuis une rubrique vers un article
+        case 'selectredirect':
+            $prefix = 'r';
+        break;
+        
+        // choix d'un article pour faire un lien (fckeditor)
+        case 'selectlink':
+            $prefix = 'l';
+        break;
+        
+        default:
+            $prefix = '';
+        break;
+    }
+    
+    
+    $treeview = array('list' => array(), 'tree' => array());
+
+    $select =   "
+                SELECT      * 
+                FROM        ploopi_mod_webedit_heading 
+                WHERE       id_module = {$moduleid} 
+                ORDER BY    depth, 
+                            position
+                ";
+                            
+    $result = $db->query($select);
+    while ($fields = $db->fetchrow($result))
+    {
+        
+        switch($option)
+        {
+            case 'selectheading':
+                $link = '';
+                $onclick = "webedit_select_heading('{$fields['id']}', '".addslashes($fields['label'])."', event)";
+            break;
+            
+            case 'selectredirect':
+            case 'selectlink':
+                $link = '';
+                $onclick = "ploopi_skin_treeview_shownode('h{$prefix}{$fields['id']}', '".ploopi_queryencode("ploopi_op=webedit_detail_heading&hid=h{$prefix}{$fields['id']}&option={$option}")."', 'admin-light.php')";
+            break;
+    
+            default:
+                $link = ploopi_urlencode("admin.php?headingid={$fields['id']}");
+                $onclick = '';
+            break;
+        }            
+        
+        $node = 
+            array(
+                'id' => 'h'.$prefix.$fields['id'],
+                'label' => $fields['label'],
+                'description' => $fields['description'],
+                'parents' => split(';', $fields['parents']),
+                'node_link' => '',
+                'node_onclick' => "ploopi_skin_treeview_shownode('h{$prefix}{$fields['id']}', '".ploopi_queryencode("ploopi_op=webedit_detail_heading&hid=h{$prefix}{$fields['id']}&option={$option}")."', 'admin-light.php')",
+                'link' => $link,
+                'onclick' => $onclick,
+                'icon' => ($fields['id_heading'] == 0) ? './modules/webedit/img/base.png' : './modules/webedit/img/folder.png'
+            );
+            
+        // on rajoute 'h' devant chaque parent
+        foreach($node['parents'] as $key => $value) $node['parents'][$key] = 'h'.$prefix.$value;
+
+        $treeview['list']['h'.$prefix.$fields['id']] = $node;
+        
+        $treeview['tree']['h'.$prefix.$fields['id_heading']][] = 'h'.$prefix.$fields['id'];                        
+    }
+    
+    if ($option != 'selectheading')
+    {
+        $select =   "
+                    SELECT      ad.id,
+                                a.id as online_id,
+                                ad.position,
+                                ad.title,
+                                ad.metadescription,
+                                ad.metatitle,
+                                ad.id_heading,
+                                ad.status,
+                                ad.timestp,
+                                ad.timestp_published,
+                                ad.timestp_unpublished,
+                                ad.id_user,
+                                MD5(ad.content) as md5_content,
+                                MD5(a.content) as md5_online_content
+                    FROM        ploopi_mod_webedit_article_draft ad
+                    LEFT JOIN   ploopi_mod_webedit_article a
+                    ON          a.id = ad.id
+    
+                    WHERE       ad.id_module = {$moduleid}
+                    ORDER BY    ad.position
+                    ";
+        
+        $result = $db->query($select);
+        
+        $today = ploopi_createtimestamp();
+        
+        while ($fields = $db->fetchrow($result))
+        {
+            if (isset($treeview['list']['h'.$prefix.$fields['id_heading']]))
+            {
+                if (is_null($fields['online_id'])) $fields['new_version'] = 2;
+                else $fields['new_version'] = ($fields['md5_content'] !=  $fields['md5_online_content']) ? '1' : '0';
+        
+                $fields['date_ok'] = (($fields['timestp_published'] <= $today || $fields['timestp_published'] == 0) && ($fields['timestp_unpublished'] >= $today || $fields['timestp_unpublished'] == 0));
+                
+                switch($option)
+                {
+                    // used for fckeditor and link redirect on heading
+                    case 'selectredirect':
+                        $link = '';
+                        $onclick = "webedit_select_article('{$fields['id']}', '".addslashes($fields['title'])."', event)";
+                    break;
+    
+                    case 'selectlink':
+                        $link = '';
+                        $onclick = "ploopi_getelem('txtArticle',parent.document).value='".ploopi_urlrewrite("index.php?headingid={$fields['id_heading']}&articleid={$fields['id']}", $fields['metatitle'])."';";
+                    break;
+    
+                    default:
+                        $link = ploopi_urlencode("admin.php?headingid={$fields['id_heading']}&op=article_modify&articleid={$fields['id']}");
+                        $onclick = '';
+                    break;
+                }        
+                
+                $node = 
+                    array(
+                        'id' => 'a'.$prefix.$fields['id'],
+                        'label' => $fields['title'],
+                        'description' => $fields['metadescription'],
+                        'parents' => array_merge($treeview['list']['h'.$prefix.$fields['id_heading']]['parents'], array('h'.$prefix.$fields['id_heading'])),
+                        'node_link' => '',
+                        'node_onclick' => '',
+                        'link' => $link,
+                        'onclick' => $onclick,
+                        'icon' => "./modules/webedit/img/doc{$fields['new_version']}.png"
+                    );
+                    
+                $treeview['list']['a'.$prefix.$fields['id']] = $node;
+                
+                $treeview['tree']['h'.$prefix.$fields['id_heading']][] = 'a'.$prefix.$fields['id'];
+            }                        
+        }
+    }
+    
+    return($treeview);
+}
+
+/**
  * Retourne les rubriques du module sous forme d'un tableau
  *
  * @param int $moduleid identifiant du module
@@ -245,237 +420,6 @@ function webedit_getarticles($moduleid = -1)
 
     return($articles);
 }
-
-/**
-* build recursively the whole heading tree
-*
-*/
-
-/**
- * Construit un arbre récursif pour la navigation dans les rubriques et les pages.
- * 
- * @param int $fromhid identifiant de la rubrique à partir de laquelle on affiche l'arbre
- * @param string $str chaîne permettant de positionner les noeuds dans l'arbre (oui pas terrible... cf todo)
- * @param string $option options d'affichage
- * @return string l'arbre au format xhtml
- * 
- * @uses $headings
- * @uses @articles
- * @uses $headingid;
- * @uses $articleid;
- * 
- * @todo Réécrire cette fonction sur le modèle de la fonction présente dans le module 'system'
- */
-
-function webedit_build_tree($fromhid = 0, $str = '', $option = '')
-{
-    global $headings;
-    global $articles;
-    
-    global $headingid;
-    global $articleid;
-    
-    switch($option)
-    {
-        // used for fckeditor and link redirect on heading
-        case 'selectredirect':
-        case 'selectlink':
-            $headingsel = $headings['list'][$headings['tree'][0][0]];
-        break;
-
-        default:
-            $headingsel = $headings['list'][$headingid];
-        break;
-    }
-
-    $html = '';
-    if (isset($headings['tree'][$fromhid]))
-    {
-        $c=0;
-        foreach($headings['tree'][$fromhid] as $hid)
-        {
-            $heading = $headings['list'][$hid];
-            $isheadingsel = ($headingid == $hid && $option == '');
-
-            $hselparents = explode(';',$headingsel['parents']);
-            $testparents = explode(';',$heading['parents']);
-            $testparents[] = $heading['id'];
-
-            // heading opened if parents array intersects
-            $hasarticles = !empty($articles['tree'][$hid]);
-            $isheadingopened = sizeof(array_intersect ($hselparents, $testparents)) == sizeof($testparents);
-            // last node or not ?
-            $islast = ((!isset($headings['tree'][$fromhid]) || $c == sizeof($headings['tree'][$fromhid])-1) && empty($articles['tree'][$fromhid]));
-
-            $decalage = '';
-            $decalage_close = '';
-
-            for($s=0;$s<strlen($str);$s++)
-            {
-                if ($s==0) $marginleft = 0;
-                else $marginleft = 19;
-
-                switch($str[$s])
-                {
-                    case 's':
-                        $decalage .= "<div style=\"margin-left:{$marginleft}px;background:url('./modules/webedit/img/line.png') top left repeat-y;\">";
-                        $decalage_close .= '</div>';
-                    break;
-
-                    case 'b':
-                        $decalage .= "<div style=\"margin-left:{$marginleft}px;background:url('./modules/webedit/img/empty.png') top left repeat-y;\">";
-                        $decalage_close .= '</div>';
-                    break;
-                }
-            }
-
-            $style_sel = ($isheadingsel) ? 'bold' : 'none';
-
-            $icon = 'folder';
-            $new_str = ''; // decalage pour les noeuds suivants
-            if ($heading['depth'] == 1 || $heading['id'] == $fromhid) $icon = 'base';
-            else
-            {
-                if (!$islast) $new_str = $str.'s'; // |
-                else $new_str = $str.'b';  // (vide)
-            }
-
-
-            switch($option)
-            {
-                // used for fckeditor and link redirect on heading
-                case 'selectredirect':
-                case 'selectlink':
-                    $link = $link_div ="<a name=\"heading{$hid}\" onclick=\"javascript:webedit_showheading('{$hid}','{$new_str}','{$option}');\" href=\"javascript:void(0);\">";
-                break;
-
-                default:
-                    $link_div ="<a name=\"heading{$hid}\" onclick=\"javascript:webedit_showheading('{$hid}', '{$new_str}', '{$option}');\" href=\"javascript:void(0);\">";
-                    $link = '<a style="font-weight:'.$style_sel.'" href="'.ploopi_urlencode("admin.php?headingid={$heading['id']}").'">';
-                break;
-            }
-
-            if ($heading['depth'] > 1)
-            {
-                $last = 'joinbottom';
-                if ($islast) $last = 'join';
-
-                if (isset($headings['tree'][$hid]) || $hasarticles)
-                {
-                    if ($islast) $last = ($isheadingsel || $isheadingopened) ? 'minus' : 'plus';
-                    else  $last = ($isheadingsel || $isheadingopened) ? 'minusbottom' : 'plusbottom';
-                }
-
-                if ($heading['depth'] == 2) $marginleft = 0;
-                else $marginleft = 19;
-
-                $decalage .= "<div style=\"margin-left:{$marginleft}px;background:url('./modules/webedit/img/{$last}.png') top left repeat-y;\" id=\"webedit_plus{$option}{$hid}\">{$link_div}<img style=\"width:19px;height:18px;\" src=\"./modules/webedit/img/empty.png\" /></a>";
-                $decalage_close .= '</div>';
-            }
-
-            $html_rec = '';
-
-            if ($isheadingsel || $isheadingopened || $heading['depth'] == 1 || !empty($articles['tree'][$hid])) $html_rec = webedit_build_tree($hid, $new_str, $option);
-
-            $display = ($isheadingopened || $isheadingsel || $heading['depth'] == 1) ? 'block' : 'none';
-
-
-            if ($heading['depth'] == 1) $marginleft = 0;
-            else $marginleft = 19;
-
-            $html .=    "
-                        <div class=\"webedit_tree_node\" id=\"webedit_tree_node{$option}{$hid}\">
-                            {$decalage}
-                                <div style=\"margin-left:{$marginleft}px;\">
-                                    <img src=\"./modules/webedit/img/{$icon}.png\" />
-                                    <span style=\"display:block;margin-left:16px;\">{$link}{$heading['label']}</a></span>
-                                </div>
-                            {$decalage_close}
-                        </div>
-                        <div style=\"clear:left;display:{$display};\" id=\"webedit_dest{$option}{$hid}\">{$html_rec}</div>
-                        ";
-            $c++;
-        }
-    }
-
-
-    // ARTICLES
-    if (!empty($articles['tree'][$fromhid]))
-    {
-        $c=0;
-        foreach($articles['tree'][$fromhid] as $aid)
-        {
-            $article = $articles['list'][$aid];
-
-            $islast = ($c == sizeof($articles['tree'][$fromhid])-1);
-            $isarticlesel = ($articleid == $aid);
-
-            $decalage = '';
-            for($s=0;$s<strlen($str);$s++)
-            {
-                if ($s==0) $marginleft = 0;
-                else $marginleft = 19;
-
-                switch($str[$s])
-                {
-                    case 's':
-                        $decalage .= "<div style=\"margin-left:{$marginleft}px;background:url('./modules/webedit/img/line.png') top left repeat-y;\">";
-                    break;
-
-                    case 'b':
-                        $decalage .= "<div style=\"margin-left:{$marginleft}px;background:url('./modules/webedit/img/empty.png') top left repeat-y;\">";
-                    break;
-                }
-            }
-
-            switch($option)
-            {
-                // used for fckeditor and link redirect on heading
-                case 'selectredirect':
-                    $link = "<a name=\"article{$aid}\" href=\"javascript:void(0);\" onclick=\"javascript:$('webedit_heading_linkedpage').value = '{$aid}';$('linkedpage_displayed').value = '".addslashes($article['title'])."';ploopi_checkbox_click(event, 'heading_content_type_article_redirect');ploopi_hidepopup('webedit_popup_selectredirect');\">";
-                break;
-
-                case 'selectlink':
-                    $link = "<a name=\"article{$aid}\" href=\"javascript:void(0);\" onclick=\"javascript:ploopi_getelem('txtArticle',parent.document).value='index.php?nav={$headings['list'][$fromhid]['nav']}&headingid={$fromhid}&articleid={$aid}';\">";
-                break;
-
-                default:
-                    $style_sel =  ($isarticlesel) ? 'bold' : 'none';
-                    $link = '<a style="font-weight:'.$style_sel.'" href="'.ploopi_urlencode("admin.php?headingid={$fromhid}&op=article_modify&articleid={$aid}").'">';
-                break;
-            }
-
-            if ($headings['list'][$fromhid]['depth'] == 1) $marginleft = 0;
-            else $marginleft = 19;
-
-            $last = ($islast) ? 'join' : 'joinbottom';
-            $decalage .= "<div style=\"margin-left:{$marginleft}px;background:url('./modules/webedit/img/{$last}.png') top left repeat-y;\">";
-
-            $status = ($article['status'] == 'wait') ? '&nbsp;<span style="color:#ff0000;font-weight:bold;">*</span>' : '';
-
-            $dateok = ($article['date_ok']) ? '' : '&nbsp;<span style="color:#ff0000;font-weight:bold;">~</span>';
-
-            $decalage_close='';
-            for ($d=0;$d<$headings['list'][$fromhid]['depth'];$d++) $decalage_close .= '</div>';
-
-            $html .=    "
-                        <div class=\"webedit_tree_node\">
-                            {$decalage}
-                                <div style=\"margin-left:19px;\">
-                                    <img src=\"./modules/webedit/img/doc{$article['new_version']}.png\">
-                                    <span style=\"display:block;margin-left:16px;\">{$link}{$article['title']}</a>{$status}{$dateok}</span>
-                                </div>
-                            {$decalage_close}
-                        </div>
-                        ";
-
-            $c++;
-        }
-    }
-
-    return $html;
-}
-
 
 /**
  * Traduit les rubriques en variables template en fonction de la position dans l'arbre des rubriques

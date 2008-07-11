@@ -19,33 +19,6 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-function webedit_showheading(hid, str, option)
-{
-    if (typeof(option) == 'undefined') var option = '';
-    
-    
-    elt = $('webedit_plus'+option+hid);
-
-    if (elt.style.background.indexOf('plusbottom') != -1) elt.style.background = elt.style.background.replace('plusbottom', 'minusbottom');
-    else  if (elt.style.background.indexOf('minusbottom')  != -1) elt.style.background = elt.style.background.replace('minusbottom', 'plusbottom');
-    else  if (elt.style.background.indexOf('plus')  != -1) elt.style.background = elt.style.background.replace('plus', 'minus');
-    else  if (elt.style.background.indexOf('minus')  != -1) elt.style.background = elt.style.background.replace('minus', 'plus');
-
-    if (elt = $('webedit_dest'+option+hid))
-    {
-        if (elt.style.display == 'none')
-        {
-            if (elt.innerHTML.length < 10) ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=xml_detail_heading&hid='+hid+'&str='+str+'&option='+option,'','webedit_dest'+option+hid);
-            elt.style.display='block';
-        }
-        else
-        {
-            elt.style.display='none';
-        }
-    }
-}
-
 function webedit_heading_validate(form)
 {
     if (ploopi_validatefield('Libellé', form.webedit_heading_label, 'string'))
@@ -111,4 +84,39 @@ function webedit_backup_reload()
         var fck_instance = $('webedit_frame_editor').contentWindow.FCKeditorAPI.GetInstance('fck_webedit_article_content');
         fck_instance.SetData(c);
     }
+}
+
+/**
+ * Sélectionne un article en redirection sur une rubrique
+ */
+
+function webedit_select_article(id, title, e)
+{
+    $('webedit_heading_linkedpage').value = id;
+    $('linkedpage_displayed').value = title;
+    ploopi_checkbox_click(e, 'heading_content_type_article_redirect');
+    ploopi_hidepopup('webedit_popup_selectredirect');
+}
+
+/**
+ * Sélectionne une nouvelle rubrique parent pour un article
+ */
+
+function webedit_select_heading(id, label, e)
+{
+    $('webedit_article_id_heading').value = id;
+    $('heading_displayed').value = label;
+    ploopi_hidepopup('webedit_popup_selectheading');
+}
+
+function webedit_switch_display_type(value)
+{
+    if ($('webedit_display_type').value != value) // nouvelle valeur
+    {
+	    if (confirm('Attention, changer d\'affichage n\'enregistre pas vos dernières modifications'))
+	    {
+	        $('webedit_display_type').value = value;
+	        $('webedit_form_display_type').submit();
+        }
+    } 
 }

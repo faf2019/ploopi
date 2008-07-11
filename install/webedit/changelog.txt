@@ -1,3 +1,13 @@
+== Module WebEdit - version 1.6 ============================================
+
+2008-07-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Possibilité de passer d'un affichage simplifié à un affichage avancé
+ * Nouvelle barre d'action en haut permettant d'afficher/cacher l'arbre des rubriques et de choisir le mode d'affichage
+ * Possibilité de déplacer un article (choisir une nouvelle rubrique parent)
+ * Quelques modifications d'interface
+ * Réécriture du treeview, utilisation d'une méthode générique de la class skin
+
 == Module WebEdit - version 1.5.2 ============================================
 
 2008-07-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

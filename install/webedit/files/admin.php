@@ -49,53 +49,39 @@ include_once './modules/webedit/class_heading_subscriber.php';
 global $headingid;
 global $articleid;
 
-if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = '';
-if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = '';
-if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'] = 'draft';
-if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display'] = 'block';
-
 if (isset($_GET['type'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'] = $_GET['type'];
 
-$headingid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'];
-$articleid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'];
-$type = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'];
+if (isset($_POST['webedit_display_type'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] = $_POST['webedit_display_type'];
 
+// heading id
 if (!empty($_GET['headingid']) && is_numeric($_GET['headingid']))
 {
-    $headingid = $_GET['headingid'];
-
-    // reset articleid if new headingid
-    if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] != $headingid) unset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid']);
-
-    $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = $headingid;
+    $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = $_GET['headingid'];
+    $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = '';
 }
 
-if (!empty($_GET['articleid']) && is_numeric($_GET['articleid'])) $articleid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = $_GET['articleid'];
+// article id
+if (!empty($_GET['articleid']) && is_numeric($_GET['articleid']))
+{
+    $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = $_GET['articleid'];
+}
+
+if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'] = 'draft';
+if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = '';
+if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = '';
+if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display'] = 'block';
+if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] = 'beginner';
+
+
+$type = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'];
+$headingid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'];
+$articleid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'];
+$display_type = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'];
 
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
 switch($op)
 {
-    // ===============
-    // XML Actions
-    // ===============
-
-    case 'xml_detail_heading':
-        ob_end_clean();
-        if (!empty($_GET['hid']) && is_numeric($_GET['hid']))
-        {
-            $headings = webedit_getheadings();
-            $articles = webedit_getarticles();
-            echo webedit_build_tree($_GET['hid'], (empty($_GET['str'])) ? '' : $_GET['str'], (empty($_GET['option'])) ? '' : $_GET['option']);
-        }
-        ploopi_die();
-    break;
-
-    case 'xml_switchdisplay':
-        if (!empty($_GET['display'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display'] = $_GET['display'];
-        ploopi_die();
-    break;
-
     // ===============
     // GLOBAL Actions
     // ===============
@@ -272,34 +258,7 @@ switch($op)
     case 'article_selectfile':
         include_once './modules/webedit/admin_imagegalery.php';
     break;
-
-    case 'article_selectlink':
-        $headings = webedit_getheadings();
-        $articles = webedit_getarticles();
-        echo webedit_build_tree(0, '', 'selectlink');
-    break;
-
-    case 'heading_selectredirect':
-        ob_end_clean();
-        ob_start();
-        ?>
-        <div style="padding:4px;height:150px;overflow:auto;">
-        <?
-        $headings = webedit_getheadings();
-        $articles = webedit_getarticles();
-        echo webedit_build_tree(0, '', 'selectredirect');
-        ?>
-        </div>
-        <?
-        $content = ob_get_contents();
-        ob_end_clean();
-        
-        echo $skin->create_popup('Choix d\'une page', $content, 'webedit_popup_selectredirect');
-
-        ploopi_die();
-    break;
-
-
+    
     case 'article_save':
         if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) && $type == 'draft')
         {
@@ -308,37 +267,58 @@ switch($op)
             $strTypeTicket = '';
 
             $article = new webedit_article('draft');
+            
+            // article existant ?
             if (!empty($_POST['articleid']) && is_numeric($_POST['articleid']) && $article->open($_POST['articleid']))
             {
-                // modification de la position d'un article
-                if (isset($_POST['webedit_art_position']))
+                // modification de la rubrique parent
+                // => modification de la position de l'article et des autres articles de la rubrique courante
+                if (isset($_POST['webedit_article_id_heading']) && is_numeric($_POST['webedit_article_id_heading']) && $_POST['webedit_article_id_heading'] != $article->fields['id_heading'])
                 {
-                    $newposition = $_POST['webedit_art_position'];
-                    if ($newposition != $article->fields['position']) // nouvelle position définie
+                    // on recherche la nouvelle position de l'article dans sa nouvelle rubrique
+                    $select = "Select max(position) as maxpos from {$tablename} WHERE id_heading = {$_POST['webedit_article_id_heading']}";
+                    $db->query($select);
+                    $fields = $db->fetchrow();
+                    $maxpos = $fields['maxpos'];
+                    if (!is_numeric($maxpos)) $maxpos = 0;
+                    
+                    // on remonte les articles de la rubrique actuelle
+                    $db->query("UPDATE {$tablename} SET position = position - 1 WHERE position > {$article->fields['position']} AND id_heading = {$article->fields['id_heading']}");
+                    
+                    // on affecte la nouvelle position à l'article
+                    $article->fields['position'] = $maxpos+1;
+                }
+                else // si la rubrique parent n'est pas modifiée
+                {
+                    // modification de la position d'un article 
+                    if (isset($_POST['webedit_art_position']))
                     {
-                        if ($newposition<1) $newposition=1;
-                        else
+                        $newposition = $_POST['webedit_art_position'];
+                        if ($newposition != $article->fields['position']) // nouvelle position définie
                         {
-                            $select = "Select max(position) as maxpos from {$tablename} where id_heading = {$headingid}";
-                            $db->query($select);
-                            $fields = $db->fetchrow();
-                            if ($newposition > $fields['maxpos']) $newposition = $fields['maxpos'];
+                            if ($newposition<1) $newposition=1;
+                            else
+                            {
+                                $select = "Select max(position) as maxpos from {$tablename} where id_heading = {$headingid}";
+                                $db->query($select);
+                                $fields = $db->fetchrow();
+                                if ($newposition > $fields['maxpos']) $newposition = $fields['maxpos'];
+                            }
+        
+                            $db->query("update {$tablename} set position=0 where position={$article->fields['position']} AND id_heading = {$article->fields['id_heading']}");
+                            if ($newposition > $article->fields['position'])
+                            {
+                                $db->query("update {$tablename} set position=position-1 where position BETWEEN ".($article->fields['position']-1)." AND {$newposition} AND id_heading = {$article->fields['id_heading']}");
+                            }
+                            else
+                            {
+                                $db->query("update {$tablename} set position=position+1 where position BETWEEN {$newposition} AND ".($article->fields['position']-1)." AND id_heading = {$article->fields['id_heading']}");
+                            }
+                            $db->query("update {$tablename} set position={$newposition} where position=0 AND id_heading = {$article->fields['id_heading']}");
+                            $article->fields['position'] = $newposition;
                         }
-    
-                        $db->query("update {$tablename} set position=0 where position={$article->fields['position']} AND id_heading = {$article->fields['id_heading']}");
-                        if ($newposition > $article->fields['position'])
-                        {
-                            $db->query("update {$tablename} set position=position-1 where position BETWEEN ".($article->fields['position']-1)." AND {$newposition} AND id_heading = {$article->fields['id_heading']}");
-                        }
-                        else
-                        {
-                            $db->query("update {$tablename} set position=position+1 where position BETWEEN {$newposition} AND ".($article->fields['position']-1)." AND id_heading = {$article->fields['id_heading']}");
-                        }
-                        $db->query("update {$tablename} set position={$newposition} where position=0 AND id_heading = {$article->fields['id_heading']}");
-                        $article->fields['position'] = $newposition;
                     }
                 }
-
             }
             else // nouvel article
             {
@@ -596,11 +576,36 @@ switch($op)
             }
         }
 
-        echo $skin->create_pagetitle(str_replace("LABEL",$_SESSION['ploopi']['modulelabel'],_WEBEDIT_PAGE_TITLE));
+        echo $skin->create_pagetitle(str_replace("LABEL",$_SESSION['ploopi']['modulelabel'], _WEBEDIT_PAGE_TITLE));
         echo $skin->open_simplebloc();
 
         ?>
-        <div>
+        <div style="padding:4px 8px;border-bottom:1px solid #a0a0a0; background:#d0d0d0; overflow:auto;">
+
+            <form action="<? echo ploopi_urlencode('admin.php?op='.$op); ?>" method="post" id="webedit_form_display_type">
+                <input type="hidden" name="webedit_display_type" id="webedit_display_type" value="<? echo $display_type; ?>" /> 
+                
+                <p class="ploopi_checkbox" style="float:right;margin-left:6px;" onclick="javascript:webedit_switch_display_type('advanced');">
+                    <img src="./modules/webedit/img/radio-<? echo ($display_type == 'advanced') ? 'on' : 'off'; ?>.png" /><span>&nbsp;Avancé</span>
+                </p>
+                
+                <p class="ploopi_checkbox" style="float:right;margin-left:6px;" onclick="javascript:webedit_switch_display_type('beginner');">
+                    <img src="./modules/webedit/img/radio-<? echo ($display_type == 'beginner') ? 'on' : 'off'; ?>.png" /><span>&nbsp;Simplifié</span>
+                </p>
+                
+                <p class="ploopi_va" style="float:right;">
+                    <span>Affichage : </span>
+                </p>
+            </form>
+            
+            <p class="ploopi_va" style="float:left;cursor:pointer;" onclick="javascript:ploopi_switchdisplay('webedit_tree');ploopi_switchdisplay('webedit_article_options');ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_switchdisplay_treeview&display='+ploopi_getelem('webedit_tree').style.display, true);">
+                <img title="Afficher/Cacher l'arborescence des rubriques" alt="Afficher/Cacher l'arborescence des rubriques" src="./modules/webedit/img/fullscreen.png">
+                <span>Afficher/Cacher l'arborescence des rubriques</span>        
+            </p>
+        </div>
+        
+        
+        <div style="clear:both;">
             <div class="webedit_tree" id="webedit_tree" style="display:<? echo $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display']; ?>;">
                 <div class="webedit_tree_padding" style="">
                     <?
@@ -609,22 +614,9 @@ switch($op)
 
                     if (empty($headingid) || !isset($headings['list'][$headingid])) $headingid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = $headings['tree'][0][0];
 
-                    if (!empty($_GET['headingid']) && is_numeric($_GET['headingid']))
-                    {
-                        $headingid = $_GET['headingid'];
-                        if (!isset($headings['list'][$headingid])) $headingid = $headings['tree'][0][0]; // id n'existe pas
-
-                        // reset articleid if new headingid
-                        if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] != $headingid) unset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid']);
-
-                        $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = $headingid;
-                    }
-
-                    if (!empty($_GET['articleid']) && is_numeric($_GET['articleid'])) $articleid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = $_GET['articleid'];
-
-                    if (empty($headingid)) $headingid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = $headings['tree'][0][0];
-
-                    echo webedit_build_tree();
+                    $treeview = webedit_gettreeview();
+                    $node_id = (!empty($articleid)) ? "a{$articleid}" : "h{$headingid}";
+                    echo $skin->display_treeview($treeview['list'], $treeview['tree'], $node_id);
                     ?>
                 </div>
                 <div id="webedit_legende">
