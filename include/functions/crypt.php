@@ -50,7 +50,7 @@ function ploopi_htpasswd($pass)
 }
 
 /**
- * Chiffre une chaîne et l'encode en URL
+ * Chiffre une url après avoir ajouté les paramètres d'environnement "ploopi"
  *
  * @param string $url URL en clair
  * @param int $ploopi_mainmenu identifiant du menu principal actif (optionnel)
@@ -67,13 +67,30 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
     $arrParsedURL = parse_url($url);
     
     if (!isset($arrParsedURL['path'])) return(false);
+    
+    return $arrParsedURL['path'].'?'.ploopi_queryencode(empty($arrParsedURL['query']) ? '' : $arrParsedURL['query'], $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action);
+}
 
+
+/**
+ * Chiffre une chaîne de paramètres après avoir ajouté les paramètres d'environnement "ploopi"
+ *
+ * @param string $query paramètres en clair
+ * @param int $ploopi_mainmenu identifiant du menu principal actif (optionnel)
+ * @param int $ploopi_workspaceid identifiant de l'espace de travail actif (optionnel)
+ * @param int $ploopi_moduleid identifiant du module actif (optionnel)
+ * @param string $ploopi_action type d'action (optionnel)
+ * @return string chaîne de paramètres chiffrée
+ */
+
+function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null)
+{
     $arrParams = array();
     
     // on parse les paramètres de l'URL et on met tout ça dans un tableau associatif param => valeur
-    if (!empty($arrParsedURL['query']))
+    if (!empty($query))
     {
-        foreach(explode('&', $arrParsedURL['query']) as $param)
+        foreach(explode('&', $query) as $param)
         {
             $arrParam = explode('=', $param);
             if (sizeof($arrParam) > 0) $arrParams[$arrParam[0]] = (isset($arrParam[1])) ? $arrParam[1] : null;
@@ -120,20 +137,13 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
     
     $strParams = implode('&', $arrParams);
     
-    //ploopi_print_r($strParams);
-    
     if (defined('_PLOOPI_URL_ENCODE') && _PLOOPI_URL_ENCODE)
     {
         require_once './include/classes/cipher.php';
         $cipher = new ploopi_cipher();
-        return("{$arrParsedURL['path']}?ploopi_url=".urlencode($cipher->crypt($strParams)));
+        return "ploopi_url=".urlencode($cipher->crypt($strParams));
     }
-    else 
-    {
-        $url = $arrParsedURL['path'];
-        if (!empty($strParams)) $url .= '?'.$strParams;
-        return($url);
-    }
+    else return $strParams; 
 }
 
 /**

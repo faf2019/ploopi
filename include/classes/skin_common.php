@@ -641,5 +641,115 @@ class skin_common
         </script>
         <?
     }
+    
+    
+    /**
+     * Affiche un treeview
+     *
+     * @param array $nodes tableau associatif contenant les noeuds 
+     * @param array $treeview tableau contenant la hiérarchie des noeuds
+     * @param string $node_id_sel identifiant du noeud sélectionné
+     * @param string $node_id_from identifiant du noeud de départ (permet de n'afficher qu'un sous-ensemble)
+     * @return string code html du treeview
+     */
+    
+    function display_treeview(&$nodes, &$treeview, $node_id_sel = null, $node_id_from = null)
+    {
+        // recherche du premier noeud
+        if (is_null($node_id_from)) $node_id_from = key($treeview); 
+        
+        if (!empty($node_id_sel) && isset($nodes[$node_id_sel])) $nodesel = $nodes[$node_id_sel];
+        
+        // code html généré par ce niveau de boucle
+        $html = '';
+        
+        if (isset($treeview[$node_id_from]))
+        {
+            $c=0;
+            foreach($treeview[$node_id_from] as $node_id)
+            {
+                // noeud courant
+                $node = $nodes[$node_id];
+                
+                // true si le noeud courant est sélectionné
+                $is_node_sel = (!empty($node_id_sel) && ($node_id_sel == $node['id']));
+    
+                // parents du noeud sélectionné
+                $nodesel_parents = (isset($nodesel)) ? $nodesel['parents'] : array();
+                
+                // parents du noeud courant
+                $node_parents = array_merge($node['parents'], array($node['id']));
+    
+                // true si le noeud est ouvert : le noeud est ouvert si les parents du noeud courant et du noeud sélectionné se superposent
+                $is_node_opened = sizeof(array_intersect_assoc($nodesel_parents, $node_parents)) == sizeof($node_parents);
+                
+                // true si le noeud est le dernier fils de son père
+                $is_node_last = ($c == sizeof($treeview[$node_id_from])-1);
+                
+                // profondeur du noeud ( = nombre de noeuds parents)
+                $node_depth = sizeof($node['parents']);
+                
+                $node_link = '';
+                $bg = '';
+    
+                if ($node_depth == 1)
+                {
+                    // au premier niveau de profondeur, on ne crée pas de décalage
+                    $marginleft = 0;
+                }
+                else
+                {
+                    $type_node = 'join';
+                    if (isset($treeview[$node_id])) $type_node = ($is_node_sel || $is_node_opened) ? 'minus' : 'plus';
+    
+                    if (!$is_node_last) 
+                    {
+                        $type_node .= 'bottom';
+                        $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/treeview/line.png) 0 0 repeat-y;";
+                    }
+                    
+                    $n_link = (empty($node['node_link'])) ? 'javascript:void(0);' : $node['node_link']; 
+                    $n_onclick = (empty($node['node_onclick'])) ? '' : 'onclick="javascript:'.$node['node_onclick'].';"'; 
+                    
+                    $node_link = "<a href=\"{$n_link}\" {$n_onclick}><img id=\"t{$node['id']}\" style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$type_node}.png\" /></a>";
+                    
+                    $marginleft = 20;
+                }
+    
+                // récupération du code html des noeuds fils par un appel récursif    
+                $html_children = ($is_node_sel || $is_node_opened || $node_depth == 1) ? $this->display_treeview($nodes, $treeview, $node_id_sel, $node['id']) : '';
+    
+                // si du contenu à afficher, display = 'block'
+                $display = ($html_children == '') ? 'none' : 'block';
+    
+                
+                // si le noeud courant est sélectionné on le met en gras
+                $style_sel = ($is_node_sel) ? 'bold' : 'none';
+                
+                // lien sur le libellé
+                $link = (empty($node['link'])) ? 'javascript:void(0);' : $node['link']; 
+                
+                // onclick sur le libellé
+                $onclick = (empty($node['onclick'])) ? '' : 'onclick="'.$node['onclick'].';"'; 
+                
+                // génération du code html du noeud courant
+                $html .=    "
+                            <div style=\"overflow:auto;{$bg}\">
+                                <div>
+                                    {$node_link}<img style=\"display:block;float:left;\" src=\"{$node['icon']}\" />
+                                    <span style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;\">
+                                        <a style=\"font-weight:{$style_sel};\" href=\"{$link}\" {$onclick}>{$node['label']}</a>
+                                    </span>
+                                </div>
+                                <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"n{$node['id']}\">{$html_children}</div>
+                            </div>
+                            ";
+                $c++;
+            }
+        }  
+
+        return $html;
+        
+    }
 }
 ?>

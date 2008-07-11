@@ -74,10 +74,6 @@ define ('_SYSTEM_TAB_MULTIPLEROLEASSIGNMENT', 'multipleroleassignment');
 define ('_SYSTEM_TAB_MESSAGEINBOX', 'messageinbox');
 define ('_SYSTEM_TAB_MESSAGEOUTBOX', 'messageoutbox');
 
-
-$system_zip_unauthorized = array("^[a-z0-9]+[-_]*[a-z0-9]*(\.(zip|rar|gz|tar|sql|bak))$");
-$system_zip_unauthorizedpath = array("data/");
-
 define ('_SYSTEM_ACTION_INSTALLMODULE',     1);
 define ('_SYSTEM_ACTION_UNINSTALLMODULE',   2);
 define ('_SYSTEM_ACTION_UPDATEMODULE',      1);

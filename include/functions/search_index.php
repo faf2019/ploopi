@@ -719,7 +719,6 @@ function ploopi_highlight($content, $words, $snippet_length = 150, $snippet_num 
         $arrEncoder['ereg'][$id] = '['.$ereg.']';
     }
 
-
     $string = str_replace('\\','',implode('@#@',$words));
 
     $string = str_replace('Æ','ae',str_replace('æ','ae',$string));

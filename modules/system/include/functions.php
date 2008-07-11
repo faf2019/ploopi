@@ -243,13 +243,11 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                         if (!$islast) 
                         {
                             $typenode .= 'bottom';
-                            $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/system/treeview/line.png) 0 0 repeat-y;";
+                            $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/treeview/line.png) 0 0 repeat-y;";
                         }
                         
-                        $node = "<a onclick=\"javascript:system_showgroup('groups', '{$gid}', '');\" href=\"javascript:void(0);\"><img id=\"ng{$group['id']}\" style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/system/treeview/{$typenode}.png\" /></a>";
+                        $node = "<a onclick=\"javascript:system_showgroup('groups', '{$gid}', '');\" href=\"javascript:void(0);\"><img id=\"ng{$group['id']}\" style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$typenode}.png\" /></a>";
                     }
-
-                    $link = "<a style=\"font-weight:{$style_sel};padding-left:2px;\" href=\"".ploopi_urlencode("admin.php?groupid={$group['id']}")."\">";
 
                     $html_rec = '';
 
@@ -263,7 +261,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                     $html .=    "
                                 <div style=\"overflow:auto;{$bg}\">
                                     <div>
-                                        {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/system/treeview/{$icon}.png\" />
+                                        {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$icon}.png\" />
                                         <span style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;\">
                                             <a style=\"font-weight:{$style_sel};\" href=\"".ploopi_urlencode("admin.php?groupid={$group['id']}")."\">{$group['label']}</a>
                                         </span>
@@ -313,10 +311,10 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                         if (!$islast) 
                         {
                             $typenode .= 'bottom';
-                            $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/system/treeview/line.png) 0 0 repeat-y;";
+                            $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/treeview/line.png) 0 0 repeat-y;";
                         }
                         
-                        $node = "<a onclick=\"javascript:system_showgroup('workspaces', '{$wid}', '');\" href=\"javascript:void(0);\"><img id=\"nw{$workspace['id']}\" style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/system/treeview/{$typenode}.png\" /></a>";
+                        $node = "<a onclick=\"javascript:system_showgroup('workspaces', '{$wid}', '');\" href=\"javascript:void(0);\"><img id=\"nw{$workspace['id']}\" style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$typenode}.png\" /></a>";
                     }
 
                     $html_rec = '';
@@ -330,7 +328,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                     $html .=    "
                                 <div style=\"overflow:auto;{$bg}\">
                                     <div>
-                                        {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/system/treeview/{$icon}.png\" />
+                                        {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$icon}.png\" />
                                         <span style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;\">
                                             <a style=\"font-weight:{$style_sel};\" href=\"".ploopi_urlencode("admin.php?workspaceid={$workspace['id']}")."\">{$workspace['label']}</a>
                                         </span>
@@ -390,13 +388,11 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                             if (!$islast) 
                             {
                                 $typenode .= 'bottom';
-                                $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/system/treeview/line.png) 0 0 repeat-y;";
+                                $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/treeview/line.png) 0 0 repeat-y;";
                             }
                             
-                            $node = "<a onclick=\"javascript:system_showgroup('groups', '{$gid}', '');\" href=\"javascript:void(0);\"><img id=\"ng{$group['id']}\" style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/system/treeview/{$typenode}.png\" /></a>";
+                            $node = "<a onclick=\"javascript:system_showgroup('groups', '{$gid}', '');\" href=\"javascript:void(0);\"><img id=\"ng{$group['id']}\" style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$typenode}.png\" /></a>";
                         }
-
-                        $link = "<a style=\"font-weight:{$style_sel};padding-left:2px;\" href=\"".ploopi_urlencode("admin.php?groupid={$group['id']}")."\">";
 
                         $html_rec = '';
 
@@ -407,7 +403,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                         $html .=    "
                                     <div style=\"overflow:auto;{$bg}\">
                                         <div>
-                                            {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/system/treeview/{$icon}.png\" />
+                                            {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$icon}.png\" />
                                             <span style=\"display:block;margin-left:40px;line-height:18px;\">
                                                 <a style=\"font-weight:{$style_sel};\" href=\"".ploopi_urlencode("admin.php?groupid={$group['id']}")."\">{$group['label']}</a>
                                             </span>

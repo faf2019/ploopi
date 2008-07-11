@@ -1618,6 +1618,31 @@ function ploopi_skin_array_renderupdate(array_id)
     }
 }
 
+function ploopi_skin_treeview_shownode(node_id, query, script)
+{
+    if (typeof(script) == 'undefined') script = 'admin-light.php';
+    
+    elt = $('t'+node_id);
+    dest = $('n'+node_id);
+    
+    if (elt.src.indexOf('plus')  != -1) elt.src = elt.src.replace('plus', 'minus');
+    else if (elt.src.indexOf('minus')  != -1) elt.src = elt.src.replace('minus', 'plus');
+
+    if ($(dest))
+    {
+        if ($(dest).style.display == 'none')
+        {
+            $(dest).style.display='block';
+            if ($(dest).innerHTML.length < 20)
+            {
+                ploopi_ajaxloader(dest);
+                ploopi_xmlhttprequest_todiv(script, query, '', dest);
+            }
+        }
+        else $(dest).style.display='none';
+    }
+}
+
 function ploopi_tickets_new(event, id_object, id_record, object_label, id_user, reload)
 {
     var data = '';
