@@ -58,7 +58,7 @@ if (isset($ploopi_op))
                     </div>
                 </div>
                 <div style="clear:both;width:237px;height:30px;z-index:5;" id="colorpicker_selectedcolor">
-                <input type="button" class="button" style="margin:6px;float:right;" value="fermer" onclick="javascript:ploopi_getelem('<? echo $_GET['inputfield_id']; ?>').value = ploopi_getelem('colorpicker_inputcolor').value; ploopi_hidepopup();var e = document.createEvent('HTMLEvents');e.initEvent('change', false, false);$('<? echo $_GET['inputfield_id']; ?>').dispatchEvent(e);">
+                <input type="button" class="button" style="margin:6px;float:right;" value="fermer" onclick="javascript:ploopi_getelem('<? echo $_GET['inputfield_id']; ?>').value = ploopi_getelem('colorpicker_inputcolor').value; ploopi_hidepopup();ploopi_dispatch_onchange('<? echo $_GET['inputfield_id']; ?>');">
                 <input type="text" class="text" id="colorpicker_inputcolor" style="margin:6px;width:60px;float:left;" value="<? echo $_GET['colorpicker_value']; ?>">
                 </div>
             </div>
@@ -187,7 +187,7 @@ if (isset($ploopi_op))
                         $localdate = ploopi_timestamp2local($ts);
                         $d = intval(substr($ts, 6, 2), 10);
                         ?>
-                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_calendar_dispatchevent('<? echo $_SESSION['calendar']['inputfield_id']; ?>');"><? echo $d; ?></a></div>
+                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<? echo $_SESSION['calendar']['inputfield_id']; ?>');"><? echo $d; ?></a></div>
                         <?
                     }
                 }

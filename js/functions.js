@@ -934,7 +934,7 @@ function ploopi_calendar_open(inputfield_id, event)
     ploopi_showpopup(ploopi_xmlhttprequest('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&selected_date='+$(inputfield_id).value+'&inputfield_id='+inputfield_id), 192, event, 'click', 'ploopi_popup_calendar');
 }
 
-function ploopi_calendar_dispatchevent(inputfield_id)
+function ploopi_dispatch_onchange(inputfield_id)
 {
     if (Prototype.Browser.IE)
     {

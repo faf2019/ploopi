@@ -47,8 +47,6 @@ class odt_varparser
     private $xml_parser;
     private $xml_data = array();
     private $parsed_data;
-    
-    private $asc2uni = array();
 
     /**
      * Constructeur de la classe. Crée le parser.
@@ -70,9 +68,6 @@ class odt_varparser
 
         xml_set_element_handler($this->xml_parser, "tag_open", "tag_close");
         xml_set_character_data_handler($this->xml_parser, "cdata");
-        
-        
-        for($i=128; $i<256; $i++) $asc2uni[chr($i)] = "&#x".dechex($i).";"; 
     }
 
     /**
@@ -142,27 +137,12 @@ class odt_varparser
         // remplacement des variables template
         $data = str_replace(array_keys($this->vars), array_values($this->vars), $data);
         
-        $data = $this->xmlentities($data);
-
         // traitement des \n \r
         $data = preg_replace("/\r\n|\n|\r/", "</{$tag[0]}><{$tag[0]} {$tag[1]}>", $data);
         // traitement des espaces
         $data = preg_replace_callback('/\s\s+/',create_function('$matches','if (strlen($matches[0])>1) return(\' <text:s text:c="\'.(strlen($matches[0])-1).\'"/>\'); else return(\' \');'), $data);
 
         $this->parsed_data .= $data;
-    }
-
-    /**
-     * Convertit tous les caractères éligibles en entités XML
-     *
-     * @param string $data chaîne à convertir
-     * @return string chaîne convertie
-     */
-    
-    private function xmlentities($data)
-    {
-        $data = str_replace(array("&", ">", "<", "\"", "'", "\r"), array("&amp;", "&gt;", "&lt;", "&quot;", "&apos;", ""), $data);
-        return strtr($data, $this->asc2uni);
     }
     
     /**
@@ -396,12 +376,15 @@ class odt_parser
     private $content_xml;
     private $styles_xml;
     private $vars = array();
+    private $images = array();
     private $blockvars = array();
     private $blocktemplates = array();
 
     private $xml_parser;
     private $xml_data = array();
     private $parsed_content_xml;
+    
+    private $zip;
 
     /**
      * Constructeur de la classe.
@@ -415,12 +398,12 @@ class odt_parser
     public function odt_parser($filename)
     {
         $this->filename = $filename;
-        $zip = new ZipArchive();
-        if ($zip->open($this->filename) === true)
+        $this->zip = new ZipArchive();
+        if ($this->zip->open($this->filename) === true)
         {
-            $this->content_xml = $zip->getFromName('content.xml');
-            $this->styles_xml = $zip->getFromName('styles.xml');
-            $zip->close();
+            $this->content_xml = $this->zip->getFromName('content.xml');
+            $this->styles_xml = $this->zip->getFromName('styles.xml');
+            $this->zip->close();
         }
         else
         {
@@ -437,8 +420,7 @@ class odt_parser
      */
     private function clean_var($value)
     {
-        $value = html_entity_decode($value, ENT_QUOTES, 'ISO-8859-15');
-        return iconv('ISO-8859-15', 'UTF-8', $value);
+        return iconv('ISO-8859-15', 'UTF-8', ploopi_xmlentities(html_entity_decode($value, ENT_QUOTES, 'ISO-8859-15')));
     }
 
     /**
@@ -455,6 +437,29 @@ class odt_parser
     {
         $this->vars['{'.$key.'}'] = ($clean) ? $this->clean_var($value) : $value;
     }
+
+
+    /**
+     * Définit une variable template de type "image"
+     *
+     * @param string $key nom de la variable
+     * @param string $value chemin absolu vers le fichier image
+     * @param string $width largeur de l'image
+     * @param string $height hauteur de l'image
+     */
+    
+    public function set_image($key, $value, $width = '5cm', $height = '5cm')
+    {
+        $file = basename($value);
+        $name = strtok($file,'/.');
+
+        $xml = '<draw:frame draw:style-name="fr1" draw:name="'.$name.'" text:anchor-type="paragraph" svg:width="'.$width.'" svg:height="'.$height.'" draw:z-index="0"><draw:image xlink:href="Pictures/'.$file.'" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>';
+        
+        $this->set_var($key, $xml, false); 
+        
+        $this->images[$value] = $file;
+    }
+    
 
     /**
      * Définit une variable template de type bloc et lui affecte un tableau valeurs
@@ -550,14 +555,16 @@ class odt_parser
             $this->filename = $newfilename;
         }
         
-        $zip = new ZipArchive();
-        if ($zip->open($this->filename, ZIPARCHIVE::CREATE) === TRUE)
+        if ($this->zip->open($this->filename, ZIPARCHIVE::CREATE) === TRUE)
         {
-            if (!$zip->addFromString('content.xml', $this->content_xml))
+            foreach($this->images as $path => $file)
+                $this->zip->addFile($path,'Pictures/'.$file);
+            
+            if (!$this->zip->addFromString('content.xml', $this->content_xml))
                 exit('Erreur lors de l\'enregistrement');
-            if (!$zip->addFromString('styles.xml', $this->styles_xml))
+            if (!$this->zip->addFromString('styles.xml', $this->styles_xml))
                 exit('Erreur lors de l\'enregistrement');
-            $zip->close();
+            $this->zip->close();
         }
         else
         {

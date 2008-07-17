@@ -601,7 +601,7 @@ switch($ploopi_op)
         if (!empty($_FILES['documentsfile_file']['name']))
         {
             $documentsfile->fields['id_user_modify'] = $_SESSION['ploopi']['userid'];
-            $documentsfile->tmpfile = $_FILES['documentsfile_file']['tmp_name'];
+            $documentsfile->settmpfile($_FILES['documentsfile_file']['tmp_name']);
             $documentsfile->fields['name'] = $_FILES['documentsfile_file']['name'];
             $documentsfile->fields['size'] = $_FILES['documentsfile_file']['size'];
         }

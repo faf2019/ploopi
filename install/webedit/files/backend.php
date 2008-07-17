@@ -100,11 +100,11 @@ switch($format)
 
 $feed = new FeedWriter($feedformat);
 
-$feed->setTitle(ploopi_xmlencode(utf8_encode($feed_title)));
+$feed->setTitle(ploopi_xmlentities(utf8_encode($feed_title)));
 $feed->setLink(_PLOOPI_BASEPATH);
 
 $feed->setChannelElement('updated', date(DATE_ATOM , time()));
-$feed->setChannelElement('author', array('name '=> ploopi_xmlencode(utf8_encode($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']))));
+$feed->setChannelElement('author', array('name '=> ploopi_xmlentities(utf8_encode($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']))));
     
 foreach($articles as $key => $article)
 {
@@ -114,7 +114,7 @@ foreach($articles as $key => $article)
     // Création d'un nouvel item
     $item = $feed->createNewItem();
     
-    $item->setTitle(ploopi_xmlencode(utf8_encode($article['title'])));
+    $item->setTitle(ploopi_xmlentities(utf8_encode($article['title'])));
     $item->setLink(_PLOOPI_BASEPATH.'/'.$url);
     $item->setDate(ploopi_timestamp2unixtimestamp($article['timestp']));
     $item->setDescription(ploopi_nl2br(htmlentities($article['metadescription'])));

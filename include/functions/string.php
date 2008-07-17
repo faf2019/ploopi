@@ -141,7 +141,12 @@ function ploopi_urlrewrite($url, $title = '')
  * @return string chaîne encodée
  */
  
-function ploopi_xmlencode($str) { return str_replace(array("&", ">", "<", "\""), array("&amp;", "&gt;", "&lt;", "&quot;"), $str); }
+function ploopi_xmlentities($str) 
+{ 
+    for($i=128; $i<256; $i++) $asc2uni[chr($i)] = "&#x".dechex($i).";"; 
+    $str = str_replace(array("&", ">", "<", "\"", "'", "\r"), array("&amp;", "&gt;", "&lt;", "&quot;", "&apos;", ""), $str);
+    return strtr($str, $asc2uni);
+}
 
 /**
  * Rend les liens d'un texte cliquables
