@@ -191,7 +191,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                 break;
 
                 case 'serverload':
-                    echo $skin->open_simplebloc(_SYSTEM_LABEL_DIAGNOSTIC);
+                    echo $skin->open_simplebloc(_SYSTEM_LABEL_SERVERLOAD);
                     ?>
                     <div id="system_serverload">
                     <? include './modules/system/tools_serverload.php'; ?>
