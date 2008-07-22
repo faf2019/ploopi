@@ -407,13 +407,13 @@ function ploopi_search_get_index($id_object, $id_record, $limit = 100, $id_modul
  *
  * @param string $keywords mots clés recherchés
  * @param int $id_object identifiant de l'objet recherché (optionnel)
- * @param string $id_record masque d'enregistrement recherché, recherche de type abc% (optionnel)
+ * @param string $id_record tableau d'enregistrement ou masque d'enregistrement recherché, recherche de type abc% (optionnel)
  * @param mixed $id_module identifiant du module ou tableau d'idenfiants de modules (optionnel)
  * @param array $options tableau des options de recherche : 'orderby', 'sort', 'limit' (optionnel)
  * @return array tableau contenant le résultat de la recherche
  */
 
-function ploopi_search($keywords, $id_object = -1, $id_record = '', $id_module = null, $options = null)
+function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module = null, $options = null)
 {
     global $db;
     
@@ -429,24 +429,28 @@ function ploopi_search($keywords, $id_object = -1, $id_record = '', $id_module =
     $arrRelevance = array();
     $arrElements = array();
 
-    if ($id_record != '') $arrSearch[] = "e.id_record LIKE '".$db->addslashes($id_record)."%'";
+    if (!empty($id_record))
+    {
+        if (is_array($id_record)) 
+        {
+            $arrIdRecord = array();
+            foreach($id_record as $rec) $arrIdRecord[] = "'".$db->addslashes($rec)."'";
+            
+            $arrSearch[] = "e.id_record IN (".implode(',', $arrIdRecord).")";
+        }
+        elseif ($id_record != '') $arrSearch[] = "e.id_record LIKE '".$db->addslashes($id_record)."%'";
+    }
+    
     if ($id_object != -1) $arrSearch[] = "e.id_object = {$id_object}";
     
     if (!empty($id_module))
     {
-        if (is_array($id_module))
-        {
-            $arrSearch[] = "e.id_module IN (".implode(',',$id_module).")";
-        }
-        else
-        {
-            $arrSearch[] = "e.id_module = {$id_module}";
-        }
-        
+        if (is_array($id_module)) $arrSearch[] = "e.id_module IN (".implode(',', $id_module).")";
+        else $arrSearch[] = "e.id_module = {$id_module}";
         //$arrSearch[] = 'e.id_workspace IN ('.ploopi_viewworkspaces($id_module).')';
     }
 
-    $strSearch = (empty($arrSearch)) ? '' : ' AND '.implode(' AND ',$arrSearch);
+    $strSearch = (empty($arrSearch)) ? '' : ' AND '.implode(' AND ', $arrSearch);
 
     $orderby = (empty($options['orderby'])) ? 'relevance' : $options['orderby'];
     $sort = (isset($options['sort'])) ? $options['sort'] : 'DESC';
@@ -592,9 +596,8 @@ function ploopi_search($keywords, $id_object = -1, $id_record = '', $id_module =
     }
     
     // tri du résultat en fonction du champ et de l'ordre
-    $compare_sign = ($sort == 'DESC') ? '>' : '<';  
+    $compare_sign = ($sort == 'DESC') ? '>' : '<';
     uasort($arrRelevance, create_function('$a,$b', 'return $b[\''.$orderby.'\'] '.$compare_sign.' $a[\''.$orderby.'\'];'));
-    
     
     $arrResult = array();
     

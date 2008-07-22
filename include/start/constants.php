@@ -31,8 +31,8 @@
  * @author Stéphane Escaich
  */
 
-define ('_PLOOPI_VERSION', '1.0RC6');
-define ('_PLOOPI_REVISION', '80624');
+define ('_PLOOPI_VERSION', '1.0 RC7');
+define ('_PLOOPI_REVISION', '80721');
 
 define ('_PLOOPI_MSG_DBERROR',          'Database connection error, please contact administrator');
 
@@ -122,6 +122,7 @@ define('_PLOOPI_ERROR_EMPTYFILE',          102);
 if (!defined ('_PLOOPI_BASEPATH')) define ('_PLOOPI_BASEPATH', ((!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://').((!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']).((!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') ? ":{$_SERVER['SERVER_PORT']}" : '').rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
 if (!defined ('_PLOOPI_USE_OUTPUT_COMPRESSION')) define ('_PLOOPI_USE_OUTPUT_COMPRESSION', false); 
 if (!defined ('_PLOOPI_FINGERPRINT')) define ('_PLOOPI_FINGERPRINT',  md5(dirname($_SERVER['SCRIPT_FILENAME']).'/'._PLOOPI_DB_SERVER.'/'._PLOOPI_DB_DATABASE));
+if (!defined ('_PLOOPI_LOAD_NBCORE')) define ('_PLOOPI_LOAD_NBCORE', 1);
 
 define ('_PLOOPI_SERVER_OSTYPE', (substr(PHP_OS, 0, 3) == 'WIN') ? 'windows' : 'unix');
 

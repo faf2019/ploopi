@@ -284,7 +284,7 @@ function ploopi_print_r($var, $return = false)
 
 function ploopi_ob_clean()
 {
-    while (ob_get_level()>1) @ob_end_clean();
+    while (ob_get_level() > 1) @ob_end_clean();
     if (ob_get_level() == 1) ob_clean();
 }
 
