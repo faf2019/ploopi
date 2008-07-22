@@ -75,7 +75,8 @@ class annotation extends data_object
 
         $id_annotation = parent::save();
 
-        $tags = preg_split('/(,)|( )/', $this->tags, -1, PREG_SPLIT_NO_EMPTY);
+        $tags = array_unique(preg_split('/(,)|( )/', $this->tags, -1, PREG_SPLIT_NO_EMPTY));
+        
         foreach($tags as $tag)
         {
             $tag = trim($tag);
@@ -95,9 +96,12 @@ class annotation extends data_object
             else $id_tag = $row['id'];
 
             $annotation_tag = new annotation_tag();
-            $annotation_tag->fields['id_tag'] = $id_tag;
-            $annotation_tag->fields['id_annotation'] = $id_annotation;
-            $annotation_tag->save();
+            if (!$annotation_tag->open($id_annotation, $id_tag))
+            {
+                $annotation_tag->fields['id_tag'] = $id_tag;
+                $annotation_tag->fields['id_annotation'] = $id_annotation;
+                $annotation_tag->save();
+            }
         }
 
         return($id_annotation);

@@ -80,7 +80,7 @@ foreach($load as $key => $l)
     if ($row = $db->fetchrow()) 
     {
         $load[$key]['res'] = $row;
-        $load[$key]['res']['load'] = $row['total_exec_time'] / ($l['time']*10); // charge (ratio tps d'exec/tps écoulé) en %
+        $load[$key]['res']['load'] = ($row['total_exec_time'] / ($l['time']*10)) / _PLOOPI_LOAD_NBCORE; // charge (ratio tps d'exec/tps écoulé) en %
         $load[$key]['res']['rps'] = $row['numqueries'] / $l['time']; // requêtes par seconde
         $load[$key]['res']['bw'] = $row['page_size'] / ($l['time']*1024); // bande passante (ko/s)
         $load[$key]['res']['pps'] = $row['numpages'] / $l['time']; // page per second
@@ -134,7 +134,7 @@ foreach($load as $key => $l)
 
 ?>
 <p class="ploopi_va" style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;font-weight:bold;">
-    <span>Charge du système en temps réel&nbsp;&nbsp;</span><img src="./img/loading.gif" style="visibility:hidden;" id="system_serverload_loading"/>
+    <span>Charge du système en temps réel (nombre de coeurs : <? echo _PLOOPI_LOAD_NBCORE; ?>)&nbsp;&nbsp;</span><img src="./img/loading.gif" style="visibility:hidden;" id="system_serverload_loading"/>
 </p>
 <?
 $skin->display_array($columns, $values, 'array_load');

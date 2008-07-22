@@ -161,10 +161,6 @@ function ploopi_search_create_index_annotation($id_object, $id_record, $tags, $i
 
 function ploopi_search_create_index($id_object, $id_record, $label, $content, $meta = '', $usecommonwords = true, $timestp_create = 0, $timestp_modify = 0, $id_user = -1, $id_workspace = -1, $id_module = -1, $debug = false)
 {
-    // TESTS :
-    // http://ploopidev/admin-light.php?op=doc_fileindex&currentfolder=9&docfile_md5id=a9a7aba316abf25e65f01a320698baa3
-    // http://ploopidev/admin-light.php?op=doc_fileindex&currentfolder=9&docfile_md5id=e2472480adc4de03ea45862b9e487930
-
     global $db;
     global $ploopi_timer;
 
@@ -304,13 +300,15 @@ function ploopi_search_create_index($id_object, $id_record, $label, $content, $m
 
         // enregistrement du lien racine <-> enregistrement
         $objStemElement = new index_stem_element();
-        $objStemElement->fields['id_stem'] = $stem_md5;
-        $objStemElement->fields['id_element'] = $id_element;
-        $objStemElement->fields['weight'] = $stem['weight'];
-        $objStemElement->fields['ratio'] = (empty($stem['meta']) && $stem_ratio<1) ? $stem_ratio : 1;
-        $objStemElement->fields['relevance'] = (empty($stem['meta'])) ? ($stem['weight']*100)/$max_weight : 100;
-        $objStemElement->save();
-
+        if (!$objStemElement->open($stem_md5, $id_element))
+        {
+            $objStemElement->fields['id_stem'] = $stem_md5;
+            $objStemElement->fields['id_element'] = $id_element;
+            $objStemElement->fields['weight'] = $stem['weight'];
+            $objStemElement->fields['ratio'] = (empty($stem['meta']) && $stem_ratio<1) ? $stem_ratio : 1;
+            $objStemElement->fields['relevance'] = (empty($stem['meta'])) ? ($stem['weight']*100)/$max_weight : 100;
+            $objStemElement->save();
+        }
 
         foreach($stem['words'] as $kw_value => $kw)
         {
@@ -333,13 +331,15 @@ function ploopi_search_create_index($id_object, $id_record, $label, $content, $m
 
             // enregistrement du lien mot clé <-> enregistrement
             $objKwElement = new index_keyword_element();
-            $objKwElement->fields['id_keyword'] = $kw_md5;
-            $objKwElement->fields['id_element'] = $id_element;
-            $objKwElement->fields['weight'] = $kw['weight'];
-            $objKwElement->fields['ratio'] = (empty($kw['meta']) && $kw_ratio<1) ? $kw_ratio : 1;
-            $objKwElement->fields['relevance'] = (empty($kw['meta'])) ? ($kw_weight*100)/$max_weight : 100;
-            $objKwElement->save();
-
+            if (!$objKwElement->open($kw_md5, $id_element))
+            {
+                $objKwElement->fields['id_keyword'] = $kw_md5;
+                $objKwElement->fields['id_element'] = $id_element;
+                $objKwElement->fields['weight'] = $kw['weight'];
+                $objKwElement->fields['ratio'] = (empty($kw['meta']) && $kw_ratio<1) ? $kw_ratio : 1;
+                $objKwElement->fields['relevance'] = (empty($kw['meta'])) ? ($kw_weight*100)/$max_weight : 100;
+                $objKwElement->save();
+            }
         }
 
         $stem = next($words);
