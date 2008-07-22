@@ -301,6 +301,14 @@ switch($http_host)
          */
 
         define ('_PLOOPI_INDEXATION_KEYWORDSMAXPCENT', 100);
+
+        /**
+         * Nombre de coeurs affectés au rendu des pages (permet d'ajuster le calcul de la charge). 
+         */
+
+        define ('_PLOOPI_LOAD_NBCORE', 1);
+
+
     break;
 }
 ?>
