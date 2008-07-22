@@ -61,6 +61,11 @@ define ('_WEBEDIT_ACTION_WORKFLOW_MANAGE',      4);
 define ('_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE',   5);
 
 /**
+ * Réindexation
+ */
+define ('_WEBEDIT_ACTION_REINDEX',   9);
+
+/**
  * Objet : ARTICLE (admin)
  */
 define ('_WEBEDIT_OBJECT_ARTICLE_ADMIN',        1);

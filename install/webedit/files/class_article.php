@@ -199,33 +199,7 @@ class webedit_article extends data_object
             $article->fields['position'] = $this->fields['position'];
             $article->save();
             
-            // suppression des liens article-tags existants
-            $sql = "DELETE FROM ploopi_mod_webedit_article_tag WHERE id_article = {$this->fields['id']}";
-            $db->query($sql);
-            
-            // récupération des tags
-            list($tags) = ploopi_getwords($this->fields['tags'], true, false, false);
-            $tags = array_keys($tags);
-            foreach($tags as $tag)
-            {
-                $select = "SELECT id FROM ploopi_mod_webedit_tag WHERE tag = '".$db->addslashes($tag)."' AND id_module = {$this->fields['id_module']}";
-                $rs = $db->query($select);
-                if (!($row = $db->fetchrow($rs)))
-                {
-                    $objTag = new webedit_tag();
-                    $objTag->fields['tag'] = $tag;
-                    $objTag->fields['id_module'] = $this->fields['id_module'];
-                    $id_tag = $objTag->save();
-                }
-                else $id_tag = $row['id'];
-    
-                $objArticleTag = new webedit_article_tag();
-                $objArticleTag->fields['id_tag'] = $id_tag;
-                $objArticleTag->fields['id_article'] = $this->fields['id'];
-                $objArticleTag->save();
-            }
-
-            ploopi_search_create_index(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $article->fields['id'], $article->fields['title'], strip_tags(html_entity_decode($article->fields['content'])), "{$article->fields['metatitle']} {$article->fields['metakeywords']} {$article->fields['metadescription']}", true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
+            $article->index();
 
             // update article positions
             $sql =  "
@@ -245,6 +219,64 @@ class webedit_article extends data_object
         }
         
         return -1;
+    }
+    
+    function index()
+    {
+        global $db;
+        
+        // Recherche des liens vers des documents (du module doc)
+        preg_match_all('/<\s*a\s*href\s*=\s*"(\.\/index-quick\.php\?ploopi_op=doc_file_download\&docfile_md5id=([^\"]+))"\s*>([^>]*)<\/a>/i' , html_entity_decode($this->fields['content']), $matches);
+        
+        if (!empty($matches[2]) && file_exists('./modules/doc/class_docfile.php'))
+        {
+            include_once './modules/doc/class_docfile.php';
+            include_once './modules/webedit/class_docfile.php';
+            
+            foreach($matches[2] as $doc_md5id)
+            {
+                $objDocFile = new docfile();
+                
+                if ($objDocFile->openmd5($doc_md5id))
+                {
+                    $objWebEditDocFile = new webedit_docfile();
+                    $objWebEditDocFile->open($objDocFile->fields['id']);
+                    $objWebEditDocFile->fields['id_docfile'] = $objDocFile->fields['id'];
+                    $objWebEditDocFile->fields['md5id_docfile'] = $objDocFile->fields['md5id'];
+                    $objWebEditDocFile->fields['id_module_docfile'] = $objDocFile->fields['id_module'];
+                    $objWebEditDocFile->fields['id_module'] = $_SESSION['ploopi']['moduleid'];
+                    $objWebEditDocFile->save();
+                }
+            }
+        }
+        
+        // suppression des liens article-tags existants
+        $sql = "DELETE FROM ploopi_mod_webedit_article_tag WHERE id_article = {$this->fields['id']}";
+        $db->query($sql);
+        
+        // récupération des tags
+        list($tags) = ploopi_getwords($this->fields['tags'], true, false, false);
+        $tags = array_keys($tags);
+        foreach($tags as $tag)
+        {
+            $select = "SELECT id FROM ploopi_mod_webedit_tag WHERE tag = '".$db->addslashes($tag)."' AND id_module = {$this->fields['id_module']}";
+            $rs = $db->query($select);
+            if (!($row = $db->fetchrow($rs)))
+            {
+                $objTag = new webedit_tag();
+                $objTag->fields['tag'] = $tag;
+                $objTag->fields['id_module'] = $this->fields['id_module'];
+                $id_tag = $objTag->save();
+            }
+            else $id_tag = $row['id'];
+
+            $objArticleTag = new webedit_article_tag();
+            $objArticleTag->fields['id_tag'] = $id_tag;
+            $objArticleTag->fields['id_article'] = $this->fields['id'];
+            $objArticleTag->save();
+        }
+
+        ploopi_search_create_index(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id'], $this->fields['title'], strip_tags(html_entity_decode($this->fields['content'])), "{$this->fields['metatitle']} {$this->fields['metakeywords']} {$this->fields['metadescription']}", true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
     }
 
     /**

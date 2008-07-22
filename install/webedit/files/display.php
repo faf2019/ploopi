@@ -201,46 +201,102 @@ webedit_template_assign($headings, $array_nav, 0, '', 0);
 
 if ($query_string != '') // recherche intégrale
 {
+    // résultat de la recherche
+    $arrRelevance = array();
+    
+    // booléen à true si le module DOC existe physiquement
+    $boolModDocExists = file_exists('./modules/doc/public.php');
+    if ($boolModDocExists) 
+    {
+        ploopi_init_module('doc');
+        include_once './modules/doc/class_docfile.php';
+    }
+    
     if (file_exists("./templates/frontoffice/{$template_name}/search.tpl")) $template_file = 'search.tpl';
     
     $template_body->assign_block_vars("switch_search", array());
 
-    $arrRelevance = ploopi_search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, '', $_SESSION['ploopi']['moduleid']);
+    // Recherche dans les articles
+    $arrRelevance += ploopi_search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, '', $_SESSION['ploopi']['moduleid']);
+    
+    // Recherche des modules DOC utilisés par les documents liés
+    $sql = 
+        "
+        SELECT      id_module_docfile, 
+                    md5id_docfile 
+        FROM        ploopi_mod_webedit_docfile 
+        WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
+        ";
+        
+    $db->query($sql);
+    
+    while ($row = $db->fetchrow()) $arrModDoc[$row['id_module_docfile']][] = $row['md5id_docfile'];
+    
+    if (!empty($arrModDoc) && $boolModDocExists) // Il y a des documents indexés
+    {
+        // pour chaque module DOC, on récupère le résultat de la recherche
+        foreach($arrModDoc as $idModDoc => $arrDoc) $arrRelevance += ploopi_search($query_string, _DOC_OBJECT_FILE, $arrDoc, $idModDoc);
+
+        // tri général de la recherche
+        uasort($arrRelevance, create_function('$a,$b', 'return $b[\'relevance\'] > $a[\'relevance\'];'));
+    }    
     
     $responses = 0;
 
+    // pour chaque réponse du moteur de recherche
     foreach($arrRelevance as $key => $result)
     {
-        $objArticle = new webedit_article();
-        $intToday = ploopi_createtimestamp();
-        if ($objArticle->open($result['id_record']) && $objArticle->isenabled())
+        if (isset($arrModDoc[$result['id_module']])) // s'agit-il d'un document ?
         {
-            $arrDateArticle = ($objArticle->fields['timestp']!='') ? ploopi_timestamp2local($objArticle->fields['timestp']) : array('date' => '');
-
-            $cleaned_content = strip_tags(html_entity_decode($objArticle->fields['content']));
-
-            $extract = ploopi_highlight($cleaned_content, array_merge(array_keys($result['kw']), array_keys($result['stem'])));
- 
-            $size = sprintf("%.02f", strlen($cleaned_content)/1024);
-
-            $script = ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}", $objArticle->fields['metatitle']);
-
-            $template_body->assign_block_vars('switch_search.result',
-                array(
-                    'RELEVANCE' => sprintf("%.02f", $result['relevance']),
-                    'TITLE' => htmlentities($objArticle->fields['title']),
-                    'AUTHOR' => htmlentities($objArticle->fields['author']),
-                    'EXTRACT' => $extract,
-                    'METATITLE' => htmlentities($objArticle->fields['metatitle']),
-                    'METAKEYWORDS' => htmlentities($objArticle->fields['metakeywords']),
-                    'METADESCRIPTION' => htmlentities($objArticle->fields['metadescription']),
-                    'DATE' => $arrDateArticle['date'],
-                    'SIZE' => $size,
-                    'LINK' => $script
-                )
-            );
-            
-            $responses++;
+            if ($boolModDocExists)
+            {
+                $objDocFile = new docfile();
+                if ($objDocFile->openmd5($result['id_record']))
+                {
+                    $template_body->assign_block_vars('switch_search.result',
+                        array(
+                            'RELEVANCE' => sprintf("%.02f", $result['relevance']),
+                            'TITLE' => htmlentities($objDocFile->fields['name']),
+                            'AUTHOR' => '',
+                            'EXTRACT' => '',
+                            'METATITLE' => htmlentities($objDocFile->fields['name']),
+                            'METAKEYWORDS' => '',
+                            'METADESCRIPTION' => '',
+                            'DATE' => current(ploopi_timestamp2local($objDocFile->fields['timestp_create'])),
+                            'SIZE' => sprintf("%.02f", $objDocFile->fields['size']/1024),
+                            'LINK' => ploopi_urlrewrite("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$result['id_record']}", $objDocFile->fields['name'], true)
+                        )
+                    );
+                
+                    $responses++;
+                }
+            }        
+        }
+        else // c'est un article
+        {
+            $objArticle = new webedit_article();
+            $intToday = ploopi_createtimestamp();
+            if ($objArticle->open($result['id_record']) && $objArticle->isenabled())
+            {
+                $cleaned_content = strip_tags(html_entity_decode($objArticle->fields['content']));
+     
+                $template_body->assign_block_vars('switch_search.result',
+                    array(
+                        'RELEVANCE' => sprintf("%.02f", $result['relevance']),
+                        'TITLE' => htmlentities($objArticle->fields['title']),
+                        'AUTHOR' => htmlentities($objArticle->fields['author']),
+                        'EXTRACT' => ploopi_highlight($cleaned_content, array_merge(array_keys($result['kw']), array_keys($result['stem']))),
+                        'METATITLE' => htmlentities($objArticle->fields['metatitle']),
+                        'METAKEYWORDS' => htmlentities($objArticle->fields['metakeywords']),
+                        'METADESCRIPTION' => htmlentities($objArticle->fields['metadescription']),
+                        'DATE' => ($objArticle->fields['timestp']!='') ? current(ploopi_timestamp2local($objArticle->fields['timestp'])) : '',
+                        'SIZE' => sprintf("%.02f", strlen($cleaned_content)/1024),
+                        'LINK' => ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}", $objArticle->fields['metatitle'])
+                    )
+                );
+                
+                $responses++;
+            }
         }
     }
     

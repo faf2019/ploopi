@@ -43,8 +43,18 @@ $block->addmenu('Voir les articles', ploopi_urlencode("admin.php?ploopi_moduleid
  * Il faut que l'utilisateur dispose au moins d'une action pour accéder à la partie 'admin'
  */
 
-if (ploopi_isactionallowed(-1,$_SESSION['ploopi']['workspaceid'],$menu_moduleid))
+if (ploopi_isactionallowed(-1, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
 {
     $block->addmenu('<b>Gestion du contenu</b>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"));
 }
+
+/**
+ * Réindexation du contenu
+ */
+
+if (ploopi_isactionallowed(_WEBEDIT_ACTION_REINDEX, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
+{
+    $block->addmenu('<b>Réindexation</b>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin&webedit_menu=reindex"));
+}
+
 ?>

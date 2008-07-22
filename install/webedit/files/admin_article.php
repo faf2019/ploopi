@@ -572,6 +572,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
             <input class="flatbutton" style="font-weight:bold;" type="submit" name="publish" value="Publier">
             <?
         }
+        else echo "Vous ne pouvez pas publier&nbsp;&nbsp;";
         ?>
         <input class="flatbutton" type="submit" value="Enregistrer">
         <?

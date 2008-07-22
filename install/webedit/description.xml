@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>webedit</label>
-        <version>1.6</version>
+        <version>1.61</version>
         <author>Netlor / Ovensia</author>
-        <date>20080711000000</date>
+        <date>20080722000000</date>
         <description>Editeur de Contenus Web</description>
         <action>
             <id_action>1</id_action>
@@ -25,6 +25,10 @@
         <action>
             <id_action>5</id_action>
             <label>Gérer les abonnés</label>
+        </action>
+        <action>
+            <id_action>6</id_action>
+            <label>Réindéxer le contenu</label>
         </action>
     </moduletype>
 </ploopi>
