@@ -1,28 +1,34 @@
-== Module FORMS - version 3.83 =====================================================
+== Module DOC - version 3.84 =====================================================
+
+2008-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise en place de la réécriture d'URL sur les liens publics vers les fichiers. Permet de propose un lien plus explicite reprenant notamment le nom d'origine du fichier.
+
+== Module DOC - version 3.83 =====================================================
 
 2008-06-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Mise à jour du système de liens (ploopi_env) lié à la mise à jour de Ploopi
 
-== Module FORMS - version 3.82 =====================================================
+== Module DOC - version 3.82 =====================================================
 
 2008-06-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correctif dans le mini explorateur pour FCKEditor : ne reconnaissait l'extension .jpeg comme format d'image valide
 
-== Module FORMS - version 3.81 =====================================================
+== Module DOC - version 3.81 =====================================================
 
 2008-06-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Affichage de l'URL publique du fichier (pour faciliter l'intégration d'un lien depuis une application externe)
 
-== Module FORMS - version 3.80 =====================================================
+== Module DOC - version 3.80 =====================================================
 
 2008-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Mise à jour des commentaires, nettoyage
 
-== Module FORMS - version 3.78 =====================================================
+== Module DOC - version 3.78 =====================================================
 
 2008-04-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
