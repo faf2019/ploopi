@@ -64,7 +64,7 @@ class rss_entry extends data_object
     /**
      * Enregistre une entrée d'un flux
      *
-     * @return unknown
+     * @return boolean true si l'enregistrement a été effectué
      */
     
     function save()
@@ -73,7 +73,10 @@ class rss_entry extends data_object
 
         $rss_feed = new rss_feed();
         $rss_feed->open($this->fields['id_feed']);
-
+        
+        $this->fields['title'] = ploopi_htmlpurifier($this->fields['title']);
+        $this->fields['content'] = ploopi_htmlpurifier($this->fields['content']);
+        
         ploopi_search_create_index(_RSS_OBJECT_NEWS_ENTRY, sprintf("%06d%06d%s", $rss_feed->fields['id_cat'], $this->fields['id_feed'], $this->fields['id']), $this->fields['title'], strip_tags(html_entity_decode($this->fields['content'])), strip_tags(html_entity_decode("{$this->fields['title']} {$this->fields['subtitle']} {$this->fields['author']}")), true, $ts, $ts, $this->fields['id_user'], $this->fields['id_workspace'], $this->fields['id_module']);
         return(parent::save());
     }

@@ -78,13 +78,13 @@ class rss_feed extends data_object
             $xmlrss = new xmlrss($this->fields['url']);
             if (!$xmlrss->error)
             {
-                $xmlrss->parse();
-                $this->fields['title'] = (empty($xmlrss->feed['title'])) ? '' : $xmlrss->feed['title'];
-                $this->fields['subtitle'] = (empty($xmlrss->feed['subtitle'])) ? '' : $xmlrss->feed['subtitle'];
+                $xmlrss->parse();        
+                $this->fields['title'] = (empty($xmlrss->feed['title'])) ? '' : ploopi_htmlpurifier($xmlrss->feed['title']);
+                $this->fields['subtitle'] = (empty($xmlrss->feed['subtitle'])) ? '' : ploopi_htmlpurifier($xmlrss->feed['subtitle']);
                 $this->fields['link'] = (empty($xmlrss->feed['link'])) ? '' : $xmlrss->feed['link'];
                 $this->fields['updated'] = (empty($xmlrss->feed['updated'])) ? '' : $xmlrss->feed['updated'];
                 $this->fields['author'] = (empty($xmlrss->feed['autor'])) ? '' : $xmlrss->feed['autor'];
-
+                
                 /*
                  * ploopi_print_r($xmlrss->header);
                  * ploopi_print_r($xmlrss->charset);
