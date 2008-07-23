@@ -1,17 +1,24 @@
-== Module WebEdit - version 1.62 ============================================
+== Module WebEdit - version 1.6.2a ============================================
+
+2008-07-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Modification dans la gestion de la réécriture des URL. La réécriture n'est désormais traitée que lors de la publication d'un article (liens vers documents et articles)
+ * Intégration de HTMLPurifier pour valider le contenu XHTML des articles
+ 
+== Module WebEdit - version 1.6.2 ============================================
 
 2008-07-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Modification dans la gestion de la réécriture des URL. La réécriture n'est désormais traitée que lors de la publication d'un article (liens vers documents et articles)
 
-== Module WebEdit - version 1.61 ============================================
+== Module WebEdit - version 1.6.1 ============================================
 
 2008-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Frontoffice : Possibilité de rechercher dans les documents liés
  * Ajout d'un menu 'Réindexation' permettant de forcer la régénération de l'index de recherche pour le module. Les documents ne sont pas réindexés. C'est le module DOC qui gère cette réindexation.
 
-== Module WebEdit - version 1.601 ============================================
+== Module WebEdit - version 1.6.0.1 ============================================
 
 2008-07-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 

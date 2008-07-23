@@ -296,7 +296,7 @@ function webedit_gettreeview($option = '', $moduleid = -1)
     
                     case 'selectlink':
                         $link = '';
-                        $onclick = "ploopi_getelem('txtArticle',parent.document).value='".ploopi_urlrewrite("index.php?headingid={$fields['id_heading']}&articleid={$fields['id']}", $fields['metatitle'])."';ploopi_getelem('txtAttTitle',parent.document).value='".addslashes($fields['title'])."';";
+                        $onclick = "ploopi_getelem('txtArticle',parent.document).value='index.php?headingid={$fields['id_heading']}&articleid={$fields['id']}';ploopi_getelem('txtAttTitle',parent.document).value='".addslashes($fields['title'])."';";
                     break;
     
                     default:

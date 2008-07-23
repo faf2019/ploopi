@@ -278,7 +278,7 @@ if ($query_string != '') // recherche intégrale
             $intToday = ploopi_createtimestamp();
             if ($objArticle->open($result['id_record']) && $objArticle->isenabled())
             {
-                $cleaned_content = strip_tags(html_entity_decode($objArticle->fields['content']));
+                $cleaned_content = strip_tags(html_entity_decode($objArticle->fields['content_cleaned']));
      
                 $template_body->assign_block_vars('switch_search.result',
                     array(
@@ -336,13 +336,15 @@ elseif($query_tag != '') // recherche par tag
             WHERE       t.tag = '".$db->addslashes($query_tag)."'
             AND         at.id_tag = t.id
             AND         at.id_article = a.id
+            AND         (a.timestp_published <= $today OR a.timestp_published = 0)
+            AND         (a.timestp_unpublished >= $today OR a.timestp_unpublished = 0)
             ";
     
     $db->query($sql);
     
     while ($row = $db->fetchrow())
     {
-        $size = sprintf("%.02f", strlen(strip_tags(html_entity_decode($row['content'])))/1024);        
+        $size = sprintf("%.02f", strlen(strip_tags(html_entity_decode($row['content_cleaned'])))/1024);        
         
         $template_body->assign_block_vars('switch_tagsearch.result',
             array(
@@ -487,7 +489,7 @@ else // affichage standard rubrique/page
                     array(
                         'REFERENCE'     => htmlentities($row['reference']),
                         'LABEL'         => htmlentities($row['title']),
-                        'CONTENT'       => htmlentities($row['content']),
+                        'CONTENT'       => htmlentities($row['content_cleaned']),
                         'AUTHOR'        => htmlentities($row['author']),
                         'VERSION'       => htmlentities($row['version']),
                         'DATE'          => htmlentities($ldate_timestp['date']),
@@ -606,7 +608,7 @@ else // affichage standard rubrique/page
         $template_body->assign_block_vars('switch_content_page', array());
 
         if (!empty($editor)) $content = $editor;
-        else $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent',$article->fields['content']);
+        else $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', $article->fields['content_cleaned']);
 
         $article_timestp = ($article->fields['timestp']!='') ? ploopi_timestamp2local($article->fields['timestp']) : array('date' => '');
         $article_lastupdate = ($article->fields['lastupdate_timestp']!='') ? ploopi_timestamp2local($article->fields['lastupdate_timestp']) : array('date' => '', 'time' => '');
