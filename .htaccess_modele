@@ -58,9 +58,10 @@ Options +FollowSymLinks -Indexes
     RewriteRule ^(bin/|data/|db/|include/|install/|pear/)(.*)$ - [F]
 
     # Regles de reecriture pour la partie FrontOffice
-    RewriteRule ^(.*)-h([0-9]*)a([0-9]*).html(.*)$ index.php?headingid=$2&articleid=$3$4 [L]
-    RewriteRule ^(.*)-h([0-9]*).html(.*)$ index.php?headingid=$2$3 [L]
-    RewriteRule ^(.*)-a([0-9]*).html(.*)$ index.php?articleid=$2$3 [L]
-    RewriteRule ^tag-([a-zA-Z0-9]*).html(.*)$ index.php?query_tag=$1$2 [L]
+    RewriteRule ^(.*)-h([0-9]*)a([0-9]*)\.[a-z0-9]*(.*)$ index.php?headingid=$2&articleid=$3$4 [L]
+    RewriteRule ^(.*)-h([0-9]*)\.[a-zA-Z0-9]*(.*)$ index.php?headingid=$2$3 [L]
+    RewriteRule ^(.*)-a([0-9]*)\.[a-zA-Z0-9]*(.*)$ index.php?articleid=$2$3 [L]
+    RewriteRule ^tag-([a-zA-Z0-9]*)\.[a-zA-Z0-9]*(.*)$ index.php?query_tag=$1$2 [L]
+    RewriteRule ^(.*)-d([a-z0-9]{32})\.[a-zA-Z0-9]*(.*)$ index-quick.php?ploopi_op=doc_file_download&docfile_md5id=$2 [L]
 </IfModule>
 

@@ -1,3 +1,62 @@
+== Ploopi - version 1.0 RC7 ===================================================
+
+2008-07-22 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+    
+* Ploopi
+  - ODT :
+    - Mise à jour des classes ODT (meilleure gestion des entités spéciales XML)
+    - Correction au niveau des classes ODT pour une meilleure prise en compte des tableaux
+    - Mise à jour des classes ODT pour gérer les images
+  - Documents
+    - Ajout d'une fonction dans le package "documents" permettant de déposer un document dans un dossier sans passer par l'interface.
+    - Possibilité de ne pas afficher directement les documents lors de l'appel de la fonction ploopi_document()
+    - Corrections dans la gestion interne des documents (problème à l'enregistrement)
+    - Possibilité de rafraichir une liste de documents avec la fonction javascript ploopi_documents_browser()
+  - Calendrier
+    - pb avec le début du mois suivant en fin de calendrier
+    - pb sur le déclenchement de l'évènement onchange en fermeture du popup
+  - Skins  
+    - Ajout d'une méthode de la classe skin pour l'affichage de treeview : display_treeview()
+    - Correction d'un bug sur le rafraichissement des tableaux générés par la classe skin
+  - Refactoring : ploopi_xmlencode => ploopi_xmlentities
+  - Général  
+    - Ajout d'une fonction de chiffrage de paramètres (complète la fonction de chiffrage d'url) : ploopi_queryencode()
+    - Mise à jour du module Système pour adapter les chemins des fichiers d'icones de l'arbre des espaces/groupes
+    - Mise à jour du fichier public.php du module système pour gérer de manière plus souple l'accès aux différentes fonctions quelque soit l'espace sélectionné.
+    - Correction d'un intitulé dans le module système (charge serveur)
+    - Ajout d'un paramètre de configuration qui permet d'indiquer le nombre de coeurs affectés au rendu des pages : _PLOOPI_LOAD_NBCORE
+    - Mise à jour de la page "charge du serveur" du module système
+    - Mise à jour de la fonction ploopi_search() : permet de filtrer sur un ensemble d'enregistrements (tableau)
+    - Mise à jour de la fonction ploopi_urlrewrite() : prend en compte les liens vers des fichiers
+    - Mise à jour SQL concernant les indexes de tables (clés primaires, indexes)
+    - Impact des mises à jour SQL sur certaines fonctionnalités : annotations (tags), moteur de recherche intégral
+    - Mise à jour SQL vers RC7
+    - Intégration de la librairie HTMLPurifier qui permet (entre autres) de valider les contenus XHTML générés par le portail (news, articles, rss)
+
+* Templates
+  - Mise à jour des templates backoffice (mineure)
+  
+* WebEdit 
+  - Correction d'un bug dans l'affichage du résultat de recherche en frontoffice (ne prenait pas en compte les lemmes dans la colorisation des mots trouvés)
+  - Possibilité de passer d'un affichage simplifié à un affichage avancé
+  - Nouvelle barre d'action en haut permettant d'afficher/cacher l'arbre des rubriques et de choisir le mode d'affichage
+  - Possibilité de déplacer un article (choisir une nouvelle rubrique parent)
+  - Quelques modifications d'interface
+  - Réécriture du treeview, utilisation d'une méthode générique de la class skin
+  - Frontoffice : Possibilité de rechercher dans les documents liés
+  - Ajout d'un menu 'Réindexation' permettant de forcer la régénération de l'index de recherche pour le module. Les documents ne sont pas réindexés. C'est le module DOC qui gère cette réindexation.
+  - Modification dans la gestion de la réécriture des URL. La réécriture n'est désormais traitée que lors de la publication d'un article (liens vers documents et articles)
+  - Intégration de HTMLPurifier pour valider le contenu XHTML des articles
+ 
+* Doc
+  - Mise en place de la réécriture d'URL sur les liens publics vers les fichiers. Permet de propose un lien plus explicite reprenant notamment le nom d'origine du fichier.
+  
+* Rss
+  - Intégration de HTMLPurifier pour valider le contenu XHTML des flux
+  
+* News 
+  - Intégration de HTMLPurifier pour valider le contenu XHTML des news
+
 == Ploopi - version 1.0 RC6 ===================================================
 
 2008-06-24 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

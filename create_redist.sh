@@ -1,5 +1,5 @@
 #!/bin/sh
-export DEST=ploopi_1.0RC6
+export DEST=ploopi_1.0RC7
 
 #################################
 # compression des fichiers
@@ -69,9 +69,9 @@ cd $DEST
 # nettoyage #
 #############
 
-find . -name ".svn" -print0 | xargs -0 rm -rf
-find . -name "*.*~" | xargs -0 rm -rf
-find . -name "Thumbs.db" | xargs -0 rm -rf
+find . -name ".svn" -print0 | xargs -0 -n 1 rm -rf
+find . -name "*.*~" -print0 | xargs -0 -n 1 rm -rf
+find . -name "Thumbs.db" -print0 | xargs -0 -n 1 rm -rf
 
 #################################
 # on remet a plat les droits
@@ -79,13 +79,13 @@ find . -name "Thumbs.db" | xargs -0 rm -rf
 
 chown -R www-data:www-data .
 
-find . -type d | xargs chmod 550
-find . -type f | xargs chmod 440
+find . -type d -print0 | xargs -0 -n 1 chmod 550
+find . -type f -print0 | xargs -0 -n 1 chmod 440
 
-find {data,config,modules} -type d | xargs chmod 770
-find {data,config,modules} -type f | xargs chmod 660
+find {data,config,modules} -type d -print0 | xargs -0 -n 1 chmod 770
+find {data,config,modules} -type f -print0 | xargs -0 -n 1 chmod 660
 
-find bin -type f | xargs chmod 550
+find bin -type f -print0 | xargs -0 -n 1 chmod 550
 chmod 550 ./cgi/upload.cgi
 
 cd ..

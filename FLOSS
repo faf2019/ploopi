@@ -1,28 +1,46 @@
+* Cupload 1.0
+  path : ./lib/cupload
+  url : http://www.pkconcept.net
+  license : MPL
+  copyright : P.E. Baroiller
+
 * FCKEditor 2.6
   path : ./FCKeditor
   url : http://www.fckeditor.net
   license : GPL / LGPL / MPL
   copyright : Frederico Caldeira Knabben
 
-* cupload 1.0
-  path : ./lib/cupload
-  url : http://www.pkconcept.net
-  license : MPL
-  copyright : P.E. Baroiller
+* HTML Purifier 3.1.1
+  path : ./lib/htmlpurifier
+  url : http://htmlpurifier.org
+  license : GPL v2
+  copyright : Edward Z. Yang
 
-* inputfilter  1.2.2_php4/php5
+* Inputfilter  1.2.2_php4/php5
   path : ./lib/inputfilter
   url : http://www.phpclasses.org/browse/package/2189.html
-  license : GPL
+  license : GPL v2
   copyright : Daniel Morris
 
-* pclzip 2.6
+* Pclzip 2.6
   path : ./lib/pclzip
   url : http://www.phpconcept.net/pclzip/index.php
-  license : LGPL
+  license : LGPL v2
   copyright : Vincent Blavet
 
-* protaculous 2.19b (prototype 1.6.0.2 + scriptaculous 1.8.1)
+* PHP Universal Feed Generator
+  path : ./lib/feedwriter
+  url : http://www.ajaxray.com/projects/rss
+  license : BSD (? cf http://code.google.com/p/orchidframework/) 
+  copyright : Anis uddin Ahmad <anisniit@gmail.com>
+
+* PHPBB / Template class 1.10.2.5
+  path : ./lib/template
+  url : http://www.phpbb.com
+  licence : GPL v2
+  copyright : The phpBB Group
+
+* Protaculous 2.19b (prototype 1.6.0.2 + scriptaculous 1.8.1)
   path : ./lib/protaculous
   url : http://groups.google.com/group/prototype-core
   licence : ?
@@ -40,14 +58,5 @@
       license : MIT
       copyright : Thomas Fuchs
 
-* PHP Universal Feed Generator
-  path : ./lib/feedwriter
-  url : http://www.ajaxray.com/projects/rss
-  license : BSD (? cf http://code.google.com/p/orchidframework/) 
-  copyright : Anis uddin Ahmad <anisniit@gmail.com>
+  
 
-* PHPBB / Template class 1.10.2.5
-  path : ./lib/template
-  url : http://www.phpbb.com
-  licence : GPL
-  copyright : The phpBB Group
