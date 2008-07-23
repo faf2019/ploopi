@@ -55,7 +55,7 @@ class user extends data_object
      * @return user
      */
     
-    function user()
+    public function user()
     {
         parent::data_object('ploopi_user');
         $this->fields['date_creation'] = ploopi_createtimestamp();
@@ -65,7 +65,7 @@ class user extends data_object
      * Supprime l'utilisateur et les données associées : workflow, param, share, annotation, subscription, etc..
      */
     
-    function delete()
+    public function delete()
     {
         include_once './include/classes/group.php';
         
@@ -97,7 +97,7 @@ class user extends data_object
      *
      * @return array tableau d'espaces
      */
-    function getworkspaces()
+    public function getworkspaces()
     {
         /**
          * 1. Récupére les groupes auxquels l'utilisateur est rattaché.
@@ -169,7 +169,7 @@ class user extends data_object
      * @return array tableau de groupes
      */
     
-    function getgroups()
+    public function getgroups()
     {
         global $db;
 
@@ -205,7 +205,7 @@ class user extends data_object
      * @param int $groupid identifiant du groupe
      */
     
-    function attachtogroup($groupid)
+    public function attachtogroup($groupid)
     {
         include_once './include/classes/group.php';
         
@@ -223,7 +223,7 @@ class user extends data_object
      * @param unknown_type $workspaceid
      */
     
-    function attachtoworkspace($workspaceid)
+    public function attachtoworkspace($workspaceid)
     {
         global $db;
 
@@ -263,7 +263,7 @@ class user extends data_object
      * @param array $actions tableau d'actions
      */
     
-    function getactions(&$actions)
+    public function getactions(&$actions)
     {
         global $db;
 
@@ -290,7 +290,7 @@ class user extends data_object
      * @return tableau d'utilisateurs
      */
     
-    function getusersgroup()
+    public function getusersgroup()
     {
         global $db;
         $usrlist=array();

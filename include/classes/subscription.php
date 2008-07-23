@@ -44,19 +44,33 @@ include_once './include/classes/data_object.php';
 
 class subscription extends data_object
 {
-    function subscription()
+    /**
+     * Constructeur de la classe
+     *
+     * @return subscription
+     */
+    
+    public function subscription()
     {
         parent::data_object('ploopi_subscription','id');
     }
     
     
-    function clean()
+    /**
+     * Vide l'abonnement de son contenu (actions souscrites)
+     */
+    
+    public function clean()
     {
         global $db;
         $db->query("DELETE FROM ploopi_subscription_action WHERE id_subscription = '{$this->fields['id']}'");
     }
     
-    function getactions()
+    /**
+     * Retourne un tableau contenant les actions souscrites pour l'abonnement
+     */
+    
+    public function getactions()
     {
         global $db;
         
@@ -71,7 +85,11 @@ class subscription extends data_object
         return($arrActions);
     }
     
-    function delete()
+    /**
+     * Supprime l'abonnement
+     */
+    
+    public function delete()
     {
         $this->clean();
         parent::delete();
@@ -91,6 +109,12 @@ class subscription extends data_object
 
 class subscription_action extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return subscription_action
+     */
+    
     function subscription_action()
     {
         parent::data_object('ploopi_subscription_action', 'id_subscription', 'id_action');

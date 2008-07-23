@@ -43,16 +43,30 @@
 
 class block
 {
-    var $menu;
-    var $content;
+    private $menu;
+    private $content;
     
-    function block()
+    /**
+     * Constructeur de la classe
+     *
+     * @return block
+     */
+    public function block()
     {
         $this->menu = array();
         $this->content = '';
     }
 
-    function addmenu($label, $url, $selected = false, $target = '')
+    /**
+     * Ajoute un menu à un block
+     *
+     * @param string $label intitulé du menu
+     * @param string $url adresse du lien vers le menu
+     * @param boolean $selected true si le menu est sélectionné (optionnel, false par défaut)
+     * @param string $target cible du lien (optionnel, par défaut vide)
+     */
+    
+    public function addmenu($label, $url, $selected = false, $target = '')
     {
         $this->menu[] = array ( 'label' => $label,
                                 'url' => $url,
@@ -61,17 +75,35 @@ class block
                                 );
     }
     
-    function addcontent($content)
+    /**
+     * Ajoute du contenu à un block
+     *
+     * @param string $content contenu html à ajouter au bloc
+     */
+    
+    public function addcontent($content)
     {
         $this->content = $content;
     }
 
-    function getmenu()
+    /**
+     * Mutateur pour le menu
+     *
+     * @return array tableau contenu les éléments du menu du block
+     */
+    
+    public function getmenu()
     {
         return($this->menu);
     }
 
-    function getcontent()
+    /**
+     * Mutateur pour le contenu
+     *
+     * @return strong le contenu du block
+     */
+    
+    public function getcontent()
     {
         return($this->content);
     }

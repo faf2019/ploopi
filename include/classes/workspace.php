@@ -45,18 +45,34 @@ include_once './include/classes/data_object.php';
 
 class workspace extends data_object
 {
-    function workspace()
+    /**
+     * Constructeur de la classe
+     *
+     * @return workspace
+     */
+    
+    public function workspace()
     {
         parent::data_object('ploopi_workspace');
     }
 
-    function save()
+    /**
+     * Enregistre l'espace de travail. Met à jour la profondeur de l'espace.
+     *
+     * @return boolean true si l'enregistrement a été correctement effectué
+     */
+    
+    public function save()
     {
         $this->fields['depth'] = sizeof(explode(';',$this->fields['parents']));
         return(parent::save());
     }
 
-    function delete()
+    /**
+     * Supprime l'espace de travail 
+     */
+    
+    public function delete()
     {
 
         global $db;
@@ -67,21 +83,24 @@ class workspace extends data_object
             $fatherid = $this->fields['id_workspace'];
 
             // attach children to new father
-            $select =   "
-                    SELECT  ploopi_workspace.id
-                        FROM    ploopi_workspace
-                        WHERE   ploopi_workspace.id_workspace = ".$this->fields['id'];
+            $select =   
+                "
+                SELECT  ploopi_workspace.id
+                FROM    ploopi_workspace
+                WHERE   ploopi_workspace.id_workspace = {$this->fields['id']}
+                ";
 
 
             $result = $db->query($select);
 
             while ($child =  $db->fetchrow($result))
             {
-                $update =   "
-                            UPDATE  ploopi_workspace
-                            SET     ploopi_workspace.id_workspace = $fatherid
-                            WHERE   ploopi_workspace.id = $child[id]
-                            ";
+                $update = 
+                    "
+                    UPDATE  ploopi_workspace
+                    SET     ploopi_workspace.id_workspace = {$fatherid}
+                    WHERE   ploopi_workspace.id = {$child['id']}
+                    ";
 
                 $db->query($update);
             }
@@ -89,12 +108,9 @@ class workspace extends data_object
             // update parents workspace
             system_updateparents();
 
-
-            $delete = "DELETE FROM ploopi_workspace_user WHERE id_workspace = ".$this->fields['id']."; DELETE FROM ploopi_workspace_group WHERE id_workspace = ".$this->fields['id'];
-            $db->query($delete);
-
-
-
+            $db->query("DELETE FROM ploopi_workspace_user WHERE id_workspace = {$this->fields['id']}");
+            $db->query("DELETE FROM ploopi_workspace_group WHERE id_workspace = {$this->fields['id']}");
+            
             parent::delete();
 
         }

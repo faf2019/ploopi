@@ -45,7 +45,13 @@ include_once './include/classes/data_object.php';
 
 class workflow extends data_object
 {
-    function workflow()
+    /**
+     * Constructeur de la classe
+     *
+     * @return workflow
+     */
+    
+    public function workflow()
     {
         parent::data_object('ploopi_workflow','id');
     }

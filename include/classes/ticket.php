@@ -45,12 +45,23 @@ include_once './include/classes/data_object.php';
 
 class ticket extends data_object
 {
+    /**
+     * Constructeur de la classe
+     * 
+     * @return subscription_action
+     */
+    
     function ticket()
     {
-        parent::data_object('ploopi_ticket','id');
+        parent::data_object('ploopi_ticket', 'id');
     }
 
-
+    /**
+     * Enregistre le ticket
+     *
+     * @return boolean true si le ticket s'est enregistré correctement
+     */
+    
     function save()
     {
         global $db;
@@ -85,6 +96,7 @@ class ticket extends data_object
 
         }
 
+        // enregistrement d'un nouveau ticket
         if ($this->new)
         {
             $ret = parent::save();
@@ -112,9 +124,15 @@ class ticket extends data_object
 
 class ticket_watch extends data_object
 {
-    function ticket_watch()
+    /**
+     * Constructeur de la classe
+     *
+     * @return ticket_watch
+     */
+    
+    public function ticket_watch()
     {
-        parent::data_object('ploopi_ticket_watch','id_ticket','id_user');
+        parent::data_object('ploopi_ticket_watch', 'id_ticket', 'id_user');
     }
 }
 
@@ -130,12 +148,22 @@ class ticket_watch extends data_object
 
 class ticket_status extends data_object
 {
-    function ticket_status()
+    /**
+     * Constructeur de la classe
+     *
+     * @return ticket_status
+     */
+    
+    public function ticket_status()
     {
-        parent::data_object('ploopi_ticket_status','id_ticket','id_user','status');
+        parent::data_object('ploopi_ticket_status', 'id_ticket', 'id_user', 'status');
     }
     
-    function save()
+    /**
+     * Enregistre l'état d'un ticket pour un utilisateur
+     */
+    
+    public function save()
     {
         if ($this->new)
         {
@@ -157,7 +185,13 @@ class ticket_status extends data_object
 
 class ticket_dest extends data_object
 {
-    function ticket_dest()
+    /**
+     * Constructeur de la classe
+     *
+     * @return ticket_dest
+     */
+    
+    public function ticket_dest()
     {
         parent::data_object('ploopi_ticket_dest','id_user','id_ticket');
     }

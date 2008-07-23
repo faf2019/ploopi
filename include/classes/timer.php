@@ -43,30 +43,58 @@
 
 class timer
 {
-    var $start;
+    private $start;
     
-    function timer()
+    /**
+     * Constructeur de la classe
+     *
+     * @return timer
+     */
+    
+    public function timer()
     {
         $this->start = 0;
     }
     
-    function start()
+    /**
+     * Démarre le timer
+     */
+    
+    public function start()
     {
         $this->start = $this->getmicrotime();       
     }
     
-    function getmicrotime()
+    /**
+     * Retourne le timestamp UNIX actuel en secondes avec les microsecondes
+     *
+     * @return float timestamp UNIX en secondes
+     */
+    
+    public function getmicrotime()
     {
         list($usec, $sec) = explode(" ",microtime());
         return ((float)$usec + (float)$sec);
     }
     
-    function getexectime()
+    /**
+     * Retourne le nombre de secondes écoulées depuis le démarrage du timer
+     *
+     * @return float temps écoulé en secondes
+     */
+    
+    public function getexectime()
     {
         return($this->getmicrotime() - $this->start);
     }
     
-    function __toString()
+    /**
+     * Gère la conversion de l'objet en chaîne
+     *
+     * @return string contenu de l'objet sous forme d'une chaîne de caractères
+     */
+    
+    public function __toString()
     {
         return sprintf("exec time : %s ms", $this->getexectime()*1000);
     }

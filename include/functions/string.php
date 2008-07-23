@@ -202,4 +202,28 @@ function ploopi_print_json($var)
     if (strlen($json)>4096) echo $json;
     else header("X-Json: {$json}");
 }
+
+/**
+ * Nettoie le code html et le rend valide XHTML
+ *
+ * @param string $string code HTML à valider
+ * @return string code HTML validé
+ * 
+ * @link http://htmlpurifier.org/
+ */
+
+function ploopi_htmlpurifier($string)
+{
+    $cache_path = _PLOOPI_PATHDATA._PLOOPI_SEP.'cache';
+    if (!file_exists($cache_path)) ploopi_makedir($cache_path);
+    
+    require_once './lib/htmlpurifier/HTMLPurifier.auto.php';
+    $config = HTMLPurifier_Config::createDefault();
+    $config->set('Cache', 'SerializerPath', $cache_path);
+    $config->set('Core', 'Encoding', 'ISO-8859-15');
+    $config->set('HTML', 'Doctype', 'XHTML 1.0 Strict');
+    $purifier = new HTMLPurifier($config);
+
+    return $purifier->purify($string); 
+}
 ?>
