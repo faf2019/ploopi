@@ -1,3 +1,9 @@
+== Module WebEdit - version 1.62 ============================================
+
+2008-07-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Modification dans la gestion de la réécriture des URL. La réécriture n'est désormais traitée que lors de la publication d'un article (liens vers documents et articles)
+
 == Module WebEdit - version 1.61 ============================================
 
 2008-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

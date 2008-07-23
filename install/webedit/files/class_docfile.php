@@ -56,7 +56,7 @@ class webedit_docfile extends data_object
     
     function webedit_docfile()
     {
-        parent::data_object('ploopi_mod_webedit_docfile', 'id_docfile');
+        parent::data_object('ploopi_mod_webedit_docfile', 'id_article', 'id_docfile');
     } 
 }
 ?>
