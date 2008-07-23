@@ -1,3 +1,9 @@
+== Module NEWS - version 2.40 ====================================================
+
+2008-07-23  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Intégration de HTMLPurifier pour valider le contenu XHTML des news
+
 == Module NEWS - version 2.39 ====================================================
 
 2008-06-19  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

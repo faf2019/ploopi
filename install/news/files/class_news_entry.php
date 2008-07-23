@@ -59,5 +59,17 @@ class news extends data_object
     {
         parent::data_object('ploopi_mod_news_entry');
     }   
+    
+    /**
+     * Enregistre la news
+     *
+     * @return boolean true si l'enregistrement a été effectué
+     */
+    
+    function save()
+    {
+        $this->fields['content'] = ploopi_htmlpurifier($this->fields['content']);
+        return parent::save();
+    }
 }
 ?>
