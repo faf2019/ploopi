@@ -1,0 +1,543 @@
+group->getgroupbrotherslite => group->getbrothers
+group->getgroupchildrenlite => group->getchildren
+
+== Ploopi - version 1.0 RC7 ===================================================
+
+2008-07-22 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+    
+* Ploopi
+  - ODT :
+    - Mise à jour des classes ODT (meilleure gestion des entités spéciales XML)
+    - Correction au niveau des classes ODT pour une meilleure prise en compte des tableaux
+    - Mise à jour des classes ODT pour gérer les images
+  - Documents
+    - Ajout d'une fonction dans le package "documents" permettant de déposer un document dans un dossier sans passer par l'interface.
+    - Possibilité de ne pas afficher directement les documents lors de l'appel de la fonction ploopi_document()
+    - Corrections dans la gestion interne des documents (problème à l'enregistrement)
+    - Possibilité de rafraichir une liste de documents avec la fonction javascript ploopi_documents_browser()
+  - Calendrier
+    - pb avec le début du mois suivant en fin de calendrier
+    - pb sur le déclenchement de l'évènement onchange en fermeture du popup
+  - Skins  
+    - Ajout d'une méthode de la classe skin pour l'affichage de treeview : display_treeview()
+    - Correction d'un bug sur le rafraichissement des tableaux générés par la classe skin
+  - Refactoring : ploopi_xmlencode => ploopi_xmlentities
+  - Général  
+    - Ajout d'une fonction de chiffrage de paramètres (complète la fonction de chiffrage d'url) : ploopi_queryencode()
+    - Mise à jour du module Système pour adapter les chemins des fichiers d'icones de l'arbre des espaces/groupes
+    - Mise à jour du fichier public.php du module système pour gérer de manière plus souple l'accès aux différentes fonctions quelque soit l'espace sélectionné.
+    - Correction d'un intitulé dans le module système (charge serveur)
+    - Ajout d'un paramètre de configuration qui permet d'indiquer le nombre de coeurs affectés au rendu des pages : _PLOOPI_LOAD_NBCORE
+    - Mise à jour de la page "charge du serveur" du module système
+    - Mise à jour de la fonction ploopi_search() : permet de filtrer sur un ensemble d'enregistrements (tableau)
+    - Mise à jour de la fonction ploopi_urlrewrite() : prend en compte les liens vers des fichiers
+    - Mise à jour SQL concernant les indexes de tables (clés primaires, indexes)
+    - Impact des mises à jour SQL sur certaines fonctionnalités : annotations (tags), moteur de recherche intégral
+    - Mise à jour SQL vers RC7
+    - Intégration de la librairie HTMLPurifier qui permet (entre autres) de valider les contenus XHTML générés par le portail (news, articles, rss)
+
+* Templates
+  - Mise à jour des templates backoffice (mineure)
+  
+* WebEdit 
+  - Correction d'un bug dans l'affichage du résultat de recherche en frontoffice (ne prenait pas en compte les lemmes dans la colorisation des mots trouvés)
+  - Possibilité de passer d'un affichage simplifié à un affichage avancé
+  - Nouvelle barre d'action en haut permettant d'afficher/cacher l'arbre des rubriques et de choisir le mode d'affichage
+  - Possibilité de déplacer un article (choisir une nouvelle rubrique parent)
+  - Quelques modifications d'interface
+  - Réécriture du treeview, utilisation d'une méthode générique de la class skin
+  - Frontoffice : Possibilité de rechercher dans les documents liés
+  - Ajout d'un menu 'Réindexation' permettant de forcer la régénération de l'index de recherche pour le module. Les documents ne sont pas réindexés. C'est le module DOC qui gère cette réindexation.
+  - Modification dans la gestion de la réécriture des URL. La réécriture n'est désormais traitée que lors de la publication d'un article (liens vers documents et articles)
+  - Intégration de HTMLPurifier pour valider le contenu XHTML des articles
+ 
+* Doc
+  - Mise en place de la réécriture d'URL sur les liens publics vers les fichiers. Permet de propose un lien plus explicite reprenant notamment le nom d'origine du fichier.
+  
+* Rss
+  - Intégration de HTMLPurifier pour valider le contenu XHTML des flux
+  
+* News 
+  - Intégration de HTMLPurifier pour valider le contenu XHTML des news
+
+== Ploopi - version 1.0 RC6 ===================================================
+
+2008-06-24 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+ - Mise à jour importante permettant la navigation sur plusieurs modules différents en multi-onglet / multi-fenêtre.
+ - Modification du système de liens pour une meilleure prise en compte des boutons page précédente / page suivante
+ - Mise à jour de tous les modules (modification des liens pour la gestion multi-onglet)
+ - Suppression de la variable globale $scriptenv (utiliser admin.php à la place)
+ - Suppression de la variable globale $basepath (utiliser _PLOOPI_BASEPATH à la place)
+ - Suppression des données de la table ploopi_mb_object à la désinstallation d'un module
+ - Correction d'un problème d'encodage du fichier d'installation ploopi.sql
+ - Optimisation de la fonction javascript de validation de formulaire ploopi_validatefield. Prise en compte des formats 'phone' et 'emptyphone'.
+
+* WebEdit
+ - Correction d'un bug à la création d'un article
+ - Correction d'un bug de détection de homepage et chargement du fichier spécifique home.tpl
+ 
+* Doc
+ - Correction dans le mini explorateur pour FCKEditor : ne reconnaissait l'extension .jpeg comme format d'image valide
+ - Correction d'un bug dans la procédure de réindexation
+ - Correction d'un bug dans l'affichage du lien direct de téléchargement d'un document
+ 
+* Templates
+ - Mise à jour des templates frontoffice ovensia
+ 
+* Install
+  - Ajout de la page de licence GPL2 avec obligation d'acceptation des termes
+
+== Ploopi - version 1.0 RC5 ===================================================
+
+2008-06-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+ - Renommage des scripts rss.php en backend.php
+ - Remplacement de la librairie RssGenesis par Universal Feed Generator
+ - Mise à jour du fichier .htaccess modèle pour intégrer la gestion des URL de tags
+ - Correction d'un problème sur le téléchargement direct d'un fichier lorsque la session n'est pas initialisée
+ - Suppression d'un "notice" dans la gestion des utilisateurs
+ - Correction d'un bug sur la méthode getactions de la classe module_type
+ - Documentation du code
+
+* Templates 
+ - Mise à jour des templates frontoffice lié du module RSSe à la mise à jour du module WebEdit
+ 
+* WebEdit
+ - modification du backend permettant de proposer un flux ATOM et un flux RSS
+ - gestion des abonnements frontoffice sur rubriques ou sur site
+ - gestion des abonnés frontoffice depuis le backoffice (possibilité de les supprimer)
+ - flux optionnels sur rubriques
+ - possibilité d'ajouter des tags (étiquettes) sur un article
+ - possibilité d'insérer un nuage de tags en frontoffice
+ 
+* Doc 
+ - affichage de l'URL publique d'un fichier
+ 
+* Rss
+ - Gestion des actions
+   
+== Ploopi - version 1.0 RC4.1 ===================================================
+
+2008-06-10  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+ - Ajout des champs "civilité" et "bureau" sur la fiche utilisateur
+ 
+== Ploopi - version 1.0 RC4 ===================================================
+
+2008-06-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+ - Commentaires : mise à jour (format phpdoc)
+ - Refactoring : réorganisation des fichiers de classes, suppression de fichiers obsolètes, nommage des variables pour la gestion backoffice/frontoffice (suppression des appellations 'web' et 'admin')
+ - Tickets : Mise à jour pour arriver directement dans les messages reçus, pouvoir afficher les message envoyés.
+ - Tickets : nouvelles icones pour messages envoyés/reçus
+ - Système : Correction d'un problème de dépendance entraînant un bug de ploopi_die() dans certains contextes
+ - Système : Correction d'un bug dans l'intégration du moteur de recherche intégal
+ - Système : Correction d'un bug au niveau du switch backoffice/frontoffice (on perdait l'id module backoffice qui était remplacé par celui du module webedit du frontoffice)
+ - Système : Amélioration des tris dans la gestion des rôles
+ - Mise à jour de la classe inputfilter qui posait des problèmes si le contenu des champs contenait <>
+ - Ajout d'un fichier robots.txt
+ - Workflow : Correction d'un bug sur le choix des utilisateurs
+ - Partages : Correction d'un bug sur le choix des utilisateurs
+ 
+* Templates 
+  - Mise à jour des templates backoffice pour gérer une deuxième zone draggable sur les popups.
+
+== Ploopi - version 1.0 RC3c ===================================================
+
+2008-05-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+    
+* Ploopi    
+  - Système : Modification lors du rattachement d'un utilisateur/groupe à un espace => redirection sur l'onglet sélectionné.
+  - Système : Correction d'un bug d'affichage sur le bloc de l'arbre des espaces/groupes.
+  - Système : Ajout d'une méthode de la classe workspace pour renvoyer la liste complète des utilisateurs directs et indirects (sous-espaces, sous-groupes)
+  - Système : Correction d'un bug lors de la création d'un sous espace si aucun module hérité.
+  - Système : Mise à jour SQL (index)
+  - Système : modification dans la liste des fuseaux horaires d'un utilisateur
+  - Abonnements : modification du premier chargement (suppression de l'appel ajax, remplacé par un appel direct à une fonction)
+  - Annotations : modification du premier chargement (suppression de l'appel ajax, remplacé par un appel direct à une fonction)
+  - Sessions : Correctifs dans la gestion des sessions : prise en compte du paramètre de durée de session interne à ploopi, regénération d'un nouvel id de session après avoir détruit une session
+  - Sessions : Modification de la proba d'exec du garbage collector (100 => 10)
+  - Tickets : Correction d'un bug sur l'ouverture du popup "nouveau ticket" (problème avec une liste vide de destinataires)
+  - Tickets : Correctif lors de l'envoi d'une réponse à un ticket (renvoyait une page blanche)
+  - Tickets : Modifications d'intitulés tickets/messages.
+  - Tickets : Mise à jour du fichier de langue
+  - Correction d'un bug dans start.php (servertimezone => timezone)
+  - modification de la classe xml2array : prise en compte des attributs
+  - nouvelles fonctions date (ploopi_tz) pour la gestion des fuseaux horaires
+  
+* Templates 
+  - Modification intitulé 'ticket' dans les templates 'ploopi*' (mail.tpl)
+
+* Directory
+  - Modifications d'intitulés tickets/messages.
+  - Mise à jour du fichier de langue
+
+* Doc
+  - Modifications d'intitulés tickets/messages.
+  - Mise à jour du fichier de langue
+
+* WebEdit :
+  - Meilleure gestion de la suppression des rubriques
+  - Ajout de variables frontoffice (cf http://redmine.ploopi.org/wiki/ploopi/Cr%C3%A9ation_d'un_template_FrontOffice)
+
+== Ploopi - version 1.0 RC3b ===================================================
+
+2008-05-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+   
+* Ploopi
+  - Possibilité de choisir le fuseau horaire par utilisateur (au lieu du décalage en heures)
+  - Correctifs sur la gestion du profil utilisateur (fuseau horaire, copie des tickets par mail)
+  - Suppression du paramètrage de fuseau horaire dans le fichier de configuration
+  - Correction d'un problème de bufferisation dans la gestion interne des documents
+  - Amélioration de l'affichage des erreurs (pile d'erreur complète)
+  - Meilleure compression html des contenus bufferisés
+  - Validateurs : uniformisation nom/prénom
+  - Partages : uniformisation nom/prénom
+  - Tickets : uniformisation nom/prénom
+  - Correctif sur la fonction ploopi_redirect()
+  - Correctif sur la fonctionnalité 'logout' (problème de redirection)
+  - Ajout d'une variable globale $basepath contenant l'url de base du portail (notamment pour FCKEditor & ploopi_redirect)
+
+* Templates 
+  - Mise à jour des templates backoffice
+  - Correction d'un bug dans le template 'ploopi_menu' (uniquement en activant la compression du buffer de sortie)
+  - Correction d'un bug dans les templates frontoffice exemple* (erreur de variable lors d'une fermeture de bloc)
+
+* Doc
+  - Mise à jour de sécurité consécutive à une modification au niveau de Ploopi
+  - Uniformisation de l'affichage nom/prénom/login
+  - Correction d'un problème de téléchargement de documents pour les utilisateurs non connectés (frontoffice)
+    
+* Directory
+  - Mise à jour de sécurité consécutive à une modification au niveau de Ploopi
+  - Changement d'ordre des onglets
+  - Suppression affichage login
+  - Correction d'un bug dans l'ajout/modification d'une liste de favoris
+  - Lien "tickets"
+  - Lien "courriel"
+
+* WebEdit
+  - Correction d'un bug sur tri par date des articles (si date identique)
+  - Correction d'un bug sur la validation d'article
+  - Meilleure intégration de FCKEditor
+  
+* Install / Config
+  - Ajout d'une détection de mauvais paramétrage de la directive RewriteBase (test)
+  - Suppression du paramètre _BASEPATH
+  - Détection automatique du problème de configuration de la directive 'RewriteBase' du fichier .htaccess
+  
+== Ploopi - version 1.0 RC3 ===================================================
+
+2008-04-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+  - Correctif sur la fonctionnalité "documents" lors de son utilisation avec l'activation du mode "compression"
+  - Procédure d'installation : corrections dans le fichier de langue french.php
+  - Procédure d'installation : Correction d'un problème dans le fichier modèle de configuration (CGIPATH)
+  - Correctif javascript dans la gestion interne des documents
+
+* Module Chat
+  - Ajout d'un module expérimental "chat" de discussion instantanée
+  
+* Module WebEdit
+  - Nouvelle version (plan de site)
+
+* Templates Frontoffice
+  - Mise à jour des templates exemple* pour intégrer la nouvelle fonctionnalité du module webedit
+
+== Ploopi - version 1.0 RC2c ===================================================
+
+2008-04-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+    
+* Ploopi
+  - Mise à jour automatique du nombre de tickets non lus (si le template le supporte)
+  - Affichage d'un popup si un nouveau message a été reçu
+  - Correctif sur la prise en charge de la compression des pages
+  - Parser ODT : Correctifs sur la gestion des CRLF
+  - Suppression fichier .htaccess
+  - Mise à jour fichier .htaccess_modele
+  - Correctif javascript sur le module système (bug quand la compression est activée)
+
+* Module Webedit
+  - Possibilité d'afficher les sous-rubriques à la place du contenu de l'article
+
+* Module Forms
+  - intégration d'une nouvelle fonction d'export de données
+  - correction des fonctionnalités d'intégration dans un autre module
+
+* Templates Frontoffice
+  - Mise à jour des templates exemple* pour intégrer la nouvelle fonctionnalité du module webedit
+
+== Ploopi - version 1.0 RC2b ===================================================
+
+2008-04-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+  - Correction d'un bug sur le téléchargement des fichiers (problème de détection du content-type si la compression est activée)
+  - Intégration du plugin "ploopiobject" au dossier 'FCKEditor'
+  - Ajout d'une icone pour les tickets contenant des objets liés
+  - Possibilité d'envoyer un ticket depuis un module avec un objet lié
+
+* Install
+  - Possibilité d'activer le mode 'CGIUPLOAD'
+  - Possibilité de paramétrer le chemin utilisé par le mode 'CGIUPLOAD'
+
+* Templates
+  - Mise à jour des templates backoffice (tickets)
+  - Mise à jour des templates frontoffice (correctifs forms.tpl)
+
+* Module Doc
+  - Possibilité d'envoyer un ticket depuis un fichier (le fichier étant lié au ticket en tant qu'objet)
+
+* Module Forms
+  - Correctifs sur l'affichage des checkbox/radio
+  - Possibilité de ne pas choisir de valeur sur un champ de type "Lien vers formulaire"
+
+* Module WebEdit
+  - Externalisation du plugin "ploopiobject"
+      - Correctifs sur les chemins d'intégration de FCKEditor
+
+ 
+== Ploopi - version 1.0 RC2 ===================================================
+
+2008-04-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * intégration FCKEditor 2.6
+ * compression des fichiers JS/CSS (templates + ploopi)
+ * optimisations dans les inclusions des dépendances des modules (JS/CSS notamment)
+ * correctifs divers
+ * nouveau système de mise à jour du portail
+ * mise à jour des modules
+ 
+== Ploopi - version 1.0 RC1 ===================================================
+
+2008-03-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * correctifs dans la gestion des paramètres au niveau des espaces de travail
+ * mise à jour de la gestion interne des documents
+ * correctifs et mise à jour sur la suppression des utilisateurs
+ * correctif lors de la déconnexion d'un utilisateur (trop long)
+ * possibilité de passer une liste d'actions (tableau) dans la fonction ploopi_isactionallowed
+ * correctif sur l'affichage des rôles attribués 
+ * mise à jour de le la procédure d'installation (nouvelles variables de configuration, nouveaux tests) 
+ * mise à jour du CGI d'upload pour une meilleure gestion des erreurs
+ * amélioration de la recherche d'utilisateurs dans les partages
+ * amélioration de la recherche d'utilisateurs dans le workflow
+ * amélioration du calendrier pour pouvoir avancer/reculer d'un an
+ * mise à jour des templates
+ * mise à jour des modules
+
+== Ploopi - version 1.0 alpha 4 ===============================================
+
+2008-02-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * correctifs de bugs
+ * ajout d'un système d'abonnement aux objets/actions
+
+== Ploopi - version 1.0 alpha 3 ===============================================
+
+2008-02-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * correctifs de bugs
+
+== Ploopi - version 1.0 alpha 2 ===============================================
+
+2008-02-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* correctifs de bugs
+
+== Ploopi - version 1.0 alpha 1 ===============================================
+
+2008-01-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Nouveaux paramètres de configuration :
+    define ('_PLOOPI_USE_CGIUPLOAD', true);         // Booléen, activation du mode 'upload CGI'
+    define ('_PLOOPI_CGI_PATH', './cgi');           // Dossier CGI
+    define ('_PLOOPI_CGI_UPLOADTMP', '/tmp');       // Dossier temporaire pour l'upload CGI
+    define ('_PLOOPI_USE_DBSESSION', true);         // Booléen, activation du stockage des sessions en Base de donnée (à la place du handler standard sur le système de fichier)
+    define ('_PLOOPI_SECRETKEY', 'ploopi');         // Phrase secrète utilisée pour le stockage des mots de passe (sert pour une partie du SALT) et pour le cryptage des URL
+    define ('_PLOOPI_PEARPATH', '/usr/share/php');  // Chemin physique contenant les classes PEAR. Peut être remplacé par " realpath('./pear'); " si votre package de Ploopi intègre directement les classes PEAR.
+    define ('_PLOOPI_INTERNETPROXY_HOST', '');      // Paramètres du Proxy d'accès Internet : adresse du serveur
+    define ('_PLOOPI_INTERNETPROXY_PORT', '');      // Paramètres du Proxy d'accès Internet : port du serveur
+    define ('_PLOOPI_INTERNETPROXY_USER', '');      // Paramètres du Proxy d'accès Internet : nom d'utilisateur
+    define ('_PLOOPI_INTERNETPROXY_PASS', '');      // Paramètres du Proxy d'accès Internet : mot de passe
+
+ * Nouvelle procédure d'installation (temporaire) pour prendre en compte les nouveaux paramètres de configuration
+ * Mise à jour de FCKEditor (2.5Beta => 2.5.1)
+ * Module Système : Optimisations d'affichage pour l'arborescence des groupes et espaces de travail (Temps/6)
+ * Module Système : Correction d'un bug sur l'application de l'héritage des groupes. Des utilisateurs n'étaient ainsi pas visibles dans certains groupes.
+ * Module Système : Rénovation quasi-complète des interfaces "Système" et "Espaces de Travail"
+ * Module Système : Nouvelle organisation dans la gestion des rôles
+ * Module Système : Synthèse Outils & Logs dans Outils
+ * Module Système : Outil de diagnostic plus complet
+ * Module Système : Correction d'un bug lors du chargement des objets WebEdit suite à une mise à jour d'un module. La référence de l'objet était modifiée et l'intégration de l'objet dans un article WebEdit ne fonctionnait plus.
+ * Tickets : Correction de bugs, mise en évidence des citations, possibilité de modifier/supprimer un ticket, affichage de la date/heure de dernière modification d'un ticket
+ * Annotations : Réécriture des fonctionnalités d'enregistrement/suppression en ajax.
+ * Paramètres : L'utilisateur peut désormais modifier certains paramètres de modules depuis l'onglet "Mon Profil".
+ * Général : remplacement des appels 'die()' par 'ploopi_die()' qui permet de sauvegarder la session et de fermer la connexion à la base de données proprement.
+
+ * Moteur de recherche global
+    - Création d'un moteur d'indexation capable d'automatiser l'analyse du contenu des enregistrements inclus dans les modules (nécessite l'ajout de quelques fonctions dans le code des modules).
+    - Intégration d'une interface de recherche permettant de retrouver les éléments indexés et de proposer un lien direct vers les éléments ainsi trouvés
+    - Algorithmes d'indexation et de recherche assez avancés : racinisation (lemmisation) des mots, calcul du poids des mots, prise en compte des metas, utilisation d'une liste noire, etc...
+    - Respect des droits utilisateurs & partages
+
+ * SECURITE :
+     * Identification / Mots de Passe : nouvelle méthode de stockage des mots de passe => md5(_PLOOPI_PASSWORDSALT.'/'.login.'/'.md5(password))
+     * Général : réorganisation dans la structure des fichiers.
+        - Le dossier racine ne contient que les points d'entrée de l'application
+            => index.php, admin.php, admin-light.php, index-light.php, index-quick.php, cron.php, rss.php
+            Seuls ces fichiers doivent pouvoir être exécuté directement
+        - Le dossier ./include ne contient plus que des fichiers php et n'a plus besoin d'être accessible depuis l'extérieur
+        - Les fichiers .js du dossier ./include ont été déplacés dans ./js
+        - Le Dossier ./config a été ajouté. Il contient le script d'installation './config/install.php' et le fichier de configuration './config/config.php'. Ce dossier doit être accessible en écriture lors de la phase d'installation automatique.
+     * Général : Nouvel handler de session (optionnel) permettant de stocker le contenu des session en base de données (activé par défaut). /!\ Attention la perte de performance n'est pas négligeable (5 à 10% voir plus en fonction de la taille de session).
+     * Général : Nouvelle méthode (addslashes) de la classe ploopi_db permettant de filtrer le contenu d'une variable (simple ou tableau) en vue d'une utilisation SQL.
+     * Général : Filtrage automatique (et générique... ne remplace pas un filtrage spécifique) des variables $_GET, $_POST, $_REQUEST, $_COOKIE, $_SERVER + correction automatique des contenus si la directive magic_quotes_gpc est activée
+     * Général : Suppression du système d'affectation automatique des variables superglobales ($_POST, $_GET, $_REQUEST, $_COOKIE) en variables (imitation du mécanisme de la directive register_globals)
+     * .htaccess : mise à jour du fichier à la racine du portail pour augmenter les restrictions d'accès. L'exécution d'un fichier php dans les dossiers "modules", "lib", "FCKEditor" est par exemple interdit. De même les dossiers "bin", "data", "db", "include", "install", "pear" ne sont pas accessibles.
+
+== DIMS - version 3.0RC6c ====================================================
+
+2007-11-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Le module WCE change de nom ! WCE devient WebEdit
+   ATTENTION, durant la phase de mise à jour vous pourriez avoir des erreurs (blocs jaunes), c'est normal.
+   1. Appliquer la mise à jour du portail 3.0RC6c
+   2. Connectez vous avec un compte administrateur système
+   3. Allez dans Administration Générale > Système pour mettre à jour le module WebEdit
+ * Correction de plusieurs bugs dans l'affichage des groupes et espaces de travail : problèmes d'ouverture de sous arbres, problèmes de cohérence dans les noeuds ouverts
+ * Optimisation du parser SQL de la procédure d'installation d'un module. La précédente était trop lente et générait des erreurs lors du chargement de fichiers SQL dont la taille dépassait 2/3 Mo
+
+2007-10-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à jour des templates 'ovensia' et 'ovensia_officiel'
+
+2007-10-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug dans le script d'extraction de contenu d'un document OpenOffice (./bin/oo2txt.sh).
+   Le script tentait d'écrire dans le dossier racine de DIMS. Désormais il écrit dans un sous-dossier du dossier /tmp
+ * Correction d'un bug lié à l'installation d'un module ayant un paramètre sans valeur par défaut
+ * Correction d'un bug lors de la suppression (ou le détachement) d'un utilisateur d'un espace de travail
+ * Ajout d'un fichier .htaccess à la racine du portail :
+    - améliorer la sécurité
+    - modifier des paramètres de php à la volée
+    - gérer les rewrite_rules du portail (option non activée par défaut, cf ./include/config.php)
+ * Déplacement de certains paramètres d'indexation au niveau du fichier de configuration du portail (paramètres communs à l'ensemble des modules) :
+   define ('_DIMS_INDEXATION_WORDSEPARATORS', " :;,.!?'^`\'~-_|()[]{}<>\$£µ&#§@%=+/*\n\r");
+   define ('_DIMS_INDEXATION_WORDMINLENGHT', 2);
+   define ('_DIMS_INDEXATION_WORDMAXLENGHT', 50);
+   define ('_DIMS_INDEXATION_COMMONWORDS_FR', './include/commonwords_fr.txt');
+   /!\ Pensez à mettre à jour le fichier de configuration (./include/config.php) si ces paramètres ne sont pas présents !
+
+2007-10-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+ * Modification de FCKEditor pour gérer un nouveau paramètre FCKConfig.LinkArticle (booléen) permet d'activer ou non la possibilité de faire des liens vers un article depuis l'éditeur.
+   Fichiers impactés :
+   ./FCKEditor/editor/dialog/fck_link.html
+   ./FCKEditor/editor/dialog/fck_link/fck_link.js
+ * Ajout de la fonction dims_getmimetype($filename) qui renvoit le type mime en fonction du nom d'un fichier
+ * Modification de la fonction dims_downloadfile($filepath, $destfilename, $deletefile = false, $attachment = true) pour une meilleure prise en compte des types mime
+ * Modification de la fonction dims_documents($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $id_user = -1, $id_workspace = -1, $id_module = -1)
+   qui prend un nouveau paramètre '$params' pour modifier le comportement par défaut de l'affichage des documents.
+   $params est un tableau pouvant contenir les valeurs suivantes :
+   $params = array( 'ROOT_NAME' => 'Racine',    // Nom de la racine des dossiers
+                    'ATTACHEMENT' => true );    // booléen pour déterminer le mode de téléchargement des fichiers
+
+2007-10-10  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Modification de la fonction javascript dims_showpopup(message, w, e, origine, id) qui peut maintenant être appelée plusieurs fois pour ouvrir plusieurs popups (ajout du paramètre id permettant d'identifier le popup pour le piloter)
+ * Modification de la fonction javascript dims_hidepopup(id) qui prend désormais en option un identifiant de popup.
+ * Ajout de la fonction javascript dims_hideallpopups() qui permet de fermer tous les popups ouverts (par dims_showpopup)
+ * Modification du template backoffice pour supprimer le <div id="dims_popup"></div> utilisé par l'ancienne fonction dims_showpopup. Ce div n'a plus d'utilité car les popups sont créés dynamiquement.
+   Modification de la feuille de styles ./css/skin.css du template : remplacement de #dims_popup par .dims_popup (les occurrences de popups peuvent désormais être multiples)
+
+== DIMS - version 3.0RC6b ====================================================
+
+2007-10-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Optimisation de la mise en page des paramètres au niveau système et au niveau d'un espace de travail
+ * Ajout d'un nouveau template frontoffice 'ovensia' valide XHTML 1.0 Strict / CSS 2 / W3C WCAG niveau 3 (accessibilité) testé sans bug sur IE6 / IE7 / FF2 / OP9
+ * Correction d'un bug dans la gestion des paramètres par défaut lors de la mise à jour d'un module
+ * Optimisation de la méthode fetchrow() de la classe dims_db : posait des problèmes de lenteur, notamment lors de la connexion d'un utilisateur
+ * Modification de type pour le champ "default_value" de la table "dims_param_type" de varchar(255) à TEXT (65k caractères)
+ * Modification de type pour le champ "value" de la table "dims_param_default" de varchar(255) à TEXT (65k caractères)
+ * Modification de type pour le champ "value" de la table "dims_param_group" de varchar(255) à TEXT (65k caractères)
+ * Modification de type pour le champ "value" de la table "dims_param_user" de varchar(255) à TEXT (65k caractères)
+
+== DIMS - version 3.0RC6 ====================================================
+
+2007-09-25  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Correctifs CSS pour IE7
+ * Correction de la fonction javascript dims_checkall (./include/functions.js)
+ * Modification du comportement du calendrier qui déclenche dorénavant l'évènement "onchange" du champ ciblé lors du choix de la date
+ * Correction d'un bug dans la gestion du rattachement d'un groupe d'utilisateur à un espace : on voyait le groupe 'système' alors que ça ne doit pas être possible
+ * Correctifs d'un bug dans le script SQL d'installation (installation vierge)
+
+== DIMS - version 3.0RC5d ====================================================
+
+2007-09-17  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Correction de la fonction de téléchargement (dims_downloadfile dans ./include/functions/filesystem.php) pour gérer correctement le type "mime" du fichier
+ * Mofication de la configuration par défaut de phpdig pour activer automatiquement l'indexation des fichiers PDF/DOC
+
+== DIMS - version 3.0RC5c ====================================================
+
+2007-09-13  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Correction d'un bug lors de la mise à jour des paramètres d'un module
+ * Correction d'un bug dans l'affichage des tickets (tickets vides dans certaines conditions d'utilisation)
+
+== DIMS - version 3.0RC5b ====================================================
+
+2007-09-12  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Correction d'un bug lors de l'activation d'un espace de travail frontoffice alors que cet espace ne porte aucun module WCE (plantage frontoffice)
+ * Correction d'un bug dans les parsers XML d'installation de modules. Sur certains systèmes, il est nécessaire de forcer le paramètre d'encodage de caractère (ISO-8859-1) car la lecture du fichier XML s'effectue par défaut en UTF-8
+
+== DIMS - version 3.0RC5 ====================================================
+
+2007-09-10  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Correction d'un bug dans l'expiration des mots de passe, la date est correctement prise en compte
+ * Amélioration du formulaire de modification d'un utilisateur (calendrier, tabindex, etc.)
+
+2007-09-07  Stéphane Escaich  <stephane@escaich.fr>
+
+ * Intégration d'un moteur de template pour le formatage du mail attaché à un ticket (inclure un fichier mail.tpl dans le template backoffice utilisé)
+ * Ajout d'un lien sur l'objet lié dans un mail attaché à un ticket
+ * Modification du processus de connexion d'un utilisateur pour permettre la redirection vers une URL interne au portail (utile entre autre pour les objets liés dans les mails)
+
+2007-09-05  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Ajout d'une fonction javascript dims_ajaxloader(div) qui permet d'afficher une image de chargement dans un élément avec son ID
+ * Ajout d'une fonction javascript dims_innerHTML(div, html) qui permet via Prototype de copier du contenu HTML dans un élément avec son ID mais également d'exécuter le code javascript inclus.
+ * Ajout d'une fonction javascript dims_window_onload_stock(func) qui permet de "stocker" une fonction javascript à exécuter au chargement de la page
+ * Ajout d'une fonction javascript dims_window_onload_launch() qui permet d'exécuter au chargement de la page les fonctions javascript "stockées"
+ * Correction de bugs dans les fonctions javascript dims_xmlhttprequest*() empêchant l'exécution en parallèle d'appels Ajax
+ * Correction de bugs dans l'envoi de tickets en mode non connecté (depuis cron par exemple)
+ * Correction d'un bug lors du choix d'utilisateurs dans le système de workflow
+ * Correction d'un bug lors du choix d'utilisateurs dans le système de partage
+
+2007-08-30  Benjamin Ganivet ~ Netlor <benjamin@netlor.fr>
+
+ * Correction d'un bug lors du choix d'utilisateurs dans le système de workflow
+ * Correction d'un bug lors de la suppression d'un utilisateur (ne le supprimait par réellement)
+
+2007-08-28  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+
+ * Ajout d'une méthode d'affichage de tableau évolué (uniquement en div, tris sur colonnes, etc..) dans la classe skin : skin::display_array($columns, $values, $array_id, $options)
+ * Intégration de la librairie javascript Prototype
+ * Optimisation du code javascript du DIMS suite à l'intégration de la librairie Prototype
+ * Ajout d'une fonction javascript dims_skin_array_refresh(array_id, array_orderby) liée à la méthode d'affichage de tableau vue ci-dessus et qui permet de rafraichir l'affichage d'un tableau (pour le trier par exemple)
+ * Ajout d'une fonction javascript dims_skin_dims_skin_ie_resizearrays_refresh() liée à la méthode d'affichage de tableau. Permet de compenser un bug d'affichage avec IE6
+ * Correction d'un bug dans le fichier ./include/import_gpr.php lors de l'utilisation du système d'encodage d'url : ne remplissait pas la variable global $_REQUEST
+ * Réécriture en Ajax du système d'annotation
+ * Modification du système d'appels de fonctions inter-module (variable $dims_op) permettant aux modules de communiquer plus facilement
+ * Correction de bugs dans le processus de connexion et de chargement de session (./include/start.php)
+
