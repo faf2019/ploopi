@@ -113,9 +113,9 @@ foreach($_SESSION['ploopi']['workspaces'] as $wid => $wsp)
     $workspace = new workspace();
     $workspace->open($wid);
     
-    $_SESSION['ploopi']['workspaces'][$wid]['children']  = $workspace->getworkspacechildrenlite();
+    $_SESSION['ploopi']['workspaces'][$wid]['children'] = $workspace->getchildren();
     $_SESSION['ploopi']['workspaces'][$wid]['parents'] = explode(';',$workspace->fields['parents']);
-    $_SESSION['ploopi']['workspaces'][$wid]['brothers']  = $workspace->getworkspacebrotherslite();
+    $_SESSION['ploopi']['workspaces'][$wid]['brothers'] = $workspace->getbrothers();
     $_SESSION['ploopi']['workspaces'][$wid]['list_parents'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
     $_SESSION['ploopi']['workspaces'][$wid]['list_children'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['children']);
     $_SESSION['ploopi']['workspaces'][$wid]['list_brothers'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['brothers']);

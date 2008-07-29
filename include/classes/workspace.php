@@ -74,7 +74,6 @@ class workspace extends data_object
     
     public function delete()
     {
-
         global $db;
 
         if ($this->fields['id']!=-1 && !$this->fields['system'])
@@ -116,98 +115,76 @@ class workspace extends data_object
         }
     }
 
-
-    function getfullworkspace($idworkspace = '')
+    /**
+     * Retourne un tableau contenant tous les identifiants des espaces fils de l'espace
+     *
+     * @return array tableau des espaces fils de l'espace (identifiants)
+     */
+    
+    public function getchildren()
     {
         global $db;
 
-        if ($idworkspace == '') $idworkspace = $this->fields['id'];
+        $db->query("SELECT id FROM ploopi_workspace WHERE parents = '{$this->fields['parents']};{$this->fields['id']}' OR parents LIKE '{$this->fields['parents']};{$this->fields['id']};%'");
 
-        $res='';
-
-        $select = "SELECT ploopi_workspace.* FROM ploopi_workspace WHERE id = $idworkspace AND id_workspace <> $idworkspace";
-        $answer = $db->query($select);
-        if ($fields = $db->fetchrow($answer))
-        {
-            $parents = $this->getfullworkspace($fields['id_workspace']);
-            if ($parents != '') $res = $parents .' / ';
-            $res .= $fields['label'];
-        }
-        return $res;
+        return $db->getarray();
     }
 
 
-    // return all children id's of current workspace
-    function getworkspacechildrenlite($mode = '')
+    /**
+     * Retourne un tableau contenant tous les identifiants des espaces frères de l'espace
+     *
+     * @return array tableau des espaces frères de l'espace (identifiants)
+     */
+    
+    public function getbrothers()
     {
         global $db;
-
-        $where = ($mode != '') ? " AND $mode = 1 " : '';
-
-        $db->query("SELECT id FROM ploopi_workspace WHERE parents = '{$this->fields['parents']};{$this->fields['id']}' OR parents LIKE '{$this->fields['parents']};{$this->fields['id']};%' {$where}");
-
-        return($db->getarray());
-    }
-
-
-    // return all brothers ids of current group
-    function getworkspacebrotherslite($mode = '', $domain = '')
-    {
-        global $db;
-
-        $where = '';
-        if ($mode != '') $where .= " AND $mode = 1 ";
 
         $select =   "
-                    SELECT  ploopi_workspace.*
+                    SELECT  id
                     FROM    ploopi_workspace
                     WHERE   id_workspace = {$this->fields['id_workspace']}
-                    $where
                     AND     id <> {$this->fields['id']}
                     ";
-        $result = $db->query($select);
-        $ar = array();
-        while ($fields = $db->fetchrow($result))
-        {
-            if ($domain != '')
-            {
-                $web_dom_array = split("\r\n", $fields['web_domainlist']);
-                $admin_dom_array = split("\r\n", $fields['admin_domainlist']);
-                foreach($admin_dom_array as $dom)
-                {
-                    if ($domain == $dom) $ar[] = $fields['id'];
-                }
-            }
-            else $ar[] = $fields['id'];
-        }
+                    
+        $db->query($select);
 
-        return($ar);
+        return $db->getarray();
     }
 
-    function getparents($parents = '')
+    /**
+     * Retourne un tableau associatif (id => fields) contenant tous les parents de l'espace
+     *
+     * @return array tableau des parents de l'espace
+     */
+    
+    public function getparents()
     {
-        global $db;
-        if ($parents == '') $parents = $this->fields['parents'];
-
-        $parents = str_replace(';',',',$parents);
-
-        $select = "SELECT * FROM ploopi_workspace WHERE id IN ({$parents}) ORDER BY depth DESC";
-        $result = $db->query($select);
-
-        $workspaces = array();
-        while ($fields = $db->fetchrow($result)) $workspaces[$fields['id']] = $fields;
-
-        return($workspaces);
+        return system_getparents($this->fields['parents'], 'workspace');
     }
-
-    function getfather()
+    
+    
+    /**
+     * Retourne l'espace père ou false
+     *
+     * @return workspace l'espace père ou false
+     */
+    
+    public function getfather()
     {
         $father = new workspace();
         if ($father->open($this->fields['id_workspace'])) return $father;
         else return(false);
     }
 
-    function getusers()
+    /**
+     * Retourne un tableau associatif (id => fields) contenant les utilisateurs de l'espace (non récursif)
+     *
+     * @return array tableau des utilisateurs
+     */
+        
+    public function getusers()
     {
         global $db;
 
@@ -230,14 +207,20 @@ class workspace extends data_object
         return $users;
     }
 
-    function getallusers()
+    /**
+     * Retourne un tableau associatif (id => fields) contenant les utilisateurs de l'espace et des sous-espaces
+     *
+     * @return array tableau des utilisateurs
+     */
+        
+    public function getallusers()
     {
         global $db;
 
         $users = array();
         
         $arrChildren = array();
-        $arrChildren = $this->getworkspacechildrenlite();
+        $arrChildren = $this->getchildren();
         $arrChildren[] = $this->fields['id'];
         
         $select =   "
@@ -275,10 +258,17 @@ class workspace extends data_object
 
         while ($fields = $db->fetchrow($result)) $users[$fields['id']] = $fields;
         
-        return($users);
+        return $users;
     }
-            
-    function getgroups($getchildren = false)
+
+    /**
+     * Retourne un tableau associatif (id => fields) des groupes rattachés à l'espace.
+     *
+     * @param boolean $getchildren true si la fonction doit renvoyer les sous-groupes (false par défaut)
+     * @return array tableau associatif des groupes rattachés à l'espace
+     */
+    
+    public function getgroups($getchildren = false)
     {
         global $db;
 
@@ -318,20 +308,13 @@ class workspace extends data_object
         return $groups;
     }
 
-
-    function createchild()
-    {
-        $child = new workspace();
-        $child->fields = $this->fields;
-        unset($child->fields['id']);
-        $child->fields['id_workspace'] = $this->fields['id'];
-        $child->fields['label'] = 'fils de '.$this->fields['label'];
-        $child->fields['parents'] = $this->fields['parents'].';'.$this->fields['id'];
-        $child->fields['system'] = 0;
-        return($child);
-    }
-
-    function createclone()
+    /**
+     * Crée un double de l'espace
+     *
+     * @return workspace
+     */
+    
+    public function createclone()
     {
         $clone = new workspace();
         $clone->fields = $this->fields;
@@ -341,49 +324,62 @@ class workspace extends data_object
         return($clone);
     }
 
-    function getmodules($lite = false, $public = false)
+    /**
+     * Retourne un tableau contenant les modules rattachés à l'espace
+     *
+     * @param boolean $light true si la fonction ne doit renvoyer que les identifiants des modules (false par défaut)
+     * @return array tableau contenant les modules rattachés à l'espace
+     */
+    
+    public function getmodules($light = false)
     {
         global $db;
 
         $modules = array();
 
         $select =   "
-                SELECT  ploopi_module_type.*,
-                        ploopi_module.label AS instancename,
-                        ploopi_module.id AS instanceid,
-                        ploopi_module.id_workspace As instanceworkspace,
-                        ploopi_module.active,
-                        ploopi_module.shared,
-                        ploopi_module.herited,
-                        ploopi_module.adminrestricted,
-                        ploopi_module.public,
-                        ploopi_module.viewmode,
-                        ploopi_module.transverseview,
-                        ploopi_module.id_module_type,
-                        ploopi_module_workspace.position,
-                        ploopi_module_workspace.blockposition
-                FROM    ploopi_module_type,
-                        ploopi_module,
-                        ploopi_module_workspace
-                WHERE   ploopi_module_workspace.id_workspace = {$this->fields['id']}
-                AND     ploopi_module_workspace.id_module = ploopi_module.id
-                AND     ploopi_module.id_module_type = ploopi_module_type.id
-                ORDER BY ploopi_module_workspace.position
-                ";
+                    SELECT  ploopi_module_type.*,
+                            ploopi_module.label AS instancename,
+                            ploopi_module.id AS instanceid,
+                            ploopi_module.id_workspace As instanceworkspace,
+                            ploopi_module.active,
+                            ploopi_module.shared,
+                            ploopi_module.herited,
+                            ploopi_module.adminrestricted,
+                            ploopi_module.public,
+                            ploopi_module.viewmode,
+                            ploopi_module.transverseview,
+                            ploopi_module.id_module_type,
+                            ploopi_module_workspace.position,
+                            ploopi_module_workspace.blockposition
+                    FROM    ploopi_module_type,
+                            ploopi_module,
+                            ploopi_module_workspace
+                    WHERE   ploopi_module_workspace.id_workspace = {$this->fields['id']}
+                    AND     ploopi_module_workspace.id_module = ploopi_module.id
+                    AND     ploopi_module.id_module_type = ploopi_module_type.id
+                    ORDER BY ploopi_module_workspace.position
+                    ";
 
         $result = $db->query($select);
 
         while ($module = $db->fetchrow($result))
         {
-            if ($lite) $modules[] = $module['instanceid'];
+            if ($light) $modules[] = $module['instanceid'];
             else $modules[$module['instanceid']] = $module;
         }
 
         return $modules;
     }
 
-
-    function getsharedmodules($herited = false)
+    /**
+     * Retourne un tableau des modules partagés (ou hérités) par les espaces parents
+     *
+     * @param boolean $herited true si la fonction doit renvoyer les modules hérités (false par défaut)
+     * @return array tableau des modules partagés (ou hérités) par les espaces parents
+     */
+    
+    public function getsharedmodules($herited = false)
     {
         global $db;
 
@@ -393,7 +389,6 @@ class workspace extends data_object
 
         if ($parents!='')
         {
-
             if ($herited) $sql_herited = 'AND m.herited = 1';
             else $sql_herited = '';
 
@@ -413,8 +408,8 @@ class workspace extends data_object
                         INNER JOIN  ploopi_module_type mt
                         ON          mt.id = m.id_module_type
 
-                        WHERE   w.id IN ({$parents})
-                        AND     m.shared = 1
+                        WHERE       w.id IN ({$parents})
+                        AND         m.shared = 1
                         {$sql_herited}
                         ORDER BY    m.label,
                                     workspacelabel
@@ -440,22 +435,32 @@ class workspace extends data_object
 
 class module_workspace extends data_object
 {
-
-    function module_workspace()
+    /**
+     * Constructeur de la classe
+     *
+     * @return module_workspace
+     */
+    
+    public function module_workspace()
     {
         parent::data_object('ploopi_module_workspace','id_workspace','id_module');
     }
 
-    function save()
+    /**
+     * Enregistre les infos sur la relation module / espace de rattachement (position par exemple)
+     */
+    
+    public function save()
     {
         global $db;
 
         if ($this->new)
         {
             $select =   "
-                    SELECT MAX(ploopi_module_workspace.position) AS position
-                    FROM ploopi_module_workspace
-                    WHERE ploopi_module_workspace.id_workspace = ".$this->fields['id_workspace'];
+                        SELECT MAX(ploopi_module_workspace.position) AS position
+                        FROM ploopi_module_workspace
+                        WHERE ploopi_module_workspace.id_workspace = {$this->fields['id_workspace']}
+                        ";
 
             $result = $db->query($select);
             $fields = $db->fetchrow($result);
@@ -465,7 +470,11 @@ class module_workspace extends data_object
         parent::save();
     }
 
-    function delete()
+    /**
+     * Supprime la relation module / espace de rattachement 
+     */
+    
+    public function delete()
     {
         global $db;
 
@@ -475,19 +484,24 @@ class module_workspace extends data_object
         parent::delete();
     }
 
-    function changeposition($direction)
+    /**
+     * Modifie la position de la relation module / espace de rattachement 
+     *
+     * @param string $direction sens du mouvement 'down' / 'up'
+     */
+    
+    public function changeposition($direction)
     {
-
         global $db;
 
         $workspaceid = $this->fields['id_workspace'];
 
         $select =   "
-                SELECT  min(position) as minpos,
-                        max(position) as maxpos
-                FROM    ploopi_module_workspace
-                WHERE   id_group = $workspaceid
-                ";
+                    SELECT  min(position) as minpos,
+                            max(position) as maxpos
+                    FROM    ploopi_module_workspace
+                    WHERE   id_group = {$workspaceid}
+                    ";
 
         $result = $db->query($select);
         $fields = $db->fetchrow($result);
@@ -496,58 +510,20 @@ class module_workspace extends data_object
         $position = $this->fields['position'];
         $move = 0;
 
-        if ($direction=='down' && $position != $maxpos)
-        {
-            $move = 1;
-        }
+        if ($direction == 'down' && $position != $maxpos) $move = 1;
 
-        if ($direction=='up' && $position != $minpos)
-        {
-            $move = -1;
-        }
+        if ($direction == 'up' && $position != $minpos) $move = -1;
 
         if ($move!=0)
         {
-            $update = "update ploopi_module_workspace set position=0 where id_workspace = $workspaceid and position=".($position+$move);
-            $db->query($update);;
-            $update = "update ploopi_module_workspace set position=".($position+$move)." where id_workspace = $workspaceid and position=$position";
-            $db->query($update);;
-            $update = "update ploopi_module_workspace set position=$position where id_workspace = $workspaceid and position=0";
-            $db->query($update);;
+            $update = "UPDATE ploopi_module_workspace SET position = 0 WHERE id_workspace = {$workspaceid} AND position = ".($position+$move);
+            $db->query($update);
+            $update = "UPDATE ploopi_module_workspace SET position = ".($position+$move)." WHERE id_workspace = {$workspaceid} AND position = {$position}";
+            $db->query($update);
+            $update = "UPDATE ploopi_module_workspace SET position = {$position} WHERE id_workspace = {$workspaceid} AND position = 0";
+            $db->query($update);
         }
     }
-
-
-     function getroles()
-     {
-        global $db;
-        $workspace = new workspace();
-        $workspace->open($this->fields['id_workspace']);
-        $parents = str_replace(';',',',$workspace->fields['parents']);
-
-        $roles = array();
-
-
-        // select own roles and shared herited roles
-        $select =   "
-                    SELECT      ploopi_role.*,
-                                ploopi_workspace.label as labelworkspace
-                    FROM        ploopi_role,
-                                ploopi_workspace
-                    WHERE       ploopi_role.id_module = {$this->fields['id_module']}
-                    AND         (ploopi_role.id_workspace = {$this->fields['id_workspace']}
-                    OR          (ploopi_role.id_workspace IN ({$parents}) AND ploopi_role.shared = 1))
-                    AND         ploopi_role.id_workspace = ploopi_workspace.id
-                    ORDER BY    ploopi_role.label
-                    ";
-
-        $result = $db->query($select);
-
-        while ($role = $db->fetchrow($result)) $roles[$role['id']] = $role;
-
-        return $roles;
-     }
-
 }
 
 /**
@@ -562,66 +538,23 @@ class module_workspace extends data_object
 
 class workspace_user extends data_object
 {
-
-    function workspace_user()
+    /**
+     * Constructeur de la classe
+     *
+     * @return workspace_user
+     */
+    
+    public function workspace_user()
     {
         parent::data_object('ploopi_workspace_user','id_workspace','id_user');
         $this->fields['adminlevel'] = _PLOOPI_ID_LEVEL_USER;
     }
 
-    function getroles()
-    {
-        global $db;
-
-        $roles = array();
-
-        $select =   "
-                SELECT      ploopi_role.*,
-                        ploopi_module.label as modulelabel
-                FROM        ploopi_role,
-                        ploopi_workspace_user_role,
-                        ploopi_module
-                WHERE       ploopi_workspace_user_role.id_user = {$this->fields['id_user']}
-                AND     ploopi_workspace_user_role.id_workspace = {$this->fields['id_workspace']}
-                AND     ploopi_workspace_user_role.id_role = ploopi_role.id
-                AND     ploopi_module.id = ploopi_role.id_module
-                ORDER BY    ploopi_role.label
-                ";
-
-        $result = $db->query($select);
-
-        while ($role = $db->fetchrow($result))
-        {
-            $roles[$role['id']] = $role;
-        }
-
-        return $roles;
-    }
-
-    function saveroles($roles)
-    {
-        global $db;
-
-        $delete =   "
-                DELETE FROM     ploopi_workspace_user_role
-                WHERE       ploopi_workspace_user_role.id_user = {$this->fields['id_user']}
-                AND     ploopi_workspace_user_role.id_workspace = {$this->fields['id_workspace']}
-                ";
-
-        $db->query($delete);
-
-        foreach($roles as $key => $idrole)
-        {
-            $workspace_user_role = new workspace_user_role();
-            $workspace_user_role->fields['id_user'] = $this->fields['id_user'];
-            $workspace_user_role->fields['id_workspace'] = $this->fields['id_workspace'];
-            $workspace_user_role->fields['id_role'] = $idrole;
-            $workspace_user_role->save();
-        }
-    }
-
-
-    function delete()
+    /**
+     * Supprime la relation utilisateur / espace de rattachement
+     */
+    
+    public function delete()
     {
         global $db;
 
@@ -644,7 +577,7 @@ class workspace_user extends data_object
             $admin_workspaceid = $this->fields['id_workspace'];
             $admin_moduleid = $fields['id'];
 
-            echo "<br><b>&laquo; {$fields['label']} &raquo;</b> ({$fields['moduletype']})<br>";
+            echo "<br /><strong>&laquo; {$fields['label']} &raquo;</strong> ({$fields['moduletype']})<br />";
             if (file_exists("./modules/{$fields['moduletype']}/include/admin_user_delete.php")) include "./modules/{$fields['moduletype']}/include/admin_user_delete.php";
         }
 
@@ -665,7 +598,13 @@ class workspace_user extends data_object
 
 class workspace_user_role extends data_object
 {
-    function workspace_user_role()
+    /**
+     * Constructeur de la classe
+     *
+     * @return workspace_user_role
+     */
+    
+    public function workspace_user_role()
     {
         parent::data_object('ploopi_workspace_user_role','id_user','id_workspace','id_role');
     }
@@ -683,71 +622,24 @@ class workspace_user_role extends data_object
 
 class workspace_group extends data_object
 {
-
+    
     /**
-    * Class constructor
-    *
-    * @param int $idconnexion
-    * @access public
-    **/
+     * Constructeur de la classe
+     *
+     * @return workspace_group
+     */
+    
     function workspace_group()
     {
         parent::data_object('ploopi_workspace_group','id_workspace','id_group');
         $this->fields['adminlevel'] = _PLOOPI_ID_LEVEL_USER;
     }
 
-    function getroles()
-    {
-        global $db;
-
-        $roles = array();
-
-        $select =   "
-                    SELECT      ploopi_role.*,
-                                ploopi_module.label as modulelabel
-                    FROM        ploopi_role,
-                                ploopi_workspace_group_role,
-                                ploopi_module
-                    WHERE       ploopi_workspace_group_role.id_group = {$this->fields['id_group']}
-                    AND         ploopi_workspace_group_role.id_workspace = {$this->fields['id_workspace']}
-                    AND         ploopi_workspace_group_role.id_role = ploopi_role.id
-                    AND         ploopi_module.id = ploopi_role.id_module
-                    ORDER BY    ploopi_role.label
-                    ";
-
-        $result = $db->query($select);
-
-        while ($role = $db->fetchrow($result))
-        {
-            $roles[$role['id']] = $role;
-        }
-
-        return $roles;
-    }
-
-    function saveroles($roles)
-    {
-        global $db;
-
-        $delete =   "
-                DELETE FROM     ploopi_workspace_group_role
-                WHERE           ploopi_workspace_group_role.id_group = {$this->fields['id_group']}
-                AND             ploopi_workspace_group_role.id_workspace = {$this->fields['id_workspace']}
-                ";
-
-        $db->query($delete);
-
-        foreach($roles as $key => $idrole)
-        {
-            $workspace_group_role = new workspace_group_role();
-            $workspace_group_role->fields['id_group'] = $this->fields['id_group'];
-            $workspace_group_role->fields['id_workspace'] = $this->fields['id_workspace'];
-            $workspace_group_role->fields['id_role'] = $idrole;
-            $workspace_group_role->save();
-        }
-    }
-
-    function delete()
+    /**
+     * Supprime la relation groupe / espace de rattachement
+     */
+    
+    public function delete()
     {
         global $db;
 
@@ -769,7 +661,7 @@ class workspace_group extends data_object
             $admin_workspaceid = $this->fields['id_workspace'];
             $admin_moduleid = $fields['id'];
 
-            echo "<br><b>« {$fields['label']} »</b> ({$fields['moduletype']})<br>";
+            echo "<br /><strong>&laquo; {$fields['label']} &raquo;</strong> ({$fields['moduletype']})<br />";
             if (file_exists("./modules/{$fields['moduletype']}/include/admin_org_delete.php")) include "./modules/{$fields['moduletype']}/include/admin_org_delete.php";
         }
         parent::delete();
@@ -788,7 +680,13 @@ class workspace_group extends data_object
 
 class workspace_group_role extends data_object
 {
-    function workspace_group_role()
+    /**
+     * Constructeur de la classe
+     *
+     * @return workspace_group_role
+     */
+    
+    public function workspace_group_role()
     {
         parent::data_object('ploopi_workspace_group_role','id_group','id_workspace','id_role');
     }

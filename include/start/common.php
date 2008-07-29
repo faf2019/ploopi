@@ -48,7 +48,8 @@ $ploopi_timer = new timer();
 $ploopi_timer->start();
 
 /**
- * Création du buffer principal
+ * Création du buffer principal.
+ * On utilise une astuce pour contourner le fait que la fonction ploopi_ob_callback n'existe pas encore.
  */
 ob_start(create_function('$buffer', 'return ploopi_ob_callback($buffer);'));
 

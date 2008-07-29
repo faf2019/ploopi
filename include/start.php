@@ -179,14 +179,14 @@ if ($ploopi_initsession)
         if ($_SESSION['ploopi']['user']['servertimezone']) $_SESSION['ploopi']['user']['timezone'] = $_SESSION['ploopi']['timezone'];
         
         $_SESSION['ploopi']['actions'] = array();
-        $user->getactions($_SESSION['ploopi']['actions']);
+        $_SESSION['ploopi']['actions'] = $user->getactions($_SESSION['ploopi']['actions']);
 
         // get all workspaces of current user
         $user_workspaces = $user->getworkspaces();
         
         $workspace = new workspace();
         $workspace->fields['id'] = _PLOOPI_SYSTEMGROUP;
-        $_SESSION['ploopi']['system_modules'] = $workspace->getmodules(TRUE);
+        $_SESSION['ploopi']['system_modules'] = $workspace->getmodules(true);
 
         $workspace_allowed = 0;
 
@@ -208,7 +208,7 @@ if ($ploopi_initsession)
                         foreach($fields['groups'] as $idg)
                         {
                             $grp = new group();
-                            if ($grp->open($idg)) $grp->getactions($_SESSION['ploopi']['actions']);
+                            if ($grp->open($idg)) $_SESSION['ploopi']['actions'] = $grp->getactions($_SESSION['ploopi']['actions']); 
                         }
                     }
 
@@ -221,9 +221,9 @@ if ($ploopi_initsession)
                         //$_SESSION['ploopi']['workspaces'][$gid] = $fields;
                         $_SESSION['ploopi']['workspaces'][$wid] = $workspaces[$wid];
                         $_SESSION['ploopi']['workspaces'][$wid]['adminlevel']  = $adminlevel;
-                        $_SESSION['ploopi']['workspaces'][$wid]['children']  = $workspace->getworkspacechildrenlite();
+                        $_SESSION['ploopi']['workspaces'][$wid]['children']  = $workspace->getchildren();
                         $_SESSION['ploopi']['workspaces'][$wid]['parents'] = explode(';',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
-                        $_SESSION['ploopi']['workspaces'][$wid]['brothers']  = $workspace->getworkspacebrotherslite();
+                        $_SESSION['ploopi']['workspaces'][$wid]['brothers']  = $workspace->getbrothers();
                         $_SESSION['ploopi']['workspaces'][$wid]['list_parents'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
                         $_SESSION['ploopi']['workspaces'][$wid]['list_children'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['children']);
                         $_SESSION['ploopi']['workspaces'][$wid]['list_brothers'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['brothers']);

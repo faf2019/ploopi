@@ -32,9 +32,10 @@
  * @author Stéphane Escaich
  */
 
-header('Expires: ' . gmdate("D, d M Y H:i:s") . " GMT");
+header('Expires: Sat, 1 Jan 2000 05:00:00 GMT');
 header('Last-Modified: ' . gmdate("D, d M Y H:i:s"));
 header('Cache-Control: no-cache, must-revalidate');
 header('Pragma: no-cache');
+header('Accept-Ranges: bytes');
 header('Content-type: text/html; charset=iso-8859-1');
 ?>

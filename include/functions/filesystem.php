@@ -176,6 +176,7 @@ function ploopi_getmimetype($filename)
         'php' => 'application/x-httpd-php',
         'php3' => 'application/x-httpd-php',
         'phtml' => 'application/x-httpd-php',
+        'sql' => 'text/x-sql',
 
         //images
         'png' => 'image/png',

@@ -327,13 +327,13 @@ class ploopi_db
      * @return mixed l'enregistrement courant (sous forme d'un tableau associatif) ou false si le recordset n'est pas valide
      */
     
-    public function fetchrow($query_id = 0)
+    public function fetchrow($query_id = 0, $result_type = MYSQL_ASSOC)
     {
         if (!$this->isconnected()) return false;
                 
         if(!$query_id) $query_id = $this->query_result;
         
-        if($query_id) return mysql_fetch_array($query_id, MYSQL_ASSOC);
+        if($query_id) return mysql_fetch_array($query_id, $result_type);
         else return false;
     }
 

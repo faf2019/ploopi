@@ -263,7 +263,15 @@ class user extends data_object
      * @param array $actions tableau d'actions
      */
     
-    public function getactions(&$actions)
+    /**
+     * Retourne un tableau des actions autorisées pour cet utilisateur.
+     * $actions[id_workspace][id_module][$fields['id_action']]
+     * 
+     * @param array $actions tableau d'actions déjà existant (optionnel)
+     * @return array tableau des actions
+     */
+    
+    public function getactions($actions = null)
     {
         global $db;
 
@@ -282,6 +290,8 @@ class user extends data_object
         $result = $db->query($select);
 
         while ($fields = $db->fetchrow($result)) $actions[$fields['id_workspace']][$fields['id_module']][$fields['id_action']] = true;
+        
+        return $actions;
     }
 
     /**

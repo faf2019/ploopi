@@ -44,6 +44,12 @@
 
 class log extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return log
+     */
+    
     function log()
     {
         parent::data_object('ploopi_log');
@@ -63,6 +69,12 @@ class log extends data_object
 
 class connecteduser extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return connecteduser
+     */
+    
     function connecteduser()
     {
         parent::data_object('ploopi_connecteduser','sid');
@@ -82,6 +94,12 @@ class connecteduser extends data_object
 
 class user_action_log extends data_object
 {
+    /**
+     * Constructeur de la classe
+     *
+     * @return user_action_log
+     */
+    
     function user_action_log()
     {
         parent::data_object('ploopi_user_action_log','id_user','id_action','id_module_type');

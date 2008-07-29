@@ -45,6 +45,82 @@
 class data_object
 {
     /**
+     * Nom de la classe
+     *
+     * @var string
+     */
+    
+    private $classname;
+    
+    /**
+     * Nom de la table
+     *
+     * @var string
+     */
+    
+    private $tablename;
+    
+    /**
+     * Tableau associatif des champs qui composent la clé primaire
+     *
+     * @var array
+     */
+
+    private $idfields;
+    
+    /**
+     * Objet de connexion à la base de données
+     *
+     * @var ploopi_db
+     * @see ploopi_db
+     */
+    
+    private $db;
+    
+    /**
+     * Connexion à la base de données
+     *
+     * @var resource
+     * @see data_objet::setdb
+     */
+    
+    private $resultid;
+    
+    /**
+     * Nombre de ligne du dernier résultat
+     *
+     * @var int
+     */
+    
+    private $numrows;
+    
+    /**
+     * Requête SQL générée par l
+     *
+     * @var string
+     * @see data_objet::getsql
+     */
+    
+    private $sql;
+    
+    /**
+     * Contenu d'un enregistrement de la table dans un tableau associatif : champ => valeur
+     *
+     * @var array
+     */
+    
+    public $fields;
+    
+    /**
+     * Indique s'il s'agit d'un nouvel enregistrement (true) ou d'un enregistrement existant (false)
+     *
+     * @var boolean
+     */
+    
+    public $new;
+    
+    
+    /**
      * Constructeur de la classe
      *
      * @param string nom de la table
@@ -56,7 +132,7 @@ class data_object
      * 
      */
 
-    function data_object()
+    public function data_object()
     {
         global $db;
         // arg(0) : tablename
@@ -95,7 +171,7 @@ class data_object
      * @param ressource $db objet de connexion à la base de données
      */
     
-    function setdb($db)
+    public function setdb($db)
     {
         $this->db = $db;
     }
@@ -108,7 +184,7 @@ class data_object
      * @param string $prefix préfixe utilisé
      */
 
-    function setvalues($values, $prefix)
+    public function setvalues($values, $prefix)
     {
         // par défaut on récupère les champs du formulaire ($values)
         $longueurprefixe = strlen($prefix);
@@ -134,20 +210,19 @@ class data_object
      * @return int nombre d'enregistrements
      */
     
-    function open() // id0, id1, id2, etc...
+    public function open() // id0, id1, id2, etc...
     {
         $numargs = func_num_args();
+        
         if ($numargs > 0)
         {
-
             for ($i = 0; $i < $numargs; $i++) $id[$i] = func_get_arg($i);
 
+            $this->sql = "SELECT * FROM `{$this->tablename}` WHERE `{$this->idfields[0]}` = '".$this->db->addslashes($id[0])."'";
 
-            $sql = "SELECT * FROM `{$this->tablename}` WHERE `{$this->idfields[0]}` = '".$this->db->addslashes($id[0])."'";
+            for ($i = 1; $i < $numargs; $i++) $this->sql .= " AND `{$this->idfields[$i]}` = '".$this->db->addslashes($id[$i])."'";
 
-            for ($i = 1; $i < $numargs; $i++) $sql = $sql." AND `{$this->idfields[$i]}` = '".$this->db->addslashes($id[$i])."'";
-
-            $this->resultid = $this->db->query($sql);
+            $this->resultid = $this->db->query($this->sql);
             $this->numrows = $this->db->numrows($this->resultid);
             $this->fields = $this->db->fetchrow($this->resultid);
 
@@ -165,7 +240,7 @@ class data_object
      * @return mixed valeur de la clé primaire
      */
     
-    function save()
+    public function save()
     {
 
         if ($this->new) // insert
@@ -204,11 +279,10 @@ class data_object
             $listvalues = (empty($arrValues)) ? '' : implode(', ', $arrValues);
 
             // build request
-            $sql = "UPDATE `{$this->tablename}` SET {$listvalues} WHERE `{$this->tablename}`.`{$this->idfields[0]}` = '".$this->db->addslashes($this->fields[$this->idfields[0]])."'";
-            for ($i = 1; $i < sizeof($this->idfields); $i++) $sql = $sql." AND `{$this->tablename}`.`{$this->idfields[$i]}` = '".$this->db->addslashes($this->fields[$this->idfields[$i]])."'";
+            $this->sql = "UPDATE `{$this->tablename}` SET {$listvalues} WHERE `{$this->tablename}`.`{$this->idfields[0]}` = '".$this->db->addslashes($this->fields[$this->idfields[0]])."'";
+            for ($i = 1; $i < sizeof($this->idfields); $i++) $this->sql .= " AND `{$this->tablename}`.`{$this->idfields[$i]}` = '".$this->db->addslashes($this->fields[$this->idfields[$i]])."'";
 
-            $this->db->query($sql);
-            $this->sql = $sql;
+            $this->db->query($this->sql);
         }
 
         // return key (array if multiple key)
@@ -225,26 +299,25 @@ class data_object
      * Supprime l'enregistrement dans la base de données
      */
 
-    function delete()
+    public function delete()
     {
         $numargs = func_num_args();
         if ($numargs > 0) for ($i = 0; $i < $numargs; $i++) $this->fields[$this->idfields[$i]] = func_get_arg($i);
 
-        $sql = "DELETE FROM `{$this->tablename}` WHERE `{$this->tablename}`.`{$this->idfields[0]}` = '".$this->db->addslashes($this->fields[$this->idfields[0]])."'";
-        for ($i = 1; $i < sizeof($this->idfields); $i++) $sql = $sql." AND `{$this->tablename}`.`{$this->idfields[$i]}` = '".$this->db->addslashes($this->fields[$this->idfields[$i]])."'";
+        $this->sql = "DELETE FROM `{$this->tablename}` WHERE `{$this->tablename}`.`{$this->idfields[0]}` = '".$this->db->addslashes($this->fields[$this->idfields[0]])."'";
+        for ($i = 1; $i < sizeof($this->idfields); $i++) $this->sql .= " AND `{$this->tablename}`.`{$this->idfields[$i]}` = '".$this->db->addslashes($this->fields[$this->idfields[$i]])."'";
 
-        $this->db->query($sql);
-
-        $this->sql = $sql;
+        $this->db->query($this->sql);
     }
 
     /**
      * Initialise les propriétés de l'objet avec la structure de la table
      */
 
-    function init_description()
+    public function init_description()
     {
-        $result = $this->db->query("describe `{$this->tablename}`");
+        $this->sql = "DESCRIBE `{$this->tablename}`";
+        $result = $this->db->query($this->sql);
         while ($fields = $this->db->fetchrow($result)) $this->fields[$fields['Field']] = '';
     }
 
@@ -252,7 +325,7 @@ class data_object
      * Met à jour les propriétés id_user, id_workspace, id_module de l'objet avec le contenu de la session
      */
     
-    function setuwm()
+    public function setuwm()
     {
         $this->fields['id_user'] = $_SESSION['ploopi']['userid'] ;
         $this->fields['id_workspace'] = $_SESSION['ploopi']['workspaceid'];
@@ -265,7 +338,7 @@ class data_object
      * @return string dump SQL
      */
     
-    function dump()
+    public function dump()
     {
         $listvalues='';
 
@@ -289,7 +362,7 @@ class data_object
      * @param string $prefix préfixe à ajouter (optionnel)
      */
     
-    function totemplate(&$tpl, $prefix = '')
+    public function totemplate(&$tpl, $prefix = '')
     {
         $array_vars = array();
         foreach($this->fields as $key => $value) $array_vars[strtoupper("{$prefix}{$key}")] = $value;
@@ -302,7 +375,7 @@ class data_object
      * @return string script SQL
      */
     
-    function getsqlstructure()
+    public function getsqlstructure()
     {
         $sql = "CREATE TABLE `{$this->tablename}` (";
 
@@ -321,6 +394,14 @@ class data_object
 
         return($sql);
     }
+    
+    /**
+     * Retourne la dernière requête SQL exécutée
+     *
+     * @return string
+     */
+    
+    public function getsql() { return $this->sql; }
 
 }
 ?>

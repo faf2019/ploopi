@@ -734,6 +734,16 @@ class skin_common
                 
                 // génération du code html du noeud courant
                 $html .=    "
+                            <div class=\"treeview_node\" style=\"{$bg}\">
+                                <div>
+                                    {$node_link}<img src=\"{$node['icon']}\" />
+                                    <a style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;font-weight:{$style_sel};\" href=\"{$link}\" {$onclick}>{$node['label']}</a>
+                                </div>
+                                <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"n{$node['id']}\">{$html_children}</div>
+                            </div>
+                            ";
+                /*
+                $html .=    "
                             <div style=\"overflow:auto;{$bg}\">
                                 <div>
                                     {$node_link}<img style=\"display:block;float:left;\" src=\"{$node['icon']}\" />
@@ -744,6 +754,7 @@ class skin_common
                                 <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"n{$node['id']}\">{$html_children}</div>
                             </div>
                             ";
+                           */ 
                 $c++;
             }
         }  

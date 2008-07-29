@@ -57,18 +57,19 @@ function ploopi_htpasswd($pass)
  * @param int $ploopi_workspaceid identifiant de l'espace de travail actif (optionnel)
  * @param int $ploopi_moduleid identifiant du module actif (optionnel)
  * @param string $ploopi_action type d'action (optionnel)
+ * @param boolean $addenv true si la fonction doit ajouter automatiquement les paramètres d'environnement (optionnel, true par défaut)
  * @return string URL chiffrée
  * 
  * @see urlencode
  */
 
-function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null)
+function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null, $addenv = true)
 {
     $arrParsedURL = parse_url($url);
     
     if (!isset($arrParsedURL['path'])) return(false);
     
-    return $arrParsedURL['path'].'?'.ploopi_queryencode(empty($arrParsedURL['query']) ? '' : $arrParsedURL['query'], $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action);
+    return $arrParsedURL['path'].'?'.ploopi_queryencode(empty($arrParsedURL['query']) ? '' : $arrParsedURL['query'], $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action, $addenv);
 }
 
 
@@ -80,10 +81,21 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
  * @param int $ploopi_workspaceid identifiant de l'espace de travail actif (optionnel)
  * @param int $ploopi_moduleid identifiant du module actif (optionnel)
  * @param string $ploopi_action type d'action (optionnel)
+ * @param boolean $addenv true si la fonction doit ajouter automatiquement les paramètres d'environnement (optionnel, true par défaut)
  * @return string chaîne de paramètres chiffrée
  */
 
-function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null)
+/**
+ * Enter description here...
+ *
+ * @param string $query
+ * @param int $ploopi_mainmenu
+ * @param int $ploopi_workspaceid
+ * @param int $ploopi_moduleid
+ * @param string $ploopi_action
+ * @return string
+ */
+function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null, $addenv = true)
 {
     $arrParams = array();
     
@@ -103,29 +115,31 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
     if (!empty($ploopi_moduleid)) $arrParams['ploopi_moduleid'] = $ploopi_moduleid;
     if (!empty($ploopi_action)) $arrParams['ploopi_action'] = $ploopi_action;
     
-        
-    // si des paramètres sont manquants, on va lire la valeur de la session
-    if (!isset($arrParams['ploopi_mainmenu'])) $arrParams['ploopi_mainmenu'] = (is_null($ploopi_mainmenu)) ? $_SESSION['ploopi']['mainmenu'] : '';
-    if (!isset($arrParams['ploopi_workspaceid'])) $arrParams['ploopi_workspaceid'] = (is_null($ploopi_workspaceid)) ? $_SESSION['ploopi']['workspaceid'] : '';
-    if (!isset($arrParams['ploopi_moduleid'])) $arrParams['ploopi_moduleid'] = (is_null($ploopi_moduleid)) ? $_SESSION['ploopi']['moduleid'] : '';
-    if (!isset($arrParams['ploopi_action'])) $arrParams['ploopi_action'] = (is_null($ploopi_action)) ? $_SESSION['ploopi']['action'] : '';
+    if ($addenv)
+    {    
+        // si des paramètres sont manquants, on va lire la valeur de la session
+        if (!isset($arrParams['ploopi_mainmenu'])) $arrParams['ploopi_mainmenu'] = (is_null($ploopi_mainmenu)) ? $_SESSION['ploopi']['mainmenu'] : '';
+        if (!isset($arrParams['ploopi_workspaceid'])) $arrParams['ploopi_workspaceid'] = (is_null($ploopi_workspaceid)) ? $_SESSION['ploopi']['workspaceid'] : '';
+        if (!isset($arrParams['ploopi_moduleid'])) $arrParams['ploopi_moduleid'] = (is_null($ploopi_moduleid)) ? $_SESSION['ploopi']['moduleid'] : '';
+        if (!isset($arrParams['ploopi_action'])) $arrParams['ploopi_action'] = (is_null($ploopi_action)) ? $_SESSION['ploopi']['action'] : '';
 
-    // on génère le "super" paramètre "ploopi_env" qui regroupe ploopi_mainmenu, ploopi_workspaceid, ploopi_moduleid, ploopi_action
-    $arrParams['ploopi_env'] = 
-        sprintf(
-            "%s,%s,%s,%s", 
-            $arrParams['ploopi_mainmenu'], 
-            $arrParams['ploopi_workspaceid'],
-            $arrParams['ploopi_moduleid'],
-            $arrParams['ploopi_action']
-        );
-    
-    // on supprime les paramètres superflus 
-    unset($arrParams['ploopi_mainmenu']);
-    unset($arrParams['ploopi_workspaceid']);
-    unset($arrParams['ploopi_moduleid']);
-    unset($arrParams['ploopi_action']);
-    
+        // on génère le "super" paramètre "ploopi_env" qui regroupe ploopi_mainmenu, ploopi_workspaceid, ploopi_moduleid, ploopi_action
+        $arrParams['ploopi_env'] = 
+            sprintf(
+                "%s,%s,%s,%s", 
+                $arrParams['ploopi_mainmenu'], 
+                $arrParams['ploopi_workspaceid'],
+                $arrParams['ploopi_moduleid'],
+                $arrParams['ploopi_action']
+            );
+        
+        // on supprime les paramètres superflus 
+        unset($arrParams['ploopi_mainmenu']);
+        unset($arrParams['ploopi_workspaceid']);
+        unset($arrParams['ploopi_moduleid']);
+        unset($arrParams['ploopi_action']);
+    }
+        
     // on génère la chaine de paramètres
     foreach($arrParams as $key => $value) 
     {

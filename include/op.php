@@ -46,20 +46,23 @@ if (isset($ploopi_op))
     {
         case 'colorpicker_open':
             ?>
-            <div style="overflow:hidden;padding:2px;background-color:#ffffff;z-index:1;">
-                <div style="margin-bottom:2px;overflow:hidden;">
-                    <div style="float:left;position:relative;width:35px;height:200px;z-index:3;">
-                        <img style="display:block;position:absolute;cursor:pointer;z-index:5;" src="./img/colorpicker/h.png" id="colorpicker_h">
-                        <img style="display:block;position:absolute;cursor:pointer;z-index:10;" src="./img/colorpicker/position.png" id="colorpicker_position">
-                    </div>
-                    <div style="float:left;position:relative;width:200px;height:200px;margin-left:2px;z-index:3;">
-                        <img style="display:block;position:absolute;cursor:pointer;z-index:5;" src="./img/colorpicker/sv.png" id="colorpicker_sv">
-                        <img style="display:block;position:absolute;cursor:pointer;z-index:10;" src="./img/colorpicker/crosshairs.png" id="colorpicker_crosshairs">
-                    </div>
+            <div id="plugin">
+                
+                <div id="SV" onmousedown="HSVslide('SVslide','plugin',event)" title="Saturation + Value">
+                    <div id="SVslide">&nbsp;</div>
                 </div>
-                <div style="clear:both;width:237px;height:30px;z-index:5;" id="colorpicker_selectedcolor">
-                <input type="button" class="button" style="margin:6px;float:right;" value="fermer" onclick="javascript:ploopi_getelem('<? echo $_GET['inputfield_id']; ?>').value = ploopi_getelem('colorpicker_inputcolor').value; ploopi_hidepopup();ploopi_dispatch_onchange('<? echo $_GET['inputfield_id']; ?>');">
-                <input type="text" class="text" id="colorpicker_inputcolor" style="margin:6px;width:60px;float:left;" value="<? echo $_GET['colorpicker_value']; ?>">
+                
+                <form id="H" onmousedown="HSVslide('Hslide','plugin',event)" title="Hue">
+                    <div id="Hslide">&nbsp;</div>
+                    <div id="Hmodel"></div>
+                </form>
+                
+                <div id="colorpicker_footer">
+                    <div id="plugCUR"></div>
+                    <input type="text" class="text" id="colorpicker_inputcolor" value="<? echo $_GET['colorpicker_value']; ?>">
+                    <input type="button" class="button" value="fermer" onclick="javascript:ploopi_getelem('<? echo $_GET['inputfield_id']; ?>').value = ploopi_getelem('colorpicker_inputcolor').value; ploopi_hidepopup('popup_colorpicker');ploopi_dispatch_onchange('<? echo $_GET['inputfield_id']; ?>');">
+                </div>
+                <div style="clear:both;">
                 </div>
             </div>
             <?

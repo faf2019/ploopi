@@ -48,14 +48,14 @@ include_once './include/classes/data_object.php';
  */
 
 class group extends data_object
-{
-    
+{ 
     /**
      * Constructeur de la classe
      *
      * @return group
      */
-    function group()
+    
+    public function group()
     {
         parent::data_object('ploopi_group');
     }
@@ -65,7 +65,8 @@ class group extends data_object
      *
      * @return int identifiant du groupe
      */
-    function save()
+    
+    public function save()
     {
         $this->fields['depth'] = sizeof(explode(';',$this->fields['parents']));
         return(parent::save());
@@ -74,7 +75,8 @@ class group extends data_object
     /**
      * Supprime le groupe
      */
-    function delete()
+    
+    public function delete()
     {
         global $db;
 
@@ -88,27 +90,13 @@ class group extends data_object
         }
     }
 
-    function getfullgroup($idgroup = '')
-    {
-        global $db;
-
-        if ($idgroup == '') $idgroup = $this->fields['id'];
-
-        $res='';
-
-        $select = "SELECT ploopi_group.* FROM ploopi_group WHERE id = $idgroup AND id_group <> $idgroup";
-        $answer = $db->query($select);
-        if ($fields = $db->fetchrow($answer))
-        {
-            $parents = $this->getfullgroup($fields['id_group']);
-            if ($parents != '') $res = $parents .' / ';
-            $res .= $fields['label'];
-        }
-        return $res;
-    }
-
-    // return all children id's of current group
-    function getgroupchildrenlite()
+    /**
+     * Retourne un tableau contenant tous les identifiants des groupes fils du groupe
+     *
+     * @return array tableau des groupes fils du groupe (identifiants)
+     */
+    
+    public function getchildren()
     {
         global $db;
 
@@ -118,69 +106,64 @@ class group extends data_object
     }
 
 
-    // return all brothers ids of current group
-    function getgroupbrotherslite($mode = '', $domain = '')
+    /**
+     * Retourne un tableau contenant tous les identifiants des groupes frères du groupe
+     *
+     * @return array tableau des groupes frères du groupe (identifiants)
+     */
+    
+    public function getbrothers()
     {
         global $db;
-
-        $where = '';
-        if ($mode != '') $where .= " AND $mode = 1 ";
 
         $select =   "
-                    SELECT  ploopi_group.*
+                    SELECT  id
                     FROM    ploopi_group
                     WHERE   id_group = {$this->fields['id_group']}
-                    $where
                     AND     id <> {$this->fields['id']}
                     ";
-        $result = $db->query($select);
-        $ar = array();
-        while ($fields = $db->fetchrow($result))
-        {
-            if ($domain != '')
-            {
-                $dom_array = split("\r\n", $fields['domainlist']);
-                foreach($dom_array as $dom)
-                {
-                    if ($domain == $dom) $ar[] = $fields['id'];
-                }
-            }
-            else $ar[] = $fields['id'];
-        }
+                    
+        $db->query($select);
 
-        return($ar);
+        return $db->getarray();
     }
 
-    function getparents($parents = '')
+    /**
+     * Retourne un tableau associatif (id => fields) contenant tous les parents du groupe
+     *
+     * @return array tableau des parents du groupe
+     */
+    
+    public function getparents()
     {
-        global $db;
-        if (empty($parents)) $parents = $this->fields['parents'];
-
-        $parents = str_replace(';',',',$parents);
-
-        $select = "SELECT * FROM ploopi_group WHERE id IN ({$parents})";
-        $result = $db->query($select);
-
-        $groups = array();
-        while ($fields = $db->fetchrow($result)) $groups[$fields['id']] = $fields;
-
-        return($groups);
+        return system_getparents($this->fields['parents'], 'group');
     }
 
-    function getfather()
+    /**
+     * Retourne le groupe père ou false
+     *
+     * @return group le groupe père ou false
+     */
+    
+    public function getfather()
     {
         $father = new group();
         if ($father->open($this->fields['id_group'])) return $father;
         else return(false);
     }
 
-    function getusers()
+    /**
+     * Retourne un tableau associatif (id => fields) contenant les utilisateurs du groupe (non récursif)
+     *
+     * @return array tableau des utilisateurs
+     */
+    
+    public function getusers()
     {
         global $db;
 
         $users = array();
 
-        // Requête1
         $select =   "
                     SELECT  ploopi_user.*
 
@@ -190,6 +173,7 @@ class group extends data_object
                     WHERE   ploopi_group_user.id_group = {$this->fields['id']}
                     AND     ploopi_group_user.id_user = ploopi_user.id
                     ";
+                    
         $result = $db->query($select);
 
         while ($fields = $db->fetchrow($result)) $users[$fields['id']] = $fields;
@@ -197,30 +181,29 @@ class group extends data_object
         return $users;
     }
 
-
-    function createchild()
-    {
-        $child = new group();
-        $child->fields = $this->fields;
-        unset($child->fields['id']);
-        $child->fields['id_group'] = $this->fields['id'];
-        $child->fields['label'] = 'fils de '.$this->fields['label'];
-        $child->fields['parents'] = $this->fields['parents'].';'.$this->fields['id'];
-        $child->fields['system'] = 0;
-        return($child);
-    }
-
-    function createclone()
+    /**
+     * Crée un double du groupe
+     *
+     * @return group
+     */
+    
+    public function createclone()
     {
         $clone = new group();
         $clone->fields = $this->fields;
         unset($clone->fields['id']);
-        $clone->fields['label'] = 'clone de '.$this->fields['label'];
+        $clone->fields['label'] = 'Clone de '.$this->fields['label'];
         $clone->fields['system'] = 0;
         return($clone);
     }
 
-    function attachtogroup($workspaceid)
+    /**
+     * Attache un espace de travail au groupe
+     *
+     * @param int $workspaceid identifiant de l'espace de travail
+     */
+    
+    public function attachtogroup($workspaceid)
     {
         include_once './include/classes/workspace.php';
         
@@ -232,30 +215,36 @@ class group extends data_object
         $workspace_group->save();
     }
 
-    function getactions(&$actions) // only for org groups
+    /**
+     * Retourne un tableau des actions autorisées pour ce groupe.
+     * $actions[id_workspace][id_module][$fields['id_action']]
+     * 
+     * @param array $actions tableau d'actions déjà existant (optionnel)
+     * @return array tableau des actions
+     */
+    
+    public function getactions($actions = null)
     {
         global $db;
 
         $select =   "
-                SELECT      ploopi_workspace_group_role.id_workspace,
-                            ploopi_role_action.id_action,
-                            ploopi_role.id_module
-                FROM        ploopi_role_action,
-                            ploopi_role,
-                            ploopi_workspace_group_role
-                WHERE       ploopi_workspace_group_role.id_role = ploopi_role.id
-                AND         ploopi_role.id = ploopi_role_action.id_role
-                AND         ploopi_workspace_group_role.id_group = {$this->fields['id']}
-                ";
+                    SELECT      ploopi_workspace_group_role.id_workspace,
+                                ploopi_role_action.id_action,
+                                ploopi_role.id_module
+                    FROM        ploopi_role_action,
+                                ploopi_role,
+                                ploopi_workspace_group_role
+                    WHERE       ploopi_workspace_group_role.id_role = ploopi_role.id
+                    AND         ploopi_role.id = ploopi_role_action.id_role
+                    AND         ploopi_workspace_group_role.id_group = {$this->fields['id']}
+                    ";
 
         $result = $db->query($select);
 
-        while ($fields = $db->fetchrow($result))
-        {
-            $actions[$fields['id_workspace']][$fields['id_module']][$fields['id_action']] = true;
-        }
+        while ($fields = $db->fetchrow($result)) $actions[$fields['id_workspace']][$fields['id_module']][$fields['id_action']] = true;
+        
+        return $actions;
     }
-
 }
 
 /**
