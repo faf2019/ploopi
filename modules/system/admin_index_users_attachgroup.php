@@ -117,8 +117,7 @@ $result = $db->query($sql);
 
 while ($fields = $db->fetchrow($result))
 {
-    $group = new group();
-    $array_parents = $group->getparents($fields['parents']);
+    $array_parents = system_getparents($fields['parents'], 'group');
     array_shift($array_parents);
 
     $str_parents = '';

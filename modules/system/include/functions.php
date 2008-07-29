@@ -619,4 +619,18 @@ function system_serverload_getcolor($min, $max, $x)
     return $color = sprintf("#%02x%02x%02x",$r,$v,$b);
 }
 
+function system_getparents($parents, $type)
+{
+    global $db;
+    
+    $parents = str_replace(';',',',$parents);
+
+    $select = "SELECT * FROM ploopi_{$type} WHERE id IN ({$parents})";
+    $result = $db->query($select);
+
+    $groups = array();
+    while ($fields = $db->fetchrow($result)) $groups[$fields['id']] = $fields;
+
+    return($groups);
+}
 ?>

@@ -64,7 +64,7 @@ echo $skin->open_simplebloc();
                                     'icon'      => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_copy.png"
                                 );
 
-            $sizeof_groups = sizeof($group->getgroupchildrenlite());
+            $sizeof_groups = sizeof($group->getchildren());
             $sizeof_users = sizeof($group->getusers());
 
             // delete button if group not protected and no children

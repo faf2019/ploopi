@@ -40,6 +40,8 @@ switch ($_SESSION['system']['level'])
     case _SYSTEM_GROUPS :
         $group = new group();
         $group->open($groupid);
+        $workspace = null;
+        
         $currentgroup = '';
         $childgroup = '';
 
@@ -121,7 +123,7 @@ switch ($_SESSION['system']['level'])
                     break;
 
                     case 'delete' :
-                        $sizeof_groups = sizeof($group->getgroupchildrenlite());
+                        $sizeof_groups = sizeof($group->getchildren());
                         $sizeof_users = sizeof($group->getusers());
                         if (!$sizeof_groups && !$sizeof_users)
                         {
@@ -156,7 +158,8 @@ switch ($_SESSION['system']['level'])
     case _SYSTEM_WORKSPACES :
         $workspace = new workspace();
         $workspace->open($workspaceid);
-
+        $group = null;
+        
         $currentworkspace = '';
         $childworkspace = '';
 
@@ -350,7 +353,7 @@ switch ($_SESSION['system']['level'])
                     break;
 
                     case 'delete' :
-                        $sizeof_workspaces = sizeof($workspace->getworkspacechildrenlite());
+                        $sizeof_workspaces = sizeof($workspace->getchildren());
                         $sizeof_users = sizeof($workspace->getusers());
                         if (!$sizeof_workspaces && !$sizeof_users)
                         {
@@ -571,7 +574,7 @@ switch ($_SESSION['system']['level'])
                     case 'apply_heritage' :
                         if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
                         {
-                            $children = $workspace->getworkspacechildrenlite();
+                            $children = $workspace->getchildren();
 
                             foreach($children as $idchildren)
                             {

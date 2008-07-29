@@ -304,7 +304,7 @@ define ('_SYSTEM_LABEL_SERVERLOAD', 'Logs - Charge du Serveur');
 define ('_SYSTEM_EXPLAIN_PHPINFO', 'L\'outil « '._SYSTEM_LABEL_PHPINFO.' » affiche la configuration PHP du serveur');
 define ('_SYSTEM_EXPLAIN_DIAGNOSTIC', 'L\'outil « '._SYSTEM_LABEL_DIAGNOSTIC.' » vérifie quelques sources d\'erreurs courantes pouvant entraîner des dysfonctionnements de PLOOPI');
 define ('_SYSTEM_EXPLAIN_CONNECTEDUSERS', 'L\'outil « '._SYSTEM_LABEL_CONNECTEDUSERS.' » affiche la liste des utilisateurs connectés au site en temps réel');
-define ('_SYSTEM_EXPLAIN_SQLDUMP', 'L\'outil « '._SYSTEM_LABEL_SQLDUMP.' » vous permet de télécharger les données dans un fichier SQL. Attention cette fonctionnalité ne remplace pas un dump classique. Il est également recommandé de n\'utiliser cette fonctionnalité que sur des petites bases de données.');
+define ('_SYSTEM_EXPLAIN_SQLDUMP', 'L\'outil « '._SYSTEM_LABEL_SQLDUMP.' » vous permet de télécharger les données dans un fichier SQL zippé. Attention cette fonctionnalité ne remplace pas un dump classique. Il est également recommandé de n\'utiliser cette fonctionnalité que sur des petites bases de données.');
 define ('_SYSTEM_EXPLAIN_ZIP', 'L\'outil « Zip » vous permet de télécharger les sources de PLOOPI dans un fichier ZIP');
 define ('_SYSTEM_EXPLAIN_BACKUP', 'L\'outil « Sauvegarde » vous permet de créer une sauvegarde complète du système (données + sources) afin de les restaurer à une date ultérieure');
 define ('_SYSTEM_EXPLAIN_ACTIONHISTORY', 'L\'outil « '._SYSTEM_LABEL_ACTIONHISTORY.' » vous permet de consulter les actions effectuées par les utilisateurs');

@@ -38,49 +38,46 @@
 ploopi_ob_clean();
 
 if (!ini_get('safe_mode')) @set_time_limit(0);
-$crlf="\n";
+$crlf = "\n";
 
+/*
 header("Cache-control: private");
 header("Content-disposition: filename="._PLOOPI_DB_DATABASE.".sql");
-header("Content-type: application/octetstream");
+header("Content-type: text/x-sql");
 header("Pragma: public");
 header("Expires: 0");
-
+*/
 
 // return $table's CREATE definition
 // returns a string containing the CREATE statement on success
-function get_table_def($db, $table, $crlf)
+function system_get_table_def($fp, $db, $table, $crlf)
 {
-    global $drop;
-
     $schema_create = "";
-    if(!empty($drop))
-        $schema_create .= "DROP TABLE IF EXISTS $table;$crlf";
-
-    $schema_create .= "CREATE TABLE $table ($crlf";
+    $schema_create .= "DROP TABLE IF EXISTS {$table};{$crlf}";
+    $schema_create .= "CREATE TABLE {$table} ({$crlf}";
 
     //$result = mysql_db_query($db, "SHOW FIELDS FROM $table") or mysql_ploopi_die();
-    $result = $db->query("SHOW FIELDS FROM $table");
+    $result = $db->query("SHOW FIELDS FROM {$table}");
     while($row = $db->fetchrow($result))
     {
-        $schema_create .= "   $row[Field] $row[Type]";
+        $schema_create .= "   {$row['Field']} {$row['Type']}";
 
-        if(isset($row["Default"]) && (!empty($row["Default"]) || $row["Default"] == "0"))
-            $schema_create .= " DEFAULT '$row[Default]'";
-        if($row["Null"] != "YES")
-            $schema_create .= " NOT NULL";
-        if($row["Extra"] != "")
-            $schema_create .= " $row[Extra]";
-        $schema_create .= ",$crlf";
+        if(isset($row['Default']) && (!empty($row['Default']) || $row['Default'] == "0"))
+            $schema_create .= " DEFAULT '{$row['Default']}'";
+        if($row['Null'] != "YES")
+            $schema_create .= ' NOT NULL';
+        if($row['Extra'] != '')
+            $schema_create .= " {$row['Extra']}";
+        $schema_create .= ",{$crlf}";
     }
     $schema_create = ereg_replace(",".$crlf."$", "", $schema_create);
     //$result = mysql_db_query($db, "SHOW KEYS FROM $table") or mysql_ploopi_die();
-    $result = $db->query("SHOW KEYS FROM $table");
+    $result = $db->query("SHOW KEYS FROM {$table}");
     while($row = $db->fetchrow($result))
     {
         $kname=$row['Key_name'];
         if(($kname != "PRIMARY") && ($row['Non_unique'] == 0))
-            $kname="UNIQUE|$kname";
+            $kname="UNIQUE|{$kname}";
          if(!isset($index[$kname]))
              $index[$kname] = array();
          $index[$kname][] = $row['Column_name'];
@@ -98,19 +95,19 @@ function get_table_def($db, $table, $crlf)
             $schema_create .= "   KEY $x (" . implode($columns, ", ") . ")";
     }
 
-    $schema_create .= "$crlf)";
-    return (stripslashes($schema_create));
+    $schema_create .= "{$crlf});{$crlf}{$crlf}";
+    
+    fwrite ($fp, stripslashes($schema_create));
+
+    return true;
 }
 
 // Get the content of $table as a series of INSERT statements.
-// After every row, a custom callback function $handler gets called.
-// $handler must accept one parameter ($sql_insert);
-function get_table_content($db, $table, $handler)
+function system_get_table_content($fp, $db, $table, $crlf)
 {
-    //$result = mysql_db_query($db, "SELECT * FROM $table") or mysql_ploopi_die();
     $result = $db->query("SELECT * FROM $table");
     $i = 0;
-    while($row = $db->fetchrow($result,MYSQL_NUM))
+    while($row = $db->fetchrow($result, MYSQL_NUM))
     {
         if (!ini_get('safe_mode')) @set_time_limit(60);
         $table_list = "(";
@@ -122,100 +119,94 @@ function get_table_content($db, $table, $handler)
         $table_list .= ")";
 
         if(isset($GLOBALS["showcolumns"]))
-            $schema_insert = "INSERT INTO $table $table_list VALUES (";
+            $schema_insert = "INSERT INTO {$table} {$table_list} VALUES (";
         else
-            $schema_insert = "INSERT INTO $table VALUES (";
+            $schema_insert = "INSERT INTO {$table} VALUES (";
 
         for($j=0; $j<$db->numfields($result);$j++)
         {
             if(!isset($row[$j]))
                 $schema_insert .= " NULL,";
             elseif($row[$j] != "")
-                $schema_insert .= " '".addslashes($row[$j])."',";
+                $schema_insert .= " '".$db->addslashes($row[$j])."',";
             else
                 $schema_insert .= " '',";
         }
         $schema_insert = ereg_replace(",$", "", $schema_insert);
         $schema_insert .= ")";
-        $handler(trim($schema_insert));
+        fwrite ($fp, htmlspecialchars(trim($schema_insert).";{$crlf}"));
         $i++;
     }
-    return (true);
-}
-
-
-
-
-// doing some DOS-CRLF magic...
-$client = getenv("HTTP_USER_AGENT");
-if(ereg('[^(]*\((.*)\)[^)]*',$client,$regs))
-{
-$os = $regs[1];
-// this looks better under WinX
-if (eregi("Win",$os))
-    $crlf="\r\n";
-}
-
-function my_handler($sql_insert)
-{
-    global $crlf, $asfile;
-
-    if(empty($asfile))
-    {
-        echo htmlspecialchars("$sql_insert;$crlf");
-    }
-    else
-    {
-        echo "$sql_insert;$crlf";
-    }
+    
+    return true;
 }
 
 $tables = $db->listtables();
 
-//$sql ="SHOW tables from `$db`";
-//$sql ="SELECT * FROM ploopi_user";
-//$tables = mysql_query($sql);
 
-$num_tables = $db->numrows($tables);
-if($num_tables == 0)
-{
-    echo $strNoTablesFound;
-}
+if(empty($tables)) echo $strNoTablesFound;
 else
 {
+    /**
+     * Génération du fichier SQL dans le dossier data/tmp
+     */
+    
+    $filepath = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp';
+    ploopi_makedir($filepath);
 
+    $filename_sql = tempnam($filepath, 'dump_sql');
+    $filename_zip = tempnam($filepath, 'dump_zip');
+    
+    $fp = fopen($filename_sql, 'w');
+    
     $i = 0;
-    print "# MySQL-Dump$crlf";
-    print "#$crlf";
-    print "# Host: "._PLOOPI_DB_SERVER;
-    print " Database: "._PLOOPI_DB_DATABASE."$crlf";
+    fwrite($fp, "# MySQL-Dump{$crlf}");
+    fwrite($fp, "#{$crlf}");
+    fwrite($fp, "# Host: "._PLOOPI_DB_SERVER);
+    fwrite($fp, " Database: "._PLOOPI_DB_DATABASE.$crlf);
 
-    while($i < $num_tables)
+    foreach($tables as $table)
     {
-        $table = $db->tablename($tables, $i);
+        fwrite($fp, $crlf);
+        fwrite($fp, "# --------------------------------------------------------{$crlf}");
+        fwrite($fp, "#{$crlf}");
+        fwrite($fp, "# Structure '{$table}'{$crlf}");
+        fwrite($fp, "#{$crlf}");
+        fwrite($fp, $crlf);
 
-        $strTableStructure = '';
+        //fwrite($fp, system_get_table_def($db, $table, $crlf).";{$crlf}{$crlf}");
+        system_get_table_def($fp, $db, $table, $crlf);
 
-        print $crlf;
-        print "# --------------------------------------------------------$crlf";
-        print "#$crlf";
-        print "# $strTableStructure '$table'$crlf";
-        print "#$crlf";
-        print $crlf;
+        fwrite($fp, "#{$crlf}");
+        fwrite($fp, "# Data '{$table}'{$crlf}");
+        fwrite($fp, "#{$crlf}");
+        fwrite($fp, $crlf);
 
-        echo get_table_def($db, $table, $crlf).";$crlf$crlf";
-
-        $strDumpingData = '';
-
-        print "#$crlf";
-        print "# $strDumpingData '$table'$crlf";
-        print "#$crlf";
-        print $crlf;
-
-        get_table_content($db, $table, "my_handler");
+        //fwrite($fp, system_get_table_content($db, $table));
+        system_get_table_content($fp, $db, $table, $crlf);
         $i++;
     }
+    
+    fclose($fp);
+    
+    /**
+     * Génération du fichier zip
+     */
+    
+    
+    $zip = new ZipArchive();
+    
+    if ($zip->open($filename_zip, ZIPARCHIVE::CREATE) === true)
+    {
+        if (!$zip->addFile($filename_sql, 'dump.sql')) exit('Erreur lors de l\'enregistrement');
+        $zip->close();
+        
+        unlink($filename_zip);
+        
+        ploopi_downloadfile($filename_zip, 'dump.zip', true, true);
+    }
 }
+
 
 ploopi_die();
 ?>

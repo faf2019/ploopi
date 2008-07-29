@@ -78,7 +78,7 @@ echo $skin->open_simplebloc();
                     );
             }
 
-            $sizeof_workspaces = sizeof($workspace->getworkspacechildrenlite());
+            $sizeof_workspaces = sizeof($workspace->getchildren());
             $sizeof_users = sizeof($workspace->getusers());
 
             // delete button if group not protected and no children
