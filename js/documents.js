@@ -25,23 +25,23 @@
 function ploopi_documents_openfolder(currentfolder, documentsfolder_id, event)
 {
     ploopi_showpopup('', 300, event, 'click', 'ploopi_documents_openfolder_popup');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_openfolder&currentfolder='+currentfolder+'&documentsfolder_id='+documentsfolder_id,'','ploopi_documents_openfolder_popup');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_openfolder&currentfolder='+currentfolder+'&documentsfolder_id='+documentsfolder_id,'ploopi_documents_openfolder_popup');
 }
 
 function ploopi_documents_openfile(currentfolder, documentsfile_id, event)
 {
     ploopi_showpopup('', 380, event, 'click', 'ploopi_documents_openfile_popup');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_openfile&currentfolder='+currentfolder+'&documentsfile_id='+documentsfile_id,'','ploopi_documents_openfile_popup');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_openfile&currentfolder='+currentfolder+'&documentsfile_id='+documentsfile_id,'ploopi_documents_openfile_popup');
 }
 
 function ploopi_documents_deletefile(currentfolder, documents_id, documentsfile_id)
 {
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_deletefile&currentfolder='+currentfolder+'&documentsfile_id='+documentsfile_id,'','ploopidocuments_'+documents_id);
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_deletefile&currentfolder='+currentfolder+'&documentsfile_id='+documentsfile_id,'ploopidocuments_'+documents_id);
 }
 
 function ploopi_documents_deletefolder(currentfolder, documents_id, documentsfolder_id)
 {
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_deletefolder&currentfolder='+currentfolder+'&documentsfolder_id='+documentsfolder_id,'','ploopidocuments_'+documents_id);
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_deletefolder&currentfolder='+currentfolder+'&documentsfolder_id='+documentsfolder_id,'ploopidocuments_'+documents_id);
 }
 
 function ploopi_documents_browser(documents_id, currentfolder, mode, orderby, asynchronous)
@@ -56,7 +56,7 @@ function ploopi_documents_browser(documents_id, currentfolder, mode, orderby, as
     if (asynchronous)
     {
         ploopi_ajaxloader('ploopidocuments_'+documents_id);
-        ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_browser&mode='+mode+'&currentfolder='+currentfolder+option,'','ploopidocuments_'+documents_id);
+        ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_browser&mode='+mode+'&currentfolder='+currentfolder+option,'ploopidocuments_'+documents_id);
     }
     else ploopi_innerHTML('ploopidocuments_'+documents_id, ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_browser&mode='+mode+'&currentfolder='+currentfolder+option));
 }
