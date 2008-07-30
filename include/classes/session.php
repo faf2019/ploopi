@@ -44,9 +44,9 @@
 
 class ploopi_session
 {
-    function open() {}
+    public function open() {}
 
-    function close() {}
+    public function close() {}
 
     /**
      * Chargement de la session depuis la base de données.
@@ -55,7 +55,7 @@ class ploopi_session
      * @param string $id identifiant de la session
      */
 
-    function read($id)
+    public function read($id)
     {
         global $db;
         return ($db->query("SELECT `data` FROM `ploopi_session` WHERE `id` = '".$db->addslashes($id)."'") && $record = $db->fetchrow()) ? gzuncompress($record['data']) : '';
@@ -69,7 +69,7 @@ class ploopi_session
      * @param string $data données de la session
      */
     
-    function write($id, $data)
+    public function write($id, $data)
     {
         global $db;
         return $db->query("REPLACE INTO `ploopi_session` VALUES ('".$db->addslashes($id)."', '".$db->addslashes(time())."', '".$db->addslashes(gzcompress($data))."')");
@@ -83,7 +83,7 @@ class ploopi_session
      * @param string $id identifiant de la session
      */
     
-    function destroy($id)
+    public function destroy($id)
     {
         global $db;
         return $db->query("DELETE FROM `ploopi_session` WHERE `id` = '".$db->addslashes($id)."'");
@@ -96,7 +96,7 @@ class ploopi_session
      * @param int $max durée d'une session en secondes
      */
     
-    function gc($max)
+    public function gc($max)
     {
         global $db;
         return $db->query("DELETE FROM `ploopi_session` WHERE `access` < '".$db->addslashes((time() - $max))."'");
@@ -109,7 +109,7 @@ class ploopi_session
      * @see session_regenerate_id
      */
     
-    function regenerate_id()
+    public function regenerate_id()
     {
         if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
         {

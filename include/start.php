@@ -124,12 +124,13 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
 
         $fields = $db->fetchrow();
 
-        if ($fields['date_expire'] != '' && $fields['date_expire'] != '00000000000000')
+        if (!empty($fields['date_expire']))
         {
             if ($fields['date_expire'] <= ploopi_createtimestamp())
             {
                 ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $ploopi_login,_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
                 session_destroy();
+                sleep(1);
                 ploopi_redirect("admin.php?ploopi_errorcode="._PLOOPI_ERROR_LOGINEXPIRE);
             }
         }
@@ -145,6 +146,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
     {
         ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $ploopi_login,_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
         session_destroy();
+        sleep(1);
         ploopi_redirect("admin.php?ploopi_errorcode="._PLOOPI_ERROR_LOGINERROR);
     }
 }
@@ -537,10 +539,11 @@ if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language'] != 
 else include_once "./lang/french.php"; // default language file (french)
 
 // LANGUAGES LIST
-include_once './include/classes/param.php';
-$param_type = new param_type();
-//if (!isset($_SESSION['ploopi']['languages'])) $_SESSION['ploopi']['languages'] = $param_type->getallchoices(_PLOOPI_PARAMTYPE_LANGUAGE);
-
+/**
+ include_once './include/classes/param.php';
+ $param_type = new param_type();
+ if (!isset($_SESSION['ploopi']['languages'])) $_SESSION['ploopi']['languages'] = $param_type->getallchoices(_PLOOPI_PARAMTYPE_LANGUAGE);
+*/
 
 // View modes for modules
 $ploopi_viewmodes = array(  _PLOOPI_VIEWMODE_UNDEFINED  => _PLOOPI_LABEL_VIEWMODE_UNDEFINED,

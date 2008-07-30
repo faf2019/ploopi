@@ -79,23 +79,38 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     // generate documents id
     $documents_id = ploopi_documents_getid($id_object, $id_record, $id_module);
 
-    if (empty($rights)) $rights['DOCUMENT_CREATE'] = $rights['DOCUMENT_MODIFY'] = $rights['DOCUMENT_DELETE'] = $rights['FOLDER_CREATE'] = $rights['FOLDER_MODIFY'] = $rights['FOLDER_DELETE'] = true;
+    // permet de mettre des droits par défaut si le paramètre est incomplet
+    $rights = 
+        array_merge(
+            array(
+                'DOCUMENT_CREATE' => true,
+                'DOCUMENT_MODIFY' => true,
+                'DOCUMENT_DELETE' => true,
+                'FOLDER_CREATE' => true,
+                'FOLDER_MODIFY' => true,
+                'FOLDER_DELETE' => true,
+                'SEARCH' => true
+            ),
+            $rights
+        );
 
     if (empty($params['ROOT_NAME'])) $params['ROOT_NAME'] = 'Racine';
     if (empty($params['ATTACHEMENT'])) $params['ATTACHEMENT'] = true;
     if (empty($params['FIELDS'])) $params['FIELDS'] = array();
 
-    $_SESSION['documents'] = array (    'id_object'     => $id_object,
-                                        'id_record'     => $id_record,
-                                        'id_user'       => $id_user,
-                                        'id_workspace'  => $id_workspace,
-                                        'id_module'     => $id_module,
-                                        'documents_id'  => $documents_id,
-                                        'mode'          => '', // peut valoir 'selectfile'
-                                        'root_name'     => $params['ROOT_NAME'],
-                                        'attachement'   => $params['ATTACHEMENT'],
-                                        'fields'        => $params['FIELDS']
-                                    );
+    $_SESSION['documents'] = 
+        array (    
+            'id_object'     => $id_object,
+            'id_record'     => $id_record,
+            'id_user'       => $id_user,
+            'id_workspace'  => $id_workspace,
+            'id_module'     => $id_module,
+            'documents_id'  => $documents_id,
+            'mode'          => '', // peut valoir 'selectfile'
+            'root_name'     => $params['ROOT_NAME'],
+            'attachement'   => $params['ATTACHEMENT'],
+            'fields'        => $params['FIELDS']
+        );
 
 
     $_SESSION['documents']['rights'] = $rights;

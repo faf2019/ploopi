@@ -51,7 +51,7 @@ class ticket extends data_object
      * @return subscription_action
      */
     
-    function ticket()
+    public function ticket()
     {
         parent::data_object('ploopi_ticket', 'id');
     }
@@ -62,7 +62,7 @@ class ticket extends data_object
      * @return boolean true si le ticket s'est enregistré correctement
      */
     
-    function save()
+    public function save()
     {
         global $db;
 

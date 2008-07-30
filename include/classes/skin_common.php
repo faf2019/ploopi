@@ -51,7 +51,7 @@ class skin_common
      * @return skin_common
      */
     
-    function skin_common($skin)
+    public function skin_common($skin)
     {
         $this->values = array();
         $this->values['path'] = "./templates/backoffice/{$skin}/img";
@@ -69,7 +69,7 @@ class skin_common
      * @return string code html de l'entête du bloc
      */
     
-    function open_simplebloc($title = '', $style = '', $styletitle = '', $additionnal_title = '')
+    public function open_simplebloc($title = '', $style = '', $styletitle = '', $additionnal_title = '')
     {
         if (strlen($style)>0) $res = "<div class=\"simplebloc\" style=\"{$style}\">";
         else $res = "<div class=\"simplebloc\">";
@@ -87,7 +87,7 @@ class skin_common
      * @return string code html du pied du bloc
      */
     
-    function close_simplebloc()
+    public function close_simplebloc()
     {
         return '</div></div>';
     }
@@ -101,7 +101,7 @@ class skin_common
      * @return string code html du titre
      */
     
-    function create_pagetitle($title, $style = '')
+    public function create_pagetitle($title, $style = '')
     {
         if (strlen($style)>0) $res = "<div class=\"pagetitle\" style=\"{$style}\">$title</div>";
         else $res = "<div class=\"pagetitle\">$title</div>";
@@ -119,7 +119,7 @@ class skin_common
      * @return string code html de la barre d'outils
      */
     
-    function create_toolbar($icons, &$iconsel, $sel = true, $vertical = false)
+    public function create_toolbar($icons, &$iconsel, $sel = true, $vertical = false)
     {
         if (!isset($icons[$iconsel])) $iconsel = -1;
 
@@ -181,7 +181,7 @@ class skin_common
      * @return string code html de l'icone
      */
     
-    function create_icon($icon, $sel, $key, $vertical)
+    public function create_icon($icon, $sel, $key, $vertical)
     {
         $confirm = isset($icon['confirm']);
 
@@ -237,7 +237,7 @@ class skin_common
      * @return string code html de la barre d'onglets
      */
     
-    function create_tabs($tabs, &$tabsel)
+    public function create_tabs($tabs, &$tabsel)
     {
 
         $res = "<div class=\"tabs\">";
@@ -263,7 +263,7 @@ class skin_common
      * @return string code html de l'onglet
      */
     
-    function create_tab($tab, $sel)
+    public function create_tab($tab, $sel)
     {
         if (!empty($tab['width'])) $style = "style=\"width:{$tab['width']}px;\"";
         else $style = '';
@@ -282,7 +282,7 @@ class skin_common
      * @return string code html du popup
      */
     
-    function create_popup($title, $content, $popupid = '')
+    public function create_popup($title, $content, $popupid = '')
     {
         $res = $this->open_simplebloc($title, 'margin:0px;','','<a title="Fermer" class="ploopi_popup_close" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');">Fermer</a>');
         $res .= $content;
@@ -300,7 +300,7 @@ class skin_common
      * @return boolean
      */
     
-    function array_sort($a,$b)
+    public function array_sort($a,$b)
     {
         $a_label = isset($this->array_values[$a]['values'][$this->array_orderby]['sort_label']) ? 'sort_label' : 'label';
         $b_label = isset($this->array_values[$b]['values'][$this->array_orderby]['sort_label']) ? 'sort_label' : 'label';
@@ -344,7 +344,7 @@ class skin_common
      * </code>
      */
     
-    function display_array($columns, $values, $array_id = null, $options = null)
+    public function display_array($columns, $values, $array_id = null, $options = null)
     {
         if (empty($array_id)) $array_id = md5(uniqid(rand(), true));
 
@@ -417,7 +417,7 @@ class skin_common
      * @param string $orderby colonne de tri
      */
     
-    function display_array_refresh($array_id, $orderby = null)
+    public function display_array_refresh($array_id, $orderby = null)
     {
         $array = &$_SESSION['ploopi']['arrays'][$array_id];
 
@@ -653,7 +653,7 @@ class skin_common
      * @return string code html du treeview
      */
     
-    function display_treeview(&$nodes, &$treeview, $node_id_sel = null, $node_id_from = null)
+    public function display_treeview(&$nodes, &$treeview, $node_id_sel = null, $node_id_from = null)
     {
         // recherche du premier noeud
         if (is_null($node_id_from)) $node_id_from = key($treeview); 
@@ -665,7 +665,7 @@ class skin_common
         
         if (isset($treeview[$node_id_from]))
         {
-            $c=0;
+            $c = 0;
             foreach($treeview[$node_id_from] as $node_id)
             {
                 // noeud courant
@@ -721,7 +721,6 @@ class skin_common
     
                 // si du contenu à afficher, display = 'block'
                 $display = ($html_children == '') ? 'none' : 'block';
-    
                 
                 // si le noeud courant est sélectionné on le met en gras
                 $style_sel = ($is_node_sel) ? 'bold' : 'none';
@@ -742,19 +741,6 @@ class skin_common
                                 <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"n{$node['id']}\">{$html_children}</div>
                             </div>
                             ";
-                /*
-                $html .=    "
-                            <div style=\"overflow:auto;{$bg}\">
-                                <div>
-                                    {$node_link}<img style=\"display:block;float:left;\" src=\"{$node['icon']}\" />
-                                    <span style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;\">
-                                        <a style=\"font-weight:{$style_sel};\" href=\"{$link}\" {$onclick}>{$node['label']}</a>
-                                    </span>
-                                </div>
-                                <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"n{$node['id']}\">{$html_children}</div>
-                            </div>
-                            ";
-                           */ 
                 $c++;
             }
         }  

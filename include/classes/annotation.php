@@ -56,7 +56,7 @@ class annotation extends data_object
      * @return annotation
      */
     
-    function annotation()
+    public function annotation()
     {
         parent::data_object('ploopi_annotation','id');
     }
@@ -67,7 +67,7 @@ class annotation extends data_object
      * @return int identifiant de l'annotation
      */
     
-    function save()
+    public function save()
     {
         global $db;
 
@@ -112,7 +112,7 @@ class annotation extends data_object
      * Supprime l'annotation
      */
     
-    function delete()
+    public function delete()
     {
         global $db;
 
@@ -152,7 +152,7 @@ class annotation_tag extends data_object
      * @return annotation_tag
      */
     
-    function annotation_tag()
+    public function annotation_tag()
     {
         parent::data_object('ploopi_annotation_tag','id_annotation','id_tag');
     }
@@ -161,7 +161,7 @@ class annotation_tag extends data_object
      * Supprime le tag s'il n'est plus utilisé
      */
     
-    function delete()
+    public function delete()
     {
         global $db;
 
@@ -203,7 +203,7 @@ class tag extends data_object
      * @return tag
      */
     
-    function tag()
+    public function tag()
     {
         parent::data_object('ploopi_tag','id');
     }

@@ -44,7 +44,13 @@ include_once './include/classes/data_object.php';
 
 class index_element extends data_object
 {
-    function index_element()
+    /**
+     * Constructeur de la classe
+     *
+     * @return index_element
+     */
+    
+    public function index_element()
     {
         parent::data_object('ploopi_index_element', 'id');
     }
@@ -62,7 +68,13 @@ class index_element extends data_object
 
 class index_keyword_element extends data_object
 {
-    function index_keyword_element()
+    /**
+     * Constructeur de la classe
+     *
+     * @return index_keyword_element
+     */
+    
+    public function index_keyword_element()
     {
         parent::data_object('ploopi_index_keyword_element', 'id_keyword', 'id_element');
     }
@@ -80,12 +92,24 @@ class index_keyword_element extends data_object
 
 class index_keyword extends data_object
 {
-    function index_keyword()
+    /**
+     * Constructeur de la classe
+     *
+     * @return index_keyword
+     */
+    
+    public function index_keyword()
     {
         parent::data_object('ploopi_index_keyword', 'id');
     }
 
-    function save()
+    /**
+     * Enregistre le mot clé
+     *
+     * @return boolean true si l'enregistrement a été correctement réalisé
+     */
+    
+    public function save()
     {
         $this->fields['twoletters'] = substr($this->fields['keyword'],0,2);
         return(parent::save());
@@ -105,14 +129,15 @@ class index_keyword extends data_object
 
 class index_stem_element extends data_object
 {
-    function index_stem_element()
+    /**
+     * Constructeur de la classe
+     *
+     * @return index_stem_element
+     */
+    
+    public function index_stem_element()
     {
         parent::data_object('ploopi_index_stem_element', 'id_stem', 'id_element');
-    }
-
-    function save()
-    {
-        return(parent::save());
     }
 }
 
@@ -128,7 +153,13 @@ class index_stem_element extends data_object
 
 class index_stem extends data_object
 {
-    function index_stem()
+    /**
+     * Constructeur de la classe
+     *
+     * @return index_stem
+     */
+    
+    public function index_stem()
     {
         parent::data_object('ploopi_index_stem', 'id');
     }

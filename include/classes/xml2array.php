@@ -43,10 +43,38 @@
 
 class xml2array
 {
-
+    /**
+     * Analyseur XML
+     *
+     * @var resource
+     * 
+     * @see xml_parser_create
+     */
+    
     private $parser;
+    
+    /**
+     * Tableau contenant la pile des noeuds XML
+     *
+     * @var array
+     */
+    
     private $node_stack = array();
+    
+    /**
+     * Tableau contenant la structure et les données XML 
+     *
+     * @var array
+     */
+    
     private $xmlarray = array();
+    
+    /**
+     * Données en cours de lecture
+     *
+     * @var string
+     */
+    
     private $currentdata = '';
 
     /**

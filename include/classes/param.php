@@ -46,24 +46,62 @@
 
 class param
 {
-    var $moduleid;
-    var $workspaceid;
-    var $userid;
-    var $idtypeparam;
-    var $tabparam;
-    var $tabparamdet;
+    /**
+     * Identifiant du module
+     *
+     * @var int
+     */
+    
+    private $moduleid;
+    
+    /**
+     * Identifiant de l'espace de travail
+     *
+     * @var int
+     */
+    
+    private $workspaceid;
+    
+    /**
+     * Identifiant de l'utilisateur
+     *
+     * @var int
+     */
+    
+    private $userid;
+    
+    /**
+     * Tableau des paramètres du module
+     *
+     * @var array
+     */
+    
+    private $arrParam;
 
-
-    function param()
+    /**
+     * Constructeur de la classe
+     *
+     * @return param
+     */
+    
+    public function param()
     {
         $this->moduleid = -1;
     }
 
     /*******************************************************************************************************
-    charge les parametres d'un module à partir de la base de données
+    
     *******************************************************************************************************/
 
-    function open($moduleid, $workspaceid=0, $userid=0, $public=0)
+    /**
+     * Charge les parametres d'un module dans un certain contexte (espace / utilisateur / public)
+     *
+     * @param int $moduleid identifiant du module
+     * @param int $workspaceid identifiant de l'espace
+     * @param int $userid identifiant de l'utilisateur
+     * @param boolean $public true si on ne veut que les paramètres publics (false par défaut)
+     */
+    public function open($moduleid, $workspaceid = 0, $userid = 0, $public = false)
     {
         global $db;
 
@@ -85,21 +123,17 @@ class param
                     ON          pt.name = pd.name
                     AND         pt.id_module_type = pd.id_module_type
 
-                    WHERE       pd.id_module = {$moduleid}
+                    WHERE       pd.id_module = {$this->moduleid}
                     ";
 
         if ($public) $select .= " AND pt.public = 1";
         $select .= " ORDER BY pt.name";
 
-
-        $answer = $db->query($select);
-        while ($fields = $db->fetchrow($answer))
-        {
-            $this->tabparam[$fields['name']] = $fields;
-        }
+        $result = $db->query($select);
+        while ($fields = $db->fetchrow($result)) $this->arrParam[$fields['name']] = $fields;
 
         // select group parameters (overide default parameters)
-        if ($this->workspaceid!=0)
+        if ($this->workspaceid != 0)
         {
             $select =   "
                         SELECT      pg.id_module,
@@ -114,23 +148,19 @@ class param
                         ON          pt.name = pg.name
                         AND         pt.id_module_type = pg.id_module_type
 
-                        WHERE       pg.id_module = {$moduleid}
+                        WHERE       pg.id_module = {$this->moduleid}
                         AND         pg.id_workspace = {$this->workspaceid}
                         ";
 
             if ($public) $select .= " AND pt.public = 1";
             $select .= " ORDER BY pt.label";
                         
-            $answer = $db->query($select);
-            while ($fields = $db->fetchrow($answer))
-            {
-                $this->tabparam[$fields['name']] = $fields;
-            }
-
+            $result = $db->query($select);
+            while ($fields = $db->fetchrow($result)) $this->arrParam[$fields['name']] = $fields;
         }
 
         // select user parameters (overide user parameters)
-        if ($this->userid!=0)
+        if ($this->userid != 0)
         {
             $select =   "
                         SELECT      pu.id_module,
@@ -145,17 +175,14 @@ class param
                         ON          pt.name = pu.name
                         AND         pt.id_module_type = pu.id_module_type
 
-                        WHERE       pu.id_module = {$moduleid}
+                        WHERE       pu.id_module = {$this->moduleid}
                         AND         pu.id_user = {$this->userid}
                         ";
 
-            $answer = $db->query($select);
-            while ($fields = $db->fetchrow($answer))
+            $result = $db->query($select);
+            while ($fields = $db->fetchrow($result))
             {
-                if (!is_null($fields['value']))
-                {
-                    $this->tabparam[$fields['name']] = $fields;
-                }
+                if (!is_null($fields['value'])) $this->arrParam[$fields['name']] = $fields;
             }
         }
 
@@ -166,40 +193,45 @@ class param
 
                     INNER JOIN  ploopi_module
                     ON          pc.id_module_type = ploopi_module.id_module_type
-                    AND         ploopi_module.id = {$moduleid}
+                    AND         ploopi_module.id = {$this->moduleid}
                     ";
 
-        $answer = $db->query($select);
-        while ($fields = $db->fetchrow($answer))
+        $result = $db->query($select);
+        while ($fields = $db->fetchrow($result))
         {
-            $this->tabparam[$fields['name']]['choices'][$fields['value']] = $fields['displayed_value'];
+            $this->arrParam[$fields['name']]['choices'][$fields['value']] = $fields['displayed_value'];
         }
 
     }
 
     /*******************************************************************************************************
     affecte des nouvelles values aux parametres
-    en fonction d'un tableau associatif de values
+    
     *******************************************************************************************************/
 
-    function setvalues($values)
+    /**
+     * Affecte de nouvelles valeurs aux paramètres en fonction d'un tableau associatif de valeurs
+     *
+     * @param array $values tableau associatif contenant les nouvelles valeurs des paramètres
+     */
+    
+    public function setvalues($values)
     {
         foreach($values as $name => $value)
         {
-            if (isset($this->tabparam[$name])) $this->tabparam[$name]['value'] = $value;
+            if (isset($this->arrParam[$name])) $this->arrParam[$name]['value'] = $value;
         }
     }
 
-
-    /*******************************************************************************************************
-    sauvegarde les parametres du module ouvert
-    *******************************************************************************************************/
-
-    function save()
+    /**
+     * Enregistre les parametres du module
+     */
+    
+    public function save()
     {
         global $db;
 
-        foreach($this->tabparam as $name => $param)
+        foreach($this->arrParam as $name => $param)
         {
             if ($this->workspaceid == 0 && $this->userid == 0) // parametres par défaut
             {
@@ -245,9 +277,15 @@ class param
 
 class param_default extends data_object
 {
-    function param_default()
+    /**
+     * Constructeur de la classe
+     *
+     * @return param_default
+     */
+    
+    public function param_default()
     {
-        parent::data_object('ploopi_param_default','id_module','name');
+        parent::data_object('ploopi_param_default', 'id_module', 'name');
     }
 }
 
@@ -264,19 +302,21 @@ class param_default extends data_object
 class param_type extends data_object
 {
     /**
-    * Class constructor
-    *
-    * @param int $connection_id
-    * @access public
-    **/
-
-    function param_type()
+     * Constructeur de la classe
+     *
+     * @return param_default
+     */
+    public function param_type()
     {
         parent::data_object('ploopi_param_type', 'id_module_type', 'name');
     }
 
-
-    function delete($preserve_data = false)
+    /**
+     * Enter description here...
+     *
+     * @param unknown_type $preserve_data
+     */
+    public function delete($preserve_data = false)
     {
         global $db;
 
@@ -298,22 +338,24 @@ class param_type extends data_object
         parent::delete();
     }
 
-    function getallchoices($id = 0)
+    /**
+     * Retourne un tableau contenant la liste des choix possibles pour le paramètre 
+     *
+     * @return array tableau associatif contenant la liste des choix possibles pour le paramètre 
+     */
+    
+    public function getallchoices()
     {
         global $db;
-        $param_choice = array();
 
-        if ($id != 0) $id_param_type = $id;
-        else $id_param_type = $this->fields['id'];
+        $arrParamChoice = array();
 
-        $select = "SELECT * FROM ploopi_param_choice WHERE id_param_type = {$id_param_type}";
+        $select = "SELECT * FROM ploopi_param_choice WHERE id_module_type = {$this->fields['id_module_type']} AND name = '".$db->addslashes($this->fields['name'])."'";
         $db->query($select);
-        while ($fields = $db->fetchrow())
-        {
-            $param_choice[$fields['value']] = $fields['displayed_value'];
-        }
+        
+        while ($fields = $db->fetchrow()) $arrParamChoice[$fields['value']] = $fields['displayed_value'];
 
-        return($param_choice);
+        return($arrParamChoice);
     }
 }
 
@@ -329,7 +371,13 @@ class param_type extends data_object
 
 class param_choice extends data_object
 {
-    function param_choice()
+    /**
+     * Constructeur de la classe
+     *
+     * @return param_choice
+     */
+    
+    public function param_choice()
     {
         parent::data_object('ploopi_param_choice','id_module_type','name');
     }

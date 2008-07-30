@@ -45,7 +45,12 @@ include_once './include/classes/data_object.php';
 
 class share extends data_object
 {
-    function share()
+    /**
+     * Constructeur de la classe
+     *
+     * @return share
+     */
+    public function share()
     {
         parent::data_object('ploopi_share','id');
     }

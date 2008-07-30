@@ -115,7 +115,7 @@ class subscription_action extends data_object
      * @return subscription_action
      */
     
-    function subscription_action()
+    public function subscription_action()
     {
         parent::data_object('ploopi_subscription_action', 'id_subscription', 'id_action');
     }

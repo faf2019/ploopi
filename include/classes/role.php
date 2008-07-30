@@ -45,12 +45,25 @@ include_once './include/classes/data_object.php';
 
 class role extends data_object
 {
-    function role()
+    /**
+     * Constructeur de la classe
+     *
+     * @return role
+     */
+    
+    public function role()
     {
         parent::data_object('ploopi_role');
     }
 
-    function save($actions, $id_module_type)
+    /**
+     * Enregistre un rôle
+     *
+     * @param array $actions tableau des actions qui constituent le rôle
+     * @param int $id_module_type identifiant du type de module concerné
+     */
+    
+    public function save($actions, $id_module_type)
     {
         global $db;
 
@@ -74,7 +87,11 @@ class role extends data_object
         }
     }
 
-    function delete()
+    /**
+     * Supprime le rôle
+     */
+    
+    public function delete()
     {
         global $db;
 
@@ -85,35 +102,38 @@ class role extends data_object
     }
 
 
-    function getactions()
+    /**
+     * Retourne un tableau contenant les actions d'un rôle
+     *
+     * @return array tableau contenant les actions d'un rôle
+     */
+    
+    public function getactions()
     {
         global $db;
 
-        $actions = array();
+        $arrActions = array();
 
         $select =   "
-                SELECT      ploopi_mb_action.*,
-                            ploopi_role_action.id_action
-
-                FROM        ploopi_role_action
-
-                LEFT JOIN       ploopi_mb_action
-                ON          ploopi_role_action.id_action = ploopi_mb_action.id_action
-                AND         ploopi_role_action.id_module_type = ploopi_mb_action.id_module_type
-
-                WHERE       ploopi_role_action.id_role = {$this->fields['id']}
-
-                ORDER BY    ploopi_mb_action.label
-                ";
+                    SELECT      ploopi_mb_action.*,
+                                ploopi_role_action.id_action
+    
+                    FROM        ploopi_role_action
+    
+                    LEFT JOIN       ploopi_mb_action
+                    ON          ploopi_role_action.id_action = ploopi_mb_action.id_action
+                    AND         ploopi_role_action.id_module_type = ploopi_mb_action.id_module_type
+    
+                    WHERE       ploopi_role_action.id_role = {$this->fields['id']}
+    
+                    ORDER BY    ploopi_mb_action.label
+                    ";
 
         $result = $db->query($select);
 
-        while ($action = $db->fetchrow($result))
-        {
-            $actions[$action['id_action']] = $action;
-        }
+        while ($row = $db->fetchrow($result)) $arrActions[$action['id_action']] = $row;
 
-        return $actions;
+        return $arrActions;
     }
 
 }
@@ -130,7 +150,13 @@ class role extends data_object
 
 class role_action extends data_object
 {
-    function role_action()
+    /**
+     * Constructeur de la classe
+     *
+     * @return role_action
+     */
+    
+    public function role_action()
     {
         parent::data_object('ploopi_role_action','id_role','id_action','id_module_type');
     }

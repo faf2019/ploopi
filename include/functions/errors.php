@@ -147,9 +147,8 @@ function ploopi_errorhandler($errno, $errstr, $errfile, $errline, $vars)
             // critical error
             if ($errno == E_ERROR || $errno == E_PARSE || $errno == E_USER_ERROR)
             {
-                while (@ob_end_clean());
-                echo '<html><body><div align="center">Une erreur est survenue sur le site.<br />Contactez l\'administrateur.</div></body></html>';
-                ploopi_die();
+                ploopi_ob_clean();
+                ploopi_die('<html><body><div align="center">Une erreur est survenue sur le site.<br />Contactez l\'administrateur.</div></body></html>');
             }
         }
     }
