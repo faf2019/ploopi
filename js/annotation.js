@@ -22,7 +22,7 @@
 
 function ploopi_annotation(id_annotation)
 {
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation&id_annotation='+id_annotation, '', 'ploopiannotation_'+id_annotation);
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation&id_annotation='+id_annotation, 'ploopiannotation_'+id_annotation);
 }
 
 var tag_timer;

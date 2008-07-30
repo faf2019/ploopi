@@ -1,3 +1,9 @@
+== Module WebEdit - version 1.6.3 ============================================
+
+2008-07-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Mise à jour des appels à la fonction ploopi_xmlhttprequest_todiv()
+
 == Module WebEdit - version 1.6.2a ============================================
 
 2008-07-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

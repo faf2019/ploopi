@@ -23,7 +23,7 @@
 function ploopi_subscription(ploopi_subscription_id, next)
 {
     if (typeof(next) == 'undefined') next = '';
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=subscription&ploopi_subscription_id='+ploopi_subscription_id+'&next='+next, '', 'ploopi_subscription_'+ploopi_subscription_id);
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=subscription&ploopi_subscription_id='+ploopi_subscription_id+'&next='+next, 'ploopi_subscription_'+ploopi_subscription_id);
 }
 
 function ploopi_subscription_checkaction(id_subscription, id_action)

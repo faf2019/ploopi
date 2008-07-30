@@ -27,6 +27,7 @@ function ploopi_ajaxloader(div)
     if (div && $(div)) $(div).innerHTML = ploopi_ajaxloader_content;
     else return ajaxloader;
 }
+
 function ploopi_gethttpobject(callback)
 {
     var xmlhttp = false;
@@ -115,7 +116,6 @@ function ploopi_xmlhttprequest(url, data, asynchronous, getxml, method)
     }
 }
 
-
 function ploopi_xmlhttprequest_tofunction(url, data, callback, ticket, getxml, method)
 {
     var xmlhttp = ploopi_gethttpobject();
@@ -142,18 +142,17 @@ function ploopi_xmlhttprequest_tofunction(url, data, callback, ticket, getxml, m
     return !ploopi_sendxmldata(method, url, data, xmlhttp, true);
 }
 
-
-function ploopi_xmlhttprequest_todiv(url, data, sep, method)
+function ploopi_xmlhttprequest_todiv(url, data, div, method)
 {
+    // Suite refactoring 29/07/2008
+    // ploopi_xmlhttprequest_todiv\( ?['"](.*)['"] ?, ?['"](.*)['"] ?, ?['"](.*)['"] ?, ?['"](.*)['"] ?\); => ploopi_xmlhttprequest_todiv('$1', '$2', '$4')
+    
     var xmlhttp = ploopi_gethttpobject();
-    var args;
 
     if (typeof(method) == 'undefined') method = 'GET';
 
     if (xmlhttp)
     {
-        args = ploopi_xmlhttprequest_todiv.arguments;
-
         /* on définit ce qui doit se passer quand la page répondra */
         xmlhttp.onreadystatechange=function()
         {
@@ -161,17 +160,7 @@ function ploopi_xmlhttprequest_todiv(url, data, sep, method)
             {
                 if (xmlhttp.status == 200)
                 {
-                    var contents = new Array();
-                    var result= xmlhttp.responseText;
-
-
-                    if (sep == '') contents[0] = result;
-                    else contents=result.split(sep);
-                    for(i=0;i<args.length-3;i++)
-                    {
-                        if (contents[i]) ploopi_innerHTML(args[i+3], contents[i]);
-                        else ploopi_innerHTML(args[i+3], '');
-                    }
+                    ploopi_innerHTML(div, xmlhttp.responseText);
                 }
             }
         }

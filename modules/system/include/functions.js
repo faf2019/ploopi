@@ -38,7 +38,7 @@ function system_showgroup(typetree, gid, str)
             if ($(dest).innerHTML.length < 20)
             {
                 ploopi_ajaxloader(dest);
-                ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=xml_detail_group&typetree='+typetree+'&gid='+gid+'&str='+str,'',dest);
+                ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=xml_detail_group&typetree='+typetree+'&gid='+gid+'&str='+str,dest);
             }
         }
         else $(dest).style.display='none';
@@ -56,7 +56,7 @@ function system_roleusers(roleid)
     {
         ploopi_ajaxloader('system_roleusers_list'+roleid);
         $('system_roleusers_detail'+roleid).style.display = 'block';
-        ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers&system_roleusers_roleid='+roleid,'','system_roleusers_list'+roleid);
+        ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers&system_roleusers_roleid='+roleid,'system_roleusers_list'+roleid);
     }
     else $('system_roleusers_detail'+roleid).style.display = 'none';
 }
@@ -64,20 +64,20 @@ function system_roleusers(roleid)
 function system_roleusers_search(roleid)
 {
     ploopi_ajaxloader('system_roleusers_search_result');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers_search&system_roleusers_roleid='+roleid+'&system_roleusers_filter='+$('system_roleusers_filter').value,'','system_roleusers_search_result');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers_search&system_roleusers_roleid='+roleid+'&system_roleusers_filter='+$('system_roleusers_filter').value,'system_roleusers_search_result');
 }
 
 function system_roleusers_select(roleid, userid, type)
 {
     ploopi_ajaxloader('system_roleusers_list');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers_select_'+type+'&system_roleusers_roleid='+roleid+'&system_roleusers_'+type+'id='+userid,'','system_roleusers_list');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers_select_'+type+'&system_roleusers_roleid='+roleid+'&system_roleusers_'+type+'id='+userid,'system_roleusers_list');
     alert('Le rôle a été attribué');
 }
 
 function system_roleusers_delete(roleid, userid, type)
 {
     ploopi_ajaxloader('system_roleusers_list');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers_delete_'+type+'&system_roleusers_roleid='+roleid+'&system_roleusers_'+type+'id='+userid,'','system_roleusers_list');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers_delete_'+type+'&system_roleusers_roleid='+roleid+'&system_roleusers_'+type+'id='+userid,'system_roleusers_list');
     alert('L\'attriution du rôle a été retirée');
 }
 
@@ -96,7 +96,7 @@ function system_tickets_display(ticket_id, opened, isroot, tpl_path)
             $('watch_notify_'+ticket_id).innerHTML = '<img src="'+tpl_path+'/img/system/email_read.png">';
             resp = $('tickets_responses_'+ticket_id);
             // if empty
-            if (resp.innerHTML.length < 5)  ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_open_responses&ticket_id='+ticket_id,'','tickets_responses_'+ticket_id);
+            if (resp.innerHTML.length < 5)  ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_open_responses&ticket_id='+ticket_id,'tickets_responses_'+ticket_id);
         }
         ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_open&ticket_id='+ticket_id);
 
@@ -117,7 +117,7 @@ function system_tickets_display(ticket_id, opened, isroot, tpl_path)
 function system_search_next()
 {
     ploopi_ajaxloader('system_search_result');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_search&system_search_keywords='+$('system_search_keywords').value+'&system_search_workspace='+$('system_search_workspace').value+'&system_search_date1='+$('system_search_date1').value+'&system_search_date2='+$('system_search_date2').value,'','system_search_result');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_search&system_search_keywords='+$('system_search_keywords').value+'&system_search_workspace='+$('system_search_workspace').value+'&system_search_date1='+$('system_search_date1').value+'&system_search_date2='+$('system_search_date2').value,'system_search_result');
 }
 
 function system_serverload()

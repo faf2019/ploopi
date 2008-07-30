@@ -592,7 +592,7 @@ div.ploopi_explorer_tools a {
 }
 
 .treeview_node {
-    overflow:auto;
+    overflow:hidden;
 }
 
 .treeview_node img {

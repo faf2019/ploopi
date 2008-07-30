@@ -20,6 +20,13 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#webedit_header {
+	padding:4px 8px;
+	border-bottom:1px solid #a0a0a0; 
+	background:#d0d0d0; 
+	overflow:auto;
+}
+
 div.webedit_tree {
     float:left;
     width:20%;
@@ -189,4 +196,10 @@ div.webedit_row {
 	font-weight:bold;
 	margin-bottom:2px;
 	margin-left:4px;
+}
+
+#webedit_heading_toolbar {
+	background-color:#e8e8e8;
+	border-bottom:1px solid #c0c0c0;
+	overflow:auto;
 }

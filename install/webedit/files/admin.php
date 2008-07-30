@@ -676,8 +676,7 @@ switch($menu)
                 echo $skin->open_simplebloc();
         
                 ?>
-                <div style="padding:4px 8px;border-bottom:1px solid #a0a0a0; background:#d0d0d0; overflow:auto;">
-        
+                <div id="webedit_header">
                     <form action="<? echo ploopi_urlencode('admin.php?op='.$op); ?>" method="post" id="webedit_form_display_type">
                         <input type="hidden" name="webedit_display_type" id="webedit_display_type" value="<? echo $display_type; ?>" /> 
                         

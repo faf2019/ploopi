@@ -15,19 +15,19 @@ function directory_list_change(list)
     
     ploopi_hidepopup('popup_directory_addtofavorites');
     ploopi_ajaxloader('directory_favorites_list');
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_favorites&directory_favorites_id_list='+list.value, '', 'directory_favorites_list');
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_favorites&directory_favorites_id_list='+list.value, 'directory_favorites_list');
 }
 
 function directory_list_addnew(e)
 {
     ploopi_showpopup(ploopi_ajaxloader_content, 300, e, 'click', 'popup_directory_list_form');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_list_addnew', '', 'popup_directory_list_form');   
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_list_addnew', 'popup_directory_list_form');   
 }
 
 function directory_list_modify(e)
 {
     ploopi_showpopup(ploopi_ajaxloader_content, 300, e, 'click', 'popup_directory_list_form');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_list_modify&directory_favorites_id_list='+$('directory_favorites_id_list').value, '', 'popup_directory_list_form');   
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_list_modify&directory_favorites_id_list='+$('directory_favorites_id_list').value, 'popup_directory_list_form');   
 }
 
 function directory_list_delete()
@@ -66,7 +66,7 @@ function directory_addtofavorites(e, id_user, id_contact)
     if (typeof(id_list_sel) == 'undefined') id_list_sel = '';
     
     ploopi_showpopup(ploopi_ajaxloader_content, 250, e, 'click', 'popup_directory_addtofavorites');
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_getlists&directory_favorites_id_user='+id_user+'&directory_favorites_id_contact='+id_contact, '', 'popup_directory_addtofavorites');
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_getlists&directory_favorites_id_user='+id_user+'&directory_favorites_id_contact='+id_contact, 'popup_directory_addtofavorites');
 }
 
 
@@ -74,5 +74,5 @@ function directory_view(e, id_user, id_contact)
 {
     var popid = 'popup_directory_view'+id_user+'_'+id_contact;
     ploopi_showpopup(ploopi_ajaxloader_content, 600, e, 'click', popid);
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_view&directory_id_user='+id_user+'&directory_id_contact='+id_contact, '', popid);
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_view&directory_id_user='+id_user+'&directory_id_contact='+id_contact, popid);
 }

@@ -677,7 +677,7 @@ else // affichage standard rubrique/page
         $template_body->assign_block_vars(
             'switch_atomfeed_heading', 
             array(
-                'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}&format=atom"),
+                'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}&format=atom", null, null, null, null, false),
                 'TITLE' => htmlentities($headings['list'][$headingid]['label']),
             )
         );
@@ -685,7 +685,7 @@ else // affichage standard rubrique/page
         $template_body->assign_block_vars(
             'switch_rssfeed_heading', 
             array(
-                'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}&format=rss"),
+                'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}&format=rss", null, null, null, null, false),
                 'TITLE' => htmlentities($headings['list'][$headingid]['label']),
             )
         );
@@ -697,7 +697,7 @@ else // affichage standard rubrique/page
         $template_body->assign_block_vars(
             'switch_subscription', 
             array(
-                'ACTION' => ploopi_urlencode("index.php?ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}")),
+                'ACTION' => ploopi_urlencode("index.php?ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false),
                 'HEADINGID' => $headingid,
                 'ROOTID' => $headings['tree'][0][0]
             )
@@ -830,14 +830,14 @@ if (isset($headings['list'][$headings['tree'][0][0]]) && $headings['list'][$head
     $template_body->assign_block_vars(
         'switch_atomfeed_site', 
         array(
-            'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=atom"),
+            'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=atom", null, null, null, null, false),
             'TITLE' => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
         )
     );
     $template_body->assign_block_vars(
         'switch_rssfeed_site', 
         array(
-            'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=rss"),
+            'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=rss", null, null, null, null, false),
             'TITLE' => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
         )
     );

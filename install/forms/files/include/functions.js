@@ -124,13 +124,13 @@ function forms_display(fuid, options)
 
     dest = 'form_'+fuid;
     ploopi_ajaxloader(dest);
-    ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_display&forms_fuid='+fuid+options,'',dest);
+    ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_display&forms_fuid='+fuid+options,dest);
 }
 
 function forms_openreply(fuid, id_reply, event)
 {
     ploopi_showpopup(ploopi_ajaxloader_content,350,event,'click','popup_forms_openreply');
-    ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_openreply&forms_fuid='+fuid+'&forms_reply_id='+id_reply,'','popup_forms_openreply');
+    ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_openreply&forms_fuid='+fuid+'&forms_reply_id='+id_reply,'popup_forms_openreply');
 }
 
 function forms_changetype(t)

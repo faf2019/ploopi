@@ -32,7 +32,7 @@ function ploopi_tickets_new(event, id_object, id_record, object_label, id_user, 
 
     ploopi_showpopup('',550,event,'click', 'system_popupticket');
     ploopi_ajaxloader('system_popupticket');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_new'+data,'','system_popupticket');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_new'+data,'system_popupticket');
 }
 
 /* Rafraichissement de la zone indiquant le nombre de tickets non lus + alerte sur nouveau ticket */
@@ -77,5 +77,5 @@ function ploopi_tickets_alert()
 {
     ploopi_showpopup('', 350, null, true, 'popup_tickets_new_alert', 0, 200);
     ploopi_ajaxloader('popup_tickets_new_alert');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_alert','','popup_tickets_new_alert');
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_alert', 'popup_tickets_new_alert');
 }

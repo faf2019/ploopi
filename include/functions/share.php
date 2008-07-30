@@ -65,7 +65,7 @@ function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module =
             <p class="ploopi_va">
                 <span>Recherche groupes/utilisateurs:&nbsp;</span>
                 <input type="text" id="ploopi_share_userfilter" class="text">
-                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('index-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&ploopi_share_userfilter='+ploopi_getelem('ploopi_share_userfilter').value,'','div_share_search_result');" style="border:0px" src="<? echo "{$_SESSION['ploopi']['template_path']}/img/shares/search.png"; ?>">
+                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('index-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&ploopi_share_userfilter='+ploopi_getelem('ploopi_share_userfilter').value,'div_share_search_result');" style="border:0px" src="<? echo "{$_SESSION['ploopi']['template_path']}/img/shares/search.png"; ?>">
             </p>
         </div>
         <div id="div_share_search_result"></div>
@@ -78,7 +78,7 @@ function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module =
             ?>
             <script type="text/javascript">
                 ploopi_ajaxloader('div_share_users_selected');
-                ploopi_xmlhttprequest_todiv('index-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user','','div_share_users_selected')
+                ploopi_xmlhttprequest_todiv('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user', 'div_share_users_selected')
             </script>
             <?
         }

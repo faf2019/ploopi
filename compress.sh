@@ -1,8 +1,11 @@
 #!/bin/sh
 
-export YUIVER='-2.3.5'
+export YUIVER='-2.3.6'
 
 echo "COMPRESSION DU FICHIER functions.js"
+
+rm js/functions*.*
+cat js/*.js > js/functions.js
 java -jar yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-15 js/functions.js > js/functions.pack.js
 gzip -cf js/functions.pack.js > js/functions.pack.js.gz
 
@@ -22,6 +25,8 @@ for template in ./templates/backoffice/ploopi*; do
         rm -rf $template/css/*.unpack.css
     fi
 done
+
+echo "COMPRESSION DES FICHIERS js/css DES MODULES"
 
 for i in $( find ./FCKeditor ./modules ./templates/frontoffice \( -name '*.js' -or -name '*.css' \) -type f )
 do

@@ -32,6 +32,11 @@
  */
 
 /**
+ * Inclusion de la classe "form"
+ */
+include_once './modules/forms/class_form.php';
+
+/**
  * On ouvre le formulaire.
  * Si l'identifiant n'est pas valide => redirection.
  */
@@ -50,7 +55,7 @@ if (isset($_GET['option'])) $_SESSION['forms'][$forms_id]['option'] = $_GET['opt
 if (isset($_REQUEST['unlockbackup'])) $_SESSION['forms'][$forms_id]['unlockbackup'] = $_REQUEST['unlockbackup'];
 
 // VERIF SESSION
-if (!isset($_SESSION['forms'][$forms_id]['page']) || $op == 'forms_filter') $_SESSION['forms'][$forms_id]['page'] = 0;
+if (!isset($_SESSION['forms'][$forms_id]['page']) || $ploopi_op == 'forms_filter') $_SESSION['forms'][$forms_id]['page'] = 0;
 if (!isset($_SESSION['forms'][$forms_id]['orderby'])) $_SESSION['forms'][$forms_id]['orderby'] = 'datevalidation';
 if (!isset($_SESSION['forms'][$forms_id]['option'])) $_SESSION['forms'][$forms_id]['option'] = ($_SESSION['forms'][$forms_id]['orderby'] == 'datevalidation') ? 'DESC' : '';
 if (!isset($_SESSION['forms'][$forms_id]['unlockbackup'])) $_SESSION['forms'][$forms_id]['unlockbackup'] = 0;
@@ -313,7 +318,7 @@ foreach ($data as $reply_id => $detail)
 }
 
 
-if ($op == 'forms_deletedata' && ploopi_isactionallowed(_FORMS_ACTION_DELETE) && !empty($export))
+if ($ploopi_op == 'forms_deletedata' && ploopi_isactionallowed(_FORMS_ACTION_DELETE) && !empty($export))
 {
     $sql_delete =   "
                     DELETE  r, rf

@@ -189,7 +189,7 @@ function ploopi_annotation_refresh($id_annotation)
                             foreach($anno['tags'] as $idtag => $tag)
                             {
                                 ?>
-                                <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','400',event,'click');ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_taghistory&id_tag=<? echo $idtag; ?>','','ploopi_popup');return false;"><? echo htmlentities($tag); ?></a>
+                                <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','400',event,'click');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_taghistory&id_tag=<? echo $idtag; ?>', 'ploopi_popup');return false;"><? echo htmlentities($tag); ?></a>
                                 <?
                             }
                         }

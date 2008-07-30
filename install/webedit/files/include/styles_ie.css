@@ -19,6 +19,12 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+#webedit_header {
+    overflow:visible;
+    height:1%;
+}
+
 div.webedit_main {
     overflow:visible;
     height:1%;
@@ -41,4 +47,9 @@ div.webedit_tree_node {
 
 #webedit_suggestions sup {
 font-size:10px;
+}
+
+#webedit_heading_toolbar {
+    overflow:visible;
+    height:1%;
 }

@@ -39,7 +39,7 @@ $heading->open($headingid);
     <img src="./modules/webedit/img/folder.png">
     <span style="font-weight:bold;">Modification de la rubrique &laquo; <? echo $heading->fields['label']; ?> &raquo;</span>
 </p>
-<div style="background-color:#e8e8e8;border-bottom:1px solid #c0c0c0;overflow:auto;">
+<div id="webedit_heading_toolbar">
     <?
     if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT))
     {

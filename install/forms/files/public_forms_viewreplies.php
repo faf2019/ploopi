@@ -218,8 +218,8 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
         {
             ?>
                 <div style="float:left;margin-left:10px;">
-                <a title="<? echo _FORMS_EXPORT; ?> XLS" href="<? echo ploopi_urlencode("admin.php?op=forms_export&forms_id={$forms_id}&forms_export_format=XLS"); ?>"><img border="0" alt="<? echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/download_xls.gif"></a>
-                <a title="<? echo _FORMS_EXPORT; ?> CSV" href="<? echo ploopi_urlencode("admin.php?op=forms_export&forms_id={$forms_id}&forms_export_format=CSV"); ?>"><img border="0" alt="<? echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/download_csv.gif"></a>
+                <a title="<? echo _FORMS_EXPORT; ?> XLS" href="<? echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$forms_id}&forms_export_format=XLS"); ?>"><img border="0" alt="<? echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/download_xls.gif"></a>
+                <a title="<? echo _FORMS_EXPORT; ?> CSV" href="<? echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$forms_id}&forms_export_format=CSV"); ?>"><img border="0" alt="<? echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/download_csv.gif"></a>
                 </div>
             <?
         }

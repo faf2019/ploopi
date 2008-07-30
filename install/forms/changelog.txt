@@ -1,3 +1,10 @@
+== Module FORMS - version 2.20 =====================================================
+
+2008-07-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à jour des appels à la fonction ploopi_xmlhttprequest_todiv()
+ * Correction d'un bug lors de l'export XLS/CSV : non prise en compte du filtrage
+
 == Module FORMS - version 2.19 =====================================================
 
 2008-05-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

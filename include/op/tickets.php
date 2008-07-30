@@ -408,7 +408,7 @@ switch($ploopi_op)
                     foreach($workgrp['users'] as $id_user => $user)
                     {
                         ?>
-                        <a class="system_tickets_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<? echo $id_user; ?>','','div_ticket_users_selected');">
+                        <a class="system_tickets_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<? echo $id_user; ?>', 'div_ticket_users_selected');">
                             <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
                         </a>
                         <?
@@ -456,7 +456,7 @@ switch($ploopi_op)
                         foreach($group['users'] as $id_user => $user)
                         {
                             ?>
-                            <a class="system_tickets_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<? echo $id_user; ?>','','div_ticket_users_selected');">
+                            <a class="system_tickets_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<? echo $id_user; ?>', 'div_ticket_users_selected');">
                                 <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
                             </a>
                             <?

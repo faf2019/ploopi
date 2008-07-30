@@ -53,6 +53,15 @@ if ($_SESSION['ploopi']['connected'])
                 }
                 ploopi_die();
             break;
+            
+            case 'forms_export':
+                ploopi_init_module('forms');
+                if (ploopi_isactionallowed(_FORMS_ACTION_EXPORT) && !empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
+                {
+                    $id_module = $_SESSION['ploopi']['moduleid'];
+                    include './modules/forms/op_export.php';
+                }
+            break;
     
             case 'forms_delete_data':
                 include_once './modules/form/include/global.php';

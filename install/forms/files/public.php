@@ -83,17 +83,6 @@ switch($op)
         }
     break;
 
-
-    case 'forms_export':
-        if (ploopi_isactionallowed(_FORMS_ACTION_EXPORT))
-        {
-            include_once './modules/forms/public_forms_preparedata.php';
-
-            $id_module = $_SESSION['ploopi']['moduleid'];
-            include './modules/forms/public_forms_export.php';
-        }
-    break;
-
     case 'forms_reply_delete':
 
         if (ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY))
@@ -130,6 +119,7 @@ switch($op)
     case 'forms_viewreplies':
     case 'forms_filter':
     case 'forms_deletedata':
+        $ploopi_op = $op;
         include_once './modules/forms/public_forms_preparedata.php';
         include_once './modules/forms/public_forms_viewreplies.php';
     break;

@@ -22,7 +22,7 @@
 
 function ploopi_annotation(id_annotation)
 {
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation&id_annotation='+id_annotation, '', 'ploopiannotation_'+id_annotation);
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation&id_annotation='+id_annotation, 'ploopiannotation_'+id_annotation);
 }
 
 var tag_timer;
@@ -812,7 +812,7 @@ function ploopi_skin_treeview_shownode(node_id, query, script)
             if ($(dest).innerHTML.length < 20)
             {
                 ploopi_ajaxloader(dest);
-                ploopi_xmlhttprequest_todiv(script, query, '', dest);
+                ploopi_xmlhttprequest_todiv(script, query, dest);
             }
         }
         else $(dest).style.display='none';
@@ -822,7 +822,7 @@ function ploopi_skin_treeview_shownode(node_id, query, script)
 
 function ploopi_skin_array_refresh(array_id, array_orderby)
 {
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_skin_array_refresh&array_id='+array_id+'&array_orderby='+array_orderby,'','ploopi_explorer_main_'+array_id);
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_skin_array_refresh&array_id='+array_id+'&array_orderby='+array_orderby,'ploopi_explorer_main_'+array_id);
 }
 /*
     Copyright (c) 2002-2007 Netlor
@@ -946,7 +946,7 @@ function ploopi_addslashes(str)
 function ploopi_subscription(ploopi_subscription_id, next)
 {
     if (typeof(next) == 'undefined') next = '';
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=subscription&ploopi_subscription_id='+ploopi_subscription_id+'&next='+next, '', 'ploopi_subscription_'+ploopi_subscription_id);
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=subscription&ploopi_subscription_id='+ploopi_subscription_id+'&next='+next, 'ploopi_subscription_'+ploopi_subscription_id);
 }
 
 function ploopi_subscription_checkaction(id_subscription, id_action)
@@ -998,7 +998,7 @@ function ploopi_tickets_new(event, id_object, id_record, object_label, id_user, 
 
     ploopi_showpopup('',550,event,'click', 'system_popupticket');
     ploopi_ajaxloader('system_popupticket');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_new'+data,'','system_popupticket');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_new'+data,'system_popupticket');
 }
 
 /* Rafraichissement de la zone indiquant le nombre de tickets non lus + alerte sur nouveau ticket */
@@ -1043,7 +1043,7 @@ function ploopi_tickets_alert()
 {
     ploopi_showpopup('', 350, null, true, 'popup_tickets_new_alert', 0, 200);
     ploopi_ajaxloader('popup_tickets_new_alert');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_alert','','popup_tickets_new_alert');
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_alert', 'popup_tickets_new_alert');
 }
 /*
     Copyright (c) 2002-2007 Netlor
@@ -1636,6 +1636,7 @@ function ploopi_ajaxloader(div)
     if (div && $(div)) $(div).innerHTML = ploopi_ajaxloader_content;
     else return ajaxloader;
 }
+
 function ploopi_gethttpobject(callback)
 {
     var xmlhttp = false;
@@ -1724,7 +1725,6 @@ function ploopi_xmlhttprequest(url, data, asynchronous, getxml, method)
     }
 }
 
-
 function ploopi_xmlhttprequest_tofunction(url, data, callback, ticket, getxml, method)
 {
     var xmlhttp = ploopi_gethttpobject();
@@ -1751,18 +1751,17 @@ function ploopi_xmlhttprequest_tofunction(url, data, callback, ticket, getxml, m
     return !ploopi_sendxmldata(method, url, data, xmlhttp, true);
 }
 
-
-function ploopi_xmlhttprequest_todiv(url, data, sep, method)
+function ploopi_xmlhttprequest_todiv(url, data, div, method)
 {
+    // Suite refactoring 29/07/2008
+    // ploopi_xmlhttprequest_todiv\( ?['"](.*)['"] ?, ?['"](.*)['"] ?, ?['"](.*)['"] ?, ?['"](.*)['"] ?\); => ploopi_xmlhttprequest_todiv('$1', '$2', '$4')
+    
     var xmlhttp = ploopi_gethttpobject();
-    var args;
 
     if (typeof(method) == 'undefined') method = 'GET';
 
     if (xmlhttp)
     {
-        args = ploopi_xmlhttprequest_todiv.arguments;
-
         /* on définit ce qui doit se passer quand la page répondra */
         xmlhttp.onreadystatechange=function()
         {
@@ -1770,17 +1769,7 @@ function ploopi_xmlhttprequest_todiv(url, data, sep, method)
             {
                 if (xmlhttp.status == 200)
                 {
-                    var contents = new Array();
-                    var result= xmlhttp.responseText;
-
-
-                    if (sep == '') contents[0] = result;
-                    else contents=result.split(sep);
-                    for(i=0;i<args.length-3;i++)
-                    {
-                        if (contents[i]) ploopi_innerHTML(args[i+3], contents[i]);
-                        else ploopi_innerHTML(args[i+3], '');
-                    }
+                    ploopi_innerHTML(div, xmlhttp.responseText);
                 }
             }
         }

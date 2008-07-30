@@ -47,7 +47,7 @@ switch($ploopi_op)
 
             ?>
             <p class="ploopi_va" style="padding:2px;">
-                <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&remove_user_id=<? echo $user->fields['id']; ?>','','div_share_users_selected');">
+                <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&remove_user_id=<? echo $user->fields['id']; ?>', 'div_share_users_selected');">
                     <img src="./img/icon_delete.gif">
                     <span><? echo "{$user->fields['lastname']} {$user->fields['firstname']} (Cliquez pour supprimer)"; ?></span>
                 </a>
@@ -179,7 +179,7 @@ switch($ploopi_op)
                             {
                                 $user = &$list['users'][$id_user];
                                 ?>
-                                <a class="ploopi_share_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&user_id=<? echo $id_user; ?>','','div_share_users_selected');">
+                                <a class="ploopi_share_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&user_id=<? echo $id_user; ?>', 'div_share_users_selected');">
                                     <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
                                 </a>
                                 <?
@@ -202,7 +202,7 @@ switch($ploopi_op)
                                     {
                                         $user = &$list['users'][$id_user];
                                         ?>
-                                        <a class="ploopi_share_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&user_id=<? echo $id_user; ?>','','div_share_users_selected');">
+                                        <a class="ploopi_share_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&user_id=<? echo $id_user; ?>', 'div_share_users_selected');">
                                             <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
                                         </a>
                                         <?

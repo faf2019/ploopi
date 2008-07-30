@@ -1,3 +1,9 @@
+== Module RSS - version 1.26 ====================================================
+
+2008-07-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Mise à jour des appels à la fonction ploopi_xmlhttprequest_todiv()
+
 == Module RSS - version 1.25 ====================================================
 
 2008-07-23  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
