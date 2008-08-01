@@ -150,7 +150,7 @@ class webedit_article extends data_object
         $this->fields['tags'] = implode(' ', array_keys($tags));
         
         $res = parent::save();
-        if ($this->tablename == 'ploopi_mod_webedit_article_draft' && $this->fields['content'] != $this->original_content)
+        if ($this->gettablename() == 'ploopi_mod_webedit_article_draft' && $this->fields['content'] != $this->original_content)
         {
             $article_backup = new webedit_article_backup();
             $article_backup->fields['id_article'] = $this->fields['id'];
@@ -172,10 +172,10 @@ class webedit_article extends data_object
         global $db;
 
         // mise à jour de la position des autres articles de la rubrique
-        $db->query("UPDATE {$this->tablename} SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
+        $db->query("UPDATE `".$this->gettablename()."` SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
         
         // si brouillon, suppression de l'article associé
-        if ($this->tablename == 'ploopi_mod_webedit_article_draft')
+        if ($this->gettablename() == 'ploopi_mod_webedit_article_draft')
         {
             $article = new webedit_article();
             $article->open($this->fields['id']);
@@ -203,7 +203,7 @@ class webedit_article extends data_object
     {
         global $db;
 
-        if ($this->tablename == 'ploopi_mod_webedit_article_draft')
+        if ($this->gettablename() == 'ploopi_mod_webedit_article_draft')
         {
             $article = new webedit_article();
             $new = !$article->open($this->fields['id']);
