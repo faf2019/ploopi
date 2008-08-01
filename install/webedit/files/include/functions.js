@@ -120,3 +120,39 @@ function webedit_switch_display_type(value)
         }
     } 
 }
+
+function webedit_stats_open(article_id, e)
+{
+    ploopi_showpopup(
+        ploopi_xmlhttprequest(
+            'admin-light.php', 
+            'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_article_stats&webedit_article_id='+article_id, 
+            false, 
+            false, 
+            'POST'
+        ), 
+        600, 
+        e, 
+        false, 
+        'popup_webedit_article_stats'
+    );
+}
+
+function webedit_stats_refresh(article_id, year, month)
+{
+    options = '&webedit_article_id='+article_id+'&webedit_yearsel='+year;
+    if (typeof(month) != 'undefined') options += '&webedit_monthsel='+month;
+    
+    ploopi_innerHTML(
+        'popup_webedit_article_stats',
+        ploopi_xmlhttprequest(
+            'admin-light.php', 
+            'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_article_stats'+options, 
+            false, 
+            false, 
+            'POST'
+        )
+    );
+
+
+}

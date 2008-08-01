@@ -77,7 +77,6 @@ if ($_SESSION['ploopi']['connected'])
 {
     switch($_REQUEST['ploopi_op'])
     {
-        
         case 'webedit_detail_heading':
             ploopi_init_module('webedit');
             if (!empty($_GET['hid']))
@@ -118,7 +117,6 @@ if ($_SESSION['ploopi']['connected'])
                                                         'PATH' => "./modules/webedit/include/styles_ie.css"
                                                     )
                                             );
-    
     
             $template_body->pparse('body');
             ploopi_die();
@@ -174,5 +172,141 @@ if ($_SESSION['ploopi']['connected'])
             }
             ploopi_die();
         break;
+        
+        case 'webedit_article_stats':
+            if (empty($_POST['webedit_article_id']) || !is_numeric($_POST['webedit_article_id'])) ploopi_die();
+            
+            $intYearSel = (empty($_POST['webedit_yearsel']) || !is_numeric($_POST['webedit_yearsel'])) ? date('Y') : $_POST['webedit_yearsel'];
+            $intMonthSel = (empty($_POST['webedit_monthsel']) || empty($_POST['webedit_yearsel'])  || !is_numeric($_POST['webedit_monthsel']) || !is_numeric($_POST['webedit_yearsel'])) ? '' : $_POST['webedit_monthsel'];
+            
+            include_once './modules/webedit/class_article.php';
+            
+            $objArticle = new webedit_article();
+            $objArticle->open($_POST['webedit_article_id']);
+            
+            $db->query("SELECT distinct(year) FROM ploopi_mod_webedit_counter WHERE id_article = {$_POST['webedit_article_id']} ORDER BY year");
+            $arrSelectYear = $db->getarray();
+            
+            $db->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_article = {$_POST['webedit_article_id']} AND year = {$intYearSel} ORDER BY month");
+            $arrSelectMonth = $db->getarray();
+            
+            // aucun mois sélectionné
+            if (empty($intMonthSel))
+            {
+                // année en cours
+                if ($intYearSel == date('Y')) $intMonthSel = date('n');
+                else $intMonthSel = current($arrSelectMonth);
+            }
+            
+            ob_start();
+            ?>
+            <div id="webedit_stats_select">
+                <p>
+                    <strong>Année:</strong>
+                    <?
+                    foreach($arrSelectYear as $year)
+                    {
+                        ?>
+                        <a href="javascript:void(0);" onclick="javascript:webedit_stats_refresh(<? echo $_POST['webedit_article_id']; ?>, <? echo $year; ?>);" <? if ($year == $intYearSel) echo 'class="selected"'; ?>><? echo $year; ?></a>
+                        <?
+                    }
+                    ?>
+                </p>
+                <p>
+                    <strong>Mois:</strong>
+                    <?
+                    foreach($arrSelectMonth as $month)
+                    {
+                        ?>
+                        <a href="javascript:void(0);" onclick="javascript:webedit_stats_refresh(<? echo $_POST['webedit_article_id']; ?>, <? echo $intYearSel; ?>, <? echo $month; ?>);" <? if ($month == $intMonthSel) echo 'class="selected"'; ?>><? echo $ploopi_months[$month]; ?></a>
+                        <?
+                    }
+                    ?>
+                </p>
+            </div>
+            <?
+            include_once './include/classes/barchart.php';
+            
+            // 1er Diagramme : année par mois
+            
+            $dataset = array();
+            $legend = array();
+            
+            foreach($ploopi_months as $key => $value) 
+            {
+                $dataset[$key] = 0;
+                $legend[$key] = substr($value,0,3);
+            }
+            
+            $db->query(
+                "
+                SELECT  month, 
+                        sum(hits) as c 
+                FROM    ploopi_mod_webedit_counter 
+                WHERE   id_article = {$_POST['webedit_article_id']} 
+                AND     year = {$intYearSel}
+                GROUP BY month
+                ORDER BY month
+                ");
+                
+            while ($row = $db->fetchrow()) $dataset[$row['month']] = $row['c'];
+
+            $objBarChartYear = new barchart(550, 100);
+            $objBarChartYear->setvalues($dataset);
+            $objBarChartYear->setlegend($legend);
+            
+            // 1er Diagramme : mois par jours
+            
+            $dataset = array();
+            $legend = array();
+            
+            $nbdays = date('t', mktime(0, 0, 0, $intMonthSel, 1, $intYearSel));
+            
+            for ($d=1;$d<=$nbdays;$d++) 
+            {
+                $dataset[$d] = 0;
+                $legend[$d] = $d;
+            }
+            
+            $db->query(
+                "
+                SELECT  day, 
+                        sum(hits) as c 
+                FROM    ploopi_mod_webedit_counter 
+                WHERE   id_article = {$_POST['webedit_article_id']} 
+                AND     year = {$intYearSel}
+                AND     month = {$intMonthSel}
+                GROUP BY month
+                ORDER BY month
+                ");
+                
+            while ($row = $db->fetchrow()) $dataset[$row['day']] = $row['c'];
+
+            $objBarChartMonth = new barchart(550, 100);
+            $objBarChartMonth->setvalues($dataset);
+            $objBarChartMonth->setlegend($legend);
+            
+            // Affichage
+            ?>
+            <div class="webedit_stats_graph">
+                <h1>Statistiques de fréquentation pour <em><? echo $intYearSel ?></em></h1>
+                <div><? $objBarChartYear->draw(); ?></div>
+            </div>
+            <div class="webedit_stats_graph">
+                <h1>Statistiques de fréquentation pour <em><? echo $ploopi_months[$intMonthSel] ?> <? echo $intYearSel ?></em></h1>
+                <div><? $objBarChartMonth->draw(); ?></div>
+            </div>
+            <?
+            $content = ob_get_contents();
+            ob_end_clean();
+            
+            echo $skin->create_popup("Statistiques de fréquentation de l'article &laquo; ".htmlentities($objArticle->fields['title'])." &raquo;", $content, 'popup_webedit_article_stats');
+    
+            
+            ploopi_die();
+        break;
+            
+        
+        
     }
 }

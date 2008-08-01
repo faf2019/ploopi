@@ -1,10 +1,11 @@
 DROP TABLE IF EXISTS `ploopi_mod_webedit_article`;
-CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article` (
+CREATE TABLE `ploopi_mod_webedit_article` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `reference` varchar(255) NOT NULL default '',
   `title` varchar(255) NOT NULL,
   `metakeywords` mediumtext NOT NULL,
   `content` longtext,
+  `content_cleaned` longtext,
   `metadescription` mediumtext NOT NULL,
   `metatitle` mediumtext NOT NULL,
   `author` varchar(255) NOT NULL,
@@ -28,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_article_backup`;
-CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article_backup` (
+CREATE TABLE `ploopi_mod_webedit_article_backup` (
   `id_article` int(10) unsigned NOT NULL default '0',
   `timestp` bigint(14) unsigned NOT NULL default '0',
   `content` longtext NOT NULL,
@@ -40,12 +41,13 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article_backup` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_article_draft`;
-CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article_draft` (
+CREATE TABLE `ploopi_mod_webedit_article_draft` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `reference` varchar(255) NOT NULL default '',
   `title` varchar(255) NOT NULL,
   `metakeywords` mediumtext NOT NULL,
   `content` longtext,
+  `content_cleaned` longtext,
   `metadescription` mediumtext NOT NULL,
   `metatitle` mediumtext NOT NULL,
   `author` varchar(255) NOT NULL,
@@ -68,15 +70,33 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article_draft` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_article_tag`;
-CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article_tag` (
+CREATE TABLE `ploopi_mod_webedit_article_tag` (
   `id_article` int(10) unsigned NOT NULL default '0',
   `id_tag` int(10) unsigned NOT NULL default '0',
   KEY `id_article` (`id_article`),
   KEY `id_tag` (`id_tag`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `ploopi_mod_webedit_counter`;
+CREATE TABLE `ploopi_mod_webedit_counter` (
+  `year` smallint(4) unsigned NOT NULL default '0',
+  `month` tinyint(2) unsigned NOT NULL default '0',
+  `day` tinyint(2) unsigned NOT NULL default '0',
+  `id_article` int(10) unsigned NOT NULL default '0',
+  `id_module` int(10) unsigned NOT NULL default '0',
+  `week` mediumint(6) unsigned NOT NULL default '0',
+  `hits` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`year`,`month`,`day`,`id_article`),
+  KEY `month` (`month`),
+  KEY `day` (`day`),
+  KEY `id_article` (`id_article`),
+  KEY `id_module` (`id_module`),
+  KEY `hits` (`hits`),
+  KEY `week` (`week`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 DROP TABLE IF EXISTS `ploopi_mod_webedit_docfile`;
-CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_docfile` (
+CREATE TABLE `ploopi_mod_webedit_docfile` (
   `id_article` int(10) unsigned NOT NULL default '0',
   `id_docfile` int(10) unsigned NOT NULL,
   `md5id_docfile` char(32) NOT NULL,
@@ -89,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_docfile` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_heading`;
-CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_heading` (
+CREATE TABLE `ploopi_mod_webedit_heading` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `label` varchar(255) default NULL,
   `description` varchar(255) default NULL,
@@ -120,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_heading` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_heading_subscriber`;
-CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_heading_subscriber` (
+CREATE TABLE `ploopi_mod_webedit_heading_subscriber` (
   `id_heading` int(10) unsigned NOT NULL default '0',
   `email` varchar(255) NOT NULL,
   `validated` tinyint(1) unsigned NOT NULL default '0',
@@ -129,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_heading_subscriber` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_tag`;
-CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_tag` (
+CREATE TABLE `ploopi_mod_webedit_tag` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `tag` varchar(64) NOT NULL,
   `id_module` int(10) unsigned NOT NULL default '0',

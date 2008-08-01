@@ -1,3 +1,9 @@
+== Module WebEdit - version 1.7.0.beta ============================================
+
+2008-08-01  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Affichage de statistiques simples (sur chaque article : nombre de visites sur l'année, sur le mois). Bientôt des stats plus complètes : globales, par rubriques, etc...
+
 == Module WebEdit - version 1.6.3 ============================================
 
 2008-07-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

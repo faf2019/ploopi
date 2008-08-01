@@ -203,3 +203,65 @@ div.webedit_row {
 	border-bottom:1px solid #c0c0c0;
 	overflow:auto;
 }
+
+#webedit_stats {
+    overflow:auto;
+    display:none;
+    border-bottom:1px solid #c0c0c0;
+    background:#fff;
+    overflow:hidden;
+}
+
+#webedit_stats_select {
+}
+
+#webedit_stats_select p {
+    padding:2px;
+    margin:0;
+    overflow:auto;
+    background:#f0f0f0;
+    border-bottom:1px solid #c0c0c0;
+}
+
+#webedit_stats_select p * {
+    display:block;
+    float:left;
+    padding:1px 4px;
+    margin-right:2px;
+}
+
+#webedit_stats_select p strong {
+    width:60px;
+    text-align:right;
+}
+
+#webedit_stats_select p a {
+    background:#e0e0e0;
+    border:1px solid #c0c0c0;
+    text-decoration:none;
+}
+
+#webedit_stats_select p a:hover {
+    background:#fff;
+    border:1px solid #a0a0a0;
+    text-decoration:none;
+}
+
+#webedit_stats_select p a.selected {
+    background:#fff;
+    border:1px solid #a0a0a0;
+    text-decoration:none;
+}
+
+.webedit_stats_graph {
+    background:#fff;
+    padding-top:10px
+}
+
+.webedit_stats_graph h1 {
+	margin:0;
+	padding:0;
+	font-size:12px;
+	font-weight:bold;
+	margin-left:10px;
+}

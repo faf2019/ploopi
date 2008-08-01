@@ -604,6 +604,36 @@ else // affichage standard rubrique/page
                 ob_end_clean();
             }
         }
+        else
+        {
+            // Test si l'article a déjà été visité pendant la session
+            if (!isset($_SESSION['webedit']['counter'][$article->fields['id']]))
+            {
+                // Enregistrement d'un hit pour cet article
+                include_once './modules/webedit/class_counter.php';
+                $counter = 
+                    array(
+                        'year' => date('Y'),
+                        'month' => date('n'),
+                        'day' => date('j'),
+                        'week' => date('o').date('W')
+                    );
+                
+                $objCounter = new webedit_counter();
+                if (!$objCounter->open($counter['year'], $counter['month'], $counter['day'], $article->fields['id']))
+                {
+                    $objCounter->fields['year'] = $counter['year']; 
+                    $objCounter->fields['month'] = $counter['month']; 
+                    $objCounter->fields['day'] = $counter['day']; 
+                    $objCounter->fields['week'] = $counter['week']; 
+                    $objCounter->fields['id_article'] = $article->fields['id']; 
+                    $objCounter->fields['id_module'] = $article->fields['id_module']; 
+                }
+                $objCounter->hit();
+                
+                $_SESSION['webedit']['counter'][$article->fields['id']] = '';
+            }
+        }
 
         $template_body->assign_block_vars('switch_content_page', array());
 
@@ -862,8 +892,8 @@ $template_body->assign_vars(
         'DATE_DAY'                      => date('d'),
         'DATE_MONTH'                    => date('m'),
         'DATE_YEAR'                     => date('Y'),
-        'DATE_DAYTEXT'                  => $ploopi_agenda_days[date('w')],
-        'DATE_MONTHTEXT'                => $ploopi_agenda_months[date('n')],
+        'DATE_DAYTEXT'                  => $ploopi_days[date('w')],
+        'DATE_MONTHTEXT'                => $ploopi_months[date('n')],
         'LASTUPDATE_DATE'               => $lastupdate['date'],
         'LASTUPDATE_TIME'               => $lastupdate['time']
     )
