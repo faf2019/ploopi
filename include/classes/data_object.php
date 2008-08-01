@@ -402,6 +402,14 @@ class data_object
      */
     
     public function getsql() { return $this->sql; }
+    
+    /**
+     * Retourne la table associée à l'instance
+     *
+     * @return string nom de la table
+     */
+    
+    public function gettablename() { return $this->tablename; }
 
 }
 ?>

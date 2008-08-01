@@ -107,7 +107,7 @@ function ploopi_die($var = null, $flush = true)
 
 function ploopi_accepts_gzip()
 {
-    return in_array('gzip', explode(',', str_replace(' ', '', strtolower($_SERVER['HTTP_ACCEPT_ENCODING']))));
+    return isset($_SERVER['HTTP_ACCEPT_ENCODING']) && in_array('gzip', explode(',', str_replace(' ', '', strtolower($_SERVER['HTTP_ACCEPT_ENCODING']))));
 }
 
 /**
