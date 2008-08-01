@@ -141,16 +141,15 @@ define ('_PLOOPI_LABEL_SUBSCRIPTION_ALLACTIONS', 'Toutes les actions');
 define ('_PLOOPI_LABEL_SUBSCRIPTION_UNSUSCRIBE', 'Se désabonner');
 
 
-
 /**
  * Tableau des jours en français
  */
-global $ploopi_agenda_days;
+global $ploopi_days;
 
 /**
  * Tableau des mois en français
  */
-global $ploopi_agenda_months;
+global $ploopi_months;
 
 /**
  * Tableau des messages d'erreur
@@ -163,22 +162,40 @@ global $ploopi_errormsg;
 global $ploopi_civility;
 
 
-$ploopi_agenda_days = array ('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'); 
+$ploopi_days = 
+    array (
+        'Dimanche', 
+        'Lundi', 
+        'Mardi', 
+        'Mercredi', 
+        'Jeudi', 
+        'Vendredi', 
+        'Samedi', 
+        'Dimanche'
+    ); 
 
-$ploopi_agenda_months[1] = 'Janvier';
-$ploopi_agenda_months[2] = 'Février';
-$ploopi_agenda_months[3] = 'Mars';
-$ploopi_agenda_months[4] = 'Avril';
-$ploopi_agenda_months[5] = 'Mai';
-$ploopi_agenda_months[6] = 'Juin';
-$ploopi_agenda_months[7] = 'Juillet';
-$ploopi_agenda_months[8] = 'Août';
-$ploopi_agenda_months[9] = 'Septembre';
-$ploopi_agenda_months[10] = 'Octobre';
-$ploopi_agenda_months[11] = 'Novembre';
-$ploopi_agenda_months[12] = 'Décembre';
+$ploopi_months = 
+    array(
+        1 => 'Janvier',
+        2 => 'Février',
+        3 => 'Mars',
+        4 => 'Avril',
+        5 => 'Mai',
+        6 => 'Juin',
+        7 => 'Juillet',
+        8 => 'Août',
+        9 => 'Septembre',
+        10 => 'Octobre',
+        11 => 'Novembre',
+        12 => 'Décembre'
+    );
 
-$ploopi_civility = array ('M', 'Mme', 'Mlle'); 
+$ploopi_civility = 
+    array (
+        'M',
+        'Mme', 
+        'Mlle'
+    ); 
 
 $ploopi_errormsg[_PLOOPI_ERROR_NOWORKSPACEDEFINED]  = 'Aucun espace de travail n\'est défini pour cet utilisateur';
 $ploopi_errormsg[_PLOOPI_ERROR_LOGINERROR]          = 'Utilisateur ou Mot de passe incorrect';
