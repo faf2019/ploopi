@@ -259,9 +259,20 @@ div.webedit_row {
 }
 
 .webedit_stats_graph h1 {
-	margin:0;
 	padding:0;
 	font-size:12px;
 	font-weight:bold;
-	margin-left:10px;
+    margin:0 0 4px 4px;
+}
+
+.webedit_stats_array {
+    background:#fff;
+    padding-top:10px
+}
+
+.webedit_stats_array h1 {
+    padding:0;
+    font-size:12px;
+    font-weight:bold;
+    margin:0 0 4px 4px;
 }

@@ -36,6 +36,15 @@ $heading->open($headingid);
 ?>
 
 <p class="ploopi_va" style="background-color:#e0e0e0;padding:6px;border-bottom:1px solid #c0c0c0;">
+    <?
+    if (ploopi_isactionallowed(_WEBEDIT_ACTION_STATS))
+    {
+        ?>
+        <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cette rubrique" onclick="javascript:webedit_stats_open(null, <? echo $heading->fields['id']; ?>, event);">
+        <?
+    }
+    ?>    
+
     <img src="./modules/webedit/img/folder.png">
     <span style="font-weight:bold;">Modification de la rubrique &laquo; <? echo $heading->fields['label']; ?> &raquo;</span>
 </p>

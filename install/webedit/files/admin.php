@@ -45,94 +45,12 @@ $menu = (empty($_REQUEST['webedit_menu'])) ? '' : $_REQUEST['webedit_menu'];
 
 switch($menu)
 {
+    case 'stats':
+        if (ploopi_isactionallowed(_WEBEDIT_ACTION_STATS)) include_once './modules/webedit/stats.php';
+    break;
+    
     case 'reindex':
-        switch($op)
-        {
-            default:
-                echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
-                echo $skin->open_simplebloc();
-                
-                $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_heading WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-                $arrStats['headings'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
-                
-                $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_article WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-                $arrStats['articles'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
-                
-                $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_docfile WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-                $arrStats['files'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
-                
-                $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_tag WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-                $arrStats['tags'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
-                
-                $db->query( 
-                    "
-                    SELECT  count(*) as c
-                    FROM    ploopi_index_element e,
-                            ploopi_index_keyword_element ke
-                    
-                    WHERE   e.id_module = {$_SESSION['ploopi']['moduleid']}
-                    AND     e.id_object = "._WEBEDIT_OBJECT_ARTICLE_PUBLIC."
-                    AND     ke.id_element = e.id
-                    "
-                );
-                
-                $arrStats['keywords'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
-                
-                ?>
-                <div style="padding:4px;">
-                    <input type="button" class="button" value="Réindexer le contenu du site" onclick="javascript:document.location.href='<? echo ploopi_urlencode('admin.php?webedit_menu=reindex&op=reindex'); ?>';" />
-                </div>
-                <div style="padding:4px;">
-                    Le site contient :
-                </div>
-                <div style="padding:4px;">
-                    <strong><? echo $arrStats['headings']; ?> rubrique(s)</strong>
-                </div>
-                <div style="padding:4px;">
-                    <strong><? echo $arrStats['articles']; ?> articles(s)</strong>
-                </div>
-                <div style="padding:4px;">
-                    <strong><? echo $arrStats['files']; ?> lien(s) vers un fichier</strong>
-                </div>
-                <div style="padding:4px;">
-                    <strong><? echo $arrStats['tags']; ?> tag(s)</strong>
-                </div>
-                <div style="padding:4px;">
-                    <strong><? echo $arrStats['keywords']; ?> mot(s) indexé(s)</strong>
-                </div>
-                <?
-                echo $skin->close_simplebloc();
-            break;
-            
-            case 'reindex':
-                if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
-                include_once './modules/webedit/class_article.php';
-                
-                echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
-                echo $skin->open_simplebloc();
-                ?>
-                <div style="padding:4px;">
-                <?
-                $index_start = $ploopi_timer->getexectime();
-                
-                $rsArticles = $db->query("SELECT id FROM ploopi_mod_webedit_article");
-                
-                while ($row = $db->fetchrow($rsArticles))
-                {
-                    $objArticle = new webedit_article();
-                    if ($objArticle->open($row['id']))
-                    {
-                        $objArticle->index();
-                    }
-                }
-                ?>
-                indexation terminée en <? printf("%.02fs", $ploopi_timer->getexectime() - $index_start); ?>
-                <br /><a title="Retour" href="<? echo ploopi_urlencode('admin.php?webedit_menu=reindex'); ?>">Retour</a>
-                </div>
-                <?
-                echo $skin->close_simplebloc();
-            break;
-        }
+        if (ploopi_isactionallowed(_WEBEDIT_ACTION_REINDEX)) include_once './modules/webedit/reindex.php';
     break;
     
     default:

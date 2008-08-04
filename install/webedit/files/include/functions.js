@@ -121,12 +121,17 @@ function webedit_switch_display_type(value)
     } 
 }
 
-function webedit_stats_open(article_id, e)
+function webedit_stats_open(article_id, heading_id, e)
 {
+    query = 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_article_stats';
+
+    if (typeof(article_id) != 'undefined' && article_id != null) query += '&webedit_article_id='+article_id;
+    if (typeof(heading_id) != 'undefined' && heading_id != null) query += '&webedit_heading_id='+heading_id;
+
     ploopi_showpopup(
         ploopi_xmlhttprequest(
             'admin-light.php', 
-            'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_article_stats&webedit_article_id='+article_id, 
+            query, 
             false, 
             false, 
             'POST'
@@ -138,16 +143,20 @@ function webedit_stats_open(article_id, e)
     );
 }
 
-function webedit_stats_refresh(article_id, year, month)
+function webedit_stats_refresh(article_id, heading_id, year, month)
 {
-    options = '&webedit_article_id='+article_id+'&webedit_yearsel='+year;
-    if (typeof(month) != 'undefined') options += '&webedit_monthsel='+month;
+    query = 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_article_stats';
+
+    if (typeof(article_id) != 'undefined' && article_id != null) query += '&webedit_article_id='+article_id;
+    if (typeof(heading_id) != 'undefined' && heading_id != null) query += '&webedit_heading_id='+heading_id;
+    if (typeof(year) != 'undefined') query += '&webedit_yearsel='+year;
+    if (typeof(month) != 'undefined') query += '&webedit_monthsel='+month;
     
     ploopi_innerHTML(
         'popup_webedit_article_stats',
         ploopi_xmlhttprequest(
             'admin-light.php', 
-            'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_article_stats'+options, 
+            query, 
             false, 
             false, 
             'POST'

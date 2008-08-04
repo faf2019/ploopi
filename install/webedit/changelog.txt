@@ -1,3 +1,11 @@
+== Module WebEdit - version 1.7.1 ============================================
+
+2008-08-04  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Ajout d'un popup "statistiques" sur chaque rubrique (statistiques de fréquentation de la rubrique)
+ * Ajout d'un menu "Statistiques" permettant de visualiser les statistiques globales de fréquentation
+ * Ajout d'un action "stats" pour gérer l'accès aux stats depuis les rôles
+
 == Module WebEdit - version 1.7.0.beta2 ============================================
 
 2008-08-01  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

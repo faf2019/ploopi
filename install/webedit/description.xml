@@ -2,7 +2,7 @@
 <ploopi>
     <moduletype>
         <label>webedit</label>
-        <version>1.7.0.beta2</version>
+        <version>1.7.1</version>
         <author>Netlor / Ovensia</author>
         <date>20080801000000</date>
         <description>Editeur de Contenus Web</description>
@@ -27,7 +27,11 @@
             <label>Gérer les abonnés</label>
         </action>
         <action>
-            <id_action>6</id_action>
+            <id_action>8</id_action>
+            <label>Afficher les Statistiques</label>
+        </action>
+        <action>
+            <id_action>9</id_action>
             <label>Réindéxer le contenu</label>
         </action>
     </moduletype>

@@ -115,8 +115,14 @@ $keywords = array_slice($keywords, 0 , 20, true);
 
 <div style="background-color:#e0e0e0;padding:4px;border-bottom:1px solid #c0c0c0;">
     <p class="ploopi_va" style="font-weight:bold;">
-        <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cet article" onclick="javascript:webedit_stats_open(<? echo $article->fields['id']; ?>, event);">
-        
+        <?
+        if (ploopi_isactionallowed(_WEBEDIT_ACTION_STATS))
+        {
+            ?>
+            <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cet article" onclick="javascript:webedit_stats_open(<? echo $article->fields['id']; ?>, event);">
+            <?
+        }
+        ?>    
         <img src="./modules/webedit/img/doc<? echo $isnewversion; ?>.png">
         <?
         echo "<span>{$title} - </span>";

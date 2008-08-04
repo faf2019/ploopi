@@ -61,6 +61,11 @@ define ('_WEBEDIT_ACTION_WORKFLOW_MANAGE',      4);
 define ('_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE',   5);
 
 /**
+ * Stats
+ */
+define ('_WEBEDIT_ACTION_STATS',   8);
+
+/**
  * Réindexation
  */
 define ('_WEBEDIT_ACTION_REINDEX',   9);

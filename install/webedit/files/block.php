@@ -49,6 +49,15 @@ if (ploopi_isactionallowed(-1, $_SESSION['ploopi']['workspaceid'], $menu_modulei
 }
 
 /**
+ * STATISTIQUES
+ */
+
+if (ploopi_isactionallowed(_WEBEDIT_ACTION_STATS, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
+{
+    $block->addmenu('<b>Statistiques</b>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin&webedit_menu=stats"));
+}
+
+/**
  * Réindexation du contenu
  */
 
