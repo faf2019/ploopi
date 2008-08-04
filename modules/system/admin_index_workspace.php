@@ -206,7 +206,7 @@ echo $skin->open_simplebloc();
                 $frontofficeedit_ready = false;
                 foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $idm)
                 {
-                    if ($_SESSION['ploopi']['modules'][$idm]['moduletype'] == 'frontofficeedit') {$frontofficeedit_ready = true;}
+                    if ($_SESSION['ploopi']['modules'][$idm]['moduletype'] == 'webedit') {$frontofficeedit_ready = true;}
                 }
 
                 if (!$frontofficeedit_ready)

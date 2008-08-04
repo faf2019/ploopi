@@ -237,9 +237,13 @@ switch ($_SESSION['system']['level'])
                         $group->fields['parents'] = '0;1';
 
                         $group_id = $group->save();
-
-                        ploopi_create_user_action_log(_SYSTEM_ACTION_CREATEGROUP, "{$group->fields['label']} ($group_id)");
-
+                        
+                        ploopi_create_user_action_log(_SYSTEM_ACTION_CREATEGROUP, "{$group->fields['label']} (id:{$group_id})");
+                        
+                        $group->attachtogroup($workspaceid);
+                        
+                        ploopi_create_user_action_log(_SYSTEM_ACTION_ATTACHGROUP, "{$group->fields['label']} (id:{$group_id}) => {$workspace->fields['label']} (id:{$workspaceid})");
+                        
                         unset($_SESSION['system']['groups']);
                         unset($_SESSION['system']['workspaces']);
 
@@ -526,7 +530,15 @@ switch ($_SESSION['system']['level'])
                             ploopi_create_user_action_log(_SYSTEM_ACTION_CONFIGUREMODULE, $module->fields['label']);
 
                             $module->setvalues($_POST,'module_');
+                            
+                            if (!isset($_POST['module_active'])) $module->fields['active'] = 0;
+                            if (!isset($_POST['module_autoconnect'])) $module->fields['autoconnect'] = 0;
+                            if (!isset($_POST['module_shared'])) $module->fields['shared'] = 0;
+                            if (!isset($_POST['module_herited'])) $module->fields['herited'] = 0;
+                            if (!isset($_POST['module_adminrestricted'])) $module->fields['adminrestricted'] = 0;
                             if (!isset($_POST['module_transverseview'])) $module->fields['transverseview'] = 0;
+                                                        
+                            
                             if (!$module->fields['shared']) $module->fields['herited'] = 0;
                             $module->save();
 

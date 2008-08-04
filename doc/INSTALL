@@ -1,97 +1,101 @@
-Ploopi 1.0 - Prérequis
------------------------
+A V E R T I S S E M E N T
+- - - - - - - - - - - - -
 
-Avant de démarrer l'installation de PLOOPI, vous devez vérifier que vous disposez des versions logicielles suivantes :
-- Apache 1.3x ou 2.x
-- PHP 5.x
-- MySQL 5.x
+Il est possible que cette documentation soit moins à jour que la page officielle sur le wiki de PLOOPI.
+Il est donc recommandé de consulter en priorité la page d'installation officielle disponible à l'adresse suivante :
 
-Vous pouvez très facilement installer les paquets prérequis de PLOOPI sous Debian (en root) :
+http://www.ploopi.org/wiki/ploopi/Installation_de_Ploopi
 
-# Apache/MySQL/PHP
-apt-get install apache2 mysql-server php5 php5-mysql php5-gd php5-cli php5-mcrypt php-pear
-pear install --alldeps Cache_Lite HTTP_Request XML_Feed_Parser Xml_Beautifier OLE-0.6.1 Spreadsheet_Excel_Writer-0.9.1
+P R E R E Q U I S
+- - - - - - - - -
+
+Avant de démarrer l'installation de PLOOPI, vous devez vérifier que vous disposez des éléments suivants :
+
+    * Linux
+    * Apache 1.3x ou 2.x
+    * PHP 5.x
+    * MySQL 5.x
+
+Certaines extensions de php sont également obligatoires pour un fonctionnement optimal :
+
+    * php5-mcrypt
+    * php5-gd
+    * php5-dev (pour pecl)
+    * php-pear : détail des classes ci-après
+
+Remarques :
+
+    * Ploopi n'a pas été testé en environnement Windows (installé côté serveur)
+    * Ploopi doit fonctionner avec lighttpd - tests à venir.
+
+Vous pouvez très facilement installer les paquets prérequis pour un bon fonctionnement de PLOOPI sous Debian (en root) :
+
+apt-get install apache2 mysql-server php5 php5-mysql php5-gd php5-cli php5-mcrypt php-pear php5-dev make
+pear upgrade-all
+pear install --alldeps Cache_Lite HTTP_Request XML_Feed_Parser Xml_Beautifier  OLE-0.6.1 Spreadsheet_Excel_Writer-0.9.1 PEAR_info  Net_UserAgent_Detect
 pecl install stem
 
-=> Pensez également à charger le module stem pour php : (créez par exemple un fichier stem.ini dans /etc/php5/conf.d)
+Si vous êtes derrière un proxy, vous pouvez configurer pear pour utiliser les paramètres de votre proxy
+
+pear config-set http_proxy http://login:password@ip_du_proxy:port_du_proxy
+
+Enfin on peut également installer les outils pour l'extraction des contenus (utilisés par le module de gestion de documents)
+
+apt-get install catdoc xpdf-utils jhead unrtf unzip zip
+
+P A R A M E T R A G E   S E R V E U R
+- - - - - - - - - - - - - - - - - - -
+
+PHP
+---
+Le module pecl/stem n'est pas chargé par défaut avec php. Pour charger stem, créez par exemple un fichier stem.ini dans /etc/php5/conf.d qui contient les éléments suivants :
+
 # configuration for pecl stem module
 extension=stem.so
 
-# Outils pour l'extraction de contenus (gestion de documents)
-catdoc xpdf-utils jhead unrtf unzip zip
+Modifiez dans le fichier de configuration de PHP (/etc/php5/apache2/php.ini sous Debian Etch) la configuration des magic quotes
 
-PLOOPI 1.0 - Installation
------------------------
+magic_quotes_gpc = Off
 
-1. Copiez le contenu de l'archive (en général un fichier .tgz) sur votre serveur web : tar zxvf ploopi_x.x.tgz (nous parlerons de /var/www/ploopi_x.x/)
-2. Configurez votre serveur web pour qu'il puisse accéder au dossier nouvellement créé (nous parlerons de http://mondomaine/monploopi/)
+En option (surtout pour le module gestion de documents) :
 
-Si vous désirez effectuer une installation automatique
-------------------------------------------------------
+memory_limit = 128M
+post_max_size = 16M
+upload_max_filesize = 16M
 
-3. Attribuez des droits en écriture au processus apache/httpd (nous considérons qu'apache est exécuté par www-data) sur le dossier include : chown -R www-data:www-data /var/www/ploopi_x.x/config/
-4. Vérifiez que vous disposez d'un compte utilisateur MySQL permettant de créer une base.
-5. Ouvrez votre navigateur et accédez à l'url : http://mondomaine/monploopi/
-6. Suivez la procédure d'installation automatique
-7. Effacez le fichier /var/www/ploopi_x.x/config/install.php
-8. Retirez les droits en écriture sur le dossier /var/www/ploopi_x.x/config/
+En option également, paramétrez correctement le fuseau horaire par défaut (sinon php vous renvoie Europe/Berlin) :
 
-Si vous désirez effectuer une installation manuelle
----------------------------------------------------
+date.timezone = Europe/Paris
 
-3. Créez une base MySQL
-4. Importez le script SQL situé dans le dossier /var/www/ploopi_x.x/install/system/ploopi.sql
-5. Renommez ou Copier le fichier /var/www/ploopi_x.x/config/config.php.model vers /var/www/ploopi_x.x/config/config.php
-6. Modifiez les paramètres non renseignés
-7. Effacez le fichier /var/www/ploopi_x.x/config/install.php
-
-Affecter des droits restrictifs (exemple pour Debian) - Avant installation :
-----------------------------------------------------------------------------
-su
-cd /var/www/ploopi_x.x/
-
-chown -R www-data:www-data .
-find . -type d -print0 | xargs -0 -n 1 chmod 500
-find . -type f -print0 | xargs -0 -n 1 chmod 400
-find {data,config,modules} -type d -print0 | xargs -0 -n 1 chmod 700
-find {data,config,modules} -type f -print0 | xargs -0 -n 1 chmod 600
-find bin -type f -print0 | xargs -0 -n 1 chmod 500
-chmod 500 ./cgi/upload.cgi
-
-# Après installation de ploopi (pré-production)
-rm -rf ./config/install.php
-find config -type d -print0 | xargs -0 -n 1 chmod 500
-find config -type f -print0 | xargs -0 -n 1 chmod 400
-
-# Après installation des modules (production)
-find modules -type d -print0 | xargs -0 -n 1 chmod 500
-find modules -type f -print0 | xargs -0 -n 1 chmod 400
-
-PLOOPI 1.0 - Configuration Apache
-------------------------------
-
-1. Dans votre fichier de configuration d'Apache  (/etc/apache2/apache2.conf sous Debian Etch), décommenter la ligne :
+Apache
+------
+1. Dans votre fichier de configuration d'Apache (/etc/apache2/apache2.conf sous Debian Etch), décommenter la ligne :
 
 AddDefaultCharset ISO-8859-15
 
-2. Ajouter le module "rewrite" dans les modules accessibles (en root)
+2. Activez le module "rewrite" (en root)
 
 ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled
 
-3. Créez un Virtual Host (optionnel mais recommandé)
+3. Créez un Virtual Host (optionnel mais recommandé).
+
+Pour cela vous pouvez ajouter un fichier dans /etc/apache2/sites-available/ (en root) :
+
+nano /etc/apache2/sites-available/ploopi
+
+puis insérez les lignes suivantes :
 
 <VirtualHost *>
         ServerName monploopi
 
         DocumentRoot /var/www/monploopi/
-        #php_flag magic_quotes_gpc on # vous pouvez redéfinir un paramètre php spécifiquement à ce virtual host
 
         <Directory /var/www/monploopi/>
                 AllowOverride All
         </Directory>
 
         # config CGI
-		ScriptAlias /cgi/ /var/www/monploopi/cgi/
+    ScriptAlias /cgi/ /var/www/monploopi/cgi/
         <Directory "/var/www/monploopi/cgi/">
                 AllowOverride None
                 Options ExecCGI -MultiViews +SymLinksIfOwnerMatch
@@ -103,26 +107,76 @@ ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled
 La configuration CGI permet d'uploader des fichiers sans limite de taille avec une barre de progression.
 Il est par contre nécessaire de disposer de l'interpréteur php en ligne de commande (paquet php5-cli)
 
-PLOOPI 1.0 - Configuration .htaccess
-------------------------------------
+Pour terminer, il faut activer le virtualhost et recharger la configuration d'Apache :
 
-Un fichier .htaccess est fourni. Ce fichier peut ne pas être interprété par Apache.
+ln -s /etc/apache2/sites-available/ploopi /etc/apache2/sites-enabled/000-ploopi
+/etc/init.d/apache2 reload
+
+I N S T A L L A T I O N
+- - - - - - - - - - - -
+
+Méthode 1 (recommandée) : téléchargement d'une archive
+------------------------------------------------------
+
+1. Téléchargez la dernière version de Ploopi
+
+2. Copiez le contenu de l'archive (en général un fichier .tar.bz2) sur votre serveur web :
+
+tar jxvf ploopi_x.x.tar.bz2
+
+Méthode 2 (testeurs) : téléchargement depuis SVN
+------------------------------------------------
+
+1. Si vous n'avez pas le client svn, vous pouvez l'installer simplement avec cette commande (toujours en root !) :
+
+apt-get install subversion
+
+2. Puis utilisez svn pour télécharger la dernière version :
+
+svn export http://svn.ploopi.org/trunk /var/www/ploopi_x.x --force
+
+3. Enfin, renommez le fichier .htaccess_modele en .htaccess
+
+mv /var/www/ploopi_x.x/.htaccess_modele /var/www/ploopi_x.x/.htaccess
+
+Suite et fin...
+---------------
+
+On supposera pour la suite que le dossier précédemment créé se situe dans /var/www/ploopi_x.x/
+
+3. Configurez votre serveur web pour qu'il puisse accéder au dossier nouvellement créé (nous parlerons de http://mondomaine/monploopi/)
+
+4. Vérifiez les droits d'accès en lecture/écriture pour le processus apache. L'idéal est d'appliquer les règles suivantes (en root) :
+
+cd /var/www/ploopi_x.x/
+
+chown -R www-data:www-data .
+find . -type d -print0 | xargs -0 -n 1 chmod 500
+find . -type f -print0 | xargs -0 -n 1 chmod 400
+find {data,config,modules} -type d -print0 | xargs -0 -n 1 chmod 700
+find {data,config,modules} -type f -print0 | xargs -0 -n 1 chmod 600
+find bin -type f -print0 | xargs -0 -n 1 chmod 500
+chmod 500 ./cgi/upload.cgi
+
+4. Ouvrez un navigateur à l'adresse http://mondomaine/monploopi/ - Vous devriez arriver sur la page d'installation.
+
+5. Lorsque l'installation est terminée, il est fortement recommandé de supprimer le fichier ./config/install.php et de modifier les droits d'écriture pour apache sur le dossier ./config
+
+rm -rf ./config/install.php
+find config -type d -print0 | xargs -0 -n 1 chmod 500
+find config -type f -print0 | xargs -0 -n 1 chmod 400
+
+C O N F I G U R A T I O N   . H T A C C E S S
+- - - - - - - - - - - - - - - - - - - - - - -
+
+Un fichier .htaccess est inclus à la racine de Ploopi.
+Ce fichier peut ne pas être interprété par Apache.
 Vérifiez pour cela que la directive AllowOverride n'est pas configurée à "None".
+
 Il peut être nécessaire de d'adapter le fichier .htaccess à votre configuration.
 Notamment la directive RewriteBase qui doit être adapté au dossier contenant ploopi.
 Si vous utilisez un virtual host vous pouvez laisser la configuration par défaut.
+
 Si vous utilisez ploopi en sous dossier d'un site existant, indiquez le chemin relatif de ce dossier dans la directive RewriteBase.
-Ex : RewriteBase /monploopi/
 
-PLOOPI 1.0 - Configuration PHP
-------------------------------
-
-1. Modifier dans le fichier de configuration de PHP (/etc/php5/apache2/php.ini sous Debian Etch) la configuration des magic quotes
-
-magic_quotes_gpc = Off
-
-2. En option :
-
-memory_limit = 32M
-post_max_size = 16M
-upload_max_filesize = 16M
+RewriteBase /monploopi/

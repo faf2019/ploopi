@@ -1,5 +1,37 @@
-group->getgroupbrotherslite => group->getbrothers
-group->getgroupchildrenlite => group->getchildren
+== Ploopi - version 1.1 ===================================================
+
+2008-08-04 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+  - Correction d'un test d'erreur permettant de vérifier la présence d'un module webedit lors de l'activation d'un espace frontoffice
+  - Correction de la fonctionnalité SQL DUMP : génère correctement le fichier SQL, ajout du format ZIP 
+  - Ajout d'un dossier "doc" contenant les documents suivants (qui étaient à la racine) : * CHANGELOG * COPYRIGHT * FLOSS * INSTALL * LICENSE
+  - DEV / Ajout d'une méthode "gettablename" à la classe "data_object"
+  - DEV / Ajout de la classe "barchart"
+  - DEV / Mise à jour des commentaires sur les classes du framework
+  - DEV / Ajout d'un sous-dossier "analyse" contenant une version imprimable du MPD global de PLOOPI.
+  - DEV / Modification de l'appel à la fonction javascript ploopi_xmlhttprequest_todiv()
+  - DEV / Modification des fonctions de chiffrage d'url pour ajouter les variables d'environnement de manière optionnelle 
+  - DEV / Mise à jour du framework javascript : Découpage en plusieurs fichiers par packages, les fichiers sont fusionnés en un seul puis ce fichier est packé (yuicompressor) et compressé (gz)
+  - Mise à jour des modules pour prendre en compte le refactoring de la fonction ploopi_xmlhttprequest_todiv()
+  - Mise à jour des images : Suppression des fichiers inutiles, Ajout des images du nouveau colorpicker
+  - Correction d'un problème dans la gestion globale du buffer de sortie : provoquait des instabilités 
+  - Correction d'un problème avec la fonction ploopi_ob_clean() (nettoyage du tampon de sortie) 
+  - Modification du header envoyé par défaut 
+  - Refactorings divers, optimisations, correctifs mineurs (orthographe, ergonomie)
+
+* Forms 2.20
+  - Correction d'un bug dans l'export CSV/XLS (non prise en compte du filtrage)  
+
+* WebEdit 1.7.1 
+  - Affichage de statistiques simples (sur chaque article : nombre de visites sur l'année, sur le mois). Bientôt des stats plus complètes : globales, par rubriques, etc...
+  - Ajout d'un popup "statistiques" sur chaque rubrique (statistiques de fréquentation de la rubrique)
+  - Ajout d'un menu "Statistiques" permettant de visualiser les statistiques globales de fréquentation
+  - Ajout d'un action "stats" pour gérer l'accès aux stats depuis les rôles
+  
+* Templates Backoffice
+ - Intégration de la nouvelle classe "barchart"
+ - Intégration du nouveau "colorpicker"
 
 == Ploopi - version 1.0 RC7 ===================================================
 

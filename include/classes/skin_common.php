@@ -443,6 +443,8 @@ class skin_common
                 if ($orderby != $array['orderby']) $array['sort'] = 'ASC';
                 else $array['sort'] = ($array['sort'] == 'ASC') ? 'DESC' : 'ASC';
             }
+            
+            $_SESSION['testsort'] = $array['sort'];
 
             // récupération de la valeur de l'orderby en session ou en parametre (par défaut en paramètre)
             $array['orderby'] = (empty($orderby)) ? $array['orderby'] : $orderby;

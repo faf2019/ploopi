@@ -34,7 +34,6 @@
 /**
  * Ouverture du bloc
  */
-
 echo $skin->open_simplebloc();
 
 if (empty($group))
@@ -49,7 +48,7 @@ else
 }
 ?>
 
-<form name="" action="<? echo ploopi_urlencode('admin.php'); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
+<form action="<? echo ploopi_urlencode('admin.php'); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
 <input type="hidden" name="op" value="save_group">
 <input type="hidden" name="group_id_group" value="<? echo $group->fields['id']; ?>">
 

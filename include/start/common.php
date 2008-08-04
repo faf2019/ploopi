@@ -119,7 +119,7 @@ if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
 {
 
     ini_set('session.save_handler', 'user');
-    ini_set('session.gc_probability', 0);
+    ini_set('session.gc_probability', 10);
     ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);
     
     session_set_save_handler(   array($session, 'open'),

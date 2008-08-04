@@ -132,97 +132,107 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
 {
     $module = new module();
     $module->open($_GET['moduleid']);
-
-    echo '<a name="modify">';
+    
+    echo '<a name="modify"></a>';
     echo $skin->open_simplebloc(str_replace('<MODULE>',$module->fields['label'],_SYSTEM_LABEL_MODULE_PROPERTIES));
     ?>
-    <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
-    <TR BGCOLOR="<? echo $skin->values['bgline1']; ?>">
-        <TD ALIGN="CENTER">
-        <FORM NAME="form_modify_module" ACTION="admin.php" METHOD="POST">
-        <INPUT TYPE="HIDDEN" NAME="op" VALUE="save_module_props">
-        <INPUT TYPE="HIDDEN" NAME="moduleid" VALUE="<? echo $module->fields['id']; ?>">
-        <TABLE WIDTH="100%" CELLPADDING="2" CELLSPACING="1">
-        <TR BGCOLOR="<? echo $skin->values['bgline2']; ?>">
-            <TD ALIGN="RIGHT"><B><? echo _SYSTEM_LABEL_MODULENAME; ?>:&nbsp;</B></TD>
-            <TD ALIGN="LEFT"><INPUT class="text" TYPE="Text" SIZE=30 MAXLENGTH=100 NAME="module_label" VALUE="<? echo htmlentities($module->fields['label']); ?>"></TD>
-            <TD ALIGN="LEFT"><I><? echo _SYSTEM_EXPLAIN_MODULENAME; ?></I></TD>
-        </TR>
-        <TR BGCOLOR="<? echo $skin->values['bgline1']; ?>">
-            <TD ALIGN="RIGHT"><B><? echo _SYSTEM_LABEL_ACTIVE; ?>:&nbsp;</B></TD>
-            <TD>
-            <INPUT TYPE="Radio" <? if ($module->fields['active']) echo "checked" ?> VALUE="1" NAME="module_active"><? echo _PLOOPI_YES; ?>
-            <INPUT TYPE="Radio" <? if (!$module->fields['active']) echo "checked" ?> VALUE="0" NAME="module_active"><? echo _PLOOPI_NO; ?>
-            </TD>
-            <TD ALIGN="LEFT"><I><? echo _SYSTEM_EXPLAIN_ACTIVE; ?></I></TD>
-        </TR>
-        <TR BGCOLOR="<? echo $skin->values['bgline2']; ?>">
-            <TD ALIGN="RIGHT"><B><? echo _SYSTEM_LABEL_AUTOCONNECT; ?>:&nbsp;</B></TD>
-            <TD>
-            <INPUT TYPE="Radio" <? if ($module->fields['autoconnect']) echo "checked" ?> VALUE="1" NAME="module_autoconnect"><? echo _PLOOPI_YES; ?>
-            <INPUT TYPE="Radio" <? if (!$module->fields['autoconnect']) echo "checked" ?> VALUE="0" NAME="module_autoconnect"><? echo _PLOOPI_NO; ?>
-            </TD>
-            <TD ALIGN="LEFT"><I><? echo _SYSTEM_EXPLAIN_AUTOCONNECT; ?></I></TD>
-        </TR>
-        <TR BGCOLOR="<? echo $skin->values['bgline1']; ?>">
-            <TD ALIGN="RIGHT"><B><? echo _SYSTEM_LABEL_SHARED; ?>:&nbsp;</B></TD>
-            <TD>
-            <INPUT TYPE="Radio" <? if ($module->fields['shared']) echo "checked" ?> VALUE="1" NAME="module_shared"><? echo _PLOOPI_YES; ?>
-            <INPUT TYPE="Radio" <? if (!$module->fields['shared']) echo "checked" ?> VALUE="0" NAME="module_shared"><? echo _PLOOPI_NO; ?>
-            </TD>
-            <TD ALIGN="LEFT"><I><? echo _SYSTEM_EXPLAIN_SHARED; ?></I></TD>
-        </TR>
-        <TR BGCOLOR="<? echo $skin->values['bgline2']; ?>">
-            <TD ALIGN="RIGHT"><B><? echo _SYSTEM_LABEL_HERITED; ?>:&nbsp;</B></TD>
-            <TD>
-            <INPUT TYPE="Radio" <? if ($module->fields['herited']) echo "checked" ?> VALUE="1" NAME="module_herited"><? echo _PLOOPI_YES; ?>
-            <INPUT TYPE="Radio" <? if (!$module->fields['herited']) echo "checked" ?> VALUE="0" NAME="module_herited"><? echo _PLOOPI_NO; ?>
-            </TD>
-            <TD ALIGN="LEFT"><I><? echo _SYSTEM_EXPLAIN_HERITED; ?></I><br><a href="<? echo ploopi_urlencode("admin.php?op=apply_heritage&moduleid={$module->fields['id']}"); ?>"><? echo _SYSTEM_APPLYHERITAGE; ?></a></TD>
-        </TR>
-        <TR BGCOLOR="<? echo $skin->values['bgline1']; ?>">
-            <TD ALIGN="RIGHT"><B><? echo _SYSTEM_LABEL_ADMINRESTRICTED; ?>:&nbsp;</B></TD>
-            <TD>
-            <INPUT TYPE="Radio" <? if ($module->fields['adminrestricted']) echo "checked" ?> VALUE="1" NAME="module_adminrestricted"><? echo _PLOOPI_YES; ?>
-            <INPUT TYPE="Radio" <? if (!$module->fields['adminrestricted']) echo "checked" ?> VALUE="0" NAME="module_adminrestricted"><? echo _PLOOPI_NO; ?>
-            </TD>
-            <TD ALIGN="LEFT"><I><? echo _SYSTEM_EXPLAIN_ADMINRESTRICTED; ?></I></TD>
-        </TR>
-        <TR BGCOLOR="<? echo $skin->values['bgline2']; ?>">
-            <TD ALIGN="RIGHT"><B><? echo _SYSTEM_LABEL_VIEWMODE; ?>:&nbsp;</B></TD>
-            <TD>
-            <TABLE CELLPADDING=0 CELLSPACING=0>
-            <TR>
-                <TD VALIGN="MIDDLE">
-                <SELECT class="select" NAME="module_viewmode">
+
+    <form name="form_modify_module" action="admin.php" method="post">
+    <input type="hidden" name="op" value="save_module_props">
+    <input type="hidden" name="moduleid" value="<? echo $module->fields['id']; ?>">
+    <div class="ploopi_form">
+        <div style="padding:2px;">
+            <p>
+                <label><? echo _SYSTEM_LABEL_MODULENAME; ?>:</label>
+                <input type="text" class="text" name="module_label" id="module_label" value="<? echo htmlentities($module->fields['label']); ?>" tabindex="1" />
+            </p>
+            <p>
+                <label>&nbsp;</label>
+                <span><em><? echo _SYSTEM_EXPLAIN_MODULENAME; ?></em></span>
+            </p>
+
+            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_active');">
+                <label><? echo _SYSTEM_LABEL_ACTIVE; ?>:</label>
+                <input type="checkbox" class="checkbox" name="module_active" id="module_active" value="1" <? if ($module->fields['active']) echo 'checked="checked"'; ?> tabindex="2" />
+            </p>
+            <p>
+                <label>&nbsp;</label>
+                <span><em><? echo _SYSTEM_EXPLAIN_ACTIVE; ?></em></span>
+            </p>
+
+            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_autoconnect');">
+                <label><? echo _SYSTEM_LABEL_AUTOCONNECT; ?>:</label>
+                <input type="checkbox" class="checkbox" name="module_autoconnect" id="module_autoconnect" value="1" <? if ($module->fields['autoconnect']) echo 'checked="checked"'; ?> tabindex="3" />
+            </p>
+            <p>
+                <label>&nbsp;</label>
+                <span><em><? echo _SYSTEM_EXPLAIN_AUTOCONNECT; ?></em></span>
+            </p>
+
+            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_shared');">
+                <label><? echo _SYSTEM_LABEL_SHARED; ?>:</label>
+                <input type="checkbox" class="checkbox" name="module_shared" id="module_shared" value="1" <? if ($module->fields['shared']) echo 'checked="checked"'; ?> tabindex="4" />
+            </p>
+            <p>
+                <label>&nbsp;</label>
+                <span><em><? echo _SYSTEM_EXPLAIN_SHARED; ?></em></span>
+            </p>
+
+            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_herited');">
+                <label><? echo _SYSTEM_LABEL_HERITED; ?>:</label>
+                <input type="checkbox" class="checkbox" name="module_herited" id="module_herited" value="1" <? if ($module->fields['herited']) echo 'checked="checked"'; ?> tabindex="5" />
+                <a href="<? echo ploopi_urlencode("admin.php?op=apply_heritage&moduleid={$module->fields['id']}"); ?>"><? echo _SYSTEM_APPLYHERITAGE; ?></a>
+            </p>
+            <p>
+                <label>&nbsp;</label>
+                <span><em><? echo _SYSTEM_EXPLAIN_HERITED; ?></em></span>
+            </p>
+            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_adminrestricted');">
+                <label><? echo _SYSTEM_LABEL_ADMINRESTRICTED; ?>:</label>
+                <input type="checkbox" class="checkbox" name="module_adminrestricted" id="module_adminrestricted" value="1" <? if ($module->fields['adminrestricted']) echo 'checked="checked"'; ?> tabindex="6" />
+            </p>
+            <p>
+                <label>&nbsp;</label>
+                <span><em><? echo _SYSTEM_EXPLAIN_ADMINRESTRICTED; ?></em></span>
+            </p>
+            <p>
+                <label><? echo _SYSTEM_LABEL_VIEWMODE; ?>:</label>
+                <select class="select" name="module_viewmode" tabindex="7">
                 <?
                 foreach($ploopi_viewmodes as $id => $viewmode)
                 {
                     if ($module->fields['viewmode'] == $id) $sel = 'selected';
                     else $sel = '';
-                    echo "<OPTION $sel VALUE=\"$id\">$viewmode</OPTION>";
+                    
+                    
+                    ?>
+                    <option <? if ($module->fields['viewmode'] == $id) echo 'selected="selected"'; ?> value="<? echo $id; ?>"><? echo $viewmode; ?></option>
+                    <?
                 }
                 ?>
-                </SELECT>
-                </TD>
-                <TD VALIGN="MIDDLE" NOWRAP>&nbsp;<INPUT TYPE="Checkbox" <? if ($module->fields['transverseview']) echo "checked" ?> VALUE="1" NAME="module_transverseview"></TD>
-                <TD VALIGN="MIDDLE"><? echo _SYSTEM_LABEL_TRANSVERSE; ?></TD>
-            </TR>
-            </TABLE>
-            </TD>
-            <TD ALIGN="LEFT"><I><? echo _SYSTEM_EXPLAIN_VIEWMODE; ?></I></TD>
-        </TR>
-        <TR BGCOLOR="<? echo $skin->values['bgline2']; ?>">
-            <TD ALIGN="RIGHT" COLSPAN="3">
-                <INPUT TYPE="Submit" class="flatbutton" VALUE="<? echo _PLOOPI_SAVE; ?>">
-            </TD>
-        </TR>
-        </TABLE>
-        </FORM>
-
-        </TD>
-    </TR>
-    </TABLE>
+                </select>
+            </p>
+            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_transverseview');">
+                <label><? echo _SYSTEM_LABEL_TRANSVERSE; ?>:</label>
+                <input type="checkbox" class="checkbox" name="module_transverseview" id="module_transverseview" value="1" <? if ($module->fields['transverseview']) echo 'checked="checked"'; ?> tabindex="8" />
+            </p>
+            <p>
+                <label>&nbsp;</label>
+                <span><em><? echo _SYSTEM_EXPLAIN_VIEWMODE; ?></em></span>
+            </p>
+        </div>
+        <div style="clear:both;text-align:right;padding:4px;">
+            <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>" tabindex="9" />
+        </div>        
+    </div>
+    </form>
+    <script type="text/javascript">
+        ploopi_window_onload_stock(
+            function() {
+                $('module_label').focus();
+            }
+        );
+    </script>
     <?
     echo $skin->close_simplebloc();
 }

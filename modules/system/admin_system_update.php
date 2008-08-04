@@ -35,7 +35,7 @@
  * Ouverture du bloc
  */
 
-echo $skin->open_simplebloc(_SYSTEM_UPDATE." - $strSysVersion vers "._PLOOPI_VERSION);
+echo $skin->open_simplebloc(_SYSTEM_UPDATE." - {$strSysVersion} vers "._PLOOPI_VERSION);
 
 switch($op)
 {

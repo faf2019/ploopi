@@ -35,7 +35,6 @@ cp -r lib $DEST
 rm $DEST/config/config.php
 
 mkdir $DEST/install
-#cp -r install/agenda $DEST/install
 cp -r install/chat $DEST/install
 cp -r install/directory $DEST/install
 cp -r install/doc $DEST/install
@@ -45,6 +44,9 @@ cp -r install/rss $DEST/install
 cp -r install/webedit $DEST/install
 cp -r install/system $DEST/install
 cp install/index.html $DEST/install
+
+mkdir $DEST/doc
+cp doc/* $DEST/doc
 
 cp -r lang $DEST
 cp -r lib $DEST

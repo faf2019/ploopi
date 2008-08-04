@@ -113,11 +113,11 @@ define ('_SYSTEM_LABEL_VERSION', 'Version');
 define ('_SYSTEM_LABEL_DATE', 'Date');
 define ('_SYSTEM_LABEL_ACTIONS', 'Actions');
 define ('_SYSTEM_LABEL_METABASE', 'Métabase');
-define ('_SYSTEM_LABEL_WCEOBJECTS', 'Objets WCE');
+define ('_SYSTEM_LABEL_WCEOBJECTS', 'Obj. WebEdit');
 define ('_SYSTEM_LABEL_MODULENAME', 'Nom');
 define ('_SYSTEM_LABEL_ACTIVE', 'Actif');
 define ('_SYSTEM_LABEL_PUBLIC', 'Public');
-define ('_SYSTEM_LABEL_AUTOCONNECT', 'Connextion Auto');
+define ('_SYSTEM_LABEL_AUTOCONNECT', 'Connexion Auto');
 define ('_SYSTEM_LABEL_SHARED', 'Partagé');
 define ('_SYSTEM_LABEL_HERITED', 'Hérité');
 define ('_SYSTEM_LABEL_ADMINRESTRICTED', 'Administration Restreinte');
@@ -130,7 +130,7 @@ define ('_SYSTEM_LABEL_MOVE', 'Déplacer');
 define ('_SYSTEM_LABEL_ASSIGN', 'Affecter');
 define ('_SYSTEM_LABEL_VIEWMODE', 'Vue');
 define ('_SYSTEM_LABEL_ROLECHOICE', 'Rôle');
-define ('_SYSTEM_LABEL_TRANSVERSE', 'Transversale');
+define ('_SYSTEM_LABEL_TRANSVERSE', 'Vue Transversale');
 define ('_SYSTEM_APPLYHERITAGE', 'Appliquer l\'héritage aux sous-groupes');
 
 
@@ -173,8 +173,8 @@ define ('_SYSTEM_LABEL_CIVILITY', 'Civilité');
 define ('_SYSTEM_LABEL_PARENTS', 'Parents');
 
 
-define ('_SYSTEM_LABEL_GROUP_MANAGEMENT', 'Gestion du Groupe <LABEL> [ <GROUP> ]');
-define ('_SYSTEM_LABEL_WORKSPACE_MANAGEMENT', 'Gestion de l\'Espace <LABEL> [ <GROUP> ]');
+define ('_SYSTEM_LABEL_GROUP_MANAGEMENT', 'Gestion du Groupe <LABEL> &laquo; <GROUP> &raquo;');
+define ('_SYSTEM_LABEL_WORKSPACE_MANAGEMENT', 'Gestion de l\'Espace <LABEL> &laquo; <GROUP> &raquo;');
 
 define ('_SYSTEM_LABEL_GROUP_ADD', 'Ajout d\'un sous-groupe');
 define ('_SYSTEM_LABEL_WORKSPACE_ADD', 'Ajout d\'un sous-espace');
@@ -223,13 +223,13 @@ define ('_SYSTEM_LABEL_CREATE_CLONE_WORKSPACE',     'Cloner');
 define ('_SYSTEM_LABEL_CREATE_CHILD_WORKSPACE',     'Créer');
 define ('_SYSTEM_LABEL_DELETE_WORKSPACE',       'Supprimer');
 
-define ('_SYSTEM_LABEL_GROUP_MODULES_MANAGEMENT',   'Gestion des Modules du Groupe [ <GROUP> ]');
-define ('_SYSTEM_LABEL_GROUP_ROLES_MANAGEMENT',     'Gestion des Rôles du Groupe [ <GROUP> ]');
-define ('_SYSTEM_LABEL_GROUP_AVAILABLE_MODULES',    'Modules disponibles dans cet Espace');
-define ('_SYSTEM_LABEL_GROUP_USABLE_MODULES',       'Modules utilisables pour cet Espace');
-define ('_SYSTEM_LABEL_MODULE_PROPERTIES',      'Propriétés du Module [ <MODULE> ]');
-define ('_SYSTEM_LABEL_MODULE_PARAMS',          'Paramètres du Module [ <MODULE> ]');
-define ('_SYSTEM_LABEL_MODULE_ROLES',           'Module « <MODULE> »');
+define ('_SYSTEM_LABEL_GROUP_MODULES_MANAGEMENT',   'Gestion des Modules du Groupe &laquo; <GROUP> &raquo;');
+define ('_SYSTEM_LABEL_GROUP_ROLES_MANAGEMENT',     'Gestion des Rôles du Groupe &laquo; <GROUP> &raquo;');
+define ('_SYSTEM_LABEL_GROUP_AVAILABLE_MODULES',    'Modules instanciés dans cet Espace');
+define ('_SYSTEM_LABEL_GROUP_USABLE_MODULES',       'Modules utilisables dans cet Espace');
+define ('_SYSTEM_LABEL_MODULE_PROPERTIES',      'Propriétés du Module &laquo; <MODULE> &raquo;');
+define ('_SYSTEM_LABEL_MODULE_PARAMS',          'Paramètres du Module &laquo; <MODULE> &raquo;');
+define ('_SYSTEM_LABEL_MODULE_ROLES',           'Module &laquo; <MODULE> &raquo;');
 define ('_SYSTEM_LABEL_PROFILES_AVAILABLE',         'Profils disponibles dans ce Groupe');
 
 define ('_SYSTEM_LABEL_MYPROFILE',              'Mon Profil');
@@ -344,8 +344,8 @@ define ('_SYSTEM_LABEL_SEARCH', 'Recherche');
 
 
 define ('_SYSTEM_LABEL_MYTICKETS', 'Mes Messages');
-define ('_SYSTEM_LABEL_TICKETS_SENDBOX', 'Messsages envoyés');
-define ('_SYSTEM_LABEL_TICKETS_INCOMINGBOX', 'Messsages reçus');
+define ('_SYSTEM_LABEL_TICKETS_SENDBOX', 'Messages envoyés');
+define ('_SYSTEM_LABEL_TICKETS_INCOMINGBOX', 'Messages reçus');
 define ('_SYSTEM_LABEL_TICKETS_WAITINGVALIDATION', 'Messages en attente de validation');
 define ('_SYSTEM_LABEL_TICKETS_TOVALIDATE', 'Messages à valider');
 define ('_SYSTEM_LABEL_TICKETS_ALL', 'Tous les messages');
