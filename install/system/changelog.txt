@@ -1,6 +1,6 @@
 == Ploopi - version 1.1 ===================================================
 
-2008-08-04 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-08-05 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Ploopi
   - Correction d'un test d'erreur permettant de vérifier la présence d'un module webedit lors de l'activation d'un espace frontoffice
@@ -23,17 +23,18 @@
 * Forms 2.20
   - Correction d'un bug dans l'export CSV/XLS (non prise en compte du filtrage)  
 
-* WebEdit 1.7.1 
+* WebEdit 1.7.2 
   - Affichage de statistiques simples (sur chaque article : nombre de visites sur l'année, sur le mois). Bientôt des stats plus complètes : globales, par rubriques, etc...
   - Ajout d'un popup "statistiques" sur chaque rubrique (statistiques de fréquentation de la rubrique)
   - Ajout d'un menu "Statistiques" permettant de visualiser les statistiques globales de fréquentation
   - Ajout d'un action "stats" pour gérer l'accès aux stats depuis les rôles
+  - Correction d'un bug dans l'extraction des liens vers les documents insérés dans les articles
   
 * Templates Backoffice
  - Intégration de la nouvelle classe "barchart"
  - Intégration du nouveau "colorpicker"
- 
- == Ploopi - version 1.0 RC7 ===================================================
+
+== Ploopi - version 1.0 RC7 ===================================================
 
 2008-07-22 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
     

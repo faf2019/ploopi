@@ -131,7 +131,7 @@ define ('_SYSTEM_LABEL_ASSIGN', 'Affecter');
 define ('_SYSTEM_LABEL_VIEWMODE', 'Vue');
 define ('_SYSTEM_LABEL_ROLECHOICE', 'Rôle');
 define ('_SYSTEM_LABEL_TRANSVERSE', 'Vue Transversale');
-define ('_SYSTEM_APPLYHERITAGE', 'Appliquer l\'héritage aux sous-groupes');
+define ('_SYSTEM_APPLYHERITAGE', 'Appliquer l\'héritage aux sous-espaces');
 
 
 define ('_SYSTEM_LABEL_INSTALL', 'Installer');

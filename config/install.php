@@ -41,7 +41,7 @@ session_start();
  */
 if (file_exists('./config.php'))
 {
-  echo ('<dir style="text-align:center;color:red;">Config exist !<br>You must delete ./config/install.php !</dir>');
+  echo ('<div style="text-align:center;color:red;">Config exist !<br />You must delete ./config/install.php !</div>');
   die();
 }
 
@@ -262,11 +262,11 @@ if($_POST['stage']>=$stage)
   {
     $strTxtLicense = _PLOOPI_INSTALL_LICENSE_TXT;
 
-    if(file_exists('./LICENSE') && is_readable('./LICENSE'))
+    if(file_exists('./doc/LICENSE') && is_readable('./doc/LICENSE'))
     {
-       $strTxtLicense = file_get_contents('./LICENSE');
+       $strTxtLicense = file_get_contents('./doc/LICENSE');
        $strTxtLicense = htmlentities($strTxtLicense);
-       $strTxtLicense = str_replace("\n\n",'<br><br>',$strTxtLicense);
+       $strTxtLicense = str_replace("\n\n",'<br /><br />',$strTxtLicense);
        $strTxtLicense = str_replace("\n",' ',$strTxtLicense);
     }
     $objInstallTemplate->assign_block_vars("stage$stage",array(

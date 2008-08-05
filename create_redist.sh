@@ -1,5 +1,5 @@
 #!/bin/sh
-export DEST=ploopi_1.0RC7
+export DEST=ploopi_1.1
 
 #################################
 # compression des fichiers
@@ -18,12 +18,14 @@ mkdir $DEST
 
 cp *.php $DEST
 cp .htaccess_modele $DEST/.htaccess
-cp {CHANGELOG,COPYRIGHT,FLOSS,INSTALL,LICENSE} $DEST
 
 cp -r bin $DEST
 
 mkdir $DEST/data
 cp data/index.html $DEST/data
+
+mkdir $DEST/doc
+cp doc/{CHANGELOG,COPYRIGHT,FLOSS,INSTALL,LICENSE} $DEST/doc
 
 cp -r cgi $DEST
 cp -r config $DEST
@@ -44,9 +46,6 @@ cp -r install/rss $DEST/install
 cp -r install/webedit $DEST/install
 cp -r install/system $DEST/install
 cp install/index.html $DEST/install
-
-mkdir $DEST/doc
-cp doc/* $DEST/doc
 
 cp -r lang $DEST
 cp -r lib $DEST
