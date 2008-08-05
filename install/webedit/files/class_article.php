@@ -105,6 +105,9 @@ class webedit_article extends data_object
      * Enregistre l'article
      *
      * @return int identifiant de l'article
+     * 
+     * @copyright Ovensia
+     * @author Stéphane Escaich
      */    
     
     function save()
@@ -121,16 +124,17 @@ class webedit_article extends data_object
         if (_PLOOPI_FRONTOFFICE_REWRITERULE)
         {
             // traitement du lien avec "title" après "href" (fckeditor inverse l'ordre des attributs à chaque enregistrement !)
-            preg_match_all('/<a.*href="([^\"]+)".*title="([^\"]+)".*>([^>]*)<\/a>/i', $this->fields['content'], $matches);
+            preg_match_all('/<a[^>]*href="([^\"]+)"[^>]*title="([^\"]+)"[^>]*>([^>]*)<\/a>/i', $this->fields['content'], $matches);
             foreach($matches[1] as $key => $value)
             {
+               ploopi_print_r($matches);
                 $value = html_entity_decode($value);
                 $arrSearch[] = $matches[1][$key];
                 $arrReplace[] = ploopi_urlrewrite($value, $matches[2][$key], (strpos($value, 'index-quick.php?ploopi_op=doc_file_download&docfile_md5id=') !== false));
             }
-            
+
             // traitement du lien avec "title" avant "href" (fckeditor inverse l'ordre des attributs à chaque enregistrement !)
-            preg_match_all('/<a.*title="([^\"]+)".*href="([^\"]+)".*>([^>]*)<\/a>/i' , $this->fields['content'], $matches);
+            preg_match_all('/<a[^>]*title="([^\"]+)"[^>]*href="([^\"]+)"[^>]*>([^>]*)<\/a>/i' , $this->fields['content'], $matches);
             foreach($matches[2] as $key => $value)
             {
                 $value = html_entity_decode($value);
@@ -261,7 +265,7 @@ class webedit_article extends data_object
         $db->query("DELETE FROM ploopi_mod_webedit_docfile WHERE id_article = {$this->fields['id']}");
         
         // Recherche des liens vers des documents (du module doc)
-        preg_match_all('/<a.*href="(index-quick\.php\?ploopi_op=doc_file_download\&docfile_md5id=([a-z0-9]{32}))".*>([^>]*)<\/a>/i' , html_entity_decode($this->fields['content']), $matches);
+        preg_match_all('/<a[^>]*href="(index-quick\.php\?ploopi_op=doc_file_download\&docfile_md5id=([a-z0-9]{32}))"[^>]*>([^>]*)<\/a>/i' , html_entity_decode($this->fields['content']), $matches);
         
         if (!empty($matches[2]) && file_exists('./modules/doc/class_docfile.php'))
         {

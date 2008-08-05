@@ -1,3 +1,9 @@
+== Module WebEdit - version 1.7.2 ============================================
+
+2008-08-05  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un bug dans l'extraction des liens vers les documents insérés dans les articles
+
 == Module WebEdit - version 1.7.1 ============================================
 
 2008-08-04  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
