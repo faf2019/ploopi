@@ -106,11 +106,13 @@ switch($op)
             $objArticle = new webedit_article();
             if ($objArticle->open($row['id']))
             {
+                if (isset($_REQUEST['force'])) $objArticle->save();
                 $objArticle->index();
             }
         }
         ?>
         indexation terminée en <? printf("%.02fs", $ploopi_timer->getexectime() - $index_start); ?>
+        <? if (isset($_REQUEST['force'])) echo "<br />Mode 'force' activé"; ?>
         <br /><a title="Retour" href="<? echo ploopi_urlencode('admin.php?webedit_menu=reindex'); ?>">Retour</a>
         </div>
         <?

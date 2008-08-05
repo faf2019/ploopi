@@ -116,6 +116,23 @@ class webedit_article extends data_object
 
         if (empty($this->fields['timestp'])) $this->fields['timestp'] = ploopi_createtimestamp();
         
+        // Cas particulier des liens vers des documents DIMS
+        preg_match_all('/<a[^>]*href="(\.\/index-quick\.php\?dims_url=([^\"]*))"[^>]*>([^>]*)<\/a>/i' , $this->fields['content'], $matches);
+        
+        if (!empty($matches[2]))
+        {
+            $arrReplace = array();
+            $arrSearch = array();
+            
+            foreach($matches[2] as $key => $url)
+            {
+                $arrSearch[] = $matches[1][$key];
+                $arrReplace[] = 'index-quick.php?'.str_replace('dims_op', 'ploopi_op', ploopi_base64_decode($url));
+            }
+            
+            $this->fields['content'] = str_replace($arrSearch, $arrReplace, $this->fields['content']);
+        }
+        
         // Recherche des liens vers des documents (du module doc)
         // Pour les remplacer (urlrewrite)
         $arrSearch = array();
