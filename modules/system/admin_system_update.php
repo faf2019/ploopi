@@ -41,6 +41,8 @@ switch($op)
 {
     case 'system_update_execute':
         
+        $strSysVersion = str_replace(' ', '', $strSysVersion);
+        
         $strSysInstallPath = './install/system/';
         
         $arrUpdates = array();
