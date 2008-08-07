@@ -79,7 +79,9 @@ if (isset($idmodule))
 
     $param_module->open($idmodule, $workspaceid);
     
-    if (isset($param_module->tabparam))
+    $arrParam = $param_module->getvalues();
+    
+    if (!empty($arrParam))
     {
         ?>
         <div style="padding:4px;">
@@ -88,7 +90,7 @@ if (isset($idmodule))
             <input type="hidden" name="idmodule" value="<? echo $idmodule; ?>">
             <div class="ploopi_form">
             <?
-            foreach($param_module->tabparam as $name => $param)
+            foreach($arrParam as $name => $param)
             {
                 ?>
                 <p>
