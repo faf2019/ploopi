@@ -53,3 +53,18 @@ font-size:10px;
     overflow:visible;
     height:1%;
 }
+
+#webedit_stats {
+    overflow:visible;
+    height:1%;
+}
+
+#webedit_stats_select p {
+    overflow:visible;
+    height:1%;
+}
+
+.webedit_stats_array {
+    overflow:visible;
+    height:1%;
+}

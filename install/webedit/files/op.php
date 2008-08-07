@@ -264,162 +264,164 @@ if ($_SESSION['ploopi']['connected'])
             
             ob_start();
             ?>
-            <div id="webedit_stats_select">
-                <p>
-                    <strong>Année:</strong>
-                    <?
-                    foreach($arrSelectYear as $year)
-                    {
-                        ?>
-                        <a href="javascript:void(0);" onclick="javascript:webedit_stats_refresh(<? echo $intArticleId; ?>, <? echo $intHeadingId; ?>, <? echo $year; ?>);" <? if ($year == $intYearSel) echo 'class="selected"'; ?>><? echo $year; ?></a>
+            <div id="webedit_stats">
+                <div id="webedit_stats_select">
+                    <p>
+                        <strong>Année:</strong>
                         <?
-                    }
-                    ?>
-                </p>
-                <p>
-                    <strong>Mois:</strong>
-                    <?
-                    foreach($arrSelectMonth as $month)
-                    {
+                        foreach($arrSelectYear as $year)
+                        {
+                            ?>
+                            <a href="javascript:void(0);" onclick="javascript:webedit_stats_refresh(<? echo $intArticleId; ?>, <? echo $intHeadingId; ?>, <? echo $year; ?>);" <? if ($year == $intYearSel) echo 'class="selected"'; ?>><? echo $year; ?></a>
+                            <?
+                        }
                         ?>
-                        <a href="javascript:void(0);" onclick="javascript:webedit_stats_refresh(<? echo $intArticleId; ?>, <? echo $intHeadingId; ?>, <? echo $intYearSel; ?>, <? echo $month; ?>);" <? if ($month == $intMonthSel) echo 'class="selected"'; ?>><? echo $ploopi_months[$month]; ?></a>
+                    </p>
+                    <p>
+                        <strong>Mois:</strong>
                         <?
-                    }
-                    ?>
-                </p>
-            </div>
-            <?
-            include_once './include/classes/barchart.php';
-            
-            // 1er Diagramme : année par mois
-            
-            $dataset = array();
-            $legend = array();
-            
-            foreach($ploopi_months as $key => $value) 
-            {
-                $dataset[$key] = 0;
-                $legend[$key] = substr($value,0,3);
-            }
-            
-            switch($type_stat)
-            {
-                case 'article':
-                    $db->query(
-                        "
-                        SELECT  month, 
-                                sum(hits) as counter 
-                        
-                        FROM    ploopi_mod_webedit_counter 
-                        
-                        WHERE   id_article = {$_POST['webedit_article_id']} 
-                        AND     year = {$intYearSel}
-
-                        GROUP BY month
-                        ORDER BY month
-                        "
-                    );
-                break;
+                        foreach($arrSelectMonth as $month)
+                        {
+                            ?>
+                            <a href="javascript:void(0);" onclick="javascript:webedit_stats_refresh(<? echo $intArticleId; ?>, <? echo $intHeadingId; ?>, <? echo $intYearSel; ?>, <? echo $month; ?>);" <? if ($month == $intMonthSel) echo 'class="selected"'; ?>><? echo $ploopi_months[$month]; ?></a>
+                            <?
+                        }
+                        ?>
+                    </p>
+                </div>
+                <?
+                include_once './include/classes/barchart.php';
                 
-                case 'heading':
-                    $db->query(
-                        "
-                        SELECT      c.month, 
-                                    sum(c.hits) as counter
-                                 
-                        FROM        ploopi_mod_webedit_counter c
-
-                        INNER JOIN  ploopi_mod_webedit_article a
-                        ON          a.id = c.id_article
-                        AND         a.id_heading = {$_POST['webedit_heading_id']} 
-                        
-                        WHERE       c.year = {$intYearSel}
-                        
-                        GROUP BY    c.month
-                        ORDER BY    c.month
-                        "
-                    );
-                break;
-            }
+                // 1er Diagramme : année par mois
                 
+                $dataset = array();
+                $legend = array();
                 
-            while ($row = $db->fetchrow()) $dataset[$row['month']] = $row['counter'];
-
-            $objBarChartYear = new barchart(550, 100);
-            $objBarChartYear->setvalues($dataset);
-            $objBarChartYear->setlegend($legend);
-            
-            // 1er Diagramme : mois par jours
-            
-            $dataset = array();
-            $legend = array();
-            
-            $nbdays = date('t', mktime(0, 0, 0, $intMonthSel, 1, $intYearSel));
-            
-            for ($d=1;$d<=$nbdays;$d++) 
-            {
-                $weekday = date('N', mktime(0, 0, 0, $intMonthSel, $d, $intYearSel));
-                $dataset[$d] = 0;
-                $legend[$d] = substr($ploopi_days[$weekday],0,2).'<br />'.$d;
-            }
-            
-            switch($type_stat)
-            {
-                case 'article':
-                    $db->query(
-                        "
-                        SELECT  day, 
-                                sum(hits) as c
-                                 
-                        FROM    ploopi_mod_webedit_counter
-                         
-                        WHERE   id_article = {$_POST['webedit_article_id']} 
-                        AND     year = {$intYearSel}
-                        AND     month = {$intMonthSel}
-                        
-                        GROUP BY day
-                        ORDER BY day
-                        "
-                    );
-                break;
+                foreach($ploopi_months as $key => $value) 
+                {
+                    $dataset[$key] = 0;
+                    $legend[$key] = substr($value,0,3);
+                }
                 
-                case 'heading':
-                    $db->query(
-                        "
-                        SELECT      c.day, 
-                                    sum(c.hits) as counter
+                switch($type_stat)
+                {
+                    case 'article':
+                        $db->query(
+                            "
+                            SELECT  month, 
+                                    sum(hits) as counter 
+                            
+                            FROM    ploopi_mod_webedit_counter 
+                            
+                            WHERE   id_article = {$_POST['webedit_article_id']} 
+                            AND     year = {$intYearSel}
+    
+                            GROUP BY month
+                            ORDER BY month
+                            "
+                        );
+                    break;
+                    
+                    case 'heading':
+                        $db->query(
+                            "
+                            SELECT      c.month, 
+                                        sum(c.hits) as counter
                                      
-                        FROM        ploopi_mod_webedit_counter c 
-
-                        INNER JOIN  ploopi_mod_webedit_article a
-                        ON          a.id = c.id_article
-                        AND         a.id_heading = {$_POST['webedit_heading_id']} 
-                        
-                        WHERE       c.year = {$intYearSel}
-                        AND         c.month = {$intMonthSel}
-                        
-                        GROUP BY    c.day
-                        ORDER BY    c.day
-                        "
-                    );
-                break;
-            }
-            
-            while ($row = $db->fetchrow()) $dataset[$row['day']] = $row['counter'];
-
-            $objBarChartMonth = new barchart(550, 100);
-            $objBarChartMonth->setvalues($dataset);
-            $objBarChartMonth->setlegend($legend);
-            
-            // Affichage
-            ?>
-            <div class="webedit_stats_graph">
-                <h1>Statistiques de fréquentation pour <em><? echo $intYearSel ?></em> (nombre de visites)</h1>
-                <div><? $objBarChartYear->draw(); ?></div>
-            </div>
-            <div class="webedit_stats_graph">
-                <h1>Statistiques de fréquentation pour <em><? echo $ploopi_months[$intMonthSel] ?> <? echo $intYearSel ?></em> (nombre de visites)</h1>
-                <div><? $objBarChartMonth->draw(); ?></div>
+                            FROM        ploopi_mod_webedit_counter c
+    
+                            INNER JOIN  ploopi_mod_webedit_article a
+                            ON          a.id = c.id_article
+                            AND         a.id_heading = {$_POST['webedit_heading_id']} 
+                            
+                            WHERE       c.year = {$intYearSel}
+                            
+                            GROUP BY    c.month
+                            ORDER BY    c.month
+                            "
+                        );
+                    break;
+                }
+                    
+                    
+                while ($row = $db->fetchrow()) $dataset[$row['month']] = $row['counter'];
+    
+                $objBarChartYear = new barchart(550, 100);
+                $objBarChartYear->setvalues($dataset);
+                $objBarChartYear->setlegend($legend);
+                
+                // 1er Diagramme : mois par jours
+                
+                $dataset = array();
+                $legend = array();
+                
+                $nbdays = date('t', mktime(0, 0, 0, $intMonthSel, 1, $intYearSel));
+                
+                for ($d=1;$d<=$nbdays;$d++) 
+                {
+                    $weekday = date('N', mktime(0, 0, 0, $intMonthSel, $d, $intYearSel));
+                    $dataset[$d] = 0;
+                    $legend[$d] = substr($ploopi_days[$weekday],0,2).'<br />'.$d;
+                }
+                
+                switch($type_stat)
+                {
+                    case 'article':
+                        $db->query(
+                            "
+                            SELECT  day, 
+                                    sum(hits) as c
+                                     
+                            FROM    ploopi_mod_webedit_counter
+                             
+                            WHERE   id_article = {$_POST['webedit_article_id']} 
+                            AND     year = {$intYearSel}
+                            AND     month = {$intMonthSel}
+                            
+                            GROUP BY day
+                            ORDER BY day
+                            "
+                        );
+                    break;
+                    
+                    case 'heading':
+                        $db->query(
+                            "
+                            SELECT      c.day, 
+                                        sum(c.hits) as counter
+                                         
+                            FROM        ploopi_mod_webedit_counter c 
+    
+                            INNER JOIN  ploopi_mod_webedit_article a
+                            ON          a.id = c.id_article
+                            AND         a.id_heading = {$_POST['webedit_heading_id']} 
+                            
+                            WHERE       c.year = {$intYearSel}
+                            AND         c.month = {$intMonthSel}
+                            
+                            GROUP BY    c.day
+                            ORDER BY    c.day
+                            "
+                        );
+                    break;
+                }
+                
+                while ($row = $db->fetchrow()) $dataset[$row['day']] = $row['counter'];
+    
+                $objBarChartMonth = new barchart(550, 100);
+                $objBarChartMonth->setvalues($dataset);
+                $objBarChartMonth->setlegend($legend);
+                
+                // Affichage
+                ?>
+                <div class="webedit_stats_graph">
+                    <h1>Statistiques de fréquentation pour <em><? echo $intYearSel ?></em> (nombre de visites)</h1>
+                    <div><? $objBarChartYear->draw(); ?></div>
+                </div>
+                <div class="webedit_stats_graph">
+                    <h1>Statistiques de fréquentation pour <em><? echo $ploopi_months[$intMonthSel] ?> <? echo $intYearSel ?></em> (nombre de visites)</h1>
+                    <div><? $objBarChartMonth->draw(); ?></div>
+                </div>
             </div>
             <?
             $content = ob_get_contents();

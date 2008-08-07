@@ -204,23 +204,18 @@ div.webedit_row {
 	overflow:auto;
 }
 
+
 #webedit_stats {
     overflow:auto;
-    display:none;
-    border-bottom:1px solid #c0c0c0;
-    background:#fff;
-    overflow:hidden;
-}
-
-#webedit_stats_select {
+	background:#fff;
 }
 
 #webedit_stats_select p {
     padding:2px;
     margin:0;
     overflow:auto;
-    background:#f0f0f0;
     border-bottom:1px solid #c0c0c0;
+    background:#eee;
 }
 
 #webedit_stats_select p * {
@@ -267,7 +262,8 @@ div.webedit_row {
 
 .webedit_stats_array {
     background:#fff;
-    padding-top:10px
+    padding-top:10px;
+    overflow:auto;
 }
 
 .webedit_stats_array h1 {

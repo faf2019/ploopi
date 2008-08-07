@@ -116,8 +116,8 @@ class webedit_article extends data_object
 
         if (empty($this->fields['timestp'])) $this->fields['timestp'] = ploopi_createtimestamp();
         
-        // Cas particulier des liens vers des documents DIMS
-        preg_match_all('/<a[^>]*href="(\.\/index-quick\.php\?dims_url=([^\"]*))"[^>]*>([^>]*)<\/a>/i' , $this->fields['content'], $matches);
+        // Cas particulier des liens vers des documents (+ images) DIMS
+        preg_match_all('/"(\.\/index-quick\.php\?dims_url=([^\"]*))"/i' , $this->fields['content'], $matches);
         
         if (!empty($matches[2]))
         {
@@ -133,36 +133,62 @@ class webedit_article extends data_object
             $this->fields['content'] = str_replace($arrSearch, $arrReplace, $this->fields['content']);
         }
         
-        // Recherche des liens vers des documents (du module doc)
-        // Pour les remplacer (urlrewrite)
-        $arrSearch = array();
-        $arrReplace = array();
-        
+        /**
+         * Réécriture des liens vers articles, documents et des images
+         */        
         if (_PLOOPI_FRONTOFFICE_REWRITERULE)
         {
-            // traitement du lien avec "title" après "href" (fckeditor inverse l'ordre des attributs à chaque enregistrement !)
-            preg_match_all('/<a[^>]*href="([^\"]+)"[^>]*title="([^\"]+)"[^>]*>([^>]*)<\/a>/i', $this->fields['content'], $matches);
-            foreach($matches[1] as $key => $value)
+            // Recherche des liens vers des documents (du module doc)
+            // Pour les remplacer (urlrewrite)
+            $arrSearch = array();
+            $arrReplace = array();
+            
+            // traitement des liens vers articles
+            preg_match_all('/<a[^>]*href="(index\.php[^\"]+articleid=([0-9]+)[^\"]*)"[^>]*>/i', $this->fields['content'], $matches);
+            ploopi_print_r($matches);
+            foreach($matches[2] as $key => $idart)
             {
-               ploopi_print_r($matches);
-                $value = html_entity_decode($value);
-                $arrSearch[] = $matches[1][$key];
-                $arrReplace[] = ploopi_urlrewrite($value, $matches[2][$key], (strpos($value, 'index-quick.php?ploopi_op=doc_file_download&docfile_md5id=') !== false));
-            }
-
-            // traitement du lien avec "title" avant "href" (fckeditor inverse l'ordre des attributs à chaque enregistrement !)
-            preg_match_all('/<a[^>]*title="([^\"]+)"[^>]*href="([^\"]+)"[^>]*>([^>]*)<\/a>/i' , $this->fields['content'], $matches);
-            foreach($matches[2] as $key => $value)
-            {
-                $value = html_entity_decode($value);
-                $arrSearch[] = $matches[2][$key];
-                $arrReplace[] = ploopi_urlrewrite($value, $matches[1][$key], (strpos($value, 'index-quick.php?ploopi_op=doc_file_download&docfile_md5id=') !== false));
+                $objArticle = new webedit_article();
+                if (!empty($idart) && $objArticle->open($idart)) // article trouvé
+                {
+                    $arrSearch[] = $matches[1][$key];
+                    $arrReplace[] = ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$idart}", $objArticle->fields['metatitle']);
+                }
             }
             
+            if (file_exists('./modules/doc/class_docfile.php'))
+            {
+                include_once './modules/doc/class_docfile.php';
+
+                // traitement des liens vers documents
+                preg_match_all('/<a[^>]*href="(index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32}))"[^>]*>/i', $this->fields['content'], $matches);
+                foreach($matches[2] as $key => $md5)
+                {
+                    $objDocFile = new docfile();
+                    if (!empty($md5) && $objDocFile->openmd5($md5)) // clé md5 présente & document trouvé
+                    {
+                        $arrSearch[] = $matches[1][$key];
+                        $arrReplace[] = ploopi_urlrewrite(html_entity_decode($matches[1][$key]), $objDocFile->fields['name'], true);
+                    }
+                }
+                
+                // traitement des images
+                preg_match_all('/<img[^>]*src="(index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32}))"[^>]*>/i', $this->fields['content'], $matches);
+                foreach($matches[2] as $key => $md5)
+                {
+                    $objDocFile = new docfile();
+                    if (!empty($md5) && $objDocFile->openmd5($md5)) // clé md5 présente & document trouvé
+                    {
+                        $arrSearch[] = $matches[1][$key];
+                        $arrReplace[] = ploopi_urlrewrite(html_entity_decode($matches[1][$key]), $objDocFile->fields['name'], true);
+                    }
+                }
+            }
+                        
             $this->fields['content_cleaned'] = str_replace($arrSearch, $arrReplace, $this->fields['content']);
         }
         else $this->fields['content_cleaned'] = $this->fields['content'];
-        
+
         $this->fields['content_cleaned'] = ploopi_htmlpurifier($this->fields['content_cleaned']);
         
         // Nettoyage des tags

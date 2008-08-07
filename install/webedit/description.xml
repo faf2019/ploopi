@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>webedit</label>
-        <version>1.7.3</version>
+        <version>1.7.4</version>
         <author>Netlor / Ovensia</author>
-        <date>20080805000000</date>
+        <date>20080806000000</date>
         <description>Editeur de Contenus Web</description>
         <action>
             <id_action>1</id_action>

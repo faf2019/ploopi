@@ -1,3 +1,10 @@
+== Module WebEdit - version 1.7.4 ============================================
+
+2008-08-07  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction de bugs visuels sur les statistiques avec IE6
+ * Amélioration du système de réécriture d'URL pour une meilleure prise en compte des liens dans un article (document, articles) et des images
+
 == Module WebEdit - version 1.7.3 ============================================
 
 2008-08-05  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
