@@ -161,8 +161,8 @@ define ('_SYSTEM_LABEL_COUNTRY', 'Pays');
 define ('_SYSTEM_LABEL_PHONE', 'Téléphone');
 define ('_SYSTEM_LABEL_MOBILE', 'Tél. Portable');
 define ('_SYSTEM_LABEL_FAX', 'Fax');
-define ('_SYSTEM_LABEL_EMAIL', 'Mèl');
-define ('_SYSTEM_LABEL_TICKETSBYEMAIL', 'Copie des messages par Mèl');
+define ('_SYSTEM_LABEL_EMAIL', 'Courriel');
+define ('_SYSTEM_LABEL_TICKETSBYEMAIL', 'Copie des messages par Courriel');
 define ('_SYSTEM_LABEL_SERVERTIMEZONE', 'Synchronisé avec le fuseau horaire du serveur');
 define ('_SYSTEM_LABEL_FUNCTION', 'Fonction');
 define ('_SYSTEM_LABEL_SERVICE', 'Service');
@@ -287,10 +287,10 @@ define ('_SYSTEM_EXPLAIN_MODULENAME', 'Nom que portera le module dans l\'interfa
 define ('_SYSTEM_EXPLAIN_ACTIVE', 'Détermine si le module est activé ou non (activé = utilisable)');
 define ('_SYSTEM_EXPLAIN_PUBLIC', 'Détermine si le module est public ou non (visible par un utilisateur non connecté)');
 define ('_SYSTEM_EXPLAIN_AUTOCONNECT', 'Détermine si ce module est affiché par défaut à la connexion de l\'utilisateur');
-define ('_SYSTEM_EXPLAIN_SHARED', 'Détermine si ce module est partagé pour les sous-groupes');
-define ('_SYSTEM_EXPLAIN_HERITED', 'Détermine si ce module est automatiquement hérité aux sous-groupes');
-define ('_SYSTEM_EXPLAIN_ADMINRESTRICTED', 'Si l\'administration du module est restreinte, les administrateurs des sous-groupes qui utilisent ce module auront des droits limités');
-define ('_SYSTEM_EXPLAIN_VIEWMODE', 'Choix de la vue qu\'ont les utilisateurs sur les données du module, <b>Privée</b> : les données ne sont vues que par le groupe, <b>Descendante</b> : les données sont vues par le groupe et les sous-groupes (les données « descendent »), <b>Ascendante</b> : les données sont vues par le groupe et les groupes parents (les données « montent »), <b>Globale</b> : les données sont entièrement partagées');
+define ('_SYSTEM_EXPLAIN_SHARED', 'Détermine si ce module est partagé pour les sous-espaces');
+define ('_SYSTEM_EXPLAIN_HERITED', 'Détermine si ce module est automatiquement hérité aux sous-espaces');
+define ('_SYSTEM_EXPLAIN_ADMINRESTRICTED', 'Si l\'administration du module est restreinte, les administrateurs des sous-espaces qui utilisent ce module auront des droits limités');
+define ('_SYSTEM_EXPLAIN_VIEWMODE', 'Choix de la vue qu\'ont les utilisateurs sur les données du module, <b>Privée</b> : les données ne sont vues que par l\'espace, <b>Descendante</b> : les données sont vues par l\'espace et les sous-espaces (les données « descendent »), <b>Ascendante</b> : les données sont vues par l\'espace et les espaces parents (les données « montent »), <b>Globale</b> : les données sont entièrement partagées');
 
 define ('_SYSTEM_LABEL_PHPINFO', 'Config - PhpInfo');
 define ('_SYSTEM_LABEL_DIAGNOSTIC', 'Config - Diagnostic');

@@ -103,29 +103,7 @@ echo $skin->open_simplebloc();
         <label><? echo _SYSTEM_LABEL_GROUP_WEBDOMAINLIST; ?>:</label>
         <textarea class="text" name="workspace_frontoffice_domainlist"><? echo $workspace->fields['frontoffice_domainlist']; ?></textarea>
     </p>
-    <?
-    if ($workspace->fields['frontoffice'])
-    {
-        // check if cms used in this workgroup
-        $cmsready = false;
-        foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $idm)
-        {
-            if ($_SESSION['ploopi']['modules'][$idm]['moduletype'] == 'cms') {$cmsready = true;echo "ici";}
-        }
 
-        if (!$cmsready)
-        {
-            ?>
-            <div style="clear:both;float:right;margin:4px;padding:2px 4px;border:1px solid #c0c0c0;background-color:#f0f0f0;">
-            <p class="ploopi_va">
-                <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png">
-                <span>Attention, pour pouvoir activer l'accès Frontoffice, vous devez créer une instance du module <a href="">WCE</a></span>
-            </p>
-            </div>
-            <?
-        }
-    }
-    ?>
 </div>
 
 <a class="ploopi_form_title" href="javascript:ploopi_switchdisplay('system_meta');">
@@ -166,16 +144,6 @@ echo $skin->open_simplebloc();
         <label><? echo _SYSTEM_LABEL_GROUP_ALLOWEDIP; ?>:</label>
         <input type="text" class="text" name="workspace_iprules"  value="<? echo $workspace->fields['iprules']; ?>">
     </p>
-    <p>
-        <label><? echo _SYSTEM_LABEL_GROUP_ALLOWEDMAC; ?>:</label>
-        <input type="text" class="text" name="workspace_macrules"  value="<? echo $workspace->fields['macrules']; ?>">
-    </p>
-    <p>
-        <label><? echo _SYSTEM_LABEL_GROUP_MUSTDEFINERULE; ?>:</label>
-        <input type="checkbox" name="workspace_mustdefinerule" <? if($workspace->fields['mustdefinerule']) echo "checked"; ?> value="1">
-    </p>
-    <?
-?>
 </div>
 
 <div class="ploopi_form_title">

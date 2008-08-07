@@ -202,14 +202,14 @@ echo $skin->open_simplebloc();
             <?
             if ($workspace->fields['frontoffice'])
             {
-                // check if frontofficeedit used in this workgroup
-                $frontofficeedit_ready = false;
+                // check if webeedit used in this workspace
+                $webedit_ready = false;
                 foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $idm)
                 {
-                    if ($_SESSION['ploopi']['modules'][$idm]['moduletype'] == 'webedit') {$frontofficeedit_ready = true;}
+                    if ($_SESSION['ploopi']['modules'][$idm]['moduletype'] == 'webedit') {$webedit_ready = true;}
                 }
 
-                if (!$frontofficeedit_ready)
+                if (!$webedit_ready)
                 {
                     ?>
                     <div class="system_wce_warning">
@@ -261,14 +261,6 @@ echo $skin->open_simplebloc();
             <p>
                 <label><? echo _SYSTEM_LABEL_GROUP_ALLOWEDIP; ?>:</label>
                 <input type="text" class="text" name="workspace_iprules"  value="<? echo $workspace->fields['iprules']; ?>">
-            </p>
-            <p>
-                <label><? echo _SYSTEM_LABEL_GROUP_ALLOWEDMAC; ?>:</label>
-                <input type="text" class="text" name="workspace_macrules"  value="<? echo $workspace->fields['macrules']; ?>">
-            </p>
-            <p>
-                <label><? echo _SYSTEM_LABEL_GROUP_MUSTDEFINERULE; ?>:</label>
-                <input type="checkbox" name="workspace_mustdefinerule" <? if($workspace->fields['mustdefinerule']) echo "checked"; ?> value="1">
             </p>
         </div>
 

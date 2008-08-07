@@ -63,9 +63,8 @@ else
         case _SYSTEM_GROUPS:
         case _SYSTEM_WORKSPACES:
 
-            $workspaces = system_getworkspaces();
-            $groups = system_getgroups();
-
+            list($workspaces, $groups) = system_getwg();
+            
             // init session
             if (empty($_SESSION['system']['workspaceid'])) $_SESSION['system']['workspaceid'] = 0;
             if (empty($_SESSION['system']['groupid'])) $_SESSION['system']['groupid'] = 0;

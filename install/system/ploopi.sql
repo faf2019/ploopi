@@ -1,8 +1,8 @@
 -- MySQL dump 10.11
 --
--- Host: localhost    Database: _ploopi_testRC7
+-- Host: localhost    Database: _ploopi_test
 -- ------------------------------------------------------
--- Server version	5.0.32-Debian_7etch6
+-- Server version   5.0.32-Debian_7etch6
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -221,7 +221,11 @@ CREATE TABLE `ploopi_group` (
   `depth` int(10) unsigned NOT NULL default '0',
   `id_workspace` int(10) unsigned NOT NULL default '0',
   `shared` tinyint(1) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `id_workspace` (`id_workspace`),
+  KEY `shared` (`shared`),
+  KEY `system` (`system`),
+  KEY `protected` (`protected`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
@@ -439,7 +443,10 @@ CREATE TABLE `ploopi_mb_action` (
   `id_workspace` int(10) default NULL,
   `id_object` int(10) unsigned NOT NULL default '0',
   `role_enabled` tinyint(1) unsigned NOT NULL default '1',
-  PRIMARY KEY  (`id_action`,`id_module_type`)
+  PRIMARY KEY  (`id_action`,`id_module_type`),
+  KEY `id_workspace` (`id_workspace`),
+  KEY `id_object` (`id_object`),
+  KEY `role_enabled` (`role_enabled`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -464,7 +471,8 @@ CREATE TABLE `ploopi_mb_field` (
   `type` varchar(50) default NULL,
   `visible` tinyint(1) unsigned default NULL,
   `id_module_type` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`tablename`,`name`,`id_module_type`)
+  PRIMARY KEY  (`tablename`,`name`,`id_module_type`),
+  KEY `visible` (`visible`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -608,7 +616,12 @@ CREATE TABLE `ploopi_module` (
   `viewmode` int(10) unsigned default '1',
   `transverseview` tinyint(1) unsigned default '0',
   `autoconnect` tinyint(1) unsigned default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `id_module_type` (`id_module_type`),
+  KEY `id_workspace` (`id_workspace`),
+  KEY `active` (`active`),
+  KEY `shared` (`shared`),
+  KEY `herited` (`herited`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
@@ -644,7 +657,7 @@ CREATE TABLE `ploopi_module_type` (
 
 LOCK TABLES `ploopi_module_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_module_type` DISABLE KEYS */;
-INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.1','Ovensia','20080805000000');
+INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.1.1','Ovensia','20080807000000');
 /*!40000 ALTER TABLE `ploopi_module_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -805,7 +818,10 @@ CREATE TABLE `ploopi_role` (
   `description` varchar(255) default NULL,
   `def` tinyint(1) unsigned NOT NULL default '0',
   `shared` tinyint(1) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `id_module` (`id_module`),
+  KEY `id_workspace` (`id_workspace`),
+  KEY `shared` (`shared`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -844,7 +860,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ploopi_session`;
 CREATE TABLE `ploopi_session` (
-  `id` varchar(32) NOT NULL,
+  `id` char(32) NOT NULL,
   `access` int(10) unsigned default NULL,
   `data` longtext,
   PRIMARY KEY  (`id`)
@@ -873,7 +889,10 @@ CREATE TABLE `ploopi_share` (
   `id_share` int(10) unsigned default '0',
   `id_module_type` int(10) default '0',
   PRIMARY KEY  (`id`),
-  KEY `search` (`id_module`,`id_object`,`id_record`)
+  KEY `search` (`id_module`,`id_object`,`id_record`),
+  KEY `id_module_type` (`id_module_type`),
+  KEY `id_share` (`id_share`),
+  KEY `type_share` (`type_share`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -1036,7 +1055,7 @@ CREATE TABLE `ploopi_ticket_status` (
   `id_ticket` int(10) unsigned NOT NULL default '0',
   `id_user` int(10) unsigned NOT NULL default '0',
   `status` tinyint(1) unsigned NOT NULL default '0',
-  `timestp` varchar(14) NOT NULL default '',
+  `timestp` bigint(14) NOT NULL,
   KEY `id_ticket` (`id_ticket`),
   KEY `id_user` (`id_user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -1103,6 +1122,8 @@ CREATE TABLE `ploopi_user` (
   `civility` varchar(16) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `login_unique` (`login`),
+  KEY `lastname` (`lastname`),
+  KEY `firstname` (`firstname`),
   FULLTEXT KEY `FT` (`city`,`country`,`function`,`firstname`,`lastname`,`service`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
@@ -1154,7 +1175,10 @@ CREATE TABLE `ploopi_workflow` (
   `id_workflow` int(10) unsigned default '0',
   `id_module_type` int(10) default '0',
   PRIMARY KEY  (`id`),
-  KEY `search` (`id_module`,`id_object`,`id_record`)
+  KEY `search` (`id_module`,`id_object`,`id_record`),
+  KEY `type_workflow` (`type_workflow`),
+  KEY `id_workflow` (`id_workflow`),
+  KEY `id_module_type` (`id_module_type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -1305,4 +1329,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-07-23  7:00:04
+-- Dump completed on 2008-08-07  7:03:12

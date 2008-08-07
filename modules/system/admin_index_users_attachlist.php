@@ -53,7 +53,7 @@ else
         {
             case _SYSTEM_GROUPS :
                 // filtrage sur les groupes partagés
-                if (!empty($groups['list'][$groupid]['groups'])) $where[] = '( gu.id_group IN ('.implode(',',array_keys($groups['list'][$groupid]['groups'])).') OR isnull(gu.id_group))';
+                if (!empty($groups['list'][$groupid]['groups_shared'])) $where[] = '( gu.id_group IN ('.implode(',',array_keys($groups['list'][$groupid]['groups_shared'])).') OR isnull(gu.id_group))';
                 else $where[] = 'gu.id_group = 0';
 
                 $currentusers = $group->getusers();
@@ -62,9 +62,9 @@ else
 
             case _SYSTEM_WORKSPACES :
                 // filtrage sur les groupes partagés
-                if (!empty($workspaces['list'][$workspaceid]['groups'])) $where[] = 'gu.id_group IN ('.implode(',',array_keys($workspaces['list'][$workspaceid]['groups'])).')';
+                if (!empty($workspaces['list'][$workspaceid]['groups_shared'])) $where[] = 'gu.id_group IN ('.implode(',',array_keys($workspaces['list'][$workspaceid]['groups_shared'])).')';
                 else $where[] = "gu.id_group = 0";
-
+                
                 $currentusers = $workspace->getusers();
                 if (!empty($currentusers)) $where[] = 'u.id NOT IN ('.implode(',',array_keys($currentusers)).')';
             break;
@@ -130,7 +130,7 @@ switch ($_SESSION['system']['level'])
 {
     case _SYSTEM_GROUPS :
         // filtrage sur les groupes partagés
-        if (!empty($groups['list'][$groupid]['groups'])) $where[] = '( gu.id_group IN ('.implode(',',array_keys($groups['list'][$groupid]['groups'])).') OR isnull(gu.id_group) )';
+        if (!empty($groups['list'][$groupid]['groups_shared'])) $where[] = '( gu.id_group IN ('.implode(',',array_keys($groups['list'][$groupid]['groups_shared'])).') OR isnull(gu.id_group) )';
         else $where[] = 'gu.id_group = 0';
 
         $currentusers = $group->getusers();
@@ -139,7 +139,7 @@ switch ($_SESSION['system']['level'])
 
     case _SYSTEM_WORKSPACES :
         // filtrage sur les groupes partagés
-        if (!empty($workspaces['list'][$workspaceid]['groups'])) $where[] = 'gu.id_group IN ('.implode(',',array_keys($workspaces['list'][$workspaceid]['groups'])).')';
+        if (!empty($workspaces['list'][$workspaceid]['groups_shared'])) $where[] = 'gu.id_group IN ('.implode(',',array_keys($workspaces['list'][$workspaceid]['groups_shared'])).')';
         else $where[] = "gu.id_group = 0";
 
         $currentusers = $workspace->getusers();

@@ -44,12 +44,69 @@ function system_mergegroups($array1, $array2)
     return($array1);
 }
 
-function system_getgroups()
+/**
+ * Retourne l'arborescence complète des espaces de travail et des groupes d'utilisateurs
+ *
+ * @return array tableau contenant le tableau des espaces de travail et le tableau des groupes
+ */
+function system_getwg()
 {
     global $db;
-    global $groupid;
-    global $workspaces;
+    
+    /**
+     * Construction de l'arbre des espaces s'il n'existe pas déjà, sinon on le lit en session
+     */
+    if (empty($_SESSION['system']['workspaces']) || (!empty($_SESSION['system']['workspaces']['workspaceid']) && $_SESSION['system']['workspaces']['workspaceid'] != $_SESSION['ploopi']['workspaceid']))
+    {
+        $workspaces = array('list' => array(), 'tree' => array(), 'workspaceid' => $_SESSION['ploopi']['workspaceid']);
 
+        /**
+         * Recherche de tous les espaces
+         */
+        
+        $select = "SELECT * FROM ploopi_workspace ORDER BY depth,label";
+        
+        $result = $db->query($select);
+        while ($fields = $db->fetchrow($result))
+        {
+            /**
+             * true si l'espace est ajouté à l'arbre des espaces
+             */
+            $add = true;
+            
+            /**
+             * Test du niveau d'accréditation (adminlevel) pour déterminer quels sont les espaces accessibles pour l'utilisateur
+             */
+            if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER && $_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN)
+            {
+                /**
+                 * L'utilisateur n'est pas administrateur système => on filtre sur les espaces accessibles
+                 */
+                $array_parents = explode(';',$fields['parents']);
+                if (!($fields['id'] == $_SESSION['ploopi']['workspaceid'] || in_array($_SESSION['ploopi']['workspaceid'],$array_parents))) $add = false;
+            }
+
+            if ($add)
+            {
+                /**
+                 * les propriétés "groups" & "groups_shared" sont remplies par la fonction qui traite les groupes "system_getgroups()"
+                 */
+                $fields['groups'] = array();
+                $fields['groups_shared'] = array();
+                $workspaces['list'][$fields['id']] = $fields;
+                $workspaces['tree'][$fields['id_workspace']][] = $fields['id'];
+            }
+        }
+
+        $_SESSION['system']['workspaces'] = $workspaces;
+    }
+    else $workspaces = $_SESSION['system']['workspaces'];
+  
+
+    /**
+     * Construction de l'arbre des groupes, complétion de l'arbre des espaces
+     */
+    
     if (empty($_SESSION['system']['groups']) || (!empty($_SESSION['system']['groups']['workspaceid']) && $_SESSION['system']['groups']['workspaceid'] != $_SESSION['ploopi']['workspaceid']))
     {
         $groups = array('list' => array(), 'tree' => array(), 'workspace_tree' => array(), 'workspaceid' => $_SESSION['ploopi']['workspaceid']);
@@ -95,7 +152,7 @@ function system_getgroups()
                 }
             }
         }
-
+        
         foreach($workspaces['list'] as $idw => $workspace)
         {
             // récupération des sous-groupes
@@ -111,7 +168,7 @@ function system_getgroups()
                     }
                 }
             }
-
+            
             // Héritage des partages
             // Des groupes peuvent être partagés par les espaces parents => on les rattache aussi comme groupes de l'espace
             if (isset($workspaces['tree'][$idw]) && !empty($workspaces['list'][$idw]['groups']))
@@ -136,45 +193,7 @@ function system_getgroups()
     }
     else $groups = $_SESSION['system']['groups'];
 
-    return($groups);
-}
-
-
-function system_getworkspaces()
-{
-    global $db;
-    
-    if (empty($_SESSION['system']['workspaces']) || (!empty($_SESSION['system']['workspaces']['workspaceid']) && $_SESSION['system']['workspaces']['workspaceid'] != $_SESSION['ploopi']['workspaceid']))
-    {
-        $workspaces = array('list' => array(), 'tree' => array(), 'workspaceid' => $_SESSION['ploopi']['workspaceid']);
-
-        //$select = "SELECT * FROM ploopi_workspace WHERE system = 0 ORDER BY depth,label";
-        $select = "SELECT * FROM ploopi_workspace ORDER BY depth,label";
-        $result = $db->query($select);
-        while ($fields = $db->fetchrow($result))
-        {
-            $add = true;
-            if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER && $_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN)
-            {
-                // get allowed only groups
-                $array_parents = explode(';',$fields['parents']);
-                if (!($fields['id'] == $_SESSION['ploopi']['workspaceid'] || in_array($_SESSION['ploopi']['workspaceid'],$array_parents))) $add = false;
-            }
-
-            if ($add)
-            {
-                $fields['groups'] = array();
-                $fields['groups_shared'] = array();
-                $workspaces['list'][$fields['id']] = $fields;
-                $workspaces['tree'][$fields['id_workspace']][] = $fields['id'];
-            }
-        }
-
-        $_SESSION['system']['workspaces'] = $workspaces;
-    }
-    else $workspaces = $_SESSION['system']['workspaces'];
-
-    return($workspaces);
+    return(array(&$workspaces, &$groups));
 }
 
 

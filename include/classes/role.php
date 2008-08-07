@@ -131,7 +131,7 @@ class role extends data_object
 
         $result = $db->query($select);
 
-        while ($row = $db->fetchrow($result)) $arrActions[$action['id_action']] = $row;
+        while ($row = $db->fetchrow($result)) $arrActions[$row['id_action']] = $row;
 
         return $arrActions;
     }

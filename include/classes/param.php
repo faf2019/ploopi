@@ -204,11 +204,6 @@ class param
 
     }
 
-    /*******************************************************************************************************
-    affecte des nouvelles values aux parametres
-    
-    *******************************************************************************************************/
-
     /**
      * Affecte de nouvelles valeurs aux paramètres en fonction d'un tableau associatif de valeurs
      *
@@ -222,7 +217,30 @@ class param
             if (isset($this->arrParam[$name])) $this->arrParam[$name]['value'] = $value;
         }
     }
+    
+    /**
+     * Retourne les valeurs des paramètres dans un tableau associatif (nom => valeur)
+     *
+     * @return array tableau des valeurs des paramètres
+     */
+    
+    public function getvalues()
+    {
+        return($this->arrParam);
+    }
 
+    /**
+     * Retourne la valeur d'un paramètre
+     *
+     * @param string $param nom du paramètre
+     * @return string valeur du paramètre
+     */
+    
+    public function getparam($param)
+    {
+        return((isset($this->arrParam[$param])) ? $this->arrParam[$param] : null);
+    }
+    
     /**
      * Enregistre les parametres du module
      */

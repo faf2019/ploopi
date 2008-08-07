@@ -1,3 +1,20 @@
+== Ploopi - version 1.1.1 ===================================================
+
+2008-08-07 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+  - Correction d'un bug important dans le système des rôles
+  - Correction d'un bug dans l'application des partages de groupes aux sous-groupes et aux espaces de travail
+  - Désactivation des fonctionnalités "Rôle obligatoire pour l'accès à cet espace", "Filtrage Mac" qui ne sont pas utiles ou plus gérées correctement.
+  - Changements d'appellation groupes/espaces (fichier de langue)
+  - Suppression d'un message d'erreur inapproprié à la création d'un espace de travail (module wce manquant)
+  - Ajout de 2 nouvelles méthodes à la classe param : param::getvalues() et param::getparam()
+
+* WebEdit 1.7.4 
+  - Intégration d'un patch pour gérer les anciens liens vers des documents DIMS
+  - Correction de bugs visuels sur les statistiques avec IE6
+  - Amélioration du système de réécriture d'URL pour une meilleure prise en compte des liens dans un article (document, articles) et des images
+ 
 == Ploopi - version 1.1 ===================================================
 
 2008-08-05 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
