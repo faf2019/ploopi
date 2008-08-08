@@ -78,7 +78,8 @@ class workspace extends data_object
 
         if ($this->fields['id']!=-1 && !$this->fields['system'])
         {
-
+            include_once '/modules/system/include/functions.php';
+            
             $fatherid = $this->fields['id_workspace'];
 
             // attach children to new father
@@ -161,9 +162,9 @@ class workspace extends data_object
     
     public function getparents()
     {
+        include_once '/modules/system/include/functions.php';
         return system_getparents($this->fields['parents'], 'workspace');
     }
-    
     
     /**
      * Retourne l'espace père ou false
