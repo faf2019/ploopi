@@ -241,6 +241,7 @@ else
 
 $template_body->assign_vars(array(
     'TEMPLATE_PATH'                 => $_SESSION['ploopi']['template_path'],
+    'TEMPLATE_NAME'                 => $_SESSION['ploopi']['template_name'],
     'WORKSPACE_LABEL'               => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']),
     'WORKSPACE_CODE'                => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['code']),
     'WORKSPACE_TITLE'               => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
