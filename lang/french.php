@@ -30,8 +30,8 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  * 
- * @global array $ploopi_agenda_days tableau des jours en français
- * @global array $ploopi_agenda_months tableau des mois en français
+ * @global array $ploopi_days tableau des jours en français
+ * @global array $ploopi_months tableau des mois en français
  * @global array $ploopi_errormsg tableau des messages d'erreur
  */
 

@@ -158,7 +158,7 @@ if (isset($ploopi_op))
                         <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&calendar_month=<? echo $prev_month; ?>&calendar_year=<? echo $prev_year; ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/prev.png"></a>
                     </div>
                     <div class="calendar_month">
-                        <? echo "{$ploopi_agenda_months[$month]}<br />{$year}"; ?>
+                        <? echo "{$ploopi_months[$month]}<br />{$year}"; ?>
                     </div>
                 </div>
                 <div class="calendar_row">
@@ -167,7 +167,7 @@ if (isset($ploopi_op))
                     for ($d=1; $d<=7; $d++)
                     {
                         ?>
-                        <div class="calendar_day"><? echo $ploopi_agenda_days[$d][0]; ?></div>
+                        <div class="calendar_day"><? echo $ploopi_days[$d][0]; ?></div>
                         <?
                     }
                     ?>
