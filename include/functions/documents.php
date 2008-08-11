@@ -91,9 +91,9 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
                 'FOLDER_DELETE' => true,
                 'SEARCH' => true
             ),
-            $rights
+            (is_array($rights)) ? $rights : array()
         );
-
+        
     if (empty($params['ROOT_NAME'])) $params['ROOT_NAME'] = 'Racine';
     if (empty($params['ATTACHEMENT'])) $params['ATTACHEMENT'] = true;
     if (empty($params['FIELDS'])) $params['FIELDS'] = array();
