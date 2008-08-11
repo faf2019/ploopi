@@ -145,11 +145,8 @@ function ploopi_share_get($id_user = -1, $id_object = -1, $id_record = -1,  $id_
     if ($id_user != -1) $sql .= " AND id_share = {$id_user} AND type_share = 'user'";
 
     $db->query($sql);
-
-    while ($row = $db->fetchrow())
-    {
-        $share[] = $row;
-    }
+ 
+    while ($row = $db->fetchrow()) $share[] = $row;
 
     return($share);
 }

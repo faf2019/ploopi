@@ -21,26 +21,26 @@
 */
 
 /**
- * Génération de documents dans différents formats "bureautique" (ODT, DOC, RTF, PDF, etc...) à partir de modèles ODT.
+ * Génération de documents dans différents formats "bureautique" (ODT, ODS, DOC, XLS, RTF, PDF, etc...) à partir de modèles OpenDocument.
  *
  * @package ploopi
- * @subpackage odt
+ * @subpackage odf
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
 /**
- * Classe permettant de traiter les variables simples d'un modèle de document ODT
+ * Classe permettant de traiter les variables simples d'un modèle de document OpenDocument.
  *
  * @package ploopi
- * @subpackage odt
+ * @subpackage odf
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
-class odt_varparser
+class odf_varparser
 {
     private $vars = array();
 
@@ -51,12 +51,12 @@ class odt_varparser
     /**
      * Constructeur de la classe. Crée le parser.
      *
-     * @return odt_varparser
+     * @return odf_varparser
      *
      * @see xml_parser_create
      */
 
-    public function odt_varparser()
+    public function odf_varparser()
     {
         $this->xml_parser = xml_parser_create('UTF-8');
 
@@ -159,16 +159,16 @@ class odt_varparser
 
 
 /**
- * Classe permettant d'extraire les blocs de variables d'un modèle de document ODT.
+ * Classe permettant d'extraire les blocs de variables d'un modèle de document ODF.
  *
  * @package ploopi
- * @subpackage odt
+ * @subpackage odf
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
-class odt_blockparser
+class odf_blockparser
 {
     private $blockvars = array();
     private $blocktemplates = array();
@@ -180,12 +180,12 @@ class odt_blockparser
     /**
      * Constructeur de la classe. Crée le parser.
      *
-     * @return odt_blockparser
+     * @return odf_blockparser
      *
      * @see xml_parser_create
      */
 
-    public function odt_blockparser()
+    public function odf_blockparser()
     {
         $this->xml_parser = xml_parser_create('UTF-8');
 
@@ -359,18 +359,18 @@ class odt_blockparser
 
 
 /**
- * Classe permettant de générer un document bureautique (ODT, DOC, PDT, etc.) à partir d'un modèle ODT.
+ * Classe permettant de générer un document bureautique (ODT, ODS, DOC, XLS, PDF, RTF, etc.) à partir d'un modèle OpenDocument.
  * Cette classe fonctionne comme un moteur de template.
  * Il est possible de définir des variables ou des blocs de variables qui seront ensuite remplacés dans le modèle via un parser XML.
  *
  * @package ploopi
- * @subpackage odt
+ * @subpackage odf
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
-class odt_parser
+class odf_parser
 {
     private $filename;
     private $content_xml;
@@ -388,14 +388,14 @@ class odt_parser
 
     /**
      * Constructeur de la classe.
-     * Ouvre le fichier modèle ODT.
+     * Ouvre le fichier modèle ODF.
      * Extrait les contenus XML (styles+content).
      *
-     * @param string $filename nom du fichier du modèle ODT
-     * @return odt_parser
+     * @param string $filename nom du fichier du modèle ODF
+     * @return odf_parser
      */
 
-    public function odt_parser($filename)
+    public function odf_parser($filename)
     {
         $this->filename = $filename;
         $this->zip = new ZipArchive();
@@ -430,7 +430,7 @@ class odt_parser
      * @param string $value valeur
      * @param boolean $clean true si le contenu de la valeur doit être nettoyée
      *
-     * @see odt_parser::clean_var
+     * @see odf_parser::clean_var
      */
 
     public function set_var($key, $value, $clean = true)
@@ -487,7 +487,7 @@ class odt_parser
     {
         if ($this->content_xml != NULL || $this->styles_xml != NULL)
         {
-            $blockparser = new odt_blockparser();
+            $blockparser = new odf_blockparser();
 
             $blockparser->parse($this->content_xml, $this->blockvars);
 
@@ -505,7 +505,7 @@ class odt_parser
                     $tpl_res = '';
                     foreach($this->blockvars[$blockname] as $vars)
                     {
-                        $varparser = new odt_varparser();
+                        $varparser = new odf_varparser();
                         $varparser->parse($tpl['content'], $vars);
                         $tpl_res .= $varparser->get_xml();
                     }
@@ -515,11 +515,11 @@ class odt_parser
             }
 
             // le reste
-            $varparser = new odt_varparser();
+            $varparser = new odf_varparser();
             $varparser->parse($this->content_xml, $this->vars);
             $this->content_xml = $varparser->get_xml();
 
-            $varparser = new odt_varparser();
+            $varparser = new odf_varparser();
             $varparser->parse($this->styles_xml, $this->vars);
             $this->styles_xml = $varparser->get_xml();
         }
@@ -540,9 +540,9 @@ class odt_parser
     }
 
     /**
-     * Enregistre le document ODT généré
+     * Enregistre le document ODF généré
      *
-     * @param string $newfilename chemin du fichier de destination (ODT)
+     * @param string $newfilename chemin du fichier de destination (ODF)
      *
      * @see ZipArchive
      */
@@ -575,10 +575,10 @@ class odt_parser
 
 
 /**
- * Classe permettant de convertir un document ODT en PDF, DOC, SXW, RTF, etc... via le webservice JODConverter
+ * Classe permettant de convertir un document au format OpenDocument en en PDF, DOC, SXW, RTF, XLS,  etc... via le webservice JODConverter
  *
  * @package ploopi
- * @subpackage odt
+ * @subpackage odf
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
@@ -586,7 +586,7 @@ class odt_parser
  * @link http://www.artofsolving.com/opensource/jodconverter
  */
 
-class odt_converter
+class odf_converter
 {
     var $url = '';
 
@@ -594,20 +594,20 @@ class odt_converter
      * Constructeur de la classe.
      *
      * @param string $url URL du webservice JODConverter
-     * @return odt_converter
+     * @return odf_converter
      *
      * @link http://www.artofsolving.com/opensource/jodconverter
      */
 
-    function odt_converter($url)
+    function odf_converter($url)
     {
         $this->url = "{$url}/service";
     }
 
     /**
-     * Convertit un document dans un format qu'Open Office (ODT, DOC, etc.) peut lire dans un format qu'il peut écrire (PDF, DOC, SXW, RTF, HTML, etc...)
+     * Convertit un document dans un format qu'Open Office (ODT, ODS, DOC, XLS, etc...) peut lire dans un format qu'il peut écrire (PDF, ODT, ODS, DOC, XLS, SXW, RTF, HTML, etc...)
      *
-     * @param string $inputData contenu du document ODT
+     * @param string $inputData contenu du document
      * @param string $inputType type mime du document source
      * @param string $outputType type mime du document destination
      * @return string contenu du document généré

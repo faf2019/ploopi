@@ -22,10 +22,10 @@
 */
 
 /**
- * Gestion de la couche workflow
+ * Gestion de la couche validation
  * 
  * @package ploopi
- * @subpackage workflow
+ * @subpackage validation
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
@@ -34,26 +34,26 @@
 include_once './include/classes/data_object.php';
 
 /**
- * Classe d'accès à la table ploopi_workflow
+ * Classe d'accès à la table ploopi_validation
  * 
  * @package ploopi
- * @subpackage workflow
+ * @subpackage validation
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
-class workflow extends data_object
+class validation extends data_object
 {
     /**
      * Constructeur de la classe
      *
-     * @return workflow
+     * @return validation
      */
     
-    public function workflow()
+    public function validation()
     {
-        parent::data_object('ploopi_workflow','id');
+        parent::data_object('ploopi_validation','id');
     }
 }
 ?>

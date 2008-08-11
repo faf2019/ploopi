@@ -229,7 +229,7 @@ switch($menu)
                     
                     /* FIN ABONNEMENT */
         
-                    ploopi_workflow_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
+                    ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
                     
                     ploopi_redirect("admin.php?headingid={$headingid}");
                 }
@@ -385,7 +385,7 @@ switch($menu)
                     
                     // recherche la liste des validateurs de cette rubrique
                     $wfusers = array();
-                    $wf = ploopi_workflow_get(_WEBEDIT_OBJECT_HEADING, $headingid);
+                    $wf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
                     $wf_headingid = $headingid;
         
                     $objHeading = new webedit_heading();
@@ -396,12 +396,12 @@ switch($menu)
                         $parents = explode(';', $objHeading->fields['parents']);
                         for ($i = sizeof($parents)-1; $i >= 0; $i--)
                         {
-                            $wf = ploopi_workflow_get(_WEBEDIT_OBJECT_HEADING, $parents[$i]);
+                            $wf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $parents[$i]);
                             if (!empty($wf)) break;
                         }
                     }
         
-                    foreach($wf as $value) $wfusers[] = $value['id_workflow'];
+                    foreach($wf as $value) $wfusers[] = $value['id_validation'];
         
                     // action "publier" et l'utilisateur est un validateur => OK
                     if (isset($_POST['publish']) && in_array($_SESSION['ploopi']['userid'],$wfusers))

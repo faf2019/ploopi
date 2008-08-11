@@ -496,9 +496,9 @@ else
 </div>
 
 <?
-// get workflow validators
+// get validation validators
 $wfusers = array();
-$wf = ploopi_workflow_get(_WEBEDIT_OBJECT_HEADING, $headingid);
+$wf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
 $wf_headingid = $headingid;
 
 if (empty($wf)) // pas de validateur pour cette rubrique, on recherche sur les parents
@@ -506,7 +506,7 @@ if (empty($wf)) // pas de validateur pour cette rubrique, on recherche sur les p
     $parents = explode(';', $heading->fields['parents']);
     for ($i = sizeof($parents)-1; $i >= 0; $i--)
     {
-        $wf = ploopi_workflow_get(_WEBEDIT_OBJECT_HEADING, $parents[$i]);
+        $wf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $parents[$i]);
         if (!empty($wf))
         {
             $wf_headingid = $parents[$i];
@@ -515,7 +515,7 @@ if (empty($wf)) // pas de validateur pour cette rubrique, on recherche sur les p
     }
 }
 
-foreach($wf as $value) $wfusers[] = $value['id_workflow'];
+foreach($wf as $value) $wfusers[] = $value['id_validation'];
 
 ?>
 <div style="clear:both;padding:4px;">
@@ -541,7 +541,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_WORKFLOW_MANAGE))
     <div style="clear:both;padding:4px;">
         <div style="border:1px solid #c0c0c0;overflow:hidden;">
         <?
-            ploopi_workflow_selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, _WEBEDIT_ACTION_ARTICLE_PUBLISH);
+            ploopi_validation_selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, _WEBEDIT_ACTION_ARTICLE_PUBLISH);
         ?>
         </div>
     </div>

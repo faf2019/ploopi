@@ -20,13 +20,13 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-div.ploopi_workflow_title {
+div.ploopi_validation_title {
     font-weight:bold;
     padding:4px;
     background-color:#ffc3b2;
 }
 
-a.ploopi_workflow_title {
+a.ploopi_validation_title {
     display:block;
     font-weight:bold;
     padding:4px;
@@ -35,32 +35,32 @@ a.ploopi_workflow_title {
     cursor:pointer;
 }
 
-a.ploopi_workflow_title:hover {
+a.ploopi_validation_title:hover {
     text-decoration:none;
 }
 
-.ploopi_workflow_search_form {
+.ploopi_validation_search_form {
     padding:4px;
     background-color:#ffded9;
 }
 
-.ploopi_workflow_authorizedlist {
+.ploopi_validation_authorizedlist {
     padding:4px;
     background-color:#ffded9;
 }
 
-.ploopi_workflow_select_workgroup {
+.ploopi_validation_select_workgroup {
     font-weight:bold;
     background-color:#e0e0e0;
     border-bottom:1px solid #c0c0c0;
     padding:1px;
 }
 
-.ploopi_workflow_select_workgroup span {
+.ploopi_validation_select_workgroup span {
     margin-left:4px;
 }
 
-.ploopi_workflow_select_user {
+.ploopi_validation_select_user {
     display:block;
     background-color:#f0f0f0;
     border-bottom:1px solid #c0c0c0;
@@ -69,29 +69,29 @@ a.ploopi_workflow_title:hover {
     text-decoration:none;
 }
 
-.ploopi_workflow_select_user:hover {
+.ploopi_validation_select_user:hover {
     text-decoration:none;
     background-color:#ffe2d9;
     color:#000000;
 }
 
-.ploopi_workflow_select_user span {
+.ploopi_validation_select_user span {
     padding-left:4px;
 }
 
 
-.ploopi_workflow_select_usergroup {
+.ploopi_validation_select_usergroup {
     font-weight:bold;
     background-color:#e8e8e8;
     border-bottom:1px solid #c0c0c0;
     padding:1px 1px 1px 20px;
 }
 
-.ploopi_workflow_select_usergroup span {
+.ploopi_validation_select_usergroup span {
     padding-left:4px;
 }
 
-.ploopi_workflow_select_usergroup_user {
+.ploopi_validation_select_usergroup_user {
     display:block;
     background-color:#f0f0f0;
     border-bottom:1px solid #c0c0c0;
@@ -100,39 +100,39 @@ a.ploopi_workflow_title:hover {
     text-decoration:none;
 }
 
-.ploopi_workflow_select_usergroup_user:hover {
+.ploopi_validation_select_usergroup_user:hover {
     text-decoration:none;
     background-color:#ffe2d9;
     color:#000000;
 }
 
-.ploopi_workflow_select_usergroup_user span {
+.ploopi_validation_select_usergroup_user span {
     padding-left:4px;
 }
 
-.ploopi_workflow_select_legend {
+.ploopi_validation_select_legend {
     padding:2px 1px;
     text-align:right;
 }
-.ploopi_workflow_select_legend span {
+.ploopi_validation_select_legend span {
     padding:0 4px;
 }
 
-.ploopi_workflow_select_empty {
+.ploopi_validation_select_empty {
     padding:4px;
 }
-.ploopi_workflow_select_empty span {
+.ploopi_validation_select_empty span {
     padding:0 4px;
 }
 
-a.ploopi_workflow_delete_user {
+a.ploopi_validation_delete_user {
     text-decoration:none;
 }
 
-a.ploopi_workflow_delete_user:hover {
+a.ploopi_validation_delete_user:hover {
     text-decoration:none;
 }
 
-a.ploopi_workflow_delete_user img {
+a.ploopi_validation_delete_user img {
     border:0;
 }

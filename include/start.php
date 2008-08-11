@@ -361,13 +361,6 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
         if (isset($_REQUEST['ploopi_action']))
             $ploopi_action = $_REQUEST['ploopi_action'];
         
-        if (isset($_REQUEST['ploopi_moduletabid']))
-            $ploopi_moduletabid = $_REQUEST['ploopi_moduletabid'];
-            
-        if (isset($_REQUEST['ploopi_moduleicon']))
-            $ploopi_moduletabid = $_REQUEST['ploopi_moduleicon'];
-
-
         ///////////////////////////////////////////////////////////////////////////
         // SWITCH MAIN MENU (Workspaces, Profile, etc.)
         ///////////////////////////////////////////////////////////////////////////
@@ -382,8 +375,6 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
 
             $_SESSION['ploopi']['backoffice']['moduleid'] = '';
             $_SESSION['ploopi']['action'] = 'public';
-            $_SESSION['ploopi']['moduletabid'] = '';
-            $_SESSION['ploopi']['moduleicon'] = '';
             $_SESSION['ploopi']['moduletype'] = '';
             $_SESSION['ploopi']['moduletypeid'] = '';
             $_SESSION['ploopi']['modulelabel'] = '';
@@ -409,8 +400,6 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
             $_SESSION['ploopi']['backoffice']['workspaceid'] = $ploopi_workspaceid;
             $_SESSION['ploopi']['backoffice']['moduleid'] = '';
             $_SESSION['ploopi']['action'] = 'public';
-            $_SESSION['ploopi']['moduletabid'] = '';
-            $_SESSION['ploopi']['moduleicon'] = '';
             $_SESSION['ploopi']['moduletype'] = '';
             $_SESSION['ploopi']['moduletypeid'] = '';
             $_SESSION['ploopi']['modulelabel'] = '';
@@ -448,8 +437,6 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
         if (isset($ploopi_moduleid) && $ploopi_moduleid != $_SESSION['ploopi']['backoffice']['moduleid']) // new module selected
         {
             $_SESSION['ploopi']['backoffice']['moduleid'] = $ploopi_moduleid;
-            $_SESSION['ploopi']['moduletabid']  = '';
-            $_SESSION['ploopi']['moduleicon']   = '';
 
             /**
             * New module selected
@@ -480,17 +467,6 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
 
         // new action selected
         if (isset($ploopi_action)) $_SESSION['ploopi']['action'] = $ploopi_action;
-
-        if (isset($ploopi_moduletabid)) // new moduletab selected
-        {
-            $_SESSION['ploopi']['moduletabid'] = $ploopi_moduletabid;
-            $_SESSION['ploopi']['moduleicon'] = '';
-        }
-
-        if (isset($ploopi_moduleicon)) // new moduleicon selected
-        {
-            $_SESSION['ploopi']['moduleicon'] = $ploopi_moduleicon;
-        }
     }
 
     if (empty($_SESSION['ploopi']['backoffice']['workspaceid'])) $_SESSION['ploopi']['backoffice']['workspaceid'] = $_SESSION['ploopi']['hosts']['backoffice'][0];
@@ -499,17 +475,17 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
     // CHOOSE TEMPLATE
     ///////////////////////////////////////////////////////////////////////////
 
-    //if (empty($_SESSION['ploopi']['defaultskin']) && isset($_SESSION['ploopi']['hosts']['backoffice'][0]))
+    $default_template = '';
     if (isset($_SESSION['ploopi']['hosts']['backoffice'][0]))
     {
         if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['backoffice'][0]]))
         {
-            $_SESSION['ploopi']['defaultskin'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['backoffice'][0]]['template'];
+            $default_template = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['backoffice'][0]]['template'];
         }
     }
 
     if ($_SESSION['ploopi']['backoffice']['workspaceid'] != '') $_SESSION['ploopi']['template_name'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['template'];
-    elseif ($_SESSION['ploopi']['defaultskin'] != '') $_SESSION['ploopi']['template_name'] = $_SESSION['ploopi']['defaultskin'];
+    elseif (!empty($default_template)) $_SESSION['ploopi']['template_name'] = $default_template;
 
     if (empty($_SESSION['ploopi']['template_name']) || !file_exists("./templates/backoffice/{$_SESSION['ploopi']['template_name']}")) $_SESSION['ploopi']['template_name'] = _PLOOPI_DEFAULT_TEMPLATE;
 
@@ -656,4 +632,5 @@ $_SESSION['ploopi']['env'] =
         $_SESSION['ploopi']['moduleid'],
         $_SESSION['ploopi']['action']
     );
+    
 ?>

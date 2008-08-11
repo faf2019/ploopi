@@ -1,3 +1,9 @@
+== Module WebEdit - version 1.7.5 ============================================
+
+2008-08-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à jour suite au refactoring des fonctions workflow (1.1.2)
+
 == Module WebEdit - version 1.7.4 ============================================
 
 2008-08-07  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

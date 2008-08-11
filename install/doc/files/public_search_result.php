@@ -114,7 +114,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
         // search folders (public/shared)
         $where = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) ? ' OR f.id IN ('.implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders']).')' : '';
 
-        $list_wf_folders = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders'])) ? implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']) : '';
+        $list_wf_folders = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders'])) ? implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']) : '';
         $list_wf_folders_option = ($list_wf_folders != '') ? " OR f_val.id_folder IN ({$list_wf_folders}) " : '';
 
         $sql =  "

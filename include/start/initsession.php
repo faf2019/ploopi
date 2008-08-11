@@ -90,7 +90,12 @@ while ($fields = $db->fetchrow())
 $_SESSION['ploopi']['allworkspaces'] = implode(',', array_keys($workspaces));
 
 $host_array = array($_SESSION['ploopi']['host'], '*');
-$_SESSION['ploopi']['hosts'] = array('frontoffice' => array(), 'backoffice' => array());
+
+$_SESSION['ploopi']['hosts'] = 
+    array(
+        'frontoffice' => array(), 
+        'backoffice' => array()
+    );
 
 // on garde les id de groupes autorisés en fonction du domaine courant
 foreach($workspaces as $gid => $grp)
@@ -121,5 +126,4 @@ foreach($_SESSION['ploopi']['workspaces'] as $wid => $wsp)
     $_SESSION['ploopi']['workspaces'][$wid]['list_brothers'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['brothers']);
     $_SESSION['ploopi']['workspaces'][$wid]['modules'] = $workspace->getmodules(true);        
 }
-    
 ?>

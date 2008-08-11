@@ -301,7 +301,7 @@ if (file_exists("./modules/forms/templates/{$template_name}/index.tpl"))
                 $template_forms->assign_block_vars('formbuttons', array(
                             'TYPE' => 'button',
                             'VALUE' => 'Retour',
-                            'OPTION' => 'onclick="javascript:document.location.href=\''.ploopi_urlencode("admin.php?ploopi_moduletabid=formlist").'\';"'
+                            'OPTION' => 'onclick="javascript:document.location.href=\''.ploopi_urlencode("admin.php?formsTabItem=formlist").'\';"'
                             )
                         );
             break;

@@ -269,7 +269,7 @@ if (isset($ploopi_op))
         include_once './include/op/documents.php';
         include_once './include/op/share.php';
         include_once './include/op/subscription.php';
-        include_once './include/op/workflow.php';
+        include_once './include/op/validation.php';
         include_once './include/op/tickets.php';
         include_once './modules/system/op.php';
         

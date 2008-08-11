@@ -63,14 +63,14 @@ switch($_SESSION['ploopi']['scriptname'])
 switch ($_SESSION['ploopi']['mode'])
 {
     case 'frontoffice':
-        if (isset($_SESSION['ploopi']['hosts']['frontoffice'][0]))
-            $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['frontoffice'][0];
+        if (isset($ploopi_hosts['frontoffice'][0]))
+            $_SESSION['ploopi']['workspaceid'] = $ploopi_hosts['frontoffice'][0];
         else ploopi_die();
     break;
     
     case 'backoffice':
-        if (isset($_SESSION['ploopi']['hosts']['backoffice'][0]))
-            $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['backoffice'][0];
+        if (isset($ploopi_hosts['backoffice'][0]))
+            $_SESSION['ploopi']['workspaceid'] = $ploopi_hosts['backoffice'][0];
         else ploopi_die();
         
         include './include/load_param.php';

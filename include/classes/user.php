@@ -62,7 +62,7 @@ class user extends data_object
     }
 
     /**
-     * Supprime l'utilisateur et les données associées : workflow, param, share, annotation, subscription, etc..
+     * Supprime l'utilisateur et les données associées : validation, param, share, annotation, subscription, etc..
      */
     
     public function delete()
@@ -71,7 +71,7 @@ class user extends data_object
         
         global $db;
         
-        $db->query("DELETE * FROM ploopi_workflow WHERE type_workflow = 'user' AND id_workflow = {$this->fields['id']}");
+        $db->query("DELETE * FROM ploopi_validation WHERE type_validation = 'user' AND id_validation = {$this->fields['id']}");
         $db->query("DELETE * FROM ploopi_share WHERE type_share = 'user' AND id_share = {$this->fields['id']}");
         $db->query("DELETE * FROM ploopi_tag WHERE id_user = {$this->fields['id']}");
         $db->query("DELETE * FROM ploopi_annotation WHERE id_user = {$this->fields['id']}");

@@ -33,9 +33,9 @@
 
 $article = new webedit_article($type);
 
-// get workflow validators
+// get validation validators
 $wfusers = array();
-$wf = ploopi_workflow_get(_WEBEDIT_OBJECT_HEADING, $headingid);
+$wf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
 $wf_headingid = $headingid;
 
 if (empty($wf)) // pas de validateur pour cette rubrique, on recherche sur les parents
@@ -43,7 +43,7 @@ if (empty($wf)) // pas de validateur pour cette rubrique, on recherche sur les p
     $parents = explode(';', $headings['list'][$headingid]['parents']);
     for ($i = sizeof($parents)-1; $i >= 0; $i--)
     {
-        $wf = ploopi_workflow_get(_WEBEDIT_OBJECT_HEADING, $parents[$i]);
+        $wf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $parents[$i]);
         if (!empty($wf))
         {
             $wf_headingid = $parents[$i];
@@ -52,7 +52,7 @@ if (empty($wf)) // pas de validateur pour cette rubrique, on recherche sur les p
     }
 }
 
-foreach($wf as $value) $wfusers[] = $value['id_workflow'];
+foreach($wf as $value) $wfusers[] = $value['id_validation'];
 
 
 $title = '';

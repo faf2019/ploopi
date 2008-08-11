@@ -31,7 +31,7 @@
  * @author Stéphane Escaich
  * 
  * @see ploopi_share_get
- * @see ploopi_workflow_get
+ * @see ploopi_validation_get
  * @see _DOC_OBJECT_FOLDER
  */
 
@@ -124,7 +124,7 @@ if (!empty($currentfolder))
                 <br />
                 <?
                 $wfusers = array();
-                foreach(ploopi_workflow_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_workflow'];
+                foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
 
                 $users = array();
                 if (!empty($wfusers))

@@ -47,7 +47,7 @@
  * @see string
  * @see subscription
  * @see tickets
- * @see workflow 
+ * @see validation 
  */
 
 include_once './include/functions/actions.php';
@@ -67,5 +67,5 @@ include_once './include/functions/system.php';
 include_once './include/functions/string.php';
 include_once './include/functions/subscription.php';
 include_once './include/functions/tickets.php';
-include_once './include/functions/workflow.php';
+include_once './include/functions/validation.php';
 ?>

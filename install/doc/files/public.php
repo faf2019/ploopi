@@ -269,7 +269,7 @@ switch($op)
 
             // on recherche s'il existe des validateurs pour ce dossier
             $wfusers = array();
-            foreach(ploopi_workflow_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_workflow'];
+            foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
 
             // on crée des documents "draft" s'il existe des validateurs et que l'utilisateur courant n'en fait pas partie
             $draft = (!empty($wfusers) && !in_array($_SESSION['ploopi']['userid'],$wfusers));
@@ -415,9 +415,9 @@ switch($op)
         if (!empty($_GET['docfiledraft_md5id']))
         {
             include_once './modules/doc/class_docfiledraft.php';
-            doc_getworkflow();
+            doc_getvalidation();
 
-            if (in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']));
+            if (in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']));
             {
                 $docfiledraft = new docfiledraft();
                 $docfiledraft->openmd5($_GET['docfiledraft_md5id']);
@@ -430,9 +430,9 @@ switch($op)
     case 'doc_folderpublish':
         if (!empty($_GET['docfolder_id']))
         {
-            doc_getworkflow();
+            doc_getvalidation();
 
-            if (in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']));
+            if (in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']));
             {
                 include_once './modules/doc/class_docfolder.php';
                 $docfolder = new docfolder();
@@ -537,8 +537,8 @@ switch($op)
             doc_resetshare();
 
             // WORKFLOW
-            ploopi_workflow_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
-            doc_resetworkflow();
+            ploopi_validation_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
+            doc_resetvalidation();
             
             // LOG
             ploopi_create_user_action_log(_DOC_ACTION_MODIFYFOLDER, $docfolder->fields['id']);
@@ -559,7 +559,7 @@ switch($op)
 
             // test if we should publish or not the folder
             $wfusers = array();
-            foreach(ploopi_workflow_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_workflow'];
+            foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
             if (!empty($wfusers) && !in_array($_SESSION['ploopi']['userid'],$wfusers))
             {
                 $docfolder->fields['published'] = 0;
@@ -598,8 +598,8 @@ switch($op)
             ploopi_share_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
             doc_resetshare();
 
-            ploopi_workflow_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
-            doc_resetworkflow();
+            ploopi_validation_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
+            doc_resetvalidation();
             
             ploopi_create_user_action_log(_DOC_ACTION_ADDFOLDER, $docfolder->fields['id']);
             ?>

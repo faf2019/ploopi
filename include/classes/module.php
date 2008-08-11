@@ -95,7 +95,7 @@ class module extends data_object
     }
 
     /**
-     * Supprime l'instance de module et les données associées : rôles, partages, abonnements, workflow, etc...
+     * Supprime l'instance de module et les données associées : rôles, partages, abonnements, validation, etc...
      */
     
     function delete()
@@ -149,8 +149,8 @@ class module extends data_object
             $delete = "DELETE FROM ploopi_subscription WHERE id_module = '{$this->fields['id']}'";
             $db->query($delete);
                     
-            // delete workflow
-            $delete = "DELETE FROM ploopi_workflow WHERE id_module = '{$this->fields['id']}'";
+            // delete validation
+            $delete = "DELETE FROM ploopi_validation WHERE id_module = '{$this->fields['id']}'";
             $db->query($delete);
         }
 

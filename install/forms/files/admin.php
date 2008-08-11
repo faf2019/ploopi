@@ -48,13 +48,25 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
     
     $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
     
+    if (!empty($_GET['formsTabItem'])) $_SESSION['forms']['formsTabItem'] = $_GET['formsTabItem'];
+    if (!isset($_SESSION['forms']['formsTabItem'])) $_SESSION['forms']['formsTabItem'] = '';
+    
     $sqllimitgroup = ' AND ploopi_mod_forms_form.id_workspace IN ('.ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).')';
     
-    $tabs['formlist'] = array('title' => _FORMS_LABELTAB_LIST, 'url' => "admin.php?ploopi_moduletabid=formlist");
-    $tabs['formadd'] = array('title' => _FORMS_LABELTAB_ADD, 'url' => "admin.php?ploopi_moduletabid=formadd");
+    $tabs['formlist'] = 
+        array(
+            'title' => _FORMS_LABELTAB_LIST, 
+            'url' => "admin.php?formsTabItem=formlist"
+        );
+        
+    $tabs['formadd'] = 
+        array(
+            'title' => _FORMS_LABELTAB_ADD, 
+            'url' => "admin.php?formsTabItem=formadd
+        ");
     
     echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
-    echo $skin->create_tabs($tabs,$_SESSION['ploopi']['moduletabid']);
+    echo $skin->create_tabs($tabs, $_SESSION['forms']['formsTabItem']);
     
     switch($op)
     {
@@ -231,7 +243,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             $forms->setuwm();
             $forms->save();
     
-            ploopi_redirect("admin.php?ploopi_moduletabid=formlist&op=forms_modify&forms_id={$forms->fields['id']}");
+            ploopi_redirect("admin.php?formsTabItem=formlist&op=forms_modify&forms_id={$forms->fields['id']}");
         break;
     
         case 'forms_delete':
@@ -357,7 +369,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
     
     }
     
-    switch($_SESSION['ploopi']['moduletabid'])
+    switch($_SESSION['forms']['formsTabItem'])
     {
         case 'formlist':
             switch($op)

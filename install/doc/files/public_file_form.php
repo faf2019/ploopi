@@ -33,7 +33,7 @@
  * @see _PLOOPI_USE_CGIUPLOAD
  * @see _DOC_OBJECT_FILE
  * 
- * @see doc_getworkflow
+ * @see doc_getvalidation
  * @see ploopi_subscription
  * @see ploopi_annotation
  */
@@ -66,11 +66,11 @@ if ($newfile)
     <div class="doc_fileform_main">
         <?
         /**
-         * Chargement du workflow
+         * Chargement du validation
          */
         
-        doc_getworkflow();
-        $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']);
+        doc_getvalidation();
+        $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
     
         
         if (_PLOOPI_USE_CGIUPLOAD)
@@ -305,8 +305,8 @@ else
             <?
             if (!$readonly)
             {
-                doc_getworkflow();
-                $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']);
+                doc_getvalidation();
+                $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
             
                 if (_PLOOPI_USE_CGIUPLOAD)
                 {

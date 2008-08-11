@@ -177,39 +177,39 @@ function doc_resetshare($id_module = -1)
 }
 
 /**
- * Chargement du workflow en session (pour éviter les multiples rechargements)
+ * Chargement du validation en session (pour éviter les multiples rechargements)
  *
  * @param int $id_module identifiant du module
  * 
- * @see ploopi_workflow_get
+ * @see ploopi_validation_get
  * @see _DOC_OBJECT_FOLDER
  */
 
-function doc_getworkflow($id_module = -1)
+function doc_getvalidation($id_module = -1)
 {
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
-    if (empty($_SESSION['doc'][$id_module]['workflow']))
+    if (empty($_SESSION['doc'][$id_module]['validation']))
     {
-        $_SESSION['doc'][$id_module]['workflow'] = array('folders' => array());
-        foreach(ploopi_workflow_get(_DOC_OBJECT_FOLDER, -1, $id_module, $_SESSION['ploopi']['userid']) as $wf)
+        $_SESSION['doc'][$id_module]['validation'] = array('folders' => array());
+        foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, -1, $id_module, $_SESSION['ploopi']['userid']) as $wf)
         {
-            $_SESSION['doc'][$id_module]['workflow']['folders'][] = $wf['id_record'];
+            $_SESSION['doc'][$id_module]['validation']['folders'][] = $wf['id_record'];
         }
     }
 }
 
 /**
- * Supprime le chargement du workflow de la session
+ * Supprime le chargement du validation de la session
  *
  * @param int $id_module identifiant du module
  */
 
-function doc_resetworkflow($id_module = -1)
+function doc_resetvalidation($id_module = -1)
 {
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
-    unset($_SESSION['doc'][$id_module]['workflow']);
+    unset($_SESSION['doc'][$id_module]['validation']);
 }
 
 
@@ -261,7 +261,7 @@ function doc_max_formsize()
  * @see _DOC_OBJECT_FILEDRAFT
  * 
  * @see doc_getshare
- * @see doc_getworkflow
+ * @see doc_getvalidation
  */
 
 function doc_record_isenabled($id_object, $id_record, $id_module)
@@ -329,8 +329,8 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
                     $objFolder = new docfolder();
                     if ($objFolder->open($objFile->fields['id_folder']))
                     {
-                        doc_getworkflow($objFile->fields['id_module']);
-                        $enabled = in_array($objFile->fields['id_folder'], $_SESSION['doc'][$objFile->fields['id_module']]['workflow']['folders']);
+                        doc_getvalidation($objFile->fields['id_module']);
+                        $enabled = in_array($objFile->fields['id_folder'], $_SESSION['doc'][$objFile->fields['id_module']]['validation']['folders']);
                     }
                 }
             }

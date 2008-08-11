@@ -32,11 +32,11 @@
  */
 
 /**
- * Charge le workflow
+ * Charge le validation
  */
 
-doc_getworkflow();
-$wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']);
+doc_getvalidation();
+$wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
 
 /**
  * Charge les partages
@@ -77,7 +77,7 @@ else
 $list_shared_folders = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) ? ' OR (f.id IN ('.implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders']).") AND f.id_user <> {$_SESSION['ploopi']['userid']} {$option_shortcuts})" : '';
 
 // dossiers dont l'utilisateur connecté est le validateur
-$list_wf_folders = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders'])) ? implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']) : '';
+$list_wf_folders = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders'])) ? implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']) : '';
 $list_wf_folders_option = ($list_wf_folders != '') ? " OR f_val.id_folder IN ({$list_wf_folders}) " : '';
 
 $sql =  "

@@ -56,7 +56,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
     $where = (!empty($_SESSION['doc'][$menu_moduleid]['share']['folders'])) ? ' OR (f.id IN ('.implode(',', $_SESSION['doc'][$menu_moduleid]['share']['folders']).") AND f.id_user <> {$_SESSION['ploopi']['userid']} {$option_shortcuts})" : '';
 
     // dossiers dont l'utilisateur connecté est le validateur
-    $list_wf_folders = (!empty($_SESSION['doc'][$menu_moduleid]['workflow']['folders'])) ? implode(',', $_SESSION['doc'][$menu_moduleid]['workflow']['folders']) : '';
+    $list_wf_folders = (!empty($_SESSION['doc'][$menu_moduleid]['validation']['folders'])) ? implode(',', $_SESSION['doc'][$menu_moduleid]['validation']['folders']) : '';
     $list_wf_folders_option = ($list_wf_folders != '') ? " OR f_val.id_folder IN ({$list_wf_folders}) " : '';
 
     $sql =  "

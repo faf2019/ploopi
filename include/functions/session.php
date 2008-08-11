@@ -44,60 +44,69 @@ function ploopi_session_reset()
         
     // session_destroy();
     $_SESSION['ploopi'] = array(
-                    'login'         => '',
-                    'password'      => '',
-                    'userid'        => '',
-                    'workspaceid'   => '',
-                    'webworkspaceid'    => '',
-                    'adminlevel'    => 0,
-
-                    'connected'     => false,
-                    'loginerror'    => false,
-                    'paramloaded'   => false,
-                    'mode'          => '',
-
-                    'remote_ip'      => ploopi_getip(),
-                    'remote_browser' => Net_UserAgent_Detect::getBrowserString(),
-                    'remote_system'  => Net_UserAgent_Detect::getOSString(),
-                    
-                    'host'          => $_SERVER['HTTP_HOST'],
-                    'scriptname'    => basename($_SERVER['PHP_SELF']),
-                    'env'           => '',
+        'login' => '',
+        'password' => '',
+        'userid' => '',
+        'workspaceid' => '',
+        'webworkspaceid' => '',
+        'adminlevel' => 0,
     
-                    'wcemoduleid'   => 0,
+        'connected' => false,
+        'loginerror' => false,
+        'paramloaded' => false,
+        'mode' => '',
+    
+        'remote_ip' => ploopi_getip(),
+        'remote_browser' => Net_UserAgent_Detect::getBrowserString(),
+        'remote_system' => Net_UserAgent_Detect::getOSString(),
+        
+        'host' => $_SERVER['HTTP_HOST'],
+        'scriptname' => basename($_SERVER['PHP_SELF']),
+        'env' => '',
+    
+        'groups' => array(),
+        'modules' => array(),
+        'moduletypes' => array(),
+        'allworkspaces' => '',
 
-                    'hosts'         => array(),
-                    'groups'        => array(),
-                    'modules'       => array(),
-                    'moduletypes'   => array(),
-                    'allworkspaces' => '',
-
-                    'currentrequesttime'    => mktime(),
-                    'lastrequesttime'       => mktime(),
-
-                    'moduleid'      =>  '',
-                    'mainmenu'      =>  '',
-                    'action'        =>  'public',
-                    'moduletabid'   =>  '',
-                    'moduletype'    =>  '',
-                    'moduletypeid'  =>  '',
-                    'modulelabel'   =>  '',
-                    'moduleicon'    =>  '',
-
-                    'backoffice'    =>  array('moduleid' => '', 'workspaceid' => ''),
-                    'frontoffice'   =>  array('moduleid' => '', 'workspaceid' => ''),
-                    
-                    'defaultskin'   =>  '',
-                    'template_name' =>  '',
-                    'template_path' =>  '',
-
-                    'uri'   =>  '',
-
-                    'newtickets'    => 0,
-
-                    'fingerprint'   => _PLOOPI_FINGERPRINT,
-
-                    'timezone'      => timezone_name_get(date_timezone_get(date_create()))
+        'hosts' => 
+            array(
+                'frontoffice' => array(), 
+                'backoffice' => array()
+            ),
+    
+        'currentrequesttime' => mktime(),
+        'lastrequesttime' => mktime(),
+    
+        'moduleid' => '',
+        'mainmenu' => '',
+        'action' => 'public',
+        'moduletype' => '',
+        'moduletypeid' => '',
+        'modulelabel' => '',
+    
+        'backoffice' =>  
+            array(
+                'moduleid' => '', 
+                'workspaceid' => ''
+            ),
+            
+        'frontoffice' =>  
+            array(
+                'moduleid' => '', 
+                'workspaceid' => ''
+            ),
+        
+        'template_name' =>  '',
+        'template_path' =>  '',
+    
+        'uri'   =>  '',
+    
+        'newtickets'    => 0,
+    
+        'fingerprint'   => _PLOOPI_FINGERPRINT,
+    
+        'timezone'      => timezone_name_get(date_timezone_get(date_create()))
     
     );
 }

@@ -253,7 +253,7 @@ $template_body->assign_vars(array(
     'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
     'ADDITIONAL_JAVASCRIPT'         => $ploopi_additional_javascript,
     'PLOOPI_ERROR'                  => (!empty($_GET['ploopi_errorcode'])) ? $ploopi_errormsg[$_GET['ploopi_errorcode']] : '',
-    'PLOOPI_VERSION'                    => _PLOOPI_VERSION
+    'PLOOPI_VERSION'                => _PLOOPI_VERSION
     )
 );
 

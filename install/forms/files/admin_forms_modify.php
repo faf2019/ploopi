@@ -257,7 +257,7 @@ if (!$forms->new)
                 }
                 */
                 ?>
-                <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?ploopi_moduletabid=formslist"); ?>'">
+                <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?formsTabItem=formslist"); ?>'">
                 <input type="reset" class="flatbutton" value="<? echo _PLOOPI_RESET; ?>">
                 <?
                 if (!$forms->new && false) //désactivé

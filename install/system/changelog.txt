@@ -1,3 +1,19 @@
+== Ploopi - version 1.1.2 ===================================================
+
+2008-08-11 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+  - Refactoring au niveau des fonctions 'workflow' => renommage en 'validation'
+  - Refactoring au niveau des classes 'odt' => renommage en 'odf'
+  - Impact SQL du refactoring
+  - Mise à jour des modules Doc / WebEdit
+  
+* WebEdit 1.7.5
+  - Mise à jour suite au refactoring des fonctions workflow (1.1.2)
+ 
+* DOC 3.88
+  - Mise à jour suite au refactoring des fonctions workflow (1.1.2) 
+ 
 == Ploopi - version 1.1.1 ===================================================
 
 2008-08-07 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -5,6 +21,7 @@
 * Ploopi
   - Correction d'un bug important dans le système des rôles
   - Correction d'un bug dans l'application des partages de groupes aux sous-groupes et aux espaces de travail
+  - Correction d'un bug dans l'affichage des paramètres de modules
   - Désactivation des fonctionnalités "Rôle obligatoire pour l'accès à cet espace", "Filtrage Mac" qui ne sont pas utiles ou plus gérées correctement.
   - Changements d'appellation groupes/espaces (fichier de langue)
   - Suppression d'un message d'erreur inapproprié à la création d'un espace de travail (module wce manquant)

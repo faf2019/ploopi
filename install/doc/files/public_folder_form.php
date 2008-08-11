@@ -30,8 +30,8 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  * 
- * @see doc_getworkflow
- * @see ploopi_workflow_get
+ * @see doc_getvalidation
+ * @see ploopi_validation_get
  * @see _DOC_OBJECT_FOLDER
  */
 
@@ -42,16 +42,16 @@ $newfolder = false;
 $docfolder = new docfolder();
 
 /**
- * Chargement du workflow
+ * Chargement du validation
  */
-doc_getworkflow();
+doc_getvalidation();
 
 $wfusers = array();
 if (!$_GET['addfolder'] && $docfolder->open($currentfolder)) // modifying
 {
-    foreach(ploopi_workflow_get(_DOC_OBJECT_FOLDER, $docfolder->fields['id_folder']) as $value) $wfusers[] = $value['id_workflow'];
+    foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $docfolder->fields['id_folder']) as $value) $wfusers[] = $value['id_validation'];
 
-    $wf_validator = in_array($docfolder->fields['id_folder'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']);
+    $wf_validator = in_array($docfolder->fields['id_folder'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
 
     // on vérifie que l'utilisateur a bien le droit de modifier ce dossier (en fonction du statut du dossier et du dossier parent)
     $docfolder_readonly_content = false;
@@ -81,9 +81,9 @@ if (!$_GET['addfolder'] && $docfolder->open($currentfolder)) // modifying
 }
 else // creating
 {
-    foreach(ploopi_workflow_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_workflow'];
+    foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
 
-    $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['workflow']['folders']);
+    $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
 
     $newfolder = true;
 
@@ -146,7 +146,7 @@ else // creating
                     else
                     {
                         ?>
-                        <select class="select" name="docfolder_foldertype" onchange="javascript:ploopi_getelem('doc_share').style.display = (this.value == 'shared') ? 'block' : 'none'; ploopi_getelem('doc_workflow').style.display = (this.value == 'private') ? 'none' : 'block';" tabindex="2">
+                        <select class="select" name="docfolder_foldertype" onchange="javascript:ploopi_getelem('doc_share').style.display = (this.value == 'shared') ? 'block' : 'none'; ploopi_getelem('doc_validation').style.display = (this.value == 'private') ? 'none' : 'block';" tabindex="2">
                             <?
                             foreach($foldertypes as $key => $value)
                             {
@@ -223,12 +223,12 @@ else // creating
     if (!$readonly && ploopi_isactionallowed(_DOC_ACTION_WORKFLOW_MANAGE))
     {
         ?>
-        <div id="doc_workflow" style="clear:both;<? echo ($docfolder->fields['foldertype'] == 'private') ? 'display:none;' : 'display:block;'; ?>">
-            <? ploopi_workflow_selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id']); ?>
+        <div id="doc_validation" style="clear:both;<? echo ($docfolder->fields['foldertype'] == 'private') ? 'display:none;' : 'display:block;'; ?>">
+            <? ploopi_validation_selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id']); ?>
         </div>
         <?
     }
-    else echo '<div id="doc_workflow" style="clear:both;margin:0;padding:0;visibility:hidden;"></div>';
+    else echo '<div id="doc_validation" style="clear:both;margin:0;padding:0;visibility:hidden;"></div>';
 
     if (!$readonly)
     {

@@ -22,10 +22,10 @@
 */
 
 /**
- * Opérations sur le workflow
+ * Opérations sur le validation
  *
  * @package ploopi
- * @subpackage workflow
+ * @subpackage validation
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
@@ -33,12 +33,12 @@
 
 switch($ploopi_op)
 {
-    case 'workflow_select_user':
-        if (isset($_GET['user_id'])) $_SESSION['ploopi']['workflow']['users_selected'][$_GET['user_id']] = $_GET['user_id'];
-        if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['workflow']['users_selected'][$_GET['remove_user_id']]);
+    case 'validation_select_user':
+        if (isset($_GET['user_id'])) $_SESSION['ploopi']['validation']['users_selected'][$_GET['user_id']] = $_GET['user_id'];
+        if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['validation']['users_selected'][$_GET['remove_user_id']]);
 
 
-        foreach($_SESSION['ploopi']['workflow']['users_selected'] as $user_id)
+        foreach($_SESSION['ploopi']['validation']['users_selected'] as $user_id)
         {
             include_once './include/classes/user.php';
 
@@ -47,7 +47,7 @@ switch($ploopi_op)
             {
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
-                    <a class="ploopi_workflow_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=workflow_select_user&remove_user_id=<? echo $user->fields['id']; ?>', 'div_workflow_users_selected');">
+                    <a class="ploopi_validation_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&remove_user_id=<? echo $user->fields['id']; ?>', 'div_validation_users_selected');">
                         <img src="./img/icon_delete.gif">
                         <span><? echo "{$user->fields['lastname']} {$user->fields['firstname']} (Cliquez pour supprimer)"; ?></span>
                     </a>
@@ -58,7 +58,7 @@ switch($ploopi_op)
         ploopi_die();
     break;
 
-    case 'workflow_search_users':
+    case 'validation_search_users':
         $listgroup = array();
 
         include_once './include/classes/group.php';
@@ -97,7 +97,7 @@ switch($ploopi_op)
             }
         }
 
-        $cleanedfilter = $db->addslashes($_GET['ploopi_workflow_userfilter']);
+        $cleanedfilter = $db->addslashes($_GET['ploopi_validation_userfilter']);
         $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
 
         // recherche des utilisateurs "admininstrateur d'espace" ou disposant d'une action particuliere dans le module
@@ -180,7 +180,7 @@ switch($ploopi_op)
         if (!sizeof($list['users']))
         {
             ?>
-            <div class="ploopi_workflow_select_empty">
+            <div class="ploopi_validation_select_empty">
                 <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_noway.png"><span>aucun validateur trouv&eacute;</span></p>
             </div>
             <?
@@ -197,7 +197,7 @@ switch($ploopi_op)
                     if (!(empty($workspace['users']) && empty($workspace['groups'])))
                     {
                         ?>
-                        <div class="ploopi_workflow_select_workgroup">
+                        <div class="ploopi_validation_select_workgroup">
                             <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><? echo $workspace['label']; ?></span></p>
                         </div>
                         <?
@@ -207,7 +207,7 @@ switch($ploopi_op)
                             {
                                 $user = &$list['users'][$id_user];
                                 ?>
-                                <a class="ploopi_workflow_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=workflow_select_user&user_id=<? echo $id_user; ?>', 'div_workflow_users_selected');">
+                                <a class="ploopi_validation_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&user_id=<? echo $id_user; ?>', 'div_validation_users_selected');">
                                     <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
                                 </a>
                                 <?
@@ -220,7 +220,7 @@ switch($ploopi_op)
                             {
                                 $group = &$list['groups'][$id_grp];
                                 ?>
-                                <div class="ploopi_workflow_select_usergroup">
+                                <div class="ploopi_validation_select_usergroup">
                                     <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><? echo $list['groups'][$id_grp]['label'];  ?></span></p>
                                 </div>
                                 <?
@@ -228,7 +228,7 @@ switch($ploopi_op)
                                 {
                                     $user = &$list['users'][$id_user];
                                     ?>
-                                    <a class="ploopi_workflow_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=workflow_select_user&user_id=<? echo $id_user; ?>', 'div_workflow_users_selected');">
+                                    <a class="ploopi_validation_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&user_id=<? echo $id_user; ?>', 'div_validation_users_selected');">
                                         <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
                                     </a>
                                     <?
@@ -240,7 +240,7 @@ switch($ploopi_op)
                 ?>
                 </div>
             </div>
-            <div class="ploopi_workflow_select_legend">
+            <div class="ploopi_validation_select_legend">
                 <p class="ploopi_va">
                     <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span>Espace de Travail</span>
                     <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span>Groupe d'Utilisateur</span>
