@@ -346,8 +346,8 @@ if ($_SESSION['ploopi']['connected'])
                     
                 while ($row = $db->fetchrow()) $dataset[$row['month']] = $row['counter'];
     
-                $objBarChartYear = new barchart(550, 100);
-                $objBarChartYear->setvalues($dataset);
+                $objBarChartYear = new barchart(550, 150, array('padding' => 1));
+                $objBarChartYear->setvalues($dataset, 'Fréquentation mensuelle', '#1E64A1', '#f0f0f0');
                 $objBarChartYear->setlegend($legend);
                 
                 // 1er Diagramme : mois par jours
@@ -408,9 +408,9 @@ if ($_SESSION['ploopi']['connected'])
                 
                 while ($row = $db->fetchrow()) $dataset[$row['day']] = $row['counter'];
     
-                $objBarChartMonth = new barchart(550, 100);
-                $objBarChartMonth->setvalues($dataset);
-                $objBarChartMonth->setlegend($legend);
+                $objBarChartMonth = new barchart(550, 150, array('padding' => 1));
+                $objBarChartMonth->setvalues($dataset, 'Fréquentation quotidienne', '#4FA11E', '#f0f0f0');
+                $objBarChartMonth->setlegend($legend);                
                 
                 // Affichage
                 ?>

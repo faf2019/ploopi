@@ -87,7 +87,9 @@ if (empty($intMonthSel))
     foreach($ploopi_months as $key => $value) 
     {
         $dataset[$key] = 0;
-        $legend[$key] = substr($value,0,3);
+        $dataset2[$key] = 0;
+        
+        $legend[$key] = $value;
     }
     
     $db->query(
@@ -101,13 +103,17 @@ if (empty($intMonthSel))
         ORDER BY month
         ");
         
-    while ($row = $db->fetchrow()) $dataset[$row['month']] = $row['c'];
+    while ($row = $db->fetchrow()) 
+    {
+        $dataset[$row['month']] = $row['c'];
+        $dataset2[$row['month']] = $row['c']-10;
+    }
     
-    $objBarChartYear = new barchart(700, 150);
-    $objBarChartYear->setvalues($dataset);
+    $objBarChartYear = new barchart(700, 150, array('padding' => 1));
+    $objBarChartYear->setvalues($dataset, 'Fréquentation mensuelle', '#1E64A1', '#f0f0f0');
     $objBarChartYear->setlegend($legend);
     
-    // 1er Diagramme : mois par jours
+    // 2eme Diagramme : mois par jours
     
     $dataset = array();
     $legend = array();
@@ -135,18 +141,18 @@ if (empty($intMonthSel))
         
     while ($row = $db->fetchrow()) $dataset[$row['day']] = $row['c'];
     
-    $objBarChartMonth = new barchart(700, 150);
-    $objBarChartMonth->setvalues($dataset);
+    $objBarChartMonth = new barchart(700, 150, array('padding' => 1));
+    $objBarChartMonth->setvalues($dataset, 'Fréquentation quotidienne', '#4FA11E', '#f0f0f0');
     $objBarChartMonth->setlegend($legend);
     
     // Affichage
     ?>
     <div class="webedit_stats_graph">
-        <h1>Statistiques globales de fréquentation pour <em><? echo $intYearSel ?></em> (nombre de visites)</h1>
+        <h1>Statistiques globales de fréquentation pour <em><? echo $intYearSel ?></em> (nombre d'articles vus)</h1>
         <div><? $objBarChartYear->draw(); ?></div>
     </div>
     <div class="webedit_stats_graph">
-        <h1>Statistiques globales de fréquentation pour <em><? echo $ploopi_months[$intMonthSel] ?> <? echo $intYearSel ?></em> (nombre de visites)</h1>
+        <h1>Statistiques globales de fréquentation pour <em><? echo $ploopi_months[$intMonthSel] ?> <? echo $intYearSel ?></em> (nombre d'articles vus)</h1>
         <div><? $objBarChartMonth->draw(); ?></div>
     </div>
     

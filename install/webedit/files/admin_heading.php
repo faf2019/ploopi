@@ -412,6 +412,11 @@ if ($display_type == 'advanced')
 else
 {
     ?>
+    <input type="hidden" name="webedit_heading_visible" value="<? echo $heading->fields['visible'] ?>" />
+    <input type="hidden" name="webedit_heading_url_window" value="<? echo $heading->fields['url_window']; ?>" />
+    <input type="hidden" name="webedit_heading_feed_enabled" value="<? echo $heading->fields['feed_enabled']; ?>" />
+    <input type="hidden" name="webedit_heading_subscription_enabled" value="<? echo $heading->fields['subscription_enabled']; ?>" />
+                
     <div class="ploopi_form" style="float:left;width:45%;">
         <div style="padding:2px;">
             <p>

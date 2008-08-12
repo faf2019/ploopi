@@ -1,3 +1,11 @@
+== Module WebEdit - version 1.7.6 ============================================
+
+2008-08-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Corrections d'un bug important lors de la validation d'un article (perte des valeurs des checkbox en mode 'simplifié')
+ * Corrections d'un bug important lors de la validation d'une rubrique (perte des valeurs des checkbox en mode 'simplifié')
+ * Intégration de la nouvelle classe barchart (couleurs, padding, etc.)
+
 == Module WebEdit - version 1.7.5 ============================================
 
 2008-08-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -449,6 +449,8 @@ $keywords = array_slice($keywords, 0 , 20, true);
     else
     {
         ?>
+        <input type="hidden" name="webedit_article_visible" value="<? echo $article->fields['visible']; ?>" />
+        <input type="hidden" name="webedit_article_comments_allowed" value="<? echo $article->fields['comments_allowed']; ?>" />
         <div class="ploopi_form" style="float:left; width:54%;">
             <div style="padding:2px;">
                 <p>
