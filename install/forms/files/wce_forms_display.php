@@ -107,7 +107,7 @@ function form_validate(form)
                         break;
                     }
                     ?>
-                    if (ploopi_validatefield('<? echo addslashes($fields['name']); ?>', form.field_<? echo $fields['id']; ?>, '<? echo $format; ?>'))
+                    if (ploopi_validatefield('<? echo str_replace("'", "\\\'", $fields['name']); ?>', form.field_<? echo $fields['id']; ?>, '<? echo $format; ?>'))
                     <?
                 }
             break;
@@ -117,17 +117,17 @@ function form_validate(form)
                 if ($fields['option_needed'])
                 {
                     ?>
-                    if (ploopi_validatefield('<? echo addslashes($fields['name']); ?>', form.field_<? echo $fields['id']; ?>, 'string'))
+                    if (ploopi_validatefield('<? echo str_replace("'", "\\\'", $fields['name']); ?>', form.field_<? echo $fields['id']; ?>, 'string'))
                     <?
                 }
             break;
-            
+
             case 'select':
             case 'color':
                 if ($fields['option_needed'])
                 {
                     ?>
-                    if (ploopi_validatefield('<? echo addslashes($fields['name']); ?>', form.field_<? echo $fields['id']; ?>, 'selected'))
+                    if (ploopi_validatefield('<? echo str_replace("'", "\\\'", $fields['name']); ?>', form.field_<? echo $fields['id']; ?>, 'selected'))
                     <?
                 }
             break;
@@ -137,7 +137,7 @@ function form_validate(form)
                 if ($fields['option_needed'])
                 {
                     ?>
-                    if (ploopi_validatefield('<? echo addslashes($fields['name']); ?>', form.elements['field_<? echo $fields['id']; ?>[]'], 'checked'))
+                    if (ploopi_validatefield('<? echo str_replace("'", "\\\'", $fields['name']); ?>', form.elements['field_<? echo $fields['id']; ?>[]'], 'checked'))
                     <?
                 }
             break;
