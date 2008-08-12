@@ -247,18 +247,19 @@ function ploopi_ob_callback($buffer)
         
         $buffer = trim(str_replace($array_tags, $array_values, $buffer));
     }
-    
-    //if (!empty($db) && $db->isconnected()) $db->close();
-    
+
     if (_PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && $content_type == 'text/html')
     {  
         header("Content-Encoding: gzip");
         return gzencode($buffer);
     }
-    else 
+    else
     {
-        header("Content-Encoding: none");
-        return($buffer);
+        // Attention, Content-Encoding: none ET Content-Type: text/html ne font pas bon ménage ! 
+        // => Problème avec le validateur W3C : Line 1, Column 0: end of document in prolog
+        if ($content_type != 'text/html') header("Content-Encoding: none"); 
+        
+        return $buffer;
     }
 }
 
