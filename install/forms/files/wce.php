@@ -70,16 +70,19 @@ switch($op)
             $reply->fields['id_user'] = 0; // anonymous
             $reply->fields['id_workspace'] = 0; // anonymous
 
-            $email_array['Formulaire']['Titre'] = $forms->fields['label'];
-            $email_array['Formulaire']['Date'] = $reply->fields['date_validation'];
-
             $reply->fields['id_form'] = $_POST['forms_id'];
             $reply->fields['ip'] = $_SERVER['REMOTE_ADDR'];
             $reply->save();
-
+            
             $email_array = array();
-            $email_array['Formulaire']['Opération'] = 'Nouvel Enregistrement';
-            $email_array['Formulaire']['Adresse IP'] = $reply->fields['ip'];
+            
+            $email_array['Formulaire'] = 
+                array(
+                    'Titre' => $forms->fields['label'],
+                    'Date' => $reply->fields['date_validation'],
+                    'Opération' => 'Nouvel Enregistrement',
+                    'Adresse IP' => $reply->fields['ip']
+                );
 
             $sql =  "
                     SELECT  *
