@@ -63,7 +63,7 @@ while ($news_fields = $db->fetchrow($news_result))
     $template_body->assign_block_vars("news" , array(
                         'ID' => $news_fields['id'],
                         'TITLE' => $news_fields['title'],
-                        'CONTENT' => ploopi_make_links($news_fields['content']),
+                        'CONTENT' => $news_fields['content'],
                         'HOT' => $news_fields['hot'],
                         'DATE' => $localdate['date'],
                         'TIME' => $localdate['time'],
@@ -76,7 +76,7 @@ while ($news_fields = $db->fetchrow($news_result))
     $template_body->assign_block_vars("news{$template_moduleid}" , array(
                         'ID' => $news_fields['id'],
                         'TITLE' => $news_fields['title'],
-                        'CONTENT' => ploopi_make_links($news_fields['content']),
+                        'CONTENT' => $news_fields['content'],
                         'HOT' => $news_fields['hot'],
                         'DATE' => $localdate['date'],
                         'TIME' => $localdate['time'],

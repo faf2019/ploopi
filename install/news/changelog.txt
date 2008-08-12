@@ -1,3 +1,9 @@
+== Module NEWS - version 2.42 ====================================================
+
+2008-08-11  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Suppression de la création automatique des liens 
+
 == Module NEWS - version 2.41 ====================================================
 
 2008-07-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
