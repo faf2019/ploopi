@@ -220,12 +220,12 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     ?>
                 </p>
                 <p>
-                    <label>Visible dans le menu:</label>
+                    <label for="webedit_article_visible" style="cursor:pointer;">Visible dans le menu:</label>
                     <?
                     if (!$readonly)
                     {
                         ?>
-                        <input type="checkbox" name="webedit_article_visible" style="width:14px;" value="1" <? if ($article->fields['visible']) echo 'checked'; ?> tabindex="12" />
+                        <input type="checkbox" name="webedit_article_visible" id="webedit_article_visible" class="checkbox" value="1" <? if ($article->fields['visible']) echo 'checked="checked"'; ?> tabindex="12" />
                         <?
                     }
                     else echo ($article->fields['visible']) ? 'oui' : 'non';
@@ -347,7 +347,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     if (!$readonly)
                     {
                         ?>
-                        <input type="checkbox" name="webedit_article_comments_allowed" style="width:14px;" value="1" <? if ($article->fields['comments_allowed']) echo 'checked'; ?> tabindex="12" />
+                        <input type="checkbox" name="webedit_article_comments_allowed" style="width:14px;" value="1" <? if ($article->fields['comments_allowed']) echo 'checked="checked"'; ?> tabindex="12" />
                         <?
                     }
                     else echo ($article->fields['comments_allowed']) ? 'oui' : 'non';
@@ -444,6 +444,43 @@ $keywords = array_slice($keywords, 0 , 20, true);
                 ?>
             </div>
         </div>
+        <div style="clear:both;">
+            <div><? echo htmlentities("Code supplémentaire, non filtré, à insérer dans la balise <HEAD> (js, css, meta, title...) :"); ?> (<a href="javascript:void(0);" onclick="javascript:$('fck_webedit_article_headcontent').style.height=(parseInt($('fck_webedit_article_headcontent').style.height,10)+20)+'px';" title="Permet d'agrandir la zone de saisie de 20px">agrandir la zone</a>)</div>
+            <div>
+            <?
+            if (!$readonly)
+            {
+                ?>
+                <textarea id="fck_webedit_article_headcontent" name="fck_webedit_article_headcontent" class="text" style="width:99%;height:16px;"><? echo htmlentities($article->fields['headcontent']); ?></textarea>
+                <?
+            }
+            else
+            {
+                ?>
+                <div id="fck_webedit_article_headcontent" style="height:16px;">
+                <pre> 
+                <?
+                echo htmlentities($article->fields['headcontent']);
+                ?>
+                </pre>
+                </div>
+                <?                
+            }
+            ?>
+            </div>
+            <div>
+                <label for="webedit_article_disabledfilter" style="cursor:pointer;">Désactiver le validateur XHTML 1.0 Strict (inclusion javascript, styles):</label>
+                <?
+                if (!$readonly)
+                {
+                    ?>
+                    <input type="checkbox" name="webedit_article_disabledfilter" id="webedit_article_disabledfilter" class="checkbox" value="1" <? if ($article->fields['disabledfilter']) echo 'checked="checked"'; ?> tabindex="12" />
+                    <?
+                }
+                else echo ($article->fields['disabledfilter']) ? 'oui' : 'non';
+                ?>
+            </div>
+        </div>
         <?
     }
     else
@@ -451,6 +488,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
         ?>
         <input type="hidden" name="webedit_article_visible" value="<? echo $article->fields['visible']; ?>" />
         <input type="hidden" name="webedit_article_comments_allowed" value="<? echo $article->fields['comments_allowed']; ?>" />
+        <input type="hidden" name="webedit_article_disabledfilter" value="<? echo $article->fields['disabledfilter']; ?>" />
         <div class="ploopi_form" style="float:left; width:54%;">
             <div style="padding:2px;">
                 <p>
@@ -478,12 +516,12 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     ?>
                 </p>
                 <p>
-                    <label>Visible dans le menu:</label>
+                    <label for="webedit_article_visible" style="cursor:pointer;">Visible dans le menu:</label>
                     <?
                     if (!$readonly)
                     {
                         ?>
-                        <input type="checkbox" name="webedit_article_visible" style="width:14px;" value="1" <? if ($article->fields['visible']) echo 'checked'; ?> tabindex="12" />
+                        <input type="checkbox" name="webedit_article_visible" id="webedit_article_visible" class="checkbox" value="1" <? if ($article->fields['visible']) echo 'checked="checked"'; ?> tabindex="12" />
                         <?
                     }
                     else echo ($article->fields['visible']) ? 'oui' : 'non';

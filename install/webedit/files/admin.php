@@ -365,6 +365,8 @@ switch($menu)
                     if ($article->fields['status'] != 'wait') 
                     {
                         $article->setvalues($_POST,'webedit_article_');
+                        
+                        if (isset($_POST['fck_webedit_article_headcontent'])) $article->fields['headcontent'] = $_POST['fck_webedit_article_headcontent'];
                         if (isset($_POST['fck_webedit_article_content'])) $article->fields['content'] = $_POST['fck_webedit_article_content'];
                         
                         $article->fields['timestp'] = ploopi_local2timestamp($_POST['webedit_article_timestp']);
@@ -375,10 +377,9 @@ switch($menu)
                         $article->fields['lastupdate_timestp'] = ploopi_createtimestamp();
                         $article->fields['lastupdate_id_user'] = $_SESSION['ploopi']['userid'];
                         
+                        if (empty($_POST['webedit_article_disabledfilter'])) $article->fields['disabledfilter'] = 0;
                         if (empty($_POST['webedit_article_visible'])) $article->fields['visible'] = 0;
                         if (empty($_POST['webedit_article_comments_allowed'])) $article->fields['comments_allowed'] = 0;
-                        //if (isset($_POST['webedit_article_timestp_published'])) $article->fields['timestp_published'] = ploopi_local2timestamp($_POST['webedit_article_timestp_published']);
-                        //if (isset($_POST['webedit_article_timestp_unpublished'])) $article->fields['timestp_unpublished'] = ploopi_local2timestamp($_POST['webedit_article_timestp_unpublished']);
                     }
                     else $article->setvalues($_POST,'webedit_article_');
         

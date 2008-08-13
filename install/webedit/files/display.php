@@ -673,7 +673,8 @@ else // affichage standard rubrique/page
                 'PAGE_LASTUPDATE_USER_LASTNAME' => htmlentities($user_lastname),
                 'PAGE_LASTUPDATE_USER_FIRSTNAME' => htmlentities($user_firstname),
                 'PAGE_LASTUPDATE_USER_LOGIN' => htmlentities($user_login),
-                'PAGE_CONTENT' => $content
+                'PAGE_CONTENT' => $content,
+                'PAGE_HEADCONTENT' => $article->fields['headcontent']
             )
         );
                                 

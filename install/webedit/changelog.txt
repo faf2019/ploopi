@@ -1,3 +1,10 @@
+== Module WebEdit - version 1.7.7 ============================================
+
+2008-08-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'une option sur les articles permettant de désactiver le validateur XHTML 1.0 Strict intégré (HTMLPurifier) 
+ * Ajout d'un champ sur les articles permettant d'insérer du code dans la balise <HEAD>
+ 
 == Module WebEdit - version 1.7.6 ============================================
 
 2008-08-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

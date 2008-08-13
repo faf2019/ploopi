@@ -145,7 +145,6 @@ class webedit_article extends data_object
             
             // traitement des liens vers articles
             preg_match_all('/<a[^>]*href="(index\.php[^\"]+articleid=([0-9]+)[^\"]*)"[^>]*>/i', $this->fields['content'], $matches);
-            ploopi_print_r($matches);
             foreach($matches[2] as $key => $idart)
             {
                 $objArticle = new webedit_article();
@@ -189,7 +188,8 @@ class webedit_article extends data_object
         }
         else $this->fields['content_cleaned'] = $this->fields['content'];
 
-        $this->fields['content_cleaned'] = ploopi_htmlpurifier($this->fields['content_cleaned']);
+        // filtre activé ?
+        if (!$this->fields['disabledfilter']) $this->fields['content_cleaned'] = ploopi_htmlpurifier($this->fields['content_cleaned']);
         
         // Nettoyage des tags
         // Note : les tags ne sont réellement enregistrés qu'à la publication
@@ -276,6 +276,8 @@ class webedit_article extends data_object
             $article->fields['id_user'] = $this->fields['id_user'];
             $article->fields['id_workspace'] = $this->fields['id_workspace'];
             $article->fields['position'] = $this->fields['position'];
+            $article->fields['disabledfilter'] = $this->fields['disabledfilter'];
+            $article->fields['headcontent'] = $this->fields['headcontent'];
             $article->save();
             
             $this->index();
