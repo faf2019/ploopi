@@ -657,7 +657,7 @@ CREATE TABLE `ploopi_module_type` (
 
 LOCK TABLES `ploopi_module_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_module_type` DISABLE KEYS */;
-INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.1.1','Ovensia','20080807000000');
+INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.1.2','Ovensia','20080901000000');
 /*!40000 ALTER TABLE `ploopi_module_type` ENABLE KEYS */;
 UNLOCK TABLES;
 

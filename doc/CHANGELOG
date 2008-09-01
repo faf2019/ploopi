@@ -1,19 +1,40 @@
 == Ploopi - version 1.1.2 ===================================================
 
-2008-08-11 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-09-01 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Ploopi
   - Refactoring au niveau des fonctions 'workflow' => renommage en 'validation'
   - Refactoring au niveau des classes 'odt' => renommage en 'odf'
   - Impact SQL du refactoring
-  - Mise à jour des modules Doc / WebEdit
+  - Correction d'un bug avec le calendrier (changement de nom de variable non impacté)
+  - Correction d'une erreur de chemin d'inclusion dans la classe workspace
+  - Correction de plusieurs bugs sur le fichier start_light.php
+  - Correction d'un bug mineur sur la fonction ploopi_documents
+  - Ajout d'une variable template 'TEMPLATE_NAME'
+  - Correction sur la fonction ploopi_ob_callback() => Bug avec la validateur W3C qui ne semble pas comprendre "content-encoding: none"
+  - Ajout de fonctionnalités à la classe barchart (Frédéric Belloy / Laurent Ulrich / Stéphane Escaich) : couleurs, espacements, types d'arrangement (merge, stack, side_by_side), options supplémentaires
+  - Correctifs mineurs sur les templates backoffice et frontoffice ainsi que sur la classe "skin"
+  - Corrections liées aux problèmes de php 5.2.6 avec les timezones
+  - Ajout d'un paramètre optionnel à la fonction ploopi_print_json() qui peut désormais encoder la variable en utf8 avant de la convertir au format JSON.
   
-* WebEdit 1.7.5
+* WebEdit 1.7.8
   - Mise à jour suite au refactoring des fonctions workflow (1.1.2)
+  - Ajout d'une option sur les articles permettant de désactiver le validateur XHTML 1.0 Strict intégré (HTMLPurifier) 
+  - Ajout d'un champ sur les articles permettant d'insérer du code dans la balise <HEAD>
+  - Corrections d'un bug important lors de la validation d'un article (perte des valeurs des checkbox en mode 'simplifié')
+  - Corrections d'un bug important lors de la validation d'une rubrique (perte des valeurs des checkbox en mode 'simplifié')
+  - Intégration de la nouvelle classe barchart (couleurs, padding, etc.)
+  - Conversion en entités HTML des titres de rubriques 
  
-* DOC 3.88
+* DOC 3.89
   - Mise à jour suite au refactoring des fonctions workflow (1.1.2) 
- 
+  - Correction d'un bug dans le mini-explorateur appelé depuis FCKEditor avec les noms de fichier contenant le caractère "apostrophe".
+  
+* FORMS 2.211
+  - Correction d'un bug à l'envoi du courriel lors de la validation du formulaire (Titre absent)
+  - Correction d'un bug lors de la génération de la fonction javascript de validation d'un formulaire intégré en frontoffice
+  - Correction d'un bug sur les onglets en admin (ajout d'un formulaire) - merci Xavier
+   
 == Ploopi - version 1.1.1 ===================================================
 
 2008-08-07 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -594,7 +615,7 @@
 2007-08-30  Benjamin Ganivet ~ Netlor <benjamin@netlor.fr>
 
  * Correction d'un bug lors du choix d'utilisateurs dans le système de workflow
- * Correction d'un bug lors de la suppression d'un utilisateur (ne le supprimait par réellement)
+ * Correction d'un bug lors de la suppression d'un utilisateur (ne le supprimait pas réellement)
 
 2007-08-28  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
 

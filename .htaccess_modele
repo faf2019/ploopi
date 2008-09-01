@@ -1,8 +1,10 @@
 # Attention, ce fichier est une configuration generique qu'il convient d'adapter a  votre environnement.
 # Il existe des configurations plus solides que vous pouvez utiliser si vous pouvez directement modifier le fichier de configuration d'apache.
 
-DirectoryIndex index.html index.php
-Options +FollowSymLinks -Indexes
+<IfModule mod_dir.c>
+    DirectoryIndex index.html index.php
+    Options +FollowSymLinks -Indexes
+</IfModule>
 
 <IfModule mod_php4.c>
     AddType application/x-httpd-php .php
