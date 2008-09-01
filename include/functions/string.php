@@ -115,8 +115,7 @@ function ploopi_urlrewrite($url, $title = '', $keep_extension = false)
             $title = basename($title, ".{$ext}");
         }
                 
-        $title_replacement = str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '_');
-        $title = urlencode(ploopi_convertaccents(strtolower(strtr(trim($title), _PLOOPI_INDEXATION_WORDSEPARATORS, $title_replacement))));
+        $title = urlencode(ploopi_convertaccents(strtolower(strtr(trim($title), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '_')))));
         
         $patterns = array('/__+/', '/_$/');
         $replacements = array('_', '');
@@ -189,14 +188,30 @@ function ploopi_make_links($text)
  * Encode et affiche une variable au format JSON et modifie les entêtes du document. Compatible x-json
  *
  * @param mixed $var variable à encoder
+ * @param boolean $utf8encode true si le contenu de la variable doit être converti en UTF8 (true par défaut)
  * 
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
+ * 
+ * @see iconv
  */
 
-function ploopi_print_json($var)
+function ploopi_print_json($var, $utf8encode = true)
 {
+    
+    if ($utf8encode) 
+    {
+        $var = 
+            ploopi_array_map(
+                create_function(
+                    '$v',
+                    'return iconv(\'ISO-8859-15\', \'UTF-8\', $v);'
+                ), 
+                $var
+            );
+    }
+        
     $json = json_encode($var);
     header("Content-Type: text/x-json"); 
     if (strlen($json)>4096) echo $json;
