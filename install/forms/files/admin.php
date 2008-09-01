@@ -62,8 +62,8 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
     $tabs['formadd'] = 
         array(
             'title' => _FORMS_LABELTAB_ADD, 
-            'url' => "admin.php?formsTabItem=formadd
-        ");
+            'url' => "admin.php?formsTabItem=formadd"
+        );
     
     echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
     echo $skin->create_tabs($tabs, $_SESSION['forms']['formsTabItem']);

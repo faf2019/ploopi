@@ -1,3 +1,9 @@
+== Module FORMS - version 2.211 =====================================================
+
+2008-09-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug sur les onglets en admin (ajout d'un formulaire) - merci Xavier
+
 == Module FORMS - version 2.21 =====================================================
 
 2008-08-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
