@@ -47,7 +47,9 @@
     {ADDITIONAL_JAVASCRIPT}
     //-->
     </script>
-
+    <!-- BEGIN switch_content_page -->
+    {PAGE_HEADCONTENT}
+    <!-- END switch_content_page -->
 </head>
 
 <body>

@@ -74,7 +74,7 @@ class skin_common
         if (strlen($style)>0) $res = "<div class=\"simplebloc\" style=\"{$style}\">";
         else $res = "<div class=\"simplebloc\">";
 
-        if ($title!=null) $res .= "<div class=\"simplebloc_title\" style=\"{$styletitle}\">{$additionnal_title}{$title}</div>";
+        if ($title!=null) $res .= "<div class=\"simplebloc_title\" id=\"handle\" style=\"{$styletitle}\"><div class=\"simplebloc_titleleft\">{$additionnal_title}{$title}</div></div>";
 
         $res .= '<div class="simplebloc_content">';
 
@@ -101,10 +101,10 @@ class skin_common
      * @return string code html du titre
      */
     
-    public function create_pagetitle($title, $style = '')
+    public function create_pagetitle($title, $style = '', $additionnal_title = '')
     {
-        if (strlen($style)>0) $res = "<div class=\"pagetitle\" style=\"{$style}\">$title</div>";
-        else $res = "<div class=\"pagetitle\">$title</div>";
+        if (strlen($style)>0) $res = "<div class=\"pagetitle\" style=\"{$style}\"><p>{$additionnal_title}</p>{$title}</div>";
+        else $res = "<div class=\"pagetitle\"><p>{$additionnal_title}</p>{$title}</div>";
 
         return $res;
     }
@@ -209,7 +209,7 @@ class skin_common
                     <div class=\"{$class}_sel\" id=\"{$key}\" {$style}>
                         <a href=\"javascript:void(0);\" onclick=\"javascript:{$onclick};return false;\">
                             <div class=\"toolbar_icon_image\">$image</div>
-                            <div class=\"toolbar_icon_title\">$title</div>
+                            <p>$title</p>
                         </a>
                     </div>
                     ";
@@ -217,10 +217,10 @@ class skin_common
         else
         {
             $res =  "
-                    <distringv class=\"{$class}\" id=\"{$key}\" {$style}>
+                    <div class=\"{$class}\" id=\"{$key}\" {$style}>
                         <a href=\"javascript:void(0);\" onclick=\"javascript:{$onclick};return false;\">
                             <div class=\"toolbar_icon_image\">$image</div>
-                            <div class=\"toolbar_icon_title\">$title</div>
+                            <p>$title</p>
                         </a>
                     </div>
                     ";
