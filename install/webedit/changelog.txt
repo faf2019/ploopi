@@ -1,3 +1,9 @@
+== Module WebEdit - version 1.7.8 ============================================
+
+2008-09-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Conversion en entités HTML des titres de rubriques 
+
 == Module WebEdit - version 1.7.7 ============================================
 
 2008-08-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

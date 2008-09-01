@@ -450,22 +450,11 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
     
     if (isset($headings['tree'][$hid]))
     {
-        /*
-        if (isset($headings['list'][$hid]))
-        {
-            if ($headings['list'][$hid]['depth'] == 0) $localvar = "sw_root{$headings['list'][$hid]['position']}";
-            else $localvar = "{$var}sw_heading{$headings['list'][$hid]['depth']}";
-            
-            echo '<br />'.$localvar;
-
-            $template_body->assign_block_vars($localvar , array());
-            
-        }
-        */
-
         foreach($headings['tree'][$hid] as $id)
         {
             $detail = $headings['list'][$id];
+            
+            $strHtmlLabel = htmlentities($detail['label']);
 
             $depth = $detail['depth'] - 1;
             if ($depth == 0) // root node
@@ -500,13 +489,12 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
             {
                 $template_body->assign_block_vars('path' , array(
                     'DEPTH' => $depth,
-                    'LABEL' => $detail['label'],
+                    'LABEL' => $strHtmlLabel,
                     'LINK' => $script
                     ));
 
                 /* Déprécié : remplacé par le bloc ci-dessous */
-                $template_body->assign_var("HEADING{$depth}_TITLE",         $detail['label']);
-                $template_body->assign_var("HEADING{$depth}_TITLE",         $detail['label']);
+                $template_body->assign_var("HEADING{$depth}_TITLE",         $strHtmlLabel);
                 $template_body->assign_var("HEADING{$depth}_ID",            $id);
                 $template_body->assign_var("HEADING{$depth}_POSITION",      $detail['position']);
                 $template_body->assign_var("HEADING{$depth}_COLOR",         $detail['color']);
@@ -517,7 +505,7 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
                 $template_body->assign_block_vars("switch_heading{$depth}" , array(
                     'DEPTH' => $depth,
                     'ID' => $detail['id'],
-                    'LABEL' => $detail['label'],
+                    'LABEL' => $strHtmlLabel,
                     'POSITION' => $detail['position'],
                     'DESCRIPTION' => $detail['description'],
                     'LINK' => $script,
@@ -538,7 +526,7 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
                 $template_body->assign_block_vars($localvar , array(
                     'DEPTH' => $depth,
                     'ID' => $detail['id'],
-                    'LABEL' => $detail['label'],
+                    'LABEL' => $strHtmlLabel,
                     'POSITION' => $detail['position'],
                     'DESCRIPTION' => $detail['description'],
                     'LINK' => $script,
