@@ -1,3 +1,9 @@
+== Module DOC - version 3.89 =====================================================
+
+2008-09-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug dans le mini-explorateur appelé depuis FCKEditor avec les noms de fichier contenant le caractère "apostrophe".
+
 == Module DOC - version 3.88 =====================================================
 
 2008-08-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
