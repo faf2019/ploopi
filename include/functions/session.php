@@ -106,8 +106,7 @@ function ploopi_session_reset()
     
         'fingerprint'   => _PLOOPI_FINGERPRINT,
     
-        'timezone'      => timezone_name_get(date_timezone_get(date_create()))
-    
+        'timezone'      => timezone_name_get(date_timezone_get($objDatetime =  date_create()))
     );
 }
 

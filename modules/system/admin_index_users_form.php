@@ -257,19 +257,24 @@ if (isset($_REQUEST['error']))
                     {
                         if (!empty($value['timezone_id']) && strpos($value['timezone_id'], '/') !== false) 
                         {
-                            $offset = timezone_offset_get(timezone_open($value['timezone_id']), $date);
+                            $objDateTimeZone = timezone_open($value['timezone_id']);
                             
-                            //don't use $value['offset'] !;
-                            
-                            $s = ($offset>0) ? '+' : '-';
-                            
-                            $hh = floor(abs($offset) / 3600);
-                            $mm = floor((abs($offset) % 3600) / 60);
-                            
-                            $arrZones[$value['timezone_id']] = array(   'offset' => $offset,
-                                                                        'label' => str_replace(array('/', '_'), array(' / ', ' '), $value['timezone_id']),
-                                                                        'offset_display' => ($offset == 0) ? 'UTC' : sprintf("GMT %s%02dh%02d",$s, $hh, $mm)
-                                                                    );
+                            if ($objDateTimeZone !== false)
+                            {
+                                $offset = timezone_offset_get($objDateTimeZone, $date);
+                                
+                                //don't use $value['offset'] !;
+                                
+                                $s = ($offset>0) ? '+' : '-';
+                                
+                                $hh = floor(abs($offset) / 3600);
+                                $mm = floor((abs($offset) % 3600) / 60);
+                                
+                                $arrZones[$value['timezone_id']] = array(   'offset' => $offset,
+                                                                            'label' => str_replace(array('/', '_'), array(' / ', ' '), $value['timezone_id']),
+                                                                            'offset_display' => ($offset == 0) ? 'UTC' : sprintf("GMT %s%02dh%02d",$s, $hh, $mm)
+                                                                        );
+                            }
                         }
                     }
                 }
