@@ -1,3 +1,10 @@
+== Module FORMS - version 2.212 =====================================================
+
+2008-09-02  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Ajout du tag pour template SELECTED_XHTML respectant XHTML Strict (retourne 'selected="selected"' ou '')
+ * Ajout du tag pour template CHECKED_XHTML respectant XHTML Strict (retourne 'checked="checked"' ou '')
+ 
 == Module FORMS - version 2.211 =====================================================
 
 2008-09-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

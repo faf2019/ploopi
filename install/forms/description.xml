@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>forms</label>
-      <version>2.211</version>
-      <author>Netlor / Ovensia</author>
-      <date>20080901000000</date>
+      <version>2.212</version>
+      <author>Netlor / Ovensia / HeXad</author>
+      <date>20080902000000</date>
       <description>Gestion de Formulaires</description>
       <paramtype>
          <name>forms_export_csvextension</name>

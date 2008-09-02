@@ -37,7 +37,7 @@
 	                        <!-- BEGIN switch_select -->
 	                        <select class="select" id="{formfields.switch_field.LABELID}" name="{formfields.switch_field.NAME}" tabindex="{formfields.switch_field.TABINDEX}">
 	                            <!-- BEGIN values -->
-	                            <option {formfields.switch_field.switch_select.values.SELECTED} value="{formfields.switch_field.switch_select.values.VALUE}">{formfields.switch_field.switch_select.values.VALUE}</option>
+	                            <option {formfields.switch_field.switch_select.values.SELECTED_XHTML} value="{formfields.switch_field.switch_select.values.VALUE}">{formfields.switch_field.switch_select.values.VALUE}</option>
 	                            <!-- END values -->
 	                        </select>
 	                        <!-- END switch_select -->
@@ -48,7 +48,7 @@
                                     <span style="float:left;width:{formfields.switch_field.switch_checkbox.columns.WIDTH}%">
 		                                <!-- BEGIN values -->
 		                                    <span class="checkbox" onclick="javascript:ploopi_checkbox_click(event, '{formfields.switch_field.LABELID}_{formfields.switch_field.switch_checkbox.columns.values.ID}');">
-		                                        <input {formfields.switch_field.switch_checkbox.columns.values.CHECKED} type="checkbox" style="width:14px;" name="{formfields.switch_field.switch_checkbox.columns.values.NAME}" id="{formfields.switch_field.LABELID}_{formfields.switch_field.switch_checkbox.columns.values.ID}" value="{formfields.switch_field.switch_checkbox.columns.values.VALUE}" />
+		                                        <input {formfields.switch_field.switch_checkbox.columns.values.CHECKED_XHTML} type="checkbox" style="width:14px;" name="{formfields.switch_field.switch_checkbox.columns.values.NAME}" id="{formfields.switch_field.LABELID}_{formfields.switch_field.switch_checkbox.columns.values.ID}" value="{formfields.switch_field.switch_checkbox.columns.values.VALUE}" />
 		                                        {formfields.switch_field.switch_checkbox.columns.values.VALUE}
 		                                    </span>
 		                                <!-- END values -->
@@ -63,7 +63,7 @@
                                     <span style="float:left;width:{formfields.switch_field.switch_radio.columns.WIDTH}%">
                                         <!-- BEGIN values -->
                                             <span class="checkbox" onclick="javascript:ploopi_checkbox_click(event, '{formfields.switch_field.LABELID}_{formfields.switch_field.switch_radio.columns.values.ID}');">
-                                                <input {formfields.switch_field.switch_radio.columns.values.CHECKED} type="radio" style="width:14px;" name="{formfields.switch_field.switch_radio.columns.values.NAME}" id="{formfields.switch_field.LABELID}_{formfields.switch_field.switch_radio.columns.values.ID}" value="{formfields.switch_field.switch_radio.columns.values.VALUE}" />
+                                                <input {formfields.switch_field.switch_radio.columns.values.CHECKED_XHTML} type="radio" style="width:14px;" name="{formfields.switch_field.switch_radio.columns.values.NAME}" id="{formfields.switch_field.LABELID}_{formfields.switch_field.switch_radio.columns.values.ID}" value="{formfields.switch_field.switch_radio.columns.values.VALUE}" />
                                                 {formfields.switch_field.switch_radio.columns.values.VALUE}
                                             </span>
                                         <!-- END values -->
@@ -82,7 +82,7 @@
 	                        <!-- BEGIN switch_color -->
 	                        <select class="select" style="background-color:{formfields.switch_field.VALUE};" id="{formfields.switch_field.LABELID}" name="{formfields.switch_field.NAME}" onchange="this.style.backgroundColor=this.value;" tabindex="{formfields.switch_field.TABINDEX}">
 	                            <!-- BEGIN values -->
-	                            <option {formfields.switch_field.switch_color.values.SELECTED} value="{formfields.switch_field.switch_color.values.VALUE}" style="background-color:{formfields.switch_field.switch_color.values.VALUE};">&nbsp;</option>
+	                            <option {formfields.switch_field.switch_color.values.SELECTED_XHTML} value="{formfields.switch_field.switch_color.values.VALUE}" style="background-color:{formfields.switch_field.switch_color.values.VALUE};">&nbsp;</option>
 	                            <!-- END values -->
 	                        </select>
 	                        <!-- END switch_color -->

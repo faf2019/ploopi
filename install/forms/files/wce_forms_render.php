@@ -2,6 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  *
  * @package forms
  * @subpackage wce
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -151,7 +152,7 @@ while ($fields = $db->fetchrow($rs_fields))
                 $template_forms->assign_block_vars('formfields.switch_field.switch_select', array());
                 
                 $template_forms->assign_block_vars('formfields.switch_field.switch_select.values', array(
-                    'VALUE' => '', 'SELECTED' => ''
+                    'VALUE' => '', 'SELECTED' => '', 'SELECTED_XHTML' => ''
                     )
                 );
                 
@@ -159,7 +160,8 @@ while ($fields = $db->fetchrow($rs_fields))
                 {
                     $template_forms->assign_block_vars('formfields.switch_field.switch_select.values', array(
                         'VALUE' => $value,
-                        'SELECTED' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'selected' : ''
+                        'SELECTED' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'selected' : '',
+                        'SELECTED_XHTML' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'selected="selected"' : ''
                         )
                     );
                 }
@@ -175,7 +177,8 @@ while ($fields = $db->fetchrow($rs_fields))
                 {
                     $template_forms->assign_block_vars('formfields.switch_field.switch_select.values', array(
                         'VALUE' => $row['value'],
-                        'SELECTED' => (isset($replies[$fields['id']]) && $row['value'] == $replies[$fields['id']][0]) ? 'selected' : ''
+                        'SELECTED' => (isset($replies[$fields['id']]) && $row['value'] == $replies[$fields['id']][0]) ? 'selected' : '',
+                        'SELECTED_HTML' => (isset($replies[$fields['id']]) && $row['value'] == $replies[$fields['id']][0]) ? 'selected="selected"' : ''
                         )
                     );
                 }
@@ -202,7 +205,8 @@ while ($fields = $db->fetchrow($rs_fields))
                             'ID' => $d,
                             'VALUE' => $value,
                             'NAME' => "field_{$fields['id']}[]",
-                            'CHECKED' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'checked' : ''
+                            'CHECKED' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'checked' : '',
+                            'CHECKED_XHTML' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'checked="checked"' : ''
                             )
                         );
                     }
@@ -228,7 +232,8 @@ while ($fields = $db->fetchrow($rs_fields))
                             'ID' => $d,
                             'VALUE' => $value,
                             'NAME' => "field_{$fields['id']}[]",
-                            'CHECKED' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'checked' : ''
+                            'CHECKED' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'checked' : '',
+                            'CHECKED_XHTML' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'checked="checked"' : ''
                             )
                         );
                     }
@@ -243,7 +248,7 @@ while ($fields = $db->fetchrow($rs_fields))
                 $template_forms->assign_block_vars('formfields.switch_field.switch_color', array());
 
                 $template_forms->assign_block_vars('formfields.switch_field.switch_color.values', array(
-                    'VALUE' => '', 'SELECTED' => ''
+                    'VALUE' => '', 'SELECTED' => '', 'SELECTED_XHTML' => '' 
                     )
                 );
                 
@@ -251,7 +256,8 @@ while ($fields = $db->fetchrow($rs_fields))
                 {
                     $template_forms->assign_block_vars('formfields.switch_field.switch_color.values', array(
                         'VALUE' => $value,
-                        'SELECTED' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'selected' : ''
+                        'SELECTED' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'selected' : '',
+                        'SELECTED_XHTML' => (isset($replies[$fields['id']]) && in_array($value, $replies[$fields['id']])) ? 'selected="selected"' : ''
                         )
                     );
                 }
