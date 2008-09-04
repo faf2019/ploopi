@@ -2,10 +2,25 @@
 <ploopi>
     <moduletype>
         <label>webedit</label>
-        <version>1.7.8</version>
+        <version>1.7.9</version>
         <author>Netlor / Ovensia</author>
-        <date>20080901000000</date>
+        <date>20080904000000</date>
         <description>Editeur de Contenus Web</description>
+        <paramtype>
+            <name>display_type</name>
+            <label>Type d'affichage par défaut</label>
+            <default_value>beginner</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>beginner</value>
+                <displayed_value>Simplifié</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>advanced</value>
+                <displayed_value>Avancé</displayed_value>
+            </paramchoice>
+        </paramtype>
         <action>
             <id_action>1</id_action>
             <label>Gérer les articles</label>

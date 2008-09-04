@@ -1,3 +1,9 @@
+== Module WebEdit - version 1.7.9 ============================================
+
+2008-09-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'un paramètre permettant de choisir le type d'affichage par défaut (au lieu de "simplifié") 
+
 == Module WebEdit - version 1.7.8 ============================================
 
 2008-09-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
