@@ -16,6 +16,7 @@
   - Correctifs mineurs sur les templates backoffice et frontoffice ainsi que sur la classe "skin"
   - Corrections liées aux problèmes de php 5.2.6 avec les timezones
   - Ajout d'un paramètre optionnel à la fonction ploopi_print_json() qui peut désormais encoder la variable en utf8 avant de la convertir au format JSON.
+  - Mise à jour de FckEditor (2.6 => 2.6.3)
   
 * WebEdit 1.7.8
   - Mise à jour suite au refactoring des fonctions workflow (1.1.2)

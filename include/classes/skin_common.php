@@ -87,9 +87,9 @@ class skin_common
      * @return string code html du pied du bloc
      */
     
-    public function close_simplebloc()
+    function close_simplebloc()
     {
-        return '</div></div>';
+        return '</div><div class="simplebloc_footer"></div></div>';
     }
 
     
@@ -282,11 +282,26 @@ class skin_common
      * @return string code html du popup
      */
     
-    public function create_popup($title, $content, $popupid = '')
+    function create_popup($title, $content, $popupid = 'ploopi_popup')
     {
-        $res = $this->open_simplebloc($title, 'margin:0px;','','<a title="Fermer" class="ploopi_popup_close" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');">Fermer</a>');
-        $res .= $content;
-        $res .= $this->close_simplebloc();
+        $res =  '
+                <div class="simplebloc" style="margin:0;">
+                    <a name="anchor_'.$popupid.'"></a>
+                    <div class="simplebloc_title">
+                        <div class="simplebloc_titleleft">
+                            <img alt="Fermer" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
+                            <div style="overflow:auto;cursor:move;" id="handle_'.$popupid.'">'.$title.'</div>
+                        </div>
+                    </div>
+                    <div class="simplebloc_content">'.$content.'</div>
+                    <div class="simplebloc_footer" style="cursor:move;" id="handlebottom_'.$popupid.'"></div>
+                </div>
+                <script type="text/javascript">
+                new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\'});
+                new Draggable(\''.$popupid.'\', { handle: \'handlebottom_'.$popupid.'\'});
+                document.location.href=\'#anchor_'.$popupid.'\';
+                </script>        
+                ';
 
         return($res);
     }
@@ -417,12 +432,21 @@ class skin_common
      * @param string $orderby colonne de tri
      */
     
+    /**
+     * Rafraichit l'affichage d'un tableau avancé
+     *
+     * @param string $array_id id du tableau
+     * @param string $orderby colonne de tri
+     */
+    
     public function display_array_refresh($array_id, $orderby = null)
     {
+        // On récupère le tableau stocké en session (identifié par array_id)
         $array = &$_SESSION['ploopi']['arrays'][$array_id];
 
         $sort_img = '';
 
+        // si le tableau est "triable" (option)
         if (!empty($array['options']['sortable']) && $array['options']['sortable'])
         {
             // initialisation  du tri par défaut pour le tableau courant
@@ -461,6 +485,8 @@ class skin_common
 
         $i = 0;
         $w = 0;
+        
+        // on insère d'abord la colonne optionnelle de droite (actions)
         if (!empty($array['columns']['actions_right']))
         {
             foreach($array['columns']['actions_right'] as $id => $c)
@@ -473,6 +499,7 @@ class skin_common
             }
         }
 
+        // on insère ensuite les colonnes de données de droite (optionnelles)
         if (!empty($array['columns']['right']))
         {
             foreach($array['columns']['right'] as $c)
@@ -486,6 +513,8 @@ class skin_common
         }
 
         $w = 0;
+        
+        // puis les colonnes de données de gauche (optionnelles)
         if (!empty($array['columns']['left']))
         {
             foreach($array['columns']['left'] as $c)
@@ -497,10 +526,13 @@ class skin_common
                 $i++;
             }
         }
+
+        // on gère ensuite l'affichage des titres de colonne
         ?>
         <div style="position:relative;">
             <div class="ploopi_explorer_title" id="ploopi_explorer_title_<? echo $array_id; ?>">
                 <?
+                // titres des colonnes d'action (à droite)
                 if (!empty($array['columns']['actions_right']))
                 {
                     foreach($array['columns']['actions_right'] as $id => $c)
@@ -511,6 +543,7 @@ class skin_common
                     }
                 }
 
+                // titres des colonnes de données à droite
                 if (!empty($array['columns']['right']))
                 {
                     foreach($array['columns']['right'] as $id => $c)
@@ -528,6 +561,7 @@ class skin_common
                     }
                 }
 
+                // titres des colonnes de données à gauche
                 if (!empty($array['columns']['left']))
                 {
                     foreach($array['columns']['left'] as $id => $c)
@@ -545,6 +579,7 @@ class skin_common
                     }
                 }
 
+                // titre de la colonne centrale (auto)
                 if (!empty($array['columns']['auto']))
                 {
                     foreach($array['columns']['auto'] as $id => $c)
@@ -564,12 +599,18 @@ class skin_common
                 ?>
             </div>
 
+            <?
+            // Gestion de l'affichage des lignes de données
+            ?>
+            
             <div <? if (!empty($array['options']['height'])) echo "style=\"height:{$array['options']['height']}px;overflow:auto;\""; ?> id="ploopi_explorer_values_outer_<? echo $array_id; ?>">
 
                 <div id="ploopi_explorer_values_inner_<? echo $array_id; ?>">
                 <?
+
                 foreach($array['values'] as $v)
                 {
+                    // alternance des couleurs (une ligne sur 2) : on joue sur les css
                     $color = (empty($color) || $color == 1) ? 2 : 1;
                     ?>
                     <div <? if (!empty($v['id'])) echo "id=\"{$v['id']}\""; ?> class="ploopi_explorer_line_<? echo $color; ?>" <? if (!empty($v['style'])) echo "style=\"{$v['style']}\""; ?>>
@@ -591,7 +632,7 @@ class skin_common
                             $onclick = (empty($v['onclick'])) ? '' : "onclick=\"{$v['onclick']}\"";
                             $title = (empty($v['description'])) ? '' : 'title="'.htmlentities($v['description']).'"';
                             ?>
-                            <a class="ploopi_explorer_link" href="<? echo $v['link']; ?>" <? echo $title ; ?> <? echo $onclick ; ?> <? if (!empty($v['style'])) echo "style=\"{$v['style']}\""; ?> <? echo $option; ?>>
+                            <a class="ploopi_explorer_link" href="<? echo $v['link']; ?>" <? echo $title ; ?> <? echo $onclick ; ?> <? echo $option; ?>>
                             <?
                         }
                         if (!empty($array['columns']['right']))
@@ -643,7 +684,6 @@ class skin_common
         </script>
         <?
     }
-    
     
     /**
      * Affiche un treeview

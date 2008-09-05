@@ -63,11 +63,11 @@ switch($ploopi_op)
             ploopi_tickets_validate = function (form)
             {
                 return (ploopi_validatefield('Titre',form.ticket_title,'string'));
-            };
+            }
         </script>
         
         <div id="tickets_new">
-            <form method="post" action="<? echo ploopi_urlencode('admin.php'); ?>" target="ploopi_tickets_send" onsubmit="javascript:return ploopi_tickets_validate(this);};">
+            <form method="post" action="<? echo ploopi_urlencode('admin.php'); ?>" target="ploopi_tickets_send" onsubmit="javascript:return ploopi_tickets_validate(this);">
             <input type="hidden" name="ploopi_op" value="tickets_send">
             <input type="hidden" name="ploopi_tickets_reload" value="<? if (!empty($_GET['ploopi_tickets_reload'])) echo $_GET['ploopi_tickets_reload']; ?>">
             <?
@@ -133,8 +133,8 @@ switch($ploopi_op)
                 ?>
             </div>
             <div style="text-align:right;">
-                    <input type="submit" class="flatbutton" value="Envoyer" style="font-weight:bold;">
                     <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('system_popupticket');">
+                    <input type="submit" class="flatbutton" value="Envoyer" style="font-weight:bold;">
             </div>
             </form>
             <iframe name="ploopi_tickets_send" style="display:none;"></iframe>
@@ -184,10 +184,10 @@ switch($ploopi_op)
                 ploopi_tickets_validate = function (form)
                 {
                     return (ploopi_validatefield('Titre',form.ticket_title,'string'));
-                };
+                }
             </script>
             <div id="tickets_new">
-                <form method="post" action="<? echo ploopi_urlencode('admin.php'); ?>" target="ploopi_tickets_send" onsubmit="javascript:return ploopi_tickets_validate(this);};">
+                <form method="post" action="<? echo ploopi_urlencode('admin.php'); ?>" target="ploopi_tickets_send" onsubmit="javascript:return ploopi_tickets_validate(this);">
                 <input type="hidden" name="ploopi_op" value="<? echo $nextop; ?>">
                 <input type="hidden" name="ticket_id" value="<? echo $_GET['ticket_id']; ?>">
                 <input type="hidden" name="ploopi_tickets_reload" value="1">
@@ -224,8 +224,8 @@ switch($ploopi_op)
                     ?>
                 </div>
                 <div style="text-align:right;">
-                        <input type="submit" class="flatbutton" value="<? echo $button_value; ?>" style="font-weight:bold;">
                         <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('system_popupticket');">
+                        <input type="submit" class="flatbutton" value="<? echo $button_value; ?>" style="font-weight:bold;">
                 </div>
                 </form>
                 <iframe name="ploopi_tickets_send" style="display:none;"></iframe>

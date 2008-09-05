@@ -237,6 +237,8 @@ function ploopi_htmlpurifier($string)
     $config->set('Cache', 'SerializerPath', $cache_path);
     $config->set('Core', 'Encoding', 'ISO-8859-15');
     $config->set('HTML', 'Doctype', 'XHTML 1.0 Strict');
+    //$config->set('HTML', 'AllowedModules', 'Target');
+    
     $purifier = new HTMLPurifier($config);
 
     return $purifier->purify($string); 

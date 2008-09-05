@@ -20,20 +20,25 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-function ploopi_tickets_new(event, id_object, id_record, object_label, id_user, reload)
+function ploopi_tickets_new(event, id_object, id_record, object_label, id_user, reload, x, y)
 {
     var data = '';
 
-    if (object_label) data += '&ploopi_tickets_object_label='+object_label;
-    if (id_object) data += '&ploopi_tickets_id_object='+id_object;
-    if (id_record) data += '&ploopi_tickets_id_record='+id_record;
-    if (reload) data += '&ploopi_tickets_reload='+reload;
-    if (id_user) data += '&ploopi_tickets_id_user='+id_user;
+    if (typeof(object_label) != 'undefined' && object_label != null) data += '&ploopi_tickets_object_label='+object_label;
+    if (typeof(id_object) != 'undefined' && id_object != null) data += '&ploopi_tickets_id_object='+id_object;
+    if (typeof(id_record) != 'undefined' && id_record != null) data += '&ploopi_tickets_id_record='+id_record;
+    if (typeof(reload) != 'undefined' && reload != null) data += '&ploopi_tickets_reload='+reload;
+    if (typeof(id_user) != 'undefined' && id_user != null) data += '&ploopi_tickets_id_user='+id_user;
+    
 
-    ploopi_showpopup('',550,event,'click', 'system_popupticket');
+    if (typeof(x) == 'undefined' || x == null) x = 0;
+    if (typeof(y) == 'undefined' || y == null) y = 0;
+
+    ploopi_showpopup('', 550, event, true, 'system_popupticket', x, y);
     ploopi_ajaxloader('system_popupticket');
     ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_new'+data,'system_popupticket');
 }
+
 
 /* Rafraichissement de la zone indiquant le nombre de tickets non lus + alerte sur nouveau ticket */
 function ploopi_tickets_refresh(lastnewticket, timeout, str_left, str_right)
