@@ -2,6 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  *
  * @package rss
  * @subpackage pref
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -42,7 +43,7 @@ include_once './include/classes/data_object.php';
  *
  * @package rss
  * @subpackage pref
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -57,13 +58,14 @@ class rss_pref extends data_object
     
     function rss_pref()
     {
-        parent::data_object('ploopi_mod_rss_pref','id_module','id_user','id_feed');
+        parent::data_object('ploopi_mod_rss_pref','id_module','id_user','id_feed_cat_filter');
     }
 
     /**
      * Enregistre le flux favori (préférence) pour un utilisateur dans un module
+     * 
+     * @return mixed valeur de la clé primaire
      */
-    
     function save()
     {
         global $db;

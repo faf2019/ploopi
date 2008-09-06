@@ -1,3 +1,31 @@
+== Module RSS (béta)- version 1.29b ====================================================
+
+2008-09-08   Xavier Toussaint ~ Hexad <xavier@hexad.fr>
+
+ * Système de filtrage pour cibler les messages des flux à afficher
+ 
+ * Refonte du système objet webedit de flux rss/atom
+ * Ajout d'objet de type rss -> catégorie
+ * Ajout d'objet de type rss -> filtre
+ * Ajout de nouveaux tags template pour Affichage des messages de flux fusionnés
+ * Ajout de nouveaux tags template pour Affichage des messages de flux précis
+ * Ajout de nouveaux tags template pour Affichage des messages de flux par catégorie
+ * Ajout de nouveaux tags template pour Affichage des messages de flux par filtre
+ * Ajout d'une limite de messages par flux
+ * Ajout d'une limite de messages par catégorie
+ * Ajout d'une limite de messages par filtre
+ * Ajout de "--- tout ---" dans le bloc en backoffice qui affiche tous les messages de flux
+ * Ajout des catégories dans le bloc en backoffice
+ * Ajout des filtres dans le bloc en backoffice
+ * Correction lors de la suppression des flux (suppression des messages)
+ * Correction lors de la suppression des catégories (nettoyage des flux attachés)
+ * Correction de texte "en dur" -> constante de langue
+ * Optimisation de cron.php
+ * Modifications sur la structure SQL
+ * Mise à jour de la Métabase
+ * ...
+ 
+
 == Module RSS - version 1.26 ====================================================
 
 2008-07-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

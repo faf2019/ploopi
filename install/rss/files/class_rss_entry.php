@@ -55,7 +55,6 @@ class rss_entry extends data_object
      *
      * @return rss_entry
      */
-    
     function rss_entry()
     {
         parent::data_object('ploopi_mod_rss_entry', 'id');
@@ -64,21 +63,17 @@ class rss_entry extends data_object
     /**
      * Enregistre une entrée d'un flux
      *
-     * @return boolean true si l'enregistrement a été effectué
+     * @return mixed valeur de la clé primaire
      */
-    
     function save()
     {
         $ts = ploopi_unixtimestamp2timestamp($this->fields['published']);
 
         $rss_feed = new rss_feed();
         $rss_feed->open($this->fields['id_feed']);
-        
-        $this->fields['title'] = ploopi_htmlpurifier($this->fields['title']);
-        $this->fields['content'] = ploopi_htmlpurifier($this->fields['content']);
-        
+
         ploopi_search_create_index(_RSS_OBJECT_NEWS_ENTRY, sprintf("%06d%06d%s", $rss_feed->fields['id_cat'], $this->fields['id_feed'], $this->fields['id']), $this->fields['title'], strip_tags(html_entity_decode($this->fields['content'])), strip_tags(html_entity_decode("{$this->fields['title']} {$this->fields['subtitle']} {$this->fields['author']}")), true, $ts, $ts, $this->fields['id_user'], $this->fields['id_workspace'], $this->fields['id_module']);
-        return(parent::save());
+        return parent::save();
     }
 
     /**

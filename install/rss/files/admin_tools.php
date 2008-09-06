@@ -1,6 +1,7 @@
 <?php
 /*
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,7 +26,7 @@
  * 
  * @package rss
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -34,16 +35,12 @@ echo $skin->open_simplebloc(_RSS_LABEL_TOOLS);
 
 if (isset($_GET['end']))
 {
-    ?>
-    <div style="padding:4px;">
-    Indexation terminée
-    </div>
-    <?
+    echo '<div style="padding:4px;">'._RSS_MESS_REINDEX.'</div>';
 }
 ?>
 
 <div style="padding:4px;">
-<input type="button" class="button" value="Ré-indéxer les flux" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=reindex"); ?>';">
+<input type="button" class="button" value="<? echo _RSS_LABEL_REINDEX; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=reindex"); ?>';">
 </div>
 
 

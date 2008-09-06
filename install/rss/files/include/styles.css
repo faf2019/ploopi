@@ -1,6 +1,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -24,15 +25,19 @@
 margin:2px;
 }
 
-#rss_explorer_catlist {
+#rss_explorer_catlist, #rss_filter_list {
 margin:2px;
 }
 
-#rss_explorer_feedlist {
+#rss_explorer_feedlist, #rss_filter_element_list  {
 margin:2px;
 }
 
-#rss_explorer_feed {
+#rss_filter_edit, #rss_filter_element_edit {
+margin:2px;
+}
+
+#rss_explorer_feed, #rss_filter_feed  {
 margin:2px;
 }
 
@@ -41,7 +46,9 @@ margin:1px;
 overflow-x:hidden;
 }
 
-#rss_explorer_catlist h1, #rss_explorer_feedlist h1, #rss_explorer_feed h1 {
+#rss_explorer_catlist h1, #rss_explorer_feedlist h1, #rss_explorer_feed h1, 
+#rss_filter_list h1, #rss_filter_element_list h1, #rss_filter_feed h1,
+#rss_filter_edit h1, #rss_filter_element_edit h1  {
 font-size:12px;
 margin:0;
 padding:2px 4px;

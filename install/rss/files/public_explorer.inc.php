@@ -2,6 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  *
  * @package rss
  * @subpackage public
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -55,7 +56,7 @@ if (substr($rss_search_kw,0,6) == 'entry:') $_SESSION['rss'][$_SESSION['ploopi']
     <div id="rss_explorer_search">
     <? echo $skin->open_simplebloc(); ?>
     <form action="" method="post" onsubmit="javascript:rss_explorer_feed_get(this.rss_search_kw.value); return false;">
-    <div style="padding:4px;font-weight:bold;">Mots Clés : <input type="text" class="text" name="rss_search_kw" value="<? echo htmlentities($rss_search_kw, ENT_QUOTES); ?>"/>&nbsp;<input type="submit" class="button" value="Filtrer"></div>
+    <div style="padding:4px;font-weight:bold;"><? echo _RSS_LABEL_KEYWORD; ?><input type="text" class="text" name="rss_search_kw" value="<? echo htmlentities($rss_search_kw, ENT_QUOTES); ?>"/>&nbsp;<input type="submit" class="button" value="<? echo _RSS_LABEL_FILTER; ?>"></div>
     </form>
     <? echo $skin->close_simplebloc(); ?>
     </div>

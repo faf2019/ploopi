@@ -2,10 +2,10 @@
 <ploopi>
     <moduletype>
         <label>rss</label>
-        <version>1.26</version>
-        <author>Netlor / Ovensia</author>
-        <date>20080730000000</date>
-        <description>Gestion de Flux RSS</description>
+        <version>1.29b</version>
+        <author>Netlor / Ovensia / HeXad</author>
+        <date>20080905000000</date>
+        <description>Gestion de Flux RSS/Atom</description>
         <paramtype>
             <name>nbitemdisplay</name>
             <label>Nombre de liens affichés</label>
@@ -43,6 +43,18 @@
       <action>
          <id_action>6</id_action>
          <label>Supprimer une catégorie</label>
+      </action>
+      <action>
+         <id_action>7</id_action>
+         <label>Ajouter un filtre</label>
+      </action>
+      <action>
+         <id_action>8</id_action>
+         <label>Modifier un filtre</label>
+      </action>
+      <action>
+         <id_action>9</id_action>
+         <label>Supprimer un filtre</label>
       </action>
     </moduletype>
 </ploopi>

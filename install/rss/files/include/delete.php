@@ -2,6 +2,8 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
+
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +28,7 @@
  *
  * @package rss
  * @subpackage delete
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -39,6 +41,13 @@ $delete = "DELETE FROM ploopi_mod_rss_cat WHERE id_module = {$this->fields['id']
 $db->query($delete);
 
 /**
+ * Suppression des entrées
+ */
+
+$delete = "DELETE FROM ploopi_mod_rss_entry WHERE id_module = {$this->fields['id']}";
+$db->query($delete);
+
+/**
  * Suppression des flux
  */
 
@@ -46,10 +55,33 @@ $delete = "DELETE FROM ploopi_mod_rss_feed WHERE id_module = {$this->fields['id'
 $db->query($delete);
 
 /**
- * Suppression des entrées
+ * Suppression des elements de filtres
+ */
+$db->query("SELECT id FROM ploopi_mod_rss_filter WHERE id_module = {$this->fields['id']}");
+$arrIdFilter = $db->getarray();
+if($arrIdFilter == false || !is_array($arrIdFilter)) $arrIdFilter = array();
+
+$delete = 'DELETE FROM ploopi_mod_rss_filter_element WHERE id_filter IN (0,'.implode(',',$arrIdFilter).')';
+$db->query($delete);
+
+/**
+ * Suppression des filtres (attention pas avant la suppr des elements !!!)
+ */
+$delete = "DELETE FROM ploopi_mod_rss_filter WHERE id_module = {$this->fields['id']}";
+$db->query($delete);
+
+/**
+ * Suppression des catégories de filtre
  */
 
-$delete = "DELETE FROM ploopi_mod_rss_entry WHERE id_module = {$this->fields['id']}";
+$delete = "DELETE FROM ploopi_mod_rss_filter_cat WHERE id_module = {$this->fields['id']}";
+$db->query($delete);
+
+/**
+ * Suppression des flux de filtre
+ */
+
+$delete = "DELETE FROM ploopi_mod_rss_filter_feed WHERE id_module = {$this->fields['id']}";
 $db->query($delete);
 
 /**

@@ -2,6 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  * 
  * @package rss
  * @subpackage cron
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -53,19 +54,24 @@ ploopi_init_module('rss', false, false, false);
 
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
-$select =   "
-            SELECT      *
-            FROM        ploopi_mod_rss_feed
-            WHERE       id_module = {$cron_moduleid}
+$select =  "SELECT      feed.id,
+                        feed.lastvisit,
+                        feed.revisit
+            FROM        ploopi_mod_rss_feed feed
+            WHERE       feed.id_module = {$cron_moduleid}
             ";
 
 $result = $db->query($select);
 while ($fields = $db->fetchrow($result))
 {
+  if(($fields['lastvisit'] == 0) || (ploopi_createtimestamp() - $fields['lastvisit']) > $fields['revisit'])
+  {
     $rss_feed = new rss_feed();
     if ($rss_feed->open($fields['id']))
     {
-        if (!$rss_feed->isuptodate()) $rss_feed->updatecache();
+      $rss_feed->updatecache();
     }
+    unset($rss_feed);
+  }
 }
 ?>

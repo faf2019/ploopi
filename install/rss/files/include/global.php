@@ -2,6 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  *
  * @package rss
  * @subpackage global
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -38,9 +39,12 @@
 define ('_RSS_ACTION_FEEDADD',          1);
 define ('_RSS_ACTION_FEEDMODIFY',       2);
 define ('_RSS_ACTION_FEEDDELETE',       3);
-define ('_RSS_ACTION_CATADD',           5);
-define ('_RSS_ACTION_CATMODIFY',        6);
-define ('_RSS_ACTION_CATDELETE',        7);
+define ('_RSS_ACTION_CATADD',           4);
+define ('_RSS_ACTION_CATMODIFY',        5);
+define ('_RSS_ACTION_CATDELETE',        6);
+define ('_RSS_ACTION_FILTERADD',        7);
+define ('_RSS_ACTION_FILTERMODIFY',     8);
+define ('_RSS_ACTION_FILTERDELETE',     9);
 
 define ('_RSS_OBJECT_NEWS_FEED',        1);
 define ('_RSS_OBJECT_NEWS_ENTRY',       2);

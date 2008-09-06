@@ -2,6 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  * 
  * @package rss
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -52,6 +53,13 @@ $array_columns['left']['title'] =
         'options' => array('sort' => true)
     );
     
+$array_columns['right']['limit'] = 
+    array(
+        'label' => _RSS_LABEL_LIMIT, 
+        'width' => 80, 
+        'options' => array('sort' => true)
+    );
+
 $array_columns['right']['revisit'] = 
     array(
         'label' => _RSS_LABEL_FEED_RENEW, 
@@ -75,7 +83,7 @@ $array_columns['right']['category'] =
     
 $array_columns['actions_right']['actions'] = 
     array(
-        'label' => 'Actions', 
+        'label' => _RSS_LABEL_ACTIONS, 
         'width' => 60
     );
 
@@ -98,8 +106,8 @@ $c = 0;
 while ($fields = $db->fetchrow($result))
 {
     $actions = '';
-    if (ploopi_isactionallowed(_RSS_ACTION_FEEDMODIFY)) $actions .= '<a title="Modifier" href="'.ploopi_urlencode("admin.php?op=rssfeed_modify&rssfeed_id={$fields['id']}").'"><img alt="Modifier" src="./modules/rss/img/ico_modify.png" /></a>';
-    if (ploopi_isactionallowed(_RSS_ACTION_FEEDDELETE)) $actions .= '<a title="Supprimer" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=rssfeed_delete&rssfeed_id={$fields['id']}").'\',\'Êtes-vous certain de vouloir supprimer ce flux ?\');"><img alt="Supprimer" src="./modules/rss/img/ico_trash.png" /></a>';
+    if (ploopi_isactionallowed(_RSS_ACTION_FEEDMODIFY)) $actions .= '<a title="'._PLOOPI_MODIFY.'" href="'.ploopi_urlencode("admin.php?op=rssfeed_modify&rssfeed_id={$fields['id']}").'"><img alt="'._PLOOPI_MODIFY.'" src="./modules/rss/img/ico_modify.png" /></a>';
+    if (ploopi_isactionallowed(_RSS_ACTION_FEEDDELETE)) $actions .= '<a title="'._PLOOPI_DELETE.'" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=rssfeed_delete&rssfeed_id={$fields['id']}").'\',\''._RSS_DELETE_FEED.'\');"><img alt="'._PLOOPI_DELETE.'" src="./modules/rss/img/ico_trash.png" /></a>';
 
     if (empty($actions)) $actions = '&nbsp;';
 
@@ -128,7 +136,12 @@ while ($fields = $db->fetchrow($result))
         array(
             'label' => $fields['titlecat']
         );
-
+    
+    $array_values[$c]['values']['limit'] = 
+        array(
+            'label' => ($fields['limit'] == 0) ? '---' : $fields['limit']
+        );
+        
     $array_values[$c]['values']['actions'] = 
         array(
             'label' => $actions

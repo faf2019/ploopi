@@ -2,6 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  *
  * @package rss
  * @subpackage template
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -35,72 +36,41 @@
  * Initialisation du module
  */
 
-ploopi_init_module('rss');
+ploopi_init_module('rss',false,false,false);
 
 include_once './modules/rss/class_rss_feed.php';
 
+$arrListFeed = array();
+
+$wk = ploopi_viewworkspaces($template_moduleid);
+
+//Recupération des info sur les flux necessaire un peu partout après...
 $rssfeed_select =   "
-                    SELECT      ploopi_mod_rss_feed.id,
-                                ploopi_mod_rss_cat.title as titlecat
-                    FROM        ploopi_mod_rss_feed
-                    LEFT JOIN   ploopi_mod_rss_cat ON ploopi_mod_rss_cat.id = ploopi_mod_rss_feed.id_cat
-                    WHERE       ploopi_mod_rss_feed.id_module = {$template_moduleid}
-                    AND         ploopi_mod_rss_feed.default = 1
-                    ";
+      SELECT      ploopi_mod_rss_feed.*
+      FROM        ploopi_mod_rss_feed
+      WHERE       ploopi_mod_rss_feed.id_workspace = {$wk}
+      ";
 
 $rssfeed_result = $db->query($rssfeed_select);
-
-while ($rssfeed_fields = $db->fetchrow($rssfeed_result))
+$arrFeedTmp = $db->getarray($rssfeed_result);
+foreach($arrFeedTmp as $arrRssData)
 {
-    $rss_feed = new rss_feed();
-    if ($rss_feed->open($rssfeed_fields['id']))
-    {
-
-        if (!$rss_feed->isuptodate()) $rss_feed->updatecache();
-
-        $template_body->assign_block_vars('rssfeed', array(
-                'TITLE' => strip_tags($rss_feed->fields['title'],'<b><i>'),
-                'SUBTITLE' => strip_tags($rss_feed->fields['subtitle'],'<b><i>'),
-                'TITLE_CLEANED' => htmlentities(strip_tags($rss_feed->fields['title'])),
-                'SUBTITLE_CLEANED' => htmlentities(strip_tags($rss_feed->fields['subtitle'])),
-                'LINK' => $rss_feed->fields['link']
-                ));
-
-        $rsscache_select =  "
-                            SELECT      ploopi_mod_rss_entry.*
-                            FROM        ploopi_mod_rss_entry
-                            WHERE       ploopi_mod_rss_entry.id_feed = {$rss_feed->fields['id']}
-                            ORDER BY    published DESC, timestp DESC, id
-                            LIMIT       0,10
-                            ";
-
-        $rsscache_result = $db->query($rsscache_select);
-
-        while($rsscache_fields = $db->fetchrow($rsscache_result))
-        {
-            if (!empty($rsscache_fields['published']) && is_numeric($rsscache_fields['published']))
-            {
-                $published_date = date(_PLOOPI_DATEFORMAT,$rsscache_fields['published']);
-                $published_time = date(_PLOOPI_TIMEFORMAT,$rsscache_fields['published']);
-            }
-            else
-            {
-                $published_date = $published_time = '';
-            }
-            
-            $template_body->assign_block_vars('rssfeed.rssentry', array(
-                        'TITLE' => strip_tags($rsscache_fields['title'],'<b><i>'),
-                        'SUBTITLE' => strip_tags($rsscache_fields['subtitle'],'<b><i>'),
-                        'DATE' => $published_date,
-                        'TIME' => $published_time,
-                        'PUBLISHED_DATE' => $published_date,
-                        'PUBLISHED_TIME' => $published_time,
-                        'LINK' => $rsscache_fields['link']
-                        ));
-        }
-    }
+   $arrListFeed[$arrRssData['id']] = $arrRssData;
 }
 
+//mise à jour des flux
+$objRssFeed = new rss_feed();
+$objRssFeed->updateallfeed($arrListFeed,$template_moduleid);
+unset($objRssFeed);
 
+// ploopi_print_r($arrListFeed);
+
+include './modules/rss/template.base.inc.php';
+include './modules/rss/template.fusion.inc.php';
+include './modules/rss/template.cat.inc.php';
+include './modules/rss/template.filter.inc.php';
+
+// ploopi_print_r($template_body);
+unset($arrListFeed);
 ?>
 

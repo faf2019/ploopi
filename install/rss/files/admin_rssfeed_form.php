@@ -2,6 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  * 
  * @package rss
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -86,7 +87,6 @@ $a_categories = $db->getarray();
                 <?
                 foreach($rss_revisit_values as $key => $value)
                 {
-
                     ?>
                     <option <? if ($rssfeed->fields['revisit'] == $key) echo 'selected'; ?> value="<? echo $key; ?>"><? echo $value; ?></option>
                     <?
@@ -94,11 +94,21 @@ $a_categories = $db->getarray();
                 ?>
             </select>
         </p>
+        <p>
+            <label><? echo _RSS_LABEL_FEEDLIMIT; ?>:</label>
+            <input class="text" type="text" name="rssfeed_limit" style="width:50px;" value="<? echo $rssfeed->fields['limit']; ?>" tabindex="103" /><?php echo _RSS_COMMENT_O_NOLIMIT; ?>
+        </p>
+        <p>
+            <label><? echo _RSS_LABEL_TPL_TAG; ?>:</label>
+            <input class="text" type="text" name="rssfeed_tpl_tag" style="width:200px;" value="<? echo $rssfeed->fields['tpl_tag'] ?>" tabindex="102" /><br/>
+            <label>&nbsp;</label><?php echo _RSS_COMMENT_FEED_TPL_TAG; ?><br/>
+            <label>&nbsp;</label><?php echo _RSS_COMMENT_WARNING_TPL_TAG; ?>
+        </p>
     </div>
 </div>
 <div style="padding:2px;text-align:right;">
-    <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?rssTabItem=tabFeedList"); ?>';" tabindex="103" />
-    <input type="reset" class="button" value="<? echo _PLOOPI_RESET; ?>" tabindex="104" />
-    <input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>" tabindex="102" />
+    <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?rssTabItem=tabFeedList"); ?>';" tabindex="105" />
+    <input type="reset" class="button" value="<? echo _PLOOPI_RESET; ?>" tabindex="106" />
+    <input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>" tabindex="104" />
 </div>
 <? echo $skin->close_simplebloc(); ?>

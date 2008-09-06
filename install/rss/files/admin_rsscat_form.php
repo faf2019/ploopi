@@ -2,6 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  * 
  * @package rss
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -49,8 +50,19 @@ else echo $skin->open_simplebloc(str_replace('LABEL',$rsscat->fields['title'],_R
             <input class="text" type="text" name="rsscat_title" value="<? echo htmlentities($rsscat->fields['title']); ?>" tabindex="100" />
         </p>
         <p>
+            <label><? echo _RSS_LABEL_LIMIT; ?>:</label>
+            <input class="text" type="text" name="rsscat_limit" style="width:50px;" value="<? echo $rsscat->fields['limit']; ?>" tabindex="101" /><?php echo _RSS_COMMENT_O_NOLIMIT; ?>
+        </p>
+        <p>
+            <label><? echo _RSS_LABEL_TPL_TAG; ?>:</label>
+            <input class="text" type="text" name="rsscat_tpl_tag" style="width:200px;" value="<? echo $rsscat->fields['tpl_tag']; ?>" tabindex="102" /><br/>
+            <label>&nbsp;</label><?php echo _RSS_COMMENT_CAT_TPL_TAG; ?><br/>
+            <label>&nbsp;</label><?php echo _RSS_COMMENT_WARNING_TPL_TAG; ?>
+        </p>
+
+        <p>
             <label><? echo _RSS_LABEL_DESCRIPTION; ?>:</label>
-            <textarea class="text" name="rsscat_description" tabindex="101"><? echo htmlentities($rsscat->fields['description']); ?></textarea>
+            <textarea class="text" name="rsscat_description" tabindex="103"><? echo htmlentities($rsscat->fields['description']); ?></textarea>
         </p>
     </div>
 </div>
