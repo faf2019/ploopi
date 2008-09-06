@@ -178,7 +178,7 @@ while ($fields = $db->fetchrow($rs_fields))
                     $template_forms->assign_block_vars('formfields.switch_field.switch_select.values', array(
                         'VALUE' => $row['value'],
                         'SELECTED' => (isset($replies[$fields['id']]) && $row['value'] == $replies[$fields['id']][0]) ? 'selected' : '',
-                        'SELECTED_HTML' => (isset($replies[$fields['id']]) && $row['value'] == $replies[$fields['id']][0]) ? 'selected="selected"' : ''
+                        'SELECTED_XHTML' => (isset($replies[$fields['id']]) && $row['value'] == $replies[$fields['id']][0]) ? 'selected="selected"' : ''
                         )
                     );
                 }

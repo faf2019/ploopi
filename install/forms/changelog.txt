@@ -1,3 +1,9 @@
+== Module FORMS - version 2.213 =====================================================
+
+2008-09-02  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Correction d'un tag SELECTED_HTML => SELECTED_XHTML
+ 
 == Module FORMS - version 2.212 =====================================================
 
 2008-09-02  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
