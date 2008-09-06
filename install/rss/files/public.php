@@ -67,13 +67,11 @@ switch($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])
     break;
     
     case 'tabNewFilter':
-      if(ploopi_isactionallowed(_RSS_ACTION_FILTERADD) || ploopi_isactionallowed(_RSS_ACTION_FILTERMODIFY))
-      {
-        $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id'] = ''; // reset
-        $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] = ''; // reset
-        include './modules/rss/public_filter_edit.inc.php';
-      }
-      ploopi_redirect('admin.php');
+      if(!ploopi_isactionallowed(_RSS_ACTION_FILTERADD) && !ploopi_isactionallowed(_RSS_ACTION_FILTERMODIFY)) ploopi_redirect('admin.php');
+
+      $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id'] = ''; // reset
+      $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] = ''; // reset
+      include './modules/rss/public_filter_edit.inc.php';
     break;
     
     case 'tabFilter':
@@ -147,21 +145,23 @@ switch($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])
         break;
 
         case 'rssfilter_element_save':
-          if(!ploopi_isactionallowed(_RSS_ACTION_FILTERADD) && !ploopi_isactionallowed(_RSS_ACTION_FILTERMODIFY)) ploopi_redirect('admin.php');
-          
-          if(!isset($_GET['rssfilter_id']) || !$_GET['rssfilter_id']>0) ploopi_die();
-          
-          include_once './modules/rss/class_rss_filter_element.php';
-          
-          $objRssFilterElement = new rss_filter_element();
-          
-          if($_GET['rssfilter_id_element']>0) $objRssFilterElement->open($_GET['rssfilter_id_element']);
-
-          $objRssFilterElement->setvalues($_POST,'rss_element_');
-          $objRssFilterElement->fields['id_filter'] = $_GET['rssfilter_id'];
-          $intLastId = $objRssFilterElement->save();
-
-          ploopi_redirect("admin.php?rssTabItem=tabFilter&op=rssfilter_modify&rssfilter_id={$_GET['rssfilter_id']}&rssfilter_id_element={$intLastId}");
+          if(ploopi_isactionallowed(_RSS_ACTION_FILTERADD) || ploopi_isactionallowed(_RSS_ACTION_FILTERMODIFY))
+          {
+            if(!isset($_GET['rssfilter_id']) || !$_GET['rssfilter_id']>0) ploopi_die();
+            
+            include_once './modules/rss/class_rss_filter_element.php';
+            
+            $objRssFilterElement = new rss_filter_element();
+            
+            if($_GET['rssfilter_id_element']>0) $objRssFilterElement->open($_GET['rssfilter_id_element']);
+  
+            $objRssFilterElement->setvalues($_POST,'rss_element_');
+            $objRssFilterElement->fields['id_filter'] = $_GET['rssfilter_id'];
+            $intLastId = $objRssFilterElement->save();
+  
+            ploopi_redirect("admin.php?rssTabItem=tabFilter&op=rssfilter_modify&rssfilter_id={$_GET['rssfilter_id']}&rssfilter_id_element={$intLastId}");
+          }
+          ploopi_redirect('admin.php');
         break;
         
         default:
