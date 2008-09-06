@@ -1,6 +1,6 @@
 DROP TABLE `ploopi_mod_rss_request` ;
 
-ALTER TABLE `ploopi_mod_rss_pref` CHANGE `id_feed` `id_feed_filter` VARCHAR( 11 ) NOT NULL DEFAULT '0';
+ALTER TABLE `ploopi_mod_rss_pref` CHANGE `id_feed` `id_feed_cat_filter` VARCHAR( 11 ) NOT NULL DEFAULT '0';
 
 ALTER TABLE `ploopi_mod_rss_cat` ADD `limit` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `title` ;
 ALTER TABLE `ploopi_mod_rss_cat` ADD `tpl_tag` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL AFTER `limit` ;
