@@ -47,7 +47,7 @@ while ($rssfilter_fields = $db->fetchrow($rssfilter_result))
   $objRssFilter->open($rssfilter_fields['id']);
   
   $strSql = $objRssFilter->makeRequest(0,true,$template_moduleid);
-  
+
   if (!empty($strSql))
   {
     $result = $db->query($strSql);
@@ -73,7 +73,7 @@ while ($rssfilter_fields = $db->fetchrow($rssfilter_result))
           $published_date = $published_time = '';
       }
 
-      $template_body->assign_block_vars($objRssFilter->fields['tpl_tag'].'.rssfilter.rss_entry',array(
+      $template_body->assign_block_vars($objRssFilter->fields['tpl_tag'].'.rssfilter.rssentry',array(
                   'FEED_TITLE' => strip_tags($fields['titlefeed'],'<b><i>'),
                   'FEED_TITLE_CLEANED' => htmlentities(strip_tags($fields['titlefeed'],'<b><i>')),
                   'FEED_SUBTITLE' => strip_tags($fields['subtitlefeed'],'<b><i>'),

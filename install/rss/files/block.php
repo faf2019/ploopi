@@ -156,10 +156,12 @@ if (substr($block_rssfeed_cat_filter_id,0,1) == 'C') // Categorie
                AND      feed.id_cat = {$objRssCat->fields['id']}
                AND      feed.id_workspace IN ({$wk})
             ORDER BY    entry.published DESC";
-
-     if($objRssCat->fields['limit']>0)
-       $sql .= " LIMIT       0,{$objRssCat->fields['limit']}";
             
+     if($objRssCat->fields['limit']>0)
+       $sql .= " LIMIT 0,{$objRssCat->fields['limit']}";
+     else
+       $sql .= " LIMIT 0,{$_SESSION['ploopi']['modules'][$menu_moduleid]['nbitemdisplay']}";
+
      $rssentry_result = $db->query($sql);
      while($rssentry_row = $db->fetchrow($rssentry_result))
      {
@@ -179,16 +181,15 @@ elseif (substr($block_rssfeed_cat_filter_id,0,1) == 'F') // Filtre
    $objRssFilter->open(substr($block_rssfeed_cat_filter_id,1));
    $objRssFilter->updateFeedByFilter();
               
-   $sql = $objRssFilter->makeRequest(0, true);
+   $sql = $objRssFilter->makeRequest();
    if($sql != '')
    {
-      $rssentry_result = $db->query($sql);
-      while($rssentry_row = $db->fetchrow($rssentry_result))
-      {
-         $ld = (!empty($rssentry_row['published']) && is_numeric($rssentry_row['published'])) ? ploopi_unixtimestamp2local($rssentry_row['published']) : '';
-  
-         $block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.$ld, $rssentry_row['link'], '', '_blank');        
-      }
+     $rssentry_result = $db->query($sql);
+     while($rssentry_row = $db->fetchrow($rssentry_result))
+     {
+        $ld = (!empty($rssentry_row['published']) && is_numeric($rssentry_row['published'])) ? ploopi_unixtimestamp2local($rssentry_row['published']) : '';
+           $block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.$ld, $rssentry_row['link'], '', '_blank');        
+     }
    }
    unset($objRssFilter);
 }
@@ -209,7 +210,9 @@ elseif (intval($block_rssfeed_cat_filter_id) > 0)  // Un flux
 
     if($rss_feed->fields['limit']>0)
        $sql .= " LIMIT 0,{$rss_feed->fields['limit']}";
-          
+    else
+       $sql .= " LIMIT 0,{$_SESSION['ploopi']['modules'][$menu_moduleid]['nbitemdisplay']}";
+       
     $rssentry_result = $db->query($sql);
     while($rssentry_row = $db->fetchrow($rssentry_result))
     {
@@ -240,7 +243,9 @@ elseif (intval($block_rssfeed_cat_filter_id) <= 0)  // Tout
                                 
             if($rss_feed->fields['limit']>0)
               $rssentry_select .= " LIMIT 0,{$rss_feed->fields['limit']}";
-                                
+            else
+              $rssentry_select .= " LIMIT 0,{$_SESSION['ploopi']['modules'][$menu_moduleid]['nbitemdisplay']}";
+              
             $rssentry_result = $db->query($rssentry_select);
         
             while($rssentry_row = $db->fetchrow($rssentry_result))

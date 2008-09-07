@@ -47,6 +47,8 @@ if (!empty($_REQUEST['op'])) $op = $_REQUEST['op'];
 
 global $template_name;
 
+$rss_moduleid = $obj['module_id']; // vient de l'appel de webedit.
+
 $template_rss = new Template("./templates/frontoffice/{$template_name}");
 
 $tplfile = '';
@@ -58,7 +60,6 @@ elseif (file_exists("./templates/frontoffice/{$template_name}/rss.tpl")) $tplfil
 if ($tplfile != '')
 {
     $template_rss->set_filenames(array('rss_display' => $tplfile));
-
     switch($op)
     {
         case 'display':
@@ -85,9 +86,12 @@ if ($tplfile != '')
                                 ORDER BY    ploopi_mod_rss_entry.published DESC, 
                                             ploopi_mod_rss_entry.timestp DESC,
                                             ploopi_mod_rss_entry.id
-                                LIMIT       0,{$rssfeed->fields['limit']}
                                 ";
-
+                if($rssfeed->fields['limit']>0)
+                  $select .= " LIMIT 0,{$rssfeed->fields['limit']}";
+                else
+                  $select .= " LIMIT 0,{$_SESSION['ploopi']['modules'][$rss_moduleid ]['nbitemdisplay']}";
+                                
                 $result = $db->query($select);
                 
                 while ($fields = $db->fetchrow($result))
@@ -123,7 +127,7 @@ if ($tplfile != '')
                 }
             }
         break;
-        case 'display_cat':
+        case 'display_categ':
             $intRssCat_id = $obj['object_id'];
             $objRssCat = new rss_cat();
             $objRssCat->open($intRssCat_id);
@@ -148,9 +152,12 @@ if ($tplfile != '')
                                 ORDER BY    ploopi_mod_rss_entry.published DESC, 
                                             ploopi_mod_rss_entry.timestp DESC,
                                             ploopi_mod_rss_entry.id
-                                LIMIT       0,{$objRssCat->fields['limit']}
                                 ";
-
+                if($objRssCat->fields['limit']>0)
+                  $select .= " LIMIT 0,{$objRssCat->fields['limit']}";
+                else
+                  $select .= " LIMIT 0,{$_SESSION['ploopi']['modules'][$rss_moduleid ]['nbitemdisplay']}";
+                                
                $result = $db->query($select);
 
                while ($fields = $db->fetchrow($result))
@@ -186,7 +193,6 @@ if ($tplfile != '')
                }
             }
           break;
-        
         case 'display_filter':
             $rssfilter_id = $obj['object_id'];
             
@@ -195,7 +201,7 @@ if ($tplfile != '')
             
             $objRssFilter->updateFeedByFilter();
             
-            $strSql = $objRssFilter->makeRequest(0,true);
+            $strSql = $objRssFilter->makeRequest();
             
             if (!empty($strSql))
             {

@@ -2,13 +2,13 @@
 <ploopi>
     <moduletype>
         <label>rss</label>
-        <version>1.29b.1</version>
+        <version>1.29b.2</version>
         <author>Netlor / Ovensia / HeXad</author>
-        <date>20080906190200</date>
+        <date>20080907000000</date>
         <description>Gestion de Flux RSS/Atom</description>
         <paramtype>
             <name>nbitemdisplay</name>
-            <label>Nombre de liens affichés</label>
+            <label>Nombre de liens affichés (>0)</label>
             <default_value>5</default_value>
             <public>1</public>
             <description/>

@@ -1,3 +1,10 @@
+== Module RSS (béta)- version 1.29b.2 ====================================================
+
+2008-09-07   Xavier Toussaint ~ Hexad <xavier@hexad.fr>
+
+ * Ajout de la limite "par défaut" du module lorsque qu'aucune limite n'est indiquée dans  flux/catégorie/filtre
+ * Correction d'un tag template dans l'affichage de filtres
+  
 == Module RSS (béta)- version 1.29b.1 ====================================================
 
 2008-09-06   Xavier Toussaint ~ Hexad <xavier@hexad.fr>

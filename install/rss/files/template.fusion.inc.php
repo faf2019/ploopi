@@ -42,10 +42,8 @@ $rssentry_select =  "
                 ORDER BY    entry.published DESC, 
                             entry.timestp DESC, 
                             entry.id
+                LIMIT 0,{$_SESSION['ploopi']['modules'][$template_moduleid]['nbitemdisplay']}
                 ";
-
-if($_SESSION['ploopi']['modules'][$template_moduleid]['nbitemdisplay']>0)
-   $rssentry_select .= "LIMIT 0,{$_SESSION['ploopi']['modules'][$template_moduleid]['nbitemdisplay']}";
 
 $rssentry_result = $db->query($rssentry_select);
 while ($rssEntry_fields = $db->fetchrow($rssentry_result))

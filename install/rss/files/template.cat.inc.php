@@ -38,7 +38,7 @@ $rssentry_select =  "
                   cat.id as catid,
                   cat.title as cattitle,
                   cat.description as catdescription,
-                  cat.limit as catlimit,
+                  IF(cat.limit>0,cat.limit,{$_SESSION['ploopi']['modules'][$template_moduleid]['nbitemdisplay']}) as catlimit,
                   cat.tpl_tag as cattpltag
                   
       FROM        ploopi_mod_rss_cat cat,
@@ -56,7 +56,7 @@ $rssentry_select =  "
                   entry.timestp DESC, 
                   entry.id
       ";
-
+                  
 $rssentry_result = $db->query($rssentry_select);
 while ($rssEntry_fields = $db->fetchrow($rssentry_result))
 {

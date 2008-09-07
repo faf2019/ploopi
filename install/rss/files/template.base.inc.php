@@ -54,7 +54,7 @@ $rssEntry_sql =  "
 $rssEntry_result = $db->query($rssEntry_sql);
 while($rssEntry_fields = $db->fetchrow($rssEntry_result))
 {
-  // si les mess sont déjà chargé a leur limite et qu'on est toujour dans le meme flux on ne fait rien
+  // si les mess sont déjà chargé a leur limite et qu'on est toujours dans le meme flux on ne fait rien
   if($intCpt <= $arrListFeed[$rssEntry_fields['feedid']]['limit'] || !isset($arrRssFeedPassed[$rssEntry_fields['feedid']]))
   {
     $arrRssFeedData = $arrListFeed[$rssEntry_fields['feedid']];

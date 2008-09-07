@@ -53,9 +53,10 @@ $rssfeed_select =   "
 
 $rssfeed_result = $db->query($rssfeed_select);
 $arrFeedTmp = $db->getarray($rssfeed_result);
-foreach($arrFeedTmp as $arrRssData)
+foreach($arrFeedTmp as $arrFeedData)
 {
-   $arrListFeed[$arrRssData['id']] = $arrRssData;
+  if(!$arrFeedData['limit']>0) $arrFeedData['limit'] = $_SESSION['ploopi']['modules'][$template_moduleid]['nbitemdisplay'];
+  $arrListFeed[$arrFeedData['id']] = $arrFeedData;
 }
 
 //mise à jour des flux

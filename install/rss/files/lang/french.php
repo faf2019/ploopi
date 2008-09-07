@@ -114,7 +114,7 @@ define ('_RSS_SQL_AFTER',           'se trouve après (>=)');
 define ('_RSS_SQL_NO_RESULT',       'Aucun résultats à afficher');
 define ('_RSS_SQL_REQUEST_ERROR',   'Erreur dans la requête demandée');
 
-define ('_RSS_COMMENT_O_NOLIMIT',   '&nbsp;(0 = pas de limite)');
+define ('_RSS_COMMENT_O_NOLIMIT',   '&nbsp;(0 = Limite par défaut du module)');
 define ('_RSS_COMMENT_CAT_TPL_TAG',     '<i>Sans "nom" de tag cette categorie ne pourra être utilisée directement en template (front)</i>');
 define ('_RSS_COMMENT_FILTER_TPL_TAG',  '<i>Sans "nom" de tag ce filtre ne pourra être utilisé directement en template (front)</i>');
 define ('_RSS_COMMENT_FEED_TPL_TAG',    '<i>Sans "nom" de tag ce flux ne pourra être utilisé directement en template (front)</i>');

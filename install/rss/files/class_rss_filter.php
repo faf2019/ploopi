@@ -152,15 +152,15 @@ class rss_filter extends data_object
    * Fabrique la requete au format sql correpondante au filtre
    *
    * @param $intIdFilterElement identifiant d'un element précis du filtre (optionnel)
-   * @param $booUseLimit Utilisation des limites (optionnel, defaut = false)
+   * @param $booUseLimit Utilisation des limites (optionnel, defaut = true)
    * @param $intIdModule identifiant du module (optionnel, utile pour une utilisation en front!)
    * @return string requete
    */
-  function makeRequest($intIdFilterElement=0,$booUseLimit=false,$intIdModule='')
+  function makeRequest($intIdFilterElement=0,$booUseLimit=true,$intIdModule=0)
   {
     global $db;
     
-    if(!$intIdModule>0) $intIdModule = $_SESSION['ploopi']['moduleid'];
+    if(!$intIdModule > 0) $intIdModule = $_SESSION['ploopi']['moduleid'];
     $wk = ploopi_viewworkspaces($intIdModule);
     
     include_once './modules/rss/class_rss_filter_element.php';
@@ -223,11 +223,18 @@ class rss_filter extends data_object
     
     // Mise en place de la limite
     $strLimit = '';
-    // Utilisation de la limite enregistrée
-    if ($booUseLimit === true && $this->fields['limit']>0) $strLimit = 'LIMIT 0,'.$this->fields['limit'];
-    // Utilisation de la limite passé en param
-    if ($booUseLimit !== true && $booUseLimit>0) $strLimit = 'LIMIT 0,'.$booUseLimit;
-
+    if ($booUseLimit === true && $this->fields['limit']>0)
+    {
+      // Utilisation de la limite enregistrée dans le filtre
+      $strLimit = 'LIMIT 0,'.$this->fields['limit'];
+    }
+    elseif($booUseLimit !== true)
+    {
+      // Utilisation de la limite par defaut
+      $strLimit = 'LIMIT 0,'.$_SESSION['ploopi']['modules'][$intIdModule]['nbitemdisplay'];
+    }
+    
+    
     if($strRssFilter != '')
     { 
       $strRssFilter = "

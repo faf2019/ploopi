@@ -220,16 +220,16 @@ if (ploopi_ismoduleallowed('rss'))
               unset($objFeed);
             }
             
-            $limit = 25;
+            $limit = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nbitemdisplay'];
             if ($rssfeed_id != '')
             {
               $objFeed = new rss_feed();
-              if($objFeed->open($rssfeed_id)) $limit = $objFeed->fields['limit'];
+              if($objFeed->open($rssfeed_id) && $objFeed->fields['limit']>0) $limit = $objFeed->fields['limit'];
             }
             elseif ($rsscat_id != '')
             {
               $objCat = new rss_cat();
-              if($objCat->open($rsscat_id)) $limit = $objCat->fields['limit'];
+              if($objCat->open($rsscat_id) && $objCat->fields['limit']>0) $limit = $objCat->fields['limit'];
             }
             
             $where = (!empty($arrWhere)) ? ' WHERE '.implode(' AND ', $arrWhere) : '';
@@ -595,7 +595,7 @@ if (ploopi_ismoduleallowed('rss'))
             {
               $objRssFilter->open($intRssFilter_id);
               
-              $sql = $objRssFilter->makeRequest($intRssFilter_id_element,true);
+              $sql = $objRssFilter->makeRequest($intRssFilter_id_element);
               if($sql == '')
               {
                  echo $skin->open_simplebloc();
@@ -627,7 +627,7 @@ if (ploopi_ismoduleallowed('rss'))
                       AND         cat.id_workspace IN ({$wk})
   
                       ORDER BY    entry.published DESC
-                      LIMIT       0,25
+                      LIMIT       0,{$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nbitemdisplay']}
                       ";
             } 
             $db->query($sql);
