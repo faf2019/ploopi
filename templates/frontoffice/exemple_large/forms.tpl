@@ -1,6 +1,4 @@
-<form name="form_display" action="{ACTION}" method="post" enctype="multipart/form-data" onsubmit="javascript:eval(form_validate);return(result);">
-<input type="hidden" name="op" value="saveform">
-<input type="hidden" name="forms_id" value="{FORM_ID}">
+<form action="{ACTION}" method="post" enctype="multipart/form-data" onsubmit="javascript:eval(form_validate);return(result);">
 <div class="form">
     <!-- BEGIN formfields -->
         <!-- BEGIN switch_field -->
@@ -27,7 +25,7 @@
                     <!-- END switch_text_date -->
 
                     <!-- BEGIN switch_textarea -->
-                    <textarea id="{formfields.switch_field.LABELID}" name="{formfields.switch_field.NAME}" tabindex="{formfields.switch_field.TABINDEX}">{formfields.switch_field.VALUE}</textarea>
+                    <textarea id="{formfields.switch_field.LABELID}" name="{formfields.switch_field.NAME}" tabindex="{formfields.switch_field.TABINDEX}" rows="" cols="">{formfields.switch_field.VALUE}</textarea>
                     <!-- END switch_textarea -->
 
                     <!-- BEGIN switch_select -->
@@ -63,7 +61,7 @@
                         </span>
                         <!-- END columns -->
                     <!-- END switch_radio -->
-    	
+        
                     <!-- BEGIN switch_file -->
                     <input type="file" id="{formfields.switch_field.LABELID}" name="{formfields.switch_field.NAME}" value="{formfields.switch_field.VALUE}" tabindex="{formfields.switch_field.TABINDEX}" />
                     <!-- END switch_file -->
@@ -82,7 +80,9 @@
 </div>
 <div class="form_validate">(*) Champs requis</div>
 <div class="form_validate">
-    <input type="reset" value="Annuler">
-    <input type="submit" value="Envoyer">
+    <input type="hidden" name="op" value="saveform" />
+    <input type="hidden" name="forms_id" value="{FORM_ID}" />
+    <input type="reset" value="Annuler" />
+    <input type="submit" value="Envoyer" />
 </div>
 </form>

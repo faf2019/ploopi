@@ -252,6 +252,11 @@
                         {PAGE_CONTENT}
                         <div id="page_lastupdate">Dernière modification le {PAGE_LASTUPDATE_DATE} à {PAGE_LASTUPDATE_TIME}</div>
                     <!-- END switch_content_page -->
+
+                    <!-- BEGIN switch_content_message -->
+                        <h1>{MESSAGE_TITLE}</h1>
+                        {MESSAGE_CONTENT}
+                    <!-- END switch_content_message -->                                
                 </div>
             </div>
             <div id="menubas">

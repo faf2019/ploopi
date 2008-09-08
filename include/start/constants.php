@@ -32,7 +32,7 @@
  */
 
 define ('_PLOOPI_VERSION', '1.1.2');
-define ('_PLOOPI_REVISION', '80901');
+define ('_PLOOPI_REVISION', '80908');
 
 define ('_PLOOPI_MSG_DBERROR',  'Database connection error, please contact administrator');
 

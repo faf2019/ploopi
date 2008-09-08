@@ -36,6 +36,7 @@
  * Initialisation des données
  */
 $current_ts = ploopi_createtimestamp();
+$intMaxRequests = 50;
 
 $load = array();
 $load['m1']['ts'] = ploopi_timestamp_add($current_ts, 0, -1);
@@ -140,7 +141,7 @@ foreach($load as $key => $l)
 $skin->display_array($columns, $values, 'array_load');
          
 
-// Analyse des 100 dernières requêtes
+// Analyse des x dernières requêtes
 
 $db->query( "
             SELECT  ts, 
@@ -160,7 +161,7 @@ $db->query( "
 
             ORDER BY ts DESC 
             
-            LIMIT 0,100
+            LIMIT 0,{$intMaxRequests}
             ");
 
 $columns = array();
@@ -199,7 +200,7 @@ while ($row = $db->fetchrow())
 
 ?>
 <div style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;border-top:2px solid #c0c0c0;font-weight:bold;">
-    Historique : 100 dernières requêtes
+    Historique : <? echo $intMaxRequests; ?> dernières requêtes
 </div>
 <?
 $skin->display_array($columns, $values, 'array_requests');

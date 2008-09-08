@@ -53,7 +53,6 @@
  * Mise à jour de la Métabase
  * ...
  
-
 == Module RSS - version 1.26 ====================================================
 
 2008-07-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

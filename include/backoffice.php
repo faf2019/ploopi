@@ -237,7 +237,19 @@ else
     {
         $template_body->assign_block_vars('switch_user_logged_out.switch_ploopierrormsg', array());
     }
+
+    if (!empty($_REQUEST['op']) && $_REQUEST['op'] == 'ploopi_passwordlost') 
+    {
+            // A DEVELOPPER (RENOUVELLEMENT DE MOT DE PASSE)
+    }
+
+    $template_body->assign_vars(array(
+        'PASSWORDLOST_URL'              => ploopi_urlencode('admin.php?op=ploopi_passwordlost')
+        )
+    );
+    
 }
+
 
 $template_body->assign_vars(array(
     'TEMPLATE_PATH'                 => $_SESSION['ploopi']['template_path'],

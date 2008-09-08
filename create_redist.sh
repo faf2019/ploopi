@@ -1,4 +1,8 @@
 #!/bin/sh
+
+# Pour l'export SQL :
+# mysqldump -uroot -p<PASS> --opt --default-character-set=latin1 ploopixxxx > install/system/ploopi.sql
+
 export DEST=ploopi_1.1.2
 
 #################################

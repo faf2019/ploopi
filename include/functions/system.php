@@ -89,7 +89,6 @@ function ploopi_die($var = null, $flush = true)
     
     if ($flush) while (ob_get_level()>1) ob_end_flush();
 
-    if (!empty($db) && $db->isconnected()) $db->close();
     die();
 }
 
@@ -128,10 +127,6 @@ function ploopi_ob_callback($buffer)
     global $ploopi_timer;
     global $db;
 
-    //DEBUG
-    //$f = fopen('./tmp/ob.data', 'w');
-    //fwrite($f, "buffer\n".gettype($db)."\n".$db."\n");
-    
     // On essaye de récupérer le content-type du contenu du buffer
     $content_type = 'text/html';
     $headers = headers_list();
@@ -194,6 +189,7 @@ function ploopi_ob_callback($buffer)
                         
     if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG && isset($db))
     {
+        
         include_once './include/functions/date.php';
         include_once './include/classes/log.php';
         
@@ -222,11 +218,11 @@ function ploopi_ob_callback($buffer)
         $log->fields['php_percent_time'] = $ploopi_stats['php_ratiotime'];
         $log->fields['numqueries'] = $ploopi_stats['numqueries'];
         $log->fields['page_size'] = $ploopi_stats['pagesize'];
-        
         $log->save();
-
     }
                             
+    if (!empty($db) && $db->isconnected()) $db->close();
+    
     if ($content_type == 'text/html')
     {
         $array_tags = array(    '<PLOOPI_PAGE_SIZE>',
@@ -247,7 +243,7 @@ function ploopi_ob_callback($buffer)
         
         $buffer = trim(str_replace($array_tags, $array_values, $buffer));
     }
-
+   
     if (_PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && $content_type == 'text/html')
     {  
         header("Content-Encoding: gzip");

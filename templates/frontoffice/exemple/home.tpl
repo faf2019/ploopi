@@ -180,6 +180,11 @@
                         {PAGE_CONTENT}
                     <!-- END switch_content_page -->
                     
+                    <!-- BEGIN switch_content_message -->
+                        <h2>{MESSAGE_TITLE}</h2>
+                        {MESSAGE_CONTENT}
+                    <!-- END switch_content_message -->                    
+                    
                     <!-- BEGIN switch_content_heading -->
                         <!-- BEGIN page -->
                             <a class="headings_page" href="{switch_content_heading.page.LINK}">

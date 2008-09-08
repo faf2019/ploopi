@@ -1,6 +1,6 @@
 == Ploopi - version 1.1.2 ===================================================
 
-2008-09-01 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-09-08 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Ploopi
   - Refactoring au niveau des fonctions 'workflow' => renommage en 'validation'
@@ -19,8 +19,8 @@
   - Mise à jour de FckEditor (2.6 => 2.6.3)
   - Correction d'un bug dans la validation javascript d'un ticket à l'envoi
   - Correction de plusieurs problèmes de rendu dans la class "skin_common"
-  
-* WebEdit 1.7.8
+   
+* WebEdit 1.8.1
   - Mise à jour suite au refactoring des fonctions workflow (1.1.2)
   - Ajout d'une option sur les articles permettant de désactiver le validateur XHTML 1.0 Strict intégré (HTMLPurifier) 
   - Ajout d'un champ sur les articles permettant d'insérer du code dans la balise <HEAD>
@@ -28,16 +28,50 @@
   - Corrections d'un bug important lors de la validation d'une rubrique (perte des valeurs des checkbox en mode 'simplifié')
   - Intégration de la nouvelle classe barchart (couleurs, padding, etc.)
   - Conversion en entités HTML des titres de rubriques 
- 
+  - Ajout d'un paramètre permettant de choisir le type d'affichage par défaut (au lieu de "simplifié") 
+  - Gestion du désabonnement depuis le frontoffice (attention, modification .htaccess nécessaire) 
+  - Correction d'un bug dans l'envoi des messages aux validateurs 
+   
 * DOC 3.89
   - Mise à jour suite au refactoring des fonctions workflow (1.1.2) 
   - Correction d'un bug dans le mini-explorateur appelé depuis FCKEditor avec les noms de fichier contenant le caractère "apostrophe".
   
-* FORMS 2.211
+* FORMS 2.213
   - Correction d'un bug à l'envoi du courriel lors de la validation du formulaire (Titre absent)
   - Correction d'un bug lors de la génération de la fonction javascript de validation d'un formulaire intégré en frontoffice
   - Correction d'un bug sur les onglets en admin (ajout d'un formulaire) - merci Xavier
-   
+  - Ajout du tag pour template SELECTED_XHTML respectant XHTML Strict (retourne 'selected="selected"' ou '')
+  - Ajout du tag pour template CHECKED_XHTML respectant XHTML Strict (retourne 'checked="checked"' ou '')
+    
+* RSS 2.0
+ - Ajout d'un système de filtrage pour cibler les messages des flux à afficher
+ - Refonte du système objet webedit de flux rss/atom
+ - Ajout d'objet de type rss -> catégorie
+ - Ajout d'objet de type rss -> filtre
+ - Ajout de nouveaux tags template pour Affichage des messages de flux fusionnés
+ - Ajout de nouveaux tags template pour Affichage des messages de flux précis
+ - Ajout de nouveaux tags template pour Affichage des messages de flux par catégorie
+ - Ajout de nouveaux tags template pour Affichage des messages de flux par filtre
+ - Ajout d'une limite de messages par flux
+ - Ajout d'une limite de messages par catégorie
+ - Ajout d'une limite de messages par filtre
+ - Ajout de "--- tout ---" dans le bloc en backoffice qui affiche tous les messages de flux
+ - Ajout des catégories dans le bloc en backoffice
+ - Ajout des filtres dans le bloc en backoffice
+ - Correction lors de la suppression des flux (suppression des messages)
+ - Correction lors de la suppression des catégories (nettoyage des flux attachés)
+ - Correction de texte "en dur" -> constante de langue
+ - Optimisation de cron.php
+ - Modifications sur la structure SQL
+ - Mise à jour de la Métabase
+ - Correction d'une requete de modification de nom (id_feed -> id_feed_cat_filter)
+ - Correction d'un test de sécurité trop élevé.
+ - Ajout de la limite "par défaut" du module lorsque qu'aucune limite n'est indiquée dans  flux/catégorie/filtre
+ - Correction d'un tag template dans l'affichage de filtres
+ - Suppression de l'attribut défaut des flux
+ - Ajout en administration, de la colonne Tag pour template dans les listes de flux et catégories
+ - Ajout en consultation avancée, dans la bulle de survol, des tags pour template (si existe) dans la liste des catégories et des filtres  
+    
 == Ploopi - version 1.1.1 ===================================================
 
 2008-08-07 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -96,7 +96,7 @@
                 </div>
             </div>
             <div class="loginbox_line" style="text-align:right;">
-                <a href="">Mot de passe perdu ?</a>
+                <a href="{PASSWORDLOST_URL}">Mot de passe perdu ?</a>
             </div>
             <!-- BEGIN switch_ploopierrormsg -->
             <div class="loginbox_line" style="text-align:right;">
