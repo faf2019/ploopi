@@ -40,9 +40,7 @@ CREATE TABLE `ploopi_mod_rss_filter_element` (
 	`target` VARCHAR( 100 ) NOT NULL,
 	`compare` VARCHAR( 100 ) NOT NULL,
 	`value` VARCHAR( 100 ) NOT NULL,
-	PRIMARY KEY ( `id` ),
-	INDEX ( `id_workspace`),
-	INDEX ( `id_module`)
+	PRIMARY KEY ( `id` )
 ) ENGINE = MYISAM;
 
 CREATE TABLE `ploopi_mod_rss_filter_cat` (
