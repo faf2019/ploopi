@@ -1,3 +1,9 @@
+== Module WebEdit - version 1.8.1 ============================================
+
+2008-09-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug dans l'envoi des messages aux validateurs 
+
 == Module WebEdit - version 1.8.0 ============================================
 
 2008-09-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

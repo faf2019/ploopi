@@ -601,7 +601,6 @@ $keywords = array_slice($keywords, 0 , 20, true);
     <?
     if ($type == 'draft')
     {
-        $article_online = new webedit_article();
         ?>
         Statut:&nbsp;
         <select name="webedit_article_status" class="select">
@@ -637,6 +636,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
     }
     if ($type == 'draft')
     {
+        $article_online = new webedit_article();
         if ($article_online->open($article->fields['id']))
         {
             ?>
@@ -673,20 +673,6 @@ $keywords = array_slice($keywords, 0 , 20, true);
     <?
     if ($type == 'draft')
     {
-        $article_online = new webedit_article();
-        ?>
-        Statut:&nbsp;
-        <select name="webedit_article_status" class="select">
-            <?
-            foreach($article_status as $key => $value)
-            {
-                ?>
-                <option <? echo ($key == $article->fields['status']) ? 'selected' : ''; ?> value="<? echo $key; ?>"><? echo $value; ?></option>
-                <?
-            }
-            ?>
-        </select>
-        <?
         if ($op != 'article_addnew' && in_array($_SESSION['ploopi']['userid'],$wfusers))
         {
             ?>
@@ -709,6 +695,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
     }
     if ($type == 'draft')
     {
+        $article_online = new webedit_article();
         if ($article_online->open($article->fields['id']))
         {
             ?>
