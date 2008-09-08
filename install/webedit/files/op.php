@@ -32,8 +32,22 @@
  */
 
 
-switch($_REQUEST['ploopi_op'])
+switch($ploopi_op)
 {
+    case 'webedit_unsubscribe':
+        // Désabonnement par mail
+        
+        ploopi_init_module('webedit');
+        
+        if (!empty($_GET['subscription_email']))
+        {
+            include_once './include/functions/crypt.php';
+            $strMd5Email = $db->addslashes(ploopi_base64_decode($_GET['subscription_email']));
+            $db->query("DELETE FROM ploopi_mod_webedit_heading_subscriber WHERE md5(email) = '{$strMd5Email}'");
+        }
+        
+    break;
+    
     case 'webedit_subscribe':
         ploopi_init_module('webedit');
         

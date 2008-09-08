@@ -373,6 +373,25 @@ elseif($query_tag != '') // recherche par tag
         )
     );
 }
+elseif (!empty($ploopi_op) && $ploopi_op == 'webedit_unsubscribe') // message affiché lors du désabonnement (lien depuis email)
+{    
+    $title = 'Désabonnement';
+    
+    $template_body->assign_block_vars('switch_content_message', array());
+    
+    $template_body->assign_vars(
+        array(
+            'PAGE_TITLE' => $title,
+            'PAGE_KEYWORDS' => $title,
+            'PAGE_DESCRIPTION' => $title,
+            'PAGE_META_TITLE' => $title,
+            'PAGE_META_KEYWORDS' => $title,
+            'PAGE_META_DESCRIPTION' => $title,
+            'MESSAGE_TITLE' => 'Désabonnement',
+            'MESSAGE_CONTENT' => 'Votre demande de désabonnement a été prise en compte.'
+        )
+    );
+}
 else // affichage standard rubrique/page
 {
     if($headings['list'][$headingid]['content_type'] == 'headings' && empty($articleid)) // affichage rubriques

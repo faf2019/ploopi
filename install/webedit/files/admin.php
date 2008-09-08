@@ -414,7 +414,7 @@ switch($menu)
         
                     $articleid = $article->save();
                     
-                    /* DEBUT ABONNEMENT */
+                    /* DEBUT ABONNEMENT (BACKOFFICE && FRONTOFFICE) */
                     
                     // on construit la liste des objets parents (y compris l'objet courant)
                     $arrHeadingList = split(';', "{$objHeading->fields['parents']};{$objHeading->fields['id']}");
@@ -455,7 +455,7 @@ switch($menu)
                                 {
                                     case 'published':
                                         $mail_title = "{$_SERVER['HTTP_HOST']} : modification d'un article";
-                                        $mail_content = "Bonjour,\n\nvous recevez ce message car vous êtes abonné au site {$_SERVER['HTTP_HOST']}.\n\nUn article intitulé \"{$article->fields['title']}\" a été modifié.\n\nVous pouvez le consulter en cliquant sur ce lien : "._PLOOPI_BASEPATH."/".$article->geturl();
+                                        $mail_content = "Bonjour,\n\nvous recevez ce message car vous êtes abonné au site {$_SERVER['HTTP_HOST']}.\n\nL'article intitulé \"{$article->fields['title']}\" a été modifié.\n\nVous pouvez le consulter en cliquant sur ce lien : "._PLOOPI_BASEPATH."/".$article->geturl();
                                     break;  
                                     
                                     case 'published_new':
@@ -464,7 +464,7 @@ switch($menu)
                                     break;  
                                 }
                                 
-                                $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : "._PLOOPI_BASEPATH."/unsubscribe-".ploopi_base64_encode($row['email']).".html";
+                                $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : "._PLOOPI_BASEPATH."/unsubscribe-".ploopi_base64_encode(md5($row['email'])).".html";
                                 
                                 ploopi_send_mail($from, $row['email'], $mail_title, $mail_content, null, null, null, null, false);
                             }
