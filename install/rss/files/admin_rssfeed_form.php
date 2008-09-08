@@ -75,13 +75,6 @@ $a_categories = $db->getarray();
             </select>
         </p>
         <p>
-            <label><? echo _RSS_LABEL_DEFAULT; ?>:</label>
-            <select class="select" name="rssfeed_default">
-                <option <? if ($rssfeed->fields['default'] == 0) echo 'selected'; ?> value="0"><? echo _PLOOPI_NO; ?></option>
-                <option <? if ($rssfeed->fields['default'] == 1) echo 'selected'; ?> value="1"><? echo _PLOOPI_YES; ?></option>
-            </select>
-        </p>
-        <p>
             <label><? echo _RSS_LABEL_FEED_RENEW; ?>:</label>
             <select class="select" name="rssfeed_revisit">
                 <?

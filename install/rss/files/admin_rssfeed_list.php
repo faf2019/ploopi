@@ -49,35 +49,34 @@ $array_columns['auto']['subtitle'] =
 $array_columns['left']['title'] = 
     array(
         'label' => _RSS_LABEL_TITLE, 
-        'width' => 200, 
+        'width' => 170, 
         'options' => array('sort' => true)
     );
     
 $array_columns['right']['limit'] = 
     array(
         'label' => _RSS_LABEL_LIMIT, 
-        'width' => 80, 
-        'options' => array('sort' => true)
-    );
-
-$array_columns['right']['revisit'] = 
-    array(
-        'label' => _RSS_LABEL_FEED_RENEW, 
-        'width' => 130, 
+        'width' => 60, 
         'options' => array('sort' => true)
     );
     
-$array_columns['right']['default'] = 
+$array_columns['right']['tpl_tag'] = 
     array(
-        'label' => _RSS_LABEL_DEFAULT, 
-        'width' => 95, 
+        'label' => _RSS_LABEL_TPL_TAG_SHORT, 
+        'width' => 100
+    );
+    
+$array_columns['right']['revisit'] = 
+    array(
+        'label' => _RSS_LABEL_FEED_RENEW_SHORT, 
+        'width' => 60, 
         'options' => array('sort' => true)
     );
     
 $array_columns['right']['category'] = 
     array(
         'label' => _RSS_LABEL_CATEGORY, 
-        'width' => 150, 
+        'width' => 120, 
         'options' => array('sort' => true)
     );
     
@@ -86,6 +85,7 @@ $array_columns['actions_right']['actions'] =
         'label' => _RSS_LABEL_ACTIONS, 
         'width' => 60
     );
+    
 
 $select =   "
             SELECT      feed.*,
@@ -127,11 +127,6 @@ while ($fields = $db->fetchrow($result))
             'sort_label' => (isset($rss_revisit_values[$fields['revisit']])) ? $fields['revisit'] : ''
         );
         
-    $array_values[$c]['values']['default'] = 
-        array(
-            'label' => ($fields['default']) ? _PLOOPI_YES : _PLOOPI_NO
-        );
-        
     $array_values[$c]['values']['category'] = 
         array(
             'label' => $fields['titlecat']
@@ -140,6 +135,11 @@ while ($fields = $db->fetchrow($result))
     $array_values[$c]['values']['limit'] = 
         array(
             'label' => ($fields['limit'] == 0) ? '---' : $fields['limit']
+        );
+        
+    $array_values[$c]['values']['tpl_tag'] = 
+        array(
+            'label' => $fields['tpl_tag']
         );
         
     $array_values[$c]['values']['actions'] = 

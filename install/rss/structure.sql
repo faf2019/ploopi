@@ -48,7 +48,6 @@ CREATE TABLE `ploopi_mod_rss_feed` (
   `limit` tinyint(4) unsigned NOT NULL default '0',
   `tpl_tag` varchar(255) default NULL,
   `updated` bigint(14) unsigned NOT NULL default '0',
-  `default` tinyint(1) unsigned NOT NULL default '0',
   `lastvisit` varchar(14) NOT NULL default '',
   `revisit` int(10) unsigned NOT NULL default '0',
   `updating_cache` tinyint(1) unsigned NOT NULL default '0',

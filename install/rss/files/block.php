@@ -86,7 +86,15 @@ $strFeedsCatFiltersOptions = "<option $sel value=\"-1\">"._PLOOPI_ALL.'</option>
 
 while($rssfeed_row = $db->fetchrow($rssfeed_result))
 {
-    if (!$block_rssfeed_cat_filter_id) $block_rssfeed_cat_filter_id = $rssfeed_row['id'];
+    if (!$block_rssfeed_cat_filter_id || empty($block_rssfeed_cat_filter_id))
+    {
+      $block_rssfeed_cat_filter_id = $rssfeed_row['id'];
+      $rsspref = new rss_pref();
+      $rsspref->fields['id_user'] = $_SESSION['ploopi']['userid'];
+      $rsspref->fields['id_module'] = $menu_moduleid;
+      $rsspref->fields['id_feed_cat_filter'] = $block_rssfeed_cat_filter_id;
+      $rsspref->save();
+    }
     $sel = ($block_rssfeed_cat_filter_id == $rssfeed_row['id']) ? 'selected' : '';
 
     $strFeedsCatFiltersOptions .= "<option $sel value=\"{$rssfeed_row['id']}\">{$rssfeed_row['title']}</option>";
@@ -108,7 +116,15 @@ if($db->numrows($rsscat_result)) $strFeedsCatFiltersOptions .= '<option value="-
 while($rsscat_row = $db->fetchrow($rsscat_result))
 {
    $rsscat_row['id'] = 'C'.$rsscat_row['id'];
-   if (!$block_rssfeed_cat_filter_id) $block_rssfeed_cat_filter_id = $rsscat_row['id'];
+   if (!$block_rssfeed_cat_filter_id || empty($block_rssfeed_cat_filter_id))
+   {
+     $block_rssfeed_cat_filter_id = $rsscat_row['id'];
+     $rsspref = new rss_pref();
+     $rsspref->fields['id_user'] = $_SESSION['ploopi']['userid'];
+     $rsspref->fields['id_module'] = $menu_moduleid;
+     $rsspref->fields['id_feed_cat_filter'] = $block_rssfeed_cat_filter_id;
+     $rsspref->save();
+   }
    $sel = ($block_rssfeed_cat_filter_id == $rsscat_row['id']) ? 'selected' : '';
 
    $strFeedsCatFiltersOptions .= "<option $sel value=\"{$rsscat_row['id']}\">(C) {$rsscat_row['title']}</option>";
@@ -130,7 +146,15 @@ if($db->numrows($rssfilter_result)) $strFeedsCatFiltersOptions .= '<option value
 while($rssfilter_row = $db->fetchrow($rssfilter_result))
 {
    $rssfilter_row['id'] = 'F'.$rssfilter_row['id'];
-   if (!$block_rssfeed_cat_filter_id) $block_rssfeed_cat_filter_id = $rssfilter_row['id'];
+   if (!$block_rssfeed_cat_filter_id || empty($block_rssfeed_cat_filter_id))
+   {
+     $block_rssfeed_cat_filter_id = $rssfilter_row['id'];
+     $rsspref = new rss_pref();
+     $rsspref->fields['id_user'] = $_SESSION['ploopi']['userid'];
+     $rsspref->fields['id_module'] = $menu_moduleid;
+     $rsspref->fields['id_feed_cat_filter'] = $block_rssfeed_cat_filter_id;
+     $rsspref->save();
+   }
    $sel = ($block_rssfeed_cat_filter_id == $rssfilter_row['id']) ? 'selected' : '';
 
    $strFeedsCatFiltersOptions .= "<option $sel value=\"{$rssfilter_row['id']}\">(F) {$rssfilter_row['title']}</option>";

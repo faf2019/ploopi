@@ -1,3 +1,11 @@
+== Module RSS (béta)- version 1.29b.3 ====================================================
+
+2008-09-08   Xavier Toussaint ~ Hexad <xavier@hexad.fr>
+
+ * Suppression de l'attribut défaut des flux
+ * Ajout en administration, de la colonne Tag pour template dans les listes de flux et catégories
+ * Ajout en consultation avancée, dans la bulle de survol, des tags pour template (si existe) dans la liste des catégories et des filtres  
+  
 == Module RSS (béta)- version 1.29b.2 ====================================================
 
 2008-09-07   Xavier Toussaint ~ Hexad <xavier@hexad.fr>

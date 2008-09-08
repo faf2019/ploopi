@@ -49,7 +49,7 @@ $array_columns['auto']['desc'] =
 $array_columns['left']['title'] = 
     array(
         'label' => _RSS_LABEL_TITLE, 
-        'width' => 200, 
+        'width' => 170, 
         'options' => array('sort' => true)
     );
     
@@ -62,6 +62,12 @@ $array_columns['right']['limit'] =
     array(
         'label' => _RSS_LABEL_LIMIT, 
         'width' => 60
+    );
+    
+$array_columns['right']['tpl_tag'] = 
+    array(
+        'label' => _RSS_LABEL_TPL_TAG_SHORT, 
+        'width' => 100
     );
     
 $select =   "
@@ -96,7 +102,12 @@ while ($fields = $db->fetchrow($result))
     
     $array_values[$c]['values']['limit'] = 
         array(
-            'label' => $fields['limit']
+            'label' => ($fields['limit'] == 0) ? '---' : $fields['limit']
+        );
+
+    $array_values[$c]['values']['tpl_tag'] = 
+        array(
+            'label' => $fields['tpl_tag']
         );
         
     $array_values[$c]['values']['actions'] = 

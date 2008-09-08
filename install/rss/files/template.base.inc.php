@@ -42,7 +42,6 @@ $rssEntry_sql =  "
                     ploopi_mod_rss_feed feed
                     
         WHERE       entry.id_feed = feed.id
-           AND      feed.default = 1
            AND      feed.id_workspace = {$wk}
            
         ORDER BY    feed.title,

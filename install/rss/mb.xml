@@ -317,13 +317,6 @@
 		</row>
 		<row>
 			<tablename>ploopi_mod_rss_feed</tablename>
-			<name>default</name>
-			<label>default</label>
-			<type>tinyint(1) unsigned</type>
-			<visible>1</visible>
-		</row>
-		<row>
-			<tablename>ploopi_mod_rss_feed</tablename>
 			<name>lastvisit</name>
 			<label>lastvisit</label>
 			<type>varchar(14)</type>

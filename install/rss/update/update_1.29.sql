@@ -12,6 +12,7 @@ ALTER TABLE `ploopi_mod_rss_entry` ADD `published_day` INT( 20 ) UNSIGNED NOT NU
 ALTER TABLE `ploopi_mod_rss_entry` ADD INDEX ( `id_workspace` );
 ALTER TABLE `ploopi_mod_rss_entry` ADD INDEX ( `id_module` );
  
+ALTER TABLE `ploopi_mod_rss_feed` DROP `default`;
 ALTER TABLE `ploopi_mod_rss_feed` ADD `limit` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `author`;
 ALTER TABLE `ploopi_mod_rss_feed` ADD `tpl_tag` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL AFTER `limit` ;
 ALTER TABLE `ploopi_mod_rss_feed` ADD INDEX ( `id_workspace` );

@@ -54,7 +54,8 @@ if (ploopi_ismoduleallowed('rss'))
                     SELECT      count(feed.id) as nbfeeds, 
                                 IFNULL(cat.id,0) as id, 
                                 IFNULL(cat.title, '"._RSS_LABEL_NOCATEGORY."') as title, 
-                                IFNULL(cat.limit,0) as limitcat
+                                IFNULL(cat.limit,0) as limitcat,
+                                IFNULL(cat.tpl_tag,'') as tpltagcat
                     FROM        ploopi_mod_rss_feed feed
                     LEFT JOIN   ploopi_mod_rss_cat cat
                     ON          cat.id = feed.id_cat
@@ -80,6 +81,7 @@ if (ploopi_ismoduleallowed('rss'))
                 $array_values[$c]['values']['cat_nb'] = array('label' => $cat['nbfeeds']);
                 $array_values[$c]['values']['cat_limit'] = array('label' => $cat['limitcat']);
                 $array_values[$c]['description'] = $cat['title'];
+                if($cat['tpltagcat'] != '') $array_values[$c]['description'] .= ' (tag: '.$cat['tpltagcat'].')';
 
                 $array_values[$c]['link'] = "javascript:void(0);";
                 $array_values[$c]['onclick'] = "javascript:rss_explorer_catlist_choose({$cat['id']})";
@@ -392,7 +394,8 @@ if (ploopi_ismoduleallowed('rss'))
               $array_values[$c]['values']['actions'] = array('label' => $actions);
               
               $array_values[$c]['description'] = $filter['title'];
-
+              if($filter['tpl_tag'] != '') $array_values[$c]['description'] .= ' (tag: '.$filter['tpl_tag'].')';
+              
               $array_values[$c]['link'] = "javascript:void(0);";
               $array_values[$c]['onclick'] = "javascript:rss_filter_list_choose({$filter['id']});";
 

@@ -37,7 +37,6 @@ $rssentry_select =  "
                             
                 WHERE       entry.id_feed = feed.id
                   AND       feed.id_workspace = {$wk} 
-                  AND       feed.default = 1
                                         
                 ORDER BY    entry.published DESC, 
                             entry.timestp DESC, 
