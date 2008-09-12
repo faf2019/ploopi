@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ploopi>
+   <moduletype>
+      <label>forum</label>
+      <version>1.0</version>
+      <author>Ovensia / HeXad</author>
+      <date>20080912170000</date>
+      <publicparam>1</publicparam>
+      <description>Gestion d'un Forum Intranet/Extranet</description>
+      <action>
+         <id_action>1</id_action>
+         <label>Administrateur du forum</label>
+      </action>
+      <action>
+         <id_action>2</id_action>
+         <label>Ajout d'un forum</label>
+         <role_enabled>0</role_enabled>
+      </action>
+      <action>
+         <id_action>3</id_action>
+         <label>Ajout d'une discution</label>
+         <role_enabled>0</role_enabled>
+      </action>
+      <action>
+         <id_action>4</id_action>
+         <label>Ajout d'une réponse</label>
+         <role_enabled>0</role_enabled>
+      </action>
+      <action>
+         <id_action>5</id_action>
+         <label>Modication d'un forum</label>
+         <role_enabled>0</role_enabled>
+      </action>
+      <action>
+         <id_action>6</id_action>
+         <label>Modification d'une discution</label>
+         <role_enabled>0</role_enabled>
+      </action>
+      <action>
+         <id_action>7</id_action>
+         <label>Modification d'une réponse</label>
+         <role_enabled>0</role_enabled>
+      </action>
+      <action>
+         <id_action>8</id_action>
+         <label>Modération d'une discution</label>
+         <role_enabled>0</role_enabled>
+      </action>
+      <action>
+         <id_action>9</id_action>
+         <label>Modération d'une réponse</label>
+         <role_enabled>0</role_enabled>
+      </action>
+      <action>
+         <id_action>10</id_action>
+         <label>Validation d'une discution</label>
+         <role_enabled>0</role_enabled>
+      </action>
+      <action>
+         <id_action>11</id_action>
+         <label>Validation d'une réponse</label>
+         <role_enabled>0</role_enabled>
+      </action>
+      <action>
+         <id_action>12</id_action>
+         <label>Suppression d'un forum</label>
+         <role_enabled>0</role_enabled>
+      </action>
+      <action>
+         <id_action>13</id_action>
+         <label>Supression d'une discution</label>
+         <role_enabled>0</role_enabled>
+      </action>
+      <action>
+         <id_action>14</id_action>
+         <label>Supression d'une réponse</label>
+         <role_enabled>0</role_enabled>
+      </action>
+   </moduletype>
+</ploopi>

@@ -1,0 +1,20 @@
+== Module FORUM - version 1.0 ====================================================
+
+2008-09-12  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Passage en v.1.0
+ * refactoring des fonctions ploopi modifiées depuis la version 0.2
+
+== Module FORUM - version 0.2 ====================================================
+
+2008-06-24  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Mise à jour de l'utilisation des scriptenv lié a la mise a jour de Ploopi
+ * Mise à jour du système de liens (ploopi_env) lié à la mise à jour de Ploopi
+ * Correction d'un bug a l'installation pour le script de recherche de Ploopi
+
+== Module FORUM - version 0.1 ====================================================
+
+2008-02-18  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Création du module Forum Intranet/Extranet

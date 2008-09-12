@@ -1,0 +1,234 @@
+/*
+  Copyright (c) 2007-2008 Ovensia
+  Copyright (c) 2008 HeXad
+  Contributors hold Copyright (c) to their code submissions.
+
+  This file is part of Ploopi.
+
+  Ploopi is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  Ploopi is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Ploopi; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/***************** PUBLIC *****************/
+div.forum_main {
+  overflow:hidden;
+  padding:4px;
+}
+
+div.forum_mess_message {
+  overflow:hidden;
+  text-align: center;
+  padding: 10px;
+  margin: 0;
+  font-weight: bold;
+  color: red;
+  background-color: white;
+}
+
+div.forum_mess_content {
+  padding:0 5px;
+  overflow:hidden;
+}
+
+div.forum_mess_edit, div.forum_cat_edit {
+  overflow:hidden;
+  padding:4px;
+}
+
+div.forum_info_pages {
+  float:left;
+  line-height: 18px;
+  color: #000000;
+  text-align:center;
+  padding: 0 5px 0 0;
+  margin:1px;  
+}
+
+input.forum_button_disabled {
+  border:1px solid #193C1C;
+  color:#555555;
+  cursor:normal;
+  background-color:#bbbbbb;
+  margin:1px;
+}
+
+.Code
+{
+  border: #8b4513 1px solid;
+  padding-right: 5px;
+  padding-left: 5px;
+  color: #000066;
+  font-family: 'Courier New' , Monospace;
+  background-color: #ff9933;
+}
+
+.forum_quoted_user {
+  margin:2px 2px 0 2px;
+  padding:2px 4px;
+  border-left:2px solid #c0c0c0;
+  background-color:#f0f0f0;
+}
+
+.forum_quoted_message {
+  margin:0 2px 2px 2px;
+  padding:2px 4px;
+  border-left:2px solid #c0c0c0;
+  background-color:#f0f0f0;
+}
+
+.forum_navig, .forum_navig:hover {
+  font-size: 1.1em;
+  color: black;
+  font-style: normal;
+  font-weight: normal;
+  /* text-decoration: none; */
+}
+
+.forum_navig a, .forum_navig:hover a {
+	font-weight: bold;
+  text-decoration: none;
+}
+
+button {
+  overflow:visible;
+  width:auto;
+  line-height: 19px;
+  padding: 1px 2px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.button_navig {
+  background: #f6f6f6;
+  margin: 0 2px 0 0;
+}
+.button_navig:hover {
+  background: #e0e0e0;
+}
+
+.button_navig_select {
+  background: #fbfbfb;
+  font-weight: bold;
+}
+
+.button_navig_select:hover {
+  background: #e0e0e0;
+}
+
+/***************** ADMIN *****************/ 
+p.forum_subtitle {
+   background-color:#e0e0e0;
+   padding:6px;
+   margin:0;
+   border-bottom:1px solid #c0c0c0;
+}
+
+a.forum_subtitle {
+  float:right;
+  text-decoration:none;
+}
+
+img.forum_subtitle {
+  float:right;
+  border:0px; 
+}
+
+
+.DragContainer {
+  clear:both;
+  margin: 10px;
+  padding: 2px;
+}
+
+.forum_col_cat
+{
+  border: 1px #303030 solid;
+  text-align: center;
+  padding: 2px;
+  margin: 0;
+}
+
+
+.DragBox, .OverDragBox {
+  clear:both;
+/*  width: 400px; */
+  display:block;
+  border: 1px #303030 solid;
+  padding: 2px;
+  margin: 2px 0 2px 0;
+  background: #e0e0e0 url('../img/move.png') top left no-repeat;
+}
+
+div.OverDragBox {
+  cursor: move;
+}
+
+div.DragDragBox {
+  clear:both;
+  width: 400px;
+  display:block;
+  border: 1px #303030 dashed;
+  padding: 0;
+  margin: 2px 0 2px 0;
+  background: #e0e0e0 url('../img/move.png') top left no-repeat;
+}
+
+div.DragContainer p, div.DragDragBox p {
+  clear:both;
+  margin: 0 2px 2px 2px;
+  padding: 0 2px;
+  border: 0px;
+}
+
+label.LabelText {
+  float:left;
+  width: 80px;
+  line-height: 18px;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+label.LabelCheck {
+  margin: 0;
+  padding: 0;
+}
+
+p.info {
+  clear:both;
+  font-size: 0.8em;
+  margin: 0 2px 2px 2px;
+  padding: 0 2px;
+  border: 0px;
+}
+
+input.DragButton {
+  float:right;
+  border: 1px #303030 solid;
+  height: 20px;
+  display: block;
+  padding:0;
+  margin: 2px;
+}
+
+div.DragContainer input[type="text"], div.DragDragBox input[type="text"] {
+  width: 300px;
+  padding: 1px;
+  margin: 1px 0;
+}
+
+div.DragContainer input[type="checkbox"], div.DragDragBox input[type="checkbox"] {
+  padding: 0;
+  margin: 0 20px 0 0;
+}
