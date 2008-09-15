@@ -370,5 +370,4 @@ switch($op)
 }
 if(isset($objForumCat)) unset($objForumCat);
 //phpinfo();
-ploopi_print_r($_SESSION['ploopi']['forum']);
 ?>
