@@ -28,8 +28,8 @@ $booForumActionAllowed = ploopi_isactionallowed(_FORUM_ACTION_ADMIN);
 
 $booForumIsAdminModerGlb = forum_IsAdminOrModer(-1,_FORUM_ACTION_ADMIN);
 
-$_SESSION['ploopi']['forum']['arrays']['mess']['page'] = 1;
-$_SESSION['ploopi']['forum']['arrays']['subject']['page'] = 1;
+$_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['page'] = 1;
+$_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['page'] = 1;
 
 if($booForumIsAdminModerGlb) // More info for admin/moderator
 {

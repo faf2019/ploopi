@@ -345,26 +345,26 @@ function forum_IsAdminOrModer($intIdCat = -1, $intObject = -1, $booWidthDetail =
 }
 
 /**
- * Control and correct $_SESSION['ploopi']['forum']['arrays']...
+ * Control and correct $_SESSION['ploopi']['forum'][$intIdModule]['arrays']...
  *
  */
 function forum_CtrlParam()
 {
 // Control PARAM for subject
-if($_SESSION['ploopi']['forum']['arrays']['subject']['orderby'] != 'timestp'
-      && $_SESSION['ploopi']['forum']['arrays']['mess']['orderby'] != 'title')
-  $_SESSION['ploopi']['forum']['arrays']['subject']['orderby'] = 'timestp';
+if($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderby'] != 'timestp'
+      && $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderby'] != 'title')
+  $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderby'] = 'timestp';
   
-if($_SESSION['ploopi']['forum']['arrays']['subject']['orderin'] != 'ASC' 
-      && $_SESSION['ploopi']['forum']['arrays']['subject']['orderin'] != 'DESC')
-  $_SESSION['ploopi']['forum']['arrays']['subject']['orderin'] = 'ASC';
+if($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderin'] != 'ASC' 
+      && $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderin'] != 'DESC')
+  $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderin'] = 'ASC';
 
 // Control PARAM for message
-if($_SESSION['ploopi']['forum']['arrays']['mess']['orderby'] != 'timestp')
-  $_SESSION['ploopi']['forum']['arrays']['mess']['orderby'] = 'timestp';
+if($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderby'] != 'timestp')
+  $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderby'] = 'timestp';
   
-if($_SESSION['ploopi']['forum']['arrays']['mess']['orderin'] != 'ASC' 
-      && $_SESSION['ploopi']['forum']['arrays']['mess']['orderin'] != 'DESC')
-  $_SESSION['ploopi']['forum']['arrays']['mess']['orderin'] = 'ASC';
+if($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderin'] != 'ASC' 
+      && $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderin'] != 'DESC')
+  $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderin'] = 'ASC';
 }
 ?>

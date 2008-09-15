@@ -43,10 +43,10 @@ if(is_array($arrForumModerat) && count($arrForumModerat) > 0)
 }
 
 // Navigate in subject... reset page for message
-$_SESSION['ploopi']['forum']['arrays']['mess']['page'] = 1;
+$_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['page'] = 1;
 
 // Subject Param
-$arrFiltre = &$_SESSION['ploopi']['forum']['arrays']['subject'];
+$arrFiltre = &$_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject'];
 
 //If it's not the good list of categories reset page
 if($arrFiltre['id'] != $objForumCat->fields['id'])
@@ -324,10 +324,10 @@ echo $skin->open_simplebloc();
                   <b><?php echo $strForumTitle; ?></b>
                   <br/><font style="font-size:0.8em;"><?php echo $arrForumFields['author'].'&nbsp;('.$arrForumDateCreate['date'].'&nbsp;'.$arrForumDateCreate['time'].')'; ?></font>
                   <?php
-                    if(isset($_SESSION['ploopi']['forum']['info']) && $_SESSION['ploopi']['forum']['info']['id'] == $arrForumFields['id'])
+                    if(isset($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']) && $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']['id'] == $arrForumFields['id'])
                     {
-                      echo $_SESSION['ploopi']['forum']['info']['mess'];
-                      unset($_SESSION['ploopi']['forum']['info']);
+                      echo $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']['mess'];
+                      unset($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']);
                     }
                   ?>
                 </p>

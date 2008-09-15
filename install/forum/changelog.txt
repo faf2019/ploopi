@@ -1,3 +1,9 @@
+== Module FORUM - version 1.0.1 ==================================================
+
+2008-09-15  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction d'un risque de bug en utilisation multi-instance par session sans identifiant unique 
+
 == Module FORUM - version 1.0 ====================================================
 
 2008-09-12  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

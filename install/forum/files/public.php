@@ -30,22 +30,22 @@ include_once './modules/forum/class_forum_mess.php';
 include_once './modules/forum/include/functions.php';
 
 // If limit = 0 => no limit !
-if(!isset($_SESSION['ploopi']['forum']['arrays']))
+if(!isset($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']))
 {
-  $_SESSION['ploopi']['forum']['arrays']['subject'] = array('limit' => 25,
-                                                            'orderby' => 'timestp',
-                                                            'orderin' => 'DESC',
-                                                            'page' => 1, 
-                                                            'id' => 0);
+  $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject'] = array('limit' => 25,
+                                                                                              'orderby' => 'timestp',
+                                                                                              'orderin' => 'DESC',
+                                                                                              'page' => 1, 
+                                                                                              'id' => 0);
   
-  $_SESSION['ploopi']['forum']['arrays']['mess'] = array( 'limit' => 25,
-                                                          'orderby' => 'timestp',
-                                                          'orderin' => 'ASC',
-                                                          'page' => 1, 
-                                                          'id' => 0);
+  $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess'] = array('limit' => 25,
+                                                                                          'orderby' => 'timestp',
+                                                                                          'orderin' => 'ASC',
+                                                                                          'page' => 1, 
+                                                                                          'id' => 0);
 }
 
-//Control $_SESSION['ploopi']['forum']['array']...
+//Control $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['array']...
 forum_CtrlParam();
 
 $strForumGroups = ploopi_viewworkspaces();
@@ -92,18 +92,18 @@ switch($op)
       ploopi_redirect('admin.php?op=error');
     
     if(isset($_GET['page']))
-      $_SESSION['ploopi']['forum']['arrays']['mess']['page'] = $_GET['page'];
+      $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['page'] = $_GET['page'];
    
     if(isset($_GET['order']))
     {
-      if($_GET['order']==$_SESSION['ploopi']['forum']['arrays']['mess']['orderby'])
+      if($_GET['order']==$_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderby'])
       {
-        $_SESSION['ploopi']['forum']['arrays']['mess']['orderin'] = ($_SESSION['ploopi']['forum']['arrays']['mess']['orderin']=='ASC') ? 'DESC' : 'ASC';
+        $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderin'] = ($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderin']=='ASC') ? 'DESC' : 'ASC';
       }
       else
       {
-        $_SESSION['ploopi']['forum']['arrays']['mess']['orderby'] = $_GET['order'];
-        $_SESSION['ploopi']['forum']['arrays']['mess']['orderin'] = 'DESC';
+        $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderby'] = $_GET['order'];
+        $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderin'] = 'DESC';
       }
     }
     
@@ -177,9 +177,9 @@ switch($op)
     if($objForumMess->fields['validated'] == 0 && !ploopi_isactionallowed(_FORUM_ACTION_ADMIN)) // If it's not validated add a message
     {
       if($objForumMess->fields['id'] == $objForumMess->fields['id_subject'])
-        $_SESSION['ploopi']['forum']['info'] = array('id' => $objForumMess->fields['id'], 'mess' => '<div class="forum_mess_message">'._FORUM_SUBJECT_TOVALID.'</div>');
+        $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info'] = array('id' => $objForumMess->fields['id'], 'mess' => '<div class="forum_mess_message">'._FORUM_SUBJECT_TOVALID.'</div>');
       else
-        $_SESSION['ploopi']['forum']['info'] = array('id' => $objForumMess->fields['id'], 'mess' => '<div class="forum_mess_message">'._FORUM_MESS_TOVALID.'</div>');
+        $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info'] = array('id' => $objForumMess->fields['id'], 'mess' => '<div class="forum_mess_message">'._FORUM_MESS_TOVALID.'</div>');
     }
     if($op == 'mess_save') // It's a message edit
       ploopi_redirect("admin.php?op=search&id_mess={$objForumMess->fields['id']}");
@@ -241,18 +241,18 @@ switch($op)
       ploopi_redirect('admin.php?op=error');
       
     if(isset($_GET['page']))
-      $_SESSION['ploopi']['forum']['arrays']['subject']['page'] = $_GET['page'];
+      $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['page'] = $_GET['page'];
     
     if(isset($_GET['order']))
     {
-      if($_GET['order']==$_SESSION['ploopi']['forum']['arrays']['subject']['orderby'])
+      if($_GET['order']==$_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderby'])
       {
-        $_SESSION['ploopi']['forum']['arrays']['subject']['orderin'] = ($_SESSION['ploopi']['forum']['arrays']['subject']['orderin']=='ASC') ? 'DESC' : 'ASC';
+        $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderin'] = ($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderin']=='ASC') ? 'DESC' : 'ASC';
       }
       else
       {
-        $_SESSION['ploopi']['forum']['arrays']['subject']['orderby'] = $_GET['order'];
-        $_SESSION['ploopi']['forum']['arrays']['subject']['orderin'] = 'DESC';
+        $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderby'] = $_GET['order'];
+        $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderin'] = 'DESC';
       }
     }
     
@@ -302,23 +302,23 @@ switch($op)
     // Search a message in a subject (and... subject in cat for links) 
     if(isset($_GET['id_mess']) && is_numeric($_GET['id_mess']) && $_GET['id_mess'] > 0) 
     {
-      $arrSearch = forum_GetMessPage($_GET['id_mess'],$_SESSION['ploopi']['forum']['arrays']);
+      $arrSearch = forum_GetMessPage($_GET['id_mess'],$_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']);
       if($arrSearch['page'] != 0)
       {
-        $_SESSION['ploopi']['forum']['arrays']['mess']['id'] = $arrSearch['id_subject'];
-        $_SESSION['ploopi']['forum']['arrays']['mess']['page'] = $arrSearch['page'];
-        $_SESSION['ploopi']['forum']['arrays']['subject']['id'] = $arrSearch['id_cat'];
-        $_SESSION['ploopi']['forum']['arrays']['subject']['page'] = $arrSearch['page_subject'];
+        $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['id'] = $arrSearch['id_subject'];
+        $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['page'] = $arrSearch['page'];
+        $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['id'] = $arrSearch['id_cat'];
+        $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['page'] = $arrSearch['page_subject'];
         ploopi_redirect(ploopi_urlencode('admin.php?op=mess&id_cat='.$arrSearch['id_cat'].'&id_subject='.$arrSearch['id_subject']).'#idMess_title_'.$arrSearch['id_mess'],false);
       }
     } // Search a subject in a categorie
     elseif(isset($_GET['id_subject']) && $_GET['id_subject'] > 0) 
     {
-      $arrSearch = forum_GetSubjectPage($_GET['id_subject'],$_SESSION['ploopi']['forum']['arrays']['subject']);
+      $arrSearch = forum_GetSubjectPage($_GET['id_subject'],$_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']);
       if($arrSearch['page'] != 0)
       {
-        $_SESSION['ploopi']['forum']['arrays']['subject']['id'] = $arrSearch['id_cat'];
-        $_SESSION['ploopi']['forum']['arrays']['subject']['page'] = $arrSearch['page'];
+        $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['id'] = $arrSearch['id_cat'];
+        $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['page'] = $arrSearch['page'];
         ploopi_redirect(ploopi_urlencode('admin.php?op=subject&id_cat='.$arrSearch['id_cat']).'#idSubject_'.$arrSearch['id_subject'],false);
       }
     }
@@ -370,4 +370,5 @@ switch($op)
 }
 if(isset($objForumCat)) unset($objForumCat);
 //phpinfo();
+ploopi_print_r($_SESSION['ploopi']['forum']);
 ?>

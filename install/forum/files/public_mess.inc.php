@@ -43,7 +43,7 @@ if(is_array($arrForumModerat) && count($arrForumModerat) > 0)
 }
 
 // Message Param
-$arrFiltre = &$_SESSION['ploopi']['forum']['arrays']['mess'];
+$arrFiltre = &$_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess'];
 
 $objForumSubject = new forum_mess();
 $objForumSubject->open($_GET['id_subject']);
@@ -227,10 +227,10 @@ echo $skin->open_simplebloc();
                   <?php 
                   echo $arrForumFields['content'];
                    
-                  if(isset($_SESSION['ploopi']['forum']['info']) && $_SESSION['ploopi']['forum']['info']['id'] == $arrForumFields['id'])
+                  if(isset($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']) && $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']['id'] == $arrForumFields['id'])
                   {
-                    echo $_SESSION['ploopi']['forum']['info']['mess'];
-                    unset($_SESSION['ploopi']['forum']['info']);
+                    echo $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']['mess'];
+                    unset($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']);
                   }
                   ?>
                   </p>
