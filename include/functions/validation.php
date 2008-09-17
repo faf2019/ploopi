@@ -41,7 +41,7 @@
  * @param unknown_type $id_action identifiant de l'action requise
  */
 
-function ploopi_validation_selectusers($id_object = -1, $id_record = -1, $id_module = -1, $id_action = -1)
+function ploopi_validation_selectusers($id_object = 0, $id_record = 0, $id_module = -1, $id_action = -1)
 {
     global $db;
 
@@ -56,7 +56,6 @@ function ploopi_validation_selectusers($id_object = -1, $id_record = -1, $id_mod
             AND     id_record = '".$db->addslashes($id_record)."' 
             AND     id_module = {$id_module}
             ";
-    
     $db->query($sql);
     while ($row = $db->fetchrow())
     {
