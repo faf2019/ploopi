@@ -107,7 +107,7 @@ function ploopi_validation_selectusers($id_object = 0, $id_record = 0, $id_modul
  * @param int $id_module identifiant du module
  */
  
-function ploopi_validation_save($id_object = -1, $id_record = -1, $id_module = -1)
+function ploopi_validation_save($id_object = 0, $id_record = 0, $id_module = -1)
 {
     global $db;
     include_once './include/classes/validation.php';
@@ -145,7 +145,7 @@ function ploopi_validation_save($id_object = -1, $id_record = -1, $id_module = -
  * @return array validation
  */
 
-function ploopi_validation_get($id_object = -1, $id_record = -1,  $id_module = -1, $id_user = -1)
+function ploopi_validation_get($id_object = 0, $id_record = 0,  $id_module = -1, $id_user = 0)
 {
     global $db;
 
@@ -154,9 +154,9 @@ function ploopi_validation_get($id_object = -1, $id_record = -1,  $id_module = -
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
     $sql =  "SELECT * FROM ploopi_validation WHERE id_module = {$id_module}";
-    if ($id_object != -1) $sql .= " AND id_object = {$id_object}";
-    if ($id_record != -1) $sql .= " AND id_record = '".$db->addslashes($id_record)."'";
-    if ($id_user != -1) $sql .= " AND id_validation = {$id_user} AND type_validation = 'user'";
+    if ($id_object != 0) $sql .= " AND id_object = {$id_object}";
+    if ($id_record != 0) $sql .= " AND id_record = '".$db->addslashes($id_record)."'";
+    if ($id_user != 0) $sql .= " AND id_validation = {$id_user} AND type_validation = 'user'";
     
     $db->query($sql);
 
