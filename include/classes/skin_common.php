@@ -664,7 +664,7 @@ class skin_common
                                 <?
                             }
                         }
-                        if (!empty($v['link']))
+                        if (!empty($v['link']) || !empty($v['onclick']))
                         {
                             ?>
                             </a>

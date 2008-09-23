@@ -516,6 +516,9 @@ switch($ploopi_op)
             $documentsfolder->fields['id_user'] = $_SESSION['documents']['id_user'];
             $documentsfolder->fields['id_workspace'] = $_SESSION['documents']['id_workspace'];
             $documentsfolder->save();
+            
+            if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
+            if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefolder', $documentsfolder->fields['name']);
         }
         ?>
         <script type="text/javascript">
@@ -571,7 +574,7 @@ switch($ploopi_op)
             </div>
         </div>
         </form>
-        <iframe name="documents_folderform_iframe" src="./img/blank.gif" style="width:0;height:0;visibility:hidden;display:none;"></iframe>
+        <iframe name="documents_folderform_iframe" src="./img/blank.gif" style="display:none;"></iframe>
         <?
         $content = ob_get_contents();
         ob_end_clean();
@@ -606,6 +609,9 @@ switch($ploopi_op)
             $documentsfile->fields['size'] = $_FILES['documentsfile_file']['size'];
         }
 
+        if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
+        if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefile', $_FILES['documentsfile_file']['name']);
+        
         $error = $documentsfile->save();
         ?>
         <script type="text/javascript">
@@ -695,7 +701,7 @@ switch($ploopi_op)
             </div>
         </div>
         </form>
-        <iframe name="documents_fileform_iframe" src="./img/blank.gif" style="width:0;height:0;visibility:hidden;display:none;"></iframe>
+        <iframe name="documents_fileform_iframe" src="./img/blank.gif" style="display:none"></iframe>
         <?
         $content = ob_get_contents();
         ob_end_clean();
@@ -712,6 +718,9 @@ switch($ploopi_op)
             $documentsfile = new documentsfile();
             $documentsfile->open($_GET['documentsfile_id']);
 
+            if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
+            if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefile', $documentsfile->fields['name']);
+            
             $documentsfile->delete();
         }
 
@@ -726,6 +735,9 @@ switch($ploopi_op)
             $documentsfolder = new documentsfolder();
             $documentsfolder->open($_GET['documentsfolder_id']);
 
+            if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
+            if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefolder', $documentsfolder->fields['name']);
+            
             $documentsfolder->delete();
         }
         ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}");

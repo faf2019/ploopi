@@ -260,7 +260,7 @@ class data_object
             $this->db->query($this->sql);
 
             // get insert id from insert (if 1 field primary key and autokey)
-            if (sizeof($this->idfields) >= 1) $this->fields[$this->idfields[0]] = $this->db->insertid();
+            if (sizeof($this->idfields) >= 1 && $this->db->insertid() !== 0) $this->fields[$this->idfields[0]] = $this->db->insertid();
 
             $this->new = false;
         }

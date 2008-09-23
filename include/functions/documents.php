@@ -97,7 +97,9 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     if (empty($params['ROOT_NAME'])) $params['ROOT_NAME'] = 'Racine';
     if (empty($params['ATTACHEMENT'])) $params['ATTACHEMENT'] = true;
     if (empty($params['FIELDS'])) $params['FIELDS'] = array();
-
+    if (empty($params['CALLBACK_FUNC'])) $params['CALLBACK_FUNC'] = null;
+    if (empty($params['CALLBACK_INC'])) $params['CALLBACK_INC'] = null;
+    
     $_SESSION['documents'] = 
         array (    
             'id_object'     => $id_object,
@@ -109,7 +111,9 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
             'mode'          => '', // peut valoir 'selectfile'
             'root_name'     => $params['ROOT_NAME'],
             'attachement'   => $params['ATTACHEMENT'],
-            'fields'        => $params['FIELDS']
+            'fields'        => $params['FIELDS'],
+            'callback_func' => $params['CALLBACK_FUNC'],
+            'callback_inc' => $params['CALLBACK_INC']
         );
 
 

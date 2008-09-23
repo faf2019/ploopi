@@ -85,16 +85,6 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
  * @return string chaîne de paramètres chiffrée
  */
 
-/**
- * Enter description here...
- *
- * @param string $query
- * @param int $ploopi_mainmenu
- * @param int $ploopi_workspaceid
- * @param int $ploopi_moduleid
- * @param string $ploopi_action
- * @return string
- */
 function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null, $addenv = true)
 {
     $arrParams = array();

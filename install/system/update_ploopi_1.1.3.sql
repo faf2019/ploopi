@@ -1,0 +1,1 @@
+ALTER TABLE `ploopi_validation` CHANGE `id_record` `id_record` VARCHAR( 255 ) NOT NULL;

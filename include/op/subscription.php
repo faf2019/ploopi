@@ -82,7 +82,7 @@ switch($ploopi_op)
                 }
                 $strNext = 'subscribed';
             }
-            elseif (!empty($_POST['ploopi_subscription_unsubscribe']) && $_POST['ploopi_subscription_unsubscribe'])
+            else
             {
                 $objSubscription = new subscription();
                 if ($objSubscription->open($_POST['ploopi_subscription_id'])) // abonnement existant

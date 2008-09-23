@@ -238,7 +238,7 @@ class param
     
     public function getparam($param)
     {
-        return((isset($this->arrParam[$param])) ? $this->arrParam[$param] : null);
+        return((isset($this->arrParam[$param])) ? $this->arrParam[$param]['value'] : null);
     }
     
     /**

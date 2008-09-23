@@ -127,14 +127,16 @@ function ploopi_urlrewrite($url, $title = '', $keep_extension = false)
         $patterns[1] = '/index.php\?headingid=([0-9]*)/';
         $patterns[2] = '/index.php\?articleid=([0-9]*)/';
         $patterns[3] = '/index-quick.php\?ploopi_op=doc_file_download&docfile_md5id=([a-z0-9]{32})/';
-        $patterns[4] = '/index.php\?query_tag=([a-zA-Z0-9]*)/';
-        
+        $patterns[4] = '/index-quick.php\?ploopi_op=webedit_unsubscribe&subscription_email=([a-z0-9]{32})/';
+        $patterns[5] = '/index.php\?query_tag=([a-zA-Z0-9]*)/';
+
         $replacements = array();
         $replacements[0] = $title.'-h$1a$2.'.$ext;
         $replacements[1] = $title.'-h$1.'.$ext;
         $replacements[2] = $title.'-a$1.'.$ext;
         $replacements[3] = $title.'-d$1.'.$ext;
-        $replacements[4] = 'tag-$1.'.$ext;
+        $replacements[4] = 'unsubscribe-$1.'.$ext;
+        $replacements[5] = 'tag-$1.'.$ext;
         
         return preg_replace($patterns, $replacements, $url);
     }

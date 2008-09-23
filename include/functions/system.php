@@ -221,7 +221,8 @@ function ploopi_ob_callback($buffer)
         $log->save();
     }
                             
-    if (!empty($db) && $db->isconnected()) $db->close();
+    // Pose quelques soucis... souvent déconnecté
+    // if (!empty($db) && $db->isconnected()) $db->close();
     
     if ($content_type == 'text/html')
     {
