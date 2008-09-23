@@ -100,9 +100,9 @@ $select =   "
                         u.firstname,
                         u.lastname,
                         u.login,
-                        g.id as workspaceid,
-                        g.code,
-                        g.label as g_label,
+                        w.id as workspaceid,
+                        w.code,
+                        w.label as w_label,
                         m.label as m_label
 
             FROM        ploopi_mod_forms_reply fr
@@ -114,8 +114,8 @@ $select =   "
             LEFT JOIN   ploopi_user u
             ON          fr.id_user = u.id
 
-            LEFT JOIN   ploopi_workspace g
-            ON          fr.id_workspace = g.id
+            LEFT JOIN   ploopi_workspace w
+            ON          fr.id_workspace = w.id
 
             WHERE   ".implode(' AND ', $search_pattern);
 
@@ -124,19 +124,21 @@ $rs = $db->query($select);
 // construction du jeu de données brut (liste des réponses)
 $data = array();
 while ($fields = $db->fetchrow($rs))
-{
+{    
     $c = $fields['id'];
 
     $data[$c] = array();
 
     if ($_SESSION['forms'][$forms_fuid]['options']['object_display'])
     {
-        $data[$c]['object'] = $fields['id_record'];
+        $data[$c]['record'] = $fields['id_record'];
     }
 
     $data[$c]['datevalidation'] = $fields['date_validation'];
     $data[$c]['user'] = $fields['login'];
-    $data[$c]['group'] = $fields['g_label'];
+    $data[$c]['userid'] = $fields['userid'];
+    $data[$c]['group'] = $fields['w_label'];
+    $data[$c]['groupid'] = $fields['workspaceid'];
     $data[$c]['ip'] = $fields['ip'];
 
 /*
@@ -177,18 +179,17 @@ foreach ($data as $reply_id => $detail)
 {
     foreach($detail as $key => $value)
     {
-        if ($key == 'object')
+        if ($key == 'record')
         {
             // affectation d'une valeur à l'objet (si définie)
-            if (isset($_SESSION['forms'][$forms_fuid]['options']['object_values'][$value])) $data[$reply_id][$key] = $_SESSION['forms'][$forms_fuid]['options']['object_values'][$value];
+            if (isset($_SESSION['forms'][$forms_fuid]['options']['object_values'][$value])) $data[$reply_id]['object'] = $_SESSION['forms'][$forms_fuid]['options']['object_values'][$value];
         }
-
-        if ($key == 'datevalidation')
+        elseif ($key == 'datevalidation')
         {
             $ldate = ploopi_timestamp2local($value);
             $data[$reply_id][$key] = "{$ldate['date']} {$ldate['time']}";
         }
-        elseif ($data_title[$key]['format'] == 'date' && !empty($value))
+        elseif (isset($data_title[$key]) && $data_title[$key]['format'] == 'date' && !empty($value))
         {
             $ldate = ploopi_timestamp2local($value);
             $data[$reply_id][$key] = $ldate['date'];

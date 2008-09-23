@@ -1,3 +1,9 @@
+== Module FORMS - version 2.22 =====================================================
+
+2008-09-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correctifs et ajouts mineurs pour l'intégration d'un formulaire dans un module externe
+
 == Module FORMS - version 2.213 =====================================================
 
 2008-09-02  Xavier Toussaint ~ HeXad <xavier@hexad.fr>

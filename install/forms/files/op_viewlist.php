@@ -214,8 +214,9 @@
                     <?
                     if ( $_SESSION['forms'][$_GET['forms_fuid']]['rights']['_FORMS_ACTION_ADDREPLY'] && (($forms->fields['option_modify'] == 'user' && $detail['userid'] == $_SESSION['ploopi']['userid']) || ($forms->fields['option_modify'] == 'group' && $detail['workspaceid'] == $_SESSION['ploopi']['workspaceid'])  || ($forms->fields['option_modify'] == 'all')))
                     {
+                        // MODIF NON GEREE !!
                         ?>
-                        <a href="<? echo $modify; ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_modify.png"></a>
+                        <!-- a href="<? echo $modify; ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_modify.png"></a-->
                         <?
                         if ($_SESSION['forms'][$_GET['forms_fuid']]['rights']['_FORMS_ACTION_DELETE'])
                         {

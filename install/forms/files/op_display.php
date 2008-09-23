@@ -155,9 +155,8 @@ ob_end_clean();
 
 $replies = array(); //réponses déjà saisies
 
-if (isset($reply_id))
+if (!empty($reply_id))
 {
-
     if (isset($reply_id)) $where = " AND ploopi_mod_forms_reply.id = {$reply_id}";
     else $where = '';
 
