@@ -355,6 +355,11 @@ function webedit_getarticles($moduleid = -1)
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
     $today = ploopi_createtimestamp();
 
+    
+    if (!isset($_SESSION['webedit']['articles'])) $_SESSION['webedit']['articles'] = array();
+    
+    $_SESSION['webedit']['articles']['tree'] = array();
+    
     $articles = array();
 
     $select =   "
@@ -369,14 +374,13 @@ function webedit_getarticles($moduleid = -1)
                             ad.author,
                             ad.id_heading,
                             ad.status,
+                            ad.lastupdate_timestp,
                             ad.timestp,
                             ad.timestp_published,
                             ad.timestp_unpublished,
                             ad.id_user,
                             ad.content,
-                            a.content as online_content,
-                            MD5(ad.content) as md5_content,
-                            MD5(a.content) as md5_online_content
+                            a.content as online_content
                 FROM        ploopi_mod_webedit_article_draft ad
                 LEFT JOIN   ploopi_mod_webedit_article a
                 ON          a.id = ad.id
@@ -388,19 +392,23 @@ function webedit_getarticles($moduleid = -1)
     $result = $db->query($select);
     while ($fields = $db->fetchrow($result))
     {
-        if (is_null($fields['online_id'])) $fields['new_version'] = 2;
-        else $fields['new_version'] = (strlen(strip_tags($fields['content'])) - similar_text(strip_tags($fields['online_content']),strip_tags($fields['content']))) ? '1' : '0'; 
-
-        $fields['date_ok'] = (($fields['timestp_published'] <= $today || $fields['timestp_published'] == 0) && ($fields['timestp_unpublished'] >= $today || $fields['timestp_unpublished'] == 0));
-        
-        unset($fields['content']);
-        unset($fields['online_content']);
-        
-        $articles['list'][$fields['id']] = $fields;
-        $articles['tree'][$fields['id_heading']][] = $fields['id'];
+        if (!isset($_SESSION['webedit']['articles']['list'][$fields['id']]) || $fields['lastupdate_timestp'] != $_SESSION['webedit']['articles']['list'][$fields['id']]['lastupdate_timestp'])
+        {
+            // nouvel article ou article modifié
+            if (is_null($fields['online_id'])) $fields['new_version'] = 2;
+            else $fields['new_version'] = (strip_tags($fields['content']) != strip_tags($fields['online_content'])) ? '1' : '0';
+            
+            $fields['date_ok'] = (($fields['timestp_published'] <= $today || $fields['timestp_published'] == 0) && ($fields['timestp_unpublished'] >= $today || $fields['timestp_unpublished'] == 0));
+            
+            unset($fields['content']);
+            unset($fields['online_content']);
+            
+            $_SESSION['webedit']['articles']['list'][$fields['id']] = $fields;
+        }
+        $_SESSION['webedit']['articles']['tree'][$fields['id_heading']][] = $fields['id'];
     }
 
-    return($articles);
+    return($_SESSION['webedit']['articles']);
 }
 
 /**
@@ -467,6 +475,7 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
 
                 /* Déprécié : remplacé par le bloc ci-dessous */
                 $template_body->assign_var("HEADING{$depth}_TITLE",         $strHtmlLabel);
+                $template_body->assign_var("HEADING{$depth}_TITLE_RAW",     $detail['label']);
                 $template_body->assign_var("HEADING{$depth}_ID",            $id);
                 $template_body->assign_var("HEADING{$depth}_POSITION",      $detail['position']);
                 $template_body->assign_var("HEADING{$depth}_COLOR",         $detail['color']);
@@ -501,6 +510,7 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
                     'DEPTH' => $depth,
                     'ID' => $detail['id'],
                     'LABEL' => $strHtmlLabel,
+                    'LABEL_RAW' => $detail['label'],
                     'POSITION' => $detail['position'],
                     'DESCRIPTION' => $detail['description'],
                     'LINK' => $script,
