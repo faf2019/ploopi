@@ -97,8 +97,10 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     if (empty($params['ROOT_NAME'])) $params['ROOT_NAME'] = 'Racine';
     if (empty($params['ATTACHEMENT'])) $params['ATTACHEMENT'] = true;
     if (empty($params['FIELDS'])) $params['FIELDS'] = array();
+    if (empty($params['FIELDS_SIZE'])) $params['FIELDS_SIZE'] = array();
     if (empty($params['CALLBACK_FUNC'])) $params['CALLBACK_FUNC'] = null;
     if (empty($params['CALLBACK_INC'])) $params['CALLBACK_INC'] = null;
+    if (empty($params['DEFAULT_FOLDER'])) $params['DEFAULT_FOLDER'] = '';
     
     $_SESSION['documents'] = 
         array (    
@@ -112,11 +114,12 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
             'root_name'     => $params['ROOT_NAME'],
             'attachement'   => $params['ATTACHEMENT'],
             'fields'        => $params['FIELDS'],
+            'fields_size'   => $params['FIELDS_SIZE'],
             'callback_func' => $params['CALLBACK_FUNC'],
-            'callback_inc' => $params['CALLBACK_INC']
+            'callback_inc' => $params['CALLBACK_INC'],
+            'default_folder' => $params['DEFAULT_FOLDER']
         );
-
-
+    
     $_SESSION['documents']['rights'] = $rights;
 
     include_once './include/classes/documents.php';
@@ -125,7 +128,7 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     $db->query("SELECT id FROM ploopi_documents_folder WHERE id_folder = 0 and id_object = '{$_SESSION['documents']['id_object']}' and id_record = '".addslashes($_SESSION['documents']['id_record'])."'");
 
     if ($row = $db->fetchrow()) $currentfolder = $row['id'];
-    else // racine inexistante, il faut la crÃ©er
+    else // racine inexistante, il faut la créer
     {
         $documentsfolder = new documentsfolder();
         $documentsfolder->fields['name'] = $params['ROOT_NAME'];
@@ -162,7 +165,7 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     {
         ?>
         <script type="text/javascript">
-            ploopi_window_onload_stock(function () { ploopi_documents_browser('<? echo $documents_id; ?>', '', '', '', true); });
+            ploopi_window_onload_stock(function () { ploopi_documents_browser('<? echo $documents_id; ?>', '<? echo $params['DEFAULT_FOLDER']; ?>', '', '', true); });
         </script>
         <?
     }

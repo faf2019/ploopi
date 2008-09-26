@@ -81,12 +81,6 @@ $template_body->assign_block_vars('ploopi_js',
     )
 );
 
-$template_body->assign_block_vars('ploopi_js', 
-    array(
-        'PATH' => './js/colorpicker.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
-    )
-);
-
 $ploopi_additional_head = '';
 $ploopi_additional_javascript = '';
 
