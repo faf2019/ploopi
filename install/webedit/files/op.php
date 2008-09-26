@@ -42,8 +42,7 @@ switch($ploopi_op)
         if (!empty($_GET['subscription_email']))
         {
             include_once './include/functions/crypt.php';
-            $strMd5Email = $db->addslashes(ploopi_base64_decode($_GET['subscription_email']));
-            $db->query("DELETE FROM ploopi_mod_webedit_heading_subscriber WHERE md5(email) = '{$strMd5Email}'");
+            $db->query("DELETE FROM ploopi_mod_webedit_heading_subscriber WHERE md5(email) = '".$db->addslashes($_GET['subscription_email'])."'");
         }
         
     break;

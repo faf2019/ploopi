@@ -379,6 +379,7 @@ switch($menu)
                         if (empty($_POST['webedit_article_disabledfilter'])) $article->fields['disabledfilter'] = 0;
                         if (empty($_POST['webedit_article_visible'])) $article->fields['visible'] = 0;
                         if (empty($_POST['webedit_article_comments_allowed'])) $article->fields['comments_allowed'] = 0;
+                        
                     }
                     else $article->setvalues($_POST,'webedit_article_');
         
@@ -464,7 +465,7 @@ switch($menu)
                                     break;  
                                 }
                                 
-                                $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : "._PLOOPI_BASEPATH."/unsubscribe-".ploopi_base64_encode(md5($row['email'])).".html";
+                                $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : "._PLOOPI_BASEPATH.'/'.ploopi_urlrewrite('index-quick.php?ploopi_op=webedit_unsubscribe&subscription_email='.md5($row['email']));
                                 
                                 ploopi_send_mail($from, $row['email'], $mail_title, $mail_content, null, null, null, null, false);
                             }
@@ -627,7 +628,7 @@ switch($menu)
         
                             if (empty($headingid) || !isset($headings['list'][$headingid])) $headingid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = $headings['tree'][0][0];
         
-                            $treeview = webedit_gettreeview();
+                            $treeview = webedit_gettreeview($headings, $articles);
                             $node_id = (!empty($articleid)) ? "a{$articleid}" : "h{$headingid}";
                             echo $skin->display_treeview($treeview['list'], $treeview['tree'], $node_id);
                             ?>

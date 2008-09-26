@@ -117,19 +117,23 @@ define ('_WEBEDIT_SUBSCRIPTION_ERROR_PARAM', 99);
  * Statuts d'articles (modifiable, à valider)
  */
 global $article_status;
-$article_status = array(    'edit' => 'Modifiable',
-                            'wait' => 'A Valider'
-                        );
+$article_status = 
+    array(
+        'edit' => 'Modifiable',
+        'wait' => 'A Valider'
+    );
 
 
 /**
  * Types de tris pour les articles
  */
 global $heading_sortmodes;
-$heading_sortmodes = array( 'bypos' => 'par position croissante',
-                            'bydate' => 'par date décroissante',
-                            'bydaterev' => 'par date croissante'
-                        );
+$heading_sortmodes = 
+    array(
+        'bypos' => 'par position croissante',
+        'bydate' => 'par date décroissante',
+        'bydaterev' => 'par date croissante'
+    );
 
 
 
@@ -169,7 +173,7 @@ function webedit_getlastupdate($moduleid = -1)
  * 
  */
 
-function webedit_gettreeview($option = '', $moduleid = -1)
+function webedit_gettreeview($headings = array(), $articles = array(), $option = '', $moduleid = -1)
 {
     global $db;
 
@@ -201,16 +205,7 @@ function webedit_gettreeview($option = '', $moduleid = -1)
     
     $treeview = array('list' => array(), 'tree' => array());
 
-    $select =   "
-                SELECT      * 
-                FROM        ploopi_mod_webedit_heading 
-                WHERE       id_module = {$moduleid} 
-                ORDER BY    depth, 
-                            position
-                ";
-                            
-    $result = $db->query($select);
-    while ($fields = $db->fetchrow($result))
+    foreach($headings['list'] as $id => $fields)
     {
         
         switch($option)
@@ -255,40 +250,14 @@ function webedit_gettreeview($option = '', $moduleid = -1)
     
     if ($option != 'selectheading')
     {
-        $select =   "
-                    SELECT      ad.id,
-                                a.id as online_id,
-                                ad.position,
-                                ad.title,
-                                ad.metadescription,
-                                ad.metatitle,
-                                ad.id_heading,
-                                ad.status,
-                                ad.timestp,
-                                ad.timestp_published,
-                                ad.timestp_unpublished,
-                                ad.id_user,
-                                MD5(ad.content) as md5_content,
-                                MD5(a.content) as md5_online_content
-                    FROM        ploopi_mod_webedit_article_draft ad
-                    LEFT JOIN   ploopi_mod_webedit_article a
-                    ON          a.id = ad.id
-    
-                    WHERE       ad.id_module = {$moduleid}
-                    ORDER BY    ad.position
-                    ";
-        
-        $result = $db->query($select);
-        
         $today = ploopi_createtimestamp();
         
-        while ($fields = $db->fetchrow($result))
+        foreach($articles['list'] as $id => $fields)
         {
             if (isset($treeview['list']['h'.$prefix.$fields['id_heading']]))
             {
-                if (is_null($fields['online_id'])) $fields['new_version'] = 2;
-                else $fields['new_version'] = ($fields['md5_content'] !=  $fields['md5_online_content']) ? '1' : '0';
-        
+                
+                
                 $fields['date_ok'] = (($fields['timestp_published'] <= $today || $fields['timestp_published'] == 0) && ($fields['timestp_unpublished'] >= $today || $fields['timestp_unpublished'] == 0));
                 
                 switch($option)
@@ -371,6 +340,7 @@ function webedit_getheadings($moduleid = -1)
     return($headings);
 }
 
+
 /**
  * Retourne les articles du module sous forme d'un tableau
  *
@@ -394,6 +364,8 @@ function webedit_getarticles($moduleid = -1)
                             ad.reference,
                             ad.version,
                             ad.title,
+                            ad.metadescription,
+                            ad.metatitle,
                             ad.author,
                             ad.id_heading,
                             ad.status,
@@ -401,6 +373,8 @@ function webedit_getarticles($moduleid = -1)
                             ad.timestp_published,
                             ad.timestp_unpublished,
                             ad.id_user,
+                            ad.content,
+                            a.content as online_content,
                             MD5(ad.content) as md5_content,
                             MD5(a.content) as md5_online_content
                 FROM        ploopi_mod_webedit_article_draft ad
@@ -414,16 +388,14 @@ function webedit_getarticles($moduleid = -1)
     $result = $db->query($select);
     while ($fields = $db->fetchrow($result))
     {
-        /*
-         * $fields['similar_text'] = similar_text($fields['content'],$fields['online_content']);
-        $fields['length_text'] = strlen($fields['content']);
-        * */
-
         if (is_null($fields['online_id'])) $fields['new_version'] = 2;
-        else $fields['new_version'] = ($fields['md5_content'] !=  $fields['md5_online_content']) ? '1' : '0';
+        else $fields['new_version'] = (strlen(strip_tags($fields['content'])) - similar_text(strip_tags($fields['online_content']),strip_tags($fields['content']))) ? '1' : '0'; 
 
         $fields['date_ok'] = (($fields['timestp_published'] <= $today || $fields['timestp_published'] == 0) && ($fields['timestp_unpublished'] >= $today || $fields['timestp_unpublished'] == 0));
-
+        
+        unset($fields['content']);
+        unset($fields['online_content']);
+        
         $articles['list'][$fields['id']] = $fields;
         $articles['tree'][$fields['id_heading']][] = $fields['id'];
     }
@@ -506,8 +478,10 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
                     'DEPTH' => $depth,
                     'ID' => $detail['id'],
                     'LABEL' => $strHtmlLabel,
+                    'LABEL_RAW' => $detail['label'],
                     'POSITION' => $detail['position'],
-                    'DESCRIPTION' => $detail['description'],
+                    'DESCRIPTION' => htmlentities($detail['description']),
+                    'DESCRIPTION_RAW' => $detail['description'],
                     'LINK' => $script,
                     'LINK_TARGET' => ($detail['url_window']) ? 'target="_blank"' : '',
                     'SEL' => $sel,

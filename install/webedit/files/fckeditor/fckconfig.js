@@ -19,12 +19,10 @@ FCKConfig.ToolbarSets["Default"] = [
 FCKConfig.ToolbarSets["Beginner"] = [
     ['Cut','Copy','Paste','PasteText','PasteWord'],
     ['Undo','Redo','-','SelectAll','RemoveFormat'],
-    ['Style'],
-    ['Bold','Italic','Underline'],
+    ['Style', 'Bold','Italic','Underline'],
     ['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
     ['OrderedList','UnorderedList','-','Outdent','Indent'],
-    ['Link','Unlink'],
-    ['Image']
+    ['Link','Unlink','Image'],
 ] ;
 
 FCKConfig.EnterMode = 'br' ;            // p | div | br

@@ -257,9 +257,11 @@ if ($query_string != '') // recherche intégrale
                         array(
                             'RELEVANCE' => sprintf("%.02f", $result['relevance']),
                             'TITLE' => htmlentities($objDocFile->fields['name']),
+                            'TITLE_RAW' => $objDocFile->fields['name'],
                             'AUTHOR' => '',
                             'EXTRACT' => '',
                             'METATITLE' => htmlentities($objDocFile->fields['name']),
+                            'METATITLE_RAW' => $objDocFile->fields['name'],
                             'METAKEYWORDS' => '',
                             'METADESCRIPTION' => '',
                             'DATE' => current(ploopi_timestamp2local($objDocFile->fields['timestp_create'])),
@@ -284,11 +286,16 @@ if ($query_string != '') // recherche intégrale
                     array(
                         'RELEVANCE' => sprintf("%.02f", $result['relevance']),
                         'TITLE' => htmlentities($objArticle->fields['title']),
+                        'TITLE_RAW' => $objArticle->fields['title'],
                         'AUTHOR' => htmlentities($objArticle->fields['author']),
+                        'AUTHOR_RAW' => $objArticle->fields['author'],
                         'EXTRACT' => ploopi_highlight($cleaned_content, array_merge(array_keys($result['kw']), array_keys($result['stem']))),
                         'METATITLE' => htmlentities($objArticle->fields['metatitle']),
+                        'METATITLE_RAW' => $objArticle->fields['metatitle'],
                         'METAKEYWORDS' => htmlentities($objArticle->fields['metakeywords']),
+                        'METAKEYWORDS_RAW' => $objArticle->fields['metakeywords'],
                         'METADESCRIPTION' => htmlentities($objArticle->fields['metadescription']),
+                        'METADESCRIPTION_RAW' => $objArticle->fields['metadescription'],
                         'DATE' => ($objArticle->fields['timestp']!='') ? current(ploopi_timestamp2local($objArticle->fields['timestp'])) : '',
                         'SIZE' => sprintf("%.02f", strlen($cleaned_content)/1024),
                         'LINK' => ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}", $objArticle->fields['metatitle'])
@@ -305,17 +312,24 @@ if ($query_string != '') // recherche intégrale
         $template_body->assign_block_vars('switch_search.switch_notfound',array());
     }
     
-    $title = htmlentities("Résultat de la recherche pour \" {$query_string} \"");
+    $title_raw = "Résultat de la recherche pour \" {$query_string} \"";
+    $title = htmlentities($title_raw);
     
     $template_body->assign_vars(
         array(
             'SEARCH_RESPONSES' => $responses,
             'PAGE_TITLE' => $title,
+            'PAGE_TITLE_RAW' => $title_raw,
             'PAGE_KEYWORDS' => htmlentities($query_string),
+            'PAGE_KEYWORDS_RAW' => $query_string,
             'PAGE_DESCRIPTION' => $title,
+            'PAGE_DESCRIPTION_RAW' => $title_raw,
             'PAGE_META_TITLE' => $title,
+            'PAGE_META_TITLE_RAW' => $title_raw,
             'PAGE_META_KEYWORDS' => htmlentities($query_string),
-            'PAGE_META_DESCRIPTION' => $title
+            'PAGE_META_KEYWORDS_RAW' => $query_string,
+            'PAGE_META_DESCRIPTION' => $title,
+            'PAGE_META_DESCRIPTION_RAW' => $title
         )
     );
                             
@@ -360,35 +374,49 @@ elseif($query_tag != '') // recherche par tag
         );    
     }    
     
-    $title = htmlentities("Liste des articles contenant le tag \" {$query_tag} \"");
-
+    $title_raw = "Liste des articles contenant le tag \" {$query_tag} \"";
+    $title = htmlentities($title_raw);
+    
     $template_body->assign_vars(
         array(
             'PAGE_TITLE' => $title,
+            'PAGE_TITLE_RAW' => $title,
             'PAGE_KEYWORDS' => htmlentities($query_tag),
+            'PAGE_KEYWORDS_RAW' => $query_tag,
             'PAGE_DESCRIPTION' => $title,
+            'PAGE_DESCRIPTION_RAW' => $title_raw,
             'PAGE_META_TITLE' => $title,
+            'PAGE_META_TITLE_RAW' => $title_raw,
             'PAGE_META_KEYWORDS' => htmlentities($query_tag),
-            'PAGE_META_DESCRIPTION' => $title
+            'PAGE_META_KEYWORDS_RAW' => $query_tag,
+            'PAGE_META_DESCRIPTION' => $title,
+            'PAGE_META_DESCRIPTION_RAW' => $title_raw
         )
     );
 }
 elseif (!empty($ploopi_op) && $ploopi_op == 'webedit_unsubscribe') // message affiché lors du désabonnement (lien depuis email)
 {    
-    $title = 'Désabonnement';
+    $title_raw = 'Désabonnement';
+    $title = htmlentities($title_raw);
     
     $template_body->assign_block_vars('switch_content_message', array());
     
     $template_body->assign_vars(
         array(
             'PAGE_TITLE' => $title,
+            'PAGE_TITLE_RAW' => $title_raw,
             'PAGE_KEYWORDS' => $title,
+            'PAGE_KEYWORDS_RAW' => $title_raw,
             'PAGE_DESCRIPTION' => $title,
+            'PAGE_DESCRIPTION_RAW' => $title_raw,
             'PAGE_META_TITLE' => $title,
+            'PAGE_META_TITLE_RAW' => $title_raw,
             'PAGE_META_KEYWORDS' => $title,
+            'PAGE_META_KEYWORDS_RAW' => $title_raw,
             'PAGE_META_DESCRIPTION' => $title,
-            'MESSAGE_TITLE' => 'Désabonnement',
-            'MESSAGE_CONTENT' => 'Votre demande de désabonnement a été prise en compte.'
+            'PAGE_META_DESCRIPTION_RAW' => $title_raw,
+            'MESSAGE_TITLE' => $title,
+            'MESSAGE_CONTENT' => htmlentities('Votre demande de désabonnement a été prise en compte.')
         )
     );
 }
@@ -508,8 +536,10 @@ else // affichage standard rubrique/page
                     array(
                         'REFERENCE'     => htmlentities($row['reference']),
                         'LABEL'         => htmlentities($row['title']),
+                        'LABEL_RAW'     => $row['title'],
                         'CONTENT'       => htmlentities($row['content_cleaned']),
                         'AUTHOR'        => htmlentities($row['author']),
+                        'AUTHOR_RAW'    => $row['author'],
                         'VERSION'       => htmlentities($row['version']),
                         'DATE'          => htmlentities($ldate_timestp['date']),
                         'LASTUPDATE_DATE' => htmlentities($ldate_lastupdate['date']),
@@ -601,11 +631,9 @@ else // affichage standard rubrique/page
                 $oFCKeditor->Width='100%';
                 $oFCKeditor->Height='500';
 
-                
                 $oFCKeditor->Config['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/fckconfig.js';
                 $oFCKeditor->Config['ToolbarLocation'] = 'Out:parent(xToolbar)';
                 $oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH.'/';
-                $oFCKeditor->Config['SkinPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/skins/default/';
                 
                 if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner') $oFCKeditor->ToolbarSet = 'Beginner' ;
                 else $oFCKeditor->ToolbarSet = 'Default' ;
@@ -672,19 +700,35 @@ else // affichage standard rubrique/page
         else $user_lastname = $user_firstname = $user_login = '';
 
         list($keywords) = ploopi_getwords("{$article->fields['metatitle']} {$article->fields['metakeywords']} {$article->fields['author']}");
-
+        
+        $kwds_raw = implode(', ', array_keys($keywords));
+        $kwds = htmlentities($kwds_raw);
+        
+        $desc_raw = $article->fields['metadescription'];
+        $desc = htmlentities($article->fields['metadescription']);
+        
         $template_body->assign_vars(
             array(
                 'PAGE_REFERENCE' => htmlentities($article->fields['reference']),
+                'PAGE_REFERENCE_RAW' => $article->fields['reference'],
                 'PAGE_TITLE' => htmlentities($article->fields['title']),
-                'PAGE_KEYWORDS' => htmlentities(implode(', ', array_keys($keywords))),
-                'PAGE_DESCRIPTION' => htmlentities($article->fields['metadescription']),
+                'PAGE_TITLE_RAW' => $article->fields['title'],
+                'PAGE_TITLE_ESCAPED' => addslashes($article->fields['title']),
+                'PAGE_KEYWORDS' => $kwds,
+                'PAGE_KEYWORDS_RAW' => $kwds_raw,
+                'PAGE_DESCRIPTION' => $desc,
+                'PAGE_DESCRIPTION_RAW' => $desc_raw,
+                'PAGE_DESCRIPTION_ESCAPED' => addslashes($article->fields['metadescription']),
                 'PAGE_META_TITLE' => htmlentities($article->fields['metatitle']),
-                'PAGE_META_KEYWORDS' => htmlentities(implode(', ', array_keys($keywords))),
-                'PAGE_META_DESCRIPTION' => htmlentities($article->fields['metadescription']),
-                'PAGE_TITLE_FAVORITES'  => addslashes($article->fields['title']),
+                'PAGE_META_TITLE_RAW' => $article->fields['metatitle'],
+                'PAGE_META_KEYWORDS' => $kwds,
+                'PAGE_META_KEYWORDS_RAW' => $kwds_raw,
+                'PAGE_META_DESCRIPTION' => $desc,
+                'PAGE_META_DESCRIPTION_RAW' => $desc_raw,
                 'PAGE_AUTHOR' => htmlentities($article->fields['author']),
+                'PAGE_AUTHOR_RAW' => $article->fields['author'],
                 'PAGE_VERSION' => htmlentities($article->fields['version']),
+                'PAGE_VERSION_RAW' => $article->fields['version'],
                 'PAGE_DATE' => htmlentities($article_timestp['date']),
                 'PAGE_LASTUPDATE_DATE' => htmlentities($article_lastupdate['date']),
                 'PAGE_LASTUPDATE_TIME' => htmlentities($article_lastupdate['time']),
@@ -892,15 +936,20 @@ if (isset($headings['list'][$headings['tree'][0][0]]) && $headings['list'][$head
     );
 }
 
+$title_raw = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title'];
+$title = htmlentities($title_raw);
+
 $template_body->assign_vars(
     array(
         'TEMPLATE_PATH'                 => $template_path,
         'ADDITIONAL_JAVASCRIPT'         => $additional_javascript,
         'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
-        'SITE_TITLE'                    => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
-        'WORKSPACE_TITLE'               => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
+        'SITE_TITLE'                    => $title,
+        'SITE_TITLE_RAW'                => $title_raw,
+        'WORKSPACE_TITLE'               => $title,
+        'WORKSPACE_TITLE_RAW'           => $title_raw,
         'WORKSPACE_META_DESCRIPTION'    => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_description']),
-        'WORKSPACE_META_KEYWORDS'       => implode(', ', array_keys($keywords)),
+        'WORKSPACE_META_KEYWORDS'       => htmlentities(implode(', ', array_keys($keywords))),
         'WORKSPACE_META_AUTHOR'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']),
         'WORKSPACE_META_COPYRIGHT'      => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_copyright']),
         'WORKSPACE_META_ROBOTS'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_robots']),
