@@ -95,8 +95,8 @@ if ($_SESSION['ploopi']['connected'])
             if (!empty($_GET['hid']))
             {
                 $option = (empty($_GET['option'])) ? '' : $_GET['option'];
-                
-                $treeview = webedit_gettreeview($option);
+
+                $treeview = webedit_gettreeview(webedit_getheadings(), webedit_getarticles(), $option);
                 echo $skin->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['hid']);
             }
             ploopi_die();
@@ -141,7 +141,7 @@ if ($_SESSION['ploopi']['connected'])
             ?>
             <div style="padding:4px;height:150px;overflow:auto;">
             <?
-            $treeview = webedit_gettreeview('selectredirect');
+            $treeview = webedit_gettreeview(webedit_getheadings(), webedit_getarticles(), 'selectredirect');
             echo $skin->display_treeview($treeview['list'], $treeview['tree']);
             ?>
             </div>
@@ -162,7 +162,7 @@ if ($_SESSION['ploopi']['connected'])
             <?
             $hid = (empty($_GET['hid'])) ? '' : 'hh'.$_GET['hid'];
             
-            $treeview = webedit_gettreeview('selectheading');
+            $treeview = webedit_gettreeview(webedit_getheadings(), webedit_getarticles(), 'selectheading');
             echo $skin->display_treeview($treeview['list'], $treeview['tree'],$hid);
             ?>
             </div>
