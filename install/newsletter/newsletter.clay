@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<clay-model clay-version="1.4.2">
+<database-model alias="" author="Xavier Toussaint" begin-script="" end-script="" name="newsletter" remarks="" sql-dialect-id="jp.azzurri.clay.dialect.MySQL_5_0_Dialect" uid="163d118:11c64c9bdbb:-8000" version="1.0">
+<database-model-description/>
+<schema-list>
+<schema alias="" name="DEFAULT_SCHEMA" remarks="" uid="163d118:11c64c9bdbb:-7ffd">
+<schema-description/>
+<domain-list/>
+<table-list>
+<table alias="ploopi_mod_newsletter_letter" name="ploopi_mod_newsletter_letter" remarks="" uid="163d118:11c64c9bdbb:-7fff">
+<table-description/>
+<table-figure-bounds height="407" width="290" x="31" y="74"/>
+<column-list>
+<column alias="id" auto-increment="true" column-size="10" decimal-digits="0" default-value="" mandatory="true" name="id" remarks="" uid="163d118:11c64c9bdbb:-7f46">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT(%n) UNSIGNED">
+<variant type-name-pattern="INT"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n)"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) ZEROFILL"/>
+<variant type-name-pattern="INT UNSIGNED"/>
+<variant type-name-pattern="INT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="INT ZEROFILL"/>
+</data-type>
+</column>
+<column alias="title" auto-increment="false" column-size="255" decimal-digits="0" default-value="" mandatory="false" name="title" remarks="" uid="163d118:11c64c9bdbb:-7f3e">
+<column-description/>
+<data-type jdbc-type="12" literal-prefix="'" literal-suffix="'" name="VARCHAR" selected-variant-pattern="VARCHAR(%n)">
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n)"/>
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n) BINARY"/>
+</data-type>
+</column>
+<column alias="subject" auto-increment="false" column-size="255" decimal-digits="0" default-value="" mandatory="false" name="subject" remarks="" uid="f47040:11c749e5fb0:-7ffb">
+<column-description/>
+<data-type jdbc-type="12" literal-prefix="'" literal-suffix="'" name="VARCHAR" selected-variant-pattern="VARCHAR(%n)">
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n)"/>
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n) BINARY"/>
+</data-type>
+</column>
+<column alias="status" auto-increment="false" column-size="16" decimal-digits="0" default-value="" mandatory="true" name="status" remarks="" uid="163d118:11c64c9bdbb:-7f3d">
+<column-description/>
+<data-type jdbc-type="12" literal-prefix="'" literal-suffix="'" name="VARCHAR" selected-variant-pattern="VARCHAR(%n)">
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n)"/>
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n) BINARY"/>
+</data-type>
+</column>
+<column alias="content" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="content" remarks="" uid="163d118:11c64c9bdbb:-7f45">
+<column-description/>
+<data-type jdbc-type="-1" literal-prefix="'" literal-suffix="'" name="LONGTEXT" selected-variant-pattern="LONGTEXT">
+<variant type-name-pattern="LONGTEXT"/>
+</data-type>
+</column>
+<column alias="template" auto-increment="false" column-size="255" decimal-digits="0" default-value="" mandatory="false" name="template" remarks="" uid="f47040:11c749e5fb0:-7ff8">
+<column-description/>
+<data-type jdbc-type="12" literal-prefix="'" literal-suffix="'" name="VARCHAR" selected-variant-pattern="VARCHAR(%n)">
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n)"/>
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n) BINARY"/>
+</data-type>
+</column>
+<column alias="timestp" auto-increment="false" column-size="14" decimal-digits="0" default-value="" mandatory="true" name="timestp" remarks="" uid="163d118:11c64c9bdbb:-7f44">
+<column-description/>
+<data-type jdbc-type="-5" name="BIGINT" selected-variant-pattern="BIGINT(%n) UNSIGNED">
+<variant type-name-pattern="BIGINT"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n)"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) UNSIGNED"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) ZEROFILL"/>
+<variant type-name-pattern="BIGINT UNSIGNED"/>
+<variant type-name-pattern="BIGINT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="BIGINT ZEROFILL"/>
+</data-type>
+</column>
+<column alias="id_author" auto-increment="false" column-size="10" decimal-digits="0" default-value="" mandatory="false" name="id_author" remarks="" uid="a2e359:11ca78bc510:-7ffa">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT(%n) UNSIGNED">
+<variant type-name-pattern="INT"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n)"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) ZEROFILL"/>
+<variant type-name-pattern="INT UNSIGNED"/>
+<variant type-name-pattern="INT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="INT ZEROFILL"/>
+</data-type>
+</column>
+<column alias="author" auto-increment="false" column-size="255" decimal-digits="0" default-value="" mandatory="false" name="author" remarks="" uid="163d118:11c64c9bdbb:-7f41">
+<column-description/>
+<data-type jdbc-type="12" literal-prefix="'" literal-suffix="'" name="VARCHAR" selected-variant-pattern="VARCHAR(%n)">
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n)"/>
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n) BINARY"/>
+</data-type>
+</column>
+<column alias="lastupdate_timestp" auto-increment="false" column-size="14" decimal-digits="0" default-value="" mandatory="false" name="lastupdate_timestp" remarks="" uid="163d118:11c64c9bdbb:-7f43">
+<column-description/>
+<data-type jdbc-type="-5" name="BIGINT" selected-variant-pattern="BIGINT(%n) UNSIGNED">
+<variant type-name-pattern="BIGINT"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n)"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) UNSIGNED"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) ZEROFILL"/>
+<variant type-name-pattern="BIGINT UNSIGNED"/>
+<variant type-name-pattern="BIGINT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="BIGINT ZEROFILL"/>
+</data-type>
+</column>
+<column alias="lastupdate_id_user" auto-increment="false" column-size="10" decimal-digits="0" default-value="" mandatory="false" name="lastupdate_id_user" remarks="" uid="163d118:11c64c9bdbb:-7f40">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT(%n) UNSIGNED">
+<variant type-name-pattern="INT"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n)"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) ZEROFILL"/>
+<variant type-name-pattern="INT UNSIGNED"/>
+<variant type-name-pattern="INT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="INT ZEROFILL"/>
+</data-type>
+</column>
+<column alias="lastupdate_user" auto-increment="false" column-size="255" decimal-digits="0" default-value="" mandatory="false" name="lastupdate_user" remarks="" uid="a2e359:11ca78bc510:-7ff9">
+<column-description/>
+<data-type jdbc-type="12" literal-prefix="'" literal-suffix="'" name="VARCHAR" selected-variant-pattern="VARCHAR(%n)">
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n)"/>
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n) BINARY"/>
+</data-type>
+</column>
+<column alias="validated_timestp" auto-increment="false" column-size="14" decimal-digits="0" default-value="" mandatory="false" name="validated_timestp" remarks="" uid="163d118:11c64c9bdbb:-7f42">
+<column-description/>
+<data-type jdbc-type="-5" name="BIGINT" selected-variant-pattern="BIGINT(%n) UNSIGNED">
+<variant type-name-pattern="BIGINT"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n)"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) UNSIGNED"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) ZEROFILL"/>
+<variant type-name-pattern="BIGINT UNSIGNED"/>
+<variant type-name-pattern="BIGINT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="BIGINT ZEROFILL"/>
+</data-type>
+</column>
+<column alias="validated_id_user" auto-increment="false" column-size="10" decimal-digits="0" default-value="" mandatory="false" name="validated_id_user" remarks="" uid="163d118:11c64c9bdbb:-7f3f">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT(%n) UNSIGNED">
+<variant type-name-pattern="INT"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n)"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) ZEROFILL"/>
+<variant type-name-pattern="INT UNSIGNED"/>
+<variant type-name-pattern="INT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="INT ZEROFILL"/>
+</data-type>
+</column>
+<column alias="validated_user" auto-increment="false" column-size="255" decimal-digits="0" default-value="" mandatory="false" name="validated_user" remarks="" uid="a2e359:11ca78bc510:-7ff8">
+<column-description/>
+<data-type jdbc-type="12" literal-prefix="'" literal-suffix="'" name="VARCHAR" selected-variant-pattern="VARCHAR(%n)">
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n)"/>
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n) BINARY"/>
+</data-type>
+</column>
+<column alias="send_timestp" auto-increment="false" column-size="14" decimal-digits="0" default-value="" mandatory="false" name="send_timestp" remarks="" uid="a2e359:11ca78bc510:-7ff7">
+<column-description/>
+<data-type jdbc-type="-5" name="BIGINT" selected-variant-pattern="BIGINT(%n) UNSIGNED">
+<variant type-name-pattern="BIGINT"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n)"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) UNSIGNED"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) ZEROFILL"/>
+<variant type-name-pattern="BIGINT UNSIGNED"/>
+<variant type-name-pattern="BIGINT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="BIGINT ZEROFILL"/>
+</data-type>
+</column>
+<column alias="send_id_user" auto-increment="false" column-size="10" decimal-digits="0" default-value="" mandatory="false" name="send_id_user" remarks="" uid="a2e359:11ca78bc510:-7ff6">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT(%n) UNSIGNED">
+<variant type-name-pattern="INT"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n)"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) ZEROFILL"/>
+<variant type-name-pattern="INT UNSIGNED"/>
+<variant type-name-pattern="INT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="INT ZEROFILL"/>
+</data-type>
+</column>
+<column alias="send_user" auto-increment="false" column-size="255" decimal-digits="0" default-value="" mandatory="false" name="send_user" remarks="" uid="a2e359:11ca78bc510:-7ff5">
+<column-description/>
+<data-type jdbc-type="12" literal-prefix="'" literal-suffix="'" name="VARCHAR" selected-variant-pattern="VARCHAR(%n)">
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n)"/>
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n) BINARY"/>
+</data-type>
+</column>
+<column alias="id_module" auto-increment="false" column-size="10" decimal-digits="0" default-value="" mandatory="true" name="id_module" remarks="" uid="163d118:11c64c9bdbb:-7f3c">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT(%n) UNSIGNED">
+<variant type-name-pattern="INT"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n)"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) ZEROFILL"/>
+<variant type-name-pattern="INT UNSIGNED"/>
+<variant type-name-pattern="INT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="INT ZEROFILL"/>
+</data-type>
+</column>
+<column alias="id_user" auto-increment="false" column-size="10" decimal-digits="0" default-value="" mandatory="true" name="id_user" remarks="" uid="163d118:11c64c9bdbb:-7f3b">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT(%n) UNSIGNED">
+<variant type-name-pattern="INT"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n)"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) ZEROFILL"/>
+<variant type-name-pattern="INT UNSIGNED"/>
+<variant type-name-pattern="INT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="INT ZEROFILL"/>
+</data-type>
+</column>
+<column alias="id_workspace" auto-increment="false" column-size="10" decimal-digits="0" default-value="" mandatory="true" name="id_workspace" remarks="" uid="163d118:11c64c9bdbb:-7f3a">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT(%n) UNSIGNED">
+<variant type-name-pattern="INT"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n)"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) ZEROFILL"/>
+<variant type-name-pattern="INT UNSIGNED"/>
+<variant type-name-pattern="INT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="INT ZEROFILL"/>
+</data-type>
+</column>
+</column-list>
+<primary-key alias="" name="PK_PLOOPI_MOD_NEWSLETTER_LETTER" remarks="" uid="163d118:11c64c9bdbb:-7ffe">
+<primary-key-description/>
+<primary-key-column name="id"/>
+</primary-key>
+<unique-key-list/>
+<foreign-key-list/>
+<index-list/>
+</table>
+<table alias="ploopi_mod_newsletter_send" name="ploopi_mod_newsletter_send" remarks="" uid="163d118:11c64c9bdbb:-7ffa">
+<table-description/>
+<table-figure-bounds height="96" width="269" x="334" y="75"/>
+<column-list>
+<column alias="email_subscriber" auto-increment="false" column-size="255" decimal-digits="0" default-value="" mandatory="true" name="email_subscriber" remarks="" uid="163d118:11c64c9bdbb:-7f98">
+<column-description/>
+<data-type jdbc-type="12" literal-prefix="'" literal-suffix="'" name="VARCHAR" selected-variant-pattern="VARCHAR(%n)">
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n)"/>
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n) BINARY"/>
+</data-type>
+</column>
+<column alias="id_letter" auto-increment="false" column-size="10" decimal-digits="0" default-value="" mandatory="true" name="id_letter" remarks="" uid="163d118:11c64c9bdbb:-7f99">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT(%n) UNSIGNED">
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED"/>
+<variant type-name-pattern="INT"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n)"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) ZEROFILL"/>
+<variant type-name-pattern="INT UNSIGNED"/>
+<variant type-name-pattern="INT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="INT ZEROFILL"/>
+</data-type>
+</column>
+<column alias="timestp_send" auto-increment="false" column-size="14" decimal-digits="0" default-value="" mandatory="false" name="timestp_send" remarks="" uid="163d118:11c64c9bdbb:-7f97">
+<column-description/>
+<data-type jdbc-type="-5" name="BIGINT" selected-variant-pattern="BIGINT(%n) UNSIGNED">
+<variant type-name-pattern="BIGINT"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n)"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) UNSIGNED"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) ZEROFILL"/>
+<variant type-name-pattern="BIGINT UNSIGNED"/>
+<variant type-name-pattern="BIGINT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="BIGINT ZEROFILL"/>
+</data-type>
+</column>
+</column-list>
+<primary-key alias="" name="PK_PLOOPI_MOD_NEWSLETTER_SEND" remarks="" uid="163d118:11c64c9bdbb:-7ff9">
+<primary-key-description/>
+</primary-key>
+<unique-key-list/>
+<foreign-key-list/>
+<index-list/>
+</table>
+<table alias="ploopi_mod_newsletter_subscriber" name="ploopi_mod_newsletter_subscriber" remarks="" uid="163d118:11c64c9bdbb:-7fa8">
+<table-description/>
+<table-figure-bounds height="124" width="251" x="623" y="75"/>
+<column-list>
+<column alias="email" auto-increment="false" column-size="255" decimal-digits="0" default-value="" mandatory="true" name="email" remarks="" uid="163d118:11c64c9bdbb:-7fa0">
+<column-description/>
+<data-type jdbc-type="12" literal-prefix="'" literal-suffix="'" name="VARCHAR" selected-variant-pattern="VARCHAR(%n)">
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n)"/>
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n) BINARY"/>
+</data-type>
+</column>
+<column alias="timestp_subscribe" auto-increment="false" column-size="14" decimal-digits="0" default-value="" mandatory="false" name="timestp_subscribe" remarks="" uid="163d118:11c64c9bdbb:-7f9f">
+<column-description/>
+<data-type jdbc-type="-5" name="BIGINT" selected-variant-pattern="BIGINT(%n) UNSIGNED">
+<variant type-name-pattern="BIGINT"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n)"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) UNSIGNED"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="255" precision-min="0" precision-variable="%n" type-name-pattern="BIGINT(%n) ZEROFILL"/>
+<variant type-name-pattern="BIGINT UNSIGNED"/>
+<variant type-name-pattern="BIGINT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="BIGINT ZEROFILL"/>
+</data-type>
+</column>
+<column alias="ip" auto-increment="false" column-size="39" decimal-digits="0" default-value="" mandatory="false" name="ip" remarks="" uid="163d118:11c64c9bdbb:-7f9e">
+<column-description/>
+<data-type jdbc-type="12" literal-prefix="'" literal-suffix="'" name="VARCHAR" selected-variant-pattern="VARCHAR(%n)">
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n)"/>
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n) BINARY"/>
+</data-type>
+</column>
+<column alias="active" auto-increment="false" column-size="1" decimal-digits="0" default-value="1" mandatory="true" name="active" remarks="" uid="163d118:11c64c9bdbb:-7f9c">
+<column-description/>
+<data-type jdbc-type="-6" name="TINYINT" selected-variant-pattern="TINYINT(%n) UNSIGNED">
+<variant type-name-pattern="TINYINT"/>
+<variant type-name-pattern="TINYINT UNSIGNED"/>
+<variant type-name-pattern="TINYINT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="TINYINT ZEROFILL"/>
+<variant precision-max="1" precision-min="0" precision-variable="%n" type-name-pattern="TINYINT(%n)"/>
+<variant precision-max="1" precision-min="0" precision-variable="%n" type-name-pattern="TINYINT(%n) UNSIGNED"/>
+<variant precision-max="1" precision-min="0" precision-variable="%n" type-name-pattern="TINYINT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="1" precision-min="0" precision-variable="%n" type-name-pattern="TINYINT(%n) ZEROFILL"/>
+</data-type>
+</column>
+<column alias="id_module" auto-increment="false" column-size="10" decimal-digits="0" default-value="" mandatory="true" name="id_module" remarks="" uid="3fc47c:11c65031fb8:-7ff5">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT(%n) UNSIGNED">
+<variant type-name-pattern="INT"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n)"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) ZEROFILL"/>
+<variant type-name-pattern="INT UNSIGNED"/>
+<variant type-name-pattern="INT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="INT ZEROFILL"/>
+</data-type>
+</column>
+</column-list>
+<primary-key alias="" name="PK_PLOOPI_MOD_NEWSLETTER_SUBSCRIBER" remarks="" uid="163d118:11c64c9bdbb:-7fa7">
+<primary-key-description/>
+<primary-key-column name="email"/>
+</primary-key>
+<unique-key-list/>
+<foreign-key-list/>
+<index-list/>
+</table>
+<table alias="ploopi_mod_newsletter_param" name="ploopi_mod_newsletter_param" remarks="" uid="b65e0:11c9e20b3c7:-7ffd">
+<table-description/>
+<table-figure-bounds height="-1" width="-1" x="892" y="75"/>
+<column-list>
+<column alias="param" auto-increment="false" column-size="50" decimal-digits="0" default-value="" mandatory="false" name="param" remarks="" uid="b65e0:11c9e20b3c7:-7ff7">
+<column-description/>
+<data-type jdbc-type="12" literal-prefix="'" literal-suffix="'" name="VARCHAR" selected-variant-pattern="VARCHAR(%n)">
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n)"/>
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n) BINARY"/>
+</data-type>
+</column>
+<column alias="value" auto-increment="false" column-size="255" decimal-digits="0" default-value="" mandatory="false" name="value" remarks="" uid="b65e0:11c9e20b3c7:-7ff6">
+<column-description/>
+<data-type jdbc-type="12" literal-prefix="'" literal-suffix="'" name="VARCHAR" selected-variant-pattern="VARCHAR(%n)">
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n)"/>
+<variant precision-max="255" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n) BINARY"/>
+</data-type>
+</column>
+<column alias="id_module" auto-increment="false" column-size="10" decimal-digits="0" default-value="" mandatory="false" name="id_module" remarks="" uid="b65e0:11c9e20b3c7:-7ff5">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT(%n) UNSIGNED">
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED"/>
+<variant type-name-pattern="INT"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n)"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) UNSIGNED ZEROFILL"/>
+<variant precision-max="10" precision-min="0" precision-variable="%n" type-name-pattern="INT(%n) ZEROFILL"/>
+<variant type-name-pattern="INT UNSIGNED"/>
+<variant type-name-pattern="INT UNSIGNED ZEROFILL"/>
+<variant type-name-pattern="INT ZEROFILL"/>
+</data-type>
+</column>
+</column-list>
+<primary-key alias="" name="PK_PLOOPI_MOD_NEWSLETTER_PARAM" remarks="" uid="b65e0:11c9e20b3c7:-7ffc">
+<primary-key-description/>
+</primary-key>
+<unique-key-list/>
+<foreign-key-list/>
+<index-list/>
+</table>
+</table-list>
+</schema>
+</schema-list>
+</database-model>
+</clay-model>

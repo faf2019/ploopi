@@ -1,0 +1,5 @@
+== Module NEWSLETTER - version 0.1beta ====================================================
+
+2008-09-28  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Nouveau module newsletter
