@@ -55,9 +55,9 @@ define ('_NEWSLETTER_PAGE_TITLE_CONSULT', 'Consultation des Newsletters');
 define ('_NEWSLETTER_ADMIN',      'Administration');
 define ('_NEWSLETTER_CONSULT',    'Consultation');
 define ('_NEWSLETTER_VALIDATE',   'Valider');
-define ('_NEWSLETTER_DEFAULT',    'Defaut');
+define ('_NEWSLETTER_DEFAULT',    'Défaut');
 define ('_NEWSLETTER_RETURN',     'Retour');
-define ('_NEWSLETTER_DELETED',    'Supprimé');
+define ('_NEWSLETTER_DELETED',    'Supprimé(e)');
 
 define ('_NEWSLETTER_LABELTAB_LETTER_LIST', 'Gestion des Newsletters');
 define ('_NEWSLETTER_LABELTAB_SEND',        'Gestion des envois');
@@ -66,10 +66,10 @@ define ('_NEWSLETTER_LABELTAB_PARAM',       'Paramètres');
 
 define ('_NEWSLETTER_NAMECOLUMN_EMAIL',     'Adresse mail');
 define ('_NEWSLETTER_NAMECOLUMN_SUBSCRIBE', 'Inscription');
-define ('_NEWSLETTER_NAMECOLUMN_IP',        'IP Inscription');
+define ('_NEWSLETTER_NAMECOLUMN_IP',        'IP inscription');
 define ('_NEWSLETTER_NAMECOLUMN_ACTIVE',    'Active');
 define ('_NEWSLETTER_NAMECOLUMN_TITLE',     'Titre');
-define ('_NEWSLETTER_NAMECOLUMN_STATUS',    'Status');
+define ('_NEWSLETTER_NAMECOLUMN_STATUS',    'Statut');
 define ('_NEWSLETTER_NAMECOLUMN_CREATE',    'Création');
 define ('_NEWSLETTER_NAMECOLUMN_VALID',     'Validation');
 
@@ -83,7 +83,7 @@ define ('_NEWSLETTER_LABEL_ACTIVE',           'Adresse active');
 define ('_NEWSLETTER_LABEL_IP',               'IP d\'inscription');
 define ('_NEWSLETTER_LABEL_TIMESTP_SUBSCRIBE','Date d\'inscription');
 
-define ('_NEWSLETTER_CONFIRM_SUBSCRIBE_DELETE',   'Confirmez-vous la supression de l\'inscription de %email ?');
+define ('_NEWSLETTER_CONFIRM_SUBSCRIBE_DELETE',   'Confirmez-vous la suppression de l\'inscription de %email ?');
 
 // Newsletter
 define ('_NEWSLETTER_LABEL_NEWSLETTER_LIST',      'Liste des newsletters');
@@ -100,7 +100,7 @@ define ('_NEWSLETTER_LABEL_SUBJECT',              'Sujet');
 define ('_NEWSLETTER_LABEL_SUBJECT_EXPLAIN',      'Utilisé comme sujet au mail');
 define ('_NEWSLETTER_LABEL_GABARIT',              'Gabarit');
 define ('_NEWSLETTER_LABEL_GABARIT_EXPLAIN',      'Enregistrement nécessaire pour rendre effectif dans l\'éditeur');
-define ('_NEWSLETTER_LABEL_STATUS',               'Status');
+define ('_NEWSLETTER_LABEL_STATUS',               'Statut');
 define ('_NEWSLETTER_LABEL_STATUS_DRAFT',         'Brouillon');
 define ('_NEWSLETTER_LABEL_STATUS_WAIT',          'En attente de validation');
 define ('_NEWSLETTER_LABEL_STATUS_VALID',         'Validée');
@@ -114,7 +114,7 @@ define ('_NEWSLETTER_LABEL_VALID',                'Validation');
 
 define ('_NEWSLETTER_CONFIRM_NEWSLETTER_DELETE',  'Confirmez-vous la suppression de cette Newsletter ?');
 define ('_NEWSLETTER_CONFIRM_NEWSLETTER_SEND',  'Confirmez-vous l\'envoi de cette Newsletter ?');
-define ('_NEWSLETTER_CONFIRM_STATUS_WAIT_NEWSLETTER',  '"ATTENTION !! Cet newsletter semble vide.\n\n Si vous l\'enregistrez, vous perdrez tout son contenu\n\nÊtes-vous malgré tout certain de vouloir enregistrer cet Newsletter ?"');
+define ('_NEWSLETTER_CONFIRM_STATUS_WAIT_NEWSLETTER',  '"ATTENTION !! Cette newsletter semble vide.\n\n Si vous l\'enregistrez, vous perdrez tout son contenu\n\nÊtes-vous malgré tout certain de vouloir enregistrer cette Newsletter ?"');
 
 
 define ('_NEWSLETTER_LABELICON_LIST', 'Liste');
