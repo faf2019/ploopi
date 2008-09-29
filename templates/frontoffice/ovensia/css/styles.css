@@ -301,6 +301,33 @@ border:1px solid #a0a0a0;
 font-size:0.9em;
 }
 
+#mini_form_newsletter {
+font-size:0.9em;
+font-weight:bold;
+margin-bottom:4px;
+}
+
+#mini_form_newsletter fieldset {
+border: 1px solid #d0d0d0;
+background-color: #f0f0f0;
+padding:4px;
+margin:0px;
+}
+
+#mini_form_newsletter .text {
+width:70%;
+margin-right:2px;
+border:1px solid #c0c0c0;
+padding-left:2px;
+font-size:0.9em;
+}
+
+#mini_form_newsletter .button {
+width:20%;
+border:1px solid #a0a0a0;
+font-size:0.9em;
+}
+
 .box_bg {
 display:block;
 }

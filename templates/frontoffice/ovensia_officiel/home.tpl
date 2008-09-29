@@ -114,7 +114,24 @@
                             </fieldset>
                         </form>
                     </div>
-                    
+                   
+                    <!-- BEGIN switch_newsletter_subscription -->
+                    <div class="mini_form">
+                        <form method="post" action="{switch_newsletter_subscription.ACTION}">
+                            <fieldset>
+                              <label for="subscription_email">Inscription NewsLetter:</label>
+                              <!-- BEGIN switch_response -->
+                              <div><strong>{switch_newsletter_subscription.switch_response.CONTENT}</strong></div>
+                              <!-- END switch_response -->
+                              <div>
+                                <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="subscription_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" />
+                                <input type="submit" title="Bouton pour valider l'inscription" class="button" value="go" />
+                              </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <!-- END switch_newsletter_subscription -->
+                                                                                
                     <!-- BEGIN switch_subscription -->
                     <div class="mini_form">
                         <form method="post" action="{switch_subscription.ACTION}">
@@ -196,7 +213,23 @@
                         <h1>{MESSAGE_TITLE}</h1>
                         {MESSAGE_CONTENT}
                     <!-- END switch_content_message -->                    
-
+                    
+                    <!-- BEGIN switch_newsletter_unsubscrib -->
+                      <div style="text-align: center;">
+                        <h2>Desinscription à la NewsLetter:</h2>
+                        <form method="post" action="{switch_newsletter_unsubscrib.ACTION}">
+                            <div>
+                                <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="unsubcrib_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" />
+                                <input type="submit" title="Bouton pour valider la désinscription" class="button" value="désinscrire" />
+                            </div>
+                        </form>
+                      </div>
+                    <!-- END switch_newsletter_unsubscrib -->
+                    <!-- BEGIN switch_newsletter_unsubscrib_response -->
+                      <div style="text-align: center;">
+                        <h2>{switch_newsletter_unsubscrib_response.RESPONSE}</h2>
+                      </div>
+                    <!-- END switch_newsletter_unsubscrib_response -->
                 </div>
             </div>
             <div id="menubas">
