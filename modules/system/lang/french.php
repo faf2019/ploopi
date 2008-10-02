@@ -44,7 +44,6 @@ define ('_SYSTEM_LABELICON_PARAMS', 'Paramètres');
 define ('_SYSTEM_LABELICON_USERS', 'Utilisateurs');
 define ('_SYSTEM_LABELICON_TOOLS', 'Outils');
 define ('_SYSTEM_LABELICON_LOGS', 'Logs');
-define ('_SYSTEM_LABELICON_PROFILES', 'Profils');
 define ('_SYSTEM_LABELICON_ROLES', 'Roles');
 define ('_SYSTEM_LABELICON_GROUP', 'Groupe');
 define ('_SYSTEM_LABELICON_HOMEPAGE', 'Accueil');
@@ -74,24 +73,10 @@ define ('_SYSTEM_LABELTAB_ROLEMANAGEMENT', 'Gestion des Rôles');
 define ('_SYSTEM_LABELTAB_ROLEUSERS', 'Attribution des Rôles');
 define ('_SYSTEM_LABELTAB_MULTIPLEROLEASSIGNMENT', 'Affectations Groupées');
 
-define ('_SYSTEM_LABELTAB_PROFILEMANAGEMENT', 'Gestion des Profils');
-define ('_SYSTEM_LABELTAB_PROFILEADD', 'Ajout d\'un Profil');
-define ('_SYSTEM_LABELTAB_PROFILEASSIGNMENT', 'Affectation des Profils');
-
-define ('_SYSTEM_LABELTAB_RULESLIST', 'Liste des règles');
-define ('_SYSTEM_LABELTAB_RULESADD', 'Ajouter une règle');
-
 define ('_SYSTEM_LABELTAB_USERIMPORT', 'Importer');
 
 define ('_SYSTEM_LABELTAB_MESSAGEINBOX', 'Boite de Réception');
 define ('_SYSTEM_LABELTAB_MESSAGEOUTBOX', 'Boite d\'Envoi');
-
-define ('_SYSTEM_LABEL_RULELABEL', 'Libellé');
-define ('_SYSTEM_LABEL_RULETYPE', 'Type');
-define ('_SYSTEM_LABEL_RULEFIELD', 'Champ');
-define ('_SYSTEM_LABEL_RULEOPERATOR', 'Opérateur');
-define ('_SYSTEM_LABEL_RULEVALUE', 'Valeur');
-define ('_SYSTEM_LABEL_RULEPROFILE', 'Profil');
 
 define ('_SYSTEM_LABEL_INSTALLEDMODULES', 'Modules Installés');
 define ('_SYSTEM_LABEL_NEWMODULEVERSIONS', 'Nouvelles Versions');
@@ -140,7 +125,6 @@ define ('_SYSTEM_LABEL_UNINSTALL', 'Désinstaller');
 define ('_SYSTEM_LABEL_ROLEADD', 'Ajouter un Rôle');
 
 define ('_SYSTEM_LABEL_TYPE', 'Type');
-define ('_SYSTEM_LABEL_PROFILE', 'Profil');
 define ('_SYSTEM_LABEL_LASTNAME', 'Nom');
 define ('_SYSTEM_LABEL_FIRSTNAME', 'Prénom');
 define ('_SYSTEM_LABEL_LOGIN', 'Login');
@@ -201,14 +185,12 @@ define ('_SYSTEM_LABEL_GROUP_SKIN',     'Habillage');
 define ('_SYSTEM_LABEL_GROUP_ALLOWEDIP',    'IP Autorisées');
 define ('_SYSTEM_LABEL_GROUP_ALLOWEDMAC',   'Adresses MAC Autorisées');
 define ('_SYSTEM_LABEL_GROUP_WEBDOMAIN',    'Domaine WEB');
-define ('_SYSTEM_LABEL_GROUP_MUSTDEFINERULE',   'Rôle obligatoire pour l\'accès à cet espace');
 define ('_SYSTEM_LABEL_GROUP_ACCESSMODE',   'Type d\'accès');
 define ('_SYSTEM_LABEL_GROUP_ADMIN',        'Activation du Backoffice');
 define ('_SYSTEM_LABEL_GROUP_WEB',      'Activation du Frontoffice');
 define ('_SYSTEM_LABEL_GROUP_ACCESSWARNING',    '(nécessite au moins un domaine)');
 define ('_SYSTEM_LABEL_GROUP_SHARED',       'Partagé');
 
-define ('_SYSTEM_LABEL_USER_PROFILE',       'Profil par défaut');
 define ('_SYSTEM_LABEL_USER_UNDEFINED',     'Non défini');
 define ('_SYSTEM_LABEL_GROUP_WEBDOMAINLIST',    'Liste des domaines Frontoffice');
 define ('_SYSTEM_LABEL_GROUP_ADMINDOMAINLIST',  'Liste des domaines Backoffice');
@@ -230,7 +212,6 @@ define ('_SYSTEM_LABEL_GROUP_USABLE_MODULES',       'Modules utilisables dans ce
 define ('_SYSTEM_LABEL_MODULE_PROPERTIES',      'Propriétés du Module &laquo; <MODULE> &raquo;');
 define ('_SYSTEM_LABEL_MODULE_PARAMS',          'Paramètres du Module &laquo; <MODULE> &raquo;');
 define ('_SYSTEM_LABEL_MODULE_ROLES',           'Module &laquo; <MODULE> &raquo;');
-define ('_SYSTEM_LABEL_PROFILES_AVAILABLE',         'Profils disponibles dans ce Groupe');
 
 define ('_SYSTEM_LABEL_MYPROFILE',              'Mon Profil');
 define ('_SYSTEM_LABEL_MYDATAS',                        'Mes Informations');
@@ -242,8 +223,6 @@ define ('_SYSTEM_LABEL_MODULE_ADMINISTRATOR',       'Gestionnaire du Module');
 define ('_SYSTEM_LABEL_SYSTEM_AVAILABLE_MODULES',   'Modules disponibles');
 define ('_SYSTEM_LABEL_SYSTEM_USABLE_MODULES',      'Modules utilisables');
 
-define ('_SYSTEM_LABEL_DEFAULT_PROFILE',        'Profil par défaut');
-
 define ('_SYSTEM_LABEL_NO_MODULE_DEFINED',      'Aucun module défini pour ce groupe');
 define ('_SYSTEM_LABEL_NO_USER_DEFINED',        'Aucun utilisateur défini pour ce groupe');
 define ('_SYSTEM_LABEL_NO_ROLE_DEFINED',        'Aucun rôle défini pour ce module');
@@ -253,17 +232,14 @@ define ('_SYSTEM_LABEL_MODIFY_ROLE_ASSIGNMENT',     'Modifier l\'affectation des
 define ('_SYSTEM_LABEL_COMMENTARY',     'Commentaire');
 define ('_SYSTEM_LABEL_RESULT',     'Résultat');
 
-
 define ('_SYSTEM_MSG_CONFIRMGROUPDELETE', 'Êtes-vous certain de vouloir\nsupprimer ce Groupe ?');
 define ('_SYSTEM_MSG_CONFIRMGROUPDETACH', 'Êtes-vous certain de vouloir\ndétacher ce Groupe ?');
 define ('_SYSTEM_MSG_CONFIRMUSERDETACH', 'Êtes-vous certain de vouloir\ndétacher cet Utilisateur ?');
 define ('_SYSTEM_MSG_CONFIRMUSERDELETE', 'Êtes-vous certain de vouloir\nsupprimer cet Utilisateur ?');
 define ('_SYSTEM_MSG_CONFIRMROLEDELETE', 'Êtes-vous certain de vouloir\nsupprimer ce Rôle ?');
-define ('_SYSTEM_MSG_CONFIRMRULEDELETE', 'Êtes-vous certain de vouloir\nsupprimer cette règle ?');
-define ('_SYSTEM_MSG_CONFIRMPROFILEDELETE','Êtes-vous certain de vouloir\nsupprimer ce Profil ?');
 define ('_SYSTEM_MSG_CONFIRMLOGDELETE', 'Êtes-vous certain de vouloir\nsupprimer les Logs ?');
 define ('_SYSTEM_MSG_PASSWORDERROR', 'Erreur lors de la saisie du mot de passe.\nVous devez saisir deux fois le mot de passe');
-define ('_SYSTEM_MSG_LOGINERROR', 'Erreur lors de la création de l\'utilisateur.\nCe login existe déjà.');
+define ('_SYSTEM_MSG_LOGINERROR', "Erreur lors de la création de l'utilisateur.\nCe login existe déjà.");
 define ('_SYSTEM_MSG_LOGINPASSWORDERROR', 'Erreur lors de la saisie du mot de passe.<BR>Votre mot de passe a été rejeté par le système');
 
 define ('_SYSTEM_MSG_CONFIRMMODULEDETACH', 'Êtes-vous certain de vouloir détacher ce Module ?');
@@ -278,10 +254,9 @@ define ('_SYSTEM_MSG_INFODELETE_GROUPS', 'Vous ne pouvez pas supprimer ce groupe
 
 define ('_SYSTEM_MSG_CANTCOPYGROUP', 'Vous n\\\'avez pas les droits suffisants pour cloner cet espace');
 
-
-
-
-define ('_SYSTEM_EXPLAIN_ABOUT', 'Ploopi est un produit développé par la société <A TARGET=\'blank\' HREF=\'http://www.netlorconcept.com\'>Netlor Concept</A><br>Le logo ainsi que la marque sont déposés et appartiennent à la société Netlor Concept.');
+define ('_SYSTEM_MSG_CREATEUSER_CONFIRMATION1', "Il existe au moins un autre utilisateur dont la définition est proche de l'utilisateur que vous souhaitez créer.");
+define ('_SYSTEM_MSG_CREATEUSER_CONFIRMATION2', "Vous pouvez, au choix, confirmer la création de votre utilisateur ou choisir de rattacher un utilisateur existant à votre groupe d'utilisateur.");
+define ('_SYSTEM_MSG_CREATEUSER_CONFIRMATION3', "Confirmer la création d'un nouvel utilisateur");
 
 define ('_SYSTEM_EXPLAIN_MODULENAME', 'Nom que portera le module dans l\'interface');
 define ('_SYSTEM_EXPLAIN_ACTIVE', 'Détermine si le module est activé ou non (activé = utilisable)');

@@ -21,21 +21,25 @@
   - Classe barchart : Affichage d'une légende en bas à droite du diagramme 
   - fonction security : Ajout d'une fonction permettant de générer un mot de passe alétoire avec différents niveaux de complexité
   - Ajout (enfin !) d'un système de re-génération de nouveau mot de passe (avec système de confirmation par mail)
+  - Ajout d'un système de rattachement "intelligent" d'utilisateur lors de l'ajout d'un compte utilisateur. Permet d'éviter les doublons de comptes
 
-* Forms 2.22
+* Forms 2.221
   - Correctifs et ajouts mineurs pour l'intégration d'un formulaire dans un module externe. (ovensia)
-  
-* WebEdit 1.8.2b
+  - Correctif pour IE. Arrondi sur les % de largeur des colonnes.
+   
+* WebEdit 1.8.3
   - Ajout de nouvelles balises templates "RAW" sans les entités HTML (les entités HTML peuvent poser problème). (ovensia)
   - Correction d'un bug dans la détection de modification d'un article (lié au fait que fckeditor modifie l'article à chaque chargement...). Attention la détection ne se fait plus que sur le contenu textuel brut. (ovensia)
   - Suppression du dossier ./fckeditor/skins (ne sert plus). (ovensia)
   - Suppression du dossier ./fckeditor/plugins (ne sert plus). (ovensia)
   - optimisation de la détection de modification des articles. (ovensia)
   - Correction d'un bug lors du chargement des sous-rubriques dans le treeview. (ovensia)
+  - Correction d'un bug lors de la modification de position d'une rubrique
+  - Correction d'un bug à l'affichage des stats si aucune donnée à afficher
   
-* Newsletter 0.2.0b (Béta)
-  - Nouveau module newsletter. (hexad)
-
+* Newsletter 0.3.0b (Béta)
+  - Nouveau module newsletter. (hexad) 
+ 
 == Ploopi - version 1.1.2 ===================================================
 
 2008-09-08 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

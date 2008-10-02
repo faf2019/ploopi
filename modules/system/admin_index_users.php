@@ -42,24 +42,39 @@ switch($op)
     case 'save_user':
         $user = new user();
 
-        // ouverture user si existant
-        if (!empty($_POST['user_id']))
+        // ouverture utilisateur si existant
+        if (!empty($_GET['user_id']))
         {
             // ne doit pas modifier le login !
             if (isset($_POST['user_login'])) ploopi_redirect('admin.php');
 
-            if (!is_numeric($_POST['user_id']) || !$user->open($_POST['user_id'])) ploopi_redirect('admin.php');
+            if (!is_numeric($_GET['user_id']) || !$user->open($_GET['user_id'])) ploopi_redirect('admin.php');
         }
-        else
+        else // nouvel utilisateur
         {
-            // nouveau user
-            if (!isset($_POST['user_login'])) ploopi_redirect('admin.php');
+            if (empty($_POST['user_login'])) ploopi_redirect('admin.php');
 
+            $_SESSION['system']['save_user'] = $_POST;
+            
             // test si login deja existant
-            $db->query("SELECT id FROM ploopi_user WHERE login = '{$_POST['user_login']}'");
+            $db->query("SELECT id FROM ploopi_user WHERE login = '".$db->addslashes($_POST['user_login'])."'");
+            
+            // problème, ce login existe déjà => redirect
             if($db->numrows()) ploopi_redirect("admin.php?op=manage_account&error=login");
+            else
+            {
+                if (!isset($_GET['confirm'])) // pas de confirmation de création demandée
+                {
+                    // test si utilisateur existe déjà => demande de confirmation de création (homonyme ?)
+                    $db->query("SELECT id FROM ploopi_user WHERE lastname = '{$_POST['user_lastname']}' AND firstname = '{$_POST['user_firstname']}'");
+                    if($db->numrows()) ploopi_redirect("admin.php?op=manage_account&confirm");
+                }
+            }
         }
 
+        // on efface la sauvegarde des données utilisateur si elles existent
+        if (isset($_SESSION['system']['save_user'])) unset($_SESSION['system']['save_user']);
+        
         if (!isset($_POST['user_ticketsbyemail'])) $user->fields['ticketsbyemail'] = 0;
         if (!isset($_POST['user_servertimezone'])) $user->fields['servertimezone'] = 0;
         if (!empty($_POST['user_date_expire'])) $_POST['user_date_expire'] = ploopi_local2timestamp($_POST['user_date_expire']);
@@ -115,38 +130,58 @@ switch($op)
         if ($passwordok) ploopi_redirect("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&alphaTabItem=".(ord(strtolower($user->fields['lastname']))-96).$reload);
         else ploopi_redirect("admin.php?op=modify_user&user_id=".$user->fields['id']."&error=password");
     break;
+
+    case 'attach_user':
+        // on efface la sauvegarde des données utilisateur si elles existent
+        if (isset($_SESSION['system']['save_user'])) unset($_SESSION['system']['save_user']);
+        
+        $user = new user();
+        if (isset($_GET['user_id']) && is_numeric($_GET['user_id']) && $user->open($_GET['user_id']))
+        {
+            $user->attachtogroup($groupid);
+            $alphaTabItem = isset($_GET['alphaTabItem']) ? $_GET['alphaTabItem'] : '';
+            ploopi_redirect("admin.php?reloadsession&usrTabItem=tabUserList&alphaTabItem=".(ord(strtolower($user->fields['lastname']))-96));
+        }
+        else ploopi_redirect('admin.php');
+    break;
+    
 }
 
 
-$tabs['tabUserList'] = array(   'title' => _SYSTEM_LABELTAB_USERLIST,
-                            'url' => "admin.php?usrTabItem=tabUserList"
-                        );
+$tabs['tabUserList'] = array(   
+    'title' => _SYSTEM_LABELTAB_USERLIST,
+    'url' => "admin.php?usrTabItem=tabUserList"
+);
 
 if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
 {
-    $tabs['tabUserAdd'] = array(    'title' => _SYSTEM_LABELTAB_USERADD,
-                                'url' => "admin.php?usrTabItem=tabUserAdd"
-                            );
+    $tabs['tabUserAdd'] = array(
+        'title' => _SYSTEM_LABELTAB_USERADD,
+        'url' => "admin.php?usrTabItem=tabUserAdd"
+    );
 }
 
 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
 {
-    $tabs['tabUserAttach'] = array( 'title' => _SYSTEM_LABELTAB_USERATTACH,
-                                    'url' => "admin.php?usrTabItem=tabUserAttach"
-                                );
+    $tabs['tabUserAttach'] = array( 
+        'title' => _SYSTEM_LABELTAB_USERATTACH,
+        'url' => "admin.php?usrTabItem=tabUserAttach"
+    );
 }
 
 if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 {
-    $tabs['tabGroupList'] = array(  'title' => _SYSTEM_LABELTAB_GROUPLIST,
-                                'url' => "admin.php?usrTabItem=tabGroupList"
-                            );
+    $tabs['tabGroupList'] = array(  
+        'title' => _SYSTEM_LABELTAB_GROUPLIST,
+        'url' => "admin.php?usrTabItem=tabGroupList"
+    );
 
     if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
     {
-        $tabs['tabGroupAttach'] = array(    'title' => _SYSTEM_LABELTAB_GROUPATTACH,
-                                        'url' => "admin.php?usrTabItem=tabGroupAttach"
-                                    );
+        $tabs['tabGroupAttach'] = array(
+            'title' => _SYSTEM_LABELTAB_GROUPATTACH,
+            'url' => "admin.php?usrTabItem=tabGroupAttach"
+        );
     }
 }
 
@@ -154,9 +189,10 @@ if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
 {
     if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
     {
-        $tabs['tabUserImport'] = array( 'title' => _SYSTEM_LABELTAB_USERIMPORT,
-                                        'url' => "admin.php?usrTabItem=tabUserImport"
-                                    );
+        $tabs['tabUserImport'] = array( 
+            'title' => _SYSTEM_LABELTAB_USERIMPORT,
+            'url' => "admin.php?usrTabItem=tabUserImport"
+        );
     }
 }
 

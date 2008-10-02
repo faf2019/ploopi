@@ -173,12 +173,47 @@ switch ($_SESSION['system']['level'])
 $columns = array();
 $values = array();
 
-$columns['left']['name']    = array('label' => _SYSTEM_LABEL_LASTNAME.', '._SYSTEM_LABEL_FIRSTNAME, 'width' => '170', 'options' => array('sort' => true));
-$columns['left']['login']       = array('label' => _SYSTEM_LABEL_LOGIN, 'width' => '85', 'options' => array('sort' => true));
-if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES) $columns['left']['adminlevel']  = array('label' => 'Niv.', 'width' => '50', 'options' => array('sort' => true));
-$columns['left']['origin']      = array('label' => _SYSTEM_LABEL_ORIGIN, 'width' => '100', 'options' => array('sort' => true));
-$columns['auto']['service']     = array('label' => _SYSTEM_LABEL_SERVICE, 'width' => '100', 'options' => array('sort' => true));
-$columns['actions_right']['actions'] = array('label' => 'Actions', 'width' => '70');
+$columns['left']['name'] = 
+    array(
+        'label' => _SYSTEM_LABEL_LASTNAME.', '._SYSTEM_LABEL_FIRSTNAME, 
+        'width' => 170, 
+        'options' => array('sort' => true)
+    );
+    
+$columns['left']['login'] = 
+    array(
+        'label' => _SYSTEM_LABEL_LOGIN, 
+        'width' => 85, 
+        'options' => array('sort' => true)
+    );
+    
+if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES) 
+    $columns['left']['adminlevel'] = 
+        array(
+            'label' => 'Niv.', 
+            'width' => 50, 
+            'options' => array('sort' => true)
+        );
+        
+$columns['left']['origin'] = 
+    array(
+        'label' => _SYSTEM_LABEL_ORIGIN, 
+        'width' => 100, 
+        'options' => array('sort' => true)
+    );
+    
+$columns['auto']['service'] = 
+    array(
+        'label' => _SYSTEM_LABEL_SERVICE, 
+        'width' => 100, 
+        'options' => array('sort' => true)
+    );
+    
+$columns['actions_right']['actions'] = 
+    array(
+        'label' => 'Actions', 
+        'width' => 70
+    );
 
 $c = 0;
 

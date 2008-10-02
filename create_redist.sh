@@ -8,7 +8,7 @@ export DEST=ploopi_1.1.3
 #################################
 # compression des fichiers
 #################################
-./compress.sh
+# ./compress.sh
 
 #################################
 # on cree le dossier
@@ -45,7 +45,9 @@ cp -r install/chat $DEST/install
 cp -r install/directory $DEST/install
 cp -r install/doc $DEST/install
 cp -r install/forms $DEST/install
+cp -r install/forum $DEST/install
 cp -r install/news $DEST/install
+cp -r install/newsletter $DEST/install
 cp -r install/rss $DEST/install
 cp -r install/webedit $DEST/install
 cp -r install/system $DEST/install

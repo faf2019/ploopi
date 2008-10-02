@@ -37,11 +37,19 @@
 
 $user = new user();
 
-if (!empty($_GET['user_id'])) $user->open($_GET['user_id']);
-else 
+if (empty($_GET['user_id']) || !is_numeric($_GET['user_id']) || !$user->open($_GET['user_id']))
 {
     $user->init_description();
     $user->fields['servertimezone'] = 1;
+    
+    // Récuération des données de l'utilisateur (problème lors de la création) => pour remplir le formulaire
+    if (!empty($_SESSION['system']['save_user']))
+    {
+        foreach($user->fields as $field => $value)
+        {
+            if (isset($_SESSION['system']['save_user']["user_{$field}"])) $user->fields[$field] = $_SESSION['system']['save_user']["user_{$field}"];
+        }
+    }    
 }
 
 // detect server timezone
@@ -66,35 +74,13 @@ if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
     }
 }
 
-if (isset($_SESSION['module_system']) && !empty($_SESSION['module_system']))
-{
-    $user->fields['lastname'] = $_SESSION['module_system']['user_lastname'];
-    $user->fields['firstname'] = $_SESSION['module_system']['user_firstname'];
-    $user->fields['login'] = $_SESSION['module_system']['user_login'];
-    $user->fields['date_expire'] = $_SESSION['module_system']['user_date_expire'];
-    $user->fields['email'] = $_SESSION['module_system']['user_email'];
-    $user->fields['phone'] = $_SESSION['module_system']['user_phone'];
-    $user->fields['fax'] = $_SESSION['module_system']['user_fax'];
-    $user->fields['address'] = $_SESSION['module_system']['user_address'];
-    $user->fields['comments'] = $_SESSION['module_system']['user_comments'];
-    $user->fields['id_type'] = $_SESSION['module_system']['user_id_type'];
-    $user->fields['civility'] = $_SESSION['module_system']['user_civility'];
-    $user->fields['office'] = $_SESSION['module_system']['user_office'];
-    $workspace_user->fields['adminlevel'] = $_SESSION['module_system']['userworkspace_adminlevel'];
 
-    //ploopi_print_r($user);
 
-    $_SESSION['module_system'] = '';
-    unset($_SESSION['module_system']);
-}
-
+$arrFormurl[] = 'op=save_user'; 
+if (isset($_REQUEST['confirm'])) $arrFormurl[] = 'confirm'; 
+if (!$user->new)  $arrFormurl[] = "user_id={$user->fields['id']}"; 
 ?>
-
-<form name="form_modify_user" action="<? echo ploopi_urlencode('admin.php'); ?>" method="POST" enctype="multipart/form-data" onsubmit="javascript:return system_user_validate(this, <? echo ($user->new) ? 'true' : 'false'; ?>)">
-<input type="hidden" name="op" value="save_user">
-<input type="hidden" name="user_id" value="<? if (!$user->new) echo $user->fields['id']; ?>">
-<div>
-
+<form name="form_modify_user" action="<? echo ploopi_urlencode('admin.php?'.implode('&',$arrFormurl)); ?>" method="POST" enctype="multipart/form-data" onsubmit="javascript:return system_user_validate(this, <? echo ($user->new) ? 'true' : 'false'; ?>)">
 <?
 
 if (isset($_REQUEST['error']))
@@ -119,7 +105,137 @@ if (isset($_REQUEST['error']))
     <div class="error" style="padding:2px;text-align:center;"><? echo $error; ?></div>
     <?
 }
+if (isset($_REQUEST['confirm']))
+{
+    ?>
+    <div class="error" style="padding:2px;text-align:center;"><? echo _SYSTEM_MSG_CREATEUSER_CONFIRMATION1; ?></div>
+    <div style="margin:10px;">
+    <?
+    $db->query("
+        SELECT  
+            id, 
+            login,
+            lastname, 
+            firstname, 
+            email, 
+            service, 
+            office, 
+            function 
+            
+        FROM 
+            ploopi_user
+             
+        WHERE 
+            lastname = '{$_SESSION['system']['save_user']['user_lastname']}' 
+        AND 
+            firstname = '{$_SESSION['system']['save_user']['user_firstname']}'
+    ");
+        
+    $arrColumns = array();
+    $arrValues = array();
+    
+    $arrColumns['left']['name'] = 
+        array(
+            'label' => _SYSTEM_LABEL_LASTNAME.', '._SYSTEM_LABEL_FIRSTNAME, 
+            'width' => 150, 
+            'options' => array('sort' => true)
+        );
+        
+    $arrColumns['left']['login'] = 
+        array(
+            'label' => _SYSTEM_LABEL_LOGIN, 
+            'width' => 100, 
+            'options' => array('sort' => true)
+        );
+            
+    $arrColumns['left']['service'] = 
+        array(
+            'label' => _SYSTEM_LABEL_SERVICE, 
+            'width' => 100, 
+            'options' => array('sort' => true)
+        );
+        
+    $arrColumns['left']['office'] = 
+        array(
+            'label' => _SYSTEM_LABEL_OFFICE, 
+            'width' => 100, 
+            'options' => array('sort' => true)
+        );
+        
+        
+    $arrColumns['left']['function'] = 
+        array(
+            'label' => _SYSTEM_LABEL_FUNCTION, 
+            'width' => 100, 
+            'options' => array('sort' => true)
+        );
+        
+    $arrColumns['auto']['origin'] = 
+        array(
+            'label' => _SYSTEM_LABEL_ORIGIN, 
+            'options' => array('sort' => true)
+        );
+        
+        
+    while ($row = $db->fetchrow())
+    {
+        $objUser = new user();
+        $objUser->fields['id'] = $row['id'];
+        
+        $arrGroups = $objUser->getgroups();
+        $currentGroup = current($arrGroups);
+        
+        $arrValues[] = 
+            array(
+                'values' => 
+                    array(
+                        'name' =>
+                            array(
+                                'label' => htmlentities("{$row['lastname']}, {$row['firstname']}")
+                            ),
+                        'login' =>
+                            array(
+                                'label' => htmlentities($row['login'])
+                            ),
+                        'origin' =>
+                            array(
+                                'label' => htmlentities($currentGroup['label'])
+                            ),
+                        'service' =>
+                            array(
+                                'label' => htmlentities($row['service'])
+                            ),
+                        'office' =>
+                            array(
+                                'label' => htmlentities($row['office'])
+                            ),
+                        'function' =>
+                            array(
+                                'label' => htmlentities($row['function'])
+                            ),
+                    ),
+                'description' => _SYSTEM_LABEL_ATTACH,
+                'link' => ploopi_urlencode("admin.php?op=attach_user&user_id={$row['id']}")
+            );
+        
+            
+            /*
+        $values[$c]['values']['origin'] = 
+            array(
+                'label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.htmlentities($currentgroup['label']).'</a>'
+            );*/
+    }
+
+    echo $skin->open_simplebloc('Choisir un utilisateur existant');
+    $skin->display_array($arrColumns, $arrValues, 'array_createuser_confirm', array('sortable' => true, 'orderby_default' => 'name'));
+    echo $skin->close_simplebloc();
+    ?>
+    </div>
+    <div class="error" style="padding:2px;text-align:center;"><? echo _SYSTEM_MSG_CREATEUSER_CONFIRMATION2; ?></div>
+    <?
+}
 ?>
+<div>
     <div class="ploopi_form" style="float:left;width:50%;">
         <div style="padding:2px;">
             <p>
@@ -207,11 +323,11 @@ if (isset($_REQUEST['error']))
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_PASSWORD; ?>:</label>
-                <input type="password" class="text" name="usernewpass"  value="" tabindex="22" />
+                <input type="password" class="text" name="usernewpass" value="" tabindex="22" />
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_PASSWORD_CONFIRM; ?>:</label>
-                <input type="password" class="text" name="usernewpass_confirm"  value="" tabindex="23" />
+                <input type="password" class="text" name="usernewpass_confirm" value="" tabindex="23" />
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_EXPIRATION_DATE; ?>:</label>
@@ -328,7 +444,20 @@ if (isset($_REQUEST['error']))
         </div>
     </div>
 </div>
-<div style="clear:both;float:right;padding:4px;">
+<div style="clear:both;text-align:right;padding:4px;">
+<?
+if (isset($_REQUEST['confirm']))
+{
+    ?>
+    <input type="submit" class="flatbutton" value="<? echo _SYSTEM_MSG_CREATEUSER_CONFIRMATION3; ?>">
+    <?
+}
+else
+{
+    ?>
     <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+    <?
+}
+?>
 </div>
 </form>
