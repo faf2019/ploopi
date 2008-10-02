@@ -181,6 +181,7 @@ switch($menu)
                     $newposition = $_POST['head_position'];
                     if ($newposition != $heading->fields['position']) // nouvelle position définie
                     {
+                        // contrôle de position (on vérifie que la position proposée est possible)
                         if ($newposition<1) $newposition=1;
                         else
                         {
@@ -190,10 +191,11 @@ switch($menu)
                             if ($newposition > $fields['maxpos']) $newposition = $fields['maxpos'];
                         }
         
+                        // mise à jour des positions
                         $db->query("update ploopi_mod_webedit_heading set position=0 where position={$heading->fields['position']} AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
                         if ($newposition > $heading->fields['position'])
                         {
-                            $db->query("update ploopi_mod_webedit_heading set position=position-1 where position BETWEEN ".($heading->fields['position']-1)." AND {$newposition} AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
+                            $db->query("update ploopi_mod_webedit_heading set position=position-1 where position BETWEEN ".($heading->fields['position']+1)." AND {$newposition} AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
                         }
                         else
                         {

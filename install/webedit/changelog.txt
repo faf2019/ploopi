@@ -1,3 +1,10 @@
+== Module WebEdit - version 1.8.3 ============================================
+
+2008-10-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug lors de la modification de position d'une rubrique
+ * Correction d'un bug à l'affichage des stats si aucune donnée à afficher
+
 == Module WebEdit - version 1.8.2b ============================================
 
 2008-09-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -382,17 +382,17 @@ if ($_SESSION['ploopi']['connected'])
                     case 'article':
                         $db->query(
                             "
-                            SELECT  day, 
-                                    sum(hits) as c
+                            SELECT  c.day, 
+                                    sum(c.hits) as counter
                                      
-                            FROM    ploopi_mod_webedit_counter
+                            FROM    ploopi_mod_webedit_counter c
                              
-                            WHERE   id_article = {$_POST['webedit_article_id']} 
-                            AND     year = {$intYearSel}
-                            AND     month = {$intMonthSel}
+                            WHERE   c.id_article = {$_POST['webedit_article_id']} 
+                            AND     c.year = {$intYearSel}
+                            AND     c.month = {$intMonthSel}
                             
-                            GROUP BY day
-                            ORDER BY day
+                            GROUP BY c.day
+                            ORDER BY c.day
                             "
                         );
                     break;
@@ -420,7 +420,7 @@ if ($_SESSION['ploopi']['connected'])
                 }
                 
                 while ($row = $db->fetchrow()) $dataset[$row['day']] = $row['counter'];
-    
+                
                 $objBarChartMonth = new barchart(550, 150, array('padding' => 1));
                 $objBarChartMonth->setvalues($dataset, 'Fréquentation quotidienne', '#4FA11E', '#f0f0f0');
                 $objBarChartMonth->setlegend($legend);                

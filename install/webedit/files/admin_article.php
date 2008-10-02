@@ -119,7 +119,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
         if (ploopi_isactionallowed(_WEBEDIT_ACTION_STATS))
         {
             ?>
-            <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cet article" onclick="javascript:webedit_stats_open(<? echo $article->fields['id']; ?>, event);">
+            <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cet article" onclick="javascript:webedit_stats_open(<? echo $article->fields['id']; ?>, null, event);">
             <?
         }
         ?>    
