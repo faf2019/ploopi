@@ -72,7 +72,7 @@ switch($op)
         {
             if ($_POST['usernewpass']!='' && $_POST['usernewpass'] == $_POST['usernewpass_confirm'])
             {
-                $user->fields['password'] = md5(_PLOOPI_SECRETKEY."/{$user->fields['login']}/".md5($_POST['usernewpass']));
+                $user->setpassword($_POST['usernewpass']);
                 if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($user->fields['login'], $_POST['usernewpass']);
             }
             elseif ($_POST['usernewpass'] != $_POST['usernewpass_confirm']) $passwordok = false;

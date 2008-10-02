@@ -89,10 +89,10 @@ include './include/javascript.php';
 $ploopi_additional_javascript = ob_get_contents();
 @ob_end_clean();
 
+include_once './include/op.php';
+
 if ($_SESSION['ploopi']['connected'])
 {
-    include_once './include/op.php';
-    
     $template_body->assign_block_vars('switch_user_logged_in', array());
 
     // GET WORKSPACES
@@ -231,19 +231,19 @@ else
     {
         $template_body->assign_block_vars('switch_user_logged_out.switch_ploopierrormsg', array());
     }
-
-    if (!empty($_REQUEST['op']) && $_REQUEST['op'] == 'ploopi_passwordlost') 
+    
+    if (!empty($_GET['ploopi_msgcode']))
     {
-            // A DEVELOPPER (RENOUVELLEMENT DE MOT DE PASSE)
+        $template_body->assign_block_vars('switch_user_logged_out.switch_ploopimsg', array());
     }
-
+    
+    
     $template_body->assign_vars(array(
-        'PASSWORDLOST_URL'              => ploopi_urlencode('admin.php?op=ploopi_passwordlost')
+        'PASSWORDLOST_URL'              => ploopi_urlencode('admin.php?ploopi_op=ploopi_lostpassword')
         )
     );
     
 }
-
 
 $template_body->assign_vars(array(
     'TEMPLATE_PATH'                 => $_SESSION['ploopi']['template_path'],
@@ -260,6 +260,7 @@ $template_body->assign_vars(array(
     'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
     'ADDITIONAL_JAVASCRIPT'         => $ploopi_additional_javascript,
     'PLOOPI_ERROR'                  => (!empty($_GET['ploopi_errorcode'])) ? $ploopi_errormsg[$_GET['ploopi_errorcode']] : '',
+    'PLOOPI_MSG'                    => (!empty($_GET['ploopi_msgcode'])) ? $ploopi_msg[$_GET['ploopi_msgcode']] : '',
     'PLOOPI_VERSION'                => _PLOOPI_VERSION
     )
 );

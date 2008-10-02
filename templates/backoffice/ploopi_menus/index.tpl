@@ -137,35 +137,56 @@
 <!-- BEGIN switch_user_logged_out -->
 <div id="container_out">
     <div id="loginbox">
-    <form name="formlogin" action="admin.php" method="post" {PLOOPI_TEST_MAC}>
         <div class="loginbox_title">
             <p>Identification</p>
         </div>
         <div style="padding:10px;">
-            <div class="loginbox_line" style="text-align:right;">
-                <label for="ploopi_login">utilisateur:&nbsp;</label>
-                <input type="text" class="text" id="ploopi_login" name="ploopi_login" style="width:100px;" tabindex="1" />
-            </div>
-            <div class="loginbox_line" style="text-align:right;">
-                <label for="ploopi_password">mot de passe:&nbsp;</label>
-                <input class="text" type="password" id="ploopi_password" name="ploopi_password" style="width:100px;" tabindex="2" />
-            </div>
-            <div class="loginbox_line">
-                <div style="float:left;width:100%;">
-                    <input type="submit" value="connexion" class="flatbutton" style="width:100%;" tabindex="3"/>
+            <form id="formlogin" action="admin.php" method="post">
+                <div class="loginbox_line" style="text-align:right;">
+                    <label for="ploopi_login">utilisateur:&nbsp;</label>
+                    <input type="text" class="text" id="ploopi_login" name="ploopi_login" style="width:100px;" tabindex="1" />
                 </div>
-            </div>
+                <div class="loginbox_line" style="text-align:right;">
+                    <label for="ploopi_password">mot de passe:&nbsp;</label>
+                    <input type="password" class="text" id="ploopi_password" name="ploopi_password" style="width:100px;" tabindex="2" />
+                </div>
+                <div class="loginbox_line">
+                    <input type="submit" value="Connexion" class="flatbutton" style="width:100%;" tabindex="3"/>
+                </div>
+            </form>
             <div class="loginbox_line" style="text-align:right;">
-                <a href="">Mot de passe perdu ?</a>
+                <a href="javascript:void(0);" onclick="javascript:tpl_passwordlost();">Mot de passe perdu ?</a>
             </div>
+            <form id="formpasswordlost" action="{PASSWORDLOST_URL}" method="post" style="display:none;" onsubmit="javascript:return tpl_passwordlost_submit();">
+                <div class="loginbox_line" style="text-align:right;">
+                    <label for="ploopi_lostpassword_login">utilisateur:&nbsp;</label>
+                    <input type="text" class="text" id="ploopi_lostpassword_login" name="ploopi_lostpassword_login" style="width:100px;" tabindex="10" />
+                </div>
+                <div class="loginbox_line" style="text-align:right;">
+                    <label for="ploopi_lostpassword_email">(ou) email:&nbsp;</label>
+                    <input type="text" class="text" id="ploopi_lostpassword_email" name="ploopi_lostpassword_email" style="width:100px;" tabindex="11" />
+                </div>
+                <div class="loginbox_line">
+                    <em><strong>ATTENTION</strong>, une demande de mot de passe génère un nouveau mot de passe automatique.</em>
+                </div>
+                <div class="loginbox_line">
+                    <input type="button" value="Annuler" class="button" style="width:49%;" tabindex="12" onclick="javascript:tpl_passwordlost_cancel();" />
+                    <input type="submit" value="Envoyer" class="button" style="width:49%;" tabindex="13" />
+                </div>
+            </form>
+            
+            <!-- BEGIN switch_ploopimsg -->
+            <div class="loginbox_line" style="text-align:right;">
+                <img src="{TEMPLATE_PATH}/img/system/information.png" style="display:block;float:left;"><span class="information">&nbsp;{PLOOPI_MSG}</span>
+            </div>
+            <!-- END switch_ploopimsg -->
             <!-- BEGIN switch_ploopierrormsg -->
             <div class="loginbox_line" style="text-align:right;">
                 <img src="{TEMPLATE_PATH}/img/system/attention.png" style="display:block;float:left;"><span class="error">&nbsp;{PLOOPI_ERROR}</span>
             </div>
             <!-- END switch_ploopierrormsg -->
         </div>
-    </form>
-        <div class="loginbox_footer"></div>
+    <div class="loginbox_footer"></div>
     </div>
 </div>
 <!-- END switch_user_logged_out -->
@@ -257,13 +278,52 @@
 
 
 <p id="footer">
-Template:&nbsp;<a href="http://ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi {PLOOPI_VERSION}</a>&nbsp;&#169;&nbsp;2008&nbsp;<a href="http://ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>
-<br />[ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko ] 
+Template:&nbsp;<a href="http://ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi {PLOOPI_VERSION}</a>&nbsp;&#169;&nbsp;2008&nbsp;<a href="http://ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>&nbsp;
+<br />[ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko ]&nbsp;
 </p>
 
 <!-- BEGIN switch_user_logged_out -->
 <script type="text/javascript">
 ploopi_window_onload_stock(function() { if ($('ploopi_login')) $('ploopi_login').focus(); } );
+
+var effect = false;
+
+function tpl_passwordlost() {
+    if (effect) return false;
+    effect = true;
+    new Effect.BlindDown(
+        'formpasswordlost', 
+        {
+            duration: 0.3, 
+            afterFinish:function() {
+                $('ploopi_lostpassword_login').focus();
+                effect = false;
+            }
+        }
+    );
+}
+
+function tpl_passwordlost_cancel() {
+    if (effect) return false;
+    effect = true;
+    new Effect.BlindUp(
+        'formpasswordlost', 
+        {
+            duration: 0.3, 
+            afterFinish:function() {
+                $('ploopi_login').focus();
+                effect = false;
+            }
+        }
+    );
+}
+
+function tpl_passwordlost_submit() {
+    if ($('ploopi_lostpassword_login').value != '' || $('ploopi_lostpassword_email').value != '') return true;
+    else alert('Vous devez remplir un des deux champs');
+    
+    return false;
+}
 </script>
 <!-- END switch_user_logged_out -->
 </body>

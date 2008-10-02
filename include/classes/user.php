@@ -333,5 +333,16 @@ class user extends data_object
         
         return($usrlist);
     }
+    
+    /**
+     * Affecte un nouveau mot de passe à l'utilisateur
+     *
+     * @param string $strPassword mot de passe en clair
+     */
+    
+    public function setpassword($strPassword)
+    {
+        $this->fields['password'] = md5(_PLOOPI_SECRETKEY."/{$this->fields['login']}/".md5($strPassword));
+    }
 }
 ?>

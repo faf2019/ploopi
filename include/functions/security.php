@@ -43,7 +43,41 @@
 
 function ploopi_checkpasswordvalidity($password, $min_length = 8, $max_length = 20)
 {
-    return (preg_match('/^(?=^.{'.$min_length.','.$max_length.'}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{"":;\'?\/>.<,]).*$$/', $password));
+    return (preg_match('/^(?=^.{'.$min_length.','.$max_length.'}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_-+}{"":;\'?\/><.,\]\[]).*$$/', $password));
+}
+
+/**
+ * Génère un mot de passe paramétrable
+ *
+ * @param int $length longueur du mot de passe
+ * @param boolean $use_char_up true si le mot de passe doit inclure au moins un caractère majuscule
+ * @param boolean $use_char_numb true si le mot de passe doit inclure au moins un caractère numérique
+ * @param boolean $use_ponc  true si le mot de passe doit inclure au moins un caractère de ponctuation
+ * @return string le mot de passe généré
+ * 
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+function ploopi_generatepassword($length = 8, $use_char_up = true, $use_char_numb = true, $use_ponc = true)
+{
+    if ($length<4) $length=4;
+    
+    $arrChar = array();
+    $arrChar[] = "abcdefghijklmnopqrstuvwxz";
+    if ($use_char_up) $arrChar[] = "ABCDEFGHIJKLMNOPQRSTUVWXZ";
+    if ($use_char_numb) $arrChar[] = "0123456789";
+    if ($use_ponc) $arrChar[] = ":?!@#$%&*";
+
+    $strChar = implode('', $arrChar);
+    
+    $strPassword = '';
+    
+    foreach($arrChar as $str) $strPassword .= substr($str,rand(0,strlen($str)-1),1);
+    for($c = strlen($strPassword); $c < $length; $c++) $strPassword .= substr($strChar,rand(0,strlen($strChar)-1),1);
+    
+    return(str_shuffle($strPassword));
 }
 
 /**

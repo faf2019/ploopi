@@ -441,9 +441,17 @@ function ploopi_loadparams()
     // load params
     foreach($_SESSION['ploopi']['params'] as $param_idmodule => $param_type)
     {
-        if (!empty($param_type['default'])) foreach($param_type['default'] as $param_name => $param_value) $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
-        if (!empty($param_type['workspace'][$_SESSION['ploopi']['workspaceid']])) foreach($param_type['workspace'][$_SESSION['ploopi']['workspaceid']] as $param_name => $param_value) $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
-        if (!empty($param_type['user'])) foreach($param_type['user'] as $param_name => $param_value) $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
+        if (!empty($param_type['default'])) 
+            foreach($param_type['default'] as $param_name => $param_value) 
+                $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
+                
+        if (!empty($param_type['workspace'][$_SESSION['ploopi']['backoffice']['workspaceid']])) 
+            foreach($param_type['workspace'][$_SESSION['ploopi']['backoffice']['workspaceid']] as $param_name => $param_value) 
+                $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
+                
+        if (!empty($param_type['user'])) 
+            foreach($param_type['user'] as $param_name => $param_value) 
+                $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
     }
 }
 

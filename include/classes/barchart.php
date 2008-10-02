@@ -22,7 +22,7 @@
 
 /**
  * Gestion des diagrammes en barre
- * 
+ *
  * @package ploopi
  * @subpackage barchart
  * @copyright Ovensia, CII67
@@ -37,55 +37,55 @@ class barchart
      *
      * @var int
      */
-    
+
     private $width;
-    
+
     /**
      * Hauteur du diagramme
      *
      * @var int
      */
-    
+
     private $height;
-    
+
     /**
      * Données du diagramme
      *
      * @var array
      */
-    
+
     private $datasets;
-    
+
     /**
      * Légende du diagramme
      *
      * @var array
      */
-    
+
     private $legend;
-    
+
     /**
      * Options du diagramme
      *
      * @var array
      */
-    
+
     private $options;
-    
+
     /**
      * Nombre de colonnes à afficher
      *
      * @var int
      */
     private $nb_columns;
-    
+
     /**
      * Valeur max du diagramme
      *
      * @var float
      */
     private $value_max;
-    
+
     /**
      * Constructeur de la classe
      *
@@ -93,30 +93,33 @@ class barchart
      * @param int $height hauteur du diagramme en pixel
      * @param array $options tableau d'options
      * @return barchart
-     * 
+     *
      * @see barchart::setoptions
      */
-    
+
     public function barchart($width, $height, $options = array())
     {
         $this->width = $width;
         $this->height = $height;
         $this->values = array();
         $this->legend = array();
-        $this->options = 
+        $this->options =
             array(
-                'display_grid' => true,
-                'display_legend' => true,
-                'display_titles' => true,
-                'class_name' => 'ploopi_barchart',
-                'bar_arrange' => 'merge',  // merge, stack, side_by_side
-                'padding' => 0
+                'display_values' => true, // affichage des valeurs sur les barres optionnel
+                'autofit_scale' => true, // échelle verticale auto-adaptive
+                'display_grid' => true, // affichage d'une grille horizontale
+                'display_legend' => true, // affichage d'une légende
+                'display_ticks' => true, // affichage des valeurs de l'échelle (vertical seulement)
+                'display_titles' => true, // affichage de titres
+                'class_name' => 'ploopi_barchart', // class de style (css) utilisée
+                'bar_arrange' => 'merge', // type d'arrangement des barres : merge, stack, side_by_side
+                'padding' => 0 // marge utilisée à l'affichage
             );
-            
+
         $this->setoptions($options);
-        
+
     }
-    
+
     /**
      * Ajoute un jeu de données au diagramme
      *
@@ -126,56 +129,63 @@ class barchart
      * @param string $dataset_color couleur du texte du jeu de données (optionnel)
      * @param string $dataset_name nom du jeu de données (optionnel)
      */
-         
+
     public function setvalues($values, $dataset_label = null, $dataset_bgcolor = null, $dataset_color = null, $dataset_name = null)
     {
-        
-        $this->datasets[(empty($dataset_name)) ? 'p'.sizeof($this->datasets) : htmlentities($dataset_name)] = 
+
+        $this->datasets[(empty($dataset_name)) ? 'p'.sizeof($this->datasets) : htmlentities($dataset_name)] =
             array(
                 'values' => $values,
-                'label' => $dataset_label,    
+                'label' => $dataset_label,
                 'bgcolor' => $dataset_bgcolor,
                 'color' => $dataset_color,
             );
-                            
+
         $this->nb_columns = max($this->nb_columns, sizeof($values));
         $this->value_max = max($this->value_max, max($values));
+
+
+
+
     }
-    
+
     /**
      * Ajoute une légende au diagramme
      *
      * @param array $legend tableau contenant la légende
      */
-    
+
     public function setlegend($legend)
     {
-        $this->legend = $legend;        
+        $this->legend = $legend;
     }
-    
+
     /**
-     * Permet de définir les options : 
+     * Permet de définir les options :
      * grid_width:int,
-     * display_grid:boolean, 
-     * display_legend:boolean, 
+     * autofit_scale:boolean,
+     * display_grid:boolean,
+     * display_legend:boolean,
+     * display_ticks:boolean,
      * display_titles:boolean,
+     * display_values:boolean,
      * bar_arrange:string ('merge', 'stack', 'side_by_side'),
      * padding:0,
      * class_name:string
      *
      * @param array $options tableau des options à modifier
      */
-    
+
     public function setoptions($options)
     {
-        $this->options = array_merge($this->options, $options);        
+        $this->options = array_merge($this->options, $options);
     }
-    
+
     /**
      * Affiche le diagramme
      *
      */
-    
+
     public function draw()
     {
         /* Calcul de la valeur max pour les types 'stack'*/
@@ -192,139 +202,192 @@ class barchart
                 }
             }
             $this->value_max = max($sum_array);
+
         }
+
+        //mise à l'échelle verticale auto-adaptive
+        $autofit_scale_inc = 0;
+        
+        if ($this->value_max)
+        {
+            $pow = floor(log10($this->value_max));
     
+            if( $this->options['autofit_scale'] && $pow )
+            {
+                $autofit_scale_inc = 1 ;
+    
+                $value_max_1st= floor($this->value_max / pow(10,$pow)) ;
+                $value_max_2nd = floor(($this->value_max - $value_max_1st * pow(10,$pow) ) / pow(10, ($pow-1))) ;
+    
+                $this->value_max = ( ($value_max_1st == 1 && $value_max_2nd < 6 ) || ($value_max_1st < 5 && $value_max_2nd < 5) ) ? $value_max_1st * pow(10,$pow) + 5 * pow(10,$pow-1) : ( $value_max_1st + 1 )* pow(10,$pow) ;
+            }
+        }
+        
         /**
          * Définition de la largeur de grille si elle n'existe pas déjà
          */
-            
-        $this->options = 
+
+        $this->options =
             array_merge(
                 array(
                     'grid_width' => ($this->value_max>=5) ? floor($this->value_max/5) : 1,
-                ), 
+                ),
                 $this->options
-            );        
-        
+            );
+
         if( $this->options['bar_arrange'] == 'side_by_side' ) $this->nb_columns *=  sizeof($this->datasets);
 
         $column_width = floor($this->width / $this->nb_columns) - 1;
-        
+
         ?>
-        <div class="<? echo $this->options['class_name']; ?>">
+        <div class="<? echo $this->options['class_name']; ?>" style ="margin-top: 10px;">
             <?
-            if ($this->options['display_legend'])
+            if ($this->value_max)
             {
-                ?>
-                <div class="vlegend" style="height:<? echo $this->height; ?>px;">
-                <?
-                for ($t = 1; $t < $this->value_max / $this->options['grid_width']; $t++)
-                {
-                    ?>
-                    <div style="bottom:<? echo floor(($t * $this->options['grid_width'] * $this->height) / $this->value_max) - 3; ?>px;"><? echo $t * $this->options['grid_width']; ?></div>
-                    <?
-                }
-                ?>
-                &nbsp;
-                </div>
-                <?
-            }
-            ?>
-            <div style="float:left;">
-                <ul class="chart" style="width:<? echo $this->width; ?>px;height:<? echo $this->height; ?>px;">
-                <?
-                if ($this->options['display_grid'] && !empty($this->options['grid_width']))
-                {
-                    for ($t = 1; $t < $this->value_max / $this->options['grid_width']; $t++)
-                    {
-                        ?>
-                        <div class="grid" style="left:-2px;width:<? echo $this->width+2; ?>;bottom:<? echo floor(($t * $this->options['grid_width'] * $this->height) / $this->value_max); ; ?>px;"></div>
-                        <?
-                    }
-                }
-
-                
-                $dataset_index = 0;
-                foreach($this->datasets as $dataset_name => $dataset)
-                {
-                    $c = 0;
-
-                    $bar_color = (empty($dataset['bgcolor'])) ? '' : "background-color:{$dataset['bgcolor']};";
-                    $bar_color .= (empty($dataset['color'])) ? '' : "color:{$dataset['color']};";
-                    
-                    foreach($dataset['values'] as $key => $value)
-                    {
-                        if (!empty($value) && is_numeric($value))
-                        {
-                            if( $this->options['bar_arrange'] == 'stack' )
-                            {
-                                if (!isset($previous_values[$key])) $previous_values[$key] = 0;
-                                
-                                $display_bottom = $previous_values[$key];
-                                $previous_values[$key] += $value;
-                            }
-                            else $display_bottom = 0;
-            
-                            if( $this->options['bar_arrange'] == 'side_by_side' )
-                            {
-                                $col_width = $column_width - ceil(($this->options['padding'] * 2) / sizeof($this->datasets));
-                                $column_left = ($c * sizeof($this->datasets)) * ($column_width+1) + $dataset_index * ($col_width+1);
-                            }
-                            else
-                            {
-                                $col_width = $column_width - $this->options['padding'] * 2;
-                                $column_left = $c * ($column_width+1) + $this->options['padding'];
-                            }
-                            
-                            $display_bottom = floor(($display_bottom * $this->height) / $this->value_max);
-                            $column_height = floor(($value * $this->height) / $this->value_max);
-                            
-                            $style = sprintf("height:%dpx;width:%dpx;left:%dpx;bottom:%dpx;%s", $column_height, $col_width, $column_left, $display_bottom, $bar_color);
-                            
-                            if ($this->options['display_titles']) 
-                            {
-                                $style .= 'cursor:help;';
-                                
-                                $title = (empty($dataset['label'])) ? '' : $dataset['label'].': ';
-                                $title = 'title="'.htmlentities($title.strip_tags($this->legend[$key]).', '.$value).'"'; 
-                            }
-                            else $title = '';
-                            
-                            ?>
-                            <li class="<? echo $dataset_name; ?>" style="<? echo $style; ?>" <? echo $title ?>>
-                                <? echo $value; ?>
-                            </li>
-                            <?
-                        }
-                        
-                        $c++;
-                    }
-                    
-                    $dataset_index += 1;
-                }
-                ?>
-                </ul>
-                <?
                 if ($this->options['display_legend'])
                 {
                     ?>
-                    <div class="hlegend" style="width:<? echo $this->width; ?>px;">
+                    <div class="vlegend" style="height:<? echo $this->height; ?>px;">
                     <?
-                        $legend_column_width = $column_width+1;
-                        if ($this->options['bar_arrange'] == 'side_by_side') $legend_column_width *= sizeof($this->datasets);
-                        
-                        foreach($this->legend as $key => $label)
-                        {
-                            ?>
-                            <div style="width:<? echo $legend_column_width; ?>px; "><? echo $label; ?></div>
-                            <?
-                        }
-                    ?>        
+                    for ($t = 1; $t < $this->value_max / $this->options['grid_width'] + $autofit_scale_inc ; $t++)
+                    {
+                        ?>
+                        <div style="bottom:<? echo floor(($t * $this->options['grid_width'] * $this->height) / $this->value_max) -5 ; ?>px;"><? echo $t * $this->options['grid_width']; ?></div>
+                        <?
+                    }
+                    ?>
+                    &nbsp;
                     </div>
                     <?
                 }
                 ?>
+                <div style="float:left;">
+                    <ul class="chart" style="left: <? if( $this->options['autofit_scale']) echo strlen(floor($this->value_max))*5 ; ?>px; width:<? echo $this->width; ?>px;height:<? echo $this->height; ?>px;">
+                    <?
+                    if ($this->options['display_grid'] && !empty($this->options['grid_width']))
+                    {
+                        for ($t = 1; $t < $this->value_max / $this->options['grid_width'] + $autofit_scale_inc; $t++)
+                        {
+                            ?>
+                            <div class="grid" style="left:-2px;width:<? echo $this->width+2; ?>;bottom:<? echo floor(($t * $this->options['grid_width'] * $this->height) / $this->value_max); ; ?>px;"></div>
+                            <?
+                        }
+                    }
+    
+    
+                    $dataset_index = 0;
+                    foreach($this->datasets as $dataset_name => $dataset)
+                    {
+                        $c = 0;
+    
+                        $bar_color = (empty($dataset['bgcolor'])) ? '' : "background-color:{$dataset['bgcolor']};";
+                        $bar_color .= (empty($dataset['color'])) ? '' : "color:{$dataset['color']};";
+    
+                        foreach($dataset['values'] as $key => $value)
+                        {
+                            if (!empty($value) && is_numeric($value))
+                            {
+                                if( $this->options['bar_arrange'] == 'stack' )
+                                {
+                                    if (!isset($previous_values[$key])) $previous_values[$key] = 0;
+    
+                                    $display_bottom = $previous_values[$key];
+                                    $previous_values[$key] += $value;
+                                }
+                                else $display_bottom = 0;
+    
+                                if( $this->options['bar_arrange'] == 'side_by_side' )
+                                {
+                                    $col_width = $column_width - ceil(($this->options['padding'] * 2) / sizeof($this->datasets));
+                                    $column_left = ($c * sizeof($this->datasets)) * ($column_width+1) + $dataset_index * ($col_width+1);
+                                }
+                                else
+                                {
+                                    $col_width = $column_width - $this->options['padding'] * 2;
+                                    $column_left = $c * ($column_width+1) + $this->options['padding'];
+                                }
+    
+                                $display_bottom = floor(($display_bottom * $this->height) / $this->value_max);
+                                $column_height = floor(($value * $this->height) / $this->value_max);
+    
+                                $style = sprintf("height:%dpx;width:%dpx;left:%dpx;bottom:%dpx;%s", $column_height, $col_width, $column_left, $display_bottom, $bar_color);
+    
+                                if ($this->options['display_titles'])
+                                {
+                                    $style .= 'cursor:help;';
+    
+                                    $title = (empty($dataset['label'])) ? '' : $dataset['label'].': ';
+                                    $title = 'title="'.htmlentities($title.strip_tags($this->legend[$key]).', '.$value).'"';
+                                }
+                                else $title = '';
+    
+                                ?>
+                                <li class="<? echo $dataset_name; ?>" style="<? echo $style; ?>" <? echo $title ?>>
+                                    <? if ($this->options['display_values']) echo $value; //affichage des valeurs rendu optionnel ?>
+                                </li>
+                                <?
+                            }
+    
+                            $c++;
+                        }
+    
+                        $dataset_index += 1;
+                    }
+                    ?>
+                    </ul>
+                    <?
+                    if ($this->options['display_ticks'])
+                    {
+                        ?>
+                        <div class="hlegend" style="left: <? if( $this->options['autofit_scale']) echo strlen(floor($this->value_max))*5 ; ?>px; width:<? echo $this->width; ?>px;">
+                        <?
+                            $ticks_column_width = $column_width+1;
+                            if ($this->options['bar_arrange'] == 'side_by_side') $ticks_column_width *= sizeof($this->datasets);
+    
+                            foreach($this->legend as $key => $label)
+                            {
+                                //alignement automatique de l'échelle horizontale ?>
+                                <div style="text-align: center; text-indent: <? if ($this->options['bar_arrange']=='side_by_side') echo -2 * $this->options['padding'] ; ?>px ; width:<? echo $ticks_column_width; ?>px; "><? echo $label; ?></div>
+                                <?
+                            }
+                        ?>
+                        </div>
+                        <?
+                    }
+                }
+                ?>
             </div>
+            <?
+            if ($this->options['display_legend'])
+            {
+                ?>
+                <div class="caption">
+                <?
+                /* légende en bas à droite du graph, avec alignement automatique du texte (en fonction de la longueur de chaîne):
+                si les descriptions de la légende sont de longueur différente, le texte et la légende seront alognés en fonction
+                de la chaîne la plus longue
+                */
+                    $max_label_strl = 0;
+    
+                    foreach($this->datasets as $dataset)
+                    {
+                     $max_label_strl = (strlen($dataset['label']) > $max_label_strl) ? strlen($dataset['label']) : $max_label_strl  ;
+                     ?>
+                        <div style="position: relative ; clear:both ;top : 10px ;margin-left: <? echo $this->width + strlen(floor($this->value_max))*10 -7 * $max_label_strl - 20 ; ?>px;
+                        font-size: 0px; line-height: 0%; width: 0px;
+                        border-top: 5px solid <?echo $dataset['bgcolor']?>;
+                        border-bottom: 5px solid <?echo $dataset['bgcolor']?>;
+                        border-left: 5px solid <?echo $dataset['bgcolor']?>;
+                        border-right: 5px solid <?echo $dataset['bgcolor']?>;">
+                        </div>
+                        <div style="position:relative; top: -2px; margin-left: <? echo $this->width + strlen(floor($this->value_max))*10 - 7 * $max_label_strl ; ?>px;"> <? echo $dataset['label'] ; ?> </div>
+                        <?
+                    }
+                    ?>
+                </div>
+                <?
+            }
+            ?>
         </div>
         <?
     }

@@ -105,7 +105,7 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
     {
         // initialisation du moteur de template
         $tplmail = new Template($_SESSION['ploopi']['template_path']);
-        $tplmail->set_filenames(array('mail' => 'mail.tpl'));
+        $tplmail->set_filenames(array('mail' => 'ticket.tpl'));
 
         $ticket = new ticket();
         $ticket->fields['id_object'] = $id_object;

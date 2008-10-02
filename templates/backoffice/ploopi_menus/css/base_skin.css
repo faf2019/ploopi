@@ -501,6 +501,11 @@ p.ploopi_checkbox img, p.ploopi_checkbox span, p.ploopi_checkbox input, p.ploopi
     font-weight:bold;
 }
 
+.information {
+    color:#00a600;
+    font-weight:bold;
+}
+
 .Title td {
     font-weight:bold;
 }

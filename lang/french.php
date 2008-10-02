@@ -203,4 +203,11 @@ $ploopi_errormsg[_PLOOPI_ERROR_LOGINEXPIRE]         = 'Votre mot de passe a expi
 $ploopi_errormsg[_PLOOPI_ERROR_SESSIONEXPIRE]       = 'Votre session a expiré';
 $ploopi_errormsg[_PLOOPI_ERROR_SESSIONINVALID]      = 'Votre session est invalide';
 
+$ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_UNKNOWN]      = 'Ce compte est inconnu';
+$ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_INVALID]      = 'Ce compte n\'a pas d\'adresse de courriel valide';
+$ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_MANYRESPONSES] = 'Ce compte n\'est pas unique';
+
+$ploopi_msg[_PLOOPI_MSG_MAILSENT]      = 'Un message vous a été envoyé';
+$ploopi_msg[_PLOOPI_MSG_PASSWORDSENT]  = 'Un nouveau mot de passe vous a été envoyé';
+
 ?>
