@@ -193,7 +193,7 @@ while ($fields = $db->fetchrow($rs_fields))
                 for ($c = 1; $c<=$fields['cols']; $c++) // columns
                 {
                     $template_forms->assign_block_vars('formfields.switch_field.switch_checkbox.columns', array(
-                        'WIDTH' => 100 / $fields['cols']
+                        'WIDTH' => round(100 / $fields['cols'])
                         )
                     );
                     
@@ -221,7 +221,7 @@ while ($fields = $db->fetchrow($rs_fields))
                 for ($c = 1; $c<=$fields['cols']; $c++) // columns
                 {
                     $template_forms->assign_block_vars('formfields.switch_field.switch_radio.columns', array(
-                        'WIDTH' => 100 / $fields['cols']
+                        'WIDTH' => round(100 / $fields['cols'])
                         )
                     );
                     

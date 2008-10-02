@@ -1,3 +1,9 @@
+== Module FORMS - version 2.221 =====================================================
+
+2008-10-02  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Correctif pour IE. Arrondi sur les % de largeur des colonnes. 
+
 == Module FORMS - version 2.22 =====================================================
 
 2008-09-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
