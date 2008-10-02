@@ -24,13 +24,13 @@
 
 /**
  * Moteur de rendu de newsletter
- * 
+ *
  * @package Newsletter
  * @subpackage display
  * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint
- * 
+ *
  * @global Template $template_body template
  * @global string $template_path chemin vers le template
  */
@@ -41,7 +41,7 @@
 // newsletter_mode : edit / display / dompdf => mode édition / affichage frontoffice ou popup / affichage pour dompdf
 
 /**
- * Inclusion de la collection de fonction de ploopi (pour ploopi_urlencode notament) 
+ * Inclusion de la collection de fonction de ploopi (pour ploopi_urlencode notament)
  */
 include_once './include/start/functions.php';
 
@@ -54,7 +54,7 @@ include_once './lib/template/template.php';
  * Inclusion des classes du module
  */
 include_once './modules/newsletter/class_newsletter_letter.php';
-    
+
 global $template_body;
 global $template_path;
 
@@ -68,7 +68,7 @@ if(!empty($strNewsletterMode))
   $newsletter_mode = $strNewsletterMode;
 elseif(ploopi_isactionallowed(_NEWSLETTER_ACTION_WRITE) || ploopi_isactionallowed(_NEWSLETTER_ACTION_MODIFY))
   $newsletter_mode = 'edit';
-else 
+else
   $newsletter_mode = 'display';
 
 // Etat de readonly
@@ -86,7 +86,7 @@ else
 
 // Changement d'état de readonly si le status de la newsletter est validée ou expédiée
 if($objNewsletter->fields['status'] == 'valid' || $objNewsletter->fields['status'] == 'send') $readonly = 1;
- 
+
 // CHARGEMENT DU TEMPLATE
 // get template name
 $template_name = (!empty($objNewsletter->fields['template'])) ? $objNewsletter->fields['template'] : '';
@@ -115,7 +115,7 @@ unset($objNewsletterParam);
 if (!$readonly)
 {
   ob_start();
-  
+
   include_once './FCKeditor/fckeditor.php' ;
 
   $oFCKeditor = new FCKeditor('fck_newsletter_content') ;
@@ -132,10 +132,9 @@ if (!$readonly)
   $oFCKeditor->Config['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/newsletter/fckeditor/fckconfig.js';
   $oFCKeditor->Config['ToolbarLocation'] = 'Out:parent(xToolbar)';
   $oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH.'/';
-  $oFCKeditor->Config['SkinPath'] = _PLOOPI_BASEPATH.'/modules/newsletter/fckeditor/skins/default/';
-  
+
   $oFCKeditor->ToolbarSet = 'Default' ;
-  
+
   if (file_exists("{$template_path}/fckeditor/fck_editorarea.css")) $oFCKeditor->Config['EditorAreaCSS'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fck_editorarea.css';
 
   if (file_exists("{$template_path}/fckeditor/fcktemplates.xml")) $oFCKeditor->Config['TemplatesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fcktemplates.xml';
@@ -152,7 +151,7 @@ $template_newsletter->assign_block_vars('switch_content_newsletter', array());
 
 if($newsletter_mode == 'dompdf')
   $content = $objNewsletter->fields['content'];
-else // dans tous les autres $newsletter_mode 
+else // dans tous les autres $newsletter_mode
   $content = (!empty($editor)) ? $editor : $objNewsletter->convert_extern($objNewsletter->fields['content']);
 
 $template_newsletter->assign_vars(

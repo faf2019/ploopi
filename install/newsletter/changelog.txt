@@ -1,3 +1,18 @@
+== Module NEWSLETTER - version 0.3beta ====================================================
+
+2008-10-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Modification de la détection automatique du host 
+ * Correction d'un bug à l'appel de FCKEditor (pointait vers un skin inexistant)
+
+== Module NEWSLETTER - version 0.2beta ====================================================
+
+2008-09-29  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction french.php
+ * Correction d'une passage de variable inutile dans display.php
+
+ 
 == Module NEWSLETTER - version 0.1beta ====================================================
 
 2008-09-28  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

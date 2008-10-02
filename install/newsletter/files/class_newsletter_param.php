@@ -46,7 +46,7 @@ include_once './include/classes/data_object.php';
  */
 
 class newsletter_param extends data_object
-{   
+{
   /**
    * Constructeur de la classe
    *
@@ -56,7 +56,7 @@ class newsletter_param extends data_object
   {
     parent::data_object('ploopi_mod_newsletter_param','id_module','param');
   }
-  
+
   /**
    * Recupere des params pour l'envoi et les convert de "contant"
    *
@@ -65,29 +65,29 @@ class newsletter_param extends data_object
    */
   function get_param($id_module = 0)
   {
-    $arrParam = array('host' => 'http://'.$_SERVER['HTTP_HOST'].'/',
+    $arrParam = array('host' => _PLOOPI_BASEPATH,
                       'from_name' => '',
                       'from_email' => '',
                       'send_by' => '0');
-    
+
     global $db;
-    
+
     if(empty($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
-    
+
     $sql = "SELECT * FROM ploopi_mod_newsletter_param WHERE id_module = {$id_module}";
     $resultSql = $db->query($sql);
-    
+
     while ($fields = $db->fetchrow($resultSql))
     {
       $arrParam[$fields['param']] = $fields['value'];
     }
-    
-    return $arrParam; 
+
+    return $arrParam;
   }
-  
+
   /**
    * Sauvegarde un param général
-   * 
+   *
    * @return mixed valeur de la clé primaire
    */
   function save()
@@ -98,11 +98,11 @@ class newsletter_param extends data_object
       if(substr($this->fields['value'],0,7) != 'http://') $this->fields['value'] = 'http://'.$this->fields['value'];
       if(substr($this->fields['value'],-1) != '/') $this->fields['value'] = $this->fields['value'].'/';
     }
-    
+
     $this->fields['id_module'] = $_SESSION['ploopi']['moduleid'];
-    
+
     return parent::save();
   }
-  
+
 }
 ?>
