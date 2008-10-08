@@ -186,7 +186,7 @@ $template_newsletter->assign_vars(
         'TEMPLATE_PATH'                 => $template_path,
         'TITLE'                         => htmlentities($objNewsletter->fields['title']),
         'SUBJECT'                       => htmlentities($objNewsletter->fields['subject']),
-        'LINK'                          => ($objNewsletter->fields['id'] >0) ? $arrNewsletterParam['host'].ploopi_urlencode('index-quick.php?ploopi_op=newsletter_tpl&id_newsletter='.$objNewsletter->fields['id']) : '.',
+        'LINK'                          => ($objNewsletter->fields['id'] >0) ? $arrNewsletterParam['host'].ploopi_urlencode('index-quick.php?ploopi_op=newsletter_consult&id_newsletter='.$objNewsletter->fields['id']) : '.',
         'LINK_UNSUBSCRIB'               => $arrNewsletterParam['host'].ploopi_urlencode('index.php?switch_newsletter_unsubscrib=true'),
         'DATE_DAY'                      => $dateDay,
         'DATE_MONTH'                    => $dateMonth,
