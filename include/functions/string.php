@@ -127,7 +127,7 @@ function ploopi_urlrewrite($url, $title = '', $keep_extension = false)
         $patterns[1] = '/index.php\?headingid=([0-9]*)/';
         $patterns[2] = '/index.php\?articleid=([0-9]*)/';
         $patterns[3] = '/index-quick.php\?ploopi_op=doc_file_download&docfile_md5id=([a-z0-9]{32})/';
-        $patterns[4] = '/index-quick.php\?ploopi_op=webedit_unsubscribe&subscription_email=([a-z0-9]{32})/';
+        $patterns[4] = '/index.php\?ploopi_op=webedit_unsubscribe&subscription_email=([a-z0-9]{32})/';
         $patterns[5] = '/index.php\?query_tag=([a-zA-Z0-9]*)/';
 
         $replacements = array();
@@ -191,6 +191,7 @@ function ploopi_make_links($text)
  *
  * @param mixed $var variable à encoder
  * @param boolean $utf8encode true si le contenu de la variable doit être converti en UTF8 (true par défaut)
+ * @param boolean $use_xjson true si X-json peut être utilisé
  * 
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
@@ -199,7 +200,7 @@ function ploopi_make_links($text)
  * @see iconv
  */
 
-function ploopi_print_json($var, $utf8encode = true)
+function ploopi_print_json($var, $utf8encode = true, $use_xjson = true)
 {
     
     if ($utf8encode) 
@@ -216,7 +217,7 @@ function ploopi_print_json($var, $utf8encode = true)
         
     $json = json_encode($var);
     header("Content-Type: text/x-json"); 
-    if (strlen($json)>4096) echo $json;
+    if ($use_xjson === false || strlen($json) > 2048) echo $json;
     else header("X-Json: {$json}");
 }
 

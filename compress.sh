@@ -55,7 +55,7 @@ done
 for i in $( find ./FCKeditor \( -name '*.js' -or -name '*.css' \) -type f )
 do
     echo "Compression : $i => $i.gz"
-    java -jar yuicompressor/build/yuicompressor$YUIVER.jar --charset UTF-8 $i | gzip > $i.gz
+    cat $i | gzip > $i.gz
     export ta=`stat -c "%s" $i`
     export tb=`stat -c "%s" $i.gz`
     echo "Résultat : $ta => $tb"

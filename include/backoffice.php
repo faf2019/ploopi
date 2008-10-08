@@ -261,8 +261,9 @@ $template_body->assign_vars(array(
     'ADDITIONAL_JAVASCRIPT'         => $ploopi_additional_javascript,
     'PLOOPI_ERROR'                  => (!empty($_GET['ploopi_errorcode'])) ? $ploopi_errormsg[$_GET['ploopi_errorcode']] : '',
     'PLOOPI_MSG'                    => (!empty($_GET['ploopi_msgcode'])) ? $ploopi_msg[$_GET['ploopi_msgcode']] : '',
-    'PLOOPI_VERSION'                => _PLOOPI_VERSION
-    )
+    'PLOOPI_VERSION'                => _PLOOPI_VERSION,
+    'PLOOPI_REVISION'               => _PLOOPI_REVISION
+)
 );
 
 
