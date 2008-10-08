@@ -395,7 +395,7 @@ elseif($query_tag != '') // recherche par tag
     );
 }
 elseif (!empty($ploopi_op) && $ploopi_op == 'webedit_unsubscribe') // message affiché lors du désabonnement (lien depuis email)
-{    
+{   
     $title_raw = 'Désabonnement';
     $title = htmlentities($title_raw);
     

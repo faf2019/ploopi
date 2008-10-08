@@ -467,7 +467,7 @@ switch($menu)
                                     break;  
                                 }
                                 
-                                $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : "._PLOOPI_BASEPATH.'/'.ploopi_urlrewrite('index-quick.php?ploopi_op=webedit_unsubscribe&subscription_email='.md5($row['email']));
+                                $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : "._PLOOPI_BASEPATH.'/'.ploopi_urlrewrite('index.php?ploopi_op=webedit_unsubscribe&subscription_email='.md5($row['email']));
                                 
                                 ploopi_send_mail($from, $row['email'], $mail_title, $mail_content, null, null, null, null, false);
                             }

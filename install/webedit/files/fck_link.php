@@ -79,7 +79,7 @@ if ($webedit_idm)
         break;
 
         case 'webedit_selectlink':
-            $treeview = webedit_gettreeview('selectlink');
+            $treeview = webedit_gettreeview($headings, $articles, 'selectlink');
             echo $skin->display_treeview($treeview['list'], $treeview['tree']);
         break;
     }

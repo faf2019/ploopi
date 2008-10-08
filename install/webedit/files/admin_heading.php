@@ -273,13 +273,12 @@ if ($display_type == 'advanced')
                         </div>
                         <div style="padding-left:20px;">
                             <?
+                            $article_title = '';
                             if (!empty($heading->fields['linkedpage']))
                             {
                                 $article = new webedit_article('draft');
-                                $article->open($heading->fields['linkedpage']);
-                                $article_title = $article->fields['title'];
+                                if ($article->open($heading->fields['linkedpage'])) $article_title = $article->fields['title'];
                             }
-                            else $article_title = '';
                             ?>
                             <input type="hidden" id="webedit_heading_linkedpage" name="webedit_heading_linkedpage" value="<? echo $heading->fields['linkedpage']; ?>">
                             <input type="text" readonly class="text" style="width:150px;" id="linkedpage_displayed" value="<? echo $article_title; ?>">

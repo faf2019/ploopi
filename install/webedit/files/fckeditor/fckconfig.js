@@ -46,3 +46,6 @@ FCKConfig.FlashBrowserWindowWidth  = 600 ;  // 70% ;
 FCKConfig.FlashBrowserWindowHeight = 350 ;  // 70% ;
 
 FCKConfig.CustomStyles = { };
+
+FCKConfig.AutoDetectLanguage    = false ;
+FCKConfig.DefaultLanguage       = 'fr' ;

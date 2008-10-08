@@ -1,3 +1,11 @@
+== Module WebEdit - version 1.8.4 ============================================
+
+2008-10-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug lors de la redirection d'une rubrique vers un article si l'article n'existe plus 
+ * Correction d'un bug lors de la création d'un lien vers un article (lié à la mise en place du nouveau treeview)
+ * Correction d'un bug dans le lien de désabonnement envoyé par mail si la réécriture d'URL n'est pas activée
+
 == Module WebEdit - version 1.8.3 ============================================
 
 2008-10-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

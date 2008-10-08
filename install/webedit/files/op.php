@@ -44,7 +44,7 @@ switch($ploopi_op)
             include_once './include/functions/crypt.php';
             $db->query("DELETE FROM ploopi_mod_webedit_heading_subscriber WHERE md5(email) = '".$db->addslashes($_GET['subscription_email'])."'");
         }
-        
+        //ploopi_redirect('index.php', false);
     break;
     
     case 'webedit_subscribe':
