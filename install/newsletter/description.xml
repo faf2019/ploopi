@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>newsletter</label>
-      <version>0.3.0b</version>
+      <version>1.0</version>
       <author>HeXad</author>
-      <date>20081002000000</date>
+      <date>20081008161300</date>
       <description>Gestion de NewsLetter</description>
       <action>
           <id_action>1</id_action>

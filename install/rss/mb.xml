@@ -4,18 +4,14 @@
 		<row>
 			<id>1</id>
 			<label>Flux RSS</label>
-			<script>
-				ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;op=display_news&amp;news_id=&lt;IDRECORD&gt;
-			</script>
+			<script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;op=display_news&amp;news_id=&lt;IDRECORD&gt;</script>
 		</row>
 	</ploopi_mb_object>
 	<ploopi_mb_object>
 		<row>
 			<id>2</id>
 			<label>Actualité RSS</label>
-			<script>
-				ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;rss_search_kw=entry:&lt;IDRECORD&gt;
-			</script>
+			<script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;rss_search_kw=entry:&lt;IDRECORD&gt;</script>
 		</row>
 	</ploopi_mb_object>
 	<ploopi_mb_wce_object>
@@ -697,7 +693,6 @@
 			<tabledest>ploopi_user</tabledest>
 			<fielddest>id</fielddest>
 		</row>
-
 		<row>
 			<tablesrc>ploopi_mod_rss_cat</tablesrc>
 			<fieldsrc>id_workspace</fieldsrc>

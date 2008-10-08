@@ -94,7 +94,7 @@ class newsletter_param extends data_object
   {
     if($this->fields['param'] == 'host')
     {
-      if(empty($this->fields['value'])) $this->fields['value'] = 'http://'.$_SERVER['HTTP_HOST'].'/';
+      if(empty($this->fields['value'])) $this->fields['value'] = 'http://'._PLOOPI_BASEPATH.'/';
       if(substr($this->fields['value'],0,7) != 'http://') $this->fields['value'] = 'http://'.$this->fields['value'];
       if(substr($this->fields['value'],-1) != '/') $this->fields['value'] = $this->fields['value'].'/';
     }

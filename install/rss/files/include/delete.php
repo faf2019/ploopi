@@ -59,7 +59,7 @@ $db->query($delete);
  */
 $db->query("SELECT id FROM ploopi_mod_rss_filter WHERE id_module = {$this->fields['id']}");
 $arrIdFilter = $db->getarray();
-if($arrIdFilter == false || !is_array($arrIdFilter)) $arrIdFilter = array();
+if($arrIdFilter == false || !is_array($arrIdFilter)) $arrIdFilter[] = '0';
 
 $delete = 'DELETE FROM ploopi_mod_rss_filter_element WHERE id_filter IN (0,'.implode(',',$arrIdFilter).')';
 $db->query($delete);

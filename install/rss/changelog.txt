@@ -1,3 +1,10 @@
+== Module RSS - version 2.0.1 ====================================================
+
+2008-10-08   Xavier Toussaint ~ Hexad <xavier@hexad.fr>
+
+ * Correction d'un bug en désinstallation (delete.php)
+ * Correction dans la structure XML de mb.xml à l'installation
+
 == Module RSS - version 2.0 ====================================================
 
 2008-09-08   Xavier Toussaint ~ Hexad <xavier@hexad.fr>

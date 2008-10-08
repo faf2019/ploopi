@@ -1,3 +1,15 @@
+== Module NEWSLETTER - version 1.0 ====================================================
+
+2008-10-08  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction d'un bug a la génération PDF. L'utilisation des PNG est possible.
+
+== Module NEWSLETTER - version 0.3.1beta ====================================================
+
+2008-10-07  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction d'un bug a la génération PDF. L'utilisation des PNG est possible.
+
 == Module NEWSLETTER - version 0.3beta ====================================================
 
 2008-10-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

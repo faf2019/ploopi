@@ -175,10 +175,13 @@ class newsletter extends data_object
     
     $content = ob_get_contents(); // recupération du contenu généré
     ob_end_clean(); // Nettoyage du buffer
-
-    // Convertion du contenu au format dompdf (<a href> etc.. avec host mais <img> en relatif)
+ 
+    //echo htmlentities($content).'<br/><br/><br/>';
+    // Convertion du contenu au format dompdf (<a href> etc.. avec host mais <img> en realpath)
     $content = $this->convert_dompdf($content);
-
+    //echo htmlentities($content).'<br/>';
+    //ploopi_die();
+    
     /*
      * Mise en pace de la classe dompdf
      * Conversion en PDF
@@ -190,6 +193,7 @@ class newsletter extends data_object
     $dompdf = new DOMPDF();
     $dompdf->load_html($content);
     $dompdf->render();
+   // ploopi_die();
     //Export PDF
     $dompdf->stream($this->fields['title'].'.pdf');
   }
@@ -319,12 +323,17 @@ class newsletter extends data_object
         }
         
         // traitement des images
-        // Image en chemin relatif (./template/...)
+        // Image en chemin relatif (./templates/...)
+        /*
+        $path_url = trim(parse_url(_PLOOPI_BASEPATH,PHP_URL_PATH));
+        if(!empty($path_url) && substr($path_url,0,1) != '/') $path_url = '/'.$path_url;
+        if(!empty($path_url) && substr($path_url,-1) != '/') $path_url .= '/';
+        */
         preg_match_all('/<img[^>]*src="('.str_replace(array('/','.'),array('\/','\.'),$arrNewsletterParam['host']).'[^\"]*)[^>]*>/i' , $content, $matches);
         foreach($matches[1] as $key => $md5)
         {
           $arrSearch[] = $matches[1][$key];
-          $arrReplace[] = str_replace($arrNewsletterParam['host'],'./',$matches[1][$key]);
+          $arrReplace[] = str_replace($arrNewsletterParam['host'],realpath('.').'/',$matches[1][$key]);
         }
 
         // Image en chemin type doc 
