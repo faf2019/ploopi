@@ -236,6 +236,7 @@ height:1%;
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -368,7 +369,19 @@ div.ploopi_explorer_line_2 {
     overflow:visible;
     height:1%;
 }
-/*
+
+div.ploopi_explorer_line_2 {
+    overflow:visible;
+    height:1%;
+}
+
+div.ploopi_page_cut {
+    display: inline-block;
+}
+
+input.ploopi_page_cut_select, input.ploopi_page_cut {
+  width: 22px;
+}/*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.

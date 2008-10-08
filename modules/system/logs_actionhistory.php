@@ -2,6 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  * 
  * @package system
  * @subpackage system
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -37,8 +38,30 @@
 
 echo $skin->open_simplebloc(_SYSTEM_LABEL_ACTIONHISTORY);
 
-$maxres = 100;
+/* Paramétre de découpage de page */
 
+$limit_begin = 0;
+$limit_by = 100;
+$actual_page = 1;
+
+if(isset($_POST['cut_page1_begin']))  $limit_begin = $_POST['cut_page1_begin'];  
+if(isset($_POST['cut_page2_begin']))  $limit_begin = $_POST['cut_page2_begin'];  
+
+if(isset($_POST['cut_page1_by']))     $limit_by = $_POST['cut_page1_by'];
+if(isset($_POST['cut_page2_by']))     $limit_by = $_POST['cut_page2_by'];
+
+if(isset($_POST['cut_page1_page']))   $actual_page = $_POST['cut_page1_page'];
+if(isset($_POST['cut_page2_page']))   $actual_page = $_POST['cut_page2_page'];
+
+/*
+ploopi_print_r($_POST);
+
+echo '$limit_begin = '.$limit_begin.'<br/>';
+echo '$limit_by = '.$limit_by.'<br/>';
+echo '$actual_page = '.$actual_page.'<br/>';
+*/
+
+//Paramètre de filtre
 $search_pattern = array();
 $search_pattern['date'] = (isset($_POST['filter_date'])) ? $_POST['filter_date'] : '';
 $search_pattern['date2'] = (isset($_POST['filter_date2'])) ? $_POST['filter_date2'] : '';
@@ -123,13 +146,20 @@ if (!empty($_POST['historyoption']))
     }
 }
 
+//Découpage des pages
+if($limit_begin > 0)
+  $limit = "LIMIT {$limit_begin},{$limit_by}";
+elseif ($limit_by > 0)
+    $limit = "LIMIT {$limit_by}";
+  else
+    $limit = '';
 ?>
 
 <form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" id="form_loghistory">
 <input type="hidden" name="op" value="actionhistory">
 <input type="hidden" name="historyoption" id="historyoption" value="">
-<div style="border-bottom:2px solid #c0c0c0;padding:4px;">
-    <div style="float:left;width:50%;" class="ploopi_form">
+<div style="margin: 0;border-bottom:2px solid #c0c0c0;padding:4px; with: 99%;">
+    <div style="margin:0; padding:0; float:left;width:49%;" class="ploopi_form">
         <p>
             <label>Entre le (date):</label>
             <input type="text" class="text" name="filter_date" id="filter_date" style="width:100px;" value="<? echo htmlentities($search_pattern['date']); ?>"><a href="#" onclick="javascript:ploopi_calendar_open('filter_date', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
@@ -144,7 +174,7 @@ if (!empty($_POST['historyoption']))
         </p>
     </div>
 
-    <div style="float:left;width:50%;" class="ploopi_form">
+    <div style="margin:0; padding:0; float:left;width:50%;" class="ploopi_form">
         <p>
             <label>Module:</label>
             <input type="text" class="text" name="filter_module" value="<? echo htmlentities($search_pattern['module']); ?>">
@@ -169,9 +199,7 @@ if (!empty($_POST['historyoption']))
     </div>
 </div>
 </form>
-
 <?
-
 $sql =  "
         SELECT      count(*) as c
         FROM        ploopi_user_action_log
@@ -188,8 +216,10 @@ $row = $db->fetchrow();
 $count = $row['c'];
 
 ?>
-<div style="padding:4px;border-bottom:1px solid #c0c0c0;background:#e0e0e0;"><b><? echo $count; ?> élément(s) trouvés</b> <? if ($count > $maxres) { ?>- Affichage des <? echo $maxres; ?> résultats les plus récents<? } ?> - Utilisez les filtres ci-dessus pour des résultats plus précis</div>
+<div style="padding:4px;border-bottom:1px solid #c0c0c0;background:#e0e0e0;"><b><? echo $count; ?> élément(s) trouvés</b> <? if ($count > $limit_by) { ?>- Affichage des enregistrements de <? echo ($limit_begin+1); ?> à <?php echo (($limit_begin+$limit_by)<=$count) ? ($limit_begin+$limit_by) : $count; } ?> - Utilisez les filtres ci-dessus pour des résultats plus précis</div>
 <?
+
+$sql = "SELECT * FROM ploopi_mb_action WHERE ploopi_mb_action.id_workspace = ";
 
 $sql =  "
         SELECT      ploopi_user_action_log.*,
@@ -204,7 +234,7 @@ $sql =  "
         AND         ploopi_mb_action.id_module_type = ploopi_module.id_module_type
         {$wheresql}
         ORDER BY    timestp DESC
-        LIMIT       0,{$maxres}
+        {$limit}
         ";
 
 $db->query($sql);
@@ -212,12 +242,36 @@ $db->query($sql);
 $columns = array();
 $values = array();
 
-$columns['left']['timestp'] = array('label' => 'Date/Heure', 'width' => '130', 'options' => array('sort' => true));
-$columns['left']['ip']      = array('label' => 'IP client', 'width' => '110', 'options' => array('sort' => true));
-$columns['left']['login']   = array('label' => 'Login', 'width' => '100', 'options' => array('sort' => true));
-$columns['left']['module']  = array('label' => 'Module', 'width' => '100', 'options' => array('sort' => true));
-$columns['left']['action']  = array('label' => 'Action', 'width' => '200', 'options' => array('sort' => true));
-$columns['auto']['record']  = array('label' => 'Enregistrement', 'options' => array('sort' => true));
+$columns['left']['timestp'] = array('label' => 'Date/Heure', 
+                                    'width' => '130', 
+                                    'options' => array('sort' => true),
+                                    'filter' => array('type' => 'datetime')
+                                   );
+$columns['left']['ip']      = array('label' => 'IP client', 
+                                    'width' => '110', 
+                                    'options' => array('sort' => true),
+                                    'filter' => array('type' => 'string')
+                                   );
+$columns['left']['login']   = array('label' => 'Login', 
+                                    'width' => '100', 
+                                    'options' => array('sort' => true),
+                                    'filter' => array('type' => 'string')
+                                   );
+$columns['left']['module']  = array('label' => 'Module', 
+                                    'width' => '100', 
+                                    'options' => array('sort' => true),
+                                    'filter' => array('type' => 'select', 'value' => array('module1', 'module2', 'module3'))
+                                   );
+$columns['left']['action']  = array('label' => 'Action', 
+                                    'width' => '200', 
+                                    'options' => array('sort' => true),
+                                    'filter' => array('type' => 'select', 'value' => array('Action1','Action2','Action3'))
+
+                                   );
+$columns['auto']['record']  = array('label' => 'Enregistrement', 
+                                    'options' => array('sort' => true),
+                                    'filter' => array('type' => 'string')
+                                   );
 
 $c = 0;
 
@@ -242,7 +296,29 @@ while($row = $db->fetchrow())
     $c++;
 }
 
-$skin->display_array($columns, $values, 'array_actionlog', array('sortable' => true, 'orderby_default' => 'timestp', 'sort_default' => 'DESC'));
+$actual = (isset($_POST['skin_page_cut_page']) && $_POST['skin_page_cut_page'] > 0) ? $_POST['skin_page_cut_page'] : 1;
+
+$paramCutPage = array('nbMax' => $count,
+                      'by' => $limit_by,
+                      'page' => $actual_page,
+                      'post' => array('op' => 'actionhistory'),
+                      'answerby' => array(10,25,50,100,500));
+
+
+echo $skin->display_cut_page('cut_page1',$paramCutPage);
+?>
+<div style="margin:0; padding:0; border-bottom:1px solid #c0c0c0; height:0px; font-size: 0em;"></div>
+<?php
+$skin->display_array($columns, 
+                      $values, 
+                      'array_actionlog', 
+                      array('sortable' => true, 
+                            'orderby_default' => 'timestp', 
+                            'sort_default' => 'DESC',
+                            'page' => true)
+                           );
+
+echo $skin->display_cut_page('cut_page2',$paramCutPage);
 
 echo $skin->close_simplebloc();
 ?>

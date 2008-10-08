@@ -2,6 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  * 
  * @package ploopi
  * @subpackage skin
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -36,7 +37,7 @@
  * 
  * @package ploopi
  * @subpackage skin
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -432,13 +433,6 @@ class skin_common
      * @param string $orderby colonne de tri
      */
     
-    /**
-     * Rafraichit l'affichage d'un tableau avancé
-     *
-     * @param string $array_id id du tableau
-     * @param string $orderby colonne de tri
-     */
-    
     public function display_array_refresh($array_id, $orderby = null)
     {
         // On récupère le tableau stocké en session (identifié par array_id)
@@ -789,6 +783,161 @@ class skin_common
 
         return $html;
         
+    }
+    
+    /**
+     * Affiche un découpage par page
+     *
+     * @param string $form_id Nom unique du form
+     * @param array $param propriétés du découpage
+     * 
+     * @return code html des pages
+     *         $POST: $form_id+_begin = début du limit
+     *                $form_id+_page  = page cliquée
+     *                $form_id+_by    = by selectionné
+     *      
+     * propriétés du découpage : 
+     *      - nbmax   : nombre d'enregistrement total
+     *      - by      : nb enregistrement par page
+     *      - page    : page en cours
+     *      - action  : action à passer au form (optionnel)
+     *      - post    : liste de input hidden a passer = array(id/name => value,...) (optionnel)
+     *      - answerby: liste des découpages à porposer = array(10,25,50,100,...) (optionnel)
+     * 
+     */           
+    
+    public function display_cut_page($form_id,$param)
+    {
+      if(empty($form_id)) return '';
+      if(!isset($param['nbMax']) || $param['nbMax'] <= 0) return ''; 
+      if(!isset($param['by']) || $param['by'] <= 0 || $param['nbMax'] <= $param['by']) return '';
+      
+      $nbPage = ceil($param['nbMax']/$param['by']); // forcement > 1 a cause du test "$param['nbMax'] <= $param['by']" juste au dessus
+      
+      if(empty($action)) $action = $_SESSION['ploopi']['scriptname']; 
+      
+      //Correction de la page actuel au cas où...
+      if(!isset($param['page']) || (isset($param['page']) && $param['page'] < 1))  $param['page'] = 1;
+      if($param['page'] > $nbPage ) $param['page'] = $nbPage;
+      
+      $limit_begin = (($param['page']-1)*$param['by']);
+      $html = '<form action="'.ploopi_urlencode($action).'" id="'.$form_id.'" name="'.$form_id.'" method="post">
+               <input type="hidden" id="'.$form_id.'_begin" name="'.$form_id.'_begin" value="'.$limit_begin.'">
+               <input type="hidden" id="'.$form_id.'_page" name="'.$form_id.'_page" value="'.$param['page'].'">
+               <div class="ploopi_page_cut">';
+      
+      /*
+       * Gestion du select de proposition pour le $by 
+       */
+      $answerby_js ='';
+      if(!empty($param['answerby']) && is_array($param['answerby']))
+      {
+        $html .= '<div style="float:left;">
+                  <input type="hidden" id="'.$form_id.'_by" name="'.$form_id.'_by" value="'.$param['by'].'">
+                  <select id="'.$form_id.'_select_by" class="ploopi_page_by" 
+                                                   onchange="javascript:var page;
+                                                                        if('.$param['page'].' > Math.ceil('.$param['nbMax'].'/$(\''.$form_id.'_select_by\').value))
+                                                                          page =  Math.ceil('.$param['nbMax'].'/$(\''.$form_id.'_select_by\').value);
+                                                                        else
+                                                                          page =  '.$param['page'].';
+                                                                        $(\''.$form_id.'_begin\').value=((page-1)*$(\''.$form_id.'_select_by\').value);
+                                                                        $(\''.$form_id.'_page\').value=\''.$param['page'].'\';
+                                                                        $(\''.$form_id.'_by\').value=$(\''.$form_id.'_select_by\').value;
+                                                                        $(\''.$form_id.'\').submit();">';
+        foreach($param['answerby'] as $value)
+        {
+          $select = ($value == $param['by']) ? 'selected="selected"' : '';
+          $html .= '<option value="'.$value.'" '.$select.'>'.$value.'</option>';
+        }
+        $html .= '</select></div>';
+        $answerby_js = '$(\''.$form_id.'_by\').value=$(\''.$form_id.'_select_by\').value;';
+      }
+        
+      /*
+       *  Gestion des $param['post'] => <input type="hidden"...
+       */
+      if(!empty($param['post']))
+      {
+        foreach($param['post'] as $name => $value)
+        {
+          $html .= '<input type="hidden" name="'.$name.'" value="'.$value.'" class>'; 
+        }
+      }
+      
+      /* Si on a moins de 5 pages */
+      if($nbPage <= 5)
+      {
+        $html .= '<div>'; 
+        /* ajout des Pages */
+        for ($page = 1; $page <= $nbPage; $page++)
+        {
+          $limit_begin = (($page-1)*$param['by']);
+          //class utilisée 
+          $class = ($page == $param['page']) ? 'ploopi_page_cut_select' : 'ploopi_page_cut'; 
+          $html .= '<input type="button" class="'.$class.'" value="'.$page.'" onclick="javascript:'.$answerby_js.'$(\''.$form_id.'_begin\').value=\''.$limit_begin.'\';$(\''.$form_id.'_page\').value=\''.$page.'\';$(\''.$form_id.'\').submit();">';
+        }
+        $html .= '</div>';
+      }
+      else /* Si on a plus de 5 pages */
+      {
+        $html .= '<div>';
+        /* Recherche où on est */
+        if($param['page'] < 4) // On est au debut
+        {
+          $button = 'end';
+          $debPage = 1;
+          $maxPage = 5;
+        }
+        elseif($param['page'] > ($nbPage-4)) // on est à la fin
+        {
+          $button = 'begin';
+          $debPage = ($nbPage-5);
+          $maxPage = $nbPage;
+        }
+        else // on est au milieu... 
+        {
+          $button = 'extrem';
+          $debPage = ($param['page']-2);
+          $maxPage = ($param['page']+2);
+        }
+        
+        /* ajout des << et < (ou pas) */
+        if($param['page'] > 1) 
+        {
+          $html .= '<input type="button" class="ploopi_page_cut" value="&lt;&lt;" onclick="javascript:'.$answerby_js.'$(\''.$form_id.'_begin\').value=\'0\';$(\''.$form_id.'_page\').value=\'1\';$(\''.$form_id.'\').submit();">';
+          $limit_begin = (($param['page']-2)*$param['by']);
+          $html .= '<input type="button" class="ploopi_page_cut" value="&lt;" onclick="javascript:'.$answerby_js.'$(\''.$form_id.'_begin\').value=\''.$limit_begin.'\';$(\''.$form_id.'_page\').value=\''.($param['page']-1).'\';$(\''.$form_id.'\').submit();">';
+        }
+        
+        if($button == 'begin' || $button == 'extrem')
+          $html .= '<input type="button" class="ploopi_page_cut_disable" value="...">';
+        
+        /* ajout des Pages */
+        for ($page = $debPage; $page <= $maxPage; $page++)
+        {
+          $limit_begin = (($page-1)*$param['by']);
+          //class utilisée 
+          $class = ($page == $param['page']) ? 'ploopi_page_cut_select' : 'ploopi_page_cut'; 
+          $html .= '<input type="button" class="'.$class.'" value="'.$page.'" onclick="javascript:'.$answerby_js.'$(\''.$form_id.'_begin\').value=\''.$limit_begin.'\';$(\''.$form_id.'_page\').value=\''.$page.'\';$(\''.$form_id.'\').submit();">';
+        }
+
+        if($button == 'end' || $button == 'extrem')
+          $html .= '<input type="button" class="ploopi_page_cut_disable" value="...">';
+        
+        /* ajout des > et >> (ou pas) */
+        if($param['page'] < $nbPage)
+        {
+          $limit_begin = (($param['page'])*$param['by']);
+          $html .= '<input type="button" class="ploopi_page_cut" value="&gt;" onclick="javascript:'.$answerby_js.'$(\''.$form_id.'_begin\').value=\''.$limit_begin.'\';$(\''.$form_id.'_page\').value=\''.($param['page']+1).'\';$(\''.$form_id.'\').submit();">';
+          $limit_begin = (($nbPage-1)*$param['by']);
+          $html .= '<input type="button" class="ploopi_page_cut" value="&gt;&gt;" onclick="javascript:'.$answerby_js.'$(\''.$form_id.'_begin\').value=\''.$limit_begin.'\';$(\''.$form_id.'_page\').value=\''.$nbPage.'\';$(\''.$form_id.'\').submit();">';
+        }
+        $html .= '</div>';
+      }
+      
+      $html .= '</div></form>';
+      
+      return $html;
     }
 }
 ?>

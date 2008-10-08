@@ -1,6 +1,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -603,4 +604,46 @@ div.ploopi_explorer_tools a {
 .treeview_node img {
     display:block;
     float:left;
+}
+
+div.ploopi_page_cut {
+  clear:both;
+  overflow: auto;
+  margin: 0;
+  padding: 2px;
+  text-align: center;
+}
+
+input.ploopi_page_cut_select, input.ploopi_page_cut {
+  margin: 0 1px;
+  padding:0 2px;
+  border: 1px solid #193c1c;
+  background:#7a8f7c url(../img/template/bouton.png) top left repeat-x;
+  color: #000000;
+  text-align:center;
+  cursor: pointer;
+  font-weight: normal;
+  min-width: 22px;
+}
+
+input.ploopi_page_cut_select {
+  font-weight: bold;
+  font-style: italic;
+}
+
+input.ploopi_page_cut_disable {
+  margin: 0 1px;
+  padding:0 2px;
+  border: 1px solid #193c1c;
+  background:#7a8f7c url(../img/template/bouton.png) top left repeat-x;
+  color: #000000;
+  text-align:center;
+  font-weight: normal;
+  width: 18px;
+} 
+
+select.ploopi_page_by {
+  border: 1px solid #606060;
+  background: #f0f0f0;
+  color: #193c1c;
 }
