@@ -686,10 +686,11 @@ class skin_common
      * @param array $treeview tableau contenant la hiérarchie des noeuds
      * @param string $node_id_sel identifiant du noeud sélectionné
      * @param string $node_id_from identifiant du noeud de départ (permet de n'afficher qu'un sous-ensemble)
+     * @param boolean $viewall true tous les noeuds de l'arbre doivent être ouvert (false par défaut)
      * @return string code html du treeview
      */
     
-    public function display_treeview(&$nodes, &$treeview, $node_id_sel = null, $node_id_from = null)
+    public function display_treeview(&$nodes, &$treeview, $node_id_sel = null, $node_id_from = null, $viewall = false)
     {
         // recherche du premier noeud
         if (is_null($node_id_from)) $node_id_from = key($treeview); 
@@ -717,7 +718,7 @@ class skin_common
                 $node_parents = array_merge($node['parents'], array($node['id']));
     
                 // true si le noeud est ouvert : le noeud est ouvert si les parents du noeud courant et du noeud sélectionné se superposent
-                $is_node_opened = sizeof(array_intersect_assoc($nodesel_parents, $node_parents)) == sizeof($node_parents);
+                $is_node_opened = ($viewall || sizeof(array_intersect_assoc($nodesel_parents, $node_parents)) == sizeof($node_parents));
                 
                 // true si le noeud est le dernier fils de son père
                 $is_node_last = ($c == sizeof($treeview[$node_id_from])-1);
@@ -753,7 +754,7 @@ class skin_common
                 }
     
                 // récupération du code html des noeuds fils par un appel récursif    
-                $html_children = ($is_node_sel || $is_node_opened || $node_depth == 1) ? $this->display_treeview($nodes, $treeview, $node_id_sel, $node['id']) : '';
+                $html_children = ($is_node_sel || $is_node_opened || $node_depth == 1) ? $this->display_treeview($nodes, $treeview, $node_id_sel, $node['id'], $viewall) : '';
     
                 // si du contenu à afficher, display = 'block'
                 $display = ($html_children == '') ? 'none' : 'block';

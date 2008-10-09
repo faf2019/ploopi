@@ -432,7 +432,9 @@ switch($ploopi_op)
 
             if (file_exists($documentsfile->getfilepath())) ploopi_downloadfile($documentsfile->getfilepath(),$documentsfile->fields['name'], false, $attachement);
         }
-        ploopi_die();
+
+        echo "Le fichier n'existe pas";
+        ploopi_redirect('admin.php', true, true, 2);
     break;
 
     case 'documents_downloadfile_zip':
@@ -468,7 +470,8 @@ switch($ploopi_op)
             }
         }
 
-        ploopi_die();
+        echo "Le fichier n'existe pas";
+        ploopi_redirect('admin.php', true, true, 2);
     break;
 
     case 'documents_savefolder':

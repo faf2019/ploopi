@@ -296,18 +296,22 @@ function ploopi_ob_clean()
  * @param string $url URL de redirection
  * @param boolean $urlencode true si l'URL doit être chiffrée (true par défaut)
  * @param boolean $internal true si la redirection est interne au site (true par défaut)
+ * @param int $refresh durée en seconde avant la redirection (0 par défaut)
  */
 
-function ploopi_redirect($url, $urlencode = true, $internal = true)
+function ploopi_redirect($url, $urlencode = true, $internal = true, $refresh = 0)
 {
     include_once './include/functions/crypt.php';
     
     if ($urlencode) $url = ploopi_urlencode($url);
     if ($internal) $url = _PLOOPI_BASEPATH.'/'.$url;
 
-    header("Location: {$url}");
+    if (empty($refresh) || !is_numeric($refresh)) header("Location: {$url}");
+    else header("Refresh: {$refresh}; url={$url}");
+    
     ploopi_die();
 }
+
 
 /**
  * Charge l'environnement du module : variables globales, constantes, fonctions.

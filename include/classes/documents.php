@@ -82,8 +82,7 @@ class documentsfile extends data_object
      */
     public function open($id)
     {
-        $res = parent::open($id);
-        $this->oldname = $this->fields['name'];
+        if ($res = parent::open($id)) $this->oldname = $this->fields['name'];
         return($res);
     }
 
