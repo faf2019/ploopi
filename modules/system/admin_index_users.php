@@ -130,20 +130,6 @@ switch($op)
         if ($passwordok) ploopi_redirect("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&alphaTabItem=".(ord(strtolower($user->fields['lastname']))-96).$reload);
         else ploopi_redirect("admin.php?op=modify_user&user_id=".$user->fields['id']."&error=password");
     break;
-
-    case 'attach_user':
-        // on efface la sauvegarde des données utilisateur si elles existent
-        if (isset($_SESSION['system']['save_user'])) unset($_SESSION['system']['save_user']);
-        
-        $user = new user();
-        if (isset($_GET['user_id']) && is_numeric($_GET['user_id']) && $user->open($_GET['user_id']))
-        {
-            $user->attachtogroup($groupid);
-            $alphaTabItem = isset($_GET['alphaTabItem']) ? $_GET['alphaTabItem'] : '';
-            ploopi_redirect("admin.php?reloadsession&usrTabItem=tabUserList&alphaTabItem=".(ord(strtolower($user->fields['lastname']))-96));
-        }
-        else ploopi_redirect('admin.php');
-    break;
     
 }
 
@@ -359,6 +345,20 @@ switch($_SESSION['system']['usrTabItem'])
                 else ploopi_redirect('admin.php');
             break;
 
+            case 'attach_user':
+                // on efface la sauvegarde des données utilisateur si elles existent
+                if (isset($_SESSION['system']['save_user'])) unset($_SESSION['system']['save_user']);
+                
+                $user = new user();
+                if (isset($_GET['user_id']) && is_numeric($_GET['user_id']) && $user->open($_GET['user_id']))
+                {
+                    $user->attachtogroup($groupid);
+                    $alphaTabItem = isset($_GET['alphaTabItem']) ? $_GET['alphaTabItem'] : '';
+                    ploopi_redirect("admin.php?reloadsession&usrTabItem=tabUserList&alphaTabItem=".(ord(strtolower($user->fields['lastname']))-96));
+                }
+                else ploopi_redirect('admin.php');
+            break;            
+            
             case 'detach_user':
                 if (!empty($_GET['user_id']) && is_numeric($_GET['user_id']))
                 {
