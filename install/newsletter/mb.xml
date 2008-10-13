@@ -67,6 +67,41 @@
     </row>
     <row>
       <tablename>ploopi_mod_newsletter_letter</tablename>
+      <name>banniere</name>
+      <label>banniere</label>
+      <type>varchar(255)</type>
+      <visible>1</visible>
+    </row>
+    <row>
+      <tablename>ploopi_mod_newsletter_letter</tablename>
+      <name>banniere_id</name>
+      <label>banniere_id</label>
+      <type>varchar(255)</type>
+      <visible>1</visible>
+    </row>
+    <row>
+      <tablename>ploopi_mod_newsletter_letter</tablename>
+      <name>background_color</name>
+      <label>background_color</label>
+      <type>varchar(7)</type>
+      <visible>1</visible>
+    </row>
+    <row>
+      <tablename>ploopi_mod_newsletter_letter</tablename>
+      <name>content_color</name>
+      <label>content_color</label>
+      <type>varchar(7)</type>
+      <visible>1</visible>
+    </row>
+    <row>
+      <tablename>ploopi_mod_newsletter_letter</tablename>
+      <name>text_color</name>
+      <label>text_color</label>
+      <type>varchar(7)</type>
+      <visible>1</visible>
+    </row>
+    <row>
+      <tablename>ploopi_mod_newsletter_letter</tablename>
       <name>template</name>
       <label>template</label>
       <type>varchar(255)</type>

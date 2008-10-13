@@ -41,6 +41,10 @@ if((isset($_GET['newsletterToolbarNewsletter']) && $_GET['newsletterToolbarNewsl
   ?>
   function newsletter_letter_validate(form, validator)
   {
+      if($(form.newsletter_background_color).value == '') $(form.newsletter_background_color).value = '#FFFFFF';
+      if($(form.newsletter_content_color).value == '') $(form.newsletter_content_color).value = '#FFFFFF';
+      if($(form.newsletter_text_color).value == '') $(form.newsletter_text_color).value = '#000000';
+
       next = true;
   
       if ($('newsletter_status').value == 'wait' && !validator)
@@ -59,6 +63,9 @@ if((isset($_GET['newsletterToolbarNewsletter']) && $_GET['newsletterToolbarNewsl
         if ($('newsletter_status').value == 'draft')
         {
           if (ploopi_validatefield("<?php echo _NEWSLETTER_LABEL_TITLE; ?>", form.newsletter_title, 'string'))
+          if (ploopi_validatefield("<?php echo _NEWSLETTER_LABEL_BACKGROUND_COLOR; ?>", form.newsletter_background_color, 'color'))
+          if (ploopi_validatefield("<?php echo _NEWSLETTER_LABEL_CONTENT_COLOR; ?>", form.newsletter_content_color, 'color'))
+          if (ploopi_validatefield("<?php echo _NEWSLETTER_LABEL_TEXT_COLOR; ?>", form.newsletter_text_color, 'color'))
             return true;
         }
         else
@@ -66,6 +73,9 @@ if((isset($_GET['newsletterToolbarNewsletter']) && $_GET['newsletterToolbarNewsl
           if (ploopi_validatefield("<?php echo _NEWSLETTER_LABEL_TITLE; ?>", form.newsletter_title, 'string'))
           if (ploopi_validatefield("<?php echo _NEWSLETTER_LABEL_SUBJECT; ?>", form.newsletter_subject, 'string'))
           if (ploopi_validatefield("<?php echo _NEWSLETTER_LABEL_SUBJECT; ?>", form.newsletter_subject, 'string'))
+          if (ploopi_validatefield("<?php echo _NEWSLETTER_LABEL_BACKGROUND_COLOR; ?>", form.newsletter_background_color, 'color'))
+          if (ploopi_validatefield("<?php echo _NEWSLETTER_LABEL_CONTENT_COLOR; ?>", form.newsletter_content_color, 'color'))
+          if (ploopi_validatefield("<?php echo _NEWSLETTER_LABEL_TEXT_COLOR; ?>", form.newsletter_text_color, 'color'))
           if ($('fck_newsletter_content').value == '')
           {
               if (confirm(<?php echo _NEWSLETTER_CONFIRM_STATUS_WAIT_NEWSLETTER; ?>)) return true;

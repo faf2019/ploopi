@@ -1,3 +1,15 @@
+== Module NEWSLETTER - version 1.1 ====================================================
+
+2008-10-13  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Modification de la newsletter pour permettre l'utilisation de nouvelles balises :
+  * BANNIERE = une image de la GED
+  * BACKGROUND_COLOR = couleur du fond
+  * CONTENT_COLOR = couleur du fond de la zone de texte
+  * TEXT_COLOR = couleur du texte
+  
+ * Ajout d'une "mini-ged" de gestion des bannières
+
 == Module NEWSLETTER - version 1.0 ====================================================
 
 2008-10-08  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

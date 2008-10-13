@@ -58,10 +58,12 @@ define ('_NEWSLETTER_VALIDATE',   'Valider');
 define ('_NEWSLETTER_DEFAULT',    'Défaut');
 define ('_NEWSLETTER_RETURN',     'Retour');
 define ('_NEWSLETTER_DELETED',    'Supprimé(e)');
+define ('_NEWSLETTER_OPEN',       'Ouvrir');
 
 define ('_NEWSLETTER_LABELTAB_LETTER_LIST', 'Gestion des Newsletters');
 define ('_NEWSLETTER_LABELTAB_SEND',        'Gestion des envois');
 define ('_NEWSLETTER_LABELTAB_SUBSCRIBER',  'Gestion des inscrits');
+define ('_NEWSLETTER_LABELTAB_BANNIERE',    'Gestion des bannières');
 define ('_NEWSLETTER_LABELTAB_PARAM',       'Paramètres');
 
 define ('_NEWSLETTER_NAMECOLUMN_EMAIL',     'Adresse mail');
@@ -100,6 +102,11 @@ define ('_NEWSLETTER_LABEL_SUBJECT',              'Sujet');
 define ('_NEWSLETTER_LABEL_SUBJECT_EXPLAIN',      'Utilisé comme sujet au mail');
 define ('_NEWSLETTER_LABEL_GABARIT',              'Gabarit');
 define ('_NEWSLETTER_LABEL_GABARIT_EXPLAIN',      'Enregistrement nécessaire pour rendre effectif dans l\'éditeur');
+define ('_NEWSLETTER_LABEL_BANNIERE',             'Bannière');
+define ('_NEWSLETTER_LABEL_BACKGROUND_COLOR',     'Couleur de l\'arrière plan');
+define ('_NEWSLETTER_LABEL_CONTENT_COLOR',        'Couleur du fond');
+define ('_NEWSLETTER_LABEL_TEXT_COLOR',     'Couleur du texte');
+
 define ('_NEWSLETTER_LABEL_STATUS',               'Statut');
 define ('_NEWSLETTER_LABEL_STATUS_DRAFT',         'Brouillon');
 define ('_NEWSLETTER_LABEL_STATUS_WAIT',          'En attente de validation');

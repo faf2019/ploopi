@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>newsletter</label>
-      <version>1.0</version>
+      <version>1.1</version>
       <author>HeXad</author>
-      <date>20081008161300</date>
+      <date>20081013145300</date>
       <description>Gestion de NewsLetter</description>
       <action>
           <id_action>1</id_action>
@@ -58,6 +58,11 @@
           <id_action>12</id_action>
           <label>Demande de validation d'une inscription</label>
           <role_enabled>0</role_enabled>
+      </action>
+      <action>
+          <id_action>13</id_action>
+          <label>Gestion des Bannières</label>
+          <role_enabled>1</role_enabled>
       </action>
    </moduletype>
 </ploopi>

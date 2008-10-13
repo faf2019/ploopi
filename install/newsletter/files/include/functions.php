@@ -156,6 +156,25 @@ function newsletter_IsValidator($intIdLetter = -1, $intObject = -1, $intIdModule
 function newsletter_gettemplates()
 {
     $newsletter_templates = array();
+    $newsletter_templates_default = array();
+    
+    $dirTemplate_Default = './modules/newsletter/template_default'; 
+    
+    if(is_dir($dirTemplate_Default))
+    {
+      $pdir = @opendir($dirTemplate_Default);
+  
+      while ($tpl = @readdir($pdir))
+      {
+          if ((substr($tpl, 0, 1) != '.') && is_dir($dirTemplate_Default."/{$tpl}"))
+          {
+              $newsletter_templates_default[] = $tpl;
+          }
+      }
+  
+      sort($newsletter_templates_default);
+    }
+    
     if(is_dir(_NEWSLETTER_TEMPLATES_PATH))
     {
       $pdir = @opendir(_NEWSLETTER_TEMPLATES_PATH);
@@ -170,7 +189,9 @@ function newsletter_gettemplates()
   
       sort($newsletter_templates);
     }
-
+    
+    $newsletter_templates = $newsletter_templates_default + $newsletter_templates;
+    
     return($newsletter_templates);
 }
 

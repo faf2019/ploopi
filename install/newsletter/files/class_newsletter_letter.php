@@ -323,19 +323,6 @@ class newsletter extends data_object
         }
         
         // traitement des images
-        // Image en chemin relatif (./templates/...)
-        /*
-        $path_url = trim(parse_url(_PLOOPI_BASEPATH,PHP_URL_PATH));
-        if(!empty($path_url) && substr($path_url,0,1) != '/') $path_url = '/'.$path_url;
-        if(!empty($path_url) && substr($path_url,-1) != '/') $path_url .= '/';
-        */
-        preg_match_all('/<img[^>]*src="('.str_replace(array('/','.'),array('\/','\.'),$arrNewsletterParam['host']).'[^\"]*)[^>]*>/i' , $content, $matches);
-        foreach($matches[1] as $key => $md5)
-        {
-          $arrSearch[] = $matches[1][$key];
-          $arrReplace[] = str_replace($arrNewsletterParam['host'],realpath('.').'/',$matches[1][$key]);
-        }
-
         // Image en chemin type doc 
         preg_match_all('/<img[^>]*src="(index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32}))"[^>]*>/i', $content, $matches);
         foreach($matches[2] as $key => $md5)
@@ -348,6 +335,30 @@ class newsletter extends data_object
             }
         }
     }
+    
+    // traitement des images HORS ged
+    include_once './include/classes/documents.php';
+    
+    // Image en chemin type mini ged => Banniere
+    preg_match_all('/<img[^>]*src="('.str_replace(array('/','.'),array('\/','\.'),$arrNewsletterParam['host']).'index-quick\.php[^\"]+banniere_id=([0-9]{1,11})[^\"]*)[^>]*>/i', $content, $matches);
+    foreach($matches[2] as $key => $id_img)
+    {
+      $doc = new documentsfile();
+      if ($doc->open($id_img)) 
+      {
+          $arrSearch[] = $matches[1][$key];
+          $arrReplace[] = $doc->getfilepath();
+      }
+    }
+    
+    // Image en chemin relatif (./templates/...) ATTENTION, A CONSERVER A LA FIN SINON CONFLICT AVEC  Image en chemin type mini ged => Banniere
+    preg_match_all('/<img[^>]*src="('.str_replace(array('/','.'),array('\/','\.'),$arrNewsletterParam['host']).'[^\"]*)[^>]*>/i' , $content, $matches);
+    foreach($matches[1] as $key => $md5)
+    {
+      $arrSearch[] = $matches[1][$key];
+      $arrReplace[] = str_replace($arrNewsletterParam['host'],realpath('.').'/',$matches[1][$key]);
+    }
+    
     return str_replace($arrSearch, $arrReplace, $content);
   }
 }

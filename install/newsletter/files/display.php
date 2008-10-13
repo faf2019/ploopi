@@ -90,15 +90,21 @@ if($objNewsletter->fields['status'] == 'valid' || $objNewsletter->fields['status
 // CHARGEMENT DU TEMPLATE
 // get template name
 $template_name = (!empty($objNewsletter->fields['template'])) ? $objNewsletter->fields['template'] : '';
+$template_path = './modules/newsletter/template_default/'; // ATTENTION => peut changer juste après !
 
-if(($template_name !== '' && !file_exists(_NEWSLETTER_TEMPLATES_PATH."/$template_name")) || $template_name == '')
+if($template_name !== '' && file_exists(_NEWSLETTER_TEMPLATES_PATH."/$template_name")) // Template perso
+{
+  $template_path = _NEWSLETTER_TEMPLATES_PATH."/$template_name";
+}
+elseif($template_name !== '' && file_exists($template_path."/$template_name")) // Template par defaut
+{
+  $template_path = $template_path."/$template_name";
+}else // Pas de template enregistré donc template par defaut avec banniere fixe
 {
   // Si pas de template spécifique, on passe le template par defaut.
   $template_name = '';
-  $template_path = './modules/newsletter/template_default/';
-}
-else
-  $template_path = _NEWSLETTER_TEMPLATES_PATH."/$template_name";
+  $template_path = './modules/newsletter/template_default/exemple_banniere_fixe/';
+}  
 
 $template_newsletter = new Template($template_path);
 
@@ -179,6 +185,14 @@ else
   $dateMonthText  = $ploopi_months[date('n')];
 }
 
+$banniere = '';
+if(!empty($objNewsletter->fields['banniere_id']))
+  $banniere = $arrNewsletterParam['host'].ploopi_urlencode('index-quick.php?ploopi_op=newsletter_display_banniere&banniere_id='.$objNewsletter->fields['banniere_id']);
+
+$background_color = (!empty($objNewsletter->fields['background_color'])) ? htmlentities($objNewsletter->fields['background_color']) : '#ffffff';
+$content_color = (!empty($objNewsletter->fields['content_color'])) ? htmlentities($objNewsletter->fields['content_color']) : '#ffffff';
+$text_color = (!empty($objNewsletter->fields['text_color'])) ? htmlentities($objNewsletter->fields['text_color']) : '#000000';
+
 // Chargement des tag à appliquer au template
 $template_newsletter->set_filenames(array('body' => $template_file));
 $template_newsletter->assign_vars(
@@ -186,6 +200,10 @@ $template_newsletter->assign_vars(
         'TEMPLATE_PATH'                 => $template_path,
         'TITLE'                         => htmlentities($objNewsletter->fields['title']),
         'SUBJECT'                       => htmlentities($objNewsletter->fields['subject']),
+        'BANNIERE'                      => $banniere,
+        'BACKGROUND_COLOR'              => $background_color,
+        'CONTENT_COLOR'                 => $content_color,
+        'TEXT_COLOR'                    => $text_color,
         'LINK'                          => ($objNewsletter->fields['id'] >0) ? $arrNewsletterParam['host'].ploopi_urlencode('index-quick.php?ploopi_op=newsletter_consult&id_newsletter='.$objNewsletter->fields['id']) : '.',
         'LINK_UNSUBSCRIB'               => $arrNewsletterParam['host'].ploopi_urlencode('index.php?switch_newsletter_unsubscrib=true'),
         'DATE_DAY'                      => $dateDay,

@@ -3,13 +3,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-15" />
-<title>Newsletter Ploopi</title>
+<title>{TITLE}</title>
 <style type="text/css">
 body{
   width: 580px;
   margin: 0 auto;
   border: none;
   padding: 0;
+  background-color: {BACKGROUND_COLOR};
+  color: {TEXT_COLOR};
 }
 
 img{
@@ -39,23 +41,32 @@ div.top{
   margin: 0;
   padding: 0;
   text-align: center;
+  color: black;
 }
 
 div.banniere{
   clear: both;
-  width: 580px;
+  width: 578px;
   margin: 0;
   padding: 0;
+  border-left: 1px solid black; 
+  border-right: 1px solid black; 
+  border-top: 1px solid black;
+}
+div.banniere img{
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 div.content{
   clear: both;
   margin: 0;
   padding: 0;
-  background-color: #ffffff;
   border-left: 1px solid black; 
   border-right: 1px solid black; 
   border-bottom: 1px solid black;
+  background-color: {CONTENT_COLOR};
 }
 
 div.style1{
@@ -79,6 +90,7 @@ div.bottom{
   margin: 0;
   padding: 0;
   text-align: center;
+  color: black;
 }
 </style>
 </head>
@@ -87,7 +99,7 @@ div.bottom{
     <div class="top">
       <font face="Arial, Helvetica, sans-serif" size="1">Si le message ne s'affiche pas correctement, <a href="{LINK}">cliquez ici</a>.</font>
     </div>
-    <div class="banniere"><a href="{HOST}"><img src="{HOST}modules/newsletter/template_default/img/banniere.jpg" /></a></div>
+    <div class="banniere"><a href="{HOST}"><img src="{BANNIERE}" /></a></div>
     <div class="content">
 	    <div class="style1">{DATE_DAYTEXT}&nbsp;{DATE_DAY}&nbsp;{DATE_MONTHTEXT}&nbsp;{DATE_YEAR}</div>
 	    <div class="style2">{PAGE_CONTENT}</div>

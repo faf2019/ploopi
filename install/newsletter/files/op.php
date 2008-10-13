@@ -112,6 +112,21 @@ switch($ploopi_op)
     ploopi_redirect("index.php?newsletter_unsubscrib_return={$return}");
   break;
   
+  case 'newsletter_display_banniere':
+    
+    if(!empty($_GET['banniere_id']))
+    {
+      include_once './include/functions/filesystem.php';
+      include_once './include/functions/documents.php';
+      include_once './include/classes/documents.php';
+      
+      $doc = new documentsfile();
+      if ($doc->open($_GET['banniere_id']))
+        ploopi_downloadfile($doc->getfilepath(),$doc->fields['label'],false,false);
+    }
+    ploopi_die();
+  break;
+  
   default:
   break;
 }

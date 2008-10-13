@@ -265,6 +265,9 @@ switch ($strNewsletterMenuBlock)
         //Onglet de gestion des envois
         if (ploopi_isactionallowed(_NEWSLETTER_ACTION_SEND))
             $tabs['tabNewsletterSend'] = array('title'   => _NEWSLETTER_LABELTAB_SEND, 'url' => "admin.php?newsletterTabAdmin=tabNewsletterSend");
+        //Onglet de gestion des bannières
+        if (ploopi_isactionallowed(_NEWSLETTER_ACTION_BANNIERE))
+          $tabs['tabNewsletterBanniere'] = array('title'   => _NEWSLETTER_LABELTAB_BANNIERE, 'url' => "admin.php?newsletterTabAdmin=tabNewsletterBanniere");
         //Onglet de gestion des parametres
         if (ploopi_isactionallowed(_NEWSLETTER_ACTION_PARAM) || ploopi_isactionallowed(_NEWSLETTER_ACTION_MANAGE_VALIDATOR))
             $tabs['tabNewsletterParam'] = array('title'   => _NEWSLETTER_LABELTAB_PARAM, 'url' => "admin.php?newsletterTabAdmin=tabNewsletterParam");
@@ -295,6 +298,10 @@ switch ($strNewsletterMenuBlock)
           // Gestion des inscrits
           case 'tabNewsletterSubscriber':
             include './modules/newsletter/admin_subscrib.inc.php';
+          break;
+          //Gestion des Banniere
+          case 'tabNewsletterBanniere':
+            include './modules/newsletter/admin_banniere.inc.php';
           break;
           // Paramétrage
           case 'tabNewsletterParam':

@@ -35,6 +35,11 @@
  */
 
 /**
+ * Objet image pour la mini-ged en gestion de banniere
+ */
+define ('_NEWSLETTER_OBJECT_IMAGE', 0);
+
+/**
  * Action : Ajouter une newsletter
  */
 define ('_NEWSLETTER_ACTION_WRITE',       1);
@@ -93,6 +98,11 @@ define ('_NEWSLETTER_ACTION_VALIDATED',   11);
  * Action : Demande de validation d'une newsletter
  */
 define ('_NEWSLETTER_ACTION_WAIT_VALID',   12);
+
+/**
+ * Action : Demande de gestion des bannières
+ */
+define ('_NEWSLETTER_ACTION_BANNIERE',   13);
 
 /**
  * Enregistrement d'un abonné : OK
