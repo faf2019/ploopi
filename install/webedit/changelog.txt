@@ -1,3 +1,10 @@
+== Module WebEdit - version 1.8.5 ============================================
+
+2008-10-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug lors de la suppression d'un article (ne recharge pas correctement l'arbre)
+ * Ajout de nouvelles balises (version, revision, etc.) 
+
 == Module WebEdit - version 1.8.4 ============================================
 
 2008-10-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

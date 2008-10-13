@@ -942,8 +942,8 @@ $title = htmlentities($title_raw);
 $template_body->assign_vars(
     array(
         'TEMPLATE_PATH'                 => $template_path,
+        'TEMPLATE_NAME'                 => $template_name,
         'ADDITIONAL_JAVASCRIPT'         => $additional_javascript,
-        'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
         'SITE_TITLE'                    => $title,
         'SITE_TITLE_RAW'                => $title_raw,
         'WORKSPACE_TITLE'               => $title,
@@ -963,7 +963,11 @@ $template_body->assign_vars(
         'DATE_DAYTEXT'                  => $ploopi_days[date('w')],
         'DATE_MONTHTEXT'                => $ploopi_months[date('n')],
         'LASTUPDATE_DATE'               => $lastupdate['date'],
-        'LASTUPDATE_TIME'               => $lastupdate['time']
+        'LASTUPDATE_TIME'               => $lastupdate['time'],
+        'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
+        'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
+        'PLOOPI_VERSION'                => _PLOOPI_VERSION,
+        'PLOOPI_REVISION'               => _PLOOPI_REVISION
     )
 );
 

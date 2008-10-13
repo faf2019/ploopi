@@ -205,97 +205,103 @@ function webedit_gettreeview($headings = array(), $articles = array(), $option =
     
     $treeview = array('list' => array(), 'tree' => array());
 
-    foreach($headings['list'] as $id => $fields)
+    if (!empty($headings['list']))
     {
-        
-        switch($option)
+        foreach($headings['list'] as $id => $fields)
         {
-            case 'selectheading':
-                $link = '';
-                $onclick = "webedit_select_heading('{$fields['id']}', '".addslashes($fields['label'])."', event)";
-            break;
             
-            case 'selectredirect':
-            case 'selectlink':
-                $link = '';
-                $onclick = "ploopi_skin_treeview_shownode('h{$prefix}{$fields['id']}', '".ploopi_queryencode("ploopi_op=webedit_detail_heading&hid=h{$prefix}{$fields['id']}&option={$option}")."', 'admin-light.php')";
-            break;
+            switch($option)
+            {
+                case 'selectheading':
+                    $link = '';
+                    $onclick = "webedit_select_heading('{$fields['id']}', '".addslashes($fields['label'])."', event)";
+                break;
+                
+                case 'selectredirect':
+                case 'selectlink':
+                    $link = '';
+                    $onclick = "ploopi_skin_treeview_shownode('h{$prefix}{$fields['id']}', '".ploopi_queryencode("ploopi_op=webedit_detail_heading&hid=h{$prefix}{$fields['id']}&option={$option}")."', 'admin-light.php')";
+                break;
+        
+                default:
+                    $link = ploopi_urlencode("admin.php?headingid={$fields['id']}");
+                    $onclick = '';
+                break;
+            }            
+            
+            $node = 
+                array(
+                    'id' => 'h'.$prefix.$fields['id'],
+                    'label' => $fields['label'],
+                    'description' => $fields['description'],
+                    'parents' => split(';', $fields['parents']),
+                    'node_link' => '',
+                    'node_onclick' => "ploopi_skin_treeview_shownode('h{$prefix}{$fields['id']}', '".ploopi_queryencode("ploopi_op=webedit_detail_heading&hid=h{$prefix}{$fields['id']}&option={$option}")."', 'admin-light.php')",
+                    'link' => $link,
+                    'onclick' => $onclick,
+                    'icon' => ($fields['id_heading'] == 0) ? './modules/webedit/img/base.png' : './modules/webedit/img/folder.png'
+                );
+                
+            // on rajoute 'h' devant chaque parent
+            foreach($node['parents'] as $key => $value) $node['parents'][$key] = 'h'.$prefix.$value;
     
-            default:
-                $link = ploopi_urlencode("admin.php?headingid={$fields['id']}");
-                $onclick = '';
-            break;
-        }            
-        
-        $node = 
-            array(
-                'id' => 'h'.$prefix.$fields['id'],
-                'label' => $fields['label'],
-                'description' => $fields['description'],
-                'parents' => split(';', $fields['parents']),
-                'node_link' => '',
-                'node_onclick' => "ploopi_skin_treeview_shownode('h{$prefix}{$fields['id']}', '".ploopi_queryencode("ploopi_op=webedit_detail_heading&hid=h{$prefix}{$fields['id']}&option={$option}")."', 'admin-light.php')",
-                'link' => $link,
-                'onclick' => $onclick,
-                'icon' => ($fields['id_heading'] == 0) ? './modules/webedit/img/base.png' : './modules/webedit/img/folder.png'
-            );
+            $treeview['list']['h'.$prefix.$fields['id']] = $node;
             
-        // on rajoute 'h' devant chaque parent
-        foreach($node['parents'] as $key => $value) $node['parents'][$key] = 'h'.$prefix.$value;
-
-        $treeview['list']['h'.$prefix.$fields['id']] = $node;
-        
-        $treeview['tree']['h'.$prefix.$fields['id_heading']][] = 'h'.$prefix.$fields['id'];                        
+            $treeview['tree']['h'.$prefix.$fields['id_heading']][] = 'h'.$prefix.$fields['id'];                        
+        }
     }
     
     if ($option != 'selectheading')
     {
         $today = ploopi_createtimestamp();
         
-        foreach($articles['list'] as $id => $fields)
+        if (!empty($articles['list']))
         {
-            if (isset($treeview['list']['h'.$prefix.$fields['id_heading']]))
+            foreach($articles['list'] as $id => $fields)
             {
-                
-                
-                $fields['date_ok'] = (($fields['timestp_published'] <= $today || $fields['timestp_published'] == 0) && ($fields['timestp_unpublished'] >= $today || $fields['timestp_unpublished'] == 0));
-                
-                switch($option)
+                if (isset($treeview['list']['h'.$prefix.$fields['id_heading']]))
                 {
-                    // used for fckeditor and link redirect on heading
-                    case 'selectredirect':
-                        $link = '';
-                        $onclick = "webedit_select_article('{$fields['id']}', '".addslashes($fields['title'])."', event)";
-                    break;
-    
-                    case 'selectlink':
-                        $link = '';
-                        $onclick = "ploopi_getelem('txtArticle',parent.document).value='index.php?headingid={$fields['id_heading']}&articleid={$fields['id']}';ploopi_getelem('txtAttTitle',parent.document).value='".addslashes($fields['title'])."';";
-                    break;
-    
-                    default:
-                        $link = ploopi_urlencode("admin.php?headingid={$fields['id_heading']}&op=article_modify&articleid={$fields['id']}");
-                        $onclick = '';
-                    break;
-                }        
-                
-                $node = 
-                    array(
-                        'id' => 'a'.$prefix.$fields['id'],
-                        'label' => $fields['title'],
-                        'description' => $fields['metadescription'],
-                        'parents' => array_merge($treeview['list']['h'.$prefix.$fields['id_heading']]['parents'], array('h'.$prefix.$fields['id_heading'])),
-                        'node_link' => '',
-                        'node_onclick' => '',
-                        'link' => $link,
-                        'onclick' => $onclick,
-                        'icon' => "./modules/webedit/img/doc{$fields['new_version']}.png"
-                    );
                     
-                $treeview['list']['a'.$prefix.$fields['id']] = $node;
-                
-                $treeview['tree']['h'.$prefix.$fields['id_heading']][] = 'a'.$prefix.$fields['id'];
-            }                        
+                    
+                    $fields['date_ok'] = (($fields['timestp_published'] <= $today || $fields['timestp_published'] == 0) && ($fields['timestp_unpublished'] >= $today || $fields['timestp_unpublished'] == 0));
+                    
+                    switch($option)
+                    {
+                        // used for fckeditor and link redirect on heading
+                        case 'selectredirect':
+                            $link = '';
+                            $onclick = "webedit_select_article('{$fields['id']}', '".addslashes($fields['title'])."', event)";
+                        break;
+        
+                        case 'selectlink':
+                            $link = '';
+                            $onclick = "ploopi_getelem('txtArticle',parent.document).value='index.php?headingid={$fields['id_heading']}&articleid={$fields['id']}';ploopi_getelem('txtAttTitle',parent.document).value='".addslashes($fields['title'])."';";
+                        break;
+        
+                        default:
+                            $link = ploopi_urlencode("admin.php?headingid={$fields['id_heading']}&op=article_modify&articleid={$fields['id']}");
+                            $onclick = '';
+                        break;
+                    }        
+                    
+                    $node = 
+                        array(
+                            'id' => 'a'.$prefix.$fields['id'],
+                            'label' => $fields['title'],
+                            'description' => $fields['metadescription'],
+                            'parents' => array_merge($treeview['list']['h'.$prefix.$fields['id_heading']]['parents'], array('h'.$prefix.$fields['id_heading'])),
+                            'node_link' => '',
+                            'node_onclick' => '',
+                            'link' => $link,
+                            'onclick' => $onclick,
+                            'icon' => "./modules/webedit/img/doc{$fields['new_version']}.png"
+                        );
+                        
+                    $treeview['list']['a'.$prefix.$fields['id']] = $node;
+                    
+                    $treeview['tree']['h'.$prefix.$fields['id_heading']][] = 'a'.$prefix.$fields['id'];
+                }                        
+            }
         }
     }
     
@@ -360,7 +366,7 @@ function webedit_getarticles($moduleid = -1)
     
     $_SESSION['webedit']['articles']['tree'] = array();
     
-    $articles = array();
+    $arrArticles = array();
 
     $select =   "
                 SELECT      ad.id,
@@ -404,7 +410,11 @@ function webedit_getarticles($moduleid = -1)
             unset($fields['online_content']);
             
             $_SESSION['webedit']['articles']['list'][$fields['id']] = $fields;
+            $arrArticles[$fields['id']] = $fields;
         }
+        else $arrArticles[$fields['id']] = $_SESSION['webedit']['articles']['list'][$fields['id']];
+        
+        $_SESSION['webedit']['articles']['list'] = $arrArticles;
         $_SESSION['webedit']['articles']['tree'][$fields['id_heading']][] = $fields['id'];
     }
 
