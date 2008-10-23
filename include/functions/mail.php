@@ -268,7 +268,7 @@ function ploopi_send_form($from, $to, $subject, $form, $cc = null, $bcc = null, 
                 </html>
                 ";
 
-    return(ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = null, $replyto = null));
+    return(ploopi_send_mail($from, $to, $subject, $message, $cc, $bcc, $replyto));
 }
 
 

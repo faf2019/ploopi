@@ -93,7 +93,7 @@ function ploopi_convertaccents($str)
 
 
 /**
- * Réécrit une URL selon les règles de réécriture utilisée par ploopi
+ * Réécrit une URL selon les règles de réécriture utilisées par ploopi
  *
  * @param string $url URL à réécrire
  * @param string $title titre à insérer dans la nouvelle URL
@@ -245,5 +245,17 @@ function ploopi_htmlpurifier($string)
     $purifier = new HTMLPurifier($config);
 
     return $purifier->purify($string); 
+}
+
+/**
+ * Convertit une couleur HTML/Hex en un tableau de composantes RVB (entier)
+ *
+ * @param string $strHex couleur au format HTML/Hex
+ * @return array tableau contenant les composantes RVB (entier)
+ */
+
+function ploopi_color_hex2rgb($strHex)
+{
+    return array_map('hexdec', str_split(str_replace('#', '', $strHex) ,2));    
 }
 ?>

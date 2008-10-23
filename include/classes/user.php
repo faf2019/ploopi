@@ -71,14 +71,14 @@ class user extends data_object
         
         global $db;
         
-        $db->query("DELETE * FROM ploopi_validation WHERE type_validation = 'user' AND id_validation = {$this->fields['id']}");
-        $db->query("DELETE * FROM ploopi_share WHERE type_share = 'user' AND id_share = {$this->fields['id']}");
-        $db->query("DELETE * FROM ploopi_tag WHERE id_user = {$this->fields['id']}");
-        $db->query("DELETE * FROM ploopi_annotation WHERE id_user = {$this->fields['id']}");
-        $db->query("DELETE * FROM ploopi_param_user WHERE id_user = {$this->fields['id']}");
-        $db->query("DELETE * FROM ploopi_workspace_user_role WHERE id_user = {$this->fields['id']}");
-        $db->query("DELETE * FROM ploopi_group_user WHERE id_user = {$this->fields['id']}");
-        $db->query("DELETE * FROM ploopi_subscription WHERE id_user = {$this->fields['id']}");
+        $db->query("DELETE FROM ploopi_validation WHERE type_validation = 'user' AND id_validation = {$this->fields['id']}");
+        $db->query("DELETE FROM ploopi_share WHERE type_share = 'user' AND id_share = {$this->fields['id']}");
+        $db->query("DELETE FROM ploopi_tag WHERE id_user = {$this->fields['id']}");
+        $db->query("DELETE FROM ploopi_annotation WHERE id_user = {$this->fields['id']}");
+        $db->query("DELETE FROM ploopi_param_user WHERE id_user = {$this->fields['id']}");
+        $db->query("DELETE FROM ploopi_workspace_user_role WHERE id_user = {$this->fields['id']}");
+        $db->query("DELETE FROM ploopi_group_user WHERE id_user = {$this->fields['id']}");
+        $db->query("DELETE FROM ploopi_subscription WHERE id_user = {$this->fields['id']}");
         
         $select = "SELECT * FROM ploopi_workspace_user WHERE id_user = {$this->fields['id']}";
         $rs = $db->query($select);

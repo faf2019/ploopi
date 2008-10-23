@@ -141,222 +141,224 @@ function ploopi_makedir($path, $mode = 0750)
 
 function ploopi_getmimetype($filename)
 {
-    if (ereg('Opera(/| )([0-9].[0-9]{1,2})', $_SERVER['HTTP_USER_AGENT']))
-        $UserBrowser = "Opera";
-    elseif (ereg('MSIE ([0-9].[0-9]{1,2})', $_SERVER['HTTP_USER_AGENT']))
-        $UserBrowser = "IE";
-    else
-        $UserBrowser = '';
+    
+    $strUserBrowser = '';
+    if (!empty($_SERVER['HTTP_USER_AGENT']))
+    {
+        if (ereg('Opera(/| )([0-9].[0-9]{1,2})', $_SERVER['HTTP_USER_AGENT']))
+            $strUserBrowser = "Opera";
+        elseif (ereg('MSIE ([0-9].[0-9]{1,2})', $_SERVER['HTTP_USER_AGENT']))
+            $strUserBrowser = "IE";
+    }        
 
     /// important for download im most browser
-    $mimetype = ($UserBrowser == 'IE' || $UserBrowser == 'Opera') ? 'application/octetstream' : 'application/octet-stream';
+    $strMimetype = ($strUserBrowser == 'IE' || $strUserBrowser == 'Opera') ? 'application/octetstream' : 'application/octet-stream';
 
-    $mimetypes_array = array(
-
-        //texte
-        'txt' => 'text/plain',
-        'htm' => 'text/html',
-        'html' => 'text/html',
-        'shtml' => 'text/html',
-        'css' => 'text/css',
-        'js' => 'application/javascript',
-        'latex' => 'application/x-latex',
-        'g' => 'text/plain',
-        'bas' => 'text/plain',
-        'h' => 'text/plain',
-        'c' => 'text/plain',
-        'cc' => 'text/plain',
-        'cpp' => 'text/plain',
-        'java' => 'text/plain',
-        'hh' => 'text/plain',
-        'm' => 'text/plain',
-        'f90' => 'text/plain',
-        'csv' => 'text/csv',
-        'tsv' => 'text/tab-separated-values',
-        'php' => 'application/x-httpd-php',
-        'php3' => 'application/x-httpd-php',
-        'phtml' => 'application/x-httpd-php',
-        'sql' => 'text/x-sql',
-
-        //images
-        'png' => 'image/png',
-        'gif' => 'image/gif',
-        'jpg' => 'image/jpeg',
-        'jpeg' => 'image/jpeg',
-        'jpe' => 'image/jpeg',
-        'bmp' => 'image/bmp',
-        'tif' => 'image/tiff',
-        'tiff' => 'image/tiff',
-        'pnm' => 'image/x-portable-anymap',
-        'pbm' => 'image/x-portable-bitmap',
-        'pgm' => 'image/x-portable-graymap',
-        'ppm' => 'image/x-portable-pixmap',
-        'xbm' => 'image/x-xbitmap',
-        'xpm' => 'image/x-xpixmap',
-        'ico' => 'image/x-icon',
-        'svg' => 'image/svg+xml',
-        'svgz' => 'image/svg+xml',
-
-
-        //archives
-        'bz2' => 'application/x-bzip',
-        'gz' => 'application/x-gzip',
-        'tar' => 'application/x-tar',
-        'tgz' => 'application/x-gzip',
-        'zip' => 'application/zip',
-        'z' => 'application/x-compress',
-
-        //audio
-        'aif' => 'audio/aiff',
-        'aiff' => 'audio/aiff',
-        'aifc' => 'audio/aiff',
-        'mid' => 'audio/mid',
-        'midi' => 'audio/mid',
-        'mp3' => 'audio/mpeg',
-        'mp2' => 'audio/mpeg',
-        'mpa' => 'audio/mpeg',
-        'ogg' => 'audio/ogg',
-        'wav' => 'audio/wav',
-        'wma' => 'audio/x-ms-wma',
-        'au' => 'audio/basic',
-        'snd' => 'audio/basic',
-        'mid' => 'audio/x-midi',
-        'midi' => 'audio/x-midi',
-
-        //video
-        'asf' => 'video/x-ms-asf',
-        'asx' => 'video/x-ms-asf',
-        'avi' => 'video/avi',
-        'mpg' => 'video/mpeg',
-        'mpeg' => 'video/mpeg',
-        'mpe' => 'video/mpeg',
-        'wmv' => 'video/x-ms-wmv',
-        'wmx' => 'video/x-ms-wmx',
-        'qt' => 'video/quicktime',
-        'mov' => 'video/quicktime',
-        'movie' => 'video/x-sgi-movie',
-        'mp4' => 'audio/mp4',
-
-        //playlist
-        'pls' => 'audio/scpls',
-        'm3u' => 'audio/x-mpegurl',
-
-        //xml
-        'xml' => 'text/xml',
-        'xsl' => 'text/xsl',
-        'sgml' => 'text/x-sgml',
-        'sgm' => 'text/x-sgml',
-        'flr' => 'x-world/x-vrml',
-        'vrml' => 'x-world/x-vrml',
-        'wrl' => 'x-world/x-vrml',
-        'wrz' => 'x-world/x-vrml',
-        'xaf' => 'x-world/x-vrml',
-        'xof' => 'x-world/x-vrml',
-
-        //microsoft
-        'doc' => 'application/msword',
-        'dot' => 'application/msword',
-        'xls' => 'application/excel',
-        'xla' => 'application/excel',
-        'xlc' => 'application/excel',
-        'xlm' => 'application/excel',
-        'xlt' => 'application/excel',
-        'xlw' => 'application/excel',
-        'pps' => 'application/vnd.ms-powerpoint',
-        'ppt' => 'application/vnd.ms-powerpoint',
-        'ppz' => 'application/vnd.ms-powerpoint',
-        'pot' => 'application/vnd.ms-powerpoint',
-        'hlp' => 'application/mshelp',
-        'chm' => 'application/mshelp',
-        'msg' => 'application/vnd.ms-outlook',
-        'mpp' => 'application/vnd.ms-project',
-        'wcm' => 'application/vnd.ms-works',
-        'wdb' => 'application/vnd.ms-works',
-        'wks' => 'application/vnd.ms-works',
-        'wps' => 'application/vnd.ms-works',
-        'mdb' => 'application/x-msaccess',
-        'wmf' => 'application/x-msmetafile',
-        'mny' => 'application/x-msmoney',
-        'pub' => 'application/x-mspublisher',
-        'scd' => 'application/x-msschedule',
-        'trm' => 'application/x-msterminal',
-        'wri' => 'application/x-mswrite',
+    $arrMimetypes = 
+        array(
+            //texte
+            'txt' => 'text/plain',
+            'htm' => 'text/html',
+            'html' => 'text/html',
+            'shtml' => 'text/html',
+            'css' => 'text/css',
+            'js' => 'application/javascript',
+            'latex' => 'application/x-latex',
+            'g' => 'text/plain',
+            'bas' => 'text/plain',
+            'h' => 'text/plain',
+            'c' => 'text/plain',
+            'cc' => 'text/plain',
+            'cpp' => 'text/plain',
+            'java' => 'text/plain',
+            'hh' => 'text/plain',
+            'm' => 'text/plain',
+            'f90' => 'text/plain',
+            'csv' => 'text/csv',
+            'tsv' => 'text/tab-separated-values',
+            'php' => 'application/x-httpd-php',
+            'php3' => 'application/x-httpd-php',
+            'phtml' => 'application/x-httpd-php',
+            'sql' => 'text/x-sql',
     
-        //open office
-        'sxw' => 'application/vnd.sun.xml.writer', 
-        'stw' => 'application/vnd.sun.xml.writer.template',
-        'sxg' => 'application/vnd.sun.xml.writer.global',
-        'sxc' => 'application/vnd.sun.xml.calc',
-        'stc' => 'application/vnd.sun.xml.calc.template', 
-        'sxi' => 'application/vnd.sun.xml.impress',
-        'sti' => 'application/vnd.sun.xml.impress.template', 
-        'sxd' => 'application/vnd.sun.xml.draw',
-        'std' => 'application/vnd.sun.xml.draw.template', 
-        'sxm' => 'application/vnd.sun.xml.math',
-
-        'odt' => 'application/vnd.oasis.opendocument.text',
-        'otm' => 'application/vnd.oasis.opendocument.text-master',
-        'ott' => 'application/vnd.oasis.opendocument.text-template',
-        'odc' => 'application/vnd.oasis.opendocument.chart',
-        'otc' => 'application/vnd.oasis.opendocument.chart-template',
-        'odf' => 'application/vnd.oasis.opendocument.formula',
-        'otf' => 'application/vnd.oasis.opendocument.formula-template',
-        'odg' => 'application/vnd.oasis.opendocument.graphics',
-        'otg' => 'application/vnd.oasis.opendocument.graphics-template',
-        'odi' => 'application/vnd.oasis.opendocument.image',
-        'oti' => 'application/vnd.oasis.opendocument.image-template',
-        'odp' => 'application/vnd.oasis.opendocument.presentation',
-        'otp' => 'application/vnd.oasis.opendocument.presentation-template',
-        'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-        'ots' => 'application/vnd.oasis.opendocument.spreadsheet-template',
-        'oth' => 'application/vnd.oasis.opendocument.text-web',
+            //images
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'jpe' => 'image/jpeg',
+            'bmp' => 'image/bmp',
+            'tif' => 'image/tiff',
+            'tiff' => 'image/tiff',
+            'pnm' => 'image/x-portable-anymap',
+            'pbm' => 'image/x-portable-bitmap',
+            'pgm' => 'image/x-portable-graymap',
+            'ppm' => 'image/x-portable-pixmap',
+            'xbm' => 'image/x-xbitmap',
+            'xpm' => 'image/x-xpixmap',
+            'ico' => 'image/x-icon',
+            'svg' => 'image/svg+xml',
+            'svgz' => 'image/svg+xml',
     
-        //texte enrichi
-        'rtf' => 'text/rtf',
-        'rtx' => 'text/richtext',
-
-        //adobe
-        'pdf' => 'application/pdf',
-        'ai' => 'application/postscript',
-        'eps' => 'application/postscript',
-        'psd' => 'image/psd',
-        'ps' => 'application/postscript',
-
-        //macromedia
-        'swf' => 'application/x-shockwave-flash',
-
-        //real
-        'ra' => 'audio/vnd.rn-realaudio',
-        'ram' => 'audio/x-pn-realaudio',
-        'rm' => 'application/vnd.rn-realmedia',
-        'rv' => 'video/vnd.rn-realvideo',
-
-        //binaires/executables
-        'hqx' => 'application/mac-binhex40',
-
-        //cryptage/certificats
-        'cer' => 'application/x-x509-ca-cert',
-        'crt' => 'application/x-x509-ca-cert',
-        'der' => 'application/x-x509-ca-cert',
-        'p12' => 'application/x-pkcs12',
-        'pfx' => 'application/x-pkcs12',
-        'p7b' => 'application/x-pkcs7-certificates',
-        'spc' => 'application/x-pkcs7-certificates',
-        'p7r' => 'application/x-pkcs7-certreqresp',
-        'p7c' => 'application/x-pkcs7-mime',
-        'p7m' => 'application/x-pkcs7-mime',
-        'p7s' => 'application/x-pkcs7-signature',
-
-        //divers
-        'vcf' => 'text/x-vcard'
-
-    );
+    
+            //archives
+            'bz2' => 'application/x-bzip',
+            'gz' => 'application/x-gzip',
+            'tar' => 'application/x-tar',
+            'tgz' => 'application/x-gzip',
+            'zip' => 'application/zip',
+            'z' => 'application/x-compress',
+    
+            //audio
+            'aif' => 'audio/aiff',
+            'aiff' => 'audio/aiff',
+            'aifc' => 'audio/aiff',
+            'mid' => 'audio/mid',
+            'midi' => 'audio/mid',
+            'mp3' => 'audio/mpeg',
+            'mp2' => 'audio/mpeg',
+            'mpa' => 'audio/mpeg',
+            'ogg' => 'audio/ogg',
+            'wav' => 'audio/wav',
+            'wma' => 'audio/x-ms-wma',
+            'au' => 'audio/basic',
+            'snd' => 'audio/basic',
+            'mid' => 'audio/x-midi',
+            'midi' => 'audio/x-midi',
+    
+            //video
+            'asf' => 'video/x-ms-asf',
+            'asx' => 'video/x-ms-asf',
+            'avi' => 'video/avi',
+            'mpg' => 'video/mpeg',
+            'mpeg' => 'video/mpeg',
+            'mpe' => 'video/mpeg',
+            'wmv' => 'video/x-ms-wmv',
+            'wmx' => 'video/x-ms-wmx',
+            'qt' => 'video/quicktime',
+            'mov' => 'video/quicktime',
+            'movie' => 'video/x-sgi-movie',
+            'mp4' => 'audio/mp4',
+    
+            //playlist
+            'pls' => 'audio/scpls',
+            'm3u' => 'audio/x-mpegurl',
+    
+            //xml
+            'xml' => 'text/xml',
+            'xsl' => 'text/xsl',
+            'sgml' => 'text/x-sgml',
+            'sgm' => 'text/x-sgml',
+            'flr' => 'x-world/x-vrml',
+            'vrml' => 'x-world/x-vrml',
+            'wrl' => 'x-world/x-vrml',
+            'wrz' => 'x-world/x-vrml',
+            'xaf' => 'x-world/x-vrml',
+            'xof' => 'x-world/x-vrml',
+    
+            //microsoft
+            'doc' => 'application/msword',
+            'dot' => 'application/msword',
+            'xls' => 'application/excel',
+            'xla' => 'application/excel',
+            'xlc' => 'application/excel',
+            'xlm' => 'application/excel',
+            'xlt' => 'application/excel',
+            'xlw' => 'application/excel',
+            'pps' => 'application/vnd.ms-powerpoint',
+            'ppt' => 'application/vnd.ms-powerpoint',
+            'ppz' => 'application/vnd.ms-powerpoint',
+            'pot' => 'application/vnd.ms-powerpoint',
+            'hlp' => 'application/mshelp',
+            'chm' => 'application/mshelp',
+            'msg' => 'application/vnd.ms-outlook',
+            'mpp' => 'application/vnd.ms-project',
+            'wcm' => 'application/vnd.ms-works',
+            'wdb' => 'application/vnd.ms-works',
+            'wks' => 'application/vnd.ms-works',
+            'wps' => 'application/vnd.ms-works',
+            'mdb' => 'application/x-msaccess',
+            'wmf' => 'application/x-msmetafile',
+            'mny' => 'application/x-msmoney',
+            'pub' => 'application/x-mspublisher',
+            'scd' => 'application/x-msschedule',
+            'trm' => 'application/x-msterminal',
+            'wri' => 'application/x-mswrite',
+        
+            //open office
+            'sxw' => 'application/vnd.sun.xml.writer', 
+            'stw' => 'application/vnd.sun.xml.writer.template',
+            'sxg' => 'application/vnd.sun.xml.writer.global',
+            'sxc' => 'application/vnd.sun.xml.calc',
+            'stc' => 'application/vnd.sun.xml.calc.template', 
+            'sxi' => 'application/vnd.sun.xml.impress',
+            'sti' => 'application/vnd.sun.xml.impress.template', 
+            'sxd' => 'application/vnd.sun.xml.draw',
+            'std' => 'application/vnd.sun.xml.draw.template', 
+            'sxm' => 'application/vnd.sun.xml.math',
+    
+            'odt' => 'application/vnd.oasis.opendocument.text',
+            'otm' => 'application/vnd.oasis.opendocument.text-master',
+            'ott' => 'application/vnd.oasis.opendocument.text-template',
+            'odc' => 'application/vnd.oasis.opendocument.chart',
+            'otc' => 'application/vnd.oasis.opendocument.chart-template',
+            'odf' => 'application/vnd.oasis.opendocument.formula',
+            'otf' => 'application/vnd.oasis.opendocument.formula-template',
+            'odg' => 'application/vnd.oasis.opendocument.graphics',
+            'otg' => 'application/vnd.oasis.opendocument.graphics-template',
+            'odi' => 'application/vnd.oasis.opendocument.image',
+            'oti' => 'application/vnd.oasis.opendocument.image-template',
+            'odp' => 'application/vnd.oasis.opendocument.presentation',
+            'otp' => 'application/vnd.oasis.opendocument.presentation-template',
+            'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+            'ots' => 'application/vnd.oasis.opendocument.spreadsheet-template',
+            'oth' => 'application/vnd.oasis.opendocument.text-web',
+        
+            //texte enrichi
+            'rtf' => 'text/rtf',
+            'rtx' => 'text/richtext',
+    
+            //adobe
+            'pdf' => 'application/pdf',
+            'ai' => 'application/postscript',
+            'eps' => 'application/postscript',
+            'psd' => 'image/psd',
+            'ps' => 'application/postscript',
+    
+            //macromedia
+            'swf' => 'application/x-shockwave-flash',
+    
+            //real
+            'ra' => 'audio/vnd.rn-realaudio',
+            'ram' => 'audio/x-pn-realaudio',
+            'rm' => 'application/vnd.rn-realmedia',
+            'rv' => 'video/vnd.rn-realvideo',
+    
+            //binaires/executables
+            'hqx' => 'application/mac-binhex40',
+    
+            //cryptage/certificats
+            'cer' => 'application/x-x509-ca-cert',
+            'crt' => 'application/x-x509-ca-cert',
+            'der' => 'application/x-x509-ca-cert',
+            'p12' => 'application/x-pkcs12',
+            'pfx' => 'application/x-pkcs12',
+            'p7b' => 'application/x-pkcs7-certificates',
+            'spc' => 'application/x-pkcs7-certificates',
+            'p7r' => 'application/x-pkcs7-certreqresp',
+            'p7c' => 'application/x-pkcs7-mime',
+            'p7m' => 'application/x-pkcs7-mime',
+            'p7s' => 'application/x-pkcs7-signature',
+    
+            //divers
+            'vcf' => 'text/x-vcard'
+        );
 
     $ext = ploopi_file_getextension($filename);
 
-    if (isset($mimetypes_array[$ext])) $mimetype = $mimetypes_array[$ext];
+    if (isset($arrMimetypes[$ext])) $strMimetype = $arrMimetypes[$ext];
 
-    return($mimetype);
+    return($strMimetype);
 }
 
 /**

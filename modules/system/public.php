@@ -41,6 +41,7 @@ $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 switch($op)
 {
     case 'search':
+    case 'search_next':
         include_once 'public_search.php';
     break;
 

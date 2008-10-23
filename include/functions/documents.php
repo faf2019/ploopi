@@ -66,12 +66,15 @@ function ploopi_documents_getid($id_object, $id_record, $id_module = -1)
 
 function ploopi_documents($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $load_doc = true, $id_user = -1, $id_workspace = -1, $id_module = -1)
 {
+    include_once './include/classes/documents.php';
+    
     global $db;
+    
     global $ploopi_documents_idinstance;
 
     if (empty($ploopi_documents_idinstance)) $ploopi_documents_idinstance = 0;
     $ploopi_documents_idinstance++;
-
+        
     if ($id_user == -1) $id_user = $_SESSION['ploopi']['userid'];
     if ($id_workspace == -1) $id_workspace = $_SESSION['ploopi']['workspaceid'];
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
@@ -121,9 +124,7 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
         );
     
     $_SESSION['documents']['rights'] = $rights;
-
-    include_once './include/classes/documents.php';
-
+    
     // on va chercher la racine
     $db->query("SELECT id FROM ploopi_documents_folder WHERE id_folder = 0 and id_object = '{$_SESSION['documents']['id_object']}' and id_record = '".addslashes($_SESSION['documents']['id_record'])."'");
 
@@ -156,21 +157,19 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
                 $documentsfolder->save();
             }
         }
-    }
-    ?>
-    <div id="ploopidocuments_<? echo $documents_id; ?>">
-    </div>
-    <?
+    }    
+    
     if ($load_doc)
     {
         ?>
-        <script type="text/javascript">
-            ploopi_window_onload_stock(function () { ploopi_documents_browser('<? echo $documents_id; ?>', '<? echo $params['DEFAULT_FOLDER']; ?>', '', '', true); });
-        </script>
+        <div id="ploopidocuments_<? echo $_SESSION['documents']['documents_id']; ?>">
+            <script type="text/javascript">
+                ploopi_window_onload_stock(function () { ploopi_documents_browser('<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $params['DEFAULT_FOLDER']; ?>', '', '', true); });
+            </script>
+        </div>
         <?
     }
 }
-
 
 /**
  * Renvoie le dossier de stockage des documents

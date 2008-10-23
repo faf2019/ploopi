@@ -1,0 +1,13 @@
+== Ploopi - version 1.1.4 ===================================================
+
+2008-10-09 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Fonction ploopi_color_hex2rgb, nouvelle fonction permettant de convertir une couleur HTML/Hex en un tableau de composantes RVB (entier)
+  ./include/functions/string.php => function ploopi_color_hex2rgb($strHex)
+
+* Fonction ploopi_redirect(), ajout d'un nouveau paramètre permettant de déclencher une redirection au bout d'un temps déterminé.
+  ./include/functions/system.php => ploopi_redirect($url, $urlencode = true, $internal = true, $refresh = 0)
+  
+* Méthode skin_common::display_treeview(), ajout d'un nouveau paramètre permettant de forcer l'ouverture de tous les noeuds à l'affichage
+  ./include/classes/skin_common.php => skin_common::display_treeview(&$nodes, &$treeview, $node_id_sel = null, $node_id_from = null, $viewall = false)
+   
