@@ -344,6 +344,7 @@ class workspace extends data_object
                             ploopi_module.id AS instanceid,
                             ploopi_module.id_workspace As instanceworkspace,
                             ploopi_module.active,
+                            ploopi_module.visible,
                             ploopi_module.shared,
                             ploopi_module.herited,
                             ploopi_module.adminrestricted,

@@ -39,6 +39,7 @@ $select =   "
             SELECT      m.id,
                         m.label,
                         m.active,
+                        m.visible,
                         m.public,
                         m.autoconnect,
                         m.shared,

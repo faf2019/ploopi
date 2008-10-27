@@ -465,6 +465,7 @@ switch ($_SESSION['system']['level'])
                     break;
 
                     case 'switch_active':
+                    case 'switch_visible':
                     case 'switch_public':
                     case 'switch_shared':
                     case 'switch_herited':
@@ -475,6 +476,7 @@ switch ($_SESSION['system']['level'])
                             ploopi_create_user_action_log(_SYSTEM_ACTION_PARAMMODULE, $module->fields['label']);
 
                             if ($op == 'switch_active') $module->fields['active'] = ($module->fields['active']+1)%2;
+                            if ($op == 'switch_visible') $module->fields['visible'] = ($module->fields['visible']+1)%2;
                             if ($op == 'switch_public') $module->fields['public'] = ($module->fields['public']+1)%2;
                             if ($op == 'switch_shared') $module->fields['shared'] = ($module->fields['shared']+1)%2;
                             if ($op == 'switch_herited') $module->fields['herited'] = ($module->fields['herited']+1)%2;
@@ -523,21 +525,20 @@ switch ($_SESSION['system']['level'])
                     break;
 
                     case 'save_module_props' :
-                        if (!empty($_POST['moduleid']) && is_numeric($_POST['moduleid']))
+                        $module = new module();
+                        if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']) && $module->open($_GET['moduleid']))
                         {
-                            $module = new module();
-                            $module->open($_POST['moduleid']);
                             ploopi_create_user_action_log(_SYSTEM_ACTION_CONFIGUREMODULE, $module->fields['label']);
 
                             $module->setvalues($_POST,'module_');
                             
                             if (!isset($_POST['module_active'])) $module->fields['active'] = 0;
+                            if (!isset($_POST['module_visible'])) $module->fields['visible'] = 0;
                             if (!isset($_POST['module_autoconnect'])) $module->fields['autoconnect'] = 0;
                             if (!isset($_POST['module_shared'])) $module->fields['shared'] = 0;
                             if (!isset($_POST['module_herited'])) $module->fields['herited'] = 0;
                             if (!isset($_POST['module_adminrestricted'])) $module->fields['adminrestricted'] = 0;
                             if (!isset($_POST['module_transverseview'])) $module->fields['transverseview'] = 0;
-                                                        
                             
                             if (!$module->fields['shared']) $module->fields['herited'] = 0;
                             $module->save();

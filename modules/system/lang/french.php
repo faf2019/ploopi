@@ -101,6 +101,7 @@ define ('_SYSTEM_LABEL_METABASE', 'Métabase');
 define ('_SYSTEM_LABEL_WCEOBJECTS', 'Obj. WebEdit');
 define ('_SYSTEM_LABEL_MODULENAME', 'Nom');
 define ('_SYSTEM_LABEL_ACTIVE', 'Actif');
+define ('_SYSTEM_LABEL_VISIBLE', 'Visible');
 define ('_SYSTEM_LABEL_PUBLIC', 'Public');
 define ('_SYSTEM_LABEL_AUTOCONNECT', 'Connexion Auto');
 define ('_SYSTEM_LABEL_SHARED', 'Partagé');
@@ -260,6 +261,7 @@ define ('_SYSTEM_MSG_CREATEUSER_CONFIRMATION3', "Confirmer la création d'un nouv
 
 define ('_SYSTEM_EXPLAIN_MODULENAME', 'Nom que portera le module dans l\'interface');
 define ('_SYSTEM_EXPLAIN_ACTIVE', 'Détermine si le module est activé ou non (activé = utilisable)');
+define ('_SYSTEM_EXPLAIN_VISIBLE', 'Détermine si le module est visible ou non (accessible via le menu)');
 define ('_SYSTEM_EXPLAIN_PUBLIC', 'Détermine si le module est public ou non (visible par un utilisateur non connecté)');
 define ('_SYSTEM_EXPLAIN_AUTOCONNECT', 'Détermine si ce module est affiché par défaut à la connexion de l\'utilisateur');
 define ('_SYSTEM_EXPLAIN_SHARED', 'Détermine si ce module est partagé pour les sous-espaces');

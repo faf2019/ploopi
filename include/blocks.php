@@ -82,7 +82,7 @@ switch ($_SESSION['ploopi']['mainmenu'])
 
                 foreach($modules as $key => $menu_moduleid)
                 {
-                    if ($_SESSION['ploopi']['modules'][$menu_moduleid]['active'])
+                    if ($_SESSION['ploopi']['modules'][$menu_moduleid]['active'] && $_SESSION['ploopi']['modules'][$menu_moduleid]['visible'])
                     {
                         $modtype = $_SESSION['ploopi']['modules'][$menu_moduleid]['moduletype'];
                         $blockpath = "./modules/{$modtype}/block.php";

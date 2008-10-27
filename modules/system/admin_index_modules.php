@@ -57,21 +57,23 @@ $c = 0;
 
 $columns['auto']['name']        = array('label' => _SYSTEM_LABEL_MODULENAME, 'options' => array('sort' => true));
 
-$columns['left']['position']    = array('label' => _SYSTEM_LABEL_MODULEPOSITION, 'width' => '50', 'style' => 'text-align:center;');
+$columns['left']['position']    = array('label' => _SYSTEM_LABEL_MODULEPOSITION, 'width' => '75', 'options' => array('sort' => true));
 $columns['left']['type']        = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '100', 'options' => array('sort' => true));
 $columns['right']['actions']    = array('label' => _SYSTEM_LABEL_ACTION, 'width' => '50');
 $columns['right']['herited']    = array('label' => 'Her.', 'width' => '50', 'options' => array('sort' => true));
 $columns['right']['shared']     = array('label' => 'Par.', 'width' => '50', 'options' => array('sort' => true));
+$columns['right']['visible']     = array('label' => 'Vis.', 'width' => '50', 'options' => array('sort' => true));
 $columns['right']['active']     = array('label' => 'Act.', 'width' => '50', 'options' => array('sort' => true));
 $columns['right']['viewmode']   = array('label' => _SYSTEM_LABEL_VIEWMODE, 'width' => '80', 'options' => array('sort' => true));
 
-foreach ($ownmodules AS $index => $module)
+foreach ($ownmodules as $index => $module)
 {
-    $active = $public = $shared = $herited = '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/p_red.png">';
+    $active = $visible = $public = $shared = $herited = '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/p_red.png">';
 
     $p_green = '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/p_green.png">';
 
     if ($module['active']) $active = $p_green;
+    if ($module['visible']) $visible = $p_green;
     if ($module['public']) $public = $p_green;
     if ($module['shared']) $shared = $p_green;
     if ($module['herited']) $herited = $p_green;
@@ -98,7 +100,7 @@ foreach ($ownmodules AS $index => $module)
 
     if ($module['transverseview']) $viewmode .= ' '._SYSTEM_LABEL_TRANSVERSE;
 
-    $values[$c]['values']['position'] = array('label' => $updown, 'style' => 'text-align:center;', 'sort_label' => $module['position']);
+    $values[$c]['values']['position'] = array('label' => "{$updown}{$module['position']}", 'sort_label' => $module['position']);
     $values[$c]['values']['type'] = array('label' => htmlentities($module['label']));
     $values[$c]['values']['name'] = array('label' => htmlentities($module['instancename']));
     $values[$c]['values']['viewmode'] = array('label' => $viewmode);
@@ -106,6 +108,7 @@ foreach ($ownmodules AS $index => $module)
     if ($module['instanceworkspace'] == $workspaceid)
     {
         $values[$c]['values']['active'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=switch_active&moduleid={$module['instanceid']}").'">'.$active.'</a>', 'sort_label' => ($module['active']) ? 1 : 0);
+        $values[$c]['values']['visible'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=switch_visible&moduleid={$module['instanceid']}").'">'.$visible.'</a>', 'sort_label' => ($module['visible']) ? 1 : 0);
         $values[$c]['values']['public'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=switch_public&moduleid={$module['instanceid']}").'">'.$public.'</a>', 'sort_label' => ($module['public']) ? 1 : 0);
         $values[$c]['values']['shared'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=switch_shared&moduleid={$module['instanceid']}").'">'.$shared.'</a>', 'sort_label' => ($module['shared']) ? 1 : 0);
         $values[$c]['values']['herited'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=switch_herited&moduleid={$module['instanceid']}").'">'.$herited.'</a>', 'sort_label' => ($module['herited']) ? 1 : 0);
@@ -113,6 +116,7 @@ foreach ($ownmodules AS $index => $module)
     else
     {
         $values[$c]['values']['active'] = array('label' => $active);
+        $values[$c]['values']['visible'] = array('label' => $visible);
         $values[$c]['values']['public'] = array('label' => $public);
         $values[$c]['values']['shared'] = array('label' => $shared);
         $values[$c]['values']['herited'] = array('label' => $herited);
@@ -137,9 +141,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
     echo $skin->open_simplebloc(str_replace('<MODULE>',$module->fields['label'],_SYSTEM_LABEL_MODULE_PROPERTIES));
     ?>
 
-    <form name="form_modify_module" action="admin.php" method="post">
-    <input type="hidden" name="op" value="save_module_props">
-    <input type="hidden" name="moduleid" value="<? echo $module->fields['id']; ?>">
+    <form name="form_modify_module" action="<? echo ploopi_urlencode("admin.php?op=save_module_props&moduleid={$module->fields['id']}"); ?>" method="post">
     <div class="ploopi_form">
         <div style="padding:2px;">
             <p>
@@ -160,9 +162,18 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 <span><em><? echo _SYSTEM_EXPLAIN_ACTIVE; ?></em></span>
             </p>
 
+            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_visible');">
+                <label><? echo _SYSTEM_LABEL_VISIBLE; ?>:</label>
+                <input type="checkbox" class="checkbox" name="module_visible" id="module_visible" value="1" <? if ($module->fields['visible']) echo 'checked="checked"'; ?> tabindex="3" />
+            </p>
+            <p>
+                <label>&nbsp;</label>
+                <span><em><? echo _SYSTEM_EXPLAIN_VISIBLE; ?></em></span>
+            </p>
+
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_autoconnect');">
                 <label><? echo _SYSTEM_LABEL_AUTOCONNECT; ?>:</label>
-                <input type="checkbox" class="checkbox" name="module_autoconnect" id="module_autoconnect" value="1" <? if ($module->fields['autoconnect']) echo 'checked="checked"'; ?> tabindex="3" />
+                <input type="checkbox" class="checkbox" name="module_autoconnect" id="module_autoconnect" value="1" <? if ($module->fields['autoconnect']) echo 'checked="checked"'; ?> tabindex="4" />
             </p>
             <p>
                 <label>&nbsp;</label>
@@ -171,7 +182,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
 
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_shared');">
                 <label><? echo _SYSTEM_LABEL_SHARED; ?>:</label>
-                <input type="checkbox" class="checkbox" name="module_shared" id="module_shared" value="1" <? if ($module->fields['shared']) echo 'checked="checked"'; ?> tabindex="4" />
+                <input type="checkbox" class="checkbox" name="module_shared" id="module_shared" value="1" <? if ($module->fields['shared']) echo 'checked="checked"'; ?> tabindex="5" />
             </p>
             <p>
                 <label>&nbsp;</label>
@@ -180,7 +191,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
 
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_herited');">
                 <label><? echo _SYSTEM_LABEL_HERITED; ?>:</label>
-                <input type="checkbox" class="checkbox" name="module_herited" id="module_herited" value="1" <? if ($module->fields['herited']) echo 'checked="checked"'; ?> tabindex="5" />
+                <input type="checkbox" class="checkbox" name="module_herited" id="module_herited" value="1" <? if ($module->fields['herited']) echo 'checked="checked"'; ?> tabindex="6" />
                 <a href="<? echo ploopi_urlencode("admin.php?op=apply_heritage&moduleid={$module->fields['id']}"); ?>"><? echo _SYSTEM_APPLYHERITAGE; ?></a>
             </p>
             <p>
@@ -189,7 +200,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
             </p>
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_adminrestricted');">
                 <label><? echo _SYSTEM_LABEL_ADMINRESTRICTED; ?>:</label>
-                <input type="checkbox" class="checkbox" name="module_adminrestricted" id="module_adminrestricted" value="1" <? if ($module->fields['adminrestricted']) echo 'checked="checked"'; ?> tabindex="6" />
+                <input type="checkbox" class="checkbox" name="module_adminrestricted" id="module_adminrestricted" value="1" <? if ($module->fields['adminrestricted']) echo 'checked="checked"'; ?> tabindex="7" />
             </p>
             <p>
                 <label>&nbsp;</label>
@@ -197,7 +208,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_VIEWMODE; ?>:</label>
-                <select class="select" name="module_viewmode" tabindex="7">
+                <select class="select" name="module_viewmode" tabindex="8">
                 <?
                 foreach($ploopi_viewmodes as $id => $viewmode)
                 {
@@ -214,7 +225,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
             </p>
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_transverseview');">
                 <label><? echo _SYSTEM_LABEL_TRANSVERSE; ?>:</label>
-                <input type="checkbox" class="checkbox" name="module_transverseview" id="module_transverseview" value="1" <? if ($module->fields['transverseview']) echo 'checked="checked"'; ?> tabindex="8" />
+                <input type="checkbox" class="checkbox" name="module_transverseview" id="module_transverseview" value="1" <? if ($module->fields['transverseview']) echo 'checked="checked"'; ?> tabindex="9" />
             </p>
             <p>
                 <label>&nbsp;</label>
@@ -222,7 +233,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
             </p>
         </div>
         <div style="clear:both;text-align:right;padding:4px;">
-            <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>" tabindex="9" />
+            <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>" tabindex="10" />
         </div>        
     </div>
     </form>
@@ -269,7 +280,7 @@ foreach ($installedmodules AS $index => $moduletype)
     $c++;
 }
 
-$skin->display_array($columns, $values, 'array_modules', array('sortable' => true, 'orderby_default' => 'actions'));
+$skin->display_array($columns, $values, 'array_modules', array('sortable' => true, 'orderby_default' => 'type'));
 
 echo $skin->close_simplebloc();
 ?>
