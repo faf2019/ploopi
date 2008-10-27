@@ -8,3 +8,4 @@ PRIMARY KEY ( `action` )
 ) ENGINE = MYISAM ;
 
 UPDATE `ploopi_module_type` SET `version` = '1.1.3', `author` = 'Ovensia', `date` = '20081002000000' WHERE `ploopi_module_type`.`id` = 1;
+UPDATE `ploopi_module` SET `visible` = `active`;
