@@ -52,12 +52,12 @@ function ploopi_create_user_action_log($id_action, $id_record, $id_module_type =
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
     $user_action_log = new user_action_log();
-    $user_action_log->fields['id_user'] = $_SESSION["ploopi"]["userid"];
+    $user_action_log->fields['id_user'] = $_SESSION['ploopi']['userid'];
     $user_action_log->fields['id_action'] = $id_action;
     $user_action_log->fields['id_module_type'] = $id_module_type;
     $user_action_log->fields['id_module'] = $id_module;
     $user_action_log->fields['id_record'] = $id_record;
-    $user_action_log->fields['ip'] = $_SERVER['REMOTE_ADDR'];
+    $user_action_log->fields['ip'] = (empty($_SESSION['ploopi']['remote_ip'])) ? '' : implode(',', $_SESSION['ploopi']['remote_ip']);
     $user_action_log->fields['timestp'] = ploopi_createtimestamp();
     $user_action_log->save();
 }

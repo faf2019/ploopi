@@ -115,6 +115,8 @@ define ('_PLOOPI_JS_CHECK_ERROR',   "Vous devez sélectionner une valeur pour le 
 define ('_PLOOPI_JS_COLOR_ERROR',   "Le champ '<FIELD_LABEL>' doit être une couleur valide\\n(ex: #ffff00 / jaune / yellow)");
 define ('_PLOOPI_JS_PHONE_ERROR',   "Le champ '<FIELD_LABEL>' doit être un numéro de téléphone valide\\n(ex: +33 1 02 03 04 05 ou 0102030405)");
 
+define ('_PLOOPI_ERROR_TEMPLATE_FILE', "Le fichier <FILE> du template <TEMPLATE> n'a pas pu être chargé");
+
 define ('_PLOOPI_LABEL_NEWTICKET', 'Nouveau message');
 define ('_PLOOPI_LABEL_TICKET_VALIDATIONREQUIRED', 'Validation requise<br />(optionnel, permet de demander au(x) destinataire(s) de valider le message)');
 define ('_PLOOPI_LABEL_TICKET_LINKEDOBJECT', 'Objet lié');

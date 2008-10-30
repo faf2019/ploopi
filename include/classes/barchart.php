@@ -113,7 +113,8 @@ class barchart
                 'display_titles' => true, // affichage de titres
                 'class_name' => 'ploopi_barchart', // class de style (css) utilisée
                 'bar_arrange' => 'merge', // type d'arrangement des barres : merge, stack, side_by_side
-                'padding' => 0 // marge utilisée à l'affichage
+                'padding' => 0, // marge utilisée à l'affichage
+				'yaxis_pos'=> 0 // positionnement personnalisé de l'axe des ordonnées
             );
 
         $this->setoptions($options);
@@ -170,7 +171,8 @@ class barchart
      * display_titles:boolean,
      * display_values:boolean,
      * bar_arrange:string ('merge', 'stack', 'side_by_side'),
-     * padding:0,
+     * padding:int,
+     * yaxis_pos:int,
      * class_name:string
      *
      * @param array $options tableau des options à modifier
@@ -251,8 +253,10 @@ class barchart
                     <?
                     for ($t = 1; $t < $this->value_max / $this->options['grid_width'] + $autofit_scale_inc ; $t++)
                     {
+						$vscale_value=$t * $this->options['grid_width'];
+						$vscale_value = ( $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] + $vscale_value / $this->value_max : $vscale_value ;
                         ?>
-                        <div style="bottom:<? echo floor(($t * $this->options['grid_width'] * $this->height) / $this->value_max) -5 ; ?>px;"><? echo $t * $this->options['grid_width']; ?></div>
+                        <div style="bottom:<? echo floor(($t * $this->options['grid_width'] * $this->height) / $this->value_max) -5 ; ?>px;"><? echo $vscale_value; ?></div>
                         <?
                     }
                     ?>
@@ -273,8 +277,9 @@ class barchart
                             <?
                         }
                     }
-    
-    
+    				
+					$this->value_max -= ( $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] : 0 ;
+ 
                     $dataset_index = 0;
                     foreach($this->datasets as $dataset_name => $dataset)
                     {
@@ -285,6 +290,8 @@ class barchart
     
                         foreach($dataset['values'] as $key => $value)
                         {
+							$value -= ( $this->options['yaxis_pos'] && $value > $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] : 0 ;
+
                             if (!empty($value) && is_numeric($value))
                             {
                                 if( $this->options['bar_arrange'] == 'stack' )

@@ -46,9 +46,21 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mode'] == 'backoffi
     $skin = new skin();
     $template_body = new Template($_SESSION['ploopi']['template_path']);
 
+    if (!file_exists("{$_SESSION['ploopi']['template_path']}/light.tpl") || ! is_readable("{$_SESSION['ploopi']['template_path']}/light.tpl")) {
+    
+        ploopi_die(
+            str_replace(
+                array('<FILE>', '<TEMPLATE>'),
+                array('light.tpl', $_SESSION['ploopi']['template_path']),
+                _PLOOPI_ERROR_TEMPLATE_FILE
+            )
+        );
+        
+    }
+    
     $template_body->set_filenames(
         array(
-            'body' => "light.tpl"
+            'body' => 'light.tpl'
         )
     );
 

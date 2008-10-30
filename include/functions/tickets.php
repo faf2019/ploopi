@@ -101,7 +101,7 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
         $id_user = $id_workspace = $id_module = $id_module_type = 0;
     }
 
-    if (isset($_SESSION['ploopi']['tickets']['users_selected']))
+    if (isset($_SESSION['ploopi']['tickets']['users_selected']) && file_exists("{$_SESSION['ploopi']['template_path']}/ticket.tpl") && is_readable("{$_SESSION['ploopi']['template_path']}/ticket.tpl"))
     {
         // initialisation du moteur de template
         $tplmail = new Template($_SESSION['ploopi']['template_path']);
@@ -196,21 +196,22 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
         foreach($_SESSION['ploopi']['tickets']['users_selected'] as $user_id)
         {
             $user = new user();
-            $user->open($user_id);
-            if ($user->fields['ticketsbyemail'] == 1 && !empty($user->fields['email']))
+            if ($user->open($user_id))
             {
-                $email_to[0] = array(   'address'   => $user->fields['email'],
-                                        'name'  => "{$user->fields['firstname']} {$user->fields['lastname']}"
-                                    );
-
-                ploopi_send_mail($email_from, $email_to, $email_subject, $email_message);
+                if ($user->fields['ticketsbyemail'] == 1 && !empty($user->fields['email']))
+                {
+                    $email_to[0] = array(   'address'   => $user->fields['email'],
+                                            'name'  => "{$user->fields['firstname']} {$user->fields['lastname']}"
+                                        );
+    
+                    ploopi_send_mail($email_from, $email_to, $email_subject, $email_message);
+                }
+    
+                $ticket_dest = new ticket_dest();
+                $ticket_dest->fields['id_user'] = $user_id;
+                $ticket_dest->fields['id_ticket'] = $id_ticket;
+                $ticket_dest->save();
             }
-
-            $ticket_dest = new ticket_dest();
-            $ticket_dest->fields['id_user'] = $user_id;
-            $ticket_dest->fields['id_ticket'] = $id_ticket;
-            $ticket_dest->save();
-
         }
 
         unset($_SESSION['ploopi']['tickets']['users_selected']);

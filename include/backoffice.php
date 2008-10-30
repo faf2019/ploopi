@@ -59,6 +59,18 @@ $template_filename = 'index.tpl';
 if (!empty($_GET['ploopi_tpl']) && file_exists("{$_SESSION['ploopi']['template_path']}/{$_GET['ploopi_tpl']}.tpl")) $template_filename = "{$_GET['ploopi_tpl']}.tpl";
 else if (isset($_SESSION['ploopi']['remote_pda']) && $_SESSION['ploopi']['remote_pda'] && file_exists("{$_SESSION['ploopi']['template_path']}/pda.tpl")) $template_filename = 'pda.tpl';
 
+if (!file_exists("{$_SESSION['ploopi']['template_path']}/{$template_filename}") || ! is_readable("{$_SESSION['ploopi']['template_path']}/{$template_filename}")) {
+
+    ploopi_die(
+        str_replace(
+            array('<FILE>', '<TEMPLATE>'),
+            array($template_filename, $_SESSION['ploopi']['template_path']),
+            _PLOOPI_ERROR_TEMPLATE_FILE
+        )
+    );
+    
+}
+
 $template_body->set_filenames(
     array(
         'body' => $template_filename

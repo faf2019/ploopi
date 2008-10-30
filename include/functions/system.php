@@ -68,14 +68,15 @@ function ploopi_die($var = null, $flush = true)
         _PLOOPI_ADMINMAIL != ''
         )
     {
-        mail(   _PLOOPI_ADMINMAIL,
-                "[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$_SERVER['HTTP_HOST']}]",
-                "{$ploopi_errors_nb} erreur(s) sur {$ploopi_errors_msg}".
-                "\n_SERVER:\n".print_r($_SERVER, true).
-                "\n_POST:\n".print_r($_POST, true).
-                "\n_GET:\n".print_r($_GET, true).
-                "\n_SESSION:\n".print_r($_SESSION, true)
-            );
+        mail(   
+            _PLOOPI_ADMINMAIL,
+            "[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$_SERVER['HTTP_HOST']}]",
+            "{$ploopi_errors_nb} erreur(s) sur {$ploopi_errors_msg}".
+            "\n_SERVER:\n".print_r($_SERVER, true).
+            "\n_POST:\n".print_r($_POST, true).
+            "\n_GET:\n".print_r($_GET, true).
+            "\n_SESSION:\n".print_r($_SESSION, true)
+        );
     }  
     
     
@@ -197,7 +198,7 @@ function ploopi_ob_callback($buffer)
         
         $log->fields['request_method'] = $_SERVER['REQUEST_METHOD'];
         $log->fields['query_string'] = $_SERVER['QUERY_STRING'];
-        $log->fields['remote_addr'] = implode(',', ploopi_getip());
+        $log->fields['remote_addr'] = (empty($_SESSION['ploopi']['remote_ip'])) ? '' : implode(',', $_SESSION['ploopi']['remote_ip']);
         $log->fields['remote_port'] = $_SERVER['REMOTE_PORT'];
         $log->fields['script_filename'] = $_SERVER['SCRIPT_FILENAME'];
         $log->fields['script_name'] = $_SERVER['SCRIPT_NAME'];

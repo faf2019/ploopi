@@ -905,5 +905,8 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 ALTER TABLE `ploopi_module` ADD `visible` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `active`;
+UPDATE `ploopi_module` SET `visible` = `active`;
 
-UPDATE `ploopi_module_type` SET `version` = '1.1.4', `author` = 'Ovensia', `date` = '20081027000000' WHERE `ploopi_module_type`.`id` = 1;
+ALTER TABLE `ploopi_user_action_log` CHANGE `ip` `ip` VARCHAR( 64 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL; 
+
+UPDATE `ploopi_module_type` SET `version` = '1.1.4', `author` = 'Ovensia', `date` = '20081029000000' WHERE `ploopi_module_type`.`id` = 1;
