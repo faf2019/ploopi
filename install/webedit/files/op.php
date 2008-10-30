@@ -77,7 +77,7 @@ switch($ploopi_op)
             }
             else $return = _WEBEDIT_SUBSCRIPTION_ERROR_EMAIL;
         }
-        else $return = _WEBEDIT_SUBSCRIPTION_ERROR_FATAL;
+        else $return = _WEBEDIT_SUBSCRIPTION_ERROR_PARAM;
         
         ploopi_redirect("index.php?headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&subscription_return={$return}");
     break;

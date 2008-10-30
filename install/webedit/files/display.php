@@ -815,6 +815,19 @@ else // affichage standard rubrique/page
 // load a specific template file in edition mode (if exists)
 if ($webedit_mode == 'edit' && file_exists("./templates/frontoffice/{$template_name}/fck_{$template_file}")) $template_file = "fck_{$template_file}";
 
+// on vérifie l'existence du fichier TPL, sinon => die
+if (!file_exists("./templates/frontoffice/{$template_name}/{$template_file}") || ! is_readable("./templates/frontoffice/{$template_name}/{$template_file}")) {
+
+    ploopi_die(
+        str_replace(
+            array('<FILE>', '<TEMPLATE>'),
+            array($template_file, "./templates/frontoffice/{$template_name}"),
+            _PLOOPI_ERROR_TEMPLATE_FILE
+        )
+    );
+    
+}
+    
 $template_body->set_filenames(array('body' => $template_file));
 
 if (!empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))

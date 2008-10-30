@@ -1,3 +1,10 @@
+== Module WebEdit - version 1.8.6 ============================================
+
+2008-10-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Corrections de bugs mineurs
+ * Ajout d'un test si l'existence du template frontoffice au moment du rendu 
+
 == Module WebEdit - version 1.8.5 ============================================
 
 2008-10-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

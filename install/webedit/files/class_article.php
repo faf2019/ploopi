@@ -193,8 +193,11 @@ class webedit_article extends data_object
         
         // Nettoyage des tags
         // Note : les tags ne sont réellement enregistrés qu'à la publication
-        list($tags) = ploopi_getwords($this->fields['tags'], true, false, false);
-        $this->fields['tags'] = implode(' ', array_keys($tags));
+        if (!empty($this->fields['tags']))
+        {
+            list($tags) = ploopi_getwords($this->fields['tags'], true, false, false);
+            $this->fields['tags'] = implode(' ', array_keys($tags));
+        }
         
         $res = parent::save();
         if ($this->gettablename() == 'ploopi_mod_webedit_article_draft' && $this->fields['content'] != $this->original_content)
