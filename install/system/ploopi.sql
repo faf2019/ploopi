@@ -304,10 +304,11 @@ CREATE TABLE `ploopi_log` (
   `numqueries` int(10) unsigned default '0',
   `page_size` int(10) unsigned default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
 LOCK TABLES `ploopi_log` WRITE;
 /*!40000 ALTER TABLE `ploopi_log` DISABLE KEYS */;
+INSERT INTO `ploopi_log` VALUES (1,'GET','ploopi_op=tickets_getnum','192.168.1.200',38732,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102131,40,4,10,90,10,0),(2,'GET','ploopi_op=tickets_getnum','192.168.1.200',38742,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102201,17,2,12,88,10,0),(3,'GET','ploopi_op=tickets_getnum','192.168.1.200',38745,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102231,18,2,11,89,10,0),(4,'GET','ploopi_op=tickets_getnum','192.168.1.200',38747,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102301,21,3,14,86,10,0),(5,'GET','ploopi_op=tickets_getnum','192.168.1.200',38760,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102331,19,2,11,89,10,0),(6,'GET','ploopi_op=tickets_getnum','192.168.1.200',38763,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102401,39,3,8,92,10,0),(7,'GET','ploopi_op=tickets_getnum','192.168.1.200',38766,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102431,18,1,6,94,10,0),(8,'GET','ploopi_op=tickets_getnum','192.168.1.200',38768,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102501,18,2,11,89,10,0),(9,'GET','ploopi_op=tickets_getnum','192.168.1.200',37589,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102531,32,2,6,94,10,0),(10,'GET','ploopi_op=tickets_getnum','192.168.1.200',37591,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102601,23,2,9,91,10,0),(11,'GET','ploopi_op=tickets_getnum','192.168.1.200',37604,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102631,17,1,6,94,10,0),(12,'GET','ploopi_op=tickets_getnum','192.168.1.200',37608,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102701,17,2,12,88,10,0),(13,'GET','ploopi_op=tickets_getnum','192.168.1.200',37615,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102731,20,2,10,90,10,0),(14,'GET','ploopi_op=tickets_getnum','192.168.1.200',37633,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102801,47,2,4,96,10,0),(15,'GET','ploopi_op=tickets_getnum','192.168.1.200',37640,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102831,18,2,11,89,10,0),(16,'GET','ploopi_op=tickets_getnum','192.168.1.200',37643,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102901,19,1,5,95,10,0),(17,'GET','ploopi_op=tickets_getnum','192.168.1.200',37659,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030102931,17,1,6,94,10,0),(18,'GET','ploopi_op=tickets_getnum','192.168.1.200',37663,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030103001,17,1,6,94,10,0),(19,'GET','ploopi_op=tickets_getnum','192.168.1.200',59714,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030103031,17,1,6,94,10,0),(20,'GET','ploopi_op=tickets_getnum','192.168.1.200',59717,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030103101,19,2,11,89,10,0),(21,'GET','ploopi_op=tickets_getnum','192.168.1.200',59722,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030103131,33,9,27,73,10,0),(22,'GET','ploopi_op=tickets_getnum','192.168.1.200',59725,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030103201,19,2,11,89,11,0),(23,'GET','ploopi_op=tickets_getnum','192.168.1.200',59728,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030103231,19,2,11,89,10,0),(24,'GET','ploopi_op=tickets_getnum','192.168.1.200',59763,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030103301,41,5,12,88,11,0),(25,'GET','ploopi_op=tickets_getnum','192.168.1.200',59767,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030103331,26,2,8,92,10,0),(26,'GET','ploopi_op=tickets_getnum','192.168.1.200',59781,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030103401,17,1,6,94,10,0),(27,'GET','ploopi_op=tickets_getnum','192.168.1.200',59785,'/var/www/ploopi_1.1.4/index-quick.php',NULL,'/ploopi_1.1.4/index-quick.php','/ploopi_1.1.4/index-quick.php?ploopi_op=tickets_getnum',0,0,0,'Mozilla/Netscape 6.x','Linux/Unix',20081030103431,17,1,6,94,10,0);
 /*!40000 ALTER TABLE `ploopi_log` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_mb_action`;
@@ -422,6 +423,7 @@ CREATE TABLE `ploopi_module` (
   `id_module_type` int(10) unsigned NOT NULL default '0',
   `id_workspace` int(10) default NULL,
   `active` tinyint(1) unsigned NOT NULL default '0',
+  `visible` tinyint(1) unsigned NOT NULL default '0',
   `public` tinyint(1) unsigned default '0',
   `shared` tinyint(1) unsigned default '0',
   `herited` tinyint(1) unsigned default '0',
@@ -439,7 +441,7 @@ CREATE TABLE `ploopi_module` (
 
 LOCK TABLES `ploopi_module` WRITE;
 /*!40000 ALTER TABLE `ploopi_module` DISABLE KEYS */;
-INSERT INTO `ploopi_module` VALUES (1,'SystËme',1,0,1,0,0,0,0,1,0,0);
+INSERT INTO `ploopi_module` VALUES (1,'SystËme',1,0,1,1,0,0,0,0,1,0,0);
 /*!40000 ALTER TABLE `ploopi_module` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_module_type`;
@@ -457,7 +459,7 @@ CREATE TABLE `ploopi_module_type` (
 
 LOCK TABLES `ploopi_module_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_module_type` DISABLE KEYS */;
-INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.1.3','Ovensia','20081002000000');
+INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,NULL,'1.1.4','Ovensia','20081027000000');
 /*!40000 ALTER TABLE `ploopi_module_type` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_module_workspace`;
@@ -591,6 +593,7 @@ CREATE TABLE `ploopi_session` (
 
 LOCK TABLES `ploopi_session` WRITE;
 /*!40000 ALTER TABLE `ploopi_session` DISABLE KEYS */;
+INSERT INTO `ploopi_session` VALUES ('5a873d950b76d36e1ba0940e72318c48',1225359271,'xúµVÕn„6æË;,tZG§ùÿVŒ{€∂=î4∂â–$ó§úxSøo£Cäî)€õän.ÊèÛÛÕ7“B)Õˇf’|]ΩŸÍ°*Ñ⁄rY<Ÿ™¨\nˇ≥™\nÕ¨}Q¶À§èU—[0<óRhˆl5ka™Y†öo(Òóu{.@Oº*Q∫ÆäVI ≠4nÇÃ[ÜÙ¿eF)Ò\Z∂äuÉ1A1>πWdaH{Â†Ê∫xb©ﬁÜ∑»º*»öŒ»„jFf¥,ãß”êt¥oåz¡j}ä¡~S_πÏ˛wp∂e\Z><Œ^ã\'zÿ£u∞OÂ}‚≤ΩˇKÚ`Üqw ∫ÿ∆HﬁB≤¥≠·⁄I∂$8.;x˝ıKœ€Áôﬁi/∆g@¶”ÿ\Z’kÎÀ*´7Ã~ Ôÿ±T‚ˇY˙1SFÄ≠#˛◊œù5æ˚¡ÛOÃ˛ü!ÕZ«êõ£…Å[ﬁàâMuﬂﬁFaô@¡zß‚0s⁄€3–Â¬ï\r/it)∂Ü3L⁄ﬁbÚ»¬T◊Ó®ßæ°‹zDﬂƒ≥L}J^>´qxæP|ê+ªD ã‘óﬁÌîâf‡-gqæsêC<≠HIóe¯Z§7Í- ò—∏ﬁπ∞eì^¯ÒG;¡‰∂g€î·∆Älw””–·s  i‹ìBpΩΩ‰GT2@@2!∆€Xçœx¥áº®œ¬Áª1J:µŸ‰\'»˙Y4¨}>À„ÜÚäÔ 8⁄ﬁ`ÌŒ¿ó¨s‹£°MÈ√¸aMó$∂M0˚ÆÕ*ılBE^ ∏‹ÉÏß€ÂW`Ë⁄‰WËIúFs≈K™q„2\"ú÷˙u;’oëÌÈfÉˇc ú+‚G–ƒI…-◊iÊvôUΩ·ïIxq»a‡ë¿G‚ﬁpπ£\róÅ\ZÊÿ7⁄ï´tãfæ\\Æ°%-],J\n´f—ñ¨°, èı´íê⁄˝±7J√˝gf∏MoÊàåh¢~»%   “wx‚ä   b‡c∞¯oπf\"nJ;Ω8.I[çgHº√e;Àó·å!∂”™ƒ.57m»f`wÆÕ¿ÓSÙ∂7§iNiù˘ﬁ∆ö:–√‰∆¯≥Ÿ[◊¡∆üŸ^\\±eé–åc/1wv¢$w™;ÂWL·\0\"TÓ~˛)f„∏åaˇˆ‡X›¡p„fÍg8˙œìºÍ∞e^w¶µÏ[$hZ•èÜowÓñõQçry@J\'^îÅnw)•8ƒö√éﬂ•?◊Åœﬁ$Ûæ<Ê7\Z˙ûÉßÕÊuf[‚gç€·A»(´Ù5’#√à _H™.hœ—&√∫s–Q7˝Ò/y6åüm(ÒP!\0Y/‹H^ˇÁÕ<ù˛2ˇb£');
 /*!40000 ALTER TABLE `ploopi_session` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_share`;
@@ -781,7 +784,7 @@ CREATE TABLE `ploopi_user_action_log` (
   `id_module_type` int(10) unsigned default '0',
   `id_module` int(10) unsigned default '0',
   `id_record` varchar(255) default NULL,
-  `ip` varchar(15) NOT NULL default '',
+  `ip` varchar(64) NOT NULL,
   `timestp` varchar(14) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -903,10 +906,3 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
-ALTER TABLE `ploopi_module` ADD `visible` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `active`;
-UPDATE `ploopi_module` SET `visible` = `active`;
-
-ALTER TABLE `ploopi_user_action_log` CHANGE `ip` `ip` VARCHAR( 64 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL; 
-
-UPDATE `ploopi_module_type` SET `version` = '1.1.4', `author` = 'Ovensia', `date` = '20081029000000' WHERE `ploopi_module_type`.`id` = 1;
