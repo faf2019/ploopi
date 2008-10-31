@@ -417,8 +417,8 @@ if (isset($ploopi_op))
             break;
     
             case 'ploopi_checkpasswordvalidity':
-                if (!isset($_GET['password'])) ploopi_die();
-                if (_PLOOPI_USE_COMPLEXE_PASSWORD) echo ploopi_checkpasswordvalidity($_GET['password']);
+                if (!isset($_POST['password'])) ploopi_die();
+                if (_PLOOPI_USE_COMPLEXE_PASSWORD) echo ploopi_checkpasswordvalidity($_POST['password']);
                 else echo true;
                 ploopi_die();
             break;

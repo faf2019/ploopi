@@ -136,7 +136,7 @@ function ploopi_validation_save($id_object = 0, $id_record = '', $id_module = -1
 }
 
 /**
- * Renvoie les informations du validation en fonction d'un utilisateur, d'un objet ou d'un enregistrement
+ * Renvoie les informations de validation en fonction d'un utilisateur, d'un objet ou d'un enregistrement
  *
  * @param int $id_object identifiant de l'objet
  * @param string $id_record identifiant de l'enregistrement

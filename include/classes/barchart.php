@@ -319,6 +319,8 @@ class barchart
     
                                 $style = sprintf("height:%dpx;width:%dpx;left:%dpx;bottom:%dpx;%s", $column_height, $col_width, $column_left, $display_bottom, $bar_color);
     
+								$value += ( $value>0 ) ? $this->options['yaxis_pos'] : 0 ;
+
                                 if ($this->options['display_titles'])
                                 {
                                     $style .= 'cursor:help;';
@@ -346,7 +348,7 @@ class barchart
                     if ($this->options['display_ticks'])
                     {
                         ?>
-                        <div class="hlegend" style="left: <? if( $this->options['autofit_scale']) echo strlen(floor($this->value_max))*5 ; ?>px; width:<? echo $this->width; ?>px;">
+                        <div class="hlegend" style="left: <? $this->value_max += ( $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] : 0 ; if( $this->options['autofit_scale']) echo strlen(floor($this->value_max))*5 ; ?>px; width:<? echo $this->width; ?>px;">
                         <?
                             $ticks_column_width = $column_width+1;
                             if ($this->options['bar_arrange'] == 'side_by_side') $ticks_column_width *= sizeof($this->datasets);

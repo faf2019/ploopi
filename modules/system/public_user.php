@@ -44,7 +44,7 @@ function user_validate(form)
         if (form.usernewpass_confirm.value == form.usernewpass.value && form.usernewpass.value == '') return true;
         else
         {
-            rep = ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+form.usernewpass.value);
+            rep = ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+form.usernewpass.value, false, false, 'POST');
             
             if (rep == 0)
             {

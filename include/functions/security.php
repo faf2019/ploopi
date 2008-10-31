@@ -43,7 +43,14 @@
 
 function ploopi_checkpasswordvalidity($password, $min_length = 8, $max_length = 20)
 {
-    return (preg_match('/^(?=^.{'.$min_length.','.$max_length.'}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_-+}{"":;\'?\/><.,\]\[]).*$$/', $password));
+    return $validity = (
+        strlen($password) >= $min_length &&
+        strlen($password) <= $max_length &&
+        preg_match('/^.*[A-Z].*/', $password) &&
+        preg_match('/^.*[a-z].*/', $password) &&
+        preg_match('/^.*[0-9].*/', $password) && 
+        preg_match('/^.*[!@#\$%\^&\*\(\)_\-\+\}\{"":;\'?\/><\.,\]\[].*/', $password)
+    );
 }
 
 /**
