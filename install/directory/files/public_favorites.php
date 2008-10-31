@@ -91,8 +91,8 @@ while ($row = $db->fetchrow()) $result[] = $row;
 $c = 0;
 foreach($result as $row)
 {
-    $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img title="'._DIRECTORY_SEND_EMAIL.'" src="./modules/directory/img/ico_email.png"></a>' : '';
-    $ticket = '';
+    $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'" title="'.htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '&nbsp;';
+    $ticket = '&nbsp;';
     
     switch ($row['usertype'])
     {
@@ -120,8 +120,8 @@ foreach($result as $row)
             // on met tout ça dans une chaine
             $workspaces_list = implode(', ',$workspaces_list);
 
-            $values[$c]['link'] = 'javascript:void(0);';
-            $values[$c]['onclick'] = "javascript:directory_view(event, '{$row['id']}', '');";
+            //$values[$c]['link'] = 'javascript:void(0);';
+            //$values[$c]['onclick'] = "javascript:directory_view(event, '{$row['id']}', '');";
             $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
         break;
 
@@ -134,8 +134,8 @@ foreach($result as $row)
             $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'];
             $workspaces_list = '';
             
-            $values[$c]['link'] = 'javascript:void(0);';
-            $values[$c]['onclick'] = "javascript:directory_view(event, '', '{$row['id']}');";
+            //$values[$c]['link'] = 'javascript:void(0);';
+            //$values[$c]['onclick'] = "javascript:directory_view(event, '', '{$row['id']}');";
         break;
     }
 
@@ -143,9 +143,9 @@ foreach($result as $row)
     $values[$c]['values']['type'] = array('label' => $level_display);
     $values[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
     $values[$c]['values']['groups'] = array('label' => $workspaces_list);
-    $values[$c]['values']['service'] = array('label' => $row['service']);
-    $values[$c]['values']['function'] = array('label' => $row['function']);
-    $values[$c]['values']['phone'] = array('label' => $row['phone']);
+    $values[$c]['values']['service'] = array('label' => ($row['service']) ? $row['service'] : '&nbsp;');
+    $values[$c]['values']['function'] = array('label' => ($row['function']) ? $row['function'] : '&nbsp;');
+    $values[$c]['values']['phone'] = array('label' => ($row['phone']) ? $row['phone'] : '&nbsp;');
     $values[$c]['values']['email'] = array('label' => $email);
     $values[$c]['values']['ticket'] = array('label' => $ticket);
     $values[$c]['values']['actions'] = array('label' => $actions);

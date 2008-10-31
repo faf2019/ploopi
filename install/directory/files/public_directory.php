@@ -169,7 +169,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         $c = 0;
         while ($row = $db->fetchrow())
         {
-            $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img title="'._DIRECTORY_SEND_EMAIL.'" src="./modules/directory/img/ico_email.png"></a>' : '';
+            $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'" title="'.htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
 
             $actions =  '
                         <a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>
@@ -243,7 +243,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         $c = 0;
         while ($row = $db->fetchrow($res))
         {
-            $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img title="'._DIRECTORY_SEND_EMAIL.'" src="./modules/directory/img/ico_email.png"></a>' : '';
+            $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'" title="'.htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
             $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
             
             $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>';
@@ -447,7 +447,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $c = 0;
             foreach($result as $row)
             {
-                $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'"><img title="'._DIRECTORY_SEND_EMAIL.'" src="./modules/directory/img/ico_email.png"></a>' : '';
+                $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'" title="'.htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
                 $ticket = '';
 
                 switch ($row['usertype'])
