@@ -1,3 +1,10 @@
+== Module DOC - version 3.90 =====================================================
+
+2008-10-31  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un problème de gestion des validateurs
+ * Meilleure compression des images PNG
+
 == Module DOC - version 3.89 =====================================================
 
 2008-09-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

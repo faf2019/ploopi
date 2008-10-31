@@ -192,7 +192,7 @@ function doc_getvalidation($id_module = -1)
     if (empty($_SESSION['doc'][$id_module]['validation']))
     {
         $_SESSION['doc'][$id_module]['validation'] = array('folders' => array());
-        foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, -1, $id_module, $_SESSION['ploopi']['userid']) as $wf)
+        foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, '', $id_module, $_SESSION['ploopi']['userid']) as $wf)
         {
             $_SESSION['doc'][$id_module]['validation']['folders'][] = $wf['id_record'];
         }
