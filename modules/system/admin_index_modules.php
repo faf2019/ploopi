@@ -192,11 +192,10 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_herited');">
                 <label><? echo _SYSTEM_LABEL_HERITED; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_herited" id="module_herited" value="1" <? if ($module->fields['herited']) echo 'checked="checked"'; ?> tabindex="6" />
-                <a href="<? echo ploopi_urlencode("admin.php?op=apply_heritage&moduleid={$module->fields['id']}"); ?>"><? echo _SYSTEM_APPLYHERITAGE; ?></a>
             </p>
             <p>
                 <label>&nbsp;</label>
-                <span><em><? echo _SYSTEM_EXPLAIN_HERITED; ?></em></span>
+                <span><a href="<? echo ploopi_urlencode("admin.php?op=apply_heritage&moduleid={$module->fields['id']}"); ?>"><? echo _SYSTEM_APPLYHERITAGE; ?></a><br /><em><? echo _SYSTEM_EXPLAIN_HERITED; ?></em></span>
             </p>
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_adminrestricted');">
                 <label><? echo _SYSTEM_LABEL_ADMINRESTRICTED; ?>:</label>

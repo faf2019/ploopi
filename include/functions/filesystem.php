@@ -180,6 +180,9 @@ function ploopi_getmimetype($filename)
             'php3' => 'application/x-httpd-php',
             'phtml' => 'application/x-httpd-php',
             'sql' => 'text/x-sql',
+            '323' => 'text/h323',
+            'tcl' => 'application/x-tcl',
+            'tex' => 'application/x-tex',        
     
             //images
             'png' => 'image/png',
@@ -208,13 +211,23 @@ function ploopi_getmimetype($filename)
             'tgz' => 'application/x-gzip',
             'zip' => 'application/zip',
             'z' => 'application/x-compress',
-    
+            'sit' => 'application/x-stuffit',
+            'lzh' => 'application/lzh',
+            'lhw' => 'application/lzh',
+            'lzs' => 'application/lzh',
+            'lzw' => 'application/lzh',
+            'ace' => 'application/x-ace',
+            'rar' => 'application/x-rar',
+            'arj' => 'application/x-arj',
+            '7z' => 'application/x-7z-compressed',
+        
             //audio
             'aif' => 'audio/aiff',
             'aiff' => 'audio/aiff',
             'aifc' => 'audio/aiff',
             'mid' => 'audio/mid',
             'midi' => 'audio/mid',
+            'rmi' => 'audio/mid',
             'mp3' => 'audio/mpeg',
             'mp2' => 'audio/mpeg',
             'mpa' => 'audio/mpeg',
@@ -223,15 +236,14 @@ function ploopi_getmimetype($filename)
             'wma' => 'audio/x-ms-wma',
             'au' => 'audio/basic',
             'snd' => 'audio/basic',
-            'mid' => 'audio/x-midi',
-            'midi' => 'audio/x-midi',
-    
+
             //video
             'asf' => 'video/x-ms-asf',
             'asx' => 'video/x-ms-asf',
             'avi' => 'video/avi',
             'mpg' => 'video/mpeg',
             'mpeg' => 'video/mpeg',
+            'mpa' => 'video/mpeg',
             'mpe' => 'video/mpeg',
             'wmv' => 'video/x-ms-wmv',
             'wmx' => 'video/x-ms-wmx',
@@ -239,7 +251,16 @@ function ploopi_getmimetype($filename)
             'mov' => 'video/quicktime',
             'movie' => 'video/x-sgi-movie',
             'mp4' => 'audio/mp4',
-    
+            'mp2' => 'audio/mpeg',
+            'movie' => 'video/x-sgi-movie',
+                
+            //real
+            'ra' => 'audio/vnd.rn-realaudio',
+            'ram' => 'audio/x-pn-realaudio',
+            'rm' => 'application/vnd.rn-realmedia',
+            'rv' => 'video/vnd.rn-realvideo',
+            'rmvb' => 'application/vnd.rn-realmedia-vbr',
+        
             //playlist
             'pls' => 'audio/scpls',
             'm3u' => 'audio/x-mpegurl',
@@ -328,12 +349,6 @@ function ploopi_getmimetype($filename)
             //macromedia
             'swf' => 'application/x-shockwave-flash',
     
-            //real
-            'ra' => 'audio/vnd.rn-realaudio',
-            'ram' => 'audio/x-pn-realaudio',
-            'rm' => 'application/vnd.rn-realmedia',
-            'rv' => 'video/vnd.rn-realvideo',
-    
             //binaires/executables
             'hqx' => 'application/mac-binhex40',
     
@@ -349,9 +364,16 @@ function ploopi_getmimetype($filename)
             'p7c' => 'application/x-pkcs7-mime',
             'p7m' => 'application/x-pkcs7-mime',
             'p7s' => 'application/x-pkcs7-signature',
-    
+        
+            //iso
+            'iso' => 'application/x-isoview',
+            'nrg' => 'application/x-extension-nrg',
+            'ccd' => 'text/x-cdwizard',
+            
             //divers
-            'vcf' => 'text/x-vcard'
+            'vcf' => 'text/x-vcard',
+            'mht' => 'message/rfc822',
+            'mhtml' => 'message/rfc822'
         );
 
     $ext = ploopi_file_getextension($filename);

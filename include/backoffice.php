@@ -83,7 +83,7 @@ $template_body->set_filenames(
 
 $template_body->assign_block_vars('ploopi_js', 
     array(
-        'PATH' => './lib/protoculous/protoculous-packer.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+        'PATH' => './lib/protoaculous/protoaculous.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
     )
 );
 

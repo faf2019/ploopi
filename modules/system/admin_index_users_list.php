@@ -211,7 +211,7 @@ $columns['auto']['service'] =
     
 $columns['actions_right']['actions'] = 
     array(
-        'label' => 'Actions', 
+        'label' => '&nbsp;', 
         'width' => 70
     );
 
@@ -226,7 +226,7 @@ while ($fields = $db->fetchrow($result))
     $groups = $user->getgroups();
     $currentgroup = current($groups);
 
-    $action = ' <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=detach_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_LABEL_DETACH.'"></a>
+    $action = ' <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=detach_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_USERDETACH.'"></a>
                 <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=delete_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>
                 ';
 

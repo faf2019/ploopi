@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -36,6 +35,7 @@
  * @see date
  * @see documents
  * @see filesystem
+ * @see filexplorer
  * @see image
  * @see ip
  * @see mail
@@ -56,6 +56,7 @@ include_once './include/functions/crypt.php';
 include_once './include/functions/date.php';
 include_once './include/functions/documents.php';
 include_once './include/functions/filesystem.php';
+include_once './include/functions/filexplorer.php';
 include_once './include/functions/image.php';
 include_once './include/functions/ip.php';
 include_once './include/functions/mail.php';

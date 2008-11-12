@@ -403,6 +403,7 @@ if (isset($ploopi_op))
     {
         include_once './include/op/annotation.php';
         include_once './include/op/documents.php';
+        include_once './include/op/filexplorer.php';
         include_once './include/op/share.php';
         include_once './include/op/subscription.php';
         include_once './include/op/validation.php';

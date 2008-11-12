@@ -50,30 +50,41 @@ $row = $db->fetchrow();
 if (strcmp(_PLOOPI_VERSION, $row['version']))
 {
     $strSysVersion = $row['version'];
-    $toolbar['systemupdate'] = array(
-                                        'title' => _SYSTEM_LABELICON_SYSTEMUPDATE,
-                                        'url'   => "admin.php?sysToolbarItem=systemupdate",
-                                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemupdate.png"
-                                    );
+    $toolbar['systemupdate'] = 
+        array(
+            'title' => _SYSTEM_LABELICON_SYSTEMUPDATE,
+            'url'   => "admin.php?sysToolbarItem=systemupdate",
+            'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemupdate.png"
+        );
 }
 
-$toolbar['install'] = array(
-                                    'title' => _SYSTEM_LABELICON_INSTALLMODULES,
-                                    'url'   => "admin.php?sysToolbarItem=install",
-                                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_install_module.png"
-                                );
+$toolbar['install'] = 
+    array(
+        'title' => _SYSTEM_LABELICON_INSTALLMODULES,
+        'url'   => "admin.php?sysToolbarItem=install",
+        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_install_module.png"
+    );
 
-$toolbar['params'] = array(
-                                    'title' => _SYSTEM_LABELICON_PARAMS,
-                                    'url'   => "admin.php?sysToolbarItem=params",
-                                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemparams.png"
-                                );
+$toolbar['params'] = 
+    array(
+        'title' => _SYSTEM_LABELICON_PARAMS,
+        'url'   => "admin.php?sysToolbarItem=params",
+        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemparams.png"
+    );
 
-$toolbar['tools'] = array(
-                                    'title' => _SYSTEM_LABELICON_TOOLS,
-                                    'url'   => "admin.php?sysToolbarItem=tools",
-                                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_tools.png"
-                                );
+$toolbar['directory'] = 
+    array(
+        'title' => _SYSTEM_LABELICON_USERS,
+        'url'   => "admin.php?sysToolbarItem=directory",
+        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_directory.png"
+    );
+    
+$toolbar['tools'] = 
+    array(
+        'title' => _SYSTEM_LABELICON_TOOLS,
+        'url'   => "admin.php?sysToolbarItem=tools",
+        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_tools.png"
+    );
 
 if (!empty($_GET['sysToolbarItem']))  $_SESSION['system']['sysToolbarItem'] = $_GET['sysToolbarItem'];
 if (!isset($_SESSION['system']['sysToolbarItem'])) $_SESSION['system']['sysToolbarItem'] = '';
@@ -179,6 +190,10 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
             }
         break;
 
+        case 'directory':
+            include "./modules/system/admin_system_directory.php";
+        break;
+        
         case 'tools':
             switch($op)
             {
@@ -214,13 +229,17 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                 break;
 
                 case 'connectedusers':
-                    include "./modules/system/logs_connectedusers.php";
+                    include "./modules/system/tools_connectedusers.php";
                 break;
 
                 case 'actionhistory':
-                    include "./modules/system/logs_actionhistory.php";
+                    include "./modules/system/tools_actionhistory.php";
                 break;
 
+                case 'stats':
+                    include "./modules/system/tools_stats.php";
+                break;
+                
                 default:
                     include './modules/system/admin_system_tools.php';
                 break;

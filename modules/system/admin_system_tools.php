@@ -40,8 +40,18 @@ echo $skin->open_simplebloc(_SYSTEM_LABEL_TOOLS);
 $columns = array();
 $values = array();
 
-$columns['left']['tool']        = array('label' => 'Outil', 'width' => '200', 'options' => array('sort' => true));
-$columns['auto']['desc']        = array('label' => 'Description', 'options' => array('sort' => true));
+$columns['left']['tool'] = 
+    array(
+        'label' => 'Outil', 
+        'width' => '200', 
+        'options' => array('sort' => true)
+    );
+    
+$columns['auto']['desc'] = 
+    array(
+        'label' => 'Description', 
+        'options' => array('sort' => true)
+    );
 
 $c = 0;
 

@@ -127,10 +127,31 @@ $sql =  "
 $columns = array();
 $values = array();
 
-$columns['left']['label']       = array('label' => _SYSTEM_LABEL_GROUP, 'width' => '200', 'options' => array('sort' => true));
-$columns['left']['adminlevel']  = array('label' => 'Niv.', 'width' => '50', 'options' => array('sort' => true));
-$columns['auto']['parents']     = array('label' => _SYSTEM_LABEL_PARENTS, 'options' => array('sort' => true));
-$columns['actions_right']['actions'] = array('label' => 'Actions', 'width' => '70');
+$columns['left']['label'] = 
+    array(
+        'label' => _SYSTEM_LABEL_GROUP, 
+        'width' => '200', 
+        'options' => array('sort' => true)
+    );
+    
+$columns['left']['adminlevel'] = 
+    array(
+        'label' => 'Niv.', 
+        'width' => '50', 
+        'options' => array('sort' => true)
+    );
+    
+$columns['auto']['parents'] = 
+    array(
+        'label' => _SYSTEM_LABEL_PARENTS, 
+        'options' => array('sort' => true)
+    );
+    
+$columns['actions_right']['actions'] = 
+    array(
+        'label' => '&nbsp;', 
+        'width' => '70'
+    );
 
 $c = 0;
 
@@ -144,7 +165,7 @@ while ($fields = $db->fetchrow($result))
     $str_parents = '';
     foreach($array_parents as $parent) $str_parents .= ($str_parents == '') ? $parent['label']: " > {$parent['label']}";
 
-    $action = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=detach_group&orgid={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMGROUPDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" alt="'._SYSTEM_LABEL_DETACH.'"></a>';
+    $action = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=detach_group&orgid={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMGROUPDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_GROUPDETACH.'"></a>';
 
     $values[$c]['values']['label']      = array('label' => htmlentities($fields['label']));
     $values[$c]['values']['parents']    = array('label' => htmlentities($str_parents));

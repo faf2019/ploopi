@@ -95,9 +95,11 @@ class user extends data_object
     /**
      * Retourne un tableau contenant les espaces auxquels l'utilisateur est (plus ou moins directement) rattaché
      *
+     * @param boolean $lite true si la fonction ne doit renvoyer que le nom des espaces
      * @return array tableau d'espaces
      */
-    public function getworkspaces()
+    
+    public function getworkspaces($lite = false)
     {
         /**
          * 1. Récupére les groupes auxquels l'utilisateur est rattaché.
@@ -125,22 +127,29 @@ class user extends data_object
             $groups = implode(',',array_keys(array_flip($parents)));
 
             $select =   "
-                        SELECT      ploopi_workspace.*,
-                                    ploopi_workspace_group.id_group,
-                                    ploopi_workspace_group.adminlevel
-                        FROM        ploopi_workspace
-                        LEFT JOIN   ploopi_workspace_group ON ploopi_workspace_group.id_workspace = ploopi_workspace.id
-                        WHERE       ploopi_workspace_group.id_group IN ({$groups})
+                        SELECT      w.*,
+                                    wg.id_group,
+                                    wg.adminlevel
+                                    
+                        FROM        ploopi_workspace w
+                        
+                        LEFT JOIN   ploopi_workspace_group wg ON wg.id_workspace = w.id
+                        
+                        WHERE       wg.id_group IN ({$groups})
                         ";
 
             $result = $db->query($select);
 
             while ($fields = $db->fetchrow($result))
             {
-                if (empty($workspaces[$fields['id']])) $workspaces[$fields['id']] = $fields;
-                else $workspaces[$fields['id']]['adminlevel'] = max($workspaces[$fields['id']]['adminlevel'], $fields['adminlevel']);
-
-                $workspaces[$fields['id']]['groups'][] = $fields['id_group'];
+                if ($lite) $workspaces[$fields['id']] = $fields['label'];
+                else
+                {
+                    if (empty($workspaces[$fields['id']])) $workspaces[$fields['id']] = $fields;
+                    else $workspaces[$fields['id']]['adminlevel'] = max($workspaces[$fields['id']]['adminlevel'], $fields['adminlevel']);
+    
+                    $workspaces[$fields['id']]['groups'][] = $fields['id_group'];
+                }
 
             }
         }
@@ -151,14 +160,25 @@ class user extends data_object
                                 wu.adminlevel
 
                     FROM        ploopi_workspace w
+                    
                     INNER JOIN  ploopi_workspace_user wu ON wu.id_workspace = w.id
+
                     WHERE       wu.id_user = {$this->fields['id']}
+                    
                     ORDER BY    w.depth, id
                     ";
 
         $result = $db->query($select);
 
-        while ($fields = $db->fetchrow($result)) $workspaces[$fields['id']] = $fields;
+        while ($fields = $db->fetchrow($result)) 
+        {
+            if ($lite) $workspaces[$fields['id']] = $fields['label'];
+            else
+            {
+                if (empty($workspaces[$fields['id']])) $workspaces[$fields['id']] = $fields;
+                else $workspaces[$fields['id']]['adminlevel'] = max($workspaces[$fields['id']]['adminlevel'], $fields['adminlevel']);
+            }
+        }
 
         return $workspaces;
     }
@@ -166,10 +186,11 @@ class user extends data_object
     /**
      * Retourne un tableau contenant les groupes auxquels l'utilisateur est rattaché
      *
+     * @param boolean $lite true si la fonction ne doit renvoyer que le nom des groupes
      * @return array tableau de groupes
      */
     
-    public function getgroups()
+    public function getgroups($lite = false)
     {
         global $db;
 
@@ -193,7 +214,9 @@ class user extends data_object
         {
             // group 0 = virtual group SYSTEM
             if ($fields['id'] == _SYSTEM_SYSTEMADMIN) $fields['label'] = _SYSTEM_LABEL_SYSTEM;
-            $groups[$fields['id']] = $fields;
+            
+            if ($lite) $groups[$fields['id']] = $fields['label'];
+            else $groups[$fields['id']] = $fields;
         }
 
         return $groups;
@@ -275,17 +298,18 @@ class user extends data_object
     {
         global $db;
 
-        $select =   "
-                SELECT      ploopi_workspace_user_role.id_workspace,
-                            ploopi_role_action.id_action,
-                            ploopi_role.id_module
-                FROM        ploopi_role_action,
-                            ploopi_role,
-                            ploopi_workspace_user_role
-                WHERE       ploopi_workspace_user_role.id_role = ploopi_role.id
-                AND         ploopi_role.id = ploopi_role_action.id_role
-                AND         ploopi_workspace_user_role.id_user = {$this->fields['id']}
-                ";
+        $select =   
+            "
+            SELECT      ploopi_workspace_user_role.id_workspace,
+                        ploopi_role_action.id_action,
+                        ploopi_role.id_module
+            FROM        ploopi_role_action,
+                        ploopi_role,
+                        ploopi_workspace_user_role
+            WHERE       ploopi_workspace_user_role.id_role = ploopi_role.id
+            AND         ploopi_role.id = ploopi_role_action.id_role
+            AND         ploopi_workspace_user_role.id_user = {$this->fields['id']}
+            ";
 
         $result = $db->query($select);
 
@@ -293,6 +317,7 @@ class user extends data_object
         
         return $actions;
     }
+
 
     /**
      * Retourne un tableau contenant les utilisateurs "visibles" par l'utilisateur

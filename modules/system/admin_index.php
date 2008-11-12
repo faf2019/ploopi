@@ -56,17 +56,19 @@ switch ($_SESSION['system']['level'])
         }
 
         $toolbar = array();
-        $toolbar['tabGroups'] = array(
-                                            'title'     => _SYSTEM_LABELICON_GROUP,
-                                            'url'       => "admin.php?wspToolbarItem=tabGroups",
-                                            'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group.png"
-                                        );
+        $toolbar['tabGroups'] = 
+            array(
+                'title'     => _SYSTEM_LABELICON_GROUP,
+                'url'       => "admin.php?wspToolbarItem=tabGroups",
+                'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group.png"
+            );
 
-        $toolbar['tabUsers'] = array(
-                                            'title'     => _SYSTEM_LABELICON_USERS,
-                                            'url'       => "admin.php?wspToolbarItem=tabUsers",
-                                            'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_user.png"
-                                        );
+        $toolbar['tabUsers'] = 
+            array(
+                'title'     => _SYSTEM_LABELICON_USERS,
+                'url'       => "admin.php?wspToolbarItem=tabUsers",
+                'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_user.png"
+            );
 
 
         if (!empty($_GET['wspToolbarItem']))  $_SESSION['system']['wspToolbarItem'] = $_GET['wspToolbarItem'];
@@ -174,45 +176,49 @@ switch ($_SESSION['system']['level'])
         }
 
         $toolbar = array();
-        $toolbar['tabWorkspaces'] = array(
-                                            'title'     => _SYSTEM_LABELICON_WORKSPACE,
-                                            'url'       => "admin.php?wspToolbarItem=tabWorkspaces",
-                                            'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace.png"
-                                        );
+        $toolbar['tabWorkspaces'] = 
+            array(
+                'title'     => _SYSTEM_LABELICON_WORKSPACE,
+                'url'       => "admin.php?wspToolbarItem=tabWorkspaces",
+                'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace.png"
+            );
 
 
 
         if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
         {
 
-                $toolbar['tabModules'] = array(
-                                                    'title'     => _SYSTEM_LABELICON_MODULES,
-                                                    'url'       => "admin.php?wspToolbarItem=tabModules",
-                                                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_module.png"
-                                                );
+                $toolbar['tabModules'] = 
+                    array(
+                        'title'     => _SYSTEM_LABELICON_MODULES,
+                        'url'       => "admin.php?wspToolbarItem=tabModules",
+                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_module.png"
+                    );
 
-                $toolbar['tabParams'] = array(
-                                                    'title'     => _SYSTEM_LABELICON_PARAMS,
-                                                    'url'       => "admin.php?wspToolbarItem=tabParams",
-                                                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemparams.png"
-                                                );
+                $toolbar['tabParams'] = 
+                    array(
+                        'title'     => _SYSTEM_LABELICON_PARAMS,
+                        'url'       => "admin.php?wspToolbarItem=tabParams",
+                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemparams.png"
+                    );
         }
 
 
-        $toolbar['tabUsers'] = array(
-                                            'title'     => _SYSTEM_LABELICON_USERS,
-                                            'url'       => "admin.php?wspToolbarItem=tabUsers",
-                                            'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_user.png"
-                                        );
+        $toolbar['tabUsers'] = 
+            array(
+                'title'     => _SYSTEM_LABELICON_AUTHORIZATIONS,
+                'url'       => "admin.php?wspToolbarItem=tabUsers",
+                'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_user.png"
+            );
 
         if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
         {
-
-                $toolbar['tabRoles'] = array(
-                                                    'title'     => _SYSTEM_LABELICON_ROLES,
-                                                    'url'       => "admin.php?wspToolbarItem=tabRoles",
-                                                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_role.png"
-                                                );
+            $toolbar['tabRoles'] = 
+                array(
+                    'title'     => _SYSTEM_LABELICON_ROLES,
+                    'url'       => "admin.php?wspToolbarItem=tabRoles",
+                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_role.png"
+                );
         }
 
         if (!empty($_GET['wspToolbarItem']))  $_SESSION['system']['wspToolbarItem'] = $_GET['wspToolbarItem'];

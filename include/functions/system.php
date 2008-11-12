@@ -604,6 +604,8 @@ function ploopi_getavailabletemplates($type = 'frontoffice')
         if ((substr($template, 0, 1) != '.') && is_dir($tplpath) && file_exists($tplpath._PLOOPI_SEP.'index.tpl')) $templates[] = $template;
     }
     
+    closedir($p);
+    
     sort($templates);
 
     return($templates);

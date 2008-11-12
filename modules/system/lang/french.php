@@ -42,9 +42,10 @@ define ('_SYSTEM_LABELICON_INSTALLMODULES', 'Installation');
 define ('_SYSTEM_LABELICON_MODULES', 'Modules');
 define ('_SYSTEM_LABELICON_PARAMS', 'Paramètres');
 define ('_SYSTEM_LABELICON_USERS', 'Utilisateurs');
+define ('_SYSTEM_LABELICON_AUTHORIZATIONS', 'Autorisations');
 define ('_SYSTEM_LABELICON_TOOLS', 'Outils');
 define ('_SYSTEM_LABELICON_LOGS', 'Logs');
-define ('_SYSTEM_LABELICON_ROLES', 'Roles');
+define ('_SYSTEM_LABELICON_ROLES', 'Rôles');
 define ('_SYSTEM_LABELICON_GROUP', 'Groupe');
 define ('_SYSTEM_LABELICON_HOMEPAGE', 'Accueil');
 define ('_SYSTEM_LABELICON_WORKSPACE', 'Espace');
@@ -63,15 +64,14 @@ define ('_SYSTEM_LABEL_NOMODULEPARAM', 'Aucun paramètre pour ce module');
 define ('_SYSTEM_LABELTAB_GROUPLIST', 'Liste des Groupes');
 
 define ('_SYSTEM_LABELTAB_USERLIST', 'Liste des Utilisateurs');
-define ('_SYSTEM_LABELTAB_USERATTACH', 'Rattacher un Utilisateur');
+define ('_SYSTEM_LABELTAB_USERATTACH', 'Choisir un Utilisateur');
 define ('_SYSTEM_LABELTAB_USERMOVE', 'Déplacer un Utilisateur');
 define ('_SYSTEM_LABELTAB_USERADD', 'Ajouter un Utilisateur');
 
-define ('_SYSTEM_LABELTAB_GROUPATTACH', 'Rattacher un Groupe');
+define ('_SYSTEM_LABELTAB_GROUPATTACH', 'Choisir un Groupe');
 
 define ('_SYSTEM_LABELTAB_ROLEMANAGEMENT', 'Gestion des Rôles');
 define ('_SYSTEM_LABELTAB_ROLEUSERS', 'Attribution des Rôles');
-define ('_SYSTEM_LABELTAB_MULTIPLEROLEASSIGNMENT', 'Affectations Groupées');
 
 define ('_SYSTEM_LABELTAB_USERIMPORT', 'Importer');
 
@@ -86,6 +86,7 @@ define ('_SYSTEM_LABEL_ADDNEWMODULE_DESC', 'Permet d\'ajouter un nouveau module 
 define ('_SYSTEM_LABEL_ADDNEWMODULE_WARNING', '<b>Erreur !</b> Le répertoire « install » n\'est pas accessible en écriture pour Apache !<br>Effectuez un <a href=\'?ploopi_moduleicon=system_tools&op=diagnostic\'>diagnostic</a> pour de plus amples informations.');
 define ('_SYSTEM_LABEL_INSTALLREPORT', 'Rapport d\'installation');
 define ('_SYSTEM_LABEL_UPDATEREPORT', 'Rapport de mise à jour');
+define ('_SYSTEM_LABEL_DIRECTORY', 'Utilisateurs');
 
 define ('_SYSTEM_LABEL_TOOLS', 'Outils');
 define ('_SYSTEM_LABEL_LOGS', 'Analyse des Logs');
@@ -233,9 +234,12 @@ define ('_SYSTEM_LABEL_MODIFY_ROLE_ASSIGNMENT',     'Modifier l\'affectation des
 define ('_SYSTEM_LABEL_COMMENTARY',     'Commentaire');
 define ('_SYSTEM_LABEL_RESULT',     'Résultat');
 
+define ('_SYSTEM_TITLE_GROUPDETACH', 'Supprimer l\'accès à ce Groupe');
+define ('_SYSTEM_TITLE_USERDETACH', 'Supprimer l\'accès à cet Utilisateur');
+
 define ('_SYSTEM_MSG_CONFIRMGROUPDELETE', 'Êtes-vous certain de vouloir\nsupprimer ce Groupe ?');
-define ('_SYSTEM_MSG_CONFIRMGROUPDETACH', 'Êtes-vous certain de vouloir\ndétacher ce Groupe ?');
-define ('_SYSTEM_MSG_CONFIRMUSERDETACH', 'Êtes-vous certain de vouloir\ndétacher cet Utilisateur ?');
+define ('_SYSTEM_MSG_CONFIRMGROUPDETACH', 'Êtes-vous certain de vouloir\nsupprimer l\\\'accès à ce Groupe ?');
+define ('_SYSTEM_MSG_CONFIRMUSERDETACH', 'Êtes-vous certain de vouloir\nsupprimer l\\\'accès à cet Utilisateur ?');
 define ('_SYSTEM_MSG_CONFIRMUSERDELETE', 'Êtes-vous certain de vouloir\nsupprimer cet Utilisateur ?');
 define ('_SYSTEM_MSG_CONFIRMROLEDELETE', 'Êtes-vous certain de vouloir\nsupprimer ce Rôle ?');
 define ('_SYSTEM_MSG_CONFIRMLOGDELETE', 'Êtes-vous certain de vouloir\nsupprimer les Logs ?');
@@ -277,16 +281,16 @@ define ('_SYSTEM_LABEL_ZIP', 'Zip');
 define ('_SYSTEM_LABEL_BACKUP', 'Sauvegarde');
 define ('_SYSTEM_LABEL_ACTIONHISTORY', 'Logs - Historique des Actions');
 define ('_SYSTEM_LABEL_SERVERLOAD', 'Logs - Charge du Serveur');
+define ('_SYSTEM_LABEL_STATS', 'Stats - Système');
 
 define ('_SYSTEM_EXPLAIN_PHPINFO', 'L\'outil « '._SYSTEM_LABEL_PHPINFO.' » affiche la configuration PHP du serveur');
 define ('_SYSTEM_EXPLAIN_DIAGNOSTIC', 'L\'outil « '._SYSTEM_LABEL_DIAGNOSTIC.' » vérifie quelques sources d\'erreurs courantes pouvant entraîner des dysfonctionnements de PLOOPI');
 define ('_SYSTEM_EXPLAIN_CONNECTEDUSERS', 'L\'outil « '._SYSTEM_LABEL_CONNECTEDUSERS.' » affiche la liste des utilisateurs connectés au site en temps réel');
-define ('_SYSTEM_EXPLAIN_SQLDUMP', 'L\'outil « '._SYSTEM_LABEL_SQLDUMP.' » vous permet de télécharger les données dans un fichier SQL zippé. Attention cette fonctionnalité ne remplace pas un dump classique. Il est également recommandé de n\'utiliser cette fonctionnalité que sur des petites bases de données.');
+define ('_SYSTEM_EXPLAIN_SQLDUMP', 'L\'outil « '._SYSTEM_LABEL_SQLDUMP.' » vous permet de télécharger les données dans un fichier SQL zippé. Attention cette fonctionnalité ne remplace pas un dump classique. Il est également <b>fortement</b> recommandé de n\'utiliser cette fonctionnalité que sur des petites bases de données.');
 define ('_SYSTEM_EXPLAIN_ZIP', 'L\'outil « Zip » vous permet de télécharger les sources de PLOOPI dans un fichier ZIP');
 define ('_SYSTEM_EXPLAIN_BACKUP', 'L\'outil « Sauvegarde » vous permet de créer une sauvegarde complète du système (données + sources) afin de les restaurer à une date ultérieure');
 define ('_SYSTEM_EXPLAIN_ACTIONHISTORY', 'L\'outil « '._SYSTEM_LABEL_ACTIONHISTORY.' » vous permet de consulter les actions effectuées par les utilisateurs');
 define ('_SYSTEM_EXPLAIN_SERVERLOAD', 'L\'outil « '._SYSTEM_LABEL_SERVERLOAD.' » affiche la charge du serveur sur plusieurs intervalles de temps');
-
 
 define ('_SYSTEM_LABEL_HOMEPAGECONTENT',    'Contenu de la Page d\'Accueil');
 define ('_SYSTEM_LABEL_PREVIEW',        'Prévisualiser');
@@ -314,7 +318,6 @@ define ('_SYSTEM_LABEL_USERCREATE', 'Création de l\'utilisateur « <LABEL> »');
 
 
 define ('_SYSTEM_LABEL_IMPORTSRC', 'Source d\'import');
-
 
 define ('_SYSTEM_LABEL_TICKETS', 'Messages');
 define ('_SYSTEM_LABEL_SEARCH', 'Recherche');
