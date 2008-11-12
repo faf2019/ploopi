@@ -239,11 +239,11 @@ if (isset($_REQUEST['confirm']))
     <div class="ploopi_form" style="float:left;width:50%;">
         <div style="padding:2px;">
             <p>
-                <label><? echo _SYSTEM_LABEL_LASTNAME; ?>:</label>
+                <label><? if ($user->new) echo '<em>*&nbsp;</em>'; echo _SYSTEM_LABEL_LASTNAME; ?><sup style="font-size:.7em">&nbsp;1</sup>:</label>
                 <input type="text" class="text" name="user_lastname"  value="<? echo htmlentities($user->fields['lastname']); ?>" tabindex="1" />
             </p>
             <p>
-                <label><? echo _SYSTEM_LABEL_FIRSTNAME; ?>:</label>
+                <label><? if ($user->new) echo '<em>*&nbsp;</em>'; echo _SYSTEM_LABEL_FIRSTNAME; ?><sup style="font-size:.7em">&nbsp;1</sup>:</label>
                 <input type="text" class="text" name="user_firstname"  value="<? echo htmlentities($user->fields['firstname']); ?>" tabindex="2" />
             </p>
             <p>
@@ -305,7 +305,7 @@ if (isset($_REQUEST['confirm']))
     <div style="float:left;width:50%;" class="ploopi_form">
         <div style="padding:2px;">
             <p>
-                <label><? echo _SYSTEM_LABEL_LOGIN; ?>:</label>
+                <label><? if ($user->new) echo '<em>*&nbsp;</em>'; echo _SYSTEM_LABEL_LOGIN; ?>:</label>
                 <?
                 if ($user->new)
                 {
@@ -444,20 +444,21 @@ if (isset($_REQUEST['confirm']))
         </div>
     </div>
 </div>
-<div style="clear:both;text-align:right;padding:4px;">
-<?
-if (isset($_REQUEST['confirm']))
-{
-    ?>
-    <input type="submit" class="flatbutton" value="<? echo _SYSTEM_MSG_CREATEUSER_CONFIRMATION3; ?>">
+<div style="clear:both;padding:4px;text-align:right;">
+    <em><? if ($user->new) echo '<sup>(1)</sup> Champs utilisés pour tester la présence de l\'utilisateur / '; ?>* Champs obligatoires</em>&nbsp;
     <?
-}
-else
-{
+    if (isset($_REQUEST['confirm']))
+    {
+        ?>
+        <input type="submit" class="flatbutton" value="<? echo _SYSTEM_MSG_CREATEUSER_CONFIRMATION3; ?>">
+        <?
+    }
+    else
+    {
+        ?>
+        <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+        <?
+    }
     ?>
-    <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
-    <?
-}
-?>
 </div>
 </form>

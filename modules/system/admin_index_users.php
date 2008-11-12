@@ -127,8 +127,13 @@ switch($op)
         }
 
 
-        if ($passwordok) ploopi_redirect("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&alphaTabItem=".(ord(strtolower($user->fields['lastname']))-96).$reload);
-        else ploopi_redirect("admin.php?op=modify_user&user_id=".$user->fields['id']."&error=password");
+        if ($passwordok) 
+        {
+            $alphaTabItem = ord(strtolower($user->fields['lastname']))-96;
+            if ($alphaTabItem < 1 || $alphaTabItem > 26) $alphaTabItem = 98; // #
+            ploopi_redirect("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&alphaTabItem={$alphaTabItem}{$reload}");
+        }
+        else ploopi_redirect("admin.php?op=modify_user&user_id={$user->fields['id']}&error=password");
     break;
     
 }
@@ -353,8 +358,11 @@ switch($_SESSION['system']['usrTabItem'])
                 if (isset($_GET['user_id']) && is_numeric($_GET['user_id']) && $user->open($_GET['user_id']))
                 {
                     $user->attachtogroup($groupid);
-                    $alphaTabItem = isset($_GET['alphaTabItem']) ? $_GET['alphaTabItem'] : '';
-                    ploopi_redirect("admin.php?reloadsession&usrTabItem=tabUserList&alphaTabItem=".(ord(strtolower($user->fields['lastname']))-96));
+                    
+                    $alphaTabItem = ord(strtolower($user->fields['lastname']))-96;
+                    if ($alphaTabItem < 1 || $alphaTabItem > 26) $alphaTabItem = 98; // #
+                    
+                    ploopi_redirect("admin.php?reloadsession&usrTabItem=tabUserList&alphaTabItem={$alphaTabItem}");
                 }
                 else ploopi_redirect('admin.php');
             break;            
