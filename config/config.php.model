@@ -176,7 +176,7 @@ switch($http_host)
          * @see _PLOOPI_MAIL_ERRORS
          */
 
-        define ('_PLOOPI_ADMINMAIL', 'webmaster@mydomain.com');
+        define ('_PLOOPI_ADMINMAIL', '<ADMIN_MAIL>');
 
         /**
          * Active ou non le log interne
@@ -303,7 +303,7 @@ switch($http_host)
         define ('_PLOOPI_INDEXATION_KEYWORDSMAXPCENT', 100);
 
         /**
-         * Nombre de coeurs affectés au rendu des pages (permet d'ajuster le calcul de la charge). 
+         * Nombre de coeurs affectés au rendu des pages (permet d'ajuster le calcul de la charge).
          */
 
         define ('_PLOOPI_LOAD_NBCORE', 1);
