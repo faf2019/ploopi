@@ -406,8 +406,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
                 var date_split = field_value.split("/");
                 for (i=0;i<=2;i++) date_split[i] = parseInt(date_split[i],10);
                 var datetotest = new Date(date_split[2], date_split[1]-1, date_split[0]);
-                var year = datetotest.getYear();
-                ok = ( datetotest.getDate() == date_split[0] && datetotest.getMonth() == date_split[1]-1 && year == date_split[2] );
+                ok = ( datetotest.getDate() == date_split[0] && datetotest.getMonth() == date_split[1]-1 && datetotest.getFullYear() == date_split[2] );
             }
 
             if (field_type == 'emptydate') ok = (ok || field_value.length == 0);

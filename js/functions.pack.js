@@ -545,6 +545,39 @@ function ploopi_dispatch_onchange(inputfield_id)
 ploopi_window_onload_launch();
 ploopi_window_onunload_launch();
 /*
+    Copyright (c) 2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/* FILE EXPLORER FUNCTIONS */
+
+function ploopi_filexplorer_popup(filexplorer_id, event)
+{
+    ploopi_showpopup(ploopi_ajaxloader_content, 600, event, true, 'ploopi_filexplorer_popup');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=filexplorer_browser&filexplorer_id='+filexplorer_id, 'ploopi_filexplorer_popup')
+}
+
+
+function ploopi_filexplorer_browser(filexplorer_id, folder)
+{
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=filexplorer_browser&filexplorer_id='+filexplorer_id+'&filexplorer_folder='+folder, 'ploopi_filexplorer_popup')
+}/*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.
@@ -1504,7 +1537,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
     if (field_object)
     {
         field_value = field_object.value;
-        
+
         /* Vérifie qu'un élément de liste a été sélectionné */
         if (field_type == 'selected')
         {
@@ -1522,21 +1555,21 @@ function ploopi_validatefield(field_label, field_object, field_type)
                 if (field_object[c].checked) ok = true;
             }
         }
-        
+
         /* Vérifie que le champ contient une numéro de téléphone valide */
         if (field_type == 'phone' || field_type == 'emptyphone')
         {
-            ok = field_value.match(/^\+?(\([0-9 ]+\))?[0-9 ]+$/);
-            if (field_type == 'emptyphone') ok = ok || field_value.length == 0;
-            if (!ok) msg = (field_type == 'phone' && field_value.length == 0) ? lstmsg[4] : lstmsg[11]; 
+            ok = (field_value.search(/^\+?(\([0-9 ]+\))?[0-9 ]+$/) != -1);
+            if (field_type == 'emptyphone') ok = (ok || field_value.length == 0);
+            if (!ok) msg = (field_type == 'phone' && field_value.length == 0) ? lstmsg[4] : lstmsg[11];
         }
 
         /* Vérifie que le champ contient une adresse email valide */
         if (field_type == 'email' || field_type == 'emptyemail')
         {
-            ok = field_value.match(/^[a-z0-9._-]+@[a-z0-9.-]{2,}[.][a-z]{2,4}$/);
-            if (field_type == 'emptyemail') ok = ok || field_value.length == 0;
-            if (!ok) msg = (field_type == 'email' && field_value.length == 0) ? lstmsg[4] : lstmsg[0]; 
+            ok = (field_value.search(/^[a-z0-9._-]+@[a-z0-9.-]{2,}[.][a-z]{2,4}$/) != -1);
+            if (field_type == 'emptyemail') ok = (ok || field_value.length == 0);
+            if (!ok) msg = (field_type == 'email' && field_value.length == 0) ? lstmsg[4] : lstmsg[0];
         }
 
         /* Vérifie que le champ contient une couleur valide */
@@ -1560,42 +1593,41 @@ function ploopi_validatefield(field_label, field_object, field_type)
         /* Vérifie que le champ contient une valeur entière ou vide */
         if (field_type == 'int' || field_type == 'emptyint')
         {
-            ok = field_value.match(/^(\-?[0-9]+)$/);
-            if (field_type == 'emptyint') ok = ok || field_value.length == 0;
-            if (!ok) msg = (field_type == 'int' && field_value.length == 0) ? lstmsg[4] : lstmsg[5]; 
+            ok = (field_value.search(/^(\-?[0-9]+)$/) != -1);
+            if (field_type == 'emptyint') ok = (ok || field_value.length == 0);
+            if (!ok) msg = (field_type == 'int' && field_value.length == 0) ? lstmsg[4] : lstmsg[5];
         }
 
         /* Vérifie que le champ contient une valeur réelle ou vide */
         if (field_type == 'float' || field_type == 'emptyfloat')
         {
-            ok = field_value.match(/^(\-?((([0-9]+(\.)?)|([0-9]*\.[0-9]+))))$/);
-            if (field_type == 'emptyfloat') ok = ok || field_value.length == 0;
-            if (!ok) msg = (field_type == 'float' && field_value.length == 0) ? lstmsg[4] : lstmsg[6]; 
+            ok = (field_value.search(/^(\-?((([0-9]+(\.)?)|([0-9]*\.[0-9]+))))$/) != -1);
+            if (field_type == 'emptyfloat') ok = (ok || field_value.length == 0);
+            if (!ok) msg = (field_type == 'float' && field_value.length == 0) ? lstmsg[4] : lstmsg[6];
         }
 
         /* Vérifie que le champ contient une date valide ou vide */
         if (field_type == 'date' || field_type == 'emptydate')
         {
-            ok = field_value.match(/^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/);
+            ok = (field_value.search(/^([0-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-9]{4}$/) != -1);
             if (ok && field_value.length > 0)
             {
                 var date_split = field_value.split("/");
-                var datetotest = new Date(eval(date_split[2]), eval(date_split[1])-1, eval(date_split[0]));
-                var year = datetotest.getYear()
-                if ((Math.abs(year)+"").length < 4) year = year + 1900
-                ok = ((datetotest.getDate() == eval(date_split[0])) && (datetotest.getMonth() == eval(date_split[1])-1) && (year == eval(date_split[2])));
+                for (i=0;i<=2;i++) date_split[i] = parseInt(date_split[i],10);
+                var datetotest = new Date(date_split[2], date_split[1]-1, date_split[0]);
+                ok = ( datetotest.getDate() == date_split[0] && datetotest.getMonth() == date_split[1]-1 && datetotest.getFullYear() == date_split[2] );
             }
 
-            if (field_type == 'emptydate') ok = ok || field_value.length == 0; 
-            if (!ok) msg = (field_type == 'date' && field_value.length == 0) ? lstmsg[4] : lstmsg[7]; 
+            if (field_type == 'emptydate') ok = (ok || field_value.length == 0);
+            if (!ok) msg = (field_type == 'date' && field_value.length == 0) ? lstmsg[4] : lstmsg[7];
         }
 
         /* Vérifie que le champ contient une heure valide ou vide */
         if (field_type == 'time' || field_type == 'emptytime')
         {
-            ok = field_value.match(/^[0-9]{2}[:]{1}[0-9]{2}([:]{1}[0-9]{2})?$/);
-            if (field_type == 'emptytime') ok = ok || field_value.length == 0;
-            if (!ok) msg = (field_type == 'time' && field_value.length == 0) ? lstmsg[4] : lstmsg[8]; 
+            ok = (field_value.search(/^(0[0-9]|1[0-9]|2[0-4]):[0-5][0-9](:[0-5][0-9])?$/) != -1);
+            if (field_type == 'emptytime') ok = (ok || field_value.length == 0);
+            if (!ok) msg = (field_type == 'time' && field_value.length == 0) ? lstmsg[4] : lstmsg[8];
         }
     }
     else ok = false;
@@ -1611,8 +1643,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
     }
 
     return (ok);
-}
-/*
+}/*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.
