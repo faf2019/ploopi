@@ -45,12 +45,12 @@ $strForumHidden = ($objForumCat->fields['visible'] == 1) ? 'checked' : '';
 ?>
 
 <script type="text/javascript">
-  function form_validate(form) 
+  function form_validate(form)
   {
-    if (ploopi_validatefield('<?php echo _FORUM_CAT_LABEL_TITLE; ?>',form.forum_title,'string')) 
+    if (ploopi_validatefield('<?php echo _FORUM_CAT_LABEL_TITLE; ?>',form.forum_title,'string'))
     if (ploopi_validatefield('<?php echo _FORUM_CAT_LABEL_DESCRIPTION; ?>',form.forum_description,'string'))
-      return(true); 
-    
+      return(true);
+
     return(false);
   }
 </script>
@@ -79,10 +79,10 @@ $strForumHidden = ($objForumCat->fields['visible'] == 1) ? 'checked' : '';
         <div style="font-weight:bold;width:190px;float:left;">
           <?php echo _FORUM_CAT_LABEL_VISIBLE; ?>
         </div>
-        <p class="ploopi_va" style="float:left;cursor:pointer;" onclick="javascript:ploopi_checkbox_click('forum_visible_1');">
+        <p class="ploopi_va" style="float:left;cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event,'forum_visible_1');">
           <span><?php echo _PLOOPI_YES ?>&nbsp;</span><input type="radio" id="forum_visible_1" name="forum_visible" style="padding:0; margin:0; cursor:pointer;" value="1" <?php if($objForumCat->fields['visible'] == 1) echo 'CHECKED'; ?>>
         </p>
-        <p class="ploopi_va" style="float:left;cursor:pointer;margin: 0 0 0 10px;" onclick="javascript:ploopi_checkbox_click('forum_visible_0');">
+        <p class="ploopi_va" style="float:left;cursor:pointer;margin: 0 0 0 10px;" onclick="javascript:ploopi_checkbox_click(event, 'forum_visible_0');">
           <span><?php echo _PLOOPI_NO ?>&nbsp;</span><input type="radio" id="forum_visible_0" name="forum_visible" style="padding:0; margin:0; cursor:pointer;" value="0" <?php if($objForumCat->fields['visible'] != 1) echo 'CHECKED'; ?>>
         </p>
       </div>
@@ -90,10 +90,10 @@ $strForumHidden = ($objForumCat->fields['visible'] == 1) ? 'checked' : '';
         <div style="font-weight:bold;width:190px;float:left;">
           <?php echo _FORUM_CAT_LABEL_CLOSE; ?>
         </div>
-        <p class="ploopi_va" style="float:left;cursor:pointer;" onclick="javascript:ploopi_checkbox_click('forum_closed_1');">
+        <p class="ploopi_va" style="float:left;cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'forum_closed_1');">
           <span><?php echo _PLOOPI_YES ?>&nbsp;</span><input type="radio" id="forum_closed_1" name="forum_closed" style="padding:0; margin:0; cursor:pointer;" value="1" <?php if($objForumCat->fields['closed'] == 1) echo 'CHECKED'; ?>>
         </p>
-        <p class="ploopi_va" style="float:left;cursor:pointer;margin: 0 0 0 10px;" onclick="javascript:ploopi_checkbox_click('forum_closed_0');">
+        <p class="ploopi_va" style="float:left;cursor:pointer;margin: 0 0 0 10px;" onclick="javascript:ploopi_checkbox_click(event, 'forum_closed_0');">
           <span><?php echo _PLOOPI_NO ?>&nbsp;</span><input type="radio" id="forum_closed_0" name="forum_closed" style="padding:0; margin:0; cursor:pointer;" value="0" <?php if($objForumCat->fields['closed'] != 1) echo 'CHECKED'; ?>>
         </p>
       </div>
@@ -101,10 +101,10 @@ $strForumHidden = ($objForumCat->fields['visible'] == 1) ? 'checked' : '';
         <div style="font-weight:bold;width:190px;float:left;">
           <?php echo _FORUM_CAT_LABEL_VALIDATE; ?>
         </div>
-        <p class="ploopi_va" style="float:left;cursor:pointer;" onclick="javascript:ploopi_checkbox_click('forum_mustbe_validated_1');">
+        <p class="ploopi_va" style="float:left;cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'forum_mustbe_validated_1');">
           <span><?php echo _PLOOPI_YES ?>&nbsp;</span><input type="radio" id="forum_mustbe_validated_1" name="forum_mustbe_validated" style="padding:0; margin:0; cursor:pointer;" value="1" <?php if($objForumCat->fields['mustbe_validated'] == 1) echo 'CHECKED'; ?>>
         </p>
-        <p class="ploopi_va" style="float:left;cursor:pointer;margin: 0 0 0 10px;" onclick="javascript:ploopi_checkbox_click('forum_mustbe_validated_0');">
+        <p class="ploopi_va" style="float:left;cursor:pointer;margin: 0 0 0 10px;" onclick="javascript:ploopi_checkbox_click(event, 'forum_mustbe_validated_0');">
           <span><?php echo _PLOOPI_NO ?>&nbsp;</span><input type="radio" id="forum_mustbe_validated_0" name="forum_mustbe_validated" style="padding:0; margin:0; cursor:pointer;" value="0" <?php if($objForumCat->fields['mustbe_validated'] != 1) echo 'CHECKED'; ?>>
         </p>
       </div>
