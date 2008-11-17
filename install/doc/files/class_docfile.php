@@ -79,6 +79,7 @@ class docfile extends data_object
 
         $this->oldname = '';
         $this->tmpfile = null;
+        $this->sharedfile = null;
         $this->draftfile = null;
     }
 
@@ -133,7 +134,7 @@ class docfile extends data_object
 
         if ($this->new) // insert
         {
-            if ($this->tmpfile == 'none' && $this->draftfile == 'none') $error = _DOC_ERROR_EMPTYFILE;
+            if ($this->tmpfile == 'none' && $this->draftfile == 'none' && $this->sharedfile == null) $error = _DOC_ERROR_EMPTYFILE;
 
             if ($this->fields['size'] > _PLOOPI_MAXFILESIZE) $error = _DOC_ERROR_MAXFILESIZE;
 
@@ -154,7 +155,11 @@ class docfile extends data_object
 
                 if (!$error && is_writable($basepath))
                 {
-                    if ($this->draftfile != null)
+                    if ($this->sharedfile != null)
+                    {
+                        if (!copy($this->sharedfile, $filepath)) $error = _DOC_ERROR_FILENOTWRITABLE;
+                    }
+                    elseif ($this->draftfile != null)
                     {
                         if (!rename($this->draftfile, $filepath)) $error = _DOC_ERROR_FILENOTWRITABLE;
                     }
@@ -176,7 +181,7 @@ class docfile extends data_object
         else // update
         {
 
-            if ((!empty($this->tmpfile) && $this->tmpfile != 'none') || (!empty($this->draftfile) && $this->draftfile != 'none'))
+            if ((!empty($this->tmpfile) && $this->tmpfile != 'none') || (!empty($this->draftfile) && $this->draftfile != 'none')  || (!empty($this->sharedfile)))
             {
                 $this->fields['version']++;
 
@@ -207,7 +212,16 @@ class docfile extends data_object
                         // on copie le nouveau
                         if (!$error && is_writable($basepath))
                         {
-                            if ($this->draftfile != 'none')
+                            if ($this->sharedfile != null)
+                            {
+                                if (copy($this->sharedfile, $filepath))
+                                {
+                                    $this->parse();
+                                    chmod($filepath, 0640);
+                                }
+                                else $error = _DOC_ERROR_FILENOTWRITABLE;
+                            }
+                            if ($this->draftfile != null)
                             {
                                 if (rename($this->draftfile, $filepath))
                                 {
@@ -216,7 +230,7 @@ class docfile extends data_object
                                 }
                                 else $error = _DOC_ERROR_FILENOTWRITABLE;
                             }
-                            if ($this->tmpfile != 'none')
+                            elseif ($this->tmpfile != null)
                             {
                                 if (rename($this->tmpfile, $filepath))
                                 {

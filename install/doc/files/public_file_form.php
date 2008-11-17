@@ -32,6 +32,7 @@
  * 
  * @see _PLOOPI_USE_CGIUPLOAD
  * @see _DOC_OBJECT_FILE
+ * @see _PLOOPI_PATHSHARED
  * 
  * @see doc_getvalidation
  * @see ploopi_subscription
@@ -50,6 +51,8 @@ $max_filesize = doc_max_filesize();
 
 $newfile = !(isset($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']));
 
+$booServerModeAvailable = (_PLOOPI_PATHSHARED != '' && file_exists(_PLOOPI_PATHSHARED) && is_readable(_PLOOPI_PATHSHARED));
+
 /**
  * Nouveaux fichiers à déposer
  */
@@ -65,64 +68,116 @@ if ($newfile)
     <div class="doc_fileform_title">Nouveau Fichier</div>
     <div class="doc_fileform_main">
         <?
-        /**
-         * Chargement du validation
-         */
-        
-        doc_getvalidation();
-        $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
-    
-        
-        if (_PLOOPI_USE_CGIUPLOAD)
-        {
-            $sid = doc_guid();
-            ?>
-            <form method="post" enctype="multipart/form-data" action="<? echo _PLOOPI_CGI_PATH; ?>/upload.cgi?sid=<? echo $sid; ?>" onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>, '<? echo $sid; ?>', '<? echo _PLOOPI_CGI_PATH; ?>');" target="doc_fileform_iframe">
-            <input type="hidden" name="op" value="doc_filesave">
-            <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
-            <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
-            <input type="hidden" name="redirect" value="../admin.php">
-            <?
-        }
-        else
+        if ($booServerModeAvailable)
         {
             ?>
-            <form method="post" enctype="multipart/form-data" action="<? echo ploopi_urlencode('admin.php'); ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" target="doc_fileform_iframe">
-            <input type="hidden" name="op" value="doc_filesave">
-            <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
-            <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
+            <div style="padding:4px;">
+                <div>Les fichiers sont situés : </div>
+                <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi_checkbox_click(event, '_docfile_location_host');">
+                    <input type="radio" name="_docfile_location" id="_docfile_location_host" value="host" checked="checked" onchange="javascript:$('doc_form_host').style.display = 'block'; $('doc_form_server').style.display = 'none';" />
+                    <span>sur mon poste</span>
+                </p>
+                <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi_checkbox_click(event, '_docfile_location_server');">
+                    <input type="radio" name="_docfile_location" id="_docfile_location_server" value="server" onchange="javascript:$('doc_form_host').style.display = 'none'; $('doc_form_server').style.display = 'block';" />
+                    <span>sur le serveur</span>
+                </p>
+            </div>
             <?
         }
-        ?>
-        <input type="hidden" name="MAX_FILE_SIZE" value="<? echo $max_filesize*1024; ?>">
-        <div style="padding:2px;">
-            <div style="padding:2px;font-weight:bold;">Fichiers : </div>
+        ?>        
+        <div id="doc_form_host" style="display:block;">
             <?
-            for ($i=0;$i<5;$i++)
+            /**
+             * Chargement du validation
+             */
+            
+            doc_getvalidation();
+            $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
+        
+            
+            if (_PLOOPI_USE_CGIUPLOAD)
+            {
+                $sid = doc_guid();
+                ?>
+                <form method="post" enctype="multipart/form-data" action="<? echo _PLOOPI_CGI_PATH; ?>/upload.cgi?sid=<? echo $sid; ?>" onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>, '<? echo $sid; ?>', '<? echo _PLOOPI_CGI_PATH; ?>');">
+                <input type="hidden" name="ploopi_op" value="doc_filesave">
+                <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
+                <input type="hidden" name="doc_mode" value="host">
+                <input type="hidden" name="redirect" value="../admin.php">
+                <?
+            }
+            else
             {
                 ?>
-                <p class="ploopi_va" style="margin-bottom:2px;">
-                    <input type="file" class="text" name="docfile_file_<? echo $i; ?>" />&nbsp;<input type="text" style="width:300px;" maxlength="100" class="text" name="docfile_description_<? echo $i; ?>" />
-                    <input type="checkbox" name="docfile_readonly_<? echo $i; ?>" id="docfile_readonly_<? echo $i; ?>" value="1">
-                    <span style="cursor:pointer;" onclick="javascript:$('docfile_readonly_<? echo $i; ?>').checked = !$('docfile_readonly_<? echo $i; ?>').checked;">Lecture Seule</span>
-                </p>
+                <form method="post" enctype="multipart/form-data" action="<? echo ploopi_urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&doc_mode=host"); ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
                 <?
             }
             ?>
-        
-            <div id="doc_progressbar" style="display:none;"><div id="doc_progressbar_bg"></div></div>
-            <div id="doc_progressbar_txt"></div>
-        
-            <div>Taille maxi autorisée par fichier : <b><? echo ($max_filesize) ? "{$max_filesize} ko" : 'pas de limite'; ?></b></div>
-            <div>Taille maxi autorisée par envoi : <b><? echo ($max_formsize) ? "{$max_formsize} ko" : 'pas de limite'; ?></b></div>
+            <input type="hidden" name="MAX_FILE_SIZE" value="<? echo $max_filesize*1024; ?>">
+            <div style="padding:2px;">
+                <div style="padding:2px;font-weight:bold;">Fichiers : </div>
+                <?
+                for ($i=0;$i<5;$i++)
+                {
+                    ?>
+                    <p class="ploopi_va" style="margin-bottom:2px;">
+                        <input type="file" class="text" name="docfile_file_<? echo $i; ?>" />&nbsp;<input type="text" style="width:300px;" maxlength="100" class="text" name="docfile_description_<? echo $i; ?>" />
+                        <span class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_readonly_<? echo $i; ?>_host');">
+                            <input type="checkbox" name="docfile_readonly_<? echo $i; ?>" id="docfile_readonly_<? echo $i; ?>_host" value="1">
+                            <span>Lecture Seule</span>
+                        </span>
+                    </p>
+                    <?
+                }
+                ?>
             
-            <div style="padding:4px;text-align:right;">
-                <input type="button" class="flatbutton" value="<? echo _PLOOPI_BACK; ?>" onclick="javascript:doc_explorer(<? echo $currentfolder; ?>);">
-                <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+                <div id="doc_progressbar" style="display:none;"><div id="doc_progressbar_bg"></div></div>
+                <div id="doc_progressbar_txt"></div>
+            
+                <div>Taille maxi autorisée par fichier : <b><? echo ($max_filesize) ? "{$max_filesize} ko" : 'pas de limite'; ?></b></div>
+                <div>Taille maxi autorisée par envoi : <b><? echo ($max_formsize) ? "{$max_formsize} ko" : 'pas de limite'; ?></b></div>
+                
+                <div style="padding:4px;text-align:right;">
+                    <input type="button" class="flatbutton" value="<? echo _PLOOPI_BACK; ?>" onclick="javascript:doc_explorer(<? echo $currentfolder; ?>);">
+                    <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+                </div>
             </div>
+            </form>
         </div>
-        </form>
-        <iframe name="doc_fileform_iframe" src="./img/blank.gif" style="display:none;"></iframe>
+    
+        <?
+        if ($booServerModeAvailable)
+        {
+            ?>
+            <div id="doc_form_server" style="display:none;">
+                <form method="post" action="<? echo ploopi_urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&doc_mode=server"); ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
+                <div style="padding:2px;">
+                    <div style="padding:2px;font-weight:bold;">Fichiers : </div>
+                    <?
+                    for ($i=0;$i<5;$i++)
+                    {
+                        ?>
+                        <p class="ploopi_va" style="margin-bottom:2px;">
+                            <input type="text" class="text" name="docfile_file_<? echo $i; ?>" id="docfile_file_server_<? echo $i; ?>" value="" style="width:300px;cursor:pointer;" onclick="javascript:ploopi_filexplorer_popup('<? echo ploopi_filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server_{$i}", "docfile_explorer_{$i}"); ?>', event);" readonly="readonly" />
+                            <input type="button" class="button" value="Parcourir" style="width:90px;" onclick="javascript:ploopi_filexplorer_popup('<? echo ploopi_filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server_{$i}", "docfile_explorer_{$i}"); ?>', event);" />&nbsp;<input type="text" style="width:300px;" maxlength="100" class="text" name="docfile_description_<? echo $i; ?>" />
+                            <span class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_readonly_<? echo $i; ?>_server');">
+                                <input type="checkbox" name="docfile_readonly_<? echo $i; ?>" id="docfile_readonly_<? echo $i; ?>_server" value="1">
+                                <span>Lecture Seule</span>
+                            </span>
+                        </p>
+                        <?
+                    }
+                    ?>
+                    <div style="padding:4px;text-align:right;">
+                        <input type="button" class="flatbutton" value="<? echo _PLOOPI_BACK; ?>" onclick="javascript:doc_explorer(<? echo $currentfolder; ?>);">
+                        <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+                    </div>
+                </div>
+                </form>
+            </div>
+            <?
+        }
+        ?>        
     </div>
     <?
     
@@ -137,10 +192,10 @@ else
     $title = ($readonly) ? '(lecture seule)' : ''
     ?>
     <div class="doc_fileform_title">
-        <a title="Télécharger ZIP" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("admin-light.php?op=doc_filedownloadzip&docfile_md5id={$docfile->fields['md5id']}"); ?>">Télécharger ZIP</a>
-        <a title="Télécharger" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("admin-light.php?op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>">Télécharger</a>
-        <a title="Ouvrir" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("admin-light.php?op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>" target="_blank">Ouvrir</a>
-        <a title="Envoyer un message" style="display:block;float:right;margin-left:10px;" href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, '<? echo _DOC_OBJECT_FILE ?>','<? echo $docfile->fields['md5id']; ?>', '<? echo $docfile->fields['name']; ?>');">Envoyer un message</a>
+        <a title="Télécharger ZIP" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$docfile->fields['md5id']}"); ?>">Télécharger ZIP</a>
+        <a title="Télécharger" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>">Télécharger</a>
+        <a title="Ouvrir" style="display:block;float:right;margin-left:10px;" href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>" target="_blank">Ouvrir</a>
+        <a title="Envoyer en pièce jointe" style="display:block;float:right;margin-left:10px;" href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, '<? echo _DOC_OBJECT_FILE ?>','<? echo $docfile->fields['md5id']; ?>', '<? echo $docfile->fields['name']; ?>');">Envoyer en pièce jointe</a>
         <? echo htmlentities($docfile->fields['name'])." {$title}"; ?>
     </div>
     
@@ -312,20 +367,21 @@ else
                 {
                     $sid = doc_guid();
                     ?>
-                    <form method="post" enctype="multipart/form-data" action="<? echo _PLOOPI_CGI_PATH; ?>/upload.cgi?sid=<? echo $sid; ?>" onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>, '<? echo $sid; ?>', '<? echo _PLOOPI_CGI_PATH; ?>');" target="doc_fileform_iframe">
-                    <input type="hidden" name="op" value="doc_filesave">
+                    <form method="post" enctype="multipart/form-data" action="<? echo _PLOOPI_CGI_PATH; ?>/upload.cgi?sid=<? echo $sid; ?>" onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>, '<? echo $sid; ?>', '<? echo _PLOOPI_CGI_PATH; ?>');">
+                    <input type="hidden" name="ploopi_op" value="doc_filesave">
                     <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
                     <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
                     <input type="hidden" name="redirect" value="../admin.php">
+                    <input type="hidden" name="doc_mode" id="doc_mode" value="host">
                     <?
                 }
                 else
                 {
                     ?>
-                    <form method="post" enctype="multipart/form-data" action="<? echo ploopi_urlencode('admin.php'); ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" target="doc_fileform_iframe">
-                    <input type="hidden" name="op" value="doc_filesave">
+                    <form method="post" enctype="multipart/form-data" action="<? echo ploopi_urlencode('admin.php'); ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
+                    <input type="hidden" name="ploopi_op" value="doc_filesave">
                     <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
-                    <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
+                    <input type="hidden" name="doc_mode" id="doc_mode" value="host">
                     <?
                 }
                 ?>
@@ -404,21 +460,51 @@ else
                     }
                     ?>
                 </p>
-                <?
-                if (!$readonly)
+            </div>
+            <?
+            if (!$readonly)
+            {
+                if ($booServerModeAvailable)
                 {
                     ?>
-                    <p>
-                        <label>Déposer une nouvelle Version:</label>
-                        <input type="file" class="text" name="docfile_file">
-                    </p>
-                    <div id="doc_progressbar" style="display:none;"><div id="doc_progressbar_bg"></div></div>
-                    <div id="doc_progressbar_txt"></div>
+                    <div style="padding:4px;">
+                        <div>Mettre à jour avec un fichier situé : </div>
+                        <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi_checkbox_click(event, '_docfile_location_host');">
+                            <input type="radio" name="_docfile_location" id="_docfile_location_host" value="host" checked="checked" onchange="javascript:$('doc_form_host').style.display = 'block'; $('doc_form_server').style.display = 'none'; $('docfile_file_server').value = ''; $('doc_mode').value='host'; " />
+                            <span>sur mon poste</span>
+                        </p>
+                        <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi_checkbox_click(event, '_docfile_location_server');">
+                            <input type="radio" name="_docfile_location" id="_docfile_location_server" value="server" onchange="javascript:$('doc_form_host').style.display = 'none'; $('doc_form_server').style.display = 'block'; $('docfile_file_host').value = ''; $('doc_mode').value='server';" />
+                            <span>sur le serveur</span>
+                        </p>
+                    </div>
                     <?
                 }
-                
+                ?>  
+                <div id="doc_form_host" style="display:block;">
+                    <p class="ploopi_va" style="margin-bottom:2px;">
+                        <input type="file" class="text" name="docfile_file_host" id="docfile_file_host" />
+                    </p>
+                </div>
+                <?
+                if ($booServerModeAvailable)
+                {
+                    ?>
+                    <div id="doc_form_server" style="display:none;">
+                        <p class="ploopi_va" style="margin-bottom:2px;">
+                            <input type="text" class="text" name="_docfile_file_server" id="docfile_file_server" value="" style="width:200px;" readonly />
+                            <input type="button" class="button" value="Parcourir" style="width:90px;" onclick="javascript:ploopi_filexplorer_popup('<? echo ploopi_filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server", "docfile_explorer"); ?>', event);" />
+                        </p>
+                    </div>
+                    <?
+                }
                 ?>
-            </div>   
+                <div id="doc_progressbar" style="display:none;"><div id="doc_progressbar_bg"></div></div>
+                <div id="doc_progressbar_txt"></div>
+                <?
+            }
+            
+            ?>
                  
             <div style="padding:4px;text-align:right;">
                 <input type="button" class="flatbutton" value="<? echo _PLOOPI_BACK; ?>" onclick="javascript:doc_explorer(<? echo $currentfolder; ?>);">
@@ -426,8 +512,8 @@ else
                 if (!$readonly)
                 {
                     ?>
+                    <input type="button" class="flatbutton" value="Ré-indéxer" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin-light.php?ploopi_op=doc_fileindex&currentfolder={$currentfolder}&docfile_md5id={$_GET['docfile_md5id']}"); ?>';">
                     <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
-                    <input type="button" class="flatbutton" value="Ré-indéxer" onclick="javascript:doc_fileindex(<? echo $currentfolder; ?>, '<? echo $_GET['docfile_md5id']; ?>');">
                     <?
                 }
                 ?>
@@ -437,7 +523,6 @@ else
             {
                 ?>
                 </form>
-                <iframe name="doc_fileform_iframe" src="./img/blank.gif" style="display:none;"></iframe>
                 <?
             }
             ?>

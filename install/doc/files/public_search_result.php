@@ -226,20 +226,19 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 
             if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_DELETEFILE) && (!$docfolder_readonly_content || $row['id_user'] == $_SESSION['ploopi']['userid'])))
             {
-                $tools = "<a title=\"Supprimer\" style=\"display:block;float:right;\" href=\"javascript:void(0);\" onclick=\"javascript:doc_filedelete({$row['id_folder']},'{$row['md5id']}');\"><img src=\"./modules/doc/img/ico_trash.png\" /></a>";
+                $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ploopi_urlencode("admin.php?ploopi_op=doc_filedelete&currentfolder={$row['id_folder']}&docfile_md5id={$row['md5id']}").'\';"><img src="./modules/doc/img/ico_trash.png" /></a>';
             }
             else
             {
-                $tools = "<a title=\"Supprimer\" style=\"display:block;float:right;\" href=\"javascript:void(0);\" onclick=\"javascript:alert('Vous ne disposez pas des autorisations nécessaires pour supprimer ce fichier');\"><img src=\"./modules/doc/img/ico_trash_grey.png\" /></a>";
+                $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nécessaires pour supprimer ce fichier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
             }
 
-
-            $tools .=   "
-                        <a title=\"Modifier\" style=\"display:block;float:right;\" href=\"javascript:void(0);\" onclick=\"javascript:doc_fileform({$row['id_folder']},'{$row['md5id']}');\"><img src=\"./modules/doc/img/ico_modify.png\" /></a>
-                        <a title=\"Télécharger\" style=\"display:block;float:right;\" href=\"".ploopi_urlencode("admin.php?op=doc_filedownload&docfile_md5id={$row['md5id']}")."\"><img src=\"./modules/doc/img/ico_download.png\" /></a>
-                        <a title=\"Télécharger (ZIP)\" style=\"display:block;float:right;\" href=\"".ploopi_urlencode("admin.php?op=doc_filedownloadzip&docfile_md5id={$row['md5id']}")."\"><img src=\"./modules/doc/img/ico_download_zip.png\" /></a>
-                        ";
-
+            $tools .=   '
+                        <a title="Modifier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$row['id_folder']}&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_modify.png" /></a>
+                        <a title="Télécharger" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
+                        <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
+                        ';                        
+                        
             $blue = 128;
             if ($arrRelevance[$row['md5id']]['relevance']>=50)
             {
@@ -256,16 +255,16 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 
 
             $values[$c]['values']['pert'] = array('label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $arrRelevance[$row['md5id']]['relevance']), 'sort_label' => $arrRelevance[$row['md5id']]['relevance']);
-            $values[$c]['values']['nom'] = array('label' => "<img src=\"./modules/doc/img/mimetypes/{$ico}\" /><span>&nbsp;{$row['name']}</span>");
-            $values[$c]['values']['taille'] = array('label' => "{$ksize} ko", 'style' => 'text-align:right');
-            $values[$c]['values']['dossier'] = array('label' => "<img src=\"./modules/doc/img/{$icofolder}.png\" /><span>&nbsp;{$row['fd_name']}</span>");
+            $values[$c]['values']['nom'] = array('label' => "<img src=\"./modules/doc/img/mimetypes/{$ico}\" /><span>&nbsp;{$row['name']}</span>", 'sort_label' => $row['name']);
+            $values[$c]['values']['taille'] = array('label' => "{$ksize} ko", 'style' => 'text-align:right', 'sort_label' => sprintf("%016d", $ksize*100));
+            $values[$c]['values']['dossier'] = array('label' => "<img src=\"./modules/doc/img/{$icofolder}.png\" /><span>&nbsp;{$row['fd_name']}</span>", 'sort_label' => $row['fd_name']);
             $values[$c]['values']['propriétaire'] = array('label' => $row['login']);
             $values[$c]['values']['espace'] = array('label' => $row['label']);
-            $values[$c]['values']['date'] = array('label' => "{$ldate['date']} {$ldate['time']}");
+            $values[$c]['values']['date'] = array('label' => "{$ldate['date']} {$ldate['time']}", 'sort_label' => $row['timestp_modify']);
             $values[$c]['values']['actions'] = array('label' => $tools);
 
             $values[$c]['description'] = $row['description'];
-            $values[$c]['link'] = ploopi_urlencode("admin.php?op=doc_filedownload&docfile_md5id={$row['md5id']}");
+            $values[$c]['link'] = ploopi_urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}");
             $values[$c]['style'] = '';
 
             $c++;

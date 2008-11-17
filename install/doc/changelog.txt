@@ -1,3 +1,11 @@
+== Module DOC - version 3.95 =====================================================
+
+2008-11-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Suppression de la navigation via AJAX (inutile)
+ * Ajout d'une option permettant d'ajouter un fichier depuis le serveur (voir _PLOOPI_PATHSHARED dans config.php)
+ * Correction de problème de tri (nom, date, taille) sur le résultat de la recherche
+
 == Module DOC - version 3.90 =====================================================
 
 2008-10-31  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

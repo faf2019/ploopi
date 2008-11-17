@@ -83,6 +83,8 @@ function doc_upload(sid)
         {
             if (rc == 'notfound')
             {
+                alert("Impossible d'envoyer ce fichier,\nvérifiez qu'il n'est pas trop volumineux.");
+                //document.location.reload();
             }
             else
             {
@@ -109,98 +111,6 @@ function doc_upload(sid)
     }
 }
 
-
-function doc_browser(currentfolder, orderby, op)
-{
-    if (!currentfolder) currentfolder = 0;
-
-    op = (op) ? op : 'doc_browser';
-    orderby = (orderby) ? '&orderby='+orderby : '';
-
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op='+op+'&currentfolder='+currentfolder+orderby,'doc_browser');
-}
-
-
-function doc_explorer(currentfolder, orderby)
-{
-    if (!currentfolder) currentfolder = 0;
-
-    orderby = (orderby) ? '&orderby='+orderby : '';
-
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=doc_explorer&currentfolder='+currentfolder+orderby,'doc_explorer');
-}
-
-function doc_folderform(currentfolder, addfolder)
-{
-    if (!currentfolder) currentfolder = 0;
-    addfolder = (addfolder) ? 1 : 0;
-
-    ploopi_ajaxloader('doc_browser');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=doc_folderform&currentfolder='+currentfolder+'&addfolder='+addfolder,'doc_browser');
-
-}
-
-function doc_folderdelete(docfolder_id)
-{
-    if (confirm('Êtes vous certain de vouloir supprimer ce dossier ?'))
-    {
-        ploopi_ajaxloader('doc_explorer');
-        ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=doc_folderdelete&docfolder_id='+docfolder_id,'doc_explorer');
-    }
-}
-
-function doc_folderpublish(currentfolder, docfolder_id)
-{
-    if (!currentfolder) currentfolder = 0;
-
-    if (confirm('Êtes vous certain de vouloir publier ce dossier (et son contenu) ?'))
-    {
-        ploopi_ajaxloader('doc_explorer');
-        ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=doc_folderpublish&currentfolder='+currentfolder+'&docfolder_id='+docfolder_id,'doc_explorer');
-    }
-}
-
-
-function doc_fileform(currentfolder, docfile_md5id)
-{
-    if (!currentfolder) currentfolder = 0;
-    docfile_md5id = (docfile_md5id) ? '&docfile_md5id='+docfile_md5id : '';
-
-    ploopi_ajaxloader('doc_browser');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=doc_fileform&currentfolder='+currentfolder+docfile_md5id,'doc_browser');
-}
-
-function doc_fileindex(currentfolder, docfile_md5id)
-{
-    if (!currentfolder) currentfolder = 0;
-
-    ploopi_ajaxloader('doc_browser');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=doc_fileindex&currentfolder='+currentfolder+'&docfile_md5id='+docfile_md5id,'doc_browser');
-}
-
-function doc_filedelete(currentfolder, docfile_md5id, draft)
-{
-    if (!currentfolder) currentfolder = 0;
-    if (!draft) draft = '';
-
-    if (confirm('Êtes vous certain de vouloir supprimer ce fichier ?'))
-    {
-        ploopi_ajaxloader('doc_explorer');
-        ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=doc_file'+draft+'delete&currentfolder='+currentfolder+'&docfile'+draft+'_md5id='+docfile_md5id,'doc_explorer');
-    }
-}
-
-function doc_filepublish(currentfolder, docfiledraft_md5id)
-{
-    if (!currentfolder) currentfolder = 0;
-
-    if (confirm('Êtes vous certain de vouloir publier ce fichier ?'))
-    {
-        ploopi_ajaxloader('doc_explorer');
-        ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=doc_filepublish&currentfolder='+currentfolder+'&docfiledraft_md5id='+docfiledraft_md5id,'doc_explorer');
-    }
-}
-
 function doc_parser_add()
 {
     $('docparser_form').style.display = 'block';
@@ -214,7 +124,7 @@ function doc_parser_add()
 function doc_search()
 {
     ploopi_ajaxloader('doc_browser');
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&op=doc_search&currentfolder=0', 'doc_browser');
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_search&currentfolder=0', 'doc_browser');
 }
 
 function doc_search_next()
@@ -223,22 +133,12 @@ function doc_search_next()
     ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_search_next&doc_search_keywords='+$('doc_search_keywords').value+'&doc_search_filetype='+$('doc_search_filetype').value+'&doc_search_user='+$('doc_search_user').value+'&doc_search_workspace='+$('doc_search_workspace').value+'&doc_search_date1='+$('doc_search_date1').value+'&doc_search_date2='+$('doc_search_date2').value,'doc_search_result');
 }
 
-// utile pour contourner un bug de FF lors d'un appel AJAX depuis une iframe
-// merci à http://www.fleegix.org/articles/2006/10/21/xmlhttprequest-and-0x80004005-ns_error_failure-error
-function doc_browser_from_iframe(idfolder)
-{
-    setTimeout('doc_browser('+idfolder+')', 0);
-}
-
-
 function doc_openhelp(e)
 {
     ploopi_showpopup('', 300, e, 'click', 'dochelp');
     ploopi_ajaxloader('dochelp');
     ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_help', 'dochelp');
 }
-
-
 
 function doc_fckexplorer_set_folder(idfolder, ploopi_op)
 {

@@ -39,45 +39,48 @@
 
 ob_start();
 ?>
-<div style="padding:2px;">
+<div style="padding:4px;">
     <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_home.png"><span> Racine</span>
+        <img src="./modules/doc/img/ico_home.png"><span style="margin-left:4px;">Racine</span>
     </p>
     <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_newfolder.png"><span> Nouveau Dossier</span>
+        <img src="./modules/doc/img/ico_newfolder.png"><span style="margin-left:4px;">Nouveau Dossier</span>
     </p>
     <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_newfile.png"><span> Nouveau Fichier</span>
+        <img src="./modules/doc/img/ico_newfile.png"><span style="margin-left:4px;">Nouveau Fichier</span>
     </p>
     <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_search.png"><span> Rechercher</span>
+        <img src="./modules/doc/img/ico_search.png"><span style="margin-left:4px;">Rechercher</span>
     </p>
     <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_download.png"><span> Télécharger</span>
+        <img src="./modules/doc/img/ico_download.png"><span style="margin-left:4px;">Télécharger</span>
     </p>
     <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_download_zip.png"><span> Télécharger (ZIP)</span>
+        <img src="./modules/doc/img/ico_download_zip.png"><span style="margin-left:4px;">Télécharger (ZIP)</span>
     </p>
     <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_modify.png"><span> Modifier</span>
+        <img src="./modules/doc/img/ico_modify.png"><span style="margin-left:4px;">Modifier</span>
     </p>
     <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_trash.png"><span> Supprimer</span>
+        <img src="./modules/doc/img/ico_trash.png"><span style="margin-left:4px;">Supprimer</span>
     </p>
     <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_validate.png"><span> Valider</span>
+        <img src="./modules/doc/img/ico_validate.png"><span style="margin-left:4px;">Valider</span>
     </p>
     <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_folder_public.png"><span> Dossier Public</span>
+        <img src="./modules/doc/img/ico_folder_public.png"><span style="margin-left:4px;">Dossier Public</span>
     </p>
     <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_folder_public_locked.png"><span> Dossier Public en Lecture Seule</span>
+        <img src="./modules/doc/img/ico_folder_public_locked.png"><span style="margin-left:4px;">Dossier Public en Lecture Seule</span>
     </p>
     <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_folder_shared.png"><span> Dossier Partagé</span>
+        <img src="./modules/doc/img/ico_folder_shared.png"><span style="margin-left:4px;">Dossier Partagé</span>
     </p>
     <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_folder_shared_locked.png"><span> Dossier Partagé en Lecture Seule</span>
+        <img src="./modules/doc/img/ico_folder_shared_locked.png"><span style="margin-left:4px;">Dossier Partagé en Lecture Seule</span>
+    </p>
+    <p class="ploopi_va" style="background-color:#ffe0e0;padding:2px 0;margin-top:2px;">
+        <span style="margin-left:4px;">Dossier ou fichier à valider</span>
     </p>
 </div>
 <?

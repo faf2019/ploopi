@@ -45,12 +45,13 @@ if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])) $
 /**
  * On affiche les options si une option a été modifiée
  */
-$show_options = (   !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype']) ||
-                    !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']) ||
-                    !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']) ||
-                    !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']) ||
-                    !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])
-                );
+$show_options = (   
+    !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype']) ||
+    !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']) ||
+    !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']) ||
+    !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']) ||
+    !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])
+);
 
 /**
  * Affichage du formulaire de recherche
@@ -130,7 +131,6 @@ $show_options = (   !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['se
     </div>
     <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px;">
-            <strong>Lancer la recherche</strong>:
             <br /><input type="submit" class="flatbutton" value="Rechercher">
         </p>
     </div>

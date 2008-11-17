@@ -47,7 +47,10 @@ $docfolder = new docfolder();
 doc_getvalidation();
 
 $wfusers = array();
-if (!$_GET['addfolder'] && $docfolder->open($currentfolder)) // modifying
+
+$addfolder = isset($_GET['addfolder']) ? $_GET['addfolder'] : 0;
+ 
+if (!$addfolder && $docfolder->open($currentfolder)) // modifying
 {
     foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $docfolder->fields['id_folder']) as $value) $wfusers[] = $value['id_validation'];
 
@@ -81,10 +84,13 @@ if (!$_GET['addfolder'] && $docfolder->open($currentfolder)) // modifying
 }
 else // creating
 {
-    foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
-
-    $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
-
+    if (!empty($currentfolder)) // si pas le dossier racine, on cherche les validateurs
+    {
+        foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
+        $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
+    }
+    else $wf_validator = false;    
+    
     $newfolder = true;
 
     $docfolder->init_description();
@@ -102,16 +108,8 @@ else // creating
         if (!$readonly)
         {
             ?>
-            <form name="docfolder_form" action="<? echo ploopi_urlencode('admin.php'); ?>"  onsubmit="javascript:return doc_folder_validate(this, <? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" method="post" enctype="multipart/form-data" target="doc_folderform_iframe">
-            <input type="hidden" name="op" value="doc_foldersave">
-            <input type="hidden" name="currentfolder" value="<? echo htmlentities($currentfolder); ?>">
+            <form name="docfolder_form" action="<? echo ploopi_urlencode("admin.php?ploopi_op=doc_foldersave&currentfolder={$currentfolder}".($newfolder ? '' : "&docfolder_id={$currentfolder}")); ?>"  onsubmit="javascript:return doc_folder_validate(this, <? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" method="post" enctype="multipart/form-data">
             <?
-            if (!$newfolder)
-            {
-                ?>
-                <input type="hidden" name="docfolder_id" value="<? echo htmlentities($currentfolder); ?>">
-                <?
-            }
         }
         ?>
 
@@ -242,12 +240,12 @@ else // creating
     ?>
 
     <div style="clear:both;float:right;padding:4px;">
-        <input type="button" class="flatbutton" value="<? echo _PLOOPI_BACK; ?>" onclick="javascript:doc_explorer(<? echo $currentfolder; ?>);">
+        <input type="button" class="flatbutton" value="<? echo _PLOOPI_BACK; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$currentfolder}"); ?>">
         <?
         if (!$readonly)
         {
             ?>
-            <input type="button" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>" onclick="javascript:if (doc_folder_validate(document.docfolder_form, <? echo ($newfolder && !empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>)) document.docfolder_form.submit();" tabindex="6">
+            <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>" tabindex="6">
             <?
         }
         ?>
@@ -270,7 +268,6 @@ if (!$readonly)
     <script type="text/javascript">
     document.docfolder_form.docfolder_name.focus();
     </script>
-    <iframe name="doc_folderform_iframe" src="./img/blank.gif" style="width:0;height:0;display:none;"></iframe>
     <?
 }
 
