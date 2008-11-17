@@ -43,16 +43,17 @@ switch($ploopi_op)
             include_once './include/classes/user.php';
 
             $user = new user();
-            $user->open($user_id);
-
-            ?>
-            <p class="ploopi_va" style="padding:2px;">
-                <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&remove_user_id=<? echo $user->fields['id']; ?>', 'div_share_users_selected');">
-                    <img src="./img/icon_delete.gif">
-                    <span><? echo "{$user->fields['lastname']} {$user->fields['firstname']} (Cliquez pour supprimer)"; ?></span>
-                </a>
-            </p>
-            <?
+            if ($user->open($user_id))
+            {
+                ?>
+                <p class="ploopi_va" style="padding:2px;">
+                    <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&remove_user_id=<? echo $user->fields['id']; ?>', 'div_share_users_selected');">
+                        <img src="./img/icon_delete.gif">
+                        <span><? echo "{$user->fields['lastname']} {$user->fields['firstname']} (Cliquez pour supprimer)"; ?></span>
+                    </a>
+                </p>
+                <?
+            }
         }
         ploopi_die();
     break;

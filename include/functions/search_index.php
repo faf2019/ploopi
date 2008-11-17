@@ -635,21 +635,23 @@ function ploopi_getwords($content, $usecommonwords = true, $getstem = false, $so
     $words = array();
     $words_indexed = $words_overall = 0;
 
-    if ($usecommonwords && !isset($_SESSION['ploopi']['commonwords']) && file_exists(_PLOOPI_INDEXATION_COMMONWORDS_FR) )
+    if ($usecommonwords && !isset($_SESSION['ploopi']['commonwords']))
     {
-        $filecontent = '';
-        $handle = @fopen(_PLOOPI_INDEXATION_COMMONWORDS_FR, 'r');
-        if ($handle)
+        if (file_exists(_PLOOPI_INDEXATION_COMMONWORDS_FR))
         {
-            while (!feof($handle)) $filecontent .= fgets($handle);
-            fclose($handle);
+            $filecontent = '';
+            $handle = @fopen(_PLOOPI_INDEXATION_COMMONWORDS_FR, 'r');
+            if ($handle)
+            {
+                while (!feof($handle)) $filecontent .= fgets($handle);
+                fclose($handle);
+            }
+    
+            $_SESSION['ploopi']['commonwords'] = array_flip(split("[\n]", str_replace("\r",'',$filecontent)));
         }
-
-        $_SESSION['ploopi']['commonwords'] = array_flip(split("[\n]", str_replace("\r",'',$filecontent)));
+        else $_SESSION['ploopi']['commonwords'] = array();
     }
-
-    if (empty($_SESSION['ploopi']['commonwords'])) $_SESSION['ploopi']['commonwords'] = array();
-
+    
     for ($kw = strtok($content, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
     {
         // remove empty characters
@@ -658,7 +660,7 @@ function ploopi_getwords($content, $usecommonwords = true, $getstem = false, $so
         // only keep "normal" characters
         $kw_clean = preg_replace("/[^a-zA-Z0-9]/","",ploopi_convertaccents($kw));
 
-        if (!isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
+        if (!$usecommonwords || !isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
         {
             $len = strlen($kw_clean);
             if ($len >= _PLOOPI_INDEXATION_WORDMINLENGHT && $len <= _PLOOPI_INDEXATION_WORDMAXLENGHT)

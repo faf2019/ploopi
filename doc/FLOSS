@@ -40,13 +40,13 @@
   licence : GPL v2
   copyright : The phpBB Group
 
-* Protaculous 2.19b (prototype 1.6.0.2 + scriptaculous 1.8.1)
-  path : ./lib/protaculous
+* Protoaculous 1.8.1 (prototype 1.6.0.3 + scriptaculous 1.8.1)
+  path : ./lib/protoaculous
   url : http://groups.google.com/group/prototype-core
   licence : ?
   copyright : ?
 
-    * prototype 1.6.0.2
+    * prototype 1.6.0.3
       path : ./lib/prototype
       url : http://www.prototypejs.org
       license : MIT

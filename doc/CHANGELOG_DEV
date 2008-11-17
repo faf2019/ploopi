@@ -1,5 +1,19 @@
 == Ploopi - version 1.1.4 ===================================================
 
+2008-11-10 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* user::getworkspaces() accepte un nouveau paramètre : $lite:boolean qui permet de ne renvoyer que le nom des espaces.
+* user::getgroupes() accepte un nouveau paramètre : $lite:boolean qui permet de ne renvoyer que le nom des groupes.
+
+2008-11-04 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* package filexplorer permettant de parcourir un filesytem sur le serveur (dans un popup) et de retourner un  chemin vers un fichier
+  ./include/functions/filexplorer.php
+  ./include/op/filexplorer.php
+  ./js/filexplorer.js
+  
+* Nouveau paramètre de configuration : _PLOOPI_PATHSHARED
+
 2008-10-09 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Fonction ploopi_color_hex2rgb, nouvelle fonction permettant de convertir une couleur HTML/Hex en un tableau de composantes RVB (entier)

@@ -158,9 +158,12 @@ function ploopi_getmimetype($filename)
         array(
             //texte
             'txt' => 'text/plain',
-            'htm' => 'text/html',
             'html' => 'text/html',
+            'htm' => 'text/html',
             'shtml' => 'text/html',
+            'shtm' => 'text/html',
+            'xhtml' => 'text/xhtml',
+            'xhtm' => 'text/xhtml',
             'css' => 'text/css',
             'js' => 'application/javascript',
             'latex' => 'application/x-latex',
@@ -170,6 +173,7 @@ function ploopi_getmimetype($filename)
             'c' => 'text/plain',
             'cc' => 'text/plain',
             'cpp' => 'text/plain',
+            'hpp' => 'text/plain',
             'java' => 'text/plain',
             'hh' => 'text/plain',
             'm' => 'text/plain',
@@ -178,18 +182,26 @@ function ploopi_getmimetype($filename)
             'tsv' => 'text/tab-separated-values',
             'php' => 'application/x-httpd-php',
             'php3' => 'application/x-httpd-php',
+            'php4' => 'application/x-httpd-php',
             'phtml' => 'application/x-httpd-php',
             'sql' => 'text/x-sql',
             '323' => 'text/h323',
             'tcl' => 'application/x-tcl',
-            'tex' => 'application/x-tex',        
-    
+            'tex' => 'application/x-tex',
+            'latex' => 'application/x-tex',
+            'ltx' => 'application/x-tex',
+            'texi' => 'application/x-tex',
+            'ctx' => 'application/x-tex',
+            'py' => 'text/x-python',
+            'pl' => 'text/x-perl',  
+        
             //images
             'png' => 'image/png',
             'gif' => 'image/gif',
             'jpg' => 'image/jpeg',
             'jpeg' => 'image/jpeg',
             'jpe' => 'image/jpeg',
+            'jfif' => 'image/jpeg',
             'bmp' => 'image/bmp',
             'tif' => 'image/tiff',
             'tiff' => 'image/tiff',
@@ -202,7 +214,9 @@ function ploopi_getmimetype($filename)
             'ico' => 'image/x-icon',
             'svg' => 'image/svg+xml',
             'svgz' => 'image/svg+xml',
-    
+        
+            // thumbnails
+            'thm' => 'application/vnd.eri.thm', 
     
             //archives
             'bz2' => 'application/x-bzip',
@@ -212,6 +226,7 @@ function ploopi_getmimetype($filename)
             'zip' => 'application/zip',
             'z' => 'application/x-compress',
             'sit' => 'application/x-stuffit',
+            'sitx' => 'application/x-stuffit',
             'lzh' => 'application/lzh',
             'lhw' => 'application/lzh',
             'lzs' => 'application/lzh',
@@ -220,6 +235,10 @@ function ploopi_getmimetype($filename)
             'rar' => 'application/x-rar',
             'arj' => 'application/x-arj',
             '7z' => 'application/x-7z-compressed',
+        
+            //packages
+            'rpm' => 'application/x-redhat-package',
+            'deb' => 'application/x-debian-package',
         
             //audio
             'aif' => 'audio/aiff',
@@ -236,7 +255,10 @@ function ploopi_getmimetype($filename)
             'wma' => 'audio/x-ms-wma',
             'au' => 'audio/basic',
             'snd' => 'audio/basic',
-
+            'flac' => 'audio/flac',
+            'aac' => 'audio/mp4',
+            'm4a' => 'audio/mp4',
+        
             //video
             'asf' => 'video/x-ms-asf',
             'asx' => 'video/x-ms-asf',
@@ -253,6 +275,7 @@ function ploopi_getmimetype($filename)
             'mp4' => 'audio/mp4',
             'mp2' => 'audio/mpeg',
             'movie' => 'video/x-sgi-movie',
+            'flv' => 'video/x-flv',
                 
             //real
             'ra' => 'audio/vnd.rn-realaudio',
@@ -260,6 +283,8 @@ function ploopi_getmimetype($filename)
             'rm' => 'application/vnd.rn-realmedia',
             'rv' => 'video/vnd.rn-realvideo',
             'rmvb' => 'application/vnd.rn-realmedia-vbr',
+            'smil' => 'application/smil',
+            'smi' => 'application/smil',
         
             //playlist
             'pls' => 'audio/scpls',
@@ -276,7 +301,11 @@ function ploopi_getmimetype($filename)
             'wrz' => 'x-world/x-vrml',
             'xaf' => 'x-world/x-vrml',
             'xof' => 'x-world/x-vrml',
-    
+            'rss' => 'application/rss+xml',
+            'rdf' => 'application/rdf+xml',
+            'atom' => 'application/atom+xml',
+            'opml' => 'application/opml+xml',
+        
             //microsoft
             'doc' => 'application/msword',
             'dot' => 'application/msword',
@@ -348,11 +377,25 @@ function ploopi_getmimetype($filename)
     
             //macromedia
             'swf' => 'application/x-shockwave-flash',
-    
+            'fla' => 'application/x-shockwave-flash',
+        
             //binaires/executables
             'hqx' => 'application/mac-binhex40',
-    
-            //cryptage/certificats
+            'exe' => 'application/x-msdownload',
+            'com' => 'application/x-msdownload',
+            'bat' => 'application/x-msdownload',
+            'class' => 'application/x-java-class',  
+            'jar' => 'application/java',  
+            'jad' => 'text/vnd.sun.j2me.app-descriptor',
+        
+            //fonts
+            'otf' => 'font/opentype',
+            'ttf' => 'application/x-font-ttf',
+            'ttc' => 'application/x-font-ttf',
+            'pfb' => 'application/x-font-type1',
+            'pfa' => 'application/x-font-type1',
+        
+            //chiffrement/certificats
             'cer' => 'application/x-x509-ca-cert',
             'crt' => 'application/x-x509-ca-cert',
             'der' => 'application/x-x509-ca-cert',
@@ -365,15 +408,20 @@ function ploopi_getmimetype($filename)
             'p7m' => 'application/x-pkcs7-mime',
             'p7s' => 'application/x-pkcs7-signature',
         
-            //iso
+            //disk images
             'iso' => 'application/x-isoview',
             'nrg' => 'application/x-extension-nrg',
             'ccd' => 'text/x-cdwizard',
+            'dmg' => 'application/x-apple-diskimage',
             
             //divers
             'vcf' => 'text/x-vcard',
+            'vcs' => 'text/x-vcalendar',
+            'ics' => 'text/calendar',
             'mht' => 'message/rfc822',
-            'mhtml' => 'message/rfc822'
+            'mhtml' => 'message/rfc822',
+            'torrent' => 'application/x-bittorrent'
+            
         );
 
     $ext = ploopi_file_getextension($filename);
