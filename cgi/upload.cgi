@@ -68,26 +68,27 @@ if(!empty($_getvars['sid']))
     $uploader->processInput();
 
     $_query = '';
+    
+    $strFormContent = '';
 
     if (!empty($uploader->postvars['redirect']))
     {
         $_query = urldecode($uploader->postvars['redirect']);
-
-        $_queryparams[] = 'sid='.urlencode($_getvars['sid']);
+        
+        $strFormContent .= '<input type="hidden" name="sid" value="'.htmlentities($_getvars['sid']).'" />';
 
         foreach($uploader->postvars as $key => $value)
         {
-            if ($key != 'sid' && $key != 'redirect' && $key != 'MAX_FILE_SIZE') $_queryparams[] = "{$key}=".urlencode($value);
+            if ($key != 'sid' && $key != 'redirect' && $key != 'MAX_FILE_SIZE') $strFormContent .= '<input type="hidden" name="'.$key.'" value="'.htmlentities($value).'" />';
+            
         }
-
-        if (!empty($_queryparams)) $_query .= '?'.implode('&',$_queryparams);
     }
 
 
     # check is there was an error or not
     if(!$uploader->check_complete())
     {
-        $_query .= '&notcomplete';
+        $strFormContent .= '<input type="hidden" name="notcomplete" value="" />';
     }
     else
     {
@@ -98,7 +99,17 @@ if(!empty($_getvars['sid']))
     if (!empty($uploader->postvars['redirect']))
     {
         if (!empty($uploader->error)) $_query .= '&error='.urlencode($uploader->error);
-        echo '<META HTTP-EQUIV=Refresh CONTENT="0; URL='.$_query.'">';
+        echo '
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+        <head>
+        </head>
+        <body>
+            <form name="cgifrmredirect" action="'.$_query.'" method="post">'.$strFormContent.'</form>
+            <script type="text/javascript">document.cgifrmredirect.submit();</script>
+        </body>
+        </html>
+        ';
     }
 }
 else echo 'Chargement impossible';

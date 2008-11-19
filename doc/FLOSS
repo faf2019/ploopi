@@ -22,12 +22,6 @@
   license : GPL v2
   copyright : Daniel Morris
 
-* Pclzip 2.6
-  path : ./lib/pclzip
-  url : http://www.phpconcept.net/pclzip/index.php
-  license : LGPL v2
-  copyright : Vincent Blavet
-
 * PHP Universal Feed Generator
   path : ./lib/feedwriter
   url : http://www.ajaxray.com/projects/rss

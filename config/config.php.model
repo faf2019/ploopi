@@ -86,7 +86,7 @@ switch($http_host)
          * Le chemin physique vers le dossier partagé (ftp)
          */
 
-        define ('_PLOOPI_PATHSHARED', _PLOOPI_PATHDATA.'./shared');
+        define ('_PLOOPI_PATHSHARED', _PLOOPI_PATHDATA.'/shared');
 
         /**
          * Taille maximum autorisée pour un fichier uploadé (octets).
