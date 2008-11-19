@@ -71,19 +71,20 @@ if(!empty($_getvars['sid']))
     
     $strFormContent = '';
 
-    if (!empty($uploader->postvars['redirect']))
+    if (!empty($uploader->postvars['redirect'][0]))
     {
-        $_query = urldecode($uploader->postvars['redirect']);
+        $_query = urldecode($uploader->postvars['redirect'][0]);
         
         $strFormContent .= '<input type="hidden" name="sid" value="'.htmlentities($_getvars['sid']).'" />';
 
-        foreach($uploader->postvars as $key => $value)
+        foreach($uploader->postvars as $key => $arrValue)
         {
-            if ($key != 'sid' && $key != 'redirect' && $key != 'MAX_FILE_SIZE') $strFormContent .= '<input type="hidden" name="'.$key.'" value="'.htmlentities($value).'" />';
-            
+            if ($key != 'sid' && $key != 'redirect' && $key != 'MAX_FILE_SIZE') 
+            {
+                foreach($arrValue as $value) $strFormContent .= '<input type="hidden" name="'.$key.'" value="'.htmlentities($value).'" />';
+            }
         }
     }
-
 
     # check is there was an error or not
     if(!$uploader->check_complete())
@@ -96,7 +97,7 @@ if(!empty($_getvars['sid']))
     }
 
     # force page refresh, this script may not process anything else than uploading files.
-    if (!empty($uploader->postvars['redirect']))
+    if (!empty($uploader->postvars['redirect'][0]))
     {
         if (!empty($uploader->error)) $_query .= '&error='.urlencode($uploader->error);
         echo '

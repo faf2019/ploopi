@@ -125,7 +125,10 @@ class CUpload {
                 $rc = preg_match_all("/Content-Disposition: form-data; name=\"([^\"]*)\"\r\n\r\n(.*)\r\n/i", $header, $matchesF, PREG_OFFSET_CAPTURE);
                 $fieldname = trim($matchesF[1][0][0]);
                 $fieldvalue = trim($matchesF[2][0][0]);
-                if (!empty($fieldname)) $this->postvars[$fieldname] = $fieldvalue;
+                if (!empty($fieldname)) 
+                {
+                    $this->postvars[$fieldname][] = $fieldvalue;
+                }
               }
             }
           }
