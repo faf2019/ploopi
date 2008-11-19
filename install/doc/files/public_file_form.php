@@ -100,10 +100,7 @@ if ($newfile)
                 $sid = doc_guid();
                 ?>
                 <form method="post" enctype="multipart/form-data" action="<? echo _PLOOPI_CGI_PATH; ?>/upload.cgi?sid=<? echo $sid; ?>" onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>, '<? echo $sid; ?>', '<? echo _PLOOPI_CGI_PATH; ?>');">
-                <input type="hidden" name="ploopi_op" value="doc_filesave">
-                <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
-                <input type="hidden" name="doc_mode" value="host">
-                <input type="hidden" name="redirect" value="../admin.php">
+                <input type="hidden" name="redirect" value="../<? echo ploopi_urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&doc_mode=host"); ?>">
                 <?
             }
             else
@@ -368,20 +365,13 @@ else
                     $sid = doc_guid();
                     ?>
                     <form method="post" enctype="multipart/form-data" action="<? echo _PLOOPI_CGI_PATH; ?>/upload.cgi?sid=<? echo $sid; ?>" onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>, '<? echo $sid; ?>', '<? echo _PLOOPI_CGI_PATH; ?>');">
-                    <input type="hidden" name="ploopi_op" value="doc_filesave">
-                    <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
-                    <input type="hidden" name="docfile_md5id" value="<? echo $docfile->fields['md5id']; ?>">
-                    <input type="hidden" name="redirect" value="../admin.php">
-                    <input type="hidden" name="doc_mode" id="doc_mode" value="host">
+                    <input type="hidden" name="redirect" value="../<? echo ploopi_urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&doc_mode=host"); ?>">
                     <?
                 }
                 else
                 {
                     ?>
-                    <form method="post" enctype="multipart/form-data" action="<? echo ploopi_urlencode('admin.php'); ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
-                    <input type="hidden" name="ploopi_op" value="doc_filesave">
-                    <input type="hidden" name="currentfolder" value="<? echo $currentfolder; ?>">
-                    <input type="hidden" name="doc_mode" id="doc_mode" value="host">
+                    <form method="post" enctype="multipart/form-data" action="<? echo ploopi_urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&doc_mode=host"); ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
                     <?
                 }
                 ?>

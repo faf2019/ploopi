@@ -1,3 +1,11 @@
+== Module DOC - version 3.96 =====================================================
+
+2008-11-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Suppression de l'utilisation de la librairie PCLZip
+ * Correctifs sur les fonctionnalités "Supprimer", "Télécharger", "Demandes de publication"
+ * Correctifs liés à la modification du script CGI d'upload
+
 == Module DOC - version 3.95 =====================================================
 
 2008-11-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

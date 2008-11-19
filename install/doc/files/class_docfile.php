@@ -59,7 +59,8 @@ class docfile extends data_object
     var $oldname;
     var $tmpfile;
     var $draftfile;
-
+    var $sharedfile;
+    
     /**
      * Constructeur de la classe
      *

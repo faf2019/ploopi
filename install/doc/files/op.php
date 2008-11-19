@@ -74,7 +74,6 @@ if ($_SESSION['ploopi']['connected'])
              * Enregistrement d'un document (ou ensemble de document si ajout)
              */
             case 'doc_filesave':
-                
                 if (empty($_GET['doc_mode'])) ploopi_redirect("admin.php?doc_fileform&currentfolder={$currentfolder}");
                 
                 include_once './modules/doc/class_docfile.php';
@@ -84,12 +83,11 @@ if ($_SESSION['ploopi']['connected'])
                 ploopi_init_module('doc');
                 
                 $draft = false;
-                
             
                 // en mode CGI, il faut récupérer les infos des fichiers uploadés (via le fichier lock)
                 // cf class Cupload
                 // on écrit tout dans $_FILES pour retomber sur nos pieds dans la suite des traitements
-                if ($_GET['doc_mode'] == 'host' && _PLOOPI_USE_CGIUPLOAD && !empty($_GET['sid']))
+                if ($_GET['doc_mode'] == 'host' && _PLOOPI_USE_CGIUPLOAD && !empty($_POST['sid']))
                 {
                     if (!empty($_GET['error']) && $_GET['error'] == 'notwritable') 
                     {
@@ -100,7 +98,7 @@ if ($_SESSION['ploopi']['connected'])
                     define ('UPLOAD_PATH', _PLOOPI_CGI_UPLOADTMP.'/');
                     include './lib/cupload/Cupload.class.php';
     
-                    $_sId = $_GET['sid'];
+                    $_sId = $_POST['sid'];
                     $uploader = & new CUploadSentinel;
                     $uploader->__init($_sId);
     
@@ -247,7 +245,7 @@ if ($_SESSION['ploopi']['connected'])
                 else // mise à jour d'un (unique) fichier
                 {
                     $docfile = new docfile();
-                    if (!$docfile->openmd5($_REQUEST['docfile_md5id'])) ploopi_redirect('admin.php');
+                    if (empty($_GET['docfile_md5id']) || !$docfile->openmd5($_GET['docfile_md5id'])) ploopi_redirect('admin.php');
                     $docfile_id = $docfile->fields['id'];
     
                     $error = true;
@@ -277,9 +275,9 @@ if ($_SESSION['ploopi']['connected'])
                         break;
                             
                         case 'server':
-                            if (!empty($_REQUEST["_docfile_file_server"]))
+                            if (!empty($_POST["_docfile_file_server"]))
                             {
-                                $file = _PLOOPI_PATHSHARED.$_REQUEST["_docfile_file_server"];
+                                $file = _PLOOPI_PATHSHARED.$_POST["_docfile_file_server"];
                                 
                                 $error = !file_exists($file);
                                 if (!$error)
@@ -305,8 +303,8 @@ if ($_SESSION['ploopi']['connected'])
                         if (!$error) $docfile->createhistory();
                     }
     
-                    $docfile->setvalues($_REQUEST,'docfile_');
-                    if (empty($_REQUEST['docfile_readonly'])) $docfile->fields['readonly'] = 0;
+                    $docfile->setvalues($_POST,'docfile_');
+                    if (empty($_POST['docfile_readonly'])) $docfile->fields['readonly'] = 0;
                     
                     if (!$error)
                     {
@@ -350,71 +348,59 @@ if ($_SESSION['ploopi']['connected'])
             
             case 'doc_filedownloadzip':
         
+                ploopi_init_module('doc');
+                $error = true;
+                
                 if (!empty($_GET['docfile_md5id']))
                 {
-                    include_once './lib/pclzip/pclzip.lib.php';
-                    
-                    ploopi_init_module('doc');
-                    
-                    $zip_path = doc_getpath()._PLOOPI_SEP.'zip';
-                    if (!is_dir($zip_path)) mkdir($zip_path);
-                        
                     include_once './modules/doc/class_docfile.php';
                     $docfile = new docfile();
-                    $docfile->openmd5($_GET['docfile_md5id']);
-        
-                    if (file_exists($docfile->getfilepath()) && is_writeable($zip_path))
-                    {
-                        // create a temporary file with the real name
-                        $tmpfilename = $zip_path._PLOOPI_SEP.$docfile->fields['name'];
-        
-                        copy($docfile->getfilepath(),$tmpfilename);
-                        // create zip file
-                        $zip_filename = "archive_{$_GET['docfile_md5id']}.zip";
-                        $zip_filepath = $zip_path._PLOOPI_SEP.$zip_filename;
-                        $zip = new PclZip($zip_filepath);
-                        $zip->create($tmpfilename,PCLZIP_OPT_REMOVE_ALL_PATH);
-        
-                        // delete temporary file
-                        unlink($tmpfilename);
-        
-                        // download zip file
-                        ploopi_downloadfile($zip_filepath, $zip_filename, true);
-                    }
+                    $error = ($docfile->openmd5($_GET['docfile_md5id']) === false);
                 }
-        
                 if (!empty($_GET['docfiledraft_md5id']))
                 {
-                    $docfiledraft = new docfiledraft();
-                    $docfiledraft->openmd5($_GET['docfiledraft_md5id']);
-        
-                    if (file_exists($docfiledraft->getfilepath()) && is_writeable($zip_path))
-                    {
-                        // create a temporary file with the real name
-                        $tmpfilename = $zip_path._PLOOPI_SEP.$docfiledraft->fields['name'];
-                        copy($docfiledraft->getfilepath(),$tmpfilename);
-        
-                        // create zip file
-                        $zip_filename = "archive_draft_{$_GET['docfiledraft_md5id']}.zip";
-                        echo $zip_filepath = $zip_path._PLOOPI_SEP.$zip_filename;
-                        $zip = new PclZip($zip_filepath);
-                        $zip->create($tmpfilename,PCLZIP_OPT_REMOVE_ALL_PATH);
-        
-                        // delete temporary file
-                        unlink($tmpfilename);
-        
-                        // download zip file
-                        ploopi_downloadfile($zip_filepath, $zip_filename, true);
-                    }
+                    include_once './modules/doc/class_docfiledraft.php';
+                    $docfile = new docfiledraft();
+                    $error = ($docfile->openmd5($_GET['docfiledraft_md5id']) === false);
                 }
+                
+                if (!$error)
+                {
+                    // Création d'un dossier de travail temporaire
+                    $tmpfoldername = md5(uniqid(rand(), true));
+                    $zip_path = doc_getpath()._PLOOPI_SEP.'zip'._PLOOPI_SEP.$tmpfoldername;
+                    if (!is_dir($zip_path)) mkdir($zip_path);
+                    
+                    if (file_exists($docfile->getfilepath()) && is_writeable($zip_path))
+                    {
+                        $zip_filename = $docfile->fields['name'].'.zip';
+                        
+                        $objZip = new ZipArchive();
+                        if ($objZip->open($zip_path._PLOOPI_SEP.$zip_filename, ZIPARCHIVE::CREATE) === TRUE)
+                        {
+                            $objZip->addFile($docfile->getfilepath(), '/'.$docfile->fields['name']);
+                            $objZip->close();
+                        }                        
+                        
+                        // Téléchargement du fichier zip
+                        ploopi_downloadfile($zip_path._PLOOPI_SEP.$zip_filename, $zip_filename, true, true, false);
+                        
+                        // Suppression du dossier temporaire
+                        rmdir($zip_path);
+                        
+                        // Vidage buffer
+                        ploopi_die(null, true);
+                    }
+                }   
+
+                ploopi_redirect("admin.php");
             break;
         
             case 'doc_filedownload':
             case 'doc_fileview':
+                ploopi_init_module('doc');
                 if (!empty($_GET['docfile_md5id']))
                 {
-                    ploopi_init_module('doc');
-                    
                     include_once './modules/doc/class_docfile.php';
                     $docfile = new docfile();
                     $docfile->openmd5($_GET['docfile_md5id']);
@@ -435,15 +421,20 @@ if ($_SESSION['ploopi']['connected'])
         
                 if (!empty($_GET['docfiledraft_md5id']))
                 {
+                    include_once './modules/doc/class_docfiledraft.php';
                     $docfiledraft = new docfiledraft();
                     $docfiledraft->openmd5($_GET['docfiledraft_md5id']);
                     if (file_exists($docfiledraft->getfilepath())) ploopi_downloadfile($docfiledraft->getfilepath(),$docfiledraft->fields['name']);
                 }
+                
+                ploopi_redirect("admin.php");
             break;
         
             case 'doc_filedraftdelete':
                 if (!empty($_GET['docfiledraft_md5id']))
                 {
+                    ploopi_init_module('doc');
+                    include_once './modules/doc/class_docfiledraft.php';
                     $docfiledraft = new docfiledraft();
                     $docfiledraft->openmd5($_GET['docfiledraft_md5id']);
                     $error = $docfiledraft->delete();

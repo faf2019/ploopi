@@ -390,7 +390,7 @@ while ($row = $db->fetchrow())
     $values[$c]['values']['actions']    = array('label' => $tools, 'style' => 'text-align:center');
 
     $values[$c]['description'] = $row['description'];
-    $values[$c]['link'] = ploopi_urlencode("admin.php?op=doc_filedownload&docfiledraft_md5id={$row['md5id']}");
+    $values[$c]['link'] = ploopi_urlencode("admin-light.php?ploopi_op=doc_filedownload&docfiledraft_md5id={$row['md5id']}");
     $values[$c]['style'] = 'background-color:#ffe0e0;';
     $c++;
 }

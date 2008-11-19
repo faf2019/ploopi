@@ -50,6 +50,10 @@ include_once './include/classes/data_object.php';
 
 class docfiledraft extends data_object
 {
+    var $oldname;
+    var $tmpfile;
+    var $sharedfile;
+
     /**
      * Constructeur de la classe
      *
@@ -60,6 +64,10 @@ class docfiledraft extends data_object
     {
         parent::data_object('ploopi_mod_doc_file_draft');
         $this->fields['timestp_create'] = ploopi_createtimestamp();
+        
+        $this->oldname = '';
+        $this->tmpfile = null;
+        $this->sharedfile = null;
     }
 
     /**
@@ -100,9 +108,8 @@ class docfiledraft extends data_object
 
         if ($this->new) // insert
         {
-
-            if ($this->tmpfile == 'none') $error = _DOC_ERROR_EMPTYFILE;
-
+            if ($this->tmpfile == 'none' && $this->sharedfile == null) $error = _DOC_ERROR_EMPTYFILE;
+            
             if ($this->fields['size'] > _PLOOPI_MAXFILESIZE) $error = _DOC_ERROR_MAXFILESIZE;
 
             if (!$error)
@@ -120,9 +127,21 @@ class docfiledraft extends data_object
 
                 if (file_exists($filepath) && !is_writable($filepath)) $error = _DOC_ERROR_FILENOTWRITABLE;
 
-                if (!$error && is_writable($basepath) && rename($this->tmpfile, $filepath))
+                if (!$error && is_writable($basepath))
                 {
-                    chmod($filepath, 0640);
+                    if ($this->sharedfile != null)
+                    {
+                        if (!copy($this->sharedfile, $filepath)) $error = _DOC_ERROR_FILENOTWRITABLE;
+                    }
+                    elseif ($this->tmpfile != null)
+                    {
+                        if (!rename($this->tmpfile, $filepath)) $error = _DOC_ERROR_FILENOTWRITABLE;
+                    }
+
+                    if (!$error)
+                    {
+                        chmod($filepath, 0640);
+                    }
                 }
                 else $error = _DOC_ERROR_FILENOTWRITABLE;
             }
