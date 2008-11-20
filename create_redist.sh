@@ -3,7 +3,7 @@
 # Pour l'export SQL :
 # mysqldump -uroot -p<PASS> --opt --default-character-set=latin1 --comments=FALSE ploopixxxx > install/system/ploopi.sql
 
-export DEST=ploopi_1.1.3
+export DEST=ploopi_1.2
 
 #################################
 # compression des fichiers
@@ -25,7 +25,7 @@ cp .htaccess_modele $DEST/.htaccess
 
 cp -r bin $DEST
 
-mkdir $DEST/data
+mkdir -p $DEST/data/shared
 cp data/index.html $DEST/data
 
 mkdir $DEST/doc

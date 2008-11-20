@@ -1,0 +1,1 @@
+UPDATE `ploopi_module_type` SET `version` = '1.2', `author` = 'Ovensia', `date` = '20081120000000', `description` = 'Coeur du système' WHERE `ploopi_module_type`.`id` = 1;

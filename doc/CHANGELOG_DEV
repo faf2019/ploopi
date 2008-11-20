@@ -1,4 +1,4 @@
-== Ploopi - version 1.1.4 ===================================================
+== Ploopi - version 1.2 ===================================================
 
 2008-11-10 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
@@ -24,4 +24,9 @@
   
 * Méthode skin_common::display_treeview(), ajout d'un nouveau paramètre permettant de forcer l'ouverture de tous les noeuds à l'affichage
   ./include/classes/skin_common.php => skin_common::display_treeview(&$nodes, &$treeview, $node_id_sel = null, $node_id_from = null, $viewall = false)
+   
+2008-10-08 Xavier Toussaint ~ Hexad <xavier@hexad.fr>
+
+* skin::display_cut_page() permet le découpage par page d'un affichage quelconque
+  ./include/classes/skin_common.php
    

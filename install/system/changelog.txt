@@ -1,3 +1,101 @@
+== Ploopi - version 1.2 ===================================================
+
+2008-11-20 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ploopi
+ - Mise à jour de la version compressée de FCKEditor (problème d'encodage)
+ - Mise à jour du backoffice pour afficher la revision : balise PLOOPI_REVISION
+ - Mise à jour de la fonction ploopi_print_json, ajout d'un nouveau paramètre rendant optionnelle l'utilisation de x-json, correction d'un problème lors de l'utilisation du header x-json
+ - Mise à jour du script de compression (problème d'encodage avec FCKEditor)
+ - Ajout à la classe skin de la méthode display_cut_page qui permet le découpage par page
+ - Application de la nouvelle méthode display_cut_page à la visonneuse de log "actions" des outils d'administration système
+ - Correction dans le template backoffice ploopi pour IE7
+ - Fonction ploopi_redirect(), ajout d'un nouveau paramètre permettant de déclencher une redirection au bout d'un temps déterminé.
+   ./include/functions/system.php => ploopi_redirect($url, $urlencode = true, $internal = true, $refresh = 0)
+ - Méthode skin_common::display_treeview(), ajout d'un nouveau paramètre permettant de forcer l'ouverture de tous les noeuds à l'affichage
+   ./include/classes/skin_common.php => skin_common::display_treeview(&$nodes, &$treeview, $node_id_sel = null, $node_id_from = null, $viewall = false)
+ - Ajout d'un message d'erreur (+ redirection) lors d'une tentative de téléchargement d'un document inexistant
+ - Correction d'un bug empêchant le rattachement d'un utilisateur à un espace de travail (lié à l'ajout de la fonction de rattachement optionnel lors de l'ajout d'un utilisateur homonyme).
+ - Mise à jour du fichier .htaccess (gestion "expires")
+ - Ajout d'un script de compression des image (compress_png.sh)
+ - Compression des images PNG
+ - Ajout d'un changelog dédié "développeur"
+ - Correctifs mineurs sur les fonctions du portail
+ - Ajout de fichiers "index.html" afin de limiter l'accès aux dossiers en cas de mauvais paramétrage du serveur web
+ - Ajout d'une option visible sur les paramètres de modules permettant d'activer un module sans l'afficher (utile pour certains pseudo-modules)
+ - Mise à jour de la classe barchart (Frédéric Belloy - CII67)
+ - Meilleure prise en compte de l'adresse IP du client dans l'enregistrement des logs
+ - Détection d'erreurs sur le chargement des templates (backoffice, front, mail)
+ - Corrections mineures 
+ - Espaces de travail / Groupes d'utilisateurs : Correction d'un problème de rattachement pour les utilisateurs attachés à aucun groupe.
+ - Correction d'un bug à la validation via ajax des mots de passes (fonction ploopi_checkpasswordvalidity)
+ - Mise à jour du framework JS (correction de problème de validation de formulaire notamment)
+ - Intégration de la fonctionnalité "filexplorer" (explorateur de fichier côté serveur - alpha)
+ - Intégration d'un outil permettant de trouver facilement un utilisateur depuis l'interface d'administration "système"
+ - Mise à jour des templates backoffice (intégration icone tab_directory.png), légère modification sur la feuille de style.
+ - Mise à jour de la librairie protoaculous (avec notamment prototype 1.6.0.3) 
+   - Renommage du dossier en "protoaculous" (anciennement protoculous) pour la version packée/zippée
+   - Mise à jour du fichier "index-light.php" pour prise en compte du nouveau chemin vers "protoaculous"
+ - Création d'un nouveau dossier "shared" dans le dossier "data". Ce dossier sera utilisé dans la nouvelle option de configuration utilisée par la fonctionnalité "filexplorer"
+ - Gestion des utilisateurs : Meilleure gestion du filtrage par lettre des utilisateurs, ajout d'un onglet "#" (autre que alpha) * Admin : Indication des champs obligatoires et particuliers de la fiche "utilisateur"
+ - Install : Correction balise manquante pour Email Administrateur
+ - Nouveaux types mime pris en compte
+ - Correction dans le chargement des partages
+ - Correction d'un bug dans la fonction ploopi_getwords() (prise en compte abusive du fichier des mots communs) 
+ - Mise à jour de la liste des FLOSS
+ - Mise à jour du fichier modèle de configuration pour intégrer le nouveau paramètre PLOOPI_PATHSHARED
+ - Suppression de la librairie PCLZip 
+ - Modification du script d'upload CGI pour qu'il renvoie les données de type POST en POST (via formulaire)
+ - Modification du script d'upload CGI pour prise en compte des variables $_POST de type "tableau"
+ - Modification mineure sur l'affichage dans le package "filexplorer" 
+ - Modification sur la constante PLOOPI_BASEPATH qui était erronée lorsque l'url contenait un port différent du port 80
+ - Documents : Ajout de nouveaux types "mime"
+ - Admin Système : Modification de la liste des modules installés, intégration du pseudo-module "system" dans la liste
+
+* NEWSLETTER 1.1
+  - Passage en version stable
+  - Correction d'un tag erroné
+  - Modification de la newsletter pour permettre l'utilisation de nouvelles balises :
+    - BANNIERE = une image de la GED
+    - BACKGROUND_COLOR = couleur du fond
+    - CONTENT_COLOR = couleur du fond de la zone de texte
+    - TEXT_COLOR = couleur du texte
+  - Ajout d'une "mini-ged" de gestion des bannières
+
+* RSS 2.0.1
+ - Correction d'un bug en désinstallation (delete.php)
+ - Correction dans la structure XML de mb.xml à l'installation
+
+* DOC 3.97
+
+ - Correction d'un problème de gestion des validateurs
+ - Meilleure compression des images PNG
+ - Suppression de la navigation via AJAX (inutile)
+ - Ajout d'une option permettant d'ajouter un fichier depuis le serveur (voir _PLOOPI_PATHSHARED dans config.php)
+ - Correction de problème de tri (nom, date, taille) sur le résultat de la recherche
+ - Suppression de l'utilisation de la librairie PCLZip
+ - Correctifs sur les fonctionnalités "Supprimer", "Télécharger", "Demandes de publication"
+ - Correctifs liés à la modification du script CGI d'upload
+ - Modification des liens de confirmation javascript pour IE6 
+ - Suppression du contrôle de taille des fichiers lors de l'utilisation du mode de fichier "serveur"
+
+* WebEdit 1.8.6
+ - Correction d'un bug lors de la redirection d'une rubrique vers un article si l'article n'existe plus
+ - Correction d'un bug lors de la création d'un lien vers un article (lié à la mise en place du nouveau treeview)
+ - Correction d'un bug dans le lien de désabonnement envoyé par mail si la réécriture d'URL n'est pas activée
+ - Correction d'un bug lors de la suppression d'un article (ne recharge pas correctement l'arbre)
+ - Ajout de nouvelles balises (version, revision, etc.)
+ - Corrections de bugs mineurs
+ - Ajout d'un test si l'existence du template frontoffice au moment du rendu
+ - Meilleure compression des images PNG
+    
+* DIRECTORY 1.35
+ - Correctifs mineurs d'interfaces pour IE7
+ - Meilleure compression des images PNG
+
+* Forum 1.0.2
+  - Correction de l'appel de la function JS ploopi_checkbox_click sur les checkbox
+
 == Ploopi - version 1.1.3 ===================================================
 
 2008-10-02 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
