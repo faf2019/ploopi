@@ -100,11 +100,11 @@ $columns['right']['version']    = array('label' => _SYSTEM_LABEL_VERSION, 'width
 $columns['right']['author']     = array('label' => _SYSTEM_LABEL_AUTHOR, 'width' => '130', 'options' => array('sort' => true));
 $columns['left']['mtype']       = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '80', 'options' => array('sort' => true));
 
+
 // get all modules installed in a table
 $select =   "
             SELECT  *
             FROM    ploopi_module_type
-            WHERE   system != 1
             ORDER   BY label
             ";
 
@@ -137,11 +137,15 @@ while ($fields = $db->fetchrow($result))
     $values[$c]['values']['actions'] = array('label' => $has_actions, 'style' => 'text-align:center');
     $values[$c]['values']['metabase'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin.php?op=updatemb&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMBUPDATE."')\">{$has_mb}</a>", 'style' => 'text-align:center');
     $values[$c]['values']['wce'] = array('label' => $has_cmsop, 'style' => 'text-align:center');
-    $values[$c]['values']['action'] = array('label' => "<a href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin.php?op=uninstall&uninstallidmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMODULEUNINSTAL."')\">"._SYSTEM_LABEL_UNINSTALL."</a>", 'style' => 'text-align:center;');
-
+    
+    if ($fields['id'] == _PLOOPI_MODULE_SYSTEM) // module system
+        $values[$c]['values']['action'] = array('label' => '&nbsp;');
+    else
+        $values[$c]['values']['action'] = array('label' => "<a href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin.php?op=uninstall&uninstallidmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMODULEUNINSTAL."')\">"._SYSTEM_LABEL_UNINSTALL."</a>", 'style' => 'text-align:center;');
+        
     $values[$c]['description'] = $fields['description'];
-    $values[$c]['link'] = '';
-    $values[$c]['style'] = '';
+    $values[$c]['style'] = ($fields['id'] == _PLOOPI_MODULE_SYSTEM) ? 'background-color:#f0e0e0;' : '';
+    
     $c++;
 
     $tabmoduletype_installed[$fields['label']]['version'] = $fields['version'];
