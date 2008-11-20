@@ -1,3 +1,10 @@
+== Module DOC - version 3.97 =====================================================
+
+2008-11-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Modification des liens de confirmation javascript pour IE6 
+ * Suppression du contrôle de taille des fichiers lors de l'utilisation du mode de fichier "serveur"
+
 == Module DOC - version 3.96 =====================================================
 
 2008-11-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

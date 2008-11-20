@@ -110,7 +110,7 @@ class docfiledraft extends data_object
         {
             if ($this->tmpfile == 'none' && $this->sharedfile == null) $error = _DOC_ERROR_EMPTYFILE;
             
-            if ($this->fields['size'] > _PLOOPI_MAXFILESIZE) $error = _DOC_ERROR_MAXFILESIZE;
+            if ($this->fields['size'] > _PLOOPI_MAXFILESIZE && $this->sharedfile == null) $error = _DOC_ERROR_MAXFILESIZE;
 
             if (!$error)
             {
