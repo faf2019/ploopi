@@ -438,13 +438,14 @@ function ploopi_getmimetype($filename)
  * @param string $destfilename nom du fichier tel qu'il apparaîtra au moment du téléchargement
  * @param boolean $deletefile true si le fichier doit être supprimé après téléchargement
  * @param boolean $attachment true si le fichier doit être envoyé en "attachment", false si il doit être envoyé "inline"
+ * @param boolean $die true si la fonction doit arrêter le script
  * @return boolean false si le fichier n'existe pas, rien sinon
  * 
  * @see ploopi_getmimetype
  * @see ploopi_file_getextension
  */
 
-function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $attachment = true)
+function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $attachment = true, $die = true)
 {
     //if (substr($path,-1) == '/') $path = substr($path, 0, strlen($path)-1);
 
@@ -490,7 +491,7 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
         
         if ($deletefile && is_writable($filepath)) @unlink($filepath);
 
-        ploopi_die(null, false);
+        if ($die) ploopi_die(null, false);
 
     }
     else return(false);

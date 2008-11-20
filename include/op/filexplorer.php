@@ -178,8 +178,9 @@ switch($ploopi_op)
                                             ),
                                         'size' => 
                                             array(
-                                                'label' => $boolIsFolder ? "{$intElements} element(s)" : "{$arrStat['size']} octets",
-                                                'sort_label' => $intSortId.'_'.($boolIsFolder ? sprintf("%020d", $intElements) : sprintf("%020d", $arrStat['size']))
+                                                'label' => $boolIsFolder ? "{$intElements} element(s)" : sprintf("%s Ko", number_format(($arrStat['size']/1024),1,".", " ")),
+                                                'sort_label' => $intSortId.'_'.($boolIsFolder ? sprintf("%020d", $intElements) : sprintf("%020d", $arrStat['size'])),
+                                                'style' => 'text-align:right;'
                                             )
                                     ),
                                 'description' => '',

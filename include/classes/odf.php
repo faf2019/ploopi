@@ -605,7 +605,7 @@ class odf_converter
     }
 
     /**
-     * Convertit un document dans un format qu'Open Office (ODT, ODS, DOC, XLS, etc...) peut lire dans un format qu'il peut écrire (PDF, ODT, ODS, DOC, XLS, SXW, RTF, HTML, etc...)
+     * Convertit un document dans un format qu'Open Office peut lire (ODT, ODS, DOC, XLS, etc...) dans un format qu'il peut écrire (PDF, ODT, ODS, DOC, XLS, SXW, RTF, HTML, etc...)
      *
      * @param string $inputData contenu du document
      * @param string $inputType type mime du document source
