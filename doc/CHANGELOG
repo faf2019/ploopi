@@ -51,6 +51,7 @@
  - Modification sur la constante PLOOPI_BASEPATH qui était erronée lorsque l'url contenait un port différent du port 80
  - Documents : Ajout de nouveaux types "mime"
  - Admin Système : Modification de la liste des modules installés, intégration du pseudo-module "system" dans la liste
+ - Correction d'un bug sur la fonction ploopi_copydir : applique un chmod uniquement si le processus courant est propriétaire du fichier
 
 * NEWSLETTER 1.1
   - Passage en version stable
@@ -67,7 +68,6 @@
  - Correction dans la structure XML de mb.xml à l'installation
 
 * DOC 3.97
-
  - Correction d'un problème de gestion des validateurs
  - Meilleure compression des images PNG
  - Suppression de la navigation via AJAX (inutile)
@@ -79,7 +79,7 @@
  - Modification des liens de confirmation javascript pour IE6 
  - Suppression du contrôle de taille des fichiers lors de l'utilisation du mode de fichier "serveur"
 
-* WebEdit 1.8.6
+* WebEdit 1.8.7
  - Correction d'un bug lors de la redirection d'une rubrique vers un article si l'article n'existe plus
  - Correction d'un bug lors de la création d'un lien vers un article (lié à la mise en place du nouveau treeview)
  - Correction d'un bug dans le lien de désabonnement envoyé par mail si la réécriture d'URL n'est pas activée
@@ -88,6 +88,9 @@
  - Corrections de bugs mineurs
  - Ajout d'un test si l'existence du template frontoffice au moment du rendu
  - Meilleure compression des images PNG
+ - Meilleur contrôle des dates de publication d'un article
+ - Ajout d'un message d'erreur si l'article/la rubrique n'existe pas (voir /templates/frontoffice/exemple/index.tpl)
+ - Découpage automatique des url trop longues pour affichage, création d'un tag spécifique : SHORT_LINK
     
 * DIRECTORY 1.35
  - Correctifs mineurs d'interfaces pour IE7

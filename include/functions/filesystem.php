@@ -46,6 +46,8 @@ function ploopi_copydir($src , $dest, $folder_mode = 0750, $file_mode = 0640)
 {
     $ok = true;
 
+    $processid = posix_getuid();
+    
     $folder=opendir($src);
 
     if (!file_exists($dest)) mkdir($dest, $folder_mode);
@@ -55,17 +57,22 @@ function ploopi_copydir($src , $dest, $folder_mode = 0750, $file_mode = 0640)
         $l = array('.', '..');
         if (!in_array($file, $l))
         {
-            if (is_dir("{$src}/{$file}"))
+            $src_file = "{$src}/{$file}";
+            $dest_file = "{$dest}/{$file}";
+            
+            if (is_dir($src_file))
             {
-                $ok = ploopi_copydir("{$src}/{$file}", "{$dest}/{$file}", $folder_mode = 0750, $file_mode = 0640);
+                $ok = ploopi_copydir($src_file, $dest_file, $folder_mode = 0750, $file_mode = 0640);
             }
             else
             {
                 // test if writable
-                if (!(file_exists("$dest/$file") && !is_writable("{$dest}/{$file}")))
+                if (!(file_exists($dest_file) && !is_writable($dest_file)))
                 {
-                    copy("{$src}/{$file}", "{$dest}/{$file}");
-                    chmod("{$dest}/{$file}", $file_mode);
+                    copy($src_file, $dest_file);
+                    
+                    // changement des droits uniquement le processus courant est propriétaire du fichier
+                    if (fileowner($dest_file) == $processid) chmod($dest_file, $file_mode);
                 }
                 else $ok = false;
             }

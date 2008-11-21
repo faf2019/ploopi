@@ -196,7 +196,7 @@
                             <a href="{switch_search.result.LINK}" title="Lien vers {switch_search.result.TITLE}">
                                 <h2>{switch_search.result.TITLE}<span class="relevance">{switch_search.result.RELEVANCE} %</span></h2>
                                 <div class="extract">{switch_search.result.EXTRACT}</div>
-                                <div class="link">&raquo; {switch_search.result.LINK} ({switch_search.result.SIZE} ko)</div>
+                                <div class="link">&raquo; {switch_search.result.SHORT_LINK} ({switch_search.result.SIZE} ko)</div>
                             </a>
                         <!-- END result -->
                     </div>
@@ -208,7 +208,7 @@
                         <!-- BEGIN result -->
                             <a href="{switch_tagsearch.result.LINK}" title="Lien vers {switch_tagsearch.result.TITLE}">
                                 <h2>{switch_tagsearch.result.TITLE}</h2>
-                                <div class="link">&raquo; {switch_tagsearch.result.LINK} ({switch_tagsearch.result.SIZE} ko)</div>
+                                <div class="link">&raquo; {switch_tagsearch.result.SHORT_LINK} ({switch_tagsearch.result.SIZE} ko)</div>
                             </a>
                         <!-- END result -->
                     </div>
@@ -278,6 +278,13 @@
                         <div id="page_lastupdate">Auteur: {PAGE_LASTUPDATE_USER_FIRSTNAME} {PAGE_LASTUPDATE_USER_LASTNAME} - Modifié le: {PAGE_LASTUPDATE_DATE} à {PAGE_LASTUPDATE_TIME}</div>
                     <!-- END switch_content_page -->
                     
+                    <!-- BEGIN switch_content_error -->
+                        <div style="text-align:center;padding:10px;">
+	                        <strong>Erreur {PAGE_ERROR_CODE}</strong>
+	                        <br />Cette page n'existe pas
+                        </div>
+                    <!-- END switch_content_error -->
+                    
                     <!-- BEGIN switch_content_message -->
                         <h1>{MESSAGE_TITLE}</h1>
                         {MESSAGE_CONTENT}
@@ -294,6 +301,7 @@
                         </form>
                       </div>
                     <!-- END switch_newsletter_unsubscrib -->
+                    
                     <!-- BEGIN switch_newsletter_unsubscrib_response -->
                       <div style="text-align: center;">
                         <h2>{switch_newsletter_unsubscrib_response.RESPONSE}</h2>
