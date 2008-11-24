@@ -65,6 +65,8 @@ function ploopi_htpasswd($pass)
 
 function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null, $addenv = true)
 {
+    if ($_SESSION['ploopi']['mode'] == 'frontoffice') $addenv = false;
+    
     $arrParsedURL = parse_url($url);
     
     if (!isset($arrParsedURL['path'])) return(false);
