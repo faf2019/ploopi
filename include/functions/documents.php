@@ -163,9 +163,7 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     {
         ?>
         <div id="ploopidocuments_<? echo $_SESSION['documents']['documents_id']; ?>">
-            <script type="text/javascript">
-                ploopi_window_onload_stock(function () { ploopi_documents_browser('<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $params['DEFAULT_FOLDER']; ?>', '', '', true); });
-            </script>
+            <? ploopi_documents_browser($currentfolder); ?>
         </div>
         <?
     }
@@ -314,5 +312,334 @@ function ploopi_documents_savefile($id_object, $id_record, $file, $filename, $id
         
         $documentsfile->save();
     }
+}
+
+
+/**
+ * Affiche l'explorateur de documents
+ *
+ * @param int $currentfolder identifiant du dossier parcouru
+ */
+
+function ploopi_documents_browser($currentfolder)
+{
+    global $db;
+    global $skin;
+    
+    ?>
+    <div class="documents_browser">
+
+        <div class="documents_path">
+            <?
+            // voir pour une optimisation de cette partie car on ouvre un docfolder sans doute pour rien
+            $documentsfolder = new documentsfolder();
+
+            if (!empty($currentfolder)) $documentsfolder->open($currentfolder);
+
+            if ($_SESSION['documents']['rights']['SEARCH'])
+            {
+                ?>
+                <a title="Rechercher un Fichier" href="javascript:void(0);" style="float:right;"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_search.png"></a>
+                <?
+            }
+            
+            if (empty($_SESSION['documents']['mode']))
+            {
+                if ($_SESSION['documents']['rights']['DOCUMENT_CREATE'])
+                {
+                    ?><a title="Créer un nouveau fichier" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfile('<? echo $currentfolder; ?>','',event);"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_newfile.png"></a><?
+                }
+                if ($_SESSION['documents']['rights']['FOLDER_CREATE'])
+                {
+                    ?>
+                    <a title="Créer un nouveau Dossier" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfolder('<? echo $currentfolder; ?>','',event);"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_newfolder.png"></a>
+                    <?
+                }
+            }
+            ?>
+            <a title="Aller au Dossier Racine" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_browser('<? echo $_SESSION['documents']['documents_id']; ?>', '', '<? echo $_SESSION['documents']['mode']; ?>','',true);"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_home.png"></a>
+
+            <div>Emplacement :</div>
+            <?
+            if ($currentfolder != 0)
+            {
+                $documentsfolder = new documentsfolder();
+                $documentsfolder->open($currentfolder);
+
+                $db->query("SELECT id, name, id_folder FROM ploopi_documents_folder WHERE id in ({$documentsfolder->fields['parents']},{$currentfolder}) ORDER by id");
+
+                while ($row = $db->fetchrow())
+                {
+                    // change root name
+                    $foldername = (!$row['id_folder']) ? $_SESSION['documents']['root_name'] : $row['name'];
+                    ?>
+                    <a <? if ($currentfolder == $row['id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:ploopi_documents_browser('<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $row['id']; ?>', '<? echo $_SESSION['documents']['mode']; ?>','',true);">
+                        <p class="ploopi_va">
+                            <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_folder.png" />
+                            <span><? echo $foldername; ?></span>
+                        </p>
+                    </a>
+                    <?
+                }
+            }
+            ?>
+        </div>
+        <?
+
+        $documents_columns = array();
+
+        $documents_columns['auto']['name'] = 
+            array(  
+                'label' => 'Nom',
+                'options' => array('sort' => true)
+            );
+
+        if (empty($_SESSION['documents']['fields']) || in_array('type', $_SESSION['documents']['fields']))
+        {
+            $documents_columns['right']['type'] = 
+                array( 
+                    'label' => 'Type',
+                    'width' => empty($_SESSION['documents']['fields_size']['type']) ? 65 : $_SESSION['documents']['fields_size']['type'],
+                    'options' => array('sort' => true)
+                );
+        }
+
+        if (empty($_SESSION['documents']['fields']) || in_array('timestp_modify', $_SESSION['documents']['fields']))
+        {
+            $documents_columns['right']['timestp_modify'] = 
+                array( 
+                    'label' => 'Date Modif',
+                    'width' => empty($_SESSION['documents']['fields_size']['timestp_modify']) ? 130 : $_SESSION['documents']['fields_size']['timestp_modify'],
+                    'options' => array('sort' => true)
+                );
+        }
+
+        if (empty($_SESSION['documents']['fields']) || in_array('timestp_file', $_SESSION['documents']['fields']))
+        {
+            $documents_columns['right']['timestp_file'] = 
+                array( 
+                    'label' => 'Date',
+                    'width' => empty($_SESSION['documents']['fields_size']['timestp_file']) ? 80 : $_SESSION['documents']['fields_size']['timestp_file'],
+                    'options' => array('sort' => true)
+                );
+        }
+
+        if (empty($_SESSION['documents']['fields']) || in_array('ref', $_SESSION['documents']['fields']))
+        {
+            $documents_columns['right']['ref'] = 
+                array( 
+                    'label' => 'Ref',
+                    'width' => empty($_SESSION['documents']['fields_size']['ref']) ? 100 : $_SESSION['documents']['fields_size']['ref'],
+                    'options' => array('sort' => true)
+                );
+        }
+
+        if (empty($_SESSION['documents']['fields']) || in_array('label', $_SESSION['documents']['fields']))
+        {
+            $documents_columns['right']['label'] = 
+                array( 
+                    'label' => 'Libellé',
+                    'width' => empty($_SESSION['documents']['fields_size']['label']) ? 150 : $_SESSION['documents']['fields_size']['label'],
+                    'options' => array('sort' => true)
+                );
+        }
+
+        if (empty($_SESSION['documents']['fields']) || in_array('size', $_SESSION['documents']['fields']))
+        {
+            $documents_columns['right']['size'] = 
+                array( 
+                    'label' => 'Taille',
+                    'width' => empty($_SESSION['documents']['fields_size']['size']) ? 90 : $_SESSION['documents']['fields_size']['size'],
+                    'options' => array('sort' => true)
+                );
+        }
+
+        if (empty($_SESSION['documents']['mode'])) 
+            $documents_columns['actions_right']['actions'] = 
+                array(
+                    'label' => 'Actions', 
+                    'width' => 85
+                );
+
+        $documents_values = array();
+                
+        // DISPLAY FOLDERS
+        $sql =  "
+                SELECT      f.*,
+                            u.login
+                FROM        ploopi_documents_folder f
+                LEFT JOIN   ploopi_user u
+                ON          f.id_user = u.id
+                WHERE       f.id_folder = {$currentfolder}
+                ";
+
+        $db->query($sql);
+
+        $i = 0;
+        while ($row = $db->fetchrow())
+        {
+            $ldate = ploopi_timestamp2local($row['timestp_modify']);
+            
+            $documents_values[$i]['values'] = 
+                array(
+                    'name' => 
+                        array(
+                            'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/ico_folder.png\" /><span>&nbsp;{$row['name']}</span>",
+                            'sort_label' => '1_'.$row['name']
+                        ),
+                    'type' =>
+                        array(
+                            'label' => 'Dossier'
+                        ),
+                    'timestp_modify' =>
+                         array(
+                            'label' => "{$ldate['date']} {$ldate['time']}",
+                            'sort_label' => '1_'.$row['timestp_modify']
+                         ),
+                    'timestp_file' => 
+                        array(
+                            'label' => '&nbsp;'
+                        ),
+                    'ref' =>
+                        array(
+                            'label' => '&nbsp;'
+                        ),
+                    'label' => 
+                        array(
+                            'label' => '&nbsp;', 
+                        ),
+                    'size' => 
+                        array(
+                            'label' => "{$row['nbelements']} element(s)",
+                            'sort_label' => '1_'.$row['nbelements']
+                        )
+                );
+
+            $actions = '';
+            if ($_SESSION['documents']['rights']['DOCUMENT_MODIFY']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le dossier et son contenu\')) ploopi_documents_deletefolder(\''.$currentfolder.'\',\''.$_SESSION['documents']['documents_id'].'\',\''.$row['id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
+            if ($_SESSION['documents']['rights']['DOCUMENT_DELETE']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi_documents_openfolder(\''.$currentfolder.'\',\''.$row['id'].'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
+
+            if ($actions == '') $actions = '&nbsp;';
+
+            if (empty($_SESSION['documents']['mode'])) 
+                $documents_values[$i]['values']['actions'] = 
+                    array(
+                        'label' => $actions, 
+                    );
+
+            $documents_values[$i]['description'] = '';
+            $documents_values[$i]['link'] = 'javascript:void(0);';
+            $documents_values[$i]['option'] = 'onclick="javascript:ploopi_documents_browser(\''.$_SESSION['documents']['documents_id'].'\',\''.$row['id'].'\',\''.$_SESSION['documents']['mode'].'\',\'\',true);"';
+            $documents_values[$i]['style'] = '';
+
+            $i++;
+        }
+
+        // DISPLAY FILES
+        $sql =  "
+                SELECT      f.*,
+                            u.login,
+                            e.filetype
+
+                FROM        ploopi_documents_file f
+
+                LEFT JOIN   ploopi_user u
+                ON          f.id_user = u.id
+
+                LEFT JOIN   ploopi_documents_ext e
+                ON          e.ext = f.extension
+
+                WHERE       f.id_folder = {$currentfolder}
+                ";
+
+        $db->query($sql);
+
+        while ($row = $db->fetchrow())
+        {
+            $ksize = sprintf("%.02f",$row['size']/1024);
+            $ldate = ploopi_timestamp2local($row['timestp_modify']);
+
+            $ldate_file = ($row['timestp_file'] != 0) ? ploopi_timestamp2local($row['timestp_file']) : array('date' => '');
+
+            $ico = (file_exists("{$_SESSION['ploopi']['template_path']}/img/documents/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
+
+            $actions = '';
+
+            if ($_SESSION['documents']['rights']['FOLDER_MODIFY']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le fichier\')) ploopi_documents_deletefile(\''.$currentfolder.'\',\''.$_SESSION['documents']['documents_id'].'\',\''.$row['id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
+            if ($_SESSION['documents']['rights']['FOLDER_DELETE']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi_documents_openfile(\''.$currentfolder.'\',\''.$row['id'].'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
+
+            
+            $documents_values[$i]['values'] = 
+                array(
+                    'name' => 
+                        array(
+                            'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/mimetypes/{$ico}\" /><span>&nbsp;{$row['name']}</span>",
+                            'sort_label' => '2_'.$row['name']
+                        ),
+                    'type' =>
+                        array(
+                            'label' => 'Fichier'
+                        ),
+                    'timestp_modify' =>
+                         array(
+                            'label' => "{$ldate['date']} {$ldate['time']}",
+                            'sort_label' => '2_'.$row['timestp_modify']
+                         ),
+                    'timestp_file' => 
+                        array(
+                            'label' => $ldate_file['date'],
+                            'sort_label' => '2_'.$row['timestp_file']
+                        ),
+                    'ref' =>
+                        array(
+                            'label' => $row['ref'],
+                            'sort_label' => '2_'.$row['ref']
+                        ),
+                    'label' => 
+                        array(
+                            'label' => $row['label'], 
+                            'sort_label' => '2_'.$row['label']
+                        ),
+                    'size' => 
+                        array(
+                            'label' => "{$ksize} ko",
+                            'sort_label' => '2_'.$row['size']
+                        )
+                );
+                                
+            $documents_values[$i]['values']['actions'] = 
+                array(
+                    'label' => $actions.'<a title="Télécharger" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download.png" /></a>
+                                         <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=documents_downloadfile_zip&documentsfile_id={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download_zip.png" /></a>', 
+                );
+                
+            $documents_values[$i]['description'] = '';
+            
+            if ($_SESSION['documents']['mode'] == 'selectfile')
+            {
+                $documents_values[$i]['link'] = 'javascript:void(0);';
+                $documents_values[$i]['onclick'] = "javascript:ploopi_getelem('{$_SESSION['documents']['destfield']}').value='{$row['name']}';ploopi_getelem('{$_SESSION['documents']['destfield']}_id').value='{$row['id']}';ploopi_hidepopup('ploopi_documents_popup');";
+            }
+            else $documents_values[$i]['link'] = ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['id']}&attachement=".$_SESSION['documents']['attachement']);
+
+
+            $documents_values[$i]['style'] = '';
+
+            $i++;
+        }
+
+        $skin->display_array(
+            $documents_columns, 
+            $documents_values, 
+            'ploopi_documents', 
+            array(
+                'sortable' => true, 
+                'orderby_default' => 'name', 
+                'sort_default' => 'DESC',
+            )
+        );                 
+        ?>
+    </div>
+    <?    
 }
 ?>
