@@ -43,84 +43,108 @@
  * @param string $format format de l'image destination (jpg, png, gif)
  * @param int $nbcolor taille de la palette de l'image destination
  * @param string $filename nom du fichier image destination, si vide renvoit l'image vers le navigateur
- * @return boolean true si redimensionnement ok 
- * 
+ * @param string (6) couleur de fond hexadécimal RVB pour redimension avec marge
+ * @return boolean true si redimensionnement ok
+ *
  * @link http://fr.php.net/manual/fr/ref.image.php
  */
 
-function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format = '', $nbcolor = 0, $filename = '')
+function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format = '', $nbcolor = 0, $filename = '',$addBorder = false)
 {
     //$c = new ploopi_cache($imagefile, 8640000, _PLOOPI_PATHDATA._PLOOPI_SEP.'cache'._PLOOPI_SEP);
     //if (!$c->start())
     //{
-    
+
     $imagefile_name = basename($imagefile);
     $extension = ploopi_file_getextension($imagefile_name);
-    
+
     switch($extension)
     {
         case 'jpg':
         case 'jpeg':
           $imgsrc = ImageCreateFromJPEG($imagefile);
         break;
-        
+
         case 'png':
           $imgsrc = ImageCreateFromPng($imagefile);
         break;
-        
+
         case 'gif':
           $imgsrc = imagecreatefromgif($imagefile);
         break;
-        
+
         default:
           return(false);
         break;
     }
-    
+
     $w = imagesx($imgsrc);
     $h = imagesy($imgsrc);
-    
+
     if (!$coef) // no coef defined
     {
         if ($wmax) $coef = $w/$wmax;
         if ($hmax && $h/$hmax > $coef) $coef = $h/$hmax;
     }
-    
+
     $wdest = $w/$coef;
     $hdest = $h/$coef;
-    
-    $imgdest = imagecreatetruecolor ($wdest, $hdest);
-    
-    imagecopyresampled($imgdest, $imgsrc, 0, 0, 0, 0, $wdest, $hdest, $w, $h);
-    
+
+    if(!empty($addBorder) && $wmax && $hmax)
+    {
+      $red = $green = $blue = '255';
+      if(strlen($addBorder) == 6)
+      {
+        $color = sscanf($addBorder, '#%2x%2x%2x');
+        $red = $color[0];
+        $green = $color[1];
+        $blue = $color[2];
+      }
+
+      $imgdest = imagecreatetruecolor ($wmax, $hmax);
+
+      $background = imagecolorallocate($imgdest,$red,$green,$blue);
+
+      imageFilledRectangle($imgdest, 0, 0, $wmax, $hmax, $background);
+
+      $distX = ($wmax > $wdest) ? (($wmax-$wdest)/2) : 0;
+      $distY = ($hmax > $hdest) ? (($hmax-$hdest)/2) : 0;
+      imagecopyresampled($imgdest, $imgsrc, $distX, $distY, 0, 0, $wdest, $hdest, $w, $h);
+    }
+    else
+    {
+      $imgdest = imagecreatetruecolor ($wdest, $hdest);
+      imagecopyresampled($imgdest, $imgsrc, 0, 0, 0, 0, $wdest, $hdest, $w, $h);
+    }
+
     if ($nbcolor) imagetruecolortopalette($imgdest, true, $nbcolor);
-    
+
     if($format != '')
     {
         $extension = $format;
         $imagefile = substr($imagefile,0,strlen($imagefile) - strlen(ploopi_file_getextension($imagefile)) + 1);
     }
-    
+
     if($filename == '')
     {
         header("Content-Type: image/{$extension}");
         header("Content-Disposition: inline; filename=\"{$imagefile_name}\"");
-        
+
         switch($extension)
         {
             case 'jpg':
             case 'jpeg':
               imagejpeg($imgdest);
             break;
-        
+
             case 'png':
                 imagepng($imgdest);
             break;
-        
+
             case 'gif':
                 imagepng($imgdest);
             break;
-        
+
             default:
                 return(false);
             break;
@@ -138,15 +162,15 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
                 case 'jpeg':
                     imagejpeg($imgdest, $filename);
                 break;
-            
+
                 case 'png':
                     imagepng($imgdest, $filename);
                 break;
-            
+
                 case 'gif':
                     imagepng($imgdest, $filename);
                 break;
-            
+
                 default:
                     return(false);
                 break;
@@ -154,10 +178,10 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
         }
         else return(false);
     }
-    
+
     //$c->end();
     //}
-    
+
     return(true);
 }
 
