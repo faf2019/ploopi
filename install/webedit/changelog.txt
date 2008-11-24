@@ -1,3 +1,9 @@
+== Module WebEdit - version 1.8.8 ============================================
+
+2008-11-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Activation d'un switch permettant d'intégrer un module frontoffice dans le contenu de la page (?template_idmodule=X => template_content.php)
+
 == Module WebEdit - version 1.8.7 ============================================
 
 2008-11-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -54,15 +54,20 @@ global $template_body;
 global $template_path;
 global $webedit_mode;
 
+// Date du jour (utile pour vérifier les dates de publication)
 $today = ploopi_createtimestamp();
 
 $type = (empty($_GET['type'])) ? '' : $_GET['type'];
 $webedit_mode = (empty($_GET['webedit_mode'])) ? 'display' : $_GET['webedit_mode'];
 $readonly = (empty($_GET['readonly'])) ? 0 : $_GET['readonly'];
 
+// id article passé en param ?
 $articleid = (!empty($_REQUEST['articleid'])) ? $_REQUEST['articleid'] : '';
+
+// id rubrique passé en param ?
 $headingid = (!empty($_REQUEST['headingid'])) ? $_REQUEST['headingid'] : '';
 
+// code d'erreur renvoyé (principalement 404)
 $intErrorCode = 0;
 
 // vérification des paramètres
@@ -74,12 +79,16 @@ if ($webedit_mode == 'render' || $webedit_mode == 'display')
     $type = '';
 }
 
-// requête de recherche
+// requête de recherche ?
 $query_string = (empty($_REQUEST['query_string'])) ? '' : $_REQUEST['query_string'];
 
-// requête sur un tag
+// requête sur un tag ?
 $query_tag = (empty($_REQUEST['query_tag'])) ? '' : $_REQUEST['query_tag'];
 
+// module frontoffice ?
+$template_moduleid = (empty($_REQUEST['template_moduleid']) || !is_numeric($_REQUEST['template_moduleid']) || !isset($_SESSION['ploopi']['modules'][$_REQUEST['template_moduleid']]) || !file_exists("./modules/{$_SESSION['ploopi']['modules'][$_REQUEST['template_moduleid']]['moduletype']}/template_content.php")) ? '' : $_REQUEST['template_moduleid'];
+
+// récupération des rubriques
 $headings = webedit_getheadings();
 
 if ($query_string != '') // Recherche intégrale
@@ -87,6 +96,10 @@ if ($query_string != '') // Recherche intégrale
     $headingid = $headings['tree'][0][0];    
 }
 elseif ($query_tag != '') // Recherche par tag
+{
+    $headingid = $headings['tree'][0][0];    
+}
+elseif (!empty($template_moduleid)) // Module frontoffice
 {
     $headingid = $headings['tree'][0][0];    
 }
@@ -388,6 +401,22 @@ elseif($query_tag != '') // recherche par tag
             'PAGE_META_KEYWORDS_RAW' => $query_tag,
             'PAGE_META_DESCRIPTION' => $title,
             'PAGE_META_DESCRIPTION_RAW' => $title_raw
+        )
+    );
+}
+elseif (!empty($template_moduleid))
+{
+    $template_body->assign_block_vars("switch_content_module_{$_SESSION['ploopi']['modules'][$template_moduleid]['moduletype']}", array());
+
+    include_once "./modules/{$_SESSION['ploopi']['modules'][$template_moduleid]['moduletype']}/template_content.php";
+
+    $template_body->assign_vars(
+        array(
+            'MODULE_ID' => $template_moduleid,
+            'MODULE_TITLE' => $_SESSION['ploopi']['modules'][$template_moduleid]['label'],
+            'MODULE_VERSION' => $_SESSION['ploopi']['modules'][$template_moduleid]['version'],
+            'MODULE_AUTHOR' => $_SESSION['ploopi']['modules'][$template_moduleid]['author'],
+            'MODULE_DATE' => current(ploopi_timestamp2local($_SESSION['ploopi']['modules'][$template_moduleid]['date']))
         )
     );
 }
