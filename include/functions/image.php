@@ -86,19 +86,19 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
         if ($wmax) $coef = $w/$wmax;
         if ($hmax && $h/$hmax > $coef) $coef = $h/$hmax;
     }
-
-    $wdest = $w/$coef;
-    $hdest = $h/$coef;
+    
+    $wdest = round($w/$coef);
+    $hdest = round($h/$coef);
 
     if(!empty($addBorder) && $wmax && $hmax)
     {
       $red = $green = $blue = '255';
-      if(strlen($addBorder) == 6)
+
+      if(preg_match('`^#([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$`',$addBorder,$color))
       {
-        $color = sscanf($addBorder, '#%2x%2x%2x');
-        $red = $color[0];
-        $green = $color[1];
-        $blue = $color[2];
+        $red = hexdec($color[1]);
+        $green = hexdec($color[2]);
+        $blue = hexdec($color[3]);
       }
 
       $imgdest = imagecreatetruecolor ($wmax, $hmax);
@@ -176,12 +176,12 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
                 break;
             }
         }
-        else return(false);
+        else
+          return(false);
     }
 
     //$c->end();
     //}
-
     return(true);
 }
 
