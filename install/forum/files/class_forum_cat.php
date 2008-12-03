@@ -39,27 +39,23 @@ class forum_cat extends data_object
     parent::data_object('ploopi_mod_forum_cat');
     $this->oldvisible = 1;
   }
-  
+
   /**
-   * Open with a control if id_cat is ok 
+   * Open with a control if id_cat is ok
    *
    */
   function open($intId)
   {
-    
-    if(!is_numeric($intId) || $intId <= 0)
-      ploopi_redirect('admin.php?op=error');
+
+    if(!is_numeric($intId) || $intId <= 0) return false;
 
     $numrows = parent::open($intId);
-    
-    if($numrows <= 0)
-      ploopi_redirect('admin.php?op=error');
-      
+
     $this->oldvisible = $this->fields['visible']; // For change state for search index
-      
+
     return $numrows;
   }
-  
+
   /**
    * Save the categories data's
    *
@@ -67,9 +63,9 @@ class forum_cat extends data_object
   function save()
   {
     global $db;
-    
+
     $this->setuwm(); // first for getlastposition !
-    
+
     if($this->new)
     {
       $this->fields['position'] = $this->getlastposition()+1;
@@ -84,44 +80,44 @@ class forum_cat extends data_object
       $this->fields['lastupdate_id_user'] = $_SESSION['ploopi']['user']['id'];
       $this->fields['lastupdate_timestp'] = ploopi_createtimestamp();
       /** Log **/
-      ploopi_create_user_action_log(_FORUM_ACTION_MODIFY_CAT, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');     
+      ploopi_create_user_action_log(_FORUM_ACTION_MODIFY_CAT, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');
     }
-    
+
     //***** Search Index *****//
     ploopi_search_create_index(_FORUM_OBJECT_CAT, $this->fields['id'], $this->fields['title'], strip_tags(html_entity_decode($this->fields['title'].' '.$this->fields['description'])), '', true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
-    
+
     parent::save();
   }
-  
+
   /**
    * Delete a categories width :
    * - All link with moderator
    * - All subscription
    * - All subjects and messages !
-   * 
+   *
    */
   function delete()
   {
-    
+
     global $db;
-    
+
     //***** Delete all moderator to this categ *****//
     unset($_SESSION['ploopi']['workflow']['users_selected']);
     ploopi_validation_save(_FORUM_OBJECT_CAT, $this->fields['id']);
-    
+
     //***** Delete all subscription to this categ and all her subjects *****//
     //***** Delete all search index *****//
     // Search all subject in this cat
-    $arrListSubject[] = 0;            
+    $arrListSubject[] = 0;
     $strForumSql = "SELECT id, id_subject
-                    FROM ploopi_mod_forum_mess 
-                    WHERE ploopi_mod_forum_mess.id_module = {$_SESSION['ploopi']['moduleid']} 
+                    FROM ploopi_mod_forum_mess
+                    WHERE ploopi_mod_forum_mess.id_module = {$_SESSION['ploopi']['moduleid']}
                       AND ploopi_mod_forum_mess.id_cat = {$this->fields['id']}";
     $objForumSqlResult = $db->query($strForumSql);
     while ($arrForumFields = $db->fetchrow($objForumSqlResult))
     {
       if($arrForumFields['id'] == $arrForumFields['id_subject'])
-      { 
+      {
         // Create array with list of subject in this cat
         $arrListSubject[] = $arrForumFields['id'];
         // Delete search_index of this subject
@@ -133,12 +129,12 @@ class forum_cat extends data_object
         ploopi_search_remove_index(_FORUM_OBJECT_MESSAGE, $arrForumFields['id']);
       }
     }
-    
+
     $strListSubject = implode(",",$arrListSubject);
-    
+
     // Search all id subscription's link with this cat and her subject
     $strListSubscripToDelete = "''";
-    $strForumSql = "SELECT id 
+    $strForumSql = "SELECT id
                     FROM ploopi_subscription
                     WHERE ploopi_subscription.id_module = {$_SESSION['ploopi']['moduleid']}
                       AND ((ploopi_subscription.id_object = "._FORUM_OBJECT_SUBJECT."
@@ -150,34 +146,34 @@ class forum_cat extends data_object
 
     $objForumSqlResult = $db->query($strForumSql);
     while ($arrForumFields = $db->fetchrow($objForumSqlResult))
-      $strListSubscripToDelete .= ",'".$arrForumFields['id']."'";      
-      
-    $strForumSqlDelete = "DELETE FROM ploopi_subscription 
+      $strListSubscripToDelete .= ",'".$arrForumFields['id']."'";
+
+    $strForumSqlDelete = "DELETE FROM ploopi_subscription
                           WHERE ploopi_subscription.id IN ({$strListSubscripToDelete})";
     $db->query($strForumSqlDelete);
-    
-    $strForumSqlDelete = "DELETE FROM ploopi_subscription_action 
+
+    $strForumSqlDelete = "DELETE FROM ploopi_subscription_action
                           WHERE ploopi_subscription_action.id_subscription IN ({$strListSubscripToDelete})";
     $db->query($strForumSqlDelete);
-    
+
     //***** Delete all subjects and messages in this categorie *****//
-    $strForumSqlDelete = "DELETE FROM ploopi_mod_forum_mess 
-                          WHERE ploopi_mod_forum_mess.id_module = {$_SESSION['ploopi']['moduleid']} 
+    $strForumSqlDelete = "DELETE FROM ploopi_mod_forum_mess
+                          WHERE ploopi_mod_forum_mess.id_module = {$_SESSION['ploopi']['moduleid']}
                             AND ploopi_mod_forum_mess.id_cat = {$this->fields['id']}";
     $db->query($strForumSqlDelete);
-    
+
     //***** Delete search_index of this categorie *****//
     ploopi_search_remove_index(_FORUM_OBJECT_CAT, $this->fields['id']);
-    
+
     /** Log **/
-    ploopi_create_user_action_log(_FORUM_ACTION_DELETE_CAT, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');     
-    
+    ploopi_create_user_action_log(_FORUM_ACTION_DELETE_CAT, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');
+
     // Delete categorie
     parent::delete();
-    
+
     $this->renumber();
   }
-  
+
   /**
    * renumber all position categories
    *
@@ -185,14 +181,14 @@ class forum_cat extends data_object
   function renumber()
   {
     global $db;
-    
+
     $db->query('SET @compteur=0');
-    $db->query("UPDATE ploopi_mod_forum_cat 
-                    SET position = @compteur:=@compteur+1 
-                    WHERE ploopi_mod_forum_cat.id_module = {$this->fields['id_module']} 
+    $db->query("UPDATE ploopi_mod_forum_cat
+                    SET position = @compteur:=@compteur+1
+                    WHERE ploopi_mod_forum_cat.id_module = {$this->fields['id_module']}
                     ORDER BY ploopi_mod_forum_cat.position ASC");
   }
-    
+
   /**
    * Get the last position
    *
@@ -201,15 +197,15 @@ class forum_cat extends data_object
   function getlastposition()
   {
     global $db;
-    
+
     $strRequest = "SELECT MAX(ploopi_mod_forum_cat.position) AS maxposit
-                    FROM ploopi_mod_forum_cat 
+                    FROM ploopi_mod_forum_cat
                     WHERE ploopi_mod_forum_cat.id_module = {$this->fields['id_module']}
                     GROUP BY ploopi_mod_forum_cat.id_module";
     $sqlmaxposition = $db->query($strRequest);
-    
+
     if(!$db->numrows($sqlmaxposition)) return 0;
-      
+
     $value = $db->fetchrow($sqlmaxposition);
 
     return $value['maxposit'];

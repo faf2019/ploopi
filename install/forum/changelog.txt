@@ -1,3 +1,14 @@
+== Module FORUM - version 1.0.3 ==================================================
+
+2008-12-03  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction du bug sur les messages (ticket) si le message concerné a été supprimé
+ * Ajout de précisions pour les messages d'erreurs éventuelles
+  * Erreur : #1002 (= erreur indéterminée qui ne devrait pas apparaitre)
+  * Erreur : Vous ne bénéficiez pas des autorisations nécessaires (=... !)
+  * Erreur : Information(s) manquante(s) (= par ex. : demande d'ouverture mess sans le id_mess)
+  * Aucun résultat trouvé (= recherche qui n'aboutie pas)
+
 == Module FORUM - version 1.0.2 ==================================================
 
 2008-11-14  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

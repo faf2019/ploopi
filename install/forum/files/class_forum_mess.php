@@ -36,36 +36,32 @@ class forum_mess extends data_object
   {
     parent::data_object('ploopi_mod_forum_mess');
   }
-  
+
   /**
-   * Open with a control if id is ok 
+   * Open with a control if id is ok
    *
    */
   function open($intId)
   {
-    if(!is_numeric($intId) || $intId <= 0)
-      ploopi_redirect('admin.php?op=error');
-      
+    if(!is_numeric($intId) || $intId <= 0) return false;
+
     $numrows = parent::open($intId);
-    
-    if(!$numrows)
-      ploopi_redirect('admin.php?op=error');
-    
+
     return $numrows;
   }
-    
+
   /**
    * Save the message/subject data's
    *
    */
   function save()
   {
-    $booForumNew = $this->new; 
+    $booForumNew = $this->new;
     $booForumIsAdminModer = forum_IsAdminOrModer($this->fields['id_cat'],_FORUM_ACTION_ADMIN);
-    
+
     $objForumMyCat = new forum_cat();
     $objForumMyCat->open($this->fields['id_cat']);
-    
+
     if($this->new) // creation
     {
       $this->fields['id_author'] = $_SESSION['ploopi']['user']['id'];
@@ -86,12 +82,12 @@ class forum_mess extends data_object
       }
     }
     $this->setuwm();
-    
-    // Forced validation (it's a moderator and it's his message !) 
+
+    // Forced validation (it's a moderator and it's his message !)
     if($booForumIsAdminModer && $this->fields['id_author'] == $_SESSION['ploopi']['user']['id'])
       $this->fields['validated'] = 1;
-    
-      
+
+
     // Save if title is ok for a subject (or it's not a subject...).
     if((($this->fields['id_subject'] == $this->fields['id'] || $this->fields['id_subject'] == 0) && trim($this->fields['title']) != '')
         || ($this->fields['id_subject'] != $this->fields['id'] && $this->fields['id_subject'] > 0))
@@ -104,15 +100,15 @@ class forum_mess extends data_object
         $this->fields['id_subject'] = $this->fields['id'];
         parent::save();
       }
-      
+
 //      if($booForumIsAdminModer)
 //      {
-//        if($this->fields['closed']) 
+//        if($this->fields['closed'])
 //          $this->closeSubject();
 //        else
 //          $this->openSubject();
 //      }
-      
+
       if($this->fields['id_subject'] == $this->fields['id']) // it is a subject
       {
         // create search index
@@ -120,14 +116,14 @@ class forum_mess extends data_object
         ploopi_search_create_index(_FORUM_OBJECT_MESSAGE, $this->fields['id'], $this->fields['title'], strip_tags(html_entity_decode($this->fields['title'].' '.$this->fields['content'])), '', true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
         // Log
         if($booForumNew) // Create
-          ploopi_create_user_action_log(_FORUM_ACTION_ADD_SUBJECT, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');     
+          ploopi_create_user_action_log(_FORUM_ACTION_ADD_SUBJECT, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');
         else // Modify
         {
           if($this->fields['id_author'] == $_SESSION['ploopi']['user']['id']) //By author
             ploopi_create_user_action_log(_FORUM_ACTION_MODIFY_SUBJECT, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');
           else // By moderator
             ploopi_create_user_action_log(_FORUM_ACTION_MODERATE_SUBJECT, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');
-        }     
+        }
       }
       else
       {
@@ -135,7 +131,7 @@ class forum_mess extends data_object
         ploopi_search_create_index(_FORUM_OBJECT_MESSAGE, $this->fields['id'], $this->fields['title'], strip_tags(html_entity_decode($this->fields['title'].' '.$this->fields['content'])), '', true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
         // Log
         if($booForumNew) // Create
-          ploopi_create_user_action_log(_FORUM_ACTION_ADD_MESSAGE, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');     
+          ploopi_create_user_action_log(_FORUM_ACTION_ADD_MESSAGE, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');
         else // Modify
         {
           if($this->fields['id_author'] == $_SESSION['ploopi']['user']['id']) //By author
@@ -144,7 +140,7 @@ class forum_mess extends data_object
             ploopi_create_user_action_log(_FORUM_ACTION_MODERATE_MESSAGE, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');
         }
       }
-      
+
       // Just for new subject/mess -> subscription
       if($booForumNew) $this->SendToSubscribers();
     }
@@ -161,16 +157,16 @@ class forum_mess extends data_object
     $this->fields['validated_id_user'] = $_SESSION['ploopi']['user']['id'];
     $this->fields['validated_timestp'] = ploopi_createtimestamp();
     parent::save();
-    
+
     // Log
     if($this->fields['id_subject'] == $this->fields['id']) // it is a subject
       ploopi_create_user_action_log(_FORUM_ACTION_VALIDATE_SUBJECT, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');
     else
       ploopi_create_user_action_log(_FORUM_ACTION_VALIDATE_MESSAGE, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');
-    
+
     $this->SendToSubscribers();
   }
-  
+
   /**
    * Delete a message
    *
@@ -183,31 +179,31 @@ class forum_mess extends data_object
     {
       // Delete search_index of this message
       ploopi_search_remove_index(_FORUM_OBJECT_MESSAGE, $this->fields['id']);
-      
+
       // Log
       ploopi_create_user_action_log(_FORUM_ACTION_DELETE_SUBJECT, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');
-      
+
       parent::delete();
     }
   }
-  
+
   /**
    * Open a subject
    *
    * All messages in this subject will be unmarqued "closed"
-   * 
+   *
    */
   function openSubject()
   {
     global $db;
-    
-    $strForumSqlOpenSubject = "UPDATE ploopi_mod_forum_mess SET ploopi_mod_forum_mess.closed = '0' 
+
+    $strForumSqlOpenSubject = "UPDATE ploopi_mod_forum_mess SET ploopi_mod_forum_mess.closed = '0'
                                 WHERE ploopi_mod_forum_mess.id_subject = {$this->fields['id_subject']}
                                   AND ploopi_mod_forum_mess.id_module = {$this->fields['id_module']}";
     $db->query($strForumSqlOpenSubject);
-    
+
   }
-  
+
   /**
    * Close the subject,
    * All messages in this subject will be marqued "closed" !
@@ -216,13 +212,13 @@ class forum_mess extends data_object
   function closeSubject()
   {
     global $db;
-    
-    $strForumSqlCloseSubject = "UPDATE ploopi_mod_forum_mess SET ploopi_mod_forum_mess.closed = '1' 
+
+    $strForumSqlCloseSubject = "UPDATE ploopi_mod_forum_mess SET ploopi_mod_forum_mess.closed = '1'
                                 WHERE ploopi_mod_forum_mess.id_subject = {$this->fields['id_subject']}
                                   AND ploopi_mod_forum_mess.id_module = {$this->fields['id_module']}";
     $db->query($strForumSqlCloseSubject);
   }
-  
+
   /**
    * Delete the subject and all messages in this subject and subscription
    *
@@ -230,10 +226,10 @@ class forum_mess extends data_object
   function deleteSubject()
   {
     global $db;
-    
+
     // Search all id subscription's link with this subject
     $strListSubscripToDelete = "''";
-    $strForumSql = "SELECT id 
+    $strForumSql = "SELECT id
                     FROM ploopi_subscription
                     WHERE ploopi_subscription.id_module = {$_SESSION['ploopi']['moduleid']}
                       AND ploopi_subscription.id_object = "._FORUM_OBJECT_MESSAGE."
@@ -241,41 +237,41 @@ class forum_mess extends data_object
 
     $objForumSqlResult = $db->query($strForumSql);
     while ($arrForumFields = $db->fetchrow($objForumSqlResult))
-      $strListSubscripToDelete .= ",'".$arrForumFields['id']."'";      
-      
-    $strForumSqlDelete = "DELETE FROM ploopi_subscription 
+      $strListSubscripToDelete .= ",'".$arrForumFields['id']."'";
+
+    $strForumSqlDelete = "DELETE FROM ploopi_subscription
                           WHERE ploopi_subscription.id IN ({$strListSubscripToDelete})";
     $db->query($strForumSqlDelete);
-    
-    $strForumSqlDelete = "DELETE FROM ploopi_subscription_action 
+
+    $strForumSqlDelete = "DELETE FROM ploopi_subscription_action
                           WHERE ploopi_subscription_action.id_subscription IN ({$strListSubscripToDelete})";
     $db->query($strForumSqlDelete);
 
     // Search all mess for Delete search_index of all message in this subject
-    $strForumSqlSearch = "SELECT id 
-                          FROM ploopi_mod_forum_mess 
-                          WHERE id_module = {$this->fields['id_module']} 
-                            AND id_cat = {$this->fields['id_cat']} 
+    $strForumSqlSearch = "SELECT id
+                          FROM ploopi_mod_forum_mess
+                          WHERE id_module = {$this->fields['id_module']}
+                            AND id_cat = {$this->fields['id_cat']}
                             AND id_subject = {$this->fields['id']}";
     $objForumSqlResult = $db->query($strForumSqlSearch);
     while ($arrForumFields = $db->fetchrow($objForumSqlResult))
       ploopi_search_remove_index(_FORUM_OBJECT_MESSAGE, $arrForumFields['id']);
-    
+
     // Delete search_index of this subject
     ploopi_search_remove_index(_FORUM_OBJECT_SUBJECT, $this->fields['id']);
 
     // Log
     ploopi_create_user_action_log(_FORUM_ACTION_DELETE_SUBJECT, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');
-    
+
     // Delete subject and all mess
-    $strForumSqlDelete = "DELETE FROM ploopi_mod_forum_mess 
-                          WHERE id_module = {$this->fields['id_module']} 
-                            AND id_cat = {$this->fields['id_cat']} 
+    $strForumSqlDelete = "DELETE FROM ploopi_mod_forum_mess
+                          WHERE id_module = {$this->fields['id_module']}
+                            AND id_cat = {$this->fields['id_cat']}
                             AND id_subject = {$this->fields['id']}";
     $db->query($strForumSqlDelete);
-    
+
   }
-  
+
   /**
    * Send ticket for subcription
    *
@@ -284,9 +280,9 @@ class forum_mess extends data_object
   {
     $arrForumTo = array();
     $arrAdminOrModerat = array();
-    
+
     include_once './modules/forum/class_forum_cat.php';
-    
+
     $objForumCat = new forum_cat();
     $objForumCat->open($this->fields['id_cat']);
     // Get subscribers for the categories
@@ -303,10 +299,10 @@ class forum_mess extends data_object
       $objForumSubject = new forum_mess();
       $objForumSubject->open($this->fields['id_subject']);
       $strForumTitleSubject = $objForumCat->fields['title'].' >> '.$objForumSubject->fields['title'];
-      unset($objForumSubject); 
+      unset($objForumSubject);
       $strMessage = _FORUM_TICKET_NEW_MESSAGE;
     }
-    
+
     // If it's not validate -> send just for subscribers type admin or moderator...
     if($this->fields['validated'] == 0 || $objForumCat->fields['closed'] == 1 || $this->fields['closed'] == 1)
     {
@@ -318,7 +314,7 @@ class forum_mess extends data_object
       $arrAdminOrModeTmp += ploopi_validation_get(_FORUM_OBJECT_CAT,$this->fields['id_cat']);
       foreach($arrAdminOrModeTmp as $value)
       {
-        $arrAdminOrMode[$value['id_validation']] = $arrAdminOrModeTmp;  
+        $arrAdminOrMode[$value['id_validation']] = $arrAdminOrModeTmp;
       }
       unset($arrAdminOrModeTmp);
       $arrForumTo = array_intersect_key($arrForumTo, $arrAdminOrMode);
@@ -330,9 +326,9 @@ class forum_mess extends data_object
       if($this->fields['closed'] == 1)
         $strMessage .= '<br/><b>'._FORUM_CLOSE_SUBJET.'</b>';
     }
-    
+
     unset($objForumCat);
-    
+
     if($this->fields['id'] == $this->fields['id_subject']) // it's a subject
       ploopi_subscription_notify(_FORUM_OBJECT_SUBJECT, $this->fields['id'], _FORUM_ACTION_ADD_SUBJECT, $strForumTitleCat, array_keys($arrForumTo), $strMessage);
     else

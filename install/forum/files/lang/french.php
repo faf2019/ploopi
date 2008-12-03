@@ -72,7 +72,7 @@ define('_FORUM_CAT_COL_MESS',         'Messages');
 // Subject
 define('_FORUM_SUBJECT_LABEL_TITLE_ADD',  'Ajout d\'une nouvelle discussion');
 define('_FORUM_SUBJECT_LABEL_TITLE_EDIT', 'Edition d\'une discussion');
-    
+
 define('_FORUM_SUBJECT_COL_SUBJECT',  'Discussions&nbsp;/&nbsp;Auteur');
 define('_FORUM_SUBJECT_COL_MESS',     'Réponses');
 define('_FORUM_SUBJECT_COL_LASTMESS', 'Dernier message');
@@ -197,4 +197,9 @@ define('_FORUM_IMG_48_MESS_TOVALID',         './modules/forum/img/48x48/mess_tov
 
 define('_FORUM_IMG_48_LOCK',                 './modules/forum/img/48x48/lock.png');
 define('_FORUM_IMG_48_LOCK_HIDDEN',          './modules/forum/img/48x48/lock_hidden.png');
+
+define('_FORUM_ERROR_DEFAULT',               'Erreur : #1002');
+define('_FORUM_ERROR_1',                     'Erreur : Vous ne bénéficiez pas des autorisations nécessaires');
+define('_FORUM_ERROR_2',                     'Erreur : Information(s) manquante(s)');
+define('_FORUM_ERROR_3',                     'Aucun résultat trouvé');
 ?>

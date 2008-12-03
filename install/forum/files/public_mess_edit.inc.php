@@ -29,7 +29,7 @@ $booForumIsAdminModerGlb = forum_IsAdminOrModer($objForumCat->fields['id'],_FORU
 
 // Control if categorie is open
 if(($objForumCat->fields['visible'] == 0 || $objForumCat->fields['closed'] == 1) && !$booForumIsAdminModerGlb)
-  ploopi_redirect('admin.php?op=error');
+  ploopi_redirect('admin.php?op=forum_error&num_error=1');
 
 $objForumMess = new forum_mess();
 $objForumSubject = new forum_mess();
@@ -38,9 +38,9 @@ switch ($op)
 {
   case 'mess_add': //i know id_subject
     // control
-    if(!isset($_GET['id_subject'])) 
-      ploopi_redirect('admin.php?op=error');
-    
+    if(!isset($_GET['id_subject']))
+      ploopi_redirect('admin.php?op=forum_error&num_error=2');
+
     $objForumMess->init_description();
     $objForumSubject->open($_GET['id_subject']);
     $strForumAction = 'admin.php?op=mess_save&id_cat='.$objForumCat->fields['id'].'&id_subject='.$objForumSubject->fields['id_subject'];
@@ -50,8 +50,8 @@ switch ($op)
     $strForumBlocTitle = _FORUM_MESS_LABEL_TITLE_ADD;
     // action forbiden ?
     if($objForumSubject->fields['closed'] == 1 && !$booForumIsAdminModerGlb)
-      ploopi_redirect('admin.php?op=error');
-      
+      ploopi_redirect('admin.php?op=forum_error&num_error=1');
+
     // Message quote
     if(isset($_GET['id_quote']))
     {
@@ -63,9 +63,9 @@ switch ($op)
     break;
   case 'mess_edit' : // i know id_mess
     // control
-    if(!isset($_GET['id_mess'])) 
-      ploopi_redirect('admin.php?op=error');
-    
+    if(!isset($_GET['id_mess']))
+      ploopi_redirect('admin.php?op=forum_error&num_error=2');
+
     $objForumMess->open($_GET['id_mess']);
     $objForumSubject->open($objForumMess->fields['id_subject']);
     $strForumAction = 'admin.php?op=mess_save&id_cat='.$objForumCat->fields['id'].'&id_subject='.$objForumMess->fields['id_subject'].'&id_mess='.$objForumMess->fields['id'];
@@ -82,12 +82,12 @@ switch ($op)
     $strForumBlocTitle = _FORUM_MESS_LABEL_TITLE_EDIT;
     // action forbiden ?
     if(($objForumCat->fields['closed'] == 1
-        || $objForumMess->fields['closed'] == 1 
+        || $objForumMess->fields['closed'] == 1
         || $objForumMess->fields['id_author'] != $_SESSION['ploopi']['user']['id']
         || $objForumSubject->fields['validated_id_user'] > 0)
         && !$booForumIsAdminModerGlb)
-      ploopi_redirect('admin.php?op=error');
-      
+      ploopi_redirect('admin.php?op=forum_error&num_error=1');
+
     unset($objForumSubject);
     break;
   case 'subject_add' : // i know id_cat
@@ -98,8 +98,8 @@ switch ($op)
     $strForumBlocTitle = _FORUM_SUBJECT_LABEL_TITLE_ADD;
     break;
   case 'subject_edit' : // i know id_mess (it's ~ like a message)
-    if(!isset($_GET['id_mess'])) ploopi_redirect('admin.php?op=error');
-    
+    if(!isset($_GET['id_mess'])) ploopi_redirect('admin.php?op=forum_error&num_error=2');
+
     $objForumMess->open($_GET['id_mess']);
     $strForumAction = 'admin.php?op=subject_save&id_cat='.$objForumCat->fields['id'].'&id_subject='.$objForumMess->fields['id_subject'].'&id_mess='.$objForumMess->fields['id'];
     $strForumNavigReturn = ploopi_urlencode("admin.php?op=subject&id_cat={$objForumCat->fields['id']}");
@@ -134,7 +134,7 @@ echo $skin->open_simplebloc();
     }
     ?>
   </div>
-  
+
   <?php
   echo $skin->open_simplebloc($strForumBlocTitle);
   ?>
@@ -149,31 +149,31 @@ echo $skin->open_simplebloc();
       {
       ?>
       <div style="float:left;padding:0 0 0 5px; margin:0;">
-        <input type="button" class="button" style="width:80px;" value="Valider" 
+        <input type="button" class="button" style="width:80px;" value="Valider"
           onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=mess_edit_validate&id_cat={$objForumMess->fields['id_cat']}&id_mess={$objForumMess->fields['id']}"); ?>'" />
       </div>
-      <?php 
+      <?php
       }
-    } 
+    }
     ?>
     <div style="clear:both;padding:8px 0 0 0;font-weight:bold;"><?php echo _FORUM_MESS_LABEL_MESSAGE; ?>:</div>
     <div style="clear:both;">
-        <?php 
+        <?php
         // TODO dans fckconfig.js si on active FCKConfig.EnterMode = 'br'; on est coincé dans les citations
         include_once './FCKeditor/fckeditor.php' ;
-        
+
         $objFCKeditor = new FCKeditor('fck_forum_content') ;
-        
+
         $objFCKeditor->BasePath = "./FCKeditor/";
-        
+
         // default value
         $objFCKeditor->Value = $objForumMess->fields['content'];
-        
+
         // width & height
         $objFCKeditor->Width='100%';
         $objFCKeditor->Height='300';
-        
-        $objFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH;        
+
+        $objFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH;
         $objFCKeditor->Config['CustomConfigurationsPath'] =  _PLOOPI_BASEPATH."/modules/forum/fckeditor/fckconfig.js"  ;
         $objFCKeditor->Config['EditorAreaCSS'] = _PLOOPI_BASEPATH."/modules/forum/fckeditor/fck_editorarea.css" ;
         $objFCKeditor->Create('FCKeditor_1') ;

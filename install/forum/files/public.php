@@ -35,13 +35,13 @@ if(!isset($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays'
   $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject'] = array('limit' => 25,
                                                                                               'orderby' => 'timestp',
                                                                                               'orderin' => 'DESC',
-                                                                                              'page' => 1, 
+                                                                                              'page' => 1,
                                                                                               'id' => 0);
-  
+
   $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess'] = array('limit' => 25,
                                                                                           'orderby' => 'timestp',
                                                                                           'orderin' => 'ASC',
-                                                                                          'page' => 1, 
+                                                                                          'page' => 1,
                                                                                           'id' => 0);
 }
 
@@ -58,10 +58,10 @@ $strForumSqlAddFiltre = '';
 $op = (empty($_GET['op'])) ? '' : $_GET['op'];
 
 // AJAX (with ploopi_die() in admin.ajax.php !)
-if(strpos($op,'ajax') !== false) 
+if(strpos($op,'ajax') !== false)
   include './modules/forum/public.ajax.php';
 
-// Titre 
+// Titre
 echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
 
 // Open Categorie (if it's possible) here because it's very useful and test right in same time
@@ -69,12 +69,12 @@ if(isset($_GET['id_cat']))
 {
   $objForumCat = new forum_cat();
   if($objForumCat->open($_GET['id_cat']))
-  { 
+  {
     // Id_cat is ok and open, you have the right to use this cat ?
     if($objForumCat->fields['visible'] == 0 && !forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN))
     {
       unset($objForumCat);
-      ploopi_redirect('admin.php?op=error');
+      ploopi_redirect('admin.php?op=forum_error&num=1');
     }
   }
   else
@@ -89,11 +89,11 @@ switch($op)
   case 'mess': // LIST MESSAGES
     // Contrôls
     if(!isset($objForumCat) || !isset($_GET['id_subject']))
-      ploopi_redirect('admin.php?op=error');
-    
+      ploopi_redirect('admin.php?op=forum_error&num_error=2');
+
     if(isset($_GET['page']))
       $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['page'] = $_GET['page'];
-   
+
     if(isset($_GET['order']))
     {
       if($_GET['order']==$_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderby'])
@@ -106,9 +106,9 @@ switch($op)
         $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderin'] = 'DESC';
       }
     }
-    
+
     forum_CtrlParam();
-    
+
     include './modules/forum/public_mess.inc.php';
     break;
   case 'mess_add' :
@@ -122,26 +122,26 @@ switch($op)
   case 'subject_save' :
     // Contrôls
     if(!isset($objForumCat))
-      ploopi_redirect('admin.php?op=error');
-    
+      ploopi_redirect('admin.php?op=forum_error&num_error=2');
+
     $objForumMess = new forum_mess();
-    
+
     if(isset($_GET['id_mess'])) // It's a know message
     {
       $objForumMess->open($_GET['id_mess']);
-      
+
       //if this action is forbiden
       if(($objForumCat->fields['closed'] == 1
            || $objForumMess->fields['moderate_id_user'] > 0
            || $objForumMess->fields['validated_id_user'] > 0
            || $objForumMess->fields['id_author'] != $_SESSION['ploopi']['user']['id'])
-           && !forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN)) 
-        ploopi_redirect('admin.php?op=error');
+           && !forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN))
+        ploopi_redirect('admin.php?op=forum_error&num_error=1');
     }
     else // it's a new mess/subject
     {
       $objForumMess->init_description();
-      
+
       if(isset($_GET['id_subject'])) // it's a new/edit message
       {
         $objForumSubject = new forum_mess();
@@ -149,31 +149,31 @@ switch($op)
         // if this action is forbiden
         if(($objForumCat->fields['closed'] == 1 || $objForumSubject->fields['closed'] == 1)
               && !forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN))
-          ploopi_redirect('admin.php?op=error');
-          
+          ploopi_redirect('admin.php?op=forum_error&num_error=1');
+
         unset($objForumSubject);
       }
       else // it's a new/edit subject
       {
         // if this action is forbiden
         if($objForumCat->fields['closed'] == 1
-              && !forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN)) 
-          ploopi_redirect('admin.php?op=error');
+              && !forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN))
+          ploopi_redirect('admin.php?op=forum_error&num_error=1');
       }
     }
-    
+
     $objForumMess->fields['id_cat']     = $objForumCat->fields['id'];
     $objForumMess->fields['id_subject'] = (isset($_GET['id_subject'])) ? $_GET['id_subject'] : 0;
     $objForumMess->fields['closed']     = (isset($_POST['forum_close']) && $_POST['forum_close'] == 1) ? 1 : 0;
     $objForumMess->fields['title']      = $_POST['forum_title'];
     $objForumMess->fields['content']    = $_POST['fck_forum_content'];
-    
+
     $objForumMess->fields['validated'] = ($objForumCat->fields['mustbe_validated'] == 1 && $objForumMess->fields['validated'] != 1) ? 0 : 1;
-          
+
     // if id_subject = 0 traitement in method save ! (id_subject <= id)
     // your are a moderator/admin auto validated in methode save
-    $objForumMess->save(); 
-    
+    $objForumMess->save();
+
     if($objForumMess->fields['validated'] == 0 && !ploopi_isactionallowed(_FORUM_ACTION_ADMIN)) // If it's not validated add a message
     {
       if($objForumMess->fields['id'] == $objForumMess->fields['id_subject'])
@@ -189,12 +189,13 @@ switch($op)
   case 'mess_validate' :
   case 'mess_edit_validate' :
     // Contrôls
-    if(!isset($objForumCat) || !isset($_GET['id_mess']) 
-        || !forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN))
-      ploopi_redirect('admin.php?op=error');
+    if(!isset($objForumCat) || !isset($_GET['id_mess']))
+       ploopi_redirect('admin.php?op=forum_error&num_error=2');
+    if(!forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN))
+       ploopi_redirect('admin.php?op=forum_error&num_error=1');
 
     $objForumMess = new forum_mess();
-    
+
     $objForumMess->open($_GET['id_mess']);
     $objForumMess->validate();
     if($op == 'mess_validate')
@@ -205,20 +206,20 @@ switch($op)
   case 'mess_delete' :
     // Contrôls
     if(!isset($objForumCat) || !isset($_GET['id_mess']))
-      ploopi_redirect('admin.php?op=error');
-    
+      ploopi_redirect('admin.php?op=forum_error&num_error=2');
+
     $objForumMess = new forum_mess();
-    
+
     $objForumMess->open($_GET['id_mess']);
-    
+
     // if this action is forbiden (or it's a subject)
     if(($objForumCat->fields['closed'] == 1
-            || $objForumMess->fields['closed'] == 1 
+            || $objForumMess->fields['closed'] == 1
             || $objForumMess->fields['moderate_id_user'] > 0
             || $objForumMess->fields['validated_id_user'] > 0
             || $objForumMess->fields['id_author'] != $_SESSION['ploopi']['user']['id'])
           && !forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN))
-      ploopi_redirect('admin.php?op=error');
+      ploopi_redirect('admin.php?op=forum_error&num_error=1');
 
     // If it's a subject no delete, just modify
     if($objForumMess->fields['id'] == $objForumMess->fields['id_subject'])
@@ -237,12 +238,15 @@ switch($op)
     break;
   case 'subject': // LIST SUBJECTS
     // Contrôls
-    if(!isset($objForumCat) || ($objForumCat->fields['visible'] == 0 && !forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN)))
-      ploopi_redirect('admin.php?op=error');
-      
+    if(!isset($objForumCat))
+      ploopi_redirect('admin.php?op=forum_error&num_error=2');
+    if($objForumCat->fields['visible'] == 0 && !forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN))
+      ploopi_redirect('admin.php?op=forum_error&num_error=1');
+
+
     if(isset($_GET['page']))
       $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['page'] = $_GET['page'];
-    
+
     if(isset($_GET['order']))
     {
       if($_GET['order']==$_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderby'])
@@ -255,16 +259,16 @@ switch($op)
         $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderin'] = 'DESC';
       }
     }
-    
+
     forum_CtrlParam();
-    
+
     include './modules/forum/public_subject.inc.php';
     break;
   case 'subject_delete':
     // Contrôls
     if(!isset($objForumCat) || !isset($_GET['id_mess']))
-      ploopi_redirect('admin.php?op=error');
-    
+      ploopi_redirect('admin.php?op=forum_error&num_error=2');
+
     $objForumMess = new forum_mess();
     $objForumMess->open($_GET['id_mess']);
 
@@ -275,18 +279,20 @@ switch($op)
             || $objForumMess->fields['closed'] == 1
             || $objForumMess->fields['moderate_id_user'] > 0
             || $objForumMess->fields['validated_id_user'] > 0
-            || $objForumMess->fields['id_author'] != $_SESSION['ploopi']['user']['id']) 
+            || $objForumMess->fields['id_author'] != $_SESSION['ploopi']['user']['id'])
           && !forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN)))
-      ploopi_redirect('admin.php?op=error');
-    
+      ploopi_redirect('admin.php?op=forum_error&num_error=1');
+
     $objForumMess->deleteSubject();
-      
+
     ploopi_redirect('admin.php?op=subject&id_cat='.$objForumCat->fields['id']);
     break;
   case 'subject_openclose':
     // Contrôls
-    if(!isset($objForumCat) || !isset($_GET['id_subject']) || !forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN))
-      ploopi_redirect('admin.php?op=error');
+    if(!isset($objForumCat) || !isset($_GET['id_subject']))
+      ploopi_redirect('admin.php?op=forum_error&num_error=2');
+    if(!forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN))
+      ploopi_redirect('admin.php?op=forum_error&num_error=1');
 
     $objForumSubject = new forum_mess();
     $objForumSubject->open($_GET['id_subject']);
@@ -294,13 +300,13 @@ switch($op)
       $objForumSubject->openSubject();
     else
       $objForumSubject->closeSubject();
-    
+
     //ploopi_redirect("admin.php?op=search&id_subject={$objForumSubject->fields['id']}");
     ploopi_redirect('admin.php?op=mess&id_cat='.$objForumCat->fields['id'].'&id_subject='.$objForumSubject->fields['id']);
-    break; 
+    break;
   case 'search':
-    // Search a message in a subject (and... subject in cat for links) 
-    if(isset($_GET['id_mess']) && is_numeric($_GET['id_mess']) && $_GET['id_mess'] > 0) 
+    // Search a message in a subject (and... subject in cat for links)
+    if(isset($_GET['id_mess']) && is_numeric($_GET['id_mess']) && $_GET['id_mess'] > 0)
     {
       $arrSearch = forum_GetMessPage($_GET['id_mess'],$_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']);
       if($arrSearch['page'] != 0)
@@ -312,7 +318,7 @@ switch($op)
         ploopi_redirect(ploopi_urlencode('admin.php?op=mess&id_cat='.$arrSearch['id_cat'].'&id_subject='.$arrSearch['id_subject']).'#idMess_title_'.$arrSearch['id_mess'],false);
       }
     } // Search a subject in a categorie
-    elseif(isset($_GET['id_subject']) && $_GET['id_subject'] > 0) 
+    elseif(isset($_GET['id_subject']) && $_GET['id_subject'] > 0)
     {
       $arrSearch = forum_GetSubjectPage($_GET['id_subject'],$_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']);
       if($arrSearch['page'] != 0)
@@ -323,21 +329,21 @@ switch($op)
       }
     }
     // Error
-    ploopi_redirect('admin.php?op=error');
+    ploopi_redirect('admin.php?op=forum_error&num_error=3');
     break;
   case 'categ_add':
   case 'categ_edit':
     // Contrôls
-    if(!ploopi_isactionallowed(_FORUM_ACTION_ADMIN)) 
-      ploopi_redirect('admin.php?op=error');
+    if(!ploopi_isactionallowed(_FORUM_ACTION_ADMIN))
+      ploopi_redirect('admin.php?op=forum_error&num_error=1');
 
     include './modules/forum/public_categ_edit.inc.php';
     break;
   case 'categ_save' :
     // Contrôls
     if(!ploopi_isactionallowed(_FORUM_ACTION_ADMIN))
-      ploopi_redirect('admin.php?op=error');
-      
+      ploopi_redirect('admin.php?op=forum_error&num_error=1');
+
     if(!isset($objForumCat))
     {
       $objForumCat = new forum_cat();
@@ -352,7 +358,7 @@ switch($op)
   case 'categ_delete':
     // Contrôls
     if(!ploopi_isactionallowed(_FORUM_ACTION_ADMIN))
-      ploopi_redirect('admin.php?op=error');
+      ploopi_redirect('admin.php?op=forum_error&num_error=1');
 
     if(!isset($objForumCat))
     {
@@ -362,6 +368,23 @@ switch($op)
     $objForumCat->delete();
     ploopi_redirect('admin.php?op=categ');
     break;
+  case 'forum_error':
+    /*
+     * Traitement des erreurs
+     */
+    echo $skin->open_simplebloc('','font-size: 1.2em; font-weight: bold; color: red;');
+    echo '<p>&nbsp;&nbsp;';
+    if(isset($_GET['num_error']) && is_numeric($_GET['num_error']))
+    {
+      if(defined('_FORUM_ERROR_'.$_GET['num_error']))
+        echo constant('_FORUM_ERROR_'.$_GET['num_error']);
+      else
+        echo _FORUM_ERROR_DEFAULT;
+    }
+    else
+      echo _FORUM_ERROR_DEFAULT;
+    echo '</p>';
+    echo $skin->close_simplebloc();
   default: // LIST CATEGORIES
     echo $skin->open_simplebloc();
     include './modules/forum/public_categ.inc.php';

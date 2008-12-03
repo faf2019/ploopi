@@ -27,7 +27,7 @@ Define ('_FORUM_OBJECT_MESSAGE',  3);
 
 define ('_FORUM_ACTION_ADMIN',              1); // Enable in role
 define ('_FORUM_ACTION_ADD_CAT',            2); // Not show in role
-define ('_FORUM_ACTION_ADD_SUBJECT',        3); //  "   
+define ('_FORUM_ACTION_ADD_SUBJECT',        3); //  "
 define ('_FORUM_ACTION_ADD_MESSAGE',        4); //  "
 define ('_FORUM_ACTION_MODIFY_CAT',         5); //  "
 define ('_FORUM_ACTION_MODIFY_SUBJECT',     6); //  "
@@ -44,29 +44,29 @@ define ('_FORUM_ACTION_DELETE_MESSAGE',    14); //  "
 function forum_record_isenabled($id_object, $id_record, $id_module)
 {
     global $db;
-    
+
     $enabled = false;
-    
+
     if(!isset($_SESSION['ploopi']['forum'][$id_module]['catvisible']))
     {
       $strForumSql = "SELECT id,visible
-                      FROM ploopi_mod_forum_cat 
+                      FROM ploopi_mod_forum_cat
                       WHERE ploopi_mod_forum_cat.id_module = {$id_module}";
       $objForumSqlResult = $db->query($strForumSql);
       while ($arrForumFields = $db->fetchrow($objForumSqlResult))
       {
         $_SESSION['ploopi']['forum'][$id_module]['catvisible'][$arrForumFields['id']] = $arrForumFields['visible'];
-      }      
+      }
     }
-    
+
     include_once './modules/forum/include/functions.php';
-    
+
     switch($id_object)
     {
         case _FORUM_OBJECT_CAT:
           if(forum_IsAdminOrModer($id_record,_FORUM_OBJECT_CAT,false,$id_module)) return(true);
-          
-          if (isset($_SESSION['ploopi']['forum'][$id_module]['catvisible'][$arrForumFields['id']])) 
+
+          if (isset($_SESSION['ploopi']['forum'][$id_module]['catvisible'][$arrForumFields['id']]))
             return($_SESSION['ploopi']['forum'][$id_module]['catvisible'][$arrForumFields['id']]);
 
           break;
@@ -81,11 +81,11 @@ function forum_record_isenabled($id_object, $id_record, $id_module)
           {
             //if user is a admin or moderator of this cat of forum
             if(forum_IsAdminOrModer($objForumMess->fields['id_cat'],_FORUM_OBJECT_CAT,false,$id_module)) return(true);
-            
-            // If this cat is visble 
+
+            // If this cat is visble
             if(isset($_SESSION['ploopi']['forum'][$id_module]['catvisible'][$objForumMess->fields['id_cat']])
                 && $_SESSION['ploopi']['forum'][$id_module]['catvisible'][$objForumMess->fields['id_cat']] == 1)
-              return($objForumMess->fields['validated']); // If mess/subject is validated  
+              return($objForumMess->fields['validated']); // If mess/subject is validated
           }
           break;
     }
