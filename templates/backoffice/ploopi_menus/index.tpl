@@ -196,15 +196,16 @@
 <div id="container_in">
 
     <div id="bandeau">
-        <img src="{TEMPLATE_PATH}/img/template/bandeau_gauche.png" style="position:absolute;top:0;right:297px;"/>
-        <img src="{TEMPLATE_PATH}/img/template/bandeau_droit.png" style="position:absolute;top:0;right:0px;" usemap="#map" border="0" />
-
         <map name="map">
         <area shape="rect" coords="5,15,102,45" alt="{MAINMENU_TICKETS}" href="{MAINMENU_SHOWTICKETS_URL}" />
         <area shape="rect" coords="6,54,121,79" alt="{MAINMENU_ANNOTATIONS}" href="{MAINMENU_SHOWANNOTATIONS_URL}" />
         <area shape="rect" coords="75,84,151,105" alt="{MAINMENU_PROFILE" href="{MAINMENU_SHOWPROFILE_URL}" />
         <area shape="rect" coords="205,80,292,99" alt="{MAINMENU_DISCONNECTION}" href="{USER_DECONNECT}" />
         </map>
+
+        <img src="{TEMPLATE_PATH}/img/template/bandeau_gauche.jpg" style="position:absolute;top:0;right:297px;"/>
+        <img src="{TEMPLATE_PATH}/img/template/bandeau_droit.jpg" style="position:absolute;top:0;right:0px;" usemap="#map" border="0" />
+
 
         <div id="menu_horizontal">
         <!-- BEGIN switch_blockmenu -->
