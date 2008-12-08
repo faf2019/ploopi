@@ -55,8 +55,8 @@ class skin_common
     public function skin_common($skin)
     {
         $this->values = array();
-        $this->values['path'] = "./templates/backoffice/{$skin}/img";
-        $this->values['inifile'] = "./templates/backoffice/{$skin}/skin.ini";
+        $this->values['path'] = "./templates/{$_SESSION['ploopi']['mode']}/{$skin}/img";
+        $this->values['inifile'] = "./templates/{$_SESSION['ploopi']['mode']}/{$skin}/skin.ini";
         if (file_exists($this->values['inifile'])) $this->values = array_merge($this->values,parse_ini_file($this->values['inifile']));
     }
 
@@ -768,12 +768,18 @@ class skin_common
                 // onclick sur le libellé
                 $onclick = (empty($node['onclick'])) ? '' : 'onclick="'.$node['onclick'].';"'; 
                 
+                // label supplémentaire
+                $status = (empty($node['status'])) ? '' : $node['status']; 
+                
                 // génération du code html du noeud courant
                 $html .=    "
                             <div class=\"treeview_node\" style=\"{$bg}\">
                                 <div>
                                     {$node_link}<img src=\"{$node['icon']}\" />
-                                    <a style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;font-weight:{$style_sel};\" href=\"{$link}\" {$onclick}>{$node['label']}</a>
+                                    <div style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;font-weight:{$style_sel};\">
+                                        <a href=\"{$link}\" {$onclick}>{$node['label']}</a>
+                                        {$status}
+                                    </div>
                                 </div>
                                 <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"n{$node['id']}\">{$html_children}</div>
                             </div>

@@ -251,15 +251,44 @@ function ploopi_timestamp_add($timestp, $h=0, $mn=0, $s=0, $m=0, $d=0, $y=0)
 {
     $timestp_array = ploopi_gettimestampdetail($timestp);
 
-    return  date(_PLOOPI_TIMESTAMPFORMAT_MYSQL,  mktime(    
-                                                    $timestp_array[_PLOOPI_DATE_HOUR]+$h,
-                                                    $timestp_array[_PLOOPI_DATE_MINUTE]+$mn,
-                                                    $timestp_array[_PLOOPI_DATE_SECOND]+$s,
-                                                    $timestp_array[_PLOOPI_DATE_MONTH]+$m,
-                                                    $timestp_array[_PLOOPI_DATE_DAY]+$d,
-                                                    $timestp_array[_PLOOPI_DATE_YEAR]+$y
-                                                )
-            );
+    return  
+        date(
+            _PLOOPI_TIMESTAMPFORMAT_MYSQL,  
+            mktime(    
+                $timestp_array[_PLOOPI_DATE_HOUR]+$h,
+                $timestp_array[_PLOOPI_DATE_MINUTE]+$mn,
+                $timestp_array[_PLOOPI_DATE_SECOND]+$s,
+                $timestp_array[_PLOOPI_DATE_MONTH]+$m,
+                $timestp_array[_PLOOPI_DATE_DAY]+$d,
+                $timestp_array[_PLOOPI_DATE_YEAR]+$y
+            )
+        );
+}
+
+/**
+ * Retourne un timestamp unix de la date du 1er jour d'une semaine
+ *
+ * @param int $intNumWeek Numéro de la semaine dans l'année
+ * @param int $intYear Année
+ * @return int timestamp unix de la date du premier jour de la semaine
+ */
+function ploopi_numweek2unixtimestamp($intNumWeek, $intYear)
+{
+    // On va chercher quand commence la semaine 1 de l'année en cours dans le but de connaître le 1er jour de n'importe quelle semaine de l'année
+    // 1. On se positionne qques jours avant la fin de l'année (la semaine 1 commence au plus tôt le 29/12 : cf ISO-8601)
+    $date_firstweek = mktime(0, 0, 0, 12, 29, $intYear - 1);
+    $d = -1;
+    do
+    {  
+        $d++;
+        $date_firstweek = mktime(0, 0, 0, 12, 29 + $d, $intYear - 1);
+        
+    } while (date('W', $date_firstweek) != 1); // Tant qu'on n'est pas sur la semaine 1
+    
+    // $date_firstweek contient le 1er jour de la semaine 1
+    
+    // 2. On ajoute ($intSelWeek-1)*7 jours pour se positionner sur le 1er jour de la semaine $intSelWeek
+    return(mktime(0, 0, 0, 12, 29 + $d + (($intNumWeek - 1) * 7), $intYear - 1));        
 }
 
 /**

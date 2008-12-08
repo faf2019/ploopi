@@ -118,7 +118,6 @@ class barchart
             );
 
         $this->setoptions($options);
-
     }
 
     /**
@@ -144,10 +143,6 @@ class barchart
 
         $this->nb_columns = max($this->nb_columns, sizeof($values));
         $this->value_max = max($this->value_max, max($values));
-
-
-
-
     }
 
     /**

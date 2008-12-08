@@ -641,12 +641,4 @@ function ploopi_array_map($func, $var)
  */
 
 function ploopi_h404() { header("HTTP/1.0 404 Not Found"); }
-
-
-
-function ploopi_workspace_sort($a,$b)
-{
-    return (intval($_SESSION['ploopi']['workspaces'][$b]['depth'])<intval($_SESSION['ploopi']['workspaces'][$a]['depth']));
-}
-
 ?>
