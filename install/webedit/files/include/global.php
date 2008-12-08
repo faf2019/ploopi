@@ -261,9 +261,8 @@ function webedit_gettreeview($headings = array(), $articles = array(), $option =
             {
                 if (isset($treeview['list']['h'.$prefix.$fields['id_heading']]))
                 {
-                    
-                    
-                    $fields['date_ok'] = (($fields['timestp_published'] <= $today || $fields['timestp_published'] == 0) && ($fields['timestp_unpublished'] >= $today || $fields['timestp_unpublished'] == 0));
+                    $status = ($fields['status'] == 'wait') ? '<sup style="margin-left:2px;color:#ff0000;font-weight:bold;">*</sup>' : '';
+                    $dateok = ($fields['date_ok']) ? '' : '<sup style="margin-left:2px;color:#ff0000;font-weight:bold;">~</sup>';
                     
                     switch($option)
                     {
@@ -288,6 +287,7 @@ function webedit_gettreeview($headings = array(), $articles = array(), $option =
                         array(
                             'id' => 'a'.$prefix.$fields['id'],
                             'label' => $fields['title'],
+                            'status' => $status.$dateok,
                             'description' => $fields['metadescription'],
                             'parents' => array_merge($treeview['list']['h'.$prefix.$fields['id_heading']]['parents'], array('h'.$prefix.$fields['id_heading'])),
                             'node_link' => '',
@@ -672,14 +672,14 @@ function webedit_getobjectcontent($matches)
 
         if (sizeof($id_object) == 2 || sizeof($id_object) == 3) // normal size !
         {
-            $module_id_cms = $id_object[1];
+            $object_moduleid = $id_object[1];
 
             $queryobj = "SELECT * FROM ploopi_mb_wce_object WHERE id={$id_object[0]}";
 
             $resobj = $db->query($queryobj);
             if($obj = $db->fetchrow($resobj))
             {
-                $obj['module_id'] = $module_id_cms;
+                $obj['module_id'] = $object_moduleid;
                 if (isset($id_object[2])) $obj['object_id'] = $id_object[2];
 
                 $tab = explode("&",trim($obj['script'],"?"));
@@ -687,8 +687,12 @@ function webedit_getobjectcontent($matches)
                 foreach ($tab as $key => $value) eval("$".$value.";");
 
                 ob_start();
-                include "./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php";
-                $content .= ob_get_contents();
+                if (file_exists("./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php"))
+                {
+                    include "./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php";
+                    $content .= ob_get_contents();
+                }
+                else $content = "Objet WCE non trouvé";
                 ob_end_clean();
             }
         }
@@ -727,5 +731,29 @@ function webedit_record_isenabled($id_object, $id_record, $id_module)
     }
 
     return($enabled);
+}
+
+function webedit_get_articleid()
+{
+    global $articleid;
+    return $articleid;
+}
+
+function webedit_get_headingid()
+{
+    global $headingid;
+    return $headingid;
+}
+
+function webedit_get_template_name()
+{
+    global $template_name;
+    return $template_name;
+}
+
+function webedit_get_url()
+{
+    global $article;
+    return $article->geturl();
 }
 ?>

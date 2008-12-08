@@ -53,6 +53,9 @@ include_once './modules/webedit/class_heading.php';
 global $template_body;
 global $template_path;
 global $webedit_mode;
+global $article;
+global $articleid;
+global $headingid;
 
 // Date du jour (utile pour vérifier les dates de publication)
 $today = ploopi_createtimestamp();
@@ -206,6 +209,10 @@ $template_body = new Template($template_path);
 $template_file = 'index.tpl';
 
 if (file_exists("{$template_path}/config.php")) include_once "{$template_path}/config.php";
+
+// Inclusion op modules en environnement frontoffice (permet par exemple de connaître le template frontoffice utilisé)
+$_SESSION['ploopi']['frontoffice']['template_path'] = $template_path;
+include_once './include/op.php';
 
 webedit_template_assign($headings, $array_nav, 0, '', 0);
 
@@ -708,7 +715,7 @@ else // affichage standard rubrique/page
             }
         }
             
-        if (!$intErrorCode)
+        if (!$intErrorCode || $webedit_mode == 'edit')
         {
             $template_body->assign_block_vars('switch_content_page', array());
     
