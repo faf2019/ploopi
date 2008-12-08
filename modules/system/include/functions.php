@@ -119,6 +119,7 @@ function system_getwg()
             $fields['groups'] = array();
             $groups['list'][$fields['id']] = $fields;
             $groups['tree'][$fields['id_group']][] = $fields['id'];
+            // Groupe attaché à un espace (existant)
             if (!empty($fields['id_workspace']) && isset($workspaces['list'][$fields['id_workspace']]))
             {
                 $groups['workspace_tree'][$fields['id_workspace']][] = $fields['id'];

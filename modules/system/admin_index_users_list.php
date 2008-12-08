@@ -99,7 +99,7 @@ else
             'url' => 'admin.php?alphaTabItem=99'
         );
 
-    echo $skin->create_tabs($tabs_char,$alphaTabItem);
+    echo $skin->create_tabs($tabs_char, $alphaTabItem);
     ?>
 </div>
 

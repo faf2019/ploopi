@@ -22,7 +22,7 @@
  */
 
 /**
- * Affichage des utilisateurs "rattachables" à l'espace de travail courant 
+ * Affichage des utilisateurs "rattachables" à l'espace de travail ou au groupe courant 
  *
  * @package system
  * @subpackage admin
@@ -46,7 +46,7 @@ switch ($_SESSION['system']['level'])
 {
     case _SYSTEM_GROUPS :
         // filtrage sur les groupes partagés
-        if (!empty($groups['list'][$groupid]['groups_shared'])) $arrWhere[] = '( gu.id_group IN ('.implode(',',array_keys($groups['list'][$groupid]['groups_shared'])).') OR isnull(gu.id_group))';
+        if (!empty($groups['list'][$groupid]['groups'])) $arrWhere[] = '( gu.id_group IN ('.implode(',',array_keys($groups['list'][$groupid]['groups'])).') OR isnull(gu.id_group))';
         else $arrWhere[] = 'gu.id_group = 0';
 
         $currentusers = $group->getusers();
@@ -93,15 +93,33 @@ else
     }
 }
 ?>
-<div style="padding: 4px;"><?
-$tabs_char = array();
+<div style="padding: 4px;">
+    <?
+    $tabs_char = array();
 
-for($i=1;$i<27;$i++) $tabs_char[$i] = array('title' => chr($i+64), 'url' => "admin.php?alphaTabItem={$i}");
-
-$tabs_char[99] = array('title' => "&nbsp;tous&nbsp;", 'url' => "admin.php?alphaTabItem=99");
-
-echo $skin->create_tabs($tabs_char,$alphaTabItem);
-?></div>
+    // Génération des onglets
+    for($i=1;$i<27;$i++) 
+        $tabs_char[$i] = 
+            array(
+                'title' => chr($i+64), 
+                'url' => "admin.php?alphaTabItem={$i}"
+            );
+    
+    $tabs_char[98] = 
+        array(
+            'title' => '#', 
+            'url' => 'admin.php?alphaTabItem=98'
+        );
+    
+    $tabs_char[99] = 
+        array(
+            'title' => '<em>tous</em>',
+            'url' => 'admin.php?alphaTabItem=99'
+        );
+    
+    echo $skin->create_tabs($tabs_char, $alphaTabItem);
+    ?>
+</div>
 
 <form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
 <p class="ploopi_va"
@@ -121,12 +139,15 @@ if ($alphaTabItem == 99) // tous ou recherche
     if ($pattern != '')
     {
         $pattern = $db->addslashes($pattern);
-        $strWhereName = " AND (u.lastname LIKE '%{$pattern}%' OR u.firstname LIKE '%{$pattern}%' OR u.login LIKE '%{$pattern}%')";
+        $strWhereName .=  " AND (u.lastname LIKE '%{$pattern}%' OR u.firstname LIKE '%{$pattern}%' OR u.login LIKE '%{$pattern}%') ";
     }
 }
 else
 {
-    $strWhereName = " AND u.lastname LIKE '".chr($alphaTabItem+96)."%'";
+    // 98 : # => non alpha
+    if ($alphaTabItem == 98) $strWhereName= " AND ASCII(LCASE(LEFT(u.lastname,1))) NOT BETWEEN 97 AND 122 ";
+    // alpha
+    else $strWhereName = " AND ASCII(LCASE(LEFT(u.lastname,1))) = ".($alphaTabItem+96).' ';
 }
 
 $select =   "
@@ -157,7 +178,7 @@ $columns['left']['name']    = array('label' => _SYSTEM_LABEL_LASTNAME.', '._SYST
 $columns['left']['login']       = array('label' => _SYSTEM_LABEL_LOGIN, 'width' => '85', 'options' => array('sort' => true));
 $columns['left']['origin']      = array('label' => _SYSTEM_LABEL_ORIGIN, 'width' => '100', 'options' => array('sort' => true));
 $columns['auto']['service']     = array('label' => _SYSTEM_LABEL_SERVICE, 'width' => '100', 'options' => array('sort' => true));
-$columns['actions_right']['actions'] = array('label' => 'Actions', 'width' => '70');
+$columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '24');
 
 $c = 0;
 
