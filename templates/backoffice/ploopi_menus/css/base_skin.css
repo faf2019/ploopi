@@ -607,3 +607,118 @@ div.ploopi_explorer_tools a {
     display:block;
     float:left;
 }
+
+input.ploopi_page_cut_select, input.ploopi_page_cut {
+  margin: 0 1px;
+  padding:0 2px;
+  border: 1px solid #193c1c;
+  background:#7a8f7c url(../img/template/bouton.png) top left repeat-x;
+  color: #000000;
+  text-align:center;
+  cursor: pointer;
+  font-weight: normal;
+  min-width: 22px;
+}
+
+input.ploopi_page_cut_select {
+  font-weight: bold;
+  font-style: italic;
+}
+
+input.ploopi_page_cut_disable {
+  margin: 0 1px;
+  padding:0 2px;
+  border: 1px solid #193c1c;
+  background:#7a8f7c url(../img/template/bouton.png) top left repeat-x;
+  color: #000000;
+  text-align:center;
+  font-weight: normal;
+  width: 18px;
+} 
+
+select.ploopi_page_by {
+  border: 1px solid #606060;
+  background: #f0f0f0;
+  color: #193c1c;
+}
+
+/**
+ * LISTE DE CHOIX
+ */
+
+.ploopi_selectbox {
+    text-align: left;
+}
+
+.ploopi_selectbox_button {
+    margin:0; 
+    background: #f0f0f0 url(../img/template/selectbox.gif) right no-repeat;
+    padding:2px 4px;
+    border: 1px solid #808080;
+    cursor:pointer;
+}
+
+.ploopi_selectbox_button_content {
+    margin:0;
+    padding:0;
+    margin-right:16px;
+    overflow:hidden;
+    white-space:nowrap;
+}
+
+.ploopi_selectbox_button img, 
+.ploopi_selectbox_button span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ploopi_selectbox:hover .ploopi_selectbox_button {
+    background-color: #d0d0d0;
+}
+
+
+.ploopi_selectbox_list {
+    margin-top: -1px;;
+    padding: 0;
+    background: #f0f0f0;
+    z-index: 10000; 
+    position: absolute; 
+}
+
+.ploopi_selectbox_list ul {
+    border-width: 1px; 
+    border-style: solid;
+    border-color: #808080;
+    margin:0;
+    padding:0;
+}
+
+.ploopi_selectbox_list li {
+    margin:0;
+    padding:0;
+    list-style-type: none;
+}
+
+.ploopi_selectbox_list li a {
+    display:block;
+    padding:2px 4px;
+    padding-left:10px;
+    cursor:pointer;
+}
+
+.ploopi_selectbox_list li a:hover {
+    background:#d0d0d0; /* Change background color of hovered links in drop down */
+    text-decoration:none;
+}
+
+.ploopi_selectbox_list li a img, 
+.ploopi_selectbox_list li a span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ploopi_selectbox_list li strong {
+    display:block;
+    padding:2px 4px;
+    margin:0;
+}

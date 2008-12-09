@@ -1,0 +1,149 @@
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+html input { overflow: visible; }
+
+#ploopi_popup {
+    height: 1%;
+    overflow:visible;
+}
+
+.pagetitle {
+    height: 1%;
+    overflow: visible;
+}
+
+div.simplebloc {
+    height: 1%;
+    overflow: visible;
+}
+
+div.simplebloc_title {
+    overflow: visible;
+}
+
+.simplebloc_content {
+    height: 1%;
+    overflow: visible;
+}
+
+
+.ploopi_form p label {
+    padding: .2em .2em 0 0;
+}
+
+.ploopi_form input,
+.ploopi_form textarea,
+.ploopi_form span
+{
+    width: 65%;
+}
+
+.ploopi_form select
+{
+    width: 45%;
+}
+
+.ploopi_form textarea{
+    height: 6em;
+}
+
+.ploopi_form p {
+    height: 1%;
+    overflow: visible;
+}
+
+.toolbar {
+    height: 1%;
+    overflow: visible;
+}
+
+.toolbar_icon_vertical a {
+filter:alpha(opacity=80);
+height: 1%;
+overflow: visible;
+}
+
+.toolbar_icon_vertical a:hover {
+filter:alpha(opacity=100);
+height: 1%;
+overflow: visible;
+}
+
+.toolbar_icon a {
+filter:alpha(opacity=80);
+}
+
+.toolbar_icon a:hover {
+filter:alpha(opacity=100);
+}
+
+.ploopi_overflowauto {
+overflow:visible;
+height:1%;
+}
+
+p.ploopi_va img, p.ploopi_va span, p.ploopi_va input, p.ploopi_va select {
+display: inline-block;
+}
+
+div.ploopi_explorer_main {
+    overflow:visible;
+}
+
+div.ploopi_explorer_title {
+    overflow:visible;
+    height:1%;
+}
+
+a.ploopi_explorer_link {
+    overflow:visible;
+    height:1%;
+}
+
+a.ploopi_explorer_link p, a.ploopi_explorer_link span, a.ploopi_explorer_link img {
+    cursor:pointer;
+}
+
+div.ploopi_explorer_line_1 {
+    overflow:visible;
+    height:1%;
+}
+
+div.ploopi_explorer_line_2 {
+    overflow:visible;
+    height:1%;
+}
+
+div.ploopi_explorer_line_2 {
+    overflow:visible;
+    height:1%;
+}
+
+div.ploopi_page_cut {
+    display: inline-block;
+}
+
+input.ploopi_page_cut_select, input.ploopi_page_cut {
+  width: 22px;
+}

@@ -47,6 +47,10 @@ margin-top: 0px;
 margin-bottom: 0px;
 }
 
+img {
+border:0;
+}
+
 table {
 padding:0px;
 margin:2px;
@@ -89,7 +93,7 @@ cursor:pointer;
 
 #entete {
 margin: 20px auto 0 auto;
-width: 778px;
+width: 978px;
 overflow:auto;
 color: #3d678b;
 text-align:right;
