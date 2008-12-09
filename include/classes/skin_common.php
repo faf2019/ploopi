@@ -946,5 +946,118 @@ class skin_common
       
       return $html;
     }
+    
+    
+    /**
+     * Affichage d'une liste de choix paramétrable
+     *
+     * @param string $id identifiant du champ de formulaire
+     * @param string $name nom du champ de formulaire
+     * @param array $arrValues tableau des valeurs de la liste
+     * @param array $arrUserOptions options d'affichage
+     * @param string $selecteditem clé de l'élément sélectionné
+     * @return string code html de la liste
+     */
+    
+    public function display_selectbox($id, $name, $arrValues, $arrUserOptions = null, $selecteditem = null)
+    {
+        // Options par défaut
+        $arrOptions = 
+            array(
+                'input_width' => null,
+                'menu_width' => null,
+                'onchange' => null
+            );
+            
+        // Merge avec les options utilisateur
+        $arrOptions = array_merge($arrOptions, $arrUserOptions);
+            
+        // Démarrage bufferisation
+        ob_start();
+        ?>
+        <input type="hidden" name="<? echo $name; ?>" id="<? echo $id; ?>" value="<? if (!empty($selecteditem)) echo htmlentities($selecteditem); ?>" <? if (!empty($arrOptions['onchange'])) echo 'onchange="javascript:'.$arrOptions['onchange'].'";'; ?>/>
+        
+        <div class="ploopi_selectbox" style="display:inline-block;<? if (!empty($arrOptions['input_width'])) echo "width:{$arrOptions['input_width']};"; ?>">
+            <div class="ploopi_selectbox_button" id="ploopi_selectbox_button<? echo $id; ?>" onclick="javascript:$('ploopi_selectbox_list<? echo $id; ?>').style.display='block';">
+                <div class="ploopi_selectbox_button_content" id="ploopi_selectbox_button_content<? echo $id; ?>" >
+                    <?
+                    if (!empty($arrValues[$selecteditem]))
+                    {
+                        $menu = $arrValues[$selecteditem];
+                        
+                        if (!empty($menu['icon'])) 
+                        {
+                            ?>
+                            <img src="<? echo $menu['icon']; ?>">
+                            <?
+                        } 
+                        ?>
+                        <span><? echo $menu['label']; ?></span>
+                        <?
+                    }
+                    ?>
+                </div>
+            </div>
+            
+            <div id="ploopi_selectbox_list<? echo $id; ?>" class="ploopi_selectbox_list" style="display:none;<? if (!empty($arrOptions['menu_width'])) echo "width:{$arrOptions['menu_width']};"; ?>" onclick="$('ploopi_selectbox_list<? echo $id; ?>').style.display='none';" onmouseout="$('ploopi_selectbox_list<? echo $id; ?>').style.display='none';">
+                <ul onmouseover="$('ploopi_selectbox_list<? echo $id; ?>').style.display='block';">
+                    <?
+                    foreach($arrValues as $key => $menu)
+                    {
+                        switch($menu['type'])
+                        {
+                            case 'group':
+                                ?>
+                                <li style="font-weight:bold;padding:2px 4px;"><? echo $menu['label']; ?></li>
+                                <?
+                            break;
+                            
+                            case 'select':
+                                ?>
+                                <li>
+                                    <a href="javascript:void(0);" <? if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> onclick="javascript:$('ploopi_selectbox_button_content<? echo $id; ?>').innerHTML = this.innerHTML; $('<? echo $id; ?>').value = '<? echo addslashes($key); ?>'; ploopi_dispatch_onchange('<? echo $id; ?>');" title="Accéder à <? echo htmlentities($menu['label']); ?>">
+                                        <? 
+                                        if (!empty($menu['icon'])) 
+                                        {
+                                            ?>
+                                            <img src="<? echo $menu['icon']; ?>">
+                                            <?
+                                        } 
+                                        ?>
+                                        <span><? echo $menu['label']; ?></span>
+                                    </a>
+                                </li>
+                                <?
+                            break;
+                            
+                            case 'link':
+                                ?>
+                                <li>
+                                    <a href="<? echo $menu['link']; ?>" <? if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> <? if (!empty($menu['target'])) echo 'target="'.$menu['target'].'"'; ?> title="Accéder à <? echo htmlentities($menu['label']); ?>">
+                                        <? 
+                                        if (!empty($menu['icon'])) 
+                                        {
+                                            ?>
+                                            <img src="<? echo $menu['icon']; ?>">
+                                            <?
+                                        } 
+                                        ?>
+                                        <span><? echo $menu['label']; ?></span>
+                                    </a>
+                                </li>
+                                <?
+                            break;
+                        }
+                    }
+                    ?>
+                </ul>
+            </div>
+        </div>
+        <?
+        $strContent = ob_get_contents();
+        ob_end_clean();
+        
+        return $strContent;
+    }    
 }
 ?>

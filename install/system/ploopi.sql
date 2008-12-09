@@ -905,3 +905,19 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+INSERT INTO `ploopi_param_type` (`id_module_type`, `name`, `default_value`, `public`, `description`, `label`) 
+VALUES (1, 'system_set_cache', '0', 0, '', 'Activer le Cache');
+INSERT INTO `ploopi_param_choice` (`id_module_type`, `name`, `value`, `displayed_value`) VALUES
+(1, 'system_set_cache', '0', 'non'),
+(1, 'system_set_cache', '1', 'oui');
+INSERT INTO `ploopi_param_default` (`id_module`, `name`, `value`, `id_module_type`) VALUES 
+(1, 'system_set_cache', '0', 1);
+
+ALTER TABLE `ploopi_group_user` ADD INDEX ( `id_user` );
+ALTER TABLE `ploopi_workspace_group` ADD INDEX ( `id_workspace` );
+ALTER TABLE `ploopi_workspace_user_role` ADD INDEX ( `id_workspace` );
+ALTER TABLE `ploopi_workspace_user_role` ADD INDEX ( `id_role` );
+ALTER TABLE `ploopi_workspace_group_role` ADD INDEX ( `id_workspace` );
+ALTER TABLE `ploopi_workspace_group_role` ADD INDEX ( `id_role` );
+
+UPDATE `ploopi_module_type` SET `version` = '1.2.2', `author` = 'Ovensia', `date` = '20081210000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;

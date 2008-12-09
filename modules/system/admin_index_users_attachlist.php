@@ -46,7 +46,7 @@ switch ($_SESSION['system']['level'])
 {
     case _SYSTEM_GROUPS :
         // filtrage sur les groupes partagés
-        if (!empty($groups['list'][$groupid]['groups'])) $arrWhere[] = '( gu.id_group IN ('.implode(',',array_keys($groups['list'][$groupid]['groups'])).') OR isnull(gu.id_group))';
+        if (!empty($groups['list'][$groupid]['groups'])) $arrWhere[] = '( gu.id_group IN ('.implode(',',array_keys($groups['list'][$groupid]['groups'])).'))';
         else $arrWhere[] = 'gu.id_group = 0';
 
         $currentusers = $group->getusers();
@@ -73,23 +73,37 @@ else
 
     if ($alphaTabItem == -1)
     {
+        $db->query("
+            SELECT      count(distinct(u.id)) as nbuser
 
-        $select =   "
-                    SELECT      count(u.id) as nbuser
+            FROM        ploopi_user u,
+                        ploopi_group_user gu
 
-                    FROM        ploopi_user u
+            WHERE       gu.id_user = u.id
+            AND         ".implode(' AND ', $arrWhere)."
+        ");
 
-                    LEFT JOIN   ploopi_group_user gu
-                    ON          gu.id_user = u.id
-
-                    WHERE       (".implode(' AND ', $arrWhere).")
-                    
-                    OR          ISNULL(gu.id_group)
-                    ";
-
-        $db->query($select);
         $fields = $db->fetchrow();
-        if ($fields['nbuser'] < 25) $alphaTabItem = 99;
+        
+        $c = $fields['nbuser'];
+        
+        if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
+        {
+            // Utilisateurs non rattachés
+            $db->query("
+                SELECT      count(distinct(u.id)) as nbuser
+    
+                FROM        ploopi_user u
+                
+                WHERE       u.id NOT IN (SELECT distinct(id_user) FROM ploopi_group_user gu)
+            ");
+            
+            $fields = $db->fetchrow();
+            
+            $c += $fields['nbuser'];
+        }
+        
+        if ($c < 25) $alphaTabItem = 99;
     }
 }
 ?>
@@ -122,18 +136,18 @@ else
 </div>
 
 <form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
-<p class="ploopi_va"
-	style="padding: 4px; border-bottom: 2px solid #c0c0c0;"><span><? echo _SYSTEM_LABEL_USER; ?>
-:</span> <input class="text" ID="system_user" name="pattern" type="text"
-	size="15" maxlength="255" value="<? echo htmlentities($pattern); ?>"> <input
-	type="submit" value="<? echo _PLOOPI_FILTER; ?>" class="button"> <input
-	type="submit" name="reset" value="<? echo _PLOOPI_RESET; ?>"
-	class="button"></p>
+    <p class="ploopi_va" style="padding: 4px; border-bottom: 2px solid #c0c0c0;">
+        <span><? echo _SYSTEM_LABEL_USER; ?>:</span> 
+        <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<? echo htmlentities($pattern); ?>"> 
+        <input type="submit" value="<? echo _PLOOPI_FILTER; ?>" class="button"> 
+        <input type="submit" name="reset" value="<? echo _PLOOPI_RESET; ?>" class="button">
+    </p>
 </form>
 
 <?
 $strWhereName = '';
 
+// Filtrage par lettre + nom
 if ($alphaTabItem == 99) // tous ou recherche
 {
     if ($pattern != '')
@@ -150,26 +164,49 @@ else
     else $strWhereName = " AND ASCII(LCASE(LEFT(u.lastname,1))) = ".($alphaTabItem+96).' ';
 }
 
-$select =   "
-            SELECT      u.id,
-                        u.lastname,
-                        u.firstname,
-                        u.login,
-                        u.service
+$db->query("
+    SELECT      u.id,
+                u.lastname,
+                u.firstname,
+                u.login,
+                u.service
+                
+    FROM        ploopi_user u,
+                ploopi_group_user gu
 
-            FROM        ploopi_user u
+    WHERE      gu.id_user = u.id
+    AND        ".implode(' AND ', $arrWhere)."
 
-            LEFT JOIN   ploopi_group_user gu
-            ON          gu.id_user = u.id
+    {$strWhereName}
 
-            WHERE       ((".implode(' AND ', $arrWhere).")
-            
-            OR          ISNULL(gu.id_group))
-            
-            {$strWhereName}
-
-            GROUP BY    u.id
-            ";
+    GROUP BY    u.id
+");
+    
+$arrUsers = $db->getarray();
+    
+if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
+{
+    $db->query('reset query cache');
+    
+    // Utilisateurs non rattachés
+    $db->query("
+        SELECT      u.id,
+                    u.lastname,
+                    u.firstname,
+                    u.login,
+                    u.service
+                    
+        FROM        ploopi_user u
+    
+        WHERE       u.id NOT IN (SELECT distinct(id_user) FROM ploopi_group_user gu)
+    
+        {$strWhereName}
+    
+        GROUP BY    u.id
+    ");
+        
+    $arrUsers = array_merge($arrUsers, $db->getarray());
+}
 
 $columns = array();
 $values = array();
@@ -182,10 +219,9 @@ $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '24
 
 $c = 0;
 
-$result = $db->query($select);
 $user = new user();
 
-while ($fields = $db->fetchrow($result))
+foreach($arrUsers as $fields)
 {
     $user->fields['id'] = $fields['id'];
     $groups = $user->getgroups();
@@ -213,23 +249,17 @@ $skin->display_array($columns, $values, 'array_userlist', array('sortable' => tr
 if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 {
     ?>
-<p class="ploopi_va" style="padding: 4px;"><span
-	style="margin-right: 5px;">Légende:</span> <img
-	src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
-<span style="margin-right: 5px;"><? echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
-<img
-	src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />
-<span style="margin-right: 5px;"><? echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
-<img
-	src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupadmin.png" />
-<span style="margin-right: 5px;"><? echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
-<img
-	src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_systemadmin.png" />
-<span style="margin-right: 5px;"><? echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
-</p>
+    <p class="ploopi_va" style="padding: 4px;">
+        <span style="margin-right: 5px;">Légende:</span> 
+        <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
+        <span style="margin-right: 5px;"><? echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
+        <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />
+        <span style="margin-right: 5px;"><? echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
+        <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupadmin.png" />
+        <span style="margin-right: 5px;"><? echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
+        <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_systemadmin.png" />
+        <span style="margin-right: 5px;"><? echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
+    </p>
     <?
 }
 ?>
-
-
-
