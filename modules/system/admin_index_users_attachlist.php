@@ -186,8 +186,6 @@ $arrUsers = $db->getarray();
     
 if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
 {
-    $db->query('reset query cache');
-    
     // Utilisateurs non rattachés
     $db->query("
         SELECT      u.id,
