@@ -135,7 +135,7 @@ class odf_varparser
         $tag = &$this->xmltags[sizeof($this->xmltags)-1];
 
         // remplacement des variables template
-        $data = str_replace(array_keys($this->vars), array_values($this->vars), $data);
+        $data = str_replace(array_keys($this->vars), array_values($this->vars), ploopi_xmlentities($data, true));
         
         // traitement des \n \r
         $data = preg_replace("/\r\n|\n|\r/", "</{$tag[0]}><{$tag[0]} {$tag[1]}>", $data);
@@ -495,7 +495,7 @@ class odf_parser
 
             // le contenu XML sans les blocks (mais avec des nouvelles variables à la place)
             $this->content_xml = $blockparser->get_xml();
-
+            
             // traitement des blocks
             reset($this->blocktemplates);
             foreach($this->blocktemplates as $blockname => $tpl)

@@ -146,17 +146,62 @@ function ploopi_urlrewrite($url, $title = '', $keep_extension = false)
 
 
 /**
+ * Equivalent de strtr en version multibyte (UTF-8) car la version "mbstring" de strtr n'existe pas.
+ * Remplace des caractères dans une chaîne.
+ * 
+ * @param string $str la chaîne à traiter
+ * @param string $from caractères de départ
+ * @param string $to caractères de remplacement
+ * @return string chaîne modifiée
+ * 
+ * @see strtr
+ */
+
+function ploopi_strtr($str, $from, $to)
+{
+    return str_replace(ploopi_str_split($from), ploopi_str_split($to), $str);
+}
+
+/**
+ * Equivalent de str_split en version multibyte (UTF-8) car la version "mbstring" de str_split n'existe pas.
+ * Convertit une chaîne de caractères en tableau.
+ *
+ * @param string $str la chaîne Ã  convertir
+ * @return array tableau de caractères
+ * 
+ * @see strtr
+ */
+
+function ploopi_str_split($str)
+{
+    $strlen = mb_strlen($str);
+    
+    while ($strlen) 
+    {
+        $array[] = mb_substr($str, 0, 1, 'UTF-8');
+        $str = mb_substr($str, 1, $strlen, 'UTF-8');
+        $strlen = mb_strlen($str);
+    }
+    
+    return $array;
+}
+
+
+/**
  * Encode les caractères spéciaux d'une chaîne pour qu'elle puisse être intégrée dans un document XML
  *
  * @param string $str chaîne brute
+ * @param boolean $utf8 true si la chaîne à encoder est en UTF-8
  * @return string chaîne encodée
  */
- 
-function ploopi_xmlentities($str) 
+
+function ploopi_xmlentities($str, $utf8 = false) 
 { 
     for($i=128; $i<256; $i++) $asc2uni[chr($i)] = "&#x".dechex($i).";"; 
+    
     $str = str_replace(array("&", ">", "<", "\"", "'", "\r"), array("&amp;", "&gt;", "&lt;", "&quot;", "&apos;", ""), $str);
-    return strtr($str, $asc2uni);
+    
+    return $utf8 ? ploopi_strtr($str, $asc2uni) : strtr($str, $asc2uni);
 }
 
 /**
