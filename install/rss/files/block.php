@@ -24,7 +24,7 @@
 
 /**
  * Affichage du bloc de menu
- * 
+ *
  * @package rss
  * @subpackage block
  * @copyright Netlor, Ovensia, HeXad
@@ -41,10 +41,11 @@ ploopi_init_module('rss', false, false, false);
 include_once './modules/rss/class_rss_pref.php';
 
 $wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
-   
-$title = '';
 
-$block_rssfeed_cat_filter_id = empty($_GET['block_rssfeed_filter_id']) ? 0 : $_GET['block_rssfeed_filter_id'];
+$title = '';
+$booRssFindAff = false;
+
+$block_rssfeed_cat_filter_id = empty($_POST['block_rssfeed_filter_id']) ? 0 : $_POST['block_rssfeed_filter_id'];
 
 if ($block_rssfeed_cat_filter_id != '0')
 {
@@ -80,7 +81,7 @@ $rssfeed_select =   "
                     ";
 
 $rssfeed_result = $db->query($rssfeed_select);
-
+if($block_rssfeed_cat_filter_id == -1) $booRssFindAff = true;
 $sel = ($block_rssfeed_cat_filter_id == -1) ? 'selected' : '';
 $strFeedsCatFiltersOptions = "<option $sel value=\"-1\">"._PLOOPI_ALL.'</option>';
 
@@ -126,6 +127,7 @@ while($rsscat_row = $db->fetchrow($rsscat_result))
      $rsspref->save();
    }
    $sel = ($block_rssfeed_cat_filter_id == $rsscat_row['id']) ? 'selected' : '';
+   if($block_rssfeed_cat_filter_id == $rsscat_row['id']) $booRssFindAff = true;
 
    $strFeedsCatFiltersOptions .= "<option $sel value=\"{$rsscat_row['id']}\">(C) {$rsscat_row['title']}</option>";
 }
@@ -156,10 +158,12 @@ while($rssfilter_row = $db->fetchrow($rssfilter_result))
      $rsspref->save();
    }
    $sel = ($block_rssfeed_cat_filter_id == $rssfilter_row['id']) ? 'selected' : '';
+   if($block_rssfeed_cat_filter_id == $rssfilter_row['id']) $booRssFindAff = true;
 
    $strFeedsCatFiltersOptions .= "<option $sel value=\"{$rssfilter_row['id']}\">(F) {$rssfilter_row['title']}</option>";
 }
 
+if(!$booRssFindAff) $block_rssfeed_cat_filter_id = -1;
 
 // Affichage des flux
 include_once './modules/rss/class_rss_feed.php';
@@ -167,7 +171,7 @@ include_once './modules/rss/class_rss_feed.php';
 if (substr($block_rssfeed_cat_filter_id,0,1) == 'C') // Categorie
 {
    include_once './modules/rss/class_rss_cat.php';
-   
+
    $objRssCat = new rss_cat();
    if($objRssCat->open(substr($block_rssfeed_cat_filter_id,1)))
    {
@@ -180,7 +184,7 @@ if (substr($block_rssfeed_cat_filter_id,0,1) == 'C') // Categorie
                AND      feed.id_cat = {$objRssCat->fields['id']}
                AND      feed.id_workspace IN ({$wk})
             ORDER BY    entry.published DESC";
-            
+
      if($objRssCat->fields['limit']>0)
        $sql .= " LIMIT 0,{$objRssCat->fields['limit']}";
      else
@@ -190,8 +194,8 @@ if (substr($block_rssfeed_cat_filter_id,0,1) == 'C') // Categorie
      while($rssentry_row = $db->fetchrow($rssentry_result))
      {
         $ld = (!empty($rssentry_row['published']) && is_numeric($rssentry_row['published'])) ? ploopi_unixtimestamp2local($rssentry_row['published']) : '';
-     
-        $block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.$ld, $rssentry_row['link'], '', '_blank');        
+
+        $block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.$ld, $rssentry_row['link'], '', '_blank');
      }
      unset($objRssCat);
    }
@@ -199,22 +203,27 @@ if (substr($block_rssfeed_cat_filter_id,0,1) == 'C') // Categorie
 elseif (substr($block_rssfeed_cat_filter_id,0,1) == 'F') // Filtre
 {
    include_once './modules/rss/class_rss_filter.php';
-            
+
    $objRssFilter = new rss_filter();
 
-   $objRssFilter->open(substr($block_rssfeed_cat_filter_id,1));
-   $objRssFilter->updateFeedByFilter();
-              
-   $sql = $objRssFilter->makeRequest();
-   if($sql != '')
+   $resultOpen = $objRssFilter->open(substr($block_rssfeed_cat_filter_id,1));
+   if($resultOpen)
    {
-     $rssentry_result = $db->query($sql);
-     while($rssentry_row = $db->fetchrow($rssentry_result))
+     $objRssFilter->updateFeedByFilter();
+
+     $sql = $objRssFilter->makeRequest();
+     if($sql != '')
      {
-        $ld = (!empty($rssentry_row['published']) && is_numeric($rssentry_row['published'])) ? ploopi_unixtimestamp2local($rssentry_row['published']) : '';
-           $block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.$ld, $rssentry_row['link'], '', '_blank');        
+       $rssentry_result = $db->query($sql);
+       while($rssentry_row = $db->fetchrow($rssentry_result))
+       {
+          $ld = (!empty($rssentry_row['published']) && is_numeric($rssentry_row['published'])) ? ploopi_unixtimestamp2local($rssentry_row['published']) : '';
+             $block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.$ld, $rssentry_row['link'], '', '_blank');
+       }
      }
    }
+   else
+    $block_rssfeed_cat_filter_id = '-1';
    unset($objRssFilter);
 }
 elseif (intval($block_rssfeed_cat_filter_id) > 0)  // Un flux
@@ -223,7 +232,7 @@ elseif (intval($block_rssfeed_cat_filter_id) > 0)  // Un flux
     $rss_feed->open($block_rssfeed_cat_filter_id);
 
     if (!$rss_feed->isuptodate()) $rss_feed->updatecache();
-    
+
     $block->addmenu("<b>{$rss_feed->fields['title']}</b>".(!empty($rss_feed->fields['subtitle']) ? '<br /><i>'.strip_tags($rss_feed->fields['subtitle'], '<b><i>').'</i>' : ''), $rss_feed->fields['link'], '', '_blank');
 
     $sql =  "
@@ -236,20 +245,20 @@ elseif (intval($block_rssfeed_cat_filter_id) > 0)  // Un flux
        $sql .= " LIMIT 0,{$rss_feed->fields['limit']}";
     else
        $sql .= " LIMIT 0,{$_SESSION['ploopi']['modules'][$menu_moduleid]['nbitemdisplay']}";
-       
+
     $rssentry_result = $db->query($sql);
     while($rssentry_row = $db->fetchrow($rssentry_result))
     {
         $ld = (!empty($rssentry_row['published']) && is_numeric($rssentry_row['published'])) ? ploopi_unixtimestamp2local($rssentry_row['published']) : '';
 
-        $block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.$ld, $rssentry_row['link'], '', '_blank');        
+        $block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.$ld, $rssentry_row['link'], '', '_blank');
     }
 }
 elseif (intval($block_rssfeed_cat_filter_id) <= 0)  // Tout
 {
-    
+
     $rssfeed_result = $db->query($rssfeed_select);
-    
+
     while ($rssfeed_fields = $db->fetchrow($rssfeed_result))
     {
         $rss_feed = new rss_feed();
@@ -258,36 +267,36 @@ elseif (intval($block_rssfeed_cat_filter_id) <= 0)  // Tout
             if (!$rss_feed->isuptodate()) $rss_feed->updatecache();
 
             $block->addmenu("<b>{$rss_feed->fields['title']}</b>".(!empty($rss_feed->fields['subtitle']) ? '<br /><i>'.strip_tags($rss_feed->fields['subtitle'], '<b><i>').'</i>' : ''), $rss_feed->fields['link'], '', '_blank');
-        
+
             $rssentry_select =  "
                                 SELECT      ploopi_mod_rss_entry.*
                                 FROM        ploopi_mod_rss_entry
                                 WHERE       ploopi_mod_rss_entry.id_feed = {$rss_feed->fields['id']}
                                 ORDER BY    published DESC, timestp DESC, id";
-                                
+
             if($rss_feed->fields['limit']>0)
               $rssentry_select .= " LIMIT 0,{$rss_feed->fields['limit']}";
             else
               $rssentry_select .= " LIMIT 0,{$_SESSION['ploopi']['modules'][$menu_moduleid]['nbitemdisplay']}";
-              
+
             $rssentry_result = $db->query($rssentry_select);
-        
+
             while($rssentry_row = $db->fetchrow($rssentry_result))
             {
                 $ld = (!empty($rssentry_row['published']) && is_numeric($rssentry_row['published'])) ? ploopi_unixtimestamp2local($rssentry_row['published']) : '';
-        
-                $block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.$ld, $rssentry_row['link'], '', '_blank');        
+
+                $block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.$ld, $rssentry_row['link'], '', '_blank');
             }
         }
         unset($rss_feed);
-    }  
+    }
 }
 
 if ($strFeedsCatFiltersOptions != '')
 {
     $content =  "
                 <div style=\"padding:2px;\">
-                    <form name=\"bloc_rss_switch\">
+                    <form name=\"bloc_rss_switch\" action=".ploopi_urlencode('admin.php')." method=\"POST\">
                     <select name=\"block_rssfeed_filter_id\" class=\"select\" style=\"width:95%;\" OnChange=\"javascript:bloc_rss_switch.submit()\">{$strFeedsCatFiltersOptions}</select>
                     </form>
                     <div style=\"font-weight:bold;padding:2px 0px;\">{$title}</div>

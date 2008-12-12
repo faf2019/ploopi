@@ -1,3 +1,10 @@
+== Module RSS - version 2.0.2 ====================================================
+
+2008-12-12   Xavier Toussaint ~ Hexad <xavier@hexad.fr>
+
+ * Correction d'un bug en base de données (Pas de problème avec une nouvelle installation mais bug en MAJ : coquille dans le nom d'un champ)
+ * Correction d'un bug d'affichage lorsque le flux selectionné en affcihage en admin était supprimé.
+
 == Module RSS - version 2.0.1 ====================================================
 
 2008-10-08   Xavier Toussaint ~ Hexad <xavier@hexad.fr>
@@ -17,15 +24,15 @@
 
  * Suppression de l'attribut défaut des flux
  * Ajout en administration, de la colonne Tag pour template dans les listes de flux et catégories
- * Ajout en consultation avancée, dans la bulle de survol, des tags pour template (si existe) dans la liste des catégories et des filtres  
-  
+ * Ajout en consultation avancée, dans la bulle de survol, des tags pour template (si existe) dans la liste des catégories et des filtres
+
 == Module RSS (béta)- version 1.29b.2 ====================================================
 
 2008-09-07   Xavier Toussaint ~ Hexad <xavier@hexad.fr>
 
  * Ajout de la limite "par défaut" du module lorsque qu'aucune limite n'est indiquée dans  flux/catégorie/filtre
  * Correction d'un tag template dans l'affichage de filtres
-  
+
 == Module RSS (béta)- version 1.29b.1 ====================================================
 
 2008-09-06   Xavier Toussaint ~ Hexad <xavier@hexad.fr>
@@ -38,7 +45,7 @@
 2008-09-06   Xavier Toussaint ~ Hexad <xavier@hexad.fr>
 
  * Système de filtrage pour cibler les messages des flux à afficher
- 
+
  * Refonte du système objet webedit de flux rss/atom
  * Ajout d'objet de type rss -> catégorie
  * Ajout d'objet de type rss -> filtre
@@ -59,7 +66,7 @@
  * Modifications sur la structure SQL
  * Mise à jour de la Métabase
  * ...
- 
+
 == Module RSS - version 1.26 ====================================================
 
 2008-07-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
@@ -83,7 +90,7 @@
 2008-05-16  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Mise à jour des commentaires, nettoyage
-  
+
 == Module RSS - version 1.21 ====================================================
 
 2008-04-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
