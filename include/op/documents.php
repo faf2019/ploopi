@@ -377,11 +377,11 @@ switch($ploopi_op)
                 ?>
                 <p>
                     <label>Libellé:</label>
-                    <input class="text" name="documentsfile_label" value="<? echo htmlentities($documentsfile->fields['label']); ?>" tabindex="3">
+                    <input class="text" name="documentsfile_label" value="<? echo htmlentities($documentsfile->fields['label']); ?>" tabindex="3" style="width:250px;">
                 </p>
                 <p>
                     <label>Référence:</label>
-                    <input class="text" name="documentsfile_ref" value="<? echo htmlentities($documentsfile->fields['ref']); ?>" tabindex="4">
+                    <input class="text" name="documentsfile_ref" value="<? echo htmlentities($documentsfile->fields['ref']); ?>" tabindex="4" style="width:250px;">
                 </p>
                 <p>
                     <label>Date:</label>
