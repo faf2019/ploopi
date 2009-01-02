@@ -71,7 +71,7 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
     
     if (!isset($arrParsedURL['path'])) return(false);
     
-    return $arrParsedURL['path'].'?'.ploopi_queryencode(empty($arrParsedURL['query']) ? '' : $arrParsedURL['query'], $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action, $addenv);
+    return (empty($arrParsedURL['scheme']) ? '' : "{$arrParsedURL['scheme']}://").(empty($arrParsedURL['host']) ? '' : $arrParsedURL['host']).(empty($arrParsedURL['port']) ? '' : ":{$arrParsedURL['port']}")."{$arrParsedURL['path']}?".ploopi_queryencode(empty($arrParsedURL['query']) ? '' : $arrParsedURL['query'], $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action, $addenv);
 }
 
 

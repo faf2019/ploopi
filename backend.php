@@ -41,7 +41,7 @@ if (isset($_REQUEST['ploopi_moduleid']))
 {
     $ploopi_moduleid = $_REQUEST['ploopi_moduleid'];
 
-    if ($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'][$ploopi_moduleid])
+    if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'][$ploopi_moduleid]))
     {
         /*
         include_once './include/classes/module.php';

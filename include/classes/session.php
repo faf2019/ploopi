@@ -72,7 +72,8 @@ class ploopi_session
     public function write($id, $data)
     {
         global $db;
-        return $db->query("REPLACE INTO `ploopi_session` VALUES ('".$db->addslashes($id)."', '".$db->addslashes(time())."', '".$db->addslashes(gzcompress($data))."')");
+        $db->query("REPLACE INTO `ploopi_session` VALUES ('".$db->addslashes($id)."', '".$db->addslashes(time())."', '".$db->addslashes(gzcompress($data))."')");
+        return true;
     }
 
 
@@ -86,7 +87,8 @@ class ploopi_session
     public function destroy($id)
     {
         global $db;
-        return $db->query("DELETE FROM `ploopi_session` WHERE `id` = '".$db->addslashes($id)."'");
+        $db->query("DELETE FROM `ploopi_session` WHERE `id` = '".$db->addslashes($id)."'");
+        return true;
     }
 
     /**
@@ -99,7 +101,8 @@ class ploopi_session
     public function gc($max)
     {
         global $db;
-        return $db->query("DELETE FROM `ploopi_session` WHERE `access` < '".$db->addslashes((time() - $max))."'");
+        $db->query("DELETE FROM `ploopi_session` WHERE `access` < '".$db->addslashes((time() - $max))."'");
+        return true;
     }
     
     

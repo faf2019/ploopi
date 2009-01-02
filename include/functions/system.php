@@ -304,8 +304,8 @@ function ploopi_redirect($url, $urlencode = true, $internal = true, $refresh = 0
 {
     include_once './include/functions/crypt.php';
     
-    if ($urlencode) $url = ploopi_urlencode($url);
     if ($internal) $url = _PLOOPI_BASEPATH.'/'.$url;
+    if ($urlencode) $url = ploopi_urlencode($url);
 
     if (empty($refresh) || !is_numeric($refresh)) header("Location: {$url}");
     else header("Refresh: {$refresh}; url={$url}");

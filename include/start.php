@@ -131,7 +131,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
                 ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $ploopi_login,_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
                 session_destroy();
                 sleep(1);
-                ploopi_redirect("admin.php?ploopi_errorcode="._PLOOPI_ERROR_LOGINEXPIRE);
+                ploopi_redirect(basename($_SERVER['PHP_SELF'])."?ploopi_errorcode="._PLOOPI_ERROR_LOGINEXPIRE);
             }
         }
         $_SESSION['ploopi']['connected']    = 1;
@@ -147,7 +147,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
         ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $ploopi_login,_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
         session_destroy();
         sleep(1);
-        ploopi_redirect("admin.php?ploopi_errorcode="._PLOOPI_ERROR_LOGINERROR);
+        ploopi_redirect(basename($_SERVER['PHP_SELF'])."?ploopi_errorcode="._PLOOPI_ERROR_LOGINERROR);
     }
 }
 

@@ -109,6 +109,26 @@ global $db;
 $db = new ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
 if(!$db->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
 
+/*
+$db->query('SELECT * FROM ploopi_user');
+$db->query('SELECT * FROM ploopi_workspace');
+
+
+while ($row = $db->fetchrow())
+{
+	ploopi_print_r($row);
+}
+
+ploopi_print_r($db->numrows());
+
+ploopi_print_r($db->getjson());
+
+
+ploopi_print_r($db->getarray());
+
+die();
+*/
+
 /**
  * Initialisation du gestionnaire de session
  */

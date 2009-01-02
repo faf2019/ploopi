@@ -303,4 +303,37 @@ function ploopi_color_hex2rgb($strHex)
 {
     return array_map('hexdec', str_split(str_replace('#', '', $strHex) ,2));    
 }
+
+/**
+ * Vérifie qu'une url est valide
+ *
+ * @param string $url url à tester
+ * @return boolean true si l'url est valide
+ */
+
+function ploopi_is_url($url)
+{
+	$urlregex = "^(https?)\:\/\/";
+
+	// USER AND PASS (optional) 
+	$urlregex .= "([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?"; 
+
+	// HOSTNAME OR IP 
+	$urlregex .= "[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*";
+
+	// PORT (optional) 
+	$urlregex .= "(\:[0-9]{2,5})?"; 
+
+	// PATH  (optional) 
+	$urlregex .= "(\/([a-z0-9+\$_-]\.?)+)*\/?"; 
+
+	// GET Query (optional) 
+	$urlregex .= "(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?"; 
+
+	// ANCHOR (optional) 
+	$urlregex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?\$"; 
+
+	return eregi($urlregex, $url) ? true : false; 
+}
 ?>
+

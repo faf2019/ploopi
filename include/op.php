@@ -286,12 +286,12 @@ if (isset($ploopi_op))
             <div id="calendar">
                 <div class="calendar_row">
                     <div class="calendar_arrow" style="float:right;">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&calendar_month=<? echo $next_month; ?>&calendar_year=<? echo $next_year; ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/next.png"></a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&calendar_month=<? echo $month; ?>&calendar_year=<? echo ($year+1); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/nextx2.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$next_month}&calendar_year={$next_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/next.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year+1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/nextx2.png"></a>
                     </div>
                     <div class="calendar_arrow" style="float:left;">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&calendar_month=<? echo $month; ?>&calendar_year=<? echo ($year-1); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/prevx2.png"></a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&calendar_month=<? echo $prev_month; ?>&calendar_year=<? echo $prev_year; ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/prev.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year-1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/prevx2.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$prev_month}&calendar_year={$prev_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/prev.png"></a>
                     </div>
                     <div class="calendar_month">
                         <? echo "{$ploopi_months[$month]}<br />{$year}"; ?>
@@ -388,7 +388,7 @@ if (isset($ploopi_op))
 
                 $localdate = ploopi_timestamp2local(sprintf("%04d%02d%02d000000", date('Y'), date('n'), date('j')));
                 ?>
-                <div class="calendar_row" style="height:1.2em;">
+                <div class="calendar_row" style="height:1.2em;overflow:hidden;">
                     <a style="display:block;float:left;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<? echo $_SESSION['calendar']['inputfield_id']; ?>');">Aujourd'hui</a>
                     <a style="display:block;float:right;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup('ploopi_popup_calendar');">Fermer</a>
                 </div>

@@ -1008,13 +1008,13 @@ class skin_common
                         {
                             case 'group':
                                 ?>
-                                <li style="font-weight:bold;padding:2px 4px;"><? echo $menu['label']; ?></li>
+                                <li style="font-weight:bold;padding:2px 4px;<? if (!empty($menu['style'])) echo $menu['style']; ?>"><? echo $menu['label']; ?></li>
                                 <?
                             break;
                             
                             case 'select':
                                 ?>
-                                <li>
+                                <li <? if (!empty($menu['style'])) echo 'style="'.$menu['style'].'"'; ?>>
                                     <a href="javascript:void(0);" <? if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> onclick="javascript:$('ploopi_selectbox_button_content<? echo $id; ?>').innerHTML = this.innerHTML; $('<? echo $id; ?>').value = '<? echo addslashes($key); ?>'; ploopi_dispatch_onchange('<? echo $id; ?>');" title="Accéder à <? echo htmlentities($menu['label']); ?>">
                                         <? 
                                         if (!empty($menu['icon'])) 
@@ -1032,7 +1032,7 @@ class skin_common
                             
                             case 'link':
                                 ?>
-                                <li>
+                                <li <? if (!empty($menu['style'])) echo 'style="'.$menu['style'].'"'; ?>>
                                     <a href="<? echo $menu['link']; ?>" <? if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> <? if (!empty($menu['target'])) echo 'target="'.$menu['target'].'"'; ?> title="Accéder à <? echo htmlentities($menu['label']); ?>">
                                         <? 
                                         if (!empty($menu['icon'])) 
@@ -1058,6 +1058,6 @@ class skin_common
         ob_end_clean();
         
         return $strContent;
-    }    
+    } 
 }
 ?>

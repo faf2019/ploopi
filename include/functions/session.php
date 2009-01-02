@@ -64,7 +64,7 @@ function ploopi_session_reset()
         'scriptname' => basename($_SERVER['PHP_SELF']),
         'env' => '',
     
-        'groups' => array(),
+        'workspaces' => array(),
         'modules' => array(),
         'moduletypes' => array(),
         'allworkspaces' => '',

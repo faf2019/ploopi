@@ -122,6 +122,15 @@ class ploopi_db
      */
     
     private $db_timer;
+    
+    /**
+     * Log des requêtes exécutées par l'instance
+     *
+     * @var array
+     */
+    
+    private  $arrLog;
+    
 
     /**
      * Constructeur de la classe. Connexion à une base de données, sélection de la base.
@@ -256,8 +265,8 @@ class ploopi_db
             @mysql_select_db($this->database, $this->connection_id);
             $this->query_result = @mysql_query($query, $this->connection_id);
 
-            $this->timer_stop();
-
+            $this->arrLog[] = array ('query' => $query, 'time' => $this->timer_stop());
+            
             if (mysql_errno() != 0) trigger_error(mysql_error()."<br />ressource:{$this->connection_id}<br /><b>query:</b> $query", E_USER_WARNING);
 
         }
@@ -516,22 +525,28 @@ class ploopi_db
     /**
      * Met à jour le temps d'exécution global avec le timer en cours
      * 
+     * @return int temps écoulé en microsecondes
+     * 
      * @see timer
      * @see timer::getexectime
      */
     
     public function timer_stop()
     {
+        $intExt = 0;
         if (class_exists('timer'))
         {
-            $this->exectime_queries += $this->db_timer->getexectime();
+            $intExt = $this->db_timer->getexectime();
+            $this->exectime_queries += $intExt;
         }
+        
+        return $intExt;
     }
     
     public function get_num_queries() { return($this->num_queries); }
     
     public function get_exectime_queries() { return($this->exectime_queries); }
     
-
+    public function get_log() { return $this->arrLog; } 
 }
 ?>

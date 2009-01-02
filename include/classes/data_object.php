@@ -184,18 +184,22 @@ class data_object
      * @param string $prefix préfixe utilisé
      */
 
-    public function setvalues($values, $prefix)
+    public function setvalues($values, $prefix = '')
     {
         // par défaut on récupère les champs du formulaire ($values)
-        $longueurprefixe = strlen($prefix);
-        foreach ($values AS $key => $value)
+        $lprefix = strlen($prefix);
+        foreach ($values as $key => $value)
         {
-            $pref = substr($key,0,$longueurprefixe);
-            if ($pref==$prefix)
+            if ($lprefix == 0) $this->fields[$key] = $value;
+            else
             {
-                $prop = substr($key,$longueurprefixe);
-                $this->fields[$prop] = $value;
-            }
+				$pref = substr($key, 0, $lprefix);
+				if ($pref == $prefix)
+				{
+					$prop = substr($key, $lprefix);
+					$this->fields[$prop] = $value;
+				}
+			}	
         }
 
     }
@@ -410,6 +414,14 @@ class data_object
      */
     
     public function gettablename() { return $this->tablename; }
+    
+    /**
+     * Retourne true si l'enregistrement n'existe pas encore dans la base de données
+     *
+     * @return boolean
+     */
+
+    public function isnew() { return $this->new; }
 
 }
 ?>
