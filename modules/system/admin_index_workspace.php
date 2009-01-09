@@ -54,24 +54,27 @@ echo $skin->open_simplebloc();
             </div>
             <?
 
-            $toolbar_workspace[] = array(
-                                    'title'     => str_replace('<LABEL>','<br /><b>'.$childworkspace.'</b>', _SYSTEM_LABEL_CREATE_CHILD_WORKSPACE),
-                                    'url'       => "admin.php?op=child&gworkspaceid=$workspaceid",
-                                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_child.png",
-                                );
+            $toolbar_workspace[] = 
+                array(
+                    'title'     => str_replace('<LABEL>','<br /><b>'.$childworkspace.'</b>', _SYSTEM_LABEL_CREATE_CHILD_WORKSPACE),
+                    'url'       => "admin.php?op=child&gworkspaceid=$workspaceid",
+                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_child.png",
+                );
 
             if ($_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN && $_SESSION['ploopi']['workspaceid'] == $workspaceid)
             {
-                $toolbar_workspace[] = array(
-                                        'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_CREATE_CLONE_WORKSPACE),
-                                        'url'       => 'admin.php',
-                                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_copy_gray.png",
-                                        'confirm'   => _SYSTEM_MSG_CANTCOPYGROUP
-                                    );
+                $toolbar_workspace[] = 
+                    array(
+                        'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_CREATE_CLONE_WORKSPACE),
+                        'url'       => 'admin.php',
+                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_copy_gray.png",
+                        'confirm'   => _SYSTEM_MSG_CANTCOPYGROUP
+                    );
             }
             else
             {
-                $toolbar_workspace[] = array(
+                $toolbar_workspace[] = 
+                    array(
                         'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_CREATE_CLONE_WORKSPACE),
                         'url'       => "admin.php?op=clone&workspaceid=$workspaceid",
                         'icon'      => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_copy.png",
@@ -84,11 +87,12 @@ echo $skin->open_simplebloc();
             // delete button if group not protected and no children
             if (!$workspace->fields['protected'] && !$sizeof_workspaces && !$sizeof_users)
             {
-                $toolbar_workspace[] = array(
-                                        'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_DELETE_WORKSPACE),
-                                        'url'       => "admin.php?op=delete&workspaceid=$workspaceid",
-                                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_delete.png",
-                                    );
+                $toolbar_workspace[] = 
+                    array(
+                        'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_DELETE_WORKSPACE),
+                        'url'       => "admin.php?op=delete&workspaceid=$workspaceid",
+                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_delete.png",
+                    );
             }
             else
             {
@@ -98,21 +102,23 @@ echo $skin->open_simplebloc();
                     if ($sizeof_workspaces) $msg = _SYSTEM_MSG_INFODELETE_GROUPS;
                     elseif ($sizeof_users) $msg = _SYSTEM_MSG_INFODELETE_USERS;
 
-                    $toolbar_workspace[] = array(
-                                            'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_DELETE_WORKSPACE),
-                                            'url'       => 'admin.php',
-                                            'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_delete_gray.png",
-                                            'confirm'   => $msg
-                                        );
+                    $toolbar_workspace[] = 
+                        array(
+                            'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_DELETE_WORKSPACE),
+                            'url'       => 'admin.php',
+                            'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_delete_gray.png",
+                            'confirm'   => $msg
+                        );
 
                 }
             }
 
-            $toolbar_workspace[] = array(
-                                    'title'     => _SYSTEM_LABEL_CREATE_GROUP,
-                                    'url'       => "admin.php?op=groupchild&workspaceid=$workspaceid",
-                                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_child.png",
-                                );
+            $toolbar_workspace[] = 
+                array(
+                    'title'     => _SYSTEM_LABEL_CREATE_GROUP,
+                    'url'       => "admin.php?op=groupchild&workspaceid=$workspaceid",
+                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_child.png",
+                );
 
 
 
@@ -153,7 +159,7 @@ echo $skin->open_simplebloc();
                 <input type="text" class="text" name="workspace_label"  value="<? echo $workspace->fields['label']; ?>">
             </p>
             <?
-            if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
+            if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
             {
                 ?>
                 <p>
