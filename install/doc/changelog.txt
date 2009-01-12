@@ -1,3 +1,9 @@
+== Module DOC - version 3.98 =====================================================
+
+2009-01-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correctif mineur sur les fonctions de téléchargement (notice / nom de variable erroné)
+
 == Module DOC - version 3.97 =====================================================
 
 2008-11-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

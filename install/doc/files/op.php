@@ -1,4 +1,4 @@
-<?php
+  <?php
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
@@ -410,12 +410,12 @@ if ($_SESSION['ploopi']['connected'])
                         include_once './modules/doc/class_docfilehistory.php';
                         $docfilehistory = new docfilehistory();
                         $docfilehistory->open($docfile->fields['id'], $_GET['version']);
-                        if (file_exists($docfilehistory->getfilepath())) ploopi_downloadfile($docfilehistory->getfilepath(), $docfilehistory->fields['name'], false, ($op != 'doc_fileview'));
+                        if (file_exists($docfilehistory->getfilepath())) ploopi_downloadfile($docfilehistory->getfilepath(), $docfilehistory->fields['name'], false, ($ploop_op != 'doc_fileview'));
                     }
                     else
                     {
-                        if (file_exists($docfile->getfilepath())) ploopi_downloadfile($docfile->getfilepath(), $docfile->fields['name'], false, ($op != 'doc_fileview'));
-                        else if (file_exists($docfile->getfilepath_deprecated())) ploopi_downloadfile($docfile->getfilepath_deprecated(), $docfile->fields['name'], false, ($op != 'doc_fileview'));
+                        if (file_exists($docfile->getfilepath())) ploopi_downloadfile($docfile->getfilepath(), $docfile->fields['name'], false, ($ploop_op != 'doc_fileview'));
+                        else if (file_exists($docfile->getfilepath_deprecated())) ploopi_downloadfile($docfile->getfilepath_deprecated(), $docfile->fields['name'], false, ($ploop_op != 'doc_fileview'));
                     }
                 }
         
