@@ -1,3 +1,9 @@
+== Module FORUM - version 1.0.5 ==================================================
+
+2009-01-13  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction orthographe dans french.php 'à priori'-> 'a priori'
+
 == Module FORUM - version 1.0.4 ==================================================
 
 2009-01-13  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

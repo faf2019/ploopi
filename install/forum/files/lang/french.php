@@ -55,7 +55,7 @@ define('_FORUM_CAT_LABEL_TITLE',      'Titre');
 define('_FORUM_CAT_LABEL_DESCRIPTION','Description');
 define('_FORUM_CAT_LABEL_CLOSE',      'Forum fermé');
 define('_FORUM_CAT_LABEL_VISIBLE',    'Forum visible');
-define('_FORUM_CAT_LABEL_VALIDATE',   'Modération à priori requise');
+define('_FORUM_CAT_LABEL_VALIDATE',   'Modération a priori requise');
 define('_FORUM_CAT_LABEL_TITLE_EDIT', 'Edition d\'un forum');
 define('_FORUM_CAT_CREATE',           'Créé le');
 define('_FORUM_CAT_LASTUPDATE',       'Dernière modification le');
