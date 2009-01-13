@@ -1,3 +1,10 @@
+== Module FORUM - version 1.0.4 ==================================================
+
+2009-01-13  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction du bug sur les messages (ticket) l'envoi d'une demande de validation à un modérateur ne fonctionnait que si celui-ci était abonné.
+ * Correction orthographe dans description.xml discution -> discussion
+
 == Module FORUM - version 1.0.3 ==================================================
 
 2008-12-03  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

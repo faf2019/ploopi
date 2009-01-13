@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>forum</label>
-      <version>1.0.3</version>
+      <version>1.0.4</version>
       <author>Ovensia / HeXad</author>
-      <date>20081203103000</date>
+      <date>20090113120100</date>
       <publicparam>1</publicparam>
       <description>Gestion d'un Forum Intranet/Extranet</description>
       <action>
@@ -18,7 +18,7 @@
       </action>
       <action>
          <id_action>3</id_action>
-         <label>Ajout d'une discution</label>
+         <label>Ajout d'une discussion</label>
          <role_enabled>0</role_enabled>
       </action>
       <action>
@@ -33,7 +33,7 @@
       </action>
       <action>
          <id_action>6</id_action>
-         <label>Modification d'une discution</label>
+         <label>Modification d'une discussion</label>
          <role_enabled>0</role_enabled>
       </action>
       <action>
@@ -43,7 +43,7 @@
       </action>
       <action>
          <id_action>8</id_action>
-         <label>Modération d'une discution</label>
+         <label>Modération d'une discussion</label>
          <role_enabled>0</role_enabled>
       </action>
       <action>
@@ -53,7 +53,7 @@
       </action>
       <action>
          <id_action>10</id_action>
-         <label>Validation d'une discution</label>
+         <label>Validation d'une discussion</label>
          <role_enabled>0</role_enabled>
       </action>
       <action>
@@ -68,7 +68,7 @@
       </action>
       <action>
          <id_action>13</id_action>
-         <label>Supression d'une discution</label>
+         <label>Supression d'une discussion</label>
          <role_enabled>0</role_enabled>
       </action>
       <action>

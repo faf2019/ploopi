@@ -57,6 +57,7 @@ class forum_mess extends data_object
   function save()
   {
     $booForumNew = $this->new;
+
     $booForumIsAdminModer = forum_IsAdminOrModer($this->fields['id_cat'],_FORUM_ACTION_ADMIN);
 
     $objForumMyCat = new forum_cat();
@@ -285,17 +286,14 @@ class forum_mess extends data_object
 
     $objForumCat = new forum_cat();
     $objForumCat->open($this->fields['id_cat']);
-    // Get subscribers for the categories
+
     if($this->fields['id'] == $this->fields['id_subject']) // it's a new subject
     {
-      $arrForumTo += ploopi_subscription_getusers(_FORUM_OBJECT_SUBJECT, $this->fields['id_cat'], array(_FORUM_ACTION_ADD_SUBJECT));
       $strForumTitleCat = $objForumCat->fields['title'];
       $strMessage = _FORUM_TICKET_NEW_SUBJECT;
     }
     else // it's a response
     {
-      $arrForumTo += ploopi_subscription_getusers(_FORUM_OBJECT_SUBJECT, $this->fields['id_cat'], array(_FORUM_ACTION_ADD_MESSAGE));
-      $arrForumTo += ploopi_subscription_getusers(_FORUM_OBJECT_MESSAGE, $this->fields['id_subject'], array(_FORUM_ACTION_ADD_MESSAGE));
       $objForumSubject = new forum_mess();
       $objForumSubject->open($this->fields['id_subject']);
       $strForumTitleSubject = $objForumCat->fields['title'].' >> '.$objForumSubject->fields['title'];
@@ -303,22 +301,20 @@ class forum_mess extends data_object
       $strMessage = _FORUM_TICKET_NEW_MESSAGE;
     }
 
-    // If it's not validate -> send just for subscribers type admin or moderator...
+    // If it's not validate (not public) -> send just for subscribers type admin or moderator...
     if($this->fields['validated'] == 0 || $objForumCat->fields['closed'] == 1 || $this->fields['closed'] == 1)
     {
       $arrAdminOrMode = array();
-      $arrAdminOrModeTmp = array();
       // Get list of admin
-      // $arrAdminOrModeTmp += ploopi_actions_getusers(_FORUM_ACTION_ADMIN); // Uncomment this line if you want alway send to admin
+      // $arrAdminOrMode = ploopi_actions_getusers(_FORUM_ACTION_ADMIN); // Uncomment this line if you want alway send to admin
       // Get list of moderator
-      $arrAdminOrModeTmp += ploopi_validation_get(_FORUM_OBJECT_CAT,$this->fields['id_cat']);
-      foreach($arrAdminOrModeTmp as $value)
+      $arrAdminOrMode += ploopi_validation_get(_FORUM_OBJECT_CAT,$this->fields['id_cat']);
+      foreach($arrAdminOrMode as $value)
       {
-        $arrAdminOrMode[$value['id_validation']] = $arrAdminOrModeTmp;
+        $arrForumTo[$value['id_validation']] = $arrAdminOrMode;
       }
-      unset($arrAdminOrModeTmp);
-      $arrForumTo = array_intersect_key($arrForumTo, $arrAdminOrMode);
       unset($arrAdminOrMode);
+
       if($this->fields['validated'] == 0)
         $strMessage .= '<br/><b>'._FORUM_STAY_VALIDATED.'</b>';
       if($objForumCat->fields['closed'] == 1)
@@ -326,7 +322,19 @@ class forum_mess extends data_object
       if($this->fields['closed'] == 1)
         $strMessage .= '<br/><b>'._FORUM_CLOSE_SUBJET.'</b>';
     }
-
+    else // cat or message is public. Send to all subscribers
+    {
+      // Get subscribers for the categories
+      if($this->fields['id'] == $this->fields['id_subject']) // it's a new subject
+      {
+        $arrForumTo = ploopi_subscription_getusers(_FORUM_OBJECT_SUBJECT, $this->fields['id_cat'], array(_FORUM_ACTION_ADD_SUBJECT));
+      }
+      else // it's a response
+      {
+        $arrForumTo = ploopi_subscription_getusers(_FORUM_OBJECT_SUBJECT, $this->fields['id_cat'], array(_FORUM_ACTION_ADD_MESSAGE));
+        $arrForumTo += ploopi_subscription_getusers(_FORUM_OBJECT_MESSAGE, $this->fields['id_subject'], array(_FORUM_ACTION_ADD_MESSAGE));
+      }
+    }
     unset($objForumCat);
 
     if($this->fields['id'] == $this->fields['id_subject']) // it's a subject

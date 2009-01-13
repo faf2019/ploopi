@@ -42,7 +42,7 @@ if($booForumIsAdminModerGlb) // More info for admin/moderator
       AND ploopi_mod_forum_mess.id_module = {$_SESSION['ploopi']['moduleid']}
       AND ploopi_mod_forum_mess.id_subject = ploopi_mod_forum_mess.id
     GROUP BY ploopi_mod_forum_mess.id_cat";
-        
+
   $objForumSqlResult = $db->query($strForumSqlQuery);
   while ($arrForumFields = $db->fetchrow($objForumSqlResult))
   {
@@ -58,7 +58,7 @@ if($booForumIsAdminModerGlb) // More info for admin/moderator
       AND ploopi_mod_forum_mess.id_subject <> ploopi_mod_forum_mess.id
       AND ploopi_mod_forum_mess.id_module = {$_SESSION['ploopi']['moduleid']}
     GROUP BY ploopi_mod_forum_mess.id_cat";
-            
+
   $objForumSqlResult = $db->query($strForumSqlQuery);
   while ($arrForumFields = $db->fetchrow($objForumSqlResult))
   {
@@ -80,7 +80,7 @@ else
       AND ploopi_mod_forum_mess.id_module = {$_SESSION['ploopi']['moduleid']}
       AND ploopi_mod_forum_mess.id_subject = ploopi_mod_forum_mess.id
     GROUP BY ploopi_mod_forum_mess.id_cat";
-        
+
   $objForumSqlResult = $db->query($strForumSqlQuery);
   while ($arrForumFields = $db->fetchrow($objForumSqlResult))
   {
@@ -100,7 +100,7 @@ else
       AND ploopi_mod_forum_mess.id_subject <> ploopi_mod_forum_mess.id
       AND ploopi_mod_forum_mess.id_module = {$_SESSION['ploopi']['moduleid']}
     GROUP BY ploopi_mod_forum_mess.id_cat";
-            
+
   $objForumSqlResult = $db->query($strForumSqlQuery);
   while ($arrForumFields = $db->fetchrow($objForumSqlResult))
   {
@@ -122,7 +122,7 @@ $strForumSqlQuery = "SELECT ploopi_mod_forum_mess.id_cat,
     AND ploopi_mod_forum_mess.id_subject = ploopi_mod_forum_mess.id
     AND ploopi_mod_forum_mess.id_module = {$_SESSION['ploopi']['moduleid']}
   GROUP BY ploopi_mod_forum_mess.id_cat";
-          
+
 $objForumSqlResult = $db->query($strForumSqlQuery);
 while ($arrForumFields = $db->fetchrow($objForumSqlResult))
 {
@@ -136,7 +136,7 @@ while ($arrForumFields = $db->fetchrow($objForumSqlResult))
 $strForumSqlQuery = "SELECT ploopi_mod_forum_cat.*,
   COUNT(ploopi_mod_forum_mess.id) AS nbMessValid
   FROM ploopi_mod_forum_cat
-  LEFT JOIN ploopi_mod_forum_mess 
+  LEFT JOIN ploopi_mod_forum_mess
     ON (ploopi_mod_forum_cat.id = ploopi_mod_forum_mess.id_cat
         AND ploopi_mod_forum_mess.validated = 1
         AND ploopi_mod_forum_mess.id_subject <> ploopi_mod_forum_mess.id)
@@ -155,7 +155,7 @@ $strForumSqlQuery = "SELECT ploopi_mod_forum_cat.*,
       <img style="border: none; margin: 0 0 -3px 0; padding: 0;" src="<?php echo _FORUM_IMG_16_FOLDER; ?>"/>&nbsp;<?php echo _FORUM_LABEL_CAT; ?>
     </button>
   </div>
-  
+
 <?php
 // Menu
 if($booForumActionAllowed)
@@ -168,7 +168,7 @@ if($booForumActionAllowed)
     </button>
     </div>
   </div>
-  <?php 
+  <?php
 }
 
   // Title of subject
@@ -183,13 +183,13 @@ if($booForumActionAllowed)
     // For button edit/delete
     if($booForumActionAllowed)
     {
-      ?> 
+      ?>
       <div id="forum_column_cat_2" class="ploopi_explorer_column" style="right: 390px;"></div>
       <?php
     }
     ?>
     <div id="forum_column_cat_4" class="ploopi_explorer_column" style="left: 50px;"></div>
-  
+
     <div style="position: relative;">
       <div id="forum_title_categ" class="ploopi_explorer_title">
         <div class="ploopi_explorer_element" style="width: 85px; float: right; text-align: center;">
@@ -206,10 +206,10 @@ if($booForumActionAllowed)
         if($booForumActionAllowed)
         {
           ?>
-          <div class="ploopi_explorer_element" style="width: 90px; float: right;"><p></p></div> 
+          <div class="ploopi_explorer_element" style="width: 90px; float: right;"><p></p></div>
           <?php
         }
-        ?>      
+        ?>
         <div class="ploopi_explorer_element" style="width: 50px; float: left; text-align: center;">
           <p><span>&nbsp;</span></p>
         </div>
@@ -233,31 +233,31 @@ if($booForumActionAllowed)
             $booForumIsAdminModerCat = ($booForumActionAllowed || array_key_exists($_SESSION['ploopi']['user']['id'],$arrForumModerat));
             foreach($arrForumModerat as $value)
             {
-              if($strForumModerator == '&nbsp;') 
+              if($strForumModerator == '&nbsp;')
                 $strForumModerator = '--- &nbsp;'._FORUM_MODERATOR.':&nbsp;'.$value['login'];
               else
                 $strForumModerator .= ', '.$value['login'];
-            }    
+            }
             $strForumModerator .= '&nbsp;---';
           }
-          
+
           // Not show if not allowed
           if($arrForumFields['visible'] == 1 || $booForumIsAdminModerCat)
           {
             // Add info in $arrForumFields
-            $arrForumFields['nbSubjectValid'] = (isset($arrForumInfoCat[$arrForumFields['id']]['nbSubjectValid'])) ? $arrForumInfoCat[$arrForumFields['id']]['nbSubjectValid'] : 0; 
-            $arrForumFields['nbSubjectNoValid'] = (isset($arrForumInfoCat[$arrForumFields['id']]['nbSubjectNoValid'])) ? $arrForumInfoCat[$arrForumFields['id']]['nbSubjectNoValid'] : 0; 
-            $arrForumFields['nbMessNoValid'] = (isset($arrForumInfoCat[$arrForumFields['id']]['nbMessNoValid'])) ? $arrForumInfoCat[$arrForumFields['id']]['nbMessNoValid'] : 0; 
-            $arrForumFields['nbMYSubjectNoValid'] = (isset($arrForumInfoCat[$arrForumFields['id']]['nbMYSubjectNoValid'])) ? $arrForumInfoCat[$arrForumFields['id']]['nbMYSubjectNoValid'] : 0; 
-            $arrForumFields['nbMYMessNoValid'] = (isset($arrForumInfoCat[$arrForumFields['id']]['nbMYMessNoValid'])) ? $arrForumInfoCat[$arrForumFields['id']]['nbMYMessNoValid'] : 0; 
-            
+            $arrForumFields['nbSubjectValid'] = (isset($arrForumInfoCat[$arrForumFields['id']]['nbSubjectValid'])) ? $arrForumInfoCat[$arrForumFields['id']]['nbSubjectValid'] : 0;
+            $arrForumFields['nbSubjectNoValid'] = (isset($arrForumInfoCat[$arrForumFields['id']]['nbSubjectNoValid'])) ? $arrForumInfoCat[$arrForumFields['id']]['nbSubjectNoValid'] : 0;
+            $arrForumFields['nbMessNoValid'] = (isset($arrForumInfoCat[$arrForumFields['id']]['nbMessNoValid'])) ? $arrForumInfoCat[$arrForumFields['id']]['nbMessNoValid'] : 0;
+            $arrForumFields['nbMYSubjectNoValid'] = (isset($arrForumInfoCat[$arrForumFields['id']]['nbMYSubjectNoValid'])) ? $arrForumInfoCat[$arrForumFields['id']]['nbMYSubjectNoValid'] : 0;
+            $arrForumFields['nbMYMessNoValid'] = (isset($arrForumInfoCat[$arrForumFields['id']]['nbMYMessNoValid'])) ? $arrForumInfoCat[$arrForumFields['id']]['nbMYMessNoValid'] : 0;
+
             // Class for lines table's
-            $strForumClassLine = ($strForumClassLine == 'ploopi_explorer_line_2') ? 'ploopi_explorer_line_1' : 'ploopi_explorer_line_2'; 
-            
+            $strForumClassLine = ($strForumClassLine == 'ploopi_explorer_line_2') ? 'ploopi_explorer_line_1' : 'ploopi_explorer_line_2';
+
             // Nb subject and messages in this categ (WITH no validated if you are allowed !)
             $strForumNbSubject = $arrForumFields['nbSubjectValid'];
             $strForumNbMess = $arrForumFields['nbMessValid'];
-      
+
             // Add red/green color if not validated for subject and message
             if($booForumIsAdminModerCat)
             {
@@ -266,7 +266,7 @@ if($booForumActionAllowed)
             }
             if($arrForumFields['nbMYSubjectNoValid']>0)  $strForumNbSubject .= '&nbsp;/&nbsp;<font color="green">'.$arrForumFields['nbMYSubjectNoValid'].'</font>';
             if($arrForumFields['nbMYMessNoValid']>0)     $strForumNbMess .= '&nbsp;/&nbsp;<font color="green">'.$arrForumFields['nbMYMessNoValid']."</font>";
-          
+
             // Get the last message
             $strForumSqlQuery = "SELECT ploopi_mod_forum_mess.timestp,
               ploopi_mod_forum_mess.author,
@@ -276,7 +276,7 @@ if($booForumActionAllowed)
               if(!$booForumIsAdminModerCat)
                 $strForumSqlQuery .= " AND ploopi_mod_forum_mess.validated = 1";
             $strForumSqlQuery .= " ORDER BY ploopi_mod_forum_mess.timestp DESC LIMIT 1";
-      
+
             $objForumSqlInfoLastMess = $db->query($strForumSqlQuery);
             if($db->numrows())
             {
@@ -286,10 +286,10 @@ if($booForumActionAllowed)
             }
             else
               $strForumLastMess = '';
-    
+
             // Icon
             $strIcon = $strIcon2 = '';
-            if($arrForumFields['visible'] == 0 && $booForumIsAdminModerCat) 
+            if($arrForumFields['visible'] == 0 && $booForumIsAdminModerCat)
             {
               if($arrForumFields['closed'] == 1)
                 $strIcon = _FORUM_IMG_32_LOCK_HIDDEN;
@@ -302,7 +302,7 @@ if($booForumActionAllowed)
             }
             elseif(($arrForumFields['nbSubjectValid'] + $arrForumFields['nbMessValid']) > 0)
             {
-              $strIcon = (($arrForumFields['nbSubjectNoValid'] + $arrForumFields['nbMessNoValid']) > 0 && $booForumIsAdminModerCat) ? _FORUM_IMG_32_FOLDER_TOVALID : _FORUM_IMG_32_FOLDER; 
+              $strIcon = (($arrForumFields['nbSubjectNoValid'] + $arrForumFields['nbMessNoValid']) > 0 && $booForumIsAdminModerCat) ? _FORUM_IMG_32_FOLDER_TOVALID : _FORUM_IMG_32_FOLDER;
             }
             else
             {
@@ -324,7 +324,7 @@ if($booForumActionAllowed)
                 }
                 else
                 {
-                  ?><p></p><?php 
+                  ?><p></p><?php
                 }
                 ?>
               </div>
@@ -332,11 +332,11 @@ if($booForumActionAllowed)
               // if allowed add edit/delete on categories
               if($booForumActionAllowed)
               {
-              ?>  
+              ?>
                 <div class="ploopi_explorer_element" style="width: 90px; float: right;text-align: center;z-index: 1000">
-                  <input type="button" class="button" style="margin:1px;width:80px;" value="<?php echo _FORUM_EDIT; ?>" 
+                  <input type="button" class="button" style="margin:1px;width:80px;" value="<?php echo _FORUM_EDIT; ?>"
                     onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=categ_edit&id_cat={$arrForumFields['id']}"); ?>'" />
-                  <input type="button" class="button" style="margin:1px;width:80px;" value="<?php echo _FORUM_DELETE; ?>" 
+                  <input type="button" class="button" style="margin:1px;width:80px;" value="<?php echo _FORUM_DELETE; ?>"
                     onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=categ_delete&id_cat={$arrForumFields['id']}"); ?>','<?php echo _FORUM_CONFIRM_DELETE_CAT; ?>');" />
                 </div>
                 <div class="ploopi_explorer_element" style="width: 22px; float: right;text-align: center;z-index: 1000">
