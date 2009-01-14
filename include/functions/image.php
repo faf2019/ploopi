@@ -140,6 +140,8 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
 
     if($filename == '')
     {
+        ploopi_ob_clean();
+        
         if ($format != '') $extension = $format;
         
         header("Content-Type: image/{$extension}");
