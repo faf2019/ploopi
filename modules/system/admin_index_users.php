@@ -80,7 +80,7 @@ switch($op)
         if (!empty($_POST['user_date_expire'])) $_POST['user_date_expire'] = ploopi_local2timestamp($_POST['user_date_expire']);
 
         $user->setvalues($_POST,'user_');
-
+        
         // affectation nouveau password
         $passwordok = true;
         if (isset($_POST['usernewpass']) && isset($_POST['usernewpass_confirm']))
@@ -104,7 +104,16 @@ switch($op)
             ploopi_create_user_action_log(_SYSTEM_ACTION_MODIFYUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']})");
         }
 
-
+        if (!empty($_SESSION['system']['user_photopath'])) 
+        {
+            ploopi_makedir(_PLOOPI_PATHDATA._PLOOPI_SEP.'system');
+            
+            // photo temporaire présente => copie dans le dossier définitif
+            rename($_SESSION['system']['user_photopath'], $user->getphotopath());
+            unset($_SESSION['system']['user_photopath']);
+        }
+        
+        
         $reload = ''; // reloadsession or not ?
 
         if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES && !empty($workspaceid))
@@ -152,7 +161,7 @@ if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
     );
 }
 
-if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER)
 {
     $tabs['tabUserAttach'] = array( 
         'title' => _SYSTEM_LABELTAB_USERATTACH,
@@ -167,7 +176,7 @@ if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
         'url' => "admin.php?usrTabItem=tabGroupList"
     );
 
-    if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+    if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER)
     {
         $tabs['tabGroupAttach'] = array(
             'title' => _SYSTEM_LABELTAB_GROUPATTACH,

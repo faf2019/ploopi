@@ -133,3 +133,9 @@ function system_serverload()
         );
     }, 15);
 }
+
+function system_choose_photo(e, user_id)
+{
+    ploopi_showpopup(ploopi_ajaxloader_content, 400, e, false, 'popup_system_choose_photo');
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_choose_photo&system_user_id='+user_id, 'popup_system_choose_photo');
+}

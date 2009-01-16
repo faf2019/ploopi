@@ -144,6 +144,7 @@ define ('_SYSTEM_LABEL_ADDRESS', 'Adresse');
 define ('_SYSTEM_LABEL_POSTALCODE', 'Code Postal');
 define ('_SYSTEM_LABEL_CITY', 'Ville');
 define ('_SYSTEM_LABEL_COUNTRY', 'Pays');
+define ('_SYSTEM_LABEL_NUMBER', 'Numéro de Poste');
 define ('_SYSTEM_LABEL_PHONE', 'Téléphone');
 define ('_SYSTEM_LABEL_MOBILE', 'Tél. Portable');
 define ('_SYSTEM_LABEL_FAX', 'Fax');
@@ -155,6 +156,7 @@ define ('_SYSTEM_LABEL_SERVICE', 'Service');
 define ('_SYSTEM_LABEL_COLOR', 'Couleur');
 define ('_SYSTEM_LABEL_OFFICE', 'Bureau');
 define ('_SYSTEM_LABEL_CIVILITY', 'Civilité');
+define ('_SYSTEM_LABEL_PHOTO', 'Photo');
 
 define ('_SYSTEM_LABEL_PARENTS', 'Parents');
 

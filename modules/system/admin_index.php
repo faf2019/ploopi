@@ -110,35 +110,43 @@ switch ($_SESSION['system']['level'])
                     break;
 
                     case 'child' :
-                        include './modules/system/admin_index_group_add.php';
+                        if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                        {
+                            include './modules/system/admin_index_group_add.php';
+                        }
                     break;
 
                     case 'clone' :
-                        $clone = $group->createclone();
-                        $groupid = $clone->save();
-                        ploopi_create_user_action_log(_SYSTEM_ACTION_CLONEGROUP, "{$clone->fields['label']} ({$groupid})");
-
-                        unset($_SESSION['system']['groups']);
-                        unset($_SESSION['system']['workspaces']);
-
-                        ploopi_redirect("admin.php?groupid={$groupid}");
+                        if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                        {
+                            $clone = $group->createclone();
+                            $groupid = $clone->save();
+                            ploopi_create_user_action_log(_SYSTEM_ACTION_CLONEGROUP, "{$clone->fields['label']} ({$groupid})");
+    
+                            unset($_SESSION['system']['groups']);
+                            unset($_SESSION['system']['workspaces']);
+                            ploopi_redirect("admin.php?groupid={$groupid}");
+                        }
+                        else ploopi_redirect('admin.php');
                     break;
 
                     case 'delete' :
-                        $sizeof_groups = sizeof($group->getchildren());
-                        $sizeof_users = sizeof($group->getusers());
-                        if (!$sizeof_groups && !$sizeof_users)
+                        if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
                         {
-                            ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEGROUP, "{$group->fields['label']} ({$group->fields['id_group']})");
-                            $group->delete();
-
-                            unset($_SESSION['system']['groups']);
-                            unset($_SESSION['system']['workspaces']);
-
-                            if(!empty($group->fields['id_workspace'])) ploopi_redirect("admin.php?workspaceid={$group->fields['id_workspace']}");
-                            else ploopi_redirect("admin.php?groupid={$group->fields['id_group']}");
-                        }
-
+                            $sizeof_groups = sizeof($group->getchildren());
+                            $sizeof_users = sizeof($group->getusers());
+                            if (!$sizeof_groups && !$sizeof_users)
+                            {
+                                ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEGROUP, "{$group->fields['label']} ({$group->fields['id_group']})");
+                                $group->delete();
+    
+                                unset($_SESSION['system']['groups']);
+                                unset($_SESSION['system']['workspaces']);
+    
+                                if(!empty($group->fields['id_workspace'])) ploopi_redirect("admin.php?workspaceid={$group->fields['id_workspace']}");
+                                else ploopi_redirect("admin.php?groupid={$group->fields['id_group']}");
+                            }
+                        }    
                         ploopi_redirect('admin.php');
                     break;
 

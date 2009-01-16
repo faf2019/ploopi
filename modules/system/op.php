@@ -405,6 +405,65 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         ploopi_die();
                     break;
                     
+                    case 'system_choose_photo':
+                        // Popup de choix d'une photo pour un utilisateur
+                        ob_start();
+                        ploopi_init_module('system');
+                        ?>
+                        <form action="<? echo ploopi_urlencode("admin.php?ploopi_op=system_send_photo"); ?>" method="post" enctype="multipart/form-data" target="system_user_photo_iframe">
+                        <p class="ploopi_va" style="padding:2px;">
+                            <label><? echo _SYSTEM_LABEL_PHOTO; ?>: </label>
+                            <input type="file" class="text" name="system_user_photo" />
+                            <input type="submit" class="button" name="<? echo _PLOOPI_SAVE; ?>" />
+                        </p>
+                        </form>
+                        <iframe name="system_user_photo_iframe" style="display:none;"></iframe>
+                        <?
+                        $content = ob_get_contents();
+                        ob_end_clean();
+                        
+                        echo $skin->create_popup("Chargement d'une nouvelle photo", $content, 'popup_system_choose_photo');
+                        ploopi_die();
+                    break;
+                    
+                    case 'system_send_photo':
+                        // Envoi d'une photo temporaire dans la fiche utilisateur
+                        // On vérifie qu'un fichier a bien été uploadé
+                        if (!empty($_FILES['system_user_photo']['tmp_name']))
+                        {
+                            $strTmpPath = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp';
+                            ploopi_makedir($strTmpPath);
+                            $_SESSION['system']['user_photopath'] = tempnam($strTmpPath, '');
+                            ploopi_resizeimage($_FILES['system_user_photo']['tmp_name'], 0, 100, 150, 'png', 0, $_SESSION['system']['user_photopath']);
+                        }
+                        ?>
+                        <script type="text/javascript">
+                            new function() {
+                                window.parent.ploopi_getelem('system_user_photo', window.parent.document).innerHTML = '<img src="<? echo ploopi_urlencode('admin-light.php?ploopi_op=system_get_photo'); ?>" />'; 
+                                window.parent.ploopi_hidepopup('popup_system_choose_photo');
+                            }
+                        </script>
+                        <?
+                    break;
+                    
+                    case 'system_get_photo':
+                        // Envoi de la photo temporaire vers le client
+                        if (!empty($_SESSION['system']['user_photopath'])) ploopi_downloadfile($_SESSION['system']['user_photopath'], 'user.png', false, false);
+                        ploopi_die();
+                    break;
+                    
+                    case 'system_get_userphoto':
+                        // Envoi de la photo d'un utilisateur vers le client
+                        $objUser = new user();
+                        if (!empty($_GET['system_user_id']) && is_numeric($_GET['system_user_id']) && $objUser->open($_GET['system_user_id']))
+                        {
+                            $strPhotoPath = $objUser->getphotopath();
+                            if (file_exists($strPhotoPath)) ploopi_downloadfile($strPhotoPath, 'user.png', false, false);
+                        } 
+                        ploopi_die();
+                    break;
+                    
+                    
                 }
             }
         break;

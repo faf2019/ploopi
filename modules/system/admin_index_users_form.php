@@ -273,6 +273,10 @@ if (isset($_REQUEST['confirm']))
                 <input type="text" class="text" name="user_function"  value="<? echo htmlentities($user->fields['function']); ?>" tabindex="6" />
             </p>
             <p>
+                <label><? echo _SYSTEM_LABEL_NUMBER; ?>:</label>
+                <input type="text" class="text" name="user_number"  value="<? echo htmlentities($user->fields['number']); ?>" tabindex="6" />
+            </p>
+            <p>
                 <label><? echo _SYSTEM_LABEL_PHONE; ?>:</label>
                 <input type="text" class="text" name="user_phone"  value="<? echo htmlentities($user->fields['phone']); ?>" tabindex="7" />
             </p>
@@ -417,6 +421,21 @@ if (isset($_REQUEST['confirm']))
                 <label><? echo _SYSTEM_LABEL_COLOR; ?>:</label>
                 <input type="text" style="width:100px;" class="text" name="user_color" id="user_color" value="<? echo htmlentities($user->fields['color']); ?>" tabindex="29" />
                 <a href="javascript:void(0);" onclick="javascript:ploopi_colorpicker_open('user_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0"></a>
+            </p>
+            <p>
+                <label><? echo _SYSTEM_LABEL_PHOTO; ?>:</label>
+                <span>
+                <div><a href="javascript:void(0);" onclick="javascript:system_choose_photo(event, '<? echo $user->fields['id']; ?>');">Choisir une photo</a></div>
+                <div id="system_user_photo">
+                <?
+                if (file_exists($user->getphotopath()))
+                {
+                    ?><img src="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_get_userphoto&system_user_id={$user->fields['id']}"); ?>" /><?
+                }
+                ?>
+                </div>
+                </span>
+                
             </p>
             <?
             if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)

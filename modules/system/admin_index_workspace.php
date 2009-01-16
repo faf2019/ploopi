@@ -53,66 +53,68 @@ echo $skin->open_simplebloc();
                 <br /><strong><? echo $nbusers; ?> utilisateur(s)</strong>
             </div>
             <?
-
-            $toolbar_workspace[] = 
-                array(
-                    'title'     => str_replace('<LABEL>','<br /><b>'.$childworkspace.'</b>', _SYSTEM_LABEL_CREATE_CHILD_WORKSPACE),
-                    'url'       => "admin.php?op=child&gworkspaceid=$workspaceid",
-                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_child.png",
-                );
-
-            if ($_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN && $_SESSION['ploopi']['workspaceid'] == $workspaceid)
+            if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
             {
                 $toolbar_workspace[] = 
                     array(
-                        'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_CREATE_CLONE_WORKSPACE),
-                        'url'       => 'admin.php',
-                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_copy_gray.png",
-                        'confirm'   => _SYSTEM_MSG_CANTCOPYGROUP
+                        'title'     => str_replace('<LABEL>','<br /><b>'.$childworkspace.'</b>', _SYSTEM_LABEL_CREATE_CHILD_WORKSPACE),
+                        'url'       => "admin.php?op=child&gworkspaceid=$workspaceid",
+                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_child.png",
                     );
-            }
-            else
-            {
-                $toolbar_workspace[] = 
-                    array(
-                        'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_CREATE_CLONE_WORKSPACE),
-                        'url'       => "admin.php?op=clone&workspaceid=$workspaceid",
-                        'icon'      => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_copy.png",
-                    );
-            }
-
-            $sizeof_workspaces = sizeof($workspace->getchildren());
-            $sizeof_users = sizeof($workspace->getusers());
-
-            // delete button if group not protected and no children
-            if (!$workspace->fields['protected'] && !$sizeof_workspaces && !$sizeof_users)
-            {
-                $toolbar_workspace[] = 
-                    array(
-                        'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_DELETE_WORKSPACE),
-                        'url'       => "admin.php?op=delete&workspaceid=$workspaceid",
-                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_delete.png",
-                    );
-            }
-            else
-            {
-                if ($sizeof_workspaces || $sizeof_users)
+    
+                if ($_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN && $_SESSION['ploopi']['workspaceid'] == $workspaceid)
                 {
-                    $msg = '';
-                    if ($sizeof_workspaces) $msg = _SYSTEM_MSG_INFODELETE_GROUPS;
-                    elseif ($sizeof_users) $msg = _SYSTEM_MSG_INFODELETE_USERS;
+                    $toolbar_workspace[] = 
+                        array(
+                            'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_CREATE_CLONE_WORKSPACE),
+                            'url'       => 'admin.php',
+                            'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_copy_gray.png",
+                            'confirm'   => _SYSTEM_MSG_CANTCOPYGROUP
+                        );
+                }
+                else
+                {
+                    $toolbar_workspace[] = 
+                        array(
+                            'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_CREATE_CLONE_WORKSPACE),
+                            'url'       => "admin.php?op=clone&workspaceid=$workspaceid",
+                            'icon'      => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_copy.png",
+                        );
+                }
 
+                $sizeof_workspaces = sizeof($workspace->getchildren());
+                $sizeof_users = sizeof($workspace->getusers());
+    
+                // delete button if group not protected and no children
+                if (!$workspace->fields['protected'] && !$sizeof_workspaces && !$sizeof_users)
+                {
                     $toolbar_workspace[] = 
                         array(
                             'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_DELETE_WORKSPACE),
-                            'url'       => 'admin.php',
-                            'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_delete_gray.png",
-                            'confirm'   => $msg
+                            'url'       => "admin.php?op=delete&workspaceid=$workspaceid",
+                            'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_delete.png",
                         );
-
+                }
+                else
+                {
+                    if ($sizeof_workspaces || $sizeof_users)
+                    {
+                        $msg = '';
+                        if ($sizeof_workspaces) $msg = _SYSTEM_MSG_INFODELETE_GROUPS;
+                        elseif ($sizeof_users) $msg = _SYSTEM_MSG_INFODELETE_USERS;
+    
+                        $toolbar_workspace[] = 
+                            array(
+                                'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_DELETE_WORKSPACE),
+                                'url'       => 'admin.php',
+                                'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_delete_gray.png",
+                                'confirm'   => $msg
+                            );
+    
+                    }
                 }
             }
-
+            
             $toolbar_workspace[] = 
                 array(
                     'title'     => _SYSTEM_LABEL_CREATE_GROUP,
