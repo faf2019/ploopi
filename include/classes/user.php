@@ -369,5 +369,11 @@ class user extends data_object
     {
         $this->fields['password'] = md5(_PLOOPI_SECRETKEY."/{$this->fields['login']}/".md5($strPassword));
     }
+    
+    
+    public function getphotopath()
+    {
+        return (_PLOOPI_PATHDATA._PLOOPI_SEP.'system'._PLOOPI_SEP.$this->fields['id'].'.png');
+    }
 }
 ?>
