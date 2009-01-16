@@ -71,6 +71,9 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
     
     if (!isset($arrParsedURL['path'])) return(false);
     
+    // Attention la variable 'HTTP_X_SSL_REQUEST' permet de détecter un frontend gérant le chiffrage SSL, cette solution n'est pas exhaustive
+    if (!empty($arrParsedURL['scheme']) && $arrParsedURL['scheme'] == 'http' && isset($_SERVER['HTTP_X_SSL_REQUEST']) && ($_SERVER['HTTP_X_SSL_REQUEST'] == 1 || $_SERVER['HTTP_X_SSL_REQUEST'] == true || $_SERVER['HTTP_X_SSL_REQUEST'] == 'on')) $arrParsedURL['scheme'] = 'https';
+    
     return (empty($arrParsedURL['scheme']) ? '' : "{$arrParsedURL['scheme']}://").(empty($arrParsedURL['host']) ? '' : $arrParsedURL['host']).(empty($arrParsedURL['port']) ? '' : ":{$arrParsedURL['port']}")."{$arrParsedURL['path']}?".ploopi_queryencode(empty($arrParsedURL['query']) ? '' : $arrParsedURL['query'], $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action, $addenv);
 }
 
