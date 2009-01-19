@@ -52,6 +52,12 @@ if (isset($_POST['ploopi_firstname']) && !ereg($pattern, $_POST['ploopi_firstnam
 if (isset($_POST['ploopi_login']) && !ereg($pattern, $_POST['ploopi_login'])) $arrFilter['ploopi_login'] = $_POST['ploopi_login']; 
 if (isset($_POST['ploopi_email']) && !ereg($pattern, $_POST['ploopi_email'])) $arrFilter['ploopi_email'] = $_POST['ploopi_email']; 
 
+// Affectation de valeurs par défaut si non défini
+if (!isset($arrFilter['ploopi_lastname'])) $arrFilter['ploopi_lastname'] = ''; 
+if (!isset($arrFilter['ploopi_firstname'])) $arrFilter['ploopi_firstname'] = ''; 
+if (!isset($arrFilter['ploopi_login'])) $arrFilter['ploopi_login'] = ''; 
+if (!isset($arrFilter['ploopi_email'])) $arrFilter['ploopi_email'] = ''; 
+
 // Enregistrement SESSION
 $_SESSION['system']['directoryform'] = $arrFilter;
 ?>
@@ -92,16 +98,15 @@ $db->query("
 
 $row = $db->fetchrow();
 ?>
-
-<p class="ploopi_va" style="padding:4px;background-color:#e0e0e0;border-bottom:1px solid #808080;">
-    <span><? echo $row['c']; ?> utilisateur(s) trouvé(s).</span>
+<div style="padding:4px;background-color:#e0e0e0;border-bottom:1px solid #808080;">
+    <span>Vous pouvez retrouver ici l'ensemble des utilisateurs du sytème avec leur profil complet.<br />Vous ne pouvez cependant pas les gérer. Pour cela vous devez accéder à l'<a href="<? echo ploopi_urlencode('admin.php?system_level=work'); ?>">interface d'administration des espaces de travail</a>.<br /><strong><? echo $row['c']; ?> utilisateur(s) trouvé(s).</strong></span>
     <? 
     if ($row['c'] > $intMaxResponse)
     {
         ?><strong class="error">Il y a trop de réponses (<? echo $intMaxResponse; ?> max), vous devriez préciser votre recherche</strong><?
     }
     ?>
-</p>
+</div>
 <? 
 if ($row['c'] > 0 && $row['c'] <= $intMaxResponse)
 {
@@ -373,7 +378,7 @@ if ($row['c'] > 0 && $row['c'] <= $intMaxResponse)
                             'label' => (empty($arrWorkspaces)) ? '<em>Pas d\'espace</em>' : implode('<br /> ', $arrWorkspaces),
                             'sort_label' => $strSortLabelWorkspaces
                         ),
-                        'actions' => array('label' => '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?ploopi_op=system_delete_user&user_id={$row['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>')
+                        'actions' => array('label' => '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?ploopi_op=system_delete_user&system_user_id={$row['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>')
                     )
             );
     }            

@@ -463,7 +463,20 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         ploopi_die();
                     break;
                     
-                    
+                    case 'system_delete_user':
+                        if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
+                        {
+                            ploopi_init_module('system');
+                            $objUser = new user();
+                            if (!empty($_GET['system_user_id']) && is_numeric($_GET['system_user_id']) && $objUser->open($_GET['system_user_id']))
+                            {
+                                if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($objUser->fields['login'], '', true);
+                                ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEUSER, "{$objUser->fields['login']} - {$objUser->fields['lastname']} {$objUser->fields['firstname']} (id:{$objUser->fields['id']})");
+                                $objUser->delete();
+                            }
+                        }
+                        ploopi_redirect('admin.php?system_level=system&sysToolbarItem=directory');
+                    break;       
                 }
             }
         break;
