@@ -279,6 +279,7 @@ switch ($_SESSION['system']['level'])
                             $parent_workspace = new workspace();
                             $parent_workspace->open($_GET['workspace_id_workspace']);
                             $workspace->fields['parents'] = "{$parent_workspace->fields['parents']};{$_GET['workspace_id_workspace']}";
+                            $workspace->fields['id_workspace'] = $_GET['workspace_id_workspace'];
                         }
 
                         if (empty($_POST['workspace_backoffice'])) $workspace->fields['backoffice'] = 0;
