@@ -54,7 +54,7 @@ echo $skin->open_simplebloc();
         $templatelist_back = ploopi_getavailabletemplates('backoffice');
         $templatelist_front = ploopi_getavailabletemplates('frontoffice');
 
-        if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
+        if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
         {
             ?>
             <p>
