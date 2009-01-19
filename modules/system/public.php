@@ -100,6 +100,16 @@ switch($op)
         }
 
         $user->save();
+        
+        if (!empty($_SESSION['system']['user_photopath'])) 
+        {
+            ploopi_makedir(_PLOOPI_PATHDATA._PLOOPI_SEP.'system');
+            
+            // photo temporaire présente => copie dans le dossier définitif
+            rename($_SESSION['system']['user_photopath'], $user->getphotopath());
+            unset($_SESSION['system']['user_photopath']);
+        }
+        
         if ($passwordok) ploopi_redirect("admin.php?op=profile&reloadsession");
         else ploopi_redirect("admin.php?op=profile&error=password");
     break;

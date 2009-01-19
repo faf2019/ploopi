@@ -435,7 +435,6 @@ if (isset($_REQUEST['confirm']))
                 ?>
                 </div>
                 </span>
-                
             </p>
             <?
             if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
