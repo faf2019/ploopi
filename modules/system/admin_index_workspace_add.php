@@ -38,10 +38,7 @@
 echo $skin->open_simplebloc();
 ?>
 
-<form name="" action="<? echo ploopi_urlencode('admin.php'); ?>" method="POST" onsubmit="javascript:return system_workspace_validate(this);">
-<input type="hidden" name="op" value="save_workspace">
-<input type="hidden" name="workspace_id_workspace" value="<? echo $workspace->fields['id']; ?>">
-
+<form name="" action="<? echo ploopi_urlencode("admin.php?op=save_workspace&workspace_id_workspace={$workspace->fields['id']}"); ?>" method="post" onsubmit="javascript:return system_workspace_validate(this);">
 <div class="ploopi_form_title">
     <? echo $workspace->fields['label']; ?> &raquo;
     <?
@@ -106,10 +103,10 @@ echo $skin->open_simplebloc();
 
 </div>
 
-<a class="ploopi_form_title" href="javascript:ploopi_switchdisplay('system_meta');">
+<div class="ploopi_form_title">
     <? echo $workspace->fields['label']; ?> &raquo; <? echo _SYSTEM_LABEL_META; ?>
-</a>
-<div class="ploopi_form" id="system_meta" style="clear:both;padding:2px;display:none;">
+</div>
+<div class="ploopi_form" id="system_meta" style="clear:both;padding:2px;">
     <p>
         <label>Titre:</label>
         <input type="text" class="text" name="workspace_title" value="<? echo $workspace->fields['title']; ?>">
@@ -136,10 +133,10 @@ echo $skin->open_simplebloc();
     </p>
 </div>
 
-<a class="ploopi_form_title" href="javascript:ploopi_switchdisplay('system_filtering');">
+<div class="ploopi_form_title">
     <? echo $workspace->fields['label']; ?> &raquo; <? echo _SYSTEM_LABEL_FILTERING; ?>
-</a>
-<div class="ploopi_form" id="system_filtering" style="clear:both;padding:2px;display:none;">
+</div>
+<div class="ploopi_form" id="system_filtering" style="clear:both;padding:2px;">
     <p>
         <label><? echo _SYSTEM_LABEL_GROUP_ALLOWEDIP; ?>:</label>
         <input type="text" class="text" name="workspace_iprules"  value="<? echo $workspace->fields['iprules']; ?>">
@@ -149,63 +146,69 @@ echo $skin->open_simplebloc();
 <div class="ploopi_form_title">
     <? echo $workspace->fields['label']; ?> &raquo; <? echo _SYSTEM_LABEL_USEDMODULES; ?>
 </div>
-<div class="ploopi_form" id="system_filtering" style="clear:both;padding:2px;">
+<div class="ploopi_form">
     <?
     $child = new workspace();
     $child->fields['parents'] = $workspace->fields['parents'].';'.$workspace->fields['id'];
     $sharedmodules = $child->getsharedmodules(false);
     $heritedmodules = $child->getsharedmodules(true);
     $installedmodules = system_getinstalledmodules();
-    ?>
-    <TABLE WIDTH="100%" CELLPADDING="2" CELLSPACING="1">
-    <?
-    $color=$skin->values['bgline1'];
-    echo    "
-        <TR CLASS=\"Title\" BGCOLOR=\"".$color."\">
-            <TD ALIGN=\"CENTER\" width=\"20\"></TD>
-            <TD ALIGN=\"CENTER\">"._SYSTEM_LABEL_MODULETYPE."</TD>
-            <TD ALIGN=\"CENTER\">"._SYSTEM_LABEL_DESCRIPTION."</TD>
-        </TR>
-        ";
-
-
-
+    
+    $columns = array();
+    $values = array();
+    
+    $columns['left']['check'] = 
+        array(
+            'label' => '&nbsp;', 
+            'width' => 44,
+            'options' => array('sort' => true)
+        );
+    
+    $columns['left']['label'] = 
+        array(
+            'label' => _SYSTEM_LABEL_MODULENAME, 
+            'width' => 100, 
+            'options' => array('sort' => true)
+        );
+        
+    $columns['left']['type'] = 
+        array(
+            'label' => _SYSTEM_LABEL_MODULETYPE, 
+            'width' => 100, 
+            'options' => array('sort' => true)
+        );
+        
+    $columns['auto']['description'] = 
+        array(
+            'label' => _SYSTEM_LABEL_DESCRIPTION, 
+            'options' => array('sort' => true)
+        );
+        
       foreach ($sharedmodules AS $instanceid => $instance)
       {
-        if ($color==$skin->values['bgline2']) $color=$skin->values['bgline1'];
-        else $color=$skin->values['bgline2'];
-
-        $checked = (isset($heritedmodules[$instanceid])) ? 'checked' : '';
-
-        echo    "
-                <TR BGCOLOR=\"".$color."\">
-                    <TD ALIGN=\"CENTER\"><input type=\"checkbox\" name=\"heritedmodule[]\" value=\"SHARED,$instanceid\" $checked></TD>
-                    <TD ALIGN=\"CENTER\">$instance[label]</TD>
-                    <TD ALIGN=\"CENTER\">$instance[description]</TD>
-                </TR>
-                ";
-        //echo "<option value=\"SHARED,$groupID,$instanceId\" class=\"listParentItem\">$instanceName</option>";
+        $values[]['values'] = 
+            array(
+                'check' => array('label' => '<input type="checkbox" name="heritedmodule[]" value="SHARED,'.$instanceid.'" '.(isset($heritedmodules[$instanceid]) ? 'checked="checked"' : '').'>', 'sort_label' => isset($heritedmodules[$instanceid]) ? '0' : '1'),
+                'type' => array('label' => htmlentities($instance['moduletype'])),
+                'label' => array('label' => htmlentities($instance['label'])),
+                'description' => array('label' => htmlentities($instance['description']))
+            );
       }
 
       foreach ($installedmodules AS $index => $moduletype)
       {
-        if ($color==$skin->values['bgline2']) $color=$skin->values['bgline1'];
-        else $color=$skin->values['bgline2'];
-
-        echo    "
-            <TR BGCOLOR=\"".$color."\">
-                <TD ALIGN=\"CENTER\"><input type=\"checkbox\" name=\"heritedmodule[]\" value=\"NEW,{$moduletype['id']}\"></TD>
-                <TD ALIGN=\"CENTER\">$moduletype[label]</TD>
-                <TD ALIGN=\"CENTER\">$moduletype[description]</TD>
-            </TR>
-            ";
-        // Objet temporaire
-        // $obj = NEW PLOOPI_MODULE($db->connection_id,$moduletype['instanceid']);
-        // $moduleLabel = $obj->adminGetProperty('moduleLabel');
-        //echo "<option value=\"NEW,$groupID,{$moduletype['id']}\">{$moduletype['label']}</option>";
+        $values[]['values'] = 
+            array(
+                'check' => array('label' => '<input type="checkbox" name="heritedmodule[]" value="NEW,'.$moduletype['id'].'">', 'sort_label' => '9'),
+                'type' => array('label' => htmlentities($moduletype['label'])),
+                'label' => array('label' => '&nbsp;'),
+                'description' => array('label' => htmlentities($moduletype['description']))
+            );
       }
+        
+    $skin->display_array($columns, $values, 'array_choosemodules', array('sortable' => true, 'orderby_default' => 'check'));
+
     ?>
-    </TABLE>
 </div>
 
 

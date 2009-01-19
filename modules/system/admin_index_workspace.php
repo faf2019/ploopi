@@ -144,10 +144,14 @@ echo $skin->open_simplebloc();
     }
 
     $templatelist_back = ploopi_getavailabletemplates('backoffice');
+
+    if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+    {
+        ?>
+        <form name="" action="<? echo ploopi_urlencode("admin.php?op=save_workspace&workspace_id={$workspace->fields['id']}"); ?>" method="post" onsubmit="javascript:return system_workspace_validate(this);">
+        <?
+    }
     ?>
-    <form name="" action="<? echo ploopi_urlencode('admin.php'); ?>" method="POST" onsubmit="javascript:return system_workspace_validate(this);">
-    <input type="hidden" name="op" value="save_workspace">
-    <input type="hidden" name="workspace_id" value="<? echo $workspace->fields['id']; ?>">
 
         <div class="ploopi_form_title">
             <? echo $workspace->fields['label']; ?> &raquo;
@@ -158,7 +162,15 @@ echo $skin->open_simplebloc();
         <div class="ploopi_form" style="clear:both;padding:2px">
             <p>
                 <label><? echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
-                <input type="text" class="text" name="workspace_label"  value="<? echo $workspace->fields['label']; ?>">
+                <?
+                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                {
+                    ?>
+                    <input type="text" class="text" name="workspace_label"  value="<? echo htmlentities($workspace->fields['label']); ?>">
+                    <?
+                }
+                else echo '<span>'.htmlentities($workspace->fields['label']).'</span>';
+                ?>
             </p>
             <?
             if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
@@ -180,32 +192,73 @@ echo $skin->open_simplebloc();
         <div class="ploopi_form" style="clear:both;padding:2px">
             <p>
                 <label><? echo _SYSTEM_LABEL_GROUP_ADMIN; ?>:</label>
-                <input style="width:16px;" type="checkbox" name="workspace_backoffice" <? if($workspace->fields['backoffice']) echo "checked"; ?> value="1">
+                <?
+                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                {
+                    ?>
+                    <input style="width:16px;" type="checkbox" name="workspace_backoffice" <? if ($workspace->fields['backoffice']) echo "checked"; ?> value="1">
+                    <?
+                }
+                else echo '<span>'.($workspace->fields['backoffice'] ? _PLOOPI_YES : _PLOOPI_NO).'</span>';
+                ?>
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_GROUP_SKIN; ?>:</label>
-                <select class="select" name="workspace_template">
-                    <option value=""><? echo _PLOOPI_NONE; ?></option>
-                    <?
-                    foreach($templatelist_back as $index => $tpl_name)
-                    {
-                        $sel = ($tpl_name == $workspace->fields['template']) ? 'selected' : '';
-                        echo "<option $sel>$tpl_name</option>";
-                    }
+                <?
+                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                {
                     ?>
-                </select>
+                    <select class="select" name="workspace_template">
+                        <option value=""><? echo _PLOOPI_NONE; ?></option>
+                        <?
+                        foreach($templatelist_back as $index => $tpl_name)
+                        {
+                            ?>
+                            <option <? if ($tpl_name == $workspace->fields['template']) echo 'selected="selected"'; ?>><? echo htmlentities($tpl_name); ?></option>
+                            <?
+                        }
+                        ?>
+                    </select>
+                    <?
+                }
+                else echo '<span>'.$workspace->fields['template'].'</span>';
+                ?>
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_GROUP_ADMINDOMAINLIST; ?>:</label>
-                <textarea class="text" name="workspace_backoffice_domainlist"><? echo $workspace->fields['backoffice_domainlist']; ?></textarea>
+                <?
+                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                {
+                    ?>
+                    <textarea class="text" name="workspace_backoffice_domainlist"><? echo htmlentities($workspace->fields['backoffice_domainlist']); ?></textarea>
+                    <?
+                }
+                else echo '<span>'.ploopi_nl2br(htmlentities($workspace->fields['backoffice_domainlist'])).'</span>';
+                ?>
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_GROUP_WEB; ?>:</label>
-                <input style="width:16px;" type="checkbox" name="workspace_frontoffice" <? if($workspace->fields['frontoffice']) echo "checked"; ?> value="1">
+                <?
+                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                {
+                    ?>
+                    <input style="width:16px;" type="checkbox" name="workspace_frontoffice" <? if($workspace->fields['frontoffice']) echo "checked"; ?> value="1">
+                    <?
+                }
+                else echo '<span>'.($workspace->fields['frontoffice'] ? _PLOOPI_YES : _PLOOPI_NO).'</span>';
+                ?>
             </p>
             <p>
                 <label><? echo _SYSTEM_LABEL_GROUP_WEBDOMAINLIST; ?>:</label>
-                <textarea class="text" name="workspace_frontoffice_domainlist"><? echo $workspace->fields['frontoffice_domainlist']; ?></textarea>
+                <?
+                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                {
+                    ?>
+                    <textarea class="text" name="workspace_frontoffice_domainlist"><? echo htmlentities($workspace->fields['frontoffice_domainlist']); ?></textarea>
+                    <?
+                }
+                else echo '<span>'.ploopi_nl2br(htmlentities($workspace->fields['backoffice_domainlist'])).'</span>';
+                ?>
             </p>
             <?
             if ($workspace->fields['frontoffice'])
@@ -230,55 +283,125 @@ echo $skin->open_simplebloc();
             ?>
         </div>
 
-        <a class="ploopi_form_title" href="javascript:ploopi_switchdisplay('system_meta');">
+        <div class="ploopi_form_title">
             <? echo $workspace->fields['label']; ?> &raquo; <? echo _SYSTEM_LABEL_META; ?>
-        </a>
+        </div>
 
-        <div class="ploopi_form" id="system_meta" style="clear:both;padding:2px;display:none;">
+        <div class="ploopi_form" id="system_meta" style="clear:both;padding:2px;">
             <p>
                 <label>Titre:</label>
-                <input type="text" class="text" name="workspace_title" value="<? echo $workspace->fields['title']; ?>">
+                <?
+                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                {
+                    ?>
+                    <input type="text" class="text" name="workspace_title" value="<? echo htmlentities($workspace->fields['title']); ?>">
+                    <?
+                }
+                else echo '<span>'.htmlentities($workspace->fields['title']).'</span>';
+                ?>
             </p>
             <p>
                 <label>Description:</label>
-                <input type="text" class="text" name="workspace_meta_description" value="<? echo $workspace->fields['meta_description']; ?>">
+                <?
+                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                {
+                    ?>
+                    <input type="text" class="text" name="workspace_meta_description" value="<? echo htmlentities($workspace->fields['meta_description']); ?>">
+                    <?
+                }
+                else echo '<span>'.htmlentities($workspace->fields['meta_description']).'</span>';
+                ?>
             </p>
             <p>
                 <label>Mots Clés:</label>
-                <input type="text" class="text" name="workspace_meta_keywords" value="<? echo $workspace->fields['meta_keywords']; ?>">
+                <?
+                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                {
+                    ?>
+                    <input type="text" class="text" name="workspace_meta_keywords" value="<? echo htmlentities($workspace->fields['meta_keywords']); ?>">
+                    <?
+                }
+                else echo '<span>'.htmlentities($workspace->fields['meta_keywords']).'</span>';
+                ?>
             </p>
             <p>
                 <label>Auteur:</label>
-                <input type="text" class="text" name="workspace_meta_author" value="<? echo $workspace->fields['meta_author']; ?>">
+                <?
+                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                {
+                    ?>
+                    <input type="text" class="text" name="workspace_meta_author" value="<? echo $workspace->fields['meta_author']; ?>">
+                    <?
+                }
+                else echo '<span>'.htmlentities($workspace->fields['meta_author']).'</span>';
+                ?>
             </p>
             <p>
                 <label>Copyright:</label>
-                <input type="text" class="text" name="workspace_meta_copyright" value="<? echo $workspace->fields['meta_copyright']; ?>">
+                <?
+                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                {
+                    ?>
+                    <input type="text" class="text" name="workspace_meta_copyright" value="<? echo htmlentities($workspace->fields['meta_copyright']); ?>">
+                    <?
+                }
+                else echo '<span>'.htmlentities($workspace->fields['meta_copyright']).'</span>';
+                ?>
             </p>
             <p>
                 <label>Robots:</label>
-                <input type="text" class="text" name="workspace_meta_robots" value="<? echo $workspace->fields['meta_robots']; ?>">
+                <?
+                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                {
+                    ?>
+                    <input type="text" class="text" name="workspace_meta_robots" value="<? echo htmlentities($workspace->fields['meta_robots']); ?>">
+                    <?
+                }
+                else echo '<span>'.htmlentities($workspace->fields['meta_robots']).'</span>';
+                ?>
             </p>
         </div>
 
-        <a class="ploopi_form_title" href="javascript:ploopi_switchdisplay('system_filtering');">
+        <div class="ploopi_form_title">
             <? echo $workspace->fields['label']; ?> &raquo; <? echo _SYSTEM_LABEL_FILTERING; ?>
-        </a>
+        </div>
 
-        <div class="ploopi_form" id="system_filtering" style="clear:both;padding:2px;display:none;">
+        <div class="ploopi_form" id="system_filtering" style="clear:both;padding:2px;">
             <p>
                 <label><? echo _SYSTEM_LABEL_GROUP_ALLOWEDIP; ?>:</label>
-                <input type="text" class="text" name="workspace_iprules"  value="<? echo $workspace->fields['iprules']; ?>">
+                <?
+                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                {
+                    ?>
+                    <input type="text" class="text" name="workspace_iprules"  value="<? echo htmlentities($workspace->fields['iprules']); ?>">
+                    <?
+                }
+                else echo '<span>'.htmlentities($workspace->fields['iprules']).'</span>';
+                ?>
+                
             </p>
         </div>
 
+        <?
+        if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+        {
+            ?>
+            <div style="clear:both;float:right;padding:4px;">
+                <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+            </div>
+            <?
+        }
+        ?>
         <div style="clear:both;float:right;padding:4px;">
-            <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
         </div>
-
-        <div style="clear:both;float:right;padding:4px;">
-        </div>
-    </form>
+    <?
+    if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+    {
+        ?>
+        </form>
+        <?
+    }
+    ?>
 
     </div>
 

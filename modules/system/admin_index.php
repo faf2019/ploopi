@@ -266,23 +266,24 @@ switch ($_SESSION['system']['level'])
 
 
                     case 'save_workspace' :
-
+                        // Il faut être admin d'espace ou mieux pour pouvoir sauvegarder un espace de travail
+                        if ($_SESSION['ploopi']['adminlevel'] <= _PLOOPI_ID_LEVEL_GROUPMANAGER) ploopi_redirect("admin.php?workspaceid={$workspace_id}");
+                        
                         $workspace = new workspace();
-                        if (!empty($_POST['workspace_id']) && is_numeric($_POST['workspace_id'])) $workspace->open($_POST['workspace_id']);
+                        if (!empty($_GET['workspace_id']) && is_numeric($_GET['workspace_id'])) $workspace->open($_GET['workspace_id']);
 
                         $workspace->setvalues($_POST,'workspace_');
 
-                        if (!empty($_POST['workspace_id_workspace']))
+                        if (!empty($_GET['workspace_id_workspace']))
                         {
                             $parent_workspace = new workspace();
-                            $parent_workspace->open($_POST['workspace_id_workspace']);
-                            $workspace->fields['parents'] = "{$parent_workspace->fields['parents']};{$_POST['workspace_id_workspace']}";
+                            $parent_workspace->open($_GET['workspace_id_workspace']);
+                            $workspace->fields['parents'] = "{$parent_workspace->fields['parents']};{$_GET['workspace_id_workspace']}";
                         }
 
                         if (empty($_POST['workspace_backoffice'])) $workspace->fields['backoffice'] = 0;
                         if (empty($_POST['workspace_frontoffice'])) $workspace->fields['frontoffice'] = 0;
                         if (empty($_POST['workspace_mustdefinerule'])) $workspace->fields['mustdefinerule'] = 0;
-
 
                         $workspace_id = $workspace->save();
 
@@ -291,7 +292,7 @@ switch ($_SESSION['system']['level'])
 
                         system_updateparents();
 
-                        if (empty($_POST['workspace_id']) && isset($_POST['heritedmodule']))
+                        if (empty($_GET['workspace_id']) && isset($_POST['heritedmodule']))
                         {
                             foreach($_POST['heritedmodule'] as $instance)
                             {

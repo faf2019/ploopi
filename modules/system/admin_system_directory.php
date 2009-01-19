@@ -43,11 +43,17 @@ $arrFilter = array();
 // On ne veut pas les caractères % et | dans la recherche avec LIKE
 $pattern = '%|_';
 
-$arrFilter['ploopi_lastname'] = isset($_POST['ploopi_lastname']) && !ereg($pattern, $_POST['ploopi_lastname']) ? $_POST['ploopi_lastname'] : '';
-$arrFilter['ploopi_firstname'] = isset($_POST['ploopi_firstname']) && !ereg($pattern, $_POST['ploopi_firstname']) ? $_POST['ploopi_firstname'] : '';
-$arrFilter['ploopi_login'] = isset($_POST['ploopi_login']) && !ereg($pattern, $_POST['ploopi_login']) ? $_POST['ploopi_login'] : '';
-$arrFilter['ploopi_email'] = isset($_POST['ploopi_email']) && !ereg($pattern, $_POST['ploopi_email']) ? $_POST['ploopi_email'] : '';
+// Lecture SESSION
+if (isset($_SESSION['system']['directoryform'])) $arrFilter = $_SESSION['system']['directoryform'];
 
+// Lecture Params
+if (isset($_POST['ploopi_lastname']) && !ereg($pattern, $_POST['ploopi_lastname'])) $arrFilter['ploopi_lastname'] = $_POST['ploopi_lastname']; 
+if (isset($_POST['ploopi_firstname']) && !ereg($pattern, $_POST['ploopi_firstname'])) $arrFilter['ploopi_firstname'] = $_POST['ploopi_firstname']; 
+if (isset($_POST['ploopi_login']) && !ereg($pattern, $_POST['ploopi_login'])) $arrFilter['ploopi_login'] = $_POST['ploopi_login']; 
+if (isset($_POST['ploopi_email']) && !ereg($pattern, $_POST['ploopi_email'])) $arrFilter['ploopi_email'] = $_POST['ploopi_email']; 
+
+// Enregistrement SESSION
+$_SESSION['system']['directoryform'] = $arrFilter;
 ?>
 <form action="<? echo ploopi_urlencode('admin.php?sysToolbarItem=directory'); ?>" method="post">
 <p class="ploopi_va" style="padding:4px;border-bottom:1px solid #808080;">
@@ -133,6 +139,12 @@ if ($row['c'] > 0 && $row['c'] <= $intMaxResponse)
             'options' => array('sort' => true)
         );
 
+    $arrResult['columns']['actions_right']['actions'] = 
+        array(
+            'label' => '&nbsp;', 
+            'width' => 24
+        );        
+        
 
     // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
     $ptrRs = $db->query("
@@ -346,7 +358,7 @@ if ($row['c'] > 0 && $row['c'] <= $intMaxResponse)
                 );
                 
         }        
-                
+        
         $arrResult['rows'][] = 
             array(
                 'values' => 
@@ -360,7 +372,8 @@ if ($row['c'] > 0 && $row['c'] <= $intMaxResponse)
                         'workspaces' => array(
                             'label' => (empty($arrWorkspaces)) ? '<em>Pas d\'espace</em>' : implode('<br /> ', $arrWorkspaces),
                             'sort_label' => $strSortLabelWorkspaces
-                        )
+                        ),
+                        'actions' => array('label' => '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?ploopi_op=system_delete_user&user_id={$row['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>')
                     )
             );
     }            
