@@ -32,6 +32,7 @@
  * @author Stéphane Escaich
  */
 
+include_once './include/functions/string.php';
 
 /**
  * Redimensionne une image et l'enregistre dans un fichier ou la renvoie vers le navigateur
