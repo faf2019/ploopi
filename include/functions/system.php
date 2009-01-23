@@ -74,8 +74,8 @@ function ploopi_die($var = null, $flush = true)
             "{$ploopi_errors_nb} erreur(s) sur {$ploopi_errors_msg}".
             "\n_SERVER:\n".print_r($_SERVER, true).
             "\n_POST:\n".print_r($_POST, true).
-            "\n_GET:\n".print_r($_GET, true).
-            "\n_SESSION:\n".print_r($_SESSION, true)
+            "\n_GET:\n".print_r($_GET, true)
+            // ."\n_SESSION:\n".print_r($_SESSION, true)
         );
     }  
     

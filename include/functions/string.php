@@ -150,15 +150,21 @@ function ploopi_urlrewrite($url, $title = '', $keep_extension = false)
  * Remplace des caractères dans une chaîne.
  * 
  * @param string $str la chaîne à traiter
- * @param string $from caractères de départ
- * @param string $to caractères de remplacement
+ * @param mixed $from caractères de départ sous forme d'une chaine ou d'un tableau associatif (si to est null)
+ * @param string $to caractères de remplacement ou null
  * @return string chaîne modifiée
  * 
  * @see strtr
  */
 
-function ploopi_strtr($str, $from, $to)
+function ploopi_strtr($str, $from, $to = null)
 {
+    if (!isset($to) && is_array($from)) 
+    {
+        $to = implode('', $from);
+        $from = implode('', array_keys($from));
+    }
+    
     return str_replace(ploopi_str_split($from), ploopi_str_split($to), $str);
 }
 

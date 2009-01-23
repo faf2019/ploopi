@@ -131,19 +131,20 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
             $mb_object = new mb_object();
             $mb_object->open($id_object, $id_module_type);
 
-            $object_script = str_replace(
-                                        array(
-                                            '<IDRECORD>',
-                                            '<IDMODULE>',
-                                            '<IDWORKSPACE>'
-                                        ),
-                                        array(
-                                            $id_record,
-                                            $id_module,
-                                            $id_workspace
-                                        ),
-                                        $mb_object->fields['script']
-                            );
+            $object_script = 
+                str_replace(
+                    array(
+                        '<IDRECORD>',
+                        '<IDMODULE>',
+                        '<IDWORKSPACE>'
+                    ),
+                    array(
+                        $id_record,
+                        $id_module,
+                        $id_workspace
+                    ),
+                    $mb_object->fields['script']
+                );
 
             $url = _PLOOPI_BASEPATH.'/'.ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}");
 
@@ -158,23 +159,29 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
 
         if ($id_user == 0)
         {
-                $email_from[0] = array( 'address'   => _PLOOPI_ADMINMAIL,
-                                        'name'  => _PLOOPI_ADMINMAIL
-                                    );
+                $email_from[0] = 
+                    array( 
+                        'address'   => _PLOOPI_ADMINMAIL,
+                        'name'  => _PLOOPI_ADMINMAIL
+                    );
         }
         else
         {
             if (!empty($_SESSION['ploopi']['user']['email']))
             {
-                $email_from[0] = array( 'address'   => $_SESSION['ploopi']['user']['email'],
-                                        'name'  => "{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']}"
-                                    );
+                $email_from[0] = 
+                    array( 
+                        'address' => $_SESSION['ploopi']['user']['email'],
+                        'name' => "{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']}"
+                    );
             }
             else
             {
-                $email_from[0] = array( 'address'   => _PLOOPI_ADMINMAIL,
-                                        'name'  => "{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']}"
-                                    );
+                $email_from[0] = 
+                    array( 
+                        'address'   => _PLOOPI_ADMINMAIL,
+                        'name'  => "{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']}"
+                    );
             }
         }
 
@@ -200,9 +207,11 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
             {
                 if ($user->fields['ticketsbyemail'] == 1 && !empty($user->fields['email']))
                 {
-                    $email_to[0] = array(   'address'   => $user->fields['email'],
-                                            'name'  => "{$user->fields['firstname']} {$user->fields['lastname']}"
-                                        );
+                    $email_to[0] = 
+                        array(   
+                            'address' => $user->fields['email'],
+                            'name' => "{$user->fields['firstname']} {$user->fields['lastname']}"
+                        );
     
                     ploopi_send_mail($email_from, $email_to, $email_subject, $email_message);
                 }
