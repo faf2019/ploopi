@@ -297,7 +297,8 @@ function forms_getdata($id_form, $id_module, $id_object, $id_record, $options = 
     if (!isset($options['object_label'])) $options['object_label'] = 'Objet Lié';
     if (!isset($options['object_values'])) $options['object_values'] = array();
 
-
+    $_SESSION['forms'][$forms_fuid]['options'] = $options;
+    
     include './modules/forms/op_preparedata.php';
     
     return(array($data_title, $data));

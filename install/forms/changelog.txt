@@ -1,3 +1,9 @@
+== Module FORMS - version 2.23 =====================================================
+
+2009-01-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correctif sur la fonction forms_getdata(), ne prenait pas en compte les options. 
+
 == Module FORMS - version 2.221 =====================================================
 
 2008-10-02  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
