@@ -1,3 +1,9 @@
+== Module NEWS - version 2.43 ====================================================
+
+2009-01-23  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un bug (constante non définie) 
+
 == Module NEWS - version 2.42 ====================================================
 
 2008-08-11  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

@@ -30,6 +30,11 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
+
+/**
+ * Initialisation du module
+ */
+ploopi_init_module('news', false, false, false);
 ?>
 
 function news_validate(form)
