@@ -34,8 +34,18 @@
 
 header('Expires: Sat, 1 Jan 2000 05:00:00 GMT');
 header('Last-Modified: ' . gmdate("D, d M Y H:i:s"));
-header('Cache-Control: no-cache, must-revalidate');
+
+// HTTP/1.1
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Cache-Control: max-age=0', false);
+
+// HTTP/1.0
 header('Pragma: no-cache');
+
+// On génère un Etag unique
+header('Etag: '.microtime());
+
 header('Accept-Ranges: bytes');
 header('Content-type: text/html; charset=iso-8859-1');
 ?>
