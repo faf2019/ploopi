@@ -205,35 +205,44 @@ else
                 $array_columns = array();
                 $array_values = array();
 
-                $array_columns['left']['vers'] = array( 'label' => 'Vers',
-                                                        'width' => '60',
-                                                        'options' => array('sort' => true)
-                                                        );
+                $array_columns['left']['vers'] = 
+                    array( 
+                        'label' => 'Vers',
+                        'width' => '60',
+                        'options' => array('sort' => true)
+                    );
 
-                $array_columns['right']['taille'] = array(  'label' => 'Taille',
-                                                            'width' => '80',
-                                                            'options' => array('sort' => true)
-                                                            );
+                $array_columns['right']['taille'] = 
+                    array(  
+                        'label' => 'Taille',
+                        'width' => '80',
+                        'options' => array('sort' => true)
+                    );
 
-                $array_columns['right']['par'] = array( 'label' => 'Par',
-                                                        'width' => '100',
-                                                        'options' => array('sort' => true)
-                                                        );
+                $array_columns['right']['par'] = 
+                    array( 
+                        'label' => 'Par',
+                        'width' => '100',
+                        'options' => array('sort' => true)
+                    );
 
-                $array_columns['right']['modif'] = array(   'label' => 'Modifié le',
-                                                            'width' => '140',
-                                                            'options' => array('sort' => true)
-                                                            );
+                $array_columns['right']['modif'] = 
+                    array(   
+                        'label' => 'Modifié le',
+                        'width' => '140',
+                        'options' => array('sort' => true)
+                    );
 
-                $array_columns['auto']['fichier'] = array(  'label' => 'Fichier',
-                                                            'options' => array('sort' => true)
-                                                            );
+                $array_columns['auto']['fichier'] = 
+                    array(  
+                        'label' => 'Fichier',
+                        'options' => array('sort' => true)
+                    );
 
                 $c = 0;
 
                 $history = $docfile->gethistory();
 
-                //ploopi_print_r($history);
                 foreach($history as $row)
                 {
                     $ldate_modify = (!empty($row['timestp_modify'])) ? ploopi_timestamp2local($row['timestp_modify']) : array('date' => '', 'time' => '');
@@ -244,7 +253,7 @@ else
                     $array_values[$c]['values']['modif']    = array('label' => "{$ldate_modify['date']} {$ldate_modify['time']}", 'style' => '');
                     $array_values[$c]['values']['fichier']  = array('label' => $row['name'], 'style' => '');
                     $array_values[$c]['description'] = htmlentities("{$row['name']} ({$row['version']})");
-                    $array_values[$c]['link'] = "admin.php?op=doc_filedownload&docfile_md5id={$row['md5id']}&version={$row['version']}";
+                    $array_values[$c]['link'] = "admin.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}&version={$row['version']}";
                     $array_values[$c]['style'] = '';
                     $c++;
                 }
@@ -263,14 +272,18 @@ else
             $array_columns = array();
             $array_values = array();
 
-            $array_columns['left']['meta'] = array( 'label' => 'Propriété',
-                                                        'width' => '150',
-                                                        'options' => array('sort' => true)
-                                                        );
+            $array_columns['left']['meta'] = 
+                array( 
+                    'label' => 'Propriété',
+                    'width' => '150',
+                    'options' => array('sort' => true)
+                );
 
-            $array_columns['auto']['valeur'] = array(   'label' => 'Valeur',
-                                                        'options' => array('sort' => true)
-                                                        );
+            $array_columns['auto']['valeur'] = 
+                array(   
+                    'label' => 'Valeur',
+                    'options' => array('sort' => true)
+                );
 
             $c = 0;
 
@@ -295,34 +308,41 @@ else
             $array_columns = array();
             $array_values = array();
 
-            $array_columns['right']['ratio'] = array(   'label' => 'Ratio',
-                                                        'width' => '60',
-                                                        'options' => array('sort' => true)
-                                                        );
+            $array_columns['right']['ratio'] = 
+                array(   
+                    'label' => 'Ratio',
+                    'width' => '60',
+                    'options' => array('sort' => true)
+                );
 
-            $array_columns['right']['weight'] = array(  'label' => 'Poids',
-                                                        'width' => '60',
-                                                        'options' => array('sort' => true)
-                                                        );
+            $array_columns['right']['weight'] = 
+                array(  
+                    'label' => 'Poids',
+                    'width' => '60',
+                    'options' => array('sort' => true)
+                );
 
-            $array_columns['right']['relevance'] = array(   'label' => 'Pertinence',
-                                                            'width' => '100',
-                                                            'options' => array('sort' => true)
-                                                            );
+            $array_columns['right']['relevance'] = 
+                array(   
+                    'label' => 'Pertinence',
+                    'width' => '100',
+                    'options' => array('sort' => true)
+                );
 
-            $array_columns['right']['stem'] = array(    'label' => 'Racine',
-                                                        'width' => '100',
-                                                        'options' => array('sort' => true)
-                                                        );
+            $array_columns['right']['stem'] = 
+                array(    
+                    'label' => 'Racine',
+                    'width' => '100',
+                    'options' => array('sort' => true)
+                );
 
-            $array_columns['auto']['keyword'] = array(  'label' => 'Mot Clé',
-                                                        'options' => array('sort' => true)
-                                                        );
+            $array_columns['auto']['keyword'] = 
+                array(  
+                    'label' => 'Mot Clé',
+                    'options' => array('sort' => true)
+                );
 
             $index = ploopi_search_get_index(_DOC_OBJECT_FILE, $docfile->fields['md5id']);
-
-            //ploopi_print_r($index);
-
 
             $c = 1;
 
@@ -371,7 +391,7 @@ else
                 else
                 {
                     ?>
-                    <form method="post" enctype="multipart/form-data" action="<? echo ploopi_urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&doc_mode=host"); ?>"  onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
+                    <form method="post" enctype="multipart/form-data" action="<? echo ploopi_urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&doc_mode=host"); ?>" onsubmit="javascript:return doc_file_validate(this,<? echo ($newfile) ? 'true' : 'false'; ?>,<? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
                     <?
                 }
                 ?>
@@ -451,50 +471,51 @@ else
                     ?>
                 </p>
             </div>
-            <?
-            if (!$readonly)
-            {
-                if ($booServerModeAvailable)
+            <div style="padding:0 4px;">
+                <?
+                if (!$readonly)
                 {
-                    ?>
-                    <div style="padding:4px;">
-                        <div>Mettre à jour avec un fichier situé : </div>
-                        <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi_checkbox_click(event, '_docfile_location_host');">
-                            <input type="radio" name="_docfile_location" id="_docfile_location_host" value="host" checked="checked" onchange="javascript:$('doc_form_host').style.display = 'block'; $('doc_form_server').style.display = 'none'; $('docfile_file_server').value = ''; $('doc_mode').value='host'; " />
-                            <span>sur mon poste</span>
-                        </p>
-                        <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi_checkbox_click(event, '_docfile_location_server');">
-                            <input type="radio" name="_docfile_location" id="_docfile_location_server" value="server" onchange="javascript:$('doc_form_host').style.display = 'none'; $('doc_form_server').style.display = 'block'; $('docfile_file_host').value = ''; $('doc_mode').value='server';" />
-                            <span>sur le serveur</span>
+                    if ($booServerModeAvailable)
+                    {
+                        ?>
+                        <div style="padding:4px;">
+                            <div>Mettre à jour avec un fichier situé : </div>
+                            <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi_checkbox_click(event, '_docfile_location_host');">
+                                <input type="radio" name="_docfile_location" id="_docfile_location_host" value="host" checked="checked" onchange="javascript:$('doc_form_host').style.display = 'block'; $('doc_form_server').style.display = 'none'; $('docfile_file_server').value = ''; $('doc_mode').value='host'; " />
+                                <span>sur mon poste</span>
+                            </p>
+                            <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi_checkbox_click(event, '_docfile_location_server');">
+                                <input type="radio" name="_docfile_location" id="_docfile_location_server" value="server" onchange="javascript:$('doc_form_host').style.display = 'none'; $('doc_form_server').style.display = 'block'; $('docfile_file_host').value = ''; $('doc_mode').value='server';" />
+                                <span>sur le serveur</span>
+                            </p>
+                        </div>
+                        <?
+                    }
+                    ?>  
+                    <div id="doc_form_host" style="display:block;">
+                        <p class="ploopi_va" style="margin-bottom:2px;">
+                            <input type="file" class="text" name="docfile_file_host" id="docfile_file_host" />
                         </p>
                     </div>
                     <?
-                }
-                ?>  
-                <div id="doc_form_host" style="display:block;">
-                    <p class="ploopi_va" style="margin-bottom:2px;">
-                        <input type="file" class="text" name="docfile_file_host" id="docfile_file_host" />
-                    </p>
-                </div>
-                <?
-                if ($booServerModeAvailable)
-                {
+                    if ($booServerModeAvailable)
+                    {
+                        ?>
+                        <div id="doc_form_server" style="display:none;">
+                            <p class="ploopi_va" style="margin-bottom:2px;">
+                                <input type="text" class="text" name="_docfile_file_server" id="docfile_file_server" value="" style="width:200px;" readonly />
+                                <input type="button" class="button" value="Parcourir" style="width:90px;" onclick="javascript:ploopi_filexplorer_popup('<? echo ploopi_filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server", "docfile_explorer"); ?>', event);" />
+                            </p>
+                        </div>
+                        <?
+                    }
                     ?>
-                    <div id="doc_form_server" style="display:none;">
-                        <p class="ploopi_va" style="margin-bottom:2px;">
-                            <input type="text" class="text" name="_docfile_file_server" id="docfile_file_server" value="" style="width:200px;" readonly />
-                            <input type="button" class="button" value="Parcourir" style="width:90px;" onclick="javascript:ploopi_filexplorer_popup('<? echo ploopi_filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server", "docfile_explorer"); ?>', event);" />
-                        </p>
-                    </div>
+                    <div id="doc_progressbar" style="display:none;"><div id="doc_progressbar_bg"></div></div>
+                    <div id="doc_progressbar_txt"></div>
                     <?
                 }
                 ?>
-                <div id="doc_progressbar" style="display:none;"><div id="doc_progressbar_bg"></div></div>
-                <div id="doc_progressbar_txt"></div>
-                <?
-            }
-            
-            ?>
+            </div>
                  
             <div style="padding:4px;text-align:right;">
                 <input type="button" class="flatbutton" value="<? echo _PLOOPI_BACK; ?>" onclick="javascript:doc_explorer(<? echo $currentfolder; ?>);">

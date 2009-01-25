@@ -1,3 +1,18 @@
+== Module DOC - version 4.0 =====================================================
+
+2009-01-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correctif sur le téléchargement d'un document dans l'historique des versions
+ * Correctif sur la mise à jour d'un document sans passer par le CGI
+ * Correctif sur le tri des documents/dossiers (case insensitive) dans l'explorateur
+ * Correctif sur le tri des documents/dossiers (case insensitive) dans la recherche
+ * Correction d'un bug lors de la suppression d'un fichier, tentait de supprimer un dossier potentiellement non vide
+ * Suppression du champ 'type' dans l'explorateur de documents
+ * Ajout de l'information 'espace de travail' sur les dossiers
+ * Meilleure gestion à l'affichage des utilisateurs ou espace de travail supprimés
+ * Un abonné n'est averti d'une opération sur un élément que s'il peut accéder à cet élément (il n'est pas averti lors de la création d'un dossier privé ou qui ne lui est pas partagé)
+ * Paramétrage possible des colonnes à afficher dans l'explorateur de documents et dans la recherche
+ 
 == Module DOC - version 3.98 =====================================================
 
 2009-01-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

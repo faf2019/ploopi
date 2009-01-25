@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>doc</label>
-        <version>3.98</version>
-        <author>Netlor / Ovensia</author>
-        <date>20090112000000</date>
+        <version>4.0</version>
+        <author>Ovensia</author>
+        <date>20090125000000</date>
         <description>Gestion de Documents</description>
         <paramtype>
             <name>doc_viewfoldersinblock</name>
@@ -102,6 +102,66 @@
             <public>1</public>
             <description/>
         </paramtype>
+        <paramtype>
+            <name>doc_explorer_displaysize</name>
+            <label>Afficher la colonne "Taille" dans l'explorateur</label>
+            <default_value>1</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>1</value>
+                <displayed_value>oui</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>0</value>
+                <displayed_value>non</displayed_value>
+            </paramchoice>
+        </paramtype>        
+        <paramtype>
+            <name>doc_explorer_displayuser</name>
+            <label>Afficher la colonne "Propriétaire" dans l'explorateur</label>
+            <default_value>1</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>1</value>
+                <displayed_value>oui</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>0</value>
+                <displayed_value>non</displayed_value>
+            </paramchoice>
+        </paramtype>        
+        <paramtype>
+            <name>doc_explorer_displayworkspace</name>
+            <label>Afficher la colonne "Espace" dans l'explorateur</label>
+            <default_value>1</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>1</value>
+                <displayed_value>oui</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>0</value>
+                <displayed_value>non</displayed_value>
+            </paramchoice>
+        </paramtype>        
+        <paramtype>
+            <name>doc_explorer_displaydatetime</name>
+            <label>Afficher la colonne "Date/Heure" dans l'explorateur</label>
+            <default_value>1</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>1</value>
+                <displayed_value>oui</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>0</value>
+                <displayed_value>non</displayed_value>
+            </paramchoice>
+        </paramtype>        
         <action>
             <id_action>1</id_action>
             <label>Ajouter un Dossier</label>

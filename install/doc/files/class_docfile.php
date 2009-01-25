@@ -290,14 +290,25 @@ class docfile extends data_object
         return($error);
     }
 
-
+    /**
+     * Supprime le document/fichier
+     */
+    
     function delete()
     {
         $filepath = $this->getfilepath();
         if (file_exists($filepath)) @unlink($filepath);
 
         $basepath = $this->getbasepath();
-        if (file_exists($basepath)) @rmdir($basepath);
+        if (file_exists($basepath)) 
+        {
+            $dh = opendir($basepath);
+            $booEmptyDir = true;
+            while (($file = readdir($dh)) !== false) $booEmptyDir = $booEmptyDir && in_array($file, array('.', '..'));
+            
+            // Pas de sous dossiers ou de fichiers, on peut effacer le dossier
+            if ($booEmptyDir) @rmdir($basepath);
+        }
 
         parent::delete();
 
