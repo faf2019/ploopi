@@ -30,6 +30,11 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
+
+/**
+ * Initialisation du module
+ */
+ploopi_init_module('forms', false, false, false);
 ?>
 
 var verifcolor = false;
