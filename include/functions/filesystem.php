@@ -54,8 +54,7 @@ function ploopi_copydir($src , $dest, $folder_mode = 0750, $file_mode = 0640)
 
     while ($file = readdir($folder))
     {
-        $l = array('.', '..');
-        if (!in_array($file, $l))
+        if (!in_array($file, array('.', '..')))
         {
             $src_file = "{$src}/{$file}";
             $dest_file = "{$dest}/{$file}";
@@ -95,8 +94,7 @@ function ploopi_deletedir($src)
 
         while ($file = readdir($folder))
         {
-            $l = array('.', '..');
-            if (!in_array( $file, $l))
+            if (!in_array( $file, array('.', '..')))
             {
                 if (is_dir("{$src}/{$file}"))
                 {

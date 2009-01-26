@@ -24,7 +24,7 @@
 /**
  * Opérations génériques.
  * Calendrier, Colorpicker...
- * 
+ *
  * @package ploopi
  * @subpackage global
  * @copyright Netlor, Ovensia
@@ -46,72 +46,72 @@ if (isset($ploopi_op))
     {
         case 'ploopi_lostpassword':
         case 'ploopi_lostpassword_confirm':
-            
+
             if (!isset($_REQUEST['ploopi_lostpassword_login']) && !isset($_REQUEST['ploopi_lostpassword_email'])) ploopi_die();
-            
+
             $arrWhere = array();
             if (!empty($_REQUEST['ploopi_lostpassword_login'])) $arrWhere[] = "login = '".$db->addslashes($_REQUEST['ploopi_lostpassword_login'])."'";
             if (!empty($_REQUEST['ploopi_lostpassword_email'])) $arrWhere[] = "email = '".$db->addslashes($_REQUEST['ploopi_lostpassword_email'])."'";
-            
+
             $db->query('
-                SELECT  id, 
-                        email, 
-                        lastname, 
+                SELECT  id,
+                        email,
+                        lastname,
                         firstname
-                        
+
                 FROM    ploopi_user
-                
+
                 WHERE   '.implode(' AND ', $arrWhere)
             );
-            
+
             switch ($db->numrows())
             {
                 case 0: // erreur : inconnu
                     $intError = _PLOOPI_ERROR_LOSTPASSWORD_UNKNOWN;
                 break;
-                
+
                 case 1: // ok
                     $row = $db->fetchrow();
                     if (!empty($row['email']))
                     {
-                        
+
                         include_once './include/classes/user.php';
                         $objUser = new user();
                         $objUser->open($row['id']);
-                        
+
                         // confirmation de modification de mdp
-                        if ($ploopi_op == 'ploopi_lostpassword_confirm') 
+                        if ($ploopi_op == 'ploopi_lostpassword_confirm')
                         {
                             // si code de confirmation fourni
                             if (!empty($_GET['ploopi_lostpassword_confirmcode']))
                             {
                                 include_once './include/classes/confirmation_code.php';
                                 $confirmation_code = new confirmation_code();
-                                
+
                                 // si action en cours avec le bon code de confirmation
                                 if ($confirmation_code->open("ploopi_lostpassword{$objUser->fields['id']}") && $confirmation_code->fields['code'] == $_GET['ploopi_lostpassword_confirmcode'])
                                 {
-                                    
+
                                     // ok on peut générer le nouveau mot de passe et l'enregistrer
                                     $strPass = ploopi_generatepassword();
                                     $objUser->setpassword($strPass);
                                     $objUser->save();
-                                    
+
                                     // ok on peut envoyer le mail
                                     ploopi_send_mail(
                                         array(
                                             array(
-                                                    'name' => $_SERVER['HTTP_HOST'], 
+                                                    'name' => $_SERVER['HTTP_HOST'],
                                                     'address' => _PLOOPI_ADMINMAIL
                                             )
                                         ),
                                         array(
                                             array(
-                                                'name' => "{$row['lastname']} {$row['firstname']}", 
+                                                'name' => "{$row['lastname']} {$row['firstname']}",
                                                 'address' => $row['email']
                                             )
                                         ),
-                                        "{$_SERVER['HTTP_HOST']} : modification de votre mot de passe", 
+                                        "{$_SERVER['HTTP_HOST']} : modification de votre mot de passe",
                                         "Bonjour,\n\nvous recevez ce message car vous avez effectué une demande de mot de passe sur le site {$_SERVER['HTTP_HOST']}.\n\nVotre nouveau mot de passe est le suivant :\n\n{$strPass}",
                                         null,
                                         null,
@@ -119,7 +119,7 @@ if (isset($ploopi_op))
                                         null,
                                         false
                                     );
-                                    
+
                                     $confirmation_code->delete();
                                     $intMsg = _PLOOPI_MSG_PASSWORDSENT;
                                 }
@@ -128,34 +128,34 @@ if (isset($ploopi_op))
                         else
                         {
                             include_once './include/classes/confirmation_code.php';
-                            
+
                             $confirmation_code = new confirmation_code();
                             $strAction = "ploopi_lostpassword{$objUser->fields['id']}";
-                            
+
                             if ($confirmation_code->open($strAction))
                             {
                                 $confirmation_code->delete();
                                 $confirmation_code = new confirmation_code();
                             }
-                            
+
                             $confirmation_code = new confirmation_code();
                             $confirmation_code->fields['action'] = $strAction;
                             $confirmation_code->save();
-                            
+
                             ploopi_send_mail(
                                 array(
                                     array(
-                                            'name' => $_SERVER['HTTP_HOST'], 
+                                            'name' => $_SERVER['HTTP_HOST'],
                                             'address' => _PLOOPI_ADMINMAIL
                                     )
                                 ),
                                 array(
                                     array(
-                                        'name' => "{$row['lastname']} {$row['firstname']}", 
+                                        'name' => "{$row['lastname']} {$row['firstname']}",
                                         'address' => $row['email']
                                     )
                                 ),
-                                "{$_SERVER['HTTP_HOST']} : modification de votre mot de passe", 
+                                "{$_SERVER['HTTP_HOST']} : modification de votre mot de passe",
                                 "Bonjour,\n\nvous recevez ce message car vous avez effectué une demande de mot de passe sur le site {$_SERVER['HTTP_HOST']}.\n\nVous devez confirmer cette demande en cliquant sur le lien suivant:\n\n"._PLOOPI_BASEPATH."/".ploopi_urlencode("admin.php?ploopi_op=ploopi_lostpassword_confirm&ploopi_lostpassword_login={$_REQUEST['ploopi_lostpassword_login']}&ploopi_lostpassword_email={$_REQUEST['ploopi_lostpassword_email']}&ploopi_lostpassword_confirmcode={$confirmation_code->fields['code']}"),
                                 null,
                                 null,
@@ -163,36 +163,36 @@ if (isset($ploopi_op))
                                 null,
                                 false
                             );
-                            
+
                             $intMsg = _PLOOPI_MSG_MAILSENT;
-                        }                        
+                        }
                     }
-                    else $intError = _PLOOPI_ERROR_LOSTPASSWORD_INVALID;                    
+                    else $intError = _PLOOPI_ERROR_LOSTPASSWORD_INVALID;
                 break;
-                
+
                 default:  // erreur : plusieurs réponses
                     $intError = _PLOOPI_ERROR_LOSTPASSWORD_MANYRESPONSES;
                 break;
             }
-            
+
             if (isset($intError)) ploopi_redirect("admin.php?ploopi_errorcode={$intError}");
             elseif (isset($intMsg)) ploopi_redirect("admin.php?ploopi_msgcode={$intMsg}");
             else ploopi_redirect('admin.php');
         break;
-        
+
         case 'colorpicker_open':
             ?>
             <div id="plugin">
-                
+
                 <div id="SV" onmousedown="HSVslide('SVslide','plugin',event)" title="Saturation + Value">
                     <div id="SVslide">&nbsp;</div>
                 </div>
-                
+
                 <form id="H" onmousedown="HSVslide('Hslide','plugin',event)" title="Hue">
                     <div id="Hslide">&nbsp;</div>
                     <div id="Hmodel"></div>
                 </form>
-                
+
                 <div id="colorpicker_footer">
                     <div id="plugCUR"></div>
                     <input type="text" class="text" id="colorpicker_inputcolor" value="<? echo $_GET['colorpicker_value']; ?>">
@@ -204,15 +204,15 @@ if (isset($ploopi_op))
             <?
             ploopi_die();
         break;
-    
+
         case 'calendar_open':
             $month = date('n');
             $year = date('Y');
-            
+
             if (!empty($_GET['inputfield_id'])) $_SESSION['calendar']['inputfield_id'] = $_GET['inputfield_id'];
-            
+
             if (empty($_SESSION['calendar']['inputfield_id'])) ploopi_die();
-            
+
             if (!empty($_GET['selected_date']))
             {
                 $sel_day = $sel_month = $sel_year = 0;
@@ -253,7 +253,7 @@ if (isset($ploopi_op))
                 $month = $_GET['calendar_month'];
                 $year = $_GET['calendar_year'];
             }
-            
+
             if (empty($_SESSION['calendar']['selected_day']))
             {
                 $_SESSION['calendar']['selected_month'] = date('n');
@@ -277,11 +277,11 @@ if (isset($ploopi_op))
 
             $prev_year = $year - ($prev_month == 12);
             $next_year = $year + ($next_month == 1);
-            
-            
+
+
             if ($_SESSION['ploopi']['mode'] == 'backoffice' && !empty($_SESSION['ploopi']['template_path'])) $strIconsPath = $_SESSION['ploopi']['template_path'];
             else $strIconsPath = '.';
-             
+
             ?>
             <div id="calendar">
                 <div class="calendar_row">
@@ -321,7 +321,7 @@ if (isset($ploopi_op))
                         /**
                          * Affichage des derniers jours du mois précédent
                          */
-                        
+
                         $ts = ploopi_timestamp_add(sprintf("%04d%02d01000000", $year, $month), 0, 0, 0, 0, $c-$weekday);
                         $localdate = ploopi_timestamp2local($ts);
                         $d = intval(substr($ts, 6, 2), 10);
@@ -362,7 +362,7 @@ if (isset($ploopi_op))
                      * Chaque fin de semaine = fin de ligne
                      */
                     if ($weekday == 7) echo '</div>';
-                    
+
                     $weekday++;
                 }
 
@@ -373,7 +373,7 @@ if (isset($ploopi_op))
                 {
                     for ($c = $weekday; $c <= 7 ; $c++)
                     {
-                        
+
                         $ts = ploopi_timestamp_add(sprintf("%04d%02d01000000", $year, $month), 0, 0, 0, 1, $c-$weekday);
                         $localdate = ploopi_timestamp2local($ts);
                         $d = intval(substr($ts, 6, 2), 10);
@@ -383,7 +383,7 @@ if (isset($ploopi_op))
                     }
 
                     echo '</div>';
-                    
+
                 }
 
                 $localdate = ploopi_timestamp2local(sprintf("%04d%02d%02d000000", date('Y'), date('n'), date('j')));
@@ -409,56 +409,56 @@ if (isset($ploopi_op))
         include_once './include/op/validation.php';
         include_once './include/op/tickets.php';
         include_once './modules/system/op.php';
-        
+
         switch($ploopi_op)
         {
             case 'ploopi_switchdisplay':
                 if (!empty($_GET['id'])) $_SESSION['ploopi']['switchdisplay'][$_GET['id']] = $_GET['display'];
                 ploopi_die();
             break;
-    
+
             case 'ploopi_checkpasswordvalidity':
                 if (!isset($_POST['password'])) ploopi_die();
                 if (_PLOOPI_USE_COMPLEXE_PASSWORD) echo ploopi_checkpasswordvalidity($_POST['password']);
                 else echo true;
                 ploopi_die();
             break;
-    
+
             case 'ploopi_skin_array_refresh':
                 $skin->display_array_refresh($_GET['array_id'], $_GET['array_orderby']);
                 ploopi_die();
             break;
-    
+
             case 'ploopi_getobjects':
                 ob_start();
                 ?>
                 <script language="javascript">
-        
+
                 var oEditor = window.parent.InnerDialogLoaded() ;
                 var FCKLang = oEditor.FCKLang ;
                 var FCKPlaceholders = oEditor.FCKPlaceholders ;
-        
+
                 window.onload = function ()
                 {
                     /* First of all, translate the dialog box texts */
                     oEditor.FCKLanguageManager.TranslatePage( document ) ;
-        
+
                     LoadSelected() ;
-        
+
                     /* Show the "Ok" button. */
                     window.parent.SetOkButton( true ) ;
                 };
-        
+
                 var eSelected = oEditor.FCKSelection.GetSelectedElement() ;
-        
+
                 function LoadSelected()
                 {
                     if ( !eSelected )
                         return ;
-        
+
                     var info = eSelected._fckplaceholder.split("/");
                     var sValue = info[0];
-        
+
                     if ( eSelected.tagName == 'SPAN' && eSelected._fckplaceholder )
                     {
                         var obj = document.getElementById('ploopi_webedit_objects');
@@ -467,50 +467,50 @@ if (isset($ploopi_op))
                     else
                         eSelected == null ;
                 }
-        
+
                 function Ok()
                 {
                     var obj = document.getElementById('ploopi_webedit_objects');
-        
+
                     var sValue = obj[obj.selectedIndex].value+'/'+obj[obj.selectedIndex].text ;
-        
+
                     if ( eSelected && eSelected._fckplaceholder == sValue )
                         return true ;
-        
+
                     if ( sValue.length == 0 )
                     {
                         alert( FCKLang.PlaceholderErrNoName ) ;
                         return false ;
                     }
-        
+
                     if ( FCKPlaceholders.Exist( sValue ) )
                     {
                         alert( FCKLang.PlaceholderErrNameInUse ) ;
                         return false ;
                     }
-        
+
                     FCKPlaceholders.Add( sValue ) ;
                     return true ;
                 }
-        
+
                 </script>
-        
+
                 <div style="padding:4px 0;">Choix d'un objet PLOOPI à insérer dans la page :</div>
                 <?
                 $select_object =    "
                                     SELECT  ploopi_mb_wce_object.*,
                                             ploopi_module.label as module_label,
                                             ploopi_module.id as module_id
-        
+
                                     FROM    ploopi_mb_wce_object,
                                             ploopi_module,
                                             ploopi_module_workspace
-        
+
                                     WHERE   ploopi_mb_wce_object.id_module_type = ploopi_module.id_module_type
                                     AND     ploopi_module_workspace.id_module = ploopi_module.id
                                     AND     ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['workspaceid']}
                                     ";
-        
+
                 $result_object = $db->query($select_object);
                 while ($fields_object = $db->fetchrow($result_object))
                 {
@@ -518,7 +518,7 @@ if (isset($ploopi_op))
                     {
                         $select = "select {$fields_object['select_id']}, {$fields_object['select_label']} from {$fields_object['select_table']} where id_module = {$fields_object['module_id']}";
                         $db->query($select);
-        
+
                         while ($fields = $db->fetchrow())
                         {
                             $fields_object['object_label'] = $fields[$fields_object['select_label']];
@@ -545,21 +545,32 @@ if (isset($ploopi_op))
                 <?
                 $main_content = ob_get_contents();
                 @ob_end_clean();
-        
+
                 $template_body->assign_vars(array(
                     'TEMPLATE_PATH'         => $_SESSION['ploopi']['template_path'],
                     'ADDITIONAL_JAVASCRIPT' => $additional_javascript,
                     'PAGE_CONTENT'          => $main_content
                     )
                 );
-        
+
                 $template_body->pparse('body');
                 ploopi_die();
             break;
+
+            case 'ploopi_get_userphoto':
+                // Envoi de la photo d'un utilisateur vers le client
+                $objUser = new user();
+                if (!empty($_GET['ploopi_user_id']) && is_numeric($_GET['ploopi_user_id']) && $objUser->open($_GET['ploopi_user_id']))
+                {
+                    $strPhotoPath = $objUser->getphotopath();
+                    if (file_exists($strPhotoPath)) ploopi_downloadfile($strPhotoPath, 'user.png', false, false);
+                }
+                ploopi_die();
+            break;
         }
-        
+
     }
-    
+
     //echo $_SESSION['ploopi']['workspaceid'];
     if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
     {

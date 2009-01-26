@@ -143,8 +143,6 @@ function ploopi_urlrewrite($url, $title = '', $keep_extension = false)
     else return $url;
 }
 
-
-
 /**
  * Equivalent de strtr en version multibyte (UTF-8) car la version "mbstring" de strtr n'existe pas.
  * Remplace des caractères dans une chaîne.
@@ -161,11 +159,10 @@ function ploopi_strtr($str, $from, $to = null)
 {
     if (!isset($to) && is_array($from)) 
     {
-        $to = implode('', $from);
-        $from = implode('', array_keys($from));
+        return str_replace(array_keys($from), $from, $str);
     }
-    
-    return str_replace(ploopi_str_split($from), ploopi_str_split($to), $str);
+    else return str_replace(ploopi_str_split($from), ploopi_str_split($to), $str);
+
 }
 
 /**
@@ -203,7 +200,7 @@ function ploopi_str_split($str)
 
 function ploopi_xmlentities($str, $utf8 = false) 
 { 
-    for($i=128; $i<256; $i++) $asc2uni[chr($i)] = "&#x".dechex($i).";"; 
+    for($i=128; $i<256; $i++) $asc2uni[$utf8 ? utf8_encode(chr($i)) : chr($i)] = "&#x".dechex($i).";"; 
     
     $str = str_replace(array("&", ">", "<", "\"", "'", "\r"), array("&amp;", "&gt;", "&lt;", "&quot;", "&apos;", ""), $str);
     
