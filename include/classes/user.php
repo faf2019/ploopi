@@ -124,7 +124,9 @@ class user extends data_object
                 $parents[] = $org['id'];
             }
 
-            $groups = implode(',',array_keys(array_flip($parents)));
+            $parents = array_unique($parents);
+
+            $groups = implode("','", $parents);
 
             $select =   "
                         SELECT      w.*,
@@ -135,7 +137,7 @@ class user extends data_object
                         
                         LEFT JOIN   ploopi_workspace_group wg ON wg.id_workspace = w.id
                         
-                        WHERE       wg.id_group IN ({$groups})
+                        WHERE       wg.id_group IN ('{$groups}')
                         ";
 
             $result = $db->query($select);
