@@ -296,7 +296,8 @@ switch($ploopi_op)
         if (isset($_POST['fck_documentsfile_description']))
             $documentsfile->fields['description'] = $_POST['fck_documentsfile_description'];
             
-        $documentsfile->fields['timestp_file'] = ploopi_local2timestamp($documentsfile->fields['timestp_file']);
+        if (isset($documentsfile->fields['timestp_file'])) $documentsfile->fields['timestp_file'] = ploopi_local2timestamp($documentsfile->fields['timestp_file']);
+        
         $documentsfile->fields['id_folder'] = $_POST['currentfolder'];
 
         if (!empty($_FILES['documentsfile_file']['name']))
