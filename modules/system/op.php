@@ -452,17 +452,6 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         ploopi_die();
                     break;
                     
-                    case 'system_get_userphoto':
-                        // Envoi de la photo d'un utilisateur vers le client
-                        $objUser = new user();
-                        if (!empty($_GET['system_user_id']) && is_numeric($_GET['system_user_id']) && $objUser->open($_GET['system_user_id']))
-                        {
-                            $strPhotoPath = $objUser->getphotopath();
-                            if (file_exists($strPhotoPath)) ploopi_downloadfile($strPhotoPath, 'user.png', false, false);
-                        } 
-                        ploopi_die();
-                    break;
-                    
                     case 'system_delete_user':
                         if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
                         {

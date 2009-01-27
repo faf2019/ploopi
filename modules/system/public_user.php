@@ -62,6 +62,9 @@ function user_validate(form)
 </script>
 
 <?
+// Suppression de la variable de stockage de la photo temporaire
+if (isset($_SESSION['system']['user_photopath'])) unset($_SESSION['system']['user_photopath']);
+
 echo $skin->open_simplebloc(_SYSTEM_LABEL_MYACCOUNT); 
 
 /**
@@ -270,7 +273,7 @@ if (isset($error))
                 <?
                 if (file_exists($user->getphotopath()))
                 {
-                    ?><img src="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_get_userphoto&system_user_id={$user->fields['id']}"); ?>" /><?
+                    ?><img src="<? echo ploopi_urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$user->fields['id']}"); ?>" /><?
                 }
                 ?>
                 </div>

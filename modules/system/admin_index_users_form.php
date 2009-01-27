@@ -37,6 +37,9 @@
 
 $user = new user();
 
+// Suppression de la variable de stockage de la photo temporaire
+if (isset($_SESSION['system']['user_photopath'])) unset($_SESSION['system']['user_photopath']);
+
 if (empty($_GET['user_id']) || !is_numeric($_GET['user_id']) || !$user->open($_GET['user_id']))
 {
     $user->init_description();
@@ -430,7 +433,7 @@ if (isset($_REQUEST['confirm']))
                 <?
                 if (file_exists($user->getphotopath()))
                 {
-                    ?><img src="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_get_userphoto&system_user_id={$user->fields['id']}"); ?>" /><?
+                    ?><img src="<? echo ploopi_urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$user->fields['id']}"); ?>" /><?
                 }
                 ?>
                 </div>
