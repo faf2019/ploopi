@@ -1,6 +1,11 @@
 <form action="{ACTION}" method="post" enctype="multipart/form-data" onsubmit="javascript:eval(form_validate);return(result);">
 <div class="form">
     <!-- BEGIN formfields -->
+        <!-- BEGIN switch_separator -->
+            <h{formfields.switch_separator.LEVEL}>
+            {formfields.switch_separator.NAME}
+            </h{formfields.switch_separator.LEVEL}>
+        <!-- END switch_separator -->    
         <!-- BEGIN switch_field -->
             <p>
                 <label for="{formfields.switch_field.LABELID}">
