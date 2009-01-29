@@ -1,3 +1,17 @@
+== Module DIRECTORY - version 2.0 ====================================================
+
+2009-01-29  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Nouvelle mise en forme des fiches utilisateur/contact
+ * Intégration d'informations plus complètes sur les fiches utilisateur (espaces, groupes, rôles)
+ * Possibilité d'ajouter une photo à un contact
+ * Visualisation des photos des utilisateurs du portail
+ * Gestion de contacts partagés avec arborescence de rubriques/services
+ * Gestion d'accréditations pour administrer les contacts partagés
+ * Ajout des contacts partagés dans les résultats de recherche
+ * Personnalisation de la recherche en fonction des onglets activés
+ * Impression de le fiche contact/utilisateur
+
 == Module DIRECTORY - version 1.35 ====================================================
 
 2008-10-31  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -11,7 +25,7 @@
 
  * Mise à jour du système de liens (ploopi_env) lié à la mise à jour de Ploopi
  * Ajout d'index sur les tables du module
- 
+
 == Module DIRECTORY - version 1.33 ====================================================
 
 2008-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -32,25 +46,25 @@
  * Modification sur l'ordre des onglets
  * Ajout d'un lien "envoyer un ticket" et d'un lien "envoyer un courriel"
  * Evolutions ergonomiques mineures
- 
+
 == Module DIRECTORY - version 1.31 ====================================================
 
 2008-04-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Compression des fichiers JS/CSS
- 
+
 == Module DIRECTORY - version 1.302 ====================================================
 
 2008-03-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Ajout d'une image manquante
- 
+
  == Module DIRECTORY - version 1.301 ====================================================
 
 2008-03-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction d'un bug sur l'activation des favoris (paramètre du module)
- 
+
  == Module DIRECTORY - version 1.30 ====================================================
 
 2008-03-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -59,7 +73,7 @@
    - Gestion des listes (ajout/modif/supp)
    - Ajout d'un favori à une ou plusieurs listes
  * Ouverture de la fiche 'utilisateur' dans un popup
- 
+
 == Module DIRECTORY - version 1.20 ====================================================
 
 2008-01-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -33,7 +33,7 @@
 
 /**
  * Initialisation du module
- */ 
+ */
 
 ploopi_init_module('directory', false, false, false);
 
@@ -48,6 +48,26 @@ if ($_SESSION["ploopi"]["workspaceid"] > 0)  // group selected
     {
         $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mygroup'])) ? _DIRECTORY_MYGROUP : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mygroup'],ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabMygroup"));
     }
+}
+
+/**
+ * Menu 'Organigramme'
+ */
+
+/*
+if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_organizationchart'])
+{
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_organizationchart'])) ? _DIRECTORY_ORGANIZATIONCHART : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_organizationchart'],ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabOrganizationChart"));
+}
+*/
+
+/**
+ * Menu 'Contacts partagés'
+ */
+
+if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_sharedcontacts'])
+{
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_sharedcontacts'])) ? _DIRECTORY_SHAREDCONTACTS : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_sharedcontacts'],ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSharedContacts"));
 }
 
 /**

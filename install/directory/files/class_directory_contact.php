@@ -71,5 +71,11 @@ class directory_contact extends data_object
         $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_contact = {$this->fields['id']}");
         parent::delete();
     }
+    
+    public function getphotopath()
+    {
+        return (_PLOOPI_PATHDATA._PLOOPI_SEP.'directory'._PLOOPI_SEP.$this->fields['id'].'.png');
+    }
+    
 }
 ?>

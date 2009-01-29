@@ -30,6 +30,9 @@
  * @author Stéphane Escaich
  */
 
+// Récupération des rubriques de contacts partagés
+$arrHeadings = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_sharedcontacts'] ? directory_getheadings() : array();
+
 /**
  * Création du tableau des favoris
  */
@@ -131,11 +134,28 @@ foreach($result as $row)
                         <a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>
                         ';
             
-            $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'];
-            $workspaces_list = '';
-            
-            //$values[$c]['link'] = 'javascript:void(0);';
-            //$values[$c]['onclick'] = "javascript:directory_view(event, '', '{$row['id']}');";
+            if (empty($row['id_heading'])) // contact perso
+            {
+                $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'];
+                $workspaces_list = '';                
+            }
+            else // contact partagé
+            {
+                $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_sharedcontacts'])) ? _DIRECTORY_SHAREDCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_sharedcontacts'];
+
+                if (isset($arrHeadings['list'][$row['id_heading']]['parents']))
+                {
+                    $arrParents = split(';', $arrHeadings['list'][$row['id_heading']]['parents']);
+                    $arrTitle  = array();
+                    foreach($arrParents as $intId)
+                        if (isset($arrHeadings['list'][$intId]))
+                            $arrTitle[] = $arrHeadings['list'][$intId]['label'];
+    
+                    $arrTitle[] = $arrHeadings['list'][$row['id_heading']]['label'];
+                    $workspaces_list = implode(' > ', $arrTitle);
+                }
+                else $workspaces_list = '';
+            }
         break;
     }
 

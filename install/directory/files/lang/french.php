@@ -40,11 +40,15 @@ define ('_DIRECTORY_MYCONTACTS', 'Contacts personnels');
 define ('_DIRECTORY_MYGROUP', 'Espace de Travail');
 define ('_DIRECTORY_USERS', 'Utilisateurs');
 define ('_DIRECTORY_SEARCH', 'Recherche');
+define ('_DIRECTORY_SHAREDCONTACTS', 'Contacts partagés');
+define ('_DIRECTORY_ORGANIZATIONCHART', 'Organigramme');
 
 define ('_DIRECTORY_FAVORITES_DESC', 'Cette rubrique contient vos favoris, c\'est à dire des liens vers vos contacts personnels ou vers des utilisateurs du portail.');
 define ('_DIRECTORY_MYCONTACTS_DESC', 'Cette rubrique contient vos contacts personnels. Ils sont visualisables et modifiables uniquement par vous.');
 define ('_DIRECTORY_MYGROUP_DESC', 'Cette rubrique contient les utilisateurs de votre espace de travail. Ce sont les utilisateurs qui travaillent dans le même environnement que le votre.');
 define ('_DIRECTORY_SEARCH_DESC', 'Cette rubrique vous permet de trouver un utilisateur parmi l\'ensemble des utilisateurs du portail.');
+define ('_DIRECTORY_ORGANIZATIONCHART_DESC', 'Cette rubrique vous permet de consulter l\'organigramme de l\'ensemble des utilisateurs du portail répartis par espaces de travail.');
+define ('_DIRECTORY_SHAREDCONTACTS_DESC', 'Cette rubrique contient les contacts partagés par l\'ensemble des utilisateurs.');
 
 define ('_DIRECTORY_ADDNEWCONTACT', 'Ajouter un nouveau contact');
 define ('_DIRECTORY_MODIFYCONTACT', 'Modifier un contact');
@@ -55,8 +59,10 @@ define ('_DIRECTORY_TYPE', 'Type');
 define ('_DIRECTORY_NAME', 'Nom');
 define ('_DIRECTORY_FIRSTNAME', 'Prénom');
 define ('_DIRECTORY_LOGIN', 'Login');
-define ('_DIRECTORY_GROUPS', 'Espaces');
+define ('_DIRECTORY_GROUPS', 'Rattachements');
 define ('_DIRECTORY_SERVICE', 'Service');
+define ('_DIRECTORY_OFFICE', 'Bureau');
+define ('_DIRECTORY_NUMBER', 'Numéro de Poste');
 define ('_DIRECTORY_GROUP', 'Espace');
 define ('_DIRECTORY_FUNCTION', 'Fonction');
 define ('_DIRECTORY_PHONE', 'Téléphone');
@@ -72,6 +78,8 @@ define ('_DIRECTORY_COMMENTARY', 'Commentaire');
 define ('_DIRECTORY_BACK', 'Retour');
 define ('_DIRECTORY_FULLTEXT', 'Texte intégral');
 define ('_DIRECTORY_LEGEND', 'Légende');
+define ('_DIRECTORY_CIVILITY', 'Civilité');
+define ('_DIRECTORY_PHOTO', 'Photo');
 
 define ('_DIRECTORY_SEND_TICKET', 'Envoyer un message');
 define ('_DIRECTORY_SEND_EMAIL', 'Envoyer un mèl');

@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>directory</label>
-      <version>1.35</version>
-      <author>Netlor / Ovensia</author>
-      <date>200810310000000</date>
+      <version>1.991</version>
+      <author>Ovensia</author>
+      <date>200901280000000</date>
       <description>Annuaire des Utilisateurs</description>
       <paramtype>
          <name>directory_myfavorites</name>
@@ -52,6 +52,36 @@
          </paramchoice>
       </paramtype>
       <paramtype>
+         <name>directory_organizationchart</name>
+         <label>Accéder à l'onglet "Organigramme"</label>
+         <default_value>1</default_value>
+         <public>1</public>
+         <description/>
+         <paramchoice>
+            <value>1</value>
+            <displayed_value>oui</displayed_value>
+         </paramchoice>
+         <paramchoice>
+            <value>0</value>
+            <displayed_value>non</displayed_value>
+         </paramchoice>
+      </paramtype>
+      <paramtype>
+         <name>directory_sharedcontacts</name>
+         <label>Accéder à l'onglet "Contacts Partagés"</label>
+         <default_value>1</default_value>
+         <public>1</public>
+         <description/>
+         <paramchoice>
+            <value>1</value>
+            <displayed_value>oui</displayed_value>
+         </paramchoice>
+         <paramchoice>
+            <value>0</value>
+            <displayed_value>non</displayed_value>
+         </paramchoice>
+      </paramtype>      
+      <paramtype>
          <name>directory_search</name>
          <label>Accéder à l'onglet "Recherche"</label>
          <default_value>1</default_value>
@@ -88,11 +118,68 @@
          <description/>
       </paramtype>
       <paramtype>
+         <name>directory_label_organizationchart</name>
+         <label>Libellé de l'onglet "Organigramme"</label>
+         <default_value></default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+      <paramtype>
+         <name>directory_label_sharedcontacts</name>
+         <label>Libellé de l'onglet "Contacts Partagés"</label>
+         <default_value></default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+      <paramtype>
          <name>directory_label_search</name>
          <label>Libellé de l'onglet "Recherche"</label>
          <default_value></default_value>
          <public>1</public>
          <description/>
       </paramtype>
+      <paramtype>
+         <name>directory_label_depth1</name>
+         <label>Libellé des Rubriques de 1er niveau</label>
+         <default_value>une/cette/racine</default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+      <paramtype>
+         <name>directory_label_depth2</name>
+         <label>Libellé des Rubriques de 2ème niveau</label>
+         <default_value>une/cette/rubrique</default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+      <paramtype>
+         <name>directory_label_depth3</name>
+         <label>Libellé des Rubriques de 3ème niveau</label>
+         <default_value>une/cette/rubrique</default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+      <paramtype>
+         <name>directory_label_depth4</name>
+         <label>Libellé des Rubriques de 4ème niveau</label>
+         <default_value>une/cette/rubrique</default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+      <paramtype>
+         <name>directory_label_depth5</name>
+         <label>Libellé des Rubriques de 5ème niveau</label>
+         <default_value>une/cette/rubrique</default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+      <action>
+         <id_action>1</id_action>
+         <label>Gérer les rubriques/contacts</label>
+      </action>
+      <action>
+         <id_action>2</id_action>
+         <label>Gérer les gestionnaires</label>
+      </action>
    </moduletype>
 </ploopi>
