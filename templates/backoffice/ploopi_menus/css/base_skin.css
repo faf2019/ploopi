@@ -722,3 +722,36 @@ select.ploopi_page_by {
     padding:2px 4px;
     margin:0;
 }
+
+.ploopi_tabs {
+background-color:#d2d2d3;
+border-bottom:1px solid #808080;
+overflow:hidden;
+line-height:20px;
+height:20px;
+}
+
+.ploopi_tabs img {
+display:block;
+float:left;
+margin:2px 3px 0 0;
+}
+
+.ploopi_tabs input {
+display:block;
+float:left;
+margin:3px 3px 0 0;
+}
+
+.ploopi_tabs a {
+display:block;
+float:right;
+padding-left:12px;
+padding-right:6px;
+text-decoration:none;
+background: url(../img/template/tabs.png) 0 0 no-repeat;
+}
+
+.ploopi_tabs a:hover {
+background: url(../img/template/tabs.png) 0 -20px no-repeat;
+}
