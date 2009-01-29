@@ -1,0 +1,215 @@
+# French translations for PACKAGE package
+# Traductions françaises du paquet PACKAGE.
+# Copyright (C) 2008 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# lulrich <lulrich@phi-laurent-portable.workgroup>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-11-21 21:56+0100\n"
+"PO-Revision-Date: 2008-11-21 22:56+0100\n"
+"Last-Translator: lulrich <lulrich@phi-laurent-portable.workgroup>\n"
+"Language-Team: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: console_installer.sh:42
+#, sh-format
+msgid "_secret_key"
+msgstr "Secret key:"
+
+#: console_installer.sh:52
+#, sh-format
+msgid "_data_directory:_"
+msgstr "Directory where files will be recorded:"
+
+#: console_installer.sh:53
+#, sh-format
+msgid "_temp_directory:_"
+msgstr "Temporary files directory:"
+
+#: console_installer.sh:54
+#, sh-format
+msgid "_admin_login:"
+msgstr "Administrator login:"
+
+#: console_installer.sh:55
+#, sh-format
+msgid "_admin_password:"
+msgstr "Administrator password:"
+
+#: console_installer.sh:56
+#, sh-format
+msgid "_admin_email:"
+msgstr "Administrator e-mail:"
+
+#: console_installer.sh:57
+#, sh-format
+msgid "_secret_key:"
+msgstr "Secret key:"
+
+#: console_installer.sh:58
+#, sh-format
+msgid "_encode_visible_urls_?"
+msgstr "Encode visible URL ?"
+
+#: console_installer.sh:59
+#, sh-format
+msgid "_store_session_in_database_?"
+msgstr "Store sessions in database ?"
+
+#: console_installer.sh:60
+#, sh-format
+msgid "_Ploopi_configuration"
+msgstr "PLOOPI configuration"
+
+#: console_installer.sh:61
+#, sh-format
+msgid "_CGI_scripts_usage"
+msgstr "CGI configuration"
+
+#: console_installer.sh:62
+#, sh-format
+msgid "_CGI_activation_?"
+msgstr "Enable CGI ?"
+
+#: console_installer.sh:63
+#, sh-format
+msgid "_CGI_directory:"
+msgstr "CGI directory:"
+
+#: console_installer.sh:64
+#, sh-format
+msgid "_GPL_licence"
+msgstr "GPL licence"
+
+#: console_installer.sh:65
+#, sh-format
+msgid "_PEAR_install_directory"
+msgstr "PEAR directory:"
+
+#: console_installer.sh:66
+#, sh-format
+msgid "_FrontOffice_configuration"
+msgstr "FrontOffice configuration"
+
+#: console_installer.sh:67
+#, sh-format
+msgid "_FrontOffice_activation_?"
+msgstr "Enable FrontOffice ?"
+
+#: console_installer.sh:68
+#, sh-format
+msgid "_URL rewrite_activation_?"
+msgstr "Enable URL rewrite ?"
+
+#: console_installer.sh:69
+#, sh-format
+msgid "_read_licence"
+msgstr "Read licence"
+
+#: console_installer.sh:70
+#, sh-format
+msgid ""
+"_\\n\\nPloopi_is_distributed_under_the_GNU_GPL.\\n"
+"\\ndo_you_accept_the_Ploopi licence_?\\n\\n"
+msgstr " \nPLOOPI is distributed under GNU GPL.\nDo you agree the licence terms ?"
+
+#: console_installer.sh:71
+#, sh-format
+msgid "_advanced_configuration"
+msgstr "Advanced configuration"
+
+#: console_installer.sh:72
+#, sh-format
+msgid "_do_you_want_to_configure_a_proxy_?"
+msgstr "Do you want to configure a proxy ?"
+
+#: console_installer.sh:73 console_installer.sh:79
+#, sh-format
+msgid "_address:"
+msgstr "Address:"
+
+#: console_installer.sh:74
+#, sh-format
+msgid "_port:"
+msgstr "Port:"
+
+#: console_installer.sh:75 console_installer.sh:80
+#, sh-format
+msgid "_user:"
+msgstr "User:"
+
+#: console_installer.sh:76 console_installer.sh:81
+#, sh-format
+msgid "_password:"
+msgstr "Password:"
+
+#: console_installer.sh:77
+#, sh-format
+msgid "_database_configuration"
+msgstr "Database configuration"
+
+#: console_installer.sh:78
+#, sh-format
+msgid "_database_type"
+msgstr "Database type"
+
+#: console_installer.sh:82
+#, sh-format
+msgid "_do_you_really_want_to_stop_installation_?"
+msgstr "Do you really want to quit ?"
+
+#: console_installer.sh:83
+#, sh-format
+msgid "_select_a_database"
+msgstr "Select a database"
+
+#: console_installer.sh:84
+#, sh-format
+msgid "_<new_database>"
+msgstr "<New database>"
+
+#: console_installer.sh:85
+#, sh-format
+msgid "_error"
+msgstr "Error"
+
+#: console_installer.sh:86
+#, sh-format
+msgid "_a_mandatory_field_was_left_blank"
+msgstr "A mandatory field is not filled"
+
+#: console_installer.sh:87
+#, sh-format
+msgid "_connexion_to_the_database_cannot_be_established"
+msgstr "Connection to the database cannot be established"
+
+#: console_installer.sh:88
+#, sh-format
+msgid "_the_database_is_already_a_ploopi"
+msgstr "The database is already a PLOOPI"
+
+#: console_installer.sh:89
+#, sh-format
+msgid "_the_install_script_must_be_executed_from_the_root_of_de_Ploopi_directory"
+msgstr "This script must be executed from the root of the PLOOPI directory"
+
+#: console_installer.sh:90
+#, sh-format
+msgid "_you_do_not_have_write_access_to_the_config_directory"
+msgstr "You do not have access to the config directory"
+
+#: console_installer.sh:91
+#, sh-format
+msgid "_installation_failed"
+msgstr "Installation failed"
+
+#: console_installer.sh:92
+#, sh-format
+msgid "_installation_succeeded"
+msgstr "Installation succeeded"
