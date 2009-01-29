@@ -41,7 +41,7 @@
  * @param unknown_type $id_action identifiant de l'action requise
  */
 
-function ploopi_validation_selectusers($id_object = 0, $id_record = '', $id_module = -1, $id_action = -1)
+function ploopi_validation_selectusers($id_object = 0, $id_record = '', $id_module = -1, $id_action = -1, $title = 'Validateurs')
 {
     global $db;
 
@@ -66,7 +66,7 @@ function ploopi_validation_selectusers($id_object = 0, $id_record = '', $id_modu
     <a class="ploopi_validation_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('ploopi_validation');">
         <p class="ploopi_va">
             <img src="<? echo "{$_SESSION['ploopi']['template_path']}/img/validation/validation.png"; ?>">
-            <span>Validateurs</span>
+            <span><? echo $title; ?></span>
         </p>
     </a>
     <div id="ploopi_validation" style="display:block;">
@@ -121,12 +121,14 @@ function ploopi_validation_save($id_object = 0, $id_record = '', $id_module = -1
         foreach($_SESSION['ploopi']['validation']['users_selected'] as $id_user)
         {
             $validation = new validation();
-            $validation->fields = array(  'id_module'     => $id_module,
-                                        'id_record'     => $id_record,
-                                        'id_object'     => $id_object,
-                                        'type_validation' => 'user',
-                                        'id_validation'   => $id_user
-                                );
+            $validation->fields = 
+                array(  
+                    'id_module' => $id_module,
+                    'id_record' => $id_record,
+                    'id_object' => $id_object,
+                    'type_validation' => 'user',
+                    'id_validation' => $id_user
+                );
             $validation->save();
 
         }
@@ -145,7 +147,7 @@ function ploopi_validation_save($id_object = 0, $id_record = '', $id_module = -1
  * @return array validation
  */
 
-function ploopi_validation_get($id_object = 0, $id_record = '',  $id_module = -1, $id_user = 0)
+function ploopi_validation_get($id_object = 0, $id_record = '', $id_module = -1, $id_user = 0)
 {
     global $db;
 
@@ -166,5 +168,27 @@ function ploopi_validation_get($id_object = 0, $id_record = '',  $id_module = -1
     }
 
     return($validation);
+}
+
+/**
+ * Supprime les informations de validation attachées à un objet/enregistrement/utilisateur
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_module identifiant du module
+ * @param int $id_user identifiant de l'utilisateur
+ */
+function ploopi_validation_delete($id_object = 0, $id_record = '', $id_module = -1, $id_user = 0)
+{
+    global $db;
+    
+    if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
+
+    $sql = "DELETE FROM ploopi_validation WHERE id_module = {$id_module}";
+    if ($id_object != 0) $sql .= " AND id_object = {$id_object}";
+    if ($id_record != '') $sql .= " AND id_record = '".$db->addslashes($id_record)."'";
+    if ($id_user != 0) $sql .= " AND id_validation = {$id_user} AND type_validation = 'user'";
+    
+    $db->query($sql);
 }
 ?>

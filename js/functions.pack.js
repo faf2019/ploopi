@@ -822,7 +822,7 @@ function ploopi_skin_array_renderupdate(array_id)
         columns = $('ploopi_explorer_main_'+array_id).getElementsByClassName('ploopi_explorer_column');
         for (j=0;j<columns.length;j++)
         {
-            columns[j].style.height = $('ploopi_explorer_main_'+array_id).offsetHeight+'px'
+            columns[j].style.height = $('ploopi_explorer_main_'+array_id).offsetHeight+'px';
         }
     }
 }

@@ -339,4 +339,3 @@ function ploopi_is_url($url)
 	return eregi($urlregex, $url) ? true : false; 
 }
 ?>
-

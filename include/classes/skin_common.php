@@ -285,6 +285,8 @@ class skin_common
     
     function create_popup($title, $content, $popupid = 'ploopi_popup')
     {
+        $option = ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_focus_popup']) ? "document.location.href='#anchor_{$popupid}';" : '';  
+        
         $res =  '
                 <div class="simplebloc" style="margin:0;">
                     <a name="anchor_'.$popupid.'"></a>
@@ -300,7 +302,7 @@ class skin_common
                 <script type="text/javascript">
                 new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\'});
                 new Draggable(\''.$popupid.'\', { handle: \'handlebottom_'.$popupid.'\'});
-                document.location.href=\'#anchor_'.$popupid.'\';
+                '.$option.'
                 </script>        
                 ';
 
