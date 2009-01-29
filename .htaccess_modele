@@ -7,7 +7,7 @@
 # @modifiedby $LastChangedBy$
 # @lastmodified $Date$
  
-# Attention, ce fichier est une configuration generique qu'il convient d'adapter a  votre environnement.
+# Attention, ce fichier est une configuration generique qu'il convient d'adapter a votre environnement.
 # Il existe des configurations plus solides que vous pouvez utiliser si vous pouvez directement modifier le fichier de configuration d'apache.
 
 <IfModule mod_dir.c>
@@ -76,7 +76,7 @@
 
     # Quelques restrictions d'acces
     RewriteRule ^(modules|lib|templates|FCKeditor)/.*\.php$ - [F]
-    RewriteRule ^(bin|data|include|install|lang|pear)/.*$ - [F]
+    RewriteRule ^(bin|data|include|install|lang|pear|tools)/.*$ - [F]
 
     # Regles de reecriture pour la partie FrontOffice
     RewriteRule ^(.*)-h([0-9]*)a([0-9]*)\.[a-z0-9]*(.*)$ index.php?headingid=$2&articleid=$3$4 [L]

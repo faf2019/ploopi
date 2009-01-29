@@ -1,3 +1,149 @@
+ == Ploopi - version 1.3 ===================================================
+
+2009-01-29 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ploopi 
+ 
+  * Nouvelle possibilité pour l'utilisateur de modifier sa photo dans le menu "mon profil"
+  * Suppression de la possibilité de pouvoir modifier les paramètres de l'espace pour un gestionnaire d'espace
+  * Amélioration de l'interface de sélection des modules à instancier/partager lors de la création d'un espace fils
+  * Nouvelle possibilité pour l'utilisateur de modifier sa photo dans le menu "mon profil"
+  * Intégration du champ "code" à la création d'un espace fils pour les administrateurs d'espaces de travail
+  * Correction d'un bug à la création d'un espace de travail (ne prenait pas en compte l'id parent) suite à une modification précédente
+  * Intégration d'une dépendance manquante entre "image" et "string"
+  * Correctif sur la fonction ploopi_strtr()
+  * Le mail d'erreur ne contient plus la variable SESSION qui est souvent très lourde et peu intéressante
+  * Corrections/modifications mineures
+  * Optimisation du header no-cache
+  * Modification de la méthode user::getworkspaces() qui générait un bug avec un jeu de données bancal
+  * Correction d'une erreur à l'enregistrement d'un document (variable non définie)
+  * Correctifs sur les fonctions ploopi_xmlentities() et ploopi_strtr() lors de l'utilisation de chaînes UTF8
+  * Amélioration de la détection de HTTPS dans la construction du basepath de l'application (constante " _PLOOPI_BASEPATH ")
+  * Correction d'un problème avec l'icône de recherche sur le template ploopi_menu (IE uniquement)
+  * Mise à jour du gabarit des formulaires dans les templates frontoffice pour afficher les séparateurs
+  * Correction d'un problème de rafraichissement de page lors de la suppression des tickets (suppression groupée) avec IE uniquement
+  * Quelques ajustements mineurs de code sur la gestion des photos d'utilisateurs
+  * Ajout d'un nouveau paramètre permettant de choisir d'activer ou non le focus auto sur les popups
+
+ * Directory 2.0
+ 
+  * Nouvelle mise en forme des fiches utilisateur/contact
+  * Intégration d'informations plus complètes sur les fiches utilisateur (espaces, groupes, rôles)
+  * Possibilité d'ajouter une photo à un contact
+  * Visualisation des photos des utilisateurs du portail
+  * Gestion de contacts partagés avec arborescence de rubriques/services
+  * Gestion d'accréditations pour administrer les contacts partagés
+  * Ajout des contacts partagés dans les résultats de recherche
+  * Personnalisation de la recherche en fonction des onglets activés
+  * Impression de le fiche contact/utilisateur
+
+ * Forms 2.231
+ 
+  * Correctif sur la fonction forms_getdata(), ne prenait pas en compte les options.
+  * Correction d'un bug (constante non définie)
+
+ * Doc 4.0.1
+ 
+  * Correctif sur le téléchargement d'un document dans l'historique des versions
+  * Correctif sur la mise à jour d'un document sans passer par le CGI
+  * Correctif sur le tri des documents/dossiers (case insensitive) dans l'explorateur
+  * Correctif sur le tri des documents/dossiers (case insensitive) dans la recherche
+  * Correction d'un bug lors de la suppression d'un fichier, tentait de supprimer un dossier potentiellement non vide
+  * Suppression du champ 'type' dans l'explorateur de documents
+  * Ajout de l'information 'espace de travail' sur les dossiers
+  * Meilleure gestion à l'affichage des utilisateurs ou espace de travail supprimés
+  * Un abonné n'est averti d'une opération sur un élément que s'il peut accéder à cet élément (il n'est pas averti lors de la création d'un dossier privé ou qui ne lui est pas partagé)
+  * Paramétrage possible des colonnes à afficher dans l'explorateur de documents et dans la recherche
+  * Correction d'une erreur lors du téléchargement d'un document (variable non définie)
+
+ == Ploopi - version 1.2.4 ===================================================
+
+2009-01-16 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ploopi 
+ 
+  * Possibilité de modifier un code d'espace pour un administrateur d'espace
+  * Petite amélioration sur la fonction ploopi_resizeimage() (vidage du buffer avant envoi de l'image vers le client)
+  * Modification de la fonction ploopi_urlencode() pour prendre en compte la variable HTTP_X_SSL_REQUEST indiquant que la requête appelante est en HTTPS (cas d'un frontend HTTPS) alors que les indicateurs traditionnels ne sont pas renseignés
+  * Système : Ajout de deux champs Photo et Poste sur la fiche utilisateur
+  * Système : Ajustement du profil "Gestionnaire d'Espace" pour interdire l'accès aux fonctionnalités d'ajout/suppression d'espaces de travail
+  * Mise à jour de la classe user (nouvelle méthode user::getphotopath())
+  * Mise à jour de la classe skin_common
+    
+ * Forum 1.0.5
+
+  *  Correction du bug sur les messages (ticket) l'envoi d'une demande de validation à un modérateur ne fonctionnait que si celui-ci était abonné.
+  * Correction orthographe dans description.xml discution -> discussion
+  * Correction orthographe dans french.php 'à priori'-> 'a priori' (Merci M.Konovaloff)
+
+ * Doc 3.98
+
+  * Correctif mineur sur les fonctions de téléchargement (notice / nom de variable erroné)
+
+ == Ploopi - version 1.2.3 ===================================================
+
+2009-01-09 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ploopi 
+
+  * Correction d'un bug sur les classes ODF lors de l'utilisation de caractères spéciaux dans des blocks de template 
+  * Intégration de deux nouvelles fonctions ploopi_strtr() et ploopi_str_split() pour remplacer les équivalentes php non compatibles UTF-8
+  * Correctifs divers sur le framework php (classes et fonctions, moteur du portail)
+  * Ajout d'une fonction ploopi_is_url() : "Vérifie qu'une url est valide" 
+  * Ajout d'une fonction ploopi_image_wordwrap() : "Découpe un texte pour qu'il tienne dans une image d'une largeur déterminée"
+  * Nouveau wrapper pour PDO/mysql en remplacement du wrapper pour les fonctions natives mysql (TEST UNIQUEMENT - pour tester modifier dans le fichier de config "mysql" par "pdo")
+  * Ajustement de la taille des champs du formulaire d'ajout/modification de document
+  * Correction sur la taille des références de documents (32car => 255car) 
+  * Possibilité pour un administrateur d'espace de modifier le champ 'code' d'un espace de travail
+
+ * Rss 2.0.2
+
+  * Correction d'un bug en base de données (Pas de problème avec une nouvelle installation mais bug en MAJ : coquille dans le nom d'un champ)
+  * Correction d'un bug d'affichage lorsque le flux selectionné en affcihage en admin était supprimé.
+  
+ == Ploopi - version 1.2.2 ===================================================
+
+2008-12-10 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ploopi 
+
+  * Corrections/Optimisations sur la gestion des rattachements d'utilisateurs à un groupe ou un espace de travail
+  * Mise à jour des templates backoffice & frontoffice suite à l'intégration de la classe calendar et de la nouvelle méthode skin::display_selectbox()
+
+ == Ploopi - version 1.2.1 ===================================================
+
+2008-12-08 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ploopi
+
+  * Modification de la function ploopi_reziseimage() : Ajout du paramètre addBorder; Si ce paramètre est renseigné avec une couleur de type #ffffff, l'image généré est de taille wmax et hmax, l'image de base est centrée et un remplissage est effectué avec la couleur addBorder
+  * La fonction ploopi_urlencode n'ajoute plus les paramètres d'environnement en utilisation frontoffice même si $addenv est à "true"
+  * Modification du chargement lors de l'appel à la fonction ploopi_documents : suppression du chargement "onload"
+  * Correction d'un bug dans la fonction ploopi_reziseimage() : mauvaise prise en compte de la couleur de fond lors du redimensionnement des images
+  * Correctif sur le template backoffice "ploopi_menu" (problème d'incompatibilité entre le traitement de la transparence des images PNG et le mapping des images PNG)
+  * Réintégration de la possibilité d'attacher un utilisateur à plusieurs groupes (supprimé malencontreusement)
+  * Ajout d'un onglet # pour filtrer les groupes/utilisateurs dont le nom commence par un caractère non alphabétique (ou accentué)
+  * Mise à jour de la class "skin" (affichage treeview)
+  * La fonction ploopi_urlencode n'ajoute plus les paramètres d'environnement en utilisation frontoffice même si $addenv est à "true"
+
+ * WebEdit 1.8.9
+
+  * Activation d'un switch permettant d'intégrer un module frontoffice dans le contenu de la page (?template_idmodule=X => template_content.php)
+  * Test d'existence du fichier wce.php lors de l'intégration d'un objet frontoffice
+  * Améliorations diverses pour faciliter l'intégration de modules frontoffice (expérimental)
+  * Ajout des informations ~ (hors ligne) et * (attente de validation) dans l'arbre des rubriques/articles (supprimé malencontreusement)
+  * Correction d'un bug d'affichage en mode édition si les dates de publications de l'article ne sont pas valides
+
+ * Forum 1.0.3
+
+  * Correction du bug sur les messages (ticket) si le message concerné a été supprimé
+  * Ajout de précisions pour les messages d'erreurs éventuelles
+
+   * Erreur : #1002 (= erreur indéterminée qui ne devrait pas apparaitre)
+   * Erreur : Vous ne bénéficiez pas des autorisations nécessaires (=... !)
+   * Erreur : Information(s) manquante(s) (= par ex. : demande d'ouverture mess sans le id_mess)
+   * Aucun résultat trouvé (= recherche qui n'aboutie pas)
+
 == Ploopi - version 1.2 ===================================================
 
 2008-11-20 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

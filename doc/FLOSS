@@ -52,5 +52,9 @@
       license : MIT
       copyright : Thomas Fuchs
 
-  
+ * Tango icon set
+   path : ./templates/*
+   url : http://tango.freedesktop.org
+   license : CC SA
+   copyright : ?
 

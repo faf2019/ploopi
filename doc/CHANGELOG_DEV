@@ -1,3 +1,43 @@
+== Ploopi - version 1.3 ===================================================
+
+2009-01-29 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Fonction ploopi_validation_delete, nouvelle fonction : supprime les informations de validation attachées à un objet/enregistrement/utilisateur
+  ./include/functions/validation.php => function ploopi_validation_delete($id_object = 0, $id_record = '', $id_module = -1, $id_user = 0)
+
+2009-01-16 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* user::getphotopath(), nouvelle méthode : retourne le chemin vers la photo de l'utilisateur
+
+2009-01-02 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Fonction ploopi_image_wordwrap(), nouvelle fonction : découpe un texte pour qu'il tienne dans une image d'une largeur déterminée
+  ./include/functions/image.php => function ploopi_image_wordwrap($text, $width, $fontsize, $font)
+
+2008-12-29 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Fonction ploopi_is_url, nouvelle fonction : vérifie qu'une url est valide
+  ./include/functions/string.php => function ploopi_is_url($url)
+
+2008-12-23 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Classe "db_pdo" : nouvelle classe d'abstraction d'accès aux bases de données utilisant pdo - experimental uniquement - seul mysql est géré
+
+2008-11-23 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Fonction ploopi_strtr, nouvelle fonction : équivalent de strtr en version multibyte (UTF-8) car la version "mbstring" de strtr n'existe pas.
+  ./include/functions/string.php => function ploopi_strtr($str, $from, $to = null)
+
+* Fonction ploopi_str_split, nouvelle fonction : équivalent de str_split en version multibyte (UTF-8) car la version "mbstring" de str_split n'existe pas.
+  ./include/functions/string.php =>  ploopi_str_split($str)
+
+2008-11-23 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* skin::display_selectbox(), nouvelle méthode : affiche une liste de choix paramétrable
+  ./include/classes/skin_common.php => public function display_selectbox($id, $name, $arrValues, $arrUserOptions = null, $selecteditem = null)
+
+* calendar, nouvelle classe permettant d'afficher un calendrier hebdomadaire ou mensuel avec un jeu de données fourni en paramètres
+
 == Ploopi - version 1.2 ===================================================
 
 2008-11-10 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
