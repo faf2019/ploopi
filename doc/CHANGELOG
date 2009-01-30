@@ -55,6 +55,15 @@
   * Un abonné n'est averti d'une opération sur un élément que s'il peut accéder à cet élément (il n'est pas averti lors de la création d'un dossier privé ou qui ne lui est pas partagé)
   * Paramétrage possible des colonnes à afficher dans l'explorateur de documents et dans la recherche
   * Correction d'une erreur lors du téléchargement d'un document (variable non définie)
+  
+ * WebEdit 1.9.1
+
+  * Correction d'un bug dans l'intégration d'un objet WCE dans un article
+  * Correction d'un bug dans la génération des flux ATOM/RSS (problème d'encodage UTF8)
+  * Prise en compte des articles des sous-rubriques dans la génération des flux ATOM/RSS de rubriques
+  * Modification de la génération des flux ATOM/RSS : Les flux n'intègrent désormais que les articles contenus dans des rubriques qui y ont souscrit
+  * Amélioration de l'intégration du flux global ATOM/RSS (il suffit qu'une rubrique propose un flux pour que ce flux soit activé sur la page d'accueil)
+  * L'abonnement au site concerne désormais l'ensemble du site et non plus la première racine 
 
  == Ploopi - version 1.2.4 ===================================================
 
