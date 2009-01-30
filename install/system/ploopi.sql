@@ -101,7 +101,7 @@ CREATE TABLE `ploopi_documents_file` (
   `name` varchar(255) default NULL,
   `label` varchar(255) NOT NULL,
   `description` varchar(255) default NULL,
-  `ref` varchar(32) NOT NULL,
+  `ref` varchar(255) NOT NULL,
   `timestp_file` bigint(14) unsigned NOT NULL,
   `timestp_create` bigint(14) default NULL,
   `timestp_modify` bigint(14) default NULL,
@@ -185,7 +185,8 @@ DROP TABLE IF EXISTS `ploopi_group_user`;
 CREATE TABLE `ploopi_group_user` (
   `id_user` int(10) unsigned NOT NULL default '0',
   `id_group` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id_group`,`id_user`)
+  PRIMARY KEY  (`id_group`,`id_user`),
+  KEY `id_user` (`id_user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 LOCK TABLES `ploopi_group_user` WRITE;
@@ -458,7 +459,7 @@ CREATE TABLE `ploopi_module_type` (
 
 LOCK TABLES `ploopi_module_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_module_type` DISABLE KEYS */;
-INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,'Coeur du système','1.2','Ovensia','20081120000000');
+INSERT INTO `ploopi_module_type` VALUES (1,'system',1,0,'Noyau du système','1.3','Ovensia','20090129000000');
 /*!40000 ALTER TABLE `ploopi_module_type` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_module_workspace`;
@@ -487,7 +488,7 @@ CREATE TABLE `ploopi_param_choice` (
 
 LOCK TABLES `ploopi_param_choice` WRITE;
 /*!40000 ALTER TABLE `ploopi_param_choice` DISABLE KEYS */;
-INSERT INTO `ploopi_param_choice` VALUES (1,'system_generate_htpasswd','0','non'),(1,'system_generate_htpasswd','1','oui');
+INSERT INTO `ploopi_param_choice` VALUES (1,'system_generate_htpasswd','0','non'),(1,'system_generate_htpasswd','1','oui'),(1,'system_set_cache','0','non'),(1,'system_set_cache','1','oui'),(1,'system_focus_popup','0','non'),(1,'system_focus_popup','1','oui');
 /*!40000 ALTER TABLE `ploopi_param_choice` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_param_default`;
@@ -502,7 +503,7 @@ CREATE TABLE `ploopi_param_default` (
 
 LOCK TABLES `ploopi_param_default` WRITE;
 /*!40000 ALTER TABLE `ploopi_param_default` DISABLE KEYS */;
-INSERT INTO `ploopi_param_default` VALUES (1,'system_generate_htpasswd','0',1),(1,'system_language','french',1);
+INSERT INTO `ploopi_param_default` VALUES (1,'system_generate_htpasswd','0',1),(1,'system_language','french',1),(1,'system_set_cache','0',1),(1,'system_focus_popup','0',1);
 /*!40000 ALTER TABLE `ploopi_param_default` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_param_type`;
@@ -518,7 +519,7 @@ CREATE TABLE `ploopi_param_type` (
 
 LOCK TABLES `ploopi_param_type` WRITE;
 /*!40000 ALTER TABLE `ploopi_param_type` DISABLE KEYS */;
-INSERT INTO `ploopi_param_type` VALUES (1,'system_generate_htpasswd','1',0,'','Générer un fichier htpasswd'),(1,'system_language','',1,'','Langue du système');
+INSERT INTO `ploopi_param_type` VALUES (1,'system_generate_htpasswd','1',0,'','Générer un fichier htpasswd'),(1,'system_language','',1,'','Langue du système'),(1,'system_set_cache','0',0,'','Activer le Cache'),(1,'system_focus_popup','0',0,'','Activer le Focus sur les Popups');
 /*!40000 ALTER TABLE `ploopi_param_type` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_param_user`;
@@ -754,6 +755,7 @@ CREATE TABLE `ploopi_user` (
   `mobile` varchar(32) NOT NULL,
   `service` varchar(64) NOT NULL,
   `function` varchar(64) NOT NULL,
+  `number` varchar(255) NOT NULL,
   `postalcode` varchar(16) NOT NULL,
   `city` varchar(64) NOT NULL,
   `country` varchar(64) NOT NULL,
@@ -772,7 +774,7 @@ CREATE TABLE `ploopi_user` (
 
 LOCK TABLES `ploopi_user` WRITE;
 /*!40000 ALTER TABLE `ploopi_user` DISABLE KEYS */;
-INSERT INTO `ploopi_user` VALUES (2,'Administrateur','','admin','feee4f3ca6345d6562972e7c3a9dad9b',20040701101222,0,'','','','','','','','','','','',0,1,'','0','','');
+INSERT INTO `ploopi_user` VALUES (2,'Administrateur','','admin','feee4f3ca6345d6562972e7c3a9dad9b',20040701101222,0,'','','','','','','','','','','','',0,1,'','0','','');
 /*!40000 ALTER TABLE `ploopi_user` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_user_action_log`;
@@ -849,7 +851,8 @@ CREATE TABLE `ploopi_workspace_group` (
   `id_group` int(10) NOT NULL default '0',
   `id_workspace` int(10) NOT NULL default '0',
   `adminlevel` tinyint(3) unsigned default '0',
-  PRIMARY KEY  (`id_group`,`id_workspace`)
+  PRIMARY KEY  (`id_group`,`id_workspace`),
+  KEY `id_workspace` (`id_workspace`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 LOCK TABLES `ploopi_workspace_group` WRITE;
@@ -861,7 +864,9 @@ CREATE TABLE `ploopi_workspace_group_role` (
   `id_group` int(10) NOT NULL default '0',
   `id_workspace` int(10) NOT NULL default '0',
   `id_role` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id_group`,`id_workspace`,`id_role`)
+  PRIMARY KEY  (`id_group`,`id_workspace`,`id_role`),
+  KEY `id_workspace` (`id_workspace`),
+  KEY `id_role` (`id_role`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 LOCK TABLES `ploopi_workspace_group_role` WRITE;
@@ -888,7 +893,9 @@ CREATE TABLE `ploopi_workspace_user_role` (
   `id_user` int(10) unsigned NOT NULL default '0',
   `id_workspace` int(10) NOT NULL default '0',
   `id_role` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id_user`,`id_workspace`,`id_role`)
+  PRIMARY KEY  (`id_user`,`id_workspace`,`id_role`),
+  KEY `id_workspace` (`id_workspace`),
+  KEY `id_role` (`id_role`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 LOCK TABLES `ploopi_workspace_user_role` WRITE;
@@ -905,23 +912,3 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
-INSERT INTO `ploopi_param_type` (`id_module_type`, `name`, `default_value`, `public`, `description`, `label`) 
-VALUES (1, 'system_set_cache', '0', 0, '', 'Activer le Cache');
-INSERT INTO `ploopi_param_choice` (`id_module_type`, `name`, `value`, `displayed_value`) VALUES
-(1, 'system_set_cache', '0', 'non'),
-(1, 'system_set_cache', '1', 'oui');
-INSERT INTO `ploopi_param_default` (`id_module`, `name`, `value`, `id_module_type`) VALUES 
-(1, 'system_set_cache', '0', 1);
-
-ALTER TABLE `ploopi_group_user` ADD INDEX ( `id_user` );
-ALTER TABLE `ploopi_workspace_group` ADD INDEX ( `id_workspace` );
-ALTER TABLE `ploopi_workspace_user_role` ADD INDEX ( `id_workspace` );
-ALTER TABLE `ploopi_workspace_user_role` ADD INDEX ( `id_role` );
-ALTER TABLE `ploopi_workspace_group_role` ADD INDEX ( `id_workspace` );
-ALTER TABLE `ploopi_workspace_group_role` ADD INDEX ( `id_role` );
-
-ALTER TABLE `ploopi_documents_file` CHANGE `ref` `ref` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
-
-ALTER TABLE `ploopi_user` ADD `number` VARCHAR( 255 ) NOT NULL AFTER `function`;
-
-UPDATE `ploopi_module_type` SET `version` = '1.2.4', `author` = 'Ovensia', `date` = '20090116000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
