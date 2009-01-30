@@ -52,7 +52,7 @@ switch($ploopi_op)
         
         $return = -1;
         
-        if (!empty($_GET['headingid']) && is_numeric($_GET['headingid']) && !empty($_POST['subscription_headingid']) && is_numeric($_POST['subscription_headingid']))
+        if (!empty($_GET['headingid']) && is_numeric($_GET['headingid']) && is_numeric($_POST['subscription_headingid']))
         {
             if (!empty($_POST['subscription_email']) && ploopi_checkemail($_POST['subscription_email']))
             {

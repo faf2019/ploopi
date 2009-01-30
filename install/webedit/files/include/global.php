@@ -321,7 +321,7 @@ function webedit_getheadings($moduleid = -1)
 
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
 
-    $headings = array('list' => array(), 'tree' => array());
+    $headings = array('list' => array(), 'tree' => array(), 'feed_enabled' => false, 'subscription_enabled' => false);
 
     $select = "SELECT * FROM ploopi_mod_webedit_heading WHERE id_module = {$moduleid} ORDER BY depth, position";
     $result = $db->query($select);
@@ -341,6 +341,12 @@ function webedit_getheadings($moduleid = -1)
             $headings['list'][$fields['id']]['template'] = $headings['list'][$fields['id_heading']]['template'];
             $headings['list'][$fields['id']]['herited_template'] = 1;
         }
+        
+        // Il suffit qu'une rubrique active le flux pour que le flux soit également activé sur le site global (en respectant le choix de chaque rubrique)
+        if ($fields['feed_enabled'] && !$headings['feed_enabled']) $headings['feed_enabled'] = true;
+        
+        // Il suffit qu'une rubrique active l'abonnement pour que l'abonnement soit également activé sur le site global (en respectant le choix de chaque rubrique)
+        if ($fields['feed_enabled'] && !$headings['subscription_enabled']) $headings['feed_enabled'] = true;
     }
 
     return($headings);
@@ -672,24 +678,34 @@ function webedit_getobjectcontent($matches)
 
         if (sizeof($id_object) == 2 || sizeof($id_object) == 3) // normal size !
         {
-            $object_moduleid = $id_object[1];
 
-            $queryobj = "SELECT * FROM ploopi_mb_wce_object WHERE id={$id_object[0]}";
-
-            $resobj = $db->query($queryobj);
+            $resobj = $db->query("
+                SELECT  mwo.*, 
+                        mt.label as module_type 
+                         
+                FROM    ploopi_mb_wce_object mwo,
+                        ploopi_module m,
+                        ploopi_module_type mt
+                        
+                WHERE   mwo.id = {$id_object[0]}
+                AND     mwo.id_module_type = m.id_module_type
+                AND     m.id = {$id_object[1]}
+                AND     mt.id = m.id_module_type
+            ");
+                
             if($obj = $db->fetchrow($resobj))
             {
-                $obj['module_id'] = $object_moduleid;
+                $obj['module_id'] = $id_object[1];
                 if (isset($id_object[2])) $obj['object_id'] = $id_object[2];
 
-                $tab = explode("&",trim($obj['script'],"?"));
+                $arrQuery = explode("&",trim($obj['script'],"?"));
 
-                foreach ($tab as $key => $value) eval("$".$value.";");
-
+                foreach ($arrQuery as $key => $value) eval("$".$value.";");
+                
                 ob_start();
                 if (file_exists("./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php"))
                 {
-                    include "./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php";
+                    include "./modules/{$obj['module_type']}/wce.php";
                     $content .= ob_get_contents();
                 }
                 else $content = "Objet WCE non trouvé";
@@ -731,29 +747,5 @@ function webedit_record_isenabled($id_object, $id_record, $id_module)
     }
 
     return($enabled);
-}
-
-function webedit_get_articleid()
-{
-    global $articleid;
-    return $articleid;
-}
-
-function webedit_get_headingid()
-{
-    global $headingid;
-    return $headingid;
-}
-
-function webedit_get_template_name()
-{
-    global $template_name;
-    return $template_name;
-}
-
-function webedit_get_url()
-{
-    global $article;
-    return $article->geturl();
 }
 ?>

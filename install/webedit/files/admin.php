@@ -422,7 +422,6 @@ switch($menu)
                     // on construit la liste des objets parents (y compris l'objet courant)
                     $arrHeadingList = split(';', "{$objHeading->fields['parents']};{$objHeading->fields['id']}");
                     
-        
                     switch($strTypeTicket)
                     {
                         case 'new':

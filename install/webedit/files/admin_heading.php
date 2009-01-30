@@ -95,8 +95,7 @@ $heading->open($headingid);
 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
 {
     ?>
-    <form style="margin:0;" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return webedit_heading_validate(this);">
-    <input type="hidden" name="op" value="heading_save">
+    <form style="margin:0;" action="<? echo ploopi_urlencode('admin.php?op=heading_save'); ?>" method="post" onsubmit="javascript:return webedit_heading_validate(this);">
     <?
 }
 ?>

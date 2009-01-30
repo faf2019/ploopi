@@ -818,16 +818,16 @@ else // affichage standard rubrique/page
             )
         );
     }    
-
+    
     // Doit on autoriser les abonnements ?
-    if (isset($headings['list'][$headingid]) && $headings['list'][$headingid]['subscription_enabled'])
+    if (($booIsHomePage && isset($headings['subscription_enabled']) && $headings['subscription_enabled']) || (isset($headings['list'][$headingid]) && $headings['list'][$headingid]['subscription_enabled']))
     {
         $template_body->assign_block_vars(
             'switch_subscription', 
             array(
                 'ACTION' => ploopi_urlencode("index.php?ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false),
-                'HEADINGID' => $headingid,
-                'ROOTID' => $headings['tree'][0][0]
+                'HEADINGID' => $booIsHomePage ? 0 : $headingid,
+                'ROOTID' => 0
             )
         );
         
@@ -995,7 +995,7 @@ $template_body->assign_block_vars(
 );
 
 // Doit on afficher le flux du site ?
-if (isset($headings['list'][$headings['tree'][0][0]]) && $headings['list'][$headings['tree'][0][0]]['feed_enabled'])
+if (isset($headings['feed_enabled']) && $headings['feed_enabled'])
 {
     $template_body->assign_block_vars(
         'switch_atomfeed_site', 

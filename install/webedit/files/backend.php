@@ -54,37 +54,45 @@ $today = ploopi_createtimestamp();
 // Format du flux (RSS / ATOM)
 $format = (empty($_REQUEST['format'])) ? 'atom' : $_REQUEST['format']; 
 
+// Si une rubrique est définie, le flux porte le titre de la rubrique
 if (isset($_REQUEST['headingid']))
 {
     $objHeading = new webedit_heading();
-    $objHeading->open($_REQUEST['headingid']);
-    
-    $where = " AND id_heading = {$_REQUEST['headingid']} ";
-    $feed_title = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title'].' - '.$objHeading->fields['label'];
-    $feed_description = $objHeading->fields['description'];
+    if ($objHeading->open($_REQUEST['headingid']))
+    {
+        $where = "AND (heading.id = {$objHeading->fields['id']} OR heading.parents = '{$objHeading->fields['parents']};{$objHeading->fields['id']}' OR heading.parents LIKE '{$objHeading->fields['parents']};{$objHeading->fields['id']};%')";
+        $feed_title = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title'].' - '.$objHeading->fields['label'];
+        $feed_description = $objHeading->fields['description'];
+    }
+    else 
+    {
+        ploopi_h404();
+        ploopi_die();
+    }
 }
-else
+else // sinon du site
 {
     $where = '';
     $feed_title = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title'];
     $feed_description = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_description'];
 }
 
-
-$select =   "
-            SELECT      *
-            FROM        ploopi_mod_webedit_article
-            WHERE       id_module = {$ploopi_moduleid}
-            {$where}
-            AND         (timestp_published <= {$today} OR timestp_published = 0)
-            AND         (timestp_unpublished >= {$today} OR timestp_unpublished = 0)
-            ORDER BY    timestp DESC
-            LIMIT       0,10
-            ";
+$select = "
+    SELECT      article.*
+    FROM        ploopi_mod_webedit_article article,
+                ploopi_mod_webedit_heading heading
+    WHERE       article.id_module = {$ploopi_moduleid}
+    AND         article.id_heading = heading.id 
+    AND         heading.feed_enabled = 1
+    {$where}
+    AND         (article.timestp_published <= {$today} OR article.timestp_published = 0)
+    AND         (article.timestp_unpublished >= {$today} OR article.timestp_unpublished = 0)
+    ORDER BY    article.timestp DESC
+    LIMIT       0,10
+";
 
 $db->query($select);
 $articles = $db->getarray();
-
 
 switch($format)
 {
@@ -100,11 +108,11 @@ switch($format)
 
 $feed = new FeedWriter($feedformat);
 
-$feed->setTitle(ploopi_xmlentities(utf8_encode($feed_title)));
+$feed->setTitle(ploopi_xmlentities(utf8_encode($feed_title), true));
 $feed->setLink(_PLOOPI_BASEPATH);
 
 $feed->setChannelElement('updated', date(DATE_ATOM , time()));
-$feed->setChannelElement('author', array('name '=> ploopi_xmlentities(utf8_encode($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']))));
+$feed->setChannelElement('author', array('name '=> ploopi_xmlentities(utf8_encode($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']), true)));
     
 foreach($articles as $key => $article)
 {
@@ -114,7 +122,7 @@ foreach($articles as $key => $article)
     // Création d'un nouvel item
     $item = $feed->createNewItem();
     
-    $item->setTitle(ploopi_xmlentities(utf8_encode($article['title'])));
+    $item->setTitle(ploopi_xmlentities(utf8_encode($article['title']), true));
     $item->setLink(_PLOOPI_BASEPATH.'/'.$url);
     $item->setDate(ploopi_timestamp2unixtimestamp($article['timestp']));
     $item->setDescription(ploopi_nl2br(htmlentities($article['metadescription'])));
@@ -123,6 +131,9 @@ foreach($articles as $key => $article)
     $feed->addItem($item);
 }
     
+// Vidage du buffer (par sécurité car il doit être vide...)
+ploopi_ob_clean();
+
 // Génération du flux
 $feed->generateFeed();
 ?>
