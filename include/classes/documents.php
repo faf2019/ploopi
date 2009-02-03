@@ -365,5 +365,31 @@ class documentsfolder extends data_object
         }
         
     }
+    
+    /**
+     * Crée un sous-dossier
+     *
+     * @param string $name nom du dossier
+     * @param string $description description du dossier
+     * @return documentsfolder dossier fils
+     */
+    
+    function create_child($name, $description = '')
+    {
+        $objDocChild = new documentsfolder();
+        $objDocChild->fields['id_record'] = $this->fields['id_record'];
+        $objDocChild->fields['id_object'] = $this->fields['id_object'];
+        $objDocChild->fields['id_module'] = $this->fields['id_module'];
+        $objDocChild->fields['id_workspace'] = $this->fields['id_workspace'];
+        $objDocChild->fields['id_user'] = $this->fields['id_user'];
+        $objDocChild->fields['name'] = $name;
+        $objDocChild->fields['description'] = $description;
+        $objDocChild->fields['timestp_create'] = $objDocChild->fields['timestp_modify'] = ploopi_createtimestamp();
+        $objDocChild->fields['nbelements'] = 0;
+        $objDocChild->fields['parents'] = "{$this->fields['parents']},{$this->fields['id']}";
+        $objDocChild->fields['id_folder'] = $this->fields['id'];
+        
+        return $objDocChild;
+    }
 }
 
