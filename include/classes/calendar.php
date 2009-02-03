@@ -157,8 +157,8 @@ class calendar
     public function display()
     {
         ?>
-        <div class="<? echo $this->options['class_name']; ?>">
-            <?
+        <div class="<?php echo $this->options['class_name']; ?>">
+            <?php
             switch($this->display_type)
             {
                 case 'days':
@@ -171,7 +171,7 @@ class calendar
             }
             ?>
         </div>
-        <?
+        <?php
     }
 
     /**
@@ -229,20 +229,20 @@ class calendar
         $calendar_width = $nbdays * $day_width + ($this->options['hours_colwidth'] * $this->options['display_hours']);
         $calendar_height = $day_height + ($this->options['dayslabel_height'] * $this->options['display_dayslabel']);
         ?>
-        <div class="days_inner" style=width:<? echo $calendar_width; ?>px;height:<? echo $calendar_height; ?>px;">
-        <?
+        <div class="days_inner" style=width:<?php echo $calendar_width; ?>px;height:<?php echo $calendar_height; ?>px;">
+        <?php
         // Affichage des libellés de jours si demandé
         if ($this->options['display_dayslabel']) 
         { 
             ?>
             <div class="row">
-                <?
+                <?php
                 // Il faut afficher une petite case vide (intersection heures/jours)
                 if ($this->options['display_hours']) 
                 {
                     ?>
-                    <div class="day_header" style="<? echo "width:".($this->options['hours_colwidth'] - 1)."px;height:".($this->options['dayslabel_height'] - 1)."px;"; ?>">&nbsp;</div>
-                    <?
+                    <div class="day_header" style="<?php echo "width:".($this->options['hours_colwidth'] - 1)."px;height:".($this->options['dayslabel_height'] - 1)."px;"; ?>">&nbsp;</div>
+                    <?php
                 }
                                     
                 
@@ -255,45 +255,45 @@ class calendar
                     // Date locale
                     $ldate = substr(ploopi_unixtimestamp2local($dateday), 0, 5);
                     ?>
-                    <div class="day_header" style="<? echo $day_header_style; ?>">
-                        <div class="day_header_label"><? echo $ploopi_days[$d].' '.$ldate; ?></div>
+                    <div class="day_header" style="<?php echo $day_header_style; ?>">
+                        <div class="day_header_label"><?php echo $ploopi_days[date('N', $dateday)].' '.$ldate; ?></div>
                     </div>
-                    <?
+                    <?php
                 }
                 ?>
             </div>
-            <?
+            <?php
         }
         
         
         ?>
         <div class="row">
-        <?
+        <?php
         // Affichage des heures
         if ($this->options['display_hours']) 
         { 
             ?>
-            <div class="hours" style="<? echo $hours_style; ?>">
-                <?
+            <div class="hours" style="<?php echo $hours_style; ?>">
+                <?php
                 // Affichage des heures + demi-heures
                 for ($h = $this->options['hour_begin']; $h < $this->options['hour_end']; $h++ )
                 {
                     ?>
-                    <div class="hour_header" style="<? echo $hour_header_style; ?>;">
-                        <div class="hour_header_num"><? echo sprintf("%02d", $h); ?></div>
+                    <div class="hour_header" style="<?php echo $hour_header_style; ?>;">
+                        <div class="hour_header_num"><?php echo sprintf("%02d", $h); ?></div>
                     </div>
-                    <?
+                    <?php
                     // Affichage du séparateur d'heures 
                     if ($h > $this->options['hour_begin'])
                     {
                         ?>
-                        <div class="tick" style="top:<? echo $hour_height * ($h - $this->options['hour_begin']); ?>px;width:<? echo $this->options['hours_colwidth']-1; ?>px;"></div>
-                        <?
+                        <div class="tick" style="top:<?php echo $hour_height * ($h - $this->options['hour_begin']); ?>px;width:<?php echo $this->options['hours_colwidth']-1; ?>px;"></div>
+                        <?php
                     }
                 }
                 ?>
             </div>
-            <?
+            <?php
         }
                 
         // Affichage des journées
@@ -302,15 +302,15 @@ class calendar
         for ($d = 1; $d <= $nbdays; $d++)
         {
             ?>
-            <div class="day" style="<? echo $day_style; ?>">
-                <?
+            <div class="day" style="<?php echo $day_style; ?>">
+                <?php
                 // Affichage des heures + demi-heures
                 for ($h = $this->options['hour_begin']+1; $h < $this->options['hour_end']; $h++ )
                 {
                     ?>
-                    <div class="tick" style="opacity:0.5;filter:alpha(opacity=50);top:<? echo floor($hour_height * ($h - $this->options['hour_begin'] - 0.5)); ?>px;width:<? echo $day_width-1; ?>px;"></div>
-                    <div class="tick" style="top:<? echo $hour_height * ($h - $this->options['hour_begin']); ?>px;width:<? echo $day_width-1; ?>px;"></div>
-                    <?
+                    <div class="tick" style="opacity:0.5;filter:alpha(opacity=50);top:<?php echo floor($hour_height * ($h - $this->options['hour_begin'] - 0.5)); ?>px;width:<?php echo $day_width-1; ?>px;"></div>
+                    <div class="tick" style="top:<?php echo $hour_height * ($h - $this->options['hour_begin']); ?>px;width:<?php echo $day_width-1; ?>px;"></div>
+                    <?php
                 }
                 // Détermination de la date du jour à afficher
                 $dateday = mktime(0, 0, 0, $firstday_m, $firstday_d + $d - 1, $firstday_y);
@@ -350,9 +350,9 @@ class calendar
                             $intEventHeight = floor($floTimeLength * $hour_height);
                             
                             ?>
-                            <a class="event" href="<? echo $this->events[$intId]['href']; ?>" title="<? echo $this->events[$intId]['title']; ?>" <? if (!empty($this->events[$intId]['onclick'])) {?>onclick="<? echo $this->events[$intId]['onclick']; ?>"<? } ?> style="top:<? echo $intEventTop; ?>px;height:<? echo $intEventHeight - 1; ?>px;width:<? echo $day_width - 1 ?>px;background-color:<? echo htmlentities($this->events[$intId]['color']); ?>;">
-                                <div class="event_inner" <? if (!empty($this->events[$intId]['style'])) {?>style="<? echo $this->events[$intId]['style']; ?>"<? } ?>>
-                                    <? 
+                            <a class="event" href="<?php echo $this->events[$intId]['href']; ?>" title="<?php echo $this->events[$intId]['title']; ?>" <?php if (!empty($this->events[$intId]['onclick'])) {?>onclick="<?php echo $this->events[$intId]['onclick']; ?>"<?php } ?> style="top:<?php echo $intEventTop; ?>px;height:<?php echo $intEventHeight - 1; ?>px;width:<?php echo $day_width - 1 ?>px;background-color:<?php echo htmlentities($this->events[$intId]['color']); ?>;">
+                                <div class="event_inner" <?php if (!empty($this->events[$intId]['style'])) {?>style="<?php echo $this->events[$intId]['style']; ?>"<?php } ?>>
+                                    <?php 
                                     echo str_replace(
                                         array('<timestp_begin>', '<timestp_end>'),
                                         array($strTime, $strTime),
@@ -361,18 +361,18 @@ class calendar
                                     ?>
                                 </div>
                             </a>
-                            <?
+                            <?php
                         }
                     } 
                 }
                 ?>
             </div>
-            <?
+            <?php
         }
         
         ?>
         </div>
-        <?
+        <?php
     }
     
     /**
@@ -419,33 +419,33 @@ class calendar
         $calendar_height = ($day_height * $nbweeks) + ($this->options['dayslabel_height'] * $this->options['display_dayslabel']);
         
         ?>
-        <div class="month_inner" style=width:<? echo $calendar_width; ?>px;height:<? echo $calendar_height; ?>px;">
-            <?
+        <div class="month_inner" style=width:<?php echo $calendar_width; ?>px;height:<?php echo $calendar_height; ?>px;">
+            <?php
             // Affichage des libellés de jours si demandé
             if ($this->options['display_dayslabel']) 
             { 
                 ?>
                 <div class="row">
-                    <?
+                    <?php
                     // Il faut afficher une petite case vide (intersection semaines/jours)
                     if ($this->options['display_numweeks']) 
                     {
                         ?>
-                        <div class="day_header" style="<? echo "width:".($this->options['numweeks_colwidth'] - 1)."px;height:".($this->options['dayslabel_height'] - 1)."px;"; ?>">&nbsp;</div>
-                        <?
+                        <div class="day_header" style="<?php echo "width:".($this->options['numweeks_colwidth'] - 1)."px;height:".($this->options['dayslabel_height'] - 1)."px;"; ?>">&nbsp;</div>
+                        <?php
                     }
                     
                     for ($d=1; $d<=7; $d++)
                     {
                         ?>
-                        <div class="day_header" style="<? echo $day_header_style; ?>">
-                            <div class="day_header_label"><? echo $ploopi_days[$d]; ?></div>
+                        <div class="day_header" style="<?php echo $day_header_style; ?>">
+                            <div class="day_header_label"><?php echo $ploopi_days[$d]; ?></div>
                         </div>
-                        <?
+                        <?php
                     }
                     ?>
                 </div>
-                <?
+                <?php
             }
             
             // Boucle n°1 : Si le 1er jour du mois n'est pas un lundi, on affiche la fin du mois précédent 
@@ -455,14 +455,14 @@ class calendar
                 $w = date('W', $firstday);
                 ?>
                 <div class="row">
-                <?
+                <?php
                 if ($this->options['display_numweeks']) 
                 { 
                     ?>
-                    <div class="week_header" style="<? echo $week_header_style; ?>">
-                        <div class="week_header_num"><? echo $w; ?></div>
+                    <div class="week_header" style="<?php echo $week_header_style; ?>">
+                        <div class="week_header_num"><?php echo $w; ?></div>
                     </div>
-                    <?
+                    <?php
                 }
                 
                 for ($c = 1; $c < $weekday; $c++)
@@ -475,14 +475,14 @@ class calendar
                     // Date au format local
                     $date = substr(ploopi_unixtimestamp2local($strTs), 0, 10);
                     ?>
-                    <div class="day" title="<? echo $date ?>" style="<? echo $day_style; ?>">
-                        <div class="day_num_grayed"><? echo $d; ?></div>
-                        <?
+                    <div class="day" title="<?php echo $date ?>" style="<?php echo $day_style; ?>">
+                        <div class="day_num_grayed"><?php echo $d; ?></div>
+                        <?php
                         $strEventsKey = substr(ploopi_unixtimestamp2timestamp($strTs), 0, 8);
                         if (!empty($arrEvents[$strEventsKey])) $this->_display_month_events($arrEvents[$strEventsKey]);
                         ?>
                     </div>
-                    <?
+                    <?php
                 }
             }
             
@@ -499,14 +499,14 @@ class calendar
                     $w = date('W', mktime(0, 0, 0, $this->options['month'], $d,  $this->options['year']));
                     ?>
                     <div class="row">
-                    <? 
+                    <?php 
                     if ($this->options['display_numweeks']) 
                     { 
                         ?>
-                        <div class="week_header" style="<? echo $week_header_style; ?>">
-                            <div class="week_header_num"><? echo $w; ?></div>
+                        <div class="week_header" style="<?php echo $week_header_style; ?>">
+                            <div class="week_header_num"><?php echo $w; ?></div>
                         </div>
-                        <?
+                        <?php
                     }
                 }
                 
@@ -514,14 +514,14 @@ class calendar
                 $date = current(ploopi_timestamp2local(sprintf("%04d%02d%02d000000",$this->options['year'], $this->options['month'], $d)));
     
                 ?>
-                <div class="day" title="<? echo $date ?>" style="<? echo $day_style; ?>">
-                    <div class="day_num"><? echo $d; ?></div>
-                    <?
+                <div class="day" title="<?php echo $date ?>" style="<?php echo $day_style; ?>">
+                    <div class="day_num"><?php echo $d; ?></div>
+                    <?php
                     $strEventsKey = sprintf("%04d%02d%02d",$this->options['year'], $this->options['month'], $d);
                     if (!empty($arrEvents[$strEventsKey])) $this->_display_month_events($arrEvents[$strEventsKey]);
                     ?>
                 </div>
-                <?
+                <?php
                 // Si fin de semaine, fin de ligne
                 if ($weekday == 7) echo '</div>';
                 
@@ -542,21 +542,21 @@ class calendar
                     // Date au format local
                     $date = substr(ploopi_unixtimestamp2local($strTs), 0, 10);
                     ?>
-                    <div class="day" title="<? echo $date ?>" style="<? echo $day_style; ?>">
-                        <div class="day_num_grayed"><? echo $d; ?></div>
-                        <?
+                    <div class="day" title="<?php echo $date ?>" style="<?php echo $day_style; ?>">
+                        <div class="day_num_grayed"><?php echo $d; ?></div>
+                        <?php
                         $strEventsKey = substr(ploopi_unixtimestamp2timestamp($strTs), 0, 8);
                         if (!empty($arrEvents[$strEventsKey])) $this->_display_month_events($arrEvents[$strEventsKey]);
                         ?>
                         </div>
-                    <?
+                    <?php
                 }
     
                 echo '</div>';
             }        
         ?>
         </div>
-        <? // month_inner
+        <?php // month_inner
     }    
     
     /**
@@ -574,9 +574,9 @@ class calendar
                 $arrDate = ploopi_timestamp2local($this->events[$intId]['timestp_begin']);
                 $strTime = substr($arrDate['time'], 0, 5);
                 ?>
-                <a class="event" href="<? echo $this->events[$intId]['href']; ?>" title="<? echo $this->events[$intId]['title']; ?>" <? if (!empty($this->events[$intId]['onclick'])) {?>onclick="<? echo $this->events[$intId]['onclick']; ?>"<? } ?>>
-                    <div class="event_inner" style="background-color:<? echo htmlentities($this->events[$intId]['color']); ?>;" <? if (!empty($this->events[$intId]['style'])) {?>style="<? echo $this->events[$intId]['style']; ?>"<? } ?>>
-                        <? 
+                <a class="event" href="<?php echo $this->events[$intId]['href']; ?>" title="<?php echo $this->events[$intId]['title']; ?>" <?php if (!empty($this->events[$intId]['onclick'])) {?>onclick="<?php echo $this->events[$intId]['onclick']; ?>"<?php } ?>>
+                    <div class="event_inner" style="background-color:<?php echo htmlentities($this->events[$intId]['color']); ?>;" <?php if (!empty($this->events[$intId]['style'])) {?>style="<?php echo $this->events[$intId]['style']; ?>"<?php } ?>>
+                        <?php 
                         echo str_replace(
                             array('<timestp_begin>', '<timestp_end>'),
                             array($strTime, $strTime),
@@ -585,7 +585,7 @@ class calendar
                         ?>
                     </div>
                 </a>
-                <?
+                <?php
             }
         }
     }
