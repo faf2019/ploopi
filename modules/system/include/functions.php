@@ -573,15 +573,15 @@ function system_tickets_displayresponses($parents, $tickets, $rootid)
 
         ?>
         <div class="system_tickets_response">
-            <div class="system_tickets_head" onclick="javascript:system_tickets_display(<? echo $fields['id']; ?>,<? echo (empty($fields['status'])) ? 0 : 1; ?>, 0);">
-                <div  class="system_tickets_date"><? echo $localdate['date']; ?> à <? echo $localdate['time']; ?></div>
-                <div class="system_tickets_sender"><b><? echo "{$fields['firstname']} {$fields['lastname']}"; ?></b></div>
-                <div class="system_tickets_title" id="tickets_title_<? echo $fields['id']; ?>" <? if (is_null($fields['status'])) echo 'style="font-weight:bold;"'; ?>><? echo $fields['title']; ?></div>
+            <div class="system_tickets_head" onclick="javascript:system_tickets_display(<?php echo $fields['id']; ?>,<?php echo (empty($fields['status'])) ? 0 : 1; ?>, 0);">
+                <div  class="system_tickets_date"><?php echo $localdate['date']; ?> à <?php echo $localdate['time']; ?></div>
+                <div class="system_tickets_sender"><b><?php echo "{$fields['firstname']} {$fields['lastname']}"; ?></b></div>
+                <div class="system_tickets_title" id="tickets_title_<?php echo $fields['id']; ?>" <?php if (is_null($fields['status'])) echo 'style="font-weight:bold;"'; ?>><?php echo $fields['title']; ?></div>
             </div>
 
-            <div class="system_tickets_response_detail" id="tickets_detail_<? echo $fields['id'];?>">
+            <div class="system_tickets_response_detail" id="tickets_detail_<?php echo $fields['id'];?>">
                 <div class="system_tickets_message">
-                <?
+                <?php
                 echo ploopi_make_links($fields['message']);
                 if ($fields['lastedit_timestp'])
                 {
@@ -592,26 +592,26 @@ function system_tickets_displayresponses($parents, $tickets, $rootid)
                 </div>
                 <div class="system_tickets_buttons">
                     <p class="ploopi_va">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','550',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<? echo $fields['id']; ?>', 'system_popupticket');"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_reply.png">Répondre</a>
-                        <?
-                        /* <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','400',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<? echo $fields['id']; ?>&quoted=true', 'system_popupticket');"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_quote.png">Citer</a> */
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','550',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_reply.png">Répondre</a>
+                        <?php
+                        /* <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','400',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>&quoted=true', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_quote.png">Citer</a> */
                         if ($fields['sender_uid'] == $_SESSION['ploopi']['userid'])
                         {
                             ?>
-                            <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','550',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_modify&ticket_id=<? echo $fields['id']; ?>', 'system_popupticket');"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_modify.png">Modifier</a>
-                            <?
+                            <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','550',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_modify&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_modify.png">Modifier</a>
+                            <?php
                         }
                         ?>
                     </p>
                 </div>
             </div>
             <div>
-            <?
+            <?php
                 if (isset($parents[$ticketid])) system_tickets_displayresponses($parents, $tickets, $ticketid);
             ?>
             </div>
         </div>
-        <?
+        <?php
     }
 }
 

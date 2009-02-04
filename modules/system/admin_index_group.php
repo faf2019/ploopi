@@ -42,16 +42,16 @@ echo $skin->open_simplebloc();
 <div>
     <div class="system_group_icons">
         <div class="system_group_icons_padding">
-            <?
+            <?php
             $nbusers = sizeof($group->getusers());
             $nbgroups = (!empty($groups['tree'][$groupid])) ? sizeof($groups['tree'][$groupid]) : 0;
             ?>
             <div style="padding:4px;">
                 Ce groupe est composé de
-                <br /><strong><? echo $nbgroups; ?> groupe(s)</strong>
-                <br /><strong><? echo $nbusers; ?> utilisateur(s)</strong>
+                <br /><strong><?php echo $nbgroups; ?> groupe(s)</strong>
+                <br /><strong><?php echo $nbusers; ?> utilisateur(s)</strong>
             </div>
-            <?
+            <?php
             $toolbar_group[] = array(
                                     'title'     => str_replace('<LABEL>','<br /><b>'.$childgroup.'</b>', _SYSTEM_LABEL_CREATE_CHILD),
                                     'url'       => "admin.php?op=child&groupid=$groupid",
@@ -103,7 +103,7 @@ echo $skin->open_simplebloc();
     </div>
 
     <div class="system_group_main">
-        <?
+        <?php
         if ($father = $group->getfather())
         {
             $parentlabel = $father->fields['label'];
@@ -121,33 +121,33 @@ echo $skin->open_simplebloc();
         $templatelist_back = ploopi_getavailabletemplates('backoffice');
         $templatelist_front = ploopi_getavailabletemplates('frontoffice');
         ?>
-        <form name="" action="<? echo ploopi_urlencode('admin.php'); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
+        <form name="" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
         <input type="hidden" name="op" value="save_group">
-        <input type="hidden" name="group_id" value="<? echo $group->fields['id']; ?>">
+        <input type="hidden" name="group_id" value="<?php echo $group->fields['id']; ?>">
 
             <div class="ploopi_form_title">
-                <? echo $group->fields['label']; ?> &raquo;
-                <?
+                <?php echo $group->fields['label']; ?> &raquo;
+                <?php
                     echo _SYSTEM_LABEL_GROUP_MODIFY;
                 ?>
             </div>
             <div class="ploopi_form" style="clear:both;padding:2px">
                 <p>
-                    <label><? echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
-                    <input type="text" class="text" name="group_label"  value="<? echo $group->fields['label']; ?>">
+                    <label><?php echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
+                    <input type="text" class="text" name="group_label"  value="<?php echo $group->fields['label']; ?>">
                 </p>
                 <p>
-                    <label><? echo _SYSTEM_LABEL_GROUP_SHARED; ?>:</label>
-                    <input style="width:16px;" type="checkbox" name="group_shared" <? if($group->fields['shared']) echo "checked"; ?> value="1">(disponible pour les sous-espaces)
+                    <label><?php echo _SYSTEM_LABEL_GROUP_SHARED; ?>:</label>
+                    <input style="width:16px;" type="checkbox" name="group_shared" <?php if($group->fields['shared']) echo "checked"; ?> value="1">(disponible pour les sous-espaces)
                 </p>
             </div>
             <div style="clear:both;float:right;padding:4px;">
-                <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+                <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
             </div>
         </form>
     </div>
 </div>
-<?
+<?php
 echo $skin->close_simplebloc();
 
 echo $skin->open_simplebloc();

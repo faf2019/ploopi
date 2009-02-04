@@ -23,7 +23,7 @@
 
 /**
  * Fichier de langue 'français'
- * 
+ *
  * @package system
  * @subpackage lang
  * @copyright Netlor, Ovensia
@@ -255,6 +255,7 @@ define ('_SYSTEM_MSG_CONFIRMHOMEPAGERESET', 'Êtes-vous certain de vouloir reveni
 
 define ('_SYSTEM_MSG_CONFIRMMODULEUNINSTAL', 'Êtes-vous certain de vouloir désinstaller ce Module ?');
 define ('_SYSTEM_MSG_CONFIRMMBUPDATE', 'Êtes-vous certain de vouloir mettre à jour la métabase de ce module ?\n(Rechargement du fichier XML)');
+define ('_SYSTEM_MSG_CONFIRMDESCUPDATE', 'Êtes-vous certain de vouloir mettre à jour la description (actions, paramètres, etc.) de ce module ?\n(Rechargement du fichier XML)');
 
 define ('_SYSTEM_MSG_INFODELETE_USERS', 'Vous ne pouvez pas supprimer ce groupe car il contient des utilisateurs');
 define ('_SYSTEM_MSG_INFODELETE_GROUPS', 'Vous ne pouvez pas supprimer ce groupe car il contient des sous-groupes');

@@ -135,9 +135,9 @@ foreach($load as $key => $l)
 
 ?>
 <p class="ploopi_va" style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;font-weight:bold;">
-    <span>Charge du système en temps réel (nombre de coeurs : <? echo _PLOOPI_LOAD_NBCORE; ?>)&nbsp;&nbsp;</span><img src="./img/loading.gif" style="visibility:hidden;" id="system_serverload_loading"/>
+    <span>Charge du système en temps réel (nombre de coeurs : <?php echo _PLOOPI_LOAD_NBCORE; ?>)&nbsp;&nbsp;</span><img src="./img/loading.gif" style="visibility:hidden;" id="system_serverload_loading"/>
 </p>
-<?
+<?php
 $skin->display_array($columns, $values, 'array_load');
          
 
@@ -200,8 +200,8 @@ while ($row = $db->fetchrow())
 
 ?>
 <div style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;border-top:2px solid #c0c0c0;font-weight:bold;">
-    Historique : <? echo $intMaxRequests; ?> dernières requêtes
+    Historique : <?php echo $intMaxRequests; ?> dernières requêtes
 </div>
-<?
+<?php
 $skin->display_array($columns, $values, 'array_requests');
 ?>

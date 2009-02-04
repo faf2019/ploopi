@@ -38,12 +38,12 @@
  * Formulaire d'import de fichier
  */
 ?>
-<form action="<? echo ploopi_urlencode('admin.php'); ?>" method="Post" enctype="multipart/form-data">
+<form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="Post" enctype="multipart/form-data">
 <input type="Hidden" name="op" value="import">
 
 <table cellpadding="2" cellspacing="1" align="center" width="100%">
     <tr>
-        <td align="right"><? echo _SYSTEM_LABEL_IMPORTSRC; ?>*:&nbsp;</td>
+        <td align="right"><?php echo _SYSTEM_LABEL_IMPORTSRC; ?>*:&nbsp;</td>
         <td align="left"><input class="text" type="File" name="srcfile"></td>
     </tr>
     <tr>

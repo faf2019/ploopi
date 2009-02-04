@@ -23,7 +23,7 @@
 
 /**
  * Gestion des interfaces d'administration "système"
- * 
+ *
  * @package system
  * @subpackage system
  * @copyright Netlor, Ovensia
@@ -50,7 +50,7 @@ $row = $db->fetchrow();
 if (strcmp(_PLOOPI_VERSION, $row['version']))
 {
     $strSysVersion = $row['version'];
-    $toolbar['systemupdate'] = 
+    $toolbar['systemupdate'] =
         array(
             'title' => _SYSTEM_LABELICON_SYSTEMUPDATE,
             'url'   => "admin.php?sysToolbarItem=systemupdate",
@@ -58,28 +58,28 @@ if (strcmp(_PLOOPI_VERSION, $row['version']))
         );
 }
 
-$toolbar['install'] = 
+$toolbar['install'] =
     array(
         'title' => _SYSTEM_LABELICON_INSTALLMODULES,
         'url'   => "admin.php?sysToolbarItem=install",
         'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_install_module.png"
     );
 
-$toolbar['params'] = 
+$toolbar['params'] =
     array(
         'title' => _SYSTEM_LABELICON_PARAMS,
         'url'   => "admin.php?sysToolbarItem=params",
         'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_systemparams.png"
     );
 
-$toolbar['directory'] = 
+$toolbar['directory'] =
     array(
         'title' => _SYSTEM_LABELICON_USERS,
         'url'   => "admin.php?sysToolbarItem=directory",
         'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_directory.png"
     );
-    
-$toolbar['tools'] = 
+
+$toolbar['tools'] =
     array(
         'title' => _SYSTEM_LABELICON_TOOLS,
         'url'   => "admin.php?sysToolbarItem=tools",
@@ -92,13 +92,13 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
 ?>
 
 <div>
-    <?
+    <?php
     switch($_SESSION['system']['sysToolbarItem'])
     {
         case 'systemupdate':
             if (!empty($strSysVersion)) include './modules/system/admin_system_update.php';
         break;
-        
+
         // ---------------------------------
         // ONGLET "INSTALLATION DE MODULES"
         // ---------------------------------
@@ -127,11 +127,11 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                             </TR>
                             <TR>
                                 <TD ALIGN="RIGHT">
-                                <INPUT TYPE="Button" CLASS="flatbutton" VALUE="<? echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<? echo "admin.php?reloadsession"; ?>'">
+                                <INPUT TYPE="Button" CLASS="flatbutton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo "admin.php?reloadsession"; ?>'">
                                 </TD>
                             </TR>
                             </TABLE>
-                        <?
+                        <?php
                         echo $skin->close_simplebloc();
                     }
 
@@ -140,47 +140,6 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                 case 'addnewmodule':
                     include './modules/system/admin_system_addnewmodule.php';
                     //ploopi_redirect("admin.php");
-                break;
-
-                // update metabase
-                case 'updatemb':
-                    $module_type = new module_type();
-                    if (!empty($_GET['idmoduletype']) && is_numeric($_GET['idmoduletype']) && $module_type->open($_GET['idmoduletype']))
-                    {
-                        global $idmoduletype;
-                        $idmoduletype = $_GET['idmoduletype'];
-
-                        include './modules/system/xmlparser_mb.php';
-
-                        ploopi_create_user_action_log(_SYSTEM_ACTION_UPDATEMETABASE, $module_type->fields['label']);
-
-
-                        $db->query("DELETE FROM ploopi_mb_field WHERE id_module_type = {$_GET['idmoduletype']}");
-                        $db->query("DELETE FROM ploopi_mb_relation WHERE id_module_type = {$_GET['idmoduletype']}");
-                        $db->query("DELETE FROM ploopi_mb_schema WHERE id_module_type = {$_GET['idmoduletype']}");
-                        $db->query("DELETE FROM ploopi_mb_table WHERE id_module_type = {$_GET['idmoduletype']}");
-                        $db->query("DELETE FROM ploopi_mb_object WHERE id_module_type = {$_GET['idmoduletype']}");
-                        $db->query("DELETE FROM ploopi_mb_wce_object WHERE id_module_type = {$_GET['idmoduletype']}");
-
-
-                        $mbfile = "./install/{$module_type->fields['label']}/mb.xml";
-
-                        if (file_exists($mbfile))
-                        {
-                            $xml_parser = xmlparser_mb();
-                            if (!xml_parse($xml_parser,  file_get_contents($mbfile)))
-                            {
-                                $stop = sprintf("Erreur XML: %s à la ligne %d dans '%s'\n", xml_error_string(xml_get_error_code($xml_parser)), xml_get_current_line_number($xml_parser), $mbfile);
-                                $testok = false;
-                            }
-                            else $detail = "Fichier '{$mbfile}' importé";
-
-                            xml_parser_free($xml_parser);
-                        }
-                        else $detail = "Fichier '{$mbfile}' non trouvé";
-                    }
-
-                    ploopi_redirect('admin.php');
                 break;
 
                 default:
@@ -193,15 +152,15 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
         case 'directory':
             include "./modules/system/admin_system_directory.php";
         break;
-        
+
         case 'tools':
             switch($op)
             {
                 case 'phpinfo':
                     echo $skin->open_simplebloc(_SYSTEM_LABEL_PHPINFO);
                     ?>
-                    <iframe id="system_tools_phpinfo" style="border:0;width:100%;height:400px;margin:0;padding:0;" src="<? echo "admin-light.php?ploopi_op=system_tools_phpinfo"; ?>"></iframe>                    
-                    <?
+                    <iframe id="system_tools_phpinfo" style="border:0;width:100%;height:400px;margin:0;padding:0;" src="<?php echo "admin-light.php?ploopi_op=system_tools_phpinfo"; ?>"></iframe>
+                    <?php
                     echo $skin->close_simplebloc();
                 break;
 
@@ -209,13 +168,13 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                     echo $skin->open_simplebloc(_SYSTEM_LABEL_SERVERLOAD);
                     ?>
                     <div id="system_serverload">
-                    <? include './modules/system/tools_serverload.php'; ?>
+                    <?php include './modules/system/tools_serverload.php'; ?>
                     </div>
                     <script type="text/javascript">system_serverload();</script>
-                    <?
+                    <?php
                     echo $skin->close_simplebloc();
                 break;
-                
+
                 case 'diagnostic':
                     include "./modules/system/tools_diagnostic.php";
                 break;
@@ -239,7 +198,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                 case 'stats':
                     include "./modules/system/tools_stats.php";
                 break;
-                
+
                 default:
                     include './modules/system/admin_system_tools.php';
                 break;

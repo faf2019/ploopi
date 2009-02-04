@@ -48,27 +48,27 @@ else
 }
 ?>
 
-<form action="<? echo ploopi_urlencode('admin.php'); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
+<form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
 <input type="hidden" name="op" value="save_group">
-<input type="hidden" name="group_id_group" value="<? echo $group->fields['id']; ?>">
+<input type="hidden" name="group_id_group" value="<?php echo $group->fields['id']; ?>">
 
 <div class="ploopi_form_title">
-    <? echo $parentlabel; ?> &raquo; <? echo _SYSTEM_LABEL_GROUP_ADD; ?>
+    <?php echo $parentlabel; ?> &raquo; <?php echo _SYSTEM_LABEL_GROUP_ADD; ?>
 </div>
 <div class="ploopi_form" style="clear:both;padding:2px">
     <p>
-        <label><? echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
-        <input type="text" class="text" name="group_label"  value="<? echo "fils de {$parentlabel}"; ?>">
+        <label><?php echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
+        <input type="text" class="text" name="group_label"  value="<?php echo "fils de {$parentlabel}"; ?>">
     </p>
     <p>
-        <label><? echo _SYSTEM_LABEL_GROUP_SHARED; ?>:</label>
+        <label><?php echo _SYSTEM_LABEL_GROUP_SHARED; ?>:</label>
         <input style="width:16px;" type="checkbox" name="group_shared" value="1">(disponible pour les sous-espaces)
     </p>
 </div>
 
 
 <div style="text-align:right;padding:4px;">
-    <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+    <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>
 
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>

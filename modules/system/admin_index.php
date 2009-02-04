@@ -437,7 +437,7 @@ switch ($_SESSION['system']['level'])
                             echo $skin->open_simplebloc(str_replace('<LABEL>',$module_type->fields['label'],_SYSTEM_LABEL_MODULEINSTANCIATION));
                             ?>
                             <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
-                            <?
+                            <?php
 
                             $module = $module_type->createinstance($workspace_id);
                             $module_id = $module->save();
@@ -455,11 +455,11 @@ switch ($_SESSION['system']['level'])
                                     </TR>
                                     <TR>
                                         <TD ALIGN="RIGHT">
-                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<? echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<? echo "admin.php?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify"; ?>'">
+                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo "admin.php?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify"; ?>'">
                                         </TD>
                                     </TR>
                                     </TABLE>
-                                <?
+                                <?php
                                 echo $skin->close_simplebloc();
                             }
                         }
@@ -578,7 +578,7 @@ switch ($_SESSION['system']['level'])
                             echo $skin->open_simplebloc(str_replace('<LABEL>',$module->fields['label'],_SYSTEM_LABEL_MODULEDELETE));
                             ?>
                             <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
-                            <?
+                            <?php
                             
                             $module->delete();
 
@@ -590,11 +590,11 @@ switch ($_SESSION['system']['level'])
                                     </TR>
                                     <TR>
                                         <TD ALIGN="RIGHT">
-                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<? echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<? echo "admin.php?reloadsession"; ?>'">
+                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo "admin.php?reloadsession"; ?>'">
                                         </TD>
                                     </TR>
                                     </TABLE>
-                                <?
+                                <?php
                                 echo $skin->close_simplebloc();
                             }
                         }

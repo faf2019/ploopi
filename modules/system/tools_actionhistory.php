@@ -155,51 +155,51 @@ elseif ($limit_by > 0)
     $limit = '';
 ?>
 
-<form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" id="form_loghistory">
+<form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" id="form_loghistory">
 <input type="hidden" name="op" value="actionhistory">
 <input type="hidden" name="historyoption" id="historyoption" value="">
 <div style="margin: 0;border-bottom:2px solid #c0c0c0;padding:4px; with: 99%;">
     <div style="margin:0; padding:0; float:left;width:49%;" class="ploopi_form">
         <p>
             <label>Entre le (date):</label>
-            <input type="text" class="text" name="filter_date" id="filter_date" style="width:100px;" value="<? echo htmlentities($search_pattern['date']); ?>"><a href="#" onclick="javascript:ploopi_calendar_open('filter_date', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+            <input type="text" class="text" name="filter_date" id="filter_date" style="width:100px;" value="<?php echo htmlentities($search_pattern['date']); ?>"><a href="#" onclick="javascript:ploopi_calendar_open('filter_date', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
         </p>
         <p>
             <label>et le (date):</label>
-            <input type="text" class="text" name="filter_date2" id="filter_date2" style="width:100px;" value="<? echo htmlentities($search_pattern['date2']); ?>"><a href="#" onclick="javascript:ploopi_calendar_open('filter_date2', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+            <input type="text" class="text" name="filter_date2" id="filter_date2" style="width:100px;" value="<?php echo htmlentities($search_pattern['date2']); ?>"><a href="#" onclick="javascript:ploopi_calendar_open('filter_date2', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
         </p>
         <p>
             <label>Utilisateur:</label>
-            <input type="text" class="text" name="filter_user" value="<? echo htmlentities($search_pattern['user']); ?>">
+            <input type="text" class="text" name="filter_user" value="<?php echo htmlentities($search_pattern['user']); ?>">
         </p>
     </div>
 
     <div style="margin:0; padding:0; float:left;width:50%;" class="ploopi_form">
         <p>
             <label>Module:</label>
-            <input type="text" class="text" name="filter_module" value="<? echo htmlentities($search_pattern['module']); ?>">
+            <input type="text" class="text" name="filter_module" value="<?php echo htmlentities($search_pattern['module']); ?>">
         </p>
         <p>
             <label>Action:</label>
-            <input type="text" class="text" name="filter_action" value="<? echo htmlentities($search_pattern['action']); ?>">
+            <input type="text" class="text" name="filter_action" value="<?php echo htmlentities($search_pattern['action']); ?>">
         </p>
         <p>
             <label>Enregistrement:</label>
-            <input type="text" class="text" name="filter_record" value="<? echo htmlentities($search_pattern['record']); ?>">
+            <input type="text" class="text" name="filter_record" value="<?php echo htmlentities($search_pattern['record']); ?>">
         </p>
         <p>
             <label>IP:</label>
-            <input type="text" class="text" name="filter_ip" value="<? echo htmlentities($search_pattern['ip']); ?>">
+            <input type="text" class="text" name="filter_ip" value="<?php echo htmlentities($search_pattern['ip']); ?>">
         </p>
     </div>
     <div style="clear:both;text-align:right;padding:4px;">
-        <input type="button" class="button" value="Effacer les logs (selon le filtre)" onclick="javascript:if (confirm('<? echo _SYSTEM_MSG_CONFIRMLOGDELETE; ?>')) {$('historyoption').value='delete';$('form_loghistory').submit();}">
+        <input type="button" class="button" value="Effacer les logs (selon le filtre)" onclick="javascript:if (confirm('<?php echo _SYSTEM_MSG_CONFIRMLOGDELETE; ?>')) {$('historyoption').value='delete';$('form_loghistory').submit();}">
         <input type="button" class="button" value="Export CSV" onclick="javascript:$('historyoption').value='exportcsv';$('form_loghistory').submit();">
         <input type="submit" class="button" value="Filtrer">
     </div>
 </div>
 </form>
-<?
+<?php
 $sql =  "
         SELECT      count(*) as c
         FROM        ploopi_user_action_log
@@ -216,8 +216,8 @@ $row = $db->fetchrow();
 $count = $row['c'];
 
 ?>
-<div style="padding:4px;border-bottom:1px solid #c0c0c0;background:#e0e0e0;"><b><? echo $count; ?> élément(s) trouvés</b> <? if ($count > $limit_by) { ?>- Affichage des enregistrements de <? echo ($limit_begin+1); ?> à <?php echo (($limit_begin+$limit_by)<=$count) ? ($limit_begin+$limit_by) : $count; } ?> - Utilisez les filtres ci-dessus pour des résultats plus précis</div>
-<?
+<div style="padding:4px;border-bottom:1px solid #c0c0c0;background:#e0e0e0;"><b><?php echo $count; ?> élément(s) trouvés</b> <?php if ($count > $limit_by) { ?>- Affichage des enregistrements de <?php echo ($limit_begin+1); ?> à <?php echo (($limit_begin+$limit_by)<=$count) ? ($limit_begin+$limit_by) : $count; } ?> - Utilisez les filtres ci-dessus pour des résultats plus précis</div>
+<?php
 
 $sql = "SELECT * FROM ploopi_mb_action WHERE ploopi_mb_action.id_workspace = ";
 

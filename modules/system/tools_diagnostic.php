@@ -336,16 +336,16 @@ $skin->display_array($columns, $values, 'array_diagnostic', array('sortable' => 
 ?>
 
 <p class="ploopi_va" style="padding:2px;">
-<img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_red.png">
+<img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_red.png">
 <span>Une puce rouge indique un problème potentiellement bloquant</span>
 </p>
 <p class="ploopi_va" style="padding:2px;">
-<img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_orange.png">
+<img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_orange.png">
 <span>Une puce orange indique qu'une fonctionnalité ou une configuration peut poser problème</span>
 </p>
 <p class="ploopi_va" style="padding:2px;">
-<img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_green.png">
+<img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_green.png">
 <span>Une puce verte indique que tout va bien !</span>
 </p>
 
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>

@@ -128,7 +128,7 @@ if($_FILES['srcfile']['name'] != '')
 <table cellpadding="2" cellspacing="1" width="100%">
     <tr>
         <td width="50%" valign="top">
-            <?
+            <?php
             if(count($created))
             {
                 echo $skin->open_simplebloc('Récapitulatif');
@@ -141,7 +141,7 @@ if($_FILES['srcfile']['name'] != '')
             ?>
         </td>
         <td width="50%" valign="top">
-            <?
+            <?php
             if(count($errors))
             {
                 echo $skin->open_simplebloc('Erreurs');

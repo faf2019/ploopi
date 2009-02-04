@@ -111,18 +111,18 @@ if ($op == 'assign_role' && !empty($_GET['roleid']) && is_numeric($_GET['roleid'
     <p class="ploopi_va" style="padding:4px; background-color:#e0e0e0; border-bottom:1px solid #c0c0c0;">
         <span style="font-weight:bold;">Rechercher un utilisateur ou un groupe :</span> 
         <input type="text" id="system_roleusers_filter" class="text">
-        <img style="cursor:pointer;" onclick="javascript:system_roleusers_search(<? echo $_GET['roleid']; ?>);" src="<? echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
+        <img style="cursor:pointer;" onclick="javascript:system_roleusers_search(<?php echo $_GET['roleid']; ?>);" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
     </p>
    
     <div id="system_roleusers_search_result"></div>
    
     <div id="system_roleusers_list">
-    <?
+    <?php
     $roleid = $_GET['roleid'];
     include './modules/system/admin_index_roles_assignment_list.php';
     ?>
     </div>
-    <?
+    <?php
     echo $skin->close_simplebloc();
 }
 ?>

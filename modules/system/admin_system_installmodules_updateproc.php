@@ -23,7 +23,7 @@
 
 /**
  * Procédure de mise à jour d'un module
- * 
+ *
  * @package system
  * @subpackage system
  * @copyright Netlor, Ovensia
@@ -46,13 +46,13 @@ if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
 echo $skin->open_simplebloc(_SYSTEM_LABEL_UPDATEREPORT.htmlentities(" - {$_GET['installmoduletype']} {$_GET['updatefrom']} => {$_GET['installmoduletype']} {$_GET['updateto']}"));
 
-$select = "SELECT version FROM ploopi_module_type WHERE id = ".$db->addslashes($_GET['idmoduletype'])." AND version = '".$db->addslashes($_GET['updateto'])."'";
+$select = "SELECT version FROM ploopi_module_type WHERE id = '".$db->addslashes($_GET['idmoduletype'])."' AND version = '".$db->addslashes($_GET['updateto'])."'";
 $db->query($select);
 if ($db->numrows())
 {
     ?>
     <div style="padding:4px;text-align:center;font-weight:bold;color:#a60000;">Module déjà mis à jour !</div>
-    <?
+    <?php
 }
 else
 {
@@ -68,9 +68,9 @@ else
     $srcfiles =     "{$modpath}/files";
     $destfiles =    "./modules/{$_GET['installmoduletype']}";
 
-    
+
     $arrSqlUpdates = array();
-    
+
     if (is_dir($sqlpath))
     {
         $dir = @opendir($sqlpath);
@@ -89,9 +89,9 @@ else
             }
         }
     }
-    
+
     ksort($arrSqlUpdates);
-    
+
     $critical_error = false;
 
     $rapport = array();
@@ -124,6 +124,13 @@ else
         // =============
         // OPERATION 2 : Chargement des paramètres/actions
         // =============
+
+        $module_type = new module_type();
+        $module_type->open($_GET['idmoduletype']);
+
+        $critical_error = $module_type->update_description($xmlfile_desc, &$rapport);
+
+        /*
         $testok = true;
         $detail = '';
 
@@ -148,13 +155,15 @@ else
 
                 $module_type->delete_params();
 
-                $module_type->fields = array(   'id'            => $_GET['idmoduletype'],
-                                                'label'         => $pt['label'][0],
-                                                'version'       => $pt['version'][0],
-                                                'author'        => $pt['author'][0],
-                                                'date'          => $pt['date'][0],
-                                                'description'   => $pt['description'][0]
-                                            );
+                $module_type->fields =
+                    array(
+                        'id'            => $_GET['idmoduletype'],
+                        'label'         => $pt['label'][0],
+                        'version'       => $pt['version'][0],
+                        'author'        => $pt['author'][0],
+                        'date'          => $pt['date'][0],
+                        'description'   => $pt['description'][0]
+                    );
 
                 $module_type->save();
 
@@ -165,13 +174,15 @@ else
                         if (empty($value['default_value'][0])) $value['default_value'][0] = '';
 
                         $param_type = new param_type();
-                        $param_type->fields = array(    'id_module_type'    => $module_type->fields['id'],
-                                                        'name'              => $value['name'][0],
-                                                        'label'             => $value['label'][0],
-                                                        'default_value'     => $value['default_value'][0],
-                                                        'public'            => $value['public'][0],
-                                                        'description'       => $value['description'][0]
-                                                    );
+                        $param_type->fields =
+                            array(
+                                'id_module_type'    => $module_type->fields['id'],
+                                'name'              => $value['name'][0],
+                                'label'             => $value['label'][0],
+                                'default_value'     => $value['default_value'][0],
+                                'public'            => $value['public'][0],
+                                'description'       => $value['description'][0]
+                            );
 
                         $param_type->save();
 
@@ -194,11 +205,13 @@ else
                         while ($row = $db->fetchrow($rs_paramdefault))
                         {
                             $param_default = new param_default();
-                            $param_default->fields = array( 'id_module'         => $row['id'],
-                                                            'name'              => $value['name'][0],
-                                                            'value'             => is_null($value['default_value'][0]) ? '' : $value['default_value'][0],
-                                                            'id_module_type'    => $module_type->fields['id']
-                                                        );
+                            $param_default->fields =
+                                array(
+                                    'id_module'         => $row['id'],
+                                    'name'              => $value['name'][0],
+                                    'value'             => is_null($value['default_value'][0]) ? '' : $value['default_value'][0],
+                                    'id_module_type'    => $module_type->fields['id']
+                                );
 
                             $param_default->save();
                         }
@@ -208,11 +221,13 @@ else
                             foreach($value['paramchoice'] as $ckey => $cvalue)
                             {
                                 $param_choice = new param_choice();
-                                $param_choice->fields = array(  'id_module_type'    => $module_type->fields['id'],
-                                                                'name'              => $param_type->fields['name'],
-                                                                'value'             => $cvalue['value'][0],
-                                                                'displayed_value'   => $cvalue['displayed_value'][0]
-                                                            );
+                                $param_choice->fields =
+                                    array(
+                                        'id_module_type'    => $module_type->fields['id'],
+                                        'name'              => $param_type->fields['name'],
+                                        'value'             => $cvalue['value'][0],
+                                        'displayed_value'   => $cvalue['displayed_value'][0]
+                                    );
                                 $param_choice->save();
                             }
                         }
@@ -224,13 +239,15 @@ else
                     foreach($pt['cms_object'] as $key => $value)
                     {
                         $mb_cms_object = new mb_cms_object();
-                        $mb_cms_object->fields = array( 'id_module_type'    => $module_type->fields['id'],
-                                                        'label' => $value['label'][0],
-                                                        'script' => $value['script'][0],
-                                                        'select_id' => $value['select_id'][0],
-                                                        'select_label' => $value['select_label'][0],
-                                                        'select_table' => $value['select_table'][0]
-                                                    );
+                        $mb_cms_object->fields =
+                            array(
+                                'id_module_type'    => $module_type->fields['id'],
+                                'label' => $value['label'][0],
+                                'script' => $value['script'][0],
+                                'select_id' => $value['select_id'][0],
+                                'select_label' => $value['select_label'][0],
+                                'select_table' => $value['select_table'][0]
+                            );
                         $mb_cms_object->save();
                     }
                 }
@@ -240,12 +257,14 @@ else
                     foreach($pt['action'] as $key => $value)
                     {
                         $mb_action = new mb_action();
-                        $mb_action->fields = array( 'id_module_type'    => $module_type->fields['id'],
-                                                    'id_action' => $value['id_action'][0],
-                                                    'label' => $value['label'][0],
-                                                    'id_object' => (isset($value['id_object'][0])) ? $value['id_object'][0] : 0,
-                                                    'role_enabled' => (isset($value['role_enabled'][0])) ? $value['role_enabled'][0] : 1
-                                                );
+                        $mb_action->fields =
+                            array(
+                                'id_module_type'    => $module_type->fields['id'],
+                                'id_action' => $value['id_action'][0],
+                                'label' => $value['label'][0],
+                                'id_object' => (isset($value['id_object'][0])) ? $value['id_object'][0] : 0,
+                                'role_enabled' => (isset($value['role_enabled'][0])) ? $value['role_enabled'][0] : 1
+                            );
                         $mb_action->save();
                     }
                 }
@@ -267,6 +286,7 @@ else
         }
 
         $rapport[] = array('operation' => 'Chargement des paramètres/actions', 'detail' => $detail, 'res' => $testok);
+        */
 
         if (!$critical_error)
         {
@@ -345,8 +365,8 @@ else
 }
 ?>
 <div style="padding:4px;text-align:right;">
-    <form action="<? echo ploopi_urlencode("admin.php?sysToolbarItem=install"); ?>" method="post">
-    <input type="submit" class="flatbutton" value="<? echo _PLOOPI_CONTINUE; ?>">
+    <form action="<?php echo ploopi_urlencode("admin.php?sysToolbarItem=install&reloadsession"); ?>" method="post">
+    <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_CONTINUE; ?>">
     </form>
 </div>
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>

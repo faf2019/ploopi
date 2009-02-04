@@ -91,21 +91,21 @@ $skin->display_array($columns, $values, 'array_connectedusers', array('sortable'
 ?>
 
 <div style="padding:4px;text-align:right;">
-<?
+<?php
 if (isset($_GET['monitoring']))
 {
     ?>
-    <input type="button" class="button" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=connectedusers"); ?>'" value="Arrêter le  monitoring">
-    <?
+    <input type="button" class="button" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=connectedusers"); ?>'" value="Arrêter le  monitoring">
+    <?php
 }
 else
 {
     ?>
-    <input type="text" class="text" value="<? echo (isset($_GET['monitoring'])) ? $_GET['monitoring'] : 2; ?>" size="2" id="system_monitoring_delay">
-    <input type="button" class="button" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=connectedusers"); ?>&monitoring='+$('system_monitoring_delay').value;" value="Monitoring">
-    <?
+    <input type="text" class="text" value="<?php echo (isset($_GET['monitoring'])) ? $_GET['monitoring'] : 2; ?>" size="2" id="system_monitoring_delay">
+    <input type="button" class="button" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=connectedusers"); ?>&monitoring='+$('system_monitoring_delay').value;" value="Monitoring">
+    <?php
 }
 ?>
 </div>
 
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>

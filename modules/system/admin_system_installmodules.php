@@ -23,7 +23,7 @@
 
 /**
  * Installation/Mise à jour/Désinstallation des modules
- * 
+ *
  * @package system
  * @subpackage system
  * @copyright Netlor, Ovensia
@@ -57,25 +57,27 @@ if ($dir = @opendir("./install/"))
                 {
                     $moduleinfo = &$xmlarray['root']['ploopi'][0]['moduletype'][0];
 
-                    $tabmoduletype_install[$moduleinfo['label'][0]] = array(
-                        'label' => $moduleinfo['label'][0],
-                        'version' => $moduleinfo['version'][0],
-                        'date' => $moduleinfo['date'][0],
-                        'author' => $moduleinfo['author'][0],
-                        'description' => $moduleinfo['description'][0]
-                    );
+                    $tabmoduletype_install[$moduleinfo['label'][0]] =
+                        array(
+                            'label' => $moduleinfo['label'][0],
+                            'version' => $moduleinfo['version'][0],
+                            'date' => $moduleinfo['date'][0],
+                            'author' => $moduleinfo['author'][0],
+                            'description' => $moduleinfo['description'][0]
+                        );
                 }
                 else // erreur XML
                 {
 
-                    $tabmoduletype_install[$file] = array(
-                        'label' => $file,
-                        'version' => '',
-                        'date' => '',
-                        'author' => '',
-                        'description' => '',
-                        'error' => true
-                    );
+                    $tabmoduletype_install[$file] =
+                        array(
+                            'label' => $file,
+                            'version' => '',
+                            'date' => '',
+                            'author' => '',
+                            'description' => '',
+                            'error' => true
+                        );
                 }
             }
         }
@@ -112,16 +114,19 @@ $result = $db->query($select);
 
 while ($fields = $db->fetchrow($result))
 {
+    // Recherche d'actions pour ce module
     $select = "SELECT * FROM ploopi_mb_action WHERE id_module_type = {$fields['id']}";
     $db->query($select);
     if ($db->numrows()) $has_actions = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_green.png\" align=\"middle\">";
     else $has_actions = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_red.png\" align=\"middle\">";
 
+    // Recherche de métabase pour ce module
     $select = "SELECT * FROM ploopi_mb_table WHERE id_module_type = {$fields['id']}";
     $db->query($select);
     if ($db->numrows()) $has_mb = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_green.png\" align=\"middle\">";
     else $has_mb = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_red.png\" align=\"middle\">";
 
+    // Recherche d'objets "WCE" (WebEdit) pour ce module
     $select = "SELECT * FROM ploopi_mb_wce_object WHERE id_module_type = {$fields['id']}";
     $db->query($select);
     if ($db->numrows()) $has_cmsop = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_green.png\" align=\"middle\">";
@@ -129,23 +134,23 @@ while ($fields = $db->fetchrow($result))
 
     $ldate = ploopi_timestamp2local($fields['date']);
 
-    $values[$c]['values']['desc'] = array('label' => $fields['description'], 'style' => '');
-    $values[$c]['values']['mtype'] = array('label' => $fields['label'], 'style' => '');
-    $values[$c]['values']['author'] = array('label' => $fields['author'], 'style' => '');
-    $values[$c]['values']['version'] = array('label' => $fields['version'], 'style' => '');
-    $values[$c]['values']['date'] = array('label' => $ldate['date'], 'style' => '', 'sort_label' => $fields['date']);
+    $values[$c]['values']['desc'] = array('label' => $fields['description']);
+    $values[$c]['values']['mtype'] = array('label' => $fields['label']);
+    $values[$c]['values']['author'] = array('label' => $fields['author']);
+    $values[$c]['values']['version'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin.php?ploopi_op=updatedesc&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMDESCUPDATE."')\">{$fields['version']}</a>");
+    $values[$c]['values']['date'] = array('label' => $ldate['date'], 'sort_label' => $fields['date']);
     $values[$c]['values']['actions'] = array('label' => $has_actions, 'style' => 'text-align:center');
-    $values[$c]['values']['metabase'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin.php?op=updatemb&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMBUPDATE."')\">{$has_mb}</a>", 'style' => 'text-align:center');
+    $values[$c]['values']['metabase'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin-light.php?ploopi_op=updatemb&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMBUPDATE."')\">{$has_mb}</a>", 'style' => 'text-align:center');
     $values[$c]['values']['wce'] = array('label' => $has_cmsop, 'style' => 'text-align:center');
-    
+
     if ($fields['id'] == _PLOOPI_MODULE_SYSTEM) // module system
         $values[$c]['values']['action'] = array('label' => '&nbsp;');
     else
         $values[$c]['values']['action'] = array('label' => "<a href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin.php?op=uninstall&uninstallidmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMODULEUNINSTAL."')\">"._SYSTEM_LABEL_UNINSTALL."</a>", 'style' => 'text-align:center;');
-        
+
     $values[$c]['description'] = $fields['description'];
     $values[$c]['style'] = ($fields['id'] == _PLOOPI_MODULE_SYSTEM) ? 'background-color:#f0e0e0;' : '';
-    
+
     $c++;
 
     $tabmoduletype_installed[$fields['label']]['version'] = $fields['version'];

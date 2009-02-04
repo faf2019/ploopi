@@ -62,12 +62,12 @@ foreach ($_SESSION['ploopi']['workspaces'] as $group)
         /*
          * 
         ?>
-        <TR bgcolor="<? echo $skin->values['bgline1']; ?>">
+        <TR bgcolor="<?php echo $skin->values['bgline1']; ?>">
             <TD>Niveau Utilisateur :</TD>
-            <TD><? echo $ploopi_system_levels[$group['adminlevel']]; ?></TD>
+            <TD><?php echo $ploopi_system_levels[$group['adminlevel']]; ?></TD>
         </TR>
             
-        <?
+        <?php
 */
 
         

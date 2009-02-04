@@ -40,6 +40,7 @@ echo $skin->open_simplebloc(_SYSTEM_UPDATE." - {$strSysVersion} vers "._PLOOPI_V
 switch($op)
 {
     case 'system_update_execute':
+        if ($strSysVersion == _PLOOPI_VERSION) ploopi_redirect('admin.php?reloadsession');
         
         $strSysVersion = str_replace(' ', '', $strSysVersion);
         
@@ -74,15 +75,15 @@ switch($op)
             if (file_exists("{$strSysInstallPath}{$strSqlFile}") && is_readable("{$strSysInstallPath}{$strSqlFile}"))
             {
                 ?>
-                <div style="padding:4px;">Import du fichier <b><? echo $strSqlFile ?></b></div>
-                <?
+                <div style="padding:4px;">Import du fichier <b><?php echo $strSqlFile ?></b></div>
+                <?php
                 $db->multiplequeries(file_get_contents("{$strSysInstallPath}{$strSqlFile}"));
             }
             else
             {
                 ?>
-                <div style="padding:4px;color:#a60000;">Impossible de lire le fichier <b><? echo "{$strSysInstallPath}{$strSqlFile}" ?></b>, vérifiez les droits en lecture</div>
-                <?
+                <div style="padding:4px;color:#a60000;">Impossible de lire le fichier <b><?php echo "{$strSysInstallPath}{$strSqlFile}" ?></b>, vérifiez les droits en lecture</div>
+                <?php
             }     
         }
         ?>
@@ -90,23 +91,23 @@ switch($op)
         <b>Mise à jour terminée</b>
         </div>
         <div style="padding:4px;">
-        <button onclick="javascript:document.location.href='<? echo ploopi_urlencode('admin.php'); ?>';">Continuer</button>
+        <button onclick="javascript:document.location.href='<?php echo ploopi_urlencode('admin.php?reloadsession'); ?>';">Continuer</button>
         </div>
-        <?
+        <?php
     break;
     
     default:
         ?>
         <div style="padding:4px;">
         Vous venez de mettre à jour Ploopi. 
-        <br />Vous aviez la version <b><? echo $strSysVersion; ?></b> et le système a été mis à jour en version <b><? echo _PLOOPI_VERSION; ?></b> 
+        <br />Vous aviez la version <b><?php echo $strSysVersion; ?></b> et le système a été mis à jour en version <b><?php echo _PLOOPI_VERSION; ?></b> 
         <br />Pour terminer la mise à jour vous devez mettre à jour la base de données.
         </div>
         
         <div style="padding:4px;">
-        <button onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=system_update_execute"); ?>';">Mettre à jour la Base de Données</button>
+        <button onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=system_update_execute"); ?>';">Mettre à jour la Base de Données</button>
         </div>
-        <?
+        <?php
    break;
 }
 

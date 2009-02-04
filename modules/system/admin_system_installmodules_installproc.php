@@ -48,14 +48,14 @@ $idmoduletype = -1;
 echo $skin->open_simplebloc(_SYSTEM_LABEL_INSTALLREPORT);
 ?>
 
-<?
+<?php
 $select = "SELECT * FROM ploopi_module_type WHERE label = '".$db->addslashes($_GET['installmoduletype'])."'";
 $db->query($select);
 if ($db->numrows())
 {
     ?>
     <div style="padding:4px;text-align:center;font-weight:bold;color:#a60000;">Module déjà installé !</div>
-    <?
+    <?php
 }
 else
 {
@@ -301,9 +301,9 @@ else
 }
 ?>
 <div style="padding:4px;text-align:right;">
-    <form action="<? echo ploopi_urlencode("admin.php?sysToolbarItem=install"); ?>" method="post">
-    <input type="submit" class="flatbutton" value="<? echo _PLOOPI_CONTINUE; ?>">
+    <form action="<?php echo ploopi_urlencode("admin.php?sysToolbarItem=install"); ?>" method="post">
+    <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_CONTINUE; ?>">
     </form>
 </div>
 
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>

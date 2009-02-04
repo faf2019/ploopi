@@ -23,7 +23,7 @@
 
 /**
  * Opération du module 'Système'
- * 
+ *
  * @package system
  * @subpackage op
  * @copyright Netlor, Ovensia
@@ -45,7 +45,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
             include_once './include/classes/ticket.php';
 
             $arrTickets = array();
-            
+
             if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
             {
                 $arrTickets[] = $_GET['ticket_id'];
@@ -193,8 +193,67 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
         default:
             /**
-             * Autres opérations nécessitant un niveau d'accrédiation plus élevé (gestionnaire)
+             * Autres opérations nécessitant un niveau d'accrédiation plus élevé (gestionnaire ou admin sys)
              */
+
+
+            if (ploopi_isadmin())
+            {
+                switch($ploopi_op)
+                {
+                    // update description
+                    case 'updatedesc':
+                        include_once './include/classes/module.php';
+                        ploopi_init_module('system', false, false, false);
+
+                        $module_type = new module_type();
+                        if (!empty($_GET['idmoduletype']) && is_numeric($_GET['idmoduletype']) && $module_type->open($_GET['idmoduletype']))
+                        {
+                            $xmlfile_desc = "./install/{$module_type->fields['label']}/description.xml";
+                            $critical_error = $module_type->update_description($xmlfile_desc);
+                            if (!$critical_error) ploopi_create_user_action_log(_SYSTEM_ACTION_UPDATEMODULE, "{$module_type->fields['label']} (reload)");
+                        }
+
+                        ploopi_redirect('admin.php');
+                    break;
+
+                    // update metabase
+                    case 'updatemb':
+                        include_once './include/classes/module.php';
+                        ploopi_init_module('system', false, false, false);
+
+                        $module_type = new module_type();
+                        if (!empty($_GET['idmoduletype']) && is_numeric($_GET['idmoduletype']) && $module_type->open($_GET['idmoduletype']))
+                        {
+                            global $idmoduletype;
+                            $idmoduletype = $_GET['idmoduletype'];
+
+                            include './modules/system/xmlparser_mb.php';
+
+                            ploopi_create_user_action_log(_SYSTEM_ACTION_UPDATEMETABASE, $module_type->fields['label']);
+
+                            $db->query("DELETE FROM ploopi_mb_field WHERE id_module_type = {$_GET['idmoduletype']}");
+                            $db->query("DELETE FROM ploopi_mb_relation WHERE id_module_type = {$_GET['idmoduletype']}");
+                            $db->query("DELETE FROM ploopi_mb_schema WHERE id_module_type = {$_GET['idmoduletype']}");
+                            $db->query("DELETE FROM ploopi_mb_table WHERE id_module_type = {$_GET['idmoduletype']}");
+                            $db->query("DELETE FROM ploopi_mb_object WHERE id_module_type = {$_GET['idmoduletype']}");
+                            $db->query("DELETE FROM ploopi_mb_wce_object WHERE id_module_type = {$_GET['idmoduletype']}");
+
+                            $mbfile = "./install/{$module_type->fields['label']}/mb.xml";
+
+                            if (file_exists($mbfile))
+                            {
+                                $xml_parser = xmlparser_mb();
+                                xml_parse($xml_parser,  file_get_contents($mbfile));
+                                xml_parser_free($xml_parser);
+                            }
+                        }
+
+                        ploopi_redirect('admin.php');
+                    break;
+                }
+            }
+
             if (ploopi_ismanager())
             {
                 switch($ploopi_op)
@@ -205,7 +264,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         include './modules/system/admin_index_roles_assignment_list.php';
                         ploopi_die();
                     break;
-                                            
+
                     // suppression de l'affectation d'un rôle à un utilisateur
                     case 'system_roleusers_delete_user':
                         if (empty($_GET['system_roleusers_userid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi_die();
@@ -275,10 +334,10 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     // résultat de la recherche utilisateurs / groupes
                     case 'system_roleusers_search':
                         if (!isset($_GET['system_roleusers_filter'])) ploopi_die();
-                        
+
                         $cleanedfilter = $db->addslashes($_GET['system_roleusers_filter']);
                         $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
-                        
+
                         $sql =  "
                                 SELECT      u.id,
                                             u.lastname,
@@ -300,7 +359,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         $users = $db->getarray();
 
                         $groupfilter = "g.label LIKE '%{$cleanedfilter}%'";
-                        
+
                         $sql =  "
                                 SELECT      g.id,
                                             g.label,
@@ -312,7 +371,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 ON          wg.id_group = g.id
                                 AND         wg.id_workspace = {$_SESSION['system']['workspaceid']}
                                 WHERE       {$groupfilter}
-                                
+
                                 ORDER BY    g.label
                                 ";
 
@@ -323,59 +382,59 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         {
                             ?>
                             <p class="ploopi_va" style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
-                                <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_noway.png">
+                                <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_noway.png">
                                 <span>aucun utilisateur/groupe trouv&eacute;</span>
                             </p>
-                            <?
+                            <?php
                         }
                         else
                         {
                             ?>
                             <div id="system_roleusers_result">
-                                <?
+                                <?php
                                 // pour chaque groupe
                                 foreach($groups as $group)
                                 {
                                     ?>
-                                    <a class="system_roleusers_select" title="Sélectionner ce groupe et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<? echo $_GET['system_roleusers_roleid']; ?>, <? echo $group['id']; ?>, 'group');">
-                                        <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><? echo "{$group['label']}"; ?></span></p>
+                                    <a class="system_roleusers_select" title="Sélectionner ce groupe et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<?php echo $_GET['system_roleusers_roleid']; ?>, <?php echo $group['id']; ?>, 'group');">
+                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo "{$group['label']}"; ?></span></p>
                                     </a>
-                                    <?
+                                    <?php
                                 }
                                 ?>
-                                <?
+                                <?php
                                 // pour chaque utilisateur
                                 foreach($users as $user)
                                 {
                                     ?>
-                                    <a class="system_roleusers_select" title="Sélectionner cet utilisateur et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<? echo $_GET['system_roleusers_roleid']; ?>, <? echo $user['id']; ?>, 'user');">
-                                        <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['lastname']} {$user['firstname']} ({$user['login']})"; ?></span></p>
+                                    <a class="system_roleusers_select" title="Sélectionner cet utilisateur et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<?php echo $_GET['system_roleusers_roleid']; ?>, <?php echo $user['id']; ?>, 'user');">
+                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo "{$user['lastname']} {$user['firstname']} ({$user['login']})"; ?></span></p>
                                     </a>
-                                    <?
+                                    <?php
                                 }
                                 ?>
                             </div>
                             <div id="system_roleusers_legend">
                                 <p class="ploopi_va" style="float:right;">
                                     <span style="font-weight:bold;">Légende:&nbsp;&nbsp;&nbsp;</span>
-                                    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span>&nbsp;Groupe d'Utilisateur&nbsp;&nbsp;</span>
-                                    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span>&nbsp;Utilisateur</span>
+                                    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span>&nbsp;Groupe d'Utilisateur&nbsp;&nbsp;</span>
+                                    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span>&nbsp;Utilisateur</span>
                                 </p>
                                 <p class="ploopi_va" style="float:left;">
                                     <span>Cliquez sur un utilisateur ou un groupe pour l'ajouter</span>
                                 </p>
                             </div>
-                            <?
+                            <?php
                         }
 
                         ploopi_die();
                     break;
-                    
+
                     case 'system_serverload':
                         include './modules/system/tools_serverload.php';
                         ploopi_die();
                     break;
-                    
+
                     case 'system_tools_phpinfo':
                         phpinfo();
                         ?>
@@ -398,34 +457,34 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 parent.document.getElementById('system_tools_phpinfo').style.height = height + 'px';
                             }
                         }
-                    
+
                         window.onload = function() { system_autofit_iframe();};
                         </script>
-                        <?
+                        <?php
                         ploopi_die();
                     break;
-                    
+
                     case 'system_choose_photo':
                         // Popup de choix d'une photo pour un utilisateur
                         ob_start();
                         ploopi_init_module('system');
                         ?>
-                        <form action="<? echo ploopi_urlencode("admin.php?ploopi_op=system_send_photo"); ?>" method="post" enctype="multipart/form-data" target="system_user_photo_iframe">
+                        <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=system_send_photo"); ?>" method="post" enctype="multipart/form-data" target="system_user_photo_iframe">
                         <p class="ploopi_va" style="padding:2px;">
-                            <label><? echo _SYSTEM_LABEL_PHOTO; ?>: </label>
+                            <label><?php echo _SYSTEM_LABEL_PHOTO; ?>: </label>
                             <input type="file" class="text" name="system_user_photo" />
-                            <input type="submit" class="button" name="<? echo _PLOOPI_SAVE; ?>" />
+                            <input type="submit" class="button" name="<?php echo _PLOOPI_SAVE; ?>" />
                         </p>
                         </form>
                         <iframe name="system_user_photo_iframe" style="display:none;"></iframe>
-                        <?
+                        <?php
                         $content = ob_get_contents();
                         ob_end_clean();
-                        
+
                         echo $skin->create_popup("Chargement d'une nouvelle photo", $content, 'popup_system_choose_photo');
                         ploopi_die();
                     break;
-                    
+
                     case 'system_send_photo':
                         // Envoi d'une photo temporaire dans la fiche utilisateur
                         // On vérifie qu'un fichier a bien été uploadé
@@ -439,19 +498,19 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         ?>
                         <script type="text/javascript">
                             new function() {
-                                window.parent.ploopi_getelem('system_user_photo', window.parent.document).innerHTML = '<img src="<? echo ploopi_urlencode('admin-light.php?ploopi_op=system_get_photo'); ?>" />'; 
+                                window.parent.ploopi_getelem('system_user_photo', window.parent.document).innerHTML = '<img src="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=system_get_photo'); ?>" />';
                                 window.parent.ploopi_hidepopup('popup_system_choose_photo');
                             }
                         </script>
-                        <?
+                        <?php
                     break;
-                    
+
                     case 'system_get_photo':
                         // Envoi de la photo temporaire vers le client
                         if (!empty($_SESSION['system']['user_photopath'])) ploopi_downloadfile($_SESSION['system']['user_photopath'], 'user.png', false, false);
                         ploopi_die();
                     break;
-                    
+
                     case 'system_delete_user':
                         if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
                         {
@@ -465,7 +524,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             }
                         }
                         ploopi_redirect('admin.php?system_level=system&sysToolbarItem=directory');
-                    break;       
+                    break;
                 }
             }
         break;

@@ -70,7 +70,7 @@ if (empty($groups) && empty($users))
 {
     ?>
     <div style="padding:4px;font-weight:bold;">Aucun utilisateur ou groupe affecté à ce rôle, utilisez la recherche pour en ajouter</div>
-    <?
+    <?php
     }
     else
     {

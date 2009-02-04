@@ -55,7 +55,7 @@ else
 
 ?>
 <div style="padding:4px;">
-    <?
+    <?php
     $tabs_char = array();
 
     // Génération des onglets
@@ -82,16 +82,16 @@ else
     ?>
 </div>
 
-<form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
+<form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
 <p class="ploopi_va" style="padding:4px;border-bottom:2px solid #c0c0c0;">
-    <span><? echo _SYSTEM_LABEL_GROUP; ?> :</span>
-    <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<? echo htmlentities($pattern); ?>">
-    <input type="submit" value="<? echo _PLOOPI_FILTER; ?>" class="button">
-    <input type="submit" name="reset" value="<? echo _PLOOPI_RESET; ?>" class="button">
+    <span><?php echo _SYSTEM_LABEL_GROUP; ?> :</span>
+    <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<?php echo htmlentities($pattern); ?>">
+    <input type="submit" value="<?php echo _PLOOPI_FILTER; ?>" class="button">
+    <input type="submit" name="reset" value="<?php echo _PLOOPI_RESET; ?>" class="button">
 </p>
 </form>
 
-<?
+<?php
 $where = array();
 
 if ($alphaTabItem == 99) // tous ou recherche

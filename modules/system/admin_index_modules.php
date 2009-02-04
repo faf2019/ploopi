@@ -141,74 +141,74 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
     echo $skin->open_simplebloc(str_replace('<MODULE>',$module->fields['label'],_SYSTEM_LABEL_MODULE_PROPERTIES));
     ?>
 
-    <form name="form_modify_module" action="<? echo ploopi_urlencode("admin.php?op=save_module_props&moduleid={$module->fields['id']}"); ?>" method="post">
+    <form name="form_modify_module" action="<?php echo ploopi_urlencode("admin.php?op=save_module_props&moduleid={$module->fields['id']}"); ?>" method="post">
     <div class="ploopi_form">
         <div style="padding:2px;">
             <p>
-                <label><? echo _SYSTEM_LABEL_MODULENAME; ?>:</label>
-                <input type="text" class="text" name="module_label" id="module_label" value="<? echo htmlentities($module->fields['label']); ?>" tabindex="1" />
+                <label><?php echo _SYSTEM_LABEL_MODULENAME; ?>:</label>
+                <input type="text" class="text" name="module_label" id="module_label" value="<?php echo htmlentities($module->fields['label']); ?>" tabindex="1" />
             </p>
             <p>
                 <label>&nbsp;</label>
-                <span><em><? echo _SYSTEM_EXPLAIN_MODULENAME; ?></em></span>
+                <span><em><?php echo _SYSTEM_EXPLAIN_MODULENAME; ?></em></span>
             </p>
 
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_active');">
-                <label><? echo _SYSTEM_LABEL_ACTIVE; ?>:</label>
-                <input type="checkbox" class="checkbox" name="module_active" id="module_active" value="1" <? if ($module->fields['active']) echo 'checked="checked"'; ?> tabindex="2" />
+                <label><?php echo _SYSTEM_LABEL_ACTIVE; ?>:</label>
+                <input type="checkbox" class="checkbox" name="module_active" id="module_active" value="1" <?php if ($module->fields['active']) echo 'checked="checked"'; ?> tabindex="2" />
             </p>
             <p>
                 <label>&nbsp;</label>
-                <span><em><? echo _SYSTEM_EXPLAIN_ACTIVE; ?></em></span>
+                <span><em><?php echo _SYSTEM_EXPLAIN_ACTIVE; ?></em></span>
             </p>
 
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_visible');">
-                <label><? echo _SYSTEM_LABEL_VISIBLE; ?>:</label>
-                <input type="checkbox" class="checkbox" name="module_visible" id="module_visible" value="1" <? if ($module->fields['visible']) echo 'checked="checked"'; ?> tabindex="3" />
+                <label><?php echo _SYSTEM_LABEL_VISIBLE; ?>:</label>
+                <input type="checkbox" class="checkbox" name="module_visible" id="module_visible" value="1" <?php if ($module->fields['visible']) echo 'checked="checked"'; ?> tabindex="3" />
             </p>
             <p>
                 <label>&nbsp;</label>
-                <span><em><? echo _SYSTEM_EXPLAIN_VISIBLE; ?></em></span>
+                <span><em><?php echo _SYSTEM_EXPLAIN_VISIBLE; ?></em></span>
             </p>
 
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_autoconnect');">
-                <label><? echo _SYSTEM_LABEL_AUTOCONNECT; ?>:</label>
-                <input type="checkbox" class="checkbox" name="module_autoconnect" id="module_autoconnect" value="1" <? if ($module->fields['autoconnect']) echo 'checked="checked"'; ?> tabindex="4" />
+                <label><?php echo _SYSTEM_LABEL_AUTOCONNECT; ?>:</label>
+                <input type="checkbox" class="checkbox" name="module_autoconnect" id="module_autoconnect" value="1" <?php if ($module->fields['autoconnect']) echo 'checked="checked"'; ?> tabindex="4" />
             </p>
             <p>
                 <label>&nbsp;</label>
-                <span><em><? echo _SYSTEM_EXPLAIN_AUTOCONNECT; ?></em></span>
+                <span><em><?php echo _SYSTEM_EXPLAIN_AUTOCONNECT; ?></em></span>
             </p>
 
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_shared');">
-                <label><? echo _SYSTEM_LABEL_SHARED; ?>:</label>
-                <input type="checkbox" class="checkbox" name="module_shared" id="module_shared" value="1" <? if ($module->fields['shared']) echo 'checked="checked"'; ?> tabindex="5" />
+                <label><?php echo _SYSTEM_LABEL_SHARED; ?>:</label>
+                <input type="checkbox" class="checkbox" name="module_shared" id="module_shared" value="1" <?php if ($module->fields['shared']) echo 'checked="checked"'; ?> tabindex="5" />
             </p>
             <p>
                 <label>&nbsp;</label>
-                <span><em><? echo _SYSTEM_EXPLAIN_SHARED; ?></em></span>
+                <span><em><?php echo _SYSTEM_EXPLAIN_SHARED; ?></em></span>
             </p>
 
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_herited');">
-                <label><? echo _SYSTEM_LABEL_HERITED; ?>:</label>
-                <input type="checkbox" class="checkbox" name="module_herited" id="module_herited" value="1" <? if ($module->fields['herited']) echo 'checked="checked"'; ?> tabindex="6" />
+                <label><?php echo _SYSTEM_LABEL_HERITED; ?>:</label>
+                <input type="checkbox" class="checkbox" name="module_herited" id="module_herited" value="1" <?php if ($module->fields['herited']) echo 'checked="checked"'; ?> tabindex="6" />
             </p>
             <p>
                 <label>&nbsp;</label>
-                <span><a href="<? echo ploopi_urlencode("admin.php?op=apply_heritage&moduleid={$module->fields['id']}"); ?>"><? echo _SYSTEM_APPLYHERITAGE; ?></a><br /><em><? echo _SYSTEM_EXPLAIN_HERITED; ?></em></span>
+                <span><a href="<?php echo ploopi_urlencode("admin.php?op=apply_heritage&moduleid={$module->fields['id']}"); ?>"><?php echo _SYSTEM_APPLYHERITAGE; ?></a><br /><em><?php echo _SYSTEM_EXPLAIN_HERITED; ?></em></span>
             </p>
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_adminrestricted');">
-                <label><? echo _SYSTEM_LABEL_ADMINRESTRICTED; ?>:</label>
-                <input type="checkbox" class="checkbox" name="module_adminrestricted" id="module_adminrestricted" value="1" <? if ($module->fields['adminrestricted']) echo 'checked="checked"'; ?> tabindex="7" />
+                <label><?php echo _SYSTEM_LABEL_ADMINRESTRICTED; ?>:</label>
+                <input type="checkbox" class="checkbox" name="module_adminrestricted" id="module_adminrestricted" value="1" <?php if ($module->fields['adminrestricted']) echo 'checked="checked"'; ?> tabindex="7" />
             </p>
             <p>
                 <label>&nbsp;</label>
-                <span><em><? echo _SYSTEM_EXPLAIN_ADMINRESTRICTED; ?></em></span>
+                <span><em><?php echo _SYSTEM_EXPLAIN_ADMINRESTRICTED; ?></em></span>
             </p>
             <p>
-                <label><? echo _SYSTEM_LABEL_VIEWMODE; ?>:</label>
+                <label><?php echo _SYSTEM_LABEL_VIEWMODE; ?>:</label>
                 <select class="select" name="module_viewmode" tabindex="8">
-                <?
+                <?php
                 foreach($ploopi_viewmodes as $id => $viewmode)
                 {
                     if ($module->fields['viewmode'] == $id) $sel = 'selected';
@@ -216,23 +216,23 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                     
                     
                     ?>
-                    <option <? if ($module->fields['viewmode'] == $id) echo 'selected="selected"'; ?> value="<? echo $id; ?>"><? echo $viewmode; ?></option>
-                    <?
+                    <option <?php if ($module->fields['viewmode'] == $id) echo 'selected="selected"'; ?> value="<?php echo $id; ?>"><?php echo $viewmode; ?></option>
+                    <?php
                 }
                 ?>
                 </select>
             </p>
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_transverseview');">
-                <label><? echo _SYSTEM_LABEL_TRANSVERSE; ?>:</label>
-                <input type="checkbox" class="checkbox" name="module_transverseview" id="module_transverseview" value="1" <? if ($module->fields['transverseview']) echo 'checked="checked"'; ?> tabindex="9" />
+                <label><?php echo _SYSTEM_LABEL_TRANSVERSE; ?>:</label>
+                <input type="checkbox" class="checkbox" name="module_transverseview" id="module_transverseview" value="1" <?php if ($module->fields['transverseview']) echo 'checked="checked"'; ?> tabindex="9" />
             </p>
             <p>
                 <label>&nbsp;</label>
-                <span><em><? echo _SYSTEM_EXPLAIN_VIEWMODE; ?></em></span>
+                <span><em><?php echo _SYSTEM_EXPLAIN_VIEWMODE; ?></em></span>
             </p>
         </div>
         <div style="clear:both;text-align:right;padding:4px;">
-            <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>" tabindex="10" />
+            <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="10" />
         </div>        
     </div>
     </form>
@@ -243,7 +243,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
             }
         );
     </script>
-    <?
+    <?php
     echo $skin->close_simplebloc();
 }
 

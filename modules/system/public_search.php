@@ -53,15 +53,15 @@ if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'])) $_SESSIO
 echo $skin->create_pagetitle(_SYSTEM_LABEL_SEARCH);
 echo $skin->open_simplebloc();
 ?>
-<form action="<? echo ploopi_urlencode('admin.php?op=search_next'); ?>" onsubmit="javascript:system_search_next();return false;" method="post">
+<form action="<?php echo ploopi_urlencode('admin.php?op=search_next'); ?>" onsubmit="javascript:system_search_next();return false;" method="post">
 <div class="dims_va" style="padding:4px;">
     <span>Mots Clés:</span>
-    <input type="text" class="text" name="system_search_keywords" id="system_search_keywords" value="<? echo htmlentities($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']); ?>" />
+    <input type="text" class="text" name="system_search_keywords" id="system_search_keywords" value="<?php echo htmlentities($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']); ?>" />
     
     <span>Module:</span>
     <select class="select" name="system_search_module" id="system_search_module" />
     <option value="">(tous)</option>
-    <?
+    <?php
     // on parcourt la liste des modules de l'espace courant
     $arrAvailableModules = array();
     foreach ($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $modid)
@@ -71,8 +71,8 @@ echo $skin->open_simplebloc();
         {
             $arrAvailableModules[] = $modid;
             ?>
-            <option value="<? echo $modid; ?>" <? if ($modid == $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module']) echo 'selected'; ?>><? echo htmlentities($arrMod['label']); ?></option>
-            <?
+            <option value="<?php echo $modid; ?>" <?php if ($modid == $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module']) echo 'selected'; ?>><?php echo htmlentities($arrMod['label']); ?></option>
+            <?php
         }
     }
     ?>
@@ -80,18 +80,18 @@ echo $skin->open_simplebloc();
 
     <input type="hidden" class="text" name="system_search_date1" id="system_search_date1" />
     <input type="hidden" class="text" name="system_search_date2" id="system_search_date2" />
-    <input type="reset" class="button" value="<? echo _PLOOPI_RESET; ?>">
-    <input type="submit" class="button" value="<? echo _PLOOPI_SEARCH; ?>">
+    <input type="reset" class="button" value="<?php echo _PLOOPI_RESET; ?>">
+    <input type="submit" class="button" value="<?php echo _PLOOPI_SEARCH; ?>">
 
 </div>
 </form>
 
 <div id="system_search_result">
-<? include_once './modules/system/public_search_result.php'; ?>
+<?php include_once './modules/system/public_search_result.php'; ?>
 </div>
 
 
-<?
+<?php
 echo $skin->close_simplebloc();
 ?>
 

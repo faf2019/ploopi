@@ -61,25 +61,25 @@ if (!isset($arrFilter['ploopi_email'])) $arrFilter['ploopi_email'] = '';
 // Enregistrement SESSION
 $_SESSION['system']['directoryform'] = $arrFilter;
 ?>
-<form action="<? echo ploopi_urlencode('admin.php?sysToolbarItem=directory'); ?>" method="post">
+<form action="<?php echo ploopi_urlencode('admin.php?sysToolbarItem=directory'); ?>" method="post">
 <p class="ploopi_va" style="padding:4px;border-bottom:1px solid #808080;">
     <label>Nom: </label>
-    <input type="text" class="text" name="ploopi_lastname" value="<? echo htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" />
+    <input type="text" class="text" name="ploopi_lastname" value="<?php echo htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" />
 
     <label>Prénom: </label>
-    <input type="text" class="text" name="ploopi_firstname" value="<? echo htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" />
+    <input type="text" class="text" name="ploopi_firstname" value="<?php echo htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" />
     
     <label>Login: </label>
-    <input type="text" class="text" name="ploopi_login" value="<? echo htmlentities($arrFilter['ploopi_login']); ?>" style="width:100px;" />
+    <input type="text" class="text" name="ploopi_login" value="<?php echo htmlentities($arrFilter['ploopi_login']); ?>" style="width:100px;" />
 
     <label>Email: </label>
-    <input type="text" class="text" name="ploopi_email" value="<? echo htmlentities($arrFilter['ploopi_email']); ?>" style="width:180px;" />
+    <input type="text" class="text" name="ploopi_email" value="<?php echo htmlentities($arrFilter['ploopi_email']); ?>" style="width:180px;" />
 
     <input type="submit" class="button" value="Filtrer" /> 
-    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<? echo ploopi_urlencode('admin.php?sysToolbarItem=directory'); ?>';" /> 
+    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi_urlencode('admin.php?sysToolbarItem=directory'); ?>';" /> 
 </p>
 </form>
-<?
+<?php
 
 $arrWhere = array();
 $arrWhere[] = '1';
@@ -99,15 +99,15 @@ $db->query("
 $row = $db->fetchrow();
 ?>
 <div style="padding:4px;background-color:#e0e0e0;border-bottom:1px solid #808080;">
-    <span>Vous pouvez retrouver ici l'ensemble des utilisateurs du sytème avec leur profil complet.<br />Vous ne pouvez cependant pas les gérer. Pour cela vous devez accéder à l'<a href="<? echo ploopi_urlencode('admin.php?system_level=work'); ?>">interface d'administration des espaces de travail</a>.<br /><strong><? echo $row['c']; ?> utilisateur(s) trouvé(s).</strong></span>
-    <? 
+    <span>Vous pouvez retrouver ici l'ensemble des utilisateurs du sytème avec leur profil complet.<br />Vous ne pouvez cependant pas les gérer. Pour cela vous devez accéder à l'<a href="<?php echo ploopi_urlencode('admin.php?system_level=work'); ?>">interface d'administration des espaces de travail</a>.<br /><strong><?php echo $row['c']; ?> utilisateur(s) trouvé(s).</strong></span>
+    <?php 
     if ($row['c'] > $intMaxResponse)
     {
-        ?><strong class="error">Il y a trop de réponses (<? echo $intMaxResponse; ?> max), vous devriez préciser votre recherche</strong><?
+        ?><strong class="error">Il y a trop de réponses (<?php echo $intMaxResponse; ?> max), vous devriez préciser votre recherche</strong><?php
     }
     ?>
 </div>
-<? 
+<?php 
 if ($row['c'] > 0 && $row['c'] <= $intMaxResponse)
 {
     // Définition des colonnes du tableau (interface)
@@ -399,12 +399,12 @@ echo $skin->close_simplebloc();
 
 <p class="ploopi_va" style="padding:4px;">
     <span style="margin-right:5px;">Légende:</span>
-    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
-    <span style="margin-right:5px;"><? echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
-    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />
-    <span style="margin-right:5px;"><? echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
-    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupadmin.png" />
-    <span style="margin-right:5px;"><? echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
-    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_systemadmin.png" />
-    <span style="margin-right:5px;"><? echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
+    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
+    <span style="margin-right:5px;"><?php echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
+    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />
+    <span style="margin-right:5px;"><?php echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
+    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupadmin.png" />
+    <span style="margin-right:5px;"><?php echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
+    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_systemadmin.png" />
+    <span style="margin-right:5px;"><?php echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
 </p>

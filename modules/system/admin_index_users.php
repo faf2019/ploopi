@@ -340,19 +340,19 @@ switch($_SESSION['system']['usrTabItem'])
                         ?>
                         <div style="padding:4px;">
                             <div style="font-weight:bold;">
-                                <? echo str_replace('<LABEL>',$user->fields['login'],_SYSTEM_LABEL_USERDELETE); ?>
+                                <?php echo str_replace('<LABEL>',$user->fields['login'],_SYSTEM_LABEL_USERDELETE); ?>
                             </div>
-                            <?
+                            <?php
     
                             $user->delete();
                             if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
     
                             ?>
                             <div style="text-align:right;">
-                                <input type="button" class="button" value="<? echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<? echo "admin.php?reloadsession"; ?>'">
+                                <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo "admin.php?reloadsession"; ?>'">
                             </div>
                         </div>
-                        <?
+                        <?php
                     }
                     else ploopi_redirect('admin.php');
                 }
@@ -396,9 +396,9 @@ switch($_SESSION['system']['usrTabItem'])
                             ?>
                             <div style="padding:4px;">
                                 <div style="font-weight:bold;">
-                                    <? echo str_replace('<LABELGROUP>',$group->fields['label'],str_replace('<LABELUSER>',$user->fields['login'],_SYSTEM_LABEL_USERDETACH)); ?>
+                                    <?php echo str_replace('<LABELGROUP>',$group->fields['label'],str_replace('<LABELUSER>',$user->fields['login'],_SYSTEM_LABEL_USERDETACH)); ?>
                                 </div>
-                                <?
+                                <?php
                                 $group_user = new group_user();
                                 $group_user->open($groupid,$_GET['user_id']);
                                 $group_user->delete();
@@ -406,10 +406,10 @@ switch($_SESSION['system']['usrTabItem'])
                                 if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
                                 ?>
                                 <div style="text-align:right;">
-                                    <input type="button" class="button" value="<? echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<? echo "admin.php?reloadsession"; ?>'">
+                                    <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo "admin.php?reloadsession"; ?>'">
                                 </div>
                             </div>
-                            <?
+                            <?php
                         break;
 
                         case _SYSTEM_WORKSPACES :
@@ -427,9 +427,9 @@ switch($_SESSION['system']['usrTabItem'])
                             ?>
                             <div style="padding:4px;">
                                 <div style="font-weight:bold;">
-                                    <? echo str_replace('<LABELGROUP>',$workspace->fields['label'],str_replace('<LABELUSER>',$user->fields['login'],_SYSTEM_LABEL_USERDETACH)); ?>
+                                    <?php echo str_replace('<LABELGROUP>',$workspace->fields['label'],str_replace('<LABELUSER>',$user->fields['login'],_SYSTEM_LABEL_USERDETACH)); ?>
                                 </div>
-                                <?
+                                <?php
 
                                 $workspace_user = new workspace_user();
                                 $workspace_user->open($workspaceid,$_GET['user_id']);
@@ -438,10 +438,10 @@ switch($_SESSION['system']['usrTabItem'])
                                 if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
                                 ?>
                                 <div style="text-align:right;">
-                                    <input type="button" class="button" value="<? echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<? echo "admin.php?reloadsession"; ?>'">
+                                    <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo "admin.php?reloadsession"; ?>'">
                                 </div>
                             </div>
-                            <?
+                            <?php
                         break;
                     }
                 }

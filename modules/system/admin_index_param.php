@@ -39,7 +39,7 @@ if (!empty($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
 echo $skin->open_simplebloc(_SYSTEM_MODULESELECTED);
 ?>
 <div style="padding:4px;">
-<?
+<?php
 // get modules
 $modules = $workspace->getmodules();
 
@@ -47,30 +47,30 @@ if (empty($modules))
 {
     ?>
     Aucun module pour cet espace
-    <?
+    <?php
 }
 else
 {
     ?>
-    <form id="form_modparam" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
+    <form id="form_modparam" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
         <select class="select" name="idmodule" onchange="javascript:$('form_modparam').submit();">
-        <?
+        <?php
         foreach($modules as $idm => $mod)
         {
             
             if (empty($idmodule)) $idmodule = $idm;
             ?>
-                <option <? if ($idmodule == $idm) echo 'selected'; ?> value="<? echo $idm; ?>"><? echo "{$mod['instancename']} ({$mod['label']})"; ?></option>
-            <?
+                <option <?php if ($idmodule == $idm) echo 'selected'; ?> value="<?php echo $idm; ?>"><?php echo "{$mod['instancename']} ({$mod['label']})"; ?></option>
+            <?php
         }
         ?>
         </select>
     </form>
-    <?
+    <?php
 }
 ?>
 </div>
-<?
+<?php
 echo $skin->close_simplebloc();
 
 if (isset($idmodule))
@@ -85,60 +85,60 @@ if (isset($idmodule))
     {
         ?>
         <div style="padding:4px;">
-            <form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
+            <form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
             <input type="hidden" name="op" value="save">
-            <input type="hidden" name="idmodule" value="<? echo $idmodule; ?>">
+            <input type="hidden" name="idmodule" value="<?php echo $idmodule; ?>">
             <div class="ploopi_form">
-            <?
+            <?php
             foreach($arrParam as $name => $param)
             {
                 ?>
                 <p>
-                    <label><? echo $param['label']; ?>:</label>
+                    <label><?php echo $param['label']; ?>:</label>
 
-                    <?
+                    <?php
                     if (!empty($param['choices']))
                     {
                         ?>
-                        <select class="select" name="<? echo $name; ?>">
-                        <?
+                        <select class="select" name="<?php echo $name; ?>">
+                        <?php
                         foreach($param['choices'] as $value => $displayed_value)
                         {
                             ?>
-                            <option <? if ($param['value'] == $value) echo 'selected'; ?> value="<? echo htmlspecialchars($value); ?>"><? echo $displayed_value; ?></option>
-                            <?
+                            <option <?php if ($param['value'] == $value) echo 'selected'; ?> value="<?php echo htmlspecialchars($value); ?>"><?php echo $displayed_value; ?></option>
+                            <?php
                         }
                         ?>
                         </select>
-                        <?
+                        <?php
                     }
                     else
                     {
                         if (strlen($param['value'])>200 || strpos($param['value'], "\n") !== false)
                         {
                             ?>
-                            <textarea class="text" name="<? echo $name; ?>"><? echo htmlspecialchars($param['value']); ?></textarea>
-                            <?
+                            <textarea class="text" name="<?php echo $name; ?>"><?php echo htmlspecialchars($param['value']); ?></textarea>
+                            <?php
                         }
                         else
                         {
                             ?>
-                            <input class="text" type="text" name="<? echo $name; ?>" value="<? echo htmlspecialchars($param['value']); ?>" />
-                            <?
+                            <input class="text" type="text" name="<?php echo $name; ?>" value="<?php echo htmlspecialchars($param['value']); ?>" />
+                            <?php
                         }
                     }
                     ?>
                 </p>
-                <?
+                <?php
             }
             ?>
             </div>
             <div style="text-align:right;">
-                    <input class="button" type="submit" value="<? echo _PLOOPI_SAVE; ?>">
+                    <input class="button" type="submit" value="<?php echo _PLOOPI_SAVE; ?>">
             </div>
             </form>
         </div>
-    <?
+    <?php
     }
     else echo '&nbsp;'._SYSTEM_LABEL_NOMODULEPARAM;
 

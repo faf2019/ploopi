@@ -42,28 +42,29 @@ if (empty($_GET['uninstallidmoduletype'])) ploopi_redirect('admin.php');
 include_once './include/classes/module.php';
 
 $module_type = new module_type();
-$module_type->open($_GET['uninstallidmoduletype']);
-
-ploopi_create_user_action_log(_SYSTEM_ACTION_UNINSTALLMODULE, $module_type->fields['label']);
-
-if (!empty($module_type->fields['label']))
+if ($module_type->open($_GET['uninstallidmoduletype']))
 {
-    if (file_exists("./modules/{$module_type->fields['label']}/include/admin_uninstall.php")) include "./modules/{$module_type->fields['label']}/include/admin_uninstall.php";
-
-    // DELETE FILES
-    $filestodelete = "./modules/".$module_type->fields['label'];
-    if (file_exists($filestodelete)) ploopi_deletedir($filestodelete);
+    ploopi_create_user_action_log(_SYSTEM_ACTION_UNINSTALLMODULE, $module_type->fields['label']);
+    
+    if (!empty($module_type->fields['label']))
+    {
+        if (file_exists("./modules/{$module_type->fields['label']}/include/admin_uninstall.php")) include "./modules/{$module_type->fields['label']}/include/admin_uninstall.php";
+    
+        // DELETE FILES
+        $filestodelete = "./modules/".$module_type->fields['label'];
+        if (file_exists($filestodelete)) ploopi_deletedir($filestodelete);
+    }
+    
+    // DELETE TABLES
+    $select = "SELECT * FROM ploopi_mb_table WHERE id_module_type = $uninstallidmoduletype";
+    $rs = $db->query($select);
+    while ($fields = $db->fetchrow($rs))
+    {
+        $db->query("DROP TABLE IF EXISTS `{$fields['name']}`");
+    }
+    
+    // DELETE MODULE TYPE, MODULES, ACTIONS, etc...
+    $module_type->delete();
 }
-
-// DELETE TABLES
-$select = "SELECT * FROM ploopi_mb_table WHERE id_module_type = $uninstallidmoduletype";
-$rs = $db->query($select);
-while ($fields = $db->fetchrow($rs))
-{
-    $db->query("DROP TABLE IF EXISTS `{$fields['name']}`");
-}
-
-// DELETE MODULE TYPE, MODULES, ACTIONS, etc...
-$module_type->delete();
-
+else ploopi_redirect('admin.php');
 ?>

@@ -144,7 +144,7 @@ else
             <div style="overflow:auto;">
                 <div class="system_tree">
                     <div class="system_tree_padding">
-                        <?
+                        <?php
 
                         if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN) echo system_build_tree('workspaces');
                         else echo system_build_tree('workspaces', $workspaces['list'][$_SESSION['ploopi']['workspaceid']]['id_workspace']);
@@ -154,10 +154,10 @@ else
                     </div>
                 </div>
                 <div class="system_main">
-                    <? include_once './modules/system/admin_index.php'; ?>
+                    <?php include_once './modules/system/admin_index.php'; ?>
                 </div>
             </div>
-            <?
+            <?php
             echo $skin->close_simplebloc();
         break;
 
@@ -171,9 +171,9 @@ else
                 echo $skin->open_simplebloc(_PLOOPI_ADMIN_SYSTEM);
                 ?>
                 <div class="system_main">
-                <? include_once './modules/system/admin_system.php'; ?>
+                <?php include_once './modules/system/admin_system.php'; ?>
                 </div>
-                <?
+                <?php
                 echo $skin->close_simplebloc();
             }
             else ploopi_redirect("admin.php?system_level="._SYSTEM_WORKSPACES);

@@ -46,9 +46,9 @@ switch($op)
 
             <div id="system_annotation_tags">
                 <div id="system_annotation_titlebar">
-                    <b>Mes tags : </b><a href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation"); ?>">voir tous les tags</a>
+                    <b>Mes tags : </b><a href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation"); ?>">voir tous les tags</a>
                 </div>
-                <?
+                <?php
                 $select =   "
                             SELECT  t.*, count(*) as c
                             FROM    ploopi_tag t,
@@ -74,8 +74,8 @@ switch($op)
                 {
                     $size = $minsize + $maxsize * $tag['c'] / $max_c;
                     ?>
-                    <a title="utilisé <? echo $tag['c']; ?> fois" class="system_annotation_tag<? if (!empty($_GET['idtag']) && $_GET['idtag'] == $idt) echo 'sel'; ?>" style="font-size: <? echo $size; ?>px;" href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&idtag={$idt}"); ?>"><? echo htmlentities($tag['tag']); ?><span style="vertical-align: 4px; font-size: 7px"> <? echo $tag['c']; ?></span></a>
-                    <?
+                    <a title="utilisé <?php echo $tag['c']; ?> fois" class="system_annotation_tag<?php if (!empty($_GET['idtag']) && $_GET['idtag'] == $idt) echo 'sel'; ?>" style="font-size: <?php echo $size; ?>px;" href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&idtag={$idt}"); ?>"><?php echo htmlentities($tag['tag']); ?><span style="vertical-align: 4px; font-size: 7px"> <?php echo $tag['c']; ?></span></a>
+                    <?php
                 }
 
                 ?>
@@ -83,7 +83,7 @@ switch($op)
 
 
             <div id="system_annotation_list">
-                <?
+                <?php
                 $idtag = '';
 
                 if (!empty($_GET['idtag']))
@@ -147,7 +147,7 @@ switch($op)
                 ?>
 
                 <div id="system_annotation_titlebar">
-                <?
+                <?php
                 $nb_anno_page = 10;
                 $numrows = sizeof($arrAnnotations);
                 $nbpage = ($numrows - $numrows % $nb_anno_page) / $nb_anno_page + ($numrows % $nb_anno_page > 0);
@@ -157,21 +157,21 @@ switch($op)
                     ?>
                     <div style="float:right;">
                         <div style="float:left;">page :&nbsp;</div>
-                        <?
+                        <?php
                         for ($p = 1; $p <= $nbpage; $p++)
                         {
                             ?>
-                            <a class="system_annotation_page<? if ($p==$page) echo '_sel'; ?>" href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&page={$p}&idtag={$idtag}"); ?>"><? echo $p; ?></a>
-                            <?
+                            <a class="system_annotation_page<?php if ($p==$page) echo '_sel'; ?>" href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&page={$p}&idtag={$idtag}"); ?>"><?php echo $p; ?></a>
+                            <?php
                         }
                         ?>
                     </div>
-                    <?
+                    <?php
                 }
                 ?>
                 </div>
 
-                <?
+                <?php
                 // on se positionne sur le bon enregistrement
                 for ($i=0; $i<($page-1)*$nb_anno_page; $i++) next($arrAnnotations);
 
@@ -194,43 +194,43 @@ switch($op)
                     $ldate = ploopi_timestamp2local($annotation['date_annotation']);
                     $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
                     ?>
-                    <div class="system_annotation_row" style="background-color:<? echo $color; ?>">
+                    <div class="system_annotation_row" style="background-color:<?php echo $color; ?>">
                         <div class="system_annotation_title">
-                            <a href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><? echo htmlentities($annotation['object_label']); ?></a>
+                            <a href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><?php echo htmlentities($annotation['object_label']); ?></a>
                         </div>
                         <div class="system_annotation_date">
-                            le <? echo $ldate['date']; ?> à <? echo $ldate['time']; ?>
+                            le <?php echo $ldate['date']; ?> à <?php echo $ldate['time']; ?>
                         </div>
 
-                        <div  class="system_annotation_content"><? echo ploopi_make_links(ploopi_nl2br(htmlentities($annotation['content']))); ?></div>
+                        <div  class="system_annotation_content"><?php echo ploopi_make_links(ploopi_nl2br(htmlentities($annotation['content']))); ?></div>
 
                         <div class="system_annotation_taglist">
-                        <?
+                        <?php
                         if (isset($annotation['tags']) && sizeof($annotation['tags'])>0)
                         {
                             ?>
                             tags:
-                            <?
+                            <?php
                             foreach($annotation['tags'] as $idtag => $tag)
                             {
                                 ?>
-                                <a href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&idtag={$idtag}"); ?>"><? echo htmlentities($tag); ?></a>
-                                <?
+                                <a href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&idtag={$idtag}"); ?>"><?php echo htmlentities($tag); ?></a>
+                                <?php
                             }
                         }
                         ?>
                         </div>
                         <div class="system_annotation_module">
-                            <a href="<? echo ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><b><? echo $annotation['module_name']; ?></b>  / <? echo htmlentities($annotation['object_name']); ?></a>
+                            <a href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><b><?php echo $annotation['module_name']; ?></b>  / <?php echo htmlentities($annotation['object_name']); ?></a>
                         </div>
                     </div>
-                    <?
+                    <?php
                     next($arrAnnotations);
                     $annotation = current($arrAnnotations);
                 }
                 ?>
             </div>
-        <?
+        <?php
         echo $skin->close_simplebloc();
     break;
 }

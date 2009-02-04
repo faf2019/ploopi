@@ -38,19 +38,19 @@
 echo $skin->open_simplebloc();
 ?>
 
-<form name="" action="<? echo ploopi_urlencode("admin.php?op=save_workspace&workspace_id_workspace={$workspace->fields['id']}"); ?>" method="post" onsubmit="javascript:return system_workspace_validate(this);">
+<form name="" action="<?php echo ploopi_urlencode("admin.php?op=save_workspace&workspace_id_workspace={$workspace->fields['id']}"); ?>" method="post" onsubmit="javascript:return system_workspace_validate(this);">
 <div class="ploopi_form_title">
-    <? echo $workspace->fields['label']; ?> &raquo;
-    <?
+    <?php echo $workspace->fields['label']; ?> &raquo;
+    <?php
      echo _SYSTEM_LABEL_WORKSPACE_ADD;
     ?>
 </div>
 <div class="ploopi_form" style="clear:both;padding:2px">
     <p>
-        <label><? echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
-        <input type="text" class="text" name="workspace_label"  value="fils de <? echo $workspace->fields['label']; ?>">
+        <label><?php echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
+        <input type="text" class="text" name="workspace_label"  value="fils de <?php echo $workspace->fields['label']; ?>">
     </p>
-    <?
+    <?php
         $templatelist_back = ploopi_getavailabletemplates('backoffice');
         $templatelist_front = ploopi_getavailabletemplates('frontoffice');
 
@@ -58,28 +58,28 @@ echo $skin->open_simplebloc();
         {
             ?>
             <p>
-                <label><? echo _SYSTEM_LABEL_GROUP_CODE; ?>:</label>
-                <input type="text" class="text" name="workspace_code"  value="<? echo $workspace->fields['code']; ?>">
+                <label><?php echo _SYSTEM_LABEL_GROUP_CODE; ?>:</label>
+                <input type="text" class="text" name="workspace_code"  value="<?php echo $workspace->fields['code']; ?>">
             </p>
-            <?
+            <?php
         }
         ?>
 </div>
 
 <div class="ploopi_form_title">
-    <? echo $workspace->fields['label']; ?> &raquo; <? echo _SYSTEM_LABEL_ACCESS; ?>
+    <?php echo $workspace->fields['label']; ?> &raquo; <?php echo _SYSTEM_LABEL_ACCESS; ?>
 </div>
 
 <div class="ploopi_form" style="clear:both;padding:2px">
     <p>
-        <label><? echo _SYSTEM_LABEL_GROUP_ADMIN; ?>:</label>
-        <input type="checkbox" name="workspace_backoffice" <? if($workspace->fields['backoffice']) echo "checked"; ?> value="1">
+        <label><?php echo _SYSTEM_LABEL_GROUP_ADMIN; ?>:</label>
+        <input type="checkbox" name="workspace_backoffice" <?php if($workspace->fields['backoffice']) echo "checked"; ?> value="1">
     </p>
     <p>
-        <label><? echo _SYSTEM_LABEL_GROUP_SKIN; ?>:</label>
+        <label><?php echo _SYSTEM_LABEL_GROUP_SKIN; ?>:</label>
         <select class="select" name="workspace_template">
-            <option value=""><? echo _PLOOPI_NONE; ?></option>
-            <?
+            <option value=""><?php echo _PLOOPI_NONE; ?></option>
+            <?php
             foreach($templatelist_back as $index => $tpl_name)
             {
                 $sel = ($tpl_name == $workspace->fields['template']) ? 'selected' : '';
@@ -89,65 +89,65 @@ echo $skin->open_simplebloc();
         </select>
     </p>
     <p>
-        <label><? echo _SYSTEM_LABEL_GROUP_ADMINDOMAINLIST; ?>:</label>
-        <textarea class="text" name="workspace_backoffice_domainlist"><? echo $workspace->fields['backoffice_domainlist']; ?></textarea>
+        <label><?php echo _SYSTEM_LABEL_GROUP_ADMINDOMAINLIST; ?>:</label>
+        <textarea class="text" name="workspace_backoffice_domainlist"><?php echo $workspace->fields['backoffice_domainlist']; ?></textarea>
     </p>
     <p>
-        <label><? echo _SYSTEM_LABEL_GROUP_WEB; ?>:</label>
-        <input type="checkbox" name="workspace_frontoffice" <? if($workspace->fields['frontoffice']) echo "checked"; ?> value="1">
+        <label><?php echo _SYSTEM_LABEL_GROUP_WEB; ?>:</label>
+        <input type="checkbox" name="workspace_frontoffice" <?php if($workspace->fields['frontoffice']) echo "checked"; ?> value="1">
     </p>
     <p>
-        <label><? echo _SYSTEM_LABEL_GROUP_WEBDOMAINLIST; ?>:</label>
-        <textarea class="text" name="workspace_frontoffice_domainlist"><? echo $workspace->fields['frontoffice_domainlist']; ?></textarea>
+        <label><?php echo _SYSTEM_LABEL_GROUP_WEBDOMAINLIST; ?>:</label>
+        <textarea class="text" name="workspace_frontoffice_domainlist"><?php echo $workspace->fields['frontoffice_domainlist']; ?></textarea>
     </p>
 
 </div>
 
 <div class="ploopi_form_title">
-    <? echo $workspace->fields['label']; ?> &raquo; <? echo _SYSTEM_LABEL_META; ?>
+    <?php echo $workspace->fields['label']; ?> &raquo; <?php echo _SYSTEM_LABEL_META; ?>
 </div>
 <div class="ploopi_form" id="system_meta" style="clear:both;padding:2px;">
     <p>
         <label>Titre:</label>
-        <input type="text" class="text" name="workspace_title" value="<? echo $workspace->fields['title']; ?>">
+        <input type="text" class="text" name="workspace_title" value="<?php echo $workspace->fields['title']; ?>">
     </p>
     <p>
         <label>Description:</label>
-        <input type="text" class="text" name="workspace_meta_description" value="<? echo $workspace->fields['meta_description']; ?>">
+        <input type="text" class="text" name="workspace_meta_description" value="<?php echo $workspace->fields['meta_description']; ?>">
     </p>
     <p>
         <label>Mots Clés:</label>
-        <input type="text" class="text" name="workspace_meta_keywords" value="<? echo $workspace->fields['meta_keywords']; ?>">
+        <input type="text" class="text" name="workspace_meta_keywords" value="<?php echo $workspace->fields['meta_keywords']; ?>">
     </p>
     <p>
         <label>Auteur:</label>
-        <input type="text" class="text" name="workspace_meta_author" value="<? echo $workspace->fields['meta_author']; ?>">
+        <input type="text" class="text" name="workspace_meta_author" value="<?php echo $workspace->fields['meta_author']; ?>">
     </p>
     <p>
         <label>Copyright:</label>
-        <input type="text" class="text" name="workspace_meta_copyright" value="<? echo $workspace->fields['meta_copyright']; ?>">
+        <input type="text" class="text" name="workspace_meta_copyright" value="<?php echo $workspace->fields['meta_copyright']; ?>">
     </p>
     <p>
         <label>Robots:</label>
-        <input type="text" class="text" name="workspace_meta_robots" value="<? echo $workspace->fields['meta_robots']; ?>">
+        <input type="text" class="text" name="workspace_meta_robots" value="<?php echo $workspace->fields['meta_robots']; ?>">
     </p>
 </div>
 
 <div class="ploopi_form_title">
-    <? echo $workspace->fields['label']; ?> &raquo; <? echo _SYSTEM_LABEL_FILTERING; ?>
+    <?php echo $workspace->fields['label']; ?> &raquo; <?php echo _SYSTEM_LABEL_FILTERING; ?>
 </div>
 <div class="ploopi_form" id="system_filtering" style="clear:both;padding:2px;">
     <p>
-        <label><? echo _SYSTEM_LABEL_GROUP_ALLOWEDIP; ?>:</label>
-        <input type="text" class="text" name="workspace_iprules"  value="<? echo $workspace->fields['iprules']; ?>">
+        <label><?php echo _SYSTEM_LABEL_GROUP_ALLOWEDIP; ?>:</label>
+        <input type="text" class="text" name="workspace_iprules"  value="<?php echo $workspace->fields['iprules']; ?>">
     </p>
 </div>
 
 <div class="ploopi_form_title">
-    <? echo $workspace->fields['label']; ?> &raquo; <? echo _SYSTEM_LABEL_USEDMODULES; ?>
+    <?php echo $workspace->fields['label']; ?> &raquo; <?php echo _SYSTEM_LABEL_USEDMODULES; ?>
 </div>
 <div class="ploopi_form">
-    <?
+    <?php
     $child = new workspace();
     $child->fields['parents'] = $workspace->fields['parents'].';'.$workspace->fields['id'];
     $sharedmodules = $child->getsharedmodules(false);
@@ -213,7 +213,7 @@ echo $skin->open_simplebloc();
 
 
 <div style="clear:both;float:right;padding:4px;">
-    <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+    <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>
 
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>

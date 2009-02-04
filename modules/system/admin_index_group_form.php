@@ -40,10 +40,10 @@
 
 <FORM NAME="form_modify_group" ACTION="admin.php" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="op" VALUE="save_group">
-<INPUT TYPE="HIDDEN" NAME="orgid" VALUE="<? echo $org->fields['id']; ?>">
+<INPUT TYPE="HIDDEN" NAME="orgid" VALUE="<?php echo $org->fields['id']; ?>">
 <TABLE CELLPADDING="2" CELLSPACING="1" ALIGN="CENTER">
 <TR>
-    <TD ALIGN=RIGHT><? echo _SYSTEM_LABEL_LEVEL; ?>:&nbsp;</TD>
+    <TD ALIGN=RIGHT><?php echo _SYSTEM_LABEL_LEVEL; ?>:&nbsp;</TD>
     <TD ALIGN=LEFT>
     <SELECT class="select" NAME="workspacegroup_adminlevel">
     <?php
@@ -64,7 +64,7 @@
 </TR>
 <TR>
     <TD ALIGN=RIGHT COLSPAN=2>
-        <INPUT TYPE="Submit" class="flatbutton" VALUE="<? echo _PLOOPI_SAVE; ?>">
+        <INPUT TYPE="Submit" class="flatbutton" VALUE="<?php echo _PLOOPI_SAVE; ?>">
     </TD>
 </TR>
 </TABLE>
