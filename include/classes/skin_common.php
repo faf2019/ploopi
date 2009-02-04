@@ -421,10 +421,10 @@ class skin_common
         }
 
         ?>
-        <div class="ploopi_explorer_main" id="ploopi_explorer_main_<? echo $array_id; ?>" style="visibility:visible;">
-        <? $this->display_array_refresh($array_id); ?>
+        <div class="ploopi_explorer_main" id="ploopi_explorer_main_<?php echo $array_id; ?>" style="visibility:visible;">
+        <?php $this->display_array_refresh($array_id); ?>
         </div>
-        <?
+        <?php
 
     }
 
@@ -489,8 +489,8 @@ class skin_common
             {
                 $w += $c['width'];
                 ?>
-                <div style="right:<? echo $w; ?>px;" class="ploopi_explorer_column" id="ploopi_explorer_column_<? echo $array_id; ?>_<? echo $i; ?>"></div>
-                <?
+                <div style="right:<?php echo $w; ?>px;" class="ploopi_explorer_column" id="ploopi_explorer_column_<?php echo $array_id; ?>_<?php echo $i; ?>"></div>
+                <?php
                 $i++;
             }
         }
@@ -502,8 +502,8 @@ class skin_common
             {
                 $w += $c['width'];
                 ?>
-                <div style="right:<? echo $w; ?>px;" class="ploopi_explorer_column" id="ploopi_explorer_column_<? echo $array_id; ?>_<? echo $i; ?>"></div>
-                <?
+                <div style="right:<?php echo $w; ?>px;" class="ploopi_explorer_column" id="ploopi_explorer_column_<?php echo $array_id; ?>_<?php echo $i; ?>"></div>
+                <?php
                 $i++;
             }
         }
@@ -517,8 +517,8 @@ class skin_common
             {
                 $w += $c['width'];
                 ?>
-                <div style="left:<? echo $w; ?>px;" class="ploopi_explorer_column" id="ploopi_explorer_column_<? echo $array_id; ?>_<? echo $i; ?>"></div>
-                <?
+                <div style="left:<?php echo $w; ?>px;" class="ploopi_explorer_column" id="ploopi_explorer_column_<?php echo $array_id; ?>_<?php echo $i; ?>"></div>
+                <?php
                 $i++;
             }
         }
@@ -526,16 +526,16 @@ class skin_common
         // on gère ensuite l'affichage des titres de colonne
         ?>
         <div style="position:relative;">
-            <div class="ploopi_explorer_title" id="ploopi_explorer_title_<? echo $array_id; ?>">
-                <?
+            <div class="ploopi_explorer_title" id="ploopi_explorer_title_<?php echo $array_id; ?>">
+                <?php
                 // titres des colonnes d'action (à droite)
                 if (!empty($array['columns']['actions_right']))
                 {
                     foreach($array['columns']['actions_right'] as $id => $c)
                     {
                         ?>
-                        <a href="<? echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <? if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<? echo $c['width']; ?>px;float:right;<? if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><? echo $c['label']; ?>&nbsp;</span></p></a>
-                        <?
+                        <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span></p></a>
+                        <?php
                     }
                 }
 
@@ -552,8 +552,8 @@ class skin_common
                             $c['style'] .= 'background-color:#e0e0e0;';
                         }
                         ?>
-                        <a href="<? echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <? if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<? echo $c['width']; ?>px;float:right;<? if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><? echo $c['label']; ?>&nbsp;</span><? echo $img; ?></p></a>
-                        <?
+                        <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                        <?php
                     }
                 }
 
@@ -570,8 +570,8 @@ class skin_common
                             $c['style'] .= 'background-color:#e0e0e0;';
                         }
                         ?>
-                        <a href="<? echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <? if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<? echo $c['width']; ?>px;float:left;<? if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><? echo $c['label']; ?>&nbsp;</span><? echo $img; ?></p></a>
-                        <?
+                        <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                        <?php
                     }
                 }
 
@@ -588,36 +588,36 @@ class skin_common
                             $c['style'] .= 'background-color:#e0e0e0;';
                         }
                         ?>
-                        <a href="<? echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <? if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="overflow:auto;<? if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><? echo $c['label']; ?>&nbsp;</span><? echo $img; ?></p></a>
-                        <?
+                        <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="overflow:auto;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                        <?php
                     }
                 }
                 ?>
             </div>
 
-            <?
+            <?php
             // Gestion de l'affichage des lignes de données
             ?>
             
-            <div <? if (!empty($array['options']['height'])) echo "style=\"height:{$array['options']['height']}px;overflow:auto;\""; ?> id="ploopi_explorer_values_outer_<? echo $array_id; ?>">
+            <div <?php if (!empty($array['options']['height'])) echo "style=\"height:{$array['options']['height']}px;overflow:auto;\""; ?> id="ploopi_explorer_values_outer_<?php echo $array_id; ?>">
 
-                <div id="ploopi_explorer_values_inner_<? echo $array_id; ?>">
-                <?
+                <div id="ploopi_explorer_values_inner_<?php echo $array_id; ?>">
+                <?php
 
                 foreach($array['values'] as $v)
                 {
                     // alternance des couleurs (une ligne sur 2) : on joue sur les css
                     $color = (empty($color) || $color == 1) ? 2 : 1;
                     ?>
-                    <div <? if (!empty($v['id'])) echo "id=\"{$v['id']}\""; ?> class="ploopi_explorer_line_<? echo $color; ?>" <? if (!empty($v['style'])) echo "style=\"{$v['style']}\""; ?>>
-                        <?
+                    <div <?php if (!empty($v['id'])) echo "id=\"{$v['id']}\""; ?> class="ploopi_explorer_line_<?php echo $color; ?>" <?php if (!empty($v['style'])) echo "style=\"{$v['style']}\""; ?>>
+                        <?php
                         if (!empty($array['columns']['actions_right']))
                         {
                             foreach($array['columns']['actions_right'] as $id => $c)
                             {
                                 ?>
-                                <div class="ploopi_explorer_tools" style="width:<? echo $c['width']; ?>px;float:right;<? if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>"><? echo $v['values'][$id]['label']; ?></div>
-                                <?
+                                <div class="ploopi_explorer_tools" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>"><?php echo $v['values'][$id]['label']; ?></div>
+                                <?php
                             }
                         }
 
@@ -628,16 +628,16 @@ class skin_common
                             $onclick = (empty($v['onclick'])) ? '' : "onclick=\"{$v['onclick']}\"";
                             $title = (empty($v['description'])) ? '' : 'title="'.htmlentities($v['description']).'"';
                             ?>
-                            <a class="ploopi_explorer_link" href="<? echo $v['link']; ?>" <? echo $title ; ?> <? echo $onclick ; ?> <? echo $option; ?>>
-                            <?
+                            <a class="ploopi_explorer_link" href="<?php echo $v['link']; ?>" <?php echo $title ; ?> <?php echo $onclick ; ?> <?php echo $option; ?>>
+                            <?php
                         }
                         if (!empty($array['columns']['right']))
                         {
                             foreach($array['columns']['right'] as $id => $c)
                             {
                                 ?>
-                                <div style="width:<? echo $c['width']; ?>px;float:right;<? if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><? echo $v['values'][$id]['label']; ?></p></div>
-                                <?
+                                <div style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><?php echo $v['values'][$id]['label']; ?></p></div>
+                                <?php
                             }
                         }
 
@@ -646,8 +646,8 @@ class skin_common
                             foreach($array['columns']['left'] as $id => $c)
                             {
                                 ?>
-                                <div style="width:<? echo $c['width']; ?>px;float:left;<? if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><? echo $v['values'][$id]['label']; ?></p></div>
-                                <?
+                                <div style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><?php echo $v['values'][$id]['label']; ?></p></div>
+                                <?php
                             }
                         }
 
@@ -656,19 +656,19 @@ class skin_common
                             foreach($array['columns']['auto'] as $id => $c)
                             {
                                 ?>
-                                <div style="<? if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><? echo $v['values'][$id]['label']; ?></p></div>
-                                <?
+                                <div style="<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><?php echo $v['values'][$id]['label']; ?></p></div>
+                                <?php
                             }
                         }
                         if (!empty($v['link']) || !empty($v['onclick']))
                         {
                             ?>
                             </a>
-                            <?
+                            <?php
                         }
                         ?>
                     </div>
-                    <?
+                    <?php
                 }
                 ?>
                 </div>
@@ -676,9 +676,9 @@ class skin_common
         </div>
 
         <script type="text/javascript">
-            ploopi_skin_array_renderupdate('<? echo $array_id; ?>');
+            ploopi_skin_array_renderupdate('<?php echo $array_id; ?>');
         </script>
-        <?
+        <?php
     }
     
     /**
@@ -977,12 +977,12 @@ class skin_common
         // Démarrage bufferisation
         ob_start();
         ?>
-        <input type="hidden" name="<? echo $name; ?>" id="<? echo $id; ?>" value="<? if (!empty($selecteditem)) echo htmlentities($selecteditem); ?>" <? if (!empty($arrOptions['onchange'])) echo 'onchange="javascript:'.$arrOptions['onchange'].'";'; ?>/>
+        <input type="hidden" name="<?php echo $name; ?>" id="<?php echo $id; ?>" value="<?php if (!empty($selecteditem)) echo htmlentities($selecteditem); ?>" <?php if (!empty($arrOptions['onchange'])) echo 'onchange="javascript:'.$arrOptions['onchange'].'";'; ?>/>
         
-        <div class="ploopi_selectbox" style="display:inline-block;<? if (!empty($arrOptions['input_width'])) echo "width:{$arrOptions['input_width']};"; ?>">
-            <div class="ploopi_selectbox_button" id="ploopi_selectbox_button<? echo $id; ?>" onclick="javascript:$('ploopi_selectbox_list<? echo $id; ?>').style.display='block';">
-                <div class="ploopi_selectbox_button_content" id="ploopi_selectbox_button_content<? echo $id; ?>" >
-                    <?
+        <div class="ploopi_selectbox" style="display:inline-block;<?php if (!empty($arrOptions['input_width'])) echo "width:{$arrOptions['input_width']};"; ?>">
+            <div class="ploopi_selectbox_button" id="ploopi_selectbox_button<?php echo $id; ?>" onclick="javascript:$('ploopi_selectbox_list<?php echo $id; ?>').style.display='block';">
+                <div class="ploopi_selectbox_button_content" id="ploopi_selectbox_button_content<?php echo $id; ?>" >
+                    <?php
                     if (!empty($arrValues[$selecteditem]))
                     {
                         $menu = $arrValues[$selecteditem];
@@ -990,63 +990,63 @@ class skin_common
                         if (!empty($menu['icon'])) 
                         {
                             ?>
-                            <img src="<? echo $menu['icon']; ?>">
-                            <?
+                            <img src="<?php echo $menu['icon']; ?>">
+                            <?php
                         } 
                         ?>
-                        <span><? echo $menu['label']; ?></span><? if (!empty($menu['label_extended'])) echo $menu['label_extended'];
+                        <span><?php echo $menu['label']; ?></span><?php if (!empty($menu['label_extended'])) echo $menu['label_extended'];
                     }
                     ?>
                 </div>
             </div>
             
-            <div id="ploopi_selectbox_list<? echo $id; ?>" class="ploopi_selectbox_list" style="display:none;<? if (!empty($arrOptions['menu_width'])) echo "width:{$arrOptions['menu_width']};"; ?>" onclick="$('ploopi_selectbox_list<? echo $id; ?>').style.display='none';" onmouseout="$('ploopi_selectbox_list<? echo $id; ?>').style.display='none';">
-                <ul onmouseover="$('ploopi_selectbox_list<? echo $id; ?>').style.display='block';">
-                    <?
+            <div id="ploopi_selectbox_list<?php echo $id; ?>" class="ploopi_selectbox_list" style="display:none;<?php if (!empty($arrOptions['menu_width'])) echo "width:{$arrOptions['menu_width']};"; ?>" onclick="$('ploopi_selectbox_list<?php echo $id; ?>').style.display='none';" onmouseout="$('ploopi_selectbox_list<?php echo $id; ?>').style.display='none';">
+                <ul onmouseover="$('ploopi_selectbox_list<?php echo $id; ?>').style.display='block';">
+                    <?php
                     foreach($arrValues as $key => $menu)
                     {
                         switch($menu['type'])
                         {
                             case 'group':
                                 ?>
-                                <li style="font-weight:bold;padding:2px 4px;"><? echo $menu['label']; ?></li>
-                                <?
+                                <li style="font-weight:bold;padding:2px 4px;"><?php echo $menu['label']; ?></li>
+                                <?php
                             break;
                             
                             case 'select':
                                 ?>
                                 <li>
-                                    <a href="javascript:void(0);" <? if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> onclick="javascript:$('ploopi_selectbox_button_content<? echo $id; ?>').innerHTML = this.innerHTML; $('<? echo $id; ?>').value = '<? echo addslashes($key); ?>'; ploopi_dispatch_onchange('<? echo $id; ?>');return false;" title="Accéder à <? echo htmlentities($menu['label']); ?>">
-                                        <? 
+                                    <a href="javascript:void(0);" <?php if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> onclick="javascript:$('ploopi_selectbox_button_content<?php echo $id; ?>').innerHTML = this.innerHTML; $('<?php echo $id; ?>').value = '<?php echo addslashes($key); ?>'; ploopi_dispatch_onchange('<?php echo $id; ?>');return false;" title="Accéder à <?php echo htmlentities($menu['label']); ?>">
+                                        <?php 
                                         if (!empty($menu['icon'])) 
                                         {
                                             ?>
-                                            <img src="<? echo $menu['icon']; ?>">
-                                            <?
+                                            <img src="<?php echo $menu['icon']; ?>">
+                                            <?php
                                         } 
                                         ?>
-                                        <span><? echo $menu['label']; ?></span><? if (!empty($menu['label_extended'])) echo $menu['label_extended']; ?>
+                                        <span><?php echo $menu['label']; ?></span><?php if (!empty($menu['label_extended'])) echo $menu['label_extended']; ?>
                                     </a>
                                 </li>
-                                <?
+                                <?php
                             break;
                             
                             case 'link':
                                 ?>
                                 <li>
-                                    <a href="<? echo $menu['link']; ?>" <? if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> <? if (!empty($menu['target'])) echo 'target="'.$menu['target'].'"'; ?> title="Accéder à <? echo htmlentities($menu['label']); ?>">
-                                        <? 
+                                    <a href="<?php echo $menu['link']; ?>" <?php if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> <?php if (!empty($menu['target'])) echo 'target="'.$menu['target'].'"'; ?> title="Accéder à <?php echo htmlentities($menu['label']); ?>">
+                                        <?php 
                                         if (!empty($menu['icon'])) 
                                         {
                                             ?>
-                                            <img src="<? echo $menu['icon']; ?>">
-                                            <?
+                                            <img src="<?php echo $menu['icon']; ?>">
+                                            <?php
                                         } 
                                         ?>
-                                        <span><? echo $menu['label']; ?></span><? if (!empty($menu['label_extended'])) echo $menu['label_extended']; ?>
+                                        <span><?php echo $menu['label']; ?></span><?php if (!empty($menu['label_extended'])) echo $menu['label_extended']; ?>
                                     </a>
                                 </li>
-                                <?
+                                <?php
                             break;
                         }
                     }
@@ -1054,7 +1054,7 @@ class skin_common
                 </ul>
             </div>
         </div>
-        <?
+        <?php
         $strContent = ob_get_contents();
         ob_end_clean();
         

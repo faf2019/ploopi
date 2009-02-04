@@ -44,7 +44,7 @@ switch($ploopi_op)
     case 'annotation_taghistory':
         ?>
         <div class="ploopi_annotation_popup">
-        <?
+        <?php
         if (isset($_GET['id_tag']) && is_numeric($_GET['id_tag']))
         {
             include_once './include/classes/annotation.php';
@@ -53,9 +53,9 @@ switch($ploopi_op)
             $tag->open($_GET['id_tag']);
 
             ?>
-            <div style="padding:4px;">Le tag <b><? echo $tag->fields['tag'] ; ?></b> a aussi été utilisé sur les annotation suivantes :</div>
+            <div style="padding:4px;">Le tag <b><?php echo $tag->fields['tag'] ; ?></b> a aussi été utilisé sur les annotation suivantes :</div>
             <div class="ploopi_annotation_popup_list">
-            <?
+            <?php
 
 
             $select =   "
@@ -84,11 +84,11 @@ switch($ploopi_op)
             {
                 $ld = ploopi_timestamp2local($fields['date_annotation']);
                 ?>
-                <div class="ploopi_annotation_row_<? echo $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2; ?>" style="padding:4px;">
-                    <div style="float:right;"><? echo "le {$ld['date']} à {$ld['time']}"; ?></div>
-                    <div style="font-weight:bold;"><? echo "{$fields['title']}"; ?></div>
-                    <div style="clear:both;padding-top:4px;"><? echo ploopi_make_links(ploopi_nl2br(htmlentities($fields['content']))); ?></div>
-                    <?
+                <div class="ploopi_annotation_row_<?php echo $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2; ?>" style="padding:4px;">
+                    <div style="float:right;"><?php echo "le {$ld['date']} à {$ld['time']}"; ?></div>
+                    <div style="font-weight:bold;"><?php echo "{$fields['title']}"; ?></div>
+                    <div style="clear:both;padding-top:4px;"><?php echo ploopi_make_links(ploopi_nl2br(htmlentities($fields['content']))); ?></div>
+                    <?php
                     if ($fields['id_record'] != '')
                     {
                         $object_script = str_replace(
@@ -105,23 +105,23 @@ switch($ploopi_op)
                                                     $fields['script']
                                         );
                         ?>
-                        <div style="clear:both;padding-top:4px;text-align:right;"><a href="<? echo "admin.php?ploopi_mainmenu=1&{$object_script}"; ?>"><? echo "{$fields['module_name']} / {$fields['object_name']} / {$fields['object_label']}"; ?></a></div>
-                        <?
+                        <div style="clear:both;padding-top:4px;text-align:right;"><a href="<?php echo "admin.php?ploopi_mainmenu=1&{$object_script}"; ?>"><?php echo "{$fields['module_name']} / {$fields['object_name']} / {$fields['object_label']}"; ?></a></div>
+                        <?php
                     }
                     ?>
                 </div>
-                <?
+                <?php
             }
             ?>
             </div>
-            <?
+            <?php
         }
         else echo "erreur";
         ?>
         <!--a style="display:block;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup();">Fermer</a-->
         <div style="padding:4px;text-align:right"><a href="javascript:void(0);" onclick="javascript:ploopi_hidepopup();">Fermer</a></div>
         </div>
-        <?
+        <?php
         ploopi_die();
     break;
 
@@ -185,9 +185,9 @@ switch($ploopi_op)
             $annotation->save();
             ?>
             <script type="text/javascript">
-                window.parent.ploopi_annotation('<? echo $_POST['id_annotation']; ?>');
+                window.parent.ploopi_annotation('<?php echo $_POST['id_annotation']; ?>');
             </script>
-        <?
+        <?php
         }
         ploopi_die();
         //ploopi_tickets_send($annotation->fields['id_object'], $annotation->fields['id_record'], $annotation->fields['object_label'], $annotation->fields['title'], $annotation->fields['content']);

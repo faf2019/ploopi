@@ -56,25 +56,25 @@ switch($ploopi_op)
         <div id="filexplorer">
             <div class="documents_browser">
                 <div class="documents_path">
-                    <a title="Aller au Dossier Racine" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_filexplorer_browser('<? echo $_GET['filexplorer_id']; ?>', '<? $cipher->crypt(''); ?>');"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_home.png"></a>
+                    <a title="Aller au Dossier Racine" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_filexplorer_browser('<?php echo $_GET['filexplorer_id']; ?>', '<?php $cipher->crypt(''); ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_home.png"></a>
                     <div>Emplacement :</div>
-                    <?
+                    <?php
                     $strShortCutPath = '';
                     foreach($arrCurrentFolder as $strFolderName)
                     {
                         if ($strFolderName != '') $strShortCutPath .= _PLOOPI_SEP.$strFolderName;
                         ?>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_filexplorer_browser('<? echo $_GET['filexplorer_id']; ?>', '<? echo $cipher->crypt($strShortCutPath); ?>');">
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_filexplorer_browser('<?php echo $_GET['filexplorer_id']; ?>', '<?php echo $cipher->crypt($strShortCutPath); ?>');">
                             <p class="ploopi_va">
-                                <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_folder.png" />
-                                <span><? echo $strFolderName ? $strFolderName : 'Racine'; ?></span>
+                                <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_folder.png" />
+                                <span><?php echo $strFolderName ? $strFolderName : 'Racine'; ?></span>
                             </p>
                         </a>
-                        <?
+                        <?php
                     }
                     ?>
                 </div>
-                <?
+                <?php
         
                 $documents_columns = array();
     
@@ -209,7 +209,7 @@ switch($ploopi_op)
                 ?>
             </div>
         </div>
-        <?
+        <?php
         $content = ob_get_contents();
         ob_end_clean();
     

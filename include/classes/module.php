@@ -23,7 +23,7 @@
 
 /**
  * Gestion des modules.
- *  
+ *
  * @package ploopi
  * @subpackage module
  * @copyright Netlor, Ovensia
@@ -39,7 +39,7 @@ include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_module
- *  
+ *
  * @package ploopi
  * @subpackage module
  * @copyright Netlor, Ovensia
@@ -64,7 +64,7 @@ class module extends data_object
      *
      * @return int identifiant du module
      */
-    
+
     function save()
     {
         global $db;
@@ -97,11 +97,11 @@ class module extends data_object
     /**
      * Supprime l'instance de module et les données associées : rôles, partages, abonnements, validation, etc...
      */
-    
+
     function delete()
     {
         include_once './include/classes/workspace.php';
-        
+
         global $db;
 
         if ($this->fields['id']!=-1)
@@ -119,7 +119,7 @@ class module extends data_object
 
             // delete all module_workspace
             $workspaces = $this->getallworkspaces();
-            
+
             foreach($workspaces as $idw => $workspace)
             {
                 $module_workspace  = new module_workspace();
@@ -133,22 +133,22 @@ class module extends data_object
 
             $delete = "DELETE FROM ploopi_param_workspace WHERE id_module = '{$this->fields['id']}'";
             $db->query($delete);
-            
+
             $delete = "DELETE FROM ploopi_param_user WHERE id_module = '{$this->fields['id']}'";
             $db->query($delete);
 
             // delete roles
             $delete = "DELETE FROM ploopi_role WHERE id_module = '{$this->fields['id']}'";
             $db->query($delete);
-            
+
             // delete share
             $delete = "DELETE FROM ploopi_share WHERE id_module = '{$this->fields['id']}'";
             $db->query($delete);
-            
+
             // delete subscription
             $delete = "DELETE FROM ploopi_subscription WHERE id_module = '{$this->fields['id']}'";
             $db->query($delete);
-                    
+
             // delete validation
             $delete = "DELETE FROM ploopi_validation WHERE id_module = '{$this->fields['id']}'";
             $db->query($delete);
@@ -157,13 +157,13 @@ class module extends data_object
         parent::delete();
 
     }
-    
+
     /**
      * Retourne un tableau contenant les espaces de travail auxquels le module est rattaché
      *
      * @return array tableau des espaces de travail
      */
-    
+
     function getallworkspaces()
     {
         global $db;
@@ -191,7 +191,7 @@ class module extends data_object
      * @param boolean $shared true si on ne veut que les rôles partagés
      * @return array tableau des rôles
      */
-    
+
     function getroles($shared = false)
     {
         global $db;
@@ -199,7 +199,7 @@ class module extends data_object
         $roles = array();
 
         $where = ($shared) ? " AND ploopi_role.shared = 1 " : '';
-        
+
         $select =   "
                 SELECT      ploopi_role.*
                 FROM        ploopi_role
@@ -215,19 +215,19 @@ class module extends data_object
         return $roles;
     }
 
-    
+
     /**
      * Détache le module d'un espace de travail donné
      *
      * @param int $workspaceid identifiant de l'espace de travail
      */
-    
+
     function unlink($workspaceid)
     {
         global $db;
 
         $sql =  "
-                DELETE 
+                DELETE
                 FROM        ploopi_module_workspace
                 WHERE       ploopi_module_workspace.id_workspace = {$workspaceid}
                 AND         ploopi_module_workspace.id_module = {$this->fields['id']}
@@ -241,7 +241,7 @@ class module extends data_object
 
 /**
  * Classe d'accès à la table ploopi_module_type
- *  
+ *
  * @package ploopi
  * @subpackage module
  * @copyright Netlor, Ovensia
@@ -256,7 +256,7 @@ class module_type extends data_object
      *
      * @return module_type
      */
-    
+
     function module_type()
     {
         parent::data_object('ploopi_module_type');
@@ -265,12 +265,12 @@ class module_type extends data_object
     /**
      * Supprime le type de module et les données associées : paramètres, modules, actions, métabase, etc..
      */
-    
+
     function delete()
     {
         include_once './include/classes/mb.php';
         include_once './include/classes/param.php';
-                
+
         global $db;
         // delete params
 
@@ -322,7 +322,7 @@ class module_type extends data_object
     /**
      * Supprime les paramètres du type de module. Utilisé notamment pour la mise à jour des modules.
      */
-    
+
     function delete_params()
     {
         include_once './include/classes/mb.php';
@@ -366,11 +366,11 @@ class module_type extends data_object
      * Crée une instance de module à partir du type de module
      *
      * @param int $workspaceid identifiant de l'espace de travail auquel l'instance va être rattachée
-     * @return module module instancié 
-     * 
+     * @return module module instancié
+     *
      * @see module
      */
-    
+
     function createinstance($workspaceid)
     {
         $position = 0;
@@ -393,13 +393,13 @@ class module_type extends data_object
      * @param boolean $role_enabled true si on ne veut que les actions autorisées pour la création de rôles
      * @return array tableau des actions
      */
-    
+
     function getactions($role_enabled = true)
     {
         global $db;
-        
+
         $actions = array();
-        
+
         $sql =  "
                 SELECT      *
                 FROM        ploopi_mb_action
@@ -407,12 +407,181 @@ class module_type extends data_object
                 AND         role_enabled = ".(($role_enabled) ? '1' : '0')."
                 ORDER BY    id_action
                 ";
-        
+
         $result = $db->query($sql);
-        
+
         while ($action = $db->fetchrow($result)) $actions[$action['id_action']] = $action;
-        
+
         return $actions;
+    }
+
+
+    function update_metabase($xmlfile_desc, $rapport = array())
+    {
+    }
+
+    function update_description($xmlfile_desc, $rapport = array())
+    {
+        include_once './include/classes/param.php';
+        include_once './include/classes/mb.php';
+        include_once './include/classes/xml2array.php';
+
+        global $db;
+
+        $testok = true;
+        $critical_error = false;
+        $detail = '';
+
+        if (file_exists($xmlfile_desc))
+        {
+            $fp = fopen($xmlfile_desc, 'r');
+            $data = fread ($fp, filesize ($xmlfile_desc));
+            fclose($fp);
+
+            $x2a = new xml2array();
+            $xmlarray = $x2a->parse($data);
+            if ($xmlarray)
+            {
+                $pt = &$xmlarray['root']['ploopi'][0]['moduletype'][0];
+
+                $this->delete_params();
+
+                $this->fields =
+                    array_merge(
+                        $this->fields,
+                        array(
+                            'label'         => $pt['label'][0],
+                            'version'       => $pt['version'][0],
+                            'author'        => $pt['author'][0],
+                            'date'          => $pt['date'][0],
+                            'description'   => $pt['description'][0]
+                        )
+                    );
+
+                $this->save();
+
+                if (!empty($pt['paramtype']))
+                {
+                    foreach($pt['paramtype'] as $key => $value)
+                    {
+                        if (empty($value['default_value'][0])) $value['default_value'][0] = '';
+
+                        $param_type = new param_type();
+                        $param_type->fields =
+                            array(
+                                'id_module_type'    => $this->fields['id'],
+                                'name'              => $value['name'][0],
+                                'label'             => $value['label'][0],
+                                'default_value'     => $value['default_value'][0],
+                                'public'            => $value['public'][0],
+                                'description'       => $value['description'][0]
+                            );
+
+                        $param_type->save();
+
+                        // on recherche les paramètres mal initialisés (ploopi_param_default manquant)
+                        $sql =  "
+                                SELECT      m.id
+
+                                FROM        ploopi_module m
+
+                                LEFT JOIN   ploopi_param_default pd
+                                ON          pd.id_module = m.id
+                                AND         pd.name = '".$db->addslashes($value['name'][0])."'
+
+                                WHERE       m.id_module_type = {$this->fields['id']}
+                                AND         ISNULL(pd.name)
+                                ";
+
+                        $rs_paramdefault = $db->query($sql);
+
+                        while ($row = $db->fetchrow($rs_paramdefault))
+                        {
+                            $param_default = new param_default();
+                            $param_default->fields =
+                                array(
+                                    'id_module'         => $row['id'],
+                                    'name'              => $value['name'][0],
+                                    'value'             => is_null($value['default_value'][0]) ? '' : $value['default_value'][0],
+                                    'id_module_type'    => $this->fields['id']
+                                );
+
+                            $param_default->save();
+                        }
+
+                        if (!empty($value['paramchoice']))
+                        {
+                            foreach($value['paramchoice'] as $ckey => $cvalue)
+                            {
+                                $param_choice = new param_choice();
+                                $param_choice->fields =
+                                    array(
+                                        'id_module_type'    => $this->fields['id'],
+                                        'name'              => $param_type->fields['name'],
+                                        'value'             => $cvalue['value'][0],
+                                        'displayed_value'   => $cvalue['displayed_value'][0]
+                                    );
+                                $param_choice->save();
+                            }
+                        }
+                    }
+                }
+
+                if (!empty($pt['cms_object']))
+                {
+                    foreach($pt['cms_object'] as $key => $value)
+                    {
+                        $mb_cms_object = new mb_cms_object();
+                        $mb_cms_object->fields =
+                            array(
+                                'id_module_type'    => $this->fields['id'],
+                                'label'             => $value['label'][0],
+                                'script'            => $value['script'][0],
+                                'select_id'         => $value['select_id'][0],
+                                'select_label'      => $value['select_label'][0],
+                                'select_table'      => $value['select_table'][0]
+                            );
+                        $mb_cms_object->save();
+                    }
+                }
+
+                if (!empty($pt['action']))
+                {
+                    foreach($pt['action'] as $key => $value)
+                    {
+                        $mb_action = new mb_action();
+                        $mb_action->fields =
+                            array(
+                                'id_module_type'    => $this->fields['id'],
+                                'id_action'         => $value['id_action'][0],
+                                'label'             => $value['label'][0],
+                                'id_object'         => (isset($value['id_object'][0])) ? $value['id_object'][0] : 0,
+                                'role_enabled'      => (isset($value['role_enabled'][0])) ? $value['role_enabled'][0] : 1
+                            );
+                        $mb_action->save();
+                    }
+                }
+
+                $detail = "Fichier '{$xmlfile_desc}' importé.";
+            }
+            else
+            {
+                $detail = "Fichier '{$xmlfile_desc}' mal formé. Vérifiez la structure XML du document.";
+                $testok = false;
+                $critical_error = true;
+            }
+        }
+        else
+        {
+            $detail = "Fichier '{$xmlfile_desc}' non trouvé.";
+            $testok = false;
+            $critical_error = true;
+        }
+
+        $rapport[] = array('operation' => 'Chargement des paramètres/actions', 'detail' => $detail, 'res' => $testok);
+
+        return $critical_error;
+
     }
 }
 ?>

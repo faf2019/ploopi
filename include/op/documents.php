@@ -51,8 +51,8 @@ switch($ploopi_op)
         ob_start();
         
         ?>
-        <div id="ploopidocuments_<? echo $_SESSION['documents']['documents_id']; ?>">
-        <?
+        <div id="ploopidocuments_<?php echo $_SESSION['documents']['documents_id']; ?>">
+        <?php
         
     case 'documents_browser':
         include_once './include/classes/documents.php';
@@ -87,7 +87,7 @@ switch($ploopi_op)
         {
             ?>
             </div>
-            <?
+            <?php
             $content = ob_get_contents();
             ob_end_clean();
         
@@ -101,8 +101,8 @@ switch($ploopi_op)
         //include_once './include/functions/documents.php';
         //ploopi_documents($_GET['id_object'], $_GET['id_record']);
         ?>
-        <div id="ploopidocuments_<? echo ploopi_documents_getid($_GET['id_object'], $_GET['id_record']); ?>"></div>
-        <?
+        <div id="ploopidocuments_<?php echo ploopi_documents_getid($_GET['id_object'], $_GET['id_record']); ?>"></div>
+        <?php
         ploopi_die();
     break;
 
@@ -195,10 +195,10 @@ switch($ploopi_op)
         }
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $_POST['currentfolder']; ?>', '<? echo $_SESSION['documents']['mode']; ?>');
+            window.parent.ploopi_documents_browser('<?php echo $_SESSION['documents']['documents_id']; ?>', '<?php echo $_POST['currentfolder']; ?>', '<?php echo $_SESSION['documents']['mode']; ?>');
             window.parent.ploopi_hidepopup('ploopi_documents_openfolder_popup');
         </script>
-        <?
+        <?php
         ploopi_die();
     break;
 
@@ -220,13 +220,13 @@ switch($ploopi_op)
         ?>
         <form id="documents_folderform" action="admin-light.php" method="post" target="documents_folderform_iframe" enctype="multipart/form-data">
         <input type="hidden" name="ploopi_op" value="documents_savefolder">
-        <input type="hidden" name="currentfolder" value="<? echo $_GET['currentfolder']; ?>">
-        <?
+        <input type="hidden" name="currentfolder" value="<?php echo $_GET['currentfolder']; ?>">
+        <?php
         if (!empty($_GET['documentsfolder_id']))
         {
             ?>
-            <input type="hidden" name="documentsfolder_id" value="<? echo $_GET['documentsfolder_id']; ?>">
-            <?
+            <input type="hidden" name="documentsfolder_id" value="<?php echo $_GET['documentsfolder_id']; ?>">
+            <?php
         }
         ?>
 
@@ -234,12 +234,12 @@ switch($ploopi_op)
             <div class="documents_formcontent">
                 <p>
                     <label>Libellé:</label>
-                    <input type="text" class="text" name="documentsfolder_name" value="<? echo htmlentities($documentsfolder->fields['name']); ?>">
+                    <input type="text" class="text" name="documentsfolder_name" value="<?php echo htmlentities($documentsfolder->fields['name']); ?>">
                 </p>
                 <p>
                     <label>Description:</label>
                     <span>
-                    <?
+                    <?php
                     include_once './FCKeditor/fckeditor.php' ;
                     
                     $oFCKeditor = new FCKeditor('fck_documentsfolder_description') ;
@@ -263,13 +263,13 @@ switch($ploopi_op)
                 </p>
             </div>
             <div class="documents_formcontent" style="text-align:right;padding:4px;">
-                <input type="button" class="flatbutton" style="width:100px;" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('ploopi_documents_openfolder_popup');">
-                <input type="submit" class="flatbutton" style="width:100px;" value="<? echo _PLOOPI_SAVE; ?>">
+                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('ploopi_documents_openfolder_popup');">
+                <input type="submit" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_SAVE; ?>">
             </div>
         </div>
         </form>
         <iframe name="documents_folderform_iframe" src="./img/blank.gif" style="display:none;"></iframe>
-        <?
+        <?php
         $content = ob_get_contents();
         ob_end_clean();
     
@@ -314,10 +314,10 @@ switch($ploopi_op)
         $error = $documentsfile->save();
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $_POST['currentfolder']; ?>', '<? echo $_SESSION['documents']['mode']; ?>');
+            window.parent.ploopi_documents_browser('<?php echo $_SESSION['documents']['documents_id']; ?>', '<?php echo $_POST['currentfolder']; ?>', '<?php echo $_SESSION['documents']['mode']; ?>');
             window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
         </script>
-        <?
+        <?php
         ploopi_die();
     break;
 
@@ -341,18 +341,18 @@ switch($ploopi_op)
         ?>
         <form id="documents_folderform" action="admin-light.php" method="post" target="documents_fileform_iframe" enctype="multipart/form-data" onsubmit="javascript:return ploopi_documents_validate(this)">
         <input type="hidden" name="ploopi_op" value="documents_savefile">
-        <input type="hidden" name="currentfolder" value="<? echo $_GET['currentfolder']; ?>">
-        <?
+        <input type="hidden" name="currentfolder" value="<?php echo $_GET['currentfolder']; ?>">
+        <?php
         if (!empty($_GET['documentsfile_id']))
         {
             ?>
-            <input type="hidden" name="documentsfile_id" value="<? echo $_GET['documentsfile_id']; ?>">
-            <?
+            <input type="hidden" name="documentsfile_id" value="<?php echo $_GET['documentsfile_id']; ?>">
+            <?php
         }
         ?>
         <div class="ploopi_form">
             <div class="documents_formcontent">
-                <?
+                <?php
                 if (empty($_GET['documentsfile_id']))
                 {
                     ?>
@@ -360,39 +360,39 @@ switch($ploopi_op)
                         <label>Fichier:</label>
                         <input type="file" class="text" name="documentsfile_file" tabindex="1">
                     </p>
-                    <?
+                    <?php
                 }
                 else
                 {
                     ?>
                     <p>
                         <label>Nom du Fichier:</label>
-                        <input type="input" class="text" name="documentsfile_name" value="<? echo htmlentities($documentsfile->fields['name']); ?>" tabindex="2">
+                        <input type="input" class="text" name="documentsfile_name" value="<?php echo htmlentities($documentsfile->fields['name']); ?>" tabindex="2">
                     </p>
                     <p>
                         <label>Nouveau Fichier:</label>
                         <input type="file" class="text" name="documentsfile_file" tabindex="2">
                     </p>
-                    <?
+                    <?php
                 }
                 ?>
                 <p>
                     <label>Libellé:</label>
-                    <input class="text" name="documentsfile_label" value="<? echo htmlentities($documentsfile->fields['label']); ?>" tabindex="3" style="width:250px;">
+                    <input class="text" name="documentsfile_label" value="<?php echo htmlentities($documentsfile->fields['label']); ?>" tabindex="3" style="width:250px;">
                 </p>
                 <p>
                     <label>Référence:</label>
-                    <input class="text" name="documentsfile_ref" value="<? echo htmlentities($documentsfile->fields['ref']); ?>" tabindex="4" style="width:250px;">
+                    <input class="text" name="documentsfile_ref" value="<?php echo htmlentities($documentsfile->fields['ref']); ?>" tabindex="4" style="width:250px;">
                 </p>
                 <p>
                     <label>Date:</label>
-                    <input class="text" id="documentsfile_timestp_file" name="documentsfile_timestp_file" value="<? echo $ldate['date']; ?>" readonly style="width:75px;" onclick="javascript:ploopi_calendar_open('documentsfile_timestp_file', event);" tabindex="5">
+                    <input class="text" id="documentsfile_timestp_file" name="documentsfile_timestp_file" value="<?php echo $ldate['date']; ?>" readonly style="width:75px;" onclick="javascript:ploopi_calendar_open('documentsfile_timestp_file', event);" tabindex="5">
                     <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('documentsfile_timestp_file', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
                 </p>
                 <p>
                     <label>Description:</label>
                     <span>
-                    <?
+                    <?php
                     include_once './FCKeditor/fckeditor.php' ;
                     
                     $oFCKeditor = new FCKeditor('fck_documentsfile_description') ;
@@ -416,13 +416,13 @@ switch($ploopi_op)
                 </p>
             </div>
             <div class="documents_formcontent" style="text-align:right;padding:4px;">
-                <input type="button" class="flatbutton" style="width:100px;" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('ploopi_documents_openfile_popup');">
-                <input type="submit" class="flatbutton" style="width:100px;" value="<? echo _PLOOPI_SAVE; ?>" tabindex="7">
+                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('ploopi_documents_openfile_popup');">
+                <input type="submit" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="7">
             </div>
         </div>
         </form>
         <iframe name="documents_fileform_iframe" src="./img/blank.gif" style="display:none"></iframe>
-        <?
+        <?php
         $content = ob_get_contents();
         ob_end_clean();
     

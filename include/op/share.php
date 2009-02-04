@@ -47,12 +47,12 @@ switch($ploopi_op)
             {
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
-                    <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&remove_user_id=<? echo $user->fields['id']; ?>', 'div_share_users_selected');">
+                    <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_share_users_selected');">
                         <img src="./img/icon_delete.gif">
-                        <span><? echo "{$user->fields['lastname']} {$user->fields['firstname']} (Cliquez pour supprimer)"; ?></span>
+                        <span><?php echo "{$user->fields['lastname']} {$user->fields['firstname']} (Cliquez pour supprimer)"; ?></span>
                     </a>
                 </p>
-                <?
+                <?php
             }
         }
         ploopi_die();
@@ -154,16 +154,16 @@ switch($ploopi_op)
         {
             ?>
             <div class="ploopi_share_select_empty">
-                <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_noway.png"><span>aucun utilisateur trouv&eacute;</span></p>
+                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_noway.png"><span>aucun utilisateur trouv&eacute;</span></p>
             </div>
-            <?
+            <?php
         }
         else
         {
             ?>
             <div style="height:200px;overflow:auto;border-bottom:1px solid #c0c0c0;">
                 <div style="overflow:hidden">
-                <?
+                <?php
                 // pour chaque espace de travail
                 foreach($list['workspaces'] as $id_workspace => $workspace)
                 {
@@ -171,19 +171,19 @@ switch($ploopi_op)
                     {
                         ?>
                         <div class="ploopi_share_select_workgroup">
-                            <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><? echo $workspace['label']; ?></span></p>
+                            <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><?php echo $workspace['label']; ?></span></p>
                         </div>
-                        <?
+                        <?php
                         if (!empty($workspace['users']))
                         {
                             foreach($workspace['users'] as $id_user)
                             {
                                 $user = &$list['users'][$id_user];
                                 ?>
-                                <a class="ploopi_share_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&user_id=<? echo $id_user; ?>', 'div_share_users_selected');">
-                                    <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
+                                <a class="ploopi_share_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&user_id=<?php echo $id_user; ?>', 'div_share_users_selected');">
+                                    <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
                                 </a>
-                                <?
+                                <?php
                             }
                         }
 
@@ -194,19 +194,19 @@ switch($ploopi_op)
                                 $group = &$list['groups'][$id_grp];
                                 ?>
                                 <div class="ploopi_share_select_usergroup">
-                                    <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><? echo $list['groups'][$id_grp]['label'];  ?></span></p>
+                                    <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo $list['groups'][$id_grp]['label'];  ?></span></p>
                                 </div>
-                                <?
+                                <?php
                                 if (!empty($list['groups'][$id_grp]['users']))
                                 {
                                     foreach($list['groups'][$id_grp]['users'] as $id_user)
                                     {
                                         $user = &$list['users'][$id_user];
                                         ?>
-                                        <a class="ploopi_share_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&user_id=<? echo $id_user; ?>', 'div_share_users_selected');">
-                                            <p class="ploopi_va"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><? echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
+                                        <a class="ploopi_share_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&user_id=<?php echo $id_user; ?>', 'div_share_users_selected');">
+                                            <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
                                         </a>
-                                        <?
+                                        <?php
                                     }
                                 }
                             }
@@ -218,12 +218,12 @@ switch($ploopi_op)
             </div>
             <div class="ploopi_share_select_legend">
                 <p class="ploopi_va">
-                    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span>Espace de Travail</span>
-                    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span>Groupe d'Utilisateur</span>
-                    <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span>Utilisateur</span>
+                    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span>Espace de Travail</span>
+                    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span>Groupe d'Utilisateur</span>
+                    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span>Utilisateur</span>
                 </p>
             </div>
-            <?
+            <?php
         }
 
         ploopi_die();

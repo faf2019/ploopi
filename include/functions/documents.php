@@ -162,10 +162,10 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     if ($load_doc)
     {
         ?>
-        <div id="ploopidocuments_<? echo $_SESSION['documents']['documents_id']; ?>">
-            <? ploopi_documents_browser($currentfolder); ?>
+        <div id="ploopidocuments_<?php echo $_SESSION['documents']['documents_id']; ?>">
+            <?php ploopi_documents_browser($currentfolder); ?>
         </div>
-        <?
+        <?php
     }
 }
 
@@ -330,7 +330,7 @@ function ploopi_documents_browser($currentfolder)
     <div class="documents_browser">
 
         <div class="documents_path">
-            <?
+            <?php
             // voir pour une optimisation de cette partie car on ouvre un docfolder sans doute pour rien
             $documentsfolder = new documentsfolder();
 
@@ -339,28 +339,28 @@ function ploopi_documents_browser($currentfolder)
             if ($_SESSION['documents']['rights']['SEARCH'])
             {
                 ?>
-                <a title="Rechercher un Fichier" href="javascript:void(0);" style="float:right;"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_search.png"></a>
-                <?
+                <a title="Rechercher un Fichier" href="javascript:void(0);" style="float:right;"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_search.png"></a>
+                <?php
             }
             
             if (empty($_SESSION['documents']['mode']))
             {
                 if ($_SESSION['documents']['rights']['DOCUMENT_CREATE'])
                 {
-                    ?><a title="Créer un nouveau fichier" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfile('<? echo $currentfolder; ?>','',event);"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_newfile.png"></a><?
+                    ?><a title="Créer un nouveau fichier" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfile('<?php echo $currentfolder; ?>','',event);"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_newfile.png"></a><?php
                 }
                 if ($_SESSION['documents']['rights']['FOLDER_CREATE'])
                 {
                     ?>
-                    <a title="Créer un nouveau Dossier" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfolder('<? echo $currentfolder; ?>','',event);"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_newfolder.png"></a>
-                    <?
+                    <a title="Créer un nouveau Dossier" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfolder('<?php echo $currentfolder; ?>','',event);"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_newfolder.png"></a>
+                    <?php
                 }
             }
             ?>
-            <a title="Aller au Dossier Racine" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_browser('<? echo $_SESSION['documents']['documents_id']; ?>', '', '<? echo $_SESSION['documents']['mode']; ?>','',true);"><img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_home.png"></a>
+            <a title="Aller au Dossier Racine" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_browser('<?php echo $_SESSION['documents']['documents_id']; ?>', '', '<?php echo $_SESSION['documents']['mode']; ?>','',true);"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_home.png"></a>
 
             <div>Emplacement :</div>
-            <?
+            <?php
             if ($currentfolder != 0)
             {
                 $documentsfolder = new documentsfolder();
@@ -373,18 +373,18 @@ function ploopi_documents_browser($currentfolder)
                     // change root name
                     $foldername = (!$row['id_folder']) ? $_SESSION['documents']['root_name'] : $row['name'];
                     ?>
-                    <a <? if ($currentfolder == $row['id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:ploopi_documents_browser('<? echo $_SESSION['documents']['documents_id']; ?>', '<? echo $row['id']; ?>', '<? echo $_SESSION['documents']['mode']; ?>','',true);">
+                    <a <?php if ($currentfolder == $row['id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:ploopi_documents_browser('<?php echo $_SESSION['documents']['documents_id']; ?>', '<?php echo $row['id']; ?>', '<?php echo $_SESSION['documents']['mode']; ?>','',true);">
                         <p class="ploopi_va">
-                            <img src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_folder.png" />
-                            <span><? echo $foldername; ?></span>
+                            <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_folder.png" />
+                            <span><?php echo $foldername; ?></span>
                         </p>
                     </a>
-                    <?
+                    <?php
                 }
             }
             ?>
         </div>
-        <?
+        <?php
 
         $documents_columns = array();
 
@@ -640,6 +640,6 @@ function ploopi_documents_browser($currentfolder)
         );                 
         ?>
     </div>
-    <?    
+    <?php    
 }
 ?>

@@ -65,8 +65,8 @@ function ploopi_validation_selectusers($id_object = 0, $id_record = '', $id_modu
     ?>
     <a class="ploopi_validation_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('ploopi_validation');">
         <p class="ploopi_va">
-            <img src="<? echo "{$_SESSION['ploopi']['template_path']}/img/validation/validation.png"; ?>">
-            <span><? echo $title; ?></span>
+            <img src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/validation.png"; ?>">
+            <span><?php echo $title; ?></span>
         </p>
     </a>
     <div id="ploopi_validation" style="display:block;">
@@ -74,16 +74,16 @@ function ploopi_validation_selectusers($id_object = 0, $id_record = '', $id_modu
             <p class="ploopi_va">
                 <span>Recherche groupes/utilisateurs:&nbsp;</span>
                 <input type="text" id="ploopi_validation_userfilter" class="text">
-                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_search_users&ploopi_validation_userfilter='+ploopi_getelem('ploopi_validation_userfilter').value+'&id_action=<? echo $id_action; ?>', 'div_validation_search_result');" style="border:0px" src="<? echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
+                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_search_users&ploopi_validation_userfilter='+ploopi_getelem('ploopi_validation_userfilter').value+'&id_action=<?php echo $id_action; ?>', 'div_validation_search_result');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
             </p>
         </div>
         <div id="div_validation_search_result"></div>
 
         <div class="ploopi_validation_title">Accréditations :</div>
         <div class="ploopi_validation_authorizedlist" id="div_validation_users_selected">
-        <? if (empty($_SESSION['ploopi']['validation']['users_selected'])) echo 'Aucune accrédidation'; ?>
+        <?php if (empty($_SESSION['ploopi']['validation']['users_selected'])) echo 'Aucune accrédidation'; ?>
         </div>
-        <?
+        <?php
         if (!empty($_SESSION['ploopi']['validation']['users_selected']))
         {
             ?>
@@ -91,11 +91,11 @@ function ploopi_validation_selectusers($id_object = 0, $id_record = '', $id_modu
                 ploopi_ajaxloader('div_validation_users_selected');
                 ploopi_xmlhttprequest_todiv('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user', 'div_validation_users_selected');
             </script>
-            <?
+            <?php
         }
         ?>
     </div>
-    <?
+    <?php
 }
 
 

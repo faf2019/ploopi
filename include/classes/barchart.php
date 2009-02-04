@@ -237,39 +237,39 @@ class barchart
         $column_width = floor($this->width / $this->nb_columns) - 1;
 
         ?>
-        <div class="<? echo $this->options['class_name']; ?>" style ="margin-top: 10px;">
-            <?
+        <div class="<?php echo $this->options['class_name']; ?>" style ="margin-top: 10px;">
+            <?php
             if ($this->value_max)
             {
                 if ($this->options['display_legend'])
                 {
                     ?>
-                    <div class="vlegend" style="height:<? echo $this->height; ?>px;">
-                    <?
+                    <div class="vlegend" style="height:<?php echo $this->height; ?>px;">
+                    <?php
                     for ($t = 1; $t < $this->value_max / $this->options['grid_width'] + $autofit_scale_inc ; $t++)
                     {
 						$vscale_value=$t * $this->options['grid_width'];
 						$vscale_value = ( $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] + $vscale_value / $this->value_max : $vscale_value ;
                         ?>
-                        <div style="bottom:<? echo floor(($t * $this->options['grid_width'] * $this->height) / $this->value_max) -5 ; ?>px;"><? echo $vscale_value; ?></div>
-                        <?
+                        <div style="bottom:<?php echo floor(($t * $this->options['grid_width'] * $this->height) / $this->value_max) -5 ; ?>px;"><?php echo $vscale_value; ?></div>
+                        <?php
                     }
                     ?>
                     &nbsp;
                     </div>
-                    <?
+                    <?php
                 }
                 ?>
                 <div style="float:left;">
-                    <ul class="chart" style="left: <? if( $this->options['autofit_scale']) echo strlen(floor($this->value_max))*5 ; ?>px; width:<? echo $this->width; ?>px;height:<? echo $this->height; ?>px;">
-                    <?
+                    <ul class="chart" style="left: <?php if( $this->options['autofit_scale']) echo strlen(floor($this->value_max))*5 ; ?>px; width:<?php echo $this->width; ?>px;height:<?php echo $this->height; ?>px;">
+                    <?php
                     if ($this->options['display_grid'] && !empty($this->options['grid_width']))
                     {
                         for ($t = 1; $t < $this->value_max / $this->options['grid_width'] + $autofit_scale_inc; $t++)
                         {
                             ?>
-                            <div class="grid" style="left:-2px;width:<? echo $this->width+2; ?>;bottom:<? echo floor(($t * $this->options['grid_width'] * $this->height) / $this->value_max); ; ?>px;"></div>
-                            <?
+                            <div class="grid" style="left:-2px;width:<?php echo $this->width+2; ?>;bottom:<?php echo floor(($t * $this->options['grid_width'] * $this->height) / $this->value_max); ; ?>px;"></div>
+                            <?php
                         }
                     }
     				
@@ -326,10 +326,10 @@ class barchart
                                 else $title = '';
     
                                 ?>
-                                <li class="<? echo $dataset_name; ?>" style="<? echo $style; ?>" <? echo $title ?>>
-                                    <? if ($this->options['display_values']) echo $value; //affichage des valeurs rendu optionnel ?>
+                                <li class="<?php echo $dataset_name; ?>" style="<?php echo $style; ?>" <?php echo $title ?>>
+                                    <?php if ($this->options['display_values']) echo $value; //affichage des valeurs rendu optionnel ?>
                                 </li>
-                                <?
+                                <?php
                             }
     
                             $c++;
@@ -339,34 +339,34 @@ class barchart
                     }
                     ?>
                     </ul>
-                    <?
+                    <?php
                     if ($this->options['display_ticks'])
                     {
                         ?>
-                        <div class="hlegend" style="left: <? $this->value_max += ( $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] : 0 ; if( $this->options['autofit_scale']) echo strlen(floor($this->value_max))*5 ; ?>px; width:<? echo $this->width; ?>px;">
-                        <?
+                        <div class="hlegend" style="left: <?php $this->value_max += ( $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] : 0 ; if( $this->options['autofit_scale']) echo strlen(floor($this->value_max))*5 ; ?>px; width:<?php echo $this->width; ?>px;">
+                        <?php
                             $ticks_column_width = $column_width+1;
                             if ($this->options['bar_arrange'] == 'side_by_side') $ticks_column_width *= sizeof($this->datasets);
     
                             foreach($this->legend as $key => $label)
                             {
                                 //alignement automatique de l'échelle horizontale ?>
-                                <div style="text-align: center; text-indent: <? if ($this->options['bar_arrange']=='side_by_side') echo -2 * $this->options['padding'] ; ?>px ; width:<? echo $ticks_column_width; ?>px; "><? echo $label; ?></div>
-                                <?
+                                <div style="text-align: center; text-indent: <?php if ($this->options['bar_arrange']=='side_by_side') echo -2 * $this->options['padding'] ; ?>px ; width:<?php echo $ticks_column_width; ?>px; "><?php echo $label; ?></div>
+                                <?php
                             }
                         ?>
                         </div>
-                        <?
+                        <?php
                     }
                 }
                 ?>
             </div>
-            <?
+            <?php
             if ($this->options['display_legend'])
             {
                 ?>
                 <div class="caption">
-                <?
+                <?php
                 /* légende en bas à droite du graph, avec alignement automatique du texte (en fonction de la longueur de chaîne):
                 si les descriptions de la légende sont de longueur différente, le texte et la légende seront alognés en fonction
                 de la chaîne la plus longue
@@ -377,22 +377,22 @@ class barchart
                     {
                      $max_label_strl = (strlen($dataset['label']) > $max_label_strl) ? strlen($dataset['label']) : $max_label_strl  ;
                      ?>
-                        <div style="position: relative ; clear:both ;top : 10px ;margin-left: <? echo $this->width + strlen(floor($this->value_max))*10 -7 * $max_label_strl - 20 ; ?>px;
+                        <div style="position: relative ; clear:both ;top : 10px ;margin-left: <?php echo $this->width + strlen(floor($this->value_max))*10 -7 * $max_label_strl - 20 ; ?>px;
                         font-size: 0px; line-height: 0%; width: 0px;
-                        border-top: 5px solid <?echo $dataset['bgcolor']?>;
-                        border-bottom: 5px solid <?echo $dataset['bgcolor']?>;
-                        border-left: 5px solid <?echo $dataset['bgcolor']?>;
-                        border-right: 5px solid <?echo $dataset['bgcolor']?>;">
+                        border-top: 5px solid <?phpecho $dataset['bgcolor']?>;
+                        border-bottom: 5px solid <?phpecho $dataset['bgcolor']?>;
+                        border-left: 5px solid <?phpecho $dataset['bgcolor']?>;
+                        border-right: 5px solid <?phpecho $dataset['bgcolor']?>;">
                         </div>
-                        <div style="position:relative; top: -2px; margin-left: <? echo $this->width + strlen(floor($this->value_max))*10 - 7 * $max_label_strl ; ?>px;"> <? echo $dataset['label'] ; ?> </div>
-                        <?
+                        <div style="position:relative; top: -2px; margin-left: <?php echo $this->width + strlen(floor($this->value_max))*10 - 7 * $max_label_strl ; ?>px;"> <?php echo $dataset['label'] ; ?> </div>
+                        <?php
                     }
                     ?>
                 </div>
-                <?
+                <?php
             }
             ?>
         </div>
-        <?
+        <?php
     }
 }

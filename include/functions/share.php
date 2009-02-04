@@ -56,7 +56,7 @@ function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module =
     ?>
     <a class="ploopi_share_title" href="#" onclick="javascript:ploopi_switchdisplay('ploopi_share');">
         <p class="ploopi_va">
-            <img src="<? echo "{$_SESSION['ploopi']['template_path']}/img/shares/share.png"; ?>">
+            <img src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/shares/share.png"; ?>">
             <span>Partages</span>
         </p>
     </a>
@@ -65,14 +65,14 @@ function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module =
             <p class="ploopi_va">
                 <span>Recherche groupes/utilisateurs:&nbsp;</span>
                 <input type="text" id="ploopi_share_userfilter" class="text">
-                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('index-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&ploopi_share_userfilter='+ploopi_getelem('ploopi_share_userfilter').value,'div_share_search_result');" style="border:0px" src="<? echo "{$_SESSION['ploopi']['template_path']}/img/shares/search.png"; ?>">
+                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('index-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&ploopi_share_userfilter='+ploopi_getelem('ploopi_share_userfilter').value,'div_share_search_result');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/shares/search.png"; ?>">
             </p>
         </div>
         <div id="div_share_search_result"></div>
 
         <div class="ploopi_share_title">Autorisations :</div>
-        <div class="ploopi_share_authorizedlist" id="div_share_users_selected"><? if (empty($_SESSION['ploopi']['share']['users_selected'])) echo 'Aucune autorisation'; ?></div>
-        <?
+        <div class="ploopi_share_authorizedlist" id="div_share_users_selected"><?php if (empty($_SESSION['ploopi']['share']['users_selected'])) echo 'Aucune autorisation'; ?></div>
+        <?php
         if (!empty($_SESSION['ploopi']['share']['users_selected']))
         {
             ?>
@@ -80,11 +80,11 @@ function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module =
                 ploopi_ajaxloader('div_share_users_selected');
                 ploopi_xmlhttprequest_todiv('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user', 'div_share_users_selected')
             </script>
-            <?
+            <?php
         }
         ?>
     </div>
-    <?
+    <?php
 }
 
 /**

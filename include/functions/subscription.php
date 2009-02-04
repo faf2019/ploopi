@@ -52,10 +52,10 @@ function ploopi_subscription($id_object, $id_record, $allowedactions = null, $op
                                                                     'optional_title' => $optional_title
     );
     ?>
-    <div id="ploopi_subscription_<? echo $ploopi_subscription_id; ?>">
-    <? ploopi_subscription_refresh($ploopi_subscription_id); ?>
+    <div id="ploopi_subscription_<?php echo $ploopi_subscription_id; ?>">
+    <?php ploopi_subscription_refresh($ploopi_subscription_id); ?>
     </div>
-    <?    
+    <?php    
 }
 
 /**
@@ -96,35 +96,35 @@ function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
 
     ?>
     <div style="overflow:hidden;">
-        <a id="annotation_count_<? echo $ploopi_subscription_id; ?>" class="ploopi_subscription_viewdetail" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('<? echo $div_id; ?>');ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_switchdisplay&id=<? echo $div_id ?>&display='+$('<? echo $div_id ?>').style.display);">
-            <img border="0" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/<? echo $strIconName; ?>.png">
-            <span><? echo $strTitle; ?></span>
+        <a id="annotation_count_<?php echo $ploopi_subscription_id; ?>" class="ploopi_subscription_viewdetail" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('<?php echo $div_id; ?>');ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_switchdisplay&id=<?php echo $div_id ?>&display='+$('<?php echo $div_id ?>').style.display);">
+            <img border="0" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/<?php echo $strIconName; ?>.png">
+            <span><?php echo $strTitle; ?></span>
         </a>
     </div>
     
-    <div style="display:<? echo $_SESSION['ploopi']['switchdisplay'][$div_id]; ?>;" id="<? echo $div_id; ?>" class="ploopi_subscription_detail">
+    <div style="display:<?php echo $_SESSION['ploopi']['switchdisplay'][$div_id]; ?>;" id="<?php echo $div_id; ?>" class="ploopi_subscription_detail">
 
-        <form action="" method="post" id="ploopi_form_subscription_<? echo $ploopi_subscription_id; ?>" target="form_subscription_target_<? echo $ploopi_subscription_id; ?>">
+        <form action="" method="post" id="ploopi_form_subscription_<?php echo $ploopi_subscription_id; ?>" target="form_subscription_target_<?php echo $ploopi_subscription_id; ?>">
         <input type="hidden" name="ploopi_op" value="subscription_save">
-        <input type="hidden" name="ploopi_subscription_id" value="<? echo $ploopi_subscription_id; ?>">
+        <input type="hidden" name="ploopi_subscription_id" value="<?php echo $ploopi_subscription_id; ?>">
         <div style="float:left;width:300px;">
 
-            <?
+            <?php
             if ($booSubscribed)
             {
                 ?>
-                <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi_subscription_checkaction('<? echo $ploopi_subscription_id; ?>', -1);">
-                    <input type="checkbox" class="checkbox" id="ploopi_subscription_unsubscribe" name="ploopi_subscription_unsubscribe" value="1" onclick="javascript:ploopi_subscription_checkaction('<? echo $ploopi_subscription_id; ?>', -1);" />
-                    <span class="ploopi_subscription_unsubscribe"><? echo _PLOOPI_LABEL_SUBSCRIPTION_UNSUSCRIBE; ?></span>
+                <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', -1);">
+                    <input type="checkbox" class="checkbox" id="ploopi_subscription_unsubscribe" name="ploopi_subscription_unsubscribe" value="1" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', -1);" />
+                    <span class="ploopi_subscription_unsubscribe"><?php echo _PLOOPI_LABEL_SUBSCRIPTION_UNSUSCRIBE; ?></span>
                 </div>            
-                <?
+                <?php
             }
             ?>
-            <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi_subscription_checkaction('<? echo $ploopi_subscription_id; ?>', 0);">
-                <input type="checkbox" class="checkbox" id="ploopi_subscription_action_0" name="ploopi_subscription_action[]" value="0" onclick="javascript:ploopi_subscription_checkaction('<? echo $ploopi_subscription_id; ?>', 0);" <? echo $strChecked; ?> />
-                <span style="font-weight:bold;"><? echo _PLOOPI_LABEL_SUBSCRIPTION_ALLACTIONS; ?></span>
+            <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', 0);">
+                <input type="checkbox" class="checkbox" id="ploopi_subscription_action_0" name="ploopi_subscription_action[]" value="0" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', 0);" <?php echo $strChecked; ?> />
+                <span style="font-weight:bold;"><?php echo _PLOOPI_LABEL_SUBSCRIPTION_ALLACTIONS; ?></span>
             </div>            
-            <?
+            <?php
             
             if (empty($_SESSION['subscription'][$ploopi_subscription_id]['allowedactions'])) // pas de liste d'actions
             {
@@ -149,12 +149,12 @@ function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
             {
                 $strChecked = (($booSubscribed && $objSubscription->fields['allactions']) || in_array($row['id_action'], $arrActions)) ? 'checked' : '';
                 ?>
-                <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi_subscription_checkaction('<? echo $ploopi_subscription_id; ?>', <? echo $row['id_action']; ?>);">
-                    <input type="checkbox" class="checkbox" id="ploopi_subscription_action_<? echo $row['id_action']; ?>" name="ploopi_subscription_action[]" value="<? echo $row['id_action']; ?>" onclick="javascript:ploopi_subscription_checkaction('<? echo $ploopi_subscription_id; ?>', <? echo $row['id_action']; ?>);" <? echo $strChecked; ?> />
-                    <span><? echo $row['label']; ?></span>
+                <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', <?php echo $row['id_action']; ?>);">
+                    <input type="checkbox" class="checkbox" id="ploopi_subscription_action_<?php echo $row['id_action']; ?>" name="ploopi_subscription_action[]" value="<?php echo $row['id_action']; ?>" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', <?php echo $row['id_action']; ?>);" <?php echo $strChecked; ?> />
+                    <span><?php echo $row['label']; ?></span>
                 </div>            
         
-                <?
+                <?php
             }
             
             if ($next != '')
@@ -163,29 +163,29 @@ function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
                 {
                     case 'subscribed':
                         ?>
-                        <div class="subscription_saved"><? echo _PLOOPI_LABEL_SUBSCRIPTION_SAVED; ?></div>
-                        <?
+                        <div class="subscription_saved"><?php echo _PLOOPI_LABEL_SUBSCRIPTION_SAVED; ?></div>
+                        <?php
                     break;
                     
                     case 'unsubscribed':
                         ?>
-                        <div class="subscription_canceled"><? echo _PLOOPI_LABEL_SUBSCRIPTION_DELETE; ?></div>
-                        <?
+                        <div class="subscription_canceled"><?php echo _PLOOPI_LABEL_SUBSCRIPTION_DELETE; ?></div>
+                        <?php
                     break;
                 }
             }
             ?>
         </div>
-        <div style="padding:4px;"><? echo _PLOOPI_LABEL_SUBSCRIPTION_DESCIPTION; ?></div>
+        <div style="padding:4px;"><?php echo _PLOOPI_LABEL_SUBSCRIPTION_DESCIPTION; ?></div>
         <div style="clear:both;padding:4px;text-align:right;">
-            <input type="button" onclick="ploopi_getelem('form_subscription_<? echo $ploopi_subscription_id; ?>').ploopi_op.value=''; ploopi_getelem('form_subscription_<? echo $ploopi_subscription_id; ?>').submit()" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>">
-            <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+            <input type="button" onclick="ploopi_getelem('form_subscription_<?php echo $ploopi_subscription_id; ?>').ploopi_op.value=''; ploopi_getelem('form_subscription_<?php echo $ploopi_subscription_id; ?>').submit()" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>">
+            <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
         </div>
         
         </form>
-        <iframe name="form_subscription_target_<? echo $ploopi_subscription_id; ?>" src="./img/blank.gif" style="display:none;"></iframe>
+        <iframe name="form_subscription_target_<?php echo $ploopi_subscription_id; ?>" src="./img/blank.gif" style="display:none;"></iframe>
     </div>
-    <?
+    <?php
     
 }
 

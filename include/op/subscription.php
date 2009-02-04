@@ -95,9 +95,9 @@ switch($ploopi_op)
         
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_subscription('<? echo $_POST['ploopi_subscription_id']; ?>', '<? echo $strNext ?>');
+            window.parent.ploopi_subscription('<?php echo $_POST['ploopi_subscription_id']; ?>', '<?php echo $strNext ?>');
         </script>
-        <?
+        <?php
         
         ploopi_die();
     break;

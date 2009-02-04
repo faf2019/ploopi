@@ -34,20 +34,20 @@
  */
 
 ?>
-defaultStatus = '<? echo addslashes($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']); ?>';
+defaultStatus = '<?php echo addslashes($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']); ?>';
 
-_PLOOPI_ENV = '<? echo $_SESSION['ploopi']['env']; ?>';
-_PLOOPI_URL_ENCODE = <? echo (_PLOOPI_URL_ENCODE) ? 'true' : 'false'; ?>;
+_PLOOPI_ENV = '<?php echo $_SESSION['ploopi']['env']; ?>';
+_PLOOPI_URL_ENCODE = <?php echo (_PLOOPI_URL_ENCODE) ? 'true' : 'false'; ?>;
 
 var lstmsg = new Array();
-lstmsg[0] = "<? echo _PLOOPI_JS_EMAIL_ERROR ?>";
-lstmsg[4] = "<? echo _PLOOPI_JS_STRING_ERROR ?>";
-lstmsg[5] = "<? echo _PLOOPI_JS_INT_ERROR ?>";
-lstmsg[6] = "<? echo _PLOOPI_JS_FLOAT_ERROR ?>";
-lstmsg[7] = "<? echo _PLOOPI_JS_DATE_ERROR ?>";
-lstmsg[8] = "<? echo _PLOOPI_JS_TIME_ERROR ?>";
-lstmsg[9] = "<? echo _PLOOPI_JS_CHECK_ERROR ?>";
-lstmsg[10] = "<? echo _PLOOPI_JS_COLOR_ERROR ?>";
-lstmsg[11] = "<? echo _PLOOPI_JS_PHONE_ERROR ?>";
+lstmsg[0] = "<?php echo _PLOOPI_JS_EMAIL_ERROR ?>";
+lstmsg[4] = "<?php echo _PLOOPI_JS_STRING_ERROR ?>";
+lstmsg[5] = "<?php echo _PLOOPI_JS_INT_ERROR ?>";
+lstmsg[6] = "<?php echo _PLOOPI_JS_FLOAT_ERROR ?>";
+lstmsg[7] = "<?php echo _PLOOPI_JS_DATE_ERROR ?>";
+lstmsg[8] = "<?php echo _PLOOPI_JS_TIME_ERROR ?>";
+lstmsg[9] = "<?php echo _PLOOPI_JS_CHECK_ERROR ?>";
+lstmsg[10] = "<?php echo _PLOOPI_JS_COLOR_ERROR ?>";
+lstmsg[11] = "<?php echo _PLOOPI_JS_PHONE_ERROR ?>";
 
-var error_bgcolor = "<? echo (isset($skin->values['colerror'])) ? $skin->values['colerror'] : "#FFAAAA"; ?>";
+var error_bgcolor = "<?php echo (isset($skin->values['colerror'])) ? $skin->values['colerror'] : "#FFAAAA"; ?>";

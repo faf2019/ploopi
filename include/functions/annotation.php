@@ -90,10 +90,10 @@ function ploopi_annotation($id_object, $id_record, $object_label = '')
                                                         'object_label' => $object_label
                                                     );
     ?>
-    <div id="ploopiannotation_<? echo $id_annotation; ?>">
-    <? ploopi_annotation_refresh($id_annotation); ?>
+    <div id="ploopiannotation_<?php echo $id_annotation; ?>">
+    <?php ploopi_annotation_refresh($id_annotation); ?>
     </div>
-    <?
+    <?php
 }
 
 /**
@@ -126,15 +126,15 @@ function ploopi_annotation_refresh($id_annotation)
     $annotation_show = (isset($_SESSION['ploopi']['annotation']['show'][$id_annotation]));
 
     ?>
-    <a name="annotation_<? echo $id_annotation; ?>" style="display:none;"></a>
+    <a name="annotation_<?php echo $id_annotation; ?>" style="display:none;"></a>
     <div style="overflow:hidden;">
-        <a id="annotation_count_<? echo $id_annotation; ?>" class="ploopi_annotation_viewlist" href="javascript:void(0);" onclick="javascript:ploopi_getelem('annotation_list_<? echo $id_annotation; ?>').style.display=(ploopi_getelem('annotation_list_<? echo $id_annotation; ?>').style.display=='block') ? 'none' : 'block'; ploopi_xmlhttprequest('index-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_show&object_id=<? echo $id_annotation; ?>');">
-            <img border="0" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/system/annotation.png">
-            <span><? echo $nbanno; ?> annotation<? echo ($nbanno>1) ? 's' : ''; ?></span>
+        <a id="annotation_count_<?php echo $id_annotation; ?>" class="ploopi_annotation_viewlist" href="javascript:void(0);" onclick="javascript:ploopi_getelem('annotation_list_<?php echo $id_annotation; ?>').style.display=(ploopi_getelem('annotation_list_<?php echo $id_annotation; ?>').style.display=='block') ? 'none' : 'block'; ploopi_xmlhttprequest('index-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_show&object_id=<?php echo $id_annotation; ?>');">
+            <img border="0" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/annotation.png">
+            <span><?php echo $nbanno; ?> annotation<?php echo ($nbanno>1) ? 's' : ''; ?></span>
         </a>
 
-        <div style="display:<? echo ($annotation_show) ? 'block' : 'none'; ?>;" id="annotation_list_<? echo $id_annotation; ?>">
-            <?
+        <div style="display:<?php echo ($annotation_show) ? 'block' : 'none'; ?>;" id="annotation_list_<?php echo $id_annotation; ?>">
+            <?php
             $select =   "
                         SELECT      a.*,
                                     u.firstname,
@@ -178,72 +178,72 @@ function ploopi_annotation_refresh($id_annotation)
                 if ($fields['private']) $private = '<div style="float:right;font-weight:bold;color:#a60000;">[ Privé ]</div>';
     
                 ?>
-                <div class="ploopi_annotation_row_<? echo $numrow; ?>">
+                <div class="ploopi_annotation_row_<?php echo $numrow; ?>">
                     <div style="padding:2px 4px;">
-                        <? echo $private; ?>
-                        <div style="float:right;padding:0 4px;">par <strong><? echo "{$fields['firstname']} {$fields['lastname']}"; ?></strong> le <? echo $ldate['date']; ?> à <? echo $ldate['time']; ?></div>
-                        <?
+                        <?php echo $private; ?>
+                        <div style="float:right;padding:0 4px;">par <strong><?php echo "{$fields['firstname']} {$fields['lastname']}"; ?></strong> le <?php echo $ldate['date']; ?> à <?php echo $ldate['time']; ?></div>
+                        <?php
                         if (isset($anno['tags']) && is_array($anno['tags']))
                         {
                             echo "<b>tags :</b>";
                             foreach($anno['tags'] as $idtag => $tag)
                             {
                                 ?>
-                                <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','400',event,'click');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_taghistory&id_tag=<? echo $idtag; ?>', 'ploopi_popup');return false;"><? echo htmlentities($tag); ?></a>
-                                <?
+                                <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','400',event,'click');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_taghistory&id_tag=<?php echo $idtag; ?>', 'ploopi_popup');return false;"><?php echo htmlentities($tag); ?></a>
+                                <?php
                             }
                         }
                         ?>
                     </div>
                     <div style="clear:both;padding:2px 4px;">
-                        <? echo ploopi_make_links(ploopi_nl2br(htmlentities($fields['content']))); ?>
+                        <?php echo ploopi_make_links(ploopi_nl2br(htmlentities($fields['content']))); ?>
                     </div>
                     <div style="clear:both;">
-                        <?
+                        <?php
                         if ($fields['id_user'] == $_SESSION['ploopi']['userid'])
                         {
                             ?>
                             <div style="float:right;padding:2px 4px;">
-                                <a href="javascript:ploopi_annotation_delete('<? echo $id_annotation; ?>', '<? echo $fields['id']; ?>');">supprimer</a>
+                                <a href="javascript:ploopi_annotation_delete('<?php echo $id_annotation; ?>', '<?php echo $fields['id']; ?>');">supprimer</a>
                             </div>
-                            <?
+                            <?php
                         }
                         ?>
                     </div>
                 </div>
-                <?
+                <?php
             }
     
             $id_module_type = (isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']])) ? $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type'] : 0;
     
             $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2;
             ?>
-            <div class="ploopi_annotation_row_<? echo $numrow; ?>">
-                <form action="" method="post" id="form_annotation_<? echo $id_annotation; ?>" target="form_annotation_target_<? echo $id_annotation; ?>" onsubmit="return ploopi_annotation_validate(this);">
+            <div class="ploopi_annotation_row_<?php echo $numrow; ?>">
+                <form action="" method="post" id="form_annotation_<?php echo $id_annotation; ?>" target="form_annotation_target_<?php echo $id_annotation; ?>" onsubmit="return ploopi_annotation_validate(this);">
                 <input type="hidden" name="ploopi_op" value="annotation_save">
-                <input type="hidden" name="id_annotation" value="<? echo $id_annotation; ?>">
+                <input type="hidden" name="id_annotation" value="<?php echo $id_annotation; ?>">
     
-                <div class="ploopi_annotation_titleform">Ajout d'une Annotation <? echo (isset($ploopi_annotation_private)) ? 'privée' : ''; ?></div>
+                <div class="ploopi_annotation_titleform">Ajout d'une Annotation <?php echo (isset($ploopi_annotation_private)) ? 'privée' : ''; ?></div>
                 <div style="padding:2px 4px;"><input type="checkbox" name="ploopi_annotation_private" value="1">Privée (visible par vous uniquement)</div>
                 <div style="padding:2px 4px;">Tags:</div>
-                <div style="padding:2px 4px;"><input type="text" class="text" style="width:99%;" name="ploopi_annotationtags" id="ploopi_annotationtags_<? echo $id_annotation; ?>" autocomplete="off"></div>
-                <div style="padding:2px 4px;" id="tagsfound_<? echo $id_annotation; ?>"></div>
+                <div style="padding:2px 4px;"><input type="text" class="text" style="width:99%;" name="ploopi_annotationtags" id="ploopi_annotationtags_<?php echo $id_annotation; ?>" autocomplete="off"></div>
+                <div style="padding:2px 4px;" id="tagsfound_<?php echo $id_annotation; ?>"></div>
                 <div style="padding:2px 4px;">Commentaire:</div>
                 <div style="padding:2px 4px;"><textarea class="text" style="width:99%;" rows="4" name="ploopi_annotation_content"></textarea></div>
     
                 <div style="padding:2px 4px;text-align:right;">
-                    <input type="button" onclick="ploopi_getelem('form_annotation_<? echo $id_annotation; ?>').ploopi_op.value=''; ploopi_getelem('form_annotation_<? echo $id_annotation; ?>').submit()" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>">
-                    <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+                    <input type="button" onclick="ploopi_getelem('form_annotation_<?php echo $id_annotation; ?>').ploopi_op.value=''; ploopi_getelem('form_annotation_<?php echo $id_annotation; ?>').submit()" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>">
+                    <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
                 </div>
                 </form>
             </div>
         </div>
     </div>
-    <iframe name="form_annotation_target_<? echo $id_annotation; ?>" src="./img/blank.gif" style="display:none;"></iframe>
+    <iframe name="form_annotation_target_<?php echo $id_annotation; ?>" src="./img/blank.gif" style="display:none;"></iframe>
 
     <script type="text/javascript">
-        ploopi_annotation_tag_init('<? echo $id_annotation; ?>');
+        ploopi_annotation_tag_init('<?php echo $id_annotation; ?>');
     </script>
-    <?
+    <?php
 }
 ?>

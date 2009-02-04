@@ -195,13 +195,13 @@ if (isset($ploopi_op))
 
                 <div id="colorpicker_footer">
                     <div id="plugCUR"></div>
-                    <input type="text" class="text" id="colorpicker_inputcolor" value="<? echo $_GET['colorpicker_value']; ?>">
-                    <input type="button" class="button" value="fermer" onclick="javascript:ploopi_getelem('<? echo $_GET['inputfield_id']; ?>').value = ploopi_getelem('colorpicker_inputcolor').value; ploopi_hidepopup('popup_colorpicker');ploopi_dispatch_onchange('<? echo $_GET['inputfield_id']; ?>');">
+                    <input type="text" class="text" id="colorpicker_inputcolor" value="<?php echo $_GET['colorpicker_value']; ?>">
+                    <input type="button" class="button" value="fermer" onclick="javascript:ploopi_getelem('<?php echo $_GET['inputfield_id']; ?>').value = ploopi_getelem('colorpicker_inputcolor').value; ploopi_hidepopup('popup_colorpicker');ploopi_dispatch_onchange('<?php echo $_GET['inputfield_id']; ?>');">
                 </div>
                 <div style="clear:both;">
                 </div>
             </div>
-            <?
+            <?php
             ploopi_die();
         break;
 
@@ -286,36 +286,36 @@ if (isset($ploopi_op))
             <div id="calendar">
                 <div class="calendar_row">
                     <div class="calendar_arrow" style="float:right;">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$next_month}&calendar_year={$next_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/next.png"></a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year+1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/nextx2.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$next_month}&calendar_year={$next_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/next.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year+1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/nextx2.png"></a>
                     </div>
                     <div class="calendar_arrow" style="float:left;">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year-1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/prevx2.png"></a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$prev_month}&calendar_year={$prev_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<? echo $strIconsPath; ?>/img/calendar/prev.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year-1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/prevx2.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$prev_month}&calendar_year={$prev_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/prev.png"></a>
                     </div>
                     <div class="calendar_month">
-                        <? echo "{$ploopi_months[$month]}<br />{$year}"; ?>
+                        <?php echo "{$ploopi_months[$month]}<br />{$year}"; ?>
                     </div>
                 </div>
                 <div class="calendar_row">
                     <div class="calendar_day">&nbsp;</div>
-                    <?
+                    <?php
                     for ($d=1; $d<=7; $d++)
                     {
                         ?>
-                        <div class="calendar_day"><? echo $ploopi_days[$d][0]; ?></div>
-                        <?
+                        <div class="calendar_day"><?php echo $ploopi_days[$d][0]; ?></div>
+                        <?php
                     }
                     ?>
                 </div>
-                <?
+                <?php
                 if ($weekday > 1)
                 {
                     $w = date('W', ploopi_timestamp2unixtimestamp(sprintf("%04d%02d01000000", $year, $month)));
                     ?>
                     <div class="calendar_row">
-                    <div class="calendar_week">s<? echo $w; ?></div>
-                    <?
+                    <div class="calendar_week">s<?php echo $w; ?></div>
+                    <?php
                     for ($c = 1; $c < $weekday; $c++)
                     {
                         /**
@@ -326,8 +326,8 @@ if (isset($ploopi_op))
                         $localdate = ploopi_timestamp2local($ts);
                         $d = intval(substr($ts, 6, 2), 10);
                         ?>
-                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<? echo $_SESSION['calendar']['inputfield_id']; ?>');"><? echo $d; ?></a></div>
-                        <?
+                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<?php echo $_SESSION['calendar']['inputfield_id']; ?>').value='<?php echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo $_SESSION['calendar']['inputfield_id']; ?>');"><?php echo $d; ?></a></div>
+                        <?php
                     }
                 }
 
@@ -346,8 +346,8 @@ if (isset($ploopi_op))
                         $w = date('W', ploopi_timestamp2unixtimestamp(sprintf("%04d%02d%02d000000", $year, $month, $d)));
                         ?>
                         <div class="calendar_row">
-                        <div class="calendar_week">s<? echo $w; ?></div>
-                        <?
+                        <div class="calendar_week">s<?php echo $w; ?></div>
+                        <?php
                     }
                     $localdate = ploopi_timestamp2local(sprintf("%04d%02d%02d000000", $year, $month, $d));
                     $class = '';
@@ -355,8 +355,8 @@ if (isset($ploopi_op))
                     if ($currentday == $selectedday) $class = 'class="calendar_day_selected"';
                     elseif ($currentday == $today) $class = 'class="calendar_day_today"';
                     ?>
-                        <div class="calendar_day"><a <? echo $class; ?> href="javascript:void(0);" onclick="javascript:$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<? echo $_SESSION['calendar']['inputfield_id']; ?>');"><? echo $d; ?></a></div>
-                    <?
+                        <div class="calendar_day"><a <?php echo $class; ?> href="javascript:void(0);" onclick="javascript:$('<?php echo $_SESSION['calendar']['inputfield_id']; ?>').value='<?php echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo $_SESSION['calendar']['inputfield_id']; ?>');"><?php echo $d; ?></a></div>
+                    <?php
 
                     /**
                      * Chaque fin de semaine = fin de ligne
@@ -378,8 +378,8 @@ if (isset($ploopi_op))
                         $localdate = ploopi_timestamp2local($ts);
                         $d = intval(substr($ts, 6, 2), 10);
                         ?>
-                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<? echo $_SESSION['calendar']['inputfield_id']; ?>');"><? echo $d; ?></a></div>
-                        <?
+                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<?php echo $_SESSION['calendar']['inputfield_id']; ?>').value='<?php echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo $_SESSION['calendar']['inputfield_id']; ?>');"><?php echo $d; ?></a></div>
+                        <?php
                     }
 
                     echo '</div>';
@@ -389,13 +389,25 @@ if (isset($ploopi_op))
                 $localdate = ploopi_timestamp2local(sprintf("%04d%02d%02d000000", date('Y'), date('n'), date('j')));
                 ?>
                 <div class="calendar_row" style="height:1.2em;overflow:hidden;">
-                    <a style="display:block;float:left;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:$('<? echo $_SESSION['calendar']['inputfield_id']; ?>').value='<? echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<? echo $_SESSION['calendar']['inputfield_id']; ?>');">Aujourd'hui</a>
+                    <a style="display:block;float:left;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:$('<?php echo $_SESSION['calendar']['inputfield_id']; ?>').value='<?php echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo $_SESSION['calendar']['inputfield_id']; ?>');">Aujourd'hui</a>
                     <a style="display:block;float:right;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup('ploopi_popup_calendar');">Fermer</a>
                 </div>
             </div>
-            <?
+            <?php
             ploopi_die();
         break;
+        
+        case 'ploopi_get_userphoto':
+            // Envoi de la photo d'un utilisateur vers le client
+            $objUser = new user();
+            if (!empty($_GET['ploopi_user_id']) && is_numeric($_GET['ploopi_user_id']) && $objUser->open($_GET['ploopi_user_id']))
+            {
+                $strPhotoPath = $objUser->getphotopath();
+                if (file_exists($strPhotoPath)) ploopi_downloadfile($strPhotoPath, 'user.png', false, false);
+            }
+            ploopi_die();
+        break;
+        
     }
 
 
@@ -496,20 +508,19 @@ if (isset($ploopi_op))
                 </script>
 
                 <div style="padding:4px 0;">Choix d'un objet PLOOPI à insérer dans la page :</div>
-                <?
-                $select_object =    "
-                                    SELECT  ploopi_mb_wce_object.*,
-                                            ploopi_module.label as module_label,
-                                            ploopi_module.id as module_id
-
-                                    FROM    ploopi_mb_wce_object,
-                                            ploopi_module,
-                                            ploopi_module_workspace
-
-                                    WHERE   ploopi_mb_wce_object.id_module_type = ploopi_module.id_module_type
-                                    AND     ploopi_module_workspace.id_module = ploopi_module.id
-                                    AND     ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['workspaceid']}
-                                    ";
+                <?php
+                $select_object = "
+                    SELECT  ploopi_mb_wce_object.*,
+                            ploopi_module.label as module_label,
+                            ploopi_module.id as module_id
+                    
+                    FROM    ploopi_mb_wce_object,
+                            ploopi_module,
+                            ploopi_module_workspace
+                    
+                    WHERE   ploopi_mb_wce_object.id_module_type = ploopi_module.id_module_type
+                    AND     ((ploopi_module_workspace.id_module = ploopi_module.id AND ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['workspaceid']}) OR ploopi_mb_wce_object.id_module_type = 1) 
+                ";
 
                 $result_object = $db->query($select_object);
                 while ($fields_object = $db->fetchrow($result_object))
@@ -530,19 +541,19 @@ if (isset($ploopi_op))
                 ?>
                 <select id="ploopi_webedit_objects" style="width:100%;">
                     <option value="0">(aucun)</option>
-                    <?
+                    <?php
                     foreach($array_modules as $key => $value)
                     {
                         //if ($fields_column['id_object'] == $key) $sel = 'selected';
                         //else $sel = '';
                         $sel = '';
                         ?>
-                        <option <? echo $sel; ?> value="<? echo $key; ?>"><? echo "{$value['module_label']} » {$value['label']}"; if (!empty($value['object_label'])) echo " » {$value['object_label']}"; ?></option>
-                        <?
+                        <option <?php echo $sel; ?> value="<?php echo $key; ?>"><?php echo "{$value['module_label']} » {$value['label']}"; if (!empty($value['object_label'])) echo " » {$value['object_label']}"; ?></option>
+                        <?php
                     }
                     ?>
                 </select>
-                <?
+                <?php
                 $main_content = ob_get_contents();
                 @ob_end_clean();
 
@@ -554,17 +565,6 @@ if (isset($ploopi_op))
                 );
 
                 $template_body->pparse('body');
-                ploopi_die();
-            break;
-
-            case 'ploopi_get_userphoto':
-                // Envoi de la photo d'un utilisateur vers le client
-                $objUser = new user();
-                if (!empty($_GET['ploopi_user_id']) && is_numeric($_GET['ploopi_user_id']) && $objUser->open($_GET['ploopi_user_id']))
-                {
-                    $strPhotoPath = $objUser->getphotopath();
-                    if (file_exists($strPhotoPath)) ploopi_downloadfile($strPhotoPath, 'user.png', false, false);
-                }
                 ploopi_die();
             break;
         }
