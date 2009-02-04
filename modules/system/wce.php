@@ -272,15 +272,15 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                 
             while ($row = $db->fetchrow()) $arrRoles['users'][$row['id_workspace']][$row['id_user']][$row['id']] = $row;
         
-            foreach ($arrUser as &$row)
+            foreach ($arrUser as $row)
             {
                 $objUser = new user();
                 $objUser->fields['id'] = $row['id'];
                 
                 // récupération et tri des espaces de travail de l'utilisateur
-                $row['workspaces'] = $objUser->getworkspaces(true);
+                $arrUser[$row['id']]['workspaces'] = $objUser->getworkspaces(true);
                 
-                if (!empty($arrFilter['system_workspace']) && !in_array($arrFilter['system_workspace'], array_keys($row['workspaces'])))
+                if (!empty($arrFilter['system_workspace']) && !in_array($arrFilter['system_workspace'], array_keys($arrUser[$row['id']]['workspaces'])))
                 {
                     // Suppression des utilisateurs n'appartenant pas à l'espace de travail
                     unset($arrUser[$row['id']]);
@@ -288,24 +288,24 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                 else
                 {
                     // tri des groupes par nom
-                    asort($row['groups']);
+                    asort($arrUser[$row['id']]['groups']);
                     
                     // tri des espaces par nom
-                    asort($row['workspaces']);
+                    asort($arrUser[$row['id']]['workspaces']);
                     
                     if (file_exists($objUser->getphotopath()))
                     {
-                        $row['photopath'] = ploopi_urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$row['id']}");
+                        $arrUser[$row['id']]['photopath'] = ploopi_urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$row['id']}");
                     }
-                    else $row['photopath'] = './img/blank.gif';
+                    else $arrUser[$row['id']]['photopath'] = './img/blank.gif';
                     
                     
-                    $row['roles'] = array();
+                    $arrUser[$row['id']]['roles'] = array();
                             
                     // tableau qui va contenir les rôles dont dispose l'utilisateur dans l'espace courant
                     $arrUserWspRoles = array();
                                             
-                    foreach($row['workspaces'] as $intIdWsp => $lbl)
+                    foreach($arrUser[$row['id']]['workspaces'] as $intIdWsp => $lbl)
                     {
                         if (isset($arrRoles['groups'][$intIdWsp]))
                         {
@@ -315,7 +315,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                                 if (in_array($intIdGrp, array_keys($row['groups'])))
                                 {
                                     foreach($arrDetail as $intIdRole => $arrR) 
-                                        $row['roles'][$intIdRole] = 
+                                        $arrUser[$row['id']]['roles'][$intIdRole] = 
                                             sprintf("%s de %s",
                                                 htmlentities($arrR['role_label']), 
                                                 htmlentities($arrR['module_label'])
@@ -327,7 +327,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                         if (isset($arrRoles['users'][$intIdWsp][$row['id']]))
                         {
                             foreach($arrRoles['users'][$intIdWsp][$row['id']] as $intIdRole => $arrR) 
-                                $row['roles'][$intIdRole] = 
+                                $arrUser[$row['id']]['roles'][$intIdRole] = 
                                     sprintf("%s de %s", 
                                             htmlentities($arrR['role_label']), 
                                             htmlentities($arrR['module_label'])
@@ -336,7 +336,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                     }                    
                 }
             }
-                    
+            
             // Aucune réponse
             if (empty($arrUser))
             {
