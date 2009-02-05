@@ -238,7 +238,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             if (!isset($_POST['forms_option_displayip'])) $forms->fields['option_displayip'] = 0;
             if (!isset($_POST['forms_cms_link'])) $forms->fields['cms_link'] = 0;
     
-            $forms->fields['autobackup_date'] = ploopi_local2timestamp($forms->fields['autobackup_date']);
+            if (!empty($forms->fields['autobackup_date'])) $forms->fields['autobackup_date'] = ploopi_local2timestamp($forms->fields['autobackup_date']);
     
             $forms->setuwm();
             $forms->save();
@@ -416,7 +416,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
         <script type="text/javascript">
             alert('Terminé !');
         </script>
-        <?
+        <?php
     }
 }
 ?>

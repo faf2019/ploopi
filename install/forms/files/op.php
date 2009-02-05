@@ -71,7 +71,7 @@ if ($_SESSION['ploopi']['connected'])
                     ?>
                     <div style="background:#f0f0f0;border-bottom:1px solid #c0c0c0;font-weight:bold;padding:2px;">Suppression des données</div>
                     <div style="padding:2px;">
-                    <?
+                    <?php
                     if (!empty($_GET['form_id']) && !empty($_GET['form_delete_date']))
                     {
                         $form_delete_date = ploopi_local2timestamp($_GET['form_delete_date']);
@@ -97,7 +97,7 @@ if ($_SESSION['ploopi']['connected'])
                     ?>
                     </div>
                     <div style="background:#f0f0f0;border-top:1px solid #c0c0c0;text-align:right;padding:2px;"><a href="javascript:void(0);" onclick="javascript:ploopi_hidepopup('forms_deletedata');document.location.reload();">Fermer</a></div>
-                    <?
+                    <?php
                 }
                 ploopi_die();
             break;
@@ -205,7 +205,7 @@ if ($_SESSION['ploopi']['connected'])
                 <script type="text/javascript">
                     window.parent.document.location.reload();
                 </script>
-                <?
+                <?php
             }
             ploopi_die();
         break;

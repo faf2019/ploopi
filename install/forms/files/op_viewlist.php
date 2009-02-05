@@ -36,7 +36,7 @@
  */
 ?>
 <div id="forms_info_box">
-    <?
+    <?php
     if ($_SESSION['ploopi']['action'] == 'public')
     {
         $ct = 0;
@@ -53,36 +53,36 @@
         {
             ?>
             <div style="float:right;;margin-left:10px;">
-                <input type="button" class="flatbutton" style="font-weight:bold" value="Ajouter un enregistrement" onclick="javascript:forms_openreply('<? echo $_GET['forms_fuid']; ?>', '0', event);">
+                <input type="button" class="flatbutton" style="font-weight:bold" value="Ajouter un enregistrement" onclick="javascript:forms_openreply('<?php echo $_GET['forms_fuid']; ?>', '0', event);">
             </div>
-            <?
+            <?php
         }
     }
     ?>
     <div style="float:left;">
-    Nombre d'Enregistrements : <b><? echo sizeof($data); ?></b>
+    Nombre d'Enregistrements : <b><?php echo sizeof($data); ?></b>
     </div>
 
-    <?
+    <?php
     if ( $_SESSION['forms'][$_GET['forms_fuid']]['rights']['_FORMS_ACTION_EXPORT'])
     {
         ?>
             <div style="float:left;margin-left:10px;">
-            <a title="<? echo _FORMS_EXPORT; ?> XLS" href="<? echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_fuid={$_GET['forms_fuid']}&forms_export_format=XLS&orderby={$orderby}&option={$option}"); ?>"><img border="0" alt="<? echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/download_xls.gif"></a>
-            <a title="<? echo _FORMS_EXPORT; ?> CSV" href="<? echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_fuid={$_GET['forms_fuid']}&forms_export_format=CSV&orderby={$orderby}&option={$option}"); ?>"><img border="0" alt="<? echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/download_csv.gif"></a>
+            <a title="<?php echo _FORMS_EXPORT; ?> XLS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_fuid={$_GET['forms_fuid']}&forms_export_format=XLS&orderby={$orderby}&option={$option}"); ?>"><img border="0" alt="<?php echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/download_xls.gif"></a>
+            <a title="<?php echo _FORMS_EXPORT; ?> CSV" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_fuid={$_GET['forms_fuid']}&forms_export_format=CSV&orderby={$orderby}&option={$option}"); ?>"><img border="0" alt="<?php echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/download_csv.gif"></a>
             </div>
-        <?
+        <?php
     }
     ?>
 </div>
 
-<div class="viewlist" <? if ($_SESSION['forms'][$_GET['forms_fuid']]['options']['height']>0) echo 'style="height:'.$_SESSION['forms'][$_GET['forms_fuid']]['options']['height'].'px;overflow:auto;"'; ?>>
+<div class="viewlist" <?php if ($_SESSION['forms'][$_GET['forms_fuid']]['options']['height']>0) echo 'style="height:'.$_SESSION['forms'][$_GET['forms_fuid']]['options']['height'].'px;overflow:auto;"'; ?>>
     <table class="viewlist">
-    <?
+    <?php
     $color = (!isset($color) || $color == $skin->values['bgline1']) ? $skin->values['bgline2'] : $skin->values['bgline1'];
     ?>
-    <tr style="background-color:<? echo $color; ?>;">
-        <?
+    <tr style="background-color:<?php echo $color; ?>;">
+        <?php
         foreach ($data_title as $key => $value)
         {
             $value = $value['label'];
@@ -127,34 +127,34 @@
                 }
                 ?>
                 <th>
-                    <a <? echo $style_col; ?> href="javascript:void(0);" onclick="javascript:forms_display('<? echo $_GET['forms_fuid']; ?>', '<? echo "orderby={$key}&option={$new_option}"; ?>');">
+                    <a <?php echo $style_col; ?> href="javascript:void(0);" onclick="javascript:forms_display('<?php echo $_GET['forms_fuid']; ?>', '<?php echo "orderby={$key}&option={$new_option}"; ?>');">
                     <p class="ploopi_va">
-                        <span><? echo $value; ?></span>
-                        <? if (!empty($sort_cell)) { ?><img src="./modules/forms/img/<? echo $sort_cell; ?>.png"> <? } ?>
+                        <span><?php echo $value; ?></span>
+                        <?php if (!empty($sort_cell)) { ?><img src="./modules/forms/img/<?php echo $sort_cell; ?>.png"> <?php } ?>
                     </p>
                     </a>
                 </th>
-                <?
+                <?php
             }
         }
         if ($_SESSION['ploopi']['action'] == 'public')
         {
             ?>
             <td></td>
-            <?
+            <?php
         }
         ?>
     </tr>
 
-    <?
+    <?php
     reset($data);
 
     foreach ($data as $reply_id => $detail)
     {
         $color = (!isset($color) || $color == $skin->values['bgline1']) ? $skin->values['bgline2'] : $skin->values['bgline1'];
         ?>
-        <tr bgcolor="<? echo $color; ?>">
-            <?
+        <tr bgcolor="<?php echo $color; ?>">
+            <?php
             foreach ($detail as $key => $value)
             {
                 $display = false;
@@ -211,33 +211,33 @@
             {
                 ?>
                 <td align="left" nowrap>
-                    <?
+                    <?php
                     if ( $_SESSION['forms'][$_GET['forms_fuid']]['rights']['_FORMS_ACTION_ADDREPLY'] && (($forms->fields['option_modify'] == 'user' && $detail['userid'] == $_SESSION['ploopi']['userid']) || ($forms->fields['option_modify'] == 'group' && $detail['workspaceid'] == $_SESSION['ploopi']['workspaceid'])  || ($forms->fields['option_modify'] == 'all')))
                     {
                         // MODIF NON GEREE !!
                         ?>
-                        <!-- a href="<? echo $modify; ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_modify.png"></a-->
-                        <?
+                        <!-- a href="<?php echo $modify; ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_modify.png"></a-->
+                        <?php
                         if ($_SESSION['forms'][$_GET['forms_fuid']]['rights']['_FORMS_ACTION_DELETE'])
                         {
                             ?>
-                            <a href="javascript:ploopi_confirmlink('<? echo $delete; ?>','<? echo _PLOOPI_CONFIRM; ?>')"><img alt="supprimer" border="0" src="./modules/forms/img/ico_trash.png"></a>
-                            <?
+                            <a href="javascript:ploopi_confirmlink('<?php echo $delete; ?>','<?php echo _PLOOPI_CONFIRM; ?>')"><img alt="supprimer" border="0" src="./modules/forms/img/ico_trash.png"></a>
+                            <?php
                         }
                     }
                     ?>
                 </td>
-                <?
+                <?php
             }
             ?>
         </tr>
-        <?
+        <?php
     }
     ?>
     </table>
 </div>
 
-<?
+<?php
 $_SESSION['forms']['export'] = $data;
 $_SESSION['forms']['export_title'] = $data_title;
 $_SESSION['forms']['export_fields'] = $array_fields;

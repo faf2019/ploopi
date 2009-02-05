@@ -60,6 +60,9 @@ define ('_FORMS_TYPEFORM',  'Type de Formulaire');
 define ('_FORMS_AUTOBACKUP', 'Archivage Automatique (En Jours)');
 define ('_FORMS_OBLIGATORY', 'Obligatoire');
 
+define ('_FORMS_FIELDCREATION',         'Ajout d\'un Champ');
+define ('_FORMS_SEPARATORCREATION',     'Ajout d\'un Séparateur');
+
 define ('_FORMS_FIELDMODIFICATION',         'Modification d\'un Champ');
 define ('_FORMS_SEPARATORMODIFICATION',     'Modification d\'un Séparateur');
 
@@ -94,7 +97,7 @@ define ('_FORMS_FIELD_EXPORTVIEW',      'Visible en Export');
 define ('_FORMS_FIELD_ARRAYVIEW',       'Visible en Liste');
 define ('_FORMS_FIELD_DEFAULTVALUE',        'Valeur par Défaut');
 define ('_FORMS_FIELD_FORMFIELD',       'Formulaire / Champ');
-define ('_FORMS_FIELD_WCEVIEW',         'Visible lors d\'une intégration en objet WCE');
+define ('_FORMS_FIELD_WCEVIEW',         'Visible lors d\'une intégration en objet WebEdit (frontoffice)');
 
 define ('_FORMS_FIELD_SEPARATOR_LEVEL',         'Niveau du Séparateur');
 define ('_FORMS_FIELD_SEPARATOR_FONTSIZE',      'Taille de Police (pix)');

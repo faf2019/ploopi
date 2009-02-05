@@ -1,0 +1,1 @@
+ALTER TABLE `ploopi_mod_forms_reply` CHANGE `id_workspace` `id_workspace` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';

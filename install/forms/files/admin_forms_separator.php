@@ -39,20 +39,27 @@
 
 $field = new field();
 
-if (!empty($_GET['field_id']) && is_numeric($_GET['field_id'])) $field->open($_GET['field_id']);
-else $field->init_description();
+if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']) && $field->open($_GET['field_id']))
+{
+    $title = _FORMS_SEPARATORMODIFICATION;
+}
+else 
+{
+    $field->init_description();
+    $title = _FORMS_SEPARATORCREATION;
+}
 
-echo $skin->open_simplebloc(_FORMS_SEPARATORMODIFICATION);
+echo $skin->open_simplebloc($title);
 ?>
 
-<form name="form_field" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return field_validate(this);">
-<input type="hidden" name="forms_id" value="<? echo $_GET['forms_id']; ?>">
-<?
+<form name="form_field" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return field_validate(this);">
+<input type="hidden" name="forms_id" value="<?php echo $_GET['forms_id']; ?>">
+<?php
 if (!$field->new)
 {
     ?>
-    <input type="hidden" name="field_id" value="<? echo $field->fields['id']; ?>">
-    <?
+    <input type="hidden" name="field_id" value="<?php echo $field->fields['id']; ?>">
+    <?php
 }
 ?>
 <input type="hidden" name="op" value="forms_separator_save">
@@ -61,17 +68,17 @@ if (!$field->new)
         <div style="padding:4px;">
 
             <p>
-                <label><? echo _FORMS_FIELD_POSITION; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="fieldnew_position" value="<? echo $field->fields['position']; ?>">
+                <label><?php echo _FORMS_FIELD_POSITION; ?>:</label>
+                <input type="text" class="text" style="width:30px;" name="fieldnew_position" value="<?php echo $field->fields['position']; ?>">
             </p>
             <p>
-                <label><? echo _FORMS_FIELD_INTERLINE; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="field_interline" value="<? echo $field->fields['interline']; ?>">
+                <label><?php echo _FORMS_FIELD_INTERLINE; ?>:</label>
+                <input type="text" class="text" style="width:30px;" name="field_interline" value="<?php echo $field->fields['interline']; ?>">
             </p>
             <p>
-                <label><? echo _FORMS_FIELD_SEPARATOR_LEVEL; ?>:</label>
+                <label><?php echo _FORMS_FIELD_SEPARATOR_LEVEL; ?>:</label>
                 <select class="select" name="field_separator_level" style="width:50px;">
-                <?
+                <?php
                 for ($i=1;$i<=5;$i++)
                 {
                     $sel = ($i == $field->fields['separator_level']) ? 'selected' : '';
@@ -81,25 +88,25 @@ if (!$field->new)
                 </select>
             </p>
             <p>
-                <label><? echo _FORMS_FIELD_SEPARATOR_FONTSIZE; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="field_separator_fontsize" value="<? echo $field->fields['separator_fontsize']; ?>">
+                <label><?php echo _FORMS_FIELD_SEPARATOR_FONTSIZE; ?>:</label>
+                <input type="text" class="text" style="width:30px;" name="field_separator_fontsize" value="<?php echo $field->fields['separator_fontsize']; ?>">
             </p>
             <p>
-                <label><? echo _FORMS_FIELD_NAME; ?>: </label>
-                <input type="text" class="text" size="30" name="field_name" value="<? echo htmlentities($field->fields['name']); ?>">
+                <label><?php echo _FORMS_FIELD_NAME; ?>: </label>
+                <input type="text" class="text" size="30" name="field_name" value="<?php echo htmlentities($field->fields['name']); ?>">
             </p>
             <p>
-                <label><? echo _FORMS_FIELD_DESCRIPTION; ?>: </label>
-                <textarea class="text" style="height:40px;" name="field_description"><? echo htmlentities($field->fields['description']); ?></textarea>
+                <label><?php echo _FORMS_FIELD_DESCRIPTION; ?>: </label>
+                <textarea class="text" style="height:40px;" name="field_description"><?php echo htmlentities($field->fields['description']); ?></textarea>
             </p>
         </div>
     </div>
 </div>
 
 <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;padding:4px;overflow:auto;text-align:right;">
-    <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}"); ?>'">
-    <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}"); ?>'">
+    <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>
 </form>
 
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>

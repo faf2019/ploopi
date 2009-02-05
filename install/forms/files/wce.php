@@ -191,8 +191,8 @@ switch($op)
         $forms = new form();
         $forms->open($obj['object_id']);
         ?>
-        <div id="forms_response"><? echo nl2br($forms->fields['cms_response']); ?></div>
-        <?
+        <div id="forms_response"><?php echo nl2br($forms->fields['cms_response']); ?></div>
+        <?php
     break;
 
 

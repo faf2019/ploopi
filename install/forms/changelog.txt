@@ -1,3 +1,12 @@
+== Module FORMS - version 2.3 =====================================================
+
+2009-02-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug sur le type du champ 'id_workspace' de la table 'ploopi_mod_forms_reply' 
+ * Correction de quelques bugs mineurs (variables non définies)
+ * Transformation des balises <? en <?php
+ * Meilleure compression des images png
+
 == Module FORMS - version 2.231 =====================================================
 
 2009-01-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

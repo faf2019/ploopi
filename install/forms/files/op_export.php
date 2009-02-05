@@ -231,11 +231,7 @@ if (!empty($_GET['forms_export_format']))
 
     }
 }
-    
-    
-        $fp = fopen('/tmp/tmp.csv', 'w');
-        fwrite($fp, ob_get_contents());
-        fclose($fp); 
+
         
 ploopi_die();
 ?>

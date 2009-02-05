@@ -260,11 +260,11 @@ function forms_display($id_form, $id_module, $id_object, $id_record, $rights = a
     $_SESSION['forms'][$forms_fuid]['options'] = $options;
 
     ?>
-    <div id="form_<? echo $forms_fuid; ?>"></div>
+    <div id="form_<?php echo $forms_fuid; ?>"></div>
     <script type="text/javascript">
-        ploopi_window_onload_stock(function () {forms_display('<? echo $forms_fuid; ?>');});
+        ploopi_window_onload_stock(function () {forms_display('<?php echo $forms_fuid; ?>');});
     </script>
-    <?
+    <?php
 }
 
 /**

@@ -68,7 +68,7 @@ class form extends data_object
     
     function save()
     {
-        if ($this->fields['tablename'] == '') $this->fields['tablename'] = $this->fields['label'];
+        if (empty($this->fields['tablename'])) $this->fields['tablename'] = $this->fields['label'];
         $this->fields['tablename'] = forms_createphysicalname($this->fields['tablename']);
         return(parent::save());
     }

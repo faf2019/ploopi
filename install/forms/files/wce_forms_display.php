@@ -52,7 +52,7 @@ ob_start();
 ?>
 function form_validate(form)
 {
-    <?
+    <?php
     $sql =  "
             SELECT  *
             FROM    ploopi_mod_forms_field
@@ -107,8 +107,8 @@ function form_validate(form)
                         break;
                     }
                     ?>
-                    if (ploopi_validatefield('<? echo str_replace("'", "\\\'", $fields['name']); ?>', form.field_<? echo $fields['id']; ?>, '<? echo $format; ?>'))
-                    <?
+                    if (ploopi_validatefield('<?php echo str_replace("'", "\\\'", $fields['name']); ?>', form.field_<?php echo $fields['id']; ?>, '<?php echo $format; ?>'))
+                    <?php
                 }
             break;
 
@@ -117,8 +117,8 @@ function form_validate(form)
                 if ($fields['option_needed'])
                 {
                     ?>
-                    if (ploopi_validatefield('<? echo str_replace("'", "\\\'", $fields['name']); ?>', form.field_<? echo $fields['id']; ?>, 'string'))
-                    <?
+                    if (ploopi_validatefield('<?php echo str_replace("'", "\\\'", $fields['name']); ?>', form.field_<?php echo $fields['id']; ?>, 'string'))
+                    <?php
                 }
             break;
 
@@ -127,8 +127,8 @@ function form_validate(form)
                 if ($fields['option_needed'])
                 {
                     ?>
-                    if (ploopi_validatefield('<? echo str_replace("'", "\\\'", $fields['name']); ?>', form.field_<? echo $fields['id']; ?>, 'selected'))
-                    <?
+                    if (ploopi_validatefield('<?php echo str_replace("'", "\\\'", $fields['name']); ?>', form.field_<?php echo $fields['id']; ?>, 'selected'))
+                    <?php
                 }
             break;
 
@@ -137,8 +137,8 @@ function form_validate(form)
                 if ($fields['option_needed'])
                 {
                     ?>
-                    if (ploopi_validatefield('<? echo str_replace("'", "\\\'", $fields['name']); ?>', form.elements['field_<? echo $fields['id']; ?>[]'], 'checked'))
-                    <?
+                    if (ploopi_validatefield('<?php echo str_replace("'", "\\\'", $fields['name']); ?>', form.elements['field_<?php echo $fields['id']; ?>[]'], 'checked'))
+                    <?php
                 }
             break;
         }
@@ -151,7 +151,7 @@ function form_validate(form)
 
 var result = form_validate(this);
 
-<?
+<?php
 /**
  * La fonction est récupérée puis nettoyée (suppression \n \r \t), 
  * puis on utilise une variable javascript pour la déclarer dans la page du client.
@@ -163,11 +163,11 @@ ob_end_clean();
 
 
 <script type="text/javascript">
-    form_validate = "<? echo $jsfunc; ?>";
+    form_validate = "<?php echo $jsfunc; ?>";
 </script>
 
 
-<?
+<?php
 $replies = array(); //réponses déjà saisies
 
 //if ($forms->fields['option_onlyone'] || isset($reply_id))
@@ -192,8 +192,8 @@ if (isset($reply_id))
     {
         $reply_id = $fields['id'];
         ?>
-        <input type="hidden" name="reply_id" value="<? echo $fields['id']; ?>">
-        <?
+        <input type="hidden" name="reply_id" value="<?php echo $fields['id']; ?>">
+        <?php
         $select =   "
                     SELECT  f.id, IFNULL(rf.value, f.defaultvalue) as value
                     FROM    ploopi_mod_forms_field f

@@ -62,30 +62,30 @@ $ptrdir = @opendir('./modules/forms/templates/');
 while ($dir = @readdir($ptrdir)) if ($dir != '.' && $dir != '..' && is_dir("./modules/forms/templates/{$dir}")) $forms_tpl[] = $dir;
 ?>
 
-<form name="frm_modify" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return forms_validate(this);">
+<form name="frm_modify" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return forms_validate(this);">
 <input type="hidden" name="op" value="forms_save" />
-<?
+<?php
 if (!$forms->new)
 {
     ?>
-    <input type="hidden" name="forms_id" value="<? echo $forms->fields['id']; ?>" />
-    <?
+    <input type="hidden" name="forms_id" value="<?php echo $forms->fields['id']; ?>" />
+    <?php
 }
 ?>
 <div style="overflow:hidden">
 
-    <?
+    <?php
     if (!isset($_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_modify_options'])) $_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_modify_options'] = 'none';
     ?>
 
-    <?
+    <?php
     if ($forms->new)
     {
         ?>
         <div class="ploopi_form_title">
             Paramétrage du formulaire
         </div>
-        <?
+        <?php
     }
     else
     {
@@ -93,40 +93,40 @@ if (!$forms->new)
         <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_modify_options');ploopi_xmlhttprequest('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_modify_options&display='+$('forms_modify_options').style.display, true);">
             <span>Paramétrage du formulaire</span><span style="font-weight:normal;font-size:0.8em;margin-left:20px;">(cliquez pour ouvrir/fermer)</span>
         </a>
-        <?
+        <?php
     }
     ?>
 
-    <div id="forms_modify_options" <? if (!$forms->new) echo 'style="display:'.$_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_modify_options'].'"'; ?>>
+    <div id="forms_modify_options" <?php if (!$forms->new) echo 'style="display:'.$_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_modify_options'].'"'; ?>>
         <div style="float:left;width:50%;">
             <div class="ploopi_form" style="padding:4px;">
                 <p>
-                    <label>*&nbsp;<? echo _FORMS_LABEL; ?>:</label>
-                    <input type="text" class="text" name="forms_label" value="<? echo htmlentities($forms->fields['label']); ?>" />
+                    <label>*&nbsp;<?php echo _FORMS_LABEL; ?>:</label>
+                    <input type="text" class="text" name="forms_label" value="<?php echo htmlentities($forms->fields['label']); ?>" />
                 </p>
-                <?
+                <?php
                 if ($forms->fields['tablename'] == '') $forms->fields['tablename'] = forms_createphysicalname($forms->fields['label']);
                 ?>
                 <!--p>
-                    <label><? echo _FORMS_TABLENAME; ?>:</label>
-                    <input type="text" class="text" style="width:150px;" name="forms_tablename" value="<? echo htmlentities($forms->fields['tablename']); ?>" /> (form_xxxxx)
+                    <label><?php echo _FORMS_TABLENAME; ?>:</label>
+                    <input type="text" class="text" style="width:150px;" name="forms_tablename" value="<?php echo htmlentities($forms->fields['tablename']); ?>" /> (form_xxxxx)
                 </p-->
                 <p>
-                    <label><? echo _FORMS_PUBDATESTART; ?>:</label>
-                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_start" id="forms_pubdate_start" value="<? echo $pubdate_start['date']; ?>">&nbsp;<a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('forms_pubdate_start', event);" /><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                    <label><?php echo _FORMS_PUBDATESTART; ?>:</label>
+                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_start" id="forms_pubdate_start" value="<?php echo $pubdate_start['date']; ?>">&nbsp;<a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('forms_pubdate_start', event);" /><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
                 </p>
                 <p>
-                    <label><? echo _FORMS_PUBDATEEND; ?>:</label>
-                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_end" id="forms_pubdate_end" value="<? echo $pubdate_end['date']; ?>">&nbsp;<a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('forms_pubdate_end', event);" /><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                    <label><?php echo _FORMS_PUBDATEEND; ?>:</label>
+                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_end" id="forms_pubdate_end" value="<?php echo $pubdate_end['date']; ?>">&nbsp;<a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('forms_pubdate_end', event);" /><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
                 </p>
                 <p>
-                    <label><? echo _FORMS_DESCRIPTION; ?>:</label>
-                    <textarea class="text" style="height:50px;" name="forms_description"><? echo htmlentities($forms->fields['description']); ?></textarea>
+                    <label><?php echo _FORMS_DESCRIPTION; ?>:</label>
+                    <textarea class="text" style="height:50px;" name="forms_description"><?php echo htmlentities($forms->fields['description']); ?></textarea>
                 </p>
                 <p>
-                    <label><? echo _FORMS_TYPEFORM; ?>:</label>
+                    <label><?php echo _FORMS_TYPEFORM; ?>:</label>
                     <select class="select" name="forms_typeform" onchange="javascript:forms_changetype(this);">
-                    <?
+                    <?php
                     foreach($form_types as $key => $value)
                     {
                         $sel = ($forms->fields['typeform'] == $key) ? 'selected' : '';
@@ -138,47 +138,47 @@ if (!$forms->new)
 
 
 
-                <?
+                <?php
                 //if ($forms->fields['typeform'] == 'cms')
                 ?>
-                <div id="forms_type_cms" <? if ($forms->fields['typeform'] != 'cms') echo 'style="display:none;"'; ?>>
+                <div id="forms_type_cms" <?php if ($forms->fields['typeform'] != 'cms') echo 'style="display:none;"'; ?>>
                     <p>
-                        <label><? echo _FORMS_RESPONSE; ?>:</label>
-                        <textarea class="text" rows="3" name="forms_cms_response"><? echo htmlentities($forms->fields['cms_response']); ?></textarea>
+                        <label><?php echo _FORMS_RESPONSE; ?>:</label>
+                        <textarea class="text" rows="3" name="forms_cms_response"><?php echo htmlentities($forms->fields['cms_response']); ?></textarea>
                     </p>
                 </div>
-                <?
+                <?php
                 //if ($forms->fields['typeform'] == 'app')
                 ?>
-                <div id="forms_type_app" <? if ($forms->fields['typeform'] != 'app') echo 'style="display:none;"'; ?>>
+                <div id="forms_type_app" <?php if ($forms->fields['typeform'] != 'app') echo 'style="display:none;"'; ?>>
                     <p>
-                        <label><? echo _FORMS_MODEL; ?>:</label>
+                        <label><?php echo _FORMS_MODEL; ?>:</label>
                         <select class="select" name="forms_model">
-                        <?
+                        <?php
                         foreach($forms_tpl as $tpl_name)
                         {
                             ?>
-                            <option <? if ($forms->fields['model'] == $tpl_name) echo 'selected'; ?> value="<? echo htmlentities($tpl_name); ?>"><? echo htmlentities($tpl_name); ?></option>
-                            <?
+                            <option <?php if ($forms->fields['model'] == $tpl_name) echo 'selected'; ?> value="<?php echo htmlentities($tpl_name); ?>"><?php echo htmlentities($tpl_name); ?></option>
+                            <?php
                         }
                         ?>
                         </select>
                     </p>
                     <p>
-                        <label style="cursor:pointer;" onclick="javascript:$('forms_option_onlyone').checked = !$('forms_option_onlyone').checked;"><? echo _FORMS_OPTION_ONLYONE; ?>:</label>
-                        <input type="checkbox" class="checkbox" name="forms_option_onlyone" id="forms_option_onlyone" value="1" <? if ($forms->fields['option_onlyone']) echo 'checked'; ?> />
+                        <label style="cursor:pointer;" onclick="javascript:$('forms_option_onlyone').checked = !$('forms_option_onlyone').checked;"><?php echo _FORMS_OPTION_ONLYONE; ?>:</label>
+                        <input type="checkbox" class="checkbox" name="forms_option_onlyone" id="forms_option_onlyone" value="1" <?php if ($forms->fields['option_onlyone']) echo 'checked'; ?> />
                     </p>
                     <p>
-                        <label style="cursor:pointer;" onclick="javascript:$('forms_option_onlyoneday').checked = !$('forms_option_onlyoneday').checked;"><? echo _FORMS_OPTION_ONLYONEDAY; ?></label>
-                        <input type="checkbox" class="checkbox" name="forms_option_onlyoneday" id="forms_option_onlyoneday" value="1" <? if ($forms->fields['option_onlyoneday']) echo 'checked'; ?> />
+                        <label style="cursor:pointer;" onclick="javascript:$('forms_option_onlyoneday').checked = !$('forms_option_onlyoneday').checked;"><?php echo _FORMS_OPTION_ONLYONEDAY; ?></label>
+                        <input type="checkbox" class="checkbox" name="forms_option_onlyoneday" id="forms_option_onlyoneday" value="1" <?php if ($forms->fields['option_onlyoneday']) echo 'checked'; ?> />
                     </p>
                     <p>
-                        <label style="cursor:pointer;" onclick="javascript:$('forms_option_displayuser').checked = !$('forms_option_displayuser').checked;"><? echo _FORMS_OPTION_DISPLAY_USER; ?></label>
-                        <input type="checkbox" class="checkbox" name="forms_option_displayuser" id="forms_option_displayuser" value="1" <? if ($forms->fields['option_displayuser']) echo 'checked'; ?> />
+                        <label style="cursor:pointer;" onclick="javascript:$('forms_option_displayuser').checked = !$('forms_option_displayuser').checked;"><?php echo _FORMS_OPTION_DISPLAY_USER; ?></label>
+                        <input type="checkbox" class="checkbox" name="forms_option_displayuser" id="forms_option_displayuser" value="1" <?php if ($forms->fields['option_displayuser']) echo 'checked'; ?> />
                     </p>
                     <p>
-                        <label style="cursor:pointer;" onclick="javascript:$('forms_option_displaygroup').checked = !$('forms_option_displaygroup').checked;"><? echo _FORMS_OPTION_DISPLAY_GROUP; ?></label>
-                        <input type="checkbox" class="checkbox" name="forms_option_displaygroup" id="forms_option_displaygroup" value="1" <? if ($forms->fields['option_displaygroup']) echo 'checked'; ?> />
+                        <label style="cursor:pointer;" onclick="javascript:$('forms_option_displaygroup').checked = !$('forms_option_displaygroup').checked;"><?php echo _FORMS_OPTION_DISPLAY_GROUP; ?></label>
+                        <input type="checkbox" class="checkbox" name="forms_option_displaygroup" id="forms_option_displaygroup" value="1" <?php if ($forms->fields['option_displaygroup']) echo 'checked'; ?> />
                     </p>
                 </div>
             </div>
@@ -187,59 +187,59 @@ if (!$forms->new)
         <div style="float:left;width:49%;">
             <div class="ploopi_form" style="padding:4px;">
                 <p>
-                    <label><? echo _FORMS_EMAIL; ?>:</label>
-                    <input type="text" class="text" size="30" name="forms_email" value="<? echo htmlentities($forms->fields['email']); ?>" />
+                    <label><?php echo _FORMS_EMAIL; ?>:</label>
+                    <input type="text" class="text" size="30" name="forms_email" value="<?php echo htmlentities($forms->fields['email']); ?>" />
                 </p>
                 <p>
-                    <label><? echo _FORMS_NBLINE; ?>:</label>
-                    <input type="text" class="text" style="width:30px;"name="forms_nbline" value="<? echo $forms->fields['nbline']; ?>" />
+                    <label><?php echo _FORMS_NBLINE; ?>:</label>
+                    <input type="text" class="text" style="width:30px;"name="forms_nbline" value="<?php echo $forms->fields['nbline']; ?>" />
                 </p>
                 <p>
-                    <label style="cursor:pointer;" onclick="javascript:$('forms_option_displaydate').checked = !$('forms_option_displaydate').checked;"><? echo _FORMS_OPTION_DISPLAY_DATE; ?>:</label>
-                    <input type="checkbox" class="checkbox" name="forms_option_displaydate" id="forms_option_displaydate" value="1" <? if ($forms->fields['option_displaydate']) echo 'checked'; ?> />
-                </p>
-
-                <p>
-                    <label style="cursor:pointer;" onclick="javascript:$('forms_option_displayip').checked = !$('forms_option_displayip').checked;"><? echo _FORMS_OPTION_DISPLAY_IP; ?>:</label>
-                    <input type="checkbox" class="checkbox" name="forms_option_displayip" id="forms_option_displayip" value="1" <? if ($forms->fields['option_displayip']) echo 'checked'; ?> />
+                    <label style="cursor:pointer;" onclick="javascript:$('forms_option_displaydate').checked = !$('forms_option_displaydate').checked;"><?php echo _FORMS_OPTION_DISPLAY_DATE; ?>:</label>
+                    <input type="checkbox" class="checkbox" name="forms_option_displaydate" id="forms_option_displaydate" value="1" <?php if ($forms->fields['option_displaydate']) echo 'checked'; ?> />
                 </p>
 
                 <p>
-                    <label><? echo _FORMS_OPTION_MODIFY; ?>:</label>
+                    <label style="cursor:pointer;" onclick="javascript:$('forms_option_displayip').checked = !$('forms_option_displayip').checked;"><?php echo _FORMS_OPTION_DISPLAY_IP; ?>:</label>
+                    <input type="checkbox" class="checkbox" name="forms_option_displayip" id="forms_option_displayip" value="1" <?php if ($forms->fields['option_displayip']) echo 'checked'; ?> />
+                </p>
+
+                <p>
+                    <label><?php echo _FORMS_OPTION_MODIFY; ?>:</label>
                     <select class="select" name="forms_option_modify">
-                        <option value="nobody" <? if ($forms->fields['option_modify'] == 'nobody') echo 'selected'; ?>><? echo _FORMS_OPTION_MODIFY_NOBODY; ?></option>
-                        <option value="user" <? if ($forms->fields['option_modify'] == 'user') echo 'selected'; ?>><? echo _FORMS_OPTION_MODIFY_USER; ?></option>
-                        <option value="group" <? if ($forms->fields['option_modify'] == 'group') echo 'selected'; ?>><? echo _FORMS_OPTION_MODIFY_GROUP; ?></option>
-                        <option value="all" <? if ($forms->fields['option_modify'] == 'all') echo 'selected'; ?>><? echo _FORMS_OPTION_MODIFY_ALL; ?></option>
+                        <option value="nobody" <?php if ($forms->fields['option_modify'] == 'nobody') echo 'selected'; ?>><?php echo _FORMS_OPTION_MODIFY_NOBODY; ?></option>
+                        <option value="user" <?php if ($forms->fields['option_modify'] == 'user') echo 'selected'; ?>><?php echo _FORMS_OPTION_MODIFY_USER; ?></option>
+                        <option value="group" <?php if ($forms->fields['option_modify'] == 'group') echo 'selected'; ?>><?php echo _FORMS_OPTION_MODIFY_GROUP; ?></option>
+                        <option value="all" <?php if ($forms->fields['option_modify'] == 'all') echo 'selected'; ?>><?php echo _FORMS_OPTION_MODIFY_ALL; ?></option>
                     </select>
                 </p>
                 <p>
-                    <label><? echo _FORMS_OPTION_VIEW; ?>:</label>
+                    <label><?php echo _FORMS_OPTION_VIEW; ?>:</label>
                     <select class="select" name="forms_option_view">
-                        <option value="private" <? if ($forms->fields['option_view'] == 'private') echo 'selected'; ?>><? echo _FORMS_OPTION_VIEW_PRIVATE; ?></option>
-                        <option value="global" <? if ($forms->fields['option_view'] == 'global') echo 'selected'; ?>><? echo _FORMS_OPTION_VIEW_GLOBAL; ?></option>
-                        <option value="asc" <? if ($forms->fields['option_view'] == 'asc') echo 'selected'; ?>><? echo _FORMS_OPTION_VIEW_ASC; ?></option>
-                        <option value="desc" <? if ($forms->fields['option_view'] == 'desc') echo 'selected'; ?>><? echo _FORMS_OPTION_VIEW_DESC; ?></option>
+                        <option value="private" <?php if ($forms->fields['option_view'] == 'private') echo 'selected'; ?>><?php echo _FORMS_OPTION_VIEW_PRIVATE; ?></option>
+                        <option value="global" <?php if ($forms->fields['option_view'] == 'global') echo 'selected'; ?>><?php echo _FORMS_OPTION_VIEW_GLOBAL; ?></option>
+                        <option value="asc" <?php if ($forms->fields['option_view'] == 'asc') echo 'selected'; ?>><?php echo _FORMS_OPTION_VIEW_ASC; ?></option>
+                        <option value="desc" <?php if ($forms->fields['option_view'] == 'desc') echo 'selected'; ?>><?php echo _FORMS_OPTION_VIEW_DESC; ?></option>
                     </select>
                 </p>
-                <?
+                <?php
                 if (!$forms->new)
                 {
                     ?>
                     <p>
                         <label>Archiver les données plus anciennes que :</label>
-                        <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<? echo $forms->fields['autobackup']; ?>"> jours (0 = aucun archivage)
+                        <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo $forms->fields['autobackup']; ?>"> jours (0 = aucun archivage)
                     </p>
                     <p>
                         <label>Archiver les données jusqu'au :</label>
-                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<? echo $autobackup_date['date']; ?>">&nbsp;<a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('forms_autobackup_date', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo $autobackup_date['date']; ?>">&nbsp;<a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('forms_autobackup_date', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
                     </p>
                     <p>
                         <label>Supprimer les données jusqu'au :</label>
                         <input type="text" class="text" style="width:70px;" id="forms_delete_date">&nbsp;<a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('forms_delete_date', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
-                        <a href="javascript:void(0);" onclick="javascript:forms_deletedata('<? echo $forms->fields['id']; ?>', event);"><img src="./modules/forms/img/ico_trash.png" /></a>
+                        <a href="javascript:void(0);" onclick="javascript:forms_deletedata('<?php echo $forms->fields['id']; ?>', event);"><img src="./modules/forms/img/ico_trash.png" /></a>
                     </p>
-                    <?
+                    <?php
                 }
                 ?>
             </div>
@@ -247,39 +247,39 @@ if (!$forms->new)
 
         <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;border-bottom:1px solid #a0a0a0;padding:4px;overflow:auto;">
             <div style="float:right;">
-                <?
+                <?php
                 /*
                 if (!$forms->new)
                 {
                     ?>
-                    <input type="button" class="flatbutton" style="font-weight:bold;" value="Générer les données physiques" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=forms_generate_tables&forms_id={$_GET['forms_id']}"); ?>'">
-                    <?
+                    <input type="button" class="flatbutton" style="font-weight:bold;" value="Générer les données physiques" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_generate_tables&forms_id={$_GET['forms_id']}"); ?>'">
+                    <?php
                 }
                 */
                 ?>
-                <input type="button" class="flatbutton" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?formsTabItem=formslist"); ?>'">
-                <input type="reset" class="flatbutton" value="<? echo _PLOOPI_RESET; ?>">
-                <?
+                <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?formsTabItem=formslist"); ?>'">
+                <input type="reset" class="flatbutton" value="<?php echo _PLOOPI_RESET; ?>">
+                <?php
                 if (!$forms->new && false) //désactivé
                 {
                     ?>
-                    <input type="button" class="flatbutton" value="<? echo _FORMS_PREVIEW; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=forms_preview&forms_id={$_GET['forms_id']}"); ?>'">
-                    <?
+                    <input type="button" class="flatbutton" value="<?php echo _FORMS_PREVIEW; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_preview&forms_id={$_GET['forms_id']}"); ?>'">
+                    <?php
                 }
                 ?>
-                <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>">
+                <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
             </div>
 
             <div>
-                <?
+                <?php
                 if (!$forms->new) //désactivé
                 {
                     ?>
-                        <input type="button" class="flatbutton" value="<? echo _FORMS_VIEWRESULT; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?ploopi_action=public&op=forms_viewreplies&forms_id={$_GET['forms_id']}"); ?>'">
-                    <?
+                        <input type="button" class="flatbutton" value="<?php echo _FORMS_VIEWRESULT; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?ploopi_action=public&op=forms_viewreplies&forms_id={$_GET['forms_id']}"); ?>'">
+                    <?php
                 }
                 ?>
-                <span>(*) <? echo _FORMS_OBLIGATORY; ?></span>
+                <span>(*) <?php echo _FORMS_OBLIGATORY; ?></span>
             </div>
         </div>
     </div>
@@ -291,13 +291,13 @@ if (!$forms->new)
 
 </form>
 
-<?
+<?php
 //
 if (!$forms->new)
 {
     ?>
-    <div class="ploopi_form_title" style=""><? echo _FORMS_FIELDLIST; ?></div>
-    <?
+    <div class="ploopi_form_title" style=""><?php echo _FORMS_FIELDLIST; ?></div>
+    <?php
     switch($op)
     {
         case 'forms_field_modify':
@@ -305,9 +305,9 @@ if (!$forms->new)
             ?>
             <a name="addform"></a>
             <div style="padding:4px;border-bottom:1px solid #a0a0a0;">
-            <? include_once './modules/forms/admin_forms_field.php'; ?>
+            <?php include_once './modules/forms/admin_forms_field.php'; ?>
             </div>
-            <?
+            <?php
         break;
 
         case 'forms_separator_modify':
@@ -315,23 +315,23 @@ if (!$forms->new)
             ?>
             <div style="padding:4px;border-bottom:1px solid #a0a0a0;">
             <a name="addform"></a>
-            <? include_once './modules/forms/admin_forms_separator.php'; ?>
+            <?php include_once './modules/forms/admin_forms_separator.php'; ?>
             </div>
-            <?
+            <?php
         break;
 
         default:
             ?>
             <div style="clear:both;background-color:#d0d0d0;overflow:auto;text-align:right;padding:4px;border-bottom:1px solid #a0a0a0;">
-                <input type="button" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=forms_separator_add&forms_id={$_GET['forms_id']}"); ?>#addform'" class="flatbutton" value="<? echo _FORMS_ADDSEPARATOR; ?>">
-                <input type="button" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=forms_field_add&forms_id={$_GET['forms_id']}"); ?>#addform'" class="flatbutton" value="<? echo _FORMS_ADDFIELD; ?>">
+                <input type="button" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_separator_add&forms_id={$_GET['forms_id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDSEPARATOR; ?>">
+                <input type="button" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_field_add&forms_id={$_GET['forms_id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDFIELD; ?>">
             </div>
-            <?
+            <?php
         break;
     }
     ?>
 
-    <?
+    <?php
     $array_columns = array();
     $array_values = array();
 

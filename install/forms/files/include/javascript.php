@@ -41,9 +41,9 @@ var verifcolor = false;
 
 function forms_validate(form)
 {
-    if (ploopi_validatefield('<? echo _FORMS_LABEL; ?>',form.forms_label,"string"))
-    if (ploopi_validatefield('<? echo _FORMS_PUBDATESTART; ?>',form.forms_pubdate_start,"emptydate"))
-    if (ploopi_validatefield('<? echo _FORMS_PUBDATEEND; ?>',form.forms_pubdate_end,"emptydate"))
+    if (ploopi_validatefield('<?php echo _FORMS_LABEL; ?>',form.forms_label,"string"))
+    if (ploopi_validatefield('<?php echo _FORMS_PUBDATESTART; ?>',form.forms_pubdate_start,"emptydate"))
+    if (ploopi_validatefield('<?php echo _FORMS_PUBDATEEND; ?>',form.forms_pubdate_end,"emptydate"))
         return(true);
 
     return(false);
@@ -64,7 +64,7 @@ function forms_field_validate(form)
     }
     else if (t.value == 'tablelink') form.field_values.value = form.f_formfield.value;
 
-    if (ploopi_validatefield('<? echo _FORMS_FIELD_NAME; ?>',form.field_name,"string"))
+    if (ploopi_validatefield('<?php echo _FORMS_FIELD_NAME; ?>',form.field_name,"string"))
         return(true);
 
     return(false);

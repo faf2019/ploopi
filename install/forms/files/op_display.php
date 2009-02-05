@@ -47,7 +47,7 @@ ob_start();
 ?>
 function form_validate(form)
 {
-    <?
+    <?php
     $sql =  "
             SELECT  *
             FROM    ploopi_mod_forms_field
@@ -102,8 +102,8 @@ function form_validate(form)
                         break;
                     }
                     ?>
-                    if (ploopi_validatefield('<? echo addslashes($fields['name']); ?>', form.field_<? echo $fields['id']; ?>, '<? echo $format; ?>'))
-                    <?
+                    if (ploopi_validatefield('<?php echo addslashes($fields['name']); ?>', form.field_<?php echo $fields['id']; ?>, '<?php echo $format; ?>'))
+                    <?php
                 }
             break;
 
@@ -112,8 +112,8 @@ function form_validate(form)
                 if ($fields['option_needed']) $format = 'selected';
                 else $format = '';
                 ?>
-                if (ploopi_validatefield('<? echo addslashes($fields['name']); ?>', form.field_<? echo $fields['id']; ?>, '<? echo $format; ?>'))
-                <?
+                if (ploopi_validatefield('<?php echo addslashes($fields['name']); ?>', form.field_<?php echo $fields['id']; ?>, '<?php echo $format; ?>'))
+                <?php
             break;
 
             case 'radio':
@@ -121,8 +121,8 @@ function form_validate(form)
                 if ($fields['option_needed']) $format = 'checked';
                 else $format = '';
                 ?>
-                if (ploopi_validatefield('<? echo addslashes($fields['name']); ?>', form.elements['field_<? echo $fields['id']; ?>[]'], '<? echo $format; ?>'))
-                <?
+                if (ploopi_validatefield('<?php echo addslashes($fields['name']); ?>', form.elements['field_<?php echo $fields['id']; ?>[]'], '<?php echo $format; ?>'))
+                <?php
             break;
         }
     }
@@ -134,7 +134,7 @@ function form_validate(form)
 
 var result = form_validate(this);
 
-<?
+<?php
 /**
  * La fonction est récupérée puis nettoyée (suppression \n \r \t), 
  * puis on utilise une variable javascript pour la déclarer dans la page du client.
@@ -145,10 +145,10 @@ ob_end_clean();
 ?>
 
 <script type="text/javascript">
-    form_validate = "<? echo $jsfunc; ?>";
+    form_validate = "<?php echo $jsfunc; ?>";
 </script>
 
-<?
+<?php
 /**
  * On va chercher (s'il existe) le contenu du formulaire.
  */
