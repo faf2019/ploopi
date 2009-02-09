@@ -368,21 +368,21 @@ class barchart
                 <div class="caption">
                 <?php
                 /* légende en bas à droite du graph, avec alignement automatique du texte (en fonction de la longueur de chaîne):
-                si les descriptions de la légende sont de longueur différente, le texte et la légende seront alognés en fonction
-                de la chaîne la plus longue
-                */
+                                            si les descriptions de la légende sont de longueur différente, le texte et la légende seront alognés en fonction
+                                            de la chaîne la plus longue
+                                            */
                     $max_label_strl = 0;
-    
+                    
                     foreach($this->datasets as $dataset)
                     {
                      $max_label_strl = (strlen($dataset['label']) > $max_label_strl) ? strlen($dataset['label']) : $max_label_strl  ;
                      ?>
                         <div style="position: relative ; clear:both ;top : 10px ;margin-left: <?php echo $this->width + strlen(floor($this->value_max))*10 -7 * $max_label_strl - 20 ; ?>px;
                         font-size: 0px; line-height: 0%; width: 0px;
-                        border-top: 5px solid <?phpecho $dataset['bgcolor']?>;
-                        border-bottom: 5px solid <?phpecho $dataset['bgcolor']?>;
-                        border-left: 5px solid <?phpecho $dataset['bgcolor']?>;
-                        border-right: 5px solid <?phpecho $dataset['bgcolor']?>;">
+                        border-top: 5px solid <?php echo $dataset['bgcolor'] ?>;
+                        border-bottom: 5px solid <?php echo $dataset['bgcolor'] ?>;
+                        border-left: 5px solid <?php echo $dataset['bgcolor'] ?>;
+                        border-right: 5px solid <?php echo $dataset['bgcolor'] ?>;">
                         </div>
                         <div style="position:relative; top: -2px; margin-left: <?php echo $this->width + strlen(floor($this->value_max))*10 - 7 * $max_label_strl ; ?>px;"> <?php echo $dataset['label'] ; ?> </div>
                         <?php
