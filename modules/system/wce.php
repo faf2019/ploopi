@@ -356,7 +356,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                     
                     $arrAddress = array();
         
-                    if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($row->fields['address']));
+                    if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['address']));
                     if (!empty($row['postalcode']) || !empty($usr->fields['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($row['postalcode'].' '.$row['city'])));
                     if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['country']));
                     
