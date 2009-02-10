@@ -407,7 +407,7 @@ switch($menu)
                     foreach($wf as $value) $wfusers[] = $value['id_validation'];
         
                     // action "publier" et l'utilisateur est un validateur => OK
-                    if (isset($_POST['publish']) && in_array($_SESSION['ploopi']['userid'],$wfusers))
+                    if (isset($_POST['publish']) && (in_array($_SESSION['ploopi']['userid'],$wfusers) || ploopi_isadmin()))
                     {
                         $strTypeTicket = ($article->publish()) ? 'published_new' : 'published';
                         
