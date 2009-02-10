@@ -68,22 +68,21 @@ if ($webedit_idm)
     /**
      * Chargement des rubriques et articles
      */
-    $headings = webedit_getheadings($webedit_idm);
-    $articles = webedit_getarticles($webedit_idm);
 
     switch($ploopi_op)
     {
         case 'webedit_detail_heading';
-            echo webedit_build_tree($_GET['hid'], $_GET['str'], (isset($_GET['option'])) ? $_GET['option'] : '');
+            $option = (empty($_GET['option'])) ? '' : $_GET['option'];
+            $treeview = webedit_gettreeview(webedit_getheadings($webedit_idm), webedit_getarticles($webedit_idm), $option);
+            echo $skin->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['hid']);
             ploopi_die();
         break;
 
         case 'webedit_selectlink':
-            $treeview = webedit_gettreeview($headings, $articles, 'selectlink');
+            $treeview = webedit_gettreeview(webedit_getheadings($webedit_idm), webedit_getarticles($webedit_idm), 'selectlink');
             echo $skin->display_treeview($treeview['list'], $treeview['tree']);
         break;
     }
-
 }
 else echo "Aucun module WEBEDIT disponible";
 ?>

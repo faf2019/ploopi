@@ -55,28 +55,28 @@ if (empty($intMonthSel))
     <div id="webedit_stats_select">
         <p>
             <strong>Année:</strong>
-            <?
+            <?php
             foreach($arrSelectYear as $year)
             {
                 ?>
-                <a href="<? echo ploopi_urlencode("admin.php?webedit_menu=stats&webedit_yearsel={$year}"); ?>" <? if ($year == $intYearSel) echo 'class="selected"'; ?>><? echo $year; ?></a>
-                <?
+                <a href="<?php echo ploopi_urlencode("admin.php?webedit_menu=stats&webedit_yearsel={$year}"); ?>" <?php if ($year == $intYearSel) echo 'class="selected"'; ?>><?php echo $year; ?></a>
+                <?php
             }
             ?>
         </p>
         <p>
             <strong>Mois:</strong>
-            <?
+            <?php
             foreach($arrSelectMonth as $month)
             {
                 ?>
-                <a href="<? echo ploopi_urlencode("admin.php?webedit_menu=stats&webedit_yearsel={$intYearSel}&webedit_monthsel={$month}"); ?>" <? if ($month == $intMonthSel) echo 'class="selected"'; ?>><? echo $ploopi_months[$month]; ?></a>
-                <?
+                <a href="<?php echo ploopi_urlencode("admin.php?webedit_menu=stats&webedit_yearsel={$intYearSel}&webedit_monthsel={$month}"); ?>" <?php if ($month == $intMonthSel) echo 'class="selected"'; ?>><?php echo $ploopi_months[$month]; ?></a>
+                <?php
             }
             ?>
         </p>
     </div>
-    <?
+    <?php
     include_once './include/classes/barchart.php';
     
     // 1er Diagramme : année par mois
@@ -148,15 +148,15 @@ if (empty($intMonthSel))
     // Affichage
     ?>
     <div class="webedit_stats_graph">
-        <h1>Statistiques globales de fréquentation pour <em><? echo $intYearSel ?></em> (nombre d'articles vus)</h1>
-        <div><? $objBarChartYear->draw(); ?></div>
+        <h1>Statistiques globales de fréquentation pour <em><?php echo $intYearSel ?></em> (nombre d'articles vus)</h1>
+        <div><?php $objBarChartYear->draw(); ?></div>
     </div>
     <div class="webedit_stats_graph">
-        <h1>Statistiques globales de fréquentation pour <em><? echo $ploopi_months[$intMonthSel] ?> <? echo $intYearSel ?></em> (nombre d'articles vus)</h1>
-        <div><? $objBarChartMonth->draw(); ?></div>
+        <h1>Statistiques globales de fréquentation pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre d'articles vus)</h1>
+        <div><?php $objBarChartMonth->draw(); ?></div>
     </div>
     
-    <? 
+    <?php 
     // Recherche des articles les plus consultés
     
     $db->query(
@@ -241,9 +241,9 @@ if (empty($intMonthSel))
     ?>
     
     <div class="webedit_stats_array">
-        <h1>Articles les plus visités pour <em><? echo $ploopi_months[$intMonthSel] ?> <? echo $intYearSel ?></em> (nombre de visites)</h1>
+        <h1>Articles les plus visités pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre de visites)</h1>
         <div style="border-top:1px solid #c0c0c0;">
-        <? 
+        <?php 
         $skin->display_array(
             $columns, 
             $values, 
@@ -258,7 +258,7 @@ if (empty($intMonthSel))
         </div>
     </div>
     
-    <? 
+    <?php 
     // Recherche des rubriques les plus consultées
     
     $db->query(
@@ -329,9 +329,9 @@ if (empty($intMonthSel))
     ?>
     
     <div class="webedit_stats_array">
-        <h1>Rubriques les plus visités pour <em><? echo $ploopi_months[$intMonthSel] ?> <? echo $intYearSel ?></em> (nombre de visites)</h1>
+        <h1>Rubriques les plus visités pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre de visites)</h1>
         <div style="border-top:1px solid #c0c0c0;">
-        <? 
+        <?php 
         $skin->display_array(
             $columns, 
             $values, 
@@ -347,6 +347,6 @@ if (empty($intMonthSel))
     </div>
 </div>
 
-<?        
+<?php        
 echo $skin->close_simplebloc(); 
 ?>

@@ -558,7 +558,7 @@ switch($menu)
                     return(oEditor.GetXHTML(true));
                 }
                 </script>
-                <?
+                <?php
                 include_once './modules/webedit/display.php';
             break;
         
@@ -597,15 +597,15 @@ switch($menu)
         
                 ?>
                 <div id="webedit_header">
-                    <form action="<? echo ploopi_urlencode('admin.php?op='.$op); ?>" method="post" id="webedit_form_display_type">
-                        <input type="hidden" name="webedit_display_type" id="webedit_display_type" value="<? echo $display_type; ?>" /> 
+                    <form action="<?php echo ploopi_urlencode('admin.php?op='.$op); ?>" method="post" id="webedit_form_display_type">
+                        <input type="hidden" name="webedit_display_type" id="webedit_display_type" value="<?php echo $display_type; ?>" /> 
                         
                         <p class="ploopi_checkbox" style="float:right;margin-left:6px;" onclick="javascript:webedit_switch_display_type('advanced');">
-                            <img src="./modules/webedit/img/radio-<? echo ($display_type == 'advanced') ? 'on' : 'off'; ?>.png" /><span>&nbsp;Avancé</span>
+                            <img src="./modules/webedit/img/radio-<?php echo ($display_type == 'advanced') ? 'on' : 'off'; ?>.png" /><span>&nbsp;Avancé</span>
                         </p>
                         
                         <p class="ploopi_checkbox" style="float:right;margin-left:6px;" onclick="javascript:webedit_switch_display_type('beginner');">
-                            <img src="./modules/webedit/img/radio-<? echo ($display_type == 'beginner') ? 'on' : 'off'; ?>.png" /><span>&nbsp;Simplifié</span>
+                            <img src="./modules/webedit/img/radio-<?php echo ($display_type == 'beginner') ? 'on' : 'off'; ?>.png" /><span>&nbsp;Simplifié</span>
                         </p>
                         
                         <p class="ploopi_va" style="float:right;">
@@ -621,9 +621,9 @@ switch($menu)
                 
                 
                 <div style="clear:both;">
-                    <div class="webedit_tree" id="webedit_tree" style="display:<? echo $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display']; ?>;">
+                    <div class="webedit_tree" id="webedit_tree" style="display:<?php echo $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display']; ?>;">
                         <div class="webedit_tree_padding" style="">
-                            <?
+                            <?php
                             $headings = webedit_getheadings();
                             $articles = webedit_getarticles();
         
@@ -663,14 +663,14 @@ switch($menu)
                     </div>
                     <div class="webedit_main">
                         <div class="webedit_main2">
-                        <?
+                        <?php
                         if ($op == 'article_addnew' || $op == 'article_modify') include_once './modules/webedit/admin_article.php';
                         else include_once './modules/webedit/admin_heading.php';
                         ?>
                         </div>
                     </div>
                 </div>
-                <?
+                <?php
                 echo $skin->close_simplebloc();
             break;
         }

@@ -59,7 +59,7 @@ switch($op)
         $options = '';
         if (!empty($_REQUEST['headingid'])) $options = "&headingid={$_REQUEST['headingid']}";
         if (!empty($_REQUEST['articleid'])) $options = "&articleid={$_REQUEST['articleid']}";
-        ?><iframe id="webedit_frame_editor" style="border:0;width:100%;height:400px;margin:0;padding:0;" src="<? echo "index.php?moduleid={$_SESSION['ploopi']['moduleid']}{$options}&webedit_mode=render&type="; ?>"></iframe><?
+        ?><iframe id="webedit_frame_editor" style="border:0;width:100%;height:400px;margin:0;padding:0;" src="<?php echo "index.php?moduleid={$_SESSION['ploopi']['moduleid']}{$options}&webedit_mode=render&type="; ?>"></iframe><?php
         echo $skin->close_simplebloc();
     break;
 }

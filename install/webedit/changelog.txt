@@ -1,3 +1,29 @@
+== Module WebEdit - version 2.0 ============================================
+
+2009-02-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Transformation des balises <? en <?php
+ * L'administrateur peut publier par défaut (plus besoin de l'ajouter dans les validateurs)
+ * Correction d'un bug dans la consultation des rubriques depuis un module externe
+ * Meilleur contrôle de positionnement dans le module pour les opérations courantes 
+ * Correction d'un bug dans la génération des flux ATOM/RSS (problème d'encodage UTF8)
+
+== Module WebEdit - version 1.9.1 ============================================
+
+2009-01-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug dans la génération des flux ATOM/RSS (problème d'encodage UTF8)
+ * Prise en compte des articles des sous-rubriques dans la génération des flux ATOM/RSS de rubriques
+ * Modification de la génération des flux ATOM/RSS : Les flux n'intègrent désormais que les articles contenus dans des rubriques qui y ont souscrit
+ * Amélioration de l'intégration du flux global ATOM/RSS (il suffit qu'une rubrique propose un flux pour que ce flux soit activé sur la page d'accueil)
+ * L'abonnement au site concerne désormais l'ensemble du site et non plus la première racine 
+ 
+== Module WebEdit - version 1.9.0 ============================================
+
+2008-12-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug dans l'intégration d'un objet WCE dans un article
+
 == Module WebEdit - version 1.8.9 ============================================
 
 2008-12-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

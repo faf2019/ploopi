@@ -64,27 +64,27 @@ switch($op)
         
         ?>
         <div style="padding:4px;">
-            <input type="button" class="button" value="Réindexer le contenu du site" onclick="javascript:document.location.href='<? echo ploopi_urlencode('admin.php?webedit_menu=reindex&op=reindex'); ?>';" />
+            <input type="button" class="button" value="Réindexer le contenu du site" onclick="javascript:document.location.href='<?php echo ploopi_urlencode('admin.php?webedit_menu=reindex&op=reindex'); ?>';" />
         </div>
         <div style="padding:4px;">
             Le site contient :
         </div>
         <div style="padding:4px;">
-            <strong><? echo $arrStats['headings']; ?> rubrique(s)</strong>
+            <strong><?php echo $arrStats['headings']; ?> rubrique(s)</strong>
         </div>
         <div style="padding:4px;">
-            <strong><? echo $arrStats['articles']; ?> articles(s)</strong>
+            <strong><?php echo $arrStats['articles']; ?> articles(s)</strong>
         </div>
         <div style="padding:4px;">
-            <strong><? echo $arrStats['files']; ?> lien(s) vers un fichier</strong>
+            <strong><?php echo $arrStats['files']; ?> lien(s) vers un fichier</strong>
         </div>
         <div style="padding:4px;">
-            <strong><? echo $arrStats['tags']; ?> tag(s)</strong>
+            <strong><?php echo $arrStats['tags']; ?> tag(s)</strong>
         </div>
         <div style="padding:4px;">
-            <strong><? echo $arrStats['keywords']; ?> mot(s) indexé(s)</strong>
+            <strong><?php echo $arrStats['keywords']; ?> mot(s) indexé(s)</strong>
         </div>
-        <?
+        <?php
         echo $skin->close_simplebloc();
     break;
     
@@ -96,7 +96,7 @@ switch($op)
         echo $skin->open_simplebloc();
         ?>
         <div style="padding:4px;">
-        <?
+        <?php
         $index_start = $ploopi_timer->getexectime();
         
         $rsArticles = $db->query("SELECT id FROM ploopi_mod_webedit_article");
@@ -111,11 +111,11 @@ switch($op)
             }
         }
         ?>
-        indexation terminée en <? printf("%.02fs", $ploopi_timer->getexectime() - $index_start); ?>
-        <? if (isset($_REQUEST['force'])) echo "<br />Mode 'force' activé"; ?>
-        <br /><a title="Retour" href="<? echo ploopi_urlencode('admin.php?webedit_menu=reindex'); ?>">Retour</a>
+        indexation terminée en <?php printf("%.02fs", $ploopi_timer->getexectime() - $index_start); ?>
+        <?php if (isset($_REQUEST['force'])) echo "<br />Mode 'force' activé"; ?>
+        <br /><a title="Retour" href="<?php echo ploopi_urlencode('admin.php?webedit_menu=reindex'); ?>">Retour</a>
         </div>
-        <?
+        <?php
         echo $skin->close_simplebloc();
     break;
 }

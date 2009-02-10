@@ -54,7 +54,6 @@ if (empty($wf)) // pas de validateur pour cette rubrique, on recherche sur les p
 
 foreach($wf as $value) $wfusers[] = $value['id_validation'];
 
-
 $title = '';
 switch($op)
 {
@@ -115,16 +114,16 @@ $keywords = array_slice($keywords, 0 , 20, true);
 
 <div style="background-color:#e0e0e0;padding:4px;border-bottom:1px solid #c0c0c0;">
     <p class="ploopi_va" style="font-weight:bold;">
-        <?
+        <?php
         if (ploopi_isactionallowed(_WEBEDIT_ACTION_STATS))
         {
             ?>
-            <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cet article" onclick="javascript:webedit_stats_open(<? echo $article->fields['id']; ?>, null, event);">
-            <?
+            <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cet article" onclick="javascript:webedit_stats_open(<?php echo $article->fields['id']; ?>, null, event);">
+            <?php
         }
         ?>    
-        <img src="./modules/webedit/img/doc<? echo $isnewversion; ?>.png">
-        <?
+        <img src="./modules/webedit/img/doc<?php echo $isnewversion; ?>.png">
+        <?php
         echo "<span>{$title} - </span>";
     
         if ($type == 'draft')
@@ -141,14 +140,14 @@ $keywords = array_slice($keywords, 0 , 20, true);
                 break;
             }
             ?>
-                <span>Document de Travail<? echo $msg; ?>&nbsp;</span>
-            <?
+                <span>Document de Travail<?php echo $msg; ?>&nbsp;</span>
+            <?php
         }
         else
         {
             ?>
                 <span>Version en Ligne : non modifiable&nbsp;</span>
-            <?
+            <?php
         }
     
         $readonly = (!(ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) && $type == 'draft' && ($article->fields['status'] == 'edit' || (in_array($_SESSION['ploopi']['userid'],$wfusers)) && ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_PUBLISH))));
@@ -156,14 +155,14 @@ $keywords = array_slice($keywords, 0 , 20, true);
     </p>
 </div>
 
-<form name="form_webedit_article" style="margin:0;" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return webedit_article_validate(this,'<? echo $type; ?>','<? echo $article->fields['status']; ?>', <? echo (in_array($_SESSION['ploopi']['userid'],$wfusers)) ? 'true' : 'false'; ?>);">
+<form name="form_webedit_article" style="margin:0;" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return webedit_article_validate(this,'<?php echo $type; ?>','<?php echo $article->fields['status']; ?>', <?php echo (in_array($_SESSION['ploopi']['userid'],$wfusers)) ? 'true' : 'false'; ?>);">
 <input type="hidden" name="op" value="article_save">
-<input type="hidden" name="articleid" id="articleid" value="<? echo $article->fields['id']; ?>">
+<input type="hidden" name="articleid" id="articleid" value="<?php echo $article->fields['id']; ?>">
 
 <div style="padding:4px;overflow:auto;">
-    <div id="webedit_article_options" style="display:<? echo $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display']; ?>;">
+    <div id="webedit_article_options" style="display:<?php echo $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display']; ?>;">
 
-    <?
+    <?php
     if ($display_type == 'advanced')
     {
         ?>
@@ -172,61 +171,61 @@ $keywords = array_slice($keywords, 0 , 20, true);
                 <div style="padding:2px;"><strong>Propriétés principales:</strong></div>
                 <p>
                     <label>Titre:</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_title" value="<? echo $article->fields['title']; ?>" tabindex="2" />
-                        <?
+                        <input class="text" type="text" name="webedit_article_title" value="<?php echo $article->fields['title']; ?>" tabindex="2" />
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
                     <label>Auteur:</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_author" value="<? echo htmlentities($article->fields['author'], ENT_QUOTES); ?>" tabindex="3" />
-                        <?
+                        <input class="text" type="text" name="webedit_article_author" value="<?php echo htmlentities($article->fields['author'], ENT_QUOTES); ?>" tabindex="3" />
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article->fields['author']).'</span>';
                     ?>
                 </p>
                 <p>
                     <label>Date:</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp" id="webedit_article_timestp" value="<? echo $article_timestp; ?>" tabindex="4" />
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp" id="webedit_article_timestp" value="<?php echo $article_timestp; ?>" tabindex="4" />
                         <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('webedit_article_timestp', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
-                        <?
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article_timestp, ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
                     <label>Position:</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:40px;" class="text" type="text" name="webedit_art_position" value="<? echo htmlentities($article->fields['position'], ENT_QUOTES); ?>" tabindex="11" />
-                        <?
+                        <input style="width:40px;" class="text" type="text" name="webedit_art_position" value="<?php echo htmlentities($article->fields['position'], ENT_QUOTES); ?>" tabindex="11" />
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article->fields['position'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
                     <label for="webedit_article_visible" style="cursor:pointer;">Visible dans le menu:</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input type="checkbox" name="webedit_article_visible" id="webedit_article_visible" class="checkbox" value="1" <? if ($article->fields['visible']) echo 'checked="checked"'; ?> tabindex="12" />
-                        <?
+                        <input type="checkbox" name="webedit_article_visible" id="webedit_article_visible" class="checkbox" value="1" <?php if ($article->fields['visible']) echo 'checked="checked"'; ?> tabindex="12" />
+                        <?php
                     }
                     else echo ($article->fields['visible']) ? 'oui' : 'non';
                     ?>
@@ -235,36 +234,36 @@ $keywords = array_slice($keywords, 0 , 20, true);
                 <div style="padding:2px;"><strong>Optimisation du Référencement (balises meta):</strong></div>
                 <p>
                     <label>Titre (title):</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_metatitle" id="webedit_article_metatitle" value="<? echo $article->fields['metatitle']; ?>" tabindex="2" />
-                        <?
+                        <input class="text" type="text" name="webedit_article_metatitle" id="webedit_article_metatitle" value="<?php echo $article->fields['metatitle']; ?>" tabindex="2" />
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article->fields['metatitle'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
                     <label>Mots Clés (keywords):</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_metakeywords" id="webedit_article_metakeywords" value="<? echo $article->fields['metakeywords']; ?>" tabindex="2" />
-                        <?
+                        <input class="text" type="text" name="webedit_article_metakeywords" id="webedit_article_metakeywords" value="<?php echo $article->fields['metakeywords']; ?>" tabindex="2" />
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article->fields['metakeywords'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
-                <?
+                <?php
                 if (!$readonly)
                 {
                     ?>
                     <p>
                         <label>Suggestions:</label>
                         <span id="webedit_suggestions">
-                            <?
+                            <?php
                             $keywords_disp_array = array();
 
                             foreach($keywords as $kw => $value)
@@ -275,17 +274,17 @@ $keywords = array_slice($keywords, 0 , 20, true);
                             ?>
                         </span>
                     </p>
-                    <?
+                    <?php
                 }
                 ?>
                 <p>
                     <label>Description (description):</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <textarea class="text" name="webedit_article_metadescription" style="height:50px;"><? echo htmlentities($article->fields['metadescription'], ENT_QUOTES); ?></textarea>
-                        <?
+                        <textarea class="text" name="webedit_article_metadescription" style="height:50px;"><?php echo htmlentities($article->fields['metadescription'], ENT_QUOTES); ?></textarea>
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article->fields['metadescription']).'</span>';
                     ?>
@@ -296,59 +295,59 @@ $keywords = array_slice($keywords, 0 , 20, true);
         <div class="ploopi_form" style="float:left; width:45%;">
             <div style="padding:2px;">
                 <div style="padding:2px;"><strong>Propriétés annexes:</strong></div>
-                <?
+                <?php
                 // on ne peut pas changer de parent à la création de l'article
                 if ($op != 'article_addnew')
                 {
                     ?>
                     <p>
-                        <?
+                        <?php
                         $heading_label = '';
                         $heading = new webedit_heading();
                         if (!empty($article->fields['id_heading']) && $heading->open($article->fields['id_heading'])) $heading_label = $heading->fields['label'];
                         ?>
                         <label>Rubrique parent:</label>
                         <span>
-                            <input type="hidden" id="webedit_article_id_heading" name="webedit_article_id_heading" value="<? echo $article->fields['id_heading']; ?>">
-                            <input type="text" readonly class="text" style="width:150px;" id="heading_displayed" value="<? echo $heading_label; ?>">
+                            <input type="hidden" id="webedit_article_id_heading" name="webedit_article_id_heading" value="<?php echo $article->fields['id_heading']; ?>">
+                            <input type="text" readonly class="text" style="width:150px;" id="heading_displayed" value="<?php echo $heading_label; ?>">
                             <img src="./modules/webedit/img/ico_choose_article.png" style="cursor:pointer;" title="Choisir une rubrique parent" alt="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_article_selectheading&hid='+$('webedit_article_id_heading').value, false), 300, event, 'click', 'webedit_popup_selectheading');" />
                         </span>
                     </p>
-                    <?
+                    <?php
                 }
                 ?>
                 <p>
                     <label>Référence:</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_reference" value="<? echo $article->fields['reference']; ?>" tabindex="1" />
-                        <?
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_reference" value="<?php echo $article->fields['reference']; ?>" tabindex="1" />
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article->fields['reference'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
                     <label>Version:</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_version" value="<? echo htmlentities($article->fields['version'], ENT_QUOTES); ?>" tabindex="5" />
-                        <?
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_version" value="<?php echo htmlentities($article->fields['version'], ENT_QUOTES); ?>" tabindex="5" />
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article->fields['version'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
                     <label>Commentaires autorisés:</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input type="checkbox" name="webedit_article_comments_allowed" style="width:14px;" value="1" <? if ($article->fields['comments_allowed']) echo 'checked="checked"'; ?> tabindex="12" />
-                        <?
+                        <input type="checkbox" name="webedit_article_comments_allowed" style="width:14px;" value="1" <?php if ($article->fields['comments_allowed']) echo 'checked="checked"'; ?> tabindex="12" />
+                        <?php
                     }
                     else echo ($article->fields['comments_allowed']) ? 'oui' : 'non';
                     ?>
@@ -356,26 +355,26 @@ $keywords = array_slice($keywords, 0 , 20, true);
                 <div style="padding:2px;"><strong>Options de mise en ligne:</strong></div>
                 <p>
                     <label>Début :</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp_published" id="webedit_article_timestp_published" value="<? echo htmlentities($article_timestp_published, ENT_QUOTES); ?>" tabindex="13" />
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp_published" id="webedit_article_timestp_published" value="<?php echo htmlentities($article_timestp_published, ENT_QUOTES); ?>" tabindex="13" />
                         <a href="#" onclick="javascript:ploopi_calendar_open('webedit_article_timestp_published', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
-                        <?
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article_timestp_published, ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
                     <label>Fin :</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp_unpublished" id="webedit_article_timestp_unpublished" value="<? echo htmlentities($article_timestp_unpublished, ENT_QUOTES); ?>" tabindex="14" />
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp_unpublished" id="webedit_article_timestp_unpublished" value="<?php echo htmlentities($article_timestp_unpublished, ENT_QUOTES); ?>" tabindex="14" />
                         <a href="#" onclick="javascript:ploopi_calendar_open('webedit_article_timestp_unpublished', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
-                        <?
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article_timestp_unpublished, ENT_QUOTES).'</span>';
                     ?>
@@ -383,23 +382,23 @@ $keywords = array_slice($keywords, 0 , 20, true);
                 <div style="padding:2px;"><strong>Classification (nuage de tags):</strong></div>
                 <p>
                     <label>Etiquettes:</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_tags" id="webedit_article_tags" value="<? echo htmlentities($article->fields['tags'], ENT_QUOTES); ?>" />
-                        <?
+                        <input class="text" type="text" name="webedit_article_tags" id="webedit_article_tags" value="<?php echo htmlentities($article->fields['tags'], ENT_QUOTES); ?>" />
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article->fields['tags']).'</span>';
                     ?>
                 </p>
-                <?
+                <?php
                 if (!$readonly &&   $op == 'article_modify')
                 {
                     ?>
                     <div style="padding:2px;"><strong>Dernières modifications:</strong></div>
                     <div style="padding:2px;">
-                    <?
+                    <?php
                     $sql =  "
                             SELECT      b.timestp,
                                         CHAR_LENGTH(b.content) as l,
@@ -423,106 +422,106 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     {
                         ?>
                         <select class="select" id="article_backup">
-                        <?
+                        <?php
                         while ($row = $db->fetchrow())
                         {
                             $ldate = ($row['timestp']) ? ploopi_timestamp2local($row['timestp']) : array('date' => '', 'time' => '');
                             $size = sprintf("%.02f",($row['l']/1024));
                             ?>
-                            <option value="<? echo $row['timestp']; ?>"><? echo "{$ldate['date']} {$ldate['time']} par {$row['login']} - {$size} kio"; ?></option>
-                            <?
+                            <option value="<?php echo $row['timestp']; ?>"><?php echo "{$ldate['date']} {$ldate['time']} par {$row['login']} - {$size} kio"; ?></option>
+                            <?php
                         }
                         ?>
                         </select>
                         <input type="button" class="button" value="Utiliser" style="width:20%;" onclick="javascript:webedit_backup_reload();">
-                        <?
+                        <?php
                     }
                     ?>
                     </div>
-                    <?
+                    <?php
                 }
                 ?>
             </div>
         </div>
         <div style="clear:both;">
-            <div><? echo htmlentities("Code supplémentaire, non filtré, à insérer dans la balise <HEAD> (js, css, meta, title...) :"); ?> (<a href="javascript:void(0);" onclick="javascript:$('fck_webedit_article_headcontent').style.height=(parseInt($('fck_webedit_article_headcontent').style.height,10)+20)+'px';" title="Permet d'agrandir la zone de saisie de 20px">agrandir la zone</a>)</div>
+            <div><?php echo htmlentities("Code supplémentaire, non filtré, à insérer dans la balise <HEAD> (js, css, meta, title...) :"); ?> (<a href="javascript:void(0);" onclick="javascript:$('fck_webedit_article_headcontent').style.height=(parseInt($('fck_webedit_article_headcontent').style.height,10)+20)+'px';" title="Permet d'agrandir la zone de saisie de 20px">agrandir la zone</a>)</div>
             <div>
-            <?
+            <?php
             if (!$readonly)
             {
                 ?>
-                <textarea id="fck_webedit_article_headcontent" name="fck_webedit_article_headcontent" class="text" style="width:99%;height:16px;"><? echo htmlentities($article->fields['headcontent']); ?></textarea>
-                <?
+                <textarea id="fck_webedit_article_headcontent" name="fck_webedit_article_headcontent" class="text" style="width:99%;height:16px;"><?php echo htmlentities($article->fields['headcontent']); ?></textarea>
+                <?php
             }
             else
             {
                 ?>
                 <div id="fck_webedit_article_headcontent" style="height:16px;">
                 <pre> 
-                <?
+                <?php
                 echo htmlentities($article->fields['headcontent']);
                 ?>
                 </pre>
                 </div>
-                <?                
+                <?php                
             }
             ?>
             </div>
             <div>
                 <label for="webedit_article_disabledfilter" style="cursor:pointer;">Désactiver le validateur XHTML 1.0 Strict (inclusion javascript, styles):</label>
-                <?
+                <?php
                 if (!$readonly)
                 {
                     ?>
-                    <input type="checkbox" name="webedit_article_disabledfilter" id="webedit_article_disabledfilter" class="checkbox" value="1" <? if ($article->fields['disabledfilter']) echo 'checked="checked"'; ?> tabindex="12" />
-                    <?
+                    <input type="checkbox" name="webedit_article_disabledfilter" id="webedit_article_disabledfilter" class="checkbox" value="1" <?php if ($article->fields['disabledfilter']) echo 'checked="checked"'; ?> tabindex="12" />
+                    <?php
                 }
                 else echo ($article->fields['disabledfilter']) ? 'oui' : 'non';
                 ?>
             </div>
         </div>
-        <?
+        <?php
     }
     else
     {
         ?>
-        <input type="hidden" name="webedit_article_visible" value="<? echo $article->fields['visible']; ?>" />
-        <input type="hidden" name="webedit_article_comments_allowed" value="<? echo $article->fields['comments_allowed']; ?>" />
-        <input type="hidden" name="webedit_article_disabledfilter" value="<? echo $article->fields['disabledfilter']; ?>" />
+        <input type="hidden" name="webedit_article_visible" value="<?php echo $article->fields['visible']; ?>" />
+        <input type="hidden" name="webedit_article_comments_allowed" value="<?php echo $article->fields['comments_allowed']; ?>" />
+        <input type="hidden" name="webedit_article_disabledfilter" value="<?php echo $article->fields['disabledfilter']; ?>" />
         <div class="ploopi_form" style="float:left; width:54%;">
             <div style="padding:2px;">
                 <p>
                     <label>Titre:</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_title" value="<? echo $article->fields['title']; ?>" tabindex="2" />
-                        <?
+                        <input class="text" type="text" name="webedit_article_title" value="<?php echo $article->fields['title']; ?>" tabindex="2" />
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
                     <label>Auteur:</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_author" value="<? echo htmlentities($article->fields['author'], ENT_QUOTES); ?>" tabindex="3" />
-                        <?
+                        <input class="text" type="text" name="webedit_article_author" value="<?php echo htmlentities($article->fields['author'], ENT_QUOTES); ?>" tabindex="3" />
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article->fields['author']).'</span>';
                     ?>
                 </p>
                 <p>
                     <label for="webedit_article_visible" style="cursor:pointer;">Visible dans le menu:</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input type="checkbox" name="webedit_article_visible" id="webedit_article_visible" class="checkbox" value="1" <? if ($article->fields['visible']) echo 'checked="checked"'; ?> tabindex="12" />
-                        <?
+                        <input type="checkbox" name="webedit_article_visible" id="webedit_article_visible" class="checkbox" value="1" <?php if ($article->fields['visible']) echo 'checked="checked"'; ?> tabindex="12" />
+                        <?php
                     }
                     else echo ($article->fields['visible']) ? 'oui' : 'non';
                     ?>
@@ -535,40 +534,40 @@ $keywords = array_slice($keywords, 0 , 20, true);
             <div style="padding:2px;">
                 <p>
                     <label>Date:</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp" id="webedit_article_timestp" value="<? echo $article_timestp; ?>" tabindex="4" />
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp" id="webedit_article_timestp" value="<?php echo $article_timestp; ?>" tabindex="4" />
                         <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('webedit_article_timestp', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
-                        <?
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article_timestp, ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
                     <label>Position:</label>
-                    <?
+                    <?php
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:40px;" class="text" type="text" name="webedit_art_position" value="<? echo htmlentities($article->fields['position'], ENT_QUOTES); ?>" tabindex="11" />
-                        <?
+                        <input style="width:40px;" class="text" type="text" name="webedit_art_position" value="<?php echo htmlentities($article->fields['position'], ENT_QUOTES); ?>" tabindex="11" />
+                        <?php
                     }
                     else echo '<span>'.htmlentities($article->fields['position'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
             </div>
         </div>
-        <?
+        <?php
     }
     ?>
     </div>
 </div>
 
 <div style="clear:both;padding:4px;background-color:#e8e8e8;border-top:1px solid #c0c0c0;">
-    <strong>Validateurs <? if ($wf_headingid != $headingid) echo "(Hérités de {$headings['list'][$wf_headingid]['label']})"; ?></strong>:
-    <?
+    <strong>Validateurs <?php if ($wf_headingid != $headingid) echo "(Hérités de {$headings['list'][$wf_headingid]['label']})"; ?></strong>:
+    <?php
     if (!empty($wfusers))
     {
         $sql = "SELECT login FROM ploopi_user WHERE id in (".implode(',',$wfusers).") ORDER BY lastname, firstname";
@@ -581,15 +580,15 @@ $keywords = array_slice($keywords, 0 , 20, true);
     if ($op != 'article_addnew')
     {
         ?>
-        <strong>&nbsp;-&nbsp;Dernière modification le </strong><? echo $lastupdate_timestp; ?><strong> par </strong><? echo $lastupdate_user; ?>
+        <strong>&nbsp;-&nbsp;Dernière modification le </strong><?php echo $lastupdate_timestp; ?><strong> par </strong><?php echo $lastupdate_user; ?>
         <br /><strong>Adresse de cette page : </strong>
-        <?
+        <?php
         // si publié, on affiche un lien vers l'article
         if ($isnewversion == 2) echo 'article non publié';
         else
         {
             $url = $article->geturl();
-            ?><a href="<? echo $url; ?>" target="_blank"><? echo $url; ?></a><?
+            ?><a href="<?php echo $url; ?>" target="_blank"><?php echo $url; ?></a><?php
         }
     }
 
@@ -598,41 +597,41 @@ $keywords = array_slice($keywords, 0 , 20, true);
 
 <div style="padding:4px;background-color:#e0e0e0;clear:both;border-width: 1px 0;border-color:#c0c0c0;border-style:solid;">
     <div style="float:right;" class="webedit_form_buttons">
-    <?
+    <?php
     if ($type == 'draft')
     {
         ?>
         Statut:&nbsp;
         <select name="webedit_article_status" class="select">
-            <?
+            <?php
             foreach($article_status as $key => $value)
             {
                 ?>
-                <option <? echo ($key == $article->fields['status']) ? 'selected' : ''; ?> value="<? echo $key; ?>"><? echo $value; ?></option>
-                <?
+                <option <?php echo ($key == $article->fields['status']) ? 'selected' : ''; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                <?php
             }
             ?>
         </select>
-        <?
-        if ($op != 'article_addnew' && in_array($_SESSION['ploopi']['userid'],$wfusers))
+        <?php
+        if ($op != 'article_addnew' && (in_array($_SESSION['ploopi']['userid'],$wfusers) || ploopi_isadmin()))
         {
             ?>
             <input class="flatbutton" style="font-weight:bold;" type="submit" name="publish" value="Publier">
-            <?
+            <?php
         }
         ?>
         <input class="flatbutton" type="submit" value="Enregistrer">
-        <?
+        <?php
     }
     ?>
     </div>
     <input class="flatbutton" type="button" value="Retour" onclick="javascript:document.location.href='admin.php';">
-    <?
+    <?php
     if ($op != 'article_addnew' && (in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
-        <input class="flatbutton" type="button" value="<? echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<? echo ploopi_urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <? echo addslashes($article->fields['title']); ?> &raquo; ?');">
-        <?
+        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
+        <?php
     }
     if ($type == 'draft')
     {
@@ -640,58 +639,58 @@ $keywords = array_slice($keywords, 0 , 20, true);
         if ($article_online->open($article->fields['id']))
         {
             ?>
-            <input type="button" class="flatbutton" value="Voir la Version en Ligne" onclick="javascript:document.location.href='<? echo "admin.php?op=article_modify&articleid={$articleid}&type=online"; ?>';">
-            <?
+            <input type="button" class="flatbutton" value="Voir la Version en Ligne" onclick="javascript:document.location.href='<?php echo "admin.php?op=article_modify&articleid={$articleid}&type=online"; ?>';">
+            <?php
         }
     }
     else
     {
         ?>
-        <input type="button" class="flatbutton" value="Modifier le Brouillon" onclick="javascript:document.location.href='<? echo "admin.php?op=article_modify&articleid={$articleid}&type=draft"; ?>';">
+        <input type="button" class="flatbutton" value="Modifier le Brouillon" onclick="javascript:document.location.href='<?php echo "admin.php?op=article_modify&articleid={$articleid}&type=draft"; ?>';">
         Cette version n'est pas modifiable, vous devez d'abord modifier le brouillon puis publier l'article.
-        <?
+        <?php
     }    
     ?>
 </div>
 
 <div style="clear:both;">
     <div id="xToolbar"></div>
-    <?
+    <?php
     if (!$readonly)
     {
         ?>
         <input type="hidden" id="fck_webedit_article_content" name="fck_webedit_article_content" value="">
-        <?
+        <?php
     }
 
     ?>
-    <iframe id="webedit_frame_editor" style="border:0;width:100%;height:750px;margin:0;padding:0;" src="<? echo ploopi_urlencode("index.php?headingid={$headingid}&articleid={$articleid}&webedit_mode=edit&type={$type}&readonly={$readonly}"); ?>"></iframe>
+    <iframe id="webedit_frame_editor" style="border:0;width:100%;height:750px;margin:0;padding:0;" src="<?php echo ploopi_urlencode("index.php?headingid={$headingid}&articleid={$articleid}&webedit_mode=edit&type={$type}&readonly={$readonly}"); ?>"></iframe>
 </div>
 
 <div style="padding:4px;background-color:#e0e0e0;clear:both;border-width: 1px 0;border-color:#c0c0c0;border-style:solid;">
     <div style="float:right;" class="webedit_form_buttons">
-    <?
+    <?php
     if ($type == 'draft')
     {
-        if ($op != 'article_addnew' && in_array($_SESSION['ploopi']['userid'],$wfusers))
+        if ($op != 'article_addnew' && (in_array($_SESSION['ploopi']['userid'],$wfusers) || ploopi_isadmin()))
         {
             ?>
             <input class="flatbutton" style="font-weight:bold;" type="submit" name="publish" value="Publier">
-            <?
+            <?php
         }
         ?>
         <input class="flatbutton" type="submit" value="Enregistrer">
-        <?
+        <?php
     }
     ?>
     </div>
     <input class="flatbutton" type="button" value="Retour" onclick="javascript:document.location.href='admin.php';">
-    <?
+    <?php
     if ($op != 'article_addnew' && (in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
-        <input class="flatbutton" type="button" value="<? echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<? echo ploopi_urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <? echo addslashes($article->fields['title']); ?> &raquo; ?');">
-        <?
+        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
+        <?php
     }
     if ($type == 'draft')
     {
@@ -699,32 +698,32 @@ $keywords = array_slice($keywords, 0 , 20, true);
         if ($article_online->open($article->fields['id']))
         {
             ?>
-            <input type="button" class="flatbutton" value="Voir la Version en Ligne" onclick="javascript:document.location.href='<? echo "admin.php?op=article_modify&articleid={$articleid}&type=online"; ?>';">
-            <?
+            <input type="button" class="flatbutton" value="Voir la Version en Ligne" onclick="javascript:document.location.href='<?php echo "admin.php?op=article_modify&articleid={$articleid}&type=online"; ?>';">
+            <?php
         }
     }
     else
     {
         ?>
-        <input type="button" class="flatbutton" value="Modifier le Brouillon" onclick="javascript:document.location.href='<? echo "admin.php?op=article_modify&articleid={$articleid}&type=draft"; ?>';">
+        <input type="button" class="flatbutton" value="Modifier le Brouillon" onclick="javascript:document.location.href='<?php echo "admin.php?op=article_modify&articleid={$articleid}&type=draft"; ?>';">
         Cette version n'est pas modifiable, vous devez d'abord modifier le brouillon puis publier l'article.
-        <?
+        <?php
     }    
     ?>
 </div>
 
 </form>
-<?
+<?php
 if ($op != 'article_addnew')
 {
     ?>
     <div style="clear:both;">
-        <? $arrAllowedActions = array(_WEBEDIT_ACTION_ARTICLE_EDIT, _WEBEDIT_ACTION_ARTICLE_PUBLISH);?>
+        <?php $arrAllowedActions = array(_WEBEDIT_ACTION_ARTICLE_EDIT, _WEBEDIT_ACTION_ARTICLE_PUBLISH);?>
         <div style="border-bottom:1px solid #c0c0c0;">
-        <? ploopi_subscription(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $arrAllowedActions, "à &laquo; {$article->fields['title']} &raquo;"); ?>
+        <?php ploopi_subscription(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $arrAllowedActions, "à &laquo; {$article->fields['title']} &raquo;"); ?>
         </div>
-        <? ploopi_annotation(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $article->fields['title']); ?>
+        <?php ploopi_annotation(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $article->fields['title']); ?>
     </div>
-    <?
+    <?php
 }
 ?>

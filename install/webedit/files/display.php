@@ -967,7 +967,7 @@ if ($webedit_mode != 'display')
     }
 
     window.onload = function() { webedit_autofit_iframe();};
-    <?
+    <?php
 }
 
 $additional_javascript = ob_get_contents();

@@ -36,45 +36,45 @@ $heading->open($headingid);
 ?>
 
 <p class="ploopi_va" style="background-color:#e0e0e0;padding:6px;border-bottom:1px solid #c0c0c0;">
-    <?
+    <?php
     if (ploopi_isactionallowed(_WEBEDIT_ACTION_STATS))
     {
         ?>
-        <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cette rubrique" onclick="javascript:webedit_stats_open(null, <? echo $heading->fields['id']; ?>, event);">
-        <?
+        <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cette rubrique" onclick="javascript:webedit_stats_open(null, <?php echo $heading->fields['id']; ?>, event);">
+        <?php
     }
     ?>    
 
     <img src="./modules/webedit/img/folder.png">
-    <span style="font-weight:bold;">Modification de la rubrique &laquo; <? echo $heading->fields['label']; ?> &raquo;</span>
+    <span style="font-weight:bold;">Modification de la rubrique &laquo; <?php echo $heading->fields['label']; ?> &raquo;</span>
 </p>
 <div id="webedit_heading_toolbar">
-    <?
+    <?php
     if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT))
     {
         ?>
-        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter un article" onclick="javascript:document.location.href='<? echo "admin.php?op=article_addnew"; ?>';" >
+        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter un article" onclick="javascript:document.location.href='<?php echo "admin.php?op=article_addnew"; ?>';" >
             <img src="./modules/webedit/img/doc_add.png">
             <span>Ajouter un article</span>
         </p>
-        <?
+        <?php
     }
     if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
     {
         ?>
-        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une sous-rubrique" onclick="javascript:document.location.href='<? echo "admin.php?op=heading_addnew"; ?>';" >
+        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une sous-rubrique" onclick="javascript:document.location.href='<?php echo "admin.php?op=heading_addnew"; ?>';" >
             <img src="./modules/webedit/img/folder_add.png">
             <span>Ajouter une sous-rubrique</span>
         </p>
-        <?
+        <?php
         if ($heading->fields['depth'] == 1) // root
         {
             ?>
-            <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une racine" onclick="javascript:document.location.href='<? echo "admin.php?op=heading_addroot"; ?>';" >
+            <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une racine" onclick="javascript:document.location.href='<?php echo "admin.php?op=heading_addroot"; ?>';" >
                 <img src="./modules/webedit/img/folder_add.png">
                 <span>Ajouter une racine</span>
             </p>
-            <?
+            <?php
         }
     }
 
@@ -82,26 +82,26 @@ $heading->open($headingid);
     if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) && !($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1))
     {
         ?>
-        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Supprimer cette rubrique" onclick="javascript:ploopi_confirmlink('<? echo "admin.php?op=heading_delete"; ?>','<? echo _PLOOPI_CONFIRM; ?>');" >
+        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Supprimer cette rubrique" onclick="javascript:ploopi_confirmlink('<?php echo "admin.php?op=heading_delete"; ?>','<?php echo _PLOOPI_CONFIRM; ?>');" >
             <img src="./modules/webedit/img/folder_del.png">
             <span>Supprimer cette rubrique</span>
         </p>
-        <?
+        <?php
     }
     ?>
 </div>
 
-<?
+<?php
 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
 {
     ?>
-    <form style="margin:0;" action="<? echo ploopi_urlencode('admin.php?op=heading_save'); ?>" method="post" onsubmit="javascript:return webedit_heading_validate(this);">
-    <?
+    <form style="margin:0;" action="<?php echo ploopi_urlencode('admin.php?op=heading_save'); ?>" method="post" onsubmit="javascript:return webedit_heading_validate(this);">
+    <?php
 }
 ?>
 
 <div class="webedit_main_form">
-<?
+<?php
 if ($display_type == 'advanced')
 {
     ?>
@@ -110,51 +110,51 @@ if ($display_type == 'advanced')
             <p style="font-weight:bold;">Propriétés principales:</p>
             <p>
                 <label>Libellé:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="text" class="text" name="webedit_heading_label"  value="<? echo htmlentities($heading->fields['label']); ?>" tabindex="1" />
-                    <?
+                    <input type="text" class="text" name="webedit_heading_label"  value="<?php echo htmlentities($heading->fields['label']); ?>" tabindex="1" />
+                    <?php
                 }
                 else echo '<span>'.htmlentities($heading->fields['label']).'</span>';
                 ?>
             </p>
             <p>
                 <label>Description:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <textarea class="text" name="webedit_heading_description" tabindex="2"><? echo htmlentities($heading->fields['description']); ?></textarea>
-                    <?
+                    <textarea class="text" name="webedit_heading_description" tabindex="2"><?php echo htmlentities($heading->fields['description']); ?></textarea>
+                    <?php
                 }
                 else echo '<span>'.ploopi_nl2br(htmlentities($heading->fields['description'])).'</span>';
                 ?>
             </p>
             <p>
                 <label>Gabarit:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
                     <select class="select" name="webedit_heading_template" tabindex="3">
-                        <?
+                        <?php
                         if (isset($headings['list'][$headingid]['herited_template']) && $headings['list'][$headingid]['herited_template']) $webedit_template_name = $headings['list'][$headingid]['template'].' (hérité)';
                         else $webedit_template_name = '';
                         ?>
-                        <option value=""><? echo $webedit_template_name; ?></option>
-                        <?
+                        <option value=""><?php echo $webedit_template_name; ?></option>
+                        <?php
                         $webedit_templates = webedit_gettemplates();
                         foreach ($webedit_templates as $tpl)
                         {
                             ?>
-                            <option value="<? echo $tpl; ?>" <? if ($heading->fields['template'] == $tpl) echo 'selected'; ?>><? echo $tpl; ?></option>
-                            <?
+                            <option value="<?php echo $tpl; ?>" <?php if ($heading->fields['template'] == $tpl) echo 'selected'; ?>><?php echo $tpl; ?></option>
+                            <?php
                         }
                         ?>
                     </select>
-                    <?
+                    <?php
                 }
                 else
                 {
@@ -166,12 +166,12 @@ if ($display_type == 'advanced')
             </p>
             <p>
                 <label>Position:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="text" class="text" name="head_position" value="<? echo htmlentities($heading->fields['position']); ?>" style="width:40px;" tabindex="4" />
-                    <?
+                    <input type="text" class="text" name="head_position" value="<?php echo htmlentities($heading->fields['position']); ?>" style="width:40px;" tabindex="4" />
+                    <?php
                 }
                 else echo '<span>'.htmlentities($heading->fields['position']).'</span>';
                 ?>
@@ -180,72 +180,72 @@ if ($display_type == 'advanced')
             
             <p>
                 <label for="webedit_heading_visible" style="cursor:pointer;"><strong>Visible:</strong></label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="checkbox" name="webedit_heading_visible" id="webedit_heading_visible" class="checkbox" value="1" <? if ($heading->fields['visible']) echo 'checked'; ?> tabindex="5" />
-                    <?
+                    <input type="checkbox" name="webedit_heading_visible" id="webedit_heading_visible" class="checkbox" value="1" <?php if ($heading->fields['visible']) echo 'checked'; ?> tabindex="5" />
+                    <?php
                 }
                 else echo ($heading->fields['visible']) ? 'oui' : 'non';
                 ?>
             </p>
             <p>
                 <label for="webedit_heading_url_window" style="cursor:pointer;">Ouvrir une nouvelle fenêtre:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="checkbox" name="webedit_heading_url_window" id="webedit_heading_url_window" class="checkbox" value="1" <? if ($heading->fields['url_window']) echo 'checked'; ?> tabindex="9" />
-                    <?
+                    <input type="checkbox" name="webedit_heading_url_window" id="webedit_heading_url_window" class="checkbox" value="1" <?php if ($heading->fields['url_window']) echo 'checked'; ?> tabindex="9" />
+                    <?php
                 }
                 else echo ($heading->fields['url_window']) ? 'oui' : 'non';
                 ?>
             </p>
             <p>
                 <label>Trier les articles:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
                     <select class="select" name="webedit_heading_sortmode">
-                    <?
+                    <?php
                     foreach($heading_sortmodes as $key => $value)
                     {
                         ?>
-                        <option <? if ($heading->fields['sortmode'] == $key) echo 'selected'; ?> value="<? echo htmlentities($key); ?>"><? echo htmlentities($value); ?></option>
-                        <?
+                        <option <?php if ($heading->fields['sortmode'] == $key) echo 'selected'; ?> value="<?php echo htmlentities($key); ?>"><?php echo htmlentities($value); ?></option>
+                        <?php
                     }
                     ?>
                     </select>
-                    <?
+                    <?php
                 }
                 else
                 {
-                    ?><span><? echo $heading_sortmodes[$heading->fields['sortmode']]; ?></span><?
+                    ?><span><?php echo $heading_sortmodes[$heading->fields['sortmode']]; ?></span><?php
                 }
                 ?>
             </p>
             <p>
                 <label for="webedit_heading_feed_enabled" style="cursor:pointer;">Fournir un flux RSS:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="checkbox" name="webedit_heading_feed_enabled" id="webedit_heading_feed_enabled" class="checkbox" value="1" <? if ($heading->fields['feed_enabled']) echo 'checked'; ?> tabindex="9" />
-                    <?
+                    <input type="checkbox" name="webedit_heading_feed_enabled" id="webedit_heading_feed_enabled" class="checkbox" value="1" <?php if ($heading->fields['feed_enabled']) echo 'checked'; ?> tabindex="9" />
+                    <?php
                 }
                 else echo ($heading->fields['feed_enabled']) ? 'oui' : 'non';
                 ?>
             </p>
             <p>
                 <label for="webedit_heading_subscription_enabled" style="cursor:pointer;">Autoriser les abonnements:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="checkbox" name="webedit_heading_subscription_enabled" id="webedit_heading_subscription_enabled" class="checkbox" value="1" <? if ($heading->fields['subscription_enabled']) echo 'checked'; ?> tabindex="9" />
-                    <?
+                    <input type="checkbox" name="webedit_heading_subscription_enabled" id="webedit_heading_subscription_enabled" class="checkbox" value="1" <?php if ($heading->fields['subscription_enabled']) echo 'checked'; ?> tabindex="9" />
+                    <?php
                 }
                 else echo ($heading->fields['subscription_enabled']) ? 'oui' : 'non';
                 ?>
@@ -260,18 +260,18 @@ if ($display_type == 'advanced')
             <p>
                 <label>Type de Contenu:</label>
                 <span>
-                    <?
+                    <?php
                     if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                     {
                         ?>
                         <div style="clear:both;cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_article_first');">
-                            <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="article_first" id="heading_content_type_article_first" <? if ($heading->fields['content_type'] == 'article_first') echo 'checked'; ?> />Afficher le premier article
+                            <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="article_first" id="heading_content_type_article_first" <?php if ($heading->fields['content_type'] == 'article_first') echo 'checked'; ?> />Afficher le premier article
                         </div>
                         <div style="clear:both;cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_article_redirect');">
-                            <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="article_redirect" id="heading_content_type_article_redirect" <? if ($heading->fields['content_type'] == 'article_redirect') echo 'checked'; ?> />Redirection vers un article
+                            <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="article_redirect" id="heading_content_type_article_redirect" <?php if ($heading->fields['content_type'] == 'article_redirect') echo 'checked'; ?> />Redirection vers un article
                         </div>
                         <div style="padding-left:20px;">
-                            <?
+                            <?php
                             $article_title = '';
                             if (!empty($heading->fields['linkedpage']))
                             {
@@ -279,24 +279,24 @@ if ($display_type == 'advanced')
                                 if ($article->open($heading->fields['linkedpage'])) $article_title = $article->fields['title'];
                             }
                             ?>
-                            <input type="hidden" id="webedit_heading_linkedpage" name="webedit_heading_linkedpage" value="<? echo $heading->fields['linkedpage']; ?>">
-                            <input type="text" readonly class="text" style="width:150px;" id="linkedpage_displayed" value="<? echo $article_title; ?>">
+                            <input type="hidden" id="webedit_heading_linkedpage" name="webedit_heading_linkedpage" value="<?php echo $heading->fields['linkedpage']; ?>">
+                            <input type="text" readonly class="text" style="width:150px;" id="linkedpage_displayed" value="<?php echo $article_title; ?>">
                             <img src="./modules/webedit/img/ico_choose_article.png" style="cursor:pointer;" title="Choisir un article" alt="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_heading_selectredirect',false), 300, event, 'click', 'webedit_popup_selectredirect');" />
                             <img src="./modules/webedit/img/ico_clear_article.png" style="cursor:pointer;" title="Effacer la redirection" alt="Choisir" onclick="javascript:ploopi_getelem('webedit_heading_linkedpage').value='';ploopi_getelem('linkedpage_displayed').value='';" />
                         </div>
                         <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_url_redirect');">
-                            <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="url_redirect" id="heading_content_type_url_redirect" <? if ($heading->fields['content_type'] == 'url_redirect') echo 'checked'; ?> />Redirection vers une URL
+                            <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="url_redirect" id="heading_content_type_url_redirect" <?php if ($heading->fields['content_type'] == 'url_redirect') echo 'checked'; ?> />Redirection vers une URL
                         </div>
                         <div style="padding-left:20px;">
-                            <input type="text" class="text" name="webedit_heading_url" style="width:95%;" value="<? echo htmlentities($heading->fields['url']); ?>" onkeyup="javascript:if (this.value.length>0 && !$('heading_content_type_url_redirect').checked) ploopi_checkbox_click(event, 'heading_content_type_url_redirect');" tabindex="8" />
+                            <input type="text" class="text" name="webedit_heading_url" style="width:95%;" value="<?php echo htmlentities($heading->fields['url']); ?>" onkeyup="javascript:if (this.value.length>0 && !$('heading_content_type_url_redirect').checked) ploopi_checkbox_click(event, 'heading_content_type_url_redirect');" tabindex="8" />
                         </div>
                         <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_headings');">
-                            <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="headings" id="heading_content_type_headings" <? if ($heading->fields['content_type'] == 'headings') echo 'checked'; ?> />Afficher le contenu des sous rubriques
+                            <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="headings" id="heading_content_type_headings" <?php if ($heading->fields['content_type'] == 'headings') echo 'checked'; ?> />Afficher le contenu des sous rubriques
                         </div>
                         <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_sitemap');">
-                            <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="sitemap" id="heading_content_type_sitemap" <? if ($heading->fields['content_type'] == 'sitemap') echo 'checked'; ?> />Afficher le plan du site
+                            <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="sitemap" id="heading_content_type_sitemap" <?php if ($heading->fields['content_type'] == 'sitemap') echo 'checked'; ?> />Afficher le plan du site
                         </div>
-                        <?
+                        <?php
                     }
                     else
                     {
@@ -305,13 +305,13 @@ if ($display_type == 'advanced')
                             case 'article_first':
                                 ?>
                                 Afficher le premier article
-                                <?
+                                <?php
                             break;
                                 
                             case 'article_redirect':
                                 ?>
                                 Redirection vers un article : <br />
-                                <?
+                                <?php
                                 if (!empty($heading->fields['linkedpage']))
                                 {
                                     $article = new webedit_article('draft');
@@ -326,14 +326,14 @@ if ($display_type == 'advanced')
                             case 'url_redirect':
                                 ?>
                                 Redirection vers une URL : <br /> 
-                                <?
+                                <?php
                                 echo htmlentities($heading->fields['url']);                            
                             break;
                                 
                             case 'headings':
                                 ?>
                                 Afficher des liens vers les sous-rubriques et les articles
-                                <?
+                                <?php
                             break;
                         }
                     }
@@ -343,61 +343,61 @@ if ($display_type == 'advanced')
             <p style="font-weight:bold;">Propriétés annexes:</p>
             <p>
                 <label>Couleur:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="text" style="width:100px;" class="text" name="webedit_heading_color" id="webedit_heading_color" value="<? echo htmlentities($heading->fields['color']); ?>" tabindex="10" />
+                    <input type="text" style="width:100px;" class="text" name="webedit_heading_color" id="webedit_heading_color" value="<?php echo htmlentities($heading->fields['color']); ?>" tabindex="10" />
                     <a href="javascript:void(0);" onclick="javascript:ploopi_colorpicker_open('webedit_heading_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0"></a>
-                <?
+                <?php
                 }
                 else echo '<span>'.htmlentities($heading->fields['color']).'</span>';
                 ?>
             </p>
             <p>
                 <label>Position x:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="text" style="width:100px;" class="text" name="webedit_heading_posx"  value="<? echo htmlentities($heading->fields['posx']); ?>" tabindex="11" />
-                    <?
+                    <input type="text" style="width:100px;" class="text" name="webedit_heading_posx"  value="<?php echo htmlentities($heading->fields['posx']); ?>" tabindex="11" />
+                    <?php
                 }
                 else echo '<span>'.htmlentities($heading->fields['posx']).'</span>';
                 ?>
             </p>
             <p>
                 <label>Position y:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="text" style="width:100px;" class="text" name="webedit_heading_posy"  value="<? echo htmlentities($heading->fields['posy']); ?>" tabindex="12" />
-                    <?
+                    <input type="text" style="width:100px;" class="text" name="webedit_heading_posy"  value="<?php echo htmlentities($heading->fields['posy']); ?>" tabindex="12" />
+                    <?php
                 }
                 else echo '<span>'.htmlentities($heading->fields['posy']).'</span>';
                 ?>
             </p>
             <p>
                 <label>Champ Libre 1:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="text" class="text" name="webedit_heading_free1"  value="<? echo htmlentities($heading->fields['free1']); ?>" tabindex="13" />
-                    <?
+                    <input type="text" class="text" name="webedit_heading_free1"  value="<?php echo htmlentities($heading->fields['free1']); ?>" tabindex="13" />
+                    <?php
                 }
                 else echo '<span>'.htmlentities($heading->fields['free1']).'</span>';
                 ?>
             </p>
             <p>
                 <label>Champ Libre 2:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="text" class="text" name="webedit_heading_free2"  value="<? echo htmlentities($heading->fields['free2']); ?>" tabindex="14" />
-                    <?
+                    <input type="text" class="text" name="webedit_heading_free2"  value="<?php echo htmlentities($heading->fields['free2']); ?>" tabindex="14" />
+                    <?php
                 }
                 else echo '<span>'.htmlentities($heading->fields['free2']).'</span>';
                 ?>
@@ -405,53 +405,52 @@ if ($display_type == 'advanced')
 
         </div>
     </div>
-    <?
+    <?php
 }
 else
 {
     ?>
-    <input type="hidden" name="webedit_heading_visible" value="<? echo $heading->fields['visible'] ?>" />
-    <input type="hidden" name="webedit_heading_url_window" value="<? echo $heading->fields['url_window']; ?>" />
-    <input type="hidden" name="webedit_heading_feed_enabled" value="<? echo $heading->fields['feed_enabled']; ?>" />
-    <input type="hidden" name="webedit_heading_subscription_enabled" value="<? echo $heading->fields['subscription_enabled']; ?>" />
+    <input type="hidden" name="webedit_heading_url_window" value="<?php echo $heading->fields['url_window']; ?>" />
+    <input type="hidden" name="webedit_heading_feed_enabled" value="<?php echo $heading->fields['feed_enabled']; ?>" />
+    <input type="hidden" name="webedit_heading_subscription_enabled" value="<?php echo $heading->fields['subscription_enabled']; ?>" />
                 
     <div class="ploopi_form" style="float:left;width:45%;">
         <div style="padding:2px;">
             <p>
                 <label>Libellé:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="text" class="text" name="webedit_heading_label"  value="<? echo htmlentities($heading->fields['label']); ?>" tabindex="1" />
-                    <?
+                    <input type="text" class="text" name="webedit_heading_label"  value="<?php echo htmlentities($heading->fields['label']); ?>" tabindex="1" />
+                    <?php
                 }
                 else echo '<span>'.htmlentities($heading->fields['label']).'</span>';
                 ?>
             </p>
             <p>
                 <label>Gabarit:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
                     <select class="select" name="webedit_heading_template" tabindex="3">
-                        <?
+                        <?php
                         if (isset($headings['list'][$headingid]['herited_template']) && $headings['list'][$headingid]['herited_template']) $webedit_template_name = $headings['list'][$headingid]['template'].' (hérité)';
                         else $webedit_template_name = '';
                         ?>
-                        <option value=""><? echo $webedit_template_name; ?></option>
-                        <?
+                        <option value=""><?php echo $webedit_template_name; ?></option>
+                        <?php
                         $webedit_templates = webedit_gettemplates();
                         foreach ($webedit_templates as $tpl)
                         {
                             ?>
-                            <option value="<? echo $tpl; ?>" <? if ($heading->fields['template'] == $tpl) echo 'selected'; ?>><? echo $tpl; ?></option>
-                            <?
+                            <option value="<?php echo $tpl; ?>" <?php if ($heading->fields['template'] == $tpl) echo 'selected'; ?>><?php echo $tpl; ?></option>
+                            <?php
                         }
                         ?>
                     </select>
-                    <?
+                    <?php
                 }
                 else
                 {
@@ -463,16 +462,27 @@ else
             </p>
             <p>
                 <label>Position:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <input type="text" class="text" name="head_position" value="<? echo htmlentities($heading->fields['position']); ?>" style="width:40px;" tabindex="4" />
-                    <?
+                    <input type="text" class="text" name="head_position" value="<?php echo htmlentities($heading->fields['position']); ?>" style="width:40px;" tabindex="4" />
+                    <?php
                 }
                 else echo '<span>'.htmlentities($heading->fields['position']).'</span>';
                 ?>
-
+            </p>
+            <p>
+                <label for="webedit_heading_visible" style="cursor:pointer;"><strong>Visible:</strong></label>
+                <?php
+                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+                {
+                    ?>
+                    <input type="checkbox" name="webedit_heading_visible" id="webedit_heading_visible" class="checkbox" value="1" <?php if ($heading->fields['visible']) echo 'checked'; ?> tabindex="5" />
+                    <?php
+                }
+                else echo ($heading->fields['visible']) ? 'oui' : 'non';
+                ?>
             </p>
         </div>
     </div>
@@ -481,24 +491,24 @@ else
         <div style="padding:2px;">
             <p>
                 <label>Description:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     ?>
-                    <textarea class="text" name="webedit_heading_description" tabindex="2"><? echo htmlentities($heading->fields['description']); ?></textarea>
-                    <?
+                    <textarea class="text" name="webedit_heading_description" tabindex="2"><?php echo htmlentities($heading->fields['description']); ?></textarea>
+                    <?php
                 }
                 else echo '<span>'.ploopi_nl2br(htmlentities($heading->fields['description'])).'</span>';
                 ?>
             </p>
         </div>
     </div>
-    <?
+    <?php
 }
 ?>
 </div>
 
-<?
+<?php
 // get validation validators
 $wfusers = array();
 $wf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
@@ -522,8 +532,8 @@ foreach($wf as $value) $wfusers[] = $value['id_validation'];
 
 ?>
 <div style="clear:both;padding:4px;">
-    <strong>Validateurs <? if ($wf_headingid != $headingid) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?headingid={$wf_headingid}")."\">{$headings['list'][$wf_headingid]['label']}</a> &raquo;)"; ?></strong>:
-    <?
+    <strong>Validateurs (utilisateurs qui peuvent publier) <?php if ($wf_headingid != $headingid) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?headingid={$wf_headingid}")."\">{$headings['list'][$wf_headingid]['label']}</a> &raquo;)"; ?></strong>:
+    <?php
     if (!empty($wfusers))
     {
         $sql = "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$wfusers).") ORDER BY lastname, firstname";
@@ -536,19 +546,19 @@ foreach($wf as $value) $wfusers[] = $value['id_validation'];
 </div>
 
 
-<?
+<?php
 if (ploopi_isactionallowed(_WEBEDIT_ACTION_WORKFLOW_MANAGE))
 {
     ?>
-    <div style="clear:both;padding:4px;font-weight:bold;"><? echo ($wf_headingid == $headingid) ? 'Vous pouvez modifier la liste des validateurs :' : 'Vous pouvez définir de nouveaux validateurs :'; ?></div>
+    <div style="clear:both;padding:4px;font-weight:bold;"><?php echo ($wf_headingid == $headingid) ? 'Vous pouvez modifier la liste des validateurs :' : 'Vous pouvez définir de nouveaux validateurs :'; ?></div>
     <div style="clear:both;padding:4px;">
         <div style="border:1px solid #c0c0c0;overflow:hidden;">
-        <?
+        <?php
             ploopi_validation_selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, _WEBEDIT_ACTION_ARTICLE_PUBLISH);
         ?>
         </div>
     </div>
-    <?
+    <?php
 }
 
 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
@@ -559,24 +569,24 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
         <input class="flatbutton" type="submit" value="Enregistrer">
     </div>
     </form>
-    <?
+    <?php
 }
 ?>
 
 <div style="margin:0 4px 4px 4px;border-style:solid;border-width:1px 1px 0 1px;border-color:#c0c0c0;">
     <p class="ploopi_va" style="background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;padding:4px 6px;overflow:auto;">
-        <?
+        <?php
         if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT))
         {
             ?>
-                <a style="float:right;text-decoration:none;" href="<? echo "admin.php?op=article_addnew"; ?>">&nbsp;Ajouter un article</a>
+                <a style="float:right;text-decoration:none;" href="<?php echo "admin.php?op=article_addnew"; ?>">&nbsp;Ajouter un article</a>
                 <img style="float:right;border:0px;" src="./modules/webedit/img/doc_add.png">
-            <?
+            <?php
         }
         ?>
-        <b>Liste des articles de la rubrique &laquo; <? echo $heading->fields['label'] ?> &raquo;</b>
+        <b>Liste des articles de la rubrique &laquo; <?php echo $heading->fields['label'] ?> &raquo;</b>
     </p>
-    <?
+    <?php
     $articles_columns = array();
     
     $articles_columns['auto']['titre'] = array('label' => 'Titre', 'options' => array('sort' => true));
@@ -656,15 +666,15 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
     ?>
 </div>
 
-<?
+<?php
 if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des abonnés ?
 {
     ?>
     <div style="margin:0 4px 4px 4px;border-style:solid;border-width:1px 1px 0 1px;border-color:#c0c0c0;">
         <p class="ploopi_va" style="background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;padding:4px 6px;overflow:auto;">
-            <b>Liste des abonnés frontoffice (anonymes) de la rubrique &laquo; <? echo $heading->fields['label'] ?> &raquo;</b>
+            <b>Liste des abonnés frontoffice (anonymes) de la rubrique &laquo; <?php echo $heading->fields['label'] ?> &raquo;</b>
         </p>
-        <?
+        <?php
         $subscribers_columns = array();
         
         $subscribers_columns['auto']['email'] = 
@@ -725,7 +735,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des a
         $skin->display_array($subscribers_columns, $subscribers_values, 'webedit_subscribers', $options);
         ?>
     </div>
-    <?
+    <?php
 }
 
 $parents = explode(';', $heading->fields['parents']);
@@ -735,9 +745,9 @@ for ($i = 0; $i < sizeof($parents); $i++)
     {
         ?>
         <div style="padding:2px 4px;font-weight:bold;">
-        Vous héritez de l'abonnement à &laquo; <a href="<? echo ploopi_urlencode("admin.php?headingid={$parents[$i]}"); ?>"><? echo $headings['list'][$parents[$i]]['label']; ?></a> &raquo; 
+        Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi_urlencode("admin.php?headingid={$parents[$i]}"); ?>"><?php echo $headings['list'][$parents[$i]]['label']; ?></a> &raquo; 
         </div>
-        <?
+        <?php
     }
 }
 
@@ -749,5 +759,5 @@ $arrAllowedActions = array( _WEBEDIT_ACTION_ARTICLE_EDIT,
 ploopi_subscription(_WEBEDIT_OBJECT_HEADING, $headingid, $arrAllowedActions, "à &laquo; {$heading->fields['label']} &raquo;"); 
 ?>
 <div style="border-top:1px solid #c0c0c0;">
-<? ploopi_annotation(_WEBEDIT_OBJECT_HEADING, $headingid, $heading->fields['label']); ?>
+<?php ploopi_annotation(_WEBEDIT_OBJECT_HEADING, $headingid, $heading->fields['label']); ?>
 </div>
