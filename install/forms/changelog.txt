@@ -1,3 +1,9 @@
+== Module FORMS - version 2.3.1 =====================================================
+
+2009-02-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug dans la navigation backoffice, avec le frontoffice désactivé, lors de l'intégration d'un objet WCE/WebEdit de type formulaire.
+ 
 == Module FORMS - version 2.3 =====================================================
 
 2009-02-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

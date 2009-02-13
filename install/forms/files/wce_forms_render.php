@@ -39,7 +39,7 @@
 $form_action_params = array();
 if (!empty($_REQUEST['headingid'])) $form_action_params[] = "headingid={$_REQUEST['headingid']}";
 if (!empty($_REQUEST['articleid'])) $form_action_params[] = "articleid={$_REQUEST['articleid']}";
-if (!empty($_REQUEST['wce_mode'])) $form_action_params[] = "wce_mode={$_REQUEST['wce_mode']}";
+if (!empty($_REQUEST['webedit_mode'])) $form_action_params[] = "webedit_mode={$_REQUEST['webedit_mode']}";
 
 $form_action = (!empty($form_action_params)) ? 'index.php?'.implode('&',$form_action_params) : 'index.php';
 
