@@ -229,47 +229,49 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
             // tableau contenant les rôles pour les utilisateurs/groupes trouvés
             $arrRoles = array('groups' => array(), 'users' => array());
             
-            if (!empty($strGroupList))
+            if (!empty($strUserList))
             {
-                // recherche des rôles "groupe"
+                if (!empty($strGroupList))
+                {
+                    // recherche des rôles "groupe"
+                    $db->query("
+                        SELECT      wgr.id_group,
+                                    wgr.id_workspace,
+                                    r.id,
+                                    r.id_module,
+                                    r.label as role_label,
+                                    m.label as module_label
+                                    
+                        FROM        ploopi_role r,
+                                    ploopi_workspace_group_role wgr,
+                                    ploopi_module m
+                                    
+                        WHERE       wgr.id_role = r.id
+                        AND         r.id_module = m.id
+                        AND         wgr.id_group IN ({$strGroupList})
+                    ");
+                    
+                    while ($row = $db->fetchrow()) $arrRoles['groups'][$row['id_workspace']][$row['id_group']][$row['id']] = $row;
+                }
+                    
+                // recherche des rôles "utilisateur"
                 $db->query("
-                    SELECT      wgr.id_group,
-                                wgr.id_workspace,
+                    SELECT      wur.id_user,
+                                wur.id_workspace,
                                 r.id,
                                 r.id_module,
                                 r.label as role_label,
                                 m.label as module_label
                                 
                     FROM        ploopi_role r,
-                                ploopi_workspace_group_role wgr,
+                                ploopi_workspace_user_role wur,
                                 ploopi_module m
                                 
-                    WHERE       wgr.id_role = r.id
+                    WHERE       wur.id_role = r.id
                     AND         r.id_module = m.id
-                    AND         wgr.id_group IN ({$strGroupList})
+                    AND         wur.id_user IN ({$strUserList})
                 ");
-                
-                while ($row = $db->fetchrow()) $arrRoles['groups'][$row['id_workspace']][$row['id_group']][$row['id']] = $row;
-            }
-                
-            // recherche des rôles "utilisateur"
-            $db->query("
-                SELECT      wur.id_user,
-                            wur.id_workspace,
-                            r.id,
-                            r.id_module,
-                            r.label as role_label,
-                            m.label as module_label
-                            
-                FROM        ploopi_role r,
-                            ploopi_workspace_user_role wur,
-                            ploopi_module m
-                            
-                WHERE       wur.id_role = r.id
-                AND         r.id_module = m.id
-                AND         wur.id_user IN ({$strUserList})
-            ");
-                
+            }                
             while ($row = $db->fetchrow()) $arrRoles['users'][$row['id_workspace']][$row['id_user']][$row['id']] = $row;
         
             foreach ($arrUser as $row)
