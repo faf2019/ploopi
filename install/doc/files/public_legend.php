@@ -83,7 +83,7 @@ ob_start();
         <span style="margin-left:4px;">Dossier ou fichier à valider</span>
     </p>
 </div>
-<?
+<?php
 /**
  * On récupère le contenu du buffer et on supprime le buffer
  */

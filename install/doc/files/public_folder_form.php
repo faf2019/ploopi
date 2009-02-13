@@ -73,13 +73,13 @@ if (!$addfolder && $docfolder->open($currentfolder)) // modifying
     {
         ?>
         <div class="doc_fileform_title">Consultation d'un Dossier (lecture seule)</div>
-        <?
+        <?php
     }
     else
     {
         ?>
         <div class="doc_fileform_title">Modification d'un Dossier</div>
-        <?
+        <?php
     }
 }
 else // creating
@@ -98,18 +98,18 @@ else // creating
     $readonly = false;
     ?>
     <div class="doc_fileform_title">Nouveau Dossier</div>
-    <?
+    <?php
 }
 ?>
 
 <div class="doc_fileform_main">
     <div>
-        <?
+        <?php
         if (!$readonly)
         {
             ?>
-            <form name="docfolder_form" action="<? echo ploopi_urlencode("admin.php?ploopi_op=doc_foldersave&currentfolder={$currentfolder}".($newfolder ? '' : "&docfolder_id={$currentfolder}")); ?>"  onsubmit="javascript:return doc_folder_validate(this, <? echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" method="post" enctype="multipart/form-data">
-            <?
+            <form name="docfolder_form" action="<?php echo ploopi_urlencode("admin.php?ploopi_op=doc_foldersave&currentfolder={$currentfolder}".($newfolder ? '' : "&docfolder_id={$currentfolder}")); ?>"  onsubmit="javascript:return doc_folder_validate(this, <?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" method="post" enctype="multipart/form-data">
+            <?php
         }
         ?>
 
@@ -117,78 +117,78 @@ else // creating
             <div style="padding:2px;">
                 <p>
                     <label>Nom du Dossier:</label>
-                    <?
+                    <?php
                     if ($readonly)
                     {
                         ?>
-                        <span><? echo htmlentities($docfolder->fields['name']); ?></span>
-                        <?
+                        <span><?php echo htmlentities($docfolder->fields['name']); ?></span>
+                        <?php
                     }
                     else
                     {
                         ?>
-                        <input type="text" class="text" name="docfolder_name" id="docfolder_name" value="<? echo htmlentities($docfolder->fields['name']); ?>" tabindex="1">
-                        <?
+                        <input type="text" class="text" name="docfolder_name" id="docfolder_name" value="<?php echo htmlentities($docfolder->fields['name']); ?>" tabindex="1">
+                        <?php
                     }
                     ?>
                 </p>
                 <p>
                     <label>Type de Dossier:</label>
-                    <?
+                    <?php
                     if ($readonly)
                     {
                         ?>
-                        <span><? echo htmlentities($foldertypes[$docfolder->fields['foldertype']]); ?></span>
-                        <?
+                        <span><?php echo htmlentities($foldertypes[$docfolder->fields['foldertype']]); ?></span>
+                        <?php
                     }
                     else
                     {
                         ?>
                         <select class="select" name="docfolder_foldertype" onchange="javascript:ploopi_getelem('doc_share').style.display = (this.value == 'shared') ? 'block' : 'none'; ploopi_getelem('doc_validation').style.display = (this.value == 'private') ? 'none' : 'block';" tabindex="2">
-                            <?
+                            <?php
                             foreach($foldertypes as $key => $value)
                             {
                                 ?>
-                                <option <? if ($docfolder->fields['foldertype'] == $key) echo 'selected'; ?> value="<? echo $key; ?>"><? echo htmlentities($value); ?></option>
-                                <?
+                                <option <?php if ($docfolder->fields['foldertype'] == $key) echo 'selected'; ?> value="<?php echo $key; ?>"><?php echo htmlentities($value); ?></option>
+                                <?php
                             }
                             ?>
                         </select>
-                        <?
+                        <?php
                     }
                     ?>
                 </p>
                 <p>
                     <label>Conteneur en Lecture seule:</label>
-                    <?
+                    <?php
                     if ($readonly)
                     {
                         ?>
-                        <span><? echo ($docfolder->fields['readonly']) ? 'oui' : 'non'; ?></span>
-                        <?
+                        <span><?php echo ($docfolder->fields['readonly']) ? 'oui' : 'non'; ?></span>
+                        <?php
                     }
                     else
                     {
                         ?>
-                        <input type="checkbox" name="docfolder_readonly" value="1" <? if ($docfolder->fields['readonly']) echo 'checked'; ?> tabindex="3">
-                        <?
+                        <input type="checkbox" name="docfolder_readonly" value="1" <?php if ($docfolder->fields['readonly']) echo 'checked'; ?> tabindex="3">
+                        <?php
                     }
                     ?>
                 </p>
                 <p>
                     <label>Contenu en Lecture seule:</label>
-                    <?
+                    <?php
                     if ($readonly)
                     {
                         ?>
-                        <span><? echo ($docfolder->fields['readonly_content']) ? 'oui' : 'non'; ?></span>
-                        <?
+                        <span><?php echo ($docfolder->fields['readonly_content']) ? 'oui' : 'non'; ?></span>
+                        <?php
                     }
                     else
                     {
                         ?>
-                        <input type="checkbox" name="docfolder_readonly_content" value="1" <? if ($docfolder->fields['readonly_content']) echo 'checked'; ?> tabindex="4">
-                        <?
+                        <input type="checkbox" name="docfolder_readonly_content" value="1" <?php if ($docfolder->fields['readonly_content']) echo 'checked'; ?> tabindex="4">
+                        <?php
                     }
                     ?>
                 </p>
@@ -198,18 +198,18 @@ else // creating
             <div style="padding:2px;">
                 <p>
                     <label>Commentaire:</label>
-                    <?
+                    <?php
                     if ($readonly)
                     {
                         ?>
-                        <span><? echo ploopi_nl2br(htmlentities($docfolder->fields['description'])); ?></span>
-                        <?
+                        <span><?php echo ploopi_nl2br(htmlentities($docfolder->fields['description'])); ?></span>
+                        <?php
                     }
                     else
                     {
                         ?>
-                        <textarea class="text" name="docfolder_description" tabindex="5"><? echo htmlentities($docfolder->fields['description']); ?></textarea>
-                        <?
+                        <textarea class="text" name="docfolder_description" tabindex="5"><?php echo htmlentities($docfolder->fields['description']); ?></textarea>
+                        <?php
                     }
                     ?>
                 </p>
@@ -217,58 +217,58 @@ else // creating
         </div>
     </div>
 
-    <?
+    <?php
     if (!$readonly && ploopi_isactionallowed(_DOC_ACTION_WORKFLOW_MANAGE))
     {
         ?>
-        <div id="doc_validation" style="clear:both;<? echo ($docfolder->fields['foldertype'] == 'private') ? 'display:none;' : 'display:block;'; ?>">
-            <? ploopi_validation_selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id']); ?>
+        <div id="doc_validation" style="clear:both;<?php echo ($docfolder->fields['foldertype'] == 'private') ? 'display:none;' : 'display:block;'; ?>">
+            <?php ploopi_validation_selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id']); ?>
         </div>
-        <?
+        <?php
     }
     else echo '<div id="doc_validation" style="clear:both;margin:0;padding:0;visibility:hidden;"></div>';
 
     if (!$readonly)
     {
         ?>
-        <div id="doc_share" style="clear:both;<? echo ($docfolder->fields['foldertype'] == 'shared') ? 'display:block;' : 'display:none;'; ?>">
-            <? ploopi_share_selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id']); ?>
+        <div id="doc_share" style="clear:both;<?php echo ($docfolder->fields['foldertype'] == 'shared') ? 'display:block;' : 'display:none;'; ?>">
+            <?php ploopi_share_selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id']); ?>
         </div>
-        <?
+        <?php
     }
     else echo '<div id="doc_share" style="clear:both;margin:0;padding:0;visibility:hidden;"></div>';
     ?>
 
     <div style="clear:both;float:right;padding:4px;">
-        <input type="button" class="flatbutton" value="<? echo _PLOOPI_BACK; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$currentfolder}"); ?>">
-        <?
+        <input type="button" class="flatbutton" value="<?php echo _PLOOPI_BACK; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$currentfolder}"); ?>">
+        <?php
         if (!$readonly)
         {
             ?>
-            <input type="submit" class="flatbutton" value="<? echo _PLOOPI_SAVE; ?>" tabindex="6">
-            <?
+            <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="6">
+            <?php
         }
         ?>
     </div>
 
-    <?
+    <?php
     if (!$readonly)
     {
         ?>
         </form>
-        <?
+        <?php
     }
     ?>
 </div>
 
-<?
+<?php
 if (!$readonly)
 {
     ?>
     <script type="text/javascript">
     document.docfolder_form.docfolder_name.focus();
     </script>
-    <?
+    <?php
 }
 
 if (!$newfolder) include './modules/doc/public_folder_actions.php';

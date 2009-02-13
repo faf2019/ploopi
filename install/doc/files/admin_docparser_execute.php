@@ -43,7 +43,7 @@ include_once './modules/doc/class_docfile.php';
 echo $skin->open_simplebloc('Indexation');
 ?>
 <div style="padding:4px;">
-<?
+<?php
 $sql =  "
         select      f.id
         from        ploopi_mod_doc_file f
@@ -64,6 +64,6 @@ $db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword`");
 $db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword_file`"); 
 ?>
 </div>
-<?
+<?php
 echo $skin->close_simplebloc();
 ?>

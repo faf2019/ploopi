@@ -41,7 +41,7 @@
  */
 ?>
 <div style="border-bottom:1px solid #c0c0c0;">
-<?
+<?php
 if ($docfolder->fields['foldertype'] != 'private')
 {
     $arrAllowedActions = array( _DOC_ACTION_ADDFOLDER,
@@ -61,16 +61,16 @@ if ($docfolder->fields['foldertype'] != 'private')
             $objDocFolderSub->open($parents[$i])
             ?>
             <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
-            Vous héritez de l'abonnement à &laquo; <a href="javascript:void(0);" onclick="javascript:doc_browser('<? echo $parents[$i]; ?>');"><? echo $objDocFolderSub->fields['name']; ?></a> &raquo; 
+            Vous héritez de l'abonnement à &laquo; <a href="javascript:void(0);" onclick="javascript:doc_browser('<?php echo $parents[$i]; ?>');"><?php echo $objDocFolderSub->fields['name']; ?></a> &raquo; 
             </div>
-            <?
+            <?php
         }
     }
     ploopi_subscription(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], $arrAllowedActions);
 }
 ?>
 </div>
-<? 
+<?php 
 /**
  * Affichage du bloc d'annotations
  */

@@ -40,7 +40,7 @@
  */
 
 ?>
-<? 
+<?php 
 $objFolder = new docfolder();
 if (empty($currentfolder) || !$objFolder->open($currentfolder) || !$objFolder->isEnabled()) $currentfolder = 0;
 
@@ -49,35 +49,35 @@ if (!empty($currentfolder))
     $style = ($objFolder->fields['published']) ? '' : 'style="background-color:#ffe0e0;"';
     
     ?>
-    <div class="doc_folderinfo" <? echo $style; ?>>
-        <?
+    <div class="doc_folderinfo" <?php echo $style; ?>>
+        <?php
         //if (ploopi_isactionallowed(_DOC_ACTION_MODIFYFOLDER) && (!$docfolder->fields['readonly'] || $_SESSION['ploopi']['userid'] == $docfolder->fields['id_user']))
         //{
             ?>
             <div style="float:right;height:40px;">
                 <p style="margin:0;padding:4px 8px;">
-                    <a href="<? echo ploopi_urlencode("admin.php?op=doc_folderform&currentfolder={$currentfolder}&addfolder=0"); ?>"><img style="border:0;" src="./modules/doc/img/edit.png" /></a>
+                    <a href="<?php echo ploopi_urlencode("admin.php?op=doc_folderform&currentfolder={$currentfolder}&addfolder=0"); ?>"><img style="border:0;" src="./modules/doc/img/edit.png" /></a>
                 </p>
             </div>
-            <?
+            <?php
         //}
         ?>
         <div style="float:left;height:40px;">
             <p style="margin:0;padding:4px 0px 4px 8px;">
-                <img src="./modules/doc/img/folder<? if ($docfolder->fields['foldertype'] == 'shared') echo '_shared'; ?><? if ($docfolder->fields['foldertype'] == 'public') echo '_public'; ?><? if ($docfolder->fields['readonly']) echo '_locked'; ?>.png" />
+                <img src="./modules/doc/img/folder<?php if ($docfolder->fields['foldertype'] == 'shared') echo '_shared'; ?><?php if ($docfolder->fields['foldertype'] == 'public') echo '_public'; ?><?php if ($docfolder->fields['readonly']) echo '_locked'; ?>.png" />
             </p>
         </div>
         <div style="float:left;height:40px;">
             <p style="margin:0;padding:4px 8px;">
-                <strong><? echo $docfolder->fields['name']; ?></strong>
-                <br />Dossier <? echo $foldertypes[$docfolder->fields['foldertype']]; ?><? if ($docfolder->fields['readonly']) echo ' en lecture seule'; ?>
+                <strong><?php echo htmlentities($docfolder->fields['name']); ?></strong>
+                <br />Dossier <?php echo $foldertypes[$docfolder->fields['foldertype']]; ?><?php if ($docfolder->fields['readonly']) echo ' en lecture seule'; ?>
             </p>
         </div>
         <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px 8px;">
                 <strong>Propriétaire</strong>:
                 <br />
-                <?
+                <?php
                 include_once './include/classes/user.php';
                 $user = new user();
                 if ($user->open($docfolder->fields['id_user'])) echo "{$user->fields['lastname']} {$user->fields['firstname']}";
@@ -85,7 +85,7 @@ if (!empty($currentfolder))
                 ?>
             </p>
         </div>
-        <?
+        <?php
         /**
          * si dossier partagés, affichage des partages
          */
@@ -96,7 +96,7 @@ if (!empty($currentfolder))
                 <p style="margin:0;padding:4px 8px;">
                     <strong>Partages</strong>:
                     <br />
-                    <?
+                    <?php
                     $shusers = array(); 
                     foreach(ploopi_share_get(-1, _DOC_OBJECT_FOLDER, $currentfolder) as $value) $shusers[] = $value['id_share'];
     
@@ -113,7 +113,7 @@ if (!empty($currentfolder))
                     ?>
                 </p>
             </div>
-            <?
+            <?php
         }
         
         /**
@@ -126,7 +126,7 @@ if (!empty($currentfolder))
                 <p style="margin:0;padding:4px 8px;">
                     <strong>Validateurs</strong>:
                     <br />
-                    <?
+                    <?php
                     $wfusers = array();
                     foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
     
@@ -144,11 +144,11 @@ if (!empty($currentfolder))
                     ?>
                 </p>
             </div>
-            <?
+            <?php
         }
         ?>
     </div>
-    <?
+    <?php
 }
 else
 {
@@ -169,6 +169,6 @@ else
             </p>
         </div>
     </div>
-    <?
+    <?php
 }
 ?>

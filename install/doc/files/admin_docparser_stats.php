@@ -38,7 +38,7 @@
 echo $skin->open_simplebloc('Statistiques');
 ?>
 <div class="doc_admin_titlebar"><b>Quelques chiffres</b></div>
-<?
+<?php
 /**
  * Premier tableau 'Quelques chiffres'
  */
@@ -127,7 +127,7 @@ $skin->display_array($array_columns, $array_values, 'docparser_stats', array('he
 ?>
 
 <div class="doc_admin_titlebar"><b>Mots les plus fréquents</b></div>
-<?
+<?php
 /**
  * Deuxième tableau 'Mots les plus fréquents'
  */

@@ -1,3 +1,13 @@
+== Module DOC - version 4.1.0 =====================================================
+
+2009-02-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Nouvelle interface de consultation d'un document, plus conviviale
+ * Correction d'un bug lors de l'ouverture d'un document depuis le moteur de recherche global : n'ouvrait pas le bon dossier
+ * Correction d'un bug d'indexation lors du renommage d'un document : ne prenait pas en compte le nouveau nom du document
+ * Correction d'une erreur sur le choix de l'emplacement du fichier à envoyer
+ * Transformation des balises <? en <?php
+
 == Module DOC - version 4.0.1 =====================================================
 
 2009-01-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

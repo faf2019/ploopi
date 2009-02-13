@@ -60,7 +60,7 @@ switch($op)
             doc_search();
         </script>
 
-        <?
+        <?php
         //include_once './modules/doc/public_legend.php';
         echo $skin->close_simplebloc();
     break;
@@ -70,7 +70,7 @@ switch($op)
         echo $skin->open_simplebloc();
         ?>
         <div id="doc_browser">
-            <?
+            <?php
             switch($op)
             {
                 case 'doc_filedraftvalidate':
@@ -80,168 +80,165 @@ switch($op)
                         $docfile = new docfiledraft();
                         if ($docfile->openmd5($_GET['docfiledraft_md5id'])) $currentfolder = $docfile->fields['id_folder'];
                     }
-                    
+
                 case 'doc_fileform':
                 case 'doc_folderform':
                 case 'doc_foldermodify':
                 case 'doc_browser':
                 case 'doc_search':
-            
+
                     include_once './modules/doc/class_docfile.php';
                     include_once './modules/doc/class_docfolder.php';
                     include_once './modules/doc/class_docfiledraft.php';
                     ?>
                     <div class="doc_path">
                         <a title="Aide" href="javascript:void(0);" onclick="javascript:doc_openhelp(event);" style="float:right;"><img src="./modules/doc/img/ico_help.png"></a>
-                        <?
-                        // voir pour une optimisation de cette partie car on ouvre un docfolder sans doute pour rien
+                        <?php
+
+                        // Lien vers document sans folder ?
+                        // Cas du lien depuis le moteur de recherche global
+                        if (!empty($_GET['docfile_md5id']) && empty($currentfolder))
+                        {
+                            $docfile = new docfile();
+                            if ($docfile->openmd5($_GET['docfile_md5id'])) $currentfolder = $docfile->fields['id_folder'];
+                        }
+
+                        //$readonly = false;
+                        $docfolder_readonly_content = false;
                         $docfolder = new docfolder();
-                        $readonly = false;
                         if (!empty($currentfolder))
                         {
                             if (!$docfolder->open($currentfolder)) $currentfolder = 0;
                             else
                             {
-                                $readonly = ($docfolder->fields['readonly_content'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']);
+                                //$readonly = ($docfolder->fields['readonly_content'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']);
+                                $docfolder_readonly_content = ($docfolder->fields['readonly_content'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']);
                             }
                         }
                         ?>
-            
-                        <a title="Rechercher un Fichier" href="<? echo ploopi_urlencode("admin.php?op=doc_search&currentfolder=0"); ?>" style="float:right;"><img src="./modules/doc/img/ico_search.png"></a>
-            
-                        <?
-                        if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_ADDFILE) && !$readonly))
+
+                        <a title="Rechercher un Fichier" href="<?php echo ploopi_urlencode("admin.php?op=doc_search&currentfolder=0"); ?>" style="float:right;"><img src="./modules/doc/img/ico_search.png"></a>
+
+                        <?php
+                        if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_ADDFILE) && !$docfolder_readonly_content))
                         {
                             ?>
-                            <a title="Créer un nouveau fichier" href="<? echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfile.png"></a>
-                            <?
+                            <a title="Créer un nouveau fichier" href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfile.png"></a>
+                            <?php
                         }
                         else
                         {
                             ?>
                             <a title="Créer un nouveau fichier" href="javascript:void(0);" style="float:right;"><img src="./modules/doc/img/ico_newfile_grey.png"></a>
-                            <?
+                            <?php
                         }
                         ?>
-                        <?
-                        if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_ADDFOLDER) && !$readonly))
+                        <?php
+                        if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_ADDFOLDER) && !$docfolder_readonly_content))
                         {
                             ?>
-                            <a title="Créer un nouveau Dossier" href="<? echo ploopi_urlencode("admin.php?op=doc_folderform&currentfolder={$currentfolder}&addfolder=1"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfolder.png"></a>
-                            <?
+                            <a title="Créer un nouveau Dossier" href="<?php echo ploopi_urlencode("admin.php?op=doc_folderform&currentfolder={$currentfolder}&addfolder=1"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfolder.png"></a>
+                            <?php
                         }
                         else
                         {
                             ?>
                             <a title="Créer un nouveau Dossier" href="javascript:void(0);" style="float:right;"><img src="./modules/doc/img/ico_newfolder_grey.png"></a>
-                            <?
+                            <?php
                         }
                         ?>
-                        <a title="Aller au Dossier Racine" href="<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder=0"); ?>" style="float:right;"><img src="./modules/doc/img/ico_home.png"></a>
-            
+                        <a title="Aller au Dossier Racine" href="<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder=0"); ?>" style="float:right;"><img src="./modules/doc/img/ico_home.png"></a>
+
                         <div>Emplacement :</div>
-                        <a <? if ($currentfolder == 0) echo 'class="doc_pathselected"'; ?> href="<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder=0"); ?>">
+                        <a <?php if ($currentfolder == 0) echo 'class="doc_pathselected"'; ?> href="<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder=0"); ?>">
                             <div style="float:left;position:relative;padding:0;height:16px;">
                                 <img style="display:block;position:absolute;" src="./modules/doc/img/ico_folder_home.png" />
                             </div>
                             <span style="margin-left:18px;">Racine</span>
                         </a>
-                        <?
+                        <?php
                         if ($currentfolder != 0)
                         {
-                            $docfolder = new docfolder();
-                            $docfolder->open($currentfolder);
-            
                             doc_getshare();
-            
+
                             $db->query("SELECT id, name, foldertype, readonly, id_user FROM ploopi_mod_doc_folder WHERE id in ({$docfolder->fields['parents']},{$currentfolder}) ORDER BY id");
-            
+
                             while ($row = $db->fetchrow())
                             {
                                 $allowed = false;
-            
+
                                 if ($row['id_user'] == $_SESSION['ploopi']['userid'] || $row['foldertype'] == 'public' || ($row['foldertype'] == 'shared' && in_array($row['id'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders']))) $allowed = true;
-            
+
                                 if ($allowed)
                                 {
                                     ?>
-                                    <a <? if ($currentfolder == $row['id']) echo 'class="doc_pathselected"'; ?> href="<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$row['id']}"); ?>">
-                                    <?
+                                    <a <?php if ($currentfolder == $row['id']) echo 'class="doc_pathselected"'; ?> href="<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$row['id']}"); ?>">
+                                    <?php
                                 }
                                 else
                                 {
                                     ?>
-                                    <a <? if ($currentfolder == $row['id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:alert('Vous n\'avez pas l\'autorisation d'\accéder à ce dossier');">
-                                    <?
+                                    <a <?php if ($currentfolder == $row['id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:alert('Vous n\'avez pas l\'autorisation d'\accéder à ce dossier');">
+                                    <?php
                                 }
                                 ?>
                                     <div style="float:left;position:relative;padding:0;height:16px;">
-                                        <img style="display:block;position:absolute;" src="./modules/doc/img/ico_folder<? if ($row['foldertype'] == 'shared') echo '_shared'; ?><? if ($row['foldertype'] == 'public') echo '_public'; ?><? if ($row['readonly']) echo '_locked'; ?>.png" />
-                                        <?
+                                        <img style="display:block;position:absolute;" src="./modules/doc/img/ico_folder<?php if ($row['foldertype'] == 'shared') echo '_shared'; ?><?php if ($row['foldertype'] == 'public') echo '_public'; ?><?php if ($row['readonly']) echo '_locked'; ?>.png" />
+                                        <?php
                                         if (!$allowed)
                                         {
-                                            ?><img style="display:block;position:absolute;" src="./modules/doc/img/notallowed.png"><?
+                                            ?><img style="display:block;position:absolute;" src="./modules/doc/img/notallowed.png"><?php
                                         }
                                         ?>
                                     </div>
-                                    <span style="margin-left:18px;"><? echo $row['name']; ?></span>
+                                    <span style="margin-left:18px;"><?php echo $row['name']; ?></span>
                                 </a>
-                                <?
+                                <?php
                             }
                         }
                         ?>
                     </div>
-            
-                    <?
-                    $docfolder_readonly_content = false;
-            
-                    if (!empty($currentfolder))
-                    {
-                        $docfolder->open($currentfolder);
-                        $docfolder_readonly_content = ($docfolder->fields['readonly_content'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']);
-                    }
-                    ?>
-            
-                    <?
+
+                    <?php
                     switch($op)
                     {
                         case 'doc_search':
                             include_once './modules/doc/public_search.php';
                         break;
-            
+
                         case 'doc_fileform':
                             include_once './modules/doc/public_folder_info.php';
                             ?>
                             <div id="doc_explorer" class="doc_explorer_main">
-                            <? include_once './modules/doc/public_file_form.php'; ?>
+                            <?php include_once './modules/doc/public_file_form.php'; ?>
                             </div>
-                            <?
+                            <?php
                         break;
-            
+
                         case 'doc_folderform':
                         case 'doc_foldermodify':
                             include_once './modules/doc/public_folder_info.php';
                             ?>
                             <div id="doc_explorer" class="doc_explorer_main">
-                            <? include_once './modules/doc/public_folder_form.php'; ?>
+                            <?php include_once './modules/doc/public_folder_form.php'; ?>
                             </div>
-                            <?
+                            <?php
                         break;
-            
+
                         default:
                             include_once './modules/doc/public_folder_info.php';
                             ?>
                             <div id="doc_explorer" class="doc_explorer_main">
-                            <? include_once './modules/doc/public_explorer.php'; ?>
+                            <?php include_once './modules/doc/public_explorer.php'; ?>
                             </div>
-                            <?
+                            <?php
                         break;
                     }
                 break;
             }
-            ?> 
+            ?>
         </div>
-        <?
+        <?php
         echo $skin->close_simplebloc();
     break;
 

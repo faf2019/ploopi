@@ -41,7 +41,6 @@ if ($_SESSION['ploopi']['connected'])
      * On vérifie qu'on est bien dans le module DOC.
      * Ces opérations ne peuvent être effectuées que depuis le module DOC.
      */
-    
     if (ploopi_ismoduleallowed('doc'))
     {
         $currentfolder = (isset($_REQUEST['currentfolder'])) ? $_REQUEST['currentfolder'] : 0;
@@ -74,7 +73,7 @@ if ($_SESSION['ploopi']['connected'])
              * Enregistrement d'un document (ou ensemble de document si ajout)
              */
             case 'doc_filesave':
-                if (empty($_GET['doc_mode'])) ploopi_redirect("admin.php?doc_fileform&currentfolder={$currentfolder}");
+                if (empty($_REQUEST['doc_mode'])) ploopi_redirect("admin.php?doc_fileform&currentfolder={$currentfolder}");
                 
                 include_once './modules/doc/class_docfile.php';
                 include_once './modules/doc/class_docfolder.php';
@@ -83,11 +82,16 @@ if ($_SESSION['ploopi']['connected'])
                 ploopi_init_module('doc');
                 
                 $draft = false;
-            
+                
+                $docfolder = new docfolder();
+                
+                // on teste l'existence du dossier
+                if (!$docfolder->open($currentfolder)) ploopi_redirect("admin.php?doc_browser&currentfolder={$currentfolder}");
+                
                 // en mode CGI, il faut récupérer les infos des fichiers uploadés (via le fichier lock)
                 // cf class Cupload
                 // on écrit tout dans $_FILES pour retomber sur nos pieds dans la suite des traitements
-                if ($_GET['doc_mode'] == 'host' && _PLOOPI_USE_CGIUPLOAD && !empty($_POST['sid']))
+                if ($_REQUEST['doc_mode'] == 'host' && _PLOOPI_USE_CGIUPLOAD && !empty($_POST['sid']))
                 {
                     if (!empty($_GET['error']) && $_GET['error'] == 'notwritable') 
                     {
@@ -106,22 +110,20 @@ if ($_SESSION['ploopi']['connected'])
                     {
                         foreach($uploader->files as $key => $file)
                         {
-                            $_FILES[$file['name']] = array( 'name'      =>  $file['filename'],
-                                                            'type'      =>  $file['mime'],
-                                                            'tmp_name'  =>  UPLOAD_PATH.$file['tmpname'],
-                                                            'error'     =>  0,
-                                                            'size'      =>  $file['size']
-                                                        );
+                            $_FILES[$file['name']] = 
+                                array( 
+                                    'name'      =>  $file['filename'],
+                                    'type'      =>  $file['mime'],
+                                    'tmp_name'  =>  UPLOAD_PATH.$file['tmpname'],
+                                    'error'     =>  0,
+                                    'size'      =>  $file['size']
+                                );
                         }
                     }
     
                     $uploader->clear();
                     //@unlink($_lock_file);
                 }
-                
-                // on se base sur le currentfolder pour connaitre le statut du futur fichier (draft/normal)
-                $docfolder = new docfolder();
-                $docfolder->open($currentfolder);
     
                 // on recherche s'il existe des validateurs pour ce dossier
                 $wfusers = array();
@@ -144,7 +146,7 @@ if ($_SESSION['ploopi']['connected'])
                         $filesize = 0;
                                                 
                         // récupération des infos sur le fichier en fonction du mode d'envoi
-                        switch($_GET['doc_mode'])
+                        switch($_REQUEST['doc_mode'])
                         {
                             case 'host':
                             default:
@@ -193,7 +195,7 @@ if ($_SESSION['ploopi']['connected'])
                             $docfile->fields['id_user_modify'] = $_SESSION['ploopi']['userid'];
                             
                             // si le fichier vient d'un dossier partagé, il ne faut pas le déplacer mais le copier
-                            if ($_GET['doc_mode'] == 'server') $docfile->sharedfile = $tmpfile; 
+                            if ($_REQUEST['doc_mode'] == 'server') $docfile->sharedfile = $tmpfile; 
                             else $docfile->tmpfile = $tmpfile;
 
                             $docfile->fields['name'] = $filename;
@@ -219,9 +221,6 @@ if ($_SESSION['ploopi']['connected'])
                             {
                                 if (!$draft)
                                 {
-                                    $docfolder = new docfolder();
-                                    $docfolder->open($currentfolder);
-                                    
                                     // On va chercher les abonnés
                                     $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_ADDFILE, _DOC_ACTION_MODIFYFILE));
                                     
@@ -247,7 +246,7 @@ if ($_SESSION['ploopi']['connected'])
                     $filesize = 0;
                     
                     // récupération des infos sur le fichier en fonction du mode d'envoi
-                    switch($_GET['doc_mode'])
+                    switch($_REQUEST['doc_mode'])
                     {
                         case 'host':
                         default:
@@ -303,7 +302,7 @@ if ($_SESSION['ploopi']['connected'])
                         $docfile->fields['id_user_modify'] = $_SESSION['ploopi']['userid'];
                         
                         // si le fichier vient d'un dossier partagé, il ne faut pas le déplacer mais le copier
-                        if ($_GET['doc_mode'] == 'server') $docfile->sharedfile = $tmpfile; 
+                        if ($_REQUEST['doc_mode'] == 'server') $docfile->sharedfile = $tmpfile; 
                         else $docfile->tmpfile = $tmpfile;
 
                         $docfile->fields['name'] = $filename;
@@ -396,7 +395,7 @@ if ($_SESSION['ploopi']['connected'])
                         include_once './modules/doc/class_docfilehistory.php';
                         $docfilehistory = new docfilehistory();
                         $docfilehistory->open($docfile->fields['id'], $_GET['version']);
-                        if (file_exists($docfilehistory->getfilepath())) ploopi_downloadfile($docfilehistory->getfilepath(), $docfilehistory->fields['name'], false, ($ploopi_op != 'doc_fileview'));
+                        if (file_exists($docfilehistory->getfilepath())) ploopi_downloadfile($docfilehistory->getfilepath(), $docfilehistory->fields['name'], false, ($ploop_opi != 'doc_fileview'));
                     }
                     else
                     {

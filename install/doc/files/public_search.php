@@ -58,7 +58,7 @@ $show_options = (
  */                
 ?>
 
-<form action="<? echo ploopi_urlencode('admin.php'); ?>" onsubmit="javascript:doc_search_next();return false;" method="post">
+<form action="<?php echo ploopi_urlencode('admin.php'); ?>" onsubmit="javascript:doc_search_next();return false;" method="post">
 <input type="hidden" name="op" value="search_next">
 <div class="doc_folderinfo">
     <div style="float:left;height:40px;">
@@ -75,26 +75,26 @@ $show_options = (
     <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px;">
             <strong>Nom / Mots Clés</strong>:
-            <br /><input type="text" class="text" style="width:140px;" id="doc_search_keywords" value="<? echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']); ?>">
+            <br /><input type="text" class="text" style="width:140px;" id="doc_search_keywords" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']); ?>">
         </p>
     </div>
-    <div style="display:<? echo ($show_options) ? 'block' : 'none'; ?>;" id="doc_search_options">
+    <div style="display:<?php echo ($show_options) ? 'block' : 'none'; ?>;" id="doc_search_options">
         <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px;">
                 <strong>Type</strong>:
                 <br />
-                <?
+                <?php
                 $select = "SELECT distinct(filetype) FROM ploopi_mod_doc_ext ORDER BY filetype";
                 $db->query($select);
                 ?>
                 <select class="select" style="width:100px;" id="doc_search_filetype">
                     <option value="">(tout)</option>
-                    <?
+                    <?php
                     while ($row = $db->fetchrow())
                     {
                         ?>
-                        <option value="<? echo $row['filetype']; ?>" <? if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] == $row['filetype']) echo 'selected'; ?>><? echo $row['filetype']; ?></option>
-                        <?
+                        <option value="<?php echo $row['filetype']; ?>" <?php if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] == $row['filetype']) echo 'selected'; ?>><?php echo $row['filetype']; ?></option>
+                        <?php
                     }
                     ?>
                 </select>
@@ -103,20 +103,20 @@ $show_options = (
         <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px;">
                 <strong>Propriétaire</strong>:
-                <br /><input type="text" class="text"  style="width:90px;" value="<? echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']); ?>" id="doc_search_user">
+                <br /><input type="text" class="text"  style="width:90px;" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']); ?>" id="doc_search_user">
             </p>
         </div>
         <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px;">
                 <strong>Espace</strong>:
-                <br /><input type="text" class="text" style="width:90px;" value="<? echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']); ?>" id="doc_search_workspace">
+                <br /><input type="text" class="text" style="width:90px;" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']); ?>" id="doc_search_workspace">
             </p>
         </div>
         <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px;">
                 <strong>Date (du)</strong>:
                 <br />
-                <input type="text" class="text" style="width:70px;" value="<? echo $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']; ?>" name="doc_search_date1" id="doc_search_date1">
+                <input type="text" class="text" style="width:70px;" value="<?php echo $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']; ?>" name="doc_search_date1" id="doc_search_date1">
                 <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('doc_search_date1', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
             </p>
         </div>
@@ -124,7 +124,7 @@ $show_options = (
             <p style="margin:0;padding:4px;">
                 <strong>Date (au)</strong>:
                 <br />
-                <input type="text" class="text" style="width:70px;" value="<? echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2']); ?>" name="doc_search_date2" id="doc_search_date2">
+                <input type="text" class="text" style="width:70px;" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2']); ?>" name="doc_search_date2" id="doc_search_date2">
                 <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('doc_search_date2', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
             </p>
         </div>
@@ -146,5 +146,5 @@ $('doc_search_keywords').focus();
 </script>
 
 <div class="doc_explorer_main" id="doc_search_result">
-<? include_once './modules/doc/public_search_result.php'; ?>
+<?php include_once './modules/doc/public_search_result.php'; ?>
 </div>

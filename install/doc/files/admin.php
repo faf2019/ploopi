@@ -113,7 +113,7 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
                     <div style="padding:4px;">
                         <input type="button" class="button" value="Ré-Indexer" onclick="javascript:ploopi_confirmlink('admin.php?op=execute','Attention cette procédure va ré-indexer tous les fichiers. Le traitement peut être très long...');">&nbsp;Cette procédure permet de ré-indexer le contenu des documents du module.
                     </div>
-                    <?
+                    <?php
                     echo $skin->close_simplebloc();
                 break;
             }

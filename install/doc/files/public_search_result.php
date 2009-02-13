@@ -107,7 +107,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
     {
         ?>
         <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;">Saisissez un mot clé puis cliquez sur "Rechercher" ou appuyez sur "Entrée"</div>
-        <?
+        <?php
     }
     else
     {
@@ -179,7 +179,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
         $db->query($sql);
         ?>
 
-        <?
+        <?php
         $columns = array();
         $values = array();
         $c = 0;
@@ -245,14 +245,14 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
         if ($db->numrows())
         {
             ?>
-            <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;"><? echo $db->numrows(); ?> fichier(s) trouvé(s)</div>
-            <?
+            <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;"><?php echo $db->numrows(); ?> fichier(s) trouvé(s)</div>
+            <?php
         }
         else
         {
             ?>
             <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;">Aucun fichier trouvé</div>
-            <?
+            <?php
         }
 
         // DISPLAY FILES

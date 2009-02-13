@@ -51,19 +51,19 @@ else $docparser->init_description();
     <div style="font-weight:bold;">Liste des parsers</div>
 </div>
 
-<div id="docparser_form" class="doc_admin_form" style="display:<? echo (isset($_GET['docparser_id'])) ? 'block' : 'none'; ?>;">
-    <form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
+<div id="docparser_form" class="doc_admin_form" style="display:<?php echo (isset($_GET['docparser_id'])) ? 'block' : 'none'; ?>;">
+    <form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
     <input type="hidden" name="op" value="docparser_save">
-    <input type="hidden" name="docparser_id" id="docparser_id" value="<? echo $docparser->fields['id']; ?>">
+    <input type="hidden" name="docparser_id" id="docparser_id" value="<?php echo $docparser->fields['id']; ?>">
     <p class="ploopi_va">
         <label>Libellé:</label>
-        <input type="text" class="text" name="docparser_label" id="docparser_label" value="<? echo htmlentities($docparser->fields['label']); ?>" tabindex="1" size="12" />
+        <input type="text" class="text" name="docparser_label" id="docparser_label" value="<?php echo htmlentities($docparser->fields['label']); ?>" tabindex="1" size="12" />
         
         <label>Extension:</label>
-        <input type="text" class="text" name="docparser_extension" id="docparser_extension" value="<? echo htmlentities($docparser->fields['extension']); ?>" tabindex="2" size="4" />
+        <input type="text" class="text" name="docparser_extension" id="docparser_extension" value="<?php echo htmlentities($docparser->fields['extension']); ?>" tabindex="2" size="4" />
         
         <label>Commande:</label>
-        <input type="text" class="text" name="docparser_path" id="docparser_path" value="<? echo htmlentities($docparser->fields['path']); ?>" tabindex="3" size="45" />
+        <input type="text" class="text" name="docparser_path" id="docparser_path" value="<?php echo htmlentities($docparser->fields['path']); ?>" tabindex="3" size="45" />
 
         <input type="submit" class="button" value="Valider" tabindex="4" />
         <input type="button" class="button" value="Annuler" onclick="javascript:$('docparser_form').style.display = 'hidden';" />
@@ -71,7 +71,7 @@ else $docparser->init_description();
     </form>
 </div>
 
-<?
+<?php
 $array_columns = array();
 $array_values = array();
 

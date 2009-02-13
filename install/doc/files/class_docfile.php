@@ -110,7 +110,7 @@ class docfile extends data_object
         global $db;
 
         $db->query("SELECT id FROM ploopi_mod_doc_file WHERE md5id = '".$db->addslashes($md5id)."'");
-        if ($fields = $db->fetchrow()) return(parent::open($fields['id']));
+        if ($fields = $db->fetchrow()) return($this->open($fields['id']));
         else return(false);
     }
 
@@ -128,6 +128,9 @@ class docfile extends data_object
     function save()
     {
         global $db;
+        
+        $booParse = false;
+        
         $error = 0;
         if (isset($this->fields['folder'])) unset($this->fields['folder']);
 
@@ -171,8 +174,8 @@ class docfile extends data_object
 
                     if (!$error)
                     {
-                        $this->parse();
-                        parent::save();
+                        //$this->parse();
+                        $booParse = true;
                         chmod($filepath, 0640);
                     }
                 }
@@ -217,7 +220,8 @@ class docfile extends data_object
                             {
                                 if (copy($this->sharedfile, $filepath))
                                 {
-                                    $this->parse();
+                                    $booParse = true;
+                                    //$this->parse();
                                     chmod($filepath, 0640);
                                 }
                                 else $error = _DOC_ERROR_FILENOTWRITABLE;
@@ -226,7 +230,8 @@ class docfile extends data_object
                             {
                                 if (rename($this->draftfile, $filepath))
                                 {
-                                    $this->parse();
+                                    $booParse = true;
+                                    //$this->parse();
                                     chmod($filepath, 0640);
                                 }
                                 else $error = _DOC_ERROR_FILENOTWRITABLE;
@@ -235,7 +240,8 @@ class docfile extends data_object
                             {
                                 if (rename($this->tmpfile, $filepath))
                                 {
-                                    $this->parse();
+                                    $booParse = true;
+                                    //$this->parse();
                                     chmod($filepath, 0640);
                                 }
                                 else $error = _DOC_ERROR_FILENOTWRITABLE;
@@ -253,6 +259,8 @@ class docfile extends data_object
             // renommage
             if ($this->oldname != $this->fields['name'])
             {
+                $booParse = true;
+                
                 // renommage avec modification de type
                 if (($newext = substr(strrchr($this->fields['name'], "."),1)) != $this->fields['extension'])
                 {
@@ -286,7 +294,9 @@ class docfile extends data_object
             $docfolder_parent->fields['nbelements'] = doc_countelements($this->fields['id_folder']);
             $docfolder_parent->save();
         }
-
+        
+        if ($booParse) $this->parse();
+        
         return($error);
     }
 

@@ -105,8 +105,8 @@ function doc_fckexplorer_displayfolders(&$f, $id_folder = 0, $path = ' ')
         foreach($f['tree'][$id_folder] as $id_child)
         {
             ?>
-            <option value="<? echo $id_child; ?>" label="<? echo $f['list'][$id_child]['name']; ?>"><? echo htmlentities("{$path} / {$f['list'][$id_child]['name']}"); ?></option>
-            <?
+            <option value="<?php echo $id_child; ?>" label="<?php echo $f['list'][$id_child]['name']; ?>"><?php echo htmlentities("{$path} / {$f['list'][$id_child]['name']}"); ?></option>
+            <?php
             doc_fckexplorer_displayfolders($f, $id_child, "{$path} / {$f['list'][$id_child]['name']}");
         }
     }
@@ -117,15 +117,15 @@ echo $skin->open_simplebloc();
 
 <div style="padding:4px;border-bottom:1px solid #a0a0a0;">
     Dossier :
-    <select class="select" name="doc_choosefolder" id="doc_choosefolder" onchange="javascript:doc_fckexplorer_switch_folder(this.value, '<? echo $ploopi_op; ?>');">
+    <select class="select" name="doc_choosefolder" id="doc_choosefolder" onchange="javascript:doc_fckexplorer_switch_folder(this.value, '<?php echo $ploopi_op; ?>');">
     <option value="0"></option>
-    <?
+    <?php
     $default_folder = 0;
     foreach($folders as $mlabel => $f)
     {
         ?>
-        <optgroup label="<? echo htmlentities($mlabel); ?>"><? echo htmlentities($mlabel); ?></optgroup>
-        <?
+        <optgroup label="<?php echo htmlentities($mlabel); ?>"><?php echo htmlentities($mlabel); ?></optgroup>
+        <?php
         if (!$default_folder && isset($f['tree'][0][0])) $default_folder = $f['tree'][0][0];
         doc_fckexplorer_displayfolders($f);
     }
@@ -135,8 +135,8 @@ echo $skin->open_simplebloc();
 
 <div id="doc_filebrowser" style="padding:4px;"></div>
 
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>
 
 <script language="javascript">
-doc_fckexplorer_set_folder('<? echo $default_folder; ?>', '<? echo $ploopi_op; ?>');
+doc_fckexplorer_set_folder('<?php echo $default_folder; ?>', '<?php echo $ploopi_op; ?>');
 </script>
