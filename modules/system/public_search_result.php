@@ -122,12 +122,24 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 
         $columns['left']['relevance']       = array('label' => 'Pert.', 'width' => 65, 'options' => array('sort' => true));
         $columns['auto']['label']           = array('label' => 'Libellé', 'options' => array('sort' => true));
-        $columns['right']['timestp_lastindex']      = array('label' => 'Indexé le', 'width' => '90', 'options' => array('sort' => true));
-        $columns['right']['timestp_create']         = array('label' => 'Ajouté le', 'width' => '140', 'options' => array('sort' => true));
-        $columns['right']['user']           = array('label' => 'Utilisateur', 'width' => '120', 'options' => array('sort' => true));
-        $columns['right']['workspace']      = array('label' => 'Espace', 'width' => '120', 'options' => array('sort' => true));
-        $columns['right']['module']         = array('label' => 'Module', 'width' => '120', 'options' => array('sort' => true));
-        $columns['right']['object_type']    = array('label' => 'Type d\'Objet', 'width' => '120', 'options' => array('sort' => true));
+        
+        if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displayindexed']))
+            $columns['right']['timestp_lastindex']      = array('label' => 'Indexé le', 'width' => '90', 'options' => array('sort' => true));
+            
+        if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displaydatetime']))
+            $columns['right']['timestp_create']         = array('label' => 'Ajouté le', 'width' => '140', 'options' => array('sort' => true));
+            
+        if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displayuser']))
+            $columns['right']['user']           = array('label' => 'Utilisateur', 'width' => '120', 'options' => array('sort' => true));
+        
+        if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displayworkspace']))
+            $columns['right']['workspace']      = array('label' => 'Espace', 'width' => '120', 'options' => array('sort' => true));
+            
+        if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displaymodule']))
+            $columns['right']['module']         = array('label' => 'Module', 'width' => '120', 'options' => array('sort' => true));
+            
+        if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displayobjecttype']))
+            $columns['right']['object_type']    = array('label' => 'Type d\'Objet', 'width' => '120', 'options' => array('sort' => true));
 
         // on parcourt le tableau des réponses
         

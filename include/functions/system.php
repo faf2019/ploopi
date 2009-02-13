@@ -641,4 +641,21 @@ function ploopi_array_map($func, $var)
  */
 
 function ploopi_h404() { header("HTTP/1.0 404 Not Found"); }
+
+/**
+ * Déconnecte l'utilisateur, nettoie la session et renvoie éventuellement un code d'erreur
+ *
+ * @param int $errorcode code d'erreur
+ * @param int $sleep durée d'attente avant la redirection en seconde
+ */
+function ploopi_logout($errorcode = null, $sleep = 1)
+{
+    global $session;
+    
+    $session->regenerate_id();
+    $_SESSION = array();
+    session_destroy();
+    sleep($sleep);
+    ploopi_redirect(basename($_SERVER['PHP_SELF']).(isset($errorcode) ? "?ploopi_errorcode={$errorcode}" : ''));
+}
 ?>

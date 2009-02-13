@@ -129,9 +129,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
             if ($fields['date_expire'] <= ploopi_createtimestamp())
             {
                 ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $ploopi_login,_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
-                session_destroy();
-                sleep(1);
-                ploopi_redirect(basename($_SERVER['PHP_SELF'])."?ploopi_errorcode="._PLOOPI_ERROR_LOGINEXPIRE);
+                ploopi_logout(_PLOOPI_ERROR_LOGINEXPIRE);
             }
         }
         $_SESSION['ploopi']['connected']    = 1;
@@ -145,9 +143,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
     else
     {
         ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $ploopi_login,_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
-        session_destroy();
-        sleep(1);
-        ploopi_redirect(basename($_SERVER['PHP_SELF'])."?ploopi_errorcode="._PLOOPI_ERROR_LOGINERROR);
+        ploopi_logout(_PLOOPI_ERROR_LOGINERROR);
     }
 }
 
@@ -175,7 +171,8 @@ if ($ploopi_initsession)
         include './include/start/load_param.php';
 
         $user = new user();
-        $user->open($_SESSION['ploopi']['userid']);
+        if (!$user->open($_SESSION['ploopi']['userid'])) ploopi_logout();
+        
         $_SESSION['ploopi']['user'] = $user->fields;
 
         if ($_SESSION['ploopi']['user']['servertimezone']) $_SESSION['ploopi']['user']['timezone'] = $_SESSION['ploopi']['timezone'];
@@ -253,7 +250,7 @@ if ($ploopi_initsession)
             if (!empty($workspace['adminlevel'])) $_SESSION['ploopi']['workspaces_allowed'][] = $workspace['id'];
         }
 
-        if (!isset($_GET['reloadsession'])) $ploopi_mainmenu = _PLOOPI_MENU_WORKSPACES;
+        if (!isset($_REQUEST['reloadsession'])) $ploopi_mainmenu = _PLOOPI_MENU_WORKSPACES;
     }
 }
 

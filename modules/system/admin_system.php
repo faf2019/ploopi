@@ -44,10 +44,11 @@ $db->query('SELECT version FROM ploopi_module_type WHERE id = 1');
 $row = $db->fetchrow();
 
 /**
- * On compare la version des fichier (_PLOOPI_VERSION) avec celle de la base de données.
- * Si les version ne concordent pas, on propose une mise à jour du système.
+ * On compare la version des fichiers (_PLOOPI_VERSION) avec celle de la base de données.
+ * Si les versions ne concordent pas, on propose une mise à jour du système.
  */
-if (strcmp(_PLOOPI_VERSION, $row['version']))
+
+if (strcmp(sprintf("%-032s", _PLOOPI_VERSION), sprintf("%-032s", $row['version'])) > 0)
 {
     $strSysVersion = $row['version'];
     $toolbar['systemupdate'] =

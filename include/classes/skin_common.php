@@ -200,32 +200,18 @@ class skin_common
         }
         else $image = '';
 
-        $class = ($vertical) ? 'toolbar_icon_vertical' : 'toolbar_icon';
+        $class = (($vertical) ? 'toolbar_icon_vertical' : 'toolbar_icon').($sel ? '_sel' : '');
 
         $style = (!empty($icon['width'])) ? "style=\"width:{$icon['width']}px;\"" : '';
 
-        if ($sel)
-        {
-            $res =  "
-                    <div class=\"{$class}_sel\" id=\"{$key}\" {$style}>
-                        <a href=\"javascript:void(0);\" onclick=\"javascript:{$onclick};return false;\">
-                            <div class=\"toolbar_icon_image\">$image</div>
-                            <p>$title</p>
-                        </a>
-                    </div>
-                    ";
-        }
-        else
-        {
-            $res =  "
-                    <div class=\"{$class}\" id=\"{$key}\" {$style}>
-                        <a href=\"javascript:void(0);\" onclick=\"javascript:{$onclick};return false;\">
-                            <div class=\"toolbar_icon_image\">$image</div>
-                            <p>$title</p>
-                        </a>
-                    </div>
-                    ";
-        }
+        $res = "
+            <div class=\"{$class}\" id=\"{$key}\" {$style}>
+                <a href=\"javascript:void(0);\" onclick=\"javascript:{$onclick};return false;\" title=\"{$title}\">
+                    <div class=\"toolbar_icon_image\">$image</div>
+                    <p>$title</p>
+                </a>
+            </div>
+        ";
 
         return $res;
     }
