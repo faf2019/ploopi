@@ -87,7 +87,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     $arrFormActionParams[] = "op=search";
     if (!empty($_REQUEST['headingid'])) $arrFormActionParams[] = "headingid={$_REQUEST['headingid']}";
     if (!empty($_REQUEST['articleid'])) $arrFormActionParams[] = "articleid={$_REQUEST['articleid']}";
-    if (!empty($_REQUEST['wce_mode'])) $arrFormActionParams[] = "wce_mode={$_REQUEST['wce_mode']}";
+    if (!empty($_REQUEST['webedit_mode'])) $arrFormActionParams[] = "webedit_mode={$_REQUEST['webedit_mode']}";
     
     $strFormActionParams = (!empty($arrFormActionParams)) ? 'index.php?'.implode('&',$arrFormActionParams) : 'index.php';
     
