@@ -1,3 +1,49 @@
+ == Ploopi - version 1.3.1 ===================================================
+
+2009-02-13 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ploopi 
+ 
+  * Classe "calendar" : correction d'un bug d'affichage du jour sur le planning multi-journées
+  * Classe "documentsfolder" : ajout d'une méthode create_child()
+  * Intégration d'un objet "WCE" fourni par le module "System" et intégrable dans un article. Cet objet permet d'effectuer une recherche dans la base des utilisateurs et d'afficher une fiche personnelle
+  * Transformation des balises <? en <?php 
+  * Mise à jour des templates frontoffice pour intégration de l'objet "Trombinoscope/Annuaire" proposé par le module "System"
+  * Correction d'une erreur sur la classe barchart suite à la transformation des balises <? en <?php 
+  * Intégration de nouveaux paramètres pour la recherche intégrale (choix des colonnes à afficher)
+  * Correctif sur la comparaison des version de noyau lors du test de mise à jour de la plateforme
+  * Objet WebEdit / Trombinoscope : Correction d'une erreur à l'affichage des données d'un utilisateur dans le trombinoscope
+  * Objet WebEdit / Trombinoscope : Correction dans la recherche frontoffice du trombinoscope
+  * Objet WebEdit / Trombinoscope : Correction d'un problème de lien lors de la navigation en backoffice avec le frontoffice désactivé
+  * Mise à jour des templates frontoffice, intégration d'une nouvelle variable pour la navigation backoffice
+  * Ajout d'un script de post installation permettant de fixer les droits utilisateurs sur l'arborescence des fichiers/dossiers
+  
+ * DOC 4.1.0
+
+  * Nouvelle interface de consultation d'un document, plus conviviale
+  * Correction d'un bug lors de l'ouverture d'un document depuis le moteur de recherche global : n'ouvrait pas le bon dossier
+  * Correction d'un bug d'indexation lors du renommage d'un document : ne prenait pas en compte le nouveau nom du document
+  * Correction d'une erreur sur le choix de l'emplacement du fichier à envoyer
+  * Transformation des balises <? en <?php
+      
+ * FORMS 2.3.1
+
+  * Correction d'un bug sur le type du champ 'id_workspace' de la table 'ploopi_mod_forms_reply'
+  * Correction de quelques bugs mineurs (variables non définies)
+  * Transformation des balises <? en <?php
+  * Meilleure compression des images png
+  * Correction d'un bug dans la navigation backoffice, avec le frontoffice désactivé, lors de l'intégration d'un objet WCE/WebEdit de type formulaire.
+
+ * WebEdit 2.0.1
+
+  * Transformation des balises <? en <?php
+  * L'administrateur peut publier par défaut (plus besoin de l'ajouter dans les validateurs)
+  * Correction d'un bug dans la consultation des rubriques depuis un module externe
+  * Meilleur contrôle de positionnement dans le module pour les opérations courantes
+  * Correction d'un bug dans la génération des flux ATOM/RSS (problème d'encodage UTF8)
+  * Correction de plusieurs bugs dans la navigation interne lorsque le frontoffice est désactivé
+
+
  == Ploopi - version 1.3 ===================================================
 
 2009-01-29 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
