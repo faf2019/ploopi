@@ -8,12 +8,12 @@
 		</row>
 		<row>
 			<id>2</id>
-			<label>Forum Subject</label>
+			<label>Sujet</label>
 			<script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;op=search&amp;id_subject=&lt;IDRECORD&gt;</script>
 		</row>
 		<row>
 			<id>3</id>
-			<label>Forum Message</label>
+			<label>Message</label>
 			<script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;op=search&amp;id_mess=&lt;IDRECORD&gt;</script>
 		</row>
 	</ploopi_mb_object>
