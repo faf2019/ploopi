@@ -69,7 +69,7 @@
 
 <body>
     <div id="entete">
-        <a href="./" title="Lien vers Accueil" accesskey="1" tabindex="1">Accueil</a>&nbsp;&#149;
+        <a href="{SITE_HOME}" title="Lien vers Accueil" accesskey="1" tabindex="1">Accueil</a>&nbsp;&#149;
         <!-- BEGIN root2 -->
             <a href="{root2.LINK}" title="Lien vers Plan de site" accesskey="2" tabindex="2">Plan de site</a>&nbsp;&#149;
         <!-- END root2 -->
@@ -109,7 +109,7 @@
 
                 <div id="menu_vertical">
                     <div class="mini_form">
-                        <form method="post" action="index.php">
+                        <form method="post" action="{SITE_HOME}">
                             <fieldset>
                                 <label for="recherche_field">Recherche:</label>
                                 <div>

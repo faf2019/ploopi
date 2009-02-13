@@ -65,7 +65,7 @@
 
 <body>
     <div id="entete">
-        <a href="./" title="Lien vers Accueil" accesskey="1" tabindex="1">Accueil</a>&nbsp;&#149;
+        <a href="{SITE_HOME}" title="Lien vers Accueil" accesskey="1" tabindex="1">Accueil</a>&nbsp;&#149;
         <a href="#page_content" title="Lien vers le Contenu" accesskey="2" tabindex="2">Aller au Contenu</a>&nbsp;&#149;
         <a href="#recherche" title="Lien vers le Moteur de Recherche" accesskey="C" tabindex="3">Aller au Moteur de recherche</a>&nbsp;&nbsp;
     </div>
@@ -115,7 +115,7 @@
                 <div id="menu_vertical">
                 
                     <div id="mini_form">
-                        <form method="post" action="index.php">
+                        <form method="post" action="{SITE_HOME}">
                             <fieldset>
                                 <label for="recherche_field">Recherche:</label>
                                 <div>

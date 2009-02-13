@@ -63,7 +63,7 @@
         <div id="header">
             <div id="title">{SITE_TITLE}</div>
             <div id="path">
-                <a href="./">&raquo;&nbsp;Accueil</a>
+                <a href="{SITE_HOME}">&raquo;&nbsp;Accueil</a>
                 <!-- BEGIN switch_heading1 -->
                 <a href="{switch_heading1.LINK}">&raquo;&nbsp;{switch_heading1.LABEL}</a>
                 <!-- END switch_heading1 -->
@@ -94,7 +94,7 @@
                 <div id="hmenu">
                     <div class="minibloc">
                         <label for="recherche_field" class="title">Recherche:</label>
-                        <form name="form_search" method="post" action="index.php">
+                        <form name="form_search" method="post" action="{SITE_HOME}">
                         <input type="text" alt="recherche" id="recherche_field" name="query_string" value="{PAGE_QUERYSTRING}" class="text" />
                         <input type="submit" value="go" class="button" />
                         </form>
