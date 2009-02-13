@@ -143,17 +143,7 @@ class webedit_article extends data_object
             $arrSearch = array();
             $arrReplace = array();
             
-            // traitement des liens vers articles
-            preg_match_all('/<a[^>]*href="(index\.php[^\"]+articleid=([0-9]+)[^\"]*)"[^>]*>/i', $this->fields['content'], $matches);
-            foreach($matches[2] as $key => $idart)
-            {
-                $objArticle = new webedit_article();
-                if (!empty($idart) && $objArticle->open($idart)) // article trouvé
-                {
-                    $arrSearch[] = $matches[1][$key];
-                    $arrReplace[] = ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$idart}", $objArticle->fields['metatitle']);
-                }
-            }
+            // /!\ Le traitement des liens d'article s'effectue au niveau du rendu final (fonction webedit_replace_links)
             
             if (file_exists('./modules/doc/class_docfile.php'))
             {

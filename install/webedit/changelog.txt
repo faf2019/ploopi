@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.0.1 ============================================
+
+2009-02-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction de plusieurs bugs dans la navigation interne lorsque le frontoffice est désactivé
+
 == Module WebEdit - version 2.0 ============================================
 
 2009-02-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

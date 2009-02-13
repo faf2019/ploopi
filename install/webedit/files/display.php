@@ -268,6 +268,7 @@ if ($query_string != '') // recherche intégrale
             if ($boolModDocExists)
             {
                 $objDocFile = new docfile();
+                
                 if ($objDocFile->openmd5($result['id_record']))
                 {
                     $template_body->assign_block_vars('switch_search.result',
@@ -294,11 +295,24 @@ if ($query_string != '') // recherche intégrale
         else // c'est un article
         {
             $objArticle = new webedit_article();
-            $intToday = ploopi_createtimestamp();
             if ($objArticle->open($result['id_record']) && $objArticle->isenabled())
             {
                 $cleaned_content = strip_tags(html_entity_decode($objArticle->fields['content_cleaned']));
      
+                // Gestion des url par mode de rendu
+                switch($webedit_mode)
+                {
+                    case 'edit';
+                    case 'render';
+                        $link = "index.php?webedit_mode=render&headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}";
+                    break;
+            
+                    default:
+                    case 'display';
+                        $link = ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}", $objArticle->fields['metatitle']);
+                    break;
+                }
+                
                 $template_body->assign_block_vars('switch_search.result',
                     array(
                         'RELEVANCE' => sprintf("%.02f", $result['relevance']),
@@ -315,7 +329,7 @@ if ($query_string != '') // recherche intégrale
                         'METADESCRIPTION_RAW' => $objArticle->fields['metadescription'],
                         'DATE' => ($objArticle->fields['timestp']!='') ? current(ploopi_timestamp2local($objArticle->fields['timestp'])) : '',
                         'SIZE' => sprintf("%.02f", strlen($cleaned_content)/1024),
-                        'LINK' => ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}", $objArticle->fields['metatitle'])
+                        'LINK' => $link
                     )
                 );
                 
@@ -376,6 +390,19 @@ elseif($query_tag != '') // recherche par tag
     while ($row = $db->fetchrow())
     {
         $size = sprintf("%.02f", strlen(strip_tags(html_entity_decode($row['content_cleaned'])))/1024);        
+
+        switch($webedit_mode)
+        {
+            case 'edit';
+            case 'render';
+                $link = "index.php?webedit_mode=render&headingid={$row['id_heading']}&articleid={$row['id']}";
+            break;
+    
+            default:
+            case 'display';
+                $link = ploopi_urlrewrite("index.php?headingid={$row['id_heading']}&articleid={$row['id']}", $row['metatitle']);
+            break;
+        }        
         
         $template_body->assign_block_vars('switch_tagsearch.result',
             array(
@@ -386,7 +413,7 @@ elseif($query_tag != '') // recherche par tag
                 'META_DESCRIPTION' => htmlentities($row['metadescription']),
                 'DATE' => ($row['timestp']!='') ? current(ploopi_timestamp2local($row['timestp'])) : '',
                 'SIZE' => $size,
-                'LINK' => ploopi_urlrewrite("index.php?headingid={$row['id_heading']}&articleid={$row['id']}", $row['metatitle'])
+                'LINK' => $link
             )
         );    
     }    
@@ -718,9 +745,10 @@ else // affichage standard rubrique/page
         if (!$intErrorCode || $webedit_mode == 'edit')
         {
             $template_body->assign_block_vars('switch_content_page', array());
-    
+            
+            // Traitement des objets WCE/WebEdit
             if (!empty($editor)) $content = $editor;
-            else $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', $article->fields['content_cleaned']);
+            else $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', in_array($webedit_mode, array('render', 'edit')) ? $article->fields['content_cleaned'] : webedit_replace_links($article->fields['content_cleaned']) );
     
             $article_timestp = ($article->fields['timestp']!='') ? ploopi_timestamp2local($article->fields['timestp']) : array('date' => '');
             $article_lastupdate = ($article->fields['lastupdate_timestp']!='') ? ploopi_timestamp2local($article->fields['lastupdate_timestp']) : array('date' => '', 'time' => '');
@@ -783,10 +811,23 @@ else // affichage standard rubrique/page
                 
                 foreach($tags as $tag)
                 {
+                    switch($webedit_mode)
+                    {
+                        case 'edit';
+                        case 'render';
+                            $link =  "index.php?webedit_mode=render&query_tag={$tag['tag']}";
+                        break;
+                
+                        default:
+                        case 'display';
+                            $link =  ploopi_urlrewrite("index.php?query_tag={$tag['tag']}");
+                        break;
+                    }                           
+                    
                     $template_body->assign_block_vars('switch_content_page.switch_tags.tag', 
                         array(
                             'TAG' => $tag['tag'],
-                            'LINK' => ploopi_urlrewrite("index.php?query_tag={$tag['tag']}")
+                            'LINK' => $link
                         )
                     );
                 }
@@ -822,10 +863,24 @@ else // affichage standard rubrique/page
     // Doit on autoriser les abonnements ?
     if (($booIsHomePage && isset($headings['subscription_enabled']) && $headings['subscription_enabled']) || (isset($headings['list'][$headingid]) && $headings['list'][$headingid]['subscription_enabled']))
     {
+        // Gestion des url par mode de rendu
+        switch($webedit_mode)
+        {
+            case 'edit';
+            case 'render';
+                $link = ploopi_urlencode("index.php?webedit_mode=render&ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false);
+            break;
+    
+            default:
+            case 'display';
+                $link = ploopi_urlencode("index.php?ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false);
+            break;
+        }        
+        
         $template_body->assign_block_vars(
             'switch_subscription', 
             array(
-                'ACTION' => ploopi_urlencode("index.php?ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false),
+                'ACTION' => $link,
                 'HEADINGID' => $booIsHomePage ? 0 : $headingid,
                 'ROOTID' => 0
             )
@@ -901,12 +956,12 @@ if (!empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]
         if ($_SESSION['ploopi']['modules'][$template_moduleid]['active'])
         {
             $template_body->assign_block_vars('modules' , array(
-                                'ID' => $template_moduleid,
-                                'LABEL' => $_SESSION['ploopi']['modules'][$template_moduleid]['label'],
-                                'TYPE' => $_SESSION['ploopi']['modules'][$template_moduleid]['moduletype'],
-                                'TYPEID' => $_SESSION['ploopi']['modules'][$template_moduleid]['id_module_type']
-                                )
-                            );
+                'ID' => $template_moduleid,
+                'LABEL' => $_SESSION['ploopi']['modules'][$template_moduleid]['label'],
+                'TYPE' => $_SESSION['ploopi']['modules'][$template_moduleid]['moduletype'],
+                'TYPEID' => $_SESSION['ploopi']['modules'][$template_moduleid]['id_module_type']
+                )
+            );
 
             if (file_exists("./modules/{$_SESSION['ploopi']['modules'][$template_moduleid]['moduletype']}/template.php")) include_once "./modules/{$_SESSION['ploopi']['modules'][$template_moduleid]['moduletype']}/template.php";
         }
@@ -1032,7 +1087,7 @@ $template_body->assign_vars(
         'WORKSPACE_META_ROBOTS'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_robots']),
         'PAGE_QUERYSTRING'              => $query_string,
         'PAGE_QUERYTAG'                 => $query_tag,
-        'NAV'                           => $nav,
+        'SITE_HOME'                     => in_array($webedit_mode, array('render', 'edit')) ? 'index.php?webedit_mode=render' : 'index.php',
         'HOST'                          => $_SERVER['HTTP_HOST'],
         'DATE_DAY'                      => date('d'),
         'DATE_MONTH'                    => date('m'),
@@ -1049,9 +1104,8 @@ $template_body->assign_vars(
 );
 
 /**
- * Génération du nuage de tags
+ * Génération du nuage de tags en fonction des articles publiés
  */
-
 $sql =  "
         SELECT      t.*, count(*) as nb 
         FROM        ploopi_mod_webedit_tag t
@@ -1059,7 +1113,12 @@ $sql =  "
         INNER JOIN  ploopi_mod_webedit_article_tag at
         ON          at.id_tag = t.id
         
+        INNER JOIN  ploopi_mod_webedit_article a
+        ON          at.id_article = a.id
+        
         WHERE       t.id_module = {$_SESSION['ploopi']['moduleid']}
+        AND         (a.timestp_published <= $today OR a.timestp_published = 0)
+        AND         (a.timestp_unpublished >= $today OR a.timestp_unpublished = 0)
         
         GROUP BY    t.id
         ORDER BY    nb DESC
@@ -1082,14 +1141,28 @@ ksort($tags);
 
 foreach ($tags as $tag)
 {
+    // Gestion des url par mode de rendu
+    switch($webedit_mode)
+    {
+        case 'edit';
+        case 'render';
+            $link = "index.php?webedit_mode=render&query_tag={$tag['tag']}";
+        break;
+
+        default:
+        case 'display';
+            $link = ploopi_urlrewrite("index.php?query_tag={$tag['tag']}");
+        break;
+    }
+    
     $template_body->assign_block_vars('tagcloud' , array(
-                        'TAG' => $tag['tag'],
-                        'SIZE' => $tag['size'],
-                        'OCCURENCE' => $tag['nb'],
-                        'LINK' => ploopi_urlrewrite("index.php?query_tag={$tag['tag']}"),
-                        'SELECTED' => ($tag['tag'] == $query_tag) ? 'selected' : ''
-                        )
-                    );
+        'TAG' => $tag['tag'],
+        'SIZE' => $tag['size'],
+        'OCCURENCE' => $tag['nb'],
+        'LINK' => $link,
+        'SELECTED' => ($tag['tag'] == $query_tag) ? 'selected' : ''
+        )
+    );
 }                            
 
 $template_body->pparse('body');

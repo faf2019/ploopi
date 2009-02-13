@@ -748,4 +748,32 @@ function webedit_record_isenabled($id_object, $id_record, $id_module)
 
     return($enabled);
 }
+
+/**
+ * Remplace les liens internes par leur équivalent réécrit 
+ *
+ * @param string $strContent contenu d'un article
+ * @return contenu de l'article dont les liens ont été modifiés
+ */
+
+function webedit_replace_links($strContent)
+{
+    include_once './modules/webedit/class_article.php';
+    
+    $arrSearch = array();
+    $arrReplace = array();
+    
+    preg_match_all('/<a[^>]*href="(index\.php[^\"]+articleid=([0-9]+)[^\"]*)"[^>]*>/i', $strContent, $matches);
+    foreach($matches[2] as $key => $idart)
+    {
+        $objArticle = new webedit_article();
+        if (!empty($idart) && $objArticle->open($idart)) // article trouvé
+        {
+            $arrSearch[] = $matches[1][$key];
+            $arrReplace[] = ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$idart}", $objArticle->fields['metatitle']);
+        }
+    }
+    
+    return str_replace($arrSearch, $arrReplace, $strContent);
+}
 ?>

@@ -79,7 +79,7 @@ switch($ploopi_op)
         }
         else $return = _WEBEDIT_SUBSCRIPTION_ERROR_PARAM;
         
-        ploopi_redirect("index.php?headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&subscription_return={$return}");
+        ploopi_redirect("index.php?".(empty($_GET['webedit_mode']) ? '' : "webedit_mode={$_GET['webedit_mode']}&")."headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&subscription_return={$return}");
     break;
 }
 
