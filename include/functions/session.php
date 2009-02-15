@@ -132,13 +132,14 @@ function ploopi_session_update()
 
     $diff = $_SESSION['ploopi']['currentrequesttime'] - $_SESSION['ploopi']['lastrequesttime'];
 
-    if ($diff > _PLOOPI_SESSIONTIME && _PLOOPI_SESSIONTIME != '' && _PLOOPI_SESSIONTIME != 0)
+    // Si la durée de sessoin est expirée et que l'on est connecté, on vide la session et on retourne à la page de login
+    if ($diff > _PLOOPI_SESSIONTIME && _PLOOPI_SESSIONTIME != '' && _PLOOPI_SESSIONTIME != 0 && !empty($_SESSION['ploopi']['connected']))
     {
         $session->regenerate_id();
         session_destroy();
         ploopi_redirect("{$scriptname}?ploopi_errorcode="._PLOOPI_ERROR_SESSIONEXPIRE);
     }
-    else
+    else // Sinon on met simplement à jour la date/heure de la dernière requête + IP
     {
         $_SESSION['ploopi']['lastrequesttime'] = $_SESSION['ploopi']['currentrequesttime'];
         $_SESSION['ploopi']['remote_ip'] = ploopi_getip();
