@@ -484,7 +484,7 @@ function ploopi_documents_browser($currentfolder)
                 array(
                     'name' => 
                         array(
-                            'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/ico_folder.png\" /><span>&nbsp;{$row['name']}</span>",
+                            'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/ico_folder".($row['system'] ? '_locked' : '').".png\" /><span>&nbsp;{$row['name']}</span>",
                             'sort_label' => '1_'.$row['name']
                         ),
                     'type' =>
@@ -521,11 +521,10 @@ function ploopi_documents_browser($currentfolder)
 
             if ($actions == '') $actions = '&nbsp;';
 
-            if (empty($_SESSION['documents']['mode'])) 
-                $documents_values[$i]['values']['actions'] = 
-                    array(
-                        'label' => $actions, 
-                    );
+            $documents_values[$i]['values']['actions'] = 
+                array(
+                    'label' => (empty($_SESSION['documents']['mode']) && !$row['system']) ? $actions : '&nbsp;', 
+                );
 
             $documents_values[$i]['description'] = '';
             $documents_values[$i]['link'] = 'javascript:void(0);';
