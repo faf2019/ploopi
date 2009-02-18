@@ -58,30 +58,30 @@ if ($_SESSION['ploopi']['connected'])
                 ?>
                 <form method="post" onsubmit="javascript:return directory_list_validate(this);" >
                 <input type="hidden" name="ploopi_op" value="directory_list_save">
-                <input type="hidden" name="directory_favorites_id_list" value="<? echo $directory_list->fields['id']; ?>">
+                <input type="hidden" name="directory_favorites_id_list" value="<?php echo $directory_list->fields['id']; ?>">
                 <div class="ploopi_form">
                     <p>
                         <label>Libellé:</label>
-                        <input type="text" class="text" name="directory_list_label" value="<? echo htmlentities($directory_list->fields['label']); ?>">
+                        <input type="text" class="text" name="directory_list_label" value="<?php echo htmlentities($directory_list->fields['label']); ?>">
                     </p>
                 </div>
                 <div style="padding:0 4px 4px 0;text-align:right">
-                    <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('popup_directory_list_form');">
-                    <?
+                    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('popup_directory_list_form');">
+                    <?php
                     if ($ploopi_op == 'directory_list_addnew')
                     {
                         $title = 'Création d\'une nouvelle liste';
-                        ?><input type="submit" class="button" value="<? echo _PLOOPI_ADD; ?>"><?
+                        ?><input type="submit" class="button" value="<?php echo _PLOOPI_ADD; ?>"><?php
                     }
                     else
                     {
                         $title = 'Modification d\'une liste';
-                        ?><input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>"><?
+                        ?><input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>"><?php
                     }
                     ?>
                     </div>
                 </form>
-                <?
+                <?php
                 $content = ob_get_contents();
                 ob_end_clean();
                 echo $skin->create_popup($title , $content, 'popup_directory_list_form');
@@ -144,19 +144,19 @@ if ($_SESSION['ploopi']['connected'])
                 $intUserId = empty($_GET['directory_favorites_id_user']) ? 0 : $_GET['directory_favorites_id_user'];
                 $intContactId = empty($_GET['directory_favorites_id_contact']) ? 0 : $_GET['directory_favorites_id_contact'];
                 ?>
-                <form action="<? echo ploopi_urlencode("admin.php?ploopi_op=directory_favorites_add&directory_favorites_id_user={$intUserId}&directory_favorites_id_contact={$intContactId}"); ?>" method="post">
+                <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_favorites_add&directory_favorites_id_user={$intUserId}&directory_favorites_id_contact={$intContactId}"); ?>" method="post">
                     <div style="padding:4px;background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;">
                         <span style="font-weight:bold;">Modifier les rattachements :</span>
                         <br /><i>Choix d'une ou plusieurs listes</i>
                     </div>
-                    <?
+                    <?php
                     if (empty($arrLists))
                     {
                         ?>
                         <div style="padding:4px;">
-                            <a href="<? echo ploopi_urlencode("admin.php?directoryTabItem=tabFavorites"); ?>"><i>Attention, vous devez ajouter au moins une liste pour gérer vos favoris !</i></a>
+                            <a href="<?php echo ploopi_urlencode("admin.php?directoryTabItem=tabFavorites"); ?>"><i>Attention, vous devez ajouter au moins une liste pour gérer vos favoris !</i></a>
                         </div>
-                        <?
+                        <?php
                     }
                     else
                     {
@@ -167,32 +167,32 @@ if ($_SESSION['ploopi']['connected'])
                                 <input type="checkbox" id="directory_id_list0" name="directory_favorites_id_list[]" value="0" onclick="javascript:directory_checklist('0');" />
                                 <span style="color:#a60000;font-weight:bold;">Supprimer les rattachements</span>
                             </div>
-                            <?
+                            <?php
                         }
                         foreach($arrLists as $row)
                         {
                             ?>
-                            <div class="directory_checkbox" onclick="javascript:directory_checklist('<? echo $row['id']; ?>');">
-                                <input type="checkbox" class="directory_id_list" id="directory_id_list<? echo $row['id']; ?>" name="directory_favorites_id_list[]" value="<? echo $row['id']; ?>" onclick="javascript:directory_checklist('<? echo $row['id']; ?>');" <? if ($row['nbfav']>0) echo 'checked'; ?> />
-                                <span><? echo $row['label']; ?></span>
+                            <div class="directory_checkbox" onclick="javascript:directory_checklist('<?php echo $row['id']; ?>');">
+                                <input type="checkbox" class="directory_id_list" id="directory_id_list<?php echo $row['id']; ?>" name="directory_favorites_id_list[]" value="<?php echo $row['id']; ?>" onclick="javascript:directory_checklist('<?php echo $row['id']; ?>');" <?php if ($row['nbfav']>0) echo 'checked'; ?> />
+                                <span><?php echo $row['label']; ?></span>
                             </div>
-                            <?
+                            <?php
                         }
                     }
                     ?>
                     <div style="padding:4px;background-color:#e0e0e0;border-top:1px solid #c0c0c0;text-align:right;">
-                        <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('popup_directory_addtofavorites');">
-                        <?
+                        <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('popup_directory_addtofavorites');">
+                        <?php
                         if (!empty($arrLists))
                         {
                             ?>
-                            <input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>">
-                            <?
+                            <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>">
+                            <?php
                         }
                         ?>
                     </div>
                 </form>
-                <?
+                <?php
                 ploopi_die();
             break;
 
@@ -332,15 +332,15 @@ if ($_SESSION['ploopi']['connected'])
                 ob_start();
                 ploopi_init_module('directory');
                 ?>
-                <form action="<? echo ploopi_urlencode("admin.php?ploopi_op=directory_send_photo&directory_photo_id={$_GET['directory_photo_id']}"); ?>" method="post" enctype="multipart/form-data" target="directory_contact_photo_iframe">
+                <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_send_photo&directory_photo_id={$_GET['directory_photo_id']}"); ?>" method="post" enctype="multipart/form-data" target="directory_contact_photo_iframe">
                 <p class="ploopi_va" style="padding:2px;">
-                    <label><? echo _DIRECTORY_PHOTO; ?>: </label>
+                    <label><?php echo _DIRECTORY_PHOTO; ?>: </label>
                     <input type="file" class="text" name="directory_contact_photo" />
-                    <input type="submit" class="button" name="<? echo _PLOOPI_SAVE; ?>" />
+                    <input type="submit" class="button" name="<?php echo _PLOOPI_SAVE; ?>" />
                 </p>
                 </form>
                 <iframe name="directory_contact_photo_iframe" style="display:none;"></iframe>
-                <?
+                <?php
                 $content = ob_get_contents();
                 ob_end_clean();
 
@@ -364,11 +364,11 @@ if ($_SESSION['ploopi']['connected'])
                     ?>
                     <script type="text/javascript">
                         new function() {
-                            window.parent.ploopi_getelem('directory_contact_photo<? echo $_GET['directory_photo_id']; ?>', window.parent.document).innerHTML = '<img src="<? echo ploopi_urlencode('admin-light.php?ploopi_op=directory_get_photo&'.ploopi_createtimestamp()); ?>" />';
+                            window.parent.ploopi_getelem('directory_contact_photo<?php echo $_GET['directory_photo_id']; ?>', window.parent.document).innerHTML = '<img src="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=directory_get_photo&'.ploopi_createtimestamp()); ?>" />';
                             window.parent.ploopi_hidepopup('popup_directory_choose_photo');
                         }
                     </script>
-                    <?
+                    <?php
                 }
                 ploopi_die();
             break;
@@ -379,21 +379,7 @@ if ($_SESSION['ploopi']['connected'])
                 ploopi_die();
             break;
 
-            case 'directory_contact_getphoto':
-                // Envoi de la photo d'un contact vers le client
-                include_once './modules/directory/class_directory_contact.php';
-
-                $directory_contact = new directory_contact();
-                if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']) && $directory_contact->open($_GET['directory_contact_id']))
-                {
-                    $strPhotoPath = $directory_contact->getphotopath();
-                    if (file_exists($strPhotoPath)) ploopi_downloadfile($strPhotoPath, 'contact.png', false, false);
-                }
-                ploopi_die();
-            break;
-
             // Gestion des rubriques
-
             case 'directory_heading_detail':
                 ploopi_init_module('directory');
                 if (!empty($_GET['directory_heading_id']))
@@ -458,9 +444,24 @@ if ($_SESSION['ploopi']['connected'])
 
                 ploopi_redirect("admin.php?directory_heading_id={$_GET['directory_heading_id']}");
             break;
-
-
         }
     }
 }
+
+switch($ploopi_op)
+{
+    case 'directory_contact_getphoto':
+        // Envoi de la photo d'un contact vers le client
+        include_once './modules/directory/class_directory_contact.php';
+
+        $directory_contact = new directory_contact();
+        if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']) && $directory_contact->open($_GET['directory_contact_id']))
+        {
+            $strPhotoPath = $directory_contact->getphotopath();
+            if (file_exists($strPhotoPath)) ploopi_downloadfile($strPhotoPath, 'contact.png', false, false);
+        }
+        ploopi_die();
+    break;
+}
 ?>
+

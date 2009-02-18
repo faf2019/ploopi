@@ -38,11 +38,11 @@
 echo $skin->open_simplebloc($title);
 ?>
 <div style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;">
-<? echo $desc; ?>
+<?php echo $desc; ?>
 </div>
 
 <div style="overflow:hidden;">
-<?
+<?php
 /**
  * On récupère les favoris
  */
@@ -75,13 +75,13 @@ switch($_SESSION['directory']['directoryTabItem'])
         <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:$('directory_addcontact').style.display='block';">
             <p class="ploopi_va">
                 <img border="0" src="./modules/directory/img/ico_add_contact.png">
-                <span><? echo _DIRECTORY_ADDNEWCONTACT; ?></span>
+                <span><?php echo _DIRECTORY_ADDNEWCONTACT; ?></span>
             </p>
         </a>
         <div id="directory_addcontact" style="display:none;">
-            <? include_once './modules/directory/public_directory_form.php'; ?>
+            <?php include_once './modules/directory/public_directory_form.php'; ?>
         </div>
-        <?
+        <?php
     break;
 
     /**
@@ -109,48 +109,48 @@ switch($_SESSION['directory']['directoryTabItem'])
 
         ?>
         <div class="directory_search">
-            <form action="<? echo ploopi_urlencode('admin.php?op=search'); ?>" method="post">
+            <form action="<?php echo ploopi_urlencode('admin.php?op=search'); ?>" method="post">
             <div class="ploopi_form" style="width:33%;float:left;">
                 <p>
-                    <label style="font-weight:bold;"><? echo _DIRECTORY_NAME; ?>:</label>
-                    <input type="text" class="text" size="20" name="lastname" value="<? echo $_SESSION['directory']['search']['lastname']; ?>" tabindex="101" />
+                    <label style="font-weight:bold;"><?php echo _DIRECTORY_NAME; ?>:</label>
+                    <input type="text" class="text" size="20" name="lastname" value="<?php echo $_SESSION['directory']['search']['lastname']; ?>" tabindex="101" />
                 </p>
                 <p>
-                    <label style="font-weight:bold;"><? echo _DIRECTORY_FIRSTNAME; ?>:</label>
-                    <input type="text" class="text" size="20" name="firstname" value="<? echo $_SESSION['directory']['search']['firstname']; ?>" tabindex="102" />
+                    <label style="font-weight:bold;"><?php echo _DIRECTORY_FIRSTNAME; ?>:</label>
+                    <input type="text" class="text" size="20" name="firstname" value="<?php echo $_SESSION['directory']['search']['firstname']; ?>" tabindex="102" />
                 </p>
                 <p>
-                    <label style="font-weight:bold;"><? echo _DIRECTORY_FULLTEXT; ?>:</label>
-                    <input type="text" class="text" size="20" name="fulltext" value="<? echo $_SESSION['directory']['search']['fulltext']; ?>" tabindex="107" />
+                    <label style="font-weight:bold;"><?php echo _DIRECTORY_FULLTEXT; ?>:</label>
+                    <input type="text" class="text" size="20" name="fulltext" value="<?php echo $_SESSION['directory']['search']['fulltext']; ?>" tabindex="107" />
                 </p>
             </div>
             <div class="ploopi_form" style="width:33%;float:left;">
                 <p>
-                    <label style="font-weight:bold;"><? echo _DIRECTORY_SERVICE; ?>:</label>
-                    <input type="text" class="text" size="20" name="service" value="<? echo $_SESSION['directory']['search']['service']; ?>" tabindex="103" />
+                    <label style="font-weight:bold;"><?php echo _DIRECTORY_SERVICE; ?>:</label>
+                    <input type="text" class="text" size="20" name="service" value="<?php echo $_SESSION['directory']['search']['service']; ?>" tabindex="103" />
                 </p>
                 <p>
-                    <label style="font-weight:bold;"><? echo _DIRECTORY_FUNCTION; ?>:</label>
-                    <input type="text" class="text" size="20" name="service" value="<? echo $_SESSION['directory']['search']['service']; ?>" tabindex="104" />
+                    <label style="font-weight:bold;"><?php echo _DIRECTORY_FUNCTION; ?>:</label>
+                    <input type="text" class="text" size="20" name="service" value="<?php echo $_SESSION['directory']['search']['service']; ?>" tabindex="104" />
                 </p>
             </div>
             <div class="ploopi_form" style="width:33%;float:left;">
                 <p>
-                    <label style="font-weight:bold;"><? echo _DIRECTORY_CITY; ?>:</label>
-                    <input type="text" class="text" size="20" name="city" value="<? echo $_SESSION['directory']['search']['city']; ?>" tabindex="105" />
+                    <label style="font-weight:bold;"><?php echo _DIRECTORY_CITY; ?>:</label>
+                    <input type="text" class="text" size="20" name="city" value="<?php echo $_SESSION['directory']['search']['city']; ?>" tabindex="105" />
                 </p>
                 <p>
-                    <label style="font-weight:bold;"><? echo _DIRECTORY_COUNTRY; ?>:</label>
-                    <input type="text" class="text" size="20" name="country" value="<? echo $_SESSION['directory']['search']['country']; ?>" tabindex="106" />
+                    <label style="font-weight:bold;"><?php echo _DIRECTORY_COUNTRY; ?>:</label>
+                    <input type="text" class="text" size="20" name="country" value="<?php echo $_SESSION['directory']['search']['country']; ?>" tabindex="106" />
                 </p>
                 <p>
                     <label>&nbsp;</label>
-                    <input type="submit" class="button" value="<? echo _PLOOPI_SEARCH; ?>" style="width:100px;" tabindex="110" />
+                    <input type="submit" class="button" value="<?php echo _PLOOPI_SEARCH; ?>" style="width:100px;" tabindex="110" />
                 </p>
             </div>
             </form>
         </div>
-        <?
+        <?php
     break;
 }
 
@@ -170,7 +170,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         $columns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
         $columns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
         $columns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
-        $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 82);
+        $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 86);
 
         $sql =  "
                 SELECT  *
@@ -317,7 +317,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 <span>Choix de la liste à afficher :</span>
                 <select class="select" onchange="javascript:directory_list_change(this);" id="directory_favorites_id_list">
                 <option value="0">(tous)</option>
-                <?
+                <?php
                 // get lists
                 $sql =  "
                         SELECT      l.*, IF(ISNULL(f.id_list),0,count(*)) as nbfav
@@ -341,33 +341,33 @@ switch($_SESSION['directory']['directoryTabItem'])
                 foreach($arrLists as $row)
                 {
                     ?>
-                    <option <? if ($id_list == $row['id']) echo 'selected'; ?> value="<? echo $row['id']; ?>"><? echo $row['label']; ?> (<? echo $row['nbfav']; ?> fav)</option>
-                    <?
+                    <option <?php if ($id_list == $row['id']) echo 'selected'; ?> value="<?php echo $row['id']; ?>"><?php echo $row['label']; ?> (<?php echo $row['nbfav']; ?> fav)</option>
+                    <?php
                 }
                 ?>
                 </select>
                 <span onclick="javascript:directory_list_addnew(event);" style="cursor:pointer;">
                     <img src="./modules/directory/img/ico_newlist.png" title="Ajouter une liste" /><span style="margin:0 10px 0 2px;">Ajouter une liste</span>
                 </span>
-                <span onclick="javascript:directory_list_modify(event);" style="cursor:pointer;display:<? echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_modify_link" >
+                <span onclick="javascript:directory_list_modify(event);" style="cursor:pointer;display:<?php echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_modify_link" >
                     <img src="./modules/directory/img/ico_modify.png" title="Modifier la liste sélectionnée"  /><span style="margin:0 10px 0 2px;">Modifier la liste sélectionnée</span>
                 </span>
-                <span onclick="javascript:ploopi_confirmlink('<? echo "admin.php?ploopi_op=directory_list_delete&directory_favorites_id_list="; ?>'+$('directory_favorites_id_list').value, 'Êtes vous certain de vouloir supprimer cette liste ?');" style="cursor:pointer;display:<? echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_delete_link">
+                <span onclick="javascript:ploopi_confirmlink('<?php echo "admin.php?ploopi_op=directory_list_delete&directory_favorites_id_list="; ?>'+$('directory_favorites_id_list').value, 'Êtes vous certain de vouloir supprimer cette liste ?');" style="cursor:pointer;display:<?php echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_delete_link">
                     <img src="./modules/directory/img/ico_delete.png" title="Supprimer la liste sélectionnée" /><span style="margin:0 10px 0 2px;">Supprimer la liste sélectionnée</span>
                 </span>
 
-                <?
+                <?php
                 if (empty($arrLists))
                 {
-                    ?><span><i>Attention, vous devez ajouter au moins une liste pour gérer vos favoris !</i></span><?
+                    ?><span><i>Attention, vous devez ajouter au moins une liste pour gérer vos favoris !</i></span><?php
                 }
                 ?>
             </p>
         </div>
         <div id="directory_favorites_list">
-            <? include_once './modules/directory/public_favorites.php'; ?>
+            <?php include_once './modules/directory/public_favorites.php'; ?>
         </div>
-        <?
+        <?php
     break;
 
     /**
@@ -466,7 +466,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         {
             ?>
             <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">Il y a trop de réponses. Vous devriez préciser vos critères de recherche.</div>
-            <?
+            <?php
         }
         else
         {
@@ -586,15 +586,16 @@ switch($_SESSION['directory']['directoryTabItem'])
         <div class="directory_shared_main">
             <div class="directory_shared_treeview" id="directory_shared_treeview">
                 <div class="ploopi_tabs">
-                    <a href="<? echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}&op=directory_heading_viewall"); ?>"><img src="./modules/directory/img/ico_viewall.png">Voir toutes les rubriques</a>
+                    <a href="<?php echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}&op=directory_heading_viewall"); ?>"><img src="./modules/directory/img/ico_viewall.png">Voir toutes les rubriques</a>
                 </div>
                 <div style="padding:10px;">
-                    <? echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $intHeadingId, null, $op == 'directory_heading_viewall'); ?>
+                    <?php echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $intHeadingId, null, $op == 'directory_heading_viewall'); ?>
                 </div>
             </div>
             <div class="directory_shared_heading" id="directory_shared_heading">
                 <div>
-                    <?
+                    <?php
+                    // Ouverture de la rubrique
                     if ($objHeading->open($intHeadingId))
                     {
                         // calcul de profondeur pour affichage du libellé de rubrique
@@ -635,38 +636,62 @@ switch($_SESSION['directory']['directoryTabItem'])
                         {
                             ?>
                             <div class="ploopi_tabs">
-                                <a href="javascript:void(0);" onclick="javascript:if (confirm('Êtes vous certain de vouloir supprimer <? printf("%s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]); ?> (et les sous-rubriques attachées) ?')) document.location.href='<? echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_delete&directory_heading_id={$objHeading->fields['id']}"); ?>';"><img src="./modules/directory/img/ico_delete.png">Supprimer</a>
-                                <a href="<? echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading={$objHeading->fields['id']}"); ?>"><img src="./modules/directory/img/ico_new.png">Ajouter <? printf("%s %s", $arrHeadingLabel[$intDepth+1][0], $arrHeadingLabel[$intDepth+1][2]); ?></a>
-                                <? if (ploopi_isadmin()) { ?><a href="<? echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <? printf("%s %s", $arrHeadingLabel[1][0], $arrHeadingLabel[1][2]); ?></a><? } ?>
+                                <a href="javascript:void(0);" onclick="javascript:if (confirm('Êtes vous certain de vouloir supprimer <?php printf("%s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]); ?> (et les sous-rubriques attachées) ?')) document.location.href='<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_delete&directory_heading_id={$objHeading->fields['id']}"); ?>';"><img src="./modules/directory/img/ico_delete.png">Supprimer</a>
+                                <a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading={$objHeading->fields['id']}"); ?>"><img src="./modules/directory/img/ico_new.png">Ajouter <?php printf("%s %s", $arrHeadingLabel[$intDepth+1][0], $arrHeadingLabel[$intDepth+1][2]); ?></a>
+                                <?php if (ploopi_isadmin()) { ?><a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <?php printf("%s %s", $arrHeadingLabel[1][0], $arrHeadingLabel[1][2]); ?></a><?php } ?>
                             </div>
-                            <?
+                            <?php
                             if ($op == 'directory_modify') // interface débloquée
                             {
                                 ?>
-                                <form method="post" action="<? echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_save&directory_heading_id={$objHeading->fields['id']}"); ?>" onsubmit="javascript:return directory_heading_validate(this);">
+                                <form method="post" action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_save&directory_heading_id={$objHeading->fields['id']}"); ?>" onsubmit="javascript:return directory_heading_validate(this);">
                                 <div class="ploopi_form">
                                     <p>
                                         <label>Niveau:</label>
-                                        <span><? echo $arrHeadingLabel[$intDepth][2]; ?></span>
+                                        <span><?php echo $arrHeadingLabel[$intDepth][2]; ?></span>
                                     </p>
                                     <p>
                                         <label>Libellé:</label>
-                                        <input name="directory_heading_label" id="directory_heading_label" type="text" class="text" value="<? echo htmlentities($objHeading->fields['label']); ?>">
+                                        <input name="directory_heading_label" id="directory_heading_label" type="text" class="text" value="<?php echo htmlentities($objHeading->fields['label']); ?>" />
                                     </p>
                                     <p>
                                         <label>Description:</label>
-                                        <textarea name="directory_heading_description" class="text" style="height:50px;"><? echo htmlentities($objHeading->fields['description']); ?></textarea>
+                                        <textarea name="directory_heading_description" class="text" style="height:50px;"><?php echo htmlentities($objHeading->fields['description']); ?></textarea>
                                     </p>
                                     <p>
                                         <label>Position:</label>
-                                        <input name="directory_heading_position" type="text" class="text" style="width:50px;" value="<? echo htmlentities($objHeading->fields['position']); ?>">
+                                        <input name="directory_heading_position" type="text" class="text" style="width:50px;" value="<?php echo htmlentities($objHeading->fields['position']); ?>" />
+                                    </p>
+                                    <p>
+                                        <label>Téléphone:</label>
+                                        <input name="directory_heading_phone" type="text" class="text" value="<?php echo htmlentities($objHeading->fields['phone']); ?>" style="width:140px;" />
+                                    </p>
+                                    <p>
+                                        <label>Fax:</label>
+                                        <input name="directory_heading_fax" type="text" class="text" value="<?php echo htmlentities($objHeading->fields['fax']); ?>" style="width:140px;" />
+                                    </p>
+                                    <p>
+                                        <label>Adresse:</label>
+                                        <textarea name="directory_heading_address" class="text" style="height:50px;"><?php echo htmlentities($objHeading->fields['address']); ?></textarea>
+                                    </p>
+                                    <p>
+                                        <label>Code Postal:</label>
+                                        <input name="directory_heading_postalcode" type="text" class="text" value="<?php echo htmlentities($objHeading->fields['postalcode']); ?>" style="width:80px;" />
+                                    </p>
+                                    <p>
+                                        <label>Ville:</label>
+                                        <input name="directory_heading_city" type="text" class="text" value="<?php echo htmlentities($objHeading->fields['city']); ?>" />
+                                    </p>
+                                    <p>
+                                        <label>Pays:</label>
+                                        <input name="directory_heading_country" type="text" class="text" value="<?php echo htmlentities($objHeading->fields['country']); ?>" />
                                     </p>
                                 </div>
     
                                 <div style="clear:both;padding:0 6px;">
                                     <em>
-                                        <strong>Gestionnaires <? if ($intWfHeadingId != $intHeadingId) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)"; ?></strong>:
-                                        <?
+                                        <strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)"; ?></strong>:
+                                        <?php
                                         if (!empty($arrWfUsers))
                                         {
                                             $db->query("SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers).") ORDER BY lastname, firstname");
@@ -681,19 +706,19 @@ switch($_SESSION['directory']['directoryTabItem'])
     
                                 <div style="clear:both;padding:4px;">
                                     <div style="border:1px solid #c0c0c0;overflow:hidden;">
-                                    <?
+                                    <?php
                                         ploopi_validation_selectusers(_DIRECTORY_OBJECT_HEADING, $intHeadingId, -1, _DIRECTORY_ACTION_CONTACTS, sprintf("Gestionnaires de %s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]));
                                     ?>
                                     </div>
                                 </div>
     
                                 <div style="text-align:right;padding:4px;">
-                                    <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}"); ?>';">
-                                    <input type="reset" class="button" value="<? echo _PLOOPI_RESET; ?>">
-                                    <input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>">
+                                    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}"); ?>';">
+                                    <input type="reset" class="button" value="<?php echo _PLOOPI_RESET; ?>">
+                                    <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>">
                                 </div>
                                 </form>
-                                <?
+                                <?php
                             }
                         }
                         
@@ -709,19 +734,41 @@ switch($_SESSION['directory']['directoryTabItem'])
                             $arrTitle[] = $objHeading->fields['label'];
 
                             ?>
-                            <h1 class="directory_title"><? echo htmlentities(implode(' > ', $arrTitle)); ?></h1>
-                            <?
+                            <h1 class="directory_title"><?php echo htmlentities(implode(' > ', $arrTitle)); ?></h1>
+                            <?php
                             if (!empty($objHeading->fields['description']))
                             {
-                                ?><div style="padding:4px;"><? echo ploopi_nl2br(htmlentities($objHeading->fields['description'])); ?></div><?
+                                ?><div style="padding:4px;"><em><?php echo ploopi_nl2br(htmlentities($objHeading->fields['description'])); ?></em></div><?php
                             }
+                            
+                            // Construction de la chaîne de téléphone
+                            $arrPone = array();
+                            if (!empty($objHeading->fields['phone'])) $arrPone[] = htmlentities("Tel: ".$objHeading->fields['phone']);
+                            if (!empty($objHeading->fields['fax'])) $arrPone[] = htmlentities("Fax: ".$objHeading->fields['fax']);
+                            
+                            if (!empty($arrPone))
+                            {
+                                ?><div style="padding:4px;"><?php echo implode(' - ', $arrPone); ?></div><?php
+                            }                            
+                            
+                            // Construction de la chaîne d'adresse
+                            $arrAddress = array();
+                            if (!empty($objHeading->fields['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($objHeading->fields['address']));
+                            if (!empty($objHeading->fields['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($objHeading->fields['postalcode'].' '.$objHeading->fields['city'])));
+                            if (!empty($objHeading->fields['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($objHeading->fields['country']));
+
+                            if (!empty($arrAddress))
+                            {
+                                ?><div style="padding:4px;"><?php echo implode('<br />', $arrAddress); ?></div><?php
+                            }                            
+                            
                             
                             ?>
                             <div class="directory_shared_managers">
                                 <div style="float:left;">
                                     <em>
-                                        <strong>Gestionnaires <? if ($intWfHeadingId != $intHeadingId) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)"; ?></strong>:
-                                        <?
+                                        <strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)"; ?></strong>:
+                                        <?php
                                         if (!empty($arrWfUsers))
                                         {
                                             $db->query("SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers).") ORDER BY lastname, firstname");
@@ -732,23 +779,23 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         ?>
                                     </em>
                                 </div>
-                                <?
+                                <?php
                                 if ($booModify) // interface bloquée
                                 {
                                     ?>
                                         <div style="float:right;">
-                                        <input type="button" class="button" value="Modifier" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}&op=directory_modify"); ?>';">
+                                        <input type="button" class="button" value="Modifier" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}&op=directory_modify"); ?>';">
                                         </div>
-                                    <?
+                                    <?php
                                 }
                                 ?>
                             </div>
-                            <?
+                            <?php
                             
                         }
                         ?>        
                         <div style="border-top:1px solid #a0a0a0;">
-                            <?
+                            <?php
                             if ($booModify) // Version modifiable
                             {
                                 $directory_contact = new directory_contact();
@@ -757,19 +804,19 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:$('directory_addcontact').style.display='block';">
                                     <p class="ploopi_va">
                                         <img border="0" src="./modules/directory/img/ico_add_contact.png">
-                                        <span><? echo _DIRECTORY_ADDNEWCONTACT; ?></span>
+                                        <span><?php echo _DIRECTORY_ADDNEWCONTACT; ?></span>
                                     </p>
                                 </a>
                                 <div id="directory_addcontact" style="display:none;">
-                                    <? include_once './modules/directory/public_directory_form.php'; ?>
+                                    <?php include_once './modules/directory/public_directory_form.php'; ?>
                                 </div>
-                                <?
+                                <?php
                             }
                             ?>
                             <div class="ploopi_form_title">
-                                <span>Liste des contacts rattachés à <? printf("%s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]); ?></span>
+                                <span>Liste des contacts rattachés à <?php printf("%s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]); ?></span>
                             </div>
-                            <?
+                            <?php
                             $columns = array();
                             $values = array();
         
@@ -822,12 +869,12 @@ switch($_SESSION['directory']['directoryTabItem'])
                             if (!$db->numrows())
                             {
                                 ?>
-                                <div style="padding:4px;text-align:center;">Il n'y a pas de contact rattaché à <? printf("%s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]); ?></div>
-                                <?
+                                <div style="padding:4px;text-align:center;">Il n'y a pas de contact rattaché à <?php printf("%s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]); ?></div>
+                                <?php
                             }
                             ?>
                         </div>
-                        <?        
+                        <?php        
                     }
                     else
                     {
@@ -836,27 +883,27 @@ switch($_SESSION['directory']['directoryTabItem'])
                         $arrHeadingLabel[1] = split('/', $strHeadingLabel);
                         ?>
                         <div class="ploopi_tabs">
-                            <? if (ploopi_isadmin()) { ?><a href="<? echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <? printf("%s %s", $arrHeadingLabel[1][0], $arrHeadingLabel[1][2]); ?></a><? } ?>
+                            <?php if (ploopi_isadmin()) { ?><a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <?php printf("%s %s", $arrHeadingLabel[1][0], $arrHeadingLabel[1][2]); ?></a><?php } ?>
                         </div>
-                        <?
+                        <?php
                         if (empty($arrHeadings['list']))
                         {
                             ?>
-                            <div class="error" style="padding:10px;text-align:center;">Vous devez d'abord créer <? printf("%s %s", $arrHeadingLabel[1][0], $arrHeadingLabel[1][2]); ?></div>
-                            <?
+                            <div class="error" style="padding:10px;text-align:center;">Vous devez d'abord créer <?php printf("%s %s", $arrHeadingLabel[1][0], $arrHeadingLabel[1][2]); ?></div>
+                            <?php
                         }
                         else
                         {
                             ?>
                             <div class="error" style="padding:10px;text-align:center;">ERREUR - Cette rubrique n'existe pas</div>
-                            <?
+                            <?php
                         }
                     }
                     ?>
                 </div>
             </div>
         </div>
-        <?
+        <?php
         if ($op == 'directory_modify')
         {
             ?>
@@ -868,7 +915,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                     }
                 );
             </script>
-            <?
+            <?php
         }
     break;
 }
@@ -876,21 +923,21 @@ switch($_SESSION['directory']['directoryTabItem'])
 </div>
 
 <p class="ploopi_va" style="padding:4px;background-color:#e0e0e0;">
-    <span style="font-weight:bold;"><? echo _DIRECTORY_LEGEND; ?>:&nbsp;&nbsp;</span>
-    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_open.png" /><span><? echo _DIRECTORY_LEGEND_VIEW; ?></span>
-    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_modify.png" /><span><? echo _DIRECTORY_LEGEND_MODIFY; ?></span>
-    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_delete.png" /><span><? echo _DIRECTORY_LEGEND_DELETE; ?></span>
-    <?
+    <span style="font-weight:bold;"><?php echo _DIRECTORY_LEGEND; ?>:&nbsp;&nbsp;</span>
+    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_open.png" /><span><?php echo _DIRECTORY_LEGEND_VIEW; ?></span>
+    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_modify.png" /><span><?php echo _DIRECTORY_LEGEND_MODIFY; ?></span>
+    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_delete.png" /><span><?php echo _DIRECTORY_LEGEND_DELETE; ?></span>
+    <?php
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
     {
         ?>
-        <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_fav_add.png" /><span><? echo _DIRECTORY_LEGEND_FAVADD; ?></span>
-        <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_fav_modify.png" /><span><? echo _DIRECTORY_LEGEND_FAVMODIFY; ?></span>
-        <?
+        <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_fav_add.png" /><span><?php echo _DIRECTORY_LEGEND_FAVADD; ?></span>
+        <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_fav_modify.png" /><span><?php echo _DIRECTORY_LEGEND_FAVMODIFY; ?></span>
+        <?php
     }
     ?>
-    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_email.png" /><span><? echo _DIRECTORY_LEGEND_EMAIL; ?></span>
-    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_ticket.png" /><span><? echo _DIRECTORY_LEGEND_TICKET; ?></span>
+    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_email.png" /><span><?php echo _DIRECTORY_LEGEND_EMAIL; ?></span>
+    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_ticket.png" /><span><?php echo _DIRECTORY_LEGEND_TICKET; ?></span>
 </p>
 
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>

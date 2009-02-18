@@ -49,11 +49,11 @@ define ('_DIRECTORY_OBJECT_HEADING',        1);
  * @return array tableau contenant les rubriques
  */
 
-function directory_getheadings()
+function directory_getheadings($intIdHeading = 0)
 {
     global $db;
 
-    $headings = 
+    $arrHeadings = 
         array(
             'list' => array(), 
             'tree' => array()
@@ -61,19 +61,50 @@ function directory_getheadings()
         
     $result = $db->query("
         SELECT      * 
+        
         FROM        ploopi_mod_directory_heading
-        ORDER BY    id_heading, position
+        
+        ORDER BY    id_heading, 
+                    position
     ");
     
     while ($fields = $db->fetchrow($result)) 
     {
-        $fields['parents'] = (isset($headings['list'][$fields['id_heading']])) ? "{$headings['list'][$fields['id_heading']]['parents']};{$fields['id_heading']}" : $fields['id_heading'];
-
-        $headings['list'][$fields['id']] = $fields;
-        $headings['tree'][$fields['id_heading']][] = $fields['id'];
+        
+        if ($intIdHeading == 0 || $fields['id'] == $intIdHeading || $fields['id_heading'] == $intIdHeading || (isset($arrHeadings['list'][$fields['id_heading']]) && in_array($intIdHeading, explode(';', $arrHeadings['list'][$fields['id_heading']]['parents']))))
+        {
+            $fields['parents'] = (isset($arrHeadings['list'][$fields['id_heading']])) ? "{$arrHeadings['list'][$fields['id_heading']]['parents']};{$fields['id_heading']}" : $fields['id_heading'];
+            
+            $arrHeadings['list'][$fields['id']] = $fields;
+            $arrHeadings['tree'][$fields['id_heading']][] = $fields['id'];
+        }
     }
     
-    return($headings);
+    return($arrHeadings);
+}
+
+/**
+ * Retourne l'ensemble des contacts partagés triés par rubrique dans un tableau
+ *
+ * @return array tableau contenant les contacts
+ */
+
+function directory_getcontacts()
+{
+    global $db;
+
+    $arrContact = array(); 
+        
+    $result = $db->query("
+        SELECT      * 
+        FROM        ploopi_mod_directory_contact
+        WHERE       id_heading > 0
+        ORDER BY    lastname, firstname
+    ");
+    
+    while ($fields = $db->fetchrow($result)) $arrContacts[$fields['id_heading']][] = $fields; 
+    
+    return($arrContacts);
 }
 
 /**

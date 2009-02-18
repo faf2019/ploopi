@@ -60,66 +60,80 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
 ?>
 
 <h1 class="directory_title" style="background-color:#c0c0c0;border-bottom:1px solid #a0a0a0;">
-    <?
+    <?php
     if (!$booPrintable) 
     {
-        ?><a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<? echo ploopi_urlencode('admin-light.php?op=directory_view&directory_id_user='.(empty($_GET['directory_id_user']) ? '' : $_GET['directory_id_user']).'&directory_id_contact='.(empty($_GET['directory_id_contact']) ? '' : $_GET['directory_id_contact']).'&directory_print'); ?>',550,400);return false;"><img style="display:block;float:right" src="./modules/directory/img/ico_print.png" title="Imprimer" alt="Imprimer" /></a><?
+        ?><a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<?php echo ploopi_urlencode('admin-light.php?op=directory_view&directory_id_user='.(empty($_GET['directory_id_user']) ? '' : $_GET['directory_id_user']).'&directory_id_contact='.(empty($_GET['directory_id_contact']) ? '' : $_GET['directory_id_contact']).'&directory_print'); ?>',550,400);return false;"><img style="display:block;float:right" src="./modules/directory/img/ico_print.png" title="Imprimer" alt="Imprimer" /></a><?php
     }
     echo $strName; 
     ?>
 </h1>
 <div>
     <div style="float:left;width:110px;">
-        <?
+        <?php
         if (file_exists($usr->getphotopath()))
         {
             if (!empty($_GET['directory_id_user']))
             {
-                ?><img title="Photo de <? echo $strName; ?>" src="<? echo ploopi_urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$usr->fields['id']}"); ?>" style="border:1px solid #404040;display:block;margin:5px auto;" /><?
+                ?><img title="Photo de <?php echo $strName; ?>" src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$usr->fields['id']}"); ?>" style="border:1px solid #404040;display:block;margin:5px auto;" /><?php
             }
             else
             {
-                ?><img title="Photo de <? echo $strName; ?>" src="<? echo ploopi_urlencode("admin-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$usr->fields['id']}"); ?>" style="border:1px solid #404040;display:block;margin:5px auto;" /><?
+                ?><img title="Photo de <?php echo $strName; ?>" src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$usr->fields['id']}"); ?>" style="border:1px solid #404040;display:block;margin:5px auto;" /><?php
             }
         }
         ?>
     </div>
     <div style="margin-left:110px;border-left:1px solid #a0a0a0;">
         <div class="ploopi_form" style="padding:4px;">
-            <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Profil</h2>
+            <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Informations professionnelles</h2>
             <p>
-                <label style="font-weight:bold;"><? echo _DIRECTORY_SERVICE; ?>:</label>
-                <span><? echo htmlentities($usr->fields['service']); ?></span>
+                <label style="font-weight:bold;"><?php echo _DIRECTORY_SERVICE; ?>:</label>
+                <span><?php echo htmlentities($usr->fields['service']); ?></span>
             </p>
             <p>
-                <label style="font-weight:bold;"><? echo _DIRECTORY_OFFICE; ?>:</label>
-                <span><? echo htmlentities($usr->fields['office']); ?></span>
+                <label style="font-weight:bold;"><?php echo _DIRECTORY_FUNCTION; ?>:</label>
+                <span><?php echo htmlentities($usr->fields['function']); ?></span>
             </p>
             <p>
-                <label style="font-weight:bold;"><? echo _DIRECTORY_FUNCTION; ?>:</label>
-                <span><? echo htmlentities($usr->fields['function']); ?></span>
+                <label style="font-weight:bold;"><?php echo _DIRECTORY_RANK; ?>:</label>
+                <span><?php echo htmlentities($usr->fields['rank']); ?></span>
             </p>
             <p>
-                <label style="font-weight:bold;"><? echo _DIRECTORY_NUMBER; ?>:</label>
-                <span><? echo htmlentities($usr->fields['number']); ?></span>
+                <label style="font-weight:bold;"><?php echo _DIRECTORY_NUMBER; ?>:</label>
+                <span><?php echo htmlentities($usr->fields['number']); ?></span>
             </p>
             <p>
-                <label style="font-weight:bold;"><? echo _DIRECTORY_PHONE; ?>:</label>
-                <span><? echo htmlentities($usr->fields['phone']); ?></span>
+                <label style="font-weight:bold;"><?php echo _DIRECTORY_PHONE; ?>:</label>
+                <span><?php echo htmlentities($usr->fields['phone']); ?></span>
             </p>
             <p>
-                <label style="font-weight:bold;"><? echo _DIRECTORY_MOBILE; ?>:</label>
-                <span><? echo htmlentities($usr->fields['mobile']); ?></span>
+                <label style="font-weight:bold;"><?php echo _DIRECTORY_MOBILE; ?>:</label>
+                <span><?php echo htmlentities($usr->fields['mobile']); ?></span>
             </p>
             <p>
-                <label style="font-weight:bold;"><? echo _DIRECTORY_FAX; ?>:</label>
-                <span><? echo htmlentities($usr->fields['fax']); ?></span>
+                <label style="font-weight:bold;"><?php echo _DIRECTORY_FAX; ?>:</label>
+                <span><?php echo htmlentities($usr->fields['fax']); ?></span>
             </p>
             <p>
-                <label style="font-weight:bold;"><? echo _DIRECTORY_EMAIL; ?>:</label>
-                <span><a href="mailto:<? echo htmlentities($usr->fields['email']); ?>"><? echo htmlentities($usr->fields['email']); ?></a></span>
+                <label style="font-weight:bold;"><?php echo _DIRECTORY_EMAIL; ?>:</label>
+                <span><a href="mailto:<?php echo htmlentities($usr->fields['email']); ?>"><?php echo htmlentities($usr->fields['email']); ?></a></span>
             </p>
-            <?
+
+            <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Lieu de travail</h2>
+            <p>
+                <label style="font-weight:bold;"><?php echo _DIRECTORY_BUILDING; ?>:</label>
+                <span><?php echo htmlentities($usr->fields['building']); ?></span>
+            </p>
+            <p>
+                <label style="font-weight:bold;"><?php echo _DIRECTORY_FLOOR; ?>:</label>
+                <span><?php echo htmlentities($usr->fields['floor']); ?></span>
+            </p>
+            <p>
+                <label style="font-weight:bold;"><?php echo _DIRECTORY_OFFICE; ?>:</label>
+                <span><?php echo htmlentities($usr->fields['office']); ?></span>
+            </p>
+            <?php
             $arrAddress = array();
 
             if (!empty($usr->fields['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($usr->fields['address']));
@@ -127,15 +141,17 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
             if (!empty($usr->fields['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($usr->fields['country']));
             ?>
             <p>
-                <label style="font-weight:bold;"><? echo _DIRECTORY_ADDRESS; ?>:</label>
-                <span><? echo implode('<br />', $arrAddress); ?></span>
+                <label style="font-weight:bold;"><?php echo _DIRECTORY_ADDRESS; ?>:</label>
+                <span><?php echo implode('<br />', $arrAddress); ?></span>
             </p>
+            
+            <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Informatons complémentaires</h2>
             <p>
-                <label style="font-weight:bold;"><? echo _DIRECTORY_COMMENTARY; ?>:</label>
-                <span><? echo ploopi_nl2br(htmlentities($usr->fields['comments'])); ?></span>
+                <label style="font-weight:bold;"><?php echo _DIRECTORY_COMMENTARY; ?>:</label>
+                <span><?php echo ploopi_nl2br(htmlentities($usr->fields['comments'])); ?></span>
             </p>
 
-            <?
+            <?php
             if (!empty($_GET['directory_id_contact']) && !empty($usr->fields['id_heading']))
             {
                 include_once './modules/directory/class_directory_heading.php';
@@ -144,7 +160,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
                 ?>
                 <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Rattachements (rubriques)</h2>
                 <div style="padding:4px;">
-                    <?
+                    <?php
                     // Récupération des rubriques de contacts partagés
                     $arrHeadings = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_sharedcontacts'] ? directory_getheadings() : array();
                     
@@ -162,7 +178,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
                     echo ploopi_nl2br(htmlentities(implode("\n", $arrTitle)));
                     ?>
                 </div>
-                <?
+                <?php
             }
 
             if (!empty($_GET['directory_id_user']))
@@ -170,7 +186,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
                 ?>
                 <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Groupes d'utilisateurs</h2>
                 <div style="padding:4px;">
-                    <?
+                    <?php
                     $user_gp = $usr->getgroups();
 
                     // on met les libellés dans un tableau
@@ -189,7 +205,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
 
                 <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Rattachements (espaces de travail)</h2>
                 <div style="padding:4px;">
-                    <?
+                    <?php
                     $user_ws = $usr->getworkspaces();
 
                     // on met les libellés dans un tableau
@@ -206,7 +222,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
 
                 <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Attributions / Rôles</h2>
                 <div style="padding:4px;">
-                    <?
+                    <?php
                     // Recherche des rôles
                     $arrRoles = array();
 
@@ -273,14 +289,14 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
                     }
                     ?>
                 </div>
-                <?
+                <?php
             }
             ?>
         </div>
     </div>
 </div>
 
-<?
+<?php
 if ($booPrintable)
 {
     ob_flush();
@@ -288,7 +304,7 @@ if ($booPrintable)
     <script type="text/javascript">
         window.print();
     </script>
-    <?
+    <?php
 }
 else
 {
