@@ -19,6 +19,10 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+body { behavior: url(./js/csshover.htc); }
+img { behavior: url(./js/png.htc); }
+
 #pagemenu {
 overflow:visible;
 height:1%;

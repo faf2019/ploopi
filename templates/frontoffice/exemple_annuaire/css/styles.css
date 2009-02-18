@@ -1,0 +1,543 @@
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/* andreas01 - an open source xhtml/css website layout by Andreas Viklund (http://andreasviklund.com). Made for OSWD.org, free to use as-is for any purpose as long as the proper credits are given for the original design work. For design assistance and support, contact me through my website or through http://oswd.org/email.phtml?user=Andreas
+
+Version: 1.0
+(July 25, 2005)
+
+Screen layout: */
+
+body, table, td, form, input, select, textarea, button {
+font: 11px Verdana,Tahoma,Arial,sans-serif;
+}
+
+body {
+margin: 0 auto;
+padding: 0;
+background: #f4f4f4 url(../gfx/bg.gif) top center repeat-y;
+}
+
+form {
+margin:0;
+padding:0;
+}
+
+#wrap {
+background: #ffffff;
+color: #303030;
+margin: 0 auto;
+width: 984px;
+}
+
+#header {
+margin-bottom: 10px;
+margin-top: 10px;
+border: 0;
+background-image:url(../gfx/front.jpg);
+width:984px;
+height:200px;
+position:relative;
+}
+
+#title {
+color:#ffffff;
+opacity:0.9;
+font-size: 4em;
+padding:10px;
+}
+
+#login {
+position:relative;
+float:right;
+width:130px;
+padding:2px;
+border:1px solid #ffffff;
+background-color:#e0e0e0;
+color:#286ea0;
+font-size:11px;
+}
+
+#login label {
+display:block;
+margin-top:2px;
+font-weight:bold;
+}
+
+
+#login input {
+display:block;
+font-size:11px;
+border:1px solid #286ea0;
+width:110px;
+padding:0 2px;
+text-align:left;
+}
+
+#login input.button {
+background-color:#286ea0;
+color:#ffffff;
+margin-top:4px;
+width:116px;
+}
+
+#path, #pathtrans {
+position:absolute;
+bottom:0px;
+width:100%;
+height:2.2em;
+padding:0;
+}
+
+
+#path {
+z-index:1;
+border-top:1px solid #ffffff;
+}
+
+#pathtrans {
+opacity:0.8;
+background-color:#ffffff;
+}
+
+#path a {
+display: block;
+float:left;
+text-decoration: none;
+color: #808080;
+padding: 0.5em 0.2em;
+}
+
+#path a:hover {
+display: block;
+text-decoration: none;
+color: #286ea0;
+padding: 0.5em 0.2em;
+}
+
+#main {
+clear: both;
+}
+
+#mainmenu {
+clear: both;
+float: left;
+width: 150px;
+margin: 0 0 10px 0;
+padding: 0;
+font-size: 0.9em;
+}
+
+
+#hmenu {
+}
+
+
+#hmenu a.r1h1 {
+display: block;
+font-weight: bold;
+text-decoration: none;
+color: #505050;
+padding: 6px 0 6px 10px;
+background: #f4f4f4;
+border-left: 4px solid #cccccc;
+margin-bottom:2px;
+}
+
+#hmenu a.r1h1:hover {
+background: #eaeaea;
+color: #286ea0;
+border-left: 4px solid #286ea0;
+}
+
+#hmenu a.r1h1selected {
+display: block;
+font-weight: bold;
+text-decoration: none;
+padding: 6px 0 6px 10px;
+background: #eaeaea;
+color: #286ea0;
+border-left: 4px solid #286ea0;
+margin-bottom:2px;
+}
+
+#pagemenu {
+margin:0 0 10px 0;
+overflow:auto;
+}
+
+#pagemenu a.page {
+display: block;
+float:left;
+padding: 2px 10px;
+margin:0px 2px 2px 0px;
+background: #f4f4f4;
+text-decoration: none;
+border-bottom:2px solid #cccccc;
+border-right:2px solid #cccccc;
+color: #505050;
+}
+
+#pagemenu a.page:hover {
+background: #eaeaea;
+border-bottom:2px solid #286ea0;
+border-right:2px solid #286ea0;
+color: #286ea0;
+}
+
+#pagemenu a.pageselected {
+display: block;
+float:left;
+padding: 2px 10px;
+margin:0px 2px 2px 0px;
+background: #eaeaea;
+text-decoration: none;
+border-bottom:2px solid #286ea0;
+border-right:2px solid #286ea0;
+color: #286ea0;
+}
+
+/* vertical alignement : IE / FF / Opera */
+.subheading1 {
+margin:0;
+text-decoration:none;
+display:block;
+font-weight:bold;
+}
+
+.subheading1 img, .subheading1 span {
+display: inline-block;
+vertical-align: middle;
+text-decoration:none;
+border:0;
+cursor:pointer;
+}
+
+.subheading1:hover {
+text-decoration:none;
+color:#404040;
+}
+
+#subheading2 a:hover {
+text-decoration:none;
+color:#404040;
+}
+	
+.headings_page {
+margin:6px 0;
+text-decoration:none;
+display:block;
+}
+    
+.headings_page img, .headings_page span {
+display: inline-block;
+vertical-align: middle;
+text-decoration:none;
+border:0;
+cursor:pointer;
+}   
+    
+.headings_page:hover {
+text-decoration:none;
+color:#404040;
+}
+
+p.va {
+margin:2px 0;
+}
+
+p.va img, 
+p.va span, 
+p.va label, 
+p.va strong, 
+p.va em, 
+p.va input, 
+p.va select, 
+p.va a {
+display: inline-block;
+vertical-align: middle;
+}
+
+.minibloc {
+margin-bottom:10px;
+}
+
+.minibloc .title {
+font-weight:bold;
+}
+
+.minibloc .text {
+width:70%;
+margin-right:2px;
+border:1px solid #c0c0c0;
+padding-left:2px;
+font-size:10px;
+}
+
+.minibloc .button {
+width:20%;
+border:1px solid #a0a0a0;
+background-color:#e0e0e0;
+font-size:10px;
+}
+
+.minibloc .response {
+color:#286ea0;
+}
+
+#tagcloud_title {
+margin:10px 0 4px 0;
+font-weight:bold;
+}
+
+#tagcloud {
+font-size:20px;
+position:relative;
+margin-bottom:10px;
+overflow:hidden;
+}
+
+#tagcloud a {
+float:left;
+display:block;
+text-decoration:none;
+height:20px;
+line-height:20px;
+padding:2px;
+}
+
+#tagcloud a:hover {
+text-decoration:none;
+background-color:#286ea0;
+color:#fff;
+}
+
+#tagcloud a.selected {
+background-color:#286ea0;
+color:#fff;
+}
+
+#tagcloud sup {
+font-size:8px;
+}
+
+#page_tags {
+margin-bottom:10px;
+font-size:9px;
+}
+
+#page_tags span, 
+#page_tags a {
+display: inline-block;
+vertical-align: middle;
+}
+
+#page_tags a {
+font-style:italic;
+}
+
+#sitemap {
+font-size:12px;
+font-weight:bold;
+}
+
+#sitemap div {
+margin-left:10px;
+}
+
+#sitemap .sitemap_heading1 {
+font-size:11px;
+font-weight:bold;
+}
+
+#sitemap .sitemap_heading2 {
+font-size:10px;
+font-weight:normal;
+}
+
+#sitemap .sitemap_heading3 {
+font-size:9px;
+font-weight:normal;
+}
+
+#sitemap .sitemap_heading4 {
+font-size:8px;
+font-weight:normal;
+}
+
+#sitemap a {
+display:block;
+padding:0 2px;
+}
+
+#sitemap a:hover {
+text-decoration:none;
+color:#404040;
+}
+
+.rssfeed {
+margin-top:10px;
+}
+
+.rssfeed a {
+display:block;
+margin-bottom:2px;
+color:#505050;
+padding:2px 2px 2px 4px;
+text-decoration: none;
+border-bottom:1px solid #c0c0c0;
+}
+
+.rssfeed a:hover {
+display:block;
+margin-bottom:2px;
+color: #286ea0;
+text-decoration: none;
+}
+
+.rssfeedtitle {
+background: #f4f4f4;
+font-weight:bold;
+}
+
+
+#content {
+overflow:auto;
+margin: 0 0 10px 10px;
+border-left: 1px solid #f0f0f0;
+padding: 0 0 0 10px;
+text-align: left;
+}
+
+#content h2 {
+font-size: 1.5em;
+margin: 0 0 0.5em 0;
+}
+
+#content h3 {
+font-size: 1.2em;
+margin: 0 0 0 0;
+}
+
+#pagecontent {
+clear:both;
+overflow:hidden;
+min-height:350px;
+}
+
+h3 {
+font-size: 1.3em;
+margin: 0 0 10px 0;
+}
+
+a {
+text-decoration: none;
+color: #286ea0;
+}
+
+a:hover {
+text-decoration: underline;
+color: #286ea0;
+}
+
+a img {
+border: 0;
+}
+
+#footer {
+clear: both;
+margin: 0 auto;
+padding: 10px 0 20px 0;
+border-top: 4px solid #f0f0f0;
+width: 760px;
+text-align: center;
+color: #808080;
+font-size: 0.9em;
+}
+
+.left {
+margin: 10px 10px 5px 0;
+float: left;
+}
+
+.right {
+margin: 10px 0 5px 10px;
+float: right;
+}
+
+
+p, ul, li {
+margin-top: 0px;
+margin-bottom: 0px;
+}
+
+table {
+padding:0px;
+margin:2px;
+border:1px solid #c0c0c0;
+border-collapse:collapse;
+}
+
+td {
+padding:2px;
+}
+
+.fck_title1 {
+font-size:1.5em;
+margin-bottom:4px;
+}
+
+.fck_title2 {
+font-size:1.3em;
+margin-bottom:4px;
+}
+
+.fck_title3 {
+font-size:1.1em;
+margin-bottom:4px;
+}
+
+.fck_normal {
+font: 12px Verdana,Tahoma,Arial,sans-serif;
+color: #286ea0;
+}
+
+.fck_image_left {
+float:left;
+margin:5px 5px 5px 0;
+}
+
+.fck_image_right {
+float:right;
+margin:5px 0 5px 5px;
+}
+
+.fck_quote {
+border: #c0c0c0 1px solid;
+padding: 5px;
+margin: 5px 0;
+color: #808080;
+font-family: 'Courier New' , Monospace;
+background-color: #fffff0;
+}
+
+.fck_ruler {
+}

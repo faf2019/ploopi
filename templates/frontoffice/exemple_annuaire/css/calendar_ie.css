@@ -19,4 +19,18 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-img { behavior: url(./img/png.htc); }
+.calendar_day div {
+    width:20px;
+    height:20px;
+    line-height:18px;
+    border:1px solid #d8d8d8;
+}
+
+.calendar_day a {
+    display:block;
+    text-decoration:none;
+    width:20px;
+    height:20px;
+    line-height:18px;
+    border:1px solid #c0c0c0;
+}

@@ -1,3 +1,4 @@
+<?php
 /*
     Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.
@@ -18,4 +19,49 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-img { behavior: url(./img/png.htc); }
+
+/**
+ * Gestion du skin 'exemple'
+ * 
+ * @package ploopi
+ * @subpackage skin
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see skin_common 
+ */
+
+/**
+ * inclusion de la classe parent
+ */
+
+include_once './include/classes/skin_common.php';
+
+/**
+ * Gestion de l'affichage du skin 'exemple'
+ *
+ * @package ploopi
+ * @subpackage skin
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ * 
+ * @see skin_common 
+ */
+
+class skin extends skin_common
+{
+    /**
+     * Construction de la classe skin 'exemple'
+     *
+     * @return skin
+     */
+    
+    function skin()
+    {
+        parent::skin_common('exemple_annuaire');
+    }
+
+}
+?>

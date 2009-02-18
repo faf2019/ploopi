@@ -1,4 +1,5 @@
 /*
+    Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
@@ -18,4 +19,24 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-img { behavior: url(./img/png.htc); }
+
+body { behavior: url(./js/csshover.htc); }
+img { behavior: url(./js/png.htc); }
+
+#pagemenu {
+overflow:visible;
+height:1%;
+}
+
+#content {
+overflow:visible;
+height:1%;
+}
+
+#title {
+filter:alpha(opacity=90);
+}
+
+#pathtrans {
+filter:alpha(opacity=70);
+}

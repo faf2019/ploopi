@@ -1,0 +1,302 @@
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+#calendar {
+    padding:4px;
+    background-color:#f0f0f0;
+}
+
+.calendar_row {
+    clear:both;
+    overflow:auto;
+}
+
+.calendar_week {
+    float:left;
+    width:28px;
+    height:22px;
+    line-height:22px;
+    text-align:center;
+    color:#606060;
+    font-size:0.9em;
+}
+
+.calendar_day {
+    float:left;
+    width:22px;
+    height:22px;
+    line-height:22px;
+    text-align:center;
+}
+
+
+.calendar_day div {
+    width:18px;
+    height:18px;
+    line-height:18px;
+    border:1px solid #d8d8d8;
+}
+
+.calendar_day a {
+    display:block;
+    text-decoration:none;
+    width:18px;
+    height:18px;
+    line-height:18px;
+    border:1px solid #c0c0c0;
+}
+
+.calendar_day a:hover {
+    background-color:#4E68A6;
+    color:#ffffff;
+    text-decoration:none;
+}
+
+.calendar_day_selected {
+    background-color:#4E68A6;
+    color:#ffffff;
+    text-decoration:none;
+}
+
+.calendar_day_today {
+    background-color:#ffffff;
+}
+
+.calendar_outmonth {
+    border:1px solid #d8d8d8;
+    color:#808080;
+}
+    
+.calendar_arrow {
+    float:left;
+    width:40px;
+    height:22px;
+    line-height:22px;
+    text-align:center;
+}
+
+
+.calendar_month {
+    height:30px;
+    line-height:15px;
+    text-align:center;
+    font-weight:bold;
+}
+
+
+
+/**
+ * Styles liés à la class calendar
+ */
+
+.ploopi_calendar_m {
+    color:#202020;
+}
+
+.ploopi_calendar_m div.month_inner {
+    border-width: 1px 1px 0 0;  
+    border-color:#a0a0a0;
+    border-style:solid;
+    background:#a0a0a0;
+}
+
+.ploopi_calendar_m div.row {
+    clear:both;
+}
+
+.ploopi_calendar_m div.day_header {
+    float:left; 
+    position:relative;
+    background:#f0f0f0;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:#c0c0c0;
+}
+
+.ploopi_calendar_m div.day_header div.day_header_label {
+    padding:2px; 
+    text-align:center;
+    font-size:0.9em;
+    font-weight:bold;
+}
+
+.ploopi_calendar_m div.day {
+    float:left; 
+    position:relative;
+    background:#f0f0f0;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    overflow:hidden;
+}
+
+.ploopi_calendar_m div.day div.day_num {
+    padding:2px; 
+    background-color:#d0d0d0;
+    text-align:right;
+    font-size:0.9em;
+}
+
+.ploopi_calendar_m div.day div.day_num_grayed {
+    padding:2px; 
+    background-color:#d0d0d0;
+    text-align:right;
+    font-size:0.9em;
+    color:#808080;
+}
+
+.ploopi_calendar_m div.week_header {
+    float:left; 
+    position:relative;
+    background:#f0f0f0;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:#e0e0e0;
+}
+
+.ploopi_calendar_m div.week_header div.week_header_num {
+    padding:2px; 
+    text-align:right;
+    font-size:14px;
+    font-weight:bold;
+    color:#808080;
+}
+
+.ploopi_calendar_m div.day a.event {
+    display:block;
+    margin:1px;
+    background-color:#c0c0c0;
+    text-decoration:none;
+    font-size:0.9em;
+    color:#fff;
+    opacity:0.8;filter:alpha(opacity=80);    
+}
+
+.ploopi_calendar_m div.day a.event:hover {
+    opacity:1;filter:alpha(opacity=100);
+}
+
+.ploopi_calendar div.day a.event div.event_inner {
+    /*border-style:solid;
+    border-color:#808080;
+    border-width:1px;*/
+    padding:1px 2px;
+}
+
+.ploopi_calendar_m div.day a.event div.event_inner span.event_h {
+    font-weight:bold;
+    margin-right:2px;
+}
+
+
+
+
+
+
+.ploopi_calendar_d div.row {
+    clear:both;
+}
+
+.ploopi_calendar_d div.days_inner {
+    border-width: 1px 1px 0 0;  
+    border-color:#a0a0a0;
+    border-style:solid;
+    background:#a0a0a0;
+}
+
+.ploopi_calendar_d div.day {
+    float:left; 
+    position:relative;
+    background:#f0f0f0;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+}
+
+.ploopi_calendar_d div.day_header {
+    float:left; 
+    position:relative;
+    background:#f0f0f0;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:#c0c0c0;
+}
+
+.ploopi_calendar_d div.day_header div.day_header_label {
+    padding:2px; 
+    text-align:center;
+    font-size:0.9em;
+    font-weight:bold;
+}
+
+.ploopi_calendar_d div.hours {
+    float:left;
+    position:relative;
+    background-color:#e0e0e0;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+}
+
+.ploopi_calendar_d div.hours div.hour_header {
+}
+
+.ploopi_calendar_d div.hours div.hour_header div.hour_header_num {
+    text-align:right;
+    font-size:14px;
+    font-weight:bold;
+    color:#808080;
+    padding:2px;
+}
+
+.ploopi_calendar_d div.day div.tick {
+    position:absolute;
+    border-top:1px solid #e0e0e0;
+    z-index:100;
+}
+
+.ploopi_calendar_d div.hours div.tick {
+    position:absolute;
+    border-top:1px solid #a0a0a0;
+    z-index:100;
+}
+
+.ploopi_calendar_d div.day a.event {
+    display:block;
+    position:absolute;
+    background-color:#c0c0c0;
+    text-decoration:none;
+    font-size:0.9em;
+    color:#fff;
+    z-index:110;
+    opacity:0.8;filter:alpha(opacity=80);
+}
+
+.ploopi_calendar_d div.day a.event:hover {
+    opacity:1;filter:alpha(opacity=100);
+}
+
+.ploopi_calendar_d div.day a.event div.event_inner {
+    padding:1px 2px;
+}
+
+.ploopi_calendar_d div.day a.event div.event_inner span.event_h {
+    font-weight:bold;
+    margin-right:2px;
+}
