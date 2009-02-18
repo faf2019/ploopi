@@ -45,6 +45,67 @@ a img:hover {background:#d85d5d; border-color:#d85d5d;}
 #content h3 {margin:20px 0 10px 0; color:#d85d5d; font-weight:normal; font-size: 2em; letter-spacing:-2px;}
 
 /* Added styles */
+
+table {
+padding:0px;
+margin:2px;
+border:1px solid #c0c0c0;
+border-collapse:collapse;
+}
+
+td {
+padding:2px;
+}
+
+
+.fck_title1 {
+color:#d85d5d;
+font-size:1.5em;
+margin-bottom:4px;
+letter-spacing:-2px;
+}
+
+.fck_title2 {
+color:#d85d5d;
+font-size:1.3em;
+margin-bottom:4px;
+letter-spacing:-1px;
+}
+
+.fck_title3 {
+color:#d85d5d;
+font-size:1.1em;
+margin-bottom:4px;
+letter-spacing:-0.5px;
+}
+
+.fck_normal {
+font:76% Verdana,Tahoma,sans-serif;
+color: #286ea0;
+}
+
+.fck_image_left {
+float:left;
+margin:5px 5px 5px 0;
+}
+
+.fck_image_right {
+float:right;
+margin:5px 0 5px 5px;
+}
+
+.fck_quote {
+border: #c0c0c0 1px solid;
+padding: 5px;
+margin: 5px 0;
+color: #808080;
+font-family: 'Courier New' , Monospace;
+background-color: #fffff0;
+}
+
+.fck_ruler {
+}
+
 #tagcloud {
 font-size:20px;
 position:relative;
