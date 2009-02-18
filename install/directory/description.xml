@@ -4,7 +4,7 @@
       <label>directory</label>
       <version>2.1</version>
       <author>Ovensia</author>
-      <date>20090217                                                                                                                                               0000000</date>
+      <date>20090217000000</date>
       <description>Annuaire des Utilisateurs</description>
       <paramtype>
          <name>directory_myfavorites</name>
