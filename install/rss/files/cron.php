@@ -24,7 +24,7 @@
 
 /**
  * Gestion de la mise à jour automatique des flux via cron
- * 
+ *
  * @package rss
  * @subpackage cron
  * @copyright Netlor, Ovensia, HeXad
@@ -58,7 +58,7 @@ $select =  "SELECT      feed.id,
                         feed.lastvisit,
                         feed.revisit
             FROM        ploopi_mod_rss_feed feed
-            WHERE       feed.id_module = {$cron_moduleid}
+            WHERE       feed.id_module = '{$cron_moduleid}'
             ";
 
 $result = $db->query($select);

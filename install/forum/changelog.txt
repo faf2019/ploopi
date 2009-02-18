@@ -1,3 +1,9 @@
+== Module FORUM - version 1.0.6 ==================================================
+
+2009-02-18  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Ajout de la fonction HTML_Purifier pour le texte venant de fck_editor afin de parer les attaques XSS
+
 == Module FORUM - version 1.0.5 ==================================================
 
 2009-01-13  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

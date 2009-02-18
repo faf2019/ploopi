@@ -37,7 +37,7 @@
  * Suppression des envois
  */
 
-$db->query("SELECT id FROM ploopi_mod_newsletter_letter WHERE id_module = {$this->fields['id']}");
+$db->query("SELECT id FROM ploopi_mod_newsletter_letter WHERE id_module = '{$this->fields['id']}'");
 $arrIdNewsletter = $db->getarray();
 if($arrIdNewsletter == false || !is_array($arrIdNewsletter)) $arrIdNewsletter[] = '0';
 
@@ -48,20 +48,20 @@ $db->query($delete);
  * Suppression des newsletter
  */
 
-$delete = "DELETE FROM ploopi_mod_newsletter_letter WHERE id_module = {$this->fields['id']}";
+$delete = "DELETE FROM ploopi_mod_newsletter_letter WHERE id_module = '{$this->fields['id']}'";
 $db->query($delete);
 
 /**
  * Suppression des inscriptions
  */
 
-$delete = "DELETE FROM ploopi_mod_newsletter_subscriber WHERE id_module = {$this->fields['id']}";
+$delete = "DELETE FROM ploopi_mod_newsletter_subscriber WHERE id_module = '{$this->fields['id']}'";
 $db->query($delete);
 
 /**
  * Suppression des paramètres
  */
 
-$delete = "DELETE FROM ploopi_mod_newsletter_param WHERE id_module = {$this->fields['id']}";
+$delete = "DELETE FROM ploopi_mod_newsletter_param WHERE id_module = '{$this->fields['id']}'";
 $db->query($delete);
 ?>

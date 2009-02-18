@@ -37,27 +37,27 @@
  * Suppression des catégories
  */
 
-$delete = "DELETE FROM ploopi_mod_rss_cat WHERE id_module = {$this->fields['id']}";
+$delete = "DELETE FROM ploopi_mod_rss_cat WHERE id_module = '{$this->fields['id']}'";
 $db->query($delete);
 
 /**
  * Suppression des entrées
  */
 
-$delete = "DELETE FROM ploopi_mod_rss_entry WHERE id_module = {$this->fields['id']}";
+$delete = "DELETE FROM ploopi_mod_rss_entry WHERE id_module = '{$this->fields['id']}'";
 $db->query($delete);
 
 /**
  * Suppression des flux
  */
 
-$delete = "DELETE FROM ploopi_mod_rss_feed WHERE id_module = {$this->fields['id']}";
+$delete = "DELETE FROM ploopi_mod_rss_feed WHERE id_module = '{$this->fields['id']}'";
 $db->query($delete);
 
 /**
  * Suppression des elements de filtres
  */
-$db->query("SELECT id FROM ploopi_mod_rss_filter WHERE id_module = {$this->fields['id']}");
+$db->query("SELECT id FROM ploopi_mod_rss_filter WHERE id_module = '{$this->fields['id']}'");
 $arrIdFilter = $db->getarray();
 if($arrIdFilter == false || !is_array($arrIdFilter)) $arrIdFilter[] = '0';
 
@@ -67,28 +67,28 @@ $db->query($delete);
 /**
  * Suppression des filtres (attention pas avant la suppr des elements !!!)
  */
-$delete = "DELETE FROM ploopi_mod_rss_filter WHERE id_module = {$this->fields['id']}";
+$delete = "DELETE FROM ploopi_mod_rss_filter WHERE id_module = '{$this->fields['id']}'";
 $db->query($delete);
 
 /**
  * Suppression des catégories de filtre
  */
 
-$delete = "DELETE FROM ploopi_mod_rss_filter_cat WHERE id_module = {$this->fields['id']}";
+$delete = "DELETE FROM ploopi_mod_rss_filter_cat WHERE id_module = '{$this->fields['id']}'";
 $db->query($delete);
 
 /**
  * Suppression des flux de filtre
  */
 
-$delete = "DELETE FROM ploopi_mod_rss_filter_feed WHERE id_module = {$this->fields['id']}";
+$delete = "DELETE FROM ploopi_mod_rss_filter_feed WHERE id_module = '{$this->fields['id']}'";
 $db->query($delete);
 
 /**
  * Suppression des préférences
  */
 
-$delete = "DELETE FROM ploopi_mod_rss_pref WHERE id_module = {$this->fields['id']}";
+$delete = "DELETE FROM ploopi_mod_rss_pref WHERE id_module = '{$this->fields['id']}'";
 $db->query($delete);
 
 ?>

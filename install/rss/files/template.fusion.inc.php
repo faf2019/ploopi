@@ -34,12 +34,12 @@ $rssentry_select =  "
                             feed.id as feedid
                 FROM        ploopi_mod_rss_entry entry,
                             ploopi_mod_rss_feed feed
-                            
+
                 WHERE       entry.id_feed = feed.id
-                  AND       feed.id_workspace = {$wk} 
-                                        
-                ORDER BY    entry.published DESC, 
-                            entry.timestp DESC, 
+                  AND       feed.id_workspace IN ({$wk})
+
+                ORDER BY    entry.published DESC,
+                            entry.timestp DESC,
                             entry.id
                 LIMIT 0,{$_SESSION['ploopi']['modules'][$template_moduleid]['nbitemdisplay']}
                 ";
@@ -48,16 +48,16 @@ $rssentry_result = $db->query($rssentry_select);
 while ($rssEntry_fields = $db->fetchrow($rssentry_result))
 {
   $booFeedOpen = false;
-  // Ce sont les flux par defaut donc ils ont déjà dû être stocké et mis à jour dans template.base.inc.php 
+  // Ce sont les flux par defaut donc ils ont déjà dû être stocké et mis à jour dans template.base.inc.php
   if (isset($arrListFeed[$rssEntry_fields['feedid']]))
   {
     $arrRssFeedData = $arrListFeed[$rssEntry_fields['feedid']];
     $booFeedOpen = true;
   }
-  
+
   if($booFeedOpen)
   {
-    
+
     if (!empty($rssEntry_fields['published']) && is_numeric($rssEntry_fields['published']))
     {
         $published_date = date(_PLOOPI_DATEFORMAT,$rssEntry_fields['published']);
@@ -67,7 +67,7 @@ while ($rssEntry_fields = $db->fetchrow($rssentry_result))
     {
         $published_date = $published_time = '';
     }
-    
+
     $template_body->assign_block_vars('rssentryfusion', array(
                 'FEED_TITLE' => strip_tags($arrRssFeedData['title'],'<b><i>'),
                 'FEED_TITLE_CLEANED' => htmlentities(strip_tags($arrRssFeedData['title'],'<b><i>')),
@@ -84,7 +84,7 @@ while ($rssEntry_fields = $db->fetchrow($rssentry_result))
                 'CONTENT' => strip_tags($rssEntry_fields['content'], '<b><i><a>'),
                 'CONTENT_CLEAN' => htmlentities(strip_tags($rssEntry_fields['content'], '<b><i><a>')),
                 'CONTENT_CUT' => ploopi_strcut(strip_tags($rssEntry_fields['content']),200)
-                ));    
+                ));
   }
 }
 ?>

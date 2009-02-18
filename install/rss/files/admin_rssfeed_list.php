@@ -24,7 +24,7 @@
 
 /**
  * Administration - gestion de la liste des flux RSS
- * 
+ *
  * @package rss
  * @subpackage admin
  * @copyright Netlor, Ovensia, HeXad
@@ -40,52 +40,52 @@ echo $skin->open_simplebloc(_RSS_LABEL_FEEDLIST);
 
 $array_columns = array();
 
-$array_columns['auto']['subtitle'] = 
+$array_columns['auto']['subtitle'] =
     array(
-        'label' => _RSS_LABEL_DESCRIPTION, 
+        'label' => _RSS_LABEL_DESCRIPTION,
         'options' => array('sort' => true)
     );
-    
-$array_columns['left']['title'] = 
+
+$array_columns['left']['title'] =
     array(
-        'label' => _RSS_LABEL_TITLE, 
-        'width' => 170, 
+        'label' => _RSS_LABEL_TITLE,
+        'width' => 170,
         'options' => array('sort' => true)
     );
-    
-$array_columns['right']['limit'] = 
+
+$array_columns['right']['limit'] =
     array(
-        'label' => _RSS_LABEL_LIMIT, 
-        'width' => 60, 
+        'label' => _RSS_LABEL_LIMIT,
+        'width' => 60,
         'options' => array('sort' => true)
     );
-    
-$array_columns['right']['tpl_tag'] = 
+
+$array_columns['right']['tpl_tag'] =
     array(
-        'label' => _RSS_LABEL_TPL_TAG_SHORT, 
+        'label' => _RSS_LABEL_TPL_TAG_SHORT,
         'width' => 100
     );
-    
-$array_columns['right']['revisit'] = 
+
+$array_columns['right']['revisit'] =
     array(
-        'label' => _RSS_LABEL_FEED_RENEW_SHORT, 
-        'width' => 60, 
+        'label' => _RSS_LABEL_FEED_RENEW_SHORT,
+        'width' => 60,
         'options' => array('sort' => true)
     );
-    
-$array_columns['right']['category'] = 
+
+$array_columns['right']['category'] =
     array(
-        'label' => _RSS_LABEL_CATEGORY, 
-        'width' => 120, 
+        'label' => _RSS_LABEL_CATEGORY,
+        'width' => 120,
         'options' => array('sort' => true)
     );
-    
-$array_columns['actions_right']['actions'] = 
+
+$array_columns['actions_right']['actions'] =
     array(
-        'label' => _RSS_LABEL_ACTIONS, 
+        'label' => _RSS_LABEL_ACTIONS,
         'width' => 60
     );
-    
+
 
 $select =   "
             SELECT      feed.*,
@@ -94,7 +94,7 @@ $select =   "
 
             LEFT JOIN   ploopi_mod_rss_cat cat
             ON          feed.id_cat = cat.id
-            WHERE       feed.id_module = {$_SESSION['ploopi']['moduleid']}
+            WHERE       feed.id_module = '{$_SESSION['ploopi']['moduleid']}'
             AND         feed.id_workspace IN (".ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).")
             ORDER BY    feed.title
             ";
@@ -111,38 +111,38 @@ while ($fields = $db->fetchrow($result))
 
     if (empty($actions)) $actions = '&nbsp;';
 
-    $array_values[$c]['values']['subtitle'] = 
+    $array_values[$c]['values']['subtitle'] =
         array(
             'label' => strip_tags($fields['subtitle'], '<b><i>')
         );
-        
-    $array_values[$c]['values']['title'] = 
+
+    $array_values[$c]['values']['title'] =
         array(
             'label' => strip_tags($fields['title'], '<b><i>')
         );
-        
-    $array_values[$c]['values']['revisit'] = 
+
+    $array_values[$c]['values']['revisit'] =
         array(
-            'label' => (isset($rss_revisit_values[$fields['revisit']])) ? $rss_revisit_values[$fields['revisit']] : '', 
+            'label' => (isset($rss_revisit_values[$fields['revisit']])) ? $rss_revisit_values[$fields['revisit']] : '',
             'sort_label' => (isset($rss_revisit_values[$fields['revisit']])) ? $fields['revisit'] : ''
         );
-        
-    $array_values[$c]['values']['category'] = 
+
+    $array_values[$c]['values']['category'] =
         array(
             'label' => $fields['titlecat']
         );
-    
-    $array_values[$c]['values']['limit'] = 
+
+    $array_values[$c]['values']['limit'] =
         array(
             'label' => ($fields['limit'] == 0) ? '---' : $fields['limit']
         );
-        
-    $array_values[$c]['values']['tpl_tag'] = 
+
+    $array_values[$c]['values']['tpl_tag'] =
         array(
             'label' => $fields['tpl_tag']
         );
-        
-    $array_values[$c]['values']['actions'] = 
+
+    $array_values[$c]['values']['actions'] =
         array(
             'label' => $actions
         );
@@ -157,12 +157,12 @@ while ($fields = $db->fetchrow($result))
 }
 
 $skin->display_array(
-    $array_columns, 
-    $array_values, 
-    'array_rssfeedlist', 
+    $array_columns,
+    $array_values,
+    'array_rssfeedlist',
     array(
-        'height' => 250, 
-        'sortable' => true, 
+        'height' => 250,
+        'sortable' => true,
         'orderby_default' => 'title'
     )
 );

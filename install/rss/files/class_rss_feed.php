@@ -30,7 +30,7 @@
  * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see xmlrss
  */
 
@@ -50,7 +50,7 @@ include_once './modules/rss/class_xmlrss.php';
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see xmlrss
  */
 
@@ -69,7 +69,7 @@ class rss_feed extends data_object
 
     /**
      * Récupère les infos sur le flux et l'enregistre
-     * 
+     *
      * @return mixed valeur de la clé primaire
      */
     function save()
@@ -87,12 +87,12 @@ class rss_feed extends data_object
                 $this->fields['author'] = (empty($xmlrss->feed['autor'])) ? '' : $xmlrss->feed['autor'];
 
                 $this->fields['tpl_tag'] = ploopi_convertaccents(strtolower(strtr(trim($this->fields['tpl_tag']), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '_'))));
-                if($this->fields['tpl_tag'] =='' || $this->fields['tpl_tag'] == 'rss_') 
+                if($this->fields['tpl_tag'] =='' || $this->fields['tpl_tag'] == 'rss_')
                   $this->fields['tpl_tag'] = NULL;
                 else
                   if(substr($this->fields['tpl_tag'],0,4) != 'rss_') $this->fields['tpl_tag'] = 'rss_'.$this->fields['tpl_tag'];
-                
-                
+
+
                 /*
                  * ploopi_print_r($xmlrss->header);
                  * ploopi_print_r($xmlrss->charset);
@@ -112,17 +112,17 @@ class rss_feed extends data_object
     function delete()
     {
       global $db;
-      
+
       include_once './modules/rss/class_rss_entry.php';
-      
+
       $wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
-      
+
       $rssentry =  "SELECT      entry.id
                    FROM        ploopi_mod_rss_entry entry
-                   WHERE       entry.id_workspace = {$wk}
-                     AND       entry.id_feed = {$this->fields['id']}
+                   WHERE       entry.id_workspace IN ({$wk})
+                     AND       entry.id_feed = '{$this->fields['id']}'
                    ";
-       
+
        $rssentry_result = $db->query($rssentry);
        while($rssentry_row = $db->fetchrow($rssentry_result))
        {
@@ -133,7 +133,7 @@ class rss_feed extends data_object
        }
        return parent::delete();
     }
-    
+
     /**
      * Vérifie qu'un flux est à jour.
      *
@@ -146,7 +146,7 @@ class rss_feed extends data_object
 
     /**
      * Met à jour le cache du flux
-     * 
+     *
      * @return none
      */
     function updatecache()
@@ -156,12 +156,12 @@ class rss_feed extends data_object
         include_once './modules/rss/class_rss_feed.php';
 
         global $db;
-    
+
         $xmlrss = new xmlrss($this->fields['url']);
         if (!$xmlrss->error)
         {
             $xmlrss->parse();
-    
+
             if (!$xmlrss->error)
             {
                 foreach($xmlrss->feed['entries'] as $entry)
@@ -174,8 +174,8 @@ class rss_feed extends data_object
                         {
                             $published_day = ploopi_unixtimestamp2local($entry['published']);
                             $published_day = substr($published_day, 0, 10);
-                            $published_day = ploopi_timestamp2unixtimestamp(ploopi_local2timestamp($published_day)); 
-                            
+                            $published_day = ploopi_timestamp2unixtimestamp(ploopi_local2timestamp($published_day));
+
                             $rss_entry->fields['id_feed'] = $this->fields['id'];
                             $rss_entry->fields['id'] = $entryid;
                             $rss_entry->fields['title'] = $entry['title'];
@@ -195,17 +195,17 @@ class rss_feed extends data_object
                 }
             }
         }
-    
+
         if ($xmlrss->error) $this->fields['error'] += 1;
-    
+
         // update lastvisit
         $this->fields['lastvisit'] = ploopi_createtimestamp();
         $this->save();
     }
-    
+
     /**
      * Met à jour le cache de tous les flux ou les flux indiqués dans le tableau en parametre (pour les filtres par ex.)
-     * Attention ! Format du tableau = $tableau[$id_feed]=fields_feed[]; 
+     * Attention ! Format du tableau = $tableau[$id_feed]=fields_feed[];
      *
      * @return none
      */
@@ -229,18 +229,18 @@ class rss_feed extends data_object
       else
       {
         global $db;
-       
+
         if(!$intIdModule>0) $intIdModule = $_SESSION['ploopi']['moduleid'];
-        
+
         $wk = ploopi_viewworkspaces($intIdModule);
-  
+
         $rssfeed =  "SELECT      feed.id,
                                  feed.lastvisit,
                                  feed.revisit
                      FROM        ploopi_mod_rss_feed feed
-                     WHERE       feed.id_workspace = {$wk}
+                     WHERE       feed.id_workspace IN ({$wk})
                      ";
-         
+
          $rssfeed_result = $db->query($rssfeed);
          while($rssfeed_row = $db->fetchrow($rssfeed_result))
          {

@@ -29,7 +29,7 @@
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint
  */
- 
+
 /**
  * Inclusion de la classe parent.
  */
@@ -47,7 +47,7 @@ include_once './include/classes/data_object.php';
  */
 class rss_filter_feed extends data_object
 {
-                              
+
   /**
    * Constructeur de la classe
    *
@@ -57,7 +57,7 @@ class rss_filter_feed extends data_object
   {
     parent::data_object('ploopi_mod_rss_filter_feed', 'id_filter', 'id_feed');
   }
-  
+
   /**
    * Enregistre un lien Filtre avec un flux
    *
@@ -68,22 +68,22 @@ class rss_filter_feed extends data_object
     $this->setuwm();
     return parent::save();
   }
-  
+
   /**
    * Enregistre un lien Filtre avec tableau de flux
-   * 
+   *
    * @param int $intIdFilter identifiant du filtre
    * @param array $arrFeed Tableau d'identifiant de flux
-   * 
+   *
    * @return boolean true si enregistrement ok
    */
   function saveArrFeed($intIdFilter,$arrFeed)
   {
-    if(!is_numeric($intIdFilter) || !$intIdFilter>0) return false; 
+    if(!is_numeric($intIdFilter) || !$intIdFilter>0) return false;
     if(!is_array($arrFeed)) return false;
 
     if(!$this->cleanFilterFeed($intIdFilter)) return false;
-    
+
     foreach($arrFeed as $idFeed)
     {
       $this->new = true;
@@ -95,18 +95,18 @@ class rss_filter_feed extends data_object
     }
     return true;
   }
-   
+
   /**
-   * Supprime tous les liens des flux à un filtre 
+   * Supprime tous les liens des flux à un filtre
    *
    * @param int $intIdFilter identifiant du filtre
-   * 
-   * @return boolean 
+   *
+   * @return boolean
    */
   function cleanFilterFeed($intIdFilter='')
   {
     global $db;
-    
+
     if(!is_numeric($intIdFilter) || !$intIdFilter>0)
     {
       if(!is_numeric($this->fields['id_filter']) || !$this->fields['id_filter']>0)
@@ -114,21 +114,21 @@ class rss_filter_feed extends data_object
       else
          $intIdFilter = $this->fields['id_filter'];
     }
-    
+
     $wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
-    
+
     $strRssSqlDelete = "DELETE FROM ploopi_mod_rss_filter_feed
-                          WHERE ploopi_mod_rss_filter_feed.id_filter = {$intIdFilter}
-                            AND ploopi_mod_rss_filter_feed.id_workspace = $wk";
+                          WHERE ploopi_mod_rss_filter_feed.id_filter = '{$intIdFilter}'
+                            AND ploopi_mod_rss_filter_feed.id_workspace IN ({$wk})";
     return $db->query($strRssSqlDelete);
   }
-  
+
   /**
-   * Recupère un tableau des flux attachées à un filtre 
+   * Recupère un tableau des flux attachées à un filtre
    *
    * @param int $intIdFilter identifiant du filtre
-   * 
-   * @return array $arrFeed[id du filtre][] = id du flux 
+   *
+   * @return array $arrFeed[id du filtre][] = id du flux
    */
   function getListFeed($intIdFilter=0)
   {
@@ -140,19 +140,19 @@ class rss_filter_feed extends data_object
     $strSqlRequest = "SELECT feed.id_filter,
                               feed.id_feed
                      FROM ploopi_mod_rss_filter_feed feed
-                     WHERE feed.id_workspace = {$wk}";
-                     
-    if($intIdFilter>0) $strSqlRequest .= " AND feed.id_filter = {$intIdFilter}";
-    
+                     WHERE feed.id_workspace IN ({$wk})";
+
+    if($intIdFilter>0) $strSqlRequest .= " AND feed.id_filter = '{$intIdFilter}'";
+
     if($db->query($strSqlRequest))
     {
       while ($row = $db->fetchrow())
       {
-        $arrFeed[$row['id_filter']][] = $row['id_feed']; 
+        $arrFeed[$row['id_filter']][] = $row['id_feed'];
       }
     }
-    
-    return $arrFeed; 
+
+    return $arrFeed;
   }
 }
 ?>

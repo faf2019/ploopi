@@ -1,3 +1,10 @@
+== Module NEWSLETTER - version 1.2 ====================================================
+
+2009-02-18  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Ajout de plusieurs $db->addslashes pour eviter les injections.
+ * Ajout de plusieurs '' pour eviter les injections.
+
 == Module NEWSLETTER - version 1.1 ====================================================
 
 2008-10-13  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
@@ -7,7 +14,7 @@
   * BACKGROUND_COLOR = couleur du fond
   * CONTENT_COLOR = couleur du fond de la zone de texte
   * TEXT_COLOR = couleur du texte
-  
+
  * Ajout d'une "mini-ged" de gestion des bannières
 
 == Module NEWSLETTER - version 1.0 ====================================================
@@ -26,7 +33,7 @@
 
 2008-10-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Modification de la détection automatique du host 
+ * Modification de la détection automatique du host
  * Correction d'un bug à l'appel de FCKEditor (pointait vers un skin inexistant)
 
 == Module NEWSLETTER - version 0.2beta ====================================================
@@ -36,7 +43,7 @@
  * Correction french.php
  * Correction d'une passage de variable inutile dans display.php
 
- 
+
 == Module NEWSLETTER - version 0.1beta ====================================================
 
 2008-09-28  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

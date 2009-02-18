@@ -71,10 +71,10 @@ class rss_filter_cat extends data_object
 
   /**
    * Enregistre un lien Filtre avec tableau de Catégories
-   * 
+   *
    * @param int $intIdFilter identifiant du filtre
    * @param array $arrCat Tableau d'identifiant de catégorie
-   * 
+   *
    * @return boolean true si enregistrement ok
    */
   function saveArrCat($intIdFilter,$arrCat)
@@ -96,13 +96,13 @@ class rss_filter_cat extends data_object
     }
     return true;
   }
-  
+
   /**
-   * Supprime tous les liens des catégories à un filtre 
+   * Supprime tous les liens des catégories à un filtre
    *
    * @param int $intIdFilter identifiant du filtre
-   * 
-   * @return boolean 
+   *
+   * @return boolean
    */
   function cleanFilterCat($intIdFilter='')
   {
@@ -119,17 +119,17 @@ class rss_filter_cat extends data_object
     $wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
 
     $strRssSqlDelete = "DELETE FROM ploopi_mod_rss_filter_cat
-    WHERE ploopi_mod_rss_filter_cat.id_filter = {$intIdFilter}
-    AND ploopi_mod_rss_filter_cat.id_workspace = $wk";
+    WHERE ploopi_mod_rss_filter_cat.id_filter = '{$intIdFilter}''
+    AND ploopi_mod_rss_filter_cat.id_workspace IN ({$wk})";
     return $db->query($strRssSqlDelete);
   }
-  
+
   /**
-   * Recupère un tableau des catégories attachées à un filtre 
+   * Recupère un tableau des catégories attachées à un filtre
    *
    * @param int $intIdFilter identifiant du filtre
-   * 
-   * @return array $arrCat[id du filtre][] = id de la catégorie 
+   *
+   * @return array $arrCat[id du filtre][] = id de la catégorie
    */
   function getListCat($intIdFilter=0)
   {
@@ -141,9 +141,9 @@ class rss_filter_cat extends data_object
     $strSqlRequest = "SELECT cat.id_filter,
     cat.id_cat
     FROM ploopi_mod_rss_filter_cat cat
-    WHERE cat.id_workspace = {$wk}";
-     
-    if($intIdFilter>0) $strSqlRequest .= " AND cat.id_filter = {$intIdFilter}";
+    WHERE cat.id_workspace IN ({$wk})";
+
+    if($intIdFilter>0) $strSqlRequest .= " AND cat.id_filter = '{$intIdFilter}'";
 
     if($db->query($strSqlRequest))
     {

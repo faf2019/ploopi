@@ -34,7 +34,7 @@ include_once './modules/rss/class_rss_filter.php';
 $rssfilter_select =   "
                     SELECT      ploopi_mod_rss_filter.id
                     FROM        ploopi_mod_rss_filter
-                    WHERE       ploopi_mod_rss_filter.id_workspace = {$wk}
+                    WHERE       ploopi_mod_rss_filter.id_workspace IN ({$wk})
                       AND       ploopi_mod_rss_filter.tpl_tag IS NOT NULL
                       AND       ploopi_mod_rss_filter.tpl_tag <> ''
                     ";
@@ -45,7 +45,7 @@ while ($rssfilter_fields = $db->fetchrow($rssfilter_result))
 {
   $objRssFilter = new rss_filter();
   $objRssFilter->open($rssfilter_fields['id']);
-  
+
   $strSql = $objRssFilter->makeRequest(0,true,$template_moduleid);
 
   if (!empty($strSql))
@@ -54,13 +54,13 @@ while ($rssfilter_fields = $db->fetchrow($rssfilter_result))
     if($result)
     {
       $template_body->assign_block_vars($objRssFilter->fields['tpl_tag'],array());
-    
+
       $template_body->assign_block_vars($objRssFilter->fields['tpl_tag'].'.rssfilter',array(
             'TITLE' => strip_tags($objRssFilter->fields['title'], '<b><i>'),
             'TITLE_CLEANED' => htmlentities(strip_tags($objRssFilter->fields['title'], '<b><i>'))
             ));
     }
-    
+
     while ($fields = $db->fetchrow($result))
     {
       if (!empty($fields['published']) && is_numeric($fields['published']))
@@ -91,6 +91,6 @@ while ($rssfilter_fields = $db->fetchrow($rssfilter_result))
                   'CONTENT_CUT' => ploopi_strcut(strip_tags($fields['content']),200)
                   ));
     }
-  }  
+  }
 }
 ?>

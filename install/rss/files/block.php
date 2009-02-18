@@ -75,7 +75,7 @@ $rssfeed_select =   "
                                 cat.title as titlecat
                     FROM        ploopi_mod_rss_feed feed
                     LEFT JOIN   ploopi_mod_rss_cat cat ON cat.id = feed.id_cat
-                    WHERE       feed.id_module = {$menu_moduleid}
+                    WHERE       feed.id_module = '{$menu_moduleid}'
                     AND         feed.id_workspace IN (".ploopi_viewworkspaces($menu_moduleid).")
                     ORDER BY    feed.title
                     ";
@@ -105,7 +105,7 @@ while($rssfeed_row = $db->fetchrow($rssfeed_result))
 $rsscat_select =   "
                     SELECT      cat.*
                     FROM        ploopi_mod_rss_cat cat
-                    WHERE       cat.id_module = {$menu_moduleid}
+                    WHERE       cat.id_module = '{$menu_moduleid}'
                     AND         cat.id_workspace IN (".ploopi_viewworkspaces($menu_moduleid).")
                     ORDER BY    cat.title
                     ";
@@ -136,7 +136,7 @@ while($rsscat_row = $db->fetchrow($rsscat_result))
 $rssfilter_select =   "
                     SELECT      filter.*
                     FROM        ploopi_mod_rss_filter filter
-                    WHERE       filter.id_module = {$menu_moduleid}
+                    WHERE       filter.id_module = '{$menu_moduleid}'
                     AND         filter.id_workspace IN (".ploopi_viewworkspaces($menu_moduleid).")
                     ORDER BY    filter.title
                     ";
@@ -181,7 +181,7 @@ if (substr($block_rssfeed_cat_filter_id,0,1) == 'C') // Categorie
             FROM        ploopi_mod_rss_entry entry,
                         ploopi_mod_rss_feed feed
             WHERE       entry.id_feed = feed.id
-               AND      feed.id_cat = {$objRssCat->fields['id']}
+               AND      feed.id_cat = '{$objRssCat->fields['id']}''
                AND      feed.id_workspace IN ({$wk})
             ORDER BY    entry.published DESC";
 
@@ -238,7 +238,7 @@ elseif (intval($block_rssfeed_cat_filter_id) > 0)  // Un flux
     $sql =  "
           SELECT      ploopi_mod_rss_entry.*
           FROM        ploopi_mod_rss_entry
-          WHERE       ploopi_mod_rss_entry.id_feed = {$block_rssfeed_cat_filter_id}
+          WHERE       ploopi_mod_rss_entry.id_feed = '{$block_rssfeed_cat_filter_id}'
           ORDER BY    published DESC, timestp DESC, id";
 
     if($rss_feed->fields['limit']>0)
@@ -271,7 +271,7 @@ elseif (intval($block_rssfeed_cat_filter_id) <= 0)  // Tout
             $rssentry_select =  "
                                 SELECT      ploopi_mod_rss_entry.*
                                 FROM        ploopi_mod_rss_entry
-                                WHERE       ploopi_mod_rss_entry.id_feed = {$rss_feed->fields['id']}
+                                WHERE       ploopi_mod_rss_entry.id_feed = '{$rss_feed->fields['id']}'
                                 ORDER BY    published DESC, timestp DESC, id";
 
             if($rss_feed->fields['limit']>0)

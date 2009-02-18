@@ -24,7 +24,7 @@
 
 /**
  * Interface d'administration du module.
- * 
+ *
  * @package rss
  * @subpackage admin
  * @copyright Netlor, Ovensia, HeXad
@@ -55,7 +55,7 @@ switch($op)
                     INNER JOIN  ploopi_mod_rss_feed f
                     ON          f.id = e.id_feed
 
-                    WHERE       e.id_module = {$_SESSION['ploopi']['moduleid']}
+                    WHERE       e.id_module = '{$_SESSION['ploopi']['moduleid']}'
                     ";
 
             $rs = $db->query($sql);

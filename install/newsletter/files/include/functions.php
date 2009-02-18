@@ -38,17 +38,17 @@
 function newsletter_getArrSubscriber()
 {
   global $db;
-  
-  $sql = "SELECT email 
-          FROM ploopi_mod_newsletter_subscriber 
-          WHERE active = 1 
-            AND id_module = {$_SESSION['ploopi']['moduleid']}
+
+  $sql = "SELECT email
+          FROM ploopi_mod_newsletter_subscriber
+          WHERE active = 1
+            AND id_module = '{$_SESSION['ploopi']['moduleid']}'
          ";
   $result_sql = $db->query($sql);
   $arrSubscriber = $db->getarray($result_sql);
 
   if(!empty($arrSubscriber)) return $arrSubscriber;
-  
+
   return false;
 }
 /**
@@ -82,27 +82,27 @@ function newsletter_ListNewsletterIsValidator()
 function newsletter_ListValid($intIdNewsletter = -1, $intObject = -1, $booWidthDetail = true, $inIdModule = -1)
 {
   global $db;
-  
+
   $arrNewsletterValidatorData = array();
 
   if($inIdModule == -1) $inIdModule = $_SESSION['ploopi']['moduleid'];
   if($intObject == -1 && defined('_NEWSLETTER_OBJECT_NEWSLETTER')) $intObject = _NEWSLETTER_OBJECT_NEWSLETTER;
-  
+
   $arrNewsletterValidator = array();
   if($intObject > -1)
   {
     if($intIdNewsletter > 0) $arrNewsletterValidator += ploopi_validation_get($intObject,$intIdNewsletter);
     $arrNewsletterValidator += ploopi_validation_get($intObject);
   }
-  
+
   if($booWidthDetail)
   {
     if(is_array($arrNewsletterValidator) && count($arrNewsletterValidator) > 0)
     {
       foreach($arrNewsletterValidator as $value) $arrNewsletterIdValidator[] = $value['id_validation'];
-        
+
       $strNewsletterIdValidator = implode(',',$arrNewsletterIdValidator);
-  
+
       $strNewsletterSqlQueryValidator = "SELECT ploopi_user.id,
                                               ploopi_user.login,
                                               ploopi_user.firstname,
@@ -111,7 +111,7 @@ function newsletter_ListValid($intIdNewsletter = -1, $intObject = -1, $booWidthD
       $objNewsletterSqlResultValidator = $db->query($strNewsletterSqlQueryValidator);
       if($db->numrows($objNewsletterSqlResultValidator))
       {
-        while($value = $db->fetchrow($objNewsletterSqlResultValidator)) 
+        while($value = $db->fetchrow($objNewsletterSqlResultValidator))
           $arrNewsletterValidatorData[$value['id']] = array('login' => $value['login'],
                                                        'firstname' => $value['firstname'],
                                                        'lastname' => $value['lastname']);
@@ -130,7 +130,7 @@ function newsletter_ListValid($intIdNewsletter = -1, $intObject = -1, $booWidthD
 
 /**
  * Vérifie si l'utilisateur connecté est un administrateur ou un validateur
- *  
+ *
  * @param int $intIdCat id categorie (optionnal)
  * @param int $intAction constant action (optionnal)
  * @param Int $inIdModule id_module
@@ -139,13 +139,13 @@ function newsletter_ListValid($intIdNewsletter = -1, $intObject = -1, $booWidthD
 function newsletter_IsValidator($intIdLetter = -1, $intObject = -1, $intIdModule = -1)
 {
   if($intIdModule == -1) $intIdModule = $_SESSION['ploopi']['moduleid'];
-  
+
   $arrListValid = newsletter_ListValid($intIdLetter,$intObject,false,$intIdModule);
-  
+
   if(is_array($arrListValid) && array_key_exists($_SESSION['ploopi']['user']['id'],$arrListValid))
     return true;
-  
-  return false; 
+
+  return false;
 }
 
 /**
@@ -157,13 +157,13 @@ function newsletter_gettemplates()
 {
     $newsletter_templates = array();
     $newsletter_templates_default = array();
-    
-    $dirTemplate_Default = './modules/newsletter/template_default'; 
-    
+
+    $dirTemplate_Default = './modules/newsletter/template_default';
+
     if(is_dir($dirTemplate_Default))
     {
       $pdir = @opendir($dirTemplate_Default);
-  
+
       while ($tpl = @readdir($pdir))
       {
           if ((substr($tpl, 0, 1) != '.') && is_dir($dirTemplate_Default."/{$tpl}"))
@@ -171,14 +171,14 @@ function newsletter_gettemplates()
               $newsletter_templates_default[] = $tpl;
           }
       }
-  
+
       sort($newsletter_templates_default);
     }
-    
+
     if(is_dir(_NEWSLETTER_TEMPLATES_PATH))
     {
       $pdir = @opendir(_NEWSLETTER_TEMPLATES_PATH);
-  
+
       while ($tpl = @readdir($pdir))
       {
           if ((substr($tpl, 0, 1) != '.') && is_dir(_NEWSLETTER_TEMPLATES_PATH."/{$tpl}"))
@@ -186,12 +186,12 @@ function newsletter_gettemplates()
               $newsletter_templates[] = $tpl;
           }
       }
-  
+
       sort($newsletter_templates);
     }
-    
+
     $newsletter_templates = $newsletter_templates_default + $newsletter_templates;
-    
+
     return($newsletter_templates);
 }
 

@@ -1,9 +1,16 @@
+== Module RSS - version 2.0.3 ====================================================
+
+2009-02-18   Xavier Toussaint ~ Hexad <xavier@hexad.fr>
+
+ * Ajout de nombreux '' dans les requetes pour eviter les injections.
+ * Correction dans l'utilisation des workspaces dans les requetes.
+
 == Module RSS - version 2.0.2 ====================================================
 
 2008-12-12   Xavier Toussaint ~ Hexad <xavier@hexad.fr>
 
  * Correction d'un bug en base de données (Pas de problème avec une nouvelle installation mais bug en MAJ : coquille dans le nom d'un champ)
- * Correction d'un bug d'affichage lorsque le flux selectionné en affcihage en admin était supprimé.
+ * Correction d'un bug d'affichage lorsque le flux selectionné en affichage en admin était supprimé.
 
 == Module RSS - version 2.0.1 ====================================================
 

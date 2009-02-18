@@ -24,7 +24,7 @@
 
 /**
  * Gestion des objets insérables dans une page de contenu (WebEdit)
- * 
+ *
  * @package rss
  * @subpackage wce
  * @copyright Netlor, Ovensia, HeXad
@@ -82,8 +82,8 @@ if ($tplfile != '')
                                             ploopi_mod_rss_feed
 
                                 WHERE       ploopi_mod_rss_feed.id = ploopi_mod_rss_entry.id_feed
-                                AND         ploopi_mod_rss_entry.id_feed = {$rssfeed_id}
-                                ORDER BY    ploopi_mod_rss_entry.published DESC, 
+                                AND         ploopi_mod_rss_entry.id_feed = '{$rssfeed_id}'
+                                ORDER BY    ploopi_mod_rss_entry.published DESC,
                                             ploopi_mod_rss_entry.timestp DESC,
                                             ploopi_mod_rss_entry.id
                                 ";
@@ -91,9 +91,9 @@ if ($tplfile != '')
                   $select .= " LIMIT 0,{$rssfeed->fields['limit']}";
                 else
                   $select .= " LIMIT 0,{$_SESSION['ploopi']['modules'][$rss_moduleid ]['nbitemdisplay']}";
-                                
+
                 $result = $db->query($select);
-                
+
                 while ($fields = $db->fetchrow($result))
                 {
                   if (!empty($fields['published']) && is_numeric($fields['published']))
@@ -135,7 +135,7 @@ if ($tplfile != '')
             if (!empty($objRssCat->fields['id']))
             {
                $objRssCat->updateFeedByCat();
-               
+
                $where = '';
 
                $select =   "
@@ -148,8 +148,8 @@ if ($tplfile != '')
 
                                 WHERE       ploopi_mod_rss_feed.id = ploopi_mod_rss_entry.id_feed
                                 AND         ploopi_mod_rss_entry.id_feed = ploopi_mod_rss_feed.id
-                                AND         ploopi_mod_rss_feed.id_cat = {$intRssCat_id}
-                                ORDER BY    ploopi_mod_rss_entry.published DESC, 
+                                AND         ploopi_mod_rss_feed.id_cat = '{$intRssCat_id}'
+                                ORDER BY    ploopi_mod_rss_entry.published DESC,
                                             ploopi_mod_rss_entry.timestp DESC,
                                             ploopi_mod_rss_entry.id
                                 ";
@@ -157,7 +157,7 @@ if ($tplfile != '')
                   $select .= " LIMIT 0,{$objRssCat->fields['limit']}";
                 else
                   $select .= " LIMIT 0,{$_SESSION['ploopi']['modules'][$rss_moduleid ]['nbitemdisplay']}";
-                                
+
                $result = $db->query($select);
 
                while ($fields = $db->fetchrow($result))
@@ -171,7 +171,7 @@ if ($tplfile != '')
                   {
                       $published_date = $published_time = '';
                   }
-                 
+
                   $template_rss->assign_block_vars('rss_entry',array(
                               'ID' => $fields['id'],
                               'TITLE' => strip_tags($fields['title'], '<b><i>'),
@@ -195,14 +195,14 @@ if ($tplfile != '')
           break;
         case 'display_filter':
             $rssfilter_id = $obj['object_id'];
-            
+
             $objRssFilter = new rss_filter();
             $objRssFilter->open($rssfilter_id);
-            
+
             $objRssFilter->updateFeedByFilter();
-            
+
             $strSql = $objRssFilter->makeRequest();
-            
+
             if (!empty($strSql))
             {
                 $result = $db->query($strSql);
@@ -218,7 +218,7 @@ if ($tplfile != '')
                   {
                       $published_date = $published_time = '';
                   }
-                  
+
                   $template_rss->assign_block_vars('rss_entry',array(
                               'ID' => $fields['id'],
                               'TITLE' => strip_tags($fields['title'], '<b><i>'),

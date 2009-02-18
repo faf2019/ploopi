@@ -42,8 +42,8 @@ if(!empty($_GET['email_subscrib']))
   {
     // date time subject
     $arrNewsletterDateSubscribe = ploopi_timestamp2local($objSubscriber->fields['timestp_subscribe']);
-      
-    echo $skin->open_simplebloc(_NEWSLETTER_LABEL_SUBSCRIBER_MODIF.' '.$objSubscriber->fields['email'],'margin: 2px auto; width:400px;'); 
+
+    echo $skin->open_simplebloc(_NEWSLETTER_LABEL_SUBSCRIBER_MODIF.' '.$objSubscriber->fields['email'],'margin: 2px auto; width:400px;');
     ?>
     <div class="ploopi_form">
       <div style="padding:2px;">
@@ -73,7 +73,7 @@ if(!empty($_GET['email_subscrib']))
     </div>
     <?php
     echo $skin->close_simplebloc();
-  }  
+  }
   unset($objSubscriber);
   unset($arrNewsletterDateSubscribe);
 }
@@ -83,10 +83,10 @@ if(!empty($_GET['email_subscrib']))
  */
 if(!isset($_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['list_receiv']['filter']))
   $_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['list_receiv']['filter'] = '';
-  
+
 if(!isset($_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['list_receiv']['alphaTabItem']))
   $_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['list_receiv']['alphaTabItem'] = -1;
-  
+
 // Mise en place du filtre
 if (isset($_POST['reset']))
   $filter = '';
@@ -103,7 +103,7 @@ $_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['list_receiv'
 if(empty($_GET['alphaTabItem']))
   $alphaTabItem = $_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['list_receiv']['alphaTabItem'];
 else
-  $alphaTabItem = (empty($_GET['alphaTabItem'])) ? -1 : $_GET['alphaTabItem'];
+  $alphaTabItem = (empty($_GET['alphaTabItem'])) ? -1 : $db->addslashes($_GET['alphaTabItem']);
 
 $_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['list_receiv']['alphaTabItem'] = $alphaTabItem;
 
@@ -150,7 +150,7 @@ if ($alphaTabItem != 99) // Si on est pas sur 'tous'
   $where[] = "subscrib.email LIKE '".chr($alphaTabItem+96)."%'";
 }
 
-$where  = (empty($where)) ? '' : ' AND '.implode(' AND ', $where); 
+$where  = (empty($where)) ? '' : ' AND '.implode(' AND ', $where);
 
 $sql =   "
             SELECT      send.*,
@@ -158,11 +158,11 @@ $sql =   "
                         IFNULL(subscrib.ip, '"._NEWSLETTER_DELETED."') as ip,
                         IFNULL(subscrib.email, '') as email_modif
             FROM        ploopi_mod_newsletter_send as send
-            LEFT JOIN   ploopi_mod_newsletter_subscriber as subscrib 
+            LEFT JOIN   ploopi_mod_newsletter_subscriber as subscrib
               ON       (subscrib.email = send.email_subscriber
-                        AND subscrib.id_module = {$_SESSION['ploopi']['moduleid']})
-                        
-            WHERE       send.id_letter = {$_GET['id_newsletter']}
+                        AND subscrib.id_module = '{$_SESSION['ploopi']['moduleid']}')
+
+            WHERE       send.id_letter = '".$db->addslashes($_GET['id_newsletter'])."'
             {$where}
             ";
 
@@ -184,19 +184,19 @@ while ($fields = $db->fetchrow($result))
 {
   // date time d'envoi
   $arrNewsletterDateSend = ploopi_timestamp2local($fields['timestp_send']);
-  
+
   $values[$c]['values']['email']       = array('label' => htmlentities($fields['email_subscriber']));
   $values[$c]['values']['ip']          = array('label' => str_replace(',','<br/>',$fields['ip']));
   $values[$c]['values']['timestpsend']    = array('label' => $arrNewsletterDateSend['date'].' '.$arrNewsletterDateSend['time']);
   // Date d'inscription
   if($fields['timestp_subscribe'])
-  { 
+  {
     $arrNewsletterDateSubscribe = ploopi_timestamp2local($fields['timestp_subscribe']);
     $values[$c]['values']['timestp']    = array('label' => $arrNewsletterDateSubscribe['date'].' '.$arrNewsletterDateSubscribe['time']);
   }
   else
     $values[$c]['values']['timestp']    = array('label' => _NEWSLETTER_DELETED);
-  
+
   $c++;
 }
 $skin->display_array($columns, $values, 'array_subscriberlist', array('height' => 400, 'sortable' => true, 'orderby_default' => 'email'));

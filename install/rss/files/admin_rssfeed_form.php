@@ -24,7 +24,7 @@
 
 /**
  * Administration - modification d'un flux RSS
- * 
+ *
  * @package rss
  * @subpackage admin
  * @copyright Netlor, Ovensia, HeXad
@@ -42,7 +42,7 @@ else echo $skin->open_simplebloc(str_replace('LABEL',$rssfeed->fields['title'],_
 $sql =  "
         SELECT  *
         FROM    ploopi_mod_rss_cat
-        WHERE   id_module = {$_SESSION['ploopi']['moduleid']}
+        WHERE   id_module = '{$_SESSION['ploopi']['moduleid']}'
         AND     id_workspace IN (".ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).")
         ORDER BY title
         ";

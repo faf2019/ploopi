@@ -74,7 +74,7 @@ class newsletter_param extends data_object
 
     if(empty($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
 
-    $sql = "SELECT * FROM ploopi_mod_newsletter_param WHERE id_module = {$id_module}";
+    $sql = "SELECT * FROM ploopi_mod_newsletter_param WHERE id_module = '{$id_module}'";
     $resultSql = $db->query($sql);
 
     while ($fields = $db->fetchrow($resultSql))

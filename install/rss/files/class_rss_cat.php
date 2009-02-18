@@ -59,7 +59,7 @@ class rss_cat extends data_object
     {
         parent::data_object('ploopi_mod_rss_cat');
     }
-    
+
     /**
      * Sauvegarde une catégorie
      *
@@ -68,16 +68,16 @@ class rss_cat extends data_object
     function save()
     {
       $this->fields['tpl_tag'] = ploopi_convertaccents(strtolower(strtr(trim($this->fields['tpl_tag']), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '_'))));
-      if($this->fields['tpl_tag'] =='' || $this->fields['tpl_tag'] == 'rss_') 
+      if($this->fields['tpl_tag'] =='' || $this->fields['tpl_tag'] == 'rss_')
         $this->fields['tpl_tag'] = NULL;
       else
         if(substr($this->fields['tpl_tag'],0,4) != 'rss_') $this->fields['tpl_tag'] = 'rss_'.$this->fields['tpl_tag'];
-      
+
       parent::save();
     }
-    
+
     /**
-     * 
+     *
      * Supprime une catégorie
      *
      * @return boolean true si suppression ok
@@ -85,18 +85,18 @@ class rss_cat extends data_object
     function delete()
     {
       global $db;
-      
+
       $wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
-      
-      $rssfeed =  "UPDATE ploopi_mod_rss_feed 
-                     SET id_cat = 0 
+
+      $rssfeed =  "UPDATE ploopi_mod_rss_feed
+                     SET id_cat = 0
                      WHERE ploopi_mod_rss_feed.id_cat = {$this->fields['id']}
                         AND ploopi_mod_rss_feed.id_workspace = {$wk}";
       $db->query($rssfeed);
-      
+
       parent::delete();
     }
-    
+
     /**
      * Mise à jour des flux d'une catégorie
      *
@@ -108,25 +108,25 @@ class rss_cat extends data_object
       if($intIdCat === '')
       {
         if(isset($this->fields['id']))
-           $intIdCat = $this->fields['id']; 
-        else 
+           $intIdCat = $this->fields['id'];
+        else
            return false;
       }
-      
+
       global $db;
-      
+
       include_once './modules/rss/class_rss_feed.php';
-      
+
       $wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
-      
+
       $rssfeed =  "SELECT      feed.id,
                                feed.lastvisit,
                                feed.revisit
                    FROM        ploopi_mod_rss_feed feed
-                   WHERE       feed.id_workspace = {$wk}
-                     AND       feed.id_cat = {$intIdCat}
+                   WHERE       feed.id_workspace IN ({$wk})
+                     AND       feed.id_cat = '{$intIdCat}'
                    ";
-       
+
        $rssfeed_result = $db->query($rssfeed);
        while($rssfeed_row = $db->fetchrow($rssfeed_result))
        {
@@ -137,7 +137,7 @@ class rss_cat extends data_object
            $objFeed->updatecache();
            unset($objFeed);
          }
-       }      
+       }
        return true;
     }
 }

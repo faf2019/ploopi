@@ -24,7 +24,7 @@
 
 /**
  * Administration - gestion de la liste des catégories de flux
- * 
+ *
  * @package rss
  * @subpackage admin
  * @copyright Netlor, Ovensia, HeXad
@@ -40,40 +40,40 @@ echo $skin->open_simplebloc(_RSS_LABEL_CATLIST);
 
 $array_columns = array();
 
-$array_columns['auto']['desc'] = 
+$array_columns['auto']['desc'] =
     array(
-        'label' => _RSS_LABEL_DESCRIPTION, 
+        'label' => _RSS_LABEL_DESCRIPTION,
         'options' => array('sort' => true)
     );
-    
-$array_columns['left']['title'] = 
+
+$array_columns['left']['title'] =
     array(
-        'label' => _RSS_LABEL_TITLE, 
-        'width' => 170, 
+        'label' => _RSS_LABEL_TITLE,
+        'width' => 170,
         'options' => array('sort' => true)
     );
-    
-$array_columns['actions_right']['actions'] = 
+
+$array_columns['actions_right']['actions'] =
     array(
         'label' => _RSS_LABEL_ACTIONS,
         'width' => 60
     );
-$array_columns['right']['limit'] = 
+$array_columns['right']['limit'] =
     array(
-        'label' => _RSS_LABEL_LIMIT, 
+        'label' => _RSS_LABEL_LIMIT,
         'width' => 60
     );
-    
-$array_columns['right']['tpl_tag'] = 
+
+$array_columns['right']['tpl_tag'] =
     array(
-        'label' => _RSS_LABEL_TPL_TAG_SHORT, 
+        'label' => _RSS_LABEL_TPL_TAG_SHORT,
         'width' => 100
     );
-    
+
 $select =   "
             SELECT  *
             FROM    ploopi_mod_rss_cat
-            WHERE   id_module = {$_SESSION['ploopi']['moduleid']}
+            WHERE   id_module = '{$_SESSION['ploopi']['moduleid']}'
             AND     id_workspace IN (".ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).")
             ORDER BY title
             ";
@@ -90,27 +90,27 @@ while ($fields = $db->fetchrow($result))
 
     if (empty($actions)) $actions = '&nbsp;';
 
-    $array_values[$c]['values']['desc'] = 
+    $array_values[$c]['values']['desc'] =
         array(
             'label' => $fields['description']
         );
-        
-    $array_values[$c]['values']['title'] = 
+
+    $array_values[$c]['values']['title'] =
         array(
             'label' => $fields['title']
         );
-    
-    $array_values[$c]['values']['limit'] = 
+
+    $array_values[$c]['values']['limit'] =
         array(
             'label' => ($fields['limit'] == 0) ? '---' : $fields['limit']
         );
 
-    $array_values[$c]['values']['tpl_tag'] = 
+    $array_values[$c]['values']['tpl_tag'] =
         array(
             'label' => $fields['tpl_tag']
         );
-        
-    $array_values[$c]['values']['actions'] = 
+
+    $array_values[$c]['values']['actions'] =
         array(
             'label' => $actions
         );
@@ -125,12 +125,12 @@ while ($fields = $db->fetchrow($result))
 }
 
 $skin->display_array(
-    $array_columns, 
-    $array_values, 
-    'array_rsscatlist', 
+    $array_columns,
+    $array_values,
+    'array_rsscatlist',
     array(
-        'height' => 250, 
-        'sortable' => true, 
+        'height' => 250,
+        'sortable' => true,
         'orderby_default' => 'title'
     )
 );

@@ -42,8 +42,8 @@ if(!empty($_GET['email_subscrib']))
   {
     // date time subject
     $arrNewsletterDateSubscribe = ploopi_timestamp2local($objSubscriber->fields['timestp_subscribe']);
-      
-    echo $skin->open_simplebloc(_NEWSLETTER_LABEL_SUBSCRIBER_MODIF.' '.$objSubscriber->fields['email'],'margin: 2px auto; width:400px;'); 
+
+    echo $skin->open_simplebloc(_NEWSLETTER_LABEL_SUBSCRIBER_MODIF.' '.$objSubscriber->fields['email'],'margin: 2px auto; width:400px;');
     ?>
     <div class="ploopi_form">
       <div style="padding:2px;">
@@ -73,7 +73,7 @@ if(!empty($_GET['email_subscrib']))
     </div>
     <?php
     echo $skin->close_simplebloc();
-  }  
+  }
   unset($objSubscriber);
   unset($arrNewsletterDateSubscribe);
 }
@@ -83,10 +83,10 @@ if(!empty($_GET['email_subscrib']))
  */
 if(!isset($_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['subscribe']['filter']))
   $_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['subscribe']['filter'] = '';
-  
+
 if(!isset($_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['subscribe']['alphaTabItem']))
   $_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['subscribe']['alphaTabItem'] = -1;
-  
+
 // Mise en place du filtre
 if (isset($_POST['reset']))
   $filter = '';
@@ -103,7 +103,7 @@ $_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['subscribe'][
 if(empty($_GET['alphaTabItem']))
   $alphaTabItem = $_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['subscribe']['alphaTabItem'];
 else
-  $alphaTabItem = (empty($_GET['alphaTabItem'])) ? -1 : $_GET['alphaTabItem'];
+  $alphaTabItem = (empty($_GET['alphaTabItem'])) ? -1 : $db->addslashes($_GET['alphaTabItem']);
 
 $_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['subscribe']['alphaTabItem'] = $alphaTabItem;
 
@@ -151,9 +151,9 @@ if ($alphaTabItem != 99) // Si on est pas sur 'tous'
 }
 
 if(empty($where))
-  $where = 'WHERE id_module = '.$_SESSION['ploopi']['moduleid'];
+  $where = 'WHERE id_module = \''.$_SESSION['ploopi']['moduleid'].'\'';
 else
-  $where = 'WHERE id_module = '.$_SESSION['ploopi']['moduleid'].' AND '.implode(' AND ', $where);
+  $where = 'WHERE id_module = \''.$_SESSION['ploopi']['moduleid'].'\' AND '.implode(' AND ', $where);
 
 
 $sql =   "
@@ -181,15 +181,15 @@ $result = $db->query($sql);
 while ($fields = $db->fetchrow($result))
 {
   // Récupération de l'icone à faire apparaitre pour l'état actif (ou pas...)
-  $active = ($fields['active']) ? '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/p_green.png">' : '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/p_red.png">';  
+  $active = ($fields['active']) ? '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/p_green.png">' : '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/p_red.png">';
 
-  // Si l'action de modif est autorisée, possibilité de changer active (ou pas) en cliquant sur la puce de couleur verte ou rouge 
+  // Si l'action de modif est autorisée, possibilité de changer active (ou pas) en cliquant sur la puce de couleur verte ou rouge
   if(ploopi_isactionallowed(_NEWSLETTER_ACTION_MODIF_SUBSCRIBER))
     $action = '<a href="'.ploopi_urlencode("admin.php?op=subscrib_switch_active&email_subscrib={$fields['email']}").'">'.$active.'</a>';
-    
+
   // date time inscription
   $arrNewsletterDateSubscribe = ploopi_timestamp2local($fields['timestp_subscribe']);
-  
+
   $values[$c]['values']['email']       = array('label' => htmlentities($fields['email']));
   $values[$c]['values']['active']      = array('label' => $action,'style' => 'text-align:center');
   $values[$c]['values']['ip']          = array('label' => str_replace(',','<br/>',$fields['ip']));
@@ -203,12 +203,12 @@ while ($fields = $db->fetchrow($result))
   // Icone Suppression
   if(ploopi_isactionallowed(_NEWSLETTER_ACTION_DELETE_SUBSCRIBER))
     $action .= ' <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=subscrib_delete&email_subscrib={$fields['email']}").'\',\''.str_replace('\'','\\\'',str_replace('%email',$fields['email'],_NEWSLETTER_CONFIRM_SUBSCRIBE_DELETE)).'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._PLOOPI_DELETE.'"></a>';
-  
+
   if(!empty($action))
     $values[$c]['values']['actions'] = array('label' => $action);
   else
     $values[$c]['values']['actions'] = array('label' => '---', 'style' => 'text-align:center;');
-  
+
   $c++;
 }
 $skin->display_array($columns, $values, 'array_subscriberlist', array('height' => 400, 'sortable' => true, 'orderby_default' => 'email'));

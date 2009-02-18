@@ -166,7 +166,7 @@ switch($op)
     $objForumMess->fields['id_subject'] = (isset($_GET['id_subject'])) ? $_GET['id_subject'] : 0;
     $objForumMess->fields['closed']     = (isset($_POST['forum_close']) && $_POST['forum_close'] == 1) ? 1 : 0;
     $objForumMess->fields['title']      = $_POST['forum_title'];
-    $objForumMess->fields['content']    = $_POST['fck_forum_content'];
+    $objForumMess->fields['content']    = ploopi_htmlpurifier($_POST['fck_forum_content']);
 
     $objForumMess->fields['validated'] = ($objForumCat->fields['mustbe_validated'] == 1 && $objForumMess->fields['validated'] != 1) ? 0 : 1;
 

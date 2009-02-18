@@ -40,23 +40,23 @@ $rssentry_select =  "
                   cat.description as catdescription,
                   IF(cat.limit>0,cat.limit,{$_SESSION['ploopi']['modules'][$template_moduleid]['nbitemdisplay']}) as catlimit,
                   cat.tpl_tag as cattpltag
-                  
+
       FROM        ploopi_mod_rss_cat cat,
                   ploopi_mod_rss_feed feed,
                   ploopi_mod_rss_entry entry
-                  
+
       WHERE       feed.id_cat = cat.id
         AND       entry.id_feed = feed.id
-        AND       cat.id_workspace = {$wk}
+        AND       cat.id_workspace IN ({$wk})
         AND       cat.tpl_tag IS NOT NULL
         AND       cat.tpl_tag <> ''
-        
+
       ORDER BY    cat.title DESC,
-                  entry.published DESC, 
-                  entry.timestp DESC, 
+                  entry.published DESC,
+                  entry.timestp DESC,
                   entry.id
       ";
-                  
+
 $rssentry_result = $db->query($rssentry_select);
 while ($rssEntry_fields = $db->fetchrow($rssentry_result))
 {
@@ -64,12 +64,12 @@ while ($rssEntry_fields = $db->fetchrow($rssentry_result))
   if($intCpt <= $rssEntry_fields['catlimit'] || $intIdCatTmp !== $rssEntry_fields['catid'])
   {
     $arrRssFeedData = $arrListFeed[$rssEntry_fields['feedid']];
-    
+
     if($intIdCatTmp !== $rssEntry_fields['catid'])
     {
       // Tag categorie
       $template_body->assign_block_vars($rssEntry_fields['cattpltag'], array());
-      
+
       $template_body->assign_block_vars($rssEntry_fields['cattpltag'].'.rsscat', array(
             'TITLE' => strip_tags($rssEntry_fields['cattitle'],'<b><i>'),
             'TITLE_CLEANED' => htmlentities(strip_tags($rssEntry_fields['cattitle'],'<b><i>')),
@@ -79,11 +79,11 @@ while ($rssEntry_fields = $db->fetchrow($rssentry_result))
       $intIdCatTmp = $rssEntry_fields['catid'];
       $intCpt = 0;
     }
-    
+
     if($intCpt <= $rssEntry_fields['catlimit'])
     {
       $intCpt++;
-      
+
       if (!empty($rssEntry_fields['published']) && is_numeric($rssEntry_fields['published']))
       {
           $published_date = date(_PLOOPI_DATEFORMAT,$rssEntry_fields['published']);
@@ -93,7 +93,7 @@ while ($rssEntry_fields = $db->fetchrow($rssentry_result))
       {
           $published_date = $published_time = '';
       }
-      
+
       $template_body->assign_block_vars($rssEntry_fields['cattpltag'].'.rsscat.rssentry', array(
                   'FEED_TITLE' => strip_tags($arrRssFeedData['title'],'<b><i>'),
                   'FEED_TITLE_CLEANED' => htmlentities(strip_tags($arrRssFeedData['title'],'<b><i>')),
@@ -110,7 +110,7 @@ while ($rssEntry_fields = $db->fetchrow($rssentry_result))
                   'CONTENT' => strip_tags($rssEntry_fields['content'], '<b><i><a>'),
                   'CONTENT_CLEAN' => htmlentities(strip_tags($rssEntry_fields['content'], '<b><i><a>')),
                   'CONTENT_CUT' => ploopi_strcut(strip_tags($rssEntry_fields['content']),200)
-                  ));    
+                  ));
     }
   }
 }

@@ -37,19 +37,19 @@ $arrRssFeedPassed = array();
 $rssEntry_sql =  "
         SELECT      entry.*,
                     feed.id as feedid
-                    
+
         FROM        ploopi_mod_rss_entry entry,
                     ploopi_mod_rss_feed feed
-                    
+
         WHERE       entry.id_feed = feed.id
-           AND      feed.id_workspace = {$wk}
-           
+           AND      feed.id_workspace IN ({$wk})
+
         ORDER BY    feed.title,
-                    entry.published DESC, 
-                    entry.timestp DESC, 
+                    entry.published DESC,
+                    entry.timestp DESC,
                     entry.id
         ";
-                    
+
 $rssEntry_result = $db->query($rssEntry_sql);
 while($rssEntry_fields = $db->fetchrow($rssEntry_result))
 {
@@ -57,13 +57,13 @@ while($rssEntry_fields = $db->fetchrow($rssEntry_result))
   if($intCpt <= $arrListFeed[$rssEntry_fields['feedid']]['limit'] || !isset($arrRssFeedPassed[$rssEntry_fields['feedid']]))
   {
     $arrRssFeedData = $arrListFeed[$rssEntry_fields['feedid']];
-    
+
     $booFeedTag = ($arrRssFeedData['tpl_tag'] != '' && $arrRssFeedData['tpl_tag'] != NULL) ? true : false;
-  
+
     if(!isset($arrRssFeedPassed[$rssEntry_fields['feedid']]))
     {
       $intCpt = 0;
-      
+
       // Entete de flux standard
       $template_body->assign_block_vars('rssfeed', array(
               'TITLE' => strip_tags($arrRssFeedData['title'],'<b><i>'),
@@ -72,12 +72,12 @@ while($rssEntry_fields = $db->fetchrow($rssEntry_result))
               'SUBTITLE_CLEANED' => htmlentities(strip_tags($arrRssFeedData['subtitle'],'<b><i>')),
               'LINK' => $arrRssFeedData['link']
               ));
-      
-      // Entete de flux avec tag particulier pour le template        
+
+      // Entete de flux avec tag particulier pour le template
       if($booFeedTag)
       {
         $template_body->assign_block_vars($arrRssFeedData['tpl_tag'],array());
-        
+
         $template_body->assign_block_vars($arrRssFeedData['tpl_tag'].'.rssfeed', array(
                 'TITLE' => strip_tags($arrRssFeedData['title'],'<b><i>'),
                 'TITLE_CLEANED' => htmlentities(strip_tags($arrRssFeedData['title'],'<b><i>')),
@@ -88,9 +88,9 @@ while($rssEntry_fields = $db->fetchrow($rssEntry_result))
       }
       $arrRssFeedPassed[$rssEntry_fields['feedid']] = true;
     }
-    
+
     $intCpt++;
-    
+
     if($intCpt<=$arrRssFeedData['limit'])
     {
       if (!empty($rssEntry_fields['published']) && is_numeric($rssEntry_fields['published']))
@@ -102,7 +102,7 @@ while($rssEntry_fields = $db->fetchrow($rssEntry_result))
       {
           $published_date = $published_time = '';
       }
-      
+
       // Flux standard
       $template_body->assign_block_vars('rssfeed.rssentry', array(
                   'TITLE' => strip_tags($rssEntry_fields['title'],'<b><i>'),
@@ -116,7 +116,7 @@ while($rssEntry_fields = $db->fetchrow($rssEntry_result))
                   'CONTENT_CLEAN' => htmlentities(strip_tags($rssEntry_fields['content'], '<b><i><a>')),
                   'CONTENT_CUT' => ploopi_strcut(strip_tags($rssEntry_fields['content']),200)
                   ));
-    
+
       // Flux avec tag particulier pour le template
       if($booFeedTag)
       {
