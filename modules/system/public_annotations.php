@@ -86,7 +86,7 @@ switch($op)
                 <?php
                 $idtag = '';
 
-                if (!empty($_GET['idtag']))
+                if (!empty($_GET['idtag']) && is_numeric($_GET['idtag']))
                 {
                     $idtag = $_GET['idtag'];
 
@@ -102,7 +102,7 @@ switch($op)
 
                                 INNER JOIN  ploopi_annotation_tag at2
                                 ON          a.id = at2.id_annotation
-                                AND         at2.id_tag = {$_GET['idtag']}
+                                AND         at2.id_tag = '".$db->addslashes($_GET['idtag'])."'
 
                                 LEFT JOIN   ploopi_annotation_tag at ON at.id_annotation = a.id
                                 LEFT JOIN   ploopi_tag t ON t.id = at.id_tag

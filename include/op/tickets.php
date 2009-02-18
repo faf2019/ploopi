@@ -255,7 +255,7 @@ switch($ploopi_op)
             $response->fields = $ticket->fields;
             $response->fields['id'] = '';
             $response->fields['title'] = $_POST['ticket_title'];
-            $response->fields['message'] = $_POST['fck_ticket_message'];
+            $response->fields['message'] = ploopi_htmlpurifier($_POST['fck_ticket_message']);
             $response->fields['id_user'] = $_SESSION['ploopi']['userid'];
             $response->fields['timestp'] = ploopi_createtimestamp();
             $response->fields['lastreply_timestp'] = $response->fields['timestp'];
