@@ -42,7 +42,6 @@
     <!-- END module_css -->
 
     <!--[if lte IE 6]>
-    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/png.css" media="screen"/>
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles_ie.pack.css" media="screen" />
     <!-- BEGIN module_css_ie -->
     <link type="text/css" rel="stylesheet" href="{module_css_ie.PATH}" media="screen" />

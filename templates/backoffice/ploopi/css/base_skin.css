@@ -377,14 +377,14 @@ p.ploopi_va a {
     overflow:hidden;
 }
 
-.ploopi_form fieldset {
+.ploopi_form fieldset, .fieldset {
     margin: 0;
     padding: 0.2em;
     margin: 0.2em;
-    border:1px solid #193c1c;
+    border:1px solid #808080;
 }
 
-.ploopi_form legend {
+.ploopi_form legend, .fieldset legend {
     font-weight: bold;
     background: transparent;
 }
