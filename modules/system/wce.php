@@ -180,11 +180,14 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                             u.mobile,
                             u.service,
                             u.function,
+                            u.rank,
                             u.number,
                             u.address,
                             u.postalcode,
                             u.city,
                             u.country,
+                            u.building,
+                            u.floor,
                             u.office,
                             g.id as groupid,
                             g.label
@@ -359,7 +362,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                     $arrAddress = array();
         
                     if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['address']));
-                    if (!empty($row['postalcode']) || !empty($usr->fields['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($row['postalcode'].' '.$row['city'])));
+                    if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($row['postalcode'].' '.$row['city'])));
                     if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['country']));
                     
                     $objTplDirectory->assign_block_vars('system_trombi_switch_result.user',
@@ -377,12 +380,15 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                             'GROUPS' => implode('<br />', $row['groups']),
                             'ROLES' => implode('<br />', $row['roles']),
                             'FUNCTION' => htmlentities($row['function']),
+                            'RANK' => htmlentities($row['rank']),
                             'NUMBER' => htmlentities($row['number']),
                             'POSTALCODE' => htmlentities($row['postalcode']),
                             'ADDRESS' => htmlentities($row['address']),
                             'CITY' => htmlentities($row['city']),
                             'COUNTRY' => htmlentities($row['country']),
                             'ADDRESS_FULL' => implode('<br />', $arrAddress),
+                            'BUILDING' => htmlentities($row['building']),
+                            'FLOOR' => htmlentities($row['floor']),
                             'OFFICE' => htmlentities($row['office']),
                             'PHOTOPATH' => $row['photopath']
                         )

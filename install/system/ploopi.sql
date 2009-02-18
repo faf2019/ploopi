@@ -939,4 +939,7 @@ INSERT INTO `ploopi_param_type` (`id_module_type`, `name`, `default_value`, `pub
 INSERT INTO `ploopi_param_choice` (`id_module_type`, `name`, `value`, `displayed_value`) VALUES (1, 'system_search_displayobjecttype', '0', 'non'), (1, 'system_search_displayobjecttype', '1', 'oui');
 INSERT INTO `ploopi_param_default` (`id_module`, `name`, `value`, `id_module_type`) VALUES  (1, 'system_search_displayobjecttype', '1', 1);
 
-UPDATE `ploopi_module_type` SET `version` = '1.3.1', `author` = 'Ovensia', `date` = '20090213000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+ALTER TABLE `ploopi_user` ADD `building` VARCHAR( 255 ) NOT NULL AFTER `timezone` , ADD `floor` VARCHAR( 32 ) NOT NULL AFTER `building` ;
+ALTER TABLE `ploopi_user` ADD `rank` VARCHAR( 32 ) NOT NULL ;
+
+UPDATE `ploopi_module_type` SET `version` = '1.3.1.1', `author` = 'Ovensia', `date` = '20090216000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;

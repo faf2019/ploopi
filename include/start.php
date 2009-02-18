@@ -519,18 +519,22 @@ else include_once "./lang/french.php"; // default language file (french)
 */
 
 // View modes for modules
-$ploopi_viewmodes = array(  _PLOOPI_VIEWMODE_UNDEFINED  => _PLOOPI_LABEL_VIEWMODE_UNDEFINED,
-                            _PLOOPI_VIEWMODE_PRIVATE        => _PLOOPI_LABEL_VIEWMODE_PRIVATE,
-                            _PLOOPI_VIEWMODE_DESC       => _PLOOPI_LABEL_VIEWMODE_DESC,
-                            _PLOOPI_VIEWMODE_ASC            => _PLOOPI_LABEL_VIEWMODE_ASC,
-                            _PLOOPI_VIEWMODE_GLOBAL     => _PLOOPI_LABEL_VIEWMODE_GLOBAL
-                        );
+$ploopi_viewmodes = 
+    array( 
+        _PLOOPI_VIEWMODE_UNDEFINED  => _PLOOPI_LABEL_VIEWMODE_UNDEFINED,
+        _PLOOPI_VIEWMODE_PRIVATE    => _PLOOPI_LABEL_VIEWMODE_PRIVATE,
+        _PLOOPI_VIEWMODE_DESC       => _PLOOPI_LABEL_VIEWMODE_DESC,
+        _PLOOPI_VIEWMODE_ASC        => _PLOOPI_LABEL_VIEWMODE_ASC,
+        _PLOOPI_VIEWMODE_GLOBAL     => _PLOOPI_LABEL_VIEWMODE_GLOBAL
+    );
 
-$ploopi_system_levels = array(  _PLOOPI_ID_LEVEL_USER       => _PLOOPI_LEVEL_USER,
-                                _PLOOPI_ID_LEVEL_GROUPMANAGER => _PLOOPI_LEVEL_GROUPMANAGER,
-                                _PLOOPI_ID_LEVEL_GROUPADMIN     => _PLOOPI_LEVEL_GROUPADMIN,
-                                _PLOOPI_ID_LEVEL_SYSTEMADMIN    => _PLOOPI_LEVEL_SYSTEMADMIN
-                            );
+$ploopi_system_levels = 
+    array(  
+        _PLOOPI_ID_LEVEL_USER           => _PLOOPI_LEVEL_USER,
+        _PLOOPI_ID_LEVEL_GROUPMANAGER   => _PLOOPI_LEVEL_GROUPMANAGER,
+        _PLOOPI_ID_LEVEL_GROUPADMIN     => _PLOOPI_LEVEL_GROUPADMIN,
+        _PLOOPI_ID_LEVEL_SYSTEMADMIN    => _PLOOPI_LEVEL_SYSTEMADMIN
+    );
 
 ///////////////////////////////////////////////////////////////////////////
 // UPDATE LIVE STATS
