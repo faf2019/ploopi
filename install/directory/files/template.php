@@ -1,4 +1,4 @@
-<<?php
+<?php
 /*
     Copyright (c) 2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.

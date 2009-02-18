@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.1.1 ====================================================
+
+2009-02-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Suppression d'un caractère inutilement intégré "<" dans template.php
+
 == Module DIRECTORY - version 2.1 ====================================================
 
 2009-02-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
