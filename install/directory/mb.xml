@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="no"?>
 <ploopi>
-    <ploopi_mb_wce_object>
-        <row>
-            <id>1</id>
-            <label>Affichage Annuaire</label>
-            <script>?object='display'</script>
-        </row>
-    </ploopi_mb_wce_object>
     <ploopi_mb_table>
         <row>
             <name>ploopi_mod_directory_contact</name>
