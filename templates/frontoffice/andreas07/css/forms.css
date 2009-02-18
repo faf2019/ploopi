@@ -1,0 +1,112 @@
+/*
+    Copyright (c) 2009 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+.form {
+    overflow:hidden;
+}
+
+.form .sep1 {
+    font-szie:15px;
+    font-weight:bold;
+    margin:2px 0;
+}
+
+.form .sep2 {
+    font-szie:13px;
+    font-weight:bold;
+    margin:2px 0;
+}
+
+.form .sep3 {
+    font-szie:12px;
+    font-weight:bold;
+    margin:2px 0;
+}
+
+.form .sep4 {
+    font-szie:11px;
+    font-weight:bold;
+    margin:2px 0;
+}
+
+.form p {
+    padding: .2em 0;
+    margin: 0 0 .2em 0;
+    clear:both;
+    overflow:auto;
+}
+
+.form label {
+    display: block;
+    margin-bottom: .2em;
+    font-weight:bold;
+}
+
+.form span {
+    display: block;
+    color: #000000;
+}
+
+.form input.text,
+.form select,
+.form textarea {
+    width:98%;
+ }
+
+.form textarea {
+    height: 6em;
+}
+
+.form p span.checkbox {
+    margin:0;
+    cursor:pointer;
+    width:100%;
+}
+
+.form p span.checkbox img, .form p span.checkbox input {
+    cursor:pointer;
+}
+
+.form img {
+    display: block;
+    float:left;
+}
+
+.form_validate {
+  padding-top:5px;
+  text-align:right;
+}
+
+.form_validate em {
+  font-size:0.8em;
+}
+
+.form input.checkbox, .form input.radio {
+    width:16px;
+}
+
+div.check {
+clear:both;
+}
+
+div.check, div.check input, div.check img {
+cursor:pointer;
+}
