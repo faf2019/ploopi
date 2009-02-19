@@ -1,0 +1,80 @@
+/*
+    Copyright (c) 2008 Hexad
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+#weather_block {
+  overflow: auto;
+  text-align: center;
+  font-size: 9px;
+  color: #193c1c;
+}
+
+div.weather_title {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+div.weather_title {
+  font-weight: bold;
+  cursor: pointer;
+  border-top: 1px solid;
+}
+
+div.weather_subtitle {
+  text-align: center;
+  margin: 2px 4px 0 0;
+  padding: 2px 0;
+  background-color: #E9E9E9;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.weather_info {
+  margin: 0;
+  padding: 0 2px;
+  text-align: right;
+  font-size: 8px;
+}
+
+p.weather_tendance {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+#weather_block a,
+#weather_block a:hover{
+  color: #193c1c;
+  text-decoration: none;
+}
+
+#weather_block label {
+  padding: 0;
+  margin: 0;
+  font-weight: bold;
+}
+
+.weather_block_detail {
+  overflow: auto;
+  text-align: left;
+  border-top: 1px solid;
+  background-color: #ffffff;
+}

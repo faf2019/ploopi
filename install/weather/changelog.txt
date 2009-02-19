@@ -1,0 +1,24 @@
+== Module WEATHER - version 0.03 ====================================================
+
+2009-01-08  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Correction d'un bug à l'installation
+ * Tests & Contrôles de fonctionnement
+ * Passage en version 0.03 officielle
+ * Ajout du text tutorial pour l'inscription à weather.com
+
+== Module WEATHER - version 0.02b ====================================================
+
+2009-01-07  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Correction d'un bug d'interprétation de date
+ * Correction d'un bug au premier enregistrement des paramètres
+ * Correction de mise en page du bloc en affichage (BackOffice)
+
+
+== Module WEATHER - version 0.01a ====================================================
+
+2008-12-23  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Premiere version du module météo basé sur les infos weather.com en ligne
+ * Enregistrement https://registration.weather.com/ursa/xmloap/step2

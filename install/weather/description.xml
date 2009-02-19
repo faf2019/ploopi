@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ploopi>
+	<moduletype>
+		<label>weather</label>
+		<version>0.03</version>
+		<author>HeXad</author>
+		<date>20090108120700</date>
+		<description>Informations météo</description>
+	</moduletype>
+</ploopi>
