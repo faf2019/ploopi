@@ -1,3 +1,38 @@
+ == Ploopi - version 1.3.1.1 ===================================================
+
+ * Ploopi
+ 
+  * Correctif sur la gestion de l'expiration de session pour les utilisateurs non connectés
+  * Ajout d'un nouveau fichier .htc (csshover.htc)
+  * Modification de l'emplacement des fichiers .htc (img => js)
+  * Mise à jour des templates backoffice suite à la modification concernant les fichiers .htc
+  * Module Système : Correction d'un bug dans la détection de nouvelle version du noyau
+  * Correction de deux failles de sécurités :
+   * injection XSS possible via l'éditeur riche de la messagerie interne (tickets) : ajout d'un filtrage de contenu sur le contenu du champ
+   * injection SQL possible via les annotations : une variable était mal testée
+  * Ajout d'un nouveau template frontoffice 'andreas07', adapté du template créé par Andreas Viklund ( http://andreasviklund.com/ )
+  * Script SQL de mise à jour (nouveaux champs sur la table ploopi_user)
+  * Mise à jour du formulaire de gestion des utilisateurs
+  * Correctif sur le trombinoscope
+  * Mise à jour du fichier de lang du module "Système"
+ 
+ * WEATHER 0.3
+  
+  * Intégration du module Weather développé par HeXaD (Xavier Toussaint) - Basé sur les données du site weather.com
+
+ * DIRECTORY 2.1.1
+
+  * Suppression d'un caractère inutilement intégré "<" dans template.php
+  
+ * FORUM 1.0.6
+
+  * Ajout de la fonction ploopi_htmlpurifier() pour le texte venant de fck_editor afin de parer les attaques XSS
+
+ * NEWSLETTER 1.2
+
+  * Ajout de plusieurs $db->addslashes pour eviter les injections SQL
+  * Ajout de plusieurs '' pour eviter les injections SQL
+
  == Ploopi - version 1.3.1 ===================================================
 
 2009-02-13 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
