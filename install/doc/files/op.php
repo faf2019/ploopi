@@ -83,11 +83,12 @@ if ($_SESSION['ploopi']['connected'])
                 
                 $draft = false;
                 
-                $docfolder = new docfolder();
-                
-                // on teste l'existence du dossier
-                if (!$docfolder->open($currentfolder)) ploopi_redirect("admin.php?doc_browser&currentfolder={$currentfolder}");
-                
+                if ($currentfolder != 0) // Autre dossier que "racine"
+                {
+                    $docfolder = new docfolder();
+                    if (!$docfolder->open($currentfolder)) ploopi_redirect("admin.php?doc_browser&currentfolder={$currentfolder}");
+                }
+                                
                 // en mode CGI, il faut récupérer les infos des fichiers uploadés (via le fichier lock)
                 // cf class Cupload
                 // on écrit tout dans $_FILES pour retomber sur nos pieds dans la suite des traitements
@@ -124,7 +125,8 @@ if ($_SESSION['ploopi']['connected'])
                     $uploader->clear();
                     //@unlink($_lock_file);
                 }
-    
+                
+                
                 // on recherche s'il existe des validateurs pour ce dossier
                 $wfusers = array();
                 foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
@@ -219,7 +221,7 @@ if ($_SESSION['ploopi']['connected'])
 
                             if (!$error) 
                             {
-                                if (!$draft)
+                                if (!$draft && $currentfolder != 0)
                                 {
                                     // On va chercher les abonnés
                                     $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_ADDFILE, _DOC_ACTION_MODIFYFILE));
@@ -313,7 +315,7 @@ if ($_SESSION['ploopi']['connected'])
         
                     if (!$error) 
                     {
-                        if (!$draft)
+                        if (!$draft && $currentfolder != 0)
                         {
                             $docfolder = new docfolder();
                             $docfolder->open($docfile->fields['id_folder']);
@@ -330,7 +332,7 @@ if ($_SESSION['ploopi']['connected'])
                 
                 ploopi_redirect("admin.php?doc_browser&currentfolder={$currentfolder}");
             break;
-            
+                        
             case 'doc_filedownloadzip':
         
                 ploopi_init_module('doc');
@@ -354,7 +356,7 @@ if ($_SESSION['ploopi']['connected'])
                     // Création d'un dossier de travail temporaire
                     $tmpfoldername = md5(uniqid(rand(), true));
                     $zip_path = doc_getpath()._PLOOPI_SEP.'zip'._PLOOPI_SEP.$tmpfoldername;
-                    if (!is_dir($zip_path)) mkdir($zip_path);
+                    if (!is_dir($zip_path)) ploopi_makedir($zip_path);
                     
                     if (file_exists($docfile->getfilepath()) && is_writeable($zip_path))
                     {

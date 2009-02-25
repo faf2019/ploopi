@@ -1,3 +1,10 @@
+== Module DOC - version 4.1.1 =====================================================
+
+2009-02-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'une erreur au téléchargement d'un fichier ZIP
+ * Correction d'une erreur lors du dépôt de document dans le dossier 'Racine'
+
 == Module DOC - version 4.1.0 =====================================================
 
 2009-02-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
