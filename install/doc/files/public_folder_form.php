@@ -144,7 +144,7 @@ else // creating
                     else
                     {
                         ?>
-                        <select class="select" name="docfolder_foldertype" onchange="javascript:ploopi_getelem('doc_share').style.display = (this.value == 'shared') ? 'block' : 'none'; ploopi_getelem('doc_validation').style.display = (this.value == 'private') ? 'none' : 'block';" tabindex="2">
+                        <select class="select" name="docfolder_foldertype" onchange="javascript:ploopi_getelem('doc_share').style.display = (this.value == 'shared') ? 'block' : 'none'; ploopi_getelem('doc_validation').style.display = (this.value == 'private') ? 'none' : 'block'; ploopi_getelem('doc_private').style.display = (this.value == 'private') ? 'block' : 'none'; " tabindex="2">
                             <?php
                             foreach($foldertypes as $key => $value)
                             {
@@ -218,25 +218,28 @@ else // creating
     </div>
 
     <?php
-    if (!$readonly && ploopi_isactionallowed(_DOC_ACTION_WORKFLOW_MANAGE))
-    {
-        ?>
-        <div id="doc_validation" style="clear:both;<?php echo ($docfolder->fields['foldertype'] == 'private') ? 'display:none;' : 'display:block;'; ?>">
-            <?php ploopi_validation_selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id']); ?>
-        </div>
-        <?php
-    }
-    else echo '<div id="doc_validation" style="clear:both;margin:0;padding:0;visibility:hidden;"></div>';
-
     if (!$readonly)
     {
+        if (ploopi_isactionallowed(_DOC_ACTION_WORKFLOW_MANAGE))
+        {
+            ?>
+            <div id="doc_validation" style="clear:both;<?php echo ($docfolder->fields['foldertype'] == 'private') ? 'display:none;' : 'display:block;'; ?>">
+                <?php ploopi_validation_selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id']); ?>
+            </div>
+            <?php
+        }
         ?>
         <div id="doc_share" style="clear:both;<?php echo ($docfolder->fields['foldertype'] == 'shared') ? 'display:block;' : 'display:none;'; ?>">
             <?php ploopi_share_selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id']); ?>
         </div>
+        <div id="doc_private" style="clear:both;<?php echo ($docfolder->fields['foldertype'] == 'private') ? 'display:block;' : 'display:none;'; ?>">
+            <div style="margin:4px;border:1px solid #c0c0c0;padding:4px;background-color:#f8f8f8;">
+                <strong>Attention !</strong>
+                <br />Seuls les administrateurs &laquo; Système &raquo; ainsi que le propriétaire du dossier pourront accéder à ce dossier.
+            </div>
+        </div>
         <?php
     }
-    else echo '<div id="doc_share" style="clear:both;margin:0;padding:0;visibility:hidden;"></div>';
     ?>
 
     <div style="clear:both;float:right;padding:4px;">

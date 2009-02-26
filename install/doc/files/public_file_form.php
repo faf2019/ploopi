@@ -189,8 +189,8 @@ else
     $readonly = !(ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_MODIFYFILE) && ((!$docfolder_readonly_content && !$docfile->fields['readonly']) || $docfile->fields['id_user'] == $_SESSION['ploopi']['userid'])));
     $title = $readonly ? '(lecture seule)' : '';
 
-    $docfile_tab = empty($_GET['docfile_tab']) ? '' : $_GET['docfile_tab'];
-
+    $docfile_tab = empty($_GET['docfile_tab']) ? 'open' : $_GET['docfile_tab'];
+    
     $db->query("SELECT filetype FROM ploopi_mod_doc_ext WHERE ext = '{$docfile->fields['extension']}'");
     $row = $db->fetchrow();
 
@@ -216,12 +216,7 @@ else
                 <span>Télécharger</span>
             </p>
         </a>
-        <a href="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>" target="_blank" title="Ouvrir">
-            <p class="ploopi_va">
-                <img src="./modules/doc/img/open.png" />
-                <span>Ouvrir</span>
-            </p>
-        </a>
+
 
         <div>
             <p class="ploopi_va" style="white-space:nowrap;overflow:hidden;">
@@ -235,12 +230,90 @@ else
         <a <?php if ($docfile_tab == 'history') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=history"); ?>"><img src="./modules/doc/img/ico_history.png">Historique des versions</a>
         <a <?php if ($docfile_tab == 'keywords') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=keywords"); ?>" title="Mots clés"><img src="./modules/doc/img/ico_keywords.png">Mots clés</a>
         <a <?php if ($docfile_tab == 'meta') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=meta"); ?>" title="Métadonnées / Propriétés"><img src="./modules/doc/img/ico_meta.png">Métadonnées / Propriétés</a>
-        <a <?php if ($docfile_tab == '') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}"); ?>"><img src="./modules/doc/img/ico_main.png">Fiche principale</a>
+        <a <?php if ($docfile_tab == 'modify') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=modify"); ?>" title="Modifier le fichier"><img src="./modules/doc/img/ico_main.png">Modifier le fichier</a>
+        <a <?php if ($docfile_tab == 'open') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=open"); ?>" title="Voir le contenu"><img src="./modules/doc/img/ico_open.png">Voir le contenu</a>
     </div>
 
     <?php
     switch($docfile_tab)
     {
+        /**
+         * Affichage du contenu du fichier (texte, multimédia)
+         */
+        case 'open':
+            $arrRenderer = (in_array(strtolower($docfile->fields['extension']), array_keys($doc_arrDocViewableFormats))) ? explode(':', $doc_arrDocViewableFormats[strtolower($docfile->fields['extension'])]) : array('iframe');
+            
+            if (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight'])) $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight'] = '600';
+            
+            switch($arrRenderer[0])
+            {
+                case 'highlighter':
+                    ?>
+                    <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#ffffff;height:<?php echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>px;overflow:auto;">
+                    <?php
+                    require_once "Text/Highlighter.php";
+                    require_once "Text/Highlighter/Renderer/Html.php";
+                    $objHL =& Text_Highlighter::factory($arrRenderer[1]);
+
+                    $objHL->setRenderer(new Text_Highlighter_Renderer_Html());
+                    
+                    $ptrHandle = fopen($docfile->getfilepath(), "rb");
+                    $strFileContent = '';
+                    while (!feof($ptrHandle)) $strFileContent .= fread($ptrHandle, 8192);
+                    fclose($ptrHandle);
+                    
+                    echo $objHL->highlight($strFileContent);
+                    ?>
+                    </div>
+                    <?php
+                break;
+                
+                case 'flash':
+                    ?>
+                    <script type="text/javascript" src="./modules/doc/jw_player/swfobject.js"></script>
+                    <div id="doc_flash_player">Player</div>
+                    <script type="text/javascript">
+                    var so = new SWFObject('<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>','mpl','100%','<? echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>','9');
+                    so.write('doc_flash_player');
+                    </script>
+                    <?
+                break;
+                
+                case 'jw_player':
+                    ?>
+                    <script type="text/javascript" src="./modules/doc/jw_player/swfobject.js"></script>
+                    <div id="doc_jw_player">Player</div>
+                    <script type="text/javascript">
+                    var so = new SWFObject('./modules/doc/jw_player/player-viral.swf','mpl','100%','<?php echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>','9');
+                    so.addParam('allowscriptaccess','always');
+                    so.addParam('allowfullscreen','true');
+                    so.addParam('flashvars','file=<?php echo ploopi_urlrewrite("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", $docfile->fields['name'], true); ?>');
+                    so.write('doc_jw_player');
+                    </script>
+                    <?php                        
+                break;
+                
+                case 'div':
+                    ?>
+                    <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#f0f0f0;height:<?php echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>px;overflow:auto;">
+                    <pre><?php
+                    $ptrHandle = fopen($docfile->getfilepath(), "rb");
+                    while (!feof($ptrHandle)) echo fread($ptrHandle, 8192);
+                    fclose($ptrHandle);
+                    ?></pre>
+                    </div>
+                    <?
+                break;
+                
+                default:
+                case 'iframe':
+                    ?>
+                    <div style="border:1px solid #c0c0c0;margin:4px;background-color:#f0f0f0;"><iframe src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>" style="border:0;width:100%;margin:0;padding:0;height:<?php echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>px;"></iframe></div>
+                    <?
+                break;
+            }
+        break;
+        
         case 'keywords':
             $array_columns = array();
             $array_values = array();
@@ -607,7 +680,7 @@ else
                 $objDocFolderSub->open($parents[$i])
                 ?>
                 <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
-                Vous héritez de l'abonnement à &laquo; <a href="javascript:void(0);" onclick="javascript:doc_browser('<?php echo $parents[$i]; ?>');"><?php echo $objDocFolderSub->fields['name']; ?></a> &raquo;
+                Vous héritez de l'abonnement à &laquo; <a href="<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo $objDocFolderSub->fields['name']; ?></a> &raquo;
                 </div>
                 <?php
             }

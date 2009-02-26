@@ -49,42 +49,49 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
      * Affichage des dossiers
      */
 
-    // affichage des raccourcis ? (pour partages + public)
-    $option_shortcuts = ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_displayshortcuts']) ? '' : 'AND f.id_folder = 0';
-
-    // dossiers partagés
-    $where = (!empty($_SESSION['doc'][$menu_moduleid]['share']['folders'])) ? ' OR (f.id IN ('.implode(',', $_SESSION['doc'][$menu_moduleid]['share']['folders']).") AND f.id_user <> {$_SESSION['ploopi']['userid']} {$option_shortcuts})" : '';
-
-    // dossiers dont l'utilisateur connectÃ© est le validateur
-    $list_wf_folders = (!empty($_SESSION['doc'][$menu_moduleid]['validation']['folders'])) ? implode(',', $_SESSION['doc'][$menu_moduleid]['validation']['folders']) : '';
-    $list_wf_folders_option = ($list_wf_folders != '') ? " OR f_val.id_folder IN ({$list_wf_folders}) " : '';
-
-    $sql =  "
-            SELECT      f.*,
-                        u.login,
-                        w.label
-            FROM        ploopi_mod_doc_folder f
-
-            LEFT JOIN   ploopi_user u
-            ON          f.id_user = u.id
-
-            LEFT JOIN   ploopi_workspace w
-            ON          w.id_workspace = w.id
-
-            LEFT JOIN   ploopi_mod_doc_folder f_val
-            ON          f_val.id = f.waiting_validation
-
-            WHERE       f.id_module = {$menu_moduleid}
-            AND         f.published = 1
-            AND         (f.waiting_validation = 0 OR f.id_user = {$_SESSION['ploopi']['userid']} {$list_wf_folders_option})
-
-            AND         ((f.id_user = {$_SESSION['ploopi']['userid']} AND f.id_folder = 0)
-                        OR (f.foldertype = 'public' AND f.id_workspace IN (".ploopi_viewworkspaces($menu_moduleid).") AND f.id_user <> {$_SESSION['ploopi']['userid']} {$option_shortcuts})
-                        $where
-                        )
-
-            ORDER BY    f.name
-            ";
+    
+    $arrWhere = array();
+    
+    // Module
+    $arrWhere['module'] = "f.id_module = {$menu_moduleid}";
+    // Dossier 
+    $arrWhere['folder'] = "f.id_folder = 0";
+    
+    // Utilisateur "standard"
+    if (!ploopi_isadmin()) 
+    {
+        // Publié (ou propriétaire)
+        $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$_SESSION['ploopi']['userid']})";
+         
+        // Prioriétaire
+        $arrWhere['visibility']['user'] = "f.id_user = {$_SESSION['ploopi']['userid']}"; 
+        // Partagé
+        if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])."))";
+        // Public
+        $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi_viewworkspaces()."))";
+        
+        // Synthèse visibilité
+        $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
+    }
+        
+    $strWhere = implode(' AND ', $arrWhere);
+    
+    $sql = "
+        SELECT      f.*,
+                    w.label
+                    
+        FROM        ploopi_mod_doc_folder f
+    
+        LEFT JOIN   ploopi_workspace w
+        ON          f.id_workspace = w.id
+    
+        LEFT JOIN   ploopi_mod_doc_folder f_val
+        ON          f_val.id = f.waiting_validation
+    
+        WHERE  {$strWhere}     
+        
+        ORDER BY    f.name
+    ";    
 
     $db->query($sql);
 

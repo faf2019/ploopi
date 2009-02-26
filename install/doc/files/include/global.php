@@ -56,7 +56,50 @@ define('_DOC_ERROR_MAXFILESIZE',        100);
 define('_DOC_ERROR_FILENOTWRITABLE',    101);
 define('_DOC_ERROR_EMPTYFILE',          102);
 
+global $doc_arrDocViewableFormats;
 
+$doc_arrDocViewableFormats = 
+    array(
+        'pdf'   => 'iframe',
+        'doc'   => 'iframe',
+        'xls'   => 'iframe',
+        'ppt'   => 'iframe',
+        'odt'   => 'iframe',
+        'ods'   => 'iframe',
+        'odp'   => 'iframe',
+        'csv'   => 'div',
+        'txt'   => 'div',
+        'svg'   => 'highlighter:xml',
+        'xml'   => 'highlighter:xml',
+        'dtd'   => 'highlighter:dtd',
+        'css'   => 'highlighter:css',
+        'php'   => 'highlighter:php',
+        'py'    => 'highlighter:python',
+        'pl'    => 'highlighter:perl',
+        'c'     => 'highlighter:cpp',
+        'cpp'   => 'highlighter:cpp',
+        'java'  => 'highlighter:java',
+        'js'    => 'highlighter:javascript',
+        'vbs'   => 'highlighter:vbscript',
+        'rb'    => 'highlighter:ruby',
+        'diff'  => 'highlighter:diff',
+        'bat'   => 'div',
+        'sh'    => 'highlighter:sh',
+        'mysql' => 'highlighter:mysql',
+        'sql'   => 'highlighter:sql',
+        'html'  => 'iframe',
+        'htm'   => 'iframe',
+        'jpg'   => 'iframe',
+        'jpeg'  => 'iframe',
+        'gif'   => 'iframe',
+        'png'   => 'iframe',
+        'flv'   => 'jw_player',
+        'aac'   => 'jw_player',
+        'mp3'   => 'jw_player',
+        'mp4'   => 'jw_player',
+        'swf'   => 'flash',
+    );
+    
 /**
  * Retourne un identifiant unique pour l'upload des fichiers
  *
@@ -267,6 +310,8 @@ function doc_max_formsize()
 function doc_record_isenabled($id_object, $id_record, $id_module)
 {
     $enabled = false;
+    
+    if (ploopi_isadmin()) return true;
 
     switch($id_object)
     {
@@ -279,7 +324,7 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
                 if ($objFolder->fields['id_user'] == $_SESSION['ploopi']['userid']) $enabled = true;
                 else
                 {
-                    if ($objFolder->fields['foldertype'] == 'public') $enabled = true;
+                    if ($objFolder->fields['foldertype'] == 'public' && in_array($objFolder->fields['id_workspace'], explode(',', ploopi_viewworkspaces()))) $enabled = true;
                     else
                     {
                         doc_getshare($id_module);
@@ -304,7 +349,7 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
                     $objFolder = new docfolder();
                     if ($objFolder->open($objFile->fields['id_folder']))
                     {
-                        if ($objFolder->fields['foldertype'] == 'public') $enabled = true;
+                        if ($objFolder->fields['foldertype'] == 'public' && in_array($objFolder->fields['id_workspace'], explode(',', ploopi_viewworkspaces()))) $enabled = true;
                         else
                         {
                             doc_getshare($id_module);
@@ -338,5 +383,132 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
     }
 
     return($enabled);
+}
+
+function doc_getfolders($id_module = -1, $id_user = -1)
+{
+    global $db;
+
+    if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
+    if ($id_user == -1) $id_user = $_SESSION['ploopi']['userid'];
+    
+    $arrFolders = 
+        array(
+            'list' => array(), 
+            'tree' => array()
+        );
+            
+    /**
+     * Charge les validations
+     */
+    
+    doc_getvalidation();
+    
+    /**
+     * Charge les partages
+     */
+    
+    doc_getshare();
+            
+        
+        
+    // dossiers partagés
+    $list_shared_folders = (!empty($_SESSION['doc'][$id_module]['share']['folders'])) ? ' OR (f.id IN ('.implode(',', $_SESSION['doc'][$id_module]['share']['folders']).") AND f.id_user <> {$id_user})" : '';
+
+    // dossiers dont l'utilisateur connecté est le validateur
+    $list_wf_folders = (!empty($_SESSION['doc'][$id_module]['validation']['folders'])) ? implode(',', $_SESSION['doc'][$id_module]['validation']['folders']) : '';
+    $list_wf_folders_option = ($list_wf_folders != '') ? " OR f_val.id_folder IN ({$list_wf_folders}) " : '';
+
+    $result = $db->query("
+        SELECT      f.id, 
+                    f.name, 
+                    f.foldertype, 
+                    f.readonly, 
+                    f.readonly_content, 
+                    f.parents, 
+                    f.id_user, 
+                    f.published, 
+                    f.waiting_validation, 
+                    f.id_folder
+                    
+        FROM        ploopi_mod_doc_folder f
+
+        LEFT JOIN   ploopi_mod_doc_folder f_val
+        ON          f_val.id = f.waiting_validation
+
+        WHERE       f.id_module = {$id_module}
+        AND         f.published = 1
+        AND         (f.waiting_validation = 0 OR f.id_user = {$id_user} {$list_wf_folders_option})
+
+        AND         (
+                        (f.id_user = {$id_user})
+                    OR  (f.foldertype = 'public' AND f.id_workspace IN (".ploopi_viewworkspaces().") AND f.id_user <> {$id_user})
+                    {$list_shared_folders}
+                    )
+
+        ORDER by f.name
+    ");
+ 
+    $arrFolders['list'][0] = array(
+        'id' => 0,
+        'name' => 'Racine',
+        'foldertype' => 'private',
+        'readonly' => 0,
+        'readonly_content' => 0,
+        'parents' => '',
+        'published' => 1,
+        'waiting_validation' => 0,
+        'id_folder' => -1
+    );
+    
+    $arrFolders['tree'][-1][] = 0;
+        
+    while ($fields = $db->fetchrow($result)) 
+    {
+        $fields['parents'] = '-1;'.str_replace(',', ';', $fields['parents']);
+         
+        $arrFolders['list'][$fields['id']] = $fields;
+        $arrFolders['tree'][$fields['id_folder']][] = $fields['id'];
+    }
+    
+    return($arrFolders);
+}
+
+
+function doc_gettreeview($arrFolder = array())
+{
+    global $db;
+
+    $arrTreeview = 
+        array(
+            'list' => array(), 
+            'tree' => array()
+        );
+
+    foreach($arrFolder['list'] as $id => $fields)
+    {
+        $strIco = 'ico_folder';
+        if ($fields['foldertype'] == 'shared') $strIco .= '_shared';
+        if ($fields['foldertype'] == 'public') $strIco .= '_public';
+        if ($fields['readonly']) $strIco .= '_locked';
+        
+        
+        $arrTreeview['list'][$fields['id']] = 
+            array(
+                'id' => $fields['id'],
+                'label' => $fields['name'],
+                'description' => $fields['name'],
+                'parents' => split(';', $fields['parents']),
+                'node_link' => '',
+                'node_onclick' => "ploopi_skin_treeview_shownode('{$fields['id']}', '".ploopi_queryencode("ploopi_op=doc_folder_detail&doc_folder_id={$fields['id']}")."', 'admin-light.php');",
+                'link' => ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$fields['id']}"),
+                'onclick' => '',
+                'icon' => "./modules/doc/img/{$strIco}.png"
+            );
+        
+        $arrTreeview['tree'][$fields['id_folder']][] = $fields['id'];                        
+    }
+    
+    return($arrTreeview);
 }
 ?>

@@ -119,10 +119,10 @@ class docfolder extends data_object
     {
         $booFolderEnabled = false;
         
-        if ($this->fields['id_user'] == $_SESSION['ploopi']['userid']) $booFolderEnabled = true;
+        if ($this->fields['id_user'] == $_SESSION['ploopi']['userid'] || ploopi_isadmin()) $booFolderEnabled = true;
         else
         {
-            if ($this->fields['foldertype'] == 'public') $booFolderEnabled = true;
+            if ($this->fields['foldertype'] == 'public' && in_array($this->fields['id_workspace'], explode(',', ploopi_viewworkspaces()))) $booFolderEnabled = true;
             else
             {
                 doc_getshare();

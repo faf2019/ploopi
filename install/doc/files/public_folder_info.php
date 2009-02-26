@@ -39,8 +39,6 @@
  * Si $currentfolder est empty (vide ou 0), c'est que l'on est dans le dossier personnel (racine)
  */
 
-?>
-<?php 
 $objFolder = new docfolder();
 if (empty($currentfolder) || !$objFolder->open($currentfolder) || !$objFolder->isEnabled()) $currentfolder = 0;
 
@@ -86,6 +84,21 @@ if (!empty($currentfolder))
             </p>
         </div>
         <?php
+        /**
+         * si dossier perso
+         */
+        if ($docfolder->fields['foldertype'] == 'private')
+        {
+            ?>
+            <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+                <p style="margin:0;padding:4px 8px;">
+                    <strong>Information</strong>
+                    <br />Les données de ce dossier sont exclusivement privées
+                </p>
+            </div>
+            <?php
+        }
+        
         /**
          * si dossier partagés, affichage des partages
          */
@@ -166,6 +179,12 @@ else
             <p style="margin:0;padding:4px 8px;">
                 <strong>Racine</strong>
                 <br />Dossier Personnel
+            </p>
+        </div>
+        <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+            <p style="margin:0;padding:4px 8px;">
+                <strong>Information</strong>
+                <br />Les données de ce dossier sont exclusivement privées
             </p>
         </div>
     </div>

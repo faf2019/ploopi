@@ -332,7 +332,7 @@ if ($_SESSION['ploopi']['connected'])
                 
                 ploopi_redirect("admin.php?doc_browser&currentfolder={$currentfolder}");
             break;
-                        
+            
             case 'doc_filedownloadzip':
         
                 ploopi_init_module('doc');

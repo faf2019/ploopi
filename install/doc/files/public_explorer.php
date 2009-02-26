@@ -95,58 +95,60 @@ $c = 0;
 
 // DISPLAY FOLDERS
 
-// affichage des raccourcis ? (pour partages + public à la racine)
-if ($currentfolder)
+// + du module
+// + du dossier
+
+// + publié + (utilisateur = propriétaire) ou (partagé a l'utilisateur) ou (public) ou (dossier à valider et utilisateur = validateur du dossier)
+// ou validateur
+
+$arrWhere = array();
+
+// Module
+$arrWhere['module'] = "f.id_module = {$_SESSION['ploopi']['moduleid']}";
+// Dossier 
+$arrWhere['folder'] = "f.id_folder = {$currentfolder}";
+
+// Utilisateur "standard"
+if (!$wf_validator && !ploopi_isadmin()) 
 {
-    $option_shortcuts = '';
-    $parent_filter = "AND f.id_folder = {$currentfolder}";
+    // Publié (ou propriétaire)
+    $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$_SESSION['ploopi']['userid']})";
+     
+    // Prioriétaire
+    $arrWhere['visibility']['user'] = "f.id_user = {$_SESSION['ploopi']['userid']}"; 
+    // Partagé
+    if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])."))";
+    // Public
+    $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi_viewworkspaces()."))";
+    
+    // Synthèse visibilité
+    $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
 }
-else
-{
-    $option_shortcuts = ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_displayshortcuts']) ? '' : 'AND (f.id_folder = 0)';
-    $parent_filter = '';
-}
+    
+$strWhere = implode(' AND ', $arrWhere);
 
-// dossiers partagés
-$list_shared_folders = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) ? ' OR (f.id IN ('.implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders']).") AND f.id_user <> {$_SESSION['ploopi']['userid']} {$option_shortcuts})" : '';
+$sql = "
+    SELECT      f.*,
+                u.id as user_id,
+                u.login,
+                u.lastname,
+                u.firstname,
+                w.id as workspace_id,
+                w.label
+                
+    FROM        ploopi_mod_doc_folder f
 
-// dossiers dont l'utilisateur connecté est le validateur
-$list_wf_folders = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders'])) ? implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']) : '';
-$list_wf_folders_option = ($list_wf_folders != '') ? " OR f_val.id_folder IN ({$list_wf_folders}) " : '';
+    LEFT JOIN   ploopi_user u
+    ON          f.id_user = u.id
 
-$sql =  "
-        SELECT      f.*,
-                    u.id as user_id,
-                    u.login,
-                    u.lastname,
-                    u.firstname,
-                    w.id as workspace_id,
-                    w.label
-                    
-        FROM        ploopi_mod_doc_folder f
+    LEFT JOIN   ploopi_workspace w
+    ON          f.id_workspace = w.id
 
-        LEFT JOIN   ploopi_user u
-        ON          f.id_user = u.id
+    LEFT JOIN   ploopi_mod_doc_folder f_val
+    ON          f_val.id = f.waiting_validation
 
-        LEFT JOIN   ploopi_workspace w
-        ON          f.id_workspace = w.id
-
-        LEFT JOIN   ploopi_mod_doc_folder f_val
-        ON          f_val.id = f.waiting_validation
-
-        WHERE       f.id_module = {$_SESSION['ploopi']['moduleid']}
-        AND         f.published = 1
-        AND         (f.waiting_validation = 0 OR f.id_user = {$_SESSION['ploopi']['userid']} {$list_wf_folders_option})
-        {$parent_filter}
-
-        AND         (
-                        (f.id_user = {$_SESSION['ploopi']['userid']} AND f.id_folder = {$currentfolder})
-                    OR  (f.foldertype = 'public' AND f.id_workspace IN (".ploopi_viewworkspaces().") AND f.id_user <> {$_SESSION['ploopi']['userid']} {$option_shortcuts})
-                    {$list_shared_folders}
-                    )
-
-        ORDER by f.name
-        ";
+    WHERE  {$strWhere}     
+";
 
 $rs = $db->query($sql);
 
@@ -173,6 +175,11 @@ while ($row = $db->fetchrow($rs))
         $tools = '<a style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nécessaires pour supprimer ce dossier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
     }
 
+    if (!$row['published'] && ($wf_validator || ploopi_isadmin()))
+    {
+        $tools .= '<a title="Publier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=doc_folderpublish&currentfolder={$currentfolder}&docfolder_id={$row['id']}").'"><img src="./modules/doc/img/ico_validate.png" /></a>';
+    }    
+    
     $tools .= '<a title="Modifier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?op=doc_foldermodify&currentfolder={$row['id']}&addfolder=0").'"><img src="./modules/doc/img/ico_modify.png" /></a>';
 
     $linked = ($currentfolder ==0 && $row['id_folder'] != 0 && ($row['foldertype'] == 'shared' || $row['foldertype'] == 'public'));
@@ -229,150 +236,44 @@ while ($row = $db->fetchrow($rs))
 
     $values[$c]['description'] = $row['description'];
     $values[$c]['link'] = ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$row['id']}");
-    $values[$c]['style'] = '';
+    $values[$c]['style'] = ($row['published']) ? '' : 'background-color:#ffe0e0;';
     $c++;
 }
-
-// DISPLAY DRAFT FOLDERS
-
-$where = ($wf_validator) ? " AND f.foldertype = 'public' AND f.id_workspace IN (".ploopi_viewworkspaces().")" : " AND f.id_user = {$_SESSION['ploopi']['userid']} ";
-
-$sql =  "
-        SELECT      f.*,
-                    u.id as user_id,
-                    u.login,
-                    u.lastname,
-                    u.firstname,
-                    w.id as workspace_id,
-                    w.label
-        FROM        ploopi_mod_doc_folder f
-
-        LEFT JOIN   ploopi_user u
-        ON          f.id_user = u.id
-
-        LEFT JOIN   ploopi_workspace w
-        ON          f.id_workspace = w.id
-
-        WHERE       f.id_folder = {$currentfolder}
-        AND         f.id_module = {$_SESSION['ploopi']['moduleid']}
-        AND         f.published = 0
-
-        {$where}
-
-        ORDER by f.name
-        ";
-
-$db->query($sql);
-
-while ($row = $db->fetchrow())
-{
-    $ldate = ploopi_timestamp2local($row['timestp_modify']);
-
-    $readonly = (($row['readonly'] && $row['id_user'] != $_SESSION['ploopi']['userid']) || $docfolder_readonly_content);
-
-    $ico = 'ico_folder';
-    if ($row['foldertype'] == 'shared') $ico .= '_shared';
-    if ($row['foldertype'] == 'public') $ico .= '_public';
-    if ($row['readonly']) $ico .= '_locked';
-    $ico .= '.png';
-
-    $tools = '';
-
-    if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_DELETEFOLDER) && (!$readonly) && ($row['nbelements'] == 0)))
-    {
-        $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce dossier ?\')) document.location.href=\''.ploopi_urlencode("admin.php?ploopi_op=doc_folderdelete&docfolder_id={$row['id']}").'\'; return(false);" ><img src="./modules/doc/img/ico_trash.png" /></a>';
-    }
-    else
-    {
-        $tools = '<a style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nécessaires pour supprimer ce dossier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
-    }
-
-    if ($wf_validator)
-    {
-        $tools .= '<a title="Publier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=doc_folderpublish&currentfolder={$currentfolder}&docfolder_id={$row['id']}").'"><img src="./modules/doc/img/ico_validate.png" /></a>';
-    }
-
-    $tools .= '<a title="Modifier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?op=doc_foldermodify&currentfolder={$row['id']}&addfolder=0").'"><img src="./modules/doc/img/ico_modify.png" /></a>';
-
-    $values[$c]['values']['label'] = 
-        array(
-            'label' => "<img src=\"./modules/doc/img/{$ico}\" /><span>&nbsp;{$row['name']}</span>", 
-            'sort_label' => '2 '.strtolower($row['name'])
-        );
-
-    if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaysize'])
-        $values[$c]['values']['size'] = 
-            array(
-                'label' => "{$row['nbelements']} élément".($row['nbelements']>1 ? 's' : ''), 
-                'style' => 'text-align:right', 
-                'sort_label' =>  sprintf("2 %016d", $row['nbelements'])
-            );
-        
-    if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
-        $values[$c]['values']['user'] = 
-            array(
-                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : "{$row['lastname']} {$row['firstname']}", 
-                'sort_label' => '2 '.(empty($row['user_id']) ? '' : strtolower("{$row['lastname']} {$row['firstname']}"))
-            );
-        
-    if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])
-        $values[$c]['values']['workspace'] = 
-            array(
-                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : $row['label'], 
-                'sort_label' => '2 '.(empty($row['workspace_id']) ? '' : strtolower($row['label']))
-            );
-            
-    if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaydatetime'])
-        $values[$c]['values']['date'] = 
-            array(
-                'label' => $ldate['date'].' '.substr($ldate['time'], 0, 5), 
-                'sort_label' => "2 {$row['timestp_modify']}"
-            );
-        
-    $values[$c]['values']['actions'] = 
-        array(
-            'label' => $tools, 
-            'style' => 'text-align:center'
-        );
-
-    $values[$c]['description'] = $row['description'];
-    $values[$c]['link'] = ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$row['id']}");
-    $values[$c]['style'] = 'background-color:#ffe0e0;';
-    $c++;
-}
-
 
 // DISPLAY FILES
+$arrWhere = array();
 
-$where = (!empty($list_sharedfile)) ? ' OR f.id IN ('.implode(',', $list_sharedfile).')' : '';
+// Module
+$arrWhere['module'] = "f.id_module = {$_SESSION['ploopi']['moduleid']}";
 
-$sql =  "
-        SELECT      f.*,
-                    u.id as user_id,
-                    u.login,
-                    u.lastname,
-                    u.firstname,
-                    w.id as workspace_id,
-                    w.label,
-                    e.filetype
+// Dossier : /!\ l'admin system voit tous les fichiers dans 'racine' 
+$arrWhere['folder'] = ($currentfolder || ploopi_isadmin()) ? "f.id_folder = {$currentfolder}" : "f.id_folder = {$currentfolder} AND f.id_user = {$_SESSION['ploopi']['userid']}";
 
-        FROM        ploopi_mod_doc_file f
+$strWhere = implode(' AND ', $arrWhere);
 
-        LEFT JOIN   ploopi_user u
-        ON          f.id_user = u.id
+$sql = "
+    SELECT      f.*,
+                u.id as user_id,
+                u.login,
+                u.lastname,
+                u.firstname,
+                w.id as workspace_id,
+                w.label,
+                e.filetype
 
-        LEFT JOIN   ploopi_workspace w
-        ON          f.id_workspace = w.id
+    FROM        ploopi_mod_doc_file f
 
-        LEFT JOIN   ploopi_mod_doc_ext e
-        ON          e.ext = f.extension
+    LEFT JOIN   ploopi_user u
+    ON          f.id_user = u.id
 
-        WHERE       f.id_folder = {$currentfolder}
-        AND         f.id_module = {$_SESSION['ploopi']['moduleid']}
-        AND         ((f.id_user = {$_SESSION['ploopi']['userid']} AND f.id_folder = 0) OR f.id_folder!=0 {$where})
+    LEFT JOIN   ploopi_workspace w
+    ON          f.id_workspace = w.id
 
-        ORDER by f.name
-        ";
+    LEFT JOIN   ploopi_mod_doc_ext e
+    ON          e.ext = f.extension
+
+    WHERE   {$strWhere}       
+";
 
 $db->query($sql);
 
@@ -396,7 +297,7 @@ while ($row = $db->fetchrow())
     }
 
     $tools .= '
-        <a title="Modifier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$row['id_folder']}&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_modify.png" /></a>
+        <a title="Modifier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}&docfile_tab=modify").'"><img src="./modules/doc/img/ico_modify.png" /></a>
         <a title="Télécharger" style="display:block;float:right;" href="'.ploopi_urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
         <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi_urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
     ';
@@ -443,47 +344,51 @@ while ($row = $db->fetchrow())
         );
 
     $values[$c]['description'] = $row['description'];
-    $values[$c]['link'] = ploopi_urlencode("admin.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}");
+    $values[$c]['link'] = ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}&docfile_tab=open");
     $values[$c]['style'] = '';
     $c++;
 }
 
 // DISPLAY DRAFT FILES
+$arrWhere = array();
 
-if (!$wf_validator) $where = " AND f.id_user = {$_SESSION['ploopi']['userid']} ";
-else $where = '';
+// Module
+$arrWhere['module'] = "f.id_module = {$_SESSION['ploopi']['moduleid']}";
 
-$sql =  "
-        SELECT      f.*,
-                    u.id as user_id,
-                    u.login,
-                    u.lastname,
-                    u.firstname,
-                    w.id as workspace_id,
-                    w.label,
-                    e.filetype,
-                    df.name as dfname
+// Dossier : /!\ l'admin system voit tous les fichiers dans 'racine' 
+$arrWhere['folder'] = ($currentfolder || ploopi_isadmin()) ? "f.id_folder = {$currentfolder}" : "f.id_folder = {$currentfolder} AND f.id_user = {$_SESSION['ploopi']['userid']}";
 
-        FROM        ploopi_mod_doc_file_draft f
+if (!$wf_validator && !ploopi_isadmin()) $arrWhere['user'] = "f.id_user = {$_SESSION['ploopi']['userid']} ";
 
-        LEFT JOIN   ploopi_user u
-        ON          f.id_user = u.id
+$strWhere = implode(' AND ', $arrWhere);
 
-        LEFT JOIN   ploopi_workspace w
-        ON          f.id_workspace = w.id
+$sql = "
+    SELECT      f.*,
+                u.id as user_id,
+                u.login,
+                u.lastname,
+                u.firstname,
+                w.id as workspace_id,
+                w.label,
+                e.filetype,
+                df.name as dfname
 
-        LEFT JOIN   ploopi_mod_doc_ext e
-        ON          e.ext = f.extension
+    FROM        ploopi_mod_doc_file_draft f
 
-        LEFT JOIN   ploopi_mod_doc_file df
-        ON          df.id = f.id_docfile
+    LEFT JOIN   ploopi_user u
+    ON          f.id_user = u.id
 
-        WHERE       f.id_folder = {$currentfolder}
-        AND         f.id_module = {$_SESSION['ploopi']['moduleid']}
-        {$where}
+    LEFT JOIN   ploopi_workspace w
+    ON          f.id_workspace = w.id
 
-        ORDER by f.name
-        ";
+    LEFT JOIN   ploopi_mod_doc_ext e
+    ON          e.ext = f.extension
+
+    LEFT JOIN   ploopi_mod_doc_file df
+    ON          df.id = f.id_docfile
+
+    WHERE       {$strWhere}
+";
 
 $db->query($sql);
 
@@ -505,7 +410,7 @@ while ($row = $db->fetchrow())
         $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nécessaires pour supprimer ce fichier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
     }
 
-    if ($wf_validator)
+    if ($wf_validator || ploopi_isadmin())
     {
         $tools .= '<a title="Publier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir publier ce fichier ?\')) document.location.href=\''.ploopi_urlencode("admin-light.php?ploopi_op=doc_filepublish&currentfolder={$currentfolder}&docfiledraft_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_validate.png" /></a>';
     }

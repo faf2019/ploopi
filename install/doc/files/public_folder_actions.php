@@ -61,7 +61,7 @@ if ($docfolder->fields['foldertype'] != 'private')
             $objDocFolderSub->open($parents[$i])
             ?>
             <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
-            Vous héritez de l'abonnement à &laquo; <a href="javascript:void(0);" onclick="javascript:doc_browser('<?php echo $parents[$i]; ?>');"><?php echo $objDocFolderSub->fields['name']; ?></a> &raquo; 
+            Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo $objDocFolderSub->fields['name']; ?></a> &raquo; 
             </div>
             <?php
         }

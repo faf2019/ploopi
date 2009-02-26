@@ -1,3 +1,18 @@
+== Module DOC - version 4.2.0 =====================================================
+
+2009-02-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'une erreur au téléchargement d'un fichier ZIP
+ * Correction d'un bug à l'affichage du lien d'héritage d'un abonnement
+ * Ajout d'un paramètre permettant de rendre optionnel le dépôt de documents dans la racine
+ * Ajout d'une visionneuse de fichiers :
+  * bureautiques : Adobe PDF, MS Word DOC, MS Excel XLS, MS PowerPoint PPT, OpenOffice ODT, ODS, ODP, ODG
+  * multimédia : MP3, MP4, AAC, FLV (lecteur flash)
+  * images : PNG, JPG, JPEG, GIF
+  * texte avec colorisation syntaxique : PHP, PERL, JAVA, JAVASCRIPT, RUBY, PYTHON, PERL, SQL, SH, XML, CSS, DTD, VBSCRIPT, C++
+  * hypertexte : HTML, HTM
+ * Ajout d'un paramètre permettant de définir la hauteur de la visionneuse
+
 == Module DOC - version 4.1.1 =====================================================
 
 2009-02-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

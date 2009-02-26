@@ -126,24 +126,13 @@ switch($op)
                             <a title="Créer un nouveau fichier" href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfile.png"></a>
                             <?php
                         }
-                        else
-                        {
-                            ?>
-                            <a title="Créer un nouveau fichier" href="javascript:void(0);" style="float:right;"><img src="./modules/doc/img/ico_newfile_grey.png"></a>
-                            <?php
-                        }
                         ?>
+                        
                         <?php
-                        if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_ADDFOLDER) && !$docfolder_readonly_content))
+                        if (($currentfolder || !$currentfolder && $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_rootwritable']) && (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_ADDFOLDER) && !$docfolder_readonly_content)))
                         {
                             ?>
                             <a title="Créer un nouveau Dossier" href="<?php echo ploopi_urlencode("admin.php?op=doc_folderform&currentfolder={$currentfolder}&addfolder=1"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfolder.png"></a>
-                            <?php
-                        }
-                        else
-                        {
-                            ?>
-                            <a title="Créer un nouveau Dossier" href="javascript:void(0);" style="float:right;"><img src="./modules/doc/img/ico_newfolder_grey.png"></a>
                             <?php
                         }
                         ?>
@@ -167,7 +156,7 @@ switch($op)
                             {
                                 $allowed = false;
 
-                                if ($row['id_user'] == $_SESSION['ploopi']['userid'] || $row['foldertype'] == 'public' || ($row['foldertype'] == 'shared' && in_array($row['id'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders']))) $allowed = true;
+                                if ($row['id_user'] == $_SESSION['ploopi']['userid'] || ploopi_isadmin() || $row['foldertype'] == 'public' || ($row['foldertype'] == 'shared' && in_array($row['id'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders']))) $allowed = true;
 
                                 if ($allowed)
                                 {
