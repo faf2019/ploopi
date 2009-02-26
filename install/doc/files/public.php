@@ -120,16 +120,14 @@ switch($op)
                         <a title="Rechercher un Fichier" href="<?php echo ploopi_urlencode("admin.php?op=doc_search&currentfolder=0"); ?>" style="float:right;"><img src="./modules/doc/img/ico_search.png"></a>
 
                         <?php
-                        if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_ADDFILE) && !$docfolder_readonly_content))
+                        if (($currentfolder || !$currentfolder && $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_rootwritable']) && (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_ADDFILE) && !$docfolder_readonly_content)))
                         {
                             ?>
                             <a title="Créer un nouveau fichier" href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfile.png"></a>
                             <?php
                         }
-                        ?>
                         
-                        <?php
-                        if (($currentfolder || !$currentfolder && $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_rootwritable']) && (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_ADDFOLDER) && !$docfolder_readonly_content)))
+                        if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_ADDFOLDER) && !$docfolder_readonly_content))
                         {
                             ?>
                             <a title="Créer un nouveau Dossier" href="<?php echo ploopi_urlencode("admin.php?op=doc_folderform&currentfolder={$currentfolder}&addfolder=1"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfolder.png"></a>
