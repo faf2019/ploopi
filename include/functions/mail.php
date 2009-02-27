@@ -56,6 +56,8 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     // bcc : Array('name','address')
     // replyto : Array('name','address')
     // files : Array
+    
+    $crlf = "\r\n";
 
     $str_to = '';
     if (is_array($to))
@@ -137,34 +139,51 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     $headers = '';
 
     // add "from" to headers
-    if (!empty($str_from)) $headers .= "From: $str_from \n";
+    if (!empty($str_from)) $headers .= "From: {$str_from}{$crlf}";
+    
     // add "reply_to" to headers
-    if (!empty($str_replyto)) $headers .= "Reply-to: $str_replyto \n";
+    if (!empty($str_replyto)) 
+    {
+        $headers .= "Reply-To: {$str_replyto}{$crlf}";
+        $headers .= "Return-Path: {$str_replyto}{$crlf}";
+    }
+    else
+    {
+        $headers .= "Reply-To: {$str_from}{$crlf}";
+        $headers .= "Return-Path: {$str_from}{$crlf}";
+    }
+
     // add "cc" to headers
-    if (!empty($str_cc)) $headers .= "Cc: $str_cc \n";
+    if (!empty($str_cc)) $headers .= "Cc: {$str_cc}{$crlf}";
     // add "bcc" to headers
-    if (!empty($str_bcc)) $headers .= "Bcc: $str_bcc \n";
+    if (!empty($str_bcc)) $headers .= "Bcc: {$str_bcc}{$crlf}";
     
     
-    $headers .= "Date: ".date('r')."\n"; 
-    $headers .= "X-Priority: 1\n";
-    $headers .= "X-Mailer: Ploopi "._PLOOPI_VERSION."\n";
-    $headers .= "MIME-Version: 1.0\n";
+    $domain = empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
+    
+    $headers .= "Date: ".date('r')."{$crlf}"; 
+    //$headers .= "X-Priority: 1{$crlf}";
+    $headers .= "X-Sender: <{$domain}>{$crlf}";
+    $headers .= "X-Mailer: PHP/Ploopi "._PLOOPI_VERSION."{$crlf}";
+    $headers .= "X-auth-smtp-user: {$str_from}{$crlf}";
+    $headers .= "X-abuse-contact: abuse@{$domain}{$crlf}";     
+    $headers .= "Organization: Ploopi "._PLOOPI_VERSION."{$crlf}"; 
+    $headers .= "MIME-Version: 1.0{$crlf}";
     
     $msg = '';
     
     if (!empty($files)) // Create multipart mail
     {
         $boundary = md5(uniqid(microtime(), true));
-        $headers .= "Content-type: multipart/mixed;boundary={$boundary}\n";
-        $headers .= "\n";
+        $headers .= "Content-Type: multipart/mixed; boundary={$boundary}{$crlf}";
+        $headers .= "{$crlf}";
         
-        $msg .= "--{$boundary}\n";
+        $msg .= "--{$boundary}{$crlf}";
         
-        if ($html) $msg .= "Content-type: text/html; charset=iso-8859-1\n";
-        else $msg .= "Content-type: text/plain; charset=iso-8859-1\n";
+        if ($html) $msg .= "Content-Type: text/html; charset=iso-8859-1{$crlf}";
+        else $msg .= "Content-Type: text/plain; charset=iso-8859-1{$crlf}";
 
-        $msg .= "$message\n\n";
+        $msg .= "{$message}{$crlf}{$crlf}";
         
         foreach($files as $filename)
         {
@@ -178,10 +197,10 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
                 $content = chunk_split(base64_encode($content));
                 $f = fclose($handle);
             
-                $msg .= "--{$boundary}\n";
-                $msg .= "Content-type:{$mime_type};name=".basename($filename)."\n";
-                $msg .= "Content-transfer-encoding:base64\n";
-                $msg .= "{$content}\n";
+                $msg .= "--{$boundary}{$crlf}";
+                $msg .= "Content-Type:{$mime_type}; name=".basename($filename)."{$crlf}";
+                $msg .= "Content-Transfer-Encoding:base64{$crlf}";
+                $msg .= "{$content}{$crlf}";
             }
         }
         
@@ -189,9 +208,8 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     }
     else
     {
-        if ($html) $headers .= "Content-type: text/html; charset=iso-8859-1\n";
-        else $headers .= "Content-type: text/plain; charset=iso-8859-1\n";
-        //$header .= 'Content-transfer-encoding:8bit'."\n";
+        if ($html) $headers .= "Content-Type: text/html; charset=iso-8859-1{$crlf}";
+        else $headers .= "Content-Type: text/plain; charset=iso-8859-1{$crlf}";
 
         $msg = $message;
     }

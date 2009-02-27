@@ -781,4 +781,36 @@ function ploopi_highlight($content, $words, $snippet_length = 150, $snippet_num 
     return($extract);
 }
 
+/**
+ * Retourne les enregistrements indexés pour un objet d'un module
+ *
+ * @param int $id_object (optionnel)
+ * @param int $id_module (optionnel)
+ * @return array tableau des id_record d'enregistrements indexés
+ */
+
+function ploopi_search_get_records($id_object = null, $id_module = null)
+{
+    global $db;
+    
+    $arrWhere = array();
+    
+    if (!isset($id_module) && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
+    
+    if (isset($id_object) && is_numeric($id_object)) $arrWhere[] = "id_object = '".$db->addslashes($id_object)."'";
+    if (isset($id_module) && is_numeric($id_module)) $arrWhere[] = "id_module = '".$db->addslashes($id_module)."'";
+    
+    $strWhere = empty($arrWhere) ? '' : 'WHERE '.implode(' AND ', $arrWhere); 
+    
+    $sql = "
+        SELECT  id_record
+        FROM    ploopi_index_element
+        {$strWhere}  
+    ";
+        
+    $rs = $db->query($sql);
+    
+    return $db->getarray();
+}
+
 ?>
