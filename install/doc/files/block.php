@@ -49,7 +49,6 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
      * Affichage des dossiers
      */
 
-    
     $arrWhere = array();
     
     // Module
@@ -129,7 +128,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_displayroot'])
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_displaysearch'])
 {
-    $block->addmenu(_DOC_SEARCH, ploopi_urlencode("admin.php?ploopi_moduleid=$menu_moduleid&ploopi_action=public&op=doc_bd_search"));
+    $block->addmenu(_DOC_SEARCH, ploopi_urlencode("admin.php?ploopi_moduleid=$menu_moduleid&ploopi_action=public&op=doc_search&currentfolder=0"));
 }
 
 /**

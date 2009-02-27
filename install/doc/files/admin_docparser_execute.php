@@ -39,26 +39,39 @@
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
 include_once './modules/doc/class_docfile.php';
-                    
+
+$arrRecords = ploopi_search_get_records();
+
 echo $skin->open_simplebloc('Indexation');
 ?>
 <div style="padding:4px;">
 <?php
-$sql =  "
-        select      f.id
-        from        ploopi_mod_doc_file f
-        where       id_module = {$_SESSION['ploopi']['moduleid']}
-        ";
+$db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword`"); 
+$db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword_file`"); 
+
+$sql = "
+    SELECT  f.id, f.md5id
+    FROM    ploopi_mod_doc_file f
+    WHERE   id_module = {$_SESSION['ploopi']['moduleid']}
+";
 
 $res = $db->query($sql);
 
+$arrFiles = array();
+
 while($fields = $db->fetchrow($res))
 {
+    $arrFiles[] = $fields['md5id'];
     $doc = new docfile();
     $doc->open($fields['id']);
     echo $doc->parse();
     $doc->save();
 }
+
+// Tableau des différences : contient les id de documents indexés mais qui n'existent plus
+$arrDiff = array_diff($arrRecords, $arrFiles);
+
+foreach($arrDiff as $id_record) ploopi_search_remove_index(_DOC_OBJECT_FILE, $id_record);
 
 $db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword`"); 
 $db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword_file`"); 

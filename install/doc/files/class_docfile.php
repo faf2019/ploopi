@@ -320,8 +320,10 @@ class docfile extends data_object
             if ($booEmptyDir) @rmdir($basepath);
         }
 
+        ploopi_search_remove_index(_DOC_OBJECT_FILE, $this->fields['id']);
+        
         parent::delete();
-
+        
         if ($this->fields['id_folder'] != 0)
         {
             $docfolder_parent = new docfolder();
@@ -329,8 +331,6 @@ class docfile extends data_object
             $docfolder_parent->fields['nbelements'] = doc_countelements($this->fields['id_folder']);
             $docfolder_parent->save();
         }
-
-        ploopi_search_remove_index(_DOC_OBJECT_FILE, $this->fields['id']);
     }
 
     /**
@@ -446,14 +446,16 @@ class docfile extends data_object
 
         $metakeywords_str = '';
 
-        $allowedmeta_list = array(  'Camera Make',      //jpg
-                                    'Camera Model',     //jpg
-                                    'Comment',          //jpg
-                                    'Producer',         //png
-                                    'Creator',          //pdf,png
-                                    'Author',           //doc
-                                    'Title'             //pdf
-                                );
+        $allowedmeta_list = 
+            array(  
+                'Camera Make',      //jpg
+                'Camera Model',     //jpg
+                'Comment',          //jpg
+                'Producer',         //png
+                'Creator',          //pdf,png
+                'Author',           //doc
+                'Title'             //pdf
+            );
 
         $res_txt = '';
 
@@ -587,10 +589,26 @@ class docfile extends data_object
 
             $metakeywords_str .= " {$this->fields['name']} {$this->fields['description']}";
 
-            ploopi_search_create_index(_DOC_OBJECT_FILE, $this->fields['md5id'], $this->fields['name'], $content, $metakeywords_str, true, $this->fields['timestp_create'], $this->fields['timestp_modify']);
+            ploopi_search_create_index(
+                _DOC_OBJECT_FILE, 
+                $this->fields['md5id'], 
+                $this->fields['name'], 
+                &$content, 
+                &$metakeywords_str, 
+                true, 
+                $this->fields['timestp_create'], 
+                $this->fields['timestp_modify'], 
+                $this->fields['id_user'], 
+                $this->fields['id_workspace'], 
+                $this->fields['id_module']
+            );
 
         }
         else $res_txt .= "<div><strong>erreur de fichier sur {$path}</strong></div>";
+        
+        
+        unset($content);
+        unset($metakeywords_str);
 
         return($res_txt);
     }

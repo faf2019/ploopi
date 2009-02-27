@@ -90,17 +90,36 @@ switch($op)
                     include_once './modules/doc/class_docfile.php';
                     include_once './modules/doc/class_docfolder.php';
                     include_once './modules/doc/class_docfiledraft.php';
+                    
+                    if (!empty($_GET['doc_error']))
+                    {
+                        switch($_GET['doc_error'])
+                        {
+                            case 'unknown_file':
+                                $strMsg = "Le fichier que vous avez tenté d'ouvrir n'existe plus";
+                            break;
+                            
+                            default:
+                                $strMsg = "Erreur inconnue";
+                            break;
+                        }
+                        ?>
+                        <div class="doc_path" style="background:#fff;">
+                            <span class="error"><? echo $strMsg ?></span>
+                        </div>
+                        <?
+                    }
                     ?>
                     <div class="doc_path">
                         <a title="Aide" href="javascript:void(0);" onclick="javascript:doc_openhelp(event);" style="float:right;"><img src="./modules/doc/img/ico_help.png"></a>
                         <?php
-
                         // Lien vers document sans folder ?
                         // Cas du lien depuis le moteur de recherche global
                         if (!empty($_GET['docfile_md5id']) && empty($currentfolder))
                         {
                             $docfile = new docfile();
-                            if ($docfile->openmd5($_GET['docfile_md5id'])) $currentfolder = $docfile->fields['id_folder'];
+                            if ($docfile->openmd5($_GET['docfile_md5id'])) $currentfolder = $docfile->fields['id_folder']; 
+                            else ploopi_redirect("admin.php?doc_error=unknown_file"); // Fichier inconnu => redirection
                         }
 
                         //$readonly = false;

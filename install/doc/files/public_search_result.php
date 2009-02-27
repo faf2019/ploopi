@@ -61,11 +61,18 @@ if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])) $
 if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 {
     /**
-     * Récupération des partages
+     * Charge les validations
+     */
+    
+    doc_getvalidation();
+    
+    /**
+     * Charge les partages
      */
     
     doc_getshare();
-
+    
+    
     $docfolder_readonly_content = false;
 
     $where = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['files'])) ? ' OR f.id IN ('.implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['files']).')' : '';
@@ -111,39 +118,72 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
     }
     else
     {
-        // search folders (public/shared)
-        $where = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) ? ' OR f.id IN ('.implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders']).')' : '';
-
-        $list_wf_folders = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders'])) ? implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']) : '';
-        $list_wf_folders_option = ($list_wf_folders != '') ? " OR f_val.id_folder IN ({$list_wf_folders}) " : '';
-
-        $sql =  "
-                SELECT      f.id
-
-                FROM        ploopi_mod_doc_folder f
-
-                LEFT JOIN   ploopi_mod_doc_folder f_val
-                ON          f_val.id = f.waiting_validation
-
-                WHERE       f.id_module = {$_SESSION['ploopi']['moduleid']}
-                AND         f.published = 1
-                AND         (f.waiting_validation = 0 OR f.id_user = {$_SESSION['ploopi']['userid']} {$list_wf_folders_option})
-
-                AND         ((f.id_user = {$_SESSION['ploopi']['userid']} AND f.id_folder = 0)
-                            OR (f.foldertype = 'public' AND f.id_workspace IN (".ploopi_viewworkspaces()."))
-                            {$where}
-                            )
-                ";
+        // Tableau pour construire la clause WHERE
+        $arrWhere = array();
+        
+        // Module
+        $arrWhere['module'] = "f.id_module = {$_SESSION['ploopi']['moduleid']}";
+        
+        // Utilisateur "standard"
+        if (!ploopi_isadmin()) 
+        {
+            // Publié (ou propriétaire)
+            $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$_SESSION['ploopi']['userid']})";
+             
+            // Prioriétaire
+            $arrWhere['visibility']['user'] = "f.id_user = {$_SESSION['ploopi']['userid']}"; 
+            // Partagé
+            if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])."))";
+            // Public
+            $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi_viewworkspaces()."))";
+            
+            // Validateur
+            if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']))
+            {
+                $arrWhere['visibility']['validator'] = "f.waiting_validation IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']).")";
+            }
+            
+            // Synthèse visibilité
+            $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
+        }
+            
+        $strWhere = implode(' AND ', $arrWhere);
+        
+        $sql = "
+            SELECT  f.*
+                        
+            FROM    ploopi_mod_doc_folder f
+        
+            WHERE   {$strWhere}     
+        ";
 
         $db->query($sql);
 
-        $folder_list_array = array();
-        while ($row = $db->fetchrow()) $folder_list_array[] = $row['id'];
-
-        $folder_list = (!empty($folder_list_array)) ? 'OR f.id_folder IN ('.implode(',',$folder_list_array).')' : '';
-
-        $file_list = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['files'])) ? ' OR f.id IN ('.implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['files']).')' : '';
-
+        $arrFolderList = array();
+        $arrFolderList[] = 0;
+        while ($row = $db->fetchrow()) $arrFolderList[] = $row['id'];
+        
+        // Tableau pour construire la clause WHERE
+        $arrWhere = array();
+        
+        // Module
+        $arrWhere['module'] = "f.id_module = {$_SESSION['ploopi']['moduleid']}";
+        
+        // Folders
+        $arrWhere['folders'] = "f.id_folder IN (".implode(',',$arrFolderList).")";
+        
+        // Search
+        $arrWhere['search'] = implode(' AND ',$search);
+        
+        // Utilisateur "standard"
+        if (!ploopi_isadmin()) 
+        {
+            // Dossier racine = cas particulier, l'utilisateur standard ne peut voir que sa racine
+            $arrWhere['root'] = "(f.id_folder <> 0 OR (f.id_folder = 0 AND f.id_user = {$_SESSION['ploopi']['userid']}))";
+        }
+        
+        $strWhere = implode(' AND ', $arrWhere);
+        
         $sql =  "
                 SELECT      f.*,
                             u.id as user_id,
@@ -170,16 +210,11 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
                 LEFT JOIN   ploopi_mod_doc_ext e
                 ON          e.ext = f.extension
 
-                WHERE       f.id_module = {$_SESSION['ploopi']['moduleid']}
-                AND         (f.id_user = {$_SESSION['ploopi']['userid']} {$folder_list} {$file_list})
-                AND         ".implode(' AND ',$search)."
-                ORDER BY    f.name
+                WHERE       {$strWhere}
                 ";
 
         $db->query($sql);
-        ?>
-
-        <?php
+        
         $columns = array();
         $values = array();
         $c = 0;
@@ -284,7 +319,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
             }
 
             $tools .=   '
-                        <a title="Modifier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$row['id_folder']}&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_modify.png" /></a>
+                        <a title="Modifier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$row['id_folder']}&docfile_md5id={$row['md5id']}&docfile_tab=modify").'"><img src="./modules/doc/img/ico_modify.png" /></a>
                         <a title="Télécharger" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
                         <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
                         ';                        
@@ -355,7 +390,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
                 );
 
             $values[$c]['description'] = $row['description'];
-            $values[$c]['link'] = ploopi_urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}");
+            $values[$c]['link'] = ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$row['id_folder']}&docfile_md5id={$row['md5id']}&docfile_tab=open");
             $values[$c]['style'] = '';
 
             $c++;

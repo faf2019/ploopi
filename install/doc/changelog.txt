@@ -1,3 +1,13 @@
+== Module DOC - version 4.2.1 =====================================================
+
+2009-02-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'un message d'erreur lors de l'ouverture d'un fichier inexistant
+ * Correction d'une erreur lors de l'indexation d'un document, ne prenait pas en compte le propriétaire du document
+ * Amélioration de la réindexation complète : suppression des fichiers "fantôme"
+ * Correction d'un bug dans le lien "recherche" du bloc "menu" du module  
+ * Correction d'un bug de visibilité des fichiers pour un administrateur dans la recherche interne au module
+
 == Module DOC - version 4.2.0.1 =====================================================
 
 2009-02-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
