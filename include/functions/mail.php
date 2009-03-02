@@ -56,9 +56,9 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     // bcc : Array('name','address')
     // replyto : Array('name','address')
     // files : Array
-    
-    $crlf = "\r\n";
 
+    $crlf = "\n";
+    
     $str_to = '';
     if (is_array($to))
     {
@@ -139,30 +139,32 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     $headers = '';
 
     // add "from" to headers
-    if (!empty($str_from)) $headers .= "From: {$str_from}{$crlf}";
+    if (!empty($str_from)) $headers .= "From: $str_from {$crlf}";
+    // add "reply_to" to headers
+    
     
     // add "reply_to" to headers
     if (!empty($str_replyto)) 
     {
-        $headers .= "Reply-To: {$str_replyto}{$crlf}";
-        $headers .= "Return-Path: {$str_replyto}{$crlf}";
+        $headers .= "Reply-to: {$str_replyto} {$crlf}";
+        $headers .= "Return-Path: {$str_replyto} {$crlf}";
     }
     else
     {
-        $headers .= "Reply-To: {$str_from}{$crlf}";
-        $headers .= "Return-Path: {$str_from}{$crlf}";
+        $headers .= "Reply-To: {$str_from} {$crlf}";
+        $headers .= "Return-Path: {$str_from} {$crlf}";
     }
-
+    
     // add "cc" to headers
-    if (!empty($str_cc)) $headers .= "Cc: {$str_cc}{$crlf}";
+    if (!empty($str_cc)) $headers .= "Cc: $str_cc {$crlf}";
     // add "bcc" to headers
-    if (!empty($str_bcc)) $headers .= "Bcc: {$str_bcc}{$crlf}";
+    if (!empty($str_bcc)) $headers .= "Bcc: $str_bcc {$crlf}";
     
     
     $domain = empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
     
     $headers .= "Date: ".date('r')."{$crlf}"; 
-    //$headers .= "X-Priority: 1{$crlf}";
+    $headers .= "X-Priority: 1{$crlf}";
     $headers .= "X-Sender: <{$domain}>{$crlf}";
     $headers .= "X-Mailer: PHP/Ploopi "._PLOOPI_VERSION."{$crlf}";
     $headers .= "X-auth-smtp-user: {$str_from}{$crlf}";
@@ -175,15 +177,14 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     if (!empty($files)) // Create multipart mail
     {
         $boundary = md5(uniqid(microtime(), true));
-        $headers .= "Content-Type: multipart/mixed; boundary={$boundary}{$crlf}";
-        $headers .= "{$crlf}";
+        $headers .= "Content-type: multipart/mixed;boundary={$boundary}{$crlf}{$crlf}";
         
         $msg .= "--{$boundary}{$crlf}";
         
-        if ($html) $msg .= "Content-Type: text/html; charset=iso-8859-1{$crlf}";
-        else $msg .= "Content-Type: text/plain; charset=iso-8859-1{$crlf}";
+        if ($html) $msg .= "Content-type: text/html; charset=iso-8859-1{$crlf}{$crlf}";
+        else $msg .= "Content-type: text/plain; charset=iso-8859-1{$crlf}{$crlf}";
 
-        $msg .= "{$message}{$crlf}{$crlf}";
+        $msg .= "$message{$crlf}{$crlf}";
         
         foreach($files as $filename)
         {
@@ -198,9 +199,9 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
                 $f = fclose($handle);
             
                 $msg .= "--{$boundary}{$crlf}";
-                $msg .= "Content-Type:{$mime_type}; name=".basename($filename)."{$crlf}";
-                $msg .= "Content-Transfer-Encoding:base64{$crlf}";
-                $msg .= "{$content}{$crlf}";
+                $msg .= "Content-type:{$mime_type};name=".basename($filename)."{$crlf}";
+                $msg .= "Content-transfer-encoding:base64{$crlf}{$crlf}";
+                $msg .= "{$content}{$crlf}{$crlf}";
             }
         }
         
@@ -208,12 +209,13 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     }
     else
     {
-        if ($html) $headers .= "Content-Type: text/html; charset=iso-8859-1{$crlf}";
-        else $headers .= "Content-Type: text/plain; charset=iso-8859-1{$crlf}";
+        if ($html) $headers .= "Content-type: text/html; charset=iso-8859-1{$crlf}{$crlf}";
+        else $headers .= "Content-type: text/plain; charset=iso-8859-1{$crlf}{$crlf}";
 
         $msg = $message;
     }
 
+    
      // send mail
     mail($str_to, $subject, $msg, $headers);
 
