@@ -22,8 +22,8 @@
 */
 
 /**
- * Définition des constantes générique utilisées par PLOOPI 
- * 
+ * Définition des constantes générique utilisées par PLOOPI
+ *
  * @package ploopi
  * @subpackage global
  * @copyright Netlor, Ovensia
@@ -126,12 +126,13 @@ define('_PLOOPI_ERROR_FILENOTWRITABLE',    101);
 define('_PLOOPI_ERROR_EMPTYFILE',          102);
 
 // Chemin web absolu de l'application
-if (!defined ('_PLOOPI_BASEPATH')) define ('_PLOOPI_BASEPATH', ((!empty($_SERVER['HTTPS']) || (isset($_SERVER['HTTP_X_SSL_REQUEST']) && ($_SERVER['HTTP_X_SSL_REQUEST'] == 1 || $_SERVER['HTTP_X_SSL_REQUEST'] == true || $_SERVER['HTTP_X_SSL_REQUEST'] == 'on'))) ? 'https://' : 'http://').((!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']).((!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80' && empty($_SERVER['HTTP_HOST'])) ? ":{$_SERVER['SERVER_PORT']}" : '').rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
+if (!defined ('_PLOOPI_BASEPATH')) 
+{
+     if (php_sapi_name() != 'cli') define ('_PLOOPI_BASEPATH', ((!empty($_SERVER['HTTPS']) || (isset($_SERVER['HTTP_X_SSL_REQUEST']) && ($_SERVER['HTTP_X_SSL_REQUEST'] == 1 || $_SERVER['HTTP_X_SSL_REQUEST'] == true || $_SERVER['HTTP_X_SSL_REQUEST'] == 'on'))) ? 'https://' : 'http://').((!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']).((!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80' && empty($_SERVER['HTTP_HOST'])) ? ":{$_SERVER['SERVER_PORT']}" : '').rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
+     else define ('_PLOOPI_BASEPATH', '');
+}
 
-// Mode de compatibilité pour des versions périmées de fichiers de config
-if (!defined ('_PLOOPI_USE_OUTPUT_COMPRESSION')) define ('_PLOOPI_USE_OUTPUT_COMPRESSION', false); 
 if (!defined ('_PLOOPI_FINGERPRINT')) define ('_PLOOPI_FINGERPRINT',  md5(dirname($_SERVER['SCRIPT_FILENAME']).'/'._PLOOPI_DB_SERVER.'/'._PLOOPI_DB_DATABASE));
-if (!defined ('_PLOOPI_LOAD_NBCORE')) define ('_PLOOPI_LOAD_NBCORE', 1);
 
 define ('_PLOOPI_SERVER_OSTYPE', (substr(PHP_OS, 0, 3) == 'WIN') ? 'windows' : 'unix');
 

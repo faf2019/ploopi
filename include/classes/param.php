@@ -24,7 +24,7 @@
 /**
  * Gestion des paramètres des modules.
  * Permet de lire/écrire les paramètres d'un module à différents niveaux (utilisateur, espace de travail, système)
- * 
+ *
  * @package ploopi
  * @subpackage param
  * @copyright Netlor, Ovensia
@@ -36,7 +36,7 @@
  * Cette classe permet de lire/écrire les paramètres d'un module à différents niveaux (utilisateur, espace de travail, système)
  * Accède aux tables ploopi_param_type, ploopi_param_default, ploopi_param_workspace, ploopi_param_user.
  * Met à jour les tables ploopi_param_default, ploopi_param_workspace, ploopi_param_user.
- * 
+ *
  * @package ploopi
  * @subpackage param
  * @copyright Netlor, Ovensia
@@ -51,25 +51,25 @@ class param
      *
      * @var int
      */
-    
+
     private $moduleid;
-    
+
     /**
      * Identifiant de l'espace de travail
      *
      * @var int
      */
-    
+
     private $workspaceid;
-    
+
     /**
      * Identifiant de l'utilisateur
      *
      * @var int
      */
-    
+
     private $userid;
-    
+
     /**
      * Tableau des paramètres du module
      *
@@ -154,7 +154,7 @@ class param
 
             if ($public) $select .= " AND pt.public = 1";
             $select .= " ORDER BY pt.label";
-                        
+
             $result = $db->query($select);
             while ($fields = $db->fetchrow($result)) $this->arrParam[$fields['name']] = $fields;
         }
@@ -217,13 +217,13 @@ class param
             if (isset($this->arrParam[$name])) $this->arrParam[$name]['value'] = $value;
         }
     }
-    
+
     /**
      * Retourne les valeurs des paramètres dans un tableau associatif (nom => valeur)
      *
      * @return array tableau des valeurs des paramètres
      */
-    
+
     public function getvalues()
     {
         return($this->arrParam);
@@ -235,7 +235,7 @@ class param
      * @param string $param nom du paramètre
      * @return string valeur du paramètre
      */
-    
+
     public function getparam($param)
     {
         return((isset($this->arrParam[$param])) ? $this->arrParam[$param]['value'] : null);
@@ -285,7 +285,7 @@ class param
 
 /**
  * Classe d'accès à la table ploopi_param_default
- *  
+ *
  * @package ploopi
  * @subpackage param
  * @copyright Netlor, Ovensia
@@ -300,7 +300,7 @@ class param_default extends data_object
      *
      * @return param_default
      */
-    
+
     public function param_default()
     {
         parent::data_object('ploopi_param_default', 'id_module', 'name');
@@ -309,7 +309,7 @@ class param_default extends data_object
 
 /**
  * Classe d'accès à la table ploopi_param_type
- *  
+ *
  * @package ploopi
  * @subpackage param
  * @copyright Netlor, Ovensia
@@ -357,11 +357,11 @@ class param_type extends data_object
     }
 
     /**
-     * Retourne un tableau contenant la liste des choix possibles pour le paramètre 
+     * Retourne un tableau contenant la liste des choix possibles pour le paramètre
      *
-     * @return array tableau associatif contenant la liste des choix possibles pour le paramètre 
+     * @return array tableau associatif contenant la liste des choix possibles pour le paramètre
      */
-    
+
     public function getallchoices()
     {
         global $db;
@@ -370,7 +370,7 @@ class param_type extends data_object
 
         $select = "SELECT * FROM ploopi_param_choice WHERE id_module_type = {$this->fields['id_module_type']} AND name = '".$db->addslashes($this->fields['name'])."'";
         $db->query($select);
-        
+
         while ($fields = $db->fetchrow()) $arrParamChoice[$fields['value']] = $fields['displayed_value'];
 
         return($arrParamChoice);
@@ -379,7 +379,7 @@ class param_type extends data_object
 
 /**
  * Classe d'accès à la table ploopi_param_choice
- *  
+ *
  * @package ploopi
  * @subpackage param
  * @copyright Netlor, Ovensia
@@ -394,7 +394,7 @@ class param_choice extends data_object
      *
      * @return param_choice
      */
-    
+
     public function param_choice()
     {
         parent::data_object('ploopi_param_choice','id_module_type','name');

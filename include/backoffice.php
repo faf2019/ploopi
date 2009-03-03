@@ -22,14 +22,14 @@
 */
 
 /**
- * Initialisation du rendu backoffice. 
+ * Initialisation du rendu backoffice.
  * Initialisation du moteur de template.
  * Initialisation du moteur de skin.
  * Définition des variables templates générales.
  * Insertion des blocs.
  * Inclusions JS/CSS.
  * Appel du module.
- *  
+ *
  * @package ploopi
  * @subpackage backoffice
  * @copyright Netlor, Ovensia
@@ -38,7 +38,7 @@
  */
 
 /**
- * inclusion des classes pour le moteur de template 
+ * inclusion des classes pour le moteur de template
  */
 
 include_once './include/classes/template.php';
@@ -55,7 +55,7 @@ $skin = new skin();
 $template_body = new Template($_SESSION['ploopi']['template_path']);
 
 $template_filename = 'index.tpl';
- 
+
 if (!empty($_GET['ploopi_tpl']) && file_exists("{$_SESSION['ploopi']['template_path']}/{$_GET['ploopi_tpl']}.tpl")) $template_filename = "{$_GET['ploopi_tpl']}.tpl";
 else if (isset($_SESSION['ploopi']['remote_pda']) && $_SESSION['ploopi']['remote_pda'] && file_exists("{$_SESSION['ploopi']['template_path']}/pda.tpl")) $template_filename = 'pda.tpl';
 
@@ -68,7 +68,7 @@ if (!file_exists("{$_SESSION['ploopi']['template_path']}/{$template_filename}") 
             _PLOOPI_ERROR_TEMPLATE_FILE
         )
     );
-    
+
 }
 
 $template_body->set_filenames(
@@ -81,13 +81,13 @@ $template_body->set_filenames(
  * inclusion des scripts JS
  * */
 
-$template_body->assign_block_vars('ploopi_js', 
+$template_body->assign_block_vars('ploopi_js',
     array(
         'PATH' => './lib/protoaculous/protoaculous.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
     )
 );
 
-$template_body->assign_block_vars('ploopi_js', 
+$template_body->assign_block_vars('ploopi_js',
     array(
         'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
     )
@@ -125,7 +125,7 @@ if ($_SESSION['ploopi']['connected'])
     {
         $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu',array());
     }
-    
+
     if (!empty($arrBlocks))
     {
 
@@ -149,7 +149,6 @@ if ($_SESSION['ploopi']['connected'])
                                                     )
                                             );
             }
-
 
             if (isset($mod['menu']))
             {
@@ -181,10 +180,10 @@ if ($_SESSION['ploopi']['connected'])
         }
 
     }
-    
+
     $page_content = ob_get_contents();
     ob_end_clean();
-    
+
     list($newtickets, $lastticket) = ploopi_tickets_getnew();
 
     $template_body->assign_vars(array(
@@ -195,22 +194,20 @@ if ($_SESSION['ploopi']['connected'])
         'USER_FIRSTNAME'        => $_SESSION['ploopi']['user']['firstname'],
         'USER_LASTNAME'         => $_SESSION['ploopi']['user']['lastname'],
         'USER_EMAIL'            => $_SESSION['ploopi']['user']['email'],
-    
+
         'USER_WORKSPACE'        => ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE),
         'USER_WORKSPACE_SEL'    => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE) ? 'selected' : '',
-    
+
         'MAINMENU_PROFILE'          => _PLOOPI_LABEL_MYPROFILE,
         'MAINMENU_ANNOTATIONS'      => _PLOOPI_LABEL_MYANNOTATIONS,
         'MAINMENU_TICKETS'          => _PLOOPI_LABEL_MYTICKETS,
         'MAINMENU_SEARCH'           => _PLOOPI_LABEL_SEARCH,
         'MAINMENU_DISCONNECTION'    => _PLOOPI_LABEL_DISCONNECTION,
-    
-    
+
         'MAINMENU_SHOWPROFILE_URL'      => ploopi_urlencode('admin.php?op=profile', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'MAINMENU_SHOWANNOTATIONS_URL'  => ploopi_urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'MAINMENU_SHOWTICKETS_URL'      => ploopi_urlencode('admin.php?op=tickets', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'MAINMENU_SHOWSEARCH_URL'       => ploopi_urlencode('admin.php?op=search', _PLOOPI_MENU_WORKSPACES, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-
 
         'MAINMENU_SHOWPROFILE_SEL'      => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'profile') ? 'selected' : '',
         'MAINMENU_SHOWANNOTATIONS_SEL'  => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'annotation') ? 'selected' : '',
@@ -228,13 +225,13 @@ if ($_SESSION['ploopi']['connected'])
     );
 
     if ($newtickets) $template_body->assign_block_vars('switch_user_logged_in.switch_newtickets', array());
-    
-    if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES) 
+
+    if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES)
     {
         $template_body->assign_block_vars('switch_user_logged_in.switch_search', array());
         $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_search', array());
     }
-    
+
 }
 else
 {
@@ -243,41 +240,39 @@ else
     {
         $template_body->assign_block_vars('switch_user_logged_out.switch_ploopierrormsg', array());
     }
-    
+
     if (!empty($_GET['ploopi_msgcode']))
     {
         $template_body->assign_block_vars('switch_user_logged_out.switch_ploopimsg', array());
     }
-    
-    
+
     $template_body->assign_vars(array(
         'PASSWORDLOST_URL'              => ploopi_urlencode('admin.php?ploopi_op=ploopi_lostpassword')
         )
     );
-    
+
 }
 
 $template_body->assign_vars(array(
-    'TEMPLATE_PATH'                 => $_SESSION['ploopi']['template_path'],
-    'TEMPLATE_NAME'                 => $_SESSION['ploopi']['template_name'],
-    'WORKSPACE_LABEL'               => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']),
-    'WORKSPACE_CODE'                => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['code']),
-    'WORKSPACE_TITLE'               => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
-    'WORKSPACE_META_DESCRIPTION'    => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_description']),
-    'WORKSPACE_META_KEYWORDS'       => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_keywords']),
-    'WORKSPACE_META_AUTHOR'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']),
-    'WORKSPACE_META_COPYRIGHT'      => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_copyright']),
-    'WORKSPACE_META_ROBOTS'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_robots']),
-    'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
-    'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
-    'ADDITIONAL_JAVASCRIPT'         => $ploopi_additional_javascript,
-    'PLOOPI_ERROR'                  => (!empty($_GET['ploopi_errorcode'])) ? $ploopi_errormsg[$_GET['ploopi_errorcode']] : '',
-    'PLOOPI_MSG'                    => (!empty($_GET['ploopi_msgcode'])) ? $ploopi_msg[$_GET['ploopi_msgcode']] : '',
-    'PLOOPI_VERSION'                => _PLOOPI_VERSION,
-    'PLOOPI_REVISION'               => _PLOOPI_REVISION
-)
+        'TEMPLATE_PATH'                 => $_SESSION['ploopi']['template_path'],
+        'TEMPLATE_NAME'                 => $_SESSION['ploopi']['template_name'],
+        'WORKSPACE_LABEL'               => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']),
+        'WORKSPACE_CODE'                => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['code']),
+        'WORKSPACE_TITLE'               => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
+        'WORKSPACE_META_DESCRIPTION'    => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_description']),
+        'WORKSPACE_META_KEYWORDS'       => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_keywords']),
+        'WORKSPACE_META_AUTHOR'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']),
+        'WORKSPACE_META_COPYRIGHT'      => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_copyright']),
+        'WORKSPACE_META_ROBOTS'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_robots']),
+        'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
+        'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
+        'ADDITIONAL_JAVASCRIPT'         => $ploopi_additional_javascript,
+        'PLOOPI_ERROR'                  => (!empty($_GET['ploopi_errorcode'])) ? $ploopi_errormsg[$_GET['ploopi_errorcode']] : '',
+        'PLOOPI_MSG'                    => (!empty($_GET['ploopi_msgcode'])) ? $ploopi_msg[$_GET['ploopi_msgcode']] : '',
+        'PLOOPI_VERSION'                => _PLOOPI_VERSION,
+        'PLOOPI_REVISION'               => _PLOOPI_REVISION
+    )
 );
-
 
 $template_body->pparse('body');
 ?>

@@ -24,7 +24,7 @@
 /**
  * Fonction d'accès à l'espace physique de stockage.
  * Création de dossier, copie de fichiers, téléchargement de fichiers...
- * 
+ *
  * @package ploopi
  * @subpackage filesystem
  * @copyright Netlor, Ovensia
@@ -47,7 +47,7 @@ function ploopi_copydir($src , $dest, $folder_mode = 0750, $file_mode = 0640)
     $ok = true;
 
     $processid = posix_getuid();
-    
+
     $folder=opendir($src);
 
     if (!file_exists($dest)) mkdir($dest, $folder_mode);
@@ -58,7 +58,7 @@ function ploopi_copydir($src , $dest, $folder_mode = 0750, $file_mode = 0640)
         {
             $src_file = "{$src}/{$file}";
             $dest_file = "{$dest}/{$file}";
-            
+
             if (is_dir($src_file))
             {
                 $ok = ploopi_copydir($src_file, $dest_file, $folder_mode = 0750, $file_mode = 0640);
@@ -69,7 +69,7 @@ function ploopi_copydir($src , $dest, $folder_mode = 0750, $file_mode = 0640)
                 if (!(file_exists($dest_file) && !is_writable($dest_file)))
                 {
                     copy($src_file, $dest_file);
-                    
+
                     // changement des droits uniquement le processus courant est propriétaire du fichier
                     if (fileowner($dest_file) == $processid) chmod($dest_file, $file_mode);
                 }
@@ -140,13 +140,13 @@ function ploopi_makedir($path, $mode = 0750)
  *
  * @param string $filename chemin du fichier
  * @return string type mime
- * 
+ *
  * @see ploopi_downloadfile
  */
 
 function ploopi_getmimetype($filename)
 {
-    
+
     $strUserBrowser = '';
     if (!empty($_SERVER['HTTP_USER_AGENT']))
     {
@@ -154,12 +154,12 @@ function ploopi_getmimetype($filename)
             $strUserBrowser = "Opera";
         elseif (ereg('MSIE ([0-9].[0-9]{1,2})', $_SERVER['HTTP_USER_AGENT']))
             $strUserBrowser = "IE";
-    }        
+    }
 
     /// important for download im most browser
     $strMimetype = ($strUserBrowser == 'IE' || $strUserBrowser == 'Opera') ? 'application/octetstream' : 'application/octet-stream';
 
-    $arrMimetypes = 
+    $arrMimetypes =
         array(
             //texte
             'txt' => 'text/plain',
@@ -198,8 +198,8 @@ function ploopi_getmimetype($filename)
             'texi' => 'application/x-tex',
             'ctx' => 'application/x-tex',
             'py' => 'text/x-python',
-            'pl' => 'text/x-perl',  
-        
+            'pl' => 'text/x-perl',
+
             //images
             'png' => 'image/png',
             'gif' => 'image/gif',
@@ -219,10 +219,10 @@ function ploopi_getmimetype($filename)
             'ico' => 'image/x-icon',
             'svg' => 'image/svg+xml',
             'svgz' => 'image/svg+xml',
-        
+
             // thumbnails
-            'thm' => 'application/vnd.eri.thm', 
-    
+            'thm' => 'application/vnd.eri.thm',
+
             //archives
             'bz2' => 'application/x-bzip',
             'gz' => 'application/x-gzip',
@@ -240,11 +240,11 @@ function ploopi_getmimetype($filename)
             'rar' => 'application/x-rar',
             'arj' => 'application/x-arj',
             '7z' => 'application/x-7z-compressed',
-        
+
             //packages
             'rpm' => 'application/x-redhat-package',
             'deb' => 'application/x-debian-package',
-        
+
             //audio
             'aif' => 'audio/aiff',
             'aiff' => 'audio/aiff',
@@ -263,7 +263,7 @@ function ploopi_getmimetype($filename)
             'flac' => 'audio/flac',
             'aac' => 'audio/mp4',
             'm4a' => 'audio/mp4',
-        
+
             //video
             'asf' => 'video/x-ms-asf',
             'asx' => 'video/x-ms-asf',
@@ -281,7 +281,7 @@ function ploopi_getmimetype($filename)
             'mp2' => 'audio/mpeg',
             'movie' => 'video/x-sgi-movie',
             'flv' => 'video/x-flv',
-                
+
             //real
             'ra' => 'audio/vnd.rn-realaudio',
             'ram' => 'audio/x-pn-realaudio',
@@ -290,11 +290,11 @@ function ploopi_getmimetype($filename)
             'rmvb' => 'application/vnd.rn-realmedia-vbr',
             'smil' => 'application/smil',
             'smi' => 'application/smil',
-        
+
             //playlist
             'pls' => 'audio/scpls',
             'm3u' => 'audio/x-mpegurl',
-    
+
             //xml
             'xml' => 'text/xml',
             'xsl' => 'text/xsl',
@@ -310,7 +310,7 @@ function ploopi_getmimetype($filename)
             'rdf' => 'application/rdf+xml',
             'atom' => 'application/atom+xml',
             'opml' => 'application/opml+xml',
-        
+
             //microsoft
             'doc' => 'application/msword',
             'dot' => 'application/msword',
@@ -339,19 +339,19 @@ function ploopi_getmimetype($filename)
             'scd' => 'application/x-msschedule',
             'trm' => 'application/x-msterminal',
             'wri' => 'application/x-mswrite',
-        
+
             //open office
-            'sxw' => 'application/vnd.sun.xml.writer', 
+            'sxw' => 'application/vnd.sun.xml.writer',
             'stw' => 'application/vnd.sun.xml.writer.template',
             'sxg' => 'application/vnd.sun.xml.writer.global',
             'sxc' => 'application/vnd.sun.xml.calc',
-            'stc' => 'application/vnd.sun.xml.calc.template', 
+            'stc' => 'application/vnd.sun.xml.calc.template',
             'sxi' => 'application/vnd.sun.xml.impress',
-            'sti' => 'application/vnd.sun.xml.impress.template', 
+            'sti' => 'application/vnd.sun.xml.impress.template',
             'sxd' => 'application/vnd.sun.xml.draw',
-            'std' => 'application/vnd.sun.xml.draw.template', 
+            'std' => 'application/vnd.sun.xml.draw.template',
             'sxm' => 'application/vnd.sun.xml.math',
-    
+
             'odt' => 'application/vnd.oasis.opendocument.text',
             'otm' => 'application/vnd.oasis.opendocument.text-master',
             'ott' => 'application/vnd.oasis.opendocument.text-template',
@@ -368,38 +368,38 @@ function ploopi_getmimetype($filename)
             'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
             'ots' => 'application/vnd.oasis.opendocument.spreadsheet-template',
             'oth' => 'application/vnd.oasis.opendocument.text-web',
-        
+
             //texte enrichi
             'rtf' => 'text/rtf',
             'rtx' => 'text/richtext',
-    
+
             //adobe
             'pdf' => 'application/pdf',
             'ai' => 'application/postscript',
             'eps' => 'application/postscript',
             'psd' => 'image/psd',
             'ps' => 'application/postscript',
-    
+
             //macromedia
             'swf' => 'application/x-shockwave-flash',
             'fla' => 'application/x-shockwave-flash',
-        
+
             //binaires/executables
             'hqx' => 'application/mac-binhex40',
             'exe' => 'application/x-msdownload',
             'com' => 'application/x-msdownload',
             'bat' => 'application/x-msdownload',
-            'class' => 'application/x-java-class',  
-            'jar' => 'application/java',  
+            'class' => 'application/x-java-class',
+            'jar' => 'application/java',
             'jad' => 'text/vnd.sun.j2me.app-descriptor',
-        
+
             //fonts
             'otf' => 'font/opentype',
             'ttf' => 'application/x-font-ttf',
             'ttc' => 'application/x-font-ttf',
             'pfb' => 'application/x-font-type1',
             'pfa' => 'application/x-font-type1',
-        
+
             //chiffrement/certificats
             'cer' => 'application/x-x509-ca-cert',
             'crt' => 'application/x-x509-ca-cert',
@@ -412,13 +412,13 @@ function ploopi_getmimetype($filename)
             'p7c' => 'application/x-pkcs7-mime',
             'p7m' => 'application/x-pkcs7-mime',
             'p7s' => 'application/x-pkcs7-signature',
-        
+
             //disk images
             'iso' => 'application/x-isoview',
             'nrg' => 'application/x-extension-nrg',
             'ccd' => 'text/x-cdwizard',
             'dmg' => 'application/x-apple-diskimage',
-            
+
             //divers
             'vcf' => 'text/x-vcard',
             'vcs' => 'text/x-vcalendar',
@@ -426,7 +426,7 @@ function ploopi_getmimetype($filename)
             'mht' => 'message/rfc822',
             'mhtml' => 'message/rfc822',
             'torrent' => 'application/x-bittorrent'
-            
+
         );
 
     $ext = ploopi_file_getextension($filename);
@@ -445,7 +445,7 @@ function ploopi_getmimetype($filename)
  * @param boolean $attachment true si le fichier doit être envoyé en "attachment", false si il doit être envoyé "inline"
  * @param boolean $die true si la fonction doit arrêter le script
  * @return boolean false si le fichier n'existe pas, rien sinon
- * 
+ *
  * @see ploopi_getmimetype
  * @see ploopi_file_getextension
  */
@@ -457,9 +457,9 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
     if (file_exists($filepath))
     {
         ploopi_ob_clean();
-                
+
         @set_time_limit(0);
-        
+
         $filepath = rawurldecode($filepath);
         $size = filesize($filepath);
 
@@ -481,19 +481,19 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
 
         if ($fp = fopen($filepath, 'r'))
         {
-            while(!feof($fp) && connection_status() == 0) 
+            while(!feof($fp) && connection_status() == 0)
             {
                 echo fread($fp, $chunksize);
                 flush();
             }
             fclose($fp);
         }
-        else 
+        else
         {
             header('Content-type: text/html; charset=iso-8859-1');
             ploopi_die('Impossible d\'ouvrir le fichier');
         }
-        
+
         if ($deletefile && is_writable($filepath)) @unlink($filepath);
 
         if ($die) ploopi_die(null, false);
@@ -507,7 +507,7 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
  *
  * @param string $filename chemin physique du dossier
  * @return string extension du fichier
- * 
+ *
  * @see ploopi_downloadfile
  */
 

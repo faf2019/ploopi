@@ -23,7 +23,7 @@
 
 /**
  * Gestion des utilisateurs
- * 
+ *
  * @package ploopi
  * @subpackage user
  * @copyright Netlor, Ovensia
@@ -39,7 +39,7 @@ include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_user
- * 
+ *
  * @package ploopi
  * @subpackage user
  * @copyright Netlor, Ovensia
@@ -54,7 +54,7 @@ class user extends data_object
      *
      * @return user
      */
-    
+
     public function user()
     {
         parent::data_object('ploopi_user');
@@ -64,13 +64,13 @@ class user extends data_object
     /**
      * Supprime l'utilisateur et les données associées : validation, param, share, annotation, subscription, etc..
      */
-    
+
     public function delete()
     {
         include_once './include/classes/group.php';
-        
+
         global $db;
-        
+
         $db->query("DELETE FROM ploopi_validation WHERE type_validation = 'user' AND id_validation = {$this->fields['id']}");
         $db->query("DELETE FROM ploopi_share WHERE type_share = 'user' AND id_share = {$this->fields['id']}");
         $db->query("DELETE FROM ploopi_tag WHERE id_user = {$this->fields['id']}");
@@ -79,7 +79,7 @@ class user extends data_object
         $db->query("DELETE FROM ploopi_workspace_user_role WHERE id_user = {$this->fields['id']}");
         $db->query("DELETE FROM ploopi_group_user WHERE id_user = {$this->fields['id']}");
         $db->query("DELETE FROM ploopi_subscription WHERE id_user = {$this->fields['id']}");
-        
+
         $select = "SELECT * FROM ploopi_workspace_user WHERE id_user = {$this->fields['id']}";
         $rs = $db->query($select);
         while($fields = $db->fetchrow($rs))
@@ -98,7 +98,7 @@ class user extends data_object
      * @param boolean $lite true si la fonction ne doit renvoyer que le nom des espaces
      * @return array tableau d'espaces
      */
-    
+
     public function getworkspaces($lite = false)
     {
         /**
@@ -106,7 +106,7 @@ class user extends data_object
          * 2. A partir des groupes, récupère les espaces auxquels les groupes sont rattachés directement ou pas (on regarde les parents).
          * 3. Récupère les espaces auxquels l'utilisateur est directement rattaché.
          */
-        
+
         global $db;
 
         $workspaces = array();
@@ -132,11 +132,11 @@ class user extends data_object
                         SELECT      w.*,
                                     wg.id_group,
                                     wg.adminlevel
-                                    
+
                         FROM        ploopi_workspace w
-                        
+
                         LEFT JOIN   ploopi_workspace_group wg ON wg.id_workspace = w.id
-                        
+
                         WHERE       wg.id_group IN ('{$groups}')
                         ";
 
@@ -149,30 +149,29 @@ class user extends data_object
                 {
                     if (empty($workspaces[$fields['id']])) $workspaces[$fields['id']] = $fields;
                     else $workspaces[$fields['id']]['adminlevel'] = max($workspaces[$fields['id']]['adminlevel'], $fields['adminlevel']);
-    
+
                     $workspaces[$fields['id']]['groups'][] = $fields['id_group'];
                 }
 
             }
         }
 
-
         $select =   "
                     SELECT      w.*,
                                 wu.adminlevel
 
                     FROM        ploopi_workspace w
-                    
+
                     INNER JOIN  ploopi_workspace_user wu ON wu.id_workspace = w.id
 
                     WHERE       wu.id_user = {$this->fields['id']}
-                    
+
                     ORDER BY    w.depth, id
                     ";
 
         $result = $db->query($select);
 
-        while ($fields = $db->fetchrow($result)) 
+        while ($fields = $db->fetchrow($result))
         {
             if ($lite) $workspaces[$fields['id']] = $fields['label'];
             else
@@ -191,7 +190,7 @@ class user extends data_object
      * @param boolean $lite true si la fonction ne doit renvoyer que le nom des groupes
      * @return array tableau de groupes
      */
-    
+
     public function getgroups($lite = false)
     {
         global $db;
@@ -216,7 +215,7 @@ class user extends data_object
         {
             // group 0 = virtual group SYSTEM
             if ($fields['id'] == _SYSTEM_SYSTEMADMIN) $fields['label'] = _SYSTEM_LABEL_SYSTEM;
-            
+
             if ($lite) $groups[$fields['id']] = $fields['label'];
             else $groups[$fields['id']] = $fields;
         }
@@ -229,11 +228,11 @@ class user extends data_object
      *
      * @param int $groupid identifiant du groupe
      */
-    
+
     public function attachtogroup($groupid)
     {
         include_once './include/classes/group.php';
-        
+
         global $db;
 
         $group_user = new group_user();
@@ -247,7 +246,7 @@ class user extends data_object
      *
      * @param unknown_type $workspaceid
      */
-    
+
     public function attachtoworkspace($workspaceid)
     {
         global $db;
@@ -256,7 +255,6 @@ class user extends data_object
         $workspace_user->fields['id_user'] = $this->fields['id'];
         $workspace_user->fields['id_workspace'] = $workspaceid;
         $workspace_user->save();
-
 
         // search for modules
         $select =   "
@@ -283,7 +281,7 @@ class user extends data_object
     }
 
     /**
-     * Retourne un tableau contenant les actions triées pas espace de travail et module 
+     * Retourne un tableau contenant les actions triées pas espace de travail et module
      *
      * @param array $actions tableau d'actions
      */
@@ -300,7 +298,7 @@ class user extends data_object
     {
         global $db;
 
-        $select =   
+        $select =
             "
             SELECT      ploopi_workspace_user_role.id_workspace,
                         ploopi_role_action.id_action,
@@ -320,13 +318,12 @@ class user extends data_object
         return $actions;
     }
 
-
     /**
      * Retourne un tableau contenant les utilisateurs "visibles" par l'utilisateur
      *
      * @return tableau d'utilisateurs
      */
-    
+
     public function getusersgroup()
     {
         global $db;
@@ -353,31 +350,30 @@ class user extends data_object
                     ON          ploopi_workspace_group.id_group=ploopi_group_user.id_group
                     AND     ploopi_workspace_group.id_workspace in (".implode(",",$workspaces).")";
 
-
         $result = $db->query($select);
 
         while ($fields = $db->fetchrow($result)) array_push($usrlist,$fields['id_user']);
-        
+
         return($usrlist);
     }
-    
+
     /**
      * Affecte un nouveau mot de passe à l'utilisateur
      *
      * @param string $strPassword mot de passe en clair
      */
-    
+
     public function setpassword($strPassword)
     {
         $this->fields['password'] = md5(_PLOOPI_SECRETKEY."/{$this->fields['login']}/".md5($strPassword));
     }
-    
+
     /**
      * Retourne le chemin vers la photo de l'utilisateur
      *
      * @return string chemin vers la photo de l'utilisateur
      */
-    
+
     public function getphotopath()
     {
         return (_PLOOPI_PATHDATA._PLOOPI_SEP.'system'._PLOOPI_SEP.$this->fields['id'].'.png');

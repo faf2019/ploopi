@@ -23,7 +23,7 @@
 
 /**
  * Gestion des partages
- * 
+ *
  * @package ploopi
  * @subpackage share
  * @copyright Netlor, Ovensia
@@ -35,7 +35,7 @@ include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_share
- * 
+ *
  * @package ploopi
  * @subpackage share
  * @copyright Netlor, Ovensia

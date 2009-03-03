@@ -24,14 +24,13 @@
 /**
  * Fonction de base pour le traitement des dates, des timestamps MYSQL et des fuseaux horaires.
  * Conversion de formats, conversion de fuseaux, calculs...
- * 
+ *
  * @package ploopi
  * @subpackage date
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
-
 
 /**
  * Retourne la date du serveur au format local (_PLOOPI_DATEFORMAT)
@@ -63,7 +62,7 @@ function ploopi_dateverify($mydate)
         case _PLOOPI_DATEFORMAT_FR:
             return (ereg(_PLOOPI_DATEFORMAT_EREG_FR, $mydate, $regs) !== false);
         break;
-        
+
         case _PLOOPI_DATEFORMAT_US:
             return (ereg(_PLOOPI_DATEFORMAT_EREG_US, $mydate, $regs) !== false);
         break;
@@ -84,7 +83,7 @@ function ploopi_dateverify($mydate)
 function ploopi_timeverify($mytime) {return (ereg(_PLOOPI_TIMEFORMAT_EREG, $mytime, $regs) !== false);}
 
 /**
- * Renvoie le détail d'un timestamp au format MYSQL (AAAAMMJJhhmmss) sous forme d'un tableau 
+ * Renvoie le détail d'un timestamp au format MYSQL (AAAAMMJJhhmmss) sous forme d'un tableau
  * $regs[_PLOOPI_DATE_YEAR] => Year
  * $regs[_PLOOPI_DATE_MONTH] => Month
  * $regs[_PLOOPI_DATE_DAY] => Day
@@ -95,7 +94,7 @@ function ploopi_timeverify($mytime) {return (ereg(_PLOOPI_TIMEFORMAT_EREG, $myti
  * @param string $mytimestamp
  * @return array tableau contenant le détail de la date
  */
- 
+
 function ploopi_gettimestampdetail($mytimestamp)
 {
     ereg(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $mytimestamp, $regs);
@@ -125,18 +124,18 @@ function ploopi_unixtimestamp2local($mytimestamp) { return(date(_PLOOPI_DATEFORM
  * @param int $mytimestamp timestamp UNIX
  * @return string timestamp MYSQL
  */
-  
+
  function ploopi_unixtimestamp2timestamp($mytimestamp) { return(date(_PLOOPI_TIMESTAMPFORMAT_MYSQL,$mytimestamp)); }
 
 /**
- * Convertit un timestamp MYSQL (AAAAMMJJhhmmss) en timestamp UNIX 
+ * Convertit un timestamp MYSQL (AAAAMMJJhhmmss) en timestamp UNIX
  *
  * @param string $mytimestamp timestamp MYSQL
  * @return int timestamp UNIX
  */
-  
- function ploopi_timestamp2unixtimestamp($mytimestamp) 
- { 
+
+ function ploopi_timestamp2unixtimestamp($mytimestamp)
+ {
     $timestp_array = ploopi_gettimestampdetail($mytimestamp);
 
     return(
@@ -150,14 +149,14 @@ function ploopi_unixtimestamp2local($mytimestamp) { return(date(_PLOOPI_DATEFORM
         )
     );
  }
- 
+
 /**
  * Convertit un timestamp MYSQL (AAAAMMJJhhmmss) au format local (date+heure)
  *
  * @param string $mytimestamp
  * @return array tableau associatif contenant la date et l'heure : Array('date' => '', 'time' => '');
  */
- 
+
 function ploopi_timestamp2local($mytimestamp)
 {
     // Output array declaration
@@ -239,7 +238,7 @@ function ploopi_local2timestamp($mydate,$mytime = '00:00:00')
  *
  * @param string $timestp timestamp MYSQL
  * @param int $h nombre d'heures à ajouter
- * @param int $mn nombre de minutes à ajouter 
+ * @param int $mn nombre de minutes à ajouter
  * @param int $s nombre de secondes à ajouter
  * @param int $m nombre de mois à ajouter
  * @param int $d nombre de jours à ajouter
@@ -251,10 +250,10 @@ function ploopi_timestamp_add($timestp, $h=0, $mn=0, $s=0, $m=0, $d=0, $y=0)
 {
     $timestp_array = ploopi_gettimestampdetail($timestp);
 
-    return  
+    return
         date(
-            _PLOOPI_TIMESTAMPFORMAT_MYSQL,  
-            mktime(    
+            _PLOOPI_TIMESTAMPFORMAT_MYSQL,
+            mktime(
                 $timestp_array[_PLOOPI_DATE_HOUR]+$h,
                 $timestp_array[_PLOOPI_DATE_MINUTE]+$mn,
                 $timestp_array[_PLOOPI_DATE_SECOND]+$s,
@@ -279,28 +278,28 @@ function ploopi_numweek2unixtimestamp($intNumWeek, $intYear)
     $date_firstweek = mktime(0, 0, 0, 12, 29, $intYear - 1);
     $d = -1;
     do
-    {  
+    {
         $d++;
         $date_firstweek = mktime(0, 0, 0, 12, 29 + $d, $intYear - 1);
-        
+
     } while (date('W', $date_firstweek) != 1); // Tant qu'on n'est pas sur la semaine 1
-    
+
     // $date_firstweek contient le 1er jour de la semaine 1
-    
+
     // 2. On ajoute ($intSelWeek-1)*7 jours pour se positionner sur le 1er jour de la semaine $intSelWeek
-    return(mktime(0, 0, 0, 12, 29 + $d + (($intNumWeek - 1) * 7), $intYear - 1));        
+    return(mktime(0, 0, 0, 12, 29 + $d + (($intNumWeek - 1) * 7), $intYear - 1));
 }
 
 /**
  * Crée le timestamp MYSQL (AAAAMMJJhhmmss) de la date actuelle pour un fuseau horaire donné (par défaut UTC+0)
  *
- * @param string $timezone_name identifiant du fuseau horaire (par défaut 'UTC') ou 'user' ou 'server' 
- * @return timestamp timestamp au format MYSQL 
+ * @param string $timezone_name identifiant du fuseau horaire (par défaut 'UTC') ou 'user' ou 'server'
+ * @return timestamp timestamp au format MYSQL
  *
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @link http://fr.php.net/timezones
  * @see timezone_identifiers_list
  */
@@ -312,7 +311,7 @@ function ploopi_tz_createtimestamp($timezone_name = 'UTC')
         case 'user':
             $timezone_name = $_SESSION['ploopi']['user']['timezone'];
         break;
-        
+
         case 'server':
             $timezone_name = $_SESSION['ploopi']['timezone'];
         break;
@@ -325,14 +324,14 @@ function ploopi_tz_createtimestamp($timezone_name = 'UTC')
  * Convertit un timestamp MYSQL (AAAAMMJJhhmmss) d'un fuseau à un autre
  *
  * @param string $ts timestamp au format MYSQL
- * @param unknown_type identifiant du fuseau horaire d'origine ou 'user' ou 'server' 
- * @param unknown_type identifiant du fuseau horaire de destination ou 'user' ou 'server' 
+ * @param unknown_type identifiant du fuseau horaire d'origine ou 'user' ou 'server'
+ * @param unknown_type identifiant du fuseau horaire de destination ou 'user' ou 'server'
  * @return string timestamp au format MYSQL AAAAMMJJHHMMSS
  *
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @link http://fr.php.net/timezones
  * @see timezone_identifiers_list
  */
@@ -344,41 +343,41 @@ function ploopi_tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezon
         case 'user':
             $timezone_name_src = $_SESSION['ploopi']['user']['timezone'];
         break;
-        
+
         case 'server':
             $timezone_name_src = $_SESSION['ploopi']['timezone'];
         break;
     }
-    
+
     switch($timezone_name_dst)
     {
         case 'user':
             $timezone_name_dst = $_SESSION['ploopi']['user']['timezone'];
         break;
-        
+
         case 'server':
             $timezone_name_dst = $_SESSION['ploopi']['timezone'];
         break;
     }
-    
+
     $default_tz = date_default_timezone_get();
 
     // on cherche les 2 fuseaux
     $tz_src = timezone_open($timezone_name_src);
     $tz_dst = timezone_open($timezone_name_dst);
-    
+
     // on parse le timestamp 'mysql' pour créer un timestamp unix
     ereg(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $ts, $tsregs);
-    
+
     // on crée l'objet date sur le fuseau source
     date_default_timezone_set($timezone_name_src);
     $date = date_create('@'.mktime($tsregs[4], $tsregs[5], $tsregs[6], $tsregs[2], $tsregs[3], $tsregs[1]));
     date_default_timezone_set($default_tz);
-    
+
     /* BUG ?? ne fonctionne pas
      * $date = date_create('@'.mktime($tsregs[4], $tsregs[5], $tsregs[6], $tsregs[2], $tsregs[3], $tsregs[1]), $tz_src);
      */
-    
+
     // changement de fuseau horaire (dest)
     date_timezone_set($date, $tz_dst);
 
@@ -395,7 +394,7 @@ function ploopi_tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezon
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @link http://fr.php.net/timezones
  * @see timezone_identifiers_list
  */
@@ -407,7 +406,7 @@ function ploopi_tz_getutc($timezone_name = 'UTC')
         case 'user':
             $timezone_name = $_SESSION['ploopi']['user']['timezone'];
         break;
-        
+
         case 'server':
             $timezone_name = $_SESSION['ploopi']['timezone'];
         break;

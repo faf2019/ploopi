@@ -22,7 +22,7 @@
 
 /**
  * Gestion de l'indexation de recherche
- * 
+ *
  * @package ploopi
  * @subpackage search_index
  * @copyright Ovensia
@@ -34,7 +34,7 @@ include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_index_element
- * 
+ *
  * @package ploopi
  * @subpackage search_index
  * @copyright Ovensia
@@ -49,7 +49,7 @@ class index_element extends data_object
      *
      * @return index_element
      */
-    
+
     public function index_element()
     {
         parent::data_object('ploopi_index_element', 'id');
@@ -58,7 +58,7 @@ class index_element extends data_object
 
 /**
  * Classe d'accès à la table ploopi_index_keyword_element
- * 
+ *
  * @package ploopi
  * @subpackage search_index
  * @copyright Ovensia
@@ -73,7 +73,7 @@ class index_keyword_element extends data_object
      *
      * @return index_keyword_element
      */
-    
+
     public function index_keyword_element()
     {
         parent::data_object('ploopi_index_keyword_element', 'id_keyword', 'id_element');
@@ -82,7 +82,7 @@ class index_keyword_element extends data_object
 
 /**
  * Classe d'accès à la table ploopi_index_keyword
- * 
+ *
  * @package ploopi
  * @subpackage search_index
  * @copyright Ovensia
@@ -97,7 +97,7 @@ class index_keyword extends data_object
      *
      * @return index_keyword
      */
-    
+
     public function index_keyword()
     {
         parent::data_object('ploopi_index_keyword', 'id');
@@ -108,7 +108,7 @@ class index_keyword extends data_object
      *
      * @return boolean true si l'enregistrement a été correctement réalisé
      */
-    
+
     public function save()
     {
         $this->fields['twoletters'] = substr($this->fields['keyword'],0,2);
@@ -116,10 +116,9 @@ class index_keyword extends data_object
     }
 }
 
-
 /**
  * Classe d'accès à la table ploopi_index_stem_element
- * 
+ *
  * @package ploopi
  * @subpackage search_index
  * @copyright Ovensia
@@ -134,7 +133,7 @@ class index_stem_element extends data_object
      *
      * @return index_stem_element
      */
-    
+
     public function index_stem_element()
     {
         parent::data_object('ploopi_index_stem_element', 'id_stem', 'id_element');
@@ -143,7 +142,7 @@ class index_stem_element extends data_object
 
 /**
  * Classe d'accès à la table ploopi_index_stem
- * 
+ *
  * @package ploopi
  * @subpackage search_index
  * @copyright Ovensia
@@ -158,7 +157,7 @@ class index_stem extends data_object
      *
      * @return index_stem
      */
-    
+
     public function index_stem()
     {
         parent::data_object('ploopi_index_stem', 'id');

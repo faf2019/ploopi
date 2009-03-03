@@ -23,7 +23,7 @@
 
 /**
  * Chargement des blocs de menus en fonction de l'espace de travail sélectionné
- *  
+ *
  * @package ploopi
  * @subpackage backoffice
  * @copyright Netlor, Ovensia
@@ -61,14 +61,14 @@ switch ($_SESSION['ploopi']['mainmenu'])
 
                     if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
                     {
-                        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = 
-                            array(   
+                        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] =
+                            array(
                                 'label' => _PLOOPI_ADMIN_SYSTEM,
                                 'url' => ploopi_urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM."&ploopi_action=admin&system_level=system")
                             );
                     }
 
-                    $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = array(   
+                    $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = array(
                         'label' => _PLOOPI_ADMIN_WORKSPACES,
                         'url' => ploopi_urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM."&ploopi_action=admin&system_level="._SYSTEM_WORKSPACES)
                     );
@@ -86,7 +86,7 @@ switch ($_SESSION['ploopi']['mainmenu'])
                     {
                         $modtype = $_SESSION['ploopi']['modules'][$menu_moduleid]['moduletype'];
                         $blockpath = "./modules/{$modtype}/block.php";
-                        
+
                         if (file_exists($blockpath))
                         {
                             $arrBlocks[$menu_moduleid] = array(
@@ -107,38 +107,38 @@ switch ($_SESSION['ploopi']['mainmenu'])
     break;
 
     case _PLOOPI_MENU_MYWORKSPACE:
-        $arrBlocks[_PLOOPI_MODULE_SYSTEM] = 
+        $arrBlocks[_PLOOPI_MODULE_SYSTEM] =
             array(
                 'title'         =>_PLOOPI_LABEL_MYWORKSPACE,
                 'url'           => ploopi_urlencode('admin.php?op=user', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
                 'description'   => 'Profil utilisateur'
             );
 
-        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = 
-            array(   
+        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] =
+            array(
                 'label'     => _PLOOPI_LABEL_MYTICKETS,
                 'url'       => ploopi_urlencode('admin.php?op=tickets', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
             );
-            
-        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = 
-            array(   
+
+        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] =
+            array(
                 'label'     => _PLOOPI_LABEL_MYANNOTATIONS,
                 'url'       => ploopi_urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
             );
-            
-        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = 
+
+        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] =
             array(
                 'label'     => _PLOOPI_LABEL_MYPROFILE,
                 'url'       => ploopi_urlencode('admin.php?op=profile', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
             );
-            
-        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = 
-            array(   
+
+        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] =
+            array(
                 'label'     => _PLOOPI_LABEL_MYDATA,
                 'url'       => ploopi_urlencode('admin.php?op=actions', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
             );
-            
-        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = 
+
+        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] =
             array(
                 'label'     => _PLOOPI_LABEL_MYPARAMS,
                 'url'       => ploopi_urlencode('admin.php?op=param', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),

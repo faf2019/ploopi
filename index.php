@@ -29,7 +29,7 @@
  * @subpackage index
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
- * @version	$Revision$
+ * @version $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  * @author $Author$

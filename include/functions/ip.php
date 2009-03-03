@@ -23,7 +23,7 @@
 
 /**
  * Fonctions de manipulation d'IPs
- * 
+ *
  * @package ploopi
  * @subpackage ip
  * @copyright Netlor, Ovensia
@@ -135,9 +135,9 @@ function ploopi_isipvalid($iprules)
     if ($iprules)
     {
         $arrUserip = ploopi_getip();
-        
-        if (!empty($arrUserip)) $userip = $arrUserip[0]; 
-        
+
+        if (!empty($arrUserip)) $userip = $arrUserip[0];
+
         foreach($iprules as $startip => $endip)
         {
             if ($userip >= $startip && $userip <= $endip) $ip_ok = true;

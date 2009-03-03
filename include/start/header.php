@@ -24,7 +24,7 @@
 /**
  * Modifie les entêtes HTTP envoyées.
  * Modifie notamment la gestion du cache (no-cache)
- * 
+ *
  * @package ploopi
  * @subpackage start
  * @copyright Netlor, Ovensia

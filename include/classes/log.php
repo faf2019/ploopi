@@ -23,7 +23,7 @@
 
 /**
  * Gestion deslogs
- * 
+ *
  * @package ploopi
  * @subpackage log
  * @copyright Netlor, Ovensia
@@ -31,10 +31,9 @@
  * @author Stéphane Escaich
  */
 
-
 /**
  * Classe d'accès à la table ploopi_log.
- * 
+ *
  * @package ploopi
  * @subpackage log
  * @copyright Netlor, Ovensia
@@ -53,13 +52,13 @@ class log extends data_object
     function log()
     {
         parent::data_object('ploopi_log');
-    }   
+    }
 }
 
 /**
  * Classe d'accès à la table ploopi_connecteduser.
  * Gestion des utilisateurs connectés.
- * 
+ *
  * @package ploopi
  * @subpackage log
  * @copyright Netlor, Ovensia
@@ -84,7 +83,7 @@ class connecteduser extends data_object
 /**
  * Classe d'accès à la table user_action_log.
  * Gestion des actions utilisateurs.
- * 
+ *
  * @package ploopi
  * @subpackage log
  * @copyright Netlor, Ovensia

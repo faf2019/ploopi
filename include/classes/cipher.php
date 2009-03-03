@@ -23,26 +23,26 @@
 
 /**
  * Gestion du chiffrement/déchiffrement
- * 
+ *
  * @package ploopi
  * @subpackage crypt
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see mcrypt
  * @see _PLOOPI_SECRETKEY
  */
 
 /**
  * Classe de chiffrement/déchiffrement (basé sur mcrypt), notamment utilisée pour chiffrer les URL
- * 
+ *
  * @package ploopi
  * @subpackage crypt
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see mcrypt
  * @see _PLOOPI_SECRETKEY
  */
@@ -59,18 +59,18 @@ class ploopi_cipher
 
     /*
      * Vecteur d'initialisation
-     * 
+     *
      * @var string
      */
-    
+
     private $iv;
-    
+
     /**
      * Pointeur de chiffrement
      *
      * @var resource
      */
-    
+
     private $cipher;
 
     /**
@@ -80,7 +80,7 @@ class ploopi_cipher
      * @param unknown_type $iv vecteur d'initialisation
      * @return ploopi_cipher
      */
-    
+
     function ploopi_cipher($key = '', $iv = '12345678')
     {
         $this->key = (empty($key)) ? _PLOOPI_SECRETKEY : $key;
@@ -94,13 +94,13 @@ class ploopi_cipher
      * @param string $str chaîne à chiffrer
      * @return mixed chaîne chiffrée ou false si la chaîne est vide
      */
-    
+
     function crypt($str)
     {
         if (!empty($str))
         {
             include_once './include/functions/crypt.php';
-            
+
             mcrypt_generic_init($this->cipher, $this->key, $this->iv);
             $encrypted = ploopi_base64_encode(mcrypt_generic($this->cipher, $str));
             mcrypt_generic_deinit($this->cipher);
@@ -115,13 +115,13 @@ class ploopi_cipher
      * @param string $encrypted chaîne chiffrée
      * @return mixed chaîne déchiffrée ou false si la chaîne est vide
      */
-    
+
     function decrypt($encrypted)
     {
         if (!empty($encrypted))
         {
             include_once './include/functions/crypt.php';
-            
+
             mcrypt_generic_init($this->cipher, $this->key, $this->iv);
             $decrypted = rtrim(mdecrypt_generic($this->cipher,ploopi_base64_decode($encrypted)),"\0");
             mcrypt_generic_deinit($this->cipher);

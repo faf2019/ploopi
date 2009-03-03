@@ -37,7 +37,6 @@ switch($ploopi_op)
         if (isset($_GET['user_id'])) $_SESSION['ploopi']['validation']['users_selected'][$_GET['user_id']] = $_GET['user_id'];
         if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['validation']['users_selected'][$_GET['remove_user_id']]);
 
-
         foreach($_SESSION['ploopi']['validation']['users_selected'] as $user_id)
         {
             include_once './include/classes/user.php';
@@ -126,7 +125,7 @@ switch($ploopi_op)
                     ON          mw.id_workspace = wu.id_workspace
                     AND         mw.id_module = {$_SESSION['ploopi']['moduleid']}
                     {$option_u}
-                    
+
                     ORDER BY u.lastname, u.firstname
                     ";
 
@@ -159,7 +158,7 @@ switch($ploopi_op)
                     ON          mw.id_workspace = wg.id_workspace
                     AND         mw.id_module = {$_SESSION['ploopi']['moduleid']}
                     {$option_g}
-                    
+
                     ORDER BY u.lastname, u.firstname
                     ";
 

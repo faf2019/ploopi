@@ -32,26 +32,26 @@
 
 switch($ploopi_op)
 {
-    
+
     case 'filexplorer_browser':
         if (empty($_GET['filexplorer_id']) || empty($_SESSION['filexplorer'][$_GET['filexplorer_id']])) ploopi_die();
-        
+
         ob_start();
 
         require_once './include/classes/cipher.php';
         $cipher = new ploopi_cipher();
-        
+
         //ploopi_print_r($_GET);
-        
+
         // Dossier actuel (chaine)
         $strCurrentFolder = empty($_GET['filexplorer_folder']) ? '' : $cipher->decrypt($_GET['filexplorer_folder']);
-        
+
         // Dossier actuel (tableau)
         $arrCurrentFolder = explode(_PLOOPI_SEP, $strCurrentFolder);
-        
+
         // Chemin complet actuel (incluant basepath)
         $strCurrentPath = $_SESSION['filexplorer'][$_GET['filexplorer_id']]['basepath']._PLOOPI_SEP.$strCurrentFolder;
-        
+
         ?>
         <div id="filexplorer">
             <div class="documents_browser">
@@ -75,71 +75,69 @@ switch($ploopi_op)
                     ?>
                 </div>
                 <?php
-        
+
                 $documents_columns = array();
-    
-                $documents_columns['auto']['name'] = 
-                    array(  
+
+                $documents_columns['auto']['name'] =
+                    array(
                         'label' => 'Nom',
                         'options' => array('sort' => true)
                     );
-    
+
                 if (empty($_SESSION['documents']['fields']) || in_array('type', $_SESSION['documents']['fields']))
                 {
-                    $documents_columns['right']['type'] = 
-                        array( 
+                    $documents_columns['right']['type'] =
+                        array(
                             'label' => 'Type',
                             'width' => empty($_SESSION['documents']['fields_size']['type']) ? 65 : $_SESSION['documents']['fields_size']['type'],
                             'options' => array('sort' => true)
                         );
                 }
-    
+
                 if (empty($_SESSION['documents']['fields']) || in_array('timestp_file', $_SESSION['documents']['fields']))
                 {
-                    $documents_columns['right']['timestp_file'] = 
-                        array( 
+                    $documents_columns['right']['timestp_file'] =
+                        array(
                             'label' => 'Date',
                             'width' => empty($_SESSION['documents']['fields_size']['timestp_file']) ? 80 : $_SESSION['documents']['fields_size']['timestp_file'],
                             'options' => array('sort' => true)
                         );
                 }
-    
-    
+
                 if (empty($_SESSION['documents']['fields']) || in_array('size', $_SESSION['documents']['fields']))
                 {
-                    $documents_columns['right']['size'] = 
-                        array( 
+                    $documents_columns['right']['size'] =
+                        array(
                             'label' => 'Taille',
                             'width' => empty($_SESSION['documents']['fields_size']['size']) ? 90 : $_SESSION['documents']['fields_size']['size'],
                             'options' => array('sort' => true)
                         );
                 }
-    
-    
+
                 $documents_values = array();
-                
+
                 clearstatcache();
-                
+
                 $ptFolder = @opendir($strCurrentPath);
-            
+
                 while ($strFileName = @readdir($ptFolder))
                 {
                     if ($strFileName != '.' && $strFileName != '..')
                     {
                         //echo '<br />'.$strCurrentPath._PLOOPI_SEP.$strFileName;
                         $strFilePath = $strCurrentPath._PLOOPI_SEP.$strFileName;
-                        
+
                         $boolIsFolder = is_dir($strFilePath);
                         $arrStat = stat($strFilePath);
-                        
+
                        // ploopi_print_r($arrStat);
-                        
+
                         if ($boolIsFolder)
                         {
                             $strFileExtension = '';
                             $strIcon = 'ico_folder.png';
                             $intSortId = 1;
-                            
+
                             // ouverture du sous-dossier pour compter les éléments
                             $intElements = 0;
                             $ptF = @opendir($strFilePath);
@@ -148,35 +146,34 @@ switch($ploopi_op)
                         else
                         {
                             //echo $strFileExtension = ploopi_file_getextension($strFileName);
-                            //$strIcon = "mimetypes/".(file_exists("{$_SESSION['ploopi']['template_path']}/img/documents/mimetypes/ico_{$strFileExtension}.png") ? "ico_{$strFileExtension}.png" : 'ico_default.png'); 
+                            //$strIcon = "mimetypes/".(file_exists("{$_SESSION['ploopi']['template_path']}/img/documents/mimetypes/ico_{$strFileExtension}.png") ? "ico_{$strFileExtension}.png" : 'ico_default.png');
                             $strIcon = 'mimetypes/ico_default.png';
                             $intSortId = 2;
                             $intElements = 0;
                         }
-                        
+
                         $strDate = ploopi_unixtimestamp2local($arrStat['mtime']);
-                        
-                        
-                        $documents_values[] = 
+
+                        $documents_values[] =
                             array(
-                                'values' => 
+                                'values' =>
                                     array(
-                                        'name' => 
+                                        'name' =>
                                             array(
                                                 'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/{$strIcon}\" /><span>&nbsp;{$strFileName}</span>",
                                                 'sort_label' => "{$intSortId}_{$strFileName}"
                                             ),
-                                        'type' => 
+                                        'type' =>
                                             array(
                                                 'label' => $boolIsFolder ? 'Dossier' : 'Fichier',
                                                 'sort_label' => $intSortId
                                             ),
-                                        'timestp_file' => 
+                                        'timestp_file' =>
                                             array(
                                                 'label' => substr($strDate,0,10),
                                                 'sort_label' => $arrStat['mtime']
                                             ),
-                                        'size' => 
+                                        'size' =>
                                             array(
                                                 'label' => $boolIsFolder ? "{$intElements} element(s)" : sprintf("%s Ko", number_format(($arrStat['size']/1024),1,".", " ")),
                                                 'sort_label' => $intSortId.'_'.($boolIsFolder ? sprintf("%020d", $intElements) : sprintf("%020d", $arrStat['size'])),
@@ -185,38 +182,38 @@ switch($ploopi_op)
                                     ),
                                 'description' => '',
                                 'link' => 'javascript:void(0);',
-                                'option' => 
-                                    $boolIsFolder 
-                                    ? 'onclick="javascript:ploopi_filexplorer_browser(\''.$_GET['filexplorer_id'].'\', \''.$cipher->crypt($strCurrentFolder._PLOOPI_SEP.$strFileName).'\');"' 
+                                'option' =>
+                                    $boolIsFolder
+                                    ? 'onclick="javascript:ploopi_filexplorer_browser(\''.$_GET['filexplorer_id'].'\', \''.$cipher->crypt($strCurrentFolder._PLOOPI_SEP.$strFileName).'\');"'
                                     : 'onclick="javascript:$(\''.$_SESSION['filexplorer'][$_GET['filexplorer_id']]['destfield'].'\').value=\''.$strCurrentFolder._PLOOPI_SEP.$strFileName.'\';ploopi_hidepopup(\'ploopi_filexplorer_popup\');"',
                                 'style' => ''
                             );
                     }
                 }
-                
+
                 closedir($ptFolder);
-                
+
                 $skin->display_array(
-                    $documents_columns, 
-                    $documents_values, 
-                    'ploopi_documents', 
+                    $documents_columns,
+                    $documents_values,
+                    'ploopi_documents',
                     array(
-                        'sortable' => true, 
-                        'orderby_default' => 'name', 
+                        'sortable' => true,
+                        'orderby_default' => 'name',
                         'sort_default' => 'DESC',
                     )
-                );                 
+                );
                 ?>
             </div>
         </div>
         <?php
         $content = ob_get_contents();
         ob_end_clean();
-    
+
         echo $skin->create_popup('Explorateur de fichiers', $content, 'ploopi_filexplorer_popup');
-        
-        ploopi_die();            
+
+        ploopi_die();
     break;
- 
+
 }
 ?>

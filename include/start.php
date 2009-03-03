@@ -25,7 +25,7 @@
  * Script de chargement de l'environnement Ploopi.
  * Charge les constantes génériques, les fonctions et classes principales.
  * Connecte l'utilisateur, initialise la session, charge les paramètres.
- * 
+ *
  * @package ploopi
  * @subpackage start
  * @copyright Netlor, Ovensia
@@ -53,7 +53,6 @@ include_once './include/classes/user.php';
 include_once './include/classes/group.php';
 include_once './include/classes/workspace.php';
 include_once './include/classes/param.php';
-
 
 /**
  * Gestion de la connexion d'un utilisateur
@@ -89,25 +88,25 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
             $_uri = (empty($_SERVER['QUERY_STRING'])) ? '' : "admin.php?{$_SERVER['QUERY_STRING']}";
             $_purl = parse_url($_SESSION['ploopi']['uri']);
             $_params = array();
-            
+
             foreach(explode('&',$_purl['query']) as $param)
             {
                 if (strstr($param, '=')) list($key, $value) = explode('=',$param);
                 else {$key = $param; $value = '';}
-        
+
                 $_REQUEST[$key] = $_GET[$key] = ploopi_filtervar($value);
-                
+
                 if ($key == 'ploopi_url')
                 {
                     require_once './include/classes/cipher.php';
                     $cipher = new ploopi_cipher();
                     $ploopi_url = $cipher->decrypt($_GET['ploopi_url']);
-                
+
                     foreach(explode('&',$ploopi_url) as $param)
                     {
                         if (strstr($param, '=')) list($key, $value) = explode('=',$param);
                         else {$key = $param; $value = '';}
-                
+
                         $_REQUEST[$key] = $_GET[$key] = ploopi_filtervar($value);
                     }
                 }
@@ -118,7 +117,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
             unset($_purl);
             unset($_params);
         }
-        
+
         ploopi_session_reset();
         $ploopi_initsession = true;
 
@@ -157,7 +156,6 @@ $ploopi_initsession |= isset($_REQUEST['reloadsession']);
  */
 $ploopi_initsession |= empty($_SESSION['ploopi']['mode']);
 
-
 if ($ploopi_initsession)
 {
     include './include/start/initsession.php';
@@ -172,17 +170,17 @@ if ($ploopi_initsession)
 
         $user = new user();
         if (!$user->open($_SESSION['ploopi']['userid'])) ploopi_logout();
-        
+
         $_SESSION['ploopi']['user'] = $user->fields;
 
         if ($_SESSION['ploopi']['user']['servertimezone']) $_SESSION['ploopi']['user']['timezone'] = $_SESSION['ploopi']['timezone'];
-        
+
         $_SESSION['ploopi']['actions'] = array();
         $_SESSION['ploopi']['actions'] = $user->getactions($_SESSION['ploopi']['actions']);
 
         // get all workspaces of current user
         $user_workspaces = $user->getworkspaces();
-        
+
         $workspace = new workspace();
         $workspace->fields['id'] = _PLOOPI_SYSTEMGROUP;
         $_SESSION['ploopi']['system_modules'] = $workspace->getmodules(true);
@@ -242,7 +240,7 @@ if ($ploopi_initsession)
 
         // sorting workspaces by depth
         uksort ($_SESSION['ploopi']['workspaces'], create_function('$a,$b', 'return (intval($_SESSION[\'ploopi\'][\'workspaces\'][$b][\'depth\'])<intval($_SESSION[\'ploopi\'][\'workspaces\'][$a][\'depth\']));'));
-        
+
         // create a list with allowed workspaces only
         $_SESSION['ploopi']['workspaces_allowed'] = array();
         foreach($_SESSION['ploopi']['workspaces'] as $workspace)
@@ -283,27 +281,27 @@ switch($_SESSION['ploopi']['scriptname'])
 
             if ($_SESSION['ploopi']['mode'] != $newmode && $newmode == 'frontoffice')
             {
-            
+
                 if (!isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['frontoffice'][0]]['webeditmoduleid']))
                 {
                     // on cherche le module webedit
                     $db->query( "
                                 select      ploopi_module_workspace.id_module
-                                            
+
                                 from        ploopi_module,
                                             ploopi_module_type,
                                             ploopi_module_workspace
-            
+
                                 where       ploopi_module.id_module_type = ploopi_module_type.id
                                 and         (ploopi_module_type.label = 'webedit')
                                 and         ploopi_module.id = ploopi_module_workspace.id_module
                                 and         ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['hosts']['frontoffice'][0]}
                                 ");
-            
+
                     if ($fields = $db->fetchrow()) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['frontoffice'][0]]['webeditmoduleid'] = $fields['id_module'];
                     else $newmode = 'backoffice';
                 }
-                
+
                 if ($newmode == 'frontoffice')
                 {
                     $_SESSION['ploopi']['frontoffice']['workspaceid'] = $_SESSION['ploopi']['hosts']['frontoffice'][0];
@@ -332,32 +330,32 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
              * ploopi_env contient ploopi_mainmenu (int), ploopi_workspaceid (int), ploopi_moduleid (int), ploopi_action (string)
              */
             $arrEnv = explode(',', $_REQUEST['ploopi_env']);
-            
-            if (isset($arrEnv[0]) && is_numeric($arrEnv[0])) 
+
+            if (isset($arrEnv[0]) && is_numeric($arrEnv[0]))
                 $ploopi_mainmenu = $arrEnv[0];
-                
+
             if (isset($arrEnv[1]) && is_numeric($arrEnv[1]))
                 $ploopi_workspaceid = $arrEnv[1];
-            
+
             if (isset($arrEnv[2]) && is_numeric($arrEnv[2]))
                 $ploopi_moduleid = $arrEnv[2];
-            
-            if (isset($arrEnv[3])) 
+
+            if (isset($arrEnv[3]))
                 $ploopi_action = $arrEnv[3];
         }
-        
+
         if (isset($_REQUEST['ploopi_mainmenu']) && is_numeric($_REQUEST['ploopi_mainmenu']))
             $ploopi_mainmenu = $_REQUEST['ploopi_mainmenu'];
-            
+
         if (isset($_REQUEST['ploopi_workspaceid']) && is_numeric($_REQUEST['ploopi_workspaceid']))
             $ploopi_workspaceid = $_REQUEST['ploopi_workspaceid'];
-        
+
         if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid']))
             $ploopi_moduleid = $_REQUEST['ploopi_moduleid'];
-        
+
         if (isset($_REQUEST['ploopi_action']))
             $ploopi_action = $_REQUEST['ploopi_action'];
-        
+
         ///////////////////////////////////////////////////////////////////////////
         // SWITCH MAIN MENU (Workspaces, Profile, etc.)
         ///////////////////////////////////////////////////////////////////////////
@@ -441,14 +439,14 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
             */
 
             $select =   "
-                        SELECT  ploopi_module.id, 
-                                ploopi_module.id_module_type, 
-                                ploopi_module.label, 
+                        SELECT  ploopi_module.id,
+                                ploopi_module.id_module_type,
+                                ploopi_module.label,
                                 ploopi_module_type.label AS module_type
-                        
-                        FROM    ploopi_module, 
+
+                        FROM    ploopi_module,
                                 ploopi_module_type
-            
+
                         WHERE   ploopi_module.id_module_type = ploopi_module_type.id
                         AND     ploopi_module.id = {$_SESSION['ploopi']['backoffice']['moduleid']}
                         ";
@@ -487,7 +485,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
     if (empty($_SESSION['ploopi']['template_name']) || !file_exists("./templates/backoffice/{$_SESSION['ploopi']['template_name']}")) $_SESSION['ploopi']['template_name'] = _PLOOPI_DEFAULT_TEMPLATE;
 
     $_SESSION['ploopi']['template_path'] = "./templates/backoffice/{$_SESSION['ploopi']['template_name']}";
-    
+
     $_SESSION['ploopi']['moduleid'] = $_SESSION['ploopi']['backoffice']['moduleid'];
     $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['backoffice']['workspaceid'];
 }
@@ -519,8 +517,8 @@ else include_once "./lang/french.php"; // default language file (french)
 */
 
 // View modes for modules
-$ploopi_viewmodes = 
-    array( 
+$ploopi_viewmodes =
+    array(
         _PLOOPI_VIEWMODE_UNDEFINED  => _PLOOPI_LABEL_VIEWMODE_UNDEFINED,
         _PLOOPI_VIEWMODE_PRIVATE    => _PLOOPI_LABEL_VIEWMODE_PRIVATE,
         _PLOOPI_VIEWMODE_DESC       => _PLOOPI_LABEL_VIEWMODE_DESC,
@@ -528,8 +526,8 @@ $ploopi_viewmodes =
         _PLOOPI_VIEWMODE_GLOBAL     => _PLOOPI_LABEL_VIEWMODE_GLOBAL
     );
 
-$ploopi_system_levels = 
-    array(  
+$ploopi_system_levels =
+    array(
         _PLOOPI_ID_LEVEL_USER           => _PLOOPI_LEVEL_USER,
         _PLOOPI_ID_LEVEL_GROUPMANAGER   => _PLOOPI_LEVEL_GROUPMANAGER,
         _PLOOPI_ID_LEVEL_GROUPADMIN     => _PLOOPI_LEVEL_GROUPADMIN,
@@ -625,13 +623,13 @@ if ($ploopi_errornum)
 }
 
 $_SESSION['ploopi']['uri'] = (empty($_SERVER['QUERY_STRING'])) ? '' : "admin.php?{$_SERVER['QUERY_STRING']}";
-$_SESSION['ploopi']['env'] = 
+$_SESSION['ploopi']['env'] =
     sprintf(
-        "%s,%s,%s,%s", 
-        $_SESSION['ploopi']['mainmenu'], 
+        "%s,%s,%s,%s",
+        $_SESSION['ploopi']['mainmenu'],
         $_SESSION['ploopi']['workspaceid'],
         $_SESSION['ploopi']['moduleid'],
         $_SESSION['ploopi']['action']
     );
-    
+
 ?>

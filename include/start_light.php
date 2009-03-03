@@ -24,7 +24,7 @@
 /**
  * Script de chargement de l'environnement Ploopi, version allégée utilisée pour les scripts cron.php, webservice.php, rss.php
  * Attention l'environnement chargé est minimal !
- * 
+ *
  * @package ploopi
  * @subpackage start
  * @copyright Netlor, Ovensia
@@ -67,12 +67,12 @@ switch ($_SESSION['ploopi']['mode'])
             $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['frontoffice'][0];
         else ploopi_die();
     break;
-    
+
     case 'backoffice':
         if (isset($_SESSION['ploopi']['hosts']['backoffice'][0]))
             $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['backoffice'][0];
         else ploopi_die();
-        
+
         include './include/start/load_param.php';
     break;
 }

@@ -37,7 +37,7 @@ switch($ploopi_op)
         if (empty($_GET['id_annotation'])) ploopi_die();
 
         ploopi_annotation_refresh($_GET['id_annotation']);
-        
+
         ploopi_die();
     break;
 
@@ -56,7 +56,6 @@ switch($ploopi_op)
             <div style="padding:4px;">Le tag <b><?php echo $tag->fields['tag'] ; ?></b> a aussi été utilisé sur les annotation suivantes :</div>
             <div class="ploopi_annotation_popup_list">
             <?php
-
 
             $select =   "
                         SELECT      a.*,

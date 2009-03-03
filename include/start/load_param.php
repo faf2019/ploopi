@@ -60,7 +60,7 @@ $select =   "
 $db->query($select);
 while ($fields = $db->fetchrow())
 {
-    if (empty($_SESSION['ploopi']['moduletypes'][$fields['moduletype']])) 
+    if (empty($_SESSION['ploopi']['moduletypes'][$fields['moduletype']]))
     {
         $_SESSION['ploopi']['moduletypes'][$fields['moduletype']] = array('version' => $fields['version'], 'author' => $fields['author'], 'date' => $fields['date']);
     }

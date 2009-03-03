@@ -23,8 +23,8 @@
 
 /**
  * Gestion des tickets (messagerie interne).
- * gestion des destinataires, envoi, etc... 
- * 
+ * gestion des destinataires, envoi, etc...
+ *
  * @package ploopi
  * @subpackage ticket
  * @copyright Netlor, Ovensia
@@ -36,17 +36,16 @@ define ('_PLOOPI_TICKETS_NONE',     0);
 define ('_PLOOPI_TICKETS_OPENED',   1);
 define ('_PLOOPI_TICKETS_DONE',     2);
 
-
 /**
  * Insère un bloc pour la sélection de destinataires
  *
  * @param mixed $id_user identifiant utilisateur ou tableau d'utilisateurs présélectionnés
  */
- 
+
 function ploopi_tickets_selectusers($id_user = null)
 {
     if (isset($_SESSION['ploopi']['tickets']['users_selected'])) unset($_SESSION['ploopi']['tickets']['users_selected']);
-    
+
     if (!empty($id_user))
     {
         if (is_array($id_user)) foreach($id_user as $idu) $_SESSION['ploopi']['tickets']['users_selected'][$idu] = $idu;
@@ -67,7 +66,6 @@ function ploopi_tickets_selectusers($id_user = null)
     <?php
 }
 
-
 /**
  * Envoie un ticket
  *
@@ -86,14 +84,14 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
     include_once './include/classes/user.php';
     include_once './include/classes/ticket.php';
     include_once './include/classes/mb.php';
-    
+
     if (!empty($_SESSION['ploopi']['userid']))
     {
         $id_user = $_SESSION['ploopi']['userid'];
         $id_workspace = $_SESSION['ploopi']['workspaceid'];
         $id_module = $_SESSION['ploopi']['moduleid'];
         $id_module_type = $_SESSION['ploopi']['moduletypeid'];
-        
+
         if ($system) $id_user = 0;
     }
     else
@@ -115,7 +113,7 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
         $ticket->fields['id_user'] = $id_user;
         $ticket->fields['object_label'] = $object_label;
         $ticket->fields['title'] = $title;
-        $ticket->fields['message'] = $message;
+        $ticket->fields['message'] = ploopi_htmlpurifier($message);
         $ticket->fields['needed_validation'] = $needed_validation;
         $ticket->fields['delivery_notification'] = $delivery_notification;
         $ticket->fields['timestp'] = ploopi_createtimestamp();
@@ -131,7 +129,7 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
             $mb_object = new mb_object();
             $mb_object->open($id_object, $id_module_type);
 
-            $object_script = 
+            $object_script =
                 str_replace(
                     array(
                         '<IDRECORD>',
@@ -159,8 +157,8 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
 
         if ($id_user == 0)
         {
-                $email_from[0] = 
-                    array( 
+                $email_from[0] =
+                    array(
                         'address'   => _PLOOPI_ADMINMAIL,
                         'name'  => _PLOOPI_ADMINMAIL
                     );
@@ -169,16 +167,16 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
         {
             if (!empty($_SESSION['ploopi']['user']['email']))
             {
-                $email_from[0] = 
-                    array( 
+                $email_from[0] =
+                    array(
                         'address' => $_SESSION['ploopi']['user']['email'],
                         'name' => "{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']}"
                     );
             }
             else
             {
-                $email_from[0] = 
-                    array( 
+                $email_from[0] =
+                    array(
                         'address'   => _PLOOPI_ADMINMAIL,
                         'name'  => "{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']}"
                     );
@@ -207,15 +205,15 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
             {
                 if ($user->fields['ticketsbyemail'] == 1 && !empty($user->fields['email']))
                 {
-                    $email_to[0] = 
-                        array(   
+                    $email_to[0] =
+                        array(
                             'address' => $user->fields['email'],
                             'name' => "{$user->fields['firstname']} {$user->fields['lastname']}"
                         );
-    
+
                     ploopi_send_mail($email_from, $email_to, $email_subject, $email_message);
                 }
-    
+
                 $ticket_dest = new ticket_dest();
                 $ticket_dest->fields['id_user'] = $user_id;
                 $ticket_dest->fields['id_ticket'] = $id_ticket;
@@ -232,16 +230,16 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
  * Renvoie l'identifiant du dernier ticket reçu par l'utilisateur connecté et le nombre de nouveaux tickets
  *
  * @return array indice 0 : nombre nouveau tickets, 1 : id du dernier ticket
- * 
+ *
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
- 
+
 function ploopi_tickets_getnew()
 {
     global $db;
-    
+
     $sql =  "
             SELECT      t.id
 
@@ -262,9 +260,9 @@ function ploopi_tickets_getnew()
             ";
 
     $rs = $db->query($sql);
-    
+
     $tickets_new = $db->numrows($rs);
-    
+
     $tickets_lastid = ($row = $db->fetchrow()) ? $row['id'] : 0;
 
     return(array($tickets_new, $tickets_lastid));
@@ -277,16 +275,16 @@ function ploopi_tickets_getnew()
 function ploopi_tickets_displayusers()
 {
     global $skin;
-    
+
     if (!empty($_SESSION['ploopi']['tickets']['users_selected']))
     {
         foreach($_SESSION['ploopi']['tickets']['users_selected'] as $user_id)
         {
             include_once './include/classes/user.php';
-    
+
             $user = new user();
             $user->open($user_id);
-    
+
             $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
             ?>
             <p class="ploopi_va" style="padding:2px;">

@@ -23,7 +23,7 @@
 
 /**
  * Gestion des erreurs
- * 
+ *
  * @package ploopi
  * @subpackage error
  * @copyright Netlor, Ovensia
@@ -41,7 +41,7 @@ $ploopi_errors_msg = '';
 $ploopi_errors_nb = 0;
 $ploopi_errors_level = 0;
 
-$ploopi_errortype = 
+$ploopi_errortype =
     array(
         E_ERROR          => 'Error',
         E_WARNING        => 'Warning',
@@ -58,7 +58,7 @@ $ploopi_errortype =
         E_RECOVERABLE_ERROR => 'Recoverable Error'
     );
 
-$ploopi_errorlevel = 
+$ploopi_errorlevel =
     array(
         0 => 'OK',
         1 => 'WARNING',
@@ -68,13 +68,13 @@ $ploopi_errorlevel =
 
 /**
  * Gestionnaire d'erreur de Ploopi.
- * 
+ *
  * @param int $errno le niveau d'erreur
  * @param string $errstr le message d'erreur
  * @param string $errfile le nom du fichier dans lequel l'erreur a été identifiée
  * @param int $errline le numéro de ligne à laquelle l'erreur a été identifiée
  * @param array $vars tableau avec toutes les variables qui existaient lorsque l'erreur a été déclenchée
- * 
+ *
  * @see _PLOOPI_DISPLAY_ERRORS
  * @see _PLOOPI_ERROR_REPORTING
  */
@@ -112,26 +112,31 @@ function ploopi_errorhandler($errno, $errstr, $errfile, $errline, $vars)
         if ($ploopi_errors_msg == '') $ploopi_errors_msg  = "[{$_SERVER['HTTP_HOST']}] le ".date("d-m-Y H:i:s (T)")."\n\nVersion PHP : ".PHP_VERSION."\nOS : ".PHP_OS."\n\n";
 
         $ploopi_errors_msg .= "\nType d'erreur : {$ploopi_errortype[$errno]}\nMessage : $errstr\n";
-        
+
         $arrTrace = debug_backtrace();
         if (_PLOOPI_DISPLAY_ERRORS) $strErrorStack = '';
-        
+
         // parse debug trace
         $s = sizeof($arrTrace);
         for ($key = $s-1; $key>=0; $key--)
         {
-            if (!empty($arrTrace[$key]['file']) && !empty($arrTrace[$key]['line'])) 
+            if (!empty($arrTrace[$key]['file']) && !empty($arrTrace[$key]['line']))
             {
                 $ploopi_errors_msg .= sprintf("Fichier : %s \nLigne : %s\n", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
-                if (_PLOOPI_DISPLAY_ERRORS) $strErrorStack .= sprintf("<div style=\"margin-left:10px;\">at <strong>%s</strong>  <em>line %d</em></div>", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
+                if (_PLOOPI_DISPLAY_ERRORS) 
+                {
+                    if (php_sapi_name() != 'cli') $strErrorStack .= sprintf("<div style=\"margin-left:10px;\">at <strong>%s</strong>  <em>line %d</em></div>", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
+                    else $strErrorStack .= sprintf("at %s line %d\n", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
+                }
             }
         }
-        
-            
+
         if (_PLOOPI_DISPLAY_ERRORS)
         {
             // display message
-            echo    "
+            if (php_sapi_name() != 'cli')  // Affichage standard, sortie HTML
+            {
+                echo "
                     <div class=\"ploopi_error\">
                         <div>
                         <strong>{$ploopi_errortype[$errno]}</strong>
@@ -139,8 +144,18 @@ function ploopi_errorhandler($errno, $errstr, $errfile, $errline, $vars)
                         </div>
                         {$strErrorStack}
                     </div>
-                    ";
-                    
+                ";
+                
+            }
+            else // Affichage cli, sortie texte brut
+            {
+                echo<<<STDOUT
+=== {$ploopi_errortype[$errno]} ==================================\r
+{$errstr}\r
+{$strErrorStack}
+STDOUT;
+            }
+
             // critical error
             if ($errno == E_ERROR || $errno == E_PARSE || $errno == E_USER_ERROR) ploopi_die();
         }

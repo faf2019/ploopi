@@ -39,7 +39,7 @@ switch($ploopi_op)
         echo "{$newtickets},{$lastticket}";
         ploopi_die();
     break;
-    
+
     case 'tickets_alert':
         ob_start();
         ?>
@@ -53,10 +53,10 @@ switch($ploopi_op)
         echo $skin->create_popup('Nouveau Message !', $content, 'popup_tickets_new_alert');
         ploopi_die();
     break;
-        
+
     case 'tickets_new':
         if (!$_SESSION['ploopi']['connected']) ploopi_die();
-        
+
         ob_start();
         ?>
         <script type="text/javascript">
@@ -65,7 +65,7 @@ switch($ploopi_op)
                 return (ploopi_validatefield('Titre',form.ticket_title,'string'));
             }
         </script>
-        
+
         <div id="tickets_new">
             <form method="post" action="<?php echo ploopi_urlencode('admin.php'); ?>" target="ploopi_tickets_send" onsubmit="javascript:return ploopi_tickets_validate(this);">
             <input type="hidden" name="ploopi_op" value="tickets_send">
@@ -110,7 +110,7 @@ switch($ploopi_op)
                 $oFCKeditor->Create('FCKeditor_1') ;
                 ?>
             </div>
-            
+
             <?php
             if (isset($_GET['ploopi_tickets_object_label']))
             {
@@ -128,7 +128,7 @@ switch($ploopi_op)
             ?>
 
             <div style="padding:8px 4px;margin:4px 0;background-color:#f0f0f0;border:1px solid #c0c0c0;">
-                <?php 
+                <?php
                 ploopi_tickets_selectusers((empty($_GET['ploopi_tickets_id_user'])) ? null : $_GET['ploopi_tickets_id_user']);
                 ?>
             </div>
@@ -149,7 +149,7 @@ switch($ploopi_op)
     case 'tickets_replyto':
     case 'tickets_modify':
         if (!$_SESSION['ploopi']['connected']) ploopi_die();
-        
+
         ob_start();
 
         include_once './include/classes/ticket.php';
@@ -160,15 +160,15 @@ switch($ploopi_op)
             if ($ploopi_op == 'tickets_replyto')
             {
                 include_once './include/classes/user.php';
-    
+
                 $objUser = new user();
                 $strUserName = ($objUser->open($ticket->fields['id_user'])) ? "{$objUser->fields['lastname']} {$objUser->fields['firstname']}" : _PLOOPI_LABEL_TICKET_UNKNOWN_USER;
-                
+
                 $ticket->fields['title'] = "RE: {$ticket->fields['title']}";
                 $nextop = 'tickets_send';
                 $button_value = 'Envoyer';
                 $popup_title = _PLOOPI_LABEL_TICKET_RESPONSE;
-                
+
                 if (isset($_GET['quoted'])) $ticket->fields['message'] = '<div class="system_tickets_quoted_user">Ticket de <b>'.$strUserName.'</b> :</div><div class="system_tickets_quoted_message">'.$ticket->fields['message'].'</div>';
                 else $ticket->fields['message'] = '';
             }
@@ -296,11 +296,10 @@ switch($ploopi_op)
             </script>
             <?php
         }
-        
+
         ploopi_die();
     break;
-    
-    
+
     case 'tickets_modify_next':
         include_once('./include/classes/ticket.php');
         $ticket = new ticket();
@@ -312,24 +311,25 @@ switch($ploopi_op)
             $ticket->setvalues($_POST, 'ticket_');
             $ticket->save();
         }
-
-        ploopi_redirect("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets");
+        ?>
+        <script type="text/javascript">
+            window.parent.location.href = '<?php echo ploopi_urlencode('admin.php?ploopi_mainmenu='._PLOOPI_MENU_MYWORKSPACE.'&op=tickets'); ?>';
+        </script>
+        <?
+        ploopi_die();
     break;
-
-
 
     case 'tickets_select_user':
         if (!$_SESSION['ploopi']['connected']) ploopi_die();
 
         if (isset($_GET['user_id'])) $_SESSION['ploopi']['tickets']['users_selected'][$_GET['user_id']] = $_GET['user_id'];
         if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['tickets']['users_selected'][$_GET['remove_user_id']]);
-        
+
         ploopi_tickets_displayusers();
 
         ploopi_die();
     break;
 
-        
     case 'tickets_search_users':
         if (!$_SESSION['ploopi']['connected']) ploopi_die();
         ?>
@@ -345,7 +345,7 @@ switch($ploopi_op)
             $list = array();
             $list['work'] = array();
             $list['org'] = array();
-            
+
             $filtered_search_field = $db->addslashes($_GET['ploopi_ticket_userfilter']);
             $search_pattern = "AND (u.login LIKE '%{$filtered_search_field}%' OR u.lastname LIKE '%{$filtered_search_field}%' OR u.firstname LIKE '%{$filtered_search_field}%') ";
 
@@ -370,12 +370,11 @@ switch($ploopi_op)
             $query_workspaces = "
                                 SELECT      u.*,
                                             wu.id_workspace
-    
-    
+
                                 FROM        ploopi_user u,
                                             ploopi_workspace w,
                                             ploopi_workspace_user wu
-    
+
                                 WHERE       u.id = wu.id_user
                                 AND         w.id = wu.id_workspace
                                 AND         wu.id_workspace IN (".implode(',',array_keys($list['work'])).")
@@ -383,9 +382,7 @@ switch($ploopi_op)
                                 ORDER BY    u.lastname, u.firstname, u.login
                                 ";
 
-
             $db->query($query_workspaces);
-
 
             // affectation des utilisateurs à leurs groupes de rattachement
             while ($fields = $db->fetchrow())
@@ -393,11 +390,10 @@ switch($ploopi_op)
                 $list['work'][$fields['id_workspace']]['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
             }
 
-    
                 // pour chaque espace de travail
             foreach($list['work'] as $id_workgrp => $workgrp)
             {
-    
+
                 ?>
                 <div class="system_tickets_select_workgroup">
                     <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><?php echo $workgrp['label']; ?></span></p>
@@ -414,18 +410,17 @@ switch($ploopi_op)
                         <?php
                     }
                 }
-    
+
                 $query_groups = "
                                 SELECT      u.*,
                                             wg.id_group
-            
-            
+
                                 FROM        ploopi_user u,
                                             ploopi_group g,
                                             ploopi_group_user gu,
                                             ploopi_workspace w,
                                             ploopi_workspace_group wg
-            
+
                                 WHERE       u.id = gu.id_user
                                 AND         w.id = ".$id_workgrp."
                                 AND         wg.id_workspace = w.id
@@ -435,15 +430,14 @@ switch($ploopi_op)
                                 {$search_pattern}
                                 ORDER BY    u.lastname, u.firstname, u.login
                                 ";
-    
-    
+
                 $db->query($query_groups);
                 $listgroup = array();
                 while ($fields = $db->fetchrow())
                 {
                     $listgroup[$fields['id_group']]['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
                 }
-    
+
                 foreach($listgroup as $id_orggrp => $group)
                 {
                     if (!empty($group['users']))
@@ -477,6 +471,6 @@ switch($ploopi_op)
         <?php
         ploopi_die();
     break;
-    
+
 }
 ?>

@@ -23,7 +23,7 @@
 
 /**
  * Gestion de la mise en cache
- * 
+ *
  * @package ploopi
  * @subpackage cache
  * @copyright Netlor, Ovensia
@@ -41,10 +41,9 @@ $ploopi_cache_activated = $_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM][
 $ploopi_cache_written = 0;
 $ploopi_cache_read = 0;
 
-
 /**
  * Classe de gestion du cache
- * 
+ *
  * @package ploopi
  * @subpackage cache
  * @copyright Netlor, Ovensia
@@ -63,7 +62,7 @@ class ploopi_cache extends Cache_Lite_Output
      * @param int $lifetime durée de vie du cache (en secondes)
      * @return ploopi_cache
      */
-    
+
     function ploopi_cache($id, $lifetime = _PLOOPI_CACHE_DEFAULT_LIFETIME)
     {
         global $ploopi_cache_activated;
@@ -100,7 +99,7 @@ class ploopi_cache extends Cache_Lite_Output
      * @param boolean $force_caching true si la mise en cache est forcée
      * @return mixed contenu du cache ou false si le cache est désactivé ou vide
      */
-    
+
     function start($force_caching = false)
     {
         global $ploopi_cache_activated;
@@ -124,7 +123,7 @@ class ploopi_cache extends Cache_Lite_Output
     /**
      * Termine la mise en cache
      */
-    
+
     function end()
     {
         global $ploopi_cache_activated;

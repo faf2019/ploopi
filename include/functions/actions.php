@@ -24,14 +24,13 @@
 /**
  * Gestion des actions utilisateur.
  * Lecture/Ecriture dans le log des actions exécutées, récupération de la liste des utilisateurs pouvant exécuter une action déterminée.
- * 
+ *
  * @package ploopi
  * @subpackage action
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
-
 
 /**
  * Enregistre le log d'une action utilisateur
@@ -68,7 +67,7 @@ function ploopi_create_user_action_log($id_action, $id_record, $id_module_type =
  * @param string $id_record identifiant de l'enregistrement
  * @param int $id_object identifiant de l'objet
  * @param int $id_action identifiant de l'action
- * @param int $id_module_type identifiant du type de module 
+ * @param int $id_module_type identifiant du type de module
  * @param int $id_module identifiant du module
  * @param int $limit_offset valeur inférieur de la clause LIMIT
  * @param int $limit_count nombre de lignes de log à renvoyer
@@ -107,8 +106,6 @@ function ploopi_get_user_action_log($id_record, $id_object = -1, $id_action = -1
             ORDER BY    timestp DESC
             LIMIT {$limit_offset}, {$limit_count}
             ";
-
-
 
     $result = $db->query($sql);
     $user_action = array();

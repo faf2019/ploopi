@@ -48,7 +48,7 @@ function ploopi_checkpasswordvalidity($password, $min_length = 8, $max_length = 
         strlen($password) <= $max_length &&
         preg_match('/^.*[A-Z].*/', $password) &&
         preg_match('/^.*[a-z].*/', $password) &&
-        preg_match('/^.*[0-9].*/', $password) && 
+        preg_match('/^.*[0-9].*/', $password) &&
         preg_match('/^.*[!@#\$%\^&\*\(\)_\-\+\}\{"":;\'?\/><\.,\]\[].*/', $password)
     );
 }
@@ -61,7 +61,7 @@ function ploopi_checkpasswordvalidity($password, $min_length = 8, $max_length = 
  * @param boolean $use_char_numb true si le mot de passe doit inclure au moins un caractère numérique
  * @param boolean $use_ponc  true si le mot de passe doit inclure au moins un caractère de ponctuation
  * @return string le mot de passe généré
- * 
+ *
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
@@ -70,7 +70,7 @@ function ploopi_checkpasswordvalidity($password, $min_length = 8, $max_length = 
 function ploopi_generatepassword($length = 8, $use_char_up = true, $use_char_numb = true, $use_ponc = true)
 {
     if ($length<4) $length=4;
-    
+
     $arrChar = array();
     $arrChar[] = "abcdefghijklmnopqrstuvwxz";
     if ($use_char_up) $arrChar[] = "ABCDEFGHIJKLMNOPQRSTUVWXZ";
@@ -78,24 +78,24 @@ function ploopi_generatepassword($length = 8, $use_char_up = true, $use_char_num
     if ($use_ponc) $arrChar[] = ":?!@#$%&*";
 
     $strChar = implode('', $arrChar);
-    
+
     $strPassword = '';
-    
+
     foreach($arrChar as $str) $strPassword .= substr($str,rand(0,strlen($str)-1),1);
     for($c = strlen($strPassword); $c < $length; $c++) $strPassword .= substr($strChar,rand(0,strlen($strChar)-1),1);
-    
+
     return(str_shuffle($strPassword));
 }
 
 /**
- * Filtre le contenu d'une variable. 
- * Gère les tableaux multi-dimensionnels. 
+ * Filtre le contenu d'une variable.
+ * Gère les tableaux multi-dimensionnels.
  * Enlève les quotes si get_magic_quotes_gpc est activé.
  *
  * @param mixed $var variable à filtrer
  * @param string $varname nom de la variable (permet notamment de traiter un cas particulier avec les variables préfixées fck_)
  * @return mixed variable filtrée
- * 
+ *
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
@@ -104,8 +104,8 @@ function ploopi_generatepassword($length = 8, $use_char_up = true, $use_char_num
 function ploopi_filtervar($var, $varname = '')
 {
     include_once './lib/inputfilter/inputfilter.php';
-    
-    if (is_array($var)) 
+
+    if (is_array($var))
     {
         foreach($var as $key => $value)
         {
@@ -121,7 +121,7 @@ function ploopi_filtervar($var, $varname = '')
             $var = $inputFilter->process($var);
         }
     }
-    
+
     return $var;
 }
 
@@ -166,7 +166,7 @@ function ploopi_isactionallowed($actionid = -1, $workspaceid = -1, $moduleid = -
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid']; // get session value if not defined
 
     $booAllowed = false;
-    
+
     if (ploopi_isadmin($workspaceid)) $booAllowed = true;
     else
     {
@@ -183,7 +183,7 @@ function ploopi_isactionallowed($actionid = -1, $workspaceid = -1, $moduleid = -
             else $booAllowed = isset($_SESSION['ploopi']['actions'][$workspaceid][$moduleid][$actionid]);
         }
     }
-    
+
     return($booAllowed);
 }
 

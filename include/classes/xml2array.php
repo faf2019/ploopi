@@ -22,8 +22,8 @@
 */
 
 /**
- * Conversion d'un flux de données XML en tableau PHP 
- * 
+ * Conversion d'un flux de données XML en tableau PHP
+ *
  * @package ploopi
  * @subpackage xml
  * @copyright Netlor, Ovensia
@@ -32,8 +32,8 @@
  */
 
 /**
- * Classe xml2array 
- * 
+ * Classe xml2array
+ *
  * @package ploopi
  * @subpackage xml
  * @copyright Netlor, Ovensia
@@ -47,46 +47,46 @@ class xml2array
      * Analyseur XML
      *
      * @var resource
-     * 
+     *
      * @see xml_parser_create
      */
-    
+
     private $parser;
-    
+
     /**
      * Tableau contenant la pile des noeuds XML
      *
      * @var array
      */
-    
+
     private $node_stack = array();
-    
+
     /**
-     * Tableau contenant la structure et les données XML 
+     * Tableau contenant la structure et les données XML
      *
      * @var array
      */
-    
+
     private $xmlarray = array();
-    
+
     /**
      * Données en cours de lecture
      *
      * @var string
      */
-    
+
     private $currentdata = '';
 
     /**
      * Parse une chaîne XML et retourne un tableau
      *
      * @param string $xmlcontent contenu xml sous forme d'un chaîne
-     * @return array tableau contenant les données ou false 
-     * 
+     * @return array tableau contenant les données ou false
+     *
      * @see xml_parser_create
      * @see xml_parse
      */
-    
+
     public function parse($xmlcontent="")
     {
         // set up a new XML parser to do all the work for us
@@ -102,7 +102,7 @@ class xml2array
         $this->xmlarray['root'] = array();
         $this->node_stack[] = &$this->xmlarray['root'];
         $this->node_stack[] = &$this->xmlarray['root attributes'];
-        
+
         // parse the data and free the parser...
         if (xml_parse($this->parser, $xmlcontent))
         {
@@ -111,13 +111,13 @@ class xml2array
         }
         else return(false);
     }
-    
+
     /**
      * Parse un fichier XML et retourne un tableau
      *
      * @param string $filename chemin du fichier
-     * @return array tableau contenant les données ou false 
-     * 
+     * @return array tableau contenant les données ou false
+     *
      * @see fopen
      */
     public function parseFile($filename)
@@ -145,16 +145,16 @@ class xml2array
      * @param string $name balise XML
      * @param string $attrs attributs de la balise XML
      */
-    
+
     private function startElement($parser, $name, $attrs)
     {
         $this->currentdata = '';
-        
+
         $s = (sizeof($this->node_stack)-2);
-        
+
         $this->node_stack[] = &$this->node_stack[$s][$name][];
         $this->node_stack[] = &$this->node_stack[$s]["{$name} attributes"][];
-        
+
         if (!empty($attrs)) $this->node_stack[$s+3] = $attrs;
     }
 
@@ -164,7 +164,7 @@ class xml2array
      * @param resource $parser parser
      * @param string $name balise XML
      */
-    
+
     private function endElement($parser, $name)
     {
         if (trim($this->currentdata) != '') $this->node_stack[(sizeof($this->node_stack)-2)] = $this->currentdata;
@@ -179,7 +179,7 @@ class xml2array
      * @param resource $parser parser
      * @param string $data contenu de la dernière balise ouverte
      */
-    
+
     private function characterData($parser, $data)
     {
         $this->currentdata .= $data;

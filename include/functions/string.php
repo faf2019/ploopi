@@ -24,7 +24,7 @@
 /**
  * Fonction de manipulation de chaînes.
  * Conversion, découpage, réécriture, etc..
- * 
+ *
  * @package ploopi
  * @subpackage string
  * @copyright Netlor, Ovensia
@@ -49,7 +49,7 @@ function ploopi_nl2br($str)
  *
  * @param string $str chaîne à couper
  * @param string $len longueur maximale de la chaîne
- * @param string $mode détermine ou couper la chaîne : 'left', 'middle' 
+ * @param string $mode détermine ou couper la chaîne : 'left', 'middle'
  * @return string chaîne modifiée
  */
 
@@ -78,19 +78,17 @@ function ploopi_strcut($str,$len = 30, $mode = 'left')
  * @param string $str chaîne à convertir
  * @return string chaîne modifiée
  */
- 
+
 function ploopi_convertaccents($str)
 {
     return(
         strtr(
-            $str, 
+            $str,
             "¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖØÙÚÛÜİßàáâãäåæçèéêëìíîïğñòóôõöøùúûüıÿŞ",
             "YuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyys"
         )
     );
 }
-
-
 
 /**
  * Réécrit une URL selon les règles de réécriture utilisées par ploopi
@@ -98,30 +96,30 @@ function ploopi_convertaccents($str)
  * @param string $url URL à réécrire
  * @param string $title titre à insérer dans la nouvelle URL
  * @return string URL réécrite
- * 
+ *
  * @see _PLOOPI_FRONTOFFICE_REWRITERULE
  * @see ploopi_convertaccents
  */
- 
+
 function ploopi_urlrewrite($url, $title = '', $keep_extension = false)
 {
     if (defined('_PLOOPI_FRONTOFFICE_REWRITERULE') && _PLOOPI_FRONTOFFICE_REWRITERULE)
     {
         $ext = 'html';
-        
+
         if ($keep_extension)
         {
             $ext = ploopi_file_getextension($title);
             $title = basename($title, ".{$ext}");
         }
-                
+
         $title = urlencode(ploopi_convertaccents(strtolower(strtr(trim($title), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '_')))));
-        
+
         $patterns = array('/__+/', '/_$/');
         $replacements = array('_', '');
-    
+
         $title = preg_replace($patterns, $replacements, $title);
-    
+
         $patterns = array();
         $patterns[0] = '/index.php\?headingid=([0-9]*)&articleid=([0-9]*)/';
         $patterns[1] = '/index.php\?headingid=([0-9]*)/';
@@ -137,7 +135,7 @@ function ploopi_urlrewrite($url, $title = '', $keep_extension = false)
         $replacements[3] = $title.'-d$1.'.$ext;
         $replacements[4] = 'unsubscribe-$1.'.$ext;
         $replacements[5] = 'tag-$1.'.$ext;
-        
+
         return preg_replace($patterns, $replacements, $url);
     }
     else return $url;
@@ -146,18 +144,18 @@ function ploopi_urlrewrite($url, $title = '', $keep_extension = false)
 /**
  * Equivalent de strtr en version multibyte (UTF-8) car la version "mbstring" de strtr n'existe pas.
  * Remplace des caractères dans une chaîne.
- * 
+ *
  * @param string $str la chaîne à traiter
  * @param mixed $from caractères de départ sous forme d'une chaine ou d'un tableau associatif (si to est null)
  * @param string $to caractères de remplacement ou null
  * @return string chaîne modifiée
- * 
+ *
  * @see strtr
  */
 
 function ploopi_strtr($str, $from, $to = null)
 {
-    if (!isset($to) && is_array($from)) 
+    if (!isset($to) && is_array($from))
     {
         return str_replace(array_keys($from), $from, $str);
     }
@@ -171,24 +169,23 @@ function ploopi_strtr($str, $from, $to = null)
  *
  * @param string $str la chaîne Ã  convertir
  * @return array tableau de caractères
- * 
+ *
  * @see strtr
  */
 
 function ploopi_str_split($str)
 {
     $strlen = mb_strlen($str);
-    
-    while ($strlen) 
+
+    while ($strlen)
     {
         $array[] = mb_substr($str, 0, 1, 'UTF-8');
         $str = mb_substr($str, 1, $strlen, 'UTF-8');
         $strlen = mb_strlen($str);
     }
-    
+
     return $array;
 }
-
 
 /**
  * Encode les caractères spéciaux d'une chaîne pour qu'elle puisse être intégrée dans un document XML
@@ -198,12 +195,12 @@ function ploopi_str_split($str)
  * @return string chaîne encodée
  */
 
-function ploopi_xmlentities($str, $utf8 = false) 
-{ 
-    for($i=128; $i<256; $i++) $asc2uni[$utf8 ? utf8_encode(chr($i)) : chr($i)] = "&#x".dechex($i).";"; 
-    
+function ploopi_xmlentities($str, $utf8 = false)
+{
+    for($i=128; $i<256; $i++) $asc2uni[$utf8 ? utf8_encode(chr($i)) : chr($i)] = "&#x".dechex($i).";";
+
     $str = str_replace(array("&", ">", "<", "\"", "'", "\r"), array("&amp;", "&gt;", "&lt;", "&quot;", "&apos;", ""), $str);
-    
+
     return $utf8 ? ploopi_strtr($str, $asc2uni) : strtr($str, $asc2uni);
 }
 
@@ -240,31 +237,31 @@ function ploopi_make_links($text)
  * @param mixed $var variable à encoder
  * @param boolean $utf8encode true si le contenu de la variable doit être converti en UTF8 (true par défaut)
  * @param boolean $use_xjson true si X-json peut être utilisé
- * 
+ *
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see iconv
  */
 
 function ploopi_print_json($var, $utf8encode = true, $use_xjson = true)
 {
-    
-    if ($utf8encode) 
+
+    if ($utf8encode)
     {
-        $var = 
+        $var =
             ploopi_array_map(
                 create_function(
                     '$v',
                     'return iconv(\'ISO-8859-15\', \'UTF-8\', $v);'
-                ), 
+                ),
                 $var
             );
     }
-        
+
     $json = json_encode($var);
-    header("Content-Type: text/x-json"); 
+    header("Content-Type: text/x-json");
     if ($use_xjson === false || strlen($json) > 2048) echo $json;
     else header("X-Json: {$json}");
 }
@@ -274,7 +271,7 @@ function ploopi_print_json($var, $utf8encode = true, $use_xjson = true)
  *
  * @param string $string code HTML à valider
  * @return string code HTML validé
- * 
+ *
  * @link http://htmlpurifier.org/
  */
 
@@ -282,17 +279,17 @@ function ploopi_htmlpurifier($string)
 {
     $cache_path = _PLOOPI_PATHDATA._PLOOPI_SEP.'cache';
     if (!file_exists($cache_path)) ploopi_makedir($cache_path);
-    
+
     require_once './lib/htmlpurifier/HTMLPurifier.auto.php';
     $config = HTMLPurifier_Config::createDefault();
     $config->set('Cache', 'SerializerPath', $cache_path);
     $config->set('Core', 'Encoding', 'ISO-8859-15');
     $config->set('HTML', 'Doctype', 'XHTML 1.0 Strict');
     //$config->set('HTML', 'AllowedModules', 'Target');
-    
+
     $purifier = new HTMLPurifier($config);
 
-    return $purifier->purify($string); 
+    return $purifier->purify($string);
 }
 
 /**
@@ -304,7 +301,7 @@ function ploopi_htmlpurifier($string)
 
 function ploopi_color_hex2rgb($strHex)
 {
-    return array_map('hexdec', str_split(str_replace('#', '', $strHex) ,2));    
+    return array_map('hexdec', str_split(str_replace('#', '', $strHex) ,2));
 }
 
 /**
@@ -316,26 +313,26 @@ function ploopi_color_hex2rgb($strHex)
 
 function ploopi_is_url($url)
 {
-	$urlregex = "^(https?)\:\/\/";
+    $urlregex = "^(https?)\:\/\/";
 
-	// USER AND PASS (optional) 
-	$urlregex .= "([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?"; 
+    // USER AND PASS (optional)
+    $urlregex .= "([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?";
 
-	// HOSTNAME OR IP 
-	$urlregex .= "[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*";
+    // HOSTNAME OR IP
+    $urlregex .= "[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*";
 
-	// PORT (optional) 
-	$urlregex .= "(\:[0-9]{2,5})?"; 
+    // PORT (optional)
+    $urlregex .= "(\:[0-9]{2,5})?";
 
-	// PATH  (optional) 
-	$urlregex .= "(\/([a-z0-9+\$_-]\.?)+)*\/?"; 
+    // PATH  (optional)
+    $urlregex .= "(\/([a-z0-9+\$_-]\.?)+)*\/?";
 
-	// GET Query (optional) 
-	$urlregex .= "(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?"; 
+    // GET Query (optional)
+    $urlregex .= "(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?";
 
-	// ANCHOR (optional) 
-	$urlregex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?\$"; 
+    // ANCHOR (optional)
+    $urlregex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?\$";
 
-	return eregi($urlregex, $url) ? true : false; 
+    return eregi($urlregex, $url) ? true : false;
 }
 ?>

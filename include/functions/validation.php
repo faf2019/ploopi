@@ -24,7 +24,7 @@
 /**
  * Fonctions de gestion du validation interne (attention concept de validation très léger).
  * Permet de gérer des validateurs sur un enregistrement d'un objet.
-  * 
+  *
  * @package ploopi
  * @subpackage validation
  * @copyright Netlor, Ovensia
@@ -50,10 +50,10 @@ function ploopi_validation_selectusers($id_object = 0, $id_record = '', $id_modu
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
     $sql =   "
-            SELECT  id_validation 
-            FROM    ploopi_validation 
-            WHERE   id_object = {$id_object} 
-            AND     id_record = '".$db->addslashes($id_record)."' 
+            SELECT  id_validation
+            FROM    ploopi_validation
+            WHERE   id_object = {$id_object}
+            AND     id_record = '".$db->addslashes($id_record)."'
             AND     id_module = {$id_module}
             ";
     $db->query($sql);
@@ -98,7 +98,6 @@ function ploopi_validation_selectusers($id_object = 0, $id_record = '', $id_modu
     <?php
 }
 
-
 /**
  * Enregistre les validateurs pour un enregistrement d'un objet
  *
@@ -106,7 +105,7 @@ function ploopi_validation_selectusers($id_object = 0, $id_record = '', $id_modu
  * @param string $id_record identifiant de l'enregistrement
  * @param int $id_module identifiant du module
  */
- 
+
 function ploopi_validation_save($id_object = 0, $id_record = '', $id_module = -1)
 {
     global $db;
@@ -121,8 +120,8 @@ function ploopi_validation_save($id_object = 0, $id_record = '', $id_module = -1
         foreach($_SESSION['ploopi']['validation']['users_selected'] as $id_user)
         {
             $validation = new validation();
-            $validation->fields = 
-                array(  
+            $validation->fields =
+                array(
                     'id_module' => $id_module,
                     'id_record' => $id_record,
                     'id_object' => $id_object,
@@ -132,7 +131,7 @@ function ploopi_validation_save($id_object = 0, $id_record = '', $id_module = -1
             $validation->save();
 
         }
-        
+
         unset($_SESSION['ploopi']['validation']['users_selected']);
     }
 }
@@ -159,7 +158,7 @@ function ploopi_validation_get($id_object = 0, $id_record = '', $id_module = -1,
     if ($id_object != 0) $sql .= " AND id_object = {$id_object}";
     if ($id_record != '') $sql .= " AND id_record = '".$db->addslashes($id_record)."'";
     if ($id_user != 0) $sql .= " AND id_validation = {$id_user} AND type_validation = 'user'";
-    
+
     $db->query($sql);
 
     while ($row = $db->fetchrow())
@@ -181,14 +180,14 @@ function ploopi_validation_get($id_object = 0, $id_record = '', $id_module = -1,
 function ploopi_validation_delete($id_object = 0, $id_record = '', $id_module = -1, $id_user = 0)
 {
     global $db;
-    
+
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
     $sql = "DELETE FROM ploopi_validation WHERE id_module = {$id_module}";
     if ($id_object != 0) $sql .= " AND id_object = {$id_object}";
     if ($id_record != '') $sql .= " AND id_record = '".$db->addslashes($id_record)."'";
     if ($id_user != 0) $sql .= " AND id_validation = {$id_user} AND type_validation = 'user'";
-    
+
     $db->query($sql);
 }
 ?>

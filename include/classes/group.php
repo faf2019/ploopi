@@ -23,7 +23,7 @@
 
 /**
  * Gestion des groupes d'utilisateurs.
- *  
+ *
  * @package ploopi
  * @subpackage group
  * @copyright Netlor, Ovensia
@@ -39,7 +39,7 @@ include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_group
- *  
+ *
  * @package ploopi
  * @subpackage group
  * @copyright Netlor, Ovensia
@@ -48,7 +48,7 @@ include_once './include/classes/data_object.php';
  */
 
 class group extends data_object
-{ 
+{
     /**
      * Constructeur de la classe
      *
@@ -95,7 +95,7 @@ class group extends data_object
      *
      * @return array tableau des groupes fils du groupe (identifiants)
      */
-    
+
     public function getchildren()
     {
         global $db;
@@ -104,7 +104,6 @@ class group extends data_object
 
         return($db->getarray());
     }
-
 
     /**
      * Retourne un tableau contenant tous les identifiants des groupes frères du groupe
@@ -133,7 +132,7 @@ class group extends data_object
      *
      * @return array tableau des parents du groupe
      */
-    
+
     public function getparents()
     {
         return system_getparents($this->fields['parents'], 'group');
@@ -144,7 +143,7 @@ class group extends data_object
      *
      * @return group le groupe père ou false
      */
-    
+
     public function getfather()
     {
         $father = new group();
@@ -157,7 +156,7 @@ class group extends data_object
      *
      * @return array tableau des utilisateurs
      */
-    
+
     public function getusers()
     {
         global $db;
@@ -173,7 +172,7 @@ class group extends data_object
                     WHERE   ploopi_group_user.id_group = {$this->fields['id']}
                     AND     ploopi_group_user.id_user = ploopi_user.id
                     ";
-                    
+
         $result = $db->query($select);
 
         while ($fields = $db->fetchrow($result)) $users[$fields['id']] = $fields;
@@ -186,7 +185,7 @@ class group extends data_object
      *
      * @return group
      */
-    
+
     public function createclone()
     {
         $clone = new group();
@@ -202,11 +201,11 @@ class group extends data_object
      *
      * @param int $workspaceid identifiant de l'espace de travail
      */
-    
+
     public function attachtogroup($workspaceid)
     {
         include_once './include/classes/workspace.php';
-        
+
         global $db;
 
         $workspace_group = new workspace_group();
@@ -249,7 +248,7 @@ class group extends data_object
 
 /**
  * Classe d'accès à la table ploopi_group_user
- *  
+ *
  * @package ploopi
  * @subpackage group
  * @copyright Netlor, Ovensia

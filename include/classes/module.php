@@ -215,7 +215,6 @@ class module extends data_object
         return $roles;
     }
 
-
     /**
      * Détache le module d'un espace de travail donné
      *
@@ -235,7 +234,6 @@ class module extends data_object
 
         $db->query($sql);
     }
-
 
 }
 
@@ -318,7 +316,6 @@ class module_type extends data_object
         parent::delete();
     }
 
-
     /**
      * Supprime les paramètres du type de module. Utilisé notamment pour la mise à jour des modules.
      */
@@ -360,7 +357,6 @@ class module_type extends data_object
             $db->query("DELETE FROM ploopi_mb_object WHERE id_module_type = {$this->fields['id']}");
         }
     }
-
 
     /**
      * Crée une instance de module à partir du type de module
@@ -414,7 +410,6 @@ class module_type extends data_object
 
         return $actions;
     }
-
 
     function update_metabase($xmlfile_desc, $rapport = array())
     {

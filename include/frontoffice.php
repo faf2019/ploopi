@@ -22,9 +22,9 @@
 */
 
 /**
- * Initialisation du rendu frontoffice. 
- * Chargement du module WebEdit. 
- * 
+ * Initialisation du rendu frontoffice.
+ * Chargement du module WebEdit.
+ *
  * @package ploopi
  * @subpackage frontoffice
  * @copyright Netlor, Ovensia

@@ -23,7 +23,7 @@
 
 /**
  * Gestion de la connexion à la base MySQL.
- * 
+ *
  * @package ploopi
  * @subpackage database
  * @copyright Netlor, Ovensia
@@ -34,7 +34,7 @@
 /**
  * Classe MySQL d'accès aux données.
  * Permet de se connecter, d'exécuter des requêtes, etc...
- * 
+ *
  * @package ploopi
  * @subpackage database
  * @copyright Netlor, Ovensia
@@ -105,7 +105,7 @@ class ploopi_db
      *
      * @var int
      */
-    
+
     private $num_queries;
 
     /**
@@ -142,7 +142,7 @@ class ploopi_db
      * @param boolean $persistency true si connexion persistente, false sinon. Par défaut : false
      * @return mixed false si problème de connexion, id de connexion sinon
      */
-    
+
     public function ploopi_db($server, $user, $password = '', $database = '', $persistency = false)
     {
         $this->persistency = $persistency;
@@ -156,33 +156,33 @@ class ploopi_db
         $this->num_queries = 0;
         $this->exectime_queries = 0;
 
-		try 
-		{
-			if($this->persistency)
-			{
-				$this->timer_start();
-				$this->connection = new PDO("mysql:host={$this->server};dbname={$this->database}",  $this->user, $this->password, array(PDO::ATTR_PERSISTENT => true));
-				$this->timer_stop();
-			}
-			else
-			{
-				$this->timer_start();
-				$this->connection = new PDO("mysql:host={$this->server};dbname={$this->database}",  $this->user, $this->password);
-				$this->timer_stop();
-			}
-		} 
-		catch (PDOException $e) 
-		{
-			return false;
-			//print "Erreur !: " . $e->getMessage() . "<br/>";
-		}
+        try 
+        {
+            if($this->persistency)
+            {
+                $this->timer_start();
+                $this->connection = new PDO("mysql:host={$this->server};dbname={$this->database}",  $this->user, $this->password, array(PDO::ATTR_PERSISTENT => true));
+                $this->timer_stop();
+            }
+            else
+            {
+                $this->timer_start();
+                $this->connection = new PDO("mysql:host={$this->server};dbname={$this->database}",  $this->user, $this->password);
+                $this->timer_stop();
+            }
+        } 
+        catch (PDOException $e) 
+        {
+            return false;
+            //print "Erreur !: " . $e->getMessage() . "<br/>";
+        }
 
-		// spécifique MySQL
-		if ($this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) == 'mysql')
-		{
-			$this->connection->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true); 
-    	}
-    	    
+        // spécifique MySQL
+        if ($this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) == 'mysql')
+        {
+            $this->connection->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true); 
+        }
+            
         return $this->connection;
     }
 
@@ -196,7 +196,7 @@ class ploopi_db
     public function selectdb($database)
     {
         if (!$this->isconnected()) return false;
-        
+
         $this->database = $database;
         return(@mysql_select_db($this->database, $this->connection_id));
     }
@@ -227,17 +227,17 @@ class ploopi_db
      * Exécute une requête SQL
      *
      * @param string $query requête SQL à exécuter
-     * @return mixed un pointeur sur le recordset (resource) ou false si la requête n'a pas pu être exécutée 
+     * @return mixed un pointeur sur le recordset (resource) ou false si la requête n'a pas pu être exécutée
      */
     
     public function query($query = '')
     {
         if (!$this->isconnected()) return false;
         if (empty($query)) return false;
-        
+
         unset($this->query_result);
-		
-		$this->query_string = $query;
+        
+        $this->query_string = $query;
                         
         if($query != '')
         {
@@ -264,7 +264,7 @@ class ploopi_db
     public function multiplequeries($queries)
     {
         if (!$this->isconnected()) return false;
-                
+
         $queries_array = explode("\n",$queries);
 
         $query = '';
@@ -297,7 +297,7 @@ class ploopi_db
      * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
      * @return mixed nombre de lignes dans le recordset ou false si le recordset n'est pas valide
      */
-    
+
     public function numrows($result = null)
     {
         if (!$this->isconnected()) return false;
@@ -305,20 +305,20 @@ class ploopi_db
         if(empty($result)) $result = $this->query_result;
 
         // si MySQL
-		if ($this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) == 'mysql')
-		{
-	        return $result->rowCount();
-		}
-		else // sinon
-		{
-			if (preg_match('/^SELECT\s+(?:ALL\s+|DISTINCT\s+)?(?:.*?)\s+FROM\s+(.*)$/i', $result->queryString, $output) > 0) 
-			{
-				$stmt = $this->connection->query("SELECT COUNT(*) FROM {$output[1]}", PDO::FETCH_NUM);
-				return $stmt->fetchColumn();
-			}
-		}	
+        if ($this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) == 'mysql')
+        {
+            return $result->rowCount();
+        }
+        else // sinon
+        {
+            if (preg_match('/^SELECT\s+(?:ALL\s+|DISTINCT\s+)?(?:.*?)\s+FROM\s+(.*)$/i', $result->queryString, $output) > 0) 
+            {
+                $stmt = $this->connection->query("SELECT COUNT(*) FROM {$output[1]}", PDO::FETCH_NUM);
+                return $stmt->fetchColumn();
+            }
+        }   
     }
-    
+
     /**
      * Renvoie l'enregistrement courant de la dernière requête ou du recordset passé en paramètre
      *
@@ -329,7 +329,7 @@ class ploopi_db
     public function fetchrow($result = null, $result_type = PDO::FETCH_ASSOC)
     {
         if (!$this->isconnected()) return false;
-                
+
         if(empty($result)) $result = $this->query_result;
         
         if(!empty($result)) return $row = $result->fetch($result_type);
@@ -351,18 +351,18 @@ class ploopi_db
     /**
      * Renvoie la liste des tables de la base de données sélectionnée
      *
-     * @return array tableau indexé contenant les tables de la base de données sélectionnée 
+     * @return array tableau indexé contenant les tables de la base de données sélectionnée
      */
     
     public function listtables()
     {
         if (!$this->isconnected()) return false;
-                
+
         $rs = $this->query("SHOW TABLES FROM `{$this->database}`");
-        
+
         return $this->getarray($rs);
     }
-    
+
     /**
      * Renvoie le nombre de champs de la dernière requête ou du recordset passé en paramètre
      *
@@ -373,7 +373,7 @@ class ploopi_db
     public function numfields($query_id = 0)
     {
         if (!$this->isconnected()) return false;
-                
+
         if(!$query_id) $query_id = $this->query_result;
 
         if($query_id) return @mysql_num_fields($query_id);
@@ -381,8 +381,8 @@ class ploopi_db
     }
 
     /**
-     * Renvoie le nom du champs de la dernière requête ou du recordset passé en paramètre selon son indice 
-     * 
+     * Renvoie le nom du champs de la dernière requête ou du recordset passé en paramètre selon son indice
+     *
      * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
      * @param integer $i indice du champs
      * @return mixed
@@ -391,7 +391,7 @@ class ploopi_db
     public function fieldname($query_id = 0, $i)
     {
         if (!$this->isconnected()) return false;
-        
+
         if(!$query_id) $query_id = $this->query_result;
 
         if($query_id) return @mysql_field_name($query_id, $i);
@@ -399,7 +399,7 @@ class ploopi_db
     }
 
     /**
-     * Retourne dans un tableau le contenu de la dernière requête ou du recordset passé en paramètre 
+     * Retourne dans un tableau le contenu de la dernière requête ou du recordset passé en paramètre
      *
      * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
      * @return mixed un tableau indexé contenant les enregistrements du recordset ou false si le recordset n'est pas valide
@@ -408,7 +408,7 @@ class ploopi_db
     public function getarray($result = null)
     {
         if (!$this->isconnected()) return false;
-        
+
         if (empty($result)) $result = $this->query_result;
 
         if (!empty($result))
@@ -430,17 +430,17 @@ class ploopi_db
     }
 
     /**
-     * Retourne dans au format JSON le contenu de la dernière requête ou du recordset passé en paramètre 
+     * Retourne dans au format JSON le contenu de la dernière requête ou du recordset passé en paramètre
      *
      * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
      * @param boolean $utf8 true si le contenu doit être encodé en utf8, false sinon (true par défaut)
      * @return string une chaîne au format JSON contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
-    
+
     public function getjson($result = null, $utf8 = true)
     {
         if (!$this->isconnected()) return false;
-        
+
         if (empty($result)) $result = $this->query_result;
 
         if (!empty($result))
@@ -464,7 +464,7 @@ class ploopi_db
     }
 
     /**
-     * Déplace le pointeur interne sur un enregistrement de la dernière requête ou du recordset passé en paramètre 
+     * Déplace le pointeur interne sur un enregistrement de la dernière requête ou du recordset passé en paramètre
      *
      * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
      * @param integer $pos position dans le recordset
@@ -473,7 +473,7 @@ class ploopi_db
     
     public function dataseek($result = 0, $pos = 0)
     {
-    	// non géré dans pdo, voir si alternative possible
+        // non géré dans pdo, voir si alternative possible
     }
 
     /**
@@ -486,9 +486,9 @@ class ploopi_db
     public function addslashes($var)
     {
         include_once './include/functions/system.php';
-        
+
         //ploopi_array_map('mysql_real_escape_string', $var));
-        
+
         if ($this->isconnected()) return substr($this->connection->quote($var), 1, -1);
         else return(false);
     }

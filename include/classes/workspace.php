@@ -23,7 +23,7 @@
 
 /**
  * Gestion des espaces de travail
- * 
+ *
  * @package ploopi
  * @subpackage workspace
  * @copyright Netlor, Ovensia
@@ -35,7 +35,7 @@ include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_workspace
- * 
+ *
  * @package ploopi
  * @subpackage workspace
  * @copyright Netlor, Ovensia
@@ -50,7 +50,7 @@ class workspace extends data_object
      *
      * @return workspace
      */
-    
+
     public function workspace()
     {
         parent::data_object('ploopi_workspace');
@@ -61,7 +61,7 @@ class workspace extends data_object
      *
      * @return boolean true si l'enregistrement a été correctement effectué
      */
-    
+
     public function save()
     {
         $this->fields['depth'] = sizeof(explode(';',$this->fields['parents']));
@@ -69,9 +69,9 @@ class workspace extends data_object
     }
 
     /**
-     * Supprime l'espace de travail 
+     * Supprime l'espace de travail
      */
-    
+
     public function delete()
     {
         global $db;
@@ -79,23 +79,22 @@ class workspace extends data_object
         if ($this->fields['id']!=-1 && !$this->fields['system'])
         {
             include_once './modules/system/include/functions.php';
-            
+
             $fatherid = $this->fields['id_workspace'];
 
             // attach children to new father
-            $select =   
+            $select =
                 "
                 SELECT  ploopi_workspace.id
                 FROM    ploopi_workspace
                 WHERE   ploopi_workspace.id_workspace = {$this->fields['id']}
                 ";
 
-
             $result = $db->query($select);
 
             while ($child =  $db->fetchrow($result))
             {
-                $update = 
+                $update =
                     "
                     UPDATE  ploopi_workspace
                     SET     ploopi_workspace.id_workspace = {$fatherid}
@@ -110,7 +109,7 @@ class workspace extends data_object
 
             $db->query("DELETE FROM ploopi_workspace_user WHERE id_workspace = {$this->fields['id']}");
             $db->query("DELETE FROM ploopi_workspace_group WHERE id_workspace = {$this->fields['id']}");
-            
+
             parent::delete();
 
         }
@@ -131,7 +130,6 @@ class workspace extends data_object
         return $db->getarray();
     }
 
-
     /**
      * Retourne un tableau contenant tous les identifiants des espaces frères de l'espace
      *
@@ -148,7 +146,7 @@ class workspace extends data_object
                     WHERE   id_workspace = {$this->fields['id_workspace']}
                     AND     id <> {$this->fields['id']}
                     ";
-                    
+
         $db->query($select);
 
         return $db->getarray();
@@ -159,7 +157,7 @@ class workspace extends data_object
      *
      * @return array tableau des parents de l'espace
      */
-    
+
     public function getparents()
     {
         include_once './modules/system/include/functions.php';
@@ -171,7 +169,7 @@ class workspace extends data_object
      *
      * @return workspace l'espace père ou false
      */
-    
+
     public function getfather()
     {
         $father = new workspace();
@@ -184,7 +182,7 @@ class workspace extends data_object
      *
      * @return array tableau des utilisateurs
      */
-        
+
     public function getusers()
     {
         global $db;
@@ -199,7 +197,6 @@ class workspace extends data_object
                     WHERE   ploopi_workspace_user.id_workspace = {$this->fields['id']}
                     AND     ploopi_workspace_user.id_user = ploopi_user.id
 
-
                     ";
         $result = $db->query($select);
 
@@ -213,26 +210,26 @@ class workspace extends data_object
      *
      * @return array tableau des utilisateurs
      */
-        
+
     public function getallusers()
     {
         global $db;
 
         $users = array();
-        
+
         $arrChildren = array();
         $arrChildren = $this->getchildren();
         $arrChildren[] = $this->fields['id'];
-        
+
         $select =   "
                     SELECT  u.*
-                    
+
                     FROM    ploopi_user u,
                             ploopi_workspace_user wu
-                            
+
                     WHERE   wu.id_workspace IN (".implode(', ', $arrChildren).")
                     AND     wu.id_user = u.id
-                    
+
                     GROUP BY u.id
                     ";
 
@@ -240,14 +237,13 @@ class workspace extends data_object
 
         while ($fields = $db->fetchrow($result)) $users[$fields['id']] = $fields;
 
-    
         $select =   "
                     SELECT  u.*
-                                                    
+
                     FROM    ploopi_user u,
                             ploopi_workspace_group wg,
                             ploopi_group_user gu
-                            
+
                     WHERE   wg.id_workspace IN (".implode(', ', $arrChildren).")
                     AND     wg.id_group = gu.id_group
                     AND     gu.id_user = u.id
@@ -258,7 +254,7 @@ class workspace extends data_object
         $result = $db->query($select);
 
         while ($fields = $db->fetchrow($result)) $users[$fields['id']] = $fields;
-        
+
         return $users;
     }
 
@@ -268,7 +264,7 @@ class workspace extends data_object
      * @param boolean $getchildren true si la fonction doit renvoyer les sous-groupes (false par défaut)
      * @return array tableau associatif des groupes rattachés à l'espace
      */
-    
+
     public function getgroups($getchildren = false)
     {
         global $db;
@@ -314,7 +310,7 @@ class workspace extends data_object
      *
      * @return workspace
      */
-    
+
     public function createclone()
     {
         $clone = new workspace();
@@ -331,7 +327,7 @@ class workspace extends data_object
      * @param boolean $light true si la fonction ne doit renvoyer que les identifiants des modules (false par défaut)
      * @return array tableau contenant les modules rattachés à l'espace
      */
-    
+
     public function getmodules($light = false)
     {
         global $db;
@@ -380,7 +376,7 @@ class workspace extends data_object
      * @param boolean $herited true si la fonction doit renvoyer les modules hérités (false par défaut)
      * @return array tableau des modules partagés (ou hérités) par les espaces parents
      */
-    
+
     public function getsharedmodules($herited = false)
     {
         global $db;
@@ -427,7 +423,7 @@ class workspace extends data_object
 
 /**
  * Classe d'accès à la table ploopi_module_workspace
- * 
+ *
  * @package ploopi
  * @subpackage workspace
  * @copyright Netlor, Ovensia
@@ -442,7 +438,7 @@ class module_workspace extends data_object
      *
      * @return module_workspace
      */
-    
+
     public function module_workspace()
     {
         parent::data_object('ploopi_module_workspace','id_workspace','id_module');
@@ -475,7 +471,7 @@ class module_workspace extends data_object
     /**
      * Supprime la relation module / espace de rattachement 
      */
-    
+
     public function delete()
     {
         global $db;
@@ -491,7 +487,7 @@ class module_workspace extends data_object
      *
      * @param string $direction sens du mouvement 'down' / 'up'
      */
-    
+
     public function changeposition($direction)
     {
         global $db;
@@ -530,7 +526,7 @@ class module_workspace extends data_object
 
 /**
  * Classe d'accès à la table ploopi_workspace_user
- * 
+ *
  * @package ploopi
  * @subpackage workspace
  * @copyright Netlor, Ovensia
@@ -545,7 +541,7 @@ class workspace_user extends data_object
      *
      * @return workspace_user
      */
-    
+
     public function workspace_user()
     {
         parent::data_object('ploopi_workspace_user','id_workspace','id_user');
@@ -555,7 +551,7 @@ class workspace_user extends data_object
     /**
      * Supprime la relation utilisateur / espace de rattachement
      */
-    
+
     public function delete()
     {
         global $db;
@@ -590,7 +586,7 @@ class workspace_user extends data_object
 
 /**
  * Classe d'accès à la table ploopi_workspace_user_role
- * 
+ *
  * @package ploopi
  * @subpackage workspace
  * @copyright Netlor, Ovensia
@@ -605,7 +601,7 @@ class workspace_user_role extends data_object
      *
      * @return workspace_user_role
      */
-    
+
     public function workspace_user_role()
     {
         parent::data_object('ploopi_workspace_user_role','id_user','id_workspace','id_role');
@@ -614,7 +610,7 @@ class workspace_user_role extends data_object
 
 /**
  * Classe d'accès à la table ploopi_workspace_group
- * 
+ *
  * @package ploopi
  * @subpackage workspace
  * @copyright Netlor, Ovensia
@@ -630,7 +626,7 @@ class workspace_group extends data_object
      *
      * @return workspace_group
      */
-    
+
     function workspace_group()
     {
         parent::data_object('ploopi_workspace_group','id_workspace','id_group');
@@ -672,7 +668,7 @@ class workspace_group extends data_object
 
 /**
  * Classe d'accès à la table ploopi_workspace_group_role
- * 
+ *
  * @package ploopi
  * @subpackage workspace
  * @copyright Netlor, Ovensia
@@ -687,7 +683,7 @@ class workspace_group_role extends data_object
      *
      * @return workspace_group_role
      */
-    
+
     public function workspace_group_role()
     {
         parent::data_object('ploopi_workspace_group_role','id_group','id_workspace','id_role');

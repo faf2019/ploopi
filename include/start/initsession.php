@@ -24,7 +24,7 @@
 /**
  * Partie commune des scripts de chargement de l'environnement Ploopi (start.php, start-light.php).
  * Concerne le chargement des espaces de travail (avec application du filtrage par nom de domaine)
- *  
+ *
  * @package ploopi
  * @subpackage start
  * @copyright Netlor, Ovensia
@@ -91,9 +91,9 @@ $_SESSION['ploopi']['allworkspaces'] = implode(',', array_keys($workspaces));
 
 $host_array = array($_SESSION['ploopi']['host'], '*');
 
-$_SESSION['ploopi']['hosts'] = 
+$_SESSION['ploopi']['hosts'] =
     array(
-        'frontoffice' => array(), 
+        'frontoffice' => array(),
         'backoffice' => array()
     );
 
@@ -117,13 +117,13 @@ foreach($_SESSION['ploopi']['workspaces'] as $wid => $wsp)
 {
     $workspace = new workspace();
     $workspace->open($wid);
-    
+
     $_SESSION['ploopi']['workspaces'][$wid]['children'] = $workspace->getchildren();
     $_SESSION['ploopi']['workspaces'][$wid]['parents'] = explode(';',$workspace->fields['parents']);
     $_SESSION['ploopi']['workspaces'][$wid]['brothers'] = $workspace->getbrothers();
     $_SESSION['ploopi']['workspaces'][$wid]['list_parents'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
     $_SESSION['ploopi']['workspaces'][$wid]['list_children'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['children']);
     $_SESSION['ploopi']['workspaces'][$wid]['list_brothers'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['brothers']);
-    $_SESSION['ploopi']['workspaces'][$wid]['modules'] = $workspace->getmodules(true);        
+    $_SESSION['ploopi']['workspaces'][$wid]['modules'] = $workspace->getmodules(true);
 }
 ?>

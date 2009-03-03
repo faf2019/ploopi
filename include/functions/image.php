@@ -54,7 +54,7 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
 {
     $imagefile_name = basename($imagefile);
     $extension = ploopi_file_getextension($imagefile_name);
-    
+
     // si l'extension du fichier n'est pas "parlante", on tente de récupérer le format dans les infos du fichier
     if (!in_array($extension, array('jpg', 'jpeg', 'png', 'gif')))
     {
@@ -99,21 +99,21 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
         if ($wmax) $coef = $w/$wmax;
         if ($hmax && $h/$hmax > $coef) $coef = $h/$hmax;
     }
-    
+
     // Détermination de la taille de l'image destination en fonction du coef de redimensionnement
-    if (!$coef) 
+    if (!$coef)
     {
         $coef = 1;
         $wdest = $w;
         $hdest = $h;
-    } 
-    else 
-    {   
+    }
+    else
+    {
         $wdest = round($w/$coef);
         $hdest = round($h/$coef);
     }
 
-    // Ajout éventuel d'un fond de couleur  
+    // Ajout éventuel d'un fond de couleur
     if(!empty($addBorder) && $wmax && $hmax)
     {
         $imgdest = imagecreatetruecolor ($wmax, $hmax);
@@ -133,7 +133,7 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
         {
             $imgdest = imagecreatetruecolor ($wdest, $hdest);
             imagecopyresampled($imgdest, $imgsrc, 0, 0, 0, 0, $wdest, $hdest, $w, $h);
-        }   
+        }
         else $imgdest = &$imgsrc;
     }
 
@@ -142,9 +142,9 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
     if($filename == '')
     {
         ploopi_ob_clean();
-        
+
         if ($format != '') $extension = $format;
-        
+
         header("Content-Type: image/{$extension}");
         header("Content-Disposition: inline; filename=\"{$imagefile_name}\"");
 
@@ -197,7 +197,6 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
     return true;
 }
 
-
 /**
  * Découpe un texte pour qu'il tienne dans une image d'une largeur déterminée
  *
@@ -214,12 +213,12 @@ function ploopi_image_wordwrap($text, $width, $fontsize, $font)
     $arrLines = array();
     $intLineHeight = 0;
     $intTextWidth = 0;
-    
+
     foreach($arrTextLines as $text)
     {
         $arrWords = split (' ', $text);
         $strLine  = '';
-        
+
         foreach ($arrWords as $strWord)
         {
             $arrBox  = imagettfbbox($fontsize, 0, $font, $strLine.$strWord);
@@ -235,17 +234,17 @@ function ploopi_image_wordwrap($text, $width, $fontsize, $font)
             }
             $strLine .= $strWord.' ';
         }
-        
+
         $strLine = trim($strLine);
         $arrDimensions  = imagettfbbox ($fontsize, 0, $font, $strLine);
         $w = $arrDimensions[4] - $arrDimensions[0];
         if ($w > $intTextWidth) $intTextWidth = $w;
         $arrLines[] = array('text' => trim($strLine), 'width' => $w);
     }
-    
+
     $arrDimensions  = imagettfbbox ($fontsize, 0, $font, 'AJLMYabdfghjklpqry019`@$^&*(,');
     $intLineHeight = $arrDimensions[1] - $arrDimensions[5];
-    
+
     return array ('lineheight' => $intLineHeight, 'textwidth' => $intTextWidth, 'lines' => $arrLines);
 }
 ?>

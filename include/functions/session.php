@@ -23,7 +23,7 @@
 
 /**
  * Fonctions de mise à jour du contenu de la session
- * 
+ *
  * @package ploopi
  * @subpackage session
  * @copyright Netlor, Ovensia
@@ -33,7 +33,6 @@
 
 include_once './include/functions/ip.php';
 
-
 /**
  * Réinitialise la session
  */
@@ -41,7 +40,7 @@ include_once './include/functions/ip.php';
 function ploopi_session_reset()
 {
     require_once 'Net/UserAgent/Detect.php';
-        
+
     // session_destroy();
     $_SESSION['ploopi'] = array(
         'login' => '',
@@ -50,68 +49,68 @@ function ploopi_session_reset()
         'workspaceid' => '',
         'webworkspaceid' => '',
         'adminlevel' => 0,
-    
+
         'connected' => false,
         'loginerror' => false,
         'paramloaded' => false,
         'mode' => '',
-    
+
         'remote_ip' => ploopi_getip(),
         'remote_browser' => Net_UserAgent_Detect::getBrowserString(),
         'remote_system' => Net_UserAgent_Detect::getOSString(),
-        
+
         'host' => $_SERVER['HTTP_HOST'],
         'scriptname' => basename($_SERVER['PHP_SELF']),
         'env' => '',
-    
+
         'workspaces' => array(),
         'modules' => array(),
         'moduletypes' => array(),
         'allworkspaces' => '',
 
-        'hosts' => 
+        'hosts' =>
             array(
-                'frontoffice' => array(), 
+                'frontoffice' => array(),
                 'backoffice' => array()
             ),
-    
+
         'currentrequesttime' => mktime(),
         'lastrequesttime' => mktime(),
-    
+
         'moduleid' => '',
         'mainmenu' => '',
         'action' => 'public',
         'moduletype' => '',
         'moduletypeid' => '',
         'modulelabel' => '',
-    
-        'backoffice' =>  
+
+        'backoffice' =>
             array(
-                'moduleid' => '', 
+                'moduleid' => '',
                 'workspaceid' => ''
             ),
-            
-        'frontoffice' =>  
+
+        'frontoffice' =>
             array(
-                'moduleid' => '', 
+                'moduleid' => '',
                 'workspaceid' => ''
             ),
-        
+
         'template_name' =>  '',
         'template_path' =>  '',
-    
+
         'uri'   =>  '',
-    
+
         'newtickets'    => 0,
-    
+
         'fingerprint'   => _PLOOPI_FINGERPRINT,
-    
+
         'timezone'      => timezone_name_get(date_timezone_get($objDatetime =  date_create()))
     );
 }
 
 /**
- * Met à jour les données et vérifie la validité de la session 
+ * Met à jour les données et vérifie la validité de la session
  */
 
 function ploopi_session_update()

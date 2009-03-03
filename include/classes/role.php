@@ -23,7 +23,7 @@
 
 /**
  * Gestion des rôles.
- *  
+ *
  * @package ploopi
  * @subpackage role
  * @copyright Netlor, Ovensia
@@ -35,7 +35,7 @@ include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_role
- *  
+ *
  * @package ploopi
  * @subpackage role
  * @copyright Netlor, Ovensia
@@ -50,7 +50,7 @@ class role extends data_object
      *
      * @return role
      */
-    
+
     public function role()
     {
         parent::data_object('ploopi_role');
@@ -62,7 +62,7 @@ class role extends data_object
      * @param array $actions tableau des actions qui constituent le rôle
      * @param int $id_module_type identifiant du type de module concerné
      */
-    
+
     public function save($actions, $id_module_type)
     {
         global $db;
@@ -90,7 +90,7 @@ class role extends data_object
     /**
      * Supprime le rôle
      */
-    
+
     public function delete()
     {
         global $db;
@@ -101,13 +101,12 @@ class role extends data_object
         parent::delete();
     }
 
-
     /**
      * Retourne un tableau contenant les actions d'un rôle
      *
      * @return array tableau contenant les actions d'un rôle
      */
-    
+
     public function getactions()
     {
         global $db;
@@ -117,15 +116,15 @@ class role extends data_object
         $select =   "
                     SELECT      ploopi_mb_action.*,
                                 ploopi_role_action.id_action
-    
+
                     FROM        ploopi_role_action
-    
+
                     LEFT JOIN       ploopi_mb_action
                     ON          ploopi_role_action.id_action = ploopi_mb_action.id_action
                     AND         ploopi_role_action.id_module_type = ploopi_mb_action.id_module_type
-    
+
                     WHERE       ploopi_role_action.id_role = {$this->fields['id']}
-    
+
                     ORDER BY    ploopi_mb_action.label
                     ";
 
@@ -140,7 +139,7 @@ class role extends data_object
 
 /**
  * Classe d'accès à la table ploopi_role_action
- *  
+ *
  * @package ploopi
  * @subpackage role
  * @copyright Netlor, Ovensia
@@ -155,11 +154,11 @@ class role_action extends data_object
      *
      * @return role_action
      */
-    
+
     public function role_action()
     {
         parent::data_object('ploopi_role_action','id_role','id_action','id_module_type');
     }
-    
+
 }
 ?>

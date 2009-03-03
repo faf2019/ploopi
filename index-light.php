@@ -44,12 +44,12 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
     {
         include_once './lib/template/template.php';
         include_once "{$_SESSION['ploopi']['template_path']}/class_skin.php";
-    
+
         $skin = new skin();
         $template_body = new Template($_SESSION['ploopi']['template_path']);
-    
+
         if (!file_exists("{$_SESSION['ploopi']['template_path']}/light.tpl") || ! is_readable("{$_SESSION['ploopi']['template_path']}/light.tpl")) {
-        
+
             ploopi_die(
                 str_replace(
                     array('<FILE>', '<TEMPLATE>'),
@@ -57,28 +57,28 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                     _PLOOPI_ERROR_TEMPLATE_FILE
                 )
             );
-            
+
         }
-        
+
         $template_body->set_filenames(
             array(
                 'body' => 'light.tpl'
             )
         );
-    
+
         // PLOOPI JS
-        $template_body->assign_block_vars('ploopi_js', 
+        $template_body->assign_block_vars('ploopi_js',
             array(
             'PATH' => './lib/protoaculous/protoaculous.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
             )
         );
-        
-        $template_body->assign_block_vars('ploopi_js', 
+
+        $template_body->assign_block_vars('ploopi_js',
             array(
                 'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
             )
         );
-    
+
         // GET MODULES STYLES & JS
         if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $_SESSION['ploopi']['workspaceid'] != _PLOOPI_NOWORKSPACE && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
         {
@@ -87,7 +87,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 if (isset($_SESSION['ploopi']['modules'][$mid]['active']))
                 {
                     $modtype = $_SESSION['ploopi']['modules'][$mid]['moduletype'];
-    
+
                     if (file_exists("./modules/{$modtype}/include/styles.css"))
                     {
                         $template_body->assign_block_vars('module_css',
@@ -96,7 +96,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                                 )
                             );
                     }
-    
+
                     if (file_exists("./modules/{$modtype}/include/styles_ie.css"))
                     {
                         $template_body->assign_block_vars('module_css_ie',
@@ -105,7 +105,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                                 )
                             );
                     }
-    
+
                     if (file_exists("./modules/{$modtype}/include/functions.js"))
                     {
                         $template_body->assign_block_vars('module_js',
@@ -117,16 +117,16 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 }
             }
         }
-    
+
         // GET MODULE ADDITIONAL JS
         ob_start();
         include './include/javascript.php';
         if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/javascript.php")) include "./modules/{$_SESSION['ploopi']['moduletype']}/include/javascript.php";
         $additional_javascript = ob_get_contents();
         @ob_end_clean();
-    
+
         include_once './include/op.php';
-    
+
         ob_start();
         if (!empty($_SESSION['ploopi']['moduletype']))
         {
@@ -138,20 +138,20 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
             {
                 if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/public.php")) include_once "./modules/{$_SESSION['ploopi']['moduletype']}/public.php";
             }
-    
+
         }
         $main_content = ob_get_contents();
         @ob_end_clean();
-    
+
         $template_body->assign_vars(array(
             'TEMPLATE_PATH'         => $_SESSION['ploopi']['template_path'],
             'ADDITIONAL_JAVASCRIPT' => $additional_javascript,
             'PAGE_CONTENT'          => $main_content
             )
         );
-    
+
         $template_body->pparse('body');
-        
+
     }
     else
     {

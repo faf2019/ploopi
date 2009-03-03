@@ -23,7 +23,7 @@
 
 /**
  * Gestion des annotations
- * 
+ *
  * @package ploopi
  * @subpackage annotation
  * @copyright Netlor, Ovensia
@@ -39,7 +39,7 @@ include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_annotation
- * 
+ *
  * @package ploopi
  * @subpackage annotation
  * @copyright Netlor, Ovensia
@@ -55,7 +55,7 @@ class annotation extends data_object
      *
      * @return annotation
      */
-    
+
     public function annotation()
     {
         parent::data_object('ploopi_annotation','id');
@@ -66,7 +66,7 @@ class annotation extends data_object
      *
      * @return int identifiant de l'annotation
      */
-    
+
     public function save()
     {
         global $db;
@@ -76,7 +76,7 @@ class annotation extends data_object
         $id_annotation = parent::save();
 
         $tags = array_unique(preg_split('/(,)|( )/', $this->tags, -1, PREG_SPLIT_NO_EMPTY));
-        
+
         foreach($tags as $tag)
         {
             $tag = trim($tag);
@@ -107,11 +107,10 @@ class annotation extends data_object
         return($id_annotation);
     }
 
-
     /**
      * Supprime l'annotation
      */
-    
+
     public function delete()
     {
         global $db;
@@ -136,7 +135,7 @@ class annotation extends data_object
 
 /**
  * Classe d'accès à la table ploopi_annotation_tag
- * 
+ *
  * @package ploopi
  * @subpackage annotation
  * @copyright Netlor, Ovensia
@@ -151,7 +150,7 @@ class annotation_tag extends data_object
      *
      * @return annotation_tag
      */
-    
+
     public function annotation_tag()
     {
         parent::data_object('ploopi_annotation_tag','id_annotation','id_tag');
@@ -160,7 +159,7 @@ class annotation_tag extends data_object
     /**
      * Supprime le tag s'il n'est plus utilisé
      */
-    
+
     public function delete()
     {
         global $db;
@@ -187,7 +186,7 @@ class annotation_tag extends data_object
 
 /**
  * Classe d'accès à la table ploopi_tag
- *  
+ *
  * @package ploopi
  * @subpackage annotation
  * @copyright Netlor, Ovensia
@@ -202,7 +201,7 @@ class tag extends data_object
      *
      * @return tag
      */
-    
+
     public function tag()
     {
         parent::data_object('ploopi_tag','id');

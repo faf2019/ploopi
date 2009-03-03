@@ -23,7 +23,7 @@
 
 /**
  * Point d'entrée permettant de s'affranchir du moteur de template et du chargement des fonctions et classes génériques.
- * Permet d'exécuter des opérations/fonctions plus rapidement. 
+ * Permet d'exécuter des opérations/fonctions plus rapidement.
  * Peut nécessiter par contre d'inclure manuellement certaines dépendances.
  *
  * @package ploopi
@@ -31,7 +31,7 @@
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see op
  */
 
@@ -41,7 +41,7 @@
 
 include './include/start/common.php';
 
-if (empty($_SESSION['ploopi']['mode'])) 
+if (empty($_SESSION['ploopi']['mode']))
 {
     include './include/start/initsession.php';
     include './include/start/load_param.php';
@@ -50,7 +50,7 @@ if (empty($_SESSION['ploopi']['mode']))
         $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['frontoffice']['workspaceid'] = $_SESSION['ploopi']['hosts']['frontoffice'][0];
     }
 }
-    
+
 include './include/op.php';
 ploopi_die();
 ?>

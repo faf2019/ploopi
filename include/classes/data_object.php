@@ -127,9 +127,9 @@ class data_object
      * @param string champ clé n°1
      * @param string champ clé n°2
      * @param string champ clé n°X
-     * 
+     *
      * @return data_object
-     * 
+     *
      */
 
     public function data_object()
@@ -176,7 +176,6 @@ class data_object
         $this->db = $db;
     }
 
-    
     /**
      * Permet de mettre à jour les propriétés de l'objet (les champs de la table)
      *
@@ -193,13 +192,13 @@ class data_object
             if ($lprefix == 0) $this->fields[$key] = $value;
             else
             {
-				$pref = substr($key, 0, $lprefix);
-				if ($pref == $prefix)
-				{
-					$prop = substr($key, $lprefix);
-					$this->fields[$prop] = $value;
-				}
-			}	
+                $pref = substr($key, 0, $lprefix);
+                if ($pref == $prefix)
+                {
+                    $prop = substr($key, $lprefix);
+                    $this->fields[$prop] = $value;
+                }
+            }   
         }
 
     }
@@ -234,7 +233,7 @@ class data_object
 
             if ($this->numrows>0) $this->new = false;
         }
-        
+
         return $this->numrows;
     }
 
@@ -406,13 +405,13 @@ class data_object
      */
     
     public function getsql() { return $this->sql; }
-    
+
     /**
      * Retourne la table associée à l'instance
      *
      * @return string nom de la table
      */
-    
+
     public function gettablename() { return $this->tablename; }
     
     /**

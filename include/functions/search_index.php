@@ -24,7 +24,7 @@
  * Fonctions de recherche et d'indexation de contenu.
  * Extraction des mots clés d'un texte, gestion des METAs, mise en valeur des mots clés recherchés, suppression des mots communs.
  * Utilisation de la technique de lemmisation (racinisation).
- * 
+ *
  * @see index_element
  * @see index_keyword
  * @see index_keyword_element
@@ -32,7 +32,7 @@
  * @see index_stem_element
  *
  * @link http://pecl.php.net/package/stem
- * 
+ *
  * @package ploopi
  * @subpackage search_index
  * @copyright Ovensia
@@ -49,7 +49,7 @@ include_once './include/classes/search_index.php';
  * @param int $id_object identifiant de l'objet
  * @param string $id_record identifiant de l'enregistrement
  * @return string identifiant unique de l'enregistrement (hash MD5, 32 caractères)
- * 
+ *
  * @see md5
  */
 
@@ -132,30 +132,30 @@ function ploopi_search_create_index_annotation($id_object, $id_record, $tags, $i
  * @param string $label libellé de l'objet
  * @param string $content contenu de l'objet à indéxer
  * @param string $meta chaîne contenant des METAs informations (le poids accordé sera maximal)
- * @param boolean $usecommonwords true si la liste des mots communs doit être utilisée (les mots communs seront dans ce cas retirés) 
- * @param int $timestp_create date/heure de création au format timestamp MYSQL 
+ * @param boolean $usecommonwords true si la liste des mots communs doit être utilisée (les mots communs seront dans ce cas retirés)
+ * @param int $timestp_create date/heure de création au format timestamp MYSQL
  * @param int $timestp_modify date/heure de modification au format timestamp MYSQL
  * @param int $id_user identifiant de l'utilisateur
  * @param int $id_workspace identifiant de l'espace
  * @param int $id_module identifiant du module
  * @param boolean $debug true si le mode 'debug' est activé
- * 
+ *
  * @see index_element
  * @see index_keyword
  * @see index_keyword_element
  * @see index_stem
  * @see index_stem_element
- * 
+ *
  * @see _PLOOPI_INDEXATION_COMMONWORDS_FR
  * @see _PLOOPI_INDEXATION_WORDSEPARATORS
  * @see _PLOOPI_INDEXATION_WORDMINLENGHT
  * @see _PLOOPI_INDEXATION_WORDMAXLENGHT
  * @see _PLOOPI_INDEXATION_METAWEIGHT
  * @see _PLOOPI_INDEXATION_KEYWORDSMAXPCENT
- * 
+ *
  * @see ploopi_search_generate_id
  * @see ploopi_convertaccents
- * 
+ *
  * @link http://pecl.php.net/package/stem
  */
 
@@ -187,7 +187,6 @@ function ploopi_search_create_index($id_object, $id_record, $label, $content, $m
     }
 
     if (empty($_SESSION['ploopi']['commonwords'])) $_SESSION['ploopi']['commonwords'] = array();
-
 
     // TRAITEMENT DU CONTENT
     for ($kw = strtok($content, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
@@ -262,7 +261,6 @@ function ploopi_search_create_index($id_object, $id_record, $label, $content, $m
     // nettoyage index
     ploopi_search_remove_index($id_object, $id_record);
     if ($debug) printf("<br />REMOVE INDEX: %0.2f",$ploopi_timer->getexectime()*1000);
-
 
     $stem = current($words);
     $stem_ratio = (empty($words_overall)) ? 1 : ($stem['weight']*100 / $words_overall);
@@ -357,7 +355,7 @@ function ploopi_search_create_index($id_object, $id_record, $label, $content, $m
  * @param int $limit nombre de lignes renvoyées
  * @param int $id_module identifiant du module (optionnel)
  * @return array tableau contenant l'index de l'enregistrement
- * 
+ *
  * @see ploopi_search_generate_id
  */
 
@@ -416,7 +414,7 @@ function ploopi_search_get_index($id_object, $id_record, $limit = 100, $id_modul
 function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module = null, $options = null)
 {
     global $db;
-    
+
     if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module = $_SESSION['ploopi']['moduleid'];
 
     // on récupère la liste des racines contenues dans la liste des mots clés
@@ -431,18 +429,18 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
 
     if (!empty($id_record))
     {
-        if (is_array($id_record)) 
+        if (is_array($id_record))
         {
             $arrIdRecord = array();
             foreach($id_record as $rec) $arrIdRecord[] = "'".$db->addslashes($rec)."'";
-            
+
             $arrSearch[] = "e.id_record IN (".implode(',', $arrIdRecord).")";
         }
         elseif ($id_record != '') $arrSearch[] = "e.id_record LIKE '".$db->addslashes($id_record)."%'";
     }
-    
+
     if ($id_object != -1) $arrSearch[] = "e.id_object = {$id_object}";
-    
+
     if (!empty($id_module))
     {
         if (is_array($id_module)) $arrSearch[] = "e.id_module IN (".implode(',', $id_module).")";
@@ -454,20 +452,20 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
 
     $orderby = (empty($options['orderby'])) ? 'relevance' : $options['orderby'];
     $sort = (isset($options['sort'])) ? $options['sort'] : 'DESC';
-    
+
     $limit = (isset($options['limit'])) ? $options['limit'] : 200;
 
     // pour chaque racine (stem), on cherche les occurences d'éléments correspondants
     foreach($arrStems as $stem => $occ)
     {
         $id_stem = md5($stem);
-        
+
         $towl = substr($stem,0,2);
 
         $sql =  "
                 SELECT      e.*,
                             se.relevance
-                            
+
                 FROM        ploopi_index_stem_element se,
                             ploopi_index_element e
 
@@ -477,22 +475,21 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
 
                 ORDER BY {$orderby} {$sort}
                 ";
-                
+
         $db->query($sql);
-        
+
         while ($row = $db->fetchrow())
         {
             $id = ($id_module != '') ? $row['id_record'] : $row['id'];
-            
+
             $arrElements[$id] = $row;
             $arrRelevance[$id]['relevance'] = $row['relevance'];
             $arrRelevance[$id]['count'] = 1;
             $arrRelevance[$id]['kw'] = array();
-            $arrRelevance[$id]['stem'] = array($stem => 1); 
+            $arrRelevance[$id]['stem'] = array($stem => 1);
         }
     }
 
-    
     // pour chaque mot, on cherche les occurences d'éléments correspondants
     foreach($arrKeywords as $kw => $occ)
     {
@@ -509,10 +506,10 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
                 AND         k.id = ke.id_keyword
                 AND         k.keyword like '".$db->addslashes($kw)."%'
                 {$strSearch}
-                
+
                 ORDER BY {$orderby} {$sort}
                 ";
-                
+
         $db->query($sql);
 
         while ($row = $db->fetchrow())
@@ -528,7 +525,7 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
                 $arrRelevance[$id]['relevance'] = $row['relevance'];
                 $arrRelevance[$id]['count'] = 1;
                 $arrRelevance[$id]['kw'] = array();
-                $arrRelevance[$id]['stem'] = array(); 
+                $arrRelevance[$id]['stem'] = array();
             }
             else
             {
@@ -539,7 +536,6 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
             $arrRelevance[$id]['kw'][$kw] = 1;
         }
 
-        
         // recherche dans les annotation de l'utilisateur (considéré comme meta ?)
         $sql =  "
                 SELECT      e.*,
@@ -555,9 +551,9 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
                 AND         at.id_annotation = a.id
                 AND         a.id_element = e.id
                 AND         t.tag_clean like '".$db->addslashes($kw)."%'
-                
+
                 {$strSearch}
-                
+
                 ORDER BY {$orderby} {$sort}
                 ";
 
@@ -576,7 +572,7 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
                 $arrRelevance[$id]['relevance'] = $row['relevance'];
                 $arrRelevance[$id]['count'] = 1;
                 $arrRelevance[$id]['kw'] = array();
-                $arrRelevance[$id]['stem'] = array(); 
+                $arrRelevance[$id]['stem'] = array();
             }
             else
             {
@@ -588,26 +584,26 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
         }
 
     }
-    
+
     foreach($arrRelevance as $key => $element)
     {
         $arrRelevance[$key]['kw_ratio'] = (sizeof($arrRelevance[$key]['kw'])+sizeof($arrRelevance[$key]['stem'])) / (sizeof($arrKeywords)+sizeof($arrStems));
         $arrRelevance[$key]['relevance'] = ($arrRelevance[$key]['relevance']/$arrRelevance[$key]['count']) * $arrRelevance[$key]['kw_ratio'];
     }
-    
+
     // tri du résultat en fonction du champ et de l'ordre
     $compare_sign = ($sort == 'DESC') ? '>' : '<';
     uasort($arrRelevance, create_function('$a,$b', 'return $b[\''.$orderby.'\'] '.$compare_sign.' $a[\''.$orderby.'\'];'));
-    
+
     $arrResult = array();
-    
+
     $c = 0;
     while (current($arrRelevance) !== false && $c++ < $limit)
     {
         $arrResult[key($arrRelevance)] = array_merge($arrElements[key($arrRelevance)], $arrRelevance[key($arrRelevance)]);
         next($arrRelevance);
     }
-    
+
     return($arrResult);
 }
 
@@ -617,16 +613,16 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
  * @param string $content contenu du texte à analyser
  * @param boolean $usecommonwords true si la liste des mots communs doit être utilisée.
  * @param boolean $getstem true si la méthode de lemmisation/racinisation doit être utilisée
- * @param boolean $sort true si le résultat doit être trié par occurence d'apparition du mot 
+ * @param boolean $sort true si le résultat doit être trié par occurence d'apparition du mot
  * @return tableau de mots clés ou de racines
- * 
+ *
  * @see _PLOOPI_INDEXATION_COMMONWORDS_FR
  * @see _PLOOPI_INDEXATION_WORDSEPARATORS
  * @see _PLOOPI_INDEXATION_WORDMINLENGHT
  * @see _PLOOPI_INDEXATION_WORDMAXLENGHT
- * 
+ *
  * @see ploopi_convertaccents
- * 
+ *
  * @link http://pecl.php.net/package/stem
  */
 
@@ -646,12 +642,12 @@ function ploopi_getwords($content, $usecommonwords = true, $getstem = false, $so
                 while (!feof($handle)) $filecontent .= fgets($handle);
                 fclose($handle);
             }
-    
+
             $_SESSION['ploopi']['commonwords'] = array_flip(split("[\n]", str_replace("\r",'',$filecontent)));
         }
         else $_SESSION['ploopi']['commonwords'] = array();
     }
-    
+
     for ($kw = strtok($content, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
     {
         // remove empty characters
@@ -792,24 +788,24 @@ function ploopi_highlight($content, $words, $snippet_length = 150, $snippet_num 
 function ploopi_search_get_records($id_object = null, $id_module = null)
 {
     global $db;
-    
+
     $arrWhere = array();
-    
+
     if (!isset($id_module) && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
-    
+
     if (isset($id_object) && is_numeric($id_object)) $arrWhere[] = "id_object = '".$db->addslashes($id_object)."'";
     if (isset($id_module) && is_numeric($id_module)) $arrWhere[] = "id_module = '".$db->addslashes($id_module)."'";
-    
-    $strWhere = empty($arrWhere) ? '' : 'WHERE '.implode(' AND ', $arrWhere); 
-    
+
+    $strWhere = empty($arrWhere) ? '' : 'WHERE '.implode(' AND ', $arrWhere);
+
     $sql = "
         SELECT  id_record
         FROM    ploopi_index_element
-        {$strWhere}  
+        {$strWhere}
     ";
-        
+
     $rs = $db->query($sql);
-    
+
     return $db->getarray();
 }
 

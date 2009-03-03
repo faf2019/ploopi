@@ -278,7 +278,6 @@ if (isset($ploopi_op))
             $prev_year = $year - ($prev_month == 12);
             $next_year = $year + ($next_month == 1);
 
-
             if ($_SESSION['ploopi']['mode'] == 'backoffice' && !empty($_SESSION['ploopi']['template_path'])) $strIconsPath = $_SESSION['ploopi']['template_path'];
             else $strIconsPath = '.';
 
@@ -396,7 +395,7 @@ if (isset($ploopi_op))
             <?php
             ploopi_die();
         break;
-        
+
         case 'ploopi_get_userphoto':
             // Envoi de la photo d'un utilisateur vers le client
             $objUser = new user();
@@ -407,9 +406,8 @@ if (isset($ploopi_op))
             }
             ploopi_die();
         break;
-        
-    }
 
+    }
 
     if ($_SESSION['ploopi']['connected'])
     {
@@ -513,13 +511,13 @@ if (isset($ploopi_op))
                     SELECT  ploopi_mb_wce_object.*,
                             ploopi_module.label as module_label,
                             ploopi_module.id as module_id
-                    
+
                     FROM    ploopi_mb_wce_object,
                             ploopi_module,
                             ploopi_module_workspace
-                    
+
                     WHERE   ploopi_mb_wce_object.id_module_type = ploopi_module.id_module_type
-                    AND     ((ploopi_module_workspace.id_module = ploopi_module.id AND ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['workspaceid']}) OR ploopi_mb_wce_object.id_module_type = 1) 
+                    AND     ((ploopi_module_workspace.id_module = ploopi_module.id AND ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['workspaceid']}) OR ploopi_mb_wce_object.id_module_type = 1)
                 ";
 
                 $result_object = $db->query($select_object);

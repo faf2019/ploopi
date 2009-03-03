@@ -23,7 +23,7 @@
 
 /**
  * Fonctions de base du coeur de Ploopi
- * 
+ *
  * @package ploopi
  * @subpackage system
  * @copyright Netlor, Ovensia
@@ -40,11 +40,11 @@
  *
  * @param mixed $var variable à afficher
  * @param boolean $flush true si la sortie doit être vidée (true par défaut)
- * 
+ *
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see die
  * @see ploopi_print_r
  */
@@ -54,21 +54,21 @@ function ploopi_die($var = null, $flush = true)
     global $ploopi_errorlevel;
     global $ploopi_errors_level;
     global $ploopi_errors_nb;
-    global $ploopi_errors_msg;    
+    global $ploopi_errors_msg;
     global $db;
-    
+
     global $ploopi_timer;
     
-    if (    
-        !empty($ploopi_errors_level) &&  
+    if (
+        !empty($ploopi_errors_level) &&
         $ploopi_errors_level &&
-        defined('_PLOOPI_MAIL_ERRORS') && 
+        defined('_PLOOPI_MAIL_ERRORS') &&
         _PLOOPI_MAIL_ERRORS  &&
         defined('_PLOOPI_ADMINMAIL') &&
         _PLOOPI_ADMINMAIL != ''
         )
     {
-        mail(   
+        mail(
             _PLOOPI_ADMINMAIL,
             "[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$_SERVER['HTTP_HOST']}]",
             "{$ploopi_errors_nb} erreur(s) sur {$ploopi_errors_msg}".
@@ -77,9 +77,8 @@ function ploopi_die($var = null, $flush = true)
             "\n_GET:\n".print_r($_GET, true)
             // ."\n_SESSION:\n".print_r($_SESSION, true)
         );
-    }  
-    
-    
+    }
+
     if (!is_null($var))
     {
         if (is_string($var)) echo $var;
@@ -97,11 +96,11 @@ function ploopi_die($var = null, $flush = true)
  * Détecte si le navigateur supporte la compression gzip
  *
  * @return boolean true si le navigateur supporte la compression gzip
- * 
+ *
  * @copyright tellinya.com
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @link http://www.tellinya.com/read/2007/09/09/106.html
  */
 
@@ -116,9 +115,9 @@ function ploopi_accepts_gzip()
  * Compresse éventuellement le contenu.
  * Ecrit dans le log.
  *
- * @param string $buffer contenu du buffer de sortie 
+ * @param string $buffer contenu du buffer de sortie
  * @return string buffer modifié
- * 
+ *
  * @see _PLOOPI_USE_OUTPUT_COMPRESSION
  * @see ob_start
  */
@@ -138,23 +137,23 @@ function ploopi_ob_callback($buffer)
 
         if (preg_match('/Content-type:((.*);(.*)|(.*))/i', $property, $matches))
         {
-            $content_type = (empty($matches[2])) ? $matches[1] : $matches[2]; 
+            $content_type = (empty($matches[2])) ? $matches[1] : $matches[2];
             $content_type = strtolower(trim($content_type));
         }
     }
-    
-    if (_PLOOPI_USE_OUTPUT_COMPRESSION && $content_type == 'text/html') 
+
+    if (_PLOOPI_USE_OUTPUT_COMPRESSION && $content_type == 'text/html')
     {
         // compress html
         // ATTENTION pose problème avec TEXTAREA & JS
         // $buffer = preg_replace(array('/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'), array('>','<','\\1'), $buffer);
     }
- 
+
     $ploopi_stats = array();
-    
+
     if (isset($buffer)) $ploopi_stats['pagesize'] = strlen($buffer);
     else $ploopi_stats['pagesize'] = 0;
-    
+
     if (isset($db))
     {
         $ploopi_stats['numqueries'] = $db->get_num_queries();
@@ -165,7 +164,7 @@ function ploopi_ob_callback($buffer)
         $ploopi_stats['numqueries'] = 0;
         $ploopi_stats['sql_exectime'] = 0;
     }
-    
+
     if (isset($ploopi_timer))
     {
         $ploopi_stats['total_exectime'] = round($ploopi_timer->getexectime()*1000,0);
@@ -178,7 +177,7 @@ function ploopi_ob_callback($buffer)
         $ploopi_stats['sql_ratiotime'] = 0;
         $ploopi_stats['php_ratiotime'] = 0;
     }
-    
+
     if (isset($_SESSION))
     {
         $ploopi_stats['sessionsize'] = strlen(session_encode());
@@ -187,15 +186,15 @@ function ploopi_ob_callback($buffer)
     {
         $ploopi_stats['sessionsize'] = 0;
     }
-                        
+
     if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG && isset($db))
     {
-        
+
         include_once './include/functions/date.php';
         include_once './include/classes/log.php';
-        
+
         $log = new log();
-        
+
         $log->fields['request_method'] = $_SERVER['REQUEST_METHOD'];
         $log->fields['query_string'] = $_SERVER['QUERY_STRING'];
         $log->fields['remote_addr'] = (empty($_SESSION['ploopi']['remote_ip'])) ? '' : implode(',', $_SESSION['ploopi']['remote_ip']);
@@ -207,12 +206,12 @@ function ploopi_ob_callback($buffer)
         $log->fields['ploopi_userid'] = (empty($_SESSION['ploopi']['userid'])) ? 0 : $_SESSION['ploopi']['userid'];
         $log->fields['ploopi_workspaceid'] = (empty($_SESSION['ploopi']['workspaceid'])) ? 0 : $_SESSION['ploopi']['workspaceid'];;
         $log->fields['ts'] = ploopi_createtimestamp();
-        
+
         require_once 'Net/UserAgent/Detect.php';
-        
+
         $log->fields['browser'] = Net_UserAgent_Detect::getBrowserString();
         $log->fields['system'] = Net_UserAgent_Detect::getOSString();
-        
+
         $log->fields['total_exec_time'] = $ploopi_stats['total_exectime'];
         $log->fields['sql_exec_time'] = $ploopi_stats['sql_exectime'];
         $log->fields['sql_percent_time'] = $ploopi_stats['sql_ratiotime'];
@@ -221,10 +220,10 @@ function ploopi_ob_callback($buffer)
         $log->fields['page_size'] = $ploopi_stats['pagesize'];
         $log->save();
     }
-                            
+
     // Pose quelques soucis... souvent déconnecté
     // if (!empty($db) && $db->isconnected()) $db->close();
-    
+
     if ($content_type == 'text/html')
     {
         $array_tags = array(    '<PLOOPI_PAGE_SIZE>',
@@ -234,7 +233,7 @@ function ploopi_ob_callback($buffer)
                                 '<PLOOPI_NUMQUERIES>',
                                 '<PLOOPI_SESSION_SIZE>'
                             );
-        
+
         $array_values = array(  sprintf("%.02f",$ploopi_stats['pagesize']/1024),
                                 $ploopi_stats['total_exectime'],
                                 $ploopi_stats['php_ratiotime'],
@@ -242,21 +241,21 @@ function ploopi_ob_callback($buffer)
                                 $ploopi_stats['numqueries'],
                                 sprintf("%.02f",$ploopi_stats['sessionsize']/1024)
                             );
-        
+
         $buffer = trim(str_replace($array_tags, $array_values, $buffer));
     }
-   
+
     if (_PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && ($content_type == 'text/html' || $content_type == 'text/xml' || $content_type == 'text/x-json'))
-    {  
+    {
         header("Content-Encoding: gzip");
         return gzencode($buffer);
     }
     else
     {
-        // Attention, Content-Encoding: none ET Content-Type: text/html ne font pas bon ménage ! 
+        // Attention, Content-Encoding: none ET Content-Type: text/html ne font pas bon ménage !
         // => Problème avec le validateur W3C : Line 1, Column 0: end of document in prolog
-        if ($content_type != 'text/html') header("Content-Encoding: none"); 
-        
+        if ($content_type != 'text/html') header("Content-Encoding: none");
+
         return $buffer;
     }
 }
@@ -281,7 +280,7 @@ function ploopi_print_r($var, $return = false)
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see ploopi_ob_callback
  */
 
@@ -303,16 +302,15 @@ function ploopi_ob_clean()
 function ploopi_redirect($url, $urlencode = true, $internal = true, $refresh = 0)
 {
     include_once './include/functions/crypt.php';
-    
+
     if ($internal) $url = _PLOOPI_BASEPATH.'/'.$url;
     if ($urlencode) $url = ploopi_urlencode($url);
 
     if (empty($refresh) || !is_numeric($refresh)) header("Location: {$url}");
     else header("Refresh: {$refresh}; url={$url}");
-    
+
     ploopi_die();
 }
-
 
 /**
  * Charge l'environnement du module : variables globales, constantes, fonctions.
@@ -333,9 +331,9 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
     global $ploopi_additional_head;
     global $ploopi_additional_javascript;
     global $template_body;
-    
+
     $strModulePath = "./modules/{$moduletype}";
-    
+
     if (is_dir($strModulePath))
     {
         $version = (empty($_SESSION['ploopi']['moduletypes'][$moduletype]['version'])) ? '' : '?v='.urlencode($_SESSION['ploopi']['moduletypes'][$moduletype]['version']);
@@ -343,28 +341,29 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
         if (!defined("_PLOOPI_INITMODULE_{$moduletype}"))
         {
             define("_PLOOPI_INITMODULE_{$moduletype}",    1);
-            
+
             $defaultlanguagefile = "{$strModulePath}/lang/french.php";
-            $languagefile = "{$strModulePath}/lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php";
+            $languagefile = (isset($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language'])) ? "{$strModulePath}/lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php" : '';
+            
             $globalfile = "{$strModulePath}/include/global.php";
-            
+
             if (file_exists($globalfile)) include_once($globalfile);
-            
+
             if (file_exists($defaultlanguagefile)) include_once($defaultlanguagefile);
-    
+
             if ($languagefile != 'french' && file_exists($languagefile)) include_once($languagefile);
         }
-        
+
         if ($head)
         {
             if (!defined("_PLOOPI_INITMODULE_HEAD_{$moduletype}"))
             {
                 define("_PLOOPI_INITMODULE_HEAD_{$moduletype}",    1);
-                
+
                 $headfile = "{$strModulePath}/include/head.php";
-    
+
                 // GET MODULE ADDITIONAL HEAD
-                if (file_exists($headfile)) 
+                if (file_exists($headfile))
                 {
                     ob_start();
                     include $headfile;
@@ -373,16 +372,16 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
                 }
             }
         }
-        
+
         if ($js)
         {
             if (!defined("_PLOOPI_INITMODULE_JS_{$moduletype}"))
             {
                 define("_PLOOPI_INITMODULE_JS_{$moduletype}",    1);
-                
+
                 $jsfile_php = "{$strModulePath}/include/javascript.php";
                 $jsfile = "{$strModulePath}/include/functions.js";
-                
+
                 // GET MODULE ADDITIONAL JS
                 if (file_exists($jsfile_php))
                 {
@@ -391,7 +390,7 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
                     $ploopi_additional_javascript .= ob_get_contents();
                     @ob_end_clean();
                 }
-                
+
                 // GET MODULE ADDITIONAL JS
                 if (file_exists($jsfile) && isset($template_body))
                 {
@@ -403,16 +402,16 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
                 }
             }
         }
-        
+
         if ($css)
         {
             if (!defined("_PLOOPI_INITMODULE_CSS_{$moduletype}"))
             {
                 define("_PLOOPI_INITMODULE_CSS_{$moduletype}",    1);
-            
+
                 $cssfile = "{$strModulePath}/include/styles.css";
                 $cssfile_ie = "{$strModulePath}/include/styles_ie.css";
-                
+
                 // GET MODULE STYLE
                 if (file_exists($cssfile) && isset($template_body))
                 {
@@ -422,7 +421,7 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
                                                         )
                                                     );
                 }
-        
+
                 // GET MODULE STYLE FOR IE
                 if (file_exists($cssfile_ie) && isset($template_body))
                 {
@@ -446,16 +445,16 @@ function ploopi_loadparams()
     // load params
     foreach($_SESSION['ploopi']['params'] as $param_idmodule => $param_type)
     {
-        if (!empty($param_type['default'])) 
-            foreach($param_type['default'] as $param_name => $param_value) 
+        if (!empty($param_type['default']))
+            foreach($param_type['default'] as $param_name => $param_value)
                 $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
-                
-        if (!empty($param_type['workspace'][$_SESSION['ploopi']['backoffice']['workspaceid']])) 
-            foreach($param_type['workspace'][$_SESSION['ploopi']['backoffice']['workspaceid']] as $param_name => $param_value) 
+
+        if (!empty($param_type['workspace'][$_SESSION['ploopi']['backoffice']['workspaceid']]))
+            foreach($param_type['workspace'][$_SESSION['ploopi']['backoffice']['workspaceid']] as $param_name => $param_value)
                 $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
-                
-        if (!empty($param_type['user'])) 
-            foreach($param_type['user'] as $param_name => $param_value) 
+
+        if (!empty($param_type['user']))
+            foreach($param_type['user'] as $param_name => $param_value)
                 $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
     }
 }
@@ -580,21 +579,20 @@ function ploopi_set_flag($var, $value)
     else return(false);
 }
 
-
 /**
  * Renvoie un tableau des templates disponibles (frontoffice ou backoffice)
  *
  * @param string $type au choix entre 'frontoffice' et 'backoffice', par défaut 'frontoffice'
  * @return array tableau des templates disponibles
  */
- 
+
 function ploopi_getavailabletemplates($type = 'frontoffice')
 {
     $templates = array();
     $basepath = '.'._PLOOPI_SEP.'templates'._PLOOPI_SEP.$type;
 
     clearstatcache();
-    
+
     $p = @opendir(realpath($basepath));
 
     while ($template = @readdir($p))
@@ -603,9 +601,9 @@ function ploopi_getavailabletemplates($type = 'frontoffice')
 
         if ((substr($template, 0, 1) != '.') && is_dir($tplpath) && file_exists($tplpath._PLOOPI_SEP.'index.tpl')) $templates[] = $template;
     }
-    
+
     closedir($p);
-    
+
     sort($templates);
 
     return($templates);
@@ -617,11 +615,11 @@ function ploopi_getavailabletemplates($type = 'frontoffice')
  * @param callback $func fonction à appliquer sur le tableau
  * @param array $var variable à modifier
  * @return array le tableau modifié
- * 
+ *
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see array_map
  */
 
@@ -632,11 +630,11 @@ function ploopi_array_map($func, $var)
 
 /**
  * Renvoie une erreur 404 dans les entêtes
- * 
+ *
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see header
  */
 
@@ -651,7 +649,7 @@ function ploopi_h404() { header("HTTP/1.0 404 Not Found"); }
 function ploopi_logout($errorcode = null, $sleep = 1)
 {
     global $session;
-    
+
     $session->regenerate_id();
     $_SESSION = array();
     session_destroy();

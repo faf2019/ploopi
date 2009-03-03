@@ -23,7 +23,7 @@
 
 /**
  * Gestion de la metabase.
- *  
+ *
  * @package ploopi
  * @subpackage metabase
  * @copyright Netlor, Ovensia
@@ -39,7 +39,7 @@ include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_mb_schema
- *  
+ *
  * @package ploopi
  * @subpackage metabase
  * @copyright Netlor, Ovensia
@@ -48,16 +48,16 @@ include_once './include/classes/data_object.php';
  */
 
 class mb_schema extends data_object
-{   
+{
     function mb_schema()
     {
         parent::data_object('ploopi_mb_schema','tablesrc','tabledest','id_module_type');
-    }   
+    }
 }
 
 /**
  * Classe d'accès à la table ploopi_mb_relation
- *  
+ *
  * @package ploopi
  * @subpackage metabase
  * @copyright Netlor, Ovensia
@@ -66,22 +66,22 @@ class mb_schema extends data_object
  */
 
 class mb_relation extends data_object
-{   
+{
     /**
      * Constructeur de la classe
      *
      * @return mb_relation
      */
-    
+
     function mb_relation()
     {
         parent::data_object('ploopi_mb_relation','tablesrc','fieldsrc','tabledest','fielddest','id_module_type');
-    }   
+    }
 }
 
 /**
  * Classe d'accès à la table ploopi_mb_table
- *  
+ *
  * @package ploopi
  * @subpackage metabase
  * @copyright Netlor, Ovensia
@@ -96,7 +96,7 @@ class mb_table extends data_object
      *
      * @return mb_table
      */
-    
+
     function mb_table()
     {
         parent::data_object('ploopi_mb_table','name','id_module_type');
@@ -105,7 +105,7 @@ class mb_table extends data_object
     /**
      * Supprime la table ainsi que les champs, les relations et le schéma associés
      */
-    
+
     function delete()
     {
         global $db;
@@ -119,7 +119,7 @@ class mb_table extends data_object
 
 /**
  * Classe d'accès à la table ploopi_mb_field
- *  
+ *
  * @package ploopi
  * @subpackage metabase
  * @copyright Netlor, Ovensia
@@ -128,22 +128,22 @@ class mb_table extends data_object
  */
 
 class mb_field extends data_object
-{   
+{
     /**
      * Constructeur de la classe
      *
      * @return mb_field
      */
-    
+
     function mb_field()
     {
         parent::data_object('ploopi_mb_field','tablename','name');
-    }   
+    }
 }
 
 /**
  * Classe d'accès à la table ploopi_mb_object
- *  
+ *
  * @package ploopi
  * @subpackage metabase
  * @copyright Netlor, Ovensia
@@ -152,22 +152,22 @@ class mb_field extends data_object
  */
 
 class mb_object extends data_object
-{   
+{
     /**
      * Constructeur de la classe
      *
      * @return mb_object
      */
-    
+
     function mb_object()
     {
         parent::data_object('ploopi_mb_object', 'id', 'id_module_type');
-    }   
+    }
 }
 
 /**
  * Classe d'accès à la table ploopi_mb_wce_object
- *  
+ *
  * @package ploopi
  * @subpackage metabase
  * @copyright Netlor, Ovensia
@@ -182,17 +182,17 @@ class mb_wce_object extends data_object
      *
      * @return mb_wce_object
      */
-    
+
     function mb_wce_object()
     {
         parent::data_object('ploopi_mb_wce_object');
     }
-    
+
 }
 
 /**
  * Classe d'accès à la table ploopi_mb_action
- *  
+ *
  * @package ploopi
  * @subpackage metabase
  * @copyright Netlor, Ovensia
@@ -207,7 +207,7 @@ class mb_action extends data_object
      *
      * @return mb_action
      */
-    
+
     function mb_action()
     {
         parent::data_object('ploopi_mb_action','id_module_type','id_action');
@@ -218,7 +218,7 @@ class mb_action extends data_object
      *
      * @return int identifiant de l'action
      */
-    
+
     function save()
     {
         global $db;
@@ -237,11 +237,11 @@ class mb_action extends data_object
      *
      * @param boolean $preserve_data false si la suppression doit se faire en cascade (rôles associés). Par défaut : false.
      */
-    
+
     function delete($preserve_data = false)
     {
         include_once './include/classes/role.php';
-        
+
         global $db;
 
         if ($this->fields['id_action']!=-1 && !$preserve_data)

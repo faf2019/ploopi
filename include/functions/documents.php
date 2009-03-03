@@ -24,14 +24,13 @@
 /**
  * Gestion d'un bloc de document associé à un enregistrement d'un objet.
  * Permet notamment de gérer des pièces jointes à n'importe quel objet de ploopi.
- * 
+ *
  * @package ploopi
  * @subpackage document
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
-
 
 /**
  * Renvoie l'identifiant d'un bloc de documents pour un enregistrement d'un objet
@@ -40,7 +39,7 @@
  * @param string $id_record identifiant de l'enregistrement
  * @param int $id_module identifiant du module
  * @return string identifiant du bloc de documents
- * 
+ *
  * @see md5
  */
 
@@ -58,7 +57,7 @@ function ploopi_documents_getid($id_object, $id_record, $id_module = -1)
  * @param string $id_record identifiant de l'enregistrement
  * @param array $rights tableau définissant les droits 'DOCUMENT_CREATE':boolean, 'DOCUMENT_MODIFY':boolean, 'DOCUMENT_DELETE':boolean, 'FOLDER_CREATE':boolean, 'FOLDER_MODIFY':boolean, 'FOLDER_DELETE': boolean, 'SEARCH': boolean
  * @param array $default_folders tableau définissant les sous-dossiers par défaut à créer
- * @param array $params tableau définissant les paramètres du bloc 'ROOT_NAME':string, 'ATTACHEMENT':boolean, 'FIELDS':array 
+ * @param array $params tableau définissant les paramètres du bloc 'ROOT_NAME':string, 'ATTACHEMENT':boolean, 'FIELDS':array
  * @param int $id_user identifiant de l'utilisateur
  * @param int $id_workspace identifiant de l'espace
  * @param int $id_module identifiant du module
@@ -67,14 +66,14 @@ function ploopi_documents_getid($id_object, $id_record, $id_module = -1)
 function ploopi_documents($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $load_doc = true, $id_user = -1, $id_workspace = -1, $id_module = -1)
 {
     include_once './include/classes/documents.php';
-    
+
     global $db;
-    
+
     global $ploopi_documents_idinstance;
 
     if (empty($ploopi_documents_idinstance)) $ploopi_documents_idinstance = 0;
     $ploopi_documents_idinstance++;
-        
+
     if ($id_user == -1) $id_user = $_SESSION['ploopi']['userid'];
     if ($id_workspace == -1) $id_workspace = $_SESSION['ploopi']['workspaceid'];
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
@@ -83,7 +82,7 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     $documents_id = ploopi_documents_getid($id_object, $id_record, $id_module);
 
     // permet de mettre des droits par défaut si le paramètre est incomplet
-    $rights = 
+    $rights =
         array_merge(
             array(
                 'DOCUMENT_CREATE' => true,
@@ -96,7 +95,7 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
             ),
             (is_array($rights)) ? $rights : array()
         );
-        
+
     if (empty($params['ROOT_NAME'])) $params['ROOT_NAME'] = 'Racine';
     if (empty($params['ATTACHEMENT'])) $params['ATTACHEMENT'] = true;
     if (empty($params['FIELDS'])) $params['FIELDS'] = array();
@@ -104,9 +103,9 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     if (empty($params['CALLBACK_FUNC'])) $params['CALLBACK_FUNC'] = null;
     if (empty($params['CALLBACK_INC'])) $params['CALLBACK_INC'] = null;
     if (empty($params['DEFAULT_FOLDER'])) $params['DEFAULT_FOLDER'] = '';
-    
-    $_SESSION['documents'] = 
-        array (    
+
+    $_SESSION['documents'] =
+        array (
             'id_object'     => $id_object,
             'id_record'     => $id_record,
             'id_user'       => $id_user,
@@ -122,9 +121,9 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
             'callback_inc' => $params['CALLBACK_INC'],
             'default_folder' => $params['DEFAULT_FOLDER']
         );
-    
+
     $_SESSION['documents']['rights'] = $rights;
-    
+
     // on va chercher la racine
     $db->query("SELECT id FROM ploopi_documents_folder WHERE id_folder = 0 and id_object = '{$_SESSION['documents']['id_object']}' and id_record = '".addslashes($_SESSION['documents']['id_record'])."'");
 
@@ -157,8 +156,8 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
                 $documentsfolder->save();
             }
         }
-    }    
-    
+    }
+
     if ($load_doc)
     {
         ?>
@@ -242,7 +241,7 @@ function ploopi_documents_getfiles($id_object, $id_record, $id_folder = 0)
  * @param string $id_record identifiant de l'enregistrement
  * @return array tableau contenant le nom des dossiers
  */
- 
+
 function ploopi_documents_getfolders($id_object, $id_record)
 {
     global $db;
@@ -270,7 +269,7 @@ function ploopi_documents_getfolders($id_object, $id_record)
  * @param int $id_user identifiant du l'utilisateur (optionnel)
  * @param int $id_workspace identifiant de l'espace de travail (optionnel)
  * @param int $id_module identifiant du module (optionnel)
- * 
+ *
  * @copyright Ovensia
  */
 
@@ -280,40 +279,38 @@ function ploopi_documents_savefile($id_object, $id_record, $file, $filename, $id
     {
         include_once './include/classes/documents.php';
         $documentsfile = new documentsfile();
-    
+
         if (empty($id_user)) $id_user = $_SESSION['ploopi']['userid'];
         if (empty($id_workspace)) $id_workspace = $_SESSION['ploopi']['workspaceid'];
         if (empty($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
-    
-        
+
         $documentsfile->fields['id_object'] = $id_object;
         $documentsfile->fields['id_record'] = $id_record;
-        
+
         $documentsfile->fields['name'] = $filename;
         $documentsfile->fields['size'] = filesize($file);
         $documentsfile->fields['extension'] = ploopi_file_getextension($filename);
         $documentsfile->fields['label'] = $label;
         $documentsfile->fields['description'] = $description;
         $documentsfile->fields['ref'] = $ref;
-        
+
         $documentsfile->fields['timestp_file'] = ploopi_createtimestamp();
         $documentsfile->fields['timestp_create'] = $documentsfile->fields['timestp_file'];
-        $documentsfile->fields['timestp_modify'] = $documentsfile->fields['timestp_file']; 
-        
+        $documentsfile->fields['timestp_modify'] = $documentsfile->fields['timestp_file'];
+
         $documentsfile->fields['id_user'] = $id_user;
         $documentsfile->fields['id_workspace'] = $id_workspace;
         $documentsfile->fields['id_module'] = $id_module;
-        
+
         $documentsfile->fields['id_folder'] = $id_folder;
-        
+
         $documentsfile->fields['id_user_modify'] = $documentsfile->fields['id_user'];
-    
+
         $documentsfile->setfile($file);
-        
+
         $documentsfile->save();
     }
 }
-
 
 /**
  * Affiche l'explorateur de documents
@@ -325,7 +322,7 @@ function ploopi_documents_browser($currentfolder)
 {
     global $db;
     global $skin;
-    
+
     ?>
     <div class="documents_browser">
 
@@ -342,7 +339,7 @@ function ploopi_documents_browser($currentfolder)
                 <a title="Rechercher un Fichier" href="javascript:void(0);" style="float:right;"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_search.png"></a>
                 <?php
             }
-            
+
             if (empty($_SESSION['documents']['mode']))
             {
                 if ($_SESSION['documents']['rights']['DOCUMENT_CREATE'])
@@ -388,16 +385,16 @@ function ploopi_documents_browser($currentfolder)
 
         $documents_columns = array();
 
-        $documents_columns['auto']['name'] = 
-            array(  
+        $documents_columns['auto']['name'] =
+            array(
                 'label' => 'Nom',
                 'options' => array('sort' => true)
             );
 
         if (empty($_SESSION['documents']['fields']) || in_array('type', $_SESSION['documents']['fields']))
         {
-            $documents_columns['right']['type'] = 
-                array( 
+            $documents_columns['right']['type'] =
+                array(
                     'label' => 'Type',
                     'width' => empty($_SESSION['documents']['fields_size']['type']) ? 65 : $_SESSION['documents']['fields_size']['type'],
                     'options' => array('sort' => true)
@@ -406,8 +403,8 @@ function ploopi_documents_browser($currentfolder)
 
         if (empty($_SESSION['documents']['fields']) || in_array('timestp_modify', $_SESSION['documents']['fields']))
         {
-            $documents_columns['right']['timestp_modify'] = 
-                array( 
+            $documents_columns['right']['timestp_modify'] =
+                array(
                     'label' => 'Date Modif',
                     'width' => empty($_SESSION['documents']['fields_size']['timestp_modify']) ? 130 : $_SESSION['documents']['fields_size']['timestp_modify'],
                     'options' => array('sort' => true)
@@ -416,8 +413,8 @@ function ploopi_documents_browser($currentfolder)
 
         if (empty($_SESSION['documents']['fields']) || in_array('timestp_file', $_SESSION['documents']['fields']))
         {
-            $documents_columns['right']['timestp_file'] = 
-                array( 
+            $documents_columns['right']['timestp_file'] =
+                array(
                     'label' => 'Date',
                     'width' => empty($_SESSION['documents']['fields_size']['timestp_file']) ? 80 : $_SESSION['documents']['fields_size']['timestp_file'],
                     'options' => array('sort' => true)
@@ -426,8 +423,8 @@ function ploopi_documents_browser($currentfolder)
 
         if (empty($_SESSION['documents']['fields']) || in_array('ref', $_SESSION['documents']['fields']))
         {
-            $documents_columns['right']['ref'] = 
-                array( 
+            $documents_columns['right']['ref'] =
+                array(
                     'label' => 'Ref',
                     'width' => empty($_SESSION['documents']['fields_size']['ref']) ? 100 : $_SESSION['documents']['fields_size']['ref'],
                     'options' => array('sort' => true)
@@ -436,8 +433,8 @@ function ploopi_documents_browser($currentfolder)
 
         if (empty($_SESSION['documents']['fields']) || in_array('label', $_SESSION['documents']['fields']))
         {
-            $documents_columns['right']['label'] = 
-                array( 
+            $documents_columns['right']['label'] =
+                array(
                     'label' => 'Libellé',
                     'width' => empty($_SESSION['documents']['fields_size']['label']) ? 150 : $_SESSION['documents']['fields_size']['label'],
                     'options' => array('sort' => true)
@@ -446,23 +443,23 @@ function ploopi_documents_browser($currentfolder)
 
         if (empty($_SESSION['documents']['fields']) || in_array('size', $_SESSION['documents']['fields']))
         {
-            $documents_columns['right']['size'] = 
-                array( 
+            $documents_columns['right']['size'] =
+                array(
                     'label' => 'Taille',
                     'width' => empty($_SESSION['documents']['fields_size']['size']) ? 90 : $_SESSION['documents']['fields_size']['size'],
                     'options' => array('sort' => true)
                 );
         }
 
-        if (empty($_SESSION['documents']['mode'])) 
-            $documents_columns['actions_right']['actions'] = 
+        if (empty($_SESSION['documents']['mode']))
+            $documents_columns['actions_right']['actions'] =
                 array(
-                    'label' => 'Actions', 
+                    'label' => 'Actions',
                     'width' => 85
                 );
 
         $documents_values = array();
-                
+
         // DISPLAY FOLDERS
         $sql =  "
                 SELECT      f.*,
@@ -479,10 +476,10 @@ function ploopi_documents_browser($currentfolder)
         while ($row = $db->fetchrow())
         {
             $ldate = ploopi_timestamp2local($row['timestp_modify']);
-            
-            $documents_values[$i]['values'] = 
+
+            $documents_values[$i]['values'] =
                 array(
-                    'name' => 
+                    'name' =>
                         array(
                             'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/ico_folder".($row['system'] ? '_locked' : '').".png\" /><span>&nbsp;{$row['name']}</span>",
                             'sort_label' => '1_'.$row['name']
@@ -496,7 +493,7 @@ function ploopi_documents_browser($currentfolder)
                             'label' => "{$ldate['date']} {$ldate['time']}",
                             'sort_label' => '1_'.$row['timestp_modify']
                          ),
-                    'timestp_file' => 
+                    'timestp_file' =>
                         array(
                             'label' => '&nbsp;'
                         ),
@@ -504,11 +501,11 @@ function ploopi_documents_browser($currentfolder)
                         array(
                             'label' => '&nbsp;'
                         ),
-                    'label' => 
+                    'label' =>
                         array(
-                            'label' => '&nbsp;', 
+                            'label' => '&nbsp;',
                         ),
-                    'size' => 
+                    'size' =>
                         array(
                             'label' => "{$row['nbelements']} element(s)",
                             'sort_label' => '1_'.$row['nbelements']
@@ -521,9 +518,9 @@ function ploopi_documents_browser($currentfolder)
 
             if ($actions == '') $actions = '&nbsp;';
 
-            $documents_values[$i]['values']['actions'] = 
+            $documents_values[$i]['values']['actions'] =
                 array(
-                    'label' => (empty($_SESSION['documents']['mode']) && !$row['system']) ? $actions : '&nbsp;', 
+                    'label' => (empty($_SESSION['documents']['mode']) && !$row['system']) ? $actions : '&nbsp;',
                 );
 
             $documents_values[$i]['description'] = '';
@@ -567,10 +564,9 @@ function ploopi_documents_browser($currentfolder)
             if ($_SESSION['documents']['rights']['FOLDER_MODIFY']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le fichier\')) ploopi_documents_deletefile(\''.$currentfolder.'\',\''.$_SESSION['documents']['documents_id'].'\',\''.$row['id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
             if ($_SESSION['documents']['rights']['FOLDER_DELETE']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi_documents_openfile(\''.$currentfolder.'\',\''.$row['id'].'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
 
-            
-            $documents_values[$i]['values'] = 
+            $documents_values[$i]['values'] =
                 array(
-                    'name' => 
+                    'name' =>
                         array(
                             'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/mimetypes/{$ico}\" /><span>&nbsp;{$row['name']}</span>",
                             'sort_label' => '2_'.$row['name']
@@ -584,7 +580,7 @@ function ploopi_documents_browser($currentfolder)
                             'label' => "{$ldate['date']} {$ldate['time']}",
                             'sort_label' => '2_'.$row['timestp_modify']
                          ),
-                    'timestp_file' => 
+                    'timestp_file' =>
                         array(
                             'label' => $ldate_file['date'],
                             'sort_label' => '2_'.$row['timestp_file']
@@ -594,26 +590,26 @@ function ploopi_documents_browser($currentfolder)
                             'label' => $row['ref'],
                             'sort_label' => '2_'.$row['ref']
                         ),
-                    'label' => 
+                    'label' =>
                         array(
-                            'label' => $row['label'], 
+                            'label' => $row['label'],
                             'sort_label' => '2_'.$row['label']
                         ),
-                    'size' => 
+                    'size' =>
                         array(
                             'label' => "{$ksize} ko",
                             'sort_label' => '2_'.$row['size']
                         )
                 );
-                                
-            $documents_values[$i]['values']['actions'] = 
+
+            $documents_values[$i]['values']['actions'] =
                 array(
                     'label' => $actions.'<a title="Télécharger" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download.png" /></a>
-                                         <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=documents_downloadfile_zip&documentsfile_id={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download_zip.png" /></a>', 
+                                         <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=documents_downloadfile_zip&documentsfile_id={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download_zip.png" /></a>',
                 );
-                
+
             $documents_values[$i]['description'] = '';
-            
+
             if ($_SESSION['documents']['mode'] == 'selectfile')
             {
                 $documents_values[$i]['link'] = 'javascript:void(0);';
@@ -621,24 +617,23 @@ function ploopi_documents_browser($currentfolder)
             }
             else $documents_values[$i]['link'] = ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['id']}&attachement=".$_SESSION['documents']['attachement']);
 
-
             $documents_values[$i]['style'] = '';
 
             $i++;
         }
 
         $skin->display_array(
-            $documents_columns, 
-            $documents_values, 
-            'ploopi_documents', 
+            $documents_columns,
+            $documents_values,
+            'ploopi_documents',
             array(
-                'sortable' => true, 
-                'orderby_default' => 'name', 
+                'sortable' => true,
+                'orderby_default' => 'name',
                 'sort_default' => 'DESC',
             )
-        );                 
+        );
         ?>
     </div>
-    <?php    
+    <?php
 }
 ?>

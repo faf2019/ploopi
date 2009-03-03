@@ -49,18 +49,17 @@ switch($ploopi_op)
         $_SESSION['documents']['destfield'] = $_GET['destfield'];
 
         ob_start();
-        
+
         ?>
         <div id="ploopidocuments_<?php echo $_SESSION['documents']['documents_id']; ?>">
         <?php
-        
+
     case 'documents_browser':
         include_once './include/classes/documents.php';
 
         if (isset($_REQUEST['currentfolder'])) $currentfolder = $_REQUEST['currentfolder'];
         if (isset($_REQUEST['mode'])) $_SESSION['documents']['mode'] = $_REQUEST['mode'];
 
-        
         if (empty($currentfolder)) // on va chercher la racine
         {
             $db->query("SELECT id FROM ploopi_documents_folder WHERE id_folder = 0 and id_object = '{$_SESSION['documents']['id_object']}' and id_record = '".$db->addslashes($_SESSION['documents']['id_record'])."'");
@@ -79,10 +78,9 @@ switch($ploopi_op)
                 $currentfolder = $documentsfolder->save();
             }
         }
-        
+
         ploopi_documents_browser($currentfolder);
-        
-        
+
         if ($ploopi_op == 'documents_selectfile')
         {
             ?>
@@ -90,10 +88,10 @@ switch($ploopi_op)
             <?php
             $content = ob_get_contents();
             ob_end_clean();
-        
+
             echo $skin->create_popup('Explorateur de fichiers', $content, 'ploopi_documents_popup');
         }
-        
+
         ploopi_die();
     break;
 
@@ -173,7 +171,7 @@ switch($ploopi_op)
 
             if (isset($_POST['fck_documentsfolder_description']))
                 $documentsfolder->fields['description'] = $_POST['fck_documentsfolder_description'];
-            
+
             $documentsfolder->save();
         }
         else // new folder
@@ -181,7 +179,7 @@ switch($ploopi_op)
             $documentsfolder->setvalues($_POST,'documentsfolder_');
             if (isset($_POST['fck_documentsfolder_description']))
                 $documentsfolder->fields['description'] = $_POST['fck_documentsfolder_description'];
-            
+
             $documentsfolder->fields['id_folder'] = $_POST['currentfolder'];
             $documentsfolder->fields['id_object'] = $_SESSION['documents']['id_object'];
             $documentsfolder->fields['id_record'] = $_SESSION['documents']['id_record'];
@@ -189,7 +187,7 @@ switch($ploopi_op)
             $documentsfolder->fields['id_user'] = $_SESSION['documents']['id_user'];
             $documentsfolder->fields['id_workspace'] = $_SESSION['documents']['id_workspace'];
             $documentsfolder->save();
-            
+
             if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
             if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefolder', $documentsfolder->fields['name']);
         }
@@ -241,24 +239,24 @@ switch($ploopi_op)
                     <span>
                     <?php
                     include_once './FCKeditor/fckeditor.php' ;
-                    
+
                     $oFCKeditor = new FCKeditor('fck_documentsfolder_description') ;
-                    
+
                     $oFCKeditor->BasePath = './FCKeditor/';
-                    
+
                     // default value
                     $oFCKeditor->Value = $documentsfolder->fields['description'];
-                    
+
                     // width & height
                     $oFCKeditor->Width='100%';
                     $oFCKeditor->Height='150';
-                    
+
                     $oFCKeditor->Config['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/js/documents/fckconfig.js';
                     $oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH.'/';
-                    
+
                     // render
                     $oFCKeditor->Create('FCKeditor_DocFileDesc') ;
-                    ?>                    
+                    ?>
                     </span>
                 </p>
             </div>
@@ -272,7 +270,7 @@ switch($ploopi_op)
         <?php
         $content = ob_get_contents();
         ob_end_clean();
-    
+
         echo $skin->create_popup($title, $content, 'ploopi_documents_openfolder_popup');
         ploopi_die();
     break;
@@ -292,12 +290,12 @@ switch($ploopi_op)
         }
 
         $documentsfile->setvalues($_POST,'documentsfile_');
-        
+
         if (isset($_POST['fck_documentsfile_description']))
             $documentsfile->fields['description'] = $_POST['fck_documentsfile_description'];
-            
+
         if (isset($documentsfile->fields['timestp_file'])) $documentsfile->fields['timestp_file'] = ploopi_local2timestamp($documentsfile->fields['timestp_file']);
-        
+
         $documentsfile->fields['id_folder'] = $_POST['currentfolder'];
 
         if (!empty($_FILES['documentsfile_file']['name']))
@@ -310,7 +308,7 @@ switch($ploopi_op)
 
         if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
         if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefile', $_FILES['documentsfile_file']['name']);
-        
+
         $error = $documentsfile->save();
         ?>
         <script type="text/javascript">
@@ -394,24 +392,24 @@ switch($ploopi_op)
                     <span>
                     <?php
                     include_once './FCKeditor/fckeditor.php' ;
-                    
+
                     $oFCKeditor = new FCKeditor('fck_documentsfile_description') ;
-                    
+
                     $oFCKeditor->BasePath = './FCKeditor/';
-                    
+
                     // default value
                     $oFCKeditor->Value = $documentsfile->fields['description'];
-                    
+
                     // width & height
                     $oFCKeditor->Width='100%';
                     $oFCKeditor->Height='150';
-                    
+
                     $oFCKeditor->Config['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/js/documents/fckconfig.js';
                     $oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH.'/';
-                    
+
                     // render
                     $oFCKeditor->Create('FCKeditor_DocFileDesc') ;
-                    ?>                    
+                    ?>
                     </span>
                 </p>
             </div>
@@ -425,7 +423,7 @@ switch($ploopi_op)
         <?php
         $content = ob_get_contents();
         ob_end_clean();
-    
+
         echo $skin->create_popup($title, $content, 'ploopi_documents_openfile_popup');
         ploopi_die();
     break;
@@ -440,7 +438,7 @@ switch($ploopi_op)
 
             if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
             if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefile', $documentsfile->fields['name']);
-            
+
             $documentsfile->delete();
         }
 
@@ -457,7 +455,7 @@ switch($ploopi_op)
 
             if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
             if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefolder', $documentsfolder->fields['name']);
-            
+
             $documentsfolder->delete();
         }
         ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}");

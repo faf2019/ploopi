@@ -23,7 +23,7 @@
 
 /**
  * Gestion internet des documents
- *  
+ *
  * @package ploopi
  * @subpackage document
  * @copyright Netlor, Ovensia
@@ -39,7 +39,7 @@ include_once './include/classes/data_object.php';
 
 /**
  * Classe de gestion des documents (ne pas confondre avec le module DOC)
- * 
+ *
  * @package ploopi
  * @subpackage document
  * @copyright Netlor, Ovensia
@@ -52,7 +52,7 @@ class documentsfile extends data_object
     private $oldname;
     private $tmpfile;
     private $file;
-    
+
     /**
      * Constructeur de la classe
      *
@@ -68,7 +68,7 @@ class documentsfile extends data_object
         $this->fields['size'] = 0;
         $this->fields['nbclick'] = 0;
         $this->fields['name'] = '';
-        
+
         $this->oldname = '';
         $this->tmpfile = 'none';
         $this->file = 'none';
@@ -123,12 +123,12 @@ class documentsfile extends data_object
                     {
                         if (!move_uploaded_file($this->tmpfile, $filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                     }
-                    
+
                     if ($this->file != 'none')
                     {
                         if (!copy($this->file, $filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                     }
-                    
+
                     if (!$error) chmod($filepath, 0640);
                 }
                 else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
@@ -140,16 +140,16 @@ class documentsfile extends data_object
             if (!empty($this->tmpfile) && $this->tmpfile != 'none')
             {
                 if ($this->fields['size']>_PLOOPI_MAXFILESIZE) $error = _PLOOPI_ERROR_MAXFILESIZE;
-                
+
                 if (!$error)
                 {
                     $this->fields['extension'] = substr(strrchr($this->fields['name'], "."),1);
 
                     $basepath = $this->getbasepath();
                     $filepath = $this->getfilepath();
-                    
+
                     if (file_exists($filepath) && !is_writable($filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
-                    
+
                     if (!$error)
                     {
                         // on copie le nouveau
@@ -164,17 +164,17 @@ class documentsfile extends data_object
                         else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                     }
                 }
-                
+
                 $this->fields['timestp_modify'] = ploopi_createtimestamp();
-                
+
                 $this->oldname = $this->fields['name'];
             }
-            
+
             // renommage
             if ($this->oldname != $this->fields['name'])
-            {   
+            {
                 // renommage avec modification de type
-                if (($newext = substr(strrchr($this->fields['name'], "."),1)) != $this->fields['extension']) 
+                if (($newext = substr(strrchr($this->fields['name'], "."),1)) != $this->fields['extension'])
                 {
                     $basepath = $this->getbasepath();
                     $filepath = $this->getfilepath();
@@ -211,9 +211,9 @@ class documentsfile extends data_object
     {
         $filepath = $this->getfilepath();
         if (file_exists($filepath)) unlink($filepath);
-        
+
         parent::delete();
-        
+
         if ($this->fields['id_folder'] != 0)
         {
             $docfolder_parent = new documentsfolder();
@@ -222,7 +222,7 @@ class documentsfile extends data_object
             $docfolder_parent->save();
         }
     }
-    
+
     /**
      * Retourne le chemin physique de stockage du document.
      * Crée le dossier si nécessaire.
@@ -256,35 +256,34 @@ class documentsfile extends data_object
     {
         return(ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$this->fields['id']}&attachement={$attachement}"));
     }
-    
-    
+
     /**
      * Permet de définir l'emplacement du fichier manuellement (ajout uniquement)
      *
      * @param string $file chemin du fichier
      */
-    
+
     public function setfile($file)
     {
-        $this->file = $file; 
+        $this->file = $file;
     }
-    
+
     /**
      * Permet de définir l'emplacement du fichier temporaire (après upload)
      *
      * @param string $file chemin du fichier
      */
-    
+
     public function settmpfile($file)
     {
-        $this->tmpfile = $file; 
+        $this->tmpfile = $file;
     }
-    
+
 }
 
 /**
  * Classe de gestion des fichiers (ne pas confondre avec le module DOC)
- * 
+ *
  * @package ploopi
  * @subpackage document
  * @copyright Netlor, Ovensia
@@ -324,7 +323,7 @@ class documentsfolder extends data_object
             $docfolder_parent->save();
         }
         else $ret = parent::save();
-        
+
         return ($ret);
     }
 
@@ -335,7 +334,7 @@ class documentsfolder extends data_object
     function delete()
     {
         global $db;
-        
+
         // on recherche tous les fichiers pour les supprimer
         $rs = $db->query("SELECT id FROM ploopi_documents_file WHERE id_folder = {$this->fields['id']}");
         while($row = $db->fetchrow($rs))
@@ -353,9 +352,9 @@ class documentsfolder extends data_object
             $folder->open($row['id']);
             $folder->delete();
         }
-        
+
         parent::delete();
-        
+
         if ($this->fields['id_folder'] != 0)
         {
             $docfolder_parent = new documentsfolder();
@@ -363,9 +362,9 @@ class documentsfolder extends data_object
             $docfolder_parent->fields['nbelements'] = ploopi_documents_countelements($this->fields['id_folder']);
             $docfolder_parent->save();
         }
-        
+
     }
-    
+
     /**
      * Crée un sous-dossier
      *
@@ -373,7 +372,7 @@ class documentsfolder extends data_object
      * @param string $description description du dossier
      * @return documentsfolder dossier fils
      */
-    
+
     function create_child($name, $description = '')
     {
         $objDocChild = new documentsfolder();
@@ -388,7 +387,7 @@ class documentsfolder extends data_object
         $objDocChild->fields['nbelements'] = 0;
         $objDocChild->fields['parents'] = "{$this->fields['parents']},{$this->fields['id']}";
         $objDocChild->fields['id_folder'] = $this->fields['id'];
-        
+
         return $objDocChild;
     }
 }

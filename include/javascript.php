@@ -23,13 +23,13 @@
 
 /**
  * Définition de quelques variables javascript liées à php
- * 
+ *
  * @package ploopi
  * @subpackage javascript
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @todo trouver une autre solution...
  */
 

@@ -34,8 +34,8 @@
 /**
  * Envoie un mail. Gère les emetteurs multiples, les destinataires multiples, le CC multiple, le BCC multiple, le REPLYTO multiple, les pièces jointes, les messages au format HTML.
  *
- * @param mixed $from tableau indexé contenant les emetteurs, chaque emetteur est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email. 
- * @param mixed $to tableau indexé contenant les destinataires, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email. 
+ * @param mixed $from tableau indexé contenant les emetteurs, chaque emetteur est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+ * @param mixed $to tableau indexé contenant les destinataires, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
  * @param string $subject le sujet du message.
  * @param string $message le contenu du message.
  * @param mixed $cc tableau indexé contenant les destinataires en copie, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
@@ -43,7 +43,7 @@
  * @param mixed $replyto tableau indexé contenant les destinataires de la réponse, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
  * @param array $files tableau indexé de chemins vers des fichiers à joindre au message.
  * @param boolean $html true si le message doit être envoyé au format HTML.
- * 
+ *
  * @see ploopi_checkemail
  * @see mail
  */
@@ -58,7 +58,7 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     // files : Array
 
     $crlf = "\n";
-    
+
     $str_to = '';
     if (is_array($to))
     {
@@ -135,16 +135,15 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     {
         if (ploopi_checkemail($replyto)) $str_replyto = $replyto;
     }
-    
+
     $headers = '';
 
     // add "from" to headers
     if (!empty($str_from)) $headers .= "From: $str_from {$crlf}";
     // add "reply_to" to headers
-    
-    
+
     // add "reply_to" to headers
-    if (!empty($str_replyto)) 
+    if (!empty($str_replyto))
     {
         $headers .= "Reply-to: {$str_replyto} {$crlf}";
         $headers .= "Return-Path: {$str_replyto} {$crlf}";
@@ -154,57 +153,56 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
         $headers .= "Reply-To: {$str_from} {$crlf}";
         $headers .= "Return-Path: {$str_from} {$crlf}";
     }
-    
+
     // add "cc" to headers
     if (!empty($str_cc)) $headers .= "Cc: $str_cc {$crlf}";
     // add "bcc" to headers
     if (!empty($str_bcc)) $headers .= "Bcc: $str_bcc {$crlf}";
-    
-    
+
     $domain = empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
-    
-    $headers .= "Date: ".date('r')."{$crlf}"; 
+
+    $headers .= "Date: ".date('r')."{$crlf}";
     $headers .= "X-Priority: 1{$crlf}";
     $headers .= "X-Sender: <{$domain}>{$crlf}";
     $headers .= "X-Mailer: PHP/Ploopi "._PLOOPI_VERSION."{$crlf}";
     $headers .= "X-auth-smtp-user: {$str_from}{$crlf}";
-    $headers .= "X-abuse-contact: abuse@{$domain}{$crlf}";     
-    $headers .= "Organization: Ploopi "._PLOOPI_VERSION."{$crlf}"; 
+    $headers .= "X-abuse-contact: abuse@{$domain}{$crlf}";
+    $headers .= "Organization: Ploopi "._PLOOPI_VERSION."{$crlf}";
     $headers .= "MIME-Version: 1.0{$crlf}";
-    
+
     $msg = '';
-    
+
     if (!empty($files)) // Create multipart mail
     {
         $boundary = md5(uniqid(microtime(), true));
         $headers .= "Content-type: multipart/mixed;boundary={$boundary}{$crlf}{$crlf}";
-        
+
         $msg .= "--{$boundary}{$crlf}";
-        
+
         if ($html) $msg .= "Content-type: text/html; charset=iso-8859-1{$crlf}{$crlf}";
         else $msg .= "Content-type: text/plain; charset=iso-8859-1{$crlf}{$crlf}";
 
         $msg .= "$message{$crlf}{$crlf}";
-        
+
         foreach($files as $filename)
         {
             if (file_exists($filename) && is_readable($filename))
             {
                 $mime_type = ploopi_getmimetype($filename);
                 $file_size = filesize($filename);
-            
+
                 $handle = fopen($filename, 'r');
                 $content = fread($handle, $file_size);
                 $content = chunk_split(base64_encode($content));
                 $f = fclose($handle);
-            
+
                 $msg .= "--{$boundary}{$crlf}";
                 $msg .= "Content-type:{$mime_type};name=".basename($filename)."{$crlf}";
                 $msg .= "Content-transfer-encoding:base64{$crlf}{$crlf}";
                 $msg .= "{$content}{$crlf}{$crlf}";
             }
         }
-        
+
         $msg .= "--{$boundary}--";
     }
     else
@@ -215,7 +213,6 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
         $msg = $message;
     }
 
-    
      // send mail
     mail($str_to, $subject, $msg, $headers);
 
@@ -262,8 +259,8 @@ function ploopi_form2html($form)
 /**
  * Envoie un formulaire (ou un tableau) par mail. Gère les emetteurs multiples, les destinataires multiples, le CC multiple, le BCC multiple, le REPLYTO multiple
  *
- * @param mixed $from tableau indexé contenant les emetteurs, chaque emetteur est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email. 
- * @param mixed $to tableau indexé contenant les destinataires, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email. 
+ * @param mixed $from tableau indexé contenant les emetteurs, chaque emetteur est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+ * @param mixed $to tableau indexé contenant les destinataires, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
  * @param string $subject le sujet du message.
  * @param string $message le contenu du message.
  * @param mixed $cc tableau indexé contenant les destinataires en copie, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
@@ -291,15 +288,14 @@ function ploopi_send_form($from, $to, $subject, $form, $cc = null, $bcc = null, 
     return(ploopi_send_mail($from, $to, $subject, $message, $cc, $bcc, $replyto));
 }
 
-
 /**
  * Valide une adresse email (format uniquement) selon les RFC 2822 et 1035
- * 
+ *
  * @param string $email adresse email à valider
  * @return boolean true si l'adresse est considérée comme valide
- * 
+ *
  * @copyright  bobocop (arobase) bobocop (point) cz
- * 
+ *
  * @link http://www.faqs.org/rfcs/rfc2822.html
  * @link http://www.faqs.org/rfcs/rfc1035.html
  * @link http://atranchant.developpez.com/code/validation/
@@ -309,7 +305,7 @@ function ploopi_checkemail($email)
 {
     $atom   = '[-a-z0-9!#$%&\'*+\\/=?^_`{|}~]';   // caractères autorisés avant l'arobase
     $domain = '([a-z0-9]([-a-z0-9]*[a-z0-9]+)?)'; // caractères autorisés après l'arobase (nom de domaine)
-                                   
+
     $regex = '/^' . $atom . '+' .   // Une ou plusieurs fois les caractères autorisés avant l'arobase
     '(\.' . $atom . '+)*' .         // Suivis par zéro point ou plus
                                     // séparés par des caractères autorisés avant l'arobase
@@ -317,7 +313,7 @@ function ploopi_checkemail($email)
     '(' . $domain . '{1,63}\.)+' .  // Suivis par 1 à 63 caractères autorisés pour le nom de domaine
                                     // séparés par des points
     $domain . '{2,63}$/i';          // Suivi de 2 à 63 caractères autorisés pour le nom de domaine
-    
+
     return (preg_match($regex, $email));
 }
 

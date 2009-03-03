@@ -1,0 +1,100 @@
+#!/usr/bin/php
+<?php
+/*
+    Copyright (c) 2007-2009 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/**
+ * Point d'entrée pour la ligne de commande
+ * Permet d'exécuter des opérations de maintenance
+ *
+ * @package ploopi
+ * @subpackage cli
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ *
+ */
+
+include_once './include/classes/timer.php' ;
+$ploopi_timer = new timer();
+$ploopi_timer->start();
+
+include_once './config/config.php'; // load config (mysql, path, etc.)
+
+/**
+ * Initialisation du gestionnaire d'erreur
+ */
+include_once './include/functions/errors.php';
+set_error_handler('ploopi_errorhandler');
+
+/**
+ * Chargement des constantes, globales
+ */
+include_once './include/start/constants.php';
+
+/**
+ * Chargements des classes et fonctions principales
+ * Attention de bien garder ces inclusions. Sinon problèmes avec ploopi_die et la gestion du buffer.
+ */
+include_once './include/classes/data_object.php';
+include_once './include/functions/date.php';
+include_once './include/functions/system.php';
+
+/**
+ * Connexion à la base de données
+ */
+if (file_exists('./include/classes/db_'._PLOOPI_SQL_LAYER.'.php')) include_once './include/classes/db_'._PLOOPI_SQL_LAYER.'.php';
+
+global $db;
+
+$db = new ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
+if(!$db->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
+
+// Traitement des arguments
+for ($i=1;$i<$argc;$i++)
+{
+    $arrArg = split('=', $argv[$i]);
+    if (sizeof($arrArg) == 2) // argument valide
+    {
+        ${$arrArg[0]} = $arrArg[1];
+    }
+}
+
+if (!empty($module) && !empty($op))
+{
+    if (file_exists("./modules/{$module}/cli.php")) 
+    {
+        include_once "./modules/{$module}/cli.php";
+        //echo "script {$ploopi_timer}\n";
+    }
+    else
+    {
+        echo "module '{$module}' inconnu\n";
+    }
+}
+else
+{
+    echo<<<STDOUT
+Vous devez préciser le module et l'opération à exécuter\r
+ex: {$argv[0]} module=doc op=reindex\n
+STDOUT;
+}
+?>

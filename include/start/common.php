@@ -31,7 +31,7 @@
  * Filtrage des variables $POST, $GET, $COOKIE, $SERVER.
  * Connexion à la base de données.
  * Mise à jour de la session
- * 
+ *
  * @package ploopi
  * @subpackage start
  * @copyright Netlor, Ovensia
@@ -75,7 +75,7 @@ set_error_handler('ploopi_errorhandler');
 include_once './include/start/constants.php';
 
 /**
- * Chargements des classes et fonctions principales 
+ * Chargements des classes et fonctions principales
  * Attention de bien garder ces inclusions. Sinon problèmes avec ploopi_die et la gestion du buffer.
  */
 include_once './include/classes/data_object.php';
@@ -120,8 +120,8 @@ if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
     ini_set('session.save_handler', 'user');
     ini_set('session.gc_probability', 10);
     ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);
-    
-    session_set_save_handler(   
+
+    session_set_save_handler(
         array($session, 'open'),
         array($session, 'close'),
         array($session, 'read'),

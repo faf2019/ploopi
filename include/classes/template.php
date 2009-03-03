@@ -23,7 +23,7 @@
 
 /**
  * Gestion du template backoffice
- * 
+ *
  * @package ploopi
  * @subpackage template
  * @copyright Netlor, Ovensia
@@ -33,7 +33,7 @@
 
 /**
  * Classe de gestion des blocs de menus
- * 
+ *
  * @package ploopi
  * @subpackage template
  * @copyright Netlor, Ovensia
@@ -45,7 +45,7 @@ class block
 {
     private $menu;
     private $content;
-    
+
     /**
      * Constructeur de la classe
      *
@@ -65,7 +65,7 @@ class block
      * @param boolean $selected true si le menu est sélectionné (optionnel, false par défaut)
      * @param string $target cible du lien (optionnel, par défaut vide)
      */
-    
+
     public function addmenu($label, $url, $selected = false, $target = '')
     {
         $this->menu[] = array ( 'label' => $label,
@@ -74,13 +74,13 @@ class block
                                 'target' => $target
                                 );
     }
-    
+
     /**
      * Ajoute du contenu à un block
      *
      * @param string $content contenu html à ajouter au bloc
      */
-    
+
     public function addcontent($content)
     {
         $this->content = $content;
@@ -91,7 +91,7 @@ class block
      *
      * @return array tableau contenu les éléments du menu du block
      */
-    
+
     public function getmenu()
     {
         return($this->menu);
@@ -102,7 +102,7 @@ class block
      *
      * @return strong le contenu du block
      */
-    
+
     public function getcontent()
     {
         return($this->content);

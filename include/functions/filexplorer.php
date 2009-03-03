@@ -23,7 +23,7 @@
 /**
  * Gestion d'un bloc de document associé à un enregistrement d'un objet.
  * Permet notamment de gérer des pièces jointes à n'importe quel objet de ploopi.
- * 
+ *
  * @package ploopi
  * @subpackage filexplorer
  * @copyright Ovensia
@@ -31,27 +31,26 @@
  * @author Stéphane Escaich
  */
 
-
 /**
  * Renvoie un identifiant unique pour l'explorateur
  *
  * @return string identifiant du bloc
- * 
+ *
  * @see md5
  */
 
 function ploopi_filexplorer_init($strBasePath, $strDestField, $strFilExplorerId = '')
 {
     if (empty($strFilExplorerId)) $strFilExplorerId = md5(uniqid(rand(), true));
-    
+
     if ($strBasePath[strlen($strBasePath)-1] == _PLOOPI_SEP) $strBasePath = substr($strBasePath, 0, -1);
 
-    $_SESSION['filexplorer'][$strFilExplorerId] = 
+    $_SESSION['filexplorer'][$strFilExplorerId] =
         array(
             'basepath' => $strBasePath,
             'destfield' => $strDestField
         );
-    
-    return $strFilExplorerId;    
+
+    return $strFilExplorerId;
 }
 ?>

@@ -29,7 +29,7 @@
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * <code>
  * * * * * * /usr/local/bin/php -f /var/www/ploopi/cron.php > /dev/null 2>&1
  * * * * * * wget -q -O /dev/null http://localhost/.../cron.php 2>&1

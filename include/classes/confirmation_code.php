@@ -22,7 +22,7 @@
 
 /**
  * Gestion des codes de confirmation (demandes par email)
- * 
+ *
  * @package ploopi
  * @subpackage security
  * @copyright Ovensia
@@ -38,7 +38,7 @@ include_once './include/classes/data_object.php';
 
 /**
  * Classe de gestion des confirmation par mail
- * 
+ *
  * @package ploopi
  * @subpackage security
  * @copyright Ovensia
@@ -57,13 +57,13 @@ class confirmation_code extends data_object
     {
         parent::data_object('ploopi_confirmation_code', 'action');
     }
-    
+
     /**
      * Enregistrement du code de confirmation
      *
      * @return unknown
      */
-    
+
     function save()
     {
         if ($this->new)

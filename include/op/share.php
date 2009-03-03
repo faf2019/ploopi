@@ -37,7 +37,6 @@ switch($ploopi_op)
         if (isset($_GET['user_id'])) $_SESSION['ploopi']['share']['users_selected'][$_GET['user_id']] = $_GET['user_id'];
         if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['share']['users_selected'][$_GET['remove_user_id']]);
 
-
         foreach($_SESSION['ploopi']['share']['users_selected'] as $user_id)
         {
             include_once './include/classes/user.php';
@@ -97,7 +96,7 @@ switch($ploopi_op)
 
         $cleanedfilter = $db->addslashes($_GET['ploopi_share_userfilter']);
         $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
-        
+
         // recherche des utilisateurs "admininstrateur d'espace" ou disposant d'une action particuliere dans le module
         $query_u =  "
                     SELECT      distinct(u.id), u.login, u.firstname, u.lastname, wu.id_workspace
@@ -111,7 +110,7 @@ switch($ploopi_op)
                     ON          mw.id_workspace = wu.id_workspace
                     AND         mw.id_module = {$_SESSION['ploopi']['moduleid']}
                     WHERE       {$userfilter}
-                    
+
                     ORDER BY    u.lastname, u.firstname
                     ";
 
@@ -131,7 +130,7 @@ switch($ploopi_op)
                     ON          mw.id_workspace = wg.id_workspace
                     AND         mw.id_module = {$_SESSION['ploopi']['moduleid']}
                     WHERE       {$userfilter}
-                    
+
                     ORDER BY    u.lastname, u.firstname
                     ";
 
@@ -148,7 +147,6 @@ switch($ploopi_op)
             $list['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
             $list['groups'][$fields['id_group']]['users'][$fields['id']] = $fields['id'];
         }
-
 
         if (!sizeof($list['users']))
         {

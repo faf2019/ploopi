@@ -23,7 +23,7 @@
 
 /**
  * Gestion du timer d'exécution
- * 
+ *
  * @package ploopi
  * @subpackage timer
  * @copyright Netlor, Ovensia
@@ -33,7 +33,7 @@
 
 /**
  * Classe timer
- * 
+ *
  * @package ploopi
  * @subpackage timer
  * @copyright Netlor, Ovensia
@@ -44,7 +44,7 @@
 class timer
 {
     private $start;
-    
+
     /**
      * Constructeur de la classe
      *
@@ -55,7 +55,7 @@ class timer
     {
         $this->start = 0;
     }
-    
+
     /**
      * Démarre le timer
      */
@@ -70,7 +70,7 @@ class timer
      *
      * @return float timestamp UNIX en secondes
      */
-    
+
     public function getmicrotime()
     {
         list($usec, $sec) = explode(" ",microtime());
@@ -82,18 +82,18 @@ class timer
      *
      * @return float temps écoulé en secondes
      */
-    
+
     public function getexectime()
     {
         return($this->getmicrotime() - $this->start);
     }
-    
+
     /**
      * Gère la conversion de l'objet en chaîne
      *
      * @return string contenu de l'objet sous forme d'une chaîne de caractères
      */
-    
+
     public function __toString()
     {
         return sprintf("exec time : %s ms", $this->getexectime()*1000);

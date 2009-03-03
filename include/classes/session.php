@@ -23,7 +23,7 @@
 
 /**
  * Gestionnaire de sessions avec une base de données
- * 
+ *
  * @package ploopi
  * @subpackage session
  * @copyright Ovensia
@@ -34,7 +34,7 @@
 /**
  * Classe permettant de remplacer le gestionnaire de session par défaut.
  * Les sessions sont stockées dans la base de données.
- * 
+ *
  * @package ploopi
  * @subpackage session
  * @copyright Ovensia
@@ -51,7 +51,7 @@ class ploopi_session
     /**
      * Chargement de la session depuis la base de données.
      * Utilisé par le gestionnaire de session de Ploopi.
-     * 
+     *
      * @param string $id identifiant de la session
      */
 
@@ -68,7 +68,7 @@ class ploopi_session
      * @param string $id identifiant de la session
      * @param string $data données de la session
      */
-    
+
     public function write($id, $data)
     {
         global $db;
@@ -76,14 +76,13 @@ class ploopi_session
         return true;
     }
 
-
     /**
      * Suppression de la session dans la base de données.
      * Utilisé par le gestionnaire de session de Ploopi.
-     * 
+     *
      * @param string $id identifiant de la session
      */
-    
+
     public function destroy($id)
     {
         global $db;
@@ -94,24 +93,23 @@ class ploopi_session
     /**
      * Suppression des sessions périmées (Garbage collector).
      * Utilisé par le gestionnaire de session de Ploopi.
-     * 
+     *
      * @param int $max durée d'une session en secondes
      */
-    
+
     public function gc($max)
     {
         global $db;
         $db->query("DELETE FROM `ploopi_session` WHERE `access` < '".$db->addslashes((time() - $max))."'");
         return true;
     }
-    
-    
+
     /**
      * Regénère un identifiant de session
-     * 
+     *
      * @see session_regenerate_id
      */
-    
+
     public function regenerate_id()
     {
         if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
@@ -119,7 +117,7 @@ class ploopi_session
             global $db;
             $old_sess_id = session_id();
             session_regenerate_id(false);
-            $new_sess_id = session_id();        
+            $new_sess_id = session_id();
             $db->query("UPDATE `ploopi_session` SET `id` = '".$db->addslashes($new_sess_id)."' WHERE `id` = '".$db->addslashes($old_sess_id)."'");
         }
         else session_regenerate_id(true);

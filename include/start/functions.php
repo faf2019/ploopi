@@ -21,14 +21,14 @@
 */
 
 /**
- * Inclusions générales des constantes et fonctions globales   
- * 
+ * Inclusions générales des constantes et fonctions globales
+ *
  * @package ploopi
  * @subpackage global
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see actions
  * @see annotation
  * @see crypt
@@ -47,7 +47,7 @@
  * @see string
  * @see subscription
  * @see tickets
- * @see validation 
+ * @see validation
  */
 
 include_once './include/functions/actions.php';

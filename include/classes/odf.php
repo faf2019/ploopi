@@ -136,7 +136,7 @@ class odf_varparser
 
         // remplacement des variables template
         $data = str_replace(array_keys($this->vars), array_values($this->vars), ploopi_xmlentities($data, true));
-        
+
         // traitement des \n \r
         $data = preg_replace("/\r\n|\n|\r/", "</{$tag[0]}><{$tag[0]} {$tag[1]}>", $data);
         // traitement des espaces
@@ -144,7 +144,7 @@ class odf_varparser
 
         $this->parsed_data .= $data;
     }
-    
+
     /**
      * Retourne le contenu XML parsé
      *
@@ -156,7 +156,6 @@ class odf_varparser
         return($this->parsed_data);
     }
 }
-
 
 /**
  * Classe permettant d'extraire les blocs de variables d'un modèle de document ODF.
@@ -263,7 +262,6 @@ class odf_blockparser
         if ($keep_content) $this->parsed_data .= ($params_str == '') ? "<{$tag}>" : "<{$tag} {$params_str}>";
     }
 
-
     /**
      * Gestionnaires de fin de balise XML
      *
@@ -305,7 +303,6 @@ class odf_blockparser
         array_pop($this->xmltags);
     }
 
-
     /**
      * Gestionnaire du flux de données, récupère le contenu des blocs.
      *
@@ -332,7 +329,7 @@ class odf_blockparser
         if ($keep_content) $this->parsed_data .= $data;
 
     }
-    
+
     /**
      * Retourne le contenu XML parsé
      *
@@ -355,8 +352,6 @@ class odf_blockparser
         return($this->blocktemplates);
     }
 }
-
-
 
 /**
  * Classe permettant de générer un document bureautique (ODT, ODS, DOC, XLS, PDF, RTF, etc.) à partir d'un modèle OpenDocument.
@@ -383,7 +378,7 @@ class odf_parser
     private $xml_parser;
     private $xml_data = array();
     private $parsed_content_xml;
-    
+
     private $zip;
 
     /**
@@ -438,7 +433,6 @@ class odf_parser
         $this->vars['{'.$key.'}'] = ($clean) ? $this->clean_var($value) : $value;
     }
 
-
     /**
      * Définit une variable template de type "image"
      *
@@ -447,19 +441,18 @@ class odf_parser
      * @param string $width largeur de l'image
      * @param string $height hauteur de l'image
      */
-    
+
     public function set_image($key, $value, $width = '5cm', $height = '5cm')
     {
         $file = basename($value);
         $name = strtok($file,'/.');
 
         $xml = '<draw:frame draw:style-name="fr1" draw:name="'.$name.'" text:anchor-type="paragraph" svg:width="'.$width.'" svg:height="'.$height.'" draw:z-index="0"><draw:image xlink:href="Pictures/'.$file.'" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>';
-        
-        $this->set_var($key, $xml, false); 
-        
+
+        $this->set_var($key, $xml, false);
+
         $this->images[$value] = $file;
     }
-    
 
     /**
      * Définit une variable template de type bloc et lui affecte un tableau valeurs
@@ -495,7 +488,7 @@ class odf_parser
 
             // le contenu XML sans les blocks (mais avec des nouvelles variables à la place)
             $this->content_xml = $blockparser->get_xml();
-            
+
             // traitement des blocks
             reset($this->blocktemplates);
             foreach($this->blocktemplates as $blockname => $tpl)
@@ -554,12 +547,12 @@ class odf_parser
             copy($this->filename, $newfilename);
             $this->filename = $newfilename;
         }
-        
+
         if ($this->zip->open($this->filename, ZIPARCHIVE::CREATE) === TRUE)
         {
             foreach($this->images as $path => $file)
                 $this->zip->addFile($path,'Pictures/'.$file);
-            
+
             if (!$this->zip->addFromString('content.xml', $this->content_xml))
                 exit('Erreur lors de l\'enregistrement');
             if (!$this->zip->addFromString('styles.xml', $this->styles_xml))
@@ -572,7 +565,6 @@ class odf_parser
         }
     }
 }
-
 
 /**
  * Classe permettant de convertir un document au format OpenDocument en en PDF, DOC, SXW, RTF, XLS,  etc... via le webservice JODConverter

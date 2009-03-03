@@ -55,7 +55,7 @@ function ploopi_subscription($id_object, $id_record, $allowedactions = null, $op
     <div id="ploopi_subscription_<?php echo $ploopi_subscription_id; ?>">
     <?php ploopi_subscription_refresh($ploopi_subscription_id); ?>
     </div>
-    <?php    
+    <?php
 }
 
 /**
@@ -68,21 +68,21 @@ function ploopi_subscription($id_object, $id_record, $allowedactions = null, $op
 function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
 {
     global $db;
-    
+
     include_once './include/classes/subscription.php';
-    
+
     $objSubscription = new subscription();
     $booSubscribed = ($objSubscription->open($ploopi_subscription_id));
-    
+
     $arrActions = array();
-    
+
     if ($booSubscribed)
     {
         $strTitle = "Vous êtes abonné {$_SESSION['subscription'][$ploopi_subscription_id]['optional_title']}";
         $arrActions = $objSubscription->getactions();
         $strChecked = ($objSubscription->fields['allactions']) ? 'checked' : '';
         $strIconName = 'subscription1';
-        
+
     }
     else
     {
@@ -90,7 +90,7 @@ function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
         $strChecked = '';
         $strIconName = 'subscription0';
     }
-    
+
     $div_id = "subscription_detail_{$ploopi_subscription_id}";
     if (empty($_SESSION['ploopi']['switchdisplay'][$div_id])) $_SESSION['ploopi']['switchdisplay'][$div_id] = 'none';
 
@@ -101,7 +101,7 @@ function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
             <span><?php echo $strTitle; ?></span>
         </a>
     </div>
-    
+
     <div style="display:<?php echo $_SESSION['ploopi']['switchdisplay'][$div_id]; ?>;" id="<?php echo $div_id; ?>" class="ploopi_subscription_detail">
 
         <form action="" method="post" id="ploopi_form_subscription_<?php echo $ploopi_subscription_id; ?>" target="form_subscription_target_<?php echo $ploopi_subscription_id; ?>">
@@ -116,16 +116,16 @@ function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
                 <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', -1);">
                     <input type="checkbox" class="checkbox" id="ploopi_subscription_unsubscribe" name="ploopi_subscription_unsubscribe" value="1" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', -1);" />
                     <span class="ploopi_subscription_unsubscribe"><?php echo _PLOOPI_LABEL_SUBSCRIPTION_UNSUSCRIBE; ?></span>
-                </div>            
+                </div>
                 <?php
             }
             ?>
             <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', 0);">
                 <input type="checkbox" class="checkbox" id="ploopi_subscription_action_0" name="ploopi_subscription_action[]" value="0" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', 0);" <?php echo $strChecked; ?> />
                 <span style="font-weight:bold;"><?php echo _PLOOPI_LABEL_SUBSCRIPTION_ALLACTIONS; ?></span>
-            </div>            
+            </div>
             <?php
-            
+
             if (empty($_SESSION['subscription'][$ploopi_subscription_id]['allowedactions'])) // pas de liste d'actions
             {
                 $where = " AND id_object = {$_SESSION['subscription'][$ploopi_subscription_id]['id_object']} ";
@@ -134,17 +134,17 @@ function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
             {
                 $where = " AND id_action IN ('".implode("','", $_SESSION['subscription'][$ploopi_subscription_id]['allowedactions'])."')";
             }
-            
+
             $sql =  "
-                    SELECT      * 
-                    FROM        ploopi_mb_action 
-                    WHERE       id_module_type = {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type']} 
+                    SELECT      *
+                    FROM        ploopi_mb_action
+                    WHERE       id_module_type = {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type']}
                     {$where}
                     ORDER BY    id_action
                     ";
-                    
+
             $db->query($sql);
-            
+
             while ($row = $db->fetchrow())
             {
                 $strChecked = (($booSubscribed && $objSubscription->fields['allactions']) || in_array($row['id_action'], $arrActions)) ? 'checked' : '';
@@ -152,11 +152,11 @@ function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
                 <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', <?php echo $row['id_action']; ?>);">
                     <input type="checkbox" class="checkbox" id="ploopi_subscription_action_<?php echo $row['id_action']; ?>" name="ploopi_subscription_action[]" value="<?php echo $row['id_action']; ?>" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', <?php echo $row['id_action']; ?>);" <?php echo $strChecked; ?> />
                     <span><?php echo $row['label']; ?></span>
-                </div>            
-        
+                </div>
+
                 <?php
             }
-            
+
             if ($next != '')
             {
                 switch($next)
@@ -166,7 +166,7 @@ function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
                         <div class="subscription_saved"><?php echo _PLOOPI_LABEL_SUBSCRIPTION_SAVED; ?></div>
                         <?php
                     break;
-                    
+
                     case 'unsubscribed':
                         ?>
                         <div class="subscription_canceled"><?php echo _PLOOPI_LABEL_SUBSCRIPTION_DELETE; ?></div>
@@ -178,15 +178,15 @@ function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
         </div>
         <div style="padding:4px;"><?php echo _PLOOPI_LABEL_SUBSCRIPTION_DESCIPTION; ?></div>
         <div style="clear:both;padding:4px;text-align:right;">
-            <input type="button" onclick="ploopi_getelem('form_subscription_<?php echo $ploopi_subscription_id; ?>').ploopi_op.value=''; ploopi_getelem('form_subscription_<?php echo $ploopi_subscription_id; ?>').submit()" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>">
+            <input type="button" onclick="javascript:$('ploopi_form_subscription_<?php echo $ploopi_subscription_id; ?>').reset();ploopi_switchdisplay('<?php echo $div_id; ?>');" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>">
             <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
         </div>
-        
+
         </form>
         <iframe name="form_subscription_target_<?php echo $ploopi_subscription_id; ?>" src="./img/blank.gif" style="display:none;"></iframe>
     </div>
     <?php
-    
+
 }
 
 /**
@@ -201,14 +201,14 @@ function ploopi_subscription_refresh($ploopi_subscription_id, $next = '')
 function ploopi_subscription_subscribed($id_object, $id_record, $id_action = -1)
 {
     global $db;
-    
+
     $where = ($id_action != -1) ? " AND (sa.id_action = {$id_action} OR s.allactions = 1) " : '';
-    
+
     $sql =  "
             SELECT      count(*) as c
 
             FROM        ploopi_subscription s
-            
+
             LEFT JOIN   ploopi_subscription_action sa
             ON          sa.id_subscription = s.id
 
@@ -218,10 +218,10 @@ function ploopi_subscription_subscribed($id_object, $id_record, $id_action = -1)
             AND         s.id_record = '".$db->addslashes($id_record)."'
             {$where}
             ";
-    
+
     $db->query($sql);
     $row = $db->fetchrow();
-    return ($row['c']>0);    
+    return ($row['c']>0);
 }
 
 /**
@@ -236,34 +236,34 @@ function ploopi_subscription_subscribed($id_object, $id_record, $id_action = -1)
 function ploopi_subscription_getusers($id_object, $id_record, $arrActionIds = null)
 {
     global $db;
-    
+
     $where = (is_null($arrActionIds)) ? '' : ' AND (sa.id_action IN ('.implode(',', $arrActionIds).') OR s.allactions = 1) ';
-    
+
     $sql =  "
             SELECT      u.*
 
             FROM        ploopi_subscription s
-            
+
             LEFT JOIN   ploopi_subscription_action sa
             ON          sa.id_subscription = s.id
 
             INNER JOIN  ploopi_user u
             ON          u.id = s.id_user
-            
+
             WHERE       s.id_object = {$id_object}
             AND         s.id_module = {$_SESSION['ploopi']['moduleid']}
             AND         s.id_record = '".$db->addslashes($id_record)."'
             AND         s.id_user != {$_SESSION['ploopi']['userid']}
             {$where}
-            
+
             GROUP BY    u.id
             ";
-            
+
     $db->query($sql);
-    
+
     $arrUsers = array();
     while ($row = $db->fetchrow()) $arrUsers[$row['id']] = $row;
-    
+
     return($arrUsers);
 }
 
@@ -281,25 +281,25 @@ function ploopi_subscription_getusers($id_object, $id_record, $arrActionIds = nu
 function ploopi_subscription_notify($id_object, $id_record, $id_action, $object_title, $arrUsers, $message = '')
 {
     include_once './include/classes/mb.php';
-    
+
     $objAction = new mb_action();
     $objAction->open($_SESSION['ploopi']['moduletypeid'], $id_action);
-    
+
     foreach($arrUsers as $intUserId)
     {
         $_SESSION['ploopi']['tickets']['users_selected'] = array();
         $_SESSION['ploopi']['tickets']['users_selected'][] = $intUserId;
-        
+
         if ($message != '') $message = '<br /><br /><span style="color:#a60000;">'.$message.'</span>';
-        
-        ploopi_tickets_send(   
-            "Alerte abonnement : <i>{$objAction->fields['label']}</i> sur <b>{$object_title}</b> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", 
+
+        ploopi_tickets_send(
+            "Alerte abonnement : <i>{$objAction->fields['label']}</i> sur <b>{$object_title}</b> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})",
             "Ceci est un message automatique déclenché par <em>{$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}</em> sur abonnement à l'action <em>{$objAction->fields['label']}</em> sur l'objet &laquo; <b>{$object_title}</b> &raquo; du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}.
-            {$message}<br /><br />Vous pouvez accéder à cet objet en cliquant sur le lien ci-dessous.", 
-            false, 
-            0, 
-            $id_object, 
-            $id_record, 
+            {$message}<br /><br />Vous pouvez accéder à cet objet en cliquant sur le lien ci-dessous.",
+            false,
+            0,
+            $id_object,
+            $id_record,
             $object_title,
             true
             );

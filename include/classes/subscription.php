@@ -22,7 +22,7 @@
 
 /**
  * Gestion des abonnements
- * 
+ *
  * @package ploopi
  * @subpackage subscription
  * @copyright Netlor, Ovensia
@@ -34,7 +34,7 @@ include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_subscription
- * 
+ *
  * @package ploopi
  * @subpackage subscription
  * @copyright Netlor, Ovensia
@@ -49,46 +49,45 @@ class subscription extends data_object
      *
      * @return subscription
      */
-    
+
     public function subscription()
     {
         parent::data_object('ploopi_subscription','id');
     }
-    
-    
+
     /**
      * Vide l'abonnement de son contenu (actions souscrites)
      */
-    
+
     public function clean()
     {
         global $db;
         $db->query("DELETE FROM ploopi_subscription_action WHERE id_subscription = '{$this->fields['id']}'");
     }
-    
+
     /**
      * Retourne un tableau contenant les actions souscrites pour l'abonnement
      */
-    
+
     public function getactions()
     {
         global $db;
-        
+
         $arrActions = array();
-        
+
         if (!$this->new && !$this->fields['allactions'])
         {
             $db->query("SELECT id_action FROM ploopi_subscription_action WHERE id_subscription = '{$this->fields['id']}'");
             $arrActions = $db->getarray();
         }
-        
+
         return($arrActions);
     }
-    
+
     /**
      * Supprime l'abonnement
      */
-    
+
     public function delete()
     {
         $this->clean();
@@ -96,10 +95,9 @@ class subscription extends data_object
     }
 }
 
-
 /**
  * Classe d'accès à la table ploopi_subscription_action
- * 
+ *
  * @package ploopi
  * @subpackage subscription
  * @copyright Netlor, Ovensia
@@ -114,7 +112,7 @@ class subscription_action extends data_object
      *
      * @return subscription_action
      */
-    
+
     public function subscription_action()
     {
         parent::data_object('ploopi_subscription_action', 'id_subscription', 'id_action');

@@ -34,22 +34,21 @@ switch($ploopi_op)
 {
     case 'subscription':
         if (empty($_GET['ploopi_subscription_id'])) ploopi_die();
-        
+
         ploopi_subscription_refresh($_GET['ploopi_subscription_id'], (empty($_GET['next'])) ? '' : $_GET['next']);
         ploopi_die();
     break;
-    
-    
+
     case 'subscription_save':
         $strNext = '';
         if (!empty($_POST['ploopi_subscription_id']))
         {
             include_once './include/classes/subscription.php';
-            
+
             if (!empty($_POST['ploopi_subscription_action']))
             {
                 $objSubscription = new subscription();
-                
+
                 if ($objSubscription->open($_POST['ploopi_subscription_id'])) // abonnement existant
                 {
                     $objSubscription->clean();
@@ -92,13 +91,13 @@ switch($ploopi_op)
                 }
             }
         }
-        
+
         ?>
         <script type="text/javascript">
             window.parent.ploopi_subscription('<?php echo $_POST['ploopi_subscription_id']; ?>', '<?php echo $strNext ?>');
         </script>
         <?php
-        
+
         ploopi_die();
     break;
 }

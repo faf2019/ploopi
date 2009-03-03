@@ -23,7 +23,7 @@
 
 /**
  * Gestion des tickets
- * 
+ *
  * @package ploopi
  * @subpackage ticket
  * @copyright Netlor, Ovensia
@@ -35,7 +35,7 @@ include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_ticket
- * 
+ *
  * @package ploopi
  * @subpackage ticket
  * @copyright Netlor, Ovensia
@@ -47,10 +47,10 @@ class ticket extends data_object
 {
     /**
      * Constructeur de la classe
-     * 
+     *
      * @return subscription_action
      */
-    
+
     public function ticket()
     {
         parent::data_object('ploopi_ticket', 'id');
@@ -61,7 +61,7 @@ class ticket extends data_object
      *
      * @return boolean true si le ticket s'est enregistré correctement
      */
-    
+
     public function save()
     {
         global $db;
@@ -114,7 +114,7 @@ class ticket extends data_object
 
 /**
  * Classe d'accès à la table ploopi_ticket_watch
- * 
+ *
  * @package ploopi
  * @subpackage ticket
  * @copyright Netlor, Ovensia
@@ -129,7 +129,7 @@ class ticket_watch extends data_object
      *
      * @return ticket_watch
      */
-    
+
     public function ticket_watch()
     {
         parent::data_object('ploopi_ticket_watch', 'id_ticket', 'id_user');
@@ -138,7 +138,7 @@ class ticket_watch extends data_object
 
 /**
  * Classe d'accès à la table ploopi_ticket_status
- * 
+ *
  * @package ploopi
  * @subpackage ticket
  * @copyright Netlor, Ovensia
@@ -153,16 +153,16 @@ class ticket_status extends data_object
      *
      * @return ticket_status
      */
-    
+
     public function ticket_status()
     {
         parent::data_object('ploopi_ticket_status', 'id_ticket', 'id_user', 'status');
     }
-    
+
     /**
      * Enregistre l'état d'un ticket pour un utilisateur
      */
-    
+
     public function save()
     {
         if ($this->new)
@@ -175,7 +175,7 @@ class ticket_status extends data_object
 
 /**
  * Classe d'accès à la table ploopi_ticket_dest
- * 
+ *
  * @package ploopi
  * @subpackage ticket
  * @copyright Netlor, Ovensia
@@ -190,7 +190,7 @@ class ticket_dest extends data_object
      *
      * @return ticket_dest
      */
-    
+
     public function ticket_dest()
     {
         parent::data_object('ploopi_ticket_dest','id_user','id_ticket');

@@ -24,13 +24,13 @@
 /**
  * Filtre les superglobales $_GET / $_POST / $_REQUEST / $_COOKIE / $_SERVER
  * Déchiffre l'URL si elle est chiffrée.
- * 
+ *
  * @package ploopi
  * @subpackage security
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see ploopi_filtervar
  * @see ploopi_cipher
  */

@@ -130,11 +130,11 @@ function ploopi_share_save($id_object = -1, $id_record = -1, $id_module = -1)
  * @param int $id_module identifiant du module
  * @return array tableau contenant la liste des partages
  */
- 
+
 function ploopi_share_get($id_user = -1, $id_object = -1, $id_record = -1,  $id_module = -1)
 {
     global $db;
-    
+
     $share = array();
 
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
@@ -145,7 +145,7 @@ function ploopi_share_get($id_user = -1, $id_object = -1, $id_record = -1,  $id_
     if ($id_user != -1) $sql .= " AND id_share = {$id_user} AND type_share = 'user'";
 
     $db->query($sql);
- 
+
     while ($row = $db->fetchrow()) $share[] = $row;
 
     return($share);

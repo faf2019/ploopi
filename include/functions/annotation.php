@@ -25,7 +25,7 @@
  * Fonction de gestion des annotations.
  * Permet de gérer un bloc d'annotations associé à un enregistrement d'un objet.
  * Permet de laisser un commentaire et des mots clés (tags) sur sur un objet
- * 
+ *
  * @package ploopi
  * @subpackage annotation
  * @copyright Netlor, Ovensia
@@ -84,7 +84,6 @@ function ploopi_annotation($id_object, $id_record, $object_label = '')
     // generate annotation id
     $id_annotation = md5("{$_SESSION['ploopi']['moduleid']}_{$id_object}_".addslashes($id_record));
 
-
     $_SESSION['annotation'][$id_annotation] = array(   'id_object' => $id_object,
                                                         'id_record' => $id_record,
                                                         'object_label' => $object_label
@@ -105,7 +104,7 @@ function ploopi_annotation($id_object, $id_record, $object_label = '')
 function ploopi_annotation_refresh($id_annotation)
 {
     global $db;
-    
+
     $id_object = $_SESSION['annotation'][$id_annotation]['id_object'];
     $id_record = $_SESSION['annotation'][$id_annotation]['id_record'];
 
@@ -143,12 +142,12 @@ function ploopi_annotation_refresh($id_annotation)
                                     t.id as idtag,
                                     t.tag
                         FROM        ploopi_annotation a
-    
+
                         INNER JOIN  ploopi_user u ON a.id_user = u.id
-    
+
                         LEFT JOIN   ploopi_annotation_tag at ON a.id = at.id_annotation
                         LEFT JOIN   ploopi_tag t ON t.id = at.id_tag
-    
+
                         WHERE       a.id_record = '".$db->addslashes($id_record)."'
                         AND         a.id_object = {$id_object}
                         AND         a.id_module = {$_SESSION['ploopi']['moduleid']}
@@ -156,27 +155,27 @@ function ploopi_annotation_refresh($id_annotation)
                         OR          (a.private = 1 AND a.id_user = {$_SESSION['ploopi']['userid']}))
                         ORDER BY    a.date_annotation DESC
                         ";
-    
+
             $rs_anno = $db->query($select);
-    
+
             $array_anno = array();
             while ($fields = $db->fetchrow($rs_anno))
             {
                 $array_anno[$fields['id']]['fields'] = $fields;
                 if (!is_null($fields['tag'])) $array_anno[$fields['id']]['tags'][$fields['idtag']] = $fields['tag'];
             }
-    
+
             foreach($array_anno as $anno)
             {
-    
+
                 $fields = $anno['fields'];
-    
+
                 $ldate = ploopi_timestamp2local($fields['date_annotation']);
                 $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2;
-    
+
                 $private = '';
                 if ($fields['private']) $private = '<div style="float:right;font-weight:bold;color:#a60000;">[ Privé ]</div>';
-    
+
                 ?>
                 <div class="ploopi_annotation_row_<?php echo $numrow; ?>">
                     <div style="padding:2px 4px;">
@@ -213,16 +212,16 @@ function ploopi_annotation_refresh($id_annotation)
                 </div>
                 <?php
             }
-    
+
             $id_module_type = (isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']])) ? $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type'] : 0;
-    
+
             $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2;
             ?>
             <div class="ploopi_annotation_row_<?php echo $numrow; ?>">
                 <form action="" method="post" id="form_annotation_<?php echo $id_annotation; ?>" target="form_annotation_target_<?php echo $id_annotation; ?>" onsubmit="return ploopi_annotation_validate(this);">
                 <input type="hidden" name="ploopi_op" value="annotation_save">
                 <input type="hidden" name="id_annotation" value="<?php echo $id_annotation; ?>">
-    
+
                 <div class="ploopi_annotation_titleform">Ajout d'une Annotation <?php echo (isset($ploopi_annotation_private)) ? 'privée' : ''; ?></div>
                 <div style="padding:2px 4px;"><input type="checkbox" name="ploopi_annotation_private" value="1">Privée (visible par vous uniquement)</div>
                 <div style="padding:2px 4px;">Tags:</div>
@@ -230,7 +229,7 @@ function ploopi_annotation_refresh($id_annotation)
                 <div style="padding:2px 4px;" id="tagsfound_<?php echo $id_annotation; ?>"></div>
                 <div style="padding:2px 4px;">Commentaire:</div>
                 <div style="padding:2px 4px;"><textarea class="text" style="width:99%;" rows="4" name="ploopi_annotation_content"></textarea></div>
-    
+
                 <div style="padding:2px 4px;text-align:right;">
                     <input type="button" onclick="ploopi_getelem('form_annotation_<?php echo $id_annotation; ?>').ploopi_op.value=''; ploopi_getelem('form_annotation_<?php echo $id_annotation; ?>').submit()" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>">
                     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
