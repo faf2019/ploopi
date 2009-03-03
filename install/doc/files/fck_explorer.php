@@ -23,14 +23,13 @@
 
 /**
  * Explorateur de documents intégré à FCKeditor
- * 
+ *
  * @package doc
  * @subpackage fckeditor
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
-
 
 /**
  * On commence par tester si une instance du module DOC est présente.
@@ -96,7 +95,6 @@ while ($fields = $db->fetchrow())
     $folders[$fields['label']]['list'][$fields['id']] = $fields;
     $folders[$fields['label']]['tree'][$fields['id_folder']][] = $fields['id'];
 }
-
 
 function doc_fckexplorer_displayfolders(&$f, $id_folder = 0, $path = ' ')
 {

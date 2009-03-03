@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>doc</label>
-        <version>4.2.1</version>
+        <version>4.3</version>
         <author>Ovensia</author>
-        <date>20090227000000</date>
+        <date>20090303000000</date>
         <description>Gestion de Documents</description>
         <paramtype>
             <name>doc_viewfoldersinblock</name>
@@ -116,7 +116,7 @@
                 <value>0</value>
                 <displayed_value>non</displayed_value>
             </paramchoice>
-        </paramtype>        
+        </paramtype>
         <paramtype>
             <name>doc_explorer_displayuser</name>
             <label>Afficher la colonne "Propriétaire" dans l'explorateur</label>
@@ -131,7 +131,7 @@
                 <value>0</value>
                 <displayed_value>non</displayed_value>
             </paramchoice>
-        </paramtype>        
+        </paramtype>
         <paramtype>
             <name>doc_explorer_displayworkspace</name>
             <label>Afficher la colonne "Espace" dans l'explorateur</label>
@@ -146,7 +146,7 @@
                 <value>0</value>
                 <displayed_value>non</displayed_value>
             </paramchoice>
-        </paramtype>        
+        </paramtype>
         <paramtype>
             <name>doc_explorer_displaydatetime</name>
             <label>Afficher la colonne "Date/Heure" dans l'explorateur</label>
@@ -161,7 +161,7 @@
                 <value>0</value>
                 <displayed_value>non</displayed_value>
             </paramchoice>
-        </paramtype>        
+        </paramtype>
         <paramtype>
             <name>doc_viewerheight</name>
             <label>Hauteur (px) de la visionneuse</label>

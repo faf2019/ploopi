@@ -74,7 +74,7 @@ div.doc_folderannotation {
 }
 
 div.doc_fileinfo {
-	border-bottom:solid 1px #a0a0a0;
+    border-bottom:solid 1px #a0a0a0;
     background-color:#e0e0e0;
     overflow:hidden;
     font-weight:bold
@@ -94,7 +94,7 @@ div.doc_fileinfo div {
 }
 
 div.doc_fileinfo a:hover {
-	background-color:#d0d0d0;
+    background-color:#d0d0d0;
 }
 
 div.doc_explorer_main {
@@ -182,7 +182,6 @@ div.doc_admin_form {
     overflow:auto;
 }
 
-
 #doc_legend {
     padding:4px 0;
     overflow:auto;
@@ -195,7 +194,6 @@ div.doc_admin_form {
 #doc_legend span{
     padding:0 8px 0 4px;
 }
-
 
 #doc_progressbar {
 position:relative;
@@ -216,7 +214,6 @@ background-color:#c0c0c0;
 #doc_progressbar_txt {
 margin:2px;
 }
-
 
 a.doc_fckexplorer_vignette {
     display:block;
@@ -257,7 +254,6 @@ a.doc_fckexplorer_file div {
     padding:0 2px;
     background-color:#ffffff;
 }
-
 
 a.doc_fckexplorer_file:hover {
     text-decoration:none;
@@ -310,7 +306,7 @@ a.doc_fckexplorer_file:hover {
 .hl-inlinetags {
     color: Blue;
 }
-.hl-main { 
+.hl-main {
 }
 .hl-gutter {
     background-color: #999999;

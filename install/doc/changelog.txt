@@ -1,3 +1,11 @@
+== Module DOC - version 4.3 =====================================================
+
+2009-03-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'une interface CLI ( exécuter ./cli module=doc op=reindex )
+ * Correction d'une erreur lors de l'indexation d'un document, ne supprimait pas l'index existant
+ * Correction d'une erreur lors de la suppression d'un document, ne supprimait pas l'index existant
+
 == Module DOC - version 4.2.1 =====================================================
 
 2009-02-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

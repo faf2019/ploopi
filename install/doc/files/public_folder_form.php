@@ -29,7 +29,7 @@
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see doc_getvalidation
  * @see ploopi_validation_get
  * @see _DOC_OBJECT_FOLDER
@@ -49,7 +49,7 @@ doc_getvalidation();
 $wfusers = array();
 
 $addfolder = isset($_GET['addfolder']) ? $_GET['addfolder'] : 0;
- 
+
 if (!$addfolder && $docfolder->open($currentfolder)) // modifying
 {
     foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $docfolder->fields['id_folder']) as $value) $wfusers[] = $value['id_validation'];
@@ -89,8 +89,8 @@ else // creating
         foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
         $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
     }
-    else $wf_validator = false;    
-    
+    else $wf_validator = false;
+
     $newfolder = true;
 
     $docfolder->init_description();

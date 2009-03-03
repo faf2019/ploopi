@@ -29,7 +29,7 @@
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see _DOC_OBJECT_FOLDER
  * @see ploopi_subscription_subscribed
  * @see ploopi_subscription
@@ -51,7 +51,7 @@ if ($docfolder->fields['foldertype'] != 'private')
                                 _DOC_ACTION_DELETEFOLDER,
                                 _DOC_ACTION_DELETEFILE
                              );
-    
+
     $parents = explode(',', $docfolder->fields['parents']);
     for ($i = 0; $i < sizeof($parents); $i++)
     {
@@ -61,7 +61,7 @@ if ($docfolder->fields['foldertype'] != 'private')
             $objDocFolderSub->open($parents[$i])
             ?>
             <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
-            Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo $objDocFolderSub->fields['name']; ?></a> &raquo; 
+            Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo $objDocFolderSub->fields['name']; ?></a> &raquo;
             </div>
             <?php
         }
@@ -70,7 +70,7 @@ if ($docfolder->fields['foldertype'] != 'private')
 }
 ?>
 </div>
-<?php 
+<?php
 /**
  * Affichage du bloc d'annotations
  */

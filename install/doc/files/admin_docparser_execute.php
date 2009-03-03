@@ -31,7 +31,6 @@
  * @author Stéphane Escaich
  */
 
-
 /**
  * On modifie la durée d'exécution maximum du script
  */
@@ -46,8 +45,8 @@ echo $skin->open_simplebloc('Indexation');
 ?>
 <div style="padding:4px;">
 <?php
-$db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword`"); 
-$db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword_file`"); 
+$db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword`");
+$db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword_file`");
 
 $sql = "
     SELECT  f.id, f.md5id
@@ -73,8 +72,8 @@ $arrDiff = array_diff($arrRecords, $arrFiles);
 
 foreach($arrDiff as $id_record) ploopi_search_remove_index(_DOC_OBJECT_FILE, $id_record);
 
-$db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword`"); 
-$db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword_file`"); 
+$db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword`");
+$db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword_file`");
 ?>
 </div>
 <?php

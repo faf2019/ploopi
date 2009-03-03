@@ -59,12 +59,12 @@ class docfiledraft extends data_object
      *
      * @return docfiledraft
      */
-    
+
     function docfiledraft()
     {
         parent::data_object('ploopi_mod_doc_file_draft');
         $this->fields['timestp_create'] = ploopi_createtimestamp();
-        
+
         $this->oldname = '';
         $this->tmpfile = null;
         $this->sharedfile = null;
@@ -91,13 +91,13 @@ class docfiledraft extends data_object
      * Enregistre le brouillon de document
      *
      * @return int numéro d'erreur
-     * 
+     *
      * @see _DOC_ERROR_EMPTYFILE
      * @see _DOC_ERROR_FILENOTWRITABLE
      * @see _DOC_ERROR_MAXFILESIZE
      * @see _PLOOPI_MAXFILESIZE
      */
-    
+
     function save()
     {
         global $db;
@@ -155,7 +155,7 @@ class docfiledraft extends data_object
      * Retourne le chemin physique de stockage des documents et le crée s'il n'existe pas
      *
      * @return string chemin physique de stockage des documents
-     * 
+     *
      * @see doc_getpath
      */
     function getbasepath()
@@ -178,14 +178,14 @@ class docfiledraft extends data_object
 
     /**
      * Publie un brouillon de document et supprime le brouillon
-     * 
+     *
      * @see docfile
      */
     
     function publish()
     {
         include_once './modules/doc/class_docfile.php';
-        
+
         $docfile = new docfile();
 
         if ($this->fields['id_docfile'])

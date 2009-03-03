@@ -29,7 +29,7 @@
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see ploopi_share_get
  * @see ploopi_validation_get
  * @see _DOC_OBJECT_FOLDER
@@ -42,10 +42,10 @@
 $objFolder = new docfolder();
 if (empty($currentfolder) || !$objFolder->open($currentfolder) || !$objFolder->isEnabled()) $currentfolder = 0;
 
-if (!empty($currentfolder)) 
+if (!empty($currentfolder))
 {
     $style = ($objFolder->fields['published']) ? '' : 'style="background-color:#ffe0e0;"';
-    
+
     ?>
     <div class="doc_folderinfo" <?php echo $style; ?>>
         <?php
@@ -98,7 +98,7 @@ if (!empty($currentfolder))
             </div>
             <?php
         }
-        
+
         /**
          * si dossier partagés, affichage des partages
          */
@@ -110,9 +110,9 @@ if (!empty($currentfolder))
                     <strong>Partages</strong>:
                     <br />
                     <?php
-                    $shusers = array(); 
+                    $shusers = array();
                     foreach(ploopi_share_get(-1, _DOC_OBJECT_FOLDER, $currentfolder) as $value) $shusers[] = $value['id_share'];
-    
+
                     $users = array();
                     if (!empty($shusers))
                     {
@@ -128,7 +128,7 @@ if (!empty($currentfolder))
             </div>
             <?php
         }
-        
+
         /**
          * Pour les dossiers non privés, affichage des validateurs s'ils existent
          */
@@ -142,13 +142,13 @@ if (!empty($currentfolder))
                     <?php
                     $wfusers = array();
                     foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
-    
+
                     $users = array();
                     if (!empty($wfusers))
                     {
                         $sql = "SELECT concat(lastname, ' ', firstname) FROM ploopi_user WHERE id in (".implode(',',$wfusers).") ORDER BY lastname, firstname";
                         $db->query($sql);
-    
+
                         $arrUsers = $db->getarray();
                         if (!empty($arrUsers)) echo implode(', ', $arrUsers);
                         else echo "Aucune accréditation";

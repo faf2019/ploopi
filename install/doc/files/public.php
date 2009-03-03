@@ -90,7 +90,7 @@ switch($op)
                     include_once './modules/doc/class_docfile.php';
                     include_once './modules/doc/class_docfolder.php';
                     include_once './modules/doc/class_docfiledraft.php';
-                    
+
                     if (!empty($_GET['doc_error']))
                     {
                         switch($_GET['doc_error'])
@@ -98,7 +98,7 @@ switch($op)
                             case 'unknown_file':
                                 $strMsg = "Le fichier que vous avez tenté d'ouvrir n'existe plus";
                             break;
-                            
+
                             default:
                                 $strMsg = "Erreur inconnue";
                             break;
@@ -118,7 +118,7 @@ switch($op)
                         if (!empty($_GET['docfile_md5id']) && empty($currentfolder))
                         {
                             $docfile = new docfile();
-                            if ($docfile->openmd5($_GET['docfile_md5id'])) $currentfolder = $docfile->fields['id_folder']; 
+                            if ($docfile->openmd5($_GET['docfile_md5id'])) $currentfolder = $docfile->fields['id_folder'];
                             else ploopi_redirect("admin.php?doc_error=unknown_file"); // Fichier inconnu => redirection
                         }
 
@@ -145,7 +145,7 @@ switch($op)
                             <a title="Créer un nouveau fichier" href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfile.png"></a>
                             <?php
                         }
-                        
+
                         if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_ADDFOLDER) && !$docfolder_readonly_content))
                         {
                             ?>

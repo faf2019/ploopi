@@ -33,7 +33,7 @@
 
 /**
  * Initialisation du module
- */ 
+ */
 
 ploopi_init_module('doc', false, false, false);
 
@@ -42,55 +42,55 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
     /**
      * Chargement des partages
      */
-    
+
     doc_getshare($menu_moduleid);
-    
+
     /**
      * Affichage des dossiers
      */
 
     $arrWhere = array();
-    
+
     // Module
     $arrWhere['module'] = "f.id_module = {$menu_moduleid}";
-    // Dossier 
+    // Dossier
     $arrWhere['folder'] = "f.id_folder = 0";
-    
+
     // Utilisateur "standard"
-    if (!ploopi_isadmin()) 
+    if (!ploopi_isadmin())
     {
         // Publié (ou propriétaire)
         $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$_SESSION['ploopi']['userid']})";
-         
+
         // Prioriétaire
-        $arrWhere['visibility']['user'] = "f.id_user = {$_SESSION['ploopi']['userid']}"; 
+        $arrWhere['visibility']['user'] = "f.id_user = {$_SESSION['ploopi']['userid']}";
         // Partagé
         if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])."))";
         // Public
         $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi_viewworkspaces()."))";
-        
+
         // Synthèse visibilité
         $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
     }
-        
+
     $strWhere = implode(' AND ', $arrWhere);
-    
+
     $sql = "
         SELECT      f.*,
                     w.label
-                    
+
         FROM        ploopi_mod_doc_folder f
-    
+
         LEFT JOIN   ploopi_workspace w
         ON          f.id_workspace = w.id
-    
+
         LEFT JOIN   ploopi_mod_doc_folder f_val
         ON          f_val.id = f.waiting_validation
-    
-        WHERE  {$strWhere}     
-        
+
+        WHERE  {$strWhere}
+
         ORDER BY    f.name
-    ";    
+    ";
 
     $db->query($sql);
 
@@ -108,7 +108,6 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
         else $block->addmenu($row['name'], ploopi_urlencode("admin.php?ploopi_moduleid=$menu_moduleid&ploopi_action=public&currentfolder={$row['id']}"));
 
     }
-
 
 }
 

@@ -91,20 +91,20 @@ function doc_upload(sid)
                 rc = rc.split('|');
 
                 //alert(rc.length);
-     
+
                 if (rc.length == 6)
                 {
-		            // 0 : taille uploadée
-		            // 1 : taille totale
-		            // 2 : ?
-		            // 3 : fichier en cours d'upload
-		            // 4 : vitesse ko/s
-		            // 5 : % avancement
-            
+                    // 0 : taille uploadée
+                    // 1 : taille totale
+                    // 2 : ?
+                    // 3 : fichier en cours d'upload
+                    // 4 : vitesse ko/s
+                    // 5 : % avancement
+
                     $('doc_progressbar_bg').style.width = ((($('doc_progressbar').offsetWidth-2)*rc[5])/100)+'px';
                     $('doc_progressbar_txt').innerHTML = '<b>'+rc[5]+'%</b> ('+rc[0]+'/'+rc[1]+'ko)<br />Envoi de <b>'+rc[3]+'</b> à <i>'+rc[4]+' ko/s</i>';
                 }
-                
+
                 setTimeout('doc_upload(\''+sid+'\');',500);
             }
         }
@@ -163,7 +163,7 @@ function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
             onSuccess:  function(transport, json)
             {
                 if (!json && transport.responseText.isJSON()) json = transport.responseText.evalJSON();
- 
+
                 if (json)
                 {
 

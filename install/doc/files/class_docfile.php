@@ -60,7 +60,7 @@ class docfile extends data_object
     var $tmpfile;
     var $draftfile;
     var $sharedfile;
-    
+
     /**
      * Constructeur de la classe
      *
@@ -86,10 +86,10 @@ class docfile extends data_object
 
     /**
      * Ouvre un document avec son identifiant MD5
-     * 
+     *
      * @param unknown_type $id
      * @return unknown
-     */    
+     */
     
     function open($id)
     {
@@ -118,7 +118,7 @@ class docfile extends data_object
      * Enregistre le document
      *
      * @return int numéro d'erreur
-     * 
+     *
      * @see _DOC_ERROR_EMPTYFILE
      * @see _DOC_ERROR_FILENOTWRITABLE
      * @see _DOC_ERROR_MAXFILESIZE
@@ -128,7 +128,7 @@ class docfile extends data_object
     function save()
     {
         global $db;
-        
+
         $booParse = false;
         
         $error = 0;
@@ -260,7 +260,7 @@ class docfile extends data_object
             if ($this->oldname != $this->fields['name'])
             {
                 $booParse = true;
-                
+
                 // renommage avec modification de type
                 if (($newext = substr(strrchr($this->fields['name'], "."),1)) != $this->fields['extension'])
                 {
@@ -294,9 +294,9 @@ class docfile extends data_object
             $docfolder_parent->fields['nbelements'] = doc_countelements($this->fields['id_folder']);
             $docfolder_parent->save();
         }
-        
+
         if ($booParse) $this->parse();
-        
+
         return($error);
     }
 
@@ -310,25 +310,25 @@ class docfile extends data_object
         if (file_exists($filepath)) @unlink($filepath);
 
         $basepath = $this->getbasepath();
-        if (file_exists($basepath)) 
+        if (file_exists($basepath))
         {
             $dh = opendir($basepath);
             $booEmptyDir = true;
             while (($file = readdir($dh)) !== false) $booEmptyDir = $booEmptyDir && in_array($file, array('.', '..'));
-            
+
             // Pas de sous dossiers ou de fichiers, on peut effacer le dossier
             if ($booEmptyDir) @rmdir($basepath);
         }
 
-        ploopi_search_remove_index(_DOC_OBJECT_FILE, $this->fields['id']);
-        
+        ploopi_search_remove_index(_DOC_OBJECT_FILE, $this->fields['md5id']);
+
         parent::delete();
         
         if ($this->fields['id_folder'] != 0)
         {
             $docfolder_parent = new docfolder();
             $docfolder_parent->open($this->fields['id_folder']);
-            $docfolder_parent->fields['nbelements'] = doc_countelements($this->fields['id_folder']);
+            $docfolder_parent->fields['nbelements'] = doc_countelements($this->fields['id_folder'], $this->fields['id_module']);
             $docfolder_parent->save();
         }
     }
@@ -337,7 +337,7 @@ class docfile extends data_object
      * Retourne le chemin physique de stockage des documents et le crée s'il n'existe pas
      *
      * @return string chemin physique de stockage des documents
-     * 
+     *
      * @see doc_getpath
      */
     
@@ -359,13 +359,13 @@ class docfile extends data_object
         return($this->getbasepath()._PLOOPI_SEP."{$this->fields['id']}_{$this->fields['version']}.{$this->fields['extension']}");
     }
 
-    
+
     /**
      * Retourne l'historique d'un fichier dans un tableau
      *
      * @return array historique d'un fichier indexé par version
      */
-    
+
     function gethistory()
     {
         global $db;
@@ -407,7 +407,7 @@ class docfile extends data_object
     function createhistory()
     {
         include_once './modules/doc/class_docfilehistory.php';
-                
+
         $docfilehistory = new docfilehistory();
         $docfilehistory->fields['id_docfile'] = $this->fields['id'];
         $docfilehistory->fields['version'] = $this->fields['version'];
@@ -427,7 +427,7 @@ class docfile extends data_object
      *
      * @param boolean $debug true si on veut afficher des informations de debug
      * @return unknown
-     * 
+     *
      * @see docmeta
      * @see _DOC_OBJECT_FILE
      * @see ploopi_search_create_index
@@ -436,7 +436,7 @@ class docfile extends data_object
     function parse($debug = false)
     {
         include_once './modules/doc/class_docmeta.php';
-        
+
         global $db;
 
         global $ploopi_timer;
@@ -446,8 +446,8 @@ class docfile extends data_object
 
         $metakeywords_str = '';
 
-        $allowedmeta_list = 
-            array(  
+        $allowedmeta_list =
+            array(
                 'Camera Make',      //jpg
                 'Camera Model',     //jpg
                 'Comment',          //jpg
@@ -495,7 +495,7 @@ class docfile extends data_object
                 break;
             }
 
-            $res_txt = "<div style=\"background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;padding:1px;margin-top:2px;\"><b>{$this->fields['name']}</b> : {$exec}</div>";
+            $res_txt = "<div style=\"background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;padding:1px;margin-top:2px;\"><b>{$this->fields['name']}</b> : {$exec}</div>\n";
 
             exec($exec,$array_result);
             if ($debug) printf("<br />META: %0.2f",$ploopi_timer->getexectime()*1000);
@@ -530,8 +530,8 @@ class docfile extends data_object
 
                         if (!empty($meta_information))
                         {
-                            $res_txt .= "<div style=\"background-color:#e0f0e0;border-bottom:1px solid #c0c0c0;padding:1px;\"><b>{$meta_information['1']}</b> = {$meta_information['2']}</div>";
-                            
+                            $res_txt .= "<div style=\"background-color:#e0f0e0;border-bottom:1px solid #c0c0c0;padding:1px;\"><b>{$meta_information['1']}</b> = {$meta_information['2']}</div>\n";
+
                             $docmeta = new docmeta();
                             $docmeta->fields['id_file'] = $this->fields['id'];
                             $docmeta->fields['meta'] = trim(ucwords(str_replace('_',' ',$meta_information['1'])));
@@ -559,7 +559,7 @@ class docfile extends data_object
                 // parse doc content
                 $exec = str_replace('%f',"\"{$path}\"",$fields['path']);
 
-                $res_txt .= "<div style=\"background-color:#ffe0e0;border-bottom:1px solid #c0c0c0;padding:1px;margin-top:2px;\">{$exec}</div>";
+                $res_txt .= "<div style=\"background-color:#ffe0e0;border-bottom:1px solid #c0c0c0;padding:1px;margin-top:2px;\">{$exec}</div>\n";
 
                 exec($exec,$array_result);
                 if ($debug) printf("<br />CONTENT: %0.2f",$ploopi_timer->getexectime()*1000);
@@ -585,28 +585,28 @@ class docfile extends data_object
                 unset($array_result);
             }
 
-            $res_txt .= "<div style=\"background-color:#e0e0f0;border-bottom:1px solid #c0c0c0;padding:1px;\">".ploopi_strcut($content,200)."</div>";
+            $res_txt .= "<div style=\"background-color:#e0e0f0;border-bottom:1px solid #c0c0c0;padding:1px;\">".ploopi_strcut($content,200)."</div>\n";
 
             $metakeywords_str .= " {$this->fields['name']} {$this->fields['description']}";
 
+            ploopi_search_remove_index(_DOC_OBJECT_FILE, $this->fields['md5id'], $this->fields['id_module']);
             ploopi_search_create_index(
-                _DOC_OBJECT_FILE, 
-                $this->fields['md5id'], 
-                $this->fields['name'], 
-                &$content, 
-                &$metakeywords_str, 
-                true, 
-                $this->fields['timestp_create'], 
-                $this->fields['timestp_modify'], 
-                $this->fields['id_user'], 
-                $this->fields['id_workspace'], 
+                _DOC_OBJECT_FILE,
+                $this->fields['md5id'],
+                $this->fields['name'],
+                &$content,
+                &$metakeywords_str,
+                true,
+                $this->fields['timestp_create'],
+                $this->fields['timestp_modify'],
+                $this->fields['id_user'],
+                $this->fields['id_workspace'],
                 $this->fields['id_module']
             );
 
         }
-        else $res_txt .= "<div><strong>erreur de fichier sur {$path}</strong></div>";
-        
-        
+        else $res_txt .= "<div><strong>erreur de fichier sur {$path}</strong></div>\n";
+
         unset($content);
         unset($metakeywords_str);
 

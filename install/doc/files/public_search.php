@@ -45,7 +45,7 @@ if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])) $
 /**
  * On affiche les options si une option a été modifiée
  */
-$show_options = (   
+$show_options = (
     !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype']) ||
     !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']) ||
     !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']) ||
@@ -55,7 +55,7 @@ $show_options = (
 
 /**
  * Affichage du formulaire de recherche
- */                
+ */
 ?>
 
 <form action="<?php echo ploopi_urlencode('admin.php'); ?>" onsubmit="javascript:doc_search_next();return false;" method="post">

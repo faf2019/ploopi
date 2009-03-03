@@ -22,7 +22,7 @@
 */
 
 /**
- * Gestion des parsers de contenu 
+ * Gestion des parsers de contenu
  *
  * @package doc
  * @subpackage parser
@@ -54,7 +54,7 @@ class docparser extends data_object
      *
      * @return docparser
      */
-    
+
     function docparser()
     {
         parent::data_object('ploopi_mod_doc_parser','id');

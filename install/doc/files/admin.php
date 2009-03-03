@@ -47,28 +47,28 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
 
     if (!empty($_GET['docTabItem'])) $_SESSION['doc']['docTabItem'] = $_GET['docTabItem'];
     if (!isset($_SESSION['doc']['docTabItem'])) $_SESSION['doc']['docTabItem'] = '';
-    
-    $tabs[_DOC_TAB_PARSERS] = 
+
+    $tabs[_DOC_TAB_PARSERS] =
         array(
-            'title' => 'Gestion des parsers', 
+            'title' => 'Gestion des parsers',
             'url' => "admin.php?docTabItem="._DOC_TAB_PARSERS
         );
-        
-    $tabs[_DOC_TAB_INDEX] = 
+
+    $tabs[_DOC_TAB_INDEX] =
         array(
-            'title' => 'Indexation', 
+            'title' => 'Indexation',
             'url' => "admin.php?docTabItem="._DOC_TAB_INDEX
         );
-        
-    $tabs[_DOC_TAB_STATS] = 
+
+    $tabs[_DOC_TAB_STATS] =
         array(
-            'title' => 'Statistiques', 
+            'title' => 'Statistiques',
             'url' => "admin.php?docTabItem="._DOC_TAB_STATS
         );
 
     echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
     echo $skin->create_tabs($tabs, $_SESSION['doc']['docTabItem']);
-    
+
     switch($_SESSION['doc']['docTabItem'])
     {
         case _DOC_TAB_PARSERS:

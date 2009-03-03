@@ -46,12 +46,12 @@ echo $skin->open_simplebloc('Statistiques');
 $array_columns = array();
 $array_values = array();
 
-$array_columns['right']['nombre'] = array(  'label' => 'Nombre', 
+$array_columns['right']['nombre'] = array(  'label' => 'Nombre',
                                             'width' => '100',
                                             'options' => array('sort' => true)
                                             );
 
-$array_columns['auto']['indicateur'] = array(   'label' => 'Indicateur', 
+$array_columns['auto']['indicateur'] = array(   'label' => 'Indicateur',
                                         'options' => array('sort' => true)
                                         );
 
@@ -81,7 +81,7 @@ $db->query( "
             SELECT  count(ke.id_keyword) as nb
             FROM    ploopi_index_element e,
                     ploopi_index_keyword_element ke
-            
+
             WHERE   e.id_module = {$_SESSION['ploopi']['moduleid']}
             AND     e.id_object = "._DOC_OBJECT_FILE."
             AND     ke.id_element = e.id
@@ -105,7 +105,7 @@ $db->query( "
             SELECT  sum(ke.weight) as total_weight
             FROM    ploopi_index_element e,
                     ploopi_index_keyword_element ke
-            
+
             WHERE   e.id_module = {$_SESSION['ploopi']['moduleid']}
             AND     e.id_object = "._DOC_OBJECT_FILE."
             AND     ke.id_element = e.id
@@ -135,53 +135,53 @@ $skin->display_array($array_columns, $array_values, 'docparser_stats', array('he
 $array_columns = array();
 $array_values = array();
 
-$array_columns['left']['pos'] = array(  'label' => 'Pos.', 
-                                        'width' => '60', 
+$array_columns['left']['pos'] = array(  'label' => 'Pos.',
+                                        'width' => '60',
                                         'options' => array('sort' => true)
                                         );
 
-$array_columns['right']['pcent'] = array(   'label' => '%', 
-                                            'width' => '50', 
+$array_columns['right']['pcent'] = array(   'label' => '%',
+                                            'width' => '50',
                                             'options' => array('sort' => true)
                                             );
 
-$array_columns['right']['poids'] = array(   'label' => 'Poids', 
-                                            'width' => '100', 
+$array_columns['right']['poids'] = array(   'label' => 'Poids',
+                                            'width' => '100',
                                             'options' => array('sort' => true)
                                             );
 
-$array_columns['right']['taille'] = array(  'label' => 'Taille', 
-                                            'width' => '100', 
+$array_columns['right']['taille'] = array(  'label' => 'Taille',
+                                            'width' => '100',
                                             'options' => array('sort' => true)
                                             );
 
-$array_columns['auto']['mot'] = array(  'label' => 'Mot', 
+$array_columns['auto']['mot'] = array(  'label' => 'Mot',
                                         'options' => array('sort' => true)
                                         );
 
 /**
  * Recherche des mots les plus fréquents
- */                                     
+ */
 
 $sql =  "
         SELECT  k.keyword,
                 sum(ke.weight) as w
-        
+
         FROM    ploopi_index_element e,
                 ploopi_index_keyword_element ke,
                 ploopi_index_keyword k
-        
+
         WHERE   e.id_module = {$_SESSION['ploopi']['moduleid']}
         AND     e.id_object = "._DOC_OBJECT_FILE."
         AND     ke.id_element = e.id
         AND     ke.weight <> 999999
         AND     k.id = ke.id_keyword
-            
+
         GROUP BY    k.id
         ORDER BY    w DESC
         LIMIT 0,50
         ";
-        
+
 $db->query($sql);
 
 $c = 1;

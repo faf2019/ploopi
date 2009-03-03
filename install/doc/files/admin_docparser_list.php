@@ -58,10 +58,10 @@ else $docparser->init_description();
     <p class="ploopi_va">
         <label>Libellé:</label>
         <input type="text" class="text" name="docparser_label" id="docparser_label" value="<?php echo htmlentities($docparser->fields['label']); ?>" tabindex="1" size="12" />
-        
+
         <label>Extension:</label>
         <input type="text" class="text" name="docparser_extension" id="docparser_extension" value="<?php echo htmlentities($docparser->fields['extension']); ?>" tabindex="2" size="4" />
-        
+
         <label>Commande:</label>
         <input type="text" class="text" name="docparser_path" id="docparser_path" value="<?php echo htmlentities($docparser->fields['path']); ?>" tabindex="3" size="45" />
 
@@ -75,24 +75,21 @@ else $docparser->init_description();
 $array_columns = array();
 $array_values = array();
 
-
-$array_columns['left']['label'] = array(    'label' => 'Libellé', 
-                                            'width' => '200', 
+$array_columns['left']['label'] = array(    'label' => 'Libellé',
+                                            'width' => '200',
                                             'options' => array('sort' => true)
                                             );
 
-$array_columns['left']['ext'] = array(  'label' => 'Ext', 
-                                        'width' => '70', 
+$array_columns['left']['ext'] = array(  'label' => 'Ext',
+                                        'width' => '70',
                                         'options' => array('sort' => true)
                                         );
 
-$array_columns['auto']['path'] = array( 'label' => 'Commande', 
+$array_columns['auto']['path'] = array( 'label' => 'Commande',
                                         'options' => array('sort' => true)
                                         );
 
 $array_columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '42');
-
-
 
 $sql =  "
         SELECT p.*, e.filetype
@@ -117,12 +114,11 @@ while ($row = $db->fetchrow())
     $array_values[$c]['description'] = $row['label'];
     $array_values[$c]['link'] = "admin.php?op=docparser_modify&docparser_id={$row['id']}";
     $array_values[$c]['style'] = '';
-    
+
     $c++;
 }
 
 $skin->display_array($array_columns, $array_values, 'docparser_list', array('sortable' => true, 'orderby_default' => 'label'));
-
 
 echo $skin->close_simplebloc();
 ?>

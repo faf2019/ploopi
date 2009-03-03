@@ -94,7 +94,6 @@ if ($newfile)
             doc_getvalidation();
             $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
 
-
             if (_PLOOPI_USE_CGIUPLOAD)
             {
                 $sid = doc_guid();
@@ -190,7 +189,7 @@ else
     $title = $readonly ? '(lecture seule)' : '';
 
     $docfile_tab = empty($_GET['docfile_tab']) ? 'open' : $_GET['docfile_tab'];
-    
+
     $db->query("SELECT filetype FROM ploopi_mod_doc_ext WHERE ext = '{$docfile->fields['extension']}'");
     $row = $db->fetchrow();
 
@@ -217,7 +216,6 @@ else
             </p>
         </a>
 
-
         <div>
             <p class="ploopi_va" style="white-space:nowrap;overflow:hidden;">
                 <img src="./modules/doc/img/mimetypes/<?php echo $ico; ?>" />
@@ -242,9 +240,9 @@ else
          */
         case 'open':
             $arrRenderer = (in_array(strtolower($docfile->fields['extension']), array_keys($doc_arrDocViewableFormats))) ? explode(':', $doc_arrDocViewableFormats[strtolower($docfile->fields['extension'])]) : array('iframe');
-            
+
             if (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight'])) $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight'] = '600';
-            
+
             switch($arrRenderer[0])
             {
                 case 'highlighter':
@@ -256,18 +254,18 @@ else
                     $objHL =& Text_Highlighter::factory($arrRenderer[1]);
 
                     $objHL->setRenderer(new Text_Highlighter_Renderer_Html());
-                    
+
                     $ptrHandle = fopen($docfile->getfilepath(), "rb");
                     $strFileContent = '';
                     while (!feof($ptrHandle)) $strFileContent .= fread($ptrHandle, 8192);
                     fclose($ptrHandle);
-                    
+
                     echo $objHL->highlight($strFileContent);
                     ?>
                     </div>
                     <?php
                 break;
-                
+
                 case 'flash':
                     ?>
                     <script type="text/javascript" src="./modules/doc/jw_player/swfobject.js"></script>
@@ -278,7 +276,7 @@ else
                     </script>
                     <?
                 break;
-                
+
                 case 'jw_player':
                     ?>
                     <script type="text/javascript" src="./modules/doc/jw_player/swfobject.js"></script>
@@ -290,9 +288,9 @@ else
                     so.addParam('flashvars','file=<?php echo ploopi_urlrewrite("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", $docfile->fields['name'], true); ?>');
                     so.write('doc_jw_player');
                     </script>
-                    <?php                        
+                    <?php
                 break;
-                
+
                 case 'div':
                     ?>
                     <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#f0f0f0;height:<?php echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>px;overflow:auto;">
@@ -304,7 +302,7 @@ else
                     </div>
                     <?
                 break;
-                
+
                 default:
                 case 'iframe':
                     ?>
@@ -313,7 +311,7 @@ else
                 break;
             }
         break;
-        
+
         case 'keywords':
             $array_columns = array();
             $array_values = array();
@@ -506,7 +504,7 @@ else
 
                 <div style="float:right;width:40%;">
                     <fieldset style="border:1px solid #c0c0c0;margin:4px 4px 0 0;">
-                        <legend>Mettre à jour avec un fichier situé</LEGEND> 
+                        <legend>Mettre à jour avec un fichier situé</LEGEND>
                         <?php
                         if (!$readonly)
                         {
@@ -628,8 +626,6 @@ else
                     </div>
                 </div>
 
-
-
                 <div style="clear:both;padding:4px;text-align:right;">
                     <input type="button" class="flatbutton" value="<?php echo _PLOOPI_BACK; ?>" onclick="javascript:doc_explorer(<?php echo $currentfolder; ?>);">
                     <?php
@@ -650,7 +646,6 @@ else
                     <?php
                 }
                 ?>
-
 
                 <p class="ploopi_va" style="padding:4px;clear:both;">
                     <strong>URL publique du fichier :</strong>

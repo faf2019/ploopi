@@ -29,7 +29,7 @@
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see doc_getshare
  * @see ploopi_search
  */
@@ -54,25 +54,23 @@ if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']
 if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'] = '';
 if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'] = '';
 
-
 /**
- * On démarre la recherche si au moins un mot clé a été saisi 
+ * On démarre la recherche si au moins un mot clé a été saisi
  */
 if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 {
     /**
      * Charge les validations
      */
-    
+
     doc_getvalidation();
-    
+
     /**
      * Charge les partages
      */
-    
+
     doc_getshare();
-    
-    
+
     $docfolder_readonly_content = false;
 
     $where = (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['files'])) ? ' OR f.id IN ('.implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['files']).')' : '';
@@ -86,14 +84,14 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
          * Appel de la fonction de recherche du moteur d'indexation interne.
          * Renvoie une liste de fichiers correspondants au mots clés.
          */
-        
+
         $arrRelevance = ploopi_search($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'], _DOC_OBJECT_FILE, '', $_SESSION['ploopi']['moduleid']);
     }
 
     /**
      * Construction de la requête SQL de recherche avec les champs spécifiques du module DOC
      */
-    
+
     if (!empty($arrRelevance)) $search[] = " f.md5id IN ('".implode("','",array_keys($arrRelevance))."') ";
     else $search[] = " f.id = -1";
 
@@ -101,7 +99,6 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
     if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])) $search[] = " e.filetype LIKE '%".$db->addslashes($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])."%' ";
     if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user'])) $search[] = " u.login LIKE '%".$db->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']))."%' ";
     if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace'])) $search[] = " g.label LIKE '%".$db->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']))."%' ";
-
 
     if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']) && !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])) $search[] = " f.timestp_modify BETWEEN '".ploopi_local2timestamp($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'])."' AND '".ploopi_timestamp_add(ploopi_local2timestamp($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2']),0,0,0,0,1)."'";
     else
@@ -120,41 +117,41 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
     {
         // Tableau pour construire la clause WHERE
         $arrWhere = array();
-        
+
         // Module
         $arrWhere['module'] = "f.id_module = {$_SESSION['ploopi']['moduleid']}";
-        
+
         // Utilisateur "standard"
-        if (!ploopi_isadmin()) 
+        if (!ploopi_isadmin())
         {
             // Publié (ou propriétaire)
             $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$_SESSION['ploopi']['userid']})";
-             
+
             // Prioriétaire
-            $arrWhere['visibility']['user'] = "f.id_user = {$_SESSION['ploopi']['userid']}"; 
+            $arrWhere['visibility']['user'] = "f.id_user = {$_SESSION['ploopi']['userid']}";
             // Partagé
             if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])."))";
             // Public
             $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi_viewworkspaces()."))";
-            
+
             // Validateur
             if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']))
             {
                 $arrWhere['visibility']['validator'] = "f.waiting_validation IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']).")";
             }
-            
+
             // Synthèse visibilité
             $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
         }
-            
+
         $strWhere = implode(' AND ', $arrWhere);
-        
+
         $sql = "
             SELECT  f.*
-                        
+
             FROM    ploopi_mod_doc_folder f
-        
-            WHERE   {$strWhere}     
+
+            WHERE   {$strWhere}
         ";
 
         $db->query($sql);
@@ -162,28 +159,28 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
         $arrFolderList = array();
         $arrFolderList[] = 0;
         while ($row = $db->fetchrow()) $arrFolderList[] = $row['id'];
-        
+
         // Tableau pour construire la clause WHERE
         $arrWhere = array();
-        
+
         // Module
         $arrWhere['module'] = "f.id_module = {$_SESSION['ploopi']['moduleid']}";
-        
+
         // Folders
         $arrWhere['folders'] = "f.id_folder IN (".implode(',',$arrFolderList).")";
-        
+
         // Search
         $arrWhere['search'] = implode(' AND ',$search);
-        
+
         // Utilisateur "standard"
-        if (!ploopi_isadmin()) 
+        if (!ploopi_isadmin())
         {
             // Dossier racine = cas particulier, l'utilisateur standard ne peut voir que sa racine
             $arrWhere['root'] = "(f.id_folder <> 0 OR (f.id_folder = 0 AND f.id_user = {$_SESSION['ploopi']['userid']}))";
         }
-        
+
         $strWhere = implode(' AND ', $arrWhere);
-        
+
         $sql =  "
                 SELECT      f.*,
                             u.id as user_id,
@@ -214,66 +211,66 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
                 ";
 
         $db->query($sql);
-        
+
         $columns = array();
         $values = array();
         $c = 0;
 
-        $columns['left']['pert'] = 
+        $columns['left']['pert'] =
             array(
-                'label' => '', 
-                'width' => 65, 
+                'label' => '',
+                'width' => 65,
                 'options' => array('sort' => true)
             );
-            
-        $columns['auto']['nom'] = 
+
+        $columns['auto']['nom'] =
             array(
-                'label' => 'Nom', 
+                'label' => 'Nom',
                 'options' => array('sort' => true)
             );
 
         if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaysize'])
-            $columns['right']['taille'] = 
+            $columns['right']['taille'] =
                 array(
-                    'label' => 'Taille', 
-                    'width' => 90, 
+                    'label' => 'Taille',
+                    'width' => 90,
                     'options' => array('sort' => true)
                 );
 
-        $columns['right']['dossier'] = 
+        $columns['right']['dossier'] =
             array(
-                'label' => 'Dossier', 
-                'width' => 120, 
+                'label' => 'Dossier',
+                'width' => 120,
                 'options' => array('sort' => true)
             );
-        
+
         if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])
-            $columns['right']['espace'] = 
+            $columns['right']['espace'] =
                 array(
-                    'label' => 'Espace', 
-                    'width' => 130, 
+                    'label' => 'Espace',
+                    'width' => 130,
                     'options' => array('sort' => true)
                 );
-            
+
         if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
-            $columns['right']['propriétaire'] = 
+            $columns['right']['propriétaire'] =
                 array(
-                    'label' => 'Propriétaire', 
-                    'width' => 120, 
+                    'label' => 'Propriétaire',
+                    'width' => 120,
                     'options' => array('sort' => true)
                 );
 
         if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaydatetime'])
-            $columns['right']['date'] = 
+            $columns['right']['date'] =
                 array(
-                    'label' => 'Date/Heure', 
-                    'width' => 115, 
+                    'label' => 'Date/Heure',
+                    'width' => 115,
                     'options' => array('sort' => true)
                 );
-        
-        $columns['actions_right']['actions'] = 
+
+        $columns['actions_right']['actions'] =
             array(
-                'label' => 'Actions', 
+                'label' => 'Actions',
                 'width' => 90
             );
 
@@ -322,8 +319,8 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
                         <a title="Modifier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$row['id_folder']}&docfile_md5id={$row['md5id']}&docfile_tab=modify").'"><img src="./modules/doc/img/ico_modify.png" /></a>
                         <a title="Télécharger" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
                         <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
-                        ';                        
-                        
+                        ';
+
             $blue = 128;
             if ($arrRelevance[$row['md5id']]['relevance']>=50)
             {
@@ -338,53 +335,52 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 
             $color = sprintf("%02X%02X%02X",$red,$green,$blue);
 
-
-            $values[$c]['values']['pert'] = 
+            $values[$c]['values']['pert'] =
                 array(
-                    'label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $arrRelevance[$row['md5id']]['relevance']), 
+                    'label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $arrRelevance[$row['md5id']]['relevance']),
                     'sort_label' => $arrRelevance[$row['md5id']]['relevance']
                 );
-                
-            $values[$c]['values']['nom'] = 
+
+            $values[$c]['values']['nom'] =
                 array(
-                    'label' => "<img src=\"./modules/doc/img/mimetypes/{$ico}\" /><span>&nbsp;{$row['name']}</span>", 
+                    'label' => "<img src=\"./modules/doc/img/mimetypes/{$ico}\" /><span>&nbsp;{$row['name']}</span>",
                     'sort_label' => strtolower($row['name'])
                 );
-            
+
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaysize'])
-                $values[$c]['values']['taille'] = 
+                $values[$c]['values']['taille'] =
                     array(
-                        'label' => "{$ksize} ko", 
-                        'style' => 'text-align:right', 
+                        'label' => "{$ksize} ko",
+                        'style' => 'text-align:right',
                         'sort_label' => sprintf("%016d", $ksize*100)
                     );
-                    
-            $values[$c]['values']['dossier'] = 
+
+            $values[$c]['values']['dossier'] =
                 array(
-                    'label' => "<img src=\"./modules/doc/img/{$icofolder}.png\" /><span>&nbsp;{$row['fd_name']}</span>", 
+                    'label' => "<img src=\"./modules/doc/img/{$icofolder}.png\" /><span>&nbsp;{$row['fd_name']}</span>",
                     'sort_label' => strtolower($row['fd_name'])
                 );
-            
+
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
-                $values[$c]['values']['propriétaire'] = 
+                $values[$c]['values']['propriétaire'] =
                     array(
                         'label' => empty($row['user_id']) ? '<em>supprimé</em>' : strtolower($row['login'])
                     );
-                    
+
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])
-                $values[$c]['values']['espace'] = 
+                $values[$c]['values']['espace'] =
                     array(
                         'label' => strtolower($row['label'])
                     );
-                    
+
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaydatetime'])
-                $values[$c]['values']['date'] = 
+                $values[$c]['values']['date'] =
                     array(
-                        'label' => $ldate['date'].' '.substr($ldate['time'],0,5), 
+                        'label' => $ldate['date'].' '.substr($ldate['time'],0,5),
                         'sort_label' => $row['timestp_modify']
                     );
-                
-            $values[$c]['values']['actions'] = 
+
+            $values[$c]['values']['actions'] =
                 array(
                     'label' => $tools
                 );
@@ -394,14 +390,6 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
             $values[$c]['style'] = '';
 
             $c++;
-
-
-            if ($row['id_folder'] == 0) $row['fd_name'] = 'Racine';
-
-            $ksize = sprintf("%.02f",$row['size']/1024);
-            $ldate = ploopi_timestamp2local($row['timestp_modify']);
-
-            $color = (!isset($color) || $color == 2) ? 1 : 2;
         }
 
         $skin->display_array($columns, $values, 'docsearch', array('sortable' => true, 'orderby_default' => 'pert', 'sort_default' => 'DESC'));

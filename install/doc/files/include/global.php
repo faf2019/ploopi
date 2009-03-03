@@ -58,7 +58,7 @@ define('_DOC_ERROR_EMPTYFILE',          102);
 
 global $doc_arrDocViewableFormats;
 
-$doc_arrDocViewableFormats = 
+$doc_arrDocViewableFormats =
     array(
         'pdf'   => 'iframe',
         'doc'   => 'iframe',
@@ -99,7 +99,7 @@ $doc_arrDocViewableFormats =
         'mp4'   => 'jw_player',
         'swf'   => 'flash',
     );
-    
+
 /**
  * Retourne un identifiant unique pour l'upload des fichiers
  *
@@ -184,7 +184,7 @@ function doc_countelements($id_folder)
  * Chargement des partages en session (pour éviter les multiples rechargements)
  *
  * @param int $id_module identifiant du module
- * 
+ *
  * @see ploopi_share_get
  * @see _DOC_OBJECT_FOLDER
  * @see _DOC_OBJECT_FILE
@@ -223,7 +223,7 @@ function doc_resetshare($id_module = -1)
  * Chargement du validation en session (pour éviter les multiples rechargements)
  *
  * @param int $id_module identifiant du module
- * 
+ *
  * @see ploopi_validation_get
  * @see _DOC_OBJECT_FOLDER
  */
@@ -255,12 +255,11 @@ function doc_resetvalidation($id_module = -1)
     unset($_SESSION['doc'][$id_module]['validation']);
 }
 
-
 /**
  * Retourne la taille maximale d'un fichier uploadable
  *
  * @return int taille maximale en ko
- * 
+ *
  * @see _PLOOPI_MAXFILESIZE
  * @see _PLOOPI_USE_CGIUPLOAD
  */
@@ -281,7 +280,7 @@ function doc_max_filesize()
  * Retourne la taille maximale qu'un formulaire peut accepter en POST
  *
  * @return int taille maximale en ko
- * 
+ *
  * @see _PLOOPI_USE_CGIUPLOAD
  */
 
@@ -298,11 +297,11 @@ function doc_max_formsize()
  * @param string $id_record identifiant de l'enregistrement
  * @param int $id_module identifiant du module
  * @return boolean true si l'enregistrement est accessible
- * 
+ *
  * @see _DOC_OBJECT_FOLDER
  * @see _DOC_OBJECT_FILE
  * @see _DOC_OBJECT_FILEDRAFT
- * 
+ *
  * @see doc_getshare
  * @see doc_getvalidation
  */
@@ -310,14 +309,14 @@ function doc_max_formsize()
 function doc_record_isenabled($id_object, $id_record, $id_module)
 {
     $enabled = false;
-    
+
     if (ploopi_isadmin()) return true;
 
     switch($id_object)
     {
         case _DOC_OBJECT_FOLDER;
             include_once './modules/doc/class_docfolder.php';
-            
+
             $objFolder = new docfolder();
             if ($objFolder->open($id_record))
             {
@@ -333,7 +332,7 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
                 }
             }
         break;
-        
+
         case _DOC_OBJECT_FILE;
             include_once './modules/doc/class_docfile.php';
             include_once './modules/doc/class_docfolder.php';
@@ -359,7 +358,7 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
                 }
             }
         break;
-        
+
         case _DOC_OBJECT_FILEDRAFT:
             include_once './modules/doc/class_docfiledraft.php';
             include_once './modules/doc/class_docfolder.php';
@@ -391,27 +390,25 @@ function doc_getfolders($id_module = -1, $id_user = -1)
 
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
     if ($id_user == -1) $id_user = $_SESSION['ploopi']['userid'];
-    
-    $arrFolders = 
+
+    $arrFolders =
         array(
-            'list' => array(), 
+            'list' => array(),
             'tree' => array()
         );
-            
+
     /**
      * Charge les validations
      */
-    
+
     doc_getvalidation();
-    
+
     /**
      * Charge les partages
      */
-    
+
     doc_getshare();
-            
-        
-        
+
     // dossiers partagés
     $list_shared_folders = (!empty($_SESSION['doc'][$id_module]['share']['folders'])) ? ' OR (f.id IN ('.implode(',', $_SESSION['doc'][$id_module]['share']['folders']).") AND f.id_user <> {$id_user})" : '';
 
@@ -420,17 +417,17 @@ function doc_getfolders($id_module = -1, $id_user = -1)
     $list_wf_folders_option = ($list_wf_folders != '') ? " OR f_val.id_folder IN ({$list_wf_folders}) " : '';
 
     $result = $db->query("
-        SELECT      f.id, 
-                    f.name, 
-                    f.foldertype, 
-                    f.readonly, 
-                    f.readonly_content, 
-                    f.parents, 
-                    f.id_user, 
-                    f.published, 
-                    f.waiting_validation, 
+        SELECT      f.id,
+                    f.name,
+                    f.foldertype,
+                    f.readonly,
+                    f.readonly_content,
+                    f.parents,
+                    f.id_user,
+                    f.published,
+                    f.waiting_validation,
                     f.id_folder
-                    
+
         FROM        ploopi_mod_doc_folder f
 
         LEFT JOIN   ploopi_mod_doc_folder f_val
@@ -448,7 +445,7 @@ function doc_getfolders($id_module = -1, $id_user = -1)
 
         ORDER by f.name
     ");
- 
+
     $arrFolders['list'][0] = array(
         'id' => 0,
         'name' => 'Racine',
@@ -460,28 +457,27 @@ function doc_getfolders($id_module = -1, $id_user = -1)
         'waiting_validation' => 0,
         'id_folder' => -1
     );
-    
+
     $arrFolders['tree'][-1][] = 0;
-        
-    while ($fields = $db->fetchrow($result)) 
+
+    while ($fields = $db->fetchrow($result))
     {
         $fields['parents'] = '-1;'.str_replace(',', ';', $fields['parents']);
-         
+
         $arrFolders['list'][$fields['id']] = $fields;
         $arrFolders['tree'][$fields['id_folder']][] = $fields['id'];
     }
-    
+
     return($arrFolders);
 }
-
 
 function doc_gettreeview($arrFolder = array())
 {
     global $db;
 
-    $arrTreeview = 
+    $arrTreeview =
         array(
-            'list' => array(), 
+            'list' => array(),
             'tree' => array()
         );
 
@@ -491,9 +487,8 @@ function doc_gettreeview($arrFolder = array())
         if ($fields['foldertype'] == 'shared') $strIco .= '_shared';
         if ($fields['foldertype'] == 'public') $strIco .= '_public';
         if ($fields['readonly']) $strIco .= '_locked';
-        
-        
-        $arrTreeview['list'][$fields['id']] = 
+
+        $arrTreeview['list'][$fields['id']] =
             array(
                 'id' => $fields['id'],
                 'label' => $fields['name'],
@@ -505,10 +500,10 @@ function doc_gettreeview($arrFolder = array())
                 'onclick' => '',
                 'icon' => "./modules/doc/img/{$strIco}.png"
             );
-        
-        $arrTreeview['tree'][$fields['id_folder']][] = $fields['id'];                        
+
+        $arrTreeview['tree'][$fields['id_folder']][] = $fields['id'];
     }
-    
+
     return($arrTreeview);
 }
 ?>

@@ -64,7 +64,7 @@ class docfilehistory extends data_object
      * Retourne le chemin physique de stockage des documents et le crée s'il n'existe pas
      *
      * @return string chemin physique de stockage des documents
-     * 
+     *
      * @see doc_getpath
      */
 
