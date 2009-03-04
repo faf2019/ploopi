@@ -359,12 +359,11 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
         ///////////////////////////////////////////////////////////////////////////
         // SWITCH MAIN MENU (Workspaces, Profile, etc.)
         ///////////////////////////////////////////////////////////////////////////
-
         if (isset($ploopi_mainmenu) && $ploopi_mainmenu != $_SESSION['ploopi']['mainmenu']) // new main menu selected
         {
             $_SESSION['ploopi']['mainmenu'] = $ploopi_mainmenu;
 
-            $_SESSION['ploopi']['backoffice']['workspaceid'] = $_SESSION['ploopi']['workspaces_allowed'][0];
+            echo $_SESSION['ploopi']['backoffice']['workspaceid'] = $_SESSION['ploopi']['workspaces_allowed'][0];
 
             if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES) ploopi_loadparams();
 
@@ -384,11 +383,17 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 break;
             }
         }
-
+        
         ///////////////////////////////////////////////////////////////////////////
         // SWITCH WORKSPACE
         ///////////////////////////////////////////////////////////////////////////
-
+        
+        // Traitement d'un car particulier lié au détachement d'un utilisateur à l'espace qu'il consulte 
+        if (!isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]))
+        {
+            $ploopi_workspaceid = $_SESSION['ploopi']['hosts']['backoffice'][0];
+        }
+        
         if (isset($ploopi_workspaceid) && $_SESSION['ploopi']['backoffice']['workspaceid'] != $ploopi_workspaceid && isset($_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['adminlevel']) && $_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['backoffice']) // new group selected
         {
             $_SESSION['ploopi']['mainmenu'] = _PLOOPI_MENU_WORKSPACES;
@@ -631,5 +636,4 @@ $_SESSION['ploopi']['env'] =
         $_SESSION['ploopi']['moduleid'],
         $_SESSION['ploopi']['action']
     );
-
 ?>

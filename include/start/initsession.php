@@ -38,6 +38,12 @@
 
 include_once './include/classes/workspace.php';
 
+/**
+ * Suppression des espaces de travail déjà sélectionnés
+ */
+
+unset($_SESSION['ploopi']['workspaces']);
+
 ///////////////////////////////////////////////////////////////////////////
 // GET WORKSPACES (FOR THIS DOMAIN)
 // on en profite pour appliquer l'héritage implicite des domaines pour les sous-espaces de travail
@@ -116,14 +122,15 @@ if (isset($_SESSION['ploopi']['hosts']['backoffice'][0])) $_SESSION['ploopi']['w
 foreach($_SESSION['ploopi']['workspaces'] as $wid => $wsp)
 {
     $workspace = new workspace();
-    $workspace->open($wid);
-
-    $_SESSION['ploopi']['workspaces'][$wid]['children'] = $workspace->getchildren();
-    $_SESSION['ploopi']['workspaces'][$wid]['parents'] = explode(';',$workspace->fields['parents']);
-    $_SESSION['ploopi']['workspaces'][$wid]['brothers'] = $workspace->getbrothers();
-    $_SESSION['ploopi']['workspaces'][$wid]['list_parents'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
-    $_SESSION['ploopi']['workspaces'][$wid]['list_children'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['children']);
-    $_SESSION['ploopi']['workspaces'][$wid]['list_brothers'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['brothers']);
-    $_SESSION['ploopi']['workspaces'][$wid]['modules'] = $workspace->getmodules(true);
+    if ($workspace->open($wid))
+    {
+        $_SESSION['ploopi']['workspaces'][$wid]['children'] = $workspace->getchildren();
+        $_SESSION['ploopi']['workspaces'][$wid]['parents'] = explode(';',$workspace->fields['parents']);
+        $_SESSION['ploopi']['workspaces'][$wid]['brothers'] = $workspace->getbrothers();
+        $_SESSION['ploopi']['workspaces'][$wid]['list_parents'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
+        $_SESSION['ploopi']['workspaces'][$wid]['list_children'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['children']);
+        $_SESSION['ploopi']['workspaces'][$wid]['list_brothers'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['brothers']);
+        $_SESSION['ploopi']['workspaces'][$wid]['modules'] = $workspace->getmodules(true);
+    }
 }
 ?>
