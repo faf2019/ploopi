@@ -1,3 +1,9 @@
+== Module DOC - version 4.3.1 =====================================================
+
+2009-03-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction à l'affichage des dossiers dans le menu du module (ne prenait pas en compte les dossiers partagés)
+
 == Module DOC - version 4.3 =====================================================
 
 2009-03-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

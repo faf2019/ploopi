@@ -65,7 +65,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
         // Prioriétaire
         $arrWhere['visibility']['user'] = "f.id_user = {$_SESSION['ploopi']['userid']}";
         // Partagé
-        if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])."))";
+        if (!empty($_SESSION['doc'][$menu_moduleid]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$menu_moduleid]['share']['folders'])."))";
         // Public
         $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi_viewworkspaces()."))";
 
