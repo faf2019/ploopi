@@ -59,6 +59,8 @@ function ploopi_die($var = null, $flush = true)
 
     global $ploopi_timer;
     
+    $strHost = (php_sapi_name() != 'cli') ? $_SERVER['HTTP_HOST'] : '';
+    
     if (
         !empty($ploopi_errors_level) &&
         $ploopi_errors_level &&
@@ -70,7 +72,7 @@ function ploopi_die($var = null, $flush = true)
     {
         mail(
             _PLOOPI_ADMINMAIL,
-            "[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$_SERVER['HTTP_HOST']}]",
+            "[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$strHost}]",
             "{$ploopi_errors_nb} erreur(s) sur {$ploopi_errors_msg}".
             "\n_SERVER:\n".print_r($_SERVER, true).
             "\n_POST:\n".print_r($_POST, true).
@@ -85,7 +87,7 @@ function ploopi_die($var = null, $flush = true)
         else ploopi_print_r($var);
     }
 
-    session_write_close();
+    if (php_sapi_name() != 'cli') session_write_close();
     
     if ($flush) while (ob_get_level()>1) ob_end_flush();
 

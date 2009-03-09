@@ -123,7 +123,8 @@ class ploopi_cipher
             include_once './include/functions/crypt.php';
 
             mcrypt_generic_init($this->cipher, $this->key, $this->iv);
-            $decrypted = rtrim(mdecrypt_generic($this->cipher,ploopi_base64_decode($encrypted)),"\0");
+            $decoded = ploopi_base64_decode($encrypted);
+            $decrypted = (strlen($decoded) > 0) ? rtrim(mdecrypt_generic($this->cipher, $decoded),"\0") : '';
             mcrypt_generic_deinit($this->cipher);
             return($decrypted);
         }

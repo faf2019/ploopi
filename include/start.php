@@ -363,7 +363,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
         {
             $_SESSION['ploopi']['mainmenu'] = $ploopi_mainmenu;
 
-            echo $_SESSION['ploopi']['backoffice']['workspaceid'] = $_SESSION['ploopi']['workspaces_allowed'][0];
+            $_SESSION['ploopi']['backoffice']['workspaceid'] = $_SESSION['ploopi']['workspaces_allowed'][0];
 
             if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES) ploopi_loadparams();
 

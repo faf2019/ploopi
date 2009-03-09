@@ -1,0 +1,90 @@
+#!/usr/bin/php
+<?php
+/*
+    Copyright (c) 2007-2009 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/**
+ * Point d'entrée les appels via CRON
+ *
+ * @package ploopi
+ * @subpackage cron
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ *
+ * <code>
+ * * * * * * /var/www/ploopi/cron > /dev/null 2>&1
+ * </code>
+ */
+
+
+include_once './include/classes/timer.php' ;
+$ploopi_timer = new timer();
+$ploopi_timer->start();
+
+include_once './config/config.php'; // load config (mysql, path, etc.)
+
+/**
+ * Initialisation du gestionnaire d'erreur
+ */
+include_once './include/functions/errors.php';
+set_error_handler('ploopi_errorhandler');
+
+/**
+ * Chargement des constantes, globales
+ */
+include_once './include/start/constants.php';
+
+/**
+ * Chargements des classes et fonctions principales
+ * Attention de bien garder ces inclusions. Sinon problèmes avec ploopi_die et la gestion du buffer.
+ */
+include_once './include/classes/data_object.php';
+include_once './include/functions/date.php';
+include_once './include/functions/system.php';
+
+/**
+ * Connexion à la base de données
+ */
+if (file_exists('./include/classes/db_'._PLOOPI_SQL_LAYER.'.php')) include_once './include/classes/db_'._PLOOPI_SQL_LAYER.'.php';
+
+global $db;
+
+$db = new ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
+if(!$db->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
+
+$cron_rs = $db->query("
+    SELECT      ploopi_module.id,
+                ploopi_module_type.label
+    FROM        ploopi_module
+    INNER JOIN  ploopi_module_type
+    ON          ploopi_module.id_module_type = ploopi_module_type.id
+");
+
+while ($cron_fields = $db->fetchrow($cron_rs))
+{
+    $cronfile = "./modules/{$cron_fields['label']}/cron.php";
+    $cron_moduleid = $cron_fields['id'];
+    if (file_exists($cronfile)) include $cronfile;
+}
+
+ploopi_die();
+?>
