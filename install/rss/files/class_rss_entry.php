@@ -81,7 +81,7 @@ class rss_entry extends data_object
      *
      * @return boolean true si suppression ok
      */
-    
+
     function delete()
     {
         ploopi_search_remove_index(_RSS_OBJECT_NEWS_ENTRY, $this->fields['id']);

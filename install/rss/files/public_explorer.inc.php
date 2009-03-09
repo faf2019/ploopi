@@ -54,11 +54,11 @@ if (substr($rss_search_kw,0,6) == 'entry:') $_SESSION['rss'][$_SESSION['ploopi']
 
 <div style="float:left;width:40%;">
     <div id="rss_explorer_search">
-    <? echo $skin->open_simplebloc(); ?>
+    <?php echo $skin->open_simplebloc(); ?>
     <form action="" method="post" onsubmit="javascript:rss_explorer_feed_get(this.rss_search_kw.value); return false;">
-    <div style="padding:4px;font-weight:bold;"><? echo _RSS_LABEL_KEYWORD; ?><input type="text" class="text" name="rss_search_kw" value="<? echo htmlentities($rss_search_kw, ENT_QUOTES); ?>"/>&nbsp;<input type="submit" class="button" value="<? echo _RSS_LABEL_FILTER; ?>"></div>
+    <div style="padding:4px;font-weight:bold;"><?php echo _RSS_LABEL_KEYWORD; ?><input type="text" class="text" name="rss_search_kw" value="<?php echo htmlentities($rss_search_kw, ENT_QUOTES); ?>"/>&nbsp;<input type="submit" class="button" value="<?php echo _RSS_LABEL_FILTER; ?>"></div>
     </form>
-    <? echo $skin->close_simplebloc(); ?>
+    <?php echo $skin->close_simplebloc(); ?>
     </div>
     <div id="rss_explorer_catlist"></div>
     <div id="rss_explorer_feedlist"></div>
@@ -66,14 +66,14 @@ if (substr($rss_search_kw,0,6) == 'entry:') $_SESSION['rss'][$_SESSION['ploopi']
 
 <script type="text/javascript">
 ploopi_window_onload_stock(rss_explorer_catlist_get);
-<?
+<?php
 if (isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rsscat_id']))
 {
     ?>
     ploopi_window_onload_stock(rss_explorer_feedlist_get);
-    <?
+    <?php
 }
 ?>
 </script>
 
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>

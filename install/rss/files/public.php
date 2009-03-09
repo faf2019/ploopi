@@ -135,7 +135,6 @@ switch($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])
             }
             ploopi_redirect("admin.php?rssTabItem=tabFilter");
           }
-            ploopi_die();
           ploopi_redirect('admin.php');
         break;
 

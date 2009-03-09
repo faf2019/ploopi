@@ -47,7 +47,7 @@ $rssentry_select =  "
 
       WHERE       feed.id_cat = cat.id
         AND       entry.id_feed = feed.id
-        AND       cat.id_workspace IN ({$wk})
+        AND       cat.id_workspace = {$wk}
         AND       cat.tpl_tag IS NOT NULL
         AND       cat.tpl_tag <> ''
 
@@ -86,12 +86,14 @@ while ($rssEntry_fields = $db->fetchrow($rssentry_result))
 
       if (!empty($rssEntry_fields['published']) && is_numeric($rssEntry_fields['published']))
       {
-          $published_date = date(_PLOOPI_DATEFORMAT,$rssEntry_fields['published']);
-          $published_time = date(_PLOOPI_TIMEFORMAT,$rssEntry_fields['published']);
+        $published_date = date(_PLOOPI_DATEFORMAT,$rssEntry_fields['published']);
+        $published_time = date(_PLOOPI_TIMEFORMAT,$rssEntry_fields['published']);
       }
       else
       {
-          $published_date = $published_time = '';
+        $date = ploopi_timestamp2local($rssEntry_fields['timestp']);
+        $published_date = $date['date'];
+        $published_time = $date['time'];
       }
 
       $template_body->assign_block_vars($rssEntry_fields['cattpltag'].'.rsscat.rssentry', array(

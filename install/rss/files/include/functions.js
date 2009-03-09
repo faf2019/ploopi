@@ -117,7 +117,7 @@ function rss_filter_element_edit(rssfilter_id_element)
    {
       ploopi_innerHTML('rss_filter_element_edit', ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=rss_filter_element_edit&rssfilter_id_element='+rssfilter_id_element));
       rss_filter_element_edit_list_get(rssfilter_id_element);
-   }   
+   }
 }
 
 function rssfilter_element_edit_save(rssfilter_id_element)
@@ -131,4 +131,4 @@ function rssfilter_element_edit_delete(rssfilter_id_element)
    ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=rssfilter_element_delete&rssfilter_id_element='+rssfilter_id_element);
    rss_filter_element_edit_list_get(rssfilter_id_element);
 }
-  
+

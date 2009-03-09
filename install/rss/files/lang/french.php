@@ -56,7 +56,7 @@ define ('_RSS_LABEL_REINDEX',       'Ré-indéxer les flux');
 define ('_RSS_MESS_REINDEX',        'Indexation terminée');
 
 define ('_RSS_LABEL_KEYWORD',       'Mots Clés :');
- 
+
 define ('_RSS_LABEL_LABEL',         'Libellé');
 define ('_RSS_LABEL_DATE_CREAT',    'Création');
 define ('_RSS_LABEL_DATE_MODIF',    'Modification');

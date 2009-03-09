@@ -89,15 +89,15 @@ class rss_filter extends data_object
 
       $strRssSqlCat = "SELECT id_cat
                           FROM ploopi_mod_rss_filter_cat
-                          WHERE ploopi_mod_rss_filter_cat.id_filter = '{$intIdFiltre}'
-                           AND  ploopi_mod_rss_filter_cat.id_workspace IN ({$wk})";
+                          WHERE ploopi_mod_rss_filter_cat.id_filter = {$intIdFiltre}
+                           AND  ploopi_mod_rss_filter_cat.id_workspace = {$wk}";
       $objRssSqlResult = $db->query($strRssSqlCat);
       $this->categ = $db->getarray();
 
       $strRssSqlFeed = "SELECT id_feed
                           FROM ploopi_mod_rss_filter_feed
-                          WHERE ploopi_mod_rss_filter_feed.id_filter = '{$intIdFiltre}'
-                           AND  ploopi_mod_rss_filter_feed.id_workspace IN ({$wk})";
+                          WHERE ploopi_mod_rss_filter_feed.id_filter = {$intIdFiltre}
+                           AND  ploopi_mod_rss_filter_feed.id_workspace = {$wk}";
       $objRssSqlResult = $db->query($strRssSqlFeed);
       $this->feed = $db->getarray();
     }
@@ -137,7 +137,7 @@ class rss_filter extends data_object
     global $db;
 
     $strRssSqlDelete = "DELETE FROM ploopi_mod_rss_filter_element
-                          WHERE ploopi_mod_rss_filter_element.id_filter = '{$this->fields['id']}'";
+                          WHERE ploopi_mod_rss_filter_element.id_filter = {$this->fields['id']}";
     if($db->query($strRssSqlDelete))
     {
       return parent::delete();
@@ -181,7 +181,7 @@ class rss_filter extends data_object
 
       $strRssSqlDetail = "SELECT id
                           FROM ploopi_mod_rss_filter_element
-                          WHERE ploopi_mod_rss_filter_element.id_filter = '{$this->fields['id']}'";
+                          WHERE ploopi_mod_rss_filter_element.id_filter = {$this->fields['id']}";
       $objRssSqlResult = $db->query($strRssSqlDetail);
       while ($arrRssFields = $db->fetchrow($objRssSqlResult))
       {
@@ -233,7 +233,6 @@ class rss_filter extends data_object
       // Utilisation de la limite par defaut
       $strLimit = 'LIMIT 0,'.$_SESSION['ploopi']['modules'][$intIdModule]['nbitemdisplay'];
     }
-
 
     if($strRssFilter != '')
     {
@@ -289,8 +288,8 @@ class rss_filter extends data_object
     // Categories
     $rssFilter = "SELECT      cat.id_cat
                   FROM        ploopi_mod_rss_filter_cat cat
-                  WHERE       cat.id_workspace IN ({$wk})
-                     AND      cat.id_filter = '{$intIdFilter}'
+                  WHERE       cat.id_workspace = {$wk}
+                     AND      cat.id_filter = {$intIdFilter}
                   ";
 
     $rssFilter_result_cat = $db->query($rssFilter);
@@ -307,8 +306,8 @@ class rss_filter extends data_object
                               feed.revisit
                   FROM        ploopi_mod_rss_filter_feed filter_feed,
                               ploopi_mod_rss_feed feed
-                  WHERE       filter_feed.id_workspace IN ({$wk})
-                     AND      filter_feed.id_filter = '{$intIdFilter}'
+                  WHERE       filter_feed.id_workspace = {$wk}
+                     AND      filter_feed.id_filter = {$intIdFilter}
                      AND      filter_feed.id_feed = feed.id
                   ";
 

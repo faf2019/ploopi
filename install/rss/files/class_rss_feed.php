@@ -66,7 +66,6 @@ class rss_feed extends data_object
         parent::data_object('ploopi_mod_rss_feed');
     }
 
-
     /**
      * Récupère les infos sur le flux et l'enregistre
      *
@@ -76,7 +75,7 @@ class rss_feed extends data_object
     {
         if (!empty($this->fields['url']))
         {
-            $xmlrss = new xmlrss($this->fields['url']);
+            $xmlrss = new xmlrss($this->fields['url'], $this->fields['id_module']);
             if (!$xmlrss->error)
             {
                 $xmlrss->parse();
@@ -91,7 +90,6 @@ class rss_feed extends data_object
                   $this->fields['tpl_tag'] = NULL;
                 else
                   if(substr($this->fields['tpl_tag'],0,4) != 'rss_') $this->fields['tpl_tag'] = 'rss_'.$this->fields['tpl_tag'];
-
 
                 /*
                  * ploopi_print_r($xmlrss->header);
@@ -119,8 +117,8 @@ class rss_feed extends data_object
 
       $rssentry =  "SELECT      entry.id
                    FROM        ploopi_mod_rss_entry entry
-                   WHERE       entry.id_workspace IN ({$wk})
-                     AND       entry.id_feed = '{$this->fields['id']}'
+                   WHERE       entry.id_workspace = {$wk}
+                     AND       entry.id_feed = {$this->fields['id']}
                    ";
 
        $rssentry_result = $db->query($rssentry);
@@ -238,7 +236,7 @@ class rss_feed extends data_object
                                  feed.lastvisit,
                                  feed.revisit
                      FROM        ploopi_mod_rss_feed feed
-                     WHERE       feed.id_workspace IN ({$wk})
+                     WHERE       feed.id_workspace = {$wk}
                      ";
 
          $rssfeed_result = $db->query($rssfeed);

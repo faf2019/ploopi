@@ -48,7 +48,7 @@ $wk = ploopi_viewworkspaces($template_moduleid);
 $rssfeed_select =   "
       SELECT      ploopi_mod_rss_feed.*
       FROM        ploopi_mod_rss_feed
-      WHERE       ploopi_mod_rss_feed.id_workspace In ({$wk})
+      WHERE       ploopi_mod_rss_feed.id_workspace = {$wk}
       ";
 
 $rssfeed_result = $db->query($rssfeed_select);

@@ -24,7 +24,7 @@
 
 /**
  * Administration - ajout/modification d'une catégorie de flux
- * 
+ *
  * @package rss
  * @subpackage admin
  * @copyright Netlor, Ovensia, HeXad
@@ -40,35 +40,35 @@ if ($rsscat->new) echo $skin->open_simplebloc(_RSS_LABEL_CATADD);
 else echo $skin->open_simplebloc(str_replace('LABEL',$rsscat->fields['title'],_RSS_LABEL_CATMODIFY));
 ?>
 
-<form name="form_rsscat" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return rsscat_validate(this);">
+<form name="form_rsscat" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return rsscat_validate(this);">
 <input type="hidden" name="op" value="rsscat_save">
-<input type="hidden" name="rsscat_id" value="<? echo $rsscat->fields['id']; ?>">
+<input type="hidden" name="rsscat_id" value="<?php echo $rsscat->fields['id']; ?>">
 <div class="ploopi_form">
     <div style="padding:2px;">
         <p>
-            <label><? echo _RSS_LABEL_TITLE; ?>:</label>
-            <input class="text" type="text" name="rsscat_title" value="<? echo htmlentities($rsscat->fields['title']); ?>" tabindex="100" />
+            <label><?php echo _RSS_LABEL_TITLE; ?>:</label>
+            <input class="text" type="text" name="rsscat_title" value="<?php echo htmlentities($rsscat->fields['title']); ?>" tabindex="100" />
         </p>
         <p>
-            <label><? echo _RSS_LABEL_LIMIT; ?>:</label>
-            <input class="text" type="text" name="rsscat_limit" style="width:50px;" value="<? echo $rsscat->fields['limit']; ?>" tabindex="101" /><?php echo _RSS_COMMENT_O_NOLIMIT; ?>
+            <label><?php echo _RSS_LABEL_LIMIT; ?>:</label>
+            <input class="text" type="text" name="rsscat_limit" style="width:50px;" value="<?php echo $rsscat->fields['limit']; ?>" tabindex="101" /><?php echo _RSS_COMMENT_O_NOLIMIT; ?>
         </p>
         <p>
-            <label><? echo _RSS_LABEL_TPL_TAG; ?>:</label>
-            <input class="text" type="text" name="rsscat_tpl_tag" style="width:200px;" value="<? echo $rsscat->fields['tpl_tag']; ?>" tabindex="102" /><br/>
+            <label><?php echo _RSS_LABEL_TPL_TAG; ?>:</label>
+            <input class="text" type="text" name="rsscat_tpl_tag" style="width:200px;" value="<?php echo $rsscat->fields['tpl_tag']; ?>" tabindex="102" /><br/>
             <label>&nbsp;</label><?php echo _RSS_COMMENT_CAT_TPL_TAG; ?><br/>
             <label>&nbsp;</label><?php echo _RSS_COMMENT_WARNING_TPL_TAG; ?>
         </p>
 
         <p>
-            <label><? echo _RSS_LABEL_DESCRIPTION; ?>:</label>
-            <textarea class="text" name="rsscat_description" tabindex="103"><? echo htmlentities($rsscat->fields['description']); ?></textarea>
+            <label><?php echo _RSS_LABEL_DESCRIPTION; ?>:</label>
+            <textarea class="text" name="rsscat_description" tabindex="103"><?php echo htmlentities($rsscat->fields['description']); ?></textarea>
         </p>
     </div>
 </div>
 <div style="padding:2px;text-align:right;">
-    <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?rssTabItem=tabCatList"); ?>';" tabindex="103" />
-    <input type="reset" class="button" value="<? echo _PLOOPI_RESET; ?>" tabindex="104" />
-    <input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>" tabindex="102" />
+    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?rssTabItem=tabCatList"); ?>';" tabindex="103" />
+    <input type="reset" class="button" value="<?php echo _PLOOPI_RESET; ?>" tabindex="104" />
+    <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="102" />
 </div>
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>

@@ -40,17 +40,17 @@
 
 function rssfeed_validate(form)
 {
-    if (ploopi_validatefield("<? echo _RSS_LABEL_FEEDURL; ?>",form.rssfeed_url,"string"))
-    if (ploopi_validatefield("<? echo _RSS_LABEL_LIMIT; ?>",form.rssfeed_limit,"int")) 
+    if (ploopi_validatefield("<?php echo _RSS_LABEL_FEEDURL; ?>",form.rssfeed_url,"string"))
+    if (ploopi_validatefield("<?php echo _RSS_LABEL_LIMIT; ?>",form.rssfeed_limit,"int"))
        return true;
-       
+
     return false;
 }
 
 function rsscat_validate(form)
 {
-    if (ploopi_validatefield("<? echo _RSS_LABEL_TITLE; ?>",form.rsscat_title,"string")) 
-    if (ploopi_validatefield("<? echo _RSS_LABEL_LIMIT; ?>",form.rsscat_limit,"int")) 
+    if (ploopi_validatefield("<?php echo _RSS_LABEL_TITLE; ?>",form.rsscat_title,"string"))
+    if (ploopi_validatefield("<?php echo _RSS_LABEL_LIMIT; ?>",form.rsscat_limit,"int"))
        return true;
 
     return false;
@@ -58,10 +58,10 @@ function rsscat_validate(form)
 
 function rssfilter_validate(form)
 {
-    if (ploopi_validatefield("<? echo _RSS_LABEL_TITLE; ?>",form.rssfilter_title,"string")) 
-    if (ploopi_validatefield("<? echo _RSS_LABEL_LIMIT; ?>",form.rssfilter_limit,"int"))
+    if (ploopi_validatefield("<?php echo _RSS_LABEL_TITLE; ?>",form.rssfilter_title,"string"))
+    if (ploopi_validatefield("<?php echo _RSS_LABEL_LIMIT; ?>",form.rssfilter_limit,"int"))
        return true;
-    
+
     return false;
 }
 
@@ -69,14 +69,14 @@ function rssfilter_element_validate()
 {
    <?php ploopi_init_module('rss'); ?>
 
-   if(ploopi_validatefield("<? echo _RSS_LABEL_FILTER_VALUE_TEST; ?>", $('rss_element_value'), $('type_control').value)) return true;
-   
+   if(ploopi_validatefield("<?php echo _RSS_LABEL_FILTER_VALUE_TEST; ?>", $('rss_element_value'), $('type_control').value)) return true;
+
    return false;
 }
 
 <?php
 /**
- * Fonction de gestion comparateur de la condition en fonction de la cible 
+ * Fonction de gestion comparateur de la condition en fonction de la cible
  */
  ?>
 function rss_select_target(target,target2,typeTarget)
@@ -84,28 +84,28 @@ function rss_select_target(target,target2,typeTarget)
     ploopi_init_module('rss');
 
     include_once './modules/rss/class_rss_filter_element.php';
-  
+
     $objFilterElement = new rss_filter_element();
-    
+
     $arrTabTarget  = $objFilterElement->getTabTarget();
     $arrTabCompare = $objFilterElement->getTabCompare();
-    
+
     ?>
     var content = 'error';
-    
+
     var tabtarget = new Array();
     var tabcompare = new Array();
 
     var typeCompare;
     var i;
-    
+
     <?php
-    /* Correspondance target => format de comparaison */ 
+    /* Correspondance target => format de comparaison */
     foreach($arrTabTarget as $nameTarget => $arrTarget)
     {
       echo 'tabtarget[\''.addslashes($nameTarget).'\'] = \''.$arrTarget['compare'].'\';'."\n";
     }
-    
+
     foreach($arrTabCompare as $nameCompare => $arrCompare)
     {
       echo 'tabcompare[\''.addslashes($nameCompare).'\'] = new Array();'."\n";
@@ -124,7 +124,7 @@ function rss_select_target(target,target2,typeTarget)
       if(content == 'error') content = '<select id="rss_element_compare" name="rss_element_compare" style="width:100%;">'+"\n";
       content += '<option value="'+tabcompare[tabtarget[typeTarget.value]][i]['compare']+'">'+tabcompare[tabtarget[typeTarget.value]][i]['label']+'</option>'+"\n";
     }
-    
+
     if(content != 'error') content += '</select>'+"\n";
 
     content2 = '<div id="div_type_control"></div>'

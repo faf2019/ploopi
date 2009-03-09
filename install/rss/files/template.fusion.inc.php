@@ -36,7 +36,7 @@ $rssentry_select =  "
                             ploopi_mod_rss_feed feed
 
                 WHERE       entry.id_feed = feed.id
-                  AND       feed.id_workspace IN ({$wk})
+                  AND       feed.id_workspace = {$wk}
 
                 ORDER BY    entry.published DESC,
                             entry.timestp DESC,
@@ -65,7 +65,9 @@ while ($rssEntry_fields = $db->fetchrow($rssentry_result))
     }
     else
     {
-        $published_date = $published_time = '';
+        $date = ploopi_timestamp2local($rssEntry_fields['timestp']);
+        $published_date = $date['date'];
+        $published_time = $date['time'];
     }
 
     $template_body->assign_block_vars('rssentryfusion', array(

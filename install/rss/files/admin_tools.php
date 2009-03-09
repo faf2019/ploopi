@@ -23,7 +23,7 @@
 
 /**
  * Outils d'administration (réindexation pour le moment)
- * 
+ *
  * @package rss
  * @subpackage admin
  * @copyright Netlor, Ovensia, HeXad
@@ -40,8 +40,7 @@ if (isset($_GET['end']))
 ?>
 
 <div style="padding:4px;">
-<input type="button" class="button" value="<? echo _RSS_LABEL_REINDEX; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?op=reindex"); ?>';">
+<input type="button" class="button" value="<?php echo _RSS_LABEL_REINDEX; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=reindex"); ?>';">
 </div>
 
-
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>

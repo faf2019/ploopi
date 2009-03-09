@@ -30,7 +30,6 @@
  * @author Xavier Toussaint
  */
 
-
 echo $skin->open_simplebloc(_RSS_LABEL_FILTER_FEED);
 
 if (!isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id'] = '';
@@ -47,14 +46,14 @@ if (!isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_eleme
 </div>
 <script type="text/javascript">
 ploopi_window_onload_stock(rss_filter_list_get);
-<?
+<?php
 if ($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id']>0)
 {
   ?>
   ploopi_window_onload_stock(rss_filter_element_list_get);
-  <?
+  <?php
 }
 ?>
 </script>
 
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>

@@ -55,7 +55,7 @@ switch($op)
                     INNER JOIN  ploopi_mod_rss_feed f
                     ON          f.id = e.id_feed
 
-                    WHERE       e.id_module = '{$_SESSION['ploopi']['moduleid']}'
+                    WHERE       e.id_module = {$_SESSION['ploopi']['moduleid']}
                     ";
 
             $rs = $db->query($sql);
@@ -132,8 +132,6 @@ switch($op)
         ploopi_redirect('admin.php');
     break;
 }
-
-
 
 $tabs['tabFeedList'] = array(   'title' => _RSS_LABEL_FEEDLIST,
                                 'url' => "admin.php?rssTabItem=tabFeedList"

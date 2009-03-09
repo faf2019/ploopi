@@ -118,8 +118,8 @@ class rss_filter_feed extends data_object
     $wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
 
     $strRssSqlDelete = "DELETE FROM ploopi_mod_rss_filter_feed
-                          WHERE ploopi_mod_rss_filter_feed.id_filter = '{$intIdFilter}'
-                            AND ploopi_mod_rss_filter_feed.id_workspace IN ({$wk})";
+                          WHERE ploopi_mod_rss_filter_feed.id_filter = {$intIdFilter}
+                            AND ploopi_mod_rss_filter_feed.id_workspace = $wk";
     return $db->query($strRssSqlDelete);
   }
 
@@ -140,9 +140,9 @@ class rss_filter_feed extends data_object
     $strSqlRequest = "SELECT feed.id_filter,
                               feed.id_feed
                      FROM ploopi_mod_rss_filter_feed feed
-                     WHERE feed.id_workspace IN ({$wk})";
+                     WHERE feed.id_workspace = {$wk}";
 
-    if($intIdFilter>0) $strSqlRequest .= " AND feed.id_filter = '{$intIdFilter}'";
+    if($intIdFilter>0) $strSqlRequest .= " AND feed.id_filter = {$intIdFilter}";
 
     if($db->query($strSqlRequest))
     {

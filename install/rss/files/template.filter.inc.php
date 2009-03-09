@@ -34,7 +34,7 @@ include_once './modules/rss/class_rss_filter.php';
 $rssfilter_select =   "
                     SELECT      ploopi_mod_rss_filter.id
                     FROM        ploopi_mod_rss_filter
-                    WHERE       ploopi_mod_rss_filter.id_workspace IN ({$wk})
+                    WHERE       ploopi_mod_rss_filter.id_workspace = {$wk}
                       AND       ploopi_mod_rss_filter.tpl_tag IS NOT NULL
                       AND       ploopi_mod_rss_filter.tpl_tag <> ''
                     ";
@@ -65,12 +65,14 @@ while ($rssfilter_fields = $db->fetchrow($rssfilter_result))
     {
       if (!empty($fields['published']) && is_numeric($fields['published']))
       {
-          $published_date = date(_PLOOPI_DATEFORMAT,$fields['published']);
-          $published_time = date(_PLOOPI_TIMEFORMAT,$fields['published']);
+        $published_date = date(_PLOOPI_DATEFORMAT,$fields['published']);
+        $published_time = date(_PLOOPI_TIMEFORMAT,$fields['published']);
       }
       else
       {
-          $published_date = $published_time = '';
+        $date = ploopi_timestamp2local($rssEntry_fields['timestp']);
+        $published_date = $date['date'];
+        $published_time = $date['time'];
       }
 
       $template_body->assign_block_vars($objRssFilter->fields['tpl_tag'].'.rssfilter.rssentry',array(

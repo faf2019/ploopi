@@ -46,7 +46,7 @@ margin:1px;
 overflow-x:hidden;
 }
 
-#rss_explorer_catlist h1, #rss_explorer_feedlist h1, #rss_explorer_feed h1, 
+#rss_explorer_catlist h1, #rss_explorer_feedlist h1, #rss_explorer_feed h1,
 #rss_filter_list h1, #rss_filter_element_list h1, #rss_filter_feed h1,
 #rss_filter_edit h1, #rss_filter_element_edit h1  {
 font-size:12px;

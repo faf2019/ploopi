@@ -119,8 +119,8 @@ class rss_filter_cat extends data_object
     $wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
 
     $strRssSqlDelete = "DELETE FROM ploopi_mod_rss_filter_cat
-    WHERE ploopi_mod_rss_filter_cat.id_filter = '{$intIdFilter}''
-    AND ploopi_mod_rss_filter_cat.id_workspace IN ({$wk})";
+    WHERE ploopi_mod_rss_filter_cat.id_filter = {$intIdFilter}
+    AND ploopi_mod_rss_filter_cat.id_workspace = $wk";
     return $db->query($strRssSqlDelete);
   }
 
@@ -141,9 +141,9 @@ class rss_filter_cat extends data_object
     $strSqlRequest = "SELECT cat.id_filter,
     cat.id_cat
     FROM ploopi_mod_rss_filter_cat cat
-    WHERE cat.id_workspace IN ({$wk})";
+    WHERE cat.id_workspace = {$wk}";
 
-    if($intIdFilter>0) $strSqlRequest .= " AND cat.id_filter = '{$intIdFilter}'";
+    if($intIdFilter>0) $strSqlRequest .= " AND cat.id_filter = {$intIdFilter}";
 
     if($db->query($strSqlRequest))
     {

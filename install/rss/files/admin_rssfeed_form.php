@@ -42,7 +42,7 @@ else echo $skin->open_simplebloc(str_replace('LABEL',$rssfeed->fields['title'],_
 $sql =  "
         SELECT  *
         FROM    ploopi_mod_rss_cat
-        WHERE   id_module = '{$_SESSION['ploopi']['moduleid']}'
+        WHERE   id_module = {$_SESSION['ploopi']['moduleid']}
         AND     id_workspace IN (".ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).")
         ORDER BY title
         ";
@@ -51,57 +51,57 @@ $a_categories = $db->getarray();
 
 ?>
 
-<form name="form_rssfeed" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return rssfeed_validate(this);">
+<form name="form_rssfeed" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return rssfeed_validate(this);">
 <input type="hidden" name="op" value="rssfeed_save">
-<input type="hidden" name="rssfeed_id" value="<? echo $rssfeed->fields['id']; ?>">
+<input type="hidden" name="rssfeed_id" value="<?php echo $rssfeed->fields['id']; ?>">
 <div class="ploopi_form">
     <div style="padding:2px;">
         <p>
-            <label><? echo _RSS_LABEL_FEEDURL; ?>:</label>
-            <input class="text" type="text" name="rssfeed_url" value="<? echo htmlentities($rssfeed->fields['url']); ?>" tabindex="100" />
+            <label><?php echo _RSS_LABEL_FEEDURL; ?>:</label>
+            <input class="text" type="text" name="rssfeed_url" value="<?php echo htmlentities($rssfeed->fields['url']); ?>" tabindex="100" />
         </p>
         <p>
-            <label><? echo _RSS_LABEL_CATEGORY; ?>:</label>
+            <label><?php echo _RSS_LABEL_CATEGORY; ?>:</label>
             <select class="select" name="rssfeed_id_cat">
-                <option value="0"><? echo _RSS_LABEL_NOCATEGORY; ?></option>
-                <?
+                <option value="0"><?php echo _RSS_LABEL_NOCATEGORY; ?></option>
+                <?php
                 foreach($a_categories as $row)
                 {
                     ?>
-                    <option <? if ($rssfeed->fields['id_cat'] == $row['id']) echo 'selected'; ?> value="<? echo $row['id']; ?>"><? echo htmlentities($row['title']); ?></option>
-                    <?
+                    <option <?php if ($rssfeed->fields['id_cat'] == $row['id']) echo 'selected'; ?> value="<?php echo $row['id']; ?>"><?php echo htmlentities($row['title']); ?></option>
+                    <?php
                 }
                 ?>
             </select>
         </p>
         <p>
-            <label><? echo _RSS_LABEL_FEED_RENEW; ?>:</label>
+            <label><?php echo _RSS_LABEL_FEED_RENEW; ?>:</label>
             <select class="select" name="rssfeed_revisit">
-                <?
+                <?php
                 foreach($rss_revisit_values as $key => $value)
                 {
                     ?>
-                    <option <? if ($rssfeed->fields['revisit'] == $key) echo 'selected'; ?> value="<? echo $key; ?>"><? echo $value; ?></option>
-                    <?
+                    <option <?php if ($rssfeed->fields['revisit'] == $key) echo 'selected'; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                    <?php
                 }
                 ?>
             </select>
         </p>
         <p>
-            <label><? echo _RSS_LABEL_FEEDLIMIT; ?>:</label>
-            <input class="text" type="text" name="rssfeed_limit" style="width:50px;" value="<? echo $rssfeed->fields['limit']; ?>" tabindex="103" /><?php echo _RSS_COMMENT_O_NOLIMIT; ?>
+            <label><?php echo _RSS_LABEL_FEEDLIMIT; ?>:</label>
+            <input class="text" type="text" name="rssfeed_limit" style="width:50px;" value="<?php echo $rssfeed->fields['limit']; ?>" tabindex="103" /><?php echo _RSS_COMMENT_O_NOLIMIT; ?>
         </p>
         <p>
-            <label><? echo _RSS_LABEL_TPL_TAG; ?>:</label>
-            <input class="text" type="text" name="rssfeed_tpl_tag" style="width:200px;" value="<? echo $rssfeed->fields['tpl_tag'] ?>" tabindex="102" /><br/>
+            <label><?php echo _RSS_LABEL_TPL_TAG; ?>:</label>
+            <input class="text" type="text" name="rssfeed_tpl_tag" style="width:200px;" value="<?php echo $rssfeed->fields['tpl_tag'] ?>" tabindex="102" /><br/>
             <label>&nbsp;</label><?php echo _RSS_COMMENT_FEED_TPL_TAG; ?><br/>
             <label>&nbsp;</label><?php echo _RSS_COMMENT_WARNING_TPL_TAG; ?>
         </p>
     </div>
 </div>
 <div style="padding:2px;text-align:right;">
-    <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?rssTabItem=tabFeedList"); ?>';" tabindex="105" />
-    <input type="reset" class="button" value="<? echo _PLOOPI_RESET; ?>" tabindex="106" />
-    <input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>" tabindex="104" />
+    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?rssTabItem=tabFeedList"); ?>';" tabindex="105" />
+    <input type="reset" class="button" value="<?php echo _PLOOPI_RESET; ?>" tabindex="106" />
+    <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="104" />
 </div>
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>

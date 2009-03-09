@@ -42,7 +42,7 @@ $rssEntry_sql =  "
                     ploopi_mod_rss_feed feed
 
         WHERE       entry.id_feed = feed.id
-           AND      feed.id_workspace IN ({$wk})
+           AND      feed.id_workspace = {$wk}
 
         ORDER BY    feed.title,
                     entry.published DESC,
@@ -100,7 +100,9 @@ while($rssEntry_fields = $db->fetchrow($rssEntry_result))
       }
       else
       {
-          $published_date = $published_time = '';
+          $date = ploopi_timestamp2local($rssEntry_fields['timestp']);
+          $published_date = $date['date'];
+          $published_time = $date['time'];
       }
 
       // Flux standard

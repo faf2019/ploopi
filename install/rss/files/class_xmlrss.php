@@ -45,12 +45,12 @@ require_once 'XML/Feed/Parser.php';
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see _PLOOPI_INTERNETPROXY_HOST
  * @see _PLOOPI_INTERNETPROXY_PORT
  * @see _PLOOPI_INTERNETPROXY_USER
  * @see _PLOOPI_INTERNETPROXY_PASS
- * 
+ *
  * @link http://pear.php.net/package/HTTP_Request
  * @link http://pear.php.net/package/XML_Feed_Parser
  */
@@ -67,7 +67,7 @@ class xmlrss
      * @param string $tgtenc codage destination (ce qu'on veut)
      * @return xmlrss
      */
-    
+
     function xmlrss($url, $moduleid = -1, $srcenc = null, $tgtenc = null)
     {
 
@@ -117,7 +117,7 @@ class xmlrss
                     $this->content = $request->getResponseBody();
 
                     // Détection de l'encoding dans le source XML
-                    if (preg_match('/<?xml.*encoding=[\'"](.*?)[\'"].*?>/m', $this->content, $m)) $this->charset = strtoupper($m[1]);
+                    if (preg_match('/<?phpxml.*encoding=[\'"](.*?)[\'"].*?>/m', $this->content, $m)) $this->charset = strtoupper($m[1]);
                 }
             }
             else
@@ -136,7 +136,7 @@ class xmlrss
      * @param string $str chaîne UTF8 à convertir
      * @return string chaîne ISO-8859-1
      */
-    
+
     function _convertstr($str)
     {
         $str = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $str);
@@ -148,7 +148,7 @@ class xmlrss
      *
      * @link http://pear.php.net/package/XML_Feed_Parser
      */
-    
+
     function parse()
     {
         $this->feed = array ('title' => '', 'entries' => array());

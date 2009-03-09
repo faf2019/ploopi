@@ -45,14 +45,14 @@ $array_columns['auto']['subtitle'] =
         'label' => _RSS_LABEL_DESCRIPTION,
         'options' => array('sort' => true)
     );
-
+    
 $array_columns['left']['title'] =
     array(
         'label' => _RSS_LABEL_TITLE,
         'width' => 170,
         'options' => array('sort' => true)
     );
-
+    
 $array_columns['right']['limit'] =
     array(
         'label' => _RSS_LABEL_LIMIT,
@@ -72,20 +72,20 @@ $array_columns['right']['revisit'] =
         'width' => 60,
         'options' => array('sort' => true)
     );
-
+    
 $array_columns['right']['category'] =
     array(
         'label' => _RSS_LABEL_CATEGORY,
         'width' => 120,
         'options' => array('sort' => true)
     );
-
+    
 $array_columns['actions_right']['actions'] =
     array(
         'label' => _RSS_LABEL_ACTIONS,
         'width' => 60
     );
-
+    
 
 $select =   "
             SELECT      feed.*,
@@ -94,7 +94,7 @@ $select =   "
 
             LEFT JOIN   ploopi_mod_rss_cat cat
             ON          feed.id_cat = cat.id
-            WHERE       feed.id_module = '{$_SESSION['ploopi']['moduleid']}'
+            WHERE       feed.id_module = {$_SESSION['ploopi']['moduleid']}
             AND         feed.id_workspace IN (".ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).")
             ORDER BY    feed.title
             ";
@@ -115,18 +115,18 @@ while ($fields = $db->fetchrow($result))
         array(
             'label' => strip_tags($fields['subtitle'], '<b><i>')
         );
-
+        
     $array_values[$c]['values']['title'] =
         array(
             'label' => strip_tags($fields['title'], '<b><i>')
         );
-
+        
     $array_values[$c]['values']['revisit'] =
         array(
             'label' => (isset($rss_revisit_values[$fields['revisit']])) ? $rss_revisit_values[$fields['revisit']] : '',
             'sort_label' => (isset($rss_revisit_values[$fields['revisit']])) ? $fields['revisit'] : ''
         );
-
+        
     $array_values[$c]['values']['category'] =
         array(
             'label' => $fields['titlecat']
@@ -141,7 +141,7 @@ while ($fields = $db->fetchrow($result))
         array(
             'label' => $fields['tpl_tag']
         );
-
+        
     $array_values[$c]['values']['actions'] =
         array(
             'label' => $actions

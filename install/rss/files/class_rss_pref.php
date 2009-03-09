@@ -55,7 +55,7 @@ class rss_pref extends data_object
      *
      * @return rss_pref
      */
-    
+
     function rss_pref()
     {
         parent::data_object('ploopi_mod_rss_pref','id_module','id_user','id_feed_cat_filter');
@@ -63,7 +63,7 @@ class rss_pref extends data_object
 
     /**
      * Enregistre le flux favori (préférence) pour un utilisateur dans un module
-     * 
+     *
      * @return mixed valeur de la clé primaire
      */
     function save()

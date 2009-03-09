@@ -56,7 +56,6 @@ $tplfile = '';
 if (file_exists("./templates/frontoffice/{$template_name}/rss_display.tpl")) $tplfile = 'rss_display.tpl';
 elseif (file_exists("./templates/frontoffice/{$template_name}/rss.tpl")) $tplfile = 'rss.tpl';
 
-
 if ($tplfile != '')
 {
     $template_rss->set_filenames(array('rss_display' => $tplfile));
@@ -82,7 +81,7 @@ if ($tplfile != '')
                                             ploopi_mod_rss_feed
 
                                 WHERE       ploopi_mod_rss_feed.id = ploopi_mod_rss_entry.id_feed
-                                AND         ploopi_mod_rss_entry.id_feed = '{$rssfeed_id}'
+                                AND         ploopi_mod_rss_entry.id_feed = {$rssfeed_id}
                                 ORDER BY    ploopi_mod_rss_entry.published DESC,
                                             ploopi_mod_rss_entry.timestp DESC,
                                             ploopi_mod_rss_entry.id
@@ -98,12 +97,14 @@ if ($tplfile != '')
                 {
                   if (!empty($fields['published']) && is_numeric($fields['published']))
                   {
-                      $published_date = date(_PLOOPI_DATEFORMAT,$fields['published']);
-                      $published_time = date(_PLOOPI_TIMEFORMAT,$fields['published']);
+                    $published_date = date(_PLOOPI_DATEFORMAT,$fields['published']);
+                    $published_time = date(_PLOOPI_TIMEFORMAT,$fields['published']);
                   }
                   else
                   {
-                      $published_date = $published_time = '';
+                    $date = ploopi_timestamp2local($fields['timestp']);
+                    $published_date = $date['date'];
+                    $published_time = $date['time'];
                   }
 
                   $template_rss->assign_block_vars('rss_entry',array(
@@ -148,7 +149,7 @@ if ($tplfile != '')
 
                                 WHERE       ploopi_mod_rss_feed.id = ploopi_mod_rss_entry.id_feed
                                 AND         ploopi_mod_rss_entry.id_feed = ploopi_mod_rss_feed.id
-                                AND         ploopi_mod_rss_feed.id_cat = '{$intRssCat_id}'
+                                AND         ploopi_mod_rss_feed.id_cat = {$intRssCat_id}
                                 ORDER BY    ploopi_mod_rss_entry.published DESC,
                                             ploopi_mod_rss_entry.timestp DESC,
                                             ploopi_mod_rss_entry.id
@@ -164,12 +165,14 @@ if ($tplfile != '')
                {
                   if (!empty($fields['published']) && is_numeric($fields['published']))
                   {
-                      $published_date = date(_PLOOPI_DATEFORMAT,$fields['published']);
-                      $published_time = date(_PLOOPI_TIMEFORMAT,$fields['published']);
+                    $published_date = date(_PLOOPI_DATEFORMAT,$fields['published']);
+                    $published_time = date(_PLOOPI_TIMEFORMAT,$fields['published']);
                   }
                   else
                   {
-                      $published_date = $published_time = '';
+                    $date = ploopi_timestamp2local($fields['timestp']);
+                    $published_date = $date['date'];
+                    $published_time = $date['time'];
                   }
 
                   $template_rss->assign_block_vars('rss_entry',array(
@@ -216,7 +219,9 @@ if ($tplfile != '')
                   }
                   else
                   {
-                      $published_date = $published_time = '';
+                    $date = ploopi_timestamp2local($fields['timestp']);
+                    $published_date = $date['date'];
+                    $published_time = $date['time'];
                   }
 
                   $template_rss->assign_block_vars('rss_entry',array(

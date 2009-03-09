@@ -123,8 +123,8 @@ class rss_cat extends data_object
                                feed.lastvisit,
                                feed.revisit
                    FROM        ploopi_mod_rss_feed feed
-                   WHERE       feed.id_workspace IN ({$wk})
-                     AND       feed.id_cat = '{$intIdCat}'
+                   WHERE       feed.id_workspace = {$wk}
+                     AND       feed.id_cat = {$intIdCat}
                    ";
 
        $rssfeed_result = $db->query($rssfeed);

@@ -45,14 +45,14 @@ $array_columns['auto']['desc'] =
         'label' => _RSS_LABEL_DESCRIPTION,
         'options' => array('sort' => true)
     );
-
+    
 $array_columns['left']['title'] =
     array(
         'label' => _RSS_LABEL_TITLE,
         'width' => 170,
         'options' => array('sort' => true)
     );
-
+    
 $array_columns['actions_right']['actions'] =
     array(
         'label' => _RSS_LABEL_ACTIONS,
@@ -69,11 +69,11 @@ $array_columns['right']['tpl_tag'] =
         'label' => _RSS_LABEL_TPL_TAG_SHORT,
         'width' => 100
     );
-
+    
 $select =   "
             SELECT  *
             FROM    ploopi_mod_rss_cat
-            WHERE   id_module = '{$_SESSION['ploopi']['moduleid']}'
+            WHERE   id_module = {$_SESSION['ploopi']['moduleid']}
             AND     id_workspace IN (".ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).")
             ORDER BY title
             ";
@@ -94,7 +94,7 @@ while ($fields = $db->fetchrow($result))
         array(
             'label' => $fields['description']
         );
-
+        
     $array_values[$c]['values']['title'] =
         array(
             'label' => $fields['title']
@@ -109,7 +109,7 @@ while ($fields = $db->fetchrow($result))
         array(
             'label' => $fields['tpl_tag']
         );
-
+        
     $array_values[$c]['values']['actions'] =
         array(
             'label' => $actions

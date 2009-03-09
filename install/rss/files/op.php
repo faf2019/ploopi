@@ -51,9 +51,9 @@ if (ploopi_ismoduleallowed('rss'))
             $wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
 
             $sql =  "
-                    SELECT      count(feed.id) as nbfeeds, 
-                                IFNULL(cat.id,0) as id, 
-                                IFNULL(cat.title, '"._RSS_LABEL_NOCATEGORY."') as title, 
+                    SELECT      count(feed.id) as nbfeeds,
+                                IFNULL(cat.id,0) as id,
+                                IFNULL(cat.title, '"._RSS_LABEL_NOCATEGORY."') as title,
                                 IFNULL(cat.limit,0) as limitcat,
                                 IFNULL(cat.tpl_tag,'') as tpltagcat
                     FROM        ploopi_mod_rss_feed feed
@@ -73,7 +73,7 @@ if (ploopi_ismoduleallowed('rss'))
             $array_columns['auto']['cat_title'] = array('label' => _RSS_LABEL_CATEGORY, 'options' => array('sort' => true));
             $array_columns['right']['cat_nb'] = array('label' => _RSS_LABEL_FEEDS, 'width' => 55, 'options' => array('sort' => true));
             $array_columns['right']['cat_limit'] = array('label' => _RSS_LABEL_LIMIT, 'width' => 55);
-            
+
             $c = 0;
             foreach($arrCat as $cat)
             {
@@ -93,13 +93,12 @@ if (ploopi_ismoduleallowed('rss'))
             echo $skin->open_simplebloc();
             ?>
             <h1>Catégories de Flux</h1>
-            <?
+            <?php
             $skin->display_array($array_columns, $array_values, 'array_rssexplorer_catlist', array('height' => 200, 'sortable' => true, 'orderby_default' => 'title'));
             echo $skin->close_simplebloc();
 
             ploopi_die();
         break;
-
 
         case 'rss_explorer_feedlist_get':
             ploopi_init_module('rss');
@@ -130,7 +129,7 @@ if (ploopi_ismoduleallowed('rss'))
 
             $array_columns['auto']['feed_title'] = array('label' => _RSS_LABEL_TITLE, 'options' => array('sort' => true));
             $array_columns['right']['feed_limit'] = array('label' => _RSS_LABEL_LIMIT, 'width' => 55);
-            
+
             $c = 0;
             foreach($arrFeed as $feed)
             {
@@ -148,7 +147,7 @@ if (ploopi_ismoduleallowed('rss'))
             echo $skin->open_simplebloc();
             ?>
             <h1>Liste des Flux</h1>
-            <?
+            <?php
             $skin->display_array($array_columns, $array_values, 'array_rssexplorer_feedlist', array('height' => 250, 'sortable' => true, 'orderby_default' => 'title'));
             echo $skin->close_simplebloc();
 
@@ -157,10 +156,10 @@ if (ploopi_ismoduleallowed('rss'))
 
         case 'rss_explorer_feed_get':
             ploopi_init_module('rss');
-            
+
             include_once './modules/rss/class_rss_cat.php';
             include_once './modules/rss/class_rss_feed.php';
-            
+
             if (isset($_GET['rss_search_kw']) && $_GET['rss_search_kw'] != '%%undefined%%') $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rss_search_kw'] = $_GET['rss_search_kw'];
 
             $wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
@@ -213,7 +212,7 @@ if (ploopi_ismoduleallowed('rss'))
               unset($objCat);
             }
             if ($rssfeed_id != '')
-            { 
+            {
               $arrWhere[] = "feed.id = {$rssfeed_id}";
               // UPDATE du flux
               $objFeed = new rss_feed();
@@ -221,7 +220,7 @@ if (ploopi_ismoduleallowed('rss'))
               if(!$objFeed->isuptodate()) $objFeed->updatecache();
               unset($objFeed);
             }
-            
+
             $limit = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nbitemdisplay'];
             if ($rssfeed_id != '')
             {
@@ -233,7 +232,7 @@ if (ploopi_ismoduleallowed('rss'))
               $objCat = new rss_cat();
               if($objCat->open($rsscat_id) && $objCat->fields['limit']>0) $limit = $objCat->fields['limit'];
             }
-            
+
             $where = (!empty($arrWhere)) ? ' WHERE '.implode(' AND ', $arrWhere) : '';
 
             $sql =  "
@@ -284,9 +283,9 @@ if (ploopi_ismoduleallowed('rss'))
 
             echo $skin->open_simplebloc();
             ?>
-            <h1>Actualités<? echo $title; ?></h1>
+            <h1>Actualités<?php echo $title; ?></h1>
             <div id="rss_explorer_feed_content">
-                <?
+                <?php
                 foreach($arrEntry as $entry)
                 {
                     if ($is_search)
@@ -310,41 +309,41 @@ if (ploopi_ismoduleallowed('rss'))
 
                     ?>
                     <div class="rss_entry">
-                        <a class="rss_entry<? echo (++$numrow)%2; ?>" href="<? echo $entry['link']; ?>" target="_blank">
-                            <?
+                        <a class="rss_entry<?php echo (++$numrow)%2; ?>" href="<?php echo $entry['link']; ?>" target="_blank">
+                            <?php
                             if ($is_search)
                             {
-                                ?><span style="float:right;border:1px solid #a0a0a0;background-color:#<? echo $color; ?>;margin:4px;padding:4px;font-weight:bold;"><? printf("%d %%", $rel); ?></span><?
+                                ?><span style="float:right;border:1px solid #a0a0a0;background-color:#<?php echo $color; ?>;margin:4px;padding:4px;font-weight:bold;"><?php printf("%d %%", $rel); ?></span><?php
                             }
                             ?>
-                            <b><? echo strip_tags($entry['title'], '<b><i>'); ?></b>
-                            <br /><i><? echo ploopi_unixtimestamp2local($entry['published']); ?> &#149; <? echo $entry['titlefeed']; ?></i>
-                        <?
+                            <b><?php echo strip_tags($entry['title'], '<b><i>'); ?></b>
+                            <br /><i><?php echo ploopi_unixtimestamp2local($entry['published']); ?> &#149; <?php echo $entry['titlefeed']; ?></i>
+                        <?php
                         if (!empty($entry['subtitle']))
                         {
                             ?>
-                            <br /><? echo strip_tags($entry['subtitle'], '<b><i>'); ?>
-                            <?
+                            <br /><?php echo strip_tags($entry['subtitle'], '<b><i>'); ?>
+                            <?php
                         }
                         if (!empty($entry['content']))
                         {
                             ?>
-                            <br /><? echo strip_tags($entry['content'], '<b><i>'); ?>
-                            <?
+                            <br /><?php echo strip_tags($entry['content'], '<b><i>'); ?>
+                            <?php
                         }
                         ?>
                         </a>
                     </div>
                     <div class="rss_entry_annotation">
-                    <?
+                    <?php
                     ploopi_annotation(_RSS_OBJECT_NEWS_ENTRY, sprintf("%06d%06d%s", $entry['id_cat'], $entry['id_feed'], $entry['id']), strip_tags($entry['title'], '<b><i>'));
                     ?>
                     </div>
-                    <?
+                    <?php
                 }
                 ?>
             </div>
-            <?
+            <?php
             echo $skin->close_simplebloc();
 
             ploopi_die();
@@ -356,11 +355,11 @@ if (ploopi_ismoduleallowed('rss'))
 
             if (isset($_GET['rssfilter_id']) && is_numeric($_GET['rssfilter_id']))
             {
-                if ($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id'] == $_GET['rssfilter_id']) 
+                if ($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id'] == $_GET['rssfilter_id'])
                   $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id'] = ''; // reset
                 else
                   $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id'] = $_GET['rssfilter_id'];
-                  
+
                 $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] = '';
             }
 
@@ -373,14 +372,14 @@ if (ploopi_ismoduleallowed('rss'))
                     ";
             $db->query($sql);
             $arrFilters = $db->getarray();
-            
+
             $array_columns = array();
             $array_values = array();
-            
+
             $array_columns['auto']['title'] = array('label' => _RSS_LABEL_LABEL, 'options' => array('sort' => true));
             $array_columns['right']['condition'] = array('label' => '', 'width' => 40);
             $array_columns['actions_right']['actions'] = array('label' => _RSS_LABEL_ACTIONS, 'width' => 60);
-            
+
             $c = 0;
             foreach($arrFilters as $filter)
             {
@@ -388,14 +387,14 @@ if (ploopi_ismoduleallowed('rss'))
               if (ploopi_isactionallowed(_RSS_ACTION_FILTERMODIFY)) $actions .= '<a title="Modifier" href="'.ploopi_urlencode("admin.php?op=rssfilter_modify&rssfilter_id={$filter['id']}").'"><img alt="Modifier" src="./modules/rss/img/ico_modify.png" /></a>';
               if (ploopi_isactionallowed(_RSS_ACTION_FILTERDELETE)) $actions .= '<a title="Supprimer" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=rssfilter_delete&rssfilter_id={$filter['id']}").'\',\'Êtes-vous certain de vouloir supprimer ce filtre ?\');"><img alt="Supprimer" src="./modules/rss/img/ico_trash.png" /></a>';
               if (empty($actions)) $actions = '&nbsp;';
-              
+
               $array_values[$c]['values']['title'] = array('label' => $filter['title']);
               $array_values[$c]['values']['condition'] = array('label' => (($filter['condition'] == 1) ? 'ET' : 'OU'));
               $array_values[$c]['values']['actions'] = array('label' => $actions);
-              
+
               $array_values[$c]['description'] = $filter['title'];
               if($filter['tpl_tag'] != '') $array_values[$c]['description'] .= ' (tag: '.$filter['tpl_tag'].')';
-              
+
               $array_values[$c]['link'] = "javascript:void(0);";
               $array_values[$c]['onclick'] = "javascript:rss_filter_list_choose({$filter['id']});";
 
@@ -410,7 +409,7 @@ if (ploopi_ismoduleallowed('rss'))
             echo $skin->close_simplebloc();
             ploopi_die();
         break;
-        
+
         case 'rss_filter_element_list_get':
         case 'rss_filter_element_edit_list_get':
             if ($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id'] == '') ploopi_die();
@@ -418,29 +417,29 @@ if (ploopi_ismoduleallowed('rss'))
             ploopi_init_module('rss');
 
             include_once './modules/rss/class_rss_filter_element.php';
-           
+
             // bloc suivant uniquement pour 'rss_filter_element_list_get' car ploopi_op : rss_filter_element_edit est effectué avant.
-            if ($ploopi_op == 'rss_filter_element_list_get' && 
+            if ($ploopi_op == 'rss_filter_element_list_get' &&
                    isset($_GET['rssfilter_id_element']) && is_numeric($_GET['rssfilter_id_element']))
             {
-                if ($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] == $_GET['rssfilter_id_element']) 
+                if ($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] == $_GET['rssfilter_id_element'])
                   $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] = ''; // reset
-                else 
+                else
                   $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] = $_GET['rssfilter_id_element'];
             }
-            
+
             $wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
 
             $sql =  "
                     SELECT      filter_element.id,
                                 filter_element.id_filter
                     FROM        ploopi_mod_rss_filter_element filter_element
-                    WHERE       filter_element.id_filter = '".$db->addslashes($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id'])."' 
+                    WHERE       filter_element.id_filter = '".$db->addslashes($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id'])."'
                     ORDER BY    filter_element.id
                     ";
             $db->query($sql);
             $arrFilterElements = $db->getarray();
-            
+
             $array_columns = array();
             $array_values = array();
 
@@ -454,68 +453,68 @@ if (ploopi_ismoduleallowed('rss'))
               if($objFilterElement->open($arrFilterElement['id']));
               {
                 $actions = '';
-                
+
                 $arrElement = $objFilterElement->getElement();
                 if($ploopi_op == 'rss_filter_element_list_get') // Changement de page vers edition
                 {
                   $array_values[$c]['link'] = "javascript:void(0);";
                   $array_values[$c]['onclick'] = "javascript:rss_filter_element_list_choose({$arrFilterElement['id']})";
-              
+
                   if (ploopi_isactionallowed(_RSS_ACTION_FILTERMODIFY)) $actions .= '<a title="Modifier" href="'.ploopi_urlencode("admin.php?op=rssfilter_modify&rssfilter_id={$arrFilterElement['id_filter']}&rssfilter_id_element={$arrFilterElement['id']}").'"><img alt="Modifier" src="./modules/rss/img/ico_modify.png" /></a>';
                   if (ploopi_isactionallowed(_RSS_ACTION_FILTERDELETE)) $actions .= '<a title="Supprimer" href="javascript:void(0);" onClick="javascript:if(confirm(\''._RSS_DELETE_ELEMENT.'\')) rssfilter_element_list_delete('.$arrFilterElement['id'].');"><img alt="Supprimer" src="./modules/rss/img/ico_trash.png" /></a>';
                 }
-                elseif($ploopi_op == 'rss_filter_element_edit_list_get') // Mise a jour du block d'édition d'un élément 
+                elseif($ploopi_op == 'rss_filter_element_edit_list_get') // Mise a jour du block d'édition d'un élément
                 {
                   $array_values[$c]['link'] = "javascript:void(0);";
-                  
+
                   $array_values[$c]['onclick'] = "javascript:rss_filter_element_edit({$arrFilterElement['id']});";
-                  
+
                   if (ploopi_isactionallowed(_RSS_ACTION_FILTERMODIFY)) $actions .= '<a title="Modifier" href="javascript:void(0);" onClick="javascript:rss_filter_element_edit('.$arrFilterElement['id'].');"><img alt="Modifier" src="./modules/rss/img/ico_modify.png" /></a>';
                   if (ploopi_isactionallowed(_RSS_ACTION_FILTERDELETE)) $actions .= '<a title="Supprimer" href="javascript:void(0);" onClick="javascript:if(confirm(\''._RSS_DELETE_ELEMENT.'\')) rssfilter_element_edit_delete('.$arrFilterElement['id'].');"><img alt="Supprimer" src="./modules/rss/img/ico_trash.png" /></a>';
                 }
-                
+
                 if (empty($actions)) $actions = '&nbsp;';
-                
+
                 if (isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element']) && $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] == $arrFilterElement['id']) $array_values[$c]['style'] = 'background-color:#ffe0e0;';
-                
+
                 $strValue = ($arrElement['target']['compare'] == 'date') ? substr(ploopi_unixtimestamp2local($arrElement['value']),0,10) : $arrElement['value'];
-                
+
                 $array_values[$c]['values']['condition'] = array('label' => $arrElement['target']['label'].' '.$arrElement['compare']['label'].' '.$strValue);
                 $array_values[$c]['values']['actions'] = array('label' => $actions);
-                
+
                 $array_values[$c]['description'] = $arrElement['target']['value'].' '.str_replace('%t',$arrElement['value'],$arrElement['compare']['sql']);
-                
+
                 $c++;
               }
             }
-            
+
             echo $skin->open_simplebloc();
             echo '<h1>'._RSS_SQL_LABEL_DETAIL.'</h1>';
             $skin->display_array($array_columns, $array_values, 'array_rss_request_list', array('height' => 200, 'sortable' => true, 'orderby_default' => 'label'));
             echo $skin->close_simplebloc();
             ploopi_die();
         break;
-        
+
         case 'rss_filter_element_edit':
             ploopi_init_module('rss');
-            
+
             if ($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id'] == '') ploopi_die();
 
             if (isset($_GET['rssfilter_id_element']) && is_numeric($_GET['rssfilter_id_element']))
             {
-                if ($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] == $_GET['rssfilter_id_element']) 
+                if ($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] == $_GET['rssfilter_id_element'])
                   $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] = ''; // reset
-                else 
+                else
                   $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] = $_GET['rssfilter_id_element'];
             }
-            
+
             include_once './modules/rss/class_rss_filter_element.php';
-            
+
             $objFilterElement = new rss_filter_element();
-            
+
             $arrTabTarget  = $objFilterElement->getTabTarget();
             $arrTabCompare = $objFilterElement->getTabCompare();
-            
+
             $action = 'admin.php?rssTabItem=tabFilter&op=rssfilter_element_save&rssfilter_id='.$_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id'];
 
             echo $skin->open_simplebloc();
@@ -528,19 +527,19 @@ if (ploopi_ismoduleallowed('rss'))
               }
               else
                 $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] = '';
-            }          
+            }
             ?>
-            <form name="form_rssfilter_element" action="<? echo ploopi_urlencode($action); ?>" method="post" onSubmit="return rssfilter_element_validate();">
+            <form name="form_rssfilter_element" action="<?php echo ploopi_urlencode($action); ?>" method="post" onSubmit="return rssfilter_element_validate();">
             <div style="padding: 4px 2px;">
               <button type="button" style="float:left;" onClick="javascript:rss_filter_element_edit(0);">Nouveau</button>
               <select id="rss_element_target" name="rss_element_target" style="width:25%;float:left;margin-left: 4px;" onChange="javascript:rss_select_target('div_compare','div_type_control',rss_element_target);">
               <?php
               $strTypeCompare = '';
-              
+
               foreach($arrTabTarget as $strName => $arrDetail)
               {
                 if($strTypeCompare == '') $strTypeCompare = $arrDetail['compare'];
-                
+
                 $strSelected = ((isset($arrElement) && $strName == $arrElement['target']['value'])) ? 'selected' : '';
 
                 echo '<option value="'.$strName.'" '.$strSelected.'>'.$arrDetail['label'].'</option>';
@@ -550,8 +549,8 @@ if (ploopi_ismoduleallowed('rss'))
               <div id="div_compare" style="width:25%;float:left;">
               <select id="rss_element_compare" name="rss_element_compare" style="width:100%;">
               <?php
-              if(isset($arrElement['target']['compare'])) $strTypeCompare = $arrElement['target']['compare']; 
-              
+              if(isset($arrElement['target']['compare'])) $strTypeCompare = $arrElement['target']['compare'];
+
               foreach($arrTabCompare[$strTypeCompare] as $strName => $arrDetail)
               {
                 $strSelected = (isset($arrElement) && $strName == $arrElement['compare']['value']) ? $strSelected = 'selected' : '';
@@ -563,13 +562,13 @@ if (ploopi_ismoduleallowed('rss'))
               <div id="div_type_control"><input type="hidden" id="type_control" value="<?php echo $strTypeCompare; ?>" /></div>
               <?php
               $strValue = '';
-              if(isset($arrElement)) 
+              if(isset($arrElement))
               {
                  $strValue = ($arrElement['target']['compare'] == 'date') ? substr(ploopi_unixtimestamp2local($arrElement['value']),0,10) : $arrElement['value'];
               }
               ?>
               <input type="text" id="rss_element_value" name="rss_element_value" style="width:38%;float:left;margin-right: 4px;" value="<?php echo $strValue; ?>">
-              <input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>" />
+              <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" />
             </div>
             </form>
             <?php
@@ -579,15 +578,15 @@ if (ploopi_ismoduleallowed('rss'))
 
         case 'rss_filter_feed_get' :
             ploopi_init_module('rss');
-            
+
             // Mise à jour de tous les flux
             include_once './modules/rss/class_rss_feed.php';
             $objFeed = new rss_feed();
             $objFeed->updateallfeed();
             unset($objFeed);
-            
+
             include_once './modules/rss/class_rss_filter.php';
-            
+
             $objRssFilter = new rss_filter();
 
             $wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
@@ -597,7 +596,7 @@ if (ploopi_ismoduleallowed('rss'))
             if(is_numeric($intRssFilter_id) && $intRssFilter_id > 0)
             {
               $objRssFilter->open($intRssFilter_id);
-              
+
               $sql = $objRssFilter->makeRequest($intRssFilter_id_element);
               if($sql == '')
               {
@@ -620,56 +619,56 @@ if (ploopi_ismoduleallowed('rss'))
                                   IFNULL(cat.id, 0) as id_cat,
                                   IFNULL(cat.title, '"._RSS_LABEL_NOCATEGORY."') as titlecat
                       FROM        ploopi_mod_rss_entry entry
-  
+
                       INNER JOIN  ploopi_mod_rss_feed feed
                       ON          feed.id = entry.id_feed
                       AND         feed.id_workspace IN ({$wk})
-  
+
                       LEFT JOIN   ploopi_mod_rss_cat cat
                       ON          cat.id = feed.id_cat
                       AND         cat.id_workspace IN ({$wk})
-  
+
                       ORDER BY    entry.published DESC
                       LIMIT       0,{$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nbitemdisplay']}
                       ";
-            } 
+            }
             $db->query($sql);
             if($db->numrows()>0)
             {
               $arrEntry = $db->getarray();
               $title = '';
               $numrow = 1;
-  
+
               echo $skin->open_simplebloc();
               ?>
-              <h1><? echo _RSS_LABEL_NEWS.' '.$title; ?></h1>
+              <h1><?php echo _RSS_LABEL_NEWS.' '.$title; ?></h1>
               <div id="rss_filter_feed_content">
                 <?php
                 foreach($arrEntry as $entry)
                 {
                   ?>
                   <div class="rss_entry">
-                      <a class="rss_entry<? echo (++$numrow)%2; ?>" href="<? echo $entry['link']; ?>" target="_blank">
-                          <b><? echo strip_tags($entry['title'], '<b><i>'); ?></b>
-                          <br /><i><? echo ploopi_unixtimestamp2local($entry['published']); ?> &#149; <? echo $entry['titlefeed']; ?></i>
-                      <?
+                      <a class="rss_entry<?php echo (++$numrow)%2; ?>" href="<?php echo $entry['link']; ?>" target="_blank">
+                          <b><?php echo strip_tags($entry['title'], '<b><i>'); ?></b>
+                          <br /><i><?php echo ploopi_unixtimestamp2local($entry['published']); ?> &#149; <?php echo $entry['titlefeed']; ?></i>
+                      <?php
                       if (!empty($entry['subtitle']))
                       {
                           ?>
-                          <br /><? echo strip_tags($entry['subtitle'], '<b><i>'); ?>
-                          <?
+                          <br /><?php echo strip_tags($entry['subtitle'], '<b><i>'); ?>
+                          <?php
                       }
                       if (!empty($entry['content']))
                       {
                           ?>
-                          <br /><? echo strip_tags($entry['content'], '<b><i>'); ?>
-                          <?
+                          <br /><?php echo strip_tags($entry['content'], '<b><i>'); ?>
+                          <?php
                       }
                       ?>
                       </a>
                   </div>
                   <div class="rss_entry_annotation">
-                  <?
+                  <?php
                   ploopi_annotation(_RSS_OBJECT_NEWS_ENTRY, sprintf("%06d%06d%s", $entry['id_cat'], $entry['id_feed'], $entry['id']), strip_tags($entry['title'], '<b><i>'));
                   ?>
                   </div>
@@ -677,7 +676,7 @@ if (ploopi_ismoduleallowed('rss'))
                 }
                 ?>
               </div>
-              <?
+              <?php
               echo $skin->close_simplebloc();
             }
             else
@@ -696,10 +695,10 @@ if (ploopi_ismoduleallowed('rss'))
 
         case 'rssfilter_element_delete':
           if($_GET['rssfilter_id_element']>0)
-          { 
+          {
             if($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] == $_GET['rssfilter_id_element'])
                $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] = '';
-            
+
             include_once './modules/rss/class_rss_filter_element.php';
             $objRssFilterElement = new rss_filter_element();
 

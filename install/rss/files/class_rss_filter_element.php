@@ -29,7 +29,7 @@
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint
  */
- 
+
 /**
  * Inclusion de la classe parent.
  */
@@ -48,10 +48,10 @@ include_once './include/classes/data_object.php';
 class rss_filter_element extends data_object
 {
   /**
-   * RssTabTarget = array( champ sql cible => array( label => nom a afficher, 
-   *                                                 compare => type de donnée, 
-   *                                                 table => table concernée, 
-   *                                                 alias => alias à utiliser pour la table) 
+   * RssTabTarget = array( champ sql cible => array( label => nom a afficher,
+   *                                                 compare => type de donnée,
+   *                                                 table => table concernée,
+   *                                                 alias => alias à utiliser pour la table)
    *
    * @var array()
    */
@@ -60,16 +60,16 @@ class rss_filter_element extends data_object
                                   'content'   => array('label' => _RSS_LABEL_CONTENT, 'compare' => 'string', 'table' => 'ploopi_mod_rss_entry', 'alias' => 'entry'),
                                   'link'      => array('label' => _RSS_LABEL_LINK, 'compare' => 'string', 'table' => 'ploopi_mod_rss_entry', 'alias' => 'entry'),
                                   'published' => array('label' => _RSS_LABEL_DATE_PUBLIC, 'compare' => 'date', 'table' => 'ploopi_mod_rss_entry', 'alias' => 'entry'),
-                          ); 
-  
+                          );
+
   /**
    * $rssTabCompare = array( type de donnée => array( type de comparatif => array( label => label à afficher,
    *                                                                               sql => sql avec tag = %t a remplacer par la valeur,
-   *                                                                               [row => champ cible si != de celui indiqué dans rssTabTarget])  
+   *                                                                               [row => champ cible si != de celui indiqué dans rssTabTarget])
    *
    * @var unknown_type
    */
-  private $rssTabCompare = array( 'string'    => array('contain' => array('label' => _RSS_SQL_CONTENT,'sql' => 'like \'%%t%\''), 
+  private $rssTabCompare = array( 'string'    => array('contain' => array('label' => _RSS_SQL_CONTENT,'sql' => 'like \'%%t%\''),
                                                        'no_contain' => array('label' => _RSS_SQL_NOCONTENT,'sql' => 'not like \'%%t%\''),
                                                        'is' => array('label' => _RSS_SQL_IS,'sql' => 'like \'%t\''),
                                                        'no_is' => array('label' => _RSS_SQL_NOIS,'sql' => 'not like \'%t\''),
@@ -82,7 +82,7 @@ class rss_filter_element extends data_object
                                                        'after' => array('label' => _RSS_SQL_AFTER,'sql' => '> \'%t\'')
                                                  )
                            );
-                              
+
   /**
    * Constructeur de la classe
    *
@@ -92,7 +92,7 @@ class rss_filter_element extends data_object
   {
     parent::data_object('ploopi_mod_rss_filter_element');
   }
-  
+
   /**
    * Enregistrement d'un élément de détail de filtre
    *
@@ -101,18 +101,18 @@ class rss_filter_element extends data_object
   function save()
   {
     if(!array_key_exists($this->fields['target'],$this->rssTabTarget)) return '';
-    
+
     if($this->rssTabTarget[$this->fields['target']]['compare'] == 'date')
       $this->fields['value'] = ploopi_timestamp2unixtimestamp(ploopi_local2timestamp($this->fields['value']));
 
     return parent::save();
   }
-  
+
   /**
    * converti un detail en ligne de requete
    *
    * @param boolean $boolUseAlias Utilisation de l'alias dans la requete (defaut = false)
-   * 
+   *
    * @return string ligne au format sql
    */
   function lineSql($boolUseAlias = false)
@@ -121,21 +121,21 @@ class rss_filter_element extends data_object
 
     $strRssTypeCompare = $this->rssTabTarget[$this->fields['target']]['compare'];
     $strRssTable = $this->rssTabTarget[$this->fields['target']]['table'];
-    
+
     if(!array_key_exists($strRssTypeCompare,$this->rssTabCompare)) return '';
     if(!array_key_exists($this->fields['compare'],$this->rssTabCompare[$strRssTypeCompare])) return '';
-    
+
     $row_target = (isset($this->rssTabCompare[$strRssTypeCompare][$this->fields['compare']]['row'])) ? $this->rssTabCompare[$strRssTypeCompare][$this->fields['compare']]['row'] : $this->fields['target'];
-    
+
     if($boolUseAlias)
       $strRssLineFilter  = $this->rssTabTarget[$this->fields['target']]['alias'].'.'.$row_target; //table Alias +champ
     else
       $strRssLineFilter  = $this->rssTabTarget[$this->fields['target']]['table'].'.'.$row_target; //table + champ
-    
+
     $strRssLineFilter .= ' '.$this->rssTabCompare[$strRssTypeCompare][$this->fields['compare']]['sql']; // Comparatif
-    
-    $strRssLineFilter  = str_replace('%t',addslashes($this->fields['value']),$strRssLineFilter); // Valeur de comparaison 
-    
+
+    $strRssLineFilter  = str_replace('%t',addslashes($this->fields['value']),$strRssLineFilter); // Valeur de comparaison
+
     return $strRssLineFilter;
   }
 
@@ -151,9 +151,9 @@ class rss_filter_element extends data_object
     $arrElements['compare'] = $this->rssTabCompare[$arrElements['target']['compare']][$this->fields['compare']];
     $arrElements['compare']['value'] = $this->fields['compare'];
     $arrElements['value'] = $this->fields['value'];
-    return $arrElements; 
+    return $arrElements;
   }
-  
+
   /**
    * Récupère le tableau des caratéristiques "Target" des éléments
    *

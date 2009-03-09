@@ -54,12 +54,13 @@ ploopi_init_module('rss', false, false, false);
 
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
-$select =  "SELECT      feed.id,
-                        feed.lastvisit,
-                        feed.revisit
-            FROM        ploopi_mod_rss_feed feed
-            WHERE       feed.id_module = '{$cron_moduleid}'
-            ";
+$select =  "
+    SELECT      feed.id,
+                feed.lastvisit,
+                feed.revisit
+    FROM        ploopi_mod_rss_feed feed
+    WHERE       feed.id_module = {$cron_moduleid}
+";
 
 $result = $db->query($select);
 while ($fields = $db->fetchrow($result))
