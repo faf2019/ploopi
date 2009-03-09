@@ -23,7 +23,7 @@
 
 /**
  * Procédure d'installation d'un module
- * 
+ *
  * @package system
  * @subpackage system
  * @copyright Netlor, Ovensia
@@ -285,7 +285,6 @@ else
     $columns['right']['result']     = array('label' => 'Etat', 'width' => '60', 'options' => array('sort' => true));
 
     $c = 0;
-
 
     foreach($rapport as $op_detail)
     {

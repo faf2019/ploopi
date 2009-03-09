@@ -23,7 +23,7 @@
 
 /**
  * Affichage temps réel du log 'utilisateurs connectés'
- * 
+ *
  * @package system
  * @subpackage system
  * @copyright Netlor, Ovensia

@@ -23,7 +23,7 @@
 
 /**
  * Liste des outils "système" disponibles
- * 
+ *
  * @package system
  * @subpackage system
  * @copyright Netlor, Ovensia
@@ -40,16 +40,16 @@ echo $skin->open_simplebloc(_SYSTEM_LABEL_TOOLS);
 $columns = array();
 $values = array();
 
-$columns['left']['tool'] = 
+$columns['left']['tool'] =
     array(
-        'label' => 'Outil', 
-        'width' => '200', 
+        'label' => 'Outil',
+        'width' => '200',
         'options' => array('sort' => true)
     );
-    
-$columns['auto']['desc'] = 
+
+$columns['auto']['desc'] =
     array(
-        'label' => 'Description', 
+        'label' => 'Description',
         'options' => array('sort' => true)
     );
 

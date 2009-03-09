@@ -23,7 +23,7 @@
 
 /**
  * Affichage des actions possibles d'un utilisateur (par module).
- * 
+ *
  * @package system
  * @subpackage public
  * @copyright Netlor, Ovensia
@@ -51,46 +51,45 @@ foreach ($_SESSION['ploopi']['workspaces'] as $group)
     if (!empty($group['adminlevel']) && $group['id'] != _PLOOPI_SYSTEMGROUP)
     {
         echo $skin->open_simplebloc("Espace « {$group['label']} »");
-        
+
         $columns = array();
         $values = array();
         $c = 0;
-        
+
         $columns['left']['module']       = array('label' => 'Module', 'width' => '250', 'options' => array('sort' => true));
         $columns['auto']['actions']     = array('label' => 'Actions');
-        
+
         /*
-         * 
+         *
         ?>
         <TR bgcolor="<?php echo $skin->values['bgline1']; ?>">
             <TD>Niveau Utilisateur :</TD>
             <TD><?php echo $ploopi_system_levels[$group['adminlevel']]; ?></TD>
         </TR>
-            
+
         <?php
 */
 
-        
         if (isset($group['modules']))
         {
             foreach ($group['modules'] as $moduleid)
             {
                 $strActions = '';
-                
+
                 if (!empty($arrActions[$_SESSION['ploopi']['modules'][$moduleid]['id_module_type']]))
                 {
                     foreach($arrActions[$_SESSION['ploopi']['modules'][$moduleid]['id_module_type']] as $id => $action)
-                    {   
+                    {
                         $puce = ploopi_isactionallowed($id, $group['id'], $moduleid) ? $green : $red;
                         $strActions .= "<p class=\"ploopi_va\">{$puce}<span>{$action['label']}</span></p>";
                     }
                 }
-                
+
                 if ($strActions == '') $strActions = 'Aucune action pour ce module';
 
                 $values[$c]['values']['module'] = array('label' => $_SESSION['ploopi']['modules'][$moduleid]['label']);
                 $values[$c]['values']['actions'] = array('label' => $strActions);
-            
+
                 $values[$c]['description'] = '';
                 $c++;
             }

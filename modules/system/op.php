@@ -107,7 +107,6 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
             ploopi_die();
         break;
 
-
         case 'tickets_open_responses':
             if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
             {
@@ -190,12 +189,10 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
             ploopi_die();
         break;
 
-
         default:
             /**
              * Autres opérations nécessitant un niveau d'accrédiation plus élevé (gestionnaire ou admin sys)
              */
-
 
             if (ploopi_isadmin())
             {

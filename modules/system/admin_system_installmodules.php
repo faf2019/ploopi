@@ -86,8 +86,6 @@ if ($dir = @opendir("./install/"))
 }
 ksort($tabmoduletype_install);
 
-
-
 $columns = array();
 $values = array();
 $c = 0;
@@ -101,7 +99,6 @@ $columns['right']['date']       = array('label' => _SYSTEM_LABEL_DATE, 'width' =
 $columns['right']['version']    = array('label' => _SYSTEM_LABEL_VERSION, 'width' => '75', 'options' => array('sort' => true));
 $columns['right']['author']     = array('label' => _SYSTEM_LABEL_AUTHOR, 'width' => '130', 'options' => array('sort' => true));
 $columns['left']['mtype']       = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '80', 'options' => array('sort' => true));
-
 
 // get all modules installed in a table
 $select =   "
@@ -203,7 +200,6 @@ foreach($tabmoduletype_install as $label => $fields)
     }
 }
 
-
 echo $skin->open_simplebloc(_SYSTEM_LABEL_NEWMODULEVERSIONS);
 $skin->display_array($columns, $values, 'array_toupdate_modules', array('sortable' => true, 'orderby_default' => 'mtype'));
 echo $skin->close_simplebloc();
@@ -218,7 +214,6 @@ $columns['right']['date'] = array('label' => _SYSTEM_LABEL_DATE, 'width' => '80'
 $columns['right']['version'] = array('label' => _SYSTEM_LABEL_VERSION, 'width' => '75', 'options' => array('sort' => true));
 $columns['right']['author'] = array('label' => _SYSTEM_LABEL_AUTHOR, 'width' => '130', 'options' => array('sort' => true));
 $columns['left']['mtype'] = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '80', 'options' => array('sort' => true));
-
 
 foreach($tabmoduletype_install as $label => $fields)
 {

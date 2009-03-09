@@ -22,7 +22,7 @@
 */
 
 /**
- * Affichage des utilisateurs du groupe ou de l'espace courant 
+ * Affichage des utilisateurs du groupe ou de l'espace courant
  *
  * @package system
  * @subpackage admin
@@ -68,20 +68,20 @@ else
     $tabs_char = array();
 
     // Génération des onglets
-    for($i=1;$i<27;$i++) 
-        $tabs_char[$i] = 
+    for($i=1;$i<27;$i++)
+        $tabs_char[$i] =
             array(
-                'title' => chr($i+64), 
+                'title' => chr($i+64),
                 'url' => "admin.php?alphaTabItem={$i}"
             );
 
-    $tabs_char[98] = 
+    $tabs_char[98] =
         array(
-            'title' => '#', 
+            'title' => '#',
             'url' => 'admin.php?alphaTabItem=98'
         );
-    
-    $tabs_char[99] = 
+
+    $tabs_char[99] =
         array(
             'title' => '<em>tous</em>',
             'url' => 'admin.php?alphaTabItem=99'
@@ -99,7 +99,6 @@ else
     <input type="submit" name="reset" value="<?php echo _PLOOPI_RESET; ?>" class="button">
 </p>
 </form>
-
 
 <?php
 $where = array();
@@ -142,33 +141,32 @@ $sql =  "
         {$where}
         ";
 
-
 $columns = array();
 $values = array();
 
-$columns['left']['label'] = 
+$columns['left']['label'] =
     array(
-        'label' => _SYSTEM_LABEL_GROUP, 
-        'width' => '200', 
+        'label' => _SYSTEM_LABEL_GROUP,
+        'width' => '200',
         'options' => array('sort' => true)
     );
-    
-$columns['left']['adminlevel'] = 
+
+$columns['left']['adminlevel'] =
     array(
-        'label' => 'Niv.', 
-        'width' => '50', 
+        'label' => 'Niv.',
+        'width' => '50',
         'options' => array('sort' => true)
     );
-    
-$columns['auto']['parents'] = 
+
+$columns['auto']['parents'] =
     array(
-        'label' => _SYSTEM_LABEL_PARENTS, 
+        'label' => _SYSTEM_LABEL_PARENTS,
         'options' => array('sort' => true)
     );
-    
-$columns['actions_right']['actions'] = 
+
+$columns['actions_right']['actions'] =
     array(
-        'label' => '&nbsp;', 
+        'label' => '&nbsp;',
         'width' => '70'
     );
 
@@ -211,7 +209,6 @@ while ($fields = $db->fetchrow($result))
         $manage_grp =   '<a href="'.ploopi_urlencode("admin.php?op=modify_group&orgid={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
     else
         $manage_grp =   '<img src="'.$_SESSION['ploopi']['template_path'].'/img/ico_noway.gif" title=""><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png" title="">';
-
 
     $values[$c]['values']['actions']        = array('label' => $manage_grp);
 

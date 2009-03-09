@@ -22,7 +22,7 @@
 
 /**
  * Interface de résultat du moteur de recherche intégrale
- * 
+ *
  * @package system
  * @subpackage public
  * @copyright Netlor, Ovensia
@@ -62,7 +62,6 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
      *
      * */
 
-
     $arrObjectTypes = array();
     $arrRelevance = array();
     $arrStems = array();
@@ -74,7 +73,6 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
     {
         if ($_SESSION['ploopi']['modules'][$modid]['active']) $arrAvailableModules[] = $modid;
     }
-    
 
     // on construit $arrObjectTypes, la liste des objets ploopi
     $db->query( '
@@ -122,40 +120,39 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 
         $columns['left']['relevance']       = array('label' => 'Pert.', 'width' => 65, 'options' => array('sort' => true));
         $columns['auto']['label']           = array('label' => 'Libellé', 'options' => array('sort' => true));
-        
+
         if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displayindexed']))
             $columns['right']['timestp_lastindex']      = array('label' => 'Indexé le', 'width' => '90', 'options' => array('sort' => true));
-            
+
         if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displaydatetime']))
             $columns['right']['timestp_create']         = array('label' => 'Ajouté le', 'width' => '140', 'options' => array('sort' => true));
-            
+
         if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displayuser']))
             $columns['right']['user']           = array('label' => 'Utilisateur', 'width' => '120', 'options' => array('sort' => true));
-        
+
         if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displayworkspace']))
             $columns['right']['workspace']      = array('label' => 'Espace', 'width' => '120', 'options' => array('sort' => true));
-            
+
         if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displaymodule']))
             $columns['right']['module']         = array('label' => 'Module', 'width' => '120', 'options' => array('sort' => true));
-            
+
         if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displayobjecttype']))
             $columns['right']['object_type']    = array('label' => 'Type d\'Objet', 'width' => '120', 'options' => array('sort' => true));
 
         // on parcourt le tableau des réponses
-        
 
         foreach ($arrRelevance as $row)
         {
             if (isset($arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]))
             {
                 $type = $arrObjectTypes[$row['id_module']]['type'];
-    
+
                 $objUser = new user();
                 $strUserName = ($objUser->open($row['id_user'])) ? "{$objUser->fields['firstname']} {$objUser->fields['lastname']}" : '';
-    
+
                 // inclusion des fonctions/constantes proposées par le module
                 ploopi_init_module($type, false, false, false);
-    
+
                 // on cherche si on fonction de validation d'objet existe pour ce module
                 $boolRecordIsEnabled = true;
                 $funcRecordIsEnabled = "{$type}_record_isenabled";
@@ -164,7 +161,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
                     // si la fonction existe, on l'appelle pour chaque enregistrement
                     $boolRecordIsEnabled = $funcRecordIsEnabled($row['id_object'], $row['id_record'], $row['id_module']);
                 }
-    
+
                 if ($boolRecordIsEnabled && !empty($arrObjectTypes[$row['id_module']]))
                 {
                     $blue = 128;
@@ -178,13 +175,12 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
                         $red = 255;
                         $green = (255-$blue)+($blue*$row['relevance'])/50;
                     }
-    
+
                     $color = sprintf("%02X%02X%02X",$red,$green,$blue);
-    
-    
+
                     $l_timestp_lastindex = ploopi_timestamp2local($row['timestp_lastindex']);
                     $l_timestp_create = ploopi_timestamp2local($row['timestp_create']);
-    
+
                     $object_script = str_replace(
                                                     array(
                                                         '<IDRECORD>',
@@ -198,10 +194,10 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
                                                     ),
                                                     $arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['script']
                                                 );
-                                                
+
                     $objWorkspace = new workspace();
                     $strWorkspaceLabel = ($objWorkspace->open($row['id_workspace'])) ? $objWorkspace->fields['label'] : '';
-    
+
                     $values[$c]['values']['relevance'] = array('label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $row['relevance']), 'sort_label' => $row['relevance']);
                     $values[$c]['values']['label'] = array('label' => $row['label']);
                     $values[$c]['values']['timestp_lastindex'] = array('label' => $l_timestp_lastindex['date'], 'sort_label' => $row['timestp_lastindex']);
@@ -210,12 +206,12 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
                     $values[$c]['values']['workspace'] = array('label' => $strWorkspaceLabel);
                     $values[$c]['values']['module'] = array('label' => $arrObjectTypes[$row['id_module']]['label']);
                     $values[$c]['values']['object_type'] = array('label' => $arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['label']);
-    
+
                     $values[$c]['description'] = $row['label'];
                     $values[$c]['link'] = ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}");
                     $values[$c]['style'] = '';
                 }
-    
+
                 $c++;
             }
         }

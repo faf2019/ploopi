@@ -21,7 +21,7 @@
 */
 
 /**
- * Interface de gestion des affectations de rôles 
+ * Interface de gestion des affectations de rôles
  *
  * @package system
  * @subpackage admin
@@ -64,8 +64,6 @@ $sql =  "
 $db->query($sql);
 $groups = $db->getarray();
 
-
-
 if (empty($groups) && empty($users))
 {
     ?>
@@ -74,17 +72,15 @@ if (empty($groups) && empty($users))
     }
     else
     {
-        
+
         $columns = array();
         $values = array();
         $c = 0;
-        
+
         $columns['left']['type']    = array('label' => 'Type', 'width' => '120', 'options' => array('sort' => true));
         $columns['auto']['name']    = array('label' => 'Nom', 'options' => array('sort' => true));
-        $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '24');    
-    
-    
-        
+        $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '24');
+
         foreach($groups as $group)
         {
             $values[$c]['values']['type']   = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\"><span>&nbsp;Groupe</span>");
@@ -92,7 +88,7 @@ if (empty($groups) && empty($users))
             $values[$c]['values']['actions']    = array('label' => '<a href="javascript:if (confirm(\''._SYSTEM_MSG_CONFIRMGROUPDETACH.'\')) system_roleusers_delete('.$roleid.', '.$group['id'].', \'group\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" alt="'._SYSTEM_LABEL_DELETE.'"></a>');
             $c++;
         }
-    
+
         foreach($users as $user)
         {
             $values[$c]['values']['type']   = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\"><span>&nbsp;Utilisateur</span>");
@@ -100,7 +96,7 @@ if (empty($groups) && empty($users))
             $values[$c]['values']['actions']    = array('label' => '<a href="javascript:if (confirm(\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')) system_roleusers_delete('.$roleid.', '.$user['id'].', \'user\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" alt="'._SYSTEM_LABEL_DELETE.'"></a>');
             $c++;
         }
-    
+
         $skin->display_array($columns, $values, 'array_roles_users', array('sortable' => true, 'orderby_default' => 'type'));
     }
 

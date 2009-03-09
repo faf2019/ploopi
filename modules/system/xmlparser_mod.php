@@ -23,13 +23,13 @@
 
 /**
  * Parser XML des fichiers de données d'install des modules
- * 
+ *
  * @package system
  * @subpackage system
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @todo Revoir cette partie
  */
 

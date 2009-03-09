@@ -120,7 +120,6 @@ define ('_SYSTEM_LABEL_ROLECHOICE', 'Rôle');
 define ('_SYSTEM_LABEL_TRANSVERSE', 'Vue Transversale');
 define ('_SYSTEM_APPLYHERITAGE', 'Appliquer l\'héritage aux sous-espaces');
 
-
 define ('_SYSTEM_LABEL_INSTALL', 'Installer');
 define ('_SYSTEM_LABEL_UPDATE', 'Mettre à Jour');
 define ('_SYSTEM_LABEL_UNINSTALL', 'Désinstaller');
@@ -163,7 +162,6 @@ define ('_SYSTEM_LABEL_PHOTO', 'Photo');
 
 define ('_SYSTEM_LABEL_PARENTS', 'Parents');
 
-
 define ('_SYSTEM_LABEL_GROUP_MANAGEMENT', 'Gestion du Groupe <LABEL> &laquo; <GROUP> &raquo;');
 define ('_SYSTEM_LABEL_WORKSPACE_MANAGEMENT', 'Gestion de l\'Espace <LABEL> &laquo; <GROUP> &raquo;');
 
@@ -201,7 +199,6 @@ define ('_SYSTEM_LABEL_GROUP_SHARED',       'Partagé');
 define ('_SYSTEM_LABEL_USER_UNDEFINED',     'Non défini');
 define ('_SYSTEM_LABEL_GROUP_WEBDOMAINLIST',    'Liste des domaines Frontoffice');
 define ('_SYSTEM_LABEL_GROUP_ADMINDOMAINLIST',  'Liste des domaines Backoffice');
-
 
 define ('_SYSTEM_LABEL_CREATE_CLONE',       'Cloner');
 define ('_SYSTEM_LABEL_CREATE_CHILD',       'Créer');
@@ -322,12 +319,10 @@ define ('_SYSTEM_LABEL_USERDETACH', 'Suppression de l\'utilisateur « <LABELUSER>
 define ('_SYSTEM_LABEL_USERDELETE', 'Suppression de l\'utilisateur « <LABEL> »');
 define ('_SYSTEM_LABEL_USERCREATE', 'Création de l\'utilisateur « <LABEL> »');
 
-
 define ('_SYSTEM_LABEL_IMPORTSRC', 'Source d\'import');
 
 define ('_SYSTEM_LABEL_TICKETS', 'Messages');
 define ('_SYSTEM_LABEL_SEARCH', 'Recherche');
-
 
 define ('_SYSTEM_LABEL_MYTICKETS', 'Mes Messages');
 define ('_SYSTEM_LABEL_TICKETS_SENDBOX', 'Messages envoyés');

@@ -24,7 +24,7 @@
 
 /**
  * Affichage du log 'historique des actions'
- * 
+ *
  * @package system
  * @subpackage system
  * @copyright Netlor, Ovensia, HeXad
@@ -44,8 +44,8 @@ $limit_begin = 0;
 $limit_by = 100;
 $actual_page = 1;
 
-if(isset($_POST['cut_page1_begin']))  $limit_begin = $_POST['cut_page1_begin'];  
-if(isset($_POST['cut_page2_begin']))  $limit_begin = $_POST['cut_page2_begin'];  
+if(isset($_POST['cut_page1_begin']))  $limit_begin = $_POST['cut_page1_begin'];
+if(isset($_POST['cut_page2_begin']))  $limit_begin = $_POST['cut_page2_begin'];
 
 if(isset($_POST['cut_page1_by']))     $limit_by = $_POST['cut_page1_by'];
 if(isset($_POST['cut_page2_by']))     $limit_by = $_POST['cut_page2_by'];
@@ -72,7 +72,6 @@ $search_pattern['record'] = (isset($_POST['filter_record'])) ? $_POST['filter_re
 $search_pattern['ip'] = (isset($_POST['filter_ip'])) ? $_POST['filter_ip'] : '';
 
 $where = array();
-
 
 if (!empty($search_pattern['date']))    $where[] = "ploopi_user_action_log.timestp >= '".$db->addslashes(ploopi_local2timestamp($search_pattern['date']))."'";
 if (!empty($search_pattern['date2']))   $where[] = "ploopi_user_action_log.timestp <= '".$db->addslashes(ploopi_timestamp_add(ploopi_local2timestamp($search_pattern['date2']),0,0,0,0,1))."'";
@@ -242,33 +241,33 @@ $db->query($sql);
 $columns = array();
 $values = array();
 
-$columns['left']['timestp'] = array('label' => 'Date/Heure', 
-                                    'width' => '130', 
+$columns['left']['timestp'] = array('label' => 'Date/Heure',
+                                    'width' => '130',
                                     'options' => array('sort' => true),
                                     'filter' => array('type' => 'datetime')
                                    );
-$columns['left']['ip']      = array('label' => 'IP client', 
-                                    'width' => '110', 
+$columns['left']['ip']      = array('label' => 'IP client',
+                                    'width' => '110',
                                     'options' => array('sort' => true),
                                     'filter' => array('type' => 'string')
                                    );
-$columns['left']['login']   = array('label' => 'Login', 
-                                    'width' => '100', 
+$columns['left']['login']   = array('label' => 'Login',
+                                    'width' => '100',
                                     'options' => array('sort' => true),
                                     'filter' => array('type' => 'string')
                                    );
-$columns['left']['module']  = array('label' => 'Module', 
-                                    'width' => '100', 
+$columns['left']['module']  = array('label' => 'Module',
+                                    'width' => '100',
                                     'options' => array('sort' => true),
                                     'filter' => array('type' => 'select', 'value' => array('module1', 'module2', 'module3'))
                                    );
-$columns['left']['action']  = array('label' => 'Action', 
-                                    'width' => '200', 
+$columns['left']['action']  = array('label' => 'Action',
+                                    'width' => '200',
                                     'options' => array('sort' => true),
                                     'filter' => array('type' => 'select', 'value' => array('Action1','Action2','Action3'))
 
                                    );
-$columns['auto']['record']  = array('label' => 'Enregistrement', 
+$columns['auto']['record']  = array('label' => 'Enregistrement',
                                     'options' => array('sort' => true),
                                     'filter' => array('type' => 'string')
                                    );
@@ -304,16 +303,15 @@ $paramCutPage = array('nbMax' => $count,
                       'post' => array('op' => 'actionhistory'),
                       'answerby' => array(10,25,50,100,500));
 
-
 echo $skin->display_cut_page('cut_page1',$paramCutPage);
 ?>
 <div style="margin:0; padding:0; border-bottom:1px solid #c0c0c0; height:0px; font-size: 0em;"></div>
 <?php
-$skin->display_array($columns, 
-                      $values, 
-                      'array_actionlog', 
-                      array('sortable' => true, 
-                            'orderby_default' => 'timestp', 
+$skin->display_array($columns,
+                      $values,
+                      'array_actionlog',
+                      array('sortable' => true,
+                            'orderby_default' => 'timestp',
                             'sort_default' => 'DESC',
                             'page' => true)
                            );

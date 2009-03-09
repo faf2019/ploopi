@@ -26,7 +26,7 @@ function system_showgroup(typetree, gid, str)
     else dest = 'w'+gid;
 
     elt = $('n'+dest);
-    
+
     if (elt.src.indexOf('plus')  != -1) elt.src = elt.src.replace('plus', 'minus');
     else if (elt.src.indexOf('minus')  != -1) elt.src = elt.src.replace('minus', 'plus');
 
@@ -81,7 +81,6 @@ function system_roleusers_delete(roleid, userid, type)
     alert('L\'attriution du rôle a été retirée');
 }
 
-
 /* TICKETS FUNCTIONS */
 
 function system_tickets_display(ticket_id, opened, isroot, tpl_path)
@@ -112,7 +111,6 @@ function system_tickets_display(ticket_id, opened, isroot, tpl_path)
         disp.style.display='block';
     }
 }
-
 
 function system_search_next()
 {

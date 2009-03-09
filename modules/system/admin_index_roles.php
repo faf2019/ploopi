@@ -22,7 +22,7 @@
 */
 
 /**
- * Gestion des rôles 
+ * Gestion des rôles
  *
  * @package system
  * @subpackage admin
@@ -75,8 +75,6 @@ switch($op)
     break;
 }
 
-
-
 if (isset($system_roletabid)) $_SESSION['system']['roletabid'] = $system_roletabid;
 
 if (!isset($_SESSION['system']['roletabid'])) $_SESSION['system']['roletabid'] = '';
@@ -94,8 +92,6 @@ if (!empty($_GET['roleTabItem']))  $_SESSION['system']['roleTabItem'] = $_GET['r
 if (!isset($_SESSION['system']['roleTabItem'])) $_SESSION['system']['roleTabItem'] = '';
 
 echo $skin->create_tabs($tabs, $_SESSION['system']['roleTabItem']);
-
-
 
 switch($_SESSION['system']['roleTabItem'])
 {

@@ -23,7 +23,7 @@
 
 /**
  * Gestion de l'interface générale et des accès aux différentes interfaces d'administration
- * 
+ *
  * @package system
  * @subpackage admin
  * @copyright Netlor, Ovensia
@@ -34,14 +34,13 @@
 /**
  * Si l'utilisateur n'est pas gestionnaire, il n'a rien à faire ici => []
  */
-
-if (!ploopi_ismanager()) ploopi_die();
+if (!ploopi_ismanager()) ploopi_redirect('admin.php?ploopi_logout');
 else
 {
     /**
      * Initialisation du module
      */
-    
+
     ploopi_init_module('system');
 
     include_once './include/classes/group.php';
@@ -50,7 +49,7 @@ else
 
     if (!empty($_REQUEST['system_level'])) $_SESSION['system']['level'] = $_REQUEST['system_level'];
     if (empty($_SESSION['system']['level'])) $_SESSION['system']['level'] = '';
-    
+
     $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
     switch($_SESSION['system']['level'])
@@ -59,12 +58,12 @@ else
          * Historiquement les 2 cas étaient séparés (groupes d'utilisateurs / espaces de travail)
          * Ils ne le sont plus.
          */
-        
+
         case _SYSTEM_GROUPS:
         case _SYSTEM_WORKSPACES:
 
             list($workspaces, $groups) = system_getwg();
-            
+
             // init session
             if (empty($_SESSION['system']['workspaceid'])) $_SESSION['system']['workspaceid'] = 0;
             if (empty($_SESSION['system']['groupid'])) $_SESSION['system']['groupid'] = 0;

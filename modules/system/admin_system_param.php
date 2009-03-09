@@ -23,7 +23,7 @@
 
 /**
  * Interface de gestion des paramètres de modules au niveau système
- * 
+ *
  * @package system
  * @subpackage system
  * @copyright Netlor, Ovensia
@@ -63,7 +63,7 @@ if (isset($idmodule))
     $param_module->open($idmodule);
 
     $arrParam = $param_module->getvalues();
-    
+
     if (!empty($arrParam))
     {
         ?>

@@ -36,7 +36,7 @@
  * Affichage du bloc
  */
 
-echo $skin->open_simplebloc(); 
+echo $skin->open_simplebloc();
 ?>
 
 <div>
@@ -68,7 +68,6 @@ echo $skin->open_simplebloc();
             $sizeof_users = sizeof($group->getusers());
 
             // delete button if group not protected and no children
-
 
             // if (!$group->fields['protected'] && !$sizeof_groups && !$sizeof_users)
             if (!$sizeof_groups && !$sizeof_users)

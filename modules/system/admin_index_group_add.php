@@ -66,7 +66,6 @@ else
     </p>
 </div>
 
-
 <div style="text-align:right;padding:4px;">
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>

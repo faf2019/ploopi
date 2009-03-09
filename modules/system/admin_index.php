@@ -23,7 +23,7 @@
 
 /**
  * Gestion de la partie droite de l'interface d'administration des groupes d'utilisateurs et espaces de travail
- * 
+ *
  * @package system
  * @subpackage admin
  * @copyright Netlor, Ovensia
@@ -41,7 +41,7 @@ switch ($_SESSION['system']['level'])
         $group = new group();
         $group->open($groupid);
         $workspace = null;
-        
+
         $currentgroup = '';
         $childgroup = '';
 
@@ -56,20 +56,19 @@ switch ($_SESSION['system']['level'])
         }
 
         $toolbar = array();
-        $toolbar['tabGroups'] = 
+        $toolbar['tabGroups'] =
             array(
                 'title'     => _SYSTEM_LABELICON_GROUP,
                 'url'       => "admin.php?wspToolbarItem=tabGroups",
                 'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group.png"
             );
 
-        $toolbar['tabUsers'] = 
+        $toolbar['tabUsers'] =
             array(
                 'title'     => _SYSTEM_LABELICON_USERS,
                 'url'       => "admin.php?wspToolbarItem=tabUsers",
                 'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_user.png"
             );
-
 
         if (!empty($_GET['wspToolbarItem']))  $_SESSION['system']['wspToolbarItem'] = $_GET['wspToolbarItem'];
         if (!isset($_SESSION['system']['wspToolbarItem'])) $_SESSION['system']['wspToolbarItem'] = '';
@@ -122,7 +121,7 @@ switch ($_SESSION['system']['level'])
                             $clone = $group->createclone();
                             $groupid = $clone->save();
                             ploopi_create_user_action_log(_SYSTEM_ACTION_CLONEGROUP, "{$clone->fields['label']} ({$groupid})");
-    
+
                             unset($_SESSION['system']['groups']);
                             unset($_SESSION['system']['workspaces']);
                             ploopi_redirect("admin.php?groupid={$groupid}");
@@ -139,14 +138,14 @@ switch ($_SESSION['system']['level'])
                             {
                                 ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEGROUP, "{$group->fields['label']} ({$group->fields['id_group']})");
                                 $group->delete();
-    
+
                                 unset($_SESSION['system']['groups']);
                                 unset($_SESSION['system']['workspaces']);
-    
+
                                 if(!empty($group->fields['id_workspace'])) ploopi_redirect("admin.php?workspaceid={$group->fields['id_workspace']}");
                                 else ploopi_redirect("admin.php?groupid={$group->fields['id_group']}");
                             }
-                        }    
+                        }
                         ploopi_redirect('admin.php');
                     break;
 
@@ -155,7 +154,7 @@ switch ($_SESSION['system']['level'])
                     break;
                 }
             break;
-            
+
             // ---------------------
             // USER MANAGEMENT
             // ---------------------
@@ -169,7 +168,7 @@ switch ($_SESSION['system']['level'])
         $workspace = new workspace();
         $workspace->open($workspaceid);
         $group = null;
-        
+
         $currentworkspace = '';
         $childworkspace = '';
 
@@ -184,26 +183,24 @@ switch ($_SESSION['system']['level'])
         }
 
         $toolbar = array();
-        $toolbar['tabWorkspaces'] = 
+        $toolbar['tabWorkspaces'] =
             array(
                 'title'     => _SYSTEM_LABELICON_WORKSPACE,
                 'url'       => "admin.php?wspToolbarItem=tabWorkspaces",
                 'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace.png"
             );
 
-
-
         if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
         {
 
-                $toolbar['tabModules'] = 
+                $toolbar['tabModules'] =
                     array(
                         'title'     => _SYSTEM_LABELICON_MODULES,
                         'url'       => "admin.php?wspToolbarItem=tabModules",
                         'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_module.png"
                     );
 
-                $toolbar['tabParams'] = 
+                $toolbar['tabParams'] =
                     array(
                         'title'     => _SYSTEM_LABELICON_PARAMS,
                         'url'       => "admin.php?wspToolbarItem=tabParams",
@@ -211,8 +208,7 @@ switch ($_SESSION['system']['level'])
                     );
         }
 
-
-        $toolbar['tabUsers'] = 
+        $toolbar['tabUsers'] =
             array(
                 'title'     => _SYSTEM_LABELICON_AUTHORIZATIONS,
                 'url'       => "admin.php?wspToolbarItem=tabUsers",
@@ -221,7 +217,7 @@ switch ($_SESSION['system']['level'])
 
         if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
         {
-            $toolbar['tabRoles'] = 
+            $toolbar['tabRoles'] =
                 array(
                     'title'     => _SYSTEM_LABELICON_ROLES,
                     'url'       => "admin.php?wspToolbarItem=tabRoles",
@@ -251,24 +247,23 @@ switch ($_SESSION['system']['level'])
                         $group->fields['parents'] = '0;1';
 
                         $group_id = $group->save();
-                        
+
                         ploopi_create_user_action_log(_SYSTEM_ACTION_CREATEGROUP, "{$group->fields['label']} (id:{$group_id})");
-                        
+
                         $group->attachtogroup($workspaceid);
-                        
+
                         ploopi_create_user_action_log(_SYSTEM_ACTION_ATTACHGROUP, "{$group->fields['label']} (id:{$group_id}) => {$workspace->fields['label']} (id:{$workspaceid})");
-                        
+
                         unset($_SESSION['system']['groups']);
                         unset($_SESSION['system']['workspaces']);
 
                         ploopi_redirect("admin.php?groupid={$group_id}&reloadsession");
                     break;
 
-
                     case 'save_workspace' :
                         // Il faut être admin d'espace ou mieux pour pouvoir sauvegarder un espace de travail
                         if ($_SESSION['ploopi']['adminlevel'] <= _PLOOPI_ID_LEVEL_GROUPMANAGER) ploopi_redirect("admin.php?workspaceid={$workspace_id}");
-                        
+
                         $workspace = new workspace();
                         if (!empty($_GET['workspace_id']) && is_numeric($_GET['workspace_id'])) $workspace->open($_GET['workspace_id']);
 
@@ -304,12 +299,12 @@ switch ($_SESSION['system']['level'])
                                     $moduletype_id = $data[1];
                                     $module_type = new module_type();
                                     $module_type->open($moduletype_id);
-    
+
                                     ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
-    
+
                                     $module = $module_type->createinstance($workspace_id);
                                     $module_id = $module->save();
-    
+
                                     $module_workspace = new module_workspace();
                                     $module_workspace->fields['id_module'] = $module_id;
                                     $module_workspace->fields['id_workspace'] = $workspace_id;
@@ -320,9 +315,9 @@ switch ($_SESSION['system']['level'])
                                     $module_id = $data[1];
                                     $module = new module();
                                     $module->open($module_id);
-    
+
                                     ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module->fields['label']);
-    
+
                                     $module_workspace = new module_workspace();
                                     $module_workspace->fields['id_module'] = $module_id;
                                     $module_workspace->fields['id_workspace'] = $workspace_id;
@@ -547,7 +542,7 @@ switch ($_SESSION['system']['level'])
                             ploopi_create_user_action_log(_SYSTEM_ACTION_CONFIGUREMODULE, $module->fields['label']);
 
                             $module->setvalues($_POST,'module_');
-                            
+
                             if (!isset($_POST['module_active'])) $module->fields['active'] = 0;
                             if (!isset($_POST['module_visible'])) $module->fields['visible'] = 0;
                             if (!isset($_POST['module_autoconnect'])) $module->fields['autoconnect'] = 0;
@@ -555,7 +550,7 @@ switch ($_SESSION['system']['level'])
                             if (!isset($_POST['module_herited'])) $module->fields['herited'] = 0;
                             if (!isset($_POST['module_adminrestricted'])) $module->fields['adminrestricted'] = 0;
                             if (!isset($_POST['module_transverseview'])) $module->fields['transverseview'] = 0;
-                            
+
                             if (!$module->fields['shared']) $module->fields['herited'] = 0;
                             $module->save();
 
@@ -579,7 +574,7 @@ switch ($_SESSION['system']['level'])
                             ?>
                             <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
                             <?php
-                            
+
                             $module->delete();
 
                             if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
@@ -655,7 +650,6 @@ switch ($_SESSION['system']['level'])
                 include_once './modules/system/admin_index_roles.php';
             break;
 
-
             // ---------------------
             // USER MANAGEMENT
             // ---------------------
@@ -665,7 +659,7 @@ switch ($_SESSION['system']['level'])
 
         } // switch
     break;
-    
+
 }//switch
 ?>
 

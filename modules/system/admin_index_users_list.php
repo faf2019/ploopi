@@ -80,20 +80,20 @@ else
     $tabs_char = array();
 
     // Génération des onglets
-    for($i=1;$i<27;$i++) 
-        $tabs_char[$i] = 
+    for($i=1;$i<27;$i++)
+        $tabs_char[$i] =
             array(
-                'title' => chr($i+64), 
+                'title' => chr($i+64),
                 'url' => "admin.php?alphaTabItem={$i}"
             );
 
-    $tabs_char[98] = 
+    $tabs_char[98] =
         array(
-            'title' => '#', 
+            'title' => '#',
             'url' => 'admin.php?alphaTabItem=98'
         );
-    
-    $tabs_char[99] = 
+
+    $tabs_char[99] =
         array(
             'title' => '<em>tous</em>',
             'url' => 'admin.php?alphaTabItem=99'
@@ -111,7 +111,6 @@ else
     <input type="submit" name="reset" value="<?php echo _PLOOPI_RESET; ?>" class="button">
 </p>
 </form>
-
 
 <?php
 $where = array();
@@ -134,7 +133,6 @@ else
 
 $where = (empty($where)) ? '' : 'WHERE '.implode(' AND ', $where);
 
-
 switch ($_SESSION['system']['level'])
 {
     case _SYSTEM_WORKSPACES :
@@ -149,7 +147,6 @@ switch ($_SESSION['system']['level'])
                                 ploopi_workspace_user.adminlevel
 
                     FROM        ploopi_user
-
 
                     INNER JOIN  ploopi_workspace_user
                     ON          ploopi_workspace_user.id_user = ploopi_user.id
@@ -173,9 +170,7 @@ switch ($_SESSION['system']['level'])
                                 ploopi_group.id as idref,
                                 ploopi_group.label as label
 
-
                     FROM        ploopi_user
-
 
                     INNER JOIN  ploopi_group_user
                     ON          ploopi_group_user.id_user = ploopi_user.id
@@ -192,45 +187,45 @@ switch ($_SESSION['system']['level'])
 $columns = array();
 $values = array();
 
-$columns['left']['name'] = 
+$columns['left']['name'] =
     array(
-        'label' => _SYSTEM_LABEL_LASTNAME.', '._SYSTEM_LABEL_FIRSTNAME, 
-        'width' => 170, 
+        'label' => _SYSTEM_LABEL_LASTNAME.', '._SYSTEM_LABEL_FIRSTNAME,
+        'width' => 170,
         'options' => array('sort' => true)
     );
-    
-$columns['left']['login'] = 
+
+$columns['left']['login'] =
     array(
-        'label' => _SYSTEM_LABEL_LOGIN, 
-        'width' => 85, 
+        'label' => _SYSTEM_LABEL_LOGIN,
+        'width' => 85,
         'options' => array('sort' => true)
     );
-    
-if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES) 
-    $columns['left']['adminlevel'] = 
+
+if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
+    $columns['left']['adminlevel'] =
         array(
-            'label' => 'Niv.', 
-            'width' => 50, 
+            'label' => 'Niv.',
+            'width' => 50,
             'options' => array('sort' => true)
         );
-        
-$columns['left']['origin'] = 
+
+$columns['left']['origin'] =
     array(
-        'label' => _SYSTEM_LABEL_ORIGIN, 
-        'width' => 100, 
+        'label' => _SYSTEM_LABEL_ORIGIN,
+        'width' => 100,
         'options' => array('sort' => true)
     );
-    
-$columns['auto']['service'] = 
+
+$columns['auto']['service'] =
     array(
-        'label' => _SYSTEM_LABEL_SERVICE, 
-        'width' => 100, 
+        'label' => _SYSTEM_LABEL_SERVICE,
+        'width' => 100,
         'options' => array('sort' => true)
     );
-    
-$columns['actions_right']['actions'] = 
+
+$columns['actions_right']['actions'] =
     array(
-        'label' => '&nbsp;', 
+        'label' => '&nbsp;',
         'width' => 70
     );
 

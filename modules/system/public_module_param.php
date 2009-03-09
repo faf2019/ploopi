@@ -23,7 +23,7 @@
 
 /**
  * Interface publique de gestion de paramètres de modules pour un utilisateur
- * 
+ *
  * @package system
  * @subpackage public
  * @copyright Netlor, Ovensia
@@ -50,8 +50,6 @@ foreach($_SESSION['ploopi']['workspaces'] as $idw => $wksp)
         $arrModList = array_unique(array_merge($arrModList, $wksp['modules']));
     }
 }
-
-
 
 if (empty($arrModList))
 {
@@ -93,7 +91,7 @@ if (isset($idmodule))
     $param_module->open($idmodule, 0, $_SESSION['ploopi']['userid'], 1);
 
     $arrParam = $param_module->getvalues();
-    
+
     if (!empty($arrParam))
     {
         ?>

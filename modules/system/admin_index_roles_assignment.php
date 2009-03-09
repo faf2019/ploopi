@@ -21,7 +21,7 @@
 */
 
 /**
- * Interface de gestion des affectations de rôles 
+ * Interface de gestion des affectations de rôles
  *
  * @package system
  * @subpackage admin
@@ -69,7 +69,6 @@ $sql =  "
 
 $db->query($sql);
 
-
 $columns = array();
 $values = array();
 $c = 0;
@@ -93,7 +92,7 @@ while($row = $db->fetchrow())
         $values[$c]['style'] = 'background-color:#ffe0e0;';
         $arrRole = $row;
     }
-    
+
     $values[$c]['description'] = 'Attribuer ce rôle';
     $values[$c]['link'] = ploopi_urlencode("admin.php?op=assign_role&roleid={$row['id']}");
     $c++;
@@ -107,15 +106,15 @@ if ($op == 'assign_role' && !empty($_GET['roleid']) && is_numeric($_GET['roleid'
 {
     echo $skin->open_simplebloc("Gestion des attributions du rôle &laquo; {$arrRole['label']} &raquo; du module &laquo; {$arrRole['module_label']} &raquo;");
     ?>
-    
+
     <p class="ploopi_va" style="padding:4px; background-color:#e0e0e0; border-bottom:1px solid #c0c0c0;">
-        <span style="font-weight:bold;">Rechercher un utilisateur ou un groupe :</span> 
+        <span style="font-weight:bold;">Rechercher un utilisateur ou un groupe :</span>
         <input type="text" id="system_roleusers_filter" class="text">
         <img style="cursor:pointer;" onclick="javascript:system_roleusers_search(<?php echo $_GET['roleid']; ?>);" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
     </p>
-   
+
     <div id="system_roleusers_search_result"></div>
-   
+
     <div id="system_roleusers_list">
     <?php
     $roleid = $_GET['roleid'];

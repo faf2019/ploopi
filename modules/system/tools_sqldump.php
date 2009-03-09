@@ -24,7 +24,7 @@
 /**
  * Outil permettant de créer un dump SQL de la base de données sans passer par les outils en ligne de commande.
  * Attention, ce script n'est pas adaptés aux grosses bases de données.
- * 
+ *
  * @package system
  * @subpackage system_tools
  * @copyright Ovensia
@@ -96,7 +96,7 @@ function system_get_table_def($fp, $db, $table, $crlf)
     }
 
     $schema_create .= "{$crlf});{$crlf}{$crlf}";
-    
+
     fwrite ($fp, stripslashes($schema_create));
 
     return true;
@@ -137,7 +137,7 @@ function system_get_table_content($fp, $db, $table, $crlf)
         fwrite ($fp, htmlspecialchars(trim($schema_insert).";{$crlf}"));
         $i++;
     }
-    
+
     return true;
 }
 
@@ -150,7 +150,7 @@ else
     /**
      * Génération du fichier SQL dans le dossier data/tmp
      */
-    
+
     $filepath = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp';
     ploopi_makedir($filepath);
 
@@ -186,13 +186,13 @@ else
         system_get_table_content($fp, $db, $table, $crlf);
         $i++;
     }
-    
+
     fclose($fp);
     
     /**
      * Génération du fichier zip
      */
-    
+
     
     $zip = new ZipArchive();
     
@@ -200,9 +200,9 @@ else
     {
         if (!$zip->addFile($filename_sql, 'dump.sql')) exit('Erreur lors de l\'enregistrement');
         $zip->close();
-        
+
         unlink($filename_zip);
-        
+
         ploopi_downloadfile($filename_zip, 'dump.zip', true, true);
     }
 }

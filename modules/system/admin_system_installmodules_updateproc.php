@@ -68,7 +68,6 @@ else
     $srcfiles =     "{$modpath}/files";
     $destfiles =    "./modules/{$_GET['installmoduletype']}";
 
-
     $arrSqlUpdates = array();
 
     if (is_dir($sqlpath))
@@ -308,7 +307,6 @@ else
 
             $rapport[] = array('operation' => 'Mise à jour des tables/champs', 'detail' => implode('<br />', $detail), 'res' => $testok);
 
-
             // =============
             // OPERATION 4 : Chargement de la métabase
             // =============
@@ -349,7 +347,6 @@ else
     $columns['right']['result']     = array('label' => 'Etat', 'width' => '60', 'options' => array('sort' => true));
 
     $c = 0;
-
 
     foreach($rapport as $op_detail)
     {

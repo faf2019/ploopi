@@ -24,7 +24,7 @@
 /**
  * Interface de modification d'un espace de travail.
  * Permet de copier/cloner/supprimer.
- * 
+ *
  * @package system
  * @subpackage admin
  * @copyright Netlor, Ovensia
@@ -55,16 +55,16 @@ echo $skin->open_simplebloc();
             <?php
             if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
             {
-                $toolbar_workspace[] = 
+                $toolbar_workspace[] =
                     array(
                         'title'     => str_replace('<LABEL>','<br /><b>'.$childworkspace.'</b>', _SYSTEM_LABEL_CREATE_CHILD_WORKSPACE),
                         'url'       => "admin.php?op=child&gworkspaceid=$workspaceid",
                         'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_child.png",
                     );
-    
+
                 if ($_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN && $_SESSION['ploopi']['workspaceid'] == $workspaceid)
                 {
-                    $toolbar_workspace[] = 
+                    $toolbar_workspace[] =
                         array(
                             'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_CREATE_CLONE_WORKSPACE),
                             'url'       => 'admin.php',
@@ -74,7 +74,7 @@ echo $skin->open_simplebloc();
                 }
                 else
                 {
-                    $toolbar_workspace[] = 
+                    $toolbar_workspace[] =
                         array(
                             'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_CREATE_CLONE_WORKSPACE),
                             'url'       => "admin.php?op=clone&workspaceid=$workspaceid",
@@ -84,11 +84,11 @@ echo $skin->open_simplebloc();
 
                 $sizeof_workspaces = sizeof($workspace->getchildren());
                 $sizeof_users = sizeof($workspace->getusers());
-    
+
                 // delete button if group not protected and no children
                 if (!$workspace->fields['protected'] && !$sizeof_workspaces && !$sizeof_users)
                 {
-                    $toolbar_workspace[] = 
+                    $toolbar_workspace[] =
                         array(
                             'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_DELETE_WORKSPACE),
                             'url'       => "admin.php?op=delete&workspaceid=$workspaceid",
@@ -102,27 +102,25 @@ echo $skin->open_simplebloc();
                         $msg = '';
                         if ($sizeof_workspaces) $msg = _SYSTEM_MSG_INFODELETE_GROUPS;
                         elseif ($sizeof_users) $msg = _SYSTEM_MSG_INFODELETE_USERS;
-    
-                        $toolbar_workspace[] = 
+
+                        $toolbar_workspace[] =
                             array(
                                 'title'     => str_replace('<LABEL>','<br /><b>'.$currentworkspace.'</b>', _SYSTEM_LABEL_DELETE_WORKSPACE),
                                 'url'       => 'admin.php',
                                 'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_workspace_delete_gray.png",
                                 'confirm'   => $msg
                             );
-    
+
                     }
                 }
             }
-            
-            $toolbar_workspace[] = 
+
+            $toolbar_workspace[] =
                 array(
                     'title'     => _SYSTEM_LABEL_CREATE_GROUP,
                     'url'       => "admin.php?op=groupchild&workspaceid=$workspaceid",
                     'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_child.png",
                 );
-
-
 
             echo $skin->create_toolbar($toolbar_workspace, $x = 0, false, true);
             ?>
@@ -378,7 +376,7 @@ echo $skin->open_simplebloc();
                 }
                 else echo '<span>'.htmlentities($workspace->fields['iprules']).'</span>';
                 ?>
-                
+
             </p>
         </div>
 

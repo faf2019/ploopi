@@ -22,7 +22,7 @@
 */
 
 /**
- * Interface de modification d'un utilisateur 
+ * Interface de modification d'un utilisateur
  *
  * @package system
  * @subpackage admin
@@ -44,7 +44,7 @@ if (empty($_GET['user_id']) || !is_numeric($_GET['user_id']) || !$user->open($_G
 {
     $user->init_description();
     $user->fields['servertimezone'] = 1;
-    
+
     // Récuération des données de l'utilisateur (problème lors de la création) => pour remplir le formulaire
     if (!empty($_SESSION['system']['save_user']))
     {
@@ -52,7 +52,7 @@ if (empty($_GET['user_id']) || !is_numeric($_GET['user_id']) || !$user->open($_G
         {
             if (isset($_SESSION['system']['save_user']["user_{$field}"])) $user->fields[$field] = $_SESSION['system']['save_user']["user_{$field}"];
         }
-    }    
+    }
 }
 
 // detect server timezone
@@ -77,11 +77,9 @@ if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
     }
 }
 
-
-
-$arrFormurl[] = 'op=save_user'; 
-if (isset($_REQUEST['confirm'])) $arrFormurl[] = 'confirm'; 
-if (!$user->new)  $arrFormurl[] = "user_id={$user->fields['id']}"; 
+$arrFormurl[] = 'op=save_user';
+if (isset($_REQUEST['confirm'])) $arrFormurl[] = 'confirm';
+if (!$user->new)  $arrFormurl[] = "user_id={$user->fields['id']}";
 ?>
 <form name="form_modify_user" action="<?php echo ploopi_urlencode('admin.php?'.implode('&',$arrFormurl)); ?>" method="POST" enctype="multipart/form-data" onsubmit="javascript:return system_user_validate(this, <?php echo ($user->new) ? 'true' : 'false'; ?>)">
 <?php
@@ -115,82 +113,80 @@ if (isset($_REQUEST['confirm']))
     <div style="margin:10px;">
     <?php
     $db->query("
-        SELECT  
-            id, 
+        SELECT
+            id,
             login,
-            lastname, 
-            firstname, 
-            email, 
-            service, 
-            office, 
-            function 
-            
-        FROM 
+            lastname,
+            firstname,
+            email,
+            service,
+            office,
+            function
+
+        FROM
             ploopi_user
-             
-        WHERE 
-            lastname = '{$_SESSION['system']['save_user']['user_lastname']}' 
-        AND 
+
+        WHERE
+            lastname = '{$_SESSION['system']['save_user']['user_lastname']}'
+        AND
             firstname = '{$_SESSION['system']['save_user']['user_firstname']}'
     ");
-        
+
     $arrColumns = array();
     $arrValues = array();
-    
-    $arrColumns['left']['name'] = 
+
+    $arrColumns['left']['name'] =
         array(
-            'label' => _SYSTEM_LABEL_LASTNAME.', '._SYSTEM_LABEL_FIRSTNAME, 
-            'width' => 150, 
+            'label' => _SYSTEM_LABEL_LASTNAME.', '._SYSTEM_LABEL_FIRSTNAME,
+            'width' => 150,
             'options' => array('sort' => true)
         );
-        
-    $arrColumns['left']['login'] = 
+
+    $arrColumns['left']['login'] =
         array(
-            'label' => _SYSTEM_LABEL_LOGIN, 
-            'width' => 100, 
+            'label' => _SYSTEM_LABEL_LOGIN,
+            'width' => 100,
             'options' => array('sort' => true)
         );
-            
-    $arrColumns['left']['service'] = 
+
+    $arrColumns['left']['service'] =
         array(
-            'label' => _SYSTEM_LABEL_SERVICE, 
-            'width' => 100, 
+            'label' => _SYSTEM_LABEL_SERVICE,
+            'width' => 100,
             'options' => array('sort' => true)
         );
-        
-    $arrColumns['left']['office'] = 
+
+    $arrColumns['left']['office'] =
         array(
-            'label' => _SYSTEM_LABEL_OFFICE, 
-            'width' => 100, 
+            'label' => _SYSTEM_LABEL_OFFICE,
+            'width' => 100,
             'options' => array('sort' => true)
         );
-        
-        
-    $arrColumns['left']['function'] = 
+
+    $arrColumns['left']['function'] =
         array(
-            'label' => _SYSTEM_LABEL_FUNCTION, 
-            'width' => 100, 
+            'label' => _SYSTEM_LABEL_FUNCTION,
+            'width' => 100,
             'options' => array('sort' => true)
         );
-        
-    $arrColumns['auto']['origin'] = 
+
+    $arrColumns['auto']['origin'] =
         array(
-            'label' => _SYSTEM_LABEL_ORIGIN, 
+            'label' => _SYSTEM_LABEL_ORIGIN,
             'options' => array('sort' => true)
         );
-        
-        
+
     while ($row = $db->fetchrow())
     {
         $objUser = new user();
         $objUser->fields['id'] = $row['id'];
-        
+
         $arrGroups = $objUser->getgroups();
         $currentGroup = current($arrGroups);
-        
-        $arrValues[] = 
+
+        $arrValues[] =
             array(
-                'values' => 
+                'values' =>
                     array(
                         'name' =>
                             array(
@@ -220,10 +216,9 @@ if (isset($_REQUEST['confirm']))
                 'description' => _SYSTEM_LABEL_ATTACH,
                 'link' => ploopi_urlencode("admin.php?op=attach_user&user_id={$row['id']}")
             );
-        
-            
+
             /*
-        $values[$c]['values']['origin'] = 
+        $values[$c]['values']['origin'] =
             array(
                 'label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.htmlentities($currentgroup['label']).'</a>'
             );*/
@@ -255,7 +250,7 @@ if (isset($_REQUEST['confirm']))
                     <p>
                         <label><?php echo _SYSTEM_LABEL_CIVILITY; ?>:</label>
                         <select class="select" name="user_civility" style="width:100px;" tabindex="3">
-                            <option value=""></option>                
+                            <option value=""></option>
                             <?php
                             foreach ($ploopi_civility as $value)
                             {
@@ -379,17 +374,17 @@ if (isset($_REQUEST['confirm']))
                         <label><?php echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
                         <input style="width:16px;" type="checkbox" id="user_ticketsbyemail" name="user_ticketsbyemail" value="1" <?php if ($user->fields['ticketsbyemail']) echo 'checked'; ?> tabindex="26" />
                     </p>
-                        
+
                     <?php
                     // get server offset
                     $offset = timezone_offset_get($server_timezone, $date);
-                    
+
                     $s = ($offset>0) ? '+' : '-';
-                    
+
                     $hh = floor(abs($offset) / 3600);
-                    $mm = floor((abs($offset) % 3600) / 60);            
+                    $mm = floor((abs($offset) % 3600) / 60);
                     ?>
-        
+
                     <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_servertimezone');">
                         <label><?php echo _SYSTEM_LABEL_SERVERTIMEZONE; ?>:</label>
                         <span>
@@ -397,34 +392,34 @@ if (isset($_REQUEST['confirm']))
                             <?php echo "{$server_timezoneid} (". (($offset == 0) ? 'UTC' : sprintf("UTC %s%02dh%02d",$s, $hh, $mm)). ")"; ?>
                         </span>
                     </p>
-        
+
                     <p id="user_timezone_choice" style="display:<?php echo ($user->fields['servertimezone']) ? 'none' : 'block'; ?>">
                         <label><?php echo _SYSTEM_LABEL_TIMEZONE; ?>:</label>
                         <?php
                         $timezone_abbreviations = timezone_abbreviations_list();
                         //ploopi_print_r($timezone_abbreviations);
-                        
+
                         foreach($timezone_abbreviations as $value)
                         {
                             foreach($value as $key => $value)
                             {
-                                if (!empty($value['timezone_id']) && strpos($value['timezone_id'], '/') !== false) 
+                                if (!empty($value['timezone_id']) && strpos($value['timezone_id'], '/') !== false)
                                 {
                                     $objDateTimeZone = timezone_open($value['timezone_id']);
-                                    
+
                                     if ($objDateTimeZone !== false)
                                     {
                                         $offset = timezone_offset_get($objDateTimeZone, $date);
-                                        
+
                                         //don't use $value['offset'] !;
-                                        
+
                                         $s = ($offset>0) ? '+' : '-';
-                                        
+
                                         $hh = floor(abs($offset) / 3600);
                                         $mm = floor((abs($offset) % 3600) / 60);
-                                        
-                                        $arrZones[$value['timezone_id']] = 
-                                            array(   
+
+                                        $arrZones[$value['timezone_id']] =
+                                            array(
                                                 'offset' => $offset,
                                                 'label' => str_replace(array('/', '_'), array(' / ', ' '), $value['timezone_id']),
                                                 'offset_display' => ($offset == 0) ? 'UTC' : sprintf("GMT %s%02dh%02d",$s, $hh, $mm)
@@ -433,9 +428,9 @@ if (isset($_REQUEST['confirm']))
                                 }
                             }
                         }
-        
+
                         ksort($arrZones);
-                        
+
                         ?>
                         <select class="select" name="user_timezone"  tabindex="28">
                         <?php
@@ -500,7 +495,7 @@ if (isset($_REQUEST['confirm']))
                         <textarea class="text" name="user_comments" tabindex="30"><?php echo htmlentities($user->fields['comments']); ?></textarea>
                     </p>
                 </div>
-            </fieldset>            
+            </fieldset>
         </div>
     </div>
 </div>
@@ -530,5 +525,5 @@ if (isset($_REQUEST['confirm']))
             $('usernewpass_confirm').value = '';
         }
     );
-        
+
 </script>

@@ -23,7 +23,7 @@
 
 /**
  * Interface publique du module système (tickets, annotations, recherche, etc..)
- * 
+ *
  * @package system
  * @subpackage public
  * @copyright Netlor, Ovensia
@@ -49,11 +49,11 @@ switch($op)
     case 'tickets':
         include './modules/system/public_tickets.php';
     break;
-    
+
     case 'annotation':
         include './modules/system/public_annotations.php';
     break;
-    
+
     case 'paramsave':
         if (!empty($_POST['idmodule']) && is_numeric($_POST['idmodule']))
         {
@@ -81,10 +81,10 @@ switch($op)
     case 'save_user':
         $user = new user();
         $user->open($_SESSION['ploopi']['userid']);
-        
+
         if (!isset($_POST['user_ticketsbyemail'])) $user->fields['ticketsbyemail'] = 0;
         if (!isset($_POST['user_servertimezone'])) $user->fields['servertimezone'] = 0;
-        
+
         $user->setvalues($_POST,'user_');
 
         // affectation nouveau password
@@ -100,16 +100,16 @@ switch($op)
         }
 
         $user->save();
-        
-        if (!empty($_SESSION['system']['user_photopath'])) 
+
+        if (!empty($_SESSION['system']['user_photopath']))
         {
             ploopi_makedir(_PLOOPI_PATHDATA._PLOOPI_SEP.'system');
-            
+
             // photo temporaire présente => copie dans le dossier définitif
             rename($_SESSION['system']['user_photopath'], $user->getphotopath());
             unset($_SESSION['system']['user_photopath']);
         }
-        
+
         if ($passwordok) ploopi_redirect("admin.php?op=profile&reloadsession");
         else ploopi_redirect("admin.php?op=profile&error=password");
     break;

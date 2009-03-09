@@ -31,7 +31,6 @@
  * @author Stéphane Escaich
  */
 
-
 /**
  * Construction de la barre d'icones
  */

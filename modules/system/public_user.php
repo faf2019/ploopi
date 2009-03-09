@@ -23,7 +23,7 @@
 
 /**
  * Interface publique de modification d'un profil utilisateur
- * 
+ *
  * @package system
  * @subpackage public
  * @copyright Netlor, Ovensia
@@ -45,7 +45,7 @@ function user_validate(form)
         else
         {
             rep = ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+form.usernewpass.value, false, false, 'POST');
-            
+
             if (rep == 0)
             {
                 alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractères,\nun caractère minuscule,\nun caractère majuscule,\nun chiffre et un caractère de ponctuation');
@@ -65,14 +65,14 @@ function user_validate(form)
 // Suppression de la variable de stockage de la photo temporaire
 if (isset($_SESSION['system']['user_photopath'])) unset($_SESSION['system']['user_photopath']);
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_MYACCOUNT); 
+echo $skin->open_simplebloc(_SYSTEM_LABEL_MYACCOUNT);
 
 /**
  * Ouverture de l'instance de l'utilisateur à modifier
  */
 $user = new user();
 $user->open($_SESSION['ploopi']['userid']);
-                
+
 // detect server timezone
 $date = date_create();
 $server_timezone = date_timezone_get($date);
@@ -122,7 +122,7 @@ if (isset($error))
                     <p>
                         <label><?php echo _SYSTEM_LABEL_CIVILITY; ?>:</label>
                         <select class="select" name="user_civility" style="width:100px;" tabindex="3">
-                            <option value=""></option>                
+                            <option value=""></option>
                             <?php
                             foreach ($ploopi_civility as $value)
                             {
@@ -203,7 +203,7 @@ if (isset($error))
             </fieldset>
         </div>
     </div>
-    
+
     <div style="float:left;width:49%;">
         <div style="padding:2px;">
             <fieldset class="fieldset">
@@ -233,18 +233,17 @@ if (isset($error))
                         <label><?php echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
                         <input style="width:16px;" type="checkbox" id="user_ticketsbyemail" name="user_ticketsbyemail" value="1" <?php if ($user->fields['ticketsbyemail']) echo 'checked'; ?> tabindex="26" />
                     </p>
-                        
-                        
+
                     <?php
                     // get server offset
                     $offset = timezone_offset_get($server_timezone, $date);
-                    
+
                     $s = ($offset>0) ? '+' : '-';
-                    
+
                     $hh = floor(abs($offset) / 3600);
-                    $mm = floor((abs($offset) % 3600) / 60);            
+                    $mm = floor((abs($offset) % 3600) / 60);
                     ?>
-        
+
                     <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_servertimezone');">
                         <label><?php echo _SYSTEM_LABEL_SERVERTIMEZONE; ?>:</label>
                         <span>
@@ -252,34 +251,34 @@ if (isset($error))
                             <?php echo "{$server_timezoneid} (". (($offset == 0) ? 'UTC' : sprintf("UTC %s%02dh%02d",$s, $hh, $mm)). ")"; ?>
                         </span>
                     </p>
-        
+
                     <p id="user_timezone_choice" style="display:<?php echo ($user->fields['servertimezone']) ? 'none' : 'block'; ?>">
                         <label><?php echo _SYSTEM_LABEL_TIMEZONE; ?>:</label>
                         <?php
                         $timezone_abbreviations = timezone_abbreviations_list();
                         //ploopi_print_r($timezone_abbreviations);
-                        
+
                         foreach($timezone_abbreviations as $value)
                         {
                             foreach($value as $key => $value)
                             {
-                                if (!empty($value['timezone_id']) && strpos($value['timezone_id'], '/') !== false) 
+                                if (!empty($value['timezone_id']) && strpos($value['timezone_id'], '/') !== false)
                                 {
                                     $objDateTimeZone = timezone_open($value['timezone_id']);
-                                    
+
                                     if ($objDateTimeZone !== false)
                                     {
                                         $offset = timezone_offset_get($objDateTimeZone, $date);
-                                        
+
                                         //don't use $value['offset'] !;
-                                        
+
                                         $s = ($offset>0) ? '+' : '-';
-                                        
+
                                         $hh = floor(abs($offset) / 3600);
                                         $mm = floor((abs($offset) % 3600) / 60);
-                                        
-                                        $arrZones[$value['timezone_id']] = 
-                                            array(   
+
+                                        $arrZones[$value['timezone_id']] =
+                                            array(
                                                 'offset' => $offset,
                                                 'label' => str_replace(array('/', '_'), array(' / ', ' '), $value['timezone_id']),
                                                 'offset_display' => ($offset == 0) ? 'UTC' : sprintf("GMT %s%02dh%02d",$s, $hh, $mm)
@@ -288,9 +287,9 @@ if (isset($error))
                                 }
                             }
                         }
-        
+
                         ksort($arrZones);
-                        
+
                         ?>
                         <select class="select" name="user_timezone"  tabindex="28">
                         <?php
@@ -332,7 +331,7 @@ if (isset($error))
                         <textarea class="text" name="user_comments" tabindex="30"><?php echo htmlentities($user->fields['comments']); ?></textarea>
                     </p>
                 </div>
-            </fieldset>            
+            </fieldset>
         </div>
     </div>
 </div>

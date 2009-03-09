@@ -23,7 +23,7 @@
 
 /**
  * Fonctions javascript dynamique du module Système
- * 
+ *
  * @package system
  * @subpackage javascript
  * @copyright Netlor, Ovensia

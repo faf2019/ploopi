@@ -22,7 +22,7 @@
 */
 
 /**
- * Interface de gestion des modules d'un espace de travail. 
+ * Interface de gestion des modules d'un espace de travail.
  * Permet d'instancier, hériter, modifier la configuration d'un module.
  *
  * @package system
@@ -30,7 +30,7 @@
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @todo supprimer les <table>
  */
 
@@ -122,11 +122,9 @@ foreach ($ownmodules as $index => $module)
         $values[$c]['values']['herited'] = array('label' => $herited);
     }
 
-
     $values[$c]['values']['actions'] = array('label' => "{$modify}{$delete}", 'style' => 'text-align:center;');
     $c++;
 }
-
 
 $skin->display_array($columns, $values, 'array_ownmodules', array('sortable' => true, 'orderby_default' => 'position'));
 
@@ -136,7 +134,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
 {
     $module = new module();
     $module->open($_GET['moduleid']);
-    
+
     echo '<a name="modify"></a>';
     echo $skin->open_simplebloc(str_replace('<MODULE>',$module->fields['label'],_SYSTEM_LABEL_MODULE_PROPERTIES));
     ?>
@@ -213,8 +211,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 {
                     if ($module->fields['viewmode'] == $id) $sel = 'selected';
                     else $sel = '';
-                    
-                    
+
                     ?>
                     <option <?php if ($module->fields['viewmode'] == $id) echo 'selected="selected"'; ?> value="<?php echo $id; ?>"><?php echo $viewmode; ?></option>
                     <?php
@@ -233,7 +230,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
         </div>
         <div style="clear:both;text-align:right;padding:4px;">
             <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="10" />
-        </div>        
+        </div>
     </div>
     </form>
     <script type="text/javascript">
@@ -249,11 +246,9 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
 
 echo $skin->open_simplebloc(_SYSTEM_LABEL_GROUP_USABLE_MODULES);
 
-
 $columns = array();
 $values = array();
 $c = 0;
-
 
 $columns['left']['type']        = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '150', 'options' => array('sort' => true));
 $columns['auto']['desc']        = array('label' => _SYSTEM_LABEL_DESCRIPTION, 'options' => array('sort' => true));

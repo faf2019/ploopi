@@ -23,7 +23,7 @@
 
 /**
  * Fonctions du module Système
- * 
+ *
  * @package system
  * @subpackage global
  * @copyright Netlor, Ovensia
@@ -52,7 +52,7 @@ function system_mergegroups($array1, $array2)
 function system_getwg()
 {
     global $db;
-    
+
     /**
      * Construction de l'arbre des espaces s'il n'existe pas déjà, sinon on le lit en session
      */
@@ -63,9 +63,9 @@ function system_getwg()
         /**
          * Recherche de tous les espaces
          */
-        
+
         $select = "SELECT * FROM ploopi_workspace ORDER BY depth,label";
-        
+
         $result = $db->query($select);
         while ($fields = $db->fetchrow($result))
         {
@@ -73,7 +73,7 @@ function system_getwg()
              * true si l'espace est ajouté à l'arbre des espaces
              */
             $add = true;
-            
+
             /**
              * Test du niveau d'accréditation (adminlevel) pour déterminer quels sont les espaces accessibles pour l'utilisateur
              */
@@ -101,12 +101,11 @@ function system_getwg()
         $_SESSION['system']['workspaces'] = $workspaces;
     }
     else $workspaces = $_SESSION['system']['workspaces'];
-  
 
     /**
      * Construction de l'arbre des groupes, complétion de l'arbre des espaces
      */
-    
+
     if (empty($_SESSION['system']['groups']) || (!empty($_SESSION['system']['groups']['workspaceid']) && $_SESSION['system']['groups']['workspaceid'] != $_SESSION['ploopi']['workspaceid']))
     {
         $groups = array('list' => array(), 'tree' => array(), 'workspace_tree' => array(), 'workspaceid' => $_SESSION['ploopi']['workspaceid']);
@@ -153,7 +152,7 @@ function system_getwg()
                 }
             }
         }
-        
+
         foreach($workspaces['list'] as $idw => $workspace)
         {
             // récupération des sous-groupes
@@ -169,7 +168,7 @@ function system_getwg()
                     }
                 }
             }
-            
+
             // Héritage des partages
             // Des groupes peuvent être partagés par les espaces parents => on les rattache aussi comme groupes de l'espace
             if (isset($workspaces['tree'][$idw]) && !empty($workspaces['list'][$idw]['groups']))
@@ -209,12 +208,12 @@ function system_getwg()
 
 function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
 {
-    
+
     global $workspaces;
     global $groups;
     global $workspaceid;
     global $groupid;
-    
+
     $html = '';
 
     if (!empty($workspaceid) && isset($workspaces['list'][$workspaceid])) $workspacesel = $workspaces['list'][$workspaceid];
@@ -242,10 +241,10 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                     // group opened if parents array intersects
                     $isgroupopened = sizeof(array_intersect_assoc($gselparents, $testparents)) == sizeof($testparents);
                     $islast = ((!isset($groups['workspace_tree'][$from_wid]) || $c == sizeof($groups['workspace_tree'][$from_wid])-1) && !isset($workspaces['tree'][$from_wid]));
-                    
+
                     $node = '';
                     $bg = '';
-                    
+
                     if ($isgroupsel) $style_sel = 'bold';
                     else $style_sel = 'none';
 
@@ -260,12 +259,12 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                             else $typenode = 'plus';
                         }
 
-                        if (!$islast) 
+                        if (!$islast)
                         {
                             $typenode .= 'bottom';
                             $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/treeview/line.png) 0 0 repeat-y;";
                         }
-                        
+
                         $node = "<a onclick=\"javascript:system_showgroup('groups', '{$gid}', '');\" href=\"javascript:void(0);\"><img id=\"ng{$group['id']}\" style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$typenode}.png\" /></a>";
                     }
 
@@ -292,7 +291,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                     $c++;
                 }
             }
-            
+
             // workspaces
             if (isset($workspaces['tree'][$from_wid]))
             {
@@ -328,12 +327,12 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                             else $typenode = 'plus';
                         }
 
-                        if (!$islast) 
+                        if (!$islast)
                         {
                             $typenode .= 'bottom';
                             $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/treeview/line.png) 0 0 repeat-y;";
                         }
-                        
+
                         $node = "<a onclick=\"javascript:system_showgroup('workspaces', '{$wid}', '');\" href=\"javascript:void(0);\"><img id=\"nw{$workspace['id']}\" style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$typenode}.png\" /></a>";
                     }
 
@@ -359,7 +358,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                     $c++;
                 }
             }
-            
+
         break;
 
         case 'groups':
@@ -395,7 +394,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                         else $style_sel = 'none';
 
                         $icon = 'group';
-                        
+
                         if ($group['depth'] > 2)
                         {
                             $typenode = 'join';
@@ -404,13 +403,13 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                                 if ($isgroupsel || $isgroupopened) $typenode = 'minus';
                                 else $typenode = 'plus';
                             }
-    
-                            if (!$islast) 
+
+                            if (!$islast)
                             {
                                 $typenode .= 'bottom';
                                 $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/treeview/line.png) 0 0 repeat-y;";
                             }
-                            
+
                             $node = "<a onclick=\"javascript:system_showgroup('groups', '{$gid}', '');\" href=\"javascript:void(0);\"><img id=\"ng{$group['id']}\" style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$typenode}.png\" /></a>";
                         }
 
@@ -419,7 +418,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                         if ($isgroupsel || $isgroupopened || ($group['depth'] == 2 && $group['id_workspace'] < 2)) $html_rec = system_build_tree('groups', 0, $gid);
 
                         $display = ($html_rec == '') ? 'none' : 'block';
-                        
+
                         $html .=    "
                                     <div style=\"overflow:auto;{$bg}\">
                                         <div>
@@ -614,7 +613,6 @@ function system_tickets_displayresponses($parents, $tickets, $rootid)
         <?php
     }
 }
-
 
 function system_serverload_getcolor($min, $max, $x)
 {

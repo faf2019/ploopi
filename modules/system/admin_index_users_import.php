@@ -30,7 +30,7 @@
  * @copyright Netlor
  * @license GNU General Public License (GPL)
  * @author Benjamin Ganivet
- * 
+ *
  * @todo Améliorer l'interface et les fonctionnalités
  */
 

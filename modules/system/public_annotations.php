@@ -23,7 +23,7 @@
 
 /**
  * Interface de gestion des annotations
- * 
+ *
  * @package system
  * @subpackage public
  * @copyright Netlor, Ovensia
@@ -80,7 +80,6 @@ switch($op)
 
                 ?>
             </div>
-
 
             <div id="system_annotation_list">
                 <?php

@@ -153,40 +153,40 @@ echo $skin->open_simplebloc();
     $sharedmodules = $child->getsharedmodules(false);
     $heritedmodules = $child->getsharedmodules(true);
     $installedmodules = system_getinstalledmodules();
-    
+
     $columns = array();
     $values = array();
-    
-    $columns['left']['check'] = 
+
+    $columns['left']['check'] =
         array(
-            'label' => '&nbsp;', 
+            'label' => '&nbsp;',
             'width' => 44,
             'options' => array('sort' => true)
         );
-    
-    $columns['left']['label'] = 
+
+    $columns['left']['label'] =
         array(
-            'label' => _SYSTEM_LABEL_MODULENAME, 
-            'width' => 100, 
+            'label' => _SYSTEM_LABEL_MODULENAME,
+            'width' => 100,
             'options' => array('sort' => true)
         );
-        
-    $columns['left']['type'] = 
+
+    $columns['left']['type'] =
         array(
-            'label' => _SYSTEM_LABEL_MODULETYPE, 
-            'width' => 100, 
+            'label' => _SYSTEM_LABEL_MODULETYPE,
+            'width' => 100,
             'options' => array('sort' => true)
         );
-        
-    $columns['auto']['description'] = 
+
+    $columns['auto']['description'] =
         array(
-            'label' => _SYSTEM_LABEL_DESCRIPTION, 
+            'label' => _SYSTEM_LABEL_DESCRIPTION,
             'options' => array('sort' => true)
         );
-        
+
       foreach ($sharedmodules AS $instanceid => $instance)
       {
-        $values[]['values'] = 
+        $values[]['values'] =
             array(
                 'check' => array('label' => '<input type="checkbox" name="heritedmodule[]" value="SHARED,'.$instanceid.'" '.(isset($heritedmodules[$instanceid]) ? 'checked="checked"' : '').'>', 'sort_label' => isset($heritedmodules[$instanceid]) ? '0' : '1'),
                 'type' => array('label' => htmlentities($instance['moduletype'])),
@@ -197,7 +197,7 @@ echo $skin->open_simplebloc();
 
       foreach ($installedmodules AS $index => $moduletype)
       {
-        $values[]['values'] = 
+        $values[]['values'] =
             array(
                 'check' => array('label' => '<input type="checkbox" name="heritedmodule[]" value="NEW,'.$moduletype['id'].'">', 'sort_label' => '9'),
                 'type' => array('label' => htmlentities($moduletype['label'])),
@@ -205,12 +205,11 @@ echo $skin->open_simplebloc();
                 'description' => array('label' => htmlentities($moduletype['description']))
             );
       }
-        
+
     $skin->display_array($columns, $values, 'array_choosemodules', array('sortable' => true, 'orderby_default' => 'check'));
 
     ?>
 </div>
-
 
 <div style="clear:both;float:right;padding:4px;">
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">

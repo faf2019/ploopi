@@ -22,7 +22,7 @@
 */
 
 /**
- * Interface de gestion des paramètres de modules. 
+ * Interface de gestion des paramètres de modules.
  *
  * @package system
  * @subpackage admin
@@ -57,7 +57,7 @@ else
         <?php
         foreach($modules as $idm => $mod)
         {
-            
+
             if (empty($idmodule)) $idmodule = $idm;
             ?>
                 <option <?php if ($idmodule == $idm) echo 'selected'; ?> value="<?php echo $idm; ?>"><?php echo "{$mod['instancename']} ({$mod['label']})"; ?></option>
@@ -78,9 +78,9 @@ if (isset($idmodule))
     echo $skin->open_simplebloc(_SYSTEM_MODULEPARAM);
 
     $param_module->open($idmodule, $workspaceid);
-    
+
     $arrParam = $param_module->getvalues();
-    
+
     if (!empty($arrParam))
     {
         ?>

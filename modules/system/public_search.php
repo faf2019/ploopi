@@ -22,7 +22,7 @@
 
 /**
  * Interface de recherche du moteur de recherche intégrale
- * 
+ *
  * @package system
  * @subpackage public
  * @copyright Netlor, Ovensia
@@ -57,7 +57,7 @@ echo $skin->open_simplebloc();
 <div class="dims_va" style="padding:4px;">
     <span>Mots Clés:</span>
     <input type="text" class="text" name="system_search_keywords" id="system_search_keywords" value="<?php echo htmlentities($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']); ?>" />
-    
+
     <span>Module:</span>
     <select class="select" name="system_search_module" id="system_search_module" />
     <option value="">(tous)</option>
@@ -89,7 +89,6 @@ echo $skin->open_simplebloc();
 <div id="system_search_result">
 <?php include_once './modules/system/public_search_result.php'; ?>
 </div>
-
 
 <?php
 echo $skin->close_simplebloc();

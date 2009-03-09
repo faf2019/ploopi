@@ -24,7 +24,7 @@
 /**
  * Interface de gestion des tickets.
  * Permet de consulter / envoyer / trier / supprimer les tickets
- * 
+ *
  * @package system
  * @subpackage public
  * @copyright Netlor, Ovensia
@@ -60,7 +60,7 @@ switch($filtertype)
         // $where = " AND ( u.id != {$_SESSION['ploopi']['userid']} OR isnull(u.id) OR td.id_user = {$_SESSION['ploopi']['userid']})";
         $where = " AND td.id_user = {$_SESSION['ploopi']['userid']}";
     break;
-    
+
     /*
     case 'tovalidate':
         $where = " AND t.id_user <> {$_SESSION['ploopi']['userid']} AND t.needed_validation > 0 AND t.status < "._PLOOPI_TICKETS_DONE;
@@ -95,7 +95,6 @@ $lstusers=$usr->getgroups();
 // liste des espaces de travail rattachés
 $lstworkspace=array_keys($usr->getworkspaces());
 
-
 $sql =  "
         SELECT      t.id, t.title,
                     t.message,
@@ -126,7 +125,7 @@ $sql =  "
 
                     m.label as module_name,
                     mt.label as module_type,
-                    
+
                     o.label as object_name,
                     o.script
 
@@ -147,7 +146,7 @@ $sql =  "
 
         LEFT JOIN   ploopi_module_type mt
         ON          mt.id = m.id_module_type
-        
+
         LEFT JOIN   ploopi_mb_object o
         ON          t.id_object = o.id
         AND         m.id_module_type = o.id_module_type
@@ -230,7 +229,6 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
 }
 ?>
 
-
 <div id="system_tickets_titlebar">
     <?php
     $nb_tickets_page = 20;
@@ -257,14 +255,13 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
     }
     ?>
 
-
     <div>
         <a id="system_tickets_button" href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, null, true);">
             <p class="ploopi_va">
                <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/newticket.png" /><span>&nbsp;<?php echo _PLOOPI_LABEL_NEWTICKET; ?></span>
             </p>
         </a>
-        
+
         <a id="system_tickets_button" href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=incomingbox"); ?>" <?php if ($filtertype=='incomingbox') echo 'style="font-weight:bold;"'; ?>>
             <p class="ploopi_va">
                <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/incomingbox.png" /><span>&nbsp;<?php echo _SYSTEM_LABEL_TICKETS_INCOMINGBOX; ?></span>
@@ -308,7 +305,6 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
         ?>
     </div>
 
-
 </div>
 
 <div class="system_tickets_row_title">
@@ -347,7 +343,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
     for  ($i=0; $i<$nb_tickets_page && !empty($ticket); $i++)
     {
         $fields = $ticket;
-        
+
         $object_script = str_replace(
                                         array(
                                             '<IDRECORD>',
@@ -420,12 +416,12 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                     else
                     {
                         $username = "{$fields['firstname']} {$fields['lastname']}";
-                        
+
                         if (is_null($fields['sender_user_id'])) // system ticket
                         {
                             $username = "<i>{$username}</i>";
                         }
-                        
+
                         if ($fields['needed_validation'] == 1 && $fields['sender_uid'] != $_SESSION['ploopi']['userid'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][_PLOOPI_TICKETS_DONE]))
                         {
                             ?><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" alt="vous devez valider ce message !"><?php
@@ -453,7 +449,6 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                     </div>
                 </div>
             </div>
-
 
             <div class="system_tickets_detail"  id="tickets_detail_<?php echo $fields['id'];?>">
                 <div class="system_tickets_detail_content">
@@ -533,7 +528,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                 {
                     // on cherche si on fonction de validation d'objet existe pour ce module
                     ploopi_init_module($fields['module_type']);
-                    
+
                     $boolRecordIsEnabled = true;
                     $funcRecordIsEnabled = "{$fields['module_type']}_record_isenabled";
                     if (function_exists($funcRecordIsEnabled))

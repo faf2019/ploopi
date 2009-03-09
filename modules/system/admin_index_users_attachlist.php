@@ -22,7 +22,7 @@
  */
 
 /**
- * Affichage des utilisateurs "rattachables" à l'espace de travail ou au groupe courant 
+ * Affichage des utilisateurs "rattachables" à l'espace de travail ou au groupe courant
  *
  * @package system
  * @subpackage admin
@@ -63,12 +63,11 @@ switch ($_SESSION['system']['level'])
     break;
 }
 
-
 if ($pattern != '') $alphaTabItem = 99; // tous
 else
 {
     // aucun caractère de filtrage sélectionné. On recherche si on en met un par défaut (si trop d'utilisateurs) ou si on sélectionne "tous"
-    
+
     $alphaTabItem = (empty($_GET['alphaTabItem'])) ? -1 : $_GET['alphaTabItem'];
 
     if ($alphaTabItem == -1)
@@ -84,25 +83,25 @@ else
         ");
 
         $fields = $db->fetchrow();
-        
+
         $c = $fields['nbuser'];
-        
+
         if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
         {
             // Utilisateurs non rattachés
             $db->query("
                 SELECT      count(distinct(u.id)) as nbuser
-    
+
                 FROM        ploopi_user u
-                
+
                 WHERE       u.id NOT IN (SELECT distinct(id_user) FROM ploopi_group_user gu)
             ");
-            
+
             $fields = $db->fetchrow();
-            
+
             $c += $fields['nbuser'];
         }
-        
+
         if ($c < 25) $alphaTabItem = 99;
     }
 }
@@ -112,34 +111,34 @@ else
     $tabs_char = array();
 
     // Génération des onglets
-    for($i=1;$i<27;$i++) 
-        $tabs_char[$i] = 
+    for($i=1;$i<27;$i++)
+        $tabs_char[$i] =
             array(
-                'title' => chr($i+64), 
+                'title' => chr($i+64),
                 'url' => "admin.php?alphaTabItem={$i}"
             );
-    
-    $tabs_char[98] = 
+
+    $tabs_char[98] =
         array(
-            'title' => '#', 
+            'title' => '#',
             'url' => 'admin.php?alphaTabItem=98'
         );
-    
-    $tabs_char[99] = 
+
+    $tabs_char[99] =
         array(
             'title' => '<em>tous</em>',
             'url' => 'admin.php?alphaTabItem=99'
         );
-    
+
     echo $skin->create_tabs($tabs_char, $alphaTabItem);
     ?>
 </div>
 
 <form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
     <p class="ploopi_va" style="padding: 4px; border-bottom: 2px solid #c0c0c0;">
-        <span><?php echo _SYSTEM_LABEL_USER; ?>:</span> 
-        <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<?php echo htmlentities($pattern); ?>"> 
-        <input type="submit" value="<?php echo _PLOOPI_FILTER; ?>" class="button"> 
+        <span><?php echo _SYSTEM_LABEL_USER; ?>:</span>
+        <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<?php echo htmlentities($pattern); ?>">
+        <input type="submit" value="<?php echo _PLOOPI_FILTER; ?>" class="button">
         <input type="submit" name="reset" value="<?php echo _PLOOPI_RESET; ?>" class="button">
     </p>
 </form>
@@ -170,7 +169,7 @@ $db->query("
                 u.firstname,
                 u.login,
                 u.service
-                
+
     FROM        ploopi_user u,
                 ploopi_group_user gu
 
@@ -181,9 +180,9 @@ $db->query("
 
     GROUP BY    u.id
 ");
-    
+
 $arrUsers = $db->getarray();
-    
+
 if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
 {
     // Utilisateurs non rattachés
@@ -193,16 +192,16 @@ if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
                     u.firstname,
                     u.login,
                     u.service
-                    
+
         FROM        ploopi_user u
-    
+
         WHERE       u.id NOT IN (SELECT distinct(id_user) FROM ploopi_group_user gu)
-    
+
         {$strWhereName}
-    
+
         GROUP BY    u.id
     ");
-        
+
     $arrUsers = array_merge($arrUsers, $db->getarray());
 }
 
@@ -248,7 +247,7 @@ if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 {
     ?>
     <p class="ploopi_va" style="padding: 4px;">
-        <span style="margin-right: 5px;">Légende:</span> 
+        <span style="margin-right: 5px;">Légende:</span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
         <span style="margin-right: 5px;"><?php echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />

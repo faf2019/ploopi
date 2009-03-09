@@ -23,7 +23,7 @@
 
 /**
  * Mise à jour du système
- * 
+ *
  * @package system
  * @subpackage system
  * @copyright Netlor, Ovensia
@@ -41,19 +41,19 @@ switch($op)
 {
     case 'system_update_execute':
         if ($strSysVersion == _PLOOPI_VERSION) ploopi_redirect('admin.php?reloadsession');
-        
+
         $strSysVersion = str_replace(' ', '', $strSysVersion);
-        
+
         $strSysInstallPath = './install/system/';
-        
+
         $arrUpdates = array();
-        
+
         if (is_dir($strSysInstallPath))
         {
             $dir = @opendir($strSysInstallPath);
             while($file = readdir($dir))
             {
-                
+
                 if (is_file("{$strSysInstallPath}{$file}"))
                 {
                     $matches = array();
@@ -67,9 +67,9 @@ switch($op)
                 }
             }
         }
-        
+
         ksort($arrUpdates);
-        
+
         foreach($arrUpdates as $strSqlFile)
         {
             if (file_exists("{$strSysInstallPath}{$strSqlFile}") && is_readable("{$strSysInstallPath}{$strSqlFile}"))
@@ -84,7 +84,7 @@ switch($op)
                 ?>
                 <div style="padding:4px;color:#a60000;">Impossible de lire le fichier <b><?php echo "{$strSysInstallPath}{$strSqlFile}" ?></b>, vérifiez les droits en lecture</div>
                 <?php
-            }     
+            }
         }
         ?>
         <div style="padding:4px;">
@@ -95,15 +95,15 @@ switch($op)
         </div>
         <?php
     break;
-    
+
     default:
         ?>
         <div style="padding:4px;">
-        Vous venez de mettre à jour Ploopi. 
-        <br />Vous aviez la version <b><?php echo $strSysVersion; ?></b> et le système a été mis à jour en version <b><?php echo _PLOOPI_VERSION; ?></b> 
+        Vous venez de mettre à jour Ploopi.
+        <br />Vous aviez la version <b><?php echo $strSysVersion; ?></b> et le système a été mis à jour en version <b><?php echo _PLOOPI_VERSION; ?></b>
         <br />Pour terminer la mise à jour vous devez mettre à jour la base de données.
         </div>
-        
+
         <div style="padding:4px;">
         <button onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=system_update_execute"); ?>';">Mettre à jour la Base de Données</button>
         </div>

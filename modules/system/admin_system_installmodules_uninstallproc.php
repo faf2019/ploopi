@@ -23,7 +23,7 @@
 
 /**
  * Procédure de désinstallation d'un module
- * 
+ *
  * @package system
  * @subpackage system
  * @copyright Netlor, Ovensia
@@ -45,16 +45,16 @@ $module_type = new module_type();
 if ($module_type->open($_GET['uninstallidmoduletype']))
 {
     ploopi_create_user_action_log(_SYSTEM_ACTION_UNINSTALLMODULE, $module_type->fields['label']);
-    
+
     if (!empty($module_type->fields['label']))
     {
         if (file_exists("./modules/{$module_type->fields['label']}/include/admin_uninstall.php")) include "./modules/{$module_type->fields['label']}/include/admin_uninstall.php";
-    
+
         // DELETE FILES
         $filestodelete = "./modules/".$module_type->fields['label'];
         if (file_exists($filestodelete)) ploopi_deletedir($filestodelete);
     }
-    
+
     // DELETE TABLES
     $select = "SELECT * FROM ploopi_mb_table WHERE id_module_type = $uninstallidmoduletype";
     $rs = $db->query($select);
@@ -62,7 +62,7 @@ if ($module_type->open($_GET['uninstallidmoduletype']))
     {
         $db->query("DROP TABLE IF EXISTS `{$fields['name']}`");
     }
-    
+
     // DELETE MODULE TYPE, MODULES, ACTIONS, etc...
     $module_type->delete();
 }

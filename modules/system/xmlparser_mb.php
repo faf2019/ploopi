@@ -23,7 +23,7 @@
 
 /**
  * Parser XML des fichiers de description de la métabase
- * 
+ *
  * @package system
  * @subpackage system
  * @copyright Netlor, Ovensia

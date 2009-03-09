@@ -22,7 +22,7 @@
 */
 
 /**
- * Interface de création d'un rôle 
+ * Interface de création d'un rôle
  *
  * @package system
  * @subpackage admin

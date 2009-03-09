@@ -55,10 +55,10 @@ switch($op)
             if (empty($_POST['user_login'])) ploopi_redirect('admin.php');
 
             $_SESSION['system']['save_user'] = $_POST;
-            
+
             // test si login deja existant
             $db->query("SELECT id FROM ploopi_user WHERE login = '".$db->addslashes($_POST['user_login'])."'");
-            
+
             // problème, ce login existe déjà => redirect
             if($db->numrows()) ploopi_redirect("admin.php?op=manage_account&error=login");
             else
@@ -74,13 +74,13 @@ switch($op)
 
         // on efface la sauvegarde des données utilisateur si elles existent
         if (isset($_SESSION['system']['save_user'])) unset($_SESSION['system']['save_user']);
-        
+
         if (!isset($_POST['user_ticketsbyemail'])) $user->fields['ticketsbyemail'] = 0;
         if (!isset($_POST['user_servertimezone'])) $user->fields['servertimezone'] = 0;
         if (!empty($_POST['user_date_expire'])) $_POST['user_date_expire'] = ploopi_local2timestamp($_POST['user_date_expire']);
 
         $user->setvalues($_POST,'user_');
-        
+
         // affectation nouveau password
         $passwordok = true;
         if (isset($_POST['usernewpass']) && isset($_POST['usernewpass_confirm']))
@@ -104,16 +104,15 @@ switch($op)
             ploopi_create_user_action_log(_SYSTEM_ACTION_MODIFYUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']})");
         }
 
-        if (!empty($_SESSION['system']['user_photopath'])) 
+        if (!empty($_SESSION['system']['user_photopath']))
         {
             ploopi_makedir(_PLOOPI_PATHDATA._PLOOPI_SEP.'system');
-            
+
             // photo temporaire présente => copie dans le dossier définitif
             rename($_SESSION['system']['user_photopath'], $user->getphotopath());
             unset($_SESSION['system']['user_photopath']);
         }
-        
-        
+
         $reload = ''; // reloadsession or not ?
 
         if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES && !empty($workspaceid))
@@ -135,8 +134,7 @@ switch($op)
             $group_user->save();
         }
 
-
-        if ($passwordok) 
+        if ($passwordok)
         {
             $alphaTabItem = ord(strtolower($user->fields['lastname']))-96;
             if ($alphaTabItem < 1 || $alphaTabItem > 26) $alphaTabItem = 98; // #
@@ -144,11 +142,10 @@ switch($op)
         }
         else ploopi_redirect("admin.php?op=modify_user&user_id={$user->fields['id']}&error=password");
     break;
-    
+
 }
 
-
-$tabs['tabUserList'] = array(   
+$tabs['tabUserList'] = array(
     'title' => _SYSTEM_LABELTAB_USERLIST,
     'url' => "admin.php?usrTabItem=tabUserList"
 );
@@ -163,7 +160,7 @@ if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
 
 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER)
 {
-    $tabs['tabUserAttach'] = array( 
+    $tabs['tabUserAttach'] = array(
         'title' => _SYSTEM_LABELTAB_USERATTACH,
         'url' => "admin.php?usrTabItem=tabUserAttach"
     );
@@ -171,7 +168,7 @@ if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER)
 
 if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 {
-    $tabs['tabGroupList'] = array(  
+    $tabs['tabGroupList'] = array(
         'title' => _SYSTEM_LABELTAB_GROUPLIST,
         'url' => "admin.php?usrTabItem=tabGroupList"
     );
@@ -189,7 +186,7 @@ if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
 {
     if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
     {
-        $tabs['tabUserImport'] = array( 
+        $tabs['tabUserImport'] = array(
             'title' => _SYSTEM_LABELTAB_USERIMPORT,
             'url' => "admin.php?usrTabItem=tabUserImport"
         );
@@ -272,7 +269,6 @@ switch($_SESSION['system']['usrTabItem'])
         }
     break;
 
-
     case 'tabUserAttach':
         switch($op)
         {
@@ -334,19 +330,19 @@ switch($_SESSION['system']['usrTabItem'])
                     if ($user->open($_GET['user_id']))
                     {
                         if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($user->fields['login'], '', true);
-    
+
                         ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']})");
-    
+
                         ?>
                         <div style="padding:4px;">
                             <div style="font-weight:bold;">
                                 <?php echo str_replace('<LABEL>',$user->fields['login'],_SYSTEM_LABEL_USERDELETE); ?>
                             </div>
                             <?php
-    
+
                             $user->delete();
                             if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
-    
+
                             ?>
                             <div style="text-align:right;">
                                 <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo "admin.php?reloadsession"; ?>'">
@@ -362,20 +358,20 @@ switch($_SESSION['system']['usrTabItem'])
             case 'attach_user':
                 // on efface la sauvegarde des données utilisateur si elles existent
                 if (isset($_SESSION['system']['save_user'])) unset($_SESSION['system']['save_user']);
-                
+
                 $user = new user();
                 if (isset($_GET['user_id']) && is_numeric($_GET['user_id']) && $user->open($_GET['user_id']))
                 {
                     $user->attachtogroup($groupid);
-                    
+
                     $alphaTabItem = ord(strtolower($user->fields['lastname']))-96;
                     if ($alphaTabItem < 1 || $alphaTabItem > 26) $alphaTabItem = 98; // #
-                    
+
                     ploopi_redirect("admin.php?reloadsession&usrTabItem=tabUserList&alphaTabItem={$alphaTabItem}");
                 }
                 else ploopi_redirect('admin.php');
-            break;            
-            
+            break;
+
             case 'detach_user':
                 if (!empty($_GET['user_id']) && is_numeric($_GET['user_id']))
                 {
@@ -486,7 +482,6 @@ switch($_SESSION['system']['usrTabItem'])
     break;
 
 }
-
 
 echo $skin->close_simplebloc();
 ?>

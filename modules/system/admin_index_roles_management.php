@@ -21,7 +21,7 @@
 */
 
 /**
- * Interface de gestion des rôles 
+ * Interface de gestion des rôles
  *
  * @package system
  * @subpackage admin
@@ -65,7 +65,6 @@ $sql =  "
         ";
 
 $db->query($sql);
-
 
 $columns = array();
 $values = array();

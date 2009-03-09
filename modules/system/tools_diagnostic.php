@@ -23,7 +23,7 @@
 
 /**
  * Outil de diagnostic pour détecter d'éventuels problèmes de configuration/installation
- * 
+ *
  * @package system
  * @subpackage system_tools
  * @copyright Netlor, Ovensia
@@ -117,7 +117,6 @@ foreach($array_path as $key => $path)
 
 }
 
-
 /* TEST 2 - config PHP */
 
 $testpear = (file_exists(_PLOOPI_PEARPATH.'/PEAR.php'));
@@ -150,7 +149,7 @@ if ($testpear)
         $packPEAR = new PEAR_Info(); // Class PEAR_Info for test if modules pear are installed
 
         $arrPearClasses = array('Cache_Lite', 'HTTP_Request', 'XML_Feed_Parser', 'Xml_Beautifier', 'OLE', 'Spreadsheet_Excel_Writer');
-        
+
         foreach($arrPearClasses as $strPearClass)
         {
             $testok = $packPEAR->packageInstalled($strPearClass);
@@ -189,7 +188,6 @@ $values[$c]['values']['comment']    = array('label' => ploopi_nl2br(htmlentities
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
-
 $testok = !ini_get('display_errors');
 
 $comment = ($testok) ? 'La directive est correctement configurée.' : 'Vous devriez modifier la valeur de cette directive.';
@@ -200,7 +198,6 @@ $values[$c]['values']['desc']       = array('label' => ploopi_nl2br(htmlentities
 $values[$c]['values']['comment']    = array('label' => ploopi_nl2br(htmlentities($comment)), 'style' => '');
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
-
 
 $mem = intval(ini_get('memory_limit'));
 $testok = $mem >= 128;
@@ -257,7 +254,6 @@ $values[$c]['values']['comment']    = array('label' => ploopi_nl2br(htmlentities
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
-
 $testok = extension_loaded('gd');
 
 $comment = ($testok) ? 'L\'extension &laquo; gd &raquo; est activée.' : 'Vous devriez activer l\'extension &laquo; gd &raquo;.';
@@ -270,7 +266,6 @@ $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['p
 $c++;
 
 $testok = extension_loaded('mcrypt');
-
 
 $comment = ($testok) ? 'L\'extension &laquo; mcrypt &raquo; est activée.' : 'Vous devriez activer l\'extension &laquo; mcrypt &raquo;.';
 $bullet = ($testok) ? 'green' : 'red';
@@ -289,7 +284,6 @@ $values[$c]['values']['desc']       = array('label' => ploopi_nl2br("L'extension
 $values[$c]['values']['comment']    = array('label' => ploopi_nl2br($comment), 'style' => '');
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
-
 
 /* TEST 3 - Connectivité internet */
 if ($testpear)
@@ -330,7 +324,6 @@ $values[$c]['values']['desc']       = array('label' => ploopi_nl2br(htmlentities
 $values[$c]['values']['comment']    = array('label' => ploopi_nl2br(htmlentities($comment)), 'style' => '');
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
-
 
 $skin->display_array($columns, $values, 'array_diagnostic', array('sortable' => true, 'orderby_default' => 'function'));
 ?>
