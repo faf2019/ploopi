@@ -69,6 +69,8 @@ class ploopi_cache extends Cache_Lite_Output
 
         if ($ploopi_cache_activated)
         {
+            if (substr($cachedir, -1) != '/') $cachedir .= '/';
+            
             $this->cache_id = $id;
             $this->Cache_Lite_Output(array( 'cacheDir' => $cachedir, 'lifeTime' => $lifetime));
         }
