@@ -1,29 +1,29 @@
 <?php
 /*
-	Copyright (c) 2007-2008 Ovensia
-	Copyright (c) 2008 HeXad
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 /**
  * Fonctions MySQL utilisées durant la procédure d'installation de Ploopi.
- * 
+ *
  * @package ploopi
  * @subpackage install
  * @copyright Ovensia, Hexad
@@ -52,12 +52,12 @@ function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallReque
     $arrInstallInfos[$intInstallInfos]['warn_replace'] = array(_PLOOPI_INSTALL_DB_ERR_CONNECT);
     return false;
   }
-  
+
   $arrInstallInfos[$intInstallInfos]['mess_replace'] = array(_PLOOPI_INSTALL_REQUIRED.$arrInstallRequestDB[$_SESSION['install']['<DB_TYPE>']]['version'],
                                                              _PLOOPI_INSTALL_INSTALLED.$objPDO->getAttribute(PDO::ATTR_SERVER_VERSION));
   $arrInstallInfos[$intInstallInfos]['form'][] = array('label' => _PLOOPI_INSTALL_DB_DATABASE_NAME,
                                                        'input' => '<input name="db_database_name" id="db_database_name" type="text" value="'.$_SESSION['install']['<DB_DATABASE>'].'"/>');
-    
+
   if(!version_compare($objPDO->getAttribute(PDO::ATTR_SERVER_VERSION),$arrInstallRequestDB[$_SESSION['install']['<DB_TYPE>']]['version'],'>='))
   {
     $arrInstallInfos[$intInstallInfos]['state'] = false;
@@ -70,7 +70,7 @@ function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallReque
     if($objRequest !== false)
     {
       $strInstallListDbName = '';
-      foreach ( $objRequest as $arrInstalledDB) 
+      foreach ( $objRequest as $arrInstalledDB)
       {
         if($_SESSION['install']['<DB_TYPE>'] !== 'mysql' ||
               ($_SESSION['install']['<DB_TYPE>'] === 'mysql' && ($arrInstalledDB['Database'] !== 'information_schema' && $arrInstalledDB['Database'] !== 'mysql'))) // Database Reserved by mysql
@@ -92,7 +92,7 @@ function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallReque
       {
         $arrInstallInfos[$intInstallInfos]['form'][] = array('label' => _PLOOPI_INSTALL_DB_DATABASE_SELECT,
                                                              'input' => '<select name="db_database_select" id="db_database_select" onChange="javascript:duplicSelectToField(this,\'db_database_name\');">'.
-        					                                            '<option value="">'._PLOOPI_INSTALL_DB_DATABASE_SELECT_NEW.'</option>'.
+                                                                        '<option value="">'._PLOOPI_INSTALL_DB_DATABASE_SELECT_NEW.'</option>'.
                                                                         $strInstallListDbName.
                                                                         '</select>');
       }
@@ -103,17 +103,17 @@ function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallReque
     {
       if(!$booFindDbListe) // The database NO exist
       {
-        // CREATE DATABASE 
+        // CREATE DATABASE
         $intRequest = $objPDO->exec("CREATE DATABASE `{$_SESSION['install']['<DB_DATABASE>']}`");
-        $arrInstallInfos[] = array('id' => 'div_db_create_db', 
+        $arrInstallInfos[] = array('id' => 'div_db_create_db',
                                    'state' => ($intRequest !== false) ? true : false,
-                                   'title' => '_PLOOPI_INSTALL_DATA_BASE_CREATE_DB', 
+                                   'title' => '_PLOOPI_INSTALL_DATA_BASE_CREATE_DB',
                                    'title_replace' => array($_SESSION['install']['<DB_DATABASE>']),
                                    'warn_replace' => array($_SESSION['install']['<DB_DATABASE>'],$_SESSION['install']['<DB_LOGIN>']));
         if($intRequest === false) return false;
       }
       $intRequest = null;
-      
+
       // Disconnect
       $objPDO = null;
       //Connect to server AND database
@@ -140,23 +140,23 @@ function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallReque
         {
           $strInstallCheckedYes = '';$strInstallCheckedNo = 'checked';
         }
-        
-        $arrInstallInfos[] = array('id' => 'div_db_plopi_exist', 
+
+        $arrInstallInfos[] = array('id' => 'div_db_plopi_exist',
                                    'state' => $_SESSION['install']['replace_database'],
                                    'title' => '_PLOOPI_INSTALL_DATA_BASE_PLOOPI_EXIST',
                                    'title_replace' => array($_SESSION['install']['<DB_DATABASE>']),
                                    'form'  => array(array('label' => _PLOOPI_INSTALL_DATA_BASE_PLOOPI_EXIST_FIELD,
-                                    			      'input' => _PLOOPI_INSTALL_YES.': <INPUT type="radio" name="del_exist" value="1" '.$strInstallCheckedYes.'> '.
+                                                      'input' => _PLOOPI_INSTALL_YES.': <INPUT type="radio" name="del_exist" value="1" '.$strInstallCheckedYes.'> '.
                                                                _PLOOPI_INSTALL_NO.': <INPUT type="radio" name="del_exist" value="0" '.$strInstallCheckedNo.'>'))
                                   );
       }
       $objRequest = null;
-      
+
       $intRequest = $objPDO->exec('DROP TABLE IF EXISTS `ploopi_install_test`');
       $intRequest = null;
       // CREATE TABLE
       $intRequest = $objPDO->exec('CREATE TABLE `ploopi_install_test` (`id` int NULL)');
-      $arrInstallInfos[] = array('id' => 'div_db_create', 
+      $arrInstallInfos[] = array('id' => 'div_db_create',
                                  'state' => ($intRequest !== false) ? true : false,
                                  'title' => '_PLOOPI_INSTALL_DATA_BASE_CREATE',
                                  'title_replace' => array($_SESSION['install']['<DB_DATABASE>']),
@@ -164,7 +164,7 @@ function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallReque
       $intRequest = null;
       // INSERT
       $intRequest = $objPDO->exec('INSERT INTO `ploopi_install_test` (`id`) VALUES (\'1\')');
-      $arrInstallInfos[] = array('id' => 'div_db_insert', 
+      $arrInstallInfos[] = array('id' => 'div_db_insert',
                                  'state' => ($intRequest !== false) ? true : false,
                                  'title' => '_PLOOPI_INSTALL_DATA_BASE_INSERT',
                                  'title_replace' => array($_SESSION['install']['<DB_DATABASE>']),
@@ -172,7 +172,7 @@ function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallReque
       $intRequest = null;
       // SELECT
       $objRequest = $objPDO->query('SELECT * FROM `ploopi_install_test`');
-      $arrInstallInfos[] = array('id' => 'div_db_select', 
+      $arrInstallInfos[] = array('id' => 'div_db_select',
                                  'state' => ($objRequest !== false) ? true : false,
                                  'title' => '_PLOOPI_INSTALL_DATA_BASE_SELECT',
                                  'title_replace' => array($_SESSION['install']['<DB_DATABASE>']),
@@ -180,7 +180,7 @@ function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallReque
       $objRequest = null;
       // UPDATE
       $intRequest = $objPDO->exec('UPDATE `ploopi_install_test` SET `id` = \'2\' WHERE `id` = 1');
-      $arrInstallInfos[] = array('id' => 'div_db_update', 
+      $arrInstallInfos[] = array('id' => 'div_db_update',
                                  'state' => ($intRequest !== false) ? true : false,
                                  'title' => '_PLOOPI_INSTALL_DATA_BASE_UPDATE',
                                  'title_replace' => array($_SESSION['install']['<DB_DATABASE>']),
@@ -188,7 +188,7 @@ function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallReque
       $intRequest = null;
       // DELETE
       $intRequest = $objPDO->exec('DELETE FROM `ploopi_install_test`');
-      $arrInstallInfos[] = array('id' => 'div_db_delete', 
+      $arrInstallInfos[] = array('id' => 'div_db_delete',
                                  'state' => ($intRequest !== false) ? true : false,
                                  'title' => '_PLOOPI_INSTALL_DATA_BASE_DELETE',
                                  'title_replace' => array($_SESSION['install']['<DB_DATABASE>']),
@@ -196,7 +196,7 @@ function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallReque
       $intRequest = null;
       // DROP TABLE
       $intRequest = $objPDO->exec('DROP TABLE `ploopi_install_test`');
-      $arrInstallInfos[] = array('id' => 'div_db_drop', 
+      $arrInstallInfos[] = array('id' => 'div_db_drop',
                                  'state' => ($intRequest !== false) ? true : false,
                                  'title' => '_PLOOPI_INSTALL_DATA_BASE_DROP',
                                  'title_replace' => array($_SESSION['install']['<DB_DATABASE>']),
@@ -207,7 +207,7 @@ function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallReque
       {
         // DROP DATABASE
         $intRequest = $objPDO->exec("DROP DATABASE `{$_SESSION['install']['<DB_DATABASE>']}`");
-        $arrInstallInfos[] = array('id' => 'div_db_drop_db', 
+        $arrInstallInfos[] = array('id' => 'div_db_drop_db',
                                    'state' => ($intRequest !== false) ? true : false,
                                    'title' => '_PLOOPI_INSTALL_DATA_BASE_DROP_DB',
                                    'title_replace' => array($_SESSION['install']['<DB_DATABASE>']),

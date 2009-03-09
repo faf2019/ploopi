@@ -63,14 +63,14 @@ class ploopi_cache extends Cache_Lite_Output
      * @return ploopi_cache
      */
 
-    function ploopi_cache($id, $lifetime = _PLOOPI_CACHE_DEFAULT_LIFETIME)
+    function ploopi_cache($id, $lifetime = _PLOOPI_CACHE_DEFAULT_LIFETIME, $cachedir = _PLOOPI_PATHCACHE)
     {
         global $ploopi_cache_activated;
 
         if ($ploopi_cache_activated)
         {
             $this->cache_id = $id;
-            $this->Cache_Lite_Output(array( 'cacheDir' => '/tmp/', 'lifeTime' => $lifetime));
+            $this->Cache_Lite_Output(array( 'cacheDir' => $cachedir, 'lifeTime' => $lifetime));
         }
     }
 

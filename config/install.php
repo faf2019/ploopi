@@ -23,7 +23,7 @@
 
 /**
  * Procédure d'installation de Ploopi.
- * 
+ *
  * @package ploopi
  * @subpackage install
  * @copyright Ovensia, Hexad
@@ -112,7 +112,7 @@ if(!isset($_SESSION['install'])) {
     '<DB_LOGIN>'        => 'root',            // ok
     '<DB_PASSWORD>'     => '',                // ok
     '<DB_DATABASE>'     => '',                // ok
-    '<BASEPATH>'        => ((!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://').((!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']).((!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') ? ":{$_SERVER['SERVER_PORT']}" : '').((!empty($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] != '') ? dirname($_SERVER['SCRIPT_NAME']) : '/'), 
+    '<BASEPATH>'        => ((!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://').((!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']).((!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') ? ":{$_SERVER['SERVER_PORT']}" : '').((!empty($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] != '') ? dirname($_SERVER['SCRIPT_NAME']) : '/'),
     '<DATAPATH>'        => './data',          // ok
     '<TMPPATH>'         => '/tmp',            // ok
     '<CGI>'             => false,             // ok
@@ -228,12 +228,12 @@ $stage = 1;
 if($_POST['stage']>=$stage)
 {
   if(isset($_POST['accept_license']))    $_SESSION['install']['accept_license'] = ($_POST['accept_license']=='true' ? true : false);
-   
+
   if ($_SESSION['install']['accept_license']==true)
   { $strInstallAcceptLicenseYes = 'selected';$strInstallAcceptLicenseNo = ''; }
   else
   { $strInstallAcceptLicenseYes = '';$strInstallAcceptLicenseNo = 'selected'; }
-  
+
    // Control Acceptation licence
    $arrInstallInfos[] = array('id' => 'div_accept_license',
            'title'   => _PLOOPI_INSTALL_LICENSE,
@@ -242,11 +242,11 @@ if($_POST['stage']>=$stage)
                                      'input' => '<select name="accept_license" id="accept_license" tabindex="%tabIndex%">
                                                    <option value="true" '.$strInstallAcceptLicenseYes.'>'._PLOOPI_INSTALL_YES.'</option>
                                                    <option value="false" '.$strInstallAcceptLicenseNo.'>'._PLOOPI_INSTALL_NO.'</option>
-                                                 </select>' 
+                                                 </select>'
                                     )
                               )
-                            ); 
-                            
+                            );
+
   // test or re-test and stop at the courant stage if an error is detected
   if(ploopi_find_error_install($arrInstallInfos))
   {
@@ -256,7 +256,7 @@ if($_POST['stage']>=$stage)
   {
      unset($arrInstallInfos);
   }
-                              
+
   // features of stage 1 (at the end for eventual comeback)
   if($_POST['stage']==$stage)
   {
@@ -271,7 +271,7 @@ if($_POST['stage']>=$stage)
     }
     $objInstallTemplate->assign_block_vars("stage$stage",array(
       'TEXT'    => _PLOOPI_INSTALL_WELCOME_TEXT,
-      
+
       'LICENSE' => $strTxtLicense
     ));
   }
@@ -425,11 +425,11 @@ if($_POST['stage']>=$stage)
   if(isset($_POST['proxy_pass']))    $_SESSION['install']['<INTERNETPROXY_PASS>'] = trim($_POST['proxy_pass']);
 
   // clean the base path
-  while(substr($_SESSION['install']['<BASEPATH>'],-1)=='/') 
+  while(substr($_SESSION['install']['<BASEPATH>'],-1)=='/')
     $_SESSION['install']['<BASEPATH>'] = substr($_SESSION['install']['<BASEPATH>'],0,-1);
-  while(substr($_SESSION['install']['<BASEPATH>'],-7)=='/config') 
+  while(substr($_SESSION['install']['<BASEPATH>'],-7)=='/config')
     $_SESSION['install']['<BASEPATH>'] = substr($_SESSION['install']['<BASEPATH>'],0,-7);
-    
+
   // Control config directories are writable
   if(!is_writable('./config'))
     $arrInstallInfos[] = array('id' => 'div_config', 'state' => false, 'title' => '_PLOOPI_INSTALL_CONFIG_WRITE');
@@ -441,9 +441,9 @@ if($_POST['stage']>=$stage)
   $arrInstallInfos[] = array('id' => 'div_config', 'state' => false, 'title' => '_PLOOPI_INSTALL_SQL_FILE');
 
   //Path CGI
-  if($_SESSION['install']['<CGI>']==false && $_SESSION['install']['<CGIPATH>'] == '') 
+  if($_SESSION['install']['<CGI>']==false && $_SESSION['install']['<CGIPATH>'] == '')
     $_SESSION['install']['<CGIPATH>'] == './cgi';
-  
+
   // Select yes/No
   if ($_SESSION['install']['<CGI>']==true)
   { $strInstallCgiActiveTrue = 'selected';$strInstallCgiActiveFalse = ''; }
@@ -578,7 +578,7 @@ if($_POST['stage']>=$stage)
                                         'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SELECT_CGI_JS).'\',form.dir_cgi,\'string\')'
                                        )
                                )
-                     );    
+                     );
   }
   // Personal informations
   $arrInstallInfos[] = array('id' => 'div_title_param_ploopi',
@@ -638,7 +638,7 @@ if($_POST['stage']>=$stage)
                                     )
                              )
                    );
-                   
+
   // Test internet connection
   $booFormHidden = ($_POST['div_connect_form_hidden']=="1") ? true : false;
   require_once 'HTTP/Request.php';
@@ -810,7 +810,6 @@ if($_POST['stage']>=$stage)
     unset($arrInstallInfos);
   }
 } // end stage 5
-
 
 /****************************************************************************************/
 

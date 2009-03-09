@@ -1,29 +1,29 @@
 <?php
 /*
-	Copyright (c) 2007-2008 Ovensia
-	Copyright (c) 2008 HeXad
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 /**
  * Fonctions utilisées durant la procédure d'installation de Ploopi.
- * 
+ *
  * @package ploopi
  * @subpackage install
  * @copyright Ovensia, Hexad
@@ -56,22 +56,22 @@ function ploopi_list_language_enable($replg) {
  * @param array $convert_languages (content fr => french, en => english, etc.)
  * @param string $languageDefault (ex: french) (default = null)
  * @return language
- * 
+ *
  * @version 1.0
- * @since 
+ * @since
  *
  * @category information
  */
 function ploopi_catch_language_navigator($convert_languages,$languageDefault=Null) {
   //language detection of navigator
-  if(is_array($convert_languages) && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) 
+  if(is_array($convert_languages) && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
   {
     $langue = explode(",",$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    if(isset($convert_languages[strtolower(substr(rtrim($langue[0]),0,2))])) 
+    if(isset($convert_languages[strtolower(substr(rtrim($langue[0]),0,2))]))
     {
       return $convert_languages[strtolower(substr(rtrim($langue[0]),0,2))];
-    } 
-    elseif(!is_null($languageDefault)) 
+    }
+    elseif(!is_null($languageDefault))
       {
         return $languageDefault;
       }
@@ -81,24 +81,24 @@ function ploopi_catch_language_navigator($convert_languages,$languageDefault=Nul
 
 /**
  * Remplace %1, %2,... in myString width array toReplace.
- * If controleType is true, you can typed all %x with b = boolean, n = integer, f = float, s = string.  
- * 
+ * If controleType is true, you can typed all %x with b = boolean, n = integer, f = float, s = string.
+ *
  * @param string $myString
  * @param array $toReplace
  * @param boolean $controlType (default = false)
  * @return string (empty if false)
  *
  * @version 1.0
- * @since 
+ * @since
  *
  * @category string manipulation
  */
 function ploopi_str_replace($myString, $toReplace,$controlType=false) {
-  
+
   if(!is_array($toReplace)) return '';
-  
+
   $fromReplace = array();
-  
+
   foreach($toReplace as $myNum => $myValue)
   {
     $myNum++;
@@ -107,26 +107,26 @@ function ploopi_str_replace($myString, $toReplace,$controlType=false) {
       switch(gettype($myValue))
       {
         case 'boolean' :
-          $fromReplace[] = '%'.$myNum.'b'; 
+          $fromReplace[] = '%'.$myNum.'b';
           break;
         case 'integer' :
-          $fromReplace[] = '%'.$myNum.'n'; 
+          $fromReplace[] = '%'.$myNum.'n';
           break;
         case 'float' :
-          $fromReplace[] = '%'.$myNum.'f'; 
+          $fromReplace[] = '%'.$myNum.'f';
           break;
         case 'string' :
-          $fromReplace[] = '%'.$myNum.'s'; 
+          $fromReplace[] = '%'.$myNum.'s';
           break;
         default :
           $fromReplace[] = '';
-          $toReplace[$myNum--] = ''; 
+          $toReplace[$myNum--] = '';
           break;
       }
     }
     else
     {
-      $fromReplace[] = '%'.$myNum; 
+      $fromReplace[] = '%'.$myNum;
     }
   }
   return str_replace($fromReplace,$toReplace,$myString);
@@ -138,9 +138,9 @@ function ploopi_str_replace($myString, $toReplace,$controlType=false) {
  *
  * @param array $tab_DB list of database install must support
  * @return An array of database types compiled into PHP.
- * 
+ *
  * @version 1.0
- * @since 
+ * @since
  *
  * @category database
  */
@@ -161,11 +161,11 @@ function ploopi_detect_database_available($tab_DB) {
 
 /**
  * Get the apache version
- * 
+ *
  * @return string (empty if false)
  *
  * @version 1.0
- * @since 
+ * @since
  *
  * @category information
  */
@@ -183,22 +183,21 @@ function ploopi_apache_get_version() {
   return '';
 }
 
-
 /**
  * Delete the "/" at the end of path if it is necessary
- * 
+ *
  * @param string $myString
  * @return string
  *
  * @version 1.0
- * @since 
+ * @since
  *
  * @category information
  */
 function ploopi_del_end_slashe($myString) {
   $myString = trim($myString);
   $myString = strtr($myString,'\\','/');
-  
+
   while(strpos($myString,'//')!==false)  $myString = str_replace('//','/',$myString);
   while(substr($myString,-1)=='/') $myString = substr($myString,0,-1);
 

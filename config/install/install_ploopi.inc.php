@@ -1,29 +1,29 @@
 <?php
 /*
-	Copyright (c) 2007-2008 Ovensia
-	Copyright (c) 2008 HeXad
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 /**
  * Installation du portail
- * 
+ *
  * @package ploopi
  * @subpackage install
  * @copyright Ovensia, Hexad
@@ -49,7 +49,7 @@ function ploopi_create_site($arrInstallInfos)
     $arrInstallInfos[] = array('id' => 'div_error_end', 'state' => false, 'title' => _PLOOPI_INSTALL_ERR_INSTALL_WARNING.'<br/>'.$arrErrors[0].'<br/>'.$arrErrors[1].'<br/>'.$arrErrors[2]);
     return false;
   }
-  
+
   $intRequest = $objPDO->exec("USE `{$_SESSION['install']['<DB_DATABASE>']}`");
   if($intRequest === false)
   {
@@ -59,10 +59,10 @@ function ploopi_create_site($arrInstallInfos)
     {
       $arrErrors = $objPDO->errorInfo();
       $arrInstallInfos[] = array('id' => 'div_error_end', 'state' => false, 'title' => _PLOOPI_INSTALL_ERR_INSTALL_WARNING.'<br/>'.$arrErrors[0].'<br/>'.$arrErrors[1].'<br/>'.$arrErrors[2]);
-      return false;    
+      return false;
     }
   }
-  
+
   $objPDO = Null;
   try {
     $objPDO = new PDO("mysql:host={$_SESSION['install']['<DB_SERVER>']};dbname={$_SESSION['install']['<DB_DATABASE>']}","{$_SESSION['install']['<DB_LOGIN>']}", "{$_SESSION['install']['<DB_PASSWORD>']}");
@@ -73,7 +73,7 @@ function ploopi_create_site($arrInstallInfos)
     $arrInstallInfos[] = array('id' => 'div_error_end', 'state' => false, 'title' => _PLOOPI_INSTALL_ERR_INSTALL_WARNING.'<br/>'.$arrErrors[0].'<br/>'.$arrErrors[1].'<br/>'.$arrErrors[2]);
     return false;
   }
-  
+
   $strModelFile = './config/config.php.model';
   $strConfigFile = './config/config.php';
   $strSqlFile = './install/system/ploopi.sql';
@@ -94,7 +94,7 @@ function ploopi_create_site($arrInstallInfos)
   $f = fopen( $strModelFile, "r" );
   while (!feof($f)) $strContent .= fgets($f, 4096);
   fclose($f);
-  
+
   $strContent = str_replace($arrTags, $arrReplace, $strContent);
 
   $fc = fopen( $strConfigFile, "w" );
@@ -112,14 +112,14 @@ function ploopi_create_site($arrInstallInfos)
   fclose ($fs);
 
   $strSql = trim($strSql);
-  
+
   $arrRequests = explode(";\n",$strSql);
-  
+
   foreach ($arrRequests AS $strKey => $strRequest)
   {
     $strRequest = trim($strRequest);
     $strRequest = preg_replace('#(.*)(\-)(.*)(([01][0-9])|(2[0-3]))\:([0-5][0-9])\:([0-5][0-9])(.*)(([\r\n])|($))#','$1$2$3$4.$7.$8$9$10',$strRequest);
-    if ($strRequest!='') 
+    if ($strRequest!='')
     {
       $intRequest = $objPDO->exec("$strRequest");
       if($intRequest === false)

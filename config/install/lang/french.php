@@ -1,29 +1,29 @@
 <?php
 /*
-	Copyright (c) 2007-2008 Ovensia
-	Copyright (c) 2008 HeXad
-	Contributors hold Copyright (c) to their code submissions.
+    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2008 HeXad
+    Contributors hold Copyright (c) to their code submissions.
 
-	This file is part of Ploopi.
+    This file is part of Ploopi.
 
-	Ploopi is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	Ploopi is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Ploopi; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 /**
  * Fichier de langue 'français' utilisé durant la procédure d'installation de Ploopi.
- * 
+ *
  * @package ploopi
  * @subpackage install
  * @copyright Ovensia, Hexad
@@ -64,7 +64,7 @@ define ('_PLOOPI_INSTALL_PREC_BUTTON',      '<< Etape précèdente');
 define ('_PLOOPI_INSTALL_REFRESH_BUTTON',   'Appliquer');
 define ('_PLOOPI_INSTALL_FINISH_BUTTON',    'Terminer');
 
-// Icon 
+// Icon
 define ('_PLOOPI_INSTALL_URL_ICO',          '/gfx/web.png');
 define ('_PLOOPI_INSTALL_ICO_OK',           '/gfx/p_green.png');
 define ('_PLOOPI_INSTALL_ICO_ERROR',        '/gfx/p_red.png');
@@ -210,7 +210,6 @@ define ('_PLOOPI_INSTALL_PROXY_PORT',        'Port - Proxy');
 define ('_PLOOPI_INSTALL_PROXY_USER',        'Utilisateur - Proxy');
 define ('_PLOOPI_INSTALL_PROXY_PASS',        'Mot de passe - Proxy');
 
-
 /*********
 * Stage 4
 *********/
@@ -263,10 +262,10 @@ define ('_PLOOPI_INSTALL_ERR_INSTALL_WARNING',        'Erreur pendant le process
 
 define ('_PLOOPI_INSTALL_END_OK', '<b>FELICITATION</b><br>'
                                    .'<br>L\'installation est maintenant terminée.'
-					               .'<br>'
-					               .'<br><b>Vous devez maintenant supprimer (ou renommer) le fichier ./config/install.php</b>'
-					               .'<br>'
-					               .'<br>vous pouvez vous connecter en utilisant votre compte "Administrateur"'
-					               .'<br>'
-					               .'<br><a href="../index.php" class="link">Continuer</a>');
+                                   .'<br>'
+                                   .'<br><b>Vous devez maintenant supprimer (ou renommer) le fichier ./config/install.php</b>'
+                                   .'<br>'
+                                   .'<br>vous pouvez vous connecter en utilisant votre compte "Administrateur"'
+                                   .'<br>'
+                                   .'<br><a href="../index.php" class="link">Continuer</a>');
 ?>

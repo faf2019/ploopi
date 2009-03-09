@@ -133,7 +133,8 @@ if (!defined ('_PLOOPI_BASEPATH'))
 }
 
 if (!defined ('_PLOOPI_FINGERPRINT')) define ('_PLOOPI_FINGERPRINT',  md5(dirname($_SERVER['SCRIPT_FILENAME']).'/'._PLOOPI_DB_SERVER.'/'._PLOOPI_DB_DATABASE));
-
+if (!defined ('_PLOOPI_PATHCACHE')) define ('_PLOOPI_PATHCACHE', _PLOOPI_PATHDATA.'/cache');
+        
 define ('_PLOOPI_SERVER_OSTYPE', (substr(PHP_OS, 0, 3) == 'WIN') ? 'windows' : 'unix');
 
 switch(_PLOOPI_SERVER_OSTYPE)
