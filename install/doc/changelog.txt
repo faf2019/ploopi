@@ -1,3 +1,9 @@
+== Module DOC - version 4.3.2 =====================================================
+
+2009-03-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction à l'affichage des dossiers publics dans le menu du module
+
 == Module DOC - version 4.3.1 =====================================================
 
 2009-03-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
