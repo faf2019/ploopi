@@ -33,6 +33,14 @@
  *
  */
 
+/**
+ * On se positionne dans le dossier de l'application
+ * pour éviter les problèmes d'include.
+ * Solution temporaire en attendant Ploopi 2
+ */
+
+chdir(dirname(__FILE__));
+
 include_once './include/classes/timer.php' ;
 $ploopi_timer = new timer();
 $ploopi_timer->start();
