@@ -155,7 +155,7 @@ class rss_feed extends data_object
 
         global $db;
 
-        $xmlrss = new xmlrss($this->fields['url']);
+        $xmlrss = new xmlrss($this->fields['url'], $this->fields['id_module']);
         if (!$xmlrss->error)
         {
             $xmlrss->parse();
