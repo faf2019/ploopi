@@ -199,7 +199,7 @@ class param
         $result = $db->query($select);
         while ($fields = $db->fetchrow($result))
         {
-            $this->arrParam[$fields['name']]['choices'][$fields['value']] = $fields['displayed_value'];
+            if (isset($this->arrParam[$fields['name']])) $this->arrParam[$fields['name']]['choices'][$fields['value']] = $fields['displayed_value'];
         }
 
     }
