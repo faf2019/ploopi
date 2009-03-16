@@ -239,7 +239,7 @@ if ($ploopi_initsession)
         }
 
         // sorting workspaces by depth
-        uksort ($_SESSION['ploopi']['workspaces'], create_function('$a,$b', 'return (intval($_SESSION[\'ploopi\'][\'workspaces\'][$b][\'depth\'])<intval($_SESSION[\'ploopi\'][\'workspaces\'][$a][\'depth\']));'));
+        uksort ($_SESSION['ploopi']['workspaces'], create_function('$a,$b', 'return (sprintf("%03d_%s", intval($_SESSION[\'ploopi\'][\'workspaces\'][$b][\'depth\']), $_SESSION[\'ploopi\'][\'workspaces\'][$b][\'label\']) < sprintf("%03d_%s", intval($_SESSION[\'ploopi\'][\'workspaces\'][$a][\'depth\']), $_SESSION[\'ploopi\'][\'workspaces\'][$a][\'label\']));'));
 
         // create a list with allowed workspaces only
         $_SESSION['ploopi']['workspaces_allowed'] = array();
