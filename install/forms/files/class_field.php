@@ -63,8 +63,8 @@ class field extends data_object
     /**
      * Enregistre le champ
      *
-     * @return int identifiant du champ enregistré 
-     * 
+     * @return int identifiant du champ enregistré
+     *
      * @see forms_createphysicalname
      */
     

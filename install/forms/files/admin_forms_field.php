@@ -38,7 +38,7 @@
 
 $field = new field();
 
-if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']) && $field->open($_GET['field_id'])) 
+if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']) && $field->open($_GET['field_id']))
 {
     $title = _FORMS_FIELDMODIFICATION;
 }

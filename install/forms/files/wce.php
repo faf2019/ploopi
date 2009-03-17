@@ -43,7 +43,6 @@ include_once './modules/forms/class_reply.php';
 include_once './modules/forms/class_reply_field.php';
 include_once './lib/template/template.php';
 
-
 global $field_formats; // from form/include/global.php
 global $field_operators; // from form/include/global.php
 
@@ -73,10 +72,10 @@ switch($op)
             $reply->fields['id_form'] = $_POST['forms_id'];
             $reply->fields['ip'] = $_SERVER['REMOTE_ADDR'];
             $reply->save();
-            
+
             $email_array = array();
-            
-            $email_array['Formulaire'] = 
+
+            $email_array['Formulaire'] =
                 array(
                     'Titre' => $forms->fields['label'],
                     'Date' => $reply->fields['date_validation'],
@@ -194,7 +193,6 @@ switch($op)
         <div id="forms_response"><?php echo nl2br($forms->fields['cms_response']); ?></div>
         <?php
     break;
-
 
 }
 ?>

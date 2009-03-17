@@ -29,7 +29,7 @@
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see ploopi_send_form
  */
 
@@ -96,7 +96,7 @@ while ($fields = $db->fetchrow($rs_fields))
     $error = false;
 
     /**
-     * Champs de type fichier, on va devoir déposer le fichier 
+     * Champs de type fichier, on va devoir déposer le fichier
      */
     if ($fields['type'] == 'file' && !empty($_FILES['field_'.$fields['id']]['name']))
     {
@@ -119,7 +119,7 @@ while ($fields = $db->fetchrow($rs_fields))
     /**
      * Pour tous les champs (sauf autoincrement)
      */
-    
+
     if (isset($_POST['field_'.$fields['id']]))
     {
         $fieldok = true;
@@ -138,7 +138,7 @@ while ($fields = $db->fetchrow($rs_fields))
         /**
          * Calcul de l'autoincrement s'il s'agit d'un nouvel enregistrement
          */
-        
+
         if ($fields['type'] == 'autoincrement' && $isnew) // not in form => need to be calculated
         {
             $fieldok = true;
@@ -181,7 +181,7 @@ if ($forms->fields['email'] != '')
     /**
      * Envoi du formulaire par mail
      */
-    
+
     ploopi_send_form($from, $to, $email_array['Formulaire']['Titre'], $email_array);
 }
 

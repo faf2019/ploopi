@@ -23,7 +23,7 @@
 
 /**
  * Affichage du bloc de menu
- * 
+ *
  * @package forms
  * @subpackage block
  * @copyright Netlor, Ovensia
@@ -39,17 +39,14 @@ ploopi_init_module('forms', false, false, false);
 
 $date_today = ploopi_createtimestamp();
 
-$forms_select =     "
-                    SELECT      *
-                    FROM        ploopi_mod_forms_form
-                    WHERE       id_module = {$menu_moduleid}
-                    AND         id_workspace IN (".ploopi_viewworkspaces($menu_moduleid).")
-                    AND         (pubdate_start <= '{$date_today}' OR pubdate_start = '')
-                    AND         (pubdate_end >= '{$date_today}' OR pubdate_end = '')
-                    ";
-
-
-$forms_result = $db->query($forms_select);
+$forms_result = $db->query("
+    SELECT      *
+    FROM        ploopi_mod_forms_form
+    WHERE       id_module = {$menu_moduleid}
+    AND         id_workspace IN (".ploopi_viewworkspaces($menu_moduleid).")
+    AND         (pubdate_start <= '{$date_today}' OR pubdate_start = '')
+    AND         (pubdate_end >= '{$date_today}' OR pubdate_end = '')
+");
 
 while ($forms_fields = $db->fetchrow($forms_result))
 {

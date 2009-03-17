@@ -48,7 +48,7 @@ include_once './include/classes/data_object.php';
  */
 
 class reply_field extends data_object
-{   
+{
     /**
      * Constructeur de la classe
      *

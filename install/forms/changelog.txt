@@ -1,3 +1,11 @@
+== Module FORMS - version 2.3.2 =====================================================
+
+2009-03-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug dans la gestion du droit de suppression des enregistrements
+ * La fonctionnalité "Supprimer les données filtrées" respecte les droits de l'utilisateur pour chaque enregistrement
+ * Remplacement des balises <? par <?php
+
 == Module FORMS - version 2.3.1 =====================================================
 
 2009-02-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

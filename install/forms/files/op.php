@@ -40,7 +40,7 @@ if ($_SESSION['ploopi']['connected'])
     /**
      * On vérifie qu'on est bien dans le module FORMS.
      */
-    
+
     if (ploopi_ismoduleallowed('forms'))
     {
         switch($ploopi_op)
@@ -62,10 +62,10 @@ if ($_SESSION['ploopi']['connected'])
                     include './modules/forms/op_export.php';
                 }
             break;
-    
+
             case 'forms_delete_data':
                 include_once './modules/form/include/global.php';
-    
+
                 if (ploopi_isactionallowed(_FORMS_ACTION_BACKUP))
                 {
                     ?>
@@ -75,15 +75,15 @@ if ($_SESSION['ploopi']['connected'])
                     if (!empty($_GET['form_id']) && !empty($_GET['form_delete_date']))
                     {
                         $form_delete_date = ploopi_local2timestamp($_GET['form_delete_date']);
-    
+
                         $form_delete_date = ploopi_timestamp_add($form_delete_date, 0, 0, 0, 0, 1, 0);
-    
+
                         $sql = "SELECT COUNT(*) as c FROM ploopi_mod_forms_reply WHERE id_form = '".$db->addslashes($_GET['form_id'])."' AND date_validation < {$form_delete_date}";
                         $db->query($sql);
                         $row = $db->fetchrow();
-    
+
                         echo "{$row['c']} enregistement(s) ont été supprimés";
-    
+
                         $sql =  "
                                 DELETE  r, rf
                                 FROM    ploopi_mod_forms_reply r,
@@ -103,11 +103,11 @@ if ($_SESSION['ploopi']['connected'])
             break;
         }
     }
-    
+
     /**
      * Autres opérations
      */
-    
+
     switch($ploopi_op)
     {
         case 'forms_download_file':
@@ -115,7 +115,7 @@ if ($_SESSION['ploopi']['connected'])
             {
                 $id_form = $_SESSION['forms'][$_GET['forms_fuid']]['id_form'];
                 $id_module = $_SESSION['forms'][$_GET['forms_fuid']]['id_module'];
-                
+
                 if (!empty($_GET['reply_id']) && !empty($_GET['field_id']) && is_numeric($_GET['reply_id']) && is_numeric($_GET['field_id']))
                 {
                     include_once './modules/forms/class_reply_field.php';
@@ -129,64 +129,63 @@ if ($_SESSION['ploopi']['connected'])
             }
             ploopi_die();
         break;
-        
+
         case 'forms_display':
             if (!empty($_GET['forms_fuid']) && isset($_SESSION['forms'][$_GET['forms_fuid']]))
             {
                 ploopi_init_module('forms', false, false, false);
                 include_once './modules/forms/class_form.php';
-    
+
                 $forms_fuid = $_GET['forms_fuid'];
                 $id_form = $_SESSION['forms'][$_GET['forms_fuid']]['id_form'];
                 $id_module = $_SESSION['forms'][$_GET['forms_fuid']]['id_module'];
-    
+
                 include_once './modules/forms/op_preparedata.php';
                 include_once './modules/forms/op_viewlist.php';
             }
             ploopi_die();
         break;
-    
+
         case 'forms_export':
             if (!empty($_GET['forms_fuid']) && isset($_SESSION['forms'][$_GET['forms_fuid']]))
             {
                 ploopi_init_module('forms', false, false, false);
                 include_once './modules/forms/class_form.php';
-    
+
                 $forms_fuid = $_GET['forms_fuid'];
                 $id_form = $_SESSION['forms'][$_GET['forms_fuid']]['id_form'];
                 $id_module = $_SESSION['forms'][$_GET['forms_fuid']]['id_module'];
-    
+
                 include_once './modules/forms/op_preparedata.php';
                 include_once './modules/forms/public_forms_export.php';
             }
             ploopi_die();
         break;
-    
+
         case 'forms_openreply':
             if (!empty($_GET['forms_fuid']) && isset($_SESSION['forms'][$_GET['forms_fuid']]))
             {
                 ob_start();
                 ploopi_init_module('forms', false, false, false);
                 include_once './modules/forms/class_form.php';
-    
+
                 $reply_id = $_GET['forms_reply_id'];
                 $id_form = $_SESSION['forms'][$_GET['forms_fuid']]['id_form'];
                 $id_module = $_SESSION['forms'][$_GET['forms_fuid']]['id_module'];
-    
+
                 $forms = new form();
                 $forms->open($id_form);
-    
+
                 include_once './modules/forms/op_display.php';
-    
+
                 $content = ob_get_contents();
                 ob_end_clean();
-    
+
                 echo $skin->create_popup($forms->fields['label'], $content, 'popup_forms_openreply');
             }
             ploopi_die();
         break;
-    
-    
+
         case 'forms_save':
             if (!empty($_POST['forms_fuid']) && isset($_SESSION['forms'][$_POST['forms_fuid']]))
             {
@@ -195,11 +194,11 @@ if ($_SESSION['ploopi']['connected'])
                 include_once './modules/forms/class_form.php';
                 include_once './modules/forms/class_reply.php';
                 include_once './modules/forms/class_reply_field.php';
-    
+
                 $reply_id = $_POST['forms_reply_id'];
                 $id_form = $_SESSION['forms'][$_POST['forms_fuid']]['id_form'];
                 $id_module = $_SESSION['forms'][$_POST['forms_fuid']]['id_module'];
-    
+
                 include_once './modules/forms/op_save.php';
                 ?>
                 <script type="text/javascript">

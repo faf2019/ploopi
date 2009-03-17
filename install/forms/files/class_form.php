@@ -74,7 +74,7 @@ class form extends data_object
     }
 
     /**
-     * Renvoie la liste des champs du formulaire 
+     * Renvoie la liste des champs du formulaire
      *
      * @return array tableau des champs indexé par les identifiants
      */

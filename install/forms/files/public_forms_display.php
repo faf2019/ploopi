@@ -121,7 +121,7 @@ function form_validate(form)
                     <?php
                 }
             break;
-                
+
             case 'select':
             case 'color':
                 if ($fields['option_needed'])
@@ -153,7 +153,7 @@ var result = form_validate(this);
 
 <?php
 /**
- * La fonction est récupérée puis nettoyée (suppression \n \r \t), 
+ * La fonction est récupérée puis nettoyée (suppression \n \r \t),
  * puis on utilise une variable javascript pour la déclarer dans la page du client.
  */
 

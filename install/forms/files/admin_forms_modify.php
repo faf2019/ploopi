@@ -136,8 +136,6 @@ if (!$forms->new)
                     </select>
                 </p>
 
-
-
                 <?php
                 //if ($forms->fields['typeform'] == 'cms')
                 ?>
@@ -284,9 +282,6 @@ if (!$forms->new)
         </div>
     </div>
 
-
-
-
 </div>
 
 </form>
@@ -344,8 +339,6 @@ if (!$forms->new)
                                             'options' => array('sort' => true)
                                             );
 
-
-
     $array_columns['right']['export'] = array(  'label' => _FORMS_FIELD_EXPORTVIEW_SHORT,
                                                 'width' => 55,
                                                 'options' => array('sort' => true)
@@ -389,7 +382,6 @@ if (!$forms->new)
         if ($fields['separator'])
         {
             $desc = str_replace('<LEVEL>',$fields['separator_level'],_FORMS_FIELD_SEPARATOR_DESC);
-
 
             $array_values[$c]['values']['name']         = array('label' =>  $fields['name']);
             $array_values[$c]['values']['type']         = array('label' =>  "{$desc} ({$fields['separator_fontsize']} pix)");

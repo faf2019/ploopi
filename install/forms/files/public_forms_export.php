@@ -29,7 +29,7 @@
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see ploopi_ob_clean
  * @link http://pear.php.net/package/Spreadsheet_Excel_Writer
  */

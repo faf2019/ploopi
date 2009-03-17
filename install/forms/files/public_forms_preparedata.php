@@ -82,8 +82,6 @@ if (ploopi_isactionallowed(_FORMS_ACTION_FILTER))
     }
 }
 
-
-
 // GET WORKSPACES
 $workspaces = forms_viewworkspaces($_SESSION['ploopi']['moduleid'], $_SESSION['ploopi']['workspaceid'], $forms->fields['option_view']);
 
@@ -119,16 +117,13 @@ while ($fields = $db->fetchrow())
     $data_title[$fields['id']]['format'] = $fields['format'];
 }
 
-
 $select =   "
             SELECT      fr.*,
-                        u.id as userid,
                         u.firstname,
                         u.lastname,
                         u.login,
-                        g.id as workspaceid,
-                        g.code,
-                        g.label as g_label,
+                        w.code,
+                        w.label as w_label,
                         m.label as m_label
 
             FROM        ploopi_mod_forms_reply fr
@@ -140,8 +135,8 @@ $select =   "
             LEFT JOIN   ploopi_user u
             ON          fr.id_user = u.id
 
-            LEFT JOIN   ploopi_workspace g
-            ON          fr.id_workspace = g.id
+            LEFT JOIN   ploopi_workspace w
+            ON          fr.id_workspace = w.id
 
             WHERE   fr.id_form = $forms_id
             AND     fr.id_workspace IN ({$workspaces})
@@ -159,13 +154,10 @@ while ($fields = $db->fetchrow($rs))
 
     $data[$c]['datevalidation'] = $fields['date_validation'];
     $data[$c]['user'] = $fields['login'];
-    $data[$c]['group'] = $fields['g_label'];
+    $data[$c]['group'] = $fields['w_label'];
     $data[$c]['ip'] = $fields['ip'];
-
-    /*
-    $data[$c]['userid'] = $fields['userid'];
-    $data[$c]['workspaceid'] = $fields['workspaceid'];
-    */
+    $data[$c]['id_user'] = $fields['id_user'];
+    $data[$c]['id_workspace'] = $fields['id_workspace'];
 
     $sql =  "
             SELECT  rf.*, f.type
@@ -211,7 +203,6 @@ function compare($a, $b)
 }
 
 uasort($data, "compare");
-
 
 // construction du jeu de données filtré
 $export = array();
@@ -307,7 +298,7 @@ foreach ($data as $reply_id => $detail)
                 $ldate = ploopi_timestamp2local($value);
                 $detail[$key] = "{$ldate['date']} {$ldate['time']}";
             }
-            elseif ($data_title[$key]['format'] == 'date' && !empty($value))
+            elseif (isset($data_title[$key]) && $data_title[$key]['format'] == 'date' && !empty($value))
             {
                 $ldate = ploopi_timestamp2local($value);
                 $detail[$key] = $ldate['date'];
@@ -317,22 +308,39 @@ foreach ($data as $reply_id => $detail)
     if ($filter_ok) $export[$reply_id] = $detail;
 }
 
-
 if ($ploopi_op == 'forms_deletedata' && ploopi_isactionallowed(_FORMS_ACTION_DELETE) && !empty($export))
 {
-    $sql_delete =   "
-                    DELETE  r, rf
-                    FROM    ploopi_mod_forms_reply r,
-                            ploopi_mod_forms_reply_field rf
-                    WHERE   r.id IN (".implode(',',array_keys($export)).")
-                    AND     r.id = rf.id_reply
-                    ";
-
-    $db->query($sql_delete);
-    ploopi_redirect("admin.php?op=filter&forms_id={$forms_id}");
+    ploopi_print_r($export);
+    $arrExportDelete = array();
+    foreach ($export as $reply_id => $detail)
+    {
+        // Droit de suppression d'un enregistrement
+        if (ploopi_isadmin() || (
+                ploopi_isactionallowed(_FORMS_ACTION_DELETE) && (
+                    ($forms->fields['option_modify'] == 'user' && $detail['id_user'] == $_SESSION['ploopi']['userid']) || 
+                    ($forms->fields['option_modify'] == 'group' && $detail['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  || 
+                    ($forms->fields['option_modify'] == 'all')
+                )
+            ))
+        {
+            $arrExportDelete[$reply_id] = 1;
+        } 
+    }    
+    
+    if (!empty($arrExportDelete))
+    {
+    
+        $db->query("
+            DELETE  r, rf
+            FROM    ploopi_mod_forms_reply r,
+                    ploopi_mod_forms_reply_field rf
+            WHERE   r.id IN (".implode(',',array_keys($arrExportDelete)).")
+            AND     r.id = rf.id_reply
+        ");
+    }
+    
+    ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$forms_id}");
 }
-
-
 
 $_SESSION['forms']['export'] = $export;
 $_SESSION['forms']['export_title'] = $data_title;

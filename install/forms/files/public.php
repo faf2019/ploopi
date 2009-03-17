@@ -85,10 +85,19 @@ switch($op)
 
     case 'forms_reply_delete':
 
-        if (ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY))
+        $reply = new reply();
+        if (!empty($_GET['reply_id']) && is_numeric($_GET['reply_id']) && $reply->open($_GET['reply_id']))
         {
-            $reply = new reply();
-            if (!empty($_GET['reply_id']) && is_numeric($_GET['reply_id']) && $reply->open($_GET['reply_id']))
+            $forms = new form();
+            $forms->open($reply->fields['id_form']);
+            
+            if (ploopi_isadmin() || (
+                    ploopi_isactionallowed(_FORMS_ACTION_DELETE) && (
+                        ($forms->fields['option_modify'] == 'user' && $reply->fields['id_user'] == $_SESSION['ploopi']['userid']) || 
+                        ($forms->fields['option_modify'] == 'group' && $reply->fields['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  || 
+                        ($forms->fields['option_modify'] == 'all')
+                    )
+                ))
             {
                 $reply->delete();
                 ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$reply->fields['id_form']}");
@@ -179,7 +188,7 @@ switch($op)
                     $path = _PLOOPI_PATHDATA._PLOOPI_SEP.'forms-'.$_SESSION['ploopi']['moduleid']._PLOOPI_SEP.$forms->fields['id']._PLOOPI_SEP.$reply->fields['id']._PLOOPI_SEP;
                     $error = ($_FILES['field_'.$fields['id']]['size'] > _PLOOPI_MAXFILESIZE);
 
-                    
+
                     if (!$error)
                     {
                         ploopi_makedir($path);
@@ -255,7 +264,7 @@ switch($op)
 
             ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$forms->fields['id']}");
         }
-        else 
+        else
         {
             ploopi_redirect('admin.php');
         }

@@ -59,8 +59,8 @@ $template_forms->assign_vars(array(
         );
 
 /**
- * On crée un bloc par champ 
- */        
+ * On crée un bloc par champ
+ */
 while ($fields = $db->fetchrow($rs_fields))
 {
     $template_forms->assign_block_vars('formfields', array());
@@ -150,12 +150,12 @@ while ($fields = $db->fetchrow($rs_fields))
 
             case 'select':
                 $template_forms->assign_block_vars('formfields.switch_field.switch_select', array());
-                
+
                 $template_forms->assign_block_vars('formfields.switch_field.switch_select.values', array(
                     'VALUE' => '', 'SELECTED' => '', 'SELECTED_XHTML' => ''
                     )
                 );
-                
+
                 foreach($values as $value)
                 {
                     $template_forms->assign_block_vars('formfields.switch_field.switch_select.values', array(
@@ -184,23 +184,22 @@ while ($fields = $db->fetchrow($rs_fields))
                 }
             break;
 
-
             case 'checkbox':
                 $template_forms->assign_block_vars('formfields.switch_field.switch_checkbox', array());
 
                 $c_size = ceil(sizeof($values) / $fields['cols']);
-                
+
                 for ($c = 1; $c<=$fields['cols']; $c++) // columns
                 {
                     $template_forms->assign_block_vars('formfields.switch_field.switch_checkbox.columns', array(
                         'WIDTH' => 100 / $fields['cols']
                         )
                     );
-                    
+
                     for ($d = ($c-1)*$c_size; $d < ($c)*$c_size && isset($values[$d]); $d++)
                     {
                         $value = $values[$d];
-                        
+
                         $template_forms->assign_block_vars('formfields.switch_field.switch_checkbox.columns.values', array(
                             'ID' => $d,
                             'VALUE' => $value,
@@ -215,16 +214,16 @@ while ($fields = $db->fetchrow($rs_fields))
 
             case 'radio':
                 $template_forms->assign_block_vars('formfields.switch_field.switch_radio', array());
-                
+
                 $c_size = ceil(sizeof($values) / $fields['cols']);
-                
+
                 for ($c = 1; $c<=$fields['cols']; $c++) // columns
                 {
                     $template_forms->assign_block_vars('formfields.switch_field.switch_radio.columns', array(
                         'WIDTH' => 100 / $fields['cols']
                         )
                     );
-                    
+
                     for ($d = ($c-1)*$c_size; $d < ($c)*$c_size && isset($values[$d]); $d++)
                     {
                         $value = $values[$d];
@@ -248,10 +247,10 @@ while ($fields = $db->fetchrow($rs_fields))
                 $template_forms->assign_block_vars('formfields.switch_field.switch_color', array());
 
                 $template_forms->assign_block_vars('formfields.switch_field.switch_color.values', array(
-                    'VALUE' => '', 'SELECTED' => '', 'SELECTED_XHTML' => '' 
+                    'VALUE' => '', 'SELECTED' => '', 'SELECTED_XHTML' => ''
                     )
                 );
-                
+
                 foreach($values as $value)
                 {
                     $template_forms->assign_block_vars('formfields.switch_field.switch_color.values', array(

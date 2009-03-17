@@ -36,7 +36,7 @@
  */
 
 /**
- * Action : Créer un formulaire
+ * Action : Gérer les formulaires
  */
 define ("_FORMS_ACTION_CREATEFORM", 1);
 
@@ -56,12 +56,12 @@ define ("_FORMS_ACTION_EXPORT",     3);
 define ("_FORMS_ACTION_FILTER",     4);
 
 /**
- * Action : Supprimer un formulaire
+ * Action : Supprimer des enregistrements d'un formulaire
  */
 define ("_FORMS_ACTION_DELETE",     5);
 
 /**
- * Action : Gérer l'archivage des données d'un formulaire 
+ * Action : Gérer l'archivage des données d'un formulaire
  */
 define ("_FORMS_ACTION_BACKUP",     6);
 
@@ -80,7 +80,7 @@ define ("_FORMS_ACTION_ADMIN",     7);
 global $field_types;
 
 /**
- * Formats de champs (string, integer, date, etc...) 
+ * Formats de champs (string, integer, date, etc...)
  */
 global $field_formats;
 
@@ -128,31 +128,30 @@ $form_types = array(    'cms' => 'Formulaire pour Gestion de Contenu',
                         'app' => 'Application PLOOPI'
                     );
 
-                    
 /**
  * Crée le nom physique de la table en fonction du nom du formulaire
  *
  * @param string $name nom du formulaire
  * @return string nom de la table
  */
-                    
+
 function forms_createphysicalname($name)
 {
     /**
      * Conversion des caractères non alphanum , conversion en minuscule, suppression des accents, suppression des espaces inutiles
      */
-    
+
     $name = ereg_replace("([^[:alnum:]|_]+)", "_", ploopi_convertaccents(strtolower(trim($name))));
-    
+
     /**
      * Suppression des '_' en trop
      */
-    
+
     $patterns = array('/__+/', '/_$/');
     $replacements = array('_', '');
 
     $name = preg_replace($patterns, $replacements, $name);
-    
+
     if (strlen($name) && is_numeric($name{0})) $name  = "_{$name}";
 
     return(substr($name, 0, 32));
@@ -205,7 +204,7 @@ function forms_viewworkspaces($moduleid, $workspaceid, $viewmode)
  * @param int $id_object identifiant de l'objet appelant
  * @param string $id_record identifiant de l'enregistrement appelant
  * @return string identifiant du bloc en md5
- * 
+ *
  * @see md5
  */
 
@@ -226,7 +225,7 @@ function forms_getfuid($id_form, $id_module, $id_object, $id_record)
  * @param string $id_record identifiant de l'enregistrement appelant
  * @param array $rights tableau des droits  (_FORMS_ACTION_ADDREPLY, _FORMS_ACTION_EXPORT, _FORMS_ACTION_DELETE, _FORMS_ACTION_MODIFY)
  * @param array $options tableau des options (height:int, filter_mode:string, object_display:boolean, object_label:string, object_values:array)
- * 
+ *
  * @see forms_getfuid
  */
 
@@ -275,32 +274,32 @@ function forms_display($id_form, $id_module, $id_object, $id_record, $rights = a
  * @param int $id_object identifiant de l'objet appelant
  * @param string $id_record identifiant de l'enregistrement appelant
  * @param array $options tableau des options (filter_mode:string, object_display:boolean, object_label:string, object_values:array)
- * 
+ *
  * @return array tableau contenant le titre et les données
  */
 
 function forms_getdata($id_form, $id_module, $id_object, $id_record, $options = array())
 {
     include_once './modules/forms/class_form.php';
-    
+
     global $db;
-    
+
     $forms_fuid = forms_getfuid($id_form, $id_module, $id_object, $id_record);
-    
+
     $_SESSION['forms'][$forms_fuid]['id_form'] = $id_form;
     $_SESSION['forms'][$forms_fuid]['id_object'] = $id_object;
     $_SESSION['forms'][$forms_fuid]['id_record'] = $id_record;
     $_SESSION['forms'][$forms_fuid]['id_module'] = $id_module;
-        
+
     if (!isset($options['filter_mode'])) $options['filter_mode'] = 'default'; // or 'like'
     if (!isset($options['object_display'])) $options['object_display'] = false;
     if (!isset($options['object_label'])) $options['object_label'] = 'Objet Lié';
     if (!isset($options['object_values'])) $options['object_values'] = array();
 
     $_SESSION['forms'][$forms_fuid]['options'] = $options;
-    
+
     include './modules/forms/op_preparedata.php';
-    
+
     return(array($data_title, $data));
 }
 ?>

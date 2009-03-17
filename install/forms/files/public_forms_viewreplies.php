@@ -350,26 +350,38 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
                             echo "<td class=\"data\">{$value}</td>";
                         }
                     }
-                    $modify = ploopi_urlencode("admin.php?op=forms_reply_modify&forms_id={$forms_id}&reply_id={$reply_id}");
-                    $delete = ploopi_urlencode("admin.php?op=forms_reply_delete&forms_id={$forms_id}&reply_id={$reply_id}");
-                    $display = ploopi_urlencode("admin.php?op=forms_reply_display&forms_id={$forms_id}&reply_id={$reply_id}");
+                    
                     if ($_SESSION['ploopi']['action'] == 'public')
                     {
                         ?>
                         <td align="left" nowrap>
+                            <a title="Ouvrir" href="<?php echo ploopi_urlencode("admin.php?op=forms_reply_display&forms_id={$forms_id}&reply_id={$reply_id}"); ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_display.png"></a>
                             <?php
-                            if (ploopi_isadmin() || (ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY) && (($forms->fields['option_modify'] == 'user' && $detail['userid'] == $_SESSION['ploopi']['userid']) || ($forms->fields['option_modify'] == 'group' && $detail['workspaceid'] == $_SESSION['ploopi']['workspaceid'])  || ($forms->fields['option_modify'] == 'all'))))
+                            // Droit de modif d'un enregistrement
+                            if (ploopi_isadmin() || (
+                                    ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY) && (
+                                        ($forms->fields['option_modify'] == 'user' && $detail['id_user'] == $_SESSION['ploopi']['userid']) || 
+                                        ($forms->fields['option_modify'] == 'group' && $detail['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  || 
+                                        ($forms->fields['option_modify'] == 'all')
+                                    )
+                                ))
                             {
                                 ?>
-                                <a title="Ouvrir" href="<?php echo $display; ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_display.png"></a>
-                                <a title="Modifier" href="<?php echo $modify; ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_modify.png"></a>
+                                <a title="Modifier" href="<?php echo ploopi_urlencode("admin.php?op=forms_reply_modify&forms_id={$forms_id}&reply_id={$reply_id}"); ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_modify.png"></a>
                                 <?php
-                                if (ploopi_isactionallowed(_FORMS_ACTION_DELETE))
-                                {
-                                    ?>
-                                    <a title="Supprimer" href="javascript:ploopi_confirmlink('<?php echo $delete; ?>','<?php echo _PLOOPI_CONFIRM; ?>')"><img alt="supprimer" border="0" src="./modules/forms/img/ico_trash.png"></a>
-                                    <?php
-                                }
+                            }
+                            // Droit de suppression d'un enregistrement
+                            if (ploopi_isadmin() || (
+                                    ploopi_isactionallowed(_FORMS_ACTION_DELETE) && (
+                                        ($forms->fields['option_modify'] == 'user' && $detail['id_user'] == $_SESSION['ploopi']['userid']) || 
+                                        ($forms->fields['option_modify'] == 'group' && $detail['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  || 
+                                        ($forms->fields['option_modify'] == 'all')
+                                    )
+                                ))
+                            {
+                                ?>
+                                <a title="Supprimer" href="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=forms_reply_delete&forms_id={$forms_id}&reply_id={$reply_id}"); ?>','<?php echo _PLOOPI_CONFIRM; ?>')"><img alt="supprimer" border="0" src="./modules/forms/img/ico_trash.png"></a>
+                                <?php
                             }
                             ?>
                         </td>

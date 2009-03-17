@@ -136,7 +136,7 @@ var result = form_validate(this);
 
 <?php
 /**
- * La fonction est récupérée puis nettoyée (suppression \n \r \t), 
+ * La fonction est récupérée puis nettoyée (suppression \n \r \t),
  * puis on utilise une variable javascript pour la déclarer dans la page du client.
  */
 
@@ -273,13 +273,13 @@ if (file_exists("./modules/forms/templates/{$template_name}/index.tpl"))
                 'OPTION' => 'onclick="javascript:ploopi_hidepopup(\'popup_forms_openreply\');"'
                 )
             );
-            
+
     $template_forms->assign_block_vars('formbuttons', array(
                 'TYPE' => 'submit',
                 'VALUE' => 'Enregistrer'
                 )
             );
-            
+
     include './modules/forms/public_forms_display_render.php';
     $template_forms->pparse('forms_display');
 }

@@ -47,21 +47,21 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
     include_once './modules/forms/class_field.php';
     
     $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
-    
+
     if (!empty($_GET['formsTabItem'])) $_SESSION['forms']['formsTabItem'] = $_GET['formsTabItem'];
     if (!isset($_SESSION['forms']['formsTabItem'])) $_SESSION['forms']['formsTabItem'] = '';
     
     $sqllimitgroup = ' AND ploopi_mod_forms_form.id_workspace IN ('.ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).')';
     
-    $tabs['formlist'] = 
+    $tabs['formlist'] =
         array(
-            'title' => _FORMS_LABELTAB_LIST, 
+            'title' => _FORMS_LABELTAB_LIST,
             'url' => "admin.php?formsTabItem=formlist"
         );
         
-    $tabs['formadd'] = 
+    $tabs['formadd'] =
         array(
-            'title' => _FORMS_LABELTAB_ADD, 
+            'title' => _FORMS_LABELTAB_ADD,
             'url' => "admin.php?formsTabItem=formadd"
         );
     

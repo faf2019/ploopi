@@ -118,7 +118,7 @@
             {
                 $new_option = $style_col = $sort_cell = '';
                 $sort_cell = '';
-                
+
                 if ($orderby == $key)
                 {
                     $new_option = ($option == 'DESC') ? '' : 'DESC';

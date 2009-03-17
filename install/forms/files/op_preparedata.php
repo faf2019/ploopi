@@ -29,7 +29,7 @@
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see forms_viewworkspaces
  */
 
@@ -58,7 +58,6 @@ $data_title['datevalidation']   = array ('label' => _FORMS_DATEVALIDATION, 'sep'
 $data_title['user']             = array ('label' => _FORMS_USER, 'sep' => 0, 'type' => '', 'format' => '');
 $data_title['group']            = array ('label' => _FORMS_GROUP, 'sep' => 0, 'type' => '', 'format' => '');
 $data_title['ip']               = array ('label' => _FORMS_IP, 'sep' => 0, 'type' => '', 'format' => '');
-
 
 //if ($forms->fields['option_displaygroup'])
 //$data[0][3] = _FORMS_MODULE;
@@ -124,7 +123,7 @@ $rs = $db->query($select);
 // construction du jeu de données brut (liste des réponses)
 $data = array();
 while ($fields = $db->fetchrow($rs))
-{    
+{
     $c = $fields['id'];
 
     $data[$c] = array();

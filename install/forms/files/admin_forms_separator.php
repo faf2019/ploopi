@@ -43,7 +43,7 @@ if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']) && $field->open($
 {
     $title = _FORMS_SEPARATORMODIFICATION;
 }
-else 
+else
 {
     $field->init_description();
     $title = _FORMS_SEPARATORCREATION;

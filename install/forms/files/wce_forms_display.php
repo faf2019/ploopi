@@ -112,7 +112,6 @@ function form_validate(form)
                 }
             break;
 
-
             case 'file':
                 if ($fields['option_needed'])
                 {
@@ -153,7 +152,7 @@ var result = form_validate(this);
 
 <?php
 /**
- * La fonction est récupérée puis nettoyée (suppression \n \r \t), 
+ * La fonction est récupérée puis nettoyée (suppression \n \r \t),
  * puis on utilise une variable javascript pour la déclarer dans la page du client.
  */
 
@@ -260,7 +259,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/forms.tpl"))
     global $template_body;
 
     $template_forms->set_filenames(array('forms_display' => "forms.tpl"));
-    
+
     /**
      * Suite du rendu
      */

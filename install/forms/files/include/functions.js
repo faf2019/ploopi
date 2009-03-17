@@ -105,7 +105,6 @@ function forms_field_move_value(lst,mv)
     }
 }
 
-
 function forms_deletedata(form_id, event)
 {
     if (ploopi_validatefield('date',$('forms_delete_date'),'date'))

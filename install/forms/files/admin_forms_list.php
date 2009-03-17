@@ -40,17 +40,25 @@ echo $skin->open_simplebloc();
 $array_columns = array();
 $array_values = array();
 
-$array_columns['auto']['label'] = array(    'label' => _FORMS_LABEL,
-                                            'options' => array('sort' => true)
-                                            );
+$array_columns['auto']['label'] = 
+    array(    
+        'label' => _FORMS_LABEL,
+        'options' => array('sort' => true)
+    );
 
-$array_columns['right']['desc'] = array(    'label' => _FORMS_DESCRIPTION,
-                                            'width' => 300,
-                                            'options' => array('sort' => true)
-                                            );
+$array_columns['right']['desc'] = 
+    array(    
+        'label' => _FORMS_DESCRIPTION,
+        'width' => 300,
+        'options' => array('sort' => true)
+    );
 
 
-$array_columns['actions_right']['actions'] = array('label' => '', 'width' => 90);
+$array_columns['actions_right']['actions'] = 
+    array(
+        'label' => '', 
+        'width' => 90
+    );
 
 
 $sql =  "
