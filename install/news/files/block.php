@@ -37,22 +37,17 @@
 
 ploopi_init_module('news', false, false, false);
 
-$groups = ploopi_viewworkspaces($menu_moduleid);
-$sqllimitgroup = " AND ploopi_mod_news_entry.id_workspace IN ($groups)";
-
-$news_select =  "
-                SELECT      ploopi_mod_news_entry.*, 
-                            ploopi_mod_news_cat.title as titlecat 
-                FROM        ploopi_mod_news_entry 
-                LEFT JOIN   ploopi_mod_news_cat ON ploopi_mod_news_cat.id = ploopi_mod_news_entry.id_cat 
-                WHERE       ploopi_mod_news_entry.id_module = $menu_moduleid
-                $sqllimitgroup
-                AND     ploopi_mod_news_entry.published = 1
-                ORDER BY    date_publish desc 
-                LIMIT       0,".$_SESSION['ploopi']['modules'][$menu_moduleid]['nbnewsdisplay'];
-
-
-$news_result = $db->query($news_select);
+$news_result = $db->query("
+    SELECT      ploopi_mod_news_entry.*, 
+                ploopi_mod_news_cat.title as titlecat 
+    FROM        ploopi_mod_news_entry 
+    LEFT JOIN   ploopi_mod_news_cat ON ploopi_mod_news_cat.id = ploopi_mod_news_entry.id_cat 
+    WHERE       ploopi_mod_news_entry.id_module = {$menu_moduleid}
+    AND         ploopi_mod_news_entry.id_workspace IN (".ploopi_viewworkspaces($menu_moduleid).")
+    AND     ploopi_mod_news_entry.published = 1
+    ORDER BY    date_publish desc 
+    LIMIT       0,{$_SESSION['ploopi']['modules'][$menu_moduleid]['nbnewsdisplay']}
+");
 
 while ($news_fields = $db->fetchrow($news_result))
 {
@@ -68,7 +63,5 @@ if (ploopi_isactionallowed(-1,$_SESSION['ploopi']['workspaceid'],$menu_moduleid)
 {
     $block->addmenu('<strong>'._NEWS_ADMIN.'</strong>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"));
 }
-
-
 ?>
 

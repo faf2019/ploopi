@@ -22,7 +22,7 @@
 */
 
 /**
- * Administration des news - liste 
+ * Administration des news - liste
  *
  * @package news
  * @subpackage admin
@@ -81,7 +81,7 @@ while ($fields = $db->fetchrow($result))
     /**
      * Conversion timestamp en date locale
      */
-    
+
     $localdate = ploopi_timestamp2local($fields['date_publish']);
 
     /**
@@ -98,14 +98,14 @@ while ($fields = $db->fetchrow($result))
 
     if (ploopi_isactionallowed(_NEWS_ACTION_PUBLISH))
     {
-        if ($fields['published']) 
+        if ($fields['published'])
             $pub_link = '<a title="Retirer" href="'.ploopi_urlencode("admin.php?op=withdraw_news&news_id={$fields['id']}").'"><img alt="Retirer" src="./modules/news/img/ico_withdraw.png" /></a>';
-        else 
+        else
             $pub_link = '<a title="Publier" href="'.ploopi_urlencode("admin.php?op=publish_news&news_id={$fields['id']}").'"><img alt="Publier" src="./modules/news/img/ico_publish.png" /></a>';
     }
     else $pub_link = '';
 
-    $news_values[$c]['values']['actions'] = 
+    $news_values[$c]['values']['actions'] =
         array(
             'label' =>  '
                         <a title="Modifier" href="'.ploopi_urlencode("admin.php?op=modify_news&news_id={$fields['id']}").'"><img alt="Modifier" src="./modules/news/img/ico_modify.png" /></a>
@@ -126,7 +126,7 @@ $skin->display_array($news_columns, $news_values, 'array_newslist', array('heigh
 echo $skin->close_simplebloc();
 ?>
 
-<?
+<?php
 /**
  * Modification d'une news
  */

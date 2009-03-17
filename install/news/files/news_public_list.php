@@ -49,7 +49,7 @@ $select =   "
             FROM        ploopi_mod_news_entry
             LEFT JOIN   ploopi_mod_news_cat ON ploopi_mod_news_cat.id = ploopi_mod_news_entry.id_cat
             WHERE       ploopi_mod_news_entry.id_module = ".$_SESSION['ploopi']['moduleid']."
-            $sqllimitgroup
+            AND         ploopi_mod_news_entry.id_workspace IN (".ploopi_viewworkspaces().")
             AND         ploopi_mod_news_entry.published = 1
             ORDER BY    titlecat,
                         date_publish desc
@@ -72,31 +72,31 @@ if ($db->numrows()>0)
 
         ?>
         <div class="news">
-            <div><b>Publié le</b> <? echo $localdate['date']; ?> à <? echo $localdate['time']; ?>
-            <?
+            <div><b>Publié le</b> <?php echo $localdate['date']; ?> à <?php echo $localdate['time']; ?>
+            <?php
             $user = new user();
             if ($user->open($fields['id_user'])) echo " par {$user->fields['firstname']} {$user->fields['lastname']}";
             ?>
             </div>
-            <div><b><? echo _NEWS_LABEL_CATEGORY ?></b>:&nbsp;<? echo $fields['titlecat']; ?></div>
-            <div><b><? echo _NEWS_LABEL_SOURCE; ?></b>:&nbsp;<? echo $source; ?></div>
-            <?
+            <div><b><?php echo _NEWS_LABEL_CATEGORY ?></b>:&nbsp;<?php echo $fields['titlecat']; ?></div>
+            <div><b><?php echo _NEWS_LABEL_SOURCE; ?></b>:&nbsp;<?php echo $source; ?></div>
+            <?php
             if ($fields['url']!='')
             {
                 if ($fields['urltitle']=='') $urltitle = _NEWS_LABEL_URL;
                 else $urltitle = $fields['urltitle'];
                 ?>
-                    <div><b><? echo _NEWS_LABEL_URL; ?></b>:&nbsp;<a target="_blank" href="<? echo $fields['url']; ?>"><? echo $urltitle; ?></a>
-                <?
+                    <div><b><?php echo _NEWS_LABEL_URL; ?></b>:&nbsp;<a target="_blank" href="<?php echo $fields['url']; ?>"><?php echo $urltitle; ?></a>
+                <?php
             }
             ?>
-            <div><b><? echo _NEWS_LABEL_READS; ?></b>:&nbsp;<? echo $fields['nbclick']; ?></div>
-            <div><? echo $fields['content']; ?></div>
+            <div><b><?php echo _NEWS_LABEL_READS; ?></b>:&nbsp;<?php echo $fields['nbclick']; ?></div>
+            <div><?php echo $fields['content']; ?></div>
         </div>
         <div style="clear:both;border-top:1px solid #c0c0c0;">
-            <? ploopi_annotation(_NEWS_OBJECT_NEWS, $fields['id'], $fields['title']); ?>
+            <?php ploopi_annotation(_NEWS_OBJECT_NEWS, $fields['id'], $fields['title']); ?>
         </div>
-        <?
+        <?php
         echo $skin->close_simplebloc();
     }
 }
@@ -107,7 +107,7 @@ else
     <div class="news">
         <div>Aucune news</div>
     </div>
-    <?
+    <?php
     echo $skin->close_simplebloc();
 }
 ?>

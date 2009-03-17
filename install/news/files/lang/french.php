@@ -74,7 +74,6 @@ define ('_NEWSCAT_WRITE',   'Ajouter une Catégorie');
 define ('_NEWSCAT_LIST',    'Liste des Catégories');
 define ('_NEWSCAT_MODIFY',  'Modifier la Catégorie \'LABEL\'');
 
-
 define ('_NEWS_WRITE',      'Rédiger une News');
 define ('_NEWS_MODIFY',     'Modifier la news \'LABEL\'');
 define ('_NEWS_LIST',       'Liste des News');

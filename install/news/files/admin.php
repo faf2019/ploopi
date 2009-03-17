@@ -23,7 +23,7 @@
 
 /**
  * Interface d'administration du module.
- * 
+ *
  * @package news
  * @subpackage admin
  * @copyright Netlor, Ovensia
@@ -137,7 +137,7 @@ switch($op)
                 $news->delete();
             }
         }
-        
+
         ploopi_redirect("admin.php");
     break;
 

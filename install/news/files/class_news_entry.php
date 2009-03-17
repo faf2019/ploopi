@@ -48,7 +48,7 @@ include_once './include/classes/data_object.php';
  */
 
 class news extends data_object
-{   
+{
     /**
      * Constructeur de la classe
      *
@@ -58,14 +58,14 @@ class news extends data_object
     function news()
     {
         parent::data_object('ploopi_mod_news_entry');
-    }   
-    
+    }
+
     /**
      * Enregistre la news
      *
      * @return boolean true si l'enregistrement a été effectué
      */
-    
+
     function save()
     {
         $this->fields['content'] = ploopi_htmlpurifier($this->fields['content']);

@@ -39,14 +39,14 @@ ploopi_init_module('news', false, false, false);
 
 function news_validate(form)
 {
-    if (ploopi_validatefield("<? echo _NEWS_LABEL_TITLE; ?>",form.news_title,"string")) return true;
+    if (ploopi_validatefield("<?php echo _NEWS_LABEL_TITLE; ?>",form.news_title,"string")) return true;
 
     return false;
 }
 
 function newscat_validate(form)
 {
-    if (ploopi_validatefield("<? echo _NEWS_LABEL_TITLE; ?>",form.newscat_title,"string")) return true;
+    if (ploopi_validatefield("<?php echo _NEWS_LABEL_TITLE; ?>",form.newscat_title,"string")) return true;
 
     return false;
 }

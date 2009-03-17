@@ -110,3 +110,5 @@ if (file_exists("./templates/frontoffice/{$template_name}/news.tpl"))
 
     $template_news->pparse('news_display');
 }
+else echo "Fichier ./templates/frontoffice/{$template_name}/news.tpl manquant";
+

@@ -22,7 +22,7 @@
 */
 
 /**
- * Administration des news - ajout/modification 
+ * Administration des news - ajout/modification
  *
  * @package news
  * @subpackage admin
@@ -39,40 +39,41 @@ if ($news->new) echo $skin->open_simplebloc(_NEWS_WRITE);
 else echo $skin->open_simplebloc(str_replace("LABEL",$news->fields['title'],_NEWS_MODIFY));
 ?>
 
-<form name="form_news" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return news_validate(this);">
+<form name="form_news" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return news_validate(this);">
 <input type="hidden" name="op" value="save_news">
-<input type="hidden" name="news_id" value="<? echo $news->fields['id']; ?>">
+<input type="hidden" name="news_id" value="<?php echo $news->fields['id']; ?>">
 <div>
     <div class="ploopi_form" style="float:left;width:50%;">
         <div style="padding:2px;">
             <p>
-                <label><? echo _NEWS_LABEL_TITLE; ?>:</label>
-                <input class="text" type="text" name="news_title" value="<? echo htmlentities($news->fields['title']); ?>">
+                <label><?php echo _NEWS_LABEL_TITLE; ?>:</label>
+                <input class="text" type="text" name="news_title" value="<?php echo htmlentities($news->fields['title']); ?>">
             </p>
             <p>
-                <label><? echo _NEWS_LABEL_CATEGORY; ?>:</label>
+                <label><?php echo _NEWS_LABEL_CATEGORY; ?>:</label>
                 <select class="select" name="news_id_cat">
-                <option value="0"><? echo _NEWS_LABEL_NOCATEGORY; ?></option>
-                <?
+                <option value="0"><?php echo _NEWS_LABEL_NOCATEGORY; ?></option>
+                <?php
                 $select = "SELECT * FROM ploopi_mod_news_cat WHERE id_module = ".$_SESSION['ploopi']['moduleid']." ORDER BY title";
                 $answer = $db->query($select);
                 while ($fields = $db->fetchrow($answer))
                 {
-                    if  ($fields['id']==$news->fields['id_cat']) $sel = "selected";
-                    echo "<option {$sel} value=\"".$fields['id']."\">".$fields['title']."</option>";
+                    ?>
+                    <option <?php if ($fields['id'] == $news->fields['id_cat']) echo 'selected="selected"'; ?> value="<?php echo $fields['id']; ?>"><?php echo htmlentities($fields['title']); ?></option>
+                    <?php
                 }
                 ?>
                 </select>
             </p>
             <p>
-                <label><? echo _NEWS_LABEL_SOURCE; ?>:</label>
-                <input class="text" type="text" name="news_source" value="<? echo htmlentities($news->fields['source']); ?>">
+                <label><?php echo _NEWS_LABEL_SOURCE; ?>:</label>
+                <input class="text" type="text" name="news_source" value="<?php echo htmlentities($news->fields['source']); ?>">
             </p>
             <p>
-                <label><? echo _NEWS_LABEL_HOT; ?>:</label>
+                <label><?php echo _NEWS_LABEL_HOT; ?>:</label>
                 <select class="select" name="news_hot" style="width:50px;">
-                    <option <? if ($news->fields['hot'] == 0) echo 'selected'; ?> value="0"><? echo _PLOOPI_NO; ?></option>
-                    <option <? if ($news->fields['hot'] == 1) echo 'selected'; ?> value="1"><? echo _PLOOPI_YES; ?></option>
+                    <option <?php if ($news->fields['hot'] == 0) echo 'selected'; ?> value="0"><?php echo _PLOOPI_NO; ?></option>
+                    <option <?php if ($news->fields['hot'] == 1) echo 'selected'; ?> value="1"><?php echo _PLOOPI_YES; ?></option>
                 </select>
             </p>
         </div>
@@ -80,29 +81,29 @@ else echo $skin->open_simplebloc(str_replace("LABEL",$news->fields['title'],_NEW
 
     <div class="ploopi_form" style="float:left;width:50%;">
         <div style="padding:2px;">
-            <? $localdate = (!empty($news->fields['date_publish'])) ? ploopi_timestamp2local($news->fields['date_publish']) : array('date' => ploopi_getdate(), 'time' => ploopi_gettime()); ?>
+            <?php $localdate = (!empty($news->fields['date_publish'])) ? ploopi_timestamp2local($news->fields['date_publish']) : array('date' => ploopi_getdate(), 'time' => ploopi_gettime()); ?>
             <p>
-                <label><? echo _NEWS_LABEL_PUBLISHDATE; ?>:</label>
-                <input class="text" type="text" id="news_date_publish" name="news_date_publish" value="<? echo $localdate['date']; ?>" style="width:100px;">
+                <label><?php echo _NEWS_LABEL_PUBLISHDATE; ?>:</label>
+                <input class="text" type="text" id="news_date_publish" name="news_date_publish" value="<?php echo $localdate['date']; ?>" style="width:100px;">
                 <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('news_date_publish', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
             </p>
             <p>
-                <label><? echo _NEWS_LABEL_PUBLISHTIME; ?>:</label>
-                <input class="text" type="text" name="newsx_time_publish" value="<? echo $localdate['time']; ?>" style="width:100px;">
+                <label><?php echo _NEWS_LABEL_PUBLISHTIME; ?>:</label>
+                <input class="text" type="text" name="newsx_time_publish" value="<?php echo $localdate['time']; ?>" style="width:100px;">
             </p>
             <p>
-                <label><? echo _NEWS_LABEL_URL; ?>:</label>
-                <input class="text" type="text" name="news_url" value="<? echo htmlentities($news->fields['url']); ?>">
+                <label><?php echo _NEWS_LABEL_URL; ?>:</label>
+                <input class="text" type="text" name="news_url" value="<?php echo htmlentities($news->fields['url']); ?>">
             </p>
             <p>
-                <label><? echo _NEWS_LABEL_URLTITLE; ?>:</label>
-                <input class="text" type="text" name="news_urltitle" value="<? echo htmlentities($news->fields['urltitle']); ?>">
+                <label><?php echo _NEWS_LABEL_URLTITLE; ?>:</label>
+                <input class="text" type="text" name="news_urltitle" value="<?php echo htmlentities($news->fields['urltitle']); ?>">
             </p>
         </div>
     </div>
 </div>
 <div style="padding:0 2px;">
-<?
+<?php
 
 /**
  * Insertion de FCKeditor pour modifier le contenu de la news
@@ -129,6 +130,6 @@ $oFCKeditor->Create('FCKeditor_1') ;
 </div>
 
 <div style="padding:2px;text-align:right;">
-    <input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>">
+    <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>

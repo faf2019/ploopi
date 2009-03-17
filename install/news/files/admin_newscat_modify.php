@@ -22,7 +22,7 @@
 */
 
 /**
- * Administration des catégories - liste 
+ * Administration des catégories - liste
  *
  * @package news
  * @subpackage admin
@@ -61,17 +61,17 @@ $array_values = array();
 $c = 0;
 while ($fields = $db->fetchrow($result))
 {
-    $array_values[$c]['values']['desc'] = 
+    $array_values[$c]['values']['desc'] =
         array(
             'label' => $fields['description']
         );
         
-    $array_values[$c]['values']['title'] = 
+    $array_values[$c]['values']['title'] =
         array(
             'label' => $fields['title']
         );
         
-    $array_values[$c]['values']['actions'] = 
+    $array_values[$c]['values']['actions'] =
         array(
             'label' =>  '
                         <a title="Modifier" href="'.ploopi_urlencode("admin.php?op=modify_newscat&newscat_id={$fields['id']}").'"><img alt="Modifier" src="./modules/news/img/ico_modify.png" /></a>
@@ -90,7 +90,7 @@ $skin->display_array($array_columns, $array_values, 'array_newscatlist', array('
 echo $skin->close_simplebloc();
 ?>
 
-<?
+<?php
 /**
  * Modification d'une catégorie
  */

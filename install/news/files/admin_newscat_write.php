@@ -22,7 +22,7 @@
 */
 
 /**
- * Administration des catégories - ajout/modification  
+ * Administration des catégories - ajout/modification
  *
  * @package news
  * @subpackage admin
@@ -39,24 +39,24 @@ if ($newscat->new) echo $skin->open_simplebloc(_NEWSCAT_WRITE);
 else echo $skin->open_simplebloc(str_replace("LABEL",$newscat->fields['title'],_NEWSCAT_MODIFY));
 ?>
 
-<form name="form_newscat" action="<? echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return newscat_validate(this);">
+<form name="form_newscat" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return newscat_validate(this);">
 <input type="hidden" name="op" value="save_newscat">
-<input type="hidden" name="newscat_id" value="<? echo $newscat->fields['id']; ?>">
+<input type="hidden" name="newscat_id" value="<?php echo $newscat->fields['id']; ?>">
 <div class="ploopi_form">
     <div style="padding:2px;">
         <p>
-            <label><? echo _NEWS_LABEL_TITLE; ?>:</label>
-            <input class="text" type="text" name="newscat_title" value="<? echo htmlentities($newscat->fields['title']); ?>" tabindex="100" />
+            <label><?php echo _NEWS_LABEL_TITLE; ?>:</label>
+            <input class="text" type="text" name="newscat_title" value="<?php echo htmlentities($newscat->fields['title']); ?>" tabindex="100" />
         </p>
         <p>
-            <label><? echo _NEWS_LABEL_DESCRIPTION; ?>:</label>
-            <textarea class="text" name="newscat_description" tabindex="101"><? echo htmlentities($newscat->fields['description']); ?></textarea>
+            <label><?php echo _NEWS_LABEL_DESCRIPTION; ?>:</label>
+            <textarea class="text" name="newscat_description" tabindex="101"><?php echo htmlentities($newscat->fields['description']); ?></textarea>
         </p>
     </div>
 </div>
 <div style="padding:2px;text-align:right;">
-    <input type="button" class="button" value="<? echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?newsTabItem=tabNewsCatModify"); ?>';" tabindex="103" />
-    <input type="reset" class="button" value="<? echo _PLOOPI_RESET; ?>" tabindex="104" />
-    <input type="submit" class="button" value="<? echo _PLOOPI_SAVE; ?>" tabindex="102" />
+    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?newsTabItem=tabNewsCatModify"); ?>';" tabindex="103" />
+    <input type="reset" class="button" value="<?php echo _PLOOPI_RESET; ?>" tabindex="104" />
+    <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="102" />
 </div>
-<? echo $skin->close_simplebloc(); ?>
+<?php echo $skin->close_simplebloc(); ?>
