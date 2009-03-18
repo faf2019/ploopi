@@ -143,8 +143,10 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
     {
         ploopi_ob_clean();
 
+        // Détermination du format de sortie
         if ($format != '') $extension = $format;
-
+        if (!in_array($extension, array('jpg', 'jpeg', 'png', 'gif'))) $extension = 'png';
+        
         header("Content-Type: image/{$extension}");
         header("Content-Disposition: inline; filename=\"{$imagefile_name}\"");
 
@@ -169,6 +171,11 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
     {
         $path = dirname($filename);
         $exists = file_exists($filename);
+        
+        // Détermination du format de sortie
+        $extension = ($format == '') ? ploopi_file_getextension($filename) : $format;
+        if (!in_array($extension, array('jpg', 'jpeg', 'png', 'gif'))) $extension = 'png';
+                
         if (is_writable($path) && (!$exists || ($exists && is_writable($filename))))
         {
             switch($extension)
