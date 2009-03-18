@@ -24,7 +24,7 @@
  * Traitement des OP de weather
  *
  * @package weather
- * @subpackage Traitement des OP
+ * @subpackage op
  * @copyright HeXad
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint

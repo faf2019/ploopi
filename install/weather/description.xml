@@ -2,9 +2,9 @@
 <ploopi>
 	<moduletype>
 		<label>weather</label>
-		<version>0.03</version>
+		<version>0.04a</version>
 		<author>HeXad</author>
-		<date>20090108120700</date>
+		<date>200903181400</date>
 		<description>Informations météo</description>
 	</moduletype>
 </ploopi>

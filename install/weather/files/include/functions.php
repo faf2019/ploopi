@@ -24,7 +24,7 @@
  * Fonction du module Weather
  *
  * @package weather
- * @subpackage function
+ * @subpackage functions
  * @copyright HeXad
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint

@@ -2,7 +2,7 @@
 
 2009-03-18  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
 
- * Ajout des commentaire pour phpdoc
+ * Modification des entêtes de fichier pour phpdoc
 
 == Module FORUM - version 1.0.6 ==================================================
 

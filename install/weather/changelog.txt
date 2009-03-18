@@ -1,3 +1,10 @@
+== Module WEATHER - version 0.04a ====================================================
+
+ * Modification des entêtes de fichier pour phpDoc
+
+ * BUG Connu :
+  * Wce ne fonctionne pas correctement
+
 == Module WEATHER - version 0.03 ====================================================
 
 2009-01-08  Xavier Toussaint ~ HeXad <xavier@hexad.fr>

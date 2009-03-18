@@ -23,7 +23,7 @@
 /**
  * Affichage d'un objet weather dans une page de contenu (WebEdit)
  *
- * @package Weather
+ * @package weather
  * @subpackage wce
  * @copyright HeXad
  * @license GNU General Public License (GPL)
