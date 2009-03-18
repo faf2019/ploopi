@@ -400,7 +400,6 @@ if ($_SESSION['ploopi']['connected'])
                     else
                     {
                         if (file_exists($docfile->getfilepath())) ploopi_downloadfile($docfile->getfilepath(), $docfile->fields['name'], false, ($ploopi_op != 'doc_fileview'));
-                        else if (file_exists($docfile->getfilepath_deprecated())) ploopi_downloadfile($docfile->getfilepath_deprecated(), $docfile->fields['name'], false, ($ploopi_op != 'doc_fileview'));
                     }
                 }
 
