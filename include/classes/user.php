@@ -194,7 +194,9 @@ class user extends data_object
     public function getgroups($lite = false)
     {
         global $db;
-
+        
+        ploopi_init_module('system', false, false, false);
+        
         $select =   "
                     SELECT      g.*
 

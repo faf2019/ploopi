@@ -62,9 +62,7 @@ switch($op)
             $param_module->setvalues($_POST);
             $param_module->save();
 
-            // reload all module params of current user in session
-            include './include/load_param.php';
-            ploopi_redirect("admin.php?op=param&idmodule={$_POST['idmodule']}");
+            ploopi_redirect("admin.php?op=param&idmodule={$_POST['idmodule']}&reloadsession");
         }
         else ploopi_redirect('admin.php');
     break;
