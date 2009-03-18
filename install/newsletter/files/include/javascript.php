@@ -34,7 +34,7 @@
  * Script de contrôle des données de la newsletter en création/édition
  */
 if((isset($_GET['newsletterToolbarNewsletter']) && $_GET['newsletterToolbarNewsletter'] == 'tabNewsletterNew')
-  || (isset($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter']) 
+  || (isset($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter'])
   && $_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter'] == 'tabNewsletterNew'))
 {
   if (ploopi_ismoduleallowed('newsletter')) ploopi_init_module('newsletter');
@@ -46,20 +46,20 @@ if((isset($_GET['newsletterToolbarNewsletter']) && $_GET['newsletterToolbarNewsl
       if($(form.newsletter_text_color).value == '') $(form.newsletter_text_color).value = '#000000';
 
       next = true;
-  
+
       if ($('newsletter_status').value == 'wait' && !validator)
       {
         // confirm sending tickets on waiting validation
         next = confirm('Cette action va envoyer\nune demande de publication\naux validateurs de cette rubrique\n\nÊtes-vous certain de vouloir continuer ?');
       }
-  
+
       if(next)
       {
         var fck_instance = $('newsletter_frame_editor').contentWindow.FCKeditorAPI.GetInstance('fck_newsletter_content');
-  
+
         // get fckeditor content
         $('fck_newsletter_content').value = fck_instance.GetData(true)
-  
+
         if ($('newsletter_status').value == 'draft')
         {
           if (ploopi_validatefield("<?php echo _NEWSLETTER_LABEL_TITLE; ?>", form.newsletter_title, 'string'))
@@ -80,8 +80,8 @@ if((isset($_GET['newsletterToolbarNewsletter']) && $_GET['newsletterToolbarNewsl
           {
               if (confirm(<?php echo _NEWSLETTER_CONFIRM_STATUS_WAIT_NEWSLETTER; ?>)) return true;
           }
-          else 
-          { 
+          else
+          {
             return true;
           }
         }
@@ -104,8 +104,8 @@ if((isset($_GET['newsletterTabAdmin']) && $_GET['newsletterTabAdmin'] == 'tabNew
     if (ploopi_validatefield("<?php echo _NEWSLETTER_LABEL_SEND_BY; ?>", form.send_by, 'emptyint'))
     {
       return true;
-    } 
-    return false;  
+    }
+    return false;
   }
   <?php
 }
@@ -118,7 +118,7 @@ if((isset($_GET['newsletterTabAdmin']) && $_GET['newsletterTabAdmin'] == 'tabNew
   {
     if (ploopi_validatefield("<?php echo _NEWSLETTER_LABEL_EMAIL; ?>", form.subscrib_email, 'email'))
       return true;
-      
+
     return false;
   }
   <?php

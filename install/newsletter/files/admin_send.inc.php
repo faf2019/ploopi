@@ -24,17 +24,17 @@
  * Entrée de la gestion des Newsletters
  *
  * @package newsletter
- * @subpackage send
+ * @subpackage admin
  * @copyright HeXad
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint
  */
 
-// Traitement sur icone sélectionné 
-if (!empty($_GET['newsletterToolbarSend']))  
+// Traitement sur icone sélectionné
+if (!empty($_GET['newsletterToolbarSend']))
   $_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarSend'] = $_GET['newsletterToolbarSend'];
-  
-if (!isset($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarSend'])) 
+
+if (!isset($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarSend']))
   $_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarSend'] = 'tabNewsletterSendTodo';
 
 // Si action autorisée, mettre la barre de menu
@@ -54,12 +54,12 @@ if(ploopi_isactionallowed(_NEWSLETTER_ACTION_WRITE))
                                     'width' => '80'
                                 );
 
-  echo '<div style="padding: 2px 0 0 0;">';                              
+  echo '<div style="padding: 2px 0 0 0;">';
   echo $skin->create_toolbar($toolbar,$_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarSend']);
   echo '</div>';
 }
 
-switch ($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarSend']) 
+switch ($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarSend'])
 {
   case 'tabNewsletterSendTodo':
         include './modules/newsletter/admin_send_todo.inc.php';
@@ -72,7 +72,7 @@ switch ($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterTool
       break;
       default:
         include './modules/newsletter/admin_send_ok.inc.php';
-      break;    
+      break;
     }
   break;
 }

@@ -1,3 +1,9 @@
+== Module NEWSLETTER - version 1.2.1 ==================================================
+
+2009-03-18  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Modification des entêtes pour phpDoc
+
 == Module NEWSLETTER - version 1.2 ====================================================
 
 2009-02-18  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

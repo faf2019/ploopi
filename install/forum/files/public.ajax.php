@@ -21,6 +21,16 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Partie public - AJAX
+ *
+ * @package forum
+ * @subpackage public
+ * @copyright HeXad, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Xavier Toussaint
+ */
+
 switch($op)
 {
   // Save the order of categories
@@ -42,7 +52,7 @@ switch($op)
     }
     break;
   default:
-    break;    
+    break;
 }
 ploopi_die();
 ?>

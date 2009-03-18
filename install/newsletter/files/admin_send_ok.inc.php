@@ -24,7 +24,7 @@
  * Affichage de la liste des Newsletters
  *
  * @package newsletter
- * @subpackage send
+ * @subpackage admin
  * @copyright HeXad
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint

@@ -24,7 +24,7 @@
  * Entrée de la gestion des Banniere
  *
  * @package newsletter
- * @subpackage banniere
+ * @subpackage admin
  * @copyright HeXad
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint
@@ -33,22 +33,22 @@
 echo $skin->open_simplebloc(_NEWSLETTER_LABELTAB_BANNIERE);
 
 ploopi_documents(
-    _NEWSLETTER_OBJECT_IMAGE, 
-    0, 
-    null, 
-    null, 
+    _NEWSLETTER_OBJECT_IMAGE,
+    0,
+    null,
+    null,
     array(
-        'ROOT_NAME' => 'Banniere', 
-        'ATTACHEMENT' => false, 
-        'FIELDS' => 
+        'ROOT_NAME' => 'Banniere',
+        'ATTACHEMENT' => false,
+        'FIELDS' =>
             array(
-                'ref', 
-                'label', 
-                'size', 
+                'ref',
+                'label',
+                'size',
                 'timestp_file'
             )
         )
     );
-    
+
 echo $skin->close_simplebloc();
 ?>

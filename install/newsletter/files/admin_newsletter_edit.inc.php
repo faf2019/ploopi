@@ -24,7 +24,7 @@
  * Edition des newsletters
  *
  * @package newsletter
- * @subpackage newsletter
+ * @subpackage admin
  * @copyright HeXad
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint
@@ -40,7 +40,7 @@ $wfusers_tempo = ploopi_validation_get(_NEWSLETTER_OBJECT_NEWSLETTER);
 if(isset($_GET['id_newsletter']))
 {
   // Ouvre la lettre en modification
-  $objLetter->open($_GET['id_newsletter']); 
+  $objLetter->open($_GET['id_newsletter']);
   // Ajout a l'action transmise au form de l'id en cours de modif
   $action_id_newsletter = "&id_newsletter={$_GET['id_newsletter']}";
   // Ajout $wfusers à de la liste des validateurs de la newsletter
@@ -49,7 +49,7 @@ if(isset($_GET['id_newsletter']))
 else
 {
   // Initialise les champs en création
-  $objLetter->init_description(); 
+  $objLetter->init_description();
   $action_id_newsletter='';
 }
 //nettoyage de $wfusers pour ne garder que les id_user validateur
@@ -64,7 +64,7 @@ echo $skin->open_simplebloc(_NEWSLETTER_LABEL_NEWSLETTER_MANAGE);
 
 // Si la lettre validée ou envoyée on passe en consultation en force grâce a readonly = true sinon c'est en fonction des autorisations
 if($objLetter->fields['status'] == 'valid' || $objLetter->fields['status'] == 'send')
-  $readonly = true; 
+  $readonly = true;
 else
   $readonly = (!ploopi_isactionallowed(_NEWSLETTER_ACTION_WRITE) && !ploopi_isactionallowed(_NEWSLETTER_ACTION_MODIFY));
 
@@ -168,24 +168,24 @@ if (!$readonly)
             $doc = new documentsfile();
             if ($doc->open($objLetter->fields['banniere_id'])) $strBanniere = $doc->fields['name'];
         }
-        
+
         // Chargement des paramètres de doc
         ploopi_documents(
-            _NEWSLETTER_OBJECT_IMAGE, 
-            0, 
-            null, 
-            null, 
+            _NEWSLETTER_OBJECT_IMAGE,
+            0,
+            null,
+            null,
             array(
                 'ROOT_NAME' => 'Banniere',
-                'ATTACHEMENT' => false, 
-                'FIELDS' => 
+                'ATTACHEMENT' => false,
+                'FIELDS' =>
                     array(
-                        'label', 
+                        'label',
                         'size'
                     )
                 ),
             false
-        );                        
+        );
         ?>
     <p>
         <label><? echo _NEWSLETTER_LABEL_BANNIERE; ?>:</label>
@@ -262,8 +262,8 @@ if (!$readonly)
         }
         else echo '<span>'.htmlentities($objLetter->fields['text_color']).'</span>';
         ?>
-    </p>            
-    
+    </p>
+
   </div>
 </div>
 <div style="clear:both;text-align: center;">
@@ -276,14 +276,14 @@ if (!$readonly)
     // date time creation
     $arrNewsletterDate = ploopi_timestamp2local($objLetter->fields['timestp']);
     echo _NEWSLETTER_LABEL_CREATE.':&nbsp;'.$arrNewsletterDate['date'].' '.$arrNewsletterDate['time'].'&nbsp;&nbsp;';
-  
+
     // date time modif
     if($objLetter->fields['lastupdate_timestp'] > 0)
     {
       $arrNewsletterDateModif = ploopi_timestamp2local($objLetter->fields['lastupdate_timestp']);
       echo _NEWSLETTER_LABEL_MODIF.':&nbsp;'.$arrNewsletterDateModif['date'].' '.$arrNewsletterDateModif['time'].'&nbsp;&nbsp;';
     }
-    
+
     // date time valid
     if($objLetter->fields['validated_timestp'] > 0)
     {
@@ -291,11 +291,11 @@ if (!$readonly)
       echo _NEWSLETTER_LABEL_VALID.':&nbsp;'.$arrNewsletterDateValid['date'].' '.$arrNewsletterDateValid['time'];
     }
   }
-  ?> 
-</div> 
+  ?>
+</div>
         <?php
 /*
- * Affichage de la gestion des validateurs 
+ * Affichage de la gestion des validateurs
  */
 ?>
 <div style="clear:both;padding:4px;background-color:#e8e8e8;border-top:1px solid #c0c0c0;">
@@ -306,8 +306,8 @@ if (!$readonly)
     $arrValidateursGlb = newsletter_ListValid('newsletter',_NEWSLETTER_LABEL_VALIDATOR_GLB,true,$_SESSION['ploopi']['moduleid']);
     if(count($arrValidateursGlb) > 0)
     {
-      foreach($arrValidateursGlb as $id => $data) $arrValidateur[] =  trim($data['lastname'].' '.$data['firstname']); 
-      
+      foreach($arrValidateursGlb as $id => $data) $arrValidateur[] =  trim($data['lastname'].' '.$data['firstname']);
+
       echo '<span style="font-style: italic;">'._NEWSLETTER_LABEL_VALIDATOR_GLB.':&nbsp;'.implode('&nbsp;/&nbsp;',$arrValidateur).'</span>';
     }
   }
@@ -333,18 +333,18 @@ if (!$readonly)
   if(isset($_GET['id_newsletter']))
   {
     ?>
-      <input type="button" class="button" style="margin:1px;" value="<?php echo _NEWSLETTER_LABEL_GENERATE_PDF; ?>" 
+      <input type="button" class="button" style="margin:1px;" value="<?php echo _NEWSLETTER_LABEL_GENERATE_PDF; ?>"
         onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=newsletter_pdf&id_newsletter={$_GET['id_newsletter']}"); ?>'" />
     <?php
   }
   if(isset($_GET['id_newsletter']) && in_array($_SESSION['ploopi']['userid'],$wfusers) && $objLetter->fields['status'] == 'wait')
   {
     ?>
-    <input type="button" class="button" style="margin:1px;" value="<?php echo _NEWSLETTER_VALIDATE; ?>" 
+    <input type="button" class="button" style="margin:1px;" value="<?php echo _NEWSLETTER_VALIDATE; ?>"
       onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=newsletter_validate&id_newsletter={$_GET['id_newsletter']}"); ?>'" />
     <?php
   }
-    
+
   if (!$readonly)
   {
     ?>

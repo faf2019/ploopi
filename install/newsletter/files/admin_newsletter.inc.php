@@ -24,16 +24,16 @@
  * Entrée de la gestion des Newsletters
  *
  * @package newsletter
- * @subpackage newsletter
+ * @subpackage admin
  * @copyright HeXad
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint
  */
 
 // Gestion du menu selectionné
-if (!empty($_GET['newsletterToolbarNewsletter']))  
+if (!empty($_GET['newsletterToolbarNewsletter']))
   $_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter'] = $_GET['newsletterToolbarNewsletter'];
-if (!isset($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter'])) 
+if (!isset($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter']))
   $_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter'] = 'tabNewsletterList';
 
 // Si c'est une demande de modification on passe sur l'icone de modif en force
@@ -59,17 +59,17 @@ if(ploopi_isactionallowed(_NEWSLETTER_ACTION_WRITE))
 ?>
 
 <div style="padding: 2px 0 0 0;">
-  <?php                              
+  <?php
   echo $skin->create_toolbar($toolbar,$_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter']);
   ?>
 </div>
 <?php
 
 // Si c'est juste pour une validation on doit allez en edition mais pas de bouton tabNewsletterNew. On passe en force le tabNewsletterNew
-if (!empty($_GET['newsletterToolbarNewsletter']) && $_GET['newsletterToolbarNewsletter'] != $_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter'])  
+if (!empty($_GET['newsletterToolbarNewsletter']) && $_GET['newsletterToolbarNewsletter'] != $_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter'])
   $_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter'] = $_GET['newsletterToolbarNewsletter'];
-  
-switch ($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter']) 
+
+switch ($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter'])
 {
   case 'tabNewsletterNew': // Création / Modification de newsletter
     include './modules/newsletter/admin_newsletter_edit.inc.php';

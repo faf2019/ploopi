@@ -21,6 +21,16 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Affichage des catégories
+ *
+ * @package forum
+ * @subpackage public
+ * @copyright HeXad, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Xavier Toussaint
+ */
+
 $strForumClassLine = '';
 $arrForumInfoCat = array();
 

@@ -24,7 +24,7 @@
  * Gestion des inscrits à la newsletter
  *
  * @package newsletter
- * @subpackage subscriber
+ * @subpackage admin
  * @copyright HeXad
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint

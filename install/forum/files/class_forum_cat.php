@@ -20,13 +20,17 @@
   along with Ploopi; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
 
-<?
 /**
- * Class forum_cat for ploopi_mod_forum_cat (Categories)
+ * Gestion des catégories
  *
+ * @package forum
+ * @subpackage category
+ * @copyright HeXad, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Xavier Toussaint
  */
+
 class forum_cat extends data_object
 {
   /**
@@ -41,8 +45,10 @@ class forum_cat extends data_object
   }
 
   /**
-   * Open with a control if id_cat is ok
+   * Open with a control if id cat is ok
    *
+   * @param int id categories
+   * @return int nombre d'enregistrements
    */
   function open($intId)
   {

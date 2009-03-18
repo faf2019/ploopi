@@ -24,7 +24,7 @@
  * Entrée des paramètrage des Newsletters
  *
  * @package newsletter
- * @subpackage param
+ * @subpackage admin
  * @copyright HeXad
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint
@@ -36,19 +36,19 @@
 if(ploopi_isactionallowed(_NEWSLETTER_ACTION_PARAM))
 {
   include_once './modules/newsletter/class_newsletter_param.php';
-  
+
   $objNewsletterParam = new newsletter_param();
   $arrNewsletterParam = $objNewsletterParam->get_param();
   unset($objNewsletterParam);
-  
+
   echo $skin->open_simplebloc(_NEWSLETTER_LABEL_NEWSLETTER_PARAM);
   ?>
   <div style="padding:4px; background-color:#e0e0e0; clear:both; border-width: 1px 0;border-color:#c0c0c0; border-style:solid;">
     <?php echo _NEWSLETTER_LABEL_SEND_BY_INFO; ?>
   </div>
-  
+
   <form style="margin:0;" action="<? echo ploopi_urlencode('admin.php?op=newsletter_param_save'); ?>" method="post" onsubmit="javascript:return newsletter_letter_validate_param(this);">
-  
+
   <div class="ploopi_form">
     <div style="padding:2px;">
       <p><!-- Host de la newsletter (pour les liens image, la désinscrition, la vue en ligne) -->
@@ -97,7 +97,7 @@ if(ploopi_isactionallowed(_NEWSLETTER_ACTION_MANAGE_VALIDATOR))
     </div>
     <div style="padding:4px;background-color:#e0e0e0;clear:both;border-width: 1px 0;border-color:#c0c0c0;border-style:solid;">
       <div style="text-align: right;" >
-        <input type="button" class="button" value="<?php echo _NEWSLETTER_LABEL_VALIDATOR_GLB_SAVE; ?>" 
+        <input type="button" class="button" value="<?php echo _NEWSLETTER_LABEL_VALIDATOR_GLB_SAVE; ?>"
           onclick="javascript:document.location.href='<?php echo ploopi_urlencode('admin.php?op=newsletter_save_global_validator'); ?>'" />
       </div>
     </div>

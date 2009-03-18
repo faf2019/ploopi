@@ -20,6 +20,17 @@
   along with Ploopi; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+/**
+ * Edition des messages et sujets
+ *
+ * @package forum
+ * @subpackage public
+ * @copyright HeXad, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Xavier Toussaint
+ */
+
 $strForumClassLine = '';
 $strForumLimit = '';
 $strForumModerator = '';
@@ -35,11 +46,11 @@ if(is_array($arrForumModerat) && count($arrForumModerat) > 0)
   $booForumIsAdminModerGlb = ($booForumIsAdminModerGlb || array_key_exists($_SESSION['ploopi']['user']['id'],$arrForumModerat));
   foreach($arrForumModerat as $value)
   {
-    if(empty($strForumModerator)) 
+    if(empty($strForumModerator))
       $strForumModerator = _FORUM_MODERATOR.':&nbsp;'.$value['login'];
     else
       $strForumModerator .= ', '.$value['login'];
-  }    
+  }
 }
 
 // Navigate in subject... reset page for message
@@ -76,8 +87,8 @@ $strForumSqlQuery = "SELECT ploopi_mod_forum_mess.id_subject,
 COUNT(ploopi_mod_forum_mess.id) AS nbMessValid
 FROM ploopi_mod_forum_mess
 WHERE ploopi_mod_forum_mess.id_cat = {$objForumCat->fields['id']}
-  AND ploopi_mod_forum_mess.validated = 1 
-  AND ploopi_mod_forum_mess.id_subject <> ploopi_mod_forum_mess.id  
+  AND ploopi_mod_forum_mess.validated = 1
+  AND ploopi_mod_forum_mess.id_subject <> ploopi_mod_forum_mess.id
   AND ploopi_mod_forum_mess.id_module = {$_SESSION['ploopi']['moduleid']}
 GROUP BY ploopi_mod_forum_mess.id_subject";
 $objForumSqlResult = $db->query($strForumSqlQuery);
@@ -113,7 +124,7 @@ else
   COUNT(ploopi_mod_forum_mess.id) AS nbMYMessNoValid
   FROM ploopi_mod_forum_mess
   WHERE ploopi_mod_forum_mess.id_cat = {$objForumCat->fields['id']}
-    AND ploopi_mod_forum_mess.validated = 0 
+    AND ploopi_mod_forum_mess.validated = 0
     AND ploopi_mod_forum_mess.id_author = {$_SESSION['ploopi']['user']['id']}
     AND ploopi_mod_forum_mess.id_subject <> ploopi_mod_forum_mess.id
     AND ploopi_mod_forum_mess.id_module = {$_SESSION['ploopi']['moduleid']}
@@ -145,7 +156,7 @@ switch($arrFiltre['orderby'])
 // Get LIMIT with page (if limit = 0 => no limit)
 if($arrFiltre['limit'] > 0)
   $strForumLimit = ' LIMIT '.($arrFiltre['limit']*($arrFiltre['page']-1)).','.$arrFiltre['limit'];
-  
+
 // Principal request
 $strForumSqlQuery = "SELECT ploopi_mod_forum_mess.*,
   MAX(ploopi_mod_forum_mess.timestp) AS timestpmax
@@ -159,7 +170,7 @@ $strForumSqlQuery = "SELECT ploopi_mod_forum_mess.*,
   {$strForumLimit}";
 
 echo $skin->open_simplebloc();
-?>  
+?>
 <div class="forum_main">
   <div style="clear:both;padding:0; margin:4px 0 20px 0;">
     <font class="forum_navig">
@@ -175,13 +186,13 @@ echo $skin->open_simplebloc();
   <div style="overflow: auto; padding: 0; margin: 0 0 2px 0;">
   <?php
   // Pages button's
-  $strForumButtonsPages = forum_pages("admin.php?op=subject&id_cat={$objForumCat->fields['id']}",$intForumNbPages,$arrFiltre['page']); 
+  $strForumButtonsPages = forum_pages("admin.php?op=subject&id_cat={$objForumCat->fields['id']}",$intForumNbPages,$arrFiltre['page']);
   if($strForumButtonsPages <> '')
   {
     ?>
     <div style="float: right; padding: 0; margin: 1px;"><?php echo $strForumButtonsPages; ?></div>
-    <?php 
-  } 
+    <?php
+  }
   if($objForumCat->fields['closed'] == 0 || $booForumIsAdminModerGlb)
   {
     ?>
@@ -190,7 +201,7 @@ echo $skin->open_simplebloc();
         <img src="<?php echo _FORUM_IMG_16_FOLDER_NEW; ?>" style="padding:0;margin:0 0 -3px 0;border:0px;">&nbsp;<?php echo _FORUM_TOOLBAR_NEW_SUBJECT; ?>
       </button>
     </div>
-    <?php 
+    <?php
   }
   ?>
   </div>
@@ -198,19 +209,19 @@ echo $skin->open_simplebloc();
   echo $skin->open_simplebloc($objForumCat->fields['title']);
   ?>
   <div id="forum_main_subject" class="ploopi_explorer_main" style="visibility:visible;">
-  
+
     <div id="forum_column_subject_0" class="ploopi_explorer_column" style="right: 75px;"></div>
     <div id="forum_column_subject_1" class="ploopi_explorer_column" style="right: 225px;"></div>
     <?php
     if($booForumIsAdminModerGlb)
     {
-      ?> 
+      ?>
       <div id="forum_column_subject_2" class="ploopi_explorer_column" style="right: 315px;"></div>
       <?php
     }
     ?>
     <div id="forum_column_subject_3" class="ploopi_explorer_column" style="left: 50px;"></div>
-  
+
     <div style="position: relative;">
       <div id="forum_title_subject" class="ploopi_explorer_title">
         <div class="ploopi_explorer_element" style="width: 75px; float: right; text-align: center;">
@@ -223,10 +234,10 @@ echo $skin->open_simplebloc();
         if($booForumIsAdminModerGlb)
         {
           ?>
-          <div class="ploopi_explorer_element" style="width: 90px; float: right;"><p></p></div> 
+          <div class="ploopi_explorer_element" style="width: 90px; float: right;"><p></p></div>
           <?php
         }
-        ?>      
+        ?>
         <div class="ploopi_explorer_element" style="width: 50px; float: left;"><p></p></div>
         <a href="<?php echo ploopi_urlencode("admin.php?op=subject&id_cat={$objForumCat->fields['id']}&order=title"); ?>" class="ploopi_explorer_element" style="overflow: auto; text-align: left;">
           <p><span><?php if($arrFiltre['orderby']=='title') { echo constant(strtoupper('_FORUM_IMG_'.$arrFiltre['orderin'])).'&nbsp;'; } echo _FORUM_SUBJECT_COL_SUBJECT; ?></span></p>
@@ -239,8 +250,8 @@ echo $skin->open_simplebloc();
         while ($arrForumFields = $db->fetchrow($objForumSqlResult))
         {
           // Class for line
-          $strForumClassLine = ($strForumClassLine == 'ploopi_explorer_line_2') ? 'ploopi_explorer_line_1' : 'ploopi_explorer_line_2'; 
-          
+          $strForumClassLine = ($strForumClassLine == 'ploopi_explorer_line_2') ? 'ploopi_explorer_line_1' : 'ploopi_explorer_line_2';
+
           // Search the last message
           $strForumSqlQuery = "SELECT ploopi_mod_forum_mess.id,
             ploopi_mod_forum_mess.author,
@@ -253,31 +264,31 @@ echo $skin->open_simplebloc();
           $objForumSqlLastMess = $db->query($strForumSqlQuery);
           $arrForumLastMess = $db->fetchrow($objForumSqlLastMess);
           unset($objForumSqlLastMess);
-          
+
           // date time last message
           $arrForumDateLastMess = ploopi_timestamp2local($arrForumLastMess['timestp']);
           // Last message (response or subject)
           $strForumLastMess = $arrForumDateLastMess['date'].'&nbsp;'.$arrForumDateLastMess['time'].'<br/><font style="font-size:0.8em;">'._FORUM_BY.'&nbsp;'.$arrForumLastMess['author'].'</font>';
-          
-          
-          $arrForumFields['nbMessValid'] = (isset($arrForumInfoMess[$arrForumFields['id']]['nbMessValid'])) ? $arrForumInfoMess[$arrForumFields['id']]['nbMessValid'] : 0; 
-          $arrForumFields['nbMessNoValid'] = (isset($arrForumInfoMess[$arrForumFields['id']]['nbMessNoValid'])) ? $arrForumInfoMess[$arrForumFields['id']]['nbMessNoValid'] : 0; 
-          $arrForumFields['nbMYMessNoValid'] = (isset($arrForumInfoMess[$arrForumFields['id']]['nbMYMessNoValid'])) ? $arrForumInfoMess[$arrForumFields['id']]['nbMYMessNoValid'] : 0;          
-          
+
+
+          $arrForumFields['nbMessValid'] = (isset($arrForumInfoMess[$arrForumFields['id']]['nbMessValid'])) ? $arrForumInfoMess[$arrForumFields['id']]['nbMessValid'] : 0;
+          $arrForumFields['nbMessNoValid'] = (isset($arrForumInfoMess[$arrForumFields['id']]['nbMessNoValid'])) ? $arrForumInfoMess[$arrForumFields['id']]['nbMessNoValid'] : 0;
+          $arrForumFields['nbMYMessNoValid'] = (isset($arrForumInfoMess[$arrForumFields['id']]['nbMYMessNoValid'])) ? $arrForumInfoMess[$arrForumFields['id']]['nbMYMessNoValid'] : 0;
+
           // Responses by subject
-          $strForumResponse = $arrForumFields['nbMessValid']; 
+          $strForumResponse = $arrForumFields['nbMessValid'];
           if($arrForumFields['nbMessNoValid'] > 0) $strForumResponse .= '&nbsp;/&nbsp;<font color="red">'.$arrForumFields['nbMessNoValid'].'</font>';
           if($arrForumFields['nbMYMessNoValid'] > 0) $strForumResponse .= '&nbsp;/&nbsp;<font color="green">'.$arrForumFields['nbMYMessNoValid'].'</font>';
-          
+
           //Icon
           if($objForumCat->fields['closed'] == 1 || $arrForumFields['closed'] == 1)
-            $strIcon = _FORUM_IMG_32_LOCK; 
+            $strIcon = _FORUM_IMG_32_LOCK;
           elseif($arrForumFields['nbMessValid'] > 0)
           {
             if($booForumIsAdminModerGlb && ($arrForumFields['nbMessNoValid'] > 0 || $arrForumFields['validated'] == 0))
-              $strIcon =  _FORUM_IMG_32_FOLDER_TOVALID; 
+              $strIcon =  _FORUM_IMG_32_FOLDER_TOVALID;
             else
-              $strIcon =  _FORUM_IMG_32_FOLDER; 
+              $strIcon =  _FORUM_IMG_32_FOLDER;
           }
           else
           {
@@ -286,13 +297,13 @@ echo $skin->open_simplebloc();
             else
               $strIcon = _FORUM_IMG_32_FOLDER_EMPTY;
           }
-          
+
           // Title
-          $strForumTitle = ($arrForumFields['validated'] == 0) ? $strForumTitle = '<font color="red">'.$arrForumFields['title'].'</font>&nbsp;-&nbsp;<i>'._FORUM_STAY_VALIDATED.'</i>' : $arrForumFields['title'];  
-  
+          $strForumTitle = ($arrForumFields['validated'] == 0) ? $strForumTitle = '<font color="red">'.$arrForumFields['title'].'</font>&nbsp;-&nbsp;<i>'._FORUM_STAY_VALIDATED.'</i>' : $arrForumFields['title'];
+
           // date time subject
           $arrForumDateCreate = ploopi_timestamp2local($arrForumFields['timestp']);
-          
+
           ?>
           <div id="idSubject_<?php echo $arrForumFields['id']; ?>" name="idSubject_<?php echo $arrForumFields['id']; ?>" class="<?php echo $strForumClassLine; ?>">
             <div class="ploopi_explorer_element" style="width: 75px; height: 100%; float: right; text-align: center;">
@@ -305,11 +316,11 @@ echo $skin->open_simplebloc();
             // if allowed add edit delete on subject
             if($booForumIsAdminModerGlb)
             {
-            ?>  
+            ?>
               <div class="ploopi_explorer_element" style="width: 90px; float: right;text-align: center;z-index: 1000">
-                <input type="button" class="button" style="margin:1px;width:80px;" value="<?php echo _FORUM_EDIT; ?>" 
+                <input type="button" class="button" style="margin:1px;width:80px;" value="<?php echo _FORUM_EDIT; ?>"
                   onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=subject_edit&id_cat={$objForumCat->fields['id']}&id_mess={$arrForumFields['id']}"); ?>'" />
-                <input type="button" class="button" style="margin:1px;width:80px;" value="<?php echo _FORUM_DELETE; ?>" 
+                <input type="button" class="button" style="margin:1px;width:80px;" value="<?php echo _FORUM_DELETE; ?>"
                   onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=subject_delete&id_cat={$objForumCat->fields['id']}&id_mess={$arrForumFields['id']}"); ?>','<?php echo _FORUM_CONFIRM_DELETE_SUBJECT; ?>');" />
               </div>
             <?php
@@ -331,7 +342,7 @@ echo $skin->open_simplebloc();
                     }
                   ?>
                 </p>
-                
+
               </div>
             </a>
           </div>
@@ -349,13 +360,13 @@ echo $skin->open_simplebloc();
   <div style="overflow:auto;padding:0;margin:0;">
   <?php
   // Pages button's
-  $strForumButtonsPages = forum_pages("admin.php?op=subject&id_cat={$objForumCat->fields['id']}",$intForumNbPages,$arrFiltre['page']); 
+  $strForumButtonsPages = forum_pages("admin.php?op=subject&id_cat={$objForumCat->fields['id']}",$intForumNbPages,$arrFiltre['page']);
   if(!empty($strForumButtonsPages))
   {
     ?>
     <div style="float:right;margin:1px;"><?php echo $strForumButtonsPages; ?></div>
-    <?php 
-  } 
+    <?php
+  }
   if($objForumCat->fields['closed'] == 0 || $booForumIsAdminModerGlb)
   {
     ?>

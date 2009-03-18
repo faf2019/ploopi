@@ -21,6 +21,16 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Fonctions, constantes, variables globales
+ *
+ * @package forum
+ * @subpackage global
+ * @copyright HeXad, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Xavier Toussaint
+ */
+
 Define ('_FORUM_OBJECT_CAT',      1);
 Define ('_FORUM_OBJECT_SUBJECT',  2);
 Define ('_FORUM_OBJECT_MESSAGE',  3);
@@ -41,6 +51,14 @@ define ('_FORUM_ACTION_DELETE_SUBJECT',    13); //  "
 define ('_FORUM_ACTION_DELETE_MESSAGE',    14); //  "
 
 
+/**
+ * get if this message, subject, categorie  is enable
+ *
+ * @param int $id_object
+ * @param int $id_record
+ * @param int $id_module
+ * @return true / false
+ */
 function forum_record_isenabled($id_object, $id_record, $id_module)
 {
     global $db;

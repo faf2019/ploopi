@@ -22,6 +22,16 @@
 */
 
 /**
+ * Fonctions PHP
+ *
+ * @package forum
+ * @subpackage functions
+ * @copyright HeXad, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Xavier Toussaint
+ */
+
+/**
  * Get the page of a subject
  *
  * @param Int $intIdSubject id of subject research
@@ -33,30 +43,30 @@ function forum_GetSubjectPage($intIdSubject,$arrInfo)
 {
   global $strForumSqlLimitGroupMess;
   global $db;
-  
+
   $arrReturn = array('page' => 0,
                       'id_subject' => $intIdSubject,
                       'id_cat' => 0);
-  
+
   // Control
-  if(intval($intIdSubject) <= 0 || !is_array($arrInfo) || $arrInfo['limit'] <= 0 
-    || ($arrInfo['orderin'] != 'ASC' && $arrInfo['orderin'] != 'DESC')) 
+  if(intval($intIdSubject) <= 0 || !is_array($arrInfo) || $arrInfo['limit'] <= 0
+    || ($arrInfo['orderin'] != 'ASC' && $arrInfo['orderin'] != 'DESC'))
      return $arrReturn;
-     
+
   // Rech detail of subject
   $objForumSubject = new forum_mess();
   if(!$objForumSubject->open($intIdSubject)) return $arrReturn;
-  
+
   //Modify the arrReturn
   $arrReturn['id_cat'] = $objForumSubject->fields['id_cat'];
   if($arrInfo['limit'] == 0)
   {
     $arrReturn['page'] = 1;
-    return $arrReturn;  
+    return $arrReturn;
   }
-  
+
   $arrReturn['id'] = $objForumSubject->fields['id_cat'];
-  
+
   switch($arrInfo['orderin'])
   {
     case 'ASC':
@@ -98,11 +108,11 @@ function forum_GetSubjectPage($intIdSubject,$arrInfo)
       {$strForumFilter}
     {$strForumOrderBy}";
   $objForumSqlResult = $db->query($strForumSqlQuery);
-  
+
   if(!$db->numrows($objForumSqlResult)) return $arrReturn;
-  
+
   $arrForumFields = $db->fetchrow($objForumSqlResult);
-  
+
   $arrReturn['page'] = ceil($arrForumFields['ndPage']/$arrInfo['limit']);
 
   return $arrReturn;
@@ -119,33 +129,33 @@ function forum_GetMessPage($intIdMess,$arrInfoGlb)
 {
   global $strForumSqlLimitGroupMess;
   global $db;
-  
+
   $arrInfo = &$arrInfoGlb['mess'];
-  
+
   $arrReturn = array('page' => 0,
                       'page_subject' => 0,
-                      'id_mess' => $intIdMess, 
+                      'id_mess' => $intIdMess,
                       'id_subject' => 0,
                       'id_cat' => 0);
-  
+
   // Control
   if(intval($intIdMess) <= 0 || !is_array($arrInfo) || ($arrInfo['orderin'] != 'ASC' && $arrInfo['orderin'] != 'DESC'))
     return $arrReturn;
-  
+
   // Rech detail of mess
   $objForumMess = new forum_mess();
   if(!$objForumMess->open($intIdMess)) return $arrReturn;
-  
+
   //Modify the arrReturn
   $arrReturn['id_subject'] = $objForumMess->fields['id_subject'];
   $arrReturn['id_cat'] = $objForumMess->fields['id_cat'];
-  
+
   if($arrInfo['limit'] == 0)
   {
     $arrReturn['page'] = 1;
-    return $arrReturn;  
+    return $arrReturn;
   }
-    
+
   switch ($arrInfo['orderin'])
   {
     case 'ASC':
@@ -171,25 +181,25 @@ function forum_GetMessPage($intIdMess,$arrInfoGlb)
              AND ploopi_mod_forum_mess.id {$strForumCompare}= {$objForumMess->fields['id']}))
   ORDER BY ploopi_mod_forum_mess.timestp {$arrInfo['orderin']}";
   $objForumSqlResult = $db->query($strForumSqlQuery);
-  
+
   if(!$db->numrows($objForumSqlResult)) return $arrReturn;
-  
+
   $arrForumFields = $db->fetchrow($objForumSqlResult);
-  
+
   $arrReturn['page'] = ceil($arrForumFields['intPage']/$arrInfo['limit']);
-  
+
   // ok... now find the page of subject...
   $arrSearchSubject = forum_GetSubjectPage($objForumMess->fields['id_subject'],&$arrInfoGlb['subject']);
   if($arrSearchSubject['page'] > 0)
     $arrReturn['page_subject'] = $arrSearchSubject['page'];
   else
     $arrReturn['page'] = 0;
-  
+
   return $arrReturn;
 }
 
 /**
- * Create buttons for page select 
+ * Create buttons for page select
  *
  * @param String $strForumUrl = Url to redirect
  * @param Int $intForumNbPages Number max of page
@@ -201,7 +211,7 @@ function forum_pages($strForumUrl,$intForumNbPages,$intForumNumPage)
   if($intForumNbPages <= 1) return '';
 
   if($intForumNumPage > $intForumNbPages) $intForumNumPage = $intForumNbPages;
-  
+
   $strForumReturn = '<div style="margin:0;padding:0;">';
   $strForumReturn .= ' <div class="forum_info_pages">'._FORUM_PAGE.'&nbsp;'.$intForumNumPage.'&nbsp;'._FORUM_PAGE_ON.'&nbsp;'.$intForumNbPages.'</div>';
   // First - Previous
@@ -222,11 +232,11 @@ function forum_pages($strForumUrl,$intForumNbPages,$intForumNumPage)
       $strForumReturn .= '<input type="button" class="forum_button_disabled" style="float:left;" value="'._FORUM_PAGE_BEFORE.'" />';
     }
   }
-  
+
   // Define begin and end button with the actual page
   $intForumBegin = ($intForumNumPage-2);
   $intForumEnd = ($intForumNumPage+2);
-  
+
   if($intForumBegin < 1)
   {
     $intForumEnd += abs($intForumBegin)+1;
@@ -255,7 +265,7 @@ function forum_pages($strForumUrl,$intForumNbPages,$intForumNumPage)
       $strForumReturn .= '<input type="button" class="button" style="margin:1px;float:left;" onclick="javascript:document.location.href=\''.ploopi_urlencode($strForumUrl."&page=".($intForumNumPage+1)).'\'" value="'._FORUM_PAGE_NEXT.'"/>';
       // Last
       $strForumReturn .= '<input type="button" class="button" style="margin:1px;float:left;" onclick="javascript:document.location.href=\''.ploopi_urlencode("{$strForumUrl}&page={$intForumNbPages}").'\'" value="'._FORUM_PAGE_LAST.'"/>';
-      
+
     }
     else // disable
     {
@@ -281,28 +291,28 @@ function forum_pages($strForumUrl,$intForumNbPages,$intForumNumPage)
 function forum_ListModer($intIdCat = -1, $intObject = -1, $booWidthDetail = true, $inIdModule = -1)
 {
   global $db;
-  
+
   $arrForumModeratData = array();
 
   if($inIdModule == -1) $inIdModule = $_SESSION['ploopi']['moduleid'];
   if($intObject == -1 && defined('_FORUM_OBJECT_CAT')) $intObject = _FORUM_OBJECT_CAT;
-  
+
   if($intObject > -1)
     $arrForumModerat = ploopi_validation_get($intObject,$intIdCat);
-  
+
   if($booWidthDetail)
   {
     if(is_array($arrForumModerat) && count($arrForumModerat) > 0)
     {
       foreach($arrForumModerat as $value) $arrForumIdModerat[] = $value['id_validation'];
-        
+
       $strForumIdModerat = implode(',',$arrForumIdModerat);
-  
+
       $strForumSqlQueryModerat = "SELECT ploopi_user.* FROM ploopi_user WHERE ploopi_user.id IN ({$strForumIdModerat})";
       $objForumSqlResultModerat = $db->query($strForumSqlQueryModerat);
       if($db->numrows($objForumSqlResultModerat))
       {
-        while($value = $db->fetchrow($objForumSqlResultModerat)) 
+        while($value = $db->fetchrow($objForumSqlResultModerat))
           $arrForumModeratData[$value['id']] = array('login' => $value['login'],
                                                   'firstname' => $value['firstname'],
                                                   'lastname' => $value['lastname']);
@@ -333,15 +343,15 @@ function forum_ListModer($intIdCat = -1, $intObject = -1, $booWidthDetail = true
 function forum_IsAdminOrModer($intIdCat = -1, $intObject = -1, $booWidthDetail = true, $intIdModule = -1)
 {
   if($intIdModule == -1) $intIdModule = $_SESSION['ploopi']['moduleid'];
-  
+
   if(ploopi_isactionallowed($intObject)) return true;
 
   $arrListModer = forum_ListModer($intIdCat,$intObject,$booWidthDetail,$intIdModule);
-  
+
   if(is_array($arrListModer) && count($arrListModer) > 0 && array_key_exists($_SESSION['ploopi']['user']['id'],$arrListModer))
     return true;
-  
-  return false; 
+
+  return false;
 }
 
 /**
@@ -354,16 +364,16 @@ function forum_CtrlParam()
 if($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderby'] != 'timestp'
       && $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderby'] != 'title')
   $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderby'] = 'timestp';
-  
-if($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderin'] != 'ASC' 
+
+if($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderin'] != 'ASC'
       && $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderin'] != 'DESC')
   $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['orderin'] = 'ASC';
 
 // Control PARAM for message
 if($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderby'] != 'timestp')
   $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderby'] = 'timestp';
-  
-if($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderin'] != 'ASC' 
+
+if($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderin'] != 'ASC'
       && $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderin'] != 'DESC')
   $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['mess']['orderin'] = 'ASC';
 }

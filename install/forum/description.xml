@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>forum</label>
-      <version>1.0.6</version>
+      <version>1.0.7</version>
       <author>Ovensia / HeXad</author>
-      <date>20090218170500</date>
+      <date>20090318120000</date>
       <publicparam>1</publicparam>
       <description>Gestion d'un Forum Intranet/Extranet</description>
       <action>

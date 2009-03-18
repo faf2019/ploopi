@@ -22,6 +22,16 @@
 */
 
 /**
+ * Gestion des sujets et messages
+ *
+ * @package forum
+ * @subpackage subjects and messages
+ * @copyright HeXad, Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Xavier Toussaint
+ */
+
+/**
  * Class forum_mess for ploopi_mod_forum_mess (Message et Subject)
  *
  */
@@ -38,8 +48,10 @@ class forum_mess extends data_object
   }
 
   /**
-   * Open with a control if id is ok
+   * Open with a control if id mess is ok
    *
+   * @param int id message
+   * @return int nombre d'enregistrements
    */
   function open($intId)
   {
@@ -52,7 +64,6 @@ class forum_mess extends data_object
 
   /**
    * Save the message/subject data's
-   *
    */
   function save()
   {
@@ -150,7 +161,6 @@ class forum_mess extends data_object
 
   /**
    * Validate a subject/message by a moderator
-   *
    */
   function validate()
   {
@@ -170,7 +180,6 @@ class forum_mess extends data_object
 
   /**
    * Delete a message
-   *
    */
   function delete()
   {
@@ -192,7 +201,6 @@ class forum_mess extends data_object
    * Open a subject
    *
    * All messages in this subject will be unmarqued "closed"
-   *
    */
   function openSubject()
   {
@@ -208,7 +216,6 @@ class forum_mess extends data_object
   /**
    * Close the subject,
    * All messages in this subject will be marqued "closed" !
-   *
    */
   function closeSubject()
   {
@@ -222,7 +229,6 @@ class forum_mess extends data_object
 
   /**
    * Delete the subject and all messages in this subject and subscription
-   *
    */
   function deleteSubject()
   {
@@ -275,7 +281,6 @@ class forum_mess extends data_object
 
   /**
    * Send ticket for subcription
-   *
    */
   function SendToSubscribers()
   {

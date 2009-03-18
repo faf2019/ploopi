@@ -27,7 +27,7 @@
 /**
  * Partie op public du module
  *
- * @package Newsletter
+ * @package newsletter
  * @subpackage op
  * @copyright HeXad
  * @license GNU General Public License (GPL)
@@ -37,15 +37,15 @@
 switch($ploopi_op)
 {
   /*
-   * Affichage de la newsletter dans l'iframe de l'editeur ou en affichage direct 
+   * Affichage de la newsletter dans l'iframe de l'editeur ou en affichage direct
    */
   case 'newsletter_tpl';
   case 'newsletter_consult';
     ploopi_init_module('newsletter');
-    
+
     /*
      * LOAD LANGUAGE FILE
-     */    
+     */
     if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language'] != 'french' && file_exists("./lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php"))
     {
         include_once "./lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php";
@@ -55,21 +55,21 @@ switch($ploopi_op)
     if($ploopi_op == 'newsletter_consult') $strNewsletterMode = 'display';
     include './modules/newsletter/display.php';
   break;
-  
+
   /*
    * Inscription/désinscription depuis le bloc en front
    */
   case 'newsletter_subscribe':
     // Gestion des abonnements et désabonnements en front
     ploopi_init_module('newsletter');
-    
+
     $return = -1;
-    
-    if (!empty($_POST['subscription_email']) && ploopi_checkemail($_POST['subscription_email']) && 
+
+    if (!empty($_POST['subscription_email']) && ploopi_checkemail($_POST['subscription_email']) &&
         !empty($_GET['id_module']) && is_numeric($_GET['id_module']))
     {
       include_once './modules/newsletter/class_newsletter_subscriber.php';
-      
+
       $objSubscriber = new newsletter_subscriber();
       if (!$objSubscriber->open($_POST['subscription_email'],$_GET['id_module']))
       {
@@ -78,7 +78,7 @@ switch($ploopi_op)
         $objSubscriber->save();
         $return = _NEWSLETTER_SUBSCRIPTION_SUBSCRIBED;
       }
-      else 
+      else
       {
         $objSubscriber->delete();
         $return = _NEWSLETTER_SUBSCRIPTION_UNSUBSCRIBED;
@@ -88,20 +88,20 @@ switch($ploopi_op)
 
     ploopi_redirect("index.php?newsletter_subscription_return={$return}");
   break;
-  
+
   /*
    * Désinscription depuis le lien dans la newsletter qui redirige vers une page spéciale en front
    */
   case 'newsletter_unsubscrib':
     ploopi_init_module('newsletter');
-    
+
     $return = _NEWSLETTER_SUBSCRIPTION_ERROR_EMAIL;
-    
-    if (!empty($_POST['unsubcrib_email']) && ploopi_checkemail($_POST['unsubcrib_email']) && 
+
+    if (!empty($_POST['unsubcrib_email']) && ploopi_checkemail($_POST['unsubcrib_email']) &&
         !empty($_GET['id_module']) && is_numeric($_GET['id_module']))
-    {  
+    {
       include_once './modules/newsletter/class_newsletter_subscriber.php';
-      
+
       $objSubscriber = new newsletter_subscriber();
       if ($objSubscriber->open($_POST['unsubcrib_email'],$_GET['id_module']))
       {
@@ -111,22 +111,22 @@ switch($ploopi_op)
     }
     ploopi_redirect("index.php?newsletter_unsubscrib_return={$return}");
   break;
-  
+
   case 'newsletter_display_banniere':
-    
+
     if(!empty($_GET['banniere_id']))
     {
       include_once './include/functions/filesystem.php';
       include_once './include/functions/documents.php';
       include_once './include/classes/documents.php';
-      
+
       $doc = new documentsfile();
       if ($doc->open($_GET['banniere_id']))
         ploopi_downloadfile($doc->getfilepath(),$doc->fields['label'],false,false);
     }
     ploopi_die();
   break;
-  
+
   default:
   break;
 }

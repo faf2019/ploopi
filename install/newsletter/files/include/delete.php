@@ -26,7 +26,7 @@
 /**
  * Suppression des données relatives au module lors d'une suppression d'instance
  *
- * @package Newsletter
+ * @package newsletter
  * @subpackage delete
  * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)

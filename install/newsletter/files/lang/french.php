@@ -39,16 +39,16 @@
  */
 global $newsletter_subscription_messages;
 
-$newsletter_subscription_messages = 
+$newsletter_subscription_messages =
     array(
         _NEWSLETTER_SUBSCRIPTION_SUBSCRIBED   =>  'Votre abonnement a été validé.',
         _NEWSLETTER_SUBSCRIPTION_UNSUBSCRIBED =>  'Votre désabonnement a été validé.',
         _NEWSLETTER_SUBSCRIPTION_ERROR_EMAIL  =>  'Votre adresse email n\'est pas valide.',
         _NEWSLETTER_SUBSCRIPTION_ERROR_PARAM  =>  'Paramètre incorrect.'
-        
+
     );
 
-    
+
 define ('_NEWSLETTER_PAGE_TITLE', 'Gestion du Module «LABEL»');
 define ('_NEWSLETTER_PAGE_TITLE_CONSULT', 'Consultation des Newsletters');
 
