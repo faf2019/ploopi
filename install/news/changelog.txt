@@ -1,3 +1,9 @@
+== Module NEWS - version 2.5.1 ====================================================
+
+2009-03-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un bug sur les filtrage par espaces de travail dans la gestion des actualités 
+
 == Module NEWS - version 2.5.0 ====================================================
 
 2009-03-17  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

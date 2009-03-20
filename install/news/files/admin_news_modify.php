@@ -64,8 +64,7 @@ $select =   "
             FROM        ploopi_mod_news_entry
             LEFT JOIN   ploopi_mod_news_cat ON ploopi_mod_news_cat.id = ploopi_mod_news_entry.id_cat
             WHERE       ploopi_mod_news_entry.id_module = {$_SESSION['ploopi']['moduleid']}
-            AND         ploopi_mod_news_entry.id_workspace IN (".ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).")
-            {$sqllimitgroup}
+            AND         ploopi_mod_news_entry.id_workspace IN (".ploopi_viewworkspaces().")
             ORDER BY    date_publish DESC
             ";
 

@@ -37,17 +37,12 @@
 
 ploopi_init_module('news');
 
-//$groups = ploopi_viewworkspaces($template_moduleid,'web');
-//$sqllimitgroup = " AND ploopi_mod_news_entry.id_workspace IN ($groups)";
-$sqllimitgroup = '';
-
 $news_select =  "
                 SELECT      ploopi_mod_news_entry.*, 
                             ploopi_mod_news_cat.title as titlecat 
                 FROM        ploopi_mod_news_entry 
                 LEFT JOIN   ploopi_mod_news_cat ON ploopi_mod_news_cat.id = ploopi_mod_news_entry.id_cat 
                 WHERE       ploopi_mod_news_entry.id_module = {$template_moduleid}
-                {$sqllimitgroup}
                 AND     ploopi_mod_news_entry.published = 1
                 ORDER BY    date_publish desc 
                 ";
