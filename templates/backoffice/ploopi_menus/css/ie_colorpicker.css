@@ -5,29 +5,29 @@
  * @link http://www.colorjack.com/software/dhtml+color+picker.html
  */
 
-#plugin { 
-	padding-right: 0;
-	width: 210px;
+#plugin {
+    padding-right: 0;
+    width: 210px;
 }
 
-#plugCUR { 
-    font-size: 1px; 
+#plugCUR {
+    font-size: 1px;
 }
 
-#SV { 
-	background: #ff0000;
-	width: 166px;
-    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../../../../img/colorpicker/satval.png', sizingMethod='scale'); 
+#SV {
+    background: #ff0000;
+    width: 166px;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../../../../img/colorpicker/satval.png', sizingMethod='scale');
 }
 
-#SVslide { 
-    font-size: 1px; 
+#SVslide {
+    font-size: 1px;
 }
 
-#Hslide { 
-    font-size: 1px; 
+#Hslide {
+    font-size: 1px;
 }
 
-#Hmodel div { 
-    font-size: 1px; 
-}    
+#Hmodel div {
+    font-size: 1px;
+}

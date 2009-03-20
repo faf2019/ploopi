@@ -21,7 +21,7 @@
 */
 #system_annotation_list {
 height:1%;
-overflow: visible; 
+overflow: visible;
 }
 
 #system_annotation_tags {
@@ -30,17 +30,17 @@ margin-left:-3px;
 
 #system_annotation_titlebar {
 height:1%;
-overflow: visible; 
+overflow: visible;
 }
 
 .system_annotation_row {
 height:1%;
-overflow: visible; 
+overflow: visible;
 }
 
 .ploopi_annotation_row {
 height:1%;
-overflow: visible; 
+overflow: visible;
 }
 
 a.system_annotation_tag {
@@ -48,10 +48,10 @@ height:24px;
 line-height:24px;
 }
 
-.ploopi_annotation_viewlist img, .ploopi_annotation_viewlist span { 
-    display: inline-block; 
+.ploopi_annotation_viewlist img, .ploopi_annotation_viewlist span {
+    display: inline-block;
 }
 
-.ploopi_annotation_titleform img, .ploopi_annotation_titleform span { 
-    display: inline-block; 
+.ploopi_annotation_titleform img, .ploopi_annotation_titleform span {
+    display: inline-block;
 }

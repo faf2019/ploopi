@@ -21,7 +21,7 @@
 */
 #system_annotation_list {
 height:1%;
-overflow: visible; 
+overflow: visible;
 }
 
 #system_annotation_tags {
@@ -30,17 +30,17 @@ margin-left:-3px;
 
 #system_annotation_titlebar {
 height:1%;
-overflow: visible; 
+overflow: visible;
 }
 
 .system_annotation_row {
 height:1%;
-overflow: visible; 
+overflow: visible;
 }
 
 .ploopi_annotation_row {
 height:1%;
-overflow: visible; 
+overflow: visible;
 }
 
 a.system_annotation_tag {
@@ -48,12 +48,12 @@ height:24px;
 line-height:24px;
 }
 
-.ploopi_annotation_viewlist img, .ploopi_annotation_viewlist span { 
-    display: inline-block; 
+.ploopi_annotation_viewlist img, .ploopi_annotation_viewlist span {
+    display: inline-block;
 }
 
-.ploopi_annotation_titleform img, .ploopi_annotation_titleform span { 
-    display: inline-block; 
+.ploopi_annotation_titleform img, .ploopi_annotation_titleform span {
+    display: inline-block;
 }
 /*
     Copyright (c) 2002-2007 Netlor
@@ -94,39 +94,39 @@ line-height:24px;
 .ploopi_barchart .chart li {
     filter:alpha(opacity=90);
     }
-    /**
+/**
  * Script original de colorjack.
  * Adapté pour Ploopi par Stéphane Escaich / OVENSIA
  *
  * @link http://www.colorjack.com/software/dhtml+color+picker.html
  */
 
-#plugin { 
-	padding-right: 0;
-	width: 210px;
+#plugin {
+    padding-right: 0;
+    width: 210px;
 }
 
-#plugCUR { 
-    font-size: 1px; 
+#plugCUR {
+    font-size: 1px;
 }
 
-#SV { 
-	background: #ff0000;
-	width: 166px;
-    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../../../../img/colorpicker/satval.png', sizingMethod='scale'); 
+#SV {
+    background: #ff0000;
+    width: 166px;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../../../../img/colorpicker/satval.png', sizingMethod='scale');
 }
 
-#SVslide { 
-    font-size: 1px; 
+#SVslide {
+    font-size: 1px;
 }
 
-#Hslide { 
-    font-size: 1px; 
+#Hslide {
+    font-size: 1px;
 }
 
-#Hmodel div { 
-    font-size: 1px; 
-}    
+#Hmodel div {
+    font-size: 1px;
+}
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
@@ -197,7 +197,6 @@ overflow: visible;
 #block_modules {
 margin-right:0px;
 }
-
 
 #login input, #login label, #login span, #login a {
    display: inline-block;
@@ -284,7 +283,6 @@ div.simplebloc_title {
     height: 1%;
     overflow: visible;
 }
-
 
 .ploopi_form p label {
     padding: .2em .2em 0 0;

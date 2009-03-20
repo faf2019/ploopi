@@ -585,72 +585,75 @@ class skin_common
 
                 <div id="ploopi_explorer_values_inner_<?php echo $array_id; ?>">
                 <?php
-
-                foreach($array['values'] as $v)
+                
+                if (!empty($array['values']))
                 {
-                    // alternance des couleurs (une ligne sur 2) : on joue sur les css
-                    $color = (empty($color) || $color == 1) ? 2 : 1;
-                    ?>
-                    <div <?php if (!empty($v['id'])) echo "id=\"{$v['id']}\""; ?> class="ploopi_explorer_line_<?php echo $color; ?>" <?php if (!empty($v['style'])) echo "style=\"{$v['style']}\""; ?>>
-                        <?php
-                        if (!empty($array['columns']['actions_right']))
-                        {
-                            foreach($array['columns']['actions_right'] as $id => $c)
-                            {
-                                ?>
-                                <div class="ploopi_explorer_tools" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>"><?php echo $v['values'][$id]['label']; ?></div>
-                                <?php
-                            }
-                        }
-
-                        $option = (empty($v['option'])) ? '' : $v['option'];
-
-                        if (!empty($v['link']) || !empty($v['onclick']))
-                        {
-                            $onclick = (empty($v['onclick'])) ? '' : "onclick=\"{$v['onclick']}\"";
-                            $title = (empty($v['description'])) ? '' : 'title="'.htmlentities($v['description']).'"';
-                            ?>
-                            <a class="ploopi_explorer_link" href="<?php echo $v['link']; ?>" <?php echo $title ; ?> <?php echo $onclick ; ?> <?php echo $option; ?>>
-                            <?php
-                        }
-                        if (!empty($array['columns']['right']))
-                        {
-                            foreach($array['columns']['right'] as $id => $c)
-                            {
-                                ?>
-                                <div style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><?php echo $v['values'][$id]['label']; ?></p></div>
-                                <?php
-                            }
-                        }
-
-                        if (!empty($array['columns']['left']))
-                        {
-                            foreach($array['columns']['left'] as $id => $c)
-                            {
-                                ?>
-                                <div style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><?php echo $v['values'][$id]['label']; ?></p></div>
-                                <?php
-                            }
-                        }
-
-                        if (!empty($array['columns']['auto']))
-                        {
-                            foreach($array['columns']['auto'] as $id => $c)
-                            {
-                                ?>
-                                <div style="<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><?php echo $v['values'][$id]['label']; ?></p></div>
-                                <?php
-                            }
-                        }
-                        if (!empty($v['link']) || !empty($v['onclick']))
-                        {
-                            ?>
-                            </a>
-                            <?php
-                        }
+                    foreach($array['values'] as $v)
+                    {
+                        // alternance des couleurs (une ligne sur 2) : on joue sur les css
+                        $color = (empty($color) || $color == 1) ? 2 : 1;
                         ?>
-                    </div>
-                    <?php
+                        <div <?php if (!empty($v['id'])) echo "id=\"{$v['id']}\""; ?> class="ploopi_explorer_line_<?php echo $color; ?>" <?php if (!empty($v['style'])) echo "style=\"{$v['style']}\""; ?>>
+                            <?php
+                            if (!empty($array['columns']['actions_right']))
+                            {
+                                foreach($array['columns']['actions_right'] as $id => $c)
+                                {
+                                    ?>
+                                    <div class="ploopi_explorer_tools" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>"><?php echo $v['values'][$id]['label']; ?></div>
+                                    <?php
+                                }
+                            }
+    
+                            $option = (empty($v['option'])) ? '' : $v['option'];
+    
+                            if (!empty($v['link']) || !empty($v['onclick']))
+                            {
+                                $onclick = (empty($v['onclick'])) ? '' : "onclick=\"{$v['onclick']}\"";
+                                $title = (empty($v['description'])) ? '' : 'title="'.htmlentities($v['description']).'"';
+                                ?>
+                                <a class="ploopi_explorer_link" href="<?php echo $v['link']; ?>" <?php echo $title ; ?> <?php echo $onclick ; ?> <?php echo $option; ?>>
+                                <?php
+                            }
+                            if (!empty($array['columns']['right']))
+                            {
+                                foreach($array['columns']['right'] as $id => $c)
+                                {
+                                    ?>
+                                    <div style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><?php echo $v['values'][$id]['label']; ?></p></div>
+                                    <?php
+                                }
+                            }
+    
+                            if (!empty($array['columns']['left']))
+                            {
+                                foreach($array['columns']['left'] as $id => $c)
+                                {
+                                    ?>
+                                    <div style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><?php echo $v['values'][$id]['label']; ?></p></div>
+                                    <?php
+                                }
+                            }
+    
+                            if (!empty($array['columns']['auto']))
+                            {
+                                foreach($array['columns']['auto'] as $id => $c)
+                                {
+                                    ?>
+                                    <div style="<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><?php echo $v['values'][$id]['label']; ?></p></div>
+                                    <?php
+                                }
+                            }
+                            if (!empty($v['link']) || !empty($v['onclick']))
+                            {
+                                ?>
+                                </a>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                        <?php
+                    }
                 }
                 ?>
                 </div>

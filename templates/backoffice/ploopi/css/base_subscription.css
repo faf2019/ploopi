@@ -20,21 +20,21 @@
 */
 
 .ploopi_subscription_viewdetail {
-	display:block;
-	background-color:#CCE3FF;
-	text-decoration:none;
-	height:24px;
-	line-height:24px;
-	font-weight:bold;
-	margin:0;
-	padding:0 6px;
-	overflow:hidden;
+    display:block;
+    background-color:#CCE3FF;
+    text-decoration:none;
+    height:24px;
+    line-height:24px;
+    font-weight:bold;
+    margin:0;
+    padding:0 6px;
+    overflow:hidden;
     cursor:pointer;
 }
 
 .ploopi_subscription_viewdetail:hover {
-	background-color:#A1C9FF; /*99c5ff*/
-	text-decoration:none;
+    background-color:#A1C9FF; /*99c5ff*/
+    text-decoration:none;
 }
 
 .ploopi_subscription_viewdetail img, .ploopi_annotation_viewlist span {
@@ -46,33 +46,33 @@
 }
 
 .ploopi_subscription_detail {
-	background-color:#d9edff;
-	border-top:1px solid #d0d0d0;
+    background-color:#d9edff;
+    border-top:1px solid #d0d0d0;
 }
 
 .ploopi_subscription_checkbox {
-	padding:2px 4px;
-	overflow:auto;
+    padding:2px 4px;
+    overflow:auto;
     clear:both;
-	cursor:pointer;
+    cursor:pointer;
     line-height:16px;
 }
 
 .ploopi_subscription_checkbox input {
-	display:block;
-	float:left;
+    display:block;
+    float:left;
     cursor:pointer;
 }
 
 .ploopi_subscription_unsubscribe {
-	color:#a60000;
-	font-weight:bold;
+    color:#a60000;
+    font-weight:bold;
 }
 
 .subscription_saved {
-	padding:4px;
-	font-weight:bold;
-	color:#00a600;
+    padding:4px;
+    font-weight:bold;
+    color:#00a600;
 }
 
 .subscription_canceled {
@@ -80,6 +80,5 @@
     font-weight:bold;
     color:#a60000;
 }
-
 
 /* #D9EDFF */

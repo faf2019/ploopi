@@ -134,7 +134,6 @@ background-color:#e0e0e0;
 text-decoration:none;
 }
 
-
 .ploopi_annotation_row_1 {
 border-top: 1px solid #d0d0d0;
 background-color:#faffd9;
@@ -248,7 +247,6 @@ border-bottom:1px solid #d0d0d0;
     text-align:center;
 }
 
-
 .calendar_day div {
     width:18px;
     height:18px;
@@ -285,7 +283,7 @@ border-bottom:1px solid #d0d0d0;
     border:1px solid #d8d8d8;
     color:#808080;
 }
-	
+
 .calendar_arrow {
     float:left;
     width:40px;
@@ -294,7 +292,6 @@ border-bottom:1px solid #d0d0d0;
     text-align:center;
 }
 
-
 .calendar_month {
     height:30px;
     line-height:15px;
@@ -302,18 +299,16 @@ border-bottom:1px solid #d0d0d0;
     font-weight:bold;
 }
 
-
-
 /**
  * Styles liés à la class calendar
  */
 
 .ploopi_calendar_m {
-	color:#202020;
+    color:#202020;
 }
 
 .ploopi_calendar_m div.month_inner {
-    border-width: 1px 1px 0 0;  
+    border-width: 1px 1px 0 0;
     border-color:#a0a0a0;
     border-style:solid;
     background:#a0a0a0;
@@ -324,7 +319,7 @@ border-bottom:1px solid #d0d0d0;
 }
 
 .ploopi_calendar_m div.day_header {
-    float:left; 
+    float:left;
     position:relative;
     background:#f0f0f0;
     margin:0 0 1px 1px;
@@ -333,14 +328,14 @@ border-bottom:1px solid #d0d0d0;
 }
 
 .ploopi_calendar_m div.day_header div.day_header_label {
-    padding:2px; 
+    padding:2px;
     text-align:center;
     font-size:0.9em;
     font-weight:bold;
 }
 
 .ploopi_calendar_m div.day {
-    float:left; 
+    float:left;
     position:relative;
     background:#f0f0f0;
     margin:0 0 1px 1px;
@@ -349,14 +344,14 @@ border-bottom:1px solid #d0d0d0;
 }
 
 .ploopi_calendar_m div.day div.day_num {
-    padding:2px; 
+    padding:2px;
     background-color:#d0d0d0;
     text-align:right;
     font-size:0.9em;
 }
 
 .ploopi_calendar_m div.day div.day_num_grayed {
-    padding:2px; 
+    padding:2px;
     background-color:#d0d0d0;
     text-align:right;
     font-size:0.9em;
@@ -364,7 +359,7 @@ border-bottom:1px solid #d0d0d0;
 }
 
 .ploopi_calendar_m div.week_header {
-    float:left; 
+    float:left;
     position:relative;
     background:#f0f0f0;
     margin:0 0 1px 1px;
@@ -373,7 +368,7 @@ border-bottom:1px solid #d0d0d0;
 }
 
 .ploopi_calendar_m div.week_header div.week_header_num {
-    padding:2px; 
+    padding:2px;
     text-align:right;
     font-size:14px;
     font-weight:bold;
@@ -387,7 +382,7 @@ border-bottom:1px solid #d0d0d0;
     text-decoration:none;
     font-size:0.9em;
     color:#fff;
-    opacity:0.8;filter:alpha(opacity=80);    
+    opacity:0.8;filter:alpha(opacity=80);
 }
 
 .ploopi_calendar_m div.day a.event:hover {
@@ -406,24 +401,19 @@ border-bottom:1px solid #d0d0d0;
     margin-right:2px;
 }
 
-
-
-
-
-
 .ploopi_calendar_d div.row {
     clear:both;
 }
 
 .ploopi_calendar_d div.days_inner {
-    border-width: 1px 1px 0 0;  
+    border-width: 1px 1px 0 0;
     border-color:#a0a0a0;
     border-style:solid;
     background:#a0a0a0;
 }
 
 .ploopi_calendar_d div.day {
-    float:left; 
+    float:left;
     position:relative;
     background:#f0f0f0;
     margin:0 0 1px 1px;
@@ -431,7 +421,7 @@ border-bottom:1px solid #d0d0d0;
 }
 
 .ploopi_calendar_d div.day_header {
-    float:left; 
+    float:left;
     position:relative;
     background:#f0f0f0;
     margin:0 0 1px 1px;
@@ -440,14 +430,14 @@ border-bottom:1px solid #d0d0d0;
 }
 
 .ploopi_calendar_d div.day_header div.day_header_label {
-    padding:2px; 
+    padding:2px;
     text-align:center;
     font-size:0.9em;
     font-weight:bold;
 }
 
 .ploopi_calendar_d div.hours {
-	float:left;
+    float:left;
     position:relative;
     background-color:#e0e0e0;
     margin:0 0 1px 1px;
@@ -472,8 +462,8 @@ border-bottom:1px solid #d0d0d0;
 }
 
 .ploopi_calendar_d div.hours div.tick {
-	position:absolute;
-	border-top:1px solid #a0a0a0;
+    position:absolute;
+    border-top:1px solid #a0a0a0;
     z-index:100;
 }
 
@@ -509,11 +499,11 @@ border-bottom:1px solid #d0d0d0;
 
 .ploopi_barchart .vlegend {
     color: #666;
-	width:30px;
-	float:left;
-	position:relative;
-	}
-	
+    width:30px;
+    float:left;
+    position:relative;
+    }
+
 .ploopi_barchart .vlegend div {
     position:absolute;
     width:25px;
@@ -527,30 +517,30 @@ border-bottom:1px solid #d0d0d0;
     padding:0;
     position: relative;
     }
-    
+
 .ploopi_barchart .chart li {
     border: 1px solid #555;
     border-bottom: none;
-    bottom: 0; 
+    bottom: 0;
     color: #fff;
     background:#a0a0a0;
-    margin: 0; 
+    margin: 0;
     padding: 0;
     position: absolute;
     list-style: none;
     text-align: center;
     opacity:0.9;
     }
-    
-.ploopi_barchart .chart li.p1 { 
+
+.ploopi_barchart .chart li.p1 {
     background-color:#666;
     }
 
-.ploopi_barchart .chart li.p2 { 
+.ploopi_barchart .chart li.p2 {
     background-color:#888;
     }
 
-.ploopi_barchart .chart li.p3 { 
+.ploopi_barchart .chart li.p3 {
     background-color:#aaa;
     }
 
@@ -566,9 +556,9 @@ border-bottom:1px solid #d0d0d0;
     padding:4px 0;
     position: relative;
     }
-    
+
 .ploopi_barchart .hlegend div {
-	float: left;
+    float: left;
     color: #666;
     text-align: center;
     }/**
@@ -579,70 +569,70 @@ border-bottom:1px solid #d0d0d0;
  */
 
 #plugin {
-   color: #444; 
-   display: block; 
-   padding: 7px 10px 11px 10px; 
+   color: #444;
+   display: block;
+   padding: 7px 10px 11px 10px;
    overflow:auto;
 }
-  
-#SV { 
-	background: #ff0000 url('../../../../img/colorpicker/satval.png'); 
-	position: relative; 
-	cursor: pointer; 
-	float: left; 
-	height: 166px; 
-	width: 167px; 
-	margin-right: 10px; 
-	border:1px solid #000;
-	-moz-user-select: none; 
-	-khtml-user-select: none; 
-	user-select: none; 
+
+#SV {
+    background: #ff0000 url('../../../../img/colorpicker/satval.png');
+    position: relative;
+    cursor: pointer;
+    float: left;
+    height: 166px;
+    width: 167px;
+    margin-right: 10px;
+    border:1px solid #000;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
 }
 
-#SVslide { 
-	background: url('../../../../img/colorpicker/slide.gif'); 
-	height: 9px; 
-	width: 9px; 
-	position: absolute;
-	top: -4px;
-	left: -4px; 
-	line-height: 1px; 
+#SVslide {
+    background: url('../../../../img/colorpicker/slide.gif');
+    height: 9px;
+    width: 9px;
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    line-height: 1px;
 }
 
-#H { 
-	border: 1px solid #000; 
-	cursor: pointer; 
-	float: left; 
-	height: 166px; 
-	position: relative; 
-	width: 19px; 
-	padding: 0; 
-	-moz-user-select: none; 
-	-khtml-user-select: none; 
-	user-select: none; 
+#H {
+    border: 1px solid #000;
+    cursor: pointer;
+    float: left;
+    height: 166px;
+    position: relative;
+    width: 19px;
+    padding: 0;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
 }
 
-#Hslide { 
-	background: url('../../../../img/colorpicker/slideHue.gif'); 
-	top:-2px;
-	left:-8px;
-	height: 5px; 
-	width: 33px; 
-	position: absolute; 
-	line-height: 1px; 
+#Hslide {
+    background: url('../../../../img/colorpicker/slideHue.gif');
+    top:-2px;
+    left:-8px;
+    height: 5px;
+    width: 33px;
+    position: absolute;
+    line-height: 1px;
 }
 
-#Hmodel	{
-	position: relative; 
+#Hmodel {
+    position: relative;
 }
 
-#Hmodel div { 
-	height: 1px; 
-	width: 19px; 
-	line-height: 1px; 
-	margin: 0; 
-	padding: 0; 
-}      
+#Hmodel div {
+    height: 1px;
+    width: 19px;
+    line-height: 1px;
+    margin: 0;
+    padding: 0;
+}
 
 #colorpicker_footer {
     clear:both;
@@ -651,9 +641,9 @@ border-bottom:1px solid #d0d0d0;
 }
 
 #colorpicker_footer .text {
-	float:left;
-	width:60px;
-	margin-left:3px;
+    float:left;
+    width:60px;
+    margin-left:3px;
 }
 
 #colorpicker_footer .button {
@@ -661,11 +651,11 @@ border-bottom:1px solid #d0d0d0;
     margin-left:3px;
 }
 
-#plugCUR { 
-    float: left; 
-    width: 18px; 
-    height: 16px; 
-    background: #FFF; 
+#plugCUR {
+    float: left;
+    width: 18px;
+    height: 16px;
+    background: #FFF;
     border:1px solid #000;
     margin-left:3px;
 }
@@ -728,7 +718,6 @@ a.documents_pathselected {
     background-color:#e0e0e0;
 
 }
-
 
 div.documents_formtitle {
     font-weight:bold;
@@ -921,7 +910,6 @@ height:6px;
 font-size:1px;
 }
 
-
 /******************
   HEADER
 *******************/
@@ -963,7 +951,6 @@ color:#f0f0f0;
 #header a.selected {
 font-weight:bold;
 }
-
 
 /******************
 MENU HORIZONTAL
@@ -1009,7 +996,6 @@ color:#f0f0f0;
 #menu_horizontal a.selected {
 font-weight:bold;
 }
-
 
 /******************
   BODY
@@ -1085,13 +1071,11 @@ background: #4E68A6;
 text-decoration: none;
 }
 
-
 #page_content {
 overflow: auto;
 min-height:400px;
 padding:0 10px;
 }
-
 
 #block_modules {
 width: 150px;
@@ -1200,7 +1184,6 @@ font-size: 0.9em;
 text-align: right;
 padding:4px 0;
 }
-
 
 #footer a {
 color: #193c1c;
@@ -1317,7 +1300,6 @@ a.ploopi_share_title:hover {
     padding-left:4px;
 }
 
-
 .ploopi_share_select_usergroup {
     font-weight:bold;
     background-color:#e8e8e8;
@@ -1425,7 +1407,6 @@ height:auto;
 width:150px;
 }
 
-
 .pagetitle {
 clear:both;
 font-size:18px;
@@ -1480,14 +1461,12 @@ height:6px;
 font-size:1px; /* IE 6 ! */
 }
 
-
 .simplebloc {
 clear:both;
 overflow:hidden;
 border:1px solid #8FA090;
 margin-bottom:2px;
 }
-
 
 select.select {
 border: 1px solid #606060;
@@ -1603,7 +1582,6 @@ padding:2px 10px;
 background:#193c1c url(../img/template/menu_fond.png) 0 0 repeat-x;
 }
 
-
 .toolbar_icon {
 display:block;
 float:left;
@@ -1714,7 +1692,6 @@ color:#f0f0f0;
 font-weight:bold;
 }
 
-
 .ploopi_error {
 clear:both;
 color:#ff0000;
@@ -1729,8 +1706,6 @@ font-size:10px;
 color:#000000;
 }
 
-
-
 .ploopi_overflowauto {
 overflow:auto;
 }
@@ -1740,18 +1715,17 @@ p.ploopi_va {
     margin:0;
 }
 
-p.ploopi_va img, 
-p.ploopi_va span, 
-p.ploopi_va label, 
-p.ploopi_va strong, 
-p.ploopi_va em, 
-p.ploopi_va input, 
-p.ploopi_va select, 
+p.ploopi_va img,
+p.ploopi_va span,
+p.ploopi_va label,
+p.ploopi_va strong,
+p.ploopi_va em,
+p.ploopi_va input,
+p.ploopi_va select,
 p.ploopi_va a {
     display: inline-block;
     vertical-align: middle;
 }
-
 
 .ploopi_form {
     overflow:hidden;
@@ -1888,7 +1862,6 @@ a.ploopi_form_title * {
     font-weight:bold;
 }
 
-
 div.ploopi_explorer_main {
     position:relative;
     background-color:#f0f0f0;
@@ -1915,7 +1888,6 @@ div.ploopi_explorer_column {
     border-left:1px solid #b8b8b8;
     z-index:1000;
 }
-
 
 *.ploopi_explorer_element {
     display:block;
@@ -2011,7 +1983,7 @@ input.ploopi_page_cut_disable {
   text-align:center;
   font-weight: normal;
   width: 18px;
-} 
+}
 
 select.ploopi_page_by {
   border: 1px solid #606060;
@@ -2028,7 +2000,7 @@ select.ploopi_page_by {
 }
 
 .ploopi_selectbox_button {
-    margin:0; 
+    margin:0;
     background: #f0f0f0 url(../img/template/selectbox.gif) right no-repeat;
     padding:2px 4px;
     border: 1px solid #808080;
@@ -2043,7 +2015,7 @@ select.ploopi_page_by {
     white-space:nowrap;
 }
 
-.ploopi_selectbox_button img, 
+.ploopi_selectbox_button img,
 .ploopi_selectbox_button span {
     display: inline-block;
     vertical-align: middle;
@@ -2053,17 +2025,16 @@ select.ploopi_page_by {
     background-color: #d0d0d0;
 }
 
-
 .ploopi_selectbox_list {
     margin-top: -1px;;
     padding: 0;
     background: #f0f0f0;
-    z-index: 10000; 
-    position: absolute; 
+    z-index: 10000;
+    position: absolute;
 }
 
 .ploopi_selectbox_list ul {
-    border-width: 1px; 
+    border-width: 1px;
     border-style: solid;
     border-color: #808080;
     margin:0;
@@ -2088,7 +2059,7 @@ select.ploopi_page_by {
     text-decoration:none;
 }
 
-.ploopi_selectbox_list li a img, 
+.ploopi_selectbox_list li a img,
 .ploopi_selectbox_list li a span {
     display: inline-block;
     vertical-align: middle;
@@ -2154,21 +2125,21 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
 */
 
 .ploopi_subscription_viewdetail {
-	display:block;
-	background-color:#CCE3FF;
-	text-decoration:none;
-	height:24px;
-	line-height:24px;
-	font-weight:bold;
-	margin:0;
-	padding:0 6px;
-	overflow:hidden;
+    display:block;
+    background-color:#CCE3FF;
+    text-decoration:none;
+    height:24px;
+    line-height:24px;
+    font-weight:bold;
+    margin:0;
+    padding:0 6px;
+    overflow:hidden;
     cursor:pointer;
 }
 
 .ploopi_subscription_viewdetail:hover {
-	background-color:#A1C9FF; /*99c5ff*/
-	text-decoration:none;
+    background-color:#A1C9FF; /*99c5ff*/
+    text-decoration:none;
 }
 
 .ploopi_subscription_viewdetail img, .ploopi_annotation_viewlist span {
@@ -2180,33 +2151,33 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
 }
 
 .ploopi_subscription_detail {
-	background-color:#d9edff;
-	border-top:1px solid #d0d0d0;
+    background-color:#d9edff;
+    border-top:1px solid #d0d0d0;
 }
 
 .ploopi_subscription_checkbox {
-	padding:2px 4px;
-	overflow:auto;
+    padding:2px 4px;
+    overflow:auto;
     clear:both;
-	cursor:pointer;
+    cursor:pointer;
     line-height:16px;
 }
 
 .ploopi_subscription_checkbox input {
-	display:block;
-	float:left;
+    display:block;
+    float:left;
     cursor:pointer;
 }
 
 .ploopi_subscription_unsubscribe {
-	color:#a60000;
-	font-weight:bold;
+    color:#a60000;
+    font-weight:bold;
 }
 
 .subscription_saved {
-	padding:4px;
-	font-weight:bold;
-	color:#00a600;
+    padding:4px;
+    font-weight:bold;
+    color:#00a600;
 }
 
 .subscription_canceled {
@@ -2214,7 +2185,6 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     font-weight:bold;
     color:#a60000;
 }
-
 
 /* #D9EDFF *//*
     Copyright (c) 2002-2007 Netlor
@@ -2307,7 +2277,6 @@ display:none;
 width:100%;
 height:250px;
 }
-
 
 /* POPUPS */
 
@@ -2462,7 +2431,6 @@ height:20px;
 line-height:20px;
 }
 
-
 .system_tickets_row {
 clear:both;
 border-bottom:1px solid #b0b0b0;
@@ -2472,7 +2440,6 @@ overflow:auto;
 .system_tickets_head {
 cursor:pointer;
 }
-
 
 .system_tickets_detail {
 clear:both;
@@ -2549,7 +2516,6 @@ padding:4px;
 float: right;
 }
 
-
 .system_tickets_user_detail img, .system_tickets_user_detail span {
     vertical-align: middle;
 }
@@ -2575,7 +2541,6 @@ clear:both;
 margin:0;
 display:none;
 }
-
 
 .system_tickets_tovalidate {
 display:block;
@@ -2700,12 +2665,20 @@ text-decoration:none;
     padding-left:4px;
 }
 
-
 .system_tickets_select_usergroup {
-    font-weight:bold;
+    display:block;
     background-color:#e8e8e8;
     border-bottom:1px solid #c0c0c0;
+    color:#404040;
     padding:1px 1px 1px 20px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.system_tickets_select_usergroup:hover {
+    text-decoration:none;
+    background-color:#F2F6FF;
+    color:#000000;
 }
 
 .system_tickets_select_usergroup span {
@@ -2758,8 +2731,6 @@ a.system_tickets_delete_user img {
     border:0;
 }
 
-
-
 .system_tickets_quoted_user {
     margin:2px 2px 0 2px;
     padding:2px 4px;
@@ -2786,7 +2757,8 @@ a.system_tickets_delete_user img {
 
 #system_tickets_button:hover {
     background-color:#e0e0e0;
-}/*
+}
+/*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.
@@ -2866,7 +2838,6 @@ a.ploopi_validation_title:hover {
 .ploopi_validation_select_user span {
     padding-left:4px;
 }
-
 
 .ploopi_validation_select_usergroup {
     font-weight:bold;

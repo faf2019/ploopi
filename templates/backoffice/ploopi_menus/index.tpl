@@ -48,7 +48,6 @@
     <!-- END module_css_ie -->
     <![endif]-->
 
-
     <!-- BEGIN ploopi_js -->
     <script type="text/javascript" src="{ploopi_js.PATH}"></script>
     <!-- END ploopi_js -->
@@ -97,7 +96,7 @@
     {
         cible = $(blockid);
 
-        if (!action) cible.style.visibility = 'hidden'; 
+        if (!action) cible.style.visibility = 'hidden';
         else
         {
             x = 0;
@@ -173,7 +172,7 @@
                     <input type="submit" value="Envoyer" class="button" style="width:49%;" tabindex="13" />
                 </div>
             </form>
-            
+
             <!-- BEGIN switch_ploopimsg -->
             <div class="loginbox_line" style="text-align:right;">
                 <img src="{TEMPLATE_PATH}/img/system/information.png" style="display:block;float:left;"><span class="information">&nbsp;{PLOOPI_MSG}</span>
@@ -190,7 +189,6 @@
 </div>
 <!-- END switch_user_logged_out -->
 
-
 <!-- BEGIN switch_user_logged_in -->
 <div id="container_in">
 
@@ -204,7 +202,6 @@
 
         <img src="{TEMPLATE_PATH}/img/template/bandeau_gauche.jpg" style="position:absolute;top:0;right:297px;"/>
         <img src="{TEMPLATE_PATH}/img/template/bandeau_droit.jpg" style="position:absolute;top:0;right:0px;" usemap="#map" border="0" />
-
 
         <div id="menu_horizontal">
         <!-- BEGIN switch_blockmenu -->
@@ -274,9 +271,6 @@
 </div>
 <!-- END switch_user_logged_in -->
 
-
-
-
 <p id="footer">
 Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi {PLOOPI_VERSION} ({PLOOPI_REVISION})</a>&nbsp;&#169;&nbsp;2008&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>&nbsp;
 <br />[ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko ]&nbsp;
@@ -292,9 +286,9 @@ function tpl_passwordlost() {
     if (effect) return false;
     effect = true;
     new Effect.BlindDown(
-        'formpasswordlost', 
+        'formpasswordlost',
         {
-            duration: 0.3, 
+            duration: 0.3,
             afterFinish:function() {
                 $('ploopi_lostpassword_login').focus();
                 effect = false;
@@ -307,9 +301,9 @@ function tpl_passwordlost_cancel() {
     if (effect) return false;
     effect = true;
     new Effect.BlindUp(
-        'formpasswordlost', 
+        'formpasswordlost',
         {
-            duration: 0.3, 
+            duration: 0.3,
             afterFinish:function() {
                 $('ploopi_login').focus();
                 effect = false;
@@ -321,7 +315,7 @@ function tpl_passwordlost_cancel() {
 function tpl_passwordlost_submit() {
     if ($('ploopi_lostpassword_login').value != '' || $('ploopi_lostpassword_email').value != '') return true;
     else alert('Vous devez remplir un des deux champs');
-    
+
     return false;
 }
 </script>

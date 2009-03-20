@@ -48,7 +48,6 @@
     text-align:center;
 }
 
-
 .calendar_day div {
     width:18px;
     height:18px;
@@ -85,7 +84,7 @@
     border:1px solid #d8d8d8;
     color:#808080;
 }
-	
+
 .calendar_arrow {
     float:left;
     width:40px;
@@ -94,7 +93,6 @@
     text-align:center;
 }
 
-
 .calendar_month {
     height:30px;
     line-height:15px;
@@ -102,18 +100,16 @@
     font-weight:bold;
 }
 
-
-
 /**
  * Styles liés à la class calendar
  */
 
 .ploopi_calendar_m {
-	color:#202020;
+    color:#202020;
 }
 
 .ploopi_calendar_m div.month_inner {
-    border-width: 1px 1px 0 0;  
+    border-width: 1px 1px 0 0;
     border-color:#a0a0a0;
     border-style:solid;
     background:#a0a0a0;
@@ -124,7 +120,7 @@
 }
 
 .ploopi_calendar_m div.day_header {
-    float:left; 
+    float:left;
     position:relative;
     background:#f0f0f0;
     margin:0 0 1px 1px;
@@ -133,14 +129,14 @@
 }
 
 .ploopi_calendar_m div.day_header div.day_header_label {
-    padding:2px; 
+    padding:2px;
     text-align:center;
     font-size:0.9em;
     font-weight:bold;
 }
 
 .ploopi_calendar_m div.day {
-    float:left; 
+    float:left;
     position:relative;
     background:#f0f0f0;
     margin:0 0 1px 1px;
@@ -149,14 +145,14 @@
 }
 
 .ploopi_calendar_m div.day div.day_num {
-    padding:2px; 
+    padding:2px;
     background-color:#d0d0d0;
     text-align:right;
     font-size:0.9em;
 }
 
 .ploopi_calendar_m div.day div.day_num_grayed {
-    padding:2px; 
+    padding:2px;
     background-color:#d0d0d0;
     text-align:right;
     font-size:0.9em;
@@ -164,7 +160,7 @@
 }
 
 .ploopi_calendar_m div.week_header {
-    float:left; 
+    float:left;
     position:relative;
     background:#f0f0f0;
     margin:0 0 1px 1px;
@@ -173,7 +169,7 @@
 }
 
 .ploopi_calendar_m div.week_header div.week_header_num {
-    padding:2px; 
+    padding:2px;
     text-align:right;
     font-size:14px;
     font-weight:bold;
@@ -187,7 +183,7 @@
     text-decoration:none;
     font-size:0.9em;
     color:#fff;
-    opacity:0.8;filter:alpha(opacity=80);    
+    opacity:0.8;filter:alpha(opacity=80);
 }
 
 .ploopi_calendar_m div.day a.event:hover {
@@ -206,24 +202,19 @@
     margin-right:2px;
 }
 
-
-
-
-
-
 .ploopi_calendar_d div.row {
     clear:both;
 }
 
 .ploopi_calendar_d div.days_inner {
-    border-width: 1px 1px 0 0;  
+    border-width: 1px 1px 0 0;
     border-color:#a0a0a0;
     border-style:solid;
     background:#a0a0a0;
 }
 
 .ploopi_calendar_d div.day {
-    float:left; 
+    float:left;
     position:relative;
     background:#f0f0f0;
     margin:0 0 1px 1px;
@@ -231,7 +222,7 @@
 }
 
 .ploopi_calendar_d div.day_header {
-    float:left; 
+    float:left;
     position:relative;
     background:#f0f0f0;
     margin:0 0 1px 1px;
@@ -240,14 +231,14 @@
 }
 
 .ploopi_calendar_d div.day_header div.day_header_label {
-    padding:2px; 
+    padding:2px;
     text-align:center;
     font-size:0.9em;
     font-weight:bold;
 }
 
 .ploopi_calendar_d div.hours {
-	float:left;
+    float:left;
     position:relative;
     background-color:#e0e0e0;
     margin:0 0 1px 1px;
@@ -272,8 +263,8 @@
 }
 
 .ploopi_calendar_d div.hours div.tick {
-	position:absolute;
-	border-top:1px solid #a0a0a0;
+    position:absolute;
+    border-top:1px solid #a0a0a0;
     z-index:100;
 }
 

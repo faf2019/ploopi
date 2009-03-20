@@ -7,11 +7,11 @@
 
 .ploopi_barchart .vlegend {
     color: #666;
-	width:30px;
-	float:left;
-	position:relative;
-	}
-	
+    width:30px;
+    float:left;
+    position:relative;
+    }
+
 .ploopi_barchart .vlegend div {
     position:absolute;
     width:25px;
@@ -25,30 +25,30 @@
     padding:0;
     position: relative;
     }
-    
+
 .ploopi_barchart .chart li {
     border: 1px solid #555;
     border-bottom: none;
-    bottom: 0; 
+    bottom: 0;
     color: #fff;
     background:#a0a0a0;
-    margin: 0; 
+    margin: 0;
     padding: 0;
     position: absolute;
     list-style: none;
     text-align: center;
     opacity:0.9;
     }
-    
-.ploopi_barchart .chart li.p1 { 
+
+.ploopi_barchart .chart li.p1 {
     background-color:#666;
     }
 
-.ploopi_barchart .chart li.p2 { 
+.ploopi_barchart .chart li.p2 {
     background-color:#888;
     }
 
-.ploopi_barchart .chart li.p3 { 
+.ploopi_barchart .chart li.p3 {
     background-color:#aaa;
     }
 
@@ -64,9 +64,9 @@
     padding:4px 0;
     position: relative;
     }
-    
+
 .ploopi_barchart .hlegend div {
-	float: left;
+    float: left;
     color: #666;
     text-align: center;
     }

@@ -178,7 +178,6 @@ height:6px;
 font-size:1px;
 }
 
-
 /******************
   HEADER
 *******************/
@@ -220,7 +219,6 @@ color:#f0f0f0;
 #header a.selected {
 font-weight:bold;
 }
-
 
 /******************
 MENU HORIZONTAL
@@ -266,7 +264,6 @@ color:#f0f0f0;
 #menu_horizontal a.selected {
 font-weight:bold;
 }
-
 
 /******************
   BODY
@@ -342,13 +339,11 @@ background: #4E68A6;
 text-decoration: none;
 }
 
-
 #page_content {
 overflow: auto;
 min-height:400px;
 padding:0 10px;
 }
-
 
 #block_modules {
 width: 150px;
@@ -457,7 +452,6 @@ font-size: 0.9em;
 text-align: right;
 padding:4px 0;
 }
-
 
 #footer a {
 color: #193c1c;

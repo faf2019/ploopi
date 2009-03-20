@@ -322,7 +322,15 @@ switch($ploopi_op)
     case 'tickets_select_user':
         if (!$_SESSION['ploopi']['connected']) ploopi_die();
 
-        if (isset($_GET['user_id'])) $_SESSION['ploopi']['tickets']['users_selected'][$_GET['user_id']] = $_GET['user_id'];
+        if (isset($_GET['user_id']) && is_numeric($_GET['user_id'])) $_SESSION['ploopi']['tickets']['users_selected'][$_GET['user_id']] = $_GET['user_id'];
+        if (isset($_GET['group_id']) && is_numeric($_GET['group_id'])) 
+        {
+            $objGroup = new group();
+            $objGroup->fields['id'] = $_GET['group_id'];
+            $arrUsers = $objGroup->getusers();
+            
+            foreach($objGroup->getusers() as $user_id => $arrUser) $_SESSION['ploopi']['tickets']['users_selected'][$user_id] = $user_id;
+        }
         if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['tickets']['users_selected'][$_GET['remove_user_id']]);
 
         ploopi_tickets_displayusers();
@@ -332,6 +340,8 @@ switch($ploopi_op)
 
     case 'tickets_search_users':
         if (!$_SESSION['ploopi']['connected']) ploopi_die();
+        if (!isset($_POST['ploopi_ticket_userfilter']) && !isset($_POST['ploopi_ticket_typefilter'])) ploopi_die();
+        
         ?>
         <div style="height:150px;overflow-y:auto;overflow-x:hidden;border:1px solid #c0c0c0;">
         <?php
@@ -342,122 +352,172 @@ switch($ploopi_op)
             $group = new group();
             $workspace = new workspace();
 
+            // liste pour les espaces, groupes, utilisateurs
             $list = array();
-            $list['work'] = array();
-            $list['org'] = array();
-
-            $filtered_search_field = $db->addslashes($_GET['ploopi_ticket_userfilter']);
-            $search_pattern = "AND (u.login LIKE '%{$filtered_search_field}%' OR u.lastname LIKE '%{$filtered_search_field}%' OR u.firstname LIKE '%{$filtered_search_field}%') ";
+            $list['wsp'] = array();
+            $list['grp'] = array();
+            $list['usr'] = array();
+            
+            $booEmptySearch = true;
+            
+            // Filtre utilisateur
+            $filtered_search_field = $db->addslashes($_POST['ploopi_ticket_userfilter']);
+            $search_pattern_user = ($_POST['ploopi_ticket_typefilter'] == 'user') ? "AND (u.login LIKE '%{$filtered_search_field}%' OR u.lastname LIKE '%{$filtered_search_field}%' OR u.firstname LIKE '%{$filtered_search_field}%') " : '';
 
             // construction de la liste des groupes de travail et des groupes d'utilisateurs rattachés (pour l'utilisateur courant)
-            foreach ($_SESSION['ploopi']['workspaces'] as $grp) // pour chaque groupe de travail
+            foreach ($_SESSION['ploopi']['workspaces'] as $wsp) // pour chaque groupe de travail
             {
-                if (isset($grp['adminlevel']) && $grp['backoffice'])
+                if (isset($wsp['adminlevel']) && $wsp['backoffice'])
                 {
-                    $list['work'][$grp['id']]['label'] = $grp['label'];
-                    $list['work'][$grp['id']]['org'] = array();
-                    $list['work'][$grp['id']]['users'] = array();
-                    $workspace->fields['id'] = $grp['id'];
-                    foreach ($workspace->getgroups() as $orgrp)
+                    if ($_POST['ploopi_ticket_typefilter'] != 'workspace' || $_POST['ploopi_ticket_userfilter'] == '' || ($_POST['ploopi_ticket_typefilter'] == 'workspace' && stristr(ploopi_convertaccents($wsp['label']), ploopi_convertaccents($_POST['ploopi_ticket_userfilter'])) !== false))
                     {
-                        $list['work'][$grp['id']]['org'][] = $orgrp['id'];
-                        $list['org'][$orgrp['id']]['label'] = $orgrp['label'];
-                    }
-                }
-            }
-
-            // recherche des utilisateurs attachés aux espaces précédemment sélectionnés
-            $query_workspaces = "
-                                SELECT      u.*,
-                                            wu.id_workspace
-
-                                FROM        ploopi_user u,
-                                            ploopi_workspace w,
-                                            ploopi_workspace_user wu
-
-                                WHERE       u.id = wu.id_user
-                                AND         w.id = wu.id_workspace
-                                AND         wu.id_workspace IN (".implode(',',array_keys($list['work'])).")
-                                {$search_pattern}
-                                ORDER BY    u.lastname, u.firstname, u.login
-                                ";
-
-            $db->query($query_workspaces);
-
-            // affectation des utilisateurs à leurs groupes de rattachement
-            while ($fields = $db->fetchrow())
-            {
-                $list['work'][$fields['id_workspace']]['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
-            }
-
-                // pour chaque espace de travail
-            foreach($list['work'] as $id_workgrp => $workgrp)
-            {
-
-                ?>
-                <div class="system_tickets_select_workgroup">
-                    <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><?php echo $workgrp['label']; ?></span></p>
-                </div>
-                <?php
-                if (!empty($workgrp['users']))
-                {
-                    foreach($workgrp['users'] as $id_user => $user)
-                    {
-                        ?>
-                        <a class="system_tickets_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<?php echo $id_user; ?>', 'div_ticket_users_selected');">
-                            <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
-                        </a>
-                        <?php
-                    }
-                }
-
-                $query_groups = "
-                                SELECT      u.*,
-                                            wg.id_group
-
-                                FROM        ploopi_user u,
-                                            ploopi_group g,
-                                            ploopi_group_user gu,
-                                            ploopi_workspace w,
-                                            ploopi_workspace_group wg
-
-                                WHERE       u.id = gu.id_user
-                                AND         w.id = ".$id_workgrp."
-                                AND         wg.id_workspace = w.id
-                                AND         g.id = wg.id_group
-                                AND         g.id = gu.id_group
-                                AND         gu.id_group = wg.id_group
-                                {$search_pattern}
-                                ORDER BY    u.lastname, u.firstname, u.login
-                                ";
-
-                $db->query($query_groups);
-                $listgroup = array();
-                while ($fields = $db->fetchrow())
-                {
-                    $listgroup[$fields['id_group']]['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
-                }
-
-                foreach($listgroup as $id_orggrp => $group)
-                {
-                    if (!empty($group['users']))
-                    {
-                        ?>
-                        <div class="system_tickets_select_usergroup">
-                            <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo $list['org'][$id_orggrp]['label']; ?></span></p>
-                        </div>
-                        <?php
-                        foreach($group['users'] as $id_user => $user)
+                        $list['wsp'][$wsp['id']]['label'] = $wsp['label'];
+                        $list['wsp'][$wsp['id']]['empty'] = true;
+                        $list['wsp'][$wsp['id']]['groups'] = array();
+                        $list['wsp'][$wsp['id']]['users'] = array();
+                        $workspace->fields['id'] = $wsp['id'];
+                        foreach ($workspace->getgroups(true) as $grp)
                         {
-                            ?>
-                            <a class="system_tickets_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<?php echo $id_user; ?>', 'div_ticket_users_selected');">
-                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
-                            </a>
-                            <?php
+                            if ($_POST['ploopi_ticket_typefilter'] != 'group' || ploopi_convertaccents($_POST['ploopi_ticket_userfilter']) == '' || ($_POST['ploopi_ticket_typefilter'] == 'group' && stristr(ploopi_convertaccents($grp['label']), ploopi_convertaccents($_POST['ploopi_ticket_userfilter'])) !== false))
+                            {
+                                $list['wsp'][$wsp['id']]['groups'][$grp['id']] = $grp['id'];
+                                if (!isset($list['grp'][$grp['id']])) $list['grp'][$grp['id']]['label'] = $grp['label'];
+                            }
                         }
                     }
                 }
             }
+
+            
+            if (!empty($list['wsp']))
+            {
+                if ($_POST['ploopi_ticket_typefilter'] != 'group')
+                {
+                    // recherche des utilisateurs attachés aux espaces précédemment sélectionnés
+                    $db->query("
+                        SELECT      u.*,
+                                    wu.id_workspace
+    
+                        FROM        ploopi_user u,
+                                    ploopi_workspace w,
+                                    ploopi_workspace_user wu
+    
+                        WHERE       u.id = wu.id_user
+                        AND         w.id = wu.id_workspace
+                        AND         wu.id_workspace IN (".implode(',',array_keys($list['wsp'])).")
+                        {$search_pattern_user}
+                        ORDER BY    u.lastname, u.firstname, u.login
+                    ");
+        
+                    // affectation des utilisateurs à leurs groupes de rattachement
+                    while ($fields = $db->fetchrow())
+                    {
+                        // Si l'espace contient au moins 1 utilisateur, il n'est pas vide
+                        if ($list['wsp'][$fields['id_workspace']]['empty']) $list['wsp'][$fields['id_workspace']]['empty'] = false;
+                        
+                        $list['wsp'][$fields['id_workspace']]['users'][] = $fields['id'];
+                        if (!isset($list['usr'][$fields['id']])) $list['usr'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
+                    }
+                }
+
+                if (!empty($list['grp']))
+                {
+                    $db->query("
+                        SELECT      u.*,
+                                    gu.id_group
+    
+                        FROM        ploopi_user u,
+                                    ploopi_group g,
+                                    ploopi_group_user gu
+    
+                        WHERE       u.id = gu.id_user
+                        AND         g.id = gu.id_group
+                        AND         gu.id_group IN (".implode(',',array_keys($list['grp'])).")
+                        {$search_pattern_user}
+                        ORDER BY    u.lastname, u.firstname, u.login
+                    ");
+                        
+                    $listgroup = array();
+                    while ($fields = $db->fetchrow())
+                    {
+                        $list['grp'][$fields['id_group']]['users'][] = $fields['id'];
+                        if (!isset($list['usr'][$fields['id']])) $list['usr'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
+                    }
+                }
+                            
+                if (!empty($list['usr']))
+                {
+                    // On vérifie que chaque espace contient bien qqchose
+                    foreach($list['wsp'] as $id_wsp => $wsp)
+                    {
+                        // On ne teste que les espaces encore vides (ceux qui n'ont pas encore au moins 1 utilisateur)
+                        if ($wsp['empty'])
+                            foreach($wsp['groups'] as $id_grp) 
+                                if ($list['wsp'][$id_wsp]['empty'] && !empty($list['grp'][$id_grp]['users'])) 
+                                    $list['wsp'][$id_wsp]['empty'] = false;
+                    }
+                    
+                    foreach($list['wsp'] as $id_wsp => $wsp)
+                    {
+                        if (!$wsp['empty'])
+                        {
+                            ?>
+                            <div class="system_tickets_select_workgroup">
+                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><?php echo $wsp['label']; ?></span></p>
+                            </div>
+                            <?php
+                            if (!empty($wsp['users']))
+                            {
+                                foreach($wsp['users'] as $id_user)
+                                {
+                                    if ($booEmptySearch) $booEmptySearch = false;
+                                    
+                                    ?>
+                                    <a class="system_tickets_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<?php echo $id_user; ?>', 'div_ticket_users_selected');">
+                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo "{$list['usr'][$id_user]['lastname']} {$list['usr'][$id_user]['firstname']}"; ?></span></p>
+                                    </a>
+                                    <?php
+                                }
+                            }
+            
+                            if (!empty($wsp['groups']))
+                            {
+                                foreach($wsp['groups'] as $id_grp)
+                                {
+                                    if (!empty($list['grp'][$id_grp]['users']))
+                                    {
+                                        ?>
+                                        <a class="system_tickets_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&group_id=<?php echo $id_grp; ?>', 'div_ticket_users_selected');">
+                                            <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo $list['grp'][$id_grp]['label']; ?></span></p>
+                                        </a>
+                                        <?php
+                                        foreach($list['grp'][$id_grp]['users'] as $id_user)
+                                        {
+                                            if ($booEmptySearch) $booEmptySearch = false;
+                                            ?>
+                                            <a class="system_tickets_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<?php echo $id_user; ?>', 'div_ticket_users_selected');">
+                                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo "{$list['usr'][$id_user]['lastname']} {$list['usr'][$id_user]['firstname']}"; ?></span></p>
+                                            </a>
+                                            <?php
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if ($booEmptySearch)
+            {
+                ?>
+                <div style="padding:4px;" class="error">
+                    Aucune réponse
+                </div>
+                <?php
+            }
+            ploopi_die();
+            
             ?>
         </div>
         <div class="system_tickets_select_legend">

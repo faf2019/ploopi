@@ -54,8 +54,14 @@ function ploopi_tickets_selectusers($id_user = null)
     ?>
     <p class="ploopi_va">
         <span><?php echo _PLOOPI_LABEL_TICKET_RECIPIENTSEARCH; ?>:</span>
-        <input type="text" id="ploopi_ticket_userfilter" class="text">
-        <img style="cursor:pointer;" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_search_users&ploopi_ticket_userfilter='+ploopi_getelem('ploopi_ticket_userfilter').value,'div_ticket_search_result');" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/search.png">
+        <select type="text" id="ploopi_ticket_typefilter" class="select">
+            <option value="user">Utilisateur</option>
+            <option value="group">Groupe</option>
+            <option value="workspace">Espace</option>
+        </select>
+        <input type="text" id="ploopi_ticket_userfilter" class="text" />
+        <img id="ploopi_ticket_search_btn" style="cursor:pointer;" onclick="javascript:ploopi_tickets_select_users('<? echo ploopi_queryencode("ploopi_op=tickets_search_users"); ?>', ploopi_getelem('ploopi_ticket_typefilter').value, ploopi_getelem('ploopi_ticket_userfilter').value, 'div_ticket_search_result');" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/search.png">
+        <!-- img style="cursor:pointer;" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_search_users&ploopi_ticket_userfilter='+ploopi_getelem('ploopi_ticket_userfilter').value+'&ploopi_ticket_typefilter='+ploopi_getelem('ploopi_ticket_userfilter').value,'div_ticket_search_result');" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/search.png"-->
     </p>
     <div id="div_ticket_search_result" style="padding:2px 0 6px 0;">
     </div>
@@ -63,6 +69,9 @@ function ploopi_tickets_selectusers($id_user = null)
     <div id="div_ticket_users_selected" style="padding:2px 0 0 0;">
     <?php if (!empty($_SESSION['ploopi']['tickets']['users_selected'])) ploopi_tickets_displayusers(); ?>
     </div>
+    <script type="text/javascript">
+    ploopi_tickets_selectusers_init();
+    </script>
     <?php
 }
 

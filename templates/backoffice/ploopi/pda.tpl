@@ -84,7 +84,6 @@ error_bgcolor = "#FCE6D6";
 <div>{PAGE_CONTENT}</div>
 
 
-
 <div id="footer">{PLOOPI_COPYRIGHT} | <PLOOPI_PAGE_SIZE> | <PLOOPI_EXEC_TIME> ms | <PLOOPI_NUMQUERIES> qry</div>
 </body>
 </html>

@@ -40,7 +40,6 @@ height:20px;
 line-height:20px;
 }
 
-
 .system_tickets_row {
 clear:both;
 border-bottom:1px solid #b0b0b0;
@@ -50,7 +49,6 @@ overflow:auto;
 .system_tickets_head {
 cursor:pointer;
 }
-
 
 .system_tickets_detail {
 clear:both;
@@ -127,7 +125,6 @@ padding:4px;
 float: right;
 }
 
-
 .system_tickets_user_detail img, .system_tickets_user_detail span {
     vertical-align: middle;
 }
@@ -153,7 +150,6 @@ clear:both;
 margin:0;
 display:none;
 }
-
 
 .system_tickets_tovalidate {
 display:block;
@@ -278,12 +274,20 @@ text-decoration:none;
     padding-left:4px;
 }
 
-
 .system_tickets_select_usergroup {
-    font-weight:bold;
+    display:block;
     background-color:#e8e8e8;
     border-bottom:1px solid #c0c0c0;
+    color:#404040;
     padding:1px 1px 1px 20px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.system_tickets_select_usergroup:hover {
+    text-decoration:none;
+    background-color:#F2F6FF;
+    color:#000000;
 }
 
 .system_tickets_select_usergroup span {
@@ -335,8 +339,6 @@ a.system_tickets_delete_user:hover {
 a.system_tickets_delete_user img {
     border:0;
 }
-
-
 
 .system_tickets_quoted_user {
     margin:2px 2px 0 2px;
