@@ -316,7 +316,6 @@ function ploopi_rgbcolor(color_string)
     }
 }
 
-
 function ploopi_validatefield(field_label, field_object, field_type)
 {
     var ok = true;

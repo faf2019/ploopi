@@ -56,7 +56,7 @@ function ploopi_switchdisplay(id)
 function ploopi_checkbox_click(e, inputfield_id)
 {
     src = (e.srcElement) ? e.srcElement : e.target;
-    
+
     if (typeof(src.id) == 'undefined' || src.id != inputfield_id)
     {
         if (Prototype.Browser.IE)
@@ -64,26 +64,25 @@ function ploopi_checkbox_click(e, inputfield_id)
             switch ($(inputfield_id).type)
             {
                 case 'radio':
-                    $(inputfield_id).checked = true; 
+                    $(inputfield_id).checked = true;
                 break;
-                
+
                 default:
-                    $(inputfield_id).checked = !$(inputfield_id).checked; 
+                    $(inputfield_id).checked = !$(inputfield_id).checked;
                 break;
-            }      
-            
+            }
+
             $(inputfield_id).fireEvent('onchange');
         }
         else
         {
-            
+
             var e = document.createEvent('MouseEvents');
             e.initEvent('click', false, false);
             $(inputfield_id).dispatchEvent(e);
         }
     }
 }
-
 
 function ploopi_checkall(form, mask, value, byid)
 {
@@ -110,10 +109,9 @@ function ploopi_checkall(form, mask, value, byid)
 function ploopi_getelem(elem, obj)
 {
     if (typeof(obj) != 'object') obj = document;
-    
+
     return (obj.getElementById) ? obj.getElementById(elem) : eval("document.all['"+ploopi_addslashes(elem)+"']");
 }
-
 
 function ploopi_innerHTML(div, html)
 {

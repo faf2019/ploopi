@@ -90,8 +90,6 @@ function ploopi_annotation_tag_prevent(e)
     else e.preventDefault()
 }
 
-
-
 function ploopi_annotation_tag_keypress(e)
 {
     e=e||window.event;
@@ -100,7 +98,7 @@ function ploopi_annotation_tag_keypress(e)
     switch(e.keyCode)
     {
         case 38: case 40:
-            prevent(e)
+            ploopi_annotation_tag_prevent(e)
         break
         case 9:
             ploopi_annotation_tag_prevent(e)
@@ -123,7 +121,7 @@ function ploopi_annotation_tag_keyup(e)
     switch(e.keyCode)
     {
         case 38: case 40:
-            prevent(e);
+            ploopi_annotation_tag_prevent(e);
         break
         case 9:
             ploopi_annotation_tag_complete(idrecord);

@@ -138,7 +138,7 @@ function ploopi_xmlhttprequest_tofunction(url, data, callback, ticket, getxml, m
             }
         }
     }
-    
+
     return !ploopi_sendxmldata(method, url, data, xmlhttp, true);
 }
 
@@ -146,7 +146,7 @@ function ploopi_xmlhttprequest_todiv(url, data, div, method)
 {
     // Suite refactoring 29/07/2008
     // ploopi_xmlhttprequest_todiv\( ?['"](.*)['"] ?, ?['"](.*)['"] ?, ?['"](.*)['"] ?, ?['"](.*)['"] ?\); => ploopi_xmlhttprequest_todiv('$1', '$2', '$4')
-    
+
     var xmlhttp = ploopi_gethttpobject();
 
     if (typeof(method) == 'undefined') method = 'GET';
@@ -165,6 +165,6 @@ function ploopi_xmlhttprequest_todiv(url, data, div, method)
             }
         }
     }
-    
+
     return !ploopi_sendxmldata(method, url, data, xmlhttp, true);
 }

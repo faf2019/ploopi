@@ -42,24 +42,23 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy)
         ploopi_popup.style.display = 'none';
 
         bodys[0].appendChild(ploopi_popup);
-        
+
         active_effect = true;
     }
     else ploopi_popup = $(id);
-
 
     w = parseInt(w);
     if (!w) w = 200;
 
     posx = 0;
     posy = 0;
-    
+
     pposx = parseInt(pposx);
     pposy = parseInt(pposy);
 
-    if (pposx) posx = pposx; 
+    if (pposx) posx = pposx;
     if (pposy) posy = pposy;
-     
+
     if(e) // event ok
     {
         if (e.pageX || e.pageY) {
@@ -71,8 +70,8 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy)
             posy = e.clientY + document.body.scrollTop;
         }
     }
-    else 
-    {    
+    else
+    {
         switch(centered)
         {
            case false:
@@ -114,18 +113,18 @@ function ploopi_movepopup(id, e, pposx, pposy, popup_content)
     var ploopi_popup;
 
     if (!id) id = 'ploopi_popup';
-    
+
     ploopi_popup = $(id);
 
     posx = 0;
     posy = 0;
-    
+
     pposx = parseInt(pposx);
     pposy = parseInt(pposy);
 
-    if (pposx) posx = pposx; 
+    if (pposx) posx = pposx;
     if (pposy) posy = pposy;
-     
+
     if(e) // event ok
     {
         if (e.pageX || e.pageY) {
@@ -137,7 +136,7 @@ function ploopi_movepopup(id, e, pposx, pposy, popup_content)
             posy = e.clientY + document.body.scrollTop;
         }
     }
-    
+
     with (ploopi_popup.style)
     {
         ploopi_innerHTML(id, popup_content);
@@ -154,8 +153,8 @@ function ploopi_movepopup(id, e, pposx, pposy, popup_content)
 
         left = tmpleft+'px';
         top = tmptop+'px';
-    }    
-    
+    }
+
 }
 
 function ploopi_hidepopup(id)
@@ -165,9 +164,9 @@ function ploopi_hidepopup(id)
     if ($(id))
     {
         new Effect.Fade(id,
-                { 
+                {
                     duration: 0.3,
-                    afterFinish:function() 
+                    afterFinish:function()
                     {
                         var bodys = document.getElementsByTagName('body');
                         bodys[0].removeChild($(id));

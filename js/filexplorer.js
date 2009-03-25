@@ -27,7 +27,6 @@ function ploopi_filexplorer_popup(filexplorer_id, event)
     ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=filexplorer_browser&filexplorer_id='+filexplorer_id, 'ploopi_filexplorer_popup')
 }
 
-
 function ploopi_filexplorer_browser(filexplorer_id, folder)
 {
     ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=filexplorer_browser&filexplorer_id='+filexplorer_id+'&filexplorer_folder='+folder, 'ploopi_filexplorer_popup')

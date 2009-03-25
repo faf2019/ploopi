@@ -27,17 +27,17 @@ ploopi_skin_array_renderupdate_done = new Array();
  * Il faut corriger certains problèmes liés à l'affichage ou non d'une barre de défilement vertical.
  * Il faut également corriger les lacunes de IE.
  */
- 
+
 function ploopi_skin_array_renderupdate(array_id)
 {
     greater = $('ploopi_explorer_values_inner_'+array_id).offsetHeight > $('ploopi_explorer_values_outer_'+array_id).offsetHeight;
-    
+
     if (greater)
     {
         if (typeof(ploopi_skin_array_renderupdate_done[array_id]) == 'undefined')
         {
             $('ploopi_explorer_title_'+array_id).innerHTML = '<div style=\'float:right;width:16px;\'>&nbsp;</div>'+$('ploopi_explorer_title_'+array_id).innerHTML;
-    
+
             columns = $('ploopi_explorer_main_'+array_id).getElementsByClassName('ploopi_explorer_column');
             for (j=0;j<columns.length;j++)
             {
@@ -47,7 +47,7 @@ function ploopi_skin_array_renderupdate(array_id)
                     columns[j].style.right = (parseInt(columns[j].style.right)+diff)+'px';
                 }
             }
-            
+
             ploopi_skin_array_renderupdate_done[array_id] = true;
         }
     }
@@ -65,10 +65,10 @@ function ploopi_skin_array_renderupdate(array_id)
 function ploopi_skin_treeview_shownode(node_id, query, script)
 {
     if (typeof(script) == 'undefined') script = 'admin-light.php';
-    
+
     elt = $('t'+node_id);
     dest = $('n'+node_id);
-    
+
     if (elt.src.indexOf('plus')  != -1) elt.src = elt.src.replace('plus', 'minus');
     else if (elt.src.indexOf('minus')  != -1) elt.src = elt.src.replace('minus', 'plus');
 
@@ -86,7 +86,6 @@ function ploopi_skin_treeview_shownode(node_id, query, script)
         else $(dest).style.display='none';
     }
 }
-
 
 function ploopi_skin_array_refresh(array_id, array_orderby)
 {

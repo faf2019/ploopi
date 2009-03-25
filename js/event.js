@@ -63,5 +63,20 @@ function ploopi_dispatch_onchange(inputfield_id)
     }
 }
 
+function ploopi_dispatch_onclick(inputfield_id)
+{
+    if (Prototype.Browser.IE)
+    {
+        $(inputfield_id).fireEvent('onclick');
+    }
+    else
+    {
+	    var e = document.createEvent('MouseEvents');
+	    e.initEvent('click', false, false);
+	    $(inputfield_id).dispatchEvent(e);
+    }
+}
+
+
 ploopi_window_onload_launch();
 ploopi_window_onunload_launch();

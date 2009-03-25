@@ -29,15 +29,15 @@ function ploopi_subscription(ploopi_subscription_id, next)
 function ploopi_subscription_checkaction(id_subscription, id_action)
 {
     var ck = (id_action == -1) ? $('ploopi_subscription_unsubscribe') : $('ploopi_subscription_action_'+id_action);
-    
+
     ck.checked = !ck.checked
-    
+
     if (id_action == -1 && ck.checked) ploopi_checkall($('ploopi_form_subscription_'+id_subscription), 'ploopi_subscription_action_', false, true)
-    
+
     if (id_action > -1 && $('ploopi_subscription_unsubscribe') && $('ploopi_subscription_unsubscribe').checked) $('ploopi_subscription_unsubscribe').checked = false;
 
     if (id_action == 0 && ck.checked) ploopi_checkall($('ploopi_form_subscription_'+id_subscription), 'ploopi_subscription_action_', true, true)
-    
+
     if (id_action > 0 && !ck.checked && $('ploopi_subscription_action_0').checked) $('ploopi_subscription_action_0').checked = false;
 }
 

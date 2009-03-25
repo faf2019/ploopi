@@ -90,8 +90,6 @@ function ploopi_annotation_tag_prevent(e)
     else e.preventDefault()
 }
 
-
-
 function ploopi_annotation_tag_keypress(e)
 {
     e=e||window.event;
@@ -100,7 +98,7 @@ function ploopi_annotation_tag_keypress(e)
     switch(e.keyCode)
     {
         case 38: case 40:
-            prevent(e)
+            ploopi_annotation_tag_prevent(e)
         break
         case 9:
             ploopi_annotation_tag_prevent(e)
@@ -123,7 +121,7 @@ function ploopi_annotation_tag_keyup(e)
     switch(e.keyCode)
     {
         case 38: case 40:
-            prevent(e);
+            ploopi_annotation_tag_prevent(e);
         break
         case 9:
             ploopi_annotation_tag_complete(idrecord);
@@ -257,7 +255,7 @@ function HSVslide(d,o,e) {
 
         }
         else if(d=='Hslide') { var ck=ckHSV(tY-oo,163), r='HSV', z={};
-        
+
             ds.top=(ck)+'px'; slideHSV.H=mkHSV(360,163,ck);
 
             for(var i in r) { i=r.substr(i,1); z[i]=(i=='H')?maxValue[i]-mkHSV(maxValue[i],163,ck):HSV[i]; }
@@ -284,7 +282,7 @@ function HSVupdate(v) { v=color.HSV_HEX(HSV=v?v:slideHSV);
 
     $S('plugCUR').background='#'+v;
     $('colorpicker_inputcolor').value = '#'+v;
-    
+
     return(v);
 
 };
@@ -296,7 +294,6 @@ function loadSV() { var z='';
     $('Hmodel').innerHTML=z;
 
 };
-
 
 /* COLOR LIBRARY */
 
@@ -372,22 +369,22 @@ color.HEX_HSV=function(o) { return(color.RGB_HSV(color.HEX_RGB(o))); }
 function ploopi_colorpicker_open(inputfield_id, event)
 {
     if ($(inputfield_id).value == '') $(inputfield_id).value = '#ffffff';
-     
+
     ploopi_showpopup(
         ploopi_xmlhttprequest(
-            'admin-light.php', 
+            'admin-light.php',
             'ploopi_op=colorpicker_open&inputfield_id='+inputfield_id+'&colorpicker_value='+escape($(inputfield_id).value)
         ),
-        220, 
-        event, 
-        false, 
+        220,
+        event,
+        false,
         'popup_colorpicker'
     );
 
-	loadSV();
-	
+    loadSV();
+
     var hsv = color.HEX_HSV($(inputfield_id).value);
-	HSVupdate(hsv);
+    HSVupdate(hsv);
 
     $S('SV').backgroundColor = '#'+color.HSV_HEX({H:hsv.H, S:100, V:100});
 
@@ -542,6 +539,21 @@ function ploopi_dispatch_onchange(inputfield_id)
     }
 }
 
+function ploopi_dispatch_onclick(inputfield_id)
+{
+    if (Prototype.Browser.IE)
+    {
+        $(inputfield_id).fireEvent('onclick');
+    }
+    else
+    {
+	    var e = document.createEvent('MouseEvents');
+	    e.initEvent('click', false, false);
+	    $(inputfield_id).dispatchEvent(e);
+    }
+}
+
+
 ploopi_window_onload_launch();
 ploopi_window_onunload_launch();
 /*
@@ -572,7 +584,6 @@ function ploopi_filexplorer_popup(filexplorer_id, event)
     ploopi_showpopup(ploopi_ajaxloader_content, 600, event, true, 'ploopi_filexplorer_popup');
     ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=filexplorer_browser&filexplorer_id='+filexplorer_id, 'ploopi_filexplorer_popup')
 }
-
 
 function ploopi_filexplorer_browser(filexplorer_id, folder)
 {
@@ -621,24 +632,23 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy)
         ploopi_popup.style.display = 'none';
 
         bodys[0].appendChild(ploopi_popup);
-        
+
         active_effect = true;
     }
     else ploopi_popup = $(id);
-
 
     w = parseInt(w);
     if (!w) w = 200;
 
     posx = 0;
     posy = 0;
-    
+
     pposx = parseInt(pposx);
     pposy = parseInt(pposy);
 
-    if (pposx) posx = pposx; 
+    if (pposx) posx = pposx;
     if (pposy) posy = pposy;
-     
+
     if(e) // event ok
     {
         if (e.pageX || e.pageY) {
@@ -650,8 +660,8 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy)
             posy = e.clientY + document.body.scrollTop;
         }
     }
-    else 
-    {    
+    else
+    {
         switch(centered)
         {
            case false:
@@ -693,18 +703,18 @@ function ploopi_movepopup(id, e, pposx, pposy, popup_content)
     var ploopi_popup;
 
     if (!id) id = 'ploopi_popup';
-    
+
     ploopi_popup = $(id);
 
     posx = 0;
     posy = 0;
-    
+
     pposx = parseInt(pposx);
     pposy = parseInt(pposy);
 
-    if (pposx) posx = pposx; 
+    if (pposx) posx = pposx;
     if (pposy) posy = pposy;
-     
+
     if(e) // event ok
     {
         if (e.pageX || e.pageY) {
@@ -716,7 +726,7 @@ function ploopi_movepopup(id, e, pposx, pposy, popup_content)
             posy = e.clientY + document.body.scrollTop;
         }
     }
-    
+
     with (ploopi_popup.style)
     {
         ploopi_innerHTML(id, popup_content);
@@ -733,8 +743,8 @@ function ploopi_movepopup(id, e, pposx, pposy, popup_content)
 
         left = tmpleft+'px';
         top = tmptop+'px';
-    }    
-    
+    }
+
 }
 
 function ploopi_hidepopup(id)
@@ -744,9 +754,9 @@ function ploopi_hidepopup(id)
     if ($(id))
     {
         new Effect.Fade(id,
-                { 
+                {
                     duration: 0.3,
-                    afterFinish:function() 
+                    afterFinish:function()
                     {
                         var bodys = document.getElementsByTagName('body');
                         bodys[0].removeChild($(id));
@@ -792,17 +802,17 @@ ploopi_skin_array_renderupdate_done = new Array();
  * Il faut corriger certains problèmes liés à l'affichage ou non d'une barre de défilement vertical.
  * Il faut également corriger les lacunes de IE.
  */
- 
+
 function ploopi_skin_array_renderupdate(array_id)
 {
     greater = $('ploopi_explorer_values_inner_'+array_id).offsetHeight > $('ploopi_explorer_values_outer_'+array_id).offsetHeight;
-    
+
     if (greater)
     {
         if (typeof(ploopi_skin_array_renderupdate_done[array_id]) == 'undefined')
         {
             $('ploopi_explorer_title_'+array_id).innerHTML = '<div style=\'float:right;width:16px;\'>&nbsp;</div>'+$('ploopi_explorer_title_'+array_id).innerHTML;
-    
+
             columns = $('ploopi_explorer_main_'+array_id).getElementsByClassName('ploopi_explorer_column');
             for (j=0;j<columns.length;j++)
             {
@@ -812,7 +822,7 @@ function ploopi_skin_array_renderupdate(array_id)
                     columns[j].style.right = (parseInt(columns[j].style.right)+diff)+'px';
                 }
             }
-            
+
             ploopi_skin_array_renderupdate_done[array_id] = true;
         }
     }
@@ -830,10 +840,10 @@ function ploopi_skin_array_renderupdate(array_id)
 function ploopi_skin_treeview_shownode(node_id, query, script)
 {
     if (typeof(script) == 'undefined') script = 'admin-light.php';
-    
+
     elt = $('t'+node_id);
     dest = $('n'+node_id);
-    
+
     if (elt.src.indexOf('plus')  != -1) elt.src = elt.src.replace('plus', 'minus');
     else if (elt.src.indexOf('minus')  != -1) elt.src = elt.src.replace('minus', 'plus');
 
@@ -851,7 +861,6 @@ function ploopi_skin_treeview_shownode(node_id, query, script)
         else $(dest).style.display='none';
     }
 }
-
 
 function ploopi_skin_array_refresh(array_id, array_orderby)
 {
@@ -985,15 +994,15 @@ function ploopi_subscription(ploopi_subscription_id, next)
 function ploopi_subscription_checkaction(id_subscription, id_action)
 {
     var ck = (id_action == -1) ? $('ploopi_subscription_unsubscribe') : $('ploopi_subscription_action_'+id_action);
-    
+
     ck.checked = !ck.checked
-    
+
     if (id_action == -1 && ck.checked) ploopi_checkall($('ploopi_form_subscription_'+id_subscription), 'ploopi_subscription_action_', false, true)
-    
+
     if (id_action > -1 && $('ploopi_subscription_unsubscribe') && $('ploopi_subscription_unsubscribe').checked) $('ploopi_subscription_unsubscribe').checked = false;
 
     if (id_action == 0 && ck.checked) ploopi_checkall($('ploopi_form_subscription_'+id_subscription), 'ploopi_subscription_action_', true, true)
-    
+
     if (id_action > 0 && !ck.checked && $('ploopi_subscription_action_0').checked) $('ploopi_subscription_action_0').checked = false;
 }
 
@@ -1019,6 +1028,10 @@ function ploopi_subscription_checkaction(id_subscription, id_action)
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Ouverture d'un popup pour envoyer un nouveau message
+ */
+ 
 function ploopi_tickets_new(event, id_object, id_record, object_label, id_user, reload, x, y)
 {
     var data = '';
@@ -1028,7 +1041,6 @@ function ploopi_tickets_new(event, id_object, id_record, object_label, id_user, 
     if (typeof(id_record) != 'undefined' && id_record != null) data += '&ploopi_tickets_id_record='+id_record;
     if (typeof(reload) != 'undefined' && reload != null) data += '&ploopi_tickets_reload='+reload;
     if (typeof(id_user) != 'undefined' && id_user != null) data += '&ploopi_tickets_id_user='+id_user;
-    
 
     if (typeof(x) == 'undefined' || x == null) x = 0;
     if (typeof(y) == 'undefined' || y == null) y = 0;
@@ -1038,30 +1050,32 @@ function ploopi_tickets_new(event, id_object, id_record, object_label, id_user, 
     ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_new'+data,'system_popupticket');
 }
 
+/**
+ * Rafraichissement de la zone indiquant le nombre de tickets non lus + alerte sur nouveau ticket
+ */
 
-/* Rafraichissement de la zone indiquant le nombre de tickets non lus + alerte sur nouveau ticket */
 function ploopi_tickets_refresh(lastnewticket, timeout, str_left, str_right)
 {
     var intPloopiLastNewTicket = lastnewticket;
     var boolAlert = false;
-    
+
     if (typeof(str_left) == 'undefined') str_left = '';
     if (typeof(str_right) == 'undefined') str_right = '';
 
-    new PeriodicalExecuter( function(pe) { 
+    new PeriodicalExecuter( function(pe) {
         new Ajax.Request('index-quick.php?ploopi_op=tickets_getnum',
             {
                 method:     'get',
                 encoding:   'iso-8859-15',
-                onSuccess:  function(transport) { 
+                onSuccess:  function(transport) {
                                  var res = transport.responseText.split(',');
                                  if (res.length == 2)
                                  {
                                      var nb = parseInt(res[0],10);
                                      var last = parseInt(res[1],10);
-                                     
+
                                      $('tpl_ploopi_tickets_new').innerHTML =  str_left+nb+str_right;
-                                     
+
                                      if (last > intPloopiLastNewTicket && !boolAlert)
                                      {
                                          ploopi_tickets_alert();
@@ -1071,11 +1085,33 @@ function ploopi_tickets_refresh(lastnewticket, timeout, str_left, str_right)
                                  }
                             }
             }
-        ); 
+        );
     }
     ,timeout
-    ); 
+    );
 }
+
+/**
+ * Recherche de destinataires pour un message
+ */
+
+function ploopi_tickets_select_users(query, filtertype, filter, dest)
+{
+    new Ajax.Request('admin-light.php?'+query,
+        {
+            method:     'post',
+            parameters: {'ploopi_ticket_userfilter': filter, 'ploopi_ticket_typefilter': filtertype},
+            encoding:   'iso-8859-15',
+            onSuccess:  function(transport) {
+               ploopi_innerHTML(dest, transport.responseText);
+            }
+        } 
+    );
+}
+
+/**
+ * Affiche un popup d'alerte à la réception de nouveaux messages
+ */
 
 function ploopi_tickets_alert()
 {
@@ -1083,7 +1119,40 @@ function ploopi_tickets_alert()
     ploopi_ajaxloader('popup_tickets_new_alert');
     ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_alert', 'popup_tickets_new_alert');
 }
-/*
+
+
+/**
+ * Recherche utilisateur
+ */
+
+function ploopi_tickets_selectusers_init()
+{
+    $('ploopi_ticket_userfilter').onkeyup = ploopi_tickets_selectusers_keypress;
+    $('ploopi_ticket_userfilter').onkeypress = ploopi_tickets_selectusers_keypress;
+}
+
+function ploopi_tickets_selectusers_prevent(e)
+{
+    if (window.event) window.event.returnValue = false
+    else e.preventDefault()
+}
+
+function ploopi_tickets_selectusers_keypress(e)
+{
+    e=e||window.event;
+    src = (e.srcElement) ? e.srcElement : e.target;
+
+    switch(e.keyCode)
+    {
+        case 9: case 13:
+            ploopi_tickets_selectusers_prevent(e);
+            ploopi_dispatch_onclick('ploopi_ticket_search_btn');
+        break;
+        
+        default:
+        break;
+    }
+}/*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.
@@ -1141,7 +1210,7 @@ function ploopi_switchdisplay(id)
 function ploopi_checkbox_click(e, inputfield_id)
 {
     src = (e.srcElement) ? e.srcElement : e.target;
-    
+
     if (typeof(src.id) == 'undefined' || src.id != inputfield_id)
     {
         if (Prototype.Browser.IE)
@@ -1149,26 +1218,25 @@ function ploopi_checkbox_click(e, inputfield_id)
             switch ($(inputfield_id).type)
             {
                 case 'radio':
-                    $(inputfield_id).checked = true; 
+                    $(inputfield_id).checked = true;
                 break;
-                
+
                 default:
-                    $(inputfield_id).checked = !$(inputfield_id).checked; 
+                    $(inputfield_id).checked = !$(inputfield_id).checked;
                 break;
-            }      
-            
+            }
+
             $(inputfield_id).fireEvent('onchange');
         }
         else
         {
-            
+
             var e = document.createEvent('MouseEvents');
             e.initEvent('click', false, false);
             $(inputfield_id).dispatchEvent(e);
         }
     }
 }
-
 
 function ploopi_checkall(form, mask, value, byid)
 {
@@ -1195,10 +1263,9 @@ function ploopi_checkall(form, mask, value, byid)
 function ploopi_getelem(elem, obj)
 {
     if (typeof(obj) != 'object') obj = document;
-    
+
     return (obj.getElementById) ? obj.getElementById(elem) : eval("document.all['"+ploopi_addslashes(elem)+"']");
 }
-
 
 function ploopi_innerHTML(div, html)
 {
@@ -1525,7 +1592,6 @@ function ploopi_rgbcolor(color_string)
     }
 }
 
-
 function ploopi_validatefield(field_label, field_object, field_type)
 {
     var ok = true;
@@ -1783,7 +1849,7 @@ function ploopi_xmlhttprequest_tofunction(url, data, callback, ticket, getxml, m
             }
         }
     }
-    
+
     return !ploopi_sendxmldata(method, url, data, xmlhttp, true);
 }
 
@@ -1791,7 +1857,7 @@ function ploopi_xmlhttprequest_todiv(url, data, div, method)
 {
     // Suite refactoring 29/07/2008
     // ploopi_xmlhttprequest_todiv\( ?['"](.*)['"] ?, ?['"](.*)['"] ?, ?['"](.*)['"] ?, ?['"](.*)['"] ?\); => ploopi_xmlhttprequest_todiv('$1', '$2', '$4')
-    
+
     var xmlhttp = ploopi_gethttpobject();
 
     if (typeof(method) == 'undefined') method = 'GET';
@@ -1810,6 +1876,6 @@ function ploopi_xmlhttprequest_todiv(url, data, div, method)
             }
         }
     }
-    
+
     return !ploopi_sendxmldata(method, url, data, xmlhttp, true);
 }

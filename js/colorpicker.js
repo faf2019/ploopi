@@ -35,7 +35,7 @@ function HSVslide(d,o,e) {
 
         }
         else if(d=='Hslide') { var ck=ckHSV(tY-oo,163), r='HSV', z={};
-        
+
             ds.top=(ck)+'px'; slideHSV.H=mkHSV(360,163,ck);
 
             for(var i in r) { i=r.substr(i,1); z[i]=(i=='H')?maxValue[i]-mkHSV(maxValue[i],163,ck):HSV[i]; }
@@ -62,7 +62,7 @@ function HSVupdate(v) { v=color.HSV_HEX(HSV=v?v:slideHSV);
 
     $S('plugCUR').background='#'+v;
     $('colorpicker_inputcolor').value = '#'+v;
-    
+
     return(v);
 
 };
@@ -74,7 +74,6 @@ function loadSV() { var z='';
     $('Hmodel').innerHTML=z;
 
 };
-
 
 /* COLOR LIBRARY */
 
@@ -150,22 +149,22 @@ color.HEX_HSV=function(o) { return(color.RGB_HSV(color.HEX_RGB(o))); }
 function ploopi_colorpicker_open(inputfield_id, event)
 {
     if ($(inputfield_id).value == '') $(inputfield_id).value = '#ffffff';
-     
+
     ploopi_showpopup(
         ploopi_xmlhttprequest(
-            'admin-light.php', 
+            'admin-light.php',
             'ploopi_op=colorpicker_open&inputfield_id='+inputfield_id+'&colorpicker_value='+escape($(inputfield_id).value)
         ),
-        220, 
-        event, 
-        false, 
+        220,
+        event,
+        false,
         'popup_colorpicker'
     );
 
-	loadSV();
-	
+    loadSV();
+
     var hsv = color.HEX_HSV($(inputfield_id).value);
-	HSVupdate(hsv);
+    HSVupdate(hsv);
 
     $S('SV').backgroundColor = '#'+color.HSV_HEX({H:hsv.H, S:100, V:100});
 
