@@ -31,7 +31,6 @@ h2.directory_title {
     padding:2px 4px;
 }
 
-
 .directory_shared_main {
     border-bottom:1px solid #a0a0a0;
     overflow:auto;
@@ -55,8 +54,8 @@ h2.directory_title {
 }
 
 .directory_search {
-	padding:4px;
-	background-color:#f0f0f0;
-	border-bottom:2px solid #c0c0c0;
-	overflow:auto;
+    padding:4px;
+    background-color:#f0f0f0;
+    border-bottom:2px solid #c0c0c0;
+    overflow:auto;
 }

@@ -61,7 +61,6 @@ while ($row = $db->fetchrow())
     if ($row['id_ploopi_user']) $favorites["user_{$row['id_ploopi_user']}"] = $row;
 }
 
-
 switch($_SESSION['directory']['directoryTabItem'])
 {
     /**
@@ -154,7 +153,6 @@ switch($_SESSION['directory']['directoryTabItem'])
     break;
 }
 
-
 switch($_SESSION['directory']['directoryTabItem'])
 {
     /**
@@ -191,7 +189,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 <a href="javascript:void(0);" onclick="javascript:directory_modify(event, \''.$row['id'].'\');"><img title="Modifier le Contact" src="./modules/directory/img/ico_modify.png"></a>
                 <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=directory_contact_delete&directory_contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>
             ';
-            
+
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
             {
                 if (!isset($favorites["contact_{$row['id']}"])) $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
@@ -375,10 +373,10 @@ switch($_SESSION['directory']['directoryTabItem'])
      */
 
     case 'tabSearch':
-        
+
         // Récupération des rubriques de contacts partagés
         $arrHeadings = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_sharedcontacts'] ? directory_getheadings() : array();
-        
+
         $columns = array();
         $values = array();
 
@@ -393,19 +391,19 @@ switch($_SESSION['directory']['directoryTabItem'])
         $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '42');
 
         $result = array();
-        
+
         if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_sharedcontacts'] || $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_mycontacts'])
         {
             $arrContact = array();
-            if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_sharedcontacts']) $arrContact[] = 'dc.id_heading > 0'; 
+            if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_sharedcontacts']) $arrContact[] = 'dc.id_heading > 0';
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_mycontacts']) $arrContact[] = "(dc.id_user = {$_SESSION['ploopi']['userid']} AND dc.id_heading = 0)";
-                    
+
            $sql = "
-                SELECT  dc.*, 
-                        'contact' as usertype, 
+                SELECT  dc.*,
+                        'contact' as usertype,
                         '' as login
                 FROM    ploopi_mod_directory_contact dc
-                WHERE   (".implode(' OR ', $arrContact).") 
+                WHERE   (".implode(' OR ', $arrContact).")
             ";
 
             if ($_SESSION['directory']['search']['fulltext'])
@@ -489,7 +487,6 @@ switch($_SESSION['directory']['directoryTabItem'])
                             else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\', \'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
                         }
 
-
                         // on va chercher les espaces auxquels l'utilisateur peut accéder
                         $user = new user();
                         $user->open($row['id']);
@@ -516,7 +513,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                             if (!isset($favorites["contact_{$row['id']}"])) $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
                             else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
                         }
-                        
+
                         if (empty($row['id_heading'])) // contact perso
                         {
                             $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'];
@@ -533,13 +530,13 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 foreach($arrParents as $intId)
                                     if (isset($arrHeadings['list'][$intId]))
                                         $arrTitle[] = $arrHeadings['list'][$intId]['label'];
-    
+
                                 $arrTitle[] = $arrHeadings['list'][$row['id_heading']]['label'];
                                 $workspaces_list = implode(' > ', $arrTitle);
                             }
                             else $workspaces_list = '';
                         }
-                            
+
                     break;
                 }
 
@@ -576,7 +573,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
         // Id de la rubrique sélectionnée
         $intHeadingId = $_SESSION['directory']['directory_heading_id'];
-        
+
         // Récupération de la structure du treeview
         $arrTreeview = directory_gettreeview($arrHeadings);
 
@@ -687,7 +684,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         <input name="directory_heading_country" type="text" class="text" value="<?php echo htmlentities($objHeading->fields['country']); ?>" />
                                     </p>
                                 </div>
-    
+
                                 <div style="clear:both;padding:0 6px;">
                                     <em>
                                         <strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)"; ?></strong>:
@@ -700,10 +697,9 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         }
                                         else echo 'Aucune accréditation';
                                         ?>
-                                    </em>                                
+                                    </em>
                                 </div>
-    
-    
+
                                 <div style="clear:both;padding:4px;">
                                     <div style="border:1px solid #c0c0c0;overflow:hidden;">
                                     <?php
@@ -711,7 +707,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                     ?>
                                     </div>
                                 </div>
-    
+
                                 <div style="text-align:right;padding:4px;">
                                     <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}"); ?>';">
                                     <input type="reset" class="button" value="<?php echo _PLOOPI_RESET; ?>">
@@ -721,7 +717,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 <?php
                             }
                         }
-                        
+
                         if (!$booModify || empty($op)) // Version non modifiable
                         {
                             $arrParents = split(';', $arrHeadings['list'][$intHeadingId]['parents']);
@@ -740,17 +736,17 @@ switch($_SESSION['directory']['directoryTabItem'])
                             {
                                 ?><div style="padding:4px;"><em><?php echo ploopi_nl2br(htmlentities($objHeading->fields['description'])); ?></em></div><?php
                             }
-                            
+
                             // Construction de la chaîne de téléphone
                             $arrPone = array();
                             if (!empty($objHeading->fields['phone'])) $arrPone[] = htmlentities("Tel: ".$objHeading->fields['phone']);
                             if (!empty($objHeading->fields['fax'])) $arrPone[] = htmlentities("Fax: ".$objHeading->fields['fax']);
-                            
+
                             if (!empty($arrPone))
                             {
                                 ?><div style="padding:4px;"><?php echo implode(' - ', $arrPone); ?></div><?php
-                            }                            
-                            
+                            }
+
                             // Construction de la chaîne d'adresse
                             $arrAddress = array();
                             if (!empty($objHeading->fields['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($objHeading->fields['address']));
@@ -760,9 +756,8 @@ switch($_SESSION['directory']['directoryTabItem'])
                             if (!empty($arrAddress))
                             {
                                 ?><div style="padding:4px;"><?php echo implode('<br />', $arrAddress); ?></div><?php
-                            }                            
-                            
-                            
+                            }
+
                             ?>
                             <div class="directory_shared_managers">
                                 <div style="float:left;">
@@ -791,9 +786,9 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 ?>
                             </div>
                             <?php
-                            
+
                         }
-                        ?>        
+                        ?>
                         <div style="border-top:1px solid #a0a0a0;">
                             <?php
                             if ($booModify) // Version modifiable
@@ -819,53 +814,53 @@ switch($_SESSION['directory']['directoryTabItem'])
                             <?php
                             $columns = array();
                             $values = array();
-        
+
                             $columns['auto']['name'] = array('label' => _DIRECTORY_NAME, 'options' => array('sort' => true));
                             $columns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
                             $columns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
                             $columns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
                             $columns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
                             $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 82);
-        
+
                             $sql =  "
                                     SELECT  *
                                     FROM    ploopi_mod_directory_contact
                                     WHERE   id_heading = {$intHeadingId}
                                     ";
-        
+
                             $db->query($sql);
-        
+
                             if ($db->numrows())
                             {
                                 $c = 0;
                                 while ($row = $db->fetchrow())
                                 {
                                     $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'" title="'.htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
-        
+
                                     $arrActions = array();
                                     $arrActions[] = '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>';
                                     if ($booModify) $arrActions[] = '<a href="javascript:void(0);" onclick="javascript:directory_modify(event, \''.$row['id'].'\');"><img title="Modifier le Contact" src="./modules/directory/img/ico_modify.png"></a>';
                                     if ($booModify) $arrActions[] = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?ploopi_op=directory_contact_delete&directory_contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>';
-        
+
                                     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
                                     {
                                         if (!isset($favorites["contact_{$row['id']}"])) $arrActions[] = '<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
                                         else $arrActions[] ='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
                                     }
-        
+
                                     $values[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
                                     $values[$c]['values']['service'] = array('label' => $row['service']);
                                     $values[$c]['values']['function'] = array('label' => $row['function']);
                                     $values[$c]['values']['phone'] = array('label' => $row['phone']);
                                     $values[$c]['values']['email'] = array('label' => $email);
                                     $values[$c]['values']['actions'] = array('label' => implode('', $arrActions));
-        
+
                                     $c++;
                                 }
                             }
-        
+
                             $skin->display_array($columns, $values, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
-        
+
                             if (!$db->numrows())
                             {
                                 ?>
@@ -874,7 +869,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                             }
                             ?>
                         </div>
-                        <?php        
+                        <?php
                     }
                     else
                     {

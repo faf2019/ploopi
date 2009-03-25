@@ -48,7 +48,7 @@ include_once './include/classes/data_object.php';
  */
 
 class directory_contact extends data_object
-{   
+{
     /**
      * Constructeur de la classe
      *
@@ -59,19 +59,19 @@ class directory_contact extends data_object
     {
         parent::data_object('ploopi_mod_directory_contact');
     }
-    
+
     /**
      * Supprime le contact et les favoris associés
      */
-    
+
     function delete()
     {
         global $db;
-        
+
         $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_contact = {$this->fields['id']}");
         parent::delete();
     }
-    
+
     public function getphotopath()
     {
         return (_PLOOPI_PATHDATA._PLOOPI_SEP.'directory'._PLOOPI_SEP.$this->fields['id'].'.png');

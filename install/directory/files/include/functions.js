@@ -39,10 +39,10 @@ function directory_list_delete()
 
 function directory_list_validate(form)
 {
-	if (ploopi_validatefield('Libellé',form.directory_list_label, 'string'))
-	    return true;
+    if (ploopi_validatefield('Libellé',form.directory_list_label, 'string'))
+        return true;
 
-	return false;
+    return false;
 }
 
 function directory_checklist(id_list)
@@ -54,9 +54,9 @@ function directory_checklist(id_list)
 
     if (id_list == 0 && $('directory_id_list0').checked)
     {
-	    for (i=0;i<$$('input.directory_id_list').length;i++)
-	    {
-	        $$('input.directory_id_list')[i].checked = false;
+        for (i=0;i<$$('input.directory_id_list').length;i++)
+        {
+            $$('input.directory_id_list')[i].checked = false;
         }
     }
 }

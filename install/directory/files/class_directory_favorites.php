@@ -48,7 +48,7 @@ include_once './include/classes/data_object.php';
  */
 
 class directory_favorites extends data_object
-{    
+{
     /**
      * Constructeur de la classe
      *

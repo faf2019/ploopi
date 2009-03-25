@@ -115,7 +115,6 @@ if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_m
 }
 elseif ($_SESSION['directory']['directoryTabItem'] == 'tabFavorites') $_SESSION['directory']['directoryTabItem'] = '';
 
-
 if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_search'])
 {
     $tabs['tabSearch'] =
@@ -160,7 +159,6 @@ switch($_SESSION['directory']['directoryTabItem'])
         $title = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_sharedcontacts'])) ? _DIRECTORY_SHAREDCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_sharedcontacts'];
         $desc = _DIRECTORY_SHAREDCONTACTS_DESC;
     break;
-
 
 }
 

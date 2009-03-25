@@ -61,11 +61,11 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
 
 <h1 class="directory_title" style="background-color:#c0c0c0;border-bottom:1px solid #a0a0a0;">
     <?php
-    if (!$booPrintable) 
+    if (!$booPrintable)
     {
         ?><a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<?php echo ploopi_urlencode('admin-light.php?op=directory_view&directory_id_user='.(empty($_GET['directory_id_user']) ? '' : $_GET['directory_id_user']).'&directory_id_contact='.(empty($_GET['directory_id_contact']) ? '' : $_GET['directory_id_contact']).'&directory_print'); ?>',550,400);return false;"><img style="display:block;float:right" src="./modules/directory/img/ico_print.png" title="Imprimer" alt="Imprimer" /></a><?php
     }
-    echo $strName; 
+    echo $strName;
     ?>
 </h1>
 <div>
@@ -144,7 +144,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_ADDRESS; ?>:</label>
                 <span><?php echo implode('<br />', $arrAddress); ?></span>
             </p>
-            
+
             <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Informatons complémentaires</h2>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_COMMENTARY; ?>:</label>
@@ -155,7 +155,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
             if (!empty($_GET['directory_id_contact']) && !empty($usr->fields['id_heading']))
             {
                 include_once './modules/directory/class_directory_heading.php';
-                
+
                 $intIdHeading = $usr->fields['id_heading'];
                 ?>
                 <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Rattachements (rubriques)</h2>
@@ -163,7 +163,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
                     <?php
                     // Récupération des rubriques de contacts partagés
                     $arrHeadings = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_sharedcontacts'] ? directory_getheadings() : array();
-                    
+
                     if (isset($arrHeadings['list'][$usr->fields['id_heading']]['parents']))
                     {
                         $arrParents = split(';', $arrHeadings['list'][$usr->fields['id_heading']]['parents']);
@@ -174,7 +174,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
 
                         $arrTitle[] = $arrHeadings['list'][$usr->fields['id_heading']]['label'];
                     }
-                    
+
                     echo ploopi_nl2br(htmlentities(implode("\n", $arrTitle)));
                     ?>
                 </div>
@@ -311,14 +311,14 @@ else
     /**
      * On récupère le contenu du buffer
      */
-    
+
     $content = ob_get_contents();
     ob_end_clean();
-    
+
     /**
      * On affiche le popup
      */
-    
+
     echo $skin->create_popup($popup_title, $content, 'popup_directory_view');
     ploopi_die();
 }

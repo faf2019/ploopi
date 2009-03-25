@@ -53,33 +53,33 @@ function directory_getheadings($intIdHeading = 0)
 {
     global $db;
 
-    $arrHeadings = 
+    $arrHeadings =
         array(
-            'list' => array(), 
+            'list' => array(),
             'tree' => array()
         );
-        
+
     $result = $db->query("
-        SELECT      * 
-        
+        SELECT      *
+
         FROM        ploopi_mod_directory_heading
-        
-        ORDER BY    id_heading, 
+
+        ORDER BY    id_heading,
                     position
     ");
-    
-    while ($fields = $db->fetchrow($result)) 
+
+    while ($fields = $db->fetchrow($result))
     {
-        
+
         if ($intIdHeading == 0 || $fields['id'] == $intIdHeading || $fields['id_heading'] == $intIdHeading || (isset($arrHeadings['list'][$fields['id_heading']]) && in_array($intIdHeading, explode(';', $arrHeadings['list'][$fields['id_heading']]['parents']))))
         {
             $fields['parents'] = (isset($arrHeadings['list'][$fields['id_heading']])) ? "{$arrHeadings['list'][$fields['id_heading']]['parents']};{$fields['id_heading']}" : $fields['id_heading'];
-            
+
             $arrHeadings['list'][$fields['id']] = $fields;
             $arrHeadings['tree'][$fields['id_heading']][] = $fields['id'];
         }
     }
-    
+
     return($arrHeadings);
 }
 
@@ -93,17 +93,17 @@ function directory_getcontacts()
 {
     global $db;
 
-    $arrContact = array(); 
-        
+    $arrContacts = array();
+
     $result = $db->query("
-        SELECT      * 
+        SELECT      *
         FROM        ploopi_mod_directory_contact
         WHERE       id_heading > 0
         ORDER BY    lastname, firstname
     ");
-    
-    while ($fields = $db->fetchrow($result)) $arrContacts[$fields['id_heading']][] = $fields; 
-    
+
+    while ($fields = $db->fetchrow($result)) $arrContacts[$fields['id_heading']][] = $fields;
+
     return($arrContacts);
 }
 
@@ -112,7 +112,7 @@ function directory_getcontacts()
  *
  * @param array $rubriques les rubriques
  * @return array treeview
- * 
+ *
  * @see risques_getrubriques
  * @see skin::display_treeview
  */
@@ -121,15 +121,15 @@ function directory_gettreeview($headings = array())
 {
     global $db;
 
-    $treeview = 
+    $treeview =
         array(
-            'list' => array(), 
+            'list' => array(),
             'tree' => array()
         );
 
     foreach($headings['list'] as $id => $fields)
     {
-        $treeview['list'][$fields['id']] = 
+        $treeview['list'][$fields['id']] =
             array(
                 'id' => $fields['id'],
                 'label' => $fields['label'],
@@ -141,12 +141,11 @@ function directory_gettreeview($headings = array())
                 'onclick' => '',
                 'icon' => './modules/directory/img/ico_heading.png'
             );
-        
-        $treeview['tree'][$fields['id_heading']][] = $fields['id'];                        
+
+        $treeview['tree'][$fields['id_heading']][] = $fields['id'];
     }
-    
+
     return($treeview);
 }
-
 
 ?>

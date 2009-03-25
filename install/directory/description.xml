@@ -80,7 +80,7 @@
             <value>0</value>
             <displayed_value>non</displayed_value>
          </paramchoice>
-      </paramtype>      
+      </paramtype>
       <paramtype>
          <name>directory_search</name>
          <label>Accéder à l'onglet "Recherche"</label>

@@ -76,9 +76,9 @@ $arrParams = array(
 foreach($arrParams as $strParam)
 {
     // Lecture Param
-    if (isset($_POST[$strParam]) && !ereg($pattern, $_POST[$strParam])) $arrFilter[$strParam] = $_POST[$strParam]; 
+    if (isset($_POST[$strParam]) && !ereg($pattern, $_POST[$strParam])) $arrFilter[$strParam] = $_POST[$strParam];
     // Affectation de valeur par défaut si non défini
-    if (!isset($arrFilter[$strParam])) $arrFilter[$strParam] = ''; 
+    if (!isset($arrFilter[$strParam])) $arrFilter[$strParam] = '';
 }
 
 // Enregistrement SESSION
@@ -99,20 +99,19 @@ $template_body->assign_vars(
         'DIRECTORY_SEARCH_POSTALCODE' => htmlentities($arrFilter['directory_postalcode']),
         'DIRECTORY_SEARCH_HEADING' => $arrFilter['directory_heading']
     )
-);  
-
+);
 
 switch($op)
 {
     case 'search':
-        
+
         $template_body->assign_block_vars('directory_switch_result', array());
-        
+
         // Construction de la requête de recherche
         $arrWhere = array();
         $arrWhere[] = 'c.id_heading > 0';
         $arrWhere[] = 'h.id = c.id_heading';
-        
+
         if (!empty($arrFilter['directory_lastname'])) $arrWhere[] = "c.lastname LIKE '".$db->addslashes($arrFilter['directory_lastname'])."%'";
         if (!empty($arrFilter['directory_firstname'])) $arrWhere[] = "c.firstname LIKE '".$db->addslashes($arrFilter['directory_firstname'])."%'";
         if (!empty($arrFilter['directory_phone'])) $arrWhere[] = "c.phone LIKE '".$db->addslashes($arrFilter['directory_phone'])."%'";
@@ -124,38 +123,37 @@ switch($op)
         if (!empty($arrFilter['directory_country'])) $arrWhere[] = "c.country LIKE '".$db->addslashes($arrFilter['directory_country'])."%'";
         if (!empty($arrFilter['directory_city'])) $arrWhere[] = "c.city LIKE '".$db->addslashes($arrFilter['directory_city'])."%'";
         if (!empty($arrFilter['directory_postalcode'])) $arrWhere[] = "c.postalcode LIKE '".$db->addslashes($arrFilter['directory_postalcode'])."%'";
-                
+
         // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
         $ptrRs = $db->query("
             SELECT      c.*, h.label
-                        
+
             FROM        ploopi_mod_directory_contact c,
                         ploopi_mod_directory_heading h
-            
+
             WHERE       ".implode(' AND ', $arrWhere)."
 
             ORDER BY    c.lastname, c.firstname
-        ");                
-        
-        
+        ");
+
         if ($db->numrows())
         {
             $c = 0;
             while ($row = $db->fetchrow($ptrRs))
             {
                 $c++;
-                
+
                 $arrAddress = array();
                 if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['address']));
                 if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($row['postalcode'].' '.$row['city'])));
                 if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['country']));
-                
+
                 $objContact = new directory_contact();
                 $objContact->fields['id'] = $row['id'];
-                
+
                 if (file_exists($objContact->getphotopath())) $row['photopath'] = ploopi_urlencode("index-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$row['id']}");
                 else $row['photopath'] = './modules/directory/img/nopic.gif';
-                
+
                 $template_body->assign_block_vars('directory_switch_result.contact',
                     array(
                         'ID' => $row['id'],
@@ -182,62 +180,60 @@ switch($op)
                         'ALTERNATE_STYLE' => $c%2,
                         'LINK' => ploopi_urlencode("index.php?template_moduleid={$template_moduleid}&op=contact&directory_contact_id={$row['id']}")
                     )
-                );                   
-                
+                );
+
             }
         }
         else
         {
-            $template_body->assign_block_vars('directory_switch_result.switch_message', 
+            $template_body->assign_block_vars('directory_switch_result.switch_message',
                 array(
-                    'CONTENT' => "Il n'y a pas de réponse pour votre recherche" 
+                    'CONTENT' => "Il n'y a pas de réponse pour votre recherche"
                 )
             );
-                        
+
         }
-        
-        
+
     break;
-    
+
     case 'contact':
         // Récupération des rubriques
         $arrHeadings = directory_getheadings();
-        
+
         $objContact = new directory_contact();
         if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']) && $objContact->open($_GET['directory_contact_id']))
         {
             if (file_exists($objContact->getphotopath())) $strPhotopath = ploopi_urlencode("index-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$_GET['directory_contact_id']}");
             else $strPhotopath = './modules/directory/img/nopic.gif';
-            
+
             $arrAddress = array();
             if (!empty($objContact->fields['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($objContact->fields['address']));
             if (!empty($objContact->fields['postalcode']) || !empty($objContact->fields['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($objContact->fields['postalcode'].' '.$objContact->fields['city'])));
             if (!empty($objContact->fields['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($objContact->fields['country']));
-            
+
             // Construction du lien sur l'annuaire détaillé de la rubrique
             $arrRequest = array();
             $arrRequest['op'] = "op=full";
             $arrRequest['template_moduleid'] = "template_moduleid={$template_moduleid}";
             if (!empty($_REQUEST['webedit_mode'])) $arrRequest['webedit_mode'] = "webedit_mode={$_REQUEST['webedit_mode']}";
-            
+
             // Tableau des rubriques associées au contact
             $arrHeadingsLabel = array();
-            
+
             foreach(explode(';', $arrHeadings['list'][$objContact->fields['id_heading']]['parents']) as $intHeadingId)
             {
                 $arrRequest['directory_heading_id'] = "directory_heading_id={$intHeadingId}";
                 if (isset($arrHeadings['list'][$intHeadingId])) $arrHeadingsLabel[$intHeadingId] = '<a title="Ouvrir l\'annuaire détaillé de '.htmlentities($arrHeadings['list'][$intHeadingId]['label']).'" href="'.ploopi_urlencode('index.php?'.implode('&',$arrRequest)).'">'.htmlentities($arrHeadings['list'][$intHeadingId]['label']).'</a>';
             }
-        
+
             $arrRequest['directory_heading_id'] = "directory_heading_id={$objContact->fields['id_heading']}";
             $arrHeadingsLabel[] = '<a title="Ouvrir l\'annuaire détaillé de '.htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['label']).'" href="'.ploopi_urlencode('index.php?'.implode('&',$arrRequest)).'">'.htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['label']).'</a>';
-            
+
             $arrHeadingAddress = array();
             if (!empty($arrHeadings['list'][$objContact->fields['id_heading']]['address'])) $arrHeadingAddress[] = ploopi_nl2br(htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['address']));
             if (!empty($arrHeadings['list'][$objContact->fields['id_heading']]['postalcode']) || !empty($arrHeadings['list'][$objContact->fields['id_heading']]['city'])) $arrHeadingAddress[] = ploopi_nl2br(htmlentities(trim($arrHeadings['list'][$objContact->fields['id_heading']]['postalcode'].' '.$arrHeadings['list'][$objContact->fields['id_heading']]['city'])));
             if (!empty($arrHeadings['list'][$objContact->fields['id_heading']]['country'])) $arrHeadingAddress[] = ploopi_nl2br(htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['country']));
-            
-            
+
             $template_body->assign_block_vars('directory_switch_contact',
                 array(
                     'CIVILITY' => htmlentities($objContact->fields['civility']),
@@ -261,14 +257,14 @@ switch($op)
                     'OFFICE' => htmlentities($objContact->fields['office']),
                     'HEADING' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['label']),
                     'HEADINGS' => implode('<br />', $arrHeadingsLabel),
-                    'HEADING_PHONE' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['phone']), 
-                    'HEADING_FAX' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['fax']), 
-                    'HEADING_POSTALCODE' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['postalcode']), 
-                    'HEADING_ADDRESS' => ploopi_nl2br(htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['address'])), 
-                    'HEADING_CITY' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['city']), 
-                    'HEADING_COUNTRY' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['country']), 
-                    'HEADING_ADDRESS' => ploopi_nl2br(htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['address'])), 
-                    'HEADING_ADDRESS_FULL' => implode('<br />', $arrHeadingAddress), 
+                    'HEADING_PHONE' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['phone']),
+                    'HEADING_FAX' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['fax']),
+                    'HEADING_POSTALCODE' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['postalcode']),
+                    'HEADING_ADDRESS' => ploopi_nl2br(htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['address'])),
+                    'HEADING_CITY' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['city']),
+                    'HEADING_COUNTRY' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['country']),
+                    'HEADING_ADDRESS' => ploopi_nl2br(htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['address'])),
+                    'HEADING_ADDRESS_FULL' => implode('<br />', $arrHeadingAddress),
                     'PHOTOPATH' => $strPhotopath,
                 )
             );
@@ -276,39 +272,39 @@ switch($op)
             // Recherche des personnes du même service
             $ptrRs = $db->query("
                 SELECT      c.*
-                            
+
                 FROM        ploopi_mod_directory_contact c
-                
+
                 WHERE       id_heading = {$objContact->fields['id_heading']}
                 AND         id <> {$objContact->fields['id']}
-                
+
                 ORDER BY    c.lastname, c.firstname
-            ");                
-            
+            ");
+
             $c = 0;
             while ($row = $db->fetchrow($ptrRs))
             {
                 $c++;
-                
+
                 $arrAddress = array();
                 if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['address']));
                 if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($row['postalcode'].' '.$row['city'])));
                 if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['country']));
-                
+
                 $objContact = new directory_contact();
                 $objContact->fields['id'] = $row['id'];
-                
+
                 if (file_exists($objContact->getphotopath())) $row['photopath'] = ploopi_urlencode("index-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$row['id']}");
                 else $row['photopath'] = './modules/directory/img/nopic.gif';
-                
+
                 // Construction du lien sur la fiche contact
                 $arrRequest = array();
-                
+
                 $arrRequest[] = "op=contact";
                 $arrRequest[] = "template_moduleid={$template_moduleid}";
                 $arrRequest[] = "directory_contact_id={$row['id']}";
                 if (!empty($_REQUEST['webedit_mode'])) $arrRequest[] = "webedit_mode={$_REQUEST['webedit_mode']}";
-                
+
                 $template_body->assign_block_vars('directory_switch_contact.contact',
                     array(
                         'ID' => $row['id'],
@@ -335,18 +331,18 @@ switch($op)
                         'ALTERNATE_STYLE' => $c%2,
                         'LINK' => ploopi_urlencode('index.php?'.implode('&',$arrRequest))
                     )
-                );                   
-                
+                );
+
             }
-            
+
         }
     break;
-    
+
     case 'full':
         function directory_template_display(&$template_body, &$arrHeadings, &$arrContacts, $intHeadingId = 0)
         {
             global $template_moduleid;
-            
+
             // Gestion des contacts de la rubrique
             if (isset($arrContacts[$intHeadingId]))
             {
@@ -354,29 +350,28 @@ switch($op)
                 foreach($arrContacts[$intHeadingId] as $row)
                 {
                     $c++;
-                    
+
                     $template_body->assign_block_vars('directory_switch_full.line', array());
-                    
+
                     $arrAddress = array();
                     if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['address']));
                     if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($row['postalcode'].' '.$row['city'])));
                     if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['country']));
-                    
-                    
+
                     $objContact = new directory_contact();
                     $objContact->fields['id'] = $row['id'];
-                    
+
                     if (file_exists($objContact->getphotopath())) $row['photopath'] = ploopi_urlencode("index-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$row['id']}");
                     else $row['photopath'] = './modules/directory/img/nopic.gif';
 
                     // Construction du lien sur la fiche contact
                     $arrRequest = array();
-                    
+
                     $arrRequest[] = "op=contact";
                     $arrRequest[] = "template_moduleid={$template_moduleid}";
                     $arrRequest[] = "directory_contact_id={$row['id']}";
                     if (!empty($_REQUEST['webedit_mode'])) $arrRequest[] = "webedit_mode={$_REQUEST['webedit_mode']}";
-                    
+
                     $template_body->assign_block_vars('directory_switch_full.line.contact',
                         array(
                             'ID' => $row['id'],
@@ -404,26 +399,24 @@ switch($op)
                             'LINK' => ploopi_urlencode('index.php?'.implode('&',$arrRequest))
                         )
                     );
-                            
+
                 }
             }
-    
-            
+
             if (isset($arrHeadings['tree'][$intHeadingId]))
             {
                 foreach($arrHeadings['tree'][$intHeadingId] as $intId)
                 {
                     $template_body->assign_block_vars('directory_switch_full.line', array());
-            
+
                     // Construction du lien sur la rubrique
                     $arrRequest = array();
-                    
+
                     $arrRequest[] = "op=full";
                     $arrRequest[] = "template_moduleid={$template_moduleid}";
                     $arrRequest[] = "directory_heading_id={$intId}";
                     if (!empty($_REQUEST['webedit_mode'])) $arrRequest[] = "webedit_mode={$_REQUEST['webedit_mode']}";
-            
-                    
+
                     $template_body->assign_block_vars('directory_switch_full.line.heading',
                         array(
                             'ID' => $intId,
@@ -438,61 +431,54 @@ switch($op)
                             'LINK' => ploopi_urlencode('index.php?'.implode('&',$arrRequest))
                         )
                     );
-                    
-                                        
+
                     directory_template_display($template_body, $arrHeadings, $arrContacts, $intId);
                 }
             }
         }
-        
+
         $intHeadingId = isset($_GET['directory_heading_id']) && is_numeric($_GET['directory_heading_id']) ? $_GET['directory_heading_id'] : 0;
 
         // Récupération des rubriques
         $arrHeadings = directory_getheadings();
-        
+
         // Récupération des contacts par rubriques
         $arrContacts = directory_getcontacts();
-        
 
         $template_body->assign_block_vars('directory_switch_full', array());
-        
+
         if ($intHeadingId) // Rubrique sélectionnée
         {
             $template_body->assign_block_vars('directory_switch_full.switch_selected_heading', array());
-            
+
             // Tableau des rubriques à afficher
             $arrSelectedHeadings = explode(';', $arrHeadings['list'][$intHeadingId]['parents']);
             unset($arrSelectedHeadings[0]);
-            $arrSelectedHeadings[] = $intHeadingId; 
+            $arrSelectedHeadings[] = $intHeadingId;
 
             // Construction du lien sur la rubrique
             $arrRequest = array();
-            
+
             $arrRequest[] = "op=full";
             $arrRequest[] = "template_moduleid={$template_moduleid}";
             if (!empty($_REQUEST['webedit_mode'])) $arrRequest[] = "webedit_mode={$_REQUEST['webedit_mode']}";
-            
-            
+
             foreach($arrSelectedHeadings as $intId)
             {
                 $arrRequest[] = "directory_heading_id={$intId}";
-                
-                $template_body->assign_block_vars('directory_switch_full.switch_selected_heading.heading', 
+
+                $template_body->assign_block_vars('directory_switch_full.switch_selected_heading.heading',
                     array(
-                        'LABEL' => isset($arrHeadings['list'][$intId]) ? $arrHeadings['list'][$intId]['label'] : '', 
-                        'LINK' => ploopi_urlencode('index.php?'.implode('&',$arrRequest)) 
+                        'LABEL' => isset($arrHeadings['list'][$intId]) ? $arrHeadings['list'][$intId]['label'] : '',
+                        'LINK' => ploopi_urlencode('index.php?'.implode('&',$arrRequest))
                     )
                 );
             }
         }
-                
-        directory_template_display($template_body, $arrHeadings, $arrContacts, $intHeadingId);
-        
-        
-                
-        
-    break;
-}    
 
+        directory_template_display($template_body, $arrHeadings, $arrContacts, $intHeadingId);
+
+    break;
+}
 
 ?>

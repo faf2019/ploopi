@@ -55,7 +55,6 @@ $columns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' =>
 $columns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
 $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 42);
 
-
 $result = array();
 
 $sql =  "
@@ -67,7 +66,7 @@ $sql =  "
         WHERE   f.id_user = {$_SESSION['ploopi']['userid']}
         AND     f.id_contact = c.id
         {$where}
-        
+
         GROUP BY c.id
         ";
 
@@ -80,7 +79,7 @@ $sql =  "
 
         FROM    ploopi_user u,
                 ploopi_mod_directory_favorites f
-                
+
         WHERE   f.id_user = {$_SESSION['ploopi']['userid']}
         AND     f.id_ploopi_user = u.id
         {$where}
@@ -96,7 +95,7 @@ foreach($result as $row)
 {
     $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'" title="'.htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '&nbsp;';
     $ticket = '&nbsp;';
-    
+
     switch ($row['usertype'])
     {
         case 'user':
@@ -104,7 +103,7 @@ foreach($result as $row)
                         <a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>
                         <a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\', \'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>
                         ';
-            
+
             $field_id = 'user_id';
             $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_users'])) ? _DIRECTORY_USERS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_users'];
 
@@ -133,11 +132,11 @@ foreach($result as $row)
                         <a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Ouvrir" src="./modules/directory/img/ico_open.png"></a>
                         <a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>
                         ';
-            
+
             if (empty($row['id_heading'])) // contact perso
             {
                 $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'];
-                $workspaces_list = '';                
+                $workspaces_list = '';
             }
             else // contact partagé
             {
@@ -150,7 +149,7 @@ foreach($result as $row)
                     foreach($arrParents as $intId)
                         if (isset($arrHeadings['list'][$intId]))
                             $arrTitle[] = $arrHeadings['list'][$intId]['label'];
-    
+
                     $arrTitle[] = $arrHeadings['list'][$row['id_heading']]['label'];
                     $workspaces_list = implode(' > ', $arrTitle);
                 }
@@ -159,7 +158,6 @@ foreach($result as $row)
         break;
     }
 
-    
     $values[$c]['values']['type'] = array('label' => $level_display);
     $values[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
     $values[$c]['values']['groups'] = array('label' => $workspaces_list);

@@ -88,12 +88,10 @@ if ($_SESSION['ploopi']['connected'])
                 ploopi_die();
             break;
 
-
             case 'directory_list_save':
                 include_once './modules/directory/class_directory_list.php';
 
                 $directory_list = new directory_list();
-
 
                 if (!empty($_POST['directory_favorites_id_list']) && is_numeric($_POST['directory_favorites_id_list'])) $directory_list->open($_POST['directory_favorites_id_list']);
                 else $directory_list->setuwm();
@@ -103,7 +101,6 @@ if ($_SESSION['ploopi']['connected'])
 
                 ploopi_redirect("admin.php?directoryTabItem=tabFavorites&directory_favorites_id_list={$directory_favorites_id_list}");
             break;
-
 
             case 'directory_getlists':
                 if (!empty($_GET['directory_favorites_id_user']) && is_numeric($_GET['directory_favorites_id_user']))
@@ -134,7 +131,6 @@ if ($_SESSION['ploopi']['connected'])
 
                         ORDER BY    l.label
                         ";
-
 
                 $db->query($sql);
                 $arrLists = $db->getarray();
@@ -215,32 +211,32 @@ if ($_SESSION['ploopi']['connected'])
                 if ((!empty($_GET['directory_id_contact']) && is_numeric($_GET['directory_id_contact'])))
                 {
                     ob_start();
-                    
+
                     ploopi_init_module('directory');
                     include_once './modules/directory/class_directory_contact.php';
-                    
+
                     $directory_contact = new directory_contact();
                     $directory_contact->open($_GET['directory_id_contact']);
-                    
+
                     include './modules/directory/public_directory_form.php';
-                    
+
                     $content = ob_get_contents();
                     ob_end_clean();
-                    
+
                     /**
                      * On affiche le popup
                      */
-                    
+
                     echo $skin->create_popup("Modification d'un contact", $content, 'popup_directory_modify');
                 }
-                
+
                 ploopi_die();
             break;
-            
+
             case 'directory_contact_save':
                 include_once './modules/directory/class_directory_contact.php';
                 include_once './modules/directory/class_directory_heading.php';
-                
+
                 $directory_contact = new directory_contact();
                 if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id'])) $directory_contact->open($_GET['directory_contact_id']);
 
@@ -327,7 +323,7 @@ if ($_SESSION['ploopi']['connected'])
 
             case 'directory_choose_photo':
                 if (empty($_GET['directory_photo_id'])) ploopi_die();
-                
+
                 // Popup de choix d'une photo pour un utilisateur
                 ob_start();
                 ploopi_init_module('directory');
@@ -350,7 +346,7 @@ if ($_SESSION['ploopi']['connected'])
 
             case 'directory_send_photo':
                 // Envoi d'une photo temporaire dans la fiche contact
-                
+
                 if (!empty($_GET['directory_photo_id']))
                 {
                     // On vérifie qu'un fichier a bien été uploadé

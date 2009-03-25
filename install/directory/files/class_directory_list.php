@@ -48,7 +48,7 @@ include_once './include/classes/data_object.php';
  */
 
 class directory_list extends data_object
-{   
+{
     /**
      * Constructeur de la classe
      *
@@ -59,11 +59,11 @@ class directory_list extends data_object
     {
         parent::data_object('ploopi_mod_directory_list');
     }
-    
+
     /**
      * Supprime la liste de favoris et les favoris associés
      */
-    
+
     function delete()
     {
         global $db;
