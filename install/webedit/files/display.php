@@ -267,6 +267,7 @@ if ($query_string != '') // recherche intégrale
             if ($boolModDocExists)
             {
                 $objDocFile = new docfile();
+                $link = ploopi_urlrewrite("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$result['id_record']}", $objDocFile->fields['name'], true);
 
                 if ($objDocFile->openmd5($result['id_record']))
                 {
@@ -283,7 +284,8 @@ if ($query_string != '') // recherche intégrale
                             'METADESCRIPTION' => '',
                             'DATE' => current(ploopi_timestamp2local($objDocFile->fields['timestp_create'])),
                             'SIZE' => sprintf("%.02f", $objDocFile->fields['size']/1024),
-                            'LINK' => ploopi_urlrewrite("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$result['id_record']}", $objDocFile->fields['name'], true)
+                            'LINK' => $link,
+                            'SHORT_LINK' => ploopi_strcut($link, 50, 'middle')
                         )
                     );
 
@@ -328,7 +330,8 @@ if ($query_string != '') // recherche intégrale
                         'METADESCRIPTION_RAW' => $objArticle->fields['metadescription'],
                         'DATE' => ($objArticle->fields['timestp']!='') ? current(ploopi_timestamp2local($objArticle->fields['timestp'])) : '',
                         'SIZE' => sprintf("%.02f", strlen($cleaned_content)/1024),
-                        'LINK' => $link
+                        'LINK' => $link,
+                        'SHORT_LINK' => ploopi_strcut($link, 50, 'middle')
                     )
                 );
 

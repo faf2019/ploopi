@@ -97,7 +97,7 @@ class webedit_article extends data_object
 
         if ($res) $this->original_content = $this->fields['content'];
 
-        return($res);
+        return $res;
     }
 
     /**
