@@ -23,7 +23,7 @@
 
 /**
  * "Constructeur" de l'instance.
- * Initialise les données du module lors de l'instanciation du module. 
+ * Initialise les données du module lors de l'instanciation du module.
  *
  * @package webedit
  * @subpackage create

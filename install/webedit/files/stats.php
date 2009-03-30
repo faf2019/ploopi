@@ -32,7 +32,7 @@
 
 echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
 echo $skin->open_simplebloc();
-        
+
 $intYearSel = (empty($_GET['webedit_yearsel']) || !is_numeric($_GET['webedit_yearsel'])) ? date('Y') : $_GET['webedit_yearsel'];
 $intMonthSel = (empty($_GET['webedit_monthsel']) || empty($_GET['webedit_yearsel'])  || !is_numeric($_GET['webedit_monthsel']) || !is_numeric($_GET['webedit_yearsel'])) ? '' : $_GET['webedit_monthsel'];
 
@@ -78,73 +78,73 @@ if (empty($intMonthSel))
     </div>
     <?php
     include_once './include/classes/barchart.php';
-    
+
     // 1er Diagramme : année par mois
-    
+
     $dataset = array();
     $legend = array();
-    
-    foreach($ploopi_months as $key => $value) 
+
+    foreach($ploopi_months as $key => $value)
     {
         $dataset[$key] = 0;
         $dataset2[$key] = 0;
-        
+
         $legend[$key] = $value;
     }
-    
+
     $db->query(
         "
-        SELECT  month, 
-                sum(hits) as c 
-        FROM    ploopi_mod_webedit_counter 
-        WHERE   id_module = {$_SESSION['ploopi']['moduleid']} 
+        SELECT  month,
+                sum(hits) as c
+        FROM    ploopi_mod_webedit_counter
+        WHERE   id_module = {$_SESSION['ploopi']['moduleid']}
         AND     year = {$intYearSel}
         GROUP BY month
         ORDER BY month
         ");
-        
-    while ($row = $db->fetchrow()) 
+
+    while ($row = $db->fetchrow())
     {
         $dataset[$row['month']] = $row['c'];
         $dataset2[$row['month']] = $row['c']-10;
     }
-    
+
     $objBarChartYear = new barchart(700, 150, array('padding' => 1));
     $objBarChartYear->setvalues($dataset, 'Fréquentation mensuelle', '#1E64A1', '#f0f0f0');
     $objBarChartYear->setlegend($legend);
-    
+
     // 2eme Diagramme : mois par jours
-    
+
     $dataset = array();
     $legend = array();
-    
+
     $nbdays = date('t', mktime(0, 0, 0, $intMonthSel, 1, $intYearSel));
-    
-    for ($d=1;$d<=$nbdays;$d++) 
+
+    for ($d=1;$d<=$nbdays;$d++)
     {
         $weekday = date('N', mktime(0, 0, 0, $intMonthSel, $d, $intYearSel));
         $dataset[$d] = 0;
         $legend[$d] = substr($ploopi_days[$weekday],0,2).'<br />'.$d;
     }
-    
+
     $db->query(
         "
-        SELECT  day, 
-                sum(hits) as c 
-        FROM    ploopi_mod_webedit_counter 
+        SELECT  day,
+                sum(hits) as c
+        FROM    ploopi_mod_webedit_counter
         WHERE   id_module = {$_SESSION['ploopi']['moduleid']}
         AND     year = {$intYearSel}
         AND     month = {$intMonthSel}
         GROUP BY day
         ORDER BY day
         ");
-        
+
     while ($row = $db->fetchrow()) $dataset[$row['day']] = $row['c'];
-    
+
     $objBarChartMonth = new barchart(700, 150, array('padding' => 1));
     $objBarChartMonth->setvalues($dataset, 'Fréquentation quotidienne', '#4FA11E', '#f0f0f0');
     $objBarChartMonth->setlegend($legend);
-    
+
     // Affichage
     ?>
     <div class="webedit_stats_graph">
@@ -155,101 +155,98 @@ if (empty($intMonthSel))
         <h1>Statistiques globales de fréquentation pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre d'articles vus)</h1>
         <div><?php $objBarChartMonth->draw(); ?></div>
     </div>
-    
-    <?php 
+
+    <?php
     // Recherche des articles les plus consultés
-    
+
     $db->query(
         "
-        SELECT      c.id_article, 
+        SELECT      c.id_article,
                     sum(c.hits) as counter,
                     a.title,
                     a.metatitle,
                     a.id_heading,
                     h.label
-                 
+
         FROM        ploopi_mod_webedit_counter as c
-    
+
         INNER JOIN  ploopi_mod_webedit_article a
         ON          a.id = c.id_article
-        
+
         INNER JOIN  ploopi_mod_webedit_heading h
         ON          h.id = a.id_heading
-        
-        WHERE       c.id_module = {$_SESSION['ploopi']['moduleid']} 
+
+        WHERE       c.id_module = {$_SESSION['ploopi']['moduleid']}
         AND         c.year = {$intYearSel}
         AND         c.month = {$intMonthSel}
-    
+
         GROUP BY    c.id_article
-    
+
         ORDER BY    counter DESC
-        
+
         LIMIT 0,50
         ");
-        
-        
+
     // initialisation du contenu du tableau
     $columns = array();
     $values = array();
-    
-    
-    $columns['auto']['article'] = 
+
+    $columns['auto']['article'] =
         array(
-            'label' => 'Article', 
+            'label' => 'Article',
             'options' => array('sort' => true)
         );
-    
-        
-    $columns['right']['counter'] = 
+
+    $columns['right']['counter'] =
         array(
-            'label' => 'visites', 
-            'width' => '80', 
+            'label' => 'visites',
+            'width' => '80',
             'options' => array('sort' => true)
         );
-        
-    $columns['right']['heading'] = 
+
+    $columns['right']['heading'] =
         array(
-            'label' => 'Rubrique', 
-            'width' => '200', 
+            'label' => 'Rubrique',
+            'width' => '200',
             'options' => array('sort' => true)
         );
-        
+
     $c = 0;
-    
+
     while ($row = $db->fetchrow())
     {
-        $values[$c]['values']['article'] = 
+        $values[$c]['values']['article'] =
             array(
                 'label' => $row['title']
             );
-            
-        $values[$c]['values']['heading'] = 
+
+        $values[$c]['values']['heading'] =
             array(
                 'label' => $row['label']
             );
-            
-        $values[$c]['values']['counter'] = 
+
+        $values[$c]['values']['counter'] =
             array(
                 'label' => $row['counter']
             );
-            
+
         $values[$c]['description'] = $row['title'];
         $values[$c]['link'] = ploopi_urlrewrite("index.php?headingid={$row['id_heading']}&articleid={$row['id_article']}", $row['metatitle']);
-    
+
         $c++;
     }
     ?>
-    
+
     <div class="webedit_stats_array">
         <h1>Articles les plus visités pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre de visites)</h1>
         <div style="border-top:1px solid #c0c0c0;">
-        <?php 
+        <?php
         $skin->display_array(
-            $columns, 
-            $values, 
-            'webedit_array_stats_articles', 
+            $columns,
+            $values,
+            'webedit_array_stats_articles',
             array(
-                'sortable' => true, 
+                'sortable' => true,
                 'orderby_default' => 'counter',
                 'sort_default' => 'DESC'
             )
@@ -257,87 +254,84 @@ if (empty($intMonthSel))
         ?>
         </div>
     </div>
-    
-    <?php 
+
+    <?php
     // Recherche des rubriques les plus consultées
-    
+
     $db->query(
         "
-        SELECT      h.id, 
+        SELECT      h.id,
                     h.label,
                     sum(c.hits) as counter
-                 
+
         FROM        ploopi_mod_webedit_counter as c
-    
+
         INNER JOIN  ploopi_mod_webedit_article a
         ON          a.id = c.id_article
-        
+
         INNER JOIN  ploopi_mod_webedit_heading h
         ON          h.id = a.id_heading
-        
-        WHERE       c.id_module = {$_SESSION['ploopi']['moduleid']} 
+
+        WHERE       c.id_module = {$_SESSION['ploopi']['moduleid']}
         AND         c.year = {$intYearSel}
         AND         c.month = {$intMonthSel}
-    
+
         GROUP BY    h.id
-    
+
         ORDER BY    counter DESC
-        
+
         LIMIT 0,50
         ");
-        
-        
+
     // initialisation du contenu du tableau
     $columns = array();
     $values = array();
-    
-    
-    $columns['auto']['heading'] = 
+
+    $columns['auto']['heading'] =
         array(
-            'label' => 'Rubrique', 
+            'label' => 'Rubrique',
             'options' => array('sort' => true)
         );
-    
-        
-    $columns['right']['counter'] = 
+
+    $columns['right']['counter'] =
         array(
-            'label' => 'visites', 
-            'width' => '80', 
+            'label' => 'visites',
+            'width' => '80',
             'options' => array('sort' => true)
         );
-        
+
     $c = 0;
-    
+
     while ($row = $db->fetchrow())
     {
-            
-        $values[$c]['values']['heading'] = 
+
+        $values[$c]['values']['heading'] =
             array(
                 'label' => $row['label']
             );
-            
-        $values[$c]['values']['counter'] = 
+
+        $values[$c]['values']['counter'] =
             array(
                 'label' => $row['counter']
             );
-            
+
         $values[$c]['description'] = $row['label'];
         $values[$c]['link'] =  ploopi_urlrewrite($script = "index.php?headingid={$row['id']}", $row['label']);
-        
+
         $c++;
     }
     ?>
-    
+
     <div class="webedit_stats_array">
         <h1>Rubriques les plus visités pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre de visites)</h1>
         <div style="border-top:1px solid #c0c0c0;">
-        <?php 
+        <?php
         $skin->display_array(
-            $columns, 
-            $values, 
-            'webedit_array_stats_headings', 
+            $columns,
+            $values,
+            'webedit_array_stats_headings',
             array(
-                'sortable' => true, 
+                'sortable' => true,
                 'orderby_default' => 'counter',
                 'sort_default' => 'DESC'
             )
@@ -347,6 +341,6 @@ if (empty($intMonthSel))
     </div>
 </div>
 
-<?php        
-echo $skin->close_simplebloc(); 
+<?php
+echo $skin->close_simplebloc();
 ?>

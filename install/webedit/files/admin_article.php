@@ -74,7 +74,7 @@ switch($op)
         $article_timestp_published = $article_timestp_unpublished = $lastupdate_timestp = $lastupdate_user = '';
 
         $article_timestp = current(ploopi_timestamp2local(ploopi_createtimestamp()));
-        
+
         $isnewversion = 0;
 
     break;
@@ -109,7 +109,6 @@ list($keywords, $words_indexed, $words_overall) = ploopi_getwords($content);
 
 $keywords = array_slice($keywords, 0 , 20, true);
 
-
 ?>
 
 <div style="background-color:#e0e0e0;padding:4px;border-bottom:1px solid #c0c0c0;">
@@ -121,11 +120,11 @@ $keywords = array_slice($keywords, 0 , 20, true);
             <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cet article" onclick="javascript:webedit_stats_open(<?php echo $article->fields['id']; ?>, null, event);">
             <?php
         }
-        ?>    
+        ?>
         <img src="./modules/webedit/img/doc<?php echo $isnewversion; ?>.png">
         <?php
         echo "<span>{$title} - </span>";
-    
+
         if ($type == 'draft')
         {
             switch($article->fields['status'])
@@ -133,7 +132,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                 case 'wait':
                     $msg = "&nbsp;(Attente de validation)";
                 break;
-    
+
                 case 'edit':
                 default:
                     $msg = "&nbsp;(Modifiable)";
@@ -149,7 +148,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                 <span>Version en Ligne : non modifiable&nbsp;</span>
             <?php
         }
-    
+
         $readonly = (!(ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) && $type == 'draft' && ($article->fields['status'] == 'edit' || (in_array($_SESSION['ploopi']['userid'],$wfusers)) && ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_PUBLISH))));
         ?>
     </p>
@@ -291,7 +290,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                 </p>
             </div>
         </div>
-        
+
         <div class="ploopi_form" style="float:left; width:45%;">
             <div style="padding:2px;">
                 <div style="padding:2px;"><strong>Propriétés annexes:</strong></div>
@@ -457,13 +456,13 @@ $keywords = array_slice($keywords, 0 , 20, true);
             {
                 ?>
                 <div id="fck_webedit_article_headcontent" style="height:16px;">
-                <pre> 
+                <pre>
                 <?php
                 echo htmlentities($article->fields['headcontent']);
                 ?>
                 </pre>
                 </div>
-                <?php                
+                <?php
             }
             ?>
             </div>
@@ -529,7 +528,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
 
             </div>
         </div>
-        
+
         <div class="ploopi_form" style="float:left; width:45%;">
             <div style="padding:2px;">
                 <p>
@@ -649,7 +648,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
         <input type="button" class="flatbutton" value="Modifier le Brouillon" onclick="javascript:document.location.href='<?php echo "admin.php?op=article_modify&articleid={$articleid}&type=draft"; ?>';">
         Cette version n'est pas modifiable, vous devez d'abord modifier le brouillon puis publier l'article.
         <?php
-    }    
+    }
     ?>
 </div>
 
@@ -708,7 +707,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
         <input type="button" class="flatbutton" value="Modifier le Brouillon" onclick="javascript:document.location.href='<?php echo "admin.php?op=article_modify&articleid={$articleid}&type=draft"; ?>';">
         Cette version n'est pas modifiable, vous devez d'abord modifier le brouillon puis publier l'article.
         <?php
-    }    
+    }
     ?>
 </div>
 

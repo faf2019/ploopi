@@ -29,7 +29,7 @@
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @global int $headingid identifiant de la rubrique sélectionnée
  * @global int $articleid identifiant de l'article sélectionné
  */
@@ -39,7 +39,6 @@
  */
 ploopi_init_module('webedit');
 
-
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 $menu = (empty($_REQUEST['webedit_menu'])) ? '' : $_REQUEST['webedit_menu'];
 
@@ -48,11 +47,11 @@ switch($menu)
     case 'stats':
         if (ploopi_isactionallowed(_WEBEDIT_ACTION_STATS)) include_once './modules/webedit/stats.php';
     break;
-    
+
     case 'reindex':
         if (ploopi_isactionallowed(_WEBEDIT_ACTION_REINDEX)) include_once './modules/webedit/reindex.php';
     break;
-    
+
     default:
         /**
          * Inclusion des classes du module
@@ -60,38 +59,37 @@ switch($menu)
         include_once './modules/webedit/class_article.php';
         include_once './modules/webedit/class_heading.php';
         include_once './modules/webedit/class_heading_subscriber.php';
-        
+
         global $headingid;
         global $articleid;
-        
+
         if (isset($_GET['type'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'] = $_GET['type'];
-        
+
         if (isset($_POST['webedit_display_type'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] = $_POST['webedit_display_type'];
-        
+
         // heading id
         if (!empty($_GET['headingid']) && is_numeric($_GET['headingid']))
         {
             $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = $_GET['headingid'];
             $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = '';
         }
-        
+
         // article id
         if (!empty($_GET['articleid']) && is_numeric($_GET['articleid']))
         {
             $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = $_GET['articleid'];
         }
-        
+
         if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'] = 'draft';
         if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = '';
         if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'] = '';
         if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display'] = 'block';
         if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['display_type'];
-        
+
         $type = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'];
         $headingid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'];
         $articleid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'];
         $display_type = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'];
-                
 
         switch($op)
         {
@@ -101,83 +99,82 @@ switch($menu)
             case 'heading_addroot':
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
-        
+
                     $heading_new = new webedit_heading();
-        
+
                     $select = "Select max(position) as maxpos from ploopi_mod_webedit_heading WHERE id_heading = 0 AND id_module = {$_SESSION['ploopi']['moduleid']}";
                     $db->query($select);
                     $fields = $db->fetchrow();
                     $maxpos = $fields['maxpos'];
                     if (!is_numeric($maxpos)) $maxpos = 0;
                     $heading_new->fields['position'] = $maxpos+1;
-        
+
                     $heading_new->fields['label'] = "Racine {$heading_new->fields['position']}";
                     $heading_new->fields['id_heading'] = 0;
                     $heading_new->fields['parents'] = 0;
                     $heading_new->fields['depth'] = 1;
                     $heading_new->setuwm();
-        
+
                     $headingid = $heading_new->save();
-        
+
                     ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
-        
+
                     ploopi_redirect("admin.php?headingid={$headingid}");
                 }
                 else ploopi_redirect('admin.php');
             break;
-        
+
             case 'heading_addnew':
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     $heading = new webedit_heading();
                     $heading->open($headingid);
-        
+
                     $heading_new = new webedit_heading();
                     $heading_new->fields['label'] = "Sous rubrique de '{$heading->fields['label']}'";
                     $heading_new->fields['id_heading'] = $headingid;
                     $heading_new->fields['parents'] = "{$heading->fields['parents']};{$headingid}";
                     $heading_new->fields['depth'] = $heading->fields['depth']+1;
-        
+
                     $select = "Select max(position) as maxpos from ploopi_mod_webedit_heading WHERE id_heading = $headingid";
                     $db->query($select);
                     $fields = $db->fetchrow();
                     $maxpos = $fields['maxpos'];
                     if (!is_numeric($maxpos)) $maxpos = 0;
                     $heading_new->fields['position'] = $maxpos+1;
-        
+
                     $heading_new->setuwm();
-        
+
                     $headingid = $heading_new->save();
-        
+
                     /* DEBUT ABONNEMENT */
-        
+
                     // on construit la liste des objets parents (y compris l'objet courant)
                     $arrHeadingList = split(';', "{$heading->fields['parents']};{$heading->fields['id']}");
-                    
+
                     // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                     $arrUsers = array();
                     foreach ($arrHeadingList as $intObjectId)
                         $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
-                    
+
                     // on envoie le ticket de notification d'action sur l'objet
                     ploopi_subscription_notify(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], _WEBEDIT_ACTION_CATEGORY_EDIT, $heading->fields['label'], array_keys($arrUsers), 'Cet objet à été créé');
-                    
+
                     /* FIN ABONNEMENT */
-                    
+
                     ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
-        
+
                     ploopi_redirect("admin.php?headingid={$headingid}");
                 }
                 else ploopi_redirect('admin.php');
             break;
-        
-        
+
             case 'heading_save':
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     $heading = new webedit_heading();
                     $heading->open($headingid);
-        
+
                     $newposition = $_POST['head_position'];
                     if ($newposition != $heading->fields['position']) // nouvelle position définie
                     {
@@ -190,7 +187,7 @@ switch($menu)
                             $fields = $db->fetchrow();
                             if ($newposition > $fields['maxpos']) $newposition = $fields['maxpos'];
                         }
-        
+
                         // mise à jour des positions
                         $db->query("update ploopi_mod_webedit_heading set position=0 where position={$heading->fields['position']} AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
                         if ($newposition > $heading->fields['position'])
@@ -204,63 +201,63 @@ switch($menu)
                         $db->query("update ploopi_mod_webedit_heading set position={$newposition} where position=0 AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
                         $heading->fields['position'] = $newposition;
                     }
-        
+
                     $heading->setvalues($_POST,'webedit_heading_');
-        
+
                     if (empty($_POST['webedit_heading_visible'])) $heading->fields['visible'] = 0;
                     if (empty($_POST['webedit_heading_url_window'])) $heading->fields['url_window'] = 0;
-                    
+
                     if (empty($_POST['webedit_heading_feed_enabled'])) $heading->fields['feed_enabled'] = 0;
                     if (empty($_POST['webedit_heading_subscription_enabled'])) $heading->fields['subscription_enabled'] = 0;
-                    
+
                     $heading->save();
-                    
+
                     /* DEBUT ABONNEMENT */
-        
+
                     // on construit la liste des objets parents (y compris l'objet courant)
                     $arrHeadingList = split(';', "{$heading->fields['parents']};{$heading->fields['id']}");
-                    
+
                     // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                     $arrUsers = array();
                     foreach ($arrHeadingList as $intObjectId)
                         $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
-                    
+
                     // on envoie le ticket de notification d'action sur l'objet
                     ploopi_subscription_notify(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], _WEBEDIT_ACTION_CATEGORY_EDIT, $heading->fields['label'], array_keys($arrUsers), 'Cet objet à été modifié');
-                    
+
                     /* FIN ABONNEMENT */
-        
+
                     ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
-                    
+
                     ploopi_redirect("admin.php?headingid={$headingid}");
                 }
                 else ploopi_redirect('admin.php');
-        
+
             break;
-        
+
             case 'heading_delete':
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
                     $heading = new webedit_heading();
                     $heading->open($headingid);
-        
+
                     if (!($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1))
                     {
                         /* DEBUT ABONNEMENT */
-                        
+
                         // on construit la liste des objets parents (y compris l'objet courant)
                         $arrHeadingList = split(';', "{$heading->fields['parents']};{$heading->fields['id']}");
-                                        
+
                         // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                         $arrUsers = array();
                         foreach ($arrHeadingList as $intObjectId)
                             $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
-                        
+
                         // on envoie le ticket de notification d'action sur l'objet
                         ploopi_subscription_notify(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], _WEBEDIT_ACTION_CATEGORY_EDIT, $heading->fields['label'], array_keys($arrUsers), 'Cet objet à été supprimé');
-                        
+
                         /* FIN ABONNEMENT */
-                    
+
                         $heading->delete(); // you don't have to delete the root heading
                         ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
                         ploopi_redirect("admin.php?headingid={$heading->fields['id_heading']}");
@@ -268,21 +265,20 @@ switch($menu)
                     else ploopi_redirect('admin.php');
                 }
             break;
-        
-        
+
             case 'article_selectfile':
                 include_once './modules/webedit/admin_imagegalery.php';
             break;
-            
+
             case 'article_save':
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) && $type == 'draft')
                 {
                     $tablename = 'ploopi_mod_webedit_article_draft';
-                    
+
                     $strTypeTicket = '';
-        
+
                     $article = new webedit_article('draft');
-                    
+
                     // article existant ?
                     if (!empty($_POST['articleid']) && is_numeric($_POST['articleid']) && $article->open($_POST['articleid']))
                     {
@@ -296,16 +292,16 @@ switch($menu)
                             $fields = $db->fetchrow();
                             $maxpos = $fields['maxpos'];
                             if (!is_numeric($maxpos)) $maxpos = 0;
-                            
+
                             // on remonte les articles de la rubrique actuelle
                             $db->query("UPDATE {$tablename} SET position = position - 1 WHERE position > {$article->fields['position']} AND id_heading = {$article->fields['id_heading']}");
-                            
+
                             // on affecte la nouvelle position à l'article
                             $article->fields['position'] = $maxpos+1;
                         }
                         else // si la rubrique parent n'est pas modifiée
                         {
-                            // modification de la position d'un article 
+                            // modification de la position d'un article
                             if (isset($_POST['webedit_art_position']))
                             {
                                 $newposition = $_POST['webedit_art_position'];
@@ -319,7 +315,7 @@ switch($menu)
                                         $fields = $db->fetchrow();
                                         if ($newposition > $fields['maxpos']) $newposition = $fields['maxpos'];
                                     }
-                
+
                                     $db->query("update {$tablename} set position=0 where position={$article->fields['position']} AND id_heading = {$article->fields['id_heading']}");
                                     if ($newposition > $article->fields['position'])
                                     {
@@ -338,7 +334,7 @@ switch($menu)
                     else // nouvel article
                     {
                         $strTypeTicket = 'new';
-                        
+
                         $article->setuwm();
                         $select = "Select max(position) as maxpos from {$tablename} WHERE id_heading = {$headingid}";
                         $db->query($select);
@@ -348,52 +344,51 @@ switch($menu)
                         $article->fields['position'] = $maxpos+1;
                         $article->fields['id_heading'] = $headingid;
                     }
-        
+
                     /*
                      * On envoie un ticket pour validation si :
                      * brouillon + statut en attente + modification de statut
-                     * 
+                     *
                      * Note : l'envoi est effectué plus bas, après avoir cherché la liste des validateurs
                      */
-                    $sendtickets = 
+                    $sendtickets =
                         (
-                                $type == 'draft' 
-                            &&  $_POST['webedit_article_status'] == 'wait' 
+                                $type == 'draft'
+                            &&  $_POST['webedit_article_status'] == 'wait'
                             &&  $article->fields['status'] != $_POST['webedit_article_status']
                         );
-                    
+
                     // article modifiable, on enregistre les nouvelles données
-                    if ($article->fields['status'] != 'wait') 
+                    if ($article->fields['status'] != 'wait')
                     {
                         $article->setvalues($_POST,'webedit_article_');
-                        
+
                         if (isset($_POST['fck_webedit_article_headcontent'])) $article->fields['headcontent'] = $_POST['fck_webedit_article_headcontent'];
                         if (isset($_POST['fck_webedit_article_content'])) $article->fields['content'] = $_POST['fck_webedit_article_content'];
-                        
+
                         $article->fields['timestp'] = ploopi_local2timestamp($_POST['webedit_article_timestp']);
-                        
+
                         if (!empty($_POST['webedit_article_timestp_published'])) $article->fields['timestp_published'] = ploopi_local2timestamp($_POST['webedit_article_timestp_published']);
                         if (!empty($_POST['webedit_article_timestp_unpublished'])) $article->fields['timestp_unpublished'] = ploopi_local2timestamp($_POST['webedit_article_timestp_unpublished']);
-        
+
                         $article->fields['lastupdate_timestp'] = ploopi_createtimestamp();
                         $article->fields['lastupdate_id_user'] = $_SESSION['ploopi']['userid'];
-                        
+
                         if (empty($_POST['webedit_article_disabledfilter'])) $article->fields['disabledfilter'] = 0;
                         if (empty($_POST['webedit_article_visible'])) $article->fields['visible'] = 0;
                         if (empty($_POST['webedit_article_comments_allowed'])) $article->fields['comments_allowed'] = 0;
-                        
+
                     }
                     else $article->setvalues($_POST,'webedit_article_');
-        
-                    
+
                     // recherche la liste des validateurs de cette rubrique
                     $wfusers = array();
                     $wf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
                     $wf_headingid = $headingid;
-        
+
                     $objHeading = new webedit_heading();
                     $objHeading->open($headingid);
-                    
+
                     if (empty($wf)) // pas de validateur pour cette rubrique, on recherche sur les parents
                     {
                         $parents = explode(';', $objHeading->fields['parents']);
@@ -403,151 +398,151 @@ switch($menu)
                             if (!empty($wf)) break;
                         }
                     }
-        
+
                     foreach($wf as $value) $wfusers[] = $value['id_validation'];
-        
+
                     // action "publier" et l'utilisateur est un validateur => OK
                     if (isset($_POST['publish']) && (in_array($_SESSION['ploopi']['userid'],$wfusers) || ploopi_isadmin()))
                     {
                         $strTypeTicket = ($article->publish()) ? 'published_new' : 'published';
-                        
+
                         ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_PUBLISH, $articleid);
-                        
+
                     }
-        
+
                     $articleid = $article->save();
-                    
+
                     /* DEBUT ABONNEMENT (BACKOFFICE && FRONTOFFICE) */
-                    
+
                     // on construit la liste des objets parents (y compris l'objet courant)
                     $arrHeadingList = split(';', "{$objHeading->fields['parents']};{$objHeading->fields['id']}");
-                    
+
                     switch($strTypeTicket)
                     {
                         case 'new':
                             $strMsg = 'Cet objet à été créé';
                             $intActionId = _WEBEDIT_ACTION_ARTICLE_EDIT;
                         break;
-                            
+
                         case 'published':
                         case 'published_new':
                             $strMsg = 'Cet objet à été publié';
                             $intActionId = _WEBEDIT_ACTION_ARTICLE_PUBLISH;
-                            
+
                             // Gestion des abonnés frontoffice
                             $sql =  "
-                                    SELECT  * 
-                                    FROM    ploopi_mod_webedit_heading_subscriber 
-                                    WHERE   id_module = {$_SESSION['ploopi']['moduleid']} 
+                                    SELECT  *
+                                    FROM    ploopi_mod_webedit_heading_subscriber
+                                    WHERE   id_module = {$_SESSION['ploopi']['moduleid']}
                                     AND     id_heading IN (".implode(',', $arrHeadingList).")
                                     ";
-                            
+
                             $db->query($sql);
-                            
+
                             // envoi d'un mail à chaque abonné
                             while ($row = $db->fetchrow())
                             {
-                                $from[] = 
+                                $from[] =
                                     array(
-                                        'name' => $_SERVER['HTTP_HOST'], 
+                                        'name' => $_SERVER['HTTP_HOST'],
                                         'address' => (empty($_SESSION['ploopi']['user']['email'])) ? _PLOOPI_ADMINMAIL : $_SESSION['ploopi']['user']['email']
                                     );
-                                
+
                                 switch($strTypeTicket)
                                 {
                                     case 'published':
                                         $mail_title = "{$_SERVER['HTTP_HOST']} : modification d'un article";
                                         $mail_content = "Bonjour,\n\nvous recevez ce message car vous êtes abonné au site {$_SERVER['HTTP_HOST']}.\n\nL'article intitulé \"{$article->fields['title']}\" a été modifié.\n\nVous pouvez le consulter en cliquant sur ce lien : "._PLOOPI_BASEPATH."/".$article->geturl();
-                                    break;  
-                                    
+                                    break;
+
                                     case 'published_new':
                                         $mail_title = "{$_SERVER['HTTP_HOST']} : publication d'un article";
                                         $mail_content = "Bonjour,\n\nvous recevez ce message car vous êtes abonné au site {$_SERVER['HTTP_HOST']}.\n\nUn nouvel article intitulé \"{$article->fields['title']}\" a été publié.\n\nVous pouvez le consulter en cliquant sur ce lien : "._PLOOPI_BASEPATH."/".$article->geturl();
-                                    break;  
+                                    break;
                                 }
-                                
+
                                 $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : "._PLOOPI_BASEPATH.'/'.ploopi_urlrewrite('index.php?ploopi_op=webedit_unsubscribe&subscription_email='.md5($row['email']));
-                                
+
                                 ploopi_send_mail($from, $row['email'], $mail_title, $mail_content, null, null, null, null, false);
                             }
                         break;
-                            
+
                         default:
                             $strMsg = 'Cet objet à été modifié';
                             $intActionId = _WEBEDIT_ACTION_ARTICLE_EDIT;
                         break;
                     }
-                    
+
                     // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                     $arrUsers = array();
                     foreach ($arrHeadingList as $intObjectId)
                         $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array($intActionId));
-                    
+
                     $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, array($intActionId));
-                    
+
                     // on envoie le ticket de notification d'action sur l'objet
                     ploopi_subscription_notify(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, $intActionId, $article->fields['title'], array_keys($arrUsers), $strMsg);
-                    
+
                     /* FIN ABONNEMENT */
-                    
+
                     // on envoie un ticket de demande de validation si l'utilisateur n'est pas un validateur
                     if ($sendtickets && !in_array($_SESSION['ploopi']['userid'],$wfusers))
                     {
                         $_SESSION['ploopi']['tickets']['users_selected'] = $wfusers;
                         ploopi_tickets_send("Demande de validation de l'article <strong>\"{$article->fields['title']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyé suite à une demande de validation de l'article \"{$article->fields['title']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à cet article pour le valider en cliquant sur le lien ci-dessous.", true, 0, _WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $article->fields['title']);
                     }
-        
+
                     if (!empty($_POST['articleid'])) ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
                     else ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
                     ploopi_redirect("admin.php?op=article_modify&articleid={$articleid}");
                 }
                 else ploopi_redirect('admin.php');
             break;
-        
+
             case 'article_delete':
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) && $type == 'draft')
                 {
                     $article = new webedit_article($type);
                     if (!empty($_GET['articleid']) && is_numeric($_GET['articleid']) && $article->open($_GET['articleid']))
                     {
-        
+
                         /* DEBUT ABONNEMENT */
-                        
+
                         $objHeading = new webedit_heading();
                         $objHeading->open($headingid);
-                        
+
                         // on construit la liste des objets parents (y compris l'objet courant)
                         $arrHeadingList = split(';', "{$objHeading->fields['parents']};{$objHeading->fields['id']}");
-                        
+
                         // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                         $arrUsers = array();
                         foreach ($arrHeadingList as $intObjectId)
                             $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_ARTICLE_EDIT, _WEBEDIT_ACTION_ARTICLE_PUBLISH));
-                        
+
                         $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $_GET['articleid'], array(_WEBEDIT_ACTION_ARTICLE_EDIT, _WEBEDIT_ACTION_ARTICLE_PUBLISH));
-            
+
                         // on envoie le ticket de notification d'action sur l'objet
                         ploopi_subscription_notify(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, _WEBEDIT_ACTION_ARTICLE_EDIT, $article->fields['title'], array_keys($arrUsers), 'Cet objet à été supprimé');
-                        
-                        /* FIN ABONNEMENT */                
-                        
+
+                        /* FIN ABONNEMENT */
+
                         $article->delete();
                         ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $_GET['articleid']);
                     }
                 }
                 ploopi_redirect('admin.php');
             break;
-            
+
             case 'subscriber_delete':
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE) && !empty($_GET['subscriber_email']))
                 {
                     $heading_subscriber = new webedit_heading_subscriber();
                     $heading_subscriber->open($headingid, $_GET['subscriber_email']);
                     $heading_subscriber->delete();
-                }        
+                }
                 ploopi_redirect('admin.php');
             break;
-        
+
             case 'display_iframe':
                 ?>
                 <script type="text/javascript" src="./FCKeditor/fckeditor.js"></script>
@@ -561,15 +556,13 @@ switch($menu)
                 <?php
                 include_once './modules/webedit/display.php';
             break;
-        
-        
+
             // ===============
             // INTERFACE
             // ===============
-        
+
             default :
-        
-        
+
                 if ($op == 'article_modify')
                 {
                     $article = new webedit_article($type);
@@ -591,44 +584,43 @@ switch($menu)
                         }
                     }
                 }
-        
+
                 echo $skin->create_pagetitle(str_replace("LABEL",$_SESSION['ploopi']['modulelabel'], _WEBEDIT_PAGE_TITLE));
                 echo $skin->open_simplebloc();
-        
+
                 ?>
                 <div id="webedit_header">
                     <form action="<?php echo ploopi_urlencode('admin.php?op='.$op); ?>" method="post" id="webedit_form_display_type">
-                        <input type="hidden" name="webedit_display_type" id="webedit_display_type" value="<?php echo $display_type; ?>" /> 
-                        
+                        <input type="hidden" name="webedit_display_type" id="webedit_display_type" value="<?php echo $display_type; ?>" />
+
                         <p class="ploopi_checkbox" style="float:right;margin-left:6px;" onclick="javascript:webedit_switch_display_type('advanced');">
                             <img src="./modules/webedit/img/radio-<?php echo ($display_type == 'advanced') ? 'on' : 'off'; ?>.png" /><span>&nbsp;Avancé</span>
                         </p>
-                        
+
                         <p class="ploopi_checkbox" style="float:right;margin-left:6px;" onclick="javascript:webedit_switch_display_type('beginner');">
                             <img src="./modules/webedit/img/radio-<?php echo ($display_type == 'beginner') ? 'on' : 'off'; ?>.png" /><span>&nbsp;Simplifié</span>
                         </p>
-                        
+
                         <p class="ploopi_va" style="float:right;">
                             <span>Affichage : </span>
                         </p>
                     </form>
-                    
+
                     <p class="ploopi_va" style="float:left;cursor:pointer;" onclick="javascript:ploopi_switchdisplay('webedit_tree');ploopi_switchdisplay('webedit_article_options');ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_switchdisplay_treeview&display='+ploopi_getelem('webedit_tree').style.display, true);">
                         <img title="Afficher/Cacher l'arborescence des rubriques" alt="Afficher/Cacher l'arborescence des rubriques" src="./modules/webedit/img/fullscreen.png">
-                        <span>Afficher/Cacher l'arborescence des rubriques</span>        
+                        <span>Afficher/Cacher l'arborescence des rubriques</span>
                     </p>
                 </div>
-                
-                
+
                 <div style="clear:both;">
                     <div class="webedit_tree" id="webedit_tree" style="display:<?php echo $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display']; ?>;">
                         <div class="webedit_tree_padding" style="">
                             <?php
                             $headings = webedit_getheadings();
                             $articles = webedit_getarticles();
-        
+
                             if (empty($headingid) || !isset($headings['list'][$headingid])) $headingid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'] = $headings['tree'][0][0];
-        
+
                             $treeview = webedit_gettreeview($headings, $articles);
                             $node_id = (!empty($articleid)) ? "a{$articleid}" : "h{$headingid}";
                             echo $skin->display_treeview($treeview['list'], $treeview['tree'], $node_id);

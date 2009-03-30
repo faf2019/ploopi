@@ -35,33 +35,33 @@ switch($op)
     default:
         echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
         echo $skin->open_simplebloc();
-        
+
         $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_heading WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
         $arrStats['headings'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
-        
+
         $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_article WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
         $arrStats['articles'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
-        
+
         $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_docfile WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
         $arrStats['files'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
-        
+
         $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_tag WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
         $arrStats['tags'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
-        
-        $db->query( 
+
+        $db->query(
             "
             SELECT  count(*) as c
             FROM    ploopi_index_element e,
                     ploopi_index_keyword_element ke
-            
+
             WHERE   e.id_module = {$_SESSION['ploopi']['moduleid']}
             AND     e.id_object = "._WEBEDIT_OBJECT_ARTICLE_PUBLIC."
             AND     ke.id_element = e.id
             "
         );
-        
+
         $arrStats['keywords'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
-        
+
         ?>
         <div style="padding:4px;">
             <input type="button" class="button" value="Réindexer le contenu du site" onclick="javascript:document.location.href='<?php echo ploopi_urlencode('admin.php?webedit_menu=reindex&op=reindex'); ?>';" />
@@ -87,20 +87,20 @@ switch($op)
         <?php
         echo $skin->close_simplebloc();
     break;
-    
+
     case 'reindex':
         if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
         include_once './modules/webedit/class_article.php';
-        
+
         echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
         echo $skin->open_simplebloc();
         ?>
         <div style="padding:4px;">
         <?php
         $index_start = $ploopi_timer->getexectime();
-        
+
         $rsArticles = $db->query("SELECT id FROM ploopi_mod_webedit_article");
-        
+
         while ($row = $db->fetchrow($rsArticles))
         {
             $objArticle = new webedit_article();

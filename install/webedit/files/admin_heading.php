@@ -43,7 +43,7 @@ $heading->open($headingid);
         <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cette rubrique" onclick="javascript:webedit_stats_open(null, <?php echo $heading->fields['id']; ?>, event);">
         <?php
     }
-    ?>    
+    ?>
 
     <img src="./modules/webedit/img/folder.png">
     <span style="font-weight:bold;">Modification de la rubrique &laquo; <?php echo $heading->fields['label']; ?> &raquo;</span>
@@ -177,7 +177,7 @@ if ($display_type == 'advanced')
                 ?>
 
             </p>
-            
+
             <p>
                 <label for="webedit_heading_visible" style="cursor:pointer;"><strong>Visible:</strong></label>
                 <?php
@@ -256,7 +256,7 @@ if ($display_type == 'advanced')
     <div class="webedit_form" style="float:left;width:54%;">
         <div style="padding:2px;">
             <p style="font-weight:bold;">Contenu:</p>
-            
+
             <p>
                 <label>Type de Contenu:</label>
                 <span>
@@ -307,7 +307,7 @@ if ($display_type == 'advanced')
                                 Afficher le premier article
                                 <?php
                             break;
-                                
+
                             case 'article_redirect':
                                 ?>
                                 Redirection vers un article : <br />
@@ -319,17 +319,17 @@ if ($display_type == 'advanced')
                                     $article_title = $article->fields['title'];
                                 }
                                 else $article_title = '';
-                                
+
                                 echo $article_title;
                             break;
-                                
+
                             case 'url_redirect':
                                 ?>
-                                Redirection vers une URL : <br /> 
+                                Redirection vers une URL : <br />
                                 <?php
-                                echo htmlentities($heading->fields['url']);                            
+                                echo htmlentities($heading->fields['url']);
                             break;
-                                
+
                             case 'headings':
                                 ?>
                                 Afficher des liens vers les sous-rubriques et les articles
@@ -337,7 +337,7 @@ if ($display_type == 'advanced')
                             break;
                         }
                     }
-                    ?>                    
+                    ?>
                 </span>
             </p>
             <p style="font-weight:bold;">Propriétés annexes:</p>
@@ -413,7 +413,7 @@ else
     <input type="hidden" name="webedit_heading_url_window" value="<?php echo $heading->fields['url_window']; ?>" />
     <input type="hidden" name="webedit_heading_feed_enabled" value="<?php echo $heading->fields['feed_enabled']; ?>" />
     <input type="hidden" name="webedit_heading_subscription_enabled" value="<?php echo $heading->fields['subscription_enabled']; ?>" />
-                
+
     <div class="ploopi_form" style="float:left;width:45%;">
         <div style="padding:2px;">
             <p>
@@ -545,7 +545,6 @@ foreach($wf as $value) $wfusers[] = $value['id_validation'];
     ?>
 </div>
 
-
 <?php
 if (ploopi_isactionallowed(_WEBEDIT_ACTION_WORKFLOW_MANAGE))
 {
@@ -588,40 +587,40 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
     </p>
     <?php
     $articles_columns = array();
-    
+
     $articles_columns['auto']['titre'] = array('label' => 'Titre', 'options' => array('sort' => true));
     $articles_columns['right']['auteur'] = array('label' => 'Auteur', 'width' => '130', 'options' => array('sort' => true));
     $articles_columns['right']['misenligne'] = array('label' => 'Mise en ligne', 'width' => '140');
     $articles_columns['right']['vers'] = array('label' => 'Vers.', 'width' => '60', 'options' => array('sort' => true));
     $articles_columns['right']['date'] = array('label' => 'Date', 'width' => '80', 'options' => array('sort' => true));
-    
+
     $articles_columns['left']['pos'] = array('label' => 'P.', 'width' => '35', 'options' => array('sort' => true));
     $articles_columns['left']['ref'] = array('label' => 'Ref.', 'width' => '60', 'options' => array('sort' => true));
-    
+
     $articles_columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '22');
-    
+
     $articles_values = array();
-    
+
     $c = 0;
-    
+
     if (!empty($articles['tree'][$headingid]))
     {
         foreach($articles['tree'][$headingid] as $key => $idart)
         {
             $row = $articles['list'][$idart];
-    
+
             $color = (!isset($color) || $color == 2) ? 1 : 2;
             $ldate = (!empty($row['timestp'])) ? ploopi_timestamp2local($row['timestp']) : array('date' => '', 'time' => '');
-    
+
             $timestp_local = (!empty($row['timestp'])) ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
             $timestp_published_local = (!empty($row['timestp_published'])) ? ploopi_timestamp2local($row['timestp_published']) : array('date' => '');
             $timestp_unpublished_local = (!empty($row['timestp_unpublished'])) ? ploopi_timestamp2local($row['timestp_unpublished']) : array('date' => '');
-    
+
             $published = (!empty($timestp_published_local['date'])) ? "à partir du {$timestp_published_local['date']}" : '';
             $published .= (!empty($timestp_unpublished_local['date'])) ? (empty($published) ? '' : '<br />')."jusqu'au {$timestp_unpublished_local['date']}" : '';
-    
+
             $art_title = ($row['status'] == 'wait') ? "{$row['title']} *" : $row['title'];
-    
+
             $articles_values[$c]['values']['date'] = array('label' => $timestp_local['date'], 'style' => '', 'sort_label' => $row['timestp']);
             $articles_values[$c]['values']['pos'] = array('label' => $row['position'], 'style' => '');
             $articles_values[$c]['values']['ref'] = array('label' => $row['reference'], 'style' => '');
@@ -629,39 +628,38 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
             $articles_values[$c]['values']['vers'] = array('label' => $row['version'], 'style' => '');
             $articles_values[$c]['values']['misenligne'] = array('label' => $published, 'style' => '');
             $articles_values[$c]['values']['auteur'] = array('label' => $row['author'], 'style' => '');
-    
+
             //if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_PUBLISH) || in_array($_SESSION['ploopi']['userid'],$wfusers))
             if (in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
             {
                 $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" href=\"javascript:ploopi_confirmlink('admin.php?op=article_delete&articleid={$row['id']}','Êtes-vous certain de vouloir supprimer l\'article &laquo; ".addslashes($row['title'])." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
             }
             else $articles_values[$c]['values']['actions'] = array('label' => '&nbsp;', 'style' => '');
-    
+
             $articles_values[$c]['description'] = $row['title'];
             $articles_values[$c]['link'] = ploopi_urlencode("admin.php?op=article_modify&articleid={$row['id']}");
             $articles_values[$c]['style'] = '';
-    
+
             $c++;
         }
     }
-    
+
     switch($heading->fields['sortmode'])
     {
         case 'bydate':
             $options = array('sortable' => true, 'orderby_default' => 'date', 'sort_default' => 'DESC');
         break;
-    
+
         case 'bydaterev':
             $options = array('sortable' => true, 'orderby_default' => 'date');
         break;
-    
+
         case 'bypos':
         default:
             $options = array('sortable' => true, 'orderby_default' => 'pos');
         break;
     }
-    
-    
+
     $skin->display_array($articles_columns, $articles_values, 'webedit_articlelist', $options);
     ?>
 </div>
@@ -676,62 +674,60 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des a
         </p>
         <?php
         $subscribers_columns = array();
-        
-        $subscribers_columns['auto']['email'] = 
+
+        $subscribers_columns['auto']['email'] =
             array(
-                'label' => 'Adresse email', 
+                'label' => 'Adresse email',
                 'options' => array('sort' => true)
             );
-        
-        $subscribers_columns['actions_right']['actions'] = 
+
+        $subscribers_columns['actions_right']['actions'] =
             array(
-                'label' => '&nbsp;', 
+                'label' => '&nbsp;',
                 'width' => '22'
             );
-        
+
         $subscribers_values = array();
-        
+
         $sql = "SELECT * FROM ploopi_mod_webedit_heading_subscriber WHERE id_heading = {$headingid} AND id_module = {$_SESSION['ploopi']['moduleid']}";
         $db->query($sql);
-        
+
         $c = 0;
-        
+
         while ($row = $db->fetchrow())
         {
-            $subscribers_values[$c]['values']['email'] = 
+            $subscribers_values[$c]['values']['email'] =
                 array(
                     'label' => $row['email']
                 );
-                
-    
-            $subscribers_values[$c]['values']['actions'] = 
+
+            $subscribers_values[$c]['values']['actions'] =
                 array(
-                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonné\" alt=\"Supprimer\" onclick=\"javascript:ploopi_confirmlink('admin.php?op=subscriber_delete&subscriber_email={$row['email']}','Êtes-vous certain de vouloir supprimer cet abonné ?');\" src=\"./modules/webedit/img/ico_delete.gif\"></a>", 
+                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonné\" alt=\"Supprimer\" onclick=\"javascript:ploopi_confirmlink('admin.php?op=subscriber_delete&subscriber_email={$row['email']}','Êtes-vous certain de vouloir supprimer cet abonné ?');\" src=\"./modules/webedit/img/ico_delete.gif\"></a>",
                     'style' => 'text-align:center;'
                 );
-    
+
             $subscribers_values[$c]['description'] = $row['email'];
-    
+
             $c++;
         }
-        
+
         switch($heading->fields['sortmode'])
         {
             case 'bydate':
                 $options = array('sortable' => true, 'orderby_default' => 'date', 'sort_default' => 'DESC');
             break;
-        
+
             case 'bydaterev':
                 $options = array('sortable' => true, 'orderby_default' => 'date');
             break;
-        
+
             case 'bypos':
             default:
                 $options = array('sortable' => true, 'orderby_default' => 'pos');
             break;
         }
-        
-        
+
         $skin->display_array($subscribers_columns, $subscribers_values, 'webedit_subscribers', $options);
         ?>
     </div>
@@ -745,7 +741,7 @@ for ($i = 0; $i < sizeof($parents); $i++)
     {
         ?>
         <div style="padding:2px 4px;font-weight:bold;">
-        Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi_urlencode("admin.php?headingid={$parents[$i]}"); ?>"><?php echo $headings['list'][$parents[$i]]['label']; ?></a> &raquo; 
+        Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi_urlencode("admin.php?headingid={$parents[$i]}"); ?>"><?php echo $headings['list'][$parents[$i]]['label']; ?></a> &raquo;
         </div>
         <?php
     }
@@ -756,7 +752,7 @@ $arrAllowedActions = array( _WEBEDIT_ACTION_ARTICLE_EDIT,
                             _WEBEDIT_ACTION_CATEGORY_EDIT
                          );
 
-ploopi_subscription(_WEBEDIT_OBJECT_HEADING, $headingid, $arrAllowedActions, "à &laquo; {$heading->fields['label']} &raquo;"); 
+ploopi_subscription(_WEBEDIT_OBJECT_HEADING, $headingid, $arrAllowedActions, "à &laquo; {$heading->fields['label']} &raquo;");
 ?>
 <div style="border-top:1px solid #c0c0c0;">
 <?php ploopi_annotation(_WEBEDIT_OBJECT_HEADING, $headingid, $heading->fields['label']); ?>

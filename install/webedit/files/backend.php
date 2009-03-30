@@ -52,7 +52,7 @@ $module_name =  $row['label'];
 $today = ploopi_createtimestamp();
 
 // Format du flux (RSS / ATOM)
-$format = (empty($_REQUEST['format'])) ? 'atom' : $_REQUEST['format']; 
+$format = (empty($_REQUEST['format'])) ? 'atom' : $_REQUEST['format'];
 
 // Si une rubrique est définie, le flux porte le titre de la rubrique
 if (isset($_REQUEST['headingid']))
@@ -64,7 +64,7 @@ if (isset($_REQUEST['headingid']))
         $feed_title = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title'].' - '.$objHeading->fields['label'];
         $feed_description = $objHeading->fields['description'];
     }
-    else 
+    else
     {
         ploopi_h404();
         ploopi_die();
@@ -82,7 +82,7 @@ $select = "
     FROM        ploopi_mod_webedit_article article,
                 ploopi_mod_webedit_heading heading
     WHERE       article.id_module = {$ploopi_moduleid}
-    AND         article.id_heading = heading.id 
+    AND         article.id_heading = heading.id
     AND         heading.feed_enabled = 1
     {$where}
     AND         (article.timestp_published <= {$today} OR article.timestp_published = 0)
@@ -99,7 +99,7 @@ switch($format)
     case 'rss';
         $feedformat = RSS2;
     break;
-    
+
     default:
     case 'atom';
         $feedformat = ATOM;
@@ -113,15 +113,15 @@ $feed->setLink(_PLOOPI_BASEPATH);
 
 $feed->setChannelElement('updated', date(DATE_ATOM , time()));
 $feed->setChannelElement('author', array('name '=> ploopi_xmlentities(utf8_encode($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']), true)));
-    
+
 foreach($articles as $key => $article)
 {
     if (empty($article['metatitle'])) $article['metatitle'] = $article['title'];
     $url = ploopi_urlrewrite("index.php?headingid={$article['id_heading']}&articleid={$article['id']}", "{$article['metatitle']} {$article['metakeywords']}");
-    
+
     // Création d'un nouvel item
     $item = $feed->createNewItem();
-    
+
     $item->setTitle(ploopi_xmlentities(utf8_encode($article['title']), true));
     $item->setLink(_PLOOPI_BASEPATH.'/'.$url);
     $item->setDate(ploopi_timestamp2unixtimestamp($article['timestp']));
@@ -130,7 +130,7 @@ foreach($articles as $key => $article)
     // Ajout de l'item dans le flux
     $feed->addItem($item);
 }
-    
+
 // Vidage du buffer (par sécurité car il doit être vide...)
 ploopi_ob_clean();
 

@@ -23,7 +23,7 @@
 
 /**
  * Explorateur de rubriques/pages intégré à FCKeditor
- * 
+ *
  * @package webedit
  * @subpackage fckeditor
  * @copyright Netlor, Ovensia

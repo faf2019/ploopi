@@ -57,6 +57,6 @@ class webedit_heading_subscriber extends data_object
     function webedit_heading_subscriber()
     {
         parent::data_object('ploopi_mod_webedit_heading_subscriber', 'id_heading', 'email');
-    } 
+    }
 }
 ?>

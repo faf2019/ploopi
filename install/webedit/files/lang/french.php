@@ -43,13 +43,13 @@ define ('_WEBEDIT_PAGE_TITLE', 'Gestion du Module «LABEL»');
 
 global $webedit_subscription_messages;
 
-$webedit_subscription_messages = 
+$webedit_subscription_messages =
     array(
         _WEBEDIT_SUBSCRIPTION_SUBSCRIBED => 'Votre abonnement a été validé.',
         _WEBEDIT_SUBSCRIPTION_UNSUBSCRIBED => 'Votre désabonnement a été validé.',
         _WEBEDIT_SUBSCRIPTION_ERROR_EMAIL => 'Votre adresse email n\'est pas valide.',
         _WEBEDIT_SUBSCRIPTION_ERROR_PARAM => 'Paramètre incorrect.'
-        
+
     );
 
 ?>

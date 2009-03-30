@@ -23,13 +23,13 @@
 
 /**
  * Moteur de rendu frontoffice
- * 
+ *
  * @package webedit
  * @subpackage frontoffice
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @global Template $template_body template
  * @global string $template_path chemin vers le template
  * @global string $webedit_mode mode d'édition : edit (édition) / render (rendu backoffice) / display (rendu frontoffice)
@@ -96,21 +96,21 @@ $headings = webedit_getheadings();
 
 if ($query_string != '') // Recherche intégrale
 {
-    $headingid = $headings['tree'][0][0];    
+    $headingid = $headings['tree'][0][0];
 }
 elseif ($query_tag != '') // Recherche par tag
 {
-    $headingid = $headings['tree'][0][0];    
+    $headingid = $headings['tree'][0][0];
 }
 elseif (!empty($template_moduleid)) // Module frontoffice
 {
-    $headingid = $headings['tree'][0][0];    
+    $headingid = $headings['tree'][0][0];
 }
 else // affichage standard rubrique/page
 {
     // on recherche d'abord la rubrique (qui détermine le template)
     // en fonction des parametres articleid et headingid
-    
+
     if (empty($articleid)) // pas de lien vers un article
     {
         // homepage
@@ -125,7 +125,7 @@ else // affichage standard rubrique/page
                 $intErrorCode = 404;
             }
         }
-        
+
         switch($headings['list'][$headingid]['content_type'])
         {
             case 'article_redirect':
@@ -142,19 +142,18 @@ else // affichage standard rubrique/page
                     }
                 }
             break;
-                
+
             case 'url_redirect':
                 if (!empty($headings['list'][$headingid]['url'])) ploopi_redirect($headings['list'][$headingid]['url'], false, false);
             break;
-            
-            
-            case 'article_first': 
+
+            case 'article_first':
                 // Cas standard, traité plus bas
             case 'headings':
                 // Traité à l'affichage
             break;
         }
-        
+
     }
     else // lien vers un article
     {
@@ -220,35 +219,35 @@ if ($query_string != '') // recherche intégrale
 {
     // résultat de la recherche
     $arrRelevance = array();
-    
+
     // booléen à true si le module DOC existe physiquement
     $boolModDocExists = file_exists('./modules/doc/public.php');
-    if ($boolModDocExists) 
+    if ($boolModDocExists)
     {
         ploopi_init_module('doc');
         include_once './modules/doc/class_docfile.php';
     }
-    
+
     if (file_exists("./templates/frontoffice/{$template_name}/search.tpl")) $template_file = 'search.tpl';
-    
+
     $template_body->assign_block_vars("switch_search", array());
 
     // Recherche dans les articles
     $arrRelevance += ploopi_search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, '', $_SESSION['ploopi']['moduleid']);
-    
+
     // Recherche des modules DOC utilisés par les documents liés
-    $sql = 
+    $sql =
         "
-        SELECT      id_module_docfile, 
-                    md5id_docfile 
-        FROM        ploopi_mod_webedit_docfile 
+        SELECT      id_module_docfile,
+                    md5id_docfile
+        FROM        ploopi_mod_webedit_docfile
         WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
         ";
-        
+
     $db->query($sql);
-    
+
     while ($row = $db->fetchrow()) $arrModDoc[$row['id_module_docfile']][] = $row['md5id_docfile'];
-    
+
     if (!empty($arrModDoc) && $boolModDocExists) // Il y a des documents indexés
     {
         // pour chaque module DOC, on récupère le résultat de la recherche
@@ -256,8 +255,8 @@ if ($query_string != '') // recherche intégrale
 
         // tri général de la recherche
         uasort($arrRelevance, create_function('$a,$b', 'return $b[\'relevance\'] > $a[\'relevance\'];'));
-    }    
-    
+    }
+
     $responses = 0;
 
     // pour chaque réponse du moteur de recherche
@@ -268,7 +267,7 @@ if ($query_string != '') // recherche intégrale
             if ($boolModDocExists)
             {
                 $objDocFile = new docfile();
-                
+
                 if ($objDocFile->openmd5($result['id_record']))
                 {
                     $template_body->assign_block_vars('switch_search.result',
@@ -287,10 +286,10 @@ if ($query_string != '') // recherche intégrale
                             'LINK' => ploopi_urlrewrite("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$result['id_record']}", $objDocFile->fields['name'], true)
                         )
                     );
-                
+
                     $responses++;
                 }
-            }        
+            }
         }
         else // c'est un article
         {
@@ -298,7 +297,7 @@ if ($query_string != '') // recherche intégrale
             if ($objArticle->open($result['id_record']) && $objArticle->isenabled())
             {
                 $cleaned_content = strip_tags(html_entity_decode($objArticle->fields['content_cleaned']));
-     
+
                 // Gestion des url par mode de rendu
                 switch($webedit_mode)
                 {
@@ -306,13 +305,13 @@ if ($query_string != '') // recherche intégrale
                     case 'render';
                         $link = "index.php?webedit_mode=render&headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}";
                     break;
-            
+
                     default:
                     case 'display';
                         $link = ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}", $objArticle->fields['metatitle']);
                     break;
                 }
-                
+
                 $template_body->assign_block_vars('switch_search.result',
                     array(
                         'RELEVANCE' => sprintf("%.02f", $result['relevance']),
@@ -332,20 +331,20 @@ if ($query_string != '') // recherche intégrale
                         'LINK' => $link
                     )
                 );
-                
+
                 $responses++;
             }
         }
     }
-    
+
     if ($responses == 0) // pas de réponse valide !
     {
         $template_body->assign_block_vars('switch_search.switch_notfound',array());
     }
-    
+
     $title_raw = "Résultat de la recherche pour \" {$query_string} \"";
     $title = htmlentities($title_raw);
-    
+
     $template_body->assign_vars(
         array(
             'SEARCH_RESPONSES' => $responses,
@@ -363,17 +362,17 @@ if ($query_string != '') // recherche intégrale
             'PAGE_META_DESCRIPTION_RAW' => $title
         )
     );
-                            
+
 }
 elseif($query_tag != '') // recherche par tag
 {
     if (file_exists("./templates/frontoffice/{$template_name}/search.tpl")) $template_file = 'search.tpl';
-    
+
     $template_body->assign_block_vars("switch_tagsearch", array());
-    
+
     $sql =  "
-            SELECT      a.* 
-            
+            SELECT      a.*
+
             FROM        ploopi_mod_webedit_tag t,
                         ploopi_mod_webedit_article_tag at,
                         ploopi_mod_webedit_article a
@@ -384,12 +383,12 @@ elseif($query_tag != '') // recherche par tag
             AND         (a.timestp_published <= $today OR a.timestp_published = 0)
             AND         (a.timestp_unpublished >= $today OR a.timestp_unpublished = 0)
             ";
-    
+
     $db->query($sql);
-    
+
     while ($row = $db->fetchrow())
     {
-        $size = sprintf("%.02f", strlen(strip_tags(html_entity_decode($row['content_cleaned'])))/1024);        
+        $size = sprintf("%.02f", strlen(strip_tags(html_entity_decode($row['content_cleaned'])))/1024);
 
         switch($webedit_mode)
         {
@@ -397,13 +396,13 @@ elseif($query_tag != '') // recherche par tag
             case 'render';
                 $link = "index.php?webedit_mode=render&headingid={$row['id_heading']}&articleid={$row['id']}";
             break;
-    
+
             default:
             case 'display';
                 $link = ploopi_urlrewrite("index.php?headingid={$row['id_heading']}&articleid={$row['id']}", $row['metatitle']);
             break;
-        }        
-        
+        }
+
         $template_body->assign_block_vars('switch_tagsearch.result',
             array(
                 'TITLE' => htmlentities($row['title']),
@@ -415,12 +414,12 @@ elseif($query_tag != '') // recherche par tag
                 'SIZE' => $size,
                 'LINK' => $link
             )
-        );    
-    }    
-    
+        );
+    }
+
     $title_raw = "Liste des articles contenant le tag \" {$query_tag} \"";
     $title = htmlentities($title_raw);
-    
+
     $template_body->assign_vars(
         array(
             'PAGE_TITLE' => $title,
@@ -455,12 +454,12 @@ elseif (!empty($template_moduleid))
     );
 }
 elseif (!empty($ploopi_op) && $ploopi_op == 'webedit_unsubscribe') // message affiché lors du désabonnement (lien depuis email)
-{   
+{
     $title_raw = 'Désabonnement';
     $title = htmlentities($title_raw);
-    
+
     $template_body->assign_block_vars('switch_content_message', array());
-    
+
     $template_body->assign_vars(
         array(
             'PAGE_TITLE' => $title,
@@ -486,31 +485,31 @@ else // affichage standard rubrique/page
     {
        $template_body->assign_block_vars('switch_content_heading', array());
        webedit_template_assign_headings($headings, $headingid);
-    }    
-    
+    }
+
     if($headings['list'][$headingid]['content_type'] == 'sitemap' && empty($articleid)) // affichage plan de site
     {
        $template_body->assign_block_vars('switch_content_sitemap', array());
        webedit_template_assign_headings($headings, 0, 'switch_content_sitemap.', 'heading', 0);
-    }    
-    
+    }
+
     // détermination du type de tri des articles
     switch($headings['list'][$headingid]['sortmode'])
     {
         case 'bydate':
             $article_orderby = 'timestp DESC, id DESC';
         break;
-    
+
         case 'bydaterev':
             $article_orderby = 'timestp, id';
         break;
-    
+
         case 'bypos':
         default:
             $article_orderby = 'position';
         break;
     }
-    
+
     // get articles
     switch($type)
     {
@@ -525,7 +524,7 @@ else // affichage standard rubrique/page
                         ORDER BY    {$article_orderby}
                         ";
         break;
-    
+
         default:
             $select =   "
                         SELECT      *
@@ -543,56 +542,56 @@ else // affichage standard rubrique/page
     if ($db->numrows())
     {
         $template_body->assign_block_vars('switch_pages', array());
-        
+
         // visible articles
         $nbvisart = 0;
-    
+
         $article_array = array();
-    
+
         while ($row = $db->fetchrow())
         {
             $article_array[] = $row;
             if ($row['visible']) $nbvisart++;
         }
-    
+
         $numvisart = 0;
-    
+
         foreach($article_array as $row)
         {
             // pas d'article sélectionné
             // choix du premier article par défaut (sauf si la rubrique affiche des sous-rubriques
             if (empty($articleid) && $headings['list'][$headingid]['content_type'] != 'headings' && $headings['list'][$headingid]['content_type'] != 'sitemap') $articleid = $row['id'];
-    
+
             if ($row['visible'])
             {
                 $numvisart++;
-    
+
                 switch($webedit_mode)
                 {
                     case 'edit';
                         $script = "javascript:window.parent.document.location.href='admin.php?op=article_modify&headingid={$headingid}&articleid={$row['id']}';";
                     break;
-    
+
                     case 'render';
                         $script = "index.php?webedit_mode=render&moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}&articleid={$row['id']}";
                         //$script = "admin.php?nav={$nav}&articleid={$row['id']}";
                     break;
-    
+
                     default:
                     case 'display';
                         $script = ploopi_urlrewrite("index.php?headingid={$headingid}&articleid={$row['id']}", $row['metatitle']);
                     break;
                 }
-    
+
                 $sel = '';
                 if ($articleid == $row['id']) $sel = 'selected';
-    
+
                 $ldate_pub = ($row['timestp_published']!='') ? ploopi_timestamp2local($row['timestp_published']) : array('date' => '');
                 $ldate_unpub = ($row['timestp_unpublished']!='') ? ploopi_timestamp2local($row['timestp_unpublished']) : array('date' => '');
                 $ldate_lastupdate = ($row['lastupdate_timestp']!='') ? ploopi_timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
                 $ldate_timestp = ($row['timestp']!='') ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
-    
-                $var_tpl_page = 
+
+                $var_tpl_page =
                     array(
                         'REFERENCE'     => htmlentities($row['reference']),
                         'LABEL'         => htmlentities($row['title']),
@@ -612,22 +611,21 @@ else // affichage standard rubrique/page
                         'POSITION'      => $row['position'],
                         'SEL'           => $sel
                     );
-                
+
                 $template_body->assign_block_vars('switch_pages.page', $var_tpl_page);
-                
+
                 if ($headings['list'][$headingid]['content_type'] == 'headings' && empty($articleid)) // affichage rubriques
                 {
                     $template_body->assign_block_vars('switch_content_heading.page', $var_tpl_page);
                 }
-                
-    
+
                 if ($numvisart < $nbvisart) $template_body->assign_block_vars('switch_pages.page.sw_separator',array());
             }
         }
     }
-    
+
     $booIsHomePage = false;
-    
+
     if (!empty($articleid)) // article à afficher
     {
         $content = '';
@@ -647,19 +645,19 @@ else // affichage standard rubrique/page
         {
             if ($article->open($articleid))
             {
-                // Article hors des dates de publication 
+                // Article hors des dates de publication
                 if (($article->fields['timestp_published'] != 0 && $article->fields['timestp_published'] > $today) || ($article->fields['timestp_unpublished'] != 0 && $article->fields['timestp_unpublished'] < $today)) $intErrorCode = 404;
-                
-                $booIsHomePage = 
+
+                $booIsHomePage =
                     (
                         !empty($headingid) && !empty($articleid)
-                        &&  
+                        &&
                             (
-                                (   $article->fields['position'] == 1 
-                                    &&  $headings['list'][$headingid]['depth'] == 1 
-                                    &&  $headings['list'][$headingid]['position'] == 1 
+                                (   $article->fields['position'] == 1
+                                    &&  $headings['list'][$headingid]['depth'] == 1
+                                    &&  $headings['list'][$headingid]['position'] == 1
                                     &&  empty($headings['list'][$headingid]['linkedpage'])
-                                ) 
+                                )
                                 || $headings['list'][$headings['tree'][0][0]]['linkedpage'] == $articleid
                             )
                     );
@@ -672,9 +670,9 @@ else // affichage standard rubrique/page
             if (!$readonly)
             {
                 if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] = 'beginner';
-                
+
                 ob_start();
-                
+
                 include_once './FCKeditor/fckeditor.php' ;
 
                 $oFCKeditor = new FCKeditor('fck_webedit_article_content') ;
@@ -691,10 +689,10 @@ else // affichage standard rubrique/page
                 $oFCKeditor->Config['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/fckconfig.js';
                 $oFCKeditor->Config['ToolbarLocation'] = 'Out:parent(xToolbar)';
                 $oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH.'/';
-                
+
                 if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner') $oFCKeditor->ToolbarSet = 'Beginner' ;
                 else $oFCKeditor->ToolbarSet = 'Default' ;
-                
+
                 if (file_exists("{$template_path}/fckeditor/fck_editorarea.css")) $oFCKeditor->Config['EditorAreaCSS'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fck_editorarea.css';
 
                 if (file_exists("{$template_path}/fckeditor/fcktemplates.xml")) $oFCKeditor->Config['TemplatesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fcktemplates.xml';
@@ -717,42 +715,42 @@ else // affichage standard rubrique/page
                 {
                     // Enregistrement d'un hit pour cet article
                     include_once './modules/webedit/class_counter.php';
-                    $counter = 
+                    $counter =
                         array(
                             'year' => date('Y'),
                             'month' => date('n'),
                             'day' => date('j'),
                             'week' => date('o').date('W')
                         );
-                    
+
                     $objCounter = new webedit_counter();
                     if (!$objCounter->open($counter['year'], $counter['month'], $counter['day'], $article->fields['id']))
                     {
-                        $objCounter->fields['year'] = $counter['year']; 
-                        $objCounter->fields['month'] = $counter['month']; 
-                        $objCounter->fields['day'] = $counter['day']; 
-                        $objCounter->fields['week'] = $counter['week']; 
-                        $objCounter->fields['id_article'] = $article->fields['id']; 
-                        $objCounter->fields['id_module'] = $article->fields['id_module']; 
+                        $objCounter->fields['year'] = $counter['year'];
+                        $objCounter->fields['month'] = $counter['month'];
+                        $objCounter->fields['day'] = $counter['day'];
+                        $objCounter->fields['week'] = $counter['week'];
+                        $objCounter->fields['id_article'] = $article->fields['id'];
+                        $objCounter->fields['id_module'] = $article->fields['id_module'];
                     }
                     $objCounter->hit();
-                    
+
                     $_SESSION['webedit']['counter'][$article->fields['id']] = '';
                 }
             }
         }
-            
+
         if (!$intErrorCode || $webedit_mode == 'edit')
         {
             $template_body->assign_block_vars('switch_content_page', array());
-            
+
             // Traitement des objets WCE/WebEdit
             if (!empty($editor)) $content = $editor;
             else $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', in_array($webedit_mode, array('render', 'edit')) ? $article->fields['content_cleaned'] : webedit_replace_links($article->fields['content_cleaned']) );
-    
+
             $article_timestp = ($article->fields['timestp']!='') ? ploopi_timestamp2local($article->fields['timestp']) : array('date' => '');
             $article_lastupdate = ($article->fields['lastupdate_timestp']!='') ? ploopi_timestamp2local($article->fields['lastupdate_timestp']) : array('date' => '', 'time' => '');
-    
+
             $user = new user();
             if ($user->open($article->fields['lastupdate_id_user']))
             {
@@ -761,15 +759,15 @@ else // affichage standard rubrique/page
                 $user_login = $user->fields['login'];
             }
             else $user_lastname = $user_firstname = $user_login = '';
-    
+
             list($keywords) = ploopi_getwords("{$article->fields['metatitle']} {$article->fields['metakeywords']} {$article->fields['author']}");
-            
+
             $kwds_raw = implode(', ', array_keys($keywords));
             $kwds = htmlentities($kwds_raw);
-            
+
             $desc_raw = $article->fields['metadescription'];
             $desc = htmlentities($article->fields['metadescription']);
-            
+
             $template_body->assign_vars(
                 array(
                     'PAGE_REFERENCE' => htmlentities($article->fields['reference']),
@@ -802,13 +800,12 @@ else // affichage standard rubrique/page
                     'PAGE_HEADCONTENT' => $article->fields['headcontent']
                 )
             );
-                                    
-            
+
             $tags = $article->gettags();
             if (!empty($tags))
             {
                 $template_body->assign_block_vars('switch_content_page.switch_tags', array());
-                
+
                 foreach($tags as $tag)
                 {
                     switch($webedit_mode)
@@ -817,14 +814,14 @@ else // affichage standard rubrique/page
                         case 'render';
                             $link =  "index.php?webedit_mode=render&query_tag={$tag['tag']}";
                         break;
-                
+
                         default:
                         case 'display';
                             $link =  ploopi_urlrewrite("index.php?query_tag={$tag['tag']}");
                         break;
-                    }                           
-                    
-                    $template_body->assign_block_vars('switch_content_page.switch_tags.tag', 
+                    }
+
+                    $template_body->assign_block_vars('switch_content_page.switch_tags.tag',
                         array(
                             'TAG' => $tag['tag'],
                             'LINK' => $link
@@ -834,7 +831,7 @@ else // affichage standard rubrique/page
             }
         } // if (!$intErrorCode)
     }
-    else 
+    else
     {
         // pas d'article par défaut, on teste si on est sur la rubrique d'accueil
         $booIsHomePage = (!empty($headingid) && $headings['tree'][0][0] == $headingid);
@@ -844,22 +841,22 @@ else // affichage standard rubrique/page
     if (!$booIsHomePage && isset($headings['list'][$headingid]) && $headings['list'][$headingid]['feed_enabled'])
     {
         $template_body->assign_block_vars(
-            'switch_atomfeed_heading', 
+            'switch_atomfeed_heading',
             array(
                 'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}&format=atom", null, null, null, null, false),
                 'TITLE' => htmlentities($headings['list'][$headingid]['label']),
             )
         );
-        
+
         $template_body->assign_block_vars(
-            'switch_rssfeed_heading', 
+            'switch_rssfeed_heading',
             array(
                 'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}&format=rss", null, null, null, null, false),
                 'TITLE' => htmlentities($headings['list'][$headingid]['label']),
             )
         );
-    }    
-    
+    }
+
     // Doit on autoriser les abonnements ?
     if (($booIsHomePage && isset($headings['subscription_enabled']) && $headings['subscription_enabled']) || (isset($headings['list'][$headingid]) && $headings['list'][$headingid]['subscription_enabled']))
     {
@@ -870,31 +867,31 @@ else // affichage standard rubrique/page
             case 'render';
                 $link = ploopi_urlencode("index.php?webedit_mode=render&ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false);
             break;
-    
+
             default:
             case 'display';
                 $link = ploopi_urlencode("index.php?ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false);
             break;
-        }        
-        
+        }
+
         $template_body->assign_block_vars(
-            'switch_subscription', 
+            'switch_subscription',
             array(
                 'ACTION' => $link,
                 'HEADINGID' => $booIsHomePage ? 0 : $headingid,
                 'ROOTID' => 0
             )
         );
-        
+
         if (!empty($_GET['subscription_return']) && isset($webedit_subscription_messages[$_GET['subscription_return']])) // réponse suite à une demande d'abonnement
         {
             $template_body->assign_block_vars(
-                'switch_subscription.switch_response', 
+                'switch_subscription.switch_response',
                 array(
                     'CONTENT' => $webedit_subscription_messages[$_GET['subscription_return']]
                 )
             );
-                
+
         }
     }
 
@@ -908,7 +905,7 @@ if ($intErrorCode && $webedit_mode != 'edit')
     $template_body->assign_block_vars('switch_content_error', array());
 
     $strError = 'Erreur '.$intErrorCode;
-    
+
     $template_body->assign_vars(
         array(
             'PAGE_TITLE' => htmlentities($strError),
@@ -927,10 +924,10 @@ if ($intErrorCode && $webedit_mode != 'edit')
             'PAGE_META_DESCRIPTION_RAW' => $strError,
             'PAGE_ERROR_CODE' => $intErrorCode,
         )
-    );        
-    
+    );
+
 }
-    
+
 // load a specific template file in edition mode (if exists)
 if ($webedit_mode == 'edit' && file_exists("./templates/frontoffice/{$template_name}/fck_{$template_file}")) $template_file = "fck_{$template_file}";
 
@@ -944,9 +941,9 @@ if (!file_exists("./templates/frontoffice/{$template_name}/{$template_file}") ||
             _PLOOPI_ERROR_TEMPLATE_FILE
         )
     );
-    
+
 }
-    
+
 $template_body->set_filenames(array('body' => $template_file));
 
 if (!empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
@@ -969,8 +966,6 @@ if (!empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]
     }
 }
 
-
-
 if ($_SESSION['ploopi']['connected'])
 {
     $template_body->assign_block_vars('switch_user_logged_in', array());
@@ -992,7 +987,6 @@ else
 {
     $template_body->assign_block_vars('switch_user_logged_out', array());
 }
-
 
 // GET MODULE ADDITIONAL JS
 ob_start();
@@ -1036,14 +1030,14 @@ list($keywords) = ploopi_getwords("{$_SESSION['ploopi']['workspaces'][$_SESSION[
 
 // PLOOPI JS
 $template_body->assign_block_vars(
-    'ploopi_js', 
+    'ploopi_js',
     array(
         'PATH' => './lib/protoaculous/protoaculous.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
     )
 );
-    
+
 $template_body->assign_block_vars(
-    'ploopi_js', 
+    'ploopi_js',
     array(
         'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
     )
@@ -1053,14 +1047,14 @@ $template_body->assign_block_vars(
 if (isset($headings['feed_enabled']) && $headings['feed_enabled'])
 {
     $template_body->assign_block_vars(
-        'switch_atomfeed_site', 
+        'switch_atomfeed_site',
         array(
             'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=atom", null, null, null, null, false),
             'TITLE' => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
         )
     );
     $template_body->assign_block_vars(
-        'switch_rssfeed_site', 
+        'switch_rssfeed_site',
         array(
             'URL' => ploopi_urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=rss", null, null, null, null, false),
             'TITLE' => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
@@ -1107,19 +1101,19 @@ $template_body->assign_vars(
  * Génération du nuage de tags en fonction des articles publiés
  */
 $sql =  "
-        SELECT      t.*, count(*) as nb 
+        SELECT      t.*, count(*) as nb
         FROM        ploopi_mod_webedit_tag t
-        
+
         INNER JOIN  ploopi_mod_webedit_article_tag at
         ON          at.id_tag = t.id
-        
+
         INNER JOIN  ploopi_mod_webedit_article a
         ON          at.id_article = a.id
-        
+
         WHERE       t.id_module = {$_SESSION['ploopi']['moduleid']}
         AND         (a.timestp_published <= $today OR a.timestp_published = 0)
         AND         (a.timestp_unpublished >= $today OR a.timestp_unpublished = 0)
-        
+
         GROUP BY    t.id
         ORDER BY    nb DESC
         ";
@@ -1154,7 +1148,7 @@ foreach ($tags as $tag)
             $link = ploopi_urlrewrite("index.php?query_tag={$tag['tag']}");
         break;
     }
-    
+
     $template_body->assign_block_vars('tagcloud' , array(
         'TAG' => $tag['tag'],
         'SIZE' => $tag['size'],
@@ -1163,7 +1157,7 @@ foreach ($tags as $tag)
         'SELECTED' => ($tag['tag'] == $query_tag) ? 'selected' : ''
         )
     );
-}                            
+}
 
 $template_body->pparse('body');
 ?>

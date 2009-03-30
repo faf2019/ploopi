@@ -90,7 +90,6 @@ define ('_WEBEDIT_OBJECT_HEADING',              3);
  */
 define ('_WEBEDIT_TEMPLATES_PATH', './templates/frontoffice');
 
-
 /**
  * Enregistrement d'un abonné : OK
  */
@@ -111,31 +110,26 @@ define ('_WEBEDIT_SUBSCRIPTION_ERROR_EMAIL', 9);
  */
 define ('_WEBEDIT_SUBSCRIPTION_ERROR_PARAM', 99);
 
-
-
 /**
  * Statuts d'articles (modifiable, à valider)
  */
 global $article_status;
-$article_status = 
+$article_status =
     array(
         'edit' => 'Modifiable',
         'wait' => 'A Valider'
     );
 
-
 /**
  * Types de tris pour les articles
  */
 global $heading_sortmodes;
-$heading_sortmodes = 
+$heading_sortmodes =
     array(
         'bypos' => 'par position croissante',
         'bydate' => 'par date décroissante',
         'bydaterev' => 'par date croissante'
     );
-
-
 
 /**
  * Retourne le timestamp (MYSQL) de dernière mise à jour
@@ -164,13 +158,13 @@ function webedit_getlastupdate($moduleid = -1)
 
 /**
  * Retourne un tableau contenant les données nécessaire à l'affiche du treeview
- * 
+ *
  * @param string $option option d'affichage qui permet d'adapter le comportement des liens (l'arbre est utilisé de plusieurs manières)
  * @param int $moduleid identifiant du module (optionnel)
  * @return array tableau des données du treeview à afficher
- * 
+ *
  * @see skin::display_treeview
- * 
+ *
  */
 
 function webedit_gettreeview($headings = array(), $articles = array(), $option = '', $moduleid = -1)
@@ -179,57 +173,55 @@ function webedit_gettreeview($headings = array(), $articles = array(), $option =
 
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
 
-
     switch($option)
     {
         // déplacement d'un article vers une rubrique
         case 'selectheading':
             $prefix = 'h';
         break;
-            
+
         // redirection depuis une rubrique vers un article
         case 'selectredirect':
             $prefix = 'r';
         break;
-        
+
         // choix d'un article pour faire un lien (fckeditor)
         case 'selectlink':
             $prefix = 'l';
         break;
-        
+
         default:
             $prefix = '';
         break;
     }
-    
-    
+
     $treeview = array('list' => array(), 'tree' => array());
 
     if (!empty($headings['list']))
     {
         foreach($headings['list'] as $id => $fields)
         {
-            
+
             switch($option)
             {
                 case 'selectheading':
                     $link = '';
                     $onclick = "webedit_select_heading('{$fields['id']}', '".addslashes($fields['label'])."', event)";
                 break;
-                
+
                 case 'selectredirect':
                 case 'selectlink':
                     $link = '';
                     $onclick = "ploopi_skin_treeview_shownode('h{$prefix}{$fields['id']}', '".ploopi_queryencode("ploopi_op=webedit_detail_heading&hid=h{$prefix}{$fields['id']}&option={$option}")."', 'admin-light.php')";
                 break;
-        
+
                 default:
                     $link = ploopi_urlencode("admin.php?headingid={$fields['id']}");
                     $onclick = '';
                 break;
-            }            
-            
-            $node = 
+            }
+
+            $node =
                 array(
                     'id' => 'h'.$prefix.$fields['id'],
                     'label' => $fields['label'],
@@ -241,20 +233,20 @@ function webedit_gettreeview($headings = array(), $articles = array(), $option =
                     'onclick' => $onclick,
                     'icon' => ($fields['id_heading'] == 0) ? './modules/webedit/img/base.png' : './modules/webedit/img/folder.png'
                 );
-                
+
             // on rajoute 'h' devant chaque parent
             foreach($node['parents'] as $key => $value) $node['parents'][$key] = 'h'.$prefix.$value;
-    
+
             $treeview['list']['h'.$prefix.$fields['id']] = $node;
-            
-            $treeview['tree']['h'.$prefix.$fields['id_heading']][] = 'h'.$prefix.$fields['id'];                        
+
+            $treeview['tree']['h'.$prefix.$fields['id_heading']][] = 'h'.$prefix.$fields['id'];
         }
     }
-    
+
     if ($option != 'selectheading')
     {
         $today = ploopi_createtimestamp();
-        
+
         if (!empty($articles['list']))
         {
             foreach($articles['list'] as $id => $fields)
@@ -263,7 +255,7 @@ function webedit_gettreeview($headings = array(), $articles = array(), $option =
                 {
                     $status = ($fields['status'] == 'wait') ? '<sup style="margin-left:2px;color:#ff0000;font-weight:bold;">*</sup>' : '';
                     $dateok = ($fields['date_ok']) ? '' : '<sup style="margin-left:2px;color:#ff0000;font-weight:bold;">~</sup>';
-                    
+
                     switch($option)
                     {
                         // used for fckeditor and link redirect on heading
@@ -271,19 +263,19 @@ function webedit_gettreeview($headings = array(), $articles = array(), $option =
                             $link = '';
                             $onclick = "webedit_select_article('{$fields['id']}', '".addslashes($fields['title'])."', event)";
                         break;
-        
+
                         case 'selectlink':
                             $link = '';
                             $onclick = "ploopi_getelem('txtArticle',parent.document).value='index.php?headingid={$fields['id_heading']}&articleid={$fields['id']}';ploopi_getelem('txtAttTitle',parent.document).value='".addslashes($fields['title'])."';";
                         break;
-        
+
                         default:
                             $link = ploopi_urlencode("admin.php?headingid={$fields['id_heading']}&op=article_modify&articleid={$fields['id']}");
                             $onclick = '';
                         break;
-                    }        
-                    
-                    $node = 
+                    }
+
+                    $node =
                         array(
                             'id' => 'a'.$prefix.$fields['id'],
                             'label' => $fields['title'],
@@ -296,15 +288,15 @@ function webedit_gettreeview($headings = array(), $articles = array(), $option =
                             'onclick' => $onclick,
                             'icon' => "./modules/webedit/img/doc{$fields['new_version']}.png"
                         );
-                        
+
                     $treeview['list']['a'.$prefix.$fields['id']] = $node;
-                    
+
                     $treeview['tree']['h'.$prefix.$fields['id_heading']][] = 'a'.$prefix.$fields['id'];
-                }                        
+                }
             }
         }
     }
-    
+
     return($treeview);
 }
 
@@ -341,17 +333,16 @@ function webedit_getheadings($moduleid = -1)
             $headings['list'][$fields['id']]['template'] = $headings['list'][$fields['id_heading']]['template'];
             $headings['list'][$fields['id']]['herited_template'] = 1;
         }
-        
+
         // Il suffit qu'une rubrique active le flux pour que le flux soit également activé sur le site global (en respectant le choix de chaque rubrique)
         if ($fields['feed_enabled'] && !$headings['feed_enabled']) $headings['feed_enabled'] = true;
-        
+
         // Il suffit qu'une rubrique active l'abonnement pour que l'abonnement soit également activé sur le site global (en respectant le choix de chaque rubrique)
         if ($fields['feed_enabled'] && !$headings['subscription_enabled']) $headings['feed_enabled'] = true;
     }
 
     return($headings);
 }
-
 
 /**
  * Retourne les articles du module sous forme d'un tableau
@@ -367,11 +358,10 @@ function webedit_getarticles($moduleid = -1)
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
     $today = ploopi_createtimestamp();
 
-    
     if (!isset($_SESSION['webedit']['articles'])) $_SESSION['webedit']['articles'] = array();
-    
+
     $_SESSION['webedit']['articles']['tree'] = array();
-    
+
     $arrArticles = array();
 
     $select =   "
@@ -409,17 +399,17 @@ function webedit_getarticles($moduleid = -1)
             // nouvel article ou article modifié
             if (is_null($fields['online_id'])) $fields['new_version'] = 2;
             else $fields['new_version'] = (strip_tags($fields['content']) != strip_tags($fields['online_content'])) ? '1' : '0';
-            
+
             $fields['date_ok'] = (($fields['timestp_published'] <= $today || $fields['timestp_published'] == 0) && ($fields['timestp_unpublished'] >= $today || $fields['timestp_unpublished'] == 0));
-            
+
             unset($fields['content']);
             unset($fields['online_content']);
-            
+
             $_SESSION['webedit']['articles']['list'][$fields['id']] = $fields;
             $arrArticles[$fields['id']] = $fields;
         }
         else $arrArticles[$fields['id']] = $_SESSION['webedit']['articles']['list'][$fields['id']];
-        
+
         $_SESSION['webedit']['articles']['list'] = $arrArticles;
         $_SESSION['webedit']['articles']['tree'][$fields['id_heading']][] = $fields['id'];
     }
@@ -442,14 +432,13 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
     global $template_body;
     global $recursive_mode;
     global $webedit_mode;
-    
-    
+
     if (isset($headings['tree'][$hid]))
     {
         foreach($headings['tree'][$hid] as $id)
         {
             $detail = $headings['list'][$id];
-            
+
             $strHtmlLabel = htmlentities($detail['label']);
 
             $depth = $detail['depth'] - 1;
@@ -498,7 +487,7 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
                 $template_body->assign_var("HEADING{$depth}_DESCRIPTION",   $detail['description']);
                 $template_body->assign_var("HEADING{$depth}_FREE1",         $detail['free1']);
                 $template_body->assign_var("HEADING{$depth}_FREE2",         $detail['free2']);
-                    
+
                 $template_body->assign_block_vars("switch_heading{$depth}" , array(
                     'DEPTH' => $depth,
                     'ID' => $detail['id'],
@@ -516,10 +505,10 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
                     'FREE1' => $detail['free1'],
                     'FREE2' => $detail['free2']
                     ));
-                              
+
                 $sel = 'selected';
             }
-            
+
             if ($detail['visible'])
             {
                 $template_body->assign_block_vars($localvar , array(
@@ -561,7 +550,6 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
     }
 }
 
-
 /**
  * Traduit les rubriques en variables template pour le contenu d'une page
  *
@@ -577,8 +565,7 @@ function webedit_template_assign_headings($headings, $hid, $var = 'switch_conten
 {
     global $template_body;
     global $webedit_mode;
-    
-    
+
     if (isset($headings['tree'][$hid]))
     {
         foreach($headings['tree'][$hid] as $id)
@@ -621,7 +608,7 @@ function webedit_template_assign_headings($headings, $hid, $var = 'switch_conten
                     'FREE1' => $detail['free1'],
                     'FREE2' => $detail['free2']
                     ));
-                    
+
                 if (isset($headings['tree'][$id])) webedit_template_assign_headings(&$headings, $id, "{$localvar}.", $prefix, $depth+1, $locallink);
             }
         }
@@ -651,7 +638,7 @@ function webedit_gettemplates()
     }
 
     sort($webedit_templates);
-    
+
     return($webedit_templates);
 }
 
@@ -661,7 +648,7 @@ function webedit_gettemplates()
  *
  * @param array $matches tableau contenant les correspondances par rapport à l'expression régulière utilisée par la fonction appelante
  * @return string contenu modifié
- * 
+ *
  * @see preg_replace_callback
  */
 
@@ -680,19 +667,19 @@ function webedit_getobjectcontent($matches)
         {
 
             $resobj = $db->query("
-                SELECT  mwo.*, 
-                        mt.label as module_type 
-                         
+                SELECT  mwo.*,
+                        mt.label as module_type
+
                 FROM    ploopi_mb_wce_object mwo,
                         ploopi_module m,
                         ploopi_module_type mt
-                        
+
                 WHERE   mwo.id = {$id_object[0]}
                 AND     mwo.id_module_type = m.id_module_type
                 AND     m.id = {$id_object[1]}
                 AND     mt.id = m.id_module_type
             ");
-                
+
             if($obj = $db->fetchrow($resobj))
             {
                 $obj['module_id'] = $id_object[1];
@@ -701,7 +688,7 @@ function webedit_getobjectcontent($matches)
                 $arrQuery = explode("&",trim($obj['script'],"?"));
 
                 foreach ($arrQuery as $key => $value) eval("$".$value.";");
-                
+
                 ob_start();
                 if (file_exists("./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php"))
                 {
@@ -743,14 +730,14 @@ function webedit_record_isenabled($id_object, $id_record, $id_module)
             //if (ploopi_isactionallowed(-1,$_SESSION['ploopi']['workspaceid'],$menu_moduleid))
             $enabled = true;
         break;
-        
+
     }
 
     return($enabled);
 }
 
 /**
- * Remplace les liens internes par leur équivalent réécrit 
+ * Remplace les liens internes par leur équivalent réécrit
  *
  * @param string $strContent contenu d'un article
  * @return contenu de l'article dont les liens ont été modifiés
@@ -759,10 +746,10 @@ function webedit_record_isenabled($id_object, $id_record, $id_module)
 function webedit_replace_links($strContent)
 {
     include_once './modules/webedit/class_article.php';
-    
+
     $arrSearch = array();
     $arrReplace = array();
-    
+
     preg_match_all('/<a[^>]*href="(index\.php[^\"]+articleid=([0-9]+)[^\"]*)"[^>]*>/i', $strContent, $matches);
     foreach($matches[2] as $key => $idart)
     {
@@ -773,7 +760,7 @@ function webedit_replace_links($strContent)
             $arrReplace[] = ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$idart}", $objArticle->fields['metatitle']);
         }
     }
-    
+
     return str_replace($arrSearch, $arrReplace, $strContent);
 }
 ?>

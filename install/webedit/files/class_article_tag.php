@@ -57,6 +57,6 @@ class webedit_article_tag extends data_object
     function webedit_article_tag()
     {
         parent::data_object('ploopi_mod_webedit_article_tag', 'id_article', 'id_tag');
-    } 
+    }
 }
 ?>

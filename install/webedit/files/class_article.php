@@ -53,7 +53,6 @@ include_once './modules/webedit/class_tag.php';
  */
 include_once './modules/webedit/class_article_tag.php';
 
-
 /**
  * Classe d'accès aux table ploopi_mod_webedit_article et ploopi_mod_webedit_article_draft
  *
@@ -74,7 +73,7 @@ class webedit_article extends data_object
      * @param string $type type d'article ('draft' / '')
      * @return webedit_article
      */
-    
+
     function webedit_article($type = '')
     {
         if ($type == 'draft') parent::data_object('ploopi_mod_webedit_article_draft');
@@ -90,8 +89,8 @@ class webedit_article extends data_object
      *
      * @param int $id identifiant de l'article
      * @return boolean true si l'article a été ouvert
-     */    
-    
+     */
+
     function open($id)
     {
         $res = parent::open($id);
@@ -105,46 +104,46 @@ class webedit_article extends data_object
      * Enregistre l'article
      *
      * @return int identifiant de l'article
-     * 
+     *
      * @copyright Ovensia
      * @author Stéphane Escaich
-     */    
-    
+     */
+
     function save()
     {
         if (empty($this->fields['metatitle'])) $this->fields['metatitle'] = $this->fields['title'];
 
         if (empty($this->fields['timestp'])) $this->fields['timestp'] = ploopi_createtimestamp();
-        
+
         // Cas particulier des liens vers des documents (+ images) DIMS
         preg_match_all('/"(\.\/index-quick\.php\?dims_url=([^\"]*))"/i' , $this->fields['content'], $matches);
-        
+
         if (!empty($matches[2]))
         {
             $arrReplace = array();
             $arrSearch = array();
-            
+
             foreach($matches[2] as $key => $url)
             {
                 $arrSearch[] = $matches[1][$key];
                 $arrReplace[] = 'index-quick.php?'.str_replace('dims_op', 'ploopi_op', ploopi_base64_decode($url));
             }
-            
+
             $this->fields['content'] = str_replace($arrSearch, $arrReplace, $this->fields['content']);
         }
-        
+
         /**
          * Réécriture des liens vers articles, documents et des images
-         */        
+         */
         if (_PLOOPI_FRONTOFFICE_REWRITERULE)
         {
             // Recherche des liens vers des documents (du module doc)
             // Pour les remplacer (urlrewrite)
             $arrSearch = array();
             $arrReplace = array();
-            
+
             // /!\ Le traitement des liens d'article s'effectue au niveau du rendu final (fonction webedit_replace_links)
-            
+
             if (file_exists('./modules/doc/class_docfile.php'))
             {
                 include_once './modules/doc/class_docfile.php';
@@ -160,7 +159,7 @@ class webedit_article extends data_object
                         $arrReplace[] = ploopi_urlrewrite(html_entity_decode($matches[1][$key]), $objDocFile->fields['name'], true);
                     }
                 }
-                
+
                 // traitement des images
                 preg_match_all('/<img[^>]*src="(index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32}))"[^>]*>/i', $this->fields['content'], $matches);
                 foreach($matches[2] as $key => $md5)
@@ -173,14 +172,14 @@ class webedit_article extends data_object
                     }
                 }
             }
-                        
+
             $this->fields['content_cleaned'] = str_replace($arrSearch, $arrReplace, $this->fields['content']);
         }
         else $this->fields['content_cleaned'] = $this->fields['content'];
 
         // filtre activé ?
         if (!$this->fields['disabledfilter']) $this->fields['content_cleaned'] = ploopi_htmlpurifier($this->fields['content_cleaned']);
-        
+
         // Nettoyage des tags
         // Note : les tags ne sont réellement enregistrés qu'à la publication
         if (!empty($this->fields['tags']))
@@ -188,7 +187,7 @@ class webedit_article extends data_object
             list($tags) = ploopi_getwords($this->fields['tags'], true, false, false);
             $this->fields['tags'] = implode(' ', array_keys($tags));
         }
-        
+
         $res = parent::save();
         if ($this->gettablename() == 'ploopi_mod_webedit_article_draft' && $this->fields['content'] != $this->original_content)
         {
@@ -201,19 +200,18 @@ class webedit_article extends data_object
         }
         return($res);
     }
-    
 
     /**
      * Supprime l'article et les données associées (sauvegardes, index du moteur de recherche)
      */
-        
+
     function delete()
     {
         global $db;
 
         // mise à jour de la position des autres articles de la rubrique
         $db->query("UPDATE `".$this->gettablename()."` SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
-        
+
         // si brouillon, suppression de l'article associé
         if ($this->gettablename() == 'ploopi_mod_webedit_article_draft')
         {
@@ -225,20 +223,20 @@ class webedit_article extends data_object
         {
             // suppression des sauvegardes
             $db->query("DELETE FROM ploopi_mod_webedit_article_backup WHERE id_article = {$this->fields['id']}");
-            
+
             // suppression de l'index
             ploopi_search_remove_index(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id']);
         }
 
         parent::delete();
     }
-    
+
     /**
      * Publie un article (copie le contenu du brouillon dans l'article en ligne)
      *
      * @return boolean true s'il s'agit d'une première publication
      */
-        
+
     function publish()
     {
         global $db;
@@ -247,7 +245,7 @@ class webedit_article extends data_object
         {
             $article = new webedit_article();
             $new = !$article->open($this->fields['id']);
-            
+
             $article->fields['reference'] = $this->fields['reference'];
             $article->fields['title'] = $this->fields['title'];
             $article->fields['content'] = $this->fields['content'];
@@ -272,9 +270,9 @@ class webedit_article extends data_object
             $article->fields['disabledfilter'] = $this->fields['disabledfilter'];
             $article->fields['headcontent'] = $this->fields['headcontent'];
             $article->save();
-            
+
             $this->index();
-            
+
             // update article positions
             $sql =  "
                     UPDATE  ploopi_mod_webedit_article_draft draft,
@@ -288,32 +286,32 @@ class webedit_article extends data_object
             $db->query($sql);
 
             $this->fields['status'] = 'edit';
-            
+
             return $new;
         }
-        
+
         return -1;
     }
-    
+
     function index()
     {
         global $db;
-        
+
         // Suppression des docs rattachés à l'article (on le récrée par la suite)
         $db->query("DELETE FROM ploopi_mod_webedit_docfile WHERE id_article = {$this->fields['id']}");
-        
+
         // Recherche des liens vers des documents (du module doc)
         preg_match_all('/<a[^>]*href="(index-quick\.php\?ploopi_op=doc_file_download\&docfile_md5id=([a-z0-9]{32}))"[^>]*>([^>]*)<\/a>/i' , html_entity_decode($this->fields['content']), $matches);
-        
+
         if (!empty($matches[2]) && file_exists('./modules/doc/class_docfile.php'))
         {
             include_once './modules/doc/class_docfile.php';
             include_once './modules/webedit/class_docfile.php';
-            
+
             foreach($matches[2] as $doc_md5id)
             {
                 $objDocFile = new docfile();
-                
+
                 if ($objDocFile->openmd5($doc_md5id))
                 {
                     $objWebEditDocFile = new webedit_docfile();
@@ -327,11 +325,11 @@ class webedit_article extends data_object
                 }
             }
         }
-        
+
         // suppression des liens article-tags existants
         $sql = "DELETE FROM ploopi_mod_webedit_article_tag WHERE id_article = {$this->fields['id']}";
         $db->query($sql);
-        
+
         // récupération des tags
         list($tags) = ploopi_getwords($this->fields['tags'], true, false, false);
         $tags = array_keys($tags);
@@ -362,13 +360,13 @@ class webedit_article extends data_object
      *
      * @return true si l'accès est autorisé
      */
-    
+
     function isenabled()
     {
         include_once './modules/webedit/class_heading.php';
 
         $heading = new webedit_heading();
-        
+
         $today = ploopi_createtimestamp();
         return (
                     ($this->fields['timestp_published'] <= $today || empty($this->fields['timestp_published'])) &&
@@ -376,39 +374,39 @@ class webedit_article extends data_object
                     $heading->open($this->fields['id_heading'])
                 );
     }
-    
+
     /**
      * Retourne l'URL publique de l'article
      *
      * @return string url de l'article
      */
-    
+
     function geturl()
     {
         return(ploopi_urlrewrite("index.php?headingid={$this->fields['id_heading']}&articleid={$this->fields['id']}", $this->fields['metatitle']));
     }
-    
+
     /**
      * Retourne un tableau contenant les tags (étiquettes) associés à l'article
      *
      * @return array tableau des tags
      */
-    
+
     function gettags()
     {
         global $db;
         if (!$this->new)
         {
             $sql =  "
-                    SELECT  t.* 
+                    SELECT  t.*
                     FROM    ploopi_mod_webedit_tag t,
                             ploopi_mod_webedit_article_tag at
                     WHERE   t.id = at.id_tag
                     AND     at.id_article = {$this->fields['id']}
                     ";
-                    
+
             $db->query($sql);
-            
+
             return($db->getarray());
         }
         else return(array());

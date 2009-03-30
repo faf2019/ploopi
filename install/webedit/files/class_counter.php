@@ -54,18 +54,18 @@ class webedit_counter extends data_object
      * @param string $type type d'article ('draft' / '')
      * @return webedit_article
      */
-    
+
     function webedit_counter()
     {
         parent::data_object('ploopi_mod_webedit_counter', 'year', 'month', 'day', 'id_article');
     }
-    
+
     /**
      * Enregistre un nouveau hit
      *
      * @return boolean true si l'enregistrement a été correctement exécuté
      */
-    
+
     function hit()
     {
         $this->fields['hits'] = (!isset($this->fields['hits'])) ? 1 : $this->fields['hits']+1;

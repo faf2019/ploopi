@@ -59,40 +59,40 @@ class webedit_heading extends data_object
     {
         parent::data_object('ploopi_mod_webedit_heading');
     }
-    
+
     /**
      * Supprime la rubrique et sont contenu (articles, sous-rubriques)
      */
-    
+
     function delete()
     {
         include_once './modules/webedit/class_article.php';
-        
+
         global $db;
-        
+
         // suppression des abonnements (frontoffice)
         $db->query("DELETE FROM ploopi_mod_webedit_heading_subscriber WHERE id_heading = {$this->fields['id']}");
-        
+
         // suppression des sous-rubriques
         $rs1 = $db->query("SELECT id FROM ploopi_mod_webedit_heading WHERE id_heading = {$this->fields['id']}");
-        
+
         while ($row = $db->fetchrow($rs1))
         {
             $h = new webedit_heading();
             $h->open($row['id']);
             $h->delete();
         }
-        
+
         // suppression des brouillons de la rubrique (les articles avec)
         $rs2 = $db->query("SELECT id FROM ploopi_mod_webedit_article_draft WHERE id_heading = {$this->fields['id']}");
-        
+
         while ($row = $db->fetchrow($rs2))
         {
             $a = new webedit_article('draft');
             $a->open($row['id']);
             $a->delete();
         }
-        
+
         parent::delete();
     }
 }

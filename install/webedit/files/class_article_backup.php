@@ -54,7 +54,7 @@ class webedit_article_backup extends data_object
      *
      * @return webedit_article_backup
      */
-    
+
     function webedit_article_backup()
     {
         parent::data_object('ploopi_mod_webedit_article_backup', 'id_article', 'timestp');
