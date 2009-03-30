@@ -1,3 +1,9 @@
+== Module RSS - version 2.0.5 ====================================================
+
+2009-03-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un bug dans le menu (block.php) : ne prenait pas en compte le bon identifiant de module
+
 == Module RSS - version 2.0.4 ====================================================
 
 2009-03-09  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

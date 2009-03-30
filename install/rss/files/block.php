@@ -40,7 +40,7 @@ ploopi_init_module('rss', false, false, false);
 
 include_once './modules/rss/class_rss_pref.php';
 
-$wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
+$wk = ploopi_viewworkspaces($menu_moduleid);
 
 $title = '';
 
@@ -75,7 +75,7 @@ $rssfeed_select =   "
                     FROM        ploopi_mod_rss_feed feed
                     LEFT JOIN   ploopi_mod_rss_cat cat ON cat.id = feed.id_cat
                     WHERE       feed.id_module = {$menu_moduleid}
-                    AND         feed.id_workspace IN (".ploopi_viewworkspaces($menu_moduleid).")
+                    AND         feed.id_workspace IN ({$wk})
                     ORDER BY    feed.title
                     ";
 
@@ -105,7 +105,7 @@ $rsscat_select =   "
                     SELECT      cat.*
                     FROM        ploopi_mod_rss_cat cat
                     WHERE       cat.id_module = {$menu_moduleid}
-                    AND         cat.id_workspace IN (".ploopi_viewworkspaces($menu_moduleid).")
+                    AND         cat.id_workspace IN ({$wk})
                     ORDER BY    cat.title
                     ";
 
@@ -135,7 +135,7 @@ $rssfilter_select =   "
                     SELECT      filter.*
                     FROM        ploopi_mod_rss_filter filter
                     WHERE       filter.id_module = {$menu_moduleid}
-                    AND         filter.id_workspace IN (".ploopi_viewworkspaces($menu_moduleid).")
+                    AND         filter.id_workspace IN ({$wk})
                     ORDER BY    filter.title
                     ";
 
