@@ -420,8 +420,10 @@ if ($_SESSION['ploopi']['connected'])
                     ploopi_init_module('doc');
                     include_once './modules/doc/class_docfiledraft.php';
                     $docfiledraft = new docfiledraft();
-                    $docfiledraft->openmd5($_GET['docfiledraft_md5id']);
-                    $error = $docfiledraft->delete();
+                    if ($docfiledraft->openmd5($_GET['docfiledraft_md5id']))
+                    {
+                        $error = $docfiledraft->delete();
+                    }
                     ploopi_redirect("admin.php?op=doc_browser&currentfolder=$currentfolder&error=$error");
                 }
             break;
@@ -434,35 +436,36 @@ if ($_SESSION['ploopi']['connected'])
                     include_once './modules/doc/class_docfile.php';
                     include_once './modules/doc/class_docfolder.php';
                     $docfile = new docfile();
-                    $docfile->openmd5($_GET['docfile_md5id']);
-
-                    // on vérifie que l'utilisateur a bien le droit de supprimer ce fichier (en fonction du statut du dossier parent)
-                    $docfolder_readonly_content = false;
-
-                    $docfolder = new docfolder();
-
-                    if (!empty($docfile->fields['id_folder']))
+                    if ($docfile->openmd5($_GET['docfile_md5id']))
                     {
-                        $docfolder->open($docfile->fields['id_folder']);
-                        $docfolder_readonly_content = ($docfolder->fields['readonly_content'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']);
-                    }
-
-                    if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_DELETEFILE) && (!$docfolder_readonly_content || $docfile->fields['id_user'] == $_SESSION['ploopi']['userid'])))
-                    {
-                        $error = $docfile->delete();
-
-                        // on n'est pas à la racine (pas d'abonnement sur la racine)
+                        // on vérifie que l'utilisateur a bien le droit de supprimer ce fichier (en fonction du statut du dossier parent)
+                        $docfolder_readonly_content = false;
+    
+                        $docfolder = new docfolder();
+    
                         if (!empty($docfile->fields['id_folder']))
                         {
-                            // On va chercher les abonnés
-                            $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFILE, _DOC_ACTION_DELETEFILE));
-
-                            // on envoie le ticket de notification d'action sur l'objet
-                            if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_DELETEFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet à été supprimé');
+                            $docfolder->open($docfile->fields['id_folder']);
+                            $docfolder_readonly_content = ($docfolder->fields['readonly_content'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']);
                         }
-
-                        ploopi_create_user_action_log(_DOC_ACTION_DELETEFILE, $docfile->fields['id']);
-                        ploopi_redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}&error={$error}");
+    
+                        if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_DELETEFILE) && (!$docfolder_readonly_content || $docfile->fields['id_user'] == $_SESSION['ploopi']['userid'])))
+                        {
+                            $error = $docfile->delete();
+    
+                            // on n'est pas à la racine (pas d'abonnement sur la racine)
+                            if (!empty($docfile->fields['id_folder']))
+                            {
+                                // On va chercher les abonnés
+                                $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFILE, _DOC_ACTION_DELETEFILE));
+    
+                                // on envoie le ticket de notification d'action sur l'objet
+                                if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_DELETEFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet à été supprimé');
+                            }
+    
+                            ploopi_create_user_action_log(_DOC_ACTION_DELETEFILE, $docfile->fields['id']);
+                            ploopi_redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}&error={$error}");
+                        }
                     }
                 }
 
@@ -475,9 +478,11 @@ if ($_SESSION['ploopi']['connected'])
                     ploopi_init_module('doc');
                     include_once './modules/doc/class_docfile.php';
                     $docfile = new docfile();
-                    $docfile->openmd5($_GET['docfile_md5id']);
-                    $docfile->parse();
-                    $docfile->save();
+                    if ($docfile->openmd5($_GET['docfile_md5id']))
+                    {
+                        $docfile->parse();
+                        $docfile->save();
+                    }
                 }
                 ploopi_redirect("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$_GET['docfile_md5id']}");
             break;
@@ -492,8 +497,7 @@ if ($_SESSION['ploopi']['connected'])
                     if (in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']));
                     {
                         $docfiledraft = new docfiledraft();
-                        $docfiledraft->openmd5($_GET['docfiledraft_md5id']);
-                        $docfiledraft->publish();
+                        if ($docfiledraft->openmd5($_GET['docfiledraft_md5id'])) $docfiledraft->publish();
                     }
                 }
                 ploopi_redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}");
@@ -509,14 +513,16 @@ if ($_SESSION['ploopi']['connected'])
                     {
                         include_once './modules/doc/class_docfolder.php';
                         $docfolder = new docfolder();
-                        $docfolder->open($_GET['docfolder_id']);
-                        $docfolder->publish();
-
-                        // On va chercher les abonnés
-                        $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFOLDER));
-
-                        // on envoie le ticket de notification d'action sur l'objet
-                        if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été publié');
+                        if ($docfolder->open($_GET['docfolder_id']))
+                        {
+                            $docfolder->publish();
+    
+                            // On va chercher les abonnés
+                            $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFOLDER));
+    
+                            // on envoie le ticket de notification d'action sur l'objet
+                            if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été publié');
+                        }
                     }
                 }
 
@@ -531,31 +537,33 @@ if ($_SESSION['ploopi']['connected'])
                     include_once './modules/doc/class_docfolder.php';
 
                     $docfolder = new docfolder();
-                    $docfolder->open($_GET['docfolder_id']);
-
-                    $currentfolder = $docfolder->fields['id_folder'];
-
-                    // on vérifie que l'utilisateur a bien le droit de supprimer ce dossier (en fonction du statut du dossier et du dossier parent)
-                    $docfolder_readonly_content = false;
-
-                    if (!empty($docfolder->fields['id_folder']))
+                    if ($docfolder->open($_GET['docfolder_id']))
                     {
-                        $docfolder_parent = new docfolder();
-                        $docfolder_parent->open($docfolder->fields['id_folder']);
-                        $docfolder_readonly_content = ($docfolder_parent->fields['readonly_content'] && $docfolder_parent->fields['id_user'] != $_SESSION['ploopi']['userid']);
-                    }
-
-                    $readonly = (($docfolder->fields['readonly'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']) || $docfolder_readonly_content);
-                    if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_DELETEFOLDER) && (!$readonly) && ($docfolder->fields['nbelements'] == 0)))
-                    {
-                        // On va chercher les abonnés
-                        $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_DELETEFOLDER, _DOC_ACTION_MODIFYFOLDER));
-
-                        // on envoie le ticket de notification d'action sur l'objet
-                        if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_DELETEFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été supprimé');
-
-                        $docfolder->delete();
-                        ploopi_create_user_action_log(_DOC_ACTION_DELETEFOLDER, $docfolder->fields['id']);
+    
+                        $currentfolder = $docfolder->fields['id_folder'];
+    
+                        // on vérifie que l'utilisateur a bien le droit de supprimer ce dossier (en fonction du statut du dossier et du dossier parent)
+                        $docfolder_readonly_content = false;
+    
+                        if (!empty($docfolder->fields['id_folder']))
+                        {
+                            $docfolder_parent = new docfolder();
+                            $docfolder_parent->open($docfolder->fields['id_folder']);
+                            $docfolder_readonly_content = ($docfolder_parent->fields['readonly_content'] && $docfolder_parent->fields['id_user'] != $_SESSION['ploopi']['userid']);
+                        }
+    
+                        $readonly = (($docfolder->fields['readonly'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']) || $docfolder_readonly_content);
+                        if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_DELETEFOLDER) && (!$readonly) && ($docfolder->fields['nbelements'] == 0)))
+                        {
+                            // On va chercher les abonnés
+                            $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_DELETEFOLDER, _DOC_ACTION_MODIFYFOLDER));
+    
+                            // on envoie le ticket de notification d'action sur l'objet
+                            if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_DELETEFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été supprimé');
+    
+                            $docfolder->delete();
+                            ploopi_create_user_action_log(_DOC_ACTION_DELETEFOLDER, $docfolder->fields['id']);
+                        }
                     }
 
                     ploopi_redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}");
@@ -575,29 +583,30 @@ if ($_SESSION['ploopi']['connected'])
 
                 if (!empty($_GET['docfolder_id']) && is_numeric($_GET['docfolder_id']))
                 {
-
-                    $docfolder->open($_GET['docfolder_id']);
-                    $docfolder->setvalues($_POST,'docfolder_');
-                    if (empty($_POST['docfolder_readonly'])) $docfolder->fields['readonly'] = 0;
-                    if (empty($_POST['docfolder_readonly_content'])) $docfolder->fields['readonly_content'] = 0;
-                    $docfolder->save();
-
-                    // On va chercher les abonnés
-                    $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFOLDER));
-
-                    // on envoie le ticket de notification d'action sur l'objet
-                    if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été modifié');
-
-                    // SHARES
-                    ploopi_share_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
-                    doc_resetshare();
-
-                    // WORKFLOW
-                    ploopi_validation_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
-                    doc_resetvalidation();
-
-                    // LOG
-                    ploopi_create_user_action_log(_DOC_ACTION_MODIFYFOLDER, $docfolder->fields['id']);
+                    if ($docfolder->open($_GET['docfolder_id']))
+                    {
+                        $docfolder->setvalues($_POST,'docfolder_');
+                        if (empty($_POST['docfolder_readonly'])) $docfolder->fields['readonly'] = 0;
+                        if (empty($_POST['docfolder_readonly_content'])) $docfolder->fields['readonly_content'] = 0;
+                        $docfolder->save();
+    
+                        // On va chercher les abonnés
+                        $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFOLDER));
+    
+                        // on envoie le ticket de notification d'action sur l'objet
+                        if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été modifié');
+    
+                        // SHARES
+                        ploopi_share_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
+                        doc_resetshare();
+    
+                        // WORKFLOW
+                        ploopi_validation_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
+                        doc_resetvalidation();
+    
+                        // LOG
+                        ploopi_create_user_action_log(_DOC_ACTION_MODIFYFOLDER, $docfolder->fields['id']);
+                    }
                 }
                 else // Nouveau dossier
                 {

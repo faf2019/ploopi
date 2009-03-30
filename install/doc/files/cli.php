@@ -91,6 +91,4 @@ while ($row = $db->fetchrow($rs))
 // Optimisation de la BDD
 $db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword`");
 $db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword_file`");
-
-echo "script {$ploopi_timer}\n";
 ?>

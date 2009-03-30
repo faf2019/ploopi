@@ -95,7 +95,7 @@ class docfile extends data_object
     {
         $res = parent::open($id);
         $this->oldname = $this->fields['name'];
-        return($res);
+        return $res;
     }
 
     /**
@@ -111,7 +111,7 @@ class docfile extends data_object
 
         $db->query("SELECT id FROM ploopi_mod_doc_file WHERE md5id = '".$db->addslashes($md5id)."'");
         if ($fields = $db->fetchrow()) return($this->open($fields['id']));
-        else return(false);
+        else return false;
     }
 
     /**

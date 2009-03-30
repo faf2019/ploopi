@@ -1,3 +1,9 @@
+== Module DOC - version 4.3.4 =====================================================
+
+2009-03-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Meilleure vérification de l'existence des fichiers/dossiers avant l'exécution d'une action (sauvegarde/enregistrement)
+ 
 == Module DOC - version 4.3.3 =====================================================
 
 2009-03-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
