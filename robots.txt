@@ -3,6 +3,7 @@ Disallow: /bin/
 Disallow: /cgi/
 Disallow: /config/
 Disallow: /data/
+Disallow: /doc/
 Disallow: /FCKeditor/
 Disallow: /img/
 Disallow: /include/
@@ -12,3 +13,4 @@ Disallow: /lang/
 Disallow: /lib/
 Disallow: /modules/
 Disallow: /templates/
+Disallow: /tools/

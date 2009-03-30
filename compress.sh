@@ -1,10 +1,10 @@
 #!/bin/sh
 
 # Compression des fichiers css/js
-# Copyright (c) 2008 Ovensia
+# Copyright (c) 2008-2009 Ovensia
 # GNU General Public License (GPL)
 
-export YUIVER='-2.3.6'
+export YUIVER='-2.4.2'
 
 echo "COMPRESSION DU FICHIER functions.js"
 
