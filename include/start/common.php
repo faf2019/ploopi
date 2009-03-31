@@ -117,6 +117,15 @@ $session = new ploopi_session();
 
 if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
 {
+    global $db_session;
+    
+    if (_PLOOPI_DB_SERVER != _PLOOPI_SESSION_DB_SERVER || _PLOOPI_DB_DATABASE != _PLOOPI_SESSION_DB_DATABASE)
+    {
+        $db_session = new ploopi_db(_PLOOPI_SESSION_DB_SERVER, _PLOOPI_SESSION_DB_LOGIN, _PLOOPI_SESSION_DB_PASSWORD, _PLOOPI_SESSION_DB_DATABASE);
+        if(!$db_session->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
+    }
+    else $db_session = &$db;    
+    
     ini_set('session.save_handler', 'user');
     ini_set('session.gc_probability', 10);
     ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);

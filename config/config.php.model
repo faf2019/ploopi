@@ -151,6 +151,33 @@ switch($http_host)
         define ('_PLOOPI_USE_DBSESSION', <USE_DBSESSION>); // true if session stored into database
 
         /**
+         * Le serveur de base de données pour les sessions.
+         * Il peut aussi inclure le numéro de port.
+         * C'est-à-dire "hostname:port" ou le chemin vers le socket local, c'est-à-dire ":/path/to/socket" pour localhost.
+         */        
+        
+        define ('_PLOOPI_SESSION_DB_SERVER', _PLOOPI_DB_SERVER);
+
+        /**
+         * Le nom de l'utilisateur pour la connexion à la base de données des sessions
+         */
+
+        define ('_PLOOPI_SESSION_DB_LOGIN', _PLOOPI_DB_LOGIN);
+
+        /**
+         * Le mot de l'utilisateur pour la connexion à la base de données des sessions
+         */
+
+        define ('_PLOOPI_SESSION_DB_PASSWORD', _PLOOPI_DB_PASSWORD);
+
+        /**
+         * Le nom de la base de données des sessions
+         */
+
+        define ('_PLOOPI_SESSION_DB_DATABASE', _PLOOPI_DB_DATABASE);
+
+
+        /**
          * Active ou non l'affichage des erreurs.
          * Vérifiez également la valeur de la directive de configuration 'display_errors' du fichier php.ini
          * Vous pouvez également paramétrer le niveau de reporting d'erreur avec la constante _PLOOPI_ERROR_REPORTING
