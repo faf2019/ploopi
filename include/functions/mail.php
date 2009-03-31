@@ -160,6 +160,7 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     if (!empty($str_bcc)) $headers .= "Bcc: $str_bcc {$crlf}";
 
     $domain = empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
+    $organization = isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : $domain;
 
     $headers .= "Date: ".date('r')."{$crlf}";
     $headers .= "X-Priority: 1{$crlf}";
@@ -167,7 +168,7 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     $headers .= "X-Mailer: PHP/Ploopi "._PLOOPI_VERSION."{$crlf}";
     $headers .= "X-auth-smtp-user: {$str_from}{$crlf}";
     $headers .= "X-abuse-contact: abuse@{$domain}{$crlf}";
-    $headers .= "Organization: Ploopi "._PLOOPI_VERSION."{$crlf}";
+    $headers .= "Organization: {$organization}{$crlf}";
     $headers .= "MIME-Version: 1.0{$crlf}";
 
     $msg = '';
