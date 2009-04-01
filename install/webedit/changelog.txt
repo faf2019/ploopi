@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.0.4 ============================================
+
+2009-04-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un problème de réécriture de lien lors de l'affichage d'un lien vers un article en navigation backoffice (interne au module)
+
 == Module WebEdit - version 2.0.3 ============================================
 
 2009-03-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

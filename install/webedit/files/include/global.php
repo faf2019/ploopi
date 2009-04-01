@@ -488,6 +488,25 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
                 $template_body->assign_var("HEADING{$depth}_FREE1",         $detail['free1']);
                 $template_body->assign_var("HEADING{$depth}_FREE2",         $detail['free2']);
 
+                $template_body->assign_vars(
+                    array(
+                        'HEADING_ID' => $detail['id'],
+                        'HEADING_DEPTH' => $depth,
+                        'HEADING_LABEL' => $strHtmlLabel,
+                        'HEADING_LABEL_RAW' => $detail['label'],
+                        'HEADING_POSITION' => $detail['position'],
+                        'HEADING_DESCRIPTION' => htmlentities($detail['description']),
+                        'HEADING_DESCRIPTION_RAW' => $detail['description'],
+                        'HEADING_LINK' => $script,
+                        'HEADING_LINK_TARGET' => ($detail['url_window']) ? 'target="_blank"' : '',
+                        'HEADING_POSX' => $detail['posx'],
+                        'HEADING_POSY' => $detail['posy'],
+                        'HEADING_COLOR' => $detail['color'],
+                        'HEADING_FREE1' => $detail['free1'],
+                        'HEADING_FREE2' => $detail['free2']
+                    )
+                );
+
                 $template_body->assign_block_vars("switch_heading{$depth}" , array(
                     'DEPTH' => $depth,
                     'ID' => $detail['id'],
@@ -530,7 +549,11 @@ function webedit_template_assign($headings, $nav, $hid, $var = '', $link = '')
 
                 if ($depth == 0 || (isset($recursive_mode[$depth]) && $recursive_mode[$depth] == 'prof'))
                 {
-                    if (isset($headings['tree'][$id])) webedit_template_assign(&$headings, &$nav, $id, "{$localvar}.", $locallink);
+                    if (isset($headings['tree'][$id]))
+                    {
+                        $template_body->assign_block_vars($localvar.'.switch_submenu' , array());
+                        webedit_template_assign(&$headings, &$nav, $id, "{$localvar}.", $locallink);
+                    }                    
                 }
             }
         }
@@ -743,13 +766,13 @@ function webedit_record_isenabled($id_object, $id_record, $id_module)
  * @return contenu de l'article dont les liens ont été modifiés
  */
 
-function webedit_replace_links($strContent)
+function webedit_replace_links($strContent, $mode)
 {
     include_once './modules/webedit/class_article.php';
 
     $arrSearch = array();
     $arrReplace = array();
-
+    
     preg_match_all('/<a[^>]*href="(index\.php[^\"]+articleid=([0-9]+)[^\"]*)"[^>]*>/i', $strContent, $matches);
     foreach($matches[2] as $key => $idart)
     {
@@ -757,7 +780,17 @@ function webedit_replace_links($strContent)
         if (!empty($idart) && $objArticle->open($idart)) // article trouvé
         {
             $arrSearch[] = $matches[1][$key];
-            $arrReplace[] = ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$idart}", $objArticle->fields['metatitle']);
+            
+            switch ($mode)
+            {
+                case 'render':
+                    $arrReplace[] = "index.php?webedit_mode={$mode}&headingid={$objArticle->fields['id_heading']}&articleid={$idart}";
+                break;
+                    
+                default:
+                    $arrReplace[] = ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$idart}", $objArticle->fields['metatitle']);
+                break;
+            }
         }
     }
 

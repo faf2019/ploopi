@@ -50,6 +50,11 @@ include_once './lib/template/template.php';
 include_once './modules/webedit/class_article.php';
 include_once './modules/webedit/class_heading.php';
 
+/**
+ * Déclaration des variables globales 
+ * (les plugins/objets sont appelées par des fonctions et ont besoin de ces variables)
+ */
+
 global $template_body;
 global $template_path;
 global $webedit_mode;
@@ -747,9 +752,13 @@ else // affichage standard rubrique/page
         {
             $template_body->assign_block_vars('switch_content_page', array());
 
-            // Traitement des objets WCE/WebEdit
+            /**
+             * Traitement des objets WCE/WebEdit
+             * avec détection de chaîne et remplacement par le contenu d'une fonction 
+             */
+             
             if (!empty($editor)) $content = $editor;
-            else $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', in_array($webedit_mode, array('render', 'edit')) ? $article->fields['content_cleaned'] : webedit_replace_links($article->fields['content_cleaned']) );
+            else $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', $webedit_mode == 'edit' ? $article->fields['content_cleaned'] : webedit_replace_links($article->fields['content_cleaned'], $webedit_mode) );
 
             $article_timestp = ($article->fields['timestp']!='') ? ploopi_timestamp2local($article->fields['timestp']) : array('date' => '');
             $article_lastupdate = ($article->fields['lastupdate_timestp']!='') ? ploopi_timestamp2local($article->fields['lastupdate_timestp']) : array('date' => '', 'time' => '');
