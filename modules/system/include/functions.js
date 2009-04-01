@@ -122,7 +122,7 @@ function system_serverload()
 {
     pe_serverload = new PeriodicalExecuter(function(pe) {
         $('system_serverload_loading').style.visibility = 'visible';
-        new Ajax.Request('admin-light.php?ploopi_op=system_serverload',
+        new Ajax.Request('admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_serverload',
             {
                 method:     'get',
                 encoding:   'iso-8859-15',
