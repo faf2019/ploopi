@@ -55,7 +55,7 @@ switch ($_SESSION['system']['level'])
 
     case _SYSTEM_WORKSPACES :
         // filtrage sur les groupes partagés
-        if (!empty($workspaces['list'][$workspaceid]['groups_shared'])) $arrWhere[] = 'gu.id_group IN ('.implode(',',array_keys($workspaces['list'][$workspaceid]['groups_shared'])).')';
+        if (!empty($workspaces['list'][$workspaceid]['groups'])) $arrWhere[] = 'gu.id_group IN ('.implode(',',array_keys($workspaces['list'][$workspaceid]['groups'])).')';
         else $arrWhere[] = "gu.id_group = 0";
 
         $currentusers = $workspace->getusers();
