@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.0.5 ============================================
+
+2009-04-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug à l'affichage des résultats de type "document" dans le moteur de recherche en frontoffice 
+
 == Module WebEdit - version 2.0.4 ============================================
 
 2009-04-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

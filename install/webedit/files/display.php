@@ -272,10 +272,11 @@ if ($query_string != '') // recherche intégrale
             if ($boolModDocExists)
             {
                 $objDocFile = new docfile();
-                $link = ploopi_urlrewrite("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$result['id_record']}", $objDocFile->fields['name'], true);
 
                 if ($objDocFile->openmd5($result['id_record']))
                 {
+                    $link = ploopi_urlrewrite("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$result['id_record']}", $objDocFile->fields['name'], true);
+                    
                     $template_body->assign_block_vars('switch_search.result',
                         array(
                             'RELEVANCE' => sprintf("%.02f", $result['relevance']),
