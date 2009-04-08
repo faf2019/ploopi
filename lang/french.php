@@ -23,13 +23,13 @@
 
 /**
  * Fichier de langue 'français' du portail
- * 
+ *
  * @package ploopi
  * @subpackage lang
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @global array $ploopi_days tableau des jours en français
  * @global array $ploopi_months tableau des mois en français
  * @global array $ploopi_errormsg tableau des messages d'erreur
@@ -99,6 +99,7 @@ define ('_PLOOPI_LABEL_VIEWMODE_PRIVATE',   'Privée');
 define ('_PLOOPI_LABEL_VIEWMODE_DESC',      'Descendante');
 define ('_PLOOPI_LABEL_VIEWMODE_ASC',       'Ascendante');
 define ('_PLOOPI_LABEL_VIEWMODE_GLOBAL',        'Globale');
+define ('_PLOOPI_LABEL_VIEWMODE_ASCDESC',        'Ascendante & Descendante');
 
 define ('_PLOOPI_LEVEL_USER',       'Utilisateur');
 define ('_PLOOPI_LEVEL_GROUPMANAGER',   'Gestionnaire d\'Espace');
@@ -134,14 +135,11 @@ define ('_PLOOPI_LABEL_TICKET_DELETE_CHECKED', 'Supprimer les messages sélection
 define ('_PLOOPI_LABEL_TICKET_CONFIRMDELETE', 'Êtes-vous certain de vouloir supprimer ce message ?');
 define ('_PLOOPI_LABEL_TICKET_CONFIRMDELETE_CHECKED', 'Êtes-vous certain de vouloir supprimer les messages cochés ?');
 
-
-
 define ('_PLOOPI_LABEL_SUBSCRIPTION_DESCIPTION', 'Sélectionnez les actions pour lesquelles vous souhaitez être abonné.<br />L\'abonnement vous permet de recevoir un message lorsqu\'une action est effectuée sur un objet ou un ensemble d\'objets hérités.');
 define ('_PLOOPI_LABEL_SUBSCRIPTION_SAVED', 'Abonnement enregistré');
 define ('_PLOOPI_LABEL_SUBSCRIPTION_DELETE', 'Désabonnement enregistré');
 define ('_PLOOPI_LABEL_SUBSCRIPTION_ALLACTIONS', 'Toutes les actions');
 define ('_PLOOPI_LABEL_SUBSCRIPTION_UNSUSCRIBE', 'Se désabonner');
-
 
 /**
  * Tableau des jours en français
@@ -163,20 +161,19 @@ global $ploopi_errormsg;
  */
 global $ploopi_civility;
 
-
-$ploopi_days = 
+$ploopi_days =
     array (
-        'Dimanche', 
-        'Lundi', 
-        'Mardi', 
-        'Mercredi', 
-        'Jeudi', 
-        'Vendredi', 
-        'Samedi', 
+        'Dimanche',
+        'Lundi',
+        'Mardi',
+        'Mercredi',
+        'Jeudi',
+        'Vendredi',
+        'Samedi',
         'Dimanche'
-    ); 
+    );
 
-$ploopi_months = 
+$ploopi_months =
     array(
         1 => 'Janvier',
         2 => 'Février',
@@ -192,12 +189,12 @@ $ploopi_months =
         12 => 'Décembre'
     );
 
-$ploopi_civility = 
+$ploopi_civility =
     array (
         'M',
-        'Mme', 
+        'Mme',
         'Mlle'
-    ); 
+    );
 
 $ploopi_errormsg[_PLOOPI_ERROR_NOWORKSPACEDEFINED]  = 'Aucun espace de travail n\'est défini pour cet utilisateur';
 $ploopi_errormsg[_PLOOPI_ERROR_LOGINERROR]          = 'Utilisateur ou Mot de passe incorrect';

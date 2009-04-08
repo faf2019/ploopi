@@ -500,6 +500,14 @@ function ploopi_viewworkspaces($moduleid = -1)
         case _PLOOPI_VIEWMODE_GLOBAL:
             $workspaces = $_SESSION['ploopi']['allworkspaces'];
         break;
+
+        case _PLOOPI_VIEWMODE_ASCDESC:
+            $arrWorkspaces = array_merge($_SESSION['ploopi']['workspaces'][$current_workspaceid]['parents'], $_SESSION['ploopi']['workspaces'][$current_workspaceid]['children']);
+            $arrWorkspaces[] = $current_workspaceid;
+            
+            $workspaces .= implode(',', $arrWorkspaces);
+        break;
+        
     }
 
     if ($_SESSION['ploopi']['modules'][$moduleid]['transverseview'] && $_SESSION['ploopi']['workspaces'][$current_workspaceid]['list_brothers'] != '')

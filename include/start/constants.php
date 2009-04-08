@@ -103,6 +103,7 @@ define ('_PLOOPI_VIEWMODE_PRIVATE',     1);
 define ('_PLOOPI_VIEWMODE_DESC',        2);
 define ('_PLOOPI_VIEWMODE_ASC',         3);
 define ('_PLOOPI_VIEWMODE_GLOBAL',      4);
+define ('_PLOOPI_VIEWMODE_ASCDESC',    5);
 
 // USER LEVEL
 define ('_PLOOPI_ID_LEVEL_VISITOR',          0);
