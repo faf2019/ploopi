@@ -180,31 +180,53 @@ class workspace extends data_object
     /**
      * Retourne un tableau associatif (id => fields) contenant les utilisateurs de l'espace (non récursif)
      *
+     * @param boolean $booWithGroups true si la fonction doit renvoyer les utilisateurs des groupes rattachés (false par défaut)
      * @return array tableau des utilisateurs
      */
-
-    public function getusers()
+    
+    public function getusers($booWithGroups = false)
     {
         global $db;
 
-        $users = array();
+        $arrUsers = array();
 
-        $select =   "
-                    SELECT  ploopi_user.*,
-                            ploopi_workspace_user.adminlevel
-                    FROM    ploopi_user,
-                            ploopi_workspace_user
-                    WHERE   ploopi_workspace_user.id_workspace = {$this->fields['id']}
-                    AND     ploopi_workspace_user.id_user = ploopi_user.id
+        $result = $db->query("
+            SELECT  u.*,
+                    wu.adminlevel
+                    
+            FROM    ploopi_user u,
+                    ploopi_workspace_user wu
+            WHERE   
+                    wu.id_workspace = {$this->fields['id']}
+            AND     wu.id_user = u.id
+        ");
 
-                    ";
-        $result = $db->query($select);
+        while ($fields = $db->fetchrow($result)) $arrUsers[$fields['id']] = $fields;
 
-        while ($fields = $db->fetchrow($result)) $users[$fields['id']] = $fields;
+        
+        if ($booWithGroups)
+        {
+            $result = $db->query("
+                SELECT  u.*,
+                        wg.adminlevel
+                        
+                FROM    ploopi_user u,
+                        ploopi_workspace_group wg,
+                        ploopi_group_user gu
 
-        return $users;
+                WHERE   wg.id_workspace = {$this->fields['id']}
+                AND     wg.id_group = gu.id_group
+                AND     gu.id_user = u.id
+
+                GROUP BY u.id
+            ");
+    
+            while ($fields = $db->fetchrow($result)) $arrUsers[$fields['id']] = $fields;            
+        }
+        
+        return $arrUsers;
     }
-
+    
     /**
      * Retourne un tableau associatif (id => fields) contenant les utilisateurs de l'espace et des sous-espaces
      *

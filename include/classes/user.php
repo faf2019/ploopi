@@ -283,25 +283,21 @@ class user extends data_object
     }
 
     /**
-     * Retourne un tableau contenant les actions triées pas espace de travail et module
-     *
-     * @param array $actions tableau d'actions
-     */
-    
-    /**
      * Retourne un tableau des actions autorisées pour cet utilisateur.
      * $actions[id_workspace][id_module][$fields['id_action']]
      * 
-     * @param array $actions tableau d'actions déjà existant (optionnel)
+     * @param array $arrActions tableau d'actions déjà existant (optionnel)
+     * @param boolean $booWithGroups true si la méthode doit renvoyer les actions des groupes de l'utilisateurs (optionnel, false par défaut)
      * @return array tableau des actions
      */
     
-    public function getactions($actions = null)
+    public function getactions($arrActions = null, $booWithGroups = false)
     {
+        include_once './include/classes/group.php';
+        
         global $db;
 
-        $select =
-            "
+        $result = $db->query("
             SELECT      ploopi_workspace_user_role.id_workspace,
                         ploopi_role_action.id_action,
                         ploopi_role.id_module
@@ -311,15 +307,25 @@ class user extends data_object
             WHERE       ploopi_workspace_user_role.id_role = ploopi_role.id
             AND         ploopi_role.id = ploopi_role_action.id_role
             AND         ploopi_workspace_user_role.id_user = {$this->fields['id']}
-            ";
+        ");
 
-        $result = $db->query($select);
-
-        while ($fields = $db->fetchrow($result)) $actions[$fields['id_workspace']][$fields['id_module']][$fields['id_action']] = true;
+        while ($fields = $db->fetchrow($result)) $arrActions[$fields['id_workspace']][$fields['id_module']][$fields['id_action']] = true;
         
-        return $actions;
+        if ($booWithGroups)
+        {
+            foreach ($this->getgroups() as $arrGroup)
+            {
+                $objGroup = new group();
+                if ($objGroup->open($arrGroup['id']))
+                {
+                    $arrActions = $objGroup->getactions($arrActions);
+                }
+            }
+        }
+        
+        return $arrActions;
     }
-
+    
     /**
      * Retourne un tableau contenant les utilisateurs "visibles" par l'utilisateur
      *
