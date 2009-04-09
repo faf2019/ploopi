@@ -166,7 +166,8 @@ switch ($_SESSION['system']['level'])
 
     case _SYSTEM_WORKSPACES :
         $workspace = new workspace();
-        $workspace->open($workspaceid);
+        if (!$workspace->open($workspaceid)) ploopi_redirect("admin.php?workspaceid=0");
+        
         $group = null;
 
         $currentworkspace = '';

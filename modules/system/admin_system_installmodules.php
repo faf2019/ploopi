@@ -227,7 +227,7 @@ foreach($tabmoduletype_install as $label => $fields)
             $values[$c]['values']['mtype'] = array('label' => $fields['label']);
             $values[$c]['values']['author'] = array('label' => $fields['author']);
             $values[$c]['values']['version'] = array('label' => $fields['version']);
-            $values[$c]['values']['date'] = array('label' => $fields['date']);
+            $values[$c]['values']['date'] = array('label' => $ldate['date'], 'sort_label' => $fields['date']);
             $values[$c]['values']['action'] = array('label' => "<a href=\"".ploopi_urlencode("admin.php?op=install&installmoduletype={$fields['label']}")."\">"._SYSTEM_LABEL_INSTALL."</a>", 'style' => 'text-align:center;');
         }
         else
