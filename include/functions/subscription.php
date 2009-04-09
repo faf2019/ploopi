@@ -282,27 +282,31 @@ function ploopi_subscription_notify($id_object, $id_record, $id_action, $object_
 {
     include_once './include/classes/mb.php';
 
-    $objAction = new mb_action();
-    $objAction->open($_SESSION['ploopi']['moduletypeid'], $id_action);
-
-    foreach($arrUsers as $intUserId)
+    if (is_array($arrUsers))
     {
-        $_SESSION['ploopi']['tickets']['users_selected'] = array();
-        $_SESSION['ploopi']['tickets']['users_selected'][] = $intUserId;
-
-        if ($message != '') $message = '<br /><br /><span style="color:#a60000;">'.$message.'</span>';
-
-        ploopi_tickets_send(
-            "Alerte abonnement : <i>{$objAction->fields['label']}</i> sur <b>{$object_title}</b> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})",
-            "Ceci est un message automatique déclenché par <em>{$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}</em> sur abonnement à l'action <em>{$objAction->fields['label']}</em> sur l'objet &laquo; <b>{$object_title}</b> &raquo; du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}.
-            {$message}<br /><br />Vous pouvez accéder à cet objet en cliquant sur le lien ci-dessous.",
-            false,
-            0,
-            $id_object,
-            $id_record,
-            $object_title,
-            true
-            );
+        $objAction = new mb_action();
+        $objAction->open($_SESSION['ploopi']['moduletypeid'], $id_action);
+    
+        
+        foreach($arrUsers as $intUserId)
+        {
+            $_SESSION['ploopi']['tickets']['users_selected'] = array();
+            $_SESSION['ploopi']['tickets']['users_selected'][] = $intUserId;
+    
+            if ($message != '') $message = '<br /><br /><span style="color:#a60000;">'.$message.'</span>';
+    
+            ploopi_tickets_send(
+                "Alerte abonnement : <i>{$objAction->fields['label']}</i> sur <b>{$object_title}</b> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})",
+                "Ceci est un message automatique déclenché par <em>{$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}</em> sur abonnement à l'action <em>{$objAction->fields['label']}</em> sur l'objet &laquo; <b>{$object_title}</b> &raquo; du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}.
+                {$message}<br /><br />Vous pouvez accéder à cet objet en cliquant sur le lien ci-dessous.",
+                false,
+                0,
+                $id_object,
+                $id_record,
+                $object_title,
+                true
+                );
+        }
     }
 }
 ?>
