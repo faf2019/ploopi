@@ -629,9 +629,12 @@ class skin_common
                             {
                                 foreach($array['columns']['left'] as $id => $c)
                                 {
-                                    ?>
-                                    <div style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><?php echo $v['values'][$id]['label']; ?></p></div>
-                                    <?php
+                                    if (isset($v['values'][$id]))
+                                    {
+                                        ?>
+                                        <div style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><?php echo $v['values'][$id]['label']; ?></p></div>
+                                        <?php
+                                    }
                                 }
                             }
     
