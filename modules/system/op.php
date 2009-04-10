@@ -522,6 +522,34 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         }
                         ploopi_redirect('admin.php?system_level=system&sysToolbarItem=directory');
                     break;
+                    
+                    case 'system_user_import':
+
+                        $_SESSION['system']['user_import'] = array();
+                        
+                        if (!empty($_FILES['system_user_file']) && !empty($_FILES['system_user_file']['name']))
+                        {
+                            // Récupération & contrôle du séparateur de champs
+                            $strSep = empty($_POST['system_user_sep']) ? ',' : $_POST['system_user_sep'];
+                            if (!in_array($strSep, array(',', ';'))) $strSep = ',';
+                             
+                            // Lecture du fichier si ok
+                            if (file_exists($_FILES['system_user_file']['tmp_name']))
+                            {
+                                $ptrHandle = fopen($_FILES['system_user_file']['tmp_name'], 'r');
+                                
+                                while (($arrLineData = fgetcsv($ptrHandle, null, $strSep)) !== FALSE) 
+                                {
+                                    if (is_array($arrLineData))
+                                    {
+                                        $_SESSION['system']['user_import'][] = $arrLineData;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        ploopi_redirect("admin.php?usrTabItem=tabUserImport&op=preview");
+                    break;
                 }
             }
         break;

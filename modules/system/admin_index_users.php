@@ -471,8 +471,86 @@ switch($_SESSION['system']['usrTabItem'])
     case 'tabUserImport':
         switch($op)
         {
+            case 'end':
+                ?>
+                <div style="padding:2px;border-bottom:1px solid #a0a0a0;background-color:#e0e0e0;"><strong>Import d'un fichier CSV contenant des utilisateurs :</strong></div>
+                <div style="padding:4px;">Traitement terminé</div>
+                <?
+                if (!empty($_SESSION['system']['user_import_errors']))
+                {
+                    ?>
+                    <div style="padding:4px;">
+                        <?
+                        foreach($_SESSION['system']['user_import_errors'] as $strMsg)
+                        {
+                            ?>
+                            <p class="ploopi_va">
+                                <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" style="margin-right:4px;" />
+                                <span><? echo $strMsg ?></span>
+                            </p>
+                            <?
+                        }
+                        ?>
+                    </div>
+                    <?
+                }
+                ?>
+                <div style="padding:4px;"><input type="button" class="button" value="Retour" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?usrTabItem=tabUserImport"); ?>';" /></div>
+                <?                
+            break;
+            
             case 'import':
-                include_once './modules/system/admin_index_users_import.php';
+                $_SESSION['system']['user_import_errors'] = array();
+                
+                if (!empty($_SESSION['system']['user_import']))
+                {
+                    for ($intI = 1; $intI < count($_SESSION['system']['user_import']); $intI++)
+                    {
+                        $objUser = new user();
+                        $objUser->init_description();
+                        
+                        $intJ = 0;
+                        foreach($_SESSION['system']['user_import'][0] as $strFieldName)
+                        {
+                            if (isset($_SESSION['system']['user_import'][$intI][$intJ])) 
+                            {
+                                if ($strFieldName != 'id' && isset($objUser->fields[$strFieldName])) // le champ existe
+                                {
+                                    $objUser->fields[$strFieldName] = $_SESSION['system']['user_import'][$intI][$intJ];
+                                }
+                            }
+                            $intJ++;
+                        } 
+                        
+                        // On vérifie que le login n'existe pas déjà
+                        $db->query("
+                            SELECT  login
+                            FROM    ploopi_user
+                            WHERE   login = '".$db->addslashes($objUser->fields['login'])."'
+                        ");
+                        
+                        if (!$db->numrows()) // ok pas de login identique dans la BDD
+                        {
+                            $objUser->setpassword($objUser->fields['password']);
+                            
+                            // On ajoute l'utilisateur
+                            $objUser->save();
+                            
+                            // On le rattache au groupe sélectionné
+                            $objUser->attachtogroup($groupid);
+                        }
+                        else
+                        {
+                            $_SESSION['system']['user_import_errors'][] = "Un utilisateur existe déjà avec le login '{$objUser->fields['login']}'";
+                        }
+                    }                
+                }
+    
+                ploopi_redirect("admin.php?usrTabItem=tabUserImport&op=end");
+            break;
+            
+            case 'preview':
+                include_once './modules/system/admin_index_users_preview.php';
             break;
 
             default:

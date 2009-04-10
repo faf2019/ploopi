@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,9 +26,9 @@
  *
  * @package system
  * @subpackage admin
- * @copyright Netlor
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Benjamin Ganivet
+ * @author Stéphane ESCAICH
  *
  * @todo Améliorer l'interface et les fonctionnalités
  */
@@ -37,50 +36,78 @@
 /**
  * Formulaire d'import de fichier
  */
+
+$arrFields = array(
+    'lastname'      =>  "Nom (obligatoire)",
+    'firstname'     =>  "Prénom (obligatoire)",
+    'login'         =>  "Identifiant utilisateur (obligatoire)",
+    'password'      =>  "Mot de passe (obligatoire)",
+    'adminlevel'    =>  "Niveau du compte. S'il n'est pas renseigné, il sera affecté au niveau le plus bas",
+    'email'         =>  "Adresse mèl",
+    'phone'         =>  "Numéro de Téléphone",
+    'fax'           =>  "Numéro de Fax",
+    'mobile'        =>  "Numéro de Portable",
+    'number'        =>  "Numéro de Poste",
+
+    'address'       =>  "Adresse",
+    'postalcode'    =>  "Code Postal",
+    'city'          =>  "Ville",
+    'country'       =>  "Pays",
+
+    'building'      =>  "Bâtiment",
+    'floor'         =>  "Etage",
+    'office'        =>  "Bureau",
+
+    'service'       =>  "Service",
+    'function'      =>  "Fonction",
+    'rank'          =>  "Grade",
+
+    'comments'      =>  "Commentaires"
+);
 ?>
-<form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="Post" enctype="multipart/form-data">
-<input type="Hidden" name="op" value="import">
+<form action="<?php echo ploopi_urlencode('admin.php?ploopi_op=system_user_import'); ?>" method="post" enctype="multipart/form-data">
 
-<table cellpadding="2" cellspacing="1" align="center" width="100%">
-    <tr>
-        <td align="right"><?php echo _SYSTEM_LABEL_IMPORTSRC; ?>*:&nbsp;</td>
-        <td align="left"><input class="text" type="File" name="srcfile"></td>
-    </tr>
-    <tr>
-        <td align="right">Mots de passe MD5** ?</td>
-        <td align="left"><input class="Checkbox" type="Checkbox" name="md5passwd"></td>
-    </tr>
-    <tr>
-        <td align="center" colspan="2"><input class="flatbutton" type="Submit" value="Importer"></td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <br>
-            (*) La source d'import doit être un fichier texte, dont les champs sont séparés par des points-virgule.<br>
-            La première ligne doit être une ligne de description.<br>
-            Cela signifie qu'elle contient certains ou tous les champs de la liste ci-dessous.<br>
-            Elle sert à décrire la structure du fichier.<br>
-            Elle doit au moins contenir les champs "login" et "password".<br><br>
-            Liste des champs :<br>
-            - adminlevel : Niveau du compte. S'il n'est pas renseigné, il sera affecté au niveau le plus bas.<br>
-            - lastname : Nom de famille.<br>
-            - firstname : Prénom.<br>
-            - login : Login. Il doit être unique. Il est nécessaire à la création d'un compte.<br>
-            - password : Mot de passe. Il est nécessaire à la création d'un compte.<br>
-            - email : Email.<br>
-            - phone : Numéro de téléphone.<br>
-            - fax : Numéro de fax.<br>
-            - address : Adresse.<br>
-            - comments : Commentaires.<br><br>
-            Liste des valeurs possibles pour le champ "adminlevel" :<br>
-            - 10 : Utilisateur<br>
-            - 15 : Gestionnaire de groupe<br>
-            - 20 : Administrateur de groupe<br>
-            - 99 : Administrateur<br><br>
+<div style="width:500px;margin:auto;">
+    <div class="ploopi_form">
+        <p>
+            <label><?php echo _SYSTEM_LABEL_IMPORTSRC; ?>:</label>
+            <input type="file" class="text" name="system_user_file" tabindex="100" />
+        </p>
+        <p>
+            <label>Séparateur:</label>
+            <select class="select" name="system_user_sep" tabindex="102" style="width:40px;">
+                <option value="<? echo htmlentities(',') ?>"><? echo htmlentities(',') ?></option>
+                <option value="<? echo htmlentities(';') ?>"><? echo htmlentities(';') ?></option>
+            </select>
+        </p>
+    </div>
+    <div style="text-align:right;padding:4px;">
+        <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SEND; ?>" tabindex="110" />
+    </div>
 
-            (**)Si la case "Mots de passe MD5" est cochée, les mots de passe seront sauvegardés tels quels.<br>
-            Dans le cas contraire, ils seront encryptés en MD5.
-        </td>
-    </tr>
-</table>
+    <div style="padding:4px;">
+        Le fichier source doit être au format CSV standard ( séparateur : , ou ; / délimiteur : " / caractère d'échappement : \ )<br>
+        La première ligne doit être une ligne de description des colonnes.<br>
+        Cela signifie qu'elle contient certains ou tous les champs de la liste ci-dessous :<br>
+        <ul>
+            <?
+            foreach($arrFields as $strField => $strLabel)
+            {
+                ?>
+                <li><strong><? echo htmlentities($strField); ?></strong>: <? echo $strLabel ?></li>
+                <?
+            }
+            ?>
+        </ul>
+        Liste des valeurs possibles pour le champ "adminlevel" :
+        <ul>
+            <li>10 : Utilisateur</li>
+            <li>15 : Gestionnaire de groupe</li>
+            <li>20 : Administrateur de groupe</li>
+            <li>99 : Administrateur</li>
+        </ul>
+    </div>
+
+</div>
 </form>
+
