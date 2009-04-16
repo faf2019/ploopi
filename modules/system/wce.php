@@ -62,19 +62,43 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     if (isset($_POST['system_firstname']) && !ereg($pattern, $_POST['system_firstname'])) $arrFilter['system_firstname'] = $_POST['system_firstname'];
     if (isset($_POST['system_service']) && !ereg($pattern, $_POST['system_service'])) $arrFilter['system_service'] = $_POST['system_service'];
     if (isset($_POST['system_phone']) && !ereg($pattern, $_POST['system_phone'])) $arrFilter['system_phone'] = $_POST['system_phone'];
+    if (isset($_POST['system_fax']) && !ereg($pattern, $_POST['system_fax'])) $arrFilter['system_fax'] = $_POST['system_fax'];
+    if (isset($_POST['system_mobile']) && !ereg($pattern, $_POST['system_mobile'])) $arrFilter['system_mobile'] = $_POST['system_mobile'];
     if (isset($_POST['system_login']) && !ereg($pattern, $_POST['system_login'])) $arrFilter['system_login'] = $_POST['system_login'];
     if (isset($_POST['system_email']) && !ereg($pattern, $_POST['system_email'])) $arrFilter['system_email'] = $_POST['system_email'];
     if (isset($_POST['system_workspace']) && !ereg($pattern, $_POST['system_workspace'])) $arrFilter['system_workspace'] = $_POST['system_workspace'];
-
+    if (isset($_POST['system_office']) && !ereg($pattern, $_POST['system_office'])) $arrFilter['system_office'] = $_POST['system_office'];
+    if (isset($_POST['system_comments']) && !ereg($pattern, $_POST['system_comments'])) $arrFilter['system_comments'] = $_POST['system_comments'];
+    if (isset($_POST['system_function']) && !ereg($pattern, $_POST['system_function'])) $arrFilter['system_function'] = $_POST['system_function'];
+    if (isset($_POST['system_number']) && !ereg($pattern, $_POST['system_number'])) $arrFilter['system_number'] = $_POST['system_number'];
+    if (isset($_POST['system_rank']) && !ereg($pattern, $_POST['system_rank'])) $arrFilter['system_rank'] = $_POST['system_rank'];
+    if (isset($_POST['system_building']) && !ereg($pattern, $_POST['system_building'])) $arrFilter['system_building'] = $_POST['system_building'];
+    if (isset($_POST['system_floor']) && !ereg($pattern, $_POST['system_floor'])) $arrFilter['system_floor'] = $_POST['system_floor'];
+    if (isset($_POST['system_country']) && !ereg($pattern, $_POST['system_country'])) $arrFilter['system_country'] = $_POST['system_country'];
+    if (isset($_POST['system_city']) && !ereg($pattern, $_POST['system_city'])) $arrFilter['system_city'] = $_POST['system_city'];
+    if (isset($_POST['system_postalcode']) && !ereg($pattern, $_POST['system_postalcode'])) $arrFilter['system_postalcode'] = $_POST['system_postalcode'];
+    
     // Affectation de valeurs par défaut si non défini
     if (!isset($arrFilter['system_lastname'])) $arrFilter['system_lastname'] = '';
     if (!isset($arrFilter['system_firstname'])) $arrFilter['system_firstname'] = '';
     if (!isset($arrFilter['system_service'])) $arrFilter['system_service'] = '';
     if (!isset($arrFilter['system_phone'])) $arrFilter['system_phone'] = '';
+    if (!isset($arrFilter['system_fax'])) $arrFilter['system_fax'] = '';
+    if (!isset($arrFilter['system_mobile'])) $arrFilter['system_mobile'] = '';
     if (!isset($arrFilter['system_login'])) $arrFilter['system_login'] = '';
     if (!isset($arrFilter['system_email'])) $arrFilter['system_email'] = '';
     if (!isset($arrFilter['system_workspace'])) $arrFilter['system_workspace'] = '';
-
+    if (!isset($arrFilter['system_office'])) $arrFilter['system_office'] = '';
+    if (!isset($arrFilter['system_comments'])) $arrFilter['system_comments'] = '';
+    if (!isset($arrFilter['system_function'])) $arrFilter['system_function'] = '';
+    if (!isset($arrFilter['system_number'])) $arrFilter['system_number'] = '';
+    if (!isset($arrFilter['system_rank'])) $arrFilter['system_rank'] = '';
+    if (!isset($arrFilter['system_building'])) $arrFilter['system_building'] = '';
+    if (!isset($arrFilter['system_floor'])) $arrFilter['system_floor'] = '';
+    if (!isset($arrFilter['system_country'])) $arrFilter['system_country'] = '';
+    if (!isset($arrFilter['system_city'])) $arrFilter['system_city'] = '';
+    if (!isset($arrFilter['system_postalcode'])) $arrFilter['system_postalcode'] = '';
+    
     // Enregistrement SESSION
     $_SESSION['system']['wce_search'] = $arrFilter;
 
@@ -151,9 +175,21 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                     'SYSTEM_TROMBI_FIRSTNAME' => htmlentities($arrFilter['system_firstname']),
                     'SYSTEM_TROMBI_SERVICE' => htmlentities($arrFilter['system_service']),
                     'SYSTEM_TROMBI_PHONE' => htmlentities($arrFilter['system_phone']),
+                    'SYSTEM_TROMBI_FAX' => htmlentities($arrFilter['system_fax']),
+                    'SYSTEM_TROMBI_MOBILE' => htmlentities($arrFilter['system_mobile']),
                     'SYSTEM_TROMBI_LOGIN' => htmlentities($arrFilter['system_login']),
                     'SYSTEM_TROMBI_EMAIL' => htmlentities($arrFilter['system_email']),
-                    'SYSTEM_TROMBI_WORKSPACE' => $arrFilter['system_workspace']
+                    'SYSTEM_TROMBI_WORKSPACE' => $arrFilter['system_workspace'],
+                    'SYSTEM_TROMBI_OFFICE' => htmlentities($arrFilter['system_office']),
+                    'SYSTEM_TROMBI_COMMENTS' => htmlentities($arrFilter['system_comments']),
+                    'SYSTEM_TROMBI_FUNCTION' => htmlentities($arrFilter['system_function']),
+                    'SYSTEM_TROMBI_NUMBER' => htmlentities($arrFilter['system_number']),
+                    'SYSTEM_TROMBI_RANK' => htmlentities($arrFilter['system_rank']),
+                    'SYSTEM_TROMBI_BUILDING' => htmlentities($arrFilter['system_building']),
+                    'SYSTEM_TROMBI_FLOOR' => htmlentities($arrFilter['system_floor']),
+                    'SYSTEM_TROMBI_COUNTRY' => htmlentities($arrFilter['system_country']),
+                    'SYSTEM_TROMBI_CITY' => htmlentities($arrFilter['system_city']),
+                    'SYSTEM_TROMBI_POSTALCODE' => htmlentities($arrFilter['system_postalcode'])
                 )
             );
 
@@ -165,9 +201,21 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
             if (!empty($arrFilter['system_firstname'])) $arrWhere[] = "u.firstname LIKE '".$db->addslashes($arrFilter['system_firstname'])."%'";
             if (!empty($arrFilter['system_service'])) $arrWhere[] = "u.service LIKE '".$db->addslashes($arrFilter['system_service'])."%'";
             if (!empty($arrFilter['system_phone'])) $arrWhere[] = "u.phone LIKE '".$db->addslashes($arrFilter['system_phone'])."%'";
+            if (!empty($arrFilter['system_fax'])) $arrWhere[] = "u.fax LIKE '".$db->addslashes($arrFilter['system_fax'])."%'";
+            if (!empty($arrFilter['system_mobile'])) $arrWhere[] = "u.mobile LIKE '".$db->addslashes($arrFilter['system_mobile'])."%'";
             if (!empty($arrFilter['system_login'])) $arrWhere[] = "u.login LIKE '".$db->addslashes($arrFilter['system_login'])."%'";
-            if (!empty($arrFilter['system_email'])) $arrWhere[] = "u.email LIKE '".$db->addslashes($arrFilter['system_email'])."%'";
-
+            if (!empty($arrFilter['system_email'])) $arrWhere[] = "u.email LIKE '%".$db->addslashes($arrFilter['system_email'])."%'";
+            if (!empty($arrFilter['system_office'])) $arrWhere[] = "u.office LIKE '".$db->addslashes($arrFilter['system_office'])."%'";
+            if (!empty($arrFilter['system_comments'])) $arrWhere[] = "u.comments LIKE '%".$db->addslashes($arrFilter['system_comments'])."%'";
+            if (!empty($arrFilter['system_function'])) $arrWhere[] = "u.function LIKE '".$db->addslashes($arrFilter['system_function'])."%'";
+            if (!empty($arrFilter['system_number'])) $arrWhere[] = "u.number LIKE '".$db->addslashes($arrFilter['system_number'])."%'";
+            if (!empty($arrFilter['system_rank'])) $arrWhere[] = "u.rank LIKE '".$db->addslashes($arrFilter['system_rank'])."%'";
+            if (!empty($arrFilter['system_building'])) $arrWhere[] = "u.building LIKE '".$db->addslashes($arrFilter['system_building'])."%'";
+            if (!empty($arrFilter['system_floor'])) $arrWhere[] = "u.floor LIKE '".$db->addslashes($arrFilter['system_floor'])."%'";
+            if (!empty($arrFilter['system_country'])) $arrWhere[] = "u.country LIKE '".$db->addslashes($arrFilter['system_country'])."%'";
+            if (!empty($arrFilter['system_city'])) $arrWhere[] = "u.city LIKE '".$db->addslashes($arrFilter['system_city'])."%'";
+            if (!empty($arrFilter['system_postalcode'])) $arrWhere[] = "u.postalcode LIKE '".$db->addslashes($arrFilter['system_postalcode'])."%'";
+            
             // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
             $ptrRs = $db->query("
                 SELECT      u.id,
@@ -189,6 +237,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                             u.building,
                             u.floor,
                             u.office,
+                            u.comments,
                             g.id as groupid,
                             g.label
 
@@ -389,6 +438,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                             'BUILDING' => htmlentities($row['building']),
                             'FLOOR' => htmlentities($row['floor']),
                             'OFFICE' => htmlentities($row['office']),
+                            'COMMENTS' => ploopi_nl2br(htmlentities($row['comments'])),
                             'PHOTOPATH' => $row['photopath']
                         )
                     );
