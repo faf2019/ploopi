@@ -34,7 +34,7 @@ switch($op)
 {
     default:
         echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
-        echo $skin->open_simplebloc();
+        echo $skin->open_simplebloc('Réindexation');
 
         $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_heading WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
         $arrStats['headings'] = ($row = $db->fetchrow()) ? $row['c'] : 0;

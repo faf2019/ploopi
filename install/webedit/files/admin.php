@@ -585,8 +585,8 @@ switch($menu)
                     }
                 }
 
-                echo $skin->create_pagetitle(str_replace("LABEL",$_SESSION['ploopi']['modulelabel'], _WEBEDIT_PAGE_TITLE));
-                echo $skin->open_simplebloc();
+                echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+                echo $skin->open_simplebloc('Gestion du contenu');
 
                 ?>
                 <div id="webedit_header">

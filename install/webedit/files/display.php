@@ -70,10 +70,10 @@ $webedit_mode = (empty($_GET['webedit_mode'])) ? 'display' : $_GET['webedit_mode
 $readonly = (empty($_GET['readonly'])) ? 0 : $_GET['readonly'];
 
 // id article passé en param ?
-$articleid = (!empty($_REQUEST['articleid'])) ? $_REQUEST['articleid'] : '';
+$articleid = (!empty($_REQUEST['articleid']) && is_numeric($_REQUEST['articleid'])) ? $_REQUEST['articleid'] : '';
 
 // id rubrique passé en param ?
-$headingid = (!empty($_REQUEST['headingid'])) ? $_REQUEST['headingid'] : '';
+$headingid = (!empty($_REQUEST['headingid']) && is_numeric($_REQUEST['headingid'])) ? $_REQUEST['headingid'] : '';
 
 // code d'erreur renvoyé (principalement 404)
 $intErrorCode = 0;
@@ -1078,6 +1078,10 @@ if (isset($headings['feed_enabled']) && $headings['feed_enabled'])
 $title_raw = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title'];
 $title = htmlentities($title_raw);
 
+// Validation du basepath (doit se terminer par /)
+$strBasePath = _PLOOPI_BASEPATH;
+if (substr($strBasePath, -1) != '/') $strBasePath .= '/';
+
 $template_body->assign_vars(
     array(
         'TEMPLATE_PATH'                 => $template_path,
@@ -1105,6 +1109,7 @@ $template_body->assign_vars(
         'LASTUPDATE_TIME'               => $lastupdate['time'],
         'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
         'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
+        'SITE_BASEPATH'                 => $strBasePath,
         'PLOOPI_VERSION'                => _PLOOPI_VERSION,
         'PLOOPI_REVISION'               => _PLOOPI_REVISION
     )

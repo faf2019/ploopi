@@ -1,3 +1,10 @@
+== Module WebEdit - version 2.0.6 ============================================
+
+2009-04-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug à l'affichage des statistiques pour un article non publié (suppression du lien "statistiques") 
+ * Mise à jour ergonomique (mise en conformité de l'ensemble des modules) 
+
 == Module WebEdit - version 2.0.5 ============================================
 
 2009-04-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

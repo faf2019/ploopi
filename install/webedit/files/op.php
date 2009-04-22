@@ -51,7 +51,7 @@ switch($ploopi_op)
 
         $return = -1;
 
-        if (!empty($_GET['headingid']) && is_numeric($_GET['headingid']) && is_numeric($_POST['subscription_headingid']))
+        if (!empty($_GET['headingid']) && is_numeric($_GET['headingid']) && isset($_POST['subscription_headingid']) && is_numeric($_POST['subscription_headingid']))
         {
             if (!empty($_POST['subscription_email']) && ploopi_checkemail($_POST['subscription_email']))
             {
@@ -216,15 +216,15 @@ if ($_SESSION['ploopi']['connected'])
                         include_once './modules/webedit/class_article.php';
 
                         $objArticle = new webedit_article();
-                        $objArticle->open($_POST['webedit_article_id']);
+                        if (empty($_POST['webedit_article_id']) || !is_numeric($_POST['webedit_article_id']) || !$objArticle->open($_POST['webedit_article_id'])) ploopi_die();
 
                         $intArticleId = $_POST['webedit_article_id'];
                         $intHeadingId = 'null';
 
-                        $db->query("SELECT distinct(year) FROM ploopi_mod_webedit_counter WHERE id_article = {$_POST['webedit_article_id']} ORDER BY year");
+                        $db->query("SELECT distinct(year) FROM ploopi_mod_webedit_counter WHERE id_article = {$intArticleId} ORDER BY year");
                         $arrSelectYear = $db->getarray();
 
-                        $db->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_article = {$_POST['webedit_article_id']} AND year = {$intYearSel} ORDER BY month");
+                        $db->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_article = {$intArticleId} AND year = {$intYearSel} ORDER BY month");
                         $arrSelectMonth = $db->getarray();
 
                         $strPopupTitle = "Statistiques de fréquentation de l'article &laquo; ".htmlentities($objArticle->fields['title'])." &raquo;";
@@ -234,7 +234,7 @@ if ($_SESSION['ploopi']['connected'])
                         include_once './modules/webedit/class_heading.php';
 
                         $objHeading = new webedit_heading();
-                        $objHeading->open($_POST['webedit_heading_id']);
+                        if (empty($_POST['webedit_heading_id']) || !is_numeric($_POST['webedit_heading_id']) || !$objHeading->open($_POST['webedit_heading_id'])) ploopi_die();
 
                         $intArticleId = 'null';
                         $intHeadingId = $_POST['webedit_heading_id'];
@@ -247,7 +247,7 @@ if ($_SESSION['ploopi']['connected'])
 
                             INNER JOIN  ploopi_mod_webedit_article a
                             ON          a.id = c.id_article
-                            AND         a.id_heading = {$_POST['webedit_heading_id']}
+                            AND         a.id_heading = {$intHeadingId}
 
                             ORDER BY    c.year
                             "
@@ -263,7 +263,7 @@ if ($_SESSION['ploopi']['connected'])
 
                             INNER JOIN  ploopi_mod_webedit_article a
                             ON          a.id = c.id_article
-                            AND         a.id_heading = {$_POST['webedit_heading_id']}
+                            AND         a.id_heading = {$intHeadingId}
 
                             WHERE       c.year = {$intYearSel}
 

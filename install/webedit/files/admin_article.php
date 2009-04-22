@@ -114,7 +114,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
 <div style="background-color:#e0e0e0;padding:4px;border-bottom:1px solid #c0c0c0;">
     <p class="ploopi_va" style="font-weight:bold;">
         <?php
-        if (ploopi_isactionallowed(_WEBEDIT_ACTION_STATS))
+        if ($type != 'draft' && ploopi_isactionallowed(_WEBEDIT_ACTION_STATS))
         {
             ?>
             <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cet article" onclick="javascript:webedit_stats_open(<?php echo $article->fields['id']; ?>, null, event);">

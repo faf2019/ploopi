@@ -31,7 +31,7 @@
  */
 
 echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
-echo $skin->open_simplebloc();
+echo $skin->open_simplebloc('Statistiques');
 
 $intYearSel = (empty($_GET['webedit_yearsel']) || !is_numeric($_GET['webedit_yearsel'])) ? date('Y') : $_GET['webedit_yearsel'];
 $intMonthSel = (empty($_GET['webedit_monthsel']) || empty($_GET['webedit_yearsel'])  || !is_numeric($_GET['webedit_monthsel']) || !is_numeric($_GET['webedit_yearsel'])) ? '' : $_GET['webedit_monthsel'];
