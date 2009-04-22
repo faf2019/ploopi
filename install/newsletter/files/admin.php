@@ -22,7 +22,7 @@
 
 /**
  * Interface d'administration du module Newsletter.
- * 
+ *
  * @package newsletter
  * @subpackage admin
  * @copyright HeXad
@@ -60,10 +60,10 @@ switch ($strNewsletterMenuBlock)
       //Ouverture d'un buffer affichage
       ob_start();
       ploopi_init_module('newsletter');
-      
+
       global $ploopi_days;
       global $ploopi_months;
-      
+
       $strNewsletterMode = 'display';
       ?>
       <div style="padding:4px; height:500px; overflow:auto;">
@@ -72,7 +72,7 @@ switch ($strNewsletterMenuBlock)
       <?php
       $content = ob_get_contents(); // Recupération du buffer
       ob_end_clean(); //Nettoyage du buffeur
-      
+
       // Creation de la popup
       echo $skin->create_popup('Newsletter',$content,'newsletter_popup_consult');
       ploopi_die();
@@ -106,7 +106,7 @@ switch ($strNewsletterMenuBlock)
         }
         ploopi_redirect('admin.php');
       break;
-      
+
       case 'subscrib_delete': // Suppression de donnée d'inscriptions
         if(ploopi_isactionallowed(_NEWSLETTER_ACTION_DELETE_SUBSCRIBER) && !empty($_GET['email_subscrib']))
         {
@@ -116,14 +116,14 @@ switch ($strNewsletterMenuBlock)
         }
         ploopi_redirect('admin.php');
       break;
-      
+
       case 'subscrib_switch_active': // Changement d'état de active
         if(ploopi_isactionallowed(_NEWSLETTER_ACTION_MODIF_SUBSCRIBER) && !empty($_GET['email_subscrib']))
         {
           $objNewsletterSubscrib = new newsletter_subscriber();
           if($objNewsletterSubscrib->open($_GET['email_subscrib']))
           {
-            $objNewsletterSubscrib->fields['active'] = ($objNewsletterSubscrib->fields['active'] == 1) ? 0 : 1; 
+            $objNewsletterSubscrib->fields['active'] = ($objNewsletterSubscrib->fields['active'] == 1) ? 0 : 1;
             $objNewsletterSubscrib->save();
           }
         }
@@ -133,7 +133,7 @@ switch ($strNewsletterMenuBlock)
        * Gestion des op des Newsletter
        */
       case 'newsletter_save': // sauvegarde les newsletter
-        if((ploopi_isactionallowed(_NEWSLETTER_ACTION_WRITE) && !isset($_GET['id_newsletter'])) || 
+        if((ploopi_isactionallowed(_NEWSLETTER_ACTION_WRITE) && !isset($_GET['id_newsletter'])) ||
            (ploopi_isactionallowed(_NEWSLETTER_ACTION_MODIFY) && isset($_GET['id_newsletter'])))
         {
           $objNewsletter = new newsletter();
@@ -142,31 +142,48 @@ switch ($strNewsletterMenuBlock)
             if(!$objNewsletter->open($_GET['id_newsletter'])) ploopi_redirect('admin.php');
           }
           $objNewsletter->fields['content'] = $_POST['fck_newsletter_content'];
-          $objNewsletter->setvalues($_POST,'newsletter_'); 
+          $objNewsletter->setvalues($_POST,'newsletter_');
           $objNewsletter->save();
-          
+
           // Enregistrement des validateurs
           if(ploopi_isactionallowed(_NEWSLETTER_ACTION_MANAGE_VALIDATOR))
             ploopi_validation_save(_NEWSLETTER_OBJECT_NEWSLETTER,$objNewsletter->fields['id']);
-          
+
           ploopi_redirect("admin.php?op=newsletter_modify&id_newsletter={$objNewsletter->fields['id']}");
         }
         ploopi_redirect('admin.php');
       break;
-      
+
       case 'newsletter_validate': // valide une newsletter
-        if(ploopi_isactionallowed(_NEWSLETTER_ACTION_VALIDATE) && isset($_GET['id_newsletter']))
+        if(isset($_GET['id_newsletter']))
         {
-          $objNewsletter = new newsletter();
-          if($objNewsletter->open($_GET['id_newsletter']))
+          $wfusers = array();
+          // Liste des validateurs globaux en detail
+          $wfusers_tempo = ploopi_validation_get(_NEWSLETTER_OBJECT_NEWSLETTER);
+          // Ajout $wfusers à de la liste des validateurs de la newsletter
+          $wfusers_tempo += ploopi_validation_get(_NEWSLETTER_OBJECT_NEWSLETTER, $_GET['id_newsletter']);
+
+          //nettoyage de $wfusers pour ne garder que les id_user validateur
+          foreach($wfusers_tempo as $value) $wfusers[] = $value['id_validation'];
+          unset($wfusers_tempo); // Plus besoin, on vide
+
+          if(in_array($_SESSION['ploopi']['userid'],$wfusers))
           {
-            $objNewsletter->validate();
-            ploopi_redirect("admin.php?op=newsletter_modify&id_newsletter={$objNewsletter->fields['id']}");
+            $objNewsletter = new newsletter();
+            if($objNewsletter->open($_GET['id_newsletter']))
+            {
+              if($objNewsletter->fields['status'] == 'wait')
+              {
+                $objNewsletter->validate();
+
+                ploopi_redirect("admin.php?op=newsletter_modify&id_newsletter={$objNewsletter->fields['id']}");
+              }
+            }
           }
         }
         ploopi_redirect('admin.php');
       break;
-      
+
       case 'newsletter_pdf': // Génère le pdf a partir du contenu de la newsletter
         if(isset($_GET['id_newsletter']))
         {
@@ -179,7 +196,7 @@ switch ($strNewsletterMenuBlock)
         }
         ploopi_redirect('admin.php');
       break;
-      
+
       case 'newsletter_delete': // Supprime une newsletter
         if(ploopi_isactionallowed(_NEWSLETTER_ACTION_DELETE) && isset($_GET['id_newsletter']))
         {
@@ -200,13 +217,13 @@ switch ($strNewsletterMenuBlock)
           if($objSendletter->newsletter_send_letter()) // Envoi de la lettre
           {
             $_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletter_return_send'] = _NEWSLETTER_LABEL_RETURN_SEND_OK;
-            
+
             //Sauvegarde dans la newsletter les détails de l'envoi
             $objNewsletter = new newsletter();
             $objNewsletter->open($_GET['id_newsletter']);
-            $objNewsletter->send(); 
+            $objNewsletter->send();
             unset($objNewsletter);
-            
+
             ploopi_redirect('admin.php?newsletterToolbarSend=tabNewsletterSendOk');
           }
           else
@@ -271,7 +288,7 @@ switch ($strNewsletterMenuBlock)
         //Onglet de gestion des parametres
         if (ploopi_isactionallowed(_NEWSLETTER_ACTION_PARAM) || ploopi_isactionallowed(_NEWSLETTER_ACTION_MANAGE_VALIDATOR))
             $tabs['tabNewsletterParam'] = array('title'   => _NEWSLETTER_LABELTAB_PARAM, 'url' => "admin.php?newsletterTabAdmin=tabNewsletterParam");
-        
+
         if (!empty($_GET['newsletterTabAdmin'])) $_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterTabAdmin'] = $_GET['newsletterTabAdmin'];
         if (!isset($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterTabAdmin'])) $_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterTabAdmin'] = '';
 
@@ -313,7 +330,7 @@ switch ($strNewsletterMenuBlock)
           break;
         }
       break;
-      
+
     }
   break;
 }

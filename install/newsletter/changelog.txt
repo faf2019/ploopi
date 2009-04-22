@@ -1,3 +1,9 @@
+== Module NEWSLETTER - version 1.2.2 ==================================================
+
+2009-04-22  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction d'un bug. Seul les administrateurs avaient le droit de valider meme si le user connecté (non admin) était dans la liste des validateurs. (Merci Bruno Morisset)
+
 == Module NEWSLETTER - version 1.2.1 ==================================================
 
 2009-03-18  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
