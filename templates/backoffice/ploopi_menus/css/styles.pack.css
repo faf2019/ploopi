@@ -1779,6 +1779,9 @@ p.ploopi_va a {
     text-align: right;
     margin: 0;
     padding: 0 .5em 0 0;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
 }
 
 .ploopi_form p input[type='text'],
@@ -1846,6 +1849,9 @@ a.ploopi_form_title * {
     display: inline-block;
     vertical-align: middle;
     cursor:pointer;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
 }
 
 .error {

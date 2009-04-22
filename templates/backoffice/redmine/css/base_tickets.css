@@ -1,0 +1,369 @@
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/******************
+  SYSTEM.TICKETS
+*******************/
+
+#system_tickets_titlebar {
+padding:2px 4px;
+border-bottom:1px solid #d0d0d0;
+background-color:#f0f0f0;
+overflow:auto;
+}
+
+.system_tickets_row_title {
+clear:both;
+background-color:#e0e0e0;
+border-bottom:1px solid #b0b0b0;
+overflow:auto;
+font-weight:bold;
+height:20px;
+line-height:20px;
+}
+
+.system_tickets_row {
+clear:both;
+border-bottom:1px solid #b0b0b0;
+overflow:auto;
+}
+
+.system_tickets_head {
+cursor:pointer;
+}
+
+.system_tickets_detail {
+clear:both;
+overflow:auto;
+display:none;
+margin-left:40px;
+}
+
+.system_tickets_sender {
+float:right;
+width:180px;
+padding:2px 0;
+}
+
+.system_tickets_date {
+float:right;
+width:160px;
+padding:2px 0;
+}
+
+.system_tickets_count {
+float:right;
+width:40px;
+padding:2px 0;
+}
+
+.system_tickets_attachment {
+float:right;
+text-align:center;
+width:20px;
+padding:2px 0;
+}
+
+.system_tickets_title {
+}
+
+.system_tickets_detail_content {
+padding-right:4px;
+overflow:auto;
+}
+
+.system_tickets_message {
+padding:4px;
+margin-right:4px;
+background-color:#fafafa;
+border:1px solid #d0d0d0;
+overflow:auto;
+}
+
+.system_tickets_buttons {
+clear: both;
+float: left;
+margin: 4px 0 4px 0px;
+padding: 2px 4px;
+border:1px solid #c0c0c0;
+background-color:#d0d0d0;
+}
+
+.system_tickets_buttons img {
+    margin-right:2px;
+}
+
+.system_tickets_buttons a {
+    margin-right:4px;
+    text-decoration:none;
+}
+
+.system_tickets_user {
+width: 250px;
+text-align: left;
+background-color:#fafafa;
+border: 1px solid #d0d0d0;
+padding:4px;
+float: right;
+}
+
+.system_tickets_user_detail img, .system_tickets_user_detail span {
+    vertical-align: middle;
+}
+
+.system_tickets_user_puce {
+float:left;
+width:20px;
+height: 16px;
+text-align: center;
+}
+
+.system_tickets_response {
+clear:both;
+border-left: 1px solid #b0b0b0;
+border-top: 1px solid #b0b0b0;
+padding:2px 0 0 12px;
+overflow:auto;
+}
+
+.system_tickets_response_detail {
+padding:0;
+clear:both;
+margin:0;
+display:none;
+}
+
+.system_tickets_tovalidate {
+display:block;
+float:left;
+background-color:#ffffe0;
+border: 1px solid #d0d0d0;
+margin:4px 0;
+padding:4px;
+overflow:auto;
+cursor:pointer;
+}
+
+.system_tickets_tovalidate:hover {
+text-decoration:none;
+}
+
+.system_tickets_tovalidate_msg img, .system_tickets_tovalidate_msg span{
+    vertical-align: middle;
+}
+
+.system_tickets_tovalidate_msg img {
+padding-right:4px;
+}
+
+.system_tickets_tovalidate_msg {
+}
+
+.system_tickets_tovalidate_button {
+    margin-top:4px;
+    text-align:right;
+}
+
+.system_tickets_tovalidate_button img {
+    margin-right:2px;
+}
+
+.system_tickets_tovalidate_button a {
+    margin-right:4px;
+    text-decoration:none;
+}
+
+.system_tickets_legend {
+    clear:both;
+    padding:4px;
+    overflow:auto;
+}
+
+.system_tickets_legend img {
+    float:left;
+    margin-left:10px;
+    margin-right:2px;
+}
+
+.system_tickets_legend div {
+    float:left;
+}
+
+#tickets_new {
+    padding:4px;
+    background-color:#f8f8f8;
+}
+
+.system_tickets_page {
+display:block;
+float:left;
+background-color:#f0f0f0;
+padding: 0px 4px;
+margin-left:1px;
+text-decoration:none;
+color:#000000;
+border:1px solid #d0d0d0;
+}
+
+.system_tickets_page:hover {
+background-color:#e0e0e0;
+text-decoration:none;
+}
+
+.system_tickets_page_sel {
+display:block;
+float:left;
+background-color:#f0f0f0;
+padding: 0px 4px;
+margin-left:1px;
+text-decoration:none;
+color:#000000;
+border:1px solid #000000;
+}
+
+.system_tickets_page_sel:hover {
+background-color:#e0e0e0;
+text-decoration:none;
+}
+
+.system_tickets_select_workgroup {
+    font-weight:bold;
+    background-color:#e0e0e0;
+    border-bottom:1px solid #c0c0c0;
+    padding:1px;
+}
+
+.system_tickets_select_workgroup span {
+    margin-left:4px;
+}
+
+.system_tickets_select_user {
+    display:block;
+    background-color:#f0f0f0;
+    border-bottom:1px solid #c0c0c0;
+    color:#404040;
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
+}
+
+.system_tickets_select_user:hover {
+    text-decoration:none;
+    background-color:#F2F6FF;
+    color:#000000;
+}
+
+.system_tickets_select_user span {
+    padding-left:4px;
+}
+
+.system_tickets_select_usergroup {
+    display:block;
+    background-color:#e8e8e8;
+    border-bottom:1px solid #c0c0c0;
+    color:#404040;
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.system_tickets_select_usergroup:hover {
+    text-decoration:none;
+    background-color:#F2F6FF;
+    color:#000000;
+}
+
+.system_tickets_select_usergroup span {
+    padding-left:4px;
+}
+
+.system_tickets_select_usergroup_user {
+    display:block;
+    background-color:#f0f0f0;
+    border-bottom:1px solid #c0c0c0;
+    color:#404040;
+    padding:1px 1px 1px 40px;
+    text-decoration:none;
+}
+
+.system_tickets_select_usergroup_user:hover {
+    text-decoration:none;
+    background-color:#F2F6FF;
+    color:#000000;
+}
+
+.system_tickets_select_usergroup_user span {
+    padding-left:4px;
+}
+
+.system_tickets_select_legend {
+    padding:2px 1px;
+    text-align:right;
+}
+.system_tickets_select_legend span {
+    padding:0 4px;
+}
+
+.system_tickets_select_empty {
+    padding:2px 1px;
+}
+.system_tickets_select_empty span {
+    padding:0 4px;
+}
+
+a.system_tickets_delete_user {
+    text-decoration:none;
+}
+
+a.system_tickets_delete_user:hover {
+    text-decoration:none;
+}
+
+a.system_tickets_delete_user img {
+    border:0;
+}
+
+.system_tickets_quoted_user {
+    margin:2px 2px 0 2px;
+    padding:2px 4px;
+    border-left:2px solid #c0c0c0;
+    background-color:#f0f0f0;
+}
+
+.system_tickets_quoted_message {
+    margin:0 2px 2px 2px;
+    padding:2px 4px;
+    border-left:2px solid #c0c0c0;
+    background-color:#f0f0f0;
+}
+
+#system_tickets_button {
+    text-decoration:none;
+    border:1px solid #c0c0c0;
+    background-color:#f8f8f8;
+    padding:2px 4px;
+    margin:2px 2px 2px 0;
+    display:block;
+    float:left;
+}
+
+#system_tickets_button:hover {
+    background-color:#e0e0e0;
+}
