@@ -34,14 +34,26 @@ function system_showgroup(typetree, gid, str)
     {
         if ($(dest).style.display == 'none')
         {
-            $(dest).style.display='block';
             if ($(dest).innerHTML.length < 20)
             {
-                ploopi_ajaxloader(dest);
-                ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=xml_detail_group&typetree='+typetree+'&gid='+gid+'&str='+str,dest);
+                $(dest).innerHTML = ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=xml_detail_group&typetree='+typetree+'&gid='+gid+'&str='+str);
             }
+            new Effect.BlindDown(
+                dest,
+                {
+                    duration: 0.2
+                }
+            );
         }
-        else $(dest).style.display='none';
+        else 
+        {
+            new Effect.BlindUp(
+                dest,
+                {
+                    duration: 0.2
+                }
+            );
+        }
     }
 }
 

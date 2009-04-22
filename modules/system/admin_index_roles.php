@@ -79,14 +79,20 @@ if (isset($system_roletabid)) $_SESSION['system']['roletabid'] = $system_roletab
 
 if (!isset($_SESSION['system']['roletabid'])) $_SESSION['system']['roletabid'] = '';
 
-$tabs['tabRoleManagement'] = array (    'title' => _SYSTEM_LABELTAB_ROLEMANAGEMENT,
-                                        'url' => "admin.php?roleTabItem=tabRoleManagement");
+$tabs['tabRoleManagement'] = array (
+    'title' => _SYSTEM_LABELTAB_ROLEMANAGEMENT,
+    'url' => "admin.php?roleTabItem=tabRoleManagement"
+);
 
-$tabs['tabRoleAdd'] = array (   'title' => 'Ajouter un Rôle',
-                                'url' => "admin.php?roleTabItem=tabRoleAdd");
+$tabs['tabRoleAdd'] = array (
+    'title' => 'Ajouter un Rôle',
+    'url' => "admin.php?roleTabItem=tabRoleAdd"
+);
 
-$tabs['tabRoleUsers'] = array ( 'title' => _SYSTEM_LABELTAB_ROLEUSERS,
-                                        'url' => "admin.php?roleTabItem=tabRoleUsers");
+$tabs['tabRoleUsers'] = array ( 
+    'title' => _SYSTEM_LABELTAB_ROLEUSERS,
+    'url' => "admin.php?roleTabItem=tabRoleUsers"
+);
 
 if (!empty($_GET['roleTabItem']))  $_SESSION['system']['roleTabItem'] = $_GET['roleTabItem'];
 if (!isset($_SESSION['system']['roleTabItem'])) $_SESSION['system']['roleTabItem'] = '';

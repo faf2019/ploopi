@@ -128,7 +128,7 @@ define ('_SYSTEM_LABEL_ROLEADD', 'Ajouter un Rôle');
 define ('_SYSTEM_LABEL_TYPE', 'Type');
 define ('_SYSTEM_LABEL_LASTNAME', 'Nom');
 define ('_SYSTEM_LABEL_FIRSTNAME', 'Prénom');
-define ('_SYSTEM_LABEL_LOGIN', 'Login');
+define ('_SYSTEM_LABEL_LOGIN', 'Identifiant');
 define ('_SYSTEM_LABEL_ACTION', 'Action');
 define ('_SYSTEM_LABEL_USER', 'Utilisateur');
 define ('_SYSTEM_LABEL_GROUP', 'Groupe');

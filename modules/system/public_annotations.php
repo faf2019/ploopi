@@ -38,8 +38,8 @@
 switch($op)
 {
     default:
-        echo $skin->create_pagetitle('Annotations');
-        echo $skin->open_simplebloc();
+        echo $skin->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
+        echo $skin->open_simplebloc(_PLOOPI_LABEL_MYANNOTATIONS); 
 
         $page = (empty($_GET['page'])) ? 1 : $_GET['page'];
         ?>

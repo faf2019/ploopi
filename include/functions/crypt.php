@@ -105,11 +105,11 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
     }
 
     // si les paramètres optionnels sont passés à la fonction, on les rajoute au tableau
-    if (!empty($ploopi_mainmenu)) $arrParams['ploopi_mainmenu'] = $ploopi_mainmenu;
-    if (!empty($ploopi_workspaceid)) $arrParams['ploopi_workspaceid'] = $ploopi_workspaceid;
-    if (!empty($ploopi_moduleid)) $arrParams['ploopi_moduleid'] = $ploopi_moduleid;
-    if (!empty($ploopi_action)) $arrParams['ploopi_action'] = $ploopi_action;
-
+    if (!is_null($ploopi_mainmenu)) $arrParams['ploopi_mainmenu'] = $ploopi_mainmenu;
+    if (!is_null($ploopi_workspaceid)) $arrParams['ploopi_workspaceid'] = $ploopi_workspaceid;
+    if (!is_null($ploopi_moduleid)) $arrParams['ploopi_moduleid'] = $ploopi_moduleid;
+    if (!is_null($ploopi_action)) $arrParams['ploopi_action'] = $ploopi_action;
+    
     if ($addenv && isset($_SESSION['ploopi']))
     {
         // si des paramètres sont manquants, on va lire la valeur de la session

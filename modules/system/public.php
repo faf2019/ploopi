@@ -68,7 +68,6 @@ switch($op)
     break;
 
     case 'param':
-        echo $skin->create_pagetitle(_PLOOPI_LABEL_MYPARAMS);
         include './modules/system/public_module_param.php';
     break;
 
@@ -113,7 +112,6 @@ switch($op)
     break;
 
     case 'profile':
-        echo $skin->create_pagetitle(_SYSTEM_LABEL_MYPROFILE);
         include './modules/system/public_user.php';
     break;
 }

@@ -469,7 +469,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=system_send_photo"); ?>" method="post" enctype="multipart/form-data" target="system_user_photo_iframe">
                         <p class="ploopi_va" style="padding:2px;">
                             <label><?php echo _SYSTEM_LABEL_PHOTO; ?>: </label>
-                            <input type="file" class="text" name="system_user_photo" />
+                            <input type="file" name="system_user_photo" />
                             <input type="submit" class="button" name="<?php echo _PLOOPI_SAVE; ?>" />
                         </p>
                         </form>

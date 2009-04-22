@@ -62,7 +62,7 @@ if (!isset($arrFilter['ploopi_email'])) $arrFilter['ploopi_email'] = '';
 $_SESSION['system']['directoryform'] = $arrFilter;
 ?>
 <form action="<?php echo ploopi_urlencode('admin.php?sysToolbarItem=directory'); ?>" method="post">
-<p class="ploopi_va" style="padding:4px;border-bottom:1px solid #808080;">
+<p class="ploopi_va" style="padding:4px;border-bottom:1px solid #ccc;">
     <label>Nom: </label>
     <input type="text" class="text" name="ploopi_lastname" value="<?php echo htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" />
 
@@ -97,7 +97,7 @@ $db->query("
 
 $row = $db->fetchrow();
 ?>
-<div style="padding:4px;background-color:#e0e0e0;border-bottom:1px solid #808080;">
+<div style="padding:4px;background-color:#e0e0e0;border-bottom:1px solid #ccc;">
     <span>Vous pouvez retrouver ici l'ensemble des utilisateurs du sytème avec leur profil complet.<br />Vous ne pouvez cependant pas les gérer. Pour cela vous devez accéder à l'<a href="<?php echo ploopi_urlencode('admin.php?system_level=work'); ?>">interface d'administration des espaces de travail</a>.<br /><strong><?php echo $row['c']; ?> utilisateur(s) trouvé(s).</strong></span>
     <?php
     if ($row['c'] > $intMaxResponse)

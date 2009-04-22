@@ -34,7 +34,7 @@
 /**
  * Récupération de l'identifiant du module
  */
-if (!empty($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
+if (!empty($_REQUEST['idmodule']) && is_numeric($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
 
 echo $skin->open_simplebloc(_SYSTEM_MODULESELECTED);
 ?>

@@ -34,9 +34,15 @@
 /**
  * Récupération de l'identifiant du module
  */
-if (!empty($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
+if (!empty($_REQUEST['idmodule']) && is_numeric($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
 
+echo $skin->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
+echo $skin->open_simplebloc(_PLOOPI_LABEL_MYPARAMS); 
+?>
+<div style="padding:4px;">
+<?php
 echo $skin->open_simplebloc(_SYSTEM_MODULESELECTED);
+
 ?>
 <div style="padding:4px;">
 <?php
@@ -156,3 +162,5 @@ if (isset($idmodule))
     echo $skin->close_simplebloc();
 }
 ?>
+</div>
+<?php echo $skin->close_simplebloc(); ?>

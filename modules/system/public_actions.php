@@ -34,7 +34,11 @@
 /**
  * Création du titre de la page
  */
-echo $skin->create_pagetitle(_PLOOPI_LABEL_MYDATA);
+echo $skin->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
+echo $skin->open_simplebloc(_PLOOPI_LABEL_MYDATA); 
+?>
+<div style="padding:4px;">
+<?php
 
 $red = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_red.png\">";
 $green = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_green.png\">";
@@ -101,3 +105,5 @@ foreach ($_SESSION['ploopi']['workspaces'] as $group)
     }
 }
 ?>
+</div>
+<?php echo $skin->close_simplebloc(); ?>

@@ -41,37 +41,25 @@ switch ($_SESSION['ploopi']['mainmenu'])
             // left menu
             // admin menu always on the left menu
             //if ($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['grouptabid']]['system'])
-
             if (ploopi_ismanager())
             {
-                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER)
+                $blockpath = "./modules/system/block.php";
+
+                if (file_exists($blockpath))
                 {
-                    $arrBlocks[_PLOOPI_MODULE_SYSTEM]['title'] = _PLOOPI_GENERAL_ADMINISTRATION;
-                    if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
-                    {
-                        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['url'] = ploopi_urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=admin&system_level=system');
-                    }
-                    else
-                    {
-                        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['url'] = ploopi_urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=admin&system_level='._SYSTEM_WORKSPACES);
-                    }
+                    $arrBlocks[_PLOOPI_MODULE_SYSTEM] =
+                        array(
+                            'title'=> _PLOOPI_GENERAL_ADMINISTRATION,
+                            'description' => 'Installation des Modules, Paramétrage, Monitoring',
+                            'url' => ploopi_urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=admin&system_level='.($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN ? 'system' : _SYSTEM_WORKSPACES)),
+                            'admin' => true,
+                            'file' => $blockpath
+                        );
 
-                    $arrBlocks[_PLOOPI_MODULE_SYSTEM]['description'] = 'Installation des Modules, Paramétrage, Monitoring';
-                    $arrBlocks[_PLOOPI_MODULE_SYSTEM]['admin'] = true;
-
-                    if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
-                    {
-                        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] =
-                            array(
-                                'label' => _PLOOPI_ADMIN_SYSTEM,
-                                'url' => ploopi_urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM."&ploopi_action=admin&system_level=system")
-                            );
-                    }
-
-                    $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] = array(
-                        'label' => _PLOOPI_ADMIN_WORKSPACES,
-                        'url' => ploopi_urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM."&ploopi_action=admin&system_level="._SYSTEM_WORKSPACES)
-                    );
+                    $block = new block();
+                    include $blockpath;
+                    $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'] = $block->getmenu();
+                    $arrBlocks[_PLOOPI_MODULE_SYSTEM]['content'] = $block->getcontent();
                 }
             }
 
@@ -84,16 +72,18 @@ switch ($_SESSION['ploopi']['mainmenu'])
                 {
                     if ($_SESSION['ploopi']['modules'][$menu_moduleid]['active'] && $_SESSION['ploopi']['modules'][$menu_moduleid]['visible'])
                     {
-                        $modtype = $_SESSION['ploopi']['modules'][$menu_moduleid]['moduletype'];
-                        $blockpath = "./modules/{$modtype}/block.php";
+                        $blockpath = "./modules/{$_SESSION['ploopi']['modules'][$menu_moduleid]['moduletype']}/block.php";
 
                         if (file_exists($blockpath))
                         {
-                            $arrBlocks[$menu_moduleid] = array(
-                                                                                'title'=> $_SESSION['ploopi']['modules'][$menu_moduleid]['label'],
-                                                                                'url' => ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"),
-                                                                                'file' => $blockpath
-                                                                            );
+                            $arrBlocks[$menu_moduleid] =
+                                array(
+                                    'title'=> $_SESSION['ploopi']['modules'][$menu_moduleid]['label'],
+                                    'description' => '',
+                                    'url' => ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"),
+                                    'file' => $blockpath
+                                );
+
                             $block = new block();
                             include($blockpath);
                             $arrBlocks[$menu_moduleid]['menu'] = $block->getmenu();
@@ -107,42 +97,24 @@ switch ($_SESSION['ploopi']['mainmenu'])
     break;
 
     case _PLOOPI_MENU_MYWORKSPACE:
-        $arrBlocks[_PLOOPI_MODULE_SYSTEM] =
-            array(
-                'title'         =>_PLOOPI_LABEL_MYWORKSPACE,
-                'url'           => ploopi_urlencode('admin.php?op=user', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-                'description'   => 'Profil utilisateur'
-            );
+        
+        $blockpath = "./modules/system/block_public.php";
 
-        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] =
-            array(
-                'label'     => _PLOOPI_LABEL_MYTICKETS,
-                'url'       => ploopi_urlencode('admin.php?op=tickets', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-            );
+        if (file_exists($blockpath))
+        {
+            $arrBlocks[_PLOOPI_MODULE_SYSTEM] =
+                array(
+                    'title'=> _PLOOPI_LABEL_MYWORKSPACE,
+                    'description' => 'Profil, paramètres, annotations, tickets',
+                    'url' => ploopi_urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public'),
+                    'file' => $blockpath
+                );
 
-        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] =
-            array(
-                'label'     => _PLOOPI_LABEL_MYANNOTATIONS,
-                'url'       => ploopi_urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-            );
-
-        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] =
-            array(
-                'label'     => _PLOOPI_LABEL_MYPROFILE,
-                'url'       => ploopi_urlencode('admin.php?op=profile', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-            );
-
-        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] =
-            array(
-                'label'     => _PLOOPI_LABEL_MYDATA,
-                'url'       => ploopi_urlencode('admin.php?op=actions', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-            );
-
-        $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'][] =
-            array(
-                'label'     => _PLOOPI_LABEL_MYPARAMS,
-                'url'       => ploopi_urlencode('admin.php?op=param', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-            );
+            $block = new block();
+            include $blockpath;
+            $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'] = $block->getmenu();
+            $arrBlocks[_PLOOPI_MODULE_SYSTEM]['content'] = $block->getcontent();
+        }
     break;
 
     //case _PLOOPI_MENU_TICKETS:

@@ -34,30 +34,29 @@
 $_SESSION['ploopi']['modules'] = Array();
 $_SESSION['ploopi']['moduletypes'] = Array();
 
-// get modules
-$select =   "
-            SELECT      m.id,
-                        m.label,
-                        m.active,
-                        m.visible,
-                        m.public,
-                        m.autoconnect,
-                        m.shared,
-                        m.viewmode,
-                        m.transverseview,
-                        m.id_module_type,
-                        m.id_workspace,
-                        mt.label as moduletype,
-                        mt.version,
-                        mt.author,
-                        mt.date
+// On récupère les modules
+$db->query("
+    SELECT      m.id,
+                m.label,
+                m.active,
+                m.visible,
+                m.public,
+                m.autoconnect,
+                m.shared,
+                m.viewmode,
+                m.transverseview,
+                m.id_module_type,
+                m.id_workspace,
+                mt.label as moduletype,
+                mt.version,
+                mt.author,
+                mt.date
 
-            FROM        ploopi_module m
+    FROM        ploopi_module m
 
-            INNER JOIN  ploopi_module_type mt ON m.id_module_type = mt.id
-            ";
+    INNER JOIN  ploopi_module_type mt ON m.id_module_type = mt.id
+");
 
-$db->query($select);
 while ($fields = $db->fetchrow())
 {
     if (empty($_SESSION['ploopi']['moduletypes'][$fields['moduletype']]))
@@ -69,70 +68,68 @@ while ($fields = $db->fetchrow())
 
 $listmodules = implode(',',array_keys($_SESSION['ploopi']['modules']));
 
-// get default params
-$select =   "
-            SELECT      pd.id_module,
-                        pt.name,
-                        pt.label,
-                        pd.value
+// On récupère les paramètres par défaut
+$db->query("
+    SELECT      pd.id_module,
+                pt.name,
+                pt.label,
+                pd.value
 
-            FROM        ploopi_param_default pd
+    FROM        ploopi_param_default pd
 
-            INNER JOIN  ploopi_param_type pt
-            ON          pt.name = pd.name
-            AND         pt.id_module_type = pd.id_module_type
+    INNER JOIN  ploopi_param_type pt
+    ON          pt.name = pd.name
+    AND         pt.id_module_type = pd.id_module_type
 
-            WHERE       pd.id_module IN ($listmodules)
-            ";
-
-$db->query($select);
+    WHERE       pd.id_module IN ({$listmodules})
+");
+    
 while ($fields = $db->fetchrow())
 {
     $_SESSION['ploopi']['params'][$fields['id_module']]['default'][$fields['name']] = $fields['value'];
 }
 
-$select =   "
-            SELECT      pg.id_module,
-                        pt.name,
-                        pt.label,
-                        pg.value,
-                        pg.id_workspace
+// On récupère les paramètres "espace de travail"
+$db->query("
+    SELECT      pg.id_module,
+                pt.name,
+                pt.label,
+                pg.value,
+                pg.id_workspace
 
-            FROM        ploopi_param_workspace pg
+    FROM        ploopi_param_workspace pg
 
-            INNER JOIN  ploopi_param_type pt
-            ON          pt.name = pg.name
-            AND         pt.id_module_type = pg.id_module_type
+    INNER JOIN  ploopi_param_type pt
+    ON          pt.name = pg.name
+    AND         pt.id_module_type = pg.id_module_type
 
-            WHERE       pg.id_module IN ({$listmodules})
-            ";
-
-$db->query($select);
+    WHERE       pg.id_module IN ({$listmodules})
+");
+            
 while ($fields = $db->fetchrow())
 {
     $_SESSION['ploopi']['params'][$fields['id_module']]['workspace'][$fields['id_workspace']][$fields['name']] = $fields['value'];
 }
 
-// get user params
+// On récupère les paramètres utilisateur
 if (!empty($_SESSION['ploopi']['userid']))
 {
-    $select =   "
-                SELECT      pu.id_module,
-                            pt.name,
-                            pt.label,
-                            pu.value
+    $db->query("
+        SELECT      pu.id_module,
+                    pt.name,
+                    pt.label,
+                    pu.value
 
-                FROM        ploopi_param_user pu
+        FROM        ploopi_param_user pu
 
-                INNER JOIN  ploopi_param_type pt
-                ON          pt.name = pu.name
-                AND         pt.id_module_type = pu.id_module_type
+        INNER JOIN  ploopi_param_type pt
+        ON          pt.name = pu.name
+        AND         pt.id_module_type = pu.id_module_type
 
-                WHERE       pu.id_module IN ({$listmodules})
-                AND         pu.id_user = {$_SESSION['ploopi']['userid']}
-                ";
-
-    $db->query($select);
+        WHERE       pu.id_module IN ({$listmodules})
+        AND         pu.id_user = {$_SESSION['ploopi']['userid']}
+    ");
+        
     while ($fields = $db->fetchrow())
     {
         $_SESSION['ploopi']['params'][$fields['id_module']]['user'][$fields['name']] = $fields['value'];

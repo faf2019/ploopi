@@ -45,6 +45,16 @@
 class data_object
 {
     /**
+     * Propriété expérimentale
+     *
+     * @var array
+     */
+    protected static $arrDef = array(
+        'strTableName' => null,
+        'arrId' => null
+    );    
+    
+    /**
      * Nom de la classe
      *
      * @var string
@@ -119,6 +129,50 @@ class data_object
     
     public $new;
     
+    /**
+     * Méthode statique expérimentale : contructeur statique de la classe
+     * 
+     * @param string $strTableName nom de la table
+     * @param array $arrId tableau contenant la description des champs composants la clé primaire
+     */
+    public static function init($strTableName, $arrId = array())
+    {
+        self::$arrDef['strTableName'] = $strTableName;
+        self::$arrDef['arrId'] = $arrId;
+    }
+    
+
+    /**
+     * Méthode statique expérimentale permettant de renvoyer le contenu de la table sous forme d'un tableau d'objets
+     *
+     * @return array tableau d'objets
+     */
+    public static function getObjects()
+    {
+        global $db;
+        
+        if (is_null(self::$arrDef['strTableName'])) return null;
+        
+        $arrResult = array();
+        
+        $db->query("SELECT * FROM `".self::$arrDef['strTableName']."`");
+        while ($row = $db->fetchrow())
+        {
+            $objRecord = new data_object(self::$arrDef['strTableName'], self::$arrDef['arrId'][0]);
+            $objRecord->new = false;
+            
+            // Construction de la clé du tableau (à partir de la clé primaire du tuple)
+            $arrKeyValue = array();
+            foreach(self::$arrDef['arrId'] as $strKeyField) $arrKeyValue[] = $row[$strKeyField];
+            
+            foreach($row as $strKey => $strValue) $objRecord->fields[$strKey] = $strValue;
+
+            $arrResult[implode(',', $arrKeyValue)] = $objRecord;
+        }
+        
+        return $arrResult;
+    }        
+    
     
     /**
      * Constructeur de la classe
@@ -160,7 +214,7 @@ class data_object
             }
         }
 
-        $this->db = $db;
+        $this->db = &$db;
 
         $this->new = true;
     }
@@ -171,7 +225,7 @@ class data_object
      * @param ressource $db objet de connexion à la base de données
      */
     
-    public function setdb($db)
+    public function setdb(&$db)
     {
         $this->db = $db;
     }
@@ -323,7 +377,7 @@ class data_object
         $result = $this->db->query($this->sql);
         while ($fields = $this->db->fetchrow($result)) $this->fields[$fields['Field']] = '';
     }
-
+    
     /**
      * Met à jour les propriétés id_user, id_workspace, id_module de l'objet avec le contenu de la session
      */

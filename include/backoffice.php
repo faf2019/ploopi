@@ -128,7 +128,6 @@ if ($_SESSION['ploopi']['connected'])
 
     if (!empty($arrBlocks))
     {
-
         foreach($arrBlocks as $idmod => $mod)
         {
             if (empty($mod['url'])) $mod['url'] = '';
@@ -153,10 +152,34 @@ if ($_SESSION['ploopi']['connected'])
 
             if (isset($mod['menu']))
             {
+                if ($idmod == $_SESSION['ploopi']['moduleid']) // Module sélectionné
+                {
+                    $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_blocksel',array(
+                            'ID' => $idmod,
+                            'TITLE' => $mod['title'],
+                            'URL' => $mod['url'],
+                            'DESCRIPTION' => ''
+                        )
+                    );
+                }
+                
                 foreach($mod['menu'] as $menu)
                 {
+                    if ($idmod == $_SESSION['ploopi']['moduleid']) // Module sélectionné
+                    {
+                        $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_blocksel.menu',array(
+                                'LABEL' => $menu['label'],
+                                'CLEANED_LABEL' => $menu['cleaned_label'],
+                                'URL' => $menu['url'],
+                                'SELECTED' => (!empty($menu['selected']) && $menu['selected']) ? 'selected' : '',
+                                'TARGET' => (!empty($menu['target'])) ? $menu['target'] : ''
+                            )
+                        );
+                    }
+                    
                     $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block.menu',array(
                             'LABEL' => $menu['label'],
+                            'CLEANED_LABEL' => $menu['cleaned_label'],
                             'URL' => $menu['url'],
                             'SELECTED' => (!empty($menu['selected']) && $menu['selected']) ? 'selected' : '',
                             'TARGET' => (!empty($menu['target'])) ? $menu['target'] : ''
@@ -208,7 +231,7 @@ if ($_SESSION['ploopi']['connected'])
         'MAINMENU_SHOWPROFILE_URL'      => ploopi_urlencode('admin.php?op=profile', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'MAINMENU_SHOWANNOTATIONS_URL'  => ploopi_urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'MAINMENU_SHOWTICKETS_URL'      => ploopi_urlencode('admin.php?op=tickets', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-        'MAINMENU_SHOWSEARCH_URL'       => ploopi_urlencode('admin.php?op=search', _PLOOPI_MENU_WORKSPACES, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        'MAINMENU_SHOWSEARCH_URL'       => ploopi_urlencode('admin.php?op=search', _PLOOPI_MENU_WORKSPACES, 0, _PLOOPI_MODULE_SEARCH, 'public'),
 
         'MAINMENU_SHOWPROFILE_SEL'      => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'profile') ? 'selected' : '',
         'MAINMENU_SHOWANNOTATIONS_SEL'  => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'annotation') ? 'selected' : '',

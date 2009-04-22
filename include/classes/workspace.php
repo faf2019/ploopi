@@ -202,7 +202,6 @@ class workspace extends data_object
         ");
 
         while ($fields = $db->fetchrow($result)) $arrUsers[$fields['id']] = $fields;
-
         
         if ($booWithGroups)
         {

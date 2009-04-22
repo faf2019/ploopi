@@ -206,6 +206,8 @@ if (isset($ploopi_op))
         break;
 
         case 'calendar_open':
+            ob_start();
+            
             $month = date('n');
             $year = date('Y');
 
@@ -393,6 +395,10 @@ if (isset($ploopi_op))
                 </div>
             </div>
             <?php
+            $content = ob_get_contents();
+            ob_end_clean();
+    
+            echo $skin->create_popup("Choix d'une date", $content, 'ploopi_popup_calendar');
             ploopi_die();
         break;
 

@@ -51,7 +51,7 @@ if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date1'])) $_SESSIO
 if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'] = '';
 
 echo $skin->create_pagetitle(_SYSTEM_LABEL_SEARCH);
-echo $skin->open_simplebloc();
+echo $skin->open_simplebloc('Formulaire de recherche');
 ?>
 <form action="<?php echo ploopi_urlencode('admin.php?op=search_next'); ?>" onsubmit="javascript:system_search_next();return false;" method="post">
 <div class="dims_va" style="padding:4px;">

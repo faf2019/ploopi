@@ -31,8 +31,8 @@
  * @author Stéphane Escaich
  */
 
-define ('_PLOOPI_VERSION', '1.3.2');
-define ('_PLOOPI_REVISION', '90401');
+define ('_PLOOPI_VERSION', '1.4.0');
+define ('_PLOOPI_REVISION', '90419');
 
 define ('_PLOOPI_MSG_DBERROR',  'Database connection error, please contact administrator');
 define ('_SYSTEM_SYSTEMADMIN',  0);
@@ -57,6 +57,7 @@ define ('_PLOOPI_CACHE_DEFAULT_LIFETIME',   '60');
 
 define ('_PLOOPI_SYSTEMGROUP',      '1'); // virtual system group
 define ('_PLOOPI_MODULE_SYSTEM',    '1');
+define ('_PLOOPI_MODULE_SEARCH',    '-1');
 define ('_PLOOPI_NOWORKSPACE',      '-1');
 
 define ('_PLOOPI_MENU_WORKSPACES',  1);
@@ -131,6 +132,7 @@ if (!defined ('_PLOOPI_BASEPATH'))
      if (php_sapi_name() != 'cli') define ('_PLOOPI_BASEPATH', ((!empty($_SERVER['HTTPS']) || (isset($_SERVER['HTTP_X_SSL_REQUEST']) && ($_SERVER['HTTP_X_SSL_REQUEST'] == 1 || $_SERVER['HTTP_X_SSL_REQUEST'] == true || $_SERVER['HTTP_X_SSL_REQUEST'] == 'on'))) ? 'https://' : 'http://').((!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']).((!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80' && empty($_SERVER['HTTP_HOST'])) ? ":{$_SERVER['SERVER_PORT']}" : '').rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
      else define ('_PLOOPI_BASEPATH', '');
 }
+
 
 if (!defined ('_PLOOPI_FINGERPRINT')) define ('_PLOOPI_FINGERPRINT',  md5(dirname($_SERVER['SCRIPT_FILENAME']).'/'._PLOOPI_DB_SERVER.'/'._PLOOPI_DB_DATABASE));
 if (!defined ('_PLOOPI_PATHCACHE')) define ('_PLOOPI_PATHCACHE', _PLOOPI_PATHDATA.'/cache');

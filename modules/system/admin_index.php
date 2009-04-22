@@ -424,54 +424,70 @@ switch ($_SESSION['system']['level'])
                         $workspace_id = $data[1];
                         if ($instancetype == 'NEW')
                         {
-                            $moduletype_id = $data[2];
-                            $module_type = new module_type();
-                            $module_type->open($moduletype_id);
-
-                            ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
-
-                            echo $skin->open_simplebloc(str_replace('<LABEL>',$module_type->fields['label'],_SYSTEM_LABEL_MODULEINSTANCIATION));
-                            ?>
-                            <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
-                            <?php
-
-                            $module = $module_type->createinstance($workspace_id);
-                            $module_id = $module->save();
-
-                            $module_workspace = new module_workspace();
-                            $module_workspace->fields['id_module'] = $module_id;
-                            $module_workspace->fields['id_workspace'] = $workspace_id;
-                            $module_workspace->save();
-
-                            if ($admin_redirect) ploopi_redirect("admin.php?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify");
-                            else
+                            if (isset($data[2]) && is_numeric($data[2]))
                             {
-                                ?>
-                                        </TD>
-                                    </TR>
-                                    <TR>
-                                        <TD ALIGN="RIGHT">
-                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo "admin.php?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify"; ?>'">
-                                        </TD>
-                                    </TR>
-                                    </TABLE>
-                                <?php
-                                echo $skin->close_simplebloc();
+                                $moduletype_id = $data[2];
+                                $module_type = new module_type();
+                                if ($module_type->open($moduletype_id))
+                                {
+        
+                                    ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
+        
+                                    echo $skin->open_simplebloc(str_replace('<LABEL>',$module_type->fields['label'],_SYSTEM_LABEL_MODULEINSTANCIATION));
+                                    ?>
+                                    <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
+                                    <?php
+        
+                                    $module = $module_type->createinstance($workspace_id);
+                                    if ($module_id = $module->save())
+                                    {
+            
+                                        $module_workspace = new module_workspace();
+                                        $module_workspace->fields['id_module'] = $module_id;
+                                        $module_workspace->fields['id_workspace'] = $workspace_id;
+                                        $module_workspace->save();
+            
+                                        if ($admin_redirect) ploopi_redirect("admin.php?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify");
+                                        else
+                                        {
+                                            ?>
+                                                    </TD>
+                                                </TR>
+                                                <TR>
+                                                    <TD ALIGN="RIGHT">
+                                                    <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo "admin.php?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify"; ?>'">
+                                                    </TD>
+                                                </TR>
+                                                </TABLE>
+                                            <?php
+                                            echo $skin->close_simplebloc();
+                                        }
+                                    }
+                                    else ploopi_redirect('admin.php');
+                                }
+                                else ploopi_redirect('admin.php');
                             }
+                            else ploopi_redirect('admin.php');
                         }
                         elseif ($instancetype == 'SHARED')
                         {
-                            $module = new module();
-                            $module->open($module_id);
-
-                            ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module->fields['label']);
-
-                            $module_id = $data[2];
-                            $module_workspace = new module_workspace();
-                            $module_workspace->fields['id_module'] = $module_id;
-                            $module_workspace->fields['id_workspace'] = $workspace_id;
-                            $module_workspace->save();
-                            if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
+                            if (isset($data[2]) && is_numeric($data[2]))
+                            {
+                                $module_id = $data[2];
+                                $module = new module();
+                                if ($module->open($module_id))
+                                {
+                                    ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module->fields['label']);
+        
+                                    $module_workspace = new module_workspace();
+                                    $module_workspace->fields['id_module'] = $module_id;
+                                    $module_workspace->fields['id_workspace'] = $workspace_id;
+                                    $module_workspace->save();
+                                    if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
+                                }
+                                else ploopi_redirect('admin.php');
+                            }
+                            else ploopi_redirect('admin.php');
                         }
                         else ploopi_redirect("admin.php?reloadsession");
                     break;

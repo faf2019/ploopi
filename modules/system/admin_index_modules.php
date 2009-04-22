@@ -30,8 +30,6 @@
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- *
- * @todo supprimer les <table>
  */
 
 /**

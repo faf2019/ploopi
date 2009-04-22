@@ -68,11 +68,13 @@ class block
 
     public function addmenu($label, $url, $selected = false, $target = '')
     {
-        $this->menu[] = array ( 'label' => $label,
-                                'url' => $url,
-                                'selected' => $selected,
-                                'target' => $target
-                                );
+        $this->menu[] = array( 
+            'label' => $label,
+            'cleaned_label' => htmlentities(trim(str_replace('&nbsp;', ' ', strip_tags($label)))),
+            'url' => $url,
+            'selected' => $selected,
+            'target' => $target
+        );
     }
 
     /**

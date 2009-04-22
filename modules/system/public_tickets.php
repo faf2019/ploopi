@@ -43,8 +43,8 @@ if (isset($_GET['sort'])) $_SESSION['tickets']['sort'] = $_GET['sort'];
 if (!isset($_SESSION['tickets']['sort'])) $_SESSION['tickets']['sort'] = 'datereply';
 $sort = $_SESSION['tickets']['sort'];
 
-echo $skin->create_pagetitle(_SYSTEM_LABEL_TICKETS);
-echo $skin->open_simplebloc();
+echo $skin->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
+echo $skin->open_simplebloc(_PLOOPI_LABEL_MYTICKETS);
 
 $where = '';
 switch($filtertype)

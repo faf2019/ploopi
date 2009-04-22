@@ -186,6 +186,8 @@ class skin_common
 
         $title = $icon['title'];
 
+        $strHrefTitle = htmlentities(strip_tags($title));
+        
         if (!empty($icon['javascript'])) $onclick = $icon['javascript'];
         elseif ($confirm) $onclick = "ploopi_confirmlink('".ploopi_urlencode($icon['url'])."','{$icon['confirm']}')";
         else $onclick = "document.location.href='".ploopi_urlencode($icon['url'])."'";
@@ -194,7 +196,7 @@ class skin_common
         {
             $classpng = '';
             //if (strtolower(substr($icon['icon'],-4,4)) == '.png') $classpng = 'class="png"';
-            $image = "<img $classpng alt=\"".strip_tags($title)."\" src=\"$icon[icon]\">";
+            $image = "<img $classpng alt=\"{$strHrefTitle}\" src=\"$icon[icon]\">";
         }
         else $image = '';
 
@@ -204,7 +206,7 @@ class skin_common
 
         $res = "
             <div class=\"{$class}\" id=\"{$key}\" {$style}>
-                <a href=\"javascript:void(0);\" onclick=\"javascript:{$onclick};return false;\" title=\"{$title}\">
+                <a href=\"javascript:void(0);\" onclick=\"javascript:{$onclick};return false;\" title=\"Accéder à &laquo; {$strHrefTitle} &raquo;\">
                     <div class=\"toolbar_icon_image\">$image</div>
                     <p>$title</p>
                 </a>
@@ -252,9 +254,11 @@ class skin_common
     {
         if (!empty($tab['width'])) $style = "style=\"width:{$tab['width']}px;\"";
         else $style = '';
+        
+        $strHrefTitle = htmlentities(strip_tags($tab['title']));
 
-        if ($sel) $res = "<a href=\"".ploopi_urlencode($tab['url'])."\" class=\"selected\" {$style}>{$tab['title']}</a>";
-        else  $res = "<a href=\"".ploopi_urlencode($tab['url'])."\" {$style}>{$tab['title']}</a>";
+        if ($sel) $res = "<a href=\"".ploopi_urlencode($tab['url'])."\" title=\"Accéder à l'onglet &laquo; {$strHrefTitle} &raquo;\"  class=\"selected\" {$style}>{$tab['title']}</a>";
+        else  $res = "<a href=\"".ploopi_urlencode($tab['url'])."\" title=\"Accéder à l'onglet &laquo; {$strHrefTitle} &raquo;\"  {$style}>{$tab['title']}</a>";
         return $res;
     }
 
@@ -276,7 +280,7 @@ class skin_common
                     <a name="anchor_'.$popupid.'"></a>
                     <div class="simplebloc_title">
                         <div class="simplebloc_titleleft">
-                            <img alt="Fermer" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
+                            <img alt="Fermer" title="Fermer le popup" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
                             <div style="overflow:auto;cursor:move;" id="handle_'.$popupid.'">'.$title.'</div>
                         </div>
                     </div>
