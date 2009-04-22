@@ -42,7 +42,7 @@ if(isset($_GET['switch_newsletter_unsubscrib']) || isset($_GET['newsletter_unsub
   {
     // réponse Désabonnement par mail
     $template_body->assign_block_vars(
-        'switch_newsletter_unsubscrib_response', 
+        'switch_newsletter_unsubscrib_response',
         array(
             'RESPONSE' => $newsletter_subscription_messages[$_GET['newsletter_unsubscrib_return']]
         )
@@ -52,26 +52,25 @@ if(isset($_GET['switch_newsletter_unsubscrib']) || isset($_GET['newsletter_unsub
   {
     // action Désabonnement par mail
     $template_body->assign_block_vars(
-        'switch_newsletter_unsubscrib', 
-        array('ACTION' => ploopi_urlencode("index.php?id_module={$template_moduleid}&ploopi_op=newsletter_unsubscrib", null, null, null, null, false))
+      'switch_newsletter_unsubscrib',
+      array('ACTION' => ploopi_urlencode("index.php?id_module={$template_moduleid}&ploopi_op=newsletter_unsubscrib&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false))
     );
-  }    
+  }
 }
 
 $template_body->assign_block_vars(
-    'switch_newsletter_subscription', 
-    array('ACTION' => ploopi_urlencode("index.php?id_module={$template_moduleid}&ploopi_op=newsletter_subscribe", null, null, null, null, false))
+  'switch_newsletter_subscription',
+  array('ACTION' => ploopi_urlencode("index.php?id_module={$template_moduleid}&ploopi_op=newsletter_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false))
 );
 
 if (isset($_GET['newsletter_subscription_return']) && isset($newsletter_subscription_messages[$_GET['newsletter_subscription_return']]) && !empty($newsletter_subscription_messages[$_GET['newsletter_subscription_return']])) // réponse suite à une demande d'abonnement
 {
-    $template_body->assign_block_vars(
-        'switch_newsletter_subscription.switch_response', 
-        array(
-            'CONTENT' => $newsletter_subscription_messages[$_GET['newsletter_subscription_return']]
-        )
-    );
-        
+  $template_body->assign_block_vars(
+    'switch_newsletter_subscription.switch_response',
+    array(
+      'CONTENT' => $newsletter_subscription_messages[$_GET['newsletter_subscription_return']]
+    )
+  );
 }
 ?>
 

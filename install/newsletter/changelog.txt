@@ -1,3 +1,9 @@
+== Module NEWSLETTER - version 1.2.3 ==================================================
+
+2009-04-22  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction d'un bug. Lors de l'inscription, le redirect etait forcement sur la page d'acceuil
+
 == Module NEWSLETTER - version 1.2.2 ==================================================
 
 2009-04-22  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

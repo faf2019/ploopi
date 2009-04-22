@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="{TEMPLATE_PATH}/css/calendar.css" media="screen,projection" />
     <link rel="stylesheet" type="text/css" href="{TEMPLATE_PATH}/css/search.css" media="screen,projection" />
     <link rel="stylesheet" type="text/css" href="{TEMPLATE_PATH}/css/system_trombi.css" media="screen,projection" />
-    
+
     <!--[if lte IE 6]>
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/skin_ie.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar_ie.css" media="screen" />
@@ -22,11 +22,11 @@
     <!-- BEGIN ploopi_js -->
     <script type="text/javascript" src="{ploopi_js.PATH}"></script>
     <!-- END ploopi_js -->
-    
+
     <!-- BEGIN module_js -->
     <script type="text/javascript" src="{module_js.PATH}"></script>
     <!-- END module_js -->
-        
+
     <script type="text/javascript">
     //<!--
     {ADDITIONAL_JAVASCRIPT}
@@ -35,7 +35,7 @@
     <!-- BEGIN switch_content_page -->
     {PAGE_HEADCONTENT}
     <!-- END switch_content_page -->
-        
+
 	<title>{SITE_TITLE} - {PAGE_TITLE}</title>
 </head>
 
@@ -53,7 +53,7 @@
 		    <!-- END heading1 -->
 		<!-- END root1 -->
 	</div>
-	
+
 	<h3>Dernière mise à jour:</h3>
 	<p>{LASTUPDATE_DATE} à {LASTUPDATE_TIME}</p>
 </div>
@@ -64,7 +64,7 @@
 	    <input type="text" alt="recherche" id="recherche_field" name="query_string" value="{PAGE_QUERYSTRING}" class="text" style="width:75%" />
 	    <input type="submit" value="go" class="button" style="width:20%" />
     </form>
-	
+
 	<!-- BEGIN switch_subscription -->
         <h2>Abonnement</h2>
 		   <!-- BEGIN switch_response -->
@@ -81,7 +81,20 @@
 		        </div>
 		    </form>
 	<!-- END switch_subscription -->
-
+  <!-- BEGIN switch_newsletter_subscription -->
+	  <div class="minibloc">
+	      <h2>Abonnement NewsLetter</h2>
+	      <!-- BEGIN switch_response -->
+	      <div style="padding-bottom:4px;"><strong>{switch_newsletter_subscription.switch_response.CONTENT}</strong></div>
+	      <!-- END switch_response -->
+	      <form method="post" action="{switch_newsletter_subscription.ACTION}">
+	          <div>
+	              <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="subscription_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" style="width:75%" />
+	              <input type="submit" title="Bouton pour valider l'inscription" class="button" value="go" style="width:20%" />
+	          </div>
+	      </form>
+	  </div>
+  <!-- END switch_newsletter_subscription -->
 	<!-- BEGIN switch_pages -->
 	<ul>
         <h2>Articles</h2>
@@ -90,13 +103,13 @@
         <!-- END page -->
 	</ul>
 	<!-- END switch_pages -->
-	
+
     <h2>Nuage de tags</h2>
 	<div id="tagcloud">
 	    <!-- BEGIN tagcloud -->
 	        <a href="{tagcloud.LINK}" class="{tagcloud.SELECTED}" title="Afficher les articles contenant le tag &laquo; {tagcloud.TAG} &raquo;" style="font-size:{tagcloud.SIZE}%;">{tagcloud.TAG}<sup>{tagcloud.OCCURENCE}</sup></a>
 	    <!-- END tagcloud -->
-	</div>   
+	</div>
 </div>
 
 <div id="content">
@@ -105,17 +118,17 @@
 		<h2>{PAGE_DESCRIPTION}</h2>
 	    <p>{PAGE_CONTENT}</p>
     <!-- END switch_content_page -->
-    
+
     <!-- BEGIN switch_content_message -->
         <h1>{MESSAGE_TITLE}</h1>
         <h2>{MESSAGE_CONTENT}</h2>
-    <!-- END switch_content_message -->  
-      
+    <!-- END switch_content_message -->
+
     <!-- BEGIN switch_content_error -->
 	    <h1>Erreur {PAGE_ERROR_CODE}</h1>
 	    <h2>Cette page n'existe pas</h2>
     <!-- END switch_content_error -->
-    
+
     <!-- BEGIN switch_search -->
 	    <h1>Résultat de la recherche</h1>
 	    <h2>Mot clé: {PAGE_QUERYSTRING}</h2>
@@ -144,8 +157,8 @@
 	            </a>
 	        <!-- END result -->
 	    </div>
-    <!-- END switch_tagsearch -->    
-    
+    <!-- END switch_tagsearch -->
+
 	<!-- BEGIN switch_content_heading -->
         <h1>{HEADING_LABEL}</h1>
 	    <!-- BEGIN page -->
@@ -154,7 +167,7 @@
 	            <span><b>{switch_content_heading.page.LABEL}</b><br />{switch_content_heading.page.DATE}</span>
 	        </a>
 	    <!-- END page -->
-	
+
 	    <!-- BEGIN subheading1 -->
 	        <a class="subheading1" href="{switch_content_heading.subheading1.LINK}">
 	            <img src="{TEMPLATE_PATH}/img/folder.png" />
@@ -162,12 +175,12 @@
 	        </a>
 	        <div id="subheading2">
 	        <!-- BEGIN subheading2 -->
-	            &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp; 
+	            &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp;
 	        <!-- END subheading2 -->
 	        </div>
 	    <!-- END subheading1 -->
-	<!-- END switch_content_heading -->    
-    
+	<!-- END switch_content_heading -->
+
     <!-- BEGIN switch_content_sitemap -->
         <h1>Plan du site</h1>
         <div id="sitemap">
@@ -198,8 +211,8 @@
             <!-- END heading0 -->
         </div>
     <!-- END switch_content_sitemap -->
-    
-          
+
+
 	<h3>Informations sur le site</h3>
     <p>&copy; 2008 <a href="#">{WORKSPACE_META_COPYRIGHT}</a> | Original design by <a href="http://andreasviklund.com/">Andreas Viklund</a> | Propulsé par <a href="http://www.ploopi.org" target="_blank">Ploopi</a></p>
 </div>

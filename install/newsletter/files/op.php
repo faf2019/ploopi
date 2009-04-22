@@ -86,7 +86,11 @@ switch($ploopi_op)
     }
     else $return = _NEWSLETTER_SUBSCRIPTION_ERROR_EMAIL;
 
-    ploopi_redirect("index.php?newsletter_subscription_return={$return}");
+    $return2 = '';
+    if(isset($_GET['headingid'])) $return2 .= '&headingid='.$_GET['headingid'];
+    if(isset($_GET['articleid'])) $return2 .= '&articleid='.$_GET['articleid'];
+
+    ploopi_redirect("index.php?newsletter_subscription_return={$return}{$return2}");
   break;
 
   /*
