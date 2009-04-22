@@ -157,7 +157,7 @@ switch($op)
         if (!empty($_GET['newsTabItem'])) $_SESSION['news']['newsTabItem'] = $_GET['newsTabItem'];
         if (!isset($_SESSION['news']['newsTabItem'])) $_SESSION['news']['newsTabItem'] = '';
 
-        echo $skin->create_pagetitle(str_replace("LABEL",$_SESSION['ploopi']['modulelabel'],_NEWS_PAGE_TITLE));
+        echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
         echo $skin->create_tabs($tabs,$_SESSION['news']['newsTabItem']);
 
         switch($op)

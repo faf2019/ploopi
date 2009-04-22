@@ -1,3 +1,9 @@
+== Module NEWS - version 2.5.2 ====================================================
+
+2009-04-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Mise à jour ergonomique (mise en conformité de l'ensemble des modules) 
+ 
 == Module NEWS - version 2.5.1 ====================================================
 
 2009-03-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

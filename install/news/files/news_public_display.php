@@ -74,7 +74,7 @@ if (!empty($_GET['news_id']) && is_numeric($_GET['news_id']) && $news->open($_GE
             if ($news->fields['urltitle'] == '') $urltitle = _NEWS_LABEL_URL;
             else $urltitle = $news->fields['urltitle'];
             ?>
-                <div><b><?php echo _NEWS_LABEL_URL; ?></b>:&nbsp;<a target="_blank" href="<?php echo $news->fields['url']; ?>"><?php echo $urltitle; ?></a>
+                <div><b><?php echo _NEWS_LABEL_URL; ?></b>:&nbsp;<a target="_blank" href="<?php echo $news->fields['url']; ?>"><?php echo $urltitle; ?></a></div>
             <?php
         }
         ?>

@@ -86,7 +86,7 @@ if ($db->numrows()>0)
                 if ($fields['urltitle']=='') $urltitle = _NEWS_LABEL_URL;
                 else $urltitle = $fields['urltitle'];
                 ?>
-                    <div><b><?php echo _NEWS_LABEL_URL; ?></b>:&nbsp;<a target="_blank" href="<?php echo $fields['url']; ?>"><?php echo $urltitle; ?></a>
+                    <div><b><?php echo _NEWS_LABEL_URL; ?></b>:&nbsp;<a target="_blank" href="<?php echo $fields['url']; ?>"><?php echo $urltitle; ?></a></div>
                 <?php
             }
             ?>
