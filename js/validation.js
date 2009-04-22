@@ -332,7 +332,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
         if (field_type == 'selected')
         {
             msg = lstmsg[9];
-            ok = (field_object.selectedIndex > 0 && field_object.value != '');
+            ok = (field_object.selectedIndex >= 0 && field_object.value != '');
         }
 
         /* Vérifie qu'une checkbox (ou bouton radio) à été cochée */

@@ -851,14 +851,27 @@ function ploopi_skin_treeview_shownode(node_id, query, script)
     {
         if ($(dest).style.display == 'none')
         {
-            $(dest).style.display='block';
+            //$(dest).style.display='block';
             if ($(dest).innerHTML.length < 20)
             {
-                ploopi_ajaxloader(dest);
-                ploopi_xmlhttprequest_todiv(script, query, dest);
+                $(dest).innerHTML = ploopi_xmlhttprequest(script, query);
             }
+            new Effect.BlindDown(
+                dest,
+                {
+                    duration: 0.2
+                }
+            );
         }
-        else $(dest).style.display='none';
+        else 
+        {
+            new Effect.BlindUp(
+                dest,
+                {
+                    duration: 0.2
+                }
+            );
+        }            
     }
 }
 
@@ -1608,7 +1621,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
         if (field_type == 'selected')
         {
             msg = lstmsg[9];
-            ok = (field_object.selectedIndex > 0 && field_object.value != '');
+            ok = (field_object.selectedIndex >= 0 && field_object.value != '');
         }
 
         /* Vérifie qu'une checkbox (ou bouton radio) à été cochée */
