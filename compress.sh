@@ -12,7 +12,7 @@ rm js/functions*.*
 cat js/*.js > js/functions.pack.js
 java -jar yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-15 js/functions.pack.js | gzip > js/functions.pack.js.gz
 
-for template in ./templates/backoffice/ploopi*; do
+for template in ./templates/backoffice/{ploopi*,redmine}; do
     if [ -d $template ]; then
         echo "COMPRESSION DU TEMPLATE $template"
 
