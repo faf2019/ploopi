@@ -384,6 +384,13 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
     return($enabled);
 }
 
+/**
+ * Retourne la liste complète des dossiers sous forme d'un tableau
+ *
+ * @param int $id_module identifiant du module (optionnel)
+ * @param int $id_user identifiant de l'utilisateur (optionnel)
+ * @return array tableau des dossiers
+ */
 function doc_getfolders($id_module = -1, $id_user = -1)
 {
     global $db;
@@ -471,6 +478,12 @@ function doc_getfolders($id_module = -1, $id_user = -1)
     return($arrFolders);
 }
 
+/**
+ * Retourne le treeview de navigation dans les dossiers
+ *
+ * @param array $arrFolder tableau contenant les dossiers
+ * @return array tableau contenant la description du treeview
+ */
 function doc_gettreeview($arrFolder = array())
 {
     global $db;

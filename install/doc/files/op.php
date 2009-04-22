@@ -67,6 +67,22 @@ if ($_SESSION['ploopi']['connected'])
                 include_once './modules/doc/public_search_result.php';
                 ploopi_die();
             break;
+            
+            case 'doc_folder_detail':
+                if (isset($_GET['doc_folder_id']) && is_numeric($_GET['doc_folder_id']))
+                {
+                    ploopi_init_module('doc');
+                    
+                    // Récupération des dossiers visibles
+                    $arrFolders = doc_getfolders();
+                    
+                    // Récupération de la structure du treeview
+                    $arrTreeview = doc_gettreeview($arrFolders);
+                    
+                    echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $currentfolder, $_GET['doc_folder_id']); 
+                }
+                ploopi_die();
+            break;            
 
             /**
              * Enregistrement d'un document (ou ensemble de document si ajout)
@@ -643,7 +659,7 @@ if ($_SESSION['ploopi']['connected'])
                     $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_ADDFOLDER, _DOC_ACTION_MODIFYFOLDER));
 
                     // on envoie le ticket de notification d'action sur l'objet
-                    if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_ADDFOLDER, $docfolder->fields['name'], array_keys($arrUsers), 'Cet objet à été créé');
+                    if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_ADDFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été créé');
 
                     // SHARES
                     ploopi_share_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);

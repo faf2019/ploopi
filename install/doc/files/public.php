@@ -37,39 +37,29 @@
 
 ploopi_init_module('doc');
 
-/**
- * Chargement des
- */
-include_once './modules/doc/class_docfile.php';
-include_once './modules/doc/class_docfolder.php';
-include_once './modules/doc/class_docfiledraft.php';
-
 $op = (isset($_REQUEST['op'])) ? $_REQUEST['op'] : 'doc_browser';
 $currentfolder = (isset($_REQUEST['currentfolder'])) ? $_REQUEST['currentfolder'] : 0;
 
-switch($op)
-{
-    case 'doc_bd_search':
-        echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
-        echo $skin->open_simplebloc();
-        ?>
+echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+echo $skin->open_simplebloc('Explorateur de documents');
 
-        <div id="doc_browser"></div>
-
-        <script type="text/javascript">
-            doc_search();
-        </script>
-
-        <?php
-        //include_once './modules/doc/public_legend.php';
-        echo $skin->close_simplebloc();
-    break;
-
-    default:
-        echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
-        echo $skin->open_simplebloc();
-        ?>
-        <div id="doc_browser">
+?>
+<div id="doc_main">
+    <div id="doc_treeview">
+        <div id="doc_treeview_inner">
+            <?php
+            // Récupération des dossiers visibles
+            $arrFolders = doc_getfolders();
+            
+            // Récupération de la structure du treeview
+            $arrTreeview = doc_gettreeview($arrFolders);
+            
+            echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $currentfolder, -1); 
+            ?>
+        </div>
+    </div>
+    <div id="doc_browser">
+        <div id="doc_browser_inner">
             <?php
             switch($op)
             {
@@ -244,9 +234,8 @@ switch($op)
             }
             ?>
         </div>
-        <?php
-        echo $skin->close_simplebloc();
-    break;
-
-}
+    </div>
+</div>
+<?php
+echo $skin->close_simplebloc();
 ?>

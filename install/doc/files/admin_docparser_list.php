@@ -35,7 +35,7 @@
  * D'abord le mini formulaire d'ajout/modif, puis la liste des parsers existants
  */
 
-echo $skin->open_simplebloc();
+echo $skin->open_simplebloc('Gestion des analyseurs');
 
 include_once './modules/doc/class_docparser.php';
 $docparser = new docparser();
@@ -46,9 +46,9 @@ else $docparser->init_description();
 
 <div class="doc_admin_titlebar">
     <p class="ploopi_va" style="float:right;">
-        <a href="javascript:void(0);" onclick="javascript:doc_parser_add();"><img style="margin-right:4px;" src="./modules/doc/img/ico_add.gif" /><span>Ajouter un parser</span></a>
+        <a href="javascript:void(0);" onclick="javascript:doc_parser_add();"><img style="margin-right:4px;" src="./modules/doc/img/ico_add.gif" /><span>Ajouter un analyseur</span></a>
     </p>
-    <div style="font-weight:bold;">Liste des parsers</div>
+    <div style="font-weight:bold;">Liste des analyseurs</div>
 </div>
 
 <div id="docparser_form" class="doc_admin_form" style="display:<?php echo (isset($_GET['docparser_id'])) ? 'block' : 'none'; ?>;">

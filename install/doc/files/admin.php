@@ -50,7 +50,7 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
 
     $tabs[_DOC_TAB_PARSERS] =
         array(
-            'title' => 'Gestion des parsers',
+            'title' => 'Gestion des analyseurs',
             'url' => "admin.php?docTabItem="._DOC_TAB_PARSERS
         );
 

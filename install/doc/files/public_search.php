@@ -61,25 +61,28 @@ $show_options = (
 <form action="<?php echo ploopi_urlencode('admin.php'); ?>" onsubmit="javascript:doc_search_next();return false;" method="post">
 <input type="hidden" name="op" value="search_next">
 <div class="doc_folderinfo">
-    <div style="float:left;height:40px;">
+    <div style="float:left;">
         <p style="margin:0;padding:4px 0px 4px 8px;">
             <img src="./modules/doc/img/search.png" />
         </p>
     </div>
-    <div style="float:left;height:40px;">
-            <p style="margin:0;padding:4px;">
+    <div style="float:left;">
+        <p style="margin:0;padding:4px;">
             <strong>Recherche</strong>
             <br />d'un Fichier
         </p>
     </div>
-    <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
-            <p style="margin:0;padding:4px;">
+    <div style="float:left;border-left:1px solid #e0e0e0;">
+        <p style="margin:0;padding:4px;">
             <strong>Nom / Mots Clés</strong>:
-            <br /><input type="text" class="text" style="width:140px;" id="doc_search_keywords" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']); ?>">
+            <br />
+            <input type="text" class="text" style="width:140px;" id="doc_search_keywords" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']); ?>" />
+            <input type="submit" class="flatbutton" value="Rechercher" />
         </p>
     </div>
+
     <div style="display:<?php echo ($show_options) ? 'block' : 'none'; ?>;" id="doc_search_options">
-        <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+        <div style="float:left;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px;">
                 <strong>Type</strong>:
                 <br />
@@ -100,19 +103,19 @@ $show_options = (
                 </select>
             </p>
         </div>
-        <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+        <div style="float:left;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px;">
                 <strong>Propriétaire</strong>:
                 <br /><input type="text" class="text"  style="width:90px;" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']); ?>" id="doc_search_user">
             </p>
         </div>
-        <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+        <div style="float:left;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px;">
                 <strong>Espace</strong>:
                 <br /><input type="text" class="text" style="width:90px;" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']); ?>" id="doc_search_workspace">
             </p>
         </div>
-        <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+        <div style="float:left;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px;">
                 <strong>Date (du)</strong>:
                 <br />
@@ -129,12 +132,12 @@ $show_options = (
             </p>
         </div>
     </div>
-    <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+    <div style="float:left;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px;">
             <br /><input type="submit" class="flatbutton" value="Rechercher">
         </p>
     </div>
-    <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+    <div style="float:left;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px;">
             <a href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('doc_search_options');"><strong>Afficher<br />plus d'options</strong></a>
         </p>

@@ -1,3 +1,16 @@
+== Module DOC - version 4.4.0 =====================================================
+
+2009-04-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'un "treeview" optionnel pour la navigation dans les dossiers
+ * Mise à jour ergonomique (mise en conformité de l'ensemble des modules) 
+ 
+== Module DOC - version 4.3.5 =====================================================
+
+2009-04-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug au niveau de la gestion des abonnés lors de la création d'un dossier
+
 == Module DOC - version 4.3.4 =====================================================
 
 2009-03-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

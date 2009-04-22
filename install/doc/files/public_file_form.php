@@ -118,7 +118,7 @@ if ($newfile)
                 {
                     ?>
                     <p class="ploopi_va" style="margin-bottom:2px;">
-                        <input type="file" class="text" name="docfile_file_<?php echo $i; ?>" />&nbsp;<input type="text" style="width:300px;" maxlength="100" class="text" name="docfile_description_<?php echo $i; ?>" />
+                        <input type="file" name="docfile_file_<?php echo $i; ?>" />&nbsp;<input type="text" style="width:300px;" maxlength="100" class="text" name="docfile_description_<?php echo $i; ?>" />
                         <span class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_readonly_<?php echo $i; ?>_host');">
                             <input type="checkbox" name="docfile_readonly_<?php echo $i; ?>" id="docfile_readonly_<?php echo $i; ?>_host" value="1">
                             <span>Lecture Seule</span>
