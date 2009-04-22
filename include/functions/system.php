@@ -635,7 +635,7 @@ function ploopi_getavailabletemplates($type = 'frontoffice')
 
 function ploopi_array_map($func, $var)
 {
-    if (is_array($var)) { foreach($var as $key => $value) $var[$key] = ploopi_array_map($func, $value); return $var; } else return($func($var));
+    if (is_array($var)) { foreach($var as $key => $value) $var[$key] = ploopi_array_map($func, $value); return $var; } else return call_user_func($func, $var);
 }
 
 /**

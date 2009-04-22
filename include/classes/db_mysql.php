@@ -492,7 +492,18 @@ class ploopi_db
     }
 
     /**
-     * Protège les caractères spéciaux d'une commande SQL
+     * Protège les caractères spéciaux d'une chaîne de caractère
+     * 
+     * @param string $strVar chaîne à échapper
+     * @return chaîne échappée
+     */
+    public function escape_string($strVar)
+    {
+        return mysql_real_escape_string($strVar, $this->connection_id);
+    }
+    
+    /**
+     * Protège les caractères spéciaux d'une variable
      *
      * @param mixed $var variable à échapper
      * @return mixed variable échappée ou false si la connexion est fermée
@@ -502,7 +513,7 @@ class ploopi_db
     {
         include_once './include/functions/system.php';
 
-        if ($this->isconnected()) return(ploopi_array_map('mysql_real_escape_string', $var));
+        if ($this->isconnected()) return(ploopi_array_map(array($this, 'escape_string'), $var));
         else return(false);
     }
 
