@@ -331,7 +331,7 @@ if ($_SESSION['ploopi']['connected'])
                 <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_send_photo&directory_photo_id={$_GET['directory_photo_id']}"); ?>" method="post" enctype="multipart/form-data" target="directory_contact_photo_iframe">
                 <p class="ploopi_va" style="padding:2px;">
                     <label><?php echo _DIRECTORY_PHOTO; ?>: </label>
-                    <input type="file" class="text" name="directory_contact_photo" />
+                    <input type="file" name="directory_contact_photo" />
                     <input type="submit" class="button" name="<?php echo _PLOOPI_SAVE; ?>" />
                 </p>
                 </form>

@@ -163,6 +163,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
                     <?php
                     // Récupération des rubriques de contacts partagés
                     $arrHeadings = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_sharedcontacts'] ? directory_getheadings() : array();
+                    $arrTitle = array();
 
                     if (isset($arrHeadings['list'][$usr->fields['id_heading']]['parents']))
                     {
