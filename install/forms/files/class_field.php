@@ -70,7 +70,7 @@ class field extends data_object
     
     function save()
     {
-        if ($this->fields['fieldname'] == '') $this->fields['fieldname'] = $this->fields['name'];
+        if (empty($this->fields['fieldname'])) $this->fields['fieldname'] = $this->fields['name'];
         $this->fields['fieldname'] = forms_createphysicalname($this->fields['fieldname']);
         return(parent::save());
     }

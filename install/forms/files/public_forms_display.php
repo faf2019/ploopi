@@ -35,7 +35,7 @@
  * On récupère l'idenfiant de la réponse (s'il existe).
  */
 
-$reply_id = (isset($_REQUEST['reply_id'])) ? $_REQUEST['reply_id'] : '';
+$reply_id = (isset($_REQUEST['reply_id']) && is_numeric($_REQUEST['reply_id'])) ? $_REQUEST['reply_id'] : '';
 
 /**
  * On récupère les dates de publication du formulaire
@@ -258,7 +258,7 @@ $template_name = (!empty($forms->fields['model']) && file_exists("./modules/form
 $template_forms = new Template("./modules/forms/templates/{$template_name}/");
 if (file_exists("./modules/forms/templates/{$template_name}/index.tpl"))
 {
-    echo $skin->open_simplebloc();
+    echo $skin->open_simplebloc("{$forms->fields['label']} (Mode Edition)");
     $template_forms->set_filenames(array('forms_display' => "index.tpl"));
 
     if ($op == 'forms_reply_add' || $op == 'forms_reply_modify')

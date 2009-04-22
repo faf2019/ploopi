@@ -35,7 +35,7 @@
  * Initialisation du tableau contenant la liste des formulaires
  */
 
-echo $skin->open_simplebloc();
+echo $skin->open_simplebloc(_FORMS_LABELTAB_LIST);
 
 $array_columns = array();
 $array_values = array();

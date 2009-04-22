@@ -271,7 +271,7 @@ switch($op)
     break;
 
     default:
-        // anciennement la liste des formulaires
+        include('./modules/forms/public_forms_list.php');
     break;
 }
 ?>

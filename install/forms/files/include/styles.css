@@ -101,3 +101,23 @@ border-bottom:1px solid #a0a0a0;
 overflow:auto;
 padding:2px;
 }
+
+
+a.forms_public_link {
+display:block;
+padding:6px;
+text-decoration:none;
+}
+
+a.forms_public_link:hover {
+background-color:#ddd;
+}
+
+a.forms_public_link h1 {
+margin:0;
+margin-bottom:4px;
+font-size:14px;
+font-weight:bold;
+border-bottom:1px solid #ccc;
+}
+
