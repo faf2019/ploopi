@@ -942,4 +942,9 @@ INSERT INTO `ploopi_param_default` (`id_module`, `name`, `value`, `id_module_typ
 ALTER TABLE `ploopi_user` ADD `building` VARCHAR( 255 ) NOT NULL AFTER `timezone` , ADD `floor` VARCHAR( 32 ) NOT NULL AFTER `building` ;
 ALTER TABLE `ploopi_user` ADD `rank` VARCHAR( 32 ) NOT NULL ;
 
-UPDATE `ploopi_module_type` SET `version` = '1.3.2', `author` = 'Ovensia', `date` = '20090330000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+ALTER TABLE `ploopi_module` CHANGE `id` `id` INT( 10 ) NOT NULL AUTO_INCREMENT 
+
+INSERT INTO `ploopi_module` ( `id` , `label` , `id_module_type` , `id_workspace` , `active` , `visible` , `public` , `shared` , `herited` , `adminrestricted` , `viewmode` , `transverseview` , `autoconnect` )
+VALUES ('-1', 'Recherche', '1', '0', '1', '1', '0', '0', '0', '0', '1', '0', '0');
+
+UPDATE `ploopi_module_type` SET `version` = '1.4.0', `author` = 'Ovensia', `date` = '20090419000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
