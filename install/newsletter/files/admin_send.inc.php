@@ -45,7 +45,7 @@ if(ploopi_isactionallowed(_NEWSLETTER_ACTION_WRITE))
                                     'title' => _NEWSLETTER_LABELICON_SEND_TODO,
                                     'url'   => 'admin.php?newsletterToolbarSend=tabNewsletterSendTodo',
                                     'icon'  => './modules/newsletter/img/send.png',
-                                    'width' => '80'
+                                    'width' => '100'
                                 );
   $toolbar['tabNewsletterSendOk'] = array(
                                     'title' => _NEWSLETTER_LABELICON_SEND_OK,

@@ -104,7 +104,7 @@ elseif($template_name !== '' && file_exists($template_path."/$template_name")) /
   // Si pas de template spécifique, on passe le template par defaut.
   $template_name = '';
   $template_path = './modules/newsletter/template_default/exemple_banniere_fixe/';
-}  
+}
 
 $template_newsletter = new Template($template_path);
 
@@ -187,7 +187,12 @@ else
 
 $banniere = '';
 if(!empty($objNewsletter->fields['banniere_id']))
-  $banniere = $arrNewsletterParam['host'].ploopi_urlencode('index-quick.php?ploopi_op=newsletter_display_banniere&banniere_id='.$objNewsletter->fields['banniere_id']);
+{
+  if($readonly && $newsletter_mode != 'dompdf') // Envois ou affichage en front ! On encode les url !
+    $banniere = $arrNewsletterParam['host'].ploopi_urlencode('index-quick.php?ploopi_op=newsletter_display_banniere&banniere_id='.$objNewsletter->fields['banniere_id']);
+  else
+    $banniere = $arrNewsletterParam['host'].'index-quick.php?ploopi_op=newsletter_display_banniere&banniere_id='.$objNewsletter->fields['banniere_id'];
+}
 
 $background_color = (!empty($objNewsletter->fields['background_color'])) ? htmlentities($objNewsletter->fields['background_color']) : '#ffffff';
 $content_color = (!empty($objNewsletter->fields['content_color'])) ? htmlentities($objNewsletter->fields['content_color']) : '#ffffff';

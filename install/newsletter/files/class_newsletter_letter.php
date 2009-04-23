@@ -265,6 +265,7 @@ class newsletter extends data_object
             }
         }
     }
+
     return str_replace($arrSearch, $arrReplace, $content);
   }
 
