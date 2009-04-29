@@ -170,7 +170,7 @@ if ($_SESSION['ploopi']['connected'])
                             ?>
                             <div class="directory_checkbox" onclick="javascript:directory_checklist('<?php echo $row['id']; ?>');">
                                 <input type="checkbox" class="directory_id_list" id="directory_id_list<?php echo $row['id']; ?>" name="directory_favorites_id_list[]" value="<?php echo $row['id']; ?>" onclick="javascript:directory_checklist('<?php echo $row['id']; ?>');" <?php if ($row['nbfav']>0) echo 'checked'; ?> />
-                                <span><?php echo $row['label']; ?></span>
+                                <span><?php echo htmlentities($row['label']); ?></span>
                             </div>
                             <?php
                         }
@@ -277,12 +277,12 @@ if ($_SESSION['ploopi']['connected'])
 
             case 'directory_favorites_add':
                 include_once './modules/directory/class_directory_favorites.php';
-
-                if (!empty($_POST['directory_favorites_id_list']) && is_array($_POST['directory_favorites_id_list']))
+                
+                if (!empty($_GET['directory_favorites_id_user']) && is_numeric($_GET['directory_favorites_id_user']))
                 {
-                    if (!empty($_GET['directory_favorites_id_user']) && is_numeric($_GET['directory_favorites_id_user']))
+                    $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_ploopi_user = {$_GET['directory_favorites_id_user']} AND id_user = {$_SESSION['ploopi']['userid']} AND id_contact = 0");
+                    if (isset($_POST['directory_favorites_id_list']) && is_array($_POST['directory_favorites_id_list']))
                     {
-                        $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_ploopi_user = {$_GET['directory_favorites_id_user']} AND id_user = {$_SESSION['ploopi']['userid']} AND id_contact = 0");
                         foreach($_POST['directory_favorites_id_list'] as $id_list)
                         {
                             if ($id_list > 0)
@@ -293,9 +293,12 @@ if ($_SESSION['ploopi']['connected'])
                             }
                         }
                     }
-                    elseif (!empty($_GET['directory_favorites_id_contact']) && is_numeric($_GET['directory_favorites_id_contact']))
+                }
+                elseif (!empty($_GET['directory_favorites_id_contact']) && is_numeric($_GET['directory_favorites_id_contact']))
+                {
+                    $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_ploopi_user = 0 AND id_user = {$_SESSION['ploopi']['userid']} AND id_contact = {$_GET['directory_favorites_id_contact']}");
+                    if (isset($_POST['directory_favorites_id_list']) && is_array($_POST['directory_favorites_id_list']))
                     {
-                        $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_ploopi_user = 0 AND id_user = {$_SESSION['ploopi']['userid']} AND id_contact = {$_GET['directory_favorites_id_contact']}");
                         foreach($_POST['directory_favorites_id_list'] as $id_list)
                         {
                             if ($id_list > 0)
