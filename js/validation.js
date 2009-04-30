@@ -357,7 +357,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
         /* Vérifie que le champ contient une adresse email valide */
         if (field_type == 'email' || field_type == 'emptyemail')
         {
-            ok = (field_value.search(/^[a-z0-9._-]+@[a-z0-9.-]{2,}[.][a-z]{2,4}$/) != -1);
+            ok = (field_value.search(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]{2,}[.][a-z]{2,4}$/) != -1);
             if (field_type == 'emptyemail') ok = (ok || field_value.length == 0);
             if (!ok) msg = (field_type == 'email' && field_value.length == 0) ? lstmsg[4] : lstmsg[0];
         }

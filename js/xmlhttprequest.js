@@ -116,6 +116,7 @@ function ploopi_xmlhttprequest(url, data, asynchronous, getxml, method)
     }
 }
 
+
 function ploopi_xmlhttprequest_tofunction(url, data, callback, ticket, getxml, method)
 {
     var xmlhttp = ploopi_gethttpobject();
@@ -142,11 +143,17 @@ function ploopi_xmlhttprequest_tofunction(url, data, callback, ticket, getxml, m
     return !ploopi_sendxmldata(method, url, data, xmlhttp, true);
 }
 
+/**
+ * Affiche le contenu contenu d'une requête HTTP dans un élément de la page
+ *
+ * @param string url nom du script à appeler 
+ * @param string data paramètres complémentaires 
+ * @param string div identifiant de l'élément 
+ * @param string method méthode http à utiliser (GET/POST) 
+ */
+ 
 function ploopi_xmlhttprequest_todiv(url, data, div, method)
 {
-    // Suite refactoring 29/07/2008
-    // ploopi_xmlhttprequest_todiv\( ?['"](.*)['"] ?, ?['"](.*)['"] ?, ?['"](.*)['"] ?, ?['"](.*)['"] ?\); => ploopi_xmlhttprequest_todiv('$1', '$2', '$4')
-
     var xmlhttp = ploopi_gethttpobject();
 
     if (typeof(method) == 'undefined') method = 'GET';
@@ -167,4 +174,38 @@ function ploopi_xmlhttprequest_todiv(url, data, div, method)
     }
 
     return !ploopi_sendxmldata(method, url, data, xmlhttp, true);
+}
+
+/**
+ * Permet d'ouvrir un popup avec le contenu d'une requête HTTP
+ *
+ * @param int width largeur du popup 
+ * @param event e événement déclencheur 
+ * @param string id identifiant du popup 
+ * @param string url nom du script à appeler 
+ * @param string data paramètres complémentaires 
+ * @param string method méthode http à utiliser (GET/POST) 
+ */
+ 
+function ploopi_xmlhttprequest_topopup(width, e, id, url, data, method)
+{
+    if (typeof(method) == 'undefined') method = 'GET';
+
+    ploopi_showpopup(ploopi_ajaxloader_content, width, e, 'click', id);
+    ploopi_xmlhttprequest_todiv(url, data, id, method);
+}
+
+/**
+ * Permet de valider automatiquement un formulaire via xmlhttprequest
+ *
+ * @param object form formulaire 
+ * @param string id identifiant du popup 
+ *
+ * @todo ajouter un param pour une fonction de validation
+ * @todo possibilité de ne pas renvoyer la réponse vers du contenu
+ */
+ 
+function ploopi_xmlhttprequest_submitform(form, id)
+{
+    ploopi_xmlhttprequest_todiv(form.action, form.serialize(), id, 'POST');
 }

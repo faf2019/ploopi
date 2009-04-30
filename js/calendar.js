@@ -20,6 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Ne plus utiliser cette fonction, utiliser de préférence l'appel PHP : ploopi_open_calendar()
+ */ 
 function ploopi_calendar_open(inputfield_id, event)
 {
     ploopi_showpopup(ploopi_xmlhttprequest('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&selected_date='+$(inputfield_id).value+'&inputfield_id='+inputfield_id), 192, event, false, 'ploopi_popup_calendar');

@@ -183,3 +183,42 @@ function ploopi_hideallpopups()
     var l = popups.length;
     for (var i = 0; i < l; i++) bodys[0].removeChild(popups[i]);
 }
+
+function ploopi_popupize(id, w, centered, pposx, pposy)
+{
+    if ($(id))
+    {
+
+        $(id).setAttribute('class', 'ploopi_popup');
+        $(id).setAttribute('className', 'ploopi_popup'); // IE
+		$(id).setAttribute('style', 'z-index:'+(1000+ploopi_nbpopup)+';');        
+		
+	    w = parseInt(w);
+	    if (!w) w = 200;
+
+        bodys = document.getElementsByTagName('body');
+
+        switch(centered)
+        {
+            case false:
+                pposx = parseInt(pposx);
+                pposy = parseInt(pposy);
+            break;
+
+            default:
+            case true:
+                var p_width = parseInt(bodys[0].offsetWidth);
+                var p_left = parseInt(bodys[0].scrollLeft);
+                pposx = (p_width/2)-(w/2)+p_left;
+            break;
+        }		
+		
+		
+		$(id).style.left = pposx+'px';
+		$(id).style.top = pposy+'px';
+
+        bodys[0].appendChild($(id));
+
+		new Effect.Appear(id, { duration: 0.4, from: 0.0, to: 1 });
+    }
+}

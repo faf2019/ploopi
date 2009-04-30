@@ -214,6 +214,9 @@ function ploopi_annotation_validate(form)
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/**
+ * Ne plus utiliser cette fonction, utiliser de préférence l'appel PHP : ploopi_open_calendar()
+ */ 
 function ploopi_calendar_open(inputfield_id, event)
 {
     ploopi_showpopup(ploopi_xmlhttprequest('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&selected_date='+$(inputfield_id).value+'&inputfield_id='+inputfield_id), 192, event, false, 'ploopi_popup_calendar');
@@ -773,7 +776,45 @@ function ploopi_hideallpopups()
     var l = popups.length;
     for (var i = 0; i < l; i++) bodys[0].removeChild(popups[i]);
 }
-/*
+
+function ploopi_popupize(id, w, centered, pposx, pposy)
+{
+    if ($(id))
+    {
+
+        $(id).setAttribute('class', 'ploopi_popup');
+        $(id).setAttribute('className', 'ploopi_popup'); // IE
+		$(id).setAttribute('style', 'z-index:'+(1000+ploopi_nbpopup)+';');        
+		
+	    w = parseInt(w);
+	    if (!w) w = 200;
+
+        bodys = document.getElementsByTagName('body');
+
+        switch(centered)
+        {
+            case false:
+                pposx = parseInt(pposx);
+                pposy = parseInt(pposy);
+            break;
+
+            default:
+            case true:
+                var p_width = parseInt(bodys[0].offsetWidth);
+                var p_left = parseInt(bodys[0].scrollLeft);
+                pposx = (p_width/2)-(w/2)+p_left;
+            break;
+        }		
+		
+		
+		$(id).style.left = pposx+'px';
+		$(id).style.top = pposy+'px';
+
+        bodys[0].appendChild($(id));
+
+		new Effect.Appear(id, { duration: 0.4, from: 0.0, to: 1 });
+    }
+}/*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.
@@ -839,10 +880,14 @@ function ploopi_skin_array_renderupdate(array_id)
 
 function ploopi_skin_treeview_shownode(node_id, query, script)
 {
+    
     if (typeof(script) == 'undefined') script = 'admin-light.php';
 
     elt = $('t'+node_id);
     dest = $('n'+node_id);
+    treenode = $('treeview_node'+node_id);
+    
+    treenode.className = 'treeview_node_loading';
 
     if (elt.src.indexOf('plus')  != -1) elt.src = elt.src.replace('plus', 'minus');
     else if (elt.src.indexOf('minus')  != -1) elt.src = elt.src.replace('minus', 'plus');
@@ -859,7 +904,8 @@ function ploopi_skin_treeview_shownode(node_id, query, script)
             new Effect.BlindDown(
                 dest,
                 {
-                    duration: 0.2
+                    duration: 0.2,
+                    afterFinish: function() {treenode.className = 'treeview_node';}
                 }
             );
         }
@@ -868,7 +914,8 @@ function ploopi_skin_treeview_shownode(node_id, query, script)
             new Effect.BlindUp(
                 dest,
                 {
-                    duration: 0.2
+                    duration: 0.2,
+                    afterFinish: function() {treenode.className = 'treeview_node';}
                 }
             );
         }            
@@ -1646,7 +1693,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
         /* Vérifie que le champ contient une adresse email valide */
         if (field_type == 'email' || field_type == 'emptyemail')
         {
-            ok = (field_value.search(/^[a-z0-9._-]+@[a-z0-9.-]{2,}[.][a-z]{2,4}$/) != -1);
+            ok = (field_value.search(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]{2,}[.][a-z]{2,4}$/) != -1);
             if (field_type == 'emptyemail') ok = (ok || field_value.length == 0);
             if (!ok) msg = (field_type == 'email' && field_value.length == 0) ? lstmsg[4] : lstmsg[0];
         }
@@ -1840,6 +1887,7 @@ function ploopi_xmlhttprequest(url, data, asynchronous, getxml, method)
     }
 }
 
+
 function ploopi_xmlhttprequest_tofunction(url, data, callback, ticket, getxml, method)
 {
     var xmlhttp = ploopi_gethttpobject();
@@ -1866,11 +1914,17 @@ function ploopi_xmlhttprequest_tofunction(url, data, callback, ticket, getxml, m
     return !ploopi_sendxmldata(method, url, data, xmlhttp, true);
 }
 
+/**
+ * Affiche le contenu contenu d'une requête HTTP dans un élément de la page
+ *
+ * @param string url nom du script à appeler 
+ * @param string data paramètres complémentaires 
+ * @param string div identifiant de l'élément 
+ * @param string method méthode http à utiliser (GET/POST) 
+ */
+ 
 function ploopi_xmlhttprequest_todiv(url, data, div, method)
 {
-    // Suite refactoring 29/07/2008
-    // ploopi_xmlhttprequest_todiv\( ?['"](.*)['"] ?, ?['"](.*)['"] ?, ?['"](.*)['"] ?, ?['"](.*)['"] ?\); => ploopi_xmlhttprequest_todiv('$1', '$2', '$4')
-
     var xmlhttp = ploopi_gethttpobject();
 
     if (typeof(method) == 'undefined') method = 'GET';
@@ -1891,4 +1945,38 @@ function ploopi_xmlhttprequest_todiv(url, data, div, method)
     }
 
     return !ploopi_sendxmldata(method, url, data, xmlhttp, true);
+}
+
+/**
+ * Permet d'ouvrir un popup avec le contenu d'une requête HTTP
+ *
+ * @param int width largeur du popup 
+ * @param event e événement déclencheur 
+ * @param string id identifiant du popup 
+ * @param string url nom du script à appeler 
+ * @param string data paramètres complémentaires 
+ * @param string method méthode http à utiliser (GET/POST) 
+ */
+ 
+function ploopi_xmlhttprequest_topopup(width, e, id, url, data, method)
+{
+    if (typeof(method) == 'undefined') method = 'GET';
+
+    ploopi_showpopup(ploopi_ajaxloader_content, width, e, 'click', id);
+    ploopi_xmlhttprequest_todiv(url, data, id, method);
+}
+
+/**
+ * Permet de valider automatiquement un formulaire via xmlhttprequest
+ *
+ * @param object form formulaire 
+ * @param string id identifiant du popup 
+ *
+ * @todo ajouter un param pour une fonction de validation
+ * @todo possibilité de ne pas renvoyer la réponse vers du contenu
+ */
+ 
+function ploopi_xmlhttprequest_submitform(form, id)
+{
+    ploopi_xmlhttprequest_todiv(form.action, form.serialize(), id, 'POST');
 }

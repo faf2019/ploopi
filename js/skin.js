@@ -64,10 +64,14 @@ function ploopi_skin_array_renderupdate(array_id)
 
 function ploopi_skin_treeview_shownode(node_id, query, script)
 {
+    
     if (typeof(script) == 'undefined') script = 'admin-light.php';
 
     elt = $('t'+node_id);
     dest = $('n'+node_id);
+    treenode = $('treeview_node'+node_id);
+    
+    treenode.className = 'treeview_node_loading';
 
     if (elt.src.indexOf('plus')  != -1) elt.src = elt.src.replace('plus', 'minus');
     else if (elt.src.indexOf('minus')  != -1) elt.src = elt.src.replace('minus', 'plus');
@@ -84,7 +88,8 @@ function ploopi_skin_treeview_shownode(node_id, query, script)
             new Effect.BlindDown(
                 dest,
                 {
-                    duration: 0.2
+                    duration: 0.2,
+                    afterFinish: function() {treenode.className = 'treeview_node';}
                 }
             );
         }
@@ -93,7 +98,8 @@ function ploopi_skin_treeview_shownode(node_id, query, script)
             new Effect.BlindUp(
                 dest,
                 {
-                    duration: 0.2
+                    duration: 0.2,
+                    afterFinish: function() {treenode.className = 'treeview_node';}
                 }
             );
         }            
