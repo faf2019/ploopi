@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.0.6b ============================================
+
+2009-04-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug à l'appel du calendrier lors de la sélection d'une date dans un article 
+
 == Module WebEdit - version 2.0.6 ============================================
 
 2009-04-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

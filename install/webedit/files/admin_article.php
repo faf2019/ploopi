@@ -199,7 +199,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     {
                         ?>
                         <input style="width:100px;" class="text" type="text" name="webedit_article_timestp" id="webedit_article_timestp" value="<?php echo $article_timestp; ?>" tabindex="4" />
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('webedit_article_timestp', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                        <? ploopi_open_calendar('webedit_article_timestp'); ?>
                         <?php
                     }
                     else echo '<span>'.htmlentities($article_timestp, ENT_QUOTES).'</span>';
@@ -359,8 +359,8 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     {
                         ?>
                         <input style="width:100px;" class="text" type="text" name="webedit_article_timestp_published" id="webedit_article_timestp_published" value="<?php echo htmlentities($article_timestp_published, ENT_QUOTES); ?>" tabindex="13" />
-                        <a href="#" onclick="javascript:ploopi_calendar_open('webedit_article_timestp_published', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
-                        <?php
+                        <?php 
+                        ploopi_open_calendar('webedit_article_timestp_published');
                     }
                     else echo '<span>'.htmlentities($article_timestp_published, ENT_QUOTES).'</span>';
                     ?>
@@ -372,8 +372,8 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     {
                         ?>
                         <input style="width:100px;" class="text" type="text" name="webedit_article_timestp_unpublished" id="webedit_article_timestp_unpublished" value="<?php echo htmlentities($article_timestp_unpublished, ENT_QUOTES); ?>" tabindex="14" />
-                        <a href="#" onclick="javascript:ploopi_calendar_open('webedit_article_timestp_unpublished', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
-                        <?php
+                        <?php 
+                        ploopi_open_calendar('webedit_article_timestp_unpublished');
                     }
                     else echo '<span>'.htmlentities($article_timestp_unpublished, ENT_QUOTES).'</span>';
                     ?>
