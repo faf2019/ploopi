@@ -179,38 +179,13 @@ line-height:24px;
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#header {
-height: 1%;
-overflow: visible;
-}
-
-#page_content {
-height: 1%;
-overflow: visible;
-}
-
-#container2 {
-height: 1%;
-overflow: visible;
-}
-
-#block_modules {
-margin-right:0px;
-}
-
 #login input, #login label, #login span, #login a {
    display: inline-block;
 }
 
-#footer span, #footer a {
-   display: inline-block;
-}
-
-.module_content {
-overflow:visible;
-height:1%;
-}
-/*
+#page_content {
+height:600px;
+}/*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.
@@ -332,6 +307,11 @@ filter:alpha(opacity=80);
 
 .toolbar_icon a:hover {
 filter:alpha(opacity=100);
+}
+
+.tabs {
+overflow:visible;
+height:1%;
 }
 
 .ploopi_overflowauto {

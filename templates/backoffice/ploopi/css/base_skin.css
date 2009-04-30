@@ -601,6 +601,19 @@ div.ploopi_explorer_tools a {
     float:left;
 }
 
+.treeview_node_loading {
+    overflow:hidden;
+}
+
+.treeview_node_loading img {
+    display:block;
+    float:left;
+}
+
+.treeview_node_loading * {
+    cursor:wait;
+}
+
 div.ploopi_page_cut {
   clear:both;
   overflow: auto;

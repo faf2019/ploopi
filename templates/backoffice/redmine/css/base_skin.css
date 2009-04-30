@@ -1,6 +1,6 @@
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
     Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -88,6 +88,7 @@ border-width:1px;
 border-style:solid;
 border-color:#bbb;
 overflow:auto;
+position:relative;
 }
 
 .simplebloc {
@@ -308,11 +309,18 @@ overflow:auto;
 }
 
 /* vertical alignement : IE / FF / Opera */
-.ploopi_va {
+p.ploopi_va {
     margin:0;
 }
 
-.ploopi_va * {
+p.ploopi_va img,
+p.ploopi_va span,
+p.ploopi_va label,
+p.ploopi_va strong,
+p.ploopi_va em,
+p.ploopi_va input,
+p.ploopi_va select,
+p.ploopi_va a {
     display: inline-block;
     vertical-align: middle;
 }
@@ -551,6 +559,19 @@ div.ploopi_explorer_tools a {
 .treeview_node img {
     display:block;
     float:left;
+}
+
+.treeview_node_loading {
+    overflow:hidden;
+}
+
+.treeview_node_loading img {
+    display:block;
+    float:left;
+}
+
+.treeview_node_loading * {
+    cursor:wait;
 }
 
 div.ploopi_page_cut {
