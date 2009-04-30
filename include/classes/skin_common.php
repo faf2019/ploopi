@@ -273,7 +273,7 @@ class skin_common
 
     function create_popup($title, $content, $popupid = 'ploopi_popup')
     {
-        $option = ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_focus_popup']) ? "document.location.href='#anchor_{$popupid}';" : '';
+        $strOptionAnchor = ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_focus_popup']) ? "document.location.href = '#anchor_{$popupid}';" : '';
 
         $res =  '
                 <div class="simplebloc" style="margin:0;">
@@ -290,12 +290,69 @@ class skin_common
                 <script type="text/javascript">
                 new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\'});
                 new Draggable(\''.$popupid.'\', { handle: \'handlebottom_'.$popupid.'\'});
-                '.$option.'
+                '.$strOptionAnchor.'
                 </script>
                 ';
 
         return($res);
     }
+    
+    
+    /**
+     * Crée un faux popup et l'ouvre via javascript
+     *
+     * @param string $title titre du popup
+     * @param string $content contenu du popup (html)
+     * @param string $popupid id du popup (propriété html id)
+     * @return string code html du popup
+     */
+    
+    function open_popup($title, $content, $popupid = 'ploopi_popup', $arrOptions = array())
+    {
+        $arrDefaultOptions = array(
+            'intWidth' => 200,
+            'booCentered' => true,
+            'intPosx' => 0,
+            'intPosy' => 0,
+            'stringJsBeforeStart' => '',
+            'stringJsAfterFinish' => '',
+        );
+        
+        $arrOptions = array_merge($arrDefaultOptions, $arrOptions);
+        
+        $strOptionAnchor = ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_focus_popup']) ? "document.location.href = '#anchor_{$popupid}';" : '';
+
+        $res =  '
+                <div id="'.$popupid.'" style="display:none;">
+                    <div class="simplebloc" style="margin:0;">
+                        <a name="anchor_'.$popupid.'"></a>
+                        <div class="simplebloc_title">
+                            <div class="simplebloc_titleleft">
+                                <img alt="Fermer" title="Fermer le popup" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
+                                <div style="overflow:auto;cursor:move;" id="handle_'.$popupid.'">'.$title.'</div>
+                            </div>
+                        </div>
+                        <div class="simplebloc_content">'.$content.'</div>
+                        <div class="simplebloc_footer" style="cursor:move;" id="handlebottom_'.$popupid.'"></div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    ploopi_window_onload_stock(
+                        function() {
+                            '.$arrOptions['stringJsBeforeStart'].'
+                            ploopi_popupize(\''.$popupid.'\', '.$arrOptions['intWidth'].', '.($arrOptions['booCentered'] ? 'true' : 'false').', '.$arrOptions['intPosx'].', '.$arrOptions['intPosy'].');
+                            new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\'});
+                            new Draggable(\''.$popupid.'\', { handle: \'handlebottom_'.$popupid.'\'});
+                            '.$arrOptions['stringJsAfterFinish'].'
+                            '.$strOptionAnchor.'
+                        }
+                    );                
+                    
+                </script>
+                ';
+
+        return($res);
+    }    
 
     /**
      * Trie le tableau avancé
@@ -767,7 +824,7 @@ class skin_common
 
                 // génération du code html du noeud courant
                 $html .=    "
-                            <div class=\"treeview_node\" style=\"{$bg}\">
+                            <div class=\"treeview_node\" id=\"treeview_node{$node['id']}\" style=\"{$bg}\">
                                 <div>
                                     {$node_link}<img src=\"{$node['icon']}\" />
                                     <div style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;font-weight:{$style_sel};\">

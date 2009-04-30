@@ -57,7 +57,7 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     // replyto : Array('name','address')
     // files : Array
 
-    $crlf = "\n";
+    $crlf = "\r\n";
 
     $str_to = '';
     if (is_array($to))

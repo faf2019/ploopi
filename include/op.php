@@ -211,18 +211,18 @@ if (isset($ploopi_op))
             $month = date('n');
             $year = date('Y');
 
-            if (!empty($_GET['inputfield_id'])) $_SESSION['calendar']['inputfield_id'] = $_GET['inputfield_id'];
+            if (!empty($_REQUEST['inputfield_id'])) $_SESSION['calendar']['inputfield_id'] = $_REQUEST['inputfield_id'];
 
             if (empty($_SESSION['calendar']['inputfield_id'])) ploopi_die();
 
-            if (!empty($_GET['selected_date']))
+            if (!empty($_REQUEST['selected_date']))
             {
                 $sel_day = $sel_month = $sel_year = 0;
 
                 switch(_PLOOPI_DATEFORMAT)
                 {
                     case _PLOOPI_DATEFORMAT_US:
-                        if (ereg(_PLOOPI_DATEFORMAT_EREG_US, $_GET['selected_date'], $regs))
+                        if (ereg(_PLOOPI_DATEFORMAT_EREG_US, $_REQUEST['selected_date'], $regs))
                         {
                             $sel_day = $regs[3];
                             $sel_month = $regs[2];
@@ -234,7 +234,7 @@ if (isset($ploopi_op))
                     break;
 
                     case _PLOOPI_DATEFORMAT_FR:
-                        if (ereg(_PLOOPI_DATEFORMAT_EREG_FR, $_GET['selected_date'], $regs))
+                        if (ereg(_PLOOPI_DATEFORMAT_EREG_FR, $_REQUEST['selected_date'], $regs))
                         {
                             $sel_day = $regs[1];
                             $sel_month = $regs[2];
@@ -250,10 +250,10 @@ if (isset($ploopi_op))
                 $_SESSION['calendar']['selected_day'] = $sel_day;
                 $_SESSION['calendar']['selected_year'] = $sel_year;
             }
-            elseif (isset($_GET['calendar_month']) && isset($_GET['calendar_year']))
+            elseif (isset($_REQUEST['calendar_month']) && isset($_REQUEST['calendar_year']))
             {
-                $month = $_GET['calendar_month'];
-                $year = $_GET['calendar_year'];
+                $month = $_REQUEST['calendar_month'];
+                $year = $_REQUEST['calendar_year'];
             }
 
             if (empty($_SESSION['calendar']['selected_day']))
@@ -283,16 +283,17 @@ if (isset($ploopi_op))
             if ($_SESSION['ploopi']['mode'] == 'backoffice' && !empty($_SESSION['ploopi']['template_path'])) $strIconsPath = $_SESSION['ploopi']['template_path'];
             else $strIconsPath = '.';
 
+            $strScript = $_SESSION['ploopi']['mode'] == 'backoffice' ? 'admin' : 'index'; 
             ?>
             <div id="calendar">
                 <div class="calendar_row">
                     <div class="calendar_arrow" style="float:right;">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$next_month}&calendar_year={$next_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/next.png"></a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year+1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/nextx2.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<? echo $strScript; ?>-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$next_month}&calendar_year={$next_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/next.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<? echo $strScript; ?>-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year+1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/nextx2.png"></a>
                     </div>
                     <div class="calendar_arrow" style="float:left;">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year-1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/prevx2.png"></a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$prev_month}&calendar_year={$prev_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/prev.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<? echo $strScript; ?>-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year-1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/prevx2.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<? echo $strScript; ?>-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$prev_month}&calendar_year={$prev_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/prev.png"></a>
                     </div>
                     <div class="calendar_month">
                         <?php echo "{$ploopi_months[$month]}<br />{$year}"; ?>

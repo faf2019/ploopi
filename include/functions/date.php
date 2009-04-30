@@ -414,4 +414,19 @@ function ploopi_tz_getutc($timezone_name = 'UTC')
 
     return('UTC '.date_format(date_create(null, timezone_open($timezone_name)), "P"));
 }
+
+/**
+ * Affiche une petite image de calendrier qui permet d'ouvrir le calendrier/popup de choix d'une date
+ *
+ * @param string $strInputFieldId identifiant du champ input associé
+ */
+function ploopi_open_calendar($strInputFieldId)
+{
+    $strScript = $_SESSION['ploopi']['mode'] == 'backoffice' ? 'admin' : 'index'; 
+    ?>
+    <a  href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(192, event, 'ploopi_popup_calendar', '<? echo $strScript; ?>-light.php?ploopi_op=calendar_open', 'selected_date='+$('<? echo $strInputFieldId; ?>').value+'&inputfield_id=<? echo $strInputFieldId; ?>', 'POST');">
+    <img height="18" border="0" align="top" width="31" src="./img/calendar/calendar.gif"/>
+    </a>
+    <?php    
+}
 ?>
