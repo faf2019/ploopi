@@ -79,7 +79,7 @@ $ploopi_errorlevel =
  * @see _PLOOPI_ERROR_REPORTING
  */
                             
-function ploopi_errorhandler($errno, $errstr, $errfile, $errline, $vars)
+function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
 {
     global $ploopi_errors_msg;
     global $ploopi_errors_nb;
@@ -169,5 +169,23 @@ STDOUT;
             }
         }
     }
+}
+
+/**
+ * Active le gestionnaire d'erreur interne à Ploopi
+ */
+function ploopi_set_error_handler()
+{
+    set_error_handler('ploopi_error_handler');
+    error_reporting(E_ALL);
+}
+
+/**
+ * Désactive le gestionnaire d'erreur interne à Ploopi
+ */
+function ploopi_unset_error_handler()
+{
+    restore_error_handler();
+    error_reporting(0);
 }
 ?>
