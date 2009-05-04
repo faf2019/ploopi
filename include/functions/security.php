@@ -101,28 +101,31 @@ function ploopi_generatepassword($length = 8, $use_char_up = true, $use_char_num
  * @author Stéphane Escaich
  */
 
-function ploopi_filtervar($var, $varname = '')
+function ploopi_filtervar($mixVar, $strVarName = null, $booUtf8 = false)
 {
     include_once './lib/inputfilter/inputfilter.php';
 
-    if (is_array($var))
+    if (is_array($mixVar))
     {
-        foreach($var as $key => $value)
+        foreach($mixVar as $strKey => $mixValue)
         {
-            $var[$key] = ploopi_filtervar($value, $key);
+            $mixVar[$strKey] = ploopi_filtervar($mixValue, $strKey, $booUtf8);
         }
     }
     else
     {
-        if (get_magic_quotes_gpc()) $var = stripslashes($var);
-        if (substr($varname,0,4) != 'fck_')
+        if (get_magic_quotes_gpc()) $mixVar = stripslashes($mixVar);
+        
+        if ($booUtf8) $mixVar = utf8_decode($mixVar);
+        
+        if (substr($strVarName,0,4) != 'fck_')
         {
             $inputFilter = new InputFilter('', '', 0, 0, 0);
-            $var = $inputFilter->process($var);
+            $mixVar = $inputFilter->process($mixVar);
         }
     }
 
-    return $var;
+    return $mixVar;
 }
 
 /**

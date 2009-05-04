@@ -290,6 +290,64 @@ function ploopi_numweek2unixtimestamp($intNumWeek, $intYear)
     return(mktime(0, 0, 0, 12, 29 + $d + (($intNumWeek - 1) * 7), $intYear - 1));
 }
 
+
+/**
+ * Retourne un booléen indiquant si une date correspond à un jour férié
+ *
+ * @copyright Olravet (http://olravet.fr/)
+ * 
+ * @param int $timestamp date au format timestamp unix
+ * @return boolean true si le jour est férié
+ */
+
+function ploopi_holiday($timestamp)
+{
+    $intDay = date("d", $timestamp);
+    $intMonth = date("m", $timestamp);
+    $intYear = date("Y", $timestamp);
+    
+    $booIsHoliday = false;
+    
+    // dates fériées fixes
+    if($intDay == 1 && $intMonth == 1) $booIsHoliday = true; // 1er janvier
+    elseif($intDay == 1 && $intMonth == 5) $booIsHoliday = true; // 1er mai
+    elseif($intDay == 8 && $intMonth == 5) $booIsHoliday = true; // 8 mai
+    elseif($intDay == 14 && $intMonth == 7) $booIsHoliday = true; // 14 juillet
+    elseif($intDay == 15 && $intMonth == 8) $booIsHoliday = true; // 15 aout
+    elseif($intDay == 1 && $intMonth == 11) $booIsHoliday = true; // 1 novembre
+    elseif($intDay == 11 && $intMonth == 11) $booIsHoliday = true; // 11 novembre
+    elseif($intDay == 25 && $intMonth == 12) $booIsHoliday = true; // 25 décembre
+    
+    // fêtes religieuses mobiles
+
+    $pak = easter_date($intYear);
+    $jp = date("d", $pak);
+    $mp = date("m", $pak);
+    if($jp == $intDay && $mp == $intMonth) { $booIsHoliday = true;} // Pâques
+    
+    $lpk = mktime(date("H", $pak), date("i", $pak), date("s", $pak), date("m", $pak), date("d", $pak) +1, date("Y", $pak) );
+    $jp = date("d", $lpk);
+    $mp = date("m", $lpk);
+    if($jp == $intDay && $mp == $intMonth){ $booIsHoliday = true; } // Lundi de Pâques
+    
+    $asc = mktime(date("H", $pak), date("i", $pak), date("s", $pak), date("m", $pak), date("d", $pak) + 39, date("Y", $pak) );
+    $jp = date("d", $asc);
+    $mp = date("m", $asc);
+    if($jp == $intDay && $mp == $intMonth){ $booIsHoliday = true;} //ascension
+
+    $pe = mktime(date("H", $pak), date("i", $pak), date("s", $pak), date("m", $pak), date("d", $pak) + 49, date("Y", $pak) );
+    $jp = date("d", $pe);
+    $mp = date("m", $pe);
+    if($jp == $intDay && $mp == $intMonth) {$booIsHoliday = true;} // Pentecôte
+    
+    $lp = mktime(date("H", $asc), date("i", $pak), date("s", $pak), date("m", $pak), date("d", $pak) + 50, date("Y", $pak) );
+    $jp = date("d", $lp);
+    $mp = date("m", $lp);
+    if($jp == $intDay && $mp == $intMonth) {$booIsHoliday = true;} // lundi Pentecôte
+
+    return $booIsHoliday;
+}
+
 /**
  * Crée le timestamp MYSQL (AAAAMMJJhhmmss) de la date actuelle pour un fuseau horaire donné (par défaut UTC+0)
  *
