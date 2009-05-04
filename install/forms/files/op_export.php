@@ -68,65 +68,70 @@ if (!empty($_GET['forms_export_format']))
             $worksheet =& $workbook->addWorksheet("export");
 
             $c=0;
-            foreach ($_SESSION['forms']['export_title'] as $key => $value)
+            if (isset($_SESSION['forms']['export_title']) && is_array($_SESSION['forms']['export_title']))
             {
-                $value = $value['label'];
-                $display = false;
-                switch($key)
+                foreach ($_SESSION['forms']['export_title'] as $key => $value)
                 {
-                    case 'datevalidation':
-                        $display = ($form->fields['option_displaydate']);
-                    break;
-
-                    case 'user':
-                        $display = ($form->fields['option_displayuser']);
-                    break;
-
-                    case 'group':
-                        $display = ($form->fields['option_displaygroup']);
-                    break;
-
-                    default:
-                        $display = (isset($_SESSION['forms']['export_fields'][$key]) && $_SESSION['forms']['export_fields'][$key]['option_exportview']);
-                    break;
-                }
-
-                if ($display) $worksheet->write(0, $c++, $value, $format_title);
-            }
-
-            $l=1;
-
-            foreach ($_SESSION['forms']['export'] as $reply_id => $detail)
-            {
-                $c=0;
-                foreach ($detail as $key => $value)
-                {
+                    $value = $value['label'];
                     $display = false;
                     switch($key)
                     {
                         case 'datevalidation':
                             $display = ($form->fields['option_displaydate']);
                         break;
-
+    
                         case 'user':
                             $display = ($form->fields['option_displayuser']);
                         break;
-
+    
                         case 'group':
                             $display = ($form->fields['option_displaygroup']);
                         break;
-
+    
                         default:
                             $display = (isset($_SESSION['forms']['export_fields'][$key]) && $_SESSION['forms']['export_fields'][$key]['option_exportview']);
                         break;
                     }
-
-                    $value = str_replace('||',';',$value);
-                    if ($display) $worksheet->write($l, $c++, $value, $format);
+    
+                    if ($display) $worksheet->write(0, $c++, $value, $format_title);
                 }
-                $l++;
             }
 
+            $l=1;
+
+            if (isset($_SESSION['forms']['export']) && is_array($_SESSION['forms']['export']))
+            {
+                foreach ($_SESSION['forms']['export'] as $reply_id => $detail)
+                {
+                    $c=0;
+                    foreach ($detail as $key => $value)
+                    {
+                        $display = false;
+                        switch($key)
+                        {
+                            case 'datevalidation':
+                                $display = ($form->fields['option_displaydate']);
+                            break;
+    
+                            case 'user':
+                                $display = ($form->fields['option_displayuser']);
+                            break;
+    
+                            case 'group':
+                                $display = ($form->fields['option_displaygroup']);
+                            break;
+    
+                            default:
+                                $display = (isset($_SESSION['forms']['export_fields'][$key]) && $_SESSION['forms']['export_fields'][$key]['option_exportview']);
+                            break;
+                        }
+    
+                        $value = str_replace('||',';',$value);
+                        if ($display) $worksheet->write($l, $c++, $value, $format);
+                    }
+                    $l++;
+                }
+            }
             $workbook->close();
         break;
 

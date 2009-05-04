@@ -1,3 +1,9 @@
+== Module FORMS - version 2.3.5 =====================================================
+
+2009-05-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction sur la fonctionnalité d'export XLS (variables non définies) 
+
 == Module FORMS - version 2.3.4 =====================================================
 
 2009-04-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
