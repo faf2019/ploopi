@@ -110,13 +110,14 @@ switch($ploopi_op)
             include_once './include/classes/documents.php';
 
             $documentsfile = new documentsfile();
-            $documentsfile->open($_GET['documentsfile_id']);
-
-            $attachement = true;
-
-            if (isset($_GET['attachement']) && ($_GET['attachement'] == 0 || $_GET['attachement'] == 'false')) $attachement = false;
-
-            if (file_exists($documentsfile->getfilepath())) ploopi_downloadfile($documentsfile->getfilepath(),$documentsfile->fields['name'], false, $attachement);
+            if ($documentsfile->open($_GET['documentsfile_id']))
+            {
+                $attachement = true;
+    
+                if (isset($_GET['attachement']) && ($_GET['attachement'] == 0 || $_GET['attachement'] == 'false')) $attachement = false;
+    
+                if (file_exists($documentsfile->getfilepath())) ploopi_downloadfile($documentsfile->getfilepath(),$documentsfile->fields['name'], false, $attachement);
+            }
         }
 
         echo "Le fichier n'existe pas";
@@ -133,26 +134,27 @@ switch($ploopi_op)
             include_once './include/classes/documents.php';
 
             $documentsfile = new documentsfile();
-            $documentsfile->open($_GET['documentsfile_id']);
-
-            if (file_exists($documentsfile->getfilepath()) && is_writeable($zip_path))
+            if ($documentsfile->open($_GET['documentsfile_id']))
             {
-                // create a temporary file with the real name
-                $tmpfilename = $zip_path._PLOOPI_SEP.$documentsfile->fields['name'];
-
-                copy($documentsfile->getfilepath(),$tmpfilename);
-
-                // create zip file
-                $zip_filename = "archive_{$_GET['documentsfile_id']}.zip";
-                echo $zip_filepath = $zip_path._PLOOPI_SEP.$zip_filename;
-                $zip = new PclZip($zip_filepath);
-                $zip->create($tmpfilename,PCLZIP_OPT_REMOVE_ALL_PATH);
-
-                // delete temporary file
-                unlink($tmpfilename);
-
-                // download zip file
-                ploopi_downloadfile($zip_filepath, $zip_filename, true);
+                if (file_exists($documentsfile->getfilepath()) && is_writeable($zip_path))
+                {
+                    // create a temporary file with the real name
+                    $tmpfilename = $zip_path._PLOOPI_SEP.$documentsfile->fields['name'];
+    
+                    copy($documentsfile->getfilepath(),$tmpfilename);
+    
+                    // create zip file
+                    $zip_filename = "archive_{$_GET['documentsfile_id']}.zip";
+                    echo $zip_filepath = $zip_path._PLOOPI_SEP.$zip_filename;
+                    $zip = new PclZip($zip_filepath);
+                    $zip->create($tmpfilename,PCLZIP_OPT_REMOVE_ALL_PATH);
+    
+                    // delete temporary file
+                    unlink($tmpfilename);
+    
+                    // download zip file
+                    ploopi_downloadfile($zip_filepath, $zip_filename, true);
+                }
             }
         }
 
