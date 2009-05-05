@@ -37,9 +37,23 @@
 if (isset($_POST['reset'])) $pattern = '';
 else $pattern = (empty($_POST['pattern'])) ? '' : $_POST['pattern'];
 
-// liste des groupes (id) "rattachables" (sans filtrage)
+$arrWhere = array();
 
-$grp_list = array_diff(array_keys($workspaces['list'][$workspaceid]['groups']),array_keys($workspace->getgroups()));
+if (!ploopi_isadmin()) // filtrage des groupes visibles si l'utilisateur n'est pas admin système
+{
+    // liste des groupes (id) "rattachables" (sans filtrage)
+    $grp_list = array_diff(array_keys($workspaces['list'][$workspaceid]['groups']),array_keys($workspace->getgroups()));
+    $nbgroup = sizeof($grp_list);
+        
+    if (!empty($grp_list)) $arrWhere[] = 'ploopi_group.id IN ('.implode(',',$grp_list).')';
+    else $arrWhere[] = 'ploopi_group.id = 0';
+}
+else
+{
+    $db->query("SELECT count(*) as nb FROM ploopi_group");
+    $row = $db->fetchrow();
+    $nbgroup = $row['nb'];
+}
 
 if ($pattern != '') $alphaTabItem = 99; // tous
 else
@@ -49,7 +63,7 @@ else
     if ($alphaTabItem == -1)
     {
         // aucun caractère de filtrage sélectionné. On recherche si on en met un par défaut (si trop de groupes) ou si on sélectionne "tous"
-        if (sizeof($grp_list) < 25) $alphaTabItem = 99;
+        if ($nbgroup < 25) $alphaTabItem = 99;
     }
 }
 
@@ -92,26 +106,24 @@ else
 </form>
 
 <?php
-$where = array();
 
 if ($alphaTabItem == 99) // tous ou recherche
 {
     if ($pattern != '')
     {
         $pattern = $db->addslashes($pattern);
-        $where[] .=  "ploopi_group.label LIKE '%{$pattern}%'";
+        $arrWhere[] .=  "ploopi_group.label LIKE '%{$pattern}%'";
     }
 }
 else
 {
     // 98 : # => non alpha
-    if ($alphaTabItem == 98) $where[] = "ASCII(LCASE(LEFT(ploopi_group.label,1))) NOT BETWEEN 97 AND 122";
+    if ($alphaTabItem == 98) $arrWhere[] = "ASCII(LCASE(LEFT(ploopi_group.label,1))) NOT BETWEEN 97 AND 122";
     // alpha
-    else $where[] = "ASCII(LCASE(LEFT(ploopi_group.label,1))) = ".($alphaTabItem+96);
+    else $arrWhere[] = "ASCII(LCASE(LEFT(ploopi_group.label,1))) = ".($alphaTabItem+96);
 }
 
-if (!empty($grp_list)) $where[] = 'ploopi_group.id IN ('.implode(',',$grp_list).')';
-else $where[] = 'ploopi_group.id = 0';
+$strWhere = (empty($arrWhere)) ? '' : ' WHERE '.implode(' AND ', $arrWhere);
 
 $sql =  "
         SELECT      ploopi_group.id,
@@ -120,7 +132,7 @@ $sql =  "
 
         FROM        ploopi_group
 
-        WHERE       ".implode(' AND ', $where)."
+        {$strWhere}
         ";
 
 $columns = array();

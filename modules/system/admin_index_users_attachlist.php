@@ -45,23 +45,31 @@ $arrWhere = array();
 switch ($_SESSION['system']['level'])
 {
     case _SYSTEM_GROUPS :
-        // filtrage sur les groupes partagés
-        if (!empty($groups['list'][$groupid]['groups'])) $arrWhere[] = '( gu.id_group IN ('.implode(',',array_keys($groups['list'][$groupid]['groups'])).'))';
-        else $arrWhere[] = 'gu.id_group = 0';
+        if (!ploopi_isadmin())
+        {
+            // filtrage sur les groupes partagés
+            if (!empty($groups['list'][$groupid]['groups'])) $arrWhere[] = '( gu.id_group IN ('.implode(',',array_keys($groups['list'][$groupid]['groups'])).'))';
+            else $arrWhere[] = 'gu.id_group = 0';
+        }
 
         $currentusers = $group->getusers();
         if (!empty($currentusers)) $arrWhere[] = 'u.id NOT IN ('.implode(',',array_keys($currentusers)).')';
     break;
 
     case _SYSTEM_WORKSPACES :
-        // filtrage sur les groupes partagés
-        if (!empty($workspaces['list'][$workspaceid]['groups'])) $arrWhere[] = 'gu.id_group IN ('.implode(',',array_keys($workspaces['list'][$workspaceid]['groups'])).')';
-        else $arrWhere[] = "gu.id_group = 0";
-
+        if (!ploopi_isadmin())
+        {
+            // filtrage sur les groupes partagés
+            if (!empty($workspaces['list'][$workspaceid]['groups'])) $arrWhere[] = 'gu.id_group IN ('.implode(',',array_keys($workspaces['list'][$workspaceid]['groups'])).')';
+            else $arrWhere[] = "gu.id_group = 0";
+        }
+        
         $currentusers = $workspace->getusers();
         if (!empty($currentusers)) $arrWhere[] = 'u.id NOT IN ('.implode(',',array_keys($currentusers)).')';
     break;
 }
+
+$strWhere = (empty($arrWhere)) ? '' : ' AND '.implode(' AND ', $arrWhere);
 
 if ($pattern != '') $alphaTabItem = 99; // tous
 else
@@ -79,7 +87,7 @@ else
                         ploopi_group_user gu
 
             WHERE       gu.id_user = u.id
-            AND         ".implode(' AND ', $arrWhere)."
+            {$strWhere}
         ");
 
         $fields = $db->fetchrow();
@@ -174,7 +182,7 @@ $db->query("
                 ploopi_group_user gu
 
     WHERE      gu.id_user = u.id
-    AND        ".implode(' AND ', $arrWhere)."
+    {$strWhere}
 
     {$strWhereName}
 
