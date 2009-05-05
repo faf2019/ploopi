@@ -1,3 +1,10 @@
+== Module DOC - version 4.4.0b =====================================================
+
+2009-05-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug (variable non définie) lors du téléchargement d'un document
+ * Corrections visuelles sur l'interface de recherche 
+
 == Module DOC - version 4.4.0 =====================================================
 
 2009-04-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

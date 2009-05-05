@@ -61,88 +61,65 @@ $show_options = (
 <form action="<?php echo ploopi_urlencode('admin.php'); ?>" onsubmit="javascript:doc_search_next();return false;" method="post">
 <input type="hidden" name="op" value="search_next">
 <div class="doc_folderinfo">
-    <div style="float:left;">
-        <p style="margin:0;padding:4px 0px 4px 8px;">
-            <img src="./modules/doc/img/search.png" />
-        </p>
-    </div>
-    <div style="float:left;">
-        <p style="margin:0;padding:4px;">
-            <strong>Recherche</strong>
-            <br />d'un Fichier
-        </p>
-    </div>
-    <div style="float:left;border-left:1px solid #e0e0e0;">
-        <p style="margin:0;padding:4px;">
-            <strong>Nom / Mots Clés</strong>:
-            <br />
-            <input type="text" class="text" style="width:140px;" id="doc_search_keywords" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']); ?>" />
-            <input type="submit" class="flatbutton" value="Rechercher" />
-        </p>
-    </div>
-
-    <div style="display:<?php echo ($show_options) ? 'block' : 'none'; ?>;" id="doc_search_options">
-        <div style="float:left;border-left:1px solid #e0e0e0;">
-            <p style="margin:0;padding:4px;">
-                <strong>Type</strong>:
-                <br />
-                <?php
-                $select = "SELECT distinct(filetype) FROM ploopi_mod_doc_ext ORDER BY filetype";
-                $db->query($select);
-                ?>
-                <select class="select" style="width:100px;" id="doc_search_filetype">
-                    <option value="">(tout)</option>
-                    <?php
-                    while ($row = $db->fetchrow())
-                    {
-                        ?>
-                        <option value="<?php echo $row['filetype']; ?>" <?php if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] == $row['filetype']) echo 'selected'; ?>><?php echo $row['filetype']; ?></option>
-                        <?php
-                    }
-                    ?>
-                </select>
-            </p>
-        </div>
-        <div style="float:left;border-left:1px solid #e0e0e0;">
-            <p style="margin:0;padding:4px;">
-                <strong>Propriétaire</strong>:
-                <br /><input type="text" class="text"  style="width:90px;" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']); ?>" id="doc_search_user">
-            </p>
-        </div>
-        <div style="float:left;border-left:1px solid #e0e0e0;">
-            <p style="margin:0;padding:4px;">
-                <strong>Espace</strong>:
-                <br /><input type="text" class="text" style="width:90px;" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']); ?>" id="doc_search_workspace">
-            </p>
-        </div>
-        <div style="float:left;border-left:1px solid #e0e0e0;">
-            <p style="margin:0;padding:4px;">
-                <strong>Date (du)</strong>:
-                <br />
-                <input type="text" class="text" style="width:70px;" value="<?php echo $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']; ?>" name="doc_search_date1" id="doc_search_date1">
-                <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('doc_search_date1', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
-            </p>
-        </div>
-        <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
-            <p style="margin:0;padding:4px;">
-                <strong>Date (au)</strong>:
-                <br />
-                <input type="text" class="text" style="width:70px;" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2']); ?>" name="doc_search_date2" id="doc_search_date2">
-                <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('doc_search_date2', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
-            </p>
-        </div>
-    </div>
-    <div style="float:left;border-left:1px solid #e0e0e0;">
-            <p style="margin:0;padding:4px;">
-            <br /><input type="submit" class="flatbutton" value="Rechercher">
-        </p>
-    </div>
-    <div style="float:left;border-left:1px solid #e0e0e0;">
-            <p style="margin:0;padding:4px;">
-            <a href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('doc_search_options');"><strong>Afficher<br />plus d'options</strong></a>
-        </p>
-    </div>
+    <p style="margin:0;padding:4px 0px 4px 4px;float:left;">
+        <img src="./modules/doc/img/search.png" />
+    </p>
+    <p style="margin:0;padding:4px;float:left;">
+        <strong>Recherche</strong>
+        <br />d'un Fichier
+    </p>
+    <p style="margin:0;padding:4px;float:left;">
+        <strong>Nom / Mots Clés</strong>:
+        <br />
+        <input type="text" class="text" style="width:140px;" id="doc_search_keywords" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']); ?>" />
+        <input type="submit" class="flatbutton" value="Rechercher" />
+    </p>
+    <p style="margin:0;padding:4px;float:left;">
+        <a href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('doc_search_options');"><strong>Afficher/Cacher<br />les options supplémentaires</strong></a>
+    </p>
 </div>
+<div class="doc_folderinfo" style="display:<?php echo ($show_options) ? 'block' : 'none'; ?>;border-top:1px solid #c0c0c0;" id="doc_search_options">
+    <p style="float:left;margin:0;padding:4px;">
+        <strong>Type</strong>:
+        <br />
+        <?php
+        $select = "SELECT distinct(filetype) FROM ploopi_mod_doc_ext ORDER BY filetype";
+        $db->query($select);
+        ?>
+        <select class="select" style="width:100px;" id="doc_search_filetype">
+            <option value="">(tout)</option>
+            <?php
+            while ($row = $db->fetchrow())
+            {
+                ?>
+                <option value="<?php echo $row['filetype']; ?>" <?php if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] == $row['filetype']) echo 'selected'; ?>><?php echo $row['filetype']; ?></option>
+                <?php
+            }
+            ?>
+        </select>
+    </p>
+    <p style="margin:0;padding:4px;float:left;">
+        <strong>Propriétaire</strong>:
+        <br /><input type="text" class="text"  style="width:90px;" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']); ?>" id="doc_search_user">
+    </p>
+    <p style="margin:0;padding:4px;float:left;">
+        <strong>Espace</strong>:
+        <br /><input type="text" class="text" style="width:90px;" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']); ?>" id="doc_search_workspace">
+    </p>
+    <p style="margin:0;padding:4px;float:left;">
+        <strong>Date (du)</strong>:
+        <br />
+        <input type="text" class="text" style="width:70px;" value="<?php echo $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']; ?>" name="doc_search_date1" id="doc_search_date1">
+        <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('doc_search_date1', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+    </p>
+    <p style="float:left;margin:0;padding:4px;">
+        <strong>Date (au)</strong>:
+        <br />
+        <input type="text" class="text" style="width:70px;" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2']); ?>" name="doc_search_date2" id="doc_search_date2">
+        <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('doc_search_date2', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+    </p>
+</div>
+
 </form>
 <script type="text/javascript">
 $('doc_search_keywords').focus();
