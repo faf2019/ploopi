@@ -746,7 +746,7 @@ class skin_common
         // recherche du premier noeud
         if (is_null($node_id_from)) $node_id_from = key($treeview);
 
-        if (!empty($node_id_sel) && isset($nodes[$node_id_sel])) $nodesel = $nodes[$node_id_sel];
+        if (!is_null($node_id_sel) && isset($nodes[$node_id_sel])) $nodesel = $nodes[$node_id_sel]; 
 
         // code html généré par ce niveau de boucle
         $html = '';
@@ -760,7 +760,7 @@ class skin_common
                 $node = $nodes[$node_id];
 
                 // true si le noeud courant est sélectionné
-                $is_node_sel = (!empty($node_id_sel) && ($node_id_sel == $node['id']));
+                $is_node_sel = (!is_null($node_id_sel) && ($node_id_sel == $node['id']));
 
                 // parents du noeud sélectionné
                 $nodesel_parents = (isset($nodesel)) ? $nodesel['parents'] : array();
