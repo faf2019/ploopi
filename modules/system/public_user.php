@@ -269,7 +269,11 @@ if (isset($error))
                             {
                                 if (!empty($value['timezone_id']) && strpos($value['timezone_id'], '/') !== false)
                                 {
+                                    // Bug php avec version 5.2.0-8+etch15
+                                    // timezone_open() [function.timezone-open]: Unknown or bad timezone (US/Pacific-New)
+                                    ploopi_unset_error_handler();
                                     $objDateTimeZone = timezone_open($value['timezone_id']);
+                                    ploopi_set_error_handler();
 
                                     if ($objDateTimeZone !== false)
                                     {
