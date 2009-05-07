@@ -144,6 +144,14 @@
     overflow:hidden;
 }
 
+.ploopi_calendar_m div.day_weekend {
+    background:#e0f0f0;
+}
+
+.ploopi_calendar_m div.day_holiday {
+    background:#f0e0e0;
+}
+
 .ploopi_calendar_m div.day div.day_num {
     padding:2px;
     background-color:#d0d0d0;
@@ -157,6 +165,22 @@
     text-align:right;
     font-size:0.9em;
     color:#808080;
+}
+
+.ploopi_calendar_m div.day_weekend div.day_num {
+    background:#c0d0d0;
+}
+
+.ploopi_calendar_m div.day_holiday div.day_num {
+    background:#d0c0c0;
+}
+
+.ploopi_calendar_m div.day_weekend div.day_num_grayed {
+    background:#c0d0d0;
+}
+
+.ploopi_calendar_m div.day_holiday div.day_num_grayed {
+    background:#d0c0c0;
 }
 
 .ploopi_calendar_m div.week_header {
@@ -182,18 +206,9 @@
     background-color:#c0c0c0;
     text-decoration:none;
     font-size:0.9em;
-    color:#fff;
-    opacity:0.8;filter:alpha(opacity=80);
-}
-
-.ploopi_calendar_m div.day .event:hover {
-    opacity:1;filter:alpha(opacity=100);
 }
 
 .ploopi_calendar div.day .event div.event_inner {
-    /*border-style:solid;
-    border-color:#808080;
-    border-width:1px;*/
     padding:1px 2px;
 }
 
@@ -221,6 +236,14 @@
     display:inline; /* IE hack pour margin */
 }
 
+.ploopi_calendar_d div.day_weekend {
+    background:#e0f0f0;
+}
+
+.ploopi_calendar_d div.day_holiday {
+    background:#f0e0e0;
+}
+
 .ploopi_calendar_d div.day_header {
     float:left;
     position:relative;
@@ -235,6 +258,14 @@
     text-align:center;
     font-size:0.9em;
     font-weight:bold;
+}
+
+.ploopi_calendar_d div.day_header_weekend {
+    background-color:#b0c0c0;
+}
+
+.ploopi_calendar_d div.day_header_holiday {
+    background-color:#c0b0b0;
 }
 
 .ploopi_calendar_d div.hours {
@@ -292,4 +323,9 @@
 
 .ploopi_calendar_d div.day .event a.event_inner {
     display:block;
+    overflow:hidden;
+}
+
+.hoverActive {
+    border:1px solid blue;
 }
