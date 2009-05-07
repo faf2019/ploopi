@@ -92,8 +92,9 @@ function ploopi_sendxmldata(method, url, data, xmlhttp, asynchronous)
     }
     else if(method == "POST")
     {
+        alert(data);
         xmlhttp.open("POST", url, asynchronous);
-        xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=ISO-8859-15');
+        xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=ISO-8859-1');
         xmlhttp.send(data);
     }
     return true;
@@ -152,7 +153,22 @@ function ploopi_xmlhttprequest_tofunction(url, data, callback, ticket, getxml, m
  * @param string method méthode http à utiliser (GET/POST) 
  */
  
-function ploopi_xmlhttprequest_todiv(url, data, div, method)
+ 
+function ploopi_xmlhttprequest_todiv(url, parameters, id, method)
+{
+    if (typeof(method) == 'undefined') method = 'GET';
+
+	new Ajax.Request(url, {
+        method:     method,
+        parameters: parameters,
+	    encoding:   'iso-8859-15',
+	    onSuccess:  function(transport) {
+	        ploopi_innerHTML(id, transport.responseText);
+        }
+	});
+}
+ 
+function ploopi_xmlhttprequest_todiv_old(url, data, div, method)
 {
     var xmlhttp = ploopi_gethttpobject();
 
@@ -200,12 +216,17 @@ function ploopi_xmlhttprequest_topopup(width, e, id, url, data, method)
  *
  * @param object form formulaire 
  * @param string id identifiant du popup 
+ * @param function beforesubmit fonction appelée avant validation (doit retourner true/false) 
  *
- * @todo ajouter un param pour une fonction de validation
  * @todo possibilité de ne pas renvoyer la réponse vers du contenu
  */
  
-function ploopi_xmlhttprequest_submitform(form, id)
+function ploopi_xmlhttprequest_submitform(form, id, beforesubmit)
 {
-    ploopi_xmlhttprequest_todiv(form.action, form.serialize(), id, 'POST');
+    var submit = true;
+    if (typeof(beforesubmit) == 'function') submit = beforesubmit(form);
+    
+    query = form.serialize();
+    query += (query == '' ? '' : '&')+'ploopi_xhr=1';
+    if (submit) ploopi_xmlhttprequest_todiv(form.action, query, id, 'POST');
 }
