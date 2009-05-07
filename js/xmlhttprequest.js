@@ -92,7 +92,6 @@ function ploopi_sendxmldata(method, url, data, xmlhttp, asynchronous)
     }
     else if(method == "POST")
     {
-        alert(data);
         xmlhttp.open("POST", url, asynchronous);
         xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=ISO-8859-1');
         xmlhttp.send(data);
