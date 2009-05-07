@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ploopi>
+   <moduletype>
+      <label>planning</label>
+      <version>0.5.000beta</version>
+      <author>Ovensia</author>
+      <date>20090507000000</date>
+      <description>Planning partagé</description>
+      <paramtype>
+         <name>planning_width</name>
+         <label>Largeur du planning</label>
+         <default_value>800</default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+      <paramtype>
+         <name>planning_height</name>
+         <label>Hauteur du planning</label>
+         <default_value>500</default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+   </moduletype>
+</ploopi>

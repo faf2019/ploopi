@@ -1,0 +1,16 @@
+== Module Planning - version 0.5.000beta ====================================================
+
+2009-05-07  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Gestion d'un planning partagé
+ * Affichages quotidien/hebdomadaire/mensuel
+ * Multi-utilisateur / Multi-groupe
+ * Support du glisser/déposer (hebdomadaire et quotidien seulement)
+ 
+Roadmap 1.0
+ 
+   * Support IE6 (ahemmmm)
+   * Gestion des droits de modification/publication entre utilisateurs
+   * Alertes par tickets (relance, ajout d'un événement pour un autre utilisateurs, etc.)
+   * Impression (?)
+   * Recherche de disponibilité d'une plage de temps

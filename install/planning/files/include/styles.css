@@ -1,0 +1,52 @@
+#planning_ressource_list p {
+padding:2px 4px;
+clear:both;
+}
+
+#planning_ressource_list p.checkbox {
+margin:0;
+cursor:pointer;
+}
+
+#planning_ressource_list p.checkbox * {
+cursor:pointer;
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
+}
+
+#planning_ressource_list p.checkbox input {
+display:block;
+float:left;
+}
+
+#planning_ressource_list p.checkbox span {
+display:block;
+margin-left:20px;
+margin-top:2px;
+}
+
+
+.planning_event_ressource_list {
+width:90%;
+border:1px solid #bbb;
+background:#fff;
+padding:4px 4px 4px 0;
+}
+
+.planning_event_ressource_list_inner {
+width:100%;
+height:100px;
+overflow:auto;
+background:#fff;
+}
+
+.planning_event_ressource_list p {
+padding:1px 0;
+clear:both;
+margin:0;
+}
+
+.planning_event_ressource_list p:hover {
+background-color:#eee;
+}
