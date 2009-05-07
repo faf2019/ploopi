@@ -42,20 +42,28 @@ if (!empty($_GET['ploopi_url']))
     $_GET['ploopi_url'] = ploopi_filtervar($_GET['ploopi_url']);
 
     require_once './include/classes/cipher.php';
-    $cipher = new ploopi_cipher();
-    $ploopi_url = $cipher->decrypt($_GET['ploopi_url']);
+    $objCipher = new ploopi_cipher();
+    $strPloopiUrl = $objCipher->decrypt($_GET['ploopi_url']);
 
-    foreach(explode('&',$ploopi_url) as $param)
+    foreach(explode('&',$strPloopiUrl) as $strParam)
     {
-        if (strstr($param, '=')) list($key, $value) = explode('=',$param);
-        else {$key = $param; $value = '';}
+        if (strstr($strParam, '=')) list($strKey, $strValue) = explode('=',$strParam);
+        else {$strKey = $strParam; $strValue = '';}
 
-        $_REQUEST[$key] = $_GET[$key] = $value;
+        $_REQUEST[$strKey] = $_GET[$strKey] = $strValue;
     }
+    
+    unset($strKey);
+    unset($strValue);
+    unset($strParam);
+    unset($strPloopiUrl);
+    unset($objCipher);
+    unset($_GET['ploopi_url']);
+    unset($_REQUEST['ploopi_url']);
 }
 
 $_GET = ploopi_filtervar($_GET);
-$_POST = ploopi_filtervar($_POST);
+$_POST = ploopi_filtervar($_POST, null, !empty($_POST['ploopi_xhr']));
 $_REQUEST = ploopi_filtervar($_REQUEST);
 $_COOKIE = ploopi_filtervar($_COOKIE);
 $_SERVER = ploopi_filtervar($_SERVER);
