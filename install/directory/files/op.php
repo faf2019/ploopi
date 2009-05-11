@@ -443,6 +443,98 @@ if ($_SESSION['ploopi']['connected'])
 
                 ploopi_redirect("admin.php?directory_heading_id={$_GET['directory_heading_id']}");
             break;
+            
+            case 'directory_speeddialing_save':
+                ploopi_init_module('directory', false, false, false);
+                if (!ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING)) ploopi_redirect("admin.php");
+                
+                include_once './modules/directory/class_directory_speeddialing.php';
+                
+                $objSpeedDialing = new directory_speeddialing();
+                
+                if (!empty($_GET['directory_speeddialing_id']) && is_numeric($_GET['directory_speeddialing_id'])) $objSpeedDialing->open($_GET['directory_speeddialing_id']); 
+
+                $objSpeedDialing->setvalues($_POST, 'directory_speeddialing_');
+                
+                // Nouvelle rubrique
+                if (empty($_POST['directory_speeddialing_heading']) && isset($_POST['_directory_speeddialing_newheading'])) $objSpeedDialing->fields['heading'] = $_POST['_directory_speeddialing_newheading'];
+                
+                $objSpeedDialing->save();
+                
+                ploopi_redirect("admin.php");
+            break;
+            
+            case 'directory_speeddialing_modify':
+                ploopi_init_module('directory', false, false, false);
+                if (!ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING)) ploopi_redirect("admin.php");
+                
+                if ((!empty($_GET['directory_speeddialing_id']) && is_numeric($_GET['directory_speeddialing_id'])))
+                {
+                    ob_start();
+
+                    ploopi_init_module('directory', false, false, false);
+                    include_once './modules/directory/class_directory_speeddialing.php';
+
+                    $objSpeedDialing = new directory_speeddialing();
+                    if (empty($_GET['directory_speeddialing_id']) || !is_numeric($_GET['directory_speeddialing_id']) || !$objSpeedDialing->open($_GET['directory_speeddialing_id'])) ploopi_die();
+                                
+                    $arrHeadings = $db->getarray(
+                        $db->query("
+                            SELECT      distinct(ds.heading)
+                            FROM        ploopi_mod_directory_speeddialing ds
+                            ORDER BY    ds.label
+                        ")
+                    );                    
+                    ?>
+                    <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_speeddialing_save&directory_speeddialing_id={$objSpeedDialing->fields['id']}"); ?>" method="post" onsubmit="return directory_speeddialing_validate(this);">
+                    <div class="ploopi_form">
+                        <p>
+                            <label>Rubrique:</label>
+                            <select class="select" name="directory_speeddialing_heading" tabindex="110">
+                                <option value="" style="font-style:italic;">(Nouvelle rubrique)</option>
+                                <?php foreach($arrHeadings as $strHeading) echo '<option '.($objSpeedDialing->fields['heading'] == $strHeading ? 'selected="selected" ' : '').'value="'.htmlentities($strHeading).'">'.htmlentities($strHeading).'</option>'; ?>
+                            </select>
+                        </p>
+                        <p>
+                            <label><em>ou</em></label>
+                            <input type="text" name="_directory_speeddialing_newheading" class="text" value="Nouvelle rubrique" tabindex="111" onfocus="javascript:this.value = '';" />
+                        </p>
+                        <p>
+                            <label>Libellé:</label>
+                            <input type="text" name="directory_speeddialing_label" value="<? echo htmlentities($objSpeedDialing->fields['label']); ?>" class="text" tabindex="115" />
+                        </p>
+                        <p>
+                            <label>Numéro:</label>
+                            <input type="text" name="directory_speeddialing_number" value="<? echo htmlentities($objSpeedDialing->fields['number']); ?>" class="text" style="width:60px;" maxlength="16" tabindex="116" />
+                        </p>
+                    </div>
+                        <div style="padding:2px 4px;text-align:right;">
+                        <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php"); ?>';" tabindex="121" />
+                        <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="120" />                
+                    </div> 
+                    </form>
+                    <?php 
+                    $content = ob_get_contents();
+                    ob_end_clean();
+
+                    echo $skin->create_popup("Modification d'un numéro", $content, 'popup_directory_speeddialing_modify');
+                }
+
+                ploopi_die();
+            break;
+            
+            case 'directory_speeddialing_delete':
+                ploopi_init_module('directory', false, false, false);
+                if (!ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING)) ploopi_redirect("admin.php");
+
+                include_once './modules/directory/class_directory_speeddialing.php';
+                
+                $objSpeedDialing = new directory_speeddialing();
+                
+                if (!empty($_GET['directory_speeddialing_id']) && is_numeric($_GET['directory_speeddialing_id']) && $objSpeedDialing->open($_GET['directory_speeddialing_id'])) $objSpeedDialing->delete();
+                            
+                ploopi_redirect("admin.php");
+            break;
         }
     }
 }

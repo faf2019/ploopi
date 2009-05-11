@@ -160,15 +160,15 @@ switch($_SESSION['directory']['directoryTabItem'])
      */
 
     case 'tabMycontacts':
-        $columns = array();
-        $values = array();
+        $arrColumns = array();
+        $arrValues = array();
 
-        $columns['auto']['name'] = array('label' => _DIRECTORY_NAME, 'options' => array('sort' => true));
-        $columns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
-        $columns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
-        $columns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
-        $columns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
-        $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 86);
+        $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME, 'options' => array('sort' => true));
+        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+        $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
+        $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
+        $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
+        $arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 86);
 
         $sql =  "
                 SELECT  *
@@ -196,17 +196,17 @@ switch($_SESSION['directory']['directoryTabItem'])
                 else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
             }
 
-            $values[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
-            $values[$c]['values']['service'] = array('label' => $row['service']);
-            $values[$c]['values']['function'] = array('label' => $row['function']);
-            $values[$c]['values']['phone'] = array('label' => $row['phone']);
-            $values[$c]['values']['email'] = array('label' => $email);
-            $values[$c]['values']['actions'] = array('label' => $actions);
+            $arrValues[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
+            $arrValues[$c]['values']['service'] = array('label' => $row['service']);
+            $arrValues[$c]['values']['function'] = array('label' => $row['function']);
+            $arrValues[$c]['values']['phone'] = array('label' => $row['phone']);
+            $arrValues[$c]['values']['email'] = array('label' => $email);
+            $arrValues[$c]['values']['actions'] = array('label' => $actions);
 
             $c++;
         }
 
-        $skin->display_array($columns, $values, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
+        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
     break;
 
     /**
@@ -214,17 +214,17 @@ switch($_SESSION['directory']['directoryTabItem'])
      */
 
     case 'tabMygroup':
-        $columns = array();
-        $values = array();
+        $arrColumns = array();
+        $arrValues = array();
 
-        $columns['auto']['groups'] = array('label' => _DIRECTORY_GROUPS,    'options' => array('sort' => true));
-        $columns['left']['name'] = array('label' => _DIRECTORY_NAME,        'width' => 150, 'options' => array('sort' => true));
-        $columns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
-        $columns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
-        $columns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
-        $columns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
-        $columns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
-        $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '42');
+        $arrColumns['auto']['groups'] = array('label' => _DIRECTORY_GROUPS,    'options' => array('sort' => true));
+        $arrColumns['left']['name'] = array('label' => _DIRECTORY_NAME,        'width' => 150, 'options' => array('sort' => true));
+        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+        $arrColumns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
+        $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
+        $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
+        $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
+        $arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '42');
 
         // il faut chercher les groupes rattachés à l'espace !
         include_once './include/classes/workspace.php';
@@ -283,19 +283,19 @@ switch($_SESSION['directory']['directoryTabItem'])
             // on met tout ça dans une chaine
             $workspaces_list = implode(', ',$workspaces_list);
 
-            $values[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
-            $values[$c]['values']['groups'] = array('label' => $workspaces_list);
-            $values[$c]['values']['service'] = array('label' => $row['service']);
-            $values[$c]['values']['function'] = array('label' => $row['function']);
-            $values[$c]['values']['phone'] = array('label' => $row['phone']);
-            $values[$c]['values']['email'] = array('label' => $email);
-            $values[$c]['values']['ticket'] = array('label' => $ticket);
-            $values[$c]['values']['actions'] = array('label' => $actions);
+            $arrValues[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
+            $arrValues[$c]['values']['groups'] = array('label' => $workspaces_list);
+            $arrValues[$c]['values']['service'] = array('label' => $row['service']);
+            $arrValues[$c]['values']['function'] = array('label' => $row['function']);
+            $arrValues[$c]['values']['phone'] = array('label' => $row['phone']);
+            $arrValues[$c]['values']['email'] = array('label' => $email);
+            $arrValues[$c]['values']['ticket'] = array('label' => $ticket);
+            $arrValues[$c]['values']['actions'] = array('label' => $actions);
 
             $c++;
         }
 
-        $skin->display_array($columns, $values, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
+        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
 
     break;
 
@@ -377,18 +377,18 @@ switch($_SESSION['directory']['directoryTabItem'])
         // Récupération des rubriques de contacts partagés
         $arrHeadings = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_sharedcontacts'] ? directory_getheadings() : array();
 
-        $columns = array();
-        $values = array();
+        $arrColumns = array();
+        $arrValues = array();
 
-        $columns['auto']['groups'] = array('label' => _DIRECTORY_GROUPS,    'options' => array('sort' => true));
-        $columns['left']['type'] = array('label' => _DIRECTORY_TYPE,        'width' => 90, 'options' => array('sort' => true));
-        $columns['left']['name'] = array('label' => _DIRECTORY_NAME,        'width' => 150, 'options' => array('sort' => true));
-        $columns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
-        $columns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
-        $columns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
-        $columns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
-        $columns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
-        $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '42');
+        $arrColumns['auto']['groups'] = array('label' => _DIRECTORY_GROUPS,    'options' => array('sort' => true));
+        $arrColumns['left']['type'] = array('label' => _DIRECTORY_TYPE,        'width' => 90, 'options' => array('sort' => true));
+        $arrColumns['left']['name'] = array('label' => _DIRECTORY_NAME,        'width' => 150, 'options' => array('sort' => true));
+        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+        $arrColumns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
+        $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
+        $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
+        $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
+        $arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '42');
 
         $result = array();
 
@@ -540,20 +540,20 @@ switch($_SESSION['directory']['directoryTabItem'])
                     break;
                 }
 
-                $values[$c]['values']['type'] = array('label' => $level_display);
-                $values[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
-                $values[$c]['values']['groups'] = array('label' => $workspaces_list);
-                $values[$c]['values']['service'] = array('label' => $row['service']);
-                $values[$c]['values']['function'] = array('label' => $row['function']);
-                $values[$c]['values']['phone'] = array('label' => $row['phone']);
-                $values[$c]['values']['email'] = array('label' => $email);
-                $values[$c]['values']['ticket'] = array('label' => $ticket);
-                $values[$c]['values']['actions'] = array('label' => $actions);
+                $arrValues[$c]['values']['type'] = array('label' => $level_display);
+                $arrValues[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
+                $arrValues[$c]['values']['groups'] = array('label' => $workspaces_list);
+                $arrValues[$c]['values']['service'] = array('label' => $row['service']);
+                $arrValues[$c]['values']['function'] = array('label' => $row['function']);
+                $arrValues[$c]['values']['phone'] = array('label' => $row['phone']);
+                $arrValues[$c]['values']['email'] = array('label' => $email);
+                $arrValues[$c]['values']['ticket'] = array('label' => $ticket);
+                $arrValues[$c]['values']['actions'] = array('label' => $actions);
 
                 $c++;
             }
 
-            $skin->display_array($columns, $values, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
+            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
         }
     break;
 
@@ -812,15 +812,15 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 <span>Liste des contacts rattachés à <?php printf("%s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]); ?></span>
                             </div>
                             <?php
-                            $columns = array();
-                            $values = array();
+                            $arrColumns = array();
+                            $arrValues = array();
 
-                            $columns['auto']['name'] = array('label' => _DIRECTORY_NAME, 'options' => array('sort' => true));
-                            $columns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
-                            $columns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
-                            $columns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
-                            $columns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
-                            $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 82);
+                            $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME, 'options' => array('sort' => true));
+                            $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+                            $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
+                            $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
+                            $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
+                            $arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 82);
 
                             $sql =  "
                                     SELECT  *
@@ -848,18 +848,18 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         else $arrActions[] ='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
                                     }
 
-                                    $values[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
-                                    $values[$c]['values']['service'] = array('label' => $row['service']);
-                                    $values[$c]['values']['function'] = array('label' => $row['function']);
-                                    $values[$c]['values']['phone'] = array('label' => $row['phone']);
-                                    $values[$c]['values']['email'] = array('label' => $email);
-                                    $values[$c]['values']['actions'] = array('label' => implode('', $arrActions));
+                                    $arrValues[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
+                                    $arrValues[$c]['values']['service'] = array('label' => $row['service']);
+                                    $arrValues[$c]['values']['function'] = array('label' => $row['function']);
+                                    $arrValues[$c]['values']['phone'] = array('label' => $row['phone']);
+                                    $arrValues[$c]['values']['email'] = array('label' => $email);
+                                    $arrValues[$c]['values']['actions'] = array('label' => implode('', $arrActions));
 
                                     $c++;
                                 }
                             }
 
-                            $skin->display_array($columns, $values, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
+                            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
 
                             if (!$db->numrows())
                             {
@@ -912,6 +912,109 @@ switch($_SESSION['directory']['directoryTabItem'])
             </script>
             <?php
         }
+    break;
+
+    case 'tabSpeedDialing':
+        $objSpeedDialing = new directory_speeddialing();
+        $objSpeedDialing->init_description();
+        
+        $arrHeadings = $db->getarray(
+            $db->query("
+                SELECT      distinct(ds.heading)
+                FROM        ploopi_mod_directory_speeddialing ds
+                ORDER BY    ds.label
+            ")
+        );
+        
+        if (ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
+        {
+            ?>
+            <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:$('directory_addnumber').style.display='block';">
+                <p class="ploopi_va">
+                    <img border="0" src="./modules/directory/img/ico_phone.png">
+                    <span><?php echo _DIRECTORY_ADDNEWNUMBER; ?></span>
+                </p>
+            </a>
+            <div id="directory_addnumber" style="display:none;border-bottom:1px solid #c0c0c0;overflow:auto;">
+                <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_speeddialing_save&directory_speeddialing_id={$objSpeedDialing->fields['id']}"); ?>" method="post" onsubmit="return directory_speeddialing_validate(this);">
+                <p class="ploopi_va" style="padding:4px;">
+                    <span>Rubrique:</span>
+                    <select class="select" name="directory_speeddialing_heading" style="width:150px;" tabindex="110">
+                        <option value="" style="font-style:italic;">(Nouvelle rubrique)</option>
+                        <?php foreach($arrHeadings as $strHeading) echo '<option value="'.htmlentities($strHeading).'">'.htmlentities($strHeading).'</option>'; ?>
+                    </select>
+                    <em>ou</em>
+                    <input type="text" name="_directory_speeddialing_newheading" class="text" style="width:100px;" value="Nouvelle rubrique" tabindex="111" onfocus="javascript:this.value = '';" />
+                    <span>Libellé:</span>
+                    <input type="text" name="directory_speeddialing_label" class="text" style="width:150px;" tabindex="115" />
+                    <span>Numéro:</span>
+                    <input type="text" name="directory_speeddialing_number" class="text" style="width:60px;" maxlength="16" tabindex="116" />
+                    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php"); ?>';" tabindex="121" />
+                    <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="120" />                
+                    
+                </p>
+                </form>
+            </div>
+            <?
+        }
+        ?>
+        <div style="border-bottom:1px solid #c0c0c0;overflow:auto;">
+            <div class="ploopi_form_title">
+                <span>Liste des numéros abrégés</span>
+            </div>
+            <?php
+            $arrColumns = array();
+            $arrValues = array();
+
+            $arrColumns['left']['heading'] = array('label' => 'Rubrique', 'width' => 200, 'options' => array('sort' => true));
+            $arrColumns['auto']['label'] = array('label' => 'Libellé', 'options' => array('sort' => true));
+            $arrColumns['right']['number'] = array('label' => 'Numéro', 'width' => 120, 'options' => array('sort' => true));
+            if (ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
+            {
+                $arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 42);
+            }
+
+            $db->query("
+                SELECT  *
+                FROM    ploopi_mod_directory_speeddialing
+            ");
+
+            if ($db->numrows())
+            {
+                $c = 0;
+                while ($row = $db->fetchrow())
+                {
+                                        
+                    $arrValues[$c]['values']['heading'] = array('label' => $row['heading'], 'sort_label' => strtoupper(ploopi_convertaccents(sprintf("%-255s_%-255s", $row['heading'], $row['label']))));
+                    $arrValues[$c]['values']['label'] = array('label' => $row['label'], 'sort_label' => strtoupper(ploopi_convertaccents($row['label'])));
+                    $arrValues[$c]['values']['number'] = array('label' => $row['number']);
+                    $arrValues[$c]['description'] = $row['label'];
+
+                    if (ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
+                    {
+                        $arrActions = array();
+                        $arrActions[] = '<a href="javascript:void(0);" onclick="javascript:directory_speeddialing_modify(event, \''.$row['id'].'\');"><img title="Modifier le numéro" src="./modules/directory/img/ico_modify.png"></a>';
+                        $arrActions[] = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin-light.php?ploopi_op=directory_speeddialing_delete&directory_speeddialing_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETENUMBER.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>';
+                        $arrValues[$c]['values']['actions'] = array('label' => implode('', $arrActions));
+                        $arrValues[$c]['link'] = 'javascript:void(0);';
+                        $arrValues[$c]['onclick'] = 'directory_speeddialing_modify(event, \''.$row['id'].'\');';
+                    }
+                    $c++;
+                }
+            }
+
+            $skin->display_array($arrColumns, $arrValues, 'array_directory_speeddialing', array('sortable' => true, 'orderby_default' => 'heading'));
+
+            if (!$db->numrows())
+            {
+                ?>
+                <div style="padding:4px;text-align:center;">Il n'y a pas de numéro abrégé</div>
+                <?php
+            }
+            ?>
+        </div>
+        <?php
+        
     break;
 }
 ?>

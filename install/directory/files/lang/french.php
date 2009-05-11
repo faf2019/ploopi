@@ -41,6 +41,7 @@ define ('_DIRECTORY_MYGROUP', 'Espace de Travail');
 define ('_DIRECTORY_USERS', 'Utilisateurs');
 define ('_DIRECTORY_SEARCH', 'Recherche');
 define ('_DIRECTORY_SHAREDCONTACTS', 'Contacts partagés');
+define ('_DIRECTORY_SPEEDDIALING', 'Numéros abrégés');
 define ('_DIRECTORY_ORGANIZATIONCHART', 'Organigramme');
 
 define ('_DIRECTORY_FAVORITES_DESC', 'Cette rubrique contient vos favoris, c\'est à dire des liens vers vos contacts personnels ou vers des utilisateurs du portail.');
@@ -49,11 +50,13 @@ define ('_DIRECTORY_MYGROUP_DESC', 'Cette rubrique contient les utilisateurs de 
 define ('_DIRECTORY_SEARCH_DESC', 'Cette rubrique vous permet de trouver un utilisateur parmi l\'ensemble des utilisateurs du portail.');
 define ('_DIRECTORY_ORGANIZATIONCHART_DESC', 'Cette rubrique vous permet de consulter l\'organigramme de l\'ensemble des utilisateurs du portail répartis par espaces de travail.');
 define ('_DIRECTORY_SHAREDCONTACTS_DESC', 'Cette rubrique contient les contacts partagés par l\'ensemble des utilisateurs.');
+define ('_DIRECTORY_SPEEDDIALING_DESC', 'Cette rubrique contient les numéros abrégés partagés.');
 
 define ('_DIRECTORY_ADDNEWCONTACT', 'Ajouter un nouveau contact');
 define ('_DIRECTORY_MODIFYCONTACT', 'Modifier un contact');
 define ('_DIRECTORY_VIEWCONTACT', 'Visualiser un contact');
 define ('_DIRECTORY_VIEWUSER', 'Visualiser un utilisateur');
+define ('_DIRECTORY_ADDNEWNUMBER', 'Ajouter un nouveau numéro');
 
 define ('_DIRECTORY_TYPE', 'Type');
 define ('_DIRECTORY_NAME', 'Nom');
@@ -93,6 +96,7 @@ define ('_DIRECTORY_NEXTPAGE', 'Page suivante');
 
 define ('_DIRECTORY_CONFIRM_DELETECONTACT', 'Êtes vous certain de vouloir supprimer ce contact ?');
 define ('_DIRECTORY_CONFIRM_DELETEFAVORITES', 'Êtes vous certain de vouloir supprimer ce favori ?');
+define ('_DIRECTORY_CONFIRM_DELETENUMBER', 'Êtes vous certain de vouloir supprimer ce numéro ?');
 
 define ('_DIRECTORY_LABEL_DELETE_USER', 'Suppression des données de l\'utilisateur');
 

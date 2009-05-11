@@ -92,3 +92,18 @@ function directory_heading_validate(form)
 
     return false;
 }
+
+function directory_speeddialing_validate(form)
+{
+    if (ploopi_validatefield('Libellé',form.directory_speeddialing_label, 'string'))
+    if (ploopi_validatefield('Numéro',form.directory_speeddialing_number, 'phone'))
+        return true;
+
+    return false;
+}
+
+function directory_speeddialing_modify(e, id_speeddialing)
+{
+    ploopi_showpopup(ploopi_ajaxloader_content, 300, e, 'click', 'popup_directory_speeddialing_modify');
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_speeddialing_modify&directory_speeddialing_id='+id_speeddialing, 'popup_directory_speeddialing_modify');
+}

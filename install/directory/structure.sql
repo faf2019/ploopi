@@ -77,3 +77,10 @@ ADD `address` VARCHAR( 255 ) NOT NULL AFTER `fax` ,
 ADD `postalcode` VARCHAR( 32 ) NOT NULL AFTER `address` ,
 ADD `city` VARCHAR( 64 ) NOT NULL AFTER `postalcode` ,
 ADD `country` VARCHAR( 64 ) NOT NULL AFTER `city` ;
+
+CREATE TABLE `ploopi_mod_directory_speeddialing` (
+`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`label` VARCHAR( 255 ) NOT NULL ,
+`number` VARCHAR( 16 ) NOT NULL ,
+`heading` VARCHAR( 255 ) NOT NULL
+) ENGINE = MYISAM ;

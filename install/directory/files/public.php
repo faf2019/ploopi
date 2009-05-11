@@ -43,6 +43,7 @@ ploopi_init_module('directory');
 include_once './modules/directory/class_directory_contact.php';
 include_once './modules/directory/class_directory_favorites.php';
 include_once './modules/directory/class_directory_list.php';
+include_once './modules/directory/class_directory_speeddialing.php';
 
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
@@ -90,6 +91,16 @@ if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_s
         array(
             'title' => (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_sharedcontacts'])) ? _DIRECTORY_SHAREDCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_sharedcontacts'],
             'url'   => "admin.php?directoryTabItem=tabSharedContacts"
+        );
+}
+elseif ($_SESSION['directory']['directoryTabItem'] == 'tabSharedContacts') $_SESSION['directory']['directoryTabItem'] = '';
+
+if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_speeddialing'])
+{
+    $tabs['tabSpeedDialing'] =
+        array(
+            'title' => (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_speeddialing'])) ? _DIRECTORY_SPEEDDIALING : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_speeddialing'],
+            'url'   => "admin.php?directoryTabItem=tabSpeedDialing"
         );
 }
 elseif ($_SESSION['directory']['directoryTabItem'] == 'tabSharedContacts') $_SESSION['directory']['directoryTabItem'] = '';
@@ -160,6 +171,10 @@ switch($_SESSION['directory']['directoryTabItem'])
         $desc = _DIRECTORY_SHAREDCONTACTS_DESC;
     break;
 
+    case 'tabSpeedDialing':
+        $title = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_speeddialing'])) ? _DIRECTORY_SPEEDDIALING : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_speeddialing'];
+        $desc = _DIRECTORY_SPEEDDIALING_DESC;
+    break;
 }
 
 include './modules/directory/public_directory.php';
