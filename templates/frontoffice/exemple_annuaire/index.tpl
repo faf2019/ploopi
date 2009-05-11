@@ -23,7 +23,7 @@
     <!-- BEGIN switch_rssfeed_heading -->
     <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_heading.URL}" title="RSS - {switch_rssfeed_heading.TITLE}" />
     <!-- END switch_rssfeed_site -->
-    
+
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/skin.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar.css" media="screen" />
@@ -45,11 +45,11 @@
     <!-- BEGIN ploopi_js -->
     <script type="text/javascript" src="{ploopi_js.PATH}"></script>
     <!-- END ploopi_js -->
-    
+
     <!-- BEGIN module_js -->
     <script type="text/javascript" src="{module_js.PATH}"></script>
     <!-- END module_js -->
-    
+
     <script type="text/javascript">
     //<!--
     {ADDITIONAL_JAVASCRIPT}
@@ -83,37 +83,42 @@
                 <!-- BEGIN switch_heading5 -->
                 <a href="{switch_heading5.LINK}">&raquo;&nbsp;{switch_heading5.LABEL}</a>
                 <!-- END switch_heading5 -->
-    
+
                 <!-- BEGIN switch_content_page -->
                     <a href="#">&raquo;&nbsp;{PAGE_TITLE}</a>
-                <!-- END switch_content_page -->       
+                <!-- END switch_content_page -->
             </div>
             <div id="pathtrans">
             </div>
         </div>
-
 
         <div id="main">
             <div id="mainmenu">
                 <div id="hmenu">
                     <div class="minibloc">
                         <form action="{DIRECTORY_FORMACTION}" method="post">
-                        
+
                         <div>
-	                        <label for="directory_name" class="title">Nom:</label>
-	                        <br /><input type="text" class="text" value="{DIRECTORY_SEARCH_LASTNAME}" name="directory_lastname"  id="directory_lastname" style="width:95%;" />
+                            <label for="directory_name" class="title">Nom:</label>
+                            <br /><input type="text" class="text" value="{DIRECTORY_SEARCH_LASTNAME}" name="directory_lastname"  id="directory_lastname" style="width:95%;" />
                         </div>
                         <div>
-					        <label for="directory_name" class="title">Prénom:</label>
-					        <br /><input type="text" class="text" value="{DIRECTORY_SEARCH_FIRSTNAME}" name="directory_firstname"  id="directory_firstname" style="width:95%;" />
+                            <label for="directory_name" class="title">Prénom:</label>
+                            <br /><input type="text" class="text" value="{DIRECTORY_SEARCH_FIRSTNAME}" name="directory_firstname"  id="directory_firstname" style="width:95%;" />
                         </div>
-				        <div>
-					        <label for="directory_function" class="title">Fonction:</label>
-					        <br /><input type="text" class="text" value="{DIRECTORY_SEARCH_NUMBER}" name="directory_function" id="directory_function" style="width:95%;" />
+                        <div>
+                            <label for="directory_function" class="title">Fonction:</label>
+                            <br /><input type="text" class="text" value="{DIRECTORY_SEARCH_FUNCTION}" name="directory_function" id="directory_function" style="width:95%;" />
+                        </div>
+                        <div>
+                            <label for="directory_function" class="title">Rattachement:</label>
+                            <br /><input type="text" class="text" value="{DIRECTORY_SEARCH_HEADING}" name="directory_heading" id="directory_heading" style="width:95%;" />
                         </div>
                         <div style="margin-top:2px;"><input type="submit" value="Chercher" class="button" style="width:98%;" /></div>
                         </form>
-                        <br /><strong><a href="{DIRECTORY_LINK_FULL}">Annuaire complet</a></strong>
+                        <div style="padding-top:5px;"><strong><a href="{DIRECTORY_LINK_FULL}">Annuaire complet</a></strong></div>
+                        <div style="padding-top:5px;"><strong><a href="{DIRECTORY_LINK_ORGANIGRAM}">Organigramme</a></strong></div>
+                        <div style="padding-top:5px;"><strong><a href="{DIRECTORY_LINK_SPEEDDIALING}">Numéros abrégés</a></strong></div>
                     </div>
 
                     <div class="minibloc">
@@ -123,7 +128,7 @@
                         <!-- END heading1 -->
                     <!-- END root1 -->
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -138,49 +143,51 @@
                 <!-- END switch_pages -->
 
                 <div id="pagecontent">
-                
+
                     <!-- ***** DEBUT ANNUAIRE ***** -->
-                
-				    <!-- BEGIN directory_switch_result -->
-				    <div class="directory">
-					    <div class="directory_result">
-					    <div class="directory_title1">Résultat de recherche dans l'annuaire</div>
-					        <table cellspacing="0" cellpadding="0" border="1">
-					            <tr class="directory_title">
-					                <th>Nom/Prénom</th>
-					                <th>Fonction</th>
-					                <th>Grade</th>
-					                <th>Poste</th>
-					                <th>Téléphone</th>
-					            </tr>            
-					            <!-- BEGIN contact -->
-					                <tr class="directory_contact{directory_switch_result.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_result.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_result.contact.LASTNAME} {directory_switch_result.contact.FIRSTNAME}">
-					                    <td>{directory_switch_result.contact.LASTNAME} {directory_switch_result.contact.FIRSTNAME}</td>
-					                    <td>{directory_switch_result.contact.FUNCTION}</td>
-					                    <td>{directory_switch_result.contact.RANK}</td>
-					                    <td>{directory_switch_result.contact.NUMBER}</td>
-					                    <td>{directory_switch_result.contact.PHONE}</td>
-					                </tr>
-					            <!-- END  contact -->
-					        </table>
-					        <!-- BEGIN switch_message -->
-					           <p style="padding:4px 0;"><em>{directory_switch_result.switch_message.CONTENT}</em></p>
-					        <!-- END  switch_message -->
-					    </div>
-				    </div>
-				    <!-- END directory_switch_result -->    
-				    
-				    <!-- BEGIN directory_switch_contact -->
+
+                    <!-- BEGIN directory_switch_result -->
                     <div class="directory">
-				        <div class="directory_form"> 
-				            <div>
-				                <div style="float:left;width:120px;">
-				                    <img title="Photo de {directory_switch_contact.LASTNAME} {directory_switch_contact.FIRSTNAME}" src="{directory_switch_contact.PHOTOPATH}" style="border:4px solid #d0d0d0;display:block;margin:0 auto;" />
-				                </div>
-				                <div style="margin-left:120px;">
+                        <div class="directory_result">
+                        <div class="directory_title1">Résultat de recherche dans l'annuaire</div>
+                            <table cellspacing="0" cellpadding="0" border="1">
+                                <tr class="directory_title">
+                                    <th>Nom/Prénom</th>
+                                    <th>Fonction</th>
+                                    <th>Rattachements</th>
+                                    <th>Grade</th>
+                                    <th>Poste</th>
+                                    <th>Téléphone</th>
+                                </tr>
+                                <!-- BEGIN contact -->
+                                    <tr class="directory_contact{directory_switch_result.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_result.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_result.contact.LASTNAME} {directory_switch_result.contact.FIRSTNAME}">
+                                        <td>{directory_switch_result.contact.LASTNAME} {directory_switch_result.contact.FIRSTNAME}</td>
+                                        <td>{directory_switch_result.contact.FUNCTION}</td>
+                                        <td>{directory_switch_result.contact.HEADINGS}</td>
+                                        <td>{directory_switch_result.contact.RANK}</td>
+                                        <td>{directory_switch_result.contact.NUMBER}</td>
+                                        <td>{directory_switch_result.contact.PHONE}</td>
+                                    </tr>
+                                <!-- END  contact -->
+                            </table>
+                            <!-- BEGIN switch_message -->
+                               <p style="padding:4px 0;"><em>{directory_switch_result.switch_message.CONTENT}</em></p>
+                            <!-- END  switch_message -->
+                        </div>
+                    </div>
+                    <!-- END directory_switch_result -->
+
+                    <!-- BEGIN directory_switch_contact -->
+                    <div class="directory">
+                        <div class="directory_form">
+                            <div>
+                                <div style="float:left;width:120px;">
+                                    <img title="Photo de {directory_switch_contact.LASTNAME} {directory_switch_contact.FIRSTNAME}" src="{directory_switch_contact.PHOTOPATH}" style="border:4px solid #d0d0d0;display:block;margin:0 auto;" />
+                                </div>
+                                <div style="margin-left:120px;">
                                     <div class="directory_title1">{directory_switch_contact.CIVILITY} {directory_switch_contact.LASTNAME} {directory_switch_contact.FIRSTNAME}</div>
-				                    <div>
-				                    <table class="directory_contact_form">
+                                    <div>
+                                    <table class="directory_contact_form">
                                         <tr>
                                             <th>N° de Poste:</th>
                                             <td>{directory_switch_contact.NUMBER}</td>
@@ -210,11 +217,11 @@
                                             <td colspan="3">{directory_switch_contact.HEADINGS}</td>
                                         </tr>
                                     </table>
-				                    </div>
-				                </div>
-				            </div>              
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-			            <div>
+                        <div>
                             <div class="directory_title2">Autres personnes de la même rubrique:</div>
                             <table cellspacing="0" cellpadding="0" border="1">
                                 <tr class="directory_title">
@@ -223,7 +230,7 @@
                                     <th>Grade</th>
                                     <th>Poste</th>
                                     <th>Téléphone</th>
-                                </tr>            
+                                </tr>
                                 <!-- BEGIN contact -->
                                     <tr class="directory_contact{directory_switch_contact.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_contact.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_contact.contact.LASTNAME} {directory_switch_contact.contact.FIRSTNAME}">
                                         <td>{directory_switch_contact.contact.CIVILITY} {directory_switch_contact.contact.LASTNAME} {directory_switch_contact.contact.FIRSTNAME}</td>
@@ -234,52 +241,78 @@
                                     </tr>
                                 <!-- END  contact -->
                             </table>
-			            </div>
-				        
+                        </div>
+
                     </div>
-				    <!-- END directory_switch_contact -->                
-                
+                    <!-- END directory_switch_contact -->
+
                     <!-- BEGIN directory_switch_full -->
                     <div class="directory">
                         <div class="directory_title1">Annuaire complet</div>
                         <!-- BEGIN switch_selected_heading -->
-	                        <div class="directory_title2">Rubrique 
-	                            &nbsp;&raquo;&nbsp;<a href="{DIRECTORY_LINK_FULL}" title="Ouvrir l'annuaire complet">Tout</a>
-		                        <!-- BEGIN heading -->
-		                        &nbsp;&raquo;&nbsp;<a href="{directory_switch_full.switch_selected_heading.heading.LINK}" title="Ouvrir l'annuaire détaillé de {directory_switch_full.switch_selected_heading.heading.LABEL}">{directory_switch_full.switch_selected_heading.heading.LABEL}</a>
-		                        <!-- END heading -->
-	                        </div>
+                            <div class="directory_title2">Rubrique
+                                &nbsp;&raquo;&nbsp;<a href="{DIRECTORY_LINK_FULL}" title="Ouvrir l'annuaire complet">Tout</a>
+                                <!-- BEGIN heading -->
+                                &nbsp;&raquo;&nbsp;<a href="{directory_switch_full.switch_selected_heading.heading.LINK}" title="Ouvrir l'annuaire détaillé de {directory_switch_full.switch_selected_heading.heading.LABEL}">{directory_switch_full.switch_selected_heading.heading.LABEL}</a>
+                                <!-- END heading -->
+                            </div>
                         <!-- END switch_selected_heading -->
-	                    <table cellspacing="0" cellpadding="0" border="1">
-	                        <tr class="directory_title">
-	                            <th>Nom/Prénom</th>
-	                            <th>Fonction</th>
-	                            <th>Grade</th>
-	                            <th>Poste</th>
-	                            <th>Téléphone</th>
-	                        </tr>
+                        <table cellspacing="0" cellpadding="0" border="1">
+                            <tr class="directory_title">
+                                <th>Nom/Prénom</th>
+                                <th>Fonction</th>
+                                <th>Grade</th>
+                                <th>Poste</th>
+                                <th>Téléphone</th>
+                            </tr>
                             <!-- BEGIN line -->
-	                            <!-- BEGIN heading -->
-	                                <tr class="directory_heading" onclick="javascript:document.location.href='{directory_switch_full.line.heading.LINK}';return false;" title="Ouvrir l'annuaire détaillé de {directory_switch_full.line.heading.LABEL}">
-	                                    <td colspan="5" class="heading{directory_switch_full.line.heading.DEPTH}">&#149;&nbsp;{directory_switch_full.line.heading.LABEL}</td>
-	                                </tr>
-	                            <!-- END heading -->
-	                            
-	                            <!-- BEGIN contact -->
-	                                <tr class="directory_contact{directory_switch_full.line.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_full.line.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_full.line.contact.LASTNAME} {directory_switch_full.line.contact.FIRSTNAME}">
-	                                    <td>{directory_switch_full.line.contact.CIVILITY} {directory_switch_full.line.contact.LASTNAME} {directory_switch_full.line.contact.FIRSTNAME}</td>
-	                                    <td>{directory_switch_full.line.contact.FUNCTION}</td>
-	                                    <td>{directory_switch_full.line.contact.RANK}</td>
-	                                    <td>{directory_switch_full.line.contact.NUMBER}</td>
-	                                    <td>{directory_switch_full.line.contact.PHONE}</td>
-	                                </tr>
-	                            <!-- END  contact -->
+                                <!-- BEGIN heading -->
+                                    <tr class="directory_heading" onclick="javascript:document.location.href='{directory_switch_full.line.heading.LINK}';return false;" title="Ouvrir l'annuaire détaillé de {directory_switch_full.line.heading.LABEL}">
+                                        <td colspan="5" class="heading{directory_switch_full.line.heading.DEPTH}">&#149;&nbsp;{directory_switch_full.line.heading.LABEL}</td>
+                                    </tr>
+                                <!-- END heading -->
+
+                                <!-- BEGIN contact -->
+                                    <tr class="directory_contact{directory_switch_full.line.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_full.line.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_full.line.contact.LASTNAME} {directory_switch_full.line.contact.FIRSTNAME}">
+                                        <td>{directory_switch_full.line.contact.CIVILITY} {directory_switch_full.line.contact.LASTNAME} {directory_switch_full.line.contact.FIRSTNAME}</td>
+                                        <td>{directory_switch_full.line.contact.FUNCTION}</td>
+                                        <td>{directory_switch_full.line.contact.RANK}</td>
+                                        <td>{directory_switch_full.line.contact.NUMBER}</td>
+                                        <td>{directory_switch_full.line.contact.PHONE}</td>
+                                    </tr>
+                                <!-- END  contact -->
                             <!-- END line -->
                         </table>
                     <!-- END directory_switch_full -->
-                
+
+                    <!-- BEGIN directory_switch_organigram -->
+                    <div class="directory">
+                        <div class="directory_title1">Organigramme</div>
+                        <div class="directory_organigram">
+                        <!-- BEGIN heading -->
+			                 <a class="heading{directory_switch_organigram.heading.DEPTH}" href="{directory_switch_organigram.heading.LINK}">{directory_switch_organigram.heading.LABEL}</a>
+                        <!-- END heading -->
+                        </div>
+                    <!-- END directory_switch_organigram -->
+
+                    <!-- BEGIN directory_switch_speeddialing -->
+                    <div class="directory">
+                        <div class="directory_title1">Numéros abrégés</div>
+                    </div>
+
+                    <div class="directory_speeddialing">
+                    <!-- BEGIN heading -->
+                        <h1>{directory_switch_speeddialing.heading.LABEL}</h1>
+	                    <!-- BEGIN number -->
+                            <div>{directory_switch_speeddialing.heading.number.LABEL} : {directory_switch_speeddialing.heading.number.NUMBER}</div>
+	                    <!-- END number -->
+                    <!-- END heading -->
+                    </div>
+                    
+                    <!-- END directory_switch_speeddialing -->
+
                     <!-- ***** FIN ANNUAIRE ***** -->
-                
+
                     <!-- BEGIN switch_search -->
                     <h2>Résultat de la recherche pour "{PAGE_QUERYSTRING}"</h2>
                     <div id="search_result">
@@ -292,7 +325,7 @@
                         <!-- END result -->
                     </div>
                     <!-- END switch_search -->
-                    
+
                     <!-- BEGIN switch_tagsearch -->
                     <h2>Articles contenant le tag "{PAGE_QUERYTAG}"</h2>
                     <div id="search_result">
@@ -304,7 +337,7 @@
                         <!-- END result -->
                     </div>
                     <!-- END switch_tagsearch -->
-                    
+
                     <!-- BEGIN switch_content_page -->
                         <h2>{PAGE_TITLE}</h2>
                         <!-- BEGIN switch_tags -->
@@ -320,14 +353,14 @@
                     <!-- BEGIN switch_content_message -->
                         <h2>{MESSAGE_TITLE}</h2>
                         {MESSAGE_CONTENT}
-                    <!-- END switch_content_message -->      
-                    
+                    <!-- END switch_content_message -->
+
                     <!-- BEGIN switch_content_error -->
                         <div style="text-align:center;padding:10px;">
                             <strong>Erreur {PAGE_ERROR_CODE}</strong>
                             <br />Cette page n'existe pas
                         </div>
-                    <!-- END switch_content_error -->                                  
+                    <!-- END switch_content_error -->
 
                     <!-- BEGIN switch_content_heading -->
                         <!-- BEGIN page -->
@@ -344,13 +377,13 @@
                             </a>
                             <div id="subheading2">
                             <!-- BEGIN subheading2 -->
-                                &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp; 
+                                &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp;
                             <!-- END subheading2 -->
                             </div>
-                            
+
                         <!-- END subheading1 -->
                     <!-- END switch_content_heading -->
-                    
+
                     <!-- BEGIN switch_content_sitemap -->
                         <h2>Plan du site</h2>
                         <div id="sitemap">
@@ -378,7 +411,7 @@
                                 </div>
                             <!-- END heading0 -->
                         </div>
-                    <!-- END switch_content_sitemap -->                    
+                    <!-- END switch_content_sitemap -->
                 </div>
             </div>
         </div>

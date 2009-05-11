@@ -9,6 +9,8 @@
     <meta name="robots" content="{WORKSPACE_META_ROBOTS}" />
 
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
+    
+    <base href="{SITE_BASEPATH}" />
 
     <!-- BEGIN switch_atomfeed_site -->
     <link rel="alternate" type="application/atom+xml" href="{switch_atomfeed_site.URL}" title="ATOM - {switch_atomfeed_site.TITLE}" />
@@ -23,7 +25,7 @@
     <!-- BEGIN switch_rssfeed_heading -->
     <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_heading.URL}" title="RSS - {switch_rssfeed_heading.TITLE}" />
     <!-- END switch_rssfeed_site -->
-    
+
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/skin.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar.css" media="screen" />
@@ -42,11 +44,11 @@
     <!-- BEGIN ploopi_js -->
     <script type="text/javascript" src="{ploopi_js.PATH}"></script>
     <!-- END ploopi_js -->
-    
+
     <!-- BEGIN module_js -->
     <script type="text/javascript" src="{module_js.PATH}"></script>
     <!-- END module_js -->
-        
+
     <script type="text/javascript">
     //<!--
     {ADDITIONAL_JAVASCRIPT}
@@ -78,15 +80,14 @@
                 <!-- BEGIN switch_heading5 -->
                 <a href="{switch_heading5.LINK}">&raquo;&nbsp;{switch_heading5.LABEL}</a>
                 <!-- END switch_heading5 -->
-    
+
                 <!-- BEGIN switch_content_page -->
                     <a href="#">&raquo;&nbsp;{PAGE_TITLE}</a>
-                <!-- END switch_content_page -->            
+                <!-- END switch_content_page -->
             </div>
             <div id="pathtrans">
             </div>
         </div>
-
 
         <div id="main">
             <div id="mainmenu">
@@ -106,7 +107,7 @@
                         <!-- END heading1 -->
                     <!-- END root1 -->
                     </div>
-                    
+
                      <!-- BEGIN switch_newsletter_subscription -->
                     <div class="minibloc">
                         <label for="subscription_email" class="title">Inscription NewsLetter:</label>
@@ -121,7 +122,7 @@
                         </form>
                     </div>
                     <!-- END switch_newsletter_subscription -->
-                                       
+
                     <!-- BEGIN switch_subscription -->
                     <div class="minibloc">
                         <label for="subscription_email" class="title">Abonnement:</label>
@@ -146,7 +147,7 @@
                         <!-- BEGIN tagcloud -->
                             <a href="{tagcloud.LINK}" class="{tagcloud.SELECTED}" title="Afficher les articles contenant le tag &laquo; {tagcloud.TAG} &raquo;" style="font-size:{tagcloud.SIZE}%;">{tagcloud.TAG}<sup>{tagcloud.OCCURENCE}</sup></a>
                         <!-- END tagcloud -->
-                    </div>                    
+                    </div>
 
                     <!-- BEGIN rssfeed -->
                     <div class="rssfeed">
@@ -172,7 +173,7 @@
                     <!-- END page -->
                 </div>
                 <!-- END switch_pages -->
-                
+
                 <div id="pagecontent">
                     <!-- BEGIN switch_search -->
                     <h2>Résultat de la recherche pour "{PAGE_QUERYSTRING}"</h2>
@@ -184,7 +185,7 @@
                                 <div class="link">&raquo; {switch_search.result.SHORT_LINK} ({switch_search.result.SIZE} ko)</div>
                             </a>
                         <!-- END result -->
-                        
+
                         <!-- BEGIN switch_notfound -->
                             Aucun résultat pour cette recherche
                         <!-- END switch_notfound -->
@@ -214,18 +215,18 @@
                         <!-- END switch_tags -->
                         {PAGE_CONTENT}
                     <!-- END switch_content_page -->
-                    
+
                     <!-- BEGIN switch_content_message -->
                         <h2>{MESSAGE_TITLE}</h2>
                         {MESSAGE_CONTENT}
-                    <!-- END switch_content_message -->    
-                    
+                    <!-- END switch_content_message -->
+
                     <!-- BEGIN switch_content_error -->
                         <div style="text-align:center;padding:10px;">
                             <strong>Erreur {PAGE_ERROR_CODE}</strong>
                             <br />Cette page n'existe pas
                         </div>
-                    <!-- END switch_content_error -->                                    
+                    <!-- END switch_content_error -->
 
                     <!-- BEGIN switch_content_heading -->
                         <!-- BEGIN page -->
@@ -237,12 +238,12 @@
 
                         <!-- BEGIN subheading1 -->
                             <a class="subheading1" href="{switch_content_heading.subheading1.LINK}">
-	                            <img src="{TEMPLATE_PATH}/gfx/folder.png" />
-	                            <span>{switch_content_heading.subheading1.LABEL}</span>
+                                <img src="{TEMPLATE_PATH}/gfx/folder.png" />
+                                <span>{switch_content_heading.subheading1.LABEL}</span>
                             </a>
                             <div id="subheading2">
                             <!-- BEGIN subheading2 -->
-                                &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp; 
+                                &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp;
                             <!-- END subheading2 -->
                             </div>
                         <!-- END subheading1 -->
@@ -251,29 +252,29 @@
                     <!-- BEGIN switch_content_sitemap -->
                         <h2>Plan du site</h2>
                         <div id="sitemap">
-	                        <!-- BEGIN heading0 -->
+                            <!-- BEGIN heading0 -->
                                 <a href="{switch_content_sitemap.heading0.LINK}">{switch_content_sitemap.heading0.LABEL}</a>
                                 <div class="sitemap_heading1">
-		                            <!-- BEGIN heading1 -->
-		                                <a href="{switch_content_sitemap.heading0.heading1.LINK}">{switch_content_sitemap.heading0.heading1.LABEL}</a>
+                                    <!-- BEGIN heading1 -->
+                                        <a href="{switch_content_sitemap.heading0.heading1.LINK}">{switch_content_sitemap.heading0.heading1.LABEL}</a>
                                         <div class="sitemap_heading2">
-				                            <!-- BEGIN heading2 -->
-   				                                <a href="{switch_content_sitemap.heading0.heading1.heading2.LINK}">{switch_content_sitemap.heading0.heading1.heading2.LABEL}</a>
+                                            <!-- BEGIN heading2 -->
+                                                <a href="{switch_content_sitemap.heading0.heading1.heading2.LINK}">{switch_content_sitemap.heading0.heading1.heading2.LABEL}</a>
                                                 <div class="sitemap_heading3">
-	                                            <!-- BEGIN heading3 -->
-	                                                <a href="{switch_content_sitemap.heading0.heading1.heading2.heading3.LINK}">{switch_content_sitemap.heading0.heading1.heading2.heading3.LABEL}</a>
+                                                <!-- BEGIN heading3 -->
+                                                    <a href="{switch_content_sitemap.heading0.heading1.heading2.heading3.LINK}">{switch_content_sitemap.heading0.heading1.heading2.heading3.LABEL}</a>
                                                     <div class="sitemap_heading4">
-	                                                <!-- BEGIN heading4 -->
-	                                                    <a href="{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LINK}">{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LABEL}</a>
-	                                                <!-- END heading4 -->
+                                                    <!-- BEGIN heading4 -->
+                                                        <a href="{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LINK}">{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LABEL}</a>
+                                                    <!-- END heading4 -->
                                                     </div>
-	                                            <!-- END heading3 -->
+                                                <!-- END heading3 -->
                                                 </div>
-				                            <!-- END heading2 -->
-			                            </div>
-		                            <!-- END heading1 -->
-		                        </div>
-	                        <!-- END heading0 -->
+                                            <!-- END heading2 -->
+                                        </div>
+                                    <!-- END heading1 -->
+                                </div>
+                            <!-- END heading0 -->
                         </div>
                     <!-- END switch_content_sitemap -->
 
@@ -293,9 +294,9 @@
                         <h2>{switch_newsletter_unsubscrib_response.RESPONSE}</h2>
                       </div>
                     <!-- END switch_newsletter_unsubscrib_response -->
-                    
+
                     <!-- ***** DEBUT ANNUAIRE ***** -->
-                
+
                     <!-- BEGIN directory_switch_result -->
                     <div class="directory">
                         <div class="directory_result">
@@ -307,7 +308,7 @@
                                     <th>Grade</th>
                                     <th>Poste</th>
                                     <th>Téléphone</th>
-                                </tr>            
+                                </tr>
                                 <!-- BEGIN contact -->
                                     <tr class="directory_contact{directory_switch_result.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_result.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_result.contact.LASTNAME} {directory_switch_result.contact.FIRSTNAME}">
                                         <td>{directory_switch_result.contact.LASTNAME} {directory_switch_result.contact.FIRSTNAME}</td>
@@ -323,11 +324,11 @@
                             <!-- END  switch_message -->
                         </div>
                     </div>
-                    <!-- END directory_switch_result -->    
-                    
+                    <!-- END directory_switch_result -->
+
                     <!-- BEGIN directory_switch_contact -->
                     <div class="directory">
-                        <div class="directory_form"> 
+                        <div class="directory_form">
                             <div>
                                 <div style="float:left;width:120px;">
                                     <img title="Photo de {directory_switch_contact.LASTNAME} {directory_switch_contact.FIRSTNAME}" src="{directory_switch_contact.PHOTOPATH}" style="border:4px solid #d0d0d0;display:block;margin:0 auto;" />
@@ -367,7 +368,7 @@
                                     </table>
                                     </div>
                                 </div>
-                            </div>              
+                            </div>
                         </div>
                         <div>
                             <div class="directory_title2">Autres personnes de la même rubrique:</div>
@@ -378,7 +379,7 @@
                                     <th>Grade</th>
                                     <th>Poste</th>
                                     <th>Téléphone</th>
-                                </tr>            
+                                </tr>
                                 <!-- BEGIN contact -->
                                     <tr class="directory_contact{directory_switch_contact.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_contact.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_contact.contact.LASTNAME} {directory_switch_contact.contact.FIRSTNAME}">
                                         <td>{directory_switch_contact.contact.CIVILITY} {directory_switch_contact.contact.LASTNAME} {directory_switch_contact.contact.FIRSTNAME}</td>
@@ -390,15 +391,15 @@
                                 <!-- END  contact -->
                             </table>
                         </div>
-                        
+
                     </div>
-                    <!-- END directory_switch_contact -->                
-                
+                    <!-- END directory_switch_contact -->
+
                     <!-- BEGIN directory_switch_full -->
                     <div class="directory">
                         <div class="directory_title1">Annuaire complet</div>
                         <!-- BEGIN switch_selected_heading -->
-                            <div class="directory_title2">Rubrique 
+                            <div class="directory_title2">Rubrique
                                 &nbsp;&raquo;&nbsp;<a href="{DIRECTORY_LINK_FULL}" title="Ouvrir l'annuaire complet">Tout</a>
                                 <!-- BEGIN heading -->
                                 &nbsp;&raquo;&nbsp;<a href="{directory_switch_full.switch_selected_heading.heading.LINK}" title="Ouvrir l'annuaire détaillé de {directory_switch_full.switch_selected_heading.heading.LABEL}">{directory_switch_full.switch_selected_heading.heading.LABEL}</a>
@@ -419,7 +420,7 @@
                                         <td colspan="5" class="heading{directory_switch_full.line.heading.DEPTH}">&#149;&nbsp;{directory_switch_full.line.heading.LABEL}</td>
                                     </tr>
                                 <!-- END heading -->
-                                
+
                                 <!-- BEGIN contact -->
                                     <tr class="directory_contact{directory_switch_full.line.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_full.line.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_full.line.contact.LASTNAME} {directory_switch_full.line.contact.FIRSTNAME}">
                                         <td>{directory_switch_full.line.contact.CIVILITY} {directory_switch_full.line.contact.LASTNAME} {directory_switch_full.line.contact.FIRSTNAME}</td>
@@ -432,9 +433,9 @@
                             <!-- END line -->
                         </table>
                     <!-- END directory_switch_full -->
-                
+
                     <!-- ***** FIN ANNUAIRE ***** -->
-                    
+
                 </div>
             </div>
         </div>

@@ -10,6 +10,8 @@
 
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
 
+    <base href="{SITE_BASEPATH}" />
+    
     <!-- BEGIN switch_atomfeed_site -->
     <link rel="alternate" type="application/atom+xml" href="{switch_atomfeed_site.URL}" title="ATOM - {switch_atomfeed_site.TITLE}" />
     <!-- END switch_atomfeed_site -->
@@ -17,7 +19,7 @@
     <!-- BEGIN switch_rssfeed_site -->
     <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_site.URL}" title="RSS - {switch_rssfeed_site.TITLE}" />
     <!-- END switch_rssfeed_site -->
-    
+
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/skin.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar.css" media="screen" />
@@ -36,7 +38,7 @@
     <!-- BEGIN ploopi_js -->
     <script type="text/javascript" src="{ploopi_js.PATH}"></script>
     <!-- END ploopi_js -->
-    
+
     <!-- BEGIN module_js -->
     <script type="text/javascript" src="{module_js.PATH}"></script>
     <!-- END module_js -->
@@ -72,15 +74,14 @@
                 <!-- BEGIN switch_heading5 -->
                 <a href="{switch_heading5.LINK}">&raquo;&nbsp;{switch_heading5.LABEL}</a>
                 <!-- END switch_heading5 -->
-    
+
                 <!-- BEGIN switch_content_page -->
                     <a href="#">&raquo;&nbsp;{PAGE_TITLE}</a>
-                <!-- END switch_content_page -->            
+                <!-- END switch_content_page -->
             </div>
             <div id="pathtrans">
             </div>
         </div>
-
 
         <div id="main">
             <div id="mainmenu">
@@ -100,7 +101,7 @@
                         <!-- END heading1 -->
                     <!-- END root1 -->
                     </div>
-                   
+
                      <!-- BEGIN switch_newsletter_subscription -->
                     <div class="minibloc">
                         <label for="subscription_email" class="title">Inscription NewsLetter:</label>
@@ -115,7 +116,7 @@
                         </form>
                     </div>
                     <!-- END switch_newsletter_subscription -->
-                                        
+
                     <!-- BEGIN switch_subscription -->
                     <div class="minibloc">
                         <label for="subscription_email" class="title">Abonnement:</label>
@@ -140,8 +141,8 @@
                         <!-- BEGIN tagcloud -->
                             <a href="{tagcloud.LINK}" class="{tagcloud.SELECTED}" title="Afficher les articles contenant le tag &laquo; {tagcloud.TAG} &raquo;" style="font-size:{tagcloud.SIZE}%;">{tagcloud.TAG}<sup>{tagcloud.OCCURENCE}</sup></a>
                         <!-- END tagcloud -->
-                    </div>   
-                    
+                    </div>
+
                     <!-- BEGIN rssfeed -->
                     <div class="rssfeed">
                         <a class="rssfeedtitle" href="{rssfeed.LINK}">{rssfeed.TITLE}<br /><i>{rssfeed.SUBTITLE}</i></a>
@@ -178,7 +179,7 @@
                                 <div class="link">&raquo; {switch_search.result.LINK} ({switch_search.result.SIZE} ko)</div>
                             </a>
                         <!-- END result -->
-                        
+
                         <!-- BEGIN switch_notfound -->
                             Aucun résultat pour cette recherche
                         <!-- END switch_notfound -->
@@ -201,12 +202,12 @@
                         <h2>{PAGE_TITLE}</h2>
                         {PAGE_CONTENT}
                     <!-- END switch_content_page -->
-                    
+
                     <!-- BEGIN switch_content_message -->
                         <h2>{MESSAGE_TITLE}</h2>
                         {MESSAGE_CONTENT}
-                    <!-- END switch_content_message -->                    
-                    
+                    <!-- END switch_content_message -->
+
                     <!-- BEGIN switch_content_heading -->
                         <!-- BEGIN page -->
                             <a class="headings_page" href="{switch_content_heading.page.LINK}">
@@ -222,7 +223,7 @@
                             </a>
                             <div id="subheading2">
                             <!-- BEGIN subheading2 -->
-                                &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp; 
+                                &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp;
                             <!-- END subheading2 -->
                             </div>
                         <!-- END subheading1 -->

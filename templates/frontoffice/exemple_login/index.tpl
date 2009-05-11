@@ -23,7 +23,7 @@
     <!-- BEGIN switch_rssfeed_heading -->
     <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_heading.URL}" title="RSS - {switch_rssfeed_heading.TITLE}" />
     <!-- END switch_rssfeed_site -->
-    
+
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/skin.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar.css" media="screen" />
@@ -45,11 +45,11 @@
     <!-- BEGIN ploopi_js -->
     <script type="text/javascript" src="{ploopi_js.PATH}"></script>
     <!-- END ploopi_js -->
-    
+
     <!-- BEGIN module_js -->
     <script type="text/javascript" src="{module_js.PATH}"></script>
     <!-- END module_js -->
-    
+
     <script type="text/javascript">
     //<!--
     {ADDITIONAL_JAVASCRIPT}
@@ -100,15 +100,14 @@
                 <!-- BEGIN switch_heading5 -->
                 <a href="{switch_heading5.LINK}">&raquo;&nbsp;{switch_heading5.LABEL}</a>
                 <!-- END switch_heading5 -->
-    
+
                 <!-- BEGIN switch_content_page -->
                     <a href="#">&raquo;&nbsp;{PAGE_TITLE}</a>
-                <!-- END switch_content_page -->       
+                <!-- END switch_content_page -->
             </div>
             <div id="pathtrans">
             </div>
         </div>
-
 
         <div id="main">
             <div id="mainmenu">
@@ -128,7 +127,7 @@
                         <!-- END heading1 -->
                     <!-- END root1 -->
                     </div>
-                    
+
                     <!-- BEGIN switch_newsletter_subscription -->
                     <div class="minibloc">
                         <label for="subscription_email" class="title">Inscription NewsLetter:</label>
@@ -143,7 +142,7 @@
                         </form>
                     </div>
                     <!-- END switch_newsletter_subscription -->
-                    
+
                     <!-- BEGIN switch_subscription -->
                     <div class="minibloc">
                         <label for="subscription_email" class="title">Abonnement:</label>
@@ -168,8 +167,8 @@
                         <!-- BEGIN tagcloud -->
                             <a href="{tagcloud.LINK}" class="{tagcloud.SELECTED}" title="Afficher les articles contenant le tag &laquo; {tagcloud.TAG} &raquo;" style="font-size:{tagcloud.SIZE}%;">{tagcloud.TAG}<sup>{tagcloud.OCCURENCE}</sup></a>
                         <!-- END tagcloud -->
-                    </div>  
-                    
+                    </div>
+
                     <!-- BEGIN rssfeed -->
                     <div class="rssfeed">
                         <a class="rssfeedtitle" href="{rssfeed.LINK}">{rssfeed.TITLE}<br /><i>{rssfeed.SUBTITLE}</i></a>
@@ -208,7 +207,7 @@
                         <!-- END result -->
                     </div>
                     <!-- END switch_search -->
-                    
+
                     <!-- BEGIN switch_tagsearch -->
                     <h2>Articles contenant le tag "{PAGE_QUERYTAG}"</h2>
                     <div id="search_result">
@@ -220,7 +219,7 @@
                         <!-- END result -->
                     </div>
                     <!-- END switch_tagsearch -->
-                    
+
                     <!-- BEGIN switch_content_page -->
                         <h2>{PAGE_TITLE}</h2>
                         <!-- BEGIN switch_tags -->
@@ -236,15 +235,15 @@
                     <!-- BEGIN switch_content_message -->
                         <h2>{MESSAGE_TITLE}</h2>
                         {MESSAGE_CONTENT}
-                    <!-- END switch_content_message -->      
-                    
+                    <!-- END switch_content_message -->
+
                     <!-- BEGIN switch_content_error -->
                         <div style="text-align:center;padding:10px;">
                             <strong>Erreur {PAGE_ERROR_CODE}</strong>
                             <br />Cette page n'existe pas
                         </div>
-                    <!-- END switch_content_error -->                                  
-                    
+                    <!-- END switch_content_error -->
+
                     <!-- BEGIN switch_content_heading -->
                         <!-- BEGIN page -->
                             <a class="headings_page" href="{switch_content_heading.page.LINK}">
@@ -260,13 +259,13 @@
                             </a>
                             <div id="subheading2">
                             <!-- BEGIN subheading2 -->
-                                &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp; 
+                                &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp;
                             <!-- END subheading2 -->
                             </div>
-                            
+
                         <!-- END subheading1 -->
                     <!-- END switch_content_heading -->
-                    
+
                     <!-- BEGIN switch_content_sitemap -->
                         <h2>Plan du site</h2>
                         <div id="sitemap">
@@ -294,27 +293,27 @@
                                 </div>
                             <!-- END heading0 -->
                         </div>
-                    <!-- END switch_content_sitemap -->                    
-                    
+                    <!-- END switch_content_sitemap -->
+
                     <!-- BEGIN switch_newsletter_unsubscrib -->
                       <div style="text-align: center;">
-	                      <h2>Desinscription à la NewsLetter:</h2>
-												<form method="post" action="{switch_newsletter_unsubscrib.ACTION}">
-												    <div>
-												        <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="unsubcrib_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" />
-												        <input type="submit" title="Bouton pour valider la désinscription" class="button" value="désinscrire" />
-												    </div>
-												</form>
-											</div>
+                          <h2>Desinscription à la NewsLetter:</h2>
+                                                <form method="post" action="{switch_newsletter_unsubscrib.ACTION}">
+                                                    <div>
+                                                        <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="unsubcrib_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" />
+                                                        <input type="submit" title="Bouton pour valider la désinscription" class="button" value="désinscrire" />
+                                                    </div>
+                                                </form>
+                                            </div>
                     <!-- END switch_newsletter_unsubscrib -->
                     <!-- BEGIN switch_newsletter_unsubscrib_response -->
                       <div style="text-align: center;">
                         <h2>{switch_newsletter_unsubscrib_response.RESPONSE}</h2>
                       </div>
                     <!-- END switch_newsletter_unsubscrib_response -->
-                    
+
                     <!-- ***** DEBUT ANNUAIRE ***** -->
-                
+
                     <!-- BEGIN directory_switch_result -->
                     <div class="directory">
                         <div class="directory_result">
@@ -326,7 +325,7 @@
                                     <th>Grade</th>
                                     <th>Poste</th>
                                     <th>Téléphone</th>
-                                </tr>            
+                                </tr>
                                 <!-- BEGIN contact -->
                                     <tr class="directory_contact{directory_switch_result.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_result.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_result.contact.LASTNAME} {directory_switch_result.contact.FIRSTNAME}">
                                         <td>{directory_switch_result.contact.LASTNAME} {directory_switch_result.contact.FIRSTNAME}</td>
@@ -342,11 +341,11 @@
                             <!-- END  switch_message -->
                         </div>
                     </div>
-                    <!-- END directory_switch_result -->    
-                    
+                    <!-- END directory_switch_result -->
+
                     <!-- BEGIN directory_switch_contact -->
                     <div class="directory">
-                        <div class="directory_form"> 
+                        <div class="directory_form">
                             <div>
                                 <div style="float:left;width:120px;">
                                     <img title="Photo de {directory_switch_contact.LASTNAME} {directory_switch_contact.FIRSTNAME}" src="{directory_switch_contact.PHOTOPATH}" style="border:4px solid #d0d0d0;display:block;margin:0 auto;" />
@@ -386,7 +385,7 @@
                                     </table>
                                     </div>
                                 </div>
-                            </div>              
+                            </div>
                         </div>
                         <div>
                             <div class="directory_title2">Autres personnes de la même rubrique:</div>
@@ -397,7 +396,7 @@
                                     <th>Grade</th>
                                     <th>Poste</th>
                                     <th>Téléphone</th>
-                                </tr>            
+                                </tr>
                                 <!-- BEGIN contact -->
                                     <tr class="directory_contact{directory_switch_contact.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_contact.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_contact.contact.LASTNAME} {directory_switch_contact.contact.FIRSTNAME}">
                                         <td>{directory_switch_contact.contact.CIVILITY} {directory_switch_contact.contact.LASTNAME} {directory_switch_contact.contact.FIRSTNAME}</td>
@@ -409,15 +408,15 @@
                                 <!-- END  contact -->
                             </table>
                         </div>
-                        
+
                     </div>
-                    <!-- END directory_switch_contact -->                
-                
+                    <!-- END directory_switch_contact -->
+
                     <!-- BEGIN directory_switch_full -->
                     <div class="directory">
                         <div class="directory_title1">Annuaire complet</div>
                         <!-- BEGIN switch_selected_heading -->
-                            <div class="directory_title2">Rubrique 
+                            <div class="directory_title2">Rubrique
                                 &nbsp;&raquo;&nbsp;<a href="{DIRECTORY_LINK_FULL}" title="Ouvrir l'annuaire complet">Tout</a>
                                 <!-- BEGIN heading -->
                                 &nbsp;&raquo;&nbsp;<a href="{directory_switch_full.switch_selected_heading.heading.LINK}" title="Ouvrir l'annuaire détaillé de {directory_switch_full.switch_selected_heading.heading.LABEL}">{directory_switch_full.switch_selected_heading.heading.LABEL}</a>
@@ -438,7 +437,7 @@
                                         <td colspan="5" class="heading{directory_switch_full.line.heading.DEPTH}">&#149;&nbsp;{directory_switch_full.line.heading.LABEL}</td>
                                     </tr>
                                 <!-- END heading -->
-                                
+
                                 <!-- BEGIN contact -->
                                     <tr class="directory_contact{directory_switch_full.line.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_full.line.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_full.line.contact.LASTNAME} {directory_switch_full.line.contact.FIRSTNAME}">
                                         <td>{directory_switch_full.line.contact.CIVILITY} {directory_switch_full.line.contact.LASTNAME} {directory_switch_full.line.contact.FIRSTNAME}</td>
@@ -451,10 +450,9 @@
                             <!-- END line -->
                         </table>
                     <!-- END directory_switch_full -->
-                
+
                     <!-- ***** FIN ANNUAIRE ***** -->
-                    
-                    
+
                 </div>
             </div>
         </div>
