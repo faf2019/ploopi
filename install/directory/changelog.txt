@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.2.0b ====================================================
+
+2009-05-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correctif sur la partie frontoffice : manquait un champ "COMMENTS"
+
 == Module DIRECTORY - version 2.2.0 ====================================================
 
 2009-05-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

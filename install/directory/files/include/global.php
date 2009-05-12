@@ -225,6 +225,7 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
                     'FLOOR' => htmlentities($row['floor']),
                     'OFFICE' => htmlentities($row['office']),
                     'PHOTOPATH' => $row['photopath'],
+                    'COMMENTS' => ploopi_nl2br(htmlentities($row['comments'])),
                     'HEADING' => htmlentities($arrHeadings['list'][$intHeadingId]['label']),
                     'HEADINGS' => htmlentities($strContactHeadings),
                     'ALTERNATE_STYLE' => $c%2,
