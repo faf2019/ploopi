@@ -274,7 +274,7 @@
 
                                 <!-- BEGIN contact -->
                                     <tr class="directory_contact{directory_switch_full.line.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_full.line.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_full.line.contact.LASTNAME} {directory_switch_full.line.contact.FIRSTNAME}">
-                                        <td>{directory_switch_full.line.contact.CIVILITY} {directory_switch_full.line.contact.LASTNAME} {directory_switch_full.line.contact.FIRSTNAME}</td>
+                                        <td><div>{directory_switch_full.line.contact.CIVILITY} {directory_switch_full.line.contact.LASTNAME} {directory_switch_full.line.contact.FIRSTNAME}</div><div>{directory_switch_full.line.contact.COMMENTS}</div></td>
                                         <td>{directory_switch_full.line.contact.FUNCTION}</td>
                                         <td>{directory_switch_full.line.contact.RANK}</td>
                                         <td>{directory_switch_full.line.contact.NUMBER}</td>
