@@ -465,6 +465,7 @@ switch($op)
                 
                 $template_body->assign_block_vars('directory_switch_speeddialing.heading',
                     array(
+                        'ID' => urlencode(ploopi_convertaccents(strtolower(strtr(trim($strHeading), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '-'))))),
                         'LABEL' => htmlentities($strHeading)
                     )
                 );
@@ -474,7 +475,8 @@ switch($op)
             $template_body->assign_block_vars('directory_switch_speeddialing.heading.number',
                 array(
                     'LABEL' => htmlentities($row['label']),
-                    'NUMBER' => htmlentities($row['number'])
+                    'NUMBER' => htmlentities($row['number']),
+                    'SHORTNUMBER' => htmlentities($row['shortnumber'])
                 )
             );
         }

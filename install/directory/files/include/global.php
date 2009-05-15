@@ -118,7 +118,7 @@ function directory_getcontacts()
  * @see skin::display_treeview
  */
 
-function directory_gettreeview($headings = array())
+function directory_gettreeview($headings = array(), $booPopup = false)
 {
     global $db;
 
@@ -130,20 +130,46 @@ function directory_gettreeview($headings = array())
 
     foreach($headings['list'] as $id => $fields)
     {
-        $treeview['list'][$fields['id']] =
+        $arrParents = split(';', $fields['parents']);
+        
+        if ($booPopup)
+        {
+            $strNodePrefix = 'pop_';
+            $strNodeId = $strNodePrefix.$fields['id'];
+            
+            foreach($arrParents as &$strNodeParentId) $strNodeParentId = $strNodePrefix.$strNodeParentId;
+            
+            $strNodeOnClick = "ploopi_skin_treeview_shownode('{$strNodeId}', '".ploopi_queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}&directory_option=popup")."', 'admin-light.php');";
+            
+            $strLink = 'javascript:void(0);'; 
+            $strOnClick = 'javascript:directory_heading_choose(\''.$fields['id'].'\', \''.addslashes($fields['label']).'\');'; 
+        }
+        else 
+        {
+            $strNodePrefix = '';
+            $strNodeId = $fields['id'];
+            
+            $strNodeOnClick = "ploopi_skin_treeview_shownode('{$strNodeId}', '".ploopi_queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}")."', 'admin-light.php');";
+            
+            $strLink = ploopi_urlencode("admin.php?directory_heading_id={$fields['id']}"); 
+            $strOnClick = ''; 
+        }
+        
+        
+        $treeview['list'][$strNodeId] =
             array(
-                'id' => $fields['id'],
+                'id' => $strNodeId,
                 'label' => $fields['label'],
                 'description' => $fields['description'],
-                'parents' => split(';', $fields['parents']),
+                'parents' => $arrParents,
                 'node_link' => '',
-                'node_onclick' => "ploopi_skin_treeview_shownode('{$fields['id']}', '".ploopi_queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}")."', 'admin-light.php');",
-                'link' => ploopi_urlencode("admin.php?directory_heading_id={$fields['id']}"),
-                'onclick' => '',
+                'node_onclick' => $strNodeOnClick,
+                'link' => $strLink,
+                'onclick' => $strOnClick,
                 'icon' => './modules/directory/img/ico_heading.png'
             );
 
-        $treeview['tree'][$fields['id_heading']][] = $fields['id'];
+        $treeview['tree'][$strNodePrefix.$fields['id_heading']][] = $strNodeId;
     }
 
     return($treeview);

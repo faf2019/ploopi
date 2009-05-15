@@ -1,3 +1,12 @@
+== Module DIRECTORY - version 2.2.1 ====================================================
+
+2009-05-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'un champ "numéro" dans la gestion des numéros abrégés
+ * Mise à jour du script SQL d'install /!\ ATTENTION, perde des données existantes de numéros abrégés
+ * Modification du template "exemple_annuaire" pour afficher les numéros abrégés par rubrique (+ clic affiche le détail)
+ * Possibilité de déplacer un contact partagé d'une rubrique à une autre (admin système uniquement) 
+
 == Module DIRECTORY - version 2.2.0b ====================================================
 
 2009-05-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -18,9 +18,13 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_contact` (
   `id_workspace` int(10) unsigned NOT NULL default '0',
   `id_module` int(10) unsigned NOT NULL default '0',
   `number` varchar(255) NOT NULL,
+  `building` varchar(255) NOT NULL,
+  `floor` varchar(32) NOT NULL,
   `office` varchar(255) NOT NULL,
   `civility` varchar(16) NOT NULL,
   `id_heading` int(10) unsigned NOT NULL default '0',
+  `rank` varchar(32) NOT NULL,
+  `position` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `id_user` (`id_user`),
   KEY `id_workspace` (`id_workspace`),
@@ -43,6 +47,12 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_heading` (
   `label` varchar(255) NOT NULL,
   `description` mediumtext NOT NULL,
   `position` int(10) unsigned NOT NULL default '0',
+  `phone` varchar(32) NOT NULL,
+  `fax` varchar(32) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `postalcode` varchar(32) NOT NULL,
+  `city` varchar(64) NOT NULL,
+  `country` varchar(64) NOT NULL,
   `id_heading` int(10) unsigned NOT NULL default '0',
   `id_user` int(10) unsigned NOT NULL default '0',
   `id_workspace` int(10) unsigned NOT NULL default '0',
@@ -64,23 +74,12 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_list` (
   KEY `id_module` (`id_module`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
-
-ALTER TABLE `ploopi_mod_directory_contact` ADD `building` VARCHAR( 255 ) NOT NULL AFTER `number` ;
-ALTER TABLE `ploopi_mod_directory_contact` ADD `floor` VARCHAR( 32 ) NOT NULL AFTER `building` ;
-ALTER TABLE `ploopi_mod_directory_contact` ADD `rank` VARCHAR( 32 ) NOT NULL ;
-
-ALTER TABLE `ploopi_mod_directory_contact` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
-
-ALTER TABLE `ploopi_mod_directory_heading` ADD `phone` VARCHAR( 32 ) NOT NULL AFTER `position` ,
-ADD `fax` VARCHAR( 32 ) NOT NULL AFTER `phone` ,
-ADD `address` VARCHAR( 255 ) NOT NULL AFTER `fax` ,
-ADD `postalcode` VARCHAR( 32 ) NOT NULL AFTER `address` ,
-ADD `city` VARCHAR( 64 ) NOT NULL AFTER `postalcode` ,
-ADD `country` VARCHAR( 64 ) NOT NULL AFTER `city` ;
-
-CREATE TABLE `ploopi_mod_directory_speeddialing` (
-`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-`label` VARCHAR( 255 ) NOT NULL ,
-`number` VARCHAR( 16 ) NOT NULL ,
-`heading` VARCHAR( 255 ) NOT NULL
-) ENGINE = MYISAM ;
+DROP TABLE IF EXISTS `ploopi_mod_directory_speeddialing`;
+CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_speeddialing` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `label` varchar(255) NOT NULL,
+  `number` varchar(32) NOT NULL,
+  `shortnumber` varchar(16) NOT NULL,
+  `heading` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;

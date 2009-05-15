@@ -795,6 +795,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                             {
                                 $directory_contact = new directory_contact();
                                 $directory_contact->init_description();
+                                $directory_contact->fields['id_heading'] = $intHeadingId;
                                 ?>
                                 <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:$('directory_addcontact').style.display='block';">
                                     <p class="ploopi_va">
@@ -940,7 +941,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 <p class="ploopi_va" style="padding:4px;">
                     <span>Rubrique:</span>
                     <select class="select" name="directory_speeddialing_heading" style="width:150px;" tabindex="110">
-                        <option value="" style="font-style:italic;">(Nouvelle rubrique)</option>
+                        <option value="" style="font-style:italic;">(Rubrique existante)</option>
                         <?php foreach($arrHeadings as $strHeading) echo '<option value="'.htmlentities($strHeading).'">'.htmlentities($strHeading).'</option>'; ?>
                     </select>
                     <em>ou</em>
@@ -948,7 +949,9 @@ switch($_SESSION['directory']['directoryTabItem'])
                     <span>Libellé:</span>
                     <input type="text" name="directory_speeddialing_label" class="text" style="width:150px;" tabindex="115" />
                     <span>Numéro:</span>
-                    <input type="text" name="directory_speeddialing_number" class="text" style="width:60px;" maxlength="16" tabindex="116" />
+                    <input type="text" name="directory_speeddialing_number" class="text" style="width:90px;" maxlength="32" tabindex="116" />
+                    <span>Abrégé:</span>
+                    <input type="text" name="directory_speeddialing_shortnumber" class="text" style="width:60px;" maxlength="16" tabindex="117" />
                     <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php"); ?>';" tabindex="121" />
                     <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="120" />                
                     
@@ -968,6 +971,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
             $arrColumns['left']['heading'] = array('label' => 'Rubrique', 'width' => 200, 'options' => array('sort' => true));
             $arrColumns['auto']['label'] = array('label' => 'Libellé', 'options' => array('sort' => true));
+            $arrColumns['right']['shortnumber'] = array('label' => 'Abrégé', 'width' => 90, 'options' => array('sort' => true));
             $arrColumns['right']['number'] = array('label' => 'Numéro', 'width' => 120, 'options' => array('sort' => true));
             if (ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
             {
@@ -987,6 +991,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         
                     $arrValues[$c]['values']['heading'] = array('label' => $row['heading'], 'sort_label' => strtoupper(ploopi_convertaccents(sprintf("%-255s_%-255s", $row['heading'], $row['label']))));
                     $arrValues[$c]['values']['label'] = array('label' => $row['label'], 'sort_label' => strtoupper(ploopi_convertaccents($row['label'])));
+                    $arrValues[$c]['values']['shortnumber'] = array('label' => $row['shortnumber']);
                     $arrValues[$c]['values']['number'] = array('label' => $row['number']);
                     $arrValues[$c]['description'] = $row['label'];
 

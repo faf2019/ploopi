@@ -246,7 +246,14 @@ if ($_SESSION['ploopi']['connected'])
                     $directory_heading = new directory_heading();
                     if ($directory_heading->open($_GET['directory_heading_id'])) $directory_contact->fields['id_heading'] = $_GET['directory_heading_id'];
                 }
-
+                
+                // Rattachement à une rubrique
+                if (!empty($_POST['directory_heading_id']) && is_numeric($_POST['directory_heading_id']))
+                {
+                    $directory_heading = new directory_heading();
+                    if ($directory_heading->open($_POST['directory_heading_id'])) $directory_contact->fields['id_heading'] = $_POST['directory_heading_id'];
+                }
+                
                 $directory_contact->setvalues($_POST, 'directory_contact_');
                 $directory_contact->setuwm();
                 $directory_contact->save();
@@ -383,8 +390,16 @@ if ($_SESSION['ploopi']['connected'])
                 ploopi_init_module('directory');
                 if (!empty($_GET['directory_heading_id']))
                 {
-                    $treeview = directory_gettreeview(directory_getheadings());
-                    echo $skin->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['directory_heading_id']);
+                    if (!empty($_GET['directory_option']) && $_GET['directory_option'] == 'popup')
+                    {
+                        $treeview = directory_gettreeview(directory_getheadings(), true);
+                        echo $skin->display_treeview($treeview['list'], $treeview['tree'], null, 'pop_'.$_GET['directory_heading_id']);
+                    }
+                    else
+                    {
+                        $treeview = directory_gettreeview(directory_getheadings());
+                        echo $skin->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['directory_heading_id']);
+                    }
                 }
                 ploopi_die();
             break;
@@ -442,6 +457,29 @@ if ($_SESSION['ploopi']['connected'])
                 ploopi_validation_save(_DIRECTORY_OBJECT_HEADING, $objHeading->fields['id']);
 
                 ploopi_redirect("admin.php?directory_heading_id={$_GET['directory_heading_id']}");
+            break;
+            
+            case 'directory_heading_choose':
+                ob_start();
+                
+                ploopi_init_module('directory', false, false, false);
+
+                // Récupération des rubriques
+                $arrHeadings = directory_getheadings();
+
+                // Récupération de la structure du treeview
+                $arrTreeview = directory_gettreeview($arrHeadings, true);
+                ?>
+                <div style="height:150px;overflow:auto;padding:4px;">
+                <?php echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], 'pop_'.$_GET['directory_heading_id'], null, false); ?>
+                </div>
+                <?php
+                $content = ob_get_contents();
+                ob_end_clean();
+
+                echo $skin->create_popup("Choix d'une rubrique", $content, 'popup_directory_heading_choose');
+                
+                ploopi_die();
             break;
             
             case 'directory_speeddialing_save':
@@ -505,7 +543,11 @@ if ($_SESSION['ploopi']['connected'])
                         </p>
                         <p>
                             <label>Numéro:</label>
-                            <input type="text" name="directory_speeddialing_number" value="<? echo htmlentities($objSpeedDialing->fields['number']); ?>" class="text" style="width:60px;" maxlength="16" tabindex="116" />
+                            <input type="text" name="directory_speeddialing_number" value="<? echo htmlentities($objSpeedDialing->fields['number']); ?>" class="text" style="width:90px;" maxlength="16" tabindex="116" />
+                        </p>
+                        <p>
+                            <label>Abrégé:</label>
+                            <input type="text" name="directory_speeddialing_shortnumber" value="<? echo htmlentities($objSpeedDialing->fields['shortnumber']); ?>" class="text" style="width:60px;" maxlength="32" tabindex="117" />
                         </p>
                     </div>
                         <div style="padding:2px 4px;text-align:right;">

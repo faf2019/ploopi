@@ -37,7 +37,6 @@
 
 unset($_SESSION['directory']['contact_photopath']);
 ?>
-
 <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_contact_save&directory_contact_id={$directory_contact->fields['id']}".(!empty($intHeadingId) ? "&directory_heading_id={$intHeadingId}" : '')); ?>" method="post">
 <div style="border-bottom:2px solid #c0c0c0;overflow:auto;">
     <div style="float:left;width:50%;">
@@ -106,6 +105,27 @@ unset($_SESSION['directory']['contact_photopath']);
                     </p>
                 </div>
             </fieldset>
+            <?
+            if (!empty($directory_contact->fields['id']) && $directory_contact->fields['id_heading'] > 0 && ploopi_isadmin())
+            {
+                include_once './modules/directory/class_directory_heading.php';
+                $objDirectoryHeading = new directory_heading();
+                $objDirectoryHeading->open($directory_contact->fields['id_heading']);
+                ?>
+                <fieldset class="fieldset">
+                    <legend>Rubrique de rattachement</legend>
+                    <div class="ploopi_form">
+                        <p>
+                            <label>Rubrique parent:</label>
+                            <input type="hidden" value="<? echo $directory_contact->fields['id_heading']; ?>" name="directory_heading_id" id="directory_heading_id" />
+                            <input type="text" class="text" value="<? echo htmlentities($objDirectoryHeading->fields['label']); ?>" id="directory_heading_id_label" tabindex="115" style="width:55%;" readonly />
+                            <a href="javascript:void(0);" onclick="javascript:directory_heading_choose_popup(event, $('directory_heading_id').value);" ><img src="./modules/directory/img/ico_heading.png" title="Modifier la rubrique de rattachement" tabindex="116" /></a>
+                        </p>
+                    </div>
+                </fieldset>
+                <?
+            }
+            ?>
         </div>
     </div>
     <div style="float:left;width:49%;">

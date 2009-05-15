@@ -107,3 +107,16 @@ function directory_speeddialing_modify(e, id_speeddialing)
     ploopi_showpopup(ploopi_ajaxloader_content, 300, e, 'click', 'popup_directory_speeddialing_modify');
     ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_speeddialing_modify&directory_speeddialing_id='+id_speeddialing, 'popup_directory_speeddialing_modify');
 }
+
+function directory_heading_choose_popup(e, id_heading)
+{
+    ploopi_showpopup(ploopi_ajaxloader_content, 300, e, 'click', 'popup_directory_heading_choose');
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_heading_choose&directory_heading_id='+id_heading, 'popup_directory_heading_choose');
+}
+
+function directory_heading_choose(id_heading, label)
+{
+    ploopi_hidepopup('popup_directory_heading_choose');
+    $('directory_heading_id').value = id_heading;
+    $('directory_heading_id_label').value = label;
+}
