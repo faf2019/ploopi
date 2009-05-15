@@ -10,6 +10,8 @@
 
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
 
+    <base href="{SITE_BASEPATH}" />
+
     <!-- BEGIN switch_atomfeed_site -->
     <link rel="alternate" type="application/atom+xml" href="{switch_atomfeed_site.URL}" title="ATOM - {switch_atomfeed_site.TITLE}" />
     <!-- END switch_atomfeed_site -->
@@ -300,12 +302,26 @@
                         <div class="directory_title1">Numéros abrégés</div>
                     </div>
 
-                    <div class="directory_speeddialing">
+                    <div class="directory_speeddialing directory">
                     <!-- BEGIN heading -->
-                        <h1>{directory_switch_speeddialing.heading.LABEL}</h1>
-	                    <!-- BEGIN number -->
-                            <div>{directory_switch_speeddialing.heading.number.LABEL} : {directory_switch_speeddialing.heading.number.NUMBER}</div>
-	                    <!-- END number -->
+                    
+                        <h1><a href="javascript:void(0);" onclick="javascript:new Effect.BlindDown('{directory_switch_speeddialing.heading.ID}', {duration: 0.2,});" title="Voir les numéros abrégés de {directory_switch_speeddialing.heading.LABEL}">{directory_switch_speeddialing.heading.LABEL}</a></h1>
+                        <div id="{directory_switch_speeddialing.heading.ID}" style="display:none;">
+	                        <table cellspacing="0" cellpadding="0">
+	                            <tr>
+	                                <th>Initulé</th>
+	                                <th style="width:150px;">Numéro</th>
+	                                <th style="width:100px;">Abrégé</th>
+	                            </tr>
+			                    <!-- BEGIN number -->
+		                            <tr>
+	                                    <td>{directory_switch_speeddialing.heading.number.LABEL}</td>
+	                                    <td>{directory_switch_speeddialing.heading.number.NUMBER}</td>
+	                                    <td>{directory_switch_speeddialing.heading.number.SHORTNUMBER}</td>
+		                            </tr>
+			                    <!-- END number -->
+		                    </table>
+	                    </div>
                     <!-- END heading -->
                     </div>
                     

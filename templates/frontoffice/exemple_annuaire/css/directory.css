@@ -150,6 +150,24 @@
     background:#eee
 }
 
-.directory_speeddialing div {
-	padding:1px 10px;
+.directory_speeddialing a {
+	display:block;
+}
+
+.directory_speeddialing table {
+    border-width:0px;
+    width:99%;
+    border-collapse:collapse;
+}
+
+.directory_speeddialing table th {
+    padding:2px;
+    vertical-align:top;
+    border-width:0px;
+}
+
+.directory_speeddialing table td {
+    padding:2px;
+    vertical-align:top;
+    border-width:0px;
 }
