@@ -1,0 +1,57 @@
+h1. Bienvenue sur le wiki
+
+h2. Menu 2
+
+h3. Menu 3
+
+* Liste 1
+** Sous Liste
+*** Autre élément
+
+* Liste 2
+* Liste 3
+
+# Un
+# Deux
+# Trois
+
++Souligné+
+
+-Barré-
+
+_Italique_
+
+*Gras*
+
+"Lien externe":http://www.google.fr
+
+[[Lien interne]]
+[[Autre Lien interne]]
+
+??citation??
+
+^superscript^
+
+~subscript~
+
+%span%
+
+@code@
+
+p. Paragraph
+
+bc. Block code
+Test
+
+pre. Pre-formatted 
+Ca marche ?
+
+Ploopi(c) Wiki(r)
+
+|_. a|_. table|_. header|
+|a|table|row|
+|a|table|row|
+
+See foo[1].
+
+fn1. Ca c'est une note de bas de page

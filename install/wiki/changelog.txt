@@ -1,0 +1,15 @@
+== Module Wiki - version 0.9.000beta ====================================================
+
+2009-05-19  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Edition de pages au format Wiki/Textile
+ * Gestion des liens internes vers d'autres pages (syntaxe : [[Lien]])
+ * Gestion du vérrouillage d'une page
+ * Gestion des révisions
+ * Affichage d'un historique des modifications d'une page
+ * Affichage d'un différentiel colorisé entre 2 versions d'une même page
+ * Gestion des annotations
+ * Gestion des abonnements
+ * Gestion du renommage avec redirection automatique des liens
+ * Index des pages par titre
+ * Index des pages par date

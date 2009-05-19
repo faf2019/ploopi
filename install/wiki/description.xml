@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ploopi>
+    <moduletype>
+        <label>wiki</label>
+        <version>0.9.000beta</version>
+        <author>Ovensia</author>
+        <date>20090519000000</date>
+        <description>Wiki</description>
+        <action>
+            <id_action>1</id_action>
+            <label>Modifier les pages</label>
+        </action>   
+        <action>
+            <id_action>2</id_action>
+            <label>Vérouiller les pages</label>
+        </action>   
+    </moduletype>
+</ploopi>
