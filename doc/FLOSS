@@ -58,3 +58,14 @@
    license : CC SA
    copyright : ?
 
+* Textile
+  path : ./lib/textile
+  url : http://textile.thresholdstate.com/
+  licence : Free Software
+  copyright : Dean Allen <dean@textism.com>
+  
+* JsToolbar
+  path : ./lib/jstoolbar
+  url : http://fr.dotclear.org/
+  licence : GPL v2
+  copyright : Nicolas Martin & Olivier Meunier and contributors  
