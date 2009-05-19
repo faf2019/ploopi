@@ -1,0 +1,99 @@
+.jstEditor {
+	padding-left: 0px;
+}
+.jstEditor textarea, .jstEditor iframe {
+  margin: 0;
+}
+
+.jstHandle {
+	height: 10px;
+	font-size: 0.1em;
+	cursor: s-resize;
+	/*background: transparent url(img/resizer.png) no-repeat 45% 50%;*/
+}
+
+.jstElements {
+	padding: 3px 3px;
+}
+
+.jstElements button {
+	margin-right : 6px;
+	width : 24px;
+	height: 24px;
+	padding: 4px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #ddd;
+	background-color : #f7f7f7;
+	background-position : 50% 50%;
+	background-repeat: no-repeat;
+}
+.jstElements button:hover {
+	border-color : #000;
+    background-color : #f7f7f7;
+    background-position : 50% 50%;
+    background-repeat: no-repeat;
+}
+
+.jstElements button span {
+	display : none;	
+}
+.jstElements span {
+	display : inline;
+}
+
+.jstSpacer {
+	width : 0px;
+	font-size: 1px;
+	margin-right: 4px;
+}
+
+.jstElements .help { float: right; margin-right: 1em; padding-top: 8px; font-size: 0.9em; }
+
+/* Buttons
+-------------------------------------------------------- */
+.jstb_strong, .jstb_strong:hover {
+	background-image: url(images/bt_strong.png);
+}
+.jstb_em, .jstb_em:hover {
+	background-image: url(images/bt_em.png);
+}
+.jstb_ins, .jstb_ins:hover {
+	background-image: url(images/bt_ins.png);
+}
+.jstb_del, .jstb_del:hover {
+	background-image: url(images/bt_del.png);
+}
+.jstb_code, .jstb_code:hover {
+	background-image: url(images/bt_code.png);
+}
+.jstb_h1, .jstb_h1:hover {
+	background-image: url(images/bt_h1.png);
+}
+.jstb_h2, .jstb_h2:hover {
+	background-image: url(images/bt_h2.png);
+}
+.jstb_h3, .jstb_h3:hover {
+	background-image: url(images/bt_h3.png);
+}
+.jstb_ul, .jstb_ul:hover {
+	background-image: url(images/bt_ul.png);
+}
+.jstb_ol, .jstb_ol:hover {
+	background-image: url(images/bt_ol.png);
+}
+.jstb_bq, .jstb_bq:hover {
+	background-image: url(images/bt_bq.png);
+}
+.jstb_unbq, .jstb_unbq:hover {
+	background-image: url(images/bt_bq_remove.png);
+}
+.jstb_pre, .jstb_pre:hover {
+	background-image: url(images/bt_pre.png);
+}
+.jstb_link, .jstb_link:hover {
+	background-image: url(images/bt_link.png);
+}
+.jstb_img, .jstb_img:hover {
+	background-image: url(images/bt_img.png);
+}
