@@ -175,12 +175,12 @@ abstract class form_element
     public function setOptions($arrOptions) {
         $this->arrOptions = array_merge($this->arrOptions, $arrOptions);
     }
-	
-	/**
-	 * Méthode abstraite de rendu d'un libellé. Cette méthode doit être redéfinie dans les classes filles
-	 *
-	 * @param int $intTabindex tabindex de l'élément dans le formulaire
-	 */
+    
+    /**
+     * Méthode abstraite de rendu d'un libellé. Cette méthode doit être redéfinie dans les classes filles
+     *
+     * @param int $intTabindex tabindex de l'élément dans le formulaire
+     */
     abstract protected function render($intTabindex);
 }
 
@@ -214,6 +214,8 @@ class form_field extends form_element
     protected static $arrDefaultOptions = array(
         'style' => null,
         'style_form' => null,
+        'class' => null,
+        'class_form' => null,
         'required' => false,
         'datatype' => 'string',
         'maxlength' => null,
@@ -231,8 +233,10 @@ class form_field extends form_element
      * @param string $strName propriété "name" du champ
      * @param string $strId propriété "id" du champ
      * @param array $arrOptions options du champ
+     * 
+     * @return form_field
      */
-    public function __construct($strType, $strLabel, $mixValue, $strName = null, $strId = null, $arrOptions = array())
+    public function __construct($strType, $strLabel, $mixValue, $strName = null, $strId = null, $arrOptions = null)
     {
         $this->setType($strType);
         
@@ -254,7 +258,8 @@ class form_field extends form_element
         $this->strLabel = $strLabel;
         $this->strName = $strName;
         $this->strId = $strId;
-        $this->arrOptions = array_merge(form_field::$arrDefaultOptions, $arrOptions);
+        
+        $this->arrOptions = is_null($arrOptions) ? form_field::$arrDefaultOptions : array_merge(form_field::$arrDefaultOptions, $arrOptions);
     }
     
     /**
@@ -268,15 +273,18 @@ class form_field extends form_element
         $strRequired = $this->arrOptions['required'] ? '<em>* </em>' : '';
         $strAccesskey = is_null($this->arrOptions['accesskey']) ? '' : " accesskey=\"{$this->arrOptions['accesskey']}\"";
         $strStyleform = is_null($this->arrOptions['style_form']) ? '' : " style=\"{$this->arrOptions['style_form']}\"";
+        $strClassform = is_null($this->arrOptions['class_form']) ? '' : " class=\"{$this->arrOptions['class_form']}\"";
         
-        return "<p id=\"{$this->strId}_form\"{$strStyleform}><label for=\"{$this->strName}\"{$strAccesskey}>{$strRequired}{$this->strLabel}</label>".$strOutputField."</p>";
+        ploopi_print_r($this->arrOptions);
+        
+        return "<p id=\"{$this->strId}_form\"{$strStyleform}{$strClassform}><label for=\"{$this->strId}\"{$strAccesskey}>{$strRequired}{$this->strLabel}</label>".$strOutputField."</p>";
     }
     
     /**
      * Génère le rendu html du champ
      *
      * @param int $intTabindex tabindex du champs dans le formulaire
-     * @return unknown
+     * @return string code html
      */
     public function render($intTabindex)
     {
@@ -286,25 +294,26 @@ class form_field extends form_element
         $strReadonly = is_null($this->arrOptions['readonly']) || !$this->arrOptions['readonly'] ? '' : " readonly=\"readonly\"";
         $strDisabled = is_null($this->arrOptions['disabled']) || !$this->arrOptions['disabled'] ? '' : " disabled=\"disabled\"";
         $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\"";
+        $strClass = is_null($this->arrOptions['class']) ? '' : " {$this->arrOptions['class']}";
         
         $strValue = htmlentities($this->arrValues[0]);
 
         switch($this->getType())
         {
             case 'input:text':
-                $strOutput .= "<input type=\"text\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"text\"{$strStyle}{$strMaxLength}{$strDisabled}{$strReadonly}/>";
+                $strOutput .= "<input type=\"text\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"text{$strClass}\"{$strStyle}{$strMaxLength}{$strDisabled}{$strReadonly}/>";
             break;
             
             case 'input:password':
-                $strOutput .= "<input type=\"password\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"text\"{$strStyle}{$strMaxLength}{$strDisabled}{$strReadonly}/>";
+                $strOutput .= "<input type=\"password\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"text{$strClass}\"{$strStyle}{$strMaxLength}{$strDisabled}{$strReadonly}/>";
             break;
             
             case 'textarea':
-                $strOutput .= "<textarea name=\"{$this->strName}\" id=\"{$this->strId}\" tabindex=\"{$intTabindex}\" class=\"text\"{$strStyle}{$strMaxLength}{$strDisabled}{$strReadonly}>{$strValue}</textarea>";
+                $strOutput .= "<textarea name=\"{$this->strName}\" id=\"{$this->strId}\" tabindex=\"{$intTabindex}\" class=\"text{$strClass}\"{$strStyle}{$strMaxLength}{$strDisabled}{$strReadonly}>{$strValue}</textarea>";
             break;
             
             case 'input:file':
-                $strOutput .= "<input type=\"file\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strStyle} />";
+                $strOutput .= "<input type=\"file\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"{$strClass}\"{$strStyle} />";
             break;
             
         }
@@ -313,8 +322,17 @@ class form_field extends form_element
     }
 }
 
+/**
+ * Classe de gestion des champs de type "select" d'un formulaire
+ *
+ */    
 class form_select extends form_field
 {
+    /**
+     * Valeur sélectionnée dans le select
+     *
+     * @var string
+     */
     private $strSelected;
     
     /**
@@ -326,23 +344,42 @@ class form_select extends form_field
         'onchange' => null
     );      
     
-    public function __construct($strLabel, $arrValues = array(), $strSelected, $strName, $strId = null, $arrOptions = array())
+    /**
+     * Constructeur de la classe
+     *
+     * @param string $strLabel libellé du champ
+     * @param array $arrValues valeur(s) du champ
+     * @param string $strSelected valeur de l'élément sélectionné
+     * @param string $strName propriété "name" du champ
+     * @param string $strId propriété "id" du champ
+     * @param array $arrOptions options du champ
+     * 
+     * @return form_select
+     */
+    public function __construct($strLabel, $arrValues = array(), $strSelected, $strName, $strId = null, $arrOptions = null)
     {
         if (!is_array($arrValues)) trigger_error('Ce type d\'élément attend un tableau de valeurs', E_USER_ERROR);
 
-        parent::__construct('select', $strLabel, $arrValues, $strName, $strId, array_merge(form_select::$arrDefaultOptions, $arrOptions));
+        parent::__construct('select', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? form_select::$arrDefaultOptions : array_merge(form_select::$arrDefaultOptions, $arrOptions));
         
         $this->strSelected = htmlentities($strSelected);
     }
     
+    /**
+     * Génère le rendu html du champ
+     *
+     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @return string code html
+     */
     public function render($intTabindex)
     {
         $strOutput = '';
         
         $strOnchange = is_null($this->arrOptions['onchange']) ? '' : " onchange=\"javascript:{$this->arrOptions['onchange']}\"";
         $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\"";
+        $strClass = is_null($this->arrOptions['class']) ? '' : " {$this->arrOptions['class']}";
         
-        $strOutput .= "<select name=\"{$this->strName}\" id=\"{$this->strId}\" tabindex=\"{$intTabindex}\" class=\"select\"{$strStyle}{$strOnchange} />";
+        $strOutput .= "<select name=\"{$this->strName}\" id=\"{$this->strId}\" tabindex=\"{$intTabindex}\" class=\"select{$strClass}\"{$strStyle}{$strOnchange} />";
         foreach($this->arrValues as $strKey => $strValue) 
         {
             $strValue = htmlentities($strValue);
@@ -355,11 +392,32 @@ class form_select extends form_field
     }
 }
 
+/**
+ * Classe de gestion des champs de type "checkbox" d'un formulaire
+ *
+ */    
 class form_checkbox extends form_field
 {
+    /**
+     * True si la checkbox est cochée
+     *
+     * @var boolean
+     */    
     private $booChecked;
     
-    public function __construct($strLabel, $strValue, $booChecked, $strName, $strId = null, $arrOptions = array())
+    /**
+     * Constructeur de la classe
+     *
+     * @param string $strLabel libellé du champ
+     * @param string $strValue valeur du champ
+     * @param boolean $booChecked true si la checkbox est cochée
+     * @param string $strName propriété "name" du champ
+     * @param string $strId propriété "id" du champ
+     * @param array $arrOptions options du champ
+     * 
+     * @return form_checkbox
+     */    
+    public function __construct($strLabel, $strValue, $booChecked, $strName, $strId = null, $arrOptions = null)
     {
         $this->setType('select');
         
@@ -368,32 +426,62 @@ class form_checkbox extends form_field
         $this->booChecked = $booChecked;
     }
     
+    /**
+     * Génère le rendu html du champ
+     *
+     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @return string code html
+     */
     public function render($intTabindex)
     {
         $strChecked = $this->booChecked ? ' checked="checked"' : '';
         $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\"";
+        $strClass = is_null($this->arrOptions['class']) ? '' : " {$this->arrOptions['class']}";
         $strValue = htmlentities($this->arrValues[0]);
         
-        return $this->renderForm("<input type=\"checkbox\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"checkbox\"{$strStyle}{$strChecked} />");
+        return $this->renderForm("<input type=\"checkbox\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"checkbox{$strClass}\"{$strStyle}{$strChecked} />");
     }
 }
 
+/**
+ * Classe de gestion des champs de type "text" (statique) d'un formulaire
+ *
+ */    
 class form_text extends form_field
 {
-    public function __construct($strLabel, $strValue)
+    /**
+     * Constructeur de la classe
+     *
+     * @param string $strLabel libellé du champ
+     * @param string $strValue valeur du champ
+     * 
+     * @return form_text
+     */        
+    public function __construct($strLabel, $strValue, $strName = null, $strId = null, $arrOptions = null)
     {
-        parent::__construct('text', $strLabel, $strValue);
+        parent::__construct('text', $strLabel, $strValue, $strName, $strId, $arrOptions);
     }
     
+    /**
+     * Génère le rendu html du champ
+     *
+     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @return string code html
+     */    
     public function render($intTabindex)
     {
         $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\"";
+        $strClass = is_null($this->arrOptions['class']) ? '' : " class=\"{$this->arrOptions['class']}\"";
         $strValue = ploopi_nl2br(htmlentities($this->arrValues[0]));
         
-        return $this->renderForm("<span{$strStyle}>{$strValue}</span>");
+        return $this->renderForm("<span{$strStyle}{$strClass}>{$strValue}</span>");
     }
 }
 
+/**
+ * Classe de gestion des champs de type "richtext" (fckeditor) d'un formulaire
+ *
+ */    
 class form_richtext extends form_field
 {
     /**
@@ -407,12 +495,29 @@ class form_richtext extends form_field
         'config' => null,
         'css' => null
     );   
-        
-    public function __construct($strLabel, $strValue, $strName, $strId = null, $arrOptions = array())
+      
+    /**
+     * Constructeur de la classe
+     *
+     * @param string $strLabel libellé du champ
+     * @param string $strValue valeur du champ
+     * @param string $strName propriété "name" du champ
+     * @param string $strId propriété "id" du champ
+     * @param array $arrOptions options du champ
+     * 
+     * @return form_richtext
+     */  
+    public function __construct($strLabel, $strValue, $strName, $strId = null, $arrOptions = null)
     {
-         parent::__construct('richtext', $strLabel, $strValue, $strName, $strId, array_merge(form_richtext::$arrDefaultOptions, $arrOptions));
+        parent::__construct('richtext', $strLabel, $strValue, $strName, $strId, is_null($arrOptions) ? form_richtext::$arrDefaultOptions : array_merge(form_richtext::$arrDefaultOptions, $arrOptions));
     }
     
+    /**
+     * Génère le rendu html du champ
+     *
+     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @return string code html
+     */    
     public function render($intTabindex)
     {
         $objFCKeditor = new FCKeditor($this->strId) ;
@@ -434,13 +539,28 @@ class form_richtext extends form_field
     }
 }
 
+/**
+ * Classe de gestion des boutons d'un formulaire
+ *
+ */    
 class form_button extends form_element
 {
+    /**
+     * Options par défaut d'un bouton
+     *
+     * @var array
+     */
     static private $arrDefaultOptions = array(
         'style'     => null,
+        'class' => null,
         'onclick'   => null
     );    
     
+    /**
+     * Différents types de boutons acceptés
+     *
+     * @var array
+     */
     protected static $arrType = array(
         'input:button',
         'input:submit',
@@ -448,7 +568,18 @@ class form_button extends form_element
         'input:img'
     );
     
-    public function __construct($strType, $strValue, $strName = null, $strId = null, $arrOptions = array())
+    /**
+     * Constructeur de la classe
+     *
+     * @param string $strType type du bouton
+     * @param string $strValue valeur du bouton (intitulé)
+     * @param string $strName propriété "name" du bouton
+     * @param string $strId propriété "id" du bouton
+     * @param array $arrOptions options du bouton
+     * 
+     * @return form_button
+     */  
+    public function __construct($strType, $strValue, $strName = null, $strId = null, $arrOptions = null)
     {
         if (!in_array($strType, form_button::$arrType)) trigger_error('Ce type d\'élément n\'existe pas', E_USER_ERROR);
         else
@@ -457,40 +588,48 @@ class form_button extends form_element
             $this->strValue = $strValue;
             $this->strName = $strName;
             $this->strId = $strId;
-            $this->arrOptions = array_merge(form_button::$arrDefaultOptions, $arrOptions);
+            $this->arrOptions = is_null($arrOptions) ? form_button::$arrDefaultOptions : array_merge(form_button::$arrDefaultOptions, $arrOptions);
         }
     }
     
+    /**
+     * Génère le rendu html du champ
+     *
+     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @return string code html
+     */    
     public function render($intTabindex)
     {
         $strOutput = '';
         $strClassName = '';
         
         $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\""; 
+        $strClass = is_null($this->arrOptions['class']) ? '' : " {$this->arrOptions['class']}";
         $strOnclick = is_null($this->arrOptions['onclick']) ? '' : " onclick=\"javascript:{$this->arrOptions['onclick']}\""; 
         $strValue = htmlentities($this->strValue);
         
         switch($this->getType())
         {
             case 'input:reset':
-                $strOutput .= "<input type=\"reset\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"button\"{$strStyle}{$strOnclick} />";
+                $strOutput .= "<input type=\"reset\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"button{$strClass}\"{$strStyle}{$strOnclick} />";
             break;
             
             case 'input:button':
-                $strOutput .= "<input type=\"button\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"button\"{$strStyle}{$strOnclick} />";
+                $strOutput .= "<input type=\"button\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"button{$strClass}\"{$strStyle}{$strOnclick} />";
             break;
             
             case 'input:submit':
-                $strOutput .= "<input type=\"submit\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"button\"{$strStyle}{$strOnclick} />";
+                $strOutput .= "<input type=\"submit\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"button{$strClass}\"{$strStyle}{$strOnclick} />";
             break;
         }
         
         return $strOutput;
     }
-    
-    
 }
-    
+
+/**
+ * Classe de gestion d'un formulaire HTML composé de champs, de boutons et d'un système de validation javascript
+ */
 class form
 {
     /**
@@ -531,12 +670,17 @@ class form
         'button_style'  => 'text-align:right;padding:2px 4px;',
         'legend'        => null,
         'legend_style'  => 'margin-right:4px;',
+        'class'         => 'ploopi_form'
     );
     
     /**
-     * Enter description here...
-     *
-     * @param array $options (tabindex, onsubmit, enctype)
+     * Constructeur du formulaire
+     * @param string $strId identifiant du formulaire
+     * @param string $strAction propriété "action" du formulaire
+     * @param string $strMethod propriété "method" du formulaire ("post" par défaut)
+     * @param array $arrOptions options du formulaire (tabindex, target, enctype, onsubmit, button_style, legend, legend_style)
+     * 
+     * @return form 
      */
     public function __construct($strId, $strAction, $strMethod = 'post', $arrOptions = null)
     {
@@ -547,39 +691,53 @@ class form
         $this->strAction = $strAction;
         $this->strMethod = $strMethod;
         
-        $this->arrOptions = array_merge(form::$arrDefaultOptions, $arrOptions);
+        $this->arrOptions = is_null($arrOptions) ? form::$arrDefaultOptions : array_merge(form::$arrDefaultOptions, $arrOptions);
     }
     
+    /**
+     * Ajoute un objet de type form_field au formulaire
+     * 
+     * @param form_field $objField objet form_field
+     */
     public function addField(form_field $objField)
     {
         if ($objField->getType() == 'input:file') $this->setOptions(array('enctype' => 'multipart/form-data'));
         
         $this->arrFields[] = $objField;
-        
-        /**
-         * options : $data_type, $required, $tabindex
-         * 
-         */
     }
     
+    /**
+     * Ajout un objet de type form_button au formulaire
+     * 
+     * @param form_button $objButton objet form_button
+     */
     public function addButton(form_button $objButton)
     {
         $this->arrButtons[] = $objButton;
     }
     
+    /**
+     * Définit les options du formulaire
+     * 
+     * @param array $arrOptions options du formulaire
+     */
     public function setOptions($arrOptions)
     {
         $this->arrOptions = array_merge($this->arrOptions, $arrOptions);
     }
     
+    /**
+     * Retourne les options du formulaire
+     * 
+     * @return array
+     */
     public function getOptions() { return $this->arrOptions; }
         
     /**
-     * Rendu du formulaire
+     * Rendu HTML du formulaire
      *
-     * @return string code html du formalaire
+     * @return string code html du formulaire
      */
-    
     public function render()
     {
         $intTabindex = $this->arrOptions['tabindex'];
@@ -601,6 +759,7 @@ class form
         $strEnctype = is_null($this->arrOptions['enctype']) ? ($booHasFile ? ' enctype="multipart/form-data"' : '') : " enctype=\"{$this->arrOptions['enctype']}\"";
         $strOnsubmit = is_null($this->arrOptions['onsubmit']) ? 'onsubmit="javascript:eval('.$this->getFormValidateFunc().'_var);return result_'.$this->getFormValidateFunc().';"' : " onsubmit=\"javascript:{$this->arrOptions['onsubmit']}\"";
         $strButtonStyle = is_null($this->arrOptions['button_style']) ? '' : " style=\"{$this->arrOptions['button_style']}\"";
+        $strClass = is_null($this->arrOptions['class']) ? '' : " class=\"{$this->arrOptions['class']}\"";
         
         /*
          * Génération du script de validation
@@ -613,7 +772,7 @@ class form
          * Génération du form
          */
         
-        $strOutput .= "<form id=\"{$this->strId}\" action=\"{$this->strAction}\" method=\"{$this->strMethod}\"{$strOnsubmit}{$strTarget}{$strEnctype}><div class=\"ploopi_form\">";
+        $strOutput .= "<form id=\"{$this->strId}\" action=\"{$this->strAction}\" method=\"{$this->strMethod}\"{$strOnsubmit}{$strTarget}{$strEnctype}><div{$strClass}>";
         
 
         /*
@@ -642,6 +801,11 @@ class form
         return $strOutput;
     }
     
+    /**
+     * Rendu de la fonction javascript de validation du formulaire
+     * 
+     * @return string fonction de validation javascript
+     */
     private function renderJS()
     {
         // javascript:eval(form_validate);return(result);
@@ -680,7 +844,11 @@ class form
         return $strOutput;
         
     }
-    
+    /**
+     * Retourne le nom de la fonction de validation du formulaire
+     * 
+     * @return string nom de la fonction de validation
+     */
     private function getFormValidateFunc() { return "{$this->strId}_validate"; }
     
 }
