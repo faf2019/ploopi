@@ -275,8 +275,6 @@ class form_field extends form_element
         $strStyleform = is_null($this->arrOptions['style_form']) ? '' : " style=\"{$this->arrOptions['style_form']}\"";
         $strClassform = is_null($this->arrOptions['class_form']) ? '' : " class=\"{$this->arrOptions['class_form']}\"";
         
-        ploopi_print_r($this->arrOptions);
-        
         return "<p id=\"{$this->strId}_form\"{$strStyleform}{$strClassform}><label for=\"{$this->strId}\"{$strAccesskey}>{$strRequired}{$this->strLabel}</label>".$strOutputField."</p>";
     }
     
@@ -814,27 +812,30 @@ class form
         
         foreach($this->arrFields as $objField)
         {
-            $arrOptions = &$objField->getOptions();
-            
-            switch ($objField->getType())
+            if ($objField->getName() != '')
             {
-                case 'input:text':
-                case 'input:password':
-                    $strFormat = ($arrOptions['required'] ? '' : 'empty').$arrOptions['datatype'];
-                    $strOutput .= "if (ploopi_validatefield('".addslashes($objField->getLabel())."', form.".$objField->getName().", '{$strFormat}'))";
-                break;
-    
-                case 'file':
-                break;
-    
-                case 'select':
-                case 'color':
-                    if ($arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes($objField->getLabel())."', form.".$objField->getName().", 'selected'))";
-                break;
-    
-                case 'radio':
-                case 'checkbox':
-                break;
+                $arrOptions = &$objField->getOptions();
+                
+                switch ($objField->getType())
+                {
+                    case 'input:text':
+                    case 'input:password':
+                        $strFormat = ($arrOptions['required'] ? '' : 'empty').$arrOptions['datatype'];
+                        $strOutput .= "if (ploopi_validatefield('".addslashes($objField->getLabel())."', form.".$objField->getName().", '{$strFormat}'))";
+                    break;
+        
+                    case 'file':
+                    break;
+        
+                    case 'select':
+                    case 'color':
+                        if ($arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes($objField->getLabel())."', form.".$objField->getName().", 'selected'))";
+                    break;
+        
+                    case 'radio':
+                    case 'checkbox':
+                    break;
+                }
             }
                 
         }
