@@ -54,7 +54,7 @@ chdir('..');
 
 //Inclusion/Requirement
 require_once './include/functions/errors.php';
-set_error_handler('ploopi_errorhandler');
+ploopi_set_error_handler();
 
 require_once './include/start/constants.php';
 require_once './include/start/functions.php';
@@ -825,7 +825,7 @@ $objInstallTemplate->assign_vars(array(
   'PAGE_TITLE'        => _PLOOPI_INSTALL_TITLE.' v'._PLOOPI_VERSION,
   'TEMPLATE_PATH'     => '../templates/install',
   'JS_MESS'           => _PLOOPI_INSTALL_JAVASCRIPT,
-  'JS_ERROR'          => _PLOOPI_ERROR_JAVASCRIPT,
+  'JS_ERROR'          => _PLOOPI_INSTALL_ERROR_JAVASCRIPT,
   'ICON_ERROR'        => _PLOOPI_INSTALL_ICO_ERROR,
   'STAGE'             => $_POST['stage']
 ));
@@ -962,6 +962,8 @@ else
 
 if($_POST['stage'] < count($arrInstallAllStages))
 {
+  $intTabINdex = 0;
+  
   /**
    *  Management of buttons next, previous and refresh
    */
