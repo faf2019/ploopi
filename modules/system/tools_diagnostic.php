@@ -288,24 +288,26 @@ $c++;
 /* TEST 3 - Connectivité internet */
 if ($testpear)
 {
-    @require_once 'HTTP/Request.php';
+    require_once 'HTTP/Request.php';
 
-    $testurl = 'http://www.ovensia.fr';
-
-    $request = new HTTP_Request($testurl, array('timeout', 20000));
+    $request = new HTTP_Request('http://www.ovensia.fr');
 
     if (_PLOOPI_INTERNETPROXY_HOST != '')
     {
-        $request->setProxy( _PLOOPI_INTERNETPROXY_HOST,
-                            _PLOOPI_INTERNETPROXY_PORT,
-                            _PLOOPI_INTERNETPROXY_USER,
-                            _PLOOPI_INTERNETPROXY_PASS
-                            );
+        $request->setProxy( 
+            _PLOOPI_INTERNETPROXY_HOST,
+            _PLOOPI_INTERNETPROXY_PORT,
+            _PLOOPI_INTERNETPROXY_USER,
+            _PLOOPI_INTERNETPROXY_PASS
+        );
     }
 
     $comment = 'Connexion internet ouverte.';
     $testok = true;
-    $res = $request->sendRequest();
+    
+    ploopi_unset_error_handler();
+    $res = PEAR::isError($request->sendRequest());
+    ploopi_set_error_handler();
 }
 else $res = false;
 
