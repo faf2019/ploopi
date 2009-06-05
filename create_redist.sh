@@ -51,8 +51,10 @@ cp -r install/forms $DEST/install
 cp -r install/forum $DEST/install
 cp -r install/news $DEST/install
 cp -r install/newsletter $DEST/install
+cp -r install/planning $DEST/install
 cp -r install/rss $DEST/install
 cp -r install/webedit $DEST/install
+cp -r install/wiki $DEST/install
 cp -r install/system $DEST/install
 cp install/index.html $DEST/install
 
@@ -65,12 +67,14 @@ cp modules/index.html $DEST/modules
 
 mkdir -p $DEST/templates/{frontoffice,backoffice}
 #cp templates/*.php $DEST/templates
+cp -r templates/frontoffice/andreas07 $DEST/templates/frontoffice
 cp -r templates/frontoffice/exemple* $DEST/templates/frontoffice
 cp -r templates/frontoffice/ovensia $DEST/templates/frontoffice
 cp -r templates/frontoffice/ovensia_officiel $DEST/templates/frontoffice
 cp -r templates/frontoffice/default $DEST/templates/frontoffice
 cp -r templates/backoffice/ploopi $DEST/templates/backoffice
 cp -r templates/backoffice/ploopi_menus $DEST/templates/backoffice
+cp -r templates/backoffice/redmine $DEST/templates/backoffice
 cp -r templates/install $DEST/templates/
 
 cd $DEST
