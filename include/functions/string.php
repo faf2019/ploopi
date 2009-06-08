@@ -91,55 +91,73 @@ function ploopi_convertaccents($str)
 }
 
 /**
- * Réécrit une URL selon les règles de réécriture utilisées par ploopi
+ * Réécrit une chaîne destinée à être transformée en URL
  *
- * @param string $url URL à réécrire
- * @param string $title titre à insérer dans la nouvelle URL
+ * @param string $str chaîne à transformer
+ * @return string chaîne transformée
+ *
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+function ploopi_string2url($str)
+{
+    $str = urlencode(ploopi_convertaccents(strtolower(strtr(trim($str), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '-')))));
+    return preg_replace(array('/--+/', '/-$/'), array('-', ''), $str);
+}
+
+/**
+ * Réécrit une URL selon les règles de réécriture fournies en paramètre
+ *
+ * @param string $strUrl URL à réécrire
+ * @param array $arrRules règles de réécriture au format array('patterns' => array(), 'replacements' => array())
+ * @param string $strTitle titre à insérer dans la nouvelle URL
+ * @param array $arrFolders tableau contenu les intitulé de dossiers à ajouter à l'url
+ * @param bool $booKeepExt true si l'url doit contenir l'extension de fichier éventuellement utilisée dans le paramètre $strTitle (par défaut : false)
  * @return string URL réécrite
  *
  * @see _PLOOPI_FRONTOFFICE_REWRITERULE
  * @see ploopi_convertaccents
+ *
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
-function ploopi_urlrewrite($url, $title = '', $keep_extension = false)
+function ploopi_urlrewrite($strUrl, $arrRules, $strTitle = '', $arrFolders = null, $booKeepExt = false)
 {
-    if (defined('_PLOOPI_FRONTOFFICE_REWRITERULE') && _PLOOPI_FRONTOFFICE_REWRITERULE)
+    if (defined('_PLOOPI_FRONTOFFICE_REWRITERULE') && _PLOOPI_FRONTOFFICE_REWRITERULE && !empty($arrRules['patterns']) && !empty($arrRules['replacements']))
     {
-        $ext = 'html';
+        $strExt = 'html';
 
-        if ($keep_extension)
+        if ($booKeepExt)
         {
-            $ext = ploopi_file_getextension($title);
-            $title = basename($title, ".{$ext}");
+            $strExt = ploopi_file_getextension($strTitle);
+            $strTitle = basename($strTitle, ".{$strExt}");
         }
 
-        $title = urlencode(ploopi_convertaccents(strtolower(strtr(trim($title), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '_')))));
+        $strTitle = ploopi_string2url($strTitle);
 
-        $patterns = array('/__+/', '/_$/');
-        $replacements = array('_', '');
+        // Construction des dossiers si nécessaire
+        if (!empty($arrFolders) && is_array($arrFolders))
+        {
+            foreach($arrFolders as &$strFolder) $strFolder = ploopi_string2url($strFolder);
+            $strFolders = implode('/', $arrFolders).'/';
+        }
+        else $strFolders = '';
 
-        $title = preg_replace($patterns, $replacements, $title);
-
-        $patterns = array();
-        $patterns[0] = '/index.php\?headingid=([0-9]*)&articleid=([0-9]*)/';
-        $patterns[1] = '/index.php\?headingid=([0-9]*)/';
-        $patterns[2] = '/index.php\?articleid=([0-9]*)/';
-        $patterns[3] = '/index-quick.php\?ploopi_op=doc_file_download&docfile_md5id=([a-z0-9]{32})/';
-        $patterns[4] = '/index.php\?ploopi_op=webedit_unsubscribe&subscription_email=([a-z0-9]{32})/';
-        $patterns[5] = '/index.php\?query_tag=([a-zA-Z0-9]*)/';
-
-        $replacements = array();
-        $replacements[0] = $title.'-h$1a$2.'.$ext;
-        $replacements[1] = $title.'-h$1.'.$ext;
-        $replacements[2] = $title.'-a$1.'.$ext;
-        $replacements[3] = $title.'-d$1.'.$ext;
-        $replacements[4] = 'unsubscribe-$1.'.$ext;
-        $replacements[5] = 'tag-$1.'.$ext;
-
-        return preg_replace($patterns, $replacements, $url);
+//        ploopi_print_r($arrRules);
+        
+        return str_replace(
+            array('<TITLE>', '<FOLDERS>', '<EXT>'),
+            array($strTitle, $strFolders, $strExt),
+            preg_replace($arrRules['patterns'], $arrRules['replacements'], $strUrl)
+        );
     }
-    else return $url;
+    else return $strUrl;
 }
+
 
 /**
  * Equivalent de strtr en version multibyte (UTF-8) car la version "mbstring" de strtr n'existe pas.
@@ -151,6 +169,10 @@ function ploopi_urlrewrite($url, $title = '', $keep_extension = false)
  * @return string chaîne modifiée
  *
  * @see strtr
+ *
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 function ploopi_strtr($str, $from, $to = null)
@@ -193,6 +215,10 @@ function ploopi_str_split($str)
  * @param string $str chaîne brute
  * @param boolean $utf8 true si la chaîne à encoder est en UTF-8
  * @return string chaîne encodée
+ *
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 function ploopi_xmlentities($str, $utf8 = false)
@@ -202,6 +228,23 @@ function ploopi_xmlentities($str, $utf8 = false)
     $str = str_replace(array("&", ">", "<", "\"", "'", "\r"), array("&amp;", "&gt;", "&lt;", "&quot;", "&apos;", ""), $str);
 
     return $utf8 ? ploopi_strtr($str, $asc2uni) : strtr($str, $asc2uni);
+}
+
+
+/**
+ * Encode une chaîne en UTF8
+ *
+ * @param string $str chaîne ISO-8859-15
+ * @return string chaîne encodée UTF8
+ *
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+function ploopi_utf8encode($str)
+{
+    return iconv('ISO-8859-15', 'UTF-8', $str);
 }
 
 /**
@@ -241,24 +284,12 @@ function ploopi_make_links($text)
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- *
- * @see iconv
  */
 
 function ploopi_print_json($var, $utf8encode = true, $use_xjson = true)
 {
 
-    if ($utf8encode)
-    {
-        $var =
-            ploopi_array_map(
-                create_function(
-                    '$v',
-                    'return iconv(\'ISO-8859-15\', \'UTF-8\', $v);'
-                ),
-                $var
-            );
-    }
+    if ($utf8encode) $var = ploopi_array_map('ploopi_utf8encode', $var);
 
     $json = json_encode($var);
     header("Content-Type: text/x-json");
@@ -273,6 +304,10 @@ function ploopi_print_json($var, $utf8encode = true, $use_xjson = true)
  * @return string code HTML validé
  *
  * @link http://htmlpurifier.org/
+ *
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
  */
 
 function ploopi_htmlpurifier($string)
