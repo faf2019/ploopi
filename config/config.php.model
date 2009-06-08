@@ -65,7 +65,7 @@ switch($http_host)
         define ('_PLOOPI_DB_LOGIN','<DB_LOGIN>');
 
         /**
-         * Le mot de l'utilisateur pour la connexion à la base de données
+         * Le mot de passe pour la connexion à la base de données
          */
 
         define ('_PLOOPI_DB_PASSWORD','<DB_PASSWORD>');
@@ -165,7 +165,7 @@ switch($http_host)
         define ('_PLOOPI_SESSION_DB_LOGIN', _PLOOPI_DB_LOGIN);
 
         /**
-         * Le mot de l'utilisateur pour la connexion à la base de données des sessions
+         * Le mot de passe pour la connexion à la base de données des sessions
          */
 
         define ('_PLOOPI_SESSION_DB_PASSWORD', _PLOOPI_DB_PASSWORD);
