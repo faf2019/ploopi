@@ -44,6 +44,43 @@ if (isset($ploopi_op))
 {
     switch($ploopi_op)
     {
+        case 'ploopi_robots':
+            include_once './include/classes/cache.php';
+
+            // Mise en cache
+            $objCache = new ploopi_cache(_PLOOPI_BASEPATH.'/robots.txt', 300);
+        
+            if (!$objCache->start())
+            {
+                $arrDisallow = array(
+                    '/bin/',
+                    '/cgi/',
+                    '/config/',
+                    '/data/',
+                    '/doc/',
+                    '/FCKeditor/',
+                    '/img/',
+                    '/include/',
+                    '/install/',
+                    '/js/',
+                    '/lang/',
+                    '/lib/',
+                    '/modules/',
+                    '/templates/',
+                    '/tools/',
+                );
+            
+                foreach($arrDisallow as &$strDisallow) $strDisallow = "Disallow "._PLOOPI_SELFPATH.$strDisallow;
+                
+                echo "User-agent: *\nSitemap: "._PLOOPI_BASEPATH."/sitemap.xml\n".implode("\n", $arrDisallow);
+                
+                $objCache->end();
+            }
+            
+            header('Content-Type: text/plain');
+            ploopi_die();
+        break;
+            
         case 'ploopi_lostpassword':
         case 'ploopi_lostpassword_confirm':
 
