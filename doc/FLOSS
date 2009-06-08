@@ -4,6 +4,12 @@
   license : MPL
   copyright : P.E. Baroiller
 
+* DomPDF 0.5.1
+  path : ./lib/dompdf
+  url : http://code.google.com/p/dompdf/
+  license : LGPL 2.1
+  copyright : Benj Carson
+
 * FCKEditor 2.6.3
   path : ./FCKeditor
   url : http://www.fckeditor.net
@@ -21,6 +27,18 @@
   url : http://www.phpclasses.org/browse/package/2189.html
   license : GPL v2
   copyright : Daniel Morris
+
+* JsToolbar
+  path : ./lib/jstoolbar
+  url : http://fr.dotclear.org/
+  licence : GPL v2
+  copyright : Nicolas Martin & Olivier Meunier and contributors  
+
+*JW FLV Player 4.4
+  path : ./lib/jw_player
+  url : http://www.longtailvideo.com/players/jw-flv-player/
+  licence : CC by-nc-sa 2.0 (Attribution-Noncommercial-Share Alike 2.0 Generic)
+  copyright : Longtail Video  
 
 * PHP Universal Feed Generator
   path : ./lib/feedwriter
@@ -52,6 +70,12 @@
       license : MIT
       copyright : Thomas Fuchs
 
+ * SWFObject 1.5
+  path : ./lib/swfobject
+  url :  http://blog.deconcept.com/swfobject/
+  licence : MIT
+  copyright : Geoff Stearns
+ 
  * Tango icon set
    path : ./templates/*
    url : http://tango.freedesktop.org
@@ -63,9 +87,3 @@
   url : http://textile.thresholdstate.com/
   licence : Free Software
   copyright : Dean Allen <dean@textism.com>
-  
-* JsToolbar
-  path : ./lib/jstoolbar
-  url : http://fr.dotclear.org/
-  licence : GPL v2
-  copyright : Nicolas Martin & Olivier Meunier and contributors  
