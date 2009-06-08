@@ -132,50 +132,7 @@ class webedit_article extends data_object
             $this->fields['content'] = str_replace($arrSearch, $arrReplace, $this->fields['content']);
         }
 
-        /**
-         * Réécriture des liens vers articles, documents et des images
-         */
-        if (_PLOOPI_FRONTOFFICE_REWRITERULE)
-        {
-            // Recherche des liens vers des documents (du module doc)
-            // Pour les remplacer (urlrewrite)
-            $arrSearch = array();
-            $arrReplace = array();
-
-            // /!\ Le traitement des liens d'article s'effectue au niveau du rendu final (fonction webedit_replace_links)
-
-            if (file_exists('./modules/doc/class_docfile.php'))
-            {
-                include_once './modules/doc/class_docfile.php';
-
-                // traitement des liens vers documents
-                preg_match_all('/<a[^>]*href="(index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32}))"[^>]*>/i', $this->fields['content'], $matches);
-                foreach($matches[2] as $key => $md5)
-                {
-                    $objDocFile = new docfile();
-                    if (!empty($md5) && $objDocFile->openmd5($md5)) // clé md5 présente & document trouvé
-                    {
-                        $arrSearch[] = $matches[1][$key];
-                        $arrReplace[] = ploopi_urlrewrite(html_entity_decode($matches[1][$key]), $objDocFile->fields['name'], true);
-                    }
-                }
-
-                // traitement des images
-                preg_match_all('/<img[^>]*src="(index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32}))"[^>]*>/i', $this->fields['content'], $matches);
-                foreach($matches[2] as $key => $md5)
-                {
-                    $objDocFile = new docfile();
-                    if (!empty($md5) && $objDocFile->openmd5($md5)) // clé md5 présente & document trouvé
-                    {
-                        $arrSearch[] = $matches[1][$key];
-                        $arrReplace[] = ploopi_urlrewrite(html_entity_decode($matches[1][$key]), $objDocFile->fields['name'], true);
-                    }
-                }
-            }
-
-            $this->fields['content_cleaned'] = str_replace($arrSearch, $arrReplace, $this->fields['content']);
-        }
-        else $this->fields['content_cleaned'] = $this->fields['content'];
+        $this->fields['content_cleaned'] = $this->fields['content'];
 
         // filtre activé ?
         if (!$this->fields['disabledfilter']) $this->fields['content_cleaned'] = ploopi_htmlpurifier($this->fields['content_cleaned']);
@@ -383,7 +340,8 @@ class webedit_article extends data_object
 
     function geturl()
     {
-        return(ploopi_urlrewrite("index.php?headingid={$this->fields['id_heading']}&articleid={$this->fields['id']}", $this->fields['metatitle']));
+        ploopi_init_module('webedit', false, false, false);
+        return(ploopi_urlrewrite("index.php?headingid={$this->fields['id_heading']}&articleid={$this->fields['id']}", webedit_getrewriterules(), $this->fields['metatitle']));
     }
 
     /**

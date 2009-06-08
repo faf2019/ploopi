@@ -206,7 +206,9 @@ switch($menu)
 
                     if (empty($_POST['webedit_heading_visible'])) $heading->fields['visible'] = 0;
                     if (empty($_POST['webedit_heading_url_window'])) $heading->fields['url_window'] = 0;
-
+                    if (empty($_POST['webedit_heading_private'])) $heading->fields['private'] = 0;
+                    if (empty($_POST['webedit_heading_private_visible'])) $heading->fields['private_visible'] = 0;
+                    
                     if (empty($_POST['webedit_heading_feed_enabled'])) $heading->fields['feed_enabled'] = 0;
                     if (empty($_POST['webedit_heading_subscription_enabled'])) $heading->fields['subscription_enabled'] = 0;
 
@@ -227,6 +229,11 @@ switch($menu)
 
                     /* FIN ABONNEMENT */
 
+                    // Enregistrement des partages si la rubrique est privée
+                    if (!$heading->fields['private']) unset($_SESSION['ploopi']['share']['users_selected']); 
+                    ploopi_share_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
+                    
+                    
                     ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
 
                     ploopi_redirect("admin.php?headingid={$headingid}");
@@ -461,12 +468,12 @@ switch($menu)
                                     break;
                                 }
 
-                                $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : "._PLOOPI_BASEPATH.'/'.ploopi_urlrewrite('index.php?ploopi_op=webedit_unsubscribe&subscription_email='.md5($row['email']));
+                                $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : "._PLOOPI_BASEPATH.'/'.ploopi_urlrewrite('index.php?ploopi_op=webedit_unsubscribe&subscription_email='.md5($row['email']), webedit_getrewriterules());
 
                                 ploopi_send_mail($from, $row['email'], $mail_title, $mail_content, null, null, null, null, false);
                             }
                         break;
-
+                        
                         default:
                             $strMsg = 'Cet objet à été modifié';
                             $intActionId = _WEBEDIT_ACTION_ARTICLE_EDIT;

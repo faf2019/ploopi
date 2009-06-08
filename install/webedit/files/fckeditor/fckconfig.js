@@ -1,4 +1,5 @@
 FCKConfig.Plugins.Add( 'ploopiobjects', 'fr' ) ;
+FCKConfig.Plugins.Add( 'flvPlayer','en') ;
 
 FCKConfig.ToolbarSets["Default"] = [
     ['Source','DocProps','-','Save','NewPage','Preview','-','Templates'],
@@ -9,7 +10,7 @@ FCKConfig.ToolbarSets["Default"] = [
     ['OrderedList','UnorderedList','-','Outdent','Indent','Blockquote'],
     ['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
     ['Link','Unlink','Anchor'],
-    ['PloopiObjects','-','Image','Flash','Table','Rule','Smiley','SpecialChar'],
+    ['PloopiObjects','-','Image','Flash', 'flvPlayer', 'Table','Rule','Smiley','SpecialChar'],
     '/',
     ['Style','FontFormat','FontName','FontSize'],
     ['TextColor','BGColor'],

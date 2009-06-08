@@ -1,3 +1,25 @@
+== Module WebEdit - version 2.1.0 ============================================
+
+2009-06-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Gestion des accès privés aux rubriques en frontoffice
+
+   * Possibilité de définir une rubrique comme étant "privée"
+   * Possibilité de choisir les utilisateurs qui peuvent accéder à une rubrique privée
+   * Impact en frontoffice sur : affichage des rubriques/pages, moteur de recherche, nuage de tags, plan de site,
+   * Impact sur la backend RSS/ATOM 
+
+ * Modifications au niveau de l'intégration des règles de réécriture (Modification Ploopi) :
+ 
+  * Ajout d'une fonction webedit_getrewriterules() qui retourne la liste des règles utilisées par le module
+  * Ajout d'un fichier ./include/rewrite.php permettant de gérer le rewriting inverse
+
+== Module WebEdit - version 2.0.7 ============================================
+
+2009-05-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'un fichier include/rewrite.php permettant d'effectuer le rewriting inverse sur les urls frontoffice
+
 == Module WebEdit - version 2.0.6b ============================================
 
 2009-04-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

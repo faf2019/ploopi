@@ -80,6 +80,18 @@ switch($ploopi_op)
 
         ploopi_redirect("index.php?".(empty($_GET['webedit_mode']) ? '' : "webedit_mode={$_GET['webedit_mode']}&")."headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&subscription_return={$return}");
     break;
+    
+    case 'webedit_sitemap':
+        ploopi_init_module('webedit', false, false, false);
+        webedit_generate_sitemap();
+        ploopi_die();
+    break;
+    
+    case 'webedit_backend':
+        include_once './modules/webedit/backend.php';
+        ploopi_die();
+    break;
+    
 }
 
 /**

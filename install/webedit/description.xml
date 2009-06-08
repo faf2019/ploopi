@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>webedit</label>
-        <version>2.0.6b</version>
+        <version>2.1.0</version>
         <author>Ovensia</author>
-        <date>20090430000000</date>
+        <date>20090605000000</date>
         <description>Editeur de Contenus Web</description>
         <paramtype>
             <name>display_type</name>
@@ -40,6 +40,10 @@
         <action>
             <id_action>5</id_action>
             <label>Gérer les abonnés</label>
+        </action>
+        <action>
+            <id_action>6</id_action>
+            <label>Gérer les autorisations d'accès</label>
         </action>
         <action>
             <id_action>8</id_action>

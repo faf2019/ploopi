@@ -50,6 +50,9 @@ if (empty($intMonthSel))
     else $intMonthSel = current($arrSelectMonth);
 }
 
+// récupération des rubriques
+$arrHeadings = webedit_getheadings();
+
 ?>
 <div id="webedit_stats">
     <div id="webedit_stats_select">
@@ -215,6 +218,9 @@ if (empty($intMonthSel))
 
     while ($row = $db->fetchrow())
     {
+        $arrParents = array();
+        if (isset($arrHeadings['list'][$row['id_heading']])) foreach(split(';', $arrHeadings['list'][$row['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+        
         $values[$c]['values']['article'] =
             array(
                 'label' => $row['title']
@@ -231,7 +237,7 @@ if (empty($intMonthSel))
             );
 
         $values[$c]['description'] = $row['title'];
-        $values[$c]['link'] = ploopi_urlrewrite("index.php?headingid={$row['id_heading']}&articleid={$row['id_article']}", $row['metatitle']);
+        $values[$c]['link'] = ploopi_urlrewrite("index.php?headingid={$row['id_heading']}&articleid={$row['id_article']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
 
         $c++;
     }
@@ -262,6 +268,7 @@ if (empty($intMonthSel))
         "
         SELECT      h.id,
                     h.label,
+                    h.parents,
                     sum(c.hits) as counter
 
         FROM        ploopi_mod_webedit_counter as c
@@ -304,7 +311,9 @@ if (empty($intMonthSel))
 
     while ($row = $db->fetchrow())
     {
-
+        $arrParents = array();
+        foreach(split(';', $row['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+        
         $values[$c]['values']['heading'] =
             array(
                 'label' => $row['label']
@@ -316,7 +325,7 @@ if (empty($intMonthSel))
             );
 
         $values[$c]['description'] = $row['label'];
-        $values[$c]['link'] =  ploopi_urlrewrite($script = "index.php?headingid={$row['id']}", $row['label']);
+        $values[$c]['link'] =  ploopi_urlrewrite($script = "index.php?headingid={$row['id']}", webedit_getrewriterules(),$row['label'], $arrParents);
 
         $c++;
     }

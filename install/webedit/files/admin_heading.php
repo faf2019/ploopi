@@ -179,7 +179,7 @@ if ($display_type == 'advanced')
             </p>
 
             <p>
-                <label for="webedit_heading_visible" style="cursor:pointer;"><strong>Visible:</strong></label>
+                <label for="webedit_heading_visible" style="cursor:pointer;"><strong>Visible dans le menu:</strong></label>
                 <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
@@ -509,57 +509,122 @@ else
 </div>
 
 <?php
-// get validation validators
-$wfusers = array();
-$wf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
-$wf_headingid = $headingid;
+// récupère les validateurs
+$arrWfUsers = array();
+$arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
+$intWfHeadingId = $headingid;
 
-if (empty($wf)) // pas de validateur pour cette rubrique, on recherche sur les parents
+if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur les parents
 {
-    $parents = explode(';', $heading->fields['parents']);
-    for ($i = sizeof($parents)-1; $i >= 0; $i--)
+    $arrParents = explode(';', $heading->fields['parents']);
+    for ($i = sizeof($arrParents)-1; $i >= 0; $i--)
     {
-        $wf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $parents[$i]);
-        if (!empty($wf))
+        $arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $arrParents[$i]);
+        if (!empty($arrWf))
         {
-            $wf_headingid = $parents[$i];
+            $intWfHeadingId = $arrParents[$i];
             break;
         }
     }
 }
 
-foreach($wf as $value) $wfusers[] = $value['id_validation'];
+foreach($arrWf as $value) $arrWfUsers[] = $value['id_validation'];
+
+// récupère les partages
+$arrSharesUsers = array();
+$arrShares = ploopi_share_get(-1, _WEBEDIT_OBJECT_HEADING, $headingid);
+$intSharesHeadingId = $headingid;
+
+if (empty($arrShares)) // pas de partages pour cette rubrique, on recherche sur les parents
+{
+    $arrParents = explode(';', $heading->fields['parents']);
+    for ($i = sizeof($arrParents)-1; $i >= 0; $i--)
+    {
+        $arrShares = ploopi_share_get(-1, _WEBEDIT_OBJECT_HEADING, $arrParents[$i]);
+        if (!empty($arrShares))
+        {
+            $intSharesHeadingId = $arrParents[$i];
+            break;
+        }
+    }
+}
+
+foreach($arrShares as $value) $arrSharesUsers[] = $value['id_share'];
 
 ?>
 <div style="clear:both;padding:4px;">
-    <strong>Validateurs (utilisateurs qui peuvent publier) <?php if ($wf_headingid != $headingid) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?headingid={$wf_headingid}")."\">{$headings['list'][$wf_headingid]['label']}</a> &raquo;)"; ?></strong>:
-    <?php
-    if (!empty($wfusers))
-    {
-        $sql = "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$wfusers).") ORDER BY lastname, firstname";
-        $db->query($sql);
-        $arrUsers = $db->getarray();
-        echo (empty($arrUsers)) ? 'Aucune accréditation' : implode(', ', $arrUsers);
-    }
-    else echo 'Aucune accréditation';
-    ?>
+    <fieldset class="fieldset" style="padding:6px;">
+        <legend><strong>Validateurs</strong> (utilisateurs qui peuvent publier)</legend>
+        
+        <div style="padding:0 2px 2px 2px;">Validateurs <?php if ($intWfHeadingId != $headingid) echo "<em>hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a> &raquo;</em>"; ?>:
+            <?php
+            if (!empty($arrWfUsers))
+            {
+                $sql = "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers).") ORDER BY lastname, firstname";
+                $db->query($sql);
+                $arrUsers = $db->getarray();
+                echo (empty($arrUsers)) ? '<em>Aucune accréditation</em>' : implode(', ', $arrUsers);
+            }
+            else echo '<em>Aucune accréditation</em>';
+            ?>
+        </div>
+        
+        <?php
+        if (ploopi_isactionallowed(_WEBEDIT_ACTION_WORKFLOW_MANAGE))
+        {
+            ?>
+            <div style="border:1px solid #c0c0c0;overflow:hidden;">
+            <?php ploopi_validation_selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, _WEBEDIT_ACTION_ARTICLE_PUBLISH, $intWfHeadingId == $headingid ? 'Modifier la listes des validateurs :' : 'Définir une nouvelle liste de validateurs :'); ?>
+            </div>
+            <?php
+        }
+        ?>
+    </fieldset>
 </div>
 
-<?php
-if (ploopi_isactionallowed(_WEBEDIT_ACTION_WORKFLOW_MANAGE))
-{
-    ?>
-    <div style="clear:both;padding:4px;font-weight:bold;"><?php echo ($wf_headingid == $headingid) ? 'Vous pouvez modifier la liste des validateurs :' : 'Vous pouvez définir de nouveaux validateurs :'; ?></div>
-    <div style="clear:both;padding:4px;">
-        <div style="border:1px solid #c0c0c0;overflow:hidden;">
-        <?php
-            ploopi_validation_selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, _WEBEDIT_ACTION_ARTICLE_PUBLISH);
-        ?>
-        </div>
-    </div>
-    <?php
-}
 
+<p class="ploopi_checkbox" style="padding:2px 0px 0px 10px;">
+    <label for="heading_private">Rubrique privée (accès avec un compte utilisateur):</label>
+    <input type="checkbox" name="webedit_heading_private" id="webedit_heading_private" value="1" <? if ($heading->fields['private']) echo 'checked="checked"'; ?> onchange="javascript:$('heading_private_form').style.display = (this.checked) ? 'block' : 'none';"/>
+</p>
+
+<div style="clear:both;padding:4px;display:<? echo $heading->fields['private'] ? 'block' : 'none'; ?>;" id="heading_private_form">
+    <p class="ploopi_checkbox" style="padding:0px 0px 0px 6px;">
+        <label for="heading_private">Toujours visible dans le menu :</label>
+        <input type="checkbox" name="webedit_heading_private_visible" id="webedit_heading_private_visible" value="1" <? if ($heading->fields['private_visible']) echo 'checked="checked"'; ?> />
+    </p>
+    <fieldset class="fieldset" style="padding:6px;">
+        <legend><strong>Autorisations d'accès</strong> (utilisateurs qui peuvent accéder à une rubrique privée)</legend>
+
+        <div style="padding:0 2px 2px 2px;">Autorisations d'accès <?php if ($intSharesHeadingId != $headingid) echo "<em>héritées de &laquo; <a href=\"".ploopi_urlencode("admin.php?headingid={$intSharesHeadingId}")."\">{$headings['list'][$intSharesHeadingId]['label']}</a> &raquo;</em>"; ?>:
+            <?php
+            if (!empty($arrSharesUsers))
+            {
+                $sql = "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrSharesUsers).") ORDER BY lastname, firstname";
+                $db->query($sql);
+                $arrUsers = $db->getarray();
+                echo (empty($arrUsers)) ? '<em>Aucune accréditation</em>' : implode(', ', $arrUsers);
+            }
+            else echo '<em>Aucune accréditation</em>';
+            ?>
+        </div>
+
+        <?php
+        if (ploopi_isactionallowed(_WEBEDIT_ACTION_ACCESS_MANAGE))
+        {
+            ?>
+            <div style="border:1px solid #c0c0c0;overflow:hidden;">
+            <?php
+                ploopi_share_selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, $intSharesHeadingId == $headingid ? 'Modifier la listes des autorisations d\'accès:' : 'Définir une nouvelle liste d\'autorisations d\'accès:');
+            ?>
+            </div>
+            <?php
+        }
+        ?>
+    </fieldset>
+</div>
+
+<?
 if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
 {
     ?>
@@ -629,8 +694,8 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
             $articles_values[$c]['values']['misenligne'] = array('label' => $published, 'style' => '');
             $articles_values[$c]['values']['auteur'] = array('label' => $row['author'], 'style' => '');
 
-            //if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_PUBLISH) || in_array($_SESSION['ploopi']['userid'],$wfusers))
-            if (in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
+            //if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_PUBLISH) || in_array($_SESSION['ploopi']['userid'],$arrWfUsers))
+            if (in_array($_SESSION['ploopi']['userid'],$arrWfUsers) || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
             {
                 $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" href=\"javascript:ploopi_confirmlink('admin.php?op=article_delete&articleid={$row['id']}','Êtes-vous certain de vouloir supprimer l\'article &laquo; ".addslashes($row['title'])." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
             }
@@ -747,10 +812,11 @@ for ($i = 0; $i < sizeof($parents); $i++)
     }
 }
 
-$arrAllowedActions = array( _WEBEDIT_ACTION_ARTICLE_EDIT,
-                            _WEBEDIT_ACTION_ARTICLE_PUBLISH,
-                            _WEBEDIT_ACTION_CATEGORY_EDIT
-                         );
+$arrAllowedActions = array( 
+    _WEBEDIT_ACTION_ARTICLE_EDIT,
+    _WEBEDIT_ACTION_ARTICLE_PUBLISH,
+    _WEBEDIT_ACTION_CATEGORY_EDIT
+);
 
 ploopi_subscription(_WEBEDIT_OBJECT_HEADING, $headingid, $arrAllowedActions, "à &laquo; {$heading->fields['label']} &raquo;");
 ?>
