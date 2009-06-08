@@ -730,7 +730,6 @@ if ($_SESSION['ploopi']['connected'])
                 $files = array();
                 while ($row = $db->fetchrow())
                 {
-                    //$row['url'] = ploopi_urlrewrite("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$row['md5id']}", $row['name'], true);
                     $row['url'] = "index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$row['md5id']}";
 
                     if (empty($filter_ext) || in_array(ploopi_file_getextension($row['name']),$filter_ext)) $files[] = $row;

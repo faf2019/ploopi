@@ -118,7 +118,7 @@ if ($newfile)
                 {
                     ?>
                     <p class="ploopi_va" style="margin-bottom:2px;">
-                        <input type="file" name="docfile_file_<?php echo $i; ?>" />&nbsp;<input type="text" style="width:300px;" maxlength="100" class="text" name="docfile_description_<?php echo $i; ?>" />
+                        <input type="file" name="docfile_file_<?php echo $i; ?>" />&nbsp;<input type="text" style="width:300px;" maxlength="100" name="docfile_description_<?php echo $i; ?>" />
                         <span class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_readonly_<?php echo $i; ?>_host');">
                             <input type="checkbox" name="docfile_readonly_<?php echo $i; ?>" id="docfile_readonly_<?php echo $i; ?>_host" value="1">
                             <span>Lecture Seule</span>
@@ -268,7 +268,7 @@ else
 
                 case 'flash':
                     ?>
-                    <script type="text/javascript" src="./modules/doc/jw_player/swfobject.js"></script>
+                    <script type="text/javascript" src="./lib/swfobject/swfobject.js"></script>
                     <div id="doc_flash_player">Player</div>
                     <script type="text/javascript">
                     var so = new SWFObject('<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>','mpl','100%','<? echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>','9');
@@ -279,13 +279,13 @@ else
 
                 case 'jw_player':
                     ?>
-                    <script type="text/javascript" src="./modules/doc/jw_player/swfobject.js"></script>
+                    <script type="text/javascript" src="./lib/swfobject/swfobject.js"></script>
                     <div id="doc_jw_player">Player</div>
                     <script type="text/javascript">
-                    var so = new SWFObject('./modules/doc/jw_player/player-viral.swf','mpl','100%','<?php echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>','9');
+                    var so = new SWFObject('./lib/jw_player/player-viral.swf','mpl','100%','<?php echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>','9');
                     so.addParam('allowscriptaccess','always');
                     so.addParam('allowfullscreen','true');
-                    so.addParam('flashvars','file=<?php echo ploopi_urlrewrite("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", $docfile->fields['name'], true); ?>');
+                    so.addParam('flashvars','file=<?php echo ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true); ?>');
                     so.write('doc_jw_player');
                     </script>
                     <?php
@@ -526,7 +526,7 @@ else
                             ?>
                             <div id="doc_form_host" style="display:block;">
                                 <p class="ploopi_va" style="margin-bottom:2px;">
-                                    <input type="file" class="text" name="docfile_file_host" id="docfile_file_host" />
+                                    <input type="file" name="docfile_file_host" id="docfile_file_host" />
                                 </p>
                             </div>
                             <?php
@@ -645,11 +645,13 @@ else
                     </form>
                     <?php
                 }
+                
+                $strPublicUrl = _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true);
                 ?>
 
                 <p class="ploopi_va" style="padding:4px;clear:both;">
                     <strong>URL publique du fichier :</strong>
-                    <a title="URL publique permettant de télécharger ce fichier" href="<?php echo _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", $docfile->fields['name'], true); ?>"><?php echo _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", $docfile->fields['name'], true); ?></a>
+                    <a title="URL publique permettant de télécharger ce fichier" href="<?php echo $strPublicUrl; ?>"><?php echo $strPublicUrl; ?></a>
                 </p>
 
             </div>
@@ -662,9 +664,10 @@ else
     <?php
     if (isset($docfolder->fields['foldertype']) && $docfolder->fields['foldertype'] != 'private')
     {
-        $arrAllowedActions = array( _DOC_ACTION_MODIFYFILE,
-                                    _DOC_ACTION_DELETEFILE
-                                 );
+        $arrAllowedActions = array( 
+            _DOC_ACTION_MODIFYFILE,
+            _DOC_ACTION_DELETEFILE
+        );
 
         $parents = explode(',', "{$docfolder->fields['parents']},{$docfolder->fields['id']}");
         for ($i = 0; $i < sizeof($parents); $i++)

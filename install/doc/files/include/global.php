@@ -519,4 +519,23 @@ function doc_gettreeview($arrFolder = array())
 
     return($arrTreeview);
 }
+
+/**
+ * Retourne un tableau contenant les règles de réécriture proposées par le module DOC
+ *
+ * @return array tableau contenant les règles de réécriture
+ */
+function doc_getrewriterules()
+{
+    return array(
+        'patterns' => array(
+            '/[a-z]*.php\?ploopi_op=doc_file_download&docfile_md5id=([a-z0-9]{32})/'
+        ),
+        
+        'replacements' => array(
+            'documents/$1/<TITLE>.<EXT>',
+        ) 
+    );
+}
+
 ?>

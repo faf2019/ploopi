@@ -1,3 +1,20 @@
+== Module DOC - version 4.4.2 =====================================================
+
+2009-06-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Déplacement de jw_player et swfobject au niveau du dossier ./lib de Ploopi
+ * Modifications au niveau de l'intégration des règles de réécriture (Modification Ploopi) :
+ 
+  * Ajout d'une fonction doc_getrewriterules() qui retourne la liste des règles utilisées par le module
+  * Ajout d'un fichier ./include/rewrite.php permettant de gérer le rewriting inverse 
+
+== Module DOC - version 4.4.1 =====================================================
+
+2009-05-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'un fichier include/rewrite.php permettant d'effectuer le rewriting inverse sur les urls de téléchargement des documents
+ * Correction d'un bug à la suppression d'un dossier
+ 
 == Module DOC - version 4.4.0b =====================================================
 
 2009-05-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -38,6 +38,12 @@
 include_once './include/classes/data_object.php';
 
 /**
+ * Inclusion de la classe docfile.
+ */
+
+include_once './modules/doc/class_docfile.php';
+
+/**
  * Classe d'accès à la table ploopi_mod_doc_folder
  *
  * @package doc
