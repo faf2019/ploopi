@@ -286,11 +286,12 @@ $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['p
 $c++;
 
 /* TEST 3 - Connectivité internet */
+$testurl = 'http://www.ploopi.org';
 if ($testpear)
 {
     require_once 'HTTP/Request.php';
 
-    $request = new HTTP_Request('http://www.ovensia.fr');
+    $request = new HTTP_Request($testurl);
 
     if (_PLOOPI_INTERNETPROXY_HOST != '')
     {
@@ -306,12 +307,12 @@ if ($testpear)
     $testok = true;
     
     ploopi_unset_error_handler();
-    $res = PEAR::isError($request->sendRequest());
+    $res = !PEAR::isError($request->sendRequest());
     ploopi_set_error_handler();
 }
 else $res = false;
 
-if ($res !== true)
+if (!$res)
 {
     $comment = "Problème de connexion internet.\nPLOOPI n'a pas pu se connecter sur <a title=\"{$testurl}\" href=\"{$testurl}\">{$testurl}</a>.";
     if ($_SESSION['ploopi']['modules'][1]['system_proxy_host'] != '') $comment .= "\nen utilisant les paramètres Proxy suivants :\nproxy_host: {$_SESSION['ploopi']['modules'][1]['system_proxy_host']}, proxy_port: {$_SESSION['ploopi']['modules'][1]['system_proxy_port']}, proxy_user: {$_SESSION['ploopi']['modules'][1]['system_proxy_user']}, proxy_pass: {$_SESSION['ploopi']['modules'][1]['system_proxy_pass']}";
@@ -321,9 +322,9 @@ if ($res !== true)
 
 $bullet = ($testok) ? 'green' : 'red';
 
-$values[$c]['values']['function']   = array('label' => htmlentities("Connexion internet"));
-$values[$c]['values']['desc']       = array('label' => ploopi_nl2br(htmlentities("Certains modules de PLOOPI ont besoin de se connecter à internet. Ce test vous indique si le serveur arrive à ouvrir une connexion internet.")), 'style' => '');
-$values[$c]['values']['comment']    = array('label' => ploopi_nl2br(htmlentities($comment)), 'style' => '');
+$values[$c]['values']['function']   = array('label' => "Connexion internet");
+$values[$c]['values']['desc']       = array('label' => ploopi_nl2br("Certains modules de PLOOPI ont besoin de se connecter à internet. Ce test vous indique si le serveur arrive à ouvrir une connexion internet."), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi_nl2br($comment), 'style' => '');
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
