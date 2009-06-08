@@ -4,7 +4,7 @@
         <row>
             <id>1</id>
             <label>Newsletter</label>
-            <script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=admin&amp;newsletterToolbarNewsletter=tabNewsletterNew&amp;op=newsletter_modify&amp;id_newsletter=&lt;IDRECORD&gt;</script>        
+            <script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=admin&amp;newsletterToolbarNewsletter=tabNewsletterNew&amp;op=newsletter_modify&amp;id_newsletter=&lt;IDRECORD&gt;</script>
         </row>
     </ploopi_mb_object>
   <ploopi_mb_table>

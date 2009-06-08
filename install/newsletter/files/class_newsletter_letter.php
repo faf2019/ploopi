@@ -186,7 +186,7 @@ class newsletter extends data_object
      * Mise en pace de la classe dompdf
      * Conversion en PDF
      */
-    include_once './modules/newsletter/lib/dompdf/dompdf_config.inc.php';
+    include_once './lib/dompdf/dompdf_config.inc.php';
 
     header("Content-Encoding: none");
 
@@ -220,7 +220,8 @@ class newsletter extends data_object
     $arrNewsletterParam = $objNewsletterParam->get_param($this->fields['id_module']);
     unset($objNewsletterParam);
 
-    if (file_exists('./modules/webedit/class_article.php'))
+    
+    if (ploopi_init_module('webedit', false, false, false))
     {
       include_once './modules/webedit/class_article.php';
 
@@ -232,12 +233,12 @@ class newsletter extends data_object
           if (!empty($idart) && $objArticle->open($idart)) // article trouvé
           {
               $arrSearch[] = $matches[1][$key];
-              $arrReplace[] = ploopi_urlrewrite("{$arrNewsletterParam['host']}index.php?headingid={$objArticle->fields['id_heading']}&articleid={$idart}", $objArticle->fields['metatitle']);
+              $arrReplace[] = $arrNewsletterParam['host'].ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$idart}", webedit_getrewriterules(), $objArticle->fields['metatitle']);
           }
       }
     }
 
-    if (file_exists('./modules/doc/class_docfile.php'))
+    if (ploopi_init_module('doc', false, false, false))
     {
         include_once './modules/doc/class_docfile.php';
 
@@ -249,7 +250,7 @@ class newsletter extends data_object
             if (!empty($md5) && $objDocFile->openmd5($md5)) // clé md5 présente & document trouvé
             {
                 $arrSearch[] = $matches[1][$key];
-                $arrReplace[] = ploopi_urlrewrite(html_entity_decode($arrNewsletterParam['host'].$matches[1][$key]), $objDocFile->fields['name'], true);
+                $arrReplace[] = $arrNewsletterParam['host'].ploopi_urlrewrite(html_entity_decode($matches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
             }
         }
 
@@ -261,7 +262,7 @@ class newsletter extends data_object
             if (!empty($md5) && $objDocFile->openmd5($md5)) // clé md5 présente & document trouvé
             {
                 $arrSearch[] = $matches[1][$key];
-                $arrReplace[] = ploopi_urlrewrite(html_entity_decode($arrNewsletterParam['host'].$matches[1][$key]), $objDocFile->fields['name'], true);
+                $arrReplace[] = $arrNewsletterParam['host'].ploopi_urlrewrite(html_entity_decode($matches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
             }
         }
     }
@@ -290,7 +291,7 @@ class newsletter extends data_object
     $arrNewsletterParam = $objNewsletterParam->get_param();
     unset($objNewsletterParam);
 
-    if (file_exists('./modules/webedit/class_article.php'))
+    if (ploopi_init_module('webedit', false, false, false))
     {
       include_once './modules/webedit/class_article.php';
 
@@ -302,12 +303,12 @@ class newsletter extends data_object
           if (!empty($idart) && $objArticle->open($idart)) // article trouvé
           {
               $arrSearch[] = $matches[1][$key];
-              $arrReplace[] = ploopi_urlrewrite("{$arrNewsletterParam['host']}index.php?headingid={$objArticle->fields['id_heading']}&articleid={$idart}", $objArticle->fields['metatitle']);
+              $arrReplace[] = $arrNewsletterParam['host'].ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$idart}", webedit_getrewriterules(), $objArticle->fields['metatitle']);
           }
       }
     }
 
-    if (file_exists('./modules/doc/class_docfile.php'))
+    if (ploopi_init_module('doc', false, false, false))
     {
         include_once './modules/doc/class_docfile.php';
 
@@ -319,7 +320,7 @@ class newsletter extends data_object
             if (!empty($md5) && $objDocFile->openmd5($md5)) // clé md5 présente & document trouvé
             {
                 $arrSearch[] = $matches[1][$key];
-                $arrReplace[] = ploopi_urlrewrite(html_entity_decode($arrNewsletterParam['host'].$matches[1][$key]), $objDocFile->fields['name'], true);
+                $arrReplace[] = $arrNewsletterParam['host'].ploopi_urlrewrite(html_entity_decode($matches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
             }
         }
 

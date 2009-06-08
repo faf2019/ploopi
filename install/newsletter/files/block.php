@@ -37,13 +37,15 @@
 
 ploopi_init_module('newsletter', false, false, false);
 
+$newsletter_menu = isset($_GET['newsletter_menu']) ? $_GET['newsletter_menu'] : ''; 
+
+if ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && empty($newsletter_menu) && (!ploopi_isactionallowed(-1, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))) $newsletter_menu = 'consult';
+
+$block->addmenu(_NEWSLETTER_CONSULT, ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin&newsletter_menu=consult"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $newsletter_menu == 'consult');
+
 if (ploopi_isactionallowed(-1,$_SESSION['ploopi']['workspaceid'],$menu_moduleid))
 {
-    $block->addmenu('<strong>'._NEWSLETTER_ADMIN.'</strong>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"));
+    $block->addmenu('<strong>'._NEWSLETTER_ADMIN.'</strong>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && empty($newsletter_menu));
 }
-
-$block->addmenu('<strong>'._NEWSLETTER_CONSULT.'</strong>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin&newsletter_menu=consult"));
-
-
 ?>
 

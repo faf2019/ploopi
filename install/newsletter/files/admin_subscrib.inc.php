@@ -47,11 +47,11 @@ if(!empty($_GET['email_subscrib']))
     ?>
     <div class="ploopi_form">
       <div style="padding:2px;">
-        <form action="<? echo ploopi_urlencode('admin.php?op=subscrib_save&email_subscrib='.$objSubscriber->fields['email']); ?>" method="post" onSubmit="javascript:return newsletter_subscrib_validate(this);">
+        <form action="<?php echo ploopi_urlencode('admin.php?op=subscrib_save&email_subscrib='.$objSubscriber->fields['email']); ?>" method="post" onSubmit="javascript:return newsletter_subscrib_validate(this);">
         <input type="hidden" name="subscrib_active" value="0">
         <p><!-- Email inscription -->
-          <label><? echo _NEWSLETTER_LABEL_EMAIL; ?>&nbsp;:</label>
-          <input class="text" id="subscrib_email" name="subscrib_email" type="text" size="50" maxlength="255" value="<? echo $objSubscriber->fields['email']; ?>">
+          <label><?php echo _NEWSLETTER_LABEL_EMAIL; ?>&nbsp;:</label>
+          <input class="text" id="subscrib_email" name="subscrib_email" type="text" size="50" maxlength="255" value="<?php echo $objSubscriber->fields['email']; ?>">
         </p>
         <p class="ploopi_va" style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event,'subscrib_active');"><!-- Email activé ou pas pour l'envoi -->
           <label><?php echo _NEWSLETTER_LABEL_ACTIVE; ?>&nbsp;:</label>
@@ -59,14 +59,14 @@ if(!empty($_GET['email_subscrib']))
         </p>
         <p class="ploopi_va"><!-- IP lors de l'inscription -->
           <label><?php echo _NEWSLETTER_LABEL_IP; ?>&nbsp;:</label>
-          <? echo str_replace(',','<br/>',$objSubscriber->fields['ip']); ?>
+          <?php echo str_replace(',','<br/>',$objSubscriber->fields['ip']); ?>
         </p>
         <p class="ploopi_va"><!-- date/heure d'inscription -->
           <label><?php echo _NEWSLETTER_LABEL_TIMESTP_SUBSCRIBE; ?>&nbsp;:</label>
-          <? echo $arrNewsletterDateSubscribe['date'].' '.$arrNewsletterDateSubscribe['time']; ?>
+          <?php echo $arrNewsletterDateSubscribe['date'].' '.$arrNewsletterDateSubscribe['time']; ?>
         </p>
         <div style="padding:2px;text-align:right;">
-          <input type="submit" value="<? echo _PLOOPI_SAVE; ?>" class="button">
+          <input type="submit" value="<?php echo _PLOOPI_SAVE; ?>" class="button">
         </div>
         </form>
       </div>
@@ -112,7 +112,7 @@ $_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['subscribe'][
  */
 ?>
 <div style="padding:4px;">
-    <?
+    <?php
     $tabs_char = array();
 
     for($i=1;$i<27;$i++) $tabs_char[$i] = array('title' => chr($i+64), 'url' => "admin.php?alphaTabItem={$i}");
@@ -122,20 +122,20 @@ $_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['subscribe'][
     echo $skin->create_tabs($tabs_char,$alphaTabItem);
     ?>
 </div>
-<?
+<?php
 /**
  * Bloc de "filtre"
  */
 ?>
-<form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
+<form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
 <p class="ploopi_va" style="padding:4px;border-bottom:2px solid #c0c0c0;">
-    <span><? echo _NEWSLETTER_LABEL_EMAIL; ?> :</span>
-    <input class="text" ID="system_user" name="filter" type="text" size="15" maxlength="255" value="<? echo htmlentities($filter); ?>">
-    <input type="submit" value="<? echo _PLOOPI_FILTER; ?>" class="button">
-    <input type="submit" name="reset" value="<? echo _PLOOPI_RESET; ?>" class="button">
+    <span><?php echo _NEWSLETTER_LABEL_EMAIL; ?> :</span>
+    <input class="text" ID="system_user" name="filter" type="text" size="15" maxlength="255" value="<?php echo htmlentities($filter); ?>">
+    <input type="submit" value="<?php echo _PLOOPI_FILTER; ?>" class="button">
+    <input type="submit" name="reset" value="<?php echo _PLOOPI_RESET; ?>" class="button">
 </p>
 </form>
-<?
+<?php
 // Création de la requète des inscrits
 $where = array();
 
@@ -154,7 +154,6 @@ if(empty($where))
   $where = 'WHERE id_module = \''.$_SESSION['ploopi']['moduleid'].'\'';
 else
   $where = 'WHERE id_module = \''.$_SESSION['ploopi']['moduleid'].'\' AND '.implode(' AND ', $where);
-
 
 $sql =   "
             SELECT      *

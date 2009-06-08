@@ -47,7 +47,7 @@ include_once './include/classes/data_object.php';
  */
 
 class newsletter_subscriber extends data_object
-{   
+{
   private $IdEmail;
   /**
    * Constructeur de la classe
@@ -58,7 +58,7 @@ class newsletter_subscriber extends data_object
   {
       parent::data_object('ploopi_mod_newsletter_subscriber','email','id_module');
   }
-  
+
   /**
    * Enter description here...
    *
@@ -70,11 +70,11 @@ class newsletter_subscriber extends data_object
   {
     // Recupération de la clef d'ouverture (email)
     $this->IdEmail = $strEmail;
-    
+
     if($intIdModule == -1 && isset($_SESSION['ploopi']['moduleid'])) $intIdModule = $_SESSION['ploopi']['moduleid'];
     return parent::open($strEmail,$intIdModule);
   }
-  
+
   /**
    * Enregistre une inscription
    *
@@ -86,7 +86,7 @@ class newsletter_subscriber extends data_object
     if(!ploopi_ismoduleallowed('newsletter')) ploopi_init_module('newsletter');
 
     $new_subscribe = $this->new;
-    
+
     if($this->new) // si c'est une nouvelle inscription ces données sont ajoutées d'office sinon elles peuvent changer
     {
       $this->fields['timestp_subscribe'] = ploopi_createtimestamp();
@@ -98,7 +98,7 @@ class newsletter_subscriber extends data_object
       /*
       les clefs indiquées au constructeur newsletter_subscriber sont 'email' et 'id_module' donc email n'est pas modifiable directement... (contrainte ploopi)
       Donc, en cas de modification d'email, on force la suppression et la 're'création d'une nouvelle inscription
-      */ 
+      */
       // Contrôle si on va changer de email
       if(!$new_subscribe && $this->IdEmail != $this->fields['email'])
       {
@@ -109,7 +109,7 @@ class newsletter_subscriber extends data_object
         $this->new = true;
       }
     }
-    
+
     if(empty($this->fields['id_module'])) $this->fields['id_module'] = $_SESSION['ploopi']['moduleid'];
     $result_save = parent::save();
 
@@ -124,7 +124,6 @@ class newsletter_subscriber extends data_object
 
     return $result_save;
   }
-  
 
   /**
    * Supprime une inscription avec log
@@ -135,7 +134,7 @@ class newsletter_subscriber extends data_object
     // Log
     if($withLog)
       ploopi_create_user_action_log(_NEWSLETTER_ACTION_DELETE_SUBSCRIBER, ploopi_strcut($this->fields['email'],200),-1,$this->fields['id_module']);
-      
+
     parent::delete();
   }
 }

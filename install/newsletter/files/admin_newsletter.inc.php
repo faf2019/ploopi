@@ -74,8 +74,8 @@ switch ($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterTool
   case 'tabNewsletterNew': // Création / Modification de newsletter
     include './modules/newsletter/admin_newsletter_edit.inc.php';
     break;
-	default: // Liste des newsletter
-		include './modules/newsletter/admin_newsletter_list.inc.php';
-	break;
+    default: // Liste des newsletter
+        include './modules/newsletter/admin_newsletter_list.inc.php';
+    break;
 }
 ?>

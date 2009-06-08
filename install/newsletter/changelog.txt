@@ -1,3 +1,11 @@
+== Module NEWSLETTER - version 1.2.5.000beta ==================================================
+
+2009-06-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Modification au niveau de l'intégration des règles de réécritures (modification Ploopi)
+ * Meilleure intégration du menu
+ * Suppression de dompdf, déplacé au niveau de Ploopi dans ./lib/dompdf 
+
 == Module NEWSLETTER - version 1.2.4 ==================================================
 
 2009-04-23  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

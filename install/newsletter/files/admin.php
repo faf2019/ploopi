@@ -67,7 +67,7 @@ switch ($strNewsletterMenuBlock)
       $strNewsletterMode = 'display';
       ?>
       <div style="padding:4px; height:500px; overflow:auto;">
-      <iframe id="newsletter_frame_consult" style="border:0;width:100%;height:500px;margin:0;padding:0;" src="<? echo ploopi_urlencode("index-quick.php?id_module={$_SESSION['ploopi']['moduleid']}&ploopi_op=newsletter_consult&id_newsletter={$_GET['id_newsletter']}"); ?>"></iframe>
+      <iframe id="newsletter_frame_consult" style="border:0;width:100%;height:500px;margin:0;padding:0;" src="<?php echo ploopi_urlencode("index-quick.php?id_module={$_SESSION['ploopi']['moduleid']}&ploopi_op=newsletter_consult&id_newsletter={$_GET['id_newsletter']}"); ?>"></iframe>
       </div>
       <?php
       $content = ob_get_contents(); // Recupération du buffer

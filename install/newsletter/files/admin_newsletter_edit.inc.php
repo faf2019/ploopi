@@ -71,20 +71,20 @@ else
 if (!$readonly)
 {
   ?>
-  <form style="margin:0;" action="<? echo ploopi_urlencode('admin.php?op=newsletter_save'.$action_id_newsletter); ?>" method="post" onsubmit="javascript:return newsletter_letter_validate(this, <? echo (in_array($_SESSION['ploopi']['userid'],$wfusers)) ? 'true' : 'false'; ?>);">
-  <?
+  <form style="margin:0;" action="<?php echo ploopi_urlencode('admin.php?op=newsletter_save'.$action_id_newsletter); ?>" method="post" onsubmit="javascript:return newsletter_letter_validate(this, <?php echo (in_array($_SESSION['ploopi']['userid'],$wfusers)) ? 'true' : 'false'; ?>);">
+  <?php
 }
 ?>
 <div class="ploopi_form" style="float:left;width:50%;">
   <div style="padding:2px;">
     <p style="font-weight:bold;"><?php echo _NEWSLETTER_LABEL_PRINC_PROPRIETY; ?>:</p>
     <p>
-        <label><? echo _NEWSLETTER_LABEL_TITLE; ?>:</label>
+        <label><?php echo _NEWSLETTER_LABEL_TITLE; ?>:</label>
         <?php
         if (!$readonly)
         {
             ?>
-            <input type="text" class="text" name="newsletter_title"  value="<? echo htmlentities($objLetter->fields['title']); ?>" tabindex="1" />
+            <input type="text" class="text" name="newsletter_title"  value="<?php echo htmlentities($objLetter->fields['title']); ?>" tabindex="1" />
             <label>&nbsp;</label><span style="font-style:italic;"><?php echo _NEWSLETTER_LABEL_TITLE_EXPLAIN; ?></span>
             <?php
         }
@@ -92,12 +92,12 @@ if (!$readonly)
         ?>
     </p>
     <p>
-        <label><? echo _NEWSLETTER_LABEL_SUBJECT; ?>:</label>
+        <label><?php echo _NEWSLETTER_LABEL_SUBJECT; ?>:</label>
         <?php
         if (!$readonly)
         {
             ?>
-            <input type="text" class="text" name="newsletter_subject"  value="<? echo htmlentities($objLetter->fields['subject']); ?>" tabindex="2" />
+            <input type="text" class="text" name="newsletter_subject"  value="<?php echo htmlentities($objLetter->fields['subject']); ?>" tabindex="2" />
             <label>&nbsp;</label><span style="font-style:italic;"><?php echo _NEWSLETTER_LABEL_SUBJECT_EXPLAIN; ?></span>
             <?php
         }
@@ -105,21 +105,21 @@ if (!$readonly)
         ?>
     </p>
     <p>
-        <label><? echo _NEWSLETTER_LABEL_STATUS; ?>:</label>
+        <label><?php echo _NEWSLETTER_LABEL_STATUS; ?>:</label>
         <?php
         if (!$readonly)
         {
             ?>
             <select class="select" id="newsletter_status" name="newsletter_status" tabindex="5">
-                <option value="draft" <? if ($objLetter->fields['status'] == 'draft') echo 'selected="selected"'; ?>><? echo _NEWSLETTER_LABEL_STATUS_DRAFT; ?></option>
-                <option value="wait" <? if ($objLetter->fields['status'] == 'wait') echo 'selected="selected"'; ?>><? echo _NEWSLETTER_LABEL_STATUS_WAIT; ?></option>
+                <option value="draft" <?php if ($objLetter->fields['status'] == 'draft') echo 'selected="selected"'; ?>><?php echo _NEWSLETTER_LABEL_STATUS_DRAFT; ?></option>
+                <option value="wait" <?php if ($objLetter->fields['status'] == 'wait') echo 'selected="selected"'; ?>><?php echo _NEWSLETTER_LABEL_STATUS_WAIT; ?></option>
             </select>
             <?php
         }
         else
         {
           ?>
-          <input type="hidden" name="newsletter_status"  value="<? echo $objLetter->fields['status']; ?>"/>
+          <input type="hidden" name="newsletter_status"  value="<?php echo $objLetter->fields['status']; ?>"/>
           <span>
           <?php
           echo (defined('_NEWSLETTER_LABEL_STATUS_'.strtoupper($objLetter->fields['status']))) ? constant('_NEWSLETTER_LABEL_STATUS_'.strtoupper($objLetter->fields['status'])): '';
@@ -135,7 +135,7 @@ if (!$readonly)
   <div style="padding:2px;">
     <span><?php echo _NEWSLETTER_LABEL_GABARIT_EXPLAIN; ?>: </span>
     <p>
-        <label><? echo _NEWSLETTER_LABEL_GABARIT; ?>:</label>
+        <label><?php echo _NEWSLETTER_LABEL_GABARIT; ?>:</label>
         <?php
         if (!$readonly)
         {
@@ -146,8 +146,8 @@ if (!$readonly)
                 foreach ($newsletter_templates as $tpl)
                 {
                     ?>
-                    <option value="<? echo $tpl; ?>" <? if ($objLetter->fields['template'] == $tpl) echo 'selected="selected"'; ?>><? echo $tpl; ?></option>
-                    <?
+                    <option value="<?php echo $tpl; ?>" <?php if ($objLetter->fields['template'] == $tpl) echo 'selected="selected"'; ?>><?php echo $tpl; ?></option>
+                    <?php
                 }
             ?>
             </select>
@@ -188,18 +188,18 @@ if (!$readonly)
         );
         ?>
     <p>
-        <label><? echo _NEWSLETTER_LABEL_BANNIERE; ?>:</label>
+        <label><?php echo _NEWSLETTER_LABEL_BANNIERE; ?>:</label>
         <?php
         if (!$readonly)
         {
             ?>
-            <input type="hidden" name="newsletter_banniere_id" id="newsletter_banniere_id"  value="<? echo $objLetter->fields['banniere_id']; ?>" />
-            <input type="text" style="width:100px;float:left;" class="text" name="newsletter_banniere" id="newsletter_banniere" value="<? echo htmlentities($strBanniere); ?>" tabindex="10" />
-            <img src="./modules/newsletter/img/ico_choosefile.png" title="Choisir un Fichier" alt="Choisir un Fichier" onclick="javascript:ploopi_documents_popup(<?php echo _NEWSLETTER_OBJECT_IMAGE; ?>, 0, <? echo $_SESSION['ploopi']['moduleid']; ?>, 'newsletter_banniere', event);" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" />
-            <?
+            <input type="hidden" name="newsletter_banniere_id" id="newsletter_banniere_id"  value="<?php echo $objLetter->fields['banniere_id']; ?>" />
+            <input type="text" style="width:100px;float:left;" class="text" name="newsletter_banniere" id="newsletter_banniere" value="<?php echo htmlentities($strBanniere); ?>" tabindex="10" />
+            <img src="./modules/newsletter/img/ico_choosefile.png" title="Choisir un Fichier" alt="Choisir un Fichier" onclick="javascript:ploopi_documents_popup(<?php echo _NEWSLETTER_OBJECT_IMAGE; ?>, 0, <?php echo $_SESSION['ploopi']['moduleid']; ?>, 'newsletter_banniere', event);" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" />
+            <?php
             if (!empty($objLetter->fields['banniere_id']))
             {
-                ?><img src="./modules/newsletter/img/ico_save.png" title="<?php echo _NEWSLETTER_OPEN ?>" alt="<?php echo _NEWSLETTER_OPEN ?>" onclick="javascript:document.location.href='<? echo $doc->geturl(); ?>';" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" /><?
+                ?><img src="./modules/newsletter/img/ico_save.png" title="<?php echo _NEWSLETTER_OPEN ?>" alt="<?php echo _NEWSLETTER_OPEN ?>" onclick="javascript:document.location.href='<?php echo $doc->geturl(); ?>';" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" /><?php
             }
             ?>
             <img src="./modules/newsletter/img/ico_delete.png" title="<?php echo _PLOOPI_DELETE; ?>" alt="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:$('newsletter_banniere_id').value='';$('newsletter_banniere').value='';" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" />
@@ -215,19 +215,19 @@ if (!$readonly)
         <p>
             <label>Aperçu:</label>
             <span>
-                <a alt="<? echo htmlentities($strRubriqueFichier); ?>" href="<? echo $doc->geturl(); ?>"><img style="width:100px;"src="<? echo $doc->geturl(); ?>" title="<? echo htmlentities($strRubriqueFichier); ?>" /></a>
+                <a alt="<?php echo htmlentities($strRubriqueFichier); ?>" href="<?php echo $doc->geturl(); ?>"><img style="width:100px;"src="<?php echo $doc->geturl(); ?>" title="<?php echo htmlentities($strRubriqueFichier); ?>" /></a>
             </span>
         </p>
-        <?
+        <?php
     }
     ?>
     <p>
-        <label><? echo _NEWSLETTER_LABEL_BACKGROUND_COLOR; ?>:</label>
+        <label><?php echo _NEWSLETTER_LABEL_BACKGROUND_COLOR; ?>:</label>
         <?php
         if (!$readonly)
         {
             ?>
-            <input type="text" style="width:100px;float:left;" class="text" name="newsletter_background_color" id="newsletter_background_color" value="<? echo htmlentities($objLetter->fields['background_color']); ?>" tabindex="10" readonly="readonly"/>
+            <input type="text" style="width:100px;float:left;" class="text" name="newsletter_background_color" id="newsletter_background_color" value="<?php echo htmlentities($objLetter->fields['background_color']); ?>" tabindex="10" readonly="readonly"/>
             <a href="javascript:void(0);" style="margin-left:2px;margin-top:2px;float:left;" onclick="javascript:ploopi_colorpicker_open('newsletter_background_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0"></a>
             <img src="./modules/newsletter/img/ico_delete.png" title="Effacer" alt="Effacer" onclick="javascript:$('newsletter_background_color').value='';" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" />
             <?php
@@ -236,12 +236,12 @@ if (!$readonly)
         ?>
     </p>
     <p>
-        <label><? echo _NEWSLETTER_LABEL_CONTENT_COLOR; ?>:</label>
+        <label><?php echo _NEWSLETTER_LABEL_CONTENT_COLOR; ?>:</label>
         <?php
         if (!$readonly)
         {
             ?>
-            <input type="text" style="width:100px;float:left;" class="text" name="newsletter_content_color" id="newsletter_content_color" value="<? echo htmlentities($objLetter->fields['content_color']); ?>" tabindex="10" readonly="readonly"/>
+            <input type="text" style="width:100px;float:left;" class="text" name="newsletter_content_color" id="newsletter_content_color" value="<?php echo htmlentities($objLetter->fields['content_color']); ?>" tabindex="10" readonly="readonly"/>
             <a href="javascript:void(0);" style="margin-left:2px;margin-top:2px;float:left;" onclick="javascript:ploopi_colorpicker_open('newsletter_content_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0"></a>
             <img src="./modules/newsletter/img/ico_delete.png" title="Effacer" alt="Effacer" onclick="javascript:$('newsletter_content_color').value='';" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" />
             <?php
@@ -250,12 +250,12 @@ if (!$readonly)
         ?>
     </p>
     <p>
-        <label><? echo _NEWSLETTER_LABEL_TEXT_COLOR; ?>:</label>
+        <label><?php echo _NEWSLETTER_LABEL_TEXT_COLOR; ?>:</label>
         <?php
         if (!$readonly)
         {
             ?>
-            <input type="text" style="width:100px;float:left;" class="text" name="newsletter_text_color" id="newsletter_text_color" value="<? echo htmlentities($objLetter->fields['text_color']); ?>" tabindex="10" readonly="readonly"/>
+            <input type="text" style="width:100px;float:left;" class="text" name="newsletter_text_color" id="newsletter_text_color" value="<?php echo htmlentities($objLetter->fields['text_color']); ?>" tabindex="10" readonly="readonly"/>
             <a href="javascript:void(0);" style="margin-left:2px;margin-top:2px;float:left;" onclick="javascript:ploopi_colorpicker_open('newsletter_text_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0"></a>
             <img src="./modules/newsletter/img/ico_delete.png" title="Effacer" alt="Effacer" onclick="javascript:$('newsletter_text_color').value='';" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" />
             <?php
@@ -322,7 +322,7 @@ if (!$readonly)
   }
   ?>
 </div>
-<?
+<?php
 /*
  * Affichage des boutons
  */
@@ -357,24 +357,24 @@ if (!$readonly)
 </div>
 
 <div style="clear:both;">
-  <?
+  <?php
   if (!$readonly)
   {
     ?>
     <div id="xToolbar"></div> <!-- Bloc d'affichage des barres d'outils de fckeditor -->
     <input type="hidden" id="fck_newsletter_content" name="fck_newsletter_content" value=""> <!-- Bloc utilisé en javascript pour ramener dans la page courante le contenu de l'iframe fckEditor et ainsi passer fck_newsletter_content en $_POST -->
-    <?
+    <?php
   }
   ?>
   <!-- Iframe contenant soit un rendu avec fckEditor soit juste un rendu en readonly-->
-  <iframe id="newsletter_frame_editor" style="border:0;width:100%;height:450px;margin:0;padding:0;" src="<? echo ploopi_urlencode("index-quick.php?id_module={$_SESSION['ploopi']['moduleid']}&ploopi_op=newsletter_tpl&id_newsletter={$objLetter->fields['id']}"); ?>"></iframe>
+  <iframe id="newsletter_frame_editor" style="border:0;width:100%;height:450px;margin:0;padding:0;" src="<?php echo ploopi_urlencode("index-quick.php?id_module={$_SESSION['ploopi']['moduleid']}&ploopi_op=newsletter_tpl&id_newsletter={$objLetter->fields['id']}"); ?>"></iframe>
 </div>
 <?php
 if (!$readonly)
 {
   ?>
   </form>
-  <?
+  <?php
 }
 
 echo $skin->close_simplebloc();

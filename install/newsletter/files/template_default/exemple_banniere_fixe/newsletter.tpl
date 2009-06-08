@@ -55,25 +55,25 @@ div.content{
   clear: both;
   margin: 0;
   padding: 0;
-  border-left: 1px solid black; 
-  border-right: 1px solid black; 
+  border-left: 1px solid black;
+  border-right: 1px solid black;
   border-bottom: 1px solid black;
   background-color: {CONTENT_COLOR};
 }
 
 div.style1{
-  clear: both; 
+  clear: both;
   margin: 0;
   padding: 2px 10px;
   text-align: right;
   font-size: 0.8em;
-  background-color: #dddddd;  
+  background-color: #dddddd;
 }
 
 div.style2{
   clear: both;
-  margin: 0; 
-  padding: 0 2px 5px 2px; 
+  margin: 0;
+  padding: 0 2px 5px 2px;
 }
 
 div.bottom{
@@ -93,16 +93,16 @@ div.bottom{
     </div>
     <div class="banniere"><a href="{HOST}"><img src="{HOST}modules/newsletter/template_default/exemple_banniere_fixe/img/banniere.jpg" /></a></div>
     <div class="content">
-	    <div class="style1">{DATE_DAYTEXT}&nbsp;{DATE_DAY}&nbsp;{DATE_MONTHTEXT}&nbsp;{DATE_YEAR}</div>
-	    <div class="style2">{PAGE_CONTENT}</div>
-	  </div>
+        <div class="style1">{DATE_DAYTEXT}&nbsp;{DATE_DAY}&nbsp;{DATE_MONTHTEXT}&nbsp;{DATE_YEAR}</div>
+        <div class="style2">{PAGE_CONTENT}</div>
+      </div>
     <div class="bottom">
       <font face="Arial, Helvetica, sans-serif" size="1">Conform&eacute;ment &agrave; l'article 40 du 6 janvier 1978 de la loi Informatique et Libert&eacute; modifi&eacute;e, <br />
-      vous disposez d'un droit d'acc&egrave;s, de modification, de rectification 
+      vous disposez d'un droit d'acc&egrave;s, de modification, de rectification
       et de suppression des donn&eacute;es vous concernant. <br />
       Si vous souhaitez vous désabonner, <a href="{LINK_UNSUBSCRIB}">cliquez ici</a>.</font>
     </div>
   </div>
 </body>
-</html>     
+</html>
 
