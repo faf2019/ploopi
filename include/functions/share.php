@@ -39,7 +39,7 @@
  * @param int $id_module identifiant du module
  */
 
-function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module = -1)
+function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module = -1, $strTitle = 'Partages')
 {
     global $db;
 
@@ -54,10 +54,10 @@ function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module =
     }
 
     ?>
-    <a class="ploopi_share_title" href="#" onclick="javascript:ploopi_switchdisplay('ploopi_share');">
+    <a class="ploopi_share_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('ploopi_share');">
         <p class="ploopi_va">
             <img src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/share/share.png"; ?>">
-            <span>Partages</span>
+            <span><? echo $strTitle; ?></span>
         </p>
     </a>
     <div id="ploopi_share" style="display:block;">
@@ -70,7 +70,7 @@ function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module =
         </div>
         <div id="div_share_search_result"></div>
 
-        <div class="ploopi_share_title">Autorisations :</div>
+        <div class="ploopi_share_title">Sélection actuelle :</div>
         <div class="ploopi_share_authorizedlist" id="div_share_users_selected"><?php if (empty($_SESSION['ploopi']['share']['users_selected'])) echo 'Aucune autorisation'; ?></div>
         <?php
         if (!empty($_SESSION['ploopi']['share']['users_selected']))
@@ -109,12 +109,14 @@ function ploopi_share_save($id_object = -1, $id_record = -1, $id_module = -1)
         foreach($_SESSION['ploopi']['share']['users_selected'] as $id_user)
         {
             $share = new share();
-            $share->fields = array( 'id_module'     => $id_module,
-                                    'id_record'     => $id_record,
-                                    'id_object'     => $id_object,
-                                    'type_share'    => 'user',
-                                    'id_share'      => $id_user
-                                );
+            $share->fields = array( 
+                'id_module'     => $id_module,
+                'id_record'     => $id_record,
+                'id_object'     => $id_object,
+                'type_share'    => 'user',
+                'id_share'      => $id_user
+            );
+            
             $share->save();
 
         }
