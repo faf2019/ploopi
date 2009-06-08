@@ -31,8 +31,8 @@
  * @author Stéphane Escaich
  */
 
-define ('_PLOOPI_VERSION', '1.4.0.1');
-define ('_PLOOPI_REVISION', '90504');
+define ('_PLOOPI_VERSION', '1.5');
+define ('_PLOOPI_REVISION', '90608');
 
 define ('_PLOOPI_MSG_DBERROR',  'Database connection error, please contact administrator');
 define ('_SYSTEM_SYSTEMADMIN',  0);
@@ -126,6 +126,13 @@ define('_PLOOPI_ERROR_MAXFILESIZE',        100);
 define('_PLOOPI_ERROR_FILENOTWRITABLE',    101);
 define('_PLOOPI_ERROR_EMPTYFILE',          102);
 
+// Chemin absolu de l'application depuis la racine
+if (!defined ('_PLOOPI_SELFPATH')) 
+{
+     if (php_sapi_name() != 'cli') define ('_PLOOPI_SELFPATH', rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
+     else define ('_PLOOPI_SELFPATH', '');
+}
+
 // Chemin web absolu de l'application
 if (!defined ('_PLOOPI_BASEPATH')) 
 {
@@ -133,14 +140,13 @@ if (!defined ('_PLOOPI_BASEPATH'))
      else define ('_PLOOPI_BASEPATH', '');
 }
 
-
-if (!defined ('_PLOOPI_FINGERPRINT')) define ('_PLOOPI_FINGERPRINT',  md5(dirname($_SERVER['SCRIPT_FILENAME']).'/'._PLOOPI_DB_SERVER.'/'._PLOOPI_DB_DATABASE));
-if (!defined ('_PLOOPI_PATHCACHE')) define ('_PLOOPI_PATHCACHE', _PLOOPI_PATHDATA.'/cache');
+if (!defined ('_PLOOPI_FINGERPRINT') && defined('_PLOOPI_DB_DATABASE') && defined('_PLOOPI_DB_SERVER')) define ('_PLOOPI_FINGERPRINT',  md5(dirname($_SERVER['SCRIPT_FILENAME']).'/'._PLOOPI_DB_SERVER.'/'._PLOOPI_DB_DATABASE));
+if (!defined ('_PLOOPI_PATHCACHE') && defined('_PLOOPI_PATHDATA')) define ('_PLOOPI_PATHCACHE', _PLOOPI_PATHDATA.'/cache');
         
-if (!defined ('_PLOOPI_SESSION_DB_SERVER')) define ('_PLOOPI_SESSION_DB_SERVER', _PLOOPI_DB_SERVER);
-if (!defined ('_PLOOPI_SESSION_DB_LOGIN')) define ('_PLOOPI_SESSION_DB_LOGIN', _PLOOPI_DB_LOGIN);
-if (!defined ('_PLOOPI_SESSION_DB_PASSWORD')) define ('_PLOOPI_SESSION_DB_PASSWORD', _PLOOPI_DB_PASSWORD);
-if (!defined ('_PLOOPI_SESSION_DB_DATABASE')) define ('_PLOOPI_SESSION_DB_DATABASE', _PLOOPI_DB_DATABASE);
+if (!defined ('_PLOOPI_SESSION_DB_SERVER') && defined('_PLOOPI_DB_SERVER')) define ('_PLOOPI_SESSION_DB_SERVER', _PLOOPI_DB_SERVER);
+if (!defined ('_PLOOPI_SESSION_DB_LOGIN') && defined('_PLOOPI_DB_LOGIN')) define ('_PLOOPI_SESSION_DB_LOGIN', _PLOOPI_DB_LOGIN);
+if (!defined ('_PLOOPI_SESSION_DB_PASSWORD') && defined('_PLOOPI_DB_PASSWORD')) define ('_PLOOPI_SESSION_DB_PASSWORD', _PLOOPI_DB_PASSWORD);
+if (!defined ('_PLOOPI_SESSION_DB_DATABASE') && defined('_PLOOPI_DB_DATABASE')) define ('_PLOOPI_SESSION_DB_DATABASE', _PLOOPI_DB_DATABASE);
 
 define ('_PLOOPI_SERVER_OSTYPE', (substr(PHP_OS, 0, 3) == 'WIN') ? 'windows' : 'unix');
 
