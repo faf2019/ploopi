@@ -5,7 +5,7 @@
             <div class="sep{formfields.switch_separator.LEVEL}>
             {formfields.switch_separator.NAME}
             </div>
-        <!-- END switch_separator -->    
+        <!-- END switch_separator -->
         <!-- BEGIN switch_field -->
             <p>
                 <label for="{formfields.switch_field.LABELID}">
@@ -14,7 +14,7 @@
                 (*)
                 <!-- END switch_required -->
                 </label>
-                
+
                 <span>
                     <!-- BEGIN switch_autoincrement -->
                     {formfields.switch_field.VALUE}
@@ -66,7 +66,7 @@
                         </span>
                         <!-- END columns -->
                     <!-- END switch_radio -->
-        
+
                     <!-- BEGIN switch_file -->
                     <input type="file" id="{formfields.switch_field.LABELID}" name="{formfields.switch_field.NAME}" value="{formfields.switch_field.VALUE}" tabindex="{formfields.switch_field.TABINDEX}" />
                     <!-- END switch_file -->

@@ -24,12 +24,11 @@ font: 12px Verdana,Tahoma,Arial,sans-serif;
 color: #688c3d;
 }
 
-
 form, input, select, textarea, button {
 font: 11px Verdana,Tahoma,Arial,sans-serif;
 color: #688c3d;
 }
-		
+        
 
 body {
 margin: 0 auto;
@@ -75,13 +74,13 @@ p.va {
 margin:2px 0;
 }
 
-p.va img, 
-p.va span, 
-p.va label, 
-p.va strong, 
-p.va em, 
-p.va input, 
-p.va select, 
+p.va img,
+p.va span,
+p.va label,
+p.va strong,
+p.va em,
+p.va input,
+p.va select,
 p.va a {
 display: inline-block;
 vertical-align: middle;
@@ -150,7 +149,7 @@ margin-bottom:10px;
 font-size:9px;
 }
 
-#page_tags span, 
+#page_tags span,
 #page_tags a {
 display: inline-block;
 vertical-align: middle;
@@ -377,15 +376,15 @@ margin:6px 0;
 text-decoration:none;
 display:block;
 }
-    
+
 .headings_page img, .headings_page span {
 display: inline-block;
 vertical-align: middle;
 text-decoration:none;
 border:0;
 cursor:pointer;
-}   
-    
+}
+
 .headings_page:hover {
 text-decoration:none;
 color:#404040;

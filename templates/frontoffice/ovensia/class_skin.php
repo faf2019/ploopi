@@ -22,14 +22,14 @@
 
 /**
  * Gestion du skin 'ovensia'
- * 
+ *
  * @package ploopi
  * @subpackage skin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
- * @see skin_common 
+ *
+ * @see skin_common
  */
 
 /**
@@ -46,8 +46,8 @@ include_once './include/classes/skin_common.php';
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
- * @see skin_common 
+ *
+ * @see skin_common
  */
 
 class skin extends skin_common
@@ -57,7 +57,7 @@ class skin extends skin_common
      *
      * @return skin
      */
-    
+
     function skin()
     {
         parent::skin_common('ovensia');

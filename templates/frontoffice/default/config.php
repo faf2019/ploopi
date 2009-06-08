@@ -25,7 +25,7 @@
  * Définition des modes de parcours récursifs en fonction de la profondeur de rubrique.
  * Par défaut le moteur de template parcours les rubriques en largeur (toutes les rubriques, niveau par niveau)
  * Pour certains besoins (menus dynamiques) on peut vouloir un parcours en profondeur des menus (disposer des sous menus pour chaque rubrique)
- * 
+ *
  * @package template
  * @subpackage front_default
  * @copyright Netlor, Ovensia
@@ -33,7 +33,7 @@
  * @author Stéphane Escaich
  */
 
-$recursive_mode = array(    
+$recursive_mode = array(
                     '1' => 'prof',
                     '2' => 'prof',
                     '3' => 'prof',

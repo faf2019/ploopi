@@ -12,6 +12,8 @@
 
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
 
+    <base href="{SITE_BASEPATH}" />
+
     <!-- BEGIN switch_atomfeed_site -->
     <link rel="alternate" type="application/atom+xml" href="{switch_atomfeed_site.URL}" title="ATOM - {switch_atomfeed_site.TITLE}" />
     <!-- END switch_atomfeed_site -->
@@ -25,7 +27,7 @@
     <!-- BEGIN switch_rssfeed_heading -->
     <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_heading.URL}" title="RSS - {switch_rssfeed_heading.TITLE}" />
     <!-- END switch_rssfeed_site -->
-    
+
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/skin.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar.css" media="screen" />
@@ -40,11 +42,11 @@
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles_ie.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar_ie.css" media="screen" />
     <![endif]-->
-    
+
     <!-- BEGIN ploopi_js -->
     <script type="text/javascript" src="{ploopi_js.PATH}"></script>
     <!-- END ploopi_js -->
-    
+
     <!-- BEGIN module_js -->
     <script type="text/javascript" src="{module_js.PATH}"></script>
     <!-- END module_js -->
@@ -109,7 +111,7 @@
             </div>
             <div id="page_main">
                 <div id="menu_vertical">
-                
+
                     <div id="mini_form">
                         <form method="post" action="{SITE_HOME}">
                             <fieldset>
@@ -148,7 +150,7 @@
                         </form>
                     </div>
                     <!-- END switch_newsletter_subscription -->
-                                        
+
                     <!-- BEGIN switch_subscription -->
                     <div id="mini_form">
                         <form method="post" action="{switch_subscription.ACTION}">
@@ -168,19 +170,19 @@
                             </fieldset>
                         </form>
                     </div>
-                    <!-- END switch_subscription -->      
-                                                            
+                    <!-- END switch_subscription -->
+
                     <img class="box_bg" src="{TEMPLATE_PATH}/gfx/box.png" alt="fond menu vertical" title="fond menu vertical" />
                     <div class="box">
                         <h1>Actualités</h1>
-						<marquee behavior="scroll" direction="up" width="100%" scrollamount="2"  scrolldelay="70" onmouseover="javascript:this.stop();" onmouseout="javascript:this.start();">
-						 <!-- BEGIN news -->
-						     <div><strong>{news.TITLE}</strong></div>
-						     <div class="news_date">le {news.DATE} à {news.TIME}</div>
-						     <div class="news_content">{news.CONTENT}</div>
-						     <div style="padding-bottom:4px;"><a href="{news.URL}" target="_blank">{news.URLTITLE}</a></div>
-						 <!-- END news -->
-						 </marquee>
+                        <marquee behavior="scroll" direction="up" width="100%" scrollamount="2"  scrolldelay="70" onmouseover="javascript:this.stop();" onmouseout="javascript:this.start();">
+                         <!-- BEGIN news -->
+                             <div><strong>{news.TITLE}</strong></div>
+                             <div class="news_date">le {news.DATE} à {news.TIME}</div>
+                             <div class="news_content">{news.CONTENT}</div>
+                             <div style="padding-bottom:4px;"><a href="{news.URL}" target="_blank">{news.URLTITLE}</a></div>
+                         <!-- END news -->
+                         </marquee>
                     </div>
 
                 </div>
@@ -197,6 +199,9 @@
                             </a>
                         <!-- END result -->
                     </div>
+                    <!-- BEGIN switch_notfound -->
+                    <p>Aucun résultat pour cette recherche</p>
+                    <!-- END switch_notfound -->
                     <!-- END switch_search -->
 
                     <!-- BEGIN switch_tagsearch -->
@@ -226,7 +231,7 @@
                             </a>
                             <div id="subheading2">
                             <!-- BEGIN subheading2 -->
-                                &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp; 
+                                &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp;
                             <!-- END subheading2 -->
                             </div>
                         <!-- END subheading1 -->
@@ -302,7 +307,7 @@
                         <h2>{switch_newsletter_unsubscrib_response.RESPONSE}</h2>
                       </div>
                     <!-- END switch_newsletter_unsubscrib_response -->
-                                                  
+
                 </div>
             </div>
             <div id="menubas">

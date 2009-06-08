@@ -135,7 +135,7 @@ margin-bottom:10px;
 font-size:9px;
 }
 
-#page_tags span, 
+#page_tags span,
 #page_tags a {
 display: inline-block;
 vertical-align: middle;
@@ -144,7 +144,6 @@ vertical-align: middle;
 #page_tags a {
 font-style:italic;
 }
-
 
 #page {
 background: #ffffff;
@@ -272,7 +271,6 @@ float:right;
 background: url(../gfx/actubox.png) 0 50px no-repeat;
 color:#415826;
 }
-
 
 #mini_form {
 font-size:0.9em;
@@ -405,15 +403,15 @@ margin:6px 0;
 text-decoration:none;
 display:block;
 }
-    
+
 .headings_page img, .headings_page span {
 display: inline-block;
 vertical-align: middle;
 text-decoration:none;
 border:0;
 cursor:pointer;
-}   
-    
+}
+
 .headings_page:hover {
 text-decoration:none;
 color:#404040;

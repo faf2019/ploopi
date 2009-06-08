@@ -13,8 +13,11 @@
     <meta name="author" content="{WORKSPACE_META_AUTHOR}" />
     <meta name="copyright" content="{WORKSPACE_META_COPYRIGHT}" />
     <meta name="robots" content="{WORKSPACE_META_ROBOTS}" />
-
+    <meta name="verify-v1" content="iio/cb/S0gkfS3Q+TGm5h2nsmjsqM3a1AYpuIhpivuk=" />
+    
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
+
+    <base href="{SITE_BASEPATH}" />
 
     <!-- BEGIN switch_atomfeed_site -->
     <link rel="alternate" type="application/atom+xml" href="{switch_atomfeed_site.URL}" title="ATOM - {switch_atomfeed_site.TITLE}" />
@@ -38,7 +41,7 @@
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/skin_ie.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar_ie.css" media="screen" />
     <![endif]-->
-    
+
     <!--[if lte IE 6]>
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/png.css" media="screen" />
     <![endif]-->
@@ -46,7 +49,7 @@
     <!-- BEGIN ploopi_js -->
     <script type="text/javascript" src="{ploopi_js.PATH}"></script>
     <!-- END ploopi_js -->
-    
+
     <!-- BEGIN module_js -->
     <script type="text/javascript" src="{module_js.PATH}"></script>
     <!-- END module_js -->
@@ -123,7 +126,7 @@
                             </fieldset>
                         </form>
                     </div>
-                   
+
                     <!-- BEGIN switch_newsletter_subscription -->
                     <div class="mini_form">
                         <form method="post" action="{switch_newsletter_subscription.ACTION}">
@@ -140,7 +143,7 @@
                         </form>
                     </div>
                     <!-- END switch_newsletter_subscription -->
-                                                                                
+
                     <!-- BEGIN switch_subscription -->
                     <div class="mini_form">
                         <form method="post" action="{switch_subscription.ACTION}">
@@ -166,9 +169,9 @@
                     <div class="box">
                         <h1>Nuage de tags</h1>
                         <div id="tagcloud">
-	                        <!-- BEGIN tagcloud -->
-	                            <a href="{tagcloud.LINK}" class="{tagcloud.SELECTED}" title="Afficher les articles contenant le tag &laquo; {tagcloud.TAG} &raquo;" style="font-size:{tagcloud.SIZE}%;">{tagcloud.TAG}<sup>{tagcloud.OCCURENCE}</sup></a>
-	                        <!-- END tagcloud -->
+                            <!-- BEGIN tagcloud -->
+                                <a href="{tagcloud.LINK}" class="{tagcloud.SELECTED}" title="Afficher les articles contenant le tag &laquo; {tagcloud.TAG} &raquo;" style="font-size:{tagcloud.SIZE}%;">{tagcloud.TAG}<sup>{tagcloud.OCCURENCE}</sup></a>
+                            <!-- END tagcloud -->
                         </div>
                     </div>
 
@@ -208,21 +211,21 @@
                     <!-- BEGIN switch_content_page -->
                         <h1>{PAGE_TITLE}</h1>
                         <!-- BEGIN switch_tags -->
-	                        <p id="page_tags"><span>tags :</span>
-		                        <!-- BEGIN tag -->
+                            <p id="page_tags"><span>tags :</span>
+                                <!-- BEGIN tag -->
                                     <a title="Afficher les articles contenant le tag &laquo; {switch_content_page.switch_tags.tag.TAG} &raquo;" href="{switch_content_page.switch_tags.tag.LINK}">{switch_content_page.switch_tags.tag.TAG}</a>
-		                        <!-- END tag -->
-	                        </p>
+                                <!-- END tag -->
+                            </p>
                         <!-- END switch_tags -->
                         <div>{PAGE_CONTENT}</div>
                         <div id="page_lastupdate">Auteur: {PAGE_LASTUPDATE_USER_FIRSTNAME} {PAGE_LASTUPDATE_USER_LASTNAME} - Modifié le: {PAGE_LASTUPDATE_DATE} à {PAGE_LASTUPDATE_TIME}</div>
                     <!-- END switch_content_page -->
-                    
+
                     <!-- BEGIN switch_content_message -->
                         <h1>{MESSAGE_TITLE}</h1>
                         {MESSAGE_CONTENT}
-                    <!-- END switch_content_message -->                    
-                    
+                    <!-- END switch_content_message -->
+
                     <!-- BEGIN switch_newsletter_unsubscrib -->
                       <div style="text-align: center;">
                         <h2>Desinscription à la NewsLetter:</h2>

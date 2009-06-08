@@ -19,7 +19,6 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 html input { overflow: visible; }
 
 #ploopi_popup {
@@ -45,7 +44,6 @@ div.simplebloc_title {
     height: 1%;
     overflow: visible;
 }
-
 
 .ploopi_form p label {
     padding: .2em .2em 0 0;

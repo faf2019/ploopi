@@ -10,6 +10,8 @@
 
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
 
+    <base href="{SITE_BASEPATH}" />
+
     <!-- BEGIN switch_atomfeed_site -->
     <link rel="alternate" type="application/atom+xml" href="{switch_atomfeed_site.URL}" title="ATOM - {switch_atomfeed_site.TITLE}" />
     <!-- END switch_atomfeed_site -->
@@ -195,6 +197,18 @@
                 <!-- END switch_pages -->
 
                 <div id="pagecontent">
+                
+                    <!-- BEGIN switch_private -->
+	                    <!-- BEGIN switch_notconnected -->
+	                    <h2>Cette rubrique est privée</h2>
+	                    Vous devez vous identifier pour accéder à cette rubrique
+                        <!-- END switch_notconnected -->
+                        <!-- BEGIN switch_notallowed -->
+                        <h2>Cette rubrique est privée</h2>
+                        Vous n'êtes pas autorisé à accéder à cette rubrique
+                        <!-- END switch_notallowed -->
+                    <!-- END switch_private -->
+                
                     <!-- BEGIN switch_search -->
                     <h2>Résultat de la recherche pour "{PAGE_QUERYSTRING}"</h2>
                     <div id="search_result">
@@ -206,6 +220,9 @@
                             </a>
                         <!-- END result -->
                     </div>
+                    <!-- BEGIN switch_notfound -->
+                    <p>Aucun résultat pour cette recherche</p>
+                    <!-- END switch_notfound -->
                     <!-- END switch_search -->
 
                     <!-- BEGIN switch_tagsearch -->

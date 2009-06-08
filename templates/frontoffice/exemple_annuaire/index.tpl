@@ -340,6 +340,9 @@
                             </a>
                         <!-- END result -->
                     </div>
+                    <!-- BEGIN switch_notfound -->
+                    <p>Aucun résultat pour cette recherche</p>
+                    <!-- END switch_notfound -->
                     <!-- END switch_search -->
 
                     <!-- BEGIN switch_tagsearch -->

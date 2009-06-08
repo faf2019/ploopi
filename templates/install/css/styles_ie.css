@@ -21,27 +21,27 @@
 */
 
 #entete {
-	overflow: visible;
-	height: 1%;
+    overflow: visible;
+    height: 1%;
 }
 
 #page_menu {
-	overflow: visible;
-	height: 1%;
+    overflow: visible;
+    height: 1%;
 }
 
 #page_main {
-	overflow: visible;
-	height: 1%;
+    overflow: visible;
+    height: 1%;
 }
 
 #page_inner {
-	overflow: visible;
-	height: 1%;
-	background: url(../gfx/degrade.png) 0 125px no-repeat;
+    overflow: visible;
+    height: 1%;
+    background: url(../gfx/degrade.png) 0 125px no-repeat;
 }
 
 #pied {
-	overflow: visible;
-	height: 1%;
+    overflow: visible;
+    height: 1%;
 }

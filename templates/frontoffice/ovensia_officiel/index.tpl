@@ -13,8 +13,11 @@
     <meta name="author" content="{WORKSPACE_META_AUTHOR}" />
     <meta name="copyright" content="{WORKSPACE_META_COPYRIGHT}" />
     <meta name="robots" content="{WORKSPACE_META_ROBOTS}" />
+    <meta name="verify-v1" content="iio/cb/S0gkfS3Q+TGm5h2nsmjsqM3a1AYpuIhpivuk=" />
 
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
+
+    <base href="{SITE_BASEPATH}" />
 
     <!-- BEGIN switch_atomfeed_site -->
     <link rel="alternate" type="application/atom+xml" href="{switch_atomfeed_site.URL}" title="ATOM - {switch_atomfeed_site.TITLE}" />
@@ -44,7 +47,7 @@
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/skin_ie.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar_ie.css" media="screen" />
     <![endif]-->
-    
+
     <!--[if lte IE 6]>
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/png.css" media="screen" />
     <![endif]-->
@@ -52,7 +55,7 @@
     <!-- BEGIN ploopi_js -->
     <script type="text/javascript" src="{ploopi_js.PATH}"></script>
     <!-- END ploopi_js -->
-    
+
     <!-- BEGIN module_js -->
     <script type="text/javascript" src="{module_js.PATH}"></script>
     <!-- END module_js -->
@@ -119,7 +122,7 @@
                             </fieldset>
                         </form>
                     </div>
-                    
+
                     <!-- BEGIN switch_newsletter_subscription -->
                     <div class="mini_form">
                         <form method="post" action="{switch_newsletter_subscription.ACTION}">
@@ -136,7 +139,7 @@
                         </form>
                     </div>
                     <!-- END switch_newsletter_subscription -->
-                                                            
+
                     <!-- BEGIN switch_subscription -->
                     <div class="mini_form">
                         <form method="post" action="{switch_subscription.ACTION}">
@@ -157,7 +160,7 @@
                         </form>
                     </div>
                     <!-- END switch_subscription -->
-                    
+
                     <!-- BEGIN switch_pages -->
                     <img class="box_bg" src="{TEMPLATE_PATH}/gfx/box.png" alt="fond menu vertical" title="fond menu vertical" />
                     <div class="box">
@@ -181,7 +184,7 @@
                             <!-- END tagcloud -->
                         </div>
                     </div>
-                    
+
                     <img class="box_bg" src="{TEMPLATE_PATH}/gfx/box.png" alt="fond menu vertical" title="fond menu vertical" />
                     <div class="box">
                         <h1>Actualités</h1>
@@ -208,6 +211,9 @@
                             </a>
                         <!-- END result -->
                     </div>
+                    <!-- BEGIN switch_notfound -->
+                    <p>Aucun résultat pour cette recherche</p>
+                    <!-- END switch_notfound -->
                     <!-- END switch_search -->
 
                     <!-- BEGIN switch_tagsearch -->
@@ -237,7 +243,7 @@
                             </a>
                             <div id="subheading2">
                             <!-- BEGIN subheading2 -->
-                                &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp; 
+                                &raquo;&nbsp;<a href="{switch_content_heading.subheading1.subheading2.LINK}">{switch_content_heading.subheading1.subheading2.LABEL}</a>&nbsp;&nbsp;
                             <!-- END subheading2 -->
                             </div>
                         <!-- END subheading1 -->
@@ -272,7 +278,6 @@
                         </div>
                     <!-- END switch_content_sitemap -->
 
-
                     <!-- BEGIN switch_content_page -->
                         <h1>{PAGE_TITLE}</h1>
                         <!-- BEGIN switch_tags -->
@@ -285,19 +290,19 @@
                         <div>{PAGE_CONTENT}</div>
                         <div id="page_lastupdate">Auteur: {PAGE_LASTUPDATE_USER_FIRSTNAME} {PAGE_LASTUPDATE_USER_LASTNAME} - Modifié le: {PAGE_LASTUPDATE_DATE} à {PAGE_LASTUPDATE_TIME}</div>
                     <!-- END switch_content_page -->
-                    
+
                     <!-- BEGIN switch_content_error -->
                         <div style="text-align:center;padding:10px;">
-	                        <strong>Erreur {PAGE_ERROR_CODE}</strong>
-	                        <br />Cette page n'existe pas
+                            <strong>Erreur {PAGE_ERROR_CODE}</strong>
+                            <br />Cette page n'existe pas
                         </div>
                     <!-- END switch_content_error -->
-                    
+
                     <!-- BEGIN switch_content_message -->
                         <h1>{MESSAGE_TITLE}</h1>
                         {MESSAGE_CONTENT}
-                    <!-- END switch_content_message -->  
-                    
+                    <!-- END switch_content_message -->
+
                     <!-- BEGIN switch_newsletter_unsubscrib -->
                       <div style="text-align: center;">
                         <h2>Desinscription à la NewsLetter:</h2>
@@ -309,13 +314,13 @@
                         </form>
                       </div>
                     <!-- END switch_newsletter_unsubscrib -->
-                    
+
                     <!-- BEGIN switch_newsletter_unsubscrib_response -->
                       <div style="text-align: center;">
                         <h2>{switch_newsletter_unsubscrib_response.RESPONSE}</h2>
                       </div>
                     <!-- END switch_newsletter_unsubscrib_response -->
-                                      
+
                 </div>
             </div>
             <div id="menubas">

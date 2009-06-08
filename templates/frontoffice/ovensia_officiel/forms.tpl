@@ -66,7 +66,7 @@
                         </span>
                         <!-- END columns -->
                     <!-- END switch_radio -->
-    	
+        
                     <!-- BEGIN switch_file -->
                     <input type="file" id="{formfields.switch_field.LABELID}" name="{formfields.switch_field.NAME}" value="{formfields.switch_field.VALUE}" tabindex="{formfields.switch_field.TABINDEX}" />
                     <!-- END switch_file -->
@@ -85,8 +85,8 @@
 </div>
 <div class="form_validate">(*) Champs requis</div>
 <div class="form_validate">
-	<input type="hidden" name="op" value="saveform" />
-	<input type="hidden" name="forms_id" value="{FORM_ID}" />
+    <input type="hidden" name="op" value="saveform" />
+    <input type="hidden" name="forms_id" value="{FORM_ID}" />
     <input type="reset" value="Annuler" />
     <input type="submit" value="Envoyer" />
 </div>

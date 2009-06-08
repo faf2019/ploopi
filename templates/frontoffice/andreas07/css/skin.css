@@ -92,7 +92,6 @@ height:6px;
 font-size:1px; /* IE 6 ! */
 }
 
-
 .simplebloc {
 clear:both;
 overflow:hidden;
@@ -100,8 +99,6 @@ background-color:#fafafa;
 border:1px solid #4a4a4a;
 margin-bottom:2px;
 }
-
-
 
 select.select {
 border: 1px solid #606060;
@@ -213,7 +210,6 @@ padding:2px 10px;
 background:#4a4a4a url(../img/template/menu_fond.png) 0 0 repeat-x;
 }
 
-
 .toolbar_icon {
 display:block;
 float:left;
@@ -321,7 +317,6 @@ color:#f0f0f0;
 font-weight:bold;
 }
 
-
 .ploopi_error {
 clear:both;
 color:#ff0000;
@@ -336,8 +331,6 @@ font-size:10px;
 color:#000000;
 }
 
-
-
 .ploopi_overflowauto {
 overflow:auto;
 }
@@ -347,16 +340,16 @@ p.ploopi_va {
     margin:0;
 }
 
-p.ploopi_va img, 
-p.ploopi_va span, 
-p.ploopi_va label, 
-p.ploopi_va strong, 
-p.ploopi_va em, 
-p.ploopi_va input, 
-p.ploopi_va select, 
+p.ploopi_va img,
+p.ploopi_va span,
+p.ploopi_va label,
+p.ploopi_va strong,
+p.ploopi_va em,
+p.ploopi_va input,
+p.ploopi_va select,
 p.ploopi_va a {
-	display: inline-block;
-	vertical-align: middle;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .ploopi_form {
@@ -451,8 +444,6 @@ p.ploopi_va a {
     cursor:pointer;
 }
 
-
-
 .ploopi_form_title {
     display:block;
     clear:both;
@@ -496,7 +487,6 @@ a.ploopi_form_title * {
     font-weight:bold;
 }
 
-
 div.ploopi_explorer_main {
     position:relative;
     background-color:#f0f0f0;
@@ -523,7 +513,6 @@ div.ploopi_explorer_column {
     border-left:1px solid #b8b8b8;
     z-index:1000;
 }
-
 
 *.ploopi_explorer_element {
     display:block;
@@ -627,7 +616,7 @@ input.ploopi_page_cut_disable {
   text-align:center;
   font-weight: normal;
   width: 18px;
-} 
+}
 
 select.ploopi_page_by {
   border: 1px solid #606060;
@@ -644,7 +633,7 @@ select.ploopi_page_by {
 }
 
 .ploopi_selectbox_button {
-    margin:0; 
+    margin:0;
     background: #f0f0f0 url(../img/template/selectbox.gif) right no-repeat;
     padding:2px 4px;
     border: 1px solid #808080;
@@ -659,7 +648,7 @@ select.ploopi_page_by {
     white-space:nowrap;
 }
 
-.ploopi_selectbox_button img, 
+.ploopi_selectbox_button img,
 .ploopi_selectbox_button span {
     display: inline-block;
     vertical-align: middle;
@@ -669,17 +658,16 @@ select.ploopi_page_by {
     background-color: #d0d0d0;
 }
 
-
 .ploopi_selectbox_list {
     margin-top: -1px;;
     padding: 0;
     background: #f0f0f0;
-    z-index: 10000; 
-    position: absolute; 
+    z-index: 10000;
+    position: absolute;
 }
 
 .ploopi_selectbox_list ul {
-    border-width: 1px; 
+    border-width: 1px;
     border-style: solid;
     border-color: #808080;
     margin:0;
@@ -704,7 +692,7 @@ select.ploopi_page_by {
     text-decoration:none;
 }
 
-.ploopi_selectbox_list li a img, 
+.ploopi_selectbox_list li a img,
 .ploopi_selectbox_list li a span {
     display: inline-block;
     vertical-align: middle;

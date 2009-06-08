@@ -181,7 +181,7 @@
                         <!-- END result -->
 
                         <!-- BEGIN switch_notfound -->
-                            Aucun résultat pour cette recherche
+                        <p>Aucun résultat pour cette recherche</p>
                         <!-- END switch_notfound -->
                     </div>
                     <!-- END switch_search -->

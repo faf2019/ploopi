@@ -1355,6 +1355,9 @@ background-color:#f0f0f0;
 display:block;
 color:#202020;
 text-decoration:none;
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
 }
 
 .toolbar_icon_vertical a:hover {
@@ -1387,6 +1390,9 @@ background-color:#f0f0f0;
 display:block;
 color:#202020;
 text-decoration:none;
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
 }
 
 .toolbar_icon a:hover {
@@ -1429,6 +1435,9 @@ background-color:#fff;
 .toolbar_icon_sel a {
 display:block;
 color:#fff;
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
 }
 
 .toolbar_icon_sel a:hover {
@@ -1461,6 +1470,9 @@ color:#fff;
 padding:2px 4px;
 margin-left:2px;
 white-space:nowrap;
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
 }
 
 .tabs a:hover {
@@ -1907,6 +1919,9 @@ padding-left:12px;
 padding-right:6px;
 text-decoration:none;
 background: url(../img/template/tabs.png) 0 0 no-repeat;
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
 }
 
 .ploopi_tabs a:hover {

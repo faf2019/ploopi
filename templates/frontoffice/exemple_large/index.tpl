@@ -10,6 +10,8 @@
 
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
 
+    <base href="{SITE_BASEPATH}" />
+
     <!-- BEGIN switch_atomfeed_site -->
     <link rel="alternate" type="application/atom+xml" href="{switch_atomfeed_site.URL}" title="ATOM - {switch_atomfeed_site.TITLE}" />
     <!-- END switch_atomfeed_site -->
@@ -184,6 +186,9 @@
                             </a>
                         <!-- END result -->
                     </div>
+                    <!-- BEGIN switch_notfound -->
+                    <p>Aucun résultat pour cette recherche</p>
+                    <!-- END switch_notfound -->
                     <!-- END switch_search -->
 
                     <!-- BEGIN switch_tagsearch -->
