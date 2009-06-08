@@ -79,7 +79,7 @@ function ploopi_validation_selectusers($id_object = 0, $id_record = '', $id_modu
         </div>
         <div id="div_validation_search_result"></div>
 
-        <div class="ploopi_validation_title">Accréditations :</div>
+        <div class="ploopi_validation_title">Sélection actuelle :</div>
         <div class="ploopi_validation_authorizedlist" id="div_validation_users_selected">
         <?php if (empty($_SESSION['ploopi']['validation']['users_selected'])) echo 'Aucune accrédidation'; ?>
         </div>

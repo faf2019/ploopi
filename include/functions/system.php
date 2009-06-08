@@ -228,21 +228,23 @@ function ploopi_ob_callback($buffer)
 
     if ($content_type == 'text/html')
     {
-        $array_tags = array(    '<PLOOPI_PAGE_SIZE>',
-                                '<PLOOPI_EXEC_TIME>',
-                                '<PLOOPI_PHP_P100>',
-                                '<PLOOPI_SQL_P100>',
-                                '<PLOOPI_NUMQUERIES>',
-                                '<PLOOPI_SESSION_SIZE>'
-                            );
+        $array_tags = array(
+            '<PLOOPI_PAGE_SIZE>',
+            '<PLOOPI_EXEC_TIME>',
+            '<PLOOPI_PHP_P100>',
+            '<PLOOPI_SQL_P100>',
+            '<PLOOPI_NUMQUERIES>',
+            '<PLOOPI_SESSION_SIZE>'
+        );
 
-        $array_values = array(  sprintf("%.02f",$ploopi_stats['pagesize']/1024),
-                                $ploopi_stats['total_exectime'],
-                                $ploopi_stats['php_ratiotime'],
-                                $ploopi_stats['sql_ratiotime'],
-                                $ploopi_stats['numqueries'],
-                                sprintf("%.02f",$ploopi_stats['sessionsize']/1024)
-                            );
+        $array_values = array(  
+            sprintf("%.02f",$ploopi_stats['pagesize']/1024),
+            $ploopi_stats['total_exectime'],
+            $ploopi_stats['php_ratiotime'],
+            $ploopi_stats['sql_ratiotime'],
+            $ploopi_stats['numqueries'],
+            sprintf("%.02f",$ploopi_stats['sessionsize']/1024)
+        );
 
         $buffer = trim(str_replace($array_tags, $array_values, $buffer));
     }
@@ -322,6 +324,7 @@ function ploopi_redirect($url, $urlencode = true, $internal = true, $refresh = 0
  * @param boolean $js true si les fichiers javascript doivent être chargés
  * @param boolean $css true si les feuilles de style doivent être chargées
  * @param boolean $head true si l'entête doit être chargée
+ * @return boolean true si le module a été initialisé 
  *
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
@@ -334,9 +337,7 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
     global $ploopi_additional_javascript;
     global $template_body;
 
-    $strModulePath = "./modules/{$moduletype}";
-
-    if (is_dir($strModulePath))
+    if (is_dir($strModulePath = "./modules/{$moduletype}"))
     {
         $version = (empty($_SESSION['ploopi']['moduletypes'][$moduletype]['version'])) ? '' : '?v='.urlencode($_SESSION['ploopi']['moduletypes'][$moduletype]['version']);
 
@@ -396,11 +397,9 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
                 // GET MODULE ADDITIONAL JS
                 if (file_exists($jsfile) && isset($template_body))
                 {
-                    $template_body->assign_block_vars(  'module_js',
-                                                        array(
-                                                        'PATH' => "{$jsfile}{$version}"
-                                                        )
-                                                    );
+                    $template_body->assign_block_vars('module_js', array(
+                        'PATH' => "{$jsfile}{$version}"
+                    ));
                 }
             }
         }
@@ -417,25 +416,24 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
                 // GET MODULE STYLE
                 if (file_exists($cssfile) && isset($template_body))
                 {
-                    $template_body->assign_block_vars(  'module_css',
-                                                        array(
-                                                        'PATH' => "{$cssfile}{$version}"
-                                                        )
-                                                    );
+                    $template_body->assign_block_vars('module_css', array(
+                        'PATH' => "{$cssfile}{$version}"
+                    ));
                 }
 
                 // GET MODULE STYLE FOR IE
                 if (file_exists($cssfile_ie) && isset($template_body))
                 {
-                    $template_body->assign_block_vars(  'module_css_ie',
-                                                        array(
-                                                        'PATH' => "{$cssfile_ie}{$version}"
-                                                        )
-                                                    );
+                    $template_body->assign_block_vars('module_css_ie', array(       
+                        'PATH' => "{$cssfile_ie}{$version}"
+                    ));
                 }
             }
         }
     }
+    else return false;
+    
+    return true;
 }
 
 /**

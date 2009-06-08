@@ -433,6 +433,7 @@ class ploopi_db
                     if (sizeof($fields) == 1) $array[] = $fields[key($fields)];
                     else $array[] = $fields;
                 }
+                $this->dataseek($query_id, 0);
             }
             return $array;
         }

@@ -34,6 +34,9 @@
 switch($ploopi_op)
 {
     case 'share_select_user':
+        
+        if (!isset($_SESSION['ploopi']['share']['users_selected'])) $_SESSION['ploopi']['share']['users_selected'] = array();
+        
         if (isset($_GET['user_id'])) $_SESSION['ploopi']['share']['users_selected'][$_GET['user_id']] = $_GET['user_id'];
         if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['share']['users_selected'][$_GET['remove_user_id']]);
 

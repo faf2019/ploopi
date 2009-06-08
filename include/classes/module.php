@@ -76,18 +76,18 @@ class module extends data_object
             $res = parent::save();
 
             // insert default parameters
-            $insert = "INSERT INTO ploopi_param_default SELECT ".$this->fields['id'].", name, default_value, id_module_type FROM ploopi_param_type WHERE id_module_type = ".$this->fields['id_module_type'];
+            $insert = "INSERT INTO ploopi_param_default SELECT {$this->fields['id']}, name, default_value, id_module_type FROM ploopi_param_type WHERE id_module_type = ".$this->fields['id_module_type'];
             $db->query($insert);
 
             // todo when new module
-            $select = "SELECT * FROM ploopi_module_type WHERE ploopi_module_type.id = ".$this->fields['id_module_type'];
-            $answer = $db->query($select);
-            $fields = $db->fetchrow($answer);
-
-            $admin_moduleid = $this->fields['id'];
-            // script to execute to create specific module data
-            if (file_exists("./modules/$fields[label]/include/create.php")) include "./modules/$fields[label]/include/create.php";
-            elseif (file_exists("./modules/$fields[label]/include/admin_instance_create.php")) include "./modules/$fields[label]/include/admin_instance_create.php";
+            $objModuleType = new module_type();
+            if ($objModuleType->open($this->fields['id_module_type']))
+            {
+                $admin_moduleid = $this->fields['id'];
+                // script to execute to create specific module data
+                if (file_exists("./modules/{$objModuleType->fields['label']}/include/create.php")) include "./modules/{$objModuleType->fields['label']}/include/create.php";
+                elseif (file_exists("./modules/{$objModuleType->fields['label']}/include/admin_instance_create.php")) include "./modules/{$objModuleType->fields['label']}/include/admin_instance_create.php";
+            }
         }
         else $res = parent::save();
 
