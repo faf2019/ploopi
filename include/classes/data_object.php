@@ -71,12 +71,20 @@ class data_object
     private $tablename;
     
     /**
-     * Tableau associatif des champs qui composent la clé primaire
+     * Tableau indexé des champs qui composent la clé primaire
      *
      * @var array
      */
 
     private $idfields;
+    
+    /**
+     * Tableau associatif des valeurs qui composent la clé primaire
+     *
+     * @var array
+     */
+
+    private $id;
     
     /**
      * Objet de connexion à la base de données
@@ -195,6 +203,7 @@ class data_object
         $this->classname = get_class($this) ;
         $this->tablename = func_get_arg(0);
         $this->idfields = array();
+        $this->id = array();
         $this->fields = array();
 
         if ($numargs == 1) // special case
@@ -210,6 +219,7 @@ class data_object
                 {
                     $this->idfields[$i-1] = func_get_arg($i);
                     $this->fields[$this->idfields[$i-1]] = null;
+                    $this->id[$this->idfields[$i-1]] = null;
                 }
             }
         }
@@ -271,10 +281,11 @@ class data_object
     {
         $numargs = func_num_args();
         
-        if ($numargs > 0)
+        if ($numargs == sizeof($this->idfields))
         {
+            
             for ($i = 0; $i < $numargs; $i++) $id[$i] = func_get_arg($i);
-
+            
             $this->sql = "SELECT * FROM `{$this->tablename}` WHERE `{$this->idfields[0]}` = '".$this->db->addslashes($id[0])."'";
 
             for ($i = 1; $i < $numargs; $i++) $this->sql .= " AND `{$this->idfields[$i]}` = '".$this->db->addslashes($id[$i])."'";
@@ -283,12 +294,14 @@ class data_object
             $this->numrows = $this->db->numrows($this->resultid);
             $this->fields = $this->db->fetchrow($this->resultid);
 
-            for ($i = 0; $i < $numargs; $i++) $this->fields[$this->idfields[$i]] = $id[$i];
+            for ($i = 0; $i < $numargs; $i++) $this->id[$this->idfields[$i]] = $this->fields[$this->idfields[$i]] = $id[$i];
 
-            if ($this->numrows>0) $this->new = false;
+            if ($this->numrows > 0) $this->new = false;
+            
+            return $this->numrows > 0;
         }
+        else return false;
 
-        return $this->numrows;
     }
 
     /**
@@ -327,17 +340,14 @@ class data_object
             $arrValues = array();
             foreach ($this->fields as $key => $value)
             {
-                if (!in_array($key,$this->idfields)) // field is not a key
-                {
-                    $arrValues[] = (is_null($value)) ? "`{$this->tablename}`.`{$key}` = null" : "`{$this->tablename}`.`{$key}` = '".$this->db->addslashes($value)."'";
-                }
+                $arrValues[] = (is_null($value)) ? "`{$this->tablename}`.`{$key}` = null" : "`{$this->tablename}`.`{$key}` = '".$this->db->addslashes($value)."'";
             }
 
             $listvalues = (empty($arrValues)) ? '' : implode(', ', $arrValues);
 
             // build request
-            $this->sql = "UPDATE `{$this->tablename}` SET {$listvalues} WHERE `{$this->tablename}`.`{$this->idfields[0]}` = '".$this->db->addslashes($this->fields[$this->idfields[0]])."'";
-            for ($i = 1; $i < sizeof($this->idfields); $i++) $this->sql .= " AND `{$this->tablename}`.`{$this->idfields[$i]}` = '".$this->db->addslashes($this->fields[$this->idfields[$i]])."'";
+            $this->sql = "UPDATE `{$this->tablename}` SET {$listvalues} WHERE `{$this->tablename}`.`{$this->idfields[0]}` = '".$this->db->addslashes($this->id[$this->idfields[0]])."'";
+            for ($i = 1; $i < sizeof($this->idfields); $i++) $this->sql .= " AND `{$this->tablename}`.`{$this->idfields[$i]}` = '".$this->db->addslashes($this->id[$this->idfields[$i]])."'";
 
             $this->db->query($this->sql);
         }
