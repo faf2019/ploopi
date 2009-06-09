@@ -3,7 +3,7 @@
 # Pour l'export SQL :
 # mysqldump -uroot -p<PASS> --opt --default-character-set=latin1 --comments=FALSE ploopixxxx > install/system/ploopi.sql
 
-export DEST=ploopi_1.4.0.1
+export DEST=ploopi_1.5
 
 #################################
 # compression des fichiers
@@ -101,6 +101,8 @@ find {data,config,modules} -type f -print0 | xargs -0 -n 1 chmod 660
 
 find bin -type f -print0 | xargs -0 -n 1 chmod 550
 chmod 550 ./cgi/upload.cgi
+
+chmod 550 *.sh
 
 cd ..
 

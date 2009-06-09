@@ -86,5 +86,9 @@
     RewriteRule ^tag-([a-zA-Z0-9]*)\.[a-zA-Z0-9]*(.*)$ index.php?query_tag=$1$2 [L]
     RewriteRule ^(.*)-d([a-z0-9]{32})\.[a-zA-Z0-9]*(.*)$ index-quick.php?ploopi_op=doc_file_download&docfile_md5id=$2 [L]
     RewriteRule ^unsubscribe-([a-zA-Z0-9].*)\.html$ index.php?ploopi_op=webedit_unsubscribe&subscription_email=$1 [L]
+    
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*) index.php    
 </IfModule>
 
