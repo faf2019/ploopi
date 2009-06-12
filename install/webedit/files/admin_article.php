@@ -624,9 +624,8 @@ $keywords = array_slice($keywords, 0 , 20, true);
     }
     ?>
     </div>
-    <input class="flatbutton" type="button" value="Retour" onclick="javascript:document.location.href='admin.php';">
     <?php
-    if ($op != 'article_addnew' && (in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
+    if ($op != 'article_addnew' && (ploopi_isadmin() || in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
         <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
@@ -683,9 +682,8 @@ $keywords = array_slice($keywords, 0 , 20, true);
     }
     ?>
     </div>
-    <input class="flatbutton" type="button" value="Retour" onclick="javascript:document.location.href='admin.php';">
     <?php
-    if ($op != 'article_addnew' && (in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
+    if ($op != 'article_addnew' && (ploopi_isadmin() || in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
         <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">

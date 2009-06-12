@@ -862,6 +862,9 @@ function webedit_generate_sitemap()
     // Mise en cache
     $objCache = new ploopi_cache('sitemap.xml', 300);
 
+    // Vidage du buffer
+    ploopi_ob_clean();
+    
     if (!$objCache->start())
     {
         global $db;

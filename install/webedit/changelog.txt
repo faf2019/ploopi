@@ -1,3 +1,10 @@
+== Module WebEdit - version 2.1.0b ============================================
+
+2009-06-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug à la génération du fichier sitemap.xml : on force le vidage du buffer 
+ * Correction d'un bug empêchant l'administrateur de supprimer les articles dont il n'est pas validateur
+ 
 == Module WebEdit - version 2.1.0 ============================================
 
 2009-06-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
