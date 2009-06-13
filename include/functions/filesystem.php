@@ -208,6 +208,7 @@ function ploopi_getmimetype($filename)
             'jpe' => 'image/jpeg',
             'jfif' => 'image/jpeg',
             'bmp' => 'image/bmp',
+            'pcx' => 'image/pcx',
             'tif' => 'image/tiff',
             'tiff' => 'image/tiff',
             'pnm' => 'image/x-portable-anymap',
@@ -219,7 +220,13 @@ function ploopi_getmimetype($filename)
             'ico' => 'image/x-icon',
             'svg' => 'image/svg+xml',
             'svgz' => 'image/svg+xml',
-
+            'rgb' => 'image/x-rgb',
+            'jng' => 'image/x-jng',
+            'cdr' => 'image/x-coreldraw',
+            'pat' => 'image/x-coreldrawpattern',
+            'cdt' => 'image/x-coreldrawtemplate',
+            'cpt' => 'image/x-corelphotopaint',
+        
             // thumbnails
             'thm' => 'application/vnd.eri.thm',
 
@@ -244,14 +251,16 @@ function ploopi_getmimetype($filename)
             //packages
             'rpm' => 'application/x-redhat-package',
             'deb' => 'application/x-debian-package',
-
+            'udeb' => 'application/x-debian-package',
+        
             //audio
             'aif' => 'audio/aiff',
             'aiff' => 'audio/aiff',
             'aifc' => 'audio/aiff',
-            'mid' => 'audio/mid',
-            'midi' => 'audio/mid',
-            'rmi' => 'audio/mid',
+            'mid' => 'audio/midi',
+            'midi' => 'audio/midi',
+            'kar' => 'audio/midi',
+            'rmi' => 'audio/midi',
             'mp3' => 'audio/mpeg',
             'mp2' => 'audio/mpeg',
             'mpa' => 'audio/mpeg',
@@ -263,7 +272,18 @@ function ploopi_getmimetype($filename)
             'flac' => 'audio/flac',
             'aac' => 'audio/mp4',
             'm4a' => 'audio/mp4',
-
+            'mka' => 'audio/x-matroska',
+            'ac3' => 'audio/ac3',
+            'mpc' => 'audio/x-musepack',
+            
+            //audio/tracker
+            'mod' => 'audio/x-mod',
+            'xm' => '"audio/x-xm',
+            'xi' => '"audio/x-xi',
+            's3m' => '"audio/x-s3m',
+            'stm' => '"audio/x-stm',
+            'it' => '"audio/x-it',
+        
             //video
             'asf' => 'video/x-ms-asf',
             'asx' => 'video/x-ms-asf',
@@ -281,6 +301,17 @@ function ploopi_getmimetype($filename)
             'mp2' => 'audio/mpeg',
             'movie' => 'video/x-sgi-movie',
             'flv' => 'video/x-flv',
+            'mkv' => 'video/x-matroska',
+            '3gp' => 'video/3gpp',
+            'dv' => 'video/dv',
+            'dif' => 'video/dv',
+            'dl' => 'video/dl',
+            'h264' => 'video/h264',
+            'viv' => 'video/vivo',
+            'vivo' => 'video/vivo',
+            'mng' => 'video/x-mng',
+            'gl' => 'video/gl',
+            'fli' => 'video/fli',
 
             //real
             'ra' => 'audio/vnd.rn-realaudio',
@@ -294,7 +325,9 @@ function ploopi_getmimetype($filename)
             //playlist
             'pls' => 'audio/scpls',
             'm3u' => 'audio/x-mpegurl',
-
+            'mxu' => 'video/vnd.mpegurl',
+            'pla' => 'audio/x-iriver-pla',
+        
             //xml
             'xml' => 'text/xml',
             'xsl' => 'text/xsl',
@@ -310,7 +343,17 @@ function ploopi_getmimetype($filename)
             'rdf' => 'application/rdf+xml',
             'atom' => 'application/atom+xml',
             'opml' => 'application/opml+xml',
-
+            'xul' => 'application/vnd.mozilla.xul+xml',
+         
+            //bureautique
+            'abw' => 'application/x-abiword',
+            'gnumeric' => 'application/x-gnumeric',
+            'kwd' => 'application/x-kword',
+            'kwt' => 'application/x-kword',
+            'ksp' => 'application/x-kspread',
+            'kpr' => 'application/x-kpresenter',
+            'kpt' => 'application/x-kpresenter',
+        
             //microsoft
             'doc' => 'application/msword',
             'dot' => 'application/msword',
@@ -339,6 +382,7 @@ function ploopi_getmimetype($filename)
             'scd' => 'application/x-msschedule',
             'trm' => 'application/x-msterminal',
             'wri' => 'application/x-mswrite',
+            'vsd' => 'application/vnd.visio',
 
             //open office
             'sxw' => 'application/vnd.sun.xml.writer',
@@ -379,20 +423,28 @@ function ploopi_getmimetype($filename)
             'eps' => 'application/postscript',
             'psd' => 'image/psd',
             'ps' => 'application/postscript',
-
+            'dcr' => 'application/x-director',
+            'dir' => 'application/x-director',
+            'dxr' => 'application/x-director',
+        
             //macromedia
             'swf' => 'application/x-shockwave-flash',
+            'swfl' => 'application/x-shockwave-flash',
             'fla' => 'application/x-shockwave-flash',
 
             //binaires/executables
             'hqx' => 'application/mac-binhex40',
             'exe' => 'application/x-msdownload',
             'com' => 'application/x-msdownload',
-            'bat' => 'application/x-msdownload',
+            'msi' => 'application/x-msi',
             'class' => 'application/x-java-class',
             'jar' => 'application/java',
             'jad' => 'text/vnd.sun.j2me.app-descriptor',
-
+        
+            //shell
+            'sh' => 'application/x-sh',
+            'bat' => 'application/x-msdownload',
+        
             //fonts
             'otf' => 'font/opentype',
             'ttf' => 'application/x-font-ttf',
@@ -414,7 +466,7 @@ function ploopi_getmimetype($filename)
             'p7s' => 'application/x-pkcs7-signature',
 
             //disk images
-            'iso' => 'application/x-isoview',
+            'iso' => 'application/x-iso9660-image',
             'nrg' => 'application/x-extension-nrg',
             'ccd' => 'text/x-cdwizard',
             'dmg' => 'application/x-apple-diskimage',
@@ -423,6 +475,7 @@ function ploopi_getmimetype($filename)
             'vcf' => 'text/x-vcard',
             'vcs' => 'text/x-vcalendar',
             'ics' => 'text/calendar',
+            'icz' => 'text/calendar',
             'mht' => 'message/rfc822',
             'mhtml' => 'message/rfc822',
             'torrent' => 'application/x-bittorrent'

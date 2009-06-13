@@ -470,7 +470,7 @@ class form_text extends form_field
     {
         $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\"";
         $strClass = is_null($this->arrOptions['class']) ? '' : " class=\"{$this->arrOptions['class']}\"";
-        $strValue = ploopi_nl2br(htmlentities($this->arrValues[0]));
+        $strValue = ploopi_nl2br($this->arrValues[0]);
         
         return $this->renderForm("<span{$strStyle}{$strClass}>{$strValue}</span>");
     }
@@ -820,11 +820,9 @@ class form
                 {
                     case 'input:text':
                     case 'input:password':
+                    case 'input:file':
                         $strFormat = ($arrOptions['required'] ? '' : 'empty').$arrOptions['datatype'];
                         $strOutput .= "if (ploopi_validatefield('".addslashes($objField->getLabel())."', form.".$objField->getName().", '{$strFormat}'))";
-                    break;
-        
-                    case 'file':
                     break;
         
                     case 'select':
@@ -832,8 +830,8 @@ class form
                         if ($arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes($objField->getLabel())."', form.".$objField->getName().", 'selected'))";
                     break;
         
-                    case 'radio':
-                    case 'checkbox':
+                    case 'input:radio':
+                    case 'input:checkbox':
                     break;
                 }
             }
@@ -843,8 +841,8 @@ class form
         $strOutput .= "return true; return false; }";
         
         return $strOutput;
-        
     }
+    
     /**
      * Retourne le nom de la fonction de validation du formulaire
      * 

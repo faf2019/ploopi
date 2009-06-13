@@ -522,7 +522,7 @@ class calendar
                     ?>
                 </div>
                 <?php
-                // Création du dropptable (jour)
+                // Création du droppable (jour)
                 $strJsCode .= "Droppables.add('calendar_day{$d}', { accept: 'event', onHover: calendar_drop_onhover });";
             }
             ?>
@@ -546,7 +546,7 @@ class calendar
                 // On force l'alignement à gauche
                 draggable.style.left = '0px';
 
-                // On calcule la demi-heure la plus proche en fonction de coordonnées
+                // On calcule la demi-heure la plus proche en fonction des coordonnées
                 top = parseInt(draggable.style.top);
                 hour = Math.round((calendar_h_begin + top / calendar_h_height)*2)/2;
                 // On calcule la nouvelle position en fonction de la demi-heure la plus proche

@@ -212,7 +212,6 @@ function ploopi_timestamp2local($mytimestamp)
 function ploopi_local2timestamp($mydate,$mytime = '00:00:00')
 {
     // verify local format
-
     if (ploopi_dateverify($mydate))// && ploopi_timeverify($mytime))
     {
         ereg(_PLOOPI_TIMEFORMAT_EREG, $mytime, $timeregs);
@@ -220,10 +219,12 @@ function ploopi_local2timestamp($mydate,$mytime = '00:00:00')
         {
             CASE _PLOOPI_DATEFORMAT_FR:
                 ereg(_PLOOPI_DATEFORMAT_EREG_FR, $mydate, $dateregs);
+                if ($dateregs[3]<100) $dateregs[3]+=2000;
                 $mydatetime = date(_PLOOPI_TIMESTAMPFORMAT_MYSQL, mktime($timeregs[1],$timeregs[2],$timeregs[3],$dateregs[2],$dateregs[1],$dateregs[3]));
             BREAK;
             CASE _PLOOPI_DATEFORMAT_US:
                 ereg(_PLOOPI_DATEFORMAT_EREG_US, $mydate, $dateregs);
+                if ($dateregs[1]<100) $dateregs[1]+=2000;
                 $mydatetime = date(_PLOOPI_TIMESTAMPFORMAT_MYSQL, mktime($timeregs[1],$timeregs[2],$timeregs[3],$dateregs[2],$dateregs[3],$dateregs[1]));
             BREAK;
         }

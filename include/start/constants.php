@@ -78,8 +78,8 @@ define ('_PLOOPI_DATE_SECOND',  6);
 define ('_PLOOPI_DATEFORMAT_FR',    'd/m/Y');
 define ('_PLOOPI_DATEFORMAT_US',    'Y-m-d');
 
-define ('_PLOOPI_DATEFORMAT_EREG_FR',       '([0-9]{1,2})[-,/,.]([0-9]{1,2})[-,/,.]([0-9]{4})');
-define ('_PLOOPI_DATEFORMAT_EREG_US',       '([0-9]{4})[-,/,.]([0-9]{1,2})[-,/,.]([0-9]{1,2})');
+define ('_PLOOPI_DATEFORMAT_EREG_FR',       '([0-9]{1,2})[-,/,.]([0-9]{1,2})[-,/,.]([0-9]{2,4})');
+define ('_PLOOPI_DATEFORMAT_EREG_US',       '([0-9]{2,4})[-,/,.]([0-9]{1,2})[-,/,.]([0-9]{1,2})');
 
 define ('_PLOOPI_TIMEFORMAT',           'H:i:s');
 define ('_PLOOPI_TIMEFORMAT_EREG',      '([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})');
