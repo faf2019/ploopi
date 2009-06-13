@@ -1,3 +1,10 @@
+== Module WebEdit - version 2.1.0c ============================================
+
+2009-06-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Modification du traitement du rewriting des urls pour prendre en compte les urls non comprises dans une balise <a> (vidéos flv par exemple) 
+ * Possibilité d'inclure des vidéos flv dans le contenu d'un article grâce au plugin flv de FCKEditor et au lecteur multimédia "FLV Player"
+
 == Module WebEdit - version 2.1.0b ============================================
 
 2009-06-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

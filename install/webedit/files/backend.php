@@ -39,7 +39,7 @@ $format = (empty($_REQUEST['format'])) ? 'atom' : $_REQUEST['format'];
 // Mise en cache
 $objCache = new ploopi_cache($format.(isset($_REQUEST['headingid']) ? "-h{$_REQUEST['headingid']}" : '').'.xml', 300);
 
-// Vidage du buffer (par sécurité car il doit être vide...)
+// Vidage du buffer
 ploopi_ob_clean();
 
 if (!$objCache->start())
