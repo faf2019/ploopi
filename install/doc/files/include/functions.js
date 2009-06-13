@@ -154,6 +154,13 @@ function doc_fckexplorer_set_folder(idfolder, ploopi_op)
     doc_fckexplorer_switch_folder(idfolder, ploopi_op)
 }
 
+
+function doc_fckexplorer_selectfile(fileUrl)
+{
+	window.opener.SetUrl(fileUrl);
+	window.close() ;
+}
+
 function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
 {
     new Ajax.Request('admin-light.php',
@@ -175,7 +182,7 @@ function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
 
                         if (ploopi_op == 'doc_selectimage')
                         {
-                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:ploopi_getelem(\'txtUrl\',opener.document).value=\''+json[i]['url']+'\';ploopi_getelem(\'txtAttTitle\',opener.document).value=\''+ploopi_addslashes(json[i]['name'])+'\';ploopi_getelem(\'txtAlt\',opener.document).value=\''+ploopi_addslashes(json[i]['name'])+'\';opener.UpdatePreview();window.close();">'+
+                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:doc_fckexplorer_selectfile(\''+json[i]['url']+'\');">'+
                                                     '<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&height=75" />'+
                                                     '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
                                                     '<div>'+filesize+' ko</div>'+
@@ -183,14 +190,14 @@ function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
                         }
                         else if (ploopi_op == 'doc_selectflash')
                         {
-                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:ploopi_getelem(\'txtUrl\',opener.document).value=\''+json[i]['url']+'\';ploopi_getelem(\'txtAttTitle\',opener.document).value=\''+ploopi_addslashes(json[i]['name'])+'\';opener.UpdatePreview();window.close();">'+
+                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:doc_fckexplorer_selectfile(\''+json[i]['url']+'\');">'+
                                                     '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
                                                     '<div>'+filesize+' ko</div>'+
                                                 '</a>';
                         }
                         else
                         {
-                            fb.innerHTML +=     '<a class="doc_fckexplorer_file" href="javascript:void(0);" onclick="javascript:ploopi_getelem(\'txtUrl\',opener.document).value=\''+json[i]['url']+'\';ploopi_getelem(\'cmbLinkProtocol\',opener.document).value=\'\';ploopi_getelem(\'txtAttTitle\',opener.document).value=\''+ploopi_addslashes(json[i]['name'])+'\';window.close();">'+
+                            fb.innerHTML +=     '<a class="doc_fckexplorer_file" href="javascript:void(0);" onclick="javascript:doc_fckexplorer_selectfile(\''+json[i]['url']+'\');">'+
                                                     '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
                                                     '<div>'+filesize+' ko</div>'+
                                                 '</a>';

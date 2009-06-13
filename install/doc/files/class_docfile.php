@@ -136,7 +136,7 @@ class docfile extends data_object
 
         if (!isset($this->oldname)) $this->oldname = '';
 
-        if ($this->new) // insert
+        if ($this->isnew()) // insert
         {
             if ($this->tmpfile == 'none' && $this->draftfile == 'none' && $this->sharedfile == null) $error = _DOC_ERROR_EMPTYFILE;
 
@@ -148,7 +148,7 @@ class docfile extends data_object
 
                 $id = parent::save();
 
-                $this->fields['md5id'] = md5(sprintf("%s_%d_%d",$this->fields['timestp_create'],$id,$this->fields['version']));
+                $this->fields['md5id'] = md5(sprintf("%s_%d_%d", $this->fields['timestp_create'], $id, $this->fields['version']));
 
                 parent::save();
 

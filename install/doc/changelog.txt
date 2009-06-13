@@ -1,3 +1,10 @@
+== Module DOC - version 4.4.2b =====================================================
+
+2009-06-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Support des fichiers flv dans les requêtes de fichiers flash (intégration de l'explorateur de fichiers pour webedit notamment)
+ * Correction d'un bug dans l'aperçu d'un fichier si celui-ci n'existe pas
+
 == Module DOC - version 4.4.2 =====================================================
 
 2009-06-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

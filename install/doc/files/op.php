@@ -405,7 +405,7 @@ if ($_SESSION['ploopi']['connected'])
                     include_once './modules/doc/class_docfile.php';
                     $docfile = new docfile();
                     $docfile->openmd5($_GET['docfile_md5id']);
-
+                    
                     if (!empty($_GET['version']))
                     {
                         include_once './modules/doc/class_docfilehistory.php';
@@ -427,7 +427,7 @@ if ($_SESSION['ploopi']['connected'])
                     if (file_exists($docfiledraft->getfilepath())) ploopi_downloadfile($docfiledraft->getfilepath(),$docfiledraft->fields['name']);
                 }
 
-                ploopi_redirect("admin.php");
+                ploopi_die();
             break;
 
             case 'doc_filedraftdelete':
@@ -695,7 +695,7 @@ if ($_SESSION['ploopi']['connected'])
                     break;
 
                     case 'doc_selectflash':
-                        $filter_ext = array('swf');
+                        $filter_ext = array('swf', 'flv');
                     break;
 
                     default:

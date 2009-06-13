@@ -240,7 +240,7 @@ else
          */
         case 'open':
             $arrRenderer = (in_array(strtolower($docfile->fields['extension']), array_keys($doc_arrDocViewableFormats))) ? explode(':', $doc_arrDocViewableFormats[strtolower($docfile->fields['extension'])]) : array('iframe');
-
+            
             if (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight'])) $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight'] = '600';
 
             switch($arrRenderer[0])
