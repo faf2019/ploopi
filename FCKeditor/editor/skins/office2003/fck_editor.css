@@ -22,14 +22,14 @@
  */
 
 /*
-	### Basic Editor IFRAME Styles.
+    ### Basic Editor IFRAME Styles.
 */
 
 body
 {
-	padding: 1px;
-	margin: 0;
-	background-color: #ffffff;
+    padding: 1px;
+    margin: 0;
+    background-color: #ffffff;
 }
 
 #xEditingArea
@@ -45,7 +45,7 @@ body
 }
 
 /*
-	Toolbar
+    Toolbar
 */
 
 .TB_ToolbarSet, .TB_Expand, .TB_Collapse
@@ -68,9 +68,9 @@ body
 
 .TB_Toolbar
 {
-   	background-color: #d6dff7;
-	background-image: url(images/toolbar.bg.gif);
-	background-repeat: repeat-x;
+    background-color: #d6dff7;
+    background-image: url(images/toolbar.bg.gif);
+    background-repeat: repeat-x;
     display: inline-table;
 }
 
@@ -135,7 +135,7 @@ body
 }
 
 /*
-	Toolbar Button
+    Toolbar Button
 */
 
 .TB_Button_On, .TB_Button_Off, .TB_Button_On_Over, .TB_Button_Off_Over, .TB_Button_Disabled
@@ -193,9 +193,9 @@ body
 
 .TB_Button_Off .TB_Button_Text
 {
-   	background-color: #d6dff7;  /* Needed because of a bug on ClearType */
-	background-image: url(images/toolbar.bg.gif);
-	background-repeat: repeat-x;
+    background-color: #d6dff7;  /* Needed because of a bug on ClearType */
+    background-image: url(images/toolbar.bg.gif);
+    background-repeat: repeat-x;
 }
 
 .TB_ConnectionLine
@@ -208,18 +208,18 @@ body
 
 .TB_Button_Off .TB_Text
 {
-   	background-color: #d6dff7;  /* Needed because of a bug on ClearType */
-	background-image: url(images/toolbar.bg.gif);
-	background-repeat: repeat-x;
+    background-color: #d6dff7;  /* Needed because of a bug on ClearType */
+    background-image: url(images/toolbar.bg.gif);
+    background-repeat: repeat-x;
 }
 
 .TB_Button_On_Over .TB_Text
 {
-   	background-color: #dff1ff ;  /* Needed because of a bug on ClearType */
+    background-color: #dff1ff ;  /* Needed because of a bug on ClearType */
 }
 
 /*
-	Menu
+    Menu
 */
 
 .MN_Menu
@@ -312,7 +312,7 @@ body
 }
 
 /*
-	### Panel Styles
+    ### Panel Styles
 */
 
 .FCK_Panel
@@ -329,7 +329,7 @@ body
 }
 
 /*
-	### Special Combos
+    ### Special Combos
 */
 
 .SC_Panel
@@ -395,9 +395,9 @@ body
     opacity: 0.75; /* Safari, Opera and Mozilla */
     filter: alpha(opacity=70); /* IE */ /* -moz-opacity: 0.75; Mozilla (Old) */
     height: 23px;
-   	background-color: #d6dff7;  /* Needed because of a bug on ClearType */
-	background-image: url(images/toolbar.bg.gif);
-	background-repeat: repeat-x;
+    background-color: #d6dff7;  /* Needed because of a bug on ClearType */
+    background-image: url(images/toolbar.bg.gif);
+    background-repeat: repeat-x;
 /*    background-color:  inherit;     Maybe this is needed wait to check */
 }
 
@@ -438,7 +438,7 @@ body
 }
 
 /*
-	### Color Selector Panel
+    ### Color Selector Panel
 */
 
 .ColorBoxBorder
