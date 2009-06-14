@@ -63,10 +63,10 @@ else
 
 if (ploopi_isactionallowed(-1,$_SESSION['ploopi']['workspaceid'],$menu_moduleid))
 {
-    $block->addmenu('<b>'._RSS_LABEL_ADMIN.'</b>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"));
+    $block->addmenu('<b>'._RSS_LABEL_ADMIN.'</b>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin');
 }
 
-if ($_SESSION['ploopi']['connected']) $block->addmenu('<b>'._RSS_LABEL_SEARCH.'</b>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"));
+$block->addmenu('<b>'._RSS_LABEL_SEARCH.'</b>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public');
 
 /* Flux */
 $rssfeed_select =   "
@@ -219,29 +219,30 @@ elseif (substr($block_rssfeed_cat_filter_id,0,1) == 'F') // Filtre
 elseif (intval($block_rssfeed_cat_filter_id) > 0)  // Un flux
 {
     $rss_feed = new rss_feed();
-    $rss_feed->open($block_rssfeed_cat_filter_id);
-
-    if (!$rss_feed->isuptodate()) $rss_feed->updatecache();
-
-    $block->addmenu("<b>{$rss_feed->fields['title']}</b>".(!empty($rss_feed->fields['subtitle']) ? '<br /><i>'.strip_tags($rss_feed->fields['subtitle'], '<b><i>').'</i>' : ''), $rss_feed->fields['link'], '', '_blank');
-
-    $sql =  "
-          SELECT      ploopi_mod_rss_entry.*
-          FROM        ploopi_mod_rss_entry
-          WHERE       ploopi_mod_rss_entry.id_feed = {$block_rssfeed_cat_filter_id}
-          ORDER BY    published DESC, timestp DESC, id";
-
-    if($rss_feed->fields['limit']>0)
-       $sql .= " LIMIT 0,{$rss_feed->fields['limit']}";
-    else
-       $sql .= " LIMIT 0,{$_SESSION['ploopi']['modules'][$menu_moduleid]['nbitemdisplay']}";
-
-    $rssentry_result = $db->query($sql);
-    while($rssentry_row = $db->fetchrow($rssentry_result))
+    if ($rss_feed->open($block_rssfeed_cat_filter_id))
     {
-        $ld = (!empty($rssentry_row['published']) && is_numeric($rssentry_row['published'])) ? ploopi_unixtimestamp2local($rssentry_row['published']) : '';
-
-        $block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.$ld, $rssentry_row['link'], '', '_blank');
+        if (!$rss_feed->isuptodate()) $rss_feed->updatecache();
+    
+        $block->addmenu("<b>{$rss_feed->fields['title']}</b>".(!empty($rss_feed->fields['subtitle']) ? '<br /><i>'.strip_tags($rss_feed->fields['subtitle'], '<b><i>').'</i>' : ''), $rss_feed->fields['link'], '', '_blank');
+    
+        $sql =  "
+              SELECT      ploopi_mod_rss_entry.*
+              FROM        ploopi_mod_rss_entry
+              WHERE       ploopi_mod_rss_entry.id_feed = {$block_rssfeed_cat_filter_id}
+              ORDER BY    published DESC, timestp DESC, id";
+    
+        if($rss_feed->fields['limit']>0)
+           $sql .= " LIMIT 0,{$rss_feed->fields['limit']}";
+        else
+           $sql .= " LIMIT 0,{$_SESSION['ploopi']['modules'][$menu_moduleid]['nbitemdisplay']}";
+    
+        $rssentry_result = $db->query($sql);
+        while($rssentry_row = $db->fetchrow($rssentry_result))
+        {
+            $ld = (!empty($rssentry_row['published']) && is_numeric($rssentry_row['published'])) ? ploopi_unixtimestamp2local($rssentry_row['published']) : '';
+    
+            $block->addmenu(strip_tags($rssentry_row['title'], '<b><i>').'<br />'.$ld, $rssentry_row['link'], '', '_blank');
+        }
     }
 }
 elseif (intval($block_rssfeed_cat_filter_id) <= 0)  // Tout

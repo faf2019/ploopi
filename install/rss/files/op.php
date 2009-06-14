@@ -160,7 +160,7 @@ if (ploopi_ismoduleallowed('rss'))
             include_once './modules/rss/class_rss_cat.php';
             include_once './modules/rss/class_rss_feed.php';
 
-            if (isset($_GET['rss_search_kw']) && $_GET['rss_search_kw'] != '%%undefined%%') $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rss_search_kw'] = $_GET['rss_search_kw'];
+            if (isset($_GET['rss_search_kw']) && $_GET['rss_search_kw'] != '') $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rss_search_kw'] = $_GET['rss_search_kw'];
 
             $wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
 

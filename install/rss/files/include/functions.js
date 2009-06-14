@@ -53,7 +53,7 @@ function rss_explorer_feedlist_choose(rssfeed_id)
 
 function rss_explorer_feed_get(rss_search_kw)
 {
-    if (rss_search_kw == undefined) rss_search_kw = '%%undefined%%';
+    if (typeof(rss_search_kw) == 'undefined') rss_search_kw = '';
 
     ploopi_ajaxloader('rss_explorer_feed');
     ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=rss_explorer_feed_get&rss_search_kw='+rss_search_kw, 'rss_explorer_feed');
@@ -109,7 +109,7 @@ function rss_filter_element_edit_list_get(rssfilter_id_element)
 
 function rss_filter_element_edit(rssfilter_id_element)
 {
-   if(rssfilter_id_element == undefined)
+   if(typeod(rssfilter_id_element) == 'undefined')
    {
       ploopi_innerHTML('rss_filter_element_edit', ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=rss_filter_element_edit'));
    }

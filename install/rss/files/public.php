@@ -40,18 +40,22 @@ ploopi_init_module('rss');
 
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
-$tabs['tabExplorer'] = array (  'title' => _RSS_LABEL_FEEDEXPLORER,
-                                'url'   => "admin.php?rssTabItem=tabExplorer"
-                            );
+$tabs['tabExplorer'] = array (  
+    'title' => _RSS_LABEL_FEEDEXPLORER,
+    'url'   => "admin.php?rssTabItem=tabExplorer"
+);
 
 if ($_SESSION['ploopi']['connected'])
 {
-    $tabs['tabFilter'] = array (    'title' => _RSS_LABEL_FILTER_FEED,
-                                    'url'   => "admin.php?rssTabItem=tabFilter"
-                                );
-    $tabs['tabNewFilter'] = array ( 'title' => _RSS_LABEL_FILTER_NEW,
-                                    'url'   => "admin.php?rssTabItem=tabNewFilter"
-                                );
+    $tabs['tabFilter'] = array (    
+        'title' => _RSS_LABEL_FILTER_FEED,
+        'url'   => "admin.php?rssTabItem=tabFilter"
+    );
+
+    $tabs['tabNewFilter'] = array ( 
+        'title' => _RSS_LABEL_FILTER_NEW,
+        'url'   => "admin.php?rssTabItem=tabNewFilter"
+    );
 }
 
 if (!empty($_GET['rssTabItem'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'] = $_GET['rssTabItem'];

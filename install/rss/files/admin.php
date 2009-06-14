@@ -133,17 +133,20 @@ switch($op)
     break;
 }
 
-$tabs['tabFeedList'] = array(   'title' => _RSS_LABEL_FEEDLIST,
-                                'url' => "admin.php?rssTabItem=tabFeedList"
-                                );
+$tabs['tabFeedList'] = array(   
+    'title' => _RSS_LABEL_FEEDLIST,
+    'url' => "admin.php?rssTabItem=tabFeedList"
+);
 
-$tabs['tabFeedAdd'] = array(    'title' => _RSS_LABEL_FEEDADD,
-                                'url' => "admin.php?rssTabItem=tabFeedAdd"
-                            );
+$tabs['tabFeedAdd'] = array(    
+    'title' => _RSS_LABEL_FEEDADD,
+    'url' => "admin.php?rssTabItem=tabFeedAdd"
+);
 
-$tabs['tabCatList'] = array(    'title' => _RSS_LABEL_CATLIST,
-                                'url' => "admin.php?rssTabItem=tabCatList"
-                                );
+$tabs['tabCatList'] = array(    
+    'title' => _RSS_LABEL_CATLIST,
+    'url' => "admin.php?rssTabItem=tabCatList"
+);
 
 if (ploopi_isactionallowed(_RSS_ACTION_CATADD))
 {
@@ -162,7 +165,7 @@ if (ploopi_isactionallowed(0))
 if (!empty($_GET['rssTabItem'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'] = $_GET['rssTabItem'];
 if (!isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'] = '';
 
-echo $skin->create_pagetitle(str_replace("LABEL",$_SESSION['ploopi']['modulelabel'],_RSS_PAGE_TITLE));
+echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
 echo $skin->create_tabs($tabs,$_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem']);
 
 switch($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])
