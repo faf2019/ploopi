@@ -1,3 +1,10 @@
+== Module RSS - version 2.1.0 ====================================================
+
+2009-06-09  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Meilleure gestion des erreurs de connexion à un flux RSS
+ * Remplacement de XML_Feed_Parser (Pear) par Simplepie 
+
 == Module RSS - version 2.0.5 ====================================================
 
 2009-03-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

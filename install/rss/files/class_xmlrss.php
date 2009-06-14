@@ -52,11 +52,16 @@ require_once 'XML/Feed/Parser.php';
  * @see _PLOOPI_INTERNETPROXY_PASS
  *
  * @link http://pear.php.net/package/HTTP_Request
- * @link http://pear.php.net/package/XML_Feed_Parser
  */
 
 class xmlrss
 {
+    private $error;
+    
+    private $content;
+    
+    private $feed;
+    
     /**
      * Constructeur de la classe.
      * Récupère le contenu du flux (via proxy si nécessaire)
@@ -68,44 +73,48 @@ class xmlrss
      * @return xmlrss
      */
 
-    function xmlrss($url, $moduleid = -1, $srcenc = null, $tgtenc = null)
+    public function xmlrss($url, $moduleid = -1, $srcenc = null, $tgtenc = null)
     {
-
         $this->error = false;
-        $this->charset = 'UTF-8';
+        $this->content = '';
+        $this->feed = array(
+            'title' => '',
+            'subtitle' => '',
+            'link' => '',
+            'updated' => '',
+            'author' => '',
+            'entries' => array()
+        );
 
         if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
 
         if ($url == '')
         {
             $this->error = true;
-            $this->error_msg = sprintf("Erreur url vide");
+            $this->error_msg = "Erreur url vide";
         }
 
         if (!$this->error)
         {
+            ploopi_unset_error_handler();
             $request = new HTTP_Request($url, array('timeout' => 500));
-
+            ploopi_set_error_handler();
+            
             if (_PLOOPI_INTERNETPROXY_HOST != '')
             {
-                $request->setProxy( _PLOOPI_INTERNETPROXY_HOST,
-                                    _PLOOPI_INTERNETPROXY_PORT,
-                                    _PLOOPI_INTERNETPROXY_USER,
-                                    _PLOOPI_INTERNETPROXY_PASS
-                                    );
+                $request->setProxy( 
+                    _PLOOPI_INTERNETPROXY_HOST,
+                    _PLOOPI_INTERNETPROXY_PORT,
+                    _PLOOPI_INTERNETPROXY_USER,
+                    _PLOOPI_INTERNETPROXY_PASS
+                );
             }
 
-            $res = $request->sendRequest();
-            $this->header = $request->getResponseHeader();
-
-            // Détection de l'encoding dans le header HTTP
-            foreach(split(';',$this->header['content-type']) as $sp)
-            {
-                $detail = split('=',$sp);
-                if (!empty($detail[0]) && !empty($detail[1]) && strtolower(trim($detail[0])) == 'charset') $this->charset = strtoupper($detail[1]);
-            }
-
-            if ($res == 1)
+            ploopi_unset_error_handler();
+            $res = !PEAR::isError($objReq = $request->sendRequest());
+            ploopi_set_error_handler();
+            
+            if ($res)
             {
                 if ($request->getResponseCode() != '200' && $request->getResponseCode() != '')
                 {
@@ -115,76 +124,74 @@ class xmlrss
                 else
                 {
                     $this->content = $request->getResponseBody();
-
-                    // Détection de l'encoding dans le source XML
-                    if (preg_match('/<?phpxml.*encoding=[\'"](.*?)[\'"].*?>/m', $this->content, $m)) $this->charset = strtoupper($m[1]);
                 }
             }
             else
             {
                 $this->error = true;
-                $this->error_msg = sprintf("Erreur HTTP %s : %s",$res->getCode(),$res->getMessage());
+                $this->error_msg = sprintf("Erreur HTTP %s : %s",$objReq->getCode(),$objReq->getMessage());
             }
         }
     }
-
-    /**
-     * Convertit une chaîne UTF8 en ISO-8859-1//TRANSLIT.
-     * Méthode notamment utile pour traiter le contenu des flux RSS.
-     * Une conversion "classique" UTF8 => ISO-8859-1 ne suffit pas.
-     *
-     * @param string $str chaîne UTF8 à convertir
-     * @return string chaîne ISO-8859-1
-     */
-
-    function _convertstr($str)
-    {
-        $str = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $str);
-        return($str);
-    }
-
+    
     /**
      * Parse le flux.
      *
      * @link http://pear.php.net/package/XML_Feed_Parser
      */
 
-    function parse()
+    public function parse()
     {
-        $this->feed = array ('title' => '', 'entries' => array());
-
-        try
-        {
-            $xmlfeed = new XML_Feed_Parser($this->content);
-        }
-        catch (XML_Feed_Parser_Exception $e)
-        {
-            $this->error_msg = 'Flux invalide: '.$e->getMessage();
-            $this->error = true;
-        }
+        require_once './lib/simplepie/simplepie.inc.php';
+        
+        
+        $feed = new SimplePie();
+        $feed->set_raw_data($this->content);
+        //$feed->handle_content_type();
+        $feed ->set_output_encoding('ISO-8859-1');
+        $feed->init();
 
         if (!$this->error)
         {
-            $this->feed['title'] = $this->_convertstr($xmlfeed->title);
-            $this->feed['subtitle'] = $this->_convertstr($xmlfeed->subtitle);
-            $this->feed['link'] = $xmlfeed->link;
-            $this->feed['updated'] = $xmlfeed->updated;
-            $this->feed['author'] = $this->_convertstr($xmlfeed->author);
-
-            foreach ($xmlfeed as $entry)
+            $this->feed['title'] = $feed->get_title();
+            $this->feed['subtitle'] = $feed->get_description();
+            $this->feed['link'] = $feed->get_link();
+            $this->feed['updated'] = 0;
+            $this->feed['author'] = $feed->get_author();
+            
+            foreach($feed->get_items() as $key => $item)
             {
-                $this->feed['entries'][] = array(   'id' => (empty($entry->id)) ? $entry->link : $entry->id,
-                                                    'title' => $this->_convertstr($entry->title),
-                                                    'subtitle' => $this->_convertstr($entry->subtitle),
-                                                    'link' => $entry->link,
-                                                    'category' => $this->_convertstr($entry->category),
-                                                    'published' => $entry->published,
-                                                    'author' => $this->_convertstr($entry->author),
-                                                    'content' => $this->_convertstr($entry->content)
-                                                );
+                $category = $item->get_category();
+                $author = $item->get_author();
+                
+                $this->feed['entries'][] = array(   
+                    'id' => $item->get_id(true),
+                    'title' => $item->get_title(),
+                    'subtitle' => $item->get_description(),
+                    'link' => $item->get_link(),
+                    'category' => $category ? $category->get_label() : '',
+                    'published' => $item->get_date('U'),
+                    'author' => $author ? $author->get_name() : '',
+                    'content' => $item->get_content()
+                );
             }
         }
     }
+    
+    /**
+     * Retourne l'erreur  
+     */
+    public function geterror() { return $this->error; }
 
+    /**
+     * Retourne le flux parsé  
+     */
+    public function getfeed() { return $this->feed; }
+
+    /**
+     * Retourne le contenu brut du flux  
+     */
+    public function getcontent() { return $this->content; }
+    
 }
 ?>
