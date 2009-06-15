@@ -657,6 +657,10 @@ function ploopi_h404() { header("HTTP/1.0 404 Not Found"); }
 function ploopi_logout($errorcode = null, $sleep = 1)
 {
     global $session;
+    
+    // Suppression de l'information de connexion
+    $objConnectedUser = new connecteduser();
+    if ($objConnectedUser->open(session_id())) $objConnectedUser->delete();    
 
     $session->regenerate_id();
     $_SESSION = array();
