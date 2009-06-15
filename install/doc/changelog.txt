@@ -1,3 +1,9 @@
+== Module DOC - version 4.4.2c =====================================================
+
+2009-06-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction mineure dans les règles de réécritures d'URL
+
 == Module DOC - version 4.4.2b =====================================================
 
 2009-06-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
