@@ -19,6 +19,37 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+function forms_display_fieldvalues()
+{
+    t = document.form_field.field_type;
+    if (t.value == 'textarea' || t.value == 'text' || t.value == 'file' || t.value == 'autoincrement' || t.value == 'tablelink') $('fieldvalues').style.display='none';
+    else $('fieldvalues').style.display='block';
+
+    verifcolor = (t.value == 'color');
+}
+
+function forms_display_fieldformats()
+{
+    t = document.form_field.field_type;
+    if (t.value == 'text') $('fieldformats').style.display='block';
+    else $('fieldformats').style.display='none';
+}
+
+function forms_display_fieldcols()
+{
+    t = document.form_field.field_type;
+    if (t.value == 'textarea' || t.value == 'text' || t.value == 'color' || t.value == 'select' || t.value == 'file' || t.value == 'autoincrement'  || t.value == 'tablelink') $('fieldcols').style.display='none';
+    else $('fieldcols').style.display='block';
+}
+
+function forms_display_tablelink()
+{
+    t = document.form_field.field_type;
+    if (t.value == 'tablelink') $('tablelink').style.display='block';
+    else $('tablelink').style.display='none';
+}
+
 function forms_field_add_value(lst,val)
 {
     if (val.value != '')

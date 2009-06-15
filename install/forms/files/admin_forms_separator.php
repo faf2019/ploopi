@@ -50,19 +50,14 @@ else
 }
 
 echo $skin->open_simplebloc($title);
+
+$arrParams = array();
+$arrParams[] = "op=forms_separator_save";
+$arrParams[] = "forms_id={$_GET['forms_id']}";
+if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 ?>
 
-<form name="form_field" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return field_validate(this);">
-<input type="hidden" name="forms_id" value="<?php echo $_GET['forms_id']; ?>">
-<?php
-if (!$field->new)
-{
-    ?>
-    <input type="hidden" name="field_id" value="<?php echo $field->fields['id']; ?>">
-    <?php
-}
-?>
-<input type="hidden" name="op" value="forms_separator_save">
+<form name="form_field" action="<?php echo ploopi_urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return field_validate(this);">
 <div style="overflow:hidden">
     <div class="ploopi_form" style="float:left;width:50%;">
         <div style="padding:4px;">
@@ -88,16 +83,16 @@ if (!$field->new)
                 </select>
             </p>
             <p>
-                <label><?php echo _FORMS_FIELD_SEPARATOR_FONTSIZE; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="field_separator_fontsize" value="<?php echo $field->fields['separator_fontsize']; ?>">
-            </p>
-            <p>
                 <label><?php echo _FORMS_FIELD_NAME; ?>: </label>
                 <input type="text" class="text" size="30" name="field_name" value="<?php echo htmlentities($field->fields['name']); ?>">
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_DESCRIPTION; ?>: </label>
                 <textarea class="text" style="height:40px;" name="field_description"><?php echo htmlentities($field->fields['description']); ?></textarea>
+            </p>
+            <p>
+                <label><?php echo _FORMS_FIELD_STYLE; ?>:</label>
+                <input type="text" class="text" name="field_style" value="<?php echo htmlentities($field->fields['style']); ?>">
             </p>
         </div>
     </div>

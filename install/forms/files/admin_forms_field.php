@@ -51,21 +51,15 @@ else
 }
 
 echo $skin->open_simplebloc($title);
+
+$arrParams = array();
+$arrParams[] = "op=forms_field_save";
+$arrParams[] = "forms_id={$_GET['forms_id']}";
+if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 ?>
 
-<form name="form_field" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return forms_field_validate(this);">
-<input type="hidden" name="forms_id" value="<?php echo $_GET['forms_id']; ?>">
-<?php
-if (!$field->new)
-{
-    ?>
-    <input type="hidden" name="field_id" value="<?php echo $field->fields['id']; ?>">
-    <?php
-}
-?>
-<input type="hidden" name="op" value="forms_field_save">
+<form name="form_field" action="<?php echo ploopi_urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return forms_field_validate(this);">
 <input type="hidden" name="field_values" value="<?php echo htmlentities($field->fields['values']); ?>">
-
 <div style="overflow:hidden">
     <div style="float:left;width:50%;">
         <div class="ploopi_form" style="padding:4px;">
@@ -90,7 +84,7 @@ if (!$field->new)
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_TYPE; ?>:</label>
-                <select class="select" name="field_type" onchange="javascript:display_fieldvalues();display_fieldformats();display_fieldcols();display_tablelink();">
+                <select class="select" name="field_type" onchange="javascript:forms_display_fieldvalues();forms_display_fieldformats();forms_display_fieldcols();forms_display_tablelink();">
                 <?php
                 foreach($field_types as $key => $value)
                 {
@@ -129,10 +123,9 @@ if (!$field->new)
                 </p>
                 <p>
                     <label><?php echo _FORMS_FIELD_MAXLENGTH; ?>:</label>
-                    <input type="text" class="text" style="width:50px;" name="field_maxlength" value="<?php echo $field->fields['maxlength']; ?>">
+                    <input type="text" class="text" style="width:50px;" name="field_maxlength" value="<?php echo htmlentities($field->fields['maxlength']); ?>">
                 </p>
             </div>
-
 
             <div id="fieldvalues" class="ploopi_form" style="display:none;">
                 <p>
@@ -141,7 +134,7 @@ if (!$field->new)
                         <table cellpadding="0" cellspacing="0">
                         <tr>
                             <td>
-                            <select name="f_values" class="select" size="12" style="width:230px" onclick="document.form_field.newvalue.value=this.value;document.form_field.newvalue.focus();">
+                            <select name="f_values" class="select" size="10" style="width:230px;height:100px;" onclick="javascript:document.form_field.newvalue.value=this.value;document.form_field.newvalue.focus();">
                             <?php
                             if ($field->fields['type'] == 'radio' || $field->fields['type'] == 'select' || $field->fields['type'] == 'checkbox' || $field->fields['type'] == 'color')
                             {
@@ -221,6 +214,14 @@ if (!$field->new)
                     </select>
                 </p>
             </div>
+
+            <div id="fieldstyles" class="ploopi_form" style="display:block;">
+                <p>
+                    <label><?php echo _FORMS_FIELD_STYLE; ?>:</label>
+                    <input type="text" class="text" name="field_style" value="<?php echo htmlentities($field->fields['style']); ?>">
+                </p>
+            </div>
+
         </div>
     </div>
 
@@ -245,51 +246,12 @@ if (!$field->new)
 
 
 <script language="javascript">
-function display_fieldvalues()
-{
-    t = document.form_field.field_type;
-    if (t.value == 'textarea' || t.value == 'text' || t.value == 'file' || t.value == 'autoincrement' || t.value == 'tablelink') document.getElementById('fieldvalues').style.display='none';
-    else document.getElementById('fieldvalues').style.display='block';
-
-    verifcolor = (t.value == 'color');
-}
-
-function display_fieldformats()
-{
-    t = document.form_field.field_type;
-    if (t.value == 'text') document.getElementById('fieldformats').style.display='block';
-    else document.getElementById('fieldformats').style.display='none';
-}
-
-function display_fieldcols()
-{
-    t = document.form_field.field_type;
-    if (t.value == 'textarea' || t.value == 'text' || t.value == 'color' || t.value == 'select' || t.value == 'file' || t.value == 'autoincrement'  || t.value == 'tablelink') document.getElementById('fieldcols').style.display='none';
-    else document.getElementById('fieldcols').style.display='block';
-}
-
-function display_tablelink()
-{
-    t = document.form_field.field_type;
-    if (t.value == 'tablelink') document.getElementById('tablelink').style.display='block';
-    else document.getElementById('tablelink').style.display='none';
-}
-
-
-if (window.attachEvent)
-{
-    window.attachEvent('onload', display_fieldvalues);
-    window.attachEvent('onload', display_fieldformats);
-    window.attachEvent('onload', display_fieldcols);
-    window.attachEvent('onload', display_tablelink);
-}
-else
-{
-    window.onload = display_fieldvalues();
-    window.onload = display_fieldformats();
-    window.onload = display_fieldcols();
-    window.onload = display_tablelink();
-}
+ploopi_window_onload_stock(function() {
+	forms_display_fieldvalues();
+	forms_display_fieldformats();
+	forms_display_fieldcols();
+	forms_display_tablelink();
+});
 </script>
 
 

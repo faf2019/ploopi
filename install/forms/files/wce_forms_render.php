@@ -48,15 +48,14 @@ $form_action = (!empty($form_action_params)) ? 'index.php?'.implode('&',$form_ac
  */
 
 $template_forms->assign_vars(array(
-            'FORM_ID' => $forms->fields['id'],
-            'FORM_TITLE' => $forms->fields['label'],
-            'FORM_DESCRIPTION' => nl2br($forms->fields['description']),
-            'HEADINGID' => (empty($_REQUEST['headingid'])) ? '' : $_REQUEST['headingid'],
-            'ARTICLEID' => (empty($_REQUEST['articleid'])) ? '' : $_REQUEST['articleid'],
-            'WCE_MODE' => (empty($_REQUEST['wce_mode'])) ? '' : $_REQUEST['wce_mode'],
-            'ACTION' => $form_action
-            )
-        );
+    'FORM_ID' => $forms->fields['id'],
+    'FORM_TITLE' => $forms->fields['label'],
+    'FORM_DESCRIPTION' => nl2br($forms->fields['description']),
+    'HEADINGID' => (empty($_REQUEST['headingid'])) ? '' : $_REQUEST['headingid'],
+    'ARTICLEID' => (empty($_REQUEST['articleid'])) ? '' : $_REQUEST['articleid'],
+    'WCE_MODE' => (empty($_REQUEST['wce_mode'])) ? '' : $_REQUEST['wce_mode'],
+    'ACTION' => $form_action
+));
 
 /**
  * On crée un bloc par champ
@@ -68,11 +67,10 @@ while ($fields = $db->fetchrow($rs_fields))
     if ($fields['separator'])
     {
         $template_forms->assign_block_vars('formfields.switch_separator', array(
-                    'NAME' => $fields['name'],
-                    'LEVEL' => $fields['separator_level'],
-                    'FONTSIZE' => $fields['separator_fontsize']
-                    )
-                );
+            'NAME' => $fields['name'],
+            'LEVEL' => $fields['separator_level'],
+            'STYLE' => htmlentities($fields['style'])
+        ));
     }
     else
     {
@@ -106,6 +104,7 @@ while ($fields = $db->fetchrow($rs_fields))
                     'VALUE' => $value,
                     'TABINDEX' => 1000+$fields['position'],
                     'MAXLENGTH' => (empty($fields['maxlength'])) ? '255' : $fields['maxlength'],
+                    'STYLE' => htmlentities($fields['style']),
                     'CONTENT' => ''
                     )
                 );

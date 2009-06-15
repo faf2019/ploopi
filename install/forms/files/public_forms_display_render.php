@@ -59,7 +59,7 @@ while ($fields = $db->fetchrow($rs_fields))
         $template_forms->assign_block_vars('formfields.switch_separator', array(
                     'NAME' => $fields['name'],
                     'LEVEL' => $fields['separator_level'],
-                    'FONTSIZE' => $fields['separator_fontsize']
+                    'STYLE' => htmlentities($fields['style'])
                     )
                 );
     }
@@ -95,6 +95,7 @@ while ($fields = $db->fetchrow($rs_fields))
                     'VALUE' => htmlentities($value),
                     'TABINDEX' => 1000+$fields['position'],
                     'MAXLENGTH' => (empty($fields['maxlength'])) ? '255' : $fields['maxlength'],
+                    'STYLE' => htmlentities($fields['style']),
                     'CONTENT' => ''
                     )
                 );

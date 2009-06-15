@@ -86,3 +86,4 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_forms_reply_field` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 ALTER TABLE `ploopi_mod_forms_reply` CHANGE `id_workspace` `id_workspace` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `ploopi_mod_forms_field` ADD `style` VARCHAR( 255 ) NOT NULL AFTER `maxlength`;

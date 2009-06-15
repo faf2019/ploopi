@@ -45,29 +45,29 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
 {
     include_once './modules/forms/class_form.php';
     include_once './modules/forms/class_field.php';
-    
+
     $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
     if (!empty($_GET['formsTabItem'])) $_SESSION['forms']['formsTabItem'] = $_GET['formsTabItem'];
     if (!isset($_SESSION['forms']['formsTabItem'])) $_SESSION['forms']['formsTabItem'] = '';
-    
+
     $sqllimitgroup = ' AND ploopi_mod_forms_form.id_workspace IN ('.ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).')';
-    
+
     $tabs['formlist'] =
         array(
             'title' => _FORMS_LABELTAB_LIST,
             'url' => "admin.php?formsTabItem=formlist"
         );
-        
+
     $tabs['formadd'] =
         array(
             'title' => _FORMS_LABELTAB_ADD,
             'url' => "admin.php?formsTabItem=formadd"
         );
-    
+
     echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
     echo $skin->create_tabs($tabs, $_SESSION['forms']['formsTabItem']);
-    
+
     switch($op)
     {
         /*
@@ -75,12 +75,12 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
         case 'forms_generate_tables_from_list':
             // needed to generate Metabase
             include_once './include/classes/mb.php';
-    
+
             $forms = new form();
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id']))
             {
                 $data_object = new data_object('form_'.forms_createphysicalname($forms->fields['label']),null);
-    
+
                 $data_object->fields['date_validation'] = '';
                 $data_object->fields['ip'] = '';
                 $data_object->fields['userid'] = '';
@@ -90,24 +90,24 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                 $data_object->fields['lastname'] = '';
                 $data_object->fields['groupname'] = '';
                 $data_object->fields['groupcode'] = '';
-    
+
                 $mb_table = new mb_table();
                 if ($mb_table->open($forms->fields['id'], $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type']))
                 {
                     $mb_table->delete();
                 }
-    
+
                 $mb_table = new mb_table();
-    
+
                 $mb_table->fields['id'] = $forms->fields['id'];
                 $mb_table->fields['name'] = 'form_'.forms_createphysicalname($forms->fields['label']);
                 $mb_table->fields['label'] = $forms->fields['label'];
                 $mb_table->fields['visible'] = 1;
                 $mb_table->fields['id_module_type'] = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type'];
                 $mb_table->save();
-    
+
                 $array_fields = $forms->getfields();
-    
+
                 $array_fields[]['name'] = 'date_validation';
                 $array_fields[]['name'] = 'ip';
                 $array_fields[]['name'] = 'userid';
@@ -117,20 +117,20 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                 $array_fields[]['name'] = 'lastname';
                 $array_fields[]['name'] = 'groupname';
                 $array_fields[]['name'] = 'groupcode';
-    
+
                 foreach($array_fields as $id => $field)
                 {
-    
+
                     if (isset($field['type']) && $field['type'] == 'tablelink')
                     {
                         // creation db relation
-    
+
                         $objfield = new field();
                         $objfield->open($field['values']);
-    
+
                         $objform = new form();
                         $objform->open($objfield->fields['id_form']);
-    
+
                         $mb_schema = new mb_schema();
                         $mb_schema->fields['tablesrc'] = 'form_'.forms_createphysicalname($forms->fields['label']);
                         $mb_schema->fields['tabledest'] = 'form_'.forms_createphysicalname($objform->fields['label']);
@@ -138,7 +138,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                         $mb_schema->fields['id_tabledest'] = $objform->fields['id'];
                         $mb_schema->fields['id_module_type'] = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type'];
                         $mb_schema->save();
-    
+
                         $mb_relation = new mb_relation();
                         $mb_relation->fields['tablesrc'] = 'form_'.forms_createphysicalname($forms->fields['label']);
                         $mb_relation->fields['id_tablesrc'] = $forms->fields['id'];
@@ -158,13 +158,13 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                     $mb_field->fields['id_module_type'] = $mb_table->fields['id_module_type'];
                     $mb_field->fields['id_table'] = $forms->fields['id'];
                     $mb_field->save();
-    
+
                     $data_object->fields[forms_createphysicalname($field['name'])] = '';
                 }
-    
+
                 $db->query("DROP TABLE IF EXISTS `{$data_object->tablename}`");
                 $db->query($data_object->getsqlstructure());
-    
+
                 $select =   "
                                 SELECT  fr.*,
                                         u.id as userid,
@@ -183,9 +183,9 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                                 AND     fr.id_module = m.id
                                 AND     fr.id_module = {$_SESSION['ploopi']['moduleid']}
                                 ";
-    
+
                 $rs = $db->query($select);
-    
+
                 // construction du jeu de données brut (liste des réponses)
                 while ($fields = $db->fetchrow($rs))
                 {
@@ -198,7 +198,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                     $data_object->fields['lastname'] = $fields['lastname'];
                     $data_object->fields['groupname'] = $fields['groupname'];
                     $data_object->fields['groupcode'] = $fields['groupcode'];
-    
+
                     $sql =  "
                             SELECT  rf.*, f.type
                             FROM    ploopi_mod_forms_reply_field rf,
@@ -207,17 +207,17 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                             AND     f.id = rf.id_field
                             AND     f.separator = 0
                             ";
-    
+
                     $rs_replies = $db->query($sql);
-    
+
                     while ($fields_replies = $db->fetchrow($rs_replies))
                     {
                         $data_object->fields[forms_createphysicalname($array_fields[$fields_replies['id_field']]['name'])] = $fields_replies['value'];
                     }
-    
+
                     $db->query($data_object->dump());
                 }
-    
+
                 if ($op == 'forms_generate_tables_from_list') ploopi_redirect("admin.php?forms_id={$forms->fields['id']}&termine");
                 else ploopi_redirect("admin.php?op=forms_modify&forms_id={$forms->fields['id']}&termine");
             }
@@ -237,21 +237,21 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             if (!isset($_POST['forms_option_displaydate'])) $forms->fields['option_displaydate'] = 0;
             if (!isset($_POST['forms_option_displayip'])) $forms->fields['option_displayip'] = 0;
             if (!isset($_POST['forms_cms_link'])) $forms->fields['cms_link'] = 0;
-    
+
             if (!empty($forms->fields['autobackup_date'])) $forms->fields['autobackup_date'] = ploopi_local2timestamp($forms->fields['autobackup_date']);
-    
+
             $forms->setuwm();
             $forms->save();
-    
+
             ploopi_redirect("admin.php?formsTabItem=formlist&op=forms_modify&forms_id={$forms->fields['id']}");
         break;
-    
+
         case 'forms_delete':
             $forms = new form();
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id'])) $forms->delete();
             ploopi_redirect('admin.php');
         break;
-    
+
         case 'forms_field_delete':
             if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']))
             {
@@ -261,16 +261,16 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             }
             else ploopi_redirect('admin.php');
         break;
-    
+
         case 'forms_field_save':
         case 'forms_separator_save':
             $field = new field();
-    
-            if (!empty($_POST['forms_id']) && is_numeric($_POST['forms_id']))
+
+            if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
             {
-                if (!empty($_POST['field_id']) && is_numeric($_POST['field_id']))
+                if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']))
                 {
-                    $field->open($_POST['field_id']);
+                    $field->open($_GET['field_id']);
                     if (!empty($_POST['fieldnew_position']) && is_numeric($_POST['fieldnew_position']) && $_POST['fieldnew_position'] != $field->fields['position']) // nouvelle position définie
                     {
                         if ($_POST['fieldnew_position'] < 1) $_POST['fieldnew_position'] = 1;
@@ -280,7 +280,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                             $fields = $db->fetchrow();
                             if ($_POST['fieldnew_position'] > $fields['maxpos']) $_POST['fieldnew_position'] = $fields['maxpos'];
                         }
-    
+
                         $db->query("update ploopi_mod_forms_field set position = 0 where position = {$field->fields['position']} and id_form = {$field->fields['id_form']}");
                         if ($_POST['fieldnew_position'] > $field->fields['position'])
                         {
@@ -296,16 +296,17 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                 }
                 else // nouveau
                 {
-                    $select = "Select max(position) as maxpos from ploopi_mod_forms_field where id_form = {$_POST['forms_id']}";
+                    $select = "Select max(position) as maxpos from ploopi_mod_forms_field where id_form = {$_GET['forms_id']}";
                     $db->query($select);
                     $fields = $db->fetchrow();
                     $maxpos = $fields['maxpos'];
                     if (!is_numeric($maxpos)) $maxpos = 0;
                     $field->fields['position'] = $maxpos+1;
-                    $field->fields['id_form'] = $_POST['forms_id'];
+                    $field->fields['id_form'] = $_GET['forms_id'];
                 }
+
                 $field->setvalues($_POST,'field_');
-    
+
                 if ($op == 'forms_separator_save')
                 {
                     $field->fields['separator'] = 1;
@@ -317,23 +318,24 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                     if (!isset($_POST['field_option_exportview'])) $field->fields['option_exportview'] = 0;
                     if (!isset($_POST['field_option_wceview'])) $field->fields['option_wceview'] = 0;
                 }
+
                 $field->save();
-                ploopi_redirect("admin.php?op=forms_modify&forms_id={$_POST['forms_id']}");
+                ploopi_redirect("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}");
             }
             else ploopi_redirect('admin.php');
         break;
-    
+
         case 'forms_field_moveup':
         case 'forms_field_movedown':
             if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']))
             {
                 $field = new field();
                 $field->open($_GET['field_id']);
-    
+
                 $select = "Select min(position) as minpos, max(position) as maxpos from ploopi_mod_forms_field where id_form = {$field->fields['id_form']}";
                 $db->query($select);
                 $fields = $db->fetchrow();
-    
+
                 if ($op == 'forms_field_movedown')
                 {
                     if ($fields['maxpos'] != $field->fields['position']) // ce n'est pas le dernier champ
@@ -356,7 +358,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             }
             else ploopi_redirect('admin.php');
         break;
-    
+
         case "export":
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
             {
@@ -366,9 +368,9 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             }
             else ploopi_redirect('admin.php');
         break;
-    
+
     }
-    
+
     switch($_SESSION['forms']['formsTabItem'])
     {
         case 'formlist':
@@ -381,23 +383,23 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                 case 'forms_modify':
                     include './modules/forms/admin_forms_modify.php';
                 break;
-    
+
                 case 'forms_preview':
                     $forms = new form();
-    
+
                     if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id']))
                     {
                         include './modules/forms/public_forms_display.php';
                     }
                     else ploopi_redirect('admin.php');
                 break;
-    
+
                 default:
                     include './modules/forms/admin_forms_list.php';
                 break;
             }
         break;
-    
+
         case 'formadd':
             switch($op)
             {
@@ -406,10 +408,10 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                 break;
             }
         break;
-    
+
     }
-    
-    
+
+
     if (isset($_GET['termine']))
     {
         ?>
