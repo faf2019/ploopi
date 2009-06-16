@@ -437,6 +437,35 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
 }
 
 /**
+ * Retourne l'id du module passé en paramètre
+ *
+ * @param string $strModuleName nom du module
+ * @param boolean $booFirstOnly true si on souhaite simplement retourner le premier id de module (cas des instances multiples)
+ * @return mixed identifiant du module ou tableau des identifiants de modules ou false si aucun module
+ * 
+ * @copyright Exyzt, Ovensia 
+ * @author Julio Renella, Stéphane Escaich
+ */
+
+function ploopi_getmoduleid($strModuleName, $booFirstOnly = true)
+{
+    $arrModuleId = array();
+    
+    foreach ($_SESSION['ploopi']['workspaces'][ $_SESSION['ploopi']['workspaceid'] ]['modules'] as $intModuleId)
+    {
+        if ($_SESSION['ploopi']['modules'][$intModuleId]['moduletype'] == $strModuleName)
+        {
+            if ($booFirstOnly) return $intModuleId;
+            $arrModuleId[] = $intModuleId;
+        }
+    }
+   
+    if (!empty($arrModuleId)) return $arrModuleId;
+    
+    return false;
+} 
+
+/**
  * Chargement des paramètres des modules
  */
 
