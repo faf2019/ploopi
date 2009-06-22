@@ -518,10 +518,9 @@ class skin_common
                 $array['index'][$idx] = $key;
             }
             
-            
-            if ($array['sort'] == 'ASC') ksort($array['index'], SORT_STRING);
-            else krsort($array['index'], SORT_STRING);
-            
+            if ($array['sort'] == 'ASC') krsort($array['index'], SORT_STRING);
+            else ksort($array['index'], SORT_STRING);
+                        
             $sort_img = ($array['sort'] == 'DESC') ? "<img src=\"{$this->values['path']}/arrays/arrow_down.png\">" : "<img src=\"{$this->values['path']}/arrays/arrow_up.png\">";
             
         }
