@@ -72,8 +72,8 @@
     <div id="header">
 		<h1>{WORKSPACE_TITLE}</h1>
     </div>
-    
-    
+
+
     <div id="loginbox">
         <div class="loginbox_title">
             Identification
@@ -126,12 +126,12 @@
         </div>
 
     </div>
-    
+
     <script type="text/javascript">
 	ploopi_window_onload_stock(function() { if ($('ploopi_login')) $('ploopi_login').focus(); } );
-	
+
 	var effect = false;
-	
+
 	function tpl_passwordlost() {
 	    if (effect) return false;
 	    effect = true;
@@ -146,7 +146,7 @@
 	        }
 	    );
 	}
-	
+
 	function tpl_passwordlost_cancel() {
 	    if (effect) return false;
 	    effect = true;
@@ -161,14 +161,14 @@
 	        }
 	    );
 	}
-	
+
 	function tpl_passwordlost_submit() {
 	    if ($('ploopi_lostpassword_login').value != '' || $('ploopi_lostpassword_email').value != '') return true;
 	    else alert('Vous devez remplir un des deux champs');
-	
+
 	    return false;
 	}
-	</script>    
+	</script>
 <!-- END switch_user_logged_out -->
 
 <!-- BEGIN switch_user_logged_in -->
@@ -183,7 +183,7 @@
 		</div>
 		<span>Connecté en tant que &nbsp;<b>{USER_FIRSTNAME}&nbsp;{USER_LASTNAME}</b></span>
 	</div>
-	
+
 	<div id="header">
 		<div id="workspace-menu">
 			<select class="select" onchange="javascript:if (this.value != '') window.location = this.value;">
@@ -207,10 +207,10 @@
             <!-- END switch_search -->
         <!-- END switch_blockmenu -->
 
-	
+
 	    <h1>{WORKSPACE_TITLE}</h1>
 	    <!-- h2>{WORKSPACE_META_DESCRIPTION}</h2 -->
-	    
+
 		<!-- BEGIN switch_blockmenu -->
 	        <div id="main-menu">
 	            <ul>
@@ -221,9 +221,9 @@
 	        </div>
 		<!-- END switch_blockmenu -->
 	</div>
-	
+
 	<div id="main">
-	
+
 		<!-- BEGIN switch_blockmenu -->
 	        <!-- BEGIN switch_blocksel -->
 	            <div id="sidebar">
@@ -236,16 +236,16 @@
 		                <li><a class="{switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.SELECTED}" href="{switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.URL}" target="{switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.TARGET}" title="Accéder au menu &laquo; {switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.CLEANED_LABEL} &raquo;">{switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.LABEL}</a></li>
 		            <!-- END menu -->
 		            </ul>
-	            </div>        
+	            </div>
 	        <!-- END switch_blocksel -->
 	    <!-- END switch_blockmenu -->
-	
+
 	    <div id="page_content">
 	        {PAGE_CONTENT}
 	    </div>
 
     </div>
-            
+
    	<script type="text/javascript">
 	ploopi_window_onload_stock(function() { ploopi_tickets_refresh({LAST_NEWTICKET}, 30, '(', ')'); } );
 	</script>
@@ -253,7 +253,7 @@
 
 <div id="footer">
     Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi {PLOOPI_VERSION} ({PLOOPI_REVISION})</a>&nbsp;&#169;&nbsp;2008&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>&nbsp;
-    <br />[ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko | {SITE_CONNECTEDUSERS} connecté(s) - {SITE_ANONYMOUSUSERS} anonyme(s) ]&nbsp;
+    <br />[ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko | mem: <PLOOPI_PHP_MEMORY> ko | {SITE_CONNECTEDUSERS} connecté(s) - {SITE_ANONYMOUSUSERS} anonyme(s) ]&nbsp;
 </div>
 </body>
 </html>
