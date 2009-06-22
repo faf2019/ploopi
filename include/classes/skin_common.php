@@ -513,13 +513,13 @@ class skin_common
             foreach($array['values'] as $key => $value)
             {
                 $label = isset($value['values'][$array['orderby']]['sort_label']) ? 'sort_label' : 'label';
-                $idx = is_numeric($value['values'][$array['orderby']][$label]) ? sprintf("%032d_%06d", $value['values'][$array['orderby']][$label], $c++) : sprintf("%s_%06d", strtoupper(ploopi_convertaccents($value['values'][$array['orderby']][$label])), $c++);
+                $idx = is_numeric($value['values'][$array['orderby']][$label]) ? sprintf("%064s_%06s", $value['values'][$array['orderby']][$label], $c++) : sprintf("%s_%06s", strtoupper(ploopi_convertaccents($value['values'][$array['orderby']][$label])), $c++);
                 
                 $array['index'][$idx] = $key;
             }
             
-            if ($array['sort'] == 'ASC') krsort($array['index'], SORT_STRING);
-            else ksort($array['index'], SORT_STRING);
+            if ($array['sort'] == 'ASC') ksort($array['index'], SORT_STRING);
+            else krsort($array['index'], SORT_STRING);
                         
             $sort_img = ($array['sort'] == 'DESC') ? "<img src=\"{$this->values['path']}/arrays/arrow_down.png\">" : "<img src=\"{$this->values['path']}/arrays/arrow_up.png\">";
             
