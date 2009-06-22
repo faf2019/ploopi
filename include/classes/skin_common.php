@@ -355,32 +355,12 @@ class skin_common
     }    
 
     /**
-     * Trie le tableau avancé
-     *
-     * @param array $a valeur a
-     * @param array $b valeur b
-     * @return boolean
-     */
-
-    public function array_sort($a,$b)
-    {
-        $a_label = isset($this->array_values[$a]['values'][$this->array_orderby]['sort_label']) ? 'sort_label' : 'label';
-        $b_label = isset($this->array_values[$b]['values'][$this->array_orderby]['sort_label']) ? 'sort_label' : 'label';
-
-        $a_val = &$this->array_values[$a]['values'][$this->array_orderby][$a_label];
-        $b_val = &$this->array_values[$b]['values'][$this->array_orderby][$b_label];
-
-        if ($this->array_sort == 'ASC') return($a_val>$b_val);
-        else return($b_val>$a_val);
-    }
-
-    /**
      * Affiche un tableau avancé
      *
-     * @param array $columns définition des colonnes
-     * @param array $values contenu du tableau
-     * @param string $array_id identifiant du tableau
-     * @param array $options options d'affichage
+     * @param array $arrColumns définition des colonnes
+     * @param array $arrValues contenu du tableau
+     * @param string $strArrayId identifiant du tableau
+     * @param array $arrOptions options d'affichage
      *
      * propriétés des colonnes : label, width, styles, options
      * propriétés des valeurs : label, style, sort_label
@@ -406,23 +386,27 @@ class skin_common
      * </code>
      */
 
-    public function display_array($columns, $values, $array_id = null, $options = null)
+    public function display_array(&$arrColumns, &$arrValues, $strArrayId = null, $arrOptions = null)
     {
-        if (empty($array_id)) $array_id = md5(uniqid(rand(), true));
-
+        
+        if (empty($strArrayId)) $strArrayId = md5(uniqid(rand(), true));
+        
         $sort = $orderby = '';
 
-        if (!empty($_SESSION['ploopi']['arrays'][$array_id]))
+        /*
+        if (!empty($_SESSION['ploopi']['arrays'][$strArrayId]))
         {
             // preserve orderby & sort values
-            $orderby = $_SESSION['ploopi']['arrays'][$array_id]['orderby'];
-            $sort = $_SESSION['ploopi']['arrays'][$array_id]['sort'];
+            $orderby = $_SESSION['ploopi']['arrays'][$strArrayId]['orderby'];
+            $sort = $_SESSION['ploopi']['arrays'][$strArrayId]['sort'];
         }
-
-        $_SESSION['ploopi']['arrays'][$array_id] = array('columns' => $columns, 'values' => $values, 'options' => $options, 'orderby' => $orderby, 'sort' => $sort);
-
-        $array = &$_SESSION['ploopi']['arrays'][$array_id];
-
+        */
+        
+        if (empty($arrOptions['page'])) $arrOptions['page'] = 1;
+        if (empty($arrOptions['limit'])) $arrOptions['limit'] = 0;
+        
+        $array = array('columns' => &$arrColumns, 'values' => &$arrValues, 'options' => &$arrOptions, 'orderby' => &$orderby, 'sort' => &$sort);
+        
         if (!empty($array['options']['sortable']) && $array['options']['sortable'])
         {
             $array['sortable_columns'] = array();
@@ -432,7 +416,7 @@ class skin_common
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['left'][$id]['onclick'] = "ploopi_skin_array_refresh('{$array_id}', '{$id}');";
+                        $array['columns']['left'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}');";
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -444,7 +428,7 @@ class skin_common
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['auto'][$id]['onclick'] = "ploopi_skin_array_refresh('{$array_id}', '{$id}');";
+                        $array['columns']['auto'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}');";
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -456,36 +440,50 @@ class skin_common
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$array_id}', '{$id}');";
+                        $array['columns']['right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}');";
                         $array['sortable_columns'][] = $id;
                     }
                 }
             }
 
         }
-
+        
+        $objSV = new serializedvar($strArrayId);
+        $objSV->save($array);
         ?>
-        <div class="ploopi_explorer_main" id="ploopi_explorer_main_<?php echo $array_id; ?>" style="visibility:visible;">
-        <?php $this->display_array_refresh($array_id); ?>
+        <div class="ploopi_explorer_main" id="ploopi_explorer_main_<?php echo $strArrayId; ?>" style="visibility:visible;">
+        <?php $this->display_array_refresh($strArrayId); ?>
         </div>
         <?php
 
     }
 
+    
+    private function array_page($strArrayId, $intPage, $strPage, $intSel = 0)
+    {
+        return $intSel == $intPage ? str_replace('{p}', $strPage, '<strong>{p}</strong>') : str_replace(array('{p}', '{id}'), array($strPage, $intPage), '<a href="javascript:void(0);" onclick="javascript:ploopi_skin_array_refresh(\''.$strArrayId.'\', \'\', \'{id}\');">{p}</a>');
+    }
+    
     /**
      * Rafraichit l'affichage d'un tableau avancé
      *
-     * @param string $array_id id du tableau
+     * @param string $strArrayId id du tableau
      * @param string $orderby colonne de tri
      */
 
-    public function display_array_refresh($array_id, $orderby = null)
+    public function display_array_refresh($strArrayId, $strOrderBy = null, $intIdPage = null)
     {
         // On récupère le tableau stocké en session (identifié par array_id)
-        $array = &$_SESSION['ploopi']['arrays'][$array_id];
-
+        include_once './include/classes/serializedvar.php';
+        
+        $objSV = new serializedvar($strArrayId);
+        $array = $objSV->read();
+        
         $sort_img = '';
-
+        
+        // index temporaire (pour tri à l'affichage)
+        $array['index'] = array();
+        
         // si le tableau est "triable" (option)
         if (!empty($array['options']['sortable']) && $array['options']['sortable'])
         {
@@ -502,25 +500,74 @@ class skin_common
                 else $array['sort'] = 'ASC';
             }
             // on réinitialise l'ordre de tri si l'ordreby est différent du précédent
-            if (!empty($orderby))
+            if (!empty($strOrderBy))
             {
-                if ($orderby != $array['orderby']) $array['sort'] = 'ASC';
+                if ($strOrderBy != $array['orderby']) $array['sort'] = 'ASC';
                 else $array['sort'] = ($array['sort'] == 'ASC') ? 'DESC' : 'ASC';
             }
 
-            $_SESSION['testsort'] = $array['sort'];
-
             // récupération de la valeur de l'orderby en session ou en parametre (par défaut en paramètre)
-            $array['orderby'] = (empty($orderby)) ? $array['orderby'] : $orderby;
+            $array['orderby'] = (empty($strOrderBy)) ? $array['orderby'] : $strOrderBy;
 
-            $this->array_values = $array['values'];
-            $this->array_sort = $array['sort'];
-            $this->array_orderby = $array['orderby'];
-
-            uksort ($array['values'], array($this, 'array_sort'));
-
+            $c = 0;
+            foreach($array['values'] as $key => $value)
+            {
+                $label = isset($value['values'][$array['orderby']]['sort_label']) ? 'sort_label' : 'label';
+                $idx = $value['values'][$array['orderby']][$label].'_'.$c++;
+                
+                $array['index'][$idx] = $key;
+            }
+            
+            if ($array['sort'] == 'ASC') ksort($array['index']);
+            else krsort($array['index']);
+            
             $sort_img = ($array['sort'] == 'DESC') ? "<img src=\"{$this->values['path']}/arrays/arrow_down.png\">" : "<img src=\"{$this->values['path']}/arrays/arrow_up.png\">";
+            
         }
+        else $array['index'] = array_keys($array['values']);
+        
+        if (!empty($intIdPage) && is_numeric($intIdPage)) $array['options']['page'] = $intIdPage;
+        
+        $objSV->save($array);
+        
+        // Affichage des pages (optionnel)
+        if ($array['options']['limit'] > 0 && $array['options']['limit'] < sizeof($array['values']))
+        {
+            $intNbPages = ceil(sizeof($array['values']) / $array['options']['limit']);
+            
+            $arrPages = array();
+            
+            // Fleche page précédente
+            if ($array['options']['page'] > 1) $arrPages[] = $this->array_page($strArrayId, $array['options']['page']-1, '&laquo;');
+            
+            // On affiche toujours la premiere page
+            $arrPages[] = $this->array_page($strArrayId, 1, 1, $array['options']['page']);
+            
+            // Affichage "..." après première page
+            if ($array['options']['page'] > 4) $arrPages[] = '...';
+            
+            // Boucle sur les pages autour de la page sélectionnée (-2 à +2 si existe)
+            for ($i = $array['options']['page'] - 2; $i <= $array['options']['page'] + 2; $i++) 
+            {
+                if ($i>1 && $i<$intNbPages) $arrPages[] = $this->array_page($strArrayId, $i, $i, $array['options']['page']);
+            }
+            
+            // Affichage "..." avant dernière page
+            if ($array['options']['page'] < $intNbPages - 3) $arrPages[] = '...';
+            
+            // Dernière page
+            if ($intNbPages>1) $arrPages[] = $this->array_page($strArrayId, $intNbPages, $intNbPages, $array['options']['page']);
+
+            // Fleche page suivante
+            if ($array['options']['page'] < $intNbPages) $arrPages[] = $this->array_page($strArrayId, $array['options']['page']+1, '&raquo;');
+            
+            ?>
+            <div class="ploopi_explorer_multipage" style="border-bottom:1px solid #c0c0c0;padding:2px 4px;text-align:right;">
+                Pages : <?php echo implode(' ', $arrPages); ?>
+            </div>
+            <?php
+        }
+        
 
         $i = 0;
         $w = 0;
@@ -532,7 +579,7 @@ class skin_common
             {
                 $w += $c['width'];
                 ?>
-                <div style="right:<?php echo $w; ?>px;" class="ploopi_explorer_column" id="ploopi_explorer_column_<?php echo $array_id; ?>_<?php echo $i; ?>"></div>
+                <div style="right:<?php echo $w; ?>px;" class="ploopi_explorer_column" id="ploopi_explorer_column_<?php echo $strArrayId; ?>_<?php echo $i; ?>"></div>
                 <?php
                 $i++;
             }
@@ -545,7 +592,7 @@ class skin_common
             {
                 $w += $c['width'];
                 ?>
-                <div style="right:<?php echo $w; ?>px;" class="ploopi_explorer_column" id="ploopi_explorer_column_<?php echo $array_id; ?>_<?php echo $i; ?>"></div>
+                <div style="right:<?php echo $w; ?>px;" class="ploopi_explorer_column" id="ploopi_explorer_column_<?php echo $strArrayId; ?>_<?php echo $i; ?>"></div>
                 <?php
                 $i++;
             }
@@ -560,7 +607,7 @@ class skin_common
             {
                 $w += $c['width'];
                 ?>
-                <div style="left:<?php echo $w; ?>px;" class="ploopi_explorer_column" id="ploopi_explorer_column_<?php echo $array_id; ?>_<?php echo $i; ?>"></div>
+                <div style="left:<?php echo $w; ?>px;" class="ploopi_explorer_column" id="ploopi_explorer_column_<?php echo $strArrayId; ?>_<?php echo $i; ?>"></div>
                 <?php
                 $i++;
             }
@@ -569,7 +616,7 @@ class skin_common
         // on gère ensuite l'affichage des titres de colonne
         ?>
         <div style="position:relative;">
-            <div class="ploopi_explorer_title" id="ploopi_explorer_title_<?php echo $array_id; ?>">
+            <div class="ploopi_explorer_title" id="ploopi_explorer_title_<?php echo $strArrayId; ?>">
                 <?php
                 // titres des colonnes d'action (à droite)
                 if (!empty($array['columns']['actions_right']))
@@ -642,15 +689,40 @@ class skin_common
             // Gestion de l'affichage des lignes de données
             ?>
 
-            <div <?php if (!empty($array['options']['height'])) echo "style=\"height:{$array['options']['height']}px;overflow:auto;\""; ?> id="ploopi_explorer_values_outer_<?php echo $array_id; ?>">
+            <div <?php if (!empty($array['options']['height'])) echo "style=\"height:{$array['options']['height']}px;overflow:auto;\""; ?> id="ploopi_explorer_values_outer_<?php echo $strArrayId; ?>">
 
-                <div id="ploopi_explorer_values_inner_<?php echo $array_id; ?>">
+                <div id="ploopi_explorer_values_inner_<?php echo $strArrayId; ?>">
                 <?php
-                
                 if (!empty($array['values']))
                 {
-                    foreach($array['values'] as $v)
+                    /*
+                    // On se positionne sur la bonne page de données
+                    reset($array['values']);
+                    $intLines = $array['options']['limit'];
+                    
+                    if ($intLines > 0 && $intLines < sizeof($array['values'])) 
                     {
+                        for ( $i=0 ; $i < ($array['options']['page']-1) * $intLines ; $i++) next($array['values']);
+                        if ($intLines > sizeof($array['values']) - ($array['options']['page']-1) * $intLines) $intLines = sizeof($array['values']) - ($array['options']['page']-1) * $intLines;
+                    }
+                    else $intLines = sizeof($array['values']);
+                    */
+                    
+                    // On se positionne sur la bonne page de données
+                    $intLines = $array['options']['limit'];
+                    
+                    if ($intLines > 0 && $intLines < sizeof($array['index'])) 
+                    {
+                        for ( $i=0 ; $i < ($array['options']['page']-1) * $intLines ; $i++) next($array['index']);
+                        if ($intLines > sizeof($array['index']) - ($array['options']['page']-1) * $intLines) $intLines = sizeof($array['index']) - ($array['options']['page']-1) * $intLines;
+                    }
+                    else $intLines = sizeof($array['index']);
+                    
+                    // On parcourt le nombre de ligne souhaité
+                    for ($i = 0 ; $i < $intLines ; $i++)
+                    {
+                        $v = $array['values'][current($array['index'])];
+                        
                         // alternance des couleurs (une ligne sur 2) : on joue sur les css
                         $color = (empty($color) || $color == 1) ? 2 : 1;
                         ?>
@@ -714,9 +786,12 @@ class skin_common
                                 </a>
                                 <?php
                             }
+                            
                             ?>
                         </div>
                         <?php
+                        
+                        next($array['index']);
                     }
                 }
                 ?>
@@ -725,7 +800,7 @@ class skin_common
         </div>
 
         <script type="text/javascript">
-            ploopi_skin_array_renderupdate('<?php echo $array_id; ?>');
+            ploopi_skin_array_renderupdate('<?php echo $strArrayId; ?>');
         </script>
         <?php
     }
@@ -823,180 +898,26 @@ class skin_common
                 $status = (empty($node['status'])) ? '' : $node['status'];
 
                 // génération du code html du noeud courant
-                $html .=    "
-                            <div class=\"treeview_node\" id=\"treeview_node{$node['id']}\" style=\"{$bg}\">
-                                <div>
-                                    {$node_link}<img src=\"{$node['icon']}\" />
-                                    <div style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;font-weight:{$style_sel};\">
-                                        <a href=\"{$link}\" {$onclick}>{$node['label']}</a>
-                                        {$status}
-                                    </div>
-                                </div>
-                                <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"n{$node['id']}\">{$html_children}</div>
+                $html .= "
+                    <div class=\"treeview_node\" id=\"treeview_node{$node['id']}\" style=\"{$bg}\">
+                        <div>
+                            {$node_link}<img src=\"{$node['icon']}\" />
+                            <div style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;font-weight:{$style_sel};\">
+                                <a href=\"{$link}\" {$onclick}>{$node['label']}</a>
+                                {$status}
                             </div>
-                            ";
+                        </div>
+                        <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"n{$node['id']}\">{$html_children}</div>
+                    </div>
+                ";
+                    
                 $c++;
             }
         }
-
         return $html;
 
     }
 
-    /**
-     * Affiche un découpage par page
-     *
-     * @param string $form_id Nom unique du form
-     * @param array $param propriétés du découpage
-     *
-     * @return code html des pages
-     *         $POST: $form_id+_begin = début du limit
-     *                $form_id+_page  = page cliquée
-     *                $form_id+_by    = by selectionné
-     *
-     * propriétés du découpage :
-     *      - nbmax   : nombre d'enregistrement total
-     *      - by      : nb enregistrement par page
-     *      - page    : page en cours
-     *      - action  : action à passer au form (optionnel)
-     *      - post    : liste de input hidden a passer = array(id/name => value,...) (optionnel)
-     *      - answerby: liste des découpages à porposer = array(10,25,50,100,...) (optionnel)
-     *
-     */
-
-    public function display_cut_page($form_id,$param)
-    {
-      if(empty($form_id)) return '';
-      if(!isset($param['nbMax']) || $param['nbMax'] <= 0) return '';
-      if(!isset($param['by']) || $param['by'] <= 0 || $param['nbMax'] <= $param['by']) return '';
-
-      $nbPage = ceil($param['nbMax']/$param['by']); // forcement > 1 a cause du test "$param['nbMax'] <= $param['by']" juste au dessus
-
-      if(empty($action)) $action = $_SESSION['ploopi']['scriptname'];
-
-      //Correction de la page actuel au cas où...
-      if(!isset($param['page']) || (isset($param['page']) && $param['page'] < 1))  $param['page'] = 1;
-      if($param['page'] > $nbPage ) $param['page'] = $nbPage;
-
-      $limit_begin = (($param['page']-1)*$param['by']);
-      $html = '<form action="'.ploopi_urlencode($action).'" id="'.$form_id.'" name="'.$form_id.'" method="post">
-               <input type="hidden" id="'.$form_id.'_begin" name="'.$form_id.'_begin" value="'.$limit_begin.'">
-               <input type="hidden" id="'.$form_id.'_page" name="'.$form_id.'_page" value="'.$param['page'].'">
-               <div class="ploopi_page_cut">';
-
-      /*
-       * Gestion du select de proposition pour le $by
-       */
-      $answerby_js ='';
-      if(!empty($param['answerby']) && is_array($param['answerby']))
-      {
-        $html .= '<div style="float:left;">
-                  <input type="hidden" id="'.$form_id.'_by" name="'.$form_id.'_by" value="'.$param['by'].'">
-                  <select id="'.$form_id.'_select_by" class="ploopi_page_by"
-                                                   onchange="javascript:var page;
-                                                                        if('.$param['page'].' > Math.ceil('.$param['nbMax'].'/$(\''.$form_id.'_select_by\').value))
-                                                                          page =  Math.ceil('.$param['nbMax'].'/$(\''.$form_id.'_select_by\').value);
-                                                                        else
-                                                                          page =  '.$param['page'].';
-                                                                        $(\''.$form_id.'_begin\').value=((page-1)*$(\''.$form_id.'_select_by\').value);
-                                                                        $(\''.$form_id.'_page\').value=\''.$param['page'].'\';
-                                                                        $(\''.$form_id.'_by\').value=$(\''.$form_id.'_select_by\').value;
-                                                                        $(\''.$form_id.'\').submit();">';
-        foreach($param['answerby'] as $value)
-        {
-          $select = ($value == $param['by']) ? 'selected="selected"' : '';
-          $html .= '<option value="'.$value.'" '.$select.'>'.$value.'</option>';
-        }
-        $html .= '</select></div>';
-        $answerby_js = '$(\''.$form_id.'_by\').value=$(\''.$form_id.'_select_by\').value;';
-      }
-
-      /*
-       *  Gestion des $param['post'] => <input type="hidden"...
-       */
-      if(!empty($param['post']))
-      {
-        foreach($param['post'] as $name => $value)
-        {
-          $html .= '<input type="hidden" name="'.$name.'" value="'.$value.'" class>';
-        }
-      }
-
-      /* Si on a moins de 5 pages */
-      if($nbPage <= 5)
-      {
-        $html .= '<div>';
-        /* ajout des Pages */
-        for ($page = 1; $page <= $nbPage; $page++)
-        {
-          $limit_begin = (($page-1)*$param['by']);
-          //class utilisée
-          $class = ($page == $param['page']) ? 'ploopi_page_cut_select' : 'ploopi_page_cut';
-          $html .= '<input type="button" class="'.$class.'" value="'.$page.'" onclick="javascript:'.$answerby_js.'$(\''.$form_id.'_begin\').value=\''.$limit_begin.'\';$(\''.$form_id.'_page\').value=\''.$page.'\';$(\''.$form_id.'\').submit();">';
-        }
-        $html .= '</div>';
-      }
-      else /* Si on a plus de 5 pages */
-      {
-        $html .= '<div>';
-        /* Recherche où on est */
-        if($param['page'] < 4) // On est au debut
-        {
-          $button = 'end';
-          $debPage = 1;
-          $maxPage = 5;
-        }
-        elseif($param['page'] > ($nbPage-4)) // on est à la fin
-        {
-          $button = 'begin';
-          $debPage = ($nbPage-5);
-          $maxPage = $nbPage;
-        }
-        else // on est au milieu...
-        {
-          $button = 'extrem';
-          $debPage = ($param['page']-2);
-          $maxPage = ($param['page']+2);
-        }
-
-        /* ajout des << et < (ou pas) */
-        if($param['page'] > 1)
-        {
-          $html .= '<input type="button" class="ploopi_page_cut" value="&lt;&lt;" onclick="javascript:'.$answerby_js.'$(\''.$form_id.'_begin\').value=\'0\';$(\''.$form_id.'_page\').value=\'1\';$(\''.$form_id.'\').submit();">';
-          $limit_begin = (($param['page']-2)*$param['by']);
-          $html .= '<input type="button" class="ploopi_page_cut" value="&lt;" onclick="javascript:'.$answerby_js.'$(\''.$form_id.'_begin\').value=\''.$limit_begin.'\';$(\''.$form_id.'_page\').value=\''.($param['page']-1).'\';$(\''.$form_id.'\').submit();">';
-        }
-
-        if($button == 'begin' || $button == 'extrem')
-          $html .= '<input type="button" class="ploopi_page_cut_disable" value="...">';
-
-        /* ajout des Pages */
-        for ($page = $debPage; $page <= $maxPage; $page++)
-        {
-          $limit_begin = (($page-1)*$param['by']);
-          //class utilisée
-          $class = ($page == $param['page']) ? 'ploopi_page_cut_select' : 'ploopi_page_cut';
-          $html .= '<input type="button" class="'.$class.'" value="'.$page.'" onclick="javascript:'.$answerby_js.'$(\''.$form_id.'_begin\').value=\''.$limit_begin.'\';$(\''.$form_id.'_page\').value=\''.$page.'\';$(\''.$form_id.'\').submit();">';
-        }
-
-        if($button == 'end' || $button == 'extrem')
-          $html .= '<input type="button" class="ploopi_page_cut_disable" value="...">';
-
-        /* ajout des > et >> (ou pas) */
-        if($param['page'] < $nbPage)
-        {
-          $limit_begin = (($param['page'])*$param['by']);
-          $html .= '<input type="button" class="ploopi_page_cut" value="&gt;" onclick="javascript:'.$answerby_js.'$(\''.$form_id.'_begin\').value=\''.$limit_begin.'\';$(\''.$form_id.'_page\').value=\''.($param['page']+1).'\';$(\''.$form_id.'\').submit();">';
-          $limit_begin = (($nbPage-1)*$param['by']);
-          $html .= '<input type="button" class="ploopi_page_cut" value="&gt;&gt;" onclick="javascript:'.$answerby_js.'$(\''.$form_id.'_begin\').value=\''.$limit_begin.'\';$(\''.$form_id.'_page\').value=\''.$nbPage.'\';$(\''.$form_id.'\').submit();">';
-        }
-        $html .= '</div>';
-      }
-
-      $html .= '</div></form>';
-
-      return $html;
-    }
 
     /**
      * Affichage d'une liste de choix paramétrable

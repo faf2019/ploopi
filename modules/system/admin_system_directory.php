@@ -36,7 +36,7 @@
 
 echo $skin->open_simplebloc(_SYSTEM_LABEL_DIRECTORY);
 
-$intMaxResponse = 250;
+$intMaxResponse = 1000;
 
 $arrFilter = array();
 
@@ -383,7 +383,8 @@ if ($row['c'] > 0 && $row['c'] <= $intMaxResponse)
         'system_directory',
         array(
             'sortable' => true,
-            'orderby_default' => 'login'
+            'orderby_default' => 'login',
+            'limit' => 100
         )
     );
 }

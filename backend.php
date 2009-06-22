@@ -37,41 +37,26 @@
 include_once './include/start_light.php';
 
 // La requête doit forcément porter sur un module valide
-if (isset($_REQUEST['ploopi_moduleid']))
+if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid']) && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'][$_REQUEST['ploopi_moduleid']]))
 {
-    $ploopi_moduleid = $_REQUEST['ploopi_moduleid'];
+    $db->query( "
+        SELECT      mt.label labeltype,
+                    m.label
+        FROM        ploopi_module m
+        INNER JOIN  ploopi_module_type mt
+        ON          mt.id = m.id_module_type
+        WHERE       m.id = '".$db->addslashes($_REQUEST['ploopi_moduleid'])."'
+    ");
 
-    if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'][$ploopi_moduleid]))
+    if ($row = $db->fetchrow())
     {
-        /*
-        include_once './include/classes/module.php';
-        $module = new module();
-        $module->open($ploopi_moduleid);
-        ploopi_print_r($module->fields);
-        */
-
-        $db->query( "
-                    SELECT      mt.label labeltype,
-                                m.label
-                    FROM        ploopi_module m
-                    INNER JOIN  ploopi_module_type mt
-                    ON          mt.id = m.id_module_type
-                    WHERE       m.id = '".$db->addslashes($ploopi_moduleid)."'");
-
-        if ($row = $db->fetchrow())
+        if (file_exists($backend_filepath = "./modules/{$row['labeltype']}/backend.php")) 
         {
-            $backend_filepath = "./modules/{$row['labeltype']}/backend.php";
-            if (file_exists($backend_filepath))
-            {
-                include_once $backend_filepath;
-            }
-            else ploopi_h404();
+            include_once $backend_filepath;
+            ploopi_die();
         }
-        else ploopi_h404();
     }
-    else ploopi_h404();
 }
-else ploopi_h404();
-
+ploopi_h404();
 ploopi_die();
 ?>

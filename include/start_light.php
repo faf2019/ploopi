@@ -50,14 +50,13 @@ switch($_SESSION['ploopi']['scriptname'])
 {
     case 'cron.php':
     case 'webservice.php':
+    case 'backend.php':
         $_SESSION['ploopi']['mode'] = 'backoffice';
     break;
 
     default:
-    case 'rss.php':
         $_SESSION['ploopi']['mode'] = 'frontoffice';
     break;
-
 }
 
 switch ($_SESSION['ploopi']['mode'])
@@ -77,4 +76,5 @@ switch ($_SESSION['ploopi']['mode'])
     break;
 }
 
+if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid'])) $_SESSION['ploopi']['moduleid'] = $ploopi_moduleid = $_REQUEST['ploopi_moduleid'];
 ?>

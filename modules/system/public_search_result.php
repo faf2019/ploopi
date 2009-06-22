@@ -217,7 +217,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
         }
         ?>
         <div style="background-color:#f0f0f0;border-top:2px solid #c0c0c0;">
-        <?php $skin->display_array($columns, $values, 'system_search', array('sortable' => true, 'orderby_default' => 'relevance', 'sort_default' => 'DESC')); ?>
+        <?php $skin->display_array($columns, $values, 'system_search', array('sortable' => true, 'orderby_default' => 'relevance', 'sort_default' => 'DESC', 'limit' => 100)); ?>
         </div>
         <?php
     }

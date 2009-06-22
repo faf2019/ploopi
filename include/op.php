@@ -479,7 +479,7 @@ if (isset($ploopi_op))
             break;
 
             case 'ploopi_skin_array_refresh':
-                $skin->display_array_refresh($_GET['array_id'], $_GET['array_orderby']);
+                if (!empty($_GET['array_id'])) $skin->display_array_refresh($_GET['array_id'], empty($_GET['array_orderby']) ? null : $_GET['array_orderby'], empty($_GET['array_page']) ? null : $_GET['array_page']);
                 ploopi_die();
             break;
 

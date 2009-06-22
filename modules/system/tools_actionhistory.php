@@ -38,50 +38,29 @@
 
 echo $skin->open_simplebloc(_SYSTEM_LABEL_ACTIONHISTORY);
 
-/* Paramétre de découpage de page */
-
-$limit_begin = 0;
-$limit_by = 100;
-$actual_page = 1;
-
-if(isset($_POST['cut_page1_begin']))  $limit_begin = $_POST['cut_page1_begin'];
-if(isset($_POST['cut_page2_begin']))  $limit_begin = $_POST['cut_page2_begin'];
-
-if(isset($_POST['cut_page1_by']))     $limit_by = $_POST['cut_page1_by'];
-if(isset($_POST['cut_page2_by']))     $limit_by = $_POST['cut_page2_by'];
-
-if(isset($_POST['cut_page1_page']))   $actual_page = $_POST['cut_page1_page'];
-if(isset($_POST['cut_page2_page']))   $actual_page = $_POST['cut_page2_page'];
-
-/*
-ploopi_print_r($_POST);
-
-echo '$limit_begin = '.$limit_begin.'<br/>';
-echo '$limit_by = '.$limit_by.'<br/>';
-echo '$actual_page = '.$actual_page.'<br/>';
-*/
+$intLimit = 5000;
 
 //Paramètre de filtre
-$search_pattern = array();
-$search_pattern['date'] = (isset($_POST['filter_date'])) ? $_POST['filter_date'] : '';
-$search_pattern['date2'] = (isset($_POST['filter_date2'])) ? $_POST['filter_date2'] : '';
-$search_pattern['user'] = (isset($_POST['filter_user'])) ? $_POST['filter_user'] : '';
-$search_pattern['module'] = (isset($_POST['filter_module'])) ? $_POST['filter_module'] : '';
-$search_pattern['action'] = (isset($_POST['filter_action'])) ? $_POST['filter_action'] : '';
-$search_pattern['record'] = (isset($_POST['filter_record'])) ? $_POST['filter_record'] : '';
-$search_pattern['ip'] = (isset($_POST['filter_ip'])) ? $_POST['filter_ip'] : '';
+$arrSearchPattern = array();
+$arrSearchPattern['date'] = (isset($_POST['filter_date'])) ? $_POST['filter_date'] : '';
+$arrSearchPattern['date2'] = (isset($_POST['filter_date2'])) ? $_POST['filter_date2'] : '';
+$arrSearchPattern['user'] = (isset($_POST['filter_user'])) ? $_POST['filter_user'] : '';
+$arrSearchPattern['module'] = (isset($_POST['filter_module'])) ? $_POST['filter_module'] : '';
+$arrSearchPattern['action'] = (isset($_POST['filter_action'])) ? $_POST['filter_action'] : '';
+$arrSearchPattern['record'] = (isset($_POST['filter_record'])) ? $_POST['filter_record'] : '';
+$arrSearchPattern['ip'] = (isset($_POST['filter_ip'])) ? $_POST['filter_ip'] : '';
 
-$where = array();
+$arrWhere = array();
 
-if (!empty($search_pattern['date']))    $where[] = "ploopi_user_action_log.timestp >= '".$db->addslashes(ploopi_local2timestamp($search_pattern['date']))."'";
-if (!empty($search_pattern['date2']))   $where[] = "ploopi_user_action_log.timestp <= '".$db->addslashes(ploopi_timestamp_add(ploopi_local2timestamp($search_pattern['date2']),0,0,0,0,1))."'";
-if (!empty($search_pattern['user']))    $where[] = "login LIKE '%".$db->addslashes($search_pattern['user'])."%'";
-if (!empty($search_pattern['module']))  $where[] = "ploopi_module.label LIKE '%".$db->addslashes($search_pattern['module'])."%'";
-if (!empty($search_pattern['action']))  $where[] = "ploopi_mb_action.label LIKE '%".$db->addslashes($search_pattern['action'])."%'";
-if (!empty($search_pattern['record']))  $where[] = "ploopi_user_action_log.id_record LIKE '%".$db->addslashes($search_pattern['record'])."%'";
-if (!empty($search_pattern['ip']))      $where[] = "ploopi_user_action_log.ip LIKE '".$db->addslashes($search_pattern['ip'])."%'";
+if (!empty($arrSearchPattern['date']))    $arrWhere[] = "ploopi_user_action_log.timestp >= '".$db->addslashes(ploopi_local2timestamp($arrSearchPattern['date']))."'";
+if (!empty($arrSearchPattern['date2']))   $arrWhere[] = "ploopi_user_action_log.timestp <= '".$db->addslashes(ploopi_timestamp_add(ploopi_local2timestamp($arrSearchPattern['date2']),0,0,0,0,1))."'";
+if (!empty($arrSearchPattern['user']))    $arrWhere[] = "login LIKE '%".$db->addslashes($arrSearchPattern['user'])."%'";
+if (!empty($arrSearchPattern['module']))  $arrWhere[] = "ploopi_module.label LIKE '%".$db->addslashes($arrSearchPattern['module'])."%'";
+if (!empty($arrSearchPattern['action']))  $arrWhere[] = "ploopi_mb_action.label LIKE '%".$db->addslashes($arrSearchPattern['action'])."%'";
+if (!empty($arrSearchPattern['record']))  $arrWhere[] = "ploopi_user_action_log.id_record LIKE '%".$db->addslashes($arrSearchPattern['record'])."%'";
+if (!empty($arrSearchPattern['ip']))      $arrWhere[] = "ploopi_user_action_log.ip LIKE '".$db->addslashes($arrSearchPattern['ip'])."%'";
 
-$wheresql = (empty($where)) ? '' : ' WHERE '.implode(' AND ', $where);
+$strWhere = (empty($arrWhere)) ? '' : ' WHERE '.implode(' AND ', $arrWhere);
 
 if (!empty($_POST['historyoption']))
 {
@@ -96,7 +75,7 @@ if (!empty($_POST['historyoption']))
                     LEFT JOIN       ploopi_mb_action
                     ON              ploopi_user_action_log.id_action = ploopi_mb_action.id_action
                     AND             ploopi_mb_action.id_module_type = ploopi_module.id_module_type
-                    {$wheresql}
+                    {$strWhere}
                     ";
             $db->query($sql);
 
@@ -119,7 +98,7 @@ if (!empty($_POST['historyoption']))
                     LEFT JOIN       ploopi_mb_action
                     ON              ploopi_user_action_log.id_action = ploopi_mb_action.id_action
                     AND             ploopi_mb_action.id_module_type = ploopi_module.id_module_type
-                    {$wheresql}
+                    {$strWhere}
                     ORDER BY        ploopi_user_action_log.timestp DESC
                     ";
 
@@ -144,14 +123,6 @@ if (!empty($_POST['historyoption']))
         break;
     }
 }
-
-//Découpage des pages
-if($limit_begin > 0)
-  $limit = "LIMIT {$limit_begin},{$limit_by}";
-elseif ($limit_by > 0)
-    $limit = "LIMIT {$limit_by}";
-  else
-    $limit = '';
 ?>
 
 <form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" id="form_loghistory">
@@ -161,34 +132,34 @@ elseif ($limit_by > 0)
     <div style="margin:0; padding:0; float:left;width:49%;" class="ploopi_form">
         <p>
             <label>Entre le (date):</label>
-            <input type="text" class="text" name="filter_date" id="filter_date" style="width:100px;" value="<?php echo htmlentities($search_pattern['date']); ?>"><a href="#" onclick="javascript:ploopi_calendar_open('filter_date', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+            <input type="text" class="text" name="filter_date" id="filter_date" style="width:100px;" value="<?php echo htmlentities($arrSearchPattern['date']); ?>"><a href="#" onclick="javascript:ploopi_calendar_open('filter_date', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
         </p>
         <p>
             <label>et le (date):</label>
-            <input type="text" class="text" name="filter_date2" id="filter_date2" style="width:100px;" value="<?php echo htmlentities($search_pattern['date2']); ?>"><a href="#" onclick="javascript:ploopi_calendar_open('filter_date2', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+            <input type="text" class="text" name="filter_date2" id="filter_date2" style="width:100px;" value="<?php echo htmlentities($arrSearchPattern['date2']); ?>"><a href="#" onclick="javascript:ploopi_calendar_open('filter_date2', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
         </p>
         <p>
             <label>Utilisateur:</label>
-            <input type="text" class="text" name="filter_user" value="<?php echo htmlentities($search_pattern['user']); ?>">
+            <input type="text" class="text" name="filter_user" value="<?php echo htmlentities($arrSearchPattern['user']); ?>">
         </p>
     </div>
 
     <div style="margin:0; padding:0; float:left;width:50%;" class="ploopi_form">
         <p>
             <label>Module:</label>
-            <input type="text" class="text" name="filter_module" value="<?php echo htmlentities($search_pattern['module']); ?>">
+            <input type="text" class="text" name="filter_module" value="<?php echo htmlentities($arrSearchPattern['module']); ?>">
         </p>
         <p>
             <label>Action:</label>
-            <input type="text" class="text" name="filter_action" value="<?php echo htmlentities($search_pattern['action']); ?>">
+            <input type="text" class="text" name="filter_action" value="<?php echo htmlentities($arrSearchPattern['action']); ?>">
         </p>
         <p>
             <label>Enregistrement:</label>
-            <input type="text" class="text" name="filter_record" value="<?php echo htmlentities($search_pattern['record']); ?>">
+            <input type="text" class="text" name="filter_record" value="<?php echo htmlentities($arrSearchPattern['record']); ?>">
         </p>
         <p>
             <label>IP:</label>
-            <input type="text" class="text" name="filter_ip" value="<?php echo htmlentities($search_pattern['ip']); ?>">
+            <input type="text" class="text" name="filter_ip" value="<?php echo htmlentities($arrSearchPattern['ip']); ?>">
         </p>
     </div>
     <div style="clear:both;text-align:right;padding:4px;">
@@ -207,19 +178,15 @@ $sql =  "
         LEFT JOIN   ploopi_mb_action
         ON          ploopi_user_action_log.id_action = ploopi_mb_action.id_action
         AND         ploopi_mb_action.id_module_type = ploopi_module.id_module_type
-        {$wheresql}
+        {$strWhere}
         ";
 
 $db->query($sql);
 $row = $db->fetchrow();
-$count = $row['c'];
-
+$intCount = $row['c'];
 ?>
-<div style="padding:4px;border-bottom:1px solid #c0c0c0;background:#e0e0e0;"><b><?php echo $count; ?> élément(s) trouvés</b> <?php if ($count > $limit_by) { ?>- Affichage des enregistrements de <?php echo ($limit_begin+1); ?> à <?php echo (($limit_begin+$limit_by)<=$count) ? ($limit_begin+$limit_by) : $count; } ?> - Utilisez les filtres ci-dessus pour des résultats plus précis</div>
+<div style="padding:4px;border-bottom:1px solid #c0c0c0;background:#e0e0e0;"><b><?php echo $intCount; ?> élément(s) trouvés</b> <?php if ($intCount > $intLimit) { ?>- Affichage des <? echo $intLimit; ?> premiers enregistrements - Utilisez les filtres ci-dessus pour des résultats plus précis <? } ?></div>
 <?php
-
-$sql = "SELECT * FROM ploopi_mb_action WHERE ploopi_mb_action.id_workspace = ";
-
 $sql =  "
         SELECT      ploopi_user_action_log.*,
                     ploopi_user.login, ploopi_user.firstname, ploopi_user.lastname,
@@ -231,46 +198,56 @@ $sql =  "
         LEFT JOIN   ploopi_mb_action
         ON          ploopi_user_action_log.id_action = ploopi_mb_action.id_action
         AND         ploopi_mb_action.id_module_type = ploopi_module.id_module_type
-        {$wheresql}
+        {$strWhere}
         ORDER BY    timestp DESC
-        {$limit}
+        LIMIT 0, {$intLimit}
         ";
 
 $db->query($sql);
 
-$columns = array();
-$values = array();
+$arrColumns = array();
+$arrValues = array();
 
-$columns['left']['timestp'] = array('label' => 'Date/Heure',
-                                    'width' => '130',
-                                    'options' => array('sort' => true),
-                                    'filter' => array('type' => 'datetime')
-                                   );
-$columns['left']['ip']      = array('label' => 'IP client',
-                                    'width' => '110',
-                                    'options' => array('sort' => true),
-                                    'filter' => array('type' => 'string')
-                                   );
-$columns['left']['login']   = array('label' => 'Login',
-                                    'width' => '100',
-                                    'options' => array('sort' => true),
-                                    'filter' => array('type' => 'string')
-                                   );
-$columns['left']['module']  = array('label' => 'Module',
-                                    'width' => '100',
-                                    'options' => array('sort' => true),
-                                    'filter' => array('type' => 'select', 'value' => array('module1', 'module2', 'module3'))
-                                   );
-$columns['left']['action']  = array('label' => 'Action',
-                                    'width' => '200',
-                                    'options' => array('sort' => true),
-                                    'filter' => array('type' => 'select', 'value' => array('Action1','Action2','Action3'))
+$arrColumns['left']['timestp'] = array(
+    'label' => 'Date/Heure',
+    'width' => '130',
+    'options' => array('sort' => true),
+    'filter' => array('type' => 'datetime')
+);
 
-                                   );
-$columns['auto']['record']  = array('label' => 'Enregistrement',
-                                    'options' => array('sort' => true),
-                                    'filter' => array('type' => 'string')
-                                   );
+$arrColumns['left']['ip'] = array(
+    'label' => 'IP client',
+    'width' => '110',
+    'options' => array('sort' => true),
+    'filter' => array('type' => 'string')
+);
+
+$arrColumns['left']['login'] = array(
+    'label' => 'Login',
+    'width' => '100',
+    'options' => array('sort' => true),
+    'filter' => array('type' => 'string')
+);
+
+$arrColumns['left']['module'] = array(
+    'label' => 'Module',
+    'width' => '100',
+    'options' => array('sort' => true),
+    'filter' => array('type' => 'select', 'value' => array('module1', 'module2', 'module3'))
+);
+
+$arrColumns['left']['action'] = array(
+    'label' => 'Action',
+    'width' => '200',
+    'options' => array('sort' => true),
+    'filter' => array('type' => 'select', 'value' => array('Action1','Action2','Action3'))
+);
+
+$arrColumns['auto']['record'] = array(
+    'label' => 'Enregistrement',
+    'options' => array('sort' => true),
+    'filter' => array('type' => 'string')
+);
 
 $c = 0;
 
@@ -278,45 +255,38 @@ while($row = $db->fetchrow())
 {
     $date_local = ploopi_timestamp2local($row['timestp']);
 
-    $values[$c]['values']['ip']     = array('label' => htmlentities($row['ip']));
+    $arrValues[$c]['values']['ip']     = array('label' => htmlentities($row['ip']));
 
-    $values[$c]['values']['timestp']    = array('label' => htmlentities("{$date_local['date']} {$date_local['time']}"), 'sort_label' => $row['timestp']);
+    $arrValues[$c]['values']['timestp']    = array('label' => htmlentities("{$date_local['date']} {$date_local['time']}"), 'sort_label' => $row['timestp']);
 
-    if (is_null($row['login'])) $values[$c]['values']['login']  = array('label' => 'supprimé', 'style' => 'font-style:italic;');
-    else $values[$c]['values']['login']     = array('label' => htmlentities($row['login']));
+    if (is_null($row['login'])) $arrValues[$c]['values']['login']  = array('label' => 'supprimé', 'style' => 'font-style:italic;');
+    else $arrValues[$c]['values']['login']     = array('label' => htmlentities($row['login']));
 
-    if (is_null($row['label_module'])) $values[$c]['values']['module']  = array('label' => 'supprimé', 'style' => 'font-style:italic;');
-    else $values[$c]['values']['module']    = array('label' => htmlentities($row['label_module']));
+    if (is_null($row['label_module'])) $arrValues[$c]['values']['module']  = array('label' => 'supprimé', 'style' => 'font-style:italic;');
+    else $arrValues[$c]['values']['module']    = array('label' => htmlentities($row['label_module']));
 
-    if (is_null($row['label_action'])) $values[$c]['values']['action']  = array('label' => 'supprimée', 'style' => 'font-style:italic;');
-    else $values[$c]['values']['action']    = array('label' => htmlentities($row['label_action']));
+    if (is_null($row['label_action'])) $arrValues[$c]['values']['action']  = array('label' => 'supprimée', 'style' => 'font-style:italic;');
+    else $arrValues[$c]['values']['action']    = array('label' => htmlentities($row['label_action']));
 
-    $values[$c]['values']['record']     = array('label' => htmlentities($row['id_record']));
+    $arrValues[$c]['values']['record']     = array('label' => htmlentities($row['id_record']));
     $c++;
 }
 
-$actual = (isset($_POST['skin_page_cut_page']) && $_POST['skin_page_cut_page'] > 0) ? $_POST['skin_page_cut_page'] : 1;
-
-$paramCutPage = array('nbMax' => $count,
-                      'by' => $limit_by,
-                      'page' => $actual_page,
-                      'post' => array('op' => 'actionhistory'),
-                      'answerby' => array(10,25,50,100,500));
-
-echo $skin->display_cut_page('cut_page1',$paramCutPage);
 ?>
 <div style="margin:0; padding:0; border-bottom:1px solid #c0c0c0; height:0px; font-size: 0em;"></div>
 <?php
-$skin->display_array($columns,
-                      $values,
-                      'array_actionlog',
-                      array('sortable' => true,
-                            'orderby_default' => 'timestp',
-                            'sort_default' => 'DESC',
-                            'page' => true)
-                           );
-
-echo $skin->display_cut_page('cut_page2',$paramCutPage);
+$skin->display_array(
+    $arrColumns,
+    $arrValues,
+    'array_actionlog',
+    array(
+        'sortable' => true,
+        'orderby_default' => 'timestp',
+        'sort_default' => 'DESC',
+        'limit' => 100,
+        'page' => 1
+    )
+);
 
 echo $skin->close_simplebloc();
 ?>

@@ -32,6 +32,16 @@
  */
 
 /**
+ * Inclusion des fonctions filesystem
+ */
+include_once './include/functions/filesystem.php';
+
+/**
+ * Inclusion de la classe permettant de gérer les variables sérialisées
+ */
+include_once './include/classes/serializedvar.php';
+
+/**
  * Classe permettant de remplacer le gestionnaire de session par défaut.
  * Les sessions sont stockées dans la base de données.
  *
@@ -44,9 +54,53 @@
 
 class ploopi_session
 {
-    public function open() {}
+    private static $booCompress = true;
 
-    public function close() {}
+    private static $booUseDb = false;
+
+    private static $objDb = null;
+
+    /**
+     * Tableau contenant les variables serialisées
+     */
+    private static $arrSv = null;
+
+    private static function get_basepath() { return _PLOOPI_PATHDATA._PLOOPI_SEP.'session'; }
+
+    public static function get_path() { return self::get_basepath()._PLOOPI_SEP.self::get_id(); }
+
+    private static function compress(&$data) { return self::$booCompress ? gzcompress($data) : $data; }
+
+    private static function uncompress(&$data) { return self::$booCompress ? gzuncompress($data) : $data; }
+
+    public static function set_usedb($booUseDb) { self::$booUseDb = $booUseDb; }
+
+    public static function get_usedb() { return self::$booUseDb; }
+
+    public static function set_db($objDb) { self::$objDb = $objDb; }
+
+    public static function get_db() { return self::$objDb; }
+
+    public static function get_id() { return session_id(); }
+
+    public static function open()
+    { 
+        ini_set('session.gc_probability', 10);
+        ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);    
+
+        if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
+        {
+            self::set_usedb(true);
+            if (_PLOOPI_DB_SERVER != _PLOOPI_SESSION_DB_SERVER || _PLOOPI_DB_DATABASE != _PLOOPI_SESSION_DB_DATABASE)
+            {
+                self::$objDb = new ploopi_db(_PLOOPI_SESSION_DB_SERVER, _PLOOPI_SESSION_DB_LOGIN, _PLOOPI_SESSION_DB_PASSWORD, _PLOOPI_SESSION_DB_DATABASE);
+                if(!self::$objDb->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
+            }
+            else self::set_deb($db);
+        }        
+    }
+
+    public static function close() { }
 
     /**
      * Chargement de la session depuis la base de données.
@@ -55,10 +109,16 @@ class ploopi_session
      * @param string $id identifiant de la session
      */
 
-    public function read($id)
+    public static function read($id)
     {
-        global $db_session;
-        return ($db_session->query("SELECT `data` FROM `ploopi_session` WHERE `id` = '".$db_session->addslashes($id)."'") && $record = $db_session->fetchrow()) ? gzuncompress($record['data']) : '';
+        if (self::$booUseDb)
+        {
+            return (self::$objDb->query("SELECT `data` FROM `ploopi_session` WHERE `id` = '".self::$objDb->addslashes($id)."'") && $arrRecord = self::$objDb->fetchrow()) ? self::uncompress($arrRecord['data']) : '';
+        }
+        else
+        {
+            return file_exists(self::get_path()._PLOOPI_SEP.'data') ? self::uncompress(file_get_contents(self::get_path()._PLOOPI_SEP.'data')) : false;
+        }
     }
 
     /**
@@ -69,10 +129,19 @@ class ploopi_session
      * @param string $data données de la session
      */
 
-    public function write($id, $data)
+    public static function write($id, &$data)
     {
-        global $db_session;
-        $db_session->query("REPLACE INTO `ploopi_session` VALUES ('".$db_session->addslashes($id)."', '".$db_session->addslashes(time())."', '".$db_session->addslashes(gzcompress($data))."')");
+        if (self::$booUseDb)
+        {
+            self::$objDb->query("REPLACE INTO `ploopi_session` VALUES ('".self::$objDb->addslashes($id)."', '".self::$objDb->addslashes(time())."', '".self::$objDb->addslashes(self::compress($data))."')");
+        }
+        else
+        {
+            ploopi_makedir(self::get_path());
+            fwrite($resHandle = fopen(self::get_path()._PLOOPI_SEP.'data', 'wb'), self::compress($data));
+            fclose($resHandle);
+        }
+
         return true;
     }
 
@@ -83,10 +152,18 @@ class ploopi_session
      * @param string $id identifiant de la session
      */
 
-    public function destroy($id)
+    public static function destroy($id)
     {
-        global $db_session;
-        $db_session->query("DELETE FROM `ploopi_session` WHERE `id` = '".$db_session->addslashes($id)."'");
+        if (self::$booUseDb)
+        {
+            //self::$objDb->query("DELETE FROM `ploopi_serializedvar` WHERE `id_session` = '".self::$objDb->addslashes($id)."'");
+            self::$objDb->query("DELETE FROM `ploopi_session` WHERE `id` = '".self::$objDb->addslashes($id)."'");
+        }
+        else
+        {
+            ploopi_deletedir(self::get_path());
+        }
+
         return true;
     }
 
@@ -97,30 +174,45 @@ class ploopi_session
      * @param int $max durée d'une session en secondes
      */
 
-    public function gc($max)
+    public static function gc($max)
     {
-        global $db_session;
-        $db_session->query("DELETE FROM `ploopi_session` WHERE `access` < '".$db_session->addslashes((time() - $max))."'");
+        if (self::$booUseDb)
+        {
+            self::$objDb->query("DELETE `ploopi_session`, `ploopi_serializedvar` FROM  `ploopi_session`, `ploopi_serializedvar` WHERE `ploopi_session`.`access` < '".self::$objDb->addslashes((time() - $max))."' AND  `ploopi_session`.`id` =  `ploopi_serializedvar`.`id_session`");
+        }
+        else
+        {
+            $resFolder = opendir(self::get_basepath());
+
+            $intDeletetime = time() - $max;
+
+            while ($strIdSession = readdir($resFolder))
+            {
+                if (!in_array($strIdSession, array('.', '..')))
+                {
+                    $strSessionData = self::get_basepath()._PLOOPI_SEP.$strIdSession._PLOOPI_SEP.'data';
+                    if (filemtime($strSessionData) < $intDeletetime)
+                    {
+                        ploopi_deletedir(self::get_basepath()._PLOOPI_SEP.$strIdSession);
+                    }
+                }
+            }
+        }
+
         return true;
     }
 
     /**
-     * Regénère un identifiant de session
+     * Détruit la session et regénère un identifiant de session
      *
      * @see session_regenerate_id
      */
 
-    public function regenerate_id()
+    public static function destroy_id()
     {
-        if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
-        {
-            global $db_session;
-            $old_sess_id = session_id();
-            session_regenerate_id(false);
-            $new_sess_id = session_id();
-            $db_session->query("UPDATE `ploopi_session` SET `id` = '".$db_session->addslashes($new_sess_id)."' WHERE `id` = '".$db_session->addslashes($old_sess_id)."'");
-        }
-        else session_regenerate_id(true);
+        session_regenerate_id(!self::$booUseDb);
+        session_destroy();
     }
+
 }
 ?>

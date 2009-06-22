@@ -86,28 +86,24 @@ function ploopi_copydir($src , $dest, $folder_mode = 0750, $file_mode = 0640)
  * @param string dossier à supprimer
  */
 
-function ploopi_deletedir($src)
+function ploopi_deletedir($strPath)
 {
-    if (file_exists($src))
+    if (file_exists($strPath))
     {
-        $folder=opendir($src);
+        $resFolder = opendir($strPath);
 
-        while ($file = readdir($folder))
+        while ($strFile = readdir($resFolder))
         {
-            if (!in_array( $file, array('.', '..')))
+            if (!in_array($strFile, array('.', '..')))
             {
-                if (is_dir("{$src}/{$file}"))
-                {
-                    ploopi_deletedir("{$src}/{$file}");
-                }
-                else
-                {
-                    unlink("{$src}/{$file}");
-                }
+                $strFilePath = $strPath._PLOOPI_SEP.$strFile;
+                 
+                if (is_dir($strFilePath)) ploopi_deletedir($strFilePath);
+                else unlink($strFilePath);
             }
         }
 
-        if (is_dir($src)) rmdir($src);
+        if (is_dir($strPath)) rmdir($strPath);
     }
 }
 
@@ -117,20 +113,23 @@ function ploopi_deletedir($src)
  * @param string chemin à créer
  */
 
-function ploopi_makedir($path, $mode = 0750)
+function ploopi_makedir($strPath, $octMode = 0750)
 {
-    $array_folder = explode(_PLOOPI_SEP, $path);
-    $old_path = '';
-
-    foreach($array_folder as $current_path)
+    if (!file_exists($strPath))
     {
-        if ($current_path != '')
+        $arrFolder = explode(_PLOOPI_SEP, $strPath);
+        $strOldPath = '';
+    
+        foreach($arrFolder as $strFolder)
         {
-            $current_path = $old_path. _PLOOPI_SEP .$current_path;
-
-            if (!is_dir($current_path)) mkdir ($current_path, $mode);
-
-            $old_path = $current_path;
+            if ($strFolder != '')
+            {
+                $strFolder = $strOldPath. _PLOOPI_SEP .$strFolder;
+    
+                if (!is_dir($strFolder)) mkdir($strFolder, $octMode);
+    
+                $strOldPath = $strFolder;
+            }
         }
     }
 }

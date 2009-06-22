@@ -58,9 +58,9 @@ function ploopi_die($var = null, $flush = true)
     global $db;
 
     global $ploopi_timer;
-    
+
     $strHost = (php_sapi_name() != 'cli') ? $_SERVER['HTTP_HOST'] : '';
-    
+
     if (
         !empty($ploopi_errors_level) &&
         $ploopi_errors_level &&
@@ -88,7 +88,7 @@ function ploopi_die($var = null, $flush = true)
     }
 
     if (php_sapi_name() != 'cli') session_write_close();
-    
+
     if ($flush) while (ob_get_level()>1) ob_end_flush();
 
     die();
@@ -180,14 +180,9 @@ function ploopi_ob_callback($buffer)
         $ploopi_stats['php_ratiotime'] = 0;
     }
 
-    if (isset($_SESSION))
-    {
-        $ploopi_stats['sessionsize'] = strlen(session_encode());
-    }
-    else
-    {
-        $ploopi_stats['sessionsize'] = 0;
-    }
+	$ploopi_stats['php_memory'] = memory_get_peak_usage();
+
+	$ploopi_stats['sessionsize'] = isset($_SESSION) ? strlen(session_encode()) : 0;
 
     if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG && isset($db))
     {
@@ -234,17 +229,19 @@ function ploopi_ob_callback($buffer)
             '<PLOOPI_PHP_P100>',
             '<PLOOPI_SQL_P100>',
             '<PLOOPI_NUMQUERIES>',
-            '<PLOOPI_SESSION_SIZE>'
+            '<PLOOPI_SESSION_SIZE>',
+            '<PLOOPI_PHP_MEMORY>'
         );
 
-        $array_values = array(  
+        $array_values = array(
             sprintf("%.02f",$ploopi_stats['pagesize']/1024),
             $ploopi_stats['total_exectime'],
             $ploopi_stats['php_ratiotime'],
             $ploopi_stats['sql_ratiotime'],
             $ploopi_stats['numqueries'],
-            sprintf("%.02f",$ploopi_stats['sessionsize']/1024)
-        );
+            sprintf("%.02f",$ploopi_stats['sessionsize']/1024),
+            sprintf("%.02f",$ploopi_stats['php_memory']/1024)
+       );
 
         $buffer = trim(str_replace($array_tags, $array_values, $buffer));
     }
@@ -324,7 +321,7 @@ function ploopi_redirect($url, $urlencode = true, $internal = true, $refresh = 0
  * @param boolean $js true si les fichiers javascript doivent être chargés
  * @param boolean $css true si les feuilles de style doivent être chargées
  * @param boolean $head true si l'entête doit être chargée
- * @return boolean true si le module a été initialisé 
+ * @return boolean true si le module a été initialisé
  *
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
@@ -347,7 +344,7 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
 
             $defaultlanguagefile = "{$strModulePath}/lang/french.php";
             $languagefile = (isset($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language'])) ? "{$strModulePath}/lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php" : '';
-            
+
             $globalfile = "{$strModulePath}/include/global.php";
 
             if (file_exists($globalfile)) include_once($globalfile);
@@ -424,7 +421,7 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
                 // GET MODULE STYLE FOR IE
                 if (file_exists($cssfile_ie) && isset($template_body))
                 {
-                    $template_body->assign_block_vars('module_css_ie', array(       
+                    $template_body->assign_block_vars('module_css_ie', array(
                         'PATH' => "{$cssfile_ie}{$version}"
                     ));
                 }
@@ -432,7 +429,7 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
         }
     }
     else return false;
-    
+
     return true;
 }
 
@@ -442,15 +439,15 @@ function ploopi_init_module($moduletype, $js = true, $css = true, $head = true)
  * @param string $strModuleName nom du module
  * @param boolean $booFirstOnly true si on souhaite simplement retourner le premier id de module (cas des instances multiples)
  * @return mixed identifiant du module ou tableau des identifiants de modules ou false si aucun module
- * 
- * @copyright Exyzt, Ovensia 
+ *
+ * @copyright Exyzt, Ovensia
  * @author Julio Renella, Stéphane Escaich
  */
 
 function ploopi_getmoduleid($strModuleName, $booFirstOnly = true)
 {
     $arrModuleId = array();
-    
+
     foreach ($_SESSION['ploopi']['workspaces'][ $_SESSION['ploopi']['workspaceid'] ]['modules'] as $intModuleId)
     {
         if ($_SESSION['ploopi']['modules'][$intModuleId]['moduletype'] == $strModuleName)
@@ -459,11 +456,11 @@ function ploopi_getmoduleid($strModuleName, $booFirstOnly = true)
             $arrModuleId[] = $intModuleId;
         }
     }
-   
+
     if (!empty($arrModuleId)) return $arrModuleId;
-    
+
     return false;
-} 
+}
 
 /**
  * Chargement des paramètres des modules
@@ -531,10 +528,10 @@ function ploopi_viewworkspaces($moduleid = -1)
         case _PLOOPI_VIEWMODE_ASCDESC:
             $arrWorkspaces = array_merge($_SESSION['ploopi']['workspaces'][$current_workspaceid]['parents'], $_SESSION['ploopi']['workspaces'][$current_workspaceid]['children']);
             $arrWorkspaces[] = $current_workspaceid;
-            
+
             $workspaces .= implode(',', $arrWorkspaces);
         break;
-        
+
     }
 
     if ($_SESSION['ploopi']['modules'][$moduleid]['transverseview'] && $_SESSION['ploopi']['workspaces'][$current_workspaceid]['list_brothers'] != '')
@@ -686,14 +683,13 @@ function ploopi_h404() { header("HTTP/1.0 404 Not Found"); }
 function ploopi_logout($errorcode = null, $sleep = 1)
 {
     global $session;
-    
+
     // Suppression de l'information de connexion
     $objConnectedUser = new connecteduser();
-    if ($objConnectedUser->open(session_id())) $objConnectedUser->delete();    
+    if ($objConnectedUser->open(session_id())) $objConnectedUser->delete();
 
-    $session->regenerate_id();
-    $_SESSION = array();
-    session_destroy();
+    ploopi_session::destroy_id();
+
     sleep($sleep);
     ploopi_redirect(basename($_SERVER['PHP_SELF']).(isset($errorcode) ? "?ploopi_errorcode={$errorcode}" : ''));
 }

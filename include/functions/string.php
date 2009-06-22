@@ -300,7 +300,8 @@ function ploopi_print_json($var, $utf8encode = true, $use_xjson = true)
 /**
  * Nettoie le code html et le rend valide XHTML
  *
- * @param string $string code HTML à valider
+ * @param string $strContent code HTML à valider
+ * @param boolean $booTrusted true si le code fourni est "sûr", dans ce cas le filtrage est moins sévère (par défaut : false)
  * @return string code HTML validé
  *
  * @link http://htmlpurifier.org/
@@ -310,21 +311,28 @@ function ploopi_print_json($var, $utf8encode = true, $use_xjson = true)
  * @author Stéphane Escaich
  */
 
-function ploopi_htmlpurifier($string)
+function ploopi_htmlpurifier($strContent, $booTrusted = false)
 {
-    $cache_path = _PLOOPI_PATHDATA._PLOOPI_SEP.'cache';
-    if (!file_exists($cache_path)) ploopi_makedir($cache_path);
+    $strCachePath = _PLOOPI_PATHDATA._PLOOPI_SEP.'cache';
+    if (!file_exists($strCachePath)) ploopi_makedir($strCachePath);
 
     require_once './lib/htmlpurifier/HTMLPurifier.auto.php';
-    $config = HTMLPurifier_Config::createDefault();
-    $config->set('Cache', 'SerializerPath', $cache_path);
-    $config->set('Core', 'Encoding', 'ISO-8859-15');
-    $config->set('HTML', 'Doctype', 'XHTML 1.0 Strict');
-    //$config->set('HTML', 'AllowedModules', 'Target');
+    $objConfig = HTMLPurifier_Config::createDefault();
+    $objConfig->set('Cache', 'SerializerPath', $strCachePath);
+    $objConfig->set('Core', 'Encoding', 'ISO-8859-15');
+    $objConfig->set('HTML', 'Doctype', 'XHTML 1.0 Strict');
+    
+    if ($booTrusted)
+    {
+        $objConfig->set('HTML', 'Trusted', true);
+        $objConfig->set('Attr', 'EnableID', true);
+        $objConfig->set('HTML', 'SafeEmbed', true);
+        $objConfig->set('HTML', 'SafeObject', true);
+    }    
 
-    $purifier = new HTMLPurifier($config);
+    $objPurifier = new HTMLPurifier($objConfig);
 
-    return $purifier->purify($string);
+    return $objPurifier->purify($strContent);
 }
 
 /**

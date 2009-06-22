@@ -256,7 +256,7 @@ foreach ($sharedmodules AS $instanceid => $instance)
 {
     if (!array_key_exists($instanceid,$ownmodules))
     {
-        $desc = sprintf("<span>%s / <b>%s</b> partagé par <b></span><a href=\"%s\">%s</a></b>", htmlentities($instance['description']), htmlentities($instance['label']), ploopi_urlencode("admin.php?workspaceid={$instance['id_workspace']}"), htmlentities($instance['workspacelabel']));;
+        $desc = sprintf("<span>%s / <b>%s</b> partagé par<b>&nbsp;</span><a href=\"%s\">%s</a></b>", htmlentities($instance['description']), htmlentities($instance['label']), ploopi_urlencode("admin.php?workspaceid={$instance['id_workspace']}"), htmlentities($instance['workspacelabel']));;
         $values[$c]['values']['type'] = array('label' => htmlentities($instance['moduletype']));
         $values[$c]['values']['desc'] = array('label' => $desc);
         $values[$c]['values']['actions'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=add&instance=SHARED,{$workspaceid},{$instanceid}").'">utiliser</a>', 'sort_label' => 0);

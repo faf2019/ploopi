@@ -85,11 +85,6 @@ include_once './include/functions/session.php';
 include_once './include/functions/system.php';
 
 /**
- * Gestionnaire de session par $db
- */
-include_once './include/classes/session.php' ;
-
-/**
  * Filtrage des variables entrantes
  */
 include_once './include/start/import_gpr.php';
@@ -110,35 +105,22 @@ $db = new ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _P
 if(!$db->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
 
 /**
+ * Gestionnaire interne de session
+ */
+include_once './include/classes/session.php' ;
+
+/**
  * Initialisation du gestionnaire de session
  */
-global $session;
-$session = new ploopi_session();
 
-if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
-{
-    global $db_session;
-    
-    if (_PLOOPI_DB_SERVER != _PLOOPI_SESSION_DB_SERVER || _PLOOPI_DB_DATABASE != _PLOOPI_SESSION_DB_DATABASE)
-    {
-        $db_session = new ploopi_db(_PLOOPI_SESSION_DB_SERVER, _PLOOPI_SESSION_DB_LOGIN, _PLOOPI_SESSION_DB_PASSWORD, _PLOOPI_SESSION_DB_DATABASE);
-        if(!$db_session->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
-    }
-    else $db_session = &$db;    
-    
-    ini_set('session.save_handler', 'user');
-    ini_set('session.gc_probability', 10);
-    ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);
-
-    session_set_save_handler(
-        array($session, 'open'),
-        array($session, 'close'),
-        array($session, 'read'),
-        array($session, 'write'),
-        array($session, 'destroy'),
-        array($session, 'gc')
-    );
-}
+session_set_save_handler(
+    array('ploopi_session', 'open'),
+    array('ploopi_session', 'close'),
+    array('ploopi_session', 'read'),
+    array('ploopi_session', 'write'),
+    array('ploopi_session', 'destroy'),
+    array('ploopi_session', 'gc')
+);
 
 /**
  * Démarrage de la session
