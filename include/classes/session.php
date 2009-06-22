@@ -96,7 +96,11 @@ class ploopi_session
                 self::$objDb = new ploopi_db(_PLOOPI_SESSION_DB_SERVER, _PLOOPI_SESSION_DB_LOGIN, _PLOOPI_SESSION_DB_PASSWORD, _PLOOPI_SESSION_DB_DATABASE);
                 if(!self::$objDb->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
             }
-            else self::set_deb($db);
+            else 
+            {
+                global $db;
+                self::set_db($db);
+            }
         }        
     }
 
