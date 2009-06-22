@@ -60,3 +60,13 @@ do
     export tb=`stat -c "%s" $i.gz`
     echo "Résultat : $ta => $tb"
 done
+
+
+for i in $( find ./lib/jstoolbar \( -name '*.js' -or -name '*.css' \) -type f )
+do
+    echo "Compression : $i => $i.gz"
+    java -jar yuicompressor/build/yuicompressor$YUIVER.jar --charset UTF-8 $i | gzip > $i.gz
+    export ta=`stat -c "%s" $i`
+    export tb=`stat -c "%s" $i.gz`
+    echo "Résultat : $ta => $tb"
+done
