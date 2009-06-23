@@ -1,3 +1,11 @@
+== Module WebEdit - version 2.1.0d ============================================
+
+2009-06-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Filtrage XHTML moins strict (inclusions javascript, intégration de vidéos flash) 
+ * Correction d'un bug lors de l'indexation des documents liés à un article 
+ * Correction d'un bug lors de la suppresion d'une rubrique : ne modifiait pas la position des rubriques suivantes d'un même parent 
+
 == Module WebEdit - version 2.1.0c ============================================
 
 2009-06-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

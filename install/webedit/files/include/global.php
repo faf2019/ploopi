@@ -797,7 +797,6 @@ function webedit_replace_links($strContent, $mode, &$arrHeadings)
     $arrReplace = array();
 
     preg_match_all('/(index\.php[^\"]+articleid=([0-9]+)[^\"]*)/i', $strContent, $arrMatches);
-    //preg_match_all('/<a[^>]*href="(index\.php[^\"]+articleid=([0-9]+)[^\"]*)"[^>]*>/i', $strContent, $arrMatches);
     foreach($arrMatches[2] as $key => $idart)
     {
         $objArticle = new webedit_article();
@@ -827,7 +826,6 @@ function webedit_replace_links($strContent, $mode, &$arrHeadings)
 
         // traitement des liens vers documents
         preg_match_all('/(index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32}))/i', $strContent, $arrMatches);
-        //preg_match_all('/<a[^>]*href="(index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32}))"[^>]*>/i', $strContent, $arrMatches);
         foreach($arrMatches[2] as $key => $md5)
         {
             $objDocFile = new docfile();
@@ -837,20 +835,6 @@ function webedit_replace_links($strContent, $mode, &$arrHeadings)
                 $arrReplace[] = ploopi_urlrewrite(html_entity_decode($arrMatches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
             }
         }
-
-        // traitement des images
-        /*
-        preg_match_all('/<img[^>]*src="(index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32}))"[^>]*>/i', $strContent, $arrMatches);
-        foreach($arrMatches[2] as $key => $md5)
-        {
-            $objDocFile = new docfile();
-            if (!empty($md5) && $objDocFile->openmd5($md5)) // clé md5 présente & document trouvé
-            {
-                $arrSearch[] = $arrMatches[1][$key];
-                $arrReplace[] = ploopi_urlrewrite(html_entity_decode($arrMatches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
-            }
-        }
-        */
     }
 
     return str_replace($arrSearch, $arrReplace, $strContent);

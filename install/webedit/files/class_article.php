@@ -116,7 +116,7 @@ class webedit_article extends data_object
         if (empty($this->fields['timestp'])) $this->fields['timestp'] = ploopi_createtimestamp();
 
         // Cas particulier des liens vers des documents (+ images) DIMS
-        preg_match_all('/"(\.\/index-quick\.php\?dims_url=([^\"]*))"/i' , $this->fields['content'], $matches);
+        /*preg_match_all('/"(\.\/index-quick\.php\?dims_url=([^\"]*))"/i' , $this->fields['content'], $matches);
 
         if (!empty($matches[2]))
         {
@@ -130,12 +130,12 @@ class webedit_article extends data_object
             }
 
             $this->fields['content'] = str_replace($arrSearch, $arrReplace, $this->fields['content']);
-        }
+        }*/
 
         $this->fields['content_cleaned'] = $this->fields['content'];
 
         // filtre activé ?
-        if (!$this->fields['disabledfilter']) $this->fields['content_cleaned'] = ploopi_htmlpurifier($this->fields['content_cleaned']);
+        if (!$this->fields['disabledfilter']) $this->fields['content_cleaned'] = ploopi_htmlpurifier($this->fields['content_cleaned'], true);
 
         // Nettoyage des tags
         // Note : les tags ne sont réellement enregistrés qu'à la publication
@@ -258,14 +258,14 @@ class webedit_article extends data_object
         $db->query("DELETE FROM ploopi_mod_webedit_docfile WHERE id_article = {$this->fields['id']}");
 
         // Recherche des liens vers des documents (du module doc)
-        preg_match_all('/<a[^>]*href="(index-quick\.php\?ploopi_op=doc_file_download\&docfile_md5id=([a-z0-9]{32}))"[^>]*>([^>]*)<\/a>/i' , html_entity_decode($this->fields['content']), $matches);
-
-        if (!empty($matches[2]) && file_exists('./modules/doc/class_docfile.php'))
+        preg_match_all('/index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32})/i', html_entity_decode($this->fields['content']), $arrMatches);
+        
+        if (!empty($arrMatches[1]) && file_exists('./modules/doc/class_docfile.php'))
         {
             include_once './modules/doc/class_docfile.php';
             include_once './modules/webedit/class_docfile.php';
 
-            foreach($matches[2] as $doc_md5id)
+            foreach($arrMatches[1] as $doc_md5id)
             {
                 $objDocFile = new docfile();
 
@@ -282,7 +282,7 @@ class webedit_article extends data_object
                 }
             }
         }
-
+        
         // suppression des liens article-tags existants
         $sql = "DELETE FROM ploopi_mod_webedit_article_tag WHERE id_article = {$this->fields['id']}";
         $db->query($sql);

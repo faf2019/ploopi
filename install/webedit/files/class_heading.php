@@ -83,7 +83,7 @@ class webedit_heading extends data_object
             $h->delete();
         }
 
-        // suppression des brouillons de la rubrique (les articles avec)
+        // Suppression des brouillons de la rubrique (les articles avec)
         $rs2 = $db->query("SELECT id FROM ploopi_mod_webedit_article_draft WHERE id_heading = {$this->fields['id']}");
 
         while ($row = $db->fetchrow($rs2))
@@ -92,6 +92,9 @@ class webedit_heading extends data_object
             $a->open($row['id']);
             $a->delete();
         }
+        
+        // Changement de position des autres rubriques
+        $db->query("UPDATE ploopi_mod_webedit_heading SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
 
         parent::delete();
     }
