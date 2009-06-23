@@ -1,10 +1,16 @@
+== Module WebEdit - version 2.1.0e ============================================
+
+2009-06-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug lors de l'indexation d'un article contenant plusieurs fois le même lien vers un même document 
+
 == Module WebEdit - version 2.1.0d ============================================
 
 2009-06-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Filtrage XHTML moins strict (inclusions javascript, intégration de vidéos flash) 
  * Correction d'un bug lors de l'indexation des documents liés à un article 
- * Correction d'un bug lors de la suppresion d'une rubrique : ne modifiait pas la position des rubriques suivantes d'un même parent 
+ * Correction d'un bug lors de la suppression d'une rubrique : ne modifiait pas la position des rubriques suivantes d'un même parent 
 
 == Module WebEdit - version 2.1.0c ============================================
 

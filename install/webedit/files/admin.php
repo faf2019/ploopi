@@ -265,7 +265,7 @@ switch($menu)
 
                         /* FIN ABONNEMENT */
 
-                        $heading->delete(); // you don't have to delete the root heading
+                        $heading->delete();
                         ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
                         ploopi_redirect("admin.php?headingid={$heading->fields['id_heading']}");
                     }

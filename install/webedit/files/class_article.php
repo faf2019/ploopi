@@ -272,13 +272,15 @@ class webedit_article extends data_object
                 if ($objDocFile->openmd5($doc_md5id))
                 {
                     $objWebEditDocFile = new webedit_docfile();
-                    //$objWebEditDocFile->open($this->fields['id'], $objDocFile->fields['id']);
-                    $objWebEditDocFile->fields['id_article'] = $this->fields['id'];
-                    $objWebEditDocFile->fields['id_docfile'] = $objDocFile->fields['id'];
-                    $objWebEditDocFile->fields['md5id_docfile'] = $objDocFile->fields['md5id'];
-                    $objWebEditDocFile->fields['id_module_docfile'] = $objDocFile->fields['id_module'];
-                    $objWebEditDocFile->fields['id_module'] = $_SESSION['ploopi']['moduleid'];
-                    $objWebEditDocFile->save();
+                    if (!$objWebEditDocFile->open($this->fields['id'], $objDocFile->fields['id']))
+                    {
+                        $objWebEditDocFile->fields['id_article'] = $this->fields['id'];
+                        $objWebEditDocFile->fields['id_docfile'] = $objDocFile->fields['id'];
+                        $objWebEditDocFile->fields['md5id_docfile'] = $objDocFile->fields['md5id'];
+                        $objWebEditDocFile->fields['id_module_docfile'] = $objDocFile->fields['id_module'];
+                        $objWebEditDocFile->fields['id_module'] = $_SESSION['ploopi']['moduleid'];
+                        $objWebEditDocFile->save();
+                    }
                 }
             }
         }
