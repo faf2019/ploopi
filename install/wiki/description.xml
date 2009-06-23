@@ -2,17 +2,34 @@
 <ploopi>
     <moduletype>
         <label>wiki</label>
-        <version>0.9.000beta</version>
+        <version>0.9.200beta</version>
         <author>Ovensia</author>
-        <date>20090519000000</date>
+        <date>20090623000000</date>
         <description>Wiki</description>
         <action>
-            <id_action>1</id_action>
-            <label>Modifier les pages</label>
-        </action>   
+            <id_action>10</id_action>
+            <label>Modifier une page</label>
+            <role_enabled>1</role_enabled>
+        </action>
         <action>
-            <id_action>2</id_action>
-            <label>Vérouiller les pages</label>
-        </action>   
+            <id_action>11</id_action>
+            <label>Renommer une page</label>
+            <role_enabled>0</role_enabled>
+        </action>
+        <action>
+            <id_action>12</id_action>
+            <label>Supprimer une page</label>
+            <role_enabled>0</role_enabled>
+        </action>
+        <action>
+            <id_action>20</id_action>
+            <label>Vérouiller une page</label>
+            <role_enabled>1</role_enabled>
+        </action>
+        <action>
+            <id_action>21</id_action>
+            <label>Dévérouiller une page</label>
+            <role_enabled>0</role_enabled>
+        </action>
     </moduletype>
 </ploopi>

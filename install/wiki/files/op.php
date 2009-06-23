@@ -22,7 +22,7 @@
 
 /**
  * Opérations du module wiki
- * 
+ *
  * @package wiki
  * @subpackage op
  * @copyright Ovensia
@@ -41,7 +41,7 @@ if (ploopi_ismoduleallowed('wiki'))
     /**
      * Affichage de l'aide en ligne
      */
-    
+
     switch($ploopi_op)
     {
         case 'wiki_help':
@@ -51,7 +51,7 @@ if (ploopi_ismoduleallowed('wiki'))
             ob_end_clean();
             ploopi_die($skin->create_popup('Syntaxe Wiki - Aide en Ligne', $content, 'popup_wiki_help'));
         break;
-        
+
         case 'wiki_page_save':
             ploopi_init_module('wiki', false, false, false);
             include_once './modules/wiki/classes/class_wiki_page.php';
@@ -60,14 +60,32 @@ if (ploopi_ismoduleallowed('wiki'))
 
             $objWikiPage = new wiki_page();
             $objWikiPage->open($strWikiPageId);
-            $objWikiPage->fields['id'] = $strWikiPageId; 
-            
+            $objWikiPage->fields['id'] = $strWikiPageId;
+
             if (isset($_POST['wiki_page_content'])) $objWikiPage->fields['content'] = $_POST['wiki_page_content'];
             $objWikiPage->save();
+
+            // on envoie le ticket de notification d'action sur l'objet
+            ploopi_subscription_notify(
+                _WIKI_OBJECT_PAGE,
+                $objWikiPage->fields['id'],
+                _WIKI_ACTION_PAGE_MODIFY,
+                $objWikiPage->fields['id'],
+                array_keys(
+                    ploopi_subscription_getusers(
+                        _WIKI_OBJECT_PAGE,
+                        $objWikiPage->fields['id'],
+                        array(_WIKI_ACTION_PAGE_MODIFY)
+                    )
+                ),
+                'Cet objet à été modifié'
+            );
+
+            ploopi_create_user_action_log(_WIKI_ACTION_PAGE_MODIFY, $objWikiPage->fields['id']);
             
-            ploopi_redirect("admin.php?wiki_page_id={$strWikiPageId}");   
+            ploopi_redirect("admin.php?wiki_page_id={$strWikiPageId}");
         break;
-                
+
         case 'wiki_page_delete':
             ploopi_init_module('wiki', false, false, false);
             include_once './modules/wiki/classes/class_wiki_page.php';
@@ -75,31 +93,55 @@ if (ploopi_ismoduleallowed('wiki'))
             $strWikiPageId = (empty($_GET['wiki_page_id'])) ? 'wiki' : $_GET['wiki_page_id'];
 
             $objWikiPage = new wiki_page();
-            if ($objWikiPage->open($strWikiPageId)) $objWikiPage->delete();
-            
-            ploopi_redirect("admin.php");   
+            if ($objWikiPage->open($strWikiPageId))
+            {
+                $objWikiPage->delete();
+
+                // on envoie le ticket de notification d'action sur l'objet
+                ploopi_subscription_notify(
+                    _WIKI_OBJECT_PAGE,
+                    $strWikiPageId,
+                    _WIKI_ACTION_PAGE_DELETE,
+                    $strWikiPageId,
+                    array_keys(
+                        ploopi_subscription_getusers(
+                            _WIKI_OBJECT_PAGE,
+                            $strWikiPageId,
+                            array(_WIKI_ACTION_PAGE_DELETE)
+                        )
+                    ),
+                    'Cet objet à été supprimé'
+                );
+
+                ploopi_create_user_action_log(_WIKI_ACTION_PAGE_DELETE, $strWikiPageId);
+            }
+
+            ploopi_redirect("admin.php");
         break;
-                
+
         case 'wiki_page_lock':
         case 'wiki_page_unlock':
             ploopi_init_module('wiki', false, false, false);
             include_once './modules/wiki/classes/class_wiki_page.php';
 
             $strWikiPageId = (empty($_GET['wiki_page_id'])) ? '' : $_GET['wiki_page_id'];
-            
+
             $objWikiPage = new wiki_page();
-            if ($objWikiPage->open($strWikiPageId)) $objWikiPage->lock($ploopi_op == 'wiki_page_lock');
-            
-            ploopi_redirect("admin.php?wiki_page_id={$strWikiPageId}");   
+            if ($objWikiPage->open($strWikiPageId))
+            {
+                $objWikiPage->lock($ploopi_op == 'wiki_page_lock');
+                ploopi_create_user_action_log($ploopi_op == 'wiki_page_lock' ? _WIKI_ACTION_PAGE_LOCK : _WIKI_ACTION_PAGE_UNLOCK, $strWikiPageId);
+            }
+            ploopi_redirect("admin.php?wiki_page_id={$strWikiPageId}");
         break;
-        
+
         case 'wiki_page_rename':
             ploopi_init_module('wiki', false, false, false);
             include_once './modules/wiki/classes/class_wiki_page.php';
-            
+
             ploopi_print_r($_POST);
             ploopi_print_r($_GET);
-            
+
             if (isset($_POST['wiki_page_newid']) && isset($_GET['wiki_page_id']))
             {
                 // pas de changement
@@ -109,15 +151,16 @@ if (ploopi_ismoduleallowed('wiki'))
                     // On va vérifier que le "nouvel" ID n'existe pas déjà
                     $objWikiPageVerif = new wiki_page();
                     $objWikiPage = new wiki_page();
-                    if (!$objWikiPageVerif->open($_POST['wiki_page_newid']) && $objWikiPage->open($_GET['wiki_page_id'])) 
+                    if (!$objWikiPageVerif->open($_POST['wiki_page_newid']) && $objWikiPage->open($_GET['wiki_page_id']))
                     {
                         $objWikiPage->rename($_POST['wiki_page_newid'], isset($_POST['wiki_page_rename_redirect']));
+                        ploopi_create_user_action_log(_WIKI_ACTION_PAGE_RENAME, "{$_GET['wiki_page_id']} -> {$_POST['wiki_page_newid']}");
                         ploopi_redirect("admin.php?wiki_page_id={$objWikiPage->fields['id']}");
                     }
                     else ploopi_redirect("admin.php?op=wiki_page_rename&wiki_page_id={$_GET['wiki_page_id']}&wiki_rename_error");
                 }
             }
-            
+
             ploopi_redirect('admin.php');
         break;
     }

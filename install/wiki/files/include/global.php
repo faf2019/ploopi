@@ -40,13 +40,31 @@
  * Action : MODIFIER
  */
 
-define ('_WIKI_ACTION_PAGE_MODIFY',     1);
+define ('_WIKI_ACTION_PAGE_MODIFY',     10);
+
+/**
+ * Action : RENOMMER
+ */
+
+define ('_WIKI_ACTION_PAGE_RENAME',     11);
+
+/**
+ * Action : SUPPRIMER
+ */
+
+define ('_WIKI_ACTION_PAGE_DELETE',     12);
 
 /**
  * Action : LOCKER
  */
 
-define ('_WIKI_ACTION_PAGE_LOCK',       2);
+define ('_WIKI_ACTION_PAGE_LOCK',       20);
+
+/**
+ * Action : DELOCKER
+ */
+
+define ('_WIKI_ACTION_PAGE_UNLOCK',     21);
 
 /**
  * Objet : PAGE
@@ -66,20 +84,22 @@ function wiki_internal_links($arrMatches)
     if (!empty($arrMatches[1]))
     {
         $strPageId = strip_tags($arrMatches[1]);
-        
+
         $objWikiPage = new wiki_page();
         if ($objWikiPage->open($strPageId))
         {
             $strLinkClass = 'wiki_link';
             $strTitle = 'Ouvrir la page &laquo; '.htmlentities($strPageId).' &raquo;';
+            $strOp = '';
         }
         else
         {
             $strLinkClass = 'wiki_link_notfound';
             $strTitle = 'Créer la page &laquo; '.htmlentities($strPageId).' &raquo;';
+            $strOp = 'op=wiki_page_modify&';
         }
-        
-        return '<span class="'.$strLinkClass.'"><a title="'.$strTitle.'" href="'.ploopi_urlencode("admin.php?op=wiki_page_modify&wiki_page_id={$strPageId}").'">'.$arrMatches[1].'</a><img src="./modules/wiki/img/ico_link.png" /></span>';
+
+        return '<span class="'.$strLinkClass.'"><a title="'.$strTitle.'" href="'.ploopi_urlencode("admin.php?{$strOp}wiki_page_id={$strPageId}").'">'.$arrMatches[1].'</a><img src="./modules/wiki/img/ico_link.png" /></span>';
     }
 
     return '';
@@ -97,17 +117,17 @@ function wiki_links($arrMatches)
     {
         switch($arrMatches[1][0]) // On regarde le 1er caractère du lien
         {
-            case '#': // cas particulier : ancre 
+            case '#': // cas particulier : ancre
                 return '<span class="wiki_link_ext"><a title="Aller à l\'ancre &laquo; '.htmlentities(strip_tags($arrMatches[2])).' &raquo;" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_anchor.png" /></span>';
             break;
-            
+
             default: // autres cas : liens externes
                 return '<span class="wiki_link_ext"><a title="Ouvrir le lien externe &laquo; '.htmlentities(strip_tags($arrMatches[1])).' &raquo;" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_ext.png" /></span>';
             break;
-            
+
         }
     }
-    
+
     return '';
 }
 
@@ -119,7 +139,7 @@ function wiki_render($strContent)
 
     $strTextile = preg_replace_callback ('/<a[^>]*href="(.*)"[^>]*>(.*)<\/a>/i', 'wiki_links', $strTextile);
     $strTextile = preg_replace_callback ('/\[\[(.*)\]\]/i', 'wiki_internal_links', $strTextile);
-    
+
     return $strTextile;
 }
 ?>

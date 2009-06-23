@@ -34,8 +34,6 @@
  * Inclusion de la classe wiki_page
  */
 
-$db->query("SELECT * FROM `ploopi_mod_wiki_page` WHERE `id` = 'PAGE A SUPPRIMER' AND `id_module` = '28'");
-
 include_once './modules/wiki/classes/class_wiki_page.php';
 
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
@@ -45,12 +43,12 @@ $strWikiPageId = (empty($_GET['wiki_page_id'])) ? '' : $_GET['wiki_page_id'];
 if ($strWikiPageId == '') // cas particulier, pas d'id renseigné => recherche de root
 {
     $db->query("SELECT id FROM ploopi_mod_wiki_page WHERE root = 1 AND id_module = {$_SESSION['ploopi']['moduleid']}");
-    if ($db->numrows()) 
+    if ($db->numrows())
     {
         $row = $db->fetchrow();
         $strWikiPageId = $row['id'];
     }
-    else // Pas de page root ! => Problème !!!! 
+    else // Pas de page root ! => Problème !!!!
     {
         echo "bug";
     }
@@ -60,7 +58,7 @@ $objWikiPage = new wiki_page();
 $booExists = $objWikiPage->open($strWikiPageId);
 
 // Vérification du droit de modification
-if ($op == 'wiki_page_modify' && (!ploopi_isactionallowed(_WIKI_ACTION_PAGE_MODIFY) || $objWikiPage->fields['locked'])) $op = ''; 
+if ($op == 'wiki_page_modify' && (!ploopi_isactionallowed(_WIKI_ACTION_PAGE_MODIFY) || $objWikiPage->fields['locked'])) $op = '';
 
 echo $skin->open_simplebloc($strWikiPageId);
 ?>
@@ -205,34 +203,34 @@ echo $skin->open_simplebloc($strWikiPageId);
     {
         case 'wiki_page_rename':
             include_once './include/classes/form.php';
-            
+
             $objForm = new form( 'wiki_form_page_rename', ploopi_urlencode("admin.php?ploopi_op=wiki_page_rename&wiki_page_id={$strWikiPageId}"), 'post', array('legend' => '* Champs obligatoires') );
-            
+
             $objForm->addField( new form_field('input:text', 'Titre:', $objWikiPage->fields['id'], 'wiki_page_newid', null, array('required' => true)) );
             $objForm->addField( new form_checkbox('Rediriger les liens existants:', 1, true, 'wiki_page_rename_redirect', 'wiki_page_rename_redirect', array('class_form' => 'ploopi_checkbox')) );
-            
+
             $objForm->addButton( new form_button('input:reset', 'Réinitialiser') );
             $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
-            
+
             echo $objForm->render();
         break;
-        
+
         case 'wiki_page_history':
             if (!empty($_GET['wiki_page_revision']) && is_numeric($_GET['wiki_page_revision']))
             {
                 $objWikiPageHistory = new wiki_page_history();
-                if ($objWikiPageHistory->open($strWikiPageId, $_GET['wiki_page_revision'])) 
+                if ($objWikiPageHistory->open($strWikiPageId, $_GET['wiki_page_revision']))
                 {
                     $objUser = new user();
                     $strUser = $objUser->open($objWikiPageHistory->fields['id_user']) ? trim("{$objUser->fields['lastname']} {$objUser->fields['firstname']}") : '<em>Utilisateur supprimé</em>';
 
                     $strLocalDate = implode(' ', ploopi_timestamp2local($objWikiPageHistory->fields['ts_modified']));
                     $strRev = "<strong>{$_GET['wiki_page_revision']}</strong> ({$strUser}, {$strLocalDate})";
-                    
+
                     ?>
                     <div id="wiki_diff_title">Révision <? echo $strRev; ?>
                     <?
-                    if (ploopi_isactionallowed(_WIKI_ACTION_PAGE_MODIFY) && !$objWikiPage->fields['locked']) 
+                    if (ploopi_isactionallowed(_WIKI_ACTION_PAGE_MODIFY) && !$objWikiPage->fields['locked'])
                     {
                         ?> - <a href="<? echo ploopi_urlencode("admin.php?op=wiki_page_modify&wiki_page_id={$strWikiPageId}&wiki_page_revision={$_GET['wiki_page_revision']}"); ?>">Revenir à cette version</a><?
                     } ?> :</div>
@@ -243,67 +241,67 @@ echo $skin->open_simplebloc($strWikiPageId);
             elseif (!empty($_POST['wiki_history_diff1']) && !empty($_POST['wiki_history_diff2']) && is_numeric($_POST['wiki_history_diff1']) && is_numeric($_POST['wiki_history_diff2']))
             {
                 include_once './modules/wiki/classes/class_wiki_page_history.php';
-            
+
                 $strContent1 = $strContent2 = null;
-                
+
                 // Infos sur la revision "1"
-                if ($_POST['wiki_history_diff1'] != $objWikiPage->fields['revision']) 
+                if ($_POST['wiki_history_diff1'] != $objWikiPage->fields['revision'])
                 {
                     $objWikiPageHistory = new wiki_page_history();
                     if ($objWikiPageHistory->open($strWikiPageId, $_POST['wiki_history_diff1'])) $strContent1 = $objWikiPageHistory->fields['content'];
 
                     $objUser = new user();
                     $strUser = $objUser->open($objWikiPageHistory->fields['id_user']) ? trim("{$objUser->fields['lastname']} {$objUser->fields['firstname']}") : '<em>Utilisateur supprimé</em>';
-                    
+
                     $strLocalDate = implode(' ', ploopi_timestamp2local($objWikiPageHistory->fields['ts_modified']));
-                    
+
                     $strRevision = "&op=wiki_page_history&wiki_page_revision={$_POST['wiki_history_diff1']}";
                 }
-                else 
+                else
                 {
                     $strContent1 = $objWikiPage->fields['content'];
-                    
+
                     $objUser = new user();
                     $strUser = $objUser->open($objWikiPage->fields['id_user']) ? trim("{$objUser->fields['lastname']} {$objUser->fields['firstname']}") : '<em>Utilisateur supprimé</em>';
 
                     $strLocalDate = implode(' ', ploopi_timestamp2local($objWikiPage->fields['ts_modified']));
-                    
+
                     $strRevision = '';
                 }
 
                 $strRevLink1 = "<a href=\"".ploopi_urlencode("admin.php?wiki_page_id={$strWikiPageId}{$strRevision}")."\"><strong>{$_POST['wiki_history_diff1']}</strong> ({$strUser}, {$strLocalDate})</a>";
-                
+
                 // Infos sur la revision "2"
-                if ($_POST['wiki_history_diff2'] != $objWikiPage->fields['revision']) 
+                if ($_POST['wiki_history_diff2'] != $objWikiPage->fields['revision'])
                 {
                     $objWikiPageHistory = new wiki_page_history();
                     if ($objWikiPageHistory->open($strWikiPageId, $_POST['wiki_history_diff2'])) $strContent2 = $objWikiPageHistory->fields['content'];
-                    
+
                     $objUser = new user();
                     $strUser = $objUser->open($objWikiPageHistory->fields['id_user']) ? trim("{$objUser->fields['lastname']} {$objUser->fields['firstname']}") : '<em>Utilisateur supprimé</em>';
 
                     $strLocalDate = implode(' ', ploopi_timestamp2local($objWikiPageHistory->fields['ts_modified']));
-                    
+
                     $strRevision = "&op=wiki_page_history&wiki_page_revision={$_POST['wiki_history_diff2']}";
                 }
-                else 
+                else
                 {
                     $strContent2 = $objWikiPage->fields['content'];
-                    
+
                     $objUser = new user();
                     $strUser = $objUser->open($objWikiPage->fields['id_user']) ? trim("{$objUser->fields['lastname']} {$objUser->fields['firstname']}") : '<em>Utilisateur supprimé</em>';
-                    
+
                     $strLocalDate = implode(' ', ploopi_timestamp2local($objWikiPage->fields['ts_modified']));
-                    
+
                     $strRevision = '';
                 }
-                
+
                 $strRevLink2 = "<a href=\"".ploopi_urlencode("admin.php?wiki_page_id={$strWikiPageId}{$strRevision}")."\"><strong>{$_POST['wiki_history_diff2']}</strong> ({$strUser}, {$strLocalDate})</a>";
-                
+
                 include_once "Text/Diff.php";
                 include_once "Text/Diff/Renderer.php";
                 include_once "Text/Diff/Renderer/inline.php";
-                
+
                 if ($strContent1 == $strContent2) $strDiff = $strContent1;
                 else
                 {
@@ -311,54 +309,54 @@ echo $skin->open_simplebloc($strWikiPageId);
                     $objRenderer = &new Text_Diff_Renderer_inline();
                     $strDiff = $objRenderer->render($objTextDiff);
                 }
-                
+
                 echo '<div id="wiki_diff_title">Différences entre les révisions '.$strRevLink2.' et '.$strRevLink1.' :</div><div id="wiki_diff">'.ploopi_nl2br($strDiff).'</div><div id="wiki_diff_legend"<span>Légende:</span>&nbsp;<ins>Texte ajouté</ins>&nbsp;<del>Texte supprimé</del></div>';
-            }            
+            }
             else
             {
-    
+
                 $columns = array();
                 $values = array();
-                
+
                 $columns['actions_right']['diff2'] =
                     array(
                         'label' => '&nbsp;',
                         'width' => 20,
                         'options' => array('sort' => true)
                     );
-                
+
                 $columns['actions_right']['diff1'] =
                     array(
                         'label' => '&nbsp;',
                         'width' => 20,
                         'options' => array('sort' => true)
                     );
-                
+
                 $columns['right']['revision'] =
                     array(
                         'label' => 'Rev.',
                         'width' => 60,
                         'options' => array('sort' => true)
                     );
-    
-    
+
+
                 $columns['left']['ts_modified'] =
                     array(
                         'label' => 'Date de mise à jour',
                         'width' => 160,
                         'options' => array('sort' => true)
                     );
-    
+
                 $columns['auto']['user'] =
                     array(
                         'label' => 'Auteur',
                         'options' => array('sort' => true)
                     );
-    
+
                 $objUser = new user();
-    
+
                 $arrLocalDate = ploopi_timestamp2local($objWikiPage->fields['ts_modified']);
-    
+
                 $values[] = array(
                     'values' => array(
                         'revision' => array(
@@ -379,18 +377,18 @@ echo $skin->open_simplebloc($strWikiPageId);
                         )
                     ),
                     'description' => "Ouvrir la dernière révision ({$objWikiPage->fields['revision']})",
-                    'link' => ploopi_urlencode("admin.php?wiki_page_id={$strWikiPageId}")                  
+                    'link' => ploopi_urlencode("admin.php?wiki_page_id={$strWikiPageId}")
                 );
-    
+
                 $intTabIndex = 101;
                 $booChecked = false;
                 $booLast = false;
-                
+
                 foreach($objWikiPage->getHistory() as $arrPageHistory)
                 {
                     $arrLocalDate = ploopi_timestamp2local($arrPageHistory['ts_modified']);
                     $booLast = $arrPageHistory['revision'] == 1;
-                    
+
                     $values[] = array(
                         'values' => array(
                             'revision' => array(
@@ -413,10 +411,10 @@ echo $skin->open_simplebloc($strWikiPageId);
                         'description' => "Ouvrir la révision {$arrPageHistory['revision']}",
                         'link' => ploopi_urlencode("admin.php?op=wiki_page_history&wiki_page_id={$strWikiPageId}&wiki_page_revision={$arrPageHistory['revision']}")
                     );
-                    
+
                     if (!$booChecked) $booChecked = true;
                 }
-                
+
                 ?>
                 <form action="<? echo ploopi_urlencode("admin.php?op=wiki_page_history&wiki_page_id={$strWikiPageId}"); ?>" method="post">
                 <?php $skin->display_array($columns, $values, 'wiki_history', array('sortable' => true, 'orderby_default' => 'revision', 'sort_default' => 'DESC')); ?>
@@ -430,13 +428,13 @@ echo $skin->open_simplebloc($strWikiPageId);
             if (ploopi_isactionallowed(_WIKI_ACTION_PAGE_MODIFY))
             {
                 $strPageContent = $objWikiPage->fields['content'];
-                
+
                 // Récupération du contenu d'une révision particulière (si demandé)
                 if (!empty($_GET['wiki_page_revision']) && is_numeric($_GET['wiki_page_revision']))
                 {
                     $objWikiPageHistory = new wiki_page_history();
                     if ($objWikiPageHistory->open($strWikiPageId, $_GET['wiki_page_revision'])) $strPageContent = $objWikiPageHistory->fields['content'];
-                }  
+                }
                 ?>
                 <div id="wiki_modify">
                     <form action="<? echo ploopi_urlencode("admin-light.php?ploopi_op=wiki_page_save&wiki_page_id={$strWikiPageId}"); ?>" method="post">
@@ -465,7 +463,17 @@ echo $skin->open_simplebloc($strWikiPageId);
     }
     ?>
     <div style="border-top:1px solid #ccc;">
-        <?php ploopi_subscription(_WIKI_OBJECT_PAGE, $strWikiPageId, array(_WIKI_ACTION_PAGE_MODIFY), "à &laquo; {$strWikiPageId} &raquo;"); ?>
+        <?php
+            ploopi_subscription(
+                _WIKI_OBJECT_PAGE,
+                $strWikiPageId,
+                array(
+                    _WIKI_ACTION_PAGE_MODIFY,
+                    _WIKI_ACTION_PAGE_DELETE
+                ),
+                "à &laquo; {$strWikiPageId} &raquo;"
+            );
+        ?>
     </div>
     <div style="border-top:1px solid #ccc;">
         <?php ploopi_annotation(_WIKI_OBJECT_PAGE, $strWikiPageId, $strWikiPageId); ?>
