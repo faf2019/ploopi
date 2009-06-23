@@ -469,10 +469,7 @@ while ($row = $db->fetchrow())
     $c++;
 }
 
-//if ($sort_option == 'ASC')  $skin->display_array($columns, array_merge($folder_values, $file_values, $draftfolder_values, $draftfile_values), 'doc_explorer');
-//else $skin->display_array($columns, array_merge($file_values, $folder_values, $draftfile_values, $draftfolder_values), 'doc_explorer');
-
-$skin->display_array($columns, $values, 'doc_explorer', array('sortable' => true, 'orderby_default' => 'label'));
+$skin->display_array($columns, $values, 'doc_explorer', array('sortable' => true, 'orderby_default' => 'label', 'limit' => 100));
 
 if (!empty($currentfolder)) include './modules/doc/public_folder_actions.php';
 ?>

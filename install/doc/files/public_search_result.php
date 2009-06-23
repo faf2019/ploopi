@@ -392,7 +392,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
             $c++;
         }
 
-        $skin->display_array($columns, $values, 'docsearch', array('sortable' => true, 'orderby_default' => 'pert', 'sort_default' => 'DESC'));
+        $skin->display_array($columns, $values, 'docsearch', array('sortable' => true, 'orderby_default' => 'pert', 'sort_default' => 'DESC', 'limit' => 100));
     }
 }
 ?>
