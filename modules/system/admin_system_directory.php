@@ -36,7 +36,7 @@
 
 echo $skin->open_simplebloc(_SYSTEM_LABEL_DIRECTORY);
 
-$intMaxResponse = 1000;
+$intMaxResponse = 250;
 
 $arrFilter = array();
 
@@ -44,39 +44,51 @@ $arrFilter = array();
 $pattern = '%|_';
 
 // Lecture SESSION
-if (isset($_SESSION['system']['directoryform'])) $arrFilter = $_SESSION['system']['directoryform'];
+if (isset($_SESSION['system']['directoryform']) && !isset($_GET['system_filter_reset'])) $arrFilter = $_SESSION['system']['directoryform'];
 
 // Lecture Params
 if (isset($_POST['ploopi_lastname']) && !ereg($pattern, $_POST['ploopi_lastname'])) $arrFilter['ploopi_lastname'] = $_POST['ploopi_lastname'];
 if (isset($_POST['ploopi_firstname']) && !ereg($pattern, $_POST['ploopi_firstname'])) $arrFilter['ploopi_firstname'] = $_POST['ploopi_firstname'];
 if (isset($_POST['ploopi_login']) && !ereg($pattern, $_POST['ploopi_login'])) $arrFilter['ploopi_login'] = $_POST['ploopi_login'];
+if (isset($_POST['ploopi_group']) && !ereg($pattern, $_POST['ploopi_group'])) $arrFilter['ploopi_group'] = $_POST['ploopi_group'];
+if (isset($_POST['ploopi_workspace']) && !ereg($pattern, $_POST['ploopi_workspace'])) $arrFilter['ploopi_workspace'] = $_POST['ploopi_workspace'];
 if (isset($_POST['ploopi_email']) && !ereg($pattern, $_POST['ploopi_email'])) $arrFilter['ploopi_email'] = $_POST['ploopi_email'];
 
 // Affectation de valeurs par défaut si non défini
 if (!isset($arrFilter['ploopi_lastname'])) $arrFilter['ploopi_lastname'] = '';
 if (!isset($arrFilter['ploopi_firstname'])) $arrFilter['ploopi_firstname'] = '';
 if (!isset($arrFilter['ploopi_login'])) $arrFilter['ploopi_login'] = '';
+if (!isset($arrFilter['ploopi_group'])) $arrFilter['ploopi_group'] = '';
+if (!isset($arrFilter['ploopi_workspace'])) $arrFilter['ploopi_workspace'] = '';
 if (!isset($arrFilter['ploopi_email'])) $arrFilter['ploopi_email'] = '';
 
 // Enregistrement SESSION
 $_SESSION['system']['directoryform'] = $arrFilter;
 ?>
 <form action="<?php echo ploopi_urlencode('admin.php?sysToolbarItem=directory'); ?>" method="post">
-<p class="ploopi_va" style="padding:4px;border-bottom:1px solid #ccc;">
+<p class="ploopi_va" style="padding:4px;">
     <label>Nom: </label>
-    <input type="text" class="text" name="ploopi_lastname" value="<?php echo htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" />
+    <input type="text" class="text" name="ploopi_lastname" value="<?php echo htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:120px;" tabindex="100" />
 
     <label>Prénom: </label>
-    <input type="text" class="text" name="ploopi_firstname" value="<?php echo htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" />
+    <input type="text" class="text" name="ploopi_firstname" value="<?php echo htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:120px;" tabindex="105" />
 
     <label>Login: </label>
-    <input type="text" class="text" name="ploopi_login" value="<?php echo htmlentities($arrFilter['ploopi_login']); ?>" style="width:100px;" />
+    <input type="text" class="text" name="ploopi_login" value="<?php echo htmlentities($arrFilter['ploopi_login']); ?>" style="width:120px;" tabindex="110" />
 
     <label>Email: </label>
-    <input type="text" class="text" name="ploopi_email" value="<?php echo htmlentities($arrFilter['ploopi_email']); ?>" style="width:180px;" />
+    <input type="text" class="text" name="ploopi_email" value="<?php echo htmlentities($arrFilter['ploopi_email']); ?>" style="width:200px;" tabindex="120" />
 
-    <input type="submit" class="button" value="Filtrer" />
-    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi_urlencode('admin.php?sysToolbarItem=directory'); ?>';" />
+</p>
+<p class="ploopi_va" style="padding:4px;border-bottom:1px solid #ccc;">
+    <label>Groupe: </label>
+    <input type="text" class="text" name="ploopi_group" value="<?php echo htmlentities($arrFilter['ploopi_group']); ?>" style="width:150px;" tabindex="115" />
+
+    <label>Espace de travail: </label>
+    <input type="text" class="text" name="ploopi_workspace" value="<?php echo htmlentities($arrFilter['ploopi_workspace']); ?>" style="width:150px;" tabindex="115" />
+
+    <input type="submit" class="button" value="Filtrer" tabindex="150" />
+    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi_urlencode('admin.php?sysToolbarItem=directory&system_filter_reset'); ?>';" tabindex="160" />
 </p>
 </form>
 <?php
@@ -84,14 +96,60 @@ $_SESSION['system']['directoryform'] = $arrFilter;
 $arrWhere = array();
 $arrWhere[] = '1';
 
-if (!empty($arrFilter['ploopi_lastname'])) $arrWhere[] = "u.lastname LIKE '".$db->addslashes($arrFilter['ploopi_lastname'])."%'";
-if (!empty($arrFilter['ploopi_firstname'])) $arrWhere[] = "u.firstname LIKE '".$db->addslashes($arrFilter['ploopi_firstname'])."%'";
-if (!empty($arrFilter['ploopi_login'])) $arrWhere[] = "u.login LIKE '".$db->addslashes($arrFilter['ploopi_login'])."%'";
-if (!empty($arrFilter['ploopi_email'])) $arrWhere[] = "u.email LIKE '".$db->addslashes($arrFilter['ploopi_email'])."%'";
+if (!empty($arrFilter['ploopi_lastname'])) $arrWhere[] = "u.lastname LIKE '%".$db->addslashes($arrFilter['ploopi_lastname'])."%'";
+if (!empty($arrFilter['ploopi_firstname'])) $arrWhere[] = "u.firstname LIKE '%".$db->addslashes($arrFilter['ploopi_firstname'])."%'";
+if (!empty($arrFilter['ploopi_login'])) $arrWhere[] = "u.login LIKE '%".$db->addslashes($arrFilter['ploopi_login'])."%'";
+if (!empty($arrFilter['ploopi_email'])) $arrWhere[] = "u.email LIKE '%".$db->addslashes($arrFilter['ploopi_email'])."%'";
+if (!empty($arrFilter['ploopi_group'])) $arrWhere[] = "g.label LIKE '%".$db->addslashes($arrFilter['ploopi_group'])."%'";
+
+
+// Filtrage des utilisateur par espace (uniquement si recherche par espace de travail)
+if ($arrFilter['ploopi_workspace'] != '')
+{
+    $arrWorkspaceUserFilter = array();
+    
+    $db->query("
+        SELECT  distinct(wu.id_user)
+                
+        FROM    ploopi_workspace w,
+                ploopi_workspace_user wu
+        
+        WHERE   w.label LIKE '%".$db->addslashes($arrFilter['ploopi_workspace'])."%'
+        AND     w.id = wu.id_workspace
+    ");
+    
+    $arrWorkspaceUserFilter = $db->getarray();
+    
+    $db->query("
+        SELECT  distinct(gu.id_user)
+                
+        FROM    ploopi_workspace w,
+                ploopi_workspace_group wg,
+                ploopi_group_user gu
+        
+        WHERE   w.label LIKE '%".$db->addslashes($arrFilter['ploopi_workspace'])."%'
+        AND     w.id = wg.id_workspace
+        AND     wg.id_group = gu.id_group
+    ");
+    
+    $arrWorkspaceUserFilter = array_merge($arrWorkspaceUserFilter, $db->getarray());
+    $arrWorkspaceUserFilter = array_unique($arrWorkspaceUserFilter);
+    
+    $arrWhere[] = empty($arrWorkspaceUserFilter) ? 'u.id = -1' : "u.id IN (".implode(',', $arrWorkspaceUserFilter).")";
+}
+
 
 $db->query("
-    SELECT      COUNT(*) as c
+    SELECT      COUNT(DISTINCT(u.id)) as c
+    
     FROM        ploopi_user u
+
+    LEFT JOIN   ploopi_group_user gu
+    ON          gu.id_user = u.id
+
+    LEFT JOIN   ploopi_group g
+    ON          g.id = gu.id_group
+    
     WHERE       ".implode(' AND ', $arrWhere)."
 ");
 
@@ -362,8 +420,8 @@ if ($row['c'] > 0 && $row['c'] <= $intMaxResponse)
             array(
                 'values' =>
                     array(
-                        'nom' => array('label' => $strUserLabel),
-                        'login' => array('label' => $strUserLogin),
+                        'nom' => array('label' => $strUserLabel, 'sort_label' => sprintf("%s %s", $row['lastname'], $row['firstname'])),
+                        'login' => array('label' => $strUserLogin, 'sort_label' => $row['login']),
                         'groups' => array(
                             'label' => (empty($row['label'])) ? '<em>Pas de groupe</em>'  : implode('<br />', $row['groups']),
                             'sort_label' => $strSortLabelGroups
@@ -384,7 +442,7 @@ if ($row['c'] > 0 && $row['c'] <= $intMaxResponse)
         array(
             'sortable' => true,
             'orderby_default' => 'login',
-            'limit' => 100
+            'limit' => 25
         )
     );
 }
