@@ -86,7 +86,7 @@ while ($fields = $db->fetchrow($result))
     $c++;
 }
 
-$skin->display_array($array_columns, $array_values, 'array_newscatlist', array('height' => 150, 'sortable' => true, 'orderby_default' => 'title'));
+$skin->display_array($array_columns, $array_values, 'array_newscatlist', array('sortable' => true, 'orderby_default' => 'title', 'limit' => 10));
 echo $skin->close_simplebloc();
 ?>
 

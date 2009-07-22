@@ -53,22 +53,20 @@ $news_columns['actions_right']['actions'] = array('label' => 'Actions', 'width' 
  * Recherche des news du module
  */
 
-$select =   "
-            SELECT      ploopi_mod_news_entry.id,
-                        ploopi_mod_news_entry.date_publish,
-                        ploopi_mod_news_entry.published,
-                        ploopi_mod_news_entry.hot,
-                        ploopi_mod_news_entry.title as titlenews,
-                        ploopi_mod_news_cat.title as titlecat,
-                        ploopi_mod_news_entry.id_workspace
-            FROM        ploopi_mod_news_entry
-            LEFT JOIN   ploopi_mod_news_cat ON ploopi_mod_news_cat.id = ploopi_mod_news_entry.id_cat
-            WHERE       ploopi_mod_news_entry.id_module = {$_SESSION['ploopi']['moduleid']}
-            AND         ploopi_mod_news_entry.id_workspace IN (".ploopi_viewworkspaces().")
-            ORDER BY    date_publish DESC
-            ";
-
-$result = $db->query($select);
+$result = $db->query("
+    SELECT      ploopi_mod_news_entry.id,
+                ploopi_mod_news_entry.date_publish,
+                ploopi_mod_news_entry.published,
+                ploopi_mod_news_entry.hot,
+                ploopi_mod_news_entry.title as titlenews,
+                ploopi_mod_news_cat.title as titlecat,
+                ploopi_mod_news_entry.id_workspace
+    FROM        ploopi_mod_news_entry
+    LEFT JOIN   ploopi_mod_news_cat ON ploopi_mod_news_cat.id = ploopi_mod_news_entry.id_cat
+    WHERE       ploopi_mod_news_entry.id_module = {$_SESSION['ploopi']['moduleid']}
+    AND         ploopi_mod_news_entry.id_workspace IN (".ploopi_viewworkspaces().")
+    ORDER BY    date_publish DESC
+");
 
 $news_values = array();
 $c = 0;
@@ -95,22 +93,29 @@ while ($fields = $db->fetchrow($result))
     $news_values[$c]['values']['date'] = array('label' => $localdate['date'], 'sort_label' => $fields['date_publish']);
     $news_values[$c]['values']['published'] = array('label' => ($fields['published']) ? 'oui' : 'non', 'style' => ($fields['published']) ? 'color:#00AA00;' : 'color:#AA0000;');
 
+    $arrActions = array();
+    
+    if (ploopi_isactionallowed(_NEWS_ACTION_MODIFY))
+    {
+        $arrActions[] = '<a title="Modifier" href="'.ploopi_urlencode("admin.php?op=modify_news&news_id={$fields['id']}").'"><img alt="Modifier" src="./modules/news/img/ico_modify.png" /></a>';
+    }
+    
     if (ploopi_isactionallowed(_NEWS_ACTION_PUBLISH))
     {
         if ($fields['published'])
-            $pub_link = '<a title="Retirer" href="'.ploopi_urlencode("admin.php?op=withdraw_news&news_id={$fields['id']}").'"><img alt="Retirer" src="./modules/news/img/ico_withdraw.png" /></a>';
+            $arrActions[] = '<a title="Retirer" href="'.ploopi_urlencode("admin.php?op=withdraw_news&news_id={$fields['id']}").'"><img alt="Retirer" src="./modules/news/img/ico_withdraw.png" /></a>';
         else
-            $pub_link = '<a title="Publier" href="'.ploopi_urlencode("admin.php?op=publish_news&news_id={$fields['id']}").'"><img alt="Publier" src="./modules/news/img/ico_publish.png" /></a>';
+            $arrActions[] = '<a title="Publier" href="'.ploopi_urlencode("admin.php?op=publish_news&news_id={$fields['id']}").'"><img alt="Publier" src="./modules/news/img/ico_publish.png" /></a>';
     }
-    else $pub_link = '';
-
+    
+    if (ploopi_isactionallowed(_NEWS_ACTION_DELETE))
+    {
+        $arrActions[] = '<a title="Supprimer" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=delete_news&news_id={$fields['id']}").'\',\'Êtes-vous certain de vouloir supprimer cette actualité ?\');"><img alt="Supprimer" src="./modules/news/img/ico_trash.png" /></a>';
+    }
+    
     $news_values[$c]['values']['actions'] =
         array(
-            'label' =>  '
-                        <a title="Modifier" href="'.ploopi_urlencode("admin.php?op=modify_news&news_id={$fields['id']}").'"><img alt="Modifier" src="./modules/news/img/ico_modify.png" /></a>
-                        '.$pub_link.'
-                        <a title="Supprimer" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=delete_news&news_id={$fields['id']}").'\',\'Êtes-vous certain de vouloir supprimer cette actualité ?\');"><img alt="Supprimer" src="./modules/news/img/ico_trash.png" /></a>
-                        '
+            'label' =>  implode('', $arrActions)
         );
 
 
@@ -121,7 +126,7 @@ while ($fields = $db->fetchrow($result))
     $c++;
 }
 
-$skin->display_array($news_columns, $news_values, 'array_newslist', array('height' => 150, 'sortable' => true, 'orderby_default' => 'date', 'sort_default' => 'DESC'));
+$skin->display_array($news_columns, $news_values, 'array_newslist', array('sortable' => true, 'orderby_default' => 'date', 'sort_default' => 'DESC', 'limit' => 10));
 echo $skin->close_simplebloc();
 ?>
 

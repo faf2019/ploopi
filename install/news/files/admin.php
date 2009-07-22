@@ -62,19 +62,21 @@ switch($op)
     break;
 
     case 'save_newscat':
-        $newscat = new newscat();
-        if (!empty($_POST['newscat_id']) && is_numeric($_POST['newscat_id'])) $newscat->open($_POST['newscat_id']);
-        else $newscat->setuwm();
-
-        $newscat->setvalues($_POST,'newscat_');
-        $newscat->save();
-        ploopi_create_user_action_log(_NEWS_ACTION_MANAGE, $newscat->fields['id']);
-
+        if (ploopi_isactionallowed(_NEWS_ACTION_MANAGECAT))
+        { 
+            $newscat = new newscat();
+            if (!empty($_POST['newscat_id']) && is_numeric($_POST['newscat_id'])) $newscat->open($_POST['newscat_id']);
+            else $newscat->setuwm();
+    
+            $newscat->setvalues($_POST,'newscat_');
+            $newscat->save();
+            ploopi_create_user_action_log(_NEWS_ACTION_MANAGE, $newscat->fields['id']);
+        }
         ploopi_redirect("admin.php?newsTabItem=tabNewsCatModify&newscat_id={$newscat->fields['id']}");
     break;
 
     case 'delete_newscat':
-        if (!empty($_GET['newscat_id']) && is_numeric($_GET['newscat_id']))
+        if (ploopi_isactionallowed(_NEWS_ACTION_MANAGECAT) && !empty($_GET['newscat_id']) && is_numeric($_GET['newscat_id']))
         {
             $newscat = new newscat();
             $newscat->open($_GET['newscat_id']);
@@ -85,22 +87,26 @@ switch($op)
     break;
 
     case 'save_news':
-        $news = new news();
-        if (!empty($_POST['news_id']) && is_numeric($_POST['news_id'])) $news->open($_POST['news_id']);
-        else $news->setuwm();
-
-        $news->setvalues($_POST,'news_');
-
-        if (isset($_POST['fck_news_content'])) $news->fields['content'] = $_POST['fck_news_content'];
-
-        if (isset($_POST['news_date_publish'])) $news->fields['date_publish'] = ploopi_local2timestamp($_POST['news_date_publish'], $_POST['newsx_time_publish']);
-
-        $news->save();
-
-        if ($news->new) ploopi_create_user_action_log(_NEWS_ACTION_WRITE, $news->fields['id']);
-        else ploopi_create_user_action_log(_NEWS_ACTION_MODIFY, $news->fields['id']);
-
-        ploopi_redirect("admin.php?newsTabItem=tabNewsModify&news_id={$news->fields['id']}");
+        if (ploopi_isactionallowed(array(_NEWS_ACTION_WRITE, _NEWS_ACTION_MODIFY)))
+        { 
+            $news = new news();
+            if (!empty($_POST['news_id']) && is_numeric($_POST['news_id'])) $news->open($_POST['news_id']);
+            else $news->setuwm();
+    
+            $news->setvalues($_POST,'news_');
+    
+            if (isset($_POST['fck_news_content'])) $news->fields['content'] = $_POST['fck_news_content'];
+    
+            if (isset($_POST['news_date_publish'])) $news->fields['date_publish'] = ploopi_local2timestamp($_POST['news_date_publish'], $_POST['newsx_time_publish']);
+    
+            $news->save();
+    
+            if ($news->new) ploopi_create_user_action_log(_NEWS_ACTION_WRITE, $news->fields['id']);
+            else ploopi_create_user_action_log(_NEWS_ACTION_MODIFY, $news->fields['id']);
+            ploopi_redirect("admin.php?newsTabItem=tabNewsModify&news_id={$news->fields['id']}");
+        }
+        
+        ploopi_redirect("admin.php");
     break;
 
     case 'publish_news':
@@ -142,7 +148,6 @@ switch($op)
     break;
 
     default:
-
         if (ploopi_isactionallowed(_NEWS_ACTION_MODIFY) || ploopi_isactionallowed(_NEWS_ACTION_PUBLISH))
             $tabs['tabNewsModify'] = array( 'title' => _NEWS_LABELTAB_NEWS, 'url' => "admin.php?newsTabItem=tabNewsModify");
         if (ploopi_isactionallowed(_NEWS_ACTION_WRITE))
