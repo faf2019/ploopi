@@ -86,7 +86,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                     {
                         ?>
                         <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=wiki_page_unlock&wiki_page_id={$strWikiPageId}"); ?>">
-                            <img src="./modules/wiki/img/ico_unlock.png" />Dévérrouiller
+                            <img src="./modules/wiki/img/ico_unlock.png" />Déverrouiller
                         </a>
                         <?
                     }
@@ -99,7 +99,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                     {
                         ?>
                         <img src="./modules/wiki/img/ico_lock.png" style="margin-left:4px;"/>
-                        <span class="error">Cette page est vérouillée, vous ne pouvez pas la modifier</span>
+                        <span class="error">Cette page est verouillée, vous ne pouvez pas la modifier</span>
                         <?
                     }
                     ?>
@@ -125,7 +125,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                     {
                         ?>
                         <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=wiki_page_lock&wiki_page_id={$strWikiPageId}"); ?>">
-                            <img src="./modules/wiki/img/ico_lock.png" />Vérrouiller
+                            <img src="./modules/wiki/img/ico_lock.png" />Verrouiller
                         </a>
                         <?
                     }
@@ -156,7 +156,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                 {
                     ?>
                     <a style="cursor:not-allowed;color:#777;">
-                        <img src="./modules/wiki/img/ico_lock.png" />Vérrouiller
+                        <img src="./modules/wiki/img/ico_lock.png" />Verrouiller
                     </a>
                     <?
                 }

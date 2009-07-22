@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>wiki</label>
-        <version>0.9.200beta</version>
+        <version>0.9.30.beta</version>
         <author>Ovensia</author>
-        <date>20090623000000</date>
+        <date>20090722000000</date>
         <description>Wiki</description>
         <action>
             <id_action>10</id_action>
@@ -23,12 +23,12 @@
         </action>
         <action>
             <id_action>20</id_action>
-            <label>Vérouiller une page</label>
+            <label>Verrouiller une page</label>
             <role_enabled>1</role_enabled>
         </action>
         <action>
             <id_action>21</id_action>
-            <label>Dévérouiller une page</label>
+            <label>Déverrouiller une page</label>
             <role_enabled>0</role_enabled>
         </action>
     </moduletype>
