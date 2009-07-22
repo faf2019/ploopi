@@ -555,4 +555,24 @@ function doc_getrewriterules()
     );
 }
 
+/**
+ * Affichage des dossiers dans l'explorateur de fichiers appelé depuis FCK Editor
+ *
+ * @param array $arrFolders tableau contenant les dossiers à afficher
+ * @param int $intIdFolder Identifiant du dossier à afficher
+ * @param string $strPath Chemin complet du dossier
+ */
+function doc_fckexplorer_displayfolders($arrFolders, $intIdFolder = 0, $strPath = ' ')
+{
+    if (isset($arrFolders['tree'][$intIdFolder]))
+    {
+        foreach($arrFolders['tree'][$intIdFolder] as $intIdChild)
+        {
+            ?>
+            <option value="<?php echo $intIdChild; ?>" label="<?php echo $arrFolders['list'][$intIdChild]['name']; ?>"><?php echo htmlentities("{$strPath} / {$arrFolders['list'][$intIdChild]['name']}"); ?></option>
+            <?php
+            doc_fckexplorer_displayfolders(&$arrFolders, $intIdChild, "{$strPath} / {$arrFolders['list'][$intIdChild]['name']}");
+        }
+    }
+}
 ?>

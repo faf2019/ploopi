@@ -691,23 +691,29 @@ if ($_SESSION['ploopi']['connected'])
                 switch($_GET['filter'])
                 {
                     case 'doc_selectimage':
-                        $filter_ext = array('jpg', 'jpeg', 'gif', 'png', 'bmp');
+                        $arrFilter = array('jpg', 'jpeg', 'gif', 'png', 'bmp');
                     break;
 
                     case 'doc_selectflash':
-                        $filter_ext = array('swf', 'flv');
+                        $arrFilter = array('swf', 'flv');
                     break;
 
                     default:
-                        $filter_ext = array();
+                        $arrFilter = array();
                     break;
                 }
 
                 // on cherche les fichiers du dossier "idfolder"
-                // en vérifiant au passage que le dossier est accessible par l'espace courant
-                // et qu'il est public.
+                // en vérifiant au passage que le module est accessible et que le dossier est public
 
-                $sql =  "
+                include_once './include/functions/system.php';
+                $arrModules = ploopi_getmoduleid('doc', false);
+                $arrFiles = array();
+
+                if (!empty($arrModules))
+                {
+                    // exec requete + encodage JSON
+                    $db->query("
                         SELECT      doc.md5id,
                                     doc.name,
                                     doc.size
@@ -718,24 +724,21 @@ if ($_SESSION['ploopi']['connected'])
                         ON          folder.id = doc.id_folder
 
                         WHERE       doc.id_folder = {$_GET['idfolder']}
-                        AND         folder.id_workspace = {$_SESSION['ploopi']['workspaceid']}
+                        AND         folder.id_module IN (".implode(',', $arrModules).")
                         AND         folder.foldertype = 'public'
 
                         ORDER BY    doc.name
-                        ";
+                    ");
 
-                // exec requete + encodage JSON
-                $db->query($sql);
+                    while ($row = $db->fetchrow())
+                    {
+                        $row['url'] = "index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$row['md5id']}";
 
-                $files = array();
-                while ($row = $db->fetchrow())
-                {
-                    $row['url'] = "index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$row['md5id']}";
-
-                    if (empty($filter_ext) || in_array(ploopi_file_getextension($row['name']),$filter_ext)) $files[] = $row;
+                        if (empty($arrFilter) || in_array(ploopi_file_getextension($row['name']),$arrFilter)) $arrFiles[] = $row;
+                    }
                 }
 
-                ploopi_print_json($files);
+                ploopi_print_json($arrFiles);
             }
 
             ploopi_die();

@@ -33,81 +33,46 @@
 
 /**
  * On commence par tester si une instance du module DOC est présente.
- * Car le module peut être installé mais pas instancié !
  */
 
-$isdoc = false;
-foreach($_SESSION['ploopi']['modules'] as $instance)
+include_once './include/functions/system.php';
+$arrModules = ploopi_getmoduleid('doc', false);
+
+if (empty($arrModules))
 {
-    if($instance['moduletype'] == 'doc')
-    {
-        $isdoc = true;
-        break;
-    }
+    ploopi_die('<div class="error">Module DOC absent</div>');
 }
 
-if(!$isdoc) ploopi_die('<b><font color="red">Module DOC absent</font></b>');
-else
-{
-    /**
-     * Inclusion des classes nécessaires et initialisation du module
-     */
-    include_once './modules/doc/class_docfile.php';
-    include_once './modules/doc/class_docfolder.php';
-    include_once './include/classes/workspace.php';
-    ploopi_init_module('doc');
-}
+/**
+ * Initialisation du module DOC
+ */
+ploopi_init_module('doc');
 
-$workspaces = ploopi_viewworkspaces();
-$sqllimitworkspace=" AND ploopi_module_workspace.id_workspace IN ($workspaces)";
+$db->query("
+    SELECT  m.label,
+            fold.id,
+            fold.name,
+            fold.id_module,
+            fold.parents,
+            fold.foldertype,
+            fold.id_folder
 
-// get all folders from all available doc modules
-$select     =   "
-            SELECT  ploopi_module.label,
-                    fold.id,
-                    fold.name,
-                    fold.id_module,
-                    fold.parents,
-                    fold.foldertype,
-                    fold.id_folder
+    FROM    ploopi_mod_doc_folder fold,
+            ploopi_module m
 
-            FROM    ploopi_mod_doc_folder fold,
-                    ploopi_module,
-                    ploopi_module_type,
-                    ploopi_module_workspace
+    WHERE   fold.foldertype = 'public'
+    AND     fold.id_module IN (".implode(',', $arrModules).")
+    AND     fold.id_module = m.id
 
-            WHERE   ploopi_module_type.label = 'doc'
-            AND     fold.foldertype = 'public'
-            AND     ploopi_module_workspace.id_module = ploopi_module.id
-            AND     ploopi_module.id_module_type = ploopi_module_type.id
-            AND     fold.id_module = ploopi_module.id
-            AND     ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['workspaceid']}
+    ORDER BY    m.label,
+                fold.name
+");
 
-            ORDER BY    ploopi_module.label,
-                        fold.name
-            ";
-
-$db->query($select);
-
-$folders = array();
+$arrFolders = array();
 while ($fields = $db->fetchrow())
 {
-    $folders[$fields['label']]['list'][$fields['id']] = $fields;
-    $folders[$fields['label']]['tree'][$fields['id_folder']][] = $fields['id'];
-}
-
-function doc_fckexplorer_displayfolders(&$f, $id_folder = 0, $path = ' ')
-{
-    if (isset($f['tree'][$id_folder]))
-    {
-        foreach($f['tree'][$id_folder] as $id_child)
-        {
-            ?>
-            <option value="<?php echo $id_child; ?>" label="<?php echo $f['list'][$id_child]['name']; ?>"><?php echo htmlentities("{$path} / {$f['list'][$id_child]['name']}"); ?></option>
-            <?php
-            doc_fckexplorer_displayfolders($f, $id_child, "{$path} / {$f['list'][$id_child]['name']}");
-        }
-    }
+    $arrFolders[$fields['label']]['list'][$fields['id']] = $fields;
+    $arrFolders[$fields['label']]['tree'][$fields['id_folder']][] = $fields['id'];
 }
 
 echo $skin->open_simplebloc();
@@ -118,14 +83,14 @@ echo $skin->open_simplebloc();
     <select class="select" name="doc_choosefolder" id="doc_choosefolder" onchange="javascript:doc_fckexplorer_switch_folder(this.value, '<?php echo $ploopi_op; ?>');">
     <option value="0"></option>
     <?php
-    $default_folder = 0;
-    foreach($folders as $mlabel => $f)
+    $intDefaultFolder = 0;
+    foreach($arrFolders as $strModuleLabel => $arrSubFolders)
     {
         ?>
-        <optgroup label="<?php echo htmlentities($mlabel); ?>"><?php echo htmlentities($mlabel); ?></optgroup>
+        <optgroup label="<?php echo htmlentities($strModuleLabel); ?>"><?php echo htmlentities($strModuleLabel); ?></optgroup>
         <?php
-        if (!$default_folder && isset($f['tree'][0][0])) $default_folder = $f['tree'][0][0];
-        doc_fckexplorer_displayfolders($f);
+        if (!$intDefaultFolder && isset($arrSubFolders['tree'][0][0])) $intDefaultFolder = $arrSubFolders['tree'][0][0];
+        doc_fckexplorer_displayfolders(&$arrSubFolders);
     }
     ?>
     </select>
@@ -136,5 +101,5 @@ echo $skin->open_simplebloc();
 <?php echo $skin->close_simplebloc(); ?>
 
 <script language="javascript">
-doc_fckexplorer_set_folder('<?php echo $default_folder; ?>', '<?php echo $ploopi_op; ?>');
+doc_fckexplorer_set_folder('<?php echo $intDefaultFolder; ?>', '<?php echo $ploopi_op; ?>');
 </script>

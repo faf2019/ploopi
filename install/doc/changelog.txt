@@ -1,3 +1,9 @@
+== Module DOC - version 4.4.3b =====================================================
+
+2009-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'une erreur au niveau de l'explorateur de fichier pour FCK Editor : ne prenait pas en compte les fichiers créés dans des espace de travail différents de l'espace courant 
+
 == Module DOC - version 4.4.3 =====================================================
 
 2009-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
