@@ -2,7 +2,7 @@
 <ploopi>
    <moduletype>
       <label>planning</label>
-      <version>0.5.000beta</version>
+      <version>0.5.10.beta</version>
       <author>Ovensia</author>
       <date>20090507000000</date>
       <description>Planning partagé</description>
@@ -20,5 +20,9 @@
          <public>1</public>
          <description/>
       </paramtype>
+      <action>
+         <id_action>10</id_action>
+         <label>Ajouter un événement</label>
+      </action>
    </moduletype>
 </ploopi>
