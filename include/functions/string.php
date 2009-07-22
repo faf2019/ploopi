@@ -148,7 +148,7 @@ function ploopi_urlrewrite($strUrl, $arrRules, $strTitle = '', $arrFolders = nul
         else $strFolders = '';
 
 //        ploopi_print_r($arrRules);
-        
+
         return str_replace(
             array('<TITLE>', '<FOLDERS>', '<EXT>'),
             array($strTitle, $strFolders, $strExt),
@@ -321,18 +321,20 @@ function ploopi_htmlpurifier($strContent, $booTrusted = false)
     $objConfig->set('Cache', 'SerializerPath', $strCachePath);
     $objConfig->set('Core', 'Encoding', 'ISO-8859-15');
     $objConfig->set('HTML', 'Doctype', 'XHTML 1.0 Strict');
-    
+
     if ($booTrusted)
     {
         $objConfig->set('HTML', 'Trusted', true);
         $objConfig->set('Attr', 'EnableID', true);
         $objConfig->set('HTML', 'SafeEmbed', true);
         $objConfig->set('HTML', 'SafeObject', true);
-    }    
+    }
 
     $objPurifier = new HTMLPurifier($objConfig);
 
-    return $objPurifier->purify($strContent);
+    $res = $objPurifier->purify($strContent);
+
+    return $res;
 }
 
 /**

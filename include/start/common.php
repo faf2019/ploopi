@@ -130,7 +130,7 @@ session_start();
 /**
  * Séquence de logout
  */
-if (isset($_REQUEST['ploopi_logout'])) ploopi_logout();
+if (isset($_REQUEST['ploopi_logout'])) ploopi_logout(null, 0, false);
 
 $ploopi_initsession = false;
 

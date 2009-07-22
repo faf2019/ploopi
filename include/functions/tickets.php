@@ -100,43 +100,27 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
         $id_workspace = $_SESSION['ploopi']['workspaceid'];
         $id_module = $_SESSION['ploopi']['moduleid'];
         $id_module_type = $_SESSION['ploopi']['moduletypeid'];
-
+        
         if ($system) $id_user = 0;
     }
     else
     {
         $id_user = $id_workspace = $id_module = $id_module_type = 0;
     }
-
+    
+    $email_message = null;
     if (isset($_SESSION['ploopi']['tickets']['users_selected']) && file_exists("{$_SESSION['ploopi']['template_path']}/ticket.tpl") && is_readable("{$_SESSION['ploopi']['template_path']}/ticket.tpl"))
     {
-        // initialisation du moteur de template
-        $tplmail = new Template($_SESSION['ploopi']['template_path']);
-        $tplmail->set_filenames(array('mail' => 'ticket.tpl'));
-
-        $ticket = new ticket();
-        $ticket->fields['id_object'] = $id_object;
-        $ticket->fields['id_record'] = $id_record;
-        $ticket->fields['id_module'] = $id_module;
-        $ticket->fields['id_workspace'] = $id_workspace;
-        $ticket->fields['id_user'] = $id_user;
-        $ticket->fields['object_label'] = $object_label;
-        $ticket->fields['title'] = $title;
-        $ticket->fields['message'] = ploopi_htmlpurifier($message);
-        $ticket->fields['needed_validation'] = $needed_validation;
-        $ticket->fields['delivery_notification'] = $delivery_notification;
-        $ticket->fields['timestp'] = ploopi_createtimestamp();
-        $ticket->fields['lastreply_timestp'] = $ticket->fields['timestp'];
-        $id_ticket = $ticket->save();
-
-        $email_message = ploopi_make_links($message);
-
-        if ($id_object != '' && $id_record != '' && $id_module_type != 0)
+        // Préparation du contenu du mail
+        $mb_object = new mb_object();
+        if ($id_object != '' && $id_record != '' && $id_module_type != 0 && $mb_object->open($id_object, $id_module_type))
         {
+            $email_message = ploopi_make_links($message);
+            // initialisation du moteur de template
+            $tplmail = new Template($_SESSION['ploopi']['template_path']);
+            $tplmail->set_filenames(array('mail' => 'ticket.tpl'));
+            
             $tplmail->assign_block_vars('sw_linkedobject',array());
-
-            $mb_object = new mb_object();
-            $mb_object->open($id_object, $id_module_type);
 
             $object_script =
                 str_replace(
@@ -162,76 +146,96 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
                 'MODULE_LABEL' => $_SESSION['ploopi']['modules'][$id_module]['label']
                 )
             );
-        }
-
-        if ($id_user == 0)
-        {
-                $email_from[0] =
-                    array(
-                        'address'   => _PLOOPI_ADMINMAIL,
-                        'name'  => _PLOOPI_ADMINMAIL
-                    );
-        }
-        else
-        {
-            if (!empty($_SESSION['ploopi']['user']['email']))
+            
+            if ($id_user == 0)
             {
-                $email_from[0] =
-                    array(
-                        'address' => $_SESSION['ploopi']['user']['email'],
-                        'name' => "{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']}"
-                    );
+                    $email_from[0] =
+                        array(
+                            'address'   => _PLOOPI_ADMINMAIL,
+                            'name'  => _PLOOPI_ADMINMAIL
+                        );
             }
             else
             {
-                $email_from[0] =
-                    array(
-                        'address'   => _PLOOPI_ADMINMAIL,
-                        'name'  => "{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']}"
-                    );
-            }
-        }
-
-        $email_subject = strip_tags("[MESSAGE] - {$title}");
-
-        $tplmail->assign_vars(array(
-            'USER_FROM_NAME' => $email_from[0]['name'].' ['._PLOOPI_BASEPATH.']',
-            'USER_FROM_EMAIL' => $email_from[0]['address'],
-            'HTTP_HOST' => _PLOOPI_BASEPATH,
-            'MAIL_CONTENT' => $email_message
-            )
-        );
-
-        ob_start();
-        $tplmail->pparse('mail');
-        $email_message = trim(ob_get_contents());
-        ob_end_clean();
-
-        foreach($_SESSION['ploopi']['tickets']['users_selected'] as $user_id)
-        {
-            $user = new user();
-            if ($user->open($user_id))
-            {
-                if ($user->fields['ticketsbyemail'] == 1 && !empty($user->fields['email']))
+                if (!empty($_SESSION['ploopi']['user']['email']))
                 {
-                    $email_to[0] =
+                    $email_from[0] =
                         array(
-                            'address' => $user->fields['email'],
-                            'name' => "{$user->fields['firstname']} {$user->fields['lastname']}"
+                            'address' => $_SESSION['ploopi']['user']['email'],
+                            'name' => "{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']}"
                         );
-
-                    ploopi_send_mail($email_from, $email_to, $email_subject, $email_message);
                 }
-
-                $ticket_dest = new ticket_dest();
-                $ticket_dest->fields['id_user'] = $user_id;
-                $ticket_dest->fields['id_ticket'] = $id_ticket;
-                $ticket_dest->save();
+                else
+                {
+                    $email_from[0] =
+                        array(
+                            'address'   => _PLOOPI_ADMINMAIL,
+                            'name'  => "{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']}"
+                        );
+                }
             }
+    
+            $email_subject = strip_tags("[MESSAGE] - {$title}");
+    
+            $tplmail->assign_vars(array(
+                'USER_FROM_NAME' => $email_from[0]['name'].' ['._PLOOPI_BASEPATH.']',
+                'USER_FROM_EMAIL' => $email_from[0]['address'],
+                'HTTP_HOST' => _PLOOPI_BASEPATH,
+                'MAIL_CONTENT' => $email_message
+                )
+            );
+    
+            ob_start();
+            $tplmail->pparse('mail');
+            $email_message = trim(ob_get_contents());
+            ob_end_clean();
         }
-
-        unset($_SESSION['ploopi']['tickets']['users_selected']);
     }
+        
+    // Création du ticket
+    $ticket = new ticket();
+    $ticket->fields['id_object'] = $id_object;
+    $ticket->fields['id_record'] = $id_record;
+    $ticket->fields['id_module'] = $id_module;
+    $ticket->fields['id_workspace'] = $id_workspace;
+    $ticket->fields['id_user'] = $id_user;
+    $ticket->fields['object_label'] = $object_label;
+    $ticket->fields['title'] = $title;
+    $ticket->fields['message'] = ploopi_htmlpurifier($message);
+    $ticket->fields['needed_validation'] = $needed_validation;
+    $ticket->fields['delivery_notification'] = $delivery_notification;
+    $ticket->fields['timestp'] = ploopi_createtimestamp();
+    $ticket->fields['lastreply_timestp'] = $ticket->fields['timestp'];
+    $id_ticket = $ticket->save();
+
+    ploopi_print_r($_SESSION['ploopi']['tickets']['users_selected']);
+    
+    // Envoi du ticket aux destinataires
+    foreach($_SESSION['ploopi']['tickets']['users_selected'] as $user_id)
+    {
+        $user = new user();
+        if ($user->open($user_id))
+        {
+            // Envoi d'une copie par mail si nécessaire
+            if (!empty($email_message) && $user->fields['ticketsbyemail'] == 1 && !empty($user->fields['email']))
+            {
+                $email_to[0] =
+                    array(
+                        'address' => $user->fields['email'],
+                        'name' => "{$user->fields['firstname']} {$user->fields['lastname']}"
+                    );
+
+                ploopi_send_mail($email_from, $email_to, $email_subject, $email_message);
+            }
+
+            $ticket_dest = new ticket_dest();
+            $ticket_dest->fields['id_user'] = $user_id;
+            $ticket_dest->fields['id_ticket'] = $id_ticket;
+            $ticket_dest->save();
+        }
+    }
+
+    unset($_SESSION['ploopi']['tickets']['users_selected']);
 
 }
 

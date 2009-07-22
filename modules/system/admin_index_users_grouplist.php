@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -46,17 +46,15 @@ else
 
     if ($alphaTabItem == -1)
     {
-        $select =   "
-                    SELECT      count(ploopi_group.id) as nbgroup
+        $db->query("
+            SELECT      count(ploopi_group.id) as nbgroup
 
-                    FROM        ploopi_group
+            FROM        ploopi_group
 
-                    INNER JOIN  ploopi_workspace_group
-                    ON          ploopi_workspace_group.id_group = ploopi_group.id
-                    AND         ploopi_workspace_group.id_workspace = {$workspaceid}
-                    ";
-
-        $db->query($select);
+            INNER JOIN  ploopi_workspace_group
+            ON          ploopi_workspace_group.id_group = ploopi_group.id
+            AND         ploopi_workspace_group.id_workspace = {$workspaceid}
+        ");
         $fields = $db->fetchrow();
         if ($fields['nbgroup'] < 25) $alphaTabItem = 99;
     }
@@ -215,7 +213,7 @@ while ($fields = $db->fetchrow($result))
     $c++;
 }
 
-$skin->display_array($columns, $values, 'array_grouplist', array('sortable' => true, 'orderby_default' => 'name'));
+$skin->display_array($columns, $values, 'array_grouplist', array('sortable' => true, 'orderby_default' => 'label'));
 
 if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 {

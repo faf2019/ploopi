@@ -34,10 +34,36 @@
 switch($ploopi_op)
 {
     case 'validation_select_user':
-        if (isset($_GET['user_id'])) $_SESSION['ploopi']['validation']['users_selected'][$_GET['user_id']] = $_GET['user_id'];
-        if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['validation']['users_selected'][$_GET['remove_user_id']]);
+        if (empty($_GET['validation_id'])) ploopi_die();
+        
+        if (!isset($_SESSION['ploopi']['validation'][$_GET['validation_id']])) $_SESSION['ploopi']['validation'][$_GET['validation_id']] = array('users_selected' => array(), 'groups_selected' => array());
 
-        foreach($_SESSION['ploopi']['validation']['users_selected'] as $user_id)
+        if (isset($_GET['user_id'])) $_SESSION['ploopi']['validation'][$_GET['validation_id']]['users_selected'][$_GET['user_id']] = $_GET['user_id'];
+        if (isset($_GET['group_id'])) $_SESSION['ploopi']['validation'][$_GET['validation_id']]['groups_selected'][$_GET['group_id']] = $_GET['group_id'];
+
+        if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['validation'][$_GET['validation_id']]['users_selected'][$_GET['remove_user_id']]); 
+        if (isset($_GET['remove_group_id'])) unset($_SESSION['ploopi']['validation'][$_GET['validation_id']]['groups_selected'][$_GET['remove_group_id']]);
+        
+        
+        foreach($_SESSION['ploopi']['validation'][$_GET['validation_id']]['groups_selected'] as $group_id)
+        {
+            include_once './include/classes/group.php';
+
+            $group = new group();
+            if ($group->open($group_id))
+            {
+                ?>
+                <p class="ploopi_va" style="padding:2px;">
+                    <a class="ploopi_validation_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo $_GET['validation_id']; ?>&remove_group_id=<?php echo $group->fields['id']; ?>', 'div_validation_users_selected_<?php echo $_GET['validation_id']; ?>');">
+                        <img src="./img/icon_delete.gif">
+                        <span>Groupe &laquo; </span><strong><?php echo $group->fields['label']; ?></strong><span></span> &raquo; (Cliquez pour supprimer)</span>
+                    </a>
+                </p>
+                <?php
+            }
+        }
+
+        foreach($_SESSION['ploopi']['validation'][$_GET['validation_id']]['users_selected'] as $user_id)
         {
             include_once './include/classes/user.php';
 
@@ -46,20 +72,21 @@ switch($ploopi_op)
             {
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
-                    <a class="ploopi_validation_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_validation_users_selected');">
+                    <a class="ploopi_validation_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo $_GET['validation_id']; ?>&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_validation_users_selected_<?php echo $_GET['validation_id']; ?>');">
                         <img src="./img/icon_delete.gif">
-                        <span><?php echo "{$user->fields['lastname']} {$user->fields['firstname']} (Cliquez pour supprimer)"; ?></span>
+                        <strong><?php echo "{$user->fields['lastname']} {$user->fields['firstname']}"; ?></strong><span>&nbsp;(Cliquez pour supprimer)</span>
                     </a>
                 </p>
                 <?php
             }
         }
+        
         ploopi_die();
     break;
 
     case 'validation_search_users':
-        $listgroup = array();
-
+        if (empty($_GET['validation_id'])) ploopi_die();
+        
         include_once './include/classes/group.php';
         include_once './include/classes/workspace.php';
 
@@ -206,7 +233,7 @@ switch($ploopi_op)
                             {
                                 $user = &$list['users'][$id_user];
                                 ?>
-                                <a class="ploopi_validation_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&user_id=<?php echo $id_user; ?>', 'div_validation_users_selected');">
+                                <a class="ploopi_validation_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo $_GET['validation_id']; ?>&user_id=<?php echo $id_user; ?>', 'div_validation_users_selected_<?php echo $_GET['validation_id']; ?>');">
                                     <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
                                 </a>
                                 <?php
@@ -219,15 +246,15 @@ switch($ploopi_op)
                             {
                                 $group = &$list['groups'][$id_grp];
                                 ?>
-                                <div class="ploopi_validation_select_usergroup">
+                                <a class="ploopi_validation_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo $_GET['validation_id']; ?>&group_id=<?php echo $id_grp; ?>', 'div_validation_users_selected_<?php echo $_GET['validation_id']; ?>');">
                                     <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo $list['groups'][$id_grp]['label'];  ?></span></p>
-                                </div>
+                                </a>
                                 <?php
                                 foreach($list['groups'][$id_grp]['users'] as $id_user)
                                 {
                                     $user = &$list['users'][$id_user];
                                     ?>
-                                    <a class="ploopi_validation_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&user_id=<?php echo $id_user; ?>', 'div_validation_users_selected');">
+                                    <a class="ploopi_validation_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo $_GET['validation_id']; ?>&user_id=<?php echo $id_user; ?>', 'div_validation_users_selected_<?php echo $_GET['validation_id']; ?>');">
                                         <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
                                     </a>
                                     <?php

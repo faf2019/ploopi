@@ -47,6 +47,8 @@ if (file_exists('./config.php'))
 
 define ('_PLOOPI_ERROR_REPORTING', E_ALL);
 
+define ('_PLOOPI_SERVER_OSTYPE', (substr(PHP_OS, 0, 3) == 'WIN') ? 'windows' : 'unix');
+
 /**
  * Init parameter for installation
  */
@@ -317,7 +319,7 @@ if($_POST['stage']>=$stage)
   ini_restore ('include_path');
   if(file_exists($_SESSION['install']['<PEARPATH>'].'/PEAR.php'))
   {
-    if(!strpos(ini_get('include_path'),$_SESSION['install']['<PEARPATH>'])) ini_set('include_path',ini_get('include_path').':'.$_SESSION['install']['<PEARPATH>']);
+    if(!strpos(ini_get('include_path'),$_SESSION['install']['<PEARPATH>'])) ini_set('include_path',ini_get('include_path').(_PLOOPI_SERVER_OSTYPE == 'windows' ? ';' : ':').$_SESSION['install']['<PEARPATH>']);
     include_once 'PEAR.php';
     $arrInstallInfos[] = array('id' => 'div_pear',
                      'state' => true,

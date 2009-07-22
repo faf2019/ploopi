@@ -31,26 +31,68 @@
  * @author Stéphane Escaich
  */
 
+
+/**
+ * Génère l'identifiant d'un bloc de partages
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_module identifiant du module
+ *
+ * @return string identifiant du bloc
+ */
+
+function ploopi_share_generateid($id_object = -1, $id_record = -1, $id_module = -1)
+{
+    if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
+
+    return md5("{$id_object}_{$id_record}_{$id_module}");
+}
+
 /**
  * Insère le bloc de partage pour un enregistrement d'un objet
  *
  * @param int $id_object identifiant de l'objet
  * @param string $id_record identifiant de l'enregistrement
  * @param int $id_module identifiant du module
+ * @param int $strTitle titre du bloc
+ * @param string $strForceShareId identifiant du bloc
+ * 
+ * @return string identifiant du bloc
  */
 
-function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module = -1, $strTitle = 'Partages')
+function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module = -1, $strTitle = null, $strForceShareId = null)
 {
     global $db;
 
-    if (isset($_SESSION['ploopi']['share']['users_selected'])) unset($_SESSION['ploopi']['share']['users_selected']);
-
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
+    
+    if (is_null($strTitle)) $strTitle = 'Partages';
 
-    $db->query("SELECT id_share FROM ploopi_share WHERE id_object = {$id_object} AND id_record = '".addslashes($id_record)."' AND id_module = {$id_module}");
+    $strShareId = is_null($strForceShareId) ? ploopi_share_generateid($id_object, $id_record, $id_module) : $strForceShareId;
+    
+    $_SESSION['ploopi']['share'][$strShareId] = array('users_selected' => array(), 'groups_selected' => array());
+
+    $db->query("
+        SELECT  id_share, type_share 
+        FROM    ploopi_share 
+        WHERE   id_object = {$id_object} 
+        AND     id_record = '".addslashes($id_record)."' 
+        AND     id_module = '".addslashes($id_module)."'
+    ");
+
     while ($row = $db->fetchrow())
     {
-        $_SESSION['ploopi']['share']['users_selected'][$row['id_share']] = $row['id_share'];
+        switch($row['type_share'])
+        {
+            case 'user':
+                $_SESSION['ploopi']['share'][$strShareId]['users_selected'][$row['id_share']] = $row['id_share'];
+            break;
+
+            case 'group':
+                $_SESSION['ploopi']['share'][$strShareId]['groups_selected'][$row['id_share']] = $row['id_share'];
+            break;
+        }
     }
 
     ?>
@@ -65,26 +107,28 @@ function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module =
             <p class="ploopi_va">
                 <span>Recherche groupes/utilisateurs:&nbsp;</span>
                 <input type="text" id="ploopi_share_userfilter" class="text">
-                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('index-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&ploopi_share_userfilter='+ploopi_getelem('ploopi_share_userfilter').value,'div_share_search_result');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/share/search.png"; ?>">
+                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&share_id=<? echo $strShareId; ?>&ploopi_share_userfilter='+ploopi_getelem('ploopi_share_userfilter').value,'div_share_search_result');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/share/search.png"; ?>">
             </p>
         </div>
         <div id="div_share_search_result"></div>
 
         <div class="ploopi_share_title">Sélection actuelle :</div>
-        <div class="ploopi_share_authorizedlist" id="div_share_users_selected"><?php if (empty($_SESSION['ploopi']['share']['users_selected'])) echo 'Aucune autorisation'; ?></div>
+        <div class="ploopi_share_authorizedlist" id="div_share_users_selected_<? echo $strShareId; ?>"><?php if (empty($_SESSION['ploopi']['share'][$strShareId])) echo 'Aucune autorisation'; ?></div>
         <?php
-        if (!empty($_SESSION['ploopi']['share']['users_selected']))
+        if (!empty($_SESSION['ploopi']['share'][$strShareId]))
         {
             ?>
             <script type="text/javascript">
-                ploopi_ajaxloader('div_share_users_selected');
-                ploopi_xmlhttprequest_todiv('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user', 'div_share_users_selected')
+                ploopi_ajaxloader('div_share_users_selected_<? echo $strShareId; ?>');
+                ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<? echo $strShareId; ?>', 'div_share_users_selected_<? echo $strShareId; ?>')
             </script>
             <?php
         }
         ?>
     </div>
     <?php
+
+    return $strShareId;
 }
 
 /**
@@ -93,34 +137,57 @@ function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module =
  * @param int $id_object identifiant de l'objet
  * @param string $id_record identifiant de l'enregistrement
  * @param int $id_module identifiant du module
+ * @param string $strForceShareId identifiant du bloc
  */
 
-function ploopi_share_save($id_object = -1, $id_record = -1, $id_module = -1)
+function ploopi_share_save($id_object = -1, $id_record = -1, $id_module = -1, $strForceShareId = null)
 {
     global $db;
     include_once './include/classes/share.php';
 
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
+    $strShareId = is_null($strForceShareId) ? ploopi_share_generateid($id_object, $id_record, $id_module) : $strForceShareId;
+    
     $db->query("DELETE FROM ploopi_share WHERE id_object = {$id_object} AND id_record = '".addslashes($id_record)."' AND id_module = {$id_module}");
 
-    if (!empty($_SESSION['ploopi']['share']['users_selected']))
+    if (!empty($_SESSION['ploopi']['share'][$strShareId]['users_selected']))
     {
-        foreach($_SESSION['ploopi']['share']['users_selected'] as $id_user)
+        foreach($_SESSION['ploopi']['share'][$strShareId]['users_selected'] as $id_user)
         {
             $share = new share();
-            $share->fields = array( 
+            $share->fields = array(
                 'id_module'     => $id_module,
                 'id_record'     => $id_record,
                 'id_object'     => $id_object,
                 'type_share'    => 'user',
                 'id_share'      => $id_user
             );
-            
+
             $share->save();
 
         }
     }
+
+    if (!empty($_SESSION['ploopi']['share'][$strShareId]['groups_selected']))
+    {
+        foreach($_SESSION['ploopi']['share'][$strShareId]['groups_selected'] as $id_group)
+        {
+            $share = new share();
+            $share->fields = array(
+                'id_module'     => $id_module,
+                'id_record'     => $id_record,
+                'id_object'     => $id_object,
+                'type_share'    => 'group',
+                'id_share'      => $id_group
+            );
+
+            $share->save();
+
+        }
+    }
+
+    unset($_SESSION['ploopi']['share'][$strShareId]);
 }
 
 /**
@@ -137,8 +204,6 @@ function ploopi_share_get($id_user = -1, $id_object = -1, $id_record = -1,  $id_
 {
     global $db;
 
-    $share = array();
-
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
     $sql =  "SELECT * FROM ploopi_share WHERE id_module = {$id_module}";
@@ -148,8 +213,6 @@ function ploopi_share_get($id_user = -1, $id_object = -1, $id_record = -1,  $id_
 
     $db->query($sql);
 
-    while ($row = $db->fetchrow()) $share[] = $row;
-
-    return($share);
+    return($db->getarray());
 }
 ?>

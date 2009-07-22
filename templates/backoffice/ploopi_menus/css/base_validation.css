@@ -80,10 +80,19 @@ a.ploopi_validation_title:hover {
 }
 
 .ploopi_validation_select_usergroup {
+    display:block;
     font-weight:bold;
     background-color:#e8e8e8;
     border-bottom:1px solid #c0c0c0;
+    color:#404040;
     padding:1px 1px 1px 20px;
+    text-decoration:none;
+}
+
+.ploopi_validation_select_usergroup:hover {
+    text-decoration:none;
+    background-color:#ffe2d9;
+    color:#000000;
 }
 
 .ploopi_validation_select_usergroup span {

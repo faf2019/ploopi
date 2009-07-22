@@ -159,7 +159,7 @@ function ploopi_search_create_index_annotation($id_object, $id_record, $tags, $i
  * @link http://pecl.php.net/package/stem
  */
 
-function ploopi_search_create_index($id_object, $id_record, $label, $content, $meta = '', $usecommonwords = true, $timestp_create = 0, $timestp_modify = 0, $id_user = -1, $id_workspace = -1, $id_module = -1, $debug = false)
+function ploopi_search_create_index($id_object, $id_record, $label, &$content, $meta = '', $usecommonwords = true, $timestp_create = 0, $timestp_modify = 0, $id_user = -1, $id_workspace = -1, $id_module = -1, $debug = false)
 {
     global $db;
     global $ploopi_timer;

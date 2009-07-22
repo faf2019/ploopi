@@ -52,16 +52,15 @@ function ploopi_annotation_getnb($id_object, $id_record, $id_user = -1, $id_work
     if ($id_workspace == -1) $id_workspace = $_SESSION['ploopi']['workspaceid'];
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
-    $select =   "
-                SELECT      count(*) as c
-                FROM        ploopi_annotation a
-                WHERE       a.id_record = '".$db->addslashes($id_record)."'
-                AND         a.id_object = {$id_object}
-                AND         a.id_module = {$id_module}
-                AND         (a.private = 0
-                OR          (a.private = 1 AND a.id_user = {$id_user}))
-                ";
-    $db->query($select);
+    $db->query("
+        SELECT      count(*) as c
+        FROM        ploopi_annotation a
+        WHERE       a.id_record = '".$db->addslashes($id_record)."'
+        AND         a.id_object = {$id_object}
+        AND         a.id_module = {$id_module}
+        AND         (a.private = 0
+        OR          (a.private = 1 AND a.id_user = {$id_user}))
+    ");
 
     if ($fields = $db->fetchrow()) $nbanno = $fields['c'];
     else $nbanno = 0;
@@ -84,10 +83,12 @@ function ploopi_annotation($id_object, $id_record, $object_label = '')
     // generate annotation id
     $id_annotation = md5("{$_SESSION['ploopi']['moduleid']}_{$id_object}_".addslashes($id_record));
 
-    $_SESSION['annotation'][$id_annotation] = array(   'id_object' => $id_object,
-                                                        'id_record' => $id_record,
-                                                        'object_label' => $object_label
-                                                    );
+    $_SESSION['annotation'][$id_annotation] =
+        array(
+            'id_object' => $id_object,
+            'id_record' => $id_record,
+            'object_label' => $object_label
+        );
     ?>
     <div id="ploopiannotation_<?php echo $id_annotation; ?>">
     <?php ploopi_annotation_refresh($id_annotation); ?>

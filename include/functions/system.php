@@ -180,9 +180,9 @@ function ploopi_ob_callback($buffer)
         $ploopi_stats['php_ratiotime'] = 0;
     }
 
-	$ploopi_stats['php_memory'] = memory_get_peak_usage();
+    $ploopi_stats['php_memory'] = memory_get_peak_usage();
 
-	$ploopi_stats['sessionsize'] = isset($_SESSION) ? strlen(session_encode()) : 0;
+    $ploopi_stats['sessionsize'] = isset($_SESSION) ? strlen(session_encode()) : 0;
 
     if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG && isset($db))
     {
@@ -680,7 +680,7 @@ function ploopi_h404() { header("HTTP/1.0 404 Not Found"); }
  * @param int $errorcode code d'erreur
  * @param int $sleep durée d'attente avant la redirection en seconde
  */
-function ploopi_logout($errorcode = null, $sleep = 1)
+function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
 {
     global $session;
 
@@ -690,7 +690,20 @@ function ploopi_logout($errorcode = null, $sleep = 1)
 
     ploopi_session::destroy_id();
 
-    sleep($sleep);
-    ploopi_redirect(basename($_SERVER['PHP_SELF']).(isset($errorcode) ? "?ploopi_errorcode={$errorcode}" : ''));
+    if ($intSleep > 0) sleep($intSleep);
+
+    // Préparation de l'url de redirection
+    require_once 'Net/URL.php';
+    if ($booRedirect)
+    {
+        $objUrl = new Net_URL($_SERVER['HTTP_REFERER']);
+        if (isset($intErrorCode)) $objUrl->addQueryString('ploopi_errorcode', $intErrorCode);
+        ploopi_redirect($objUrl->getURL(), false, false);
+    }
+    else
+    {
+        ploopi_redirect(basename($_SERVER['PHP_SELF']).(isset($intErrorCode) ? "?ploopi_errorcode={$intErrorCode}" : ''));
+    }
+
 }
 ?>

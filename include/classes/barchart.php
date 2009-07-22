@@ -204,7 +204,9 @@ class barchart
         //mise à l'échelle verticale auto-adaptive
         $autofit_scale_inc = 0;
 
-        
+        $pow = $value_max_root = $value_max_margin = $value_max_rounded1 = 0;
+        $scale_div = $sliced_range = 1;
+                            
         if ($this->value_max)
         {
             $pow = floor(log10($this->value_max));

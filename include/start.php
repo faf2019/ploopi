@@ -131,10 +131,10 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
                 ploopi_logout(_PLOOPI_ERROR_LOGINEXPIRE);
             }
         }
-        
+
         $_SESSION['ploopi']['login'] = $fields['login'];
         $_SESSION['ploopi']['userid'] = $fields['id'];
-        
+
         $ploopi_mainmenu = _PLOOPI_MENU_WORKSPACES;
 
         ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_OK, $ploopi_login,_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
@@ -248,14 +248,14 @@ if ($ploopi_initsession)
 
         $_SESSION['ploopi']['frontoffice']['connected'] = 0;
         $_SESSION['ploopi']['backoffice']['connected'] = 0;
-        
+
         foreach ($user_workspaces as $wid => $fields)
         {
             if (in_array($wid,$_SESSION['ploopi']['hosts']['frontoffice']) || $fields['adminlevel'] == _PLOOPI_ID_LEVEL_SYSTEMADMIN)
-            {   
+            {
                 $_SESSION['ploopi']['frontoffice']['connected'] = 1;
             }
-            
+
             if (in_array($wid,$_SESSION['ploopi']['hosts']['backoffice']) || $fields['adminlevel'] == _PLOOPI_ID_LEVEL_SYSTEMADMIN)
             {
                 $adminlevel = $fields['adminlevel'];
@@ -272,7 +272,7 @@ if ($ploopi_initsession)
                         foreach($fields['groups'] as $idg)
                         {
                             $grp = new group();
-                            if ($grp->open($idg)) $_SESSION['ploopi']['actions'] = $grp->getactions($_SESSION['ploopi']['actions']); 
+                            if ($grp->open($idg)) $_SESSION['ploopi']['actions'] = $grp->getactions($_SESSION['ploopi']['actions']);
                         }
                     }
 
@@ -299,12 +299,13 @@ if ($ploopi_initsession)
                 }
             }
         }
-        
-        
+
+
         if (!$_SESSION['ploopi']['frontoffice']['connected'] && !$_SESSION['ploopi']['backoffice']['connected'] || (!$_SESSION['ploopi']['backoffice']['connected'] && $_SESSION['ploopi']['mode'] == 'backoffice'))
         {
-            session_destroy();
-            ploopi_redirect("admin.php?ploopi_errorcode="._PLOOPI_ERROR_NOWORKSPACEDEFINED);
+            ploopi_logout(_PLOOPI_ERROR_NOWORKSPACEDEFINED);
+            //session_destroy();
+            //ploopi_redirect("admin.php?ploopi_errorcode="._PLOOPI_ERROR_NOWORKSPACEDEFINED);
         }
 
         // sorting workspaces by depth
@@ -323,7 +324,7 @@ if (!$_SESSION['ploopi']['paramloaded']) include './include/start/load_param.php
 if (!empty($login_redirect)) ploopi_redirect($login_redirect, false);
 
 
-// Indicateur global de connexion 
+// Indicateur global de connexion
 $_SESSION['ploopi']['connected'] = isset($_SESSION['ploopi'][$_SESSION['ploopi']['mode']]['connected']) && $_SESSION['ploopi'][$_SESSION['ploopi']['mode']]['connected'];
 
 ///////////////////////////////////////////////////////////////////////////
@@ -393,17 +394,17 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 break;
             }
         }
-        
+
         ///////////////////////////////////////////////////////////////////////////
         // SWITCH WORKSPACE
         ///////////////////////////////////////////////////////////////////////////
-        
-        // Traitement d'un car particulier lié au détachement d'un utilisateur à l'espace qu'il consulte 
+
+        // Traitement d'un car particulier lié au détachement d'un utilisateur à l'espace qu'il consulte
         if (!isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]))
         {
             $ploopi_workspaceid = $_SESSION['ploopi']['hosts']['backoffice'][0];
         }
-        
+
         if (isset($ploopi_workspaceid) && $_SESSION['ploopi']['backoffice']['workspaceid'] != $ploopi_workspaceid && isset($_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['adminlevel']) && $_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['backoffice']) // new group selected
         {
             $_SESSION['ploopi']['mainmenu'] = _PLOOPI_MENU_WORKSPACES;

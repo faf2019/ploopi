@@ -46,9 +46,9 @@ function ploopi_copydir($src , $dest, $folder_mode = 0750, $file_mode = 0640)
 {
     $ok = true;
 
-    $processid = posix_getuid();
+    if (_PLOOPI_SERVER_OSTYPE == 'unix') $processid = posix_getuid();
 
-    $folder=opendir($src);
+    $folder = opendir($src);
 
     if (!file_exists($dest)) mkdir($dest, $folder_mode);
 
@@ -71,7 +71,7 @@ function ploopi_copydir($src , $dest, $folder_mode = 0750, $file_mode = 0640)
                     copy($src_file, $dest_file);
 
                     // changement des droits uniquement le processus courant est propriétaire du fichier
-                    if (fileowner($dest_file) == $processid) chmod($dest_file, $file_mode);
+                    if (_PLOOPI_SERVER_OSTYPE == 'unix' && fileowner($dest_file) == $processid) chmod($dest_file, $file_mode);
                 }
                 else $ok = false;
             }
@@ -118,17 +118,18 @@ function ploopi_makedir($strPath, $octMode = 0750)
     if (!file_exists($strPath))
     {
         $arrFolder = explode(_PLOOPI_SEP, $strPath);
-        $strOldPath = '';
+        
+        $strOldPath = _PLOOPI_SERVER_OSTYPE == 'unix'  ? _PLOOPI_SEP : '';
     
         foreach($arrFolder as $strFolder)
         {
             if ($strFolder != '')
             {
-                $strFolder = $strOldPath. _PLOOPI_SEP .$strFolder;
+                $strFolder = $strOldPath.$strFolder;
     
                 if (!is_dir($strFolder)) mkdir($strFolder, $octMode);
     
-                $strOldPath = $strFolder;
+                $strOldPath = $strFolder._PLOOPI_SEP;
             }
         }
     }
