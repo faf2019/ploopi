@@ -198,10 +198,20 @@ function doc_getshare($id_module = -1)
     {
         $_SESSION['doc'][$id_module]['share'] = array('folders' => array(), 'files' => array());
 
-        foreach(ploopi_share_get($_SESSION['ploopi']['userid'], -1, -1, $id_module) as $sh)
+        $objUser = new user();
+        if ($objUser->open($_SESSION['ploopi']['userid']))
         {
-            if ($sh['id_object'] == _DOC_OBJECT_FOLDER) $_SESSION['doc'][$id_module]['share']['folders'][] = $sh['id_record'];
-            if ($sh['id_object'] == _DOC_OBJECT_FILE) $_SESSION['doc'][$id_module]['share']['files'][] = $sh['id_record'];
+            $arrGroups = array_keys($objUser->getgroups(true));
+
+            foreach(ploopi_share_get(-1, -1, -1, $id_module) as $sh)
+            {
+                if (($sh['type_share'] == 'user' && $sh['id_share'] == $_SESSION['ploopi']['userid']) || ($sh['type_share'] == 'group' && in_array($sh['id_share'], $arrGroups)))
+                {
+                    if ($sh['id_object'] == _DOC_OBJECT_FOLDER) $_SESSION['doc'][$id_module]['share']['folders'][] = $sh['id_record'];
+                    if ($sh['id_object'] == _DOC_OBJECT_FILE) $_SESSION['doc'][$id_module]['share']['files'][] = $sh['id_record'];
+                }
+
+            }
         }
     }
 }
@@ -220,7 +230,7 @@ function doc_resetshare($id_module = -1)
 }
 
 /**
- * Chargement du validation en session (pour éviter les multiples rechargements)
+ * Chargement des droits de validation en session (pour éviter les multiples rechargements)
  *
  * @param int $id_module identifiant du module
  *
@@ -231,14 +241,21 @@ function doc_resetshare($id_module = -1)
 function doc_getvalidation($id_module = -1)
 {
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
-
+    
     if (empty($_SESSION['doc'][$id_module]['validation']))
     {
         $_SESSION['doc'][$id_module]['validation'] = array('folders' => array());
-        foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, '', $id_module, $_SESSION['ploopi']['userid']) as $wf)
+        
+        $objUser = new user();
+        if ($objUser->open($_SESSION['ploopi']['userid']))
         {
-            $_SESSION['doc'][$id_module]['validation']['folders'][] = $wf['id_record'];
-        }
+            $arrGroups = array_keys($objUser->getgroups(true));
+
+            foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, '', $id_module) as $wf)
+            {
+                if (($wf['type_validation'] == 'user' && $wf['id_validation'] == $_SESSION['ploopi']['userid']) || ($wf['type_validation'] == 'group' && in_array($wf['id_validation'], $arrGroups))) $_SESSION['doc'][$id_module]['validation']['folders'][$wf['id_record']] = $wf['id_record'];
+            }
+        } 
     }
 }
 
@@ -531,10 +548,10 @@ function doc_getrewriterules()
         'patterns' => array(
             '/[a-z\-]*.php\?ploopi_op=doc_file_download&docfile_md5id=([a-z0-9]{32})/'
         ),
-        
+
         'replacements' => array(
             'documents/$1/<TITLE>.<EXT>',
-        ) 
+        )
     );
 }
 

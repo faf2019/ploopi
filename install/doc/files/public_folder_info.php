@@ -106,25 +106,40 @@ if (!empty($currentfolder))
         {
             ?>
             <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
-                <p style="margin:0;padding:4px 8px;">
-                    <strong>Partages</strong>:
-                    <br />
+                <div style="margin:0;padding:4px 8px;">
+                    <div><strong>Partages</strong>:</div>
+                    <p class="ploopi_va">
                     <?php
-                    $shusers = array();
-                    foreach(ploopi_share_get(-1, _DOC_OBJECT_FOLDER, $currentfolder) as $value) $shusers[] = $value['id_share'];
+                    $arrShares = array();
+                    foreach(ploopi_share_get(-1, _DOC_OBJECT_FOLDER, $currentfolder) as $value) $arrShares[$value['type_share']][] = $value['id_share'];
 
-                    $users = array();
-                    if (!empty($shusers))
+                    if (!empty($arrShares))
                     {
-                        $sql = "SELECT concat(lastname, ' ', firstname) FROM ploopi_user WHERE id in (".implode(',',$shusers).") ORDER BY lastname, firstname";
-                        $db->query($sql);
-                        $arrUsers = $db->getarray();
-                        if (!empty($arrUsers)) echo implode(', ', $arrUsers);
-                        else echo "Aucun partage";
+                        if (!empty($arrShares['group']))
+                        {
+                            $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
+
+                            $db->query(
+                                "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrShares['group']).") ORDER BY label"
+                            );
+
+                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                        }
+                        if (!empty($arrShares['user']))
+                        {
+                            $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
+
+                            $db->query(
+                                "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrShares['user']).") ORDER BY lastname, firstname"
+                            );
+
+                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                        }
                     }
-                    else echo "Aucun partage";
+                    else echo '<span>Aucun partage</span>';
                     ?>
-                </p>
+                    </p>
+                </div>
             </div>
             <?php
         }
@@ -136,26 +151,40 @@ if (!empty($currentfolder))
         {
             ?>
             <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
-                <p style="margin:0;padding:4px 8px;">
-                    <strong>Validateurs</strong>:
-                    <br />
+                <div style="margin:0;padding:4px 8px;">
+                    <div><strong>Validateurs</strong>:</div>
+                    <p class="ploopi_va">
                     <?php
-                    $wfusers = array();
-                    foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
+                    $arrValidation = array();
+                    foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $arrValidation[$value['type_validation']][] = $value['id_validation'];
 
-                    $users = array();
-                    if (!empty($wfusers))
+                    if (!empty($arrValidation))
                     {
-                        $sql = "SELECT concat(lastname, ' ', firstname) FROM ploopi_user WHERE id in (".implode(',',$wfusers).") ORDER BY lastname, firstname";
-                        $db->query($sql);
+                        if (!empty($arrValidation['group']))
+                        {
+                            $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
 
-                        $arrUsers = $db->getarray();
-                        if (!empty($arrUsers)) echo implode(', ', $arrUsers);
-                        else echo "Aucune accréditation";
+                            $db->query(
+                                "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrValidation['group']).") ORDER BY label"
+                            );
+
+                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                        }
+                        if (!empty($arrValidation['user']))
+                        {
+                            $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
+
+                            $db->query(
+                                "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrValidation['user']).") ORDER BY lastname, firstname"
+                            );
+
+                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                        }
                     }
-                    else echo "Aucune accréditation";
+                    else echo '<span>Aucune accréditation</span>';
                     ?>
-                </p>
+                    </p>
+                </div>
             </div>
             <?php
         }
