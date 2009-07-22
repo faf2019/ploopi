@@ -45,13 +45,13 @@ $tabs['tabExplorer'] = array (
     'url'   => "admin.php?rssTabItem=tabExplorer"
 );
 
-if ($_SESSION['ploopi']['connected'])
-{
-    $tabs['tabFilter'] = array (    
-        'title' => _RSS_LABEL_FILTER_FEED,
-        'url'   => "admin.php?rssTabItem=tabFilter"
-    );
+$tabs['tabFilter'] = array (    
+    'title' => _RSS_LABEL_FILTER_FEED,
+    'url'   => "admin.php?rssTabItem=tabFilter"
+);
 
+if (ploopi_isactionallowed(_RSS_ACTION_FILTERADD))
+{
     $tabs['tabNewFilter'] = array ( 
         'title' => _RSS_LABEL_FILTER_NEW,
         'url'   => "admin.php?rssTabItem=tabNewFilter"
@@ -71,7 +71,7 @@ switch($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])
     break;
 
     case 'tabNewFilter':
-      if(!ploopi_isactionallowed(_RSS_ACTION_FILTERADD) && !ploopi_isactionallowed(_RSS_ACTION_FILTERMODIFY)) ploopi_redirect('admin.php');
+      if(!ploopi_isactionallowed(_RSS_ACTION_FILTERADD) && !ploopi_isactionallowed(_RSS_ACTION_FILTERMODIFY)) ploopi_redirect("admin.php?rssTabItem=tabExplorer");
 
       $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id'] = ''; // reset
       $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssfilter_id_element'] = ''; // reset

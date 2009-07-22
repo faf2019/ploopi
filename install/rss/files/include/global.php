@@ -55,14 +55,15 @@ define ('_RSS_OBJECT_NEWS_ENTRY',       2);
 
 global $rss_revisit_values;
 
-$rss_revisit_values = array (   900     =>  '15mn',
-                                1800    =>  '30mn',
-                                3600    =>  '1h',
-                                7200    =>  '2h',
-                                14400   =>  '4h',
-                                21600   =>  '6h',
-                                43200   =>  '12h',
-                                86400   =>  '24h',
-                            );
+$rss_revisit_values = array (   
+    900     =>  '15mn',
+    1800    =>  '30mn',
+    3600    =>  '1h',
+    7200    =>  '2h',
+    14400   =>  '4h',
+    21600   =>  '6h',
+    43200   =>  '12h',
+    86400   =>  '24h',
+);
 
 ?>

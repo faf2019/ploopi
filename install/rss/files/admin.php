@@ -45,7 +45,7 @@ $groups = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
 switch($op)
 {
     case 'reindex':
-        if (ploopi_isactionallowed(0))
+        if (ploopi_isadmin())
         {
             $sql =  "
                     SELECT      e.*,
@@ -138,10 +138,13 @@ $tabs['tabFeedList'] = array(
     'url' => "admin.php?rssTabItem=tabFeedList"
 );
 
-$tabs['tabFeedAdd'] = array(    
-    'title' => _RSS_LABEL_FEEDADD,
-    'url' => "admin.php?rssTabItem=tabFeedAdd"
-);
+if (ploopi_isactionallowed(_RSS_ACTION_FEEDADD))
+{
+    $tabs['tabFeedAdd'] = array(    
+        'title' => _RSS_LABEL_FEEDADD,
+        'url' => "admin.php?rssTabItem=tabFeedAdd"
+    );
+}
 
 $tabs['tabCatList'] = array(    
     'title' => _RSS_LABEL_CATLIST,
@@ -150,16 +153,18 @@ $tabs['tabCatList'] = array(
 
 if (ploopi_isactionallowed(_RSS_ACTION_CATADD))
 {
-    $tabs['tabCatAdd'] = array( 'title' => _RSS_LABEL_CATADD,
-                                'url' => "admin.php?rssTabItem=tabCatAdd"
-                                );
+    $tabs['tabCatAdd'] = array( 
+        'title' => _RSS_LABEL_CATADD,
+        'url' => "admin.php?rssTabItem=tabCatAdd"
+    );
 }
 
-if (ploopi_isactionallowed(0))
+if (ploopi_isadmin())
 {
-    $tabs['tabTools'] = array(  'title' => _RSS_LABEL_TOOLS,
-                                'url' => "admin.php?rssTabItem=tabTools"
-                                );
+    $tabs['tabTools'] = array(  
+        'title' => _RSS_LABEL_TOOLS,
+        'url' => "admin.php?rssTabItem=tabTools"
+    );
 }
 
 if (!empty($_GET['rssTabItem'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'] = $_GET['rssTabItem'];

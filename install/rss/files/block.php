@@ -61,7 +61,7 @@ else
            $block_rssfeed_cat_filter_id = $fpref['id_feed_cat_filter'];
 }
 
-if (ploopi_isactionallowed(-1,$_SESSION['ploopi']['workspaceid'],$menu_moduleid))
+if (ploopi_isactionallowed(array(_RSS_ACTION_FEEDADD, _RSS_ACTION_FEEDMODIFY, _RSS_ACTION_FEEDDELETE, _RSS_ACTION_CATADD, _RSS_ACTION_CATMODIFY, _RSS_ACTION_CATDELETE), $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
 {
     $block->addmenu('<b>'._RSS_LABEL_ADMIN.'</b>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin');
 }

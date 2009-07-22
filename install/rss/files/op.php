@@ -94,7 +94,7 @@ if (ploopi_ismoduleallowed('rss'))
             ?>
             <h1>Catégories de Flux</h1>
             <?php
-            $skin->display_array($array_columns, $array_values, 'array_rssexplorer_catlist', array('height' => 200, 'sortable' => true, 'orderby_default' => 'title'));
+            $skin->display_array($array_columns, $array_values, 'array_rssexplorer_catlist', array('height' => 200, 'sortable' => true, 'orderby_default' => 'cat_title'));
             echo $skin->close_simplebloc();
 
             ploopi_die();
