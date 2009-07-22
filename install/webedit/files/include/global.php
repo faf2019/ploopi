@@ -317,7 +317,7 @@ function webedit_getheadings($moduleid = -1)
     global $db;
 
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
-    
+
     $arrHeadings = array('list' => array(), 'tree' => array(), 'feed_enabled' => false, 'subscription_enabled' => false);
 
     $select = "SELECT * FROM ploopi_mod_webedit_heading WHERE id_module = {$moduleid} ORDER BY depth, position";
@@ -340,14 +340,14 @@ function webedit_getheadings($moduleid = -1)
         }
 
         if ($arrHeadings['list'][$fields['id']]['private']) $arrHeadings['list'][$fields['id']]['herited_private'] = $fields['id'];
-        
-        if (!$arrHeadings['list'][$fields['id']]['private'] && isset($arrHeadings['list'][$fields['id_heading']]) && $arrHeadings['list'][$fields['id_heading']]['private']) 
+
+        if (!$arrHeadings['list'][$fields['id']]['private'] && isset($arrHeadings['list'][$fields['id_heading']]) && $arrHeadings['list'][$fields['id_heading']]['private'])
         {
             $arrHeadings['list'][$fields['id']]['private'] = 1;
             $arrHeadings['list'][$fields['id']]['private_visible'] = $arrHeadings['list'][$fields['id_heading']]['private_visible'];
             $arrHeadings['list'][$fields['id']]['herited_private'] = $arrHeadings['list'][$fields['id_heading']]['herited_private'];
         }
-        
+
         // Il suffit qu'une rubrique active le flux pour que le flux soit également activé sur le site global (en respectant le choix de chaque rubrique)
         if ($fields['feed_enabled'] && !$arrHeadings['feed_enabled']) $arrHeadings['feed_enabled'] = true;
 
@@ -404,7 +404,7 @@ function webedit_getarticles($moduleid = -1)
         WHERE       ad.id_module = {$moduleid}
         ORDER BY    ad.position
     ");
-        
+
     while ($fields = $db->fetchrow($result))
     {
         if (!isset($_SESSION['webedit']['articles']['list'][$fields['id']]) || $fields['lastupdate_timestp'] != $_SESSION['webedit']['articles']['list'][$fields['id']]['lastupdate_timestp'])
@@ -441,7 +441,7 @@ function webedit_getarticles($moduleid = -1)
  * @param string $link lien de la rubrique parent
  */
 
-function webedit_template_assign($arrHeadings, $arrShares, $nav, $hid, $var = '', $link = '')
+function webedit_template_assign(&$arrHeadings, &$arrShares, &$nav, $hid, $var = '', $link = '')
 {
     global $template_body;
     global $recursive_mode;
@@ -543,7 +543,7 @@ function webedit_template_assign($arrHeadings, $arrShares, $nav, $hid, $var = ''
 
                 $sel = 'selected';
             }
-    
+
             // Visible ET (Publique OU (Privée ET (Autorisé OU Toujours Visible)))
             if ($arrHeading['visible'] && (!$arrHeadings['list'][$arrHeading['id']]['private'] || ($arrHeadings['list'][$arrHeading['id']]['private'] && (isset($arrShares[$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || $arrHeadings['list'][$arrHeading['id']]['private_visible']))))
             {
@@ -569,7 +569,7 @@ function webedit_template_assign($arrHeadings, $arrShares, $nav, $hid, $var = ''
                     if (isset($arrHeadings['tree'][$id]))
                     {
                         $template_body->assign_block_vars($localvar.'.switch_submenu' , array());
-                        webedit_template_assign(&$arrHeadings, &$arrShares, &$nav, $id, "{$localvar}.", $locallink);
+                        webedit_template_assign($arrHeadings, $arrShares, $nav, $id, "{$localvar}.", $locallink);
                     }
                 }
             }
@@ -583,7 +583,7 @@ function webedit_template_assign($arrHeadings, $arrShares, $nav, $hid, $var = ''
                 if ($link!='' && isset($nav[$depth])) $link .= "-$nav[$depth]";
                 elseif (isset($nav[$depth])) $link = "$nav[$depth]";
 
-                if (isset($nav[$depth]) && isset($arrHeadings['tree'][$nav[$depth]])) webedit_template_assign(&$arrHeadings, &$arrShares, &$nav, $nav[$depth], '', $link);
+                if (isset($nav[$depth]) && isset($arrHeadings['tree'][$nav[$depth]])) webedit_template_assign($arrHeadings, $arrShares, $nav, $nav[$depth], '', $link);
             }
         }
 
@@ -602,7 +602,7 @@ function webedit_template_assign($arrHeadings, $arrShares, $nav, $hid, $var = ''
  * @param string $link lien de la rubrique parent
  */
 
-function webedit_template_assign_headings($arrHeadings, $arrShares, $hid, $var = 'switch_content_heading.', $prefix = 'subheading', $depth = 1, $link = '')
+function webedit_template_assign_headings(&$arrHeadings, &$arrShares, $hid, $var = 'switch_content_heading.', $prefix = 'subheading', $depth = 1, $link = '')
 {
     global $template_body;
     global $webedit_mode;
@@ -634,7 +634,7 @@ function webedit_template_assign_headings($arrHeadings, $arrShares, $hid, $var =
                     $script = ploopi_urlrewrite($script = "index.php?headingid={$id}", webedit_getrewriterules(), $arrHeading['label'], $arrParents);
                 break;
             }
-            
+
             // Visible ET (Publique OU (Privée ET (Autorisé OU Toujours Visible)))
             if ($arrHeading['visible'] && (!$arrHeadings['list'][$arrHeading['id']]['private'] || ($arrHeadings['list'][$arrHeading['id']]['private'] && (isset($arrShares[$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || $arrHeadings['list'][$arrHeading['id']]['private_visible']))))
             {
@@ -653,7 +653,7 @@ function webedit_template_assign_headings($arrHeadings, $arrShares, $hid, $var =
                     'FREE2' => $arrHeading['free2']
                     ));
 
-                if (isset($arrHeadings['tree'][$id])) webedit_template_assign_headings(&$arrHeadings, $arrShares, $id, "{$localvar}.", $prefix, $depth+1, $locallink);
+                if (isset($arrHeadings['tree'][$id])) webedit_template_assign_headings($arrHeadings, $arrShares, $id, "{$localvar}.", $prefix, $depth+1, $locallink);
             }
         }
     }
@@ -852,7 +852,7 @@ function webedit_generate_sitemap()
 
     // Vidage du buffer
     ploopi_ob_clean();
-    
+
     if (!$objCache->start())
     {
         global $db;
@@ -964,15 +964,25 @@ function webedit_generate_sitemap()
 function webedit_getshare($id_user = null, $id_module = null)
 {
     $arrShares = array();
-    
+
     if ($_SESSION['ploopi']['connected'])
     {
         if (is_null($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
         if (is_null($id_user)) $id_user = $_SESSION['ploopi']['userid'];
-        
-        foreach(ploopi_share_get($id_user, -1, -1, $id_module) as $sh) $arrShares[$sh['id_record']] = 1;
+
+        $objUser = new user();
+        if ($objUser->open($id_user))
+        {
+            $arrGroups = array_keys($objUser->getgroups(true));
+
+            foreach(ploopi_share_get(-1, -1, -1, $id_module) as $sh)
+            {
+                if (($sh['type_share'] == 'user' && $sh['id_share'] == $id_user) || ($sh['type_share'] == 'group' && in_array($sh['id_share'], $arrGroups))) $arrShares[$sh['id_record']] = 1;
+            }
+        }
+
     }
-    
+
     return $arrShares;
 }
 
@@ -993,16 +1003,16 @@ function webedit_getrewriterules()
             '/index.php\?ploopi_op=webedit_backend&format=([a-z]*)&headingid=([0-9]*)/',
             '/index.php\?ploopi_op=webedit_backend&format=([a-z]*)/'
         ),
-        
+
         'replacements' => array(
             'articles/<FOLDERS><TITLE>-h$1a$2.<EXT>',
             'articles/<FOLDERS><TITLE>-h$1.<EXT>',
-            'articles/<FOLDERS><TITLE>-a$1.<EXT>',    
+            'articles/<FOLDERS><TITLE>-a$1.<EXT>',
             'unsubscribe/$1/index.<EXT>',
             'tags/$1.<EXT>',
             '$1/<TITLE>-h$2.xml',
             '$1/<TITLE>.xml'
-            ) 
+            )
     );
 }
 ?>

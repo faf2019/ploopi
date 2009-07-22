@@ -233,7 +233,6 @@ switch($menu)
                     if (!$heading->fields['private']) unset($_SESSION['ploopi']['share']['users_selected']); 
                     ploopi_share_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
                     
-                    
                     ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
 
                     ploopi_redirect("admin.php?headingid={$headingid}");

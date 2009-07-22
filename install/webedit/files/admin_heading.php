@@ -528,7 +528,7 @@ if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur le
     }
 }
 
-foreach($arrWf as $value) $arrWfUsers[] = $value['id_validation'];
+foreach($arrWf as $value) $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
 
 // récupère les partages
 $arrSharesUsers = array();
@@ -549,26 +549,42 @@ if (empty($arrShares)) // pas de partages pour cette rubrique, on recherche sur 
     }
 }
 
-foreach($arrShares as $value) $arrSharesUsers[] = $value['id_share'];
+foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['id_share'];
 
 ?>
 <div style="clear:both;padding:4px;">
     <fieldset class="fieldset" style="padding:6px;">
         <legend><strong>Validateurs</strong> (utilisateurs qui peuvent publier)</legend>
-        
-        <div style="padding:0 2px 2px 2px;">Validateurs <?php if ($intWfHeadingId != $headingid) echo "<em>hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a> &raquo;</em>"; ?>:
+
+        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
             <?php
             if (!empty($arrWfUsers))
             {
-                $sql = "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers).") ORDER BY lastname, firstname";
-                $db->query($sql);
-                $arrUsers = $db->getarray();
-                echo (empty($arrUsers)) ? '<em>Aucune accréditation</em>' : implode(', ', $arrUsers);
+                if (!empty($arrWfUsers['group']))
+                {
+                    $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
+
+                    $db->query(
+                        "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
+                    );
+
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                }
+                if (!empty($arrWfUsers['user']))
+                {
+                    $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
+
+                    $db->query(
+                        "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
+                    );
+
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                }
             }
             else echo '<em>Aucune accréditation</em>';
             ?>
-        </div>
-        
+        </p>
+
         <?php
         if (ploopi_isactionallowed(_WEBEDIT_ACTION_WORKFLOW_MANAGE))
         {
@@ -596,18 +612,34 @@ foreach($arrShares as $value) $arrSharesUsers[] = $value['id_share'];
     <fieldset class="fieldset" style="padding:6px;">
         <legend><strong>Autorisations d'accès</strong> (utilisateurs qui peuvent accéder à une rubrique privée)</legend>
 
-        <div style="padding:0 2px 2px 2px;">Autorisations d'accès <?php if ($intSharesHeadingId != $headingid) echo "<em>héritées de &laquo; <a href=\"".ploopi_urlencode("admin.php?headingid={$intSharesHeadingId}")."\">{$headings['list'][$intSharesHeadingId]['label']}</a> &raquo;</em>"; ?>:
+        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Autorisations d'accès </span><?php if ($intSharesHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intSharesHeadingId}")."\">{$headings['list'][$intSharesHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
             <?php
             if (!empty($arrSharesUsers))
             {
-                $sql = "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrSharesUsers).") ORDER BY lastname, firstname";
-                $db->query($sql);
-                $arrUsers = $db->getarray();
-                echo (empty($arrUsers)) ? '<em>Aucune accréditation</em>' : implode(', ', $arrUsers);
+                if (!empty($arrSharesUsers['group']))
+                {
+                    $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
+
+                    $db->query(
+                        "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrSharesUsers['group']).") ORDER BY label"
+                    );
+
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                }
+                if (!empty($arrSharesUsers['user']))
+                {
+                    $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
+
+                    $db->query(
+                        "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrSharesUsers['user']).") ORDER BY lastname, firstname"
+                    );
+
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                }
             }
             else echo '<em>Aucune accréditation</em>';
             ?>
-        </div>
+        </p>
 
         <?php
         if (ploopi_isactionallowed(_WEBEDIT_ACTION_ACCESS_MANAGE))
@@ -776,23 +808,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des a
             $c++;
         }
 
-        switch($heading->fields['sortmode'])
-        {
-            case 'bydate':
-                $options = array('sortable' => true, 'orderby_default' => 'date', 'sort_default' => 'DESC');
-            break;
-
-            case 'bydaterev':
-                $options = array('sortable' => true, 'orderby_default' => 'date');
-            break;
-
-            case 'bypos':
-            default:
-                $options = array('sortable' => true, 'orderby_default' => 'pos');
-            break;
-        }
-
-        $skin->display_array($subscribers_columns, $subscribers_values, 'webedit_subscribers', $options);
+        $skin->display_array($subscribers_columns, $subscribers_values, 'webedit_subscribers', $options = array('sortable' => true, 'orderby_default' => 'email'));
         ?>
     </div>
     <?php
@@ -811,7 +827,7 @@ for ($i = 0; $i < sizeof($parents); $i++)
     }
 }
 
-$arrAllowedActions = array( 
+$arrAllowedActions = array(
     _WEBEDIT_ACTION_ARTICLE_EDIT,
     _WEBEDIT_ACTION_ARTICLE_PUBLISH,
     _WEBEDIT_ACTION_CATEGORY_EDIT
