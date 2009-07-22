@@ -48,7 +48,7 @@ else
     include_once './include/classes/module.php';
 
     if (!empty($_REQUEST['system_level'])) $_SESSION['system']['level'] = $_REQUEST['system_level'];
-    if (empty($_SESSION['system']['level'])) $_SESSION['system']['level'] = '';
+    if (empty($_SESSION['system']['level'])) $_SESSION['system']['level'] = _SYSTEM_WORKSPACES;
 
     $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 

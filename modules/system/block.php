@@ -37,7 +37,7 @@
 ploopi_init_module('system', false, false, false);
 
 if (!empty($_REQUEST['system_level'])) $_SESSION['system']['level'] = $_REQUEST['system_level'];
-if (empty($_SESSION['system']['level'])) $_SESSION['system']['level'] = '';
+if (empty($_SESSION['system']['level'])) $_SESSION['system']['level'] = _SYSTEM_WORKSPACES;
 
 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
     $block->addmenu(

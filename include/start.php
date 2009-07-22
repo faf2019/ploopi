@@ -394,53 +394,62 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 break;
             }
         }
-
-        ///////////////////////////////////////////////////////////////////////////
-        // SWITCH WORKSPACE
-        ///////////////////////////////////////////////////////////////////////////
-
-        // Traitement d'un car particulier lié au détachement d'un utilisateur à l'espace qu'il consulte
-        if (!isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]))
+        
+        
+        if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES)
         {
-            $ploopi_workspaceid = $_SESSION['ploopi']['hosts']['backoffice'][0];
-        }
-
-        if (isset($ploopi_workspaceid) && $_SESSION['ploopi']['backoffice']['workspaceid'] != $ploopi_workspaceid && isset($_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['adminlevel']) && $_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['backoffice']) // new group selected
-        {
-            $_SESSION['ploopi']['mainmenu'] = _PLOOPI_MENU_WORKSPACES;
-            $_SESSION['ploopi']['backoffice']['workspaceid'] = $ploopi_workspaceid;
-            $_SESSION['ploopi']['backoffice']['moduleid'] = '';
-            $_SESSION['ploopi']['action'] = 'public';
-            $_SESSION['ploopi']['moduletype'] = '';
-            $_SESSION['ploopi']['moduletypeid'] = '';
-            $_SESSION['ploopi']['modulelabel'] = '';
-
-            // load params
-            ploopi_loadparams();
-        }
-
-        ///////////////////////////////////////////////////////////////////////////
-        // LOOK FOR AUTOCONNECT MODULE
-        ///////////////////////////////////////////////////////////////////////////
-
-        if (!isset($ploopi_moduleid) && $_SESSION['ploopi']['backoffice']['moduleid'] == '' && !empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['modules']))
-        {
-            $autoconnect_modules = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['modules'];
-            $autoconnect_workspaceid = $_SESSION['ploopi']['backoffice']['workspaceid'];
-
-            foreach($autoconnect_modules as $id => $autoconnect_module_id)
+    
+            ///////////////////////////////////////////////////////////////////////////
+            // SWITCH WORKSPACE
+            ///////////////////////////////////////////////////////////////////////////
+    
+            // Traitement d'un car particulier lié au détachement d'un utilisateur à l'espace qu'il consulte
+            if (!isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]))
             {
-                if ($_SESSION['ploopi']['modules'][$autoconnect_module_id]['active'] && $_SESSION['ploopi']['modules'][$autoconnect_module_id]['autoconnect'])
+                $ploopi_workspaceid = $_SESSION['ploopi']['hosts']['backoffice'][0];
+            }
+    
+            if (isset($ploopi_workspaceid) && $_SESSION['ploopi']['backoffice']['workspaceid'] != $ploopi_workspaceid && isset($_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['adminlevel']) && $_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['backoffice']) // new group selected
+            {
+                $_SESSION['ploopi']['mainmenu'] = _PLOOPI_MENU_WORKSPACES;
+                $_SESSION['ploopi']['backoffice']['workspaceid'] = $ploopi_workspaceid;
+                $_SESSION['ploopi']['backoffice']['moduleid'] = '';
+                $_SESSION['ploopi']['action'] = 'public';
+                $_SESSION['ploopi']['moduletype'] = '';
+                $_SESSION['ploopi']['moduletypeid'] = '';
+                $_SESSION['ploopi']['modulelabel'] = '';
+    
+                // load params
+                ploopi_loadparams();
+            }
+    
+            ///////////////////////////////////////////////////////////////////////////
+            // LOOK FOR AUTOCONNECT MODULE
+            ///////////////////////////////////////////////////////////////////////////
+    
+            if (!isset($ploopi_moduleid) && $_SESSION['ploopi']['backoffice']['moduleid'] == '' && !empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['modules']))
+            {
+                $arrModules = &$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['modules'];
+                $intAutoconnectModuleId = null;
+                
+                foreach($arrModules as $intModuleId)
                 {
-                    if (($_SESSION['ploopi']['connected'] || (!$_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['modules'][$autoconnect_module_id]['public'])) && !isset($ploopi_moduleid) && $_SESSION['ploopi']['backoffice']['moduleid'] == '')
-                    {
-                        $ploopi_moduleid = $autoconnect_module_id;
-                        $ploopi_action = 'public';
-                    }
+                    if ($_SESSION['ploopi']['modules'][$intModuleId]['active'] && $_SESSION['ploopi']['modules'][$intModuleId]['autoconnect']) $intAutoconnectModuleId = $intModuleId; 
+                    
+                }
+                
+                if (is_null($intAutoconnectModuleId) && ploopi_ismanager()) $intAutoconnectModuleId = _PLOOPI_MODULE_SYSTEM;
+                
+                if (!is_null($intAutoconnectModuleId))
+                {
+                    
+                    $ploopi_moduleid = $intAutoconnectModuleId;
+                    
+                    $ploopi_action = $intAutoconnectModuleId == _PLOOPI_MODULE_SYSTEM ? 'admin' : 'public';
                 }
             }
         }
-
+        
         ///////////////////////////////////////////////////////////////////////////
         // SWITCH MODULE
         ///////////////////////////////////////////////////////////////////////////
@@ -475,7 +484,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 $_SESSION['ploopi']['modulelabel'] = $fields['label'];
             }
         }
-
+        
         // new action selected
         if (isset($ploopi_action)) $_SESSION['ploopi']['action'] = $ploopi_action;
     }
@@ -557,8 +566,7 @@ $ploopi_system_levels =
 
 if (session_id()!='')
 {
-    if (_PLOOPI_SESSIONTIME <= 86400) $timestplimit = ploopi_createtimestamp() - _PLOOPI_SESSIONTIME;
-    else $timestplimit = ploopi_createtimestamp() - 86400;
+    $timestplimit = ploopi_timestamp_add(ploopi_createtimestamp(), 0, 0, -min( _PLOOPI_SESSIONTIME,  86400));
     $db->query("DELETE FROM ploopi_connecteduser WHERE timestp < {$timestplimit}");
     $objConnectedUser = new connecteduser();
     $objConnectedUser->open(session_id());

@@ -141,7 +141,7 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
         // si pas de chiffrage, on encode les paramètres
         if (!defined('_PLOOPI_URL_ENCODE') || !_PLOOPI_URL_ENCODE) $value = urlencode($value);
 
-        $arrParams[$key] = (is_null($value)) ? $key : "{$key}={$value}";
+        $arrParams[$key] = (is_null($value) || $value == '') ? $key : "{$key}={$value}";
     }
 
     $strParams = implode('&', $arrParams);

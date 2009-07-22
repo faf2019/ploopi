@@ -219,7 +219,7 @@ if ($_SESSION['ploopi']['connected'])
         'USER_LASTNAME'         => $_SESSION['ploopi']['user']['lastname'],
         'USER_EMAIL'            => $_SESSION['ploopi']['user']['email'],
 
-        'USER_WORKSPACE'        => ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE),
+        'USER_WORKSPACE'        => ploopi_urlencode("admin.php", _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'USER_WORKSPACE_SEL'    => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE) ? 'selected' : '',
 
         'MAINMENU_PROFILE'          => _PLOOPI_LABEL_MYPROFILE,
@@ -244,7 +244,7 @@ if ($_SESSION['ploopi']['connected'])
         'LAST_NEWTICKET'            => $lastticket,
         'SHOW_BLOCKMENU'            => (!empty($_SESSION['ploopi']['switchdisplay']['block_modules'])) ? $_SESSION['ploopi']['switchdisplay']['block_modules'] : 'block',
 
-        'USER_DECONNECT'        => ploopi_urlencode("admin.php?ploopi_logout")
+        'USER_DECONNECT'        => ploopi_urlencode("admin.php?ploopi_logout", null, null, null, null, false)
         )
     );
 

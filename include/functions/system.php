@@ -702,7 +702,7 @@ function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
     }
     else
     {
-        ploopi_redirect(basename($_SERVER['PHP_SELF']).(isset($intErrorCode) ? "?ploopi_errorcode={$intErrorCode}" : ''));
+        ploopi_redirect(basename($_SERVER['PHP_SELF']).(isset($intErrorCode) ? "?ploopi_errorcode={$intErrorCode}" : ''), false);
     }
 
 }

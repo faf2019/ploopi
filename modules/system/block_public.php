@@ -34,7 +34,7 @@
  * Initialisation du module
  */ 
 
-$op = empty($_REQUEST['op']) ? '' : $_REQUEST['op'];
+$op = empty($_REQUEST['op']) ? 'tickets' : $_REQUEST['op'];
 
 $block->addmenu(
     _PLOOPI_LABEL_MYTICKETS, 

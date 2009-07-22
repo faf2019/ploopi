@@ -137,7 +137,7 @@ function ploopi_filtervar($mixVar, $strVarName = null, $booUtf8 = false)
 
 function ploopi_isadmin($workspaceid = -1)
 {
-    if ($workspaceid == -1) $workspaceid = $_SESSION['ploopi']['workspaceid']; // get session value if not defined
+    if ($workspaceid == -1) $workspaceid = $_SESSION['ploopi']['backoffice']['workspaceid']; // get session value if not defined
     return ($workspaceid != -1 && !empty($_SESSION['ploopi']['workspaces'][$workspaceid]['adminlevel']) && $_SESSION['ploopi']['workspaces'][$workspaceid]['adminlevel'] == _PLOOPI_ID_LEVEL_SYSTEMADMIN);
 }
 
@@ -150,7 +150,7 @@ function ploopi_isadmin($workspaceid = -1)
 
 function ploopi_ismanager($workspaceid = -1)
 {
-    if ($workspaceid == -1) $workspaceid = $_SESSION['ploopi']['workspaceid']; // get session value if not defined
+    if ($workspaceid == -1) $workspaceid = $_SESSION['ploopi']['backoffice']['workspaceid']; // get session value if not defined
     return ($workspaceid != -1 && !empty($_SESSION['ploopi']['workspaces'][$workspaceid]['adminlevel']) && $_SESSION['ploopi']['workspaces'][$workspaceid]['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER);
 }
 
