@@ -170,7 +170,7 @@ switch($_SESSION['ploopi']['scriptname'])
     break;
 
     case 'index.php':
-        if ((!empty($_GET['webedit_mode'])) && isset($_SESSION['ploopi']['backoffice']['connected']) && $_SESSION['ploopi']['backoffice']['connected'] && isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['backoffice']['moduleid']]) && $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['backoffice']['moduleid']]['label'] == 'WEBEDIT')
+        if ((!empty($_GET['webedit_mode'])) && isset($_SESSION['ploopi']['backoffice']['connected']) && $_SESSION['ploopi']['backoffice']['connected'] && isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['backoffice']['moduleid']]) && $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['backoffice']['moduleid']]['moduletype'] == 'webedit')
         {
             // cas spécial du mode de rendu public du module Webedit (on utilise le rendu frontoffice sans activer tout le processus)
             $newmode = 'frontoffice';
