@@ -170,7 +170,7 @@ switch($_SESSION['ploopi']['scriptname'])
     break;
 
     case 'index.php':
-        if ((!empty($_GET['webedit_mode'])) && $_SESSION['ploopi']['connected'])
+        if ((!empty($_GET['webedit_mode'])) && isset($_SESSION['ploopi']['backoffice']['connected']) && $_SESSION['ploopi']['backoffice']['connected'] && isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['backoffice']['moduleid']]) && $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['backoffice']['moduleid']]['label'] == 'WEBEDIT')
         {
             // cas spécial du mode de rendu public du module Webedit (on utilise le rendu frontoffice sans activer tout le processus)
             $newmode = 'frontoffice';
@@ -304,8 +304,6 @@ if ($ploopi_initsession)
         if (!$_SESSION['ploopi']['frontoffice']['connected'] && !$_SESSION['ploopi']['backoffice']['connected'] || (!$_SESSION['ploopi']['backoffice']['connected'] && $_SESSION['ploopi']['mode'] == 'backoffice'))
         {
             ploopi_logout(_PLOOPI_ERROR_NOWORKSPACEDEFINED);
-            //session_destroy();
-            //ploopi_redirect("admin.php?ploopi_errorcode="._PLOOPI_ERROR_NOWORKSPACEDEFINED);
         }
 
         // sorting workspaces by depth
@@ -322,7 +320,6 @@ if ($ploopi_initsession)
 if (!$_SESSION['ploopi']['paramloaded']) include './include/start/load_param.php';
 
 if (!empty($login_redirect)) ploopi_redirect($login_redirect, false);
-
 
 // Indicateur global de connexion
 $_SESSION['ploopi']['connected'] = isset($_SESSION['ploopi'][$_SESSION['ploopi']['mode']]['connected']) && $_SESSION['ploopi'][$_SESSION['ploopi']['mode']]['connected'];
@@ -563,8 +560,7 @@ $ploopi_system_levels =
 ///////////////////////////////////////////////////////////////////////////
 // UPDATE LIVE STATS
 ///////////////////////////////////////////////////////////////////////////
-
-if (session_id()!='')
+if (session_id() != '')
 {
     $timestplimit = ploopi_timestamp_add(ploopi_createtimestamp(), 0, 0, -min( _PLOOPI_SESSIONTIME,  86400));
     $db->query("DELETE FROM ploopi_connecteduser WHERE timestp < {$timestplimit}");
@@ -593,51 +589,16 @@ if (session_id()!='')
 ///////////////////////////////////////////////////////////////////////////
 
 $ploopi_errornum = 0;
-
-if (!$_SESSION['ploopi']['connected'])
+if ($_SESSION['ploopi']['connected'])
 {
-    // can't be admin and not connected
-    if ($_SESSION['ploopi']['action'] == 'admin')
-    {
-        $_SESSION['ploopi']['action'] = 'public';
-        $ploopi_errornum = 1;
-    }
-
-    // can't call site/meta/system modules and being not connected
-    if (!$ploopi_errornum && ($_SESSION['ploopi']['moduleid'] == _PLOOPI_MODULE_SYSTEM))
-    {
-        $ploopi_errornum = 2;
-    }
-
-    if (!$ploopi_errornum && ($_SESSION['ploopi']['moduleid']!= '' && !isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']])))
-    {
-        $ploopi_errornum = 3;
-    }
-
-    if (!$ploopi_errornum && ($_SESSION['ploopi']['moduleid']!= '' && !$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['active']))
-    {
-        $ploopi_errornum = 5;
-    }
-}
-else
-{
-    // test moduleid
-    if (!$ploopi_errornum && ($_SESSION['ploopi']['moduleid']!= '' && !isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']])))
-    {
-        $ploopi_errornum = 3;
-    }
+    // teste moduleid
+    if (!$ploopi_errornum && ($_SESSION['ploopi']['moduleid']!= '' && !isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]))) $ploopi_errornum = 3;
 
     // test if module is active
-    if (!$ploopi_errornum && ($_SESSION['ploopi']['moduleid']!= '' && !$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['active']))
-    {
-        $ploopi_errornum = 5;
-    }
+    if (!$ploopi_errornum && ($_SESSION['ploopi']['moduleid']!= '' && !$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['active'])) $ploopi_errornum = 5;
 
     // test workspaceid
-    if (!$ploopi_errornum && ($_SESSION['ploopi']['workspaceid']!= '' && !isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']])))
-    {
-        $ploopi_errornum = 6;
-    }
+    if (!$ploopi_errornum && ($_SESSION['ploopi']['workspaceid']!= '' && !isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]))) $ploopi_errornum = 6;
 }
 
 if ($ploopi_errornum)
