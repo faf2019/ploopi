@@ -365,6 +365,13 @@ function webedit_getheadings($moduleid = -1)
  * @return array tableau d'articles
  */
 
+/**
+ * Retourne les articles du module sous forme d'un tableau
+ *
+ * @param int $moduleid identifiant du module
+ * @return array tableau d'articles
+ */
+
 function webedit_getarticles($moduleid = -1)
 {
     global $db;
@@ -381,6 +388,7 @@ function webedit_getarticles($moduleid = -1)
     $result = $db->query("
         SELECT      ad.id,
                     a.id as online_id,
+                    a.id_heading as online_id_heading,
                     ad.position,
                     ad.reference,
                     ad.version,
@@ -411,7 +419,7 @@ function webedit_getarticles($moduleid = -1)
         {
             // nouvel article ou article modifié
             if (is_null($fields['online_id'])) $fields['new_version'] = 2;
-            else $fields['new_version'] = (strip_tags($fields['content']) != strip_tags($fields['online_content'])) ? '1' : '0';
+            else $fields['new_version'] = (strip_tags($fields['content']) != strip_tags($fields['online_content']) || $fields['id_heading'] != $fields['online_id_heading']) ? '1' : '0';
 
             $fields['date_ok'] = (($fields['timestp_published'] <= $today || $fields['timestp_published'] == 0) && ($fields['timestp_unpublished'] >= $today || $fields['timestp_unpublished'] == 0));
 
@@ -441,7 +449,7 @@ function webedit_getarticles($moduleid = -1)
  * @param string $link lien de la rubrique parent
  */
 
-function webedit_template_assign(&$arrHeadings, &$arrShares, &$nav, $hid, $var = '', $link = '')
+function webedit_template_assign($arrHeadings, $arrShares, &$nav, $hid, $var = '', $link = '')
 {
     global $template_body;
     global $recursive_mode;
@@ -569,7 +577,7 @@ function webedit_template_assign(&$arrHeadings, &$arrShares, &$nav, $hid, $var =
                     if (isset($arrHeadings['tree'][$id]))
                     {
                         $template_body->assign_block_vars($localvar.'.switch_submenu' , array());
-                        webedit_template_assign($arrHeadings, $arrShares, $nav, $id, "{$localvar}.", $locallink);
+                        webedit_template_assign(&$arrHeadings, &$arrShares, $nav, $id, "{$localvar}.", $locallink);
                     }
                 }
             }
@@ -583,7 +591,7 @@ function webedit_template_assign(&$arrHeadings, &$arrShares, &$nav, $hid, $var =
                 if ($link!='' && isset($nav[$depth])) $link .= "-$nav[$depth]";
                 elseif (isset($nav[$depth])) $link = "$nav[$depth]";
 
-                if (isset($nav[$depth]) && isset($arrHeadings['tree'][$nav[$depth]])) webedit_template_assign($arrHeadings, $arrShares, $nav, $nav[$depth], '', $link);
+                if (isset($nav[$depth]) && isset($arrHeadings['tree'][$nav[$depth]])) webedit_template_assign(&$arrHeadings, &$arrShares, $nav, $nav[$depth], '', $link);
             }
         }
 
@@ -602,7 +610,7 @@ function webedit_template_assign(&$arrHeadings, &$arrShares, &$nav, $hid, $var =
  * @param string $link lien de la rubrique parent
  */
 
-function webedit_template_assign_headings(&$arrHeadings, &$arrShares, $hid, $var = 'switch_content_heading.', $prefix = 'subheading', $depth = 1, $link = '')
+function webedit_template_assign_headings($arrHeadings, $arrShares, $hid, $var = 'switch_content_heading.', $prefix = 'subheading', $depth = 1, $link = '')
 {
     global $template_body;
     global $webedit_mode;
@@ -653,7 +661,7 @@ function webedit_template_assign_headings(&$arrHeadings, &$arrShares, $hid, $var
                     'FREE2' => $arrHeading['free2']
                     ));
 
-                if (isset($arrHeadings['tree'][$id])) webedit_template_assign_headings($arrHeadings, $arrShares, $id, "{$localvar}.", $prefix, $depth+1, $locallink);
+                if (isset($arrHeadings['tree'][$id])) webedit_template_assign_headings(&$arrHeadings, &$arrShares, $id, "{$localvar}.", $prefix, $depth+1, $locallink);
             }
         }
     }

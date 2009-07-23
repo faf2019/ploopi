@@ -646,7 +646,7 @@ switch($menu)
                                 <img style="float:left;display:block;" src="./modules/webedit/img/doc0.png"><span>Article publié</span>
                             </p>
                             <p class="ploopi_va" style="clear:both;">
-                                <img style="float:left;display:block;" src="./modules/webedit/img/doc1.png"><span>Article modifié</span>
+                                <img style="float:left;display:block;" src="./modules/webedit/img/doc1.png"><span>Article modifié / déplacé</span>
                             </p>
                             <p class="ploopi_va" style="clear:both;">
                                 <img style="float:left;display:block;" src="./modules/webedit/img/doc2.png"><span>Article non publié</span>

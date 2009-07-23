@@ -224,7 +224,7 @@ if (file_exists("{$template_path}/config.php")) include_once "{$template_path}/c
 $_SESSION['ploopi']['frontoffice']['template_path'] = $template_path;
 include_once './include/op.php';
 
-webedit_template_assign($arrHeadings, $arrShares, $arrNav, 0, '', 0);
+webedit_template_assign(&$arrHeadings, &$arrShares, $arrNav, 0, '', 0);
 
 if ($query_string != '') // recherche intégrale
 {
@@ -515,13 +515,13 @@ else // affichage standard rubrique/page
         if($arrHeadings['list'][$headingid]['content_type'] == 'headings' && empty($articleid)) // affichage rubriques
         {
            $template_body->assign_block_vars('switch_content_heading', array());
-           webedit_template_assign_headings($arrHeadings, $arrShares, $headingid);
+           webedit_template_assign_headings(&$arrHeadings, &$arrShares, $headingid);
         }
 
         if($arrHeadings['list'][$headingid]['content_type'] == 'sitemap' && empty($articleid)) // affichage plan de site
         {
            $template_body->assign_block_vars('switch_content_sitemap', array());
-           webedit_template_assign_headings($arrHeadings, $arrShares, 0, 'switch_content_sitemap.', 'heading', 0);
+           webedit_template_assign_headings(&$arrHeadings, &$arrShares, 0, 'switch_content_sitemap.', 'heading', 0);
         }
 
         // détermination du type de tri des articles
@@ -600,7 +600,7 @@ else // affichage standard rubrique/page
                     switch($webedit_mode)
                     {
                         case 'edit';
-                            $script = "javascript:window.parent.document.location.href='admin.php?op=article_modify&headingid={$headingid}&articleid={$row['id']}';";
+                            $script = "javascript:window.parent.document.location.href='".ploopi_urlencode("admin.php?op=article_modify&headingid={$headingid}&articleid={$row['id']}")."';";
                         break;
 
                         case 'render';
