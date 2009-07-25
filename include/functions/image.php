@@ -53,35 +53,32 @@ include_once './include/functions/string.php';
 function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format = '', $nbcolor = 0, $filename = '', $addBorder = false)
 {
     $imagefile_name = basename($imagefile);
-    $extension = ploopi_file_getextension($imagefile_name);
 
-    // si l'extension du fichier n'est pas "parlante", on tente de récupérer le format dans les infos du fichier
-    if (!in_array($extension, array('jpg', 'jpeg', 'png', 'gif')))
-    {
-        $arrImageInfo = getimagesize($imagefile);
-        if (isset($arrImageInfo['mime']))
-        {
-            if (strstr($arrImageInfo['mime'], 'gif') !== false) $extension = 'gif';
-            elseif (strstr($arrImageInfo['mime'], 'png') !== false) $extension = 'png';
-            elseif (strstr($arrImageInfo['mime'], 'jpg') !== false) $extension = 'jpg';
-            elseif (strstr($arrImageInfo['mime'], 'jpeg') !== false) $extension = 'jpeg';
-        }
-    }
-
+    $extension = mime_content_type($imagefile); //FIXME Cette fonction est devenue obsolète car l'extension PECL Fileinfo fournit la même fonctionnalité (et bien plus) d'une façon plus propre. 
+      
     // Ouverture de l'image source
     switch($extension)
     {
-        case 'jpg':
-        case 'jpeg':
+        case 'image/jpg':
+        case 'image/jpeg':
+        {
+          $extension = 'jpg';
           $imgsrc = ImageCreateFromJPEG($imagefile);
+        }
         break;
 
-        case 'png':
+        case 'image/png':
+        {
+          $extension = 'png';
           $imgsrc = ImageCreateFromPng($imagefile);
+        }
         break;
 
-        case 'gif':
+        case 'image/gif':
+        {
+          $extension = 'gif';
           $imgsrc = imagecreatefromgif($imagefile);
+        }
         break;
 
         default: // format en entrée non supporté
