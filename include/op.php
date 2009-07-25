@@ -561,7 +561,8 @@ if (isset($ploopi_op))
                             ploopi_module_workspace
 
                     WHERE   ploopi_mb_wce_object.id_module_type = ploopi_module.id_module_type
-                    AND     ((ploopi_module_workspace.id_module = ploopi_module.id AND ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['workspaceid']}) OR ploopi_mb_wce_object.id_module_type = 1)
+                      AND   ((ploopi_module_workspace.id_module = ploopi_module.id AND ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['workspaceid']}) OR ploopi_mb_wce_object.id_module_type = 1)
+                    ORDER BY module_label, label                      
                 ";
 
                 $result_object = $db->query($select_object);
@@ -569,7 +570,7 @@ if (isset($ploopi_op))
                 {
                     if ($fields_object['select_label'] != '')
                     {
-                        $select = "select {$fields_object['select_id']}, {$fields_object['select_label']} from {$fields_object['select_table']} where id_module = {$fields_object['module_id']}";
+                        $select = "select {$fields_object['select_id']}, {$fields_object['select_label']} from {$fields_object['select_table']} where id_module = {$fields_object['module_id']} ORDER BY {$fields_object['select_label']}";
                         $db->query($select);
 
                         while ($fields = $db->fetchrow())
