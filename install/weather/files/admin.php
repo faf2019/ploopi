@@ -36,9 +36,7 @@
 
 ploopi_init_module('weather');
 
-
 $op = (empty($_GET['op'])) ? '' : $_GET['op'];
-$action = 'admin.php?op=weather_save';
 
 include_once './modules/weather/class/class_weather.php';
 $objWeather = new weather();
@@ -69,9 +67,10 @@ switch($op)
         $objWeather->fields['datetime_update'] = 0;
       }
       $objWeather->setvalues($_POST,'weather_');
-      $objWeather->save();
+      $objWeather->save(true);
       break; // Break dans le {} comme ça si ça coince on fait default
     }
+    
   default:
     $sql =  "
       SELECT  id
@@ -92,6 +91,8 @@ switch($op)
     }
   break;
 }
+
+$action = 'admin.php?op=weather_save';
 
 if(isset($objWeather->fields['id']) && $objWeather->fields['id'] > 0)
   $action .= '&id_weather='.$objWeather->fields['id'];

@@ -64,6 +64,7 @@ class weather extends data_object
   private $arrData = 'old';
   private $strDateUpdate = '';
   private $strTextCity = '';
+  
   /**
    * Contructeur de la classe
    *
@@ -74,7 +75,7 @@ class weather extends data_object
     global $db;
 
     $this->error = true;
-
+    
     parent::data_object('ploopi_mod_weather', 'id');
 
     if($moduleid > 0)
@@ -152,9 +153,10 @@ class weather extends data_object
    * Surcharge de la méthode de sauvegarde. Ajout des param id_module, id_workspace, id_user
    *
    */
-  public function save()
+  public function save($withUWM = false)
   {
-    $this->setuwm();
+    if($withUWM) $this->setuwm();
+    
     parent::save();
   }
 

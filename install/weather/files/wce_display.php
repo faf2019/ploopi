@@ -37,7 +37,7 @@
 
 $template_weather = new Template("./templates/frontoffice/{$template_name}");
 if (file_exists("./templates/frontoffice/{$template_name}/weather.tpl"))
-{
+{  
   $template_weather->set_filenames(array('weather_display' => 'weather.tpl'));
 
   include_once './modules/weather/class/class_weather.php';

@@ -1,3 +1,13 @@
+== Module WEATHER - version 0.06a ====================================================
+
+ * Correction d'un bug, changement de id_module lors de l'enregistrement de nouvelles infos météo depuis le front. 
+
+== Module WEATHER - version 0.05a ====================================================
+
+ * Correction de deux bugs en administration : 
+  * Enregistrement multiple des même données
+  * La recherche portait toujours sur... Nancy ;-)
+
 == Module WEATHER - version 0.04a ====================================================
 
  * Modification des entêtes de fichier pour phpDoc

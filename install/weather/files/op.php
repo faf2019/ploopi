@@ -39,7 +39,7 @@ switch ($ploopi_op)
 
     ob_start();
 
-    $listCity = get_city('nancy');
+    $listCity = get_city($_POST['value']);
     if(!is_array($listCity))
       echo $listCity;
     else
