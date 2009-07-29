@@ -221,7 +221,7 @@
                 <!-- BEGIN workspace -->
                     <option value="{switch_user_logged_in.workspace.URL}" {switch_user_logged_in.workspace.SELECTED}>{switch_user_logged_in.workspace.TITLE}</option>
                 <!-- END workspace -->
-                <option value="{USER_WORKSPACE}" {USER_WORKSPACE_SEL}>(Mon Espace)</option>
+                <option value="{USER_WORKSPACE_URL}" {USER_WORKSPACE_SEL}>({USER_WORKSPACE_LABEL})</option>
                 </select>
             </p>
         </div>

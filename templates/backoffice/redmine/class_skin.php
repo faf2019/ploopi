@@ -39,7 +39,7 @@
 include_once './include/classes/skin_common.php';
 
 /**
- * Gestion de l'affichage du skin 'ploopi'
+ * Gestion de l'affichage du skin 'redmine'
  *
  * @package ploopi
  * @subpackage skin
@@ -53,7 +53,7 @@ include_once './include/classes/skin_common.php';
 class skin extends skin_common
 {
     /**
-     * Construction de la classe skin 'ploopi'
+     * Construction de la classe skin 'redmine'
      *
      * @return skin
      */
