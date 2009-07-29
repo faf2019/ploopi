@@ -36,7 +36,6 @@ body.index {
 background:url(../img/template/bg.gif) top left repeat-x;
 color: #303030;
 position: relative;
-overflow:hidden;
 }
 
 body.popup {
@@ -69,6 +68,7 @@ min-height:400px;
 min-width:500px;
 position:absolute;
 width:100%;
+overflow-y:hidden;
 }
 
 #login_window {
@@ -450,7 +450,7 @@ float:right;
 
 #aboutmenu li div {
 width:240px;
-left: -110px;
+left: -105px;
 }
 
 #aboutmenu label {
