@@ -1,3 +1,14 @@
+== Module WebEdit - version 2.1.2 ============================================
+
+2009-07-29  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Gestion de l'affichage des rubriques privées affichées "en force" depuis un autre module
+ 
+   * Ajout de la fonction webedit_allowheading permettant d'indiquer une liste de id_heading privés affichés "en force" depuis un autre module.
+   * Ajout de la fonction webedit_disallowheading permettant de supprimer des id_heading affichés en force depuis un autre module.
+   * Impact en frontoffice sur : affichage des rubriques/pages, moteur de recherche, nuage de tags, plan de site,
+   * Impact sur la backend RSS/ATOM 
+
 == Module WebEdit - version 2.1.1b ============================================
 
 2009-07-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

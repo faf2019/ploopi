@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  *
  * @package webedit
  * @subpackage global
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -365,13 +366,6 @@ function webedit_getheadings($moduleid = -1)
  * @return array tableau d'articles
  */
 
-/**
- * Retourne les articles du module sous forme d'un tableau
- *
- * @param int $moduleid identifiant du module
- * @return array tableau d'articles
- */
-
 function webedit_getarticles($moduleid = -1)
 {
     global $db;
@@ -552,8 +546,8 @@ function webedit_template_assign($arrHeadings, $arrShares, &$nav, $hid, $var = '
                 $sel = 'selected';
             }
 
-            // Visible ET (Publique OU (Privée ET (Autorisé OU Toujours Visible)))
-            if ($arrHeading['visible'] && (!$arrHeadings['list'][$arrHeading['id']]['private'] || ($arrHeadings['list'][$arrHeading['id']]['private'] && (isset($arrShares[$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || $arrHeadings['list'][$arrHeading['id']]['private_visible']))))
+            // Visible ET (Publique OU (Privée ET (Autorisé OU Autorisé par un module OU Toujours Visible)))
+            if ($arrHeading['visible'] && (!$arrHeadings['list'][$arrHeading['id']]['private'] || ($arrHeadings['list'][$arrHeading['id']]['private'] && (isset($arrShares[$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || isset($_SESSION['ploopi']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || $arrHeadings['list'][$arrHeading['id']]['private_visible']))))
             {
                 $template_body->assign_block_vars($localvar , array(
                     'DEPTH' => $depth,
@@ -643,8 +637,8 @@ function webedit_template_assign_headings($arrHeadings, $arrShares, $hid, $var =
                 break;
             }
 
-            // Visible ET (Publique OU (Privée ET (Autorisé OU Toujours Visible)))
-            if ($arrHeading['visible'] && (!$arrHeadings['list'][$arrHeading['id']]['private'] || ($arrHeadings['list'][$arrHeading['id']]['private'] && (isset($arrShares[$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || $arrHeadings['list'][$arrHeading['id']]['private_visible']))))
+            // Visible ET (Publique OU (Privée ET (Autorisé OU Autorisé par un module OU Toujours Visible)))
+            if ($arrHeading['visible'] && (!$arrHeadings['list'][$arrHeading['id']]['private'] || ($arrHeadings['list'][$arrHeading['id']]['private'] && (isset($arrShares[$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || isset($_SESSION['ploopi']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || $arrHeadings['list'][$arrHeading['id']]['private_visible']))))
             {
                 $template_body->assign_block_vars($localvar , array(
                     'DEPTH' => $depth,
@@ -1022,5 +1016,48 @@ function webedit_getrewriterules()
             '$1/<TITLE>.xml'
             )
     );
+}
+
+/**
+ * Retourne un tableau en session avec les id_heading à afficher même s'ils sont privés
+ *
+ * @Param int/array $heading liste des id_heading à afficher
+ * @Param int $id_module identifiant du module
+ *
+ * @return array $_SESSION['allowedheading'][$id_module]
+ */
+function webedit_allowheading($heading = null, $id_module = null)
+{
+  if (is_null($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
+
+  if(is_array($heading))
+  {
+    foreach ($heading as $id_heading) $_SESSION['ploopi']['allowedheading'][$id_module][$id_heading] = true;
+  }
+  elseif(is_numeric($heading))
+    $_SESSION['ploopi']['allowedheading'][$id_module][$heading] = true;
+}
+
+/**
+ * Supprime du tableau en session les id_heading à afficher même s'ils sont privés
+ *
+ * @Param int/array $heading liste des id_heading à supprimer
+ * @Param int $id_module identifiant du module
+ *
+ * @return array $_SESSION['allowedheading'][$id_module]
+ */
+function webedit_disallowheading($heading = null, $id_module = null)
+{
+  if (is_null($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
+
+  if(is_array($heading))
+  {
+    foreach ($heading as $id_heading)
+    {
+      if(isset($_SESSION['ploopi']['allowedheading'][$id_module][$id_heading])) unset($_SESSION['ploopi']['allowedheading'][$id_module][$id_heading]);
+    }
+  }
+  elseif(is_numeric($heading))
+      if(isset($_SESSION['ploopi']['allowedheading'][$id_module][$heading])) unset($_SESSION['ploopi']['allowedheading'][$id_module][$heading]);
 }
 ?>
