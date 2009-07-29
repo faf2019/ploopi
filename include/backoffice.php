@@ -112,7 +112,7 @@ if ($_SESSION['ploopi']['connected'])
     {
         $template_body->assign_block_vars('switch_user_logged_in.workspace',array(
                 'TITLE' => $_SESSION['ploopi']['workspaces'][$key]['label'],
-                'URL' => ploopi_urlencode('admin.php', _PLOOPI_MENU_WORKSPACES, $key, '', ''),
+                'URL' => $key == $_SESSION['ploopi']['workspaceid'] && $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES ? ploopi_urlencode('admin.php') : ploopi_urlencode('admin.php', _PLOOPI_MENU_WORKSPACES, $key, '', ''),
                 'SELECTED' => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $key == $_SESSION['ploopi']['workspaceid']) ? 'selected' : ''
             )
         );
@@ -219,7 +219,8 @@ if ($_SESSION['ploopi']['connected'])
         'USER_LASTNAME'         => $_SESSION['ploopi']['user']['lastname'],
         'USER_EMAIL'            => $_SESSION['ploopi']['user']['email'],
 
-        'USER_WORKSPACE'        => ploopi_urlencode("admin.php", _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        'USER_WORKSPACE_LABEL'  => htmlentities(_PLOOPI_LABEL_MYWORKSPACE),
+        'USER_WORKSPACE_URL'    => ploopi_urlencode("admin.php", _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'USER_WORKSPACE_SEL'    => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE) ? 'selected' : '',
 
         'MAINMENU_PROFILE'          => _PLOOPI_LABEL_MYPROFILE,
@@ -280,7 +281,7 @@ else
 $template_body->assign_vars(array(
         'TEMPLATE_PATH'                 => $_SESSION['ploopi']['template_path'],
         'TEMPLATE_NAME'                 => $_SESSION['ploopi']['template_name'],
-        'WORKSPACE_LABEL'               => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']),
+        'WORKSPACE_LABEL'               => $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE ? htmlentities(_PLOOPI_LABEL_MYWORKSPACE) : htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']),
         'WORKSPACE_CODE'                => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['code']),
         'WORKSPACE_TITLE'               => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
         'WORKSPACE_META_DESCRIPTION'    => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_description']),

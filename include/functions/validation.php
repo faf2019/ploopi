@@ -94,21 +94,21 @@ function ploopi_validation_selectusers($id_object = 0, $id_record = '', $id_modu
     }
 
     ?>
-    <a class="ploopi_validation_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('ploopi_validation');">
+    <a class="ploopi_validation_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('ploopi_validation_<?php echo $strValidationId; ?>');">
         <p class="ploopi_va">
             <img src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/validation.png"; ?>">
             <span><?php echo $strTitle; ?></span>
         </p>
     </a>
-    <div id="ploopi_validation" style="display:block;">
+    <div id="ploopi_validation_<?php echo $strValidationId; ?>" style="display:block;">
         <div class="ploopi_validation_search_form">
             <p class="ploopi_va">
                 <span>Recherche groupes/utilisateurs:&nbsp;</span>
                 <input type="text" id="ploopi_validation_userfilter" class="text">
-                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_search_users&validation_id=<?php echo $strValidationId; ?>&ploopi_validation_userfilter='+ploopi_getelem('ploopi_validation_userfilter').value+'&id_action=<?php echo $id_action; ?>', 'div_validation_search_result');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
+                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_search_users&validation_id=<?php echo $strValidationId; ?>&ploopi_validation_userfilter='+ploopi_getelem('ploopi_validation_userfilter').value+'&id_action=<?php echo $id_action; ?>', 'div_validation_search_result_<?php echo $strValidationId; ?>');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
             </p>
         </div>
-        <div id="div_validation_search_result"></div>
+        <div id="div_validation_search_result_<?php echo $strValidationId; ?>"></div>
 
         <div class="ploopi_validation_title">Sélection actuelle :</div>
         <div class="ploopi_validation_authorizedlist" id="div_validation_users_selected_<?php echo $strValidationId; ?>">
@@ -145,7 +145,7 @@ function ploopi_validation_save($id_object = 0, $id_record = '', $id_module = -1
 
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
-    echo $strValidationId = is_null($strForceValidationId) ? ploopi_validation_generateid($id_object, $id_record, $id_module) : $strForceValidationId;
+    $strValidationId = is_null($strForceValidationId) ? ploopi_validation_generateid($id_object, $id_record, $id_module) : $strForceValidationId;
     
     $db->query("DELETE FROM ploopi_validation WHERE id_object = {$id_object} AND id_record = '".$db->addslashes($id_record)."' AND id_module = {$id_module}");
     

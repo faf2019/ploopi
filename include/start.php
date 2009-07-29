@@ -431,7 +431,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 
                 foreach($arrModules as $intModuleId)
                 {
-                    if ($_SESSION['ploopi']['modules'][$intModuleId]['active'] && $_SESSION['ploopi']['modules'][$intModuleId]['autoconnect']) $intAutoconnectModuleId = $intModuleId; 
+                    if (is_null($intAutoconnectModuleId) && $_SESSION['ploopi']['modules'][$intModuleId]['active'] && $_SESSION['ploopi']['modules'][$intModuleId]['autoconnect']) $intAutoconnectModuleId = $intModuleId; 
                     
                 }
                 
