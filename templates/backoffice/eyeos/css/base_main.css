@@ -1,0 +1,468 @@
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/******************
+  MAIN LAYOUT
+*******************/
+
+body, form, table, td, input, select, textarea, button {
+font: 11px tahoma, verdana, sans-serif;
+}
+
+body, form  {
+margin: 0;
+}
+
+body.index {
+background:url(../img/template/bg.gif) top left repeat-x;
+color: #303030;
+position: relative;
+}
+
+body.popup {
+margin: 0;
+color: #303030;
+padding: 2px;
+}
+
+a {
+text-decoration: none;
+color: #304066;
+}
+
+a:hover {
+text-decoration: underline;
+}
+
+a img {
+border:0;
+}
+
+h1, h2, h3, h4 {
+font-family: "Trebuchet MS", Verdana, sans-serif;
+}
+
+#background {
+background:transparent url(../img/template/wallpaper.jpg) no-repeat scroll 0 0;
+height:100%;
+min-height:400px;
+min-width:500px;
+position:absolute;
+width:100%;
+}
+
+#login_window {
+display:block;
+position:absolute;
+width:301px;
+height:220px;
+left:50%;
+top:50%;
+margin-left:-150px;
+margin-top:-210px;
+color:#fff;
+}
+
+#login {
+position:relative;
+background:transparent url(../img/template/login.png) no-repeat scroll 0 0;
+width:301px;
+height:220px;
+}
+
+#login_form {
+margin:0;
+padding:0;
+}
+
+.login_form_box {
+display:block;
+position:relative;
+padding:10px 50px;
+}
+
+.login_form_box label {
+display:block;
+margin-top:6px;
+}
+
+.login_form_box input {
+display:block;
+border:1px solid #1c2329;
+width:100%;
+background:#fff;
+-moz-border-radius:5px;
+padding-left:4px;
+padding-right:4px;
+margin-top:6px;
+}
+
+.login_btn_right {
+position:absolute;
+bottom:10px;
+right:10px;
+z-index:2;
+}
+
+.login_btn_right a {
+color:#fff;
+text-decoration:none;
+font-weight:bold;
+}
+
+.login_btn_right a img,
+.login_btn_right a span {
+display: inline-block;
+vertical-align: middle;
+}
+
+.login_btn_right a img {
+border:0;
+opacity:0.7;
+}
+
+.login_btn_right a:hover img {
+opacity:1;
+}
+
+.login_btn_left {
+position:absolute;
+bottom:10px;
+left:10px;
+z-index:2;
+}
+
+.login_btn_left a {
+color:#fff;
+text-decoration:none;
+font-weight:bold;
+}
+
+.login_btn_left a img,
+.login_btn_left a span {
+display: inline-block;
+vertical-align: middle;
+}
+
+.login_btn_left a img {
+border:0;
+opacity:0.7;
+}
+
+.login_btn_left a:hover img {
+opacity:1;
+}
+
+#lostpassword_form {
+position:absolute;
+left:0px;
+top:203px;
+height:220px;
+width:100%;
+background:transparent url(../img/template/new_user.png) no-repeat 0 0;
+z-index:1;
+}
+
+#login_statusbar {
+position:absolute;
+height:20px;
+line-height:20px;
+bottom:0px;
+width:100%;
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
+color:#0f3d61;
+text-align:center;
+}
+
+#login_statusbar a {
+font-weight:bold;
+}
+
+#dock {
+height:31px;
+background:transparent url(../img/template/dock.png) repeat-x 0 0;
+color:#fff;
+}
+
+#mainmenu {
+margin:0;
+padding:0;
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
+}
+
+#mainmenu li {
+display:block;
+position:relative;
+float:left;
+list-style-image:none;
+list-style-position:outside;
+list-style-type:none;
+}
+
+#mainmenu li a.mainmenu {
+display:block;
+color:#fff;
+height:29px;
+line-height:29px;
+padding:0 10px;
+text-decoration:none;
+}
+
+#mainmenu li a.selected {
+color:#eeee00;
+}
+
+#mainmenu li:hover {
+background:#ccc url(../img/template/dock_sel.png) no-repeat 0 0;
+}
+
+#mainmenu li:hover a {
+color:#000;
+}
+
+#mainmenu li:hover div {
+display:block;
+}
+
+#mainmenu img {
+display:block;
+float:left;
+}
+
+#mainmenu li div {
+padding: 0px;
+margin: 0px;
+border-left:1px solid #000;
+border-right:1px solid #000;
+border-bottom:1px solid #000;
+background:#ccc;
+position: absolute;
+top: 28px;
+left: 0px;
+display: none;
+width:150px;
+}
+
+#mainmenu div a {
+display:block;
+color:#000;
+text-decoration:none;
+padding:6px 8px;
+border-bottom:1px solid #ddd;
+border-left:1px solid #ddd;
+border-right:1px solid #ddd;
+}
+
+#mainmenu div a:hover {
+background-color:#ddd;
+}
+
+#mainmenu div a.selected {
+background-color:#eee;
+}
+
+#mainmenu div a img {
+border:0;
+}
+
+#pagecontent {
+position:absolute;
+top:31px;
+width:100%;
+overflow:auto;
+z-index:1;
+}
+
+#statusbar {
+position:absolute;
+background:transparent url(../img/template/statusbar.png) repeat-x 0 0;
+height:31px;
+bottom:0px;
+width:100%;
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
+color:#0f3d61;
+}
+
+#statusbar .menu_right {
+display:block;
+float:right;
+}
+
+#statusbar a.menu_right {
+line-height:30px;
+height:30px;
+padding:0 10px;
+text-decoration:none;
+color:#0f3d61;
+font-weight:bold;
+margin-top:1px;
+}
+
+#statusbar a.menu_right:hover {
+background:transparent url(../img/template/statusbar.png) repeat-x 0 -1px;
+}
+
+#statusbar div.menu_right {
+line-height:30px;
+height:30px;
+padding:0 10px;
+margin-top:1px;
+}
+
+
+
+.statusmenu {
+margin:0;
+padding:0;
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
+color:#000;
+}
+
+.statusmenu li {
+display:block;
+position:relative;
+float:left;
+list-style-image:none;
+list-style-position:outside;
+list-style-type:none;
+}
+
+.statusmenu li a.menu {
+display:block;
+color:#0f3d61;
+height:29px;
+line-height:29px;
+padding:0 10px;
+text-decoration:none;
+font-weight:bold;
+}
+
+.statusmenu li a.selected {
+color:#eeee00;
+}
+
+.statusmenu li:hover {
+background:transparent url(../img/template/statusbar.png) repeat-x 0 -1px;
+}
+
+.statusmenu li:hover a {
+color:#000;
+}
+
+.statusmenu li:hover div {
+display:block;
+}
+
+.statusmenu img {
+display:block;
+float:left;
+}
+
+.statusmenu li div {
+padding: 0px;
+margin: 0px;
+border-left:1px solid #666;
+border-right:1px solid #666;
+border-top:1px solid #666;
+background-color:#ccc;
+position: absolute;
+bottom: 29px;
+display: none;
+z-index:2;
+}
+
+.statusmenu div a {
+display:block;
+color:#0f3d61;
+text-decoration:none;
+padding:6px 8px;
+border-left:1px solid #ddd;
+border-right:1px solid #ddd;
+border-top:1px solid #ddd;
+}
+
+.statusmenu div a:hover {
+background-color:#ddd;
+}
+
+.statusmenu div a.selected {
+background-color:#eee;
+}
+
+.statusmenu div a img {
+border:0;
+}
+
+.statusmenu div p {
+display:block;
+padding:6px 8px;
+margin:0;
+border-left:1px solid #ddd;
+border-right:1px solid #ddd;
+border-top:1px solid #ddd;
+color:#444;
+}
+
+#workspacemenu {
+margin-top:1px;
+display:block;
+float:left;
+}
+
+#workspacemenu li div {
+width:180px;
+left: 0px;
+}
+
+#aboutmenu {
+margin-top:1px;
+display:block;
+float:right;
+}
+
+#aboutmenu li div {
+width:240px;
+left: -90px;
+}
+
+#aboutmenu label {
+display:block;
+clear:both;
+float:left;
+width:100px;
+margin:2px 0;
+}
+
+#aboutmenu span {
+display:block;
+float:left;
+margin:2px 0;
+font-weight:bold;
+}
