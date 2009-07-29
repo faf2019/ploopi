@@ -36,6 +36,7 @@ body.index {
 background:url(../img/template/bg.gif) top left repeat-x;
 color: #303030;
 position: relative;
+overflow:hidden;
 }
 
 body.popup {

@@ -221,7 +221,6 @@
         <div class="menu_right" id="status_time"></div>
         <img class="menu_right" src="{TEMPLATE_PATH}/img/template/status_sep.png" />
 
-
         <ul id="aboutmenu" class="statusmenu">
             <li>
                 <a class="menu" href="javascript:void(0);" title="A propos de Ploopi"><img style="margin-top:8px;" src="{TEMPLATE_PATH}/img/template/icons/about.png" /></a>
