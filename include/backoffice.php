@@ -161,7 +161,16 @@ if ($_SESSION['ploopi']['connected'])
                             'DESCRIPTION' => ''
                         )
                     );
+                    
+                    if (!empty($mod['content']))
+                    {
+                        $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_blocksel.switch_content',array(
+                                'CONTENT' => $mod['content']
+                            )
+                        );
+                    }
                 }
+                
                 
                 foreach($mod['menu'] as $menu)
                 {
