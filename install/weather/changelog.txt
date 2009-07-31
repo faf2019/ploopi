@@ -1,3 +1,11 @@
+== Module WEATHER - version 1.00 ====================================================
+
+ * Passage en version stable
+
+ * Modification de la présentation dans block.php pour compatibilité avec le template eyeos
+ * Suppression du fond blanc des infos météo
+ * Activation d'un fond blanc juste pour ie (icone en png transparent) 
+
 == Module WEATHER - version 0.07 ====================================================
 
  * Ajout d'un javascript de contrôle lors de l'enregistrement des paramètres admin
@@ -6,7 +14,7 @@
 
 == Module WEATHER - version 0.06a ====================================================
 
- * Correction d'un bug, changement de id_module lors de l'enregistrement de nouvelles infos météo depuis le front. 
+ * Correction d'un bug, changement de id_module lors de l'enregistrement de nouvelles infos météo depuis le front. (Bug WCE !)
 
 == Module WEATHER - version 0.05a ====================================================
 

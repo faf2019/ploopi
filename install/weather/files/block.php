@@ -56,9 +56,9 @@ if(isset($arrData) && is_array($arrData))
         <div class="weather_title" onclick="javascript:weather_change_info(\'now\');">'.$data['lieu'].'</div>
         <div id="weather_info_now" class="weather_block_detail">
           <p class="weather_info">'._WEATHER_BLOC_MAJ.': '.$data['maj'].'</p>
-          <div style="text-align:center; cursor: pointer;" onclick="javascript:weather_change_info(\'now\');"><img src="./modules/weather/img/93/'.$data['icon'].'.png" style="padding:0; margin: 0;"></div>
-          <p class="weather_tendance">'.$data['text'].'</p>
-          <div style="text-align: left; padding: 2px 0 0 4px;">
+          <div style="clear: both; text-align:center; cursor: pointer;" onclick="javascript:weather_change_info(\'now\');"><img src="./modules/weather/img/93/'.$data['icon'].'.png" style="padding:0; margin: 0;"></div>
+          <div style="clear: both;"><p class="weather_tendance">'.$data['text'].'</p></div>
+          <div style="clear: both; text-align: left; padding: 2px 0 0 4px;">
             <label>'._WEATHER_BLOC_TEMPER.' :</label> '.$data['t'].' ('._WEATHER_BLOC_FEEL.' '.$data['t_ressentie'].')<br/>
             <label>'._WEATHER_BLOC_WIND.':</label> '.$data['vent']['vitesse'].' '.$data['vent']['direction_texte'].'<br/>
             <label>'._WEATHER_BLOC_HUMID.':</label> '.$data['humidite'].'
@@ -74,8 +74,8 @@ if(isset($arrData) && is_array($arrData))
               <label>'._WEATHER_BLOC_UV.':</label> '.$data['UV']['indice'].' ('.$data['UV']['text'].')<br/>
               <label>'._WEATHER_BLOC_PRESURE.':</label> '.$data['pression']['val'].'<br/>('.$data['pression']['direction'].')
               <div class="weather_subtitle">'._WEATHER_BLOC_THIS_NIGHT.'</div>
-              <div style="text-align:center; cursor: pointer;" onclick="javascript:weather_change_info(\'now\');"><img src="./modules/weather/img/93/'.$data['lune']['icon'].'.png" style="padding:0; margin: 0;"></div>
-              <p class="weather_tendance">'.$data['lune']['text'].'</p>';
+              <div style="clear: both; text-align:center; cursor: pointer;" onclick="javascript:weather_change_info(\'now\');"><img src="./modules/weather/img/93/'.$data['lune']['icon'].'.png" style="padding:0; margin: 0;"></div>
+              <div style="clear: both;"><p class="weather_tendance">'.$data['lune']['text'].'</p></div>';
               if(isset($arrData[0]) && !empty($arrData[0]))
               {
                 $htmlBlockWeather .= '

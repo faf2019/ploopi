@@ -40,7 +40,7 @@ div.weather_subtitle {
   text-align: center;
   margin: 2px 4px 0 0;
   padding: 2px 0;
-  background-color: #E9E9E9;
+  /* background-color: #E9E9E9; */
   font-weight: bold;
   font-size: 12px;
 }
@@ -76,5 +76,5 @@ p.weather_tendance {
   overflow: auto;
   text-align: left;
   border-top: 1px solid;
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
 }
