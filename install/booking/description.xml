@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ploopi>
+    <moduletype>
+        <label>booking</label>
+        <version>0.9.1</version>
+        <author>Ovensia</author>
+        <date>200904090000000</date>
+        <description>Gestion de réservation</description>
+      <paramtype>
+         <name>booking_front_planning_width</name>
+         <label>Largeur du planning (front)</label>
+         <default_value>800</default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+      <paramtype>
+         <name>booking_front_planning_height</name>
+         <label>Hauteur du planning (front)</label>
+         <default_value>500</default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+      <paramtype>
+         <name>booking_eventfilter</name>
+         <label>Visualiser seulement les événements validés</label>
+         <default_value>1</default_value>
+         <public>1</public>
+         <description/>
+         <paramchoice>
+            <value>1</value>
+            <displayed_value>oui</displayed_value>
+         </paramchoice>
+         <paramchoice>
+            <value>0</value>
+            <displayed_value>non</displayed_value>
+         </paramchoice>
+      </paramtype>      
+      <action>
+            <id_action>10</id_action>
+            <label>Gérer les types de ressources</label>
+        </action>
+        <action>
+            <id_action>11</id_action>
+            <label>Gérer les ressources</label>
+        </action>
+        <action>
+            <id_action>20</id_action>
+            <label>Gérer les validations</label>
+        </action>
+        <action>
+            <id_action>30</id_action>
+            <label>Faire une demande</label>
+        </action>
+    </moduletype>
+</ploopi>

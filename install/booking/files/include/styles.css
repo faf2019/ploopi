@@ -1,0 +1,73 @@
+/*
+    Copyright (c) 2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+.booking_toolbar {
+    background-color: #d2d2d3;
+    border-bottom: 1px solid #808080;
+    overflow: hidden;
+    line-height: 20px;
+    height: 20px;
+}
+
+.booking_toolbar img {
+    display: block;
+    float: left;
+    margin: 2px 3px 0 0;
+}
+
+.booking_toolbar input {
+    display: block;
+    float: left;
+    margin: 3px 3px 0 0;
+}
+
+.booking_toolbar a {
+    display: block;
+    float: right;
+    padding-left: 12px;
+    padding-right: 6px;
+    text-decoration: none;
+    background: url(../img/menu.png) 0 0 no-repeat;
+}
+
+.booking_toolbar a:hover {
+    background: url(../img/menu.png) 0 -20px no-repeat;
+}
+
+
+#booking_treeview {
+height:200px;
+overflow:auto;
+overflow-x:hidden;
+border:1px solid #c0c0c0;
+width:300px;
+background-color:#f0f0f0;
+}
+
+#booking_treeview a {
+text-decoration:none;
+border-bottom:1px dotted #c0c0c0;
+}
+
+#booking_treeview a:hover {
+background-color:#d0d0d0;
+border-bottom:1px solid #c0c0c0;
+}
