@@ -229,7 +229,7 @@
 	            <div id="sidebar">
 		            <h3>{switch_user_logged_in.switch_blockmenu.switch_blocksel.TITLE}</h3>
 		            <!-- BEGIN switch_content -->
-		                <div class="module_content">{switch_user_logged_in.switch_blockmenu.switch_blocksel.switch_content.CONTENT}</div>
+		                <div class="block_content">{switch_user_logged_in.switch_blockmenu.switch_blocksel.switch_content.CONTENT}</div>
 		            <!-- END switch_content -->
 		            <ul>
 		            <!-- BEGIN menu -->
