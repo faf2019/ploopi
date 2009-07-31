@@ -200,6 +200,7 @@
 
     <!-- BEGIN switch_user_logged_in -->
     <div id="dock" style="z-index:2;">
+    
         <!-- BEGIN switch_blockmenu -->
         <ul id="mainmenu">
             <!-- BEGIN block -->
@@ -218,9 +219,14 @@
             <!-- END block -->
         </ul>
         <!-- END switch_blockmenu -->
+
     </div>
 
     <div id="statusbar">
+
+        <a style="position:relative;padding-left:25px;" class="menu_right" href="{USER_DECONNECT}" title="Fermer la session en cours"><img style="position:absolute;left:10px;top:8px;" src="{TEMPLATE_PATH}/img/template/icons/logout.png" /></a>
+        <img class="menu_right" src="{TEMPLATE_PATH}/img/template/status_sep.png" />
+
         <div class="menu_right" id="status_time"></div>
         <img class="menu_right" src="{TEMPLATE_PATH}/img/template/status_sep.png" />
 
@@ -243,11 +249,22 @@
                     </p>
                 </div>
             </li>
+            <img class="menu_right" src="{TEMPLATE_PATH}/img/template/status_sep.png" />
+            <!-- BEGIN switch_search -->
+            <li>
+                <a class="menu" href="javascript:void(0);" title="A propos de Ploopi"><img style="margin-top:8px;" src="{TEMPLATE_PATH}/img/template/icons/search.png" /></a>
+                <div>
+                    <form method="post" id="form_recherche" action="{MAINMENU_SHOWSEARCH_URL}">
+                    <p style="margin:0;padding:10px;overflow:auto;">
+	                    <input type="text" name="system_search_keywords" class="text" style="width:180px;float:left;" value="{SEARCH_KEYWORDS}">
+	                    <img src="{TEMPLATE_PATH}/img/template/icons/search.png" value="Recherche" style="cursor:pointer;float:left;margin-left:4px;margin-top:4px;" onclick="$('form_recherche').submit();">
+                    </p>
+                    </form>
+                </div>
+            </li>
+            <img class="menu_right" src="{TEMPLATE_PATH}/img/template/status_sep.png" />
+            <!-- END switch_search -->
         </ul>
-        <img class="menu_right" src="{TEMPLATE_PATH}/img/template/status_sep.png" />
-
-        <a style="position:relative;padding-left:30px;" class="menu_right" href="{USER_DECONNECT}" title="Fermer la session en cours"><img style="position:absolute;left:10px;top:8px;" src="{TEMPLATE_PATH}/img/template/icons/logout.png" />{MAINMENU_DISCONNECTION}</a>
-        <img class="menu_right" src="{TEMPLATE_PATH}/img/template/status_sep.png" />
 
         <a style="position:relative;padding-left:30px;" class="menu_right {MAINMENU_SHOWTICKETS_SEL}" href="{MAINMENU_SHOWTICKETS_URL}" title="Accéder à &laquo; {MAINMENU_TICKETS} &raquo;"><img style="position:absolute;left:10px;top:8px;" src="{TEMPLATE_PATH}/img/template/icons/tickets.png" />{MAINMENU_TICKETS}<em id="tpl_ploopi_tickets_new">({NEWTICKETS})</em></a>
         <img class="menu_right" src="{TEMPLATE_PATH}/img/template/status_sep.png" />

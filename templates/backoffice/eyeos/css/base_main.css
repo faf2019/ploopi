@@ -212,6 +212,7 @@ padding:0;
 -moz-user-select: none;
 -khtml-user-select: none;
 user-select: none;
+float:left;
 }
 
 #mainmenu li {
@@ -298,7 +299,6 @@ border-right:1px solid #ddd;
 overflow:auto;
 }
 
-
 #pagecontent {
 position:absolute;
 top:31px;
@@ -359,7 +359,7 @@ color:#000;
 .statusmenu li {
 display:block;
 position:relative;
-float:left;
+float:right;
 list-style-image:none;
 list-style-position:outside;
 list-style-type:none;
@@ -460,7 +460,7 @@ float:right;
 
 #aboutmenu li div {
 width:240px;
-left: -105px;
+left: -60px;
 }
 
 #aboutmenu label {
