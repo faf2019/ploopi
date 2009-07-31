@@ -218,27 +218,33 @@ if (isset($ploopi_op))
         break;
 
         case 'colorpicker_open':
+            if (!isset($_GET['colorpicker_value']) || !isset($_GET['inputfield_id'])) ploopi_die();
+            ob_start();
             ?>
-            <div id="plugin">
+            <div id="ploopi_colorpicker" style="padding:4px;">
 
-                <div id="SV" onmousedown="HSVslide('SVslide','plugin',event)" title="Saturation + Value">
+                <div id="SV" onmousedown="HSVslide('SVslide','ploopi_colorpicker',event)" title="Saturation + Value">
                     <div id="SVslide">&nbsp;</div>
                 </div>
 
-                <form id="H" onmousedown="HSVslide('Hslide','plugin',event)" title="Hue">
+                <form id="H" onmousedown="HSVslide('Hslide','ploopi_colorpicker',event)" title="Hue">
                     <div id="Hslide">&nbsp;</div>
                     <div id="Hmodel"></div>
                 </form>
 
                 <div id="colorpicker_footer">
                     <div id="plugCUR"></div>
-                    <input type="text" class="text" id="colorpicker_inputcolor" value="<?php echo $_GET['colorpicker_value']; ?>">
-                    <input type="button" class="button" value="fermer" onclick="javascript:ploopi_getelem('<?php echo $_GET['inputfield_id']; ?>').value = ploopi_getelem('colorpicker_inputcolor').value; ploopi_hidepopup('popup_colorpicker');ploopi_dispatch_onchange('<?php echo $_GET['inputfield_id']; ?>');">
+                    <input type="text" class="text" id="colorpicker_inputcolor" value="<?php echo htmlentities($_GET['colorpicker_value']); ?>">
+                    <input type="button" class="button" value="fermer" onclick="javascript:ploopi_getelem('<?php echo addslashes($_GET['inputfield_id']); ?>').value = ploopi_getelem('colorpicker_inputcolor').value; ploopi_hidepopup('ploopi_popup_colorpicker');ploopi_dispatch_onchange('<?php echo $_GET['inputfield_id']; ?>');">
                 </div>
                 <div style="clear:both;">
                 </div>
             </div>
             <?php
+            $content = ob_get_contents();
+            ob_end_clean();
+    
+            echo $skin->create_popup("Choix d'une couleur", $content, 'ploopi_popup_colorpicker');
             ploopi_die();
         break;
 

@@ -125,7 +125,7 @@ class calendarEvent
     public function __get($strName)
     {
         if (isset($this->{$strName})) return $this->{$strName};
-        else throw new Exception('Paramètre inconnu');
+        else return null;
     }
 }
 
@@ -337,197 +337,204 @@ class calendar
         $strJsCode = '';
         ?>
         <div class="days_inner" style=width:<?php echo $calendar_width; ?>px;height:<?php echo $calendar_height; ?>px;">
-        <?php
-        // Affichage des libellés de jours si demandé
-        if ($this->arrOptions['display_dayslabel'])
-        {
-            ?>
-            <div class="row">
-                <?php
-                // Il faut afficher une petite case vide (intersection heures/jours)
-                if ($this->arrOptions['display_hours'])
-                {
-                    ?>
-                    <div class="day_header" style="<?php echo "width:".($this->arrOptions['hours_colwidth'] - 1)."px;height:".($this->arrOptions['dayslabel_height'] - 1)."px;"; ?>">&nbsp;</div>
-                    <?php
-                }
-
-                // On boucle sur les jours à afficher (1 = premier jour de l'intervalle)
-                for ($d = 1; $d <= $nbdays; $d++)
-                {
-                    // Détermination de la date du jour à afficher
-                    $dateday = mktime(0, 0, 0, $firstday_m, $firstday_d + $d - 1, $firstday_y);
-
-                    // Date locale
-                    $ldate = substr(ploopi_unixtimestamp2local($dateday), 0, 5);
-
-                    $weekday = date('N', $dateday);
-
-                    $extra_class = '';
-                    if (ploopi_holiday($dateday)) $extra_class = ' day_header_holiday';
-                    else
-                    {
-                        if ($weekday > 5) $extra_class = ' day_header_weekend';
-                    }
-                    ?>
-                    <div class="day_header<? echo $extra_class; ?>" style="<?php echo $day_header_style; ?>">
-                        <div class="day_header_label"><?php echo $ploopi_days[$weekday].' '.$ldate; ?></div>
-                    </div>
-                    <?php
-                }
-                ?>
-            </div>
+        
             <?php
-        }
-
-        ?>
-        <div class="row">
-        <?php
-        // Affichage des heures
-        if ($this->arrOptions['display_hours'])
-        {
-            ?>
-            <div class="hours" style="<?php echo $hours_style; ?>">
-                <?php
-                // Affichage des heures + demi-heures
-                for ($h = $this->arrOptions['hour_begin']; $h < $this->arrOptions['hour_end']; $h++ )
-                {
-                    ?>
-                    <div class="hour_header" style="<?php echo $hour_header_style; ?>;">
-                        <div class="hour_header_num"><?php echo sprintf("%02d", $h); ?></div>
-                    </div>
+            // Affichage des libellés de jours si demandé
+            if ($this->arrOptions['display_dayslabel'])
+            {
+                ?>
+                <div class="row">
                     <?php
-                    // Affichage du séparateur d'heures
-                    if ($h > $this->arrOptions['hour_begin'])
+                    // Il faut afficher une petite case vide (intersection heures/jours)
+                    if ($this->arrOptions['display_hours'])
                     {
                         ?>
-                        <div class="tick" style="top:<?php echo $hour_height * ($h - $this->arrOptions['hour_begin']); ?>px;width:<?php echo $this->arrOptions['hours_colwidth']-1; ?>px;"></div>
+                        <div class="day_header" style="<?php echo "width:".($this->arrOptions['hours_colwidth'] - 1)."px;height:".($this->arrOptions['dayslabel_height'] - 1)."px;"; ?>">&nbsp;</div>
                         <?php
                     }
-                }
-                ?>
-            </div>
+    
+                    // On boucle sur les jours à afficher (1 = premier jour de l'intervalle)
+                    for ($d = 1; $d <= $nbdays; $d++)
+                    {
+                        // Détermination de la date du jour à afficher
+                        $dateday = mktime(0, 0, 0, $firstday_m, $firstday_d + $d - 1, $firstday_y);
+    
+                        // Date locale
+                        $ldate = substr(ploopi_unixtimestamp2local($dateday), 0, 5);
+    
+                        $weekday = date('N', $dateday);
+    
+                        $extra_class = '';
+                        if (ploopi_holiday($dateday)) $extra_class = ' day_header_holiday';
+                        else
+                        {
+                            if ($weekday > 5) $extra_class = ' day_header_weekend';
+                        }
+                        ?>
+                        <div class="day_header<? echo $extra_class; ?>" style="<?php echo $day_header_style; ?>">
+                            <div class="day_header_label"><?php echo $ploopi_days[$weekday].' '.$ldate; ?></div>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>
+                <?php
+            }
+    
+            ?>
+            <div class="row">
             <?php
-        }
-        ?>
-
-        <div id="calendar_days" style="overflow:auto;">
-            <?php
-            // Affichage des journées
-
-            // On boucle sur les jours à afficher (1 = premier jour de l'intervalle)
-            for ($d = 1; $d <= $nbdays; $d++)
+            // Affichage des heures
+            if ($this->arrOptions['display_hours'])
             {
-                // Détermination de la date du jour à afficher
-                $dateday = mktime(0, 0, 0, $firstday_m, $firstday_d + $d - 1, $firstday_y);
-
-                $extra_class = '';
-                if (ploopi_holiday($dateday)) $extra_class = ' day_holiday';
-                else
-                {
-                    $weekday = date('N', $dateday);
-                    if ($weekday > 5) $extra_class = ' day_weekend';
-                }
                 ?>
-                <div class="day<? echo $extra_class; ?>" id="calendar_day<? echo $d; ?>" style="<?php echo $day_style; ?>">
+                <div class="hours" style="<?php echo $hours_style; ?>">
                     <?php
-                    $c = 0;
                     // Affichage des heures + demi-heures
                     for ($h = $this->arrOptions['hour_begin']; $h < $this->arrOptions['hour_end']; $h++ )
                     {
-                        $intHourPx = $hour_height * ($h - $this->arrOptions['hour_begin']);
-                        $intHalfHourPx = floor($intHourPx + $hour_height / 2);
                         ?>
-                        <div class="tick" style="opacity:0.5;filter:alpha(opacity=50);top:<?php echo $intHalfHourPx; ?>px;width:<?php echo $day_width-1; ?>px;"></div>
-                        <?
+                        <div class="hour_header" style="<?php echo $hour_header_style; ?>;">
+                            <div class="hour_header_num"><?php echo sprintf("%02d", $h); ?></div>
+                        </div>
+                        <?php
+                        // Affichage du séparateur d'heures
                         if ($h > $this->arrOptions['hour_begin'])
                         {
                             ?>
-                            <div class="tick" style="top:<?php echo $intHourPx; ?>px;width:<?php echo $day_width-1; ?>px;"></div>
-                            <?
-                        }
-                        ?>
-                        <?php
-                    }
-
-                    // Clé de date pour lire dans le tableau des événements
-                    $strEventsKey = sprintf("%04d%02d%02d",date('Y', $dateday), date('n', $dateday), date('j', $dateday));
-                    $strJsCode .= "calendar_days[$d] = '{$strEventsKey}';";
-
-                    // Affichage des événements
-                    if (!empty($arrEvents[$strEventsKey]))
-                    {
-                        foreach($arrEvents[$strEventsKey] as $intId)
-                        {
-                            if (!empty($this->arrEvents[$intId]))
-                            {
-                                $arrDateBegin = ploopi_timestamp2local($this->arrEvents[$intId]->intTimestpBegin);
-                                $arrDateEnd = ploopi_timestamp2local($this->arrEvents[$intId]->intTimestpEnd);
-                                $strTimeBegin = substr($arrDateBegin['time'], 0, 5);
-                                $strTimeEnd = substr($arrDateEnd['time'], 0, 5);
-
-                                // Détermination heure de début (ajustement de l'heure de début en fonction de la date de l'événement)
-                                $intTsDateBegin = ploopi_timestamp2unixtimestamp($this->arrEvents[$intId]->intTimestpBegin);
-                                $floTimeBegin = (substr($this->arrEvents[$intId]->intTimestpBegin, 0 ,8) == $strEventsKey) ? date('G', $intTsDateBegin) + (intval(date('i', $intTsDateBegin), 10) / 60) : 0 ;
-
-                                // Détermination heure de fin (ajustement de l'heure de fin en fonction de la date de l'événement)
-                                $intTsDateEnd = ploopi_timestamp2unixtimestamp($this->arrEvents[$intId]->intTimestpEnd);
-                                $floTimeEnd = (substr($this->arrEvents[$intId]->intTimestpEnd, 0 ,8) == $strEventsKey) ? date('G', $intTsDateEnd) + (intval(date('i', $intTsDateEnd), 10) / 60) : 24;
-
-                                // On adapte ensuite les heures de début/fin aux limites d'affichage du planning
-                                if ($floTimeBegin < $this->arrOptions['hour_begin']) $floTimeBegin = $this->arrOptions['hour_begin'];
-                                if ($floTimeEnd > $this->arrOptions['hour_end']) $floTimeEnd = $this->arrOptions['hour_end'];
-
-                                // Durée de l'événement en heures
-                                $floTimeLength = $floTimeEnd - $floTimeBegin;
-
-                                // Début de l'événement en pix
-                                $intEventTop = floor(($floTimeBegin - $this->arrOptions['hour_begin']) * $hour_height);
-
-                                // Hauteur de l'événement en pix
-                                $intEventHeight = floor($floTimeLength * $hour_height);
-
-                                ?>
-                                <div class="event" id="calendar_event<? echo $intId; ?>" title="<?php echo $this->arrEvents[$intId]->strTitle; ?>" style="top:<?php echo $intEventTop; ?>px;left:0px;height:<?php echo $intEventHeight - 1; ?>px;width:<?php echo $day_width - 1 ?>px;background-color:<?php echo htmlentities($this->arrEvents[$intId]->strColor); ?>;">
-                                    <div class="event_title" id="calendar_event<? echo $intId; ?>_handle"  style="height:16px;line-height:16px;cursor:move;">
-                                        <?
-                                        if (!is_null($this->arrEvents[$intId]->strOnClose))
-                                        {
-                                            ?>
-                                            <a href="javascript:void(0);" onclick="javascript:<? echo $this->arrEvents[$intId]->strOnClose; ?>;"><img align="right" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/calendar/close.png" /></a>
-                                            <?
-                                        }
-                                        ?>
-                                        <span><? printf("%s %s", $strTimeBegin, $strTimeEnd); ?></span>
-                                    </div>
-                                    <a class="event_inner" href="<?php echo $this->arrEvents[$intId]->strHref; ?>" <?php if (!is_null($this->arrEvents[$intId]->strOnClick)) {?>onclick="<?php echo $this->arrEvents[$intId]->strOnClick; ?>"<?php } ?> style="height:<?php echo $intEventHeight - 20; ?>px;<?php if (!empty($this->arrEvents[$intId]->strStyle)) echo $this->arrEvents[$intId]->strStyle; ?>">
-                                        <?php
-                                        //echo $this->arrEvents[$intId]->strOnClick;
-                                        echo str_replace(
-                                            array('<timestp_begin>', '<timestp_end>'),
-                                            array($strTimeBegin, $strTimeEnd),
-                                            $this->arrEvents[$intId]->strContent
-                                        );
-                                        ?>
-                                    </a>
-                                </div>
-                                <?php
-                                // Création du draggable (événement)
-                                $strJsCode .= "new Draggable('calendar_event{$intId}', { handle: 'calendar_event{$intId}_handle', snap: calendar_drag_snap, onEnd: calendar_drag_onend });";
-                                // Paramètres ondrop de l'événement
-                                if (!is_null($this->arrEvents[$intId]->arrOnDrop)) $strJsCode .= "calendar_events[{$intId}] = ['{$this->arrEvents[$intId]->arrOnDrop['url']}','{$this->arrEvents[$intId]->arrOnDrop['element_id']}'];";
-                            }
+                            <div class="tick" style="top:<?php echo $hour_height * ($h - $this->arrOptions['hour_begin']); ?>px;width:<?php echo $this->arrOptions['hours_colwidth']-1; ?>px;"></div>
+                            <?php
                         }
                     }
                     ?>
                 </div>
                 <?php
-                // Création du droppable (jour)
-                $strJsCode .= "Droppables.add('calendar_day{$d}', { accept: 'event', onHover: calendar_drop_onhover });";
             }
             ?>
+            </div>
+    
+            <div id="calendar_days" style="overflow:auto;">
+                <?php
+                // Affichage des journées
+    
+                // On boucle sur les jours à afficher (1 = premier jour de l'intervalle)
+                for ($d = 1; $d <= $nbdays; $d++)
+                {
+                    // Détermination de la date du jour à afficher
+                    $dateday = mktime(0, 0, 0, $firstday_m, $firstday_d + $d - 1, $firstday_y);
+    
+                    $extra_class = '';
+                    if (ploopi_holiday($dateday)) $extra_class = ' day_holiday';
+                    else
+                    {
+                        $weekday = date('N', $dateday);
+                        if ($weekday > 5) $extra_class = ' day_weekend';
+                    }
+                    ?>
+                    <div class="day<? echo $extra_class; ?>" id="calendar_day<? echo $d; ?>" style="<?php echo $day_style; ?>">
+                        <?php
+                        $c = 0;
+                        // Affichage des heures + demi-heures
+                        for ($h = $this->arrOptions['hour_begin']; $h < $this->arrOptions['hour_end']; $h++ )
+                        {
+                            $intHourPx = $hour_height * ($h - $this->arrOptions['hour_begin']);
+                            $intHalfHourPx = floor($intHourPx + $hour_height / 2);
+                            ?>
+                            <div class="tick" style="opacity:0.5;filter:alpha(opacity=50);top:<?php echo $intHalfHourPx; ?>px;width:<?php echo $day_width-1; ?>px;"></div>
+                            <?
+                            if ($h > $this->arrOptions['hour_begin'])
+                            {
+                                ?>
+                                <div class="tick" style="top:<?php echo $intHourPx; ?>px;width:<?php echo $day_width-1; ?>px;"></div>
+                                <?
+                            }
+                            ?>
+                            <?php
+                        }
+    
+                        // Clé de date pour lire dans le tableau des événements
+                        $strEventsKey = sprintf("%04d%02d%02d",date('Y', $dateday), date('n', $dateday), date('j', $dateday));
+                        $strJsCode .= "calendar_days[$d] = '{$strEventsKey}';";
+    
+                        // Affichage des événements
+                        if (!empty($arrEvents[$strEventsKey]))
+                        {
+                            foreach($arrEvents[$strEventsKey] as $intId)
+                            {
+                                if (!empty($this->arrEvents[$intId]))
+                                {
+                                    $arrDateBegin = ploopi_timestamp2local($this->arrEvents[$intId]->intTimestpBegin);
+                                    $arrDateEnd = ploopi_timestamp2local($this->arrEvents[$intId]->intTimestpEnd);
+                                    $strTimeBegin = substr($arrDateBegin['time'], 0, 5);
+                                    $strTimeEnd = substr($arrDateEnd['time'], 0, 5);
+    
+                                    // Détermination heure de début (ajustement de l'heure de début en fonction de la date de l'événement)
+                                    $intTsDateBegin = ploopi_timestamp2unixtimestamp($this->arrEvents[$intId]->intTimestpBegin);
+                                    $floTimeBegin = (substr($this->arrEvents[$intId]->intTimestpBegin, 0 ,8) == $strEventsKey) ? date('G', $intTsDateBegin) + (intval(date('i', $intTsDateBegin), 10) / 60) : 0 ;
+    
+                                    // Détermination heure de fin (ajustement de l'heure de fin en fonction de la date de l'événement)
+                                    $intTsDateEnd = ploopi_timestamp2unixtimestamp($this->arrEvents[$intId]->intTimestpEnd);
+                                    $floTimeEnd = (substr($this->arrEvents[$intId]->intTimestpEnd, 0 ,8) == $strEventsKey) ? date('G', $intTsDateEnd) + (intval(date('i', $intTsDateEnd), 10) / 60) : 24;
+    
+                                    // On adapte ensuite les heures de début/fin aux limites d'affichage du planning
+                                    if ($floTimeBegin < $this->arrOptions['hour_begin']) $floTimeBegin = $this->arrOptions['hour_begin'];
+                                    if ($floTimeEnd > $this->arrOptions['hour_end']) $floTimeEnd = $this->arrOptions['hour_end'];
+    
+                                    // Durée de l'événement en heures
+                                    $floTimeLength = $floTimeEnd - $floTimeBegin;
+    
+                                    // Début de l'événement en pix
+                                    $intEventTop = floor(($floTimeBegin - $this->arrOptions['hour_begin']) * $hour_height);
+    
+                                    // Hauteur de l'événement en pix
+                                    $intEventHeight = floor($floTimeLength * $hour_height);
+    
+                                    ?>
+                                    <div class="event" id="calendar_event<? echo $intId; ?>" title="<?php echo $this->arrEvents[$intId]->strTitle; ?>" style="top:<?php echo $intEventTop; ?>px;left:0px;height:<?php echo $intEventHeight - 1; ?>px;width:<?php echo $day_width - 1 ?>px;background-color:<?php echo htmlentities($this->arrEvents[$intId]->strColor); ?>;">
+                                        
+                                        <div class="event_title" id="calendar_event<? echo $intId; ?>_handle"  style="height:16px;line-height:16px;<? echo !is_null($this->arrEvents[$intId]->arrOnDrop) ? 'cursor:move;' : ''; ?>">
+                                            <?
+                                            if (!is_null($this->arrEvents[$intId]->strOnClose))
+                                            {
+                                                ?>
+                                                <a href="javascript:void(0);" onclick="javascript:<? echo $this->arrEvents[$intId]->strOnClose; ?>;"><img align="right" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/calendar/close.png" /></a>
+                                                <?
+                                            }
+                                            ?>
+                                            <span><? printf("%s %s", $strTimeBegin, $strTimeEnd); ?></span>
+                                        </div>
+                                        <a class="event_inner" href="<?php echo $this->arrEvents[$intId]->strHref; ?>" <?php if (!is_null($this->arrEvents[$intId]->strOnClick)) {?>onclick="<?php echo $this->arrEvents[$intId]->strOnClick; ?>"<?php } ?> style="height:<?php echo $intEventHeight - 20; ?>px;<?php if (!empty($this->arrEvents[$intId]->strStyle)) echo $this->arrEvents[$intId]->strStyle; ?>">
+                                            <?php
+                                            //echo $this->arrEvents[$intId]->strOnClick;
+                                            echo str_replace(
+                                                array('<timestp_begin>', '<timestp_end>'),
+                                                array($strTimeBegin, $strTimeEnd),
+                                                $this->arrEvents[$intId]->strContent
+                                            );
+                                            ?>
+                                        </a>
+                                    </div>
+                                    <?php
+                                    // Paramètres ondrop de l'événement
+                                    if (!is_null($this->arrEvents[$intId]->arrOnDrop)) 
+                                    {
+                                        // Création du draggable (événement)
+                                        $strJsCode .= "new Draggable('calendar_event{$intId}', { handle: 'calendar_event{$intId}_handle', snap: calendar_drag_snap, onEnd: calendar_drag_onend });";
+                                        $strJsCode .= "calendar_events[{$intId}] = ['{$this->arrEvents[$intId]->arrOnDrop['url']}','{$this->arrEvents[$intId]->arrOnDrop['element_id']}'];";
+                                    }
+                                }
+                            }
+                        }
+                        ?>
+                    </div>
+                    <?php
+                    // Création du droppable (jour)
+                    $strJsCode .= "Droppables.add('calendar_day{$d}', { accept: 'event', onHover: calendar_drop_onhover });";
+                }
+                ?>
+            </div>
         </div>
-
+        
         <script type="text/javascript">
             var calendar_lastdroppable = null;
             var calendar_days = [];
