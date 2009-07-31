@@ -90,7 +90,7 @@ class skin_common
 
     function close_simplebloc()
     {
-        return '</div><div class="simplebloc_footer"></div></div>';
+        return '<div style="clear:both;"></div></div><div class="simplebloc_footer"></div></div>';
     }
 
     /**
