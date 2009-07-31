@@ -44,6 +44,7 @@ cp -r lib $DEST
 rm $DEST/config/config.php
 
 mkdir $DEST/install
+cp -r install/booking $DEST/install
 cp -r install/chat $DEST/install
 cp -r install/directory $DEST/install
 cp -r install/doc $DEST/install
@@ -55,6 +56,8 @@ cp -r install/planning $DEST/install
 cp -r install/rss $DEST/install
 cp -r install/webedit $DEST/install
 cp -r install/wiki $DEST/install
+cp -r install/weather $DEST/install
+cp -r install/weathertools $DEST/install
 cp -r install/system $DEST/install
 cp install/index.html $DEST/install
 
@@ -72,6 +75,7 @@ cp -r templates/frontoffice/exemple* $DEST/templates/frontoffice
 cp -r templates/frontoffice/ovensia $DEST/templates/frontoffice
 cp -r templates/frontoffice/ovensia_officiel $DEST/templates/frontoffice
 cp -r templates/frontoffice/default $DEST/templates/frontoffice
+cp -r templates/backoffice/eyesos $DEST/templates/backoffice
 cp -r templates/backoffice/ploopi $DEST/templates/backoffice
 cp -r templates/backoffice/ploopi_menus $DEST/templates/backoffice
 cp -r templates/backoffice/redmine $DEST/templates/backoffice
