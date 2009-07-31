@@ -201,8 +201,7 @@ border-bottom:1px solid #d0d0d0;
    padding-left: 5px;
 }
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -225,6 +224,9 @@ border-bottom:1px solid #d0d0d0;
 #calendar {
     padding:4px;
     background-color:#f0f0f0;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
 }
 
 .calendar_row {

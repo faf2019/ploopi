@@ -113,7 +113,7 @@
 
         var clock = day + "/" + month + "/" + year + " " + hours + ":" + minutes;
         $('status_time').innerHTML =  clock;
-        timer = setTimeout("display_time()",1000);
+        timer = setTimeout("tpl_display_time()",1000);
     }    
     
     ploopi_window_onload_stock(
@@ -205,9 +205,12 @@
             <!-- BEGIN block -->
                 <li>
                     <a class="mainmenu {switch_user_logged_in.switch_blockmenu.block.SELECTED}" href="{switch_user_logged_in.switch_blockmenu.block.URL}" title="Accéder au module &laquo; {switch_user_logged_in.switch_blockmenu.block.TITLE} &raquo;">{switch_user_logged_in.switch_blockmenu.block.TITLE}</a>
-                    <div style="z-index:2;">
+                    <div class="blockmenu">
+                    <!-- BEGIN switch_content -->
+                        <div class="blockcontent" style="overflow:auto;">{switch_user_logged_in.switch_blockmenu.block.switch_content.CONTENT}</div>
+                    <!-- END switch_content -->
                     <!-- BEGIN menu -->
-                        <a class="{switch_user_logged_in.switch_blockmenu.block.menu.SELECTED}" href="{switch_user_logged_in.switch_blockmenu.block.menu.URL}" target="{switch_user_logged_in.switch_blockmenu.block.menu.TARGET}" title="Accéder au menu &laquo; {switch_user_logged_in.switch_blockmenu.block.menu.CLEANED_LABEL} &raquo;">{switch_user_logged_in.switch_blockmenu.block.menu.LABEL}</a>
+                        <a class="blockmenu {switch_user_logged_in.switch_blockmenu.block.menu.SELECTED}" href="{switch_user_logged_in.switch_blockmenu.block.menu.URL}" target="{switch_user_logged_in.switch_blockmenu.block.menu.TARGET}" title="Accéder au menu &laquo; {switch_user_logged_in.switch_blockmenu.block.menu.CLEANED_LABEL} &raquo;">{switch_user_logged_in.switch_blockmenu.block.menu.LABEL}</a>
                     <!-- END menu -->
                     </div>
                 </li>

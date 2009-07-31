@@ -244,7 +244,7 @@ background:#ccc url(../img/template/dock_sel.png) no-repeat 0 0;
 color:#000;
 }
 
-#mainmenu li:hover div {
+#mainmenu li:hover div.blockmenu {
 display:block;
 }
 
@@ -253,7 +253,7 @@ display:block;
 float:left;
 }
 
-#mainmenu li div {
+#mainmenu li div.blockmenu {
 padding: 0px;
 margin: 0px;
 border-left:1px solid #000;
@@ -265,9 +265,10 @@ top: 28px;
 left: 0px;
 display: none;
 width:150px;
+z-index:2;
 }
 
-#mainmenu div a {
+#mainmenu div.blockmenu a.blockmenu {
 display:block;
 color:#000;
 text-decoration:none;
@@ -277,17 +278,26 @@ border-left:1px solid #ddd;
 border-right:1px solid #ddd;
 }
 
-#mainmenu div a:hover {
+#mainmenu div.blockmenu a.blockmenu:hover {
 background-color:#ddd;
 }
 
-#mainmenu div a.selected {
+#mainmenu div.blockmenu a.selected {
 background-color:#eee;
 }
 
-#mainmenu div a img {
+#mainmenu div.blockmenu a.blockmenu img {
 border:0;
 }
+
+#mainmenu div.blockmenu div.blockcontent {
+padding:6px 8px;
+border-bottom:1px solid #ddd;
+border-left:1px solid #ddd;
+border-right:1px solid #ddd;
+overflow:auto;
+}
+
 
 #pagecontent {
 position:absolute;

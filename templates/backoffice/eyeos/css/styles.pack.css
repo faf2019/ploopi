@@ -201,8 +201,7 @@ border-bottom:1px solid #d0d0d0;
    padding-left: 5px;
 }
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -225,6 +224,9 @@ border-bottom:1px solid #d0d0d0;
 #calendar {
     padding:4px;
     background-color:#f0f0f0;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
 }
 
 .calendar_row {
@@ -1017,7 +1019,7 @@ background:#ccc url(../img/template/dock_sel.png) no-repeat 0 0;
 color:#000;
 }
 
-#mainmenu li:hover div {
+#mainmenu li:hover div.blockmenu {
 display:block;
 }
 
@@ -1026,7 +1028,7 @@ display:block;
 float:left;
 }
 
-#mainmenu li div {
+#mainmenu li div.blockmenu {
 padding: 0px;
 margin: 0px;
 border-left:1px solid #000;
@@ -1038,9 +1040,10 @@ top: 28px;
 left: 0px;
 display: none;
 width:150px;
+z-index:2;
 }
 
-#mainmenu div a {
+#mainmenu div.blockmenu a.blockmenu {
 display:block;
 color:#000;
 text-decoration:none;
@@ -1050,17 +1053,26 @@ border-left:1px solid #ddd;
 border-right:1px solid #ddd;
 }
 
-#mainmenu div a:hover {
+#mainmenu div.blockmenu a.blockmenu:hover {
 background-color:#ddd;
 }
 
-#mainmenu div a.selected {
+#mainmenu div.blockmenu a.selected {
 background-color:#eee;
 }
 
-#mainmenu div a img {
+#mainmenu div.blockmenu a.blockmenu img {
 border:0;
 }
+
+#mainmenu div.blockmenu div.blockcontent {
+padding:6px 8px;
+border-bottom:1px solid #ddd;
+border-left:1px solid #ddd;
+border-right:1px solid #ddd;
+overflow:auto;
+}
+
 
 #pagecontent {
 position:absolute;
@@ -1472,7 +1484,6 @@ text-decoration:none;
 }
 
 .simplebloc_content {
-overflow:auto;
 position:relative;
 border-top:1px solid #222;
 border-left:1px solid #222;
