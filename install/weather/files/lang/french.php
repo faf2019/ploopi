@@ -48,7 +48,18 @@ define ('_WEATHER_TEXT_EXPLAIN',
 <li>C \'est terminé</li>
 </ul>');
 
+
 define ('_WEATHER_ADMIN',  'Administration');
+
+define ('_WEATHER_ADMIN_CITY',        'Ville');
+define ('_WEATHER_ADMIN_CODE',        'Code Ville');
+define ('_WEATHER_ADMIN_PREVIEW_DAY', 'Prévision sur');
+define ('_WEATHER_ADMIN_PARTN_ID',    'Identifiant Partenaire');
+define ('_WEATHER_ADMIN_PARTN_KEY',   'Clé Partenaire');
+define ('_WEATHER_ADMIN_SYSTEM_UNIT', 'Système Unitaire');
+define ('_WEATHER_ADMIN_UNIT_IMPERIAL', 'Impérial');
+define ('_WEATHER_ADMIN_UNIT_METER',  'Métrique');
+
 
 define ('_WEATHER_BLOC_MAJ', 'maj');
 define ('_WEATHER_BLOC_FEEL', 'Ressent.');

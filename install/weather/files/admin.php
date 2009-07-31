@@ -44,9 +44,7 @@ $objWeather = new weather();
 switch($op)
 {
   case 'weather_save':
-    if(!empty($_POST['weather_city'])
-      && !empty($_POST['weather_codecity'])
-      && (isset($_POST['weather_nbDays']) && is_numeric($_POST['weather_nbDays']))
+    if(!empty($_POST['weather_codecity'])
       && !empty($_POST['weather_partnerid'])
       && !empty($_POST['weather_partnerkey']))
     {
@@ -109,16 +107,16 @@ echo $skin->open_simplebloc(_WEATHER_PAGE_TITLE);
 <div class="ploopi_form">
   <div style="padding:2px;">
     <p>
-      <label><? echo 'Ville'; ?>:</label>
+      <label><?php echo _WEATHER_ADMIN_CITY; ?>:</label>
       <input class="text" type="text" id="weather_city" name="weather_city" style="width:300px;" value="<? echo htmlentities($objWeather->fields['city']); ?>" tabindex="100" />
       <input type="button" class="button" value="<? echo _WEATHER_ADMIN_SEARCH_CITY; ?>" onclick="javascript:weather_search_city('weather_codecity','weather_city')" tabindex="101" />
     </p>
     <p>
-      <label><? echo 'Code Ville'; ?>:</label>
+      <label><?php echo _WEATHER_ADMIN_CODE; ?>:</label>
       <input class="text" type="text" id="weather_codecity" name="weather_codecity" style="width:300px;" value="<? echo htmlentities($objWeather->fields['codecity']); ?>" tabindex="102" />
     </p>
     <p>
-      <label><? echo 'Prévision sur'; ?>:</label>
+      <label><?php echo _WEATHER_ADMIN_PREVIEW_DAY; ?>:</label>
       <select class="select" name="weather_nbDays" style="width:50px;" tabindex="103">
         <?
         for($intNbJour=0; $intNbJour<=5; $intNbJour++)
@@ -131,18 +129,18 @@ echo $skin->open_simplebloc(_WEATHER_PAGE_TITLE);
       </select>&nbsp;Jour(s)
     </p>
     <p>
-      <label><? echo 'Identifiant Partenaire'; ?>:</label>
+      <label><?php echo _WEATHER_ADMIN_PARTN_ID; ?>:</label>
       <input class="text" type="text" id="weather_partnerid" name="weather_partnerid" style="width:300px;" value="<? echo htmlentities($objWeather->fields['partnerid']); ?>" tabindex="104" />
     </p>
     <p>
-      <label><? echo 'Clé Partenaire'; ?>:</label>
+      <label><?php echo _WEATHER_ADMIN_PARTN_KEY; ?>:</label>
       <input class="text" type="text" id="weather_partnerkey" name="weather_partnerkey" style="width:300px;" value="<? echo htmlentities($objWeather->fields['partnerkey']); ?>" tabindex="105" />
     </p>
     <p>
-      <label><? echo 'Système Unitaire'; ?>:</label>
+      <label><?php echo _WEATHER_ADMIN_SYSTEM_UNIT; ?>:</label>
       <select class="select" name="weather_si" style="width:150px;" tabindex="106">
-          <option <? if ($objWeather->fields['si'] == 's') echo 'selected="selected"'; ?> value="s"><? echo 'Impérial'; ?></option>
-          <option <? if ($objWeather->fields['si'] == 'm') echo 'selected="selected"'; ?> value="m"><? echo 'Métrique'; ?></option>
+          <option <? if ($objWeather->fields['si'] == 's') echo 'selected="selected"'; ?> value="s"><? echo _WEATHER_ADMIN_UNIT_IMPERIAL; ?></option>
+          <option <? if ($objWeather->fields['si'] == 'm') echo 'selected="selected"'; ?> value="m"><? echo _WEATHER_ADMIN_UNIT_METER; ?></option>
       </select>
     </p>
   </div>

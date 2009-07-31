@@ -1,3 +1,9 @@
+== Module WEATHER - version 0.07 ====================================================
+
+ * Ajout d'un javascript de contrôle lors de l'enregistrement des paramètres admin
+ * Ajout des libellés de la partie admin dans le french.php
+ * La ville indiqué est facultative (le bloc renvoyé par weather.com contient la ville) 
+
 == Module WEATHER - version 0.06a ====================================================
 
  * Correction d'un bug, changement de id_module lors de l'enregistrement de nouvelles infos météo depuis le front. 

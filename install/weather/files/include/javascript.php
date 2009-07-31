@@ -53,3 +53,13 @@ function weather_search_city(id_code,id_city)
     );
 }
 
+function weather_validate(form)
+{
+    if (ploopi_validatefield("<?php echo _WEATHER_ADMIN_CODE; ?>",form.weather_codecity,"string"))
+    if (ploopi_validatefield("<?php echo _WEATHER_ADMIN_PARTN_ID; ?>",form.weather_partnerid,"string"))
+    if (ploopi_validatefield("<?php echo _WEATHER_ADMIN_PARTN_KEY; ?>",form.weather_partnerkey,"string"))
+      return true;
+
+    return false;
+}
+
