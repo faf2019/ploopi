@@ -627,14 +627,13 @@ function weathertools_iptolocation($ip = null)
     // gunzip GeoLiteCity.dat.gz
     
     $record = null;
-    
     // On vérifie l'existence de la BDD
-    if (file_exists('./data/weathertools/GeoLiteCity.dat'))
+    if (file_exists(_PLOOPI_PATHDATA.'/weathertools/GeoLiteCity.dat'))
     {
         include("./modules/weathertools/geoip/geoipcity.inc.php");
         include("./modules/weathertools/geoip/geoipregionvars.php");
-    
-        $gi = geoip_open('./data/weathertools/GeoLiteCity.dat', GEOIP_STANDARD);
+        $gi = geoip_open(_PLOOPI_PATHDATA.'/weathertools/GeoLiteCity.dat', GEOIP_STANDARD);
+        
         $record = geoip_record_by_addr($gi, empty($ip) ? $_SESSION['ploopi']['remote_ip'][0] : $ip);
         geoip_close($gi);
     }

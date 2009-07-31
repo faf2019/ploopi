@@ -36,6 +36,7 @@ echo $skin->create_pagetitle("{$_SESSION['ploopi']['modulelabel']} - Consultatio
 echo $skin->open_simplebloc('Recherche d\'une station météo');
 
 $record = weathertools_iptolocation();
+
 ?>
 <div style="padding:4px;">
     <? 

@@ -35,16 +35,20 @@ if (ploopi_ismoduleallowed('weathertools'))
     switch($ploopi_op)
     {
     	case 'weathertools_open_bulletin':
-    		ploopi_init_module('weathertools', false, false, false);
+    	    ob_start();
+            if (empty($_GET['weathertools_icao'])) ploopi_die();
+    	    
+            ploopi_init_module('weathertools', false, false, false);
     		
-    		if (!empty($_GET['weathertools_icao']))
-    		{
-				$strUrlMetarFiles = empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['weathertools_metar_data_url']) ? '' : 'http://weather.noaa.gov/pub/data/observations/metar/stations';
+			$strUrlMetarFiles = empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['weathertools_metar_data_url']) ? '' : 'http://weather.noaa.gov/pub/data/observations/metar/stations';
 
-				echo '<div style="padding:4px;">'.weathertools_get_metar_bulletin($strUrlMetarFiles, $_GET['weathertools_icao']).'</div>';
-			}    	 
-				echo '<div style="padding:4px;"><a href="javascript:void(0);" onclick="javascript:ploopi_hidepopup(\'popup_weathertools_bulletin\');">Fermer</a></div>';
-    		ploopi_die();
+			echo '<div style="padding:4px;">'.weathertools_get_metar_bulletin($strUrlMetarFiles, $_GET['weathertools_icao']).'</div>';
+
+			$strContent = ob_get_contents();
+            ob_end_clean();
+    
+            echo $skin->create_popup("Données météo pour &laquo; {$_GET['weathertools_icao']} &raquo;", $strContent, 'popup_weathertools_bulletin');
+            ploopi_die();
     	break;
     	
     	case 'weathertools_geoip_import':
