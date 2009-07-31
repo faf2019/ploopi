@@ -1,0 +1,13 @@
+#weather_location_search_result {
+}
+
+#weather_location_search_result a {
+	display:block;
+	padding:2px;
+	border-bottom:1px solid #c0c0c0;
+	text-decoration:none;
+}
+
+#weather_location_search_result a:hover {
+    background-color:#e0e0e0;
+}
