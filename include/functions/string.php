@@ -318,16 +318,16 @@ function ploopi_htmlpurifier($strContent, $booTrusted = false)
 
     require_once './lib/htmlpurifier/HTMLPurifier.auto.php';
     $objConfig = HTMLPurifier_Config::createDefault();
-    $objConfig->set('Cache', 'SerializerPath', $strCachePath);
-    $objConfig->set('Core', 'Encoding', 'ISO-8859-15');
-    $objConfig->set('HTML', 'Doctype', 'XHTML 1.0 Strict');
-
+    $objConfig->set('Cache.SerializerPath', $strCachePath);
+    $objConfig->set('Core.Encoding', 'ISO-8859-15');
+    $objConfig->set('HTML.Doctype', 'XHTML 1.0 Strict');
+    
     if ($booTrusted)
     {
-        $objConfig->set('HTML', 'Trusted', true);
-        $objConfig->set('Attr', 'EnableID', true);
-        $objConfig->set('HTML', 'SafeEmbed', true);
-        $objConfig->set('HTML', 'SafeObject', true);
+        $objConfig->set('HTML.Trusted', true);
+        $objConfig->set('Attr.EnableID', true);
+        $objConfig->set('HTML.SafeEmbed', true);
+        $objConfig->set('HTML.SafeObject', true);
     }
 
     $objPurifier = new HTMLPurifier($objConfig);
