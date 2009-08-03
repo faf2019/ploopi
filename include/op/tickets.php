@@ -95,19 +95,12 @@ switch($ploopi_op)
             <div style="font-weight:bold;"><?php echo _PLOOPI_LABEL_TICKET_MESSAGE; ?></div>
             <div>
                 <?php
-                include_once('./FCKeditor/fckeditor.php') ;
-
-                $oFCKeditor = new FCKeditor('fck_ticket_message') ;
-
-                $oFCKeditor->BasePath   = "./FCKeditor/";
-
-                // width & height
-                $oFCKeditor->Width='100%';
-                $oFCKeditor->Height='200';
-
-                $oFCKeditor->Config['CustomConfigurationsPath'] = "../../modules/system/fckeditor/fckconfig.js"  ;
-                $oFCKeditor->Config['EditorAreaCSS'] = "../../modules/system/fckeditor/fck_editorarea.css" ;
-                $oFCKeditor->Create('FCKeditor_1') ;
+                include_once './include/functions/fck.php';
+                
+                $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/system/fckeditor/fckconfig.js';
+                $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH.'/modules/system/fckeditor/fck_editorarea.css';
+                
+                ploopi_fckeditor('fck_ticket_message', '', '100%', '200', $arrConfig);
                 ?>
             </div>
 
@@ -205,22 +198,12 @@ switch($ploopi_op)
                 <div style="font-weight:bold;"><?php echo _PLOOPI_LABEL_TICKET_MESSAGE; ?></div>
                 <div>
                     <?php
-                    include_once('./FCKeditor/fckeditor.php') ;
+                    include_once './include/functions/fck.php';
 
-                    $oFCKeditor = new FCKeditor('fck_ticket_message') ;
-
-                    $oFCKeditor->BasePath = "./FCKeditor/";
-
-                    // default value
-                    $oFCKeditor->Value = $ticket->fields['message'];
-
-                    // width & height
-                    $oFCKeditor->Width='100%';
-                    $oFCKeditor->Height='200';
-
-                    $oFCKeditor->Config['CustomConfigurationsPath'] = "../../modules/system/fckeditor/fckconfig.js"  ;
-                    $oFCKeditor->Config['EditorAreaCSS'] = "../../modules/system/fckeditor/fck_editorarea.css" ;
-                    $oFCKeditor->Create('FCKeditor_1') ;
+                    $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/system/fckeditor/fckconfig.js';
+                    $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH.'/modules/system/fckeditor/fck_editorarea.css';
+                    
+                    ploopi_fckeditor('fck_ticket_message', $ticket->fields['message'], '100%', '200', $arrConfig);
                     ?>
                 </div>
                 <div style="text-align:right;">
