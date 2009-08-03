@@ -706,34 +706,20 @@ else // affichage standard rubrique/page
 
                     ob_start();
 
-                    include_once './FCKeditor/fckeditor.php' ;
+                    include_once './include/functions/fck.php';
 
-                    $oFCKeditor = new FCKeditor('fck_webedit_article_content') ;
+                    $arrConfig = array();
+                    $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/fckconfig.js';
+                    $arrConfig['ToolbarLocation'] = 'Out:parent(xToolbar)';
 
-                    $oFCKeditor->BasePath = './FCKeditor/';
-
-                    // default value
-                    $oFCKeditor->Value= $article->fields['content'];
-
-                    // width & height
-                    $oFCKeditor->Width='100%';
-                    $oFCKeditor->Height='500';
-
-                    $oFCKeditor->Config['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/fckconfig.js';
-                    $oFCKeditor->Config['ToolbarLocation'] = 'Out:parent(xToolbar)';
-                    $oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH.'/';
-
-                    if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner') $oFCKeditor->ToolbarSet = 'Beginner' ;
-                    else $oFCKeditor->ToolbarSet = 'Default' ;
-
-                    if (file_exists("{$template_path}/fckeditor/fck_editorarea.css")) $oFCKeditor->Config['EditorAreaCSS'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fck_editorarea.css';
-
-                    if (file_exists("{$template_path}/fckeditor/fcktemplates.xml")) $oFCKeditor->Config['TemplatesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fcktemplates.xml';
-
-                    if (file_exists("{$template_path}/fckeditor/fckstyles.xml")) $oFCKeditor->Config['StylesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fckstyles.xml';
-
-                    // render
-                    $oFCKeditor->Create('FCKeditor_1') ;
+                    if (file_exists("{$template_path}/fckeditor/fck_editorarea.css")) $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fck_editorarea.css';
+                    if (file_exists("{$template_path}/fckeditor/fcktemplates.xml")) $arrConfig['TemplatesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fcktemplates.xml';
+                    if (file_exists("{$template_path}/fckeditor/fckstyles.xml")) $arrConfig['StylesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fckstyles.xml';
+                    
+                    $arrProperties = array();
+                    $arrProperties['ToolbarSet'] = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner' ? 'Beginner': 'Default';
+                    
+                    ploopi_fckeditor('fck_webedit_article_content', $article->fields['content'], '100%', '500', $arrConfig, $arrProperties);
 
                     $editor = ob_get_contents();
                     ob_end_clean();
