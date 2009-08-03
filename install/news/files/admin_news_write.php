@@ -104,28 +104,12 @@ else echo $skin->open_simplebloc(str_replace("LABEL",$news->fields['title'],_NEW
 </div>
 <div style="padding:0 2px;">
 <?php
+include_once './include/functions/fck.php';
 
-/**
- * Insertion de FCKeditor pour modifier le contenu de la news
- */
+$arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/news/fckeditor/fckconfig.js';
+$arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH.'/modules/news/fckeditor/fck_editorarea.css';
 
-include_once './FCKeditor/fckeditor.php' ;
-
-$oFCKeditor = new FCKeditor('fck_news_content') ;
-
-$oFCKeditor->BasePath = './FCKeditor/';
-
-// default value
-$oFCKeditor->Value = $news->fields['content'];
-
-// width & height
-$oFCKeditor->Width='100%';
-$oFCKeditor->Height='350';
-
-$oFCKeditor->Config['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/news/fckeditor/fckconfig.js';
-$oFCKeditor->Config['EditorAreaCSS'] = _PLOOPI_BASEPATH.'/modules/news/fckeditor/fck_editorarea.css';
-$oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH.'/';
-$oFCKeditor->Create('FCKeditor_1') ;
+ploopi_fckeditor('fck_news_content', $news->fields['content'], '100%', '350', $arrConfig);
 ?>
 </div>
 
