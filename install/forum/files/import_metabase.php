@@ -1,4 +1,4 @@
-<?
+<?php
 ob_start();
 session_start();
 chdir('../..');
@@ -34,7 +34,7 @@ header("Content-type: text/xml");
 header("Content-Disposition: attachment; filename=mb.xml");
 header("Pragma: public");*/
 
-echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\" standalone=\"no\"?>\n";
+echo "<?phpxml version=\"1.0\" encoding=\"iso-8859-1\" standalone=\"no\"?>\n";
 
 $array_tables = array();
 $array_fields = array();

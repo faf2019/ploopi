@@ -15,7 +15,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with Ploopi; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -49,8 +49,6 @@ function forum_array_renderupdate(array_id)
   }
 }
 
-
-
 function forumContentGereCat()
 {
   Sortable.create('forum_values_inner_categ',
@@ -58,11 +56,11 @@ function forumContentGereCat()
       handle: 'ForumDragBox',
       onUpdate: function() {
         var objAjax = new Ajax.Request(
-          'admin.php', 
+          'admin.php',
           {
             method: 'get',
             parameters: 'op=ajax_save_posit_cat&'+Sortable.serialize('forum_values_inner_categ')+'&ploopi_env='+_PLOOPI_ENV
-          } 
+          }
         )
       }
     }

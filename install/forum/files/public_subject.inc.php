@@ -270,7 +270,6 @@ echo $skin->open_simplebloc();
           // Last message (response or subject)
           $strForumLastMess = $arrForumDateLastMess['date'].'&nbsp;'.$arrForumDateLastMess['time'].'<br/><font style="font-size:0.8em;">'._FORUM_BY.'&nbsp;'.$arrForumLastMess['author'].'</font>';
 
-
           $arrForumFields['nbMessValid'] = (isset($arrForumInfoMess[$arrForumFields['id']]['nbMessValid'])) ? $arrForumInfoMess[$arrForumFields['id']]['nbMessValid'] : 0;
           $arrForumFields['nbMessNoValid'] = (isset($arrForumInfoMess[$arrForumFields['id']]['nbMessNoValid'])) ? $arrForumInfoMess[$arrForumFields['id']]['nbMessNoValid'] : 0;
           $arrForumFields['nbMYMessNoValid'] = (isset($arrForumInfoMess[$arrForumFields['id']]['nbMYMessNoValid'])) ? $arrForumInfoMess[$arrForumFields['id']]['nbMYMessNoValid'] : 0;

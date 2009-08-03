@@ -159,7 +159,7 @@ echo $skin->open_simplebloc();
         <img src="<?php echo _FORUM_IMG_16_LOCK; ?>" style="padding:0;margin:0 0 -3px 0;border:0px;">&nbsp;<?php echo ($objForumSubject->fields['closed'] == 0) ? _FORUM_MESS_LABEL_CLOSE : _FORUM_MESS_LABEL_REOPEN; ?>
       </button>
     </div>
-    <?
+    <?php
     }
   }
   ?>
@@ -215,7 +215,7 @@ echo $skin->open_simplebloc();
                   <?php
                 }
                 ?>
-                <div style="float:right;padding: 0 4px;">Id:&nbsp;<? echo $arrForumFields['id']; ?></div>
+                <div style="float:right;padding: 0 4px;">Id:&nbsp;<?php echo $arrForumFields['id']; ?></div>
                 <?php
               }
                 ?>

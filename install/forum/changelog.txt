@@ -1,3 +1,13 @@
+== Module FORUM - version 1.0.7b ==================================================
+
+2009-08-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Utilisation de la nouvelle fonction ploopi_fckeditor() 
+ * Mise à jour de la configuration locale fckconfig.js
+ * Optimisation/compression des fichiers png
+ * Compression des fichier js/css
+ * Remplacements des balises <? par <?php
+ 
 == Module FORUM - version 1.0.7 ==================================================
 
 2009-03-18  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

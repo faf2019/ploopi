@@ -366,7 +366,7 @@ if($booForumActionAllowed)
                     if($arrForumFields['mustbe_validated'] == 1 && $arrForumFields['closed'] == 0)
                     {
                       ?>
-                      &nbsp;<font style="font-style:italic;"><? echo _FORUM_MESS_MUSTBEVALIDATED; ?></font>
+                      &nbsp;<font style="font-style:italic;"><?php echo _FORUM_MESS_MUSTBEVALIDATED; ?></font>
                       <?php
                     }
                     ?>

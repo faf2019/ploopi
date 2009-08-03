@@ -253,7 +253,6 @@ switch($op)
     if($objForumCat->fields['visible'] == 0 && !forum_IsAdminOrModer($objForumCat->fields['id'],_FORUM_ACTION_ADMIN))
       ploopi_redirect('admin.php?op=forum_error&num_error=1');
 
-
     if(isset($_GET['page']))
       $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['arrays']['subject']['page'] = $_GET['page'];
 

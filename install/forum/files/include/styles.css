@@ -52,7 +52,7 @@ div.forum_info_pages {
   color: #000000;
   text-align:center;
   padding: 0 5px 0 0;
-  margin:1px;  
+  margin:1px;
 }
 
 input.forum_button_disabled {
@@ -96,7 +96,7 @@ input.forum_button_disabled {
 }
 
 .forum_navig a, .forum_navig:hover a {
-	font-weight: bold;
+    font-weight: bold;
   text-decoration: none;
 }
 
@@ -126,7 +126,7 @@ button {
   background: #e0e0e0;
 }
 
-/***************** ADMIN *****************/ 
+/***************** ADMIN *****************/
 p.forum_subtitle {
    background-color:#e0e0e0;
    padding:6px;
@@ -141,9 +141,8 @@ a.forum_subtitle {
 
 img.forum_subtitle {
   float:right;
-  border:0px; 
+  border:0px;
 }
-
 
 .DragContainer {
   clear:both;
@@ -158,7 +157,6 @@ img.forum_subtitle {
   padding: 2px;
   margin: 0;
 }
-
 
 .DragBox, .OverDragBox {
   clear:both;

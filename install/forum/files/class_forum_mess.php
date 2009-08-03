@@ -99,7 +99,6 @@ class forum_mess extends data_object
     if($booForumIsAdminModer && $this->fields['id_author'] == $_SESSION['ploopi']['user']['id'])
       $this->fields['validated'] = 1;
 
-
     // Save if title is ok for a subject (or it's not a subject...).
     if((($this->fields['id_subject'] == $this->fields['id'] || $this->fields['id_subject'] == 0) && trim($this->fields['title']) != '')
         || ($this->fields['id_subject'] != $this->fields['id'] && $this->fields['id_subject'] > 0))

@@ -50,7 +50,6 @@ define ('_FORUM_ACTION_DELETE_CAT',        12); //  "
 define ('_FORUM_ACTION_DELETE_SUBJECT',    13); //  "
 define ('_FORUM_ACTION_DELETE_MESSAGE',    14); //  "
 
-
 /**
  * get if this message, subject, categorie  is enable
  *

@@ -121,7 +121,7 @@ $strForumHidden = ($objForumCat->fields['visible'] == 1) ? 'checked' : '';
     </div>
     <div style="clear:both;padding: 10px 0;">
       <div style="border:1px solid #c0c0c0;overflow:hidden;">
-      <?
+      <?php
         if($objForumCat->fields['id']>0)
           ploopi_validation_selectusers(_FORUM_OBJECT_CAT,$objForumCat->fields['id']);
         else

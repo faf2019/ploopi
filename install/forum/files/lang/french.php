@@ -63,7 +63,6 @@ define('_FORUM_CAT_SAVE_NEW',         'Créer le nouveau forum');
 define('_FORUM_CAT_SAVE',             'Enregistrer');
 define('_FORUM_CONFIRM_DELETE_CAT',   'Confirmez-vous la suppression de ce forum ?\n\r(et de tous ses discussions et messages)');
 
-
 define('_FORUM_CAT_COL_FORUM',        'Forum');
 define('_FORUM_CAT_COL_LASTMESS',     'Dernier message');
 define('_FORUM_CAT_COL_SUBJECT',      'Discussions');
@@ -91,7 +90,6 @@ define('_FORUM_CONFIRM_DELETE_SUBJECT', 'Confirmez-vous la suppression de cette 
 // Message
 define('_FORUM_TOOLBAR_NEW_MESS',     'Répondre');
 
-
 define('_FORUM_MESS_LABEL_TITLE_ADD', 'Ajout d\'une nouvelle réponse');
 define('_FORUM_MESS_LABEL_TITLE_EDIT','Edition d\'une reponse');
 
@@ -110,7 +108,6 @@ define('_FORUM_MESS_LABEL_REOPEN',    'Réouvrir le sujet');
 // Ticket
 define('_FORUM_TICKET_NEW_SUBJECT',   'Nouvelle discussion');
 define('_FORUM_TICKET_NEW_MESSAGE',   'Nouveau message');
-
 
 // Page button
 define('_FORUM_PAGE',                 'Page');

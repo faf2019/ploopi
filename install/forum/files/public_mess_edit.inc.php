@@ -128,7 +128,7 @@ echo $skin->open_simplebloc();
       <img style="border: none; margin: 0 0 -3px 0; padding: 0;" src="<?php echo _FORUM_IMG_16_FOLDER; ?>"/>
       <?php echo _FORUM_LABEL_CAT; ?>
     </button>
-    <button type="button" class="<? echo ($op !== 'subject_add' && $op !== 'subject_edit') ? 'button_navig' : 'button_navig_select'; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=subject&id_cat={$objForumCat->fields['id']}"); ?>'">
+    <button type="button" class="<?php echo ($op !== 'subject_add' && $op !== 'subject_edit') ? 'button_navig' : 'button_navig_select'; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=subject&id_cat={$objForumCat->fields['id']}"); ?>'">
       <img style="border: none; margin: 0 0 -3px 0; padding: 0;" src="<?php echo _FORUM_IMG_16_FOLDER; ?>"/>
       <?php echo  ploopi_strcut($objForumCat->fields['title'],30); ?>
     </button>
@@ -170,23 +170,12 @@ echo $skin->open_simplebloc();
     <div style="clear:both;">
         <?php
         // TODO dans fckconfig.js si on active FCKConfig.EnterMode = 'br'; on est coincé dans les citations
-        include_once './FCKeditor/fckeditor.php' ;
-
-        $objFCKeditor = new FCKeditor('fck_forum_content') ;
-
-        $objFCKeditor->BasePath = "./FCKeditor/";
-
-        // default value
-        $objFCKeditor->Value = $objForumMess->fields['content'];
-
-        // width & height
-        $objFCKeditor->Width='100%';
-        $objFCKeditor->Height='300';
-
-        $objFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH;
-        $objFCKeditor->Config['CustomConfigurationsPath'] =  _PLOOPI_BASEPATH."/modules/forum/fckeditor/fckconfig.js"  ;
-        $objFCKeditor->Config['EditorAreaCSS'] = _PLOOPI_BASEPATH."/modules/forum/fckeditor/fck_editorarea.css" ;
-        $objFCKeditor->Create('FCKeditor_1') ;
+        include_once './include/functions/fck.php';
+        
+        $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/forum/fckeditor/fckconfig.js';
+        $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH.'/modules/forum/fckeditor/fck_editorarea.css';
+        
+        ploopi_fckeditor('fck_forum_content', $objForumMess->fields['content'], '100%', '300', $arrConfig);
         ?>
     </div>
   </div>
