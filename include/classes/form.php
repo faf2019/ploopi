@@ -34,11 +34,6 @@
  */
 
 /**
- * Inclusion de la classe FCKEditor
- */
-include_once './FCKeditor/fckeditor.php';
-
-/**
  * Classe abstraite de gestion des éléments de formulaire
  *
  */
@@ -518,22 +513,20 @@ class form_richtext extends form_field
      */    
     public function render($intTabindex)
     {
-        $objFCKeditor = new FCKeditor($this->strId) ;
+        include_once './include/functions/fck.php';
         
-        $objFCKeditor->Value = $this->arrValues[0];
-
-        $objFCKeditor->BasePath = './FCKeditor/';
-
-        // width & height
-        $objFCKeditor->Width = $this->arrOptions['width'];
-        $objFCKeditor->Height = $this->arrOptions['height'];
-
-        if (!is_null($this->arrOptions['config'])) $objFCKeditor->Config['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.$this->arrOptions['config'];
-        if (!is_null($this->arrOptions['css'])) $objFCKeditor->Config['EditorAreaCSS'] = _PLOOPI_BASEPATH.$this->arrOptions['css'];
+        $arrConfig = array();
+        if (!is_null($this->arrOptions['config'])) $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.$this->arrOptions['config'];
+        if (!is_null($this->arrOptions['css'])) $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH.$this->arrOptions['css'];
+        
+        ob_start();
+        ploopi_fckeditor($this->strId, $this->arrValues[0], $this->arrOptions['width'], $this->arrOptions['height'], $arrConfig);
+        $strContent = ob_get_contents();
+        ob_end_clean();
         
         $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\"";
         
-        return $this->renderForm("<span{$strStyle}>".$objFCKeditor->CreateHtml($this->strName).'</span>');
+        return $this->renderForm("<span{$strStyle}>".$strContent.'</span>');
     }
 }
 
