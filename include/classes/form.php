@@ -654,14 +654,15 @@ class form
      * @var array
      */
     static private $arrDefaultOptions = array(
-        'tabindex'      => 1,
-        'target'        => null,
-        'enctype'       => null,
-        'onsubmit'      => null,
-        'button_style'  => 'text-align:right;padding:2px 4px;',
-        'legend'        => null,
-        'legend_style'  => 'margin-right:4px;',
-        'class'         => 'ploopi_form'
+        'tabindex'      => 1,                                       // tabindex de départ pour le contenu du formulaire
+        'target'        => null,                                    // cible de la validation du formulaire (un iframe par exemple)
+        'enctype'       => null,                                    // type d'encodage du formulaire
+        'onsubmit'      => null,                                    // action à effectuer sur l'événement "onsubmit" du formulaire
+        'button_style'  => 'text-align:right;padding:2px 4px;',     // style appliqué aux boutons de validation du formulaire
+        'legend'        => null,                                    // contenu de la légende du formulaire
+        'legend_style'  => 'margin-right:4px;',                     // style appliqué à la légende du formulaire
+        'class'         => 'ploopi_form',                           // class par défaut du formulaire (partie champs)
+        'style'         => null                                     // style appliqué au formulaire (partie champs)
     );
     
     /**
@@ -751,6 +752,7 @@ class form
         $strOnsubmit = is_null($this->arrOptions['onsubmit']) ? 'onsubmit="javascript:eval('.$this->getFormValidateFunc().'_var);return result_'.$this->getFormValidateFunc().';"' : " onsubmit=\"javascript:{$this->arrOptions['onsubmit']}\"";
         $strButtonStyle = is_null($this->arrOptions['button_style']) ? '' : " style=\"{$this->arrOptions['button_style']}\"";
         $strClass = is_null($this->arrOptions['class']) ? '' : " class=\"{$this->arrOptions['class']}\"";
+        $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\"";
         
         /*
          * Génération du script de validation
@@ -763,7 +765,7 @@ class form
          * Génération du form
          */
         
-        $strOutput .= "<form id=\"{$this->strId}\" action=\"{$this->strAction}\" method=\"{$this->strMethod}\"{$strOnsubmit}{$strTarget}{$strEnctype}><div{$strClass}>";
+        $strOutput .= "<form id=\"{$this->strId}\" action=\"{$this->strAction}\" method=\"{$this->strMethod}\"{$strOnsubmit}{$strTarget}{$strEnctype}><div{$strClass}{$strStyle}>";
         
 
         /*
