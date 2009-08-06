@@ -237,6 +237,7 @@ define ('_WEATHER_TRANSLATE',
 ;Rain/Snow Showers/Wind:Averses Pluie/Neige / Vent
 ;Rain/Snow/Wind:Pluie/Neige/Vent
 ;Rain/Thunder:Pluie/Orage
+;Rain / Thunder:Pluie/Orage
 ;Rain/Wind:Pluie/Vent
 ;Scattered showers:Averses éparses
 ;Scattered t-storms:Orages épars
@@ -301,6 +302,7 @@ define ('_WEATHER_TRANSLATE',
 ;First Quarter:Premier Quartier
 ;Waxing Gibbous:Lune Gibbeuse Croissante
 ;Full Moon:Pleine Lune
+;Full: Pleine Lune
 ;Waning Gibbous:Lune Gibbeuse décroissante
 ;Last Quarter:Dernier Quartier
 ;Waning Crescent:Dernier Croissant

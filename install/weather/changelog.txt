@@ -1,3 +1,7 @@
+== Module WEATHER - version 1.01.1 ====================================================
+
+ * Ajout de deux traductions dans le french.php
+
 == Module WEATHER - version 1.01 ====================================================
 
  * Ajout d'un paramètre dans les paramètres système : Affichage de la météo en backoffice ?
