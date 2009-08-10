@@ -103,7 +103,8 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     if (empty($params['CALLBACK_FUNC'])) $params['CALLBACK_FUNC'] = null;
     if (empty($params['CALLBACK_INC'])) $params['CALLBACK_INC'] = null;
     if (empty($params['DEFAULT_FOLDER'])) $params['DEFAULT_FOLDER'] = '';
-
+    if (empty($params['LIMIT'])) $params['LIMIT'] = 0;
+    
     $_SESSION['documents'] =
         array (
             'id_object'     => $id_object,
@@ -119,7 +120,8 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
             'fields_size'   => $params['FIELDS_SIZE'],
             'callback_func' => $params['CALLBACK_FUNC'],
             'callback_inc' => $params['CALLBACK_INC'],
-            'default_folder' => $params['DEFAULT_FOLDER']
+            'default_folder' => $params['DEFAULT_FOLDER'],
+            'limit'         => $params['LIMIT']
         );
 
     $_SESSION['documents']['rights'] = $rights;
@@ -640,6 +642,7 @@ function ploopi_documents_browser($currentfolder)
                 'sortable' => true,
                 'orderby_default' => 'name',
                 'sort_default' => 'DESC',
+                'limit' => $_SESSION['documents']['limit']
             )
         );
         ?>
