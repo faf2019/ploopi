@@ -43,7 +43,7 @@ clearstatcache();
 $rscFolder = @opendir(realpath('./modules/'));
 while ($strFolderName = @readdir($rscFolder))
 {
-    if (!$booRewriteRuleFound && file_exists($strModuleRewrite = "./modules/{$strFolderName}/include/rewrite.php")) include_once $strModuleRewrite;
+    if (!$booRewriteRuleFound && $strFolderName != '.' && $strFolderName != '..' && file_exists($strModuleRewrite = "./modules/{$strFolderName}/include/rewrite.php")) include_once $strModuleRewrite;
 }
 closedir($rscFolder);
 

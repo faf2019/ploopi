@@ -140,7 +140,6 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
             $columns['right']['object_type']    = array('label' => 'Type d\'Objet', 'width' => '120', 'options' => array('sort' => true));
 
         // on parcourt le tableau des réponses
-
         foreach ($arrRelevance as $row)
         {
             if (isset($arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]))
@@ -182,23 +181,23 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
                     $l_timestp_create = ploopi_timestamp2local($row['timestp_create']);
 
                     $object_script = str_replace(
-                                                    array(
-                                                        '<IDRECORD>',
-                                                        '<IDMODULE>',
-                                                        '<IDWORKSPACE>'
-                                                    ),
-                                                    array(
-                                                        $row['id_record'],
-                                                        $row['id_module'],
-                                                        $row['id_workspace']
-                                                    ),
-                                                    $arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['script']
-                                                );
+                        array(
+                            '<IDRECORD>',
+                            '<IDMODULE>',
+                            '<IDWORKSPACE>'
+                        ),
+                        array(
+                            $row['id_record'],
+                            $row['id_module'],
+                            $row['id_workspace']
+                        ),
+                        $arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['script']
+                    );
 
                     $objWorkspace = new workspace();
                     $strWorkspaceLabel = ($objWorkspace->open($row['id_workspace'])) ? $objWorkspace->fields['label'] : '';
 
-                    $values[$c]['values']['relevance'] = array('label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $row['relevance']), 'sort_label' => $row['relevance']);
+                    $values[$c]['values']['relevance'] = array('label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $row['relevance']), 'sort_label' => intval($row['relevance']));
                     $values[$c]['values']['label'] = array('label' => $row['label']);
                     $values[$c]['values']['timestp_lastindex'] = array('label' => $l_timestp_lastindex['date'], 'sort_label' => $row['timestp_lastindex']);
                     $values[$c]['values']['timestp_create'] = array('label' => $l_timestp_create['date'].' '.$l_timestp_create['time'], 'sort_label' => $row['timestp_create']);
@@ -217,7 +216,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
         }
         ?>
         <div style="background-color:#f0f0f0;border-top:2px solid #c0c0c0;">
-        <?php $skin->display_array($columns, $values, 'system_search', array('sortable' => true, 'orderby_default' => 'relevance', 'sort_default' => 'DESC', 'limit' => 100)); ?>
+        <?php $skin->display_array($columns, $values, 'system_search', array('sortable' => true, 'orderby_default' => 'relevance', 'sort_default' => 'DESC', 'limit' => 25)); ?>
         </div>
         <?php
     }

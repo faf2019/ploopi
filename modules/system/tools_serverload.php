@@ -63,21 +63,19 @@ $load['h24']['title'] = '1 journée';
 // Calcul Charge :
 foreach($load as $key => $l)
 {
-    $sql =  "
-            SELECT      sum(total_exec_time) as total_exec_time,
-                        sum(sql_exec_time) as sql_exec_time,
-                        sum(numqueries) as numqueries,
-                        sum(page_size) as page_size,
-                        count(*) as numpages
+    log::getdb()->query("
+        SELECT      sum(total_exec_time) as total_exec_time,
+                    sum(sql_exec_time) as sql_exec_time,
+                    sum(numqueries) as numqueries,
+                    sum(page_size) as page_size,
+                    count(*) as numpages
 
-            FROM        ploopi_log
+        FROM        ploopi_log
 
-            WHERE       ts >= {$l['ts']}
-            ";
-
-    $db->query($sql);
-
-    if ($row = $db->fetchrow())
+        WHERE       ts >= {$l['ts']}
+    ");
+    
+    if ($row = log::getdb()->fetchrow())
     {
         $load[$key]['res'] = $row;
         $load[$key]['res']['load'] = ($row['total_exec_time'] / ($l['time']*10)) / _PLOOPI_LOAD_NBCORE; // charge (ratio tps d'exec/tps écoulé) en %
@@ -104,8 +102,6 @@ $columns['left']['tpp'] = array('label' => 'Tps de Réponse (ms)', 'width' => 180
 $columns['left']['rps'] = array('label' => 'Requêtes/s', 'width' => 100, 'style' => 'text-align:right;');
 $columns['left']['pps'] = array('label' => 'Pages/s', 'width' => 100, 'style' => 'text-align:right;');
 $columns['left']['bw'] = array('label' => 'Bande passante (ko)', 'width' => 150, 'style' => 'text-align:right;');
-
-$db->query($sql);
 
 $c = 0;
 // Calcul Charge :
@@ -136,7 +132,7 @@ $skin->display_array($columns, $values, 'array_load');
 
 // Analyse des x dernières requêtes
 
-$db->query( "
+log::getdb()->query( "
             SELECT  ts,
                     browser,
                     system,
@@ -171,7 +167,7 @@ $columns['auto']['uri'] = array('label' => 'URI');
 
 $c = 0;
 
-while ($row = $db->fetchrow())
+while ($row = log::getdb()->fetchrow())
 {
     $ldate = ploopi_timestamp2local($row['ts']);
     $values[$c]['values']['ts'] = array('label' => "{$ldate['date']} {$ldate['time']}", 'sort_label' => $row['ts']);

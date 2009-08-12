@@ -49,10 +49,20 @@ class log extends data_object
      * @return log
      */
     
-    function log()
+    public function __construct()
     {
-        parent::data_object('ploopi_log');
+        parent::__construct(
+            'ploopi_log'
+        );
+        
+        if (ploopi_session::get_usedb()) $this->setdb(self::getdb());
     }
+
+    public static function getdb()
+    {
+        if (ploopi_session::get_usedb()) return ploopi_session::get_db();
+        else parent::getdb();
+    }    
 }
 
 /**
@@ -74,9 +84,12 @@ class connecteduser extends data_object
      * @return connecteduser
      */
     
-    function connecteduser()
+    public function __construct()
     {
-        parent::data_object('ploopi_connecteduser','sid');
+        parent::__construct(
+            'ploopi_connecteduser',
+            'sid'
+        );
     }
 }
 
@@ -99,9 +112,23 @@ class user_action_log extends data_object
      * @return user_action_log
      */
     
-    function user_action_log()
+    public function __construct()
     {
-        parent::data_object('ploopi_user_action_log','id_user','id_action','id_module_type');
+        parent::__construct(
+            'ploopi_user_action_log',
+            'id_user',
+            'id_action',
+            'id_module_type'
+        );
+        
+        if (ploopi_session::get_usedb()) $this->setdb(self::getdb());
     }
+
+    public static function getdb()
+    {
+        if (ploopi_session::get_usedb()) return ploopi_session::get_db();
+        else parent::getdb();
+    }    
+    
 }
 ?>

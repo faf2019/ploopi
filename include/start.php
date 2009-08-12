@@ -134,7 +134,8 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
 
         $_SESSION['ploopi']['login'] = $fields['login'];
         $_SESSION['ploopi']['userid'] = $fields['id'];
-
+        $_SESSION['ploopi']['user'] = $fields;
+        
         $ploopi_mainmenu = _PLOOPI_MENU_WORKSPACES;
 
         ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_OK, $ploopi_login,_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);

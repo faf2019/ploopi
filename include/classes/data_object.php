@@ -224,7 +224,7 @@ class data_object
             }
         }
 
-        $this->db = &$db;
+        $this->db = $db;
 
         $this->new = true;
     }
@@ -235,7 +235,7 @@ class data_object
      * @param ressource $db objet de connexion à la base de données
      */
     
-    public function setdb(&$db)
+    public function setdb($db)
     {
         $this->db = $db;
     }

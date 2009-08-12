@@ -22,7 +22,7 @@
 */
 
 /**
- * Chargement des paramètres des modules
+ * Chargement des paramètres des modules + description des actions
  *
  * @package ploopi
  * @subpackage param
@@ -31,8 +31,9 @@
  * @author Stéphane Escaich
  */
 
-$_SESSION['ploopi']['modules'] = Array();
-$_SESSION['ploopi']['moduletypes'] = Array();
+$_SESSION['ploopi']['modules'] = array();
+$_SESSION['ploopi']['moduletypes'] = array();
+$_SESSION['ploopi']['actions_desc'] = array();
 
 // On récupère les modules
 $db->query("
@@ -137,6 +138,17 @@ if (!empty($_SESSION['ploopi']['userid']))
 }
 
 ploopi_loadparams();
+
+// On récupère la description des actions
+$db->query("
+    SELECT      mba.id_module_type,
+                mba.id_action,
+                mba.label
+
+    FROM        ploopi_mb_action mba
+");
+    
+while ($row = $db->fetchrow()) $_SESSION['ploopi']['actions_desc'][$row['id_module_type']][$row['id_action']] = $row['label'];
 
 $_SESSION['ploopi']['paramloaded'] = true;
 ?>

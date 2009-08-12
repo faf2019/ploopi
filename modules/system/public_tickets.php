@@ -345,18 +345,18 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
         $fields = $ticket;
 
         $object_script = str_replace(
-                                        array(
-                                            '<IDRECORD>',
-                                            '<IDMODULE>',
-                                            '<IDWORKSPACE>'
-                                        ),
-                                        array(
-                                            $fields['id_record'],
-                                            $fields['id_module'],
-                                            $fields['id_workspace']
-                                        ),
-                                        $fields['script']
-                            );
+            array(
+                '<IDRECORD>',
+                '<IDMODULE>',
+                '<IDWORKSPACE>'
+            ),
+            array(
+                $fields['id_record'],
+                $fields['id_module'],
+                $fields['id_workspace']
+            ),
+            $fields['script']
+        );
 
         $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
         $timestp = ploopi_timestamp2local($fields['timestp']);
@@ -563,8 +563,8 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                 <div class="system_tickets_buttons">
                     <p class="ploopi_va">
                         <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','550',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_reply.png">Répondre</a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','550',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>&quoted=true', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_quote.png">Citer</a>
                         <?php
-                        /* <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','550',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>&quoted=true', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_quote.png">Citer</a> */
                         if ($fields['sender_uid'] == $_SESSION['ploopi']['userid'])
                         {
                             ?>

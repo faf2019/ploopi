@@ -51,8 +51,27 @@ function ploopi_create_user_action_log($id_action, $id_record, $id_module_type =
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
     $user_action_log = new user_action_log();
-    $user_action_log->fields['id_user'] = $_SESSION['ploopi']['userid'];
+    
+    $user_action_log->fields['user'] = isset($_SESSION['ploopi']['user']) ? trim("{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']} ({$_SESSION['ploopi']['user']['login']})") : '';
+    
+    $user_action_log->fields['workspace'] = isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : '';
+    
+    if (isset($_SESSION['ploopi']['modules'][$id_module]))
+    {
+        $user_action_log->fields['module'] = $_SESSION['ploopi']['modules'][$id_module]['label'];
+        $user_action_log->fields['module_type'] = $_SESSION['ploopi']['modules'][$id_module]['moduletype'];
+        $user_action_log->fields['action'] = isset($_SESSION['ploopi']['actions_desc'][$_SESSION['ploopi']['modules'][$id_module]['id_module_type']][$id_action]) ? $_SESSION['ploopi']['actions_desc'][$_SESSION['ploopi']['modules'][$id_module]['id_module_type']][$id_action] : '';
+    }
+    else
+    {
+        $user_action_log->fields['module'] = '';
+        $user_action_log->fields['module_type'] = '';
+        $user_action_log->fields['action'] = '';
+    }
+    
+    $user_action_log->fields['id_user'] = isset($_SESSION['ploopi']['userid']) ? $_SESSION['ploopi']['userid'] : 0;
     $user_action_log->fields['id_action'] = $id_action;
+    $user_action_log->fields['id_workspace'] = isset($_SESSION['ploopi']['workspaceid']) ? $_SESSION['ploopi']['workspaceid'] : 0;
     $user_action_log->fields['id_module_type'] = $id_module_type;
     $user_action_log->fields['id_module'] = $id_module;
     $user_action_log->fields['id_record'] = $id_record;

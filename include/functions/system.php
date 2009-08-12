@@ -144,13 +144,6 @@ function ploopi_ob_callback($buffer)
         }
     }
 
-    if (_PLOOPI_USE_OUTPUT_COMPRESSION && $content_type == 'text/html')
-    {
-        // compress html
-        // ATTENTION pose problème avec TEXTAREA & JS
-        // $buffer = preg_replace(array('/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'), array('>','<','\\1'), $buffer);
-    }
-
     $ploopi_stats = array();
 
     if (isset($buffer)) $ploopi_stats['pagesize'] = strlen($buffer);
@@ -186,7 +179,6 @@ function ploopi_ob_callback($buffer)
 
     if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG && isset($db))
     {
-
         include_once './include/functions/date.php';
         include_once './include/classes/log.php';
 
