@@ -224,7 +224,7 @@
 
     <div id="statusbar">
 
-        <a style="position:relative;padding-left:25px;" class="menu_right" href="{USER_DECONNECT}" title="Fermer la session en cours"><img style="position:absolute;left:10px;top:8px;" src="{TEMPLATE_PATH}/img/template/icons/logout.png" /></a>
+        <a style="position:relative;padding-left:25px;margin-right:1px;" class="menu_right" href="{USER_DECONNECT}" title="Fermer la session en cours"><img style="position:absolute;left:10px;top:8px;" src="{TEMPLATE_PATH}/img/template/icons/logout.png" /></a>
         <img class="menu_right" src="{TEMPLATE_PATH}/img/template/status_sep.png" />
 
         <div class="menu_right" id="status_time"></div>

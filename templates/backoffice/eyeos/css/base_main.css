@@ -238,7 +238,7 @@ color:#eeee00;
 }
 
 #mainmenu li:hover {
-background:#ccc url(../img/template/dock_sel.png) no-repeat 0 0;
+background:#e0e0e0 url(../img/template/dock_sel.png) no-repeat 0 0;
 }
 
 #mainmenu li:hover a {
@@ -260,7 +260,7 @@ margin: 0px;
 border-left:1px solid #000;
 border-right:1px solid #000;
 border-bottom:1px solid #000;
-background:#ccc;
+background:#e0e0e0;
 position: absolute;
 top: 28px;
 left: 0px;
@@ -274,17 +274,17 @@ display:block;
 color:#000;
 text-decoration:none;
 padding:6px 8px;
-border-bottom:1px solid #ddd;
-border-left:1px solid #ddd;
-border-right:1px solid #ddd;
+border-bottom:1px solid #f0f0f0;
+border-left:1px solid #f0f0f0;
+border-right:1px solid #f0f0f0;
 }
 
 #mainmenu div.blockmenu a.blockmenu:hover {
-background-color:#ddd;
+background-color:#f0f0f0;
 }
 
 #mainmenu div.blockmenu a.selected {
-background-color:#eee;
+background-color:#f8f8f8;
 }
 
 #mainmenu div.blockmenu a.blockmenu img {
@@ -293,9 +293,9 @@ border:0;
 
 #mainmenu div.blockmenu div.blockcontent {
 padding:6px 8px;
-border-bottom:1px solid #ddd;
-border-left:1px solid #ddd;
-border-right:1px solid #ddd;
+border-bottom:1px solid #f0f0f0;
+border-left:1px solid #f0f0f0;
+border-right:1px solid #f0f0f0;
 overflow:auto;
 }
 
@@ -402,7 +402,7 @@ margin: 0px;
 border-left:1px solid #666;
 border-right:1px solid #666;
 border-top:1px solid #666;
-background-color:#ccc;
+background-color:#e0e0e0;
 position: absolute;
 bottom: 29px;
 display: none;
@@ -414,17 +414,17 @@ display:block;
 color:#0f3d61;
 text-decoration:none;
 padding:6px 8px;
-border-left:1px solid #ddd;
-border-right:1px solid #ddd;
-border-top:1px solid #ddd;
+border-left:1px solid #f0f0f0;
+border-right:1px solid #f0f0f0;
+border-top:1px solid #f0f0f0;
 }
 
 .statusmenu div a:hover {
-background-color:#ddd;
+background-color:#f0f0f0;
 }
 
 .statusmenu div a.selected {
-background-color:#eee;
+background-color:#f8f8f8;
 }
 
 .statusmenu div a img {
@@ -435,9 +435,9 @@ border:0;
 display:block;
 padding:6px 8px;
 margin:0;
-border-left:1px solid #ddd;
-border-right:1px solid #ddd;
-border-top:1px solid #ddd;
+border-left:1px solid #f0f0f0;
+border-right:1px solid #f0f0f0;
+border-top:1px solid #f0f0f0;
 color:#444;
 }
 
