@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.1.4 ============================================
+
+2009-08-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Modification de l'ordre d'affichage des éléments lors de l'intégration d'un module en frontoffice : template.php (habillage) est désormais traité avant template_content.php (contenu de page)
+
 == Module WebEdit - version 2.1.3b ============================================
 
 2009-08-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

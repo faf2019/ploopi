@@ -95,7 +95,7 @@ $query_string = (empty($_REQUEST['query_string'])) ? '' : $_REQUEST['query_strin
 $query_tag = (empty($_REQUEST['query_tag'])) ? '' : $_REQUEST['query_tag'];
 
 // module frontoffice ?
-$template_moduleid = (empty($_REQUEST['template_moduleid']) || !is_numeric($_REQUEST['template_moduleid']) || !isset($_SESSION['ploopi']['modules'][$_REQUEST['template_moduleid']]) || !file_exists("./modules/{$_SESSION['ploopi']['modules'][$_REQUEST['template_moduleid']]['moduletype']}/template_content.php")) ? '' : $_REQUEST['template_moduleid'];
+$intTemplateModuleId = (empty($_REQUEST['template_moduleid']) || !is_numeric($_REQUEST['template_moduleid']) || !isset($_SESSION['ploopi']['modules'][$_REQUEST['template_moduleid']]) || !file_exists("./modules/{$_SESSION['ploopi']['modules'][$_REQUEST['template_moduleid']]['moduletype']}/template_content.php")) ? '' : $_REQUEST['template_moduleid'];
 
 // récupération des rubriques
 $arrHeadings = webedit_getheadings();
@@ -111,7 +111,7 @@ elseif ($query_tag != '') // Recherche par tag
 {
     $headingid = $arrHeadings['tree'][0][0];
 }
-elseif (!empty($template_moduleid)) // Module frontoffice
+elseif (!empty($intTemplateModuleId)) // Module frontoffice
 {
     $headingid = $arrHeadings['tree'][0][0];
 }
@@ -225,6 +225,31 @@ $_SESSION['ploopi']['frontoffice']['template_path'] = $template_path;
 include_once './include/op.php';
 
 webedit_template_assign(&$arrHeadings, &$arrShares, $arrNav, 0, '', 0);
+
+if (!empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
+{
+    foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $intModuleId)
+    {
+        if ($_SESSION['ploopi']['modules'][$intModuleId]['active'])
+        {
+            $template_body->assign_block_vars('modules' , array(
+                'ID' => $intModuleId,
+                'LABEL' => $_SESSION['ploopi']['modules'][$intModuleId]['label'],
+                'TYPE' => $_SESSION['ploopi']['modules'][$intModuleId]['moduletype'],
+                'TYPEID' => $_SESSION['ploopi']['modules'][$intModuleId]['id_module_type']
+                )
+            );
+
+            if (file_exists("./modules/{$_SESSION['ploopi']['modules'][$intModuleId]['moduletype']}/template.php")) 
+            {
+                $template_moduleid = $intModuleId;
+                include_once "./modules/{$_SESSION['ploopi']['modules'][$intModuleId]['moduletype']}/template.php";
+                unset($template_moduleid);
+            }
+        }
+
+    }
+}
 
 if ($query_string != '') // recherche intégrale
 {
@@ -458,19 +483,21 @@ elseif($query_tag != '') // recherche par tag
         )
     );
 }
-elseif (!empty($template_moduleid))
+elseif (!empty($intTemplateModuleId)) // contenu d'un module
 {
-    $template_body->assign_block_vars("switch_content_module_{$_SESSION['ploopi']['modules'][$template_moduleid]['moduletype']}", array());
+    $template_body->assign_block_vars("switch_content_module_{$_SESSION['ploopi']['modules'][$intTemplateModuleId]['moduletype']}", array());
 
-    include_once "./modules/{$_SESSION['ploopi']['modules'][$template_moduleid]['moduletype']}/template_content.php";
+    $template_moduleid = $intTemplateModuleId;
+    include_once "./modules/{$_SESSION['ploopi']['modules'][$intTemplateModuleId]['moduletype']}/template_content.php";
+    unset($template_moduleid);
 
     $template_body->assign_vars(
         array(
-            'MODULE_ID' => $template_moduleid,
-            'MODULE_TITLE' => $_SESSION['ploopi']['modules'][$template_moduleid]['label'],
-            'MODULE_VERSION' => $_SESSION['ploopi']['modules'][$template_moduleid]['version'],
-            'MODULE_AUTHOR' => $_SESSION['ploopi']['modules'][$template_moduleid]['author'],
-            'MODULE_DATE' => current(ploopi_timestamp2local($_SESSION['ploopi']['modules'][$template_moduleid]['date']))
+            'MODULE_ID' => $intTemplateModuleId,
+            'MODULE_TITLE' => $_SESSION['ploopi']['modules'][$intTemplateModuleId]['label'],
+            'MODULE_VERSION' => $_SESSION['ploopi']['modules'][$intTemplateModuleId]['version'],
+            'MODULE_AUTHOR' => $_SESSION['ploopi']['modules'][$intTemplateModuleId]['author'],
+            'MODULE_DATE' => current(ploopi_timestamp2local($_SESSION['ploopi']['modules'][$intTemplateModuleId]['date']))
         )
     );
 }
@@ -970,26 +997,6 @@ if (!file_exists("./templates/frontoffice/{$template_name}/{$template_file}") ||
 
 $template_body->set_filenames(array('body' => $template_file));
 
-if (!empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
-{
-    foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $key => $template_moduleid)
-    {
-        if ($_SESSION['ploopi']['modules'][$template_moduleid]['active'])
-        {
-            $template_body->assign_block_vars('modules' , array(
-                'ID' => $template_moduleid,
-                'LABEL' => $_SESSION['ploopi']['modules'][$template_moduleid]['label'],
-                'TYPE' => $_SESSION['ploopi']['modules'][$template_moduleid]['moduletype'],
-                'TYPEID' => $_SESSION['ploopi']['modules'][$template_moduleid]['id_module_type']
-                )
-            );
-
-            if (file_exists("./modules/{$_SESSION['ploopi']['modules'][$template_moduleid]['moduletype']}/template.php")) include_once "./modules/{$_SESSION['ploopi']['modules'][$template_moduleid]['moduletype']}/template.php";
-        }
-
-    }
-}
-
 // Mode connecté, on propose les infos de l'utilisateur connecté
 if ($_SESSION['ploopi']['connected'])
 {
@@ -1071,6 +1078,7 @@ $template_body->assign_block_vars(
         'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
     )
 );
+
 
 $title_raw = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title'];
 $title = htmlentities($title_raw);
