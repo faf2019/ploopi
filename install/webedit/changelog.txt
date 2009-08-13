@@ -1,3 +1,10 @@
+== Module WebEdit - version 2.1.3 ============================================
+
+2009-08-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Refactoring de la fonction webedit_generate_sitemap() en webedit_sitemap()
+ * La fonction webedit_sitemap() peut désormais appeler automatiquement les fonctions *_sitemap() des autres modules si elles existent 
+
 == Module WebEdit - version 2.1.2b ============================================
 
 2009-08-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

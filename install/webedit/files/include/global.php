@@ -845,7 +845,10 @@ function webedit_replace_links($strContent, $mode, &$arrHeadings)
 /**
  * Génère le fichier sitemap.xml du site (gestion de mise en cache incluse)
  */
-function webedit_generate_sitemap()
+/**
+ * Génère le fichier sitemap.xml du site (gestion de mise en cache incluse)
+ */
+function webedit_sitemap()
 {
     include_once './include/classes/cache.php';
 
@@ -942,6 +945,21 @@ function webedit_generate_sitemap()
             $strScript = ploopi_xmlentities(_PLOOPI_BASEPATH.'/'.ploopi_urlrewrite("index.php?query_tag={$row['tag']}", webedit_getrewriterules()));
             $arrUrls[] = '<url><loc>'.$strScript.'</loc><lastmod>'.$strSiteLastMod.'</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>';
         }
+        
+        
+        foreach($_SESSION['ploopi']['modules'] as $intIdModule => $arrModule)
+        {
+            if ($arrModule['active'] && $arrModule['moduletype'] != 'webedit')
+            {
+                // init du module
+                ploopi_init_module($arrModule['moduletype'], false, false, false);
+                // si la fonction <module>_sitemap() existe, on l'appelle
+                if (function_exists($strFuncName = "{$arrModule['moduletype']}_sitemap")) 
+                {
+                    $arrUrls = array_merge($arrUrls, $strFuncName($intIdModule));
+                }
+            }
+        }        
 
         echo '<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
