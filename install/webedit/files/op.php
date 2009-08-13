@@ -83,7 +83,7 @@ switch($ploopi_op)
     
     case 'webedit_sitemap':
         ploopi_init_module('webedit', false, false, false);
-        webedit_generate_sitemap();
+        webedit_sitemap();
         ploopi_die();
     break;
     
