@@ -133,6 +133,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
         }
 
         $_SESSION['ploopi']['login'] = $fields['login'];
+        $_SESSION['ploopi']['password'] = $ploopi_password;
         $_SESSION['ploopi']['userid'] = $fields['id'];
         $_SESSION['ploopi']['user'] = $fields;
         

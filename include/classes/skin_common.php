@@ -479,6 +479,9 @@ class skin_common
         $objSV = new serializedvar($strArrayId);
         $array = $objSV->read();
         
+        // Le tableau n'existe pas, pas normal, on sort
+        if ($array == false) return;        
+        
         $sort_img = '';
         
         // index temporaire (pour tri à l'affichage)
