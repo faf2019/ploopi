@@ -1,3 +1,9 @@
+== Module BOOKING - version 0.9.2c ====================================================
+
+2009-08-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug sur une variable non définie (notice)
+
 == Module BOOKING - version 0.9.2b ====================================================
 
 2009-08-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
