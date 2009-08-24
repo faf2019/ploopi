@@ -293,7 +293,7 @@ function ploopi_print_json($var, $utf8encode = true, $use_xjson = true)
 
     $json = json_encode($var);
     header("Content-Type: text/x-json");
-    if ($use_xjson === false || strlen($json) > 2048) echo $json;
+    if ($use_xjson === false || strlen($json) > 1024) echo $json;
     else header("X-Json: {$json}");
 }
 
