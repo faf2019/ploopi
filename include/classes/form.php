@@ -447,6 +447,9 @@ class form_text extends form_field
      *
      * @param string $strLabel libellé du champ
      * @param string $strValue valeur du champ
+     * @param string $strName propriété "name" du champ
+     * @param string $strId propriété "id" du champ
+     * @param array $arrOptions options du champ
      * 
      * @return form_text
      */        

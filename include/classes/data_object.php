@@ -230,7 +230,7 @@ class data_object
     }
 
     /**
-     * Permet de connexion à la base de données
+     * Permet de modifier la connexion à la base de données
      *
      * @param ressource $db objet de connexion à la base de données
      */
@@ -240,6 +240,7 @@ class data_object
         $this->db = $db;
     }
 
+    
     /**
      * Permet de mettre à jour les propriétés de l'objet (les champs de la table)
      *

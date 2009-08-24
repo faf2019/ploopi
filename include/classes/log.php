@@ -55,13 +55,13 @@ class log extends data_object
             'ploopi_log'
         );
         
-        if (ploopi_session::get_usedb()) $this->setdb(self::getdb());
+        if (ploopi_session::get_usedb()) $this->setdb($this->getdb());
     }
 
-    public static function getdb()
+    public function getdb()
     {
         if (ploopi_session::get_usedb()) return ploopi_session::get_db();
-        else parent::getdb();
+        else { global $db; return $db; }
     }    
 }
 
@@ -121,13 +121,13 @@ class user_action_log extends data_object
             'id_module_type'
         );
         
-        if (ploopi_session::get_usedb()) $this->setdb(self::getdb());
+        if (ploopi_session::get_usedb()) $this->setdb($this->getdb());
     }
 
-    public static function getdb()
+    public function getdb()
     {
         if (ploopi_session::get_usedb()) return ploopi_session::get_db();
-        else parent::getdb();
+        else { global $db; return $db; }
     }    
     
 }
