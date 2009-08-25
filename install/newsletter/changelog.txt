@@ -1,6 +1,6 @@
-== Module NEWSLETTER - version 1.2.5.001beta ==================================================
+== Module NEWSLETTER - version 1.2.6.000beta ==================================================
 
-2009-08  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2009-08-25  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
 
  * Correction d'un bug. Erreur lors de la désinstanciation du module (delete.php)
  * Correction suite à modification Ploopi - Changement de répertoire Fckeditor
