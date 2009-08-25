@@ -1,3 +1,10 @@
+== Module WebEdit - version 2.1.4b ============================================
+
+2009-08-25  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Modification du fonctionnement des rubriques privées affichées "en force" depuis un autre module : $_SESSION['ploopi']['allowedheading']... -> $_SESSION['webedit']['allowedheading']
+ Ceci afin de ne pas perdre l'info lors de la connexion/déconnexion 
+   
 == Module WebEdit - version 2.1.4 ============================================
 
 2009-08-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
