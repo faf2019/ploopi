@@ -150,9 +150,8 @@ define ('_NEWSLETTER_LABEL_SEND_BY',              'Expédier par paquet de');
 define ('_NEWSLETTER_LABEL_SEND_BY_EXPLAIN',      'Possibilité d\'expédier les newsletters par paquet de destinataires (0 = pas de limite)');
 define ('_NEWSLETTER_LABEL_SEND_BY_WARNING',      'ATTENTION: certain fournisseurs d\'accès internet détectent l\'envoi de mail massif non signalé comme étant du spam invonlontaire (virus) et peuvent couper sans préavis votre connexion internet. Pour plus d\'information, prennez contact avec votre fournisseur.');
 define ('_NEWSLETTER_LABEL_SEND_BY_INFO',         '<span style="font-size: 1.1em; font-weight: bold;">Déclarez votre fichier d\'adresses de courriers électroniques auprès de la CNIL</span><br/>
-                                                   Conformément à l\'article 23 de la loi du 6 janvier 1978 modifiée,  tout traitement automatisé d\'informations nominatives comportant des adresses électroniques doit être déclaré auprès de la CNIL. A toutes fins utiles, reportez-vous à la Rubrique "Déclarer" du site web de la CNIL.<br/>
-                                                   Tout manquement à cette obligation est sanctionné par l\'article 226-16 du Code pénal (5 ans d\'emprisonnement et 300 000 euros d\'amende).
-                                                   Plus d\'informations sur <a href="http://www.cnil.fr/index.php?id=1277">http://www.cnil.fr/index.php?id=1277</a>');
+                                                   Conformément à l\'article 23 de la loi du 6 janvier 1978 modifiée,  tout traitement automatisé d\'informations nominatives comportant des adresses électroniques doit être déclaré auprès de la CNIL.<br/>A toutes fins utiles, reportez-vous à la Rubrique "Vos responsabilités" du site web de la CNIL : <a href="http://www.cnil.fr/vos-responsabilites/">http://www.cnil.fr/vos-responsabilites/</a><br/>
+                                                   Tout manquement à cette obligation est sanctionné par l\'article 226-16 du Code pénal (5 ans d\'emprisonnement et 300 000 euros d\'amende).');
 
 
 ?>

@@ -219,6 +219,7 @@ if (isset($ploopi_op))
 
         case 'colorpicker_open':
             if (!isset($_GET['colorpicker_value']) || !isset($_GET['inputfield_id'])) ploopi_die();
+
             ob_start();
             ?>
             <div id="ploopi_colorpicker" style="padding:4px;">
@@ -243,8 +244,8 @@ if (isset($ploopi_op))
             <?php
             $content = ob_get_contents();
             ob_end_clean();
-    
-            echo $skin->create_popup("Choix d'une couleur", $content, 'ploopi_popup_colorpicker');
+
+            echo $skin->create_popup('Choix d\'une couleur', $content, 'ploopi_popup_colorpicker');
             ploopi_die();
         break;
 

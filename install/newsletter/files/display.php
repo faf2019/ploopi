@@ -122,11 +122,11 @@ if (!$readonly)
 {
   ob_start();
 
-  include_once './FCKeditor/fckeditor.php' ;
+  include_once './lib/fckeditor/fckeditor.php' ;
 
   $oFCKeditor = new FCKeditor('fck_newsletter_content') ;
 
-  $oFCKeditor->BasePath = './FCKeditor/';
+  $oFCKeditor->BasePath = './lib/fckeditor/';
 
   // default value
   $oFCKeditor->Value= $objNewsletter->fields['content'];

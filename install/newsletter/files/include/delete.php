@@ -39,9 +39,9 @@
 
 $db->query("SELECT id FROM ploopi_mod_newsletter_letter WHERE id_module = '{$this->fields['id']}'");
 $arrIdNewsletter = $db->getarray();
-if($arrIdNewsletter == false || !is_array($arrIdNewsletter)) $arrIdNewsletter[] = '0';
+if(empty($arrIdNewsletter)) $arrIdNewsletter[] = '0';
 
-$delete = 'DELETE FROM ploopi_mod_newsletter_send WHERE id_letter IN (0,'.implode(',',$arrIdFilter).')';
+$delete = 'DELETE FROM ploopi_mod_newsletter_send WHERE id_letter IN (0,'.implode(',',$arrIdNewsletter).')';
 $db->query($delete);
 
 /**

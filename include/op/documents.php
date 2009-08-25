@@ -240,11 +240,11 @@ switch($ploopi_op)
                     <label>Description:</label>
                     <span>
                     <?php
-                    include_once './FCKeditor/fckeditor.php' ;
-
+                    include_once './lib/fckeditor/fckeditor.php' ;
+                    
                     $oFCKeditor = new FCKeditor('fck_documentsfolder_description') ;
 
-                    $oFCKeditor->BasePath = './FCKeditor/';
+                    $oFCKeditor->BasePath = './lib/fckeditor/';
 
                     // default value
                     $oFCKeditor->Value = $documentsfolder->fields['description'];
@@ -393,11 +393,11 @@ switch($ploopi_op)
                     <label>Description:</label>
                     <span>
                     <?php
-                    include_once './FCKeditor/fckeditor.php' ;
+                    include_once './lib/fckeditor/fckeditor.php' ;
 
                     $oFCKeditor = new FCKeditor('fck_documentsfile_description') ;
 
-                    $oFCKeditor->BasePath = './FCKeditor/';
+                    $oFCKeditor->BasePath = './lib/fckeditor/';
 
                     // default value
                     $oFCKeditor->Value = $documentsfile->fields['description'];
