@@ -422,9 +422,10 @@ function ploopi_tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezon
     $default_tz = date_default_timezone_get();
 
     // on cherche les 2 fuseaux
-    $tz_src = timezone_open($timezone_name_src);
+    ploopi_unset_error_handler();
     $tz_dst = timezone_open($timezone_name_dst);
-
+    ploopi_set_error_handler();
+    
     // on parse le timestamp 'mysql' pour créer un timestamp unix
     ereg(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $ts, $tsregs);
 
@@ -437,11 +438,15 @@ function ploopi_tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezon
      * $date = date_create('@'.mktime($tsregs[4], $tsregs[5], $tsregs[6], $tsregs[2], $tsregs[3], $tsregs[1]), $tz_src);
      */
 
-    // changement de fuseau horaire (dest)
-    date_timezone_set($date, $tz_dst);
-
-    // on renvoie la date formatée timestamp mysql
-    return(date_format($date, _PLOOPI_TIMESTAMPFORMAT_MYSQL));
+    if ($tz_dst !== false)
+    {
+        // changement de fuseau horaire (dest)
+        date_timezone_set($date, $tz_dst);
+    
+        // on renvoie la date formatée timestamp mysql
+        return(date_format($date, _PLOOPI_TIMESTAMPFORMAT_MYSQL));
+    }
+    else return false;
 }
 
 /**
@@ -471,7 +476,12 @@ function ploopi_tz_getutc($timezone_name = 'UTC')
         break;
     }
 
-    return('UTC '.date_format(date_create(null, timezone_open($timezone_name)), "P"));
+    ploopi_unset_error_handler();
+    $objDateTimeZone = timezone_open($timezone_name);
+    ploopi_set_error_handler();
+    
+    if ($objDateTimeZone !== false) return('UTC '.date_format(date_create(null, $objDateTimeZone), "P"));
+    else return(false);
 }
 
 /**
