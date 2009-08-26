@@ -44,33 +44,38 @@ include_once './include/functions/security.php';
 if (isset($_SERVER['REDIRECT_STATUS']) && $_SERVER['REDIRECT_STATUS'] == '200') include_once './include/start/rewrite.php';
 
 /**
- * Traitement des paramètres spéciaux
+ * Traitement du paramètre spécial 'ploopi_url' via POST/GET
  */
 
-if (!empty($_GET['ploopi_url']))
+foreach(array('POST', 'GET') as $strGlobalVar)
 {
-    $_GET['ploopi_url'] = ploopi_filtervar($_GET['ploopi_url']);
-
-    require_once './include/classes/cipher.php';
-    $objCipher = new ploopi_cipher();
-    $strPloopiUrl = $objCipher->decrypt($_GET['ploopi_url']);
-
-    foreach(explode('&',$strPloopiUrl) as $strParam)
+    if (!empty(${"_{$strGlobalVar}"}['ploopi_url']))
     {
-        if (strstr($strParam, '=')) list($strKey, $strValue) = explode('=',$strParam);
-        else {$strKey = $strParam; $strValue = '';}
-
-        $_REQUEST[$strKey] = $_GET[$strKey] = $strValue;
-    }
+        ${"_{$strGlobalVar}"}['ploopi_url'] = ploopi_filtervar(${"_{$strGlobalVar}"}['ploopi_url']);
+        
+        require_once './include/classes/cipher.php';
+        $objCipher = new ploopi_cipher();
+        
+        $strPloopiUrl = $objCipher->decrypt(${"_{$strGlobalVar}"}['ploopi_url']);
     
-    unset($strKey);
-    unset($strValue);
-    unset($strParam);
-    unset($strPloopiUrl);
-    unset($objCipher);
-    unset($_GET['ploopi_url']);
-    unset($_REQUEST['ploopi_url']);
+        foreach(explode('&',$strPloopiUrl) as $strParam)
+        {
+            if (strstr($strParam, '=')) list($strKey, $strValue) = explode('=',$strParam);
+            else {$strKey = $strParam; $strValue = '';}
+    
+            $_REQUEST[$strKey] = ${"_{$strGlobalVar}"}[$strKey] = $strValue;
+        }
+        
+        unset($strKey);
+        unset($strValue);
+        unset($strParam);
+        unset($strPloopiUrl);
+        unset($objCipher);
+        unset(${"_{$strGlobalVar}"}['ploopi_url']);
+    }
 }
+unset($strGlobalVar);
+unset($_REQUEST['ploopi_url']);
 
 $_GET = ploopi_filtervar($_GET);
 $_POST = ploopi_filtervar($_POST, null, !empty($_POST['ploopi_xhr']));

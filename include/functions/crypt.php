@@ -168,7 +168,7 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
  * @see base64_encode
  */
 
-function ploopi_base64_encode($str) { return(str_replace(array('+','/','='), array('-','_',''), base64_encode($str))); }
+function ploopi_base64_encode($str) { return(strtr(base64_encode($str), '+/=', '-_,')); }
 
 /**
  * Décode une chaîne en MIME base64 (métode url-safe base64)
@@ -181,7 +181,7 @@ function ploopi_base64_encode($str) { return(str_replace(array('+','/','='), arr
 
 function ploopi_base64_decode($str)
 {
-    $str = str_replace(array('-','_'),array('+','/'),$str);
+    $str = strtr($str, '-_,', '+/=');
     $mod4 = strlen($str) % 4;
     if ($mod4) $str .= substr('====', $mod4);
     return base64_decode($str);

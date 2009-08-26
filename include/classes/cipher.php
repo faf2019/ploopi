@@ -102,7 +102,7 @@ class ploopi_cipher
             include_once './include/functions/crypt.php';
 
             mcrypt_generic_init($this->cipher, $this->key, $this->iv);
-            $encrypted = ploopi_base64_encode(mcrypt_generic($this->cipher, $str));
+            $encrypted = ploopi_base64_encode(mcrypt_generic($this->cipher, gzcompress($str)));
             mcrypt_generic_deinit($this->cipher);
             return($encrypted);
         }
@@ -118,17 +118,15 @@ class ploopi_cipher
 
     function decrypt($encrypted)
     {
-        if (!empty($encrypted))
-        {
-            include_once './include/functions/crypt.php';
+        if (empty($encrypted)) return(false);
+        
+        include_once './include/functions/crypt.php';
 
-            mcrypt_generic_init($this->cipher, $this->key, $this->iv);
-            $decoded = ploopi_base64_decode($encrypted);
-            $decrypted = (strlen($decoded) > 0) ? rtrim(mdecrypt_generic($this->cipher, $decoded),"\0") : '';
-            mcrypt_generic_deinit($this->cipher);
-            return($decrypted);
-        }
-        else return(false);
+        mcrypt_generic_init($this->cipher, $this->key, $this->iv);
+        $decoded = ploopi_base64_decode($encrypted);
+        $decrypted = (strlen($decoded) > 0) ? rtrim(mdecrypt_generic($this->cipher, $decoded),"\0") : '';
+        mcrypt_generic_deinit($this->cipher);
+        return(gzuncompress($decrypted));
     }
 }
 ?>

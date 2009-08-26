@@ -63,6 +63,8 @@ if (!file_exists('./config/config.php'))
 }
 include_once './config/config.php'; // load config (mysql, path, etc.)
 
+
+
 /**
  * Initialisation du gestionnaire d'erreur
  */
