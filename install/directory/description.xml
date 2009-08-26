@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>directory</label>
-      <version>2.2.1</version>
+      <version>2.2.2</version>
       <author>Ovensia</author>
-      <date>20090515000000</date>
+      <date>20090826000000</date>
       <description>Annuaire des Utilisateurs</description>
       <paramtype>
          <name>directory_myfavorites</name>
@@ -99,6 +99,21 @@
       <paramtype>
          <name>directory_search</name>
          <label>Accéder à l'onglet "Recherche"</label>
+         <default_value>1</default_value>
+         <public>1</public>
+         <description/>
+         <paramchoice>
+            <value>1</value>
+            <displayed_value>oui</displayed_value>
+         </paramchoice>
+         <paramchoice>
+            <value>0</value>
+            <displayed_value>non</displayed_value>
+         </paramchoice>
+      </paramtype>
+      <paramtype>
+         <name>directory_display_workspaces</name>
+         <label>Afficher la colonne "Rattachements"</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>

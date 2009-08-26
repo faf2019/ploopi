@@ -42,18 +42,24 @@ $id_list = $_SESSION['directory']['id_list'];
 
 $where = (empty($id_list)) ? '' : " AND f.id_list = {$id_list}";
 
-$columns = array();
-$values = array();
+$arrColumns = array();
+$arrValues = array();
 
-$columns['auto']['groups'] = array('label' => _DIRECTORY_GROUPS,    'options' => array('sort' => true));
-$columns['left']['type'] = array('label' => _DIRECTORY_TYPE,        'width' => 90, 'options' => array('sort' => true));
-$columns['left']['name'] = array('label' => _DIRECTORY_NAME,        'width' => 150, 'options' => array('sort' => true));
-$columns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
-$columns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
-$columns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
-$columns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
-$columns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
-$columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 42);
+$arrColumns['left']['type'] = array('label' => _DIRECTORY_TYPE,        'width' => 90, 'options' => array('sort' => true));
+$arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME,        'options' => array('sort' => true));
+$arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+$arrColumns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
+$arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
+$arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 150, 'options' => array('sort' => true));
+$arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 150, 'options' => array('sort' => true));
+
+if (ploopi_getparam('directory_display_workspaces'))
+{        
+    $arrColumns['right']['groups'] = array('label' => _DIRECTORY_GROUPS,    'width' => 150, 'options' => array('sort' => true));
+}
+
+
+$arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 42);
 
 $result = array();
 
@@ -122,8 +128,8 @@ foreach($result as $row)
             // on met tout ça dans une chaine
             $workspaces_list = implode(', ',$workspaces_list);
 
-            //$values[$c]['link'] = 'javascript:void(0);';
-            //$values[$c]['onclick'] = "javascript:directory_view(event, '{$row['id']}', '');";
+            //$arrValues[$c]['link'] = 'javascript:void(0);';
+            //$arrValues[$c]['onclick'] = "javascript:directory_view(event, '{$row['id']}', '');";
             $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
         break;
 
@@ -158,21 +164,21 @@ foreach($result as $row)
         break;
     }
 
-    $values[$c]['values']['type'] = array('label' => $level_display);
-    $values[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
-    $values[$c]['values']['groups'] = array('label' => $workspaces_list);
-    $values[$c]['values']['service'] = array('label' => ($row['service']) ? $row['service'] : '&nbsp;');
-    $values[$c]['values']['function'] = array('label' => ($row['function']) ? $row['function'] : '&nbsp;');
-    $values[$c]['values']['phone'] = array('label' => ($row['phone']) ? $row['phone'] : '&nbsp;');
-    $values[$c]['values']['email'] = array('label' => $email);
-    $values[$c]['values']['ticket'] = array('label' => $ticket);
-    $values[$c]['values']['actions'] = array('label' => $actions);
+    $arrValues[$c]['values']['type'] = array('label' => $level_display);
+    $arrValues[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
+    $arrValues[$c]['values']['groups'] = array('label' => $workspaces_list);
+    $arrValues[$c]['values']['service'] = array('label' => ($row['service']) ? $row['service'] : '&nbsp;');
+    $arrValues[$c]['values']['function'] = array('label' => ($row['function']) ? $row['function'] : '&nbsp;');
+    $arrValues[$c]['values']['phone'] = array('label' => ($row['phone']) ? $row['phone'] : '&nbsp;');
+    $arrValues[$c]['values']['email'] = array('label' => $email);
+    $arrValues[$c]['values']['ticket'] = array('label' => $ticket);
+    $arrValues[$c]['values']['actions'] = array('label' => $actions);
 
-    $values[$c]['description'] = "{$row['lastname']} {$row['firstname']}";
-    $values[$c]['style'] = '';
+    $arrValues[$c]['description'] = "{$row['lastname']} {$row['firstname']}";
+    $arrValues[$c]['style'] = '';
 
     $c++;
 }
 
-$skin->display_array($columns, $values, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
+$skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
 ?>

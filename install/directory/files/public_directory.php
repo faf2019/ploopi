@@ -206,7 +206,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $c++;
         }
 
-        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
+        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 100));
     break;
 
     /**
@@ -217,13 +217,19 @@ switch($_SESSION['directory']['directoryTabItem'])
         $arrColumns = array();
         $arrValues = array();
 
-        $arrColumns['auto']['groups'] = array('label' => _DIRECTORY_GROUPS,    'options' => array('sort' => true));
-        $arrColumns['left']['name'] = array('label' => _DIRECTORY_NAME,        'width' => 150, 'options' => array('sort' => true));
+        
+        $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME, 'options' => array('sort' => true));
         $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
         $arrColumns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
         $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
-        $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
-        $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
+        $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 150, 'options' => array('sort' => true));
+        $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 150, 'options' => array('sort' => true));
+        
+        if (ploopi_getparam('directory_display_workspaces'))
+        {        
+            $arrColumns['right']['groups'] = array('label' => _DIRECTORY_GROUPS,    'width' => 150, 'options' => array('sort' => true));
+        }
+        
         $arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '42');
 
         // il faut chercher les groupes rattachés à l'espace !
@@ -295,7 +301,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $c++;
         }
 
-        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
+        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 100));
 
     break;
 
@@ -380,14 +386,19 @@ switch($_SESSION['directory']['directoryTabItem'])
         $arrColumns = array();
         $arrValues = array();
 
-        $arrColumns['auto']['groups'] = array('label' => _DIRECTORY_GROUPS,    'options' => array('sort' => true));
         $arrColumns['left']['type'] = array('label' => _DIRECTORY_TYPE,        'width' => 90, 'options' => array('sort' => true));
-        $arrColumns['left']['name'] = array('label' => _DIRECTORY_NAME,        'width' => 150, 'options' => array('sort' => true));
+        $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME,        'options' => array('sort' => true));
         $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
         $arrColumns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
         $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
-        $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
-        $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
+        $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 150, 'options' => array('sort' => true));
+        $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 150, 'options' => array('sort' => true));
+
+        if (ploopi_getparam('directory_display_workspaces'))
+        {        
+            $arrColumns['right']['groups'] = array('label' => _DIRECTORY_GROUPS,    'width' => 150, 'options' => array('sort' => true));
+        }
+        
         $arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '42');
 
         $result = array();
@@ -553,7 +564,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 $c++;
             }
 
-            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
+            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 100));
         }
     break;
 
@@ -860,7 +871,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 }
                             }
 
-                            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
+                            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 100));
 
                             if (!$db->numrows())
                             {
@@ -978,12 +989,12 @@ switch($_SESSION['directory']['directoryTabItem'])
                 $arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 42);
             }
 
-            $db->query("
+            $rs = $db->query("
                 SELECT  *
                 FROM    ploopi_mod_directory_speeddialing
             ");
 
-            if ($db->numrows())
+            if ($db->numrows($rs))
             {
                 $c = 0;
                 while ($row = $db->fetchrow())
@@ -1008,9 +1019,9 @@ switch($_SESSION['directory']['directoryTabItem'])
                 }
             }
 
-            $skin->display_array($arrColumns, $arrValues, 'array_directory_speeddialing', array('sortable' => true, 'orderby_default' => 'heading'));
+            $skin->display_array($arrColumns, $arrValues, 'array_directory_speeddialing', array('sortable' => true, 'orderby_default' => 'heading', 'limit' => 100));
 
-            if (!$db->numrows())
+            if (!$db->numrows($rs))
             {
                 ?>
                 <div style="padding:4px;text-align:center;">Il n'y a pas de numéro abrégé</div>
