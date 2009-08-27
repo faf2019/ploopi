@@ -150,7 +150,7 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
     {
         require_once './include/classes/cipher.php';
         $cipher = new ploopi_cipher();
-        return "ploopi_url=".urlencode($cipher->crypt($strParams));
+        return "ploopi_url=".$cipher->crypt($strParams);
     }
     else return $strParams;
 }
@@ -168,7 +168,7 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
  * @see base64_encode
  */
 
-function ploopi_base64_encode($str) { return(strtr(base64_encode($str), '+/=', '-_,')); }
+function ploopi_base64_encode($str) { return(strtr(base64_encode($str), '+/=', '-_.')); }
 
 /**
  * Décode une chaîne en MIME base64 (métode url-safe base64)
@@ -181,7 +181,7 @@ function ploopi_base64_encode($str) { return(strtr(base64_encode($str), '+/=', '
 
 function ploopi_base64_decode($str)
 {
-    $str = strtr($str, '-_,', '+/=');
+    $str = strtr($str, '-_.', '+/=');
     $mod4 = strlen($str) % 4;
     if ($mod4) $str .= substr('====', $mod4);
     return base64_decode($str);
