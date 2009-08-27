@@ -61,11 +61,8 @@ if (ploopi_ismoduleallowed('booking'))
 }
 else // on n'est pas dans le module, peut être une requête frontoffice ?
 {
-    if ($_SESSION['ploopi']['mode'] == 'frontoffice') // il faut être en frontoffice
+    if ($_SESSION['ploopi']['mode'] == 'frontoffice' && !empty($_GET['booking_moduleid']) && is_numeric($_GET['booking_moduleid']) && ploopi_ismoduleallowed('booking', $_GET['booking_moduleid'])) 
     {
-        // On teste la présence de moduleid
-        if (empty($_GET['booking_moduleid']) || !is_numeric($_GET['booking_moduleid'])) ploopi_die();
-        
         $booking_moduleid = $_GET['booking_moduleid'];
         
         if (!empty($_SESSION['ploopi']['frontoffice']['template_path']))
@@ -80,6 +77,7 @@ else // on n'est pas dans le module, peut être une requête frontoffice ?
              */
             include_once './modules/booking/op_wce_planning.php';
         }
+            
         ploopi_die();
     }
 }
