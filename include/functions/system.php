@@ -698,4 +698,18 @@ function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
     }
 
 }
+
+/**
+ * Retourne un paramètre de module
+ *
+ * @param string $strParamName nom du paramètre à lire
+ * @param int $intModuleId identifiant du module (optionnel, le module courant si non défini)
+ * @return string valeur du paramètre
+ */
+function ploopi_getparam($strParamName, $intModuleId = null)
+{
+    if (is_null($intModuleId)) $intModuleId = $_SESSION['ploopi']['moduleid'];
+    
+    return isset($_SESSION['ploopi']['modules'][$intModuleId][$strParamName]) ? $_SESSION['ploopi']['modules'][$intModuleId][$strParamName] : null;  
+}
 ?>
