@@ -53,7 +53,7 @@ function ploopi_nl2br($str)
  * @return string chaîne modifiée
  */
 
-function ploopi_strcut($str,$len = 30, $mode = 'left')
+function ploopi_strcut($str, $len = 30, $mode = 'left')
 {
     if (strlen($str)>$len)
     {

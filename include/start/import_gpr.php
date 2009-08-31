@@ -56,8 +56,8 @@ foreach(array('POST', 'GET') as $strGlobalVar)
         require_once './include/classes/cipher.php';
         $objCipher = new ploopi_cipher();
         
-        $strPloopiUrl = $objCipher->decrypt(${"_{$strGlobalVar}"}['ploopi_url']);
-    
+        $strPloopiUrl = ploopi_cipher::singleton()->decrypt(${"_{$strGlobalVar}"}['ploopi_url']);
+        
         foreach(explode('&',$strPloopiUrl) as $strParam)
         {
             if (strstr($strParam, '=')) list($strKey, $strValue) = explode('=',$strParam);

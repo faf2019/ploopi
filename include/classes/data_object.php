@@ -330,6 +330,9 @@ class data_object
             $this->sql = "INSERT INTO `{$this->tablename}` {$listvalues}"; // construction de la requète
             $this->db->query($this->sql);
 
+            // get "static" key 
+            foreach($this->idfields as $fieldname) $this->id[$fieldname] = $this->fields[$fieldname];
+                        
             // get insert id from insert (if 1 field primary key and autokey)
             if (sizeof($this->idfields) >= 1 && $this->db->insertid() !== 0) 
             {
