@@ -1,3 +1,10 @@
+== Module Wiki - version 1.0.0 ====================================================
+
+2009-08-31  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Ajout de liens vers des documentations complémentaires dans le popup d'aide
+ * Ajout d'un fil d'ariane indiquant les 5 dernières pages vues
+
 == Module Wiki - version 0.9.30.beta ====================================================
 
 2009-07-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

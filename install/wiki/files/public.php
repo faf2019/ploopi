@@ -28,6 +28,9 @@
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
+ * @version  $Revision$
+ * @modifiedby $LastChangedBy$
+ * @lastmodified $Date$
  */
 
 /**

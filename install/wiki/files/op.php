@@ -83,6 +83,9 @@ if (ploopi_ismoduleallowed('wiki'))
 
             ploopi_create_user_action_log(_WIKI_ACTION_PAGE_MODIFY, $objWikiPage->fields['id']);
             
+            ploopi_search_remove_index(_WIKI_OBJECT_PAGE, $objWikiPage->fields['id']);
+            ploopi_search_create_index(_WIKI_OBJECT_PAGE, $objWikiPage->fields['id'], $objWikiPage->fields['id'], strip_tags(html_entity_decode(wiki_render($objWikiPage->fields['content']))), $objWikiPage->fields['id'], true, $objWikiPage->fields['ts_created'], $objWikiPage->fields['ts_modified']);
+            
             ploopi_redirect("admin.php?wiki_page_id={$strWikiPageId}");
         break;
 
@@ -95,6 +98,7 @@ if (ploopi_ismoduleallowed('wiki'))
             $objWikiPage = new wiki_page();
             if ($objWikiPage->open($strWikiPageId))
             {
+                ploopi_search_remove_index(_WIKI_OBJECT_PAGE, $strWikiPageId);
                 $objWikiPage->delete();
 
                 // on envoie le ticket de notification d'action sur l'objet

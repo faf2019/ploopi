@@ -57,6 +57,21 @@ if ($strWikiPageId == '') // cas particulier, pas d'id renseigné => recherche de
 $objWikiPage = new wiki_page();
 $booExists = $objWikiPage->open($strWikiPageId);
 
+// Gestion de l'historique des visites
+if (!isset($_SESSION['wiki']['history'])) $_SESSION['wiki']['history'] = array();
+
+$arrUrlHistory = array();
+foreach($_SESSION['wiki']['history'] as $strPageId) $arrUrlHistory[] = "<a href=\"".ploopi_urlencode("admin.php?wiki_page_id={$strPageId}")."\">{$strPageId}</a>";
+
+if ($booExists)
+{
+    if (empty($_SESSION['wiki']['history']) || $_SESSION['wiki']['history'][0] != $strWikiPageId)
+    {
+        array_unshift($_SESSION['wiki']['history'], $strWikiPageId);
+        if (sizeof($_SESSION['wiki']['history']) > 5) array_pop($_SESSION['wiki']['history']);
+    }
+}
+
 // Vérification du droit de modification
 if ($op == 'wiki_page_modify' && (!ploopi_isactionallowed(_WIKI_ACTION_PAGE_MODIFY) || $objWikiPage->fields['locked'])) $op = '';
 
@@ -198,6 +213,11 @@ echo $skin->open_simplebloc($strWikiPageId);
         }
         ?>
     </div>
+    <div style="padding:4px 8px;background-color:#ddd;border-bottom:1px solid #ccc;">
+        Pages visitées : <?php echo implode(' &raquo; ', $arrUrlHistory); ?>
+    </div>
+    
+    
     <?
     switch($op)
     {

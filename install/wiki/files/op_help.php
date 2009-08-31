@@ -183,5 +183,18 @@
 		<td>!<em>attached_image</em>!</td>
 		<td></td>
 	</tr>
+    <tr>
+        <th colspan="3">Pour aller plus loin...</th>
+    </tr>
+    <tr>
+        <td colspan="3"><a href="http://hobix.com/textile/" target=_"new"><strong>Guide complet</strong> : Syntaxe avancée</a></td>
+    </tr>
+    <tr>
+        <td colspan="3"><a href="http://hobix.com/textile/quick.html" target=_"new"><strong>Guide Complet</strong> : Version simplifiée</a></td>
+    </tr>
+    <tr>
+        <td colspan="3"><a href="http://fr.wikipedia.org/wiki/Textile_(langage)" target=_"new"><strong>Wikipedia</strong> : Présentation de Textile</a></td>
+    </tr>
+    
 </table>
 </div>
