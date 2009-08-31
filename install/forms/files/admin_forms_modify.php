@@ -330,39 +330,40 @@ if (!$forms->new)
     $array_columns = array();
     $array_values = array();
 
-    $array_columns['left']['pos'] = array(  'label' => 'P.',
-                                            'width' => 35,
-                                            'options' => array('sort' => true)
-                                            );
+    $array_columns['left']['pos'] = array(  
+        'label' => 'P.',
+        'width' => 35,
+         'options' => array('sort' => true)
+     );
 
-    $array_columns['auto']['name'] = array( 'label' => _FORMS_FIELD_NAME,
-                                            'options' => array('sort' => true)
-                                            );
+    $array_columns['auto']['name'] = array( 
+        'label' => _FORMS_FIELD_NAME,
+        'options' => array('sort' => true)
+    );
 
-    $array_columns['right']['export'] = array(  'label' => _FORMS_FIELD_EXPORTVIEW_SHORT,
-                                                'width' => 55,
-                                                'options' => array('sort' => true)
-                                                );
+    $array_columns['right']['export'] = array(  
+        'label' => _FORMS_FIELD_EXPORTVIEW_SHORT,
+        'width' => 55,
+        'options' => array('sort' => true)
+    );
 
-    $array_columns['right']['array'] = array(   'label' => _FORMS_FIELD_ARRAYVIEW_SHORT,
-                                                'width' => 55,
-                                                'options' => array('sort' => true)
-                                                );
+    $array_columns['right']['array'] = array(   
+        'label' => _FORMS_FIELD_ARRAYVIEW_SHORT,
+        'width' => 55,
+        'options' => array('sort' => true)
+    );
 
-    $array_columns['right']['needed'] = array(  'label' => _FORMS_FIELD_NEEDED_SHORT,
-                                                'width' => 55,
-                                                'options' => array('sort' => true)
-                                                );
+    $array_columns['right']['needed'] = array(  
+        'label' => _FORMS_FIELD_NEEDED_SHORT,
+        'width' => 55,
+        'options' => array('sort' => true)
+    );
 
-    /*$array_columns['right']['desc'] = array(  'label' => _FORMS_FIELD_DESCRIPTION,
-                                                'width' => 150,
-                                                'options' => array('sort' => true)
-                                                );
-*/
-    $array_columns['right']['type'] = array(    'label' => _FORMS_FIELD_TYPE,
-                                                'width' => 250,
-                                                'options' => array('sort' => true)
-                                                );
+    $array_columns['right']['type'] = array(    
+        'label' => _FORMS_FIELD_TYPE,
+        'width' => 250,
+        'options' => array('sort' => true)
+    );
 
     $array_columns['actions_right']['actions'] = array('label' => '', 'width' => 74);
 
@@ -381,10 +382,8 @@ if (!$forms->new)
 
         if ($fields['separator'])
         {
-            $desc = str_replace('<LEVEL>',$fields['separator_level'],_FORMS_FIELD_SEPARATOR_DESC);
-
             $array_values[$c]['values']['name']         = array('label' =>  $fields['name']);
-            $array_values[$c]['values']['type']         = array('label' =>  "{$desc} ({$fields['separator_fontsize']} pix)");
+            $array_values[$c]['values']['type']         = array('label' =>  str_replace('<LEVEL>',$fields['separator_level'],_FORMS_FIELD_SEPARATOR_DESC));
             $array_values[$c]['values']['export']       = array('label' =>  '&nbsp;');
             $array_values[$c]['values']['array']        = array('label' =>  '&nbsp;');
             $array_values[$c]['values']['needed']       = array('label' =>  '&nbsp;');

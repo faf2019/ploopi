@@ -1,3 +1,10 @@
+== Module FORMS - version 2.3.6b =====================================================
+
+2009-08-31  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout du support des interlignes dans le template par défaut
+ * Correction d'un bug mineur à l'affichage des champs d'un formulaire (Suppression du texte "0px") 
+
 == Module FORMS - version 2.3.6 =====================================================
 
 2009-06-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
