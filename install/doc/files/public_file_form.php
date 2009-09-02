@@ -1,7 +1,9 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2009 HeXad
+    
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +28,7 @@
  *
  * @package doc
  * @subpackage public
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  *
@@ -118,10 +120,14 @@ if ($newfile)
                 {
                     ?>
                     <p class="ploopi_va" style="margin-bottom:2px;">
-                        <input type="file" name="docfile_file_<?php echo $i; ?>" />&nbsp;<input type="text" style="width:300px;" maxlength="100" name="docfile_description_<?php echo $i; ?>" />
+                        <input type="file" name="docfile_file_<?php echo $i; ?>" />&nbsp;<input type="text" style="width:250px;" maxlength="100" name="docfile_description_<?php echo $i; ?>" />
                         <span class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_readonly_<?php echo $i; ?>_host');">
                             <input type="checkbox" name="docfile_readonly_<?php echo $i; ?>" id="docfile_readonly_<?php echo $i; ?>_host" value="1">
                             <span>Lecture Seule</span>
+                        </span>
+                        <span class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_decompress_<?php echo $i; ?>_host');">
+                            <input type="checkbox" name="docfile_decompress_<?php echo $i; ?>" id="docfile_decompress_<?php echo $i; ?>_host" value="1">
+                            <span>A décompresser</span>
                         </span>
                     </p>
                     <?php
@@ -155,11 +161,15 @@ if ($newfile)
                     {
                         ?>
                         <p class="ploopi_va" style="margin-bottom:2px;">
-                            <input type="text" class="text" name="docfile_file_<?php echo $i; ?>" id="docfile_file_server_<?php echo $i; ?>" value="" style="width:300px;cursor:pointer;" onclick="javascript:ploopi_filexplorer_popup('<?php echo ploopi_filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server_{$i}", "docfile_explorer_{$i}"); ?>', event);" readonly="readonly" />
-                            <input type="button" class="button" value="Parcourir" style="width:90px;" onclick="javascript:ploopi_filexplorer_popup('<?php echo ploopi_filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server_{$i}", "docfile_explorer_{$i}"); ?>', event);" />&nbsp;<input type="text" style="width:300px;" maxlength="100" class="text" name="docfile_description_<?php echo $i; ?>" />
+                            <input type="text" class="text" name="docfile_file_<?php echo $i; ?>" id="docfile_file_server_<?php echo $i; ?>" value="" style="width:160px;cursor:pointer;" onclick="javascript:ploopi_filexplorer_popup('<?php echo ploopi_filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server_{$i}", "docfile_explorer_{$i}"); ?>', event);" readonly="readonly" />
+                            <input type="button" class="button" value="Parcourir" style="width:90px;" onclick="javascript:ploopi_filexplorer_popup('<?php echo ploopi_filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server_{$i}", "docfile_explorer_{$i}"); ?>', event);" />&nbsp;<input type="text" style="width:250px;" maxlength="100" class="text" name="docfile_description_<?php echo $i; ?>" />
                             <span class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_readonly_<?php echo $i; ?>_server');">
                                 <input type="checkbox" name="docfile_readonly_<?php echo $i; ?>" id="docfile_readonly_<?php echo $i; ?>_server" value="1">
                                 <span>Lecture Seule</span>
+                            </span>
+                            <span class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_decompress_<?php echo $i; ?>_server');">
+                                <input type="checkbox" name="docfile_decompress_<?php echo $i; ?>" id="docfile_decompress_<?php echo $i; ?>_server" value="1">
+                                <span>A décompresser</span>
                             </span>
                         </p>
                         <?php
