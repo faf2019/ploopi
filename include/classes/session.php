@@ -85,7 +85,7 @@ class ploopi_session
 
     public static function open()
     { 
-        ini_set('session.gc_probability', 100);
+        ini_set('session.gc_probability', 10);
         ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);    
 
         if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
