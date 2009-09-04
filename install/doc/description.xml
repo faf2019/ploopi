@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>doc</label>
-        <version>4.5.0</version>
+        <version>4.5.0b</version>
         <author>Ovensia</author>
-        <date>20090902000000</date>
+        <date>20090904000000</date>
         <description>Gestion de Documents</description>
         <paramtype>
             <name>doc_viewfoldersinblock</name>
@@ -184,6 +184,22 @@
                 <displayed_value>non</displayed_value>
             </paramchoice>
         </paramtype>
+        <paramtype>
+            <name>doc_explorer_displaytreeview</name>
+            <label>Afficher l'arborscence des dossiers avec l'explorateur</label>
+            <default_value>1</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>1</value>
+                <displayed_value>oui</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>0</value>
+                <displayed_value>non</displayed_value>
+            </paramchoice>
+        </paramtype>
+        
         <action>
             <id_action>1</id_action>
             <label>Ajouter un Dossier</label>

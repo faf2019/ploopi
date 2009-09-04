@@ -43,22 +43,33 @@ $currentfolder = (isset($_REQUEST['currentfolder'])) ? $_REQUEST['currentfolder'
 echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
 echo $skin->open_simplebloc('Explorateur de documents');
 
-?>
-<div id="doc_main">
-    <div id="doc_treeview">
-        <div id="doc_treeview_inner">
-            <?php
-            // Récupération des dossiers visibles
-            $arrFolders = doc_getfolders();
-            
-            // Récupération de la structure du treeview
-            $arrTreeview = doc_gettreeview($arrFolders);
-            
-            echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $currentfolder, -1); 
-            ?>
+if (ploopi_getparam('doc_explorer_displaytreeview')) 
+{
+    ?>
+    <div id="doc_main">
+        <div id="doc_treeview">
+            <div id="doc_treeview_inner">
+                <?php
+                // Récupération des dossiers visibles
+                $arrFolders = doc_getfolders();
+                
+                // Récupération de la structure du treeview
+                $arrTreeview = doc_gettreeview($arrFolders);
+                
+                echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $currentfolder, -1); 
+                ?>
+            </div>
         </div>
-    </div>
-    <div id="doc_browser">
+        <div id="doc_browser">
+    <?
+}
+else
+{
+    ?>
+    <div id="doc_main_notreeview">
+    <?
+}
+?>
         <div id="doc_browser_inner">
             <?php
             switch($op)
@@ -234,7 +245,14 @@ echo $skin->open_simplebloc('Explorateur de documents');
             }
             ?>
         </div>
+    <? 
+    if (ploopi_getparam('doc_explorer_displaytreeview')) 
+    {
+        ?>
     </div>
+        <?
+    }
+    ?>
 </div>
 <?php
 echo $skin->close_simplebloc();

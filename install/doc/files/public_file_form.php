@@ -312,7 +312,13 @@ else
                     </div>
                     <?
                 break;
-
+                
+                case 'video':
+                    ?>
+                     <video id='v1' src="<?php echo ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true); ?>" controls="true"><div style="padding:10px;">Votre navigateur ne supporte pas la balise "video".<br /><a href="<? echo ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true); ?>">Cliquez sur ce lien pour télécharger le document</a></div></video>
+                    <?
+                break;   
+                
                 default:
                 case 'iframe':
                     ?>

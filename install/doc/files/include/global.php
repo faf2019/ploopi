@@ -97,7 +97,12 @@ $doc_arrDocViewableFormats =
         'aac'   => 'jw_player',
         'mp3'   => 'jw_player',
         'mp4'   => 'jw_player',
-        'swf'   => 'flash',
+        'ogv'   => 'video',
+        'ogg'   => 'video',
+        'mpg'   => 'video',
+        'mpeg'  => 'video',
+        'mov'   => 'video',
+        'avi'   => 'video'
     );
 
 /**

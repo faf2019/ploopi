@@ -1,3 +1,10 @@
+== Module DOC - version 4.5.0b =====================================================
+
+2009-09-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'un paramètre permettant de désactiver le treeview dans l'explorateur de documents  
+ * Affichage de l'url publique du fichier de manière plus visible
+
 == Module DOC - version 4.5.0 =====================================================
 
 2009-09-02  Xavier Toussaint ~ HeXad <xavier@hexad.fr>

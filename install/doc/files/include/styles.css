@@ -26,6 +26,11 @@
     overflow:auto;
 }
 
+#doc_main_notreeview {
+    position:relative;
+    overflow:auto;
+}
+
 #doc_treeview {
     float:left;
     width:20%;
