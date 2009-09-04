@@ -91,6 +91,9 @@ class ploopi_cipher
         $this->cipher = mcrypt_module_open(MCRYPT_BLOWFISH,'','cbc','');
     }
 
+    /**
+     * Méthode singleton
+     */
     
     public static function singleton()
     {
@@ -141,7 +144,7 @@ class ploopi_cipher
         $strDecoded = ploopi_base64_decode($strEncrypted);
         mcrypt_generic_init($this->cipher, $this->key, $this->iv);
         ploopi_unset_error_handler();        
-        $strDecoded = strlen($strDecoded) > 0 ? gzuncompress(rtrim(mdecrypt_generic($this->cipher, $strDecoded),"\0")) : '';
+        $strDecoded = strlen($strDecoded) > 0 ? gzuncompress(mdecrypt_generic($this->cipher, $strDecoded)) : '';
         ploopi_set_error_handler();
         mcrypt_generic_deinit($this->cipher);
         
@@ -149,3 +152,5 @@ class ploopi_cipher
     }
 }
 ?>
+
+
