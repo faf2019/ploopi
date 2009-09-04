@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.1.4d ============================================
+
+2009-09-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Amélioration du format du fichier sitemap.xml (problème avec le champ lastmod et des dates vides)
+
 == Module WebEdit - version 2.1.4c ============================================
 
 2009-08-31  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
