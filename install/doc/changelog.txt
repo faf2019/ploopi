@@ -1,3 +1,9 @@
+== Module DOC - version 4.5.0c =====================================================
+
+2009-09-04  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Correction d'une erreur. La boucle de décompression pouvait s'executer meme si le fichier transmis était erroné. 
+
 == Module DOC - version 4.5.0b =====================================================
 
 2009-09-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

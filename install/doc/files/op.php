@@ -201,132 +201,135 @@ if ($_SESSION['ploopi']['connected'])
 
                             break;
                         }
-
-                        // si pas d'erreur et ce n'est pas un fichier compressé, on enregistre le document
-                        if (!$error && empty($_REQUEST["docfile_decompress_{$i}"]))
+                        
+                        if(!$error) // si pas d'erreur
                         {
-                            $arrListFic[] = 
-                                array(
-                                    'name'        => $filename,
-                                    'file'        => $filename,
-                                    'size'        => $filesize,
-                                    'description' => ((empty($_REQUEST["docfile_description_{$i}"])) ? '' : $_REQUEST["docfile_description_{$i}"]),
-                                    'readonly'    => ((empty($_REQUEST["docfile_readonly_{$i}"])) ? 0 : 1),
-                                    'uncompress'  => false
-                                );
-                        }
-                        elseif(!empty($_REQUEST["docfile_decompress_{$i}"])) // Si c'est un fichier à décompresser
-                        {
-                            // Création d'un dossier de travail temporaire
-                            $tmpfoldername = md5(uniqid(rand(), true));
-                            $uncompress_path = doc_getpath()._PLOOPI_SEP.'uncompress'._PLOOPI_SEP.$tmpfoldername;
-                            if (!is_dir($uncompress_path)) ploopi_makedir($uncompress_path);
-                            
-                            if (is_writeable($uncompress_path))
+                            // Ce n'est pas un fichier compressé, on enregistre le document
+                            if (empty($_REQUEST["docfile_decompress_{$i}"]))
                             {
-                                switch (pathinfo($filename,PATHINFO_EXTENSION))
+                                $arrListFic[] = 
+                                    array(
+                                        'name'        => $filename,
+                                        'file'        => $filename,
+                                        'size'        => $filesize,
+                                        'description' => ((empty($_REQUEST["docfile_description_{$i}"])) ? '' : $_REQUEST["docfile_description_{$i}"]),
+                                        'readonly'    => ((empty($_REQUEST["docfile_readonly_{$i}"])) ? 0 : 1),
+                                        'uncompress'  => false
+                                    );
+                            }
+                            elseif(!empty($_REQUEST["docfile_decompress_{$i}"])) // Si c'est un fichier à décompresser
+                            {
+                                // Création d'un dossier de travail temporaire
+                                $tmpfoldername = md5(uniqid(rand(), true));
+                                $uncompress_path = doc_getpath()._PLOOPI_SEP.'uncompress'._PLOOPI_SEP.$tmpfoldername;
+                                if (!is_dir($uncompress_path)) ploopi_makedir($uncompress_path);
+                                
+                                if (is_writeable($uncompress_path))
                                 {
-                                    /*
-                                    case 'gz':
-                                    //$gz = new 
-                                    break;
-                                    
-                                    case 'bzip':
-                                    break;
-                                    
-                                    case 'bzip':
-                                    break;
-                                    */  
-                                    default:
-                                    case 'zip':
-                                        $zip = new ZipArchive;
-                                        if ($zip->open($tmpfile)===true && $zip->extractTo($uncompress_path))
-                                        {
-                                            for ($numFicZip=0; $numFicZip<$zip->numFiles;$numFicZip++) 
+                                    switch (pathinfo($filename,PATHINFO_EXTENSION))
+                                    {
+                                        /*
+                                        case 'gz':
+                                        //$gz = new 
+                                        break;
+                                        
+                                        case 'bzip':
+                                        break;
+                                        
+                                        case 'bzip':
+                                        break;
+                                        */  
+                                        default:
+                                        case 'zip':
+                                            $zip = new ZipArchive;
+                                            if ($zip->open($tmpfile)===true && $zip->extractTo($uncompress_path))
                                             {
-                                                $arrInfoFicUnzip = $zip->statIndex($numFicZip);
-                                                if($arrInfoFicUnzip['size'])
+                                                for ($numFicZip=0; $numFicZip<$zip->numFiles;$numFicZip++) 
                                                 {
-                                                    $arrName = explode(_PLOOPI_SEP,$arrInfoFicUnzip['name']);
-                                              
-                                                    $arrListFic[] = 
-                                                        array(
-                                                            'name'        => $arrName[count($arrName)-1],
-                                                            'file'        => $arrInfoFicUnzip['name'],
-                                                            'size'        => $arrInfoFicUnzip['size'],
-                                                            'description' => ((empty($_REQUEST["docfile_description_{$i}"])) ? '' : $_REQUEST["docfile_description_{$i}"]),
-                                                            'readonly'    => ((empty($_REQUEST["docfile_readonly_{$i}"])) ? 0 : 1),
-                                                            'uncompress'  => true
-                                                        );
+                                                    $arrInfoFicUnzip = $zip->statIndex($numFicZip);
+                                                    if($arrInfoFicUnzip['size'])
+                                                    {
+                                                        $arrName = explode(_PLOOPI_SEP,$arrInfoFicUnzip['name']);
+                                                  
+                                                        $arrListFic[] = 
+                                                            array(
+                                                                'name'        => $arrName[count($arrName)-1],
+                                                                'file'        => $arrInfoFicUnzip['name'],
+                                                                'size'        => $arrInfoFicUnzip['size'],
+                                                                'description' => ((empty($_REQUEST["docfile_description_{$i}"])) ? '' : $_REQUEST["docfile_description_{$i}"]),
+                                                                'readonly'    => ((empty($_REQUEST["docfile_readonly_{$i}"])) ? 0 : 1),
+                                                                'uncompress'  => true
+                                                            );
+                                                    }
                                                 }
                                             }
-                                        }
-                                    break;
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                            
-                        if(!empty($arrListFic))
-                        {           
-                            foreach($arrListFic as $fic)
-                            {
-                                $docfile = ($draft) ? new docfiledraft() : new docfile();
-                                $docfile->setuwm();
-                            
-                                $docfile->fields['description'] = $fic['description'];
-                                $docfile->fields['readonly'] = $fic['readonly'];
-                            
-                                $docfile->fields['id_folder'] = $currentfolder;
-                                $docfile->fields['id_user_modify'] = $_SESSION['ploopi']['userid'];
-                            
-                                // si le fichier vient d'un dossier partagé, il ne faut pas le déplacer mais le copier
-                                if($fic['uncompress'])
-                                {
-                                    if ($_REQUEST['doc_mode'] == 'server') $docfile->sharedfile = $uncompress_path._PLOOPI_SEP.$fic['file'];
-                                    else $docfile->tmpfile = $uncompress_path._PLOOPI_SEP.$fic['file'];
-                                }
-                                else
-                                {
-                                    if ($_REQUEST['doc_mode'] == 'server') $docfile->sharedfile = $tmpfile;
-                                    else $docfile->tmpfile = $tmpfile;
-                                }
-                            
-                                $docfile->fields['name'] = $fic['name'];
-                                $docfile->fields['size'] = $fic['size'];
                                 
-                                $error = $docfile->save();
-                            
-                                if ($draft)
+                            if(!empty($arrListFic))
+                            {           
+                                foreach($arrListFic as $fic)
                                 {
-                                    $_SESSION['ploopi']['tickets']['users_selected'] = $wfusers;
-                                    ploopi_tickets_send(
-                                        "Demande de validation du document <strong>\"{$docfile->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})",
-                                        "Ceci est un message automatique envoyé suite à une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce document pour le valider en cliquant sur le lien ci-dessous.",
-                                        true,
-                                        0,
-                                        _DOC_OBJECT_FILEDRAFT,
-                                        $docfile->fields['md5id'],
-                                        $docfile->fields['name']
-                                    );
-                                }
-                            
-                                if (!$error)
-                                {
-                                    if (!$draft && $currentfolder != 0)
+                                    $docfile = ($draft) ? new docfiledraft() : new docfile();
+                                    $docfile->setuwm();
+                                
+                                    $docfile->fields['description'] = $fic['description'];
+                                    $docfile->fields['readonly'] = $fic['readonly'];
+                                
+                                    $docfile->fields['id_folder'] = $currentfolder;
+                                    $docfile->fields['id_user_modify'] = $_SESSION['ploopi']['userid'];
+                                
+                                    // si le fichier vient d'un dossier partagé, il ne faut pas le déplacer mais le copier
+                                    if($fic['uncompress'])
                                     {
-                                        // On va chercher les abonnés
-                                        $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_ADDFILE, _DOC_ACTION_MODIFYFILE));
-                                
-                                        // on envoie le ticket de notification d'action sur l'objet
-                                        if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_ADDFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet à été créé');
+                                        if ($_REQUEST['doc_mode'] == 'server') $docfile->sharedfile = $uncompress_path._PLOOPI_SEP.$fic['file'];
+                                        else $docfile->tmpfile = $uncompress_path._PLOOPI_SEP.$fic['file'];
+                                    }
+                                    else
+                                    {
+                                        if ($_REQUEST['doc_mode'] == 'server') $docfile->sharedfile = $tmpfile;
+                                        else $docfile->tmpfile = $tmpfile;
                                     }
                                 
-                                    ploopi_create_user_action_log(_DOC_ACTION_ADDFILE, $docfile->fields['id']);
+                                    $docfile->fields['name'] = $fic['name'];
+                                    $docfile->fields['size'] = $fic['size'];
+                                    
+                                    $error = $docfile->save();
+                                
+                                    if ($draft)
+                                    {
+                                        $_SESSION['ploopi']['tickets']['users_selected'] = $wfusers;
+                                        ploopi_tickets_send(
+                                            "Demande de validation du document <strong>\"{$docfile->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})",
+                                            "Ceci est un message automatique envoyé suite à une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce document pour le valider en cliquant sur le lien ci-dessous.",
+                                            true,
+                                            0,
+                                            _DOC_OBJECT_FILEDRAFT,
+                                            $docfile->fields['md5id'],
+                                            $docfile->fields['name']
+                                        );
+                                    }
+                                
+                                    if (!$error)
+                                    {
+                                        if (!$draft && $currentfolder != 0)
+                                        {
+                                            // On va chercher les abonnés
+                                            $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_ADDFILE, _DOC_ACTION_MODIFYFILE));
+                                    
+                                            // on envoie le ticket de notification d'action sur l'objet
+                                            if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_ADDFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet à été créé');
+                                        }
+                                    
+                                        ploopi_create_user_action_log(_DOC_ACTION_ADDFILE, $docfile->fields['id']);
+                                    }
                                 }
                             }
+                            // Suppression du dossier temporaire
+                            if(isset($uncompress_path) && is_dir($uncompress_path)) ploopi_deletedir($uncompress_path);
                         }
-                        // Suppression du dossier temporaire
-                        if(isset($uncompress_path) && is_dir($uncompress_path)) ploopi_deletedir($uncompress_path);
                     }
                 }
                 else // mise à jour d'un (unique) fichier

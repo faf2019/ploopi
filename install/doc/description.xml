@@ -2,7 +2,7 @@
 <ploopi>
     <moduletype>
         <label>doc</label>
-        <version>4.5.0b</version>
+        <version>4.5.0c</version>
         <author>Ovensia</author>
         <date>20090904000000</date>
         <description>Gestion de Documents</description>
