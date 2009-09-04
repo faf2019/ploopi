@@ -85,7 +85,7 @@ class ploopi_session
 
     public static function open()
     { 
-        ini_set('session.gc_probability', 10);
+        ini_set('session.gc_probability', 100);
         ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);    
 
         if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
@@ -182,7 +182,10 @@ class ploopi_session
     {
         if (self::$booUseDb)
         {
-            self::$objDb->query("DELETE `ploopi_session`, `ploopi_serializedvar` FROM  `ploopi_session`, `ploopi_serializedvar` WHERE `ploopi_session`.`access` < '".self::$objDb->addslashes((time() - $max))."' AND  `ploopi_session`.`id` =  `ploopi_serializedvar`.`id_session`");
+            // Delete serialized vars
+            self::$objDb->query("DELETE `ploopi_serializedvar` FROM  `ploopi_session`, `ploopi_serializedvar` WHERE `ploopi_session`.`access` < '".self::$objDb->addslashes((time() - $max))."' AND  `ploopi_session`.`id` =  `ploopi_serializedvar`.`id_session`");
+            // Delete session vars
+            self::$objDb->query("DELETE `ploopi_session` FROM  `ploopi_session` WHERE `ploopi_session`.`access` < '".self::$objDb->addslashes((time() - $max))."'");
         }
         else
         {
