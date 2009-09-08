@@ -216,7 +216,20 @@ class form_field extends form_element
         'maxlength' => null,
         'readonly' => false,
         'disabled' => false,
-        'accesskey' => null
+        'accesskey' => null,
+        'onblur' => null,
+        'onfocus' => null,
+        'onclick' => null,
+        'ondblclick' => null,
+        'onkeydown' => null,
+        'onkeypress' => null,
+        'onkeyup' => null,
+        'onmousedown' => null,
+        'onmousemove' => null,
+        'onmouseout' => null,
+        'onmouseover' => null,
+        'onmouseup' => null,
+    
     );    
     
     /**
@@ -295,6 +308,7 @@ class form_field extends form_element
         {
             case 'input:text':
                 $strOutput .= "<input type=\"text\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"text{$strClass}\"{$strStyle}{$strMaxLength}{$strDisabled}{$strReadonly}/>";
+                if ($this->arrOptions['datatype'] == 'date') $strOutput .= ploopi_open_calendar($this->strId, false, null, 'display:block;float:left;margin-left:-35px;margin-top:1px;');
             break;
             
             case 'input:password':
@@ -376,6 +390,8 @@ class form_select extends form_field
         foreach($this->arrValues as $strKey => $strValue) 
         {
             $strValue = htmlentities($strValue);
+            $strKey = htmlentities($strKey);
+            
             $strSelected = $this->strSelected == $strKey ? ' selected="selected"' : '';
             $strOutput .= "<option value=\"{$strKey}\"{$strSelected}>{$strValue}</option>";
         }
@@ -435,6 +451,58 @@ class form_checkbox extends form_field
         return $this->renderForm("<input type=\"checkbox\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"checkbox{$strClass}\"{$strStyle}{$strChecked} />");
     }
 }
+
+/**
+ * Classe de gestion des champs de type "radio" d'un formulaire
+ *
+ */    
+class form_radio extends form_field
+{
+    /**
+     * True si le radiobutton est coché
+     *
+     * @var boolean
+     */    
+    private $booChecked;
+    
+    /**
+     * Constructeur de la classe
+     *
+     * @param string $strLabel libellé du champ
+     * @param string $strValue valeur du champ
+     * @param boolean $booChecked true si la checkbox est cochée
+     * @param string $strName propriété "name" du champ
+     * @param string $strId propriété "id" du champ
+     * @param array $arrOptions options du champ
+     * 
+     * @return form_radio
+     */    
+    public function __construct($strLabel, $strValue, $booChecked, $strName, $strId = null, $arrOptions = null)
+    {
+        $this->setType('select');
+        
+        parent::__construct('input:radio', $strLabel, $strValue, $strName, $strId, $arrOptions);
+        
+        $this->booChecked = $booChecked;
+    }
+    
+    /**
+     * Génère le rendu html du champ
+     *
+     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @return string code html
+     */
+    public function render($intTabindex)
+    {
+        $strChecked = $this->booChecked ? ' checked="checked"' : '';
+        $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\"";
+        $strClass = is_null($this->arrOptions['class']) ? '' : " {$this->arrOptions['class']}";
+        $strValue = htmlentities($this->arrValues[0]);
+        
+        return $this->renderForm("<input type=\"radio\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"radio{$strClass}\"{$strStyle}{$strChecked} />");
+    }
+}
+
 
 /**
  * Classe de gestion des champs de type "text" (statique) d'un formulaire
@@ -622,16 +690,204 @@ class form_button extends form_element
 }
 
 /**
+ * Classe de gestion des contenus libres
+ */    
+
+class form_html extends form_field
+{
+    
+    /**
+     * Contenu de l'élément
+     *
+     * @var string
+     */
+    private $strContent;
+    
+    public function __construct($strContent)
+    {
+        $this->strContent = $strContent;    
+    }
+    
+    /**
+     * Retourne le contenu html
+     */
+    public function render($intTabindex)
+    {
+        return $this->strContent;
+    }
+}
+
+/**
+ * Classe de gestion des panels
+ *
+ */    
+class form_panel
+{
+    /**
+     * Propriété "id" du panel
+     *
+     * @var string
+     */
+    private $strId;
+    
+    /**
+     * Libellé du panel
+     *
+     * @var string
+     */    
+    private $strLabel;
+    
+    /**
+     * Champs du panel
+     *
+     * @var array
+     */
+    private $arrFields;    
+    
+    /**
+     * Options du panel
+     *
+     * @var array
+     */    
+    private $arrOptions;
+    
+    /*
+     * Object form "parent"
+     */
+    private $objParentForm;
+    
+    
+    static private $arrDefaultOptions = array(
+        'style'     => null,
+        'class'     => null
+    );     
+    
+    public static $strDefaultPanel = 'ploopi_panel_default';
+    
+
+    /**
+     * Constructeur du panel
+     * @param string $strId identifiant du panel
+     * @param string $strLabel libellé du panel
+     * @param array $arrOptions options du panel
+     * 
+     * @return form_panel 
+     */
+    public function __construct($strId, $strLabel = null, $arrOptions = null)
+    {
+        // init Champs
+        $this->arrFields = array();
+        
+        $this->strId = $strId;
+        $this->strLabel = $strLabel;
+        $this->objParentForm = null;
+        
+        // Fusion des options
+        $this->arrOptions = is_null($arrOptions) ? self::$arrDefaultOptions : array_merge(self::$arrDefaultOptions, $arrOptions);
+        
+    }    
+    
+    /**
+     * Ajoute un objet de type form_field au panel
+     * 
+     * @param form_field $objField objet form_field
+     */
+    public function addField(form_field $objField)
+    {
+        if ($objField->getType() == 'input:file' && !is_null($this->objParentForm) && get_class($this->objParentForm) == 'form') $this->objParentForm->setOptions(array('enctype' => 'multipart/form-data'));
+        
+        $this->arrFields[] = &$objField;
+    }        
+    
+    /**
+     * Affecte le lien vers le formulaire "parent"
+     */
+    public function setParentForm(form $objParentForm)
+    {
+        $this->objParentForm = &$objParentForm;
+    }
+    
+    /**
+     * Lecture de la propriété "id"
+     *
+     * @return string
+     */
+    public function getId() { return $this->strId; }
+    
+    /**
+     * Lecture de la propriété "label"
+     *
+     * @return string
+     */
+    public function getLabel() { return $this->strLabel; }
+
+    /**
+     * Lecture des options
+     *
+     * @return array
+     */
+    public function getOptions() { return $this->arrOptions; }
+
+    /**
+     * Lecture du nombre de champs
+     *
+     * @return int
+     */
+    public function getNbFields() { return sizeof($this->arrFields); }
+    
+    
+    /**
+     * Retourne les champs du panel
+     *
+     * @return array
+     */
+    public function getFields() { return $this->arrFields; }
+    
+    /**
+     * Génère le rendu html du panel
+     *
+     * @param string $strFields contenu du panel
+     * @return string code html
+     */    
+    public function render($intTabindex)
+    {
+        $strOutputFields = '';
+        
+        // Génération des champs
+        $strOutputFields = '';
+        
+        foreach($this->arrFields as $objField)
+        {
+            $strOutputFields .= $objField->render($intTabindex++);
+            // On détermine si le formulaire dispose d'un champ FILE
+            // if (!$booHasFile && $objField->getType() == 'input:file') $booHasFile = true;
+        }
+        
+        $strClass = is_null($this->arrOptions['class']) ? '' : " class=\"{$this->arrOptions['class']}\""; 
+        $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\""; 
+        
+        $strOutput = "
+            <fieldset id=\"{$this->strId}\"{$strClass}{$strStyle}>
+                <legend>{$this->strLabel}</legend>
+                {$strOutputFields}
+            </fieldset>
+        ";
+        
+        return $strOutput;
+    }
+}
+    
+/**
  * Classe de gestion d'un formulaire HTML composé de champs, de boutons et d'un système de validation javascript
  */
 class form
 {
     /**
-     * Champs du formulaire
+     * Panels du formulaire
      *
      * @var array
      */
-    private $arrFields;
+    private $arrPanels;
     
     /**
      * Boutons du formulaire
@@ -647,9 +903,25 @@ class form
      */
     private $arrOptions;
     
+    /**
+     * Propriété "id" du formulaire
+     */
     private $strId;
+    
+    /**
+     * Action exécutée par le formulaire lors du submit
+     */
     private $strAction;
+    
+    /**
+     * Méthode de validation du formulaire (post/get)
+     */
     private $strMethod;
+    
+    /**
+     * Panel par défaut
+     */
+    private $objDefaultPanel;
     
     /**
      * Options par défaut des formulaires
@@ -679,14 +951,19 @@ class form
      */
     public function __construct($strId, $strAction, $strMethod = 'post', $arrOptions = null)
     {
-        $this->arrFields = array();
+        // Init Panels, Boutons
+        $this->arrPanels = array();
         $this->arrButtons = array();
         
         $this->strId = $strId;
         $this->strAction = $strAction;
         $this->strMethod = $strMethod;
         
+        // Fusion des options
         $this->arrOptions = is_null($arrOptions) ? form::$arrDefaultOptions : array_merge(form::$arrDefaultOptions, $arrOptions);
+        
+        // Création d'un panel par défaut (utilisé si l'utilisateur n'en crée pas)
+        $this->addPanel($this->objDefaultPanel = &new form_panel(form_panel::$strDefaultPanel, null, array('style' => 'border:0;')));
     }
     
     /**
@@ -696,20 +973,32 @@ class form
      */
     public function addField(form_field $objField)
     {
-        if ($objField->getType() == 'input:file') $this->setOptions(array('enctype' => 'multipart/form-data'));
+        $this->objDefaultPanel->addField($objField);
         
-        $this->arrFields[] = $objField;
+        /*if ($objField->getType() == 'input:file') $this->setOptions(array('enctype' => 'multipart/form-data'));
+        $this->arrFields[] = $objField;*/
     }
     
     /**
-     * Ajout un objet de type form_button au formulaire
+     * Ajoute un objet de type form_button au formulaire
      * 
      * @param form_button $objButton objet form_button
      */
     public function addButton(form_button $objButton)
     {
-        $this->arrButtons[] = $objButton;
+        $this->arrButtons[] = &$objButton;
     }
+    
+    /**
+     * Ajoute un objet de type form_panel au formulaire
+     * 
+     * @param form_panel $objPanel objet form_panel
+     */
+    public function addPanel(form_panel $objPanel)
+    {
+        $this->arrPanels[] = &$objPanel;
+        $objPanel->setParentForm($this);
+    }    
     
     /**
      * Définit les options du formulaire
@@ -727,6 +1016,21 @@ class form
      * @return array
      */
     public function getOptions() { return $this->arrOptions; }
+    
+    /**
+     * Retourne les champs du formulaire
+     * 
+     * @return array
+     */
+    public function getFields() 
+    {
+        $arrFields = array();
+        
+        foreach($this->arrPanels as $objPanel) $arrFields = array_merge($arrFields, $objPanel->getFields());
+        
+        return $arrFields; 
+    }
+    
         
     /**
      * Rendu HTML du formulaire
@@ -737,18 +1041,27 @@ class form
     {
         $intTabindex = $this->arrOptions['tabindex'];
         
-        /*
-         * Génération des champs
-         */
-        $strOutputFields = '';
+        
+        // Génération des Panels
+        $strOutputPanels = '';
         $booHasFile = false;
         
-        foreach($this->arrFields as $objField)
+        foreach($this->arrPanels as $objPanel)
         {
-            $strOutputFields .= $objField->render($intTabindex++);
-            // On détermine si le formulaire dispose d'un champ FILE
-            if (!$booHasFile && $objField->getType() == 'input:file') $booHasFile = true;
+            // Génération des champs
+            /*
+            $strOutputFields = '';
+            
+            foreach($this->arrFields as $objField)
+            {
+                $strOutputFields .= $objField->render($intTabindex++);
+                // On détermine si le formulaire dispose d'un champ FILE
+                if (!$booHasFile && $objField->getType() == 'input:file') $booHasFile = true;
+            }
+            */
+            if($objPanel->getNbFields()) $strOutputPanels .= $objPanel->render(&$intTabindex);
         }
+        
         
         $strTarget = is_null($this->arrOptions['target']) ? '' : " target=\"{$this->arrOptions['target']}\"";
         $strEnctype = is_null($this->arrOptions['enctype']) ? ($booHasFile ? ' enctype="multipart/form-data"' : '') : " enctype=\"{$this->arrOptions['enctype']}\"";
@@ -775,7 +1088,7 @@ class form
          * Insertion des champs
          */
         
-        $strOutput .= $strOutputFields;
+        $strOutput .= $strOutputPanels;
         
         
         /*
@@ -808,7 +1121,7 @@ class form
         
         $strOutput = "function ".$this->getFormValidateFunc()."(form) {";
         
-        foreach($this->arrFields as $objField)
+        foreach($this->getFields() as $objField)
         {
             if ($objField->getName() != '')
             {
