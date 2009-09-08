@@ -284,7 +284,6 @@ class data_object
         
         if ($numargs == sizeof($this->idfields))
         {
-            
             for ($i = 0; $i < $numargs; $i++) $id[$i] = func_get_arg($i);
             
             $this->sql = "SELECT * FROM `{$this->tablename}` WHERE `{$this->idfields[0]}` = '".$this->db->addslashes($id[0])."'";
@@ -331,7 +330,7 @@ class data_object
             $this->db->query($this->sql);
 
             // get "static" key 
-            foreach($this->idfields as $fieldname) $this->id[$fieldname] = $this->fields[$fieldname];
+            foreach($this->idfields as $fieldname) if (isset($this->fields[$fieldname])) $this->id[$fieldname] = $this->fields[$fieldname];
                         
             // get insert id from insert (if 1 field primary key and autokey)
             if (sizeof($this->idfields) >= 1 && $this->db->insertid() !== 0) 
