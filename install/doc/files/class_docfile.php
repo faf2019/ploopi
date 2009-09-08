@@ -306,6 +306,8 @@ class docfile extends data_object
     
     function delete()
     {
+        global $db;
+        
         $filepath = $this->getfilepath();
         if (file_exists($filepath)) @unlink($filepath);
 
@@ -321,7 +323,10 @@ class docfile extends data_object
         }
 
         ploopi_search_remove_index(_DOC_OBJECT_FILE, $this->fields['md5id']);
-
+        
+        // delete existing meta for current file
+        $db->query("DELETE FROM ploopi_mod_doc_meta WHERE id_file = {$this->fields['id']}");
+        
         parent::delete();
         
         if ($this->fields['id_folder'] != 0)
