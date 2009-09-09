@@ -489,13 +489,20 @@ function ploopi_tz_getutc($timezone_name = 'UTC')
  *
  * @param string $strInputFieldId identifiant du champ input associé
  */
-function ploopi_open_calendar($strInputFieldId)
+function ploopi_open_calendar($strInputFieldId, $booEcho = true, $strClass = null, $strStyle = null)
 {
     $strScript = $_SESSION['ploopi']['mode'] == 'backoffice' ? 'admin' : 'index'; 
-    ?>
-    <a  href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(192, event, 'ploopi_popup_calendar', '<? echo $strScript; ?>-light.php?ploopi_op=calendar_open', 'selected_date='+$('<? echo $strInputFieldId; ?>').value+'&inputfield_id=<? echo $strInputFieldId; ?>', 'POST');">
-    <img height="18" border="0" align="top" width="31" src="./img/calendar/calendar.gif"/>
-    </a>
-    <?php    
+    
+    $strClass = $strClass == null ? '' : " class=\"{$strClass}\""; 
+    $strStyle = $strStyle == null ? '' : " style=\"{$strStyle}\""; 
+    
+    $strEcho = "
+        <a href=\"javascript:void(0);\" onclick=\"javascript:ploopi_xmlhttprequest_topopup(192, event, 'ploopi_popup_calendar', '{$strScript}-light.php?ploopi_op=calendar_open', 'selected_date='+$('{$strInputFieldId}').value+'&inputfield_id={$strInputFieldId}', 'POST');\" {$strClass}{$strStyle}>
+        <img src=\"./img/calendar/calendar.gif\" />
+        </a>
+    ";
+
+    if ($booEcho) echo $strEcho;
+    else return $strEcho;
 }
 ?>
