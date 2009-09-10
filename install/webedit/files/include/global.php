@@ -1051,10 +1051,10 @@ function webedit_allowheading($heading = null, $id_module = null)
 
   if(is_array($heading))
   {
-    foreach ($heading as $id_heading) $_SESSION['ploopi']['allowedheading'][$id_module][$id_heading] = true;
+    foreach ($heading as $id_heading) $_SESSION['webedit']['allowedheading'][$id_module][$id_heading] = true;
   }
   elseif(is_numeric($heading))
-    $_SESSION['ploopi']['allowedheading'][$id_module][$heading] = true;
+    $_SESSION['webedit']['allowedheading'][$id_module][$heading] = true;
 }
 
 /**
@@ -1073,10 +1073,10 @@ function webedit_disallowheading($heading = null, $id_module = null)
   {
     foreach ($heading as $id_heading)
     {
-      if(isset($_SESSION['ploopi']['allowedheading'][$id_module][$id_heading])) unset($_SESSION['ploopi']['allowedheading'][$id_module][$id_heading]);
+      if(isset($_SESSION['webedit']['allowedheading'][$id_module][$id_heading])) unset($_SESSION['webedit']['allowedheading'][$id_module][$id_heading]);
     }
   }
   elseif(is_numeric($heading))
-      if(isset($_SESSION['ploopi']['allowedheading'][$id_module][$heading])) unset($_SESSION['ploopi']['allowedheading'][$id_module][$heading]);
+      if(isset($_SESSION['webedit']['allowedheading'][$id_module][$heading])) unset($_SESSION['webedit']['allowedheading'][$id_module][$heading]);
 }
 ?>

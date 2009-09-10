@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.1.4e ============================================
+
+2009-09-10  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Correction d'un petit bug de régression sur les rubriques privées affichées "en force".
+
 == Module WebEdit - version 2.1.4d ============================================
 
 2009-09-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
