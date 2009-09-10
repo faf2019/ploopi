@@ -547,7 +547,7 @@ function webedit_template_assign($arrHeadings, $arrShares, &$nav, $hid, $var = '
             }
 
             // Visible ET (Publique OU (Privée ET (Autorisé OU Autorisé par un module OU Toujours Visible)))
-            if ($arrHeading['visible'] && (!$arrHeadings['list'][$arrHeading['id']]['private'] || ($arrHeadings['list'][$arrHeading['id']]['private'] && (isset($arrShares[$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || isset($_SESSION['ploopi']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || $arrHeadings['list'][$arrHeading['id']]['private_visible']))))
+            if ($arrHeading['visible'] && (!$arrHeadings['list'][$arrHeading['id']]['private'] || ($arrHeadings['list'][$arrHeading['id']]['private'] && (isset($arrShares[$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || $arrHeadings['list'][$arrHeading['id']]['private_visible']))))
             {
                 $template_body->assign_block_vars($localvar , array(
                     'DEPTH' => $depth,
@@ -638,7 +638,7 @@ function webedit_template_assign_headings($arrHeadings, $arrShares, $hid, $var =
             }
 
             // Visible ET (Publique OU (Privée ET (Autorisé OU Autorisé par un module OU Toujours Visible)))
-            if ($arrHeading['visible'] && (!$arrHeadings['list'][$arrHeading['id']]['private'] || ($arrHeadings['list'][$arrHeading['id']]['private'] && (isset($arrShares[$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || isset($_SESSION['ploopi']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || $arrHeadings['list'][$arrHeading['id']]['private_visible']))))
+            if ($arrHeading['visible'] && (!$arrHeadings['list'][$arrHeading['id']]['private'] || ($arrHeadings['list'][$arrHeading['id']]['private'] && (isset($arrShares[$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || $arrHeadings['list'][$arrHeading['id']]['private_visible']))))
             {
                 $template_body->assign_block_vars($localvar , array(
                     'DEPTH' => $depth,
@@ -1043,7 +1043,7 @@ function webedit_getrewriterules()
  * @Param int/array $heading liste des id_heading à afficher
  * @Param int $id_module identifiant du module
  *
- * @return array $_SESSION['allowedheading'][$id_module]
+ * @return array $_SESSION['webedit']['allowedheading'][$id_module]
  */
 function webedit_allowheading($heading = null, $id_module = null)
 {
@@ -1063,7 +1063,7 @@ function webedit_allowheading($heading = null, $id_module = null)
  * @Param int/array $heading liste des id_heading à supprimer
  * @Param int $id_module identifiant du module
  *
- * @return array $_SESSION['allowedheading'][$id_module]
+ * @return array $_SESSION['webedit']['allowedheading'][$id_module]
  */
 function webedit_disallowheading($heading = null, $id_module = null)
 {
