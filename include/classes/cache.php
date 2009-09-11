@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -33,14 +33,6 @@
 
 @include_once 'Cache/Lite/Output.php';
 
-global $ploopi_cache_activated;
-global $ploopi_cache_written;
-global $ploopi_cache_read;
-
-$ploopi_cache_activated = $_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_set_cache'] && class_exists('Cache_Lite_Output');
-$ploopi_cache_written = 0;
-$ploopi_cache_read = 0;
-
 /**
  * Classe de gestion du cache
  *
@@ -53,8 +45,52 @@ $ploopi_cache_read = 0;
 
 class ploopi_cache extends Cache_Lite_Output
 {
-    var $cache_id;
-
+    /**
+     * Cache activé ?
+     */
+    static private $activated;
+    
+    /**
+     * Nombre d'écriture dans la page
+     */
+    static private $written;
+    
+    /**
+     * Nombre de lecture dans la page
+     */
+    static private $read;
+    
+    /**
+     * Id du cache
+     */    
+    private $cache_id;
+    
+    
+    /**
+     * Constructeur statique
+     */
+    public static function init()
+    {
+        self::$activated = _PLOOPI_USE_CACHE;
+        self::$written = 0;
+        self::$read = 0;         
+    }
+    
+    /**
+     * Retourne le nombre de lecture dans la page
+     */
+    public static function getread() { return self::$read; }
+    
+    /**
+     * Retourne le nombre d'écriture dans la page
+     */
+    public static function getwritten() { return self::$written; }
+    
+    /**
+     * Retourne true si le cache est activé
+     */
+    public static function getactivated() { return self::$activated; }
+    
     /**
      * Constructeur de la classe
      *
@@ -63,11 +99,9 @@ class ploopi_cache extends Cache_Lite_Output
      * @return ploopi_cache
      */
 
-    function ploopi_cache($id, $lifetime = _PLOOPI_CACHE_DEFAULT_LIFETIME, $cachedir = _PLOOPI_PATHCACHE)
+    public function ploopi_cache($id, $lifetime = _PLOOPI_CACHE_DEFAULT_LIFETIME, $cachedir = _PLOOPI_PATHCACHE)
     {
-        global $ploopi_cache_activated;
-
-        if ($ploopi_cache_activated)
+        if (self::$activated)
         {
             if (substr($cachedir, -1) != '/') $cachedir .= '/';
             
@@ -81,18 +115,16 @@ class ploopi_cache extends Cache_Lite_Output
      *
      * @return int date/heure (format ?)
      */
-    function get_lastmodified()
+    public function get_lastmodified()
     {
-        global $ploopi_cache_activated;
-
-        if ($ploopi_cache_activated)
+        if (self::$activated)
         {
             $this->_setFileName($this->cache_id, 'default');
             if (file_exists($this->_file)) return($this->lastModified());
-            else return(0);
+            else return 0;
         }
 
-        return(0);
+        return 0;
     }
 
     /**
@@ -102,39 +134,64 @@ class ploopi_cache extends Cache_Lite_Output
      * @return mixed contenu du cache ou false si le cache est désactivé ou vide
      */
 
-    function start($force_caching = false)
+    public function start($force_caching = false)
     {
-        global $ploopi_cache_activated;
-        global $ploopi_cache_written;
-        global $ploopi_cache_read;
-
-        if ($ploopi_cache_activated)
+        if (self::$activated)
         {
             if ($force_caching) $this->setOption('lifeTime', 0);
             $cache_content = parent::start($this->cache_id);
 
-            if ($cache_content) $ploopi_cache_read++;
-            else $ploopi_cache_written++;
+            if ($cache_content) self::$read++;
 
-            return($cache_content);
+            return $cache_content;
         }
-        else return(false); // no cache
-
+        else return false; // no cache
     }
 
     /**
      * Termine la mise en cache
      */
 
-    function end()
-    {
-        global $ploopi_cache_activated;
-
-        if ($ploopi_cache_activated)
+    public function end() 
+    { 
+        if (self::$activated) 
         {
-            parent::end();
+            parent::end(); 
+            self::$written++;
         }
     }
+    
+    /**
+     * Lit une variable en cache
+     */
+    public function get($force_caching = false)
+    { 
+        if (self::$activated)
+        {
+            if ($force_caching) $this->setOption('lifeTime', 0);
+            $var = unserialize(parent::get($this->cache_id));
+
+            if ($var) self::$read++;
+            
+            return $var;
+        }
+        else return false;
+         
+    }
+    
+    /**
+     * Enregistre une variable en cache 
+     */
+    public function save($var) 
+    { 
+        if (self::$activated)
+        {
+            parent::save(serialize($var));
+            self::$written++;
+        }
+    }
+    
+    
 }
 
 ?>
