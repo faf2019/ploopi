@@ -95,6 +95,13 @@ switch($http_host)
         define ('_PLOOPI_PATHCACHE', _PLOOPI_PATHDATA.'/cache');
 
         /**
+         * Active ou non l'utilisation du cache interne
+         * @see _PLOOPI_PATHCACHE
+         */
+         
+        define ('_PLOOPI_USE_CACHE', false);
+
+        /**
          * Taille maximum autorisée pour un fichier uploadé (octets).
          * Vérifier également les directives de configuration de PHP : post_max_size & upload_max_filesize
          *
