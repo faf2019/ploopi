@@ -1,3 +1,9 @@
+== Module NEWS - version 2.5.2d ====================================================
+
+2009-09-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise à jour de la version compressée de fckconfig.js
+
 == Module NEWS - version 2.5.2c ====================================================
 
 2009-08-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

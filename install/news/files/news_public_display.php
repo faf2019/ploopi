@@ -80,13 +80,12 @@ if (!empty($_GET['news_id']) && is_numeric($_GET['news_id']) && $news->open($_GE
         ?>
         <div><b><?php echo _NEWS_LABEL_READS; ?></b>:&nbsp;<?php echo $news->fields['nbclick']; ?></div>
         <div><?php echo $news->fields['content']; ?></div>
-
-
     </div>
     <div style="clear:both;border-top:1px solid #c0c0c0;">
         <?php ploopi_annotation(_NEWS_OBJECT_NEWS, $news->fields['id'], $news->fields['title']); ?>
     </div>
     <?php
+    echo $skin->close_simplebloc();
 }
 
 
