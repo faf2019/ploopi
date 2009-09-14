@@ -387,28 +387,49 @@ switch($menu)
                     }
                     else $article->setvalues($_POST,'webedit_article_');
 
-                    // recherche la liste des validateurs de cette rubrique
-                    $wfusers = array();
-                    $wf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
-                    $wf_headingid = $headingid;
-
-                    $objHeading = new webedit_heading();
-                    $objHeading->open($headingid);
-
-                    if (empty($wf)) // pas de validateur pour cette rubrique, on recherche sur les parents
+                    
+                    // récupère les validateurs
+                    $arrWfUsers = array('group' => array(), 'user' => array());
+                    $arrWfUsersOnly = array(); // utilisateurs uniquement (groupes compris)
+                    $arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
+                    $intWfHeadingId = $headingid;
+                    
+                    if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur les parents
                     {
-                        $parents = explode(';', $objHeading->fields['parents']);
-                        for ($i = sizeof($parents)-1; $i >= 0; $i--)
+                        $arrParents = explode(';', $heading->fields['parents']);
+                        for ($i = sizeof($arrParents)-1; $i >= 0; $i--)
                         {
-                            $wf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $parents[$i]);
-                            if (!empty($wf)) break;
+                            $arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $arrParents[$i]);
+                            if (!empty($arrWf))
+                            {
+                                $intWfHeadingId = $arrParents[$i];
+                                break;
+                            }
+                        }
+                    }
+                    
+                    $objUser = new user();
+                    $objUser->open($_SESSION['ploopi']['userid']);
+                    $arrGroups = $objUser->getgroups(true);
+                    
+                    $booWfVal = false;
+                    foreach($arrWf as $value) 
+                    {
+                        if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booWfVal = true;
+                        if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booWfVal = true;
+                        
+                        $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
+                        
+                        if ($value['type_validation'] == 'user') $arrWfUsersOnly[] = $value['id_validation'];
+                        if ($value['type_validation'] == 'group') 
+                        {
+                            $objGroup = new group();
+                            if ($objGroup->open($value['id_validation'])) $arrWfUsersOnly = array_merge($arrWfUsersOnly, array_keys($objGroup->getusers()));
                         }
                     }
 
-                    foreach($wf as $value) $wfusers[] = $value['id_validation'];
-
                     // action "publier" et l'utilisateur est un validateur => OK
-                    if (isset($_POST['publish']) && (in_array($_SESSION['ploopi']['userid'],$wfusers) || ploopi_isadmin()))
+                    if (isset($_POST['publish']) && ($booWfVal || ploopi_isadmin()))
                     {
                         $strTypeTicket = ($article->publish()) ? 'published_new' : 'published';
 
@@ -492,9 +513,9 @@ switch($menu)
                     /* FIN ABONNEMENT */
 
                     // on envoie un ticket de demande de validation si l'utilisateur n'est pas un validateur
-                    if ($sendtickets && !in_array($_SESSION['ploopi']['userid'],$wfusers))
+                    if ($sendtickets && !$booWfVal)
                     {
-                        $_SESSION['ploopi']['tickets']['users_selected'] = $wfusers;
+                        $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
                         ploopi_tickets_send("Demande de validation de l'article <strong>\"{$article->fields['title']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyé suite à une demande de validation de l'article \"{$article->fields['title']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à cet article pour le valider en cliquant sur le lien ci-dessous.", true, 0, _WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $article->fields['title']);
                     }
 

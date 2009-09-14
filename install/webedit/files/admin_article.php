@@ -33,26 +33,37 @@
 
 $article = new webedit_article($type);
 
-// get validation validators
-$wfusers = array();
-$wf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
-$wf_headingid = $headingid;
+// récupère les validateurs
+$arrWfUsers = array('group' => array(), 'user' => array());
+$arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
+$intWfHeadingId = $headingid;
 
-if (empty($wf)) // pas de validateur pour cette rubrique, on recherche sur les parents
+if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur les parents
 {
-    $parents = explode(';', $headings['list'][$headingid]['parents']);
-    for ($i = sizeof($parents)-1; $i >= 0; $i--)
+    $arrParents = explode(';', $heading->fields['parents']);
+    for ($i = sizeof($arrParents)-1; $i >= 0; $i--)
     {
-        $wf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $parents[$i]);
-        if (!empty($wf))
+        $arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $arrParents[$i]);
+        if (!empty($arrWf))
         {
-            $wf_headingid = $parents[$i];
+            $intWfHeadingId = $arrParents[$i];
             break;
         }
     }
 }
 
-foreach($wf as $value) $wfusers[] = $value['id_validation'];
+$objUser = new user();
+$objUser->open($_SESSION['ploopi']['userid']);
+$arrGroups = $objUser->getgroups(true);
+
+$booWfVal = false;
+foreach($arrWf as $value) 
+{
+    if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booWfVal = true;
+    if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booWfVal = true;
+    
+    $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
+}
 
 $title = '';
 switch($op)
@@ -154,7 +165,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
     </p>
 </div>
 
-<form name="form_webedit_article" style="margin:0;" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return webedit_article_validate(this,'<?php echo $type; ?>','<?php echo $article->fields['status']; ?>', <?php echo (in_array($_SESSION['ploopi']['userid'],$wfusers)) ? 'true' : 'false'; ?>);">
+<form name="form_webedit_article" style="margin:0;" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return webedit_article_validate(this,'<?php echo $type; ?>','<?php echo $article->fields['status']; ?>', <?php echo $booWfVal ? 'true' : 'false'; ?>);">
 <input type="hidden" name="op" value="article_save">
 <input type="hidden" name="articleid" id="articleid" value="<?php echo $article->fields['id']; ?>">
 
@@ -564,17 +575,46 @@ $keywords = array_slice($keywords, 0 , 20, true);
     </div>
 </div>
 
+
+
+<div style="clear:both;padding:4px;">
+    <fieldset class="fieldset" style="padding:6px;">
+        <legend><strong>Validateurs</strong> (utilisateurs qui peuvent publier)</legend>
+
+        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+            <?php
+            if (!empty($arrWfUsers))
+            {
+                if (!empty($arrWfUsers['group']))
+                {
+                    $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
+
+                    $db->query(
+                        "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
+                    );
+
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                }
+                if (!empty($arrWfUsers['user']))
+                {
+                    $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
+
+                    $db->query(
+                        "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
+                    );
+
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                }
+            }
+            else echo '<em>Aucune accréditation</em>';
+            ?>
+        </p>
+    </fieldset>
+</div>
+
+
 <div style="clear:both;padding:4px;background-color:#e8e8e8;border-top:1px solid #c0c0c0;">
-    <strong>Validateurs <?php if ($wf_headingid != $headingid) echo "(Hérités de {$headings['list'][$wf_headingid]['label']})"; ?></strong>:
     <?php
-    if (!empty($wfusers))
-    {
-        $sql = "SELECT login FROM ploopi_user WHERE id in (".implode(',',$wfusers).") ORDER BY lastname, firstname";
-        $db->query($sql);
-        $arrUsers = $db->getarray();
-        echo (empty($arrUsers)) ? 'Aucune accréditation' : implode(', ', $arrUsers);
-    }
-    else echo 'Aucune accréditation';
 
     if ($op != 'article_addnew')
     {
@@ -612,7 +652,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
             ?>
         </select>
         <?php
-        if ($op != 'article_addnew' && (in_array($_SESSION['ploopi']['userid'],$wfusers) || ploopi_isadmin()))
+        if ($op != 'article_addnew' && ($booWfVal || ploopi_isadmin()))
         {
             ?>
             <input class="flatbutton" style="font-weight:bold;" type="submit" name="publish" value="Publier">
@@ -625,7 +665,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
     ?>
     </div>
     <?php
-    if ($op != 'article_addnew' && (ploopi_isadmin() || in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
+    if ($op != 'article_addnew' && (ploopi_isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
         <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">

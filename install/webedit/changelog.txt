@@ -1,4 +1,13 @@
-== Module WebEdit - version 2.1.4f ============================================
+== Module WebEdit - version 2.1.5 ============================================
+
+2009-09-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un conflit dans la gestion des ancres (fckeditor) et l'utilisation de la balise <base>
+ * Optimisation des temps de réponse à l'affichage des articles avec mise en cache d'une partie du rendu (réécriture des urls)
+ * Affichage des abonnés frontoffice à l'ensemble du site au même niveau que les abonnés d'une rubrique particulière
+ * Prise en compte réelle des groupes dans la gestion des validateurs de rubriques
+  
+ == Module WebEdit - version 2.1.4f ============================================
 
 2009-09-10  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 

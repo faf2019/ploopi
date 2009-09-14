@@ -97,12 +97,13 @@ $query_tag = (empty($_REQUEST['query_tag'])) ? '' : $_REQUEST['query_tag'];
 // module frontoffice ?
 $intTemplateModuleId = (empty($_REQUEST['template_moduleid']) || !is_numeric($_REQUEST['template_moduleid']) || !isset($_SESSION['ploopi']['modules'][$_REQUEST['template_moduleid']]) || !file_exists("./modules/{$_SESSION['ploopi']['modules'][$_REQUEST['template_moduleid']]['moduletype']}/template_content.php")) ? '' : $_REQUEST['template_moduleid'];
 
+
 // récupération des rubriques
 $arrHeadings = webedit_getheadings();
 
 // récupération des partages (mode connecté uniquement)
 $arrShares = webedit_getshare();
-
+    
 if ($query_string != '') // Recherche intégrale
 {
     $headingid = $arrHeadings['tree'][0][0];
@@ -795,7 +796,7 @@ else // affichage standard rubrique/page
                  */
 
                 if (!empty($editor)) $content = $editor;
-                else $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', $webedit_mode == 'edit' ? $article->fields['content_cleaned'] : webedit_replace_links($article->fields['content_cleaned'], $webedit_mode, $arrHeadings) );
+                else $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', $webedit_mode == 'edit' ? $article->fields['content_cleaned'] : webedit_replace_links($article, $webedit_mode, $arrHeadings) );
 
                 $article_timestp = ($article->fields['timestp']!='') ? ploopi_timestamp2local($article->fields['timestp']) : array('date' => '');
                 $article_lastupdate = ($article->fields['lastupdate_timestp']!='') ? ploopi_timestamp2local($article->fields['lastupdate_timestp']) : array('date' => '', 'time' => '');

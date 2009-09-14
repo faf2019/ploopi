@@ -785,7 +785,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des a
 
         $subscribers_values = array();
 
-        $sql = "SELECT * FROM ploopi_mod_webedit_heading_subscriber WHERE id_heading = {$headingid} AND id_module = {$_SESSION['ploopi']['moduleid']}";
+        $sql = "SELECT * FROM ploopi_mod_webedit_heading_subscriber WHERE (id_heading = {$headingid} OR id_heading = 0) AND id_module = {$_SESSION['ploopi']['moduleid']}";
         $db->query($sql);
 
         $c = 0;

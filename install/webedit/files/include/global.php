@@ -791,55 +791,85 @@ function webedit_record_isenabled($id_object, $id_record, $id_module)
  * @return contenu de l'article dont les liens ont été modifiés
  */
 
-function webedit_replace_links($strContent, $mode, &$arrHeadings)
+function webedit_replace_links($objArticle, $mode, &$arrHeadings)
 {
-    include_once './modules/webedit/class_article.php';
+    // Mise en cache
+    $objCache = new ploopi_cache('webedit/article/'._PLOOPI_FRONTOFFICE_REWRITERULE.'/'.$objArticle->fields['id'].'/'.$objArticle->fields['lastupdate_timestp'], 86400);
 
-    $arrSearch = array();
-    $arrReplace = array();
-
-    preg_match_all('/(index\.php[^\"]+articleid=([0-9]+)[^\"]*)/i', $strContent, $arrMatches);
-    foreach($arrMatches[2] as $key => $idart)
+    if (!$strReplaced = $objCache->get())
     {
-        $objArticle = new webedit_article();
-        if (!empty($idart) && $objArticle->open($idart)) // article trouvé
+        include_once './modules/webedit/class_article.php';
+    
+        $arrSearch = array();
+        $arrReplace = array();
+        $strContent = $objArticle->fields['content'];
+    
+        // Traitement des ancres (incompatibilité fckeditor / <base href>)
+        preg_match_all('/(href=\"(#[^\"]*)\")/i', $strContent, $arrMatches);
+        foreach($arrMatches[2] as $key => $strAnchor)
         {
             $arrSearch[] = $arrMatches[1][$key];
-
+            
             switch ($mode)
             {
                 case 'render':
-                    $arrReplace[] = "index.php?webedit_mode={$mode}&headingid={$objArticle->fields['id_heading']}&articleid={$idart}";
+                    $arrReplace[] = str_replace($strAnchor, "index.php?webedit_mode={$mode}&headingid={$objArticle->fields['id_heading']}&articleid={$objArticle->fields['id']}{$strAnchor}", $arrMatches[1][$key]);
                 break;
-
+    
                 default:
                     $arrParents = array();
                     if (isset($arrHeadings['list'][$objArticle->fields['id_heading']])) foreach(split(';', $arrHeadings['list'][$objArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-
-                    $arrReplace[] = ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$idart}", webedit_getrewriterules(), $objArticle->fields['metatitle'], $arrParents);
+    
+                    $arrReplace[] = str_replace($strAnchor, ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$objArticle->fields['id']}", webedit_getrewriterules(), $objArticle->fields['metatitle'], $arrParents).$strAnchor, $arrMatches[1][$key]);
                 break;
             }
         }
-    }
-
-    if (ploopi_init_module('doc', false, false, false))
-    {
-        include_once './modules/doc/class_docfile.php';
-
-        // traitement des liens vers documents
-        preg_match_all('/(index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32}))/i', $strContent, $arrMatches);
-        foreach($arrMatches[2] as $key => $md5)
+        
+        preg_match_all('/(index\.php[^\"]+articleid=([0-9]+)[^\"]*)/i', $strContent, $arrMatches);
+        foreach($arrMatches[2] as $key => $idart)
         {
-            $objDocFile = new docfile();
-            if (!empty($md5) && $objDocFile->openmd5($md5)) // clé md5 présente & document trouvé
+            $objLinkArticle = new webedit_article();
+            if (!empty($idart) && $objLinkArticle->open($idart)) // article trouvé
             {
                 $arrSearch[] = $arrMatches[1][$key];
-                $arrReplace[] = ploopi_urlrewrite(html_entity_decode($arrMatches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
+    
+                switch ($mode)
+                {
+                    case 'render':
+                        $arrReplace[] = "index.php?webedit_mode={$mode}&headingid={$objLinkArticle->fields['id_heading']}&articleid={$idart}";
+                    break;
+    
+                    default:
+                        $arrParents = array();
+                        if (isset($arrHeadings['list'][$objLinkArticle->fields['id_heading']])) foreach(split(';', $arrHeadings['list'][$objLinkArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+    
+                        $arrReplace[] = ploopi_urlrewrite("index.php?headingid={$objLinkArticle->fields['id_heading']}&articleid={$idart}", webedit_getrewriterules(), $objLinkArticle->fields['metatitle'], $arrParents);
+                    break;
+                }
             }
         }
+    
+        if (ploopi_init_module('doc', false, false, false))
+        {
+            include_once './modules/doc/class_docfile.php';
+    
+            // traitement des liens vers documents
+            preg_match_all('/(index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32}))/i', $strContent, $arrMatches);
+            foreach($arrMatches[2] as $key => $md5)
+            {
+                $objDocFile = new docfile();
+                if (!empty($md5) && $objDocFile->openmd5($md5)) // clé md5 présente & document trouvé
+                {
+                    $arrSearch[] = $arrMatches[1][$key];
+                    $arrReplace[] = ploopi_urlrewrite(html_entity_decode($arrMatches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
+                }
+            }
+        }
+        
+        $objCache->save($strReplaced = str_replace($arrSearch, $arrReplace, $strContent));
     }
-
-    return str_replace($arrSearch, $arrReplace, $strContent);
+    
+    return $strReplaced;
 }
 
 /**
