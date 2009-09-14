@@ -149,6 +149,8 @@ function ploopi_validation_save($id_object = 0, $id_record = '', $id_module = -1
     
     $db->query("DELETE FROM ploopi_validation WHERE id_object = {$id_object} AND id_record = '".$db->addslashes($id_record)."' AND id_module = {$id_module}");
     
+    ploopi_print_r($_SESSION['ploopi']['validation'][$strValidationId]);
+    
     if (!empty($_SESSION['ploopi']['validation'][$strValidationId]['users_selected']))
     {
         foreach($_SESSION['ploopi']['validation'][$strValidationId]['users_selected'] as $id_user)
@@ -194,11 +196,12 @@ function ploopi_validation_save($id_object = 0, $id_record = '', $id_module = -1
  * @param int $id_object identifiant de l'objet
  * @param string $id_record identifiant de l'enregistrement
  * @param int $id_module identifiant du module
- * @param int $id_user identifiant de l'utilisateur
+ * @param int $id_val identifiant de l'utilisateur ou du groupe
+ * @param string $type_val type de validateur (user/group)
  * @return array validation
  */
 
-function ploopi_validation_get($id_object = 0, $id_record = '', $id_module = -1, $id_user = 0)
+function ploopi_validation_get($id_object = 0, $id_record = '', $id_module = -1, $id_val = 0, $type_val = 'user')
 {
     global $db;
 
@@ -207,7 +210,14 @@ function ploopi_validation_get($id_object = 0, $id_record = '', $id_module = -1,
     $sql =  "SELECT * FROM ploopi_validation WHERE id_module = {$id_module}";
     if ($id_object != 0) $sql .= " AND id_object = {$id_object}";
     if ($id_record != '') $sql .= " AND id_record = '".$db->addslashes($id_record)."'";
-    if ($id_user != 0) $sql .= " AND id_validation = {$id_user} AND type_validation = 'user'";
+    if ($id_val != 0) 
+    {
+        switch($type_val)
+        {
+            case 'user' : $sql .= " AND id_validation = {$id_user} AND type_validation = 'user'"; break;
+            case 'group' : $sql .= " AND id_validation = {$id_user} AND type_validation = 'group'"; break;
+        }
+    }
 
     $db->query($sql);
 
@@ -220,9 +230,10 @@ function ploopi_validation_get($id_object = 0, $id_record = '', $id_module = -1,
  * @param int $id_object identifiant de l'objet
  * @param string $id_record identifiant de l'enregistrement
  * @param int $id_module identifiant du module
- * @param int $id_user identifiant de l'utilisateur
+ * @param int $id_val identifiant de l'utilisateur ou du groupe
+ * @param string $type_val type de validateur (user/group)
  */
-function ploopi_validation_delete($id_object = 0, $id_record = '', $id_module = -1, $id_user = 0)
+function ploopi_validation_delete($id_object = 0, $id_record = '', $id_module = -1, $id_val = 0, $type_val = 'user')
 {
     global $db;
 
@@ -231,7 +242,14 @@ function ploopi_validation_delete($id_object = 0, $id_record = '', $id_module = 
     $sql = "DELETE FROM ploopi_validation WHERE id_module = {$id_module}";
     if ($id_object != 0) $sql .= " AND id_object = {$id_object}";
     if ($id_record != '') $sql .= " AND id_record = '".$db->addslashes($id_record)."'";
-    if ($id_user != 0) $sql .= " AND id_validation = {$id_user} AND type_validation = 'user'";
+    if ($id_val != 0) 
+    {
+        switch($type_val)
+        {
+            case 'user' : $sql .= " AND id_validation = {$id_user} AND type_validation = 'user'"; break;
+            case 'group' : $sql .= " AND id_validation = {$id_user} AND type_validation = 'group'"; break;
+        }
+    }    
 
     $db->query($sql);
 }

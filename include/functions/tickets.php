@@ -208,8 +208,6 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
     $ticket->fields['lastreply_timestp'] = $ticket->fields['timestp'];
     $id_ticket = $ticket->save();
 
-    ploopi_print_r($_SESSION['ploopi']['tickets']['users_selected']);
-    
     // Envoi du ticket aux destinataires
     foreach($_SESSION['ploopi']['tickets']['users_selected'] as $user_id)
     {
