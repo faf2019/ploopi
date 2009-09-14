@@ -97,6 +97,7 @@ class newsletter extends data_object
     if($this->fields['status'] == 'wait')
     {
       $arrNewsletterTo = newsletter_ListValid($this->fields['id'],-1,false);
+      
       ploopi_subscription_notify(_NEWSLETTER_OBJECT_NEWSLETTER, $this->fields['id'], _NEWSLETTER_ACTION_WAIT_VALID, $this->fields['title'], array_keys($arrNewsletterTo));
     }
 

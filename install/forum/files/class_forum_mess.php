@@ -315,7 +315,19 @@ class forum_mess extends data_object
       $arrAdminOrMode += ploopi_validation_get(_FORUM_OBJECT_CAT,$this->fields['id_cat']);
       foreach($arrAdminOrMode as $value)
       {
-        $arrForumTo[$value['id_validation']] = $arrAdminOrMode;
+          if ($value['type_validation'] == 'group') // recherche des utilisateurs du groupe
+          {
+            $value['type_validation'] = 'user'; //petite astuce pour récupérer l'enregistrement comme si c'était un utilisateur
+            $objGroup = new group();
+            $objGroup->open($value['id_validation']);
+            $arrUsers = $objGroup->getusers();
+            foreach($arrUsers as $arrUser)
+            {
+              $value['id_validation'] = $arrUser['id'];
+              $arrForumTo[$value['id_validation']] = $value;
+            }
+          }
+          else $arrForumTo[$value['id_validation']] = $value;
       }
       unset($arrAdminOrMode);
 

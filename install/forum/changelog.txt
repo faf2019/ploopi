@@ -1,3 +1,10 @@
+== Module FORUM - version 1.0.7c ==================================================
+
+2009-09-14  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+2009-09-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Nouvelle prise en charge des groupes de validateurs
+
 == Module FORUM - version 1.0.7b ==================================================
 
 2009-08-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

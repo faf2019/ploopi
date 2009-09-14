@@ -51,6 +51,7 @@ function newsletter_getArrSubscriber()
 
   return false;
 }
+
 /**
  * Récupère la liste des newsletter dont le user courant est validateur
  *
@@ -58,16 +59,31 @@ function newsletter_getArrSubscriber()
  */
 function newsletter_ListNewsletterIsValidator()
 {
-  $arrListReturn = array();
-  $arrList = ploopi_validation_get(_NEWSLETTER_OBJECT_NEWSLETTER, 'newsletter',  $_SESSION['ploopi']['moduleid'], $_SESSION['ploopi']['user']['id']);
-  if(count($arrList)>0)
-     return 'all';
+  // Recherche des groupes de l'utilisateur
+  include_once './include/classes/user.php';
+  $objUser = new user();
+  $objUser->open($_SESSION['ploopi']['userid']);
+  $arrGroups = $objUser->getgroups(true);
+  
+  $arrList = array();
+  
+  foreach(ploopi_validation_get(_NEWSLETTER_OBJECT_NEWSLETTER, 'newsletter') as $value) 
+  {
+    if (($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) || ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']]))) $arrList[$value['id_record']] = $value['id_record'];
+  }        
+  
+  if(count($arrList)>0) return 'all';
   else
   {
-    $arrList = ploopi_validation_get(_NEWSLETTER_OBJECT_NEWSLETTER, '',  $_SESSION['ploopi']['moduleid'], $_SESSION['ploopi']['user']['id']);
-    foreach($arrList as $data) $arrListReturn[] = $data['id_record'];
+    $arrListReturn = array();
+    
+    foreach(ploopi_validation_get(_NEWSLETTER_OBJECT_NEWSLETTER) as $value) 
+    {
+      if (($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) || ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']]))) $arrListReturn[$value['id_record']] = $value['id_record'];
+    }
+            
+    return $arrListReturn;
   }
-  return $arrListReturn;
 }
 
 /**
@@ -76,23 +92,43 @@ function newsletter_ListNewsletterIsValidator()
  * @param Int $intIdCat Id categorie
  * @param Int $intAction action
  * @param Boolean $booWidthDetail true = Récupère les detail
- * @param Int $inIdModule id_module
+ * @param Int $intIdModule id_module
  * @return Array [id] = array(login, firstname, lastname) or Array [id] = 0 (without detail)
  */
-function newsletter_ListValid($intIdNewsletter = -1, $intObject = -1, $booWidthDetail = true, $inIdModule = -1)
+function newsletter_ListValid($intIdNewsletter = -1, $intObject = -1, $booWidthDetail = true, $intIdModule = -1)
 {
+  include_once './include/classes/group.php';
   global $db;
 
   $arrNewsletterValidatorData = array();
 
-  if($inIdModule == -1) $inIdModule = $_SESSION['ploopi']['moduleid'];
+  if($intIdModule == -1) $intIdModule = $_SESSION['ploopi']['moduleid'];
   if($intObject == -1 && defined('_NEWSLETTER_OBJECT_NEWSLETTER')) $intObject = _NEWSLETTER_OBJECT_NEWSLETTER;
 
   $arrNewsletterValidator = array();
+  $arrNewsletterValidatorSearch = array();
   if($intObject > -1)
   {
-    if($intIdNewsletter > 0) $arrNewsletterValidator += ploopi_validation_get($intObject,$intIdNewsletter);
-    $arrNewsletterValidator += ploopi_validation_get($intObject);
+    if($intIdNewsletter > 0) $arrNewsletterValidatorSearch += ploopi_validation_get($intObject,$intIdNewsletter);
+    $arrNewsletterValidatorSearch += ploopi_validation_get($intObject);
+    
+    $arrNewsletterValidator = array();
+    foreach($arrNewsletterValidatorSearch as $value)
+    {
+      if ($value['type_validation'] == 'group') // recherche des utilisateurs du groupe
+      {
+        $value['type_validation'] = 'user'; //petite astuce pour récupérer l'enregistrement comme si c'était un utilisateur
+        $objGroup = new group();
+        $objGroup->open($value['id_validation']);
+        $arrUsers = $objGroup->getusers();
+        foreach($arrUsers as $arrUser)
+        {
+          $value['id_validation'] = $arrUser['id'];
+          $arrNewsletterValidator[$value['id_validation']] = $value;
+        }
+      }
+      else $arrNewsletterValidator[$value['id_validation']] = $value;
+    }
   }
 
   if($booWidthDetail)
@@ -133,7 +169,7 @@ function newsletter_ListValid($intIdNewsletter = -1, $intObject = -1, $booWidthD
  *
  * @param int $intIdCat id categorie (optionnal)
  * @param int $intAction constant action (optionnal)
- * @param Int $inIdModule id_module
+ * @param Int $intIdModule id_module
  * @return boolean
  */
 function newsletter_IsValidator($intIdLetter = -1, $intObject = -1, $intIdModule = -1)

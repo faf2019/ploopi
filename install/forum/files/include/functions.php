@@ -290,6 +290,7 @@ function forum_pages($strForumUrl,$intForumNbPages,$intForumNumPage)
  */
 function forum_ListModer($intIdCat = -1, $intObject = -1, $booWidthDetail = true, $inIdModule = -1)
 {
+  include_once './include/classes/group.php';
   global $db;
 
   $arrForumModeratData = array();
@@ -298,7 +299,27 @@ function forum_ListModer($intIdCat = -1, $intObject = -1, $booWidthDetail = true
   if($intObject == -1 && defined('_FORUM_OBJECT_CAT')) $intObject = _FORUM_OBJECT_CAT;
 
   if($intObject > -1)
-    $arrForumModerat = ploopi_validation_get($intObject,$intIdCat);
+  {
+    $arrForumModeratSearch = ploopi_validation_get($intObject, $intIdCat);
+    
+    $arrForumModerat = array();
+    foreach($arrForumModeratSearch as $value)
+    {
+      if ($value['type_validation'] == 'group') // recherche des utilisateurs du groupe
+      {
+        $value['type_validation'] = 'user'; //petite astuce pour récupérer l'enregistrement comme si c'était un utilisateur
+        $objGroup = new group();
+        $objGroup->open($value['id_validation']);
+        $arrUsers = $objGroup->getusers();
+        foreach($arrUsers as $arrUser)
+        {
+          $value['id_validation'] = $arrUser['id'];
+          $arrForumModerat[$value['id_validation']] = $value;
+        }
+      }
+      else $arrForumModerat[$value['id_validation']] = $value;
+    }      
+  }
 
   if($booWidthDetail)
   {
