@@ -36,7 +36,6 @@ cp doc/{CHANGELOG,COPYRIGHT,FLOSS,INSTALL,LICENSE} $DEST/doc
 
 cp -r cgi $DEST
 cp -r config $DEST
-cp -r FCKeditor $DEST
 cp -r img $DEST
 cp -r include $DEST
 cp -r js $DEST

@@ -12,7 +12,7 @@ rm js/functions*.*
 cat js/*.js > js/functions.pack.js
 java -jar yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-15 js/functions.pack.js | gzip > js/functions.pack.js.gz
 
-for template in ./templates/backoffice/{ploopi*,redmine}; do
+for template in ./templates/backoffice/{eyeos,redmine,ploopi*}; do
     if [ -d $template ]; then
         echo "COMPRESSION DU TEMPLATE $template"
 
@@ -52,7 +52,7 @@ do
     echo "Résultat : $ta => $tb"
 done
 
-for i in $( find ./FCKeditor \( -name '*.js' -or -name '*.css' \) -type f )
+for i in $( find ./lib/fckeditor \( -name '*.js' -or -name '*.css' \) -type f )
 do
     echo "Compression : $i => $i.gz"
     cat $i | gzip > $i.gz
