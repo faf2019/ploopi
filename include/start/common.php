@@ -63,8 +63,6 @@ if (!file_exists('./config/config.php'))
 }
 include_once './config/config.php'; // load config (mysql, path, etc.)
 
-
-
 /**
  * Initialisation du gestionnaire d'erreur
  */
@@ -95,6 +93,10 @@ include_once './include/start/import_gpr.php';
  * Initialisation du header par défaut
  */
 include_once './include/start/header.php';
+
+
+include_once './include/classes/cache.php' ;
+ploopi_cache::init();
 
 /**
  * Connexion à la base de données
