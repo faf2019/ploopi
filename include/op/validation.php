@@ -100,24 +100,25 @@ switch($ploopi_op)
 
         $id_action = (!empty($_GET['id_action']) && is_numeric($_GET['id_action'])) ? $_GET['id_action'] : -1;
 
-        // construction de la liste des groupes de travail et des groupes d'utilisateurs rattachés (pour l'utilisateur courant)
-        foreach (split(',',ploopi_viewworkspaces_inv()) as $grpid) // pour chaque groupe de travail
+        // construction de la liste des espaces de travail et des groupes d'utilisateurs rattachés (pour l'utilisateur courant)
+        foreach (split(',',ploopi_viewworkspaces_inv()) as $wspid) // pour chaque espace de travail
         {
-            if (isset($_SESSION['ploopi']['workspaces'][$grpid]))
+            if (isset($_SESSION['ploopi']['workspaces'][$wspid]))
             {
-                $grp = $_SESSION['ploopi']['workspaces'][$grpid];
+                $wsp = $_SESSION['ploopi']['workspaces'][$wspid];
 
-                if (isset($grp['adminlevel']) && $grp['backoffice'])
+                if (isset($wsp['adminlevel']) && $wsp['backoffice'])
                 {
-                    $list['workspaces'][$grp['id']]['label'] = $grp['label'];
-                    $list['workspaces'][$grp['id']]['groups'] = array();
-                    $list['workspaces'][$grp['id']]['users'] = array();
-                    $workspace->fields['id'] = $grp['id'];
-                    foreach ($workspace->getgroups() as $orgrp)
+                    $list['workspaces'][$wsp['id']]['label'] = $wsp['label'];
+                    $list['workspaces'][$wsp['id']]['groups'] = array();
+                    $list['workspaces'][$wsp['id']]['users'] = array();
+                    $workspace->fields['id'] = $wsp['id'];
+                    foreach ($workspace->getgroups() as $grp)
                     {
-                        $list['workspaces'][$grp['id']]['groups'][] = $orgrp['id'];
-                        $list['groups'][$orgrp['id']]['label'] = $orgrp['label'];
-                        $list['groups'][$orgrp['id']]['users'] = array();
+                        $list['workspaces'][$wsp['id']]['groups'][$grp['id']] = $grp['id'];
+                        $list['groups'][$grp['id']]['label'] = $grp['label'];
+                        $list['groups'][$grp['id']]['display'] = false;
+                        $list['groups'][$grp['id']]['users'] = array();
                     }
                 }
             }
@@ -125,70 +126,98 @@ switch($ploopi_op)
 
         $cleanedfilter = $db->addslashes($_GET['ploopi_validation_userfilter']);
         $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
-
+        
         // recherche des utilisateurs "admininstrateur d'espace" ou disposant d'une action particuliere dans le module
-        $option_u = ($id_action != -1) ?
-                    "
-                    LEFT JOIN   ploopi_workspace_user_role wur
-                    ON          wur.id_user = u.id
-                    AND         wur.id_workspace = wu.id_workspace
+        $option_u = ($id_action != -1) ? "
+            LEFT JOIN   ploopi_workspace_user_role wur
+            ON          wur.id_user = u.id
+            AND         wur.id_workspace = wu.id_workspace
 
-                    LEFT JOIN   ploopi_role_action rau
-                    ON          rau.id_role = wur.id_role
+            LEFT JOIN   ploopi_role_action rau
+            ON          rau.id_role = wur.id_role
 
-                    WHERE       wu.adminlevel = "._PLOOPI_ID_LEVEL_SYSTEMADMIN." OR (rau.id_action = {$id_action} AND rau.id_module_type = {$_SESSION['ploopi']['moduletypeid']})
-                    AND         {$userfilter}
-                    " : "WHERE {$userfilter}";
+            WHERE       wu.adminlevel = "._PLOOPI_ID_LEVEL_SYSTEMADMIN." OR (rau.id_action = {$id_action} AND rau.id_module_type = {$_SESSION['ploopi']['moduletypeid']})
+            AND         {$userfilter}
+            " : "WHERE {$userfilter}";
 
-        $query_u =  "
-                    SELECT      distinct(u.id), u.login, u.firstname, u.lastname, wu.id_workspace
-                    FROM        ploopi_user u
+        $query_u = "
+            SELECT      distinct(u.id), u.login, u.firstname, u.lastname, wu.id_workspace
+            FROM        ploopi_user u
 
-                    INNER JOIN  ploopi_workspace_user wu
-                    ON          wu.id_user = u.id
-                    AND         wu.id_workspace IN (".implode(',',array_keys($list['workspaces'])).")
+            INNER JOIN  ploopi_workspace_user wu
+            ON          wu.id_user = u.id
+            AND         wu.id_workspace IN (".implode(',',array_keys($list['workspaces'])).")
 
-                    INNER JOIN  ploopi_module_workspace mw
-                    ON          mw.id_workspace = wu.id_workspace
-                    AND         mw.id_module = {$_SESSION['ploopi']['moduleid']}
-                    {$option_u}
+            INNER JOIN  ploopi_module_workspace mw
+            ON          mw.id_workspace = wu.id_workspace
+            AND         mw.id_module = {$_SESSION['ploopi']['moduleid']}
+            {$option_u}
 
-                    ORDER BY u.lastname, u.firstname
-                    ";
+            ORDER BY u.lastname, u.firstname
+        ";
 
+
+        // recherche des groupes "admininstrateur d'espace" ou disposant d'une action particuliere dans le module
+        $option_g = ($id_action != -1) ? "
+            LEFT JOIN   ploopi_workspace_group_role wgr
+            ON          wgr.id_group = g.id
+            AND         wgr.id_workspace = wg.id_workspace
+
+            LEFT JOIN   ploopi_role_action rag
+            ON          rag.id_role = wgr.id_role
+
+            WHERE       g.id IN (".implode(',',array_keys($list['groups'])).")
+            AND         wg.adminlevel = "._PLOOPI_ID_LEVEL_SYSTEMADMIN." OR (rag.id_action = {$id_action} AND rag.id_module_type = {$_SESSION['ploopi']['moduletypeid']})
+            " : "";
+
+        $query_g = "
+            SELECT      *
+            FROM        ploopi_group g
+            
+            INNER JOIN  ploopi_workspace_group wg
+            ON          wg.id_group = g.id
+            AND         wg.id_workspace IN (".implode(',',array_keys($list['workspaces'])).")
+
+            INNER JOIN  ploopi_module_workspace mw
+            ON          mw.id_workspace = wg.id_workspace
+            AND         mw.id_module = {$_SESSION['ploopi']['moduleid']}
+            {$option_g}
+        ";
+                    
         // recherche des utilisateurs de groupes "admininstrateur d'espace" ou disposant d'une action particuliere dans le module
-        $option_g = ($id_action != -1) ?
-                    "
-                    LEFT JOIN   ploopi_workspace_group_role wgr
-                    ON          wgr.id_group = gu.id_group
-                    AND         wgr.id_workspace = wg.id_workspace
+        $option_gu = ($id_action != -1) ? "
+            LEFT JOIN   ploopi_workspace_group_role wgr
+            ON          wgr.id_group = gu.id_group
+            AND         wgr.id_workspace = wg.id_workspace
 
-                    LEFT JOIN   ploopi_role_action rag
-                    ON          rag.id_role = wgr.id_role
+            LEFT JOIN   ploopi_role_action rag
+            ON          rag.id_role = wgr.id_role
 
-                    WHERE       wg.adminlevel = "._PLOOPI_ID_LEVEL_SYSTEMADMIN." OR (rag.id_action = {$id_action} AND rag.id_module_type = {$_SESSION['ploopi']['moduletypeid']})
-                    AND         {$userfilter}
-                    " : "WHERE {$userfilter}";
+            WHERE       wg.adminlevel = "._PLOOPI_ID_LEVEL_SYSTEMADMIN." OR (rag.id_action = {$id_action} AND rag.id_module_type = {$_SESSION['ploopi']['moduletypeid']})
+            AND         {$userfilter}
+            " : "WHERE {$userfilter}";
 
-        $query_g =  "
-                    SELECT      distinct(u.id), u.login, u.firstname, u.lastname, wg.id_group, wg.id_workspace
-                    FROM        ploopi_user u
+        $query_gu = "
+            SELECT      distinct(u.id), u.login, u.firstname, u.lastname, wg.id_group, wg.id_workspace
+            FROM        ploopi_user u
 
-                    INNER JOIN  ploopi_group_user gu
-                    ON          gu.id_user = u.id
+            INNER JOIN  ploopi_group_user gu
+            ON          gu.id_user = u.id
 
-                    INNER JOIN  ploopi_workspace_group wg
-                    ON          wg.id_group = gu.id_group
-                    AND         wg.id_workspace IN (".implode(',',array_keys($list['workspaces'])).")
+            INNER JOIN  ploopi_workspace_group wg
+            ON          wg.id_group = gu.id_group
+            AND         wg.id_workspace IN (".implode(',',array_keys($list['workspaces'])).")
 
-                    INNER JOIN  ploopi_module_workspace mw
-                    ON          mw.id_workspace = wg.id_workspace
-                    AND         mw.id_module = {$_SESSION['ploopi']['moduleid']}
-                    {$option_g}
+            INNER JOIN  ploopi_module_workspace mw
+            ON          mw.id_workspace = wg.id_workspace
+            AND         mw.id_module = {$_SESSION['ploopi']['moduleid']}
+            {$option_gu}
 
-                    ORDER BY u.lastname, u.firstname
-                    ";
-
+            ORDER BY u.lastname, u.firstname
+        ";
+                    
+                    
+                    
         $db->query($query_u);
         while ($fields = $db->fetchrow())
         {
@@ -199,10 +228,16 @@ switch($ploopi_op)
         $db->query($query_g);
         while ($fields = $db->fetchrow())
         {
+            $list['groups'][$fields['id']]['display'] = true;
+        }
+        
+        $db->query($query_gu);
+        while ($fields = $db->fetchrow())
+        {
             $list['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
             $list['groups'][$fields['id_group']]['users'][$fields['id']] = $fields['id'];
         }
-
+        
         if (!sizeof($list['users']))
         {
             ?>
@@ -245,19 +280,25 @@ switch($ploopi_op)
                             foreach($workspace['groups'] as $id_grp)
                             {
                                 $group = &$list['groups'][$id_grp];
-                                ?>
-                                <a class="ploopi_validation_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo $_GET['validation_id']; ?>&group_id=<?php echo $id_grp; ?>', 'div_validation_users_selected_<?php echo $_GET['validation_id']; ?>');">
-                                    <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo $list['groups'][$id_grp]['label'];  ?></span></p>
-                                </a>
-                                <?php
-                                foreach($list['groups'][$id_grp]['users'] as $id_user)
+                                if ($group['display'])
                                 {
-                                    $user = &$list['users'][$id_user];
                                     ?>
-                                    <a class="ploopi_validation_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo $_GET['validation_id']; ?>&user_id=<?php echo $id_user; ?>', 'div_validation_users_selected_<?php echo $_GET['validation_id']; ?>');">
-                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
+                                    <a class="ploopi_validation_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo $_GET['validation_id']; ?>&group_id=<?php echo $id_grp; ?>', 'div_validation_users_selected_<?php echo $_GET['validation_id']; ?>');">
+                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo $list['groups'][$id_grp]['label'];  ?></span></p>
                                     </a>
                                     <?php
+                                    if (!empty($list['groups'][$id_grp]))
+                                    {
+                                        foreach($list['groups'][$id_grp]['users'] as $id_user)
+                                        {
+                                            $user = &$list['users'][$id_user];
+                                            ?>
+                                            <a class="ploopi_validation_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo $_GET['validation_id']; ?>&user_id=<?php echo $id_user; ?>', 'div_validation_users_selected_<?php echo $_GET['validation_id']; ?>');">
+                                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo "{$user['lastname']} {$user['firstname']}"; ?></span></p>
+                                            </a>
+                                            <?php
+                                        }
+                                    }
                                 }
                             }
                         }
