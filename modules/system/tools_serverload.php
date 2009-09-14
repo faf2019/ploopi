@@ -130,8 +130,12 @@ foreach($load as $key => $l)
 <?php
 $skin->display_array($columns, $values, 'array_load');
 
-// Analyse des x dernières requêtes
+log::getdb()->query("SELECT COUNT(*) AS c FROM ploopi_log");
+$row = log::getdb()->fetchrow();
+$intLogRows = $row['c'];
 
+
+// Analyse des x dernières requêtes
 log::getdb()->query( "
             SELECT  ts,
                     browser,
@@ -186,8 +190,8 @@ while ($row = log::getdb()->fetchrow())
 }
 
 ?>
-<div style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;border-top:2px solid #c0c0c0;font-weight:bold;">
-    Historique : <?php echo $intMaxRequests; ?> dernières requêtes
+<div style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;border-top:2px solid #c0c0c0;">
+    <strong>Historique : <?php echo $intMaxRequests; ?> dernières requêtes</strong> (<span style="color:#a60000;"><?php echo $intLogRows ?> lignes dans la base</span>, pensez à vider les logs régulièrement ou à utiliser la tâche &laquo; cron &raquo;  de Ploopi)
 </div>
 <?php
 $skin->display_array($columns, $values, 'array_requests');

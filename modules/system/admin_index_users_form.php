@@ -113,23 +113,20 @@ if (isset($_REQUEST['confirm']))
     <div style="margin:10px;">
     <?php
     $db->query("
-        SELECT
-            id,
-            login,
-            lastname,
-            firstname,
-            email,
-            service,
-            office,
-            function
+        SELECT  id,
+                login,
+                lastname,
+                firstname,
+                email,
+                service,
+                office,
+                function
 
-        FROM
-            ploopi_user
+        FROM    ploopi_user
 
-        WHERE
-            lastname = '{$_SESSION['system']['save_user']['user_lastname']}'
-        AND
-            firstname = '{$_SESSION['system']['save_user']['user_firstname']}'
+        WHERE   (lastname = '".$db->addslashes($_SESSION['system']['save_user']['user_lastname'])."'
+        AND     firstname = '".$db->addslashes($_SESSION['system']['save_user']['user_firstname'])."')
+        OR      login = '".$db->addslashes($_SESSION['system']['save_user']['user_login'])."'
     ");
 
     $arrColumns = array();
@@ -176,8 +173,12 @@ if (isset($_REQUEST['confirm']))
             'options' => array('sort' => true)
         );
 
+    $booLoginWarning = false;
+    
     while ($row = $db->fetchrow())
     {
+        if ($row['login'] == $_SESSION['system']['save_user']['user_login']) $booLoginWarning = true;
+        
         $objUser = new user();
         $objUser->fields['id'] = $row['id'];
 
@@ -344,6 +345,12 @@ if (isset($_REQUEST['confirm']))
                             ?>
                             <input type="text" class="text" name="user_login"  value="<?php echo htmlentities($user->fields['login']); ?>" tabindex="21" />
                             <?php
+                            if (isset($_REQUEST['confirm']) && !empty($booLoginWarning))
+                            {
+                                ?>
+                                <div class="error">Attention ! &laquo; <?php echo htmlentities($user->fields['login']); ?> &raquo; existe déjà. Vous devez modifier la propriété &laquo; <?php echo _SYSTEM_LABEL_LOGIN; ?> &raquo; pour pouvoir créer un nouvel utilisateur.</div>
+                                <?php
+                            }
                         }
                         else
                         {

@@ -37,7 +37,7 @@ include_once './include/functions/date.php';
 $strTsDelete = ploopi_timestamp_add(ploopi_createtimestamp(), 0, 0, 0, 0, -7, 0);
 
 // suppression des données périmées
-$db->query("DELETE FROM `ploopi_log`` WHERE ts < {$strTsDelete}");
+$db->query("DELETE FROM `ploopi_log` WHERE ts < {$strTsDelete}");
 
 // optimisation des tables
 $db->query("OPTIMIZE TABLE `ploopi_log`");

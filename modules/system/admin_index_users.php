@@ -56,19 +56,18 @@ switch($op)
 
             $_SESSION['system']['save_user'] = $_POST;
 
-            // test si login deja existant
-            $db->query("SELECT id FROM ploopi_user WHERE login = '".$db->addslashes($_POST['user_login'])."'");
-
-            // problème, ce login existe déjà => redirect
-            if($db->numrows()) ploopi_redirect("admin.php?op=manage_account&error=login");
-            else
+            if (!isset($_GET['confirm'])) // pas de confirmation de création demandée
             {
-                if (!isset($_GET['confirm'])) // pas de confirmation de création demandée
-                {
-                    // test si utilisateur existe déjà => demande de confirmation de création (homonyme ?)
-                    $db->query("SELECT id FROM ploopi_user WHERE lastname = '{$_POST['user_lastname']}' AND firstname = '{$_POST['user_firstname']}'");
-                    if($db->numrows()) ploopi_redirect("admin.php?op=manage_account&confirm");
-                }
+                // test si utilisateur existe déjà => demande de confirmation de création (homonyme ?)
+                $db->query("SELECT id FROM ploopi_user WHERE (lastname = '{$_POST['user_lastname']}' AND firstname = '{$_POST['user_firstname']}') OR (login = '".$db->addslashes($_POST['user_login'])."')");
+                if($db->numrows()) ploopi_redirect("admin.php?op=manage_account&confirm");
+            }
+            else // on vérifie qd même le doublon de login
+            {
+                // test si login deja existant
+                $db->query("SELECT id FROM ploopi_user WHERE login = '".$db->addslashes($_POST['user_login'])."'");
+                // problème, ce login existe déjà => redirect
+                if($db->numrows()) ploopi_redirect("admin.php?op=manage_account&confirm");
             }
         }
 
