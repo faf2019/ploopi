@@ -144,11 +144,31 @@ if ($_SESSION['ploopi']['connected'])
                 }
 
                 // on recherche s'il existe des validateurs pour ce dossier
-                $wfusers = array();
-                foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
-
+                $arrWfUsers = array('group' => array(), 'user' => array());
+                $arrWfUsersOnly = array(); // utilisateurs uniquement (groupes compris)
+                
+                $objUser = new user();
+                $objUser->open($_SESSION['ploopi']['userid']);
+                $arrGroups = $objUser->getgroups(true);
+                
+                $booWfVal = false;
+                foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) 
+                {
+                    if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booWfVal = true;
+                    if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booWfVal = true;
+                    
+                    $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
+                    
+                    if ($value['type_validation'] == 'user') $arrWfUsersOnly[] = $value['id_validation'];
+                    if ($value['type_validation'] == 'group') 
+                    {
+                        $objGroup = new group();
+                        if ($objGroup->open($value['id_validation'])) $arrWfUsersOnly = array_merge($arrWfUsersOnly, array_keys($objGroup->getusers()));
+                    }
+                }
+                
                 // on crée des documents "draft" s'il existe des validateurs et que l'utilisateur courant n'en fait pas partie
-                $draft = (!empty($wfusers) && !in_array($_SESSION['ploopi']['userid'],$wfusers));
+                $draft = ((!empty($arrWfUsers['user']) || !empty($arrWfUsers['group'])) && !$booWfVal);
 
                 // nouveau fichier ?
                 $newfile = (empty($_REQUEST['docfile_md5id']));
@@ -300,7 +320,7 @@ if ($_SESSION['ploopi']['connected'])
                                 
                                     if ($draft)
                                     {
-                                        $_SESSION['ploopi']['tickets']['users_selected'] = $wfusers;
+                                        $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
                                         ploopi_tickets_send(
                                             "Demande de validation du document <strong>\"{$docfile->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})",
                                             "Ceci est un message automatique envoyé suite à une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce document pour le valider en cliquant sur le lien ci-dessous.",
@@ -696,13 +716,13 @@ if ($_SESSION['ploopi']['connected'])
                         if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été modifié');
     
                         // SHARES
-                        ploopi_share_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
+                        ploopi_share_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_share_folder');
                         doc_resetshare();
     
                         // WORKFLOW
-                        ploopi_validation_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
+                        ploopi_validation_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_validation_folder');
                         doc_resetvalidation();
-    
+                        
                         // LOG
                         ploopi_create_user_action_log(_DOC_ACTION_MODIFYFOLDER, $docfolder->fields['id']);
                     }
@@ -716,14 +736,35 @@ if ($_SESSION['ploopi']['connected'])
                     $docfolder->fields['id_folder'] = $currentfolder;
                     $docfolder->setuwm();
 
-                    // test if we should publish or not the folder
-                    $wfusers = array();
-                    foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
-                    if (!empty($wfusers) && !in_array($_SESSION['ploopi']['userid'],$wfusers))
+                    // on recherche s'il existe des validateurs pour ce dossier
+                    $arrWfUsers = array('group' => array(), 'user' => array());
+                    $arrWfUsersOnly = array(); // utilisateurs uniquement (groupes compris)
+                    
+                    $objUser = new user();
+                    $objUser->open($_SESSION['ploopi']['userid']);
+                    $arrGroups = $objUser->getgroups(true);
+                    
+                    $booWfVal = false;
+                    foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) 
+                    {
+                        if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booWfVal = true;
+                        if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booWfVal = true;
+                        
+                        $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
+                        
+                        if ($value['type_validation'] == 'user') $arrWfUsersOnly[] = $value['id_validation'];
+                        if ($value['type_validation'] == 'group') 
+                        {
+                            $objGroup = new group();
+                            if ($objGroup->open($value['id_validation'])) $arrWfUsersOnly = array_merge($arrWfUsersOnly, array_keys($objGroup->getusers()));
+                        }
+                    }
+                    
+                    if ((!empty($arrWfUsers['user']) || !empty($arrWfUsers['group'])) && !$booWfVal)
                     {
                         $docfolder->fields['published'] = 0;
 
-                        $_SESSION['ploopi']['tickets']['users_selected'] = $wfusers;
+                        $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
                         ploopi_tickets_send("Demande de validation du dossier <strong>\"{$docfolder->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyé suite à une demande de validation du dossier \"{$docfolder->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce dossier pour le valider en cliquant sur le lien ci-dessous.", true, 0, _DOC_OBJECT_FILEDRAFT, $currentfolder, $docfolder->fields['name']);
                     }
                     else
@@ -745,17 +786,16 @@ if ($_SESSION['ploopi']['connected'])
                     if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_ADDFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été créé');
 
                     // SHARES
-                    ploopi_share_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
+                    ploopi_share_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_share_folder');
                     doc_resetshare();
 
                     // WORKFLOW
-                    ploopi_validation_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id']);
+                    ploopi_validation_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_validation_folder');
                     doc_resetvalidation();
 
                     // LOG
                     ploopi_create_user_action_log(_DOC_ACTION_ADDFOLDER, $docfolder->fields['id']);
                 }
-
                 ploopi_redirect("admin.php?op=doc_folderform&currentfolder={$docfolder->fields['id']}");
 
             break;
