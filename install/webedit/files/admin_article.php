@@ -40,7 +40,7 @@ $intWfHeadingId = $headingid;
 
 if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur les parents
 {
-    $arrParents = explode(';', $heading->fields['parents']);
+    $arrParents = explode(';', $headings['list'][$headingid]['parents']);
     for ($i = sizeof($arrParents)-1; $i >= 0; $i--)
     {
         $arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $arrParents[$i]);
@@ -160,7 +160,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
             <?php
         }
 
-        $readonly = (!(ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) && $type == 'draft' && ($article->fields['status'] == 'edit' || (in_array($_SESSION['ploopi']['userid'],$wfusers)) && ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_PUBLISH))));
+        $readonly = (!(ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) && $type == 'draft' && ($article->fields['status'] == 'edit' || ($booWfVal) && ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_PUBLISH))));
         ?>
     </p>
 </div>
@@ -710,7 +710,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
     <?php
     if ($type == 'draft')
     {
-        if ($op != 'article_addnew' && (in_array($_SESSION['ploopi']['userid'],$wfusers) || ploopi_isadmin()))
+        if ($op != 'article_addnew' && ($booWfVal || ploopi_isadmin()))
         {
             ?>
             <input class="flatbutton" style="font-weight:bold;" type="submit" name="publish" value="Publier">
@@ -723,7 +723,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
     ?>
     </div>
     <?php
-    if ($op != 'article_addnew' && (ploopi_isadmin() || in_array($_SESSION['ploopi']['userid'],$wfusers) || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
+    if ($op != 'article_addnew' && (ploopi_isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
         <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">

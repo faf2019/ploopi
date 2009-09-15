@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.1.5b ============================================
+
+2009-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug lors de l'affichage des validateurs hérités de rubriques parents
+
 == Module WebEdit - version 2.1.5 ============================================
 
 2009-09-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
