@@ -51,7 +51,7 @@ include_once './config/config.php'; // load config (mysql, path, etc.)
  * Initialisation du gestionnaire d'erreur
  */
 include_once './include/functions/errors.php';
-set_error_handler('ploopi_errorhandler');
+ploopi_set_error_handler();
 
 /**
  * Chargement des constantes, globales
