@@ -39,8 +39,42 @@
  * Chargement de l'environnement
  */
 
-include_once './include/start.php';
-include_once ($_SESSION['ploopi']['mode'] == 'frontoffice') ? './include/frontoffice.php' : './include/backoffice.php';
+include_once './include/boot.php';
+
+
+switch($ploopi_access_script)
+{
+    case 'index':
+        include_once './include/start.php';
+        include_once ($_SESSION['ploopi']['mode'] == 'frontoffice') ? './include/frontoffice.php' : './include/backoffice.php';
+    break;
+    
+    case 'admin':
+        include_once './include/start.php';
+        include_once './include/backoffice.php';
+    break;
+    
+    case 'admin-light':
+    case 'index-light':
+        include_once './include/start.php';
+        include_once './include/light.php';
+    break;
+    
+    case 'webservice':
+        include_once './include/start_light.php';
+        include_once './include/webservice.php';
+    break;
+    
+    case 'backend':
+        include_once './include/start_light.php';
+        include_once './include/backend.php';
+    break;
+    
+    case 'quick':
+        include_once './include/quick.php';
+    break;
+    
+}
 
 ploopi_die();
 ?>
