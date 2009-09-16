@@ -118,11 +118,11 @@ if (!empty($_POST['historyoption']))
     <div style="margin:0; padding:0; float:left;width:49%;" class="ploopi_form">
         <p>
             <label>Entre le (date):</label>
-            <input type="text" class="text" name="filter_date" id="filter_date" style="width:100px;" value="<?php echo htmlentities($arrSearchPattern['date']); ?>"><a href="#" onclick="javascript:ploopi_calendar_open('filter_date', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+            <input type="text" class="text" name="filter_date" id="filter_date" style="width:100px;" value="<?php echo htmlentities($arrSearchPattern['date']); ?>"><?php ploopi_open_calendar('filter_date'); ?>
         </p>
         <p>
             <label>et le (date):</label>
-            <input type="text" class="text" name="filter_date2" id="filter_date2" style="width:100px;" value="<?php echo htmlentities($arrSearchPattern['date2']); ?>"><a href="#" onclick="javascript:ploopi_calendar_open('filter_date2', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+            <input type="text" class="text" name="filter_date2" id="filter_date2" style="width:100px;" value="<?php echo htmlentities($arrSearchPattern['date2']); ?>"><?php ploopi_open_calendar('filter_date2'); ?>
         </p>
         <p>
             <label>Utilisateur:</label>
