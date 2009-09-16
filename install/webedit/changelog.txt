@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.1.5c ============================================
+
+2009-09-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Les fichiers javascript.php et head.php des modules sont désormais gérés en frontoffice  
+
 == Module WebEdit - version 2.1.5b ============================================
 
 2009-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

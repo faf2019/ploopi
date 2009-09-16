@@ -394,9 +394,12 @@ switch($menu)
                     $arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
                     $intWfHeadingId = $headingid;
                     
+                    $objHeading = new webedit_heading();
+                    $objHeading->open($headingid);
+                    
                     if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur les parents
                     {
-                        $arrParents = explode(';', $heading->fields['parents']);
+                        $arrParents = explode(';', $objHeading->fields['parents']);
                         for ($i = sizeof($arrParents)-1; $i >= 0; $i--)
                         {
                             $arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $arrParents[$i]);

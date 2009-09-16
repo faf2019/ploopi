@@ -31,29 +31,31 @@
  */
 
 // sitemap
-if ($booRewriteRuleFound = (substr($_SERVER['REQUEST_URI'], -11 ) == 'sitemap.xml'))
+if ($booRewriteRuleFound = ($arrParsedURI['path'] == '/sitemap.xml'))
 {
+    $ploopi_access_script = 'index-light';
     $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'webedit_sitemap';
 }
 
 // url webedit (article/rubrique + parametres)
-elseif ($booRewriteRuleFound = (preg_match('/articles\/(.*)-(h([0-9]*)){0,1}(a([0-9]*)){0,1}\.[a-z0-9]*\?{0,1}(.*)/', $_SERVER['REQUEST_URI'], $arrMatches) == 1)) 
+elseif ($booRewriteRuleFound = (preg_match('/articles\/(.*)-(h([0-9]*)){0,1}(a([0-9]*)){0,1}\.[a-z0-9]*\?{0,1}(.*)/', $arrParsedURI['path'], $arrMatches) == 1)) 
 {
     if (!empty($arrMatches[3]) && is_numeric($arrMatches[3])) $_REQUEST['headingid'] = $_GET['headingid'] = $arrMatches[3];
     if (!empty($arrMatches[5]) && is_numeric($arrMatches[5])) $_REQUEST['articleid'] = $_GET['articleid'] = $arrMatches[5];
 }
 
 // tags
-elseif ($booRewriteRuleFound = (preg_match('/tags\/(.*)\.[a-zA-Z0-9]*(.*)/', $_SERVER['REQUEST_URI'], $arrMatches) == 1)) 
+elseif ($booRewriteRuleFound = (preg_match('/tags\/(.*)\.[a-zA-Z0-9]*(.*)/', $arrParsedURI['path'], $arrMatches) == 1)) 
 {
     if (!empty($arrMatches[1])) $_REQUEST['query_tag'] = $_GET['query_tag'] = $arrMatches[1]; 
 }
 
 // atom rubrique
-elseif ($booRewriteRuleFound = (preg_match('/atom\/(.*)-h([0-9]*)\.xml/', $_SERVER['REQUEST_URI'], $arrMatches) == 1))
+elseif ($booRewriteRuleFound = (preg_match('/atom\/(.*)-h([0-9]*)\.xml/', $arrParsedURI['path'], $arrMatches) == 1))
 {
     if (!empty($arrMatches[2])) 
     {
+        $ploopi_access_script = 'index-light';
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'webedit_backend';
         $_REQUEST['format'] = $_GET['format'] = 'atom';
         $_REQUEST['headingid'] = $_GET['headingid'] = $arrMatches[2];
@@ -61,17 +63,19 @@ elseif ($booRewriteRuleFound = (preg_match('/atom\/(.*)-h([0-9]*)\.xml/', $_SERV
 }
 
 // atom racine
-elseif ($booRewriteRuleFound = (preg_match('/atom\/(.*)\.xml/', $_SERVER['REQUEST_URI'], $arrMatches) == 1))
+elseif ($booRewriteRuleFound = (preg_match('/atom\/(.*)\.xml/', $arrParsedURI['path'], $arrMatches) == 1))
 {
+    $ploopi_access_script = 'index-light';
     $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'webedit_backend';
     $_REQUEST['format'] = $_GET['format'] = 'atom';
 }
 
 // rss rubrique
-elseif ($booRewriteRuleFound = (preg_match('/rss\/(.*)-h([0-9]*)\.xml/', $_SERVER['REQUEST_URI'], $arrMatches) == 1))
+elseif ($booRewriteRuleFound = (preg_match('/rss\/(.*)-h([0-9]*)\.xml/', $arrParsedURI['path'], $arrMatches) == 1))
 {
     if (!empty($arrMatches[2])) 
     {
+        $ploopi_access_script = 'index-light';
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'webedit_backend';
         $_REQUEST['format'] = $_GET['format'] = 'rss';
         $_REQUEST['headingid'] = $_GET['headingid'] = $arrMatches[2];
@@ -79,14 +83,15 @@ elseif ($booRewriteRuleFound = (preg_match('/rss\/(.*)-h([0-9]*)\.xml/', $_SERVE
 }
 
 // rss racine
-elseif ($booRewriteRuleFound = (preg_match('/rss\/(.*)\.xml/', $_SERVER['REQUEST_URI'], $arrMatches) == 1))
+elseif ($booRewriteRuleFound = (preg_match('/rss\/(.*)\.xml/', $arrParsedURI['path'], $arrMatches) == 1))
 {
+    $ploopi_access_script = 'index-light';
     $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'webedit_backend';
     $_REQUEST['format'] = $_GET['format'] = 'rss';
 }
 
 // Désinscription
-elseif ($booRewriteRuleFound = (preg_match('/unsubscribe\/([a-z0-9]{32})\/index\.[a-zA-Z0-9](.*)/', $_SERVER['REQUEST_URI'], $arrMatches) == 1)) 
+elseif ($booRewriteRuleFound = (preg_match('/unsubscribe\/([a-z0-9]{32})\/index\.[a-zA-Z0-9](.*)/', $arrParsedURI['path'], $arrMatches) == 1)) 
 {
     if (!empty($arrMatches[1])) 
     {

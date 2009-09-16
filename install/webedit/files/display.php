@@ -63,6 +63,12 @@ global $article;
 global $articleid;
 global $headingid;
 
+global $ploopi_additional_head;
+global $ploopi_additional_javascript;
+
+$ploopi_additional_head = '';
+$ploopi_additional_javascript = '';
+
 // Date du jour (utile pour vérifier les dates de publication)
 $today = ploopi_createtimestamp();
 
@@ -1055,7 +1061,7 @@ if ($webedit_mode != 'display')
     <?php
 }
 
-$additional_javascript = ob_get_contents();
+$ploopi_additional_javascript .= ob_get_contents();
 @ob_end_clean();
 
 $lastupdate = ($lastupdate = webedit_getlastupdate()) ? ploopi_timestamp2local($lastupdate) : array('date' => '', 'time' => '');
@@ -1110,7 +1116,8 @@ $template_body->assign_vars(
     array(
         'TEMPLATE_PATH'                 => $template_path,
         'TEMPLATE_NAME'                 => $template_name,
-        'ADDITIONAL_JAVASCRIPT'         => $additional_javascript,
+        'ADDITIONAL_JAVASCRIPT'         => $ploopi_additional_javascript,
+        'ADDITIONAL_HEAD'               => $ploopi_additional_head,
         'SITE_TITLE'                    => $title,
         'SITE_TITLE_RAW'                => $title_raw,
         'WORKSPACE_TITLE'               => $title,

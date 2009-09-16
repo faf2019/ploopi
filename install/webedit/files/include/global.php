@@ -880,6 +880,7 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
  */
 function webedit_sitemap()
 {
+    include_once './include/functions/string.php';
     include_once './include/classes/cache.php';
 
     // Mise en cache
