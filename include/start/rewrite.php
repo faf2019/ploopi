@@ -30,21 +30,62 @@
  * @author Stéphane Escaich
  */
 
-$booRewriteRuleFound = false;
+$ploopi_access_script = 'index'; // index/admin/light/quick/webservice/backend
 
-// robots.txt
-if ($booRewriteRuleFound = (substr($_SERVER['REQUEST_URI'], -10 ) == 'robots.txt'))
-{
-    $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'ploopi_robots';
-}
+if (isset($_SERVER['REDIRECT_STATUS']) && $_SERVER['REDIRECT_STATUS'] == '200')
+{ 
+    $booRewriteRuleFound = false;
+    
+    if (_PLOOPI_SELFPATH == '' || strpos($_SERVER['REQUEST_URI'], _PLOOPI_SELFPATH) === 0) define('_PLOOPI_REQUEST_URI', substr($_SERVER['REQUEST_URI'], strlen(_PLOOPI_SELFPATH) - strlen($_SERVER['REQUEST_URI'])));
+    else define('_PLOOPI_REQUEST_URI', $_SERVER['REQUEST_URI']);
+    
+    $arrParsedURI = parse_url(_PLOOPI_REQUEST_URI);
+     
+    if (!empty($arrParsedURI['path']))
+    {
+        // robots.txt
+        if ($booRewriteRuleFound = ($arrParsedURI['path'] == '/robots.txt'))
+        {
+            $ploopi_access_script = 'quick';
+            $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'ploopi_robots';
+        }
+        elseif ($booRewriteRuleFound = ($arrParsedURI['path'] == '/admin.php'))
+        {
+            $ploopi_access_script = 'admin';
+        }
+        elseif ($booRewriteRuleFound = ($arrParsedURI['path'] == '/admin-light.php'))
+        {
+            $ploopi_access_script = 'admin-light';
+        }
+        elseif ($booRewriteRuleFound = ($arrParsedURI['path'] == '/index-light.php'))
+        {
+            $ploopi_access_script = 'index-light';
+        }
+        elseif ($booRewriteRuleFound = ($arrParsedURI['path'] == '/webservice.php'))
+        {
+            $ploopi_access_script = 'webservice';
+        }
+        elseif ($booRewriteRuleFound = ($arrParsedURI['path'] == '/backend.php'))
+        {
+            $ploopi_access_script = 'backend';
+        }
+        elseif ($booRewriteRuleFound = ($arrParsedURI['path'] == '/index-quick.php'))
+        {
+            $ploopi_access_script = 'quick';
+        }
+    }
 
-// Gestion du rewriting inverse des modules
-clearstatcache();
-$rscFolder = @opendir(realpath('./modules/'));
-while ($strFolderName = @readdir($rscFolder))
-{
-    if (!$booRewriteRuleFound && $strFolderName != '.' && $strFolderName != '..' && file_exists($strModuleRewrite = "./modules/{$strFolderName}/include/rewrite.php")) include_once $strModuleRewrite;
+    if (!$booRewriteRuleFound)
+    {
+        // Gestion du rewriting inverse des modules
+        clearstatcache();
+        $rscFolder = @opendir(realpath('./modules/'));
+        while ($strFolderName = @readdir($rscFolder))
+        {
+            if (!$booRewriteRuleFound && $strFolderName != '.' && $strFolderName != '..' && file_exists($strModuleRewrite = "./modules/{$strFolderName}/include/rewrite.php")) include_once $strModuleRewrite;
+        }
+        closedir($rscFolder);
+    }
 }
-closedir($rscFolder);
 
 ?>

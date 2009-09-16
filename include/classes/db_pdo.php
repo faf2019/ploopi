@@ -360,7 +360,7 @@ class ploopi_db
 
         $rs = $this->query("SHOW TABLES FROM `{$this->database}`");
 
-        return $this->getarray($rs);
+        return $this->getarray(false, $rs);
     }
 
     /**
@@ -405,7 +405,7 @@ class ploopi_db
      * @return mixed un tableau indexé contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
     
-    public function getarray($result = null)
+    public function getarray($firstcolkey = false, $result = null)
     {
         if (!$this->isconnected()) return false;
 
@@ -418,16 +418,28 @@ class ploopi_db
             if ($this->numrows())
             {
                 //$this->dataseek($query_id, 0);
-                while ($row = $this->fetchrow($result))
+                while ($row = $this->fetchrow($query_id))
                 {
-                    if (sizeof($row) == 1) $array[] = $row[key($row)];
-                    else $array[] = $row;
+                    if ($firstcolkey) 
+                    {
+                        $key = current($row);
+                        array_shift($row);
+                        
+                        if (sizeof($row) == 1) $array[$key] = $row[key($row)];
+                        else $array[$key] = $row;
+                    }
+                    else
+                    {
+                        if (sizeof($row) == 1) $array[] = $row[key($row)];
+                        else $array[] = $row;
+                    }
                 }
             }
             return $array;
         }
         else return false;
     }
+  
 
     /**
      * Retourne dans au format JSON le contenu de la dernière requête ou du recordset passé en paramètre

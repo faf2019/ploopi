@@ -107,7 +107,6 @@ abstract class form_element
         'text',
     
         'richtext'
-    
     );
 
     /**
@@ -228,8 +227,7 @@ class form_field extends form_element
         'onmousemove' => null,
         'onmouseout' => null,
         'onmouseover' => null,
-        'onmouseup' => null,
-    
+        'onmouseup' => null
     );    
     
     /**
@@ -307,12 +305,12 @@ class form_field extends form_element
         switch($this->getType())
         {
             case 'input:text':
-                $strOutput .= "<input type=\"text\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"text{$strClass}\"{$strStyle}{$strMaxLength}{$strDisabled}{$strReadonly}/>";
+                $strOutput .= "<input type=\"text\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"text{$strClass}\"{$strStyle}{$strMaxLength}{$strDisabled}{$strReadonly} />";
                 if ($this->arrOptions['datatype'] == 'date') $strOutput .= ploopi_open_calendar($this->strId, false, null, 'display:block;float:left;margin-left:-35px;margin-top:1px;');
             break;
             
             case 'input:password':
-                $strOutput .= "<input type=\"password\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"text{$strClass}\"{$strStyle}{$strMaxLength}{$strDisabled}{$strReadonly}/>";
+                $strOutput .= "<input type=\"password\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"text{$strClass}\"{$strStyle}{$strMaxLength}{$strDisabled}{$strReadonly} />";
             break;
             
             case 'textarea':
@@ -327,6 +325,46 @@ class form_field extends form_element
         
         return $this->renderForm($strOutput);
     }
+}
+
+/**
+ * Classe de gestion des champs de type "hidden"
+ *
+ */    
+class form_hidden extends form_field
+{
+    /**
+     * Constructeur de la classe
+     *
+     * @param string $strValue valeur du champ
+     * @param string $strName propriété "name" du champ
+     * @param string $strId propriété "id" du champ
+     * @param array $arrOptions options du champ
+     * 
+     * @return form_hidden
+     */
+    public function __construct($strValue, $strName = null, $strId = null, $arrOptions = null)
+    {
+        parent::__construct('input:hidden', '', $strValue, $strName, $strId, $arrOptions);
+    }    
+    
+    /**
+     * Génère le rendu html du champ
+     *
+     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @return string code html
+     */
+    public function render($intTabindex)
+    {
+        $strOutput = '';
+        
+        $strClass = is_null($this->arrOptions['class']) ? '' : " {$this->arrOptions['class']}";
+        $strValue = htmlentities($this->arrValues[0]);
+
+        $strOutput .= "<input type=\"hidden\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\"{$strClass} />";
+        
+        return $strOutput;
+    }    
 }
 
 /**
@@ -348,7 +386,9 @@ class form_select extends form_field
      * @var array
      */
     protected static $arrDefaultOptions = array(
-        'onchange' => null
+        'onchange' => null,
+        'size' => null,
+        'multiple' => false
     );      
     
     /**
@@ -385,8 +425,10 @@ class form_select extends form_field
         $strOnchange = is_null($this->arrOptions['onchange']) ? '' : " onchange=\"javascript:{$this->arrOptions['onchange']}\"";
         $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\"";
         $strClass = is_null($this->arrOptions['class']) ? '' : " {$this->arrOptions['class']}";
+        $strSize = is_null($this->arrOptions['size']) ? '' : " size=\"{$this->arrOptions['size']}\"";
+        $strMultiple = $this->arrOptions['multiple'] ? " multiple=\"multiple\"" : '';
         
-        $strOutput .= "<select name=\"{$this->strName}\" id=\"{$this->strId}\" tabindex=\"{$intTabindex}\" class=\"select{$strClass}\"{$strStyle}{$strOnchange} />";
+        $strOutput .= "<select name=\"{$this->strName}\" id=\"{$this->strId}\" tabindex=\"{$intTabindex}\" class=\"select{$strClass}\"{$strStyle}{$strOnchange}{$strSize}{$strMultiple} />";
         foreach($this->arrValues as $strKey => $strValue) 
         {
             $strValue = htmlentities($strValue);
@@ -538,7 +580,7 @@ class form_text extends form_field
         $strClass = is_null($this->arrOptions['class']) ? '' : " class=\"{$this->arrOptions['class']}\"";
         $strValue = ploopi_nl2br($this->arrValues[0]);
         
-        return $this->renderForm("<span{$strStyle}{$strClass}>{$strValue}</span>");
+        return $this->renderForm("<span name=\"{$this->strName}\" id=\"{$this->strId}\" {$strStyle}{$strClass}>{$strValue}</span>");
     }
 }
 
@@ -1065,7 +1107,7 @@ class form
         
         $strTarget = is_null($this->arrOptions['target']) ? '' : " target=\"{$this->arrOptions['target']}\"";
         $strEnctype = is_null($this->arrOptions['enctype']) ? ($booHasFile ? ' enctype="multipart/form-data"' : '') : " enctype=\"{$this->arrOptions['enctype']}\"";
-        $strOnsubmit = is_null($this->arrOptions['onsubmit']) ? 'onsubmit="javascript:eval('.$this->getFormValidateFunc().'_var);return result_'.$this->getFormValidateFunc().';"' : " onsubmit=\"javascript:{$this->arrOptions['onsubmit']}\"";
+        $strOnsubmit = is_null($this->arrOptions['onsubmit']) ? 'onsubmit="javascript:return ploopi.'.$this->getFormValidateFunc().'(this);"' : " onsubmit=\"javascript:{$this->arrOptions['onsubmit']}\"";
         $strButtonStyle = is_null($this->arrOptions['button_style']) ? '' : " style=\"{$this->arrOptions['button_style']}\"";
         $strClass = is_null($this->arrOptions['class']) ? '' : " class=\"{$this->arrOptions['class']}\"";
         $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\"";
@@ -1075,7 +1117,7 @@ class form
          * Attention, nécessité de passer par eval() pour les appels AJAX
          */
         
-        $strOutput = '<script type="text/javascript">'.$this->getFormValidateFunc().'_var = "'.preg_replace("/(\r\n|\n|\r|\t)+/", ' ', $this->renderJS().' var result_'.$this->getFormValidateFunc().' = '.$this->getFormValidateFunc().'(this);').'";</script>';
+        $strOutput = '<script type="text/javascript">'.$this->renderJS().'</script>';
         
         /*
          * Génération du form
@@ -1117,9 +1159,7 @@ class form
      */
     private function renderJS()
     {
-        // javascript:eval(form_validate);return(result);
-        
-        $strOutput = "function ".$this->getFormValidateFunc()."(form) {";
+        $strOutput = "ploopi.".$this->getFormValidateFunc()." = function(form) {";
         
         foreach($this->getFields() as $objField)
         {
@@ -1133,12 +1173,12 @@ class form
                     case 'input:password':
                     case 'input:file':
                         $strFormat = ($arrOptions['required'] ? '' : 'empty').$arrOptions['datatype'];
-                        $strOutput .= "if (ploopi_validatefield('".addslashes($objField->getLabel())."', form.".$objField->getName().", '{$strFormat}'))";
+                        $strOutput .= "if (ploopi_validatefield('".$this->jsAddslashes($objField->getLabel())."', form.".$objField->getName().", '{$strFormat}'))";
                     break;
         
                     case 'select':
                     case 'color':
-                        if ($arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes($objField->getLabel())."', form.".$objField->getName().", 'selected'))";
+                        if ($arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".$this->jsAddslashes($objField->getLabel())."', form.".$objField->getName().", 'selected'))";
                     break;
         
                     case 'input:radio':
@@ -1154,11 +1194,24 @@ class form
         return $strOutput;
     }
     
+    // function sdis_interop_site_form_validate(form) {if (ploopi_validatefield('Libellé:', form.sdis_interop_site_label, 'string'))if (ploopi_validatefield('IP distante (si fixe):', form.sdis_interop_site_ip_source, 'emptystring'))if (ploopi_validatefield('Code didentification:', form.sdis_interop_site_code, 'string'))return true; return false; }
+    
     /**
      * Retourne le nom de la fonction de validation du formulaire
      * 
      * @return string nom de la fonction de validation
      */
     private function getFormValidateFunc() { return "{$this->strId}_validate"; }
+    
+    /**
+     * Echappe le contenu d'un contenu JS
+     *
+     * @param string $strLabel contenu à échapper
+     * @return string contenu échappé
+     */
+    private function jsAddslashes($strLabel)
+    {
+        return str_replace(array("'", '"'), array("\\\\'", '\"'), $strLabel);     
+    }
     
 }

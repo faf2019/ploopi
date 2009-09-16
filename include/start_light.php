@@ -22,7 +22,7 @@
 */
 
 /**
- * Script de chargement de l'environnement Ploopi, version allégée utilisée pour les scripts cron.php, webservice.php, rss.php
+ * Script de chargement de l'environnement Ploopi, version allégée utilisée pour les scripts cron.php, webservice.php, backend.php
  * Attention l'environnement chargé est minimal !
  *
  * @package ploopi
@@ -33,24 +33,17 @@
  */
 
 /**
- * Chargement de la partie commune de chargement de l'environnement
- */
-
-include './include/start/common.php';
-
-/**
  * Chargement des classes principales (dans la version light, pas grand chose)
  */
-
 include_once './include/classes/workspace.php';
 
 if ($ploopi_initsession) include './include/start/initsession.php';
 
-switch($_SESSION['ploopi']['scriptname'])
+switch($ploopi_access_script)
 {
-    case 'cron.php':
-    case 'webservice.php':
-    case 'backend.php':
+    case 'cron':
+    case 'webservice':
+    case 'backend':
         $_SESSION['ploopi']['mode'] = 'backoffice';
     break;
 

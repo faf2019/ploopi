@@ -23,7 +23,7 @@
 
 /**
  * Script de chargement de l'environnement Ploopi.
- * Charge les constantes génériques, les fonctions et classes principales.
+ * Charge les fonctions et classes principales.
  * Connecte l'utilisateur, initialise la session, charge les paramètres.
  *
  * @package ploopi
@@ -32,12 +32,6 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
-
-/**
- * Chargement de la partie commune de chargement de l'environnement
- */
-
-include './include/start/common.php';
 
 /**
  * Chargement fonctions génériques
@@ -164,14 +158,15 @@ if ($ploopi_initsession) include './include/start/initsession.php';
  * Switch entre backoffice et frontoffice en fonction du nom du script appelant (admin.php/index.php) et de la config du portail
  */
 
-switch($_SESSION['ploopi']['scriptname'])
+switch($ploopi_access_script)
 {
-    case 'admin.php':
-    case 'admin-light.php':
+    case 'admin':
+    case 'admin-light':
         $_SESSION['ploopi']['mode'] = 'backoffice';
     break;
 
-    case 'index.php':
+    case 'index':
+    case 'index-light':
         if ((!empty($_GET['webedit_mode'])) && isset($_SESSION['ploopi']['backoffice']['connected']) && $_SESSION['ploopi']['backoffice']['connected'] && isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['backoffice']['moduleid']]) && $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['backoffice']['moduleid']]['moduletype'] == 'webedit')
         {
             // cas spécial du mode de rendu public du module Webedit (on utilise le rendu frontoffice sans activer tout le processus)

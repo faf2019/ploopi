@@ -45,16 +45,6 @@
 class data_object
 {
     /**
-     * Propriété expérimentale
-     *
-     * @var array
-     */
-    protected static $arrDef = array(
-        'strTableName' => null,
-        'arrId' => null
-    );    
-    
-    /**
      * Nom de la classe
      *
      * @var string
@@ -138,51 +128,6 @@ class data_object
     public $new;
     
     /**
-     * Méthode statique expérimentale : contructeur statique de la classe
-     * 
-     * @param string $strTableName nom de la table
-     * @param array $arrId tableau contenant la description des champs composants la clé primaire
-     */
-    public static function init($strTableName, $arrId = array())
-    {
-        self::$arrDef['strTableName'] = $strTableName;
-        self::$arrDef['arrId'] = $arrId;
-    }
-    
-
-    /**
-     * Méthode statique expérimentale permettant de renvoyer le contenu de la table sous forme d'un tableau d'objets
-     *
-     * @return array tableau d'objets
-     */
-    public static function getObjects()
-    {
-        global $db;
-        
-        if (is_null(self::$arrDef['strTableName'])) return null;
-        
-        $arrResult = array();
-        
-        $db->query("SELECT * FROM `".self::$arrDef['strTableName']."`");
-        while ($row = $db->fetchrow())
-        {
-            $objRecord = new data_object(self::$arrDef['strTableName'], self::$arrDef['arrId'][0]);
-            $objRecord->new = false;
-            
-            // Construction de la clé du tableau (à partir de la clé primaire du tuple)
-            $arrKeyValue = array();
-            foreach(self::$arrDef['arrId'] as $strKeyField) $arrKeyValue[] = $row[$strKeyField];
-            
-            foreach($row as $strKey => $strValue) $objRecord->fields[$strKey] = $strValue;
-
-            $arrResult[implode(',', $arrKeyValue)] = $objRecord;
-        }
-        
-        return $arrResult;
-    }        
-    
-    
-    /**
      * Constructeur de la classe
      *
      * @param string nom de la table
@@ -206,20 +151,42 @@ class data_object
         $this->id = array();
         $this->fields = array();
 
-        if ($numargs == 1) // special case
+        if ($numargs == 1) // cas particulier n°1, pas de clé définie, on prend id par défaut
         {
             $this->idfields[0] = 'id';
             $this->fields['id'] = null;
         }
         else
         {
-            for ($i = 1; $i < $numargs; $i++)
+            if ($numargs == 2 && is_array($keys = func_get_arg(1))) // cas particulier n°2, les clés sont définies dans un tableau (nouvelle méthode)
             {
-                if (!is_null(func_get_arg($i)))
+                if (sizeof($keys) == 0) // cas particulier n°2b, pas de clé définie, on prend id par défaut
                 {
-                    $this->idfields[$i-1] = func_get_arg($i);
-                    $this->fields[$this->idfields[$i-1]] = null;
-                    $this->id[$this->idfields[$i-1]] = null;
+                    $this->idfields[0] = 'id';
+                    $this->fields['id'] = null;
+                }
+                else
+                {
+                    $i = 0;
+                    foreach(func_get_arg(1) as $key)
+                    {
+                        $this->idfields[$i] = $key;
+                        $this->fields[$this->idfields[$i]] = null;
+                        $this->id[$this->idfields[$i]] = null;
+                        $i++;
+                    }
+                }
+            }
+            else // cas général, les clés sont définies dans une liste d'arguments
+            {
+                for ($i = 1; $i < $numargs; $i++)
+                {
+                    if (!is_null(func_get_arg($i)))
+                    {
+                        $this->idfields[$i-1] = func_get_arg($i);
+                        $this->fields[$this->idfields[$i-1]] = null;
+                        $this->id[$this->idfields[$i-1]] = null;
+                    }
                 }
             }
         }
@@ -228,6 +195,7 @@ class data_object
 
         $this->new = true;
     }
+
 
     /**
      * Permet de modifier la connexion à la base de données
@@ -304,6 +272,21 @@ class data_object
 
     }
 
+    /**
+     * Méthode d'ouverture spéciale pour "convertir" une ligne de recordset en objet
+     *
+     * @param array $row ligne de recordset
+     */
+    
+    public function open_row($row)
+    {
+        $this->fields = $row;
+        
+        foreach($this->idfields as $field) $this->id[$field] = $row[$field];
+        
+        $this->new = false;
+    }
+    
     /**
      * Insère ou met à jour l'enregistrement dans la base de données
      *

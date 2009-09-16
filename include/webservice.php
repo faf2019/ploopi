@@ -22,27 +22,19 @@
 */
 
 /**
- * Initialisation du rendu frontoffice.
- * Chargement du module WebEdit.
+ * Point d'entrée pour les webservices
  *
  * @package ploopi
- * @subpackage frontoffice
- * @copyright Netlor, Ovensia
+ * @subpackage webservice
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
-if (!empty($_SESSION['ploopi']['frontoffice']['template_path']))
-{
-    include_once "{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php";
-    $skin = new skin();
-}
+if (empty($_REQUEST['module'])) ploopi_die();
 
-/**
- * Initialisation du module WebEdit
- */
+$webservice_path = "./modules/{$_REQUEST['module']}";
+$webservice_rootfile = "{$webservice_path}/webservice.php";
 
-ploopi_init_module('webedit', false, false, false);
-
-include './modules/webedit/display.php';
+if (is_dir($webservice_path) && file_exists($webservice_rootfile)) include $webservice_rootfile;
 ?>

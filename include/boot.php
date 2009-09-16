@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -22,7 +21,7 @@
 */
 
 /**
- * Partie commune des scripts de chargement de l'environnement Ploopi (start.php, start-light.php).
+ * Partie commune des scripts de chargement de l'environnement Ploopi
  * Démarrage du timer principal.
  * Chargement du fichier de config.
  * Chargement du handler de gestion du buffer.
@@ -83,6 +82,11 @@ include_once './include/classes/log.php' ;
 include_once './include/functions/date.php';
 include_once './include/functions/session.php';
 include_once './include/functions/system.php';
+
+/**
+ * Traitement du rewriting inverse
+ */
+include_once './include/start/rewrite.php';
 
 /**
  * Filtrage des variables entrantes

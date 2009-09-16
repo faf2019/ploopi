@@ -38,12 +38,6 @@
 include_once './include/functions/security.php';
 
 /**
- * Traitement du rewriting inverse
- */
-
-if (isset($_SERVER['REDIRECT_STATUS']) && $_SERVER['REDIRECT_STATUS'] == '200') include_once './include/start/rewrite.php';
-
-/**
  * Traitement du paramètre spécial 'ploopi_url' via POST/GET
  */
 

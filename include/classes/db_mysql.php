@@ -319,11 +319,11 @@ class ploopi_db
      * @return mixed nombre de lignes dans le recordset ou false si le recordset n'est pas valide
      */
 
-    public function numrows($query_id = 0)
+    public function numrows($query_id = null)
     {
         if (!$this->isconnected()) return false;
 
-        if(!$query_id) $query_id = $this->query_result;
+        if(!isset($query_id)) $query_id = $this->query_result;
             
         if($query_id) return @mysql_num_rows($query_id);
         else return false;
@@ -336,11 +336,11 @@ class ploopi_db
      * @return mixed l'enregistrement courant (sous forme d'un tableau associatif) ou false si le recordset n'est pas valide
      */
     
-    public function fetchrow($query_id = 0, $result_type = MYSQL_ASSOC)
+    public function fetchrow($query_id = null, $result_type = MYSQL_ASSOC)
     {
         if (!$this->isconnected()) return false;
 
-        if(!$query_id) $query_id = $this->query_result;
+        if(!isset($query_id)) $query_id = $this->query_result;
         
         if($query_id) return mysql_fetch_array($query_id, $result_type);
         else return false;
@@ -370,7 +370,7 @@ class ploopi_db
 
         $rs = $this->query("SHOW TABLES FROM `{$this->database}`");
 
-        return $this->getarray($rs);
+        return $this->getarray(false, $rs);
     }
 
     /**
@@ -380,12 +380,12 @@ class ploopi_db
      * @return mixed nombre de champs ou false si le recordset n'est pas valide
      */
     
-    public function numfields($query_id = 0)
+    public function numfields($query_id = null)
     {
         if (!$this->isconnected()) return false;
 
-        if(!$query_id) $query_id = $this->query_result;
-
+        if(!isset($query_id)) $query_id = $this->query_result;
+        
         if($query_id) return @mysql_num_fields($query_id);
         else return false;
     }
@@ -398,12 +398,12 @@ class ploopi_db
      * @return mixed
      */
     
-    public function fieldname($query_id = 0, $i)
+    public function fieldname($query_id = null, $i)
     {
         if (!$this->isconnected()) return false;
 
-        if(!$query_id) $query_id = $this->query_result;
-
+        if(!isset($query_id)) $query_id = $this->query_result;
+        
         if($query_id) return @mysql_field_name($query_id, $i);
         else return false;
     }
@@ -415,7 +415,14 @@ class ploopi_db
      * @return mixed un tableau indexé contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
     
-    public function getarray($query_id = 0)
+    /**
+     * Retourne dans un tableau le contenu de la dernière requête ou du recordset passé en paramètre
+     *
+     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
+     * @return mixed un tableau indexé contenant les enregistrements du recordset ou false si le recordset n'est pas valide
+     */
+    
+    public function getarray($firstcolkey = false, $query_id = 0)
     {
         if (!$this->isconnected()) return false;
 
@@ -430,8 +437,19 @@ class ploopi_db
                 $this->dataseek($query_id, 0);
                 while ($fields = $this->fetchrow($query_id))
                 {
-                    if (sizeof($fields) == 1) $array[] = $fields[key($fields)];
-                    else $array[] = $fields;
+                    if ($firstcolkey) 
+                    {
+                        $key = current($fields);
+                        array_shift($fields);
+                        
+                        if (sizeof($fields) == 1) $array[$key] = $fields[key($fields)];
+                        else $array[$key] = $fields;
+                    }
+                    else
+                    {
+                        if (sizeof($fields) == 1) $array[] = $fields[key($fields)];
+                        else $array[] = $fields;
+                    }
                 }
                 $this->dataseek($query_id, 0);
             }
@@ -441,18 +459,18 @@ class ploopi_db
     }
 
     /**
-     * Retourne dans au format JSON le contenu de la dernière requête ou du recordset passé en paramètre
+     * Retourne au format JSON le contenu de la dernière requête ou du recordset passé en paramètre
      *
      * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
      * @param boolean $utf8 true si le contenu doit être encodé en utf8, false sinon (true par défaut)
      * @return string une chaîne au format JSON contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
 
-    public function getjson($query_id = 0, $utf8 = true)
+    public function getjson($query_id = null, $utf8 = true)
     {
         if (!$this->isconnected()) return false;
 
-        if(!$query_id) $query_id = $this->query_result;
+        if(!isset($query_id)) $query_id = $this->query_result;
 
         if($query_id)
         {
@@ -482,11 +500,12 @@ class ploopi_db
      * @return boolean true si le déplacement a été effectué sinon false
      */
     
-    public function dataseek($query_id = 0, $pos = 0)
+    public function dataseek($query_id = null, $pos = 0)
     {
         if (!$this->isconnected()) return false;
 
-        if(!$query_id) $query_id = $this->query_result;
+        if(!isset($query_id)) $query_id = $this->query_result;
+        
         if($query_id) return @mysql_data_seek($query_id, $pos);
         else return(false);
 
