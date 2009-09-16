@@ -428,6 +428,7 @@ p.ploopi_va a {
 .ploopi_form p textarea,
 .ploopi_form p span {
     width: 65%;
+    float:left;
 }
 
 .ploopi_form p input.checkbox {

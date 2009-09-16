@@ -237,13 +237,17 @@
                     <a href="http://www.ploopi.fr">Propulsé par <strong>Ploopi {PLOOPI_VERSION} ({PLOOPI_REVISION})</strong></a>
                     <a href="http://www.mozilla-europe.org/fr/products/firefox/">Ce template ne fonctionne pas avec IE6. <strong>Préférez Firefox</strong></a>
                     <a href="http://www.ploopi.org/#Utilisation"><strong>Documentation utilisateur</strong></a>
-                    <p><strong>Information Système:</strong>
-                        <label>Template</label><span>{TEMPLATE_NAME}</span>
-                        <label>Page size</label><span><PLOOPI_PAGE_SIZE> KB </span>
-                        <label>Exec time</label><span><PLOOPI_EXEC_TIME> ms</span>
-                        <label>Sql queries</label><span><PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %)</span>
-                        <label>Session size</label><span><PLOOPI_SESSION_SIZE> KB</span>
-                        <label>Memory used</label><span><PLOOPI_PHP_MEMORY> KB</span>
+                    <p><strong>Informations Utilisateur :</strong>
+                        <label>Identifiant</label><span>{USER_LOGIN}</span>
+                        <label>Nom</label><span>{USER_FIRSTNAME} {USER_LASTNAME}</span>
+                    </p>
+                    <p><strong>Informations Système :</strong>
+                        <label>Gabarit</label><span>{TEMPLATE_NAME}</span>
+                        <label>Exécution</label><span><PLOOPI_EXEC_TIME> ms</span>
+                        <label>SQL</label><span><PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %)</span>
+                        <label>Session</label><span><PLOOPI_SESSION_SIZE> KB</span>
+                        <label>Mémoire</label><span><PLOOPI_PHP_MEMORY> KB</span>
+                        <label>Page</label><span><PLOOPI_PAGE_SIZE> KB </span>
                         <label>Connectés</label><span>{SITE_CONNECTEDUSERS}</span>
                         <label>Anonymes</label><span>{SITE_ANONYMOUSUSERS}</span>
                     </p>

@@ -1214,6 +1214,7 @@ border-left:1px solid #f0f0f0;
 border-right:1px solid #f0f0f0;
 border-top:1px solid #f0f0f0;
 color:#444;
+clear:both;
 }
 
 #workspacemenu {
@@ -1242,13 +1243,14 @@ left: -60px;
 display:block;
 clear:both;
 float:left;
-width:100px;
+width:80px;
 margin:2px 0;
 }
 
 #aboutmenu span {
 display:block;
 float:left;
+width:140px;
 margin:2px 0;
 font-weight:bold;
 }
@@ -1511,7 +1513,6 @@ border: 1px solid #b0b0b0;
 background: #fff;
 color: #2c4056;
 padding: 3px;
-height:24px;
 }
 
 select.select:focus {
@@ -1827,6 +1828,7 @@ p.ploopi_va a {
 .ploopi_form p textarea,
 .ploopi_form p span {
     width: 65%;
+    float:left;
 }
 
 .ploopi_form p input.checkbox {

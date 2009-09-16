@@ -439,6 +439,7 @@ border-left:1px solid #f0f0f0;
 border-right:1px solid #f0f0f0;
 border-top:1px solid #f0f0f0;
 color:#444;
+clear:both;
 }
 
 #workspacemenu {
@@ -467,13 +468,14 @@ left: -60px;
 display:block;
 clear:both;
 float:left;
-width:100px;
+width:80px;
 margin:2px 0;
 }
 
 #aboutmenu span {
 display:block;
 float:left;
+width:140px;
 margin:2px 0;
 font-weight:bold;
 }
