@@ -675,7 +675,8 @@ function ploopi_h404() { header("HTTP/1.0 404 Not Found"); }
 function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
 {
     global $session;
-
+    global $arrParsedURI;
+    
     // Suppression de l'information de connexion
     $objConnectedUser = new connecteduser();
     if ($objConnectedUser->open(session_id())) $objConnectedUser->delete();
@@ -694,7 +695,7 @@ function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
     }
     else
     {
-        ploopi_redirect(basename($_SERVER['PHP_SELF']).(isset($intErrorCode) ? "?ploopi_errorcode={$intErrorCode}" : ''), false);
+        ploopi_redirect(basename($arrParsedURI['path']).(isset($intErrorCode) ? "?ploopi_errorcode={$intErrorCode}" : ''), false);
     }
 
 }

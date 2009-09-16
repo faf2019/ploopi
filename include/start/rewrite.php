@@ -74,6 +74,7 @@ if (isset($_SERVER['REDIRECT_STATUS']) && $_SERVER['REDIRECT_STATUS'] == '200')
             $ploopi_access_script = 'quick';
         }
     }
+    else $arrParsedURI['path'] = '';
 
     if (!$booRewriteRuleFound)
     {

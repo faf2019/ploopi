@@ -127,10 +127,7 @@ function ploopi_session_update()
 
     if (!isset($_SESSION['ploopi']['fingerprint']) || $_SESSION['ploopi']['fingerprint'] != _PLOOPI_FINGERPRINT) // problème d'empreinte, session invalide
     {
-        ploopi_session::destroy_id();
-        //ploopi_session::regenerate_id();
-        //session_destroy();
-        ploopi_redirect("{$scriptname}?ploopi_errorcode="._PLOOPI_ERROR_SESSIONINVALID);
+        ploopi_logout(_PLOOPI_ERROR_SESSIONINVALID);
     }
 
     $_SESSION['ploopi']['currentrequesttime'] = time();
@@ -141,10 +138,7 @@ function ploopi_session_update()
     // Si la durée de sessoin est expirée et que l'on est connecté, on vide la session et on retourne à la page de login
     if ($diff > _PLOOPI_SESSIONTIME && _PLOOPI_SESSIONTIME != '' && _PLOOPI_SESSIONTIME != 0 && !empty($_SESSION['ploopi']['connected']))
     {
-        ploopi_session::destroy_id();
-        //ploopi_session::regenerate_id();
-        //session_destroy();
-        ploopi_redirect("{$scriptname}?ploopi_errorcode="._PLOOPI_ERROR_SESSIONEXPIRE);
+        ploopi_logout(_PLOOPI_ERROR_SESSIONEXPIRE);
     }
     else // Sinon on met simplement à jour la date/heure de la dernière requête + IP
     {
