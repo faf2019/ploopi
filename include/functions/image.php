@@ -41,7 +41,7 @@ include_once './include/functions/string.php';
  * @param float $coef ratio de redimensionnement de l'image destination
  * @param int $wmax largeur max de l'image destination
  * @param int $hmax hauteur max de l'image destination
- * @param string $format format de l'image destination (jpg, png, gif)
+ * @param string/array $format format de l'image destination (jpg, png, gif) ou array(format,qualité), qualité pour le jpg 0<qualite<100
  * @param int $nbcolor taille de la palette de l'image destination
  * @param string $filename nom du fichier image destination, si vide renvoit l'image vers le navigateur
  * @param string (6) couleur de fond hexadécimal RVB pour redimension avec marge
@@ -54,6 +54,12 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
 {
     $imagefile_name = basename($imagefile);
 
+    if(is_array($format))
+    {
+        $qualite = $format[1];
+        $format = $format[0];
+    }
+    
     $extension = mime_content_type($imagefile); //FIXME Cette fonction est devenue obsolète car l'extension PECL Fileinfo fournit la même fonctionnalité (et bien plus) d'une façon plus propre. 
       
     // Ouverture de l'image source
@@ -151,7 +157,7 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
         {
             case 'jpg':
             case 'jpeg':
-              imagejpeg($imgdest);
+              imagejpeg($imgdest, null, $qualite);
             break;
 
             case 'gif':
@@ -179,7 +185,7 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
             {
                 case 'jpg':
                 case 'jpeg':
-                    imagejpeg($imgdest, $filename);
+                    imagejpeg($imgdest, $filename, $qualite);
                 break;
 
                 case 'png':
