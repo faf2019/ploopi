@@ -52,6 +52,7 @@ include_once './include/functions/string.php';
 
 function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format = '', $nbcolor = 0, $filename = '', $addBorder = false)
 {
+    $qualite = null;
     $imagefile_name = basename($imagefile);
 
     if(is_array($format))
