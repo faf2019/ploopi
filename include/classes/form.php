@@ -1173,12 +1173,12 @@ class form
                     case 'input:password':
                     case 'input:file':
                         $strFormat = ($arrOptions['required'] ? '' : 'empty').$arrOptions['datatype'];
-                        $strOutput .= "if (ploopi_validatefield('".$this->jsAddslashes($objField->getLabel())."', form.".$objField->getName().", '{$strFormat}'))";
+                        $strOutput .= "if (ploopi_validatefield('".addslashes($objField->getLabel())."', form.".$objField->getName().", '{$strFormat}'))";
                     break;
         
                     case 'select':
                     case 'color':
-                        if ($arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".$this->jsAddslashes($objField->getLabel())."', form.".$objField->getName().", 'selected'))";
+                        if ($arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes($objField->getLabel())."', form.".$objField->getName().", 'selected'))";
                     break;
         
                     case 'input:radio':
@@ -1202,16 +1202,5 @@ class form
      * @return string nom de la fonction de validation
      */
     private function getFormValidateFunc() { return "{$this->strId}_validate"; }
-    
-    /**
-     * Echappe le contenu d'un contenu JS
-     *
-     * @param string $strLabel contenu à échapper
-     * @return string contenu échappé
-     */
-    private function jsAddslashes($strLabel)
-    {
-        return str_replace(array("'", '"'), array("\\\\'", '\"'), $strLabel);     
-    }
-    
+      
 }
