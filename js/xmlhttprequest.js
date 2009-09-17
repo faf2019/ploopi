@@ -166,30 +166,6 @@ function ploopi_xmlhttprequest_todiv(url, parameters, id, method)
         }
 	});
 }
- 
-function ploopi_xmlhttprequest_todiv_old(url, data, div, method)
-{
-    var xmlhttp = ploopi_gethttpobject();
-
-    if (typeof(method) == 'undefined') method = 'GET';
-
-    if (xmlhttp)
-    {
-        /* on définit ce qui doit se passer quand la page répondra */
-        xmlhttp.onreadystatechange=function()
-        {
-            if (xmlhttp.readyState == 4)
-            {
-                if (xmlhttp.status == 200)
-                {
-                    ploopi_innerHTML(div, xmlhttp.responseText);
-                }
-            }
-        }
-    }
-
-    return !ploopi_sendxmldata(method, url, data, xmlhttp, true);
-}
 
 /**
  * Permet d'ouvrir un popup avec le contenu d'une requête HTTP

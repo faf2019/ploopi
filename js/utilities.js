@@ -113,11 +113,39 @@ function ploopi_getelem(elem, obj)
     return (obj.getElementById) ? obj.getElementById(elem) : eval("document.all['"+ploopi_addslashes(elem)+"']");
 }
 
+/**
+ * Copie d'un contenu HTML avec évaluation des scripts JS
+ */
 function ploopi_innerHTML(div, html)
 {
     if ($(div))
     {
         $(div).innerHTML = html;
         $(div).innerHTML.evalScripts();
+    }
+}
+
+/**
+ * Insertion d'un texte dans un champ à la position du curseur
+ */
+function ploopi_insertatcursor(field, value) 
+{
+    //IE support
+    if (document.selection) 
+    {
+        field.focus();
+        sel = document.selection.createRange();
+        sel.text = value;
+    }
+    //MOZILLA/NETSCAPE support
+    else if (field.selectionStart || field.selectionStart == '0') 
+    {
+        var startPos = field.selectionStart;
+        var endPos = field.selectionEnd;
+        field.value = field.value.substring(0, startPos) + value + field.value.substring(endPos, field.value.length);
+    } 
+    else
+    {
+       field.value += value;
     }
 }
