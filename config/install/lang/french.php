@@ -45,7 +45,7 @@ define ('_PLOOPI_INSTALL_NO',               'non');
 
 // Global
 define ('_PLOOPI_INSTALL_REQUIRED',         'Minimum requis : v.');
-define ('_PLOOPI_INSTALL_INSTALLED',        'installé : v.');
+define ('_PLOOPI_INSTALL_INSTALLED',        'Installée : v.');
 define ('_PLOOPI_INSTALL_JAVASCRIPT',       'Contrôle activation JavaScript');
 define ('_PLOOPI_INSTALL_ERROR_JAVASCRIPT', 'Ploopi nécessite l\'activation de Javascript');
 define ('_PLOOPI_INSTALL_MORE_PARAM',       'Paramétrage avancé - cliquez ici.');
@@ -92,7 +92,7 @@ define ('_PLOOPI_INSTALL_LICENSE_ACCEPT',   'J\'accepte les termes de la licence
 * define ('_PLOOPI_INSTALL_MYTEST_URL_INFO','http://www.wikipedia.com');
 */
 
-define ('_PLOOPI_INSTALL_CHOOSE_LANGUAGE',       'Sélectionner le language d\'installation');
+define ('_PLOOPI_INSTALL_CHOOSE_LANGUAGE',       'Sélectionner le langage d\'installation');
 define ('_PLOOPI_INSTALL_APACHE',                'Contrôle de version -> Serveur HTTPD APACHE');
 define ('_PLOOPI_INSTALL_APACHE_MESS',           '%1s / %2s');
 define ('_PLOOPI_INSTALL_APACHE_URL_INFO',       'http://httpd.apache.org/');

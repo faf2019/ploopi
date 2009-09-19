@@ -113,7 +113,8 @@ function ploopi_create_site($arrInstallInfos)
 
   $strSql = trim($strSql);
 
-  $arrRequests = explode(";\n",$strSql);
+  //  $arrRequests = explode(";\n",$strSql);
+  $arrRequests = preg_split('/;[\s]{0,}\n/',$strSql);
 
   foreach ($arrRequests AS $strKey => $strRequest)
   {

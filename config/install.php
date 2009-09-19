@@ -84,6 +84,7 @@ $arrInstallRequestDB = array(
 //  'postgresql'    => array('name' => 'PostgreSQL','version' => '7','php' => 'pg_connect','pdo' => 'PDO_PGSQL')
 
 // $arrInstallRequestDB Cleaner with pdo driver available (or function php ;-) )
+// Useful when you have several types of database
 $arrInstallRequestDBTempo = array();
 foreach($arrInstallRequestDB as $type => $detail)
 {
@@ -226,6 +227,8 @@ $objInstallTemplate->set_filenames(array('install' => 'install.tpl'));
 /**
  * STAGE 1 = License GPL ------------------------------------------------------
  */
+echo apache_get_version();
+
 $stage = 1;
 if($_POST['stage']>=$stage)
 {
@@ -287,12 +290,14 @@ if($_POST['stage']>=$stage)
 {
   if(isset($_POST['dir_pear'])) $_SESSION['install']['<PEARPATH>'] = ploopi_del_end_slashe(trim($_POST['dir_pear']));
 
+  $strVersionApache = ploopi_apache_get_version();
+  
   // Control APACHE
   $arrInstallInfos[] = array(
             'id'        => 'div_apache',
-            'state'     => version_compare(ploopi_apache_get_version(),$arrInstallRequestSys['apache'],'>='),
+            'state'     => (($strVersionApache != 'Apache with ServerTokens Prod') ? version_compare($strVersionApache,$arrInstallRequestSys['apache'],'>=') : true),
             'title'     => '_PLOOPI_INSTALL_APACHE',
-            'mess_replace' => array(_PLOOPI_INSTALL_REQUIRED.$arrInstallRequestSys['apache'],_PLOOPI_INSTALL_INSTALLED.ploopi_apache_get_version())
+            'mess_replace' => array(_PLOOPI_INSTALL_REQUIRED.$arrInstallRequestSys['apache'],(($strVersionApache != 'Apache with ServerTokens Prod') ? _PLOOPI_INSTALL_INSTALLED.$strVersionApache : $strVersionApache))
   );
   // Control PHP
   $arrInstallInfos[] = array(
@@ -727,7 +732,7 @@ if($_POST['stage']>=$stage)
     $strInstallListTypeDb .= '<option value="'.$strInstallTypeDB.'" '.$strInstallSelected.'>'.$arrDetail['name'].' (>='.$arrDetail['version'].')</option>';
   }
 
-  //ATTENTION : some information in the last $arrInstallInfos will be modify
+  // ATTENTION : some information in the last $arrInstallInfos will be modify
   $intInstallInfos = count($arrInstallInfos);
 
   // Principal Form for database configuration ($intInstallInfos used to modify this $arrInstallInfos)

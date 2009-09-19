@@ -177,10 +177,10 @@ function ploopi_apache_get_version() {
     if(stripos($value, 'apache')!==false)
     {
       $myInfo = explode("/",$value);
-      return $myInfo[1];
+      return ($myInfo[1]) ? $myInfo[1] : 'Apache with ServerTokens Prod';
     }
   }
-  return '';
+  return false;
 }
 
 /**
