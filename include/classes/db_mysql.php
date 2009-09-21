@@ -370,7 +370,7 @@ class ploopi_db
 
         $rs = $this->query("SHOW TABLES FROM `{$this->database}`");
 
-        return $this->getarray(false, $rs);
+        return $this->getarray($rs);
     }
 
     /**
@@ -412,17 +412,11 @@ class ploopi_db
      * Retourne dans un tableau le contenu de la dernière requête ou du recordset passé en paramètre
      *
      * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
+     * @param boolean $firstcolkey true si la première colonne doit servir d'index pour le tableau (optionnel)
      * @return mixed un tableau indexé contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
     
-    /**
-     * Retourne dans un tableau le contenu de la dernière requête ou du recordset passé en paramètre
-     *
-     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
-     * @return mixed un tableau indexé contenant les enregistrements du recordset ou false si le recordset n'est pas valide
-     */
-    
-    public function getarray($firstcolkey = false, $query_id = 0)
+    public function getarray($query_id = 0, $firstcolkey = false)
     {
         if (!$this->isconnected()) return false;
 
