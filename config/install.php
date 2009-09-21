@@ -227,7 +227,6 @@ $objInstallTemplate->set_filenames(array('install' => 'install.tpl'));
 /**
  * STAGE 1 = License GPL ------------------------------------------------------
  */
-echo apache_get_version();
 
 $stage = 1;
 if($_POST['stage']>=$stage)
