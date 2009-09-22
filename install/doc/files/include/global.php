@@ -551,11 +551,13 @@ function doc_getrewriterules()
 {
     return array(
         'patterns' => array(
-            '/[a-z\-]*.php\?ploopi_op=doc_file_download&docfile_md5id=([a-z0-9]{32})/'
+            '/[a-z\-]*.php\?ploopi_op=doc_file_download&docfile_md5id=([a-z0-9]{32})/',
+            '/[a-z\-]*.php\?ploopi_op=doc_file_view&docfile_md5id=([a-z0-9]{32})/'
         ),
 
         'replacements' => array(
             'documents/$1/<TITLE>.<EXT>',
+            'media/$1/<TITLE>.<EXT>'
         )
     );
 }

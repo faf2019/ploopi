@@ -1,3 +1,9 @@
+== Module DOC - version 4.5.0f =====================================================
+
+2009-09-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug empêchant l'ouverture d'un fichier SWF en frontoffice, ajout d'un rewrite d'url pour les documents de type media (swf/img) 
+
 == Module DOC - version 4.5.0e =====================================================
 
 2009-09-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

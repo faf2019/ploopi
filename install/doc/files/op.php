@@ -855,7 +855,17 @@ if ($_SESSION['ploopi']['connected'])
 
                     while ($row = $db->fetchrow())
                     {
-                        $row['url'] = "index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$row['md5id']}";
+                        switch($_GET['filter'])
+                        {
+                            case 'doc_selectimage':
+                            case 'doc_selectflash':
+                                $row['url'] = "index-quick.php?ploopi_op=doc_file_view&docfile_md5id={$row['md5id']}";
+                            break;
+        
+                            default:
+                                $row['url'] = "index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$row['md5id']}";
+                            break;
+                        }
 
                         if (empty($arrFilter) || in_array(ploopi_file_getextension($row['name']),$arrFilter)) $arrFiles[] = $row;
                     }
@@ -948,6 +958,7 @@ if ($_SESSION['ploopi']['connected'])
 
 switch($ploopi_op)
 {
+    case 'doc_file_view':
     case 'doc_file_download':
         include_once './include/start/constants.php';
         include_once './include/classes/data_object.php';
@@ -965,7 +976,7 @@ switch($ploopi_op)
                 $docfile = new docfile();
                 if ($docfile->open($fields['id']) && file_exists($docfile->getfilepath()))
                 {
-                    ploopi_downloadfile($docfile->getfilepath(),$docfile->fields['name']);
+                    ploopi_downloadfile($docfile->getfilepath(),$docfile->fields['name'], false, $ploopi_op == 'doc_file_download');
                 }
             }
         }
