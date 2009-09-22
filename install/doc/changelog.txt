@@ -1,3 +1,9 @@
+== Module DOC - version 4.5.0e =====================================================
+
+2009-09-22  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Ajout de la méthode getmeta() a la classe docfile 
+
 == Module DOC - version 4.5.0f =====================================================
 
 2009-09-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

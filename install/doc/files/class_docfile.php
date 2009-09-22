@@ -428,6 +428,28 @@ class docfile extends data_object
     }
 
     /**
+     * Retourne les META d'un fichier dans un tableau
+     *
+     * @return array meta d'un fichier
+     */
+
+    function getmeta()
+    {
+        global $db;
+
+        $rs = $db->query(   "
+                            SELECT      m.*
+                            FROM        ploopi_mod_doc_meta m
+                            WHERE       m.id_file = {$this->fields['id']}
+                            ORDER BY    m.meta
+                            ");
+
+        if($db->numrows($rs)) return $db->getarray($rs);
+
+        return array();
+    }
+    
+    /**
      * Indexe le document
      *
      * @param boolean $debug true si on veut afficher des informations de debug
