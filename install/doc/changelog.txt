@@ -1,4 +1,4 @@
-== Module DOC - version 4.5.0e =====================================================
+== Module DOC - version 4.5.0g =====================================================
 
 2009-09-22  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
