@@ -105,7 +105,7 @@ function ploopi_validation_selectusers($id_object = 0, $id_record = '', $id_modu
             <p class="ploopi_va">
                 <span>Recherche groupes/utilisateurs:&nbsp;</span>
                 <input type="text" id="ploopi_validation_userfilter_<?php echo $strValidationId; ?>" class="text">
-                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_search_users&validation_id=<?php echo $strValidationId; ?>&ploopi_validation_userfilter='+ploopi_getelem('ploopi_validation_userfilter_<?php echo $strValidationId; ?>').value+'&id_action=<?php echo $id_action; ?>', 'div_validation_search_result_<?php echo $strValidationId; ?>');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
+                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_search_users&validation_id=<?php echo $strValidationId; ?>&ploopi_validation_userfilter='+ploopi_getelem('ploopi_validation_userfilter_<?php echo $strValidationId; ?>').value+'&id_action=<?php echo $id_action; ?>', 'div_validation_search_result_<?php echo $strValidationId; ?>');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
             </p>
         </div>
         <div id="div_validation_search_result_<?php echo $strValidationId; ?>"></div>
@@ -120,7 +120,7 @@ function ploopi_validation_selectusers($id_object = 0, $id_record = '', $id_modu
             ?>
             <script type="text/javascript">
                 ploopi_ajaxloader('div_validation_users_selected_<?php echo $strValidationId; ?>');
-                ploopi_xmlhttprequest_todiv('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo $strValidationId; ?>', 'div_validation_users_selected_<?php echo $strValidationId; ?>');
+                ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo $strValidationId; ?>', 'div_validation_users_selected_<?php echo $strValidationId; ?>');
             </script>
             <?php
         }

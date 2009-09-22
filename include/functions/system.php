@@ -713,4 +713,44 @@ function ploopi_getparam($strParamName, $intModuleId = null)
     
     return isset($_SESSION['ploopi']['modules'][$intModuleId][$strParamName]) ? $_SESSION['ploopi']['modules'][$intModuleId][$strParamName] : null;  
 }
+
+/**
+ * Lit une variable de module en session
+ *
+ * @param string $strVarName nom de la variable à lire
+ * @param int $intModuleId identifiant du module (optionnel, le module courant si non défini)
+ * @return mixed valeur de la variable
+ */
+function ploopi_getsessionvar($strVarName, $intModuleId = null)
+{
+    if (is_null($intModuleId)) $intModuleId = $_SESSION['ploopi']['moduleid'];
+    
+    if (!empty($_SESSION['ploopi']['modules'][$intModuleId]['moduletype']))
+    {
+        $strModuleType = $_SESSION['ploopi']['modules'][$intModuleId]['moduletype'];
+        
+        return isset($_SESSION['ploopi'][$strModuleType][$intModuleId][$strVarName]) ? $_SESSION['ploopi'][$strModuleType][$intModuleId][$strVarName] : null;
+    } 
+
+    return null;
+}
+
+/**
+ * Enregistre une variable de module en session
+ *
+ * @param string $strVarName nom de la variable
+ * @param mixed $mixVar contenu de la variable
+ * @param integer $intModuleId Identifiant du module (optionnel, le module courant si non défini)
+ */
+function ploopi_setsessionvar($strVarName, $mixVar = null, $intModuleId = null)
+{
+    if (is_null($intModuleId)) $intModuleId = $_SESSION['ploopi']['moduleid'];
+    
+    if (!empty($_SESSION['ploopi']['modules'][$intModuleId]['moduletype']))
+    {
+        $strModuleType = $_SESSION['ploopi']['modules'][$intModuleId]['moduletype'];
+        
+        $_SESSION['ploopi'][$strModuleType][$intModuleId][$strVarName] = $mixVar;
+    }  
+}
 ?>

@@ -128,7 +128,7 @@ function ploopi_annotation_refresh($id_annotation)
     ?>
     <a name="annotation_<?php echo $id_annotation; ?>" style="display:none;"></a>
     <div style="overflow:hidden;">
-        <a id="annotation_count_<?php echo $id_annotation; ?>" class="ploopi_annotation_viewlist" href="javascript:void(0);" onclick="javascript:ploopi_getelem('annotation_list_<?php echo $id_annotation; ?>').style.display=(ploopi_getelem('annotation_list_<?php echo $id_annotation; ?>').style.display=='block') ? 'none' : 'block'; ploopi_xmlhttprequest('index-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_show&object_id=<?php echo $id_annotation; ?>');">
+        <a id="annotation_count_<?php echo $id_annotation; ?>" class="ploopi_annotation_viewlist" href="javascript:void(0);" onclick="javascript:ploopi_getelem('annotation_list_<?php echo $id_annotation; ?>').style.display=(ploopi_getelem('annotation_list_<?php echo $id_annotation; ?>').style.display=='block') ? 'none' : 'block'; ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_show&object_id=<?php echo $id_annotation; ?>');">
             <img border="0" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/annotation.png">
             <span><?php echo $nbanno; ?> annotation<?php echo ($nbanno>1) ? 's' : ''; ?></span>
         </a>
