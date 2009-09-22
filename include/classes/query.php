@@ -31,17 +31,24 @@
  */
 
 /**
- * Classe permettant de formater un contenu SQL à la manière de printf
+ * Classe abstraite permettant de formater un contenu SQL à la manière de printf
  */
-class ploopi_sqlformat
+abstract class ploopi_sqlformat
 {
+    /**
+     * Regex utilisée pour détecter point d'injection de données
+     *
+     * @var string
+     */
+    private static $strRegExFormat = '|%(([0-9]*)\$){0,1}([s,d,f,t,e,g])|';
+    
     /**
      * Numéro du paramètre traité
      *
      * @var int
      * @see replace
      */
-    private $intNumParam = 0;
+    private static $intNumParam = 0;
     
     /**
      * Tableau des valeurs de remplacement
@@ -49,28 +56,15 @@ class ploopi_sqlformat
      * @var array
      * @see replace
      */
-    private $arrValues = null;
+    private static $arrValues = null;
     
     /**
      * Connexion à la BDD
      *
      * @var resource
      */
-    private $objDb = null;
+    private static $objDb = null;
     
-    /**
-     * Constructeur de la classe
-     *
-     * @param resource $objDb Connexion à la BDD
-     * @param array $arrValues Tableau des valeurs de remplacement
-     */
-    public function __construct($objDb, $arrValues)
-    {
-        $this->intNumParam = 0;
-        $this->objDb = $objDb;
-        $this->arrValues = $arrValues;
-    }
-
     /**
      * Méthode de remplacement appelée en callback via preg_replace_callback
      *
@@ -78,15 +72,15 @@ class ploopi_sqlformat
      * @return string chaîne modifiée
      * @link http://fr.php.net/manual/fr/function.preg-replace-callback.php
      */
-    public function replace($arrMatches)
+    private static function cb_replace($arrMatches)
     {
         global $db;
         
         if (sizeof($arrMatches) == 4)
         {
-            $intNumParam = empty($arrMatches[2]) ? ++$this->intNumParam - 1 : intval($arrMatches[2]) - 1;
+            $intNumParam = empty($arrMatches[2]) ? ++self::$intNumParam - 1 : intval($arrMatches[2]) - 1;
 
-            $strValue = isset($this->arrValues[$intNumParam]) ? $this->arrValues[$intNumParam] : null;
+            $strValue = isset(self::$arrValues[$intNumParam]) ? self::$arrValues[$intNumParam] : null;
 
             switch($arrMatches[3])
             {
@@ -100,7 +94,7 @@ class ploopi_sqlformat
                         switch($arrMatches[3])
                         {
                             case 't':
-                                $strListValue = "'".$this->objDb->addslashes($strListValue)."'";
+                                $strListValue = "'".self::$objDb->addslashes($strListValue)."'";
                             break;
                             case 'e':
                                 $strListValue = intval($strListValue);
@@ -123,19 +117,42 @@ class ploopi_sqlformat
 
                 case 's': // string
                 default:
-                    $strValue = "'".$this->objDb->addslashes($strValue)."'";
+                    $strValue = "'".self::$objDb->addslashes($strValue)."'";
                 break;
             }
 
             return $strValue;
         }
     }
+    
+    /**
+     * Méthode publique de remplacement
+     *
+     * @param array $arrData tableau associatif contenant la chaîne SQL brute (rawsql) et les valeurs de remplacement (values)
+     * @param resource $objDb connexion à la BDD
+     * @return string chaîne modifiée
+     */
+    public static function replace($arrData, $objDb = null)
+    {
+        // Initialisation du numéro de paramètre en cours de traitement
+        self::$intNumParam = 0;
+        
+        // Initialisation de la connexion à la BDD
+        if (is_null($objDb)) { global $db; self::$objDb = $db; }
+        else self::$objDb = $objDb;
+        
+        // Initialisation des valeurs de remplacement
+        self::$arrValues = $arrData['values'];
+        
+        // Remplacement des variables selon la regex
+        return preg_replace_callback(self::$strRegExFormat, array('self', 'cb_replace'), $arrData['rawsql']);
+    }
 }
 
 /**
  * Classe permettant de construire une requête SQL
  */
-class ploopi_query
+abstract class ploopi_query
 {
     /**
      * Tableau de la clause SELECT
@@ -151,6 +168,20 @@ class ploopi_query
      */
     private $arrFrom;
 
+    /**
+     * Tableau de la clause INNER JOIN
+     *
+     * @var array
+     */
+    private $arrInnerJoin;
+
+    /**
+     * Tableau de la clause LEFT JOIN
+     *
+     * @var array
+     */
+    private $arrLeftJoin;
+    
     /**
      * Tableau de la clause WHERE
      *
@@ -178,6 +209,13 @@ class ploopi_query
      * @var array
      */
     private $arrOrderBy;
+    
+    /**
+     * Clause LIMIT
+     *
+     * @var string
+     */
+    private $strLimit;
 
     /**
      * Connexion à la BDD
@@ -187,22 +225,57 @@ class ploopi_query
     private $objDb;
     
     /**
+     * Différents types acceptés pour un élément
+     *
+     * @var array
+     */
+    protected static $arrType = array(
+        'select',
+        'insert',
+        'update',
+        'delete',
+        'raw'
+    );    
+    
+    private $strType;
+    
+    /**
      * Constructeur de la classe
      *
+     * @param string $strType type de requête
      * @param resource $objDb Connexion à la BDD
      */
-    public function __construct($objDb = null)
+    public function __construct($strType = 'select', $objDb = null)
     {
         $this->arrSelect = array();
         $this->arrFrom = array();
+        $this->arrInnerJoin = array();
+        $this->arrLeftJoin = array();
         $this->arrWhere = array();
         $this->arrGroupBy = array();
         $this->arrHaving = array();
         $this->arrOrderBy = array();
+        $this->strLimit = null;
         
         if (!is_null($objDb)) $this->objDb = $objDb;
         else { global $db; $this->objDb = $db; }
+        
+        if (!in_array($strType, ploopi_query::$arrType))
+        {
+            trigger_error('Ce type de requête n\'existe pas', E_USER_ERROR);
+            return false;
+        }
+        else 
+        { 
+            $this->strType = $strType;
+            return true;
+        }           
     }
+    
+    public function add_select($strSelect)
+    {
+        if (!in_array($strSelect, $this->arrSelect)) $this->arrSelect[] = $strSelect;
+    }    
     
     /**
      * Ajout d'une clause WHERE à la requête
@@ -229,6 +302,28 @@ class ploopi_query
     }
 
     /**
+     * Ajoute une clause LEFT JOIN à la requête
+     * 
+     * @param string $strLeftJoin Clause LEFT JOIN
+     */
+    public function add_leftjoin($strLeftJoin, $mixValues = null)
+    {
+        if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
+        $this->arrLeftJoin[] = array('rawsql' => $strLeftJoin, 'values' => $mixValues);
+    }
+    
+    /**
+     * Ajoute une clause INNER JOIN à la requête
+     * 
+     * @param string $strInnerJoin Clause INNER JOIN
+     */
+    public function add_innerjoin($strInnerJoin, $mixValues = null)
+    {
+        if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
+        $this->arrInnerJoin[] = array('rawsql' => $strInnerJoin, 'values' => $mixValues);
+    }
+    
+    /**
      * Ajoute une clause FROM à la requête
      * Si plusieurs clauses FROM sont ajoutées, elles sont séparées par "," 
      * 
@@ -237,7 +332,7 @@ class ploopi_query
     public function add_from($strFrom)
     {
         if (!in_array($strFrom, $this->arrFrom)) $this->arrFrom[] = $strFrom;
-    }
+    }    
 
     /**
      * Ajoute une clause GROUP BY à la requête
@@ -278,6 +373,16 @@ class ploopi_query
     }
 
     /**
+     * Définit la clause LIMIT de la requête
+     *
+     * @param string $strLimit
+     */
+    public function add_limit($strLimit)
+    {
+        $this->strLimit = $strLimit;
+    }
+    
+    /**
      * Génération de la requête SQL
      *
      * @return string Chaîne contenant la requête SQL générée
@@ -288,21 +393,63 @@ class ploopi_query
 
         if (!empty($this->arrFrom))
         {
-            $strSql = 'SELECT '.(empty($this->arrSelect) ? '*' : implode(', ', $this->arrSelect)).' FROM '.implode(', ', $this->arrFrom);
+            switch($this->strType)
+            {
+                case 'select':
+                    $strSql = 'SELECT '.(empty($this->arrSelect) ? '*' : implode(', ', $this->arrSelect)).' FROM '.implode(', ', $this->arrFrom);
+                break;
+                
+                case 'insert':
+                    $strSql = 'INSERT';
+                break;
+                
+                case 'update':
+                    $strSql = 'UPDATE';
+                break;
 
+                case 'delete':
+                    $strSql = 'DELETE FROM '.implode(', ', $this->arrFrom);
+                break;
+                
+                case 'raw':
+                default:
+                    $strSql = '';
+                break;
+                
+            }
+            
+            // LEFT JOIN
+            $arrLeftJoin = array();
+            foreach($this->arrLeftJoin as $arrLeftJoinDetail) $arrLeftJoin[] = ploopi_sqlformat::replace($arrLeftJoinDetail, $this->objDb);
+            
+            if (!empty($arrLeftJoin)) $strSql .= ' LEFT JOIN '.implode(' LEFT JOIN ', $arrLeftJoin);
+            
+            // INNER JOIN
+            $arrInnerJoin = array();
+            foreach($this->arrInnerJoin as $arrInnerJoinDetail) $arrInnerJoin[] = ploopi_sqlformat::replace($arrInnerJoinDetail, $this->objDb);
+            
+            if (!empty($arrInnerJoin)) $strSql .= ' INNER JOIN '.implode(' INNER JOIN ', $arrInnerJoin);
+            
+            // WHERE
             $arrWhere = array();
-            foreach($this->arrWhere as $arrWhereDetail) $arrWhere[] = preg_replace_callback('|%(([0-9]*)\$){0,1}([s,d,f,t,e,g])|', array(new ploopi_sqlformat($this->objDb, $arrWhereDetail['values']), 'replace'), $arrWhereDetail['rawsql']);
+            foreach($this->arrWhere as $arrWhereDetail) $arrWhere[] = ploopi_sqlformat::replace($arrWhereDetail, $this->objDb);
 
             if (!empty($arrWhere)) $strSql .= ' WHERE '.implode(' AND ', $arrWhere);
-
+            
+            // GROUP BY
             if (!empty($this->arrGroupBy)) $strSql .= ' GROUP BY '.implode(', ', $this->arrGroupBy);
 
+            // HAVING
             $arrHaving = array();
-            foreach($this->arrHaving as $arrHavingDetail) $arrHaving[] = preg_replace_callback('|%(([0-9]*)\$){0,1}([s,d,f,t,e,g])|', array(new ploopi_sqlformat($this->objDb, $arrHavingDetail['values']), 'replace'), $arrHavingDetail['rawsql']);
+            foreach($this->arrHaving as $arrHavingDetail) $arrHaving[] = ploopi_sqlformat::replace($arrHavingDetail, $this->objDb);
             
             if (!empty($arrHaving)) $strSql .= ' HAVING '.implode(' AND ', $arrHaving);
             
+            // ORDERBY
             if (!empty($this->arrOrderBy)) $strSql .= ' ORDER BY '.implode(', ', $this->arrOrderBy);
+            
+            // LIMIT
+            if (!empty($this->strLimit)) $strSql .= ' LIMIT '.$this->strLimit;
         }
 
         return $strSql;
@@ -318,6 +465,57 @@ class ploopi_query
         return(new ploopi_recordset($this->objDb, $this->objDb->query($this->get_sql())));
     }
 }
+
+
+/**
+ * Classe permettant de construire une requête SQL
+ */
+class ploopi_query_select extends ploopi_query
+{
+    /**
+     * Constructeur de la classe
+     *
+     * @param resource $objDb Connexion à la BDD
+     */
+    public function __construct($objDb = null)
+    {
+        return parent::__construct('select', $objDb);
+    }    
+}
+
+/**
+ * Classe permettant de construire une requête SQL
+ */
+class ploopi_query_delete extends ploopi_query
+{
+    /**
+     * Constructeur de la classe
+     *
+     * @param resource $objDb Connexion à la BDD
+     */
+    public function __construct($objDb = null)
+    {
+        return parent::__construct('delete', $objDb);
+    }    
+}
+
+
+/**
+ * Classe permettant de construire une requête SQL
+ */
+class ploopi_query_update extends ploopi_query
+{
+    /**
+     * Constructeur de la classe
+     *
+     * @param resource $objDb Connexion à la BDD
+     */
+    public function __construct($objDb = null)
+    {
+        return parent::__construct('update', $objDb);
+    }    
+}
+
 
 class ploopi_recordset
 {
@@ -335,5 +533,12 @@ class ploopi_recordset
     {
         return $this->objDb->fetchrow($this->resRs);
     }
+
+    public function getarray($booFirstColKey = false)
+    {
+        return $this->objDb->getarray($this->resRs, $booFirstColKey);
+    }
+    
+
 }
 ?>

@@ -979,7 +979,9 @@ class form
         'legend'        => null,                                    // contenu de la légende du formulaire
         'legend_style'  => 'margin-right:4px;',                     // style appliqué à la légende du formulaire
         'class'         => 'ploopi_form',                           // class par défaut du formulaire (partie champs)
-        'style'         => null                                     // style appliqué au formulaire (partie champs)
+        'style'         => null,                                    // style appliqué au formulaire (partie champs)
+        'class_form'    => null,                                    // class par défaut du formulaire (global, balise form)
+        'style_form'    => null                                     // style appliqué au formulaire (global, balise form)
     );
     
     /**
@@ -1111,6 +1113,8 @@ class form
         $strButtonStyle = is_null($this->arrOptions['button_style']) ? '' : " style=\"{$this->arrOptions['button_style']}\"";
         $strClass = is_null($this->arrOptions['class']) ? '' : " class=\"{$this->arrOptions['class']}\"";
         $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\"";
+        $strClassForm = is_null($this->arrOptions['class_form']) ? '' : " class=\"{$this->arrOptions['class_form']}\"";
+        $strStyleForm = is_null($this->arrOptions['style_form']) ? '' : " style=\"{$this->arrOptions['style_form']}\"";
         
         /*
          * Génération du script de validation
@@ -1123,7 +1127,7 @@ class form
          * Génération du form
          */
         
-        $strOutput .= "<form id=\"{$this->strId}\" action=\"{$this->strAction}\" method=\"{$this->strMethod}\"{$strOnsubmit}{$strTarget}{$strEnctype}><div{$strClass}{$strStyle}>";
+        $strOutput .= "<form id=\"{$this->strId}\" action=\"{$this->strAction}\" method=\"{$this->strMethod}\"{$strOnsubmit}{$strTarget}{$strEnctype}{$strClassForm}{$strStyleForm}><div{$strClass}{$strStyle}>";
         
 
         /*

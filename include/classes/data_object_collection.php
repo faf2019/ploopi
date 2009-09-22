@@ -30,6 +30,8 @@
  * @author Stéphane Escaich
  */
 
+require_once './include/classes/query.php';
+
 /**
  * Classe permettant de gérer une collection d'objets de type "data_object"
  *
@@ -96,7 +98,7 @@ class data_object_collection
         //On vérifie le type de l'objet obtenu et s'il hérite de "data_object"
         if (empty($objDoDescription) || !is_subclass_of($objDoDescription, 'data_object')) throw new Exception("data_object_collection : la classe '{$this->strClassName}' n'est pas héritée de 'data_object'");
         
-        $this->objQuery = new ploopi_query($this->objDb);
+        $this->objQuery = new ploopi_query_select($this->objDb);
         $this->objQuery->add_from('`'.$objDoDescription->gettablename().'`');
     }
     
