@@ -10,6 +10,9 @@
 
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/styles.css" media="screen" title="styles" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/forms_application.css" media="screen" />
+    <!-- BEGIN module_css -->
+    <link type="text/css" rel="stylesheet" href="{module_css.PATH}" media="screen" />
+    <!-- END module_css -->
 
     <script type="text/javascript" src="./include/prototype.js"></script>
     <script type="text/javascript" src="./include/functions.js"></script>

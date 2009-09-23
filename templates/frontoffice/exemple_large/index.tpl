@@ -34,11 +34,17 @@
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/news.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/search.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/system_trombi.css" media="screen" />
+    <!-- BEGIN module_css -->
+    <link type="text/css" rel="stylesheet" href="{module_css.PATH}" media="screen" />
+    <!-- END module_css -->
 
     <!--[if lte IE 6]>
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/skin_ie.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles_ie.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar_ie.css" media="screen" />
+    <!-- BEGIN module_css_ie -->
+    <link type="text/css" rel="stylesheet" href="{module_css_ie.PATH}" media="screen" />
+    <!-- END module_css_ie -->
     <![endif]-->
 
     <!-- BEGIN ploopi_js -->
