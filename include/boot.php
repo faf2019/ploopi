@@ -117,6 +117,16 @@ session_set_save_handler(
 session_start();
 
 /**
+ * Traitement du rewriting inverse
+ */
+include_once './include/start/rewrite.php';
+
+/**
+ * Filtrage des variables entrantes
+ */
+include_once './include/start/import_gpr.php';
+
+/**
  * Séquence de logout
  */
 if (isset($_REQUEST['ploopi_logout'])) ploopi_logout(null, 0, false);
@@ -130,15 +140,6 @@ if (empty($_SESSION) || (!empty($_SESSION['ploopi']['host']) && $_SESSION['ploop
  */
 ploopi_session_update();
 
-/**
- * Traitement du rewriting inverse
- */
-include_once './include/start/rewrite.php';
-
-/**
- * Filtrage des variables entrantes
- */
-include_once './include/start/import_gpr.php';
 
 /**
  * Initialisation du header par défaut
