@@ -84,25 +84,6 @@ include_once './include/functions/session.php';
 include_once './include/functions/system.php';
 
 /**
- * Traitement du rewriting inverse
- */
-include_once './include/start/rewrite.php';
-
-/**
- * Filtrage des variables entrantes
- */
-include_once './include/start/import_gpr.php';
-
-/**
- * Initialisation du header par défaut
- */
-include_once './include/start/header.php';
-
-
-include_once './include/classes/cache.php' ;
-ploopi_cache::init();
-
-/**
  * Connexion à la base de données
  */
 if (file_exists('./include/classes/db_'._PLOOPI_SQL_LAYER.'.php')) include_once './include/classes/db_'._PLOOPI_SQL_LAYER.'.php';
@@ -148,4 +129,23 @@ if (empty($_SESSION) || (!empty($_SESSION['ploopi']['host']) && $_SESSION['ploop
  * Mise à jour des données de la session
  */
 ploopi_session_update();
+
+/**
+ * Traitement du rewriting inverse
+ */
+include_once './include/start/rewrite.php';
+
+/**
+ * Filtrage des variables entrantes
+ */
+include_once './include/start/import_gpr.php';
+
+/**
+ * Initialisation du header par défaut
+ */
+include_once './include/start/header.php';
+
+
+include_once './include/classes/cache.php' ;
+ploopi_cache::init();
 ?>

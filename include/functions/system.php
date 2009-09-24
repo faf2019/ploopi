@@ -719,17 +719,19 @@ function ploopi_getparam($strParamName, $intModuleId = null)
  *
  * @param string $strVarName nom de la variable à lire
  * @param int $intModuleId identifiant du module (optionnel, le module courant si non défini)
+ * @param integer $intWorkspaceId Identifiant de l'espace de travail (optionnel, l'espace courant si non défini)
  * @return mixed valeur de la variable
  */
-function ploopi_getsessionvar($strVarName, $intModuleId = null)
+function ploopi_getsessionvar($strVarName, $intModuleId = null, $intWorkspaceId = null)
 {
     if (is_null($intModuleId)) $intModuleId = $_SESSION['ploopi']['moduleid'];
-    
+    if (is_null($intWorkspaceId)) $intWorkspaceId = $_SESSION['ploopi']['workspaceid'];
+        
     if (!empty($_SESSION['ploopi']['modules'][$intModuleId]['moduletype']))
     {
         $strModuleType = $_SESSION['ploopi']['modules'][$intModuleId]['moduletype'];
         
-        return isset($_SESSION['ploopi'][$strModuleType][$intModuleId][$strVarName]) ? $_SESSION['ploopi'][$strModuleType][$intModuleId][$strVarName] : null;
+        return isset($_SESSION['ploopi'][$strModuleType][$intModuleId][$intWorkspaceId][$strVarName]) ? $_SESSION['ploopi'][$strModuleType][$intModuleId][$intWorkspaceId][$strVarName] : null;
     } 
 
     return null;
@@ -741,16 +743,18 @@ function ploopi_getsessionvar($strVarName, $intModuleId = null)
  * @param string $strVarName nom de la variable
  * @param mixed $mixVar contenu de la variable
  * @param integer $intModuleId Identifiant du module (optionnel, le module courant si non défini)
+ * @param integer $intWorkspaceId Identifiant de l'espace de travail (optionnel, l'espace courant si non défini)
  */
-function ploopi_setsessionvar($strVarName, $mixVar = null, $intModuleId = null)
+function ploopi_setsessionvar($strVarName, $mixVar = null, $intModuleId = null, $intWorkspaceId = null)
 {
     if (is_null($intModuleId)) $intModuleId = $_SESSION['ploopi']['moduleid'];
+    if (is_null($intWorkspaceId)) $intWorkspaceId = $_SESSION['ploopi']['workspaceid'];
     
     if (!empty($_SESSION['ploopi']['modules'][$intModuleId]['moduletype']))
     {
         $strModuleType = $_SESSION['ploopi']['modules'][$intModuleId]['moduletype'];
         
-        $_SESSION['ploopi'][$strModuleType][$intModuleId][$strVarName] = $mixVar;
+        $_SESSION['ploopi'][$strModuleType][$intModuleId][$intWorkspaceId][$strVarName] = $mixVar;
     }  
 }
 ?>
