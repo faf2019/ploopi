@@ -635,10 +635,20 @@ switch($_SESSION['directory']['directoryTabItem'])
                             }
                         }
 
-                        foreach($arrWf as $value) $arrWfUsers[] = $value['id_validation'];
+                        foreach($arrWf as $value) $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
 
-                        // L'utilisateur peut-il modifier la rubrique et les contacts associés ? (valables pour les sous rubriques)
-                        $booModify = in_array($_SESSION['ploopi']['userid'], $arrWfUsers) || ploopi_isadmin();
+                        $objUser = new user();
+                        $objUser->open($_SESSION['ploopi']['userid']);
+                        $arrGroups = $objUser->getgroups(true);
+                        
+                        $booModify = ploopi_isadmin();
+                        if (!$booModify)
+                        {
+                            foreach($arrWfUsers as $value) 
+                            {
+                                if (($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) || ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']]))) $booModify = true;
+                            }                        
+                        }
 
                         if ($booModify) // Version modifiable
                         {
@@ -696,28 +706,48 @@ switch($_SESSION['directory']['directoryTabItem'])
                                     </p>
                                 </div>
 
-                                <div style="clear:both;padding:0 6px;">
-                                    <em>
-                                        <strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)"; ?></strong>:
-                                        <?php
-                                        if (!empty($arrWfUsers))
-                                        {
-                                            $db->query("SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers).") ORDER BY lastname, firstname");
-                                            $arrUsers = $db->getarray();
-                                            echo (empty($arrUsers)) ? 'Aucune accréditation' : implode(', ', $arrUsers);
-                                        }
-                                        else echo 'Aucune accréditation';
-                                        ?>
-                                    </em>
+                                <div style="clear:both;padding:4px;">
+                                    <fieldset class="fieldset" style="padding:6px;">
+                                        <legend><strong>Gestionnaires</strong></legend>
+                                
+                                        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><?php if ($intWfHeadingId != $intHeadingId) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?>
+                                            <?php
+                                            if (!empty($arrWfUsers))
+                                            {
+                                                if (!empty($arrWfUsers['group']))
+                                                {
+                                                    $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
+                                
+                                                    $db->query(
+                                                        "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
+                                                    );
+                                
+                                                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                                                }
+                                                if (!empty($arrWfUsers['user']))
+                                                {
+                                                    $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
+                                
+                                                    $db->query(
+                                                        "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
+                                                    );
+                                
+                                                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                                                }
+                                            }
+                                            else echo '<em>Aucune accréditation</em>';
+                                            ?>
+                                        </p>
+                                        <div style="clear:both;padding:4px;">
+                                            <div style="border:1px solid #c0c0c0;overflow:hidden;">
+                                            <?php
+                                                ploopi_validation_selectusers(_DIRECTORY_OBJECT_HEADING, $intHeadingId, -1, _DIRECTORY_ACTION_CONTACTS, sprintf("Gestionnaires de %s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]));
+                                            ?>
+                                            </div>
+                                        </div>
+                                    </fieldset>
                                 </div>
 
-                                <div style="clear:both;padding:4px;">
-                                    <div style="border:1px solid #c0c0c0;overflow:hidden;">
-                                    <?php
-                                        ploopi_validation_selectusers(_DIRECTORY_OBJECT_HEADING, $intHeadingId, -1, _DIRECTORY_ACTION_CONTACTS, sprintf("Gestionnaires de %s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]));
-                                    ?>
-                                    </div>
-                                </div>
 
                                 <div style="text-align:right;padding:4px;">
                                     <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}"); ?>';">
@@ -749,13 +779,13 @@ switch($_SESSION['directory']['directoryTabItem'])
                             }
 
                             // Construction de la chaîne de téléphone
-                            $arrPone = array();
-                            if (!empty($objHeading->fields['phone'])) $arrPone[] = htmlentities("Tel: ".$objHeading->fields['phone']);
-                            if (!empty($objHeading->fields['fax'])) $arrPone[] = htmlentities("Fax: ".$objHeading->fields['fax']);
+                            $arrPhone = array();
+                            if (!empty($objHeading->fields['phone'])) $arrPhone[] = htmlentities("Tel: ".$objHeading->fields['phone']);
+                            if (!empty($objHeading->fields['fax'])) $arrPhone[] = htmlentities("Fax: ".$objHeading->fields['fax']);
 
-                            if (!empty($arrPone))
+                            if (!empty($arrPhone))
                             {
-                                ?><div style="padding:4px;"><?php echo implode(' - ', $arrPone); ?></div><?php
+                                ?><div style="padding:4px;"><?php echo implode(' - ', $arrPhone); ?></div><?php
                             }
 
                             // Construction de la chaîne d'adresse
@@ -774,22 +804,44 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 <div style="float:left;">
                                     <em>
                                         <strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)"; ?></strong>:
-                                        <?php
-                                        if (!empty($arrWfUsers))
-                                        {
-                                            $db->query("SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers).") ORDER BY lastname, firstname");
-                                            $arrUsers = $db->getarray();
-                                            echo (empty($arrUsers)) ? 'Aucune accréditation' : implode(', ', $arrUsers);
-                                        }
-                                        else echo 'Aucune accréditation';
-                                        ?>
+
+                                        <div style="clear:both;padding:4px;">
+                                            <p class="ploopi_va" style="padding:0 2px 2px 2px;"><?php if ($intWfHeadingId != $intHeadingId) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?>
+                                                <?php
+                                                if (!empty($arrWfUsers))
+                                                {
+                                                    if (!empty($arrWfUsers['group']))
+                                                    {
+                                                        $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
+                                    
+                                                        $db->query(
+                                                            "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
+                                                        );
+                                    
+                                                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                                                    }
+                                                    if (!empty($arrWfUsers['user']))
+                                                    {
+                                                        $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
+                                    
+                                                        $db->query(
+                                                            "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
+                                                        );
+                                    
+                                                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                                                    }
+                                                }
+                                                else echo '<em>Aucune accréditation</em>';
+                                                ?>
+                                            </p>
+                                        </div>
                                     </em>
                                 </div>
                                 <?php
                                 if ($booModify) // interface bloquée
                                 {
                                     ?>
-                                        <div style="float:right;">
+                                        <div style="clear:both;text-align:right;">
                                         <input type="button" class="button" value="Modifier" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}&op=directory_modify"); ?>';">
                                         </div>
                                     <?php

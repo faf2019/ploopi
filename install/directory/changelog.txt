@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.2.2b ====================================================
+
+2009-09-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug d'affichage mineur
+
 == Module DIRECTORY - version 2.2.2 ====================================================
 
 2009-08-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
