@@ -46,7 +46,6 @@ echo $skin->open_simplebloc(_SYSTEM_MODULESELECTED);
 ?>
 <div style="padding:4px;">
 <?php
-
 $arrModList = array();
 
 foreach($_SESSION['ploopi']['workspaces'] as $idw => $wksp)
@@ -70,6 +69,8 @@ else
         <input type="hidden" name="op" value="param">
         <select class="select" name="idmodule" onchange="javascript:$('form_modparam').submit();">
         <?php
+        usort($arrModList, create_function('$a,$b', 'return strcasecmp($_SESSION[\'ploopi\'][\'modules\'][$a][\'label\'], $_SESSION[\'ploopi\'][\'modules\'][$b][\'label\']);'));
+        
         foreach($arrModList as $idm)
         {
             $mod = &$_SESSION['ploopi']['modules'][$idm];

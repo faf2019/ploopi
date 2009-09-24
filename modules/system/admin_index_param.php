@@ -42,6 +42,7 @@ echo $skin->open_simplebloc(_SYSTEM_MODULESELECTED);
 <?php
 // get modules
 $modules = $workspace->getmodules();
+usort($modules, create_function('$a,$b', 'return strcasecmp($a[\'instancename\'], $b[\'instancename\']);'));
 
 if (empty($modules))
 {
@@ -55,12 +56,12 @@ else
     <form id="form_modparam" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
         <select class="select" name="idmodule" onchange="javascript:$('form_modparam').submit();">
         <?php
-        foreach($modules as $idm => $mod)
+        foreach($modules as $mod)
         {
 
-            if (empty($idmodule)) $idmodule = $idm;
+            if (empty($idmodule)) $idmodule = $mod['id'];
             ?>
-                <option <?php if ($idmodule == $idm) echo 'selected'; ?> value="<?php echo $idm; ?>"><?php echo "{$mod['instancename']} ({$mod['label']})"; ?></option>
+                <option <?php if ($idmodule == $mod['id']) echo 'selected'; ?> value="<?php echo $mod['id']; ?>"><?php echo "{$mod['instancename']} ({$mod['label']})"; ?></option>
             <?php
         }
         ?>

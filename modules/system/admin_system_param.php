@@ -37,16 +37,21 @@
 if (!empty($_REQUEST['idmodule']) && is_numeric($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
 
 echo $skin->open_simplebloc(_SYSTEM_MODULESELECTED);
+    
+$arrModules = $_SESSION['ploopi']['modules'];
+usort($arrModules, create_function('$a,$b', 'return strcasecmp($a[\'label\'], $b[\'label\']);'));
+
 ?>
 <div style="padding:4px;">
 <form id="form_modparam" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
     <select class="select" name="idmodule" onchange="javascript:$('form_modparam').submit();">
     <?php
-    foreach($_SESSION['ploopi']['modules'] as $idm => $mod)
+    
+    foreach($arrModules as $mod)
     {
-        if (empty($idmodule)) $idmodule = $idm;
+        if (empty($idmodule)) $idmodule = $mod['id'];
         ?>
-            <option <?php if ($idmodule == $idm) echo 'selected'; ?> value="<?php echo $idm; ?>"><?php echo "{$mod['label']} ({$mod['moduletype']})"; ?></option>
+            <option <?php if ($idmodule == $mod['id']) echo 'selected="selected"'; ?> value="<?php echo $mod['id']; ?>"><?php echo "{$mod['label']} ({$mod['moduletype']})"; ?></option>
         <?php
     }
     ?>
