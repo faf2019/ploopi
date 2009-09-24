@@ -36,8 +36,12 @@ if (isset($_SERVER['REDIRECT_STATUS']) && $_SERVER['REDIRECT_STATUS'] == '200')
 { 
     $booRewriteRuleFound = false;
     
-    if (_PLOOPI_SELFPATH == '' || strpos($_SERVER['REQUEST_URI'], _PLOOPI_SELFPATH) === 0) define('_PLOOPI_REQUEST_URI', substr($_SERVER['REQUEST_URI'], strlen(_PLOOPI_SELFPATH) - strlen($_SERVER['REQUEST_URI'])));
-    else define('_PLOOPI_REQUEST_URI', $_SERVER['REQUEST_URI']);
+    // Attention ! $_SERVER['REQUEST_URI'] peut contenir une url complète avec le nom de domaine
+    $arrParsedURI = parse_url($_SERVER['REQUEST_URI']);
+    $strRequestURI = $arrParsedURI['path'].(empty($arrParsedURI['query']) ? '' : "?{$arrParsedURI['query']}");
+    
+    if (_PLOOPI_SELFPATH == '' || strpos($strRequestURI, _PLOOPI_SELFPATH) === 0) define('_PLOOPI_REQUEST_URI', substr($strRequestURI, strlen(_PLOOPI_SELFPATH) - strlen($strRequestURI)));
+    else define('_PLOOPI_REQUEST_URI', $strRequestURI);
     
     $arrParsedURI = parse_url(_PLOOPI_REQUEST_URI);
      
