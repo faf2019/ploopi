@@ -233,7 +233,16 @@ else
             </p>
         </div>
     </div>
-
+    
+    <?php
+    $strPublicUrl = _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true);
+    ?>
+    
+    <p class="ploopi_va" style="padding:4px;border-bottom:1px solid #aaa;background-color:#ddd;">
+        <strong>URL publique du fichier :</strong>
+        <a title="URL publique permettant de télécharger ce fichier" href="<?php echo $strPublicUrl; ?>"><?php echo $strPublicUrl; ?></a>
+    </p>
+    
     <div class="ploopi_tabs" style="margin-top:1px;">
         <a <?php if ($docfile_tab == 'history') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=history"); ?>"><img src="./modules/doc/img/ico_history.png">Historique des versions</a>
         <a <?php if ($docfile_tab == 'keywords') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=keywords"); ?>" title="Mots clés"><img src="./modules/doc/img/ico_keywords.png">Mots clés</a>
@@ -661,15 +670,7 @@ else
                     </form>
                     <?php
                 }
-                
-                $strPublicUrl = _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true);
                 ?>
-
-                <p class="ploopi_va" style="padding:4px;clear:both;">
-                    <strong>URL publique du fichier :</strong>
-                    <a title="URL publique permettant de télécharger ce fichier" href="<?php echo $strPublicUrl; ?>"><?php echo $strPublicUrl; ?></a>
-                </p>
-
             </div>
             <?php
         break;

@@ -1,3 +1,9 @@
+== Module DOC - version 4.5.1 =====================================================
+
+2009-09-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Régression (4.5.0b) :  Affichage de l'url publique du fichier de manière plus visible
+
 == Module DOC - version 4.5.0g =====================================================
 
 2009-09-22  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
@@ -22,12 +28,6 @@
 2009-09-08  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
  * Correction d'un bug. Les META n'étaient pas supprimés à la suppression des fichiers. 
-
-== Module DOC - version 4.5.0c =====================================================
-
-2009-09-04  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
-
- * Correction d'une erreur. La boucle de décompression pouvait s'executer meme si le fichier transmis était erroné. 
 
 == Module DOC - version 4.5.0c =====================================================
 
