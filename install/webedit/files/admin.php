@@ -563,16 +563,6 @@ switch($menu)
                 ploopi_redirect('admin.php');
             break;
 
-            case 'subscriber_delete':
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE) && !empty($_GET['subscriber_email']))
-                {
-                    $heading_subscriber = new webedit_heading_subscriber();
-                    $heading_subscriber->open($headingid, $_GET['subscriber_email']);
-                    $heading_subscriber->delete();
-                }
-                ploopi_redirect('admin.php');
-            break;
-
             case 'display_iframe':
                 ?>
                 <script type="text/javascript" src="./FCKeditor/fckeditor.js"></script>

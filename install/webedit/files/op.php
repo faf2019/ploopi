@@ -99,8 +99,21 @@ switch($ploopi_op)
  */
 if ($_SESSION['ploopi']['connected'])
 {
-    switch($_REQUEST['ploopi_op'])
+    switch($ploopi_op)
     {
+        
+        case 'webedit_subscriber_delete':
+            ploopi_init_module('webedit', false, false, false);
+            include_once './modules/webedit/class_heading_subscriber.php';
+            if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE) && !empty($_GET['webedit_subscriber_email']) && isset($_GET['webedit_subscriber_id_heading']) && is_numeric($_GET['webedit_subscriber_id_heading']))
+            {
+                $heading_subscriber = new webedit_heading_subscriber();
+                $heading_subscriber->open($_GET['webedit_subscriber_id_heading'], $_GET['webedit_subscriber_email']);
+                $heading_subscriber->delete();
+            }
+            ploopi_redirect('admin.php');
+        break;
+                    
         case 'webedit_selectlink':
         case 'webedit_detail_heading';
             ob_start();

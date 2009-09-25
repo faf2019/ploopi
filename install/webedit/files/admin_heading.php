@@ -794,12 +794,12 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des a
         {
             $subscribers_values[$c]['values']['email'] =
                 array(
-                    'label' => $row['email']
+                    'label' => $row['email'].($row['id_heading'] == 0 ? ' <em>(tout le site)</em>' : '')
                 );
 
             $subscribers_values[$c]['values']['actions'] =
                 array(
-                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonné\" alt=\"Supprimer\" onclick=\"javascript:ploopi_confirmlink('admin.php?op=subscriber_delete&subscriber_email={$row['email']}','Êtes-vous certain de vouloir supprimer cet abonné ?');\" src=\"./modules/webedit/img/ico_delete.gif\"></a>",
+                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonné\" alt=\"Supprimer\" onclick=\"javascript:ploopi_confirmlink('admin-light.php?ploopi_op=webedit_subscriber_delete&webedit_subscriber_email={$row['email']}&webedit_subscriber_id_heading={$row['id_heading']}','Êtes-vous certain de vouloir supprimer cet abonné ?');\" src=\"./modules/webedit/img/ico_delete.gif\"></a>",
                     'style' => 'text-align:center;'
                 );
 

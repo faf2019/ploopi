@@ -1,3 +1,11 @@
+== Module WebEdit - version 2.1.6 ============================================
+
+2009-09-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un problème lors de l'abonnement en frontoffice sur la page d'accueil, ne prenait pas en compte la rubrique
+ * Correction d'un bug empêchant la suppression d'un abonné frontoffice sur le site global
+ * Ajout d'une information "tout le site" pour les abonnés frontoffice au site  
+
 == Module WebEdit - version 2.1.5c ============================================
 
 2009-09-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

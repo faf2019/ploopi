@@ -934,7 +934,7 @@ else // affichage standard rubrique/page
                 'switch_subscription',
                 array(
                     'ACTION' => $link,
-                    'HEADINGID' => $booIsHomePage ? 0 : $headingid,
+                    'HEADINGID' => $headingid,
                     'ROOTID' => 0
                 )
             );
