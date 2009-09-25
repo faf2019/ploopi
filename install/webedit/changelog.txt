@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.1.6b ============================================
+
+2009-09-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug mineur à l'envoi d'un mail aux abonnés frontoffice : l'expéditeur était inclus plusieurs autant de fois que le message était envoyé
+
 == Module WebEdit - version 2.1.6 ============================================
 
 2009-09-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -469,15 +469,16 @@ switch($menu)
 
                             $db->query($sql);
 
+                            $from = array();
+                            $from[] =
+                                array(
+                                    'name' => $_SERVER['HTTP_HOST'],
+                                    'address' => (empty($_SESSION['ploopi']['user']['email'])) ? _PLOOPI_ADMINMAIL : $_SESSION['ploopi']['user']['email']
+                                );
+                                
                             // envoi d'un mail à chaque abonné
                             while ($row = $db->fetchrow())
                             {
-                                $from[] =
-                                    array(
-                                        'name' => $_SERVER['HTTP_HOST'],
-                                        'address' => (empty($_SESSION['ploopi']['user']['email'])) ? _PLOOPI_ADMINMAIL : $_SESSION['ploopi']['user']['email']
-                                    );
-
                                 switch($strTypeTicket)
                                 {
                                     case 'published':
