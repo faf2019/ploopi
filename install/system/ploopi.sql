@@ -993,4 +993,8 @@ ALTER TABLE `ploopi_mb_field` ADD INDEX ( `id_module_type` );
 ALTER TABLE `ploopi_mb_schema` ADD INDEX ( `tablesrc` );
 ALTER TABLE `ploopi_mb_table` ADD INDEX ( `id_module_type` );
 
-UPDATE `ploopi_module_type` SET `version` = '1.6.0.0', `author` = 'Ovensia', `date` = '20090916000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+DELETE FROM `ploopi_param_default` WHERE name = 'system_set_cache';
+DELETE FROM `ploopi_param_type` WHERE name = 'system_set_cache';
+DELETE FROM `ploopi_param_choice` WHERE name = 'system_set_cache';
+
+UPDATE `ploopi_module_type` SET `version` = '1.6.0.1', `author` = 'Ovensia', `date` = '20090916000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
