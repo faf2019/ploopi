@@ -81,7 +81,6 @@ abstract class form_element
      */
     protected $arrOptions;
     
-    
     /**
      * Différents types acceptés pour un élément
      *
@@ -108,7 +107,7 @@ abstract class form_element
     
         'richtext'
     );
-
+    
     /**
      * Lecture du type
      *
@@ -265,7 +264,7 @@ class form_field extends form_element
         $this->strName = $strName;
         $this->strId = $strId;
         
-        $this->arrOptions = is_null($arrOptions) ? form_field::$arrDefaultOptions : array_merge(form_field::$arrDefaultOptions, $arrOptions);
+        $this->arrOptions = is_null($arrOptions) ? self::$arrDefaultOptions : array_merge(self::$arrDefaultOptions, $arrOptions);
     }
     
     /**
@@ -427,8 +426,10 @@ class form_select extends form_field
         $strClass = is_null($this->arrOptions['class']) ? '' : " {$this->arrOptions['class']}";
         $strSize = is_null($this->arrOptions['size']) ? '' : " size=\"{$this->arrOptions['size']}\"";
         $strMultiple = $this->arrOptions['multiple'] ? " multiple=\"multiple\"" : '';
+        $strReadonly = is_null($this->arrOptions['readonly']) || !$this->arrOptions['readonly'] ? '' : " readonly=\"readonly\"";
+        $strDisabled = is_null($this->arrOptions['disabled']) || !$this->arrOptions['disabled'] ? '' : " disabled=\"disabled\"";
         
-        $strOutput .= "<select name=\"{$this->strName}\" id=\"{$this->strId}\" tabindex=\"{$intTabindex}\" class=\"select{$strClass}\"{$strStyle}{$strOnchange}{$strSize}{$strMultiple} />";
+        $strOutput .= "<select name=\"{$this->strName}\" id=\"{$this->strId}\" tabindex=\"{$intTabindex}\" class=\"select{$strClass}\"{$strStyle}{$strOnchange}{$strSize}{$strMultiple}{$strReadonly}{$strDisabled} />";
         foreach($this->arrValues as $strKey => $strValue) 
         {
             $strValue = htmlentities($strValue);
@@ -489,8 +490,10 @@ class form_checkbox extends form_field
         $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\"";
         $strClass = is_null($this->arrOptions['class']) ? '' : " {$this->arrOptions['class']}";
         $strValue = htmlentities($this->arrValues[0]);
+        $strReadonly = is_null($this->arrOptions['readonly']) || !$this->arrOptions['readonly'] ? '' : " readonly=\"readonly\"";
+        $strDisabled = is_null($this->arrOptions['disabled']) || !$this->arrOptions['disabled'] ? '' : " disabled=\"disabled\"";
         
-        return $this->renderForm("<input type=\"checkbox\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"checkbox{$strClass}\"{$strStyle}{$strChecked} />");
+        return $this->renderForm("<input type=\"checkbox\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"checkbox{$strClass}\"{$strStyle}{$strChecked}{$strReadonly}{$strDisabled} />");
     }
 }
 
@@ -540,8 +543,10 @@ class form_radio extends form_field
         $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\"";
         $strClass = is_null($this->arrOptions['class']) ? '' : " {$this->arrOptions['class']}";
         $strValue = htmlentities($this->arrValues[0]);
+        $strReadonly = is_null($this->arrOptions['readonly']) || !$this->arrOptions['readonly'] ? '' : " readonly=\"readonly\"";
+        $strDisabled = is_null($this->arrOptions['disabled']) || !$this->arrOptions['disabled'] ? '' : " disabled=\"disabled\"";
         
-        return $this->renderForm("<input type=\"radio\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"radio{$strClass}\"{$strStyle}{$strChecked} />");
+        return $this->renderForm("<input type=\"radio\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"radio{$strClass}\"{$strStyle}{$strChecked}{$strReadonly}{$strDisabled} />");
     }
 }
 
@@ -657,6 +662,8 @@ class form_button extends form_element
     static private $arrDefaultOptions = array(
         'style'     => null,
         'class' => null,
+        'readonly' => false,
+        'disabled' => false,
         'onclick'   => null
     );    
     
@@ -685,14 +692,14 @@ class form_button extends form_element
      */  
     public function __construct($strType, $strValue, $strName = null, $strId = null, $arrOptions = null)
     {
-        if (!in_array($strType, form_button::$arrType)) trigger_error('Ce type d\'élément n\'existe pas', E_USER_ERROR);
+        if (!in_array($strType, self::$arrType)) trigger_error('Ce type d\'élément n\'existe pas', E_USER_ERROR);
         else
         { 
             $this->setType($strType);
             $this->strValue = $strValue;
             $this->strName = $strName;
             $this->strId = $strId;
-            $this->arrOptions = is_null($arrOptions) ? form_button::$arrDefaultOptions : array_merge(form_button::$arrDefaultOptions, $arrOptions);
+            $this->arrOptions = is_null($arrOptions) ? self::$arrDefaultOptions : array_merge(self::$arrDefaultOptions, $arrOptions);
         }
     }
     
@@ -711,19 +718,21 @@ class form_button extends form_element
         $strClass = is_null($this->arrOptions['class']) ? '' : " {$this->arrOptions['class']}";
         $strOnclick = is_null($this->arrOptions['onclick']) ? '' : " onclick=\"javascript:{$this->arrOptions['onclick']}\""; 
         $strValue = htmlentities($this->strValue);
+        $strReadonly = is_null($this->arrOptions['readonly']) || !$this->arrOptions['readonly'] ? '' : " readonly=\"readonly\"";
+        $strDisabled = is_null($this->arrOptions['disabled']) || !$this->arrOptions['disabled'] ? '' : " disabled=\"disabled\"";
         
         switch($this->getType())
         {
             case 'input:reset':
-                $strOutput .= "<input type=\"reset\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"button{$strClass}\"{$strStyle}{$strOnclick} />";
+                $strOutput .= "<input type=\"reset\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"button{$strClass}\"{$strStyle}{$strOnclick}{$strReadonly}{$strDisabled} />";
             break;
             
             case 'input:button':
-                $strOutput .= "<input type=\"button\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"button{$strClass}\"{$strStyle}{$strOnclick} />";
+                $strOutput .= "<input type=\"button\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"button{$strClass}\"{$strStyle}{$strOnclick}{$strReadonly}{$strDisabled} />";
             break;
             
             case 'input:submit':
-                $strOutput .= "<input type=\"submit\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"button{$strClass}\"{$strStyle}{$strOnclick} />";
+                $strOutput .= "<input type=\"submit\" name=\"{$this->strName}\" id=\"{$this->strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" class=\"button{$strClass}\"{$strStyle}{$strOnclick}{$strReadonly}{$strDisabled} />";
             break;
         }
         

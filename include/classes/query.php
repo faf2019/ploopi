@@ -155,53 +155,54 @@ abstract class ploopi_sqlformat
 abstract class ploopi_query
 {
     /**
-     * Tableau de la clause SELECT
+     * Connexion à la BDD
      *
-     * @var array
+     * @var resource
      */
-    private $arrSelect;
+    protected $objDb;    
+    
+    /**
+     * Constructeur de la classe
+     *
+     * @param resource $objDb Connexion à la BDD
+     */
+    public function __construct($objDb = null)
+    {
+        if (!is_null($objDb)) $this->objDb = $objDb;
+        else { global $db; $this->objDb = $db; }
+        
+        return true;
+    }
+    
+    /**
+     * Exécute la requête SQL
+     *
+     * @return ploopi_recordset
+     */
+    public function execute()
+    {
+        return(new ploopi_recordset($this->objDb, $this->objDb->query($this->get_sql())));
+    }        
+}
 
+/**
+ * Classe permettant de construire une requête SQL
+ */
+abstract class ploopi_query_sud extends ploopi_query
+{
     /**
      * Tableau de la clause FROM
      *
      * @var array
      */
-    private $arrFrom;
+    protected $arrFrom;
 
-    /**
-     * Tableau de la clause INNER JOIN
-     *
-     * @var array
-     */
-    private $arrInnerJoin;
-
-    /**
-     * Tableau de la clause LEFT JOIN
-     *
-     * @var array
-     */
-    private $arrLeftJoin;
-    
     /**
      * Tableau de la clause WHERE
      *
      * @var array
      */
     private $arrWhere;
-
-    /**
-     * Tableau de la clause GROUP BY
-     *
-     * @var array
-     */
-    private $arrGroupBy;
-
-    /**
-     * Tableau de la clause HAVING
-     *
-     * @var array
-     */
-    private $arrHaving;
 
     /**
      * Tableau de la clause ORDER BY
@@ -218,23 +219,14 @@ abstract class ploopi_query
     private $strLimit;
 
     /**
-     * Connexion à la BDD
-     *
-     * @var resource
-     */
-    private $objDb;
-    
-    /**
      * Différents types acceptés pour un élément
      *
      * @var array
      */
     protected static $arrType = array(
         'select',
-        'insert',
         'update',
-        'delete',
-        'raw'
+        'delete'
     );    
     
     private $strType;
@@ -247,20 +239,14 @@ abstract class ploopi_query
      */
     public function __construct($strType = 'select', $objDb = null)
     {
-        $this->arrSelect = array();
+        if (!parent::__construct($objDb)) return false;
+        
         $this->arrFrom = array();
-        $this->arrInnerJoin = array();
-        $this->arrLeftJoin = array();
         $this->arrWhere = array();
-        $this->arrGroupBy = array();
-        $this->arrHaving = array();
         $this->arrOrderBy = array();
         $this->strLimit = null;
         
-        if (!is_null($objDb)) $this->objDb = $objDb;
-        else { global $db; $this->objDb = $db; }
-        
-        if (!in_array($strType, ploopi_query::$arrType))
+        if (!in_array($strType, self::$arrType))
         {
             trigger_error('Ce type de requête n\'existe pas', E_USER_ERROR);
             return false;
@@ -269,13 +255,8 @@ abstract class ploopi_query
         { 
             $this->strType = $strType;
             return true;
-        }           
+        }
     }
-    
-    public function add_select($strSelect)
-    {
-        if (!in_array($strSelect, $this->arrSelect)) $this->arrSelect[] = $strSelect;
-    }    
     
     /**
      * Ajout d'une clause WHERE à la requête
@@ -302,6 +283,139 @@ abstract class ploopi_query
     }
 
     /**
+     * Ajoute une clause FROM à la requête (select/delete/update uniquement)
+     * Si plusieurs clauses FROM sont ajoutées, elles sont séparées par "," 
+     * 
+     * @param string $strFrom Clause FROM
+     */
+    public function add_from($strFrom)
+    {
+        if (!in_array($strFrom, $this->arrFrom)) $this->arrFrom[] = $strFrom;
+    }    
+    
+    /**
+     * Ajoute une clause ORDER BY à la requête
+     * Si plusieurs clauses ORDER BY sont ajoutées, elles sont séparées par ","
+     *  
+     * @param string $strOrderBy Clause ORDER BY
+     */
+    public function add_orderby($strOrderBy)
+    {
+        if (!in_array($strOrderBy, $this->arrOrderBy)) $this->arrOrderBy[] = $strOrderBy;
+    }
+
+    /**
+     * Définit la clause LIMIT de la requête
+     *
+     * @param string $strLimit
+     */
+    public function add_limit($strLimit)
+    {
+        $this->strLimit = $strLimit;
+    }
+    
+    /**
+     * Retourne la clause FROM
+     *
+     * @return string
+     */
+    protected function get_from()
+    {
+        return empty($this->arrFrom) ? false : ' FROM '.implode(', ', $this->arrFrom);
+    }
+    
+    /**
+     * Retourne la clause WHERE
+     *
+     * @return string
+     */
+    protected function get_where() 
+    { 
+        $arrWhere = array();
+        foreach($this->arrWhere as $arrWhereDetail) $arrWhere[] = ploopi_sqlformat::replace($arrWhereDetail, $this->objDb);
+
+        return empty($arrWhere) ? '' : ' WHERE '.implode(' AND ', $arrWhere);
+    }
+    
+    /**
+     * Retourne la clause ORDER BY
+     *
+     * @return string
+     */
+    protected function get_orderby() { return empty($this->arrOrderBy) ? '' : ' ORDER BY '.implode(', ', $this->arrOrderBy); }
+    
+    /**
+     * Retourne la clause LIMIT
+     *
+     * @return string
+     */
+    protected function get_limit() { return empty($this->strLimit) ? '' : " LIMIT {$this->strLimit}"; }
+    
+}
+
+
+/**
+ * Classe permettant de construire une requête SQL de type SELECT
+ */
+class ploopi_query_select extends ploopi_query_sud
+{
+    /**
+     * Tableau de la clause SELECT
+     *
+     * @var array
+     */
+    private $arrSelect;
+    
+    /**
+     * Tableau de la clause INNER JOIN
+     *
+     * @var array
+     */
+    private $arrInnerJoin;
+
+    /**
+     * Tableau de la clause LEFT JOIN
+     *
+     * @var array
+     */
+    private $arrLeftJoin;
+    
+    /**
+     * Tableau de la clause GROUP BY
+     *
+     * @var array
+     */
+    private $arrGroupBy;
+
+    /**
+     * Tableau de la clause HAVING
+     *
+     * @var array
+     */
+    private $arrHaving;
+    
+    /**
+     * Constructeur de la classe
+     *
+     * @param resource $objDb Connexion à la BDD
+     */
+    public function __construct($objDb = null)
+    {
+        $this->arrSelect = array();
+        $this->arrInnerJoin = array();
+        $this->arrLeftJoin = array();
+        $this->arrGroupBy = array();
+        $this->arrHaving = array();
+        
+        return parent::__construct('select', $objDb);
+    }    
+    
+    public function add_select($strSelect)
+    {
+        if (!in_array($strSelect, $this->arrSelect)) $this->arrSelect[] = $strSelect;
+    }    
+
+    /**
      * Ajoute une clause LEFT JOIN à la requête
      * 
      * @param string $strLeftJoin Clause LEFT JOIN
@@ -323,17 +437,6 @@ abstract class ploopi_query
         $this->arrInnerJoin[] = array('rawsql' => $strInnerJoin, 'values' => $mixValues);
     }
     
-    /**
-     * Ajoute une clause FROM à la requête
-     * Si plusieurs clauses FROM sont ajoutées, elles sont séparées par "," 
-     * 
-     * @param string $strFrom Clause FROM
-     */
-    public function add_from($strFrom)
-    {
-        if (!in_array($strFrom, $this->arrFrom)) $this->arrFrom[] = $strFrom;
-    }    
-
     /**
      * Ajoute une clause GROUP BY à la requête
      * Si plusieurs clauses GROUP BY sont ajoutées, elles sont séparées par ","
@@ -359,27 +462,62 @@ abstract class ploopi_query
     {
         $this->strHaving = $strHaving;
         $this->arrHavingValues = $arrValues;
+    }    
+    
+    /**
+     * Retourne la clause SELECT
+     *
+     * @return string
+     */
+    protected function get_select()
+    {
+        return 'SELECT '.(empty($this->arrSelect) ? '*' : implode(', ', $this->arrSelect));
     }
     
     /**
-     * Ajoute une clause ORDER BY à la requête
-     * Si plusieurs clauses ORDER BY sont ajoutées, elles sont séparées par ","
-     *  
-     * @param string $strOrderBy Clause ORDER BY
+     * Retourne la clause LEFT JOIN
+     *
+     * @return string
      */
-    public function add_orderby($strOrderBy)
-    {
-        if (!in_array($strOrderBy, $this->arrOrderBy)) $this->arrOrderBy[] = $strOrderBy;
+    protected function get_leftjoin() 
+    { 
+        $arrLeftJoin = array();
+        foreach($this->arrLeftJoin as $arrLeftJoinDetail) $arrLeftJoin[] = ploopi_sqlformat::replace($arrLeftJoinDetail, $this->objDb);
+        
+        return empty($arrLeftJoin) ? '' : ' LEFT JOIN '.implode(' LEFT JOIN ', $arrLeftJoin);
     }
 
     /**
-     * Définit la clause LIMIT de la requête
+     * Retourne la clause INNER JOIN
      *
-     * @param string $strLimit
+     * @return string
      */
-    public function add_limit($strLimit)
-    {
-        $this->strLimit = $strLimit;
+    protected function get_innerjoin() 
+    { 
+        $arrInnerJoin = array();
+        foreach($this->arrInnerJoin as $arrInnerJoinDetail) $arrInnerJoin[] = ploopi_sqlformat::replace($arrInnerJoinDetail, $this->objDb);
+        
+        return empty($arrInnerJoin) ? '' : ' INNER JOIN '.implode(' INNER JOIN ', $arrInnerJoin);
+    }
+
+    /**
+     * Retourne la clause GROUP BY
+     *
+     * @return string
+     */
+    protected function get_groupby() { return empty($this->arrGroupBy) ? '' : ' GROUP BY '.implode(', ', $this->arrGroupBy); }
+    
+    /**
+     * Retourne la clause HAVING
+     *
+     * @return string
+     */
+    protected function get_having() 
+    { 
+        $arrHaving = array();
+        foreach($this->arrHaving as $arrHavingDetail) $arrHaving[] = ploopi_sqlformat::replace($arrHavingDetail, $this->objDb);
+        
+        return empty($arrHaving) ? '' : ' HAVING '.implode(' AND ', $arrHaving);
     }
     
     /**
@@ -390,103 +528,28 @@ abstract class ploopi_query
     public function get_sql()
     {
         $strSql = '';
-
-        if (!empty($this->arrFrom))
+        
+        if ($this->get_from() !== false)
         {
-            switch($this->strType)
-            {
-                case 'select':
-                    $strSql = 'SELECT '.(empty($this->arrSelect) ? '*' : implode(', ', $this->arrSelect)).' FROM '.implode(', ', $this->arrFrom);
-                break;
-                
-                case 'insert':
-                    $strSql = 'INSERT';
-                break;
-                
-                case 'update':
-                    $strSql = 'UPDATE';
-                break;
-
-                case 'delete':
-                    $strSql = 'DELETE FROM '.implode(', ', $this->arrFrom);
-                break;
-                
-                case 'raw':
-                default:
-                    $strSql = '';
-                break;
-                
-            }
-            
-            // LEFT JOIN
-            $arrLeftJoin = array();
-            foreach($this->arrLeftJoin as $arrLeftJoinDetail) $arrLeftJoin[] = ploopi_sqlformat::replace($arrLeftJoinDetail, $this->objDb);
-            
-            if (!empty($arrLeftJoin)) $strSql .= ' LEFT JOIN '.implode(' LEFT JOIN ', $arrLeftJoin);
-            
-            // INNER JOIN
-            $arrInnerJoin = array();
-            foreach($this->arrInnerJoin as $arrInnerJoinDetail) $arrInnerJoin[] = ploopi_sqlformat::replace($arrInnerJoinDetail, $this->objDb);
-            
-            if (!empty($arrInnerJoin)) $strSql .= ' INNER JOIN '.implode(' INNER JOIN ', $arrInnerJoin);
-            
-            // WHERE
-            $arrWhere = array();
-            foreach($this->arrWhere as $arrWhereDetail) $arrWhere[] = ploopi_sqlformat::replace($arrWhereDetail, $this->objDb);
-
-            if (!empty($arrWhere)) $strSql .= ' WHERE '.implode(' AND ', $arrWhere);
-            
-            // GROUP BY
-            if (!empty($this->arrGroupBy)) $strSql .= ' GROUP BY '.implode(', ', $this->arrGroupBy);
-
-            // HAVING
-            $arrHaving = array();
-            foreach($this->arrHaving as $arrHavingDetail) $arrHaving[] = ploopi_sqlformat::replace($arrHavingDetail, $this->objDb);
-            
-            if (!empty($arrHaving)) $strSql .= ' HAVING '.implode(' AND ', $arrHaving);
-            
-            // ORDERBY
-            if (!empty($this->arrOrderBy)) $strSql .= ' ORDER BY '.implode(', ', $this->arrOrderBy);
-            
-            // LIMIT
-            if (!empty($this->strLimit)) $strSql .= ' LIMIT '.$this->strLimit;
+            $strSql = $this->get_select().
+                $this->get_from(). 
+                $this->get_leftjoin(). 
+                $this->get_innerjoin().
+                $this->get_where().
+                $this->get_groupby().
+                $this->get_having().
+                $this->get_orderby().
+                $this->get_limit();
         }
-
+        
         return $strSql;
     }
-
-    /**
-     * Exécute la requête SQL
-     *
-     * @return ploopi_recordset
-     */
-    public function execute()
-    {
-        return(new ploopi_recordset($this->objDb, $this->objDb->query($this->get_sql())));
-    }
-}
-
-
-/**
- * Classe permettant de construire une requête SQL
- */
-class ploopi_query_select extends ploopi_query
-{
-    /**
-     * Constructeur de la classe
-     *
-     * @param resource $objDb Connexion à la BDD
-     */
-    public function __construct($objDb = null)
-    {
-        return parent::__construct('select', $objDb);
-    }    
 }
 
 /**
- * Classe permettant de construire une requête SQL
+ * Classe permettant de construire une requête SQL de type DELETE
  */
-class ploopi_query_delete extends ploopi_query
+class ploopi_query_delete extends ploopi_query_sud
 {
     /**
      * Constructeur de la classe
@@ -497,14 +560,42 @@ class ploopi_query_delete extends ploopi_query
     {
         return parent::__construct('delete', $objDb);
     }    
+    
+    /**
+     * Génération de la requête SQL
+     *
+     * @return string Chaîne contenant la requête SQL générée
+     */
+    public function get_sql()
+    {
+        $strSql = '';
+        
+        if ($this->get_from() !== false)
+        {
+            echo $strSql = 'DELETE'.
+                $this->get_from(). 
+                $this->get_where().
+                $this->get_orderby().
+                $this->get_limit();
+        }
+        
+        return $strSql;
+    }    
 }
 
 
 /**
- * Classe permettant de construire une requête SQL
+ * Classe permettant de construire une requête SQL de type UPDATE
  */
-class ploopi_query_update extends ploopi_query
+class ploopi_query_update extends ploopi_query_sud
 {
+    /**
+     * Tableau de la clause SET
+     *
+     * @var array
+     */
+    private $arrSet;    
+
     /**
      * Constructeur de la classe
      *
@@ -512,33 +603,230 @@ class ploopi_query_update extends ploopi_query
      */
     public function __construct($objDb = null)
     {
+        $this->arrSet = array();
+        
         return parent::__construct('update', $objDb);
+    }    
+    
+    /**
+     * Ajout d'une clause SET à la requête
+     * Si plusieurs clauses SET sont ajoutées, elles sont séparées par , 
+     * 
+     * @param string $strSet Clause SQL brute
+     * @param mixed $mixValues Valeurs
+     */
+    public function add_set($strSet, $mixValues = null)
+    {
+        if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
+        $this->arrSet[] = array('rawsql' => $strSet, 'values' => $mixValues);
+    }
+    
+    /**
+     * Retourne la clause FROM
+     *
+     * @return string
+     */
+    protected function get_from()
+    {
+        return empty($this->arrFrom) ? false : ' '.implode(', ', $this->arrFrom);
+    }
+    
+    /**
+     * Retourne la clause SET
+     *
+     * @return string
+     */
+    protected function get_set() 
+    { 
+        $arrSet = array();
+        foreach($this->arrSet as $arrSetDetail) $arrSet[] = ploopi_sqlformat::replace($arrSetDetail, $this->objDb);
+        
+        return empty($arrSet) ? '' : ' SET '.implode(', ', $arrSet);
+    }
+    
+    /**
+     * Génération de la requête SQL
+     *
+     * @return string Chaîne contenant la requête SQL générée
+     */
+    public function get_sql()
+    {
+        $strSql = '';
+        
+        if ($this->get_from() !== false)
+        {
+            $strSql = 'UPDATE'.
+                $this->get_from(). 
+                $this->get_set(). 
+                $this->get_where().
+                $this->get_orderby().
+                $this->get_limit();
+        }
+        
+        return $strSql;
     }    
 }
 
+/**
+ * Classe permettant de construire une requête SQL de type INSERT
+ */
+class ploopi_query_insert extends ploopi_query
+{
+    /**
+     * Tableau de la clause SET
+     *
+     * @var array
+     */
+    private $arrSet;   
+        
+    /**
+     * Constructeur de la classe
+     *
+     * @param resource $objDb Connexion à la BDD
+     */
+    public function __construct($objDb = null)
+    {
+        $this->arrSet = array();
+        
+        return parent::__construct($objDb);
+    }  
+    
+    /**
+     * Définit la table 
+     * 
+     * @param string $strTable nom de la table
+     */
+    public function set_table($strTable)
+    {
+        $this->arrFrom = array($strTable);
+    }   
 
+    /**
+     * Ajout d'une clause SET à la requête
+     * Si plusieurs clauses SET sont ajoutées, elles sont séparées par , 
+     * 
+     * @param string $strSet Clause SQL brute
+     * @param mixed $mixValues Valeurs
+     */
+    public function add_set($strSet, $mixValues = null)
+    {
+        if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
+        $this->arrSet[] = array('rawsql' => $strSet, 'values' => $mixValues);
+    }
+    
+    /**
+     * Retourne la table 
+     * 
+     * @return string
+     */
+    protected function get_table()
+    {
+        return empty($this->arrFrom) ? false : current($this->arrFrom);
+    }  
+    
+    /**
+     * Retourne la clause SET
+     *
+     * @return string
+     */
+    protected function get_set() 
+    { 
+        $arrSet = array();
+        foreach($this->arrSet as $arrSetDetail) $arrSet[] = ploopi_sqlformat::replace($arrSetDetail, $this->objDb);
+        
+        return empty($arrSet) ? '' : ' SET '.implode(', ', $arrSet);
+    }   
+    
+    /**
+     * Génération de la requête SQL
+     *
+     * @return string Chaîne contenant la requête SQL générée
+     */
+    public function get_sql()
+    {
+        $strSql = '';
+        
+        if ($this->get_table() !== false)
+        {
+            $strSql = 'INSERT INTO '.$this->get_table().$this->get_set();
+        }
+        
+        return $strSql;
+    }      
+    
+}
+
+/**
+ * Classe de gestion des recordsets retournés par ploopi_query
+ */
 class ploopi_recordset
 {
-    private $objDb;
+    /**
+     * Connexion à la BDD
+     *
+     * @var resource
+     */
+    private $objDb;   
     
+    /**
+     * Recordset courant
+     *
+     * @var resource
+     */
     private $resRs;
 
+    /**
+     * Constructeur de la classe
+     *
+     * @param resource $objDb Connexion à la BDD
+     * @param resource $resRs Recordset
+     */
     public function __construct($objDb, $resRs)
     {
         $this->objDb = $objDb;
         $this->resRs = $resRs;
     }
-    
+
+    /**
+     * Retourne l'enregistrement courant du recordset et avance le pointeur sur l'enregistrement suivant
+     *
+     * @return array
+     */
     public function fetchrow()
     {
         return $this->objDb->fetchrow($this->resRs);
     }
 
+    /**
+     * Retourne le nombre d'enregistrements du recordset
+     *
+     * @return integer
+     */
+    public function numrows()
+    {
+        return $this->objDb->numrows($this->resRs);
+    }
+    
+    /**
+     * Retourne dans un tableau le contenu du recordset
+     *
+     * @param $booFirstColKey $firstcolkey true si la première colonne doit servir d'index pour le tableau (optionnel)
+     * @return mixed un tableau indexé contenant les enregistrements du recordset ou false si le recordset n'est pas valide
+     */    
     public function getarray($booFirstColKey = false)
     {
         return $this->objDb->getarray($this->resRs, $booFirstColKey);
     }
     
-
+    /**
+     * Retourne au format JSON le contenu du recordset
+     *
+     * @param boolean $booUtf8 true si le contenu doit être encodé en utf8, false sinon (true par défaut)
+     * @return string une chaîne au format JSON contenant les enregistrements du recordset ou false si le recordset n'est pas valide
+     */    
+    public function getjson($booUtf8 = true)
+    {
+        return $this->objDb->getjson($this->resRs, $booUtf8);
+    }    
 }
 ?>
