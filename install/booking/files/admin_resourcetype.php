@@ -94,6 +94,8 @@ $db->query("
     LEFT JOIN   ploopi_workspace w
     ON          w.id = rt.id_workspace
     
+    WHERE       rt.id_module = {$_SESSION['ploopi']['moduleid']}
+    
     GROUP BY    rt.id
 ");
     

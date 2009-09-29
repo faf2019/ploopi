@@ -65,18 +65,12 @@ else // on n'est pas dans le module, peut être une requête frontoffice ?
     {
         $booking_moduleid = $_GET['booking_moduleid'];
         
-        if (!empty($_SESSION['ploopi']['frontoffice']['template_path']))
-        {
-            include_once "{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php";
-            $skin = new skin();
-            
-            include_once './modules/booking/op_event.php';
-            
-            /**
-             * Opérations sur le planning
-             */
-            include_once './modules/booking/op_wce_planning.php';
-        }
+        include_once './modules/booking/op_event.php';
+        
+        /**
+         * Opérations sur le planning
+         */
+        include_once './modules/booking/op_wce_planning.php';
             
         ploopi_die();
     }

@@ -192,13 +192,13 @@ switch($arrSearchPattern['booking_display_type'])
 <div style="padding:4px;">
     <p class="ploopi_va" style="padding:2px;float:left;">
         <label>Affichage :</label>
-        <input type="image" alt="Aujourd'hui" src="./modules/booking/img/ico_today<? if ($arrSearchPattern['booking_display_type'] != 'today') echo'_notsel'; ?>.png" title="Aujourd'hui" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=today'); ?>', 'booking_main');" />
-        <input type="image" alt="Quotidien" src="./modules/booking/img/ico_day<? if ($arrSearchPattern['booking_display_type'] != 'day') echo'_notsel'; ?>.png" title="Journée" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=day'); ?>', 'booking_main');" />
-        <input type="image" alt="Hebdomadaire" src="./modules/booking/img/ico_week<? if ($arrSearchPattern['booking_display_type'] != 'week') echo'_notsel'; ?>.png" title="Semaine" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=week'); ?>', 'booking_main');" />
-        <input type="image" alt="Mensuel" src="./modules/booking/img/ico_month<? if ($arrSearchPattern['booking_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=month'); ?>', 'booking_main');" />
+        <input type="image" alt="Aujourd'hui" src="./modules/booking/img/ico_today<? if ($arrSearchPattern['booking_display_type'] != 'today') echo'_notsel'; ?>.png" title="Aujourd'hui" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=today'); ?>', 'booking_main');" />
+        <input type="image" alt="Quotidien" src="./modules/booking/img/ico_day<? if ($arrSearchPattern['booking_display_type'] != 'day') echo'_notsel'; ?>.png" title="Journée" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=day'); ?>', 'booking_main');" />
+        <input type="image" alt="Hebdomadaire" src="./modules/booking/img/ico_week<? if ($arrSearchPattern['booking_display_type'] != 'week') echo'_notsel'; ?>.png" title="Semaine" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=week'); ?>', 'booking_main');" />
+        <input type="image" alt="Mensuel" src="./modules/booking/img/ico_month<? if ($arrSearchPattern['booking_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=month'); ?>', 'booking_main');" />
         
         <label>Taille :</label>
-        <select class="select" name="booking_size" id="booking_size" onchange="javascript:ploopi_xmlhttprequest_todiv('<? echo ploopi_urlencode('index-light.php?ploopi_op=booking_refresh'); ?>', 'booking_size='+this.value, 'booking_main');">
+        <select class="select" name="booking_size" id="booking_size" onchange="javascript:ploopi_xmlhttprequest_todiv('<? echo ploopi_urlencode('admin-light.php?ploopi_op=booking_refresh'); ?>', 'booking_size='+this.value, 'booking_main');">
         <?
         foreach($arrBookingSize as $strSize)
         {
@@ -208,7 +208,7 @@ switch($arrSearchPattern['booking_display_type'])
         </select>
     </p>
     
-    <form style="float:left;" id="booking_form_view" action="<? echo ploopi_urlencode('index-light.php?ploopi_op=booking_refresh'); ?>" method="post" onsubmit="ploopi_xmlhttprequest_submitform(this, 'booking_main');return false;">
+    <form style="float:left;" id="booking_form_view" action="<? echo ploopi_urlencode('admin-light.php?ploopi_op=booking_refresh'); ?>" method="post" onsubmit="ploopi_xmlhttprequest_submitform(this, 'booking_main');return false;">
     <p class="ploopi_va" style="padding:2px;float:left;">
         <label>Période :</label>
         <?
@@ -321,7 +321,7 @@ switch($arrSearchPattern['booking_display_type'])
             'onchange' => "$('booking_form_res').onsubmit();"
         );
     ?>    
-    <form id="booking_form_res" action="<? echo ploopi_urlencode('index-light.php?ploopi_op=booking_refresh'); ?>" method="post" onsubmit="ploopi_xmlhttprequest_submitform(this, 'booking_main');return false;">
+    <form id="booking_form_res" action="<? echo ploopi_urlencode('admin-light.php?ploopi_op=booking_refresh'); ?>" method="post" onsubmit="ploopi_xmlhttprequest_submitform(this, 'booking_main');return false;">
     <p class="ploopi_va" style="clear:both;padding:2px;">
         <label>Ressource à afficher :</label>
         <span style="padding:0 2px;"><? echo $skin->display_selectbox('booking_resource_id', 'booking_resource_id', $arrMenu, $arrOptions, $arrSearchPattern['booking_resource_id']); ?></span>
