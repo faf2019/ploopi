@@ -276,15 +276,22 @@ if ($query_string != '') // recherche intégrale
     // Recherche des modules DOC utilisés par les documents liés
     $sql =
         "
-        SELECT      id_module_docfile,
-                    md5id_docfile
-        FROM        ploopi_mod_webedit_docfile
-        WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
+        SELECT      df.id_module_docfile,
+                    df.md5id_docfile,
+                    a.id_heading
+        FROM        ploopi_mod_webedit_docfile df,
+                    ploopi_mod_webedit_article a
+        WHERE       df.id_module = {$_SESSION['ploopi']['moduleid']}
+        AND         df.id_article = a.id
         ";
 
     $db->query($sql);
 
-    while ($row = $db->fetchrow()) $arrModDoc[$row['id_module_docfile']][] = $row['md5id_docfile'];
+    while ($row = $db->fetchrow()) 
+    {
+        if (!$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
+            $arrModDoc[$row['id_module_docfile']][] = $row['md5id_docfile'];
+    }
 
     if (!empty($arrModDoc) && $boolModDocExists) // Il y a des documents indexés
     {

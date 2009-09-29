@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.1.6c ============================================
+
+2009-09-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug qui autorise l'affichage d'un document lié dans une page privée pour un utilisateur non identifié qui utilise la recherche
+
 == Module WebEdit - version 2.1.6b ============================================
 
 2009-09-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
