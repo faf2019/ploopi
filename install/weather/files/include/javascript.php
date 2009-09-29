@@ -29,37 +29,41 @@
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint
  */
+if (ploopi_ismoduleallowed('weather'))
+{
+    ?>
+    
+    function weather_search_city(id_code,id_city)
+    {
+        ploopi_showpopup('', 300, null, true, 'popup_weather_codecity');
+    
+        new Ajax.Updater(
+          'popup_weather_codecity',
+          '<?php echo ploopi_urlencode('admin-light.php?ploopi_op=weather_get_city'); ?>',
+          {
+            method: 'post',
+            postBody: 'value='+$(id_city).value+'&id_code='+id_code+'&id_city='+id_city,
+            onCreate: function() {
+              ploopi_ajaxloader('popup_weather_codecity');
+            },
+            onSuccess : function() {
+              new Draggable('popup_weather_codecity', { handle: 'handle_popup_weather_codecity'});
+              new Draggable('popup_weather_codecity', { handle: 'handlebottom_popup_weather_codecity'});
+              document.location.href='#anchor_popup_weather_codecity';
+            }
+          }
+        );
+    }
+    
+    function weather_validate(form)
+    {
+        if (ploopi_validatefield("<?php echo _WEATHER_ADMIN_CODE; ?>",form.weather_codecity,"string"))
+        if (ploopi_validatefield("<?php echo _WEATHER_ADMIN_PARTN_ID; ?>",form.weather_partnerid,"string"))
+        if (ploopi_validatefield("<?php echo _WEATHER_ADMIN_PARTN_KEY; ?>",form.weather_partnerkey,"string"))
+          return true;
+    
+        return false;
+    }
+    <?php 
+}
 ?>
-
-function weather_search_city(id_code,id_city)
-{
-    ploopi_showpopup('', 300, null, true, 'popup_weather_codecity');
-
-    new Ajax.Updater(
-      'popup_weather_codecity',
-      '<?php echo ploopi_urlencode('admin-light.php?ploopi_op=weather_get_city'); ?>',
-      {
-        method: 'post',
-        postBody: 'value='+$(id_city).value+'&id_code='+id_code+'&id_city='+id_city,
-        onCreate: function() {
-          ploopi_ajaxloader('popup_weather_codecity');
-        },
-        onSuccess : function() {
-          new Draggable('popup_weather_codecity', { handle: 'handle_popup_weather_codecity'});
-          new Draggable('popup_weather_codecity', { handle: 'handlebottom_popup_weather_codecity'});
-          document.location.href='#anchor_popup_weather_codecity';
-        }
-      }
-    );
-}
-
-function weather_validate(form)
-{
-    if (ploopi_validatefield("<?php echo _WEATHER_ADMIN_CODE; ?>",form.weather_codecity,"string"))
-    if (ploopi_validatefield("<?php echo _WEATHER_ADMIN_PARTN_ID; ?>",form.weather_partnerid,"string"))
-    if (ploopi_validatefield("<?php echo _WEATHER_ADMIN_PARTN_KEY; ?>",form.weather_partnerkey,"string"))
-      return true;
-
-    return false;
-}
-

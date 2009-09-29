@@ -1,3 +1,7 @@
+== Module WEATHER - version 1.01.2 ====================================================
+
+ * Javascript.php : ajout du test ploopi_ismoduleallowed('weather') pour filtrer les js back/front
+
 == Module WEATHER - version 1.01.1 ====================================================
 
  * Ajout de deux traductions dans le french.php
