@@ -1,0 +1,54 @@
+/*
+    Copyright (c) 2009 HeXad
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/******************
+  SYSTEM.MODULE.MESSAGE
+*******************/
+.ploopi_mod_mess_ok
+{
+	position:absolute;
+	top: 30px;
+	left: 20px;
+	margin: 0;
+	padding:2px 4px;
+	color:#193c1c;
+	border: none;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    background-color: #e4e8e4;
+    color: #006F00;
+}
+
+.ploopi_mod_mess_error
+{
+    position:absolute;
+    top: 30px;
+    left: 20px;
+    margin: 0;
+    padding:2px 4px;
+    color:#193c1c;
+    border: none;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    background-color: #e4e8e4;
+    color: #CC0000;
+}

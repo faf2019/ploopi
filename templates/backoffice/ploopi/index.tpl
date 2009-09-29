@@ -66,6 +66,11 @@
 
 <body class="index">
 
+<!-- BEGIN switch_mod_message -->
+<div id="{switch_mod_message.MSG_ID}" class="{switch_mod_message.MSG_CLASS}">{switch_mod_message.MSG}</div>
+<script type="text/javascript">ploopi_window_onload_stock(function() { $('{switch_mod_message.MSG_ID}').fade({ duration: 3.0}); });</script>
+<!-- END switch_mod_message -->
+
 <!-- BEGIN switch_user_logged_out -->
 <div id="container_out">
 <!-- END switch_user_logged_out -->

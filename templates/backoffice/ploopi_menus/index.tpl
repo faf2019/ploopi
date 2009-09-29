@@ -191,7 +191,6 @@
 
 <!-- BEGIN switch_user_logged_in -->
 <div id="container_in">
-
     <div id="bandeau">
         <map name="map">
         <area shape="rect" coords="5,15,102,45" alt="{MAINMENU_TICKETS}" href="{MAINMENU_SHOWTICKETS_URL}" />
@@ -224,6 +223,10 @@
                 <option value="{USER_WORKSPACE_URL}" {USER_WORKSPACE_SEL}>({USER_WORKSPACE_LABEL})</option>
                 </select>
             </p>
+        </div>
+        
+        <div id="ploopi_mod_mess" style="display:none;">
+            <div id="ploopi_mod_mess_mess"></div>
         </div>
 
         <div id="workspace_title">
@@ -275,6 +278,15 @@
 Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi {PLOOPI_VERSION} ({PLOOPI_REVISION})</a>&nbsp;&#169;&nbsp;2008&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>&nbsp;
 <br />[ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko | mem: <PLOOPI_PHP_MEMORY> ko ]&nbsp;
 </p>
+
+
+<!-- BEGIN switch_mod_message -->
+<script type="text/javascript">
+$('ploopi_mod_mess_mess').innerHTML = '{switch_mod_message.MSG4JS}';
+$('ploopi_mod_mess').className = '{switch_mod_message.MSG_CLASS}';
+ploopi_window_onload_stock( function() { new Effect.SlideUp('ploopi_mod_mess', { duration: 3.0 }); } );
+</script>
+<!-- END switch_mod_message -->
 
 <!-- BEGIN switch_user_logged_out -->
 <script type="text/javascript">

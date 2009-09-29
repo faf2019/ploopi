@@ -149,8 +149,6 @@ function ploopi_validation_save($id_object = 0, $id_record = '', $id_module = -1
     
     $db->query("DELETE FROM ploopi_validation WHERE id_object = {$id_object} AND id_record = '".$db->addslashes($id_record)."' AND id_module = {$id_module}");
     
-    ploopi_print_r($_SESSION['ploopi']['validation'][$strValidationId]);
-    
     if (!empty($_SESSION['ploopi']['validation'][$strValidationId]['users_selected']))
     {
         foreach($_SESSION['ploopi']['validation'][$strValidationId]['users_selected'] as $id_user)

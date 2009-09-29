@@ -296,6 +296,8 @@
 
     </div>
 
+    <div id="ploopi_mod_mess" class=""></div>
+
     <div id="pagecontent">
         <div style="padding:10px;">
         {PAGE_CONTENT}
@@ -304,6 +306,14 @@
     <!-- END switch_user_logged_in -->
 
 </div>
+
+<!-- BEGIN switch_mod_message -->
+<script type="text/javascript">
+$('ploopi_mod_mess').innerHTML = '{switch_mod_message.MSG4JS}';
+$('ploopi_mod_mess').className = '{switch_mod_message.MSG_CLASS}';
+ploopi_window_onload_stock( function() { $('ploopi_mod_mess').fade({ duration: 3.0 }); } );
+</script>
+<!-- END switch_mod_message -->
 
 </body>
 </html>

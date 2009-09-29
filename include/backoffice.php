@@ -311,5 +311,29 @@ $template_body->assign_vars(array(
     )
 );
 
+// Message "ok" envoyé par le module
+if(isset($_GET['ploopi_mod_msg']) && defined($_GET['ploopi_mod_msg']))
+{
+    $template_body->assign_block_vars('switch_mod_message',array(
+        'MSG'       => constant($_GET['ploopi_mod_msg']),
+        'MSG4JS'    => addslashes(constant($_GET['ploopi_mod_msg'])),
+        'MSG_ID'    => uniqid('ploopi_mod_mess_'),
+        'MSG_CLASS' => 'ploopi_mod_mess_ok'  
+        )
+    );
+}
+
+// Message "erreur" envoyé par le module
+if(isset($_GET['ploopi_mod_error']) && defined($_GET['ploopi_mod_error']))
+{
+    $template_body->assign_block_vars('switch_mod_message',array(
+        'MSG'       => constant($_GET['ploopi_mod_msg']),
+        'MSG4JS'    => addslashes(constant($_GET['ploopi_mod_msg'])),
+        'MSG_ID'    => uniqid('ploopi_mod_error_'),
+        'MSG_CLASS' => 'ploopi_mod_mess_error'
+        )
+    );
+}
+
 $template_body->pparse('body');
 ?>
