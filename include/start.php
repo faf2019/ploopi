@@ -71,47 +71,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
 
     if ($db->numrows() == 1) // 1 user found
     {
-        // parse previous uri to detect "ploopi_mainmenu" param
-        // if "ploopi_mainmenu" param then redirect after connect
-
-        // parse previous uri to detect "ploopi_mainmenu" param
-        // if "ploopi_mainmenu" param then redirect after connect
-
-        if (!empty($_SESSION['ploopi']['uri']))
-        {
-            $_uri = (empty($_SERVER['QUERY_STRING'])) ? '' : "admin.php?{$_SERVER['QUERY_STRING']}";
-            $_purl = parse_url($_SESSION['ploopi']['uri']);
-            $_params = array();
-
-            foreach(explode('&',$_purl['query']) as $param)
-            {
-                if (strstr($param, '=')) list($key, $value) = explode('=',$param);
-                else {$key = $param; $value = '';}
-
-                $_REQUEST[$key] = $_GET[$key] = ploopi_filtervar($value);
-
-                if ($key == 'ploopi_url')
-                {
-                    require_once './include/classes/cipher.php';
-                    $cipher = new ploopi_cipher();
-                    $ploopi_url = $cipher->decrypt($_GET['ploopi_url']);
-
-                    foreach(explode('&',$ploopi_url) as $param)
-                    {
-                        if (strstr($param, '=')) list($key, $value) = explode('=',$param);
-                        else {$key = $param; $value = '';}
-
-                        $_REQUEST[$key] = $_GET[$key] = ploopi_filtervar($value);
-                    }
-                }
-            }
-
-            $login_redirect = (!empty($_SESSION['ploopi']['uri']) && empty($uri) && !empty($_params['ploopi_mainmenu'])) ? $_SESSION['ploopi']['uri'] : '';
-            unset($_uri);
-            unset($_purl);
-            unset($_params);
-        }
-
+        $login_redirect = $_SERVER['HTTP_REFERER'];
 
         $fields = $db->fetchrow();
 
@@ -133,7 +93,7 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
         $_SESSION['ploopi']['userid'] = $fields['id'];
         $_SESSION['ploopi']['user'] = $fields;
         
-        $ploopi_mainmenu = _PLOOPI_MENU_WORKSPACES;
+        //$ploopi_mainmenu = _PLOOPI_MENU_WORKSPACES;
     }
     else
     {
@@ -217,7 +177,6 @@ switch($ploopi_access_script)
 
 if ($ploopi_initsession)
 {
-
     /**
      * Chargement du profil utilisateur
      */
@@ -316,7 +275,8 @@ if ($ploopi_initsession)
 
 if (!$_SESSION['ploopi']['paramloaded']) include './include/start/load_param.php';
 
-if (!empty($login_redirect)) ploopi_redirect($login_redirect, false);
+if (!empty($login_redirect)) ploopi_redirect($login_redirect, false, false);
+unset($login_redirect);
 
 // Indicateur global de connexion
 $_SESSION['ploopi']['connected'] = isset($_SESSION['ploopi'][$_SESSION['ploopi']['mode']]['connected']) && $_SESSION['ploopi'][$_SESSION['ploopi']['mode']]['connected'];
@@ -360,6 +320,9 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
 
         if (isset($_REQUEST['ploopi_action']))
             $ploopi_action = $_REQUEST['ploopi_action'];
+            
+        // Cas particulier de la connexion ou du transfert front/back 
+        if (empty($ploopi_mainmenu) && empty($_SESSION['ploopi']['mainmenu'])) $ploopi_mainmenu = _PLOOPI_MENU_WORKSPACES;
 
         ///////////////////////////////////////////////////////////////////////////
         // SWITCH MAIN MENU (Workspaces, Profile, etc.)
@@ -388,7 +351,6 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 break;
             }
         }
-        
         
         if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES)
         {
