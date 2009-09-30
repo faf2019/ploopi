@@ -474,6 +474,18 @@ class data_object
      */
 
     public function isnew() { return $this->new; }
+    
+    /**
+     * Retourne un hash de la clé de l'enregistrement
+     *
+     * @return string
+     */
+    public function gethash() 
+    { 
+        $arrHash = array();
+        foreach($this->idfields as $fieldname) if (isset($this->id[$fieldname])) $arrHash[] = $this->id[$fieldname];
+        return(implode(',', $arrHash));
+    }
 
 }
 ?>

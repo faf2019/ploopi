@@ -374,6 +374,21 @@ class ploopi_db
     }
 
     /**
+    * Renvoie la liste des champs d'une table dont le nom est passé en paramètre
+    *
+    * @return array tableau à une dimension contenant le nom des champs de la table
+    */
+     public function listfields($table)
+    {
+        if (!$this->isconnected()) return false;
+        $rs = $this->query("SHOW FIELDS FROM `{$table}`");
+        $allResults = $this->getarray($rs);
+        $allFields = array();
+        foreach ($allResults as $result) $allFields[] = $result['Field'];
+        return $allFields;
+    } 
+
+    /**
      * Renvoie le nombre de champs de la dernière requête ou du recordset passé en paramètre
      *
      * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée

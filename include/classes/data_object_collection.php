@@ -124,7 +124,7 @@ class data_object_collection
      *
      * @return array tableau d'objets du type demandé
      */
-    public function get_objects()
+    public function get_objects($booFirstColKey = false)
     {
         $arrResult = array();
         
@@ -136,7 +136,8 @@ class data_object_collection
             
             $objDoRecord->open_row($row);
 
-            $arrResult[] = $objDoRecord;
+            if ($booFirstColKey) $arrResult[$objDoRecord->gethash()] = $objDoRecord;
+            else $arrResult[] = $objDoRecord;
         }
         
         return $arrResult;
