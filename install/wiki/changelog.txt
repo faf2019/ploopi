@@ -1,3 +1,10 @@
+== Module Wiki - version 1.0.0b ====================================================
+
+2009-09-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction du bug #21 : [WIKI v1.0.0] Balise "pre" / Encodage des labels - fixes #21
+ * Mise à jour de la métabase (mb.xml)
+
 == Module Wiki - version 1.0.0 ====================================================
 
 2009-08-31  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

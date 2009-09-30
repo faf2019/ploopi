@@ -458,7 +458,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                 ?>
                 <div id="wiki_modify">
                     <form action="<? echo ploopi_urlencode("admin-light.php?ploopi_op=wiki_page_save&wiki_page_id={$strWikiPageId}"); ?>" method="post">
-                        <textarea accesskey="e" class="wiki-edit text"style="width:99%;" id="wiki_page_content" name="wiki_page_content" rows="25"><? echo $strPageContent; ?></textarea>
+                        <textarea accesskey="e" class="wiki-edit text" style="width:99%;" id="wiki_page_content" name="fck_wiki_page_content" rows="25"><? echo $strPageContent; ?></textarea>
                         <div style="text-align:right"><input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?wiki_page_id={$strWikiPageId}"); ?>';" /><input type="submit" class="button" value="Enregistrer" style="margin-left:4px;" /></div>
                     </form>
                 </div>

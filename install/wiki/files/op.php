@@ -62,7 +62,7 @@ if (ploopi_ismoduleallowed('wiki'))
             $objWikiPage->open($strWikiPageId);
             $objWikiPage->fields['id'] = $strWikiPageId;
 
-            if (isset($_POST['wiki_page_content'])) $objWikiPage->fields['content'] = $_POST['wiki_page_content'];
+            if (isset($_POST['fck_wiki_page_content'])) $objWikiPage->fields['content'] = ploopi_htmlpurifier($_POST['fck_wiki_page_content']);
             $objWikiPage->save();
 
             // on envoie le ticket de notification d'action sur l'objet
