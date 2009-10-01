@@ -22,7 +22,7 @@
 */
 
 /**
- * Définition des constantes générique utilisées par PLOOPI
+ * Définition des constantes génériques utilisées par PLOOPI
  *
  * @package ploopi
  * @subpackage global
@@ -31,8 +31,8 @@
  * @author Stéphane Escaich
  */
 
-define ('_PLOOPI_VERSION', '1.6.0.2');
-define ('_PLOOPI_REVISION', '90930');
+define ('_PLOOPI_VERSION', '1.6.0.3');
+define ('_PLOOPI_REVISION', '91001');
 
 define ('_PLOOPI_MSG_DBERROR',  'Database connection error, please contact administrator');
 define ('_SYSTEM_SYSTEMADMIN',  0);

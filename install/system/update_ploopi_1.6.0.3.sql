@@ -9,4 +9,4 @@ CHANGE `rank` `rank` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_
 ALTER TABLE `ploopi_serializedvar` DROP PRIMARY KEY;
 ALTER TABLE `ploopi_serializedvar` ADD PRIMARY KEY ( `id` , `id_session` ) ;
 
-UPDATE `ploopi_module_type` SET `version` = '1.6.0.2', `author` = 'Ovensia', `date` = '20090930000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+UPDATE `ploopi_module_type` SET `version` = '1.6.0.3', `author` = 'Ovensia', `date` = '20091001000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
