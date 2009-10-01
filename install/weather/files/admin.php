@@ -44,7 +44,8 @@ $objWeather = new weather();
 switch($op)
 {
   case 'weather_save':
-    if(!empty($_POST['weather_codecity'])
+    if(ploopi_isactionallowed(_WEATHER_ACTION_ADMIN)
+      && !empty($_POST['weather_codecity'])
       && !empty($_POST['weather_partnerid'])
       && !empty($_POST['weather_partnerkey']))
     {
@@ -96,6 +97,7 @@ if(isset($objWeather->fields['id']) && $objWeather->fields['id'] > 0)
   $action .= '&id_weather='.$objWeather->fields['id'];
 
 echo $skin->create_pagetitle('ADMINISTRATION DU MODULE METEO');
+
 echo $skin->open_simplebloc(_WEATHER_PAGE_TITLE);
 echo '<div style="padding: 5px 10px;">'._WEATHER_TEXT_EXPLAIN.'</div>';
 echo $skin->close_simplebloc();

@@ -147,7 +147,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['weather_displayback'])
   }
 }
 
-if (ploopi_isactionallowed(-1,$_SESSION['ploopi']['workspaceid'],$menu_moduleid))
+if (ploopi_isactionallowed(_WEATHER_ACTION_ADMIN,$_SESSION['ploopi']['workspaceid'],$menu_moduleid))
 {
   $block->addmenu('<strong>'._WEATHER_ADMIN.'</strong>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"));
 }

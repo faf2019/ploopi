@@ -30,4 +30,5 @@
  * @author Xavier Toussaint
  */
 
+define ('_WEATHER_ACTION_ADMIN',      1);
 ?>

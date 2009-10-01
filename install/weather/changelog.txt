@@ -1,3 +1,7 @@
+== Module WEATHER - version 1.01.3 ====================================================
+
+ * Ajout d'une action 'admin' pour création de rôle.
+
 == Module WEATHER - version 1.01.2 ====================================================
 
  * Javascript.php : ajout du test ploopi_ismoduleallowed('weather') pour filtrer les js back/front

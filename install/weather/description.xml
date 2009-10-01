@@ -2,24 +2,28 @@
 <ploopi>
 	<moduletype>
 		<label>weather</label>
-		<version>1.01.2</version>
+		<version>1.01.3</version>
 		<author>HeXad</author>
-		<date>20090925185200</date>
+		<date>20091001103300</date>
 		<description>Informations météo</description>
-    <paramtype>
-        <name>weather_displayback</name>
-        <label>Afficher la météo en administration</label>
-        <default_value>1</default_value>
-        <public>1</public>
-        <description/>
-        <paramchoice>
-            <value>1</value>
-            <displayed_value>oui</displayed_value>
-        </paramchoice>
-        <paramchoice>
-            <value>0</value>
-            <displayed_value>non</displayed_value>
-        </paramchoice>
-    </paramtype>
+        <action>
+            <id_action>1</id_action>
+            <label>Administration Météo</label>
+        </action>
+        <paramtype>
+	        <name>weather_displayback</name>
+	        <label>Afficher la météo en administration</label>
+	        <default_value>1</default_value>
+	        <public>1</public>
+	        <description/>
+	        <paramchoice>
+	            <value>1</value>
+	            <displayed_value>oui</displayed_value>
+	        </paramchoice>
+	        <paramchoice>
+	            <value>0</value>
+	            <displayed_value>non</displayed_value>
+	        </paramchoice>
+	    </paramtype>
 	</moduletype>
 </ploopi>
