@@ -129,7 +129,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/gallery.tpl"))
                 $intNbPict = $objGallery->fields['nb_line']*$objGallery->fields['nb_col'];
 
                 $sql = "
-                    SELECT      f.id, f.name
+                    SELECT      f.id, f.name, f.description
                 
                     FROM        (ploopi_mod_doc_file f,
                                 ploopi_mod_doc_ext e,
