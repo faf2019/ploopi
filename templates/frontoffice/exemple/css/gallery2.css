@@ -1,0 +1,62 @@
+.gallery2main {
+    overflow: auto;
+	margin: 0;
+	padding: 2px;
+}
+
+.gallery2line {
+	clear: both;
+	overflow: auto;
+	margin: 0;
+	padding: 0;
+}
+
+.gallery2col {
+	float: left;
+	padding: 5px;
+}
+
+.gallery2col a.image {
+	display: block;
+	margin: 0;
+	padding: 0; 
+	border: 1px black solid;
+}
+
+.gallery2col a.image:hover {
+    border-color: #286ea0;
+}
+
+div.gallery2_page_cut {
+  clear:both;
+  overflow: auto;
+  margin: 0;
+  padding: 2px;
+  text-align: center;
+}
+
+input.gallery2_page_cut_select, input.gallery2_page_cut, input.gallery2_page_cut_disable {
+  margin: 0 1px;
+  padding: 0 2px;
+  border: none;
+  border-bottom: 2px solid #cccccc;
+  border-right: 2px solid #cccccc;
+  background:#f4f4f4;
+  color: #303030;
+  text-align:center;
+  cursor: pointer;
+  font-weight: normal;
+  min-width: 22px;
+}
+
+input.gallery2_page_cut_select {
+  color: #286ea0;
+  background:#eaeaea;
+  border-bottom: 2px solid #286ea0;
+  border-right: 2px solid #286ea0;
+}
+
+input.gallery2_page_cut_disable {
+  width: 18px;
+  cursor: default;
+}

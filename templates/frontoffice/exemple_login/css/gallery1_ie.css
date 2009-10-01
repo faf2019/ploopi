@@ -1,0 +1,22 @@
+img.pngimage {
+    behavior: url(../pngbehavior.htc);
+}
+
+.topshadow, .leftshadow, .rightshadow {
+    background: none;
+}
+
+#homescreenshadow {
+    display: none;
+}
+
+#homescreenshot {
+    border: 1px solid #ccc;
+    top: 14px;
+    left: 25px;
+}
+
+.floatingcol {
+    float: none;
+}
+

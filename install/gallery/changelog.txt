@@ -1,0 +1,35 @@
+== Module GALLERY - version 0.1.1 ====================================================
+
+2009-10-01  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Premiere version - Commit Dépot Ploopi officiel.
+
+== Module GALLERY - version 0.1.0d ====================================================
+
+2009-09-30  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Test de compatibilité des exemples sous :
+ 
+    * Firefox 3.0.14 (Linux / Windows XP)
+    * Safari 4.0.2 (530.19.1) (Windows XP)
+    * Opera 10.00 v.1750 (Windows XP)
+    * Google Chrome 3.0.195.21 (Windows XP)
+    * Internet Explorer 8.0.6001.18813 (Windows XP)
+    * Internet Explorer 7.0.5730.13 (Windows XP)
+    * internet Explorer 6.0.2800.1106 (Windows 98se... si si...) (Il serait temps d'abandonner IE6 non ? hein ?)
+    
+== Module GALLERY - version 0.1.0c ====================================================
+
+2009-09-29  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+== Module GALLERY - version 0.1.0b ====================================================
+
+2009-09-22  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Reprise module Gallery
+ 
+== Module GALLERY - version 0.1.0a ====================================================
+
+2009-08-31  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Création du module Gallery

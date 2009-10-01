@@ -1,0 +1,65 @@
+.gallery2main {
+    overflow: auto;
+	margin: 0;
+	padding: 2px;
+}
+
+.gallery2line {
+	clear: both;
+	overflow: auto;
+	margin: 0;
+	padding: 0;
+}
+
+.gallery2col {
+	float: left;
+	padding: 5px;
+}
+
+.gallery2col a.image {
+	display: block;
+	margin: 0;
+	padding: 0; 
+	border: 1px #E0E0E0 solid;
+}
+
+.gallery2col a.image:hover {
+    border-color: #93203F;
+}
+
+.gallery2col a.image img {
+    border: none;
+}
+div.gallery2_page_cut {
+  clear:both;
+  overflow: auto;
+  margin: 0;
+  padding: 2px;
+  text-align: center;
+}
+
+input.gallery2_page_cut_select, input.gallery2_page_cut, input.gallery2_page_cut_disable {
+  margin: 0 1px;
+  padding: 0 2px;
+  border: none;
+  border-bottom: 2px solid #E0E0E0;
+  border-right: 2px solid #E0E0E0;
+  background:#f4f4f4;
+  color: #303030;
+  text-align:center;
+  cursor: pointer;
+  font-weight: normal;
+  min-width: 22px;
+}
+
+input.gallery2_page_cut_select {
+  color: #93203F;
+  background:#E0E0E0;
+  border-bottom: 2px solid #93203F;
+  border-right: 2px solid #93203F;
+}
+
+input.gallery2_page_cut_disable {
+  width: 18px;
+  cursor: default;
+}
