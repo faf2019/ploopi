@@ -116,14 +116,15 @@ if (file_exists("./templates/frontoffice/{$template_name}/gallery.tpl"))
             if($db->numrows($resultSqlDir))
             {
                 // Gestion des découpage par page
-                $actual_page = (isset($_POST['id_cut_page']) && $_POST['id_cut_page'] == $objGallery->fields['id']) ? $_POST[$_POST['id_cut_page'].'_page']: 1;
+                $actual_page = (isset($_POST['id_cut_page']) && ($_POST['id_cut_page'] == $objGallery->fields['id'].'_1' || $_POST['id_cut_page'] == $objGallery->fields['id'].'_2')) ? $_POST[$_POST['id_cut_page'].'_page'] : 1;
                 
                 $paramCutPage = array(
                     'nbMax' => $db->numrows($resultSqlDir),                                 // Nombre d'enregistrement total
                     'by' => $objGallery->fields['nb_line']*$objGallery->fields['nb_col'],   // Nombre d'enregistrement par page
                     'page' => $actual_page                                                  // Page en cours
                 );   
-                $htmlPage = gallery_cut_page($objGallery->fields['id'],$paramCutPage);
+                $htmlPage1 = gallery_cut_page($objGallery->fields['id'].'_1',$paramCutPage);
+                $htmlPage2 = gallery_cut_page($objGallery->fields['id'].'_2',$paramCutPage);
 
                 $intNbPictDeb = ($actual_page-1)*$objGallery->fields['nb_line']*$objGallery->fields['nb_col'];
                 $intNbPict = $objGallery->fields['nb_line']*$objGallery->fields['nb_col'];
@@ -178,7 +179,8 @@ if (file_exists("./templates/frontoffice/{$template_name}/gallery.tpl"))
                             'NB_COL'        => $objGallery->fields['nb_col'],
                             'NB_LINE'       => $objGallery->fields['nb_line'],
                             'ID_UNIQ'       => uniqid(),
-                            'PAGE_CUT'      => $htmlPage
+                            'PAGE_CUT_TOP'      => $htmlPage1,
+                            'PAGE_CUT_BOTTOM'   => $htmlPage2
                             )
                         );
                         

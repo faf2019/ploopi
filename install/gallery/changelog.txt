@@ -1,3 +1,12 @@
+== Module GALLERY - version 0.1.1a ====================================================
+
+2009-10-01  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction : Si le tpl contenait 2 "découpages de page" le second ne fonctionnait pas
+ * Les images de la présentation 2 sont centrées
+ * Le tpl "default" est mis aux normes Ploopi.
+ * Test de compatipilité sous tous les navigateurs précédement cités + Safari 4.0.3 (531.9.1) (Windows XP)
+
 == Module GALLERY - version 0.1.1 ====================================================
 
 2009-10-01  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

@@ -40,19 +40,18 @@
 
 
 <!-- BEGIN gallery2 -->
-{gallery2.PAGE_CUT}
+{gallery2.PAGE_CUT_TOP}
 <div class="gallery2main">
     <!-- BEGIN line -->
     <div class="gallery2line">
         <!-- BEGIN col -->
-            <div id="thumb-{gallery2.ID_UNIQ}-{gallery2.line.col.CPT}" class="gallery2col">
-                <a href="{gallery2.line.col.URL_VIEW}" rel="lightbox[{gallery2.ID_UNIQ}]" title="{gallery2.line.col.NAME}" class="image" style="width: {gallery2.line.col.THUMB_WIDTH}px; height: {gallery2.line.col.THUMB_HEIGHT}px;"><img src="{gallery2.line.col.URL_THUMB}" class="thumbnail"  width="{gallery2.line.col.THUMB_WIDTH}" height="{gallery2.line.col.THUMB_HEIGHT}" alt="{gallery2.line.col.NAME}"/></a>
-            </div>
+        <a href="{gallery2.line.col.URL_VIEW}" rel="lightbox[{gallery2.ID_UNIQ}]" title="{gallery2.line.col.NAME}" class="image" style="width: {gallery2.line.col.THUMB_WIDTH}px; height: {gallery2.line.col.THUMB_HEIGHT}px;"><img src="{gallery2.line.col.URL_THUMB}" class="thumbnail"  width="{gallery2.line.col.THUMB_WIDTH}" height="{gallery2.line.col.THUMB_HEIGHT}" alt="{gallery2.line.col.NAME}"/></a>
         <!-- END col -->
     </div>
     <!-- END line -->
 </div>
-{gallery2.PAGE_CUT}
+{gallery2.PAGE_CUT_BOTTOM}
+
 <!-- BEGIN switch_once -->
     <script type="text/javascript" src="{TEMPLATE_PATH}/js/lightbox.js"></script>
 <!-- END switch_once -->

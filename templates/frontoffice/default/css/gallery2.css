@@ -6,30 +6,24 @@
 
 .gallery2line {
 	clear: both;
-	overflow: auto;
 	margin: 0;
-	padding: 0;
+    padding: 2px 0;
+    text-align: center;
 }
 
-.gallery2col {
-	float: left;
-	padding: 5px;
+div.gallery2line a.image {
+    margin: 0;
+    padding: 0; 
 }
 
-.gallery2col a.image {
-	display: block;
-	margin: 0;
-	padding: 0; 
-	border: 1px #E0E0E0 solid;
+div.gallery2line a.image img {
+    border: 1px black solid;    
 }
 
-.gallery2col a.image:hover {
+div.gallery2line a.image img:hover {
     border-color: #93203F;
 }
 
-.gallery2col a.image img {
-    border: none;
-}
 div.gallery2_page_cut {
   clear:both;
   overflow: auto;

@@ -8,14 +8,30 @@
     <meta name="copyright" content="{WORKSPACE_META_COPYRIGHT}" />
     <meta name="robots" content="{WORKSPACE_META_ROBOTS}" />
 
+    <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
+
+    <base href="{SITE_BASEPATH}" />
+
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/styles.css" media="screen" title="styles" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/forms_application.css" media="screen" />
     <!-- BEGIN module_css -->
     <link type="text/css" rel="stylesheet" href="{module_css.PATH}" media="screen" />
     <!-- END module_css -->
 
-    <script type="text/javascript" src="./include/prototype.js"></script>
-    <script type="text/javascript" src="./include/functions.js"></script>
+    <!--[if lte IE 6]>
+    <!-- BEGIN module_css_ie -->
+    <link type="text/css" rel="stylesheet" href="{module_css_ie.PATH}" media="screen" />
+    <!-- END module_css_ie -->
+    <![endif]-->
+
+    <!-- BEGIN ploopi_js -->
+    <script type="text/javascript" src="{ploopi_js.PATH}"></script>
+    <!-- END ploopi_js -->
+
+    <!-- BEGIN module_js -->
+    <script type="text/javascript" src="{module_js.PATH}"></script>
+    <!-- END module_js -->
+
     <script type="text/javascript">
     //<!--
     {ADDITIONAL_JAVASCRIPT}
