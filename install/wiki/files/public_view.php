@@ -61,7 +61,7 @@ $booExists = $objWikiPage->open($strWikiPageId);
 if (!isset($_SESSION['wiki']['history'])) $_SESSION['wiki']['history'] = array();
 
 $arrUrlHistory = array();
-foreach($_SESSION['wiki']['history'] as $strPageId) $arrUrlHistory[] = "<a href=\"".ploopi_urlencode("admin.php?wiki_page_id={$strPageId}")."\">{$strPageId}</a>";
+foreach($_SESSION['wiki']['history'] as $strPageId) $arrUrlHistory[] = "<a href=\"".ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strPageId))."\">{$strPageId}</a>";
 
 if ($booExists)
 {
@@ -87,7 +87,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                 if ($objWikiPage->fields['locked'])
                 {
                     ?>
-                    <a href="<? echo ploopi_urlencode("admin.php?op=wiki_page_history&wiki_page_id={$strWikiPageId}"); ?>" <? if ($op == 'wiki_page_history') echo 'style="font-weight:bold;" '; ?>>
+                    <a href="<? echo ploopi_urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)); ?>" <? if ($op == 'wiki_page_history') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_history.png" />Historique
                     </a>
                     <a style="cursor:not-allowed;color:#777;">
@@ -100,7 +100,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                     if (ploopi_isactionallowed(_WIKI_ACTION_PAGE_LOCK))
                     {
                         ?>
-                        <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=wiki_page_unlock&wiki_page_id={$strWikiPageId}"); ?>">
+                        <a href="<? echo ploopi_urlencode_trusted("admin-light.php?ploopi_op=wiki_page_unlock&wiki_page_id=".urlencode($strWikiPageId)); ?>">
                             <img src="./modules/wiki/img/ico_unlock.png" />Déverrouiller
                         </a>
                         <?
@@ -118,7 +118,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                         <?
                     }
                     ?>
-                    <a href="<? echo ploopi_urlencode("admin.php?wiki_page_id={$strWikiPageId}"); ?>" <? if ($op == '') echo 'style="font-weight:bold;" '; ?>>
+                    <a href="<? echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <? if ($op == '') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_view.png" />Visualiser
                     </a>
                     <?
@@ -126,29 +126,29 @@ echo $skin->open_simplebloc($strWikiPageId);
                 else
                 {
                     ?>
-                    <a href="<? echo ploopi_urlencode("admin.php?op=wiki_page_history&wiki_page_id={$strWikiPageId}"); ?>" <? if ($op == 'wiki_page_history') echo 'style="font-weight:bold;" '; ?>>
+                    <a href="<? echo ploopi_urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)); ?>" <? if ($op == 'wiki_page_history') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_history.png" />Historique
                     </a>
-                    <a href="javascript:void(0);" onclick="if (confirm('Êtes vous certain de vouloir supprimer cette page ?')) document.location.href='<? echo ploopi_urlencode("admin-light.php?ploopi_op=wiki_page_delete&wiki_page_id={$strWikiPageId}"); ?>'; return false;">
+                    <a href="javascript:void(0);" onclick="if (confirm('Êtes vous certain de vouloir supprimer cette page ?')) document.location.href='<? echo ploopi_urlencode_trusted("admin-light.php?ploopi_op=wiki_page_delete&wiki_page_id=".urlencode($strWikiPageId)); ?>'; return false;">
                         <img src="./modules/wiki/img/ico_delete.png" />Supprimer
                     </a>
-                    <a href="<? echo ploopi_urlencode("admin.php?op=wiki_page_rename&wiki_page_id={$strWikiPageId}"); ?>" <? if ($op == 'wiki_page_rename') echo 'style="font-weight:bold;" '; ?>>
+                    <a href="<? echo ploopi_urlencode_trusted("admin.php?op=wiki_page_rename&wiki_page_id=".urlencode($strWikiPageId)); ?>" <? if ($op == 'wiki_page_rename') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_rename.png" />Renommer
                     </a>
                     <?
                     if (ploopi_isactionallowed(_WIKI_ACTION_PAGE_LOCK))
                     {
                         ?>
-                        <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=wiki_page_lock&wiki_page_id={$strWikiPageId}"); ?>">
+                        <a href="<? echo ploopi_urlencode_trusted("admin-light.php?ploopi_op=wiki_page_lock&wiki_page_id=".urlencode($strWikiPageId)); ?>">
                             <img src="./modules/wiki/img/ico_lock.png" />Verrouiller
                         </a>
                         <?
                     }
                     ?>
-                    <a href="<? echo ploopi_urlencode("admin.php?op=wiki_page_modify&wiki_page_id={$strWikiPageId}"); ?>" <? if ($op == 'wiki_page_modify') echo 'style="font-weight:bold;" '; ?>>
+                    <a href="<? echo ploopi_urlencode_trusted("admin.php?op=wiki_page_modify&wiki_page_id=".urlencode($strWikiPageId)); ?>" <? if ($op == 'wiki_page_modify') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_modify.png" />Modifier
                     </a>
-                    <a href="<? echo ploopi_urlencode("admin.php?wiki_page_id={$strWikiPageId}"); ?>" <? if ($op == '') echo 'style="font-weight:bold;" '; ?>>
+                    <a href="<? echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <? if ($op == '') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_view.png" />Visualiser
                     </a>
                     <?
@@ -176,10 +176,10 @@ echo $skin->open_simplebloc($strWikiPageId);
                     <?
                 }
                 ?>
-                <a href="<? echo ploopi_urlencode("admin.php?op=wiki_page_modify&wiki_page_id={$strWikiPageId}"); ?>" <? if ($op == 'wiki_page_modify') echo 'style="font-weight:bold;" '; ?>>
+                <a href="<? echo ploopi_urlencode_trusted("admin.php?op=wiki_page_modify&wiki_page_id=".urlencode($strWikiPageId)); ?>" <? if ($op == 'wiki_page_modify') echo 'style="font-weight:bold;" '; ?>>
                     <img src="./modules/wiki/img/ico_modify.png" />Modifier
                 </a>
-                <a href="<? echo ploopi_urlencode("admin.php?wiki_page_id={$strWikiPageId}"); ?>" <? if ($op == '') echo 'style="font-weight:bold;" '; ?>>
+                <a href="<? echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <? if ($op == '') echo 'style="font-weight:bold;" '; ?>>
                     <img src="./modules/wiki/img/ico_view.png" />Visualiser
                 </a>
                 <?
@@ -191,10 +191,10 @@ echo $skin->open_simplebloc($strWikiPageId);
             if ($booExists)
             {
                 ?>
-                <a href="<? echo ploopi_urlencode("admin.php?op=wiki_page_history&wiki_page_id={$strWikiPageId}"); ?>" <? if ($op == 'wiki_page_history') echo 'style="font-weight:bold;" '; ?>>
+                <a href="<? echo ploopi_urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)); ?>" <? if ($op == 'wiki_page_history') echo 'style="font-weight:bold;" '; ?>>
                     <img src="./modules/wiki/img/ico_history.png" />Historique
                 </a>
-                <a href="<? echo ploopi_urlencode("admin.php?wiki_page_id={$strWikiPageId}"); ?>" <? if ($op == '') echo 'style="font-weight:bold;" '; ?>>
+                <a href="<? echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <? if ($op == '') echo 'style="font-weight:bold;" '; ?>>
                     <img src="./modules/wiki/img/ico_view.png" />Visualiser
                 </a>
                 <?
@@ -205,7 +205,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                 <a style="cursor:not-allowed;color:#777;">
                     <img src="./modules/wiki/img/ico_history.png" />Historique
                 </a>
-                <a href="<? echo ploopi_urlencode("admin.php?wiki_page_id={$strWikiPageId}"); ?>" <? if ($op == '') echo 'style="font-weight:bold;" '; ?>>
+                <a href="<? echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <? if ($op == '') echo 'style="font-weight:bold;" '; ?>>
                     <img src="./modules/wiki/img/ico_view.png" />Visualiser
                 </a>
                 <?
@@ -224,7 +224,7 @@ echo $skin->open_simplebloc($strWikiPageId);
         case 'wiki_page_rename':
             include_once './include/classes/form.php';
 
-            $objForm = new form( 'wiki_form_page_rename', ploopi_urlencode("admin.php?ploopi_op=wiki_page_rename&wiki_page_id={$strWikiPageId}"), 'post', array('legend' => '* Champs obligatoires') );
+            $objForm = new form( 'wiki_form_page_rename', ploopi_urlencode_trusted("admin.php?ploopi_op=wiki_page_rename&wiki_page_id=".urlencode($strWikiPageId)), 'post', array('legend' => '* Champs obligatoires') );
 
             $objForm->addField( new form_field('input:text', 'Titre:', $objWikiPage->fields['id'], 'wiki_page_newid', null, array('required' => true)) );
             $objForm->addField( new form_checkbox('Rediriger les liens existants:', 1, true, 'wiki_page_rename_redirect', 'wiki_page_rename_redirect', array('class_form' => 'ploopi_checkbox')) );
@@ -252,7 +252,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                     <?
                     if (ploopi_isactionallowed(_WIKI_ACTION_PAGE_MODIFY) && !$objWikiPage->fields['locked'])
                     {
-                        ?> - <a href="<? echo ploopi_urlencode("admin.php?op=wiki_page_modify&wiki_page_id={$strWikiPageId}&wiki_page_revision={$_GET['wiki_page_revision']}"); ?>">Revenir à cette version</a><?
+                        ?> - <a href="<? echo ploopi_urlencode_trusted("admin.php?op=wiki_page_modify&wiki_page_id=".urlencode($strWikiPageId)."&wiki_page_revision={$_GET['wiki_page_revision']}"); ?>">Revenir à cette version</a><?
                     } ?> :</div>
                     <div id="wiki_page"><? echo wiki_render($objWikiPageHistory->fields['content']); ?></div>
                     <?php
@@ -289,7 +289,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                     $strRevision = '';
                 }
 
-                $strRevLink1 = "<a href=\"".ploopi_urlencode("admin.php?wiki_page_id={$strWikiPageId}{$strRevision}")."\"><strong>{$_POST['wiki_history_diff1']}</strong> ({$strUser}, {$strLocalDate})</a>";
+                $strRevLink1 = "<a href=\"".ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId).$strRevision)."\"><strong>{$_POST['wiki_history_diff1']}</strong> ({$strUser}, {$strLocalDate})</a>";
 
                 // Infos sur la revision "2"
                 if ($_POST['wiki_history_diff2'] != $objWikiPage->fields['revision'])
@@ -316,7 +316,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                     $strRevision = '';
                 }
 
-                $strRevLink2 = "<a href=\"".ploopi_urlencode("admin.php?wiki_page_id={$strWikiPageId}{$strRevision}")."\"><strong>{$_POST['wiki_history_diff2']}</strong> ({$strUser}, {$strLocalDate})</a>";
+                $strRevLink2 = "<a href=\"".ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId).$strRevision)."\"><strong>{$_POST['wiki_history_diff2']}</strong> ({$strUser}, {$strLocalDate})</a>";
 
                 include_once "Text/Diff.php";
                 include_once "Text/Diff/Renderer.php";
@@ -397,7 +397,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                         )
                     ),
                     'description' => "Ouvrir la dernière révision ({$objWikiPage->fields['revision']})",
-                    'link' => ploopi_urlencode("admin.php?wiki_page_id={$strWikiPageId}")
+                    'link' => ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId))
                 );
 
                 $intTabIndex = 101;
@@ -429,14 +429,14 @@ echo $skin->open_simplebloc($strWikiPageId);
                             )
                         ),
                         'description' => "Ouvrir la révision {$arrPageHistory['revision']}",
-                        'link' => ploopi_urlencode("admin.php?op=wiki_page_history&wiki_page_id={$strWikiPageId}&wiki_page_revision={$arrPageHistory['revision']}")
+                        'link' => ploopi_urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)."&wiki_page_revision={$arrPageHistory['revision']}")
                     );
 
                     if (!$booChecked) $booChecked = true;
                 }
 
                 ?>
-                <form action="<? echo ploopi_urlencode("admin.php?op=wiki_page_history&wiki_page_id={$strWikiPageId}"); ?>" method="post">
+                <form action="<? echo ploopi_urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)); ?>" method="post">
                 <?php $skin->display_array($columns, $values, 'wiki_history', array('sortable' => true, 'orderby_default' => 'revision', 'sort_default' => 'DESC')); ?>
                 <div style="text-align:right;"><input type="submit" class="button" value="Voir les différences" style="margin:4px;"/></div>
                 </form>
@@ -457,9 +457,9 @@ echo $skin->open_simplebloc($strWikiPageId);
                 }
                 ?>
                 <div id="wiki_modify">
-                    <form action="<? echo ploopi_urlencode("admin-light.php?ploopi_op=wiki_page_save&wiki_page_id={$strWikiPageId}"); ?>" method="post">
+                    <form action="<? echo ploopi_urlencode_trusted("admin-light.php?ploopi_op=wiki_page_save&wiki_page_id=".urlencode($strWikiPageId)); ?>" method="post">
                         <textarea accesskey="e" class="wiki-edit text" style="width:99%;" id="wiki_page_content" name="fck_wiki_page_content" rows="25"><? echo $strPageContent; ?></textarea>
-                        <div style="text-align:right"><input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?wiki_page_id={$strWikiPageId}"); ?>';" /><input type="submit" class="button" value="Enregistrer" style="margin-left:4px;" /></div>
+                        <div style="text-align:right"><input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<? echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>';" /><input type="submit" class="button" value="Enregistrer" style="margin-left:4px;" /></div>
                     </form>
                 </div>
                 <script type="text/javascript">

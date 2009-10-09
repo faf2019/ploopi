@@ -1,3 +1,10 @@
+== Module Wiki - version 1.0.0c ====================================================
+
+2009-10-09  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction du bug #22 : [Wiki 1.0.0b] Problèmes avec les liens sur des entités comportant des caractères spéciaux - fixes #22
+ * Correction d'un problème avec des caractères spéciaux non reconnus à l'enregistrement d'un article 
+
 == Module Wiki - version 1.0.0b ====================================================
 
 2009-09-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

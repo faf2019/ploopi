@@ -78,13 +78,15 @@ define ('_WIKI_OBJECT_PAGE',            1);
  *
  * @param array $arrMatches Tableau des correspondances
  * @return string lien modifié
+ * 
+ * @see wiki_render
  */
 function wiki_internal_links($arrMatches)
 {
     if (!empty($arrMatches[1]))
     {
-        $strPageId = strip_tags($arrMatches[1]);
-
+        $strPageId = ploopi_iso8859_clean(html_entity_decode(strip_tags($arrMatches[1])));
+        
         $objWikiPage = new wiki_page();
         if ($objWikiPage->open($strPageId))
         {
@@ -98,18 +100,22 @@ function wiki_internal_links($arrMatches)
             $strTitle = 'Créer la page &laquo; '.htmlentities($strPageId).' &raquo;';
             $strOp = 'op=wiki_page_modify&';
         }
-
-        return '<span class="'.$strLinkClass.'"><a title="'.$strTitle.'" href="'.ploopi_urlencode("admin.php?{$strOp}wiki_page_id={$strPageId}").'">'.$arrMatches[1].'</a><img src="./modules/wiki/img/ico_link.png" /></span>';
+        
+        
+        return '<span class="'.$strLinkClass.'"><a title="'.$strTitle.'" href="'.ploopi_urlencode_trusted("admin.php?{$strOp}wiki_page_id=".urlencode($strPageId)).'">'.$arrMatches[1].'</a><img src="./modules/wiki/img/ico_link.png" /></span>';
     }
 
     return '';
 }
+
 
 /**
  * Traitement des liens externes et ancres (href) par expression regulière
  *
  * @param array $arrMatches Tableau des correspondances
  * @return string lien modifié
+ * 
+ * @see wiki_render
  */
 function wiki_links($arrMatches)
 {
@@ -131,6 +137,15 @@ function wiki_links($arrMatches)
     return '';
 }
 
+/**
+ * Rendu de la page via le moteur de rendu Textile
+ *
+ * @param string $strContent chaîne brute utilisant la syntaxe Wiki Textile
+ * @return string contenu HTML
+ * 
+ * @see wiki_internal_links
+ * @see wiki_links
+ */
 function wiki_render($strContent)
 {
     include_once './lib/textile/classTextile.php';

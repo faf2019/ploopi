@@ -141,6 +141,8 @@ class wiki_page extends data_object
      */
     public function redirect_links($strOldId, $strNewId)
     {
+        $strOldId = htmlentities($strOldId);
+        $strNewId = htmlentities($strNewId);
         $this->fields['content'] = str_replace("[[{$strOldId}]]", "[[{$strNewId}]]", $this->fields['content']);
         return parent::save();
     }
@@ -198,6 +200,7 @@ class wiki_page extends data_object
         $rs = $db->query("SELECT id FROM ploopi_mod_wiki_page WHERE id_module = {$this->fields['id_module']}");
         while ($row = $db->fetchrow($rs))
         {
+            
             if ($booRedirectLinks)
             {
                 $objWikiPage = new wiki_page();
