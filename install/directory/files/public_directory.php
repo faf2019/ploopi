@@ -987,7 +987,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 SELECT      distinct(ds.heading)
                 FROM        ploopi_mod_directory_speeddialing ds
                 ORDER BY    ds.label
-            ")
+            "), true
         );
         
         if (ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))

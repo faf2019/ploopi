@@ -521,7 +521,7 @@ if ($_SESSION['ploopi']['connected'])
                             SELECT      distinct(ds.heading)
                             FROM        ploopi_mod_directory_speeddialing ds
                             ORDER BY    ds.label
-                        ")
+                        "), true
                     );                    
                     ?>
                     <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_speeddialing_save&directory_speeddialing_id={$objSpeedDialing->fields['id']}"); ?>" method="post" onsubmit="return directory_speeddialing_validate(this);">
