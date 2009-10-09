@@ -52,7 +52,7 @@ $rssfeed_select =   "
       ";
 
 $rssfeed_result = $db->query($rssfeed_select);
-$arrFeedTmp = $db->getarray($rssfeed_result);
+$arrFeedTmp = $db->getarray();
 foreach($arrFeedTmp as $arrFeedData)
 {
   if(!$arrFeedData['limit']>0) $arrFeedData['limit'] = $_SESSION['ploopi']['modules'][$template_moduleid]['nbitemdisplay'];

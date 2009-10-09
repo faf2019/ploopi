@@ -92,13 +92,13 @@ class rss_filter extends data_object
                           WHERE ploopi_mod_rss_filter_cat.id_filter = {$intIdFiltre}
                            AND  ploopi_mod_rss_filter_cat.id_workspace = {$wk}";
       $objRssSqlResult = $db->query($strRssSqlCat);
-      $this->categ = $db->getarray();
+      $this->categ = $db->getarray($objRssSqlResult, true);
 
       $strRssSqlFeed = "SELECT id_feed
                           FROM ploopi_mod_rss_filter_feed
                           WHERE ploopi_mod_rss_filter_feed.id_filter = {$intIdFiltre}
                            AND  ploopi_mod_rss_filter_feed.id_workspace = {$wk}";
-      $objRssSqlResult = $db->query($strRssSqlFeed);
+      $objRssSqlResult = $db->query($strRssSqlFeed, true);
       $this->feed = $db->getarray();
     }
     return $intFind;
@@ -212,7 +212,7 @@ class rss_filter extends data_object
                             AND feed.id_workspace IN ('.$wk.')';
 
       if($db->query($strRssFeed))
-         $arrListFeed = $db->getarray();
+         $arrListFeed = $db->getarray($strRssFeed, true);
     }
 
     //Mise en place du filtre sur le flux et/ou la catégorie

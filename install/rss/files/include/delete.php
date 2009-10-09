@@ -57,8 +57,8 @@ $db->query($delete);
 /**
  * Suppression des elements de filtres
  */
-$db->query("SELECT id FROM ploopi_mod_rss_filter WHERE id_module = {$this->fields['id']}");
-$arrIdFilter = $db->getarray();
+$rs = $db->query("SELECT id FROM ploopi_mod_rss_filter WHERE id_module = {$this->fields['id']}");
+$arrIdFilter = $db->getarray($rs, true);
 if($arrIdFilter == false || !is_array($arrIdFilter)) $arrIdFilter[] = '0';
 
 $delete = 'DELETE FROM ploopi_mod_rss_filter_element WHERE id_filter IN (0,'.implode(',',$arrIdFilter).')';
