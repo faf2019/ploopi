@@ -85,13 +85,13 @@ class booking_resource extends data_object
         
         if (!empty($this->fields['id']))
         {
-            $db->query("
+            $rs = $db->query("
                 SELECT  id_workspace
                 FROM    ploopi_mod_booking_resource_workspace
                 WHERE   id_resource = {$this->fields['id']}
             ");
                 
-            return $db->getarray();
+            return $db->getarray($rs, true);
         }
         else return array();
         
