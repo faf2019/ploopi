@@ -225,17 +225,14 @@ function ploopi_documents_countelements($id_folder)
  * @return array tableau contenant le nom des fichiers
  */
 
-function ploopi_documents_getfiles($id_object, $id_record, $id_folder = 0, $id_workspace = -1, $id_module = -1)
+function ploopi_documents_getfiles($id_object, $id_record, $id_folder = 0)
 {
     global $db;
 
-    if ($id_workspace == -1) $id_workspace = $_SESSION['ploopi']['workspaceid'];
-    if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
-    
     $files = array();
 
-    if ($id_folder == 0) $db->query("SELECT * FROM ploopi_documents_file WHERE id_workspace = {$id_workspace} AND id_module = {$id_module} AND id_object = '{$id_object}' AND id_record = '{$id_record}' ORDER BY name");
-    else $db->query("SELECT * FROM ploopi_documents_file WHERE id_workspace = {$id_workspace} AND id_module = {$id_module} AND id_object = '{$id_object}' AND id_record = '{$id_record}' and id_folder = {$id_folder} ORDER BY name");
+    if ($id_folder == 0) $db->query("SELECT * FROM ploopi_documents_file WHERE id_object = '{$id_object}' AND id_record = '{$id_record}' ORDER BY name");
+    else $db->query("SELECT * FROM ploopi_documents_file WHERE id_object = '{$id_object}' AND id_record = '{$id_record}' and id_folder = {$id_folder} ORDER BY name");
     while ($row = $db->fetchrow()) $files[] = $row;
 
     return($files);
