@@ -1,3 +1,10 @@
+== Module NEWSLETTER - version 1.2.7b ==================================================
+
+2009-10-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug lié à une modification sur $db->getarray()
+* Correction d'un bug dans l'insertion de liens/images avec fckeditor (uniquement si pas de virtualhost)
+ 
 == Module NEWSLETTER - version 1.2.7 ==================================================
 
 2009-09-14  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
