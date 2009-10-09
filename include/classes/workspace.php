@@ -125,9 +125,9 @@ class workspace extends data_object
     {
         global $db;
 
-        $db->query("SELECT id FROM ploopi_workspace WHERE parents = '{$this->fields['parents']};{$this->fields['id']}' OR parents LIKE '{$this->fields['parents']};{$this->fields['id']};%'");
+        $rs = $db->query("SELECT id FROM ploopi_workspace WHERE parents = '{$this->fields['parents']};{$this->fields['id']}' OR parents LIKE '{$this->fields['parents']};{$this->fields['id']};%'");
 
-        return $db->getarray();
+        return $db->getarray($rs, true);
     }
 
     /**
@@ -140,16 +140,14 @@ class workspace extends data_object
     {
         global $db;
 
-        $select =   "
-                    SELECT  id
-                    FROM    ploopi_workspace
-                    WHERE   id_workspace = {$this->fields['id_workspace']}
-                    AND     id <> {$this->fields['id']}
-                    ";
+        $rs = $db->query("
+            SELECT  id
+            FROM    ploopi_workspace
+            WHERE   id_workspace = {$this->fields['id_workspace']}
+            AND     id <> {$this->fields['id']}
+        ");
 
-        $db->query($select);
-
-        return $db->getarray();
+        return $db->getarray($rs, true);
     }
 
     /**

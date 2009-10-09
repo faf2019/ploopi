@@ -49,6 +49,17 @@ function ploopi_htpasswd($pass)
 }
 
 /**
+ * Version spéciale de ploopi_urlencode qui nécessite que les paramètres soient déjà urlencodés (via la fonction urlencode())
+ *
+ * @see ploopi_urlencode
+ */
+
+function ploopi_urlencode_trusted($url, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null, $addenv = true)
+{
+    return ploopi_urlencode($url, $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action, $addenv, true);
+}
+
+/**
  * Chiffre une url après avoir ajouté les paramètres d'environnement "ploopi"
  *
  * @param string $url URL en clair
@@ -62,7 +73,7 @@ function ploopi_htpasswd($pass)
  * @see urlencode
  */
 
-function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null, $addenv = true)
+function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null, $addenv = true, $trusted = false)
 {
     if (isset($_SESSION['ploopi']['mode']) && $_SESSION['ploopi']['mode'] == 'frontoffice') $addenv = false;
 
@@ -73,9 +84,20 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
     // Attention la variable 'HTTP_X_SSL_REQUEST' permet de détecter un frontend gérant le chiffrage SSL, cette solution n'est pas exhaustive
     if (!empty($arrParsedURL['scheme']) && $arrParsedURL['scheme'] == 'http' && isset($_SERVER['HTTP_X_SSL_REQUEST']) && ($_SERVER['HTTP_X_SSL_REQUEST'] == 1 || $_SERVER['HTTP_X_SSL_REQUEST'] == true || $_SERVER['HTTP_X_SSL_REQUEST'] == 'on')) $arrParsedURL['scheme'] = 'https';
 
-    $strQueryEncode = ploopi_queryencode(empty($arrParsedURL['query']) ? '' : $arrParsedURL['query'], $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action, $addenv);
+    $strQueryEncode = ploopi_queryencode(empty($arrParsedURL['query']) ? '' : $arrParsedURL['query'], $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action, $addenv, $trusted);
 
     return (empty($arrParsedURL['scheme']) ? '' : "{$arrParsedURL['scheme']}://").(empty($arrParsedURL['host']) ? '' : $arrParsedURL['host']).(empty($arrParsedURL['port']) ? '' : ":{$arrParsedURL['port']}")."{$arrParsedURL['path']}".(empty($strQueryEncode) ? '' : "?{$strQueryEncode}");
+}
+
+/**
+ * Version spéciale de ploopi_queryencode qui nécessite que les paramètres soient déjà urlencodés (via la fonction urlencode())
+ *
+ * @see ploopi_queryencode
+ */
+
+function ploopi_queryencode_trusted($query, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null, $addenv = true)
+{
+    return ploopi_queryencode($query, $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action, $addenv, true);
 }
 
 /**
@@ -90,7 +112,7 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
  * @return string chaîne de paramètres chiffrée
  */
 
-function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null, $addenv = true)
+function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null, $addenv = true, $trusted = false)
 {
     $arrParams = array();
 
@@ -139,7 +161,7 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
     foreach($arrParams as $key => $value)
     {
         // si pas de chiffrage, on encode les paramètres
-        if (!defined('_PLOOPI_URL_ENCODE') || !_PLOOPI_URL_ENCODE) $value = urlencode($value);
+        if (!$trusted && (!defined('_PLOOPI_URL_ENCODE') || !_PLOOPI_URL_ENCODE)) $value = urlencode($value);
 
         $arrParams[$key] = (is_null($value) || $value == '') ? $key : "{$key}={$value}";
     }

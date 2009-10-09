@@ -806,7 +806,7 @@ function ploopi_search_get_records($id_object = null, $id_module = null)
 
     $rs = $db->query($sql);
 
-    return $db->getarray();
+    return $db->getarray($rs, true);
 }
 
 ?>
