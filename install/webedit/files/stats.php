@@ -36,11 +36,11 @@ echo $skin->open_simplebloc('Statistiques');
 $intYearSel = (empty($_GET['webedit_yearsel']) || !is_numeric($_GET['webedit_yearsel'])) ? date('Y') : $_GET['webedit_yearsel'];
 $intMonthSel = (empty($_GET['webedit_monthsel']) || empty($_GET['webedit_yearsel'])  || !is_numeric($_GET['webedit_monthsel']) || !is_numeric($_GET['webedit_yearsel'])) ? '' : $_GET['webedit_monthsel'];
 
-$db->query("SELECT distinct(year) FROM ploopi_mod_webedit_counter WHERE id_module = {$_SESSION['ploopi']['moduleid']} ORDER BY year");
-$arrSelectYear = $db->getarray();
+$rs = $db->query("SELECT distinct(year) FROM ploopi_mod_webedit_counter WHERE id_module = {$_SESSION['ploopi']['moduleid']} ORDER BY year");
+$arrSelectYear = $db->getarray($rs, true);
 
-$db->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND year = {$intYearSel} ORDER BY month");
-$arrSelectMonth = $db->getarray();
+$rs = $db->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND year = {$intYearSel} ORDER BY month");
+$arrSelectMonth = $db->getarray($rs, true);
 
 // aucun mois sélectionné
 if (empty($intMonthSel))
