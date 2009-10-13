@@ -72,7 +72,7 @@ echo $skin->open_simplebloc($strTitle);
             $strPrevDate = $strDate;
         }
         ?>
-        <li><a href="<? echo ploopi_urlencode("admin.php?wiki_page_id={$row['id']}"); ?>"><? echo htmlentities($row['id']); ?></a></li>
+        <li><a href="<? echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($row['id'])); ?>"><? echo htmlentities($row['id']); ?></a></li>
         <?php
     }
 

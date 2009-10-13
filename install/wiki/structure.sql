@@ -38,3 +38,6 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_wiki_page_history` (
   KEY `id_module` (`id_module`),
   KEY `revision` (`revision`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+ALTER TABLE `ploopi_mod_wiki_page` CHANGE `content` `content` LONGTEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+ALTER TABLE `ploopi_mod_wiki_page_history` CHANGE `content` `content` LONGTEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;

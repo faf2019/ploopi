@@ -62,7 +62,7 @@ if (ploopi_ismoduleallowed('wiki'))
             $objWikiPage->open($strWikiPageId);
             $objWikiPage->fields['id'] = $strWikiPageId;
 
-            if (isset($_POST['fck_wiki_page_content'])) $objWikiPage->fields['content'] = ploopi_htmlpurifier($_POST['fck_wiki_page_content']);
+            if (isset($_POST['fck_wiki_page_content'])) $objWikiPage->fields['content'] = ploopi_htmlpurifier(ploopi_iso8859_clean($_POST['fck_wiki_page_content']));
             $objWikiPage->save();
 
             // on envoie le ticket de notification d'action sur l'objet
@@ -86,7 +86,7 @@ if (ploopi_ismoduleallowed('wiki'))
             ploopi_search_remove_index(_WIKI_OBJECT_PAGE, $objWikiPage->fields['id']);
             ploopi_search_create_index(_WIKI_OBJECT_PAGE, $objWikiPage->fields['id'], $objWikiPage->fields['id'], strip_tags(html_entity_decode(wiki_render($objWikiPage->fields['content']))), $objWikiPage->fields['id'], true, $objWikiPage->fields['ts_created'], $objWikiPage->fields['ts_modified']);
             
-            ploopi_redirect("admin.php?wiki_page_id={$strWikiPageId}");
+            ploopi_redirect_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId));
         break;
 
         case 'wiki_page_delete':
@@ -136,20 +136,17 @@ if (ploopi_ismoduleallowed('wiki'))
                 $objWikiPage->lock($ploopi_op == 'wiki_page_lock');
                 ploopi_create_user_action_log($ploopi_op == 'wiki_page_lock' ? _WIKI_ACTION_PAGE_LOCK : _WIKI_ACTION_PAGE_UNLOCK, $strWikiPageId);
             }
-            ploopi_redirect("admin.php?wiki_page_id={$strWikiPageId}");
+            ploopi_redirect_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId));
         break;
 
         case 'wiki_page_rename':
             ploopi_init_module('wiki', false, false, false);
             include_once './modules/wiki/classes/class_wiki_page.php';
 
-            ploopi_print_r($_POST);
-            ploopi_print_r($_GET);
-
             if (isset($_POST['wiki_page_newid']) && isset($_GET['wiki_page_id']))
             {
                 // pas de changement
-                if ($_POST['wiki_page_newid'] == $_GET['wiki_page_id']) ploopi_redirect("admin.php?wiki_page_id={$_GET['wiki_page_id']}");
+                if ($_POST['wiki_page_newid'] == $_GET['wiki_page_id']) ploopi_redirect_trusted("admin.php?wiki_page_id=".urlencode($_GET['wiki_page_id']));
                 else
                 {
                     // On va vérifier que le "nouvel" ID n'existe pas déjà
@@ -159,9 +156,9 @@ if (ploopi_ismoduleallowed('wiki'))
                     {
                         $objWikiPage->rename($_POST['wiki_page_newid'], isset($_POST['wiki_page_rename_redirect']));
                         ploopi_create_user_action_log(_WIKI_ACTION_PAGE_RENAME, "{$_GET['wiki_page_id']} -> {$_POST['wiki_page_newid']}");
-                        ploopi_redirect("admin.php?wiki_page_id={$objWikiPage->fields['id']}");
+                        ploopi_redirect_trusted("admin.php?wiki_page_id=".urlencode($objWikiPage->fields['id']));
                     }
-                    else ploopi_redirect("admin.php?op=wiki_page_rename&wiki_page_id={$_GET['wiki_page_id']}&wiki_rename_error");
+                    else ploopi_redirect_trusted("admin.php?op=wiki_page_rename&wiki_page_id=".urlencode($_GET['wiki_page_id'])."&wiki_rename_error");
                 }
             }
 

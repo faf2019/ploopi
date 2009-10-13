@@ -1,0 +1,2 @@
+ALTER TABLE `ploopi_mod_wiki_page` CHANGE `content` `content` LONGTEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+ALTER TABLE `ploopi_mod_wiki_page_history` CHANGE `content` `content` LONGTEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
