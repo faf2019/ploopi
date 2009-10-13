@@ -445,7 +445,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                         ?>
                     </div>
                     <div class="system_tickets_title" id="tickets_title_<?php echo $fields['id']; ?>" <?php if (empty($fields['status'])) echo 'style="font-weight:bold;"'; ?>>
-                        <?php echo ploopi_strcut($fields['title'],100); ?>
+                        <?php echo htmlentities($fields['title']); ?>
                     </div>
                 </div>
             </div>

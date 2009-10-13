@@ -451,14 +451,11 @@ class ploopi_db
                         $key = current($fields);
                         array_shift($fields);
                         
-                        if (sizeof($fields) == 1) $array[$key] = $fields[key($fields)];
-                        else $array[$key] = $fields;
+                        if (sizeof($fields) == 0) $array[$key] = $key;
+                        elseif (sizeof($fields) == 1) $array[$key] = $fields[key($fields)];
+                        else $array[$key] = $fields; 
                     }
-                    else
-                    {
-                        if (sizeof($fields) == 1) $array[] = $fields[key($fields)];
-                        else $array[] = $fields;
-                    }
+                    else $array[] = $fields;
                 }
                 $this->dataseek($query_id, 0);
             }

@@ -410,9 +410,10 @@ class ploopi_query_select extends ploopi_query_sud
         return parent::__construct('select', $objDb);
     }    
     
-    public function add_select($strSelect)
+    public function add_select($strSelect, $mixValues = null)
     {
-        if (!in_array($strSelect, $this->arrSelect)) $this->arrSelect[] = $strSelect;
+        if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
+        $this->arrSelect[] = array('rawsql' => $strSelect, 'values' => $mixValues);
     }    
 
     /**
@@ -458,10 +459,10 @@ class ploopi_query_select extends ploopi_query_sud
      * @see add_where
      */
         
-    public function add_having($strHaving, $arrValues)
+    public function add_having($strHaving, $mixValues = null)
     {
-        $this->strHaving = $strHaving;
-        $this->arrHavingValues = $arrValues;
+        if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
+        $this->arrHaving[] = array('rawsql' => $strHaving, 'values' => $mixValues);
     }    
     
     /**
@@ -471,7 +472,10 @@ class ploopi_query_select extends ploopi_query_sud
      */
     protected function get_select()
     {
-        return 'SELECT '.(empty($this->arrSelect) ? '*' : implode(', ', $this->arrSelect));
+        $arrSelect = array();
+        foreach($this->arrSelect as $arrSelectDetail) $arrSelect[] = ploopi_sqlformat::replace($arrSelectDetail, $this->objDb);
+        
+        return 'SELECT '.(empty($arrSelect) ? '*' : implode(', ', $arrSelect));
     }
     
     /**

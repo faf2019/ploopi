@@ -1185,6 +1185,7 @@ class form
                     case 'input:text':
                     case 'input:password':
                     case 'input:file':
+                    case 'textarea':
                         $strFormat = ($arrOptions['required'] ? '' : 'empty').$arrOptions['datatype'];
                         $strOutput .= "if (ploopi_validatefield('".addslashes($objField->getLabel())."', form.".$objField->getName().", '{$strFormat}'))";
                     break;

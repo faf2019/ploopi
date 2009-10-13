@@ -438,17 +438,14 @@ class ploopi_db
                 {
                     if ($firstcolkey) 
                     {
-                        $key = current($row);
-                        array_shift($row);
+                        $key = current($fields);
+                        array_shift($fields);
                         
-                        if (sizeof($row) == 1) $array[$key] = $row[key($row)];
-                        else $array[$key] = $row;
+                        if (sizeof($fields) == 0) $array[$key] = $key;
+                        elseif (sizeof($fields) == 1) $array[$key] = $fields[key($fields)];
+                        else $array[$key] = $fields; 
                     }
-                    else
-                    {
-                        if (sizeof($row) == 1) $array[] = $row[key($row)];
-                        else $array[] = $row;
-                    }
+                    else $array[] = $fields;
                 }
             }
             return $array;

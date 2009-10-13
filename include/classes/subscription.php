@@ -77,8 +77,8 @@ class subscription extends data_object
 
         if (!$this->new && !$this->fields['allactions'])
         {
-            $db->query("SELECT id_action FROM ploopi_subscription_action WHERE id_subscription = '{$this->fields['id']}'");
-            $arrActions = $db->getarray();
+            $rs = $db->query("SELECT id_action FROM ploopi_subscription_action WHERE id_subscription = '{$this->fields['id']}'");
+            $arrActions = $db->getarray($rs, true);
         }
 
         return($arrActions);

@@ -69,7 +69,7 @@ class group extends data_object
     public function save()
     {
         $this->fields['depth'] = sizeof(explode(';',$this->fields['parents']));
-        return(parent::save());
+        return parent::save();
     }
 
     /**
@@ -100,9 +100,9 @@ class group extends data_object
     {
         global $db;
 
-        $db->query("SELECT id FROM ploopi_group WHERE system = 0 AND parents = '{$this->fields['parents']};{$this->fields['id']}' OR parents LIKE '{$this->fields['parents']};{$this->fields['id']};%'");
+        $rs = $db->query("SELECT id FROM ploopi_group WHERE system = 0 AND parents = '{$this->fields['parents']};{$this->fields['id']}' OR parents LIKE '{$this->fields['parents']};{$this->fields['id']};%'");
 
-        return($db->getarray());
+        return $db->getarray($rs, true);
     }
 
     /**
@@ -115,16 +115,14 @@ class group extends data_object
     {
         global $db;
 
-        $select =   "
-                    SELECT  id
-                    FROM    ploopi_group
-                    WHERE   id_group = {$this->fields['id_group']}
-                    AND     id <> {$this->fields['id']}
-                    ";
-                    
-        $db->query($select);
+        $rs = $db->query("
+            SELECT  id
+            FROM    ploopi_group
+            WHERE   id_group = {$this->fields['id_group']}
+            AND     id <> {$this->fields['id']}
+        ");
 
-        return $db->getarray();
+        return $db->getarray($rs, true);
     }
 
     /**

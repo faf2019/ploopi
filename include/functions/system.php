@@ -284,6 +284,16 @@ function ploopi_ob_clean()
 }
 
 /**
+ * Version spéciale de ploopi_redirect qui nécessite que les paramètres soient déjà urlencodés (via la fonction urlencode())
+ *
+ * @see ploopi_redirect
+ */
+function ploopi_redirect_trusted($url, $urlencode = true, $internal = true, $refresh = 0)
+{
+    ploopi_redirect($url, $urlencode, $internal, $refresh, true);
+}
+
+/**
  * Redirige le script vers une url et termine le script courant
  *
  * @param string $url URL de redirection
@@ -292,12 +302,12 @@ function ploopi_ob_clean()
  * @param int $refresh durée en seconde avant la redirection (0 par défaut)
  */
 
-function ploopi_redirect($url, $urlencode = true, $internal = true, $refresh = 0)
+function ploopi_redirect($url, $urlencode = true, $internal = true, $refresh = 0, $trusted = false)
 {
     include_once './include/functions/crypt.php';
 
     if ($internal) $url = _PLOOPI_BASEPATH.'/'.$url;
-    if ($urlencode) $url = ploopi_urlencode($url);
+    if ($urlencode) $url = $trusted ? ploopi_urlencode_trusted($url) : ploopi_urlencode($url);
 
     if (empty($refresh) || !is_numeric($refresh)) header("Location: {$url}");
     else header("Refresh: {$refresh}; url={$url}");

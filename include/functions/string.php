@@ -248,6 +248,80 @@ function ploopi_utf8encode($str)
 }
 
 /**
+ * Décode les caractères iso non représentables
+ *
+ * @param string chaîne iso à décoder $str
+ * @param boolean true si les caractères doivent être adaptés
+ * @return chaîne décodée
+ */
+function ploopi_iso8859_clean($str, $booTranslit = true) 
+{
+    $str = strtr($str, array(
+       "\x80" => "&#8364;", /* EURO SIGN */
+       "\x82" => "&#8218;", /* SINGLE LOW-9 QUOTATION MARK */
+       "\x83" => "&#402;",  /* LATIN SMALL LETTER F WITH HOOK */
+       "\x84" => "&#8222;", /* DOUBLE LOW-9 QUOTATION MARK */
+       "\x85" => "&#8230;", /* HORIZONTAL ELLIPSIS */
+       "\x86" => "&#8224;", /* DAGGER */
+       "\x87" => "&#8225;", /* DOUBLE DAGGER */
+       "\x88" => "&#710;",  /* MODIFIER LETTER CIRCUMFLEX ACCENT */
+       "\x89" => "&#8240;", /* PER MILLE SIGN */
+       "\x8a" => "&#352;",  /* LATIN CAPITAL LETTER S WITH CARON */
+       "\x8b" => "&#8249;", /* SINGLE LEFT-POINTING ANGLE QUOTATION */
+       "\x8c" => "&#338;",  /* LATIN CAPITAL LIGATURE OE */
+       "\x8e" => "&#381;",  /* LATIN CAPITAL LETTER Z WITH CARON */
+       "\x91" => "&#8216;", /* LEFT SINGLE QUOTATION MARK */
+       "\x92" => "&#8217;", /* RIGHT SINGLE QUOTATION MARK */
+       "\x93" => "&#8220;", /* LEFT DOUBLE QUOTATION MARK */
+       "\x94" => "&#8221;", /* RIGHT DOUBLE QUOTATION MARK */
+       "\x95" => "&#8226;", /* BULLET */
+       "\x96" => "&#8211;", /* EN DASH */
+       "\x97" => "&#8212;", /* EM DASH */
+    
+       "\x98" => "&#732;",  /* SMALL TILDE */
+       "\x99" => "&#8482;", /* TRADE MARK SIGN */
+       "\x9a" => "&#353;",  /* LATIN SMALL LETTER S WITH CARON */
+       "\x9b" => "&#8250;", /* SINGLE RIGHT-POINTING ANGLE QUOTATION*/
+       "\x9c" => "&#339;",  /* LATIN SMALL LIGATURE OE */
+       "\x9e" => "&#382;",  /* LATIN SMALL LETTER Z WITH CARON */
+       "\x9f" => "&#376;"   /* LATIN CAPITAL LETTER Y WITH DIAERESIS*/
+    ));
+    
+    if ($booTranslit)
+        $str = strtr($str, array(
+           '&#8364;' => 'Euro', /* EURO SIGN */
+           '&#8218;' => ',',    /* SINGLE LOW-9 QUOTATION MARK */
+           '&#402;' => 'f',     /* LATIN SMALL LETTER F WITH HOOK */
+           '&#8222;' => ',,',   /* DOUBLE LOW-9 QUOTATION MARK */
+           '&#8230;' => '...',  /* HORIZONTAL ELLIPSIS */
+           '&#8224;' => '+',    /* DAGGER */
+           '&#8225;' => '++',   /* DOUBLE DAGGER */
+           '&#710;' => '^',     /* MODIFIER LETTER CIRCUMFLEX ACCENT */
+           '&#8240;' => '0/00', /* PER MILLE SIGN */
+           '&#352;' => 'S',     /* LATIN CAPITAL LETTER S WITH CARON */
+           '&#8249;' => '<',    /* SINGLE LEFT-POINTING ANGLE QUOTATION */
+           '&#338;' => 'OE',    /* LATIN CAPITAL LIGATURE OE */
+           '&#381;' => 'Z',     /* LATIN CAPITAL LETTER Z WITH CARON */
+           '&#8216;' => "'",    /* LEFT SINGLE QUOTATION MARK */
+           '&#8217;' => "'",    /* RIGHT SINGLE QUOTATION MARK */
+           '&#8220;' => '"',    /* LEFT DOUBLE QUOTATION MARK */
+           '&#8221;' => '"',    /* RIGHT DOUBLE QUOTATION MARK */
+           '&#8226;' => '*',    /* BULLET */
+           '&#8211;' => '-',    /* EN DASH */
+           '&#8212;' => '--',   /* EM DASH */
+           '&#732;' => '~',     /* SMALL TILDE */
+           '&#8482;' => '(TM)', /* TRADE MARK SIGN */
+           '&#353;' => 's',     /* LATIN SMALL LETTER S WITH CARON */
+           '&#8250;' => '>',    /* SINGLE RIGHT-POINTING ANGLE QUOTATION*/
+           '&#339;' => 'oe',    /* LATIN SMALL LIGATURE OE */
+           '&#382;' => 'z',     /* LATIN SMALL LETTER Z WITH CARON */
+           '&#376;' => 'Y'      /* LATIN CAPITAL LETTER Y WITH DIAERESIS*/
+        ));
+        
+    return $str;
+}
+
+/**
  * Rend les liens d'un texte cliquables
  *
  * @param string $text le texte à traiter

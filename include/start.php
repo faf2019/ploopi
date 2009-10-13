@@ -71,8 +71,26 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
 
     if ($db->numrows() == 1) // 1 user found
     {
-        $login_redirect = $_SERVER['HTTP_REFERER'];
-
+        // Gestion de la redirection après login (en fonction de l'url de provenance et du script d'authentification)
+        $arrReferer = parse_url($_SERVER['HTTP_REFERER']); // Provenance
+        $arrRequest = parse_url($_SERVER['REQUEST_URI']);  // Demande d'authentification
+        
+        $strRefererHost = isset($arrReferer['host']) ? $arrReferer['host'] : '';
+        $strRequestHost = $_SERVER['HTTP_HOST'];
+        
+        $strRefererScript = isset($arrReferer['path']) ? basename($arrReferer['path']) : '';
+        $strRequestScript = isset($arrRequest['path']) ? basename($arrRequest['path']) : '';
+        
+        $strLoginRedirect = '';
+        
+        // Même domaine, même script, redirection acceptée
+        if ($strRefererHost == $strRequestHost && ($strRefererScript == $strRequestScript || $strRequestScript != 'admin.php'))  
+        {
+            $strLoginRedirect = $_SERVER['HTTP_REFERER'];
+        }
+        // on force la redirection sur le domaine+script courant
+        else $strLoginRedirect = _PLOOPI_BASEPATH.'/'.$strRequestScript; 
+        
         $fields = $db->fetchrow();
 
         if (!empty($fields['date_expire']))
@@ -275,8 +293,8 @@ if ($ploopi_initsession)
 
 if (!$_SESSION['ploopi']['paramloaded']) include './include/start/load_param.php';
 
-if (!empty($login_redirect)) ploopi_redirect($login_redirect, false, false);
-unset($login_redirect);
+if (!empty($strLoginRedirect)) ploopi_redirect($strLoginRedirect, false, false); 
+unset($strLoginRedirect);
 
 // Indicateur global de connexion
 $_SESSION['ploopi']['connected'] = isset($_SESSION['ploopi'][$_SESSION['ploopi']['mode']]['connected']) && $_SESSION['ploopi'][$_SESSION['ploopi']['mode']]['connected'];

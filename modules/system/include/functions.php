@@ -637,13 +637,21 @@ function system_serverload_getcolor($min, $max, $x)
     return $color = sprintf("#%02x%02x%02x",$r,$v,$b);
 }
 
+/**
+ * Retourne les parents d'un espace de travail ou d'un groupe d'utilisateur
+ *
+ * @param string $parents id des parents
+ * @param string $type type d'élément cherché (workspace/group)
+ * @return array
+ */
+
 function system_getparents($parents, $type)
 {
     global $db;
     
     $parents = str_replace(';',',',$parents);
 
-    $select = "SELECT * FROM ploopi_{$type} WHERE id IN ({$parents})";
+    $select = "SELECT * FROM ploopi_{$type} WHERE id IN ({$parents}) ORDER BY depth";
     $result = $db->query($select);
 
     $groups = array();
