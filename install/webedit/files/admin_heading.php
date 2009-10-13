@@ -528,7 +528,21 @@ if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur le
     }
 }
 
-foreach($arrWf as $value) $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
+$objUser = new user();
+$objUser->open($_SESSION['ploopi']['userid']);
+$arrGroups = $objUser->getgroups(true);
+
+/**
+ * L'utilisateur connecté est-il validateur ?
+ */
+$booWfVal = false;
+foreach($arrWf as $value) 
+{
+    if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booWfVal = true;
+    if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booWfVal = true;
+    
+    $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
+}
 
 // récupère les partages
 $arrSharesUsers = array();
@@ -726,7 +740,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
             $articles_values[$c]['values']['misenligne'] = array('label' => $published, 'style' => '');
             $articles_values[$c]['values']['auteur'] = array('label' => $row['author'], 'style' => '');
 
-            if (ploopi_isadmin() || in_array($_SESSION['ploopi']['userid'], $arrWfUsers) || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
+            if (ploopi_isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
             {
                 $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" title=\"Supprimer\" href=\"javascript:ploopi_confirmlink('admin.php?op=article_delete&articleid={$row['id']}','Êtes-vous certain de vouloir supprimer l\'article &laquo; ".addslashes($row['title'])." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
             }

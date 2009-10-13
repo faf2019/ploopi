@@ -247,10 +247,10 @@ if ($_SESSION['ploopi']['connected'])
                         $intHeadingId = 'null';
 
                         $db->query("SELECT distinct(year) FROM ploopi_mod_webedit_counter WHERE id_article = {$intArticleId} ORDER BY year");
-                        $arrSelectYear = $db->getarray();
+                        $rs = $arrSelectYear = $db->getarray($rs, true);
 
-                        $db->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_article = {$intArticleId} AND year = {$intYearSel} ORDER BY month");
-                        $arrSelectMonth = $db->getarray();
+                        $rs = $db->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_article = {$intArticleId} AND year = {$intYearSel} ORDER BY month");
+                        $arrSelectMonth = $db->getarray($rs, true);
 
                         $strPopupTitle = "Statistiques de fréquentation de l'article &laquo; ".htmlentities($objArticle->fields['title'])." &raquo;";
                     break;
@@ -264,7 +264,7 @@ if ($_SESSION['ploopi']['connected'])
                         $intArticleId = 'null';
                         $intHeadingId = $_POST['webedit_heading_id'];
 
-                        $db->query(
+                        $rs = $db->query(
                             "
                             SELECT      distinct(c.year)
 
@@ -278,9 +278,9 @@ if ($_SESSION['ploopi']['connected'])
                             "
                         );
 
-                        $arrSelectYear = $db->getarray();
+                        $arrSelectYear = $db->getarray($rs, true);
 
-                        $db->query(
+                        $rs = $db->query(
                             "
                             SELECT      distinct(c.month)
 
@@ -296,7 +296,7 @@ if ($_SESSION['ploopi']['connected'])
                             "
                         );
 
-                        $arrSelectMonth = $db->getarray();
+                        $arrSelectMonth = $db->getarray($rs, true);
 
                         $strPopupTitle = "Statistiques de fréquentation de la rubrique &laquo; ".htmlentities($objHeading->fields['label'])." &raquo;";
                     break;

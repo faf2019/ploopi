@@ -1,3 +1,11 @@
+== Module WebEdit - version 2.1.7 ============================================
+
+2009-10-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction du bug #27 : "module webedit : problème de suppression d'article"
+* Correction d'un bug lié à une modification sur $db->getarray()
+* Correction d'un bug dans l'insertion de liens/images avec fckeditor (uniquement si pas de virtualhost)
+
 == Module WebEdit - version 2.1.6c ============================================
 
 2009-09-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

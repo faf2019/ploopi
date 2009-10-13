@@ -56,6 +56,9 @@ $objUser = new user();
 $objUser->open($_SESSION['ploopi']['userid']);
 $arrGroups = $objUser->getgroups(true);
 
+/**
+ * L'utilisateur connecté est-il validateur ?
+ */
 $booWfVal = false;
 foreach($arrWf as $value) 
 {
