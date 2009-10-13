@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.1.6e ============================================
+
+2009-10-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction du bug #27 : "module webedit : problème de suppression d'article" - fixes #27
+
 == Module WebEdit - version 2.1.6d ============================================
 
 2009-10-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
