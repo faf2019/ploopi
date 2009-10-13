@@ -48,6 +48,7 @@ cp -r install/directory $DEST/install
 cp -r install/doc $DEST/install
 cp -r install/forms $DEST/install
 cp -r install/forum $DEST/install
+cp -r install/gallery $DEST/install
 cp -r install/news $DEST/install
 cp -r install/newsletter $DEST/install
 cp -r install/planning $DEST/install
