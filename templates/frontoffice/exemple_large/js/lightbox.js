@@ -46,8 +46,8 @@
 //  Configurationl
 //
 LightboxOptions = Object.extend({
-    fileLoadingImage:        './templates/frontoffice/exemple/img/lightbox/loading.gif',     
-    fileBottomNavCloseImage: './templates/frontoffice/exemple/img/lightbox/closelabel.gif',
+    fileLoadingImage:        './templates/frontoffice/exemple_large/img/lightbox/loading.gif',     
+    fileBottomNavCloseImage: './templates/frontoffice/exemple_large/img/lightbox/closelabel.gif',
 
     overlayOpacity: 0.8,   // controls transparency of shadow overlay
 
