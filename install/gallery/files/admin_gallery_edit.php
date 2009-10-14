@@ -65,7 +65,7 @@ if(isset($_GET['id_gallery']) && is_numeric($_GET['id_gallery'])) // MODIF ADHER
     
     $formParam = '&id_gallery='.$objGallery->fields['id'];
 }
-else // NOUVEL ADHERENT
+else // NOUVELLE GALERIE
 {
     $mode = 'new';
     
@@ -149,7 +149,7 @@ else // NOUVEL ADHERENT
                         {
                             ?>
                             <br/>
-                            <select class="select" name="gallery_template" id="gallery_template" style="width: 418px;" tabindex="<?php echo $tabIndex++; ?>" onchange="javascript:$('info_gallery').innerHTML = $('gallery_hidden_'+this.value).innerHTML;">
+                            <select class="select" name="gallery_template" id="gallery_template" style="width: 418px; clear: both;" tabindex="<?php echo $tabIndex++; ?>" onchange="javascript:$('info_gallery').innerHTML = $('gallery_hidden_'+this.value).innerHTML;">
                             <?php 
                             $note = '';
                             $htmlNoteHidden = '';

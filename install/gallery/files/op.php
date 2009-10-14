@@ -73,11 +73,9 @@ if ($_SESSION['ploopi']['connected'])
                                 u.lastname,
                                 u.firstname,
                                 w.id as workspace_id,
-                                w.label,
-                                e.filetype
+                                w.label
                 
                     FROM        (ploopi_mod_doc_file f,
-                                ploopi_mod_doc_ext e,
                                 ploopi_mod_doc_folder fo)
                     
                     LEFT JOIN   ploopi_user u
@@ -86,8 +84,7 @@ if ($_SESSION['ploopi']['connected'])
                     LEFT JOIN   ploopi_workspace w
                     ON          f.id_workspace = w.id
                 
-                    WHERE       e.ext = f.extension
-                    AND         e.filetype = 'image'
+                    WHERE       LCASE(f.extension) IN ('jpg','jpeg','gif','png')
                     AND         fo.id IN ({$strIdDirectory}) 
                     AND         f.id_folder = fo.id
                     
@@ -117,12 +114,11 @@ if ($_SESSION['ploopi']['connected'])
                         $arrMeta = $objImgFile->getmeta();
                         
                         ?>
-                        <div style="clear: both; overflow: hidden; padding: 2px; margin: 2px 0; border: 1px solid black;">
-                            <div id="photo_preview_<?php echo $row['id']; ?>" style="float: left; width:135px; height: 10px; text-align: center;">
+                        <div class="gallery_bloc_image">
+                            <div id="photo_preview_<?php echo $row['id']; ?>" class="gallery_image_preview">
                                 <img src="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=gallery_admin_get_photo&id_preview='.$row['id'].'&'.ploopi_createtimestamp()); ?>" /><br/>
                             </div>
-                            <div style="padding: 0 2px; margin: 0; float: left;">
-                            
+                            <div  class="gallery_image_info">
                                 <?php
                                     $refresh = '<a href="javascript:void(0);" onclick="javascript:gallery_refresh_photo('.$row['id'].');" title="'._GALLERY_EDIT_REFRESH_PHOTO.'"><img src="./modules/gallery/img/refresh.png"></a>&nbsp;';
                                     echo $skin->open_simplebloc($objImgFile->fields['name'],'', '', $refresh);
@@ -159,7 +155,7 @@ if ($_SESSION['ploopi']['connected'])
                                     }
                                     else
                                     {
-                                        echo 'Pas d\'information sur le fichier';
+                                        echo '<div style="padding: 2px 4px;">Pas d\'information sur le fichier</div>';
                                     }
                                     echo $skin->close_simplebloc();
                                 ?>
@@ -258,11 +254,9 @@ switch($ploopi_op)
                     SELECT      f.id, f.name
                 
                     FROM        (ploopi_mod_doc_file f,
-                                ploopi_mod_doc_ext e,
                                 ploopi_mod_doc_folder fo)
                     
-                    WHERE       e.ext = f.extension
-                    AND         e.filetype = 'image'
+                    WHERE       LCASE(f.extension) IN ('jpg','jpeg','gif','png')
                     AND         fo.id IN (".implode(',',$arrDirSelect).") 
                     AND         f.id_folder = fo.id
                     

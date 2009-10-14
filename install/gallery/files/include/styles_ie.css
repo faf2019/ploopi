@@ -1,5 +1,6 @@
 /*
-    Copyright (c) 2009 HeXad
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -19,32 +20,12 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-.gallery_treeview_dir {
-    display:block;
-    margin-left: 20px;
-    line-height:18px;
-}
-
-.gallery_note {
-	padding: 2px 4px;
-}
-
 .gallery_bloc_image {
-    clear: both;
-    overflow: auto;
-    padding: 2px;
-    margin: 2px 0;
-    border: 1px solid black;	
-}
-
-.gallery_image_preview {
-	float: left;
-	width:135px;
-	text-align: center;
+    overflow:visible;
+    height:1%;
 }
 
 .gallery_image_info {
-    overflow:auto;
-	padding: 0 2px;
-	margin: 0;
+    overflow:visible;
+    height:1%;
 }

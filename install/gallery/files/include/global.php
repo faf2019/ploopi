@@ -80,14 +80,14 @@ function gallery_show_directories($arrData, $level = 0)
         }
         ?>
         <div class="treeview_node" id="treeview_directory_<?php echo $id; ?>" style=" <?php echo $cursor.$bg; ?>">
-            <div <?php echo $onClick; ?>>
-                <img style="display:block; float:left;" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/treeview/<?php echo $type_node; ?>.png" />
-                <img src="./modules/gallery/img/folder.png" />
+            <div <?php echo $onClick; ?> style="clear: both; padding: 0; margin: 0;">
+                <img style="display:block; float:left; padding:0; margin: 0;" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/treeview/<?php echo $type_node; ?>.png" />
+                <img src="./modules/gallery/img/folder.png" style="padding:0; margin: 0;"/>
                 <?php
                 if(isset($data['id']))
                 {
                     $select = ($data['dir_selected']) ? 'checked="checked"' : '';
-                    echo '<input style="display:block; margin: 2px 2px 0 2px; padding: 0; float: left;" type="checkbox" name="_gallery_directory[]" id="_gallery_directory_'.$id.'" value="'.$data['id'].'" onchange="javascript:gallery_show_preview_rep('.$data['id'].')" '.$select.'}/>';
+                    echo '<input style="display:block; margin: 1px 2px 0 2px; padding: 0; height: 15px; float: left;" type="checkbox" name="_gallery_directory[]" id="_gallery_directory_'.$id.'" value="'.$data['id'].'" onchange="javascript:gallery_show_preview_rep('.$data['id'].')" '.$select.'}/>';
                 }
                 ?>
                 <div <?php echo $id_directorie; ?> class="gallery_treeview_dir" ><?php echo $name; ?></div>

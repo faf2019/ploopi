@@ -1,3 +1,10 @@
+== Module GALLERY - version 0.1.1b ====================================================
+
+2009-10-01  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction : Problèmes d'affichage en administration sous IE6...
+ * Filtrage. Le filtrage des fichiers à exploiter ne se fait plus sur le type (='image') mais sur l'extension : jpg, jpeg, gif ou png  
+
 == Module GALLERY - version 0.1.1a ====================================================
 
 2009-10-01  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
