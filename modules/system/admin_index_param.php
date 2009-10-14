@@ -58,10 +58,9 @@ else
         <?php
         foreach($modules as $mod)
         {
-
-            if (empty($idmodule)) $idmodule = $mod['id'];
+            if (empty($idmodule)) $idmodule = $mod['instanceid'];
             ?>
-                <option <?php if ($idmodule == $mod['id']) echo 'selected'; ?> value="<?php echo $mod['id']; ?>"><?php echo "{$mod['instancename']} ({$mod['label']})"; ?></option>
+                <option <?php if ($idmodule == $mod['instanceid']) echo 'selected'; ?> value="<?php echo $mod['instanceid']; ?>"><?php echo "{$mod['instancename']} ({$mod['label']})"; ?></option>
             <?php
         }
         ?>

@@ -108,7 +108,7 @@ if ($arrFilter['ploopi_workspace'] != '')
 {
     $arrWorkspaceUserFilter = array();
     
-    $db->query("
+    $rs = $db->query("
         SELECT  distinct(wu.id_user)
                 
         FROM    ploopi_workspace w,
@@ -118,9 +118,9 @@ if ($arrFilter['ploopi_workspace'] != '')
         AND     w.id = wu.id_workspace
     ");
     
-    $arrWorkspaceUserFilter = $db->getarray();
+    $arrWorkspaceUserFilter = $db->getarray($rs, true);
     
-    $db->query("
+    $rs = $db->query("
         SELECT  distinct(gu.id_user)
                 
         FROM    ploopi_workspace w,
@@ -132,7 +132,7 @@ if ($arrFilter['ploopi_workspace'] != '')
         AND     wg.id_group = gu.id_group
     ");
     
-    $arrWorkspaceUserFilter = array_merge($arrWorkspaceUserFilter, $db->getarray());
+    $arrWorkspaceUserFilter = array_merge($arrWorkspaceUserFilter, $db->getarray($rs, true));
     $arrWorkspaceUserFilter = array_unique($arrWorkspaceUserFilter);
     
     $arrWhere[] = empty($arrWorkspaceUserFilter) ? 'u.id = -1' : "u.id IN (".implode(',', $arrWorkspaceUserFilter).")";
