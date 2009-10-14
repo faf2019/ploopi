@@ -1,13 +1,12 @@
-== Module GALLERY - version 0.1.1b ====================================================
+== Module GALLERY - version 0.1.1c ====================================================
 
-2009-10-01  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2009-10-14  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
 
- * Correction : Problèmes d'affichage en administration sous IE6...
- * Filtrage. Le filtrage des fichiers à exploiter ne se fait plus sur le type (='image') mais sur l'extension : jpg, jpeg, gif ou png  
+ * Filtrage. Le filtrage des fichiers à exploiter dans WCE.php ne se fait plus sur le type (='image') mais sur l'extension : jpg, jpeg, gif ou png  
 
 == Module GALLERY - version 0.1.1a ====================================================
 
-2009-10-01  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2009-10-14  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
 
  * Correction : Si le tpl contenait 2 "découpages de page" le second ne fonctionnait pas
  * Les images de la présentation 2 sont centrées

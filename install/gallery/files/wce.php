@@ -100,11 +100,9 @@ if (file_exists("./templates/frontoffice/{$template_name}/gallery.tpl"))
                 SELECT      f.id
             
                 FROM        (ploopi_mod_doc_file f,
-                            ploopi_mod_doc_ext e,
                             ploopi_mod_doc_folder fo)
                 
-                WHERE       e.ext = f.extension
-                AND         e.filetype = 'image'
+                WHERE       LCASE(f.extension) IN ('jpg','jpeg','gif','png')
                 AND         fo.id IN (".implode(',',$arrDirSelect).") 
                 AND         fo.foldertype = 'public' 
                 AND         f.id_folder = fo.id
@@ -133,11 +131,9 @@ if (file_exists("./templates/frontoffice/{$template_name}/gallery.tpl"))
                     SELECT      f.id, f.name, f.description
                 
                     FROM        (ploopi_mod_doc_file f,
-                                ploopi_mod_doc_ext e,
                                 ploopi_mod_doc_folder fo)
                     
-                    WHERE       e.ext = f.extension
-                    AND         e.filetype = 'image'
+                    WHERE       LCASE(f.extension) IN ('jpg','jpeg','gif','png')
                     AND         fo.id IN (".implode(',',$arrDirSelect).")
                     AND         fo.foldertype = 'public' 
                     AND         f.id_folder = fo.id
