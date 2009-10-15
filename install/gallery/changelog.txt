@@ -1,3 +1,9 @@
+== Module GALLERY - version 0.1.1d ====================================================
+
+2009-10-15  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction : Le cache ne gérait pas la version de l'image.
+
 == Module GALLERY - version 0.1.1c ====================================================
 
 2009-10-14  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

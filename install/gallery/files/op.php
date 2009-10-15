@@ -214,11 +214,9 @@ switch($ploopi_op)
         
         ploopi_ob_clean();
         
-        putenv('GDFONTPATH=' . realpath('.'));
+        header("Content-Type: image/jpg"); // pour le cache
         
-        header("Content-Type: image/jpg");
-
-        $objCache = new ploopi_cache(md5($_GET['id_image'].$_GET['width'].$_GET['height'],$_GET['color']), $intTimeCache);
+        $objCache = new ploopi_cache($_GET['id_image'].$_GET['version'].$_GET['width'].$_GET['height'].$_GET['color'], $intTimeCache);
         
         if(!$objCache->start($booForceCache)) // si pas de cache on le crée
         {

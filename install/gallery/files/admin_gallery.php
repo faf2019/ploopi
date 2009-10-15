@@ -47,7 +47,6 @@ switch($op)
         if(isset($_POST['_gallery_directory']))
             $objGallery->savedirectories($_POST['_gallery_directory']);
         
-        // $objGallery->make_photos();   
         ploopi_redirect('admin.php?op=gallery_modify&id_gallery='.$objGallery->fields['id'].'&ploopi_mod_msg=_GALLERY_MESS_OK_1');
         
     break;
