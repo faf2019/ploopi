@@ -250,6 +250,10 @@ if (file_exists("./templates/frontoffice/{$template_name}/gallery.tpl"))
                 $template_gallery->assign_block_vars('gallery_no_pict', array('MESS' => _GALLERY_FRONT_NO_PICT));
             }
         }
+        else
+        {
+            $template_gallery->assign_block_vars('gallery_no_pict', array('MESS' => _GALLERY_FRONT_NO_PICT));
+        }
     }
     
     $template_gallery->pparse('gallery_display');
