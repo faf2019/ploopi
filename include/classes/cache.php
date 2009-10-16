@@ -142,7 +142,7 @@ class ploopi_cache extends Cache_Lite_Output
             $cache_content = parent::start($this->cache_id);
 
             if ($cache_content) self::$read++;
-
+            
             return $cache_content;
         }
         else return false; // no cache
@@ -164,7 +164,7 @@ class ploopi_cache extends Cache_Lite_Output
     /**
      * Lit une variable en cache
      */
-    public function get($force_caching = false)
+    public function get_var($force_caching = false)
     { 
         if (self::$activated)
         {
@@ -182,7 +182,7 @@ class ploopi_cache extends Cache_Lite_Output
     /**
      * Enregistre une variable en cache 
      */
-    public function save($var) 
+    public function save_var($var) 
     { 
         if (self::$activated)
         {
