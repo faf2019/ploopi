@@ -796,7 +796,7 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
     // Mise en cache
     $objCache = new ploopi_cache('webedit/article/'._PLOOPI_FRONTOFFICE_REWRITERULE.'/'.$objArticle->fields['id'].'/'.$objArticle->fields['lastupdate_timestp'], 86400);
 
-    if (!$strReplaced = $objCache->get())
+    if (!$strReplaced = $objCache->get_var())
     {
         include_once './modules/webedit/class_article.php';
     
@@ -866,7 +866,7 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
             }
         }
         
-        $objCache->save($strReplaced = str_replace($arrSearch, $arrReplace, $strContent));
+        $objCache->save_var($strReplaced = str_replace($arrSearch, $arrReplace, $strContent));
     }
     
     return $strReplaced;

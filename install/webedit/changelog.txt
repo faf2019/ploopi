@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.1.6f ============================================
+
+2009-10-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Modification dans la gestion du cache suite à une correction sur le gestionnaire de cache de Ploopi
+
 == Module WebEdit - version 2.1.6e ============================================
 
 2009-10-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
