@@ -90,7 +90,7 @@ class gallery extends data_object
         // On supprime toutes les repertoires de cette galerie
         $db->query("DELETE FROM ploopi_mod_gallery_directories WHERE id_gallery = '{$this->fields['id']}'");
         
-        // On enregitre tous les repertoires 
+        // On enregistre tous les repertoires 
         $arrAdd = array();
         foreach ($arrDirectories as $key => $idDir) $arrAdd[] = "(NULL, '{$this->fields['id']}', '{$idDir}')";  
         
@@ -98,9 +98,15 @@ class gallery extends data_object
         {
             $sql = 'INSERT INTO `ploopi_mod_gallery_directories` (`id`, `id_gallery`, `id_directory`) VALUES ';
             $sql .= implode(',',$arrAdd);
-            echo $sql;
             $db->query($sql);
         }
+    }
+
+    function deldirectories()
+    {
+        global $db;
+        // On supprime toutes les repertoires de cette galerie
+        $db->query("DELETE FROM ploopi_mod_gallery_directories WHERE id_gallery = '{$this->fields['id']}'");
     }
     
     function getdirectories()
@@ -108,7 +114,10 @@ class gallery extends data_object
         global $db;
 
         $sqldir = $db->query("SELECT * FROM ploopi_mod_gallery_directories WHERE id_gallery = '{$this->fields['id']}'");
-        return $db->getarray($sqldir); 
+        if($db->numrows($sqldir))
+            return $db->getarray($sqldir);
+        else
+            return false;
     }
     
     function setautosaveinfo($booAutoSave)

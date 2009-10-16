@@ -207,18 +207,17 @@ if ($_SESSION['ploopi']['connected'])
 switch($ploopi_op)
 {
     case 'gallery_get_photo':
-        $booForceCache = false;
         $intTimeCache = 2592000; // 30 jours
         
         include_once './include/classes/cache.php';
         
         ploopi_ob_clean();
-        
+
         header("Content-Type: image/jpg"); // pour le cache
-        
+
         $objCache = new ploopi_cache($_GET['id_image'].$_GET['version'].$_GET['width'].$_GET['height'].$_GET['color'], $intTimeCache);
-        
-        if(!$objCache->start($booForceCache)) // si pas de cache on le crée
+                
+        if(!$objCache->start()) // si pas de cache on le crée
         {
             ploopi_init_module('doc', false, false, false);
             

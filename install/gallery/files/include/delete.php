@@ -41,8 +41,8 @@ $db->query($delete);
 /*
  * Suppression des directories 
  */
-$db->query("SELECT id FROM ploopi_mod_gallery WHERE id_module = '{$this->fields['id']}'");
-$arrIdGallery = $db->getarray();
+$sql = $db->query("SELECT id FROM ploopi_mod_gallery WHERE id_module = '{$this->fields['id']}'");
+$arrIdGallery = $db->getarray($sql, true);
 if(empty($arrIdGallery)) $arrIdGallery[] = '0';
 
 $delete = 'DELETE FROM ploopi_mod_gallery_directories WHERE id_gallery IN ('.implode(',',$arrIdGallery).')';

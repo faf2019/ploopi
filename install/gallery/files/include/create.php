@@ -50,7 +50,7 @@ $objTpl->setautosaveinfo(false);
 
 $objTpl->fields['block'] = 'gallery1';
 $objTpl->fields['description'] = 'Affichage de l\'image principale avec les vignettes en dessous';
-$objTpl->fields['note'] = 'Attention, cette galerie requière OBLIGATOIREMENT :\r\nNombre de lignes = 1\r\nNombre de colonnes = 0\r\nDimension des vignettes = 92 x 69\r\nDimension des images = 500 x 375';
+$objTpl->fields['note'] = "Attention, cette galerie requière OBLIGATOIREMENT :\r\nNombre de lignes = 1\r\nNombre de colonnes = 0\r\nDimension des vignettes = 92 x 69\r\nDimension des images = 500 x 375";
 $objTpl->fields['addtoheadcss'] = 'gallery1.css';
 $objTpl->fields['addtoheadcssie'] = 'gallery1_ie.css';
 $objTpl->fields['id_module'] = $this->fields['id'];

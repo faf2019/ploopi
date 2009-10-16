@@ -1,3 +1,14 @@
+== Module GALLERY - version 0.1.1e ====================================================
+
+2009-10-16  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction : Le texte de gallery1 en admin ne s'ajoutait pas correctement à l'instanciation (prob avec \r\n)
+ * Correction : Mise en conformité avec le nouveau fonctionnement de la Méthode getArray (delete.php)
+ * Correction : il était impossible de ne pas avoir de répertoire ged selectionné dans une galerie...
+ * Correction : Si une galerie ne contenait aucun répertoire en front aucun message n'était affiché. (une erreur en debug)
+ * Correction : un bug JS se produisait sur la galerie1 lorsque l'objet wce était, par exemple, en gras
+ * Correction : le bloc galerie1 n'était pas correctement fermé dans les gallery.tpl
+
 == Module GALLERY - version 0.1.1d ====================================================
 
 2009-10-15  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

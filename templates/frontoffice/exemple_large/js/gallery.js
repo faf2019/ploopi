@@ -8,7 +8,7 @@ ClassGallerySlide = function(idUniq,withThumb) {
 	this.withthumb = withThumb;
 	this.maxindex = -1;
 	this.maxposition = 0;
-
+	
 	/* 
 	 * Ajout d'une image dans le tableau des url
 	 */
@@ -21,7 +21,6 @@ ClassGallerySlide = function(idUniq,withThumb) {
 		// max position = -1 car decalage négatif
 	    //              et (maxindex-4) car 2 premieres et 2 dernieres cases ne bougent pas donc on bouge de n-4 cases en tout 
 	}
-		
 	
 	/*
 	 * ajout du libellé en dessous de la vignette 
@@ -30,17 +29,20 @@ ClassGallerySlide = function(idUniq,withThumb) {
 	{   
 		idUniqLocal = this.iduniq;
 		
-	    $('gallerythumbs-'+this.iduniq).immediateDescendants().each(
+	    $('gallerythumbs-'+idUniqLocal).childElements().each(
 	        function(myDiv) {
-	            // Passage en 'hover' mais en concervant éventuellement le 'active'
-	            if(myDiv.id == 'thumb-'+idUniqLocal+'-'+myDivHover)
-	            {
-	                $(myDiv.id).className = ($(myDiv.id).className.indexOf('active') > -1) ? 'active hover' : 'hover';
-	            }
-	            else
-	            {
-	                $(myDiv.id).className = ($(myDiv.id).className.indexOf('active') > -1) ? 'active' : '';
-	            }
+	        	if(myDiv.tagName == "DIV" && myDiv.id.indexOf('thumb-') > -1) 
+	        	{
+		        	// Passage en 'hover' mais en concervant éventuellement le 'active'
+		            if(myDiv.id == 'thumb-'+idUniqLocal+'-'+myDivHover)
+		            {
+		                $(myDiv.id).className = ($(myDiv.id).className.indexOf('active') > -1) ? 'active hover' : 'hover';
+		            }
+		            else
+		            {
+		                $(myDiv.id).className = ($(myDiv.id).className.indexOf('active') > -1) ? 'active' : '';
+		            }
+		        }
 	        }
 	    )
 	}
@@ -53,18 +55,22 @@ ClassGallerySlide = function(idUniq,withThumb) {
 	{
 		idUniqLocal = this.iduniq;
 		
-	    $('gallerythumbs-'+this.iduniq).immediateDescendants().each(
+	    $('gallerythumbs-'+this.iduniq).childElements().each(
 	        function(myDiv) {
-	            // Passage en 'active' mais en concervant éventuellement le 'hover'
-	            if(myDiv.id == 'thumb-'+idUniqLocal+'-'+myDivSelect)
-	            {
-	                $(myDiv.id).className = ($(myDiv.id).className.indexOf('hover') > -1) ? 'active hover' : 'active';
-	            }
-	            else
-	            {
-	                $(myDiv.id).className = ($(myDiv.id).className.indexOf('hover') > -1) ? 'hover' : '';
-	            }
+	        	if(myDiv.tagName == "DIV" && myDiv.id.indexOf('thumb-') > -1) 
+	        	{
+		            // Passage en 'active' mais en concervant éventuellement le 'hover'
+		            if(myDiv.id == 'thumb-'+idUniqLocal+'-'+myDivSelect)
+		            {
+		                $(myDiv.id).className = ($(myDiv.id).className.indexOf('hover') > -1) ? 'active hover' : 'active';
+		            }
+		            else
+		            {
+		                $(myDiv.id).className = ($(myDiv.id).className.indexOf('hover') > -1) ? 'hover' : '';
+		            }
+	        	}
 	        }
+	        	
 	    )
 	}
 	

@@ -36,8 +36,7 @@
         <!-- END col -->
     <!-- END line -->
 </script>
-<!-- END gallery -->
-
+<!-- END gallery1 -->
 
 <!-- BEGIN gallery2 -->
 {gallery2.PAGE_CUT_TOP}
