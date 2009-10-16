@@ -463,7 +463,55 @@ class ploopi_db
         }
         else return false;
     }
+    
+    /**
+     * Retourne dans une chaine le contenu de la dernière requête ou du recordset passé en paramètre
+     *
+     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
+     * @param string $gluebloc ',' jointure des bloc d'enregistrement
+     * @param string $gluevalue ',' jointure des valeur dans les enregsitrements
+     * @return string une chaine contenant les enregistrements du recordset ou false si le recordset n'est pas valide
+     */
+    
+    public function getimplode($query_id = 0, $gluebloc=',', $gluevalue=',')
+    {
+        if (!$this->isconnected()) return false;
 
+        if(!$query_id) $query_id = $this->query_result;
+
+        if($query_id)
+        {
+            $string = '';
+            $boogluebloc = false;
+            
+            if ($this->numrows())
+            {
+                $this->dataseek($query_id, 0);
+                while ($fields = $this->fetchrow($query_id))
+                {
+                    // ajout de la glue de bloc d'enregistrement
+                    if($string != '') 
+                    { 
+                        $string .= $gluebloc; 
+                        $boogluebloc = true; 
+                    }
+                    
+                    foreach($fields as $value)
+                    {
+                        // ajout de la glue entre les valeurs
+                        if($string != '' && !$boogluebloc) $string .= $gluevalue;
+                        // ajout de la valeur
+                        $string .= $value;
+                        $boogluebloc = false;
+                    }
+                }
+                $this->dataseek($query_id, 0);
+            }
+            return $string;
+        }
+        else return false;
+    }
+    
     /**
      * Retourne au format JSON le contenu de la dernière requête ou du recordset passé en paramètre
      *
