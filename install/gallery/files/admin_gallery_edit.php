@@ -206,7 +206,7 @@ else // NOUVELLE GALERIE
                             AND waiting_validation = '0'
                             {$sqllimitgroup}
                             ORDER BY name";
-    
+
                         $reqDirectories = $db->query($sqlDirectories);
                         if($db->numrows($reqDirectories))
                         {
@@ -235,7 +235,7 @@ else // NOUVELLE GALERIE
                                 }
         
                                 // On enregistrer les données dans la bonne case grace au pointeur.
-                                $arrTmp[$field['id']] = $field;
+                                $arrTmp[$field['id']] = (isset($arrTmp[$field['id']]) ? $arrTmp[$field['id']] + $field : $field);
                                 $arrTmp[$field['id']]['dir_selected'] = (!empty($arrDirSelect) && in_array($field['id'],$arrDirSelect));
                             }
                             gallery_show_directories($arrDir);

@@ -1,3 +1,9 @@
+== Module GALLERY - version 0.1.1f ====================================================
+
+2009-10-26  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction : Dans le cas où un sous-répertoire de la ged avait un nom inférieur (dans l'ordre alphabétique) au conteneur, celui-ci n'apparaissait pas. 
+
 == Module GALLERY - version 0.1.1e ====================================================
 
 2009-10-16  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
