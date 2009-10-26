@@ -1,3 +1,9 @@
+== Module FORMS - version 2.3.6c =====================================================
+
+2009-10-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction du bug #28 qui tentait d'afficher une image inexistante dans le titre des colonnes des données du formulaire - fixes #28
+
 == Module FORMS - version 2.3.6b =====================================================
 
 2009-08-31  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

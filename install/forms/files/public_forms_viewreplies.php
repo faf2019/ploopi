@@ -275,7 +275,10 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
                         <a <?php echo $style_col; ?> href="<?php echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$forms_id}&orderby={$key}&option={$new_option}"); ?>">
                         <p class="ploopi_va">
                             <span><?php echo $value; ?></span>
-                            <img src="./modules/forms/img/<?php echo $sort_cell; ?>.png">
+                            <?
+                            if ($_SESSION['forms'][$forms_id]['orderby'] == $key)
+                            { ?><img src="./modules/forms/img/<?php echo $sort_cell; ?>.png"><? }
+                            ?>
                         </p>
                         </a>
                     </th>
