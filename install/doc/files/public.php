@@ -37,8 +37,21 @@
 
 ploopi_init_module('doc');
 
+include_once './modules/doc/class_docfile.php';
+include_once './modules/doc/class_docfolder.php';
+include_once './modules/doc/class_docfiledraft.php';
+
 $op = (isset($_REQUEST['op'])) ? $_REQUEST['op'] : 'doc_browser';
 $currentfolder = (isset($_REQUEST['currentfolder'])) ? $_REQUEST['currentfolder'] : 0;
+
+// Lien vers document sans folder ?
+// Cas du lien depuis le moteur de recherche global
+if (!empty($_GET['docfile_md5id']) && empty($currentfolder))
+{
+    $docfile = new docfile();
+    if ($docfile->openmd5($_GET['docfile_md5id'])) $currentfolder = $docfile->fields['id_folder'];
+    else ploopi_redirect("admin.php?doc_error=unknown_file"); // Fichier inconnu => redirection
+}
 
 echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
 echo $skin->open_simplebloc('Explorateur de documents');
@@ -77,7 +90,6 @@ else
                 case 'doc_filedraftvalidate':
                     if (!empty($_GET['docfiledraft_md5id'])) // ouverture directe d'un fichier (lien externe au module)
                     {
-                        include_once './modules/doc/class_docfiledraft.php';
                         $docfile = new docfiledraft();
                         if ($docfile->openmd5($_GET['docfiledraft_md5id'])) $currentfolder = $docfile->fields['id_folder'];
                     }
@@ -87,11 +99,6 @@ else
                 case 'doc_foldermodify':
                 case 'doc_browser':
                 case 'doc_search':
-
-                    include_once './modules/doc/class_docfile.php';
-                    include_once './modules/doc/class_docfolder.php';
-                    include_once './modules/doc/class_docfiledraft.php';
-
                     if (!empty($_GET['doc_error']))
                     {
                         switch($_GET['doc_error'])
@@ -114,15 +121,6 @@ else
                     <div class="doc_path">
                         <a title="Aide" href="javascript:void(0);" onclick="javascript:doc_openhelp(event);" style="float:right;"><img src="./modules/doc/img/ico_help.png"></a>
                         <?php
-                        // Lien vers document sans folder ?
-                        // Cas du lien depuis le moteur de recherche global
-                        if (!empty($_GET['docfile_md5id']) && empty($currentfolder))
-                        {
-                            $docfile = new docfile();
-                            if ($docfile->openmd5($_GET['docfile_md5id'])) $currentfolder = $docfile->fields['id_folder'];
-                            else ploopi_redirect("admin.php?doc_error=unknown_file"); // Fichier inconnu => redirection
-                        }
-
                         //$readonly = false;
                         $docfolder_readonly_content = false;
                         $docfolder = new docfolder();

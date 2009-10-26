@@ -1,3 +1,9 @@
+== Module DOC - version 4.5.1b =====================================================
+
+2009-10-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction du bug #29 qui ne sélectionnait pas le dossier dans le treeview lors d'un appel direct à un fichier (depuis un mail par exemple) - fixes #29
+
 == Module DOC - version 4.5.1 =====================================================
 
 2009-09-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
