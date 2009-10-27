@@ -132,6 +132,7 @@ function ploopi_ob_callback($buffer)
     // On essaye de récupérer le content-type du contenu du buffer
     $content_type = 'text/html';
     $headers = headers_list();
+    $booDownloadFile = false;
 
     foreach($headers as $property)
     {
@@ -141,6 +142,17 @@ function ploopi_ob_callback($buffer)
         {
             $content_type = (empty($matches[2])) ? $matches[1] : $matches[2];
             $content_type = strtolower(trim($content_type));
+        }
+
+        if (preg_match('/X-Ploopi:(.*)/i', $property, $matches))
+        {
+            if (isset($matches[1]))
+            {
+                switch(trim($matches[1]))
+                {
+                    case 'Download': $booDownloadFile = true; break;
+                }
+            }
         }
     }
 
@@ -210,10 +222,7 @@ function ploopi_ob_callback($buffer)
         $log->save();
     }
 
-    // Pose quelques soucis... souvent déconnecté
-    // if (!empty($db) && $db->isconnected()) $db->close();
-
-    if ($content_type == 'text/html')
+    if ($content_type == 'text/html' && !$booDownloadFile)
     {
         $array_tags = array(
             '<PLOOPI_PAGE_SIZE>',
@@ -238,10 +247,11 @@ function ploopi_ob_callback($buffer)
         $buffer = trim(str_replace($array_tags, $array_values, $buffer));
     }
 
-    if (_PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && ($content_type == 'text/html' || $content_type == 'text/xml' || $content_type == 'text/x-json'))
+    if (!$booDownloadFile && _PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && ($content_type == 'text/html' || $content_type == 'text/xml' || $content_type == 'text/x-json'))
     {
         header("Content-Encoding: gzip");
         return gzencode($buffer);
+        
     }
     else
     {

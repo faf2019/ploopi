@@ -183,6 +183,13 @@ abstract class ploopi_query
     {
         return(new ploopi_recordset($this->objDb, $this->objDb->query($this->get_sql())));
     }        
+    
+    /**
+     * Permet de redéfinir la connexion à la BDD (utile notamment après désérialisation
+     *
+     * @param resource $objDb Connexion à la BDD
+     */
+    public function set_db($objDb) { $this->objDb = $objDb; }    
 }
 
 /**

@@ -248,11 +248,15 @@ class data_object
     
     public function open() // id0, id1, id2, etc...
     {
-        $numargs = func_num_args();
+        $args = func_get_args();
+        
+        if(sizeof($args) == 1 && is_array($args[0])) $args = $args[0];
+        
+        $numargs = sizeof($args);
         
         if ($numargs == sizeof($this->idfields))
         {
-            for ($i = 0; $i < $numargs; $i++) $id[$i] = func_get_arg($i);
+            for ($i = 0; $i < $numargs; $i++) $id[$i] = $args[$i];
             
             $this->sql = "SELECT * FROM `{$this->tablename}` WHERE `{$this->idfields[0]}` = '".$this->db->addslashes($id[0])."'";
 
@@ -271,7 +275,7 @@ class data_object
         else return false;
 
     }
-
+    
     /**
      * Méthode d'ouverture spéciale pour "convertir" une ligne de recordset en objet
      *
