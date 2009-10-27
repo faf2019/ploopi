@@ -215,7 +215,7 @@ switch($ploopi_op)
 
         header("Content-Type: image/jpg"); // pour le cache
 
-        $objCache = new ploopi_cache($_GET['id_image'].$_GET['version'].$_GET['width'].$_GET['height'].$_GET['color'], $intTimeCache);
+        $objCache = new ploopi_cache('galleryjpg'.$_GET['id_image'].$_GET['version'].$_GET['width'].$_GET['height'].$_GET['color'], $intTimeCache);
                 
         if(!$objCache->start()) // si pas de cache on le crée
         {
