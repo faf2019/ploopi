@@ -230,8 +230,6 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
                 imagepng($imgdest);
             break;
         }
-        imagedestroy($imgdest);
-        imagedestroy($imgsrc);
     }
     else
     {
@@ -277,6 +275,7 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
         {
             imagedestroy($imgdest);
             imagedestroy($imgsrc);
+            
             return false;
         } 
     }
