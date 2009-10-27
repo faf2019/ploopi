@@ -259,5 +259,5 @@ if (file_exists("./templates/frontoffice/{$template_name}/gallery.tpl"))
     $template_gallery->pparse('gallery_display');
     
 }
-else echo "ERREUR : template forms.tpl manquant !";
+else echo "ERREUR : template gallery.tpl manquant !";
 ?>

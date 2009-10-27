@@ -248,16 +248,17 @@ switch($ploopi_op)
             {
                 foreach ($arrDirSelectTmp as $key => $dirSelect) $arrDirSelect[] = $dirSelect['id_directory'];
                 $sql = "
-                    SELECT      f.id, f.name
+                    SELECT      f.id, f.name, f.version
                 
                     FROM        (ploopi_mod_doc_file f,
                                 ploopi_mod_doc_folder fo)
                     
                     WHERE       LCASE(f.extension) IN ('jpg','jpeg','gif','png')
                     AND         fo.id IN (".implode(',',$arrDirSelect).") 
+                    AND         fo.foldertype = 'public' 
                     AND         f.id_folder = fo.id
                     
-                    ORDER BY    f.name
+                    ORDER BY    fo.name, f.name
                 ";
             
                 $resultSqlDir = $db->query($sql);
@@ -267,7 +268,7 @@ switch($ploopi_op)
     
                 while ($row = $db->fetchrow($resultSqlDir))
                 {
-                     $strXML .= "\t".'<img src="'.htmlspecialchars(ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&width='.$objGallery->fields['view_width'].'&height='.$objGallery->fields['view_height'].'&color='.str_replace('#','',$objGallery->fields['view_color']))).'" title="'.$row['name'].'" />'."\r\n";
+                     $strXML .= "\t".'<img src="'.htmlspecialchars(ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['view_width'].'&height='.$objGallery->fields['view_height'].'&color='.str_replace('#','',$objGallery->fields['view_color']))).'" title="'.$row['name'].'" />'."\r\n";
                 }
                 
             }

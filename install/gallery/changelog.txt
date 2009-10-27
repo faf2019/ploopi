@@ -1,3 +1,9 @@
+== Module GALLERY - version 0.1.1g ====================================================
+
+2009-10-27  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction : donnée manquante dans l'url indiquée dans le xml pour l'affichage flash 
+
 == Module GALLERY - version 0.1.1f ====================================================
 
 2009-10-26  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
