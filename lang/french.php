@@ -196,6 +196,26 @@ $ploopi_civility =
         'Mlle'
     );
 
+$ploopi_type_file =
+    array (
+        'archive'       => 'Archive',
+        'audio'         => 'Audio',
+        'calendar'      => 'Calendrier',
+        'cd'            => 'Image Disque',
+        'certificate'   => 'Certificat',
+        'document'      => 'Document',
+        'exec'          => 'Executable',
+        'html'          => 'HTML',
+        'image'         => 'Image',
+        'package'       => 'Pack',
+        'presentation'  => 'Présentation',
+        'script'        => 'Script',
+        'spreadsheet'   => 'Tableur',
+        'text'          => 'Texte',
+        'video'         => 'Vidéo'
+    );
+
+    
 $ploopi_errormsg[_PLOOPI_ERROR_NOWORKSPACEDEFINED]  = 'Aucun espace de travail n\'est défini pour cet utilisateur';
 $ploopi_errormsg[_PLOOPI_ERROR_LOGINERROR]          = 'Utilisateur ou Mot de passe incorrect';
 $ploopi_errormsg[_PLOOPI_ERROR_LOGINEXPIRE]         = 'Votre mot de passe a expiré';

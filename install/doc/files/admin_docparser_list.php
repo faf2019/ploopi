@@ -94,7 +94,7 @@ $array_columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' 
 $sql =  "
         SELECT p.*, e.filetype
         FROM ploopi_mod_doc_parser p
-        LEFT JOIN   ploopi_mod_doc_ext e
+        LEFT JOIN   ploopi_mimetype e
         ON          e.ext = p.extension
         ";
 $db->query($sql);
@@ -105,10 +105,10 @@ while ($row = $db->fetchrow())
     $actions =  "<a title=\"Supprimer\" style=\"display:block;float:right;\" href=\"javascript:void(0);\" onclick=\"javascript:ploopi_confirmlink('admin.php?op=docparser_delete&docparser_id={$row['id']}','Êtes-vous certain de vouloir supprimer cette commande ?');\"><img src=\"./modules/doc/img/ico_trash.png\" /></a>
                 <a title=\"Modifier\" style=\"display:block;float:right;\" href=\"admin.php?op=docparser_modify&docparser_id={$row['id']}\"><img src=\"./modules/doc/img/ico_modify.png\" /></a>";
 
-    $ico = (file_exists("./modules/doc/img/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
+    $ico = (file_exists("./img/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
 
     $array_values[$c]['values']['label'] = array('label' => $row['label'], 'style' => '');
-    $array_values[$c]['values']['ext'] = array('label' => "<img src=\"./modules/doc/img/mimetypes/{$ico}\" /><span>&nbsp;{$row['extension']}</span>", 'style' => '');
+    $array_values[$c]['values']['ext'] = array('label' => "<img src=\"./img/mimetypes/{$ico}\" /><span>&nbsp;{$row['extension']}</span>", 'style' => '');
     $array_values[$c]['values']['path'] = array('label' => $row['path'], 'style' => '');
     $array_values[$c]['values']['actions'] = array('label' => $actions, 'style' => '');
     $array_values[$c]['description'] = $row['label'];

@@ -134,6 +134,12 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
+        <name>ploopi_mimetype</name>
+        <label>ploopi_mimetype</label>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
         <name>ploopi_module</name>
         <label>ploopi_module</label>
         <visible>1</visible>
@@ -1564,6 +1570,38 @@
         <name>select_table</name>
         <label>select_table</label>
         <type>varchar(64)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_mimetype</tablename>
+        <name>ext</name>
+        <label>extension</label>
+        <type>varchar(10)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_mimetype</tablename>
+        <name>mimetype</name>
+        <label>mimetype</label>
+        <type>varchar(255)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_mimetype</tablename>
+        <name>filetype</name>
+        <label>filetype</label>
+        <type>varchar(50)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_mimetype</tablename>
+        <name>group</name>
+        <label>group</label>
+        <type>varchar(30)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>

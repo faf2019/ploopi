@@ -67,7 +67,7 @@
     padding:4px;
     margin-left:2px;
     border:1px solid #d8d8d8;
-    background-color:#f8f8f8;
+    background-color: #f8f8f8;
     overflow:auto;
 }
 
@@ -339,4 +339,34 @@ a.doc_fckexplorer_file:hover {
     font-family: courier;
     font-size: 12px;
     border: solid 1px Lightgrey;
+}
+
+div.doc_main_thumbs {
+	clear: both;
+	overflow: auto;
+}
+
+div.doc_thumb {
+    cursor:pointer;
+    text-align:center;
+    margin: 2px 4px;
+    padding: 2px;
+    width: 115px;
+    height: 125px;
+    display: block;
+    float: left;
+    border: 1px solid black;
+    background-color: #e0e0e0;
+}
+
+div.doc_thumb:hover {
+	background-color: #C2C2C2;
+}
+
+div.doc_thumb a p {
+	clear: both;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	text-decoration: none; 
 }

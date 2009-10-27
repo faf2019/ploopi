@@ -28,6 +28,12 @@
   license : GPL v2
   copyright : Daniel Morris
 
+* JodConverter
+  path : ./lib/jodconverter
+  url : http://artofsolving.com/opensource/jodconverter
+  licence : LGPL
+  copyright : artofsolving
+
 * JsToolbar
   path : ./lib/jstoolbar
   url : http://fr.dotclear.org/

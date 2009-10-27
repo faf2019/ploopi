@@ -83,16 +83,23 @@ $show_options = (
         <strong>Type</strong>:
         <br />
         <?php
-        $select = "SELECT distinct(filetype) FROM ploopi_mod_doc_ext ORDER BY filetype";
+        $arrFileType = array();
+        
+        $select = "SELECT distinct(filetype) FROM ploopi_mimetype";
         $db->query($select);
+        while ($row = $db->fetchrow())
+        {
+            $arrFileType[$row['filetype']] = (isset($ploopi_type_file[$row['filetype']]) ? $ploopi_type_file[$row['filetype']] : $row['filetype']);
+        }
+        natcasesort($arrFileType);
         ?>
         <select class="select" style="width:100px;" id="doc_search_filetype">
             <option value="">(tout)</option>
             <?php
-            while ($row = $db->fetchrow())
+            foreach ($arrFileType as $strFileType => $strFileTypeLang)
             {
                 ?>
-                <option value="<?php echo $row['filetype']; ?>" <?php if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] == $row['filetype']) echo 'selected'; ?>><?php echo $row['filetype']; ?></option>
+                <option value="<?php echo $strFileType; ?>" <?php if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] == $strFileType) echo 'selected'; ?>><?php echo $strFileTypeLang; ?></option>
                 <?php
             }
             ?>

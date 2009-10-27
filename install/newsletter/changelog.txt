@@ -1,3 +1,9 @@
+== Module NEWSLETTER - version 1.2.7b ==================================================
+
+2009-10-27  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * A la premiere execution, la redirection automatique vers les paramètrage en admin pouvait ommettre le fichier de langue.
+
 == Module NEWSLETTER - version 1.2.7 ==================================================
 
 2009-09-14  Xavier Toussaint ~ HeXad <xavier@hexad.fr>

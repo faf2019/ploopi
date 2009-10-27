@@ -1,3 +1,23 @@
+== Module DOC - version 4.6.0 =====================================================
+
+2009-10-27  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+* Ajout du mode d'affichage "prévisualisation des fichiers". Attention, cette prévisualisation fait appel à plusieurs outils externes :
+    - un webservice Jodconverter OU OpenOffice
+    - Inkscape
+    - ffmpeg
+    - imagemagick (+ module imagick sous php)
+    - html2ps
+    - ghostcript
+* Correction d'un bug : lors du téléchargement de fichier zippé, le dossier temporaire n'était pas effacé.
+* Correction d'un bug : coquille dans le script js du bouton "retour" dans la page de création de répertoire
+
+== Module DOC - version 4.5.1b =====================================================
+
+2009-10-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction du bug #29 qui ne sélectionnait pas le dossier dans le treeview lors d'un appel direct à un fichier (depuis un mail par exemple) - fixes #29
+
 == Module DOC - version 4.5.1 =====================================================
 
 2009-09-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

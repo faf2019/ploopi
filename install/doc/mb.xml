@@ -19,12 +19,6 @@
     </ploopi_mb_object>
     <ploopi_mb_table>
         <row>
-            <name>ploopi_mod_doc_ext</name>
-            <label>ext</label>
-            <visible>1</visible>
-        </row>
-
-        <row>
             <name>ploopi_mod_doc_file</name>
             <label>file</label>
             <visible>1</visible>
@@ -71,23 +65,6 @@
         </row>
     </ploopi_mb_table>
     <ploopi_mb_field>
-
-        <row>
-            <tablename>ploopi_mod_doc_ext</tablename>
-            <name>ext</name>
-            <label>ext</label>
-            <type>varchar(10)</type>
-            <visible>1</visible>
-
-        </row>
-        <row>
-            <tablename>ploopi_mod_doc_ext</tablename>
-            <name>filetype</name>
-            <label>filetype</label>
-            <type>varchar(16)</type>
-            <visible>1</visible>
-
-        </row>
         <row>
             <tablename>ploopi_mod_doc_file</tablename>
             <name>id</name>

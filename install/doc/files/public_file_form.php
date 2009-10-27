@@ -200,10 +200,10 @@ else
 
     $docfile_tab = empty($_GET['docfile_tab']) ? 'open' : $_GET['docfile_tab'];
 
-    $db->query("SELECT filetype FROM ploopi_mod_doc_ext WHERE ext = '{$docfile->fields['extension']}'");
+    $db->query("SELECT filetype FROM ploopi_mimetype WHERE ext = '{$docfile->fields['extension']}'");
     $row = $db->fetchrow();
 
-    $ico = (!empty($row['filetype']) && file_exists("./modules/doc/img/mimetypes/{$row['filetype']}.png")) ? "{$row['filetype']}.png" : 'default.png';
+    $ico = (!empty($row['filetype']) && file_exists("./img/mimetypes/{$row['filetype']}.png")) ? "{$row['filetype']}.png" : 'default.png';
     ?>
 
     <div class="doc_fileinfo">
@@ -228,7 +228,7 @@ else
 
         <div>
             <p class="ploopi_va" style="white-space:nowrap;overflow:hidden;">
-                <img src="./modules/doc/img/mimetypes/<?php echo $ico; ?>" />
+                <img src="./img/mimetypes/<?php echo $ico; ?>" />
                 <strong><?php echo htmlentities("{$docfile->fields['name']} {$title}"); ?></strong>
             </p>
         </div>

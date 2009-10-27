@@ -93,7 +93,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
      */
 
     if (!empty($arrRelevance)) $search[] = " f.md5id IN ('".implode("','",array_keys($arrRelevance))."') ";
-    else $search[] = " f.id = -1";
+    else $search[] = " f.id = -1"; //@TODO ce param bloque la recherche sans mot clé ! Normal ???
 
     if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_name'])) $search[] = " f.name LIKE '%".$db->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_name']))."%' ";
     if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])) $search[] = " e.filetype LIKE '%".$db->addslashes($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])."%' ";
@@ -204,7 +204,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
                 LEFT JOIN   ploopi_workspace w
                 ON          f.id_workspace = w.id
 
-                LEFT JOIN   ploopi_mod_doc_ext e
+                LEFT JOIN   ploopi_mimetype e
                 ON          e.ext = f.extension
 
                 WHERE       {$strWhere}
@@ -295,7 +295,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
             $ksize = sprintf("%.02f",$row['size']/1024);
             $ldate = ploopi_timestamp2local($row['timestp_modify']);
 
-            $ico = (file_exists("./modules/doc/img/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
+            $ico = (file_exists("./img/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
 
             $icofolder = 'ico_folder';
             if ($row['foldertype'] == 'shared') $icofolder .= '_shared';
@@ -343,7 +343,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 
             $values[$c]['values']['nom'] =
                 array(
-                    'label' => "<img src=\"./modules/doc/img/mimetypes/{$ico}\" /><span>&nbsp;{$row['name']}</span>",
+                    'label' => "<img src=\"./img/mimetypes/{$ico}\" /><span>&nbsp;{$row['name']}</span>",
                     'sort_label' => strtolower($row['name'])
                 );
 

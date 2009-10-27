@@ -444,7 +444,7 @@ class docfile extends data_object
                             ORDER BY    m.meta
                             ");
 
-        if($db->numrows($rs)) return $db->getarray($rs);
+        if($db->numrows($rs)) return $db->getarray($rs, true);
 
         return array();
     }

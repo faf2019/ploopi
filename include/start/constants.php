@@ -31,8 +31,8 @@
  * @author Stéphane Escaich
  */
 
-define ('_PLOOPI_VERSION', '1.6.9.0.0');
-define ('_PLOOPI_REVISION', '91001');
+define ('_PLOOPI_VERSION', '1.6.9.0.1');
+define ('_PLOOPI_REVISION', '91027');
 
 define ('_PLOOPI_MSG_DBERROR',  'Database connection error, please contact administrator');
 define ('_SYSTEM_SYSTEMADMIN',  0);
@@ -104,7 +104,7 @@ define ('_PLOOPI_VIEWMODE_PRIVATE',     1);
 define ('_PLOOPI_VIEWMODE_DESC',        2);
 define ('_PLOOPI_VIEWMODE_ASC',         3);
 define ('_PLOOPI_VIEWMODE_GLOBAL',      4);
-define ('_PLOOPI_VIEWMODE_ASCDESC',    5);
+define ('_PLOOPI_VIEWMODE_ASCDESC',     5);
 
 // USER LEVEL
 define ('_PLOOPI_ID_LEVEL_VISITOR',          0);

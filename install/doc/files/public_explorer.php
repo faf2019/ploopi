@@ -31,6 +31,10 @@
  * @author Stéphane Escaich
  */
 
+?>
+<div id="doc_infotypedisplay" style="display: none;">list</div>
+<?php
+
 /**
  * Charge le validation
  */
@@ -269,7 +273,7 @@ $sql = "
     LEFT JOIN   ploopi_workspace w
     ON          f.id_workspace = w.id
 
-    LEFT JOIN   ploopi_mod_doc_ext e
+    LEFT JOIN   ploopi_mimetype e
     ON          e.ext = f.extension
 
     WHERE   {$strWhere}
@@ -282,7 +286,7 @@ while ($row = $db->fetchrow())
     $ksize = sprintf("%.02f",$row['size']/1024);
     $ldate = ploopi_timestamp2local($row['timestp_modify']);
 
-    $ico = (file_exists("./modules/doc/img/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
+    $ico = (file_exists("./img/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
 
     $tools = '';
 
@@ -304,7 +308,7 @@ while ($row = $db->fetchrow())
 
     $values[$c]['values']['label'] =
         array(
-            'label' => "<img src=\"./modules/doc/img/mimetypes/{$ico}\" /><span>&nbsp;{$row['name']}</span>",
+            'label' => "<img src=\"./img/mimetypes/{$ico}\" /><span>&nbsp;{$row['name']}</span>",
             'sort_label' => '1 '.strtolower($row['name'])
         );
 
@@ -381,7 +385,7 @@ $sql = "
     LEFT JOIN   ploopi_workspace w
     ON          f.id_workspace = w.id
 
-    LEFT JOIN   ploopi_mod_doc_ext e
+    LEFT JOIN   ploopi_mimetype e
     ON          e.ext = f.extension
 
     LEFT JOIN   ploopi_mod_doc_file df
@@ -397,7 +401,7 @@ while ($row = $db->fetchrow())
     $ksize = sprintf("%.02f",$row['size']/1024);
     $ldate = ploopi_timestamp2local($row['timestp_create']);
 
-    $ico = (file_exists("./modules/doc/img/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
+    $ico = (file_exists("./img/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
 
     $tools = '';
 
@@ -425,7 +429,7 @@ while ($row = $db->fetchrow())
 
     $values[$c]['values']['label'] =
         array(
-            'label' => "<img src=\"./modules/doc/img/mimetypes/{$ico}\" /><span>&nbsp;{$name}</span>",
+            'label' => "<img src=\"./img/mimetypes/{$ico}\" /><span>&nbsp;{$name}</span>",
             'sort_label' => '3 '.strtolower($row['name'])
         );
 

@@ -209,3 +209,25 @@ function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
         }
     );
 }
+
+function doc_changeshow(currentfolder, typeshow)
+{
+	urlGet = 'admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=';
+	
+	if($('doc_infotypedisplay') == 'undefined' || $('doc_infotypedisplay').innerHTML == 'thumb')
+	{
+		// doc_type_show = 'list';
+		$('doc_type_show').src = './modules/doc/img/ico_show_list.png';
+		urlGet = urlGet+'doc_explorer';
+	}
+	else
+	{
+		// doc_type_show = 'thumb';
+		$('doc_type_show').src = './modules/doc/img/ico_show_thumb.png';
+		urlGet = urlGet+'doc_explorer_thumb';
+	}
+	
+	if(currentfolder != 'undefined') urlGet = urlGet+'&currentfolder='+currentfolder;
+
+	new Ajax.Updater('doc_explorer',urlGet);
+}

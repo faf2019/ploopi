@@ -241,7 +241,7 @@ if ($_SESSION['ploopi']['connected'])
                             {
                                 // Création d'un dossier de travail temporaire
                                 $tmpfoldername = md5(uniqid(rand(), true));
-                                $uncompress_path = doc_getpath()._PLOOPI_SEP.'uncompress'._PLOOPI_SEP.$tmpfoldername;
+                                $uncompress_path = doc_getpath()._PLOOPI_SEP.'zip'._PLOOPI_SEP.$tmpfoldername;
                                 if (!is_dir($uncompress_path)) ploopi_makedir($uncompress_path);
                                 
                                 if (is_writeable($uncompress_path))
@@ -490,7 +490,7 @@ if ($_SESSION['ploopi']['connected'])
                         ploopi_downloadfile($zip_path._PLOOPI_SEP.$zip_filename, $zip_filename, true, true, false);
 
                         // Suppression du dossier temporaire
-                        rmdir($zip_path);
+                        if(isset($zip_path) && is_dir($zip_path)) ploopi_deletedir($zip_path);
 
                         // Vidage buffer
                         ploopi_die(null, true);
@@ -932,6 +932,9 @@ if ($_SESSION['ploopi']['connected'])
         break;
 
         case 'doc_explorer':
+            
+            $_SESSION['ploopi']['doc']['typeshow'] = 'list';
+            
             ploopi_init_module('doc');
 
             include_once './modules/doc/class_docfolder.php';
@@ -948,7 +951,59 @@ if ($_SESSION['ploopi']['connected'])
             include_once './modules/doc/public_explorer.php';
             ploopi_die();
         break;
+        
+        case 'doc_explorer_thumb':
+            
+            $_SESSION['ploopi']['doc']['typeshow'] = 'thumb';
+            
+            ploopi_init_module('doc');
 
+            include_once './modules/doc/class_docfolder.php';
+
+            $docfolder_readonly_content = false;
+
+            if (!empty($currentfolder))
+            {
+                $docfolder = new docfolder();
+                $docfolder->open($currentfolder);
+                $docfolder_readonly_content = ($docfolder->fields['readonly_content'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']);
+            }
+
+            include_once './modules/doc/public_explorer_thumb.php';
+            ploopi_die();
+        break;
+        
+        case 'doc_getthumbnail':
+            
+            $booForceCache = false;
+            
+            $intTimeCache = 2592000; // 30 jours
+            $strFormatExport = 'png';
+            
+            include_once './include/classes/cache.php';
+            ploopi_ob_clean();
+
+            $objCache = new ploopi_cache(md5('doc_thumb_'.$_GET['docfile_md5id'].$_GET['version']), $intTimeCache);
+
+            // header("Content-Type: image/{$strFormatExport}");
+            
+            if(!$objCache->start($booForceCache)) // si pas de cache on le crée
+            {
+                ploopi_init_module('doc', false, false, false);
+                
+                include_once './modules/doc/class_docfile.php';
+                include './include/classes/mimethumb.php';
+                
+                $objDoc = new docfile();
+                $objThumb = new mimethumb(111,90,"{$strFormatExport}",'transparent');
+                
+                if($objDoc->openmd5($_GET['docfile_md5id']))
+                    $objThumb->getThumbnail($objDoc->getfilepath(),$objDoc->fields['extension']);
+                    
+                if(isset($objCache)) $objCache->end();
+            }
+            ploopi_die();
+        break;            
     }
 }
 

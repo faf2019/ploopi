@@ -78,3 +78,12 @@ div.doc_moreinfo_box {
     overflow:visible;
     height:1%;
 }
+
+div.doc_main_thumbs {
+    clear: both;
+    overflow: visible;
+    height:1%;
+    padding: 0 0 2px 0;
+    
+}
+

@@ -101,7 +101,6 @@ else // creating
     <?php
 }
 ?>
-
 <div class="doc_fileform_main">
     <div>
         <?php
@@ -241,9 +240,8 @@ else // creating
         <?php
     }
     ?>
-
     <div style="clear:both;float:right;padding:4px;">
-        <input type="button" class="flatbutton" value="<?php echo _PLOOPI_BACK; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$currentfolder}"); ?>">
+        <input type="button" class="flatbutton" value="<?php echo _PLOOPI_BACK; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$currentfolder}"); ?>'">
         <?php
         if (!$readonly)
         {
@@ -269,7 +267,7 @@ if (!$readonly)
 {
     ?>
     <script type="text/javascript">
-    document.docfolder_form.docfolder_name.focus();
+    $('docfolder_name').focus();
     </script>
     <?php
 }
