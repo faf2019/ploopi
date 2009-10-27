@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mimetype` (
   `group` varchar(30) NOT NULL,
   PRIMARY KEY  (`ext`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-LOCK TABLES `ploopi_mb_wce_object` WRITE;
+LOCK TABLES `ploopi_mimetype` WRITE;
 /*!40000 ALTER TABLE `ploopi_mimetype` DISABLE KEYS */;
 INSERT INTO `ploopi_mimetype` (`ext`, `mimetype`, `filetype`, `group`) VALUES
 ('txt', 'text/plain', 'text', 'text'),
