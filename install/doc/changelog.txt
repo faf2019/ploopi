@@ -1,3 +1,10 @@
+== Module DOC - version 4.5.1c =====================================================
+
+2009-10-29  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction du bug #30/#31 qui ne générait une demande de validation pour un fichier alors que le contenu n'était pas modifié - fixes #30, fixes #31
+* Correctifs mineurs sur l'interface de mise à jour d'un fichier
+
 == Module DOC - version 4.5.1b =====================================================
 
 2009-10-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -528,11 +528,13 @@ else
                 ?>
 
                 <div style="float:right;width:40%;">
-                    <fieldset style="border:1px solid #c0c0c0;margin:4px 4px 0 0;">
-                        <legend>Mettre à jour avec un fichier situé</LEGEND>
-                        <?php
-                        if (!$readonly)
-                        {
+                    <?php
+                    if (!$readonly)
+                    {
+                        ?>
+                        <fieldset style="border:1px solid #c0c0c0;margin:4px 4px 0 0;">
+                            <legend>Mettre à jour avec un fichier situé</LEGEND>
+                            <?php
                             if ($booServerModeAvailable)
                             {
                                 ?>
@@ -569,10 +571,10 @@ else
                             ?>
                             <div id="doc_progressbar" style="display:none;"><div id="doc_progressbar_bg"></div></div>
                             <div id="doc_progressbar_txt"></div>
-                            <?php
-                        }
-                        ?>
-                    </fieldset>
+                        </fieldset>
+                        <?php
+                    }
+                    ?>
                 </div>
 
                 <div style="float:left;width:59%;">
@@ -652,7 +654,6 @@ else
                 </div>
 
                 <div style="clear:both;padding:4px;text-align:right;">
-                    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_BACK; ?>" onclick="javascript:doc_explorer(<?php echo $currentfolder; ?>);">
                     <?php
                     if (!$readonly)
                     {

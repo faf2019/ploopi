@@ -167,12 +167,12 @@ if ($_SESSION['ploopi']['connected'])
                     }
                 }
                 
-                // on crée des documents "draft" s'il existe des validateurs et que l'utilisateur courant n'en fait pas partie
-                $draft = ((!empty($arrWfUsers['user']) || !empty($arrWfUsers['group'])) && !$booWfVal);
-
                 // nouveau fichier ?
                 $newfile = (empty($_REQUEST['docfile_md5id']));
 
+                // on crée des documents "draft" s'il existe des validateurs et que l'utilisateur courant n'en fait pas partie
+                $draft = ((!empty($arrWfUsers['user']) || !empty($arrWfUsers['group'])) && !$booWfVal);
+                
                 if ($newfile)
                 {
                     for ($i=0;$i<=5;$i++)
@@ -318,22 +318,22 @@ if ($_SESSION['ploopi']['connected'])
                                     
                                     $error = $docfile->save();
                                 
-                                    if ($draft)
-                                    {
-                                        $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
-                                        ploopi_tickets_send(
-                                            "Demande de validation du document <strong>\"{$docfile->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})",
-                                            "Ceci est un message automatique envoyé suite à une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce document pour le valider en cliquant sur le lien ci-dessous.",
-                                            true,
-                                            0,
-                                            _DOC_OBJECT_FILEDRAFT,
-                                            $docfile->fields['md5id'],
-                                            $docfile->fields['name']
-                                        );
-                                    }
-                                
                                     if (!$error)
                                     {
+                                        if ($draft)
+                                        {
+                                            $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
+                                            ploopi_tickets_send(
+                                                "Demande de validation du document <strong>\"{$docfile->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})",
+                                                "Ceci est un message automatique envoyé suite à une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce document pour le valider en cliquant sur le lien ci-dessous.",
+                                                true,
+                                                0,
+                                                _DOC_OBJECT_FILEDRAFT,
+                                                $docfile->fields['md5id'],
+                                                $docfile->fields['name']
+                                            );
+                                        }
+                                        
                                         if (!$draft && $currentfolder != 0)
                                         {
                                             // On va chercher les abonnés
@@ -401,16 +401,16 @@ if ($_SESSION['ploopi']['connected'])
                         break;
                     }
 
-                    if ($draft)
+                    if (!$error) 
                     {
-                        $docfile = new docfiledraft();
-                        $docfile->setuwm();
-                        $docfile->fields['id_docfile'] = $docfile_id;
-                        $docfile->fields['id_folder'] = $currentfolder;
-                    }
-                    else
-                    {
-                        if (!$error) $docfile->createhistory();
+                        if ($draft)
+                        {
+                            $docfile = new docfiledraft();
+                            $docfile->setuwm();
+                            $docfile->fields['id_docfile'] = $docfile_id;
+                            $docfile->fields['id_folder'] = $currentfolder;
+                        }
+                        else $docfile->createhistory();
                     }
 
                     $docfile->setvalues($_POST,'docfile_');
@@ -432,6 +432,20 @@ if ($_SESSION['ploopi']['connected'])
 
                     if (!$error)
                     {
+                        if ($draft)
+                        {
+                            $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
+                            ploopi_tickets_send(
+                                "Demande de validation du document <strong>\"{$docfile->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})",
+                                "Ceci est un message automatique envoyé suite à une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce document pour le valider en cliquant sur le lien ci-dessous.",
+                                true,
+                                0,
+                                _DOC_OBJECT_FILEDRAFT,
+                                $docfile->fields['md5id'],
+                                $docfile->fields['name']
+                            );
+                        }                        
+                        
                         if (!$draft && $currentfolder != 0)
                         {
                             $docfolder = new docfolder();
