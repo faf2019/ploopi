@@ -1,3 +1,9 @@
+== Module DOC - version 4.6.1a ====================================================
+
+2009-10-29  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Mise à jour : Application des correctifs de la branche stable
+
 == Module DOC - version 4.6.1 =====================================================
 
 2009-10-29  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
