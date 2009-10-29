@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -45,31 +46,40 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
 {
     $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
-    if (!empty($_GET['docTabItem'])) $_SESSION['doc']['docTabItem'] = $_GET['docTabItem'];
-    if (!isset($_SESSION['doc']['docTabItem'])) $_SESSION['doc']['docTabItem'] = '';
+    if (!empty($_GET['docTabItem'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['docTabItem'] = $_GET['docTabItem'];
+    if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['docTabItem'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['docTabItem'] = '';
 
     $tabs[_DOC_TAB_PARSERS] =
         array(
-            'title' => 'Gestion des analyseurs',
+            'title' => _DOC_TAB_TITLE_PARSERS,
             'url' => "admin.php?docTabItem="._DOC_TAB_PARSERS
         );
 
     $tabs[_DOC_TAB_INDEX] =
         array(
-            'title' => 'Indexation',
+            'title' => _DOC_TAB_TITLE_INDEX,
             'url' => "admin.php?docTabItem="._DOC_TAB_INDEX
         );
-
+        
+    if(_PLOOPI_USE_CACHE)
+    {        
+        $tabs[_DOC_TAB_CLEAN_CACHE] =
+            array(
+                'title' => _DOC_TAB_TITLE_CLEAN_CACHE,
+                'url' => "admin.php?docTabItem="._DOC_TAB_CLEAN_CACHE
+            );
+    }
+        
     $tabs[_DOC_TAB_STATS] =
         array(
-            'title' => 'Statistiques',
+            'title' => _DOC_TAB_TITLE_STATS,
             'url' => "admin.php?docTabItem="._DOC_TAB_STATS
         );
 
     echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
-    echo $skin->create_tabs($tabs, $_SESSION['doc']['docTabItem']);
+    echo $skin->create_tabs($tabs, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['docTabItem']);
 
-    switch($_SESSION['doc']['docTabItem'])
+    switch($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['docTabItem'])
     {
         case _DOC_TAB_PARSERS:
             switch($op)
@@ -108,7 +118,7 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
                 break;
 
                 default:
-                    echo $skin->open_simplebloc('Indexation');
+                    echo $skin->open_simplebloc(_DOC_TAB_TITLE_INDEX);
                     ?>
                     <div style="padding:4px;">
                         <input type="button" class="button" value="Ré-Indexer" onclick="javascript:ploopi_confirmlink('admin.php?op=execute','Attention cette procédure va ré-indexer tous les fichiers. Le traitement peut être très long...');">&nbsp;Cette procédure permet de ré-indexer le contenu des documents du module.
@@ -122,6 +132,38 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
         case _DOC_TAB_STATS:
             include './modules/doc/admin_docparser_stats.php';
         break;
+        
+        case _DOC_TAB_CLEAN_CACHE:
+            switch($op)
+            {
+                case 'execute':
+                    include_once './include/classes/cache.php';
+                    $objCache = new ploopi_cache(0);
+                    $objCache->set_groupe('module_doc_'.$_SESSION['ploopi']['workspaceid'].'_'.$_SESSION['ploopi']['moduleid']);
+                    $objCache->clean();
+                    unset($objCache);
+                    
+                    echo $skin->open_simplebloc(_DOC_TAB_TITLE_CLEAN_CACHE);
+                    ?>
+                    <div style="padding:4px;">
+                        Le cache a été vidé.
+                    </div>
+                    <?php
+                    echo $skin->close_simplebloc();
+                break;
+
+                default:
+                    echo $skin->open_simplebloc(_DOC_TAB_TITLE_CLEAN_CACHE);
+                    ?>
+                    <div style="padding:4px;">
+                        <input type="button" class="button" value="Vider le cache" onclick="javascript:ploopi_confirmlink('admin.php?op=execute','Attention, cette procédure va supprimer toutes les vignettes mises en cache pour le module courant. Confirmez-vous la suppression ?');">&nbsp;Cette procédure permet de supprimer toutes les vignettes mises en cache par le module.
+                    </div>
+                    <?php
+                    echo $skin->close_simplebloc();
+                break;
+            }
+            break;
+        
     }
 }
 ?>

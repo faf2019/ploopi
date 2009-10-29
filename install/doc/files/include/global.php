@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -37,7 +38,9 @@
 
 define ('_DOC_TAB_PARSERS',     1);
 define ('_DOC_TAB_INDEX',       2);
-define ('_DOC_TAB_STATS',       3);
+define ('_DOC_TAB_CLEAN_CACHE', 3);
+define ('_DOC_TAB_STATS',       4);
+
 
 define ('_DOC_ACTION_ADDFOLDER',    1);
 define ('_DOC_ACTION_ADDFILE',      2);

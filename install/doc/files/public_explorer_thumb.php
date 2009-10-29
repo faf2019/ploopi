@@ -329,7 +329,7 @@ while ($row = $db->fetchrow())
     ?>
     <div class="doc_thumb">
         <a href="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_filedownload&docfiledraft_md5id={$row['md5id']}"); ?>" title="<?php echo strtolower($name); ?>" >
-            <p style="height: 90px;"><img alt="<?php  echo strtolower($name); ?>" src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_getthumbnail&docfile_md5id={$row['md5id']}&version={$row['version']}"); ?>" ></p>
+            <p style="height: 90px;"><img alt="<?php  echo strtolower($name); ?>" src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_getthumbnail&docfile_md5id={$row['md5id']}&version=draft"); ?>" ></p>
             <p style="height: 8px;"><?php  echo ploopi_strcut(strtolower($name),18,'middle'); ?></p>
         </a>
         <p style="height: 15px;"><?php echo $tools; ?></p>

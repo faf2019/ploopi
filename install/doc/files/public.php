@@ -43,7 +43,7 @@ include_once './modules/doc/class_docfiledraft.php';
 
 $op = (isset($_REQUEST['op'])) ? $_REQUEST['op'] : 'doc_browser';
 $currentfolder = (isset($_REQUEST['currentfolder'])) ? $_REQUEST['currentfolder'] : 0;
-if(!isset($_SESSION['ploopi']['doc']['typeshow'])) $_SESSION['ploopi']['doc']['typeshow'] = 'list';
+if(!isset($_SESSION['ploopi']['doc'][$_SESSION['ploopi']['moduleid']]['typeshow'])) $_SESSION['ploopi']['doc'][$_SESSION['ploopi']['moduleid']]['typeshow'] = 'list';
 
 // Lien vers document sans folder ?
 // Cas du lien depuis le moteur de recherche global
@@ -121,7 +121,7 @@ else
                     ?>
                     <div class="doc_path">
                         <a title="Aide" href="javascript:void(0);" onclick="javascript:doc_openhelp(event);" style="float:right;"><img src="./modules/doc/img/ico_help.png" /></a>
-                        <a title="Affichage" href="javascript:void(0);" onclick="javascript:doc_changeshow(<?php if(!empty($currentfolder)) echo $currentfolder ?>);" style="float: right;"><img  id="doc_type_show" src="<?php echo (($_SESSION['ploopi']['doc']['typeshow'] == 'list') ? './modules/doc/img/ico_show_list.png' : './modules/doc/img/ico_show_thumb.png'); ?>" /></a>                        
+                        <a title="Affichage" href="javascript:void(0);" onclick="javascript:doc_changeshow(<?php if(!empty($currentfolder)) echo $currentfolder ?>);" style="float: right;"><img  id="doc_type_show" src="<?php echo (($_SESSION['ploopi']['doc'][$_SESSION['ploopi']['moduleid']]['typeshow'] == 'list') ? './modules/doc/img/ico_show_list.png' : './modules/doc/img/ico_show_thumb.png'); ?>" /></a>                        
                         <?php
                         //$readonly = false;
                         $docfolder_readonly_content = false;
@@ -237,7 +237,7 @@ else
                             ?>
                             <div id="doc_explorer" class="doc_explorer_main">
                             <?php
-                            if($_SESSION['ploopi']['doc']['typeshow'] == 'list')
+                            if($_SESSION['ploopi']['doc'][$_SESSION['ploopi']['moduleid']]['typeshow'] == 'list')
                                 include './modules/doc/public_explorer.php';
                             else
                                 include './modules/doc/public_explorer_thumb.php';

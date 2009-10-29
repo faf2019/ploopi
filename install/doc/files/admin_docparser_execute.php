@@ -1,7 +1,9 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2009 HeXad
+    
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -41,7 +43,7 @@ include_once './modules/doc/class_docfile.php';
 
 $arrRecords = ploopi_search_get_records();
 
-echo $skin->open_simplebloc('Indexation');
+echo $skin->open_simplebloc(_DOC_TAB_TITLE_INDEX);
 ?>
 <div style="padding:4px;">
 <?php

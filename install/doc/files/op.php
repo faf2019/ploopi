@@ -933,7 +933,7 @@ if ($_SESSION['ploopi']['connected'])
 
         case 'doc_explorer':
             
-            $_SESSION['ploopi']['doc']['typeshow'] = 'list';
+            $_SESSION['ploopi']['doc'][$_SESSION['ploopi']['moduleid']]['typeshow'] = 'list';
             
             ploopi_init_module('doc');
 
@@ -954,7 +954,7 @@ if ($_SESSION['ploopi']['connected'])
         
         case 'doc_explorer_thumb':
             
-            $_SESSION['ploopi']['doc']['typeshow'] = 'thumb';
+            $_SESSION['ploopi']['doc'][$_SESSION['ploopi']['moduleid']]['typeshow'] = 'thumb';
             
             ploopi_init_module('doc');
 
@@ -975,19 +975,15 @@ if ($_SESSION['ploopi']['connected'])
         
         case 'doc_getthumbnail':
             
-            $booForceCache = false;
-            
             $intTimeCache = 2592000; // 30 jours
-            $strFormatExport = 'png';
-            
+
             include_once './include/classes/cache.php';
             ploopi_ob_clean();
 
-            $objCache = new ploopi_cache(md5('doc_thumb_'.$_GET['docfile_md5id'].$_GET['version']), $intTimeCache);
-
-            // header("Content-Type: image/{$strFormatExport}");
+            $objCache = new ploopi_cache(md5('doc_thumb_'.$_GET['docfile_md5id'].'_'.$_GET['version']), $intTimeCache); // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
+            $objCache->set_groupe('module_doc_'.$_SESSION['ploopi']['workspaceid'].'_'.$_SESSION['ploopi']['moduleid']); 
             
-            if(!$objCache->start($booForceCache)) // si pas de cache on le crée
+            if(!$objCache->start()) // si pas de cache on le crée
             {
                 ploopi_init_module('doc', false, false, false);
                 
@@ -995,12 +991,15 @@ if ($_SESSION['ploopi']['connected'])
                 include './include/classes/mimethumb.php';
                 
                 $objDoc = new docfile();
-                $objThumb = new mimethumb(111,90,"{$strFormatExport}",'transparent');
+                $objThumb = new mimethumb(111,90,'png','transparent');
                 
                 if($objDoc->openmd5($_GET['docfile_md5id']))
                     $objThumb->getThumbnail($objDoc->getfilepath(),$objDoc->fields['extension']);
-                    
                 if(isset($objCache)) $objCache->end();
+            }
+            else
+            {
+                header("Content-Type: image/png");
             }
             ploopi_die();
         break;            

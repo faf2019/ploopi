@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -35,7 +36,7 @@
  * Affichage du bloc 'statistiques'
  */
 
-echo $skin->open_simplebloc('Statistiques');
+echo $skin->open_simplebloc(_DOC_TAB_TITLE_STATS);
 ?>
 <div class="doc_admin_titlebar"><b>Quelques chiffres</b></div>
 <?php

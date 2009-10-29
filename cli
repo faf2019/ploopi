@@ -76,9 +76,17 @@ global $db;
 $db = new ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
 if(!$db->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
 
+$booHelp = false;
+
 // Traitement des arguments
 for ($i=1;$i<$argc;$i++)
 {
+    if($argv[$i] == '--help')
+    {
+        $booHelp = true;
+        break;
+    }
+    
     $arrArg = split('=', $argv[$i]);
     if (sizeof($arrArg) == 2) // argument valide
     {
@@ -86,7 +94,19 @@ for ($i=1;$i<$argc;$i++)
     }
 }
 
-if (!empty($module) && !empty($op))
+if($booHelp)
+{
+    echo<<<STDOUT
+Usage: {$argv[0]} module=[MODULE]... op=[OPERATION]...\r
+Effectuer une opération automatique propre au module ploopi\r
+Réindexation, génération de vignettes,...\r\n
+  module=MODULE       indique le module responsable de l'opération à effectuer\r
+                    (ex. doc)\r
+  op=OPERATION        l'opération à effectuer\r
+                    (ex. reindex, thumbnails)\n
+STDOUT;
+}
+elseif (!empty($module) && !empty($op))
 {
     if (file_exists("./modules/{$module}/cli.php")) 
     {
@@ -101,8 +121,8 @@ if (!empty($module) && !empty($op))
 else
 {
     echo<<<STDOUT
-Vous devez préciser le module et l'opération à exécuter\r
-ex: {$argv[0]} module=doc op=reindex\n
+cli : unreconized option\r
+Pour en savoir davantage, faites: « ./cli --help ».\n
 STDOUT;
 }
 ?>

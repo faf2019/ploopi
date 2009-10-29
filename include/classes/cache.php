@@ -65,6 +65,11 @@ class ploopi_cache extends Cache_Lite_Output
      */    
     private $cache_id;
     
+    /**
+     * Id du cache
+     */    
+    private $cache_groupe = 'default';
+    
     
     /**
      * Constructeur statique
@@ -90,6 +95,11 @@ class ploopi_cache extends Cache_Lite_Output
      * Retourne true si le cache est activé
      */
     public static function getactivated() { return self::$activated; }
+    
+    /*
+     * Modifie le groupe de cache
+     */
+    public function set_groupe($strGroup = 'default') { if(is_string($strGroup)) $this->cache_groupe = $strGroup; }
     
     /**
      * Constructeur de la classe
@@ -119,7 +129,7 @@ class ploopi_cache extends Cache_Lite_Output
     {
         if (self::$activated)
         {
-            $this->_setFileName($this->cache_id, 'default');
+            $this->_setFileName($this->cache_id, $this->cache_groupe);
             if (file_exists($this->_file)) return($this->lastModified());
             else return 0;
         }
@@ -139,7 +149,7 @@ class ploopi_cache extends Cache_Lite_Output
         if (self::$activated)
         {
             if ($force_caching) $this->setOption('lifeTime', 0);
-            $cache_content = parent::start($this->cache_id);
+            $cache_content = parent::start($this->cache_id, $this->cache_groupe);
 
             if ($cache_content) self::$read++;
 
@@ -161,6 +171,17 @@ class ploopi_cache extends Cache_Lite_Output
         }
     }
     
+    /*
+     * Vide le cache d'un groupe
+     */
+    public function clean()
+    {
+        if (self::$activated) 
+        {
+            parent::clean($this->cache_groupe);
+        }
+    }
+    
     /**
      * Lit une variable en cache
      */
@@ -169,7 +190,7 @@ class ploopi_cache extends Cache_Lite_Output
         if (self::$activated)
         {
             if ($force_caching) $this->setOption('lifeTime', 0);
-            $var = unserialize(parent::get($this->cache_id));
+            $var = unserialize(parent::get($this->cache_id,$this->cache_groupe));
 
             if ($var) self::$read++;
             
@@ -186,7 +207,7 @@ class ploopi_cache extends Cache_Lite_Output
     { 
         if (self::$activated)
         {
-            parent::save(serialize($var));
+            parent::save(serialize($var),$this->cache_groupe);
             self::$written++;
         }
     }

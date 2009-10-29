@@ -1,7 +1,9 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2009 HeXad
+    
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -35,7 +37,7 @@
  * D'abord le mini formulaire d'ajout/modif, puis la liste des parsers existants
  */
 
-echo $skin->open_simplebloc('Gestion des analyseurs');
+echo $skin->open_simplebloc(_DOC_TAB_TITLE_PARSERS);
 
 include_once './modules/doc/class_docparser.php';
 $docparser = new docparser();
