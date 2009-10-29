@@ -72,8 +72,8 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
     if ($db->numrows() == 1) // 1 user found
     {
         // Gestion de la redirection après login (en fonction de l'url de provenance et du script d'authentification)
-        $arrReferer = parse_url($_SERVER['HTTP_REFERER']); // Provenance
-        $arrRequest = parse_url($_SERVER['REQUEST_URI']);  // Demande d'authentification
+        $arrReferer = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER']) : array(); // Provenance
+        $arrRequest = isset($_SERVER['REQUEST_URI']) ? parse_url($_SERVER['REQUEST_URI']) : array();  // Demande d'authentification
         
         $strRefererHost = isset($arrReferer['host']) ? $arrReferer['host'] : '';
         $strRequestHost = $_SERVER['HTTP_HOST'];
