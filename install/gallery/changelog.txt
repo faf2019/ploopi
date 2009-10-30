@@ -1,3 +1,9 @@
+== Module GALLERY - version 0.1.2 ====================================================
+
+2009-10-30  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Ajout: Possibilité de cloner les galeries
+
 == Module GALLERY - version 0.1.1i ====================================================
 
 2009-10-30  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

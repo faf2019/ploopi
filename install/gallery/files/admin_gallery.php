@@ -62,6 +62,17 @@ switch($op)
         ploopi_redirect('admin.php?galleryTabItem='._GALLERY_TAB_LIST.'&ploopi_mod_msg=_GALLERY_MESS_OK_2');
     break;
     
+    // clone
+    case 'gallery_clone':
+        include_once './modules/gallery/class/class_gallery.php';
+        $objGallery = new gallery();
+        
+        $objGallery->open($_GET['id_gallery']);
+        $objGallery->saveclone();
+        
+        ploopi_redirect('admin.php?op=gallery_modify&id_gallery='.$objGallery->fields['id'].'&ploopi_mod_msg=_GALLERY_MESS_OK_1');
+    break;
+    
     default:
     break;
 }

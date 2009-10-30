@@ -71,12 +71,14 @@ $c=0;
 
 while ($fields = $db->fetchrow($resultSqlGallery))
 {
+    $clone = ploopi_urlencode("admin.php?op=gallery_clone&id_gallery={$fields['id']}");
     $open = ploopi_urlencode("admin.php?op=gallery_modify&id_gallery={$fields['id']}");
     $delete = ploopi_urlencode("admin.php?op=gallery_delete&id_gallery={$fields['id']}");
 
     $array_values[$c]['values']['label']        = array('label' => $fields['label']);
     $array_values[$c]['values']['desc']         = array('label' => $fields['description']);
     $array_values[$c]['values']['actions']      = array('label' => '
+        <a href="'.$clone.'" title="'._GALLERY_LIST_CLONE.'"><img src="./modules/gallery/img/ico_clone.png" alt="'._GALLERY_LIST_CLONE.'"></a>
         <a href="'.$open.'" title="'._GALLERY_LIST_MODIFY.'"><img src="./modules/gallery/img/ico_modify.png" alt="'._GALLERY_LIST_MODIFY.'"></a>
         <a href="javascript:ploopi_confirmlink(\''.$delete.'\',\''._GALLERY_LIST_CONFIRM_DELETE.'\')"><img border="0" src="./modules/gallery/img/ico_trash.png"></a>');
 

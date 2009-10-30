@@ -124,5 +124,23 @@ class gallery extends data_object
     {
         $this->booAutoSaveInfo = $booAutoSave;
     }
+    
+    public function saveclone()
+    {
+        $objClone = new gallery();
+        $objClone->fields = $this->fields;
+        $objClone->fields['label'] .= ' (Copie)';
+        
+        unset($objClone->fields['id']);
+        $objClone->save();
+        
+        foreach($this->getdirectories() as $key => $idfield) $res[] = $idfield['id_directory'];
+        ploopi_print_r($res);
+        
+        $objClone->savedirectories($res);
+
+        $this->open($objClone->fields['id']);
+        unset($objClone);
+    }
 }
 ?>

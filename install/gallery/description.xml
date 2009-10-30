@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>gallery</label>
-      <version>0.1.1i</version>
+      <version>0.1.2</version>
       <author>HeXad</author>
-      <date>20091027155900</date>
+      <date>20091030160600</date>
       <publicparam>1</publicparam>
       <description>Affichage de galeries d'images</description>
       <action>

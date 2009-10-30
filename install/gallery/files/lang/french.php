@@ -45,8 +45,9 @@ define('_GALLERY_TABLIB_EDIT',              'Modification d\'une Galerie');
 define('_GALLERY_LIST_LABEL',               'Label');
 define('_GALLERY_LIST_DESCRIPTION',         'Description');
 
-define('_GALLERY_LIST_MODIFY',              'Modifier le formulaire');
-define('_GALLERY_LIST_DELETE',              'Modifier le formulaire');
+define('_GALLERY_LIST_CLONE',               'Cloner la galerie');
+define('_GALLERY_LIST_MODIFY',              'Editer la galerie');
+define('_GALLERY_LIST_DELETE',              'Supprimer la galerie');
 
 define('_GALLERY_LIST_CONFIRM_DELETE',      'Attention cette action va supprimer définitivement cette galerie. Êtes-vous certain de vouloir continuer ?');
 
