@@ -139,16 +139,17 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
         $hdest = round($h/$coef);
     }
 
-    if($wdest > $wmax) $wdest = $wmax;
-    if($hdest > $hmax) $hdest = $hmax;
+    if($wmax && $wdest > $wmax) $wdest = $wmax;
+    if($hmax && $hdest > $hmax) $hdest = $hmax;
     
     // Centrage de l'image demandé avec pourtour de couleur $centerwidthcolor
-    if(!empty($centerwidthcolor) && $wmax && $hmax)
+    if(!empty($centerwidthcolor))
     {
         $distX = ($wmax > $wdest) ? round(($wmax-$wdest)/2) : 0;
         $distY = ($hmax > $hdest) ? round(($hmax-$hdest)/2) : 0;
         
-        $imgdest = imagecreatetruecolor ($wmax, $hmax);
+        
+        $imgdest = imagecreatetruecolor ((($wmax) ? $wmax : $wdest), (($hmax) ? $hmax : $hdest));
 
         if($centerwidthcolor == 'transparent' && ($format == 'png' || $format == 'gif'))
         {
@@ -181,7 +182,7 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
             
             $arrColor = ploopi_color_hex2rgb($centerwidthcolor);
             $background = imagecolorallocate($imgdest, $arrColor[0], $arrColor[1], $arrColor[2]);
-            imageFilledRectangle($imgdest, 0, 0, $wmax, $hmax, $background);
+            imageFilledRectangle($imgdest, 0, 0, (($wmax) ? $wmax : $wdest), (($hmax) ? $hmax : $hdest), $background);
         }
         imagecopyresampled($imgdest, $imgsrc, $distX, $distY, 0, 0, $wdest, $hdest, $w, $h);
     }

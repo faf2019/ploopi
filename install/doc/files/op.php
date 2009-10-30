@@ -852,6 +852,7 @@ if ($_SESSION['ploopi']['connected'])
                     // exec requete + encodage JSON
                     $db->query("
                         SELECT      doc.md5id,
+                                    doc.version,
                                     doc.name,
                                     doc.size
 
@@ -873,11 +874,11 @@ if ($_SESSION['ploopi']['connected'])
                         {
                             case 'doc_selectimage':
                             case 'doc_selectflash':
-                                $row['url'] = "index-quick.php?ploopi_op=doc_file_view&docfile_md5id={$row['md5id']}";
+                                $row['url'] = "index-quick.php?ploopi_op=doc_file_view&docfile_md5id={$row['md5id']}&version={$row['version']}";
                             break;
         
                             default:
-                                $row['url'] = "index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$row['md5id']}";
+                                $row['url'] = "index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$row['md5id']}&version={$row['version']}";
                             break;
                         }
 
@@ -911,36 +912,57 @@ if ($_SESSION['ploopi']['connected'])
         break;
 
         case 'doc_image_get':
+            $intTimeCache = 2592000; // 30 jours
+            
             include_once './include/classes/data_object.php';
             include_once './include/functions/date.php';
             include_once './include/functions/filesystem.php';
             include_once './include/functions/image.php';
             include_once './modules/doc/include/global.php';
             include_once './modules/doc/class_docfile.php';
-
-            if (!empty($_GET['docfile_id']))
+            include_once './include/classes/cache.php';
+            
+            ploopi_ob_clean();
+            
+            
+            if ((!empty($_GET['docfile_id']) || !empty($_GET['docfile_md5id'])) && !empty($_GET['version']))
             {
                 $docfile = new docfile();
-                $docfile->open($_GET['docfile_id']);
-            }
-
-            if (!empty($_GET['docfile_md5id']))
-            {
-                $db->query("SELECT id FROM ploopi_mod_doc_file WHERE md5id = '".$db->addslashes($_GET['docfile_md5id'])."'");
-                if ($fields = $db->fetchrow())
-                {
-                    $docfile = new docfile();
-                    $docfile->open($fields['id']);
-                }
-            }
-
-            if (!empty($docfile))
-            {
+                if(!empty($_GET['docfile_id'])) 
+                    $objCache = new ploopi_cache(md5('doc_fck_'.$_GET['docfile_id'].'_'.$_GET['version']), $intTimeCache); // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
+                    
+                if(!empty($_GET['docfile_md5id']))
+                    $objCache = new ploopi_cache(md5('doc_fck_'.$_GET['docfile_md5id'].'_'.$_GET['version']), $intTimeCache); // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
+                    
                 $height = (isset($_GET['height'])) ? $_GET['height'] : 0;
                 $width = (isset($_GET['width'])) ? $_GET['width'] : 0;
                 $coef = (isset($_GET['coef'])) ? $_GET['coef'] : 0;
-
-                if (file_exists($docfile->getfilepath())) ploopi_resizeimage($docfile->getfilepath(), $coef, $width, $height);
+                /*
+                echo $width.'x'.$height.' ('.$coef.')';
+                ploopi_die();
+                */
+                if(!$objCache->start()) // si pas de cache on le crée
+                {
+                    ploopi_init_module('doc', false, false, false);
+                
+                    include_once './modules/doc/class_docfile.php';
+                    include './include/classes/mimethumb.php';
+                    
+                    $objDoc = new docfile();
+                    $objThumb = new mimethumb($width,$height,$coef,'png','transparent');
+                    
+                    if(!empty($_GET['docfile_id']) && $objDoc->open($_GET['docfile_id']))
+                        $objThumb->getThumbnail($objDoc->getfilepath(),$objDoc->fields['extension']);
+                        
+                    elseif(!empty($_GET['docfile_md5id']) && $objDoc->openmd5($_GET['docfile_md5id']))
+                        $objThumb->getThumbnail($objDoc->getfilepath(),$objDoc->fields['extension']);
+                        
+                    if(isset($objCache)) $objCache->end();
+                }
+                else
+                {
+                    header("Content-Type: image/png");
+                }
             }
             ploopi_die();
         break;
@@ -1005,7 +1027,7 @@ if ($_SESSION['ploopi']['connected'])
                 include './include/classes/mimethumb.php';
                 
                 $objDoc = new docfile();
-                $objThumb = new mimethumb(111,90,'png','transparent');
+                $objThumb = new mimethumb(111,90,0,'png','transparent');
                 
                 if($objDoc->openmd5($_GET['docfile_md5id']))
                     $objThumb->getThumbnail($objDoc->getfilepath(),$objDoc->fields['extension']);

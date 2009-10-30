@@ -38,6 +38,11 @@ include_once './include/functions/image.php';
 class mimethumb
 {
     /**
+     * Passage en mode debug
+     */
+    private $booDebug = false;
+    
+    /**
      * longueur de la vignette
      */
     private $intWidth = 100;
@@ -46,6 +51,11 @@ class mimethumb
      * hauteur de la vignette
      */
     private $intHeight = 100;
+    
+    /**
+     * Coefficient d'agrandissement/reduction à appliquer à l'image
+     */
+    private $floatCoef = 0;
     
     /**
      * format d'export de la vignette
@@ -68,11 +78,6 @@ class mimethumb
     private $strPathFile;
     
     
-    /**
-     * Passage en mode debug
-     */
-    private $booDebug = false;
-    
     /*
      * Param pour la version CLI.php !
      */
@@ -84,13 +89,15 @@ class mimethumb
      *
      * @param int $width longueur de la vignette (defaut = 100)
      * @param int $height hauteur de la vignette (defaut = 100)
+     * @param int $coef coefficient de redimentionnement de l'image (defaut = 0)
      * @param string $extensionExport format d'export ('jpg', 'jpeg', 'png'(defaut), 'gif')
      * @param str $bgcolor couleur de la bordure de la vignette ('#1f1f1f', 'transparent'(defaut))
      */
-    public function __construct($width = '', $height = '', $extensionExport='', $bgcolor='')
+    public function __construct($width = '', $height = '', $coef = '', $extensionExport='', $bgcolor='')
     {
-        if(!empty($width)) $this->setWith($width);
-        if(!empty($height)) $this->setHeight($height);
+        $this->setWith($width);
+        $this->setHeight($height);
+        $this->setCoef($coef);
         if(!empty($extensionExport)) $this->setExport($extensionExport);
         if(!empty($bgcolor)) $this->setBorder($bgcolor);
     }
@@ -103,7 +110,7 @@ class mimethumb
      */
     public function setWith($width)
     {
-        $this->intWidth = (is_int($width)) ? $width : 100;
+        $this->intWidth = (is_numeric($width)) ? round($width) : 100;
         return true;
     }
     
@@ -115,7 +122,19 @@ class mimethumb
      */
     public function setHeight($height)
     {
-        $this->intHeight = (is_int($height)) ? $height : 100;
+        $this->intHeight = (is_numeric($height)) ? round($height) : 100;
+        return true;
+    }
+
+    /**
+     * Paramétrage du coefficient 
+     *
+     * @param int $height hauteur de la vignette
+     * @return true
+     */
+    public function setCoef($coef)
+    {
+        $this->floatCoef = (is_numeric($coef)) ? $coef : 0;
         return true;
     }
     
@@ -289,11 +308,11 @@ class mimethumb
             $fieldMime = $db->fetchrow($sqlMime);
             if(file_exists("./img/mimetypes/thumb_{$fieldMime['filetype']}.png"))
             {
-                ploopi_resizeimage("./img/mimetypes/thumb_{$fieldMime['filetype']}.png", 0, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
+                ploopi_resizeimage("./img/mimetypes/thumb_{$fieldMime['filetype']}.png", $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
                 return true;
             }
         }
-        ploopi_resizeimage('./img/mimetypes/thumb_default.png', 0, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
+        ploopi_resizeimage('./img/mimetypes/thumb_default.png', $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
         return false;
     }
 
@@ -330,7 +349,7 @@ class mimethumb
     private function _thumbImage()
     {
         try {
-            ploopi_resizeimage($this->strPathFile, 0, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
+            ploopi_resizeimage($this->strPathFile, $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
         } catch (Exception $e) {
             if($this->booDebug)
             {
@@ -396,6 +415,22 @@ class mimethumb
                 $thumb->setFormat($this->strExport);
             }
             
+            // Détermination de la taille de l'image destination en fonction du coef de redimensionnement
+            if (!$this->floatCoef && (!$this->intWidth || !$this->intHeight))
+            {
+                if ($this->intWidth) $this->setCoef($thumb->getImageWidth()/$this->intWidth);
+                if ($this->intHeight && $thumb->getImageHeight()/$this->intHeight > $this->floatCoef) $this->setCoef($thumb->getImageHeight()/$this->intHeight);
+                
+                if (!$this->intWidth)    $this->setWith(round($thumb->getImageWidth()/$this->floatCoef));
+                if (!$this->intHeight)   $this->setHeight(round($thumb->getImageHeight()/$this->floatCoef));
+            }
+            
+            if ($this->floatCoef && !$this->intWidth && !$this->intHeight)
+            {
+                $this->setWith(round($thumb->getImageWidth()/$this->floatCoef));
+                $this->setHeight(round($thumb->getImageHeight()/$this->floatCoef));
+            }
+            
             $thumb->thumbnailImage($this->intWidth,$this->intHeight,true);
             
             $intWithTmp = $thumb->getImageWidth();
@@ -443,7 +478,7 @@ class mimethumb
                 if(file_exists($zip_path.'Thumbnails/thumbnail.png'))
                 {
                     // On mets une couleur de fond car les thumbs inclus sont sur fond transparent !!!
-                    ploopi_resizeimage($zip_path.'Thumbnails/thumbnail.png', 0, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor, '#ffffff');
+                    ploopi_resizeimage($zip_path.'Thumbnails/thumbnail.png', $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor, '#ffffff');
                 }
                 else
                 {
@@ -533,7 +568,7 @@ class mimethumb
                 {
                     // Ouverture du demon soffice pour jodconverter
                     exec('soffice -headless -accept="socket,host=127.0.0.1,port=8100;urp;" -nofirststartwizard -norestore > /dev/null');
-                    sleep(2); // attend que le demon se lance (le 1er démarrage "a froid" peut etre long...)
+                    sleep(4); // attend que le demon se lance (le 1er démarrage "a froid" peut etre long...)
                     exec("ps -A -f | grep -E '^(.*)soffice(.*)accept\=socket\,host\=127\.0\.0\.1\,port\=8100'",$arrResult);
                     if(empty($arrResult)) return false;
                 }
@@ -581,7 +616,7 @@ class mimethumb
             
             exec('inkscape'.$strParamExport);
             
-            ploopi_resizeimage($fileTempo, 0, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
+            ploopi_resizeimage($fileTempo, $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
             if(file_exists($fileTempo)) unlink($fileTempo);
            
         } catch (Exception $e) {
@@ -618,7 +653,7 @@ class mimethumb
         
             if ($retval == 0)
             { 
-                ploopi_resizeimage($fileTempo, 0, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
+                ploopi_resizeimage($fileTempo, $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
                 unlink($fileTempo);
                 return true;
             }

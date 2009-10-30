@@ -1,3 +1,10 @@
+== Module DOC - version 4.6.1b ====================================================
+
+2009-10-30  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Ajout : génération de thumb pour fck
+ * Mise à jour : mimethumb demande un paramètre supplémentaire pour fonctionner
+
 == Module DOC - version 4.6.1a ====================================================
 
 2009-10-29  Xavier Toussaint ~ HeXad <xavier@hexad.fr>

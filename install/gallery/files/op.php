@@ -56,7 +56,6 @@ if ($_SESSION['ploopi']['connected'])
                     else
                         $_SESSION['ploopi']['gallery']['rep_selected'][$_GET['id_directories']] = $_GET['id_directories'];
                 }
-                      
                 $strIdDirectory = ($_GET['id_directories'] == 'all') ? implode(',',array_keys($_SESSION['ploopi']['gallery']['rep_selected'])) : $_GET['id_directories'];
 
                 if(empty($strIdDirectory))
@@ -67,6 +66,8 @@ if ($_SESSION['ploopi']['connected'])
                 
                 $sql = "
                     SELECT      f.id,
+                                f.md5id,
+                                f.version,
                                 fo.name,
                                 u.id as user_id,
                                 u.login,
@@ -86,11 +87,11 @@ if ($_SESSION['ploopi']['connected'])
                 
                     WHERE       LCASE(f.extension) IN ('jpg','jpeg','gif','png')
                     AND         fo.id IN ({$strIdDirectory}) 
+                    AND         fo.foldertype = 'public' 
                     AND         f.id_folder = fo.id
                     
                     ORDER BY    fo.name, f.name
                 ";
-                
                 $resultSqlPhotosDir = $db->query($sql);
                 
                 $c=0;
@@ -115,12 +116,12 @@ if ($_SESSION['ploopi']['connected'])
                         
                         ?>
                         <div class="gallery_bloc_image">
-                            <div id="photo_preview_<?php echo $row['id']; ?>" class="gallery_image_preview">
-                                <img src="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=gallery_admin_get_photo&id_preview='.$row['id'].'&'.ploopi_createtimestamp()); ?>" /><br/>
+                            <div id="photo_preview_<?php echo $row['md5id']; ?>_<?php echo $row['version']; ?>" class="gallery_image_preview">
+                                <img src="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=gallery_admin_get_photo&md5_preview='.$row['md5id'].'&version='.$row['version'].'&'.ploopi_createtimestamp()); ?>" /><br/>
                             </div>
                             <div  class="gallery_image_info">
                                 <?php
-                                    $refresh = '<a href="javascript:void(0);" onclick="javascript:gallery_refresh_photo('.$row['id'].');" title="'._GALLERY_EDIT_REFRESH_PHOTO.'"><img src="./modules/gallery/img/refresh.png"></a>&nbsp;';
+                                    $refresh = '<a href="javascript:void(0);" onclick="javascript:gallery_refresh_photo(\''.$row['md5id'].'\','.$row['version'].');" title="'._GALLERY_EDIT_REFRESH_PHOTO.'"><img src="./modules/gallery/img/refresh.png"></a>&nbsp;';
                                     echo $skin->open_simplebloc($objImgFile->fields['name'],'', '', $refresh);
                                     if(!empty($arrMeta))
                                     {
@@ -175,27 +176,63 @@ if ($_SESSION['ploopi']['connected'])
                 break;
                 
             case 'gallery_admin_get_photo':
-                ploopi_init_module('doc', false, false, false);
-                
-                $strTmpPath = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp';
-                
-                include_once './modules/doc/class_docfile.php';
-                
-                $objImgFile = new docfile();
-                $objImgFile->open($_GET['id_preview']);
-                
-                if(!isset($_SESSION['ploopi']['gallery']['photo_preview'][$_GET['id_preview']]) || isset($_GET['refresh']))
-                    $_SESSION['ploopi']['gallery']['photo_preview'][$_GET['id_preview']] = $strTmpPath.'/preview_'.$_GET['id_preview'];
+                if(file_exists('./include/classes/mimethumb.php')) // Retrocompatibilité avec ploopi < 1.6.9.0
+                {
+                    $refresh = (isset($_GET['refresh'])) ? true : false;
                     
-                if(!file_exists($_SESSION['ploopi']['gallery']['photo_preview'][$_GET['id_preview']]) || isset($_GET['refresh']))
-                    ploopi_resizeimage($objImgFile->getfilepath(), 0, 130, 0, 'png', 0, $_SESSION['ploopi']['gallery']['photo_preview'][$_GET['id_preview']]);
-                
-                if (!empty($_SESSION['ploopi']['gallery']['photo_preview'][$_GET['id_preview']])) ploopi_downloadfile($_SESSION['ploopi']['gallery']['photo_preview'][$_GET['id_preview']], 'preview.png', false, false);
-                ploopi_die();
+                    $intTimeCache = 86400; // 24h
+
+                    include_once './include/classes/cache.php';
+                    ploopi_ob_clean();
+        
+                    $objCache = new ploopi_cache(md5('gallery_admin_preview_'.$_GET['md5_preview'].'_'.$_GET['version']), $intTimeCache); // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
+                    $objCache->set_groupe('gallery_admin_preview_'.$_SESSION['ploopi']['workspaceid'].'_'.$_SESSION['ploopi']['moduleid']); 
+                    
+                    if(!$objCache->start($refresh)) // si pas de cache on le crée
+                    {
+                        ploopi_init_module('doc', false, false, false);
+                        
+                        include_once './modules/doc/class_docfile.php';
+                        include './include/classes/mimethumb.php';
+                        
+                        $objDoc = new docfile();
+                        $objThumb = new mimethumb(130,0,0,'png','transparent');
+                        
+                        if($objDoc->openmd5($_GET['md5_preview']))
+                            $objThumb->getThumbnail($objDoc->getfilepath(),$objDoc->fields['extension']);
+                            
+                        if(isset($objCache)) $objCache->end();
+                    }
+                    else
+                    {
+                        header("Content-Type: image/png");
+                    }
+                    ploopi_die();
+                }
+                else
+                {
+                    ploopi_init_module('doc', false, false, false);
+                    
+                    $strTmpPath = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp';
+                    
+                    include_once './modules/doc/class_docfile.php';
+                    
+                    $objImgFile = new docfile();
+                    $objImgFile->openmd5($_GET['md5_preview']);
+                    
+                    if(!isset($_SESSION['ploopi']['gallery']['photo_preview'][$_GET['md5_preview']]) || isset($_GET['refresh']))
+                        $_SESSION['ploopi']['gallery']['photo_preview'][$_GET['md5_preview']] = $strTmpPath.'/preview_'.$_GET['md5_preview'];
+                        
+                    if(!file_exists($_SESSION['ploopi']['gallery']['photo_preview'][$_GET['md5_preview']]) || isset($_GET['refresh']))
+                        ploopi_resizeimage($objImgFile->getfilepath(), 0, 130, 0, 'png', 0, $_SESSION['ploopi']['gallery']['photo_preview'][$_GET['md5_preview']]);
+                    
+                    if (!empty($_SESSION['ploopi']['gallery']['photo_preview'][$_GET['md5_preview']])) ploopi_downloadfile($_SESSION['ploopi']['gallery']['photo_preview'][$_GET['md5_preview']], 'preview.png', false, false);
+                    ploopi_die();
+                }
                 break;
             case 'gallery_refresh_photo':
                 ?>
-                <img src="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=gallery_admin_get_photo&refresh=1&id_preview='.$_GET['id_preview'].'&'.ploopi_createtimestamp()); ?>" />
+                <img src="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=gallery_admin_get_photo&refresh=1&md5_preview='.$_GET['md5_preview'].'&version='.$_GET['version'].'&'.ploopi_createtimestamp()); ?>" />
                 <?php
                 ploopi_die();
                 break;

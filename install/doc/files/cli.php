@@ -58,7 +58,7 @@ switch($op)
             
             $objDoc = new docfile();
             
-            $objThumb = new mimethumb(111,90,'png','transparent');
+            $objThumb = new mimethumb(111,90,0,'png','transparent');
             $objThumb->setIdmw($row['id_module'],$row['id_workspace']);
                
             if($objDoc->openmd5($row['md5id']))
@@ -89,7 +89,7 @@ switch($op)
             
             $objDocDraft = new docfiledraft();
             
-            $objThumb = new mimethumb(111,90,'png','transparent');
+            $objThumb = new mimethumb(111,90,0,'png','transparent');
             $objThumb->setIds($row['id_module'],$row['id_workspace']);
                
             if($objDocDraft->openmd5($row['md5id']))

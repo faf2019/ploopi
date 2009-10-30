@@ -1,8 +1,15 @@
+== Module GALLERY - version 0.1.1i ====================================================
+
+2009-10-30  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction: la demande d'affichage en admin de toutes les images contenues dans une galerie affichait encore les répertoires modifiés en ged public->privé si ils faisaient précédement parti de la galerie.
+ * Mise a jour : utilisation du cache et de la classe mimethumb pour le back 
+
 == Module GALLERY - version 0.1.1h ====================================================
 
 2009-10-27  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
 
- * le nom donné pour le cache pouvait potentiellement poser problème  (format et module non indiqué). Le risque est EXTREMEMENT faible !
+ * le nom donné pour le cache pouvait potentiellement poser problème (format et module non indiqué). Le risque est EXTREMEMENT faible !
 
 == Module GALLERY - version 0.1.1g ====================================================
 
