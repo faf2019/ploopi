@@ -91,6 +91,12 @@ if (isset($_SERVER['REDIRECT_STATUS']) && $_SERVER['REDIRECT_STATUS'] == '200')
         }
         closedir($rscFolder);
     }
+    
+    if (!$booRewriteRuleFound) 
+    {
+        ploopi_h404();
+        ploopi_die('Page non trouvée');
+    }    
 }
 
 ?>

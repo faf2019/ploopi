@@ -72,51 +72,15 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
             )
         );
-
-        // GET MODULES STYLES & JS
-        if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $_SESSION['ploopi']['workspaceid'] != _PLOOPI_NOWORKSPACE && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
-        {
-            foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $key => $mid)
-            {
-                if (isset($_SESSION['ploopi']['modules'][$mid]['active']))
-                {
-                    $modtype = $_SESSION['ploopi']['modules'][$mid]['moduletype'];
-
-                    if (file_exists("./modules/{$modtype}/include/styles.css"))
-                    {
-                        $template_body->assign_block_vars('module_css',
-                            array(
-                                'PATH' => "./modules/{$modtype}/include/styles.css"
-                                )
-                            );
-                    }
-
-                    if (file_exists("./modules/{$modtype}/include/styles_ie.css"))
-                    {
-                        $template_body->assign_block_vars('module_css_ie',
-                            array(
-                                'PATH' => "./modules/{$modtype}/include/styles_ie.css"
-                                )
-                            );
-                    }
-
-                    if (file_exists("./modules/{$modtype}/include/functions.js"))
-                    {
-                        $template_body->assign_block_vars('module_js',
-                            array(
-                                'PATH' => "./modules/{$modtype}/include/functions.js"
-                            )
-                        );
-                    }
-                }
-            }
-        }
-
+        
+        $ploopi_additional_head = '';
+        $ploopi_additional_javascript = '';
+        
         // GET MODULE ADDITIONAL JS
         ob_start();
         include './include/javascript.php';
         if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/include/javascript.php")) include "./modules/{$_SESSION['ploopi']['moduletype']}/include/javascript.php";
-        $additional_javascript = ob_get_contents();
+        $ploopi_additional_javascript = ob_get_contents();
         @ob_end_clean();
 
         include_once './include/op.php';
@@ -139,7 +103,8 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
 
         $template_body->assign_vars(array(
             'TEMPLATE_PATH'         => $_SESSION['ploopi']['template_path'],
-            'ADDITIONAL_JAVASCRIPT' => $additional_javascript,
+            'ADDITIONAL_HEAD'       => $ploopi_additional_head,
+            'ADDITIONAL_JAVASCRIPT' => $ploopi_additional_javascript,
             'PAGE_CONTENT'          => $main_content
             )
         );

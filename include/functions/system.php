@@ -657,6 +657,7 @@ function ploopi_getavailabletemplates($type = 'frontoffice')
 
 /**
  * Applique récursivement une fonction sur les éléments d'un tableau
+ * Les éléments peuvent être des tableaux récursifs ou des objets récursifs
  *
  * @param callback $func fonction à appliquer sur le tableau
  * @param array $var variable à modifier
@@ -671,7 +672,9 @@ function ploopi_getavailabletemplates($type = 'frontoffice')
 
 function ploopi_array_map($func, $var)
 {
-    if (is_array($var)) { foreach($var as $key => $value) $var[$key] = ploopi_array_map($func, $value); return $var; } else return call_user_func($func, $var);
+    if (is_array($var)) { foreach($var as $key => $value) $var[$key] = ploopi_array_map($func, $value); return $var; } 
+    elseif (is_object($var)) { foreach(get_object_vars($var) as $key => $value)  $var->$key = ploopi_array_map($func, $value); return $var; } 
+    else return call_user_func($func, $var);
 }
 
 /**
@@ -707,7 +710,7 @@ function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
 
     // Préparation de l'url de redirection
     require_once 'Net/URL.php';
-    if ($booRedirect)
+    if ($booRedirect && isset($_SERVER['HTTP_REFERER']))
     {
         $objUrl = new Net_URL($_SERVER['HTTP_REFERER']);
         if (isset($intErrorCode)) $objUrl->addQueryString('ploopi_errorcode', $intErrorCode);

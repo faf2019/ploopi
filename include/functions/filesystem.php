@@ -550,8 +550,6 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
 
         if ($deletefile && is_writable($filepath)) @unlink($filepath);
 
-
-        
         if ($die) ploopi_die(null, false);
 
     }

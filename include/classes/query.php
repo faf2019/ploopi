@@ -80,14 +80,14 @@ abstract class ploopi_sqlformat
         {
             $intNumParam = empty($arrMatches[2]) ? ++self::$intNumParam - 1 : intval($arrMatches[2]) - 1;
 
-            $strValue = isset(self::$arrValues[$intNumParam]) ? self::$arrValues[$intNumParam] : null;
+            $mixValue = isset(self::$arrValues[$intNumParam]) ? self::$arrValues[$intNumParam] : null;
 
             switch($arrMatches[3])
             {
                 case 't': // list string
                 case 'e': // list integer
                 case 'g': // list float
-                    $arrValues = split(',', $strValue);
+                    $arrValues = is_array($mixValue) ? $mixValue : split(',', $mixValue);
                     $arrValues = ploopi_array_map('trim', $arrValues);
                     foreach($arrValues as &$strListValue)
                     {
@@ -108,16 +108,16 @@ abstract class ploopi_sqlformat
                 break;
                 
                 case 'd': // integer
-                    $strValue = intval($strValue);
+                    $strValue = intval($mixValue);
                 break;
 
                 case 'f': // float
-                    $strValue = floatval($strValue);
+                    $strValue = floatval($mixValue);
                 break;
 
                 case 's': // string
                 default:
-                    $strValue = "'".self::$objDb->addslashes($strValue)."'";
+                    $strValue = "'".self::$objDb->addslashes($mixValue)."'";
                 break;
             }
 
@@ -182,7 +182,14 @@ abstract class ploopi_query
     public function execute()
     {
         return(new ploopi_recordset($this->objDb, $this->objDb->query($this->get_sql())));
-    }        
+    }
+
+    /**
+     * Permet de redéfinir la connexion à la BDD (utile notamment après désérialisation
+     *
+     * @param resource $objDb Connexion à la BDD
+     */
+    public function set_db($objDb) { $this->objDb = $objDb; }
 }
 
 /**
@@ -576,7 +583,7 @@ class ploopi_query_delete extends ploopi_query_sud
         
         if ($this->get_from() !== false)
         {
-            echo $strSql = 'DELETE'.
+            $strSql = 'DELETE'.
                 $this->get_from(). 
                 $this->get_where().
                 $this->get_orderby().
@@ -810,6 +817,17 @@ class ploopi_recordset
     {
         return $this->objDb->numrows($this->resRs);
     }
+    
+    /**
+     * Déplace le pointeur interne sur un enregistrement particulier
+     *
+     * @param integer $intPos position dans le recordset
+     * @return boolean true si le déplacement a été effectué sinon false
+     */
+    public function dataseek($intPos = 0)
+    {
+        return $this->objDb->dataseek($this->resRs, $intPos);
+    }    
     
     /**
      * Retourne dans un tableau le contenu du recordset
