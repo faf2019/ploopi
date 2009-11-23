@@ -66,9 +66,16 @@ define ("_FORMS_ACTION_DELETE",     5);
 define ("_FORMS_ACTION_BACKUP",     6);
 
 /**
+ * Action : Afficher les graphiques
+ */
+define ("_FORMS_ACTION_GRAPHICS",     7);
+
+/**
  * Action : Administer les formulaire
  */
-define ("_FORMS_ACTION_ADMIN",     7);
+define ("_FORMS_ACTION_ADMIN",     99);
+
+
 
 /**
  * Définition des variables globales
@@ -94,39 +101,80 @@ global $field_operators;
  */
 global $form_types;
 
+/**
+ * Types de graphique
+ */
+global $forms_graphic_types;
 
-$field_types = array(   'text' => 'Texte Simple',
-                        'textarea' => 'Texte Avancé',
-                        'checkbox' => 'Case à Cocher',
-                        'radio' => 'Boutons Radio',
-                        'select' => 'Liste de Choix',
-                        'tablelink' => 'Lien Formulaire',
-                        'file' => 'Fichier',
-                        'autoincrement' => 'Numéro Auto',
-                        'color' => 'Palette de Couleur'
-                    );
+/**
+ * Types d'aggregation
+ */
+global $forms_graphic_line_aggregation;
 
-$field_formats = array( 'string' => 'Chaîne de caractères',
-                        'integer' => 'Nombre Entier',
-                        'float' => 'Nombre Réel',
-                        'date' => 'Date',
-                        'time' => 'Heure',
-                        'email' => 'Email',
-                        'url' => 'Adresse Internet'
-                    );
+/**
+ * Types d'opération
+ */
+global $forms_graphic_operation;
 
-$field_operators = array(   '=' => '=',
-                            '>' => '>',
-                            '<' => '<',
-                            '>=' => '>=',
-                            '<=' => '<=',
-                            'like' => 'Contient',
-                            'begin' => 'Commence par'
-                        );
 
-$form_types = array(    'cms' => 'Formulaire pour Gestion de Contenu',
-                        'app' => 'Application PLOOPI'
-                    );
+$field_types = array(   
+    'text' => 'Texte Simple',
+    'textarea' => 'Texte Avancé',
+    'checkbox' => 'Case à Cocher',
+    'radio' => 'Boutons Radio',
+    'select' => 'Liste de Choix',
+    'tablelink' => 'Lien Formulaire',
+    'file' => 'Fichier',
+    'autoincrement' => 'Numéro Auto',
+    'color' => 'Palette de Couleur'
+);
+
+$field_formats = array( 
+    'string' => 'Chaîne de caractères',
+    'integer' => 'Nombre Entier',
+    'float' => 'Nombre Réel',
+    'date' => 'Date',
+    'time' => 'Heure',
+    'email' => 'Email',
+    'url' => 'Adresse Internet'
+);
+
+$field_operators = array(   
+    '=' => '=',
+    '>' => '>',
+    '<' => '<',
+    '>=' => '>=',
+    '<=' => '<=',
+    'like' => 'Contient',
+    'begin' => 'Commence par'
+);
+
+$form_types = array(    
+    'cms' => 'Formulaire pour Gestion de Contenu',
+    'app' => 'Application PLOOPI'
+);
+
+$forms_graphic_types = array(   
+    'line' => 'Courbes',
+    'linec' => 'Courbes cumulées',
+    'bar' => 'Histogrammes',
+    'barc' => 'Histogrammes cumulés',
+    'pie' => 'Secteurs',
+    'pie3d' => 'Secteurs 3D'
+);
+
+$forms_graphic_line_aggregation = array(   
+    'hour' => 'Horaire (24h)',
+    'day' => 'Journalier (14j)',
+    'week' => 'Hebdomadaire (inactif)',
+    'month' => 'Mensuel (12 mois)'
+);
+
+$forms_graphic_operation = array(   
+    'count' => 'Nombre',
+    'avg' => 'Moyenne',
+    'sum' => 'Somme'
+);
 
 /**
  * Crée le nom physique de la table en fonction du nom du formulaire
@@ -301,5 +349,43 @@ function forms_getdata($id_form, $id_module, $id_object, $id_record, $options = 
     include './modules/forms/op_preparedata.php';
 
     return(array($data_title, $data));
+}
+
+function forms_gradient($HexFrom, $HexTo, $ColorSteps)
+{
+    if (substr($HexFrom, 0, 1) == '#') $HexFrom = substr($HexFrom, 1, strlen($HexFrom) - 1);
+    if (substr($HexTo, 0, 1) == '#') $HexTo = substr($HexTo, 1, strlen($HexTo) - 1);
+    
+    
+    $FromRGB['r'] = hexdec(substr($HexFrom, 0, 2));
+    $FromRGB['g'] = hexdec(substr($HexFrom, 2, 2));
+    $FromRGB['b'] = hexdec(substr($HexFrom, 4, 2));
+
+    $ToRGB['r'] = hexdec(substr($HexTo, 0, 2));
+    $ToRGB['g'] = hexdec(substr($HexTo, 2, 2));
+    $ToRGB['b'] = hexdec(substr($HexTo, 4, 2));
+   
+    $StepRGB['r'] = ($FromRGB['r'] - $ToRGB['r']) / ($ColorSteps - 1);
+    $StepRGB['g'] = ($FromRGB['g'] - $ToRGB['g']) / ($ColorSteps - 1);
+    $StepRGB['b'] = ($FromRGB['b'] - $ToRGB['b']) / ($ColorSteps - 1);
+
+    $GradientColors = array();
+
+    for($i = 0; $i <= $ColorSteps; $i++)
+    {
+            $RGB['r'] = floor($FromRGB['r'] - ($StepRGB['r'] * $i));
+            $RGB['g'] = floor($FromRGB['g'] - ($StepRGB['g'] * $i));
+            $RGB['b'] = floor($FromRGB['b'] - ($StepRGB['b'] * $i));
+            
+            $HexRGB['r'] = sprintf('%02x', ($RGB['r']));
+            $HexRGB['g'] = sprintf('%02x', ($RGB['g']));
+            $HexRGB['b'] = sprintf('%02x', ($RGB['b']));
+
+            $GradientColors[] = implode(NULL, $HexRGB);
+    }
+
+    foreach($GradientColors as &$Color) $Color = "#{$Color}";
+    
+    return $GradientColors;
 }
 ?>

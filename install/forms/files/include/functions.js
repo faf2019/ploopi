@@ -177,3 +177,12 @@ function forms_changetype(t)
         $('forms_type_cms').style.display = 'block';
     }
 }
+
+function forms_graphic_type_onchange(field)
+{
+    $('forms_graphic_pie').style.display = 'none';
+    $('forms_graphic_line').style.display = 'none';
+
+    if (field.value == 'pie' || field.value == 'pie3d') $('forms_graphic_pie').style.display = 'block';
+    else if (field.value == 'line' || field.value == 'linec' || field.value == 'bar' || field.value == 'barc') $('forms_graphic_line').style.display = 'block';
+}

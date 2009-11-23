@@ -206,6 +206,8 @@ uasort($data, "compare");
 
 // construction du jeu de données filtré
 $export = array();
+// jeu de données brut filtré (pour graphique)
+$raw_data = array();
 $actual_ts = ploopi_createtimestamp();
 
 foreach ($data as $reply_id => $detail)
@@ -305,12 +307,15 @@ foreach ($data as $reply_id => $detail)
             }
         }
     }
-    if ($filter_ok) $export[$reply_id] = $detail;
+    if ($filter_ok) 
+    {
+        $raw_data[$reply_id] = $data[$reply_id];
+        $export[$reply_id] = $detail;
+    }
 }
 
 if ($ploopi_op == 'forms_deletedata' && ploopi_isactionallowed(_FORMS_ACTION_DELETE) && !empty($export))
 {
-    ploopi_print_r($export);
     $arrExportDelete = array();
     foreach ($export as $reply_id => $detail)
     {
@@ -342,6 +347,7 @@ if ($ploopi_op == 'forms_deletedata' && ploopi_isactionallowed(_FORMS_ACTION_DEL
     ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$forms_id}");
 }
 
+$_SESSION['forms']['data'] = $raw_data;
 $_SESSION['forms']['export'] = $export;
 $_SESSION['forms']['export_title'] = $data_title;
 $_SESSION['forms']['export_fields'] = $array_fields;

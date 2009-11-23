@@ -45,7 +45,8 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
 {
     include_once './modules/forms/class_form.php';
     include_once './modules/forms/class_field.php';
-
+    include_once './modules/forms/class_forms_graphic.php';
+    
     $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
     if (!empty($_GET['formsTabItem'])) $_SESSION['forms']['formsTabItem'] = $_GET['formsTabItem'];
@@ -358,6 +359,39 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             }
             else ploopi_redirect('admin.php');
         break;
+        
+        case 'forms_graphic_save':
+            $objGraphic = new forms_graphic();
+
+            if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
+            {
+                if (!empty($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id'])) $objGraphic->open($_GET['forms_graphic_id']);
+                
+                if ($objGraphic->isnew()) $objGraphic->fields['id_form'] = $_GET['forms_id'];
+
+                $objGraphic->setvalues($_POST,'forms_graphic_');
+                if (!isset($_POST['forms_graphic_percent'])) $objGraphic->fields['percent'] = 0;
+                if (!isset($_POST['forms_graphic_filled'])) $objGraphic->fields['filled'] = 0;
+                
+                $objGraphic->save();
+                
+                ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}");
+            }            
+            else ploopi_redirect('admin.php');
+            
+            ploopi_die();
+        break;
+        
+        case 'forms_graphic_delete':
+            $objGraphic = new forms_graphic();
+            if (!empty($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id']) && $objGraphic->open($_GET['forms_graphic_id'])) 
+            {
+                $objGraphic->delete();
+                ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}");
+            }
+            else ploopi_redirect('admin.php');
+        break;
+        
 
         case "export":
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
@@ -380,6 +414,8 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                 case 'forms_separator_modify':
                 case 'forms_field_add':
                 case 'forms_field_modify':
+                case 'forms_graphic_add':
+                case 'forms_graphic_modify':
                 case 'forms_modify':
                     include './modules/forms/admin_forms_modify.php';
                 break;

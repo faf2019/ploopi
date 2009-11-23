@@ -1,3 +1,9 @@
+== Module FORMS - version 2.5.0 =====================================================
+
+2009-11-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Gestion des graphiques de type "courbes", "histogrammes", "secteurs". Plusieurs graphiques peuvent être associés à un formulaire. Nombreux paramétrages (couleur, période, pourcentage, cumul, etc.)
+
 == Module FORMS - version 2.3.6b =====================================================
 
 2009-08-31  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -93,6 +93,7 @@ background-color:#f0f0f0;
 border-bottom:1px solid #a0a0a0;
 overflow:auto;
 padding:4px;
+
 }
 
 div#forms_archive_box {
@@ -121,3 +122,9 @@ font-weight:bold;
 border-bottom:1px solid #ccc;
 }
 
+.forms_noselect {
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
+background-color:#f0f0f0;
+}	

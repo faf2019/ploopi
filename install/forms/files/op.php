@@ -96,11 +96,441 @@ if ($_SESSION['ploopi']['connected'])
                     }
                     ?>
                     </div>
-                    <div style="background:#f0f0f0;border-top:1px solid #c0c0c0;text-align:right;padding:2px;"><a href="javascript:void(0);" onclick="javascript:ploopi_hidepopup('forms_deletedata');document.location.reload();">Fermer</a></div>
+                    <div style="background:#f0f0f0;border-top:1px solid #c0c0c0;text-align:right;padding:2px;"><a href="javascript:void(0);" onmouseup="javascript:ploopi_hidepopup('forms_deletedata');document.location.reload();">Fermer</a></div>
                     <?php
                 }
                 ploopi_die();
             break;
+            
+            case 'forms_graphic_display':
+                ob_start();
+                ?>
+                <div style="background-color:#fff;">
+                <?php
+                if (isset($_POST['forms_graphic_id']))
+                {
+                    ?>
+                    <img src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=forms_graphic_generate&forms_graphic_id={$_POST['forms_graphic_id']}&forms_rand=".microtime()); ?>" />
+                    <?
+                }
+                else
+                {
+                    echo "erreur";
+                }
+                ?>
+                </div>
+                <?php
+                $strContent = ob_get_contents();
+                ob_end_clean();
+                ploopi_die($skin->create_popup('Graphique', $strContent, 'forms_popup_graphic'));
+            break;
+            
+            case 'forms_graphic_generate':
+                include_once './modules/forms/class_forms_graphic.php';
+                include_once './modules/forms/class_field.php';
+                
+                $objGraphic = new forms_graphic();
+                if (isset($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id']) && $objGraphic->open($_GET['forms_graphic_id']))
+                {
+                    include_once './modules/forms/jpgraph/jpgraph.php';
+                    
+                    $intGraphWidth = 700;
+                    $intGraphHeight = 450;
+                    
+                    switch($objGraphic->fields['type'])
+                    {
+                        // Génération des secteurs + 3d
+                        case 'pie':
+                        case 'pie3d':
+                            include_once './modules/forms/jpgraph/jpgraph_pie.php';
+                            include_once './modules/forms/jpgraph/jpgraph_pie3d.php';
+                            
+                            $arrData = array();
+                            
+                            foreach($_SESSION['forms']['data'] as $arrLine)
+                            {
+                                if (empty($arrData[$arrLine[$objGraphic->fields['pie_field']]])) $arrData[$arrLine[$objGraphic->fields['pie_field']]] = 0;
+                                $arrData[$arrLine[$objGraphic->fields['pie_field']]]++;
+                            }
+                            
+                            //ploopi_die($arrData);
+                            
+                            // Création du graph
+                            // On spécifie la largeur et la hauteur du graph
+                            $objGraph = new PieGraph($intGraphWidth, $intGraphHeight);
+                             
+                            $objGraph->title->Set($objGraphic->fields['label']);
+                            $objGraph->title->SetFont(FF_VERDANA, FS_NORMAL, 15);
+                            $objGraph->SetFrame(false); // optional, if you don't want a frame border
+                            $objGraph->legend->SetFont(FF_VERDANA, FS_NORMAL, 8);
+                            
+                            $objGraph->SetAntiAliasing();
+                            
+                            if ($objGraphic->fields['type'] == 'pie3d') $objPie = new PiePlot3D(array_values($arrData));
+                            else $objPie = new PiePlot(array_values($arrData));
+                            
+                            // Position du graphique (0.5=centré)
+                            $objPie->SetCenter(0.5, 0.62);       
+                                                    
+                            // Définition du format d'affichage
+                            if ($objGraphic->fields['percent'])
+                            {
+                                $objPie->value->SetFormat('%d %%');
+                            }
+                            else
+                            {
+                                $objPie->value->SetFormat('%s');
+                                $objPie->SetValueType(PIE_VALUE_ABS);
+                            }
+                            $objPie->value->SetFont(FF_VERDANA, FS_NORMAL, 10);
+                            
+                            $objPie->SetLegends(array_keys($arrData));
+                            
+                            $objPie->SetSliceColors(forms_gradient($objGraphic->fields['pie_color1'], $objGraphic->fields['pie_color2'], sizeof($arrData)));
+                            
+                                                        
+                            $objGraph->Add($objPie);
+                            
+                        break;
+                        
+                        // Génération des histogrammes et des courbes + cumuls
+                        case 'bar':
+                        case 'barc':
+                        case 'line':
+                        case 'linec':
+                            include_once './modules/forms/jpgraph/jpgraph_line.php';
+                            include_once './modules/forms/jpgraph/jpgraph_bar.php';
+                            
+                            $arrLabels = array(); // tableau des libellés du graphique
+                            $arrDataModel = array(); // tableau type d'un dataset (une courbe)
+                            $arrData = array(); // Tableau des données
+                            $arrCount = array(); // Tableau des compteurs (pour moyenne notamment)
+                            $arrTotal = array(); // tableau contenant le total pour chaque indice (permet de calculer les valeurs en pourcentage) 
+                            
+                            $intTsNow = mktime();
+                            
+                            switch($objGraphic->fields['line_aggregation'])
+                            {
+                                case 'hour':
+                                    $intTsMin = ploopi_unixtimestamp2timestamp(mktime(date('G') - 23, 0, 0));
+                                    for ($intI = 0; $intI < 24; $intI++) 
+                                    {
+                                        $arrDataModel[$intI] = 0;
+                                        $intTsLabel = mktime(date('G') - 23 + $intI, 0, 0);
+                                        $arrLabels[$intI] = date('H', $intTsLabel).'h';
+                                        $arrTotal[$intI] = 0; // Valeur totale pour chaque indice
+                                    }
+                                    $strTitleX = 'Heures';
+                                break;
+                                
+                                case 'day':
+                                    $intTsMin = ploopi_unixtimestamp2timestamp(mktime(0, 0, 0, date('n'), date('j') - 13));
+                                    for ($intI = 0; $intI < 14; $intI++) 
+                                    {
+                                        $arrDataModel[$intI] = 0;
+                                        $intTsLabel = mktime(0, 0, 0, date('n'), date('j') - 13 + $intI);
+                                        $arrLabels[$intI] = date('d/m', $intTsLabel);
+                                        $arrTotal[$intI] = 0; // Valeur totale pour chaque indice
+                                    }
+                                    $strTitleX = 'Jour / Mois';
+                                break;
+                                
+                                case 'week':
+                                    for ($intI = 0; $intI < 12; $intI++) 
+                                    {
+                                        $arrDataModel[$intI] = 0;
+                                        $arrTotal[$intI] = 0; // Valeur totale pour chaque indice
+                                    }
+                                    $strTitleX = 'Semaines';
+                                break;
+                                
+                                case 'month':
+                                    $intTsMin = ploopi_unixtimestamp2timestamp(mktime(0, 0, 0, date('n') - 11, 1));
+                                    for ($intI = 0; $intI < 12; $intI++) 
+                                    {
+                                        $arrDataModel[$intI] = 0;
+                                        $intTsLabel = mktime(0, 0, 0, date('n') - 11 + $intI, 1);
+                                        $arrLabels[$intI] = date('m/Y', $intTsLabel);
+                                        $arrTotal[$intI] = 0; // Valeur totale pour chaque indice
+                                    }
+                                    $strTitleX = 'Mois / Année';
+                                break;
+                            }
+                            
+                            // Initialisation des dataset avec 0
+                            for ($intI = 1; $intI <= 5; $intI++) // Courbes
+                            {
+                                if (!empty($objGraphic->fields["line{$intI}_field"])) // Courbe valide
+                                {
+                                    $arrData[$intI] = $arrDataModel; // Un tableau de données par courbe
+                                    $arrCount[$intI] = $arrDataModel; // Un tableau de données par courbe
+                                }
+                                
+                            }
+                            
+                            foreach($_SESSION['forms']['data'] as $arrLine)
+                            {
+                                // 1. Filtrage sur la date par rapport à la période choisie
+                                if ($arrLine['datevalidation'] > $intTsMin)
+                                {
+                                    // 2. Détermination de l'appartenance à la courbe en fonction du filtre
+                                    foreach(array_keys($arrData) as $intI)
+                                    {
+                                        $booFilterOk = false;
+                                        if ($objGraphic->fields["line{$intI}_filter_op"] != '' && $objGraphic->fields["line{$intI}_filter_value"] != '')
+                                        {
+                                            $strVal1 = $arrLine[$objGraphic->fields["line{$intI}_field"]];
+                                            $strVal2 = $objGraphic->fields["line{$intI}_filter_value"];
+                                            
+                                            switch($objGraphic->fields["line{$intI}_filter_op"])
+                                            {
+                                                case '=':
+                                                    $booFilterOk = ($strVal1 == $strVal2);
+                                                break;
+                        
+                                                case '>':
+                                                    $booFilterOk = ($strVal1 > $strVal2);
+                                                break;
+                        
+                                                case '<':
+                                                    $booFilterOk = ($strVal1 < $strVal2);
+                                                break;
+                        
+                                                case '>=':
+                                                    $booFilterOk = ($strVal1 >= $strVal2);
+                                                break;
+                        
+                                                case '<=':
+                                                    $booFilterOk = ($strVal1 <= $strVal2);
+                                                break;
+                        
+                                                case 'like':
+                                                    $booFilterOk = strstr($strVal1, $strVal2);
+                                                break;
+                        
+                                                case 'begin':
+                                                    $booFilterOk = (strpos($strVal1, $strVal2) === 0);
+                                                break;
+                                                
+                                            }
+                                        }
+                                        else $booFilterOk = true;
+                                        
+                                        if ($booFilterOk) // Filtre ok, la donnée appartient à cette courbe
+                                        {
+                                            // Détermination de l'indice de la donnée sur la courbe
+                                            $intIndice = 0;
+                                            
+                                            switch($objGraphic->fields['line_aggregation'])
+                                            {
+                                                case 'hour':
+                                                    $intIndice = round((ploopi_timestamp2unixtimestamp($arrLine['datevalidation']) - ploopi_timestamp2unixtimestamp($intTsMin)) / 3600);
+                                                break;
+                                                
+                                                case 'day':
+                                                    $intIndice = round((ploopi_timestamp2unixtimestamp($arrLine['datevalidation']) - ploopi_timestamp2unixtimestamp($intTsMin)) / (3600*24)) - 1;
+                                                break;
+                                                
+                                                case 'week':
+                                                    $intIndice = 0;
+                                                break;
+                                                
+                                                case 'month':
+                                                    $intIndice = 11 - (12 + date('n') - date('n', ploopi_timestamp2unixtimestamp($arrLine['datevalidation']))) % 12;
+                                                break;
+                                            }
+                                            
+                                            
+                                            switch($objGraphic->fields["line{$intI}_operation"])
+                                            {
+                                                case 'count':
+                                                    $arrData[$intI][$intIndice]++; 
+                                                break;
+                                                
+                                                case 'sum':
+                                                case 'avg':
+                                                    $arrData[$intI][$intIndice] += floatval($arrLine[$objGraphic->fields["line{$intI}_field"]]);
+                                                    $arrCount[$intI][$intIndice]++; 
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
+        
+                            // Post-traitement spécial pour calculer la moyenne
+                            foreach($arrData as $intI => $arrDataDetail)
+                            {
+                                if ($objGraphic->fields["line{$intI}_operation"] == 'avg')
+                                {
+                                    foreach($arrDataDetail as $intIndice => $mixVal)
+                                    {
+                                        if (!empty($arrCount[$intI][$intIndice])) $arrData[$intI][$intIndice] = round($arrData[$intI][$intIndice] / $arrCount[$intI][$intIndice], 2);
+                                    }
+                                }
+                            }
+                            
+                            // Post-traitement spécial pour calculer les valeurs en pourcentage
+                            if ($objGraphic->fields["percent"])
+                            {
+                                foreach($arrData as $intI => $arrDataDetail)
+                                {
+                                    foreach($arrDataDetail as $intIndice => $mixVal)
+                                    {
+                                        $arrTotal[$intIndice] += $mixVal;
+                                    }
+                                }
+                            }
+                                                        
+                            
+                            // Post-traitement spécial pour le calcul des cumuls
+                            if ($objGraphic->fields['type'] == 'linec' || $objGraphic->fields['type'] == 'barc')
+                            {
+                                foreach(array_keys($arrDataModel) as $intIndice)
+                                {
+                                    $floTotal = 0;
+                                    foreach($arrData as $intI => $arrDataDetail)
+                                    {
+                                        $floTotal += $arrData[$intI][$intIndice];
+                                        $arrData[$intI][$intIndice] = $floTotal;
+                                    }
+                                }
+                            }
+                            
+                            
+                            // Post-traitement spécial pour calculer les valeurs en pourcentage
+                            if ($objGraphic->fields["percent"])
+                            {
+                                foreach($arrData as $intI => $arrDataDetail)
+                                {
+                                    foreach($arrDataDetail as $intIndice => $mixVal)
+                                    {
+                                        $arrData[$intI][$intIndice] = empty($arrTotal[$intIndice]) ? 0 : round(($arrData[$intI][$intIndice] * 100) / $arrTotal[$intIndice], 2);
+                                    }
+                                }
+                            }
+
+                            $objGraph = new Graph($intGraphWidth, $intGraphHeight);
+                            
+                            // /!\ antialiasing non dispo dans la version de GD2 incluse dans debian etch
+                            // $objGraph->img->SetAntiAliasing(true);
+                            
+                            $objGraph->SetScale("textlin");
+                            $objGraph->title->Set($objGraphic->fields['label']);
+                            $objGraph->title->SetFont(FF_VERDANA, FS_NORMAL, 15);
+                            $objGraph->legend->SetFont(FF_VERDANA, FS_NORMAL, 8);
+                            
+                            $objGraph->xaxis->title->Set($strTitleX);
+                            $objGraph->xaxis->title->SetFont(FF_VERDANA, FS_NORMAL, 10);
+                            $objGraph->xaxis->SetFont(FF_VERDANA, FS_NORMAL, 8);
+                            $objGraph->xaxis->SetTickLabels($arrLabels);                
+        
+                            if ($objGraphic->fields['percent']) $objGraph->yaxis->title->Set('%');
+                            $objGraph->yaxis->title->SetFont(FF_VERDANA, FS_NORMAL, 10);
+                            $objGraph->yaxis->SetFont(FF_VERDANA, FS_NORMAL, 8);
+                            
+                            $objGraph->SetFrame(false); // optional, if you don't want a frame border
+                            $objGraph->SetColor('white'); // pick any color not in the graph itself
+                            $objGraph->img->SetTransparent('white'); // must be same color as above  
+                            $objGraph->img->SetMargin(40,0,150,0);
+                            
+                            $arrObjPlots = array();
+                            
+                            $intC = 0;
+                            foreach($arrData as $intI => $arrPlots)
+                            {
+                                $strColor = $objGraphic->fields["line{$intI}_color"];
+                                if (empty($strColor)) $strColor = 'black';
+                                
+                                switch($objGraphic->fields['type'])
+                                {
+                                    case 'line':
+                                    case 'linec':
+                                        // Création d'une série de points avec une courbe
+                                        $arrObjPlots[] = $objPlots = new LinePlot($arrPlots);
+                                
+                                        // Chaque point de la courbe ****
+                                        // Type de point
+                                        $objPlots->mark->SetType(MARK_FILLEDCIRCLE);
+                                        // Couleur de remplissage
+                                        $objPlots->mark->SetFillColor($strColor);
+                                        // Taille
+                                        $objPlots->mark->SetWidth(5);
+                                    break;
+                                        
+                                    case 'bar':
+                                    case 'barc':
+                                        // Création d'une série de barres
+                                        $arrObjPlots[] = $objPlots = new BarPlot($arrPlots);
+                                        if ($objGraphic->fields['type'] == 'bar' || $intC == sizeof($arrData)-1)
+                                        $objPlots->SetShadow('gray');
+                                        
+                                        $intC++;
+                                    break;
+                                }
+                                
+                                // Valeurs: Apparence de la police
+                                $objPlots->value->SetFont(FF_VERDANA, FS_NORMAL, 10);
+                                $objPlots->value->SetFormat('%d');
+                                $objPlots->value->SetColor($strColor);
+
+                                
+                                // Couleur de la courbe
+                                $objPlots->SetColor($strColor);
+                                if ($objGraphic->fields['filled'])
+                                {
+                                    // Couleur de remplissage de la courbe
+                                    $objPlots->SetFillColor($strColor);
+                                }
+                                
+                                $objPlots->SetCenter();            
+        
+                                $objField = new field();
+                                if ($objField->open($objGraphic->fields["line{$intI}_field"]))
+                                {
+                                    $strLegend = $objField->fields['name'];
+                                    if ($objGraphic->fields["line{$intI}_filter_value"] != '') $strLegend .= ' - '.$objGraphic->fields["line{$intI}_filter_value"]; 
+                                    
+                                    if ($objGraphic->fields['percent']) $strLegend .= ' (%)';
+                                    elseif (isset($forms_graphic_operation[$objGraphic->fields["line{$intI}_operation"]])) $strLegend .= ' ('.$forms_graphic_operation[$objGraphic->fields["line{$intI}_operation"]].')';
+                                    
+                                    $objPlots->SetLegend($strLegend);
+                                }
+                            }
+                            
+                            if (in_array($objGraphic->fields['type'], array('linec', 'barc')))
+                            {
+                                // Inversion de l'ordre d'affchage des courbes (notamment pour gérer correctement l'affichage des courbes cumulées)
+                                $arrObjPlots = array_reverse($arrObjPlots);
+                            }
+                            
+                            if (in_array($objGraphic->fields['type'], array('line', 'linec', 'barc')))
+                            {
+                                // Attachement des courbes au conteneur
+                                foreach($arrObjPlots as $objPlots) $objGraph->Add($objPlots);
+                            }
+                            else
+                            {
+                                $objGroupBarPlot = new GroupBarPlot($arrObjPlots);
+                                $objGraph->Add($objGroupBarPlot);
+                            }
+                            
+                            
+                            
+                        break;
+                    }
+
+                    // Vidage du buffer de Ploopi
+                    ploopi_ob_clean();
+                    
+                    // Génération du graphique
+                    $objGraph->Stroke();
+                    
+                }
+                ploopi_die();
+            break;
+            
         }
     }
 

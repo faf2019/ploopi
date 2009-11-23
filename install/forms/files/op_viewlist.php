@@ -130,7 +130,7 @@
                     <a <?php echo $style_col; ?> href="javascript:void(0);" onclick="javascript:forms_display('<?php echo $_GET['forms_fuid']; ?>', '<?php echo "orderby={$key}&option={$new_option}"; ?>');">
                     <p class="ploopi_va">
                         <span><?php echo $value; ?></span>
-                        <?php if (!empty($sort_cell)) { ?><img src="./modules/forms/img/<?php echo $sort_cell; ?>.png"> <?php } ?>
+                        <?php if ($orderby == $key) { ?><img src="./modules/forms/img/<?php echo $sort_cell; ?>.png"> <?php } ?>
                     </p>
                     </a>
                 </th>
