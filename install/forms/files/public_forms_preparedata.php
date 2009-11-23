@@ -92,7 +92,7 @@ $data_title['user']             = array ('label' => _FORMS_USER, 'sep' => 0, 'ty
 $data_title['group']            = array ('label' => _FORMS_GROUP, 'sep' => 0, 'type' => '', 'format' => '');
 $data_title['ip']               = array ('label' => _FORMS_IP, 'sep' => 0, 'type' => '', 'format' => '');
 
-// GET FORM FIELDS
+// Récupération des champs du formulaire
 $sql =  "
         SELECT  *
         FROM    ploopi_mod_forms_field
@@ -117,30 +117,39 @@ while ($fields = $db->fetchrow())
     $data_title[$fields['id']]['format'] = $fields['format'];
 }
 
-$select =   "
-            SELECT      fr.*,
-                        u.firstname,
-                        u.lastname,
-                        u.login,
-                        w.code,
-                        w.label as w_label,
-                        m.label as m_label
+$strWhere = '';
+if (!$_SESSION['forms'][$forms_id]['unlockbackup'])
+{
+    if ($forms->fields['autobackup'] > 0) $strWhere .= ' AND fr.date_validation >= '.ploopi_timestamp_add(ploopi_createtimestamp(), 0, 0, 0, 0, -$forms->fields['autobackup']);
+    if (!empty($forms->fields['autobackup_date'])) $strWhere .= ' AND fr.date_validation >= '.ploopi_timestamp_add($forms->fields['autobackup_date'], 0, 0, 0, 0, 1, 0);
+}
 
-            FROM        ploopi_mod_forms_reply fr
+// Récupération des données du formulaire + filtrage sur les espaces + filtrage sur l'archivage auto
+$select = "
+    SELECT      fr.*,
+                u.firstname,
+                u.lastname,
+                u.login,
+                w.code,
+                w.label as w_label,
+                m.label as m_label
 
-            INNER JOIN  ploopi_module m
-            ON          fr.id_module = m.id
-            AND         m.id = {$_SESSION['ploopi']['moduleid']}
+    FROM        ploopi_mod_forms_reply fr
 
-            LEFT JOIN   ploopi_user u
-            ON          fr.id_user = u.id
+    INNER JOIN  ploopi_module m
+    ON          fr.id_module = m.id
+    AND         m.id = {$_SESSION['ploopi']['moduleid']}
 
-            LEFT JOIN   ploopi_workspace w
-            ON          fr.id_workspace = w.id
+    LEFT JOIN   ploopi_user u
+    ON          fr.id_user = u.id
 
-            WHERE   fr.id_form = $forms_id
-            AND     fr.id_workspace IN ({$workspaces})
-            ";
+    LEFT JOIN   ploopi_workspace w
+    ON          fr.id_workspace = w.id
+
+    WHERE   fr.id_form = $forms_id
+    AND     fr.id_workspace IN ({$workspaces})
+    {$strWhere}
+";
 
 $rs = $db->query($select);
 
@@ -188,8 +197,8 @@ while ($fields = $db->fetchrow($rs))
         $data[$c][$key] = (isset($array_values[$key]['value'])) ? $array_values[$key]['value'] : '';
         if ($data_title[$key]['format'] == 'date') $data[$c][$key] = ploopi_local2timestamp(substr($data[$c][$key],0,10), '00:00:00');
     }
-
 }
+
 // compare 2 chaines en ordre naturel
 function compare($a, $b)
 {

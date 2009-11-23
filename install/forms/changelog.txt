@@ -1,3 +1,11 @@
+== Module FORMS - version 2.5.0b =====================================================
+
+2009-11-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout des fichiers de langue de jpgraph
+ * Ajout des fonts manquantes
+ * Meilleure gestion de l'archivage automatique (Gestion du filtrage au niveau physique)
+
 == Module FORMS - version 2.5.0 =====================================================
 
 2009-11-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
