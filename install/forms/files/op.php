@@ -136,7 +136,7 @@ if ($_SESSION['ploopi']['connected'])
                     
                     $intGraphWidth = 700;
                     $intGraphHeight = 450;
-                    
+
                     switch($objGraphic->fields['type'])
                     {
                         // Génération des secteurs + 3d
@@ -198,9 +198,12 @@ if ($_SESSION['ploopi']['connected'])
                         case 'barc':
                         case 'line':
                         case 'linec':
+                        case 'radar':
+                        case 'radarc':
                             include_once './modules/forms/jpgraph/jpgraph_line.php';
                             include_once './modules/forms/jpgraph/jpgraph_bar.php';
-                            
+                            include_once './modules/forms/jpgraph/jpgraph_radar.php';
+                                                        
                             $arrLabels = array(); // tableau des libellés du graphique
                             $arrDataModel = array(); // tableau type d'un dataset (une courbe)
                             $arrData = array(); // Tableau des données
@@ -217,7 +220,7 @@ if ($_SESSION['ploopi']['connected'])
                                     {
                                         $arrDataModel[$intI] = 0;
                                         $intTsLabel = mktime(date('G') - 23 + $intI, 0, 0);
-                                        $arrLabels[$intI] = date('H', $intTsLabel).'h';
+                                        $arrLabels[$intI] = date('d-H', $intTsLabel).'h';
                                         $arrTotal[$intI] = 0; // Valeur totale pour chaque indice
                                     }
                                     $strTitleX = 'Heures';
@@ -324,11 +327,13 @@ if ($_SESSION['ploopi']['connected'])
                                             switch($objGraphic->fields['line_aggregation'])
                                             {
                                                 case 'hour':
-                                                    $intIndice = round((ploopi_timestamp2unixtimestamp($arrLine['datevalidation']) - ploopi_timestamp2unixtimestamp($intTsMin)) / 3600);
+                                                    $intHNow = date('H', ploopi_timestamp2unixtimestamp($arrLine['datevalidation']));
+                                                    $intHStart = date('H', ploopi_timestamp2unixtimestamp($intTsMin));
+                                                    $intIndice = 24 - (24 + $intHStart - $intHNow) % 24 ;
                                                 break;
                                                 
                                                 case 'day':
-                                                    $intIndice = round((ploopi_timestamp2unixtimestamp($arrLine['datevalidation']) - ploopi_timestamp2unixtimestamp($intTsMin)) / (3600*24));
+                                                    $intIndice = round((ploopi_timestamp2unixtimestamp(substr($arrLine['datevalidation'], 0, 8).'000000') - ploopi_timestamp2unixtimestamp($intTsMin)) / (3600*24));
                                                 break;
                                                 
                                                 case 'week':
@@ -386,7 +391,7 @@ if ($_SESSION['ploopi']['connected'])
                                                         
                             
                             // Post-traitement spécial pour le calcul des cumuls
-                            if ($objGraphic->fields['type'] == 'linec' || $objGraphic->fields['type'] == 'barc')
+                            if ($objGraphic->fields['type'] == 'linec' || $objGraphic->fields['type'] == 'barc' || $objGraphic->fields['type'] == 'radarc')
                             {
                                 foreach(array_keys($arrDataModel) as $intIndice)
                                 {
@@ -412,24 +417,42 @@ if ($_SESSION['ploopi']['connected'])
                                 }
                             }
                             
-                            $objGraph = new Graph($intGraphWidth, $intGraphHeight);
+                            if (in_array($objGraphic->fields['type'], array('radar', 'radarc')))
+                            {
+                                $objGraph = new RadarGraph($intGraphWidth, $intGraphHeight, "auto"); 
+                                $objGraph->SetScale("lin");
+                                $objGraph->SetCenter(0.35, 0.60);       
+                                
+                                $objGraph->axis->title->Set($strTitleX);
+                                $objGraph->axis->title->SetFont(FF_VERDANA, FS_NORMAL, 10);
+                                $objGraph->axis->SetFont(FF_VERDANA, FS_NORMAL, 8);
+                                
+                                $objGraph->SetTitles($arrLabels);
+                                //$objGraph->axis->SetTickLabels($arrLabels);
+                            }
+                            else
+                            {
+                                $objGraph = new Graph($intGraphWidth, $intGraphHeight);
+                                $objGraph->SetScale("textlin");
+                                
+                                $objGraph->xaxis->title->Set($strTitleX);
+                                $objGraph->xaxis->title->SetFont(FF_VERDANA, FS_NORMAL, 10);
+                                $objGraph->xaxis->SetFont(FF_VERDANA, FS_NORMAL, 8);
+                                $objGraph->xaxis->SetTickLabels($arrLabels);                
+                                
+                                if ($objGraphic->fields['percent']) $objGraph->yaxis->title->Set('%');
+                                $objGraph->yaxis->title->SetFont(FF_VERDANA, FS_NORMAL, 10);
+                                $objGraph->yaxis->SetFont(FF_VERDANA, FS_NORMAL, 8);
+                                
+                            }
                             
                             // /!\ antialiasing non dispo dans la version de GD2 incluse dans debian etch
                             // $objGraph->img->SetAntiAliasing(true);
                             
-                            $objGraph->SetScale("textlin");
                             $objGraph->title->Set($objGraphic->fields['label']);
                             $objGraph->title->SetFont(FF_VERDANA, FS_NORMAL, 15);
                             $objGraph->legend->SetFont(FF_VERDANA, FS_NORMAL, 8);
                             
-                            $objGraph->xaxis->title->Set($strTitleX);
-                            $objGraph->xaxis->title->SetFont(FF_VERDANA, FS_NORMAL, 10);
-                            $objGraph->xaxis->SetFont(FF_VERDANA, FS_NORMAL, 8);
-                            $objGraph->xaxis->SetTickLabels($arrLabels);                
-        
-                            if ($objGraphic->fields['percent']) $objGraph->yaxis->title->Set('%');
-                            $objGraph->yaxis->title->SetFont(FF_VERDANA, FS_NORMAL, 10);
-                            $objGraph->yaxis->SetFont(FF_VERDANA, FS_NORMAL, 8);
                             
                             $objGraph->SetFrame(false); // optional, if you don't want a frame border
                             $objGraph->SetColor('white'); // pick any color not in the graph itself
@@ -450,14 +473,19 @@ if ($_SESSION['ploopi']['connected'])
                                     case 'linec':
                                         // Création d'une série de points avec une courbe
                                         $arrObjPlots[] = $objPlots = new LinePlot($arrPlots);
-                                
-                                        // Chaque point de la courbe ****
+                                        ploopi_print_r($arrPlots);
+                                        
+                                        // Chaque point de la courbe
                                         // Type de point
                                         $objPlots->mark->SetType(MARK_FILLEDCIRCLE);
                                         // Couleur de remplissage
                                         $objPlots->mark->SetFillColor($strColor);
                                         // Taille
                                         $objPlots->mark->SetWidth(5);
+                                        
+                                        // E
+                                        $objPlots->SetLineWeight(1);
+                                        
                                     break;
                                         
                                     case 'bar':
@@ -469,24 +497,39 @@ if ($_SESSION['ploopi']['connected'])
                                         
                                         $intC++;
                                     break;
+                                    
+                                    case 'radar':
+                                    case 'radarc':
+                                        $arrObjPlots[] = $objPlots = new RadarPlot($arrPlots);        
+
+                                        // Chaque point du radar
+                                        // Type de point
+                                        $objPlots->mark->SetType(MARK_SQUARE);
+                                        // Couleur de remplissage
+                                        $objPlots->mark->SetFillColor($strColor);
+                                        
+                                        $objPlots->SetLineWeight(1);
+                                        
+                                    break;
                                 }
                                 
                                 // Valeurs: Apparence de la police
+                                /*
                                 $objPlots->value->SetFont(FF_VERDANA, FS_NORMAL, 10);
                                 $objPlots->value->SetFormat('%d');
                                 $objPlots->value->SetColor($strColor);
+                                */
 
                                 
                                 // Couleur de la courbe
                                 $objPlots->SetColor($strColor);
+                                
                                 if ($objGraphic->fields['filled'])
                                 {
                                     // Couleur de remplissage de la courbe
                                     $objPlots->SetFillColor($strColor);
                                 }
                                 
-                                $objPlots->SetCenter();            
-        
                                 $objField = new field();
                                 if ($objField->open($objGraphic->fields["line{$intI}_field"]))
                                 {
@@ -500,13 +543,17 @@ if ($_SESSION['ploopi']['connected'])
                                 }
                             }
                             
-                            if (in_array($objGraphic->fields['type'], array('linec', 'barc')))
+                            
+                           // ploopi_die($arrData);
+                            
+                            
+                            if (in_array($objGraphic->fields['type'], array('linec', 'barc', 'radarc')))
                             {
                                 // Inversion de l'ordre d'affchage des courbes (notamment pour gérer correctement l'affichage des courbes cumulées)
                                 $arrObjPlots = array_reverse($arrObjPlots);
                             }
                             
-                            if (in_array($objGraphic->fields['type'], array('line', 'linec', 'barc')))
+                            if (in_array($objGraphic->fields['type'], array('line', 'linec', 'barc', 'radar', 'radarc')))
                             {
                                 // Attachement des courbes au conteneur
                                 foreach($arrObjPlots as $objPlots) $objGraph->Add($objPlots);

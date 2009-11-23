@@ -159,6 +159,8 @@ $forms_graphic_types = array(
     'linec' => 'Courbes cumulées',
     'bar' => 'Histogrammes',
     'barc' => 'Histogrammes cumulés',
+    'radar' => 'Radars',
+    'radarc' => 'Radars cumulés',
     'pie' => 'Secteurs',
     'pie3d' => 'Secteurs 3D'
 );

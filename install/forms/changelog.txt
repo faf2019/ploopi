@@ -1,3 +1,11 @@
+== Module FORMS - version 2.5.1 =====================================================
+
+2009-11-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout des graphiques de type "radar"
+ * Mise à jour de jpgraph
+ * Correction d'un bug sur l'aggrégation des données par intervalles (en fonction de la période d'affichage)
+
 == Module FORMS - version 2.5.0b =====================================================
 
 2009-11-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

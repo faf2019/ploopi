@@ -1,5 +1,43 @@
 <?php
 /*
+for ($c = 0; $c < 1000; $c++)
+{
+    echo '<br />'.$date = sprintf("2009%02d%02d%02d0000", rand(1,12), rand(1,30), rand(0,24));
+    $db->query("INSERT INTO ploopi_mod_forms_reply(id_form, id_module, date_validation) values (5, 5, '{$date}')");
+    $id = $db->insertid();
+    
+    switch(rand(1,3))
+    {
+        case 1:
+        $db->query("INSERT INTO ploopi_mod_forms_reply_field(id_reply, id_form, id_field, value) values ({$id}, 5, 30,  'Moins d\'une heure l\'après-midi')");
+        break;
+        case 2:
+        $db->query("INSERT INTO ploopi_mod_forms_reply_field(id_reply, id_form, id_field, value) values ({$id}, 5, 30,  'Moins de 2 heures l\'après-midi')");
+        break;
+        case 3:
+        $db->query("INSERT INTO ploopi_mod_forms_reply_field(id_reply, id_form, id_field, value) values ({$id}, 5, 30,  'Toute l\'après-midi')");
+        break;
+    }
+    
+    switch(rand(1,3))
+    {
+        case 1:
+        $db->query("INSERT INTO ploopi_mod_forms_reply_field(id_reply, id_form, id_field, value) values ({$id}, 5, 29,  'Moins d\'une heure le matin')");
+        break;
+        case 2:
+        $db->query("INSERT INTO ploopi_mod_forms_reply_field(id_reply, id_form, id_field, value) values ({$id}, 5, 29,  'Moins de 2 heures le matin')");
+        break;
+        case 3:
+        $db->query("INSERT INTO ploopi_mod_forms_reply_field(id_reply, id_form, id_field, value) values ({$id}, 5, 29,  'Tout le matin')");
+        break;
+    }
+    
+    $duree = rand(1,20)*30;
+    $db->query("INSERT INTO ploopi_mod_forms_reply_field(id_reply, id_form, id_field, value) values ({$id}, 5, 27, {$duree})");
+}
+*/
+
+/*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.

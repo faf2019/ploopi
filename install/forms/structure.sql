@@ -129,3 +129,5 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_forms_graphic` (
   `pie_color2` varchar(16) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+
+ALTER TABLE `ploopi_mod_forms_graphic` CHANGE `type` `type` ENUM( 'pie', 'pie3d', 'bar', 'barc', 'line', 'linec', 'radar', 'radarc' ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL 

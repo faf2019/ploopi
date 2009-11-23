@@ -121,7 +121,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                 </fieldset>
             </div>
             
-            <div id="forms_graphic_line" style="display:<?php echo in_array($objGraphic->fields['type'], array('line', 'linec', 'bar', 'barc')) ? 'block' : 'none'; ?>">
+            <div id="forms_graphic_line" style="display:<?php echo in_array($objGraphic->fields['type'], array('line', 'linec', 'bar', 'barc', 'radar', 'radarc')) ? 'block' : 'none'; ?>">
                 <p>
                     <label><?php echo _FORMS_GRAPHIC_LINE_AGGREGATION; ?>:</label>
                     <select class="select" name="forms_graphic_line_aggregation">
@@ -137,7 +137,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     </select>
                 </p>
                 <p>
-                    <label>Remplissage (courbes seulement):</label>
+                    <label>Remplissage (courbes/radars seulement):</label>
                     <input type="checkbox" name="forms_graphic_filled" value="1" <?php if ($objGraphic->fields['filled']) echo 'checked="checked"'; ?> style="width:16px;"/>
                 </p>
                 <?php
