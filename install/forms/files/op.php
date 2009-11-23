@@ -207,7 +207,7 @@ if ($_SESSION['ploopi']['connected'])
                             $arrCount = array(); // Tableau des compteurs (pour moyenne notamment)
                             $arrTotal = array(); // tableau contenant le total pour chaque indice (permet de calculer les valeurs en pourcentage) 
                             
-                            $intTsNow = mktime();
+                            $intTsNow = ploopi_createtimestamp();
                             
                             switch($objGraphic->fields['line_aggregation'])
                             {
@@ -271,7 +271,7 @@ if ($_SESSION['ploopi']['connected'])
                             foreach($_SESSION['forms']['data'] as $arrLine)
                             {
                                 // 1. Filtrage sur la date par rapport à la période choisie
-                                if ($arrLine['datevalidation'] > $intTsMin)
+                                if ($arrLine['datevalidation'] > $intTsMin && $arrLine['datevalidation'] <= $intTsNow)
                                 {
                                     // 2. Détermination de l'appartenance à la courbe en fonction du filtre
                                     foreach(array_keys($arrData) as $intI)
@@ -328,7 +328,7 @@ if ($_SESSION['ploopi']['connected'])
                                                 break;
                                                 
                                                 case 'day':
-                                                    $intIndice = round((ploopi_timestamp2unixtimestamp($arrLine['datevalidation']) - ploopi_timestamp2unixtimestamp($intTsMin)) / (3600*24)) - 1;
+                                                    $intIndice = round((ploopi_timestamp2unixtimestamp($arrLine['datevalidation']) - ploopi_timestamp2unixtimestamp($intTsMin)) / (3600*24));
                                                 break;
                                                 
                                                 case 'week':
@@ -340,24 +340,25 @@ if ($_SESSION['ploopi']['connected'])
                                                 break;
                                             }
                                             
-                                            
-                                            switch($objGraphic->fields["line{$intI}_operation"])
+                                            if (isset($arrData[$intI][$intIndice]))
                                             {
-                                                case 'count':
-                                                    $arrData[$intI][$intIndice]++; 
-                                                break;
-                                                
-                                                case 'sum':
-                                                case 'avg':
-                                                    $arrData[$intI][$intIndice] += floatval($arrLine[$objGraphic->fields["line{$intI}_field"]]);
-                                                    $arrCount[$intI][$intIndice]++; 
-                                                break;
+                                                switch($objGraphic->fields["line{$intI}_operation"])
+                                                {
+                                                    case 'count':
+                                                        $arrData[$intI][$intIndice]++; 
+                                                    break;
+                                                    
+                                                    case 'sum':
+                                                    case 'avg':
+                                                        $arrData[$intI][$intIndice] += floatval($arrLine[$objGraphic->fields["line{$intI}_field"]]);
+                                                        $arrCount[$intI][$intIndice]++; 
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
-                            
         
                             // Post-traitement spécial pour calculer la moyenne
                             foreach($arrData as $intI => $arrDataDetail)
@@ -410,7 +411,7 @@ if ($_SESSION['ploopi']['connected'])
                                     }
                                 }
                             }
-
+                            
                             $objGraph = new Graph($intGraphWidth, $intGraphHeight);
                             
                             // /!\ antialiasing non dispo dans la version de GD2 incluse dans debian etch
@@ -526,6 +527,10 @@ if ($_SESSION['ploopi']['connected'])
                     
                     // Génération du graphique
                     $objGraph->Stroke();
+                    header('Content-disposition: inline; filename="graphique.png"');
+                    
+                    // Debug :
+                    //header('content-type:text/html');
                     
                 }
                 ploopi_die();
