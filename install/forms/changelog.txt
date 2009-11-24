@@ -1,3 +1,9 @@
+== Module FORMS - version 2.5.1b =====================================================
+
+2009-11-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug impactant la validation des champs de formulaire contenant le caractère "'"
+
 == Module FORMS - version 2.5.1 =====================================================
 
 2009-11-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
