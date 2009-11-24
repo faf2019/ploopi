@@ -1,3 +1,9 @@
+== Module FORMS - version 2.3.6e =====================================================
+
+2009-11-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'un tri sur les données d'un champ de type 'Lien formulaire'
+
 == Module FORMS - version 2.3.6d =====================================================
 
 2009-11-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
