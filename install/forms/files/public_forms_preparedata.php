@@ -237,7 +237,7 @@ foreach ($data as $reply_id => $detail)
                     // cas particulier du format date (on suppose que les données sont saisies au format date FR
                     if (isset($data_title[${"filter_field_{$l}"}]['format']) && $data_title[${"filter_field_{$l}"}]['format'] == 'date')
                     {
-                        $val1 = ploopi_local2timestamp($detail[${"filter_field_{$l}"}]);
+                        $val1 = $detail[${"filter_field_{$l}"}];
                         $val2 = ploopi_local2timestamp(${"filter_value_{$l}"});
                     }
                     else
