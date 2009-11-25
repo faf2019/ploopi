@@ -1,3 +1,10 @@
+== Module BOOKING - version 0.9.2g ====================================================
+
+2009-11-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug lors de la validation d'un événement : ne conservait pas les minutes
+ * Corrections mineures d'affichage 
+
 == Module BOOKING - version 0.9.2f ====================================================
 
 2009-10-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
