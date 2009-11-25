@@ -222,6 +222,8 @@ function ploopi_ob_callback($buffer)
         $log->save();
     }
 
+    session_write_close();
+
     if ($content_type == 'text/html' && !$booDownloadFile)
     {
         $array_tags = array(

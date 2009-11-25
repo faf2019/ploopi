@@ -293,6 +293,9 @@ if ($display_type == 'advanced')
                         <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_headings');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="headings" id="heading_content_type_headings" <?php if ($heading->fields['content_type'] == 'headings') echo 'checked'; ?> />Afficher le contenu des sous rubriques
                         </div>
+                        <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_blog');">
+                            <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="blog" id="heading_content_type_blog" <?php if ($heading->fields['content_type'] == 'blog') echo 'checked'; ?> />Afficher comme Blog
+                        </div>
                         <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_sitemap');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="sitemap" id="heading_content_type_sitemap" <?php if ($heading->fields['content_type'] == 'sitemap') echo 'checked'; ?> />Afficher le plan du site
                         </div>

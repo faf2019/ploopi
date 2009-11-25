@@ -140,7 +140,7 @@ class calendar
      * @var int
      */
 
-    private $intWidth;
+    protected $intWidth;
 
     /**
      * Hauteur du calendrier
@@ -148,7 +148,7 @@ class calendar
      * @var int
      */
 
-    private $intHeight;
+    protected $intHeight;
 
     /**
      * Type de calendrier : month/days
@@ -156,7 +156,7 @@ class calendar
      * @var string
      */
 
-    private $strDisplayType;
+    protected $strDisplayType;
 
     /**
      * Options du calendrier
@@ -164,7 +164,7 @@ class calendar
      * @var array
      */
 
-    private $arrOptions;
+    protected $arrOptions;
 
     /**
      * Evénements du calendrier
@@ -172,7 +172,7 @@ class calendar
      * @var array
      */
 
-    private $arrEvents;
+    protected $arrEvents;
 
     /**
      * Constructeur de la classe
@@ -810,7 +810,7 @@ class calendar
      * @param int $arrIdEvents id de l'événement
      */
 
-    private function _display_month_events($arrIdEvents)
+    protected function _display_month_events($arrIdEvents)
     {
         foreach($arrIdEvents as $intId)
         {
@@ -841,7 +841,7 @@ class calendar
      * @return array événéments (id) par jour  (clé : AAAAMMJJ)
      */
 
-    private function _prepare_events()
+    protected function _prepare_events()
     {
         $arrEvents = array();
 

@@ -77,6 +77,11 @@ define ('_WEBEDIT_ACTION_STATS',   8);
 define ('_WEBEDIT_ACTION_REINDEX',   9);
 
 /**
+ * Gerer les commentaires
+ */
+define ('_WEBEDIT_ACTION_COMMENT',   10);
+
+/**
  * Objet : ARTICLE (admin)
  */
 define ('_WEBEDIT_OBJECT_ARTICLE_ADMIN',        1);
@@ -796,7 +801,7 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
     // Mise en cache
     $objCache = new ploopi_cache('webedit/article/'._PLOOPI_FRONTOFFICE_REWRITERULE.'/'.$objArticle->fields['id'].'/'.$objArticle->fields['lastupdate_timestp'], 86400);
 
-    if (!$strReplaced = $objCache->get())
+    if (!$strReplaced = $objCache->get_var())
     {
         include_once './modules/webedit/class_article.php';
     
@@ -866,7 +871,7 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
             }
         }
         
-        $objCache->save($strReplaced = str_replace($arrSearch, $arrReplace, $strContent));
+        $objCache->save_var($strReplaced = str_replace($arrSearch, $arrReplace, $strContent));
     }
     
     return $strReplaced;
@@ -1047,19 +1052,45 @@ function webedit_getrewriterules()
 {
     return array(
         'patterns' => array(
+            // Blog
+            '/index.php\?headingid=([0-9]*)&numpage=([0-9]*)&yearmonth=([0-9]{6})&day=([0-9]{2})/',
+            '/index.php\?headingid=([0-9]*)&numpage=([0-9]*)&yearmonth=([0-9]{6})/',
+            '/index.php\?headingid=([0-9]*)&numpage=([0-9]*)&year=([0-9]{4})/',
+            '/index.php\?headingid=([0-9]*)&numpage=([0-9]*)/',
+            '/index.php\?headingid=([0-9]*)&yearmonth=([0-9]{6})&day=([0-9]{2})/',
+            '/index.php\?headingid=([0-9]*)&yearmonth=([0-9]{6}|<YEARMONTH>)/',
+            '/index.php\?headingid=([0-9]*)&year=([0-9]{4}|<YEAR>)/',
+            // Article
+            '/index.php\?headingid=([0-9]*)&articleid=([0-9]*)&comment_return=([0-9]*)/',
             '/index.php\?headingid=([0-9]*)&articleid=([0-9]*)/',
+            '/index.php\?headingid=([0-9]*)&comment_return=([0-9]*)/',
             '/index.php\?headingid=([0-9]*)/',
+            '/index.php\?articleid=([0-9]*)&comment_return=([0-9]*)/',
             '/index.php\?articleid=([0-9]*)/',
+            // Divers
             '/index.php\?ploopi_op=webedit_unsubscribe&subscription_email=([a-z0-9]{32})/',
             '/index.php\?query_tag=([a-zA-Z0-9]*)/',
             '/index.php\?ploopi_op=webedit_backend&format=([a-z]*)&headingid=([0-9]*)/',
-            '/index.php\?ploopi_op=webedit_backend&format=([a-z]*)/'
+            '/index.php\?ploopi_op=webedit_backend&format=([a-z]*)/',
         ),
 
         'replacements' => array(
+            // Blog
+            'blog/<FOLDERS><TITLE>-h$1p$2ym$3d$4.<EXT>',
+            'blog/<FOLDERS><TITLE>-h$1p$2ym$3.<EXT>',
+            'blog/<FOLDERS><TITLE>-h$1p$2y$3.<EXT>',
+            'blog/<FOLDERS><TITLE>-h$1p$2.<EXT>',
+            'blog/<FOLDERS><TITLE>-h$1ym$2d$3.<EXT>',
+            'blog/<FOLDERS><TITLE>-h$1ym$2.<EXT>',
+            'blog/<FOLDERS><TITLE>-h$1y$2.<EXT>',
+            // Article
+            'articles/<FOLDERS><TITLE>-h$1a$2r$3.<EXT>', // avec reponse (de commentaire par ex.)
             'articles/<FOLDERS><TITLE>-h$1a$2.<EXT>',
+            'articles/<FOLDERS><TITLE>-h$1r$2.<EXT>', // avec reponse (de commentaire par ex.)
             'articles/<FOLDERS><TITLE>-h$1.<EXT>',
+            'articles/<FOLDERS><TITLE>-a$1r$2.<EXT>', // avec reponse (de commentaire par ex.)
             'articles/<FOLDERS><TITLE>-a$1.<EXT>',
+            // Divers
             'unsubscribe/$1/index.<EXT>',
             'tags/$1.<EXT>',
             '$1/<TITLE>-h$2.xml',

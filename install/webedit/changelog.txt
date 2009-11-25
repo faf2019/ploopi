@@ -1,3 +1,13 @@
+== Module WebEdit - version 2.2.0 ============================================
+
+2009-11-25  xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Ajout : Les headings peuvent afficher leurs articles sous forme de "blog"
+ * Ajout d'un calendrier pour la version "blog"
+ * Ajout d'un historique des articles pour la version "blog"
+ 
+ * Ajout : les articles gèrent les commentaires
+
 == Module WebEdit - version 2.1.7 ============================================
 
 2009-10-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

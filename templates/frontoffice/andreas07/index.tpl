@@ -120,6 +120,22 @@
             <a href="{tagcloud.LINK}" class="{tagcloud.SELECTED}" title="Afficher les articles contenant le tag &laquo; {tagcloud.TAG} &raquo;" style="font-size:{tagcloud.SIZE}%;">{tagcloud.TAG}<sup>{tagcloud.OCCURENCE}</sup></a>
         <!-- END tagcloud -->
     </div>
+
+    <!-- BEGIN switch_blog -->
+        <!-- BEGIN calendar -->
+        {switch_blog.calendar.CONTENT}
+        <!-- END calendar -->
+        <br/>
+        <!-- BEGIN archive -->
+        <ul>        
+            <h2>{switch_blog.archive.YEAR}</h2>
+            <!-- BEGIN month -->
+            <li><a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_blog.archive.month.URL}'" class="row_archives">{switch_blog.archive.month.MONTH_LETTER} ({switch_blog.archive.month.NBART})</a></li>
+            <!-- END month -->
+        </ul>
+        <!-- END archive -->
+    <!-- END switch_blog -->
+
 </div>
 
 <div id="content">
@@ -127,7 +143,135 @@
         <h1>{PAGE_TITLE}</h1>
         <h2>{PAGE_DESCRIPTION}</h2>
         <p>{PAGE_CONTENT}</p>
+        <!-- BEGIN sw_comment -->
+            <div id="bloc_comment_{switch_content_page.PAGE_ID}">
+                <!-- BEGIN sw_comment_response -->
+                    <h3 style="text-align: center; background-color: #ffffaa;">{switch_content_page.sw_comment.sw_comment_response.RESPONSE}</h3>
+                <!-- END sw_comment_response -->
+                <!-- BEGIN comment -->
+                    <div class="block_comment">
+                    <p>{switch_content_page.sw_comment.comment.POSTBY}</p>
+                    {switch_content_page.sw_comment.comment.COMMENT}
+                    </div>
+                <!-- END comment -->
+                <!-- BEGIN sw_showall -->
+                <div class="block_comment_showall">
+                    <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_page.sw_comment.sw_showall.URL_ARTICLE}'">{switch_content_page.sw_comment.sw_showall.LIBELLE}</a>
+                </div>
+                <!-- END sw_showall -->
+                <div>
+                    <a name="form_comment">
+                    <form action="{switch_content_page.sw_comment.ACTION}" method="post" onsubmit="javascript:return controlComment(this);">
+                        <div class="form" style="width: 60%; float: left;">
+                            <p>
+                                <label>Nom(*) :</label><input type="text" class="text" id="comment_nickname" name="comment_nickname"  maxlength="50"/>
+                            </p>
+                            <p>
+                                <label>Email (ne sera pas affiché) :</label><input type="text" class="text" id="comment_email" name="comment_email" maxlength="255"/>
+                            </p>
+                            <p>
+                                <label>Commentaire(*) :</label><textarea class="textarea" id="comment_comment" name="comment_comment"></textarea>
+                            </p>
+                        </div>
+                        <div class="form" style="padding: 110px 0 0 30px;">
+                            <div>
+                                <div style="margin: 0 5px 0 0; float: left; width: 130px; height: 45px; text-align: center;">
+                                    <img id="img_captcha" align="center" style="border: none;" src="./img/ajax-loader.gif"/>
+                                </div>
+                                <div style="float: left; padding: 0; margin: 0;">
+                                    <div style="padding: 12px 0 0 0;">
+                                        <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" width="19" height="19" id="SecurImage_{switch_content_page.PAGE_ID}" align="top">
+                                            <param name="allowScriptAccess" value="sameDomain" />
+                                            <param name="allowFullScreen" value="false" />
+                                            <param name="movie" value="./img/captcha/securimage_play.swf?audio={switch_content_page.sw_comment.URLTOCAPTCHASOUND}&bgColor1=#D85D5D&bgColor2=#fff&iconColor=#000&roundedCorner=5" />
+                                            <param name="quality" value="high" />
+                                            <param name="bgcolor" value="#ffffff" />
+                                            <embed src="./img/captcha/securimage_play.swf?audio={switch_content_page.sw_comment.URLTOCAPTCHASOUND}&bgColor1=#D85D5D&bgColor2=#fff&iconColor=#000&roundedCorner=5" quality="high" bgcolor="#ffffff" width="19" height="19" name="SecurImage_{switch_content_page.PAGE_ID}" align="top" allowScriptAccess="sameDomain" allowFullScreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+                                        </object>
+                                    </div>
+                                    <div style="cursor: pointer;" onclick="javascript: $('img_captcha').src = '{switch_content_page.sw_comment.URLTOCAPTCHA}&random='+Math.random(); return void(0);"><img src="{TEMPLATE_PATH}/img/refresh.png" alt="Reload Image" style="border: none; padding: 5px 0 0 0; margin: 0;" border="0" align="bottom" /></div>
+                                </div>
+                            </div>
+                            <p>
+                                <label>Code(*) :</label><input type="text" class="text" id="code" name="code" maxlength="8" style="width: 140px;" />
+                            </p>
+                        </div>
+                        <div class="form_validate">(*) Champs requis</div>
+                        <div class="form_validate">
+                            <input type="submit" class="" value="Envoyer" />
+                        </div>
+                    </form>
+                    </a>
+                    <script type="text/javascript">
+                    function controlComment(form)
+                    {
+                        if (ploopi_validatefield('Nom', form.comment_nickname, 'string'))
+                        if (ploopi_validatefield('Email', form.comment_email, 'emptyemail'))
+                        if (ploopi_validatefield('Commentaire', form.comment_comment, 'string'))
+                        if (ploopi_validatefield('Code', form.code, 'captcha', '{PAGE_URL_CONTROLCAPTCHA}', 'img_captcha', '{PAGE_URL_UPDATECAPTCHA}'))
+                          return(true);
+                        
+                        return(false);
+                    }
+
+                    Event.observe(window, 'load', function() { $('img_captcha').src = '{switch_content_page.sw_comment.URLTOCAPTCHA}&random='+Math.random(); } );
+                    </script>
+                    <div id="debug"></div>
+                </div>
+            </div>
+        <!-- END sw_comment -->
     <!-- END switch_content_page -->
+    
+    <!-- BEGIN switch_content_blog -->
+        <!-- BEGIN article -->
+        <h1>{switch_content_blog.article.PAGE_TITLE}</h1>
+        <h2>{switch_content_blog.article.PAGE_DESCRIPTION}</h2>
+        <p>{switch_content_blog.article.PAGE_CONTENT}</p>
+        <div style="overflow: hidden; font-size: 8px; font-style: italic; padding: 5px 20px 0 0; text-align: center;">
+            <!-- BEGIN sw_modify -->
+            <div style="float: right;">modifié le : {switch_content_blog.article.PAGE_LASTUPDATE_DATE}</div>
+            <!-- END sw_modify -->
+            <div style="float: left;">{switch_content_blog.article.PAGE_AUTHOR} - {switch_content_blog.article.PAGE_DATE}</div>
+            <!-- BEGIN sw_comment -->
+                <!-- BEGIN info -->
+                    <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.article.PAGE_URL_ARTICLE}'">{switch_content_blog.article.sw_comment.info.NB_COMMENT} {switch_content_blog.article.sw_comment.info.LIBELLE}</a>
+                <!-- END info -->
+            <!-- END sw_comment -->
+        </div>
+        <!-- BEGIN sw_comment -->
+            <div id="bloc_comment_{switch_content_blog.article.PAGE_ID}">
+                <!-- BEGIN comment -->
+                    <div class="block_comment">
+                    <p>{switch_content_blog.article.sw_comment.comment.POSTBY}</p>
+                    {switch_content_blog.article.sw_comment.comment.COMMENT}
+                    </div>
+                <!-- END comment -->
+                <div style="overflow: auto;">
+                  <div class="block_comment_show_or_post" style="float: right; text-align:right;">
+                      <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.article.PAGE_URL_ARTICLE}#form_comment'">{switch_content_blog.article.sw_comment.LIBELLE_POST}</a>
+                  </div>
+                  <!-- BEGIN sw_showall -->
+                  <div class="block_comment_show_or_post" style="float: left;">
+                      <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.article.PAGE_URL_ARTICLE}'">{switch_content_blog.article.sw_comment.sw_showall.LIBELLE_SHOW}</a>
+                  </div>
+                  <!-- END sw_showall -->
+                </div>
+            </div>
+        <!-- END sw_comment -->
+        <!-- BEGIN sw_separator -->
+        <hr/>
+        <!-- END sw_separator -->
+        <!-- END article -->
+        
+        <div style="overflow: hidden;">
+            <!-- BEGIN page_before -->
+            <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_before.URL}'" style="float: left; padding: 10px 0 0 10px;">&lt;&lt;&nbsp;pages précédentes</a>
+            <!-- END page_before -->
+            <!-- BEGIN page_after -->
+            <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_after.URL}'" style="float: right; padding: 10px 10px 0 0;">pages suivantes&nbsp;&gt;&gt;</a>
+            <!-- END page_after -->
+        </div>    
+    <!-- END switch_content_blog -->
 
     <!-- BEGIN switch_content_message -->
         <h1>{MESSAGE_TITLE}</h1>

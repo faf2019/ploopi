@@ -180,7 +180,9 @@ class webedit_article extends data_object
         {
             // suppression des sauvegardes
             $db->query("DELETE FROM ploopi_mod_webedit_article_backup WHERE id_article = {$this->fields['id']}");
-
+            // suppression des commentaires
+            $db->query("DELETE FROM ploopi_mod_webedit_article_comment WHERE id_article = {$this->fields['id']}");
+            
             // suppression de l'index
             ploopi_search_remove_index(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id']);
         }
@@ -226,6 +228,7 @@ class webedit_article extends data_object
             $article->fields['position'] = $this->fields['position'];
             $article->fields['disabledfilter'] = $this->fields['disabledfilter'];
             $article->fields['headcontent'] = $this->fields['headcontent'];
+            $article->fields['comments_allowed'] = $this->fields['comments_allowed'];
             $article->save();
 
             $this->index();

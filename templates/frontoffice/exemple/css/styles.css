@@ -508,3 +508,143 @@ background-color: #fffff0;
 
 .fck_ruler {
 }
+
+
+/**
+ * Styles liés à la class calendar_blog POUR BLOG !
+ */
+
+.ploopi_calendar_blog {
+    color: #276A9A;
+    overflow:hidden;
+}
+
+.ploopi_calendar_blog div.month_inner {
+    border-width: 1px 1px 0 0;
+    border-color: #276A9A;
+    border-style: solid;
+    background: #276A9A;
+}
+
+.ploopi_calendar_blog div.row {
+    clear:both;
+}
+
+.ploopi_calendar_blog div.row_title {
+    clear:both;
+    color: black;
+    padding: 2px 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+.ploopi_calendar_blog div.row_title a {
+    color: black;
+}
+
+
+.ploopi_calendar_blog div.day_num {
+    float:left;
+    margin:0 0 1px 1px;
+    padding:2px;
+    display:inline; /* IE hack pour margin */
+    overflow:hidden;
+    background-color:#CCD1D9;
+    text-align:right;
+    font-size:0.9em;
+}
+
+.ploopi_calendar_blog div.day_num_grayed {
+    float:left;
+    margin:0 0 1px 1px;
+    padding:2px;
+    display:inline; /* IE hack pour margin */
+    overflow:hidden;
+    background-color:#D9DEE6;
+    text-align:right;
+    font-size:0.9em;
+    color:#808080;
+}
+
+.ploopi_calendar_blog div.day_weekend {
+    background-color:#e0e0e0;
+}
+
+.ploopi_calendar_blog div.day_holiday {
+    background-color:#e0e0e0;
+    font-style: italic;
+}
+
+.ploopi_calendar_blog div.day_event {
+    font-weight: bold;
+    color: white;
+    background-color: #276A9A;
+    cursor: pointer;
+    
+}
+
+.ploopi_calendar_blog div.day_num_grayed_event {
+    font-weight: bold;
+    color: white;
+    background-color: #276A9A;
+    cursor: pointer;
+}
+
+/**
+ * Styles liés à ARCHIVE POUR BLOG !
+ */
+
+.ploopi_archive_blog {
+    color: #276A9A;
+    overflow:hidden;
+}
+
+.ploopi_archive_blog div.row_title {
+    clear:both;
+    color: black;
+    background-color: #276A9A;
+    font-size: 1.2em;
+    padding: 2px 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+.ploopi_archive_blog a.row_archives {
+    clear:both;
+    display: block;
+    margin: 0;
+    padding: 2px 0 2px 10px;
+    background-color:#F4F4F4;
+    font-size:0.9em;
+}
+
+.ploopi_archive_blog a.row_archives:hover {
+    background-color:#CCD1D9;
+    text-decoration: none;
+}
+
+/**
+ * Styles liés aux commentaires des articles
+ */
+ 
+.block_comment {
+	padding: 4px;
+	margin: 5px;
+	background-color: #D9DEE6;
+	text-align: left;
+}
+
+.block_comment p {
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    font-size: 0.7em;
+    font-style: italic;
+    text-decoration: underline;
+}
+
+.block_comment_show_or_post {
+    padding: 0 10px;
+    margin: 0;
+    font-size: 0.8em;
+}

@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -23,11 +24,11 @@
 
 /**
  * Opérations génériques.
- * Calendrier, Colorpicker...
+ * Calendrier, Colorpicker, Captcha...
  *
  * @package ploopi
  * @subpackage global
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -35,7 +36,6 @@
 /**
  * inclusions fonctions système (ploopi_die...)
  */
-
 include_once './include/functions/system.php';
 
 if (isset($_REQUEST['ploopi_op'])) $ploopi_op = $_REQUEST['ploopi_op'];
@@ -458,6 +458,49 @@ if (isset($ploopi_op))
             ploopi_die();
         break;
 
+        case 'ploopi_get_captcha':
+            include_once './include/classes/captcha.php';
+            
+            $objCaptcha = new captcha(
+                array(
+                    'captchawidth'  => 130,     // Taille X
+                    'captchaheight' => 45,      // Taille Y
+                    'captchaeasy'   => false,   // Captcha simple a lire (alternance de console/voyelle uniquement majuscule)
+                    'charspace'     => 25,      // espace entre les caractères
+                    'charsizemin'   => 16,      // taille de police mini
+                    'charsizemax'   => 20,      // taille de police maxi
+                    'noiselinemax'  => 4,       // nombre max de lignes dessinées
+                    'nbcirclemax'   => 2,       // nombre max de cercle dessinées
+                    'brushsize'     => 2,       // taille maxi de la brosse pour tracer les points/traits/cercles
+                    'captchausetimer' => 4      // temps mini entre 2 refresh
+                )
+            );
+            
+            $objCaptcha->createCaptcha();
+            ploopi_die();
+        break;
+
+        case 'ploopi_get_captcha_sound':
+            include_once './include/classes/captcha.php';
+            
+            $objCaptchaSound = new captcha_sound();
+
+            $objCaptchaSound->outputAudioFile();
+            ploopi_die();
+        break;
+        
+        case 'ploopi_get_captcha_verif':
+            if(!empty($_POST['value']))
+            {
+                include_once './include/classes/captcha.php';
+                $objCaptcha = new captcha();
+                echo ($objCaptcha->verifCaptcha($_POST['value'])) ? 1 : 0;
+            }
+            else
+                echo 0;
+                
+            ploopi_die();
+        break;
     }
 
     if ($_SESSION['ploopi']['connected'])

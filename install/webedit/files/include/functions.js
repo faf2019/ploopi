@@ -162,5 +162,30 @@ function webedit_stats_refresh(article_id, heading_id, year, month)
             'POST'
         )
     );
-
 }
+
+function webedit_comment_publish(id_comment, id_article, publish)
+{
+	publish = (publish == true) ? '1' : '0';
+	
+	new Ajax.Request('admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_comment_publish&id_comment='+id_comment+'&publish='+publish, {
+		method: 'get',
+		onSuccess: function() {
+			new Ajax.Updater('webeditcomment_'+id_article, 'admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_comment_refresh&id_article='+id_article, { method: 'get' });
+		}
+	});
+}
+
+function webedit_comment_delete(id_comment,id_article)
+{
+    if (confirm('Êtes vous certain de vouloir supprimer ce commentaire ?'))
+    {
+    	new Ajax.Request('admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_comment_delete&id_comment='+id_comment, {
+    		method: 'get',
+    		onSuccess: function() {
+    			new Ajax.Updater('webeditcomment_'+id_article, 'admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_comment_refresh&id_article='+id_article, { method: 'get' });
+    		}
+    	});
+    }
+}
+

@@ -57,6 +57,7 @@ switch($menu)
          * Inclusion des classes du module
          */
         include_once './modules/webedit/class_article.php';
+        include_once './modules/webedit/class_article_comment.php';
         include_once './modules/webedit/class_heading.php';
         include_once './modules/webedit/class_heading_subscriber.php';
 

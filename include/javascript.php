@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  *
  * @package ploopi
  * @subpackage javascript
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  *
@@ -49,5 +50,6 @@ lstmsg[8] = "<?php echo _PLOOPI_JS_TIME_ERROR ?>";
 lstmsg[9] = "<?php echo _PLOOPI_JS_CHECK_ERROR ?>";
 lstmsg[10] = "<?php echo _PLOOPI_JS_COLOR_ERROR ?>";
 lstmsg[11] = "<?php echo _PLOOPI_JS_PHONE_ERROR ?>";
+lstmsg[12] = "<?php echo _PLOOPI_JS_CAPTCHA_ERROR ?>";
 
 var error_bgcolor = "<?php echo (isset($skin->values['colerror'])) ? $skin->values['colerror'] : "#FFAAAA"; ?>";

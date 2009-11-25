@@ -392,10 +392,11 @@ class mimethumb
         // Create Imagick object
         try {
             $thumb = new Imagick($this->strPathFile);
+            $color = new ImagickPixel( "white" );
             
             $thumb->setResolution(72,72);
             $thumb->setImageColorspace(1);
-            $thumb->setBackgroundColor('#ffffff');
+            $thumb->setBackgroundColor($color);
             
             if(!empty($arrParam))
             {
@@ -438,8 +439,10 @@ class mimethumb
             
             // Ajoute la bordure
             if(!empty($this->strBorderColor))
-                $thumb->borderImage($this->strBorderColor,($this->intWidth-$intWithTmp)/2,($this->intHeight-$intHeightTmp)/2);
-                
+            {
+                $BorderColor = new ImagickPixel( $this->strBorderColor );
+                $thumb->borderImage($BorderColor, ($this->intWidth-$intWithTmp)/2,($this->intHeight-$intHeightTmp)/2);
+            }   
             @header("Content-Type: image/{$this->strExport}");
             echo $thumb->getImage();
             
@@ -643,7 +646,9 @@ class mimethumb
                         
             $fileTempo = $pathTemp.md5(uniqid(rand(), true)).'.png';
             
-            system("ffmpeg -i {$this->strPathFile} -vcodec png -vframes 1 -an -ss 00:00:05 -y $fileTempo",$retval);
+            exec("ffmpeg -i {$this->strPathFile} -vcodec png -f image2 -vframes 1 -an -ss 00:00:05 -y $fileTempo",$arrReturn);
+            
+            if(!file_exists($fileTempo)) return false;
                 
             if (filesize($fileTempo) == 0) 
             {
@@ -651,14 +656,10 @@ class mimethumb
                 return false;
             }
         
-            if ($retval == 0)
-            { 
-                ploopi_resizeimage($fileTempo, $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
-                unlink($fileTempo);
-                return true;
-            }
-            return false;
-            
+            ploopi_resizeimage($fileTempo, $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
+            unlink($fileTempo);
+            return true;
+
         } catch (Exception $e) {
             if($this->booDebug)
             {

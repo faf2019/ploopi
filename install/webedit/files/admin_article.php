@@ -456,6 +456,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                 ?>
             </div>
         </div>
+        
         <div style="clear:both;">
             <div><?php echo htmlentities("Code supplémentaire, non filtré, à insérer dans la balise <HEAD> (js, css, meta, title...) :"); ?> (<a href="javascript:void(0);" onclick="javascript:$('fck_webedit_article_headcontent').style.height=(parseInt($('fck_webedit_article_headcontent').style.height,10)+20)+'px';" title="Permet d'agrandir la zone de saisie de 20px">agrandir la zone</a>)</div>
             <div>
@@ -578,8 +579,6 @@ $keywords = array_slice($keywords, 0 , 20, true);
     </div>
 </div>
 
-
-
 <div style="clear:both;padding:4px;">
     <fieldset class="fieldset" style="padding:6px;">
         <legend><strong>Validateurs</strong> (utilisateurs qui peuvent publier)</legend>
@@ -614,7 +613,6 @@ $keywords = array_slice($keywords, 0 , 20, true);
         </p>
     </fieldset>
 </div>
-
 
 <div style="clear:both;padding:4px;background-color:#e8e8e8;border-top:1px solid #c0c0c0;">
     <?php
@@ -762,7 +760,12 @@ if ($op != 'article_addnew')
         <div style="border-bottom:1px solid #c0c0c0;">
         <?php ploopi_subscription(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $arrAllowedActions, "à &laquo; {$article->fields['title']} &raquo;"); ?>
         </div>
+        <div style="border-bottom:1px solid #c0c0c0;">
         <?php ploopi_annotation(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $article->fields['title']); ?>
+        </div>
+        <?php
+        $objComment = new webedit_article_comment(); 
+        $objComment->admin_comment($article->fields['id']); ?>
     </div>
     <?php
 }

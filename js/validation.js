@@ -1,6 +1,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -418,6 +419,28 @@ function ploopi_validatefield(field_label, field_object, field_type)
             ok = (field_value.search(/^(0[0-9]|1[0-9]|2[0-4]):[0-5][0-9](:[0-5][0-9])?$/) != -1);
             if (field_type == 'emptytime') ok = (ok || field_value.length == 0);
             if (!ok) msg = (field_type == 'time' && field_value.length == 0) ? lstmsg[4] : lstmsg[8];
+        }
+        
+        /* Vérifie que le champ captcha est correct */
+        if (field_type == 'captcha')
+        {
+        	ok = false;
+        	if(arguments.length >= 4 && field_value.length > 0)
+        	{
+        		new Ajax.Request(arguments[3], {
+        			asynchronous : false,
+        			methode: 'get',
+        			parameters : 'value='+field_value,
+        			onSuccess: function(response) {
+        				ok = (response.responseText == 1) ? true : false;
+                    }
+        		});
+        	}
+
+        	if((!ok) && arguments.length >= 6 && $(arguments[4]) && arguments[5].length > 0)
+    			$(arguments[4]).src = arguments[5]+'&random='+Math.random();
+        	
+            if (!ok) msg = (field_type == 'captcha' && field_value.length == 0) ? lstmsg[4] : lstmsg[12];
         }
     }
     else ok = false;

@@ -2,6 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2009 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  *
  * @package ploopi
  * @subpackage lang
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  *
@@ -115,6 +116,7 @@ define ('_PLOOPI_JS_TIME_ERROR',    "Le champ '<FIELD_LABEL>' doit être une heur
 define ('_PLOOPI_JS_CHECK_ERROR',   "Vous devez sélectionner une valeur pour le champ '<FIELD_LABEL>'");
 define ('_PLOOPI_JS_COLOR_ERROR',   "Le champ '<FIELD_LABEL>' doit être une couleur valide\\n(ex: #ffff00 / jaune / yellow)");
 define ('_PLOOPI_JS_PHONE_ERROR',   "Le champ '<FIELD_LABEL>' doit être un numéro de téléphone valide\\n(ex: +33 1 02 03 04 05 ou 0102030405)");
+define ('_PLOOPI_JS_CAPTCHA_ERROR',   "Le code de contrôle entré est incorrect.");
 
 define ('_PLOOPI_ERROR_TEMPLATE_FILE', "Le fichier <FILE> du template <TEMPLATE> n'a pas pu être chargé");
 

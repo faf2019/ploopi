@@ -92,6 +92,22 @@ switch($ploopi_op)
         ploopi_die();
     break;
     
+    case 'webedit_save_comment':
+        include_once './modules/webedit/class_article_comment.php';
+        
+        $objComment = new webedit_article_comment();
+        
+        $objComment->setvalues($_POST,'comment_');
+        $objComment->fields['id_article'] = $_GET['articleid'];
+        if($objComment->save())
+            $return = ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['comment_ctrl']) ? '2' : '1';
+        else
+            return '0'; 
+
+        $arrHeadings = webedit_getheadings();
+        if (isset($arrHeadings['list'][$headingid])) foreach(split(';', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+        ploopi_redirect(ploopi_urlrewrite("index.php?headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&comment_return={$return}",webedit_getrewriterules(),$arrHeadings['list'][$headingid]['label'], $arrParents));
+    break;
 }
 
 /**
@@ -478,7 +494,51 @@ if ($_SESSION['ploopi']['connected'])
 
                 ploopi_die();
             break;
-
+        case 'webedit_comment_refresh':
+            if (isset($_GET['id_article']))
+            {
+                ploopi_init_module('webedit',false,false,false);
+                
+                include_once './modules/webedit/class_article_comment.php';
+                
+                $objComment = new webedit_article_comment();
+                $objComment->admin_comment_refresh($_GET['id_article']);
+            }            
+            ploopi_die();
+            break;
+        case 'webedit_comment_publish':
+            if (isset($_GET['id_comment']) && isset($_GET['publish']))
+            {
+                ploopi_init_module('webedit',false,false,false);
+                
+                include_once './modules/webedit/class_article_comment.php';
+                
+                $objComment = new webedit_article_comment();
+                if($objComment->open($_GET['id_comment']))
+                    $objComment->publish($_GET['publish']==1);
+            }                
+            ploopi_die();
+            break;
+        case 'webedit_comment_delete':
+            if (isset($_GET['id_comment']))
+            {
+                ploopi_init_module('webedit',false,false,false);
+                
+                include_once './modules/webedit/class_article_comment.php';
+                
+                $objComment = new webedit_article_comment();
+                if($objComment->open($_GET['id_comment'])) $objComment->delete();
+            }                
+            ploopi_die();
+            break;
+        case 'webedit_comment_show':
+            if (isset($_GET['id_article']))
+            {
+                if (isset($_SESSION['ploopi']['comment']['show'][$_GET['id_article']])) unset($_SESSION['ploopi']['comment']['show'][$_GET['id_article']]);
+                else $_SESSION['ploopi']['comment']['show'][$_GET['id_article']] = 1;
+            }
+            ploopi_die();
+            break;
         }
     }
 }

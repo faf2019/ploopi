@@ -250,7 +250,7 @@ function tpl_passwordlost_submit() {
 
 <!-- BEGIN switch_user_logged_in -->
 <script type="text/javascript">
-ploopi_window_onload_stock(function() { ploopi_tickets_refresh({LAST_NEWTICKET}, 30, '(', ')'); } );
+Event.observe(window, 'load', function() { ploopi_tickets_refresh({LAST_NEWTICKET}, 30, '(', ')'); } );
 </script>
 <!-- END switch_user_logged_in -->
 

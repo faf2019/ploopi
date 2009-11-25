@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +27,7 @@
  *
  * @package ploopi
  * @subpackage validation
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -154,11 +155,11 @@ switch($ploopi_op)
             {$option_u}
 
             ORDER BY u.lastname, u.firstname
-        ";
+            ";
 
 
         // recherche des groupes "admininstrateur d'espace" ou disposant d'une action particuliere dans le module
-        $option_g = ($id_action != -1) ? "
+        $option_g = ($id_action != -1 && !empty($list['groups'])) ? "
             LEFT JOIN   ploopi_workspace_group_role wgr
             ON          wgr.id_group = g.id
             AND         wgr.id_workspace = wg.id_workspace

@@ -29,8 +29,12 @@
             <visible>1</visible>
         </row>
         <row>
+            <name>ploopi_mod_webedit_article_comment</name>
+            <label>article_comment</label>
+            <visible>1</visible>
+        </row>
+        <row>
             <name>ploopi_mod_webedit_article_draft</name>
-
             <label>article_draft</label>
             <visible>1</visible>
         </row>
@@ -269,6 +273,78 @@
             <tablename>ploopi_mod_webedit_article_backup</tablename>
             <name>id_module</name>
             <label>id_module</label>
+
+            <type>int(10) unsigned</type>
+            <visible>0</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_webedit_comment</tablename>
+            <name>id</name>
+            <label>id</label>
+
+            <type>int(10) unsigned</type>
+            <visible>0</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_webedit_comment</tablename>
+            <name>id_article</name>
+            <label>id_article</label>
+
+            <type>int(10) unsigned</type>
+            <visible>0</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_webedit_comment</tablename>
+            <name>publish</name>
+            <label>publish</label>
+
+            <type>tinyint(1) unsigned</type>
+            <visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_webedit_comment</tablename>
+            <name>comment</name>
+            <label>comment</label>
+
+            <type>longtext</type>
+            <visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_webedit_comment</tablename>
+            <name>email</name>
+            <label>email</label>
+
+            <type>varchar(255)</type>
+            <visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_webedit_comment</tablename>
+            <name>nickname</name>
+            <label>nickname</label>
+
+            <type>varchar(50)</type>
+            <visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_webedit_comment</tablename>
+            <name>timestp</name>
+            <label>timestp</label>
+
+            <type>bigint(14) unsigned</type>
+            <visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_webedit_comment</tablename>
+            <name>id_module</name>
+            <label>id_module</label>
+
+            <type>int(10) unsigned</type>
+            <visible>0</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_webedit_comment</tablename>
+            <name>id_workspace</name>
+            <label>id_workspace</label>
 
             <type>int(10) unsigned</type>
             <visible>0</visible>
@@ -665,6 +741,18 @@
             <tabledest>ploopi_module</tabledest>
         </row>
         <row>
+            <tablesrc>ploopi_mod_webedit_article_comment</tablesrc>
+            <tabledest>ploopi_mod_webedit_article</tabledest>
+        </row>
+        <row>
+            <tablesrc>ploopi_mod_webedit_article_comment</tablesrc>
+            <tabledest>ploopi_workspace</tabledest>
+        </row>
+        <row>
+            <tablesrc>ploopi_mod_webedit_article_comment</tablesrc>
+            <tabledest>ploopi_module</tabledest>
+        </row>
+        <row>
             <tablesrc>ploopi_mod_webedit_article_draft</tablesrc>
             <tabledest>ploopi_mod_webedit_heading</tabledest>
         </row>
@@ -753,6 +841,27 @@
         </row>
         <row>
             <tablesrc>ploopi_mod_webedit_article_backup</tablesrc>
+            <fieldsrc>id_module</fieldsrc>
+            <tabledest>ploopi_module</tabledest>
+            <fielddest>id</fielddest>
+        </row>
+
+        <row>
+            <tablesrc>ploopi_mod_webedit_article_comment</tablesrc>
+            <fieldsrc>id_article</fieldsrc>
+
+            <tabledest>ploopi_mod_webedit_article</tabledest>
+            <fielddest>id</fielddest>
+        </row>
+        <row>
+            <tablesrc>ploopi_mod_webedit_article_comment</tablesrc>
+            <fieldsrc>id_workspace</fieldsrc>
+            <tabledest>ploopi_workspace</tabledest>
+            <fielddest>id</fielddest>
+
+        </row>
+        <row>
+            <tablesrc>ploopi_mod_webedit_article_comment</tablesrc>
             <fieldsrc>id_module</fieldsrc>
             <tabledest>ploopi_module</tabledest>
             <fielddest>id</fielddest>

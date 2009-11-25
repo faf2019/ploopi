@@ -52,4 +52,14 @@ $webedit_subscription_messages =
 
     );
 
+define ('_WEBEDIT_COMMENT_SHOWALL',         'Voir tous les commentaires');
+define ('_WEBEDIT_COMMENT_POST',            'Envoyer un commentaire');
+define ('_WEBEDIT_COMMENT_COMMENT',         'commentaire(s)');
+define ('_WEBEDIT_COMMENT_COMMENT_POSTBY',  'Posté par %s le %s à %s');
+
+define ('_WEBEDIT_COMMENT_COMMENT_SEND_0',  'Erreur - Votre commentaire n\'a pas été enregistré.');
+define ('_WEBEDIT_COMMENT_COMMENT_SEND_1',  'Commentaire Enregistré');
+define ('_WEBEDIT_COMMENT_COMMENT_SEND_2',  'Commentaire Enregistré.<br/>Il sera contrôlé par un modérateur avant d\'être publié.');
+
+
 ?>
