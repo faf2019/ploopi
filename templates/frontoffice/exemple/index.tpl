@@ -164,7 +164,7 @@
                         <div class="ploopi_archive_blog">
                             <div class="row_title">{switch_blog.archive.YEAR}</div>
                             <!-- BEGIN month -->
-                            <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_blog.archive.month.URL}'" class="row_archives">{switch_blog.archive.month.MONTH_LETTER} ({switch_blog.archive.month.NBART})</a>
+                            <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_blog.archive.month.URL}'; return false;" class="row_archives">{switch_blog.archive.month.MONTH_LETTER} ({switch_blog.archive.month.NBART})</a>
                             <!-- END month -->
                         </div>
                         <!-- END archive -->
@@ -248,7 +248,7 @@
                                 <!-- END comment -->
                                 <!-- BEGIN sw_showall -->
                                 <div class="block_comment_showall">
-                                    <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_page.sw_comment.sw_showall.URL_ARTICLE}'">{switch_content_page.sw_comment.sw_showall.LIBELLE}</a>
+                                    <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_page.sw_comment.sw_showall.URL_ARTICLE}'; return false;">{switch_content_page.sw_comment.sw_showall.LIBELLE}</a>
                                 </div>
                                 <!-- END sw_showall -->
                                 <div>
@@ -266,7 +266,7 @@
                                             </p>
                                         </div>
                                         <div class="form" style="padding: 50px 0 0 30px;">
-                                            <div>
+                                            <p>
                                                 <div style="margin: 0 5px 0 0; float: left; width: 130px; height: 45px; text-align: center;">
                                                     <img id="img_captcha" align="center" src="./img/ajax-loader.gif"/>
                                                 </div>
@@ -281,9 +281,9 @@
                                                             <embed src="./img/captcha/securimage_play.swf?audio={switch_content_page.sw_comment.URLTOCAPTCHASOUND}&bgColor1=#286EA0&bgColor2=#fff&iconColor=#000&roundedCorner=5" quality="high" bgcolor="#ffffff" width="19" height="19" name="SecurImage_{switch_content_page.PAGE_ID}" align="top" allowScriptAccess="sameDomain" allowFullScreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
                                                         </object>
                                                     </div>
-                                                    <div style="cursor: pointer;" onclick="javascript: $('img_captcha').src = '{switch_content_page.sw_comment.URLTOCAPTCHA}&random='+Math.random(); return void(0);"><img src="{TEMPLATE_PATH}/img/refresh.png" alt="Reload Image" border="0" align="bottom" /></div>
+                                                    <div style="cursor: pointer;" onclick="javascript: $('img_captcha').src = '{switch_content_page.sw_comment.URLTOCAPTCHA}&random='+Math.random(); return false;"><img src="{TEMPLATE_PATH}/img/refresh.png" alt="Reload Image" border="0" align="bottom" /></div>
                                                 </div>
-                                            </div>
+                                            </p>
                                             <p>
                                                 <label>Code(*) :</label><input type="text" class="text" id="code" name="code" maxlength="8" style="width: 140px;" />
                                             </p>
@@ -327,14 +327,14 @@
                             <div style="clear:both;"> 
                             {switch_content_blog.article.PAGE_CONTENT}
                             </div>
-                            <div style="clear: both; overflow: hidden; font-size: 8px; font-style: italic; padding: 5px 20px 0 0; text-align: center;">
+                            <div style="clear: both; font-size: 9px; padding: 5px 20px 0 0; text-align: center;">
                                 <!-- BEGIN sw_modify -->
                                 <div style="float: right;">modifié le : {switch_content_blog.article.PAGE_LASTUPDATE_DATE}</div>
                                 <!-- END sw_modify -->
                                 <div style="float: left;">{switch_content_blog.article.PAGE_AUTHOR} - {switch_content_blog.article.PAGE_DATE}</div>
                                 <!-- BEGIN sw_comment -->
                                     <!-- BEGIN info -->
-                                        <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.article.PAGE_URL_ARTICLE}'">{switch_content_blog.article.sw_comment.info.NB_COMMENT} {switch_content_blog.article.sw_comment.info.LIBELLE}</a>
+                                        <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.article.PAGE_URL_ARTICLE}'; return false;">{switch_content_blog.article.sw_comment.info.NB_COMMENT} {switch_content_blog.article.sw_comment.info.LIBELLE}</a>
                                     <!-- END info -->
                                 <!-- END sw_comment -->
                             </div>
@@ -346,30 +346,30 @@
                                         {switch_content_blog.article.sw_comment.comment.COMMENT}
                                         </div>
                                     <!-- END comment -->
-                                    <div style="overflow: auto;">
+                                    <div>
                                       <div class="block_comment_show_or_post" style="float: right; text-align:right;">
-                                          <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.article.PAGE_URL_ARTICLE}#form_comment'">{switch_content_blog.article.sw_comment.LIBELLE_POST}</a>
+                                          <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.article.PAGE_URL_ARTICLE}#form_comment'; return false;">{switch_content_blog.article.sw_comment.LIBELLE_POST}</a>
                                       </div>
                                       <!-- BEGIN sw_showall -->
                                       <div class="block_comment_show_or_post" style="float: left;">
-                                          <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.article.PAGE_URL_ARTICLE}'">{switch_content_blog.article.sw_comment.sw_showall.LIBELLE_SHOW}</a>
+                                          <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.article.PAGE_URL_ARTICLE}'; return false;">{switch_content_blog.article.sw_comment.sw_showall.LIBELLE_SHOW}</a>
                                       </div>
                                       <!-- END sw_showall -->
                                     </div>
                                 </div>
                             <!-- END sw_comment -->
                             <!-- BEGIN sw_separator -->
-                            <hr/>
+                            <div style="clear: both;"><hr/></div>
                             <!-- END sw_separator -->
                         <!-- END article -->
                         
-                        <div style="overflow: hidden;">
-                            <!-- BEGIN page_before -->
-                            <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_before.URL}'" style="float: left; padding: 10px 0 0 10px;">&lt;&lt;&nbsp;pages précédentes</a>
-                            <!-- END page_before -->
+                        <div style="overflow: hidden; clear: both;">
                             <!-- BEGIN page_after -->
-                            <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_after.URL}'" style="float: right; padding: 10px 10px 0 0;">pages suivantes&nbsp;&gt;&gt;</a>
+                            <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_after.URL}'; return false;" style="float: right; padding: 10px 10px 0 0;">pages suivantes&nbsp;&gt;&gt;</a>
                             <!-- END page_after -->
+                            <!-- BEGIN page_before -->
+                            <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_before.URL}'; return false;" style="float: left; padding: 10px 0 0 0;">&lt;&lt;&nbsp;pages précédentes</a>
+                            <!-- END page_before -->
                         </div>    
                     <!-- END switch_content_blog -->
 

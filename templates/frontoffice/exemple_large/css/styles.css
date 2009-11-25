@@ -637,12 +637,11 @@ background-color: #fffff0;
     margin: 0;
     text-align: left;
     font-size: 0.7em;
-    font-style: italic;
     text-decoration: underline;
 }
 
 .block_comment_show_or_post {
-    padding: 0 10px;
+    padding: 0 20px 0 10px;
     margin: 0;
     font-size: 0.8em;
 }
