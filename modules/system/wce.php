@@ -250,6 +250,8 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                 ON          g.id = gu.id_group
 
                 WHERE       ".implode(' AND ', $arrWhere)."
+                
+                ORDER BY    u.lastname, u.firstname
             ");
 
             // Tableaux qui vont contenir les utilisateurs et les groupes
