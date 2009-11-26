@@ -905,12 +905,12 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                                                 array(
                                                     'ID'        => $rowComment['id'],
                                                     'PUBLISHED' => $rowComment['publish'],
-                                                    'COMMENT'   => $rowComment['comment'],
-                                                    'EMAIL'     => $rowComment['email'],
-                                                    'NICKNAME'  => $rowComment['nickname'],
+                                                    'COMMENT'   => htmlentities($rowComment['comment']),
+                                                    'EMAIL'     => htmlentities($rowComment['email']),
+                                                    'NICKNAME'  => htmlentities($rowComment['nickname']),
                                                     'DATE'      => $date_comment['date'],
                                                     'TIME'      => $date_comment['time'],
-                                                    'POSTBY'    => sprintf(_WEBEDIT_COMMENT_COMMENT_POSTBY,$rowComment['nickname'],$date_comment['date'],$date_comment['time'])
+                                                    'POSTBY'    => sprintf(_WEBEDIT_COMMENT_COMMENT_POSTBY,htmlentities($rowComment['nickname']),$date_comment['date'],$date_comment['time'])
                                                 )
                                             );
                                         }
@@ -1401,6 +1401,7 @@ else // affichage standard rubrique/page
                 $nbComment = 0;
                 
                 $action = 'index.php?ploopi_op=webedit_save_comment&headingid='.$headingid;
+                
                 if(isset($article->fields['id'])) $action .= '&articleid='.$article->fields['id'];
                 if(isset($webedit_mode) && $webedit_mode != 'display') $action .= '&webedit_mode='.$webedit_mode;
                 
@@ -1444,12 +1445,12 @@ else // affichage standard rubrique/page
                             array(
                                 'ID'        => $rowComment['id'],
                                 'PUBLISHED' => $rowComment['publish'],
-                                'COMMENT'   => $rowComment['comment'],
-                                'EMAIL'     => $rowComment['email'],
-                                'NICKNAME'  => $rowComment['nickname'],
+                                'COMMENT'   => htmlentities($rowComment['comment']),
+                                'EMAIL'     => htmlentities($rowComment['email']),
+                                'NICKNAME'  => htmlentities($rowComment['nickname']),
                                 'DATE'      => $date_comment['date'],
                                 'TIME'      => $date_comment['time'],
-                                'POSTBY'    => sprintf(_WEBEDIT_COMMENT_COMMENT_POSTBY,$rowComment['nickname'],$date_comment['date'],$date_comment['time'])
+                                'POSTBY'    => sprintf(_WEBEDIT_COMMENT_COMMENT_POSTBY,htmlentities($rowComment['nickname']),$date_comment['date'],$date_comment['time'])
                             )
                         );
                     }

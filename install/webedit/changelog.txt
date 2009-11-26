@@ -1,3 +1,10 @@
+== Module WebEdit - version 2.2.0a ============================================
+
+2009-11-26  xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Correction : faille potentielle de sécurité dans les commentaires
+ * Correction : erreur lors de la redirection après enregistrement d'un commentaire
+
 == Module WebEdit - version 2.2.0 ============================================
 
 2009-11-25  xavier Toussaint ~ HeXad <xavier@hexad.fr>

@@ -93,20 +93,24 @@ switch($ploopi_op)
     break;
     
     case 'webedit_save_comment':
-        include_once './modules/webedit/class_article_comment.php';
+        if(isset($_GET['articleid']) && is_numeric($_GET['articleid']))
+        {
+            include_once './modules/webedit/class_article_comment.php';
+            
+            $objComment = new webedit_article_comment();
+            
+            $objComment->setvalues($_POST,'comment_');
+            $objComment->fields['id_article'] = $_GET['articleid'];
+            if($objComment->save())
+                $return = ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['comment_ctrl']) ? '2' : '1';
+            else
+                return '0'; 
+    
+        }
         
-        $objComment = new webedit_article_comment();
-        
-        $objComment->setvalues($_POST,'comment_');
-        $objComment->fields['id_article'] = $_GET['articleid'];
-        if($objComment->save())
-            $return = ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['comment_ctrl']) ? '2' : '1';
-        else
-            return '0'; 
-
         $arrHeadings = webedit_getheadings();
-        if (isset($arrHeadings['list'][$headingid])) foreach(split(';', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-        ploopi_redirect(ploopi_urlrewrite("index.php?headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&comment_return={$return}",webedit_getrewriterules(),$arrHeadings['list'][$headingid]['label'], $arrParents));
+        if (isset($arrHeadings['list'][$_GET['headingid']])) foreach(split(';', $arrHeadings['list'][$_GET['headingid']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+        ploopi_redirect(ploopi_urlrewrite("index.php?headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&comment_return={$return}",webedit_getrewriterules(),$arrHeadings['list'][$_GET['headingid']]['label'], $arrParents));
     break;
 }
 
