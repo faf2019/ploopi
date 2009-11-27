@@ -271,10 +271,14 @@ if ($_SESSION['ploopi']['connected'])
                                 
                             }
                             
+                            $strTimeField = $objGraphic->fields['timefield'];
+                            if ($strTimeField == '0') $strTimeField = 'datevalidation';
+                            
+                            
                             foreach($_SESSION['forms']['data'] as $arrLine)
                             {
                                 // 1. Filtrage sur la date par rapport à la période choisie
-                                if ($arrLine['datevalidation'] > $intTsMin && $arrLine['datevalidation'] <= $intTsNow)
+                                if ($arrLine[$strTimeField] > $intTsMin && $arrLine[$strTimeField] <= $intTsNow)
                                 {
                                     // 2. Détermination de l'appartenance à la courbe en fonction du filtre
                                     foreach(array_keys($arrData) as $intI)
@@ -282,8 +286,8 @@ if ($_SESSION['ploopi']['connected'])
                                         $booFilterOk = false;
                                         if ($objGraphic->fields["line{$intI}_filter_op"] != '' && $objGraphic->fields["line{$intI}_filter_value"] != '')
                                         {
-                                            $strVal1 = $arrLine[$objGraphic->fields["line{$intI}_field"]];
-                                            $strVal2 = $objGraphic->fields["line{$intI}_filter_value"];
+                                            $strVal1 = trim($arrLine[$objGraphic->fields["line{$intI}_field"]]);
+                                            $strVal2 = trim($objGraphic->fields["line{$intI}_filter_value"]);
                                             
                                             switch($objGraphic->fields["line{$intI}_filter_op"])
                                             {
@@ -327,13 +331,13 @@ if ($_SESSION['ploopi']['connected'])
                                             switch($objGraphic->fields['line_aggregation'])
                                             {
                                                 case 'hour':
-                                                    $intHNow = date('H', ploopi_timestamp2unixtimestamp($arrLine['datevalidation']));
+                                                    $intHNow = date('H', ploopi_timestamp2unixtimestamp($arrLine[$strTimeField]));
                                                     $intHStart = date('H', ploopi_timestamp2unixtimestamp($intTsMin));
                                                     $intIndice = 24 - (24 + $intHStart - $intHNow) % 24 ;
                                                 break;
                                                 
                                                 case 'day':
-                                                    $intIndice = round((ploopi_timestamp2unixtimestamp(substr($arrLine['datevalidation'], 0, 8).'000000') - ploopi_timestamp2unixtimestamp($intTsMin)) / (3600*24));
+                                                    $intIndice = round((ploopi_timestamp2unixtimestamp(substr($arrLine[$strTimeField], 0, 8).'000000') - ploopi_timestamp2unixtimestamp($intTsMin)) / (3600*24));
                                                 break;
                                                 
                                                 case 'week':
@@ -341,7 +345,7 @@ if ($_SESSION['ploopi']['connected'])
                                                 break;
                                                 
                                                 case 'month':
-                                                    $intIndice = 11 - (12 + date('n') - date('n', ploopi_timestamp2unixtimestamp($arrLine['datevalidation']))) % 12;
+                                                    $intIndice = 11 - (12 + date('n') - date('n', ploopi_timestamp2unixtimestamp($arrLine[$strTimeField]))) % 12;
                                                 break;
                                             }
                                             
@@ -364,7 +368,7 @@ if ($_SESSION['ploopi']['connected'])
                                     }
                                 }
                             }
-        
+                            
                             // Post-traitement spécial pour calculer la moyenne
                             foreach($arrData as $intI => $arrDataDetail)
                             {

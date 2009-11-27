@@ -120,8 +120,24 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     </p>
                 </fieldset>
             </div>
-            
             <div id="forms_graphic_line" style="display:<?php echo in_array($objGraphic->fields['type'], array('line', 'linec', 'bar', 'barc', 'radar', 'radarc')) ? 'block' : 'none'; ?>">
+                <p>
+                    <label>Trame de temps:</label>
+                    <select class="select" name="forms_graphic_timefield">
+                        <option value="0">Date de validation</option>
+                        <?
+                        foreach($arrFields as $intIdField => $arrField)
+                        {
+                            if (!$arrField['separator'] && $arrField['type'] == 'text' && $arrField['format'] == 'date')
+                            {
+                                ?>
+                                 <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["timefield"]) ? 'selected="selected"' : ''; ?>>Champ "<?php echo htmlentities($arrField['name']); ?>"</option>
+                                <?php
+                            }
+                        }
+                        ?>
+                    </select>
+                </p>
                 <p>
                     <label><?php echo _FORMS_GRAPHIC_LINE_AGGREGATION; ?>:</label>
                     <select class="select" name="forms_graphic_line_aggregation">

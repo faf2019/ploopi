@@ -1,3 +1,10 @@
+== Module FORMS - version 2.5.2 =====================================================
+
+2009-11-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Paramétrage de la trame de temps
+ * Nettoyage automatique des filtres
+
 == Module FORMS - version 2.5.1d =====================================================
 
 2009-11-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
