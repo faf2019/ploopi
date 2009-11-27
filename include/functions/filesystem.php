@@ -211,7 +211,6 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
         header('Accept-Ranges: bytes');
         header('Cache-control: private');
         header('Pragma: private');
-        header('Content-length: '.$size);
         header("Content-Encoding: None");
         header("X-Ploopi: Download"); // Permet d'indiquer au gestionnaire buffer qu'il s'agit d'un téléchargement de fichier @see ploopi_ob_callback
         

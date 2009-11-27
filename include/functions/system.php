@@ -221,7 +221,9 @@ function ploopi_ob_callback($buffer)
         $log->fields['page_size'] = $ploopi_stats['pagesize'];
         $log->save();
     }
-
+    
+    session_write_close();
+    
     session_write_close();
 
     if ($content_type == 'text/html' && !$booDownloadFile)
@@ -249,20 +251,22 @@ function ploopi_ob_callback($buffer)
         $buffer = trim(str_replace($array_tags, $array_values, $buffer));
     }
 
+    
     if (!$booDownloadFile && _PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && ($content_type == 'text/html' || $content_type == 'text/xml' || $content_type == 'text/x-json'))
     {
         header("Content-Encoding: gzip");
-        return gzencode($buffer);
-        
+        $buffer = gzencode($buffer);
     }
     else
     {
         // Attention, Content-Encoding: none ET Content-Type: text/html ne font pas bon ménage !
         // => Problème avec le validateur W3C : Line 1, Column 0: end of document in prolog
         if ($content_type != 'text/html') header("Content-Encoding: none");
-
-        return $buffer;
     }
+
+    header('Content-Length: '.strlen($buffer));
+    
+    return $buffer;
 }
 
 /**
@@ -275,7 +279,7 @@ function ploopi_ob_callback($buffer)
 
 function ploopi_print_r($var, $return = false)
 {
-    $p = '<pre style="text-align:left;">'.print_r($var, true).'</pre>';
+    $p = '<pre style="text-align:left; background-color:#fff; color:#000; padding:5px; border:1px solid #000;">'.(is_array($var) || is_object($var) ? print_r($var, true) : $var).'</pre>';
     if($return) return($p);
     else echo $p;
 }
@@ -659,6 +663,7 @@ function ploopi_getavailabletemplates($type = 'frontoffice')
 
 /**
  * Applique récursivement une fonction sur les éléments d'un tableau
+ * Les éléments peuvent être des tableaux récursifs ou des objets récursifs
  *
  * @param callback $func fonction à appliquer sur le tableau
  * @param array $var variable à modifier
@@ -673,7 +678,9 @@ function ploopi_getavailabletemplates($type = 'frontoffice')
 
 function ploopi_array_map($func, $var)
 {
-    if (is_array($var)) { foreach($var as $key => $value) $var[$key] = ploopi_array_map($func, $value); return $var; } else return call_user_func($func, $var);
+    if (is_array($var)) { foreach($var as $key => $value) $var[$key] = ploopi_array_map($func, $value); return $var; } 
+    elseif (is_object($var)) { foreach(get_object_vars($var) as $key => $value)  $var->$key = ploopi_array_map($func, $value); return $var; } 
+    else return call_user_func($func, $var);
 }
 
 /**
@@ -709,7 +716,7 @@ function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
 
     // Préparation de l'url de redirection
     require_once 'Net/URL.php';
-    if ($booRedirect)
+    if ($booRedirect && isset($_SERVER['HTTP_REFERER']))
     {
         $objUrl = new Net_URL($_SERVER['HTTP_REFERER']);
         if (isset($intErrorCode)) $objUrl->addQueryString('ploopi_errorcode', $intErrorCode);
