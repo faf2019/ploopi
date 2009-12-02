@@ -550,7 +550,6 @@ class form_radio extends form_field
     }
 }
 
-
 /**
  * Classe de gestion des champs de type "text" (statique) d'un formulaire
  *
@@ -589,6 +588,44 @@ class form_text extends form_field
     }
 }
 
+
+/**
+ * Classe de gestion des champs de type "html" d'un formulaire
+ *
+ */    
+class form_htmlfield extends form_field
+{
+    /**
+     * Constructeur de la classe
+     *
+     * @param string $strLabel libellé du champ
+     * @param string $strValue valeur du champ
+     * @param string $strName propriété "name" du champ
+     * @param string $strId propriété "id" du champ
+     * @param array $arrOptions options du champ
+     * 
+     * @return form_htmlfield
+     */        
+    public function __construct($strLabel, $strValue, $strName = null, $strId = null, $arrOptions = null)
+    {
+        parent::__construct('text', $strLabel, $strValue, $strName, $strId, $arrOptions);
+    }
+    
+    /**
+     * Génère le rendu html du champ
+     *
+     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @return string code html
+     */    
+    public function render($intTabindex)
+    {
+        $strStyle = is_null($this->arrOptions['style']) ? '' : " style=\"{$this->arrOptions['style']}\"";
+        $strClass = is_null($this->arrOptions['class']) ? '' : " class=\"{$this->arrOptions['class']}\"";
+        
+        return $this->renderForm("<span name=\"{$this->strName}\" id=\"{$this->strId}\" {$strStyle}{$strClass}>{$this->arrValues[0]}</span>");
+    }
+}
+
 /**
  * Classe de gestion des champs de type "richtext" (fckeditor) d'un formulaire
  *
@@ -604,7 +641,8 @@ class form_richtext extends form_field
         'width' => '100%',
         'height' => '150px',
         'config' => null,
-        'css' => null
+        'css' => null,
+        'toolbar'=> null
     );   
       
     /**
@@ -637,8 +675,11 @@ class form_richtext extends form_field
         if (!is_null($this->arrOptions['config'])) $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.$this->arrOptions['config'];
         if (!is_null($this->arrOptions['css'])) $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH.$this->arrOptions['css'];
         
+        $arrProperties = array();
+        if (!is_null($this->arrOptions['toolbar'])) $arrProperties['ToolbarSet'] = $this->arrOptions['toolbar'];
+
         ob_start();
-        ploopi_fckeditor($this->strId, $this->arrValues[0], $this->arrOptions['width'], $this->arrOptions['height'], $arrConfig);
+        ploopi_fckeditor($this->strId, $this->arrValues[0], $this->arrOptions['width'], $this->arrOptions['height'], $arrConfig, $arrProperties);
         $strContent = ob_get_contents();
         ob_end_clean();
         

@@ -41,39 +41,26 @@ else $pattern = (empty($_POST['pattern'])) ? '' : $_POST['pattern'];
 if ($pattern != '') $alphaTabItem = 99; // tous
 else
 {
-    $alphaTabItem = (empty($_GET['alphaTabItem'])) ? -1 : $_GET['alphaTabItem'];
+    $alphaTabItem = (empty($_GET['alphaTabItem'])) ? ploopi_getsessionvar('system_alphatabitem') : $_GET['alphaTabItem'];
 
-    if ($alphaTabItem == -1)
+    if (is_null($alphaTabItem))
     {
         // aucun caractère de filtrage sélectionné. On recherche si on en met un par défaut (si trop d'utilisateurs) ou si on sélectionne "tous"
         switch ($_SESSION['system']['level'])
         {
             case _SYSTEM_GROUPS :
-                $select =   "
-                            SELECT      count(ploopi_user.id) as nbuser
-                            FROM        ploopi_user
-
-                            INNER JOIN  ploopi_group_user ON ploopi_group_user.id_user = ploopi_user.id
-                            AND         ploopi_group_user.id_group = {$groupid}
-                            ";
-                break;
+                $intC = $group->countusers();
+            break;
             case _SYSTEM_WORKSPACES :
-                $select =   "
-                            SELECT      count(ploopi_user.id) as nbuser
-                            FROM        ploopi_user
-
-                            INNER JOIN  ploopi_workspace_user ON ploopi_workspace_user.id_user = ploopi_user.id
-                            AND         ploopi_workspace_user.id_workspace = {$workspaceid}
-                            ";
-                break;
-
+                $intC = $workspace->countusers();
+            break;
         }
-        $db->query($select);
-        $fields = $db->fetchrow();
-        if ($fields['nbuser'] < 25) $alphaTabItem = 99;
+        
+        if ($intC < 100) $alphaTabItem = 99;
     }
 }
 
+ploopi_setsessionvar('system_alphatabitem', $alphaTabItem);
 ?>
 <div style="padding:4px;">
     <?php
@@ -187,42 +174,41 @@ switch ($_SESSION['system']['level'])
 $columns = array();
 $values = array();
 
-$columns['left']['name'] =
+$columns['auto']['name'] =
     array(
         'label' => _SYSTEM_LABEL_LASTNAME.', '._SYSTEM_LABEL_FIRSTNAME,
-        'width' => 170,
         'options' => array('sort' => true)
     );
 
-$columns['left']['login'] =
+$columns['right']['service'] =
     array(
-        'label' => _SYSTEM_LABEL_LOGIN,
-        'width' => 85,
+        'label' => _SYSTEM_LABEL_SERVICE,
+        'width' => 100,
         'options' => array('sort' => true)
     );
-
-if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
-    $columns['left']['adminlevel'] =
-        array(
-            'label' => 'Niv.',
-            'width' => 50,
-            'options' => array('sort' => true)
-        );
-
-$columns['left']['origin'] =
+    
+$columns['right']['origin'] =
     array(
         'label' => _SYSTEM_LABEL_ORIGIN,
         'width' => 100,
         'options' => array('sort' => true)
     );
 
-$columns['auto']['service'] =
+if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
+    $columns['right']['adminlevel'] =
+        array(
+            'label' => 'Niv.',
+            'width' => 50,
+            'options' => array('sort' => true)
+        );
+
+$columns['right']['login'] =
     array(
-        'label' => _SYSTEM_LABEL_SERVICE,
-        'width' => 100,
+        'label' => _SYSTEM_LABEL_LOGIN,
+        'width' => 110,
         'options' => array('sort' => true)
     );
-
+    
 $columns['actions_right']['actions'] =
     array(
         'label' => '&nbsp;',
@@ -233,63 +219,73 @@ $c = 0;
 
 $result = $db->query($select);
 $user = new user();
+$intNbRep = $db->numrows($result);
 
-while ($fields = $db->fetchrow($result))
+if ($intNbRep > 2000)
 {
-    $user->fields['id'] = $fields['id'];
-    $groups = $user->getgroups();
-    $currentgroup = current($groups);
-
-    $action = ' <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=detach_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_USERDETACH.'"></a>
-                <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=delete_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>
-                ';
-
-    $values[$c]['values']['name']       = array('label' => htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
-    $values[$c]['values']['login']      = array('label' => htmlentities($fields['login']));
-    $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.htmlentities($currentgroup['label']).'</a>');
-    $values[$c]['values']['service']    = array('label' => htmlentities($fields['service']));
-
-    switch ($_SESSION['system']['level'])
+    ?>
+    <div style="padding:4px;text-align:center;" class="error">Trop de réponses (<?php echo $intNbRep; ?>)</div>
+    <?php
+}
+else
+{
+    while ($fields = $db->fetchrow($result))
     {
-        case _SYSTEM_WORKSPACES :
-
-            switch($fields['adminlevel'])
-            {
-                case _PLOOPI_ID_LEVEL_USER:
-                    $icon = 'level_user';
-                break;
-                case _PLOOPI_ID_LEVEL_GROUPMANAGER:
-                    $icon = 'level_groupmanager';
-                break;
-                case _PLOOPI_ID_LEVEL_GROUPADMIN:
-                    $icon = 'level_groupadmin';
-                break;
-                case _PLOOPI_ID_LEVEL_SYSTEMADMIN:
-                    $icon = 'level_systemadmin';
-                break;
-            }
-
-            $values[$c]['values']['adminlevel'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png\" />", 'sort_label' => $fields['adminlevel']);
-
-            if ($_SESSION['ploopi']['adminlevel'] >= $fields['adminlevel'])
-                $manage_user =  '<a href="'.ploopi_urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
-            else
-                $manage_user =  '<img src="./modules/system/img/ico_noway.gif" title="">&nbsp;&nbsp;<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png" alt="">';
-
-            $values[$c]['values']['actions']        = array('label' => $manage_user);
-
-        break;
-
-        case _SYSTEM_GROUPS :
-
-            $values[$c]['values']['actions']        = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action);
-        break;
+        $user->fields['id'] = $fields['id'];
+        $groups = $user->getgroups();
+        $currentgroup = current($groups);
+    
+        $action = ' <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=detach_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_USERDETACH.'"></a>
+                    <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=delete_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>
+                    ';
+    
+        $values[$c]['values']['name']       = array('label' => htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
+        $values[$c]['values']['login']      = array('label' => htmlentities($fields['login']));
+        $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.htmlentities($currentgroup['label']).'</a>');
+        $values[$c]['values']['service']    = array('label' => htmlentities($fields['service']));
+    
+        switch ($_SESSION['system']['level'])
+        {
+            case _SYSTEM_WORKSPACES :
+    
+                switch($fields['adminlevel'])
+                {
+                    case _PLOOPI_ID_LEVEL_USER:
+                        $icon = 'level_user';
+                    break;
+                    case _PLOOPI_ID_LEVEL_GROUPMANAGER:
+                        $icon = 'level_groupmanager';
+                    break;
+                    case _PLOOPI_ID_LEVEL_GROUPADMIN:
+                        $icon = 'level_groupadmin';
+                    break;
+                    case _PLOOPI_ID_LEVEL_SYSTEMADMIN:
+                        $icon = 'level_systemadmin';
+                    break;
+                }
+    
+                $values[$c]['values']['adminlevel'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png\" />", 'sort_label' => $fields['adminlevel']);
+    
+                if ($_SESSION['ploopi']['adminlevel'] >= $fields['adminlevel'])
+                    $manage_user =  '<a href="'.ploopi_urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
+                else
+                    $manage_user =  '<img src="./modules/system/img/ico_noway.gif" title="">&nbsp;&nbsp;<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png" alt="">';
+    
+                $values[$c]['values']['actions']        = array('label' => $manage_user);
+    
+            break;
+    
+            case _SYSTEM_GROUPS :
+    
+                $values[$c]['values']['actions']        = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action);
+            break;
+        }
+    
+        $c++;
     }
 
-    $c++;
+    $skin->display_array($columns, $values, 'array_userlist', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 25));
 }
-
-$skin->display_array($columns, $values, 'array_userlist', array('sortable' => true, 'orderby_default' => 'name'));
 
 if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 {

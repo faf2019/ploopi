@@ -51,9 +51,16 @@ switch ($_SESSION['system']['level'])
             if (!empty($groups['list'][$groupid]['groups'])) $arrWhere[] = '( gu.id_group IN ('.implode(',',array_keys($groups['list'][$groupid]['groups'])).'))';
             else $arrWhere[] = 'gu.id_group = 0';
         }
+        
+        $currentusers = "
+            SELECT  ploopi_group_user.id_user
 
-        $currentusers = $group->getusers();
-        if (!empty($currentusers)) $arrWhere[] = 'u.id NOT IN ('.implode(',',array_keys($currentusers)).')';
+            FROM    ploopi_group_user
+    
+            WHERE   ploopi_group_user.id_group = {$groupid}
+        ";
+                    
+        $arrWhere[] = "u.id NOT IN ({$currentusers})";
     break;
 
     case _SYSTEM_WORKSPACES :
@@ -64,8 +71,15 @@ switch ($_SESSION['system']['level'])
             else $arrWhere[] = "gu.id_group = 0";
         }
         
-        $currentusers = $workspace->getusers();
-        if (!empty($currentusers)) $arrWhere[] = 'u.id NOT IN ('.implode(',',array_keys($currentusers)).')';
+        $currentusers = "
+            SELECT  ploopi_workspace_user.id_user
+                    
+            FROM    ploopi_workspace_user
+                    
+            WHERE   ploopi_workspace_user.id_workspace = {$workspaceid}
+        ";        
+        
+        $arrWhere[] = "u.id NOT IN ({$currentusers})";
     break;
 }
 
@@ -76,9 +90,9 @@ else
 {
     // aucun caractère de filtrage sélectionné. On recherche si on en met un par défaut (si trop d'utilisateurs) ou si on sélectionne "tous"
 
-    $alphaTabItem = (empty($_GET['alphaTabItem'])) ? -1 : $_GET['alphaTabItem'];
+    $alphaTabItem = (empty($_GET['alphaTabItem'])) ? ploopi_getsessionvar('system_alphatabitem') : $_GET['alphaTabItem'];
 
-    if ($alphaTabItem == -1)
+    if (is_null($alphaTabItem))
     {
         $db->query("
             SELECT      count(distinct(u.id)) as nbuser
@@ -110,9 +124,11 @@ else
             $c += $fields['nbuser'];
         }
 
-        if ($c < 25) $alphaTabItem = 99;
+        if ($c < 100) $alphaTabItem = 99;
     }
 }
+
+ploopi_setsessionvar('system_alphatabitem', $alphaTabItem);
 ?>
 <div style="padding: 4px;">
     <?php
@@ -213,43 +229,82 @@ if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
     $arrUsers = array_merge($arrUsers, $db->getarray());
 }
 
-$columns = array();
-$values = array();
+$intNbRep = sizeof($arrUsers);
 
-$columns['left']['name']    = array('label' => _SYSTEM_LABEL_LASTNAME.', '._SYSTEM_LABEL_FIRSTNAME, 'width' => '170', 'options' => array('sort' => true));
-$columns['left']['login']       = array('label' => _SYSTEM_LABEL_LOGIN, 'width' => '85', 'options' => array('sort' => true));
-$columns['left']['origin']      = array('label' => _SYSTEM_LABEL_ORIGIN, 'width' => '100', 'options' => array('sort' => true));
-$columns['auto']['service']     = array('label' => _SYSTEM_LABEL_SERVICE, 'width' => '100', 'options' => array('sort' => true));
-$columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '24');
-
-$c = 0;
-
-$user = new user();
-
-foreach($arrUsers as $fields)
+if ($intNbRep > 2000)
 {
-    $user->fields['id'] = $fields['id'];
-    $groups = $user->getgroups();
-    if (!empty($groups))
-    {
-        $currentgroup = current($groups);
-        $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.htmlentities($currentgroup['label']).'</a>');
-        $service = $fields['service'];
-    }
-    else
-    {
-        $values[$c]['values']['origin']     = array('label' => 'non rattaché', 'style' => 'font-style:italic;');
-        $service = ' ';
-    }
-
-    $values[$c]['values']['name']       = array('label' => htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
-    $values[$c]['values']['login']      = array('label' => htmlentities($fields['login']));
-    $values[$c]['values']['service']    = array('label' => htmlentities($service));
-    $values[$c]['values']['actions']    = array('label' => '<a style="float:left;display:block;margin:2px;" href="'.ploopi_urlencode("admin.php?op=attach_user&userid={$fields['id']}&alphaTabItem={$alphaTabItem}").'"><img style="float:left;display:block;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
-    $c++;
+    ?>
+    <div style="padding:4px;text-align:center;" class="error">Trop de réponses (<?php echo $intNbRep; ?>)</div>
+    <?php
 }
+else
+{
 
-$skin->display_array($columns, $values, 'array_userlist', array('sortable' => true, 'orderby_default' => 'name'));
+    $columns = array();
+    $values = array();
+        
+    $columns['auto']['name'] =
+        array(
+            'label' => _SYSTEM_LABEL_LASTNAME.', '._SYSTEM_LABEL_FIRSTNAME,
+            'options' => array('sort' => true)
+        );
+    
+    $columns['right']['service'] =
+        array(
+            'label' => _SYSTEM_LABEL_SERVICE,
+            'width' => 100,
+            'options' => array('sort' => true)
+        );
+        
+    $columns['right']['origin'] =
+        array(
+            'label' => _SYSTEM_LABEL_ORIGIN,
+            'width' => 100,
+            'options' => array('sort' => true)
+        );
+    
+    $columns['right']['login'] =
+        array(
+            'label' => _SYSTEM_LABEL_LOGIN,
+            'width' => 110,
+            'options' => array('sort' => true)
+        );
+        
+    $columns['actions_right']['actions'] =
+        array(
+            'label' => '&nbsp;',
+            'width' => 24
+        );    
+    
+    $c = 0;
+    
+    $user = new user();
+    
+    foreach($arrUsers as $fields)
+    {
+        $user->fields['id'] = $fields['id'];
+        $groups = $user->getgroups();
+        if (!empty($groups))
+        {
+            $currentgroup = current($groups);
+            $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.htmlentities($currentgroup['label']).'</a>');
+            $service = $fields['service'];
+        }
+        else
+        {
+            $values[$c]['values']['origin']     = array('label' => 'non rattaché', 'style' => 'font-style:italic;');
+            $service = ' ';
+        }
+    
+        $values[$c]['values']['name']       = array('label' => htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
+        $values[$c]['values']['login']      = array('label' => htmlentities($fields['login']));
+        $values[$c]['values']['service']    = array('label' => htmlentities($service));
+        $values[$c]['values']['actions']    = array('label' => '<a style="float:left;display:block;margin:2px;" href="'.ploopi_urlencode("admin.php?op=attach_user&userid={$fields['id']}&alphaTabItem={$alphaTabItem}").'"><img style="float:left;display:block;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
+        $c++;
+    }
+    
+    $skin->display_array($columns, $values, 'array_userlist', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 25));
+}
 
 if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 {

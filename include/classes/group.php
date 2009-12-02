@@ -179,6 +179,28 @@ class group extends data_object
     }
 
     /**
+     * Retourne le nombre d'utilisateurs dans le groupe
+     *
+     * @return int
+     */
+    public function countusers()
+    {
+        global $db;
+
+        $result = $db->query("
+            SELECT  count(id_user) as c
+
+            FROM    ploopi_group_user
+
+            WHERE   id_group = {$this->fields['id']}
+        ");
+
+        $fields = $db->fetchrow($result);
+        
+        return $fields['c'];
+    }   
+
+    /**
      * Crée un double du groupe
      *
      * @return group

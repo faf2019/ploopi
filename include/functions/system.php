@@ -223,8 +223,6 @@ function ploopi_ob_callback($buffer)
     }
     
     session_write_close();
-    
-    session_write_close();
 
     if ($content_type == 'text/html' && !$booDownloadFile)
     {
