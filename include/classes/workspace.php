@@ -225,6 +225,29 @@ class workspace extends data_object
     }
     
     /**
+     * Retourne le nombre d'utilisateurs dans l'espace de travail (sans les groupes)
+     *
+     * @return int
+     */
+    public function countusers()
+    {
+        global $db;
+
+        $result = $db->query("
+            SELECT  count(id_user) as c
+
+            FROM    ploopi_workspace_user
+
+            WHERE   id_workspace = {$this->fields['id']}
+        ");
+
+        $fields = $db->fetchrow($result);
+        
+        return $fields['c'];
+    }       
+    
+    
+    /**
      * Retourne un tableau associatif (id => fields) contenant les utilisateurs de l'espace et des sous-espaces
      *
      * @return array tableau des utilisateurs

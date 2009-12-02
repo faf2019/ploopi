@@ -38,34 +38,30 @@
 
 echo $skin->open_simplebloc();
 ?>
-
 <div>
     <div class="system_group_icons">
         <div class="system_group_icons_padding">
             <?php
-            $nbusers = sizeof($group->getusers());
-            $nbgroups = (!empty($groups['tree'][$groupid])) ? sizeof($groups['tree'][$groupid]) : 0;
+            $sizeof_users = $group->countusers();
+            $sizeof_groups = (!empty($groups['tree'][$groupid])) ? sizeof($groups['tree'][$groupid]) : 0;
             ?>
             <div style="padding:4px;">
                 Ce groupe est composé de
-                <br /><strong><?php echo $nbgroups; ?> groupe(s)</strong>
-                <br /><strong><?php echo $nbusers; ?> utilisateur(s)</strong>
+                <br /><strong><?php echo $sizeof_groups; ?> groupe(s)</strong>
+                <br /><strong><?php echo $sizeof_users; ?> utilisateur(s)</strong>
             </div>
             <?php
             $toolbar_group[] = array(
-                                    'title'     => str_replace('<LABEL>','<br /><b>'.$childgroup.'</b>', _SYSTEM_LABEL_CREATE_CHILD),
-                                    'url'       => "admin.php?op=child&groupid=$groupid",
-                                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_child.png"
-                                );
+                'title'     => str_replace('<LABEL>','<br /><b>'.$childgroup.'</b>', _SYSTEM_LABEL_CREATE_CHILD),
+                'url'       => "admin.php?op=child&groupid=$groupid",
+                'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_child.png"
+            );
 
             $toolbar_group[] = array(
-                                    'title'     => str_replace('<LABEL>','<br /><b>'.$currentgroup.'</b>', _SYSTEM_LABEL_CREATE_CLONE),
-                                    'url'       => "admin.php?op=clone&groupid=$groupid",
-                                    'icon'      => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_copy.png"
-                                );
-
-            $sizeof_groups = sizeof($group->getchildren());
-            $sizeof_users = sizeof($group->getusers());
+                'title'     => str_replace('<LABEL>','<br /><b>'.$currentgroup.'</b>', _SYSTEM_LABEL_CREATE_CLONE),
+                'url'       => "admin.php?op=clone&groupid=$groupid",
+                'icon'      => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_copy.png"
+            );
 
             // delete button if group not protected and no children
 
@@ -73,11 +69,11 @@ echo $skin->open_simplebloc();
             if (!$sizeof_groups && !$sizeof_users)
             {
                 $toolbar_group[] = array(
-                                        'title'     => str_replace('<LABEL>','<br /><b>'.$currentgroup.'</b>', _SYSTEM_LABEL_DELETE_GROUP),
-                                        'url'       => "admin.php?op=delete&groupid=$groupid",
-                                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_delete.png",
-                                        'confirm'   => _SYSTEM_MSG_CONFIRMGROUPDELETE
-                                    );
+                    'title'     => str_replace('<LABEL>','<br /><b>'.$currentgroup.'</b>', _SYSTEM_LABEL_DELETE_GROUP),
+                    'url'       => "admin.php?op=delete&groupid=$groupid",
+                    'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_delete.png",
+                    'confirm'   => _SYSTEM_MSG_CONFIRMGROUPDELETE
+                );
             }
             else
             {
@@ -88,11 +84,11 @@ echo $skin->open_simplebloc();
                     elseif ($sizeof_users) $msg = _SYSTEM_MSG_INFODELETE_USERS;
 
                     $toolbar_group[] = array(
-                                            'title'     => str_replace('<LABEL>','<br /><b>'.$currentgroup.'</b>', _SYSTEM_LABEL_DELETE_GROUP),
-                                            'url'       => 'admin.php',
-                                            'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_delete_gray.png",
-                                            'confirm'   => $msg
-                                        );
+                        'title'     => str_replace('<LABEL>','<br /><b>'.$currentgroup.'</b>', _SYSTEM_LABEL_DELETE_GROUP),
+                        'url'       => 'admin.php',
+                        'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_delete_gray.png",
+                        'confirm'   => $msg
+                    );
                 }
             }
 
@@ -113,9 +109,6 @@ echo $skin->open_simplebloc();
             $parentlabel = 'Racine';
             $parentid = '';
         }
-
-        $users = $group->getusers();
-        $nbusers = sizeof($users);
 
         $templatelist_back = ploopi_getavailabletemplates('backoffice');
         $templatelist_front = ploopi_getavailabletemplates('frontoffice');
