@@ -72,7 +72,23 @@ class field extends data_object
     {
         if (empty($this->fields['fieldname'])) $this->fields['fieldname'] = $this->fields['name'];
         $this->fields['fieldname'] = forms_createphysicalname($this->fields['fieldname']);
-        return(parent::save());
+        
+        return parent::save();
+    }
+    
+    
+    /**
+     * Supprime le champ
+     *
+     * @return boolean
+     */
+    function delete()
+    {
+        global $db;
+        
+        $db->query("UPDATE `ploopi_mod_forms_field` SET position = position - 1 WHERE position > {$this->fields['position']} AND id_form = {$this->fields['id_form']}");
+        
+        return parent::delete();
     }
 }
 ?>
