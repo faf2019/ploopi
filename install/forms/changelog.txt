@@ -1,3 +1,9 @@
+== Module FORMS - version 2.3.6g =====================================================
+
+2009-12-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug sur le calcul des positions suite à la suppression d'un champ
+
 == Module FORMS - version 2.3.6f =====================================================
 
 2009-11-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
