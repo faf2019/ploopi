@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -126,7 +127,7 @@ switch($menu)
             break;
 
             case 'heading_addnew':
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || webedit_isEditor($headingid))
                 {
                     $heading = new webedit_heading();
                     $heading->open($headingid);
@@ -171,7 +172,7 @@ switch($menu)
             break;
 
             case 'heading_save':
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || webedit_isEditor($headingid))
                 {
                     $heading = new webedit_heading();
                     $heading->open($headingid);
@@ -235,6 +236,7 @@ switch($menu)
                     ploopi_share_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
                     
                     ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
+                    ploopi_validation_save(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $heading->fields['id']);
 
                     ploopi_redirect("admin.php?headingid={$headingid}");
                 }
@@ -243,11 +245,12 @@ switch($menu)
             break;
 
             case 'heading_delete':
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+                $heading = new webedit_heading();
+                $heading->open($headingid);
+                
+                // Pour rédacteur on verif qu'on est pas à la racine du redacteur en controlant si il est bien rédacteur du heading parents (ou plus loin)
+                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || (webedit_isEditor($headingid) && webedit_isEditor($heading->fields['id_heading'])))
                 {
-                    $heading = new webedit_heading();
-                    $heading->open($headingid);
-
                     if (!($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1))
                     {
                         /* DEBUT ABONNEMENT */
@@ -278,7 +281,7 @@ switch($menu)
             break;
 
             case 'article_save':
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) && $type == 'draft')
+                if ((ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid)) && $type == 'draft')
                 {
                     $tablename = 'ploopi_mod_webedit_article_draft';
 
@@ -532,7 +535,7 @@ switch($menu)
             break;
 
             case 'article_delete':
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) && $type == 'draft')
+                if ((ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid)) && $type == 'draft')
                 {
                     $article = new webedit_article($type);
                     if (!empty($_GET['articleid']) && is_numeric($_GET['articleid']) && $article->open($_GET['articleid']))

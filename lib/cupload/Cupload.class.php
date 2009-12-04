@@ -64,7 +64,7 @@ class CUpload {
 
   function __init($_sId) {
     list($chunk,$boundary) = split("boundary=",$_SERVER['CONTENT_TYPE']);
-    $this->boundary=trim($boundary);
+    $this->boundary     = trim($boundary);
     $this->sid          = $_sId;
     $this->postvars     = array();
     $this->total_size   = $_SERVER['CONTENT_LENGTH'];
@@ -87,7 +87,81 @@ class CUpload {
 
   function processInput() {
     $putdata = fopen("php://stdin", "r");
+    
+    if(!feof($putdata)) {
+      $data = fgets($putdata, 8192);
+      
+      while ($data) {
+        $this->received += strlen($data);
+        
+        if(strlen($data)!=8192) {
+          if(strstr($data,$this->boundary)) {
+            unset($data);
+            if(isset($_file)) fclose($_file);
+            $_file = null;
+            
+            # get header
+            $header = fgets($putdata,1024);  # header "content-disposition"
+            $header .=fgets($putdata,1024);  # header "content-type"
+            $header .=fgets($putdata,1024);  # CR/LF
+            
+            $this->received += strlen($header);
+
+            $rc = preg_match_all("/Content-Disposition: form-data; name=\"([^\"]*)\"(; filename=\"([^\"]*)\"\r\nContent-Type: (\S+))?\r\n/i", $header, $matchesF, PREG_OFFSET_CAPTURE);
+            if($rc) {
+
+              $filename = trim($matchesF[3][0][0]);
+              $filetype = trim($matchesF[4][0][0]);
+              $fieldname = $matchesF[1][0][0];
+              $filename = str_replace("\\","/",$filename);
+              $filename = basename($filename);
+
+              if(!empty($filename)) { // C'est un fichier à transferer !
+                if (is_dir(UPLOAD_PATH) && is_writable(UPLOAD_PATH)) 
+                {
+                    # create tmp file for upped file
+                    $tmpname = $this->appendFile($fieldname,$filename,$filetype);
+                    $_file = fopen(UPLOAD_PATH.$tmpname,'wb');
+                }
+                else $_file = null;
+              }
+              else // Ce n'est pas un fichier mais un POST
+              {
+                // Pour les <textarea> on peut être sur +eurs ligne de text !
+                while(!strstr($data,$this->boundary) && !feof($putdata))
+                {
+                    $header .= $data;
+                    $this->received+=strlen($data);
+                    $data = fgets($putdata,8192);
+                }
+                  
+                $rc = preg_match_all("/Content-Disposition: form-data; name=\"([^\"]*)\"\r\n\r\n(.*)\r\n/is", $header, $matchesF, PREG_OFFSET_CAPTURE);
+                $fieldname = trim($matchesF[1][0][0]);
+                $fieldvalue = trim($matchesF[2][0][0]);
+                if (!empty($fieldname)) 
+                {
+                    $this->postvars[$fieldname][] = $fieldvalue;
+                }
+              }
+            }
+          }
+        }
+        if($_file!=null) {
+          if(isset($data)) fwrite($_file, $data);
+          
+          $data = fgets($putdata,8192);
+        }
+        $this->append_progress();
+      }
+      if(isset($_file)) fclose($_file);
+    }
+    fclose($putdata);
+  }
+/*       
+  function processInput() {
+    $putdata = fopen("php://stdin", "r");
     $current_file = "";
+    
     if(!feof($putdata)) {
       while ($data = fgets($putdata, 8192)) {
         $this->received+=strlen($data);
@@ -100,6 +174,7 @@ class CUpload {
             $header = fgets($putdata,1024);  # header "content-disposition"
             $header .=fgets($putdata,1024);  # header "content-type"
             $header .=fgets($putdata,1024);  # CR/LF
+
             $this->received += strlen($header);
 
             $rc = preg_match_all("/Content-Disposition: form-data; name=\"([^\"]*)\"(; filename=\"([^\"]*)\"\r\nContent-Type: (\S+))?\r\n/i", $header, $matchesF, PREG_OFFSET_CAPTURE);
@@ -142,6 +217,7 @@ class CUpload {
     }
     fclose($putdata);
   }
+*/
 
   function setcomplete() {
     if (!empty($this->files))

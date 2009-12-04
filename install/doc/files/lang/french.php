@@ -40,7 +40,7 @@ define ('_DOC_PAGE_TITLE', 'Gestion des Documents du module \'LABEL\'');
 
 define ('_DOC_TAB_TITLE_PARSERS',       'Gestion des analyseurs');
 define ('_DOC_TAB_TITLE_INDEX',         'Indexation');
-define ('_DOC_TAB_TITLE_CLEAN_CACHE',   'Vidage du cache "Vignettes"');
+define ('_DOC_TAB_TITLE_CLEAN_CACHE',   'Vidage des différents caches');
 define ('_DOC_TAB_TITLE_STATS',         'Statistiques');
 
 

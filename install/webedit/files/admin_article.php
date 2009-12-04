@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -162,8 +163,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                 <span>Version en Ligne : non modifiable&nbsp;</span>
             <?php
         }
-
-        $readonly = (!(ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) && $type == 'draft' && ($article->fields['status'] == 'edit' || ($booWfVal) && ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_PUBLISH))));
+        $readonly = (!((ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid)) && $type == 'draft' && ($article->fields['status'] == 'edit' || ($booWfVal) && ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_PUBLISH))));
         ?>
     </p>
 </div>
@@ -309,7 +309,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
             <div style="padding:2px;">
                 <div style="padding:2px;"><strong>Propriétés annexes:</strong></div>
                 <?php
-                // on ne peut pas changer de parent à la création de l'article
+                // on ne peut pas changer de parent à la création de l'article ou si on est en redacteur sans droit sur cet article
                 if ($op != 'article_addnew')
                 {
                     ?>
@@ -321,9 +321,19 @@ $keywords = array_slice($keywords, 0 , 20, true);
                         ?>
                         <label>Rubrique parent:</label>
                         <span>
-                            <input type="hidden" id="webedit_article_id_heading" name="webedit_article_id_heading" value="<?php echo $article->fields['id_heading']; ?>">
-                            <input type="text" readonly class="text" style="width:150px;" id="heading_displayed" value="<?php echo $heading_label; ?>">
-                            <img src="./modules/webedit/img/ico_choose_article.png" style="cursor:pointer;" title="Choisir une rubrique parent" alt="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_article_selectheading&hid='+$('webedit_article_id_heading').value, false), 300, event, 'click', 'webedit_popup_selectheading');" />
+                        <?php               
+                        // on ne peut pas changer de parent à la création de l'article ou si on est en redacteur sans droit sur cet article
+                        if(!$readonly)
+                        {
+                            ?>
+                                <input type="hidden" id="webedit_article_id_heading" name="webedit_article_id_heading" value="<?php echo $article->fields['id_heading']; ?>">
+                                <input type="text" readonly class="text" style="width:150px;" id="heading_displayed" value="<?php echo $heading_label; ?>">
+                                <img src="./modules/webedit/img/ico_choose_article.png" style="cursor:pointer;" title="Choisir une rubrique parent" alt="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_article_selectheading&hid='+$('webedit_article_id_heading').value, false), 300, event, 'click', 'webedit_popup_selectheading');" />
+                            <?php 
+                        }
+                        else
+                            echo $heading_label;
+                        ?>
                         </span>
                     </p>
                     <?php
@@ -406,7 +416,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     ?>
                 </p>
                 <?php
-                if (!$readonly &&   $op == 'article_modify')
+                if (!$readonly && $op == 'article_modify')
                 {
                     ?>
                     <div style="padding:2px;"><strong>Dernières modifications:</strong></div>
@@ -635,36 +645,48 @@ $keywords = array_slice($keywords, 0 , 20, true);
     ?>
 </div>
 
-<div style="padding:4px;background-color:#e0e0e0;clear:both;border-width: 1px 0;border-color:#c0c0c0;border-style:solid;">
-    <div style="float:right;" class="webedit_form_buttons">
-    <?php
-    if ($type == 'draft')
-    {
-        ?>
-        Statut:&nbsp;
-        <select name="webedit_article_status" class="select">
-            <?php
-            foreach($article_status as $key => $value)
-            {
-                ?>
-                <option <?php echo ($key == $article->fields['status']) ? 'selected' : ''; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
-                <?php
-            }
-            ?>
-        </select>
+<div style="padding:4px; background-color:#e0e0e0; clear:both; border-width: 1px 0;border-color:#c0c0c0;border-style:solid; overflow: hidden;">
+        <div style="float:right;" class="webedit_form_buttons">
         <?php
-        if ($op != 'article_addnew' && ($booWfVal || ploopi_isadmin()))
+        if ($type == 'draft')
         {
             ?>
-            <input class="flatbutton" style="font-weight:bold;" type="submit" name="publish" value="Publier">
-            <?php
+            Statut:&nbsp;
+            <?php 
+            if(!$readonly)
+            {
+                ?>
+                <select name="webedit_article_status" class="select">
+                    <?php
+                    foreach($article_status as $key => $value)
+                    {
+                        ?>
+                        <option <?php echo ($key == $article->fields['status']) ? 'selected' : ''; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                        <?php
+                    }
+                    ?>
+                </select>
+                <?php
+            }
+            else
+                echo $article_status[$article->fields['status']];
+                
+            if ($op != 'article_addnew' && ($booWfVal || ploopi_isadmin()))
+            {
+                ?>
+                <input class="flatbutton" style="font-weight:bold;" type="submit" name="publish" value="Publier">
+                <?php
+            }
+            
+            if(!$readonly) 
+            {
+                ?>
+                <input class="flatbutton" type="submit" value="Enregistrer">
+                <?php
+            }
         }
         ?>
-        <input class="flatbutton" type="submit" value="Enregistrer">
-        <?php
-    }
-    ?>
-    </div>
+        </div>
     <?php
     if ($op != 'article_addnew' && (ploopi_isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
@@ -701,29 +723,34 @@ $keywords = array_slice($keywords, 0 , 20, true);
         <input type="hidden" id="fck_webedit_article_content" name="fck_webedit_article_content" value="">
         <?php
     }
-
     ?>
     <iframe id="webedit_frame_editor" style="border:0;width:100%;height:750px;margin:0;padding:0;" src="<?php echo ploopi_urlencode("index.php?headingid={$headingid}&articleid={$articleid}&webedit_mode=edit&type={$type}&readonly={$readonly}"); ?>"></iframe>
 </div>
 
 <div style="padding:4px;background-color:#e0e0e0;clear:both;border-width: 1px 0;border-color:#c0c0c0;border-style:solid;">
-    <div style="float:right;" class="webedit_form_buttons">
     <?php
-    if ($type == 'draft')
+    if(!$readonly)
     {
-        if ($op != 'article_addnew' && ($booWfVal || ploopi_isadmin()))
+        ?>
+        <div style="float:right;" class="webedit_form_buttons">
+        <?php
+        if ($type == 'draft')
         {
+            if ($op != 'article_addnew' && ($booWfVal || ploopi_isadmin()))
+            {
+                ?>
+                <input class="flatbutton" style="font-weight:bold;" type="submit" name="publish" value="Publier">
+                <?php
+            }
             ?>
-            <input class="flatbutton" style="font-weight:bold;" type="submit" name="publish" value="Publier">
+            <input class="flatbutton" type="submit" value="Enregistrer">
             <?php
         }
         ?>
-        <input class="flatbutton" type="submit" value="Enregistrer">
+        </div>
         <?php
     }
-    ?>
-    </div>
-    <?php
+    
     if ($op != 'article_addnew' && (ploopi_isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>

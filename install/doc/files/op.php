@@ -105,7 +105,6 @@ if ($_SESSION['ploopi']['connected'])
                     $docfolder = new docfolder();
                     if (!$docfolder->open($currentfolder)) ploopi_redirect("admin.php?doc_browser&currentfolder={$currentfolder}");
                 }
-
                 // en mode CGI, il faut récupérer les infos des fichiers uploadés (via le fichier lock)
                 // cf class Cupload
                 // on écrit tout dans $_FILES pour retomber sur nos pieds dans la suite des traitements
@@ -1008,37 +1007,6 @@ if ($_SESSION['ploopi']['connected'])
             include_once './modules/doc/public_explorer_thumb.php';
             ploopi_die();
         break;
-        
-        case 'doc_getthumbnail':
-            
-            $intTimeCache = 2592000; // 30 jours
-
-            include_once './include/classes/cache.php';
-            ploopi_ob_clean();
-
-            $objCache = new ploopi_cache(md5('doc_thumb_'.$_GET['docfile_md5id'].'_'.$_GET['version']), $intTimeCache); // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
-            $objCache->set_groupe('module_doc_'.$_SESSION['ploopi']['workspaceid'].'_'.$_SESSION['ploopi']['moduleid']); 
-            
-            if(!$objCache->start()) // si pas de cache on le crée
-            {
-                ploopi_init_module('doc', false, false, false);
-                
-                include_once './modules/doc/class_docfile.php';
-                include './include/classes/mimethumb.php';
-                
-                $objDoc = new docfile();
-                $objThumb = new mimethumb(111,90,0,'png','transparent');
-                
-                if($objDoc->openmd5($_GET['docfile_md5id']))
-                    $objThumb->getThumbnail($objDoc->getfilepath(),$objDoc->fields['extension']);
-                if(isset($objCache)) $objCache->end();
-            }
-            else
-            {
-                header("Content-Type: image/png");
-            }
-            ploopi_die();
-        break;            
     }
 }
 
@@ -1048,6 +1016,40 @@ if ($_SESSION['ploopi']['connected'])
 
 switch($ploopi_op)
 {
+    case 'doc_getthumbnail':
+        
+        $intTimeCache = 2592000; // 30 jours
+
+        $width = (!empty($_GET['width']) && is_numeric($_GET['width'])) ? $_GET['width'] : 111;
+        $height = (!empty($_GET['height']) && is_numeric($_GET['height'])) ? $_GET['height'] : 90;
+        
+        include_once './include/classes/cache.php';
+        ploopi_ob_clean();
+
+        $objCache = new ploopi_cache(md5('doc_thumb_'.$_GET['docfile_md5id'].'_'.$_GET['version']), $intTimeCache); // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
+        $objCache->set_groupe('module_doc_'.$_SESSION['ploopi']['workspaceid'].'_'.$_SESSION['ploopi']['moduleid']); 
+        
+        if(!$objCache->start()) // si pas de cache on le crée
+        {
+            ploopi_init_module('doc', false, false, false);
+            
+            include_once './modules/doc/class_docfile.php';
+            include './include/classes/mimethumb.php';
+            
+            $objDoc = new docfile();
+            $objThumb = new mimethumb($width, $height, 0, 'png', 'transparent');
+            
+            if($objDoc->openmd5($_GET['docfile_md5id']))
+                $objThumb->getThumbnail($objDoc->getfilepath(),$objDoc->fields['extension']);
+            if(isset($objCache)) $objCache->end();
+        }
+        else
+        {
+            header("Content-Type: image/png");
+        }
+        ploopi_die();
+    break;            
+
     case 'doc_file_view':
     case 'doc_file_download':
         include_once './include/start/constants.php';

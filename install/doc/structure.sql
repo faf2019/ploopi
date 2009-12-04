@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_folder` (
   `nbelements` int(10) unsigned NOT NULL default '0',
   `published` tinyint(1) unsigned NOT NULL default '1',
   `waiting_validation` int(10) unsigned NOT NULL default '0',
+  `allow_feeds` tinyint(1) unsigned NOT NULL default '0',
   `id_folder` int(10) unsigned default '0',
   `id_user_modify` int(10) unsigned default '0',
   `id_user` int(10) unsigned default '0',

@@ -154,6 +154,19 @@
                             <a href="{tagcloud.LINK}" class="{tagcloud.SELECTED}" title="Afficher les articles contenant le tag &laquo; {tagcloud.TAG} &raquo;" style="font-size:{tagcloud.SIZE}%;">{tagcloud.TAG}<sup>{tagcloud.OCCURENCE}</sup></a>
                         <!-- END tagcloud -->
                     </div>
+                    <div id="tagcloud3D">
+                        <div id="flashcontent">
+                          <object id="tagcloud_object" height="150" width="140"  codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96B8-444553540000">
+                            <param name="allowScriptAccess" value="sameDomain" />
+                            <param name="allowFullScreen" value="false" />
+                            <param name="movie" value="{TEMPLATE_PATH}/img/tagcloud.swf?tcolor=0x286ea0&tcolor2=0x505050&hicolor=0x286ea0&tspeed=100&distr=true&xmlpath={URL_XML_TAG3D}">
+                            <param name="quality" value="high" />
+                            <param name="bgcolor" value="#ffffff" />
+                            <param name="wmode" value="transparent" />
+                            <embed id="tagcloud_embed" width="140" height="150" flashvars="tcolor=0x286ea0&tcolor2=0x505050&hicolor=0x286ea0&tspeed=100&distr=true&xmlpath={URL_XML_TAG3D}" wmode="transparent" quality="high" bgcolor="#ffffff" name="tagcloud_embed" src="{TEMPLATE_PATH}/img/tagcloud.swf" type="application/x-shockwave-flash" />
+                          </object>
+                        </div>
+                    </div>
                     
                     <!-- BEGIN switch_blog -->
                         <!-- BEGIN calendar -->
@@ -250,7 +263,7 @@
                                     <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_page.sw_comment.sw_showall.URL_ARTICLE}'; return false;">{switch_content_page.sw_comment.sw_showall.LIBELLE}</a>
                                 </div>
                                 <!-- END sw_showall -->
-                                <div>
+                                <div style="clear: both;">
                                     <a name="form_comment">
                                     <form action="{switch_content_page.sw_comment.ACTION}" method="post" onsubmit="javascript:return controlComment(this);">
                                         <div class="form" style="width: 65%; float: left;">

@@ -1,3 +1,11 @@
+== Module WebEdit - version 2.3.0 ============================================
+
+2009-12-04  xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Ajout : Gestion des "rédacteurs" (Utilisateurs autorisés à modifier une partie des rubriques et leurs articles de webedit.)
+ * Ajout : http://"votredomaine"/tag3D/"moduleid_webedit".xml retourne un fichier XML format exploitable par le plugin flash WP-Cumulus (WP-Cumulus : Copyright Roy Tanck - www.roytanck.com)   
+ * Correction : Certains champs restaient accessibles même avec des droits restreints.
+  
 == Module WebEdit - version 2.2.0a ============================================
 
 2009-11-26  xavier Toussaint ~ HeXad <xavier@hexad.fr>

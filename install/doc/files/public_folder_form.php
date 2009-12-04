@@ -2,6 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -143,7 +144,7 @@ else // creating
                     else
                     {
                         ?>
-                        <select class="select" name="docfolder_foldertype" onchange="javascript:ploopi_getelem('doc_share').style.display = (this.value == 'shared') ? 'block' : 'none'; ploopi_getelem('doc_validation').style.display = (this.value == 'private') ? 'none' : 'block'; ploopi_getelem('doc_private').style.display = (this.value == 'private') ? 'block' : 'none'; " tabindex="2">
+                        <select class="select" name="docfolder_foldertype" onchange="javascript:switch_foldertype(this)" tabindex="2">
                             <?php
                             foreach($foldertypes as $key => $value)
                             {
@@ -212,6 +213,53 @@ else // creating
                     }
                     ?>
                 </p>
+                <div id="doc_allow_feeds" style="<?php echo ($docfolder->fields['foldertype'] == 'private') ? 'display:none;' : 'display:block;'; ?>">
+                    <p>
+                        <label style="width : 200px;">Activer les flux RSS/Atom:</label>
+                        <?php
+                        if ($readonly)
+                        {
+                            ?>
+                            <span><?php echo ($docfolder->fields['readonly_content']) ? 'oui' : 'non'; ?></span>
+                            <?php
+                        }
+                        else
+                        {
+                            ?>
+                            <input type="checkbox" name="docfolder_allow_feeds" value="1" <?php if ($docfolder->fields['allow_feeds']) echo 'checked'; ?> onchange="javascript:($('doc_feed_url').style.display == 'none') ? $('doc_feed_url').show() : $('doc_feed_url').hide();" tabindex="6">
+                            <?php
+                        }
+                        ?>
+                        <div id="doc_feed_url"  style="<?php echo ($docfolder->fields['allow_feeds']) ? 'display:block;' : 'display:none;'; ?>">
+                            <?php 
+                            if(!empty($docfolder->fields['id']))
+                            {
+                                ?>
+                                <p>
+                                    <label>RSS :</label>
+                                    <a title="RSS - <?php echo $docfolder->fields['name']; ?>" href="<?php  echo ploopi_urlrewrite('/backend.php?format=rss&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>" type="application/rss+xml" rel="alternate">
+                                        <?php echo _PLOOPI_BASEPATH.ploopi_urlrewrite('/backend.php?format=rss&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>
+                                    </a>
+                                </p>
+                                <p> 
+                                    <label>Atom :</label>
+                                    <a title="Atom - <?php echo $docfolder->fields['name']; ?>" href="<?php  echo ploopi_urlrewrite('/backend.php?format=atom&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>" type="application/atom+xml" rel="alternate">
+                                        <?php echo _PLOOPI_BASEPATH.ploopi_urlrewrite('/backend.php?format=atom&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>
+                                    </a>
+                                </p>
+                                <div style="text-align: center; font-size: 0.8em;">nb: les flux ne sont actifs qu'après enregistrement</div>
+                                <?php
+                            }
+                            else
+                            {
+                                ?>
+                                <div style="text-align: center; font-size: 0.8em;">Les flux ne seront affichés qu'après enregistrement</div>
+                                <?php
+                            } 
+                            ?>
+                        </div>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -246,7 +294,7 @@ else // creating
         if (!$readonly)
         {
             ?>
-            <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="6">
+            <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="7">
             <?php
         }
         ?>
@@ -268,6 +316,24 @@ if (!$readonly)
     ?>
     <script type="text/javascript">
     $('docfolder_name').focus();
+
+    switch_foldertype = function(select) {
+        switch (select.value)
+        {
+            case 'shared':
+                $('doc_share', 'doc_validation').invoke('show');
+                $('doc_private', 'doc_allow_feeds').invoke('hide');
+                break;
+            case 'private':
+                $('doc_private').show();
+                $('doc_share', 'doc_validation', 'doc_allow_feeds').invoke('hide');
+                break;
+            case 'public':
+                $('doc_validation', 'doc_allow_feeds').invoke('show');
+                $('doc_share').hide();
+                break;
+        }
+    }
     </script>
     <?php
 }

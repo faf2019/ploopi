@@ -401,7 +401,7 @@
                                     <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_page.sw_comment.sw_showall.URL_ARTICLE}'; return false;">{switch_content_page.sw_comment.sw_showall.LIBELLE}</a>
                                 </div>
                                 <!-- END sw_showall -->
-                                <div>
+                                <div style="clear: both;">
                                     <a name="form_comment">
                                     <form action="{switch_content_page.sw_comment.ACTION}" method="post" onsubmit="javascript:return controlComment(this);">
                                         <div class="form" style="width: 65%; float: left;">

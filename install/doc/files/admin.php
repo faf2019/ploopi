@@ -136,7 +136,7 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
         case _DOC_TAB_CLEAN_CACHE:
             switch($op)
             {
-                case 'execute':
+                case 'doc_clean_thumb':
                     include_once './include/classes/cache.php';
                     $objCache = new ploopi_cache(0);
                     $objCache->set_groupe('module_doc_'.$_SESSION['ploopi']['workspaceid'].'_'.$_SESSION['ploopi']['moduleid']);
@@ -146,7 +146,23 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
                     echo $skin->open_simplebloc(_DOC_TAB_TITLE_CLEAN_CACHE);
                     ?>
                     <div style="padding:4px;">
-                        Le cache a été vidé.
+                        Le cache des vignettes a été vidé.
+                    </div>
+                    <?php
+                    echo $skin->close_simplebloc();
+                break;
+                    
+                case 'doc_clean_feeds':
+                    include_once './include/classes/cache.php';
+                    $objCache = new ploopi_cache(0);
+                    $objCache->set_groupe('module_doc_feeds_'.$_SESSION['ploopi']['workspaceid'].'_'.$_SESSION['ploopi']['moduleid']);
+                    $objCache->clean();
+                    unset($objCache);
+                    
+                    echo $skin->open_simplebloc(_DOC_TAB_TITLE_CLEAN_CACHE);
+                    ?>
+                    <div style="padding:4px;">
+                        Le cache des flux RSS/Atom a été vidé.
                     </div>
                     <?php
                     echo $skin->close_simplebloc();
@@ -156,7 +172,10 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
                     echo $skin->open_simplebloc(_DOC_TAB_TITLE_CLEAN_CACHE);
                     ?>
                     <div style="padding:4px;">
-                        <input type="button" class="button" value="Vider le cache" onclick="javascript:ploopi_confirmlink('admin.php?op=execute','Attention, cette procédure va supprimer toutes les vignettes mises en cache pour le module courant. Confirmez-vous la suppression ?');">&nbsp;Cette procédure permet de supprimer toutes les vignettes mises en cache par le module.
+                        <input type="button" class="button" style="width: 200px;" value="Vider le cache 'Vignette'" onclick="javascript:ploopi_confirmlink('admin.php?op=doc_clean_thumb','Attention, cette procédure va supprimer toutes les vignettes mises en cache pour le module courant.\n\n\rConfirmez-vous la suppression ?');">&nbsp;Cette procédure permet de supprimer toutes les vignettes mises en cache par le module.
+                    </div>
+                    <div style="padding:4px;">
+                        <input type="button" class="button" style="width: 200px;" value="Vider le cache 'Flux RRS/Atom'" onclick="javascript:ploopi_confirmlink('admin.php?op=doc_clean_feeds','Attention, cette procédure va supprimer tous les flux RSS/Atom mis en cache pour le module courant.\n\n\rConfirmez-vous la suppression ?');">&nbsp;Cette procédure permet de supprimer tous flux RSS/Atom mis en cache par le module.
                     </div>
                     <?php
                     echo $skin->close_simplebloc();

@@ -531,6 +531,14 @@
         </row>
         <row>
             <tablename>ploopi_mod_doc_folder</tablename>
+            <name>allow_feeds</name>
+            <label>allow_feeds</label>
+            <type>tinyint(1) unsigned</type>
+            <visible>1</visible>
+
+        </row>
+        <row>
+            <tablename>ploopi_mod_doc_folder</tablename>
             <name>id_folder</name>
             <label>id_folder</label>
             <type>int(10) unsigned</type>

@@ -82,6 +82,16 @@ define ('_WEBEDIT_ACTION_REINDEX',   9);
 define ('_WEBEDIT_ACTION_COMMENT',   10);
 
 /**
+ * Gerer les rédacteurs
+ */
+define ('_WEBEDIT_ACTION_HEADING_BACK_EDITOR_MANAGE',   11);
+
+/**
+ * Etre rédacteur potentiel
+ */
+define ('_WEBEDIT_ACTION_HEADING_BACK_EDITOR',   12);
+
+/**
  * Objet : ARTICLE (admin)
  */
 define ('_WEBEDIT_OBJECT_ARTICLE_ADMIN',        1);
@@ -95,6 +105,11 @@ define ('_WEBEDIT_OBJECT_ARTICLE_PUBLIC',       2);
  * Objet : RUBRIQUE
  */
 define ('_WEBEDIT_OBJECT_HEADING',              3);
+
+/**
+ * Objet : REDACTEUR DE RUBRIQUE
+ */
+define ('_WEBEDIT_OBJECT_HEADING_BACK_EDITOR',  4);
 
 /**
  * Chemin relatif du dossier de stockage des templates
@@ -1072,6 +1087,8 @@ function webedit_getrewriterules()
             '/index.php\?query_tag=([a-zA-Z0-9]*)/',
             '/index.php\?ploopi_op=webedit_backend&format=([a-z]*)&headingid=([0-9]*)/',
             '/index.php\?ploopi_op=webedit_backend&format=([a-z]*)/',
+            '/index.php\?ploopi_op=webedit_backend&query_tag=([a-zA-Z0-9]*)&moduleid=([0-9]*)/',
+    
         ),
 
         'replacements' => array(
@@ -1094,7 +1111,8 @@ function webedit_getrewriterules()
             'unsubscribe/$1/index.<EXT>',
             'tags/$1.<EXT>',
             '$1/<TITLE>-h$2.xml',
-            '$1/<TITLE>.xml'
+            '$1/<TITLE>.xml',
+            'tag3D/$1/$2.xml'
             )
     );
 }
@@ -1140,5 +1158,53 @@ function webedit_disallowheading($heading = null, $id_module = null)
   }
   elseif(is_numeric($heading))
       if(isset($_SESSION['webedit']['allowedheading'][$id_module][$heading])) unset($_SESSION['webedit']['allowedheading'][$id_module][$heading]);
+}
+
+/**
+ * Contrôle si le user connecté est un Rédacteur
+ *
+ * @Param int $heading id_heading à contrôler
+ * @Param int $user identifiant du user ou du groupe (optionnel)
+ * @Param string $type type de user (user/group) (optionnel)
+ * @Param int $id_module identifiant du module (optionnel)
+ *
+ * @return boolean true/false
+ */
+function webedit_isEditor($heading, $user = null, $type = 'user', $id_module = null)
+{
+    if (empty($heading) || !is_numeric($heading)) return false;
+    
+    if (is_null($user)) $user = $_SESSION['ploopi']['userid'];
+
+    $type = strtolower($type);
+    $type = ($type == 'user' &&  $type == 'group') ? $type : 'user';
+
+    if (is_null($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
+    
+    // On cherche les parents de cet heading
+    include_once './modules/webedit/class_heading.php';
+    
+    $objHeading = new webedit_heading();
+    if(!$objHeading->open($heading)) return false;
+    $arrHeading = explode(';',$objHeading->fields['parents']);
+    $arrHeading[] = $heading;
+    
+    // On test si c'est un rédacteur avec le user
+    $arrEditor = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $arrHeading, $id_module, $user, $type);
+    
+    // on a verifié par le user et il n'est pas rédacteur, on va verif ses groupes
+    if(empty($arrEditor) && $type == 'user')
+    {
+        include_once './include/classes/user.php';
+        
+        $objUser = new user();
+        $objUser->open($user);
+        $arrGroups = array_keys($objUser->getgroups(true));
+
+        if(!empty($arrGroups))
+            $arrEditor = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $arrHeading, $id_module, $arrGroups, 'group');
+    }
+    
+    return (!empty($arrEditor));
 }
 ?>

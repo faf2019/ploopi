@@ -40,3 +40,13 @@ filter:alpha(opacity=90);
 #pathtrans {
 filter:alpha(opacity=70);
 }
+
+#tagcloud {
+overflow:visible;
+height:1%;
+}
+
+#tagcloud3D {
+overflow:visible;
+height:1%;
+}

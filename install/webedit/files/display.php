@@ -86,7 +86,7 @@ $headingid = (!empty($_REQUEST['headingid']) && is_numeric($_REQUEST['headingid'
 $intErrorCode = 0;
 
 // vérification des paramètres
-if ($webedit_mode == 'edit' && !ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT)) $webedit_mode = 'display';
+if ($webedit_mode == 'edit' && !(ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid))) $webedit_mode = 'display';
 
 if ($webedit_mode == 'render' || $webedit_mode == 'display')
 {
@@ -1721,7 +1721,8 @@ $template_body->assign_vars(
         'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
         'SITE_BASEPATH'                 => $strBasePath,
         'PLOOPI_VERSION'                => _PLOOPI_VERSION,
-        'PLOOPI_REVISION'               => _PLOOPI_REVISION
+        'PLOOPI_REVISION'               => _PLOOPI_REVISION,
+        'URL_XML_TAG3D'                 => ploopi_urlrewrite("index.php?ploopi_op=webedit_backend&query_tag=".((!empty($query_tag)) ? $query_tag : 'tag3D')."&moduleid={$_SESSION['ploopi']['workspaceid']}", webedit_getrewriterules())
     )
 );
 
@@ -1750,6 +1751,7 @@ $db->query($sql);
 $arrTags = array();
 while ($row = $db->fetchrow())
 {
+    // ATTENTION EN CAS DE CHANGEMENT DE FILTRE, NE PAS OUBLIER LES TAG 3D DANS BACKEND.PHP
     if (!$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
     {
         $strTag = strtolower(ploopi_convertaccents($row['tag']));

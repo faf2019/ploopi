@@ -555,12 +555,16 @@ function doc_getrewriterules()
     return array(
         'patterns' => array(
             '/[a-z\-]*.php\?ploopi_op=doc_file_download&docfile_md5id=([a-z0-9]{32})/',
-            '/[a-z\-]*.php\?ploopi_op=doc_file_view&docfile_md5id=([a-z0-9]{32})/'
+            '/[a-z\-]*.php\?ploopi_op=doc_file_view&docfile_md5id=([a-z0-9]{32})/',
+            // Flux RSS/Atom
+            '/backend.php\?format=(rss|atom)&ploopi_moduleid=([0-9]*)&id_folder=([0-9]*)/'
         ),
 
         'replacements' => array(
             'documents/$1/<TITLE>.<EXT>',
-            'media/$1/<TITLE>.<EXT>'
+            'media/$1/<TITLE>.<EXT>',
+            // Flux RSS/Atom
+            'doc/$1/<TITLE>-m$2f$3.<EXT>'
         )
     );
 }

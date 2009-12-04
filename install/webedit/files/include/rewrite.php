@@ -110,4 +110,16 @@ elseif ($booRewriteRuleFound = (preg_match('/unsubscribe\/([a-z0-9]{32})\/index\
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'webedit_unsubscribe';
         $_REQUEST['subscription_email'] = $_GET['subscription_email'] = $arrMatches[1];
     }
+}
+
+// tag 3D
+elseif ($booRewriteRuleFound = (preg_match('/tag3D\/(.*)\/([0-9]*).xml/', $arrParsedURI['path'], $arrMatches) == 1)) 
+{
+    if (!empty($arrMatches[1])) 
+    {
+        $ploopi_access_script = 'backend';
+        $_REQUEST['backendtype'] = $_GET['backendtype'] = 'tagcloud3D';
+        $_REQUEST['query_tag'] = $_GET['query_tag'] = $arrMatches[1];
+        $_REQUEST['ploopi_moduleid'] = $_GET['ploopi_moduleid'] = $arrMatches[2];
+    }
 }?>

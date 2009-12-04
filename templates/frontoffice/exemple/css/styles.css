@@ -307,6 +307,13 @@ color:#fff;
 font-size:8px;
 }
 
+#tagcloud3D {
+font-size:20px;
+position:relative;
+margin-bottom:10px;
+overflow:hidden;
+}
+
 #page_tags {
 margin-bottom:10px;
 font-size:9px;

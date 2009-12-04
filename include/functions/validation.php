@@ -192,9 +192,9 @@ function ploopi_validation_save($id_object = 0, $id_record = '', $id_module = -1
  * Renvoie les informations de validation en fonction d'un utilisateur, d'un objet ou d'un enregistrement
  *
  * @param int $id_object identifiant de l'objet
- * @param string $id_record identifiant de l'enregistrement
+ * @param string/array $id_record identifiant de l'enregistrement
  * @param int $id_module identifiant du module
- * @param int $id_val identifiant de l'utilisateur ou du groupe
+ * @param int/array $id_val identifiant de l'utilisateur ou du groupe
  * @param string $type_val type de validateur (user/group)
  * @return array validation
  */
@@ -207,13 +207,38 @@ function ploopi_validation_get($id_object = 0, $id_record = '', $id_module = -1,
 
     $sql =  "SELECT * FROM ploopi_validation WHERE id_module = {$id_module}";
     if ($id_object != 0) $sql .= " AND id_object = {$id_object}";
-    if ($id_record != '') $sql .= " AND id_record = '".$db->addslashes($id_record)."'";
-    if ($id_val != 0) 
+    if ($id_record != '')
     {
-        switch($type_val)
+        if(is_array($id_record))
         {
-            case 'user' : $sql .= " AND id_validation = {$id_user} AND type_validation = 'user'"; break;
-            case 'group' : $sql .= " AND id_validation = {$id_user} AND type_validation = 'group'"; break;
+            $value = '\'0';
+            foreach($id_record as $id) $value .= '\',\''.$db->addslashes($id);
+            $value .= '\'';
+            
+            $sql .= " AND id_record IN ({$value})";
+        }
+        else
+            $sql .= " AND id_record = '".$db->addslashes($id_record)."'";
+    }
+    
+    if (!empty($id_val)) 
+    {
+        if(is_array($id_val))
+        {
+            $id_val = implode(',',$id_val);
+            switch($type_val)
+            {
+                case 'user' : $sql .= " AND id_validation IN ({$id_val}) AND type_validation = 'user'"; break;
+                case 'group' : $sql .= " AND id_validation IN ({$id_val}) AND type_validation = 'group'"; break;
+            }
+        }
+        else
+        {
+            switch($type_val)
+            {
+                case 'user' : $sql .= " AND id_validation = {$id_val} AND type_validation = 'user'"; break;
+                case 'group' : $sql .= " AND id_validation = {$id_val} AND type_validation = 'group'"; break;
+            }
         }
     }
 
