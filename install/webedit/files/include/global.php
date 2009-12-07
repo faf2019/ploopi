@@ -466,7 +466,6 @@ function webedit_getarticles($moduleid = -1)
 function webedit_template_assign($arrHeadings, $arrShares, &$nav, $hid, $var = '', $link = '')
 {
     global $template_body;
-    global $recursive_mode;
     global $webedit_mode;
 
     if (isset($arrHeadings['tree'][$hid]))
@@ -586,21 +585,19 @@ function webedit_template_assign($arrHeadings, $arrShares, &$nav, $hid, $var = '
                     'FREE2' => $arrHeading['free2']
                     ));
 
-                if ($depth == 0 || (isset($recursive_mode[$depth]) && $recursive_mode[$depth] == 'prof'))
+                if (isset($arrHeadings['tree'][$id]))
                 {
-                    if (isset($arrHeadings['tree'][$id]))
-                    {
-                        $template_body->assign_block_vars($localvar.'.switch_submenu' , array());
-                        webedit_template_assign(&$arrHeadings, &$arrShares, $nav, $id, "{$localvar}.", $locallink);
-                    }
+                    $template_body->assign_block_vars($localvar.'.switch_submenu' , array());
+                    webedit_template_assign(&$arrHeadings, &$arrShares, $nav, $id, "{$localvar}.", $locallink);
                 }
             }
         }
 
-        if (isset($arrHeadings['list'][$hid]))
+        if (isset($arrHeadings['list'][$hid]) && !isset($arrHeadings['list'][$hid]['done']))
         {
+            $arrHeadings['list'][$hid]['done'] = true;
             $depth = $arrHeadings['list'][$hid]['depth'];
-            if ($depth > 0  && isset($nav[$depth-1]) && $nav[$depth-1] == $hid && !(isset($recursive_mode[$depth]) && $recursive_mode[$depth] == 'prof'))
+            if ($depth > 0  && isset($nav[$depth-1]) && $nav[$depth-1] == $hid)
             {
                 if ($link!='' && isset($nav[$depth])) $link .= "-$nav[$depth]";
                 elseif (isset($nav[$depth])) $link = "$nav[$depth]";

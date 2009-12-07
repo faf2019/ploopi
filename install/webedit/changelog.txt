@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.3.1 ============================================
+
+2009-12-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Modification : Génération automatique des variables "template" pour les 2 modes de navigation dans les rubriques (le fichier "config.php" dans le dossier du temmplate est donc devenu obsolète)
+
 == Module WebEdit - version 2.3.0 ============================================
 
 2009-12-04  xavier Toussaint ~ HeXad <xavier@hexad.fr>

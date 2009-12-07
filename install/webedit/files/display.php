@@ -260,8 +260,6 @@ $template_body = new Template($template_path);
 // fichier template par défaut
 $template_file = 'index.tpl';
 
-if (file_exists("{$template_path}/config.php")) include_once "{$template_path}/config.php";
-
 // Inclusion op modules en environnement frontoffice (permet par exemple de connaître le template frontoffice utilisé)
 $_SESSION['ploopi']['frontoffice']['template_path'] = $template_path;
 include_once './include/op.php';
