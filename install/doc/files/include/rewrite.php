@@ -31,22 +31,24 @@
  */
 
 // documents
-if ($booRewriteRuleFound = (preg_match('/documents\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $_SERVER['REQUEST_URI'], $arrMatches) == 1)) 
+if ((preg_match('/documents\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $_SERVER['REQUEST_URI'], $arrMatches) == 1)) 
 {
     if (!empty($arrMatches[2])) 
     {
         $ploopi_access_script = 'quick';
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'doc_file_download';
         $_REQUEST['docfile_md5id'] = $_GET['docfile_md5id'] = $arrMatches[1];
+        $booRewriteRuleFound = true;
     }
 }
-if ($booRewriteRuleFound = (preg_match('/media\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $_SERVER['REQUEST_URI'], $arrMatches) == 1)) 
+if ((preg_match('/media\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $_SERVER['REQUEST_URI'], $arrMatches) == 1)) 
 {
     if (!empty($arrMatches[2])) 
     {
         $ploopi_access_script = 'quick';
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'doc_file_view';
         $_REQUEST['docfile_md5id'] = $_GET['docfile_md5id'] = $arrMatches[1];
+        $booRewriteRuleFound = true;
     }
 }
 ?>

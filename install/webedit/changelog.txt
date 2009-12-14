@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.1.6g ============================================
+
+2009-12-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction du bug #37 : Problème avec les rewrite rules : indique "Page non trouvée" - fixes #37
+
 == Module WebEdit - version 2.1.6f ============================================
 
 2009-10-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
