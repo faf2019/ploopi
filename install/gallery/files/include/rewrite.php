@@ -30,7 +30,7 @@
  * @author Xavier Toussaint
  */
 
-if($booRewriteRuleFound = (preg_match('/gallery\/dewslider-g([0-9]*)-sb([0,1]{1})-st([0,1]{1})-rs([0,1]{1})-t([0-9]{1,2})-at([b,t]{1})-ab([b,t]{1})-tr([f,s,p,o,w,b]{1})-s([0-9]{1,2})\.xml/', $arrParsedURI['path'], $arrMatches) == 1)) 
+if(preg_match('/gallery\/dewslider-g([0-9]*)-sb([0,1]{1})-st([0,1]{1})-rs([0,1]{1})-t([0-9]{1,2})-at([b,t]{1})-ab([b,t]{1})-tr([f,s,p,o,w,b]{1})-s([0-9]{1,2})\.xml/', $arrParsedURI['path'], $arrMatches) == 1) 
 {
     $ploopi_access_script = 'index-light';
     $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'ploopi_get_dewsliderXML';
@@ -64,5 +64,6 @@ if($booRewriteRuleFound = (preg_match('/gallery\/dewslider-g([0-9]*)-sb([0,1]{1}
             break;
     }
     $_REQUEST['speed'] = $_GET['speed'] = intval($arrMatches[9]);
+    $booRewriteRuleFound = true;    
 }
 ?>

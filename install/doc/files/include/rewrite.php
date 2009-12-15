@@ -31,27 +31,29 @@
  */
 
 // documents
-if ($booRewriteRuleFound = (preg_match('/documents\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $_SERVER['REQUEST_URI'], $arrMatches) == 1)) 
+if (preg_match('/documents\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $_SERVER['REQUEST_URI'], $arrMatches) == 1) 
 {
     if (!empty($arrMatches[2])) 
     {
         $ploopi_access_script = 'quick';
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'doc_file_download';
         $_REQUEST['docfile_md5id'] = $_GET['docfile_md5id'] = $arrMatches[1];
+        $booRewriteRuleFound = true;        
     }
 }
 
-elseif ($booRewriteRuleFound = (preg_match('/media\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $_SERVER['REQUEST_URI'], $arrMatches) == 1)) 
+elseif (preg_match('/media\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $_SERVER['REQUEST_URI'], $arrMatches) == 1) 
 {
     if (!empty($arrMatches[2])) 
     {
         $ploopi_access_script = 'quick';
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'doc_file_view';
         $_REQUEST['docfile_md5id'] = $_GET['docfile_md5id'] = $arrMatches[1];
+        $booRewriteRuleFound = true;        
     }
 }
 //flux RSS/Atom
-elseif ($booRewriteRuleFound = (preg_match('/doc\/(rss|atom)\/(.*)-m([0-9]*)f([0-9]*)\.xml/', $_SERVER['REQUEST_URI'], $arrMatches) == 1))
+elseif (preg_match('/doc\/(rss|atom)\/(.*)-m([0-9]*)f([0-9]*)\.xml/', $_SERVER['REQUEST_URI'], $arrMatches) == 1)
 {
     if (!empty($arrMatches[1]) && !empty($arrMatches[3])) 
     {
@@ -59,6 +61,7 @@ elseif ($booRewriteRuleFound = (preg_match('/doc\/(rss|atom)\/(.*)-m([0-9]*)f([0
         $_REQUEST['format'] = $_GET['format'] = $arrMatches[1];
         $_REQUEST['ploopi_moduleid'] = $_GET['ploopi_moduleid'] = $arrMatches[3];
         $_REQUEST['id_folder'] = $_GET['id_folder'] = $arrMatches[4];
+        $booRewriteRuleFound = true;        
     }
 }
 ?>
