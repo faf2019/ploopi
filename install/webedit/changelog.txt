@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.1.6h ============================================
+
+2009-12-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction du bug #38 : Problème pour insérer des documents ou faire des liens vers des documents - fixes #38
+
 == Module WebEdit - version 2.1.6g ============================================
 
 2009-12-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

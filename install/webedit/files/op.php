@@ -123,7 +123,7 @@ if ($_SESSION['ploopi']['connected'])
 
             $template_body->assign_vars(array(
                 'TEMPLATE_PATH'         => $_SESSION['ploopi']['template_path'],
-                'ADDITIONAL_JAVASCRIPT' => $additional_javascript,
+                'ADDITIONAL_JAVASCRIPT' => $ploopi_additional_javascript,
                 'PAGE_CONTENT'          => $main_content
                 )
             );
