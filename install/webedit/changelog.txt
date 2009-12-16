@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.3.1d ============================================
+
+2009-12-16  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+* Correction bug : Problème d'affichage lorsqu'une rubrique n'a aucun user en autorisation d'accès meme en héritage (même sans restriction !)
+
 == Module WebEdit - version 2.3.1c ============================================
 
 2009-12-16  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

@@ -1,7 +1,8 @@
 <?php
 /*
  Copyright (c) 2002-2007 Netlor
- Copyright (c) 2007-2008 Ovensia
+ Copyright (c) 2007-2009 Ovensia
+ Copyright (c) 2009 HeXad
  Contributors hold Copyright (c) to their code submissions.
 
  This file is part of Ploopi.
@@ -26,7 +27,7 @@
  *
  * @package webedit
  * @subpackage backend
- * @copyright Netlor, Ovensia
+ * @copyright Netlor, Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -39,7 +40,7 @@ switch ($strbackendtype)
 {
     case 'tagcloud3D':
         /**
-         * Génération du fichier XML pour le cumulus de tags en fonction des articles publiés
+         * Génération du fichier XML pour le nuage de tags en fonction des articles publiés
          */
         
         $query_tag = (empty($_REQUEST['query_tag'])) ? '' : $_REQUEST['query_tag'];                        

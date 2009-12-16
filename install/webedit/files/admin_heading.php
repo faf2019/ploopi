@@ -735,7 +735,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                     echo ($heading->fields['private_visible']) ? 'oui' : 'non';
                 ?>
             </p>
-            <p class="ploopi_va" style="padding:6px 2px 2px 2px;"><span>Autorisations d'accès </span><?php if ($intSharesHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intSharesHeadingId}")."\">{$headings['list'][$intSharesHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+            <p class="ploopi_va" style="padding:6px 2px 2px 2px;"><span>Autorisations d'accès </span><?php if ($intSharesHeadingId && $intSharesHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intSharesHeadingId}")."\">{$headings['list'][$intSharesHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
                 <?php
                 if (!empty($arrSharesUsers))
                 {
@@ -769,7 +769,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                 ?>
                 <div style="border:1px solid #c0c0c0;overflow:hidden;">
                 <?php
-                    ploopi_share_selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, $intSharesHeadingId == $headingid ? 'Modifier la listes des autorisations d\'accès:' : 'Définir une nouvelle liste d\'autorisations d\'accès:');
+                    ploopi_share_selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, ($intSharesHeadingId && $intSharesHeadingId == $headingid) ? 'Modifier la listes des autorisations d\'accès:' : 'Définir une nouvelle liste d\'autorisations d\'accès:');
                 ?>
                 </div>
                 <?php
