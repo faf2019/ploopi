@@ -39,7 +39,7 @@ switch ($strbackendtype)
 {
     case 'tagcloud3D':
         /**
-         * Génération du fichier XML pour le nuage de tags en fonction des articles publiés
+         * Génération du fichier XML pour le cumulus de tags en fonction des articles publiés
          */
         
         $query_tag = (empty($_REQUEST['query_tag'])) ? '' : $_REQUEST['query_tag'];                        
@@ -54,6 +54,8 @@ switch ($strbackendtype)
             include_once './modules/webedit/include/global.php';
             include_once './include/functions/date.php';
             include_once './include/functions/string.php';
+            include_once './include/functions/share.php';
+            include_once './include/classes/user.php';
             
             $today = ploopi_createtimestamp();
             

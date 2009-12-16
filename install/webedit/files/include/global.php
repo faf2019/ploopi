@@ -1033,7 +1033,6 @@ function webedit_sitemap()
 function webedit_getshare($id_user = null, $id_module = null)
 {
     $arrShares = array();
-    include_once './include/classes/user.php';
     
     if ($_SESSION['ploopi']['connected'])
     {
