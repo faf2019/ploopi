@@ -1,8 +1,14 @@
+== Module WebEdit - version 2.3.1b ============================================
+
+2009-12-16  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+* Correction du bug #38 : Problème pour insérer des documents ou faire des liens vers des documents (Bug corrigé dans la branche stable par Stéphane Escaich)
+
 == Module WebEdit - version 2.3.1a ============================================
 
 2009-12-15  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
 
- * Correction du bug #37 : Problème avec les rewrite rules : indique "Page non trouvée" - fixes #37 (Bug corrigé par Stéphane Escaich)
+ * Correction du bug #37 : Problème avec les rewrite rules : indique "Page non trouvée" (Bug corrigé dans la branche stable par Stéphane Escaich)
 
 == Module WebEdit - version 2.3.1 ============================================
 
