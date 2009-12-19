@@ -734,7 +734,8 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                                 'SEL'           => $sel
                             );
     
-                        $template_body->assign_block_vars('switch_pages.page', $var_tpl_page);
+                        if($objArticle->fields['visible'])
+                            $template_body->assign_block_vars('switch_pages.page', $var_tpl_page);
                         
                         $content = '';
                         
