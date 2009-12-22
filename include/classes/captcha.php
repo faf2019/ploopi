@@ -2,7 +2,7 @@
 /*
   Copyright (c) 2006-2007 Sylvain BRISON (génération image)
   Copyright (c) 2009 Drew Phillips (gestion du son)
-  Copyright (c) 2009 HeXad
+  Copyright (c) 2009 HeXad (Réecriture, Adaptation Ploopi)
 
   Contributors hold Copyright (c) to their code submissions.
 
@@ -234,6 +234,7 @@ class captcha
             if(!isset($_SESSION['ploopi']['captcha'])) $_SESSION['ploopi']['captcha'] = '';
             $this->captchasession = &$_SESSION['ploopi']['captcha'];
         }
+        if(!isset($this->captchasession['captchacptuse'])) $this->captchasession['captchacptuse'] = 0;
     }
     
     /**
@@ -526,7 +527,7 @@ class captcha
         }
         
         $this->captchasession['captchatime'] = time();
-        $this->captchasession['capthcacptuse']++;       
+        $this->captchasession['captchacptuse']++;
 
         ploopi_ob_clean();
 

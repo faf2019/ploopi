@@ -221,7 +221,6 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
             while(!feof($fp) && connection_status() == 0)
             {
                 echo fread($fp, $chunksize);
-                flush();
             }
             fclose($fp);
         }
