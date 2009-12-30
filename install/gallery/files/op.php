@@ -281,7 +281,7 @@ switch($ploopi_op)
         if($objGallery->open($_GET['id_gallery']))
         {
             $arrDirSelectTmp = $objGallery->getdirectories();
-            if($arrDirSelectTmp !== false)
+            if(!empty($arrDirSelectTmp))
             {
                 foreach ($arrDirSelectTmp as $key => $dirSelect) $arrDirSelect[] = $dirSelect['id_directory'];
                 $sql = "

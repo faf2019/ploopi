@@ -91,7 +91,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/gallery.tpl"))
         }
         
         $arrDirSelectTmp = $objGallery->getdirectories();
-        if($arrDirSelectTmp !== false)
+        if(!empty($arrDirSelectTmp))
         {
             foreach ($arrDirSelectTmp as $key => $dirSelect) $arrDirSelect[] = $dirSelect['id_directory'];
             

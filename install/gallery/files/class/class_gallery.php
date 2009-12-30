@@ -117,7 +117,7 @@ class gallery extends data_object
         if($db->numrows($sqldir))
             return $db->getarray($sqldir);
         else
-            return false;
+            return array();
     }
     
     function setautosaveinfo($booAutoSave)
@@ -135,7 +135,6 @@ class gallery extends data_object
         $objClone->save();
         
         foreach($this->getdirectories() as $key => $idfield) $res[] = $idfield['id_directory'];
-        ploopi_print_r($res);
         
         $objClone->savedirectories($res);
 

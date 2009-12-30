@@ -52,7 +52,7 @@ if(isset($_GET['id_gallery']) && is_numeric($_GET['id_gallery'])) // MODIF ADHER
     $nom_tpl = $objGallery->fields['template'];
     
     $arrDirSelectTmp = $objGallery->getdirectories();
-    if($arrDirSelectTmp !== false)
+    if(!empty($arrDirSelectTmp))
     {
         foreach ($arrDirSelectTmp as $key => $dirSelect)
         {

@@ -1,3 +1,9 @@
+== Module GALLERY - version 0.1.2b ====================================================
+
+2009-12-30  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Correction: bug en duplication quand aucun répertoire n'étais coché dans la galerie source.
+
 == Module GALLERY - version 0.1.2a ====================================================
 
 2009-12-15  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
