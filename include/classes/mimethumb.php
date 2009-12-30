@@ -40,7 +40,7 @@ class mimethumb
     /**
      * Passage en mode debug
      */
-    private $booDebug = false;
+    private $booDebug = true;
     
     /**
      * longueur de la vignette
@@ -220,6 +220,9 @@ class mimethumb
             case 'DOC':
             case 'DOCX':
             case 'WPD':
+            case 'TXT':
+            case 'HTML':
+            case 'SQL':
                 // if(strtoupper($this->strExtension) == 'SQL') { $this->strExtension = 'txt'; }
                 $booviewthumb = $this->_thumbJodconverter('ODT');
             break;
@@ -266,7 +269,6 @@ class mimethumb
                 {
                     switch(strtoupper($this->strExtension))
                     {
-                        // Les cases suivant n'ont pas de break. Ce sont des params pour imagick !
                         case 'PDF':
                         case 'PSD':
                             $this->strPathFile = $this->strPathFile.'[0]';
@@ -382,15 +384,21 @@ class mimethumb
             {
                 $pathTemp = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp'._PLOOPI_SEP;
                 if (!is_dir($pathTemp)) ploopi_makedir($pathTemp);
-                
+
                 $fileTempo = $pathTemp.md5(uniqid(rand(), true)).'.text';
-                copy($this->strPathFile,$fileTempo);
+                
+                if(_PLOOPI_SERVER_OSTYPE == 'unix')
+                    symlink($this->strPathFile,$fileTempo); // Sous nux on crée juste un lien symbolique (+ rapide)
+                else
+                    copy($this->strPathFile,$fileTempo); // Sous win les liens symbolique n'existe que pour vista,2003 ou > ...
+                    
                 $this->strPathFile = $fileTempo.'[0]';
             }
         }
         
         // Create Imagick object
         try {
+            
             $thumb = new Imagick($this->strPathFile);
             $color = new ImagickPixel( "white" );
             
@@ -443,6 +451,7 @@ class mimethumb
                 $BorderColor = new ImagickPixel( $this->strBorderColor );
                 $thumb->borderImage($BorderColor, ($this->intWidth-$intWithTmp)/2,($this->intHeight-$intHeightTmp)/2);
             }   
+            
             @header("Content-Type: image/{$this->strExport}");
             echo $thumb->getImage();
             
@@ -554,32 +563,84 @@ class mimethumb
             }
             else
             {
+                global $db;
+                
                 if(_PLOOPI_SERVER_OSTYPE != 'unix') return false;
                 if(filesize($this->strPathFile) > 2*1024*1024) return false;
 
+                $fileTempo='';
+                // Les fichier type text doivent etre lu comme du text
+                $sqlMime = $db->query("SELECT mimetype FROM ploopi_mimetype WHERE ext = '{$this->strExtension}'");
+                if($db->numrows($sqlMime))
+                {
+                    $fieldMime = $db->fetchrow($sqlMime);
+                    
+                    if(in_array($fieldMime['mimetype'], array('text/plain', 'text/x-sql')))
+                    {
+                        $pathTemp = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp'._PLOOPI_SEP;
+                        if (!is_dir($pathTemp)) ploopi_makedir($pathTemp);
+        
+                        $fileTempo = $pathTemp.md5(uniqid(rand(), true)).'.txt';
+                        
+                        if(_PLOOPI_SERVER_OSTYPE == 'unix')
+                            symlink($this->strPathFile,$fileTempo); // Sous nux on crée juste un lien symbolique (+ rapide)
+                        else
+                            copy($this->strPathFile,$fileTempo); // Sous win les liens symbolique n'existe que pour vista,2003 ou > ...
+                            
+                        $this->strPathFile = $fileTempo;
+                    }
+                }
+                
                 $fileTempoPPT = '';
                 // Les pps doivent etre lu comme des ppt (en webservice le type/mime est forcé a ppt)
                 if(strtoupper($this->strExtension) == 'PPS')
                 {
                     $fileTempoPPT = $pathTemp.md5(uniqid(rand(), true)).'.ppt';
-                    copy($this->strPathFile,$fileTempoPPT);
+                    
+                    if(_PLOOPI_SERVER_OSTYPE == 'unix')
+                        symlink($this->strPathFile,$fileTempoPPT); // Sous nux on crée juste un lien symbolique (+ rapide)
+                    else
+                        copy($this->strPathFile,$fileTempoPPT); // Sous win les liens symbolique n'existe que pour vista,2003 ou > ...
+                    
                     $this->strPathFile = $fileTempoPPT;
                 }
                 
-                exec("ps -A -f | grep -E '^(.*)soffice(.*)accept\=socket\,host\=127\.0\.0\.1\,port\=8100'",$arrResult);
-                if(empty($arrResult))
+                // On verif que le démon est lancé
+                exec("ps -f -A | grep -E '^(.*)soffice(.*)accept\=socket\,host\=127\.0\.0\.1\,port\=8100'",$arrResult);
+                
+                if(empty($arrResult)) // Pas d'instance du serveur openoffice !
                 {
-                    // Ouverture du demon soffice pour jodconverter
-                    exec('soffice -headless -accept="socket,host=127.0.0.1,port=8100;urp;" -nofirststartwizard -norestore > /dev/null');
-                    sleep(4); // attend que le demon se lance (le 1er démarrage "a froid" peut etre long...)
-                    exec("ps -A -f | grep -E '^(.*)soffice(.*)accept\=socket\,host\=127\.0\.0\.1\,port\=8100'",$arrResult);
+                    if($this->booDebug) fwrite($handleTest,date('[r]').' '.$this->strPathFile." - Pas de serveur oOo\r\n");
+                    
+                    $fileLock = _PLOOPI_CGI_UPLOADTMP.'/.lockPloopiOooServer';
+                    
+                    if(!file_exists($fileLock) || (file_exists($fileLock) && ((time()-filemtime($fileLock)) > 15))) // Si pas de fichier lock ou le fichier lock a moins de 15sec.
+                    {
+                        if($this->booDebug) fwrite($handleTest,date('[r]').' '.$this->strPathFile." - Pas de Fichier de lock\r\n");
+                        if(file_exists($fileLock)) unlink($fileLock);
+                        
+                        $handle = fopen($fileLock,'w'); // On pose un lock pour eviter que +eurs instance tente de lancer le demon simultanément (ce qui provoque une erreur)
+                        if($handle === false) return false;
+                        fclose($handle);
+
+                        // Ouverture du demon soffice pour jodconverter (Attention > /dev/null est nécessaire sinon exec attend un retour !)
+                        exec('soffice -nofirststartwizard -headless -accept="socket,host=127.0.0.1,port=8100;urp;" -norestore > /dev/null');
+                        sleep(5); // attend que le demon se lance (le 1er démarrage "a froid" peut etre long...)
+                        unlink($fileLock); // on supprime le lock                     
+                    }
+                    else // Une autre instance est en train d'ouvrir le serveur Openoffice... on attend gentillement ^_^
+                    {
+                        if($this->booDebug) fwrite($handleTest,date('[r]').' '.$this->strPathFile." - Fichier lock, On attend\r\n");
+                        sleep(5);
+                    }
+                    
+                    exec("ps -f -A | grep -E '^(.*)soffice(.*)accept\=socket\,host\=127\.0\.0\.1\,port\=8100'",$arrResult);
                     if(empty($arrResult)) return false;
                 }
                 
-                exec('java -jar '.realpath('./lib/jodconverter/lib/jodconverter-cli-2.2.2.jar').' '.$this->strPathFile.' '.$fileTempo);
-                
+	            exec('java -jar '.realpath('./lib/jodconverter/lib/jodconverter-cli-2.2.2.jar').' '.$this->strPathFile.' '.$fileTempo.' > /dev/null');
+                    
                 if(!empty($fileTempoPPT) && file_exists($fileTempoPPT)) unlink($fileTempoPPT);
-                
                 if(!file_exists($fileTempo)) return false;
             }
             $this->strPathFile = $fileTempo;
@@ -609,16 +670,16 @@ class mimethumb
     private function _thumbSvg()
     {
         if(_PLOOPI_SERVER_OSTYPE != 'unix') return false;
-        
+
         try {
             $pathTemp = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp'._PLOOPI_SEP;
             if (!is_dir($pathTemp)) ploopi_makedir($pathTemp);
                         
             $fileTempo = $pathTemp.md5(uniqid(rand(), true)).'.png';
-            $strParamExport = " -f{$this->strPathFile} -e{$fileTempo} -d72 --without-gui";
-            
-            exec('inkscape'.$strParamExport);
-            
+            $strParamExport = " --without-gui -f{$this->strPathFile} -e{$fileTempo} -h400";
+
+            shell_exec("inkscape {$strParamExport}");
+
             ploopi_resizeimage($fileTempo, $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
             if(file_exists($fileTempo)) unlink($fileTempo);
            
@@ -629,6 +690,7 @@ class mimethumb
                 ploopi_die();
             }
             return false;
+            
         }
         return true;
     }
