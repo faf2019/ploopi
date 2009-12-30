@@ -40,7 +40,7 @@ class mimethumb
     /**
      * Passage en mode debug
      */
-    private $booDebug = true;
+    private $booDebug = false;
     
     /**
      * longueur de la vignette
@@ -66,6 +66,13 @@ class mimethumb
      * extension du fichier input
      */
     private $strExtension;
+    
+    /**
+     * MimeType, fileType et group du fichier à traiter (si connu)
+     */
+    private $strTypeMime = '';
+    private $strFileType = '';
+    private $strGroupType = '';
     
     /**
      * couleur de la bordure de la vignette (#aaff99, 'transparent', '' (defaut))
@@ -199,98 +206,116 @@ class mimethumb
      */
     public function getThumbnail($pathfile)
     {
+        global $db;
+        
         $strParam = array();
         if(empty($pathfile) || !file_exists($pathfile)) return false;
         
         $this->strPathFile = $pathfile;
         $this->strExtension = (!empty($extension)) ? $extension : ploopi_file_getextension($pathfile);
-        
-        switch(strtoupper($this->strExtension))
-        {
-            // Fichier openOffice
-            case 'ODT':
-            case 'ODS':
-            case 'ODP':
-            case 'ODG':
-                $booviewthumb = $this->_thumbOpenOffice();
-            break;
-            
-            case 'SXW':
-            case 'RTF':
-            case 'DOC':
-            case 'DOCX':
-            case 'WPD':
-            case 'TXT':
-            case 'HTML':
-            case 'SQL':
-                // if(strtoupper($this->strExtension) == 'SQL') { $this->strExtension = 'txt'; }
-                $booviewthumb = $this->_thumbJodconverter('ODT');
-            break;
-            
-            case 'SXC':
-            case 'XLS':
-            case 'XLSX':
-            case 'CSV':
-            case 'TSV':
-                $booviewthumb = $this->_thumbJodconverter('ODS');
-            break;
-                
-            case 'SXI':
-            case 'PPT':
-            case 'PPTX':
-            case 'PPS':
-                $booviewthumb = $this->_thumbJodconverter('ODP');
-            break;
 
-            case 'JPG':
-            case 'JPEG':
-            case 'PNG':
-            case 'GIF':
-                $booviewthumb = $this->_thumbImage();
-            break;
-            
-            case 'SVG':
-                $booviewthumb = $this->_thumbSvg();
-            break;
-            
-            case 'AVI':
-            case 'FLV':
-            case 'MP4':
-            case '3GP':
-            case 'MPEG':
-            case 'MPG':
-            case 'M2V':
-                $booviewthumb = $this->_thumbVideo();
-            break;
-            
-            // Imagick !
-            default:
-                if(class_exists('Imagick')) 
-                {
-                    switch(strtoupper($this->strExtension))
-                    {
-                        case 'PDF':
-                        case 'PSD':
-                            $this->strPathFile = $this->strPathFile.'[0]';
-                            break;
-                        case 'CIN':
-                            $strParam[] = '$thumb->setImageGamma(1.7);';
-                            break;
-                        case 'CMYK':
-                        case 'CMYKA':
-                        case 'RGB':
-                        case 'GREY':
-                            $strParam[] = '$thumb->setImageDepth(8);';
-                            $strParam[] = '$thumb->setSize(640x640);';
-                            break;
-                        default:
-                            break;
-                    }
-                    $booviewthumb = $this->_thumbImagick($strParam);
-                }
-            break;
+        // Recupération du type mime
+        $sqlMime = $db->query("SELECT `mimetype`, `filetype`, `group` FROM ploopi_mimetype WHERE ext = '{$this->strExtension}'");
+        if($db->numrows($sqlMime))
+        {
+            $fieldMime = $db->fetchrow($sqlMime);
+            $this->strTypeMime = $fieldMime['mimetype'];
+            $this->strFileType = $fieldMime['filetype'];
+            $this->strGroupType = $fieldMime['group'];
         }
 
+        if($this->strGroupType === 'text')
+        {
+            $booviewthumb = $this->_thumbJodconverter('ODT');
+        }
+        else
+        {
+            switch(strtoupper($this->strExtension))
+            {
+                // Fichier openOffice
+                case 'ODT':
+                case 'ODS':
+                case 'ODP':
+                case 'ODG':
+                    $booviewthumb = $this->_thumbOpenOffice();
+                break;
+                
+                case 'SXW':
+                case 'RTF':
+                case 'DOC':
+                case 'DOCX':
+                case 'WPD':
+                case 'TXT':
+                case 'SQL':
+                case 'HTML':
+                    $booviewthumb = $this->_thumbJodconverter('ODT');
+                break;
+                
+                case 'SXC':
+                case 'XLS':
+                case 'XLSX':
+                case 'CSV':
+                case 'TSV':
+                    $booviewthumb = $this->_thumbJodconverter('ODS');
+                break;
+                    
+                case 'SXI':
+                case 'PPT':
+                case 'PPTX':
+                case 'PPS':
+                    $booviewthumb = $this->_thumbJodconverter('ODP');
+                break;
+    
+                case 'JPG':
+                case 'JPEG':
+                case 'PNG':
+                case 'GIF':
+                    $booviewthumb = $this->_thumbImage();
+                break;
+                
+                case 'SVG':
+                    $booviewthumb = $this->_thumbSvg();
+                break;
+                
+                case 'AVI':
+                case 'FLV':
+                case 'MP4':
+                case '3GP':
+                case 'MPEG':
+                case 'MPG':
+                case 'M2V':
+                    $booviewthumb = $this->_thumbVideo();
+                break;
+                
+                // Imagick !
+                default:
+                    if(class_exists('Imagick')) 
+                    {
+                        switch(strtoupper($this->strExtension))
+                        {
+                            case 'PDF':
+                            case 'PSD':
+                                $this->strPathFile = $this->strPathFile.'[0]';
+                                break;
+                            case 'CIN':
+                                $strParam[] = '$thumb->setImageGamma(1.7);';
+                                break;
+                            case 'CMYK':
+                            case 'CMYKA':
+                            case 'RGB':
+                            case 'GREY':
+                                $strParam[] = '$thumb->setImageDepth(8);';
+                                $strParam[] = '$thumb->setSize(640x640);';
+                                break;
+                            default:
+                                break;
+                        }
+                        $booviewthumb = $this->_thumbImagick($strParam);
+                    }
+                break;
+            }
+        }
+        
         // Si pas d'image...
         if(!$booviewthumb) $this->getMimeTypeDefault();
         return true;
@@ -303,16 +328,10 @@ class mimethumb
      */
     public function getMimeTypeDefault()
     {
-        global $db;
-        $sqlMime = $db->query("SELECT filetype FROM ploopi_mimetype WHERE ext = '{$this->strExtension}'");
-        if($db->numrows($sqlMime))
+        if(!empty($this->strFileType) && file_exists("./img/mimetypes/thumb_{$this->strFileType}.png"))
         {
-            $fieldMime = $db->fetchrow($sqlMime);
-            if(file_exists("./img/mimetypes/thumb_{$fieldMime['filetype']}.png"))
-            {
-                ploopi_resizeimage("./img/mimetypes/thumb_{$fieldMime['filetype']}.png", $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
-                return true;
-            }
+            ploopi_resizeimage("./img/mimetypes/thumb_{$this->strFileType}.png", $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
+            return true;
         }
         ploopi_resizeimage('./img/mimetypes/thumb_default.png', $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
         return false;
@@ -325,19 +344,12 @@ class mimethumb
      */
     public function getMimeTypeIco()
     {
-        global $db;
-        
         @header("Content-Type: image/png");
         
-        $sqlMime = $db->query("SELECT filetype FROM ploopi_mimetype WHERE ext = '{$this->strExtension}'");
-        if($db->numrows($sqlMime))
+        if(!empty($this->strFileType) && file_exists("./img/mimetypes/thumb_{$this->strFileType}.png"))
         {
-            $fieldMime = $db->fetchrow($sqlMime);
-            if(file_exists("./img/mimetypes/ico_{$fieldMime['filetype']}.png"))
-            {
-                echo file_get_contents("./img/mimetypes/ico_{$fieldMime['filetype']}.png");
-                return true;
-            }
+            echo file_get_contents("./img/mimetypes/ico_{$this->strFileType}.png");
+            return true;
         }
         echo file_get_contents('./img/mimetypes/ico_default.png');
         return false;
@@ -371,29 +383,21 @@ class mimethumb
     private function _thumbImagick($arrParam = '')
     {
         // Pour les fichier plain-text il faut avoir une extension 'text' sinon Imagick ne le reconnait pas...
-        global $db;
-        
         $fileTempo='';
         
-        $sqlMime = $db->query("SELECT mimetype FROM ploopi_mimetype WHERE ext = '{$this->strExtension}'");
-        if($db->numrows($sqlMime))
+        if($this->strGroupType === 'text')
         {
-            $fieldMime = $db->fetchrow($sqlMime);
-            
-            if(in_array($fieldMime['mimetype'], array('text/plain', 'text/x-sql')))
-            {
-                $pathTemp = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp'._PLOOPI_SEP;
-                if (!is_dir($pathTemp)) ploopi_makedir($pathTemp);
+            $pathTemp = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp'._PLOOPI_SEP;
+            if (!is_dir($pathTemp)) ploopi_makedir($pathTemp);
 
-                $fileTempo = $pathTemp.md5(uniqid(rand(), true)).'.text';
+            $fileTempo = $pathTemp.md5(uniqid(rand(), true)).'.text';
+            
+            if(_PLOOPI_SERVER_OSTYPE == 'unix')
+                symlink($this->strPathFile,$fileTempo); // Sous nux on crée juste un lien symbolique (+ rapide)
+            else
+                copy($this->strPathFile,$fileTempo); // Sous win les liens symbolique n'existe que pour vista,2003 ou > ...
                 
-                if(_PLOOPI_SERVER_OSTYPE == 'unix')
-                    symlink($this->strPathFile,$fileTempo); // Sous nux on crée juste un lien symbolique (+ rapide)
-                else
-                    copy($this->strPathFile,$fileTempo); // Sous win les liens symbolique n'existe que pour vista,2003 ou > ...
-                    
-                $this->strPathFile = $fileTempo.'[0]';
-            }
+            $this->strPathFile = $fileTempo.'[0]';
         }
         
         // Create Imagick object
@@ -563,35 +567,25 @@ class mimethumb
             }
             else
             {
-                global $db;
-                
                 if(_PLOOPI_SERVER_OSTYPE != 'unix') return false;
                 if(filesize($this->strPathFile) > 2*1024*1024) return false;
 
-                $fileTempo='';
-                // Les fichier type text doivent etre lu comme du text
-                $sqlMime = $db->query("SELECT mimetype FROM ploopi_mimetype WHERE ext = '{$this->strExtension}'");
-                if($db->numrows($sqlMime))
+                // Les fichier type text/plain css et cie doivent etre vu comme des fichier .text
+                $fileTempoTXT = '';
+                if($this->strGroupType === 'text')
                 {
-                    $fieldMime = $db->fetchrow($sqlMime);
+                    $fileTempoTXT = $pathTemp.md5(uniqid(rand(), true)).'.txt';
                     
-                    if(in_array($fieldMime['mimetype'], array('text/plain', 'text/x-sql')))
-                    {
-                        $pathTemp = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp'._PLOOPI_SEP;
-                        if (!is_dir($pathTemp)) ploopi_makedir($pathTemp);
-        
-                        $fileTempo = $pathTemp.md5(uniqid(rand(), true)).'.txt';
-                        
-                        if(_PLOOPI_SERVER_OSTYPE == 'unix')
-                            symlink($this->strPathFile,$fileTempo); // Sous nux on crée juste un lien symbolique (+ rapide)
-                        else
-                            copy($this->strPathFile,$fileTempo); // Sous win les liens symbolique n'existe que pour vista,2003 ou > ...
-                            
-                        $this->strPathFile = $fileTempo;
-                    }
+                    if(_PLOOPI_SERVER_OSTYPE == 'unix')
+                        symlink($this->strPathFile,$fileTempoTXT); // Sous nux on crée juste un lien symbolique (+ rapide)
+                    else
+                        copy($this->strPathFile,$fileTempoTXT); // Sous win les liens symbolique n'existe que pour vista,2003 ou > ...
+                    
+                    $this->strPathFile = $fileTempoTXT;
                 }
                 
                 $fileTempoPPT = '';
+
                 // Les pps doivent etre lu comme des ppt (en webservice le type/mime est forcé a ppt)
                 if(strtoupper($this->strExtension) == 'PPS')
                 {
