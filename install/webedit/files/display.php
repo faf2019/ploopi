@@ -1979,7 +1979,7 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
         );
 
         ob_start();
-        $objCalendarBlog->display($_GET['headingid']);
+        $objCalendarBlog->display($headingid);
         $content = ob_get_contents();
         ob_end_clean();
         
