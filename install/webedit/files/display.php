@@ -504,7 +504,8 @@ elseif($query_tag != '') // recherche par tag
                     'META_DESCRIPTION' => htmlentities($row['metadescription']),
                     'DATE' => ($row['timestp']!='') ? current(ploopi_timestamp2local($row['timestp'])) : '',
                     'SIZE' => $size,
-                    'LINK' => $link
+                    'LINK' => $link,
+                    'SHORT_LINK' => ploopi_strcut($link, 50, 'middle')
                 )
             );
         }
