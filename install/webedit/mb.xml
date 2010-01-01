@@ -634,7 +634,7 @@
             <name>linkedpage</name>
             <label>linkedpage</label>
 
-            <type>int(10) unsigned</type>
+            <type>varchar(10)</type>
             <visible>1</visible>
         </row>
         <row>

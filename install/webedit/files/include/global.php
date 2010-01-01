@@ -2,7 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2009 Ovensia
-    Copyright (c) 2009 HeXad
+    Copyright (c) 2009-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -206,7 +206,7 @@ function webedit_gettreeview($arrHeadings = array(), $articles = array(), $optio
             $prefix = 'h';
         break;
 
-        // redirection depuis une rubrique vers un article
+        // redirection depuis une rubrique vers un article ou rubrique
         case 'selectredirect':
             $prefix = 'r';
         break;
@@ -236,6 +236,10 @@ function webedit_gettreeview($arrHeadings = array(), $articles = array(), $optio
                 break;
 
                 case 'selectredirect':
+                    $link = '';
+                    $onclick = "webedit_select_article_or_heading('h{$fields['id']}', '".addslashes($fields['label'])."', event)";
+                break;
+                
                 case 'selectlink':
                     $link = '';
                     $onclick = "ploopi_skin_treeview_shownode('h{$prefix}{$fields['id']}', '".ploopi_queryencode("ploopi_op=webedit_detail_heading&hid=h{$prefix}{$fields['id']}&option={$option}")."', 'admin-light.php')";
@@ -287,7 +291,7 @@ function webedit_gettreeview($arrHeadings = array(), $articles = array(), $optio
                         // used for fckeditor and link redirect on heading
                         case 'selectredirect':
                             $link = '';
-                            $onclick = "webedit_select_article('{$fields['id']}', '".addslashes($fields['title'])."', event)";
+                            $onclick = "webedit_select_article_or_heading('{$fields['id']}', '".addslashes($fields['title'])."', event)";
                         break;
 
                         case 'selectlink':
@@ -1204,4 +1208,43 @@ function webedit_isEditor($heading, $user = null, $type = 'user', $id_module = n
     
     return (!empty($arrEditor));
 }
+
+/**
+ * Contrôle si la redirection vers une rubrique ou un article n'est pas une boucle infinie
+ *
+ * @Param int $intIdHeading id_heading à contrôler
+ * @Param string $strIdRedirect id de redirection (ex: h3 => id heading = 3, 5 => id article = 5)
+ *
+ * @return boolean true/false
+ */
+
+function webedit_ctrl_infinite_loops_redirect($intIdHeading, $strIdRedirect)
+{
+    $arrRedirect = array();
+    
+    $arrRedirect[] = $intIdHeading = 'h'.$intIdHeading;
+    
+    if($intIdHeading == $strIdRedirect) return true; // Boucle infinie sur lui-même !
+    
+    do {
+        if(substr($strIdRedirect,0,1) == 'h') // Heading
+        {
+            include_once './modules/webedit/class_heading.php';
+            $objHeading = new webedit_heading();
+            if ($objHeading->open(substr($strIdRedirect,1))) 
+            {
+                if(in_array($objHeading->fields['linkedpage'], $arrRedirect)) return true; // boucle infinie !!!
+                $strIdRedirect = $arrRedirect[] = $objHeading->fields['linkedpage'];
+            }
+            else
+                return true; // Erreur ! Pour assurer on retourne comme si boucle infinie.
+        }
+        else // Article (donc Impossible d'avoir une boucle...)
+            return false; // pas de boucle infinie
+        
+    } while(!empty($strIdRedirect));
+    
+    return false; // pas de boucle infinie
+}
+
 ?>

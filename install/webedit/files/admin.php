@@ -2,7 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2009 Ovensia
-    Copyright (c) 2009 HeXad
+    Copyright (c) 2009-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -205,6 +205,9 @@ switch($menu)
                     }
 
                     $heading->setvalues($_POST,'webedit_heading_');
+                    
+                    // Contrôle si pas de boucle infinie en redirection de page/rubrique
+                    if(!empty($_POST['webedit_heading_linkedpage']) && webedit_ctrl_infinite_loops_redirect($headingid,$_POST['webedit_heading_linkedpage'])) $heading->fields['linkedpage'] = 0;
 
                     if (empty($_POST['webedit_heading_visible'])) $heading->fields['visible'] = 0;
                     if (empty($_POST['webedit_heading_url_window'])) $heading->fields['url_window'] = 0;

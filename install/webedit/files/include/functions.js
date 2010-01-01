@@ -1,6 +1,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2009-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -87,10 +88,10 @@ function webedit_backup_reload()
 }
 
 /**
- * Sélectionne un article en redirection sur une rubrique
+ * Sélectionne un article ou une rubrique en redirection sur une rubrique
  */
 
-function webedit_select_article(id, title, e)
+function webedit_select_article_or_heading(id, title, e)
 {
     $('webedit_heading_linkedpage').value = id;
     $('linkedpage_displayed').value = title;

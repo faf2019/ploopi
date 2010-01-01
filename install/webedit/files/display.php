@@ -2,7 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2009 Ovensia
-    Copyright (c) 2009 HeXad
+    Copyright (c) 2009-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -82,6 +82,8 @@ $articleid = (!empty($_REQUEST['articleid']) && is_numeric($_REQUEST['articleid'
 // id rubrique passé en param ?
 $headingid = (!empty($_REQUEST['headingid']) && is_numeric($_REQUEST['headingid'])) ? $_REQUEST['headingid'] : '';
 
+// On verif que ce 
+
 // code d'erreur renvoyé (principalement 404)
 $intErrorCode = 0;
 
@@ -140,6 +142,23 @@ else // affichage standard rubrique/page ou blog
                 $intErrorCode = 404;
             }
         }
+        
+        //Redirection de rubrique vers rubrique ! (Valable pour la racine !)
+        if($arrHeadings['list'][$headingid]['content_type'] == 'article_redirect' && substr($arrHeadings['list'][$headingid]['linkedpage'],0,1) == 'h') // redirection ! On verif si redirect sur une autre rubrique.
+        {
+            $headingid = substr($arrHeadings['list'][$headingid]['linkedpage'],1);
+            
+            do {
+                $objHeading = new webedit_heading();
+
+                if($objHeading->open($headingid) && substr($objHeading->fields['linkedpage'],0,1) == 'h')
+                    $headingid = substr($arrHeadings['list'][$headingid]['linkedpage'],1);
+                else 
+                    break;
+
+            } while(!empty($objHeading->fields['linkedpage']) && substr($objHeading->fields['linkedpage'],0,1) == 'h');
+        }
+        
         if (!$arrHeadings['list'][$headingid]['private'] || isset($arrShares[$arrHeadings['list'][$headingid]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$headingid]['herited_private']])) // Rubrique non privée ou accessible par l'utilisateur
         {
             switch($arrHeadings['list'][$headingid]['content_type'])

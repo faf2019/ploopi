@@ -2,7 +2,7 @@
 /*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2009 Ovensia
-    Copyright (c) 2009 HeXad
+    Copyright (c) 2009-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -312,19 +312,27 @@ if ($display_type == 'advanced')
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="article_first" id="heading_content_type_article_first" <?php if ($heading->fields['content_type'] == 'article_first') echo 'checked'; ?> />Afficher le premier article
                         </div>
                         <div style="clear:both;cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_article_redirect');">
-                            <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="article_redirect" id="heading_content_type_article_redirect" <?php if ($heading->fields['content_type'] == 'article_redirect') echo 'checked'; ?> />Redirection vers un article
+                            <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="article_redirect" id="heading_content_type_article_redirect" <?php if ($heading->fields['content_type'] == 'article_redirect') echo 'checked'; ?> />Redirection vers un article ou une rubrique
                         </div>
                         <div style="padding-left:20px;">
                             <?php
-                            $article_title = '';
+                            $redirect_title = '';
                             if (!empty($heading->fields['linkedpage']))
                             {
-                                $article = new webedit_article('draft');
-                                if ($article->open($heading->fields['linkedpage'])) $article_title = $article->fields['title'];
+                                if(substr($heading->fields['linkedpage'],0,1) == 'h') // C'est un heading !
+                                { 
+                                    $objHeading = new webedit_heading();
+                                    if ($objHeading->open(substr($heading->fields['linkedpage'],1))) $redirect_title = $objHeading->fields['label'];
+                                }
+                                else // C'est un article
+                                {
+                                    $article = new webedit_article('draft');
+                                    if ($article->open($heading->fields['linkedpage'])) $redirect_title = $article->fields['title'];
+                                }
                             }
                             ?>
                             <input type="hidden" id="webedit_heading_linkedpage" name="webedit_heading_linkedpage" value="<?php echo $heading->fields['linkedpage']; ?>">
-                            <input type="text" readonly class="text" style="width:150px;" id="linkedpage_displayed" value="<?php echo $article_title; ?>">
+                            <input type="text" readonly class="text" style="width:150px;" id="linkedpage_displayed" value="<?php echo $redirect_title; ?>">
                             <img src="./modules/webedit/img/ico_choose_article.png" style="cursor:pointer;" title="Choisir un article" alt="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_heading_selectredirect',false), 300, event, 'click', 'webedit_popup_selectredirect');" />
                             <img src="./modules/webedit/img/ico_clear_article.png" style="cursor:pointer;" title="Effacer la redirection" alt="Choisir" onclick="javascript:ploopi_getelem('webedit_heading_linkedpage').value='';ploopi_getelem('linkedpage_displayed').value='';" />
                         </div>
@@ -357,17 +365,24 @@ if ($display_type == 'advanced')
 
                             case 'article_redirect':
                                 ?>
-                                Redirection vers un article : <br />
+                                Redirection vers un article ou une rubrique : <br />
                                 <?php
                                 if (!empty($heading->fields['linkedpage']))
                                 {
-                                    $article = new webedit_article('draft');
-                                    $article->open($heading->fields['linkedpage']);
-                                    $article_title = $article->fields['title'];
+                                    if(substr($heading->fields['linkedpage'],0,1) == 'h') // C'est un heading !
+                                    { 
+                                        $objHeading = new webedit_heading();
+                                        if ($objHeading->open(substr($heading->fields['linkedpage'],1))) $redirect_title = $objHeading->fields['label'];
+                                    }
+                                    else // C'est un article
+                                    {
+                                        $article = new webedit_article('draft');
+                                        if ($article->open($heading->fields['linkedpage'])) $redirect_title = $article->fields['title'];
+                                    }
                                 }
-                                else $article_title = '';
+                                else $redirect_title = '';
 
-                                echo $article_title;
+                                echo $redirect_title;
                             break;
 
                             case 'url_redirect':
