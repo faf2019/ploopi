@@ -1,6 +1,6 @@
 == Module WebEdit - version 2.3.2 ============================================
 
-2009-01-01  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2010-01-01  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
 
 * Modification : Possibilité de rediriger une rubrique vers une autre rubrique. (Ex.: Racine -> rubrique "blog")
 
