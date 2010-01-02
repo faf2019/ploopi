@@ -1,3 +1,10 @@
+== Module WebEdit - version 2.3.2a ============================================
+
+2010-01-02  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+* Modification : Optimisation du contrôle de boucle sur la redirection rubrique -> rubrique
+* Correction bug : le contrôle de boucle ne verifiait pas le mode "redirect" (ou pas) 
+
 == Module WebEdit - version 2.3.2 ============================================
 
 2010-01-01  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

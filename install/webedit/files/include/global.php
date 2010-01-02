@@ -1212,13 +1212,14 @@ function webedit_isEditor($heading, $user = null, $type = 'user', $id_module = n
 /**
  * Contrôle si la redirection vers une rubrique ou un article n'est pas une boucle infinie
  *
- * @Param int $intIdHeading id_heading à contrôler
+ * @Param int $intIdHeading id_heading courant à contrôler 
  * @Param string $strIdRedirect id de redirection (ex: h3 => id heading = 3, 5 => id article = 5)
+ * @Param array $arrHeadings tableau des heading provenant de webedit_getheadings() ou  (optionnel)
  *
  * @return boolean true/false
  */
 
-function webedit_ctrl_infinite_loops_redirect($intIdHeading, $strIdRedirect)
+function webedit_ctrl_infinite_loops_redirect($intIdHeading, $strIdRedirect, $arrHeadings =array())
 {
     $arrRedirect = array();
     
@@ -1226,25 +1227,29 @@ function webedit_ctrl_infinite_loops_redirect($intIdHeading, $strIdRedirect)
     
     if($intIdHeading == $strIdRedirect) return true; // Boucle infinie sur lui-même !
     
+    if(empty($arrHeadings)) $arrHeadings = webedit_getheadings(); 
+
     do {
         if(substr($strIdRedirect,0,1) == 'h') // Heading
         {
-            include_once './modules/webedit/class_heading.php';
-            $objHeading = new webedit_heading();
-            if ($objHeading->open(substr($strIdRedirect,1))) 
+            $intIdRedirect = substr($strIdRedirect,1);
+            
+            if(isset($arrHeadings['list'][$intIdRedirect]))
             {
-                if(in_array($objHeading->fields['linkedpage'], $arrRedirect)) return true; // boucle infinie !!!
-                $strIdRedirect = $arrRedirect[] = $objHeading->fields['linkedpage'];
+                if($arrHeadings['list'][$intIdRedirect]['content_type'] != 'article_redirect') return false; //heading non redirigé donc aps de rique de boucle
+                
+                if(in_array($arrHeadings['list'][$intIdRedirect]['linkedpage'], $arrRedirect)) return true; // boucle !!!
+                $strIdRedirect = $arrRedirect[] = $arrHeadings['list'][$intIdRedirect]['linkedpage'];
             }
             else
-                return true; // Erreur ! Pour assurer on retourne comme si boucle infinie.
+                return true; // Erreur ! Pour assurer on retourne comme si boucle.
         }
         else // Article (donc Impossible d'avoir une boucle...)
-            return false; // pas de boucle infinie
+            return false; // pas de boucle
         
     } while(!empty($strIdRedirect));
     
-    return false; // pas de boucle infinie
+    return false; // pas de boucle
 }
 
 ?>
