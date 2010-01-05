@@ -249,10 +249,9 @@ switch($menu)
 
             case 'heading_delete':
                 $heading = new webedit_heading();
-                $heading->open($headingid);
                 
                 // Pour rédacteur on verif qu'on est pas à la racine du redacteur en controlant si il est bien rédacteur du heading parents (ou plus loin)
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || (webedit_isEditor($headingid) && webedit_isEditor($heading->fields['id_heading'])))
+                if ($heading->open($headingid) && (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || (webedit_isEditor($headingid) && webedit_isEditor($heading->fields['id_heading']))))
                 {
                     if (!($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1))
                     {

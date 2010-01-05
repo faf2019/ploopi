@@ -80,8 +80,7 @@ class webedit_heading extends data_object
         while ($row = $db->fetchrow($rs1))
         {
             $h = new webedit_heading();
-            $h->open($row['id']);
-            $h->delete();
+            if($h->open($row['id'])) $h->delete();
         }
 
         // Suppression des brouillons de la rubrique (les articles avec)
@@ -90,8 +89,7 @@ class webedit_heading extends data_object
         while ($row = $db->fetchrow($rs2))
         {
             $a = new webedit_article('draft');
-            $a->open($row['id']);
-            $a->delete();
+            if($a->open($row['id'])) $a->delete();
         }
         
         // Changement de position des autres rubriques

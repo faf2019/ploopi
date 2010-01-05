@@ -173,8 +173,7 @@ class webedit_article extends data_object
         if ($this->gettablename() == 'ploopi_mod_webedit_article_draft')
         {
             $article = new webedit_article();
-            $article->open($this->fields['id']);
-            $article->delete();
+            if($article->open($this->fields['id'])) $article->delete();
         }
         else
         {

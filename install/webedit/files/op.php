@@ -129,8 +129,7 @@ if ($_SESSION['ploopi']['connected'])
             if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE) && !empty($_GET['webedit_subscriber_email']) && isset($_GET['webedit_subscriber_id_heading']) && is_numeric($_GET['webedit_subscriber_id_heading']))
             {
                 $heading_subscriber = new webedit_heading_subscriber();
-                $heading_subscriber->open($_GET['webedit_subscriber_id_heading'], $_GET['webedit_subscriber_email']);
-                $heading_subscriber->delete();
+                if($heading_subscriber->open($_GET['webedit_subscriber_id_heading'], $_GET['webedit_subscriber_email'])) $heading_subscriber->delete();
             }
             ploopi_redirect('admin.php');
         break;
