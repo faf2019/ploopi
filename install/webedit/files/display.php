@@ -613,9 +613,13 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
             if($type == 'draft')
             {
                 $select =   "
-                            SELECT      id, title, visible, metatitle, 
-                                        timestp, timestp_published, timestp_unpublished
+                            SELECT      id, author, comments_allowed, content, content_cleaned, 
+                                        headcontent, id_module, lastupdate_id_user, lastupdate_timestp,
+                                        metadescription, metakeywords, metatitle, position,
+                                        reference, timestp, timestp_published, timestp_unpublished,
+                                        title, version, visible 
                             FROM        ploopi_mod_webedit_article_draft
+                            
                             WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
                             AND         id_heading = {$headingid}
                             AND         timestp > 0
@@ -627,8 +631,11 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
             else
             {
                 $select =   "
-                            SELECT      id, title, visible, metatitle,
-                                        timestp, timestp_published, timestp_unpublished
+                            SELECT      id, author, comments_allowed, content, content_cleaned, 
+                                        headcontent, id_module, lastupdate_id_user, lastupdate_timestp,
+                                        metadescription, metakeywords, metatitle, position,
+                                        reference, timestp, timestp_published, timestp_unpublished,
+                                        title, version, visible 
                             FROM        ploopi_mod_webedit_article
                             
                             WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
@@ -640,12 +647,16 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                             ORDER BY    timestp DESC, id DESC
                             ";
             }
-
-            $objArticle = new webedit_article($type); 
-    
-            $resSQL = $db->query($select);
+ 
+            $resSQL = $db->query($select); // ATTENTION CE RESULTAT DE REQUETE "$resSQL" SERT A NOUVEAU PLUS BAS !!!
+          
             if ($db->numrows($resSQL))
             {
+                // Tableau tampon des infos user (dans un blog on retrouve souvent les meme info sur le redacteur ! pas besoin de $objuser->open(iduser) 50x !)
+                $arrTmpUser = array();
+                
+                $objArticle = new webedit_article($type);
+                
                 // Bouton de menu
                 $template_body->assign_block_vars('switch_pages', array());
                 // Contenu du blog
@@ -711,251 +722,277 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                 // AFFICHAGE DES ARTICLES
                 foreach ($arrShowArticle as $row)
                 {
-                    if($objArticle->open($row['id']))
+                    $numvisart++;
+
+                    // Bloc PAGE (boutons pour les pages)
+                    if($webedit_mode == 'render')
+                        $scriptUrlArticle = "index.php?webedit_mode=render&moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}&articleid={$row['id']}";
+                    else
                     {
-                        $numvisart++;
-    
-                        // Bloc PAGE (boutons pour les pages)
-                        if($webedit_mode == 'render')
-                            $scriptUrlArticle = "index.php?webedit_mode=render&moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}&articleid={$objArticle->fields['id']}";
-                        else
-                        {
-                            $arrParents = array();
-                            if (isset($arrHeadings['list'][$headingid])) foreach(split(';', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-                            $scriptUrlArticle = ploopi_urlrewrite("index.php?headingid={$headingid}&articleid={$objArticle->fields['id']}", webedit_getrewriterules(), $objArticle->fields['metatitle'], $arrParents);
-                        }
-                        
-                        $sel = '';
-                        if ($articleid == $objArticle->fields['id']) $sel = 'selected';
-                        
-                        $ldate_pub = ($objArticle->fields['timestp_published']!='') ? ploopi_timestamp2local($objArticle->fields['timestp_published']) : array('date' => '');
-                        $ldate_unpub = ($objArticle->fields['timestp_unpublished']!='') ? ploopi_timestamp2local($objArticle->fields['timestp_unpublished']) : array('date' => '');
-                        $ldate_lastupdate = ($objArticle->fields['lastupdate_timestp']!='') ? ploopi_timestamp2local($objArticle->fields['lastupdate_timestp']) : array('date' => '', 'time' => '');
-                        $ldate_timestp = ($objArticle->fields['timestp']!='') ? ploopi_timestamp2local($objArticle->fields['timestp']) : array('date' => '');
-    
-                        $var_tpl_page =
+                        $arrParents = array();
+                        if (isset($arrHeadings['list'][$headingid])) foreach(split(';', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                        $scriptUrlArticle = ploopi_urlrewrite("index.php?headingid={$headingid}&articleid={$row['id']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
+                    }
+                    
+                    $sel = '';
+                    if ($articleid == $row['id']) $sel = 'selected';
+                    
+                    $ldate_pub = ($row['timestp_published']!='') ? ploopi_timestamp2local($row['timestp_published']) : array('date' => '');
+                    $ldate_unpub = ($row['timestp_unpublished']!='') ? ploopi_timestamp2local($row['timestp_unpublished']) : array('date' => '');
+                    $ldate_lastupdate = ($row['lastupdate_timestp']!='') ? ploopi_timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
+                    $ldate_timestp = ($row['timestp']!='') ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
+
+                    $var_tpl_page =
+                        array(
+                            'REFERENCE'     => htmlentities($row['reference']),
+                            'LABEL'         => htmlentities($row['title']),
+                            'LABEL_RAW'     => $row['title'],
+                            'CONTENT'       => htmlentities($row['content_cleaned']),
+                            'AUTHOR'        => htmlentities($row['author']),
+                            'AUTHOR_RAW'    => $row['author'],
+                            'VERSION'       => htmlentities($row['version']),
+                            'DATE'          => htmlentities($ldate_timestp['date']),
+                            'LASTUPDATE_DATE' => htmlentities($ldate_lastupdate['date']),
+                            'LASTUPDATE_TIME' => htmlentities($ldate_lastupdate['time']),
+                            'DATE_PUB'   => $ldate_pub['date'],
+                            'DATE_UNPUB' => $ldate_unpub['date'],
+                            'TIMESTP_PUB'   => $ldate_pub['date'],
+                            'TIMESTP_UNPUB' => $ldate_unpub['date'],
+                            'LINK'          => $scriptUrlArticle,
+                            'POSITION'      => $row['position'],
+                            'SEL'           => $sel
+                        );
+
+                    if($row['visible'])
+                        $template_body->assign_block_vars('switch_pages.page', $var_tpl_page);
+                    
+                    $content = '';
+                    
+                    // Test si l'article a déjà été visité pendant la session
+                    if (!isset($_SESSION['webedit']['counter'][$row['id']]))
+                    {
+                        // Enregistrement d'un hit pour cet article
+                        include_once './modules/webedit/class_counter.php';
+                        $counter =
                             array(
-                                'REFERENCE'     => htmlentities($objArticle->fields['reference']),
-                                'LABEL'         => htmlentities($objArticle->fields['title']),
-                                'LABEL_RAW'     => $objArticle->fields['title'],
-                                'CONTENT'       => htmlentities($objArticle->fields['content_cleaned']),
-                                'AUTHOR'        => htmlentities($objArticle->fields['author']),
-                                'AUTHOR_RAW'    => $objArticle->fields['author'],
-                                'VERSION'       => htmlentities($objArticle->fields['version']),
-                                'DATE'          => htmlentities($ldate_timestp['date']),
-                                'LASTUPDATE_DATE' => htmlentities($ldate_lastupdate['date']),
-                                'LASTUPDATE_TIME' => htmlentities($ldate_lastupdate['time']),
-                                'DATE_PUB'   => $ldate_pub['date'],
-                                'DATE_UNPUB' => $ldate_unpub['date'],
-                                'TIMESTP_PUB'   => $ldate_pub['date'],
-                                'TIMESTP_UNPUB' => $ldate_unpub['date'],
-                                'LINK'          => $scriptUrlArticle,
-                                'POSITION'      => $objArticle->fields['position'],
-                                'SEL'           => $sel
+                                'year' => date('Y'),
+                                'month' => date('n'),
+                                'day' => date('j'),
+                                'week' => date('o').date('W')
                             );
     
-                        if($objArticle->fields['visible'])
-                            $template_body->assign_block_vars('switch_pages.page', $var_tpl_page);
-                        
-                        $content = '';
-                        
-                        // Test si l'article a déjà été visité pendant la session
-                        if (!isset($_SESSION['webedit']['counter'][$objArticle->fields['id']]))
+                        $objCounter = new webedit_counter();
+                        if (!$objCounter->open($counter['year'], $counter['month'], $counter['day'], $row['id']))
                         {
-                            // Enregistrement d'un hit pour cet article
-                            include_once './modules/webedit/class_counter.php';
-                            $counter =
-                                array(
-                                    'year' => date('Y'),
-                                    'month' => date('n'),
-                                    'day' => date('j'),
-                                    'week' => date('o').date('W')
-                                );
-        
-                            $objCounter = new webedit_counter();
-                            if (!$objCounter->open($counter['year'], $counter['month'], $counter['day'], $objArticle->fields['id']))
-                            {
-                                $objCounter->fields['year'] = $counter['year'];
-                                $objCounter->fields['month'] = $counter['month'];
-                                $objCounter->fields['day'] = $counter['day'];
-                                $objCounter->fields['week'] = $counter['week'];
-                                $objCounter->fields['id_article'] = $objArticle->fields['id'];
-                                $objCounter->fields['id_module'] = $objArticle->fields['id_module'];
-                            }
-                            $objCounter->hit();
-        
-                            $_SESSION['webedit']['counter'][$objArticle->fields['id']] = '';
+                            $objCounter->fields['year'] = $counter['year'];
+                            $objCounter->fields['month'] = $counter['month'];
+                            $objCounter->fields['day'] = $counter['day'];
+                            $objCounter->fields['week'] = $counter['week'];
+                            $objCounter->fields['id_article'] = $row['id'];
+                            $objCounter->fields['id_module'] = $row['id_module'];
                         }
-                        
-                        
-                        /**
-                         * Traitement des objets WCE/WebEdit
-                         * avec détection de chaîne et remplacement par le contenu d'une fonction
-                         */
+                        $objCounter->hit();
     
-                        if (!empty($editor)) $content = $editor;
-                        else $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', $webedit_mode == 'edit' ? $objArticle->fields['content_cleaned'] : webedit_replace_links($objArticle, $webedit_mode, $arrHeadings) );
-        
-                        $article_timestp = ($objArticle->fields['timestp']!='') ? ploopi_timestamp2local($objArticle->fields['timestp']) : array('date' => '');
-                        $article_lastupdate = ($objArticle->fields['lastupdate_timestp']!='') ? ploopi_timestamp2local($objArticle->fields['lastupdate_timestp']) : array('date' => '', 'time' => '');
-        
+                        $_SESSION['webedit']['counter'][$row['id']] = '';
+                    }
+                    
+                    
+                    /**
+                     * Traitement des objets WCE/WebEdit
+                     * avec détection de chaîne et remplacement par le contenu d'une fonction
+                     */
+                    if (!empty($editor)) $content = $editor;
+                    else 
+                    {
+                        $objArticle->fields = $row; // astuce pour pouvoir se servir de webedit_replace_links() !
+                        $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', $webedit_mode == 'edit' ? $row['content_cleaned'] : webedit_replace_links($objArticle, $webedit_mode, $arrHeadings) );
+                    }
+
+                    $article_timestp = ($row['timestp']!='') ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
+                    $article_lastupdate = ($row['lastupdate_timestp']!='') ? ploopi_timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
+    
+                    if(isset($arrTmpUser[$row['lastupdate_id_user']]))
+                    {
+                        if(!empty($arrTmpUser[$row['lastupdate_id_user']]))
+                        {
+                            $user_lastname = $arrTmpUser[$row['lastupdate_id_user']]['lastname'];
+                            $user_firstname = $arrTmpUser[$row['lastupdate_id_user']]['firstname'];
+                            $user_login = $arrTmpUser[$row['lastupdate_id_user']]['login'];
+                        }
+                        else
+                            $user_lastname = $user_firstname = $user_login = '';
+                    }
+                    else
+                    {
                         $user = new user();
-                        if ($user->open($objArticle->fields['lastupdate_id_user']))
+                        if ($user->open($row['lastupdate_id_user']))
                         {
                             $user_lastname = $user->fields['lastname'];
                             $user_firstname = $user->fields['firstname'];
                             $user_login = $user->fields['login'];
-                        }
-                        else $user_lastname = $user_firstname = $user_login = '';
-        
-                        list($keywords) = ploopi_getwords("{$objArticle->fields['metatitle']} {$objArticle->fields['metakeywords']} {$objArticle->fields['author']}");
-        
-                        $kwds_raw = implode(', ', array_keys($keywords));
-                        $kwds = htmlentities($kwds_raw);
-        
-                        $desc_raw = $objArticle->fields['metadescription'];
-                        $desc = htmlentities($objArticle->fields['metadescription']);
-        
-                        $template_body->assign_block_vars('switch_content_blog.article',
-                            array(
-                                'PAGE_ID' => $objArticle->fields['id'],
-                                'PAGE_REFERENCE' => htmlentities($objArticle->fields['reference']),
-                                'PAGE_REFERENCE_RAW' => $objArticle->fields['reference'],
-                                'PAGE_TITLE' => htmlentities($objArticle->fields['title']),
-                                'PAGE_TITLE_RAW' => $objArticle->fields['title'],
-                                'PAGE_TITLE_ESCAPED' => addslashes($objArticle->fields['title']),
-                                'PAGE_KEYWORDS' => $kwds,
-                                'PAGE_KEYWORDS_RAW' => $kwds_raw,
-                                'PAGE_DESCRIPTION' => $desc,
-                                'PAGE_DESCRIPTION_RAW' => $desc_raw,
-                                'PAGE_DESCRIPTION_ESCAPED' => addslashes($objArticle->fields['metadescription']),
-                                'PAGE_META_TITLE' => htmlentities($objArticle->fields['metatitle']),
-                                'PAGE_META_TITLE_RAW' => $objArticle->fields['metatitle'],
-                                'PAGE_META_KEYWORDS' => $kwds,
-                                'PAGE_META_KEYWORDS_RAW' => $kwds_raw,
-                                'PAGE_META_DESCRIPTION' => $desc,
-                                'PAGE_META_DESCRIPTION_RAW' => $desc_raw,
-                                'PAGE_AUTHOR' => htmlentities($objArticle->fields['author']),
-                                'PAGE_AUTHOR_RAW' => $objArticle->fields['author'],
-                                'PAGE_VERSION' => htmlentities($objArticle->fields['version']),
-                                'PAGE_VERSION_RAW' => $objArticle->fields['version'],
-                                'PAGE_DATE' => htmlentities($article_timestp['date']),
-                                'PAGE_LASTUPDATE_DATE' => htmlentities($article_lastupdate['date']),
-                                'PAGE_LASTUPDATE_TIME' => htmlentities($article_lastupdate['time']),
-                                'PAGE_LASTUPDATE_USER_LASTNAME' => htmlentities($user_lastname),
-                                'PAGE_LASTUPDATE_USER_FIRSTNAME' => htmlentities($user_firstname),
-                                'PAGE_LASTUPDATE_USER_LOGIN' => htmlentities($user_login),
-                                'PAGE_CONTENT' => $content,
-                                'PAGE_HEADCONTENT' => $objArticle->fields['headcontent'],
-                                'PAGE_URL_ARTICLE' => $scriptUrlArticle
-                            )
-                        );
-                        
-                        if ($numvisart < $nbvisart) $template_body->assign_block_vars('switch_content_blog.article.sw_separator',array());
-                        if (!empty($article_lastupdate['date'])) $template_body->assign_block_vars('switch_content_blog.article.sw_modify',array());
-                        
-                        $tags = $objArticle->gettags();
-                        if (!empty($tags))
-                        {
-                            $template_body->assign_block_vars('switch_content_blog.article.switch_tags', array());
-        
-                            foreach($tags as $tag)
-                            {
-                                if($webedit_mode == 'render')
-                                    $link =  "index.php?webedit_mode=render&query_tag={$tag['tag']}";
-                                else
-                                    $link =  ploopi_urlrewrite("index.php?query_tag={$tag['tag']}", webedit_getrewriterules());
-                        
-                                $template_body->assign_block_vars('switch_content_blog.article.switch_tags.tag',
-                                    array(
-                                        'TAG' => $tag['tag'],
-                                        'LINK' => $link
-                                    )
-                                );
-                            }
+                            $arrTmpUser[$row['lastupdate_id_user']] = $user->fields;  // On garde l'info temporairement  
                         }
                         else
                         {
-                            // pas d'article par défaut, on teste si on est sur la rubrique d'accueil
-                            $booIsHomePage = (!empty($headingid) && $arrHeadings['tree'][0][0] == $headingid);
+                            $user_lastname = $user_firstname = $user_login = '';
+                            $arrTmpUser[$row['lastupdate_id_user']] = '';   // On garde l'info temporairement  
                         }
+                    }
+                    list($keywords) = ploopi_getwords("{$row['metatitle']} {$row['metakeywords']} {$row['author']}");
+
+                    $kwds_raw = implode(', ', array_keys($keywords));
+                    $kwds = htmlentities($kwds_raw);
+    
+                    $desc_raw = $row['metadescription'];
+                    $desc = htmlentities($row['metadescription']);
+    
+                    $template_body->assign_block_vars('switch_content_blog.article',
+                        array(
+                            'PAGE_ID' => $row['id'],
+                            'PAGE_REFERENCE' => htmlentities($row['reference']),
+                            'PAGE_REFERENCE_RAW' => $row['reference'],
+                            'PAGE_TITLE' => htmlentities($row['title']),
+                            'PAGE_TITLE_RAW' => $row['title'],
+                            'PAGE_TITLE_ESCAPED' => addslashes($row['title']),
+                            'PAGE_KEYWORDS' => $kwds,
+                            'PAGE_KEYWORDS_RAW' => $kwds_raw,
+                            'PAGE_DESCRIPTION' => $desc,
+                            'PAGE_DESCRIPTION_RAW' => $desc_raw,
+                            'PAGE_DESCRIPTION_ESCAPED' => addslashes($row['metadescription']),
+                            'PAGE_META_TITLE' => htmlentities($row['metatitle']),
+                            'PAGE_META_TITLE_RAW' => $row['metatitle'],
+                            'PAGE_META_KEYWORDS' => $kwds,
+                            'PAGE_META_KEYWORDS_RAW' => $kwds_raw,
+                            'PAGE_META_DESCRIPTION' => $desc,
+                            'PAGE_META_DESCRIPTION_RAW' => $desc_raw,
+                            'PAGE_AUTHOR' => htmlentities($row['author']),
+                            'PAGE_AUTHOR_RAW' => $row['author'],
+                            'PAGE_VERSION' => htmlentities($row['version']),
+                            'PAGE_VERSION_RAW' => $row['version'],
+                            'PAGE_DATE' => htmlentities($article_timestp['date']),
+                            'PAGE_LASTUPDATE_DATE' => htmlentities($article_lastupdate['date']),
+                            'PAGE_LASTUPDATE_TIME' => htmlentities($article_lastupdate['time']),
+                            'PAGE_LASTUPDATE_USER_LASTNAME' => htmlentities($user_lastname),
+                            'PAGE_LASTUPDATE_USER_FIRSTNAME' => htmlentities($user_firstname),
+                            'PAGE_LASTUPDATE_USER_LOGIN' => htmlentities($user_login),
+                            'PAGE_CONTENT' => $content,
+                            'PAGE_HEADCONTENT' => $row['headcontent'],
+                            'PAGE_URL_ARTICLE' => $scriptUrlArticle
+                        )
+                    );
+                    
+                    if ($numvisart < $nbvisart) $template_body->assign_block_vars('switch_content_blog.article.sw_separator',array());
+                    if (!empty($article_lastupdate['date'])) $template_body->assign_block_vars('switch_content_blog.article.sw_modify',array());
                         
-                        // Doit on autoriser les commentaires
-                        if ($objArticle->fields['comments_allowed'])
+                    // Recherche les tags
+                    $sqlTag =  "
+                        SELECT  t.tag
+                        FROM    ploopi_mod_webedit_tag t,
+                                ploopi_mod_webedit_article_tag at
+                        WHERE   t.id = at.id_tag
+                        AND     at.id_article = {$row['id']}
+                        ";
+                    $resSqltag = $db->query($sqlTag);
+                    if($db->numrows($resSqltag))
+                    {
+                        $template_body->assign_block_vars('switch_content_blog.article.switch_tags', array());
+    
+                        while ($tag = $db->fetchrow($resSqltag))
                         {
-                            $nbComment = 0;
-                            
-                            $action = 'index.php?ploopi_op=webedit_save_comment';
-                            if(isset($webedit_mode) && $webedit_mode != 'display') $action .= '&webedit_mode='.$webedit_mode;
-                            if(isset($headingid)) $action .= '&headingid='.$headingid;
-                            if(isset($objArticle->fields['id'])) $action .= '&articleid='.$objArticle->fields['id'];
-                            
-                            $template_body->assign_block_vars('switch_content_blog.article.sw_comment', 
+                            if($webedit_mode == 'render')
+                                $link =  "index.php?webedit_mode=render&query_tag={$tag['tag']}";
+                            else
+                                $link =  ploopi_urlrewrite("index.php?query_tag={$tag['tag']}", webedit_getrewriterules());
+                    
+                            $template_body->assign_block_vars('switch_content_blog.article.switch_tags.tag',
                                 array(
-                                    'LIBELLE_POST'  => _WEBEDIT_COMMENT_POST,
-                                    'ACTION'        => ploopi_urlencode($action) 
+                                    'TAG' => $tag['tag'],
+                                    'LINK' => $link
                                 )
                             );
-                            
-                            // On recherche les commentaires de l'article
-                            $selectComment = "
-                                SELECT      id, comment, email, timestp, publish, nickname
-                                FROM        ploopi_mod_webedit_article_comment
-                                WHERE       id_article = '{$objArticle->fields['id']}'
-                                AND         id_module = {$_SESSION['ploopi']['moduleid']}
-                                AND         publish = 1
-                                ORDER BY    timestp DESC
-                                ";
-                            
-                            $resSqlComment = $db->query($selectComment);
-                            
-                            if($db->numrows())
+                        }
+                    }
+                    else
+                    {
+                        // pas d'article par défaut, on teste si on est sur la rubrique d'accueil
+                        $booIsHomePage = (!empty($headingid) && $arrHeadings['tree'][0][0] == $headingid);
+                    }
+                    
+                    // Doit on autoriser les commentaires
+                    if ($row['comments_allowed'])
+                    {
+                        $nbComment = 0;
+                        
+                        $action = 'index.php?ploopi_op=webedit_save_comment';
+                        if(isset($webedit_mode) && $webedit_mode != 'display') $action .= '&webedit_mode='.$webedit_mode;
+                        if(isset($headingid)) $action .= '&headingid='.$headingid;
+                        if(isset($row['id'])) $action .= '&articleid='.$row['id'];
+                        
+                        $template_body->assign_block_vars('switch_content_blog.article.sw_comment', 
+                            array(
+                                'LIBELLE_POST'  => _WEBEDIT_COMMENT_POST,
+                                'ACTION'        => ploopi_urlencode($action) 
+                            )
+                        );
+                        
+                        // On recherche les commentaires de l'article
+                        $selectComment = "
+                            SELECT      id, comment, email, timestp, publish, nickname
+                            FROM        ploopi_mod_webedit_article_comment
+                            WHERE       id_article = '{$row['id']}'
+                            AND         id_module = {$_SESSION['ploopi']['moduleid']}
+                            AND         publish = 1
+                            ORDER BY    timestp DESC
+                            ";
+                        
+                        $resSqlComment = $db->query($selectComment);
+                        
+                        if($db->numrows())
+                        {
+                            if($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nb_comm_blog'])
                             {
-                                if($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nb_comm_blog'])
+                                while($rowComment = $db->fetchrow($resSqlComment))
                                 {
-                                    while($rowComment = $db->fetchrow($resSqlComment))
+                                    $date_comment = ($row['timestp_published']!='') ? ploopi_timestamp2local($rowComment['timestp']) : array('date' => '', 'time' => '');
+                                    
+                                    $nbComment++;
+                                    if($nbComment <= $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nb_comm_blog'])
                                     {
-                                        $date_comment = ($objArticle->fields['timestp_published']!='') ? ploopi_timestamp2local($rowComment['timestp']) : array('date' => '', 'time' => '');
-                                        
-                                        $nbComment++;
-                                        if($nbComment <= $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nb_comm_blog'])
-                                        {
-                                            $template_body->assign_block_vars('switch_content_blog.article.sw_comment.comment', 
-                                                array(
-                                                    'ID'        => $rowComment['id'],
-                                                    'PUBLISHED' => $rowComment['publish'],
-                                                    'COMMENT'   => htmlentities($rowComment['comment']),
-                                                    'EMAIL'     => htmlentities($rowComment['email']),
-                                                    'NICKNAME'  => htmlentities($rowComment['nickname']),
-                                                    'DATE'      => $date_comment['date'],
-                                                    'TIME'      => $date_comment['time'],
-                                                    'POSTBY'    => sprintf(_WEBEDIT_COMMENT_COMMENT_POSTBY,htmlentities($rowComment['nickname']),$date_comment['date'],$date_comment['time'])
-                                                )
-                                            );
-                                        }
-                                        else // Si il y en a + on affiche pour voir les autres commentaires
-                                        {
-                                            $template_body->assign_block_vars('switch_content_blog.article.sw_comment.sw_showall', 
-                                                array(
-                                                    'LIBELLE_SHOW'  => _WEBEDIT_COMMENT_SHOWALL
-                                                )
-                                            );
-                                            $nbComment = $db->numrows($resSqlComment);
-                                            break;                                       
-                                        }
+                                        $template_body->assign_block_vars('switch_content_blog.article.sw_comment.comment', 
+                                            array(
+                                                'ID'        => $rowComment['id'],
+                                                'PUBLISHED' => $rowComment['publish'],
+                                                'COMMENT'   => htmlentities($rowComment['comment']),
+                                                'EMAIL'     => htmlentities($rowComment['email']),
+                                                'NICKNAME'  => htmlentities($rowComment['nickname']),
+                                                'DATE'      => $date_comment['date'],
+                                                'TIME'      => $date_comment['time'],
+                                                'POSTBY'    => sprintf(_WEBEDIT_COMMENT_COMMENT_POSTBY,htmlentities($rowComment['nickname']),$date_comment['date'],$date_comment['time'])
+                                            )
+                                        );
+                                    }
+                                    else // Si il y en a + on affiche pour voir les autres commentaires
+                                    {
+                                        $template_body->assign_block_vars('switch_content_blog.article.sw_comment.sw_showall', 
+                                            array(
+                                                'LIBELLE_SHOW'  => _WEBEDIT_COMMENT_SHOWALL
+                                            )
+                                        );
+                                        $nbComment = $db->numrows($resSqlComment);
+                                        break;                                       
                                     }
                                 }
-                            }                  
-                            
-                            $nbComment = $db->numrows($resSqlComment);
-                            
-                            $template_body->assign_block_vars('switch_content_blog.article.sw_comment.info', 
-                                array(
-                                    'LIBELLE'       => _WEBEDIT_COMMENT_COMMENT,
-                                    'NB_COMMENT'    => $nbComment,
-                                )
-                            );
-                        }
+                            }
+                        }                  
+                        
+                        $nbComment = $db->numrows($resSqlComment);
+                        
+                        $template_body->assign_block_vars('switch_content_blog.article.sw_comment.info', 
+                            array(
+                                'LIBELLE'       => _WEBEDIT_COMMENT_COMMENT,
+                                'NB_COMMENT'    => $nbComment,
+                            )
+                        );
                     }
                 }
                 
@@ -1103,7 +1140,8 @@ else // affichage standard rubrique/page
         {
             case 'draft':
                 $select =   "
-                            SELECT      *
+                            SELECT      id, visible, metatitle, timestp_published, timestp_unpublished, lastupdate_timestp,
+                                        timestp, reference, title, content_cleaned, author, version,position 
                             FROM        ploopi_mod_webedit_article_draft
                             WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
                             AND         id_heading = {$headingid}
@@ -1115,7 +1153,8 @@ else // affichage standard rubrique/page
 
             default:
                 $select =   "
-                            SELECT      *
+                            SELECT      id, visible, metatitle, timestp_published, timestp_unpublished, lastupdate_timestp,
+                                        timestp, reference, title, content_cleaned, author, version,position 
                             FROM        ploopi_mod_webedit_article
                             WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
                             AND         id_heading = {$headingid}
@@ -1126,8 +1165,9 @@ else // affichage standard rubrique/page
             break;
         }
 
-        $db->query($select);
-        if ($db->numrows())
+        $resSQL = $db->query($select); // ATTENTION CE RESULTAT DE REQUETE "$resSQL" PEUT SERVIR A NOUVEAU PLUS BAS !!!
+        
+        if ($db->numrows($resSQL))
         {
             $template_body->assign_block_vars('switch_pages', array());
 
@@ -1136,7 +1176,7 @@ else // affichage standard rubrique/page
 
             $article_array = array();
 
-            while ($row = $db->fetchrow())
+            while ($row = $db->fetchrow($resSQL))
             {
                 $article_array[] = $row;
                 if ($row['visible']) $nbvisart++;
@@ -1748,9 +1788,8 @@ $template_body->assign_vars(
 /**
  * Génération du nuage de tags en fonction des articles publiés
  */
-
 $sql =  "
-        SELECT      t.*, a.id_heading
+        SELECT      t.tag, a.id_heading
         FROM        ploopi_mod_webedit_tag t
 
         INNER JOIN  ploopi_mod_webedit_article_tag at
@@ -1771,7 +1810,10 @@ $arrTags = array();
 while ($row = $db->fetchrow())
 {
     // ATTENTION EN CAS DE CHANGEMENT DE FILTRE, NE PAS OUBLIER LES TAG 3D DANS BACKEND.PHP
-    if (!$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
+    if (!$arrHeadings['list'][$row['id_heading']]['private'] 
+        || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) 
+        || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) 
+        || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
     {
         $strTag = strtolower(ploopi_convertaccents($row['tag']));
         if (!isset($arrTags[$strTag])) $arrTags[$strTag] = 0;
@@ -1795,6 +1837,7 @@ foreach($arrTags as $strTag => &$row)
 
     if ($row['size'] < $intMinSize) $row['size'] = $intMinSize;
 }
+
 // Tri des tags par ordre alphabétique
 ksort($arrTags);
 
@@ -1848,40 +1891,11 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
         )
     );
     
-    if($type == 'draft')
+    // la requete a déjà été effectuée dans l'affichage "blog" ou "page" plus haut
+    if(isset($resSQL) && $db->numrows($resSQL))
     {
-        $select =   "
-                    SELECT      id, title, visible, metatitle, 
-                                timestp, timestp_published, timestp_unpublished
-                    FROM        ploopi_mod_webedit_article_draft
-                    WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
-                    AND         id_heading = {$headingid}
-                    AND         timestp > 0
-                    AND         (timestp_published <= $today OR timestp_published = 0)
-                    AND         (timestp_unpublished >= $today OR timestp_unpublished = 0)
-                    ORDER BY    timestp DESC, id DESC
-                    ";
-    }
-    else
-    {
-        $select =   "
-                    SELECT      id, title, visible, metatitle,
-                                timestp, timestp_published, timestp_unpublished
-                    FROM        ploopi_mod_webedit_article
-                    
-                    WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
-                    AND         id_heading = {$headingid}
-                    AND         timestp > 0
-                    AND         (timestp_published <= $today OR timestp_published = 0)
-                    AND         (timestp_unpublished >= $today OR timestp_unpublished = 0)
-                    
-                    ORDER BY    timestp DESC, id DESC
-                    ";
-    }
-    
-    $resSQL = $db->query($select);
-    if($db->numrows($resSQL))
-    {
+        $db->dataseek($resSQL); // Repositionne au debut;
+        
         while ($row = $db->fetchrow($resSQL))
         {
             $arrDate = ploopi_gettimestampdetail($row['timestp']);
@@ -1935,6 +1949,7 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
                 )
             );
         }
+        
         // CALENDRIER
         if($maxTimeStpArt<$minTimeStpArt) $minTimeStpArt = $maxTimeStpArt = date('Ymd').'000000';
         $maxTimeStpArt = substr($maxTimeStpArt,0,6);
@@ -1997,7 +2012,7 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
                 'yearbefore' => substr($intYearMonthPreced,0,4)
             )
         );
-
+        
         ob_start();
         $objCalendarBlog->display($headingid);
         $content = ob_get_contents();

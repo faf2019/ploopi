@@ -70,8 +70,8 @@ switch ($strbackendtype)
             $arrShares = webedit_getshare(null, $_GET['ploopi_moduleid']);
             
             $sql =  "
-                    SELECT      t.*, a.id_heading
-                    FROM        ploopi_mod_webedit_tag t
+                    SELECT      t.tag, a.id_heading
+                    FROM        ploopi_mod_webedit_tag t  
             
                     INNER JOIN  ploopi_mod_webedit_article_tag at
                     ON          at.id_tag = t.id
@@ -83,7 +83,6 @@ switch ($strbackendtype)
                     AND         (a.timestp_published <= $today OR a.timestp_published = 0)
                     AND         (a.timestp_unpublished >= $today OR a.timestp_unpublished = 0)
                     ";
-            
             
             $db->query($sql);
             
@@ -112,11 +111,12 @@ switch ($strbackendtype)
             {
                 $row = array(
                     'nb' => $row,
-                    'size' => round(22 * $row / $intMax)
+                    'size' => round(25 * $row / $intMax)
                 );
             
                 if ($row['size'] < $intMinSize) $row['size'] = $intMinSize;
             }
+
             echo '<tags>';
             
             foreach ($arrTags as $strTag => $arrTag)
@@ -215,9 +215,9 @@ switch ($strbackendtype)
         
             
             $select = "
-                SELECT      article.*
+                SELECT      article.id_heading, article.metatitle, article.title, article.id, article.metakeywords, article.timestp, article.metadescription
                 FROM        ploopi_mod_webedit_article article,
-                ploopi_mod_webedit_heading heading
+                            ploopi_mod_webedit_heading heading
                 WHERE       article.id_module = {$_SESSION['ploopi']['moduleid']}
                 AND         article.id_heading = heading.id
                 AND         heading.feed_enabled = 1

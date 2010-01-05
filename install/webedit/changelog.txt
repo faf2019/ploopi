@@ -1,3 +1,11 @@
+== Module WebEdit - version 2.3.2b ============================================
+
+2010-01-02  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+* Modification : Optimisation de plusieurs requetes dans le display (suppression des SELECT "*")
+* Modification : Optimisation de l'affichage blog : suppression d'au moins une requete par boucle d'article à afficher.
+* Modification : Optimisation de plusieurs requetes dans le backend (suppression des SELECT "*")
+
 == Module WebEdit - version 2.3.2a ============================================
 
 2010-01-02  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
