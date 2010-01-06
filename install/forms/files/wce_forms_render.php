@@ -85,7 +85,7 @@ while ($fields = $db->fetchrow($rs_fields))
                     'DESCRIPTION' => htmlentities($fields['description']),
                     'IDCAPTCHA'     => $id_captcha,
                     'URLTOCAPTCHA'      => ploopi_urlencode('index-light.php?ploopi_op=ploopi_get_captcha&id_captcha='.$id_captcha),
-                    'URLTOCAPTCHASOUND' => ploopi_urlencode(urldecode('index-light.php?ploopi_op=ploopi_get_captcha_sound&id_captcha='.$id_captcha),null,null,null,null,true,true) // Passage au flash nécessite constament une url_encodée
+                    'URLTOCAPTCHASOUND' => ploopi_urlencode(urlencode('index-light.php?ploopi_op=ploopi_get_captcha_sound&id_captcha='.$id_captcha),null,null,null,null,true,true) // Passage au flash nécessite constament une url_encodée
                     )
                 );
     }
