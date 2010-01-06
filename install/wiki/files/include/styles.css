@@ -115,6 +115,17 @@ color:#ff0000;
 margin:0 2px;
 }
 
+#wiki_page_print {
+font-family: sans-serif;
+font-size: 14px;
+}
+
+#wiki_page_print_info {
+font-family: sans-serif;
+font-size: 12px;
+float: right;
+}
+
 #wiki_modify {
 padding:4px;
 }

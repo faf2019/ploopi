@@ -44,6 +44,32 @@ if (ploopi_ismoduleallowed('wiki'))
 
     switch($ploopi_op)
     {
+    	case 'wiki_page_print':
+    		ploopi_init_module('wiki');
+    		include_once './modules/wiki/classes/class_wiki_page.php';
+
+    		$strWikiPageId = (empty($_GET['wiki_page_id'])) ? 'wiki' : $_GET['wiki_page_id'];
+
+            $objWikiPage = new wiki_page();
+            if($objWikiPage->open($strWikiPageId))
+            {
+	            ?>
+	            <html>
+	            <head>
+	            	<title><? echo $strWikiPageId; ?></title>
+	            	<link rel="stylesheet" type="text/css" href="./modules/wiki/include/styles.css" />
+					<script type="text/javascript">window.print();</script>
+	            </head>
+	            <body>
+		            <div id="wiki_page_print"><? echo wiki_render($objWikiPage->fields['content']); ?></div>
+		            <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <? echo $objWikiPage->fields['revision']; ?> modifi&eacute; le <? echo implode(' à ', ploopi_timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
+	            </body>
+	            </html>
+				<?
+            } 
+            ploopi_die();
+    	break;
+    	
         case 'wiki_help':
             ob_start();
             include_once './modules/wiki/op_help.php';

@@ -107,6 +107,9 @@ echo $skin->open_simplebloc($strWikiPageId);
                     }
                     ?>
                     <a style="cursor:not-allowed;color:#777;">
+                    	<img src="./modules/wiki/img/ico_printer.png" />Imprimer
+                	</a>
+                    <a style="cursor:not-allowed;color:#777;">
                         <img src="./modules/wiki/img/ico_modify.png" />Modifier
                     </a>
                     <?
@@ -145,6 +148,9 @@ echo $skin->open_simplebloc($strWikiPageId);
                         <?
                     }
                     ?>
+  		            <a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<? echo ploopi_urlencode("admin-light.php?ploopi_op=wiki_page_print&wiki_page_id={$strWikiPageId}") ?>', 800, 600)">
+                    	<img src="./modules/wiki/img/ico_printer.png" />Imprimer
+                	</a>                    
                     <a href="<? echo ploopi_urlencode_trusted("admin.php?op=wiki_page_modify&wiki_page_id=".urlencode($strWikiPageId)); ?>" <? if ($op == 'wiki_page_modify') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_modify.png" />Modifier
                     </a>
@@ -176,6 +182,9 @@ echo $skin->open_simplebloc($strWikiPageId);
                     <?
                 }
                 ?>
+                <a style="cursor:not-allowed;color:#777;">
+                    <img src="./modules/wiki/img/ico_printer.png" />Imprimer
+                </a>
                 <a href="<? echo ploopi_urlencode_trusted("admin.php?op=wiki_page_modify&wiki_page_id=".urlencode($strWikiPageId)); ?>" <? if ($op == 'wiki_page_modify') echo 'style="font-weight:bold;" '; ?>>
                     <img src="./modules/wiki/img/ico_modify.png" />Modifier
                 </a>
