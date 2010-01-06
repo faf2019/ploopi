@@ -1,8 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
-    Copyright (c) 2008 HeXad
+    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2008-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -41,8 +41,10 @@ if (!empty($_REQUEST['headingid'])) $form_action_params[] = "headingid={$_REQUES
 if (!empty($_REQUEST['articleid'])) $form_action_params[] = "articleid={$_REQUEST['articleid']}";
 if (!empty($_REQUEST['webedit_mode'])) $form_action_params[] = "webedit_mode={$_REQUEST['webedit_mode']}";
 
-$form_action = (!empty($form_action_params)) ? 'index.php?'.implode('&',$form_action_params) : 'index.php';
+$id_captcha = id_captcha($forms->fields['id']);
 
+$form_action = (!empty($form_action_params)) ? ploopi_urlencode('index.php?'.implode('&',$form_action_params).'&id_captcha='.$id_captcha) : ploopi_urlencode('index.php?id_captcha='.$id_captcha);
+ 
 /**
  * Définition des variables décrivant le formulaire
  */
@@ -54,7 +56,8 @@ $template_forms->assign_vars(array(
     'HEADINGID' => (empty($_REQUEST['headingid'])) ? '' : $_REQUEST['headingid'],
     'ARTICLEID' => (empty($_REQUEST['articleid'])) ? '' : $_REQUEST['articleid'],
     'WCE_MODE' => (empty($_REQUEST['wce_mode'])) ? '' : $_REQUEST['wce_mode'],
-    'ACTION' => $form_action
+    'ACTION' => $form_action,
+    'TEMPLATE_PATH' => './templates/frontoffice/'.$template_name
 ));
 
 /**
@@ -71,6 +74,20 @@ while ($fields = $db->fetchrow($rs_fields))
             'LEVEL' => $fields['separator_level'],
             'STYLE' => htmlentities($fields['style'])
         ));
+    }
+    elseif($fields['captcha'])
+    {
+        $template_forms->assign_block_vars('formfields.switch_captcha', array(
+                    'ID' => $fields['id'],
+                    'LABELID' => 'captcha_'.$fields['id'],
+                    'NAME' => 'captcha_'.$fields['id'],
+                    'LABEL' => htmlentities($fields['name']),
+                    'DESCRIPTION' => htmlentities($fields['description']),
+                    'IDCAPTCHA'     => $id_captcha,
+                    'URLTOCAPTCHA'      => ploopi_urlencode('index-light.php?ploopi_op=ploopi_get_captcha&id_captcha='.$id_captcha),
+                    'URLTOCAPTCHASOUND' => ploopi_urlencode(urldecode('index-light.php?ploopi_op=ploopi_get_captcha_sound&id_captcha='.$id_captcha),null,null,null,null,true,true) // Passage au flash nécessite constament une url_encodée
+                    )
+                );
     }
     else
     {

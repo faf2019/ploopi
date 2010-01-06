@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -34,38 +35,43 @@
 /**
  * Initialisation du module
  */
-ploopi_init_module('forms', false, false, false);
-?>
-
-var verifcolor = false;
-
-function forms_validate(form)
+if (ploopi_ismoduleallowed('forms'))
 {
-    if (ploopi_validatefield('<?php echo _FORMS_LABEL; ?>',form.forms_label,"string"))
-    if (ploopi_validatefield('<?php echo _FORMS_PUBDATESTART; ?>',form.forms_pubdate_start,"emptydate"))
-    if (ploopi_validatefield('<?php echo _FORMS_PUBDATEEND; ?>',form.forms_pubdate_end,"emptydate"))
-        return(true);
-
-    return(false);
-}
-
-function forms_field_validate(form)
-{
-    form.field_values.value = '';
-
-    t = form.field_type;
-    if (t.value == 'select' || t.value == 'radio' || t.value == 'checkbox' || t.value == 'color')
+    ploopi_init_module('forms', false, false, false);
+    ?>
+    
+    var verifcolor = false;
+    
+    function forms_validate(form)
     {
-        for (i = 0; i < form.f_values.length; i++)
-        {
-            if (form.field_values.value != '') form.field_values.value += '||';
-            form.field_values.value += form.f_values[i].value;
-        }
+        if (ploopi_validatefield('<?php echo _FORMS_LABEL; ?>',form.forms_label,"string"))
+        if (ploopi_validatefield('<?php echo _FORMS_PUBDATESTART; ?>',form.forms_pubdate_start,"emptydate"))
+        if (ploopi_validatefield('<?php echo _FORMS_PUBDATEEND; ?>',form.forms_pubdate_end,"emptydate"))
+            return(true);
+    
+        return(false);
     }
-    else if (t.value == 'tablelink') form.field_values.value = form.f_formfield.value;
-
-    if (ploopi_validatefield('<?php echo _FORMS_FIELD_NAME; ?>',form.field_name,"string"))
-        return(true);
-
-    return(false);
+    
+    function forms_field_validate(form)
+    {
+        form.field_values.value = '';
+    
+        t = form.field_type;
+        if (t.value == 'select' || t.value == 'radio' || t.value == 'checkbox' || t.value == 'color')
+        {
+            for (i = 0; i < form.f_values.length; i++)
+            {
+                if (form.field_values.value != '') form.field_values.value += '||';
+                form.field_values.value += form.f_values[i].value;
+            }
+        }
+        else if (t.value == 'tablelink') form.field_values.value = form.f_formfield.value;
+    
+        if (ploopi_validatefield('<?php echo _FORMS_FIELD_NAME; ?>',form.field_name,"string"))
+            return(true);
+    
+        return(false);
+    }
+    <?php 
 }
+?>

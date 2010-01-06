@@ -1,8 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
-    Copyright (c) 2008 HeXad
+    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2008-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -61,6 +61,22 @@ while ($fields = $db->fetchrow($rs_fields))
                     'INTERLINE' => $fields['interline'],
                     'LEVEL' => $fields['separator_level'],
                     'STYLE' => htmlentities($fields['style'])
+                    )
+                );
+    }
+    elseif($fields['captcha'])
+    {
+        $id_captcha = id_captcha($fields['id']);
+        
+        $template_forms->assign_block_vars('formfields.switch_captcha', array(
+                    'ID' => $fields['id'],
+                    'LABELID' => 'field_'.$fields['id'],
+                    'NAME' => 'field_'.$fields['id'],
+                    'LABEL' => htmlentities($fields['name']),
+                    'DESCRIPTION' => htmlentities($fields['description']),
+                    'IDCAPTCHA'         => $id_captcha,
+                    'URLTOCAPTCHA'      => ploopi_urlencode('index-light.php?ploopi_op=ploopi_get_captcha&id_captcha='.$id_captcha),
+                    'URLTOCAPTCHASOUND' => ploopi_urlencode('index-light.php?ploopi_op=ploopi_get_captcha_sound&id_captcha='.$id_captcha)
                     )
                 );
     }

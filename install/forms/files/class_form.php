@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -96,6 +97,23 @@ class form extends data_object
 
         return($fields);
 
+    }
+    
+    /**
+     * Recherche si le formulaire contient un captcha
+     *
+     * @return boolean True si form contient un captcha sinon false
+     */
+    
+    function captchainform()
+    {
+        global $db;
+
+        $select = "SELECT id FROM ploopi_mod_forms_field WHERE id_form = {$this->fields['id']} AND captcha = 1";
+
+        $sqlCaptchaInForm = $db->query($select);
+        
+        return ($db->numrows($sqlCaptchaInForm) > 0);
     }
 }
 ?>

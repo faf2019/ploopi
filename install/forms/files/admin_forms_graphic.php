@@ -1,6 +1,7 @@
 <?php
 /*
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -98,7 +99,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                             <?
                             foreach($arrFields as $intIdField => $arrField)
                             {
-                                if (!$arrField['separator'])
+                                if (!$arrField['separator'] && !$arrField['captcha'])
                                 {
                                     ?>
                                      <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["pie_field"]) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($arrField['name']); ?></option>
@@ -128,7 +129,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                         <?
                         foreach($arrFields as $intIdField => $arrField)
                         {
-                            if (!$arrField['separator'] && $arrField['type'] == 'text' && $arrField['format'] == 'date')
+                            if (!$arrField['separator'] && !$arrField['captcha'] && $arrField['type'] == 'text' && $arrField['format'] == 'date')
                             {
                                 ?>
                                  <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["timefield"]) ? 'selected="selected"' : ''; ?>>Champ "<?php echo htmlentities($arrField['name']); ?>"</option>
@@ -172,7 +173,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                     <?
                                     foreach($arrFields as $intIdField => $arrField)
                                     {
-                                        if (!$arrField['separator'])
+                                        if (!$arrField['separator'] && !$arrField['captcha'])
                                         {
                                             ?>
                                              <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["line{$intI}_field"]) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($arrField['name']); ?></option>

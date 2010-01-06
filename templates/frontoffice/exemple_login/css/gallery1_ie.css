@@ -1,5 +1,5 @@
 img.pngimage {
-    behavior: url(../pngbehavior.htc);
+    behavior: url(./js/png.htc);
 }
 
 .topshadow, .leftshadow, .rightshadow {

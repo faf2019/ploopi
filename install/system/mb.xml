@@ -14,6 +14,12 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
+        <name>ploopi_captcha</name>
+        <label>ploopi_captcha</label>
+        <visible>0</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
         <name>ploopi_confirmation_code</name>
         <label>ploopi_confirmation_code</label>
         <visible>1</visible>
@@ -434,6 +440,46 @@
         <name>id_tag</name>
         <label>id_tag</label>
         <type>int(10) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_captcha</tablename>
+        <name>id</name>
+        <label>id</label>
+        <type>varchar(255)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_captcha</tablename>
+        <name>cptuse</name>
+        <label>cptuse</label>
+        <type>int(10)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_captcha</tablename>
+        <name>codesound</name>
+        <label>codesound</label>
+        <type>varchar(20)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_captcha</tablename>
+        <name>code</name>
+        <label>code</label>
+        <type>varchar(20)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_captcha</tablename>
+        <name>time</name>
+        <label>time</label>
+        <type>int(20)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>

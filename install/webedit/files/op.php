@@ -94,10 +94,15 @@ switch($ploopi_op)
     break;
     
     case 'webedit_save_comment':
-        if(isset($_GET['articleid']) && is_numeric($_GET['articleid']))
+        if(isset($_GET['articleid']) && is_numeric($_GET['articleid']) && isset($_GET['id_captcha']) && !empty($_GET['id_captcha']))
         {
-            include_once './modules/webedit/class_article_comment.php';
             
+            // Ultime verif du captcha
+            include_once './include/classes/captcha.php';
+            $objcaptcha = new captcha($_GET['id_captcha']);
+            if(!$objcaptcha->verifCaptcha($_POST['captcha_code'],true)) return '0';
+            
+            include_once './modules/webedit/class_article_comment.php';
             $objComment = new webedit_article_comment();
             
             $objComment->setvalues($_POST,'comment_');

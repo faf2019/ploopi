@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -75,15 +76,17 @@ $array_fields = array();
 
 while ($fields = $db->fetchrow())
 {
-    if (!$fields['separator'])
-    {
+    if (!$fields['separator'] && !$fields['captcha'])
         $array_fields[$fields['id']] = $fields;
+
+    if(!$fields['captcha'])
+    {
+        $data_title[$fields['id']]['label'] = $fields['name'];
+        $data_title[$fields['id']]['sep'] = $fields['separator'];
+        $data_title[$fields['id']]['seplev'] = $fields['separator_level'];
+        $data_title[$fields['id']]['type'] = $fields['type'];
+        $data_title[$fields['id']]['format'] = $fields['format'];
     }
-    $data_title[$fields['id']]['label'] = $fields['name'];
-    $data_title[$fields['id']]['sep'] = $fields['separator'];
-    $data_title[$fields['id']]['seplev'] = $fields['separator_level'];
-    $data_title[$fields['id']]['type'] = $fields['type'];
-    $data_title[$fields['id']]['format'] = $fields['format'];
 }
 
 $search_pattern = array();
@@ -151,6 +154,7 @@ while ($fields = $db->fetchrow($rs))
             WHERE   rf.id_reply = {$fields['id']}
             AND     f.id = rf.id_field
             AND     f.separator = 0
+            AND     f.captcha = 0
             ";
 
     $rs_replies = $db->query($sql);

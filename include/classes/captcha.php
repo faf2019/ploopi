@@ -2,7 +2,7 @@
 /*
   Copyright (c) 2006-2007 Sylvain BRISON (génération image)
   Copyright (c) 2009 Drew Phillips (gestion du son)
-  Copyright (c) 2009 HeXad (Réecriture, Adaptation Ploopi)
+  Copyright (c) 2009-2010 HeXad (Réecriture, Adaptation Ploopi)
 
   Contributors hold Copyright (c) to their code submissions.
 
@@ -22,6 +22,46 @@
   along with Ploopi; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+/**
+ * Classe de gestion des captcha
+ *
+ * @package ploopi
+ * @subpackage captcha
+ * @copyright HeXad
+ * @license GNU General Public License (GPL)
+ * @author Xavier Toussaint
+ */
+include_once './include/classes/data_object.php';
+
+
+class ploopi_captcha extends data_object
+{
+    /**
+     * Contructeur de la classe.
+     * 
+     * @return ploopi_captcha
+     */
+    function __construct()
+    {
+        parent::data_object('ploopi_captcha','id');
+        $this->gc(); // Suppression des anciens captcha 
+    }
+    
+    /**
+     * Garbage collector
+     * Suppression des "vieux captcha"
+     * 
+     * @return none
+     */
+    function gc() // Garbage collector, Suppression des "vieux captcha"
+    {
+        global $db;
+        
+        $intTimeMin = time() - 1800; // maintenant - 30min
+        $db->query("DELETE FROM ploopi_captcha WHERE time <= '{$intTimeMin}'");
+    }
+}
 
 /**
  * affichage de captcha
@@ -49,7 +89,7 @@
  *      Licence GNU General Public License (GPL) v.2.1
  */
 
-class captcha
+class captcha extends ploopi_captcha
 {
     // -------------------------------------
     // Configuration de la session
@@ -201,40 +241,42 @@ class captcha
     // --------------------------------
     
     private $img, $ink, $xvariation, $charnb, $tword, $bg, $brush;
-        
+
+    private $handleF = 0, $debug = false;
     
     /**
      * Contructeur de la classe.
      * 
+     * @param string idcaptcha => id du capcha
      * @param array voir la description des attributs (optionnel)
-     * @param string nom de la session => $_SESSION['ploopi']['captcha'][$param] (optionnel)
      * @return captcha
      */
-    function __construct()
+    function __construct($idcaptcha = '', $arrAttrib = '')
     {
-        // passage des variables via l'éventuel array passé au constructeur
-        if(func_num_args())
+        if(empty($idcaptcha)) $idcaptcha = 'default';
+        
+        $this->captchasession = new ploopi_captcha();
+        
+        if(!$this->captchasession->open($idcaptcha))
         {
-            $arg = func_get_arg(0);
-            if(is_array($arg)) foreach($arg as $var => $value) if(isset($this->{$var})) $this->{$var} = $value;
+            $this->captchasession->init_description();
+            $this->captchasession->fields['id'] = $idcaptcha;
+            $this->captchasession->fields['cptuse'] = 0;
+            $this->captchasession->fields['code'] = $this->captchasession->fields['codesound'] = uniqid();
+        }
+        
+        // passage des variables via l'éventuel array passé au constructeur
+        if(!empty($arrAttrib) && is_array($arrAttrib))
+        {
+            foreach($arrAttrib as $var => $value) if(isset($this->{$var})) $this->{$var} = $value;
         }
 
-        // Possibilité de modifier la session d'enregistrement
-        if(func_num_args()==2)
-        {
-            $arg = func_get_arg(1);
-            if(is_string($arg))
-            {
-                if(!isset($_SESSION['ploopi']['captcha'][$arg])) $_SESSION['ploopi']['captcha'][$arg] = '';
-                $this->captchasession = &$_SESSION['ploopi']['captcha'][$arg];
-            }
+        if($this->debug)
+        { 
+            $this->handleF = fopen('/tmp/captchadebug.log', 'a');
+            fwrite($this->handleF, date('r').' - CONSTR - '.$arg."\r\n".ploopi_print_r($this->captchasession->fields,true)."\r\n");
+            fclose($this->handleF);
         }
-        else
-        {
-            if(!isset($_SESSION['ploopi']['captcha'])) $_SESSION['ploopi']['captcha'] = '';
-            $this->captchasession = &$_SESSION['ploopi']['captcha'];
-        }
-        if(!isset($this->captchasession['captchacptuse'])) $this->captchasession['captchacptuse'] = 0;
     }
     
     /**
@@ -247,7 +289,7 @@ class captcha
     private function secure()
     {
         // Vérifie si l'utilisateur a le droit de (re)générer un cryptogramme
-        if (isset($this->captchasession['captchacptuse']) && $this->captchasession['captchacptuse'] >= $this->captchausemax)
+        if (isset($this->captchasession->fields['cptuse']) && $this->captchasession->fields['cptuse'] >= $this->captchausemax)
         {
            ploopi_ob_clean();
            header("Content-type: image/png");
@@ -255,10 +297,10 @@ class captcha
            exit;
         }
         
-        if(isset($this->captchasession['captchatime']))
+        if(isset($this->captchasession->fields['time']))
         {
             // Autorisation de refresh toutes les $this->captchausetimer seconde
-            $delai = time() - $this->captchasession['captchatime'];
+            $delai = time() - $this->captchasession->fields['time'];
             if ($delai < $this->captchausetimer) 
             { 
                 switch ($this->usertimererror)
@@ -289,7 +331,7 @@ class captcha
         // on controle que tout est ok
         $this->secure();
         
-        $this->captchasession['code'] = $this->captchasession['codesound'] = '';
+        $this->captchasession->fields['code'] = $this->captchasession->fields['codesound'] = '';
         
         $pair = rand(0,1);
         $this->charnb = rand($this->charnbmin,$this->charnbmax);
@@ -297,13 +339,23 @@ class captcha
         for ($i=1;$i<= $this->charnb; $i++)
         {              
             if ($this->captchaeasy) 
-                $this->captchasession['code'] .= (!$pair) ? $this->charelc{rand(0,strlen($this->charelc)-1)} : $this->charelv{rand(0,strlen($this->charelv)-1)};
+                $this->captchasession->fields['code'] .= (!$pair) ? $this->charelc{rand(0,strlen($this->charelc)-1)} : $this->charelv{rand(0,strlen($this->charelv)-1)};
             else 
-                $this->captchasession['code'] .= $this->charel{rand(0,strlen($this->charel)-1)};
+                $this->captchasession->fields['code'] .= $this->charel{rand(0,strlen($this->charel)-1)};
             
             $pair=!$pair;
         }
-        $this->captchasession['codesound'] = strtoupper($this->captchasession['code']);
+        $this->captchasession->fields['codesound'] = strtoupper($this->captchasession->fields['code']);
+        
+        $this->captchasession->save();
+
+        if($this->debug)
+        { 
+            $this->handleF = fopen('/tmp/captchadebug.log', 'a');
+            fwrite($this->handleF, date('r').' - CREATCODE - '.ploopi_print_r($this->captchasession->fields,true)."\r\n");
+            fclose($this->handleF);
+        }
+        
     }
     
     /**
@@ -405,9 +457,22 @@ class captcha
      */
     public function createCaptcha()
     {
+        if($this->debug)
+        { 
+            $this->handleF = fopen('/tmp/captchadebug.log', 'a');
+            fwrite($this->handleF, date('r').' - CREATCAPT 1 - '.ploopi_print_r($this->captchasession->fields,true)."\r\n");
+            fclose($this->handleF);
+        }
         
         // Création du code captcha
         $this->createCode();
+        
+        if($this->debug)
+        { 
+            $this->handleF = fopen('/tmp/captchadebug.log', 'a');
+            fwrite($this->handleF, date('r').' - CREATCAPT 2 - '.ploopi_print_r($this->captchasession->fields,true)."\r\n");
+            fclose($this->handleF);
+        }
         
         // Création du cryptogramme temporaire
         $imgtmp = imagecreatetruecolor($this->captchawidth, $this->captchaheight);
@@ -419,8 +484,15 @@ class captcha
         $i = 1;
         $x = 10;
         $this->tword = '';
-        foreach(str_split($this->captchasession['code'],1) as $letter) 
+        foreach(str_split($this->captchasession->fields['code'],1) as $letter) 
         {              
+            if($this->debug)
+            { 
+                $this->handleF = fopen('/tmp/captchadebug.log', 'a');
+                fwrite($this->handleF, date('r').' - CREATCAPT LETTER - '.$this->captchasession->fields['code'].' -> '.$letter."\r\n");
+                fclose($this->handleF);
+            }
+            
             $this->tword[$i]['element'] = $letter;
             $this->tword[$i]['font'] =  $this->tfont[array_rand($this->tfont,1)];
             $this->tword[$i]['angle'] = (rand(1,2) == 1) ? rand(0,$this->charanglemax) : rand(360-$this->charanglemax,360);
@@ -526,9 +598,17 @@ class captcha
            if ($this->gaussianblur) imagefilter( $this->img,IMG_FILTER_GAUSSIAN_BLUR);
         }
         
-        $this->captchasession['captchatime'] = time();
-        $this->captchasession['captchacptuse']++;
-
+        $this->captchasession->fields['time'] = time();
+        $this->captchasession->fields['cptuse']++;
+        $this->captchasession->save();
+        
+        if($this->debug)
+        { 
+            $this->handleF = fopen('/tmp/captchadebug.log', 'a');
+            fwrite($this->handleF, date('r').' - CREATCAPT 3 - '.ploopi_print_r($this->captchasession->fields,true)."\r\n");
+            fclose($this->handleF);
+        }
+        
         ploopi_ob_clean();
 
         header('Content-Description: File Transfer');
@@ -558,6 +638,13 @@ class captcha
                 imagepng($this->img);
         }
         
+        if($this->debug)
+        { 
+            $this->handleF = fopen('/tmp/captchadebug.log', 'a');
+            fwrite($this->handleF, date('r').' - CREATCAPT 4 - '.ploopi_print_r($this->captchasession->fields,true)."\r\n");
+            fclose($this->handleF);
+        }
+        
         imagedestroy ($this->img);
     }
     
@@ -567,23 +654,26 @@ class captcha
      * @param string $value
      * @return boolean true/false
      */
-    public function verifCaptcha($value)
+    public function verifCaptcha($value, $delete = false)
     {
+        if(!isset($this->captchasession->fields['code'])) return false;
+
         $value = addslashes($value);
         $value = str_replace(' ','',$value);  // supprime les espaces saisis par erreur.
-        
+
         $value = ($this->difuplow ? $value : strtolower($value));
-        $this->captchasession['code'] = ($this->difuplow ? $this->captchasession['code'] : strtolower($this->captchasession['code']));
+        $this->captchasession->fields['code'] = ($this->difuplow ? $this->captchasession->fields['code'] : strtolower($this->captchasession->fields['code']));
         
-        if (!empty($this->captchasession['code']) && ($this->captchasession['code'] === $value))
+        if (!empty($this->captchasession->fields['code']) && ($this->captchasession->fields['code'] === $value))
         {
-            unset($this->captchasession);
+            if($delete) $this->captchasession->delete();
             return true;
         }
 
         // on a essayé, c'est faux, on brouille le code pour les robots au cas ou on ne renew pas le captcha
-        $this->captchasession['code'] = md5(uniqid(rand(1,999)));
-        $this->captchasession['codesound'] = '';
+        $this->captchasession->fields['code'] = uniqid();
+        $this->captchasession->fields['codesound'] = '';
+        $this->captchasession->save();
         return false;
     }
 }
@@ -597,7 +687,7 @@ class captcha
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint
  */
-class captcha_sound
+class captcha_sound extends ploopi_captcha
 {
     private $captchasession = '';           // nom de la dimension supplémentaire pour le tableau en session
     
@@ -607,31 +697,26 @@ class captcha_sound
      * Constructeur de la classe captcha_sound
      * 
      * @param string $lang langue à utiliser (optionnel)
-     * @param string $session nom de la session => $_SESSION['ploopi']['captcha'][$param] (optionnel)
+     * @param string $session nom de la session => $_SESSION['ploopi_captcha'][$param] (optionnel)
      * @param string $path chemin jusque au répertoire des sons 
      * @return captcha_sound
      */
-    function __construct($lang = '', $session = '', $path = '')
+    function __construct($idcaptcha, $lang = '', $path = '')
     {
-        // changement de path
-        $this->soundpath = (!empty($path)) ? $path : '.'._PLOOPI_SEP.'img'._PLOOPI_SEP.'sound'._PLOOPI_SEP;
+        if(empty($idcaptcha)) $idcaptcha = 'default';
         
-        // changement de langue pour le path
-        $this->soundpath .= (!empty($lang)) ? $lang : $_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language'];
+        $this->captchasession = new ploopi_captcha();
         
-        if(substr($this->soundpath,-1) != _PLOOPI_SEP) $this->soundpath .= _PLOOPI_SEP;
-        
-        // Possibilité de modifier la session d'enregistrement
-        if(!empty($session))
+        if($this->captchasession->open($idcaptcha))
         {
-            if(!isset($_SESSION['ploopi']['captcha'][$session])) $_SESSION['ploopi']['captcha'][$session] = '';
-            $this->captchasession = &$_SESSION['ploopi']['captcha'][$session];
-        }
-        else
-        {
-            if(!isset($_SESSION['ploopi']['captcha'])) $_SESSION['ploopi']['captcha'] = '';
-            $this->captchasession = &$_SESSION['ploopi']['captcha'];
-        }
+            // changement de path
+            $this->soundpath = (!empty($path)) ? $path : '.'._PLOOPI_SEP.'img'._PLOOPI_SEP.'sound'._PLOOPI_SEP;
+            
+            // changement de langue pour le path
+            $this->soundpath .= (!empty($lang)) ? $lang : $_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language'];
+            
+            if(substr($this->soundpath,-1) != _PLOOPI_SEP) $this->soundpath .= _PLOOPI_SEP;
+        }    
     } 
     
     /**
@@ -641,10 +726,10 @@ class captcha_sound
      */
     public function outputAudioFile()
     {
-        if(isset($this->captchasession['codesound']) && !empty($this->captchasession['codesound']))
+        if(!$this->captchasession->new && isset($this->captchasession->fields['codesound']) && !empty($this->captchasession->fields['codesound']))
         {
             $outputaudio = '';
-            foreach(str_split($this->captchasession['codesound'],1) as $letter)
+            foreach(str_split($this->captchasession->fields['codesound'],1) as $letter)
             {
                 $filename = $this->soundpath . $letter . '.mp3';
     

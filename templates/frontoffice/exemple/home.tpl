@@ -40,7 +40,7 @@
     <link type="text/css" rel="stylesheet" href="{module_css_ie.PATH}" media="screen" />
     <!-- END module_css_ie -->
     <![endif]-->
-    
+
     <!-- BEGIN ploopi_js -->
     <script type="text/javascript" src="{ploopi_js.PATH}"></script>
     <!-- END ploopi_js -->
@@ -136,7 +136,7 @@
                             </p>
                             <div>
                                 <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="subscription_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" />
-                                <input type="submit" title="Bouton pour valider la recherche" class="button" value="go" />
+                                <input type="submit" title="Bouton pour valider l'abonnement" class="button" value="go" />
                             </div>
                         </form>
                     </div>
@@ -210,13 +210,13 @@
                             <a href="{switch_search.result.LINK}" title="Lien vers {switch_search.result.TITLE}">
                                 <h2>{switch_search.result.TITLE}<span class="relevance">{switch_search.result.RELEVANCE} %</span></h2>
                                 <div class="extract">{switch_search.result.EXTRACT}</div>
-                                <div class="link">&raquo; {switch_search.result.LINK} ({switch_search.result.SIZE} ko)</div>
+                                <div class="link">&raquo; {switch_search.result.SHORT_LINK} ({switch_search.result.SIZE} ko)</div>
                             </a>
                         <!-- END result -->
 
-                        <!-- BEGIN switch_notfound -->
-                        <p>Aucun résultat pour cette recherche</p>
-                        <!-- END switch_notfound -->
+	                    <!-- BEGIN switch_notfound -->
+	                    <p>Aucun résultat pour cette recherche</p>
+	                    <!-- END switch_notfound -->
                     </div>
                     <!-- END switch_search -->
 
@@ -226,7 +226,7 @@
                         <!-- BEGIN result -->
                             <a href="{switch_tagsearch.result.LINK}" title="Lien vers {switch_tagsearch.result.TITLE}">
                                 <h2>{switch_tagsearch.result.TITLE}</h2>
-                                <div class="link">&raquo; {switch_tagsearch.result.LINK} ({switch_tagsearch.result.SIZE} ko)</div>
+                                <div class="link">&raquo; {switch_tagsearch.result.SHORT_LINK} ({switch_tagsearch.result.SIZE} ko)</div>
                             </a>
                         <!-- END result -->
                     </div>
@@ -253,7 +253,7 @@
                                 <!-- END sw_showall -->
                                 <div style="clear: both;">
                                     <a name="form_comment">
-                                    <form action="{switch_content_page.sw_comment.ACTION}" method="post" onsubmit="javascript:return controlComment(this);">
+                                    <form action="{switch_content_page.sw_comment.ACTION}" method="post" onsubmit="javascript:return comment_validate(this);">
                                         <div class="form" style="width: 65%; float: left;">
                                             <p>
                                                 <label>Nom(*) :</label><input type="text" class="text" id="comment_nickname" name="comment_nickname"  maxlength="50"/>
@@ -268,7 +268,7 @@
                                         <div class="form" style="padding: 50px 0 0 30px; float: left;">
                                             <p>
                                                 <div style="margin: 0 5px 0 0; float: left; width: 130px; height: 45px; text-align: center;">
-                                                    <img id="img_captcha" align="center" src="./img/ajax-loader.gif"/>
+                                                    <img id="img_captcha_{switch_content_page.sw_comment.IDCAPTCHA}" align="center" src="./img/ajax-loader.gif"/>
                                                 </div>
                                                 <div style="float: left; padding: 0; margin: 0;">
                                                     <div style="padding: 2px 0 4px 0;">
@@ -281,11 +281,11 @@
                                                             <embed src="./img/captcha/securimage_play.swf?audio={switch_content_page.sw_comment.URLTOCAPTCHASOUND}&bgColor1=#286EA0&bgColor2=#fff&iconColor=#000&roundedCorner=5" quality="high" bgcolor="#ffffff" width="19" height="19" name="SecurImage_{switch_content_page.PAGE_ID}" align="top" allowScriptAccess="sameDomain" allowFullScreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
                                                         </object>
                                                     </div>
-                                                    <div style="cursor: pointer;" onclick="javascript: $('img_captcha').src = '{switch_content_page.sw_comment.URLTOCAPTCHA}&random='+Math.random(); return void(0);"><img src="{TEMPLATE_PATH}/img/refresh.png" alt="Reload Image" border="0" align="bottom" /></div>
+                                                    <div style="cursor: pointer;" onclick="javascript: $('img_captcha_{switch_content_page.sw_comment.IDCAPTCHA}').src = '{switch_content_page.sw_comment.URLTOCAPTCHA}&random='+Math.random(); return false;"><img src="{TEMPLATE_PATH}/img/refresh.png" alt="Reload Image" border="0" align="bottom" /></div>
                                                 </div>
                                             </p>
                                             <p>
-                                                <label>Code(*) :</label><input type="text" class="text" id="code" name="code" maxlength="8" style="width: 140px;" />
+                                                <label>Code(*) :</label><input type="text" class="text" id="captcha_code_{switch_content_page.sw_comment.IDCAPTCHA}" name="captcha_code" maxlength="8" style="width: 140px;" />
                                             </p>
                                         </div>
                                         <div class="form_validate">(*) Champs requis</div>
@@ -295,18 +295,18 @@
                                     </form>
                                     </a>
                                     <script type="text/javascript">
-                                    function controlComment(form)
+                                    function comment_validate(form)
                                     {
                                         if (ploopi_validatefield('Nom', form.comment_nickname, 'string'))
                                         if (ploopi_validatefield('Email', form.comment_email, 'emptyemail'))
                                         if (ploopi_validatefield('Commentaire', form.comment_comment, 'string'))
-                                        if (ploopi_validatefield('Code', form.code, 'captcha', '{PAGE_URL_CONTROLCAPTCHA}', 'img_captcha', '{PAGE_URL_UPDATECAPTCHA}'))
+                                    	if (ploopi_validatefield('Code', form.captcha_code_{switch_content_page.sw_comment.IDCAPTCHA}, 'captcha', '{PAGE_URL_CONTROLCAPTCHA}', 'img_captcha_{switch_content_page.sw_comment.IDCAPTCHA}', '{PAGE_URL_UPDATECAPTCHA}'))
                                           return(true);
                                         
                                         return(false);
                                     }
 
-                                    Event.observe(window, 'load', function() { $('img_captcha').src = '{switch_content_page.sw_comment.URLTOCAPTCHA}&random='+Math.random(); } );
+                                    Event.observe(window, 'load', function() { $('img_captcha_{switch_content_page.sw_comment.IDCAPTCHA}').src = '{switch_content_page.sw_comment.URLTOCAPTCHA}&random='+Math.random(); } );
                                     </script>
                                 </div>
                             </div>

@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -251,7 +252,8 @@ switch($op)
 
             if ($forms->fields['email'] != '')
             {
-                $list_email = explode(';',$forms->fields['email']);
+                $emails =  str_replace(array(',','|'),';',$forms->fields['email']);
+                $list_email = explode(';',$emails);
                 foreach($list_email as $email)
                 {
                     $from[0] = array('name' => $email, 'address' => $email);

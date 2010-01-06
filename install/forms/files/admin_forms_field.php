@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -201,6 +202,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                                 WHERE   forms.id_module = {$_SESSION['ploopi']['moduleid']}
                                 AND     forms.id = field.id_form
                                 AND     field.separator = 0
+                                AND     field.captcha = 0
                                 ORDER BY label, position
                                 ");
 

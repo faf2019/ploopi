@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -36,11 +37,14 @@
  * Si ok => on l'ouvre. Sinon, nouveau formulaire.
  */
 
+$booCaptchaInForm = false; // Le formulaire ne contient pas de captcha
+
 $forms = new form();
 
 if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
 {
     $forms->open($_GET['forms_id']);
+    $booCaptchaInForm = $forms->captchainform();
     $title = _FORMS_MODIFICATION.' &laquo; '.$forms->fields['label'].' &raquo;';
 }
 else
@@ -314,11 +318,29 @@ if (!$forms->isnew())
             </div>
             <?php
         break;
-
+        
+        case 'forms_captcha_modify':
+        case 'forms_captcha_add':
+            ?>
+            <div style="padding:4px;border-bottom:1px solid #a0a0a0;">
+            <a name="addform"></a>
+            <?php include_once './modules/forms/admin_forms_captcha.php'; ?>
+            </div>
+            <?php
+        break;
+        
         default:
             ?>
             <div style="clear:both;background-color:#d0d0d0;overflow:auto;text-align:right;padding:4px;border-bottom:1px solid #a0a0a0;">
                 <input type="button" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_separator_add&forms_id={$forms->fields['id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDSEPARATOR; ?>">
+                <?php
+                if(!$booCaptchaInForm)
+                {
+                    ?>
+                    <input type="button" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_captcha_add&forms_id={$forms->fields['id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDCAPTCHA; ?>">
+                    <?php 
+                }
+                ?>
                 <input type="button" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_field_add&forms_id={$forms->fields['id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDFIELD; ?>">
             </div>
             <?php
@@ -395,6 +417,23 @@ if (!$forms->isnew())
             $array_values[$c]['description'] = 'Ouvrir le Séparateur &laquo; '.htmlentities($row['name']).' &raquo;';
             $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=forms_separator_modify&forms_id={$forms->fields['id']}&field_id={$row['id']}");
 
+        }
+        elseif ($row['captcha'])
+        {
+            $array_values[$c]['values']['name']         = array('label' =>  $row['name']);
+            $array_values[$c]['values']['type']         = array('label' =>  'Captcha');
+            $array_values[$c]['values']['export']       = array('label' =>  '&nbsp;');
+            $array_values[$c]['values']['array']        = array('label' =>  '&nbsp;');
+            $array_values[$c]['values']['needed']       = array('label' =>  '<img src="./modules/forms/img/'.((!$row['option_needed']) ? 'un' : '').'checked.gif">');
+            $array_values[$c]['values']['actions']      = array('label' => '
+                <a href="'.ploopi_urlencode("admin.php?op=forms_field_moveup&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
+                <a href="'.ploopi_urlencode("admin.php?op=forms_field_movedown&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
+                <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=forms_field_delete&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
+            ');
+
+            $array_values[$c]['description'] = 'Ouvrir le Captcha &laquo; '.htmlentities($row['name']).' &raquo;';
+            $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=forms_captcha_modify&forms_id={$forms->fields['id']}&field_id={$row['id']}");
+            
         }
         else
         {

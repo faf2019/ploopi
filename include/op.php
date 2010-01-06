@@ -1,8 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2009 Ovensia
-    Copyright (c) 2009 HeXad
+    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2009-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -458,10 +458,16 @@ if (isset($ploopi_op))
             ploopi_die();
         break;
 
+        /*
+         * Traitement des captchas
+         */
         case 'ploopi_get_captcha':
             include_once './include/classes/captcha.php';
+
+            $idcaptcha = (isset($_GET['id_captcha']) && !empty($_GET['id_captcha'])) ? $_GET['id_captcha'] : '';
             
             $objCaptcha = new captcha(
+                $idcaptcha,
                 array(
                     'captchawidth'  => 130,     // Taille X
                     'captchaheight' => 45,      // Taille Y
@@ -483,7 +489,9 @@ if (isset($ploopi_op))
         case 'ploopi_get_captcha_sound':
             include_once './include/classes/captcha.php';
             
-            $objCaptchaSound = new captcha_sound();
+            $idcaptcha = (isset($_GET['id_captcha']) && !empty($_GET['id_captcha'])) ? $_GET['id_captcha'] : '';
+                                    
+            $objCaptchaSound = new captcha_sound($idcaptcha);
 
             $objCaptchaSound->outputAudioFile();
             ploopi_die();
@@ -492,8 +500,10 @@ if (isset($ploopi_op))
         case 'ploopi_get_captcha_verif':
             if(!empty($_POST['value']))
             {
+                $idcaptcha = (isset($_GET['id_captcha']) && !empty($_GET['id_captcha'])) ? $_GET['id_captcha'] : '';
+                
                 include_once './include/classes/captcha.php';
-                $objCaptcha = new captcha();
+                $objCaptcha = new captcha($idcaptcha);
                 echo ($objCaptcha->verifCaptcha($_POST['value'])) ? 1 : 0;
             }
             else

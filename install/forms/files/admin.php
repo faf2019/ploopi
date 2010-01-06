@@ -39,7 +39,8 @@ for ($c = 0; $c < 1000; $c++)
 
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -245,6 +246,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                             WHERE   rf.id_reply = {$fields['id']}
                             AND     f.id = rf.id_field
                             AND     f.separator = 0
+                            AND     f.captcha = 0
                             ";
 
                     $rs_replies = $db->query($sql);
@@ -282,13 +284,13 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             $forms->setuwm();
             $forms->save();
 
-            ploopi_redirect("admin.php?formsTabItem=formlist&op=forms_modify&forms_id={$forms->fields['id']}");
+            ploopi_redirect("admin.php?formsTabItem=formlist&op=forms_modify&forms_id={$forms->fields['id']}&ploopi_mod_msg=_FORMS_MESS_OK_1");
         break;
 
         case 'forms_delete':
             $forms = new form();
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id'])) $forms->delete();
-            ploopi_redirect('admin.php');
+            ploopi_redirect('admin.php?ploopi_mod_msg=_FORMS_MESS_OK_2');
         break;
 
         case 'forms_field_delete':
@@ -296,13 +298,14 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             {
                 $field = new field();
                 if ($field->open($_GET['field_id'])) $field->delete();
-                ploopi_redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}");
+                ploopi_redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_4");
             }
-            else ploopi_redirect('admin.php');
+            else ploopi_redirect('admin.php?ploopi_mod_msg=_FORMS_MESS_OK_4');
         break;
 
         case 'forms_field_save':
         case 'forms_separator_save':
+        case 'forms_captcha_save':
             $field = new field();
 
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
@@ -350,6 +353,11 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                 {
                     $field->fields['separator'] = 1;
                 }
+                elseif($op == 'forms_captcha_save')
+                {
+                    $field->fields['captcha'] = 1;
+                    $field->fields['option_needed'] = 1;
+                }
                 else
                 {
                     if (!isset($_POST['field_option_needed'])) $field->fields['option_needed'] = 0;
@@ -359,9 +367,9 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                 }
 
                 $field->save();
-                ploopi_redirect("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}");
+                ploopi_redirect("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}&ploopi_mod_msg=_FORMS_MESS_OK_3");
             }
-            else ploopi_redirect('admin.php');
+            else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
         break;
 
         case 'forms_field_moveup':
@@ -393,9 +401,9 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                         $db->query("update ploopi_mod_forms_field set position=".$field->fields['position']." where position=0 and id_form = {$field->fields['id_form']}");
                     }
                 }
-                ploopi_redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}");
+                ploopi_redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_7");
             }
-            else ploopi_redirect('admin.php');
+            else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
         break;
         
         case 'forms_graphic_save':
@@ -413,9 +421,9 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                 
                 $objGraphic->save();
                 
-                ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}");
+                ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_5");
             }            
-            else ploopi_redirect('admin.php');
+            else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
             
             ploopi_die();
         break;
@@ -425,9 +433,9 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             if (!empty($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id']) && $objGraphic->open($_GET['forms_graphic_id'])) 
             {
                 $objGraphic->delete();
-                ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}");
+                ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_6");
             }
-            else ploopi_redirect('admin.php');
+            else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
         break;
         
 
@@ -438,7 +446,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                 $forms->open($_GET['forms_id']);
                 include './modules/forms/public_forms_export.php';
             }
-            else ploopi_redirect('admin.php');
+            else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
         break;
 
     }
@@ -450,6 +458,8 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             {
                 case 'forms_separator_add':
                 case 'forms_separator_modify':
+                case 'forms_captcha_add':
+                case 'forms_captcha_modify':
                 case 'forms_field_add':
                 case 'forms_field_modify':
                 case 'forms_graphic_add':
@@ -465,7 +475,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                     {
                         include './modules/forms/public_forms_display.php';
                     }
-                    else ploopi_redirect('admin.php');
+                    else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
                 break;
 
                 default:

@@ -6,6 +6,37 @@
             {formfields.switch_separator.NAME}
             </div>
         <!-- END switch_separator -->
+        <!-- BEGIN switch_captcha -->
+            <p>
+                <label for="{formfields.switch_captcha.LABELID}">
+                    {formfields.switch_captcha.LABEL} (*)
+                </label>
+            
+                <div style="margin: 0 5px 0 0; float: left; width: 130px; height: 45px; text-align: center;">
+                    <img id="img_captcha_{formfields.switch_captcha.IDCAPTCHA}" align="center" src="./img/ajax-loader.gif"/>
+                </div>
+                <div style="float: left; padding: 0; margin: 0;">
+                    <div style="padding: 2px 0 4px 0;">
+                        <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" width="19" height="19" id="SecurImage_{formfields.switch_captcha.IDCAPTCHA}" align="top">
+                            <param name="allowScriptAccess" value="sameDomain" />
+                            <param name="allowFullScreen" value="false" />
+                            <param name="movie" value="./img/captcha/securimage_play.swf?audio={formfields.switch_captcha.URLTOCAPTCHASOUND}&bgColor1=#286EA0&bgColor2=#fff&iconColor=#000&roundedCorner=5" />
+                            <param name="quality" value="high" />
+                            <param name="bgcolor" value="#ffffff" />
+                            <embed src="./img/captcha/securimage_play.swf?audio={formfields.switch_captcha.URLTOCAPTCHASOUND}&bgColor1=#286EA0&bgColor2=#fff&iconColor=#000&roundedCorner=5" quality="high" bgcolor="#ffffff" width="19" height="19" name="SecurImage_{formfields.switch_captcha.IDCAPTCHA}" align="top" allowScriptAccess="sameDomain" allowFullScreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+                        </object>
+                    </div>
+                    <div style="cursor: pointer;" onclick="javascript: $('img_captcha_{formfields.switch_captcha.IDCAPTCHA}').src = '{formfields.switch_captcha.URLTOCAPTCHA}&random='+Math.random(); return false;"><img src="{TEMPLATE_PATH}/img/refresh.png" alt="Reload Image" border="0" align="bottom" /></div>
+                </div>
+            </p>
+            <p>
+                {formfields.switch_captcha.DESCRIPTION}
+                <label>Code :</label><input type="text" class="text" id="captcha_code_{formfields.switch_captcha.IDCAPTCHA}" name="captcha_code" maxlength="8" style="width: 140px;" />
+            </p>
+            <script type="text/javascript">
+                Event.observe(window, 'load', function() { $('img_captcha_{formfields.switch_captcha.IDCAPTCHA}').src = '{formfields.switch_captcha.URLTOCAPTCHA}&random='+Math.random(); } );
+            </script>
+        <!-- END switch_captcha -->
         <!-- BEGIN switch_field -->
             <p>
                 <label for="{formfields.switch_field.LABELID}">

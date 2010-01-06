@@ -130,6 +130,8 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_forms_graphic` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
-ALTER TABLE `ploopi_mod_forms_graphic` CHANGE `type` `type` ENUM( 'pie', 'pie3d', 'bar', 'barc', 'line', 'linec', 'radar', 'radarc' ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL 
+ALTER TABLE `ploopi_mod_forms_graphic` CHANGE `type` `type` ENUM( 'pie', 'pie3d', 'bar', 'barc', 'line', 'linec', 'radar', 'radarc' ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL; 
 
 ALTER TABLE `ploopi_mod_forms_graphic` ADD `timefield` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `description`;
+
+ALTER TABLE `ploopi_mod_forms_field` ADD `captcha` TINYINT( 1 ) UNSIGNED NOT NULL  DEFAULT '0' AFTER `fieldname`;

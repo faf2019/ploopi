@@ -1387,7 +1387,9 @@ else // affichage standard rubrique/page
 
                 $desc_raw = $article->fields['metadescription'];
                 $desc = htmlentities($article->fields['metadescription']);
-
+                
+                $id_captcha = md5('article_comment_catpcha_'.$article->fields['id']);
+                
                 $template_body->assign_vars(
                     array(
                         'PAGE_ID' => $article->fields['id'],
@@ -1419,8 +1421,9 @@ else // affichage standard rubrique/page
                         'PAGE_LASTUPDATE_USER_LOGIN' => htmlentities($user_login),
                         'PAGE_CONTENT' => $content,
                         'PAGE_HEADCONTENT' => $article->fields['headcontent'],
-                        'PAGE_URL_UPDATECAPTCHA' => ploopi_urlencode('index-light.php?ploopi_op=ploopi_get_captcha&time='.date('His')),
-                        'PAGE_URL_CONTROLCAPTCHA' => ploopi_urlencode('index-light.php?ploopi_op=ploopi_get_captcha_verif&time='.date('His'))
+                        'PAGE_IDCAPTCHA' => $id_captcha,
+                        'PAGE_URL_UPDATECAPTCHA' => ploopi_urlencode('index-light.php?ploopi_op=ploopi_get_captcha&time='.date('His').'&id_captcha='.$id_captcha),
+                        'PAGE_URL_CONTROLCAPTCHA' => ploopi_urlencode('index-light.php?ploopi_op=ploopi_get_captcha_verif&time='.date('His').'&id_captcha='.$id_captcha)
                     )
                 );
 
@@ -1463,12 +1466,14 @@ else // affichage standard rubrique/page
                 
                 if(isset($article->fields['id'])) $action .= '&articleid='.$article->fields['id'];
                 if(isset($webedit_mode) && $webedit_mode != 'display') $action .= '&webedit_mode='.$webedit_mode;
-                
+                $action .= '&id_captcha='.$id_captcha;
+
                 $template_body->assign_block_vars('switch_content_page.sw_comment', 
                     array(
                         'ACTION'        => ploopi_urlencode($action),
-                        'URLTOCAPTCHA'      => ploopi_urlencode('index-light.php?ploopi_op=ploopi_get_captcha'),
-                        'URLTOCAPTCHASOUND' => ploopi_urlencode('index-light.php?ploopi_op=ploopi_get_captcha_sound'),
+                        'IDCAPTCHA'     => $id_captcha,
+                        'URLTOCAPTCHA'      => ploopi_urlencode('index-light.php?ploopi_op=ploopi_get_captcha&id_captcha='.$id_captcha),
+                        'URLTOCAPTCHASOUND' => ploopi_urlencode(urlencode('index-light.php?ploopi_op=ploopi_get_captcha_sound&id_captcha='.$id_captcha),null,null,null,null,true,true) // Passage au flash nécessite constament une url_encodée
                     )
                 );
                 
@@ -2056,5 +2061,5 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
 $template_body->pparse('body');
 //unset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['blog']);
 //ploopi_print_r($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['blog']);
-//ploopi_print_r($_SESSION);
+//if(isset($_SESSION['ploopi']['captcha'])) ploopi_print_r($_SESSION['ploopi']['captcha']);
 ?>

@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -59,71 +60,80 @@ function form_validate(form)
 
     while ($fields = $db->fetchrow())
     {
-
-        switch ($fields['type'])
+        if($fields['captcha'])
         {
-            case 'text':
-                if (isset($field_formats[$fields['format']])) // chp de type 'text' et ayant un format existant
-                {
-                    switch($fields['format'])
+            $id_captcha = id_captcha($id_form);
+            ?>
+            if (ploopi_validatefield('<?php echo addslashes($fields['name']); ?>', form.captcha_code_<?php echo $id_captcha; ?>, 'captcha', '<?php echo ploopi_urlencode('index-light.php?ploopi_op=ploopi_get_captcha_verif&time='.date('His').'&id_captcha='.$id_captcha); ?>', 'img_captcha_<?php echo $id_captcha; ?>', '<?php echo ploopi_urlencode('index-light.php?ploopi_op=ploopi_get_captcha&time='.date('His').'&id_captcha='.$id_captcha); ?>'))
+            <?php
+        }
+        else
+        {
+            switch ($fields['type'])
+            {
+                case 'text':
+                    if (isset($field_formats[$fields['format']])) // chp de type 'text' et ayant un format existant
                     {
-                        case 'string':
-                            if ($fields['option_needed']) $format = 'string';
-                            else $format = 'emptystring';
-                        break;
-
-                        case 'date':
-                            if ($fields['option_needed']) $format = 'date';
-                            else $format = 'emptydate';
-                        break;
-
-                        case 'time':
-                            if ($fields['option_needed']) $format = 'time';
-                            else $format = 'emptytime';
-                        break;
-
-                        case 'integer':
-                            if ($fields['option_needed']) $format = 'int';
-                            else $format = 'emptyint';
-                        break;
-
-                        case 'float':
-                            if ($fields['option_needed']) $format = 'float';
-                            else $format = 'emptyfloat';
-                        break;
-
-                        case 'email':
-                            if ($fields['option_needed']) $format = 'email';
-                            else $format = 'emptyemail';
-                        break;
-
-                        default:
-                            $format = '';
-                        break;
+                        switch($fields['format'])
+                        {
+                            case 'string':
+                                if ($fields['option_needed']) $format = 'string';
+                                else $format = 'emptystring';
+                            break;
+    
+                            case 'date':
+                                if ($fields['option_needed']) $format = 'date';
+                                else $format = 'emptydate';
+                            break;
+    
+                            case 'time':
+                                if ($fields['option_needed']) $format = 'time';
+                                else $format = 'emptytime';
+                            break;
+    
+                            case 'integer':
+                                if ($fields['option_needed']) $format = 'int';
+                                else $format = 'emptyint';
+                            break;
+    
+                            case 'float':
+                                if ($fields['option_needed']) $format = 'float';
+                                else $format = 'emptyfloat';
+                            break;
+    
+                            case 'email':
+                                if ($fields['option_needed']) $format = 'email';
+                                else $format = 'emptyemail';
+                            break;
+    
+                            default:
+                                $format = '';
+                            break;
+                        }
+                        ?>
+                        if (ploopi_validatefield('<?php echo addslashes($fields['name']); ?>', form.field_<?php echo $fields['id']; ?>, '<?php echo $format; ?>'))
+                        <?php
                     }
+                break;
+    
+                case 'select':
+                case 'color':
+                    if ($fields['option_needed']) $format = 'selected';
+                    else $format = '';
                     ?>
                     if (ploopi_validatefield('<?php echo addslashes($fields['name']); ?>', form.field_<?php echo $fields['id']; ?>, '<?php echo $format; ?>'))
                     <?php
-                }
-            break;
-
-            case 'select':
-            case 'color':
-                if ($fields['option_needed']) $format = 'selected';
-                else $format = '';
-                ?>
-                if (ploopi_validatefield('<?php echo addslashes($fields['name']); ?>', form.field_<?php echo $fields['id']; ?>, '<?php echo $format; ?>'))
-                <?php
-            break;
-
-            case 'radio':
-            case 'checkbox':
-                if ($fields['option_needed']) $format = 'checked';
-                else $format = '';
-                ?>
-                if (ploopi_validatefield('<?php echo addslashes($fields['name']); ?>', form.elements['field_<?php echo $fields['id']; ?>[]'], '<?php echo $format; ?>'))
-                <?php
-            break;
+                break;
+    
+                case 'radio':
+                case 'checkbox':
+                    if ($fields['option_needed']) $format = 'checked';
+                    else $format = '';
+                    ?>
+                    if (ploopi_validatefield('<?php echo addslashes($fields['name']); ?>', form.elements['field_<?php echo $fields['id']; ?>[]'], '<?php echo $format; ?>'))
+                    <?php
+                break;
+            }
         }
     }
     ?>

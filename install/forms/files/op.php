@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -477,7 +478,7 @@ if ($_SESSION['ploopi']['connected'])
                                     case 'linec':
                                         // Création d'une série de points avec une courbe
                                         $arrObjPlots[] = $objPlots = new LinePlot($arrPlots);
-                                        ploopi_print_r($arrPlots);
+                                        //ploopi_print_r($arrPlots);
                                         
                                         // Chaque point de la courbe
                                         // Type de point

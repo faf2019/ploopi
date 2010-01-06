@@ -203,7 +203,7 @@ else
     $db->query("SELECT filetype FROM ploopi_mimetype WHERE ext = '{$docfile->fields['extension']}'");
     $row = $db->fetchrow();
 
-    $ico = (!empty($row['filetype']) && file_exists("./img/mimetypes/{$row['filetype']}.png")) ? "{$row['filetype']}.png" : 'default.png';
+    $ico = (!empty($row['filetype']) && file_exists("./img/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
     ?>
 
     <div class="doc_fileinfo">

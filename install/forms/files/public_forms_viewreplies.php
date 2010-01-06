@@ -1,7 +1,8 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -51,6 +52,7 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
 
             <p><b>Filtre:</b></p>
             <?php
+            //ploopi_print_r($data_title);
             for ($l=1;$l<=$lmax;$l++)
             {
                 ?>
@@ -59,6 +61,7 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
                     <option></option>
                     <?php
                     $lev = 0;
+                    
                     foreach ($data_title as $key => $value)
                     {
                         if ($value['sep'])
