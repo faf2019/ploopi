@@ -57,7 +57,7 @@ foreach(array('POST', 'GET') as $strGlobalVar)
             if (strstr($strParam, '=')) list($strKey, $strValue) = explode('=',$strParam);
             else {$strKey = $strParam; $strValue = '';}
     
-            $_REQUEST[$strKey] = ${"_{$strGlobalVar}"}[$strKey] = $strValue;
+            $_REQUEST[$strKey] = ${"_{$strGlobalVar}"}[$strKey] = urldecode($strValue);
         }
         
         unset($strKey);
