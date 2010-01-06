@@ -109,7 +109,7 @@
 
         minutes = ((minutes < 10) ? "0" : "") + minutes;
         day = ((day < 10) ? "0" : "") + day;
-        month = ((month < 10) ? "0" : "") + month;
+        month = ((month < 10) ? "0" : "") + (month + 1);
 
         var clock = day + "/" + month + "/" + year + " " + hours + ":" + minutes;
         $('status_time').innerHTML =  clock;
