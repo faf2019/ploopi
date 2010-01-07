@@ -48,6 +48,7 @@ class ploopi_captcha extends data_object
         $this->gc(); // Suppression des anciens captcha 
     }
     
+    
     /**
      * Garbage collector
      * Suppression des "vieux captcha"
@@ -58,7 +59,7 @@ class ploopi_captcha extends data_object
     {
         global $db;
         
-        $intTimeMin = time() - 1800; // maintenant - 30min
+        $intTimeMin = time() - 900; // maintenant - 15min
         $db->query("DELETE FROM ploopi_captcha WHERE time <= '{$intTimeMin}'");
     }
 }
@@ -254,6 +255,8 @@ class captcha extends ploopi_captcha
     function __construct($idcaptcha = '', $arrAttrib = '')
     {
         if(empty($idcaptcha)) $idcaptcha = 'default';
+        
+        $idcaptcha = $idcaptcha.'_'.session_id();
         
         $this->captchasession = new ploopi_captcha();
         
@@ -704,6 +707,8 @@ class captcha_sound extends ploopi_captcha
     function __construct($idcaptcha, $lang = '', $path = '')
     {
         if(empty($idcaptcha)) $idcaptcha = 'default';
+        
+        $idcaptcha = $idcaptcha.'_'.session_id();
         
         $this->captchasession = new ploopi_captcha();
         
