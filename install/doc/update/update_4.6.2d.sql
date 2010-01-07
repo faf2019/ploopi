@@ -1,0 +1,1 @@
+ALTER TABLE `ploopi_mod_doc_folder` ADD `allow_feeds` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `waiting_validation`; 
