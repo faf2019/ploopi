@@ -1,3 +1,11 @@
+== Module Wiki - version 1.0.0f ====================================================
+
+2009-01-07  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un conflit entre l'interpréteur "Textile" et le système de nettoyage des contenus HTML (HTML Purifier)
+ * Améliorations sur la feuille de style
+ * Mise à jour du fichier "exemple.txt"
+
 == Module Wiki - version 1.0.0e ====================================================
 
 2009-01-07  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

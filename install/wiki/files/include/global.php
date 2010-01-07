@@ -154,7 +154,7 @@ function wiki_render($strContent)
 
     $strTextile = preg_replace_callback ('/<a[^>]*href="(.*)"[^>]*>(.*)<\/a>/i', 'wiki_links', $strTextile);
     $strTextile = preg_replace_callback ('/\[\[(.*)\]\]/i', 'wiki_internal_links', $strTextile);
-
-    return $strTextile;
+    
+    return ploopi_htmlpurifier($strTextile);
 }
 ?>
