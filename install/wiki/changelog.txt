@@ -1,3 +1,9 @@
+== Module Wiki - version 1.0.0e ====================================================
+
+2009-01-07  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Modification des liens de l'aide sur la syntaxe "Textile" 
+
 == Module Wiki - version 1.0.0d ====================================================
 
 2010-01-06  Audrey Gilbert ~ Ovensia  <audrey@ovensia.fr>
