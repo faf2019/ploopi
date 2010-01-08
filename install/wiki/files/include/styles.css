@@ -98,9 +98,12 @@ color: #606060;
 
 #wiki_page ul.toc a:hover { color: #c61a1a; text-decoration: underline;}
 
-a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
-a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
-h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+#wiki_page a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+#wiki_page a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+
+#wiki_page h1:hover a.wiki-anchor, 
+#wiki_page h2:hover a.wiki-anchor, 
+#wiki_page h3:hover a.wiki-anchor { display: inline; color: #ddd; }
 
 #wiki_page a.wiki_link {
 }
@@ -113,6 +116,22 @@ color:#ff0000;
 #wiki_page span.wiki_link_notfound img,
 #wiki_page span.wiki_link_ext img {
 margin:0 2px;
+}
+
+#wiki_page .footnote {
+font-size:0.9em;
+color:#888;
+}
+
+#wiki_page_print {
+font-family: sans-serif;
+font-size: 14px;
+}
+
+#wiki_page_print_info {
+font-family: sans-serif;
+font-size: 12px;
+float: right;
 }
 
 #wiki_modify {

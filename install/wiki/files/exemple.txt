@@ -1,32 +1,22 @@
-h1. Bienvenue sur le wiki
+h1. titre 1
 
-h2. Menu 2
+h1>. titre 1 à droite
 
-h3. Menu 3
+h1=. titre 1 à droite
 
-* Liste 1
-** Sous Liste
-*** Autre élément
+h2. titre2
 
-* Liste 2
-* Liste 3
+h2>. titre 2 à droite
 
-# Un
-# Deux
-# Trois
+h3. titre3
 
-+Souligné+
+_texte en italique_
 
--Barré-
+*texte en gras*
 
-_Italique_
++texte souligné+
 
-*Gras*
-
-"Lien externe":http://www.google.fr
-
-[[Lien interne]]
-[[Autre Lien interne]]
+-texte barré-
 
 ??citation??
 
@@ -38,20 +28,83 @@ _Italique_
 
 @code@
 
-p. Paragraph
+p. Paragraphe
 
-bc. Block code
-Test
+bc. Bloc
 
-pre. Pre-formatted 
-Ca marche ?
+pre. Pre-formatté 
 
-Ploopi(c) Wiki(r)
+Lien vers un "site externe":http://www.ovensia.fr
 
-|_. a|_. table|_. header|
-|a|table|row|
-|a|table|row|
+Lien vers une [[page interne]]
 
-See foo[1].
+Listes:
 
-fn1. Ca c'est une note de bas de page
+* Fuel could be:
+** Coal
+** Gasoline
+** Electricity
+* Humans need only:
+** Water
+** Protein
+
+# Fuel could be:
+## Coal
+## Gasoline
+## Electricity
+# Humans need only:
+## Water
+## Protein
+
+Lien vers une note de bas de page[1].
+Lien vers une autre note de bas de page[2].
+
+Caractères spéciaux : one(TM), two(R), three(C).
+
+%{color:green}Texte% %{color:blue}en couleur%.
+
+p{color:blue;margin:30px}. Décalage+Couleur
+
+p=. Texte centré
+
+p<. Texte aligné à gauche
+
+p>. Texte aligné à droite
+
+p<>. Texte justifié
+
+p(. Indentation à gauche de 1 élément
+
+p(((. Indentation à gauche de 3 éléments
+
+
+Tableau:
+|_. nom |_. age |_. sexe |
+| joan | 24 | f |
+| john | 29 | h |
+| bella | 45 | f |
+
+Bordure :
+table{border:3px solid black}.
+|This|is|a|row|
+|This|is|a|row|
+
+Tableau en couleur :
+table{border:3px solid black}.
+|_. nom |_. age |_. sexe |
+{background:#ddd}. | joan | 24 | f |
+{background:#ffaacc}. | john | 29 | h |
+| bella | 45 | f |
+
+Image à droite:
+!>http://www.ovensia.fr/templates/frontoffice/ovensia_officiel/gfx/logo.png!
+
+Image:
+!http://www.ovensia.fr/templates/frontoffice/ovensia_officiel/gfx/logo.png!
+
+Lien sur une image :
+!http://www.ovensia.fr/templates/frontoffice/ovensia_officiel/gfx/logo.png!:http://www.ovensia.fr/
+
+fn1. Note de bas de page
+
+fn2. Note de bas de page n°1
