@@ -1,3 +1,9 @@
+== Module Wiki - version 1.0.0g ====================================================
+
+2009-01-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Contournement d'un problème avec la classe "Textile" (retourne des erreurs sur les images si allow_url_fopen est désactivé dans php.ini)
+
 == Module Wiki - version 1.0.0f ====================================================
 
 2009-01-07  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

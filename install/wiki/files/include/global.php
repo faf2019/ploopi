@@ -150,8 +150,12 @@ function wiki_render($strContent)
 {
     include_once './lib/textile/classTextile.php';
     $objTextile = new Textile;
+    
+    ploopi_unset_error_handler();
+    // La classe Textile retourne des erreurs sur les images si allow_url_fopen est désactivé dans php.ini
     $strTextile = $objTextile->TextileThis($strContent);
-
+    ploopi_set_error_handler();
+    
     $strTextile = preg_replace_callback ('/<a[^>]*href="(.*)"[^>]*>(.*)<\/a>/i', 'wiki_links', $strTextile);
     $strTextile = preg_replace_callback ('/\[\[(.*)\]\]/i', 'wiki_internal_links', $strTextile);
     
