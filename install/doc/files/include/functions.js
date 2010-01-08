@@ -228,8 +228,8 @@ function doc_changeshow(currentfolder, typeshow)
 		$('doc_type_show').src = './modules/doc/img/ico_show_thumb.png';
 		urlGet = urlGet+'doc_explorer_thumb';
 	}
-	
-	if(currentfolder != 'undefined') urlGet = urlGet+'&currentfolder='+currentfolder;
+
+	if(typeof(currentfolder) != 'undefined') urlGet = urlGet+'&currentfolder='+currentfolder;
 
 	new Ajax.Updater('doc_explorer',urlGet);
 }
