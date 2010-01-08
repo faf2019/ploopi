@@ -289,7 +289,7 @@ if ($query_string != '') // recherche intégrale
 
     while ($row = $db->fetchrow()) 
     {
-        if (!$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
+        if ( (isset($arrHeadings['list'][$row['id_heading']])) && (!$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']])) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
             $arrModDoc[$row['id_module_docfile']][] = $row['md5id_docfile'];
     }
 
@@ -755,7 +755,7 @@ else // affichage standard rubrique/page
                     if (file_exists("{$template_path}/fckeditor/fck_editorarea.css")) $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fck_editorarea.css';
                     if (file_exists("{$template_path}/fckeditor/fcktemplates.xml")) $arrConfig['TemplatesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fcktemplates.xml';
                     if (file_exists("{$template_path}/fckeditor/fckstyles.xml")) $arrConfig['StylesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fckstyles.xml';
-                    
+
                     $arrProperties = array();
                     $arrProperties['ToolbarSet'] = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner' ? 'Beginner': 'Default';
                     
