@@ -419,7 +419,7 @@ if ($_SESSION['ploopi']['connected'])
                 <p>
                     <label>Date de début:</label>
                     <input name="_booking_event_timestp_begin_d" id="_booking_event_timestp_begin_d" class="text" type="text" value="<? echo $strDate; ?>" style="width:80px;" onchange="javascript:$('_booking_event_timestp_end_d').value = this.value;" />
-                    <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('_booking_event_timestp_begin_d', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>                
+                    <?php ploopi_open_calendar('_booking_event_timestp_begin_d'); ?>
                 </p>
                 <p>
                     <label>Heure de début:</label>
@@ -444,7 +444,7 @@ if ($_SESSION['ploopi']['connected'])
                 <p>
                     <label>Date de fin:</label>
                     <input name="_booking_event_timestp_end_d" id="_booking_event_timestp_end_d" class="text" type="text" value="<? echo $strDate; ?>" style="width:80px; "/>
-                    <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('_booking_event_timestp_end_d', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>                
+                    <?php ploopi_open_calendar('_booking_event_timestp_end_d'); ?>
                 </p>
                 <p>
                     <label>Heure de fin:</label>
@@ -482,7 +482,7 @@ if ($_SESSION['ploopi']['connected'])
                 <p>
                     <label><em>se termine le</em>:</label>
                     <input name="_booking_event_periodicity_end_date" id="_booking_event_periodicity_end_date" class="text" type="text" value="" style="width:80px; "/>
-                    <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('_booking_event_periodicity_end_date', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>                
+                    <?php ploopi_open_calendar('_booking_event_periodicity_end_date'); ?>
                 </p>
             </div>
             <div style="padding:4px;text-align:right;">
@@ -718,7 +718,7 @@ switch($_REQUEST['ploopi_op'])
                                         {
                                             ?>
                                             <input name="_booking_event_timestp_begin_d[<? echo $detail['id']; ?>]" id="_booking_event_timestp_begin_d<? echo $detail['id']; ?>" class="text" type="text" value="<? echo $arrDateBegin['date']; ?>" style="width:80px;" onchange="javascript:if ($('_booking_event_timestp_end_d<? echo $detail['id']; ?>').value == '') $('_booking_event_timestp_end_d<? echo $detail['id']; ?>').value = this.value;" />
-                                            <a style="float:left;" href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('_booking_event_timestp_begin_d<? echo $detail['id']; ?>', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>                
+                                            <?php ploopi_open_calendar("_booking_event_timestp_begin_d{$detail['id']}", true, null, 'float:left;'); ?>
                                             <select name="_booking_event_timestp_begin_h[<? echo $detail['id']; ?>]" id="_booking_event_timestp_begin_h<? echo $detail['id']; ?>" class="select" style="width:60px;">
                                             <?
                                             for ($i = 0; $i < 24; $i++)
@@ -782,7 +782,7 @@ switch($_REQUEST['ploopi_op'])
                                         {
                                             ?>
                                             <input name="_booking_event_timestp_end_d[<? echo $detail['id']; ?>]" id="_booking_event_timestp_end_d<? echo $detail['id']; ?>" class="text" type="text" value="<? echo $arrDateEnd['date']; ?>" style="width:80px; "/>
-                                            <a style="float:left;" href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('_booking_event_timestp_end_d<? echo $detail['id']; ?>', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>                
+                                            <?php ploopi_open_calendar("_booking_event_timestp_end_d{$detail['id']}", true, null, 'float:left;'); ?>
                                             <select name="_booking_event_timestp_end_h[<? echo $detail['id']; ?>]" id="_booking_event_timestp_end_h<? echo $detail['id']; ?>" class="select" style="width:60px;">
                                             <?
                                             for ($i = 0; $i < 24; $i++)
