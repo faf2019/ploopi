@@ -379,7 +379,7 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
                                 $arrResource = &$arrResources[$strTypeResource][$intResource];
                                 
                                 $strColor = !empty($arrResource['color']) ? "background:{$arrResource['color']}" : '';
-                                $strUsers .= '<img src="/modules/planning/img/ico_'.$strTypeResource.'.png" style="display:block;margin:0 1px;float:left;'.$strColor.';" title="'.htmlentities($arrResource['label']).'" />';
+                                $strUsers .= '<img src="./modules/planning/img/ico_'.$strTypeResource.'.png" style="display:block;margin:0 1px;float:left;'.$strColor.';" title="'.htmlentities($arrResource['label']).'" />';
                             }
                         }
                     }
