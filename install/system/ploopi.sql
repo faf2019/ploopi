@@ -58,23 +58,23 @@ CREATE TABLE `ploopi_confirmation_code` (
   PRIMARY KEY  (`action`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-LOCK TABLES `ploopi_captcha` WRITE;
-/*!40000 ALTER TABLE `ploopi_captcha` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ploopi_captcha` ENABLE KEYS */;
-UNLOCK TABLES;
-DROP TABLE IF EXISTS `ploopi_captcha`;
-CREATE TABLE `ploopi_captcha` (
-`id` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
-`cptuse` INT( 10 ) UNSIGNED NOT NULL ,
-`codesound` VARCHAR( 20 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
-`code` VARCHAR( 20 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
-`time` INT( 20 ) UNSIGNED NOT NULL ,
-INDEX ( `id` )
-) ENGINE = MYISAM ;
-
 LOCK TABLES `ploopi_confirmation_code` WRITE;
 /*!40000 ALTER TABLE `ploopi_confirmation_code` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ploopi_confirmation_code` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `ploopi_captcha`;
+CREATE TABLE `ploopi_captcha` (
+`id` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
+`cptuse` INT(10) UNSIGNED NOT NULL ,
+`codesound` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
+`code` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
+`time` INT(20) UNSIGNED NOT NULL ,
+INDEX (`id`)
+) ENGINE=MYISAM DEFAULT CHARSET=latin1;
+
+LOCK TABLES `ploopi_captcha` WRITE;
+/*!40000 ALTER TABLE `ploopi_captcha` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ploopi_captcha` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ploopi_connecteduser`;
 CREATE TABLE `ploopi_connecteduser` (
