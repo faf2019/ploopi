@@ -343,7 +343,9 @@ a.doc_fckexplorer_file:hover {
 
 div.doc_main_thumbs {
 	clear: both;
-	overflow: auto;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
 }
 
 div.doc_thumb {

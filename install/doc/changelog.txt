@@ -1,3 +1,11 @@
+== Module DOC - version 4.6.2f ====================================================
+
+2010-01-12  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+* Correction : Certaines parties des flux RSS/ATOM sur les dossiers n'étaient pas au format UTF8
+* Modification : utilisation de $arrParsedURI['path'] dans rewrite.php
+* Modification : supression de l'ascenseur dans le mode vignette
+
 == Module DOC - version 4.6.2e ====================================================
 
 2010-01-08  Xavier Toussaint ~ HeXad <xavier@hexad.fr>

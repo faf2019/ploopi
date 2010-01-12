@@ -164,15 +164,15 @@ if (!$objCache->start())
         $title .= ' / '.$file['lastname'].' '. $file['firstname'];
         $title .= ' / '.$datePublic['date'];
         
-        $item->setTitle(ploopi_xmlentities($title, true));
+        $item->setTitle(utf8_encode(ploopi_xmlentities($title)));
         $item->setLink($link);
         
         $description = '<a href="'.$link.'"><img src="'.$img.'" align="left" hspace="20" alt="'.utf8_encode($file['name']).'" border="0" /></a>';
         $description .='<div>';
-        $description .=ploopi_nl2br(htmlentities(utf8_encode($file['description'])));
+        $description .=ploopi_nl2br(ploopi_xmlentities($file['description']));
         $description .='</div>';
         
-        $item->setDescription($description);
+        $item->setDescription(utf8_encode($description)); // Pas de ploopi_xmlentities car on affiche du html !
 
         $item->setDate(ploopi_timestamp2unixtimestamp($file['timestp_modify']));
         

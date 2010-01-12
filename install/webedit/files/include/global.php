@@ -1111,8 +1111,8 @@ function webedit_getrewriterules()
             // Divers
             'unsubscribe/$1/index.<EXT>',
             'tags/$1.<EXT>',
-            '$1/<TITLE>-h$2.xml',
-            '$1/<TITLE>.xml',
+            'web/$1/<TITLE>-h$2.xml',
+            'web/$1/<TITLE>.xml',
             'tag3D/$1/$2.xml'
             )
     );

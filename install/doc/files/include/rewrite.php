@@ -31,7 +31,7 @@
  */
 
 // documents
-if (preg_match('/documents\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $_SERVER['REQUEST_URI'], $arrMatches) == 1) 
+if (preg_match('/^\/documents\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $arrParsedURI['path'], $arrMatches) == 1) 
 {
     if (!empty($arrMatches[2])) 
     {
@@ -42,7 +42,7 @@ if (preg_match('/documents\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $_SERVER['
     }
 }
 
-elseif (preg_match('/media\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $_SERVER['REQUEST_URI'], $arrMatches) == 1) 
+elseif (preg_match('/^\/media\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $arrParsedURI['path'], $arrMatches) == 1) 
 {
     if (!empty($arrMatches[2])) 
     {
@@ -53,7 +53,7 @@ elseif (preg_match('/media\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $_SERVER['
     }
 }
 //flux RSS/Atom
-elseif (preg_match('/doc\/(rss|atom)\/(.*)-m([0-9]*)f([0-9]*)\.xml/', $_SERVER['REQUEST_URI'], $arrMatches) == 1)
+elseif (preg_match('/^\/doc\/(rss|atom)\/(.*)-m([0-9]*)f([0-9]*)\.xml/', $arrParsedURI['path'], $arrMatches) == 1)
 {
     if (!empty($arrMatches[1]) && !empty($arrMatches[3])) 
     {

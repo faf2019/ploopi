@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.3.2f ============================================
+
+2010-01-12  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * correction : la regexpr des flux RSS/ATOM n'était pas assez précise et volait les url des flux du module Doc
+
 == Module WebEdit - version 2.3.2e ============================================
 
 2010-01-07  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

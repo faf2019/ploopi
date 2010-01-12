@@ -67,7 +67,7 @@ elseif (preg_match('/blog\/(.*)-(h([0-9]*)){0,1}(p([0-9]{1,4})){0,1}(y([0-9]{4})
 }
 
 // atom rubrique
-elseif (preg_match('/atom\/(.*)-h([0-9]*)\.xml/', $arrParsedURI['path'], $arrMatches) == 1)
+elseif (preg_match('/web\/atom\/(.*)-h([0-9]*)\.xml/', $arrParsedURI['path'], $arrMatches) == 1)
 {
     if (!empty($arrMatches[2])) 
     {
@@ -75,21 +75,23 @@ elseif (preg_match('/atom\/(.*)-h([0-9]*)\.xml/', $arrParsedURI['path'], $arrMat
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'webedit_backend';
         $_REQUEST['format'] = $_GET['format'] = 'atom';
         $_REQUEST['headingid'] = $_GET['headingid'] = $arrMatches[2];
+        $_REQUEST['backendtype'] = $_GET['backendtype'] = 'feedRssAtom';
         $booRewriteRuleFound = true;        
     }    
 }
 
 // atom racine
-elseif (preg_match('/atom\/(.*)\.xml/', $arrParsedURI['path'], $arrMatches) == 1)
+elseif (preg_match('/web\/atom\/(.*)\.xml/', $arrParsedURI['path'], $arrMatches) == 1)
 {
     $ploopi_access_script = 'index-light';
     $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'webedit_backend';
     $_REQUEST['format'] = $_GET['format'] = 'atom';
+    $_REQUEST['backendtype'] = $_GET['backendtype'] = 'feedRssAtom';
     $booRewriteRuleFound = true;        
 }
 
 // rss rubrique
-elseif (preg_match('/rss\/(.*)-h([0-9]*)\.xml/', $arrParsedURI['path'], $arrMatches) == 1)
+elseif (preg_match('/web\/rss\/(.*)-h([0-9]*)\.xml/', $arrParsedURI['path'], $arrMatches) == 1)
 {
     if (!empty($arrMatches[2])) 
     {
@@ -97,16 +99,18 @@ elseif (preg_match('/rss\/(.*)-h([0-9]*)\.xml/', $arrParsedURI['path'], $arrMatc
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'webedit_backend';
         $_REQUEST['format'] = $_GET['format'] = 'rss';
         $_REQUEST['headingid'] = $_GET['headingid'] = $arrMatches[2];
+        $_REQUEST['backendtype'] = $_GET['backendtype'] = 'feedRssAtom';
         $booRewriteRuleFound = true;        
     }    
 }
 
 // rss racine
-elseif (preg_match('/rss\/(.*)\.xml/', $arrParsedURI['path'], $arrMatches) == 1)
+elseif (preg_match('/web\/rss\/(.*)\.xml/', $arrParsedURI['path'], $arrMatches) == 1)
 {
     $ploopi_access_script = 'index-light';
     $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'webedit_backend';
     $_REQUEST['format'] = $_GET['format'] = 'rss';
+    $_REQUEST['backendtype'] = $_GET['backendtype'] = 'feedRssAtom';
     $booRewriteRuleFound = true;        
 }
 

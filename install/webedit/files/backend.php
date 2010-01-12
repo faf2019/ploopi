@@ -34,7 +34,7 @@
 
 include_once './include/classes/cache.php';
 
-$strbackendtype = isset($_GET['backendtype']) ? $_GET['backendtype'] : 'rss_atom';
+$strbackendtype = isset($_GET['backendtype']) ? $_GET['backendtype'] : '';
 
 switch ($strbackendtype)
 {
@@ -132,9 +132,9 @@ switch ($strbackendtype)
         
         header('Content-Type: text/xml');
         ploopi_die();
+        break;
         
-        
-    default:    
+    case 'feedRssAtom' :    
 
         // Format du flux (RSS / ATOM)
         $format = (empty($_REQUEST['format'])) ? 'atom' : $_REQUEST['format'];
@@ -262,6 +262,10 @@ switch ($strbackendtype)
         
         header('Content-Type: text/xml');
         ploopi_die();
+        break;
+        
+    default:
+        break;
 }
 
 ?>
