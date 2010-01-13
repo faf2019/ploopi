@@ -62,7 +62,10 @@ switch($ploopi_op)
         <script type="text/javascript">
             ploopi_tickets_validate = function (form)
             {
-                return (ploopi_validatefield('Titre',form.ticket_title,'string'));
+            	if(ploopi_validatefield('Titre',form.ticket_title,'string'))
+            	if(ploopi_ticket_validateTo('Destinataire',form.system_ticket_ctrl_user_to))
+                    return true;
+                return false;
             }
         </script>
 

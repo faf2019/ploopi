@@ -145,3 +145,34 @@ function ploopi_tickets_selectusers_keypress(e)
         break;
     }
 }
+
+/*
+ * Contrôle spécifique au ticket, vérif qu'au moins un destinataire est sélectionné
+ */
+function ploopi_ticket_validateTo(field_label, field_object)
+{
+    var ok = true;
+    var msg = new String();
+    var reg = new RegExp("<FIELD_LABEL>","gi");
+
+    if (field_object)
+    {
+    	
+        field_value = field_object.value;
+
+        ok = (field_value.replace(/(^\s*)|(\s*$)/g,'').length > 0)
+    }
+    else
+    {
+    	ok = false;
+    }
+    
+    if (!ok)
+    {
+    	msg = lstmsg[4];
+        alert(msg.replace(reg,field_label));
+    }
+
+    return (ok);
+
+}

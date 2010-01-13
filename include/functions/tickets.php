@@ -289,6 +289,9 @@ function ploopi_tickets_displayusers()
 
     if (!empty($_SESSION['ploopi']['tickets']['users_selected']))
     {
+        ?>
+        <input type="hidden" id="system_ticket_ctrl_user_to" name="system_ticket_ctrl_user_to" value="<?php echo implode(',',$_SESSION['ploopi']['tickets']['users_selected']); ?>" />
+        <?php
         foreach($_SESSION['ploopi']['tickets']['users_selected'] as $user_id)
         {
             include_once './include/classes/user.php';
