@@ -1,3 +1,9 @@
+== Module DOC - version 4.6.2g ====================================================
+
+2010-01-15  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+* Correction : Url des flux erroné avec un ploopi dans un sous répertoire.
+
 == Module DOC - version 4.6.2f ====================================================
 
 2010-01-12  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
