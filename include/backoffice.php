@@ -327,8 +327,8 @@ if(isset($_GET['ploopi_mod_msg']) && defined($_GET['ploopi_mod_msg']))
 if(isset($_GET['ploopi_mod_error']) && defined($_GET['ploopi_mod_error']))
 {
     $template_body->assign_block_vars('switch_mod_message',array(
-        'MSG'       => constant($_GET['ploopi_mod_msg']),
-        'MSG4JS'    => addslashes(constant($_GET['ploopi_mod_msg'])),
+        'MSG'       => constant($_GET['ploopi_mod_error']),
+        'MSG4JS'    => addslashes(constant($_GET['ploopi_mod_error'])),
         'MSG_ID'    => uniqid('ploopi_mod_error_'),
         'MSG_CLASS' => 'ploopi_mod_mess_error'
         )
