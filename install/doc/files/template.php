@@ -47,7 +47,7 @@ $strDocSelect =  "
                 AND         f.foldertype = 'public'
                 AND         f.id_workspace IN ({$strListDocWorkspace})
                 
-                ORDER BY    f.name desc 
+                ORDER BY    f.name asc 
                 ";
 
 $sqlDocResult = $db->query($strDocSelect);
