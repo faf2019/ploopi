@@ -70,7 +70,7 @@ switch($op)
     
             $newscat->setvalues($_POST,'newscat_');
             $newscat->save();
-            ploopi_create_user_action_log(_NEWS_ACTION_MANAGE, $newscat->fields['id']);
+            ploopi_create_user_action_log(_NEWS_ACTION_MANAGECAT, $newscat->fields['id']);
         }
         ploopi_redirect("admin.php?newsTabItem=tabNewsCatModify&newscat_id={$newscat->fields['id']}");
     break;
@@ -80,7 +80,7 @@ switch($op)
         {
             $newscat = new newscat();
             $newscat->open($_GET['newscat_id']);
-            ploopi_create_user_action_log(_NEWS_ACTION_MANAGE, $newscat->fields['id']);
+            ploopi_create_user_action_log(_NEWS_ACTION_MANAGECAT, $newscat->fields['id']);
             $newscat->delete();
         }
         ploopi_redirect("admin.php?newsTabItem=tabNewsCatModify");
@@ -113,10 +113,11 @@ switch($op)
         if (!empty($_GET['news_id']) && is_numeric($_GET['news_id']) && ploopi_isactionallowed(_NEWS_ACTION_PUBLISH))
         {
             $news = new news();
-            $news->open($_GET['news_id']);
-            $news->fields['published'] = 1;
-            $news->save();
-
+            if($news->open($_GET['news_id']))
+            {
+                $news->fields['published'] = 1;
+                $news->save();
+            }
             ploopi_create_user_action_log(_NEWS_ACTION_PUBLISH, $news->fields['id']);
         }
         ploopi_redirect("admin.php?newsTabItem=tabNewsModify");
@@ -126,9 +127,12 @@ switch($op)
         if (!empty($_GET['news_id']) && is_numeric($_GET['news_id']) && ploopi_isactionallowed(_NEWS_ACTION_PUBLISH))
         {
             $news = new news();
-            $news->open($_GET['news_id']);
-            $news->fields['published'] = 0;
-            $news->save();
+            if($news->open($_GET['news_id']))
+            {
+                $news->fields['published'] = 0;
+                $news->save();
+            }
+            
         }
         ploopi_redirect("admin.php?newsTabItem=tabNewsModify");
     break;
