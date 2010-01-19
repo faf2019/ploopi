@@ -1,3 +1,10 @@
+== Module DOC - version 4.6.2h ====================================================
+
+2010-01-19  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Ajout : ajout des tags pour affichage des flux rss/atom de doc dans le template
+ * Modification : ajout des flux de ged dans le template "exemple"
+
 == Module DOC - version 4.6.2g ====================================================
 
 2010-01-15  Xavier Toussaint ~ HeXad <xavier@hexad.fr>

@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>webedit</label>
-        <version>2.3.2f</version>
-        <author>Ovensia</author>
-        <date>20100112181400</date>
+        <version>2.3.2g</version>
+        <author>Ovensia / HeXad</author>
+        <date>20100119140800</date>
         <description>Editeur de Contenus Web</description>
         <paramtype>
             <name>display_type</name>
@@ -52,27 +52,27 @@
         </paramtype>
         <action>
             <id_action>1</id_action>
-            <label>Gérer les articles</label>
+            <label>Gérer les articles (Global)</label>
         </action>
         <action>
             <id_action>2</id_action>
-            <label>Publier les articles</label>
+            <label>Être sélectionnable dans la liste des Validateurs (Global)</label>
         </action>
         <action>
             <id_action>3</id_action>
-            <label>Gérer les rubriques</label>
+            <label>Gérer les rubriques (Global)</label>
         </action>
         <action>
             <id_action>4</id_action>
-            <label>Gérer les validateurs</label>
+            <label>Gérer les validateurs (À la rubrique) - (Nécessite d'être Gestionnaire de rubrique)</label>
         </action>
         <action>
             <id_action>5</id_action>
-            <label>Gérer les abonnés</label>
+            <label>Gérer les abonnés (À la rubrique)</label>
         </action>
         <action>
             <id_action>6</id_action>
-            <label>Gérer les autorisations d'accès</label>
+            <label>Gérer les autorisations d'accès (À la rubrique) - (Nécessite d'être Gestionnaire de rubrique)</label>
         </action>
         <action>
             <id_action>8</id_action>
@@ -80,19 +80,19 @@
         </action>
         <action>
             <id_action>9</id_action>
-            <label>Réindéxer le contenu</label>
+            <label>Réindéxer le contenu (Global)</label>
         </action>
         <action>
             <id_action>10</id_action>
-            <label>Gérer les commentaires</label>
+            <label>Gérer les commentaires (À la rubrique)</label>
         </action>
         <action>
             <id_action>11</id_action>
-            <label>Gérer les rédacteurs</label>
+            <label>Gérer les rédacteurs (À la rubrique) - (Nécessite d'être Gestionnaire de rubrique)</label>
         </action>
         <action>
             <id_action>12</id_action>
-            <label>Être rédacteur potentiel</label>
+            <label>Être sélectionnable dans la liste des Rédacteurs (Global)</label>
         </action>
     </moduletype>
 </ploopi>

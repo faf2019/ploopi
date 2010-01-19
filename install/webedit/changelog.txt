@@ -1,3 +1,10 @@
+== Module WebEdit - version 2.3.2g ============================================
+
+2010-01-19  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Modification : intitulé de rôles.
+ * Correction : certain rôle ont des dépendances vis a vis d'autres rôles (ex pour être gestionnaire des validateurs il faut être gestionnaire de rubrique)
+
 == Module WebEdit - version 2.3.2f ============================================
 
 2010-01-12  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

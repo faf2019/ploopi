@@ -20,6 +20,15 @@
     <link rel="alternate" type="application/rss+xml" href="{switch_rssfeed_site.URL}" title="RSS - {switch_rssfeed_site.TITLE}" />
     <!-- END switch_rssfeed_site -->
 
+    <!-- BEGIN switch_docfeed -->
+        <!-- BEGIN atom -->
+        <link rel="alternate" type="application/atom+xml" href="{switch_docfeed.atom.URL}" title="ATOM - {switch_docfeed.atom.TITLE}" />
+        <!-- END atom -->
+        <!-- BEGIN rss -->
+        <link rel="alternate" type="application/rss+xml" href="{switch_docfeed.rss.URL}" title="RSS - {switch_docfeed.rss.TITLE}" />
+        <!-- END rss -->
+    <!-- END switch_docfeed -->
+
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/styles.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/skin.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/calendar.css" media="screen" />

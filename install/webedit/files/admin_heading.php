@@ -661,7 +661,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
         </p>
 
         <?php
-        if (ploopi_isactionallowed(_WEBEDIT_ACTION_WORKFLOW_MANAGE))
+        if (ploopi_isactionallowed(_WEBEDIT_ACTION_WORKFLOW_MANAGE) && ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
         {
             ?>
             <div style="border:1px solid #c0c0c0;overflow:hidden;">
@@ -707,7 +707,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
         </p>
 
         <?php
-        if (ploopi_isactionallowed(_WEBEDIT_ACTION_HEADING_BACK_EDITOR_MANAGE))
+        if (ploopi_isactionallowed(_WEBEDIT_ACTION_HEADING_BACK_EDITOR_MANAGE) && ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
         {
             ?>
             <div style="border:1px solid #c0c0c0;overflow:hidden;">
