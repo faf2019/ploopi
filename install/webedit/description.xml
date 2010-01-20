@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>webedit</label>
-        <version>2.3.2g</version>
+        <version>2.3.2h</version>
         <author>Ovensia / HeXad</author>
-        <date>20100119140800</date>
+        <date>20100120151600</date>
         <description>Editeur de Contenus Web</description>
         <paramtype>
             <name>display_type</name>

@@ -1,37 +1,43 @@
+== Module WebEdit - version 2.3.2h ============================================
+
+2010-01-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug dans la génération des variables templates frontoffice (notamment pour le PATH indiquant la liste des rubriques sélectionnées) 
+
 == Module WebEdit - version 2.3.2g ============================================
 
-2010-01-19  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2010-01-19  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
  * Modification : intitulé de rôles.
  * Correction : certain rôle ont des dépendances vis a vis d'autres rôles (ex pour être gestionnaire des validateurs il faut être gestionnaire de rubrique)
 
 == Module WebEdit - version 2.3.2f ============================================
 
-2010-01-12  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2010-01-12  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
  * correction : la regexpr des flux RSS/ATOM n'était pas assez précise et volait les url des flux du module Doc
 
 == Module WebEdit - version 2.3.2e ============================================
 
-2010-01-07  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2010-01-07  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
  * correction : Url vers le captcha audio pouvait être erronée
 
 == Module WebEdit - version 2.3.2d ============================================
 
-2010-01-06  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2010-01-06  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
 * Modification  : Changement de fonctionnement des Captchas
 
 == Module WebEdit - version 2.3.2c ============================================
 
-2010-01-02  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2010-01-02  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
 * Correction bug  : "Undefined index:  position" lors de la suppression d'article
 
 == Module WebEdit - version 2.3.2b ============================================
 
-2010-01-02  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2010-01-02  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
 * Modification : Optimisation de plusieurs requetes dans le display (suppression des SELECT "*")
 * Modification : Optimisation de l'affichage blog : suppression d'au moins une requete par boucle d'article à afficher.
@@ -39,56 +45,56 @@
 
 == Module WebEdit - version 2.3.2a ============================================
 
-2010-01-02  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2010-01-02  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
 * Modification : Optimisation du contrôle de boucle sur la redirection rubrique -> rubrique
 * Correction bug : le contrôle de boucle ne verifiait pas le mode "redirect" (ou pas) 
 
 == Module WebEdit - version 2.3.2 ============================================
 
-2010-01-01  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2010-01-01  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
 * Modification : Possibilité de rediriger une rubrique vers une autre rubrique. (Ex.: Racine -> rubrique "blog")
 
 == Module WebEdit - version 2.3.1g ============================================
 
-2009-12-31  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2009-12-31  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
 * Correction bug : Pour le résultat de la recherche par nuage de tags, il manque la balise {SHORT_LINK}
 
 == Module WebEdit - version 2.3.1f ============================================
 
-2009-12-30  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2009-12-30  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
 * Correction bug : Passage d'un paramètre erroné au calendrier "blog"
 
 == Module WebEdit - version 2.3.1e ============================================
 
-2009-12-19  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2009-12-19  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
 * Correction bug : En affichage "Blog", les pages non visibles dans le menu apparaissent quand même.
 
 == Module WebEdit - version 2.3.1d ============================================
 
-2009-12-16  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2009-12-16  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
 * Correction bug : Problème d'affichage lorsqu'une rubrique n'a aucun user en autorisation d'accès meme en héritage (même sans restriction !)
 
 == Module WebEdit - version 2.3.1c ============================================
 
-2009-12-16  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2009-12-16  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
 * Correction bug : Le fichier XML utilisé par le cumulus de tag renvoyait des erreurs SI le user avait été précédement connecté en Back.
 
 == Module WebEdit - version 2.3.1b ============================================
 
-2009-12-16  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2009-12-16  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
 * Correction du bug #38 : Problème pour insérer des documents ou faire des liens vers des documents (Bug corrigé dans la branche stable par Stéphane Escaich)
 
 == Module WebEdit - version 2.3.1a ============================================
 
-2009-12-15  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+2009-12-15  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
  * Correction du bug #37 : Problème avec les rewrite rules : indique "Page non trouvée" (Bug corrigé dans la branche stable par Stéphane Escaich)
 
@@ -100,7 +106,7 @@
 
 == Module WebEdit - version 2.3.0 ============================================
 
-2009-12-04  xavier Toussaint ~ HeXad <xavier@hexad.fr>
+2009-12-04  Xavier Toussaint ~ HeXad <Xavier@hexad.fr>
 
  * Ajout : Gestion des "rédacteurs" (Utilisateurs autorisés à modifier une partie des rubriques et leurs articles de webedit.)
  * Ajout : http://"votredomaine"/tag3D/"moduleid_webedit".xml retourne un fichier XML format exploitable par le plugin flash WP-Cumulus (WP-Cumulus : Copyright Roy Tanck - www.roytanck.com)   
@@ -108,14 +114,14 @@
   
 == Module WebEdit - version 2.2.0a ============================================
 
-2009-11-26  xavier Toussaint ~ HeXad <xavier@hexad.fr>
+2009-11-26  Xavier Toussaint ~ HeXad <Xavier@hexad.fr>
 
  * Correction : faille potentielle de sécurité dans les commentaires
  * Correction : erreur lors de la redirection après enregistrement d'un commentaire
 
 == Module WebEdit - version 2.2.0 ============================================
 
-2009-11-25  xavier Toussaint ~ HeXad <xavier@hexad.fr>
+2009-11-25  Xavier Toussaint ~ HeXad <Xavier@hexad.fr>
 
  * Ajout : Les headings peuvent afficher leurs articles sous forme de "blog"
  * Ajout d'un calendrier pour la version "blog"
@@ -174,13 +180,13 @@
   
  == Module WebEdit - version 2.1.4f ============================================
 
-2009-09-10  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+2009-09-10  Xavier Toussaint ~ HeXad <Xavier@hexad.fr>
 
  * idem 2.1.4e - Correction d'un petit bug de régression sur les rubriques privées affichées "en force".
 
 == Module WebEdit - version 2.1.4e ============================================
 
-2009-09-10  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+2009-09-10  Xavier Toussaint ~ HeXad <Xavier@hexad.fr>
 
  * Correction d'un petit bug de régression sur les rubriques privées affichées "en force".
 
@@ -198,7 +204,7 @@
 
 == Module WebEdit - version 2.1.4b ============================================
 
-2009-08-25  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+2009-08-25  Xavier Toussaint ~ HeXad <Xavier@hexad.fr>
 
  * Modification du fonctionnement des rubriques privées affichées "en force" depuis un autre module : $_SESSION['ploopi']['allowedheading']... -> $_SESSION['webedit']['allowedheading']
  Ceci afin de ne pas perdre l'info lors de la connexion/déconnexion 
@@ -231,7 +237,7 @@
 
 == Module WebEdit - version 2.1.2 ============================================
 
-2009-07-29  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+2009-07-29  Xavier Toussaint ~ HeXad <Xavier@hexad.fr>
 
  * Gestion de l'affichage des rubriques privées affichées "en force" depuis un autre module
  
