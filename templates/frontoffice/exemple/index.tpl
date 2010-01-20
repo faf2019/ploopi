@@ -95,7 +95,6 @@
                 <!-- BEGIN switch_heading5 -->
                 <a href="{switch_heading5.LINK}">&raquo;&nbsp;{switch_heading5.LABEL}</a>
                 <!-- END switch_heading5 -->
-
                 <!-- BEGIN switch_content_page -->
                     <a href="#">&raquo;&nbsp;{PAGE_TITLE}</a>
                 <!-- END switch_content_page -->
