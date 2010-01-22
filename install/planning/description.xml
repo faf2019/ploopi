@@ -1,28 +1,43 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ploopi>
-   <moduletype>
-      <label>planning</label>
-      <version>0.5.10.beta</version>
-      <author>Ovensia</author>
-      <date>20090507000000</date>
-      <description>Planning partagé</description>
-      <paramtype>
-         <name>planning_width</name>
-         <label>Largeur du planning</label>
-         <default_value>800</default_value>
-         <public>1</public>
-         <description/>
-      </paramtype>
-      <paramtype>
-         <name>planning_height</name>
-         <label>Hauteur du planning</label>
-         <default_value>500</default_value>
-         <public>1</public>
-         <description/>
-      </paramtype>
-      <action>
-         <id_action>10</id_action>
-         <label>Ajouter un événement</label>
-      </action>
-   </moduletype>
+    <moduletype>
+        <label>planning</label>
+        <version>0.7.0</version>
+        <author>Ovensia</author>
+        <date>20100122094500</date>
+        <description>Planning partagé</description>
+        <paramtype>
+            <name>planning_width</name>
+            <label>Largeur du planning</label>
+            <default_value>800</default_value>
+            <public>1</public>
+            <description/>
+        </paramtype>
+        <paramtype>
+            <name>planning_height</name>
+            <label>Hauteur du planning</label>
+            <default_value>500</default_value>
+            <public>1</public>
+            <description/>
+        </paramtype>
+        <paramtype>
+            <name>planning_display_groups</name>
+            <label>Afficher les groupes</label>
+            <default_value>1</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>1</value>
+                <displayed_value>oui</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>0</value>
+                <displayed_value>non</displayed_value>
+            </paramchoice>
+        </paramtype>      
+        <action>
+            <id_action>10</id_action>
+            <label>Ajouter un événement</label>
+        </action>
+    </moduletype>
 </ploopi>

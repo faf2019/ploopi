@@ -282,15 +282,14 @@ switch($ploopi_op)
             </p>
             <p>
                 <label>Heure de début:</label>
-                <select name="_planning_event_timestp_begin_h" id="_planning_event_timestp_begin_h" class="select" style="width:45px;">
+                <select name="_planning_event_timestp_begin_h" id="_planning_event_timestp_begin_h" class="select" style="width:60px;">
                 <?
                 for ($i = 0; $i < 24; $i++)
                 {
-                    ?><option <? if ($arrDateTimeBegin['time'][0] == $i) echo 'selected="selected"';  ?> value="<? echo $i; ?>"><? echo sprintf("%02d", $i); ?></option><?
+                    ?><option <? if ($arrDateTimeBegin['time'][0] == $i) echo 'selected="selected"';  ?> value="<? echo $i; ?>"><? echo sprintf("%02d h", $i); ?></option><?
                 }
                 ?>
                 </select>
-                H
                 <select name="_planning_event_timestp_begin_m" id="_planning_event_timestp_begin_m" class="select" style="width:45px;">
                 <?
                 for ($i = 0; $i < 12; $i++)
@@ -314,15 +313,14 @@ switch($ploopi_op)
             ?>
             <p>
                 <label>Heure de fin:</label>
-                <select name="_planning_event_timestp_end_h" id="_planning_event_timestp_end_h" class="select" style="width:45px;">
+                <select name="_planning_event_timestp_end_h" id="_planning_event_timestp_end_h" class="select" style="width:60px;">
                 <?
                 for ($i = 0; $i < 24; $i++)
                 {
-                    ?><option <? if ($arrDateTimeEnd['time'][0] == $i) echo 'selected="selected"';  ?> value="<? echo $i; ?>"><? echo sprintf("%02d", $i); ?></option><?
+                    ?><option <? if ($arrDateTimeEnd['time'][0] == $i) echo 'selected="selected"';  ?> value="<? echo $i; ?>"><? echo sprintf("%02d h", $i); ?></option><?
                 }
                 ?>
                 </select>
-                H
                 <select name="_planning_event_timestp_end_m" id="_planning_event_timestp_end_h" class="select" style="width:45px;">
                 <?
                 for ($i = 0; $i < 12; $i++)
@@ -349,8 +347,9 @@ switch($ploopi_op)
                         }
                         ?>
                     </select>
-
-                    terminée le:
+                </p>
+                <p>
+                    <label><em>se termine le</em>:</label>
                     <input name="_planning_event_periodicity_end_date" id="_planning_event_periodicity_end_date" class="text" type="text" value="" style="width:80px; "/>
                     <?php ploopi_open_calendar('_planning_event_periodicity_end_date'); ?>
                 </p>

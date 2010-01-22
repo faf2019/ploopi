@@ -1,3 +1,16 @@
+== Module Planning - version 0.7.0 ====================================================
+
+2010-01-22  Audrey Gilbert ~ Ovensia  <audrey@ovensia.fr>
+
+ * Synchronisation avec la version 0.6.0.beta (branche stable)
+ * Ajout d'un bouton "imprimer" qui génère une page HTML adaptée à l'impression
+
+== Module Planning - version 0.5.10.beta ====================================================
+
+2009-07-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Ajout du rôle "Ajout d'un événement" dans le fichier description.xml
+
 == Module Planning - version 0.5.10.beta ====================================================
 
 2009-07-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

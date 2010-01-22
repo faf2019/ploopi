@@ -44,6 +44,12 @@ switch($ploopi_op)
         include_once './modules/planning/public_planning.php';
         ploopi_die();
     break;
-    
+
+    case 'planning_print':
+        ploopi_init_module('planning');
+        ploopi_ob_clean();
+        include_once './modules/planning/planning_print.php';
+        ploopi_die();
+    break; 
 }
 ?>

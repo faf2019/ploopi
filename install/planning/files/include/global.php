@@ -75,14 +75,13 @@ function planning_get_resources()
 {
     include_once './include/classes/workspace.php';
 
-    $arrResource = array(
-        'group' => array(),
-        'user' => array()
-    );
+    $arrResource = array();
 
     $objWorkspace = new workspace();
     if ($objWorkspace->open($_SESSION['ploopi']['workspaceid']))
     {
+        $arrResource['user'] = array();
+        
         foreach($objWorkspace->getusers(true) as $arrUser)
         {
             $arrResource['user'][$arrUser['id']] = array(
@@ -91,16 +90,20 @@ function planning_get_resources()
                 'color' => $arrUser['color']
             );
         }
-
-        foreach($objWorkspace->getgroups() as $arrGroup)
+        
+        if (ploopi_getparam('planning_display_groups'))
         {
-            $arrResource['group'][$arrGroup['id']] = array(
-                'id' => $arrGroup['id'],
-                'label' => $arrGroup['label'],
-                'color' => ''
-            );
+            $arrResource['group'] = array();
+            
+            foreach($objWorkspace->getgroups() as $arrGroup)
+            {
+                $arrResource['group'][$arrGroup['id']] = array(
+                    'id' => $arrGroup['id'],
+                    'label' => $arrGroup['label'],
+                    'color' => ''
+                );
+            }
         }
-
     }
 
     return $arrResource;
@@ -134,6 +137,8 @@ function planning_get_events($arrResources, $intTimepstpBegin = null, $intTimeps
         
         WHERE       e.id_module = {$_SESSION['ploopi']['moduleid']}
         AND         e.id_workspace = {$_SESSION['ploopi']['workspaceid']}
+        
+        ORDER BY    ed.timestp_begin, ed.timestp_end
     ");
     
     while ($row = $db->fetchrow()) 

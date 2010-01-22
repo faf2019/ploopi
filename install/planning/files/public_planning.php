@@ -167,6 +167,8 @@ switch($arrSearchPattern['planning_display_type'])
     <input type="image" alt="Quotidien" src="./modules/planning/img/ico_day<? if ($arrSearchPattern['planning_display_type'] != 'day') echo'_notsel'; ?>.png" title="Journée" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=day'); ?>', 'planning_main');" />
     <input type="image" alt="Hebdomadaire" src="./modules/planning/img/ico_week<? if ($arrSearchPattern['planning_display_type'] != 'week') echo'_notsel'; ?>.png" title="Semaine" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=week'); ?>', 'planning_main');" />
     <input type="image" alt="Mensuel" src="./modules/planning/img/ico_month<? if ($arrSearchPattern['planning_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=month'); ?>', 'planning_main');" />
+    <a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<? echo ploopi_urlencode("admin-light.php?ploopi_op=planning_print") ?>', 800, 600)"><img src="./modules/planning/img/ico_printer.png" title="Imprimer"/></a>
+
 
     <label>Taille :</label>
     <select class="select" name="planning_size" id="planning_size" onchange="javascript:ploopi_xmlhttprequest_todiv('<? echo ploopi_urlencode('admin-light.php?ploopi_op=planning_refresh'); ?>', 'planning_size='+this.value, 'planning_main');">
@@ -379,7 +381,7 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
                                 $arrResource = &$arrResources[$strTypeResource][$intResource];
                                 
                                 $strColor = !empty($arrResource['color']) ? "background:{$arrResource['color']}" : '';
-                                $strUsers .= '<img src="/modules/planning/img/ico_'.$strTypeResource.'.png" style="display:block;margin:0 1px;float:left;'.$strColor.';" title="'.htmlentities($arrResource['label']).'" />';
+                                $strUsers .= '<img src="./modules/planning/img/ico_'.$strTypeResource.'.png" style="display:block;margin:0 1px;float:left;'.$strColor.';" title="'.htmlentities($arrResource['label']).'" />';
                             }
                         }
                     }
