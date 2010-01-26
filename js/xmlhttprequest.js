@@ -176,13 +176,15 @@ function ploopi_xmlhttprequest_todiv(url, parameters, id, method)
  * @param string url nom du script à appeler 
  * @param string data paramètres complémentaires 
  * @param string method méthode http à utiliser (GET/POST) 
+ * @param boolean true|false active la capture de la touche escape pour fermeture de la popup  
  */
  
-function ploopi_xmlhttprequest_topopup(width, e, id, url, data, method)
+function ploopi_xmlhttprequest_topopup(width, e, id, url, data, method, enable_esc)
 {
     if (typeof(method) == 'undefined') method = 'GET';
+    if (typeof(enable_esc) == 'undefined') enable_esc = false;
 
-    ploopi_showpopup(ploopi_ajaxloader_content, width, e, 'click', id);
+    ploopi_showpopup(ploopi_ajaxloader_content, width, e, 'click', id, null, null, enable_esc);
     ploopi_xmlhttprequest_todiv(url, data, id, method);
 }
 
