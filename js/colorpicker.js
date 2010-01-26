@@ -158,7 +158,10 @@ function ploopi_colorpicker_open(inputfield_id, event)
         220,
         event,
         false,
-        'ploopi_popup_colorpicker'
+        'ploopi_popup_colorpicker',
+        null,
+        null,
+        true
     );
 
     loadSV();
