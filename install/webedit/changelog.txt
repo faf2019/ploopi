@@ -1,3 +1,11 @@
+== Module WebEdit - version 2.3.2i ============================================
+
+2010-01-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Amélioration du contrôle de disponibilité des objets intégrés dans les articles
+* Ajout d'un bloc conditionnel "sw_separator" au niveau des variables template frontoffice sur les rubriques pour déterminer si un séparateur peut être affiché après une rubrique (signifiant la présence d'une rubrique suivante)
+* Correction d'un bug dans la génération des blocs de variables de rubriques pour la génération du frontoffice   
+
 == Module WebEdit - version 2.3.2h ============================================
 
 2010-01-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
