@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="{TEMPLATE_PATH}/css/calendar.css" media="screen,projection" />
     <link rel="stylesheet" type="text/css" href="{TEMPLATE_PATH}/css/search.css" media="screen,projection" />
     <link rel="stylesheet" type="text/css" href="{TEMPLATE_PATH}/css/system_trombi.css" media="screen,projection" />
+
     <!-- BEGIN module_css -->
     <link type="text/css" rel="stylesheet" href="{module_css.PATH}" media="screen" />
     <!-- END module_css -->
