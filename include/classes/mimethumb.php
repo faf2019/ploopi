@@ -531,20 +531,20 @@ class mimethumb
             $fileTempo = $pathTemp.md5(uniqid(rand(), true)).'.'.$formExport;
 
             // Besoin pour l'appel en cli
-            $doc_jobservice = '';
-            if(isset($_SESSION))
+            $system_jobservice = '';
+            if(!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_jodwebservice']))
             {
-                $doc_jobservice = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_jodwebservice'];
+                $system_jobservice = $_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_jodwebservice'];
             }
             else // en mode cli.php recup si webservice ou pas dans les param du module
             {
                 include_once './include/classes/param.php';
                 $objParam = new param();
-                $objParam->open($this->intIdModule, $this->intIdWorkspace);
-                $doc_jobservice = $objParam->getparam('doc_jodwebservice');
+                $objParam->open(_PLOOPI_MODULE_SYSTEM);
+                $system_jobservice = $objParam->getparam('system_jodwebservice');
             }
 
-            if(!empty($doc_jobservice) && ploopi_is_url($doc_jobservice))
+            if(!empty($system_jobservice) && ploopi_is_url($system_jobservice))
             {
                 if(filesize($this->strPathFile) > 512*1024) return false;
                 
@@ -575,12 +575,7 @@ class mimethumb
                 if($this->strGroupType === 'text')
                 {
                     $fileTempoTXT = $pathTemp.md5(uniqid(rand(), true)).'.txt';
-                    
-                    if(_PLOOPI_SERVER_OSTYPE == 'unix')
-                        symlink($this->strPathFile,$fileTempoTXT); // Sous nux on crée juste un lien symbolique (+ rapide)
-                    else
-                        copy($this->strPathFile,$fileTempoTXT); // Sous win les liens symbolique n'existe que pour vista,2003 ou > ...
-                    
+                    symlink($this->strPathFile,$fileTempoTXT); // Sous nux on crée juste un lien symbolique (+ rapide)
                     $this->strPathFile = $fileTempoTXT;
                 }
                 

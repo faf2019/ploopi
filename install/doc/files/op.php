@@ -718,8 +718,10 @@ if ($_SESSION['ploopi']['connected'])
                     if ($docfolder->open($_GET['docfolder_id']))
                     {
                         $docfolder->setvalues($_POST,'docfolder_');
+                        
                         if (empty($_POST['docfolder_readonly'])) $docfolder->fields['readonly'] = 0;
                         if (empty($_POST['docfolder_readonly_content'])) $docfolder->fields['readonly_content'] = 0;
+                        if (empty($_POST['docfolder_allow_feeds'])) $docfolder->fields['allow_feeds'] = 0;
                         $docfolder->save();
     
                         // On va chercher les abonnés

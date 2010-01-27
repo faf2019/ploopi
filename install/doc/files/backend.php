@@ -53,7 +53,7 @@ $format = (empty($_GET['format'])) ? 'atom' : $_GET['format'];
 include_once './include/classes/cache.php';
 
 $objCache = new ploopi_cache(md5('doc_feeds_folder_'.$format.'_'.$_GET['id_folder']), 300);
-$objCache->set_groupe('module_doc_feeds_'.$_SESSION['ploopi']['workspaceid'].'_'.$_SESSION['ploopi']['moduleid']);  // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
+$objCache->set_groupe('module_doc_feeds_'.$objFolder->fields['id_workspace'].'_'.$objFolder->fields['id_module']);  // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
 
 // Vidage du buffer
 ploopi_ob_clean();
@@ -92,24 +92,29 @@ if (!$objCache->start())
 
     $feed = new FeedWriter($feedformat);
 
-    $feed->setTitle(ploopi_xmlentities($objFolder->fields['name'], true));
+    $feed->setTitle(utf8_encode($objFolder->fields['name']));
     //$feed->setLink(_PLOOPI_BASEPATH);
-    $feed->setDescription(ploopi_xmlentities($objFolder->fields['description']));
+    $feed->setDescription(utf8_encode($objFolder->fields['description']));
     
     $feed->setChannelElement('updated', $date_update);
-    $feed->setChannelElement('author', array('name '=> ploopi_xmlentities(utf8_encode($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']), true)));
-
+    
+    if(!empty($_SESSION['ploopi']['workspaces'][$objFolder->fields['id_workspace']]['meta_author']))
+    {
+        $meta_author = ploopi_xmlentities(utf8_encode($_SESSION['ploopi']['workspaces'][$objFolder->fields['id_workspace']]['meta_author']), true);
+        $feed->setChannelElement('author', array('name '=> $meta_author));
+    }
+    
     // On recherche tous les dossiers enfants publics du dossier selectionné
     
     $select = "
         SELECT      id, name
         FROM        ploopi_mod_doc_folder
         
-        WHERE       id_module = '{$_SESSION['ploopi']['moduleid']}'
-        AND         (parents LIKE '%,{$objFolder->fields['id']},%' 
+        WHERE       (parents LIKE '%,{$objFolder->fields['id']},%' 
         OR          parents LIKE '%,{$objFolder->fields['id']}'
         OR          id = '{$objFolder->fields['id']}')
         AND         foldertype = 'public'
+        AND         published = 1
     ";
     $sql_folder = $db->query($select);
     
@@ -123,6 +128,10 @@ if (!$objCache->start())
     $arrFolder = $db->getarray($sql_folder,true);
     $strFolderSql = implode(',',array_keys($arrFolder));
     
+    $limit = '';
+    if(isset($_SESSION['ploopi']['modules'][$objFolder->fields['id_module']]['doc_nbDocFeed']))
+        $limit = 'LIMIT '.$_SESSION['ploopi']['modules'][$objFolder->fields['id_module']]['doc_nbDocFeed'];
+    
     $select = "
         SELECT      f.id, f.md5id, f.name, f.description, f.timestp_modify,
                     f.size, f.version, f.id_folder,
@@ -134,9 +143,10 @@ if (!$objCache->start())
         ON          u.id = f.id_user
         
         WHERE       f.id_folder IN ({$strFolderSql})
-        AND         f.id_module = {$_SESSION['ploopi']['moduleid']}
         
         ORDER BY    f.timestp_modify DESC
+
+        {$limit}
     ";
 
     $sql_file = $db->query($select);
@@ -150,8 +160,6 @@ if (!$objCache->start())
 
     while ($file = $db->fetchrow($sql_file))
     {
-        $datePublic = ploopi_timestamp2local($file['timestp_modify']);
-        
         // Création d'un nouvel item
         $link = _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$file['md5id']}", doc_getrewriterules(), $file['name'], null, true);
         $img  = _PLOOPI_BASEPATH.'/'.ploopi_urlencode("index-light.php?ploopi_op=doc_getthumbnail&docfile_md5id={$file['md5id']}&version={$file['version']}");
@@ -162,12 +170,11 @@ if (!$objCache->start())
         $title .=  ($file['id_folder'] != $objFolder->fields['id']) ? ' / '.$arrFolder[$file['id_folder']] : '';
         $title .= ' / '.sprintf("%0.2f kio", ($file['size']/1024));
         $title .= ' / '.$file['lastname'].' '. $file['firstname'];
-        $title .= ' / '.$datePublic['date'];
         
         $item->setTitle(utf8_encode(ploopi_xmlentities($title)));
         $item->setLink($link);
         
-        $description = '<a href="'.$link.'"><img src="'.$img.'" align="left" hspace="20" alt="'.utf8_encode($file['name']).'" border="0" /></a>';
+        $description = '<a href="'.$link.'"><img src="'.$img.'" align="left" hspace="20" alt="'.$file['name'].'" border="0" /></a>';
         $description .='<div>';
         $description .=ploopi_nl2br(ploopi_xmlentities($file['description']));
         $description .='</div>';
@@ -175,7 +182,6 @@ if (!$objCache->start())
         $item->setDescription(utf8_encode($description)); // Pas de ploopi_xmlentities car on affiche du html !
 
         $item->setDate(ploopi_timestamp2unixtimestamp($file['timestp_modify']));
-        
         
         // Ajout de l'item dans le flux
         $feed->addItem($item);

@@ -1,3 +1,10 @@
+== Module DOC - version 4.6.2i ====================================================
+
+2010-01-27  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Ajout : paramètre pour imiter les articles dans le flux atom/rss
+ * Correction : impossible de supprimer la coche d'activation des flux
+
 == Module DOC - version 4.6.2h ====================================================
 
 2010-01-19  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
@@ -17,7 +24,7 @@
 
 * Correction : Certaines parties des flux RSS/ATOM sur les dossiers n'étaient pas au format UTF8
 * Modification : utilisation de $arrParsedURI['path'] dans rewrite.php
-* Modification : supression de l'ascenseur dans le mode vignette
+* Modification : suppression de l'ascenseur dans le mode vignette
 
 == Module DOC - version 4.6.2e ====================================================
 
