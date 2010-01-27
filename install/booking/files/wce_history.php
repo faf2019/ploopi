@@ -176,7 +176,7 @@ if ($_SESSION['ploopi']['connected'])
         $arrResult['columns']['left']['resource'] = 
             array(    
                 'label' => 'Ressource',
-                'width' => 180,
+                'width' => 100,
                 'options' => array('sort' => true)
             );    
             
@@ -203,7 +203,7 @@ if ($_SESSION['ploopi']['connected'])
         $arrResult['columns']['right']['datetime'] = 
             array(   
                 'label' => 'Durée / Période',
-                'width' => 200,
+                'width' => 120,
                 'options' => array('sort' => true)
             );
          
