@@ -221,7 +221,9 @@ function ploopi_ob_callback($buffer)
         $log->fields['page_size'] = $ploopi_stats['pagesize'];
         $log->save();
     }
-
+    
+    session_write_close();
+    
     if ($content_type == 'text/html' && !$booDownloadFile)
     {
         $array_tags = array(
