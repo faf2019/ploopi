@@ -620,7 +620,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         $arrWfUsers = array();
                         $arrWf = ploopi_validation_get(_DIRECTORY_OBJECT_HEADING, $intHeadingId);
                         $intWfHeadingId = $intHeadingId;
-
+                        
                         if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur les parents
                         {
                             $parents = explode(';', $arrHeadings['list'][$intHeadingId]['parents']);
@@ -634,22 +634,27 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 }
                             }
                         }
-
-                        foreach($arrWf as $value) $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
-
+                        
                         $objUser = new user();
                         $objUser->open($_SESSION['ploopi']['userid']);
                         $arrGroups = $objUser->getgroups(true);
                         
+                        /**
+                         * L'utilisateur connecté est-il gestionnaire ?
+                         */
                         $booModify = ploopi_isadmin();
-                        if (!$booModify)
+                        
+                        foreach($arrWf as $value) 
                         {
-                            foreach($arrWfUsers as $value) 
+                            if (!$booModify)
                             {
-                                if (($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) || ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']]))) $booModify = true;
-                            }                        
+                                if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booModify = true;
+                                if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booModify = true;
+                            }
+                                
+                            $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
                         }
-
+                        
                         if ($booModify) // Version modifiable
                         {
                             ?>
@@ -708,9 +713,9 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                                 <div style="clear:both;padding:4px;">
                                     <fieldset class="fieldset" style="padding:6px;">
-                                        <legend><strong>Gestionnaires</strong></legend>
+                                        <legend><strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "<em>(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)</em>"; ?></strong></legend>
                                 
-                                        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><?php if ($intWfHeadingId != $intHeadingId) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?>
+                                        <p class="ploopi_va" style="padding:0 2px 2px 2px;">
                                             <?php
                                             if (!empty($arrWfUsers))
                                             {
@@ -806,7 +811,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         <strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)"; ?></strong>:
 
                                         <div style="clear:both;padding:4px;">
-                                            <p class="ploopi_va" style="padding:0 2px 2px 2px;"><?php if ($intWfHeadingId != $intHeadingId) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?>
+                                            <p class="ploopi_va" style="padding:0 2px 2px 2px;">
                                                 <?php
                                                 if (!empty($arrWfUsers))
                                                 {
@@ -892,12 +897,12 @@ switch($_SESSION['directory']['directoryTabItem'])
                                     WHERE   id_heading = {$intHeadingId}
                                     ";
 
-                            $db->query($sql);
+                            $rs = $db->query($sql);
 
-                            if ($db->numrows())
+                            if ($db->numrows($rs))
                             {
                                 $c = 0;
-                                while ($row = $db->fetchrow())
+                                while ($row = $db->fetchrow($rs))
                                 {
                                     $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'" title="'.htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
 
@@ -925,7 +930,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                             $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 100));
 
-                            if (!$db->numrows())
+                            if (!$db->numrows($rs))
                             {
                                 ?>
                                 <div style="padding:4px;text-align:center;">Il n'y a pas de contact rattaché à <?php printf("%s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]); ?></div>
