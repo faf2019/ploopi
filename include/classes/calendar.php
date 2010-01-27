@@ -862,7 +862,6 @@ class calendar
 
         }
 
-        ploopi_print_r($arrEvents);
         return $arrEvents;
     }
 }
