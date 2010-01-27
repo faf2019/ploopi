@@ -57,6 +57,8 @@
     <script type="text/javascript">
     //<!--
     {ADDITIONAL_JAVASCRIPT}
+    
+    ploopi_window_onload_stock(function() { if ($('query_string').value == '') $('query_string').value = 'Recherche'; } );        
     //-->
     </script>
     <!-- BEGIN switch_content_page -->

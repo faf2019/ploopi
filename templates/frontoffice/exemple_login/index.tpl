@@ -83,7 +83,9 @@
                     <!-- BEGIN switch_user_logged_in -->
                     <div>
                         Bonjour<br /><strong>{USER_FIRSTNAME} {USER_LASTNAME}</strong>
-                        <input type="submit" class="button" value="&raquo; Déconnexion" onclick="document.location.href='{USER_DECONNECT}';"/>
+                        <form action="{USER_DECONNECT}" method="post">
+                        <input type="submit" class="button" value="&raquo; Déconnexion"/>
+                        </form>
                     </div>
                     <!-- END switch_user_logged_in -->
                 </div>
