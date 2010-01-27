@@ -851,7 +851,7 @@ class calendar
             // Vérification de l'intégrité
             if ($objEvent->intTimestpBegin <= $objEvent->intTimestpEnd)
             {
-                $currentday = $objEvent->intTimestpBegin;
+                $currentday = substr($objEvent->intTimestpBegin, 0, 8).'000000';
                 // Si l'événement tient sur plusieurs jours on l'affecte pour chaque jour
                 do {
                     $arrEvents[substr($currentday, 0, 8)][] = $key;

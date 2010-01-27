@@ -49,7 +49,10 @@ function ploopi_fckeditor($strInstanceName, $strContent, $strWidth, $strHeight, 
     $oFCKeditor->Height = $strHeight;
 
     $oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH.'/';
-    
+    $oFCKeditor->Config['LinkBrowserURL'] = _PLOOPI_BASEPATH.'/admin-light.php?ploopi_op=doc_selectfile';
+    $oFCKeditor->Config['ImageBrowserURL'] = _PLOOPI_BASEPATH.'/admin-light.php?ploopi_op=doc_selectimage';
+    $oFCKeditor->Config['FlashBrowserURL'] = _PLOOPI_BASEPATH.'/admin-light.php?ploopi_op=doc_selectflash';
+        
     // config
     if (isset($arrConfig)) foreach($arrConfig as $strKey => $strValue) $oFCKeditor->Config[$strKey] = $strValue;
     

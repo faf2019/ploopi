@@ -67,7 +67,7 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
             if (ploopi_checkemail($detail['address']))
             {
                 if ($str_to != '') $str_to .= ', ';
-                $str_to .= "{$detail['name']} <{$detail['address']}>";
+                $str_to .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
             }
         }
     }
@@ -84,7 +84,7 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
             if (ploopi_checkemail($detail['address']))
             {
                 if ($str_from != '') $str_from .= ', ';
-                $str_from .= "{$detail['name']} <{$detail['address']}>";
+                $str_from .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
             }
         }
     }
@@ -101,7 +101,7 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
             if (ploopi_checkemail($detail['address']))
             {
                 if ($str_cc != '') $str_cc .= ', ';
-                $str_cc .= "{$detail['name']} <{$detail['address']}>";
+                $str_cc .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
             }
         }
     }
@@ -114,7 +114,7 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
             if (ploopi_checkemail($detail['address']))
             {
                 if ($str_bcc != '') $str_bcc .= ', ';
-                $str_bcc .= "{$detail['name']} <{$detail['address']}>";
+                $str_bcc .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
             }
         }
     }
@@ -127,7 +127,7 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
             if (ploopi_checkemail($detail['address']))
             {
                 if ($str_replyto != '') $str_replyto .= ', ';
-                $str_replyto .= "{$detail['name']} <{$detail['address']}>";
+                $str_replyto .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
             }
         }
     }
@@ -139,7 +139,7 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     $headers = '';
 
     // add "from" to headers
-    if (!empty($str_from)) $headers .= "From: $str_from {$crlf}";
+    if (!empty($str_from)) $headers .= "From: {$str_from} {$crlf}";
     // add "reply_to" to headers
 
     // add "reply_to" to headers
@@ -155,12 +155,12 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     }
 
     // add "cc" to headers
-    if (!empty($str_cc)) $headers .= "Cc: $str_cc {$crlf}";
+    if (!empty($str_cc)) $headers .= "Cc: {$str_cc} {$crlf}";
     // add "bcc" to headers
-    if (!empty($str_bcc)) $headers .= "Bcc: $str_bcc {$crlf}";
+    if (!empty($str_bcc)) $headers .= "Bcc: {$str_bcc} {$crlf}";
 
-    $domain = empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
-    $organization = isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : $domain;
+    $domain = mb_encode_mimeheader(empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST']);
+    $organization = mb_encode_mimeheader(isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : $domain);
 
     $headers .= "Date: ".date('r')."{$crlf}";
     $headers .= "X-Priority: 1{$crlf}";
@@ -198,7 +198,7 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
                 $f = fclose($handle);
 
                 $msg .= "--{$boundary}{$crlf}";
-                $msg .= "Content-type:{$mime_type};name=".basename($filename)."{$crlf}";
+                $msg .= "Content-type:{$mime_type};name=".mb_encode_mimeheader(basename($filename))."{$crlf}";
                 $msg .= "Content-transfer-encoding:base64{$crlf}{$crlf}";
                 $msg .= "{$content}{$crlf}{$crlf}";
             }

@@ -128,7 +128,7 @@ function ploopi_ob_callback($buffer)
 {
     global $ploopi_timer;
     global $db;
-
+    
     // On essaye de récupérer le content-type du contenu du buffer
     $content_type = 'text/html';
     $headers = headers_list();
@@ -248,7 +248,6 @@ function ploopi_ob_callback($buffer)
 
         $buffer = trim(str_replace($array_tags, $array_values, $buffer));
     }
-
     
     if (!$booDownloadFile && _PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && ($content_type == 'text/html' || $content_type == 'text/xml' || $content_type == 'text/x-json'))
     {

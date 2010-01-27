@@ -211,11 +211,11 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
         header('Accept-Ranges: bytes');
         header('Cache-control: private');
         header('Pragma: private');
-        header("Content-Encoding: None");
+        header("Content-Encoding: identity");
         header("X-Ploopi: Download"); // Permet d'indiquer au gestionnaire buffer qu'il s'agit d'un téléchargement de fichier @see ploopi_ob_callback
         
         $chunksize = 1*(1024*1024);
-
+        
         if ($fp = fopen($filepath, 'r'))
         {
             while(!feof($fp) && connection_status() == 0)
@@ -223,13 +223,14 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
                 echo fread($fp, $chunksize);
             }
             fclose($fp);
+            
         }
         else
         {
             header('Content-type: text/html; charset=iso-8859-1');
             ploopi_die('Impossible d\'ouvrir le fichier');
         }
-
+        
         if ($deletefile && is_writable($filepath)) @unlink($filepath);
 
         if ($die) ploopi_die(null, false);

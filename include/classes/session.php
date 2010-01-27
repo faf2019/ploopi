@@ -217,7 +217,9 @@ class ploopi_session
 
     public static function destroy_id()
     {
+        $previous_id = session_id();
         session_regenerate_id(!self::$booUseDb);
+        ploopi_session::destroy($previous_id);
         session_destroy();
     }
 

@@ -147,6 +147,9 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
 {
     require_once 'Spreadsheet/Excel/Writer.php';
 
+    $workbook = new Spreadsheet_Excel_Writer();
+    $worksheet =& $workbook->addWorksheet();
+    
     $arrDefautOptions = array(
         'landscape' => true,
         'fitpage_width' => true,
@@ -174,7 +177,8 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
         'float_euro' => null,
         'integer' => null,
         'integer_percent' => null,
-        'integer_euro' => null
+        'integer_euro' => null,
+        'date' => null
     );
     
     foreach($arrFormats as $strKey => &$objFormat)
@@ -191,9 +195,11 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
             case 'integer': $objFormat->setNumFormat('#,##0;-#,##0'); break;
             case 'integer_percent': $objFormat->setNumFormat('#,##0 %;-#,##0 %'); break;
             case 'integer_euro': $objFormat->setNumFormat('#,##0 €;-#,##0 €'); break;
+            case 'date': $objFormat->setNumFormat('DD/MM/YYYY'); break;
         }
     }    
-
+    unset($objFormat);
+    
     $objWorkSheet = $objWorkBook->addWorksheet($strSheetName);
     if ($arrOptions['fitpage_width'] || $arrOptions['fitpage_height']) $objWorkSheet->fitToPages($arrOptions['fitpage_width'] ? 1 : 0, $arrOptions['fitpage_height'] ? 1 : 0);
     if ($arrOptions['landscape']) $objWorkSheet->setLandscape();
@@ -215,9 +221,8 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
         if ($booHeader) 
         {
             $intCol = 0;
-            foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->writeString(0, $intCol++, $strKey, $objFormatTitle);
+            foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->writeString(0, $intCol++, isset($arrDataFormats[$strKey]['title']) ? $arrDataFormats[$strKey]['title'] : $strKey, $objFormatTitle);
         }
-        
         // Traitement des contenus
         $intLine = 1;
         foreach($arrArray as $row) 
@@ -226,13 +231,14 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
             foreach($row as $strKey => $strValue) 
             {
                 // On vérifie si un format de donné est proposé pour le champ
-                $objFormat = (!empty($arrDataFormats[$strKey]['type']) && !empty($arrFormats[$arrDataFormats[$strKey]['type']])) ? $arrFormats[$arrDataFormats[$strKey]['type']] : $objFormatDefault; 
-                $objWorkSheet->writeString($intLine, $intCol++, $strValue, $objFormat);
+                $objFormat = (!empty($arrDataFormats[$strKey]['type']) && !empty($arrFormats[$arrDataFormats[$strKey]['type']])) ? $arrFormats[$arrDataFormats[$strKey]['type']] : $objFormatDefault;
+
+                $objWorkSheet->write($intLine, $intCol++, $strValue, $objFormat);
             }
             $intLine++;
         }
     }
-        
+    
     // fermeture du document
     $objWorkBook->close();
     
