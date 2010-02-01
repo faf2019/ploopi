@@ -187,7 +187,8 @@ function directory_gettreeview($headings = array(), $booPopup = false)
 function directory_template_display(&$template_body, &$arrHeadings, &$arrContacts, $intHeadingId = 0)
 {
     global $template_moduleid;
-
+    global $headingid;
+    
     // Gestion des contacts de la rubrique
     if (isset($arrContacts[$intHeadingId]))
     {
@@ -223,6 +224,7 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
             // Construction du lien sur la fiche contact
             $arrRequest = array();
 
+            $arrRequest[] = "headingid={$headingid}";
             $arrRequest[] = "op=contact";
             $arrRequest[] = "template_moduleid={$template_moduleid}";
             $arrRequest[] = "directory_contact_id={$row['id']}";
@@ -271,6 +273,7 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
             // Construction du lien sur la rubrique
             $arrRequest = array();
 
+            $arrRequest[] = "headingid={$headingid}";
             $arrRequest[] = "op=full";
             $arrRequest[] = "template_moduleid={$template_moduleid}";
             $arrRequest[] = "directory_heading_id={$intId}";
@@ -307,7 +310,8 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
 function directory_template_display_organigram(&$template_body, &$arrHeadings, $intHeadingId = 0)
 {
     global $template_moduleid;
-
+    global $headingid;
+    
     if (isset($arrHeadings['tree'][$intHeadingId]))
     {
         foreach($arrHeadings['tree'][$intHeadingId] as $intId)
@@ -315,6 +319,7 @@ function directory_template_display_organigram(&$template_body, &$arrHeadings, $
             // Construction du lien sur la rubrique
             $arrRequest = array();
 
+            $arrRequest[] = "headingid={$headingid}";
             $arrRequest[] = "op=full";
             $arrRequest[] = "template_moduleid={$template_moduleid}";
             $arrRequest[] = "directory_heading_id={$intId}";

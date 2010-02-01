@@ -34,10 +34,10 @@
 
 $template_body->assign_vars(
     array(
-        'DIRECTORY_FORMACTION' => ploopi_urlencode("index.php?template_moduleid={$template_moduleid}&op=search"),
-        'DIRECTORY_LINK_FULL' => ploopi_urlencode("index.php?template_moduleid={$template_moduleid}&op=full"),
-        'DIRECTORY_LINK_ORGANIGRAM' => ploopi_urlencode("index.php?template_moduleid={$template_moduleid}&op=organigram"),
-        'DIRECTORY_LINK_SPEEDDIALING' => ploopi_urlencode("index.php?template_moduleid={$template_moduleid}&op=speeddialing")
+        'DIRECTORY_FORMACTION' => ploopi_urlencode("index.php?headingid={$headingid}&template_moduleid={$template_moduleid}&op=search"),
+        'DIRECTORY_LINK_FULL' => ploopi_urlencode("index.php?headingid={$headingid}&template_moduleid={$template_moduleid}&op=full"),
+        'DIRECTORY_LINK_ORGANIGRAM' => ploopi_urlencode("index.php?headingid={$headingid}&template_moduleid={$template_moduleid}&op=organigram"),
+        'DIRECTORY_LINK_SPEEDDIALING' => ploopi_urlencode("index.php?headingid={$headingid}&template_moduleid={$template_moduleid}&op=speeddialing")
     )
 );
 ?>
