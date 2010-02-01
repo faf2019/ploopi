@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.3.2j ============================================
+
+2010-02-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un problème de visibilité d'article pour les utilisateurs ne disposant que d'un rôle de validation
+
 == Module WebEdit - version 2.3.2i ============================================
 
 2010-01-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

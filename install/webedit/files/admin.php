@@ -283,7 +283,7 @@ switch($menu)
             break;
 
             case 'article_save':
-                if ((ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid)) && $type == 'draft')
+                if ((ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid) || webedit_isValidator($headingid)) && $type == 'draft')
                 {
                     $tablename = 'ploopi_mod_webedit_article_draft';
 

@@ -90,11 +90,12 @@ $intErrorCode = 0;
 // vérification des paramètres
 if ($webedit_mode == 'edit' && !(ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid))) $webedit_mode = 'display';
 
-if ($webedit_mode == 'render' || $webedit_mode == 'display')
+if ($webedit_mode == 'render')
 {
     $readonly = 1;
     $type = '';
 }
+
 
 // requête de recherche ?
 $query_string = (empty($_REQUEST['query_string'])) ? '' : $_REQUEST['query_string'];
@@ -121,7 +122,7 @@ elseif ($query_tag != '') // Recherche par tag
 }
 elseif (!empty($intTemplateModuleId)) // Module frontoffice
 {
-    $headingid = $arrHeadings['tree'][0][0];
+    if (empty($headingid)) $headingid = $arrHeadings['tree'][0][0];
 }
 else // affichage standard rubrique/page ou blog
 {
@@ -1814,6 +1815,7 @@ $sql =  "
 $db->query($sql);
 
 $arrTags = array();
+
 while ($row = $db->fetchrow())
 {
     // ATTENTION EN CAS DE CHANGEMENT DE FILTRE, NE PAS OUBLIER LES TAG 3D DANS BACKEND.PHP
