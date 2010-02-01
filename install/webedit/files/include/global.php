@@ -790,7 +790,7 @@ function webedit_getobjectcontent($matches)
 
                 ob_start();
                 // Module actif et disponible dans l'espace de travail
-                if ($_SESSION['ploopi']['modules'][$obj['module_id']]['active'] && in_array($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'], $obj['module_id']))
+                if ($_SESSION['ploopi']['modules'][$obj['module_id']]['active'] && in_array($obj['module_id'], $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
                 {
                     if (file_exists("./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php"))
                     {
@@ -1246,6 +1246,56 @@ function webedit_isEditor($heading, $user = null, $type = 'user', $id_module = n
     
     return (!empty($arrEditor));
 }
+
+
+/**
+ * Contrôle si le user connecté est un Validateur
+ *
+ * @Param int $heading id_heading à contrôler
+ * @Param int $user identifiant du user ou du groupe (optionnel)
+ * @Param string $type type de user (user/group) (optionnel)
+ * @Param int $id_module identifiant du module (optionnel)
+ *
+ * @return boolean true/false
+ */
+function webedit_isValidator($heading, $user = null, $type = 'user', $id_module = null)
+{
+    if (empty($heading) || !is_numeric($heading)) return false;
+    
+    if (is_null($user)) $user = $_SESSION['ploopi']['userid'];
+
+    $type = strtolower($type);
+    $type = ($type == 'user' &&  $type == 'group') ? $type : 'user';
+
+    if (is_null($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
+    
+    // On cherche les parents de cet heading
+    include_once './modules/webedit/class_heading.php';
+    
+    $objHeading = new webedit_heading();
+    if(!$objHeading->open($heading)) return false;
+    $arrHeading = explode(';',$objHeading->fields['parents']);
+    $arrHeading[] = $heading;
+    
+    // On test si c'est un rédacteur avec le user
+    $arrEditor = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $arrHeading, $id_module, $user, $type);
+    
+    // on a verifié par le user et il n'est pas rédacteur, on va verif ses groupes
+    if(empty($arrEditor) && $type == 'user')
+    {
+        include_once './include/classes/user.php';
+        
+        $objUser = new user();
+        $objUser->open($user);
+        $arrGroups = array_keys($objUser->getgroups(true));
+
+        if(!empty($arrGroups))
+            $arrEditor = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $arrHeading, $id_module, $arrGroups, 'group');
+    }
+    
+    return (!empty($arrEditor));
+}
+
 
 /**
  * Contrôle si la redirection vers une rubrique ou un article n'est pas une boucle infinie

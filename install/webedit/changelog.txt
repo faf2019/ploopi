@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.3.2k ============================================
+
+2010-02-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans le contrôle de disponibilité des objets intégrés en frontoffice
+
 == Module WebEdit - version 2.3.2j ============================================
 
 2010-02-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
