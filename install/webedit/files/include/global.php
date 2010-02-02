@@ -790,7 +790,8 @@ function webedit_getobjectcontent($matches)
 
                 ob_start();
                 // Module actif et disponible dans l'espace de travail
-                if ($_SESSION['ploopi']['modules'][$obj['module_id']]['active'] && in_array($obj['module_id'], $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
+                
+                if ($_SESSION['ploopi']['modules'][$obj['module_id']]['active'] && (in_array($obj['module_id'], $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']) || $obj['module_id'] == _PLOOPI_MODULE_SYSTEM))
                 {
                     if (file_exists("./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php"))
                     {
