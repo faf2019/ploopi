@@ -4,7 +4,7 @@
         <label>webedit</label>
         <version>2.1.6i</version>
         <author>Ovensia</author>
-        <date>20100108000000</date>
+        <date>20100202000000</date>
         <description>Editeur de Contenus Web</description>
         <paramtype>
             <name>display_type</name>

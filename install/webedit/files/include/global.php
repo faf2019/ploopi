@@ -736,12 +736,18 @@ function webedit_getobjectcontent($matches)
                 foreach ($arrQuery as $key => $value) eval("$".$value.";");
 
                 ob_start();
-                if (file_exists("./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php"))
+                // Module actif et disponible dans l'espace de travail
+                if ($_SESSION['ploopi']['modules'][$obj['module_id']]['active'] && (in_array($obj['module_id'], $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']) || $obj['module_id'] == _PLOOPI_MODULE_SYSTEM))
                 {
-                    include "./modules/{$obj['module_type']}/wce.php";
-                    $content .= ob_get_contents();
+                    if (file_exists("./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php"))
+                    {
+                        include "./modules/{$obj['module_type']}/wce.php";
+                        $content .= ob_get_contents();
+                    }
+                    else $content = "Objet WCE non trouvé";
                 }
-                else $content = "Objet WCE non trouvé";
+                else $content = "Objet WCE indisponible";
+                
                 ob_end_clean();
             }
         }

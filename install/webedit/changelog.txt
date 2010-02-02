@@ -1,6 +1,12 @@
+== Module WebEdit - version 2.1.6j ============================================
+
+2010-02-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Amélioration du contrôle de disponibilité des objets intégrés dans les articles
+
 == Module WebEdit - version 2.1.6i ============================================
 
-2010-08-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-01-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction d'un bug dans le moteur de recherche en frontoffice (affichage d'un notice sur certains documents)
 
