@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.1.6k ============================================
+
+2010-02-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction du bug #40 : Affiche parfois d'une couleur jaune en fond lors de l'intégration d'un objet - fixes #40
+
 == Module WebEdit - version 2.1.6j ============================================
 
 2010-02-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
