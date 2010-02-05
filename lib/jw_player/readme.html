@@ -42,31 +42,30 @@
 	<p>Below you see a simple embedded example of the JW Player.  Copy and paste the source code and put the SWF, JS and FLV file on your site to get started.</p>
 
 	<!-- START OF THE PLAYER EMBEDDING TO COPY-PASTE -->
-
-	<script type="text/javascript" src="swfobject.js"></script>
-	<script type="text/javascript">
-		swfobject.registerObject("player","9.0.98","expressInstall.swf");
-	</script>
-
-	<object id="player" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" name="player" width="328" height="200">
-		<param name="movie" value="player-viral.swf" />
+	
+	<object id="player" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" name="player" width="400" height="315">
+		<param name="movie" value="player.swf" />
 		<param name="allowfullscreen" value="true" />
 		<param name="allowscriptaccess" value="always" />
 		<param name="flashvars" value="file=video.flv&image=preview.jpg" />
-		<object type="application/x-shockwave-flash" data="player-viral.swf" width="328" height="200">
-			<param name="movie" value="player-viral.swf" />
-			<param name="allowfullscreen" value="true" />
-			<param name="allowscriptaccess" value="always" />
-			<param name="flashvars" value="file=video.flv&image=preview.jpg" />
-			<p><a href="http://get.adobe.com/flashplayer">Get Flash</a> to see this player.</p>
-		</object>
+		<embed
+			type="application/x-shockwave-flash"
+			id="player2"
+			name="player2"
+			src="player.swf" 
+			width="400" 
+			height="315"
+			allowscriptaccess="always" 
+			allowfullscreen="true"
+			flashvars="file=video.flv&image=preview.jpg" 
+		/>
 	</object>
-
+	
 	<!-- END OF THE PLAYER EMBEDDING -->
 
 
 	<h3>Quickstart</h3>
-	<p>The easiest way to get to know the player is by using our <a href="http://www.longtailvideo.com/support/jw-player-setup-wizard">setup wizard</a>. Select an example, set the file or playlist you want to play and copy-paste the embed code to your site. If you want to play Youtube content in the player, you also have to copy the <b>yt.swf</b> file along with the player-viral.swf.</p>
+	<p>The easiest way to get to know the player is by using our <a href="http://www.longtailvideo.com/support/jw-player-setup-wizard">setup wizard</a>. Select an example, set the file or playlist you want to play and copy-paste the embed code to your site. If you want to play Youtube content in the player, you also have to copy the <b>yt.swf</b> file along with the player.swf or player-viral.swf.</p>
 
 	<p>If you need any help, please visit our extensive support section, including <a href="http://www.longtailvideo.com/support/faq">FAQs</a>, a string of <a href="http://www.longtailvideo.com/support/tutorials">tutorials</a> and a very active <a href="http://www.longtailvideo.com/support/forum">support forum</a>.</p>
 
