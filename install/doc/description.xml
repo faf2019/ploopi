@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>doc</label>
-        <version>4.6.2i</version>
+        <version>4.6.3</version>
         <author>Ovensia / HeXad</author>
-        <date>20100127114700</date>
+        <date>20100205120000</date>
         <description>Gestion de Documents</description>
         <paramtype>
             <name>doc_viewfoldersinblock</name>
@@ -200,9 +200,9 @@
             </paramchoice>
         </paramtype>
         <paramtype>
-            <name>doc_nbDocFeed</name>
-            <label>Nombre de documents dans les flux Atom/Rss</label>
-            <default_value>10</default_value>
+            <name>doc_jodwebservice</name>
+            <label>URL du webservice JODConverter</label>
+            <default_value></default_value>
             <public>1</public>
             <description/>
         </paramtype>

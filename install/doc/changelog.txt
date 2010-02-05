@@ -1,3 +1,9 @@
+== Module DOC - version 4.6.3 ====================================================
+
+2010-02-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Intégration de JW PLAYER 5 (modification de l'appel vers le lecteur)
+
 == Module DOC - version 4.6.2i ====================================================
 
 2010-01-27  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
@@ -487,24 +493,24 @@
  * Optimisation de l'utilisation des sessions pour l'affichage et le tri des dossiers/fichiers.
  * Intégration d'un nouveau mécanisme d'upload de fichiers optionnel permettant l'envoi de gros fichiers et l'affichage temps réel de la progression du transfert, du fichier en cours de transfert et de la vitesse d'émission. Ce mécanisme doit être activé dans le fichier de configuration de PLOOPI avec les directives suivantes :
 
-	define ('_PLOOPI_USE_CGIUPLOAD', true); 	// active ou non le nouveau mécanisme d'upload
-	define ('_PLOOPI_CGI_PATH', 'cgi');	// indique le dossier contenu le CGI (chemin relatif à la racine de PLOOPI)
-	define ('_PLOOPI_CGI_UPLOADTMP', '/tmp');	// indique le chemin physique (absolu) sur le serveur, où seront stockés les fichiers en cours d'upload.
+    define ('_PLOOPI_USE_CGIUPLOAD', true);     // active ou non le nouveau mécanisme d'upload
+    define ('_PLOOPI_CGI_PATH', 'cgi'); // indique le dossier contenu le CGI (chemin relatif à la racine de PLOOPI)
+    define ('_PLOOPI_CGI_UPLOADTMP', '/tmp');   // indique le chemin physique (absolu) sur le serveur, où seront stockés les fichiers en cours d'upload.
 
    Ce nouveau mécanisme utilise un CGI écrit en php. Il nécessite donc l'installation du client php (php-cli). Il nécessite également une configuration particulière d'Apache pour que le dossier cgi soit "autorisé à exécuter" des scripts.
    Voici par exemple une configuration type permettant à Apache d'exécuter le script CGI d'upload inclus dans PLOOPI :
 
-	ScriptAlias /cgi/ /var/www/mon_ploopi/cgi/
-	<Directory "/var/www/mon_ploopi/cgi/">
-		AllowOverride None
-		Options ExecCGI -MultiViews +SymLinksIfOwnerMatch
-		Order allow,deny
-		Allow from all
-	</Directory>
+    ScriptAlias /cgi/ /var/www/mon_ploopi/cgi/
+    <Directory "/var/www/mon_ploopi/cgi/">
+        AllowOverride None
+        Options ExecCGI -MultiViews +SymLinksIfOwnerMatch
+        Order allow,deny
+        Allow from all
+    </Directory>
 
-	Si PLOOPI n'est pas installé en VirtualHost mais dans un sous-dossier ( http://domaine/mon_ploopi/ ), il faut adapter la ligne ScriptAlias :
+    Si PLOOPI n'est pas installé en VirtualHost mais dans un sous-dossier ( http://domaine/mon_ploopi/ ), il faut adapter la ligne ScriptAlias :
 
-	ScriptAlias /mon_ploopi/cgi/ /var/www/mon_ploopi/cgi/
+    ScriptAlias /mon_ploopi/cgi/ /var/www/mon_ploopi/cgi/
 
  * Mise à jour de la Métabase
 

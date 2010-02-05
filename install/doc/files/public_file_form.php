@@ -301,7 +301,7 @@ else
                     <script type="text/javascript" src="./lib/swfobject/swfobject.js"></script>
                     <div id="doc_jw_player">Player</div>
                     <script type="text/javascript">
-                    var so = new SWFObject('./lib/jw_player/player-viral.swf','mpl','100%','<?php echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>','9');
+                    var so = new SWFObject('./lib/jw_player/player.swf','mpl','100%','<?php echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>','9');
                     so.addParam('allowscriptaccess','always');
                     so.addParam('allowfullscreen','true');
                     so.addParam('flashvars','file=<?php echo ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true); ?>');
