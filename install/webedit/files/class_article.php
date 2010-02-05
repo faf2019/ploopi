@@ -132,6 +132,9 @@ class webedit_article extends data_object
             $this->fields['content'] = str_replace($arrSearch, $arrReplace, $this->fields['content']);
         }*/
 
+        
+        $this->fields['content'] = preg_replace('/<span[^>]*contenteditable="false"[^>]*>\[\[(.*)\]\]<\/span>/i', '[[$1]]', $this->fields['content']);
+        
         $this->fields['content_cleaned'] = $this->fields['content'];
 
         // filtre activé ?

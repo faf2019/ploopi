@@ -1,3 +1,10 @@
+== Module WebEdit - version 2.3.2m ============================================
+
+2010-02-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug qui affiche parfois une couleur jaune en fond lors de l'intégration d'un objet
+* Correction d'un bug à la lecture des fichiers vidéo via fw_player en frontoffice : nécessite de générer une url absolue vers le fichier à lire (pourquoi ??)
+
 == Module WebEdit - version 2.3.2l ============================================
 
 2010-02-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

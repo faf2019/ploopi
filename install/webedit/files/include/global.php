@@ -921,7 +921,8 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
                 if (!empty($md5) && $objDocFile->openmd5($md5)) // clé md5 présente & document trouvé
                 {
                     $arrSearch[] = $arrMatches[1][$key];
-                    $arrReplace[] = ploopi_urlrewrite(html_entity_decode($arrMatches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
+                    // ATTENTION ! _PLOOPI_BASEPATH est nécessaire pour la lecture des vidéos flash (chemin absolu sinon ne fonctionne pas)
+                    $arrReplace[] = _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite(html_entity_decode($arrMatches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
                 }
             }
         }
