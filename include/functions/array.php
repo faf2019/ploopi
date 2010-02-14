@@ -138,7 +138,7 @@ function ploopi_array2html($arrArray, $booHeader = true, $strClassName = 'ploopi
  * @param boolean $booHeader true si la ligne d'entête doit être ajoutée (nom des colonnes)
  * @param string $strFileName nom du fichier
  * @param string $strSheetName nom de la feuille dans le document XLS
- * @param array $arrDataFormats formats des colonnes ('type', 'width')
+ * @param array $arrDataFormats formats des colonnes ('title', 'type', 'width')
  * @param array $arrOptions Options de configuration de l'export ('landscape', 'fitpage_width', 'fitpage_height', 'tofile', 'setborder')
  * @return binary contenu XLS
  */
@@ -178,7 +178,8 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
         'integer' => null,
         'integer_percent' => null,
         'integer_euro' => null,
-        'date' => null
+        'date' => null,
+        'datetime' => null
     );
     
     foreach($arrFormats as $strKey => &$objFormat)
@@ -196,6 +197,7 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
             case 'integer_percent': $objFormat->setNumFormat('#,##0 %;-#,##0 %'); break;
             case 'integer_euro': $objFormat->setNumFormat('#,##0 €;-#,##0 €'); break;
             case 'date': $objFormat->setNumFormat('DD/MM/YYYY'); break;
+            case 'datetime' : $objFormat->setNumFormat('DD/MM/YYYY HH:MM:SS'); break;
         }
     }    
     unset($objFormat);
