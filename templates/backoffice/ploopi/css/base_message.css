@@ -23,7 +23,7 @@
 *******************/
 .ploopi_mod_mess_ok
 {
-    position:fixed;
+    position: absolute;
     right: 10px;    
     top: 10px;
     width: 50%;
@@ -40,7 +40,7 @@
 
 .ploopi_mod_mess_error
 {
-    position:fixed;
+    position: absolute;
     right: 10px;    
     top: 10px;
     width: 50%;
