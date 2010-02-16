@@ -72,6 +72,7 @@ while ($fields = $db->fetchrow($rs_fields))
         $template_forms->assign_block_vars('formfields.switch_separator', array(
             'NAME' => $fields['name'],
             'LEVEL' => $fields['separator_level'],
+            'INTERLINE' => $fields['interline'],
             'STYLE' => htmlentities($fields['style'])
         ));
     }

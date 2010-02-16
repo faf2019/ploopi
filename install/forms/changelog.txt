@@ -1,3 +1,9 @@
+== Module FORMS - version 2.5.3c =====================================================
+
+2010-02-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction du bug #41 dans la branche dev.
+
 == Module FORMS - version 2.5.3b =====================================================
 
 2010-01-07  Xavier Toussaint ~ HeXad <xavier@hexad.fr>

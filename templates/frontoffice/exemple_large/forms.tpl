@@ -2,12 +2,12 @@
 <div class="form">
     <!-- BEGIN formfields -->
         <!-- BEGIN switch_separator -->
-            <h{formfields.switch_separator.LEVEL} style="{formfields.switch_separator.STYLE}" >
+            <h{formfields.switch_separator.LEVEL} style="margin-top:{formfields.switch_separator.INTERLINE}px;{formfields.switch_separator.STYLE}" >
             {formfields.switch_separator.NAME}
             </h{formfields.switch_separator.LEVEL}>
         <!-- END switch_separator -->
         <!-- BEGIN switch_captcha -->
-            <p>
+            <p style="margin-top:{formfields.switch_field.INTERLINE}px;">
                 <label for="{formfields.switch_captcha.LABELID}">
                     {formfields.switch_captcha.LABEL} (*)
                 </label>
