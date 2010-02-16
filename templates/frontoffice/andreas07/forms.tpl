@@ -2,12 +2,12 @@
 <div class="form">
     <!-- BEGIN formfields -->
         <!-- BEGIN switch_separator -->
-            <div class="sep{formfields.switch_separator.LEVEL} style="{formfields.switch_separator.STYLE}">
+            <div class="sep{formfields.switch_separator.LEVEL} style="margin-top:{formfields.switch_separator.INTERLINE}px;{formfields.switch_separator.STYLE}">
             {formfields.switch_separator.NAME}
             </div>
         <!-- END switch_separator -->
         <!-- BEGIN switch_field -->
-            <p>
+            <p style="margin-top:{formfields.switch_field.INTERLINE}px;">
                 <label for="{formfields.switch_field.LABELID}">
                     {formfields.switch_field.LABEL}
                 <!-- BEGIN switch_required -->

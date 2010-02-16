@@ -1,3 +1,9 @@
+== Module FORMS - version 2.3.6h =====================================================
+
+2010-02-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction du bug #41 "le champ Interligne ne réagit pas en frontoffice" - fixes #41
+ 
 == Module FORMS - version 2.3.6g =====================================================
 
 2009-12-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -313,7 +313,7 @@
                         <div id="{directory_switch_speeddialing.heading.ID}" style="display:none;">
 	                        <table cellspacing="0" cellpadding="0">
 	                            <tr>
-	                                <th>Initulé</th>
+	                                <th>Intitulé</th>
 	                                <th style="width:150px;">Numéro</th>
 	                                <th style="width:100px;">Abrégé</th>
 	                            </tr>

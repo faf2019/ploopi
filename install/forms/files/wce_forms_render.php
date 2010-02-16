@@ -69,6 +69,7 @@ while ($fields = $db->fetchrow($rs_fields))
         $template_forms->assign_block_vars('formfields.switch_separator', array(
             'NAME' => $fields['name'],
             'LEVEL' => $fields['separator_level'],
+            'INTERLINE' => $fields['interline'],
             'STYLE' => htmlentities($fields['style'])
         ));
     }
@@ -94,20 +95,20 @@ while ($fields = $db->fetchrow($rs_fields))
         else $value = (isset($replies[$fields['id']][0])) ? $replies[$fields['id']][0] : '';
 
         $template_forms->assign_block_vars('formfields.switch_field',array(
-                    'ID' => $fields['id'],
-                    'LABELID' => 'field_'.$fields['id'],
-                    'NAME' => 'field_'.$fields['id'],
-                    'LABEL' => $fields['name'],
-                    'DESCRIPTION' => $fields['description'],
-                    'NEEDED' => $fields['option_needed'],
-                    'INTERLINE' => $fields['interline'],
-                    'VALUE' => $value,
-                    'TABINDEX' => 1000+$fields['position'],
-                    'MAXLENGTH' => (empty($fields['maxlength'])) ? '255' : $fields['maxlength'],
-                    'STYLE' => htmlentities($fields['style']),
-                    'CONTENT' => ''
-                    )
-                );
+            'ID' => $fields['id'],
+            'LABELID' => 'field_'.$fields['id'],
+            'NAME' => 'field_'.$fields['id'],
+            'LABEL' => $fields['name'],
+            'DESCRIPTION' => $fields['description'],
+            'NEEDED' => $fields['option_needed'],
+            'INTERLINE' => $fields['interline'],
+            'VALUE' => $value,
+            'TABINDEX' => 1000+$fields['position'],
+            'MAXLENGTH' => (empty($fields['maxlength'])) ? '255' : $fields['maxlength'],
+            'STYLE' => htmlentities($fields['style']),
+            'CONTENT' => ''
+            )
+        );
 
         if ($fields['option_needed']) $template_forms->assign_block_vars('formfields.switch_field.switch_required',array());
 
