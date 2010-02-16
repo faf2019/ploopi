@@ -7,7 +7,7 @@
             </h{formfields.switch_separator.LEVEL}>
         <!-- END switch_separator -->
         <!-- BEGIN switch_captcha -->
-            <p style="margin-top:{formfields.switch_field.INTERLINE}px;">
+            <p>
                 <label for="{formfields.switch_captcha.LABELID}">
                     {formfields.switch_captcha.LABEL} (*)
                 </label>
@@ -38,7 +38,7 @@
             </script>
         <!-- END switch_captcha -->
         <!-- BEGIN switch_field -->
-            <p>
+            <p style="margin-top:{formfields.switch_field.INTERLINE}px;">
                 <label for="{formfields.switch_field.LABELID}">
                     {formfields.switch_field.LABEL}
                 <!-- BEGIN switch_required -->
