@@ -185,11 +185,21 @@ abstract class ploopi_query
     }
 
     /**
-     * Permet de redéfinir la connexion à la BDD (utile notamment après désérialisation
+     * Permet de redéfinir la connexion à la BDD
      *
      * @param resource $objDb Connexion à la BDD
      */
     public function set_db($objDb) { $this->objDb = $objDb; }
+    
+    
+    /**
+     * Permet de redéfinir la connexion à la BDD au réveil de l'objet  (utile notamment après désérialisation)
+     */    
+    public function __wakeup()
+    {
+        global $db; 
+        $this->objDb = $db;
+    }
 }
 
 /**
@@ -544,8 +554,8 @@ class ploopi_query_select extends ploopi_query_sud
         {
             $strSql = $this->get_select().
                 $this->get_from(). 
-                $this->get_leftjoin(). 
                 $this->get_innerjoin().
+                $this->get_leftjoin(). 
                 $this->get_where().
                 $this->get_groupby().
                 $this->get_having().

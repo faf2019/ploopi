@@ -253,6 +253,8 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
  */
 function ploopi_array_cleankeys($arrArray)
 {
+    if (!is_array($arrArray)) return $arrArray;
+    
     $arrNewArray = array();
     
     foreach($arrArray as $strKey => $mixValue)
