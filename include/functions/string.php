@@ -454,4 +454,20 @@ function ploopi_is_url($url)
 
     return eregi($urlregex, $url) ? true : false;
 }
+
+/**
+ * Nettoie une chaine pour en faire un nom de fichier valide. Ne conserve que les caracteres : [a-zA-Z0-9_-]
+ *
+ * @param string $str chaine à nettoyer
+ * @return string la chaine nettoyée
+ */
+
+function ploopi_clean_filename($str) 
+{
+    $str = ploopi_convertaccents($str);
+    $arrSearch = array ('@[ */]@i','@[^a-zA-Z0-9_-]@');
+    $arrReplace = array ('_','');
+    return preg_replace($arrSearch, $arrReplace, $str);
+}
+
 ?>
