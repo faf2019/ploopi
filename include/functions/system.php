@@ -208,11 +208,9 @@ function ploopi_ob_callback($buffer)
         $log->fields['ploopi_workspaceid'] = (empty($_SESSION['ploopi']['workspaceid'])) ? 0 : $_SESSION['ploopi']['workspaceid'];;
         $log->fields['ts'] = ploopi_createtimestamp();
 
-        require_once 'Net/UserAgent/Detect.php';
-
-        $log->fields['browser'] = Net_UserAgent_Detect::getBrowserString();
-        $log->fields['system'] = Net_UserAgent_Detect::getOSString();
-
+        $log->fields['browser'] = isset($_SESSION['ploopi']['remote_browser']) ? $_SESSION['ploopi']['remote_browser'] : '';
+        $log->fields['system'] = isset($_SESSION['ploopi']['remote_system']) ? $_SESSION['ploopi']['remote_system'] : '';
+        
         $log->fields['total_exec_time'] = $ploopi_stats['total_exectime'];
         $log->fields['sql_exec_time'] = $ploopi_stats['sql_exectime'];
         $log->fields['sql_percent_time'] = $ploopi_stats['sql_ratiotime'];
