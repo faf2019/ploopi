@@ -84,8 +84,9 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enabl
             posy = e.pageY;
         }
         else if (e.clientX || e.clientY) {
-            posx = e.clientX + document.body.scrollLeft;
-            posy = e.clientY + document.body.scrollTop;
+        	var coordScroll = document.body.cumulativeScrollOffset();
+            posx = e.clientX + coordScroll.left;
+            posy = e.clientY + coordScroll.top;
         }
     }
     else
@@ -97,9 +98,9 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enabl
 
            default:
            case true:
-                var p_width = parseInt(document.body.offsetWidth);
-                var p_left = parseInt(document.body.scrollLeft);
-                var posx = (p_width/2)-(w/2)+p_left;
+        	   var coordScroll = document.body.cumulativeScrollOffset();
+        	   var posx = parseInt(document.viewport.getWidth()/2)-parseInt(w/2)+coordScroll.left;
+        	   var posy = parseInt(coordScroll.top)+20;
             break;
         }
     }
@@ -114,7 +115,7 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enabl
         if (w > 0) width = w+'px';
         else w = parseInt(ploopi_popup.offsetWidth);
 
-        if (20 + w + parseInt(tmpleft) > parseInt(document.body.offsetWidth))
+        if (20 + w + parseInt(tmpleft) > parseInt(document.viewport.getWidth()))
         {
             tmpleft = parseInt(tmpleft) - w - 40;
         }
