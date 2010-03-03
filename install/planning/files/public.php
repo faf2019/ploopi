@@ -73,6 +73,20 @@ foreach ($arrResources as $strResourceType => $arrResourceType)
 }
 ?>
 </form>
+
+<form id="planning_search_form" action="<? echo ploopi_urlencode('admin-light.php?ploopi_op=planning_search'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'planning_search_result'); return false;">
+<p class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;">
+    <img src="./modules/planning/img/ico_search.png" />
+    <strong>Rechercher un événement</strong>
+</p>
+<p class="ploopi_va">
+	<input type="text" title="Champ de recherche" alt="Champ de recherche" class="text" style="width:145px;" name="query_string" value="" />
+	<input type="submit" title="Bouton pour valider la recherche" class="button" style="width:30px;" value="go" />
+</p>
+</form>
+</div>
+
+<div id="planning_search_result">
 </div>
 <?    
 $content = ob_get_contents();

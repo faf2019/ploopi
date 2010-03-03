@@ -41,6 +41,11 @@
  */
 define ('_PLANNING_ADD_EVENT',   10);
 
+/**
+ * Objet 'événement'
+ */
+define ('_PLANNING_OBJECT_EVENT',   1);
+
 
 /**
  * Variables globales

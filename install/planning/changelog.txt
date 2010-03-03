@@ -1,3 +1,9 @@
+== Module Planning - version 0.7.5 ====================================================
+
+2010-03-03  Audrey Gilbert ~ Ovensia  <audrey@ovensia.fr>
+
+ * Recherche dans les événements, affichage du résultat, lien vers la journée de l'événement
+
 == Module Planning - version 0.7.0 ====================================================
 
 2010-01-22  Audrey Gilbert ~ Ovensia  <audrey@ovensia.fr>

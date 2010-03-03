@@ -47,5 +47,10 @@ if (ploopi_ismoduleallowed('planning'))
      * Opérations sur le planning
      */
     include_once './modules/planning/op_planning.php';
+    
+    /**
+     * Opérations sur la recherche
+     */
+    include_once './modules/planning/op_search.php';
 }
 ?>
