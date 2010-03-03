@@ -101,6 +101,8 @@ function ploopi_create_site($arrInstallInfos)
   fwrite($fc, $strContent);
   fclose($fc);
 
+  chmod($strConfigFile, 0640);
+    
   $arrRequests = array();
   $strSql = '';
 
