@@ -351,6 +351,20 @@ div.ploopi_explorer_title {
     height:1%;
 }
 
+div.ploopi_explorer_tools {
+    margin: 0 -4px 0 0;
+}
+
+div.ploopi_explorer_element {
+    overflow: visible;
+    display: block;
+    height: 1%;
+}
+
+div.ploopi_explorer_element_right {
+    margin: 0 -4px 0 0;
+}
+
 a.ploopi_explorer_link {
     overflow:visible;
     height:1%;
@@ -361,11 +375,6 @@ a.ploopi_explorer_link p, a.ploopi_explorer_link span, a.ploopi_explorer_link im
 }
 
 div.ploopi_explorer_line_1 {
-    overflow:visible;
-    height:1%;
-}
-
-div.ploopi_explorer_line_2 {
     overflow:visible;
     height:1%;
 }

@@ -2059,6 +2059,8 @@ div.ploopi_explorer_title {
 }
 
 div.ploopi_explorer_column {
+    margin: 0;
+    padding: 0;
     position:absolute;
     height:100%;
     border-left:1px solid #b8b8b8;
@@ -2081,6 +2083,8 @@ a.ploopi_explorer_element * {
 }
 
 *.ploopi_explorer_element p img, *.ploopi_explorer_element p span, *.ploopi_explorer_element p a {
+margin: 0;
+padding: 0;
 display: inline-block;
 vertical-align: middle;
 }
@@ -2115,7 +2119,10 @@ div.ploopi_explorer_line_2 {
 }
 
 div.ploopi_explorer_tools {
-    overflow:hidden;
+    margin: 0 -2px 0 2px;
+    padding: 0;
+    display: block;
+    overflow: hidden;
 }
 
 div.ploopi_explorer_tools a {
