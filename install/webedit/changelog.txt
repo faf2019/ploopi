@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.3.2n ============================================
+
+2010-03-04  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
+
+* Correction d'un bug dans l'intégration de class_skin.php en utilisation frontoffice
+
 == Module WebEdit - version 2.3.2m ============================================
 
 2010-02-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

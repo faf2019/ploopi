@@ -282,6 +282,13 @@ $template_file = 'index.tpl';
 
 // Inclusion op modules en environnement frontoffice (permet par exemple de connaître le template frontoffice utilisé)
 $_SESSION['ploopi']['frontoffice']['template_path'] = $template_path;
+
+if (!is_object($skin) && !empty($_SESSION['ploopi']['frontoffice']['template_path']) && file_exists("{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php"))
+{
+    include_once "{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php";
+    $skin = new skin();
+}
+
 include_once './include/op.php';
 
 webedit_template_assign(&$arrHeadings, &$arrShares, $arrNav, 0, '', 0);
