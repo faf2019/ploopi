@@ -154,7 +154,8 @@ class ploopi_db
         $this->num_queries = 0;
         $this->exectime_queries = 0;
 
-
+        $this->flush_log();
+        
         if($this->persistency)
         {
             $this->timer_start();
@@ -585,5 +586,7 @@ class ploopi_db
     public function get_exectime_queries() { return($this->exectime_queries); }
     
     public function get_log() { return $this->arrLog; } 
+    
+    public function flush_log() { $this->arrLog = array(); }
 }
 ?>
