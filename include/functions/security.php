@@ -103,7 +103,7 @@ function ploopi_generatepassword($length = 8, $use_char_up = true, $use_char_num
 
 function ploopi_filtervar($mixVar, $strVarName = null, $booUtf8 = false)
 {
-    include_once './lib/inputfilter/inputfilter.php';
+    include_once './include/classes/inputfilter.php';
 
     if (is_array($mixVar))
     {
@@ -120,7 +120,7 @@ function ploopi_filtervar($mixVar, $strVarName = null, $booUtf8 = false)
         
         if (substr($strVarName,0,4) != 'fck_')
         {
-            $inputFilter = new InputFilter('', '', 0, 0, 0);
+            $inputFilter = new ploopi_inputfilter();
             $mixVar = $inputFilter->process($mixVar);
         }
     }
