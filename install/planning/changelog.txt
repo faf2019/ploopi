@@ -1,3 +1,9 @@
+== Module Planning - version 0.7.5a ====================================================
+
+2010-03-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un bug de la fonctionnalité de recherche avec IE6
+
 == Module Planning - version 0.7.5 ====================================================
 
 2010-03-03  Audrey Gilbert ~ Ovensia  <audrey@ovensia.fr>
