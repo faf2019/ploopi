@@ -68,8 +68,8 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enabl
     w = parseInt(w);
     if (!w) w = 200;
 
-    posx = 0;
-    posy = 0;
+    var posx = 0;
+    var posy = 0;
 
     pposx = parseInt(pposx);
     pposy = parseInt(pposy);
@@ -84,7 +84,7 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enabl
             posy = e.pageY;
         }
         else if (e.clientX || e.clientY) {
-        	var coordScroll = document.body.cumulativeScrollOffset();
+        	var coordScroll = document.viewport.getScrollOffsets();
             posx = e.clientX + coordScroll.left;
             posy = e.clientY + coordScroll.top;
         }
@@ -98,7 +98,7 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enabl
 
            default:
            case true:
-        	   var coordScroll = document.body.cumulativeScrollOffset();
+        	   var coordScroll = document.viewport.getScrollOffsets();
         	   var posx = parseInt(document.viewport.getWidth()/2)-parseInt(w/2)+coordScroll.left;
         	   var posy = parseInt(coordScroll.top)+20;
             break;
@@ -115,9 +115,9 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enabl
         if (w > 0) width = w+'px';
         else w = parseInt(ploopi_popup.offsetWidth);
 
-        if (20 + w + parseInt(tmpleft) > parseInt(document.viewport.getWidth()))
+        if (e && ((20 + w + parseInt(tmpleft)) > parseInt(document.viewport.getWidth())))
         {
-            tmpleft = parseInt(tmpleft) - w - 40;
+        	tmpleft = parseInt(tmpleft) - w - 40;
         }
 
         left = tmpleft+'px';
