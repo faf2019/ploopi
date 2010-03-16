@@ -63,7 +63,7 @@ switch($ploopi_op) {
             // Affectation de la ressource à l'événement
 			$arrSearchResult[$row['id']]['resources'][$row['type_resource']][$row['id_resource']] = $row['id_resource'];
 		}
-		
+
 		// Pour chaque événement
 		foreach($arrSearchResult as $id => $row)
 		{	

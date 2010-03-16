@@ -239,7 +239,7 @@ switch($ploopi_op)
         }
 
         ?>
-        <form action="<? echo ploopi_urlencode("admin-light.php?".implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'planning_main', planning_event_validate); return false;">
+        <form id="planning_add_form" action="<? echo ploopi_urlencode("admin-light.php?".implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_add_form'), 'planning_main', planning_event_validate); return false;">
         <div class=ploopi_form>
             <p>
                 <label>Utilisateur / Groupe:</label>

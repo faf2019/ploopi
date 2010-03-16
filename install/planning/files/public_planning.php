@@ -71,6 +71,7 @@ if (!isset($arrSearchPattern['planning_resources']))
         'user' => array($_SESSION['ploopi']['userid'] => $_SESSION['ploopi']['userid']), 
         'group' => array()
     );
+elseif (!isset($arrSearchPattern['planning_resources']['group'])) $arrSearchPattern['planning_resources']['group'] = array();
 
 // Init de la date "virtuelle"
 if (!isset($arrSearchPattern['planning_virtualdate'])) $arrSearchPattern['planning_virtualdate'] = time();
@@ -180,7 +181,7 @@ switch($arrSearchPattern['planning_display_type'])
     ?>
     </select>
 </p>
-<form style="float:left;" id="planning_form_view" action="<? echo ploopi_urlencode('admin-light.php?ploopi_op=planning_refresh'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'planning_main');return false;">
+<form style="float:left;" id="planning_form_view" action="<? echo ploopi_urlencode('admin-light.php?ploopi_op=planning_refresh'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_form_view'), 'planning_main');return false;">
 <p class="ploopi_va" style="padding:2px;float:left;">
     <label>Période :</label>
     <?

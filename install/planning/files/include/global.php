@@ -80,37 +80,37 @@ function planning_get_resources()
 {
     include_once './include/classes/workspace.php';
 
-    $arrResource = array();
-
-    $objWorkspace = new workspace();
-    if ($objWorkspace->open($_SESSION['ploopi']['workspaceid']))
+    $arrResource = array('user' => array(), 'group' => array());
+    
+    $arrWorkspaces = explode(',', ploopi_viewworkspaces());
+    
+    foreach($arrWorkspaces as $intIdWorkspace)
     {
-        $arrResource['user'] = array();
-        
-        foreach($objWorkspace->getusers(true) as $arrUser)
+        $objWorkspace = new workspace();
+        if ($objWorkspace->open($intIdWorkspace))
         {
-            $arrResource['user'][$arrUser['id']] = array(
-                'id' => $arrUser['id'],
-                'label' => "{$arrUser['lastname']} {$arrUser['firstname']}",
-                'color' => $arrUser['color']
-            );
-        }
-        
-        if (ploopi_getparam('planning_display_groups'))
-        {
-            $arrResource['group'] = array();
-            
-            foreach($objWorkspace->getgroups() as $arrGroup)
+            foreach($objWorkspace->getusers(true) as $arrUser)
             {
-                $arrResource['group'][$arrGroup['id']] = array(
-                    'id' => $arrGroup['id'],
-                    'label' => $arrGroup['label'],
-                    'color' => ''
+                $arrResource['user'][$arrUser['id']] = array(
+                    'id' => $arrUser['id'],
+                    'label' => "{$arrUser['lastname']} {$arrUser['firstname']}",
+                    'color' => $arrUser['color']
                 );
+            }
+            if (ploopi_getparam('planning_display_groups'))
+            {
+                foreach($objWorkspace->getgroups() as $arrGroup)
+                {
+                    $arrResource['group'][$arrGroup['id']] = array(
+                        'id' => $arrGroup['id'],
+                        'label' => $arrGroup['label'],
+                        'color' => ''
+                    );
+                }
             }
         }
     }
-
+    
     return $arrResource;
 }
 
@@ -141,7 +141,7 @@ function planning_get_events($arrResources, $intTimepstpBegin = null, $intTimeps
         ON          ".implode(' AND ', $arrWhere['ed'])."
         
         WHERE       e.id_module = {$_SESSION['ploopi']['moduleid']}
-        AND         e.id_workspace = {$_SESSION['ploopi']['workspaceid']}
+        AND         e.id_workspace IN (".ploopi_viewworkspaces().")
         
         ORDER BY    ed.timestp_begin, ed.timestp_end
     ");

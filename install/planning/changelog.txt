@@ -1,3 +1,10 @@
+== Module Planning - version 0.7.6 ====================================================
+
+2010-03-16  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Gestion de la vue des données (possibilité de voir les données en provenances d'autres espaces de travail)
+ * Possibilité de replier/déplier la liste des groupes/utilisateurs dans la boite de sélection des ressources à visualiser.
+
 == Module Planning - version 0.7.5a ====================================================
 
 2010-03-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

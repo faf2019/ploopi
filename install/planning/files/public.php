@@ -49,25 +49,34 @@ ob_start();
 <?    
 foreach ($arrResources as $strResourceType => $arrResourceType)
 {
-    $strResourceTitle = '';
-    switch($strResourceType)
+    if (!empty($arrResourceType))
     {
-        case 'user': $strResourceTitle = 'Utilisateurs'; break;
-        case 'group': $strResourceTitle = 'Groupes'; break;
-    }
-    ?>
-    <p class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;">
-        <img src="<? echo "{$_SESSION['ploopi']['template_path']}/img/system/ico_{$strResourceType}.png"; ?>" />
-        <strong><? echo $strResourceTitle; ?></strong>
-    </p>
-    <?
-    foreach($arrResourceType as $row)
-    {
+        $strResourceTitle = '';
+        switch($strResourceType)
+        {
+            case 'user': $strResourceTitle = 'Utilisateurs'; break;
+            case 'group': $strResourceTitle = 'Groupes'; break;
+        }
         ?>
-        <p class="checkbox" style="background-color:<? echo $row['color']; ?>;" onclick="javascript:ploopi_checkbox_click(event, 'planning_resource<? echo $strResourceType[0].$row['id']; ?>');">
-            <input type="checkbox" name="planning_resources[<? echo $strResourceType; ?>][<? echo $row['id']; ?>]" id="planning_resource<? echo $strResourceType[0].$row['id']; ?>" value="<? echo $row['id']; ?>" <? if (!empty($arrSearchPattern['planning_resources'][$strResourceType][$row['id']])) echo 'checked="checked"'; ?> onclick="javascript:$('planning_resource_list_form').onsubmit();" />
-            <span><? echo $row['label']; ?><span>
-        </p>
+        <a href="javascript:void(0);" onclick="javascript:with ($('planning_<?php echo $strResourceType; ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
+            <p class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;">
+                <img src="<? echo "{$_SESSION['ploopi']['template_path']}/img/system/ico_{$strResourceType}.png"; ?>" />
+                <strong><? echo $strResourceTitle; ?></strong>
+            </p>
+        </a>
+        <div id="planning_<?php echo $strResourceType; ?>_list" style="display:block;">
+            <?
+            foreach($arrResourceType as $row)
+            {
+                ?>
+                <p class="checkbox" style="background-color:<? echo $row['color']; ?>;" onclick="javascript:ploopi_checkbox_click(event, 'planning_resource<? echo $strResourceType[0].$row['id']; ?>');">
+                    <input type="checkbox" name="planning_resources[<? echo $strResourceType; ?>][<? echo $row['id']; ?>]" id="planning_resource<? echo $strResourceType[0].$row['id']; ?>" value="<? echo $row['id']; ?>" <? if (!empty($arrSearchPattern['planning_resources'][$strResourceType][$row['id']])) echo 'checked="checked"'; ?> onclick="javascript:$('planning_resource_list_form').onsubmit();" />
+                    <span><? echo $row['label']; ?><span>
+                </p>
+                <?
+            }
+            ?>
+        </div>
         <?
     }
 }
