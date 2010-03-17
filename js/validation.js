@@ -340,12 +340,20 @@ function ploopi_validatefield(field_label, field_object, field_type)
         /* Vérifie qu'une checkbox (ou bouton radio) à été cochée */
         if (field_type == 'checked')
         {
-            msg = lstmsg[9];
             ok = false;
-            for (c = 0; c < field_object.length; c++)
-            {
-                if (field_object[c].checked) ok = true;
-            }
+        	if(field_object.length == undefined) // Une seule case à cocher
+        	{
+        		msg = lstmsg[14];
+        		if (field_object.checked) ok = true;
+        	}
+        	else
+        	{
+                msg = lstmsg[9];
+                for (c = 0; c < field_object.length; c++)
+                {
+                    if (field_object[c].checked) ok = true;
+                }
+        	}
         }
 
         /* Vérifie que le champ contient une numéro de téléphone valide */

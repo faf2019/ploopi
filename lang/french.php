@@ -114,6 +114,7 @@ define ('_PLOOPI_JS_FLOAT_ERROR',   "Le champ '<FIELD_LABEL>' doit être un nombr
 define ('_PLOOPI_JS_DATE_ERROR',    "Le champ '<FIELD_LABEL>' doit être une date valide\\n(ex: 06/07/1977)");
 define ('_PLOOPI_JS_TIME_ERROR',    "Le champ '<FIELD_LABEL>' doit être une heure valide");
 define ('_PLOOPI_JS_CHECK_ERROR',   "Vous devez sélectionner une valeur pour le champ '<FIELD_LABEL>'");
+define ('_PLOOPI_JS_ONECHECK_ERROR',"Vous devez cocher le champ '<FIELD_LABEL>'");
 define ('_PLOOPI_JS_COLOR_ERROR',   "Le champ '<FIELD_LABEL>' doit être une couleur valide\\n(ex: #ffff00 / jaune / yellow)");
 define ('_PLOOPI_JS_PHONE_ERROR',   "Le champ '<FIELD_LABEL>' doit être un numéro de téléphone valide\\n(ex: +33 1 02 03 04 05 ou 0102030405)");
 define ('_PLOOPI_JS_CAPTCHA_ERROR',   "Le code de contrôle entré est incorrect.");
