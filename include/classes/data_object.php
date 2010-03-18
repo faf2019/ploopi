@@ -294,13 +294,14 @@ class data_object
     /**
      * Insère ou met à jour l'enregistrement dans la base de données
      *
+     * @param boolean $booReplace true si la méthode doit exécuter la commande sql REPLACE plutôt que INSERT/UPDATE
+     * 
      * @return mixed valeur de la clé primaire
      */
-    
-    public function save()
+    public function save($booReplace = false)
     {
 
-        if ($this->new) // insert
+        if ($this->new && !$booReplace) // insert
         {
             $listvalues='';
 
@@ -339,7 +340,7 @@ class data_object
             $listvalues = (empty($arrValues)) ? '' : implode(', ', $arrValues);
 
             // build request
-            $this->sql = "UPDATE `{$this->tablename}` SET {$listvalues} WHERE `{$this->tablename}`.`{$this->idfields[0]}` = '".$this->db->addslashes($this->id[$this->idfields[0]])."'";
+            $this->sql = ($booReplace ? 'REPLACE' : 'UPDATE')." `{$this->tablename}` SET {$listvalues} WHERE `{$this->tablename}`.`{$this->idfields[0]}` = '".$this->db->addslashes($this->id[$this->idfields[0]])."'";
             for ($i = 1; $i < sizeof($this->idfields); $i++) $this->sql .= " AND `{$this->tablename}`.`{$this->idfields[$i]}` = '".$this->db->addslashes($this->id[$this->idfields[$i]])."'";
 
             $this->db->query($this->sql);

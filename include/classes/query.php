@@ -80,6 +80,7 @@ abstract class ploopi_sqlformat
         {
             $intNumParam = empty($arrMatches[2]) ? ++self::$intNumParam - 1 : intval($arrMatches[2]) - 1;
 
+            // La valeur correspondante du paramètre peut être un tableau de valeurs ou une valeur simple
             $mixValue = isset(self::$arrValues[$intNumParam]) ? self::$arrValues[$intNumParam] : null;
 
             switch($arrMatches[3])
@@ -162,6 +163,13 @@ abstract class ploopi_query
     protected $objDb;    
     
     /**
+     * Tableau de clauses SQL brutes
+     *
+     * @var array
+     */
+    protected $arrRaw;    
+    
+    /**
      * Constructeur de la classe
      *
      * @param resource $objDb Connexion à la BDD
@@ -174,6 +182,26 @@ abstract class ploopi_query
         return true;
     }
     
+    /**
+     * Ajoute une clause SQL brute, non filtrée
+     * 
+     * @param string $strRaw chaîne SQL
+     */
+    public function add_raw($strRaw)
+    {
+        $this->arrRaw[] = $strRaw;
+    }      
+    
+    /**
+     * Retourne la clause Brute
+     *
+     * @return string
+     */
+    protected function get_raw()
+    {
+        return empty($this->arrRaw) ? false : ' '.implode(' ', $this->arrRaw);
+    }
+
     /**
      * Exécute la requête SQL
      *
@@ -560,7 +588,8 @@ class ploopi_query_select extends ploopi_query_sud
                 $this->get_groupby().
                 $this->get_having().
                 $this->get_orderby().
-                $this->get_limit();
+                $this->get_limit().
+                $this->get_raw();
         }
         
         return $strSql;
@@ -597,7 +626,8 @@ class ploopi_query_delete extends ploopi_query_sud
                 $this->get_from(). 
                 $this->get_where().
                 $this->get_orderby().
-                $this->get_limit();
+                $this->get_limit().
+                $this->get_raw();
         }
         
         return $strSql;
@@ -681,7 +711,8 @@ class ploopi_query_update extends ploopi_query_sud
                 $this->get_set(). 
                 $this->get_where().
                 $this->get_orderby().
-                $this->get_limit();
+                $this->get_limit().
+                $this->get_raw();
         }
         
         return $strSql;
@@ -769,7 +800,7 @@ class ploopi_query_insert extends ploopi_query
         
         if ($this->get_table() !== false)
         {
-            $strSql = 'INSERT INTO '.$this->get_table().$this->get_set();
+            $strSql = 'INSERT INTO '.$this->get_table().$this->get_set().$this->get_raw();
         }
         
         return $strSql;

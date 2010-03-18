@@ -46,17 +46,7 @@ class ploopi_inputfilter
      */
     public function process($strSource)
     {
-        $strSource = $this->decode($strSource);
-        
-        do {
-            $intC = 0;
-            $strSource = preg_replace('/(<)([^>]*?<)/' , '&lt;$2' , $strSource , -1 , $intC);
-        } while ($intC > 0);
-        
-        $strSource = strip_tags($strSource);
-        $strSource = str_replace('&lt;' , '>' , $strSource);
-        
-        return $strSource;        
+        return $strSource = preg_replace('/<\/?[\w]+[^>]*>/','',$this->decode($strSource));
     }
     
     /**
