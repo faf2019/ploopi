@@ -301,7 +301,7 @@ class data_object
     public function save($booReplace = false)
     {
 
-        if ($this->new && !$booReplace) // insert
+        if ($this->new || $booReplace) // insert
         {
             $listvalues='';
 
@@ -314,7 +314,7 @@ class data_object
 
             $listvalues = (empty($arrValues)) ? '' : 'SET '.implode(', ', $arrValues);
 
-            $this->sql = "INSERT INTO `{$this->tablename}` {$listvalues}"; // construction de la requète
+            $this->sql = ($booReplace ? 'REPLACE' : 'INSERT')." INTO `{$this->tablename}` {$listvalues}"; // construction de la requète
             $this->db->query($this->sql);
 
             // get "static" key 
@@ -340,7 +340,7 @@ class data_object
             $listvalues = (empty($arrValues)) ? '' : implode(', ', $arrValues);
 
             // build request
-            $this->sql = ($booReplace ? 'REPLACE' : 'UPDATE')." `{$this->tablename}` SET {$listvalues} WHERE `{$this->tablename}`.`{$this->idfields[0]}` = '".$this->db->addslashes($this->id[$this->idfields[0]])."'";
+            $this->sql = "UPDATE `{$this->tablename}` SET {$listvalues} WHERE `{$this->tablename}`.`{$this->idfields[0]}` = '".$this->db->addslashes($this->id[$this->idfields[0]])."'";
             for ($i = 1; $i < sizeof($this->idfields); $i++) $this->sql .= " AND `{$this->tablename}`.`{$this->idfields[$i]}` = '".$this->db->addslashes($this->id[$this->idfields[$i]])."'";
 
             $this->db->query($this->sql);
