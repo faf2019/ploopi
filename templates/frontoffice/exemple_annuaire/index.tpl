@@ -230,7 +230,7 @@
                                             <th>Grade:</th>
                                             <td>{directory_switch_contact.RANK}</td>
                                             <th>Adresse:</th>
-                                            <td>{directory_switch_contact.HEADING_ADDRESS_FULL}</td>
+                                            <td>{directory_switch_contact.ADDRESS_FULL}</td>
                                         </tr>
                                         <tr>
                                             <th>Rattaché à:</th>
