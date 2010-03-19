@@ -60,6 +60,10 @@ function ploopi_array2xml($arrArray, $strRootName = 'data', $strDefaultTagName =
         )
     ); 
     
+    // Conversion Xml entities
+    if ($strEncoding == 'ISO-8859-1') $arrArray = ploopi_array_map(create_function('$str', 'return ploopi_xmlentities($str);'), $arrArray);
+    elseif ($strEncoding == 'UTF8') $arrArray = ploopi_array_map(create_function('$str', 'return ploopi_xmlentities($str, true);'), $arrArray);
+    
     // Sérialisation & détection d'erreur
     if (PEAR::isError($objSerializer->serialize(ploopi_array_cleankeys($arrArray)))) return false;
     
@@ -260,6 +264,11 @@ function ploopi_array_cleankeys($arrArray)
     foreach($arrArray as $strKey => $mixValue)
     {
         $strKey = preg_replace("/[^a-z0-9_]/", "_", strtolower(ploopi_convertaccents($strKey)));
+        
+        // Cas particulier des clés non conformes
+        if (strlen($strKey) == 0) $strKey = 'xml';
+        elseif (substr($strKey,0,1) == '_') $strKey = 'xml'.$strKey;
+        
         if (is_array($mixValue)) $arrNewArray[$strKey] = ploopi_array_cleankeys($mixValue);
         else $arrNewArray[$strKey] = $mixValue;
     }
