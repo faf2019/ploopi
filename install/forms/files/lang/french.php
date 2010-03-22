@@ -48,6 +48,7 @@ define ('_FORMS_RESPONSE',      'Réponse après Validation (WebEdit)');
 define ('_FORMS_PUBDATESTART',  'Date de début de Publication');
 define ('_FORMS_PUBDATEEND',    'Date de fin de Publication');
 define ('_FORMS_EMAIL',     'Envoyer par email à ');
+define ('_FORMS_EMAIL_EXPLAIN', '(Destinataires : Plusieurs adresses possibles séparées par des points-virgules et sans espaces.)');
 define ('_FORMS_FROM',          'Expéditeur de l\'email');
 define ('_FORMS_WIDTH',     'Largeur (*: variable)');
 define ('_FORMS_ADD',           'Création d\'un Formulaire');

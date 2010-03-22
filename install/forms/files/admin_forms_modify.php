@@ -192,6 +192,7 @@ if (!$forms->new)
                     <label><?php echo _FORMS_EMAIL; ?>:</label>
                     <input type="text" class="text" size="30" name="forms_email" value="<?php echo htmlentities($forms->fields['email']); ?>" />
                 </p>
+                <p style="padding-top: 0; font-size: 10px; text-align: center;"><?php echo _FORMS_EMAIL_EXPLAIN; ?></p>
                 <p>
                     <label><?php echo _FORMS_FROM; ?>:</label>
                     <input type="text" class="text" size="30" name="forms_email_from" value="<?php echo htmlentities($forms->fields['email_from']); ?>" />
