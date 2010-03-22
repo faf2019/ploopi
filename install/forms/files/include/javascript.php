@@ -44,10 +44,10 @@ if (ploopi_ismoduleallowed('forms'))
     
     function forms_validate(form)
     {
-        if (ploopi_validatefield('<?php echo _FORMS_LABEL; ?>',form.forms_label,"string"))
-        if (ploopi_validatefield('<?php echo _FORMS_FROM; ?>',form.forms_email_from,"emptyemail"))
-        if (ploopi_validatefield('<?php echo _FORMS_PUBDATESTART; ?>',form.forms_pubdate_start,"emptydate"))
-        if (ploopi_validatefield('<?php echo _FORMS_PUBDATEEND; ?>',form.forms_pubdate_end,"emptydate"))
+        if (ploopi_validatefield('<?php echo addslashes(html_entity_decode(_FORMS_LABEL)); ?>',form.forms_label,"string"))
+        if (ploopi_validatefield('<?php echo addslashes(html_entity_decode(_FORMS_FROM)); ?>',form.forms_email_from,"emptyemail"))
+        if (ploopi_validatefield('<?php echo addslashes(html_entity_decode(_FORMS_PUBDATESTART)); ?>',form.forms_pubdate_start,"emptydate"))
+        if (ploopi_validatefield('<?php echo addslashes(html_entity_decode(_FORMS_PUBDATEEND)); ?>',form.forms_pubdate_end,"emptydate"))
             return(true);
     
         return(false);
