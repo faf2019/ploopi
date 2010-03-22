@@ -1,3 +1,9 @@
+== Module BOOKING - version 0.9.9 ====================================================
+
+2010-03-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Corrections sur l'appel des calendriers 
+ 
 == Module BOOKING - version 0.9.2g ====================================================
 
 2010-01-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

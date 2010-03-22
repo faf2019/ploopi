@@ -203,7 +203,7 @@ if ($_SESSION['ploopi']['connected'])
         $arrResult['columns']['right']['datetime'] = 
             array(   
                 'label' => 'Durée / Période',
-                'width' => 120,
+                'width' => 130,
                 'options' => array('sort' => true)
             );
          
