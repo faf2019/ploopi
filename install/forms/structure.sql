@@ -135,3 +135,5 @@ ALTER TABLE `ploopi_mod_forms_graphic` CHANGE `type` `type` ENUM( 'pie', 'pie3d'
 ALTER TABLE `ploopi_mod_forms_graphic` ADD `timefield` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `description`;
 
 ALTER TABLE `ploopi_mod_forms_field` ADD `captcha` TINYINT( 1 ) UNSIGNED NOT NULL  DEFAULT '0' AFTER `fieldname`;
+
+ALTER TABLE `ploopi_mod_forms_form` ADD `email_from` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL AFTER `pubdate_end`;

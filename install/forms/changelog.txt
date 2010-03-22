@@ -1,3 +1,9 @@
+== Module FORMS - version 2.5.4 =====================================================
+
+2010-03-22  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Ajout d'un email pour "from" dans les formulaires expédiés par email
+
 == Module FORMS - version 2.5.3c =====================================================
 
 2010-02-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

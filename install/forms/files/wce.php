@@ -185,13 +185,26 @@ switch($op)
     
                 if ($forms->fields['email'] != '')
                 {
-                    $emails =  str_replace(array(',','|'),';',$forms->fields['email']);
+                    $from = $to = array();
+                    
+                    $arrFormsSearch = array(' ',',','|');
+                    $arrFormsReplace = array('',';',';');
+                    
+                    // From
+                    $emailFrom =  str_replace($arrFormsSearch, $arrFormsReplace, $forms->fields['email_from']);
+                    $from[] = array('name' => $emailFrom, 'address' => $emailFrom);
+                    
+                    // To
+                    $emails =  str_replace($arrFormsSearch, $arrFormsReplace, $forms->fields['email']);
                     $list_email = explode(';',$emails);
                     foreach($list_email as $email)
                     {
-                        $from[0] = array('name' => $email, 'address' => $email);
                         $to[] = array('name' => $email, 'address' => $email);
                     }
+                    
+                    /**
+                     * Envoi du formulaire par mail
+                     */
                     ploopi_send_form($from, $to, $email_array['Formulaire']['Titre'], $email_array);
                 }
             }

@@ -1,0 +1,1 @@
+ALTER TABLE `ploopi_mod_forms_form` ADD `email_from` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL AFTER `pubdate_end`;

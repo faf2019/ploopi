@@ -193,6 +193,10 @@ if (!$forms->new)
                     <input type="text" class="text" size="30" name="forms_email" value="<?php echo htmlentities($forms->fields['email']); ?>" />
                 </p>
                 <p>
+                    <label><?php echo _FORMS_FROM; ?>:</label>
+                    <input type="text" class="text" size="30" name="forms_email_from" value="<?php echo htmlentities($forms->fields['email_from']); ?>" />
+                </p>
+                <p>
                     <label><?php echo _FORMS_NBLINE; ?>:</label>
                     <input type="text" class="text" style="width:30px;"name="forms_nbline" value="<?php echo $forms->fields['nbline']; ?>" />
                 </p>

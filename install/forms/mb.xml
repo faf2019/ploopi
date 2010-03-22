@@ -268,6 +268,14 @@
         </row>
         <row>
             <tablename>ploopi_mod_forms_form</tablename>
+            <name>email_from</name>
+            <label>email_from</label>
+
+            <type>varchar(255)</type>
+            <visible>1</visible>
+        </row>
+        <row>
+            <tablename>ploopi_mod_forms_form</tablename>
             <name>email</name>
             <label>email</label>
 
