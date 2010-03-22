@@ -712,29 +712,13 @@ switch($_REQUEST['ploopi_op'])
                                 ?>
                                 <div style="<? echo $strBorderColor; ?>;margin:1px;<? echo $strBgcolor; ?>" id="booking_event_bg<? echo $detail['id']; ?>">
                                     <p>
-                                        <label>Date/Heure de début:</label>
+                                        <label>Date de début:</label>
                                         <?
                                         if ($booModify)
                                         {
                                             ?>
                                             <input name="_booking_event_timestp_begin_d[<? echo $detail['id']; ?>]" id="_booking_event_timestp_begin_d<? echo $detail['id']; ?>" class="text" type="text" value="<? echo $arrDateBegin['date']; ?>" style="width:80px;" onchange="javascript:if ($('_booking_event_timestp_end_d<? echo $detail['id']; ?>').value == '') $('_booking_event_timestp_end_d<? echo $detail['id']; ?>').value = this.value;" />
-                                            <?php ploopi_open_calendar("_booking_event_timestp_begin_d{$detail['id']}", true, null, 'float:left;'); ?>
-                                            <select name="_booking_event_timestp_begin_h[<? echo $detail['id']; ?>]" id="_booking_event_timestp_begin_h<? echo $detail['id']; ?>" class="select" style="width:60px;">
-                                            <?
-                                            for ($i = 0; $i < 24; $i++)
-                                            {
-                                                ?><option value="<? echo $i; ?>" <? if ($arrDateBegin_h == $i) echo 'selected="selected"'; ?>><? echo sprintf("%02d h", $i); ?></option><?
-                                            }
-                                            ?>
-                                            </select>
-                                            <select name="_booking_event_timestp_begin_m[<? echo $detail['id']; ?>]" id="_booking_event_timestp_begin_m<? echo $detail['id']; ?>" class="select" style="width:45px;">
-                                            <?
-                                            for ($i = 0; $i < 12; $i++)
-                                            {
-                                                ?><option value="<? echo $i*5; ?>" <? if ($arrDateBegin_m == $i*5) echo 'selected="selected"'; ?>><? echo sprintf("%02d", $i*5); ?></option><?
-                                            }
-                                            ?>
-                                            </select>
+                                            <?php ploopi_open_calendar("_booking_event_timestp_begin_d{$detail['id']}"); ?>
                                             <?
                                         }
                                         else
@@ -742,7 +726,7 @@ switch($_REQUEST['ploopi_op'])
                                             ?>
                                             <span>
                                                 <?
-                                                echo $arrDateBegin['date'].' '.substr($arrDateBegin['time'], 0, 5);
+                                                echo $arrDateBegin['date'];
                                                 echo '<strong style="margin-left:10px;">'.($detail['validated'] ? 'Validé' : ($detail['canceled'] ? 'Refusé' : 'Indeterminé')).'</strong>';
                                                 
                                                 // Peuvent supprimer :
@@ -776,13 +760,61 @@ switch($_REQUEST['ploopi_op'])
                                         ?>
                                     </p>
                                     <p>
-                                        <label>Date/Heure de fin:</label>
+                                        <label>Heure de début:</label>
+                                        <?
+                                        if ($booModify)
+                                        {
+                                            ?>
+                                            <select name="_booking_event_timestp_begin_h[<? echo $detail['id']; ?>]" id="_booking_event_timestp_begin_h<? echo $detail['id']; ?>" class="select" style="width:60px;">
+                                            <?
+                                            for ($i = 0; $i < 24; $i++)
+                                            {
+                                                ?><option value="<? echo $i; ?>" <? if ($arrDateBegin_h == $i) echo 'selected="selected"'; ?>><? echo sprintf("%02d h", $i); ?></option><?
+                                            }
+                                            ?>
+                                            </select>
+                                            <select name="_booking_event_timestp_begin_m[<? echo $detail['id']; ?>]" id="_booking_event_timestp_begin_m<? echo $detail['id']; ?>" class="select" style="width:45px;">
+                                            <?
+                                            for ($i = 0; $i < 12; $i++)
+                                            {
+                                                ?><option value="<? echo $i*5; ?>" <? if ($arrDateBegin_m == $i*5) echo 'selected="selected"'; ?>><? echo sprintf("%02d", $i*5); ?></option><?
+                                            }
+                                            ?>
+                                            </select>
+                                            <?
+                                        }
+                                        else
+                                        {
+                                            ?>
+                                            <span><? echo substr($arrDateBegin['time'], 0, 5); ?></span>
+                                            <?
+                                        }
+                                        ?>
+                                    </p>
+                                    <p>
+                                        <label>Date de fin:</label>
                                         <?
                                         if ($booModify)
                                         {
                                             ?>
                                             <input name="_booking_event_timestp_end_d[<? echo $detail['id']; ?>]" id="_booking_event_timestp_end_d<? echo $detail['id']; ?>" class="text" type="text" value="<? echo $arrDateEnd['date']; ?>" style="width:80px; "/>
-                                            <?php ploopi_open_calendar("_booking_event_timestp_end_d{$detail['id']}", true, null, 'float:left;'); ?>
+                                            <?php ploopi_open_calendar("_booking_event_timestp_end_d{$detail['id']}"); ?>
+                                            <?
+                                        }
+                                        else
+                                        {
+                                            ?>
+                                            <span><? echo $arrDateEnd['date']; ?></span>
+                                            <?
+                                        }
+                                        ?>
+                                    </p>
+                                    <p>
+                                        <label>Heure de fin:</label>
+                                        <?
+                                        if ($booModify)
+                                        {
+                                            ?>
                                             <select name="_booking_event_timestp_end_h[<? echo $detail['id']; ?>]" id="_booking_event_timestp_end_h<? echo $detail['id']; ?>" class="select" style="width:60px;">
                                             <?
                                             for ($i = 0; $i < 24; $i++)
@@ -804,7 +836,7 @@ switch($_REQUEST['ploopi_op'])
                                         else
                                         {
                                             ?>
-                                            <span><? echo $arrDateEnd['date'].' '.substr($arrDateEnd['time'], 0, 5); ?></span>
+                                            <span><? echo substr($arrDateEnd['time'], 0, 5); ?></span>
                                             <?
                                         }
                                         ?>
