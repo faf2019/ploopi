@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>doc</label>
-        <version>4.6.3a</version>
+        <version>4.6.3b</version>
         <author>Ovensia / HeXad</author>
-        <date>20100205130000</date>
+        <date>20100323174400</date>
         <description>Gestion de Documents</description>
         <paramtype>
             <name>doc_viewfoldersinblock</name>
@@ -198,13 +198,6 @@
                 <value>0</value>
                 <displayed_value>non</displayed_value>
             </paramchoice>
-        </paramtype>
-        <paramtype>
-            <name>doc_jodwebservice</name>
-            <label>URL du webservice JODConverter</label>
-            <default_value></default_value>
-            <public>1</public>
-            <description/>
         </paramtype>
         
         <action>

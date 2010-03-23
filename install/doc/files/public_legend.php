@@ -53,6 +53,12 @@ ob_start();
         <img src="./modules/doc/img/ico_search.png"><span style="margin-left:4px;">Rechercher</span>
     </p>
     <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_show_list.png"><span style="margin-left:4px;">Vue en liste</span>
+    </p>
+    <p class="ploopi_va">
+        <img src="./modules/doc/img/ico_show_thumb.png"><span style="margin-left:4px;">Vue en icônes</span>
+    </p>
+    <p class="ploopi_va">
         <img src="./modules/doc/img/ico_download.png"><span style="margin-left:4px;">Télécharger</span>
     </p>
     <p class="ploopi_va">

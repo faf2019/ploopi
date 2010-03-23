@@ -29,6 +29,8 @@
  * @copyright HeXad
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint
+ * 
+ * Dependance : include/functions/image.php !
  */
 
 include_once './include/functions/image.php';
@@ -207,6 +209,7 @@ class mimethumb
     public function getThumbnail($pathfile)
     {
         global $db;
+        $booviewthumb = false;
         
         $strParam = array();
         if(empty($pathfile) || !file_exists($pathfile)) return false;
@@ -532,9 +535,10 @@ class mimethumb
 
             // Besoin pour l'appel en cli
             $system_jobservice = '';
-            if(!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_jodwebservice']))
+
+            if(function_exists('ploopi_getparam'))
             {
-                $system_jobservice = $_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_jodwebservice'];
+                $system_jobservice = ploopi_getparam('system_jodwebservice', _PLOOPI_MODULE_SYSTEM);
             }
             else // en mode cli.php recup si webservice ou pas dans les param du module
             {
@@ -543,19 +547,19 @@ class mimethumb
                 $objParam->open(_PLOOPI_MODULE_SYSTEM);
                 $system_jobservice = $objParam->getparam('system_jodwebservice');
             }
-
+            
             if(!empty($system_jobservice) && ploopi_is_url($system_jobservice))
             {
                 if(filesize($this->strPathFile) > 512*1024) return false;
                 
                 include_once './include/classes/odf.php';
                 
-                $objJOD = new odf_converter($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_jodwebservice']);
+                $objJOD = new odf_converter($system_jobservice);
                 $inputType = ploopi_getmimetype('file.'.$this->strExtension);
                 $outputType = ploopi_getmimetype('file.'.$formExport);
 
                 $content = $objJOD->convert(file_get_contents($this->strPathFile), $inputType, $outputType);
-                
+
                 if(!empty($content) && substr($content, 0, 12) !== '<html><head>')
                 {
                     $handle = fopen($fileTempo,'w');
@@ -579,57 +583,28 @@ class mimethumb
                     $this->strPathFile = $fileTempoTXT;
                 }
                 
-                $fileTempoPPT = '';
-
                 // Les pps doivent etre lu comme des ppt (en webservice le type/mime est forcé a ppt)
+                $fileTempoPPT = '';
                 if(strtoupper($this->strExtension) == 'PPS')
                 {
                     $fileTempoPPT = $pathTemp.md5(uniqid(rand(), true)).'.ppt';
-                    
-                    if(_PLOOPI_SERVER_OSTYPE == 'unix')
-                        symlink($this->strPathFile,$fileTempoPPT); // Sous nux on crée juste un lien symbolique (+ rapide)
-                    else
-                        copy($this->strPathFile,$fileTempoPPT); // Sous win les liens symbolique n'existe que pour vista,2003 ou > ...
-                    
+                    symlink($this->strPathFile,$fileTempoPPT); // Sous nux on crée juste un lien symbolique (+ rapide)
                     $this->strPathFile = $fileTempoPPT;
                 }
                 
                 // On verif que le démon est lancé
                 exec("ps -f -A | grep -E '^(.*)soffice(.*)accept\=socket\,host\=127\.0\.0\.1\,port\=8100'",$arrResult);
-                
-                if(empty($arrResult)) // Pas d'instance du serveur openoffice !
+                if(empty($arrResult)) // Pas d'instance du serveur openoffice ! On sort
                 {
-                    if($this->booDebug) fwrite($handleTest,date('[r]').' '.$this->strPathFile." - Pas de serveur oOo\r\n");
-                    
-                    $fileLock = _PLOOPI_CGI_UPLOADTMP.'/.lockPloopiOooServer';
-                    
-                    if(!file_exists($fileLock) || (file_exists($fileLock) && ((time()-filemtime($fileLock)) > 15))) // Si pas de fichier lock ou le fichier lock a moins de 15sec.
-                    {
-                        if($this->booDebug) fwrite($handleTest,date('[r]').' '.$this->strPathFile." - Pas de Fichier de lock\r\n");
-                        if(file_exists($fileLock)) unlink($fileLock);
-                        
-                        $handle = fopen($fileLock,'w'); // On pose un lock pour eviter que +eurs instance tente de lancer le demon simultanément (ce qui provoque une erreur)
-                        if($handle === false) return false;
-                        fclose($handle);
-
-                        // Ouverture du demon soffice pour jodconverter (Attention > /dev/null est nécessaire sinon exec attend un retour !)
-                        exec('soffice -nofirststartwizard -headless -accept="socket,host=127.0.0.1,port=8100;urp;" -norestore > /dev/null');
-                        sleep(5); // attend que le demon se lance (le 1er démarrage "a froid" peut etre long...)
-                        unlink($fileLock); // on supprime le lock                     
-                    }
-                    else // Une autre instance est en train d'ouvrir le serveur Openoffice... on attend gentillement ^_^
-                    {
-                        if($this->booDebug) fwrite($handleTest,date('[r]').' '.$this->strPathFile." - Fichier lock, On attend\r\n");
-                        sleep(5);
-                    }
-                    
-                    exec("ps -f -A | grep -E '^(.*)soffice(.*)accept\=socket\,host\=127\.0\.0\.1\,port\=8100'",$arrResult);
-                    if(empty($arrResult)) return false;
+                    if(!empty($fileTempoTXT) && is_link($fileTempoTXT)) unlink($fileTempoTXT);
+                    if(!empty($fileTempoPPT) && is_link($fileTempoPPT)) unlink($fileTempoPPT);
+                    return false;
                 }
                 
 	            exec('java -jar '.realpath('./lib/jodconverter/lib/jodconverter-cli-2.2.2.jar').' '.$this->strPathFile.' '.$fileTempo.' > /dev/null');
                     
-                if(!empty($fileTempoPPT) && file_exists($fileTempoPPT)) unlink($fileTempoPPT);
+                if(!empty($fileTempoTXT) && is_link($fileTempoTXT)) unlink($fileTempoTXT);
+	            if(!empty($fileTempoPPT) && is_link($fileTempoPPT)) unlink($fileTempoPPT);
                 if(!file_exists($fileTempo)) return false;
             }
             $this->strPathFile = $fileTempo;

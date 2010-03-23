@@ -853,7 +853,6 @@ if ($_SESSION['ploopi']['connected'])
                     // exec requete + encodage JSON
                     $db->query("
                         SELECT      doc.md5id,
-                                    doc.version,
                                     doc.name,
                                     doc.size
 
@@ -875,11 +874,11 @@ if ($_SESSION['ploopi']['connected'])
                         {
                             case 'doc_selectimage':
                             case 'doc_selectflash':
-                                $row['url'] = "index-quick.php?ploopi_op=doc_file_view&docfile_md5id={$row['md5id']}&version={$row['version']}";
+                                $row['url'] = "index-quick.php?ploopi_op=doc_file_view&docfile_md5id={$row['md5id']}";
                             break;
         
                             default:
-                                $row['url'] = "index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$row['md5id']}&version={$row['version']}";
+                                $row['url'] = "index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$row['md5id']}";
                             break;
                         }
 

@@ -1,3 +1,10 @@
+== Module DOC - version 4.6.3b ====================================================
+
+2010-03-23  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Modification : Suppression du parametre pour URL du webservice JODConverter (paramètre déplacé vers les param. "systeme") 
+ * Correction : liens de telechargement généré depuis FckEditor (WebEdit) erroné suite modif pour vignette
+
 == Module DOC - version 4.6.3a ====================================================
 
 2010-02-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
