@@ -573,7 +573,10 @@ class mimethumb
             {
                 if(_PLOOPI_SERVER_OSTYPE != 'unix') return false;
                 if(filesize($this->strPathFile) > 2*1024*1024) return false;
-
+                // On verif que le démon est lancé
+                exec("ps -f -A | grep -E '^(.*)soffice(.*)accept\=socket\,host\=127\.0\.0\.1\,port\=8100'",$arrResult);
+                if(empty($arrResult)) return false; // Pas d'instance du serveur openoffice ! On sort
+                
                 // Les fichier type text/plain css et cie doivent etre vu comme des fichier .text
                 $fileTempoTXT = '';
                 if($this->strGroupType === 'text')
@@ -590,15 +593,6 @@ class mimethumb
                     $fileTempoPPT = $pathTemp.md5(uniqid(rand(), true)).'.ppt';
                     symlink($this->strPathFile,$fileTempoPPT); // Sous nux on crée juste un lien symbolique (+ rapide)
                     $this->strPathFile = $fileTempoPPT;
-                }
-                
-                // On verif que le démon est lancé
-                exec("ps -f -A | grep -E '^(.*)soffice(.*)accept\=socket\,host\=127\.0\.0\.1\,port\=8100'",$arrResult);
-                if(empty($arrResult)) // Pas d'instance du serveur openoffice ! On sort
-                {
-                    if(!empty($fileTempoTXT) && is_link($fileTempoTXT)) unlink($fileTempoTXT);
-                    if(!empty($fileTempoPPT) && is_link($fileTempoPPT)) unlink($fileTempoPPT);
-                    return false;
                 }
                 
 	            exec('java -jar '.realpath('./lib/jodconverter/lib/jodconverter-cli-2.2.2.jar').' '.$this->strPathFile.' '.$fileTempo.' > /dev/null');
