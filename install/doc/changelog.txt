@@ -1,3 +1,9 @@
+== Module DOC - version 4.6.3c ====================================================
+
+2010-03-26  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+ * Correction : bug dans les flux RSS & ATOM, le lien dans l'entete du flux n'était pas renseigné correctement. 
+
 == Module DOC - version 4.6.3b ====================================================
 
 2010-03-23  Xavier Toussaint ~ HeXad <xavier@hexad.fr>

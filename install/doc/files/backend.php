@@ -93,7 +93,7 @@ if (!$objCache->start())
     $feed = new FeedWriter($feedformat);
 
     $feed->setTitle(utf8_encode($objFolder->fields['name']));
-    //$feed->setLink(_PLOOPI_BASEPATH);
+    $feed->setLink(_PLOOPI_BASEPATH.$_SERVER['REQUEST_URI']);
     $feed->setDescription(utf8_encode($objFolder->fields['description']));
     
     $feed->setChannelElement('updated', $date_update);
