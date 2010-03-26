@@ -117,7 +117,7 @@
                             <br /><input type="text" class="text" value="{DIRECTORY_SEARCH_FUNCTION}" name="directory_function" id="directory_function" style="width:95%;" />
                         </div>
                         <div>
-                            <label for="directory_function" class="title">Rattachement:</label>
+                            <label for="directory_heading" class="title">Rattachement:</label>
                             <br /><input type="text" class="text" value="{DIRECTORY_SEARCH_HEADING}" name="directory_heading" id="directory_heading" style="width:95%;" />
                         </div>
                         <div style="margin-top:2px;"><input type="submit" value="Chercher" class="button" style="width:98%;" /></div>
