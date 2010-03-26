@@ -36,7 +36,7 @@
  * On vérifie qu'on est bien dans le module Booking.
  */
 
-if (ploopi_ismoduleallowed('booking'))
+if ($_SESSION['ploopi']['mode'] == 'backoffice' && ploopi_ismoduleallowed('booking'))
 {
     /**
      * Opérations sur les types de ressources

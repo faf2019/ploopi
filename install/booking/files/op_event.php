@@ -544,32 +544,31 @@ if ($_SESSION['ploopi']['connected'])
             }
             ploopi_redirect("admin.php");
         break;
+        
+        
+        case 'booking_event_detail_delete':
+            include_once './modules/booking/classes/class_booking_event.php';
+            include_once './modules/booking/classes/class_booking_event_detail.php';
+    
+            $objEventDetail = new booking_event_detail();
+            
+            if (!empty($_GET['booking_event_detail_id']) && is_numeric($_GET['booking_event_detail_id']) && $objEventDetail->open($_GET['booking_event_detail_id']))
+            {
+                
+                $objEvent = new booking_event();
+                if ($objEvent->open($objEventDetail->fields['id_event']) && $objEvent->fields['id_user'] == $_SESSION['ploopi']['userid'])
+                {
+                    $objEventDetail->delete();
+                }
+            }
+            if ($_SESSION['ploopi']['mode'] == 'backoffice') ploopi_redirect('admin.php');
+            else ploopi_redirect($_SESSION['booking'][$_GET['booking_moduleid']]['article_url']);
+        break;        
     }
 }
 
-switch($_REQUEST['ploopi_op'])
+switch($ploopi_op)
 {
-    case 'booking_event_detail_delete':
-        
-        include_once './modules/booking/classes/class_booking_event.php';
-        include_once './modules/booking/classes/class_booking_event_detail.php';
-
-        $objEventDetail = new booking_event_detail();
-        
-        if (!empty($_GET['booking_event_detail_id']) && is_numeric($_GET['booking_event_detail_id']) && $objEventDetail->open($_GET['booking_event_detail_id']))
-        {
-            
-            $objEvent = new booking_event();
-            if ($objEvent->open($objEventDetail->fields['id_event']) && $objEvent->fields['id_user'] == $_SESSION['ploopi']['userid'])
-            {
-                $objEventDetail->delete();
-            }
-        }
-        if (ploopi_urlencode($_SESSION['ploopi']['mode'] == 'backoffice')) ploopi_redirect("admin.php");
-        else ploopi_redirect($_SESSION['booking'][$_GET['booking_moduleid']]['article_url']);
-    break;
-    
-    
     case 'booking_event_open':
         ob_start();
         ploopi_init_module('booking');

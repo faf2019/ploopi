@@ -1,3 +1,9 @@
+== Module BOOKING - version 0.9.9a ====================================================
+
+2010-03-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug lors de la suppression d'une demande en frontoffice. Si l'encodage des url était activé, l'utilisateur était redirigé vers le backoffice. 
+
 == Module BOOKING - version 0.9.9 ====================================================
 
 2010-03-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
