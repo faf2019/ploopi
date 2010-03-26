@@ -663,11 +663,27 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 <a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading={$objHeading->fields['id']}"); ?>"><img src="./modules/directory/img/ico_new.png">Ajouter <?php printf("%s %s", $arrHeadingLabel[$intDepth+1][0], $arrHeadingLabel[$intDepth+1][2]); ?></a>
                                 <?php if (ploopi_isadmin()) { ?><a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <?php printf("%s %s", $arrHeadingLabel[1][0], $arrHeadingLabel[1][2]); ?></a><?php } ?>
                             </div>
-                            <?php
-                            if ($op == 'directory_modify') // interface débloquée
+                            <?
+                        }
+                        
+                        if ($op == 'directory_modify') // interface débloquée
+                        {
+                            if ($booModify)
                             {
                                 ?>
                                 <form method="post" action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_save&directory_heading_id={$objHeading->fields['id']}"); ?>" onsubmit="javascript:return directory_heading_validate(this);">
+                                <?
+                            }
+                            elseif (ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS))
+                            {
+                                ?>
+                                <form method="post" action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_save&directory_heading_id={$objHeading->fields['id']}"); ?>">
+                                <?
+                            }
+                            
+                            if ($booModify) // Gestionnaire uniquement
+                            {
+                                ?>
                                 <div class="ploopi_form">
                                     <p>
                                         <label>Niveau:</label>
@@ -710,7 +726,58 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         <input name="directory_heading_country" type="text" class="text" value="<?php echo htmlentities($objHeading->fields['country']); ?>" />
                                     </p>
                                 </div>
+                                <?
+                            }
+                        }
+                        
+                        if (!$booModify || empty($op)) // Version non modifiable
+                        {
+                            $arrParents = split(';', $arrHeadings['list'][$intHeadingId]['parents']);
+                            $arrTitle  = array();
 
+                            foreach($arrParents as $intId)
+                                if (isset($arrHeadings['list'][$intId]))
+                                    $arrTitle[] = $arrHeadings['list'][$intId]['label'];
+
+                            $arrTitle[] = $objHeading->fields['label'];
+                            
+                            
+                            ?>
+                            <h1 class="directory_title"><?php echo htmlentities(implode(' > ', $arrTitle)); ?></h1>
+                            <?php
+                            if (!empty($objHeading->fields['description']))
+                            {
+                                ?><div style="padding:4px;"><em><?php echo ploopi_nl2br(htmlentities($objHeading->fields['description'])); ?></em></div><?php
+                            }
+
+                            // Construction de la chaîne de téléphone
+                            $arrPhone = array();
+                            if (!empty($objHeading->fields['phone'])) $arrPhone[] = htmlentities("Tel: ".$objHeading->fields['phone']);
+                            if (!empty($objHeading->fields['fax'])) $arrPhone[] = htmlentities("Fax: ".$objHeading->fields['fax']);
+
+                            if (!empty($arrPhone))
+                            {
+                                ?><div style="padding:4px;"><?php echo implode(' - ', $arrPhone); ?></div><?php
+                            }
+
+                            // Construction de la chaîne d'adresse
+                            $arrAddress = array();
+                            if (!empty($objHeading->fields['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($objHeading->fields['address']));
+                            if (!empty($objHeading->fields['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($objHeading->fields['postalcode'].' '.$objHeading->fields['city'])));
+                            if (!empty($objHeading->fields['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($objHeading->fields['country']));
+
+                            if (!empty($arrAddress))
+                            {
+                                ?><div style="padding:4px;"><?php echo implode('<br />', $arrAddress); ?></div><?php
+                            }                            
+                            
+                        }
+                        
+                        if ($op == 'directory_modify') // interface débloquée
+                        {
+                            if ($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS))
+                            {
+                                ?>
                                 <div style="clear:both;padding:4px;">
                                     <fieldset class="fieldset" style="padding:6px;">
                                         <legend><strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "<em>(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)</em>"; ?></strong></legend>
@@ -746,13 +813,13 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         <div style="clear:both;padding:4px;">
                                             <div style="border:1px solid #c0c0c0;overflow:hidden;">
                                             <?php
+                                            
                                                 ploopi_validation_selectusers(_DIRECTORY_OBJECT_HEADING, $intHeadingId, -1, _DIRECTORY_ACTION_CONTACTS, sprintf("Gestionnaires de %s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]));
                                             ?>
                                             </div>
                                         </div>
                                     </fieldset>
                                 </div>
-
 
                                 <div style="text-align:right;padding:4px;">
                                     <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}"); ?>';">
@@ -763,46 +830,9 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 <?php
                             }
                         }
-
-                        if (!$booModify || empty($op)) // Version non modifiable
+                        
+                        if (!($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) || empty($op)) // Version non modifiable
                         {
-                            $arrParents = split(';', $arrHeadings['list'][$intHeadingId]['parents']);
-                            $arrTitle  = array();
-
-                            foreach($arrParents as $intId)
-                                if (isset($arrHeadings['list'][$intId]))
-                                    $arrTitle[] = $arrHeadings['list'][$intId]['label'];
-
-                            $arrTitle[] = $objHeading->fields['label'];
-
-                            ?>
-                            <h1 class="directory_title"><?php echo htmlentities(implode(' > ', $arrTitle)); ?></h1>
-                            <?php
-                            if (!empty($objHeading->fields['description']))
-                            {
-                                ?><div style="padding:4px;"><em><?php echo ploopi_nl2br(htmlentities($objHeading->fields['description'])); ?></em></div><?php
-                            }
-
-                            // Construction de la chaîne de téléphone
-                            $arrPhone = array();
-                            if (!empty($objHeading->fields['phone'])) $arrPhone[] = htmlentities("Tel: ".$objHeading->fields['phone']);
-                            if (!empty($objHeading->fields['fax'])) $arrPhone[] = htmlentities("Fax: ".$objHeading->fields['fax']);
-
-                            if (!empty($arrPhone))
-                            {
-                                ?><div style="padding:4px;"><?php echo implode(' - ', $arrPhone); ?></div><?php
-                            }
-
-                            // Construction de la chaîne d'adresse
-                            $arrAddress = array();
-                            if (!empty($objHeading->fields['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($objHeading->fields['address']));
-                            if (!empty($objHeading->fields['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($objHeading->fields['postalcode'].' '.$objHeading->fields['city'])));
-                            if (!empty($objHeading->fields['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($objHeading->fields['country']));
-
-                            if (!empty($arrAddress))
-                            {
-                                ?><div style="padding:4px;"><?php echo implode('<br />', $arrAddress); ?></div><?php
-                            }
 
                             ?>
                             <div class="directory_shared_managers">
@@ -843,7 +873,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                     </em>
                                 </div>
                                 <?php
-                                if ($booModify) // interface bloquée
+                                if ($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) // interface bloquée
                                 {
                                     ?>
                                         <div style="clear:both;text-align:right;">

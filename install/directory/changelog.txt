@@ -1,3 +1,11 @@
+== Module DIRECTORY - version 2.3.1 ====================================================
+
+2010-03-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Possibilité de faire une recherche sur le champ "commentaire" en frontoffice.
+ * Recherche de type "contient" au lieu de "commence par" sur certains champs en frontoffice (nom, prénom, ville, etc..).
+ * Les critères de recherche ne sont plus conservés en frontoffice lorsque l'on accède aux autres fonctionnalités de l'annuaire.
+
 == Module DIRECTORY - version 2.3.0 ====================================================
 
 2010-02-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

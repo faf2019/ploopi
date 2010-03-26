@@ -49,61 +49,65 @@ include_once './modules/directory/class_directory_contact.php';
 
 $op = empty($_REQUEST['op']) ? '' : $_REQUEST['op'];
 
-// Récupération des paramètres
-$arrFilter = array();
-
-// On ne veut pas les caractères % et | dans la recherche avec LIKE
-$pattern = '%|_';
-
-// Lecture SESSION
-if (isset($_SESSION['directory']['tpl_search'])) $arrFilter = $_SESSION['directory']['tpl_search'];
-
-$arrParams = array(
-    'directory_lastname',
-    'directory_firstname',
-    'directory_phone',
-    'directory_email',
-    'directory_number',
-    'directory_service',
-    'directory_function',
-    'directory_rank',
-    'directory_country',
-    'directory_city',
-    'directory_postalcode',
-    'directory_heading'
-);
-
-foreach($arrParams as $strParam)
-{
-    // Lecture Param
-    if (isset($_POST[$strParam]) && !ereg($pattern, $_POST[$strParam])) $arrFilter[$strParam] = $_POST[$strParam];
-    // Affectation de valeur par défaut si non défini
-    if (!isset($arrFilter[$strParam])) $arrFilter[$strParam] = '';
-}
-
-// Enregistrement SESSION
-$_SESSION['directory']['tpl_search'] = $arrFilter;
-
-$template_body->assign_vars(
-    array(
-        'DIRECTORY_SEARCH_LASTNAME' => htmlentities($arrFilter['directory_lastname']),
-        'DIRECTORY_SEARCH_FIRSTNAME' => htmlentities($arrFilter['directory_firstname']),
-        'DIRECTORY_SEARCH_PHONE' => htmlentities($arrFilter['directory_phone']),
-        'DIRECTORY_SEARCH_EMAIL' => htmlentities($arrFilter['directory_email']),
-        'DIRECTORY_SEARCH_NUMBER' => htmlentities($arrFilter['directory_number']),
-        'DIRECTORY_SEARCH_SERVICE' => htmlentities($arrFilter['directory_service']),
-        'DIRECTORY_SEARCH_FUNCTION' => htmlentities($arrFilter['directory_function']),
-        'DIRECTORY_SEARCH_RANK' => htmlentities($arrFilter['directory_rank']),
-        'DIRECTORY_SEARCH_COUNTRY' => htmlentities($arrFilter['directory_country']),
-        'DIRECTORY_SEARCH_CITY' => htmlentities($arrFilter['directory_city']),
-        'DIRECTORY_SEARCH_POSTALCODE' => htmlentities($arrFilter['directory_postalcode']),
-        'DIRECTORY_SEARCH_HEADING' => $arrFilter['directory_heading']
-    )
-);
-
 switch($op)
 {
     case 'search':
+        
+        // Récupération des paramètres
+        $arrFilter = array();
+        
+        // On ne veut pas les caractères % et | dans la recherche avec LIKE
+        $pattern = '%|_';
+        
+        // Lecture SESSION
+        if (isset($_SESSION['directory']['tpl_search'])) $arrFilter = $_SESSION['directory']['tpl_search'];
+        
+        $arrParams = array(
+            'directory_lastname',
+            'directory_firstname',
+            'directory_phone',
+            'directory_email',
+            'directory_number',
+            'directory_service',
+            'directory_function',
+            'directory_rank',
+            'directory_country',
+            'directory_city',
+            'directory_postalcode',
+            'directory_heading',
+            'directory_comments'
+        );
+        
+        foreach($arrParams as $strParam)
+        {
+            // Lecture Param
+            if (isset($_POST[$strParam]) && !ereg($pattern, $_POST[$strParam])) $arrFilter[$strParam] = $_POST[$strParam];
+            // Affectation de valeur par défaut si non défini
+            if (!isset($arrFilter[$strParam])) $arrFilter[$strParam] = '';
+        }
+        
+        // Enregistrement SESSION
+        $_SESSION['directory']['tpl_search'] = $arrFilter;
+        
+        $template_body->assign_vars(
+            array(
+                'DIRECTORY_SEARCH_LASTNAME' => htmlentities($arrFilter['directory_lastname']),
+                'DIRECTORY_SEARCH_FIRSTNAME' => htmlentities($arrFilter['directory_firstname']),
+                'DIRECTORY_SEARCH_PHONE' => htmlentities($arrFilter['directory_phone']),
+                'DIRECTORY_SEARCH_EMAIL' => htmlentities($arrFilter['directory_email']),
+                'DIRECTORY_SEARCH_NUMBER' => htmlentities($arrFilter['directory_number']),
+                'DIRECTORY_SEARCH_SERVICE' => htmlentities($arrFilter['directory_service']),
+                'DIRECTORY_SEARCH_FUNCTION' => htmlentities($arrFilter['directory_function']),
+                'DIRECTORY_SEARCH_RANK' => htmlentities($arrFilter['directory_rank']),
+                'DIRECTORY_SEARCH_COUNTRY' => htmlentities($arrFilter['directory_country']),
+                'DIRECTORY_SEARCH_CITY' => htmlentities($arrFilter['directory_city']),
+                'DIRECTORY_SEARCH_POSTALCODE' => htmlentities($arrFilter['directory_postalcode']),
+                'DIRECTORY_SEARCH_HEADING' => $arrFilter['directory_heading'],
+                'DIRECTORY_SEARCH_COMMENTS' => $arrFilter['directory_comments']
+            )
+        );        
+        
+        
         $arrDirectoryHeadings = directory_getheadings();
         
         $template_body->assign_block_vars('directory_switch_result', array());
@@ -142,18 +146,19 @@ switch($op)
         }
         
 
-        if (!empty($arrFilter['directory_lastname'])) $arrWhere[] = "c.lastname LIKE '".$db->addslashes($arrFilter['directory_lastname'])."%'";
-        if (!empty($arrFilter['directory_firstname'])) $arrWhere[] = "c.firstname LIKE '".$db->addslashes($arrFilter['directory_firstname'])."%'";
+        if (!empty($arrFilter['directory_lastname'])) $arrWhere[] = "c.lastname LIKE '%".$db->addslashes($arrFilter['directory_lastname'])."%'";
+        if (!empty($arrFilter['directory_firstname'])) $arrWhere[] = "c.firstname LIKE '%".$db->addslashes($arrFilter['directory_firstname'])."%'";
         if (!empty($arrFilter['directory_phone'])) $arrWhere[] = "c.phone LIKE '".$db->addslashes($arrFilter['directory_phone'])."%'";
-        if (!empty($arrFilter['directory_email'])) $arrWhere[] = "c.email LIKE '".$db->addslashes($arrFilter['directory_email'])."%'";
+        if (!empty($arrFilter['directory_email'])) $arrWhere[] = "c.email LIKE '%".$db->addslashes($arrFilter['directory_email'])."%'";
         if (!empty($arrFilter['directory_number'])) $arrWhere[] = "c.number LIKE '".$db->addslashes($arrFilter['directory_number'])."%'";
-        if (!empty($arrFilter['directory_service'])) $arrWhere[] = "c.service LIKE '".$db->addslashes($arrFilter['directory_service'])."%'";
-        if (!empty($arrFilter['directory_function'])) $arrWhere[] = "c.function LIKE '".$db->addslashes($arrFilter['directory_function'])."%'";
-        if (!empty($arrFilter['directory_rank'])) $arrWhere[] = "c.rank LIKE '".$db->addslashes($arrFilter['directory_rank'])."%'";
-        if (!empty($arrFilter['directory_country'])) $arrWhere[] = "c.country LIKE '".$db->addslashes($arrFilter['directory_country'])."%'";
-        if (!empty($arrFilter['directory_city'])) $arrWhere[] = "c.city LIKE '".$db->addslashes($arrFilter['directory_city'])."%'";
+        if (!empty($arrFilter['directory_service'])) $arrWhere[] = "c.service LIKE '%".$db->addslashes($arrFilter['directory_service'])."%'";
+        if (!empty($arrFilter['directory_function'])) $arrWhere[] = "c.function LIKE '%".$db->addslashes($arrFilter['directory_function'])."%'";
+        if (!empty($arrFilter['directory_rank'])) $arrWhere[] = "c.rank LIKE '%".$db->addslashes($arrFilter['directory_rank'])."%'";
+        if (!empty($arrFilter['directory_country'])) $arrWhere[] = "c.country LIKE '%".$db->addslashes($arrFilter['directory_country'])."%'";
+        if (!empty($arrFilter['directory_city'])) $arrWhere[] = "c.city LIKE '%".$db->addslashes($arrFilter['directory_city'])."%'";
         if (!empty($arrFilter['directory_postalcode'])) $arrWhere[] = "c.postalcode LIKE '".$db->addslashes($arrFilter['directory_postalcode'])."%'";
-
+        if (!empty($arrFilter['directory_comments'])) $arrWhere[] = "c.comments LIKE '%".$db->addslashes($arrFilter['directory_comments'])."%'";
+        
         // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
         $ptrRs = $db->query("
             SELECT      c.*, h.label
@@ -177,7 +182,7 @@ switch($op)
                 if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['address']));
                 if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($row['postalcode'].' '.$row['city'])));
                 if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['country']));
-
+                
                 $objContact = new directory_contact();
                 $objContact->fields['id'] = $row['id'];
 
@@ -391,6 +396,9 @@ switch($op)
      * Affichage de l'annuaire complet
      */
     case 'full':
+        // Reset de la recherche
+        unset($_SESSION['directory']['tpl_search']);         
+                
         $intHeadingId = isset($_GET['directory_heading_id']) && is_numeric($_GET['directory_heading_id']) ? $_GET['directory_heading_id'] : 0;
 
         // Récupération des rubriques
@@ -438,6 +446,9 @@ switch($op)
      * Affichage de l'organigramme
      */
     case 'organigram':
+        // Reset de la recherche
+        unset($_SESSION['directory']['tpl_search']);         
+        
         // Récupération des rubriques
         $arrDirectoryHeadings = directory_getheadings();
 
@@ -450,6 +461,9 @@ switch($op)
      * Affichage des numéros abrégés
      */
     case 'speeddialing':
+        // Reset de la recherche
+        unset($_SESSION['directory']['tpl_search']);         
+        
         $template_body->assign_block_vars('directory_switch_speeddialing', array());
         
         $db->query("
