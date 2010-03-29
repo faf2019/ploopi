@@ -75,25 +75,23 @@ if (!$objCache->start())
     $intTsToday = ploopi_createtimestamp();
     
 //    $where = "AND (heading.id = {$objHeading->fields['id']} OR heading.parents = '{$objHeading->fields['parents']};{$objHeading->fields['id']}' OR heading.parents LIKE '{$objHeading->fields['parents']};{$objHeading->fields['id']};%')";
-    
     switch($format)
     {
         case 'rss';
-        $feedformat = RSS2;
+        $feed = new FeedWriter(RSS2);
         $date_update = date(DATE_RSS , time());
+        $feed->setLink(_PLOOPI_BASEPATH.'/'.ploopi_urlrewrite('backend.php?format=rss&ploopi_moduleid='.$objFolder->fields['id_module'].'&id_folder='.$objFolder->fields['id'], doc_getrewriterules(), $objFolder->fields['name'].'.xml',null,true));
         break;
 
         default:
         case 'atom';
-        $feedformat = ATOM;
+        $feed = new FeedWriter(ATOM);
         $date_update = date(DATE_ATOM , time());
+        $feed->setLink(_PLOOPI_BASEPATH.'/'.ploopi_urlrewrite('backend.php?format=atom&ploopi_moduleid='.$objFolder->fields['id_module'].'&id_folder='.$objFolder->fields['id'], doc_getrewriterules(), $objFolder->fields['name'].'.xml',null,true));
         break;
     }
 
-    $feed = new FeedWriter($feedformat);
-
     $feed->setTitle(utf8_encode($objFolder->fields['name']));
-    $feed->setLink(_PLOOPI_BASEPATH.$_SERVER['REQUEST_URI']);
     $feed->setDescription(utf8_encode($objFolder->fields['description']));
     
     $feed->setChannelElement('updated', $date_update);
