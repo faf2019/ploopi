@@ -52,7 +52,7 @@ $format = (empty($_GET['format'])) ? 'atom' : strtolower($_GET['format']);
 // Mise en cache
 include_once './include/classes/cache.php';
 
-$objCache = new ploopi_cache(md5('doc_feeds_folder_'.$format.'_'.$_GET['id_folder']), 30);
+$objCache = new ploopi_cache(md5('doc_feeds_folder_'.$format.'_'.$_GET['id_folder']), 300);
 $objCache->set_groupe('module_doc_feeds_'.$objFolder->fields['id_workspace'].'_'.$objFolder->fields['id_module']);  // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
 
 // Vidage du buffer
