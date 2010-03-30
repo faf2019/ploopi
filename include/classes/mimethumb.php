@@ -215,7 +215,7 @@ class mimethumb
         if(empty($pathfile) || !file_exists($pathfile)) return false;
         
         $this->strPathFile = $pathfile;
-        $this->strExtension = (!empty($extension)) ? $extension : ploopi_file_getextension($pathfile);
+        $this->strExtension = ploopi_file_getextension($pathfile);
 
         // Recupération du type mime
         $sqlMime = $db->query("SELECT `mimetype`, `filetype`, `group` FROM ploopi_mimetype WHERE ext = '{$this->strExtension}'");
@@ -227,8 +227,9 @@ class mimethumb
             $this->strGroupType = $fieldMime['group'];
         }
 
-        if($this->strGroupType === 'text')
+        if($this->strGroupType === 'text' || $this->strGroupType === 'shell' || $this->strGroupType === 'xml' || $this->strGroupType === 'unix')
         {
+            $this->strExtension = 'txt'; //passe en force le type "txt" (pour feinter les csv, sql, php, etc...)
             $booviewthumb = $this->_thumbJodconverter('ODT');
         }
         else
@@ -248,16 +249,12 @@ class mimethumb
                 case 'DOC':
                 case 'DOCX':
                 case 'WPD':
-                case 'TXT':
-                case 'SQL':
-                case 'HTML':
                     $booviewthumb = $this->_thumbJodconverter('ODT');
                 break;
                 
                 case 'SXC':
                 case 'XLS':
                 case 'XLSX':
-                case 'CSV':
                 case 'TSV':
                     $booviewthumb = $this->_thumbJodconverter('ODS');
                 break;
@@ -550,11 +547,12 @@ class mimethumb
             
             if(!empty($system_jobservice) && ploopi_is_url($system_jobservice))
             {
-                if(filesize($this->strPathFile) > 512*1024) return false;
+                if(filesize($this->strPathFile) > 1024*1024) return false;
                 
                 include_once './include/classes/odf.php';
                 
                 $objJOD = new odf_converter($system_jobservice);
+                
                 $inputType = ploopi_getmimetype('file.'.$this->strExtension);
                 $outputType = ploopi_getmimetype('file.'.$formExport);
 
