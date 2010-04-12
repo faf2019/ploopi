@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.3.2 ====================================================
+
+2010-04-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Les champs du bloc "Informatons complémentaires" sont cachés par défaut lors de la consultation d'une fiche en backoffice.
+
 == Module DIRECTORY - version 2.3.1 ====================================================
 
 2010-03-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

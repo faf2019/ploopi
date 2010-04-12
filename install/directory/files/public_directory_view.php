@@ -145,154 +145,163 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
                 <span><?php echo implode('<br />', $arrAddress); ?></span>
             </p>
 
-            <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Informatons complémentaires</h2>
-            <p>
-                <label style="font-weight:bold;"><?php echo _DIRECTORY_COMMENTARY; ?>:</label>
-                <span><?php echo ploopi_nl2br(htmlentities($usr->fields['comments'])); ?></span>
-            </p>
-
-            <?php
-            if (!empty($_GET['directory_id_contact']) && !empty($usr->fields['id_heading']))
-            {
-                include_once './modules/directory/class_directory_heading.php';
-
-                $intIdHeading = $usr->fields['id_heading'];
-                ?>
-                <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Rattachements (rubriques)</h2>
-                <div style="padding:4px;">
-                    <?php
-                    // Récupération des rubriques de contacts partagés
-                    $arrHeadings = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_sharedcontacts'] ? directory_getheadings() : array();
-                    $arrTitle = array();
-
-                    if (isset($arrHeadings['list'][$usr->fields['id_heading']]['parents']))
-                    {
-                        $arrParents = split(';', $arrHeadings['list'][$usr->fields['id_heading']]['parents']);
-                        $arrTitle  = array();
-                        foreach($arrParents as $intId)
-                            if (isset($arrHeadings['list'][$intId]))
-                                $arrTitle[] = $arrHeadings['list'][$intId]['label'];
-
-                        $arrTitle[] = $arrHeadings['list'][$usr->fields['id_heading']]['label'];
-                    }
-
-                    echo ploopi_nl2br(htmlentities(implode("\n", $arrTitle)));
-                    ?>
-                </div>
+            <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Informatons complémentaires ( <a href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('directory_view_details');" >Afficher</a> )</h2>
+            <div id="directory_view_details" style="display:none;">
+                <p>
+                    <label style="font-weight:bold;"><?php echo _DIRECTORY_COMMENTARY; ?>:</label>
+                    <span><?php echo ploopi_nl2br(htmlentities($usr->fields['comments'])); ?></span>
+                </p>
                 <?php
-            }
-
-            if (!empty($_GET['directory_id_user']))
-            {
+                if (!empty($_GET['directory_id_contact']) && !empty($usr->fields['id_heading']))
+                {
+                    include_once './modules/directory/class_directory_heading.php';
+    
+                    $intIdHeading = $usr->fields['id_heading'];
+                    ?>
+                    <p>
+                        <label style="font-weight:bold;">Rattachements (rubriques):</label>
+                        <span>
+                            <?php
+                            // Récupération des rubriques de contacts partagés
+                            $arrHeadings = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_sharedcontacts'] ? directory_getheadings() : array();
+                            $arrTitle = array();
+        
+                            if (isset($arrHeadings['list'][$usr->fields['id_heading']]['parents']))
+                            {
+                                $arrParents = split(';', $arrHeadings['list'][$usr->fields['id_heading']]['parents']);
+                                $arrTitle  = array();
+                                foreach($arrParents as $intId)
+                                    if (isset($arrHeadings['list'][$intId]))
+                                        $arrTitle[] = $arrHeadings['list'][$intId]['label'];
+        
+                                $arrTitle[] = $arrHeadings['list'][$usr->fields['id_heading']]['label'];
+                            }
+        
+                            echo ploopi_nl2br(htmlentities(implode("\n", $arrTitle)));
+                            ?>
+                        </span>
+                    </p>
+                    <?php
+                }
+    
+                if (!empty($_GET['directory_id_user']))
+                {
+                    ?>
+                    <p>
+                        <label style="font-weight:bold;">Groupes:</label>
+                        <span>
+                                <?php
+                                $user_gp = $usr->getgroups();
+            
+                                // on met les libellés dans un tableau
+                                $groups_list = array();
+                                $groups_list_id = array();
+            
+                                foreach($user_gp as $gp) $groups_list[sprintf("%04d%s", $gp['depth'], $gp['label'])] = $gp['label'];
+            
+                                // on trie par profondeur + libellé
+                                ksort($groups_list);
+            
+                                // on affiche
+                                echo implode('<br />',$groups_list);
+                                ?>
+                        </span>
+                    </p>
+    
+                    <p>
+                        <label style="font-weight:bold;">Espaces de travail:</label>
+                        <span>
+                            <?php
+                            $user_ws = $usr->getworkspaces();
+        
+                            // on met les libellés dans un tableau
+                            $workspaces_list = array();
+                            foreach($user_ws as $ws) $workspaces_list[sprintf("%04d%s", $ws['depth'], $ws['label'])] = $ws['label'];
+        
+                            // on trie par profondeur + libellé
+                            ksort($workspaces_list);
+        
+                            // on affiche
+                            echo implode('<br />',$workspaces_list);
+                            ?>
+                        </span>
+                    </p>
+    
+                    <p>
+                        <label style="font-weight:bold;">Attributions / Rôles:</label>
+                        <span>
+                            <?php
+                            // Recherche des rôles
+                            $arrRoles = array();
+        
+                            if (!empty($user_ws))
+                            {
+                                // recherche des rôles "groupe"
+                                if (!empty($user_gp))
+                                {
+        
+                                    $db->query("
+                                        SELECT      wgr.id_group,
+                                                    wgr.id_workspace,
+                                                    r.id,
+                                                    r.id_module,
+                                                    r.label as role_label,
+                                                    m.label as module_label
+        
+                                        FROM        ploopi_role r,
+                                                    ploopi_workspace_group_role wgr,
+                                                    ploopi_module m
+        
+                                        WHERE       wgr.id_role = r.id
+                                        AND         r.id_module = m.id
+                                        AND         wgr.id_group IN (".implode(',', array_keys($user_gp)).")
+                                        AND         wgr.id_workspace IN (".implode(',', array_keys($user_ws)).")
+                                    ");
+        
+                                    while ($row = $db->fetchrow()) $arrRoles["{$row['id_workspace']}_{$row['id']}"] = sprintf("%s : <strong>%s</strong> dans le module <strong>%s</strong>", $user_ws[$row['id_workspace']]['label'], $row['role_label'], $row['module_label']);
+        
+                                    // recherche des rôles "utilisateur"
+                                    $db->query("
+                                        SELECT      wur.id_user,
+                                                    wur.id_workspace,
+                                                    r.id,
+                                                    r.id_module,
+                                                    r.label as role_label,
+                                                    m.label as module_label
+        
+                                        FROM        ploopi_role r,
+                                                    ploopi_workspace_user_role wur,
+                                                    ploopi_module m
+        
+                                        WHERE       wur.id_role = r.id
+                                        AND         r.id_module = m.id
+                                        AND         wur.id_user = {$usr->fields['id']}
+                                        AND         wur.id_workspace IN (".implode(',', array_keys($user_ws)).")
+                                    ");
+        
+                                    while ($row = $db->fetchrow()) $arrRoles["{$row['id_workspace']}_{$row['id']}"] = sprintf("%s : <strong>%s</strong> dans le module <strong>%s</strong>", $user_ws[$row['id_workspace']]['label'], $row['role_label'], $row['module_label']);
+                                }
+                            }
+        
+                            if (empty($arrRoles))
+                            {
+                                echo "<em>Aucun rôle</em>";
+                            }
+                            else
+                            {
+                                // on trie par espace / rôle
+                                ksort($arrRoles);
+        
+                                // on affiche
+                                echo implode('<br />',$arrRoles);
+                            }
+                            ?>
+                        </span>
+                    </p>
+                    <?php
+                }
                 ?>
-                <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Groupes d'utilisateurs</h2>
-                <div style="padding:4px;">
-                    <?php
-                    $user_gp = $usr->getgroups();
-
-                    // on met les libellés dans un tableau
-                    $groups_list = array();
-                    $groups_list_id = array();
-
-                    foreach($user_gp as $gp) $groups_list[sprintf("%04d%s", $gp['depth'], $gp['label'])] = $gp['label'];
-
-                    // on trie par profondeur + libellé
-                    ksort($groups_list);
-
-                    // on affiche
-                    echo implode('<br />',$groups_list);
-                    ?>
-                </div>
-
-                <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Rattachements (espaces de travail)</h2>
-                <div style="padding:4px;">
-                    <?php
-                    $user_ws = $usr->getworkspaces();
-
-                    // on met les libellés dans un tableau
-                    $workspaces_list = array();
-                    foreach($user_ws as $ws) $workspaces_list[sprintf("%04d%s", $ws['depth'], $ws['label'])] = $ws['label'];
-
-                    // on trie par profondeur + libellé
-                    ksort($workspaces_list);
-
-                    // on affiche
-                    echo implode('<br />',$workspaces_list);
-                    ?>
-                </div>
-
-                <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Attributions / Rôles</h2>
-                <div style="padding:4px;">
-                    <?php
-                    // Recherche des rôles
-                    $arrRoles = array();
-
-                    if (!empty($user_ws))
-                    {
-                        // recherche des rôles "groupe"
-                        if (!empty($user_gp))
-                        {
-
-                            $db->query("
-                                SELECT      wgr.id_group,
-                                            wgr.id_workspace,
-                                            r.id,
-                                            r.id_module,
-                                            r.label as role_label,
-                                            m.label as module_label
-
-                                FROM        ploopi_role r,
-                                            ploopi_workspace_group_role wgr,
-                                            ploopi_module m
-
-                                WHERE       wgr.id_role = r.id
-                                AND         r.id_module = m.id
-                                AND         wgr.id_group IN (".implode(',', array_keys($user_gp)).")
-                                AND         wgr.id_workspace IN (".implode(',', array_keys($user_ws)).")
-                            ");
-
-                            while ($row = $db->fetchrow()) $arrRoles["{$row['id_workspace']}_{$row['id']}"] = sprintf("%s : <strong>%s</strong> dans le module <strong>%s</strong>", $user_ws[$row['id_workspace']]['label'], $row['role_label'], $row['module_label']);
-
-                            // recherche des rôles "utilisateur"
-                            $db->query("
-                                SELECT      wur.id_user,
-                                            wur.id_workspace,
-                                            r.id,
-                                            r.id_module,
-                                            r.label as role_label,
-                                            m.label as module_label
-
-                                FROM        ploopi_role r,
-                                            ploopi_workspace_user_role wur,
-                                            ploopi_module m
-
-                                WHERE       wur.id_role = r.id
-                                AND         r.id_module = m.id
-                                AND         wur.id_user = {$usr->fields['id']}
-                                AND         wur.id_workspace IN (".implode(',', array_keys($user_ws)).")
-                            ");
-
-                            while ($row = $db->fetchrow()) $arrRoles["{$row['id_workspace']}_{$row['id']}"] = sprintf("%s : <strong>%s</strong> dans le module <strong>%s</strong>", $user_ws[$row['id_workspace']]['label'], $row['role_label'], $row['module_label']);
-                        }
-                    }
-
-                    if (empty($arrRoles))
-                    {
-                        echo "<em>Aucun rôle</em>";
-                    }
-                    else
-                    {
-                        // on trie par espace / rôle
-                        ksort($arrRoles);
-
-                        // on affiche
-                        echo implode('<br />',$arrRoles);
-                    }
-                    ?>
-                </div>
-                <?php
-            }
-            ?>
+            </div>
         </div>
     </div>
 </div>
