@@ -83,7 +83,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_sharedcontacts'])
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_speeddialing'])
 {
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_speeddialing'])) ? _DIRECTORY_SPEEDDIALING : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_sharedcontacts'],ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSpeedDialing"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabSpeedDialing');
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_speeddialing'])) ? _DIRECTORY_SPEEDDIALING : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_speeddialing'],ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSpeedDialing"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabSpeedDialing');
 }
 
 /**

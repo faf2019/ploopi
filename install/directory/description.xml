@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>directory</label>
-      <version>2.2.2e</version>
+      <version>2.2.2f</version>
       <author>Ovensia</author>
-      <date>20100217090000</date>
+      <date>20100412100000</date>
       <description>Annuaire des Utilisateurs</description>
       <paramtype>
          <name>directory_myfavorites</name>

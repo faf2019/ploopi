@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.2.2f ====================================================
+
+2010-04-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction du bug #48 : Problème d'affichage dans le menu - fixes #48
+
 == Module DIRECTORY - version 2.2.2e ====================================================
 
 2010-02-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
