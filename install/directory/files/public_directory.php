@@ -206,7 +206,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $c++;
         }
 
-        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 100));
+        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi_getparam('directory_pagesize')));
     break;
 
     /**
@@ -301,7 +301,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $c++;
         }
 
-        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 100));
+        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi_getparam('directory_pagesize')));
 
     break;
 
@@ -564,7 +564,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 $c++;
             }
 
-            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 100));
+            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi_getparam('directory_pagesize')));
         }
     break;
 
@@ -958,7 +958,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 }
                             }
 
-                            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 100));
+                            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi_getparam('directory_pagesize')));
 
                             if (!$db->numrows($rs))
                             {
@@ -1106,7 +1106,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 }
             }
 
-            $skin->display_array($arrColumns, $arrValues, 'array_directory_speeddialing', array('sortable' => true, 'orderby_default' => 'heading', 'limit' => 100));
+            $skin->display_array($arrColumns, $arrValues, 'array_directory_speeddialing', array('sortable' => true, 'orderby_default' => 'heading', 'limit' => ploopi_getparam('directory_pagesize')));
 
             if (!$db->numrows($rs))
             {
