@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>directory</label>
-      <version>2.3.2</version>
+      <version>2.3.3</version>
       <author>Ovensia</author>
-      <date>20100412103000</date>
+      <date>20100413110000</date>
       <description>Annuaire des Utilisateurs</description>
       <paramtype>
          <name>directory_myfavorites</name>
@@ -210,6 +210,13 @@
          <public>1</public>
          <description/>
       </paramtype>
+      <paramtype>
+         <name>directory_pagesize</name>
+         <label>Nombre d'enregistrements affichés par page</label>
+         <default_value>50</default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>      
       <action>
          <id_action>1</id_action>
          <label>Gérer les rubriques/contacts</label>

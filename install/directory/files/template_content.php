@@ -168,7 +168,7 @@ switch($op)
 
             WHERE       ".implode(' AND ', $arrWhere)."
 
-            ORDER BY    c.lastname, c.firstname
+            ORDER BY    c.position, c.lastname, c.firstname
         ");
 
         if ($db->numrows())
@@ -204,6 +204,7 @@ switch($op)
                 $template_body->assign_block_vars('directory_switch_result.contact',
                     array(
                         'ID' => $row['id'],
+                        'POSITION' => $row['position'],
                         'CIVILITY' => htmlentities($row['civility']),
                         'LASTNAME' => htmlentities($row['lastname']),
                         'FIRSTNAME' => htmlentities($row['firstname']),
@@ -287,6 +288,7 @@ switch($op)
 
             $template_body->assign_block_vars('directory_switch_contact',
                 array(
+                    'POSITION' => $objContact->fields['position'],
                     'CIVILITY' => htmlentities($objContact->fields['civility']),
                     'LASTNAME' => htmlentities($objContact->fields['lastname']),
                     'FIRSTNAME' => htmlentities($objContact->fields['firstname']),
@@ -330,7 +332,7 @@ switch($op)
                 WHERE       id_heading = {$objContact->fields['id_heading']}
                 AND         id <> {$objContact->fields['id']}
 
-                ORDER BY    c.lastname, c.firstname
+                ORDER BY    c.position, c.lastname, c.firstname
             ");
 
             $c = 0;
@@ -361,6 +363,7 @@ switch($op)
                 $template_body->assign_block_vars('directory_switch_contact.contact',
                     array(
                         'ID' => $row['id'],
+                        'POSITION' => $row['position'],
                         'CIVILITY' => htmlentities($row['civility']),
                         'LASTNAME' => htmlentities($row['lastname']),
                         'FIRSTNAME' => htmlentities($row['firstname']),

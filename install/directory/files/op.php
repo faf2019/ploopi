@@ -267,7 +267,7 @@ if ($_SESSION['ploopi']['connected'])
                     rename($_SESSION['directory']['contact_photopath'], $directory_contact->getphotopath());
                     unset($_SESSION['directory']['contact_photopath']);
                 }
-
+                
                 ploopi_redirect('admin.php');
             break;
 
@@ -448,7 +448,7 @@ if ($_SESSION['ploopi']['connected'])
                 include_once './modules/directory/class_directory_heading.php';
 
                 $objHeading = new directory_heading();
-
+                
                 if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !$objHeading->open($_GET['directory_heading_id'])) ploopi_redirect('admin.php');
 
                 $objHeading->setvalues($_POST, 'directory_heading_');

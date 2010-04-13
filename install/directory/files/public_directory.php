@@ -206,7 +206,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $c++;
         }
 
-        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 100));
+        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi_getparam('directory_pagesize')));
     break;
 
     /**
@@ -301,7 +301,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $c++;
         }
 
-        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 100));
+        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi_getparam('directory_pagesize')));
 
     break;
 
@@ -564,7 +564,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 $c++;
             }
 
-            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 100));
+            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi_getparam('directory_pagesize')));
         }
     break;
 
@@ -642,7 +642,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         /**
                          * L'utilisateur connecté est-il gestionnaire ?
                          */
-                        $booModify = ploopi_isadmin();
+                        $booModify = ploopi_isadmin() || $arrHeadings['list'][$intHeadingId]['isvalidator'];
                         
                         foreach($arrWf as $value) 
                         {
@@ -914,6 +914,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                             $arrColumns = array();
                             $arrValues = array();
 
+                            $arrColumns['left']['position'] = array('label' => 'P.',     'width' => 35, 'options' => array('sort' => true));
                             $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME, 'options' => array('sort' => true));
                             $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
                             $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
@@ -947,6 +948,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         else $arrActions[] ='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
                                     }
 
+                                    $arrValues[$c]['values']['position'] = array('label' => $row['position']);
                                     $arrValues[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
                                     $arrValues[$c]['values']['service'] = array('label' => $row['service']);
                                     $arrValues[$c]['values']['function'] = array('label' => $row['function']);
@@ -958,7 +960,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 }
                             }
 
-                            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 100));
+                            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'position', 'limit' => ploopi_getparam('directory_pagesize')));
 
                             if (!$db->numrows($rs))
                             {
@@ -1106,7 +1108,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 }
             }
 
-            $skin->display_array($arrColumns, $arrValues, 'array_directory_speeddialing', array('sortable' => true, 'orderby_default' => 'heading', 'limit' => 100));
+            $skin->display_array($arrColumns, $arrValues, 'array_directory_speeddialing', array('sortable' => true, 'orderby_default' => 'heading', 'limit' => ploopi_getparam('directory_pagesize')));
 
             if (!$db->numrows($rs))
             {

@@ -53,7 +53,38 @@ define ('_DIRECTORY_OBJECT_HEADING',        1);
 function directory_getheadings($intIdHeading = 0)
 {
     global $db;
+    
+    $booIsAdmin = ploopi_isadmin();
+    if (!$booIsAdmin)
+    {
+        // Lecture du profil utilisateur (groupes notamment)
+        $objUser = new user();
+        $objUser->open($_SESSION['ploopi']['userid']);
+        $arrGroups = $objUser->getgroups(true);
+        
+        // Tous les validateurs pour toutes les rubriques !
+        $arrVal = ploopi_validation_get(_DIRECTORY_OBJECT_HEADING);
 
+        // On trie par rubrique
+        // $arrValidation contient un enregistrement par rubrique, si false alors il y a des validateurs mais l'utilisateur courant n'en fait pas partie, si true alors l'utilisateur courant est validateur
+        foreach($arrVal as $row)
+        {
+            if (!isset($arrValidation[$row['id_record']])) $arrValidation[$row['id_record']] = false;
+            if (($row['type_validation'] == 'user' && $row['id_validation'] == $_SESSION['ploopi']['userid']) || ($row['type_validation'] == 'group' && isset($arrGroups[$row['id_validation']]))) $arrValidation[$row['id_record']] = true;
+        }
+        
+        /*// Lecture des droits de validation pour l'utilisateur courant
+        $arrValidation = array();
+        
+        
+        $arrValUser = ploopi_validation_get(_DIRECTORY_OBJECT_HEADING, '', -1, $_SESSION['ploopi']['userid'], 'user'); 
+        $arrValGroup = ploopi_validation_get(_DIRECTORY_OBJECT_HEADING, '', -1, array_keys($arrGroups), 'group');
+        
+        foreach($arrValUser as $arrVal) $arrValidation[$arrVal['id_record']] = 1;
+        foreach($arrValGroup as $arrVal) $arrValidation[$arrVal['id_record']] = 1;
+        */ 
+    }
+    
     $arrHeadings =
         array(
             'list' => array(),
@@ -74,14 +105,16 @@ function directory_getheadings($intIdHeading = 0)
 
         if ($intIdHeading == 0 || $fields['id'] == $intIdHeading || $fields['id_heading'] == $intIdHeading || (isset($arrHeadings['list'][$fields['id_heading']]) && in_array($intIdHeading, explode(';', $arrHeadings['list'][$fields['id_heading']]['parents']))))
         {
+            // Validateur ? oui si "admin sys" ou "validateur" ou "validateur de la rubrique parent"
+            $fields['isvalidator'] = $booIsAdmin || !empty($arrValidation[$fields['id']]) || (!isset($arrValidation[$fields['id']]) && !empty($arrHeadings['list'][$fields['id_heading']]['isvalidator']));
             $fields['parents'] = (isset($arrHeadings['list'][$fields['id_heading']])) ? "{$arrHeadings['list'][$fields['id_heading']]['parents']};{$fields['id_heading']}" : $fields['id_heading'];
 
             $arrHeadings['list'][$fields['id']] = $fields;
             $arrHeadings['tree'][$fields['id_heading']][] = $fields['id'];
         }
     }
-
-    return($arrHeadings);
+    
+    return $arrHeadings;
 }
 
 /**
@@ -100,7 +133,7 @@ function directory_getcontacts()
         SELECT      *
         FROM        ploopi_mod_directory_contact
         WHERE       id_heading > 0
-        ORDER BY    lastname, firstname
+        ORDER BY    position, lastname, firstname
     ");
 
     while ($fields = $db->fetchrow($result)) $arrContacts[$fields['id_heading']][] = $fields;
@@ -131,6 +164,7 @@ function directory_gettreeview($headings = array(), $booPopup = false)
     foreach($headings['list'] as $id => $fields)
     {
         $arrParents = split(';', $fields['parents']);
+        $icon = 'ico_heading.png';
         
         if ($booPopup)
         {
@@ -142,7 +176,9 @@ function directory_gettreeview($headings = array(), $booPopup = false)
             $strNodeOnClick = "ploopi_skin_treeview_shownode('{$strNodeId}', '".ploopi_queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}&directory_option=popup")."', 'admin-light.php');";
             
             $strLink = 'javascript:void(0);'; 
-            $strOnClick = 'javascript:directory_heading_choose(\''.$fields['id'].'\', \''.addslashes($fields['label']).'\');'; 
+            $strOnClick = $fields['isvalidator'] ? 'javascript:directory_heading_choose(\''.$fields['id'].'\', \''.addslashes($fields['label']).'\');' : "javascript:alert('Vous ne disposez pas des autorisations nécessaires');";
+
+            if (!$fields['isvalidator']) $icon = 'ico_heading_false.png';
         }
         else 
         {
@@ -155,7 +191,6 @@ function directory_gettreeview($headings = array(), $booPopup = false)
             $strOnClick = ''; 
         }
         
-        
         $treeview['list'][$strNodeId] =
             array(
                 'id' => $strNodeId,
@@ -166,7 +201,7 @@ function directory_gettreeview($headings = array(), $booPopup = false)
                 'node_onclick' => $strNodeOnClick,
                 'link' => $strLink,
                 'onclick' => $strOnClick,
-                'icon' => './modules/directory/img/ico_heading.png'
+                'icon' => "./modules/directory/img/{$icon}"
             );
 
         $treeview['tree'][$strNodePrefix.$fields['id_heading']][] = $strNodeId;
@@ -233,6 +268,7 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
             $template_body->assign_block_vars('directory_switch_full.line.contact',
                 array(
                     'ID' => $row['id'],
+                    'POSITION' => $row['position'],
                     'CIVILITY' => htmlentities($row['civility']),
                     'LASTNAME' => htmlentities($row['lastname']),
                     'FIRSTNAME' => htmlentities($row['firstname']),

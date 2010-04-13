@@ -1,3 +1,11 @@
+== Module DIRECTORY - version 2.3.3 ====================================================
+
+2010-04-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'un paramètre permettant d'ajuster le nombre d'enregistrements par page (tableaux multi-pages)
+ * Contacts Partagés : Ajout d'un champ "position", tri par défaut sur position 
+ * Contacts Partagés : Gestion des rôles dans le déplacement d'un contact d'une rubrique à une autre 
+
 == Module DIRECTORY - version 2.3.2 ====================================================
 
 2010-04-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

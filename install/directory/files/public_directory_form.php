@@ -106,7 +106,11 @@ unset($_SESSION['directory']['contact_photopath']);
                 </div>
             </fieldset>
             <?
-            if (!empty($directory_contact->fields['id']) && $directory_contact->fields['id_heading'] > 0 && ploopi_isadmin())
+            //ploopi_print_r(ploopi_validation_get(_DIRECTORY_OBJECT_HEADING, '', -1, $_SESSION['ploopi']['userid'], 'user'));
+            //ploopi_print_r(ploopi_validation_get(_DIRECTORY_OBJECT_HEADING, '', -1, $_SESSION['ploopi']['userid'], 'group'));
+            
+            //if (!empty($directory_contact->fields['id']) && $directory_contact->fields['id_heading'] > 0 && ploopi_isadmin())
+            if (!empty($directory_contact->fields['id']) && $directory_contact->fields['id_heading'] > 0)
             {
                 include_once './modules/directory/class_directory_heading.php';
                 $objDirectoryHeading = new directory_heading();
@@ -115,6 +119,10 @@ unset($_SESSION['directory']['contact_photopath']);
                 <fieldset class="fieldset">
                     <legend>Rubrique de rattachement</legend>
                     <div class="ploopi_form">
+                        <p>
+                            <label>Position:</label>
+                            <input type="text" class="text" name="directory_contact_position" value="<?php echo htmlentities($directory_contact->fields['position']); ?>" tabindex="114" style="width:50px;" />
+                        </p>
                         <p>
                             <label>Rubrique parent:</label>
                             <input type="hidden" value="<? echo $directory_contact->fields['id_heading']; ?>" name="directory_heading_id" id="directory_heading_id" />
