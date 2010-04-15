@@ -59,8 +59,7 @@ function directory_getheadings($intIdHeading = 0)
     {
         // Lecture du profil utilisateur (groupes notamment)
         $objUser = new user();
-        $objUser->open($_SESSION['ploopi']['userid']);
-        $arrGroups = $objUser->getgroups(true);
+        $arrGroups = $objUser->open($_SESSION['ploopi']['userid']) ? $objUser->getgroups(true) : array(); 
         
         // Tous les validateurs pour toutes les rubriques !
         $arrVal = ploopi_validation_get(_DIRECTORY_OBJECT_HEADING);
@@ -72,17 +71,6 @@ function directory_getheadings($intIdHeading = 0)
             if (!isset($arrValidation[$row['id_record']])) $arrValidation[$row['id_record']] = false;
             if (($row['type_validation'] == 'user' && $row['id_validation'] == $_SESSION['ploopi']['userid']) || ($row['type_validation'] == 'group' && isset($arrGroups[$row['id_validation']]))) $arrValidation[$row['id_record']] = true;
         }
-        
-        /*// Lecture des droits de validation pour l'utilisateur courant
-        $arrValidation = array();
-        
-        
-        $arrValUser = ploopi_validation_get(_DIRECTORY_OBJECT_HEADING, '', -1, $_SESSION['ploopi']['userid'], 'user'); 
-        $arrValGroup = ploopi_validation_get(_DIRECTORY_OBJECT_HEADING, '', -1, array_keys($arrGroups), 'group');
-        
-        foreach($arrValUser as $arrVal) $arrValidation[$arrVal['id_record']] = 1;
-        foreach($arrValGroup as $arrVal) $arrValidation[$arrVal['id_record']] = 1;
-        */ 
     }
     
     $arrHeadings =

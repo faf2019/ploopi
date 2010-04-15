@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.3.3a ====================================================
+
+2010-04-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug sur la consultation frontoffice de l'annuaire (lors de la vérification des droits de modification)
+ 
 == Module DIRECTORY - version 2.3.3 ====================================================
 
 2010-04-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
