@@ -263,7 +263,10 @@ switch($ploopi_op)
             $objImgFile = new docfile();
             $objImgFile->open($_GET['id_image']);
             
-            ploopi_resizeimage($objImgFile->getfilepath(), 0, $_GET['width'], $_GET['height'], array('jpg',90), 0, '', '#'.$_GET['color']);
+            if($_GET['color'] == 'transparence')
+                ploopi_resizeimage($objImgFile->getfilepath(), 0, $_GET['width'], $_GET['height'], 'png', 0, '', 'transparent');
+            else
+                ploopi_resizeimage($objImgFile->getfilepath(), 0, $_GET['width'], $_GET['height'], array('jpg',90), 0, '', '#'.$_GET['color']);
             
             if(isset($objCache)) $objCache->end();
         }
@@ -280,9 +283,12 @@ switch($ploopi_op)
         $objGallery = new gallery();
         if($objGallery->open($_GET['id_gallery']))
         {
+            $color = ($objGallery->fields['view_transparence']) ? 'transparence' : str_replace('#','',$objGallery->fields['view_color']);
+            
             $arrDirSelectTmp = $objGallery->getdirectories();
             if(!empty($arrDirSelectTmp))
             {
+                
                 foreach ($arrDirSelectTmp as $key => $dirSelect) $arrDirSelect[] = $dirSelect['id_directory'];
                 $sql = "
                     SELECT      f.id, f.name, f.version
@@ -305,12 +311,210 @@ switch($ploopi_op)
     
                 while ($row = $db->fetchrow($resultSqlDir))
                 {
-                     $strXML .= "\t".'<img src="'.htmlspecialchars(ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['view_width'].'&height='.$objGallery->fields['view_height'].'&color='.str_replace('#','',$objGallery->fields['view_color']))).'" title="'.$row['name'].'" />'."\r\n";
+                    
+                     $strXML .= "\t".'<img src="'.htmlspecialchars(ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['view_width'].'&height='.$objGallery->fields['view_height'].'&color='.$color)).'" title="'.$row['name'].'" />'."\r\n";
                 }
                 
             }
         }
         $strXML .= '</album>';
+        
+        echo utf8_encode($strXML);
+        header('Content-Type: text/xml');
+        ploopi_die();
+        break;
+
+    case 'ploopi_get_flipXML':
+         
+        // Vidage du buffer
+        ploopi_ob_clean();
+        
+        $strXML = '<?xml version="1.0" encoding="UTF-8" ?>'."\r\n";
+        $strXML .= '<slide_show>'."\r\n";
+        
+        include_once './modules/gallery/class/class_gallery.php';
+        $objGallery = new gallery();
+        if($objGallery->open($_GET['id_gallery']))
+        {
+            $color = ($objGallery->fields['view_transparence']) ? 'transparence' : str_replace('#','',$objGallery->fields['view_color']);
+            
+            $arrDirSelectTmp = $objGallery->getdirectories();
+            if(!empty($arrDirSelectTmp))
+            {
+                $strXML .= "\t".'<options>'."\r\n";
+                $strXML .= "\t".'<debug>false</debug>'."\r\n";
+                $strXML .= "\t".'<background>'.(($_GET['transparent']) ? 'transparent' : $objGallery->fields['view_color']).'</background>'."\r\n";
+                $strXML .= "\t".'<friction>'.$_GET['friction'].'</friction>'."\r\n";
+                $strXML .= "\t".'<fullscreen>'.$_GET['fullscreen'].'</fullscreen>'."\r\n";
+                $strXML .= "\t".'<fieldOfView>'.$_GET['fieldofview'].'</fieldOfView>'."\r\n";
+                $strXML .= "\t".'<margins>'."\r\n";
+                $strXML .= "\t".'<top>'.$_GET['margin_top'].'</top>'."\r\n";
+                $strXML .= "\t".'<left>'.$_GET['margin_right'].'</left>'."\r\n";
+                $strXML .= "\t".'<bottom>'.$_GET['margin_bottom'].'</bottom>'."\r\n";
+                $strXML .= "\t".'<right>'.$_GET['margin_left'].'</right>'."\r\n";
+                $strXML .= "\t".'</margins>'."\r\n";
+                $strXML .= "\t".'<interaction>'."\r\n";
+                $strXML .= "\t".'<flip>'.$_GET['flip'].'</flip>'."\r\n";
+                $strXML .= "\t".'<vertical>'.$_GET['vertical'].'</vertical>'."\r\n";
+                $strXML .= "\t".'<speed>'.$_GET['speed'].'</speed>'."\r\n";
+                $strXML .= "\t".'<default_speed>'.$_GET['default_speed'].'</default_speed>'."\r\n";
+                $strXML .= "\t".'<reset_delay>'.$_GET['reset_delay'].'</reset_delay>'."\r\n";
+                $strXML .= "\t".'</interaction>'."\r\n";
+                $strXML .= "\t".'<reflection>'."\r\n";
+                $strXML .= "\t".'<amount>'.$_GET['amount'].'</amount>'."\r\n";
+                $strXML .= "\t".'<blur>'.$_GET['blur'].'</blur>'."\r\n";
+                $strXML .= "\t".'<distance>'.$_GET['distance'].'</distance>'."\r\n";
+                $strXML .= "\t".'<alpha>'.$_GET['alpha'].'</alpha>'."\r\n";
+                $strXML .= "\t".'</reflection>'."\r\n";
+                $strXML .= "\t".'</options>'."\r\n";
+                
+                foreach ($arrDirSelectTmp as $key => $dirSelect) $arrDirSelect[] = $dirSelect['id_directory'];
+                $sql = "
+                    SELECT      f.id, f.name, f.version, f.description
+                
+                    FROM        (ploopi_mod_doc_file f,
+                                ploopi_mod_doc_folder fo)
+                    
+                    WHERE       LCASE(f.extension) IN ('jpg','jpeg','gif','png')
+                    AND         fo.id IN (".implode(',',$arrDirSelect).") 
+                    AND         fo.foldertype = 'public' 
+                    AND         f.id_folder = fo.id
+                    
+                    ORDER BY    fo.name, f.name
+                ";
+            
+                $resultSqlDir = $db->query($sql);
+
+                include_once './modules/doc/class_docfile.php';
+                $objImgFile = new docfile();
+				$intCpt = 0;
+                while ($row = $db->fetchrow($resultSqlDir))
+                {
+                    $strXML .= "\t".'<photo';
+
+					if($_GET['onmouse'] == 'desc' && !empty($row['description']))
+                        $strXML .= ' title="'.htmlspecialchars($row['description']).'"';
+                    elseif($_GET['onmouse'] == 'linkself' && !empty($row['description']) && ploopi_is_url($row['description']))
+                        $strXML .= ' title="'.htmlspecialchars($row['name']).'" href="'.htmlspecialchars($row['description']).'" target="_self"';
+                    elseif($_GET['onmouse'] == 'linkblank' && !empty($row['description']) && ploopi_is_url($row['description']))
+                        $strXML .= ' title="'.htmlspecialchars($row['name']).'" href="'.htmlspecialchars($row['description']).'" target="_blank"';
+                    elseif($_GET['onmouse'] == 'lightbox')
+                        $strXML .= ' title="'.htmlspecialchars($row['name']).'" href="javascript:mainLightbox.start($(\''.$_GET['id_gallery'].'_'.substr('0'.$intCpt,-2).'\'))" target="_self"';
+                    else
+                        $strXML .= ' title="'.htmlspecialchars($row['name']).'"';
+                        
+                     $strXML .= '>'.htmlspecialchars(ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['view_width'].'&height='.$objGallery->fields['view_height'].'&color='.$color)).'</photo>'."\r\n";
+                     
+                     $intCpt++;
+                }
+                
+            }
+        }
+        $strXML .= '</slide_show>';
+        
+        echo utf8_encode($strXML);
+        header('Content-Type: text/xml');
+        ploopi_die();
+        break;
+
+    case 'ploopi_get_carouselXML':
+         
+        // Vidage du buffer
+        ploopi_ob_clean();
+        
+        $strXML = '<?xml version="1.0" encoding="UTF-8" ?>'."\r\n";
+        $strXML .= '<slide_show>'."\r\n";
+        
+        include_once './modules/gallery/class/class_gallery.php';
+        $objGallery = new gallery();
+        if($objGallery->open($_GET['id_gallery']))
+        {
+            $color = ($objGallery->fields['view_transparence']) ? 'transparence' : str_replace('#','',$objGallery->fields['view_color']);
+            
+            $arrDirSelectTmp = $objGallery->getdirectories();
+            if(!empty($arrDirSelectTmp))
+            {
+                $strXML .= "\t".'<options>'."\r\n";
+                $strXML .= "\t".'<debug>false</debug>'."\r\n";
+                $strXML .= "\t".'<background>'.(($_GET['transparent']) ? 'transparent' : $objGallery->fields['view_color']).'</background>'."\r\n";
+                $strXML .= "\t".'<friction>'.$_GET['friction'].'</friction>'."\r\n";
+                $strXML .= "\t".'<fullscreen>'.$_GET['fullscreen'].'</fullscreen>'."\r\n";
+
+                $strXML .= "\t".'<margins>'."\r\n";
+                $strXML .= "\t".'<top>'.$_GET['margin_top'].'</top>'."\r\n";
+                $strXML .= "\t".'<left>'.$_GET['margin_right'].'</left>'."\r\n";
+                $strXML .= "\t".'<bottom>'.$_GET['margin_bottom'].'</bottom>'."\r\n";
+                $strXML .= "\t".'<right>'.$_GET['margin_left'].'</right>'."\r\n";
+                $strXML .= "\t".'<horizontal_ratio>'.$_GET['horizontal_ratio'].'</horizontal_ratio>'."\r\n";
+                $strXML .= "\t".'<vertical_ratio>'.$_GET['vertical_ratio'].'</vertical_ratio>'."\r\n";
+                $strXML .= "\t".'</margins>'."\r\n";
+                
+                $strXML .= "\t".'<interaction>'."\r\n";
+                $strXML .= "\t".'<rotation>'.$_GET['rotation'].'</rotation>'."\r\n";
+                $strXML .= "\t".'<view_point>'.$_GET['view_point'].'</view_point>'."\r\n";
+                $strXML .= "\t".'<speed>'.$_GET['speed'].'</speed>'."\r\n";
+                $strXML .= "\t".'<default_speed>'.$_GET['default_speed'].'</default_speed>'."\r\n";
+                $strXML .= "\t".'<default_view_point>'.$_GET['default_view_point'].'</default_view_point>'."\r\n";
+                $strXML .= "\t".'<reset_delay>'.$_GET['reset_delay'].'</reset_delay>'."\r\n";
+                $strXML .= "\t".'</interaction>'."\r\n";
+                
+                $strXML .= "\t".'<far_photos>'."\r\n";
+                $strXML .= "\t".'<size>'.$_GET['far_size'].'</size>'."\r\n";
+                $strXML .= "\t".'<amount>'.$_GET['far_amount'].'</amount>'."\r\n";
+                $strXML .= "\t".'<blur>'.$_GET['far_blur'].'</blur>'."\r\n";
+                $strXML .= "\t".'<blur_quality>'.$_GET['far_blur_quality'].'</blur_quality>'."\r\n";
+                $strXML .= "\t".'</far_photos>'."\r\n";
+                
+                $strXML .= "\t".'<reflection>'."\r\n";
+                $strXML .= "\t".'<amount>'.$_GET['amount'].'</amount>'."\r\n";
+                $strXML .= "\t".'<blur>'.$_GET['blur'].'</blur>'."\r\n";
+                $strXML .= "\t".'<distance>'.$_GET['distance'].'</distance>'."\r\n";
+                $strXML .= "\t".'<alpha>'.$_GET['alpha'].'</alpha>'."\r\n";
+                $strXML .= "\t".'</reflection>'."\r\n";
+                $strXML .= "\t".'</options>'."\r\n";
+                
+                foreach ($arrDirSelectTmp as $key => $dirSelect) $arrDirSelect[] = $dirSelect['id_directory'];
+                $sql = "
+                    SELECT      f.id, f.name, f.version, f.description
+                
+                    FROM        (ploopi_mod_doc_file f,
+                                ploopi_mod_doc_folder fo)
+                    
+                    WHERE       LCASE(f.extension) IN ('jpg','jpeg','gif','png')
+                    AND         fo.id IN (".implode(',',$arrDirSelect).") 
+                    AND         fo.foldertype = 'public' 
+                    AND         f.id_folder = fo.id
+                    
+                    ORDER BY    fo.name, f.name
+                ";
+            
+                $resultSqlDir = $db->query($sql);
+
+                include_once './modules/doc/class_docfile.php';
+                $objImgFile = new docfile();
+                
+                $intCpt = 0;
+                while ($row = $db->fetchrow($resultSqlDir))
+                {
+                    $strXML .= "\t".'<photo';
+
+					if($_GET['onmouse'] == 'desc' && !empty($row['description']))
+                        $strXML .= ' title="'.htmlspecialchars($row['description']).'"';
+                    elseif($_GET['onmouse'] == 'linkself' && !empty($row['description']) && ploopi_is_url($row['description']))
+                        $strXML .= ' title="'.htmlspecialchars($row['name']).'" href="'.htmlspecialchars($row['description']).'" target="_self"';
+                    elseif($_GET['onmouse'] == 'linkblank' && !empty($row['description']) && ploopi_is_url($row['description']))
+                        $strXML .= ' title="'.htmlspecialchars($row['name']).'" href="'.htmlspecialchars($row['description']).'" target="_blank"';
+                    elseif($_GET['onmouse'] == 'lightbox')
+                        $strXML .= ' title="'.htmlspecialchars($row['name']).'" href="javascript:mainLightbox.start($(\''.$_GET['id_gallery'].'_'.substr('0'.$intCpt,-2).'\'))" target="_self"';
+                    else
+                        $strXML .= ' title="'.htmlspecialchars($row['name']).'"';
+                                            
+                    $strXML .= '>'.htmlspecialchars(ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['view_width'].'&height='.$objGallery->fields['view_height'].'&color='.$color)).'</photo>'."\r\n";
+                    $intCpt++;
+                }
+            }
+        }
+        $strXML .= '</slide_show>';
         
         echo utf8_encode($strXML);
         header('Content-Type: text/xml');

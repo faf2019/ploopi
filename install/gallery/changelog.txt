@@ -1,3 +1,12 @@
+== Module GALLERY - version 0.1.3 ====================================================
+
+2010-04-22  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
+
+ * Ajout: possibilité de générer des vignettes et des affichages conservant la transparence (fichier PNG !)
+ * Ajout: 2 nouveaux templates basés sur les présentations flash "Flip" et "Carousel" de flshow de Saverio Caminiti
+
+ * Correction: tabindex en création/modif de galerie et admin
+
 == Module GALLERY - version 0.1.2b ====================================================
 
 2009-12-30  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>

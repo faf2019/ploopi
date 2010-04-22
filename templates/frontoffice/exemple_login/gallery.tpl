@@ -50,19 +50,55 @@
     <!-- END line -->
 </div>
 {gallery2.PAGE_CUT_BOTTOM}
-
-<!-- BEGIN switch_once -->
-    <script type="text/javascript" src="{TEMPLATE_PATH}/js/lightbox.js"></script>
-<!-- END switch_once -->
 <!-- END gallery2 -->
 
 <!-- BEGIN gallery3 -->
-<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" type="application/x-shockwave-flash" data="{TEMPLATE_PATH}/img/dewslider.swf?xml=gallery/dewslider-g{gallery3.ID_GALLERY}-sb1-st1-rs1-t10-atb-abb-trb-s20.xml" width="{gallery3.VIEW_WIDTH}" height="{gallery3.VIEW_HEIGHT}">
-<param name="movie" value="{TEMPLATE_PATH}/img/dewslider.swf?xml=gallery/dewslider-g{gallery3.ID_GALLERY}-sb1-st1-rs1-t10-atb-abb-trb-s20.xml" />
-<param name="quality" value="high"/> 
-<embed src="{TEMPLATE_PATH}/img/dewslider.swf?xml=gallery/dewslider-g{gallery3.ID_GALLERY}-sb1-st1-rs1-t10-atb-abb-trb-s20.xml" type="application/x-shockwave-flash" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" width="{gallery3.VIEW_WIDTH}" height="{gallery3.VIEW_HEIGHT}"></embed>
-</object>
+<div id="dewslider_content_{gallery3.ID_UNIQ}"></div>
+<script type="text/javascript">
+    var dewslider = new SWFObject("{TEMPLATE_PATH}/img/dewslider.swf", "dewslider_embed_{gallery3.ID_UNIQ}", "{gallery3.VIEW_WIDTH}", "{gallery3.VIEW_HEIGHT}", "9", "#ffffff");
+    dewslider.addParam("wmode", "transparent");
+    dewslider.addVariable("xml", "gallery/dewslider-g{gallery3.ID_GALLERY}-sb1-st1-rs1-t10-atb-abb-trb-s20.xml");
+    dewslider.write("dewslider_content_{gallery3.ID_UNIQ}");
+</script>
 <!-- END gallery3 -->
+
+<!-- BEGIN gallery4 -->
+<div id="flip_content_{gallery4.ID_UNIQ}"></div>
+
+<div style="display: none;">
+    <!-- BEGIN line -->
+        <!-- BEGIN col -->
+            <a id="{gallery4.ID_GALLERY}_{gallery4.line.col.CPT}" href="{gallery4.line.col.URL_VIEW}" rel="lightbox[{gallery4.ID_UNIQ}]"><img src="{gallery4.line.col.URL_THUMB}" alt="{gallery4.line.col.NAME}"/></a>
+        <!-- END col -->
+    <!-- END line -->
+</div>
+
+<script type="text/javascript">
+    var flip = new SWFObject("{TEMPLATE_PATH}/img/Flip.swf", "flip_embed_{gallery4.ID_UNIQ}", "{gallery4.THUMB_WIDTH}", "{gallery4.THUMB_HEIGHT}", "9");
+    flip.addParam("wmode", "transparent");
+    flip.addVariable("xmlfile", "gallery/flip-g{gallery4.ID_GALLERY}-lightbox-transp1-friction5-fullscreen0-fieldofview55-margin0-0-20-0-flipm-vertical1-speed180-default_speed45-reset_delay30-amount40-blur2-distance0-alpha50.xml");
+    flip.write("flip_content_{gallery4.ID_UNIQ}");
+</script>
+<!-- END gallery4 -->
+
+<!-- BEGIN gallery5 -->
+<div id="caroussel_content_{gallery5.ID_UNIQ}"></div>
+
+<div style="display: none;">
+    <!-- BEGIN line -->
+        <!-- BEGIN col -->
+            <a id="{gallery5.ID_GALLERY}_{gallery5.line.col.CPT}" href="{gallery5.line.col.URL_VIEW}" rel="lightbox[{gallery5.ID_UNIQ}]"><img src="{gallery5.line.col.URL_THUMB}" alt="{gallery5.line.col.NAME}"/></a>
+        <!-- END col -->
+    <!-- END line -->
+</div>
+
+<script type="text/javascript">
+    var caroussel = new SWFObject("{TEMPLATE_PATH}/img/Carousel.swf", "caroussel_embed_{gallery5.ID_UNIQ}", "500", "100", "9");
+    caroussel.addParam("wmode", "transparent");
+    caroussel.addVariable("xmlfile", "/gallery/carousel-g{gallery5.ID_GALLERY}-lightbox-transp1-friction5-fullscreen0-margin0-0-0-0-33-50-rotationm-view_pointm-speed90-default_speed45-default_view_point20-reset_delay30-size50-amount50-blur10-blur_quality3-amount100-blur2-distance0-alpha50.xml");
+    caroussel.write("caroussel_content_{gallery5.ID_UNIQ}");
+</script>
+<!-- END gallery5 -->
 
 <!-- BEGIN gallery_no_pict -->
 <h2 style="text-align: center;">

@@ -14,6 +14,7 @@
 
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/styles.css" media="screen" title="styles" />
     <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/forms_application.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{TEMPLATE_PATH}/css/lightbox.css" media="screen" />
     <!-- BEGIN module_css -->
     <link type="text/css" rel="stylesheet" href="{module_css.PATH}" media="screen" />
     <!-- END module_css -->
@@ -31,6 +32,9 @@
     <!-- BEGIN module_js -->
     <script type="text/javascript" src="{module_js.PATH}"></script>
     <!-- END module_js -->
+
+    <script type="text/javascript" src="./lib/swfobject/swfobject.js"></script>
+    <script type="text/javascript" src="{TEMPLATE_PATH}/js/lightbox.js"></script>
 
     <script type="text/javascript">
     //<!--

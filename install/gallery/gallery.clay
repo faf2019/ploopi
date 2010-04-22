@@ -33,6 +33,9 @@
 <column alias="thumb_color" auto-increment="false" column-size="7" decimal-digits="0" default-value="" id="3c7981e7:12406745352:-7ff8" mandatory="false" name="thumb_color">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
+<column alias="Thumb Transparence" auto-increment="false" column-size="1" decimal-digits="0" default-value="0" id="b8d7705:1281bcfd5bc:-7ff7" mandatory="false" name="thumb_transparence">
+<data-type name="TINYINT" selected-variant-pattern="TINYINT(%n)"/>
+</column>
 <column alias="view_width" auto-increment="false" column-size="4" decimal-digits="0" default-value="" id="2587f343:12375a9fd6a:-7fed" mandatory="false" name="view_width">
 <data-type name="INT" selected-variant-pattern="INT(%n) UNSIGNED"/>
 </column>
@@ -41,6 +44,9 @@
 </column>
 <column alias="view_color" auto-increment="false" column-size="7" decimal-digits="0" default-value="" id="3c7981e7:12406745352:-7ff7" mandatory="false" name="view_color">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column alias="View Transparence" auto-increment="false" column-size="1" decimal-digits="0" default-value="0" id="b8d7705:1281bcfd5bc:-7ff6" mandatory="false" name="view_transparence">
+<data-type name="TINYINT" selected-variant-pattern="TINYINT(%n)"/>
 </column>
 <column alias="create_id_user" auto-increment="false" column-size="10" decimal-digits="0" default-value="" id="3c7981e7:12406745352:-7ff6" mandatory="false" name="create_id_user">
 <data-type name="INT" selected-variant-pattern="INT(%n) UNSIGNED"/>
@@ -139,7 +145,7 @@
 </schema-list>
 </database-model>
 <diagram>
-<table-figure height="372" refid="2587f343:12375a9fd6a:-7fff" width="268" x="86" y="70"/>
+<table-figure height="398" refid="2587f343:12375a9fd6a:-7fff" width="268" x="86" y="70"/>
 <table-figure height="89" refid="19789a96:123798a534b:-7ffd" width="223" x="538" y="336"/>
 <table-figure refid="3c7981e7:12406745352:-7feb" x="536" y="23"/>
 </diagram>

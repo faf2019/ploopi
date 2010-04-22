@@ -31,7 +31,7 @@
  * @author Xavier Toussaint
  */
 
-$tabIndex = 0;
+$tabIndex = 1;
 
 $sqlGetTpl = $db->query("SELECT * FROM ploopi_mod_gallery_tpl WHERE id_module = {$_SESSION['ploopi']['moduleid']} {$sqllimitgroup} ORDER BY block");
 $arrBlockTpl = $db->getarray($sqlGetTpl);
@@ -122,8 +122,13 @@ else // NOUVELLE GALERIE
                             </p>
                             <p>
                                 <label style="width: 200px;"><?php echo _GALLERY_EDIT_LABEL_COLOR_THUMB; ?>:</label>
-                                <input type="text" class="text" name="gallery_thumb_color" id="gallery_thumb_color" value="<?php echo $objGallery->fields['thumb_color']; ?>" style="width: 55px; float: left;" readonly="readonly" tabindex="<?php echo $tabIndex++; ?>" />
-                                <a href="javascript:void(0);" style="margin-left:2px;margin-top:2px;float:left;" onclick="javascript:ploopi_colorpicker_open('gallery_thumb_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0"></a>
+                                <input type="text" class="text" name="gallery_thumb_color" id="gallery_thumb_color" value="<?php echo $objGallery->fields['thumb_color']; ?>" style="width: 55px; float: left;" readonly="readonly" />
+                                <a href="javascript:void(0);" style="margin-left:2px;margin-top:2px;float:left;" onclick="javascript:ploopi_colorpicker_open('gallery_thumb_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0" tabindex="<?php echo $tabIndex++; ?>"></a>
+                            </p>
+                            <p>
+                                <label style="width: 200px;" for="gallery_thumb_transparence"><?php echo _GALLERY_EDIT_LABEL_PNG_THUMB; ?>:</label>
+                                <input type="hidden" name="gallery_thumb_transparence" value="0" /> 
+                                <input type="checkbox" class="checkbox" name="gallery_thumb_transparence" id="gallery_thumb_transparence" value="1" <?php if($objGallery->fields['thumb_transparence']) echo 'checked="checked"'; ?> tabindex="<?php echo $tabIndex++; ?>" />
                             </p>
                             <hr/>
                             <p>
@@ -135,10 +140,20 @@ else // NOUVELLE GALERIE
                             </p>
                             <p>
                                 <label style="width: 200px;"><?php echo _GALLERY_EDIT_LABEL_COLOR_VIEW; ?>:</label>
-                                <input type="text" class="text" name="gallery_view_color" id="gallery_view_color" value="<?php echo $objGallery->fields['view_color']; ?>" style="width: 55px; float: left;" readonly="readonly" tabindex="<?php echo $tabIndex++; ?>" />
-                                <a href="javascript:void(0);" style="margin-left:2px;margin-top:2px;float:left;" onclick="javascript:ploopi_colorpicker_open('gallery_view_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0"></a>
+                                <input type="text" class="text" name="gallery_view_color" id="gallery_view_color" value="<?php echo $objGallery->fields['view_color']; ?>" style="width: 55px; float: left;" readonly="readonly" />
+                                <a href="javascript:void(0);" style="margin-left:2px;margin-top:2px;float:left;" onclick="javascript:ploopi_colorpicker_open('gallery_view_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0" tabindex="<?php echo $tabIndex++; ?>"></a>
+                            </p>
+                            <p>
+                                <label style="width: 200px;" for="gallery_view_transparence"><?php echo _GALLERY_EDIT_LABEL_PNG_VIEW; ?>:</label>
+                                <input type="hidden" name="gallery_view_transparence" value="0" /> 
+                                <input type="checkbox" class="checkbox" name="gallery_view_transparence" id="gallery_view_transparence" value="1" <?php if($objGallery->fields['view_transparence']) echo 'checked="checked"'; ?> tabindex="<?php echo $tabIndex++; ?>" />
                             </p>
                         </div>
+                        <hr/>
+                            <p style="font-size: 0.8em; font-style: italic; padding: 0; margin: 0; text-align: center;">
+                                <?php echo _GALLERY_EDIT_LABEL_PNG_EXPLAIN; ?>
+                            </p>
+                        
                     </fieldset>
                 </div>
                 <div style="margin: 0 0 5px 121px;">

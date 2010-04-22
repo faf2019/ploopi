@@ -31,7 +31,7 @@
  * @author Xavier Toussaint
  */
 
-$tabIndex = 0;
+$tabIndex = 1;
 
 include_once './modules/gallery/class/class_gallery_tpl.php';
 $objGalleryTpl = new gallery_tpl();
@@ -97,7 +97,7 @@ echo $skin->open_simplebloc();
         </p>
         <p>
             <label style="width: 160px;"><?php echo _GALLERY_TPL_LABEL_NOTE; ?>:</label>
-            <textarea class="text" name="gallery_tpl_note" ><?php echo $objGalleryTpl->fields['note']; ?></textarea>
+            <textarea class="text" name="gallery_tpl_note" tabindex="<?php echo $tabIndex++; ?>" ><?php echo $objGalleryTpl->fields['note']; ?></textarea>
         </p>
         <fieldset class="fieldset">
             <legend><?php echo _GALLERY_TPL_LEGEND_CSS; ?></legend>
