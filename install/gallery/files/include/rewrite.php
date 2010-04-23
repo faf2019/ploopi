@@ -120,11 +120,11 @@ elseif(preg_match('/gallery\/carousel-g([0-9]*)-(name|desc|linkself|linkblank|li
     $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'ploopi_get_carouselXML';
     $_REQUEST['id_gallery'] = $_GET['id_gallery'] = $arrMatches[1];
     
-    if($arrMatches[2] == 'name') $_REQUEST['onmouse'] = $_GET['onmouse'] = 'name';
-    elseif($arrMatches[2] == 'desc') $_REQUEST['onmouse'] = $_GET['onmouse'] = 'desc';
-    elseif($arrMatches[2] == 'link') $_REQUEST['onmouse'] = $_GET['onmouse'] = 'link';
-    elseif($arrMatches[2] == 'lightbox') $_REQUEST['onmouse'] = $_GET['onmouse'] = 'lightbox';
-        
+    if(in_array($arrMatches[2], array('name', 'desc', 'linkself', 'linkblank', 'lightbox')))
+        $_REQUEST['onmouse'] = $_GET['onmouse'] = $arrMatches[2];
+    else 
+        $_REQUEST['onmouse'] = $_GET['onmouse'] = 'none';
+            
     $_REQUEST['transparent'] = $_GET['transparent'] = $arrMatches[3];
     $_REQUEST['friction'] = $_GET['friction'] = ($arrMatches[4]>=1 && $arrMatches[4] <= 100) ? $arrMatches[4] : 5;
     $_REQUEST['fullscreen'] = $_GET['fullscreen'] = ($arrMatches[5] == 1) ? 'true' : 'false';

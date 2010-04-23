@@ -336,14 +336,14 @@ switch($ploopi_op)
         $objGallery = new gallery();
         if($objGallery->open($_GET['id_gallery']))
         {
-            $color = ($objGallery->fields['view_transparence']) ? 'transparence' : str_replace('#','',$objGallery->fields['view_color']);
+            $color = ($objGallery->fields['thumb_transparence']) ? 'transparence' : str_replace('#','',$objGallery->fields['thumb_color']);
             
             $arrDirSelectTmp = $objGallery->getdirectories();
             if(!empty($arrDirSelectTmp))
             {
                 $strXML .= "\t".'<options>'."\r\n";
                 $strXML .= "\t".'<debug>false</debug>'."\r\n";
-                $strXML .= "\t".'<background>'.(($_GET['transparent']) ? 'transparent' : $objGallery->fields['view_color']).'</background>'."\r\n";
+                $strXML .= "\t".'<background>'.(($_GET['transparent']) ? 'transparent' : $objGallery->fields['thumb_color']).'</background>'."\r\n";
                 $strXML .= "\t".'<friction>'.$_GET['friction'].'</friction>'."\r\n";
                 $strXML .= "\t".'<fullscreen>'.$_GET['fullscreen'].'</fullscreen>'."\r\n";
                 $strXML .= "\t".'<fieldOfView>'.$_GET['fieldofview'].'</fieldOfView>'."\r\n";
@@ -395,7 +395,7 @@ switch($ploopi_op)
 					if($_GET['onmouse'] == 'desc' && !empty($row['description']))
                         $strXML .= ' title="'.htmlspecialchars($row['description']).'"';
                     elseif($_GET['onmouse'] == 'linkself' && !empty($row['description']) && ploopi_is_url($row['description']))
-                        $strXML .= ' title="'.htmlspecialchars($row['name']).'" href="'.htmlspecialchars($row['description']).'" target="_self"';
+                        $strXML .= ' title="'.htmlspecialchars($row['name']).'" href="'.htmlspecialchars($row['description']).'"';
                     elseif($_GET['onmouse'] == 'linkblank' && !empty($row['description']) && ploopi_is_url($row['description']))
                         $strXML .= ' title="'.htmlspecialchars($row['name']).'" href="'.htmlspecialchars($row['description']).'" target="_blank"';
                     elseif($_GET['onmouse'] == 'lightbox')
@@ -403,7 +403,7 @@ switch($ploopi_op)
                     else
                         $strXML .= ' title="'.htmlspecialchars($row['name']).'"';
                         
-                     $strXML .= '>'.htmlspecialchars(ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['view_width'].'&height='.$objGallery->fields['view_height'].'&color='.$color)).'</photo>'."\r\n";
+                     $strXML .= '>'.htmlspecialchars(ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['thumb_width'].'&height='.$objGallery->fields['thumb_height'].'&color='.$color)).'</photo>'."\r\n";
                      
                      $intCpt++;
                 }
@@ -429,14 +429,14 @@ switch($ploopi_op)
         $objGallery = new gallery();
         if($objGallery->open($_GET['id_gallery']))
         {
-            $color = ($objGallery->fields['view_transparence']) ? 'transparence' : str_replace('#','',$objGallery->fields['view_color']);
+            $color = ($objGallery->fields['thumb_transparence']) ? 'transparence' : str_replace('#','',$objGallery->fields['thumb_color']);
             
             $arrDirSelectTmp = $objGallery->getdirectories();
             if(!empty($arrDirSelectTmp))
             {
                 $strXML .= "\t".'<options>'."\r\n";
                 $strXML .= "\t".'<debug>false</debug>'."\r\n";
-                $strXML .= "\t".'<background>'.(($_GET['transparent']) ? 'transparent' : $objGallery->fields['view_color']).'</background>'."\r\n";
+                $strXML .= "\t".'<background>'.(($_GET['transparent']) ? 'transparent' : $objGallery->fields['thumb_color']).'</background>'."\r\n";
                 $strXML .= "\t".'<friction>'.$_GET['friction'].'</friction>'."\r\n";
                 $strXML .= "\t".'<fullscreen>'.$_GET['fullscreen'].'</fullscreen>'."\r\n";
 
@@ -509,7 +509,7 @@ switch($ploopi_op)
                     else
                         $strXML .= ' title="'.htmlspecialchars($row['name']).'"';
                                             
-                    $strXML .= '>'.htmlspecialchars(ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['view_width'].'&height='.$objGallery->fields['view_height'].'&color='.$color)).'</photo>'."\r\n";
+                    $strXML .= '>'.htmlspecialchars(ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['thumb_width'].'&height='.$objGallery->fields['thumb_height'].'&color='.$color)).'</photo>'."\r\n";
                     $intCpt++;
                 }
             }
