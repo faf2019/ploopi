@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.3.2o ============================================
+
+2010-04-27  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
+
+* Modification : le tag pour tpl switch_pages n'existe plus si pas de pages à afficher (ex : liste de pages).
+
 == Module WebEdit - version 2.3.2n ============================================
 
 2010-03-04  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>

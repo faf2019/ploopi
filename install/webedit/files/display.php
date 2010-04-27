@@ -665,10 +665,11 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                 
                 $objArticle = new webedit_article($type);
                 
-                // Bouton de menu
-                $template_body->assign_block_vars('switch_pages', array());
                 // Contenu du blog
                 $template_body->assign_block_vars('switch_content_blog', array());
+                
+                // Bouton de menu
+                $booIsSwitchPages = false;
                 
                 $booIsHomePage = false;
                 // On a une page avant ?
@@ -771,9 +772,14 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                             'SEL'           => $sel
                         );
 
+                    // Bouton de menu
                     if($row['visible'])
+                    {
+                        if(!$booIsSwitchPages) { $booIsSwitchPages = true; $template_body->assign_block_vars('switch_pages', array()); }
                         $template_body->assign_block_vars('switch_pages.page', $var_tpl_page);
-                    
+                    }
+                
+                        
                     $content = '';
                     
                     // Test si l'article a déjà été visité pendant la session
@@ -1177,7 +1183,8 @@ else // affichage standard rubrique/page
         
         if ($db->numrows($resSQL))
         {
-            $template_body->assign_block_vars('switch_pages', array());
+            // Bouton de menu
+            $booIsSwitchPages = false;
 
             // visible articles
             $nbvisart = 0;
@@ -1250,6 +1257,8 @@ else // affichage standard rubrique/page
                             'SEL'           => $sel
                         );
 
+                    if(!$booIsSwitchPages) { $booIsSwitchPages = true; $template_body->assign_block_vars('switch_pages', array()); }
+                    
                     $template_body->assign_block_vars('switch_pages.page', $var_tpl_page);
 
                     if ($arrHeadings['list'][$headingid]['content_type'] == 'headings' && empty($articleid)) // affichage rubriques
@@ -2070,6 +2079,8 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
 }
 
 $template_body->pparse('body');
+
+//ploopi_print_r($template_body->_tpldata);
 //unset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['blog']);
 //ploopi_print_r($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['blog']);
 //if(isset($_SESSION['ploopi']['captcha'])) ploopi_print_r($_SESSION['ploopi']['captcha']);
