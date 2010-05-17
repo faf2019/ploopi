@@ -237,7 +237,8 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
                 // On vérifie si un format de donné est proposé pour le champ
                 $objFormat = (!empty($arrDataFormats[$strKey]['type']) && !empty($arrFormats[$arrDataFormats[$strKey]['type']])) ? $arrFormats[$arrDataFormats[$strKey]['type']] : $objFormatDefault;
 
-                $objWorkSheet->write($intLine, $intCol++, $strValue, $objFormat);
+                if (empty($arrDataFormats[$strKey]['type']) || $arrDataFormats[$strKey]['type'] == 'string') $objWorkSheet->writeString($intLine, $intCol++, $strValue, $objFormat);
+                else $objWorkSheet->write($intLine, $intCol++, $strValue, $objFormat);
             }
             $intLine++;
         }
