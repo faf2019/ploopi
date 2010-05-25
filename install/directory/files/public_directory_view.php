@@ -145,7 +145,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
                 <span><?php echo implode('<br />', $arrAddress); ?></span>
             </p>
 
-            <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Informatons complémentaires ( <a href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('directory_view_details');" >Afficher</a> )</h2>
+            <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Informations complémentaires ( <a href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('directory_view_details');" >Afficher</a> )</h2>
             <div id="directory_view_details" style="display:none;">
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_COMMENTARY; ?>:</label>

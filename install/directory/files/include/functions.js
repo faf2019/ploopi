@@ -85,6 +85,11 @@ function directory_choose_photo(e, contact_id, photo_id)
     ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_choose_photo&directory_contact_id='+contact_id+'&directory_photo_id='+photo_id, 'popup_directory_choose_photo');
 }
 
+function directory_delete_photo(contact_id)
+{
+    ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_delete_photo&directory_contact_id='+contact_id);
+}
+
 function directory_heading_validate(form)
 {
     if (ploopi_validatefield('Libellé',form.directory_heading_label, 'string'))

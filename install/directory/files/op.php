@@ -268,6 +268,12 @@ if ($_SESSION['ploopi']['connected'])
                     unset($_SESSION['directory']['contact_photopath']);
                 }
                 
+                if (ploopi_getsessionvar("deletephoto_{$_GET['directory_contact_id']}"))
+                {
+                    ploopi_setsessionvar("deletephoto_{$_GET['directory_contact_id']}", 0);
+                    $directory_contact->deletephoto();
+                }                
+                
                 ploopi_redirect('admin.php');
             break;
 
@@ -359,6 +365,9 @@ if ($_SESSION['ploopi']['connected'])
 
                 if (!empty($_GET['directory_photo_id']))
                 {
+                    // reset suppression
+                    ploopi_setsessionvar("deletephoto_{$_GET['directory_contact_id']}", 0);
+                    
                     // On vérifie qu'un fichier a bien été uploadé
                     if (!empty($_FILES['directory_contact_photo']['tmp_name']))
                     {
@@ -375,6 +384,16 @@ if ($_SESSION['ploopi']['connected'])
                         }
                     </script>
                     <?php
+                }
+                ploopi_die();
+            break;
+            
+            case 'directory_delete_photo':
+                // demande de suppression d'une photo
+                if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']))
+                {
+                    ploopi_setsessionvar("deletephoto_{$_GET['directory_contact_id']}", 1);
+                    $_SESSION['directory']['contact_photopath'] = '';
                 }
                 ploopi_die();
             break;

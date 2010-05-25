@@ -1,3 +1,11 @@
+== Module DIRECTORY - version 2.3.5 ====================================================
+
+2010-05-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Gestion de la suppression de la photo d'un contact
+ * Correction d'intitulé
+ * Correction sur l'action "Gérer les rubriques/contacts" (donnait accès à la gestion des gestionnaires)
+
 == Module DIRECTORY - version 2.3.4 ====================================================
 
 2010-05-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

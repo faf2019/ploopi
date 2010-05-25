@@ -640,7 +640,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         $arrGroups = $objUser->getgroups(true);
                         
                         /**
-                         * L'utilisateur connecté est-il gestionnaire ?
+                         * L'utilisateur connecté est-il gestionnaire de la rubrique (admin ou validateur) ?
                          */
                         $booModify = ploopi_isadmin() || $arrHeadings['list'][$intHeadingId]['isvalidator'];
                         
@@ -665,6 +665,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                             </div>
                             <?
                         }
+                        
                         
                         if ($op == 'directory_modify') // interface débloquée
                         {
@@ -775,7 +776,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         
                         if ($op == 'directory_modify') // interface débloquée
                         {
-                            if ($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS))
+                            if (ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) // Gestion des gestionnaires
                             {
                                 ?>
                                 <div style="clear:both;padding:4px;">
@@ -820,20 +821,24 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         </div>
                                     </fieldset>
                                 </div>
-
+                                <?php
+                            }
+                            
+                            if ($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS))
+                            {
+                                ?>
                                 <div style="text-align:right;padding:4px;">
                                     <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}"); ?>';">
                                     <input type="reset" class="button" value="<?php echo _PLOOPI_RESET; ?>">
                                     <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>">
                                 </div>
                                 </form>
-                                <?php
+                                <?
                             }
                         }
-                        
-                        if (!($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) || empty($op)) // Version non modifiable
-                        {
 
+                        if (!$booModify || !ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS) || empty($op)) // Version non modifiable
+                        {
                             ?>
                             <div class="directory_shared_managers">
                                 <div style="float:left;">
@@ -873,7 +878,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                     </em>
                                 </div>
                                 <?php
-                                if ($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) // interface bloquée
+                                if (($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) && empty($op)) // interface bloquée
                                 {
                                     ?>
                                         <div style="clear:both;text-align:right;">
@@ -887,6 +892,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                         }
                         ?>
+                        
                         <div style="border-top:1px solid #a0a0a0;">
                             <?php
                             if ($booModify) // Version modifiable

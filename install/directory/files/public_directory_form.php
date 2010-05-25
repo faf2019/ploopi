@@ -35,6 +35,9 @@
  */
 
 unset($_SESSION['directory']['contact_photopath']);
+
+// Reset de la demande de suppression de photo
+if (!empty($directory_contact->fields['id'])) ploopi_setsessionvar("deletephoto_{$directory_contact->fields['id']}", 0);
 ?>
 <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_contact_save&directory_contact_id={$directory_contact->fields['id']}".(!empty($intHeadingId) ? "&directory_heading_id={$intHeadingId}" : '')); ?>" method="post">
 <div style="border-bottom:2px solid #c0c0c0;overflow:auto;">
@@ -177,18 +180,19 @@ unset($_SESSION['directory']['contact_photopath']);
                         <label><?php echo _DIRECTORY_COMMENTARY; ?>:</label>
                         <textarea class="text" name="directory_contact_comments" tabindex="130"><?php echo htmlentities($directory_contact->fields['comments']); ?></textarea>
                     </p>
-                    <?php $strPhotoId = md5(uniqid(rand(), true)); ?>
+                    <?php 
+                    $strPhotoId = md5(uniqid(rand(), true)); 
+                    $booPhotoExists = file_exists($directory_contact->getphotopath());
+                    ?>
                     <p>
                         <label><?php echo _DIRECTORY_PHOTO; ?>:</label>
                         <span>
-                            <a href="javascript:void(0);" onclick="javascript:directory_choose_photo(event, '<?php echo $directory_contact->fields['id']; ?>', '<?php echo $strPhotoId; ?>');">Choisir une photo</a>
+                            <a href="javascript:void(0);" onclick="javascript:directory_choose_photo(event, '<?php echo $directory_contact->fields['id']; ?>', '<?php echo $strPhotoId; ?>');"><img title="Charger une nouvelle photo" src="./modules/directory/img/ico_new.png" /></a>
+                            <?
+                            if ($booPhotoExists) { ?><a href="javascript:void(0);" onclick="javascript:directory_delete_photo('<?php echo $directory_contact->fields['id']; ?>'); $('directory_contact_photo<?php echo $strPhotoId; ?>').innerHTML = '';"><img title="Supprimer la photo" src="./modules/directory/img/ico_delete.png" /></a><? } ?>
                             <br /><span id="directory_contact_photo<?php echo $strPhotoId; ?>">
                             <?php
-                            if (file_exists($directory_contact->getphotopath()))
-                            {
-                                ?><img src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$directory_contact->fields['id']}"); ?>" /><?php
-                            }
-                            ?>
+                            if ($booPhotoExists) { ?><img src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$directory_contact->fields['id']}"); ?>" /><?php } ?>
                             </span>
                         </span>
                     </p>
