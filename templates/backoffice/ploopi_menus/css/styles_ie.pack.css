@@ -75,6 +75,7 @@ line-height:24px;
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 .calendar_day div {
     width:20px;
     height:20px;
@@ -89,6 +90,10 @@ line-height:24px;
     height:20px;
     line-height:18px;
     border:1px solid #c0c0c0;
+}
+
+.ploopi_calendar_d div.day div.tick-half {
+    filter:alpha(opacity=50);
 }
 .ploopi_barchart .chart li {
     filter:alpha(opacity=90);
