@@ -60,16 +60,13 @@ function ploopi_array2xml($arrArray, $strRootName = 'data', $strDefaultTagName =
         )
     ); 
     
-    // Conversion Xml entities
-    if ($strEncoding == 'ISO-8859-1') $arrArray = ploopi_array_map(create_function('$str', 'return ploopi_xmlentities($str);'), $arrArray);
-    elseif ($strEncoding == 'UTF8') $arrArray = ploopi_array_map(create_function('$str', 'return ploopi_xmlentities($str, true);'), $arrArray);
-    
     // Sérialisation & détection d'erreur
     if (PEAR::isError($objSerializer->serialize(ploopi_array_cleankeys($arrArray)))) return false;
     
     // Contenu XML
     return $objSerializer->getSerializedData(); 
 }  
+
 
 /**
  * Retourne le contenu d'un tableau à 2 dimensions au format CSV
