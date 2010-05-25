@@ -214,6 +214,7 @@ function ploopi_str_split($str)
  *
  * @param string $str chaîne brute
  * @param boolean $utf8 true si la chaîne à encoder est en UTF-8
+ * @param boolean $extended true permet d'encoder les caractères ascii spéciaux de 128 à 255
  * @return string chaîne encodée
  *
  * @copyright Ovensia
@@ -221,13 +222,13 @@ function ploopi_str_split($str)
  * @author Stéphane Escaich
  */
 
-function ploopi_xmlentities($str, $utf8 = false)
+function ploopi_xmlentities($str, $utf8 = false, $extended = true)
 {
-    for($i=128; $i<256; $i++) $asc2uni[$utf8 ? utf8_encode(chr($i)) : chr($i)] = "&#x".dechex($i).";";
+    if ($extended) for($i=128; $i<256; $i++) $asc2uni[$utf8 ? utf8_encode(chr($i)) : chr($i)] = "&#x".dechex($i).";";
 
     $str = str_replace(array("&", ">", "<", "\"", "'", "\r"), array("&amp;", "&gt;", "&lt;", "&quot;", "&apos;", ""), $str);
-
-    return $utf8 ? ploopi_strtr($str, $asc2uni) : strtr($str, $asc2uni);
+    
+    return $extended ? $utf8 ? ploopi_strtr($str, $asc2uni) : strtr($str, $asc2uni) : $str;
 }
 
 

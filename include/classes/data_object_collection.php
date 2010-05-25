@@ -99,8 +99,17 @@ class data_object_collection
         if (empty($objDoDescription) || !is_subclass_of($objDoDescription, 'data_object')) throw new Exception("data_object_collection : la classe '{$this->strClassName}' n'est pas héritée de 'data_object'");
         
         $this->objQuery = new ploopi_query_select($this->objDb);
+        $this->objQuery->add_select('`'.$objDoDescription->gettablename().'`.*');
         $this->objQuery->add_from('`'.$objDoDescription->gettablename().'`');
     }
+    
+    /**
+     * Ajoute une clause FROM à la collection
+     *
+     * @param string $strFrom clause from
+     * @see ploopi_query
+     */
+    public function add_from($strFrom) { $this->objQuery->add_from($strFrom); }
     
     /**
      * Ajoute une clause WHERE à la collection

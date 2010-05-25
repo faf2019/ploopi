@@ -121,6 +121,8 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
     // on parse les paramètres de l'URL et on met tout ça dans un tableau associatif param => valeur
     if (!empty($query))
     {
+        //$query = str_replace('&amp;', '&', $query);
+        
         foreach(explode('&', $query) as $param)
         {
             $arrParam = explode('=', $param);
@@ -168,8 +170,9 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
         $arrParams[$strKey] = (is_null($strValue) || $strValue == '') ? $strKey : "{$strKey}={$strValue}";
     }
 
+    //$strParams = implode('&amp;', $arrParams);
     $strParams = implode('&', $arrParams);
-
+    
     if (defined('_PLOOPI_URL_ENCODE') && _PLOOPI_URL_ENCODE)
     {
         $strUrlMD5 = md5($strParams);

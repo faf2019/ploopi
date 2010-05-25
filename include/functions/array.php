@@ -78,15 +78,17 @@ function ploopi_array2xml($arrArray, $strRootName = 'data', $strDefaultTagName =
  * @return string contenu CSV
  */
 
-function ploopi_array2csv($arrArray, $booHeader = true, $strFieldSep = ',', $strLineSep = "\n", $strTextSep = '"')
+function ploopi_array2csv($arrArray, $booHeader = true, $strFieldSep = ',', $strLineSep = "\n", $strTextSep = '"', $booClean = true)
 {
     // Tableau des lignes du fichier CSV
     $arrCSV = array();
     
     if (!empty($arrArray))
     {
+        if ($booClean) $arrArray = ploopi_array_map('ploopi_iso8859_clean', $arrArray);
+        
         // Fonction d'échappement & formatage du contenu
-        $funcLineEchap = create_function('$value', 'return \''.$strTextSep.'\'.str_replace(\''.$strTextSep.'\', \'\\'.$strTextSep.'\', $value).\''.$strTextSep.'\';');
+        $funcLineEchap = create_function('$value', 'return \''.$strTextSep.'\'.str_replace(\''.$strTextSep.'\', \''.$strTextSep.$strTextSep.'\', $value).\''.$strTextSep.'\';');
     
         // Ajout de la ligne d'entête
         if ($booHeader) $arrCSV[] = implode($strFieldSep, ploopi_array_map($funcLineEchap, array_keys(reset($arrArray))));
@@ -235,7 +237,8 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
                 // On vérifie si un format de donné est proposé pour le champ
                 $objFormat = (!empty($arrDataFormats[$strKey]['type']) && !empty($arrFormats[$arrDataFormats[$strKey]['type']])) ? $arrFormats[$arrDataFormats[$strKey]['type']] : $objFormatDefault;
 
-                $objWorkSheet->write($intLine, $intCol++, $strValue, $objFormat);
+                if (empty($arrDataFormats[$strKey]['type']) || $arrDataFormats[$strKey]['type'] == 'string') $objWorkSheet->writeString($intLine, $intCol++, $strValue, $objFormat);
+                else $objWorkSheet->write($intLine, $intCol++, $strValue, $objFormat);
             }
             $intLine++;
         }
@@ -262,6 +265,11 @@ function ploopi_array_cleankeys($arrArray)
     foreach($arrArray as $strKey => $mixValue)
     {
         $strKey = preg_replace("/[^a-z0-9_]/", "_", strtolower(ploopi_convertaccents($strKey)));
+        
+        // Cas particulier des clés non conformes
+        if (strlen($strKey) == 0) $strKey = 'xml';
+        elseif (substr($strKey,0,1) == '_') $strKey = 'xml'.$strKey;
+        
         if (is_array($mixValue)) $arrNewArray[$strKey] = ploopi_array_cleankeys($mixValue);
         else $arrNewArray[$strKey] = $mixValue;
     }

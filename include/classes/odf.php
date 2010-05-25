@@ -413,11 +413,11 @@ class odf_parser
      * @return string chaîne "nettoyée"
      *
      */
-    private function clean_var($value)
+    protected static function clean_var($value)
     {
-        return iconv('ISO-8859-15', 'UTF-8', ploopi_xmlentities(html_entity_decode($value, ENT_QUOTES, 'ISO-8859-15')));
+        return ploopi_xmlentities(html_entity_decode(iconv('ISO-8859-15', 'UTF-8', $value), ENT_QUOTES, 'UTF-8'), true);
     }
-
+    
     /**
      * Définit une variable template et lui affecte une valeur
      *
@@ -430,7 +430,7 @@ class odf_parser
 
     public function set_var($key, $value, $clean = true)
     {
-        $this->vars['{'.$key.'}'] = ($clean) ? $this->clean_var($value) : $value;
+        $this->vars['{'.$key.'}'] = ($clean) ? self::clean_var($value) : $value;
     }
 
     /**
@@ -468,7 +468,7 @@ class odf_parser
         foreach($block as $k => $v)
             foreach($v as $key => $value)
             {
-                $this->blockvars[$blockname][$k]['{'.$key.'}'] = $this->clean_var($value);
+                $this->blockvars[$blockname][$k]['{'.$key.'}'] = self::clean_var($value);
             }
     }
 
