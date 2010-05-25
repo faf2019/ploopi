@@ -349,7 +349,9 @@
                                 </p>
                             <!-- END switch_tags -->
                             <div style="clear:both;"> 
-                            {switch_content_blog.article.PAGE_CONTENT}
+                            {switch_content_blog.article.PAGE_DESCRIPTION}
+                            
+                            {switch_content_blog.article.PAGE_URL_ARTICLE}
                             </div>
                             <div style="clear: both; font-size: 9px; padding: 5px 20px 0 0; text-align: center;">
                                 <!-- BEGIN sw_modify -->

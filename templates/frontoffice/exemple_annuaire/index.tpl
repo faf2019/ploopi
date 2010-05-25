@@ -191,6 +191,7 @@
                                         <td>{directory_switch_result.contact.RANK}</td>
                                         <td>{directory_switch_result.contact.NUMBER}</td>
                                         <td>{directory_switch_result.contact.PHONE}</td>
+                                        <td>{directory_switch_result.contact.EMAIL}</td>
                                     </tr>
                                 <!-- END  contact -->
                             </table>
