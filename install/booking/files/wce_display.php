@@ -40,27 +40,27 @@ $arrSearchPattern = array();
 if (isset($_SESSION['booking'][$booking_moduleid]['booking_request'])) $arrSearchPattern = $_SESSION['booking'][$booking_moduleid]['booking_request'];
 
 // Lecture des paramètres
-if (isset($_REQUEST['booking_resource_id'])) $arrSearchPattern['booking_resource_id'] = $_REQUEST['booking_resource_id'];
 if (isset($_REQUEST['booking_display_type'])) $arrSearchPattern['booking_display_type'] = $_REQUEST['booking_display_type'];
 if (isset($_REQUEST['booking_validated'])) $arrSearchPattern['booking_validated'] = $_REQUEST['booking_validated'];
 if (isset($_REQUEST['booking_size'])) $arrSearchPattern['booking_size'] = $_REQUEST['booking_size'];
+if (isset($_REQUEST['booking_channels'])) $arrSearchPattern['booking_channels'] = $_REQUEST['booking_channels'];
+
+if (isset($_REQUEST['booking_resources'])) $arrSearchPattern['booking_resources'] = $_REQUEST['booking_resources'];
 
 if (isset($_REQUEST['booking_month'])) $arrSearchPattern['booking_month'] = $_REQUEST['booking_month'];
 if (isset($_REQUEST['booking_year'])) $arrSearchPattern['booking_year'] = $_REQUEST['booking_year'];
 if (isset($_REQUEST['booking_week'])) $arrSearchPattern['booking_week'] = $_REQUEST['booking_week'];
 if (isset($_REQUEST['booking_day'])) $arrSearchPattern['booking_day'] = $_REQUEST['booking_day'];
 
-
 // booléen à true si la date est modifiée par l'utilisateur (mois, année, jour ou semaine)
 $booDateModify = isset($_REQUEST['booking_month']) || isset($_REQUEST['booking_year']) || isset($_REQUEST['booking_week']) || isset($_REQUEST['booking_day']);
-
-//ploopi_print_r($_REQUEST);
 
 // Init des valeurs par défaut
 if (!isset($arrSearchPattern['booking_display_type'])) $arrSearchPattern['booking_display_type'] = 'month';
 if (!isset($arrSearchPattern['booking_size'])) $arrSearchPattern['booking_size'] = $arrBookingSize[0];
-if (!isset($arrSearchPattern['booking_resource_id'])) $arrSearchPattern['booking_resource_id'] = '';
+if (!isset($arrSearchPattern['booking_resources'])) $arrSearchPattern['booking_resources'] = array();
 if (!isset($arrSearchPattern['booking_validated'])) $arrSearchPattern['booking_validated'] = '';
+if (!isset($arrSearchPattern['booking_channels'])) $arrSearchPattern['booking_channels'] = 1;
 
 // Init de la date "virtuelle"
 if (!isset($arrSearchPattern['booking_virtualdate'])) $arrSearchPattern['booking_virtualdate'] = time();
@@ -123,40 +123,8 @@ $arrSearchPattern['booking_day'] = date('j', $arrSearchPattern['booking_virtuald
 
 $_SESSION['booking'][$booking_moduleid]['booking_request'] = $arrSearchPattern;
 
-$arrMenu = array();
+// Lecture des ressources
 $arrResources = booking_get_resources(false, $booking_moduleid);
-$strResourceType = '';
-
-
-$arrMenu[''] = 
-    array(
-        'label' => '(choisir)',
-        'type'  => 'select'
-    );
-
-
-foreach ($arrResources as $row)
-{
-    
-    if ($row['rt_name'] != $strResourceType) // nouveau type de ressource => affichage séparateur
-    {
-        $arrMenu[$row['rt_name']] = 
-            array(
-                'label' => $row['rt_name'],
-                'type'  => 'group',
-            );
-        
-        $strResourceType = $row['rt_name']; 
-    }
-        
-    $arrMenu[$row['id']] = 
-        array(
-            'label' => htmlentities($row['name'].(empty($row['reference']) ? '' : " ({$row['reference']})")),
-            'label_extended' => $row['validator'] ? '<span>&nbsp;-&nbsp;</span><em><strong>Validateur</strong></em>' : '',
-            'type'  => 'select',
-            'style' => "background-color:{$row['color']};"
-        );
-}
 
 // Taille du planning (lecture des paramètres du module)
 $arrSize = 
@@ -165,6 +133,8 @@ $arrSize =
         empty($_SESSION['ploopi']['modules'][$booking_moduleid]['booking_front_planning_height']) ? 500 : $_SESSION['ploopi']['modules'][$booking_moduleid]['booking_front_planning_height']
     );
 
+if (sizeof($arrSize) != 2 || !is_numeric($arrSize[0]) || !is_numeric($arrSize[1])) $arrSize = array(800, 500);
+    
 /**
  * Détermination des dates de début et fin de la période affichée
  */
@@ -189,6 +159,9 @@ switch($arrSearchPattern['booking_display_type'])
     break;
 
 }
+
+
+
 ?>
 
 <div style="padding:4px;">
@@ -198,9 +171,12 @@ switch($arrSearchPattern['booking_display_type'])
         <input type="image" alt="Quotidien" src="./modules/booking/img/ico_day<? if ($arrSearchPattern['booking_display_type'] != 'day') echo'_notsel'; ?>.png" title="Journée" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_display_type=day"); ?>', 'booking_main');" />
         <input type="image" alt="Hebdomadaire" src="./modules/booking/img/ico_week<? if ($arrSearchPattern['booking_display_type'] != 'week') echo'_notsel'; ?>.png" title="Semaine" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_display_type=week"); ?>', 'booking_main');" />
         <input type="image" alt="Mensuel" src="./modules/booking/img/ico_month<? if ($arrSearchPattern['booking_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_display_type=month"); ?>', 'booking_main');" />
+        
+        <label for="booking_channels">Multi Col:</label>
+        <input type="checkbox" name="booking_channels" id="booking_channels" <?php if ($arrSearchPattern['booking_channels']) echo 'checked="checked"'; ?> onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_channels=".($arrSearchPattern['booking_channels'] ? 0 : 1)); ?>', 'booking_main');"/>
     </p>
     
-    <form style="float:left;" id="booking_form_view" action="<? echo ploopi_urlencode("index-light.php?ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}"); ?>" method="post" onsubmit="ploopi_xmlhttprequest_submitform(this, 'booking_main');return false;">
+    <form style="float:left;" id="booking_form_view" action="<? echo ploopi_urlencode("index-light.php?ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}"); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'booking_main');return false;">
     <p class="ploopi_va" style="padding:2px;float:left;">
         <label>Période :</label>
         <?
@@ -302,133 +278,143 @@ switch($arrSearchPattern['booking_display_type'])
             break;
     
         }
-        ?>
-        </p>
-    </form>
-
-    <?
-    $arrOptions = 
-        array(
-            'input_width' => '300px',
-            'menu_width' => '500px',
-            'onchange' => "$('booking_form_res').onsubmit();"
-        );
-    ?>    
-    <form id="booking_form_res" action="<? echo ploopi_urlencode("index-light.php?ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}"); ?>" method="post" onsubmit="ploopi_xmlhttprequest_submitform(this, 'booking_main');return false;">
-    <p class="ploopi_va" style="clear:both;padding:2px;">
-        <label>Ressource à afficher :</label>
-        <span style="padding:0 2px;"><? echo $skin->display_selectbox('booking_resource_id', 'booking_resource_id', $arrMenu, $arrOptions, $arrSearchPattern['booking_resource_id']); ?></span>
-        <?
+        
         $date_today = mktime();
         
         if ($date_today >= $date_begin && $date_today <= $date_end) $date_sel = $date_today;
         else $date_sel = $date_begin;
         
-        if ($_SESSION['ploopi']['connected'])
+        if ($_SESSION['ploopi']['connected'] && ploopi_isactionallowed(_BOOKING_ACTION_ASKFOREVENT, $_SESSION['ploopi']['workspaceid'], $booking_moduleid))
         {
             $date_today = mktime();
             
             if ($date_today >= $date_begin && $date_today <= $date_end) $date_sel = $date_today;
             else $date_sel = $date_begin;
                     
-            ?><input type="button" class="button" value="Effectuer une demande" style="margin:0 10px;" onclick="javascript:booking_front_event_add(event, '<? echo $date_sel; ?>', '<? echo $booking_moduleid; ?>');" /><?
+            ?><input type="button" class="button" value="Réserver" style="margin:0 10px;" onclick="javascript:booking_front_event_add(event, '<? echo $date_sel; ?>', '<? echo $booking_moduleid; ?>');" /><?
         }
         else
         {
-            ?><input type="button" class="button" value="Effectuer une demande" style="margin:0 10px;" onclick="javascript:alert('Vous devez être connecté pour effectuer une demande');" /><?
+            ?><input type="button" class="button" value="Réserver" style="margin:0 10px;" onclick="javascript:alert('Vous ne disposez pas des autorisations nécessaires');" /><?
         }
         ?>
-    </p>   
-    </form> 
-    
+        </p>
+    </form>
 </div>
 
 <?
-// Choix d'une ressource => on peut chercher les événements associés
-if (!empty($arrSearchPattern['booking_resource_id']) && sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
+switch($arrSearchPattern['booking_display_type'])
 {
-    switch($arrSearchPattern['booking_display_type'])
-    {
-        case 'month':
-            $objCalendar = new calendar($arrSize[0], $arrSize[1], 'month');
-    
-            $objCalendar->setoptions(
-                array(
-                    'month' => $arrSearchPattern['booking_month'],
-                    'year' => $arrSearchPattern['booking_year'],
-                )
-            );
-        break;
-    
-        case 'week':
-            $objCalendar = new calendar($arrSize[0], $arrSize[1], 'days');
-    
-            $objCalendar->setoptions(
-                array(
-                    'date_begin' => substr(ploopi_unixtimestamp2timestamp($date_begin), 0, 8),
-                    'date_end' => substr(ploopi_unixtimestamp2timestamp($date_end), 0, 8)
-                )
-            );
-        break;
-    
-        default:
-        case 'day':
-            $objCalendar = new calendar($arrSize[0], $arrSize[1], 'days');
-    
-            $objCalendar->setoptions(
-                array(
-                    'date_begin' => substr(ploopi_unixtimestamp2timestamp($date_begin), 0, 8),
-                    'date_end' => substr(ploopi_unixtimestamp2timestamp($date_end), 0, 8)
-                )
-            );
-        break;
-    }
-    
-    $objCalendar->setoptions(
-        array(
-            'hour_begin' => 6,
-            'hour_end' => 21
-        )
-    );
-    
-    
-    // Recherche des événements
-    $arrEvents = 
-        booking_get_events(
-            $arrSearchPattern['booking_resource_id'], 
-            false, 
-            false, 
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            $booking_moduleid
-        );
-    
-    // Affectation de la liste des événements au calendrier
-    foreach($arrEvents as $event)
-    {
-        $objCalendar->addevent(
-            new calendarEvent(
-                $event['timestp_begin'],
-                $event['timestp_end'],
-                htmlentities($event['object']),
-                '<div style="float:right;margin:2px;font-size:1px;background-color:'.($event['validated'] ? $arrBookingColor['validated'] : ($event['canceled'] ? $arrBookingColor['canceled'] : $arrBookingColor['unknown'])).';border:1px solid #000;width:10px;height:8px;"></div><div style="margin:2px;"><strong style="margin-right:2px;"><timestp_begin></strong>'.htmlentities(ploopi_strcut($event['object'],20)).'</div>',
-                $event['color'],
-                "booking_front_element_open('event', '{$event['id']},{$event['ed_id']}', event, '{$booking_moduleid}');", // onclick
-                'javascript:void(0);' // href
+    case 'month':
+        $objCalendar = new calendar($arrSize[0], $arrSize[1], 'month');
+
+        $objCalendar->setoptions(
+            array(
+                'intMonth' => $arrSearchPattern['booking_month'],
+                'intYear' => $arrSearchPattern['booking_year'],
             )
         );
-    }      
+    break;
 
-    ?>
-    <div style="width:100%;overflow:auto;clear:both;" id="planning_display">
-        <?
-        $objCalendar->display(); 
-        ?>
-    </div>
-    <?
+    case 'week':
+        $objCalendar = new calendar($arrSize[0], $arrSize[1], 'days');
+
+        $objCalendar->setoptions(
+            array(
+                'strDateBegin' => substr(ploopi_unixtimestamp2timestamp($date_begin), 0, 8),
+                'strDateEnd' => substr(ploopi_unixtimestamp2timestamp($date_end), 0, 8)
+            )
+        );
+    break;
+
+    default:
+    case 'day':
+        $objCalendar = new calendar($arrSize[0], $arrSize[1], 'days');
+
+        $objCalendar->setoptions(
+            array(
+                'strDateBegin' => substr(ploopi_unixtimestamp2timestamp($date_begin), 0, 8),
+                'strDateEnd' => substr(ploopi_unixtimestamp2timestamp($date_end), 0, 8)
+            )
+        );
+    break;
 }
+
+$objCalendar->setoptions(
+    array(
+        'intHourBegin' => 6,
+        'intHourEnd' => 21,
+        'booDisplayChannelsLabel' => $arrSearchPattern['booking_channels'] == 1,
+        'intChannelsLabelHeight' => in_array($arrSearchPattern['booking_display_type'], array('day', 'today')) ? '16' : '6'
+    )
+);
+
+// Recherche des événements
+$arrEvents = empty($arrSearchPattern['booking_resources']) ? array() :
+    booking_get_events(
+        $arrSearchPattern['booking_resources'], 
+        false, 
+        false, 
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        $booking_moduleid
+    );
+
+    
+if ($arrSearchPattern['booking_channels'])
+{
+    $arrChannels = array();
+    foreach($arrSearchPattern['booking_resources'] as $intIdResource)
+    {
+        if (empty($arrChannels[$intIdResource])) $arrChannels[$intIdResource] = new calendarChannel(in_array($arrSearchPattern['booking_display_type'], array('day', 'today')) ? $arrResources[$intIdResource]['name'] : '', $arrResources[$intIdResource]['color']);
+    }
+    
+    $objCalendar->setChannels($arrChannels);
+}
+else
+{
+    $objCalendar->addChannel(new calendarChannel(''), '');
+}    
+    
+// Affectation de la liste des événements au calendrier
+foreach($arrEvents as $event)
+{
+    $strBgColor = ($event['validated'] ? $arrBookingColor['validated'] : ($event['canceled'] ? $arrBookingColor['canceled'] : $arrBookingColor['unknown']));
+    $strStatus = ($event['validated'] ? 'validé' : ($event['canceled'] ? 'annulé' : 'en attente'));
+    
+    if ($arrSearchPattern['booking_display_type'] == 'month')
+    {
+        $strContent = '<div style="float:right;margin:1px;width:10px;height:10px;background-color:'.$strBgColor.';"></div><div style="height:12px;overflow:hidden;"><time_begin> '.htmlentities(ploopi_strcut($event['object'],20)).'</div>';
+    }
+    else
+    {
+        $strContent = '<div style="margin:2px;background-color:'.$strBgColor.';border:1px solid #000;text-align:center;">'.$strStatus.'</div><div style="margin:2px;">'.htmlentities($event['object']).'</div>';
+    }    
+    
+    $objCalendar->addevent(
+        new calendarEvent(
+            $event['timestp_begin'],
+            $event['timestp_end'],
+            '<time_begin> / <time_end>',
+            $strContent,
+            $arrSearchPattern['booking_channels'] ? $event['id_resource'] : '',
+            array(
+                'strColor' => $event['color'],
+                'strOnClick' => "booking_front_element_open('event', '{$event['id']},{$event['ed_id']}', event, '{$booking_moduleid}');",
+                'strHref' => 'javascript:void(0);',
+                'strLabel' => ''
+            )
+        )
+    );
+}      
+
 ?>
+<div style="width:100%;overflow:auto;clear:both;" id="planning_display">
+    <?
+    $objCalendar->display(); 
+    ?>
+</div>

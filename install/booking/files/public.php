@@ -60,6 +60,60 @@ switch($_SESSION['booking']['$booking_menu'])
         </div>
         <?
         echo $skin->close_simplebloc();
+
+        /**
+         * Affichage du popup de sélection des ressources
+         */
+        ob_start();
+        
+        ?>
+        <div id="booking_ressource_list">
+        <form id="booking_resource_list_form" action="<? echo ploopi_urlencode('admin-light.php?ploopi_op=booking_setresources'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('booking_resource_list_form'), 'booking_main'); return false;">
+        <?
+        $strResourceType = '';
+        
+        foreach ($arrResources as $row)
+        {
+            if ($row['rt_name'] != $strResourceType) // nouveau type de ressource => affichage séparateur
+            {
+                if ($strResourceType != '') echo '</div>';
+                $strResourceType = $row['rt_name']; 
+                ?>
+                <a href="javascript:void(0);" onclick="javascript:with ($('booking_<?php echo $strResourceType; ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
+                    <p class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;">
+                        <img src="<? echo "{$_SESSION['ploopi']['template_path']}/img/system/ico_{$strResourceType}.png"; ?>" />
+                        <strong><? echo $strResourceType; ?></strong>
+                    </p>
+                </a>
+                <div id="booking_<?php echo $row['rt_name']; ?>_list" style="display:block;">
+                <?        
+            }
+            ?>
+            <p class="checkbox" style="background-color:<? echo $row['color']; ?>;" onclick="javascript:ploopi_checkbox_click(event, 'booking_resource<? echo $row['id']; ?>');">
+                <input type="checkbox" name="booking_resources[<? echo $row['id']; ?>]" id="booking_resource<? echo $row['id']; ?>" value="<? echo $row['id']; ?>" <? if (!empty($arrSearchPattern['booking_resources'][$row['id']])) echo 'checked="checked"'; ?> onchange="javascript:$('booking_resource_list_form').onsubmit();" />
+                <span><? echo $row['name']; ?><span>
+            </p>
+            <?            
+        }
+        if ($strResourceType != '') echo '</div>';
+        ?>
+        </form>
+        </div>
+        <?
+        $content = ob_get_contents();
+        ob_end_clean();        
+
+        echo $skin->open_popup(
+            'Ressources affichées', 
+            $content, 
+            'popup_booking', 
+            array(
+                'intWidth' => 200,
+                'intPosx' => '$(\'planning_display\').viewportOffset().left +  $(\'planning_display\').getWidth() - 206', 
+                'intPosy' => '$(\'planning_display\').viewportOffset().top + 20',
+                'booCentered' => false
+            )
+        );
     break;
 }
 ?>

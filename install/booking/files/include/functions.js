@@ -109,7 +109,7 @@ function booking_resource_validate(form)
 function booking_event_add(e, date)
 {
     ploopi_showpopup(ploopi_ajaxloader_content, '450', e, 'click', 'popup_event');
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=booking_event_add&booking_resource_id='+$('booking_resource_id').value+'&booking_resource_date='+date, 'popup_event');   
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=booking_event_add&booking_resource_date='+date, 'popup_event');   
 }
 
 function booking_event_validate(form)
@@ -186,70 +186,6 @@ function booking_prevday()
         booking_prevmonth();
     }
 }
- 
- 
- 
-/*
-function booking_nextmonth()
-{
-    if ($('booking_month').value < 12) $('booking_month').selectedIndex++;
-    else {$('booking_month').selectedIndex = 0; $('booking_year').selectedIndex++;}
-    
-    $('booking_form_view').submit();
-}
-
-function booking_prevmonth()
-{
-    if ($('booking_month').value > 1) $('booking_month').selectedIndex--;
-    else {$('booking_month').selectedIndex = 11; $('booking_year').selectedIndex--;}
-    
-    $('booking_form_view').submit();
-}
-
-function booking_nextweek()
-{
-    if ($('booking_week').selectedIndex < $('booking_week').length - 1) $('booking_week').selectedIndex++;
-    else {$('booking_week').selectedIndex = 0; $('booking_year').selectedIndex++;}
-    
-    $('booking_form_view').submit();
-}
-
-function booking_prevweek()
-{
-    if ($('booking_week').selectedIndex > 0) $('booking_week').selectedIndex--;
-    else {$('booking_week_previousyear').value = '1'; $('booking_year').selectedIndex--;}
-    
-    $('booking_form_view').submit();
-}
-
-function booking_nextday()
-{
-    if ($('booking_day').selectedIndex < $('booking_day').length - 1) 
-    {
-        $('booking_day').selectedIndex++;
-        $('booking_form_view').submit();
-    }
-    else 
-    {
-        $('booking_day').selectedIndex = 0; 
-        booking_nextmonth();
-    }
-}
-
-function booking_prevday()
-{
-    if ($('booking_day').selectedIndex > 0) 
-    {
-        $('booking_day').selectedIndex--;
-        $('booking_form_view').submit();
-    }
-    else 
-    {
-        $('booking_week_previousmonth').value = '1'
-        booking_prevmonth();
-    }
-}
-*/
 
 /**
  * FRONTOFFICE
@@ -258,7 +194,7 @@ function booking_prevday()
 function booking_front_event_add(e, date, moduleid)
 {
     ploopi_showpopup(ploopi_ajaxloader_content, '450', e, 'click', 'popup_event');
-    ploopi_xmlhttprequest_todiv('index-light.php', 'ploopi_op=booking_event_add&booking_moduleid='+moduleid+'&booking_resource_id='+$('booking_resource_id').value+'&booking_resource_date='+date, 'popup_event');
+    ploopi_xmlhttprequest_todiv('index-light.php', 'ploopi_op=booking_event_add&booking_moduleid='+moduleid+'&booking_resource_date='+date, 'popup_event');
     
 }
  

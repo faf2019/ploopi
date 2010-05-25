@@ -372,7 +372,7 @@ if ($_SESSION['ploopi']['connected'])
             ploopi_init_module('booking');
             
             // Cas particulier du mode frontoffice, on teste la présence de moduleid
-            if ($_SESSION['ploopi']['mode'] == 'frontoffice' && (empty($_GET['booking_moduleid']) || !is_numeric($_GET['booking_moduleid']))) ploopi_die();
+            if ($_SESSION['ploopi']['mode'] == 'frontoffice' && (empty($_GET['booking_moduleid']) || !is_numeric($_GET['booking_moduleid']) || !ploopi_isactionallowed(_BOOKING_ACTION_ASKFOREVENT, $_SESSION['ploopi']['workspaceid'], $_GET['booking_moduleid']))) ploopi_die();
             
             $strDate = empty($_GET['booking_resource_date']) ? '' : date('d/m/Y', $_GET['booking_resource_date']);
             

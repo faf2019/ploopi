@@ -306,7 +306,7 @@ function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -
 /**
  * Retourne les événements
  *
- * @param int $id identifiant de la ressource
+ * @param mixed $mixId identifiant de la ressource (entier/tableau d'entier)
  * @param boolean $extended true si la fonction doit retourne des informations complémentaires sur les événements
  * @param boolean $strict true si la fonction ne doit renvoyer que des éléments validés
  * @param int $validated vaut 0 : indéterminé, 1 : validé, -1 : refusé ou null
@@ -319,7 +319,7 @@ function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -
  * @return array tableau des événements
  */
 
-function booking_get_events($id = 0, $extended = false, $strict = false, $validated = null, $managed = null, $object = '', $requestedby = '', $from = '', $to = '', $moduleid = -1)
+function booking_get_events($mixId = null, $extended = false, $strict = false, $validated = null, $managed = null, $object = '', $requestedby = '', $from = '', $to = '', $moduleid = -1)
 {
     global $db;
     
@@ -329,14 +329,15 @@ function booking_get_events($id = 0, $extended = false, $strict = false, $valida
     
     $arrWhere = array();
     
-    if ($id) $arrWhere[] = " e.id_resource = {$id} ";
+    if (is_array($mixId)) $arrWhere[] = ' e.id_resource IN ('.implode(',', $mixId).')';
+    elseif (is_numeric($mixId)) $arrWhere[] = " e.id_resource = '{$mixId}'";
+    
     switch($validated)
     {
         case '0':   $arrWhere[] = " ed.canceled = 0 AND ed.validated = 0 "; break;
         case '1':   $arrWhere[] = " ed.validated = 1 "; break;
         case '-1':  $arrWhere[] = " ed.canceled = 1 "; break;
     }
-    
     
     // On cherche les événements de l'utilisateur courant (sauf si pas connecté) et ceux qui sont validés et ceux dont l'utilisateur gère la resource :
     $arrWhereDetail = array();
@@ -395,7 +396,7 @@ function booking_get_events($id = 0, $extended = false, $strict = false, $valida
             AND         e.id_user = u.id
             {$strWhere}
             
-            ORDER BY    e.id, ed.timestp_begin, ed.timestp_end
+            ORDER BY    ed.timestp_begin, ed.timestp_end
         ");
     }
     else
@@ -421,7 +422,7 @@ function booking_get_events($id = 0, $extended = false, $strict = false, $valida
             AND         e.id_module = {$moduleid}
             {$strWhere}
             
-            ORDER BY    e.id, ed.timestp_begin, ed.timestp_end
+            ORDER BY    ed.timestp_begin, ed.timestp_end
         ");
     }    
             

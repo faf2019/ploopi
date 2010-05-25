@@ -38,6 +38,8 @@
 
 switch($ploopi_op)
 {
+    case 'booking_setresources':
+        if (empty($_REQUEST['booking_resources'])) $_REQUEST['booking_resources'] = array();
     case 'booking_refresh':
         ploopi_init_module('booking');
         include_once './modules/booking/public_planning.php';
