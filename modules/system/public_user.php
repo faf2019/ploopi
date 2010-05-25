@@ -78,6 +78,9 @@ echo $skin->open_simplebloc(_PLOOPI_LABEL_MYPROFILE);
 $user = new user();
 $user->open($_SESSION['ploopi']['userid']);
 
+ploopi_setsessionvar("deletephoto_{$_SESSION['ploopi']['userid']}", 0);
+
+
 // detect server timezone
 $date = date_create();
 $server_timezone = date_timezone_get($date);
@@ -319,14 +322,14 @@ if (isset($error))
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PHOTO; ?>:</label>
                         <span>
-                        <a href="javascript:void(0);" onclick="javascript:system_choose_photo(event, '<?php echo $user->fields['id']; ?>');">Choisir une photo</a>
+                        <?
+                        $booPhotoExists = file_exists($user->getphotopath());
+                        ?>
+                        <a href="javascript:void(0);" onclick="javascript:system_choose_photo(event, '<?php echo $user->fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_edit.png" /></a>
+                        <? if ($booPhotoExists) { ?> <a href="javascript:void(0);" onclick="javascript:$('system_user_photo').innerHTML = ''; system_delete_photo('<?php echo $user->fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" /></a><? } ?>
                         <br /><span id="system_user_photo">
                         <?php
-                        if (file_exists($user->getphotopath()))
-                        {
-                            ?><img src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$user->fields['id']}"); ?>" /><?php
-                        }
-                        ?>
+                        if ($booPhotoExists) { ?><img src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$user->fields['id']}"); ?>" /><?php } ?>
                         </span>
                         </span>
                     </p>

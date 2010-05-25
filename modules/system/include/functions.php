@@ -192,6 +192,9 @@ function system_getwg()
         $_SESSION['system']['workspaces'] = $workspaces;
     }
     else $groups = $_SESSION['system']['groups'];
+    
+    //ploopi_print_r($workspaces);
+    //ploopi_print_r($groups);
 
     return(array(&$workspaces, &$groups));
 }

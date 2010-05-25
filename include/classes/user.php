@@ -89,7 +89,19 @@ class user extends data_object
             $workspace_user->delete();
         }
 
+        $this->deletephoto();
+        
         parent::delete();
+    }
+    
+    /**
+     * Supprime la photo associée à l'utilisateur
+     */
+    public function deletephoto()
+    {
+        $strPhotoPath = $this->getphotopath();
+        
+        if (file_exists($strPhotoPath)) unlink($strPhotoPath);        
     }
 
     /**

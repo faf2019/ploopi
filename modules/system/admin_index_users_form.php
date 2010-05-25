@@ -54,6 +54,9 @@ if (empty($_GET['user_id']) || !is_numeric($_GET['user_id']) || !$user->open($_G
         }
     }
 }
+else ploopi_setsessionvar("deletephoto_{$_GET['user_id']}", 0);
+
+
 
 // detect server timezone
 $date = date_create();
@@ -460,14 +463,14 @@ if (isset($_REQUEST['confirm']))
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PHOTO; ?>:</label>
                         <span>
-                        <a href="javascript:void(0);" onclick="javascript:system_choose_photo(event, '<?php echo $user->fields['id']; ?>');">Choisir une photo</a>
+                        <?
+                        $booPhotoExists = file_exists($user->getphotopath());
+                        ?>
+                        <a href="javascript:void(0);" onclick="javascript:system_choose_photo(event, '<?php echo $user->fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_edit.png" /></a>
+                        <? if ($booPhotoExists) { ?> <a href="javascript:void(0);" onclick="javascript:$('system_user_photo').innerHTML = ''; system_delete_photo('<?php echo $user->fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" /></a><? } ?>
                         <br /><span id="system_user_photo">
                         <?php
-                        if (file_exists($user->getphotopath()))
-                        {
-                            ?><img src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$user->fields['id']}"); ?>" /><?php
-                        }
-                        ?>
+                        if ($booPhotoExists) { ?><img src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$user->fields['id']}"); ?>" /><?php } ?>
                         </span>
                         </span>
                     </p>

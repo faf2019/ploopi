@@ -149,3 +149,8 @@ function system_choose_photo(e, user_id)
     ploopi_showpopup(ploopi_ajaxloader_content, 400, e, false, 'popup_system_choose_photo');
     ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_choose_photo&system_user_id='+user_id, 'popup_system_choose_photo');
 }
+
+function system_delete_photo(user_id)
+{
+    ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_delete_photo&system_user_id='+user_id);
+}

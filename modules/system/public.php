@@ -106,6 +106,9 @@ switch($op)
             rename($_SESSION['system']['user_photopath'], $user->getphotopath());
             unset($_SESSION['system']['user_photopath']);
         }
+        
+        // Suppression photo
+        if (ploopi_getsessionvar("deletephoto_{$user->fields['id']}")) $user->deletephoto();
 
         if ($passwordok) ploopi_redirect("admin.php?op=profile&reloadsession");
         else ploopi_redirect("admin.php?op=profile&error=password");

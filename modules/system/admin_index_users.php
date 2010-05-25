@@ -111,6 +111,9 @@ switch($op)
             rename($_SESSION['system']['user_photopath'], $user->getphotopath());
             unset($_SESSION['system']['user_photopath']);
         }
+        
+        // Suppression photo
+        if (ploopi_getsessionvar("deletephoto_{$user->fields['id']}")) $user->deletephoto();
 
         $reload = ''; // reloadsession or not ?
 
@@ -234,6 +237,10 @@ switch($_SESSION['system']['usrTabItem'])
                     $workspace_group = new workspace_group();
                     $workspace_group->open($workspaceid,$_GET['orgid']);
                     $workspace_group->delete();
+                    
+                    unset($_SESSION['system']['groups']);
+                    unset($_SESSION['system']['workspaces']);
+                    
                     ploopi_redirect("admin.php?reloadsession");
                 }
                 else ploopi_redirect('admin.php');
@@ -256,6 +263,10 @@ switch($_SESSION['system']['usrTabItem'])
                         $org = new group();
                         $org->open($_GET['orgid']);
                         $org->attachtogroup($workspaceid);
+
+                        unset($_SESSION['system']['groups']);
+                        unset($_SESSION['system']['workspaces']);
+                                                
                         ploopi_create_user_action_log(_SYSTEM_ACTION_ATTACHGROUP, "{$org->fields['label']} (id:{$org->fields['id']}) => {$workspace->fields['label']} (id:$workspaceid)");
                         ploopi_redirect("admin.php?reloadsession");
                     }
