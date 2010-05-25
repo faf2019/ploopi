@@ -45,7 +45,7 @@ echo $skin->close_simplebloc();
 ob_start();
 ?>
 <div id="planning_ressource_list">
-<form id="planning_resource_list_form" action="<? echo ploopi_urlencode('admin-light.php?ploopi_op=planning_setresources'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'planning_main');">
+<form id="planning_resource_list_form" action="<? echo ploopi_urlencode('admin-light.php?ploopi_op=planning_setresources'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_resource_list_form'), 'planning_main'); return false;">
 <?    
 foreach ($arrResources as $strResourceType => $arrResourceType)
 {
@@ -70,7 +70,7 @@ foreach ($arrResources as $strResourceType => $arrResourceType)
             {
                 ?>
                 <p class="checkbox" style="background-color:<? echo $row['color']; ?>;" onclick="javascript:ploopi_checkbox_click(event, 'planning_resource<? echo $strResourceType[0].$row['id']; ?>');">
-                    <input type="checkbox" name="planning_resources[<? echo $strResourceType; ?>][<? echo $row['id']; ?>]" id="planning_resource<? echo $strResourceType[0].$row['id']; ?>" value="<? echo $row['id']; ?>" <? if (!empty($arrSearchPattern['planning_resources'][$strResourceType][$row['id']])) echo 'checked="checked"'; ?> onclick="javascript:$('planning_resource_list_form').onsubmit();" />
+                    <input type="checkbox" name="planning_resources[<? echo $strResourceType; ?>][<? echo $row['id']; ?>]" id="planning_resource<? echo $strResourceType[0].$row['id']; ?>" value="<? echo $row['id']; ?>" <? if (!empty($arrSearchPattern['planning_resources'][$strResourceType][$row['id']])) echo 'checked="checked"'; ?> onchange="javascript:$('planning_resource_list_form').onsubmit();" />
                     <span><? echo $row['label']; ?><span>
                 </p>
                 <?

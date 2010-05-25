@@ -52,11 +52,14 @@ if (isset($_REQUEST['planning_display_type'])) $arrSearchPattern['planning_displ
 if (isset($_REQUEST['planning_size'])) $arrSearchPattern['planning_size'] = $_REQUEST['planning_size'];
 
 if (isset($_REQUEST['planning_resources'])) $arrSearchPattern['planning_resources'] = $_REQUEST['planning_resources'];
+if (isset($_REQUEST['planning_channels'])) $arrSearchPattern['planning_channels'] = $_REQUEST['planning_channels'];
 
 if (isset($_REQUEST['planning_month'])) $arrSearchPattern['planning_month'] = $_REQUEST['planning_month'];
 if (isset($_REQUEST['planning_year'])) $arrSearchPattern['planning_year'] = $_REQUEST['planning_year'];
 if (isset($_REQUEST['planning_week'])) $arrSearchPattern['planning_week'] = $_REQUEST['planning_week'];
 if (isset($_REQUEST['planning_day'])) $arrSearchPattern['planning_day'] = $_REQUEST['planning_day'];
+
+
 
 // booléen à true si la date est modifiée par l'utilisateur (mois, année, jour ou semaine)
 $booDateModify = isset($_REQUEST['planning_month']) || isset($_REQUEST['planning_year']) || isset($_REQUEST['planning_week']) || isset($_REQUEST['planning_day']);
@@ -72,6 +75,8 @@ if (!isset($arrSearchPattern['planning_resources']))
         'group' => array()
     );
 elseif (!isset($arrSearchPattern['planning_resources']['group'])) $arrSearchPattern['planning_resources']['group'] = array();
+
+if (!isset($arrSearchPattern['planning_channels'])) $arrSearchPattern['planning_channels'] = 1;
 
 // Init de la date "virtuelle"
 if (!isset($arrSearchPattern['planning_virtualdate'])) $arrSearchPattern['planning_virtualdate'] = time();
@@ -170,6 +175,8 @@ switch($arrSearchPattern['planning_display_type'])
     <input type="image" alt="Mensuel" src="./modules/planning/img/ico_month<? if ($arrSearchPattern['planning_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=month'); ?>', 'planning_main');" />
     <a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<? echo ploopi_urlencode("admin-light.php?ploopi_op=planning_print") ?>', 800, 600)"><img src="./modules/planning/img/ico_printer.png" title="Imprimer"/></a>
 
+    <label for="booking_channels">Multi Col:</label>
+    <input type="checkbox" id="planning_channels" <?php if ($arrSearchPattern['planning_channels']) echo 'checked="checked"'; ?> onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_channels='.($arrSearchPattern['planning_channels'] ? 0 : 1)); ?>', 'planning_main');"/>
 
     <label>Taille :</label>
     <select class="select" name="planning_size" id="planning_size" onchange="javascript:ploopi_xmlhttprequest_todiv('<? echo ploopi_urlencode('admin-light.php?ploopi_op=planning_refresh'); ?>', 'planning_size='+this.value, 'planning_main');">
@@ -308,8 +315,8 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
     
             $objCalendar->setoptions(
                 array(
-                    'month' => $arrSearchPattern['planning_month'],
-                    'year' => $arrSearchPattern['planning_year'],
+                    'intMonth' => $arrSearchPattern['planning_month'],
+                    'intYear' => $arrSearchPattern['planning_year'],
                 )
             );
         break;
@@ -319,8 +326,8 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
     
             $objCalendar->setoptions(
                 array(
-                    'date_begin' => substr(ploopi_unixtimestamp2timestamp($date_begin), 0, 8),
-                    'date_end' => substr(ploopi_unixtimestamp2timestamp($date_end), 0, 8)
+                    'strDateBegin' => substr(ploopi_unixtimestamp2timestamp($date_begin), 0, 8),
+                    'strDateEnd' => substr(ploopi_unixtimestamp2timestamp($date_end), 0, 8)
                 )
             );
         break;
@@ -331,8 +338,8 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
     
             $objCalendar->setoptions(
                 array(
-                    'date_begin' => substr(ploopi_unixtimestamp2timestamp($date_begin), 0, 8),
-                    'date_end' => substr(ploopi_unixtimestamp2timestamp($date_end), 0, 8)
+                    'strDateBegin' => substr(ploopi_unixtimestamp2timestamp($date_begin), 0, 8),
+                    'strDateEnd' => substr(ploopi_unixtimestamp2timestamp($date_end), 0, 8)
                 )
             );
         break;
@@ -340,8 +347,10 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
     
     $objCalendar->setoptions(
         array(
-            'hour_begin' => 0,
-            'hour_end' => 24
+            'intHourBegin' => 0,
+            'intHourEnd' => 24,
+            'booDisplayChannelsLabel' => $arrSearchPattern['planning_channels'] == 1,
+            'intChannelsLabelHeight' => in_array($arrSearchPattern['planning_display_type'], array('day', 'today')) ? '16' : '6'
         )
     );
     
@@ -355,17 +364,37 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
         ploopi_unixtimestamp2timestamp(mktime(0, 0, 0, date('n', $date_end), date('j', $date_end)+1, date('Y', $date_end)))
     );    
     
+    if ($arrSearchPattern['planning_channels']) // Mode multi-canaux
+    {
+        $arrChannels = array();
+        foreach($arrSearchPattern['planning_resources'] as $strTypeResource => $arrTypeResource)
+        {
+            foreach($arrTypeResource as $intIdResource)
+            {
+                if (isset($arrResources[$strTypeResource][$intIdResource]))
+                {
+                    $arrResource = &$arrResources[$strTypeResource][$intIdResource];
+                    
+                    $strChannelId = $strTypeResource[0].$intIdResource;
+                    if (empty($arrChannels[$strChannelId])) $arrChannels[$strChannelId] = new calendarChannel(in_array($arrSearchPattern['planning_display_type'], array('day', 'today')) ? $arrResource['label'] : '', $arrResource['color']);
+                }
+            }
+        }
+        
+        $objCalendar->setChannels($arrChannels);
+    }
+    else
+    {
+        $objCalendar->addChannel(new calendarChannel(''), '');
+    }
     
     // Affectation de la liste des événements au calendrier
     foreach($arrEvents as $arrEvent)
     {
-        
         switch($arrSearchPattern['planning_display_type'])
         {
             case 'month':
-                $strContent = '
-                    <div style="margin:2px;overflow:auto;">'.htmlentities(ploopi_strcut($arrEvent['object'])).'</div>
-                ';
+                $strContent = '<div style="height:12px;overflow:hidden;"><time_begin> '.htmlentities(ploopi_strcut($arrEvent['object'],20)).'</div>';
             break;
             
             case 'week':
@@ -375,11 +404,11 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
                 {
                     foreach($arrEvent['res'] as $strTypeResource => $arrTypeResource)
                     {
-                        foreach($arrTypeResource as $intResource)
+                        foreach($arrTypeResource as $intIdResource)
                         {
-                            if (isset($arrResources[$strTypeResource][$intResource]))
+                            if (isset($arrResources[$strTypeResource][$intIdResource]))
                             {
-                                $arrResource = &$arrResources[$strTypeResource][$intResource];
+                                $arrResource = &$arrResources[$strTypeResource][$intIdResource];
                                 
                                 $strColor = !empty($arrResource['color']) ? "background:{$arrResource['color']}" : '';
                                 $strUsers .= '<img src="./modules/planning/img/ico_'.$strTypeResource.'.png" style="display:block;margin:0 1px;float:left;'.$strColor.';" title="'.htmlentities($arrResource['label']).'" />';
@@ -388,29 +417,80 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
                     }
                 }
                 
-                $strContent = '
-                    <div style="margin:2px;float:right;padding:2px;border:1px solid #888;background:#fff">'.$strUsers.'</div>
-                    <div style="margin:2px;">'.htmlentities($arrEvent['object']).'</div>
-                ';
+                if ($arrSearchPattern['planning_channels'])
+                {
+                    $strContent = '
+                        <div style="margin:2px;">'.htmlentities($arrEvent['object']).'</div>
+                    ';
+                }
+                else
+                {
+                    $strContent = '
+                        <div style="margin:2px;float:right;padding:2px;border:1px solid #888;background:#fff">'.$strUsers.'</div>
+                        <div style="margin:2px;">'.htmlentities($arrEvent['object']).'</div>
+                    ';
+                }
             break;    
         }
-            
-        $objCalendar->addevent(
-            new calendarEvent(
-                $arrEvent['timestp_begin'],
-                $arrEvent['timestp_end'],
-                htmlentities($arrEvent['object']),
-                $strContent,
-                '',
-                "ploopi_xmlhttprequest_topopup('450', event, 'popup_planning_event', 'admin-light.php', '".ploopi_queryencode("ploopi_op=planning_event_detail_open&planning_event_detail_id={$arrEvent['ed_id']}")."');", // onclick
-                'javascript:void(0);', // href
-                "if (confirm('Êtes vous certain de vouloir supprimer cet événement ?')) ploopi_xmlhttprequest_todiv('admin-light.php', '".ploopi_queryencode("ploopi_op=planning_event_detail_delete&planning_event_detail_id={$arrEvent['ed_id']}")."', 'planning_main'); ploopi_hidepopup('popup_planning_event');",
-                array(
-                    'url' => ploopi_urlencode("admin-light.php?ploopi_op=planning_event_detail_quicksave&planning_event_detail_id={$arrEvent['ed_id']}"),
-                    'element_id' => 'planning_main'
+        
+        
+        if ($arrSearchPattern['planning_channels'])
+        {
+            if (!empty($arrEvent['res']))
+            {
+                foreach($arrEvent['res'] as $strTypeResource => $arrTypeResource)
+                {
+                    foreach($arrTypeResource as $intIdResource)
+                    {
+                        if (isset($arrResources[$strTypeResource][$intIdResource]))
+                        {
+                            $arrResource = &$arrResources[$strTypeResource][$intIdResource];
+                            
+                            $objCalendar->addevent(
+                                new calendarEvent(
+                                    $arrEvent['timestp_begin'],
+                                    $arrEvent['timestp_end'],
+                                    '<time_begin> / <time_end>',
+                                    $strContent,
+                                    $strTypeResource[0].$intIdResource,
+                                    array(
+                                        'strColor' => $arrResource['color'],
+                                        'strHref' => 'javascript:void(0);',
+                                        'strOnClick' => "ploopi_xmlhttprequest_topopup('450', event, 'popup_planning_event', 'admin-light.php', '".ploopi_queryencode("ploopi_op=planning_event_detail_open&planning_event_detail_id={$arrEvent['ed_id']}")."');", // onclick
+                                        'strOnClose' => "if (confirm('Êtes vous certain de vouloir supprimer cet événement ?')) ploopi_xmlhttprequest_todiv('admin-light.php', '".ploopi_queryencode("ploopi_op=planning_event_detail_delete&planning_event_detail_id={$arrEvent['ed_id']}")."', 'planning_main'); ploopi_hidepopup('popup_planning_event');",
+                                        'arrOnDrop' => array(
+                                            'url' => ploopi_urlencode("admin-light.php?ploopi_op=planning_event_detail_quicksave&planning_event_detail_id={$arrEvent['ed_id']}"),
+                                            'element_id' => 'planning_main'
+                                        )
+                                    )
+                                )
+                            );
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            $objCalendar->addevent(
+                new calendarEvent(
+                    $arrEvent['timestp_begin'],
+                    $arrEvent['timestp_end'],
+                    '<time_begin> / <time_end>',
+                    $strContent,
+                    '',
+                    array(
+                        'strHref' => 'javascript:void(0);',
+                        'strOnClick' => "ploopi_xmlhttprequest_topopup('450', event, 'popup_planning_event', 'admin-light.php', '".ploopi_queryencode("ploopi_op=planning_event_detail_open&planning_event_detail_id={$arrEvent['ed_id']}")."');", // onclick
+                        'strOnClose' => "if (confirm('Êtes vous certain de vouloir supprimer cet événement ?')) ploopi_xmlhttprequest_todiv('admin-light.php', '".ploopi_queryencode("ploopi_op=planning_event_detail_delete&planning_event_detail_id={$arrEvent['ed_id']}")."', 'planning_main'); ploopi_hidepopup('popup_planning_event');",
+                        'arrOnDrop' => array(
+                            'url' => ploopi_urlencode("admin-light.php?ploopi_op=planning_event_detail_quicksave&planning_event_detail_id={$arrEvent['ed_id']}"),
+                            'element_id' => 'planning_main'
+                        )
+                    )
                 )
-            )
-        );
+            );
+        }
     }
     ?>
     <div style="width:100%;overflow:auto;clear:both;" id="planning_display">

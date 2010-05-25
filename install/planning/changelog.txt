@@ -1,3 +1,9 @@
+== Module Planning - version 0.7.7 ====================================================
+
+2010-05-21  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Intégration de la nouvelle classe "calendar" : affichage multi-colonne des ressources, gestion du déplacement en multi-colonne
+
 == Module Planning - version 0.7.6 ====================================================
 
 2010-03-16  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
