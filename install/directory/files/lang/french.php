@@ -58,6 +58,9 @@ define ('_DIRECTORY_VIEWCONTACT', 'Visualiser un contact');
 define ('_DIRECTORY_VIEWUSER', 'Visualiser un utilisateur');
 define ('_DIRECTORY_ADDNEWNUMBER', 'Ajouter un nouveau numéro');
 
+define ('_DIRECTORY_IMPORTCONTACTS', 'Importer des contacts');
+
+
 define ('_DIRECTORY_TYPE', 'Type');
 define ('_DIRECTORY_NAME', 'Nom');
 define ('_DIRECTORY_FIRSTNAME', 'Prénom');

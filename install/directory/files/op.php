@@ -577,6 +577,175 @@ if ($_SESSION['ploopi']['connected'])
                             
                 ploopi_redirect("admin.php");
             break;
+            
+            case 'directory_import':
+                ploopi_init_module('directory', false, false, false);
+                
+                if (empty($_GET['directory_heading_id']) && !is_numeric($_GET['directory_heading_id'])) ploopi_die();
+                
+                if (isset($_GET['directory_step']) && $_GET['directory_step'] == '2')
+                {
+                    include_once './modules/directory/class_directory_contact.php';
+                    
+                    $arrData = ploopi_getsessionvar('contact_import');
+                    if (!empty($arrData))
+                    {
+                        $intCount = $intDoublon = 0;
+                        foreach($arrData as $arrContact)
+                        {
+                            if (isset($arrContact['lastname']) && isset($arrContact['firstname']))
+                            {
+                                // Vérification de doublon
+                                $db->query("SELECT * FROM ploopi_mod_directory_contact WHERE id_heading = ".$_GET['directory_heading_id']." AND lastname = '".addslashes($arrContact['lastname'])."' AND firstname = '".addslashes($arrContact['firstname'])."'");
+                                if ($db->numrows() == 0)
+                                {
+                                    $objContact = new directory_contact();
+                                    
+                                    // Import des champs
+                                    foreach($arrContact as $strField => $strValue) if (isset($arrDirectoryImportFields[$strField])) $objContact->fields[$strField] = $strValue;
+                                    
+                                    $objContact->fields['id_heading'] = $_GET['directory_heading_id'];
+                                    $objContact->setuwm();
+                                    
+                                    // Enregistrement du contact
+                                    $objContact->save();
+                                    $intCount++;
+                                }
+                                else $intDoublon++;
+                            }
+                        }
+                        ?>
+                        <div style="margin:4px;padding:4px;border:1px solid #c0c0c0;background:#e0e0e0;">
+                            <div><? echo $intCount; ?> contact(s) importés, <? echo $intDoublon; ?> doublons détecté(s).</div>
+                            <div style="text-align:right;">
+                                <input type="button" class="button" value="Continuer" onclick="javascript:document.location.href='<? echo ploopi_urlencode('admin.php'); ?>';" style="font-weight:bold;" />
+                            </div>
+                        </div>
+                        <?
+                    }
+                }
+                else
+                {
+                    include_once './include/functions/array.php';
+                    
+                    $arrLineHeader = array();
+                    $arrData = array();
+                    $arrDataExcerpt = array();
+                    $booDataError = false;
+                    ploopi_setsessionvar('contact_import', $arrData);
+                    
+                    $intCount = 0;
+                    if (!empty($_FILES['directory_import_file']) && !empty($_FILES['directory_import_file']['name']))
+                    {
+                        
+                        // Récupération & contrôle du séparateur de champs
+                        $strSep = empty($_POST['directory_import_sep']) ? ',' : $_POST['directory_import_sep'];
+                        if (!in_array($strSep, array(',', ';'))) $strSep = ',';
+                         
+                        // Lecture du fichier si ok
+                        if (file_exists($_FILES['directory_import_file']['tmp_name']))
+                        {
+                            $ptrHandle = fopen($_FILES['directory_import_file']['tmp_name'], 'r');
+                            
+                            while (($arrLineData = fgetcsv($ptrHandle, null, $strSep)) !== FALSE) 
+                            {
+                                if ($intCount == 0) $arrLineHeader = $arrLineData;
+                                else
+                                {
+                                    if (is_array($arrLineData) && sizeof($arrLineHeader) >= sizeof($arrLineData)) 
+                                    {
+                                        $arrData[] = array_combine($arrLineHeader, $arrLineData);
+                                        if ($intCount < 3) $arrDataExcerpt[] = &$arrData[sizeof($arrData)-1];
+                                    }
+                                    else $booDataError = true; 
+                                }
+                                
+                                $intCount++;
+                                
+                            }
+                        }
+                        
+                        $arrInvalidCols = array_diff($arrLineHeader, array_keys($arrDirectoryImportFields));
+                        
+                        ?>
+                        <div style="margin:4px;padding:4px;border:1px solid #c0c0c0;background:#e0e0e0;">
+                            <div><strong>Le fichier envoyé (<? echo $_FILES['directory_import_file']['name']; ?>) contient <? echo $intCount; ?> ligne(s) et <? echo sizeof($arrLineHeader) ?> colonnes dont <? echo sizeof($arrLineHeader) - sizeof($arrInvalidCols) ?> sont connues.</strong></div>
+                            <? 
+                            if ($booDataError) echo '<div>Des erreurs de données ont été rencontrées</div>'; 
+                            if (!empty($arrInvalidCols)) echo '<div>Les colonnes suivantes sont inconnues : '.implode(', ', $arrInvalidCols).'</div>';
+                            ?>
+                            
+                            <div>Aperçu du fichier :</div>
+                            <div style="overflow:auto;border:1px solid #c0c0c0;margin:4px;padding:4px;background:#fff;"><? echo ploopi_array2html($arrDataExcerpt); ?></div>
+                            <div style="text-align:right;">
+                                <input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<? echo ploopi_urlencode('admin.php'); ?>';"/>
+                                <?
+                                if (sizeof($arrData) && isset($arrData[0]['lastname']) && isset($arrData[0]['firstname'])) // Données valides
+                                {
+                                    // Sauvegarde des données importées en SESSION
+                                    ploopi_setsessionvar('contact_import', $arrData);
+                                    ?>
+                                    <input type="button" class="button" value="Continuer" style="font-weight:bold;" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode("ploopi_op=directory_import&directory_step=2&directory_heading_id={$_GET['directory_heading_id']}"); ?>', 'directory_import_info');" />
+                                    <?
+                                }
+                                ?>
+                            </div>
+                        </div>
+                        <?
+                    }
+                } 
+                
+                               
+                ploopi_die();
+            break;
+            
+            case 'directory_export':
+                ploopi_init_module('directory', false, false, false);
+                include_once './include/functions/array.php';
+                
+                if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !isset($_GET['directory_format'])) ploopi_die();
+                
+                $sql =  "
+                    SELECT  ".implode(',', array_keys($arrDirectoryImportFields))."
+                    FROM    ploopi_mod_directory_contact
+                    WHERE   id_heading = {$_GET['directory_heading_id']}
+                ";
+
+                $rs = $db->query($sql);
+                
+                $strFormat = strtolower($_GET['directory_format']);
+                
+                ploopi_ob_clean();
+                
+                switch($_GET['directory_format'])
+                {
+                    case 'xls':
+                        ploopi_array2xls($db->getarray(), true, 'contacts.xls');
+                        ploopi_die();
+                    break;
+                    
+                    case 'csv':
+                     echo ploopi_array2csv($db->getarray());
+                    break;
+                    
+                    default:
+                        $strFormat = 'xml';
+                    case 'xml':
+                        echo ploopi_array2xml($db->getarray(), 'contacts', 'contact');
+                    break;
+                }
+                
+                $strFileName = "contacts.{$strFormat}";
+                
+                header('Content-Type: ' . ploopi_getmimetype($strFileName) . '; charset=ISO-8859-15');
+                header('Content-Disposition: attachment; Filename="'.$strFileName.'"');
+                header('Cache-Control: private');
+                header('Pragma: private');
+                header('Content-Length: '.ob_get_length());
+                header("Content-Encoding: None");   
+                
+                ploopi_die();
+            break;
         }
     }
 }

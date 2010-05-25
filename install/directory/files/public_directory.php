@@ -891,11 +891,22 @@ switch($_SESSION['directory']['directoryTabItem'])
                             <?php
                             if ($booModify) // Version modifiable
                             {
+                                ?>
+                                <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('directory_import');">
+                                    <p class="ploopi_va">
+                                        <img border="0" src="./modules/directory/img/ico_import.png">
+                                        <span><?php echo _DIRECTORY_IMPORTCONTACTS; ?></span>
+                                    </p>
+                                </a>
+                                <div id="directory_import" style="display:none;">
+                                    <?php include_once './modules/directory/public_directory_import.php'; ?>
+                                </div>
+                                <?
                                 $directory_contact = new directory_contact();
                                 $directory_contact->init_description();
                                 $directory_contact->fields['id_heading'] = $intHeadingId;
                                 ?>
-                                <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:$('directory_addcontact').style.display='block';">
+                                <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('directory_addcontact');">
                                     <p class="ploopi_va">
                                         <img border="0" src="./modules/directory/img/ico_add_contact.png">
                                         <span><?php echo _DIRECTORY_ADDNEWCONTACT; ?></span>
@@ -908,6 +919,9 @@ switch($_SESSION['directory']['directoryTabItem'])
                             }
                             ?>
                             <div class="ploopi_form_title">
+                                <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=directory_export&directory_format=csv&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export CSV"><img src="./modules/directory/img/mime/csv.png" /></a>
+                                <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=directory_export&directory_format=xls&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export XLS"><img src="./modules/directory/img/mime/xls.png" /></a>
+                                <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=directory_export&directory_format=xml&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export XML"><img src="./modules/directory/img/mime/xml.png" /></a>
                                 <span>Liste des contacts rattachés à <?php printf("%s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]); ?></span>
                             </div>
                             <?php

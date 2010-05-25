@@ -44,6 +44,32 @@ define ('_DIRECTORY_ACTION_SPEEDDIALING',     3);
 
 define ('_DIRECTORY_OBJECT_HEADING',        1);
 
+global $arrDirectoryImportFields;
+$arrDirectoryImportFields = array(
+    'lastname'      =>  "Nom",
+    'firstname'     =>  "Prénom",
+    'civility'     =>   "Civilité",
+
+    'service'       =>  "Service",
+    'function'      =>  "Fonction",
+    'rank'          =>  "Grade/Niveau",
+    'number'        =>  "Numéro de Poste",
+    'phone'         =>  "Numéro de Téléphone",
+    'mobile'        =>  "Numéro de Portable",
+    'fax'           =>  "Numéro de Fax",
+    'email'         =>  "Adresse mèl",
+
+    'building'      =>  "Bâtiment",
+    'floor'         =>  "Etage",
+    'office'        =>  "Bureau",
+    'address'       =>  "Adresse",
+    'postalcode'    =>  "Code Postal",
+    'city'          =>  "Ville",
+    'country'       =>  "Pays",
+
+    'comments'      =>  "Commentaires"
+);
+
 /**
  * Retourne l'ensemble des rubriques dans un tableau
  *
