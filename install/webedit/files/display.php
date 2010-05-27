@@ -1969,8 +1969,8 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
                     $date.'000000',
                     $row['metatitle'],
                     '',
-                    '',
-                    $scriptDate                    
+                    null,
+                    array('strHref' => $scriptDate)                    
                 )
             );
         }

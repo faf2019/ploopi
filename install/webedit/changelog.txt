@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.3.2p ============================================
+
+2010-05-27  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
+
+* Correction : adaptation au fonctionnement de la classe calendar qui a été profondement modifiée.
+
 == Module WebEdit - version 2.3.2o ============================================
 
 2010-04-27  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>

@@ -147,12 +147,22 @@ class webedit_calendar_blog extends calendar
                         
                         if(!empty($arrEvents[$strEventsKey]))
                         {
-                            $extra_class .= ' day_num_grayed_event';
-                            if (!empty($this->arrEvents[$arrEvents[$strEventsKey][0]]))
-                            { 
-                                $extra_title =  ' - '.$this->arrEvents[$arrEvents[$strEventsKey][0]]->strTitle;
-                                $onclick = 'onClick="javascript:window.location.href=\''.$this->arrEvents[$arrEvents[$strEventsKey][0]]->strOnClick.'\';"';
-                            }
+                            $onclick = '';
+                            foreach($arrEvents[$strEventsKey] as $strChannelId => $arrDayEvents)
+                            {
+                                foreach($arrDayEvents as $intId)
+                                {
+                                    if (!empty($this->arrEvents[$intId]))
+                                    {                            
+                                        $extra_title .=  ' - '.$this->arrEvents[$intId]->strTitle;
+                                        if(empty($onclick))
+                                        {   
+                                            $onclick = 'onClick="javascript:window.location.href=\''.$this->arrEvents[$intId]->strHref.'\';return(0);"';
+                                            $extra_class .= ' day_num_grayed_event';
+                                        }
+                                    }
+                                }
+                            }                            
                         }
                         ?>
                         <div class="day_num_grayed<?php echo $extra_class; ?>" title="<?php echo $date ?>" style="<?php echo $day_style; ?>" <?php echo $onclick; ?>>
@@ -191,12 +201,22 @@ class webedit_calendar_blog extends calendar
                     $strEventsKey = sprintf("%04d%02d%02d",$this->arrOptions['year'], $this->arrOptions['month'], $d);
                     if(!empty($arrEvents[$strEventsKey]))
                     {
-                        $extra_class .= ' day_event';
-                        if (!empty($this->arrEvents[$arrEvents[$strEventsKey][0]]))
-                        { 
-                            $extra_title =  ' - '.$this->arrEvents[$arrEvents[$strEventsKey][0]]->strTitle;
-                            $onclick = 'onClick="javascript:window.location.href=\''.$this->arrEvents[$arrEvents[$strEventsKey][0]]->strOnClick.'\';return(0);"';
-                        }
+                        $onclick = '';
+                        foreach($arrEvents[$strEventsKey] as $strChannelId => $arrDayEvents)
+                        {
+                            foreach($arrDayEvents as $intId)
+                            {
+                                if (!empty($this->arrEvents[$intId]))
+                                {                            
+                                    $extra_title .=  ' - '.$this->arrEvents[$intId]->strTitle;
+                                    if(empty($onclick))
+                                    {   
+                                        $onclick = 'onClick="javascript:window.location.href=\''.$this->arrEvents[$intId]->strHref.'\';return(0);"';
+                                        $extra_class .= ' day_event';
+                                    }
+                                }
+                            }
+                        }                            
                     }
                     ?>
                     <div class="day_num<? echo $extra_class; ?>" title="<?php echo $date.$extra_title ?>" style="<?php echo $day_style; ?>" <?php echo $onclick;?>>
@@ -235,12 +255,22 @@ class webedit_calendar_blog extends calendar
                         $strEventsKey = substr(ploopi_unixtimestamp2timestamp($strTs), 0, 8);
                         if(!empty($arrEvents[$strEventsKey]))
                         {
-                            $extra_class .= ' day_num_grayed_event';
-                            if (!empty($this->arrEvents[$arrEvents[$strEventsKey][0]]))
-                            { 
-                                $extra_title =  ' - '.$this->arrEvents[$arrEvents[$strEventsKey][0]]->strTitle;
-                                $onclick = 'onClick="javascript:window.location.href=\''.$this->arrEvents[$arrEvents[$strEventsKey][0]]->strOnClick.'\';return(0);"';
-                            }
+                            $onclick = '';
+                            foreach($arrEvents[$strEventsKey] as $strChannelId => $arrDayEvents)
+                            {
+                                foreach($arrDayEvents as $intId)
+                                {
+                                    if (!empty($this->arrEvents[$intId]))
+                                    {                            
+                                        $extra_title .=  ' - '.$this->arrEvents[$intId]->strTitle;
+                                        if(empty($onclick))
+                                        {   
+                                            $onclick = 'onClick="javascript:window.location.href=\''.$this->arrEvents[$intId]->strHref.'\';return(0);"';
+                                            $extra_class .= ' day_num_grayed_event';
+                                        }
+                                    }
+                                }
+                            }                            
                         }
                         ?>
                         <div class="day_num_grayed<? echo $extra_class; ?>" title="<?php echo $date.$extra_title ?>" style="<?php echo $day_style; ?>"<?php echo $onclick; ?>>
