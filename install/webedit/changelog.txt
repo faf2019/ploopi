@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.3.2q ============================================
+
+2010-05-28  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
+
+* Correction : warning sur le contrôle de l'action de gestion des commentaires (global.php de webedit non chargé)
+
 == Module WebEdit - version 2.3.2p ============================================
 
 2010-05-27  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>

@@ -518,9 +518,9 @@ if ($_SESSION['ploopi']['connected'])
         case 'webedit_comment_publish':
             if (isset($_GET['id_comment']) && isset($_GET['publish']))
             {
-                if(!ploopi_isactionallowed(_WEBEDIT_ACTION_COMMENT)) ploopi_die();
-
                 ploopi_init_module('webedit',false,false,false);
+                
+                if(!ploopi_isactionallowed(_WEBEDIT_ACTION_COMMENT)) ploopi_die();
                 
                 include_once './modules/webedit/class_article_comment.php';
                 
@@ -533,9 +533,9 @@ if ($_SESSION['ploopi']['connected'])
         case 'webedit_comment_delete':
             if (isset($_GET['id_comment']))
             {
-                if(!ploopi_isactionallowed(_WEBEDIT_ACTION_COMMENT)) ploopi_die();
-                
                 ploopi_init_module('webedit',false,false,false);
+                
+                if(!ploopi_isactionallowed(_WEBEDIT_ACTION_COMMENT)) ploopi_die();
                 
                 include_once './modules/webedit/class_article_comment.php';
                 
