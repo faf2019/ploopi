@@ -102,7 +102,9 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
         </p>
         <?php
     }
-    if ($booIsAllowedEdit)
+    
+    //if ($booIsAllowedEdit) Modifié par SE le 01/06/2010 (demande SZSIC)
+    if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
     {
         ?>
         <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une sous-rubrique" onclick="javascript:document.location.href='<?php echo "admin.php?op=heading_addnew"; ?>';" >
