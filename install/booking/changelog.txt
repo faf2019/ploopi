@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.0b ====================================================
+
+2010-05-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Suppression du tag "IMG" sur les types de ressources dans le choix des ressources affichées (back/front)
+
 == Module BOOKING - version 1.0.0 ====================================================
 
 2010-05-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

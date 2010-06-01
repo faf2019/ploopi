@@ -81,7 +81,6 @@ switch($_SESSION['booking']['$booking_menu'])
                 ?>
                 <a href="javascript:void(0);" onclick="javascript:with ($('booking_<?php echo $strResourceType; ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
                     <p class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;">
-                        <img src="<? echo "{$_SESSION['ploopi']['template_path']}/img/system/ico_{$strResourceType}.png"; ?>" />
                         <strong><? echo $strResourceType; ?></strong>
                     </p>
                 </a>
