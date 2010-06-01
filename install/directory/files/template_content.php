@@ -104,7 +104,7 @@ $template_body->assign_vars(
 switch($op)
 {
     case 'search':
-        $arrHeadings = directory_getheadings();
+        $arrDirectoryHeadings = directory_getheadings();
         
         $template_body->assign_block_vars('directory_switch_result', array());
 
@@ -133,7 +133,7 @@ switch($op)
             $intHid = current($arrHeadingId);
             while ($intHid !== false)
             {
-                if (!empty($arrHeadings['tree'][$intHid])) foreach($arrHeadings['tree'][$intHid] as $intNewHid) $arrHeadingId[] = $intNewHid; 
+                if (!empty($arrDirectoryHeadings['tree'][$intHid])) foreach($arrDirectoryHeadings['tree'][$intHid] as $intNewHid) $arrHeadingId[] = $intNewHid; 
                 $intHid = next($arrHeadingId);
             }
             
@@ -187,9 +187,9 @@ switch($op)
                 // Récupération des rubriques du contact
                 $arrContactHeadings = array();
                 
-                foreach(split(';', $arrHeadings['list'][$row['id_heading']]['parents']) as $intIdHeading)
+                foreach(split(';', $arrDirectoryHeadings['list'][$row['id_heading']]['parents']) as $intIdHeading)
                 {
-                    if (isset($arrHeadings['list'][$intIdHeading])) $arrContactHeadings[] = $arrHeadings['list'][$intIdHeading]['label'];
+                    if (isset($arrDirectoryHeadings['list'][$intIdHeading])) $arrContactHeadings[] = $arrDirectoryHeadings['list'][$intIdHeading]['label'];
                 }
                 
                 $arrContactHeadings[] = $row['label'];
@@ -223,7 +223,7 @@ switch($op)
                         'HEADING' => htmlentities($row['label']),
                         'HEADINGS' => htmlentities($strContactHeadings),
                         'ALTERNATE_STYLE' => $c%2,
-                        'LINK' => ploopi_urlencode("index.php?template_moduleid={$template_moduleid}&op=contact&directory_contact_id={$row['id']}")
+                        'LINK' => ploopi_urlencode("index.php?headingid={$headingid}&template_moduleid={$template_moduleid}&op=contact&directory_contact_id={$row['id']}")
                     )
                 );
 
@@ -243,7 +243,7 @@ switch($op)
 
     case 'contact':
         // Récupération des rubriques
-        $arrHeadings = directory_getheadings();
+        $arrDirectoryHeadings = directory_getheadings();
 
         $objContact = new directory_contact();
         if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']) && $objContact->open($_GET['directory_contact_id']))
@@ -258,26 +258,27 @@ switch($op)
 
             // Construction du lien sur l'annuaire détaillé de la rubrique
             $arrRequest = array();
+            $arrRequest['headingid'] = "headingid={$headingid}";
             $arrRequest['op'] = "op=full";
             $arrRequest['template_moduleid'] = "template_moduleid={$template_moduleid}";
             if (!empty($_REQUEST['webedit_mode'])) $arrRequest['webedit_mode'] = "webedit_mode={$_REQUEST['webedit_mode']}";
 
             // Tableau des rubriques associées au contact
-            $arrHeadingsLabel = array();
+            $arrDirectoryHeadingsLabel = array();
 
-            foreach(explode(';', $arrHeadings['list'][$objContact->fields['id_heading']]['parents']) as $intHeadingId)
+            foreach(explode(';', $arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['parents']) as $intHeadingId)
             {
                 $arrRequest['directory_heading_id'] = "directory_heading_id={$intHeadingId}";
-                if (isset($arrHeadings['list'][$intHeadingId])) $arrHeadingsLabel[$intHeadingId] = '<a title="Ouvrir l\'annuaire détaillé de '.htmlentities($arrHeadings['list'][$intHeadingId]['label']).'" href="'.ploopi_urlencode('index.php?'.implode('&',$arrRequest)).'">'.htmlentities($arrHeadings['list'][$intHeadingId]['label']).'</a>';
+                if (isset($arrDirectoryHeadings['list'][$intHeadingId])) $arrDirectoryHeadingsLabel[$intHeadingId] = '<a title="Ouvrir l\'annuaire détaillé de '.htmlentities($arrDirectoryHeadings['list'][$intHeadingId]['label']).'" href="'.ploopi_urlencode('index.php?'.implode('&',$arrRequest)).'">'.htmlentities($arrDirectoryHeadings['list'][$intHeadingId]['label']).'</a>';
             }
 
             $arrRequest['directory_heading_id'] = "directory_heading_id={$objContact->fields['id_heading']}";
-            $arrHeadingsLabel[] = '<a title="Ouvrir l\'annuaire détaillé de '.htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['label']).'" href="'.ploopi_urlencode('index.php?'.implode('&',$arrRequest)).'">'.htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['label']).'</a>';
+            $arrDirectoryHeadingsLabel[] = '<a title="Ouvrir l\'annuaire détaillé de '.htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['label']).'" href="'.ploopi_urlencode('index.php?'.implode('&',$arrRequest)).'">'.htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['label']).'</a>';
 
             $arrHeadingAddress = array();
-            if (!empty($arrHeadings['list'][$objContact->fields['id_heading']]['address'])) $arrHeadingAddress[] = ploopi_nl2br(htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['address']));
-            if (!empty($arrHeadings['list'][$objContact->fields['id_heading']]['postalcode']) || !empty($arrHeadings['list'][$objContact->fields['id_heading']]['city'])) $arrHeadingAddress[] = ploopi_nl2br(htmlentities(trim($arrHeadings['list'][$objContact->fields['id_heading']]['postalcode'].' '.$arrHeadings['list'][$objContact->fields['id_heading']]['city'])));
-            if (!empty($arrHeadings['list'][$objContact->fields['id_heading']]['country'])) $arrHeadingAddress[] = ploopi_nl2br(htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['country']));
+            if (!empty($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['address'])) $arrHeadingAddress[] = ploopi_nl2br(htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['address']));
+            if (!empty($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['postalcode']) || !empty($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['city'])) $arrHeadingAddress[] = ploopi_nl2br(htmlentities(trim($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['postalcode'].' '.$arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['city'])));
+            if (!empty($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['country'])) $arrHeadingAddress[] = ploopi_nl2br(htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['country']));
 
             $template_body->assign_block_vars('directory_switch_contact',
                 array(
@@ -300,15 +301,15 @@ switch($op)
                     'BUILDING' => htmlentities($objContact->fields['building']),
                     'FLOOR' => htmlentities($objContact->fields['floor']),
                     'OFFICE' => htmlentities($objContact->fields['office']),
-                    'HEADING' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['label']),
-                    'HEADINGS' => implode('<br />', $arrHeadingsLabel),
-                    'HEADING_PHONE' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['phone']),
-                    'HEADING_FAX' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['fax']),
-                    'HEADING_POSTALCODE' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['postalcode']),
-                    'HEADING_ADDRESS' => ploopi_nl2br(htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['address'])),
-                    'HEADING_CITY' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['city']),
-                    'HEADING_COUNTRY' => htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['country']),
-                    'HEADING_ADDRESS' => ploopi_nl2br(htmlentities($arrHeadings['list'][$objContact->fields['id_heading']]['address'])),
+                    'HEADING' => htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['label']),
+                    'HEADINGS' => implode('<br />', $arrDirectoryHeadingsLabel),
+                    'HEADING_PHONE' => htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['phone']),
+                    'HEADING_FAX' => htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['fax']),
+                    'HEADING_POSTALCODE' => htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['postalcode']),
+                    'HEADING_ADDRESS' => ploopi_nl2br(htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['address'])),
+                    'HEADING_CITY' => htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['city']),
+                    'HEADING_COUNTRY' => htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['country']),
+                    'HEADING_ADDRESS' => ploopi_nl2br(htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['address'])),
                     'HEADING_ADDRESS_FULL' => implode('<br />', $arrHeadingAddress),
                     'PHOTOPATH' => $strPhotopath,
                     'COMMENTS' => ploopi_nl2br(htmlentities($objContact->fields['comments']))
@@ -346,6 +347,7 @@ switch($op)
                 // Construction du lien sur la fiche contact
                 $arrRequest = array();
 
+                $arrRequest[] = "headingid={$headingid}";
                 $arrRequest[] = "op=contact";
                 $arrRequest[] = "template_moduleid={$template_moduleid}";
                 $arrRequest[] = "directory_contact_id={$row['id']}";
@@ -392,7 +394,7 @@ switch($op)
         $intHeadingId = isset($_GET['directory_heading_id']) && is_numeric($_GET['directory_heading_id']) ? $_GET['directory_heading_id'] : 0;
 
         // Récupération des rubriques
-        $arrHeadings = directory_getheadings();
+        $arrDirectoryHeadings = directory_getheadings();
 
         // Récupération des contacts par rubriques
         $arrContacts = directory_getcontacts();
@@ -404,13 +406,14 @@ switch($op)
             $template_body->assign_block_vars('directory_switch_full.switch_selected_heading', array());
 
             // Tableau des rubriques à afficher
-            $arrSelectedHeadings = explode(';', $arrHeadings['list'][$intHeadingId]['parents']);
+            $arrSelectedHeadings = explode(';', $arrDirectoryHeadings['list'][$intHeadingId]['parents']);
             unset($arrSelectedHeadings[0]);
             $arrSelectedHeadings[] = $intHeadingId;
 
             // Construction du lien sur la rubrique
             $arrRequest = array();
 
+            $arrRequest[] = "headingid={$headingid}";
             $arrRequest[] = "op=full";
             $arrRequest[] = "template_moduleid={$template_moduleid}";
             if (!empty($_REQUEST['webedit_mode'])) $arrRequest[] = "webedit_mode={$_REQUEST['webedit_mode']}";
@@ -421,14 +424,14 @@ switch($op)
 
                 $template_body->assign_block_vars('directory_switch_full.switch_selected_heading.heading',
                     array(
-                        'LABEL' => isset($arrHeadings['list'][$intId]) ? $arrHeadings['list'][$intId]['label'] : '',
+                        'LABEL' => isset($arrDirectoryHeadings['list'][$intId]) ? $arrDirectoryHeadings['list'][$intId]['label'] : '',
                         'LINK' => ploopi_urlencode('index.php?'.implode('&',$arrRequest))
                     )
                 );
             }
         }
 
-        directory_template_display($template_body, $arrHeadings, $arrContacts, $intHeadingId);
+        directory_template_display($template_body, $arrDirectoryHeadings, $arrContacts, $intHeadingId);
     break;
     
     /**
@@ -436,11 +439,11 @@ switch($op)
      */
     case 'organigram':
         // Récupération des rubriques
-        $arrHeadings = directory_getheadings();
+        $arrDirectoryHeadings = directory_getheadings();
 
         $template_body->assign_block_vars('directory_switch_organigram', array());
 
-        directory_template_display_organigram($template_body, $arrHeadings);
+        directory_template_display_organigram($template_body, $arrDirectoryHeadings);
     break;
     
     /**

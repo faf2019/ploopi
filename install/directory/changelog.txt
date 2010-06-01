@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.2.2h ====================================================
+
+2010-06-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Contacts partagés : correction d'un bug lors de l'enregistrement d'une rubrique, les gestionnaires étaient perdus selon le profil de l'utilisateur connecté
+
 == Module DIRECTORY - version 2.2.2g ====================================================
 
 2010-04-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

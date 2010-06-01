@@ -640,9 +640,9 @@ switch($_SESSION['directory']['directoryTabItem'])
                         $arrGroups = $objUser->getgroups(true);
                         
                         /**
-                         * L'utilisateur connecté est-il gestionnaire ?
+                         * L'utilisateur connecté est-il gestionnaire de la rubrique (admin ou validateur) ?
                          */
-                        $booModify = ploopi_isadmin();
+                        $booModify = ploopi_isadmin() || $arrHeadings['list'][$intHeadingId]['isvalidator'];
                         
                         foreach($arrWf as $value) 
                         {
@@ -665,6 +665,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                             </div>
                             <?
                         }
+                        
                         
                         if ($op == 'directory_modify') // interface débloquée
                         {
@@ -775,7 +776,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         
                         if ($op == 'directory_modify') // interface débloquée
                         {
-                            if ($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS))
+                            if (ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) // Gestion des gestionnaires
                             {
                                 ?>
                                 <div style="clear:both;padding:4px;">
@@ -820,20 +821,24 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         </div>
                                     </fieldset>
                                 </div>
-
+                                <?php
+                            }
+                            
+                            if ($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS))
+                            {
+                                ?>
                                 <div style="text-align:right;padding:4px;">
                                     <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}"); ?>';">
                                     <input type="reset" class="button" value="<?php echo _PLOOPI_RESET; ?>">
                                     <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>">
                                 </div>
                                 </form>
-                                <?php
+                                <?
                             }
                         }
-                        
-                        if (!($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) || empty($op)) // Version non modifiable
-                        {
 
+                        if (!$booModify || !ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS) || empty($op)) // Version non modifiable
+                        {
                             ?>
                             <div class="directory_shared_managers">
                                 <div style="float:left;">
@@ -873,7 +878,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                     </em>
                                 </div>
                                 <?php
-                                if ($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) // interface bloquée
+                                if (($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) && empty($op)) // interface bloquée
                                 {
                                     ?>
                                         <div style="clear:both;text-align:right;">
@@ -887,6 +892,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                         }
                         ?>
+                        
                         <div style="border-top:1px solid #a0a0a0;">
                             <?php
                             if ($booModify) // Version modifiable
@@ -895,7 +901,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 $directory_contact->init_description();
                                 $directory_contact->fields['id_heading'] = $intHeadingId;
                                 ?>
-                                <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:$('directory_addcontact').style.display='block';">
+                                <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('directory_addcontact');">
                                     <p class="ploopi_va">
                                         <img border="0" src="./modules/directory/img/ico_add_contact.png">
                                         <span><?php echo _DIRECTORY_ADDNEWCONTACT; ?></span>
@@ -908,12 +914,16 @@ switch($_SESSION['directory']['directoryTabItem'])
                             }
                             ?>
                             <div class="ploopi_form_title">
+                                <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=directory_export&directory_format=csv&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export CSV"><img src="./modules/directory/img/mime/csv.png" /></a>
+                                <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=directory_export&directory_format=xls&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export XLS"><img src="./modules/directory/img/mime/xls.png" /></a>
+                                <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=directory_export&directory_format=xml&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export XML"><img src="./modules/directory/img/mime/xml.png" /></a>
                                 <span>Liste des contacts rattachés à <?php printf("%s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]); ?></span>
                             </div>
                             <?php
                             $arrColumns = array();
                             $arrValues = array();
 
+                            $arrColumns['left']['position'] = array('label' => 'P.',     'width' => 35, 'options' => array('sort' => true));
                             $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME, 'options' => array('sort' => true));
                             $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
                             $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
@@ -947,6 +957,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         else $arrActions[] ='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
                                     }
 
+                                    $arrValues[$c]['values']['position'] = array('label' => $row['position']);
                                     $arrValues[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
                                     $arrValues[$c]['values']['service'] = array('label' => $row['service']);
                                     $arrValues[$c]['values']['function'] = array('label' => $row['function']);
@@ -958,7 +969,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 }
                             }
 
-                            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi_getparam('directory_pagesize')));
+                            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'position', 'limit' => ploopi_getparam('directory_pagesize')));
 
                             if (!$db->numrows($rs))
                             {
