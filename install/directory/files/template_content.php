@@ -322,6 +322,39 @@ switch($op)
                     'COMMENTS' => ploopi_nl2br(htmlentities($objContact->fields['comments']))
                 )
             );
+            
+            
+            // Lecture des documents
+            include_once './include/classes/documents.php';
+            
+            // Lecture du dossier racine de la mini ged associée à l'utilisateur
+            $objRootFolder = documentsfolder::getroot(
+                _DIRECTORY_OBJECT_CONTACT, 
+                $objContact->fields['id'],
+                $template_moduleid
+            );
+            
+            if (!empty($objRootFolder))
+            {
+                $template_body->assign_block_vars('directory_switch_contact.switch_files', array());
+                
+                $arrFiles = $objRootFolder->getlist();
+                
+                foreach($arrFiles as $intIdFile => $rowFile)
+                {
+                    // Découpage du chemin pour modifier le fichier
+                    $arrPath = explode('/', $rowFile['path']);
+                    $strFileName = $arrPath[sizeof($arrPath)-1];
+                    array_pop($arrPath);
+                    
+                    $template_body->assign_block_vars('directory_switch_contact.switch_files.file', array(
+                        'FILENAME' => $strFileName,
+                        'PATH' => implode(' &raquo; ', $arrPath),
+                        'URL' => $rowFile['file']->geturl()
+                    ));
+                }
+            }    
+                        
 
             // Recherche des personnes du même service
             $ptrRs = $db->query("

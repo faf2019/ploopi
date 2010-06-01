@@ -347,8 +347,44 @@ if (isset($error))
         </div>
     </div>
 </div>
-<div style="clear:both;float:right;padding:4px;">
+<div style="clear:both;text-align:right;padding:4px;">
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>
 </form>
+
+<fieldset class="fieldset" style="padding:0px;margin:4px;">
+    <legend>Documents liés à l'utilisateur</legend>
+    <?php
+    ploopi_documents(
+        _SYSTEM_OBJECT_USER, 
+        $user->fields['id'],
+        array(
+            'DOCUMENT_CREATE' => true,
+            'DOCUMENT_MODIFY' => true,
+            'DOCUMENT_DELETE' => true,
+            'FOLDER_CREATE' => true,
+            'FOLDER_MODIFY' => true,
+            'FOLDER_DELETE' => true,            
+            'SEARCH' => false
+        ), 
+        array(
+            'PHOTOS',
+            'VIDEOS',
+            'DOCUMENTS'
+        ),
+        array(
+            'ROOT_NAME' => trim("{$user->fields['lastname']} {$user->fields['firstname']}"), 
+            'ATTACHEMENT' => false, 
+            'FIELDS' => 
+                array(
+                    'name',
+                    'timestp_modify',
+                    'label',
+                    'ref'
+            ),
+        )
+    );
+    ?>
+</fieldset>
+                        
 <?php echo $skin->close_simplebloc(); ?>

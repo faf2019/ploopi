@@ -225,17 +225,16 @@ function ploopi_documents_countelements($id_folder)
  * @return array tableau contenant le nom des fichiers
  */
 
-function ploopi_documents_getfiles($id_object, $id_record, $id_folder = 0, $id_workspace = -1, $id_module = -1)
+function ploopi_documents_getfiles($id_object, $id_record, $id_folder = 0, $id_module = -1)
 {
     global $db;
 
-    if ($id_workspace == -1) $id_workspace = $_SESSION['ploopi']['workspaceid'];
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
     
     $files = array();
 
-    if ($id_folder == 0) $db->query("SELECT * FROM ploopi_documents_file WHERE id_workspace = {$id_workspace} AND id_module = {$id_module} AND id_object = '{$id_object}' AND id_record = '{$id_record}' ORDER BY name");
-    else $db->query("SELECT * FROM ploopi_documents_file WHERE id_workspace = {$id_workspace} AND id_module = {$id_module} AND id_object = '{$id_object}' AND id_record = '{$id_record}' and id_folder = {$id_folder} ORDER BY name");
+    if ($id_folder == 0) $db->query("SELECT * FROM ploopi_documents_file WHERE id_module = {$id_module} AND id_object = '{$id_object}' AND id_record = '{$id_record}' ORDER BY name");
+    else $db->query("SELECT * FROM ploopi_documents_file WHERE id_module = {$id_module} AND id_object = '{$id_object}' AND id_record = '{$id_record}' and id_folder = {$id_folder} ORDER BY name");
     while ($row = $db->fetchrow()) $files[] = $row;
 
     return($files);
@@ -251,16 +250,15 @@ function ploopi_documents_getfiles($id_object, $id_record, $id_folder = 0, $id_w
  * @return array tableau contenant le nom des dossiers
  */
 
-function ploopi_documents_getfolders($id_object, $id_record, $id_workspace = -1, $id_module = -1, $id_workspace = -1, $id_module = -1)
+function ploopi_documents_getfolders($id_object, $id_record, $id_module = -1)
 {
     global $db;
 
-    if ($id_workspace == -1) $id_workspace = $_SESSION['ploopi']['workspaceid'];
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
     
     $folders = array();
 
-    $db->query("SELECT * FROM ploopi_documents_folder WHERE id_workspace = {$id_workspace} AND id_module = {$id_module} AND id_object = '{$id_object}' AND id_record = '{$id_record}' ORDER BY name");
+    $db->query("SELECT * FROM ploopi_documents_folder WHERE id_module = {$id_module} AND id_object = '{$id_object}' AND id_record = '{$id_record}' ORDER BY parents, name");
 
     while ($row = $db->fetchrow()) $folders[$row['id_folder']][] = $row;
 
@@ -641,7 +639,7 @@ function ploopi_documents_browser($currentfolder)
             array(
                 'sortable' => true,
                 'orderby_default' => 'name',
-                'sort_default' => 'DESC',
+                'sort_default' => 'ASC',
                 'limit' => $_SESSION['documents']['limit']
             )
         );

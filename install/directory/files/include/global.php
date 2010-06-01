@@ -43,6 +43,7 @@ define ('_DIRECTORY_ACTION_MANAGERS',         2);
 define ('_DIRECTORY_ACTION_SPEEDDIALING',     3);
 
 define ('_DIRECTORY_OBJECT_HEADING',        1);
+define ('_DIRECTORY_OBJECT_CONTACT',        2);
 
 global $arrDirectoryImportFields;
 $arrDirectoryImportFields = array(

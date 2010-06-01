@@ -445,6 +445,35 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                         )
                     );
 
+                    include_once './include/classes/documents.php';
+                    
+                    // Lecture du dossier racine de la mini ged associée à l'utilisateur
+                    $objRootFolder = documentsfolder::getroot(
+                        _SYSTEM_OBJECT_USER, 
+                        $row['id'],
+                        $obj['module_id']
+                    );
+                    
+                    if (!empty($objRootFolder))
+                    {
+                        $objTplDirectory->assign_block_vars('system_trombi_switch_result.user.switch_files', array());
+                        
+                        $arrFiles = $objRootFolder->getlist();
+                        
+                        foreach($arrFiles as $intIdFile => $rowFile)
+                        {
+                            // Découpage du chemin pour modifier le fichier
+                            $arrPath = explode('/', $rowFile['path']);
+                            $strFileName = $arrPath[sizeof($arrPath)-1];
+                            array_pop($arrPath);
+                            
+                            $objTplDirectory->assign_block_vars('system_trombi_switch_result.user.switch_files.file', array(
+                                'FILENAME' => $strFileName,
+                                'PATH' => implode(' &raquo; ', $arrPath),
+                                'URL' => $rowFile['file']->geturl()
+                            ));
+                        }
+                    }
                 }
             }
 

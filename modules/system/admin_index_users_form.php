@@ -512,7 +512,7 @@ if (isset($_REQUEST['confirm']))
     </div>
 </div>
 <div style="clear:both;padding:4px;text-align:right;">
-    <em><?php if ($user->new) echo '<sup>(1)</sup> Champs utilisés pour tester la présence de l\'utilisateur / '; ?>* Champs obligatoires</em>&nbsp;
+    <em><?php if ($user->isnew()) echo '<sup>(1)</sup> Champs utilisés pour tester la présence de l\'utilisateur / '; ?>* Champs obligatoires</em>&nbsp;
     <?php
     if (isset($_REQUEST['confirm']))
     {
@@ -529,6 +529,50 @@ if (isset($_REQUEST['confirm']))
     ?>
 </div>
 </form>
+
+<?php
+if (!$user->isnew())
+{
+    ?>
+    <fieldset class="fieldset" style="padding:0px;margin:4px;">
+        <legend>Documents liés à l'utilisateur</legend>
+        <?php
+        ploopi_documents(
+            _SYSTEM_OBJECT_USER, 
+            $user->fields['id'],
+            array(
+                'DOCUMENT_CREATE' => true,
+                'DOCUMENT_MODIFY' => true,
+                'DOCUMENT_DELETE' => true,
+                'FOLDER_CREATE' => true,
+                'FOLDER_MODIFY' => true,
+                'FOLDER_DELETE' => true, 
+                'SEARCH' => false
+            ), 
+            array(
+                'PHOTOS',
+                'VIDEOS',
+                'DOCUMENTS'
+            ),
+            array(
+                'ROOT_NAME' => trim("{$user->fields['lastname']} {$user->fields['firstname']}"), 
+                'ATTACHEMENT' => false, 
+                'FIELDS' => 
+                    array(
+                        'name',
+                        'timestp_modify',
+                        'label',
+                        'ref'
+                ),
+            )
+        );
+        ?>
+    </fieldset>
+    <?php
+    // ploopi_annotation(_SYSTEM_OBJECT_USER, $user->fields['id'], trim("{$user->fields['lastname']} {$user->fields['firstname']}"));
+}
+?>
+
 
 <script type="text/javascript">
     ploopi_window_onload_stock(

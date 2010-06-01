@@ -40,7 +40,7 @@ unset($_SESSION['directory']['contact_photopath']);
 if (!empty($directory_contact->fields['id'])) ploopi_setsessionvar("deletephoto_{$directory_contact->fields['id']}", 0);
 ?>
 <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_contact_save&directory_contact_id={$directory_contact->fields['id']}".(!empty($intHeadingId) ? "&directory_heading_id={$intHeadingId}" : '')); ?>" method="post">
-<div style="border-bottom:2px solid #c0c0c0;overflow:auto;">
+<div>
     <div style="float:left;width:50%;">
         <div style="padding:2px;">
             <fieldset class="fieldset">
@@ -206,3 +206,38 @@ if (!empty($directory_contact->fields['id'])) ploopi_setsessionvar("deletephoto_
     </div>
 </div>
 </form>
+
+<fieldset class="fieldset" style="padding:0px;margin:4px;">
+    <legend>Documents liés au contact</legend>
+    <?php
+    ploopi_documents(
+        _DIRECTORY_OBJECT_CONTACT, 
+        $directory_contact->fields['id'],
+        array(
+            'DOCUMENT_CREATE' => true,
+            'DOCUMENT_MODIFY' => true,
+            'DOCUMENT_DELETE' => true,
+            'FOLDER_CREATE' => true,
+            'FOLDER_MODIFY' => true,
+            'FOLDER_DELETE' => true, 
+            'SEARCH' => false
+        ), 
+        array(
+            'PHOTOS',
+            'VIDEOS',
+            'DOCUMENTS'
+        ),
+        array(
+            'ROOT_NAME' => trim("{$directory_contact->fields['lastname']} {$directory_contact->fields['firstname']}"), 
+            'ATTACHEMENT' => false, 
+            'FIELDS' => 
+                array(
+                    'name',
+                    'timestp_modify',
+                    'label',
+                    'ref'
+            ),
+        )
+    );
+    ?>
+</fieldset>

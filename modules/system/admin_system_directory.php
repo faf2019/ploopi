@@ -36,7 +36,7 @@
 
 echo $skin->open_simplebloc(_SYSTEM_LABEL_DIRECTORY);
 
-$intMaxResponse = 250;
+$intMaxResponse = 500;
 
 $arrFilter = array();
 
@@ -93,79 +93,306 @@ $_SESSION['system']['directoryform'] = $arrFilter;
 </form>
 <?php
 
-$arrWhere = array();
-$arrWhere[] = '1';
 
-if (!empty($arrFilter['ploopi_lastname'])) $arrWhere[] = "u.lastname LIKE '%".$db->addslashes($arrFilter['ploopi_lastname'])."%'";
-if (!empty($arrFilter['ploopi_firstname'])) $arrWhere[] = "u.firstname LIKE '%".$db->addslashes($arrFilter['ploopi_firstname'])."%'";
-if (!empty($arrFilter['ploopi_login'])) $arrWhere[] = "u.login LIKE '%".$db->addslashes($arrFilter['ploopi_login'])."%'";
-if (!empty($arrFilter['ploopi_email'])) $arrWhere[] = "u.email LIKE '%".$db->addslashes($arrFilter['ploopi_email'])."%'";
-if (!empty($arrFilter['ploopi_group'])) $arrWhere[] = "g.label LIKE '%".$db->addslashes($arrFilter['ploopi_group'])."%'";
+include_once './include/classes/query.php';
 
+// On charge un maximum de données dans des tableaux pour simplifier les recherches par la suite
+// et pour résoudre des cas complexes (retrouver un utilisateur dans un espace attaché à un sous-groupe d'utilisateur dans un sous-espace de travail)
 
-// Filtrage des utilisateur par espace (uniquement si recherche par espace de travail)
-if ($arrFilter['ploopi_workspace'] != '')
+// ETAPE 1 : CHARGEMENT
+
+// Chargement de tous les sous-espaces de travail de l'espace courant
+$arrWorkspaces = array();
+// Espaces selon le filtre de recherche
+$arrFilteredWorkspaces = array();
+
+$objQuery = new ploopi_query_select();
+$objQuery->add_select('w.*');
+$objQuery->add_from('ploopi_workspace w');
+// ICI, on n'applique pas le filtre sur le nom pour pouvoir lire l'arbre complet (au cas ou l'espace ou le groupe que l'on cherche soit dans un sous-espace)
+
+if ($_SESSION['system']['level'] == 'work') // Visualisation depuis un espace de travail, filtrage sur les sous-espaces
 {
-    $arrWorkspaceUserFilter = array();
-    
-    $rs = $db->query("
-        SELECT  distinct(wu.id_user)
-                
-        FROM    ploopi_workspace w,
-                ploopi_workspace_user wu
-        
-        WHERE   w.label LIKE '%".$db->addslashes($arrFilter['ploopi_workspace'])."%'
-        AND     w.id = wu.id_workspace
-    ");
-    
-    $arrWorkspaceUserFilter = $db->getarray($rs, true);
-    
-    $rs = $db->query("
-        SELECT  distinct(gu.id_user)
-                
-        FROM    ploopi_workspace w,
-                ploopi_workspace_group wg,
-                ploopi_group_user gu
-        
-        WHERE   w.label LIKE '%".$db->addslashes($arrFilter['ploopi_workspace'])."%'
-        AND     w.id = wg.id_workspace
-        AND     wg.id_group = gu.id_group
-    ");
-    
-    $arrWorkspaceUserFilter = array_merge($arrWorkspaceUserFilter, $db->getarray($rs, true));
-    $arrWorkspaceUserFilter = array_unique($arrWorkspaceUserFilter);
-    
-    $arrWhere[] = empty($arrWorkspaceUserFilter) ? 'u.id = -1' : "u.id IN (".implode(',', $arrWorkspaceUserFilter).")";
+    $objWorkspace = new workspace();
+    if ($objWorkspace->open($workspaceid))
+    {
+        $objQuery->add_where('(w.id = %d OR w.parents = %s OR w.parents LIKE %s)', array(
+            $workspaceid,
+            "{$objWorkspace->fields['parents']};{$objWorkspace->fields['id']}",
+            "{$objWorkspace->fields['parents']};{$objWorkspace->fields['id']};%")
+        );
+    }
 }
 
+$objRs = $objQuery->execute();
+while ($row = $objRs->fetchrow())
+{
+    $arrWorkspaces[$row['id']] = array(
+        'desc' => $row, // Description de l'espace (nom, ...)
+        'children' => array(), // Liste des espaces fils directs
+        'family' => array(), // Liste des espaces fils indirects
+        'groups_children' => array(), // Liste des groupes fils directs
+        'groups_family' => array(), // Liste des groupes fils indirects
+        'groups_included' => array() // Liste des groupes fils inclus (y compris en provenance des sous-espaces)
+    );
+}
 
-$db->query("
-    SELECT      COUNT(DISTINCT(u.id)) as c
+// Chargement des ID de tous les sous-espaces de travail de l'espace courant en fonction du filtre de recherche par espace
+if ($arrFilter['ploopi_workspace'] != '')
+{
+    $objQuery = new ploopi_query_select();
+    $objQuery->add_select('w.*');
+    $objQuery->add_from('ploopi_workspace w');
+    $objQuery->add_where('label LIKE %s', "%{$arrFilter['ploopi_workspace']}%");
+
+    $objRs = $objQuery->execute();
+    while ($row = $objRs->fetchrow()) $arrFilteredWorkspaces[$row['id']] = $row['id'];
+
+    if (empty($arrFilteredWorkspaces)) $arrFilteredWorkspaces[-1] = -1;
+}
+else foreach($arrWorkspaces as $intIdWorkspace => $row) $arrFilteredWorkspaces[$intIdWorkspace] = $intIdWorkspace;
+
+// Chargement de tous les groupes
+$arrGroups = array();
+// Groupes selon le filtre de recherche
+$arrFilteredGroups = array();
+
+$objQuery = new ploopi_query_select();
+$objQuery->add_select('*');
+$objQuery->add_from('ploopi_group');
+
+$objRs = $objQuery->execute();
+while ($row = $objRs->fetchrow()) $arrGroups[$row['id']] = array('desc' => $row, 'children' => array(), 'family' => array());
+
+// Chargement de tous les groupes en fonction du filtre de recherche
+if ($arrFilter['ploopi_group'] != '')
+{
+    // Chargement des groupes autorisés
+    $objQuery = new ploopi_query_select();
+    $objQuery->add_select('id');
+    $objQuery->add_from('ploopi_group');
+    $objQuery->add_where('label LIKE %s', "%{$arrFilter['ploopi_group']}%");
+
+    $objRs = $objQuery->execute();
+    while ($row = $objRs->fetchrow()) $arrFilteredGroups[$row['id']] = $row['id'];
+}
+else foreach($arrGroups as $intIdGroup => $row) $arrFilteredGroups[$intIdGroup] = $intIdGroup;
+
+
+// ETAPE 2 : TRAITEMENTS
+
+// On construit pour chaque espace, la liste des sous-espaces (tous niveaux)
+foreach($arrWorkspaces as $intId => $row)
+{
+    // Lien fils
+    if (isset($arrWorkspaces[$row['desc']['id_workspace']])) $arrWorkspaces[$row['desc']['id_workspace']]['children'][$intId] = $intId;
+
+    // Lien famille (fils, petits-fils)
+    $arrParents = explode(';', $row['desc']['parents']);
+    foreach($arrParents as $intIdParent)
+    {
+        if ($intIdParent > 1 && isset($arrWorkspaces[$intIdParent]))
+        {
+            $arrWorkspaces[$intIdParent]['family'][$intId] = $intId;
+        }
+    }
+}
+
+// On construit pour chaque groupe, la liste des sous-groupes (tous niveaux)
+foreach($arrGroups as $intId => $row)
+{
+    // Lien fils
+    if (isset($arrGroups[$row['desc']['id_group']])) $arrGroups[$row['desc']['id_group']]['children'][$intId] = $intId;
+
+    // Lien famille (fils, petits-fils)
+    $arrParents = explode(';', $row['desc']['parents']);
+    foreach($arrParents as $intIdParent)
+    {
+        if ($intIdParent > 1 && isset($arrGroups[$intIdParent]))
+        {
+            $arrGroups[$intIdParent]['family'][$intId] = $intId;
+        }
+    }
+}
+
+// On construit pour chaque espace, la liste des sous-groupes directs et indirect
+$objQuery = new ploopi_query_select();
+$objQuery->add_select('wg.*');
+$objQuery->add_from('ploopi_workspace_group wg');
+if (!empty($arrFilteredWorkspaces) && $arrFilter['ploopi_workspace'] != '') $objQuery->add_where('wg.id_workspace IN (%e)', array($arrFilteredWorkspaces));
+
+if ($_SESSION['system']['level'] == 'work') // Visualisation depuis un espace de travail, filtrage sur les sous-espaces
+{
+    $objWorkspace = new workspace();
+    if ($objWorkspace->open($workspaceid))
+    {
+        $objQuery->add_from('ploopi_workspace w');
+        $objQuery->add_where('wg.id_workspace = w.id');
+        $objQuery->add_where('(w.id = %d OR w.parents = %s OR w.parents LIKE %s)', array(
+            $workspaceid,
+            "{$objWorkspace->fields['parents']};{$objWorkspace->fields['id']}",
+            "{$objWorkspace->fields['parents']};{$objWorkspace->fields['id']};%")
+        );
+    }
+}
+
+$objRs = $objQuery->execute();
+while ($row = $objRs->fetchrow())
+{
+    //if ($row['id_workspace'] && isset($arrFilteredWorkspaces[$row['id_workspace']]) && isset($arrGroups[$row['id_group']]))
+    if ($row['id_workspace'] && isset($arrGroups[$row['id_group']]))
+    {
+        $arrWorkspaces[$row['id_workspace']]['groups_children'][$row['id_group']] = $row['id_group'];
+
+        $arrWorkspaces[$row['id_workspace']]['groups_family'][$row['id_group']] = $row['id_group'];
+
+        foreach($arrGroups[$row['id_group']]['family'] as $intId) $arrWorkspaces[$row['id_workspace']]['groups_family'][$intId] = $intId;
+
+    }
+}
+
+// On construit pour chaque espace, la liste des sous-groupes inclus (partie 2, héritage des sous-espaces)
+// PAS OPTIMISE ! IL FAUDRAIT PARTIR DES BRANCHES ET REMONTER, ça reste acceptable.
+foreach($arrWorkspaces as $intId => $row)
+{
+    $arrWorkspaces[$intId]['groups_included'] = $arrWorkspaces[$intId]['groups_family'];
+
+    $arrParents = explode(';', $row['desc']['parents']);
+    foreach($arrParents as $intIdParent)
+    {
+        if ($intIdParent > 1 && isset($arrWorkspaces[$intIdParent]))
+        {
+            foreach($row['groups_family'] as $intIdGroup)
+            {
+                $arrWorkspaces[$intIdParent]['groups_included'][$intIdGroup] = $intIdGroup;
+            }
+        }
+    }
+}
+
+// On cherche :
+// * Les utilisateurs inclus dans l'espace sélectionné, c'est à dire :
+//   Tous les utilisateurs de l'espace courant et des sous-espaces, en incluant les rattachements de groupes et sous-groupes (et les utilisateurs rattachés en direct)
+// * Il faut donc utiliser la propriété "groups_included" de l'espace de travail qui contient tous les sous-groupes (directs, indirects, sous-espaces)
+// * Il faut également vérifier l'appartenance aux groupes/espaces filtrés (par le nom)
+
+
+// Sélection des utilisateurs
+$objQuery = new ploopi_query_select();
+$objQuery->add_from('ploopi_user u');
+
+// Filtrages basiques (utilisateur)
+if ($arrFilter['ploopi_lastname'] != '') $objQuery->add_where('u.lastname LIKE %s', "%{$arrFilter['ploopi_lastname']}%");
+if ($arrFilter['ploopi_firstname'] != '') $objQuery->add_where('u.firstname LIKE %s', "%{$arrFilter['ploopi_firstname']}%");
+if ($arrFilter['ploopi_login'] != '') $objQuery->add_where('u.login LIKE %s', "%{$arrFilter['ploopi_login']}%");
+if ($arrFilter['ploopi_email'] != '') $objQuery->add_where('u.email LIKE %s', "%{$arrFilter['ploopi_email']}%");
+
+// Filtrage sur les espaces/groupes "visibles"
+$objQuery->add_leftjoin('ploopi_workspace_user wu ON wu.id_user = u.id');
+$objQuery->add_leftjoin('ploopi_group_user gu ON gu.id_user = u.id');
+
+// Détermination des espaces/groupes à utiliser dans le filtre
+$arrQueryGroups = array();
+$arrQueryWorkspaces = array();
+
+if ($_SESSION['system']['level'] == 'work')
+{
+    if (!empty($arrWorkspaces[$workspaceid]['family'])) $arrQueryWorkspaces = $arrWorkspaces[$workspaceid]['family'];
     
-    FROM        ploopi_user u
+    if (!empty($arrWorkspaces[$workspaceid])) $arrQueryWorkspaces[$workspaceid] = $workspaceid;
 
-    LEFT JOIN   ploopi_group_user gu
-    ON          gu.id_user = u.id
-
-    LEFT JOIN   ploopi_group g
-    ON          g.id = gu.id_group
+    if (!empty($arrWorkspaces[$workspaceid]['groups_included'])) $arrQueryGroups = $arrWorkspaces[$workspaceid]['groups_included'];
     
-    WHERE       ".implode(' AND ', $arrWhere)."
-");
+    // Intersection entre les groupes possibles et les groupes filtrés
+    if (!empty($arrQueryGroups) && !empty($arrFilteredGroups)) $arrQueryGroups = array_intersect($arrQueryGroups, $arrFilteredGroups);
+    
+    // Intersection entre les espaces possibles et les espaces filtrés
+    if (!empty($arrQueryWorkspaces) && !empty($arrFilteredWorkspaces)) $arrQueryWorkspaces = array_intersect($arrQueryWorkspaces, $arrFilteredWorkspaces);
+}
+else
+{
+    //$arrQueryGroups = $arrFilteredGroups;
+    $arrQueryWorkspaces = $arrFilteredWorkspaces;
+    
+    if ($arrFilter['ploopi_workspace'] != '')
+    {
+        $arrQueryGroups = array();
+        foreach($arrFilteredWorkspaces as $intIdWorkspace)
+        {
+            $arrQueryGroups = array_merge($arrQueryGroups, $arrWorkspaces[$intIdWorkspace]['groups_family']);
+        }
+    }
+    else $arrQueryGroups = $arrFilteredGroups;
+}
 
-$row = $db->fetchrow();
+//ploopi_print_r($arrWorkspaces[current($arrFilteredWorkspaces)]);
+
+if (empty($arrQueryWorkspaces)) $arrQueryWorkspaces[] = -1;
+if (empty($arrQueryGroups)) $arrQueryGroups[] = -1;
+
+// Pas de filtre sur espace et groupe
+if ($arrFilter['ploopi_workspace'] == '' && $arrFilter['ploopi_group'] == '')
+{
+    if ($_SESSION['system']['level'] == 'work')
+    {
+        $objQuery->add_where('(wu.id_workspace IN (%e) OR gu.id_group IN (%e))', array($arrQueryWorkspaces, $arrQueryGroups));
+    }
+}
+else 
+{
+    if ($arrFilter['ploopi_workspace'] != '' && $arrFilter['ploopi_group'] != '')
+    {
+        $objQuery->add_where('(wu.id_workspace IN (%e) AND gu.id_group IN (%e))', array($arrQueryWorkspaces, $arrQueryGroups));
+    }
+    else // Au moins un filtre sur espace ou groupe (les espaces sont filtrés en amont)
+    {
+        if ($arrFilter['ploopi_workspace'] != '')
+        {
+            $objQuery->add_where('(wu.id_workspace IN (%e) OR gu.id_group IN (%e))', array($arrQueryWorkspaces, $arrQueryGroups));
+        }
+        else // ($arrFilter['ploopi_group'] != '')
+        {
+            $objQuery->add_where('gu.id_group IN (%e)', array($arrQueryGroups));
+        }
+    }
+}
+
+$objQueryCount = clone $objQuery;
+
+// On distingue la requête "Count" de la requête "Data"
+$objQuery->add_select('DISTINCT u.id, u.login, u.firstname, u.lastname, u.email');
+$objQueryCount->add_select('COUNT(DISTINCT u.id) as c');
+
+// Lecture du nombre de réponses
+$intNbRep = current($objQueryCount->execute()->fetchrow());
+
 ?>
 <div style="padding:4px;background-color:#e0e0e0;border-bottom:1px solid #ccc;">
-    <span>Vous pouvez retrouver ici l'ensemble des utilisateurs du sytème avec leur profil complet.<br />Vous ne pouvez cependant pas les gérer. Pour cela vous devez accéder à l'<a href="<?php echo ploopi_urlencode('admin.php?system_level=work'); ?>">interface d'administration des espaces de travail</a>.<br /><strong><?php echo $row['c']; ?> utilisateur(s) trouvé(s).</strong></span>
-    <?php
-    if ($row['c'] > $intMaxResponse)
+    <?
+    if ($_SESSION['system']['level'] == 'system')
     {
-        ?><strong class="error">Il y a trop de réponses (<?php echo $intMaxResponse; ?> max), vous devriez préciser votre recherche</strong><?php
+        ?>
+        <span>Vous pouvez retrouver ici l'ensemble des utilisateurs du sytème avec leur profil complet.<br />Vous ne pouvez cependant pas les gérer. Pour cela vous devez accéder à l'<a href="<?php echo ploopi_urlencode('admin.php?system_level=work'); ?>">interface d'administration des espaces de travail</a>.<br /><strong><?php echo $intNbRep; ?> utilisateur(s) trouvé(s).</strong></span>
+        <?
+    }
+    else
+    {
+        ?>
+        <span>Vous pouvez retrouver ici l'ensemble des utilisateurs de l'espace de travail et des sous-espaces.<br /><strong><?php echo $intNbRep; ?> utilisateur(s) trouvé(s).</strong></span>
+        <?
+    }
+    ?>
+    <?php
+
+    if ($intNbRep > $intMaxResponse)
+    {
+        ?><strong class="error">Il y a <?php echo $intNbRep ?> réponses (<?php echo $intMaxResponse; ?> max), vous devriez préciser votre recherche</strong><?php
     }
     ?>
 </div>
+
 <?php
-if ($row['c'] > 0 && $row['c'] <= $intMaxResponse)
+if ($intNbRep > 0 && $intNbRep <= $intMaxResponse)
 {
     // Définition des colonnes du tableau (interface)
     $arrResult =
@@ -184,7 +411,7 @@ if ($row['c'] > 0 && $row['c'] <= $intMaxResponse)
     $arrResult['columns']['left']['login'] =
         array(
             'label' => 'Login',
-            'width' => '100',
+            'width' => '130',
             'options' => array('sort' => true)
         );
 
@@ -201,197 +428,250 @@ if ($row['c'] > 0 && $row['c'] <= $intMaxResponse)
             'options' => array('sort' => true)
         );
 
-    $arrResult['columns']['actions_right']['actions'] =
-        array(
-            'label' => '&nbsp;',
-            'width' => 24
-        );
+    if ($_SESSION['system']['level'] == 'system')
+    {
+        $arrResult['columns']['actions_right']['actions'] =
+            array(
+                'label' => '&nbsp;',
+                'width' => 24
+            );
+    }
 
     // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
-    $ptrRs = $db->query("
-        SELECT      u.id,
-                    u.lastname,
-                    u.firstname,
-                    u.login,
-                    g.id as groupid,
-                    g.label
+    $arrUser = $objQuery->execute()->getarray(true);
+    
+    
+    // Requête permettant de connaître les groupes attachés aux utilisateurs
+    $objQuery = new ploopi_query_select();
+    $objQuery->add_select('gu.*');
+    $objQuery->add_from('ploopi_group_user gu');
+    $objQuery->add_where('gu.id_user IN (%e)', array(array_keys($arrUser)));
+    $objRs = $objQuery->execute();
 
-        FROM        ploopi_user u
-
-        LEFT JOIN   ploopi_group_user gu
-        ON          gu.id_user = u.id
-
-        LEFT JOIN   ploopi_group g
-        ON          g.id = gu.id_group
-
-        WHERE       ".implode(' AND ', $arrWhere)."
-    ");
-
-    // Tableaux qui vont contenir les utilisateurs et les groupes
-    $arrUser = array();
-    $arrGroup = array();
-
-    while ($row = $db->fetchrow($ptrRs))
+    $arrGroupsId = array(); // Contient les Id des groupes concernés par les utilisateurs affichés
+    while ($row = $objRs->fetchrow())
     {
-        if (!isset($arrUser[$row['id']]))
-        {
-            $arrUser[$row['id']] = $row;
-            $arrUser[$row['id']]['groups'] = array();
-        }
+        $arrUser[$row['id_user']]['groups'][$row['id_group']] = $arrGroups[$row['id_group']]['desc']['label'];
+        $arrGroupsId[$row['id_group']] = $row['id_group'];
+    }
 
-        // groupe lié
-        if (!empty($row['groupid']))
+    // Requête permettant de connaître les "adminlevel" des groupes rattachés aux espaces de la recherche
+    $objQuery = new ploopi_query_select();
+    $objQuery->add_select('wg.*');
+    $objQuery->add_from('ploopi_workspace_group wg');
+    $objQuery->add_where('wg.id_workspace IN (%e)', array(array_keys($arrWorkspaces)));
+    $objRs = $objQuery->execute();
+
+    $arrAdminLevel = array();
+
+    while ($row = $objRs->fetchrow()) $arrAdminLevel[$row['id_workspace']][$row['id_group']] = $row['adminlevel'];
+
+    // Récupération des espaces des utilisateurs trouvés (via les rattachements de groupes)
+    foreach($arrUser as $intIdUser => $rowUser)
+    {
+        if (!empty($rowUser['groups']))
         {
-            $arrUser[$row['id']]['groups'][$row['groupid']] = $row['label'];
-            $arrGroup[$row['groupid']] = $row['label'];
+            foreach($arrWorkspaces as $intIdWorkspace => $rowWorkspace)
+            {
+                if (empty($arrUser[$intIdUser]['workspaces'][$intIdWorkspace]))
+                {
+                    // Permet de déterminer sur l'utilisateur est attaché à cet espace
+                    $arrInt = array_intersect(array_keys($rowUser['groups']), $rowWorkspace['groups_family']);
+
+                    $intAdminLevel = _PLOOPI_ID_LEVEL_VISITOR;
+
+                    if (!empty($arrInt)) // L'utilisateur est attaché à cet espace
+                    {
+                        // On cherche son adminlevel
+                        foreach($arrInt as $intIdGroupInt)
+                        {
+                            if (isset($arrAdminLevel[$intIdWorkspace][$intIdGroupInt]))
+                            {
+                                $intAdminLevel = max($arrAdminLevel[$intIdWorkspace][$intIdGroupInt], $intAdminLevel);
+                            }
+                        }
+                        
+                        if (!$intAdminLevel)
+                        {
+                            foreach($arrInt as $intIdGroup)
+                            {
+                                $arrGroupsParent = explode(';', $arrGroups[$intIdGroup]['desc']['parents']);
+
+                                foreach($arrGroupsParent as $intIdGroupInt)
+                                {
+                                    if (isset($arrAdminLevel[$intIdWorkspace][$intIdGroupInt]))
+                                    {
+                                        $intAdminLevel = max($arrAdminLevel[$intIdWorkspace][$intIdGroupInt], $intAdminLevel);
+                                    }
+                                }
+                            }
+
+                        }
+
+                        $arrUser[$intIdUser]['workspaces'][$intIdWorkspace] = array(
+                            'label' => $rowWorkspace['desc']['label'],
+                            'adminlevel' => $intAdminLevel
+                        );
+                    }
+                }
+            }
         }
     }
 
-    // liste des groupes trouvés
-    $strGroupList = implode(',', array_keys($arrGroup));
+    // Récupération des espaces des utilisateurs trouvés (via les rattachements directs)
+    $objQuery = new ploopi_query_select();
+    $objQuery->add_select('wu.*');
+    $objQuery->add_from('ploopi_workspace_user wu');
+    $objQuery->add_where('wu.id_user IN (%e)', array(array_keys($arrUser)));
+    $objQuery->add_where('wu.id_workspace IN (%e)', array(array_keys($arrWorkspaces)));
+    $objRs = $objQuery->execute();
 
-    // liste des utilisateurs trouvés
-    $strUserList = implode(',', array_keys($arrUser));
+    while ($row = $objRs->fetchrow())
+    {
+        if (empty($arrUser[$row['id_user']]['workspaces'][$row['id_workspace']]))
+            $arrUser[$row['id_user']]['workspaces'][$row['id_workspace']] = array(
+                'label' => $arrWorkspaces[$row['id_workspace']]['desc']['label'],
+                'adminlevel' => $row['adminlevel']
+            );
+        else $arrUser[$row['id_user']]['workspaces'][$row['id_workspace']]['adminlevel'] = max($arrUser[$row['id_user']]['workspaces'][$row['id_workspace']]['adminlevel'], $row['adminlevel']);
+    }
+
 
     // tableau contenant les rôles pour les utilisateurs/groupes trouvés
     $arrRoles = array('groups' => array(), 'users' => array());
 
-    if (!empty($strGroupList))
+    if (!empty($arrGroupsId))
     {
         // recherche des rôles "groupe"
-        $db->query("
-            SELECT      wgr.id_group,
-                        wgr.id_workspace,
-                        r.id,
-                        r.id_module,
-                        r.label as role_label,
-                        m.label as module_label
-
-            FROM        ploopi_role r,
-                        ploopi_workspace_group_role wgr,
-                        ploopi_module m
-
-            WHERE       wgr.id_role = r.id
-            AND         r.id_module = m.id
-            AND         wgr.id_group IN ({$strGroupList})
-        ");
-
-        while ($row = $db->fetchrow()) $arrRoles['groups'][$row['id_workspace']][$row['id_group']][$row['id']] = $row;
+        $objQuery = new ploopi_query_select();
+        $objQuery->add_select('wgr.id_group, wgr.id_workspace');
+        $objQuery->add_select('r.id, r.id_module, r.label as role_label');
+        $objQuery->add_select('m.label as module_label');
+        $objQuery->add_from('ploopi_role r');
+        $objQuery->add_from('ploopi_workspace_group_role wgr');
+        $objQuery->add_from('ploopi_module m');
+        $objQuery->add_where('wgr.id_role = r.id');
+        $objQuery->add_where('r.id_module = m.id');
+        $objQuery->add_where('wgr.id_group IN (%e)', array($arrGroupsId));
+        $objRs = $objQuery->execute();
+        
+        while ($row = $objRs->fetchrow()) $arrRoles['groups'][$row['id_workspace']][$row['id_group']][$row['id']] = $row;
     }
 
     // recherche des rôles "utilisateur"
-    $db->query("
-        SELECT      wur.id_user,
-                    wur.id_workspace,
-                    r.id,
-                    r.id_module,
-                    r.label as role_label,
-                    m.label as module_label
+    $objQuery = new ploopi_query_select();
+    $objQuery->add_select('wur.id_user, wur.id_workspace');
+    $objQuery->add_select('r.id, r.id_module, r.label as role_label');
+    $objQuery->add_select('m.label as module_label');
+    $objQuery->add_from('ploopi_role r');
+    $objQuery->add_from('ploopi_workspace_user_role wur');
+    $objQuery->add_from('ploopi_module m');
+    $objQuery->add_where('wur.id_role = r.id');
+    $objQuery->add_where('r.id_module = m.id');
+    $objQuery->add_where(' wur.id_user IN (%e)', array(array_keys($arrUser)));
+    $objRs = $objQuery->execute();
+    
+    while ($row = $objRs->fetchrow()) $arrRoles['users'][$row['id_workspace']][$row['id_user']][$row['id']] = $row;
 
-        FROM        ploopi_role r,
-                    ploopi_workspace_user_role wur,
-                    ploopi_module m
-
-        WHERE       wur.id_role = r.id
-        AND         r.id_module = m.id
-        AND         wur.id_user IN ({$strUserList})
-    ");
-
-    while ($row = $db->fetchrow()) $arrRoles['users'][$row['id_workspace']][$row['id_user']][$row['id']] = $row;
-
-    foreach ($arrUser as $row)
+    
+    foreach ($arrUser as $intUserId => $row)
     {
-        $objUser = new user();
-        $objUser->fields['id'] = $row['id'];
-
-        // récupération et tri des espaces de travail de l'utilisateur
-        $arrWorkspaces = $objUser->getworkspaces();
-        uasort($arrWorkspaces, create_function('$a,$b', 'return $b[\'adminlevel\'] > $a[\'adminlevel\'];'));
-
         // tri des groupes par nom
-        asort($row['groups']);
-
-        // Indices de tri pour le tableau
-        $strSortLabelGroups = implode(',', $row['groups']);
-        $strSortLabelWorkspaces = '';
-
-        // conversion du tableau d'espaces en un tableau de liens vers les espaces
-        foreach($arrWorkspaces as &$arrWsp)
+        if (!empty($row['groups']))
         {
-            // tableau qui va contenir les rôles dont dispose l'utilisateur dans l'espace courant
-            $arrUserWspRoles = array();
-            if (isset($arrRoles['groups'][$arrWsp['id']]))
+            asort($row['groups']);
+            $strSortLabelGroups = implode(',', $row['groups']);
+        }
+        else $strSortLabelGroups = '';
+
+        // tri des espaces par nom
+        if (!empty($row['workspaces'])) asort($row['workspaces']);
+        
+        $arrSortLabelWorkspaces = array();
+        
+        // conversion du tableau d'espaces en un tableau de liens vers les espaces
+        if (!empty($row['workspaces']))
+        {
+            foreach($row['workspaces'] as $intIdWorkspace => $rowWorkspace)
             {
-                foreach($arrRoles['groups'][$arrWsp['id']] as $intIdGrp => $arrDetail)
+                $arrSortLabelWorkspaces[] = $rowWorkspace['label'];
+                
+                // tableau qui va contenir les rôles dont dispose l'utilisateur dans l'espace courant
+                $arrUserWspRoles = array();
+                if (isset($arrRoles['groups'][$intIdWorkspace]))
                 {
-                    // L'utilisateur appartient au groupe (donc il a les rôles)
-                    if (in_array($intIdGrp, array_keys($row['groups'])))
+                    foreach($arrRoles['groups'][$intIdWorkspace] as $intIdGrp => $arrDetail)
                     {
-                        foreach($arrDetail as $intIdRole => $arrR)
-                            $arrUserWspRoles[$intIdRole] =
-                                sprintf(
-                                    "<a title=\"Accéder à ce rôle\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"Accéder à ce module\" href=\"%s\">%s</a><span>)</span>",
-                                    ploopi_urlencode("admin.php?system_level=work&workspaceid={$arrWsp['id']}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
-                                    htmlentities($arrR['role_label']),
-                                    ploopi_urlencode("admin.php?system_level=work&workspaceid={$arrWsp['id']}&wspToolbarItem=tabModules&op=modify&moduleid={$arrR['id_module']}"),
-                                    htmlentities($arrR['module_label'])
-                                );
+                        // L'utilisateur appartient au groupe (donc il a les rôles)
+                        if (in_array($intIdGrp, array_keys($row['groups'])))
+                        {
+                            foreach($arrDetail as $intIdRole => $arrR)
+                                $arrUserWspRoles[$intIdRole] = $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN ? 
+                                    sprintf(
+                                        "<a title=\"Accéder à ce rôle\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"Accéder à ce module\" href=\"%s\">%s</a><span>)</span>",
+                                        ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
+                                        htmlentities($arrR['role_label']),
+                                        ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabModules&op=modify&moduleid={$arrR['id_module']}"),
+                                        htmlentities($arrR['module_label'])
+                                    ) : sprintf("%s (%s)", htmlentities($arrR['role_label']), htmlentities($arrR['module_label']));
+                        }
                     }
                 }
+
+                if (isset($arrRoles['users'][$intIdWorkspace][$intUserId]))
+                {
+                    foreach($arrRoles['users'][$intIdWorkspace][$intUserId] as $intIdRole => $arrR)
+                        $arrUserWspRoles[$intIdRole] = $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN ? 
+                            sprintf(
+                                    "<a title=\"Accéder à ce rôle\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"Accéder à ce module\" href=\"%s\">%s</a><span>)</span>",
+                                    ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
+                                    htmlentities($arrR['role_label']),
+                                    ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabModules&op=modify&moduleid={$arrR['id_module']}"),
+                                    htmlentities($arrR['module_label'])
+                                ) : sprintf("%s (%s)", htmlentities($arrR['role_label']), htmlentities($arrR['module_label']));
+                }
+
+                // Chaine contenant, pour un utilisateur et un espace, la liste des rôles
+                $strUserWspRoles = empty($arrUserWspRoles) ? '' : '<span>&nbsp;:&nbsp;</span>'.implode('<span>,&nbsp;</span>', $arrUserWspRoles);
+
+                switch($rowWorkspace['adminlevel'])
+                {
+                    case _PLOOPI_ID_LEVEL_USER:
+                        $icon = 'level_user';
+                    break;
+                    case _PLOOPI_ID_LEVEL_GROUPMANAGER:
+                        $icon = 'level_groupmanager';
+                    break;
+                    case _PLOOPI_ID_LEVEL_GROUPADMIN:
+                        $icon = 'level_groupadmin';
+                    break;
+                    case _PLOOPI_ID_LEVEL_SYSTEMADMIN:
+                        $icon = 'level_systemadmin';
+                    break;
+                }
+
+                $row['workspaces'][$intIdWorkspace] =
+                    sprintf(
+                        "<img src=\"%s\" /><a title=\"Accéder à cet espace\" href=\"%s\">%s</a>%s",
+                        "{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png",
+                        ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}"),
+                        htmlentities($rowWorkspace['label']),
+                        $strUserWspRoles
+                    );
             }
-
-            if (isset($arrRoles['users'][$arrWsp['id']][$row['id']]))
-            {
-                foreach($arrRoles['users'][$arrWsp['id']][$row['id']] as $intIdRole => $arrR)
-                    $arrUserWspRoles[$intIdRole] =
-                        sprintf(
-                                "<a title=\"Accéder à ce rôle\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"Accéder à ce module\" href=\"%s\">%s</a><span>)</span>",
-                                ploopi_urlencode("admin.php?system_level=work&workspaceid={$arrWsp['id']}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
-                                htmlentities($arrR['role_label']),
-                                ploopi_urlencode("admin.php?system_level=work&workspaceid={$arrWsp['id']}&wspToolbarItem=tabModules&op=modify&moduleid={$arrR['id_module']}"),
-                                htmlentities($arrR['module_label'])
-                            );
-            }
-
-            // Chaine contenant, pour un utilisateur et un espace, la liste des rôles
-            $strUserWspRoles = empty($arrUserWspRoles) ? '' : '<span>&nbsp;:&nbsp;</span>'.implode('<span>,&nbsp;</span>', $arrUserWspRoles);
-
-            $strSortLabelWorkspaces .= $arrWsp.',';
-
-            switch($arrWsp['adminlevel'])
-            {
-                case _PLOOPI_ID_LEVEL_USER:
-                    $icon = 'level_user';
-                break;
-                case _PLOOPI_ID_LEVEL_GROUPMANAGER:
-                    $icon = 'level_groupmanager';
-                break;
-                case _PLOOPI_ID_LEVEL_GROUPADMIN:
-                    $icon = 'level_groupadmin';
-                break;
-                case _PLOOPI_ID_LEVEL_SYSTEMADMIN:
-                    $icon = 'level_systemadmin';
-                break;
-            }
-
-            $arrWsp =
-                sprintf(
-                    "<img src=\"%s\" /><a title=\"Accéder à cet espace\" href=\"%s\">%s</a>%s",
-                    "{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png",
-                    ploopi_urlencode("admin.php?system_level=work&workspaceid={$arrWsp['id']}"),
-                    htmlentities($arrWsp['label']),
-                    $strUserWspRoles
-                );
         }
 
         // conversion du tableau de libellé de groupes en un tableau de liens vers les groupes
-        foreach($row['groups'] as $intId => &$strLabel)
-            $strLabel =
-                sprintf(
-                    "<a title=\"Accéder à ce groupe\" href=\"%s\">%s</a>",
-                    ploopi_urlencode("admin.php?system_level=work&groupid={$intId}"),
-                    htmlentities($strLabel)
-                );
+        if (!empty($row['groups']))
+        {
+            foreach($row['groups'] as $intId => $strLabel)
+                $row['groups'][$intId] =
+                    sprintf(
+                        "<a title=\"Accéder à ce groupe\" href=\"%s\">%s</a>",
+                        ploopi_urlencode("admin.php?system_level=work&groupid={$intId}"),
+                        htmlentities($strLabel)
+                    );
+        }
 
         $strUserLabel = htmlentities(sprintf("%s %s", $row['lastname'], $row['firstname']));
         $strUserLogin = htmlentities($row['login']);
@@ -403,14 +683,14 @@ if ($row['c'] > 0 && $row['c'] <= $intMaxResponse)
             $strUserLabel =
                 sprintf(
                     "<a title=\"Accéder à cet utilisateur\" href=\"%s\">%s</a>",
-                    ploopi_urlencode("admin.php?system_level=work&groupid=".key($row['groups'])."&wspToolbarItem=tabUsers&op=modify_user&user_id={$row['id']}"),
+                    ploopi_urlencode("admin.php?system_level=work&groupid=".key($row['groups'])."&wspToolbarItem=tabUsers&op=modify_user&user_id={$intUserId}"),
                     $strUserLabel
                 );
 
             $strUserLogin =
                 sprintf(
                     "<a title=\"Accéder à cet utilisateur\" href=\"%s\">%s</a>",
-                    ploopi_urlencode("admin.php?system_level=work&groupid=".key($row['groups'])."&wspToolbarItem=tabUsers&op=modify_user&user_id={$row['id']}"),
+                    ploopi_urlencode("admin.php?system_level=work&groupid=".key($row['groups'])."&wspToolbarItem=tabUsers&op=modify_user&user_id={$intUserId}"),
                     $strUserLogin
                 );
 
@@ -423,14 +703,14 @@ if ($row['c'] > 0 && $row['c'] <= $intMaxResponse)
                         'nom' => array('label' => $strUserLabel, 'sort_label' => sprintf("%s %s", $row['lastname'], $row['firstname'])),
                         'login' => array('label' => $strUserLogin, 'sort_label' => $row['login']),
                         'groups' => array(
-                            'label' => (empty($row['label'])) ? '<em>Pas de groupe</em>'  : implode('<br />', $row['groups']),
+                            'label' => (empty($row['groups'])) ? '<em>Pas de groupe dans cet espace</em>'  : implode('<br />', $row['groups']),
                             'sort_label' => $strSortLabelGroups
                         ),
                         'workspaces' => array(
-                            'label' => (empty($arrWorkspaces)) ? '<em>Pas d\'espace</em>' : implode('<br /> ', $arrWorkspaces),
-                            'sort_label' => $strSortLabelWorkspaces
+                            'label' => (empty($row['workspaces'])) ? '<em>Pas d\'espace</em>' : implode('<br /> ', $row['workspaces']),
+                            'sort_label' => implode(',', $arrSortLabelWorkspaces)
                         ),
-                        'actions' => array('label' => '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?ploopi_op=system_delete_user&system_user_id={$row['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>')
+                        'actions' => array('label' => '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?ploopi_op=system_delete_user&system_user_id={$intUserId}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>')
                     )
             );
     }

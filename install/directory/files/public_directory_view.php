@@ -47,12 +47,15 @@ if (!empty($_GET['directory_id_contact']))
     $usr = new directory_contact();
     $usr->open($_GET['directory_id_contact']);
     $popup_title = _DIRECTORY_VIEWCONTACT;
+    $booContact = true;
 }
 elseif (!empty($_GET['directory_id_user']))
 {
+    ploopi_init_module('system');
     $usr = new user();
     $usr->open($_GET['directory_id_user']);
     $popup_title = _DIRECTORY_VIEWUSER;
+    $booContact = false;
 }
 else ploopi_die();
 
@@ -226,7 +229,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
                             ?>
                         </span>
                     </p>
-    
+                    
                     <p>
                         <label style="font-weight:bold;">Attributions / Rôles:</label>
                         <span>
@@ -301,11 +304,44 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
                     <?php
                 }
                 ?>
+            
+                <p>
+                    <label style="font-weight:bold;">Documents:</label>
+                    <span style="overflow:hidden;">
+                        <?php
+                        include_once './include/classes/documents.php';
+                        
+                        // Lecture du dossier racine de la mini ged associée à l'utilisateur ou au contact courant
+                        $objRootFolder = documentsfolder::getroot(
+                            $booContact ? _DIRECTORY_OBJECT_CONTACT : _SYSTEM_OBJECT_USER, 
+                            $usr->fields['id'], 
+                            $booContact ? null : 1 // Il faut prendre l'id du module actuel ou l'id du module système
+                        );
+                        
+                        if (!empty($objRootFolder))
+                        {
+                            $arrFiles = $objRootFolder->getlist();
+                            
+                            foreach($arrFiles as $intIdFile => $rowFile)
+                            {
+                                // Découpage du chemin pour modifier le fichier
+                                $arrPath = explode('/', $rowFile['path']);
+                                
+                                // On ajoute un lien sur le fichier
+                                $arrPath[sizeof($arrPath)-1] = '<a title="Télécharger le fichier" href="'.$rowFile['file']->geturl().'">'.$arrPath[sizeof($arrPath)-1].'</a>';
+                                
+                                // Affichage
+                                echo '<div>'.' &raquo; '.implode(' &raquo; ', $arrPath).'</div>';
+                            }
+                        }
+                        else echo "<em>Aucun fichier</em>";
+                        ?>
+                    </span>
+                </p>                
             </div>
         </div>
     </div>
 </div>
-
 <?php
 if ($booPrintable)
 {

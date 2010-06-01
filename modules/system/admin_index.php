@@ -209,6 +209,13 @@ switch ($_SESSION['system']['level'])
                     );
         }
 
+        $toolbar['tabDirectory'] =
+            array(
+                'title'     => _SYSTEM_LABELICON_USERS,
+                'url'       => "admin.php?wspToolbarItem=tabDirectory",
+                'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_directory.png"
+            );
+        
         $toolbar['tabUsers'] =
             array(
                 'title'     => _SYSTEM_LABELICON_AUTHORIZATIONS,
@@ -663,6 +670,10 @@ switch ($_SESSION['system']['level'])
                 }
             break;
 
+            case 'tabDirectory':
+                include_once './modules/system/admin_system_directory.php';
+            break;
+            
             case 'tabRoles':
                 include_once './modules/system/admin_index_roles.php';
             break;

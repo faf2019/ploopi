@@ -41,6 +41,13 @@ define ('_SYSTEM_OBJECT_WORKSPACE',     1);
  */
 define ('_SYSTEM_OBJECT_GROUP',     2);
 
+
+/**
+ * Objet : Utilisateur
+ */
+define ('_SYSTEM_OBJECT_USER',     3);
+
+
 define ('_SYSTEM_ICON_SYSTEM_INSTALLMODULES', 'system_installmodules');
 define ('_SYSTEM_ICON_SYSTEM_PARAMS', 'system_params');
 define ('_SYSTEM_ICON_SYSTEM_USERS', 'system_users');

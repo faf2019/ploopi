@@ -1,3 +1,10 @@
+== Module DIRECTORY - version 2.3.6 ====================================================
+
+2010-06-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Possibilité de déposer des documents sur un fiche contact
+ * Visualisation des documents en frontoffice (template exemple_annuaire)
+
 == Module DIRECTORY - version 2.3.5 ====================================================
 
 2010-05-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

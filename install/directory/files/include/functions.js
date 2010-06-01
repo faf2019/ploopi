@@ -69,13 +69,13 @@ function directory_addtofavorites(e, id_user, id_contact)
 
 function directory_view(e, id_user, id_contact)
 {
-    ploopi_showpopup(ploopi_ajaxloader_content, 600, e, 'click', 'popup_directory_view');
+    ploopi_showpopup(ploopi_ajaxloader_content, 700, e, 'click', 'popup_directory_view');
     ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_view&directory_id_user='+id_user+'&directory_id_contact='+id_contact, 'popup_directory_view');
 }
 
 function directory_modify(e, id_contact)
 {
-    ploopi_showpopup(ploopi_ajaxloader_content, 600, e, 'click', 'popup_directory_modify');
+    ploopi_showpopup(ploopi_ajaxloader_content, 700, e, 'click', 'popup_directory_modify');
     ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_modify&directory_id_contact='+id_contact, 'popup_directory_modify');
 }
 
