@@ -813,10 +813,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         </p>
                                         <div style="clear:both;padding:4px;">
                                             <div style="border:1px solid #c0c0c0;overflow:hidden;">
-                                            <?php
-                                            
-                                                ploopi_validation_selectusers(_DIRECTORY_OBJECT_HEADING, $intHeadingId, -1, _DIRECTORY_ACTION_CONTACTS, sprintf("Gestionnaires de %s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]));
-                                            ?>
+                                            <?php ploopi_validation_selectusers(_DIRECTORY_OBJECT_HEADING, $intHeadingId, -1, _DIRECTORY_ACTION_CONTACTS, sprintf("Gestionnaires de %s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2])); ?>
                                             </div>
                                         </div>
                                     </fieldset>

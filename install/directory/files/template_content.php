@@ -146,8 +146,8 @@ switch($op)
         }
         
 
-        if (!empty($arrFilter['directory_lastname'])) $arrWhere[] = "c.lastname LIKE '%".$db->addslashes($arrFilter['directory_lastname'])."%'";
-        if (!empty($arrFilter['directory_firstname'])) $arrWhere[] = "c.firstname LIKE '%".$db->addslashes($arrFilter['directory_firstname'])."%'";
+        if (!empty($arrFilter['directory_lastname'])) $arrWhere[] = "c.lastname LIKE '".$db->addslashes($arrFilter['directory_lastname'])."%'";
+        if (!empty($arrFilter['directory_firstname'])) $arrWhere[] = "c.firstname LIKE '".$db->addslashes($arrFilter['directory_firstname'])."%'";
         if (!empty($arrFilter['directory_phone'])) $arrWhere[] = "c.phone LIKE '".$db->addslashes($arrFilter['directory_phone'])."%'";
         if (!empty($arrFilter['directory_email'])) $arrWhere[] = "c.email LIKE '%".$db->addslashes($arrFilter['directory_email'])."%'";
         if (!empty($arrFilter['directory_number'])) $arrWhere[] = "c.number LIKE '".$db->addslashes($arrFilter['directory_number'])."%'";
@@ -168,7 +168,7 @@ switch($op)
 
             WHERE       ".implode(' AND ', $arrWhere)."
 
-            ORDER BY    c.position, c.lastname, c.firstname
+            ORDER BY    c.lastname, c.firstname
         ");
 
         if ($db->numrows())

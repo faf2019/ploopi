@@ -472,8 +472,8 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objHeading->setvalues($_POST, 'directory_heading_');
                 $objHeading->save();
-
-                ploopi_validation_save(_DIRECTORY_OBJECT_HEADING, $objHeading->fields['id']);
+                
+                if (ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) ploopi_validation_save(_DIRECTORY_OBJECT_HEADING, $objHeading->fields['id']);
 
                 ploopi_redirect("admin.php?directory_heading_id={$_GET['directory_heading_id']}");
             break;

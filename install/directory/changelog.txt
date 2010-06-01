@@ -1,3 +1,11 @@
+== Module DIRECTORY - version 2.3.6b ====================================================
+
+2010-06-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Modification de la recherche frontoffice : le filtre appliqué lors de la recherche sur les champs "nom" et "prénom" est désormais "commence par" au lieu de "contient"
+ * Modification de la recherche frontoffice : le champ "position" n'est plus pris en compte dans le tri des résultats de recherche  
+ * Contacts partagés : correction d'un bug lors de l'enregistrement d'une rubrique, les gestionnaires étaient perdus selon le profil de l'utilisateur connecté
+ 
 == Module DIRECTORY - version 2.3.6 ====================================================
 
 2010-06-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
