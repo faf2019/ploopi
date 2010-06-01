@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
+<ploopi>
+    <ploopi_mb_object>
+        <row>
+            <id>1</id>
+            <label>Evénement</label>
+            <script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;op=display_event&amp;planning_event_detail_id=&lt;IDRECORD&gt;</script>
+        </row>
+    </ploopi_mb_object>
+</ploopi>
+

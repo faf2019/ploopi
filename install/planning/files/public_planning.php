@@ -43,26 +43,51 @@ $arrResources = planning_get_resources();
 // INIT PATTERN de recherche
 $arrSearchPattern = array();
 
-// Lecture session
-if (isset($_SESSION['planning'][$_SESSION['ploopi']['moduleid']]['planning_request'])) $arrSearchPattern = $_SESSION['planning'][$_SESSION['ploopi']['moduleid']]['planning_request'];
+$booDateModify = false;
 
-// Lecture des paramètres
-if (isset($_REQUEST['planning_display_type'])) $arrSearchPattern['planning_display_type'] = $_REQUEST['planning_display_type']; 
-
-if (isset($_REQUEST['planning_size'])) $arrSearchPattern['planning_size'] = $_REQUEST['planning_size'];
-
-if (isset($_REQUEST['planning_resources'])) $arrSearchPattern['planning_resources'] = $_REQUEST['planning_resources'];
-if (isset($_REQUEST['planning_channels'])) $arrSearchPattern['planning_channels'] = $_REQUEST['planning_channels'];
-
-if (isset($_REQUEST['planning_month'])) $arrSearchPattern['planning_month'] = $_REQUEST['planning_month'];
-if (isset($_REQUEST['planning_year'])) $arrSearchPattern['planning_year'] = $_REQUEST['planning_year'];
-if (isset($_REQUEST['planning_week'])) $arrSearchPattern['planning_week'] = $_REQUEST['planning_week'];
-if (isset($_REQUEST['planning_day'])) $arrSearchPattern['planning_day'] = $_REQUEST['planning_day'];
-
+// Requête spéciale en provenance de la gestion des annotations
+if (isset($_REQUEST['op']) && $_REQUEST['op'] == 'display_event' && !empty($_REQUEST['planning_event_detail_id']) && is_numeric($_REQUEST['planning_event_detail_id'])) 
+{
+    include_once './modules/planning/classes/class_planning_event_detail.php';
+    
+    $objEventDetail = new planning_event_detail();
+    if ($objEventDetail->open($_REQUEST['planning_event_detail_id'])) // Evénement trouvé
+    {
+        $arrSearchPattern['planning_display_type'] = 'day';
+        $arrSearchPattern['planning_month'] = intval(substr($objEventDetail->fields['timestp_begin'], 4, 2)); 
+        $arrSearchPattern['planning_day'] = intval(substr($objEventDetail->fields['timestp_begin'], 6, 2));
+        $arrSearchPattern['planning_year'] = intval(substr($objEventDetail->fields['timestp_begin'], 0, 4));
+        $arrSearchPattern['planning_week'] = date('W', ploopi_timestamp2unixtimestamp($objEventDetail->fields['timestp_begin']));
+        
+        $arrSearchPattern['planning_resources'] = $objEventDetail->getresources();
+        
+        $_REQUEST['planning_display_type'] = 'day';
+        
+        $booDateModify = true;
+    }
+}
+else
+{
+    // Lecture session
+    if (isset($_SESSION['planning'][$_SESSION['ploopi']['moduleid']]['planning_request'])) $arrSearchPattern = $_SESSION['planning'][$_SESSION['ploopi']['moduleid']]['planning_request'];
+    
+    // Lecture des paramètres
+    if (isset($_REQUEST['planning_display_type'])) $arrSearchPattern['planning_display_type'] = $_REQUEST['planning_display_type']; 
+    
+    if (isset($_REQUEST['planning_size'])) $arrSearchPattern['planning_size'] = $_REQUEST['planning_size'];
+    
+    if (isset($_REQUEST['planning_resources'])) $arrSearchPattern['planning_resources'] = $_REQUEST['planning_resources'];
+    if (isset($_REQUEST['planning_channels'])) $arrSearchPattern['planning_channels'] = $_REQUEST['planning_channels'];
+    
+    if (isset($_REQUEST['planning_month'])) $arrSearchPattern['planning_month'] = $_REQUEST['planning_month'];
+    if (isset($_REQUEST['planning_year'])) $arrSearchPattern['planning_year'] = $_REQUEST['planning_year'];
+    if (isset($_REQUEST['planning_week'])) $arrSearchPattern['planning_week'] = $_REQUEST['planning_week'];
+    if (isset($_REQUEST['planning_day'])) $arrSearchPattern['planning_day'] = $_REQUEST['planning_day'];
+}
 
 
 // booléen à true si la date est modifiée par l'utilisateur (mois, année, jour ou semaine)
-$booDateModify = isset($_REQUEST['planning_month']) || isset($_REQUEST['planning_year']) || isset($_REQUEST['planning_week']) || isset($_REQUEST['planning_day']);
+$booDateModify = $booDateModify || isset($_REQUEST['planning_month']) || isset($_REQUEST['planning_year']) || isset($_REQUEST['planning_week']) || isset($_REQUEST['planning_day']);
 
 // Init des valeurs par défaut
 if (!isset($arrSearchPattern['planning_display_type'])) $arrSearchPattern['planning_display_type'] = 'week';

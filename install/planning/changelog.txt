@@ -1,3 +1,10 @@
+== Module Planning - version 0.7.8 ====================================================
+
+2010-05-28  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Intégration des annotations sur les événements
+ * Gestion du lien entre l'annotation et l'événement associé
+
 == Module Planning - version 0.7.7 ====================================================
 
 2010-05-21  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

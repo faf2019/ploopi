@@ -88,71 +88,6 @@ switch($ploopi_op)
 
                 $objEvent->setuwm();
                 $objEvent->save();
-
-                /**
-                 * Envoyer un ticket aux gestionnaires de la ressource
-                 * (les utilisateurs des espaces gestionnaires qui disposent de l'action de validation ou qui sont admin sys)
-                 */
-
-                /*
-                $arrUsers = array();
-
-                $objResource = new planning_resource();
-                if ($objResource->open($objEvent->fields['id_resource']))
-                {
-                    // On récupère les espaces gestionnaires de la ressource
-                    $arrWorkspaces = $objResource->getworkspaces();
-
-                    foreach($arrWorkspaces as $intIdWsp)
-                    {
-                        $objWorkspace = new workspace();
-                        if ($objWorkspace->open($intIdWsp))
-                        {
-                            // On récupère les utilisateurs des espaces gestionnaires
-                            foreach($objWorkspace->getusers(true) as $arrUser)
-                            {
-                                if (!isset($arrUsers[$arrUser['id']])) // Utilisateur non sélectionné
-                                {
-                                    // S'il s'agit d'un administrateyr système, on le sélectionne automatiquement
-                                    if ($arrUser['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
-                                    {
-                                        $arrUsers[$arrUser['id']] = $arrUser;
-                                    }
-                                    else
-                                    {
-                                        $objUser = new user();
-
-                                        if ($objUser->open($arrUser['id']))
-                                        {
-                                            // S'il n'est pas administrateur système, on vérifie les actions dont il dispose
-                                            $arrActions = $objUser->getactions(null, true);
-
-                                            // Si l'utilisateur dispose de l'action de validation sur le module planning dans l'espace gestionnaire
-                                            if (isset($arrActions[$intIdWsp][$objEvent->fields['id_module']][_BOOKING_ACTION_VALIDATE]))
-                                            {
-                                                $arrUsers[$arrUser['id']] = $arrUser;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    $objEvent->save();
-
-                    // Selection des destinataires du ticket
-                    foreach(array_keys($arrUsers) as $intIdUser) $_SESSION['ploopi']['tickets']['users_selected'][] = $intIdUser;
-
-                    $strResource = $objResource->open($objEvent->fields['id_resource']) ? $objResource->fields['name'] : 'inconnu';
-
-                    $strMessage = "Nouvelle demande de réservation pour {$strResource} pour le motif suivant : <br /><br />".ploopi_nl2br(htmlentities($_POST['planning_event_object']));
-                    $strTitle = "Nouvelle demande de réservation pour {$strResource} ";
-
-                    // Envoi du ticket
-                    ploopi_tickets_send($strTitle, $strMessage);
-                }
-                */
             }
         }
 
@@ -368,6 +303,7 @@ switch($ploopi_op)
             <input type="submit" class="button" value="Enregistrer" />
         </div>
         </form>
+        <div style="border-top:1px solid #aaa;"><? ploopi_annotation(_PLANNING_OBJECT_EVENT, $objEventDetail->fields['id'], $objEvent->fields['object']); ?></div>
         <?
         $content = ob_get_contents();
         ob_end_clean();
