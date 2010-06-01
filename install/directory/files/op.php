@@ -238,8 +238,13 @@ if ($_SESSION['ploopi']['connected'])
                 include_once './modules/directory/class_directory_heading.php';
 
                 $directory_contact = new directory_contact();
-                if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id'])) $directory_contact->open($_GET['directory_contact_id']);
-
+                if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id'])) 
+                {
+                    $directory_contact->open($_GET['directory_contact_id']);
+                    $booForcePos = !empty($_POST['_directory_contact_forcepos']);
+                }
+                else $booForcePos = false;
+                
                 // Rattachement à une rubrique
                 if (!empty($_GET['directory_heading_id']) && is_numeric($_GET['directory_heading_id']))
                 {
@@ -256,7 +261,7 @@ if ($_SESSION['ploopi']['connected'])
                 
                 $directory_contact->setvalues($_POST, 'directory_contact_');
                 $directory_contact->setuwm();
-                $directory_contact->save();
+                $directory_contact->save($booForcePos);
 
                 // Photo ?
                 if (!empty($_SESSION['directory']['contact_photopath']))

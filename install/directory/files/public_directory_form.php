@@ -124,6 +124,7 @@ if (!empty($directory_contact->fields['id'])) ploopi_setsessionvar("deletephoto_
                         <p>
                             <label>Position:</label>
                             <input type="text" class="text" name="directory_contact_position" value="<?php echo htmlentities($directory_contact->fields['position']); ?>" tabindex="114" style="width:50px;" />
+                            <input type="checkbox" class="checkbox" name="_directory_contact_forcepos" value="1" />Forcer la position
                         </p>
                         <p>
                             <label>Rubrique parent:</label>
