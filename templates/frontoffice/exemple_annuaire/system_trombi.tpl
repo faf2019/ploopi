@@ -128,6 +128,16 @@
                             <div style="padding:4px;">
                                 {system_trombi_switch_result.user.ROLES}
                             </div>
+                            
+                            <!-- BEGIN switch_files -->
+                            <h2>Documents</h2>
+                            <div style="padding:4px;">
+                                <!-- BEGIN file -->
+                                <div>{system_trombi_switch_result.user.switch_files.file.PATH} &raquo; <a title="Télécharger le fichier" href="{system_trombi_switch_result.user.switch_files.file.URL}">{system_trombi_switch_result.user.switch_files.file.FILENAME}</a></div>
+                                <!-- END file -->
+                            </div>
+                            <!-- END switch_files -->
+                            
                         </div>
                     </div>
                 </div>

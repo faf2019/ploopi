@@ -182,6 +182,7 @@
                                     <th>Grade</th>
                                     <th>Poste</th>
                                     <th>Téléphone</th>
+                                    <!-- th>Email</th -->
                                 </tr>
                                 <!-- BEGIN contact -->
                                     <tr class="directory_contact{directory_switch_result.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_result.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_result.contact.LASTNAME} {directory_switch_result.contact.FIRSTNAME}">
@@ -191,7 +192,7 @@
                                         <td>{directory_switch_result.contact.RANK}</td>
                                         <td>{directory_switch_result.contact.NUMBER}</td>
                                         <td>{directory_switch_result.contact.PHONE}</td>
-                                        <td>{directory_switch_result.contact.EMAIL}</td>
+                                        <!-- td>{directory_switch_result.contact.EMAIL}</td -->
                                     </tr>
                                 <!-- END  contact -->
                             </table>
@@ -246,6 +247,16 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- BEGIN switch_files -->
+                        <div>
+                            <div class="directory_title2">Documents:</div>
+                            <!-- BEGIN file -->
+                            <div>{directory_switch_contact.switch_files.file.PATH} &raquo; <a title="Télécharger le fichier" href="{directory_switch_contact.switch_files.file.URL}">{directory_switch_contact.switch_files.file.FILENAME}</a></div>
+                            <!-- END file -->
+                        </div>
+                        <!-- END switch_files -->
+                        
                         <div>
                             <div class="directory_title2">Autres personnes de la même rubrique:</div>
                             <table cellspacing="0" cellpadding="0" border="1">

@@ -65,18 +65,18 @@
 
                     <div style="margin-left:110px;border-left:1px solid #a0a0a0;">
                         <div class="ploopi_form" style="padding:4px;">
-                            <h2>Profil</h2>
+                            <h2>Information professionnelles</h2>
                             <p>
                                 <label style="font-weight:bold;">Service:</label>
                                 <span>{system_trombi_switch_result.user.SERVICE}</span>
                             </p>
                             <p>
-                                <label style="font-weight:bold;">Bureau:</label>
-                                <span>{system_trombi_switch_result.user.OFFICE}</span>
-                            </p>
-                            <p>
                                 <label style="font-weight:bold;">Fonction:</label>
                                 <span>{system_trombi_switch_result.user.FUNCTION}</span>
+                            </p>
+                            <p>
+                                <label style="font-weight:bold;">Grade/Niveau:</label>
+                                <span>{system_trombi_switch_result.user.RANK}</span>
                             </p>
                             <p>
                                 <label style="font-weight:bold;">Poste:</label>
@@ -98,6 +98,20 @@
                                 <label style="font-weight:bold;">Courriel:</label>
                                 <span><a href="mailto:{system_trombi_switch_result.user.EMAIL}">{system_trombi_switch_result.user.EMAIL}</a></span>
                             </p>
+
+                            <h2>Lieu de travail</h2>
+                            <p>
+                                <label style="font-weight:bold;">Bâtiment:</label>
+                                <span>{system_trombi_switch_result.user.BUILDING}</span>
+                            </p>
+                            <p>
+                                <label style="font-weight:bold;">Etage:</label>
+                                <span>{system_trombi_switch_result.user.FLOOR}</span>
+                            </p>
+                            <p>
+                                <label style="font-weight:bold;">Bureau:</label>
+                                <span>{system_trombi_switch_result.user.OFFICE}</span>
+                            </p>
                             <p>
                                 <label style="font-weight:bold;">Adresse:</label>
                                 <span>{system_trombi_switch_result.user.ADDRESS}</span>
@@ -114,6 +128,16 @@
                             <div style="padding:4px;">
                                 {system_trombi_switch_result.user.ROLES}
                             </div>
+                            
+                            <!-- BEGIN switch_files -->
+                            <h2>Documents</h2>
+                            <div style="padding:4px;">
+                                <!-- BEGIN file -->
+                                <div>{system_trombi_switch_result.user.switch_files.file.PATH} &raquo; <a title="Télécharger le fichier" href="{system_trombi_switch_result.user.switch_files.file.URL}">{system_trombi_switch_result.user.switch_files.file.FILENAME}</a></div>
+                                <!-- END file -->
+                            </div>
+                            <!-- END switch_files -->
+                            
                         </div>
                     </div>
                 </div>
