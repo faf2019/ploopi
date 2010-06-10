@@ -371,7 +371,7 @@ if ($_SESSION['ploopi']['connected'])
                 if (!empty($_GET['directory_photo_id']))
                 {
                     // reset suppression
-                    ploopi_setsessionvar("deletephoto_{$_GET['directory_contact_id']}", 0);
+                    ploopi_setsessionvar("deletephoto_{$_GET['directory_photo_id']}", 0);
                     
                     // On vérifie qu'un fichier a bien été uploadé
                     if (!empty($_FILES['directory_contact_photo']['tmp_name']))

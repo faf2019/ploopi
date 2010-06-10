@@ -1,8 +1,15 @@
+== Module DIRECTORY - version 2.3.6d ====================================================
+
+2010-06-10  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug lors de la suppression d'une photo d'une fiche utilisateur
+ * Contacts partagés : Possibilité de forcer la position d'une rubrique (permet de corriger des erreurs ou de forcer des positions multiples)
+
 == Module DIRECTORY - version 2.3.6c ====================================================
 
 2010-06-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Contacts partagés : Possibilité de forcer la position d'un contact (permet de corriger des erreurs ou de forcer des position multiples)
+ * Contacts partagés : Possibilité de forcer la position d'un contact (permet de corriger des erreurs ou de forcer des positions multiples)
 
 == Module DIRECTORY - version 2.3.6b ====================================================
 

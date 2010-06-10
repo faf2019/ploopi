@@ -66,52 +66,54 @@ class directory_heading extends data_object
         return $ret;
     }
 
-    public function save()
+    public function save($booForcePos = false)
     {
         global $db;
 
         if ($this->new) $this->setuwm();
         else
         {
-            if ($this->position != $this->fields['position']) // nouvelle position définie
+            if (!$booForcePos)
             {
-                if ($this->fields['position'] < 1) $this->fields['position'] = 1;
-                else
+                if ($this->position != $this->fields['position']) // nouvelle position définie
                 {
-                    $db->query("
-                        SELECT  MAX(position) AS maxpos
-                        FROM    ploopi_mod_directory_heading
-                        WHERE   id_heading = {$this->fields['id_heading']}
-                    ");
-
-                    $row = $db->fetchrow();
-
-                    if ($this->fields['position'] > $row['maxpos']) $this->fields['position'] = $row['maxpos'];
-                }
-
-                // Mise à jour de la position des autres rubriques
-                if ($this->fields['position'] > $this->position)
-                {
-                    $db->query("
-                        UPDATE  ploopi_mod_directory_heading
-                        SET     position = position-1
-                        WHERE   position BETWEEN ".($this->position + 1)." AND {$this->fields['position']}
-                        AND     id_heading = {$this->fields['id_heading']}
-                        AND     id <> {$this->fields['id']}
-                    ");
-                }
-                else
-                {
-                   $db->query("
-                        UPDATE  ploopi_mod_directory_heading
-                        SET     position = position+1
-                        WHERE   position BETWEEN {$this->fields['position']} AND ".($this->position - 1)."
-                        AND     id_heading = {$this->fields['id_heading']}
-                        AND     id <> {$this->fields['id']}
-                    ");
+                    if ($this->fields['position'] < 1) $this->fields['position'] = 1;
+                    else
+                    {
+                        $db->query("
+                            SELECT  MAX(position) AS maxpos
+                            FROM    ploopi_mod_directory_heading
+                            WHERE   id_heading = {$this->fields['id_heading']}
+                        ");
+    
+                        $row = $db->fetchrow();
+    
+                        if ($this->fields['position'] > $row['maxpos']) $this->fields['position'] = $row['maxpos'];
+                    }
+    
+                    // Mise à jour de la position des autres rubriques
+                    if ($this->fields['position'] > $this->position)
+                    {
+                        $db->query("
+                            UPDATE  ploopi_mod_directory_heading
+                            SET     position = position-1
+                            WHERE   position BETWEEN ".($this->position + 1)." AND {$this->fields['position']}
+                            AND     id_heading = {$this->fields['id_heading']}
+                            AND     id <> {$this->fields['id']}
+                        ");
+                    }
+                    else
+                    {
+                       $db->query("
+                            UPDATE  ploopi_mod_directory_heading
+                            SET     position = position+1
+                            WHERE   position BETWEEN {$this->fields['position']} AND ".($this->position - 1)."
+                            AND     id_heading = {$this->fields['id_heading']}
+                            AND     id <> {$this->fields['id']}
+                        ");
+                    }
                 }
             }
-
         }
 
         return(parent::save());
