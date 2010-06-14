@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.3.6f ====================================================
+
+2010-06-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Suppression des onglets (doublon avec le menu principal du module, homogénéisation de l'interface avec les autres modules)
+
 == Module DIRECTORY - version 2.3.6e ====================================================
 
 2010-06-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
