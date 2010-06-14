@@ -112,7 +112,7 @@ if ($_SESSION['ploopi']['connected'])
     {
         $template_body->assign_block_vars('switch_user_logged_in.workspace',array(
                 'TITLE' => $_SESSION['ploopi']['workspaces'][$key]['label'],
-                'URL' => $key == $_SESSION['ploopi']['workspaceid'] && $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES ? ploopi_urlencode('admin.php') : ploopi_urlencode('admin.php', _PLOOPI_MENU_WORKSPACES, $key, '', ''),
+                'URL' => $key == $_SESSION['ploopi']['workspaceid'] && $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $_SESSION['ploopi']['moduleid'] != -1 ? ploopi_urlencode('admin.php') : ploopi_urlencode('admin.php?ploopi_switch_workspace', _PLOOPI_MENU_WORKSPACES, $key, '', ''),
                 'SELECTED' => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $key == $_SESSION['ploopi']['workspaceid']) ? 'selected' : ''
             )
         );
@@ -243,7 +243,7 @@ if ($_SESSION['ploopi']['connected'])
         'MAINMENU_SHOWANNOTATIONS_URL'  => ploopi_urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'MAINMENU_SHOWTICKETS_URL'      => ploopi_urlencode('admin.php?op=tickets', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'MAINMENU_SHOWDATA_URL'         => ploopi_urlencode('admin.php?op=actions', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-        'MAINMENU_SHOWSEARCH_URL'       => ploopi_urlencode('admin.php?op=search', _PLOOPI_MENU_WORKSPACES, 0, _PLOOPI_MODULE_SEARCH, 'public'),
+        'MAINMENU_SHOWSEARCH_URL'       => ploopi_urlencode('admin.php?op=search', _PLOOPI_MENU_WORKSPACES, null, _PLOOPI_MODULE_SEARCH, 'public'),
 
         'MAINMENU_SHOWPROFILE_SEL'      => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'profile') ? 'selected' : '',
         'MAINMENU_SHOWANNOTATIONS_SEL'  => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'annotation') ? 'selected' : '',

@@ -383,7 +383,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 $ploopi_workspaceid = $_SESSION['ploopi']['hosts']['backoffice'][0];
             }
     
-            if (isset($ploopi_workspaceid) && $_SESSION['ploopi']['backoffice']['workspaceid'] != $ploopi_workspaceid && isset($_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['adminlevel']) && $_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['backoffice']) // new group selected
+            if (isset($_REQUEST['ploopi_switch_workspace']) || (isset($ploopi_workspaceid) && $_SESSION['ploopi']['backoffice']['workspaceid'] != $ploopi_workspaceid && isset($_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['adminlevel']) && $_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['backoffice'])) // new group selected
             {
                 $_SESSION['ploopi']['mainmenu'] = _PLOOPI_MENU_WORKSPACES;
                 $_SESSION['ploopi']['backoffice']['workspaceid'] = $ploopi_workspaceid;
