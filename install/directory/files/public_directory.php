@@ -701,6 +701,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                     <p>
                                         <label>Position:</label>
                                         <input name="directory_heading_position" type="text" class="text" style="width:50px;" value="<?php echo htmlentities($objHeading->fields['position']); ?>" />
+                                        <input type="checkbox" class="checkbox" name="_directory_heading_forcepos" value="1" />Forcer la position
                                     </p>
                                     <p>
                                         <label>Téléphone:</label>

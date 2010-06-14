@@ -474,9 +474,9 @@ if ($_SESSION['ploopi']['connected'])
                 $objHeading = new directory_heading();
                 
                 if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !$objHeading->open($_GET['directory_heading_id'])) ploopi_redirect('admin.php');
-
+                
                 $objHeading->setvalues($_POST, 'directory_heading_');
-                $objHeading->save();
+                $objHeading->save(!empty($_POST['_directory_heading_forcepos']));
                 
                 if (ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) ploopi_validation_save(_DIRECTORY_OBJECT_HEADING, $objHeading->fields['id']);
 
