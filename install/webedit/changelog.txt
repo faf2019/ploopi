@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.3.2s ============================================
+
+2010-06-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Modification : un rédacteur de peut plus gérer les rubriques du tout (ajout/modification/suppression)
+
 == Module WebEdit - version 2.3.2r ============================================
 
 2010-06-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
