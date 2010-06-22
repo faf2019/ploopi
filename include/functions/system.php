@@ -247,11 +247,10 @@ function ploopi_ob_callback($buffer)
         $buffer = trim(str_replace($array_tags, $array_values, $buffer));
     }
 
-    if (!$booDownloadFile && _PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && ($content_type == 'text/html' || $content_type == 'text/xml' || $content_type == 'text/x-json'))
+    if (!$booDownloadFile && _PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && ($content_type == 'text/plain' || $content_type == 'text/html' || $content_type == 'text/xml' || $content_type == 'text/x-json'))
     {
         header("Content-Encoding: gzip");
         return gzencode($buffer);
-        
     }
     else
     {
