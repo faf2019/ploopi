@@ -288,10 +288,14 @@ function ploopi_print_r($var, $return = false)
  * @see ploopi_ob_callback
  */
 
-function ploopi_ob_clean()
+function ploopi_ob_clean($booDeleteAllBuffers = false)
 {
-    while (ob_get_level() > 1) @ob_end_clean();
-    if (ob_get_level() == 1) ob_clean();
+    if ($booDeleteAllBuffers) while (ob_get_level()) @ob_end_clean();
+    else
+    {
+        while (ob_get_level() > 1) @ob_end_clean();
+        if (ob_get_level() == 1) ob_clean();
+    }
 }
 
 /**

@@ -97,7 +97,7 @@ function ploopi_deletedir($strPath)
             if (!in_array($strFile, array('.', '..')))
             {
                 $strFilePath = $strPath._PLOOPI_SEP.$strFile;
-                 
+
                 if (is_dir($strFilePath)) ploopi_deletedir($strFilePath);
                 else unlink($strFilePath);
             }
@@ -118,17 +118,17 @@ function ploopi_makedir($strPath, $octMode = 0750)
     if (!file_exists($strPath))
     {
         $arrFolder = explode(_PLOOPI_SEP, $strPath);
-        
+
         $strOldPath = _PLOOPI_SERVER_OSTYPE == 'unix'  ? _PLOOPI_SEP : '';
-    
+
         foreach($arrFolder as $strFolder)
         {
             if ($strFolder != '')
             {
                 $strFolder = $strOldPath.$strFolder;
-    
+
                 if (!is_dir($strFolder)) mkdir($strFolder, $octMode);
-    
+
                 $strOldPath = $strFolder._PLOOPI_SEP;
             }
         }
@@ -149,7 +149,7 @@ function ploopi_getmimetype($filename)
     $ext = ploopi_file_getextension($filename);
 
     global $db;
-    
+
     // Si mimetype = '' ou pas trouvé c'est que c'est un octetstream donc on passe
     $sqlMime = $db->query("SELECT mimetype FROM ploopi_mimetype WHERE ext = '{$ext}' AND mimetype != ''");
     if($db->numrows($sqlMime))
@@ -157,7 +157,7 @@ function ploopi_getmimetype($filename)
         $fieldMime = $db->fetchrow($sqlMime);
         return $fieldMime['mimetype'];
     }
-    
+
     $strUserBrowser = '';
     if (!empty($_SERVER['HTTP_USER_AGENT']))
     {
@@ -169,7 +169,7 @@ function ploopi_getmimetype($filename)
 
     /// important for download im most browser
     $strMimetype = ($strUserBrowser == 'IE' || $strUserBrowser == 'Opera') ? 'application/octetstream' : 'application/octet-stream';
-    
+
     return($strMimetype);
 }
 
@@ -193,47 +193,48 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
 
     if (file_exists($filepath))
     {
-        ploopi_ob_clean();
+        ploopi_ob_clean(true);
 
         @set_time_limit(0);
 
         $filepath = rawurldecode($filepath);
         $size = filesize($filepath);
 
+        $chunksize = 1*(1024*1024);
+
         header('Content-Type: ' . ploopi_getmimetype($destfilename));
+        header('Content-Length: '.$size);
 
         if (ploopi_file_getextension($destfilename) == 'svgz') header('Content-Encoding: gzip');
+        else header('Content-Encoding: identity');
 
         if ($attachment) header("Content-disposition: attachment; filename=\"{$destfilename}\"");
         else header("Content-disposition: inline; filename=\"{$destfilename}\"");
-
         header('Expires: Sat, 1 Jan 2000 05:00:00 GMT');
         header('Accept-Ranges: bytes');
         header('Cache-control: private');
         header('Pragma: private');
-        header("Content-Encoding: identity");
-        header("X-Ploopi: Download"); // Permet d'indiquer au gestionnaire buffer qu'il s'agit d'un téléchargement de fichier @see ploopi_ob_callback
-        
-        $chunksize = 1*(1024*1024);
-        
+
+        ob_start();
         if ($fp = fopen($filepath, 'r'))
         {
             while(!feof($fp) && connection_status() == 0)
             {
                 echo fread($fp, $chunksize);
+                ob_flush();
             }
             fclose($fp);
-            
+            ob_end_flush();
         }
         else
         {
             header('Content-type: text/html; charset=iso-8859-1');
             ploopi_die('Impossible d\'ouvrir le fichier');
         }
-        
+
         if ($deletefile && is_writable($filepath)) @unlink($filepath);
 
-        if ($die) ploopi_die(null, false);
+        if ($die) ploopi_die(null, true);
 
     }
     else return(false);
