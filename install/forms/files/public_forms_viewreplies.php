@@ -61,7 +61,7 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
                     <option></option>
                     <?php
                     $lev = 0;
-                    
+
                     foreach ($data_title as $key => $value)
                     {
                         if ($value['sep'])
@@ -148,7 +148,8 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
                     </p>
                     <p>
                         <label>Archiver les données jusqu'au :</label>
-                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo $autobackup_date['date']; ?>">&nbsp;<a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('forms_autobackup_date', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo $autobackup_date['date']; ?>">&nbsp;
+						<?php echo ploopi_open_calendar('forms_autobackup_date'); ?>
                     </p>
                     <p>
                         <label>&nbsp;</label>
@@ -195,7 +196,7 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
 					?>
 				<?php
 			}
-			
+
 			if ($_SESSION['ploopi']['action'] == 'public')
 			{
 				$ct = 0;
@@ -214,11 +215,11 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
 					<input type="button" class="flatbutton" style="margin-left:10px;font-weight:bold" value="Ajouter un enregistrement" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_reply_add&forms_id={$forms_id}"); ?>'">
 					<?php
 				}
-			}			
+			}
 			?>
 			</p>
 		</div>
-		
+
         <div style="float:left;">
 			<p class="ploopi_va">
 			<span>
@@ -233,7 +234,7 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
 				<a title="<?php echo _FORMS_EXPORT; ?> CSV" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$forms_id}&forms_export_format=CSV"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/download_csv.gif"></a>
 				<?php
 			}
-			
+
 			if (ploopi_isactionallowed(_FORMS_ACTION_GRAPHICS))
 			{
 				$db->query("
@@ -393,7 +394,7 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
                             echo "<td class=\"data\">{$value}</td>";
                         }
                     }
-                    
+
                     if ($_SESSION['ploopi']['action'] == 'public')
                     {
                         ?>
@@ -403,8 +404,8 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
                             // Droit de modif d'un enregistrement
                             if (ploopi_isadmin() || (
                                     ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY) && (
-                                        ($forms->fields['option_modify'] == 'user' && $detail['id_user'] == $_SESSION['ploopi']['userid']) || 
-                                        ($forms->fields['option_modify'] == 'group' && $detail['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  || 
+                                        ($forms->fields['option_modify'] == 'user' && $detail['id_user'] == $_SESSION['ploopi']['userid']) ||
+                                        ($forms->fields['option_modify'] == 'group' && $detail['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  ||
                                         ($forms->fields['option_modify'] == 'all')
                                     )
                                 ))
@@ -416,8 +417,8 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
                             // Droit de suppression d'un enregistrement
                             if (ploopi_isadmin() || (
                                     ploopi_isactionallowed(_FORMS_ACTION_DELETE) && (
-                                        ($forms->fields['option_modify'] == 'user' && $detail['id_user'] == $_SESSION['ploopi']['userid']) || 
-                                        ($forms->fields['option_modify'] == 'group' && $detail['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  || 
+                                        ($forms->fields['option_modify'] == 'user' && $detail['id_user'] == $_SESSION['ploopi']['userid']) ||
+                                        ($forms->fields['option_modify'] == 'group' && $detail['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  ||
                                         ($forms->fields['option_modify'] == 'all')
                                     )
                                 ))
