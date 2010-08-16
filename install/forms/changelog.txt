@@ -1,3 +1,9 @@
+== Module FORMS - version 2.5.4c =====================================================
+
+2010-08-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug avec l'ouverture des calendriers javascript dans le template par défaut du formulaire.
+
 == Module FORMS - version 2.5.4b =====================================================
 
 2010-08-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
