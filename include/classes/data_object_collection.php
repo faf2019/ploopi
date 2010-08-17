@@ -51,7 +51,7 @@ class data_object_collection
      * @var resource
      */
     private $objDb;
-    
+
     /**
      * Requête
      *
@@ -68,41 +68,41 @@ class data_object_collection
 
     /**
      * Tableau permettant de construire la clause ORDER BY
-     * 
+     *
      * @var array
      */
     private $arrOrderBy;
-    
-    
+
+
     /**
      * Constructeur de la classe
      *
      * @param string $strClassName Nom de la classe gérée dans la collection (cette classe doit être héritée de data_object)
      * @param resource $objDb Connexion à la base de données
      */
-    public function __construct($strClassName, $objDb = null)
+    public function __construct($strClassName, &$objDb = null)
     {
         $this->strClassName = $strClassName;
-        
+
         if (!is_null($objDb)) $this->objDb = $objDb;
-        else { global $db; $this->objDb = $db; }
-        
+        else { global $db; $this->objDb = &$db; }
+
         //On vérifie que la classe existe
         if (empty($this->strClassName) || !class_exists($this->strClassName)) throw new Exception("data_object_collection : classe '{$this->strClassName}' inconnue");
-        
+
         //On tente de créer une instance de la classe
         ploopi_unset_error_handler();
         $objDoDescription = new $this->strClassName();
         ploopi_set_error_handler();
-        
+
         //On vérifie le type de l'objet obtenu et s'il hérite de "data_object"
         if (empty($objDoDescription) || !is_subclass_of($objDoDescription, 'data_object')) throw new Exception("data_object_collection : la classe '{$this->strClassName}' n'est pas héritée de 'data_object'");
-        
+
         $this->objQuery = new ploopi_query_select($this->objDb);
         $this->objQuery->add_select('`'.$objDoDescription->gettablename().'`.*');
         $this->objQuery->add_from('`'.$objDoDescription->gettablename().'`');
     }
-    
+
     /**
      * Ajoute une clause FROM à la collection
      *
@@ -110,7 +110,7 @@ class data_object_collection
      * @see ploopi_query
      */
     public function add_from($strFrom) { $this->objQuery->add_from($strFrom); }
-    
+
     /**
      * Ajoute une clause WHERE à la collection
      *
@@ -127,7 +127,7 @@ class data_object_collection
      * @see ploopi_query
      */
     public function add_orderby($strOrderBy) { $this->objQuery->add_orderby($strOrderBy); }
-    
+
     /**
      * Retourne les objets de la collection
      *
@@ -136,19 +136,19 @@ class data_object_collection
     public function get_objects($booFirstColKey = false)
     {
         $arrResult = array();
-        
+
         $objRs = $this->objQuery->execute();
-        
+
         while ($row = $objRs->fetchrow())
         {
             $objDoRecord = new $this->strClassName();
-            
+
             $objDoRecord->open_row($row);
 
             if ($booFirstColKey) $arrResult[$objDoRecord->gethash()] = $objDoRecord;
             else $arrResult[] = $objDoRecord;
         }
-        
+
         return $arrResult;
     }
 }
