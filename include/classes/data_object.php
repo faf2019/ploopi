@@ -49,17 +49,17 @@ class data_object
      *
      * @var string
      */
-    
+
     private $classname;
-    
+
     /**
      * Nom de la table
      *
      * @var string
      */
-    
+
     private $tablename;
-    
+
     /**
      * Tableau indexé des champs qui composent la clé primaire
      *
@@ -67,7 +67,7 @@ class data_object
      */
 
     private $idfields;
-    
+
     /**
      * Tableau associatif des valeurs qui composent la clé primaire
      *
@@ -75,58 +75,58 @@ class data_object
      */
 
     private $id;
-    
+
     /**
      * Objet de connexion à la base de données
      *
      * @var ploopi_db
      * @see ploopi_db
      */
-    
+
     private $db;
-    
+
     /**
      * Connexion à la base de données
      *
      * @var resource
      * @see data_objet::setdb
      */
-    
+
     private $resultid;
-    
+
     /**
      * Nombre de ligne du dernier résultat
      *
      * @var int
      */
-    
+
     private $numrows;
-    
+
     /**
      * Requête SQL générée par l
      *
      * @var string
      * @see data_objet::getsql
      */
-    
+
     private $sql;
-    
+
     /**
      * Contenu d'un enregistrement de la table dans un tableau associatif : champ => valeur
      *
      * @var array
      */
-    
+
     public $fields;
-    
+
     /**
      * Indique s'il s'agit d'un nouvel enregistrement (true) ou d'un enregistrement existant (false)
      *
      * @var boolean
      */
-    
+
     public $new;
-    
+
     /**
      * Constructeur de la classe
      *
@@ -191,7 +191,7 @@ class data_object
             }
         }
 
-        $this->db = $db;
+        $this->db = &$db;
 
         $this->new = true;
     }
@@ -202,13 +202,13 @@ class data_object
      *
      * @param ressource $db objet de connexion à la base de données
      */
-    
-    public function setdb($db)
+
+    public function setdb(&$db)
     {
         $this->db = $db;
     }
 
-    
+
     /**
      * Permet de mettre à jour les propriétés de l'objet (les champs de la table)
      *
@@ -231,7 +231,7 @@ class data_object
                     $prop = substr($key, $lprefix);
                     $this->fields[$prop] = $value;
                 }
-            }   
+            }
         }
 
     }
@@ -245,19 +245,19 @@ class data_object
      *
      * @return int nombre d'enregistrements
      */
-    
+
     public function open() // id0, id1, id2, etc...
     {
         $args = func_get_args();
-        
+
         if(sizeof($args) == 1 && is_array($args[0])) $args = $args[0];
-        
+
         $numargs = sizeof($args);
-        
+
         if ($numargs == sizeof($this->idfields))
         {
             for ($i = 0; $i < $numargs; $i++) $id[$i] = $args[$i];
-            
+
             $this->sql = "SELECT * FROM `{$this->tablename}` WHERE `{$this->idfields[0]}` = '".$this->db->addslashes($id[0])."'";
 
             for ($i = 1; $i < $numargs; $i++) $this->sql .= " AND `{$this->idfields[$i]}` = '".$this->db->addslashes($id[$i])."'";
@@ -269,34 +269,34 @@ class data_object
             for ($i = 0; $i < $numargs; $i++) $this->id[$this->idfields[$i]] = $this->fields[$this->idfields[$i]] = $id[$i];
 
             if ($this->numrows > 0) $this->new = false;
-            
+
             return $this->numrows > 0;
         }
         else return false;
 
     }
-    
+
     /**
      * Méthode d'ouverture spéciale pour "convertir" une ligne de recordset en objet
      *
      * @param array $row ligne de recordset
      */
-    
+
     public function open_row($row)
     {
         $this->fields = $row;
-        
+
         foreach($this->idfields as $field) $this->id[$field] = $row[$field];
-        
+
         $this->new = false;
     }
-    
+
     /**
      * Insère ou met à jour l'enregistrement dans la base de données
      *
      * @return mixed valeur de la clé primaire
      */
-    
+
     public function save()
     {
 
@@ -316,11 +316,11 @@ class data_object
             $this->sql = "INSERT INTO `{$this->tablename}` {$listvalues}"; // construction de la requète
             $this->db->query($this->sql);
 
-            // get "static" key 
+            // get "static" key
             foreach($this->idfields as $fieldname) if (isset($this->fields[$fieldname])) $this->id[$fieldname] = $this->fields[$fieldname];
-                        
+
             // get insert id from insert (if 1 field primary key and autokey)
-            if (sizeof($this->idfields) >= 1 && $this->db->insertid() !== 0) 
+            if (sizeof($this->idfields) >= 1 && $this->db->insertid() !== 0)
             {
                 $this->id[$this->idfields[0]] = $this->fields[$this->idfields[0]] = $this->db->insertid();
             }
@@ -380,11 +380,11 @@ class data_object
         $result = $this->db->query($this->sql);
         while ($fields = $this->db->fetchrow($result)) $this->fields[$fields['Field']] = '';
     }
-    
+
     /**
      * Met à jour les propriétés id_user, id_workspace, id_module de l'objet avec le contenu de la session
      */
-    
+
     public function setuwm()
     {
         $this->fields['id_user'] = $_SESSION['ploopi']['userid'] ;
@@ -397,7 +397,7 @@ class data_object
      *
      * @return string dump SQL
      */
-    
+
     public function dump()
     {
         $listvalues='';
@@ -421,7 +421,7 @@ class data_object
      * @param Template $tpl template
      * @param string $prefix préfixe à ajouter (optionnel)
      */
-    
+
     public function totemplate(&$tpl, $prefix = '')
     {
         $array_vars = array();
@@ -434,7 +434,7 @@ class data_object
      *
      * @return string script SQL
      */
-    
+
     public function getsqlstructure()
     {
         $sql = "CREATE TABLE `{$this->tablename}` (";
@@ -454,13 +454,13 @@ class data_object
 
         return($sql);
     }
-    
+
     /**
      * Retourne la dernière requête SQL exécutée
      *
      * @return string
      */
-    
+
     public function getsql() { return $this->sql; }
 
     /**
@@ -470,7 +470,7 @@ class data_object
      */
 
     public function gettablename() { return $this->tablename; }
-    
+
     /**
      * Retourne true si l'enregistrement n'existe pas encore dans la base de données
      *
@@ -478,14 +478,14 @@ class data_object
      */
 
     public function isnew() { return $this->new; }
-    
+
     /**
      * Retourne un hash de la clé de l'enregistrement
      *
      * @return string
      */
-    public function gethash() 
-    { 
+    public function gethash()
+    {
         $arrHash = array();
         foreach($this->idfields as $fieldname) if (isset($this->id[$fieldname])) $arrHash[] = $this->id[$fieldname];
         return(implode(',', $arrHash));
