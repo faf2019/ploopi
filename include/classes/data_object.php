@@ -205,8 +205,10 @@ class data_object
 
     public function setdb(&$db)
     {
+        unset($this->db);
         $this->db = $db;
     }
+
 
 
     /**
