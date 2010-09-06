@@ -74,23 +74,23 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
         // Gestion de la redirection après login (en fonction de l'url de provenance et du script d'authentification)
         $arrReferer = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER']) : array(); // Provenance
         $arrRequest = isset($_SERVER['REQUEST_URI']) ? parse_url($_SERVER['REQUEST_URI']) : array();  // Demande d'authentification
-        
+
         $strRefererHost = isset($arrReferer['host']) ? $arrReferer['host'] : '';
         $strRequestHost = $_SERVER['HTTP_HOST'];
-        
+
         $strRefererScript = isset($arrReferer['path']) ? basename($arrReferer['path']) : '';
         $strRequestScript = isset($arrRequest['path']) ? basename($arrRequest['path']) : '';
-        
+
         $strLoginRedirect = '';
-        
+
         // Même domaine, même script, redirection acceptée
-        if ($strRefererHost == $strRequestHost && ($strRefererScript == $strRequestScript || $strRequestScript != 'admin.php'))  
+        if ($strRefererHost == $strRequestHost && ($strRefererScript == $strRequestScript || $strRequestScript != 'admin.php'))
         {
             $strLoginRedirect = $_SERVER['HTTP_REFERER'];
         }
         // on force la redirection sur le domaine+script courant
-        else $strLoginRedirect = _PLOOPI_BASEPATH.'/'.$strRequestScript; 
-        
+        else $strLoginRedirect = _PLOOPI_BASEPATH.'/'.$strRequestScript;
+
         $fields = $db->fetchrow();
 
         if (!empty($fields['date_expire']))
@@ -102,15 +102,15 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
             }
         }
         ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_OK, $ploopi_login,_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
-        
+
         ploopi_session_reset();
         $ploopi_initsession = true;
-        
+
         $_SESSION['ploopi']['login'] = $fields['login'];
         $_SESSION['ploopi']['password'] = $ploopi_password;
         $_SESSION['ploopi']['userid'] = $fields['id'];
         $_SESSION['ploopi']['user'] = $fields;
-        
+
         //$ploopi_mainmenu = _PLOOPI_MENU_WORKSPACES;
     }
     else
@@ -293,7 +293,7 @@ if ($ploopi_initsession)
 
 if (!$_SESSION['ploopi']['paramloaded']) include './include/start/load_param.php';
 
-if (!empty($strLoginRedirect)) ploopi_redirect($strLoginRedirect, false, false); 
+if (!empty($strLoginRedirect)) ploopi_redirect($strLoginRedirect, false, false);
 unset($strLoginRedirect);
 
 // Indicateur global de connexion
@@ -338,8 +338,8 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
 
         if (isset($_REQUEST['ploopi_action']))
             $ploopi_action = $_REQUEST['ploopi_action'];
-            
-        // Cas particulier de la connexion ou du transfert front/back 
+
+        // Cas particulier de la connexion ou du transfert front/back
         if (empty($ploopi_mainmenu) && empty($_SESSION['ploopi']['mainmenu'])) $ploopi_mainmenu = _PLOOPI_MENU_WORKSPACES;
 
         ///////////////////////////////////////////////////////////////////////////
@@ -369,20 +369,20 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 break;
             }
         }
-        
+
         if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES)
         {
-    
+
             ///////////////////////////////////////////////////////////////////////////
             // SWITCH WORKSPACE
             ///////////////////////////////////////////////////////////////////////////
-    
+
             // Traitement d'un car particulier lié au détachement d'un utilisateur à l'espace qu'il consulte
             if (!isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]))
             {
                 $ploopi_workspaceid = $_SESSION['ploopi']['hosts']['backoffice'][0];
             }
-    
+
             if (isset($_REQUEST['ploopi_switch_workspace']) || (isset($ploopi_workspaceid) && $_SESSION['ploopi']['backoffice']['workspaceid'] != $ploopi_workspaceid && isset($_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['adminlevel']) && $_SESSION['ploopi']['workspaces'][$ploopi_workspaceid]['backoffice'])) // new group selected
             {
                 $_SESSION['ploopi']['mainmenu'] = _PLOOPI_MENU_WORKSPACES;
@@ -392,38 +392,38 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 $_SESSION['ploopi']['moduletype'] = '';
                 $_SESSION['ploopi']['moduletypeid'] = '';
                 $_SESSION['ploopi']['modulelabel'] = '';
-    
+
                 // load params
                 ploopi_loadparams();
             }
-    
+
             ///////////////////////////////////////////////////////////////////////////
             // LOOK FOR AUTOCONNECT MODULE
             ///////////////////////////////////////////////////////////////////////////
-    
+
             if (!isset($ploopi_moduleid) && $_SESSION['ploopi']['backoffice']['moduleid'] == '' && !empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['modules']))
             {
                 $arrModules = &$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['modules'];
                 $intAutoconnectModuleId = null;
-                
+
                 foreach($arrModules as $intModuleId)
                 {
-                    if (is_null($intAutoconnectModuleId) && $_SESSION['ploopi']['modules'][$intModuleId]['active'] && $_SESSION['ploopi']['modules'][$intModuleId]['autoconnect']) $intAutoconnectModuleId = $intModuleId; 
-                    
+                    if (is_null($intAutoconnectModuleId) && $_SESSION['ploopi']['modules'][$intModuleId]['active'] && $_SESSION['ploopi']['modules'][$intModuleId]['autoconnect']) $intAutoconnectModuleId = $intModuleId;
+
                 }
-                
+
                 if (is_null($intAutoconnectModuleId) && ploopi_ismanager()) $intAutoconnectModuleId = _PLOOPI_MODULE_SYSTEM;
-                
+
                 if (!is_null($intAutoconnectModuleId))
                 {
-                    
+
                     $ploopi_moduleid = $intAutoconnectModuleId;
-                    
+
                     $ploopi_action = $intAutoconnectModuleId == _PLOOPI_MODULE_SYSTEM ? 'admin' : 'public';
                 }
             }
         }
-        
+
         ///////////////////////////////////////////////////////////////////////////
         // SWITCH MODULE
         ///////////////////////////////////////////////////////////////////////////
@@ -458,7 +458,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 $_SESSION['ploopi']['modulelabel'] = $fields['label'];
             }
         }
-        
+
         // new action selected
         if (isset($ploopi_action)) $_SESSION['ploopi']['action'] = $ploopi_action;
     }

@@ -33,11 +33,11 @@ include_once './include/functions/string.php';
 function ploopi_array2json($arrArray, $booForceUTF8 = true)
 {
     return json_encode($booForceUTF8 ? ploopi_array_map('utf8_encode',ploopi_array_cleankeys($arrArray)) : ploopi_array_cleankeys($arrArray));
-}       
+}
 
 /**
  * Retourne le contenu d'un tableau multidimensionnel au format XML
- * 
+ *
  * @param array $arrArray tableau de données
  * @param string $strRootName nom du noeud racine
  * @param string $strDefaultTagName nom des noeuds 'anonymes'
@@ -58,14 +58,14 @@ function ploopi_array2xml($arrArray, $strRootName = 'data', $strDefaultTagName =
            'rootName' => $strRootName,
            'defaultTagName' => $strDefaultTagName,
         )
-    ); 
-    
+    );
+
     // Sérialisation & détection d'erreur
     if (PEAR::isError($objSerializer->serialize(ploopi_array_cleankeys($arrArray)))) return false;
-    
+
     // Contenu XML
-    return $objSerializer->getSerializedData(); 
-}  
+    return $objSerializer->getSerializedData();
+}
 
 /**
  * Retourne le contenu d'un tableau à 2 dimensions au format CSV
@@ -78,25 +78,35 @@ function ploopi_array2xml($arrArray, $strRootName = 'data', $strDefaultTagName =
  * @return string contenu CSV
  */
 
-function ploopi_array2csv($arrArray, $booHeader = true, $strFieldSep = ',', $strLineSep = "\n", $strTextSep = '"', $booClean = true)
+function ploopi_array2csv($arrArray, $arrOptions = array())
 {
+    $arrDefaultOptions = array(
+        'booHeader' => true,
+        'strFieldSep' => ',',
+        'strLineSep' => "\n",
+        'strTextSep' => '"',
+        'booClean' => true
+    );
+
+    $arrOptions = array_merge($arrDefaultOptions, $arrOptions);
+
     // Tableau des lignes du fichier CSV
     $arrCSV = array();
-    
+
     if (!empty($arrArray))
     {
         if ($booClean) $arrArray = ploopi_array_map('ploopi_iso8859_clean', $arrArray);
-        
+
         // Fonction d'échappement & formatage du contenu
         $funcLineEchap = create_function('$value', 'return \''.$strTextSep.'\'.str_replace(\''.$strTextSep.'\', \''.$strTextSep.$strTextSep.'\', $value).\''.$strTextSep.'\';');
-    
+
         // Ajout de la ligne d'entête
         if ($booHeader) $arrCSV[] = implode($strFieldSep, ploopi_array_map($funcLineEchap, array_keys(reset($arrArray))));
-        
+
         // Traitement des contenus
         foreach($arrArray as $row) $arrCSV[] = implode($strFieldSep, ploopi_array_map($funcLineEchap, $row));
     }
-        
+
     // contenu CSV
     return implode($strLineSep, $arrCSV).$strLineSep;
 }
@@ -114,21 +124,21 @@ function ploopi_array2html($arrArray, $booHeader = true, $strClassName = 'ploopi
 {
     // Tableau des lignes
     $arrHTML = array();
-    
+
     if (!empty($arrArray))
     {
         // Fonction de formatage du contenu
         $funcLineTH = create_function('$value', 'return "<th>$value</th>";');
         $funcLineTD = create_function('$value', 'return "<td>$value</td>";');
-        
-        
+
+
         // Ajout de la ligne d'entête
         if ($booHeader) $arrHTML[] = '<tr>'.implode('', ploopi_array_map($funcLineTH, array_keys(reset($arrArray)))).'</tr>';
-        
+
         // Traitement des contenus
         foreach($arrArray as $row) $arrHTML[] = '<tr>'.implode('', ploopi_array_map($funcLineTD, $row)).'</tr>';
     }
-        
+
     // contenu HTML
     return '<table class="'.$strClassName.'">'.implode('', $arrHTML).'</table>';
 }
@@ -151,7 +161,7 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
 
     $workbook = new Spreadsheet_Excel_Writer();
     $worksheet =& $workbook->addWorksheet();
-    
+
     $arrDefautOptions = array(
         'landscape' => true,
         'fitpage_width' => true,
@@ -159,18 +169,18 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
         'tofile' => false,
         'setborder' => false
     );
-    
+
     $arrOptions = empty($arrOptions) ? $arrDefautOptions : array_merge($arrDefautOptions, $arrOptions);
-    
+
     // Création du document
     if ($arrOptions['tofile']) $objWorkBook = new Spreadsheet_Excel_Writer($strFileName);
     else { $objWorkBook = new Spreadsheet_Excel_Writer(); $objWorkBook->send($strFileName); }
-    
+
     $objFormatTitle = $objWorkBook->addFormat( array( 'Align' => 'center', 'Bold'  => 1, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter', 'FgColor' => 'silver'));
     if ($arrOptions['setborder']) { $objFormatTitle->setBorder(1); $objFormatTitle->setBorderColor('black'); }
     $objFormatDefault = $objWorkBook->addFormat( array( 'TextWrap' => 1, 'Align' => 'left', 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
     if ($arrOptions['setborder']) { $objFormatDefault->setBorder(1); $objFormatDefault->setBorderColor('black'); }
-    
+
     // Définition des différents formats numériques/text
     $arrFormats = array(
         'string' => null,
@@ -183,12 +193,12 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
         'date' => null,
         'datetime' => null
     );
-    
+
     foreach($arrFormats as $strKey => &$objFormat)
     {
         $objFormat = $objWorkBook->addFormat( array( 'Align' => 'right', 'TextWrap' => 1, 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
         if ($arrOptions['setborder']) { $objFormat->setBorder(1); $objFormat->setBorderColor('black'); }
-        
+
         switch($strKey)
         {
             case 'string': $objFormat->setAlign('left'); break;
@@ -201,38 +211,38 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
             case 'date': $objFormat->setNumFormat('DD/MM/YYYY'); break;
             case 'datetime' : $objFormat->setNumFormat('DD/MM/YYYY HH:MM:SS'); break;
         }
-    }    
+    }
     unset($objFormat);
-    
+
     $objWorkSheet = $objWorkBook->addWorksheet($strSheetName);
     if ($arrOptions['fitpage_width'] || $arrOptions['fitpage_height']) $objWorkSheet->fitToPages($arrOptions['fitpage_width'] ? 1 : 0, $arrOptions['fitpage_height'] ? 1 : 0);
     if ($arrOptions['landscape']) $objWorkSheet->setLandscape();
-    
+
     if (!empty($arrArray))
     {
         // Définition des formats de colonnes
         if (!empty($arrDataFormats))
         {
             $intCol = 0;
-            foreach(array_keys(reset($arrArray)) as $strKey) 
+            foreach(array_keys(reset($arrArray)) as $strKey)
             {
                 if (isset($arrDataFormats[$strKey]['width'])) $objWorkSheet->setColumn($intCol, $intCol, $arrDataFormats[$strKey]['width']);
                 $intCol++;
             }
         }
-        
+
         // Ajout de la ligne d'entête
-        if ($booHeader) 
+        if ($booHeader)
         {
             $intCol = 0;
             foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->writeString(0, $intCol++, isset($arrDataFormats[$strKey]['title']) ? $arrDataFormats[$strKey]['title'] : $strKey, $objFormatTitle);
         }
         // Traitement des contenus
         $intLine = 1;
-        foreach($arrArray as $row) 
+        foreach($arrArray as $row)
         {
             $intCol = 0;
-            foreach($row as $strKey => $strValue) 
+            foreach($row as $strKey => $strValue)
             {
                 // On vérifie si un format de donné est proposé pour le champ
                 $objFormat = (!empty($arrDataFormats[$strKey]['type']) && !empty($arrFormats[$arrDataFormats[$strKey]['type']])) ? $arrFormats[$arrDataFormats[$strKey]['type']] : $objFormatDefault;
@@ -243,15 +253,15 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
             $intLine++;
         }
     }
-    
+
     // fermeture du document
     $objWorkBook->close();
-    
+
     return true;
 }
 
 /**
- * "Nettoie" les clés d'un tableau multidimensionnel afin que les clés soient compatibles avec des noms d'entités ou de variables 
+ * "Nettoie" les clés d'un tableau multidimensionnel afin que les clés soient compatibles avec des noms d'entités ou de variables
  *
  * @param array $arrArray tableau à nettoyer
  * @return array tableau nettoyé
@@ -259,21 +269,63 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
 function ploopi_array_cleankeys($arrArray)
 {
     if (!is_array($arrArray)) return $arrArray;
-    
+
     $arrNewArray = array();
-    
+
     foreach($arrArray as $strKey => $mixValue)
     {
         $strKey = preg_replace("/[^a-z0-9_]/", "_", strtolower(ploopi_convertaccents($strKey)));
-        
+
         // Cas particulier des clés non conformes
         if (strlen($strKey) == 0) $strKey = 'xml';
         elseif (substr($strKey,0,1) == '_') $strKey = 'xml'.$strKey;
-        
+
         if (is_array($mixValue)) $arrNewArray[$strKey] = ploopi_array_cleankeys($mixValue);
         else $arrNewArray[$strKey] = $mixValue;
     }
-    
+
     return $arrNewArray;
+}
+
+function ploopi_array_page($intPage, $strLabel, $strUrlMask, $intPageSel = 0)
+{
+    return $intPageSel == $intPage ? str_replace('{l}', $strLabel, '<strong>{l}</strong>') : str_replace(array('{p}', '{l}'), array($intPage, $strLabel), '<a href="'.$strUrlMask.'">{l}</a>');
+}
+
+function ploopi_array_getpages($intNumRows, $intMaxLines = 50, $strUrlMask = '?page={p}', $intPageSel = 1)
+{
+    $arrPages = array();
+
+    // Affichage des pages (optionnel)
+    if ($intMaxLines > 0 && $intMaxLines < $intNumRows)
+    {
+        $intNumPages = ceil($intNumRows / $intMaxLines);
+
+        // Fleche page précédente
+        if ($intPageSel > 1) $arrPages[] = ploopi_array_page($intPageSel-1, '&laquo;', $strUrlMask, $intPageSel);
+
+        // On affiche toujours la premiere page
+        $arrPages[] = ploopi_array_page(1, 1, $strUrlMask, $intPageSel);
+
+        // Affichage "..." après première page
+        if ($intPageSel > 4) $arrPages[] = '...';
+
+        // Boucle sur les pages autour de la page sélectionnée (-2 à +2 si existe)
+        for ($i = $intPageSel - 2; $i <= $intPageSel + 2; $i++)
+        {
+            if ($i>1 && $i<$intNumPages) $arrPages[] = ploopi_array_page($i, $i, $strUrlMask, $intPageSel);
+        }
+
+        // Affichage "..." avant dernière page
+        if ($intPageSel < $intNumPages - 3) $arrPages[] = '...';
+
+        // Dernière page
+        if ($intNumPages>1) $arrPages[] = ploopi_array_page($intNumPages, $intNumPages, $strUrlMask, $intPageSel);
+
+        // Fleche page suivante
+        if ($intPageSel < $intNumPages) $arrPages[] = ploopi_array_page($intPageSel+1, '&raquo;', $strUrlMask, $intPageSel);
+    }
+
+    return implode(' ', $arrPages);
 }
 ?>

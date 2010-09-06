@@ -128,7 +128,7 @@ function ploopi_ob_callback($buffer)
 {
     global $ploopi_timer;
     global $db;
-    
+
     // On essaye de récupérer le content-type du contenu du buffer
     $content_type = 'text/html';
     $headers = headers_list();
@@ -210,7 +210,7 @@ function ploopi_ob_callback($buffer)
 
         $log->fields['browser'] = isset($_SESSION['ploopi']['remote_browser']) ? $_SESSION['ploopi']['remote_browser'] : '';
         $log->fields['system'] = isset($_SESSION['ploopi']['remote_system']) ? $_SESSION['ploopi']['remote_system'] : '';
-        
+
         $log->fields['total_exec_time'] = $ploopi_stats['total_exectime'];
         $log->fields['sql_exec_time'] = $ploopi_stats['sql_exectime'];
         $log->fields['sql_percent_time'] = $ploopi_stats['sql_ratiotime'];
@@ -219,7 +219,7 @@ function ploopi_ob_callback($buffer)
         $log->fields['page_size'] = $ploopi_stats['pagesize'];
         $log->save();
     }
-    
+
     session_write_close();
 
     if ($content_type == 'text/html' && !$booDownloadFile)
@@ -246,7 +246,7 @@ function ploopi_ob_callback($buffer)
 
         $buffer = trim(str_replace($array_tags, $array_values, $buffer));
     }
-    
+
     if (!$booDownloadFile && _PLOOPI_USE_OUTPUT_COMPRESSION && ploopi_accepts_gzip() && ($content_type == 'text/plain' || $content_type == 'text/html' || $content_type == 'text/xml' || $content_type == 'text/x-json'))
     {
         header("Content-Encoding: gzip");
@@ -260,7 +260,7 @@ function ploopi_ob_callback($buffer)
     }
 
     header('Content-Length: '.strlen($buffer));
-    
+
     return $buffer;
 }
 
@@ -288,10 +288,14 @@ function ploopi_print_r($var, $return = false)
  * @see ploopi_ob_callback
  */
 
-function ploopi_ob_clean()
+function ploopi_ob_clean($booDeleteAllBuffers = false)
 {
-    while (ob_get_level() > 1) @ob_end_clean();
-    if (ob_get_level() == 1) ob_clean();
+    if ($booDeleteAllBuffers) while (ob_get_level()) @ob_end_clean();
+    else
+    {
+        while (ob_get_level() > 1) @ob_end_clean();
+        if (ob_get_level() == 1) ob_clean();
+    }
 }
 
 /**
@@ -673,8 +677,8 @@ function ploopi_getavailabletemplates($type = 'frontoffice')
 
 function ploopi_array_map($func, $var)
 {
-    if (is_array($var)) { foreach($var as $key => $value) $var[$key] = ploopi_array_map($func, $value); return $var; } 
-    elseif (is_object($var)) { foreach(get_object_vars($var) as $key => $value)  $var->$key = ploopi_array_map($func, $value); return $var; } 
+    if (is_array($var)) { foreach($var as $key => $value) $var[$key] = ploopi_array_map($func, $value); return $var; }
+    elseif (is_object($var)) { foreach(get_object_vars($var) as $key => $value)  $var->$key = ploopi_array_map($func, $value); return $var; }
     else return call_user_func($func, $var);
 }
 
@@ -700,7 +704,7 @@ function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
 {
     global $session;
     global $arrParsedURI;
-    
+
     // Suppression de l'information de connexion
     $objConnectedUser = new connecteduser();
     if ($objConnectedUser->open(session_id())) $objConnectedUser->delete();
@@ -734,8 +738,8 @@ function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
 function ploopi_getparam($strParamName, $intModuleId = null)
 {
     if (is_null($intModuleId)) $intModuleId = $_SESSION['ploopi']['moduleid'];
-    
-    return isset($_SESSION['ploopi']['modules'][$intModuleId][$strParamName]) ? $_SESSION['ploopi']['modules'][$intModuleId][$strParamName] : null;  
+
+    return isset($_SESSION['ploopi']['modules'][$intModuleId][$strParamName]) ? $_SESSION['ploopi']['modules'][$intModuleId][$strParamName] : null;
 }
 
 /**
@@ -750,13 +754,13 @@ function ploopi_getsessionvar($strVarName, $intModuleId = null, $intWorkspaceId 
 {
     if (is_null($intModuleId)) $intModuleId = $_SESSION['ploopi']['moduleid'];
     if (is_null($intWorkspaceId)) $intWorkspaceId = $_SESSION['ploopi']['workspaceid'];
-        
+
     if (!empty($_SESSION['ploopi']['modules'][$intModuleId]['moduletype']))
     {
         $strModuleType = $_SESSION['ploopi']['modules'][$intModuleId]['moduletype'];
-        
+
         return isset($_SESSION['ploopi'][$strModuleType][$intModuleId][$intWorkspaceId][$strVarName]) ? $_SESSION['ploopi'][$strModuleType][$intModuleId][$intWorkspaceId][$strVarName] : null;
-    } 
+    }
 
     return null;
 }
@@ -773,12 +777,23 @@ function ploopi_setsessionvar($strVarName, $mixVar = null, $intModuleId = null, 
 {
     if (is_null($intModuleId)) $intModuleId = $_SESSION['ploopi']['moduleid'];
     if (is_null($intWorkspaceId)) $intWorkspaceId = $_SESSION['ploopi']['workspaceid'];
-    
+
     if (!empty($_SESSION['ploopi']['modules'][$intModuleId]['moduletype']))
     {
         $strModuleType = $_SESSION['ploopi']['modules'][$intModuleId]['moduletype'];
-        
+
         $_SESSION['ploopi'][$strModuleType][$intModuleId][$intWorkspaceId][$strVarName] = $mixVar;
-    }  
+    }
+}
+
+
+function ploopi_loadv2()
+{
+    /**
+     * Autoloader pour les classes v2 + compatibilité anciennes versions php
+     */
+    require_once './include/functions/compatibility.php';
+    require_once './include/classes_v2/ploopiAutoloader.php';
+    ploopiAutoloader::init();
 }
 ?>

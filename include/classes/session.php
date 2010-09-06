@@ -72,7 +72,7 @@ class ploopi_session
     private static function compress(&$data) { return self::$booCompress ? @gzcompress($data) : $data; }
 
     private static function uncompress(&$data) { return self::$booCompress && $data != '' ? @gzuncompress($data) : $data; }
-    
+
     public static function set_usedb($booUseDb) { self::$booUseDb = $booUseDb; }
 
     public static function get_usedb() { return self::$booUseDb; }
@@ -84,9 +84,9 @@ class ploopi_session
     public static function get_id() { return session_id(); }
 
     public static function open()
-    { 
+    {
         ini_set('session.gc_probability', 10);
-        ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);    
+        ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);
 
         if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
         {
@@ -96,12 +96,12 @@ class ploopi_session
                 self::$objDb = new ploopi_db(_PLOOPI_SESSION_DB_SERVER, _PLOOPI_SESSION_DB_LOGIN, _PLOOPI_SESSION_DB_PASSWORD, _PLOOPI_SESSION_DB_DATABASE);
                 if(!self::$objDb->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
             }
-            else 
+            else
             {
                 global $db;
                 self::set_db($db);
             }
-        }        
+        }
     }
 
     public static function close() { }

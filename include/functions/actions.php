@@ -51,11 +51,11 @@ function ploopi_create_user_action_log($id_action, $id_record, $id_module_type =
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
     $user_action_log = new user_action_log();
-    
+
     $user_action_log->fields['user'] = isset($_SESSION['ploopi']['user']) ? trim("{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']} ({$_SESSION['ploopi']['user']['login']})") : '';
-    
+
     $user_action_log->fields['workspace'] = isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : '';
-    
+
     if (isset($_SESSION['ploopi']['modules'][$id_module]))
     {
         $user_action_log->fields['module'] = $_SESSION['ploopi']['modules'][$id_module]['label'];
@@ -68,7 +68,7 @@ function ploopi_create_user_action_log($id_action, $id_record, $id_module_type =
         $user_action_log->fields['module_type'] = '';
         $user_action_log->fields['action'] = '';
     }
-    
+
     $user_action_log->fields['id_user'] = isset($_SESSION['ploopi']['userid']) ? $_SESSION['ploopi']['userid'] : 0;
     $user_action_log->fields['id_action'] = $id_action;
     $user_action_log->fields['id_workspace'] = isset($_SESSION['ploopi']['workspaceid']) ? $_SESSION['ploopi']['workspaceid'] : 0;

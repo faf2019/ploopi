@@ -46,20 +46,20 @@ foreach(array('POST', 'GET') as $strGlobalVar)
     if (!empty(${"_{$strGlobalVar}"}['ploopi_url']))
     {
         ${"_{$strGlobalVar}"}['ploopi_url'] = ploopi_filtervar(${"_{$strGlobalVar}"}['ploopi_url']);
-        
+
         require_once './include/classes/cipher.php';
         $objCipher = new ploopi_cipher();
-        
+
         $strPloopiUrl = ploopi_cipher::singleton()->decrypt(${"_{$strGlobalVar}"}['ploopi_url']);
-        
+
         foreach(explode('&',$strPloopiUrl) as $strParam)
         {
             if (strstr($strParam, '=')) list($strKey, $strValue) = explode('=',$strParam);
             else {$strKey = $strParam; $strValue = '';}
-    
+
             $_REQUEST[$strKey] = ${"_{$strGlobalVar}"}[$strKey] = urldecode($strValue);
         }
-        
+
         unset($strKey);
         unset($strValue);
         unset($strParam);

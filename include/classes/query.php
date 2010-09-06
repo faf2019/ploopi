@@ -41,7 +41,7 @@ abstract class ploopi_sqlformat
      * @var string
      */
     private static $strRegExFormat = '|%(([0-9]*)\$){0,1}([s,d,f,t,e,g])|';
-    
+
     /**
      * Numéro du paramètre traité
      *
@@ -49,7 +49,7 @@ abstract class ploopi_sqlformat
      * @see replace
      */
     private static $intNumParam = 0;
-    
+
     /**
      * Tableau des valeurs de remplacement
      *
@@ -57,14 +57,14 @@ abstract class ploopi_sqlformat
      * @see replace
      */
     private static $arrValues = null;
-    
+
     /**
      * Connexion à la BDD
      *
      * @var resource
      */
     private static $objDb = null;
-    
+
     /**
      * Méthode de remplacement appelée en callback via preg_replace_callback
      *
@@ -75,7 +75,7 @@ abstract class ploopi_sqlformat
     private static function cb_replace($arrMatches)
     {
         global $db;
-        
+
         if (sizeof($arrMatches) == 4)
         {
             $intNumParam = empty($arrMatches[2]) ? ++self::$intNumParam - 1 : intval($arrMatches[2]) - 1;
@@ -107,7 +107,7 @@ abstract class ploopi_sqlformat
                     }
                     $strValue = implode(',', $arrValues);
                 break;
-                
+
                 case 'd': // integer
                     $strValue = intval($mixValue);
                 break;
@@ -125,7 +125,7 @@ abstract class ploopi_sqlformat
             return $strValue;
         }
     }
-    
+
     /**
      * Méthode publique de remplacement
      *
@@ -137,14 +137,14 @@ abstract class ploopi_sqlformat
     {
         // Initialisation du numéro de paramètre en cours de traitement
         self::$intNumParam = 0;
-        
+
         // Initialisation de la connexion à la BDD
         if (is_null($objDb)) { global $db; self::$objDb = $db; }
         else self::$objDb = $objDb;
-        
+
         // Initialisation des valeurs de remplacement
         self::$arrValues = $arrData['values'];
-        
+
         // Remplacement des variables selon la regex
         return preg_replace_callback(self::$strRegExFormat, array('self', 'cb_replace'), $arrData['rawsql']);
     }
@@ -160,15 +160,15 @@ abstract class ploopi_query
      *
      * @var resource
      */
-    protected $objDb;    
-    
+    protected $objDb;
+
     /**
      * Tableau de clauses SQL brutes
      *
      * @var array
      */
-    protected $arrRaw;    
-    
+    protected $arrRaw;
+
     /**
      * Constructeur de la classe
      *
@@ -178,20 +178,20 @@ abstract class ploopi_query
     {
         if (!is_null($objDb)) $this->objDb = $objDb;
         else { global $db; $this->objDb = $db; }
-        
+
         return true;
     }
-    
+
     /**
      * Ajoute une clause SQL brute, non filtrée
-     * 
+     *
      * @param string $strRaw chaîne SQL
      */
     public function add_raw($strRaw)
     {
         $this->arrRaw[] = $strRaw;
-    }      
-    
+    }
+
     /**
      * Retourne la clause Brute
      *
@@ -218,14 +218,14 @@ abstract class ploopi_query
      * @param resource $objDb Connexion à la BDD
      */
     public function set_db($objDb) { $this->objDb = $objDb; }
-    
-    
+
+
     /**
      * Permet de redéfinir la connexion à la BDD au réveil de l'objet  (utile notamment après désérialisation)
-     */    
+     */
     public function __wakeup()
     {
-        global $db; 
+        global $db;
         $this->objDb = $db;
     }
 }
@@ -255,7 +255,7 @@ abstract class ploopi_query_sud extends ploopi_query
      * @var array
      */
     private $arrOrderBy;
-    
+
     /**
      * Clause LIMIT
      *
@@ -272,10 +272,10 @@ abstract class ploopi_query_sud extends ploopi_query
         'select',
         'update',
         'delete'
-    );    
-    
+    );
+
     private $strType;
-    
+
     /**
      * Constructeur de la classe
      *
@@ -285,29 +285,29 @@ abstract class ploopi_query_sud extends ploopi_query
     public function __construct($strType = 'select', $objDb = null)
     {
         if (!parent::__construct($objDb)) return false;
-        
+
         $this->arrFrom = array();
         $this->arrWhere = array();
         $this->arrOrderBy = array();
         $this->strLimit = null;
-        
+
         if (!in_array($strType, self::$arrType))
         {
             trigger_error('Ce type de requête n\'existe pas', E_USER_ERROR);
             return false;
         }
-        else 
-        { 
+        else
+        {
             $this->strType = $strType;
             return true;
         }
     }
-    
+
     /**
      * Ajout d'une clause WHERE à la requête
-     * Si plusieurs clauses WHERE sont ajoutées, elles sont séparées par AND 
-     * 
-     * Format supportés : 
+     * Si plusieurs clauses WHERE sont ajoutées, elles sont séparées par AND
+     *
+     * Format supportés :
      * %d int
      * %f float
      * %s string
@@ -317,7 +317,7 @@ abstract class ploopi_query_sud extends ploopi_query
      * %r raw
      *
      * Numérotation des arguments possible : %1$f, %2$d, %4$r
-     * 
+     *
      * @param string $strWhere Clause SQL brute
      * @param mixed $mixValues Valeurs
      */
@@ -329,19 +329,19 @@ abstract class ploopi_query_sud extends ploopi_query
 
     /**
      * Ajoute une clause FROM à la requête (select/delete/update uniquement)
-     * Si plusieurs clauses FROM sont ajoutées, elles sont séparées par "," 
-     * 
+     * Si plusieurs clauses FROM sont ajoutées, elles sont séparées par ","
+     *
      * @param string $strFrom Clause FROM
      */
     public function add_from($strFrom)
     {
         if (!in_array($strFrom, $this->arrFrom)) $this->arrFrom[] = $strFrom;
-    }    
-    
+    }
+
     /**
      * Ajoute une clause ORDER BY à la requête
      * Si plusieurs clauses ORDER BY sont ajoutées, elles sont séparées par ","
-     *  
+     *
      * @param string $strOrderBy Clause ORDER BY
      */
     public function add_orderby($strOrderBy)
@@ -358,7 +358,22 @@ abstract class ploopi_query_sud extends ploopi_query
     {
         $this->strLimit = $strLimit;
     }
-    
+
+    /**
+     * Supprime la clause WHERE
+     */
+    public function remove_where() { $this->arrWhere = array(); }
+
+    /**
+     * Supprime la clause ORDER BY
+     */
+    public function remove_orderby() { $this->arrOrderBy = array(); }
+
+    /**
+     * Supprime la clause LIMIT
+     */
+    public function remove_limit() { $this->strLimit = null; }
+
     /**
      * Retourne la clause FROM
      *
@@ -368,34 +383,34 @@ abstract class ploopi_query_sud extends ploopi_query
     {
         return empty($this->arrFrom) ? false : ' FROM '.implode(', ', $this->arrFrom);
     }
-    
+
     /**
      * Retourne la clause WHERE
      *
      * @return string
      */
-    protected function get_where() 
-    { 
+    protected function get_where()
+    {
         $arrWhere = array();
         foreach($this->arrWhere as $arrWhereDetail) $arrWhere[] = ploopi_sqlformat::replace($arrWhereDetail, $this->objDb);
 
         return empty($arrWhere) ? '' : ' WHERE '.implode(' AND ', $arrWhere);
     }
-    
+
     /**
      * Retourne la clause ORDER BY
      *
      * @return string
      */
     protected function get_orderby() { return empty($this->arrOrderBy) ? '' : ' ORDER BY '.implode(', ', $this->arrOrderBy); }
-    
+
     /**
      * Retourne la clause LIMIT
      *
      * @return string
      */
     protected function get_limit() { return empty($this->strLimit) ? '' : " LIMIT {$this->strLimit}"; }
-    
+
 }
 
 
@@ -410,7 +425,7 @@ class ploopi_query_select extends ploopi_query_sud
      * @var array
      */
     private $arrSelect;
-    
+
     /**
      * Tableau de la clause INNER JOIN
      *
@@ -424,7 +439,7 @@ class ploopi_query_select extends ploopi_query_sud
      * @var array
      */
     private $arrLeftJoin;
-    
+
     /**
      * Tableau de la clause GROUP BY
      *
@@ -438,7 +453,7 @@ class ploopi_query_select extends ploopi_query_sud
      * @var array
      */
     private $arrHaving;
-    
+
     /**
      * Constructeur de la classe
      *
@@ -451,25 +466,25 @@ class ploopi_query_select extends ploopi_query_sud
         $this->arrLeftJoin = array();
         $this->arrGroupBy = array();
         $this->arrHaving = array();
-        
+
         return parent::__construct('select', $objDb);
-    }    
-    
+    }
+
     /**
      * Ajoute une clause SELECT
      *
      * @param string $strSelect Clause SELECT
-     * @param mixed $mixValues valeur
+     * @param mixed $mixValues valeur(s)
      */
     public function add_select($strSelect, $mixValues = null)
     {
         if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
         $this->arrSelect[] = array('rawsql' => $strSelect, 'values' => $mixValues);
-    }    
+    }
 
     /**
      * Ajoute une clause LEFT JOIN à la requête
-     * 
+     *
      * @param string $strLeftJoin Clause LEFT JOIN
      */
     public function add_leftjoin($strLeftJoin, $mixValues = null)
@@ -477,10 +492,10 @@ class ploopi_query_select extends ploopi_query_sud
         if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
         $this->arrLeftJoin[] = array('rawsql' => $strLeftJoin, 'values' => $mixValues);
     }
-    
+
     /**
      * Ajoute une clause INNER JOIN à la requête
-     * 
+     *
      * @param string $strInnerJoin Clause INNER JOIN
      */
     public function add_innerjoin($strInnerJoin, $mixValues = null)
@@ -488,11 +503,11 @@ class ploopi_query_select extends ploopi_query_sud
         if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
         $this->arrInnerJoin[] = array('rawsql' => $strInnerJoin, 'values' => $mixValues);
     }
-    
+
     /**
      * Ajoute une clause GROUP BY à la requête
      * Si plusieurs clauses GROUP BY sont ajoutées, elles sont séparées par ","
-     *  
+     *
      * @param string $strGroupBy Clause ORDER BY
      */
     public function add_groupby($strGroupBy)
@@ -502,20 +517,20 @@ class ploopi_query_select extends ploopi_query_sud
 
     /**
      * Ajout d'une clause HAVING à la requête
-     * Si plusieurs clauses HAVING sont ajoutées, elles sont séparées par AND 
-     * 
+     * Si plusieurs clauses HAVING sont ajoutées, elles sont séparées par AND
+     *
      * @param string $strWhere Clause SQL brute
      * @param mixed $mixValues Valeurs
-     * 
+     *
      * @see add_where
      */
-        
+
     public function add_having($strHaving, $mixValues = null)
     {
         if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
         $this->arrHaving[] = array('rawsql' => $strHaving, 'values' => $mixValues);
-    }    
-    
+    }
+
     /**
      * Retourne la clause SELECT
      *
@@ -525,20 +540,20 @@ class ploopi_query_select extends ploopi_query_sud
     {
         $arrSelect = array();
         foreach($this->arrSelect as $arrSelectDetail) $arrSelect[] = ploopi_sqlformat::replace($arrSelectDetail, $this->objDb);
-        
+
         return 'SELECT '.(empty($arrSelect) ? '*' : implode(', ', $arrSelect));
     }
-    
+
     /**
      * Retourne la clause LEFT JOIN
      *
      * @return string
      */
-    protected function get_leftjoin() 
-    { 
+    protected function get_leftjoin()
+    {
         $arrLeftJoin = array();
         foreach($this->arrLeftJoin as $arrLeftJoinDetail) $arrLeftJoin[] = ploopi_sqlformat::replace($arrLeftJoinDetail, $this->objDb);
-        
+
         return empty($arrLeftJoin) ? '' : ' LEFT JOIN '.implode(' LEFT JOIN ', $arrLeftJoin);
     }
 
@@ -547,11 +562,11 @@ class ploopi_query_select extends ploopi_query_sud
      *
      * @return string
      */
-    protected function get_innerjoin() 
-    { 
+    protected function get_innerjoin()
+    {
         $arrInnerJoin = array();
         foreach($this->arrInnerJoin as $arrInnerJoinDetail) $arrInnerJoin[] = ploopi_sqlformat::replace($arrInnerJoinDetail, $this->objDb);
-        
+
         return empty($arrInnerJoin) ? '' : ' INNER JOIN '.implode(' INNER JOIN ', $arrInnerJoin);
     }
 
@@ -561,20 +576,45 @@ class ploopi_query_select extends ploopi_query_sud
      * @return string
      */
     protected function get_groupby() { return empty($this->arrGroupBy) ? '' : ' GROUP BY '.implode(', ', $this->arrGroupBy); }
-    
+
     /**
      * Retourne la clause HAVING
      *
      * @return string
      */
-    protected function get_having() 
-    { 
+    protected function get_having()
+    {
         $arrHaving = array();
         foreach($this->arrHaving as $arrHavingDetail) $arrHaving[] = ploopi_sqlformat::replace($arrHavingDetail, $this->objDb);
-        
+
         return empty($arrHaving) ? '' : ' HAVING '.implode(' AND ', $arrHaving);
     }
-    
+
+    /**
+     * Supprime la clause SELECT
+     */
+    public function remove_select() { $this->arrSelect = array(); }
+
+    /**
+     * Supprime la clause LEFT JOIN
+     */
+    public function remove_leftjoin() { $this->arrLeftJoin = array(); }
+
+    /**
+     * Supprime la clause INNER JOIN
+     */
+    public function remove_innerjoin() { $this->arrInnerJoin = array(); }
+
+    /**
+     * Supprime la clause GROUP BY
+     */
+    public function remove_groupby() { $this->arrGroupBy = array(); }
+
+    /**
+     * Supprime la clause HAVING
+     */
+    public function remove_having() { $this->arrHaving = array(); }
+
     /**
      * Génération de la requête SQL
      *
@@ -583,13 +623,13 @@ class ploopi_query_select extends ploopi_query_sud
     public function get_sql()
     {
         $strSql = '';
-        
+
         if ($this->get_from() !== false)
         {
             $strSql = $this->get_select().
-                $this->get_from(). 
+                $this->get_from().
                 $this->get_innerjoin().
-                $this->get_leftjoin(). 
+                $this->get_leftjoin().
                 $this->get_where().
                 $this->get_groupby().
                 $this->get_having().
@@ -597,7 +637,7 @@ class ploopi_query_select extends ploopi_query_sud
                 $this->get_limit().
                 $this->get_raw();
         }
-        
+
         return $strSql;
     }
 }
@@ -607,14 +647,14 @@ class ploopi_query_select extends ploopi_query_sud
  */
 class ploopi_query_delete extends ploopi_query_sud
 {
-    
+
     /**
      * Tableau de la clause DELETE
      *
      * @var array
      */
     private $arrDelete;
-        
+
     /**
      * Tableau de la clause INNER JOIN
      *
@@ -628,7 +668,7 @@ class ploopi_query_delete extends ploopi_query_sud
      * @var array
      */
     private $arrLeftJoin;
-        
+
     /**
      * Constructeur de la classe
      *
@@ -639,10 +679,10 @@ class ploopi_query_delete extends ploopi_query_sud
         $this->arrDelete = array();
         $this->arrInnerJoin = array();
         $this->arrLeftJoin = array();
-        
+
         return parent::__construct('delete', $objDb);
-    }    
-    
+    }
+
     /**
      * Ajoute une clause DELETE
      *
@@ -652,11 +692,11 @@ class ploopi_query_delete extends ploopi_query_sud
     public function add_delete($strDelete)
     {
         $this->arrDelete[] = $strDelete;
-    }    
-    
+    }
+
     /**
      * Ajoute une clause LEFT JOIN à la requête
-     * 
+     *
      * @param string $strLeftJoin Clause LEFT JOIN
      */
     public function add_leftjoin($strLeftJoin, $mixValues = null)
@@ -664,18 +704,18 @@ class ploopi_query_delete extends ploopi_query_sud
         if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
         $this->arrLeftJoin[] = array('rawsql' => $strLeftJoin, 'values' => $mixValues);
     }
-    
+
     /**
      * Ajoute une clause INNER JOIN à la requête
-     * 
+     *
      * @param string $strInnerJoin Clause INNER JOIN
      */
     public function add_innerjoin($strInnerJoin, $mixValues = null)
     {
         if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
         $this->arrInnerJoin[] = array('rawsql' => $strInnerJoin, 'values' => $mixValues);
-    }    
-    
+    }
+
     /**
      * Retourne la clause DELETE
      *
@@ -683,19 +723,19 @@ class ploopi_query_delete extends ploopi_query_sud
      */
     protected function get_delete()
     {
-        return 'DELETE '.(empty($this->arrDelete) ? '*' : implode(', ', $this->arrDelete));
+        return 'DELETE '.(empty($this->arrDelete) ? '' : implode(', ', $this->arrDelete));
     }
-    
+
     /**
      * Retourne la clause LEFT JOIN
      *
      * @return string
      */
-    protected function get_leftjoin() 
-    { 
+    protected function get_leftjoin()
+    {
         $arrLeftJoin = array();
         foreach($this->arrLeftJoin as $arrLeftJoinDetail) $arrLeftJoin[] = ploopi_sqlformat::replace($arrLeftJoinDetail, $this->objDb);
-        
+
         return empty($arrLeftJoin) ? '' : ' LEFT JOIN '.implode(' LEFT JOIN ', $arrLeftJoin);
     }
 
@@ -704,14 +744,14 @@ class ploopi_query_delete extends ploopi_query_sud
      *
      * @return string
      */
-    protected function get_innerjoin() 
-    { 
+    protected function get_innerjoin()
+    {
         $arrInnerJoin = array();
         foreach($this->arrInnerJoin as $arrInnerJoinDetail) $arrInnerJoin[] = ploopi_sqlformat::replace($arrInnerJoinDetail, $this->objDb);
-        
+
         return empty($arrInnerJoin) ? '' : ' INNER JOIN '.implode(' INNER JOIN ', $arrInnerJoin);
-    }    
-    
+    }
+
     /**
      * Génération de la requête SQL
      *
@@ -720,21 +760,21 @@ class ploopi_query_delete extends ploopi_query_sud
     public function get_sql()
     {
         $strSql = '';
-        
+
         if ($this->get_from() !== false)
         {
             $strSql = $this->get_delete().
-                $this->get_from(). 
+                $this->get_from().
                 $this->get_innerjoin().
-                $this->get_leftjoin(). 
+                $this->get_leftjoin().
                 $this->get_where().
                 $this->get_orderby().
                 $this->get_limit().
                 $this->get_raw();
         }
-        
+
         return $strSql;
-    }    
+    }
 }
 
 
@@ -748,7 +788,7 @@ class ploopi_query_update extends ploopi_query_sud
      *
      * @var array
      */
-    private $arrSet;    
+    private $arrSet;
 
     /**
      * Constructeur de la classe
@@ -758,14 +798,14 @@ class ploopi_query_update extends ploopi_query_sud
     public function __construct($objDb = null)
     {
         $this->arrSet = array();
-        
+
         return parent::__construct('update', $objDb);
-    }    
-    
+    }
+
     /**
      * Ajout d'une clause SET à la requête
-     * Si plusieurs clauses SET sont ajoutées, elles sont séparées par , 
-     * 
+     * Si plusieurs clauses SET sont ajoutées, elles sont séparées par ,
+     *
      * @param string $strSet Clause SQL brute
      * @param mixed $mixValues Valeurs
      */
@@ -774,7 +814,7 @@ class ploopi_query_update extends ploopi_query_sud
         if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
         $this->arrSet[] = array('rawsql' => $strSet, 'values' => $mixValues);
     }
-    
+
     /**
      * Retourne la clause FROM
      *
@@ -784,20 +824,20 @@ class ploopi_query_update extends ploopi_query_sud
     {
         return empty($this->arrFrom) ? false : ' '.implode(', ', $this->arrFrom);
     }
-    
+
     /**
      * Retourne la clause SET
      *
      * @return string
      */
-    protected function get_set() 
-    { 
+    protected function get_set()
+    {
         $arrSet = array();
         foreach($this->arrSet as $arrSetDetail) $arrSet[] = ploopi_sqlformat::replace($arrSetDetail, $this->objDb);
-        
+
         return empty($arrSet) ? '' : ' SET '.implode(', ', $arrSet);
     }
-    
+
     /**
      * Génération de la requête SQL
      *
@@ -806,20 +846,20 @@ class ploopi_query_update extends ploopi_query_sud
     public function get_sql()
     {
         $strSql = '';
-        
+
         if ($this->get_from() !== false)
         {
             $strSql = 'UPDATE'.
-                $this->get_from(). 
-                $this->get_set(). 
+                $this->get_from().
+                $this->get_set().
                 $this->get_where().
                 $this->get_orderby().
                 $this->get_limit().
                 $this->get_raw();
         }
-        
+
         return $strSql;
-    }    
+    }
 }
 
 /**
@@ -832,8 +872,8 @@ class ploopi_query_insert extends ploopi_query
      *
      * @var array
      */
-    private $arrSet;   
-        
+    private $arrSet;
+
     /**
      * Constructeur de la classe
      *
@@ -842,24 +882,24 @@ class ploopi_query_insert extends ploopi_query
     public function __construct($objDb = null)
     {
         $this->arrSet = array();
-        
+
         return parent::__construct($objDb);
-    }  
-    
+    }
+
     /**
-     * Définit la table 
-     * 
+     * Définit la table
+     *
      * @param string $strTable nom de la table
      */
     public function set_table($strTable)
     {
         $this->arrFrom = array($strTable);
-    }   
+    }
 
     /**
      * Ajout d'une clause SET à la requête
-     * Si plusieurs clauses SET sont ajoutées, elles sont séparées par , 
-     * 
+     * Si plusieurs clauses SET sont ajoutées, elles sont séparées par ,
+     *
      * @param string $strSet Clause SQL brute
      * @param mixed $mixValues Valeurs
      */
@@ -868,30 +908,30 @@ class ploopi_query_insert extends ploopi_query
         if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
         $this->arrSet[] = array('rawsql' => $strSet, 'values' => $mixValues);
     }
-    
+
     /**
-     * Retourne la table 
-     * 
+     * Retourne la table
+     *
      * @return string
      */
     protected function get_table()
     {
         return empty($this->arrFrom) ? false : current($this->arrFrom);
-    }  
-    
+    }
+
     /**
      * Retourne la clause SET
      *
      * @return string
      */
-    protected function get_set() 
-    { 
+    protected function get_set()
+    {
         $arrSet = array();
         foreach($this->arrSet as $arrSetDetail) $arrSet[] = ploopi_sqlformat::replace($arrSetDetail, $this->objDb);
-        
+
         return empty($arrSet) ? '' : ' SET '.implode(', ', $arrSet);
-    }   
-    
+    }
+
     /**
      * Génération de la requête SQL
      *
@@ -900,15 +940,15 @@ class ploopi_query_insert extends ploopi_query
     public function get_sql()
     {
         $strSql = '';
-        
+
         if ($this->get_table() !== false)
         {
             $strSql = 'INSERT INTO '.$this->get_table().$this->get_set().$this->get_raw();
         }
-        
+
         return $strSql;
-    }      
-    
+    }
+
 }
 
 /**
@@ -921,8 +961,8 @@ class ploopi_recordset
      *
      * @var resource
      */
-    private $objDb;   
-    
+    private $objDb;
+
     /**
      * Recordset courant
      *
@@ -961,7 +1001,7 @@ class ploopi_recordset
     {
         return $this->objDb->numrows($this->resRs);
     }
-    
+
     /**
      * Déplace le pointeur interne sur un enregistrement particulier
      *
@@ -971,28 +1011,28 @@ class ploopi_recordset
     public function dataseek($intPos = 0)
     {
         return $this->objDb->dataseek($this->resRs, $intPos);
-    }    
-    
+    }
+
     /**
      * Retourne dans un tableau le contenu du recordset
      *
      * @param $booFirstColKey $firstcolkey true si la première colonne doit servir d'index pour le tableau (optionnel)
      * @return mixed un tableau indexé contenant les enregistrements du recordset ou false si le recordset n'est pas valide
-     */    
+     */
     public function getarray($booFirstColKey = false)
     {
         return $this->objDb->getarray($this->resRs, $booFirstColKey);
     }
-    
+
     /**
      * Retourne au format JSON le contenu du recordset
      *
      * @param boolean $booUtf8 true si le contenu doit être encodé en utf8, false sinon (true par défaut)
      * @return string une chaîne au format JSON contenant les enregistrements du recordset ou false si le recordset n'est pas valide
-     */    
+     */
     public function getjson($booUtf8 = true)
     {
         return $this->objDb->getjson($this->resRs, $booUtf8);
-    }    
+    }
 }
 ?>

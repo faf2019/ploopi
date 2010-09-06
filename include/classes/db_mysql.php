@@ -49,7 +49,7 @@ class ploopi_db
      *
      * @var boolean
      */
-    
+
     private $persistency;
 
     /**
@@ -57,7 +57,7 @@ class ploopi_db
      *
      * @var string
      */
-    
+
     private $user;
 
     /**
@@ -65,7 +65,7 @@ class ploopi_db
      *
      * @var string
      */
-    
+
     private $password;
 
     /**
@@ -73,7 +73,7 @@ class ploopi_db
      *
      * @var string
      */
-    
+
     private $server;
 
     /**
@@ -81,7 +81,7 @@ class ploopi_db
      *
      * @var string
      */
-    
+
     private $database;
 
     /**
@@ -89,7 +89,7 @@ class ploopi_db
      *
      * @var ressource
      */
-    
+
     private $connection_id;
 
     /**
@@ -97,7 +97,7 @@ class ploopi_db
      *
      * @var ressource
      */
-    
+
     private $query_result;
 
     /**
@@ -130,7 +130,7 @@ class ploopi_db
      */
 
     private  $arrLog;
-    
+
 
     /**
      * Constructeur de la classe. Connexion à une base de données, sélection de la base.
@@ -155,7 +155,7 @@ class ploopi_db
         $this->exectime_queries = 0;
 
         $this->flush_log();
-        
+
         if($this->persistency)
         {
             $this->timer_start();
@@ -200,7 +200,7 @@ class ploopi_db
      * @param string $database nom de la base de données
      * @return boolean true si sélection ok
      */
-    
+
     public function selectdb($database)
     {
         if (!$this->isconnected()) return false;
@@ -214,7 +214,7 @@ class ploopi_db
      *
      * @return boolean true si la connexion est active, false sinon
      */
-    
+
     public function isconnected()
     {
         return ($this->connection_id != 0);
@@ -225,7 +225,7 @@ class ploopi_db
      *
      * @return boolean true si la connexion a été fermée
      */
-    
+
     public function close()
     {
         if (!$this->isconnected()) return false;
@@ -248,7 +248,7 @@ class ploopi_db
      * @param string $query requête SQL à exécuter
      * @return mixed un pointeur sur le recordset (resource) ou false si la requête n'a pas pu être exécutée
      */
-    
+
     public function query($query = '')
     {
         if (empty($query)) return false;
@@ -256,7 +256,7 @@ class ploopi_db
         unset($this->query_result);
 
         if (!$this->isconnected()) return false;
-                
+
         if($query != '')
         {
             $this->num_queries++;
@@ -267,7 +267,7 @@ class ploopi_db
             $this->query_result = @mysql_query($query, $this->connection_id);
 
             $this->arrLog[] = array ('query' => $query, 'time' => $this->timer_stop());
-            
+
             if (mysql_errno() != 0) trigger_error(mysql_error()."<br />ressource:{$this->connection_id}<br /><b>query:</b> $query", E_USER_WARNING);
 
         }
@@ -325,7 +325,7 @@ class ploopi_db
         if (!$this->isconnected()) return false;
 
         if(!isset($query_id)) $query_id = $this->query_result;
-            
+
         if($query_id) return @mysql_num_rows($query_id);
         else return false;
     }
@@ -336,13 +336,13 @@ class ploopi_db
      * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
      * @return mixed l'enregistrement courant (sous forme d'un tableau associatif) ou false si le recordset n'est pas valide
      */
-    
+
     public function fetchrow($query_id = null, $result_type = MYSQL_ASSOC)
     {
         if (!$this->isconnected()) return false;
 
         if(!isset($query_id)) $query_id = $this->query_result;
-        
+
         if($query_id) return mysql_fetch_array($query_id, $result_type);
         else return false;
     }
@@ -352,7 +352,7 @@ class ploopi_db
      *
      * @return mixed dernier id inséré ou false si la connexion n'est pas valide
      */
-    
+
     public function insertid()
     {
         if (!$this->isconnected()) return false;
@@ -364,7 +364,7 @@ class ploopi_db
      *
      * @return array tableau indexé contenant les tables de la base de données sélectionnée
      */
-    
+
     public function listtables()
     {
         if (!$this->isconnected()) return false;
@@ -387,7 +387,7 @@ class ploopi_db
         $allFields = array();
         foreach ($allResults as $result) $allFields[] = $result['Field'];
         return $allFields;
-    } 
+    }
 
     /**
      * Renvoie le nombre de champs de la dernière requête ou du recordset passé en paramètre
@@ -395,13 +395,13 @@ class ploopi_db
      * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
      * @return mixed nombre de champs ou false si le recordset n'est pas valide
      */
-    
+
     public function numfields($query_id = null)
     {
         if (!$this->isconnected()) return false;
 
         if(!isset($query_id)) $query_id = $this->query_result;
-        
+
         if($query_id) return @mysql_num_fields($query_id);
         else return false;
     }
@@ -413,13 +413,13 @@ class ploopi_db
      * @param integer $i indice du champs
      * @return mixed
      */
-    
+
     public function fieldname($query_id = null, $i)
     {
         if (!$this->isconnected()) return false;
 
         if(!isset($query_id)) $query_id = $this->query_result;
-        
+
         if($query_id) return @mysql_field_name($query_id, $i);
         else return false;
     }
@@ -431,7 +431,7 @@ class ploopi_db
      * @param boolean $firstcolkey true si la première colonne doit servir d'index pour le tableau (optionnel)
      * @return mixed un tableau indexé contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
-    
+
     public function getarray($query_id = 0, $firstcolkey = false)
     {
         if (!$this->isconnected()) return false;
@@ -447,14 +447,14 @@ class ploopi_db
                 $this->dataseek($query_id, 0);
                 while ($fields = $this->fetchrow($query_id))
                 {
-                    if ($firstcolkey) 
+                    if ($firstcolkey)
                     {
                         $key = current($fields);
                         array_shift($fields);
-                        
+
                         if (sizeof($fields) == 0) $array[$key] = $key;
                         elseif (sizeof($fields) == 1) $array[$key] = $fields[key($fields)];
-                        else $array[$key] = $fields; 
+                        else $array[$key] = $fields;
                     }
                     else $array[] = $fields;
                 }
@@ -464,7 +464,7 @@ class ploopi_db
         }
         else return false;
     }
-    
+
     /**
      * Retourne dans une chaine le contenu de la dernière requête ou du recordset passé en paramètre
      *
@@ -473,7 +473,7 @@ class ploopi_db
      * @param string $gluevalue ',' jointure des valeur dans les enregsitrements
      * @return string une chaine contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
-    
+
     public function getimplode($query_id = 0, $gluebloc=',', $gluevalue=',')
     {
         if (!$this->isconnected()) return false;
@@ -484,19 +484,19 @@ class ploopi_db
         {
             $string = '';
             $boogluebloc = false;
-            
+
             if ($this->numrows())
             {
                 $this->dataseek($query_id, 0);
                 while ($fields = $this->fetchrow($query_id))
                 {
                     // ajout de la glue de bloc d'enregistrement
-                    if($string != '') 
-                    { 
-                        $string .= $gluebloc; 
-                        $boogluebloc = true; 
+                    if($string != '')
+                    {
+                        $string .= $gluebloc;
+                        $boogluebloc = true;
                     }
-                    
+
                     foreach($fields as $value)
                     {
                         // ajout de la glue entre les valeurs
@@ -512,7 +512,7 @@ class ploopi_db
         }
         else return false;
     }
-    
+
     /**
      * Retourne au format JSON le contenu de la dernière requête ou du recordset passé en paramètre
      *
@@ -554,13 +554,13 @@ class ploopi_db
      * @param integer $pos position dans le recordset
      * @return boolean true si le déplacement a été effectué sinon false
      */
-    
+
     public function dataseek($query_id = null, $pos = 0)
     {
         if (!$this->isconnected()) return false;
 
         if(!isset($query_id)) $query_id = $this->query_result;
-        
+
         if($query_id) return @mysql_data_seek($query_id, $pos);
         else return(false);
 
@@ -568,7 +568,7 @@ class ploopi_db
 
     /**
      * Protège les caractères spéciaux d'une chaîne de caractère
-     * 
+     *
      * @param string $strVar chaîne à échapper
      * @return chaîne échappée
      */
@@ -576,14 +576,14 @@ class ploopi_db
     {
         return mysql_real_escape_string($strVar, $this->connection_id);
     }
-    
+
     /**
      * Protège les caractères spéciaux d'une variable
      *
      * @param mixed $var variable à échapper
      * @return mixed variable échappée ou false si la connexion est fermée
      */
-    
+
     public function addslashes($var)
     {
         include_once './include/functions/system.php';
@@ -594,11 +594,11 @@ class ploopi_db
 
     /**
      * Démarre le timer
-     * 
+     *
      * @see timer
      * @see timer::start
      */
-    
+
     public function timer_start()
     {
         if (class_exists('timer'))
@@ -610,13 +610,13 @@ class ploopi_db
 
     /**
      * Met à jour le temps d'exécution global avec le timer en cours
-     * 
+     *
      * @return int temps écoulé en microsecondes
      *
      * @see timer
      * @see timer::getexectime
      */
-    
+
     public function timer_stop()
     {
         $intExt = 0;
@@ -632,8 +632,8 @@ class ploopi_db
     public function get_num_queries() { return($this->num_queries); }
 
     public function get_exectime_queries() { return($this->exectime_queries); }
-    
-    public function get_log() { return $this->arrLog; } 
+
+    public function get_log() { return $this->arrLog; }
 
     public function flush_log() { $this->arrLog = array(); }
 
