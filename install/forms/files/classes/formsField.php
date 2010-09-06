@@ -144,7 +144,7 @@ class formsField extends data_object
                         }
                     }
 
-                    $booUpdateTable->updateMetabase();
+                    $objForm->updateMetabase();
                 }
             }
         }
