@@ -47,24 +47,21 @@ include_once './include/classes/data_object.php';
  * @author Stéphane Escaich
  */
 
-class reply extends data_object
+class formsReply extends data_object
 {
     /**
      * Constructeur de la classe
      *
      * @return reply
      */
-    
-    function reply()
-    {
-        parent::data_object('ploopi_mod_forms_reply');
-    }
+
+    public function __construct() { parent::__construct('ploopi_mod_forms_reply'); }
 
     /**
      * Supprime cette réponse et les champs attachés
      */
-    
-    function delete()
+
+    public function delete()
     {
         global $db;
 

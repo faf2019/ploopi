@@ -1,3 +1,28 @@
+== Module FORMS - version 3.0 =====================================================
+
+2010-09-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Moteur de stockage
+** Stockage des données dans une structure physique (une table), permettant la mise en place de formulaires avec une volumétrie importante de données
+** Mise à jour automatique de la structure physique depuis l'interface d'administration d'un formulaire
+** Ajout des données directement dans la stucture physique
+** Indexation automatique des contenus
+
+* Consultation des données de formulaires
+** Nouveaux formats d'exports, ou remise en forme de formats existants : XLS, CSV, HTML, XML, ODT (via OOo), PDF (via OOo)
+** Nouveau système de navigation par pages
+
+* Interface
+** Remplacement du moteur de template par un système basé sur des feuilles de style (CSS) 
+** Ergonomie des formulaires nettement améliorée
+
+* Connecteurs
+** Interfaçage automatique avec le module DBREPORT, permet de construire des requêtes sur les données de formulaires ou de mettre en place un webservice (XML, CSV, JSON, etc...)
+
+* Graphiques
+** Les graphiques sont générés à partir du résultat de la requête et non plus sur une période déterminée
+** La largeur des graphiques est paramétrable par l'utilisateur
+
 == Module FORMS - version 2.5.4a =====================================================
 
 2010-03-22  Xavier Toussaint ~ HeXad <xavier@hexad.fr>

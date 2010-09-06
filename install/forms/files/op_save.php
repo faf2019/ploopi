@@ -38,7 +38,7 @@
  * Ouverture du formulaire
  */
 
-$forms = new form();
+$forms = new formsForm();
 $forms->open($id_form);
 
 /**
@@ -49,10 +49,10 @@ $email_array = array();
 
 $isnew = false;
 
-$reply = new reply();
-if (!empty($reply_id)) // existant
+$reply = new formsReply();
+if (!empty($record_id)) // existant
 {
-    $reply->open($reply_id);
+    $reply->open($record_id);
     $email_array['Formulaire']['Opération'] = 'Modification d\'Enregistrement';
 }
 else // nouveau
@@ -152,10 +152,10 @@ while ($fields = $db->fetchrow($rs_fields))
 
     if ($fieldok = true)
     {
-        $reply_field = new reply_field();
-        if (isset($reply_id))
+        $reply_field = new formsReplyField();
+        if (isset($record_id))
         {
-            $reply_field->open($reply_id, $fields['id']);
+            $reply_field->open($record_id, $fields['id']);
         }
 
         $reply_field->fields['id_field'] = $fields['id'];

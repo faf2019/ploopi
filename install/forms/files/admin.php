@@ -1,43 +1,5 @@
 <?php
 /*
-for ($c = 0; $c < 1000; $c++)
-{
-    echo '<br />'.$date = sprintf("2009%02d%02d%02d0000", rand(1,12), rand(1,30), rand(0,24));
-    $db->query("INSERT INTO ploopi_mod_forms_reply(id_form, id_module, date_validation) values (5, 5, '{$date}')");
-    $id = $db->insertid();
-    
-    switch(rand(1,3))
-    {
-        case 1:
-        $db->query("INSERT INTO ploopi_mod_forms_reply_field(id_reply, id_form, id_field, value) values ({$id}, 5, 30,  'Moins d\'une heure l\'après-midi')");
-        break;
-        case 2:
-        $db->query("INSERT INTO ploopi_mod_forms_reply_field(id_reply, id_form, id_field, value) values ({$id}, 5, 30,  'Moins de 2 heures l\'après-midi')");
-        break;
-        case 3:
-        $db->query("INSERT INTO ploopi_mod_forms_reply_field(id_reply, id_form, id_field, value) values ({$id}, 5, 30,  'Toute l\'après-midi')");
-        break;
-    }
-    
-    switch(rand(1,3))
-    {
-        case 1:
-        $db->query("INSERT INTO ploopi_mod_forms_reply_field(id_reply, id_form, id_field, value) values ({$id}, 5, 29,  'Moins d\'une heure le matin')");
-        break;
-        case 2:
-        $db->query("INSERT INTO ploopi_mod_forms_reply_field(id_reply, id_form, id_field, value) values ({$id}, 5, 29,  'Moins de 2 heures le matin')");
-        break;
-        case 3:
-        $db->query("INSERT INTO ploopi_mod_forms_reply_field(id_reply, id_form, id_field, value) values ({$id}, 5, 29,  'Tout le matin')");
-        break;
-    }
-    
-    $duree = rand(1,20)*30;
-    $db->query("INSERT INTO ploopi_mod_forms_reply_field(id_reply, id_form, id_field, value) values ({$id}, 5, 27, {$duree})");
-}
-*/
-
-/*
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2010 Ovensia
     Copyright (c) 2010 HeXad
@@ -82,10 +44,10 @@ ploopi_init_module('forms');
 
 if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
 {
-    include_once './modules/forms/class_form.php';
-    include_once './modules/forms/class_field.php';
-    include_once './modules/forms/class_forms_graphic.php';
-    
+    include_once './modules/forms/classes/formsForm.php';
+    include_once './modules/forms/classes/formsField.php';
+    include_once './modules/forms/classes/formsGraphic.php';
+
     $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
     if (!empty($_GET['formsTabItem'])) $_SESSION['forms']['formsTabItem'] = $_GET['formsTabItem'];
@@ -110,163 +72,8 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
 
     switch($op)
     {
-        /*
-        case 'forms_generate_tables':
-        case 'forms_generate_tables_from_list':
-            // needed to generate Metabase
-            include_once './include/classes/mb.php';
-
-            $forms = new form();
-            if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id']))
-            {
-                $data_object = new data_object('form_'.forms_createphysicalname($forms->fields['label']),null);
-
-                $data_object->fields['date_validation'] = '';
-                $data_object->fields['ip'] = '';
-                $data_object->fields['userid'] = '';
-                $data_object->fields['workspaceid'] = '';
-                $data_object->fields['login'] = '';
-                $data_object->fields['firstname'] = '';
-                $data_object->fields['lastname'] = '';
-                $data_object->fields['groupname'] = '';
-                $data_object->fields['groupcode'] = '';
-
-                $mb_table = new mb_table();
-                if ($mb_table->open($forms->fields['id'], $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type']))
-                {
-                    $mb_table->delete();
-                }
-
-                $mb_table = new mb_table();
-
-                $mb_table->fields['id'] = $forms->fields['id'];
-                $mb_table->fields['name'] = 'form_'.forms_createphysicalname($forms->fields['label']);
-                $mb_table->fields['label'] = $forms->fields['label'];
-                $mb_table->fields['visible'] = 1;
-                $mb_table->fields['id_module_type'] = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type'];
-                $mb_table->save();
-
-                $array_fields = $forms->getfields();
-
-                $array_fields[]['name'] = 'date_validation';
-                $array_fields[]['name'] = 'ip';
-                $array_fields[]['name'] = 'userid';
-                $array_fields[]['name'] = 'workspaceid';
-                $array_fields[]['name'] = 'login';
-                $array_fields[]['name'] = 'firstname';
-                $array_fields[]['name'] = 'lastname';
-                $array_fields[]['name'] = 'groupname';
-                $array_fields[]['name'] = 'groupcode';
-
-                foreach($array_fields as $id => $field)
-                {
-
-                    if (isset($field['type']) && $field['type'] == 'tablelink')
-                    {
-                        // creation db relation
-
-                        $objfield = new field();
-                        $objfield->open($field['values']);
-
-                        $objform = new form();
-                        $objform->open($objfield->fields['id_form']);
-
-                        $mb_schema = new mb_schema();
-                        $mb_schema->fields['tablesrc'] = 'form_'.forms_createphysicalname($forms->fields['label']);
-                        $mb_schema->fields['tabledest'] = 'form_'.forms_createphysicalname($objform->fields['label']);
-                        $mb_schema->fields['id_tablesrc'] = $forms->fields['id'];
-                        $mb_schema->fields['id_tabledest'] = $objform->fields['id'];
-                        $mb_schema->fields['id_module_type'] = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type'];
-                        $mb_schema->save();
-
-                        $mb_relation = new mb_relation();
-                        $mb_relation->fields['tablesrc'] = 'form_'.forms_createphysicalname($forms->fields['label']);
-                        $mb_relation->fields['id_tablesrc'] = $forms->fields['id'];
-                        $mb_relation->fields['fieldsrc'] = forms_createphysicalname($field['name']);
-                        $mb_relation->fields['tabledest'] = 'form_'.forms_createphysicalname($objform->fields['label']);
-                        $mb_relation->fields['id_tabledest'] = $objform->fields['id'];
-                        $mb_relation->fields['fielddest'] = forms_createphysicalname($objfield->fields['name']);
-                        $mb_relation->fields['id_module_type'] = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type'];
-                        $mb_relation->save();
-                    }
-                    $mb_field = new mb_field();
-                    $mb_field->fields['tablename'] = $mb_table->fields['name'];
-                    $mb_field->fields['name'] = forms_createphysicalname($field['name']);
-                    $mb_field->fields['label'] = $field['name'];
-                    $mb_field->fields['type'] = 'varchar(255)';
-                    $mb_field->fields['visible'] = 1;
-                    $mb_field->fields['id_module_type'] = $mb_table->fields['id_module_type'];
-                    $mb_field->fields['id_table'] = $forms->fields['id'];
-                    $mb_field->save();
-
-                    $data_object->fields[forms_createphysicalname($field['name'])] = '';
-                }
-
-                $db->query("DROP TABLE IF EXISTS `{$data_object->tablename}`");
-                $db->query($data_object->getsqlstructure());
-
-                $select =   "
-                                SELECT  fr.*,
-                                        u.id as userid,
-                                        u.firstname,
-                                        u.lastname,
-                                        u.login,
-                                        g.id as workspaceid,
-                                        g.code as groupcode,
-                                        g.label as groupname
-                                FROM    ploopi_mod_forms_reply fr,
-                                        ploopi_module m
-                                LEFT JOIN ploopi_user u ON fr.id_user = u.id
-                                LEFT JOIN ploopi_workspace g ON fr.id_workspace = g.id
-                                AND     fr.id_workspace IN ({$workspaces})
-                                WHERE   fr.id_form = {$forms->fields['id']}
-                                AND     fr.id_module = m.id
-                                AND     fr.id_module = {$_SESSION['ploopi']['moduleid']}
-                                ";
-
-                $rs = $db->query($select);
-
-                // construction du jeu de données brut (liste des réponses)
-                while ($fields = $db->fetchrow($rs))
-                {
-                    $data_object->fields['date_validation'] = $fields['date_validation'];
-                    $data_object->fields['ip'] = $fields['ip'];
-                    $data_object->fields['userid'] = $fields['userid'];
-                    $data_object->fields['workspaceid'] = $fields['workspaceid'];
-                    $data_object->fields['login'] = $fields['login'];
-                    $data_object->fields['firstname'] = $fields['firstname'];
-                    $data_object->fields['lastname'] = $fields['lastname'];
-                    $data_object->fields['groupname'] = $fields['groupname'];
-                    $data_object->fields['groupcode'] = $fields['groupcode'];
-
-                    $sql =  "
-                            SELECT  rf.*, f.type
-                            FROM    ploopi_mod_forms_reply_field rf,
-                                    ploopi_mod_forms_field f
-                            WHERE   rf.id_reply = {$fields['id']}
-                            AND     f.id = rf.id_field
-                            AND     f.separator = 0
-                            AND     f.captcha = 0
-                            ";
-
-                    $rs_replies = $db->query($sql);
-
-                    while ($fields_replies = $db->fetchrow($rs_replies))
-                    {
-                        $data_object->fields[forms_createphysicalname($array_fields[$fields_replies['id_field']]['name'])] = $fields_replies['value'];
-                    }
-
-                    $db->query($data_object->dump());
-                }
-
-                if ($op == 'forms_generate_tables_from_list') ploopi_redirect("admin.php?forms_id={$forms->fields['id']}&termine");
-                else ploopi_redirect("admin.php?op=forms_modify&forms_id={$forms->fields['id']}&termine");
-            }
-            else ploopi_redirect('admin.php');
-        break;
-        */
         case 'forms_save':
-            $forms = new form();
+            $forms = new formsForm();
             if (!empty($_POST['forms_id']) && is_numeric($_POST['forms_id'])) $forms->open($_POST['forms_id']);
             $forms->setvalues($_POST,'forms_');
             $forms->fields['pubdate_start'] = ploopi_local2timestamp($forms->fields['pubdate_start']);
@@ -288,7 +95,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
         break;
 
         case 'forms_delete':
-            $forms = new form();
+            $forms = new formsForm();
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id'])) $forms->delete();
             ploopi_redirect('admin.php?ploopi_mod_msg=_FORMS_MESS_OK_2');
         break;
@@ -296,7 +103,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
         case 'forms_field_delete':
             if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']))
             {
-                $field = new field();
+                $field = new formsField();
                 if ($field->open($_GET['field_id'])) $field->delete();
                 ploopi_redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_4");
             }
@@ -306,7 +113,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
         case 'forms_field_save':
         case 'forms_separator_save':
         case 'forms_captcha_save':
-            $field = new field();
+            $field = new formsField();
 
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
             {
@@ -376,7 +183,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
         case 'forms_field_movedown':
             if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']))
             {
-                $field = new field();
+                $field = new formsField();
                 $field->open($_GET['field_id']);
 
                 $select = "Select min(position) as minpos, max(position) as maxpos from ploopi_mod_forms_field where id_form = {$field->fields['id_form']}";
@@ -405,44 +212,44 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             }
             else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
         break;
-        
+
         case 'forms_graphic_save':
-            $objGraphic = new forms_graphic();
+            $objGraphic = new formsGraphic();
 
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
             {
                 if (!empty($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id'])) $objGraphic->open($_GET['forms_graphic_id']);
-                
+
                 if ($objGraphic->isnew()) $objGraphic->fields['id_form'] = $_GET['forms_id'];
 
                 $objGraphic->setvalues($_POST,'forms_graphic_');
                 if (!isset($_POST['forms_graphic_percent'])) $objGraphic->fields['percent'] = 0;
                 if (!isset($_POST['forms_graphic_filled'])) $objGraphic->fields['filled'] = 0;
-                
+
                 $objGraphic->save();
-                
+
                 ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_5");
-            }            
+            }
             else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
-            
+
             ploopi_die();
         break;
-        
+
         case 'forms_graphic_delete':
-            $objGraphic = new forms_graphic();
-            if (!empty($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id']) && $objGraphic->open($_GET['forms_graphic_id'])) 
+            $objGraphic = new formsGraphic();
+            if (!empty($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id']) && $objGraphic->open($_GET['forms_graphic_id']))
             {
                 $objGraphic->delete();
                 ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_6");
             }
             else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
         break;
-        
+
 
         case "export":
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
             {
-                $forms = new form();
+                $forms = new formsForm();
                 $forms->open($_GET['forms_id']);
                 include './modules/forms/public_forms_export.php';
             }
@@ -469,7 +276,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
                 break;
 
                 case 'forms_preview':
-                    $forms = new form();
+                    $forms = new formsForm();
 
                     if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id']))
                     {

@@ -36,7 +36,7 @@
  * Si ok => on l'ouvre. Sinon, nouveau graphique.
  */
 
-$objGraphic = new forms_graphic();
+$objGraphic = new formsGraphic();
 
 if (!empty($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id']) && $objGraphic->open($_GET['forms_graphic_id']))
 {

@@ -43,7 +43,7 @@ $option = (!isset($_GET['option'])) ? (( $orderby == 'datevalidation' ) ? 'DESC'
 
 $lmax = 1;
 
-$forms = new form();
+$forms = new formsForm();
 $forms->open($id_form);
 
 $workspaces = forms_viewworkspaces($id_module, $_SESSION['ploopi']['workspaceid'], $forms->fields['option_view']);
@@ -178,24 +178,24 @@ while ($fields = $db->fetchrow($rs))
 uasort($data, create_function('$a,$b', '$orderby = "'.$orderby.'";$option = "'.$option.'";$res=($option == "DESC")?strnatcasecmp($b[$orderby], $a[$orderby]):strnatcasecmp($a[$orderby], $b[$orderby]);return($res);'));
 
 // Formatage des données (dates)
-foreach ($data as $reply_id => $detail)
+foreach ($data as $record_id => $detail)
 {
     foreach($detail as $key => $value)
     {
         if ($key == 'record')
         {
             // affectation d'une valeur à l'objet (si définie)
-            if (isset($_SESSION['forms'][$forms_fuid]['options']['object_values'][$value])) $data[$reply_id]['object'] = $_SESSION['forms'][$forms_fuid]['options']['object_values'][$value];
+            if (isset($_SESSION['forms'][$forms_fuid]['options']['object_values'][$value])) $data[$record_id]['object'] = $_SESSION['forms'][$forms_fuid]['options']['object_values'][$value];
         }
         elseif ($key == 'datevalidation')
         {
             $ldate = ploopi_timestamp2local($value);
-            $data[$reply_id][$key] = "{$ldate['date']} {$ldate['time']}";
+            $data[$record_id][$key] = "{$ldate['date']} {$ldate['time']}";
         }
         elseif (isset($data_title[$key]) && $data_title[$key]['format'] == 'date' && !empty($value))
         {
             $ldate = ploopi_timestamp2local($value);
-            $data[$reply_id][$key] = $ldate['date'];
+            $data[$record_id][$key] = $ldate['date'];
         }
     }
 }

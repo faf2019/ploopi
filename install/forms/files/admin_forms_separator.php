@@ -37,7 +37,7 @@
  * Remarque : un séparateur et un champ particulier, on utilise donc la classe field.
  */
 
-$field = new field();
+$field = new formsField();
 
 if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']) && $field->open($_GET['field_id']))
 {

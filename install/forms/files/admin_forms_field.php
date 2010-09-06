@@ -37,7 +37,7 @@
  * Si ok => on l'ouvre. Sinon, nouveau champ.
  */
 
-$field = new field();
+$field = new formsField();
 
 if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']) && $field->open($_GET['field_id']))
 {
@@ -190,7 +190,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                 </p>
             </div>
 
-            <div id="tablelink" style="display:none;">
+            <div id="tablelink" class="ploopi_form" style="display:none;">
                 <p>
                     <label><?php echo _FORMS_FIELD_FORMFIELD; ?>:</label>
                     <select class="select" name="f_formfield" style="width:200px;">
@@ -206,11 +206,24 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                                 ORDER BY label, position
                                 ");
 
+                    $strTable = '';
                     while ($row = $db->fetchrow())
                     {
-                        $sel = ($field->fields['values'] == $row['id']) ? 'selected' : '';
-                        echo "<option $sel value=\"{$row['id']}\">{$row['label']} | {$row['name']}</option>";
+                        if ($row['label'] != $strTable) 
+                        {
+                            if (!empty($strTable)) echo '</optgroup>';
+                            $strTable = $row['label'];
+                            echo '<optgroup label="'.htmlentities($strTable).'">';
+                        }
+                        
+                        $strFormat = isset($field_formats[$row['format']]) ? " ({$field_formats[$row['format']]})" : '';
+                        ?>
+                        <option value="<?php echo $row['id']; ?>" <?php if ($field->fields['values'] == $row['id']) echo 'selected="selected"'; ?>>
+                        <?php echo htmlentities("{$row['name']}{$strFormat}"); ?>
+                        </option>
+                        <?php
                     }
+                    if (!empty($strTable)) echo '</optgroup>';
 
                     ?>
                     </select>

@@ -40,23 +40,30 @@ echo $skin->open_simplebloc(_FORMS_LABELTAB_LIST);
 $array_columns = array();
 $array_values = array();
 
-$array_columns['auto']['label'] = 
-    array(    
+$array_columns['auto']['label'] =
+    array(
         'label' => _FORMS_LABEL,
         'options' => array('sort' => true)
     );
 
-$array_columns['right']['desc'] = 
-    array(    
+$array_columns['right']['typeform'] =
+    array(
+        'label' => _FORMS_TYPEFORM,
+        'width' => 220,
+        'options' => array('sort' => true)
+    );
+
+$array_columns['right']['desc'] =
+    array(
         'label' => _FORMS_DESCRIPTION,
         'width' => 300,
         'options' => array('sort' => true)
     );
 
 
-$array_columns['actions_right']['actions'] = 
+$array_columns['actions_right']['actions'] =
     array(
-        'label' => '', 
+        'label' => '',
         'width' => 90
     );
 
@@ -87,6 +94,7 @@ while ($fields = $db->fetchrow())
 
     $array_values[$c]['values']['label']        = array('label' => $fields['label']);
     $array_values[$c]['values']['desc']         = array('label' => $fields['description']);
+    $array_values[$c]['values']['typeform']     = array('label' => isset($form_types[$fields['typeform']]) ? $form_types[$fields['typeform']] : '');
     $array_values[$c]['values']['date_start']   = array('label' => $pubdate_start['date']);
     $array_values[$c]['values']['date_end']     = array('label' => $pubdate_end['date']);
     $array_values[$c]['values']['actions']      = array('label' => '

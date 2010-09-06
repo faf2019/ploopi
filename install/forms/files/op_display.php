@@ -165,9 +165,9 @@ ob_end_clean();
 
 $replies = array(); //réponses déjà saisies
 
-if (!empty($reply_id))
+if (!empty($record_id))
 {
-    if (isset($reply_id)) $where = " AND ploopi_mod_forms_reply.id = {$reply_id}";
+    if (isset($record_id)) $where = " AND ploopi_mod_forms_reply.id = {$record_id}";
     else $where = '';
 
     $select =   "
@@ -185,7 +185,7 @@ if (!empty($reply_id))
     $db->query($select);
     if ($fields = $db->fetchrow())
     {
-        $reply_id = $fields['id'];
+        $record_id = $fields['id'];
         $replies['id_user'] = $fields['id_user'];
         if (!is_null($fields['login'])) $replies['user_login'] = $fields['login'];
         else $replies['user_login'] = _FORMS_ANONYMOUS;
@@ -260,7 +260,7 @@ if (file_exists("./modules/forms/templates/{$template_name}/index.tpl"))
     $hiddenvars[] = array('name' => 'ploopi_op', 'value' => 'forms_save');
     $hiddenvars[] = array('name' => 'forms_id', 'value' => $forms->fields['id']);
     $hiddenvars[] = array('name' => 'forms_fuid', 'value' => $_GET['forms_fuid']);
-    $hiddenvars[] = array('name' => 'forms_reply_id', 'value' => $reply_id);
+    $hiddenvars[] = array('name' => 'forms_record_id', 'value' => $record_id);
 
     foreach($hiddenvars as $var)
     {

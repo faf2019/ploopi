@@ -32,7 +32,18 @@
  * @author Stéphane Escaich
  */
 
-echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '100%');
+$intTotalNumRows = $objForm->getNumRows(true);
+
+// Lecture des champs statiques du formulaire
+$arrStaticFields = formsForm::getStaticFields();
+
+// Lecture des champs dynamiques et séparateurs du formulaire
+$arrFields = $objForm->getFields(true);
+
+// Lecture des titres de colonnes
+$arrTitles = $objForm->getTitles();
+
+echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', '100%');
 ?>
 
 <div style="overflow:hidden;">
@@ -48,61 +59,68 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
         <div id="forms_filter_box"  style="display:<?php echo $_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_filter_box']; ?>;">
             <form style="margin:0;" id="filtre_frm" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
             <input type="hidden" name="op" value="forms_filter">
-            <input type="hidden" name="forms_id" value="<?php echo $forms_id; ?>">
+            <input type="hidden" name="forms_id" value="<?php echo $objForm->fields['id']; ?>">
 
             <p><b>Filtre:</b></p>
             <?php
-            //ploopi_print_r($data_title);
-            for ($l=1;$l<=$lmax;$l++)
+
+            for ($l=1;$l<=sizeof($arrFormFilter)+1;$l++)
             {
                 ?>
                 <p>
                     <select class="select" name="filter_field_<?php echo $l; ?>" style="width:150px">
                     <option></option>
                     <?php
-                    $lev = 0;
-                    
-                    foreach ($data_title as $key => $value)
+                    foreach($arrStaticFields as $strKey => $strValue)
                     {
-                        if ($value['sep'])
-                        {
-                            for ($i=$value['seplev'];$i<=$lev;$i++) echo "</optgroup>";
-                            $padding = ($lev>1) ? str_repeat('&nbsp;', $lev-1) : '';
+                        $booSel = (isset($arrFormFilter[$l]) && $arrFormFilter[$l]['field'] == $strKey) ? 'selected="selected"' : '';
+                        ?>
+                        <option <?php echo $booSel; ?> value="<?php echo $strKey; ?>"><?php echo $strValue; ?></option>
+                        <?php
+                    }
 
+                    $intLevel = 0;
+
+                    foreach($arrFields as $strKey => $objField)
+                    {
+                        if ($objField->fields['separator'])
+                        {
+                            for ($i = $objField->fields['separator_level']; $i <= $intLevel; $i++) echo "</optgroup>";
+                            $strPadding = $intLevel > 1 ? str_repeat('&nbsp;', $intLevel-1) : '';
                             ?>
-                            <optgroup label="<?php echo $padding.htmlentities($value['label']); ?>">
+                            <optgroup label="<?php echo $strPadding.htmlentities($objField->fields['name']); ?>">
                             <?php
                         }
                         else
                         {
-                            $value = $value['label'];
-                            $sel = (isset(${"filter_field_{$l}"}) && ${"filter_field_{$l}"} == $key) ? 'selected' : '';
+                            $booSel = (isset($arrFormFilter[$l]) && $arrFormFilter[$l]['field'] == $strKey) ? 'selected="selected"' : '';
                             ?>
-                            <option <?php echo $sel; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                            <option <?php echo $booSel; ?> value="<?php echo $strKey; ?>"><?php echo htmlentities($objField->fields['name']); ?></option>
                             <?php
                         }
                     }
-                    for ($i=1;$i<=$lev;$i++) echo "</optgroup>";
+
+                    for ($i=1;$i<=$intLevel;$i++) echo "</optgroup>";
                     ?>
                     </select>
                     <select class="select" name="filter_op_<?php echo $l; ?>" style="width:70px">
                         <?php
-                        foreach($field_operators as $key => $value)
+                        foreach($field_operators as $strKey => $strValue)
                         {
-                            $sel = (isset(${"filter_op_{$l}"}) && ${"filter_op_{$l}"} == $key) ? 'selected' : '';
-                            echo "<option $sel value=\"{$key}\">{$value}</option>";
+                            $booSel = (isset($arrFormFilter[$l]) && $arrFormFilter[$l]['op'] == $strKey) ? 'selected="selected"' : '';
+                            echo "<option {$booSel} value=\"{$strKey}\">{$strValue}</option>";
                         }
                         ?>
                     </select>
-                    <input type="text" value="<?php if (isset(${"filter_value_{$l}"})) echo ${"filter_value_{$l}"}; ?>" size="25" class="text" name="filter_value_<?php echo $l; ?>">
+                    <input type="text" value="<?php if (isset($arrFormFilter[$l])) echo htmlentities($arrFormFilter[$l]['value']); ?>" size="25" class="text" name="filter_value_<?php echo $l; ?>">
                 </p>
                 <?php
             }
-            if ($forms->fields['autobackup'] > 0 || !empty($forms->fields['autobackup_date']))
+            if ($objForm->fields['autobackup'] > 0 || !empty($objForm->fields['autobackup_date']))
             {
                 ?>
                 <p>
-                    <input type="checkbox" name="unlockbackup" <?php if ($_SESSION['forms'][$forms_id]["unlockbackup"]) echo 'checked'; ?> value="1">Afficher les enregistrements archivés
+                    <input type="checkbox" name="unlockbackup" <?php if ($_SESSION['forms'][$objForm->fields['id']]["unlockbackup"]) echo 'checked'; ?> value="1">Afficher les enregistrements archivés
                 </p>
                 <?php
             }
@@ -116,7 +134,7 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
                     <?php
                 }
                 ?>
-                <input type="button" class="flatbutton" value="<?php echo _PLOOPI_RESET; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$forms_id}&reset"); ?>'">
+                <input type="button" class="flatbutton" value="<?php echo _PLOOPI_RESET; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}&reset"); ?>'">
                 <input type="submit" class="flatbutton" style="font-weight:bold" value="<?php echo _PLOOPI_FILTER; ?>">
             </p>
             </form>
@@ -131,7 +149,7 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
 
     if (ploopi_isactionallowed(_FORMS_ACTION_BACKUP))
     {
-        $autobackup_date = ($forms->fields['autobackup_date']) ? ploopi_timestamp2local($forms->fields['autobackup_date']) : array('date' => '');
+        $autobackup_date = ($objForm->fields['autobackup_date']) ? ploopi_timestamp2local($objForm->fields['autobackup_date']) : array('date' => '');
         ?>
         <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_archive_box');ploopi_xmlhttprequest('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_archive_box&display='+$('forms_archive_box').style.display, true);">
             Archivage automatique des données<sub style="font-weight:normal;">&nbsp;&nbsp;&nbsp;(cliquez pour ouvrir/fermer)</sub>
@@ -139,16 +157,17 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
         <div id="forms_archive_box" style="display:<?php echo $_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_archive_box']; ?>;">
             <form name="frm_modify" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
             <input type="hidden" name="op" value="forms_save">
-            <input type="hidden" name="forms_id" value="<?php echo $forms->fields['id']; ?>">
+            <input type="hidden" name="forms_id" value="<?php echo $objForm->fields['id']; ?>">
 
                 <div class="ploopi_form">
                     <p>
                         <label>Archiver les données plus anciennes que :</label>
-                        <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo $forms->fields['autobackup']; ?>"> jours (0 = aucun archivage)
+                        <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo $objForm->fields['autobackup']; ?>"> jours (0 = aucun archivage)
                     </p>
                     <p>
                         <label>Archiver les données jusqu'au :</label>
-                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo $autobackup_date['date']; ?>">&nbsp;<a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('forms_autobackup_date', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo $autobackup_date['date']; ?>">&nbsp;
+						<?php echo ploopi_open_calendar('forms_autobackup_date'); ?>
                     </p>
                     <p>
                         <label>&nbsp;</label>
@@ -163,47 +182,23 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
     ?>
 
     <div id="forms_info_box">
-		<div style="float:right">
+		<div style="float:right;margin-bottom:2px;">
 			<p class="ploopi_va">
 			<?php
-			$numrows = sizeof($export);
-
-			if ($forms->fields['nbline'] > 0 && $numrows > $forms->fields['nbline'])
+			if ($objForm->fields['nbline'] > 0 && $intNumRows > $objForm->fields['nbline'])
 			{
-				$numpages = (($numrows - ($numrows % $forms->fields['nbline'])) / $forms->fields['nbline']) + (($numrows % $forms->fields['nbline'])>0);
-				?>
-					<?php
-					if ($_SESSION['forms'][$forms->fields['id']]['page']>0)
-					{
-						?><input type="button" class="button" value="««" style="width:20px;" onclick="javascript:document.location.href='<?php echo "admin.php?op=forms_viewreplies&forms_id={$forms->fields['id']}&page=".($_SESSION['forms'][$forms->fields['id']]['page']-1); ?>'" /><?php
-					}
-					else
-					{
-						?><input type="button" class="button" value="&nbsp;" style="width:20px;" disabled="disabled" /><?php
-					}
-					?>
-					<span><?php echo $_SESSION['forms'][$forms->fields['id']]['page']+1; ?> / <?php echo $numpages; ?></span>
-					<?php
-					if ($_SESSION['forms'][$forms->fields['id']]['page']+1<$numpages)
-					{
-						?><input type="button" class="button" value="»»" style="width:20px;" onclick="javascript:document.location.href='<?php echo "admin.php?op=forms_viewreplies&forms_id={$forms->fields['id']}&page=".($_SESSION['forms'][$forms->fields['id']]['page']+1); ?>'" /><?php
-					}
-					else
-					{
-						?><input type="button" class="button" value="&nbsp;" style="width:20px;" disabled="disabled" /><?php
-					}
-					?>
-				<?php
+                include_once './include/functions/array.php';
+                echo '<span>Pages&nbsp;:&nbsp;</span>'.ploopi_array_getpages($intNumRows, $objForm->fields['nbline'], "admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}&page={p}", $_SESSION['forms'][$objForm->fields['id']]['page']);
 			}
-			
+
 			if ($_SESSION['ploopi']['action'] == 'public')
 			{
 				$ct = 0;
-				if ($forms->fields['option_onlyone'] || $forms->fields['option_onlyoneday'])
+				if ($objForm->fields['option_onlyone'] || $objForm->fields['option_onlyoneday'])
 				{
 					$select = "select count(*) as ct from ploopi_mod_forms_reply where 1 ";
-					if ($forms->fields['option_onlyone']) $select .= " AND id_user = {$_SESSION['ploopi']['userid']}";
-					if ($forms->fields['option_onlyoneday']) $select .= " AND LEFT(date_validation,8) = '".substr(ploopi_createtimestamp(),0,8)."'";
+					if ($objForm->fields['option_onlyone']) $select .= " AND id_user = {$_SESSION['ploopi']['userid']}";
+					if ($objForm->fields['option_onlyoneday']) $select .= " AND LEFT(date_validation,8) = '".substr(ploopi_createtimestamp(),0,8)."'";
 					$db->query($select);
 					if ($fields = $db->fetchrow()) $ct = $fields['ct'];
 				}
@@ -211,60 +206,81 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
 				if (!$ct &&  ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY))
 				{
 					?>
-					<input type="button" class="flatbutton" style="margin-left:10px;font-weight:bold" value="Ajouter un enregistrement" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_reply_add&forms_id={$forms_id}"); ?>'">
+					<input type="button" class="flatbutton" style="margin-left:10px;font-weight:bold" value="Ajouter un enregistrement" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_reply_add&forms_id={$objForm->fields['id']}"); ?>'">
 					<?php
 				}
-			}			
+			}
 			?>
 			</p>
 		</div>
-		
+
         <div style="float:left;">
 			<p class="ploopi_va">
 			<span>
-				Nombre d'Enregistrements : <b><?php echo sizeof($data); ?></b> - Avec le Filtre : <b><?php echo sizeof($export); ?></b>
+				Nombre d'Enregistrements : <b><?php echo $intTotalNumRows; ?></b> - Avec le Filtre : <b><?php echo $intNumRows; ?></b>
 			</span>
-
-			<?php
-			if (ploopi_isactionallowed(_FORMS_ACTION_EXPORT))
-			{
-				?>
-				<a style="margin-left:10px;" title="<?php echo _FORMS_EXPORT; ?> XLS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$forms_id}&forms_export_format=XLS"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/download_xls.gif"></a>
-				<a title="<?php echo _FORMS_EXPORT; ?> CSV" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$forms_id}&forms_export_format=CSV"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/download_csv.gif"></a>
-				<?php
-			}
-			
-			if (ploopi_isactionallowed(_FORMS_ACTION_GRAPHICS))
-			{
-				$db->query("
-					SELECT  *
-					FROM    ploopi_mod_forms_graphic
-					WHERE   id_form = {$forms->fields['id']}
-				");
-				if ($db->numrows())
-				{
-					?>
-						<span style="margin-left:10px;">Graphiques:</span>
-						<?php
-						?>
-						<select class="select" onchange="javascript:if (this.value != '') {ploopi_xmlhttprequest_topopup(750, event, 'forms_popup_graphic', 'admin-light.php', 'ploopi_op=forms_graphic_display&forms_graphic_id='+this.value, 'POST');} else {ploopi_hidepopup('forms_popup_graphic');} this.selectedIndex = 0;">
-							<option value="">(Sélectionner un graphique)</option>
-							<?php
-							while ($row = $db->fetchrow())
-							{
-								?>
-								<option value="<?php echo $row['id']; ?>"><?php echo htmlentities($row['label']); ?></option>
-								<?php
-							}
-							?>
-						</select>
-					<?php
-				}
-			}
-			?>
 			</p>
 		</div>
+
+    	<div style="clear:both;">
+			<p class="ploopi_va">
+        		<?php
+        		if (ploopi_isactionallowed(_FORMS_ACTION_EXPORT))
+        		{
+        			?>
+        			Export :<a class="forms_export_link" style="margin-left:10px;" title="<?php echo _FORMS_EXPORT; ?> XLS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=XLS"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/mime/xls.png">XLS</a>
+        			<?php
+        			if (ploopi_getparam('forms_webservice_jodconverter') != '')
+        			{
+        			?>
+        				<a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> ODS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=ODS"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> ODS" src="./modules/forms/img/mime/ods.png">ODS</a>
+        				<a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> PDF" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=PDF"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> PDF" src="./modules/forms/img/mime/pdf.png">PDF</a>
+        				<?php
+        			}
+        			?>
+        			<a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> CSV" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=CSV"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/mime/csv.png">CSV</a>
+        			<a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> HTML" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=HTML"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> HTML" src="./modules/forms/img/mime/html.png">HTML</a>
+        			<a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> XML" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=XML"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XML" src="./modules/forms/img/mime/xml.png">XML</a>
+        			<?php
+        		}
+
+        		if (ploopi_isactionallowed(_FORMS_ACTION_GRAPHICS))
+        		{
+        			$db->query("
+        				SELECT  *
+        				FROM    ploopi_mod_forms_graphic
+        				WHERE   id_form = {$objForm->fields['id']}
+        			");
+        			if ($db->numrows())
+        			{
+        				?>
+        					<span style="margin-left:10px;">Graphique : </span>
+        					<?php
+        					?>
+        					<select class="select" onchange="javascript:if (this.value != '') {ploopi_xmlhttprequest_topopup(750, event, 'forms_popup_graphic', 'admin-light.php', 'ploopi_op=forms_graphic_display&forms_graphic_id='+this.value+'&forms_graphic_width='+$('forms_graphic_width').value, 'POST');} else {ploopi_hidepopup('forms_popup_graphic');} this.selectedIndex = 0;">
+        						<option value="">(Sélectionner un graphique)</option>
+        						<?php
+        						while ($row = $db->fetchrow())
+        						{
+        							?>
+        							<option value="<?php echo $row['id']; ?>"><?php echo htmlentities($row['label']); ?></option>
+        							<?php
+        						}
+        						?>
+        					</select>
+        					<span>Largeur (px) : </span>
+        					<input type="text" class="text" value="" size="4" maxlength="5" id="forms_graphic_width" /> (vide = auto)
+        				<?php
+        			}
+        		}
+        		?>
+			</p>
+    	</div>
+
 	</div>
+
+
+
 
     <div class="viewlist">
         <table class="viewlist">
@@ -273,50 +289,26 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
         ?>
         <tr style="background-color:<?php echo $color; ?>;">
             <?php
-            foreach ($data_title as $key => $value)
+            foreach ($arrTitles as $strKey => $row)
             {
-                $value = $value['label'];
-                $display = false;
-                switch($key)
+                if ($row['arrayview'])
                 {
-                    case 'datevalidation':
-                        $display = ($forms->fields['option_displaydate']);
-                    break;
-
-                    case 'user':
-                        $display = ($forms->fields['option_displayuser']);
-                    break;
-
-                    case 'group':
-                        $display = ($forms->fields['option_displaygroup']);
-                    break;
-
-                    case 'ip':
-                        $display = ($forms->fields['option_displayip']);
-                    break;
-
-                    default:
-                        $display = (isset($array_fields[$key]) && $array_fields[$key]['option_arrayview']);
-                    break;
-                }
-
-                if ($display)
-                {
-                    $new_option = $style_col = $sort_cell = '';
-                    if ($_SESSION['forms'][$forms_id]['orderby'] == $key)
+                    $style_col = $sort_cell = '';
+                    $new_option = 'ASC';
+                    if ($_SESSION['forms'][$objForm->fields['id']]['orderby'] == $strKey)
                     {
-                        $new_option = ($_SESSION['forms'][$forms_id]['option'] == 'DESC') ? '' : 'DESC';
+                        $new_option = ($_SESSION['forms'][$objForm->fields['id']]['option'] == 'DESC') ? 'ASC' : 'DESC';
                         $style_col = 'class="selected"';
-                        $sort_cell = ($_SESSION['forms'][$forms_id]['option'] == 'DESC') ? 'arrow_down' : 'arrow_up';
+                        $sort_cell = ($_SESSION['forms'][$objForm->fields['id']]['option'] == 'DESC') ? 'arrow_down' : 'arrow_up';
                     }
 
                     ?>
                     <th>
-                        <a <?php echo $style_col; ?> href="<?php echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$forms_id}&orderby={$key}&option={$new_option}"); ?>">
+                        <a <?php echo $style_col; ?> href="<?php echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}&orderby={$strKey}&option={$new_option}"); ?>">
                         <p class="ploopi_va">
-                            <span><?php echo $value; ?></span>
+                            <span><?php echo htmlentities($row['label']); ?></span>
                             <?
-                            if ($_SESSION['forms'][$forms_id]['orderby'] == $key)
+                            if ($_SESSION['forms'][$objForm->fields['id']]['orderby'] == $strKey)
                             { ?><img src="./modules/forms/img/<?php echo $sort_cell; ?>.png"><? }
                             ?>
                         </p>
@@ -335,106 +327,87 @@ echo $skin->open_simplebloc($forms->fields['label'].' ('._FORMS_VIEWLIST.')', '1
         </tr>
 
         <?php
-        $c=0;
-
-        foreach ($export as $reply_id => $detail)
+        foreach ($arrData as $rowData)
         {
-            // filtre sur la page sélectionnée
+            $intReplyId = $rowData['id'];
 
-            if (($forms->fields['nbline'] == 0) || ($c >= ($_SESSION['forms'][$forms->fields['id']]['page'])*$forms->fields['nbline'] && $c < ($_SESSION['forms'][$forms->fields['id']]['page']+1)*$forms->fields['nbline']))
-            {
-                $color = (!isset($color) || $color == $skin->values['bgline1']) ? $skin->values['bgline2'] : $skin->values['bgline1'];
-                ?>
-                <tr bgcolor="<?php echo $color; ?>">
-                    <?php
-                    foreach ($detail as $key => $value)
-                    {
-                        $display = false;
-                        switch($key)
-                        {
-                            case 'datevalidation':
-                                $display = ($forms->fields['option_displaydate']);
-                            break;
-
-                            case 'user':
-                                $display = ($forms->fields['option_displayuser']);
-                            break;
-
-                            case 'group':
-                                $display = ($forms->fields['option_displaygroup']);
-                            break;
-
-                            case 'ip':
-                                $display = ($forms->fields['option_displayip']);
-                            break;
-
-                            default:
-                                $display = (isset($array_fields[$key]) && $array_fields[$key]['option_arrayview']);
-                            break;
-                        }
-
-                        if ($display)
-                        {
-                            switch($data_title[$key]['type'])
-                            {
-                                case 'file':
-                                    if ($value != '') $value = $value.'<a href="'.ploopi_urlencode("admin.php?op=forms_download_file&forms_id={$forms_id}&reply_id={$reply_id}&field_id={$key}").'"><img style="border:0px" src="./modules/forms/img/link.gif"></a>';
-                                break;
-
-                                case 'color':
-                                    $value = '<div style="background-color:'.$value.';">&nbsp;&nbsp;</div>';
-                                break;
-
-                                default:
-                                    $value = str_replace('||','<br />',$value);
-                                    $value = ploopi_make_links($value);
-                                break;
-                            }
-                            echo "<td class=\"data\">{$value}</td>";
-                        }
-                    }
-                    
-                    if ($_SESSION['ploopi']['action'] == 'public')
-                    {
-                        ?>
-                        <td align="left" nowrap>
-                            <a title="Ouvrir" href="<?php echo ploopi_urlencode("admin.php?op=forms_reply_display&forms_id={$forms_id}&reply_id={$reply_id}"); ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_display.png"></a>
-                            <?php
-                            // Droit de modif d'un enregistrement
-                            if (ploopi_isadmin() || (
-                                    ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY) && (
-                                        ($forms->fields['option_modify'] == 'user' && $detail['id_user'] == $_SESSION['ploopi']['userid']) || 
-                                        ($forms->fields['option_modify'] == 'group' && $detail['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  || 
-                                        ($forms->fields['option_modify'] == 'all')
-                                    )
-                                ))
-                            {
-                                ?>
-                                <a title="Modifier" href="<?php echo ploopi_urlencode("admin.php?op=forms_reply_modify&forms_id={$forms_id}&reply_id={$reply_id}"); ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_modify.png"></a>
-                                <?php
-                            }
-                            // Droit de suppression d'un enregistrement
-                            if (ploopi_isadmin() || (
-                                    ploopi_isactionallowed(_FORMS_ACTION_DELETE) && (
-                                        ($forms->fields['option_modify'] == 'user' && $detail['id_user'] == $_SESSION['ploopi']['userid']) || 
-                                        ($forms->fields['option_modify'] == 'group' && $detail['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  || 
-                                        ($forms->fields['option_modify'] == 'all')
-                                    )
-                                ))
-                            {
-                                ?>
-                                <a title="Supprimer" href="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=forms_reply_delete&forms_id={$forms_id}&reply_id={$reply_id}"); ?>','<?php echo _PLOOPI_CONFIRM; ?>')"><img alt="supprimer" border="0" src="./modules/forms/img/ico_trash.png"></a>
-                                <?php
-                            }
-                            ?>
-                        </td>
-                        <?php
-                    }
-                    ?>
-                </tr>
+            $color = (!isset($color) || $color == $skin->values['bgline1']) ? $skin->values['bgline2'] : $skin->values['bgline1'];
+            ?>
+            <tr bgcolor="<?php echo $color; ?>">
                 <?php
-            }
-            $c++;
+                foreach ($arrTitles as $strFieldId => $row)
+                {
+                    if ($arrTitles[$strFieldId]['arrayview'])
+                    {
+                        if (isset($rowData[$strFieldId]))
+                        {
+                            $strValue = $rowData[$strFieldId];
+
+                            if (is_numeric($strFieldId))
+                            {
+                                switch($arrTitles[$strFieldId]['type'])
+                                {
+
+                                    case 'file':
+                                        if ($strValue != '') $strValue = $strValue.'<a href="'.ploopi_urlencode("admin.php?ploopi_op=forms_download_file&forms_id={$objForm->fields['id']}&record_id={$intReplyId}&field_id={$strFieldId}").'"><img style="border:0px" src="./modules/forms/img/link.gif"></a>';
+                                    break;
+
+                                    case 'color':
+                                        $strValue = '<div style="background-color:'.$strValue.';">&nbsp;&nbsp;</div>';
+                                    break;
+
+                                    default:
+                                        $strValue = ploopi_make_links(str_replace('||','<br />',$strValue));
+                                    break;
+                                }
+                            }
+                        }
+                        else $strValue = '';
+
+                        echo "<td class=\"data\">{$strValue}</td>";
+                    }
+                }
+
+
+                if ($_SESSION['ploopi']['action'] == 'public')
+                {
+                    ?>
+                    <td align="left" nowrap>
+                        <a title="Ouvrir" href="<?php echo ploopi_urlencode("admin.php?op=forms_reply_display&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_display.png"></a>
+                        <?php
+                        // Droit de modif d'un enregistrement
+                        if (ploopi_isadmin() || (
+                                ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY) && (
+                                    ($objForm->fields['option_modify'] == 'user' && $rowData['id_user'] == $_SESSION['ploopi']['userid']) ||
+                                    ($objForm->fields['option_modify'] == 'group' && $rowData['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  ||
+                                    ($objForm->fields['option_modify'] == 'all')
+                                )
+                            ))
+                        {
+                            ?>
+                            <a title="Modifier" href="<?php echo ploopi_urlencode("admin.php?op=forms_reply_modify&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_modify.png"></a>
+                            <?php
+                        }
+                        // Droit de suppression d'un enregistrement
+                        if (ploopi_isadmin() || (
+                                ploopi_isactionallowed(_FORMS_ACTION_DELETE) && (
+                                    ($objForm->fields['option_modify'] == 'user' && $rowData['id_user'] == $_SESSION['ploopi']['userid']) ||
+                                    ($objForm->fields['option_modify'] == 'group' && $rowData['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  ||
+                                    ($objForm->fields['option_modify'] == 'all')
+                                )
+                            ))
+                        {
+                            ?>
+                            <a title="Supprimer" href="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=forms_reply_delete&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>','<?php echo _PLOOPI_CONFIRM; ?>')"><img alt="supprimer" border="0" src="./modules/forms/img/ico_trash.png"></a>
+                            <?php
+                        }
+                        ?>
+                    </td>
+                    <?php
+                }
+                ?>
+            </tr>
+            <?php
         }
         ?>
         </table>

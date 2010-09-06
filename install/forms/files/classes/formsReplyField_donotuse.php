@@ -22,10 +22,10 @@
 */
 
 /**
- * Gestion des champs
+ * Gestion des valeurs des réponses
  *
  * @package forms
- * @subpackage field
+ * @subpackage reply
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
@@ -38,57 +38,23 @@
 include_once './include/classes/data_object.php';
 
 /**
- * Classe d'accès à la table ploopi_mod_forms_field
+ * Classe d'accès à la table ploopi_mod_forms_reply_field
  *
  * @package forms
- * @subpackage field
+ * @subpackage reply
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
-class field extends data_object
+class formsReplyField extends data_object
 {
     /**
      * Constructeur de la classe
      *
-     * @return field
+     * @return reply_field
      */
     
-    function field()
-    {
-        parent::data_object('ploopi_mod_forms_field');
-    }
-
-    /**
-     * Enregistre le champ
-     *
-     * @return int identifiant du champ enregistré
-     *
-     * @see forms_createphysicalname
-     */
-    
-    function save()
-    {
-        if (empty($this->fields['fieldname'])) $this->fields['fieldname'] = $this->fields['name'];
-        $this->fields['fieldname'] = forms_createphysicalname($this->fields['fieldname']);
-        
-        return parent::save();
-    }
-    
-    
-    /**
-     * Supprime le champ
-     *
-     * @return boolean
-     */
-    function delete()
-    {
-        global $db;
-        
-        $db->query("UPDATE `ploopi_mod_forms_field` SET position = position - 1 WHERE position > {$this->fields['position']} AND id_form = {$this->fields['id_form']}");
-        
-        return parent::delete();
-    }
+    public function __construct() { parent::__construct('ploopi_mod_forms_reply_field','id_reply','id_field'); }   
 }
 ?>

@@ -127,4 +127,18 @@ border-bottom:1px solid #ccc;
 -khtml-user-select: none;
 user-select: none;
 background-color:#f0f0f0;
-}	
+}
+
+.forms_export_link {
+	text-decoration:none;
+	border:1px solid #ccc;
+	background:#fff;
+	padding:2px;
+	border-radius:4px;
+	-moz-border-radius:4px;
+}
+
+.forms_export_link:hover {
+	text-decoration:none;
+	background:#ddd;
+}

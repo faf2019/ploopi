@@ -1,0 +1,198 @@
+.forms_form {
+	margin:5px auto;
+	padding:10px;
+	width:550px;
+	overflow:auto;
+	font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif; 
+	font-size:11px;
+	border:2px solid #d6d6d6;
+	-moz-border-radius:10px;
+	border-radius:10px;
+	background-color:#fff;
+}
+
+.forms_form *{
+	-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif; 
+	font-size:11px;
+}
+
+.forms_form p, 
+.forms_form h1, 
+.forms_form h2, 
+.forms_form h3, 
+.forms_form form, 
+.forms_form button{
+	border:0; 
+	margin:0; 
+	padding:0;
+}
+
+.forms_form h1, 
+.forms_form h2, 
+.forms_form h3{
+	clear:both;
+	display:block;
+	font-weight:bold;
+	margin-bottom:10px;
+	border-bottom:dotted 2px #d6d6d6;
+	padding-bottom:5px;
+	text-align:center;
+}
+
+.forms_form h1 {
+	font-size:1.5em;
+}
+
+.forms_form h2 {
+	font-size:1.3em;
+}
+
+.forms_form h3 {
+	font-size:1.1em;
+}
+
+.forms_form .spacer{
+	clear:both; 
+	height:1px;
+}
+
+.forms_form .onclick,
+.forms_form .onclick *{
+	cursor:pointer;
+}
+
+.forms_form *[disabled=disabled],
+.forms_form *[readonly=readonly]{
+	color:#888;
+}
+
+.forms_form h1 p{
+	font-size:0.9em;
+	color:#666;
+	margin-top:4px;
+	font-weight:normal;
+}
+
+.forms_form div {
+	overflow:auto;
+}
+
+.forms_form label{
+	display:block;
+	font-weight:bold;
+	text-align:right;
+	width:30%;
+	float:left;
+	clear:both;
+	padding-right:10px;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	user-select: none;		
+}
+
+.forms_form label.required{
+	background:url(red_star.png) no-repeat right top;
+}
+	
+.forms_form label span{
+	color:#888;
+	display:block;
+	font-weight:normal;
+	font-style:italic;
+	text-align:right;
+	width:100%;
+}
+
+.forms_form input,
+.forms_form select,
+.forms_form textarea{
+	float:left;
+	color:#444;
+	padding:4px 2px;
+	border:solid 1px #c9c9c9;
+	background-color:#f8f8f8;
+	margin:2px 0 5px 0;
+	width:60%;
+	-moz-border-radius:5px;
+	border-radius:5px;
+}
+
+.forms_form select{
+	padding:4px 4px 4px 2px;
+}
+
+.forms_form input:focus,
+.forms_form select:focus,
+.forms_form textarea:focus{
+	background-color:#fff;
+	color:#000;
+	border-color:#999;
+}
+
+.forms_form input[type=password]{
+	letter-spacing:2px;
+}
+
+.forms_form span{
+	display:block;
+	float:left;
+	margin:2px 0 5px 0;
+	width:60%;
+}
+
+
+.forms_form span *{
+	width:auto;
+}
+.forms_form span label{
+	display:block;
+	float:left;
+	clear:none;
+	padding:0 6px 0 2px;
+	font-weight:normal;
+	width:auto;
+}	
+
+.forms_form span input{
+	margin:2px 0;
+}	
+
+.forms_form fieldset {
+	clear:both;
+	display:block;
+	border:solid 1px #d6d6d6;
+	margin:0;
+	padding:0;
+	margin-bottom:20px;
+}
+
+.forms_form fieldset legend {
+	padding:0 4px;
+	font-weight:bold;
+}
+
+.forms_form .buttons {
+	clear:both;
+	margin:0 8%;
+}
+
+.forms_form button { 
+	float:right;
+	text-align:center;
+	background:#666;
+	color:#fff;
+	font-weight:normal;
+	padding:5px 10px;
+	cursor:pointer;
+	-moz-border-radius:5px;
+	border-radius:5px;
+	margin-left:4px;
+}
+
+.forms_form button[type=submit] { 
+	font-weight:bold;
+}	
+
+.forms_form button:hover { 
+	background-color:#999;
+}

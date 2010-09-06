@@ -149,7 +149,7 @@
     <?php
     reset($data);
 
-    foreach ($data as $reply_id => $detail)
+    foreach ($data as $record_id => $detail)
     {
         $color = (!isset($color) || $color == $skin->values['bgline1']) ? $skin->values['bgline2'] : $skin->values['bgline1'];
         ?>
@@ -190,7 +190,7 @@
                     switch($data_title[$key]['type'])
                     {
                         case 'file':
-                            if ($value != '') $value = $value.'<a href="'.ploopi_urlencode("admin.php?ploopi_op=forms_download_file&forms_fuid={$_GET['forms_fuid']}&reply_id={$reply_id}&field_id={$key}").'"><img style="border:0px" src="./modules/forms/img/link.gif"></a>';
+                            if ($value != '') $value = $value.'<a href="'.ploopi_urlencode("admin.php?ploopi_op=forms_download_file&forms_fuid={$_GET['forms_fuid']}&record_id={$record_id}&field_id={$key}").'"><img style="border:0px" src="./modules/forms/img/link.gif"></a>';
                         break;
 
                         case 'color':
@@ -205,8 +205,8 @@
                     echo "<td class=\"data\">{$value}</td>";
                 }
             }
-            $modify = ploopi_urlencode("admin.php?op=modify&forms_id={$id_form}&reply_id={$reply_id}");
-            $delete = ploopi_urlencode("admin.php?op=delete_reply&forms_id={$id_form}&reply_id={$reply_id}");
+            $modify = ploopi_urlencode("admin.php?op=modify&forms_id={$id_form}&record_id={$record_id}");
+            $delete = ploopi_urlencode("admin.php?op=delete_reply&forms_id={$id_form}&record_id={$record_id}");
             if ($_SESSION['ploopi']['action'] == 'public')
             {
                 ?>

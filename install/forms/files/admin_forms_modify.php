@@ -39,7 +39,7 @@
 
 $booCaptchaInForm = false; // Le formulaire ne contient pas de captcha
 
-$forms = new form();
+$forms = new formsForm();
 
 if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
 {
@@ -108,24 +108,32 @@ if (!$forms->new)
                     <label>*&nbsp;<?php echo _FORMS_LABEL; ?>:</label>
                     <input type="text" class="text" name="forms_label" value="<?php echo htmlentities($forms->fields['label']); ?>" />
                 </p>
-                <?php
-                if ($forms->fields['tablename'] == '') $forms->fields['tablename'] = forms_createphysicalname($forms->fields['label']);
-                ?>
-                <!--p>
-                    <label><?php echo _FORMS_TABLENAME; ?>:</label>
-                    <input type="text" class="text" style="width:150px;" name="forms_tablename" value="<?php echo htmlentities($forms->fields['tablename']); ?>" /> (form_xxxxx)
-                </p-->
                 <p>
                     <label><?php echo _FORMS_PUBDATESTART; ?>:</label>
-                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_start" id="forms_pubdate_start" value="<?php echo $pubdate_start['date']; ?>">&nbsp;<a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('forms_pubdate_start', event);" /><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_start" id="forms_pubdate_start" value="<?php echo $pubdate_start['date']; ?>">&nbsp;
+                    <?php echo ploopi_open_calendar('forms_pubdate_start'); ?>
                 </p>
                 <p>
                     <label><?php echo _FORMS_PUBDATEEND; ?>:</label>
-                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_end" id="forms_pubdate_end" value="<?php echo $pubdate_end['date']; ?>">&nbsp;<a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('forms_pubdate_end', event);" /><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_end" id="forms_pubdate_end" value="<?php echo $pubdate_end['date']; ?>">&nbsp;
+                    <?php echo ploopi_open_calendar('forms_pubdate_end'); ?>
                 </p>
                 <p>
                     <label><?php echo _FORMS_DESCRIPTION; ?>:</label>
                     <textarea class="text" style="height:50px;" name="forms_description"><?php echo htmlentities($forms->fields['description']); ?></textarea>
+                </p>
+                <p>
+                    <label><?php echo _FORMS_MODEL; ?>:<br /><em>Back/Front</em></label>
+                    <select class="select" name="forms_model">
+                    <?php
+                    foreach($forms_tpl as $tpl_name)
+                    {
+                        ?>
+                        <option <?php if ($forms->fields['model'] == $tpl_name) echo 'selected'; ?> value="<?php echo htmlentities($tpl_name); ?>"><?php echo htmlentities($tpl_name); ?></option>
+                        <?php
+                    }
+                    ?>
+                    </select>
                 </p>
                 <p>
                     <label><?php echo _FORMS_TYPEFORM; ?>:</label>
@@ -153,19 +161,6 @@ if (!$forms->new)
                 //if ($forms->fields['typeform'] == 'app')
                 ?>
                 <div id="forms_type_app" <?php if ($forms->fields['typeform'] != 'app') echo 'style="display:none;"'; ?>>
-                    <p>
-                        <label><?php echo _FORMS_MODEL; ?>:</label>
-                        <select class="select" name="forms_model">
-                        <?php
-                        foreach($forms_tpl as $tpl_name)
-                        {
-                            ?>
-                            <option <?php if ($forms->fields['model'] == $tpl_name) echo 'selected'; ?> value="<?php echo htmlentities($tpl_name); ?>"><?php echo htmlentities($tpl_name); ?></option>
-                            <?php
-                        }
-                        ?>
-                        </select>
-                    </p>
                     <p>
                         <label style="cursor:pointer;" onclick="javascript:$('forms_option_onlyone').checked = !$('forms_option_onlyone').checked;"><?php echo _FORMS_OPTION_ONLYONE; ?>:</label>
                         <input type="checkbox" class="checkbox" name="forms_option_onlyone" id="forms_option_onlyone" value="1" <?php if ($forms->fields['option_onlyone']) echo 'checked'; ?> />
@@ -235,15 +230,17 @@ if (!$forms->new)
                     ?>
                     <p>
                         <label>Archiver les données plus anciennes que :</label>
-                        <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo $forms->fields['autobackup']; ?>"> jours (0 = aucun archivage)
+                        <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo $forms->fields['autobackup']; ?>">&nbsp;jours (0 = aucun archivage)
                     </p>
                     <p>
                         <label>Archiver les données jusqu'au :</label>
-                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo $autobackup_date['date']; ?>">&nbsp;<a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('forms_autobackup_date', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo $autobackup_date['date']; ?>">&nbsp;
+	                    <?php echo ploopi_open_calendar('forms_autobackup_date'); ?>
                     </p>
                     <p>
                         <label>Supprimer les données jusqu'au :</label>
-                        <input type="text" class="text" style="width:70px;" id="forms_delete_date">&nbsp;<a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('forms_delete_date', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                        <input type="text" class="text" style="width:70px;" id="forms_delete_date">&nbsp;
+	                    <?php echo ploopi_open_calendar('forms_delete_date'); ?>
                         <a href="javascript:void(0);" onclick="javascript:forms_deletedata('<?php echo $forms->fields['id']; ?>', event);"><img src="./modules/forms/img/ico_trash.png" /></a>
                     </p>
                     <?php
@@ -323,7 +320,7 @@ if (!$forms->isnew())
             </div>
             <?php
         break;
-        
+
         case 'forms_captcha_modify':
         case 'forms_captcha_add':
             ?>
@@ -333,7 +330,7 @@ if (!$forms->isnew())
             </div>
             <?php
         break;
-        
+
         default:
             ?>
             <div style="clear:both;background-color:#d0d0d0;overflow:auto;text-align:right;padding:4px;border-bottom:1px solid #a0a0a0;">
@@ -343,7 +340,7 @@ if (!$forms->isnew())
                 {
                     ?>
                     <input type="button" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_captcha_add&forms_id={$forms->fields['id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDCAPTCHA; ?>">
-                    <?php 
+                    <?php
                 }
                 ?>
                 <input type="button" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_field_add&forms_id={$forms->fields['id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDFIELD; ?>">
@@ -351,40 +348,40 @@ if (!$forms->isnew())
             <?php
         break;
     }
-    
+
     $array_columns = array();
     $array_values = array();
 
-    $array_columns['left']['pos'] = array(  
+    $array_columns['left']['pos'] = array(
         'label' => 'P.',
         'width' => 35,
          'options' => array('sort' => true)
      );
 
-    $array_columns['auto']['name'] = array( 
+    $array_columns['auto']['name'] = array(
         'label' => _FORMS_FIELD_NAME,
         'options' => array('sort' => true)
     );
 
-    $array_columns['right']['export'] = array(  
+    $array_columns['right']['export'] = array(
         'label' => _FORMS_FIELD_EXPORTVIEW_SHORT,
         'width' => 55,
         'options' => array('sort' => true)
     );
 
-    $array_columns['right']['array'] = array(   
+    $array_columns['right']['array'] = array(
         'label' => _FORMS_FIELD_ARRAYVIEW_SHORT,
         'width' => 55,
         'options' => array('sort' => true)
     );
 
-    $array_columns['right']['needed'] = array(  
+    $array_columns['right']['needed'] = array(
         'label' => _FORMS_FIELD_NEEDED_SHORT,
         'width' => 55,
         'options' => array('sort' => true)
     );
 
-    $array_columns['right']['type'] = array(    
+    $array_columns['right']['type'] = array(
         'label' => _FORMS_FIELD_TYPE,
         'width' => 250,
         'options' => array('sort' => true)
@@ -438,7 +435,7 @@ if (!$forms->isnew())
 
             $array_values[$c]['description'] = 'Ouvrir le Captcha &laquo; '.htmlentities($row['name']).' &raquo;';
             $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=forms_captcha_modify&forms_id={$forms->fields['id']}&field_id={$row['id']}");
-            
+
         }
         else
         {
@@ -487,22 +484,28 @@ if (!$forms->isnew())
             <?php
         break;
     }
-    
+
     $array_columns = array();
     $array_values = array();
 
-    $array_columns['left']['label'] = array(  
+    $array_columns['left']['label'] = array(
         'label' => _FORMS_GRAPHIC_LABEL,
         'width' => 200,
         'options' => array('sort' => true)
      );
 
-    $array_columns['auto']['description'] = array( 
+    $array_columns['auto']['description'] = array(
         'label' => _FORMS_GRAPHIC_DESCRIPTION,
         'options' => array('sort' => true)
     );
 
-    $array_columns['right']['type'] = array(  
+    $array_columns['right']['line_aggregation'] = array(
+        'label' => _FORMS_GRAPHIC_LINE_AGGREGATION,
+        'width' => 150,
+        'options' => array('sort' => true)
+    );
+
+    $array_columns['right']['type'] = array(
         'label' => _FORMS_GRAPHIC_TYPE,
         'width' => 200,
         'options' => array('sort' => true)
@@ -523,22 +526,23 @@ if (!$forms->isnew())
     {
         $array_values[$c]['values']['label'] = array('label' =>  $row['label']);
         $array_values[$c]['values']['description'] = array('label' =>  ploopi_nl2br($row['description']));
-        $array_values[$c]['values']['type'] = array('label' =>  $forms_graphic_types[$row['type']]);
+        $array_values[$c]['values']['type'] = array('label' => isset($forms_graphic_types[$row['type']]) ? $forms_graphic_types[$row['type']] : '');
+        $array_values[$c]['values']['line_aggregation'] = array('label' => isset($forms_graphic_line_aggregation[$row['line_aggregation']]) ? $forms_graphic_line_aggregation[$row['line_aggregation']] : '');
         $array_values[$c]['values']['actions']  = array('label' => '
             <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=forms_graphic_delete&forms_id={$forms->fields['id']}&forms_graphic_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
         ');
 
         $array_values[$c]['description'] = 'Ouvrir le Graphique &laquo; '.htmlentities($row['label']).' &raquo;';
         $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=forms_graphic_modify&forms_id={$forms->fields['id']}&forms_graphic_id={$row['id']}").'#addgraphic';
-        
+
         if (isset($_GET['forms_graphic_id']) && $row['id'] == $_GET['forms_graphic_id']) $array_values[$c]['style'] = 'background-color:#ffe0e0;';
 
         $c++;
     }
 
     $skin->display_array($array_columns, $array_values, 'forms_graphic_list', array('sortable' => true, 'orderby_default' => 'label'));
-    
-    
+
+
 }
 
 echo $skin->close_simplebloc();

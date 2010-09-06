@@ -65,6 +65,7 @@ define ('_FORMS_AUTOBACKUP', 'Archivage Automatique (En Jours)');
 define ('_FORMS_OBLIGATORY', 'Obligatoire');
 define ('_FORMS_GRAPHICLIST',     'Liste des Graphiques');
 define ('_FORMS_ADDGRAPHIC',      'Ajouter un Graphique');
+define ('_FORMS_EXPORT_TO_TABLE',    'Stockage physique pour synchro DBREPORT');
 
 define ('_FORMS_FIELDCREATION',         'Ajout d\'un Champ');
 define ('_FORMS_SEPARATORCREATION',     'Ajout d\'un Séparateur');
@@ -77,7 +78,7 @@ define ('_FORMS_CAPTCHAMODIFICATION',       'Modification du Captcha');
 define ('_FORMS_GRAPHICMODIFICATION',         'Modification d\'un Graphique');
 
 define ('_FORMS_USER',      'Utilisateur');
-define ('_FORMS_GROUP',     'Espace');
+define ('_FORMS_WORKSPACE',     'Espace');
 define ('_FORMS_IP',    'Adresse IP');
 define ('_FORMS_MODULE',    'Module');
 define ('_FORMS_DATEVALIDATION',    'Date de Validation');
@@ -119,7 +120,7 @@ define ('_FORMS_FIELD_MULTICOLDISPLAY',         'Affichage multi-colonne');
 define ('_FORMS_GRAPHIC_LABEL',       'Intitulé');
 define ('_FORMS_GRAPHIC_TYPE',        'Type de graphique');
 define ('_FORMS_GRAPHIC_DESCRIPTION', 'Description');
-define ('_FORMS_GRAPHIC_LINE_AGGREGATION', 'Période d\'aggrégation des données');
+define ('_FORMS_GRAPHIC_LINE_AGGREGATION', 'Unité de temps');
 define ('_FORMS_GRAPHIC_DATASET', 'Jeu de données');
 
 

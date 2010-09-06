@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>forms</label>
-      <version>2.5.4a</version>
+      <version>3.0.0</version>
       <author>Ovensia / HeXad / Netlor</author>
-      <date>20100322160900</date>
+      <date>201000906000000</date>
       <description>Gestion de Formulaires</description>
       <paramtype>
          <name>forms_export_csvextension</name>
@@ -34,6 +34,13 @@
          <public>0</public>
          <description/>
       </paramtype>
+	  <paramtype>
+		 <name>forms_webservice_jodconverter</name>
+    	 <label>Web Service JODConverter</label>
+    	 <default_value></default_value>
+    	 <public>0</public>
+    	 <description/>
+	  </paramtype>         
       <action>
          <id_action>1</id_action>
          <label>Gérer les Formulaires</label>

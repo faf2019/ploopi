@@ -92,7 +92,7 @@ if (!empty($_GET['forms_export_format']))
 
             $l=1;
 
-            foreach ($data as $reply_id => $detail)
+            foreach ($data as $record_id => $detail)
             {
                 $c=0;
                 foreach ($detail as $key => $value)
@@ -187,7 +187,7 @@ if (!empty($_GET['forms_export_format']))
                 }
             }
 
-            foreach ($data as $reply_id => $detail)
+            foreach ($data as $record_id => $detail)
             {
                 echo $lineseparator;
 

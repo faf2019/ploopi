@@ -160,7 +160,7 @@ function forms_display(fuid, options)
 function forms_openreply(fuid, id_reply, event)
 {
     ploopi_showpopup(ploopi_ajaxloader_content,350,event,'click','popup_forms_openreply');
-    ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_openreply&forms_fuid='+fuid+'&forms_reply_id='+id_reply,'popup_forms_openreply');
+    ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_openreply&forms_fuid='+fuid+'&forms_record_id='+id_reply,'popup_forms_openreply');
 }
 
 function forms_changetype(t)
@@ -185,4 +185,57 @@ function forms_graphic_type_onchange(field)
 
     if (field.value == 'pie' || field.value == 'pie3d') $('forms_graphic_pie').style.display = 'block';
     else if (field.value == 'line' || field.value == 'linec' || field.value == 'bar' || field.value == 'barc' || field.value == 'radar' || field.value == 'radarc') $('forms_graphic_line').style.display = 'block';
+}
+
+/**
+ * Retourne le contenu d'une liste de choix liée à une table
+ * @param current champ sélectionné
+ * @param fields liste des champs imbriqués
+ * @param url url controleur
+ */
+function forms_field_tablelink_onchange(current, fields, url)
+{
+	var params = new Hash();
+	var lastparam = false;
+	var requested = '';
+	
+	fields.each(function(item) {
+		if (!lastparam)
+		{
+			params.set('forms_params['+item+']', $('field_'+item).value);
+			if (item == current) lastparam = true;
+		}
+		else 
+		{
+			// Stockage de l'item demandé
+			if (requested == '') requested = item;
+			// Vidage des sous-listes
+        	while ($('field_'+item).length > 1) $('field_'+item).remove(1);
+		}
+	});
+	
+	params.set('forms_fields', fields.join(','));
+	params.set('forms_requested', requested);
+	
+	new Ajax.Request(url, {
+        method:     'get',
+        parameters: params,
+        encoding:   'iso-8859-15',
+        onSuccess:  function(transport, json) {
+            if(null == json) {
+                json = transport.responseText.evalJSON();
+            }
+
+            if (json) {
+            	json.each(function(item) {
+            		$('field_'+requested).appendChild(newOpt = document.createElement("OPTION"));
+            		newOpt.value = item;
+            		newOpt.text = item;
+            	});
+            }
+        },
+		onFailure: function(message) { alert(message); }
+    });	
+	
+
 }
