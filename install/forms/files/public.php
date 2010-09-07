@@ -62,30 +62,6 @@ switch($op)
         ploopi_redirect('admin.php');
     break;
 
-    case 'forms_reply_delete':
-
-        $reply = new formsReply();
-        if (!empty($_GET['record_id']) && is_numeric($_GET['record_id']) && $reply->open($_GET['record_id']))
-        {
-            $objForm = new formsForm();
-            $objForm->open($reply->fields['id_form']);
-
-            if (ploopi_isadmin() || (
-            ploopi_isactionallowed(_FORMS_ACTION_DELETE) && (
-            ($objForm->fields['option_modify'] == 'user' && $reply->fields['id_user'] == $_SESSION['ploopi']['userid']) ||
-            ($objForm->fields['option_modify'] == 'group' && $reply->fields['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  ||
-            ($objForm->fields['option_modify'] == 'all')
-            )
-            ))
-            {
-                $reply->delete();
-                ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$reply->fields['id_form']}");
-            }
-            else ploopi_redirect('admin.php');
-        }
-        else ploopi_redirect('admin.php');
-    break;
-
     case 'forms_reply_display':
     case 'forms_reply_add':
     case 'forms_reply_modify':

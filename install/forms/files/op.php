@@ -97,44 +97,38 @@ if ($_SESSION['ploopi']['connected'])
     {
         switch($ploopi_op)
         {
+            case 'forms_reply_delete':
 
+                ploopi_init_module('forms');
 
-            case 'forms_tablelink_values':
                 include_once './modules/forms/classes/formsForm.php';
-                include_once './modules/forms/classes/formsField.php';
+                include_once './modules/forms/classes/formsRecord.php';
 
-                if (!empty($_GET['forms_fields']) && !empty($_GET['forms_params']) && !empty($_GET['forms_requested']))
+                $objForm = new formsForm();
+                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
                 {
-                    $arrParams = array();
-                    foreach($_GET['forms_params'] as $intFieldId => $strValue)
+                    $objRecord = new formsRecord($objForm);
+                
+                    if (!empty($_GET['record_id']) && is_numeric($_GET['record_id']) && $objRecord->open($_GET['record_id']))
                     {
-                        $objField = new formsField();
-                        if ($objField->open($intFieldId))
+                        if (ploopi_isadmin() || (
+                            ploopi_isactionallowed(_FORMS_ACTION_DELETE) && (
+                                ($objForm->fields['option_modify'] == 'user' && $objRecord->fields['user_id'] == $_SESSION['ploopi']['userid']) ||
+                                ($objForm->fields['option_modify'] == 'group' && $objRecord->fields['workspace_id'] == $_SESSION['ploopi']['workspaceid'])  ||
+                                ($objForm->fields['option_modify'] == 'all')
+                            )
+                        ))
                         {
-                            // Valeur de la table liée
-                            $objFieldValues = new formsField();
-                            if ($objFieldValues->open($intFieldId))
-                            {
-                                $arrParams[$objFieldValues->fields['fieldname']] = $strValue;
-                            }
+                            $objRecord->delete();
                         }
                     }
-
-                    // Champ à remplir
-                    $objField = new formsField();
-                    if ($objField->open($_GET['forms_requested']))
-                    {
-                        // Valeur de la table liée
-                        $objFieldValues = new formsField();
-                        if ($objFieldValues->open($objField->fields['values']))
-                        {
-                            ploopi_print_json(array_keys($objFieldValues->getValues($arrParams)));
-                        }
-                    }
+                    
+                    ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$_GET['forms_id']}");
                 }
-
-                ploopi_die();
+                
+                ploopi_redirect('admin.php');
             break;
+
 
             case 'forms_download_file':
                 include_once './modules/forms/classes/formsForm.php';

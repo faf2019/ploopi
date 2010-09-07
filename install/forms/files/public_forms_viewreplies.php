@@ -398,7 +398,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                             ))
                         {
                             ?>
-                            <a title="Supprimer" href="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=forms_reply_delete&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>','<?php echo _PLOOPI_CONFIRM; ?>')"><img alt="supprimer" border="0" src="./modules/forms/img/ico_trash.png"></a>
+                            <a title="Supprimer" href="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin-light.php?ploopi_op=forms_reply_delete&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>','<?php echo _PLOOPI_CONFIRM; ?>')"><img alt="supprimer" border="0" src="./modules/forms/img/ico_trash.png"></a>
                             <?php
                         }
                         ?>
