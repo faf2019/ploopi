@@ -169,5 +169,5 @@ INSERT INTO `ploopi_mb_schema` (`tablesrc`, `tabledest`, `id_module_type`) VALUE
 ('ploopi_module', 'ploopi_workspace', 1);
 
 
-UPDATE `ploopi_module_type` SET `version` = '1.7.9.1', `author` = 'Ovensia', `date` = '20100906000000', `description` = 'Noyau du systÃ¨me' WHERE `ploopi_module_type`.`id` = 1;
+UPDATE `ploopi_module_type` SET `version` = '1.7.9.1', `author` = 'Ovensia', `date` = '20100906000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
 

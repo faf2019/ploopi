@@ -31,8 +31,8 @@
  * @author Stéphane Escaich
  */
 
-define ('_PLOOPI_VERSION', '1.7.9.0');
-define ('_PLOOPI_REVISION', '100614');
+define ('_PLOOPI_VERSION', '1.7.9.2');
+define ('_PLOOPI_REVISION', '100914');
 
 define ('_PLOOPI_MSG_DBERROR',  'Database connection error, please contact administrator');
 define ('_SYSTEM_SYSTEMADMIN',  0);
@@ -127,14 +127,14 @@ define('_PLOOPI_ERROR_FILENOTWRITABLE',    101);
 define('_PLOOPI_ERROR_EMPTYFILE',          102);
 
 // Chemin absolu de l'application depuis la racine
-if (!defined ('_PLOOPI_SELFPATH')) 
+if (!defined ('_PLOOPI_SELFPATH'))
 {
      if (php_sapi_name() != 'cli') define ('_PLOOPI_SELFPATH', rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
      else define ('_PLOOPI_SELFPATH', '');
 }
 
 // Chemin web absolu de l'application
-if (!defined ('_PLOOPI_BASEPATH')) 
+if (!defined ('_PLOOPI_BASEPATH'))
 {
      if (php_sapi_name() != 'cli') define ('_PLOOPI_BASEPATH', ((!empty($_SERVER['HTTPS']) || (isset($_SERVER['HTTP_X_SSL_REQUEST']) && ($_SERVER['HTTP_X_SSL_REQUEST'] == 1 || $_SERVER['HTTP_X_SSL_REQUEST'] == true || $_SERVER['HTTP_X_SSL_REQUEST'] == 'on'))) ? 'https://' : 'http://').((!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']).((!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80' && empty($_SERVER['HTTP_HOST'])) ? ":{$_SERVER['SERVER_PORT']}" : '').rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
      else define ('_PLOOPI_BASEPATH', '');
@@ -142,7 +142,7 @@ if (!defined ('_PLOOPI_BASEPATH'))
 
 if (!defined ('_PLOOPI_FINGERPRINT') && defined('_PLOOPI_DB_DATABASE') && defined('_PLOOPI_DB_SERVER')) define ('_PLOOPI_FINGERPRINT',  md5(dirname($_SERVER['SCRIPT_FILENAME']).'/'._PLOOPI_DB_SERVER.'/'._PLOOPI_DB_DATABASE));
 if (!defined ('_PLOOPI_PATHCACHE') && defined('_PLOOPI_PATHDATA')) define ('_PLOOPI_PATHCACHE', _PLOOPI_PATHDATA.'/cache');
-        
+
 if (!defined ('_PLOOPI_SESSION_DB_SERVER') && defined('_PLOOPI_DB_SERVER')) define ('_PLOOPI_SESSION_DB_SERVER', _PLOOPI_DB_SERVER);
 if (!defined ('_PLOOPI_SESSION_DB_LOGIN') && defined('_PLOOPI_DB_LOGIN')) define ('_PLOOPI_SESSION_DB_LOGIN', _PLOOPI_DB_LOGIN);
 if (!defined ('_PLOOPI_SESSION_DB_PASSWORD') && defined('_PLOOPI_DB_PASSWORD')) define ('_PLOOPI_SESSION_DB_PASSWORD', _PLOOPI_DB_PASSWORD);
