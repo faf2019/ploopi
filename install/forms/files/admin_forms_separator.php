@@ -52,7 +52,7 @@ else
 echo $skin->open_simplebloc($title);
 
 $arrParams = array();
-$arrParams[] = "op=forms_separator_save";
+$arrParams[] = "ploopi_op=forms_separator_save";
 $arrParams[] = "forms_id={$_GET['forms_id']}";
 if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 ?>
@@ -91,8 +91,8 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                 <textarea class="text" style="height:40px;" name="field_description"><?php echo htmlentities($field->fields['description']); ?></textarea>
             </p>
             <p>
-                <label><?php echo _FORMS_FIELD_STYLE; ?>:</label>
-                <input type="text" class="text" name="field_style" value="<?php echo htmlentities($field->fields['style']); ?>">
+                <label><?php echo _FORMS_FIELD_STYLE_FORM; ?>:</label>
+                <input type="text" class="text" name="field_style_form" value="<?php echo htmlentities($field->fields['style_form']); ?>">
             </p>
         </div>
     </div>

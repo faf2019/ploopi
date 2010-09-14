@@ -38,7 +38,6 @@
 $pubdate_start = ($objForm->fields['pubdate_start']) ? ploopi_timestamp2local($objForm->fields['pubdate_start']) : array('date' => '');
 $pubdate_end = ($objForm->fields['pubdate_end']) ? ploopi_timestamp2local($objForm->fields['pubdate_end']) : array('date' => '');
 
-
 switch($op)
 {
     case 'forms_reply_add':
@@ -51,7 +50,6 @@ switch($op)
     break;
 
     default:
-    case 'forms_preview':
         $strRenderMode = 'preview';
     break;
 }

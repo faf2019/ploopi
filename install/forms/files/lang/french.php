@@ -66,6 +66,7 @@ define ('_FORMS_OBLIGATORY', 'Obligatoire');
 define ('_FORMS_GRAPHICLIST',     'Liste des Graphiques');
 define ('_FORMS_ADDGRAPHIC',      'Ajouter un Graphique');
 define ('_FORMS_EXPORT_TO_TABLE',    'Stockage physique pour synchro DBREPORT');
+define ('_FORMS_STYLE',       		'Style formulaire (optionnel)<br /><em>ex : width:500px; </em>');
 
 define ('_FORMS_FIELDCREATION',         'Ajout d\'un Champ');
 define ('_FORMS_SEPARATORCREATION',     'Ajout d\'un Séparateur');
@@ -86,7 +87,7 @@ define ('_FORMS_NBLINE',    'Nb Ligne/Page');
 
 
 define ('_FORMS_PREVIEW',       'Aperçu');
-define ('_FORMS_VIEWRESULT',        'Voir l\'interface utilisateur');
+define ('_FORMS_VIEWRESULT',        'Basculer vers l\'interface utilisateur');
 define ('_FORMS_VIEWLIST',      'Mode Liste');
 
 define ('_FORMS_FILTER',        'Filtre');
@@ -103,13 +104,18 @@ define ('_FORMS_FIELD_TYPE',        'Type');
 define ('_FORMS_FIELD_FORMAT',      'Format');
 define ('_FORMS_FIELD_VALUES',      'Valeurs');
 define ('_FORMS_FIELD_MAXLENGTH',       'Longueur maximum (caractères)');
-define ('_FORMS_FIELD_STYLE',       'Style optionnel<br />(ex : color:red;)');
-define ('_FORMS_FIELD_NEEDED',      'Requis');
+define ('_FORMS_FIELD_STYLE_FORM',       'Style élément (optionnel)<br /><em>ex : color:red; </em>');
+define ('_FORMS_FIELD_STYLE_FIELD',       'Style champ (optionnel)<br /><em>ex : height:50px; </em>');
+define ('_FORMS_FIELD_NEEDED',      'Saisie Requise');
+define ('_FORMS_FIELD_FORMVIEW',      'Visible dans le Formulaire');
 define ('_FORMS_FIELD_EXPORTVIEW',      'Visible en Export');
 define ('_FORMS_FIELD_ARRAYVIEW',       'Visible en Liste');
+define ('_FORMS_FIELD_ADMINONLY',      'Limité aux administrateurs');
 define ('_FORMS_FIELD_DEFAULTVALUE',        'Valeur par Défaut');
 define ('_FORMS_FIELD_FORMFIELD',       'Formulaire / Champ');
 define ('_FORMS_FIELD_WCEVIEW',         'Visible lors d\'une intégration en objet WebEdit (frontoffice)');
+define ('_FORMS_FIELD_FORMULA_EDITOR',         'Editeur de Formule');
+
 
 define ('_FORMS_FIELD_SEPARATOR_LEVEL',         'Niveau du Séparateur');
 define ('_FORMS_FIELD_SEPARATOR_FONTSIZE',      'Taille de Police (pix)');
@@ -125,8 +131,10 @@ define ('_FORMS_GRAPHIC_DATASET', 'Jeu de données');
 
 
 define ('_FORMS_FIELD_NEEDED_SHORT',        'Req.');
+define ('_FORMS_FIELD_FORMVIEW_SHORT',        'For.');
 define ('_FORMS_FIELD_EXPORTVIEW_SHORT',        'Exp.');
 define ('_FORMS_FIELD_ARRAYVIEW_SHORT',         'Lst.');
+define ('_FORMS_FIELD_ADMINONLY_SHORT',      'Adm.');
 
 define ('_FORMS_ALLREADYFILLED', 'Vous avez déjà rempli ce formulaire');
 
@@ -140,6 +148,8 @@ define ('_FORMS_OPTION_MODIFY_NOBODY',      'Personne');
 define ('_FORMS_OPTION_MODIFY_USER',        'Le propriétaire');
 define ('_FORMS_OPTION_MODIFY_GROUP',       'L\'espace');
 define ('_FORMS_OPTION_MODIFY_ALL',         'Tout le monde');
+define ('_FORMS_OPTION_ADMINONLY',      'Uniquement visible par les administrateurs');
+
 
 define ('_FORMS_OPTION_VIEW',               'Vue sur les données');
 define ('_FORMS_OPTION_VIEW_GLOBAL',        'Globale');

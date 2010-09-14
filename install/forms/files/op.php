@@ -97,8 +97,267 @@ if ($_SESSION['ploopi']['connected'])
     {
         switch($ploopi_op)
         {
-            case 'forms_reply_delete':
+            /**
+             * CONTROLEURS ADMIN
+             */
+            case 'forms_preview':
+                ploopi_init_module('forms');
 
+                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+
+                include_once './modules/forms/classes/formsForm.php';
+
+                $objForm = new formsForm();
+                if (!empty($_POST['forms_id']) && is_numeric($_POST['forms_id']) && $objForm->open($_POST['forms_id']))
+                {
+                    echo $skin->create_popup('Aperçu du formulaire', $objForm->render(null, 'preview', false, false), 'forms_preview');
+                }
+
+                ploopi_die();
+            break;
+
+            case 'forms_field_save':
+            case 'forms_separator_save':
+            case 'forms_captcha_save':
+                ploopi_init_module('forms');
+
+                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+
+                include_once './modules/forms/classes/formsField.php';
+
+                $field = new formsField();
+
+                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
+                {
+                    if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']))
+                    {
+                        $field->open($_GET['field_id']);
+                        if (!empty($_POST['fieldnew_position']) && is_numeric($_POST['fieldnew_position']) && $_POST['fieldnew_position'] != $field->fields['position']) // nouvelle position définie
+                        {
+                            if ($_POST['fieldnew_position'] < 1) $_POST['fieldnew_position'] = 1;
+                            else
+                            {
+                                $db->query("Select max(position) as maxpos from ploopi_mod_forms_field where id_form = {$field->fields['id_form']}");
+                                $fields = $db->fetchrow();
+                                if ($_POST['fieldnew_position'] > $fields['maxpos']) $_POST['fieldnew_position'] = $fields['maxpos'];
+                            }
+
+                            $db->query("update ploopi_mod_forms_field set position = 0 where position = {$field->fields['position']} and id_form = {$field->fields['id_form']}");
+                            if ($_POST['fieldnew_position'] > $field->fields['position'])
+                            {
+                                $db->query("update ploopi_mod_forms_field set position=position-1 where position BETWEEN ".($field->fields['position']-1)." AND {$_POST['fieldnew_position']} and id_form = {$field->fields['id_form']}");
+                            }
+                            else
+                            {
+                                $db->query("update ploopi_mod_forms_field set position=position+1 where position BETWEEN {$_POST['fieldnew_position']} AND ".($field->fields['position']-1)." and id_form = {$field->fields['id_form']}");
+                            }
+                            $db->query("update ploopi_mod_forms_field set position={$_POST['fieldnew_position']} where position=0 and id_form = {$field->fields['id_form']}");
+                            $field->fields['position'] = $_POST['fieldnew_position'];
+                        }
+                    }
+                    else // nouveau
+                    {
+                        $select = "Select max(position) as maxpos from ploopi_mod_forms_field where id_form = {$_GET['forms_id']}";
+                        $db->query($select);
+                        $fields = $db->fetchrow();
+                        $maxpos = $fields['maxpos'];
+                        if (!is_numeric($maxpos)) $maxpos = 0;
+                        $field->fields['position'] = $maxpos+1;
+                        $field->fields['id_form'] = $_GET['forms_id'];
+                    }
+
+                    $field->setvalues($_POST,'field_');
+
+                    if ($ploopi_op == 'forms_separator_save')
+                    {
+                        $field->fields['separator'] = 1;
+                    }
+                    elseif($ploopi_op == 'forms_captcha_save')
+                    {
+                        $field->fields['captcha'] = 1;
+                        $field->fields['option_needed'] = 1;
+                    }
+                    else
+                    {
+                        if (!isset($_POST['field_option_needed'])) $field->fields['option_needed'] = 0;
+                        if (!isset($_POST['field_option_formview'])) $field->fields['option_formview'] = 0;
+                        if (!isset($_POST['field_option_arrayview'])) $field->fields['option_arrayview'] = 0;
+                        if (!isset($_POST['field_option_exportview'])) $field->fields['option_exportview'] = 0;
+                        if (!isset($_POST['field_option_wceview'])) $field->fields['option_wceview'] = 0;
+                        if (!isset($_POST['field_option_adminonly'])) $field->fields['option_adminonly'] = 0;
+
+                        if (!$field->fields['option_formview']) $field->fields['option_needed'] = 0;
+                    }
+
+                    $field->save();
+                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}&ploopi_mod_msg=_FORMS_MESS_OK_3");
+                }
+                else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
+            break;
+
+            case 'forms_save':
+                ploopi_init_module('forms');
+
+                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+
+                include_once './modules/forms/classes/formsForm.php';
+
+                $forms = new formsForm();
+                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id'])) $forms->open($_GET['forms_id']);
+                $forms->setvalues($_POST,'forms_');
+                $forms->fields['pubdate_start'] = ploopi_local2timestamp($forms->fields['pubdate_start']);
+                $forms->fields['pubdate_end'] = ploopi_local2timestamp($forms->fields['pubdate_end']);
+                if (!isset($_POST['forms_option_onlyone'])) $forms->fields['option_onlyone'] = 0;
+                if (!isset($_POST['forms_option_onlyoneday'])) $forms->fields['option_onlyoneday'] = 0;
+                if (!isset($_POST['forms_option_displayuser'])) $forms->fields['option_displayuser'] = 0;
+                if (!isset($_POST['forms_option_displaygroup'])) $forms->fields['option_displaygroup'] = 0;
+                if (!isset($_POST['forms_option_displaydate'])) $forms->fields['option_displaydate'] = 0;
+                if (!isset($_POST['forms_option_displayip'])) $forms->fields['option_displayip'] = 0;
+                if (!isset($_POST['forms_cms_link'])) $forms->fields['cms_link'] = 0;
+                if (!isset($_POST['forms_option_adminonly'])) $forms->fields['option_adminonly'] = 0;
+
+                if (!empty($forms->fields['autobackup_date'])) $forms->fields['autobackup_date'] = ploopi_local2timestamp($forms->fields['autobackup_date']);
+
+                $forms->setuwm();
+                $forms->save();
+
+                ploopi_redirect("admin.php?formsTabItem=formlist&op=forms_modify&forms_id={$forms->fields['id']}&ploopi_mod_msg=_FORMS_MESS_OK_1");
+            break;
+
+            case 'forms_delete':
+                ploopi_init_module('forms');
+
+                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+
+                include_once './modules/forms/classes/formsForm.php';
+
+                $forms = new formsForm();
+                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id'])) $forms->delete();
+                ploopi_redirect('admin.php?ploopi_mod_msg=_FORMS_MESS_OK_2');
+            break;
+
+            case 'forms_field_delete':
+                ploopi_init_module('forms');
+
+                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+
+                include_once './modules/forms/classes/formsField.php';
+
+                if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']))
+                {
+                    $field = new formsField();
+                    if ($field->open($_GET['field_id'])) $field->delete();
+                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_4");
+                }
+                else ploopi_redirect('admin.php?ploopi_mod_msg=_FORMS_MESS_OK_4');
+            break;
+
+
+            case 'forms_field_moveup':
+            case 'forms_field_movedown':
+                ploopi_init_module('forms');
+
+                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+
+                include_once './modules/forms/classes/formsField.php';
+
+                if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']))
+                {
+                    $field = new formsField();
+                    $field->open($_GET['field_id']);
+
+                    $select = "Select min(position) as minpos, max(position) as maxpos from ploopi_mod_forms_field where id_form = {$field->fields['id_form']}";
+                    $db->query($select);
+                    $fields = $db->fetchrow();
+
+                    if ($ploopi_op == 'forms_field_movedown')
+                    {
+                        if ($fields['maxpos'] != $field->fields['position']) // ce n'est pas le dernier champ
+                        {
+                            $db->query("update ploopi_mod_forms_field set position=0 where position=".($field->fields['position']+1)." and id_form = {$field->fields['id_form']}");
+                            $db->query("update ploopi_mod_forms_field set position=".($field->fields['position']+1)." where position=".$field->fields['position']." and id_form = {$field->fields['id_form']}");
+                            $db->query("update ploopi_mod_forms_field set position=".$field->fields['position']." where position=0 and id_form = {$field->fields['id_form']}");
+                        }
+                    }
+                    else
+                    {
+                        if ($fields['minpos'] != $field->fields['position']) // ce n'est pas le premier champ
+                        {
+                            $db->query("update ploopi_mod_forms_field set position=0 where position=".($field->fields['position']-1)." and id_form = {$field->fields['id_form']}");
+                            $db->query("update ploopi_mod_forms_field set position=".($field->fields['position']-1)." where position=".$field->fields['position']." and id_form = {$field->fields['id_form']}");
+                            $db->query("update ploopi_mod_forms_field set position=".$field->fields['position']." where position=0 and id_form = {$field->fields['id_form']}");
+                        }
+                    }
+                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_7");
+                }
+                else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
+            break;
+
+            case 'forms_graphic_save':
+                ploopi_init_module('forms');
+
+                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+
+                include_once './modules/forms/classes/formsGraphic.php';
+
+                $objGraphic = new formsGraphic();
+
+                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
+                {
+                    if (!empty($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id'])) $objGraphic->open($_GET['forms_graphic_id']);
+
+                    if ($objGraphic->isnew()) $objGraphic->fields['id_form'] = $_GET['forms_id'];
+
+                    $objGraphic->setvalues($_POST,'forms_graphic_');
+                    if (!isset($_POST['forms_graphic_percent'])) $objGraphic->fields['percent'] = 0;
+                    if (!isset($_POST['forms_graphic_filled'])) $objGraphic->fields['filled'] = 0;
+
+                    $objGraphic->save();
+
+                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_5");
+                }
+                else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
+
+                ploopi_die();
+            break;
+
+            case 'forms_graphic_delete':
+                ploopi_init_module('forms');
+
+                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+
+                include_once './modules/forms/classes/formsGraphic.php';
+
+                $objGraphic = new formsGraphic();
+                if (!empty($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id']) && $objGraphic->open($_GET['forms_graphic_id']))
+                {
+                    $objGraphic->delete();
+                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_6");
+                }
+                else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
+            break;
+
+            /*
+            case "export":
+                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
+                {
+                    $forms = new formsForm();
+                    $forms->open($_GET['forms_id']);
+                    include './modules/forms/public_forms_export.php';
+                }
+                else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
+            break;
+            */
+
+
+
+
+
+
+
+
+
+            case 'forms_reply_delete':
                 ploopi_init_module('forms');
 
                 include_once './modules/forms/classes/formsForm.php';
@@ -108,7 +367,7 @@ if ($_SESSION['ploopi']['connected'])
                 if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
                 {
                     $objRecord = new formsRecord($objForm);
-                
+
                     if (!empty($_GET['record_id']) && is_numeric($_GET['record_id']) && $objRecord->open($_GET['record_id']))
                     {
                         if (ploopi_isadmin() || (
@@ -122,10 +381,10 @@ if ($_SESSION['ploopi']['connected'])
                             $objRecord->delete();
                         }
                     }
-                    
+
                     ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$_GET['forms_id']}");
                 }
-                
+
                 ploopi_redirect('admin.php');
             break;
 
@@ -224,9 +483,12 @@ if ($_SESSION['ploopi']['connected'])
                 <?php
                 if (isset($_POST['forms_graphic_id']) && isset($_POST['forms_graphic_width']))
                 {
+                    $strUrl = ploopi_urlencode("admin-light.php?ploopi_op=forms_graphic_generate&forms_graphic_id={$_POST['forms_graphic_id']}&forms_graphic_width={$_POST['forms_graphic_width']}&forms_rand=".microtime());
                     ?>
-                    <iframe style="width:100%;height:500px;" src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=forms_graphic_generate&forms_graphic_id={$_POST['forms_graphic_id']}&forms_rand=".microtime()); ?>"></iframe>
-                    <img src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=forms_graphic_generate&forms_graphic_id={$_POST['forms_graphic_id']}&forms_graphic_width={$_POST['forms_graphic_width']}&forms_rand=".microtime()); ?>" />
+                    <p class="ploopi_va" style="padding:4px;background:#eee;border-bottom:1px solid #ccc;">
+                    	<a class="forms_export_link" href="<?php echo $strUrl; ?>"><img src="./modules/forms/img/mime/png.png" /> Télécharger l'image</a>
+                	</p>
+                    <img style="margin:4px;display:block;clear:both;" src="<?php echo $strUrl; ?>" />
                     <?
                 }
                 else
@@ -249,7 +511,6 @@ if ($_SESSION['ploopi']['connected'])
                 if (isset($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id']) && $objGraphic->open($_GET['forms_graphic_id']))
                 {
                     $intWidth = isset($_GET['forms_graphic_width']) && is_numeric($_GET['forms_graphic_width']) ? $_GET['forms_graphic_width'] : null;
-                    //$intHeight = $intWidth*3/5;
 
                     $objGraphic->render($intWidth);
                 }
@@ -260,9 +521,10 @@ if ($_SESSION['ploopi']['connected'])
     }
 
     /**
-     * Autres opérations
+     * Autres opérations (appels externes)
      */
 
+    /*
     switch($ploopi_op)
     {
         case 'forms_download_file':
@@ -364,5 +626,6 @@ if ($_SESSION['ploopi']['connected'])
             ploopi_die();
         break;
     }
+    */
 }
 ?>

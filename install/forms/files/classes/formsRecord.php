@@ -34,7 +34,7 @@ class formsRecord extends data_object
 {
     public function __construct(&$objForm)
     {
-        parent::__construct($objForm->getTableName(), '#id');
+        parent::__construct($objForm->getDataTableName(), '#id');
     }
 
     public function save()

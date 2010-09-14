@@ -32,13 +32,14 @@
  * @author Stéphane Escaich
  */
 
+// Admin oui/non ?
+$booIsAdmin = ploopi_isactionallowed(_FORMS_ACTION_ADMIN);
+
+// Nombre de lignes (visibles dans le profil actuel)
 $intTotalNumRows = $objForm->getNumRows(true);
 
 // Lecture des champs statiques du formulaire
 $arrStaticFields = formsForm::getStaticFields();
-
-// Lecture des champs dynamiques et séparateurs du formulaire
-$arrFields = $objForm->getFields(true);
 
 // Lecture des titres de colonnes
 $arrTitles = $objForm->getTitles();
@@ -51,6 +52,9 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
     <?php
     if (ploopi_isactionallowed(_FORMS_ACTION_FILTER))
     {
+        // Lecture des champs dynamiques et séparateurs du formulaire
+        $arrFields = $objForm->getFields(true);
+
         if (!isset($_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_filter_box'])) $_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_filter_box'] = 'none';
         ?>
         <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_filter_box');ploopi_xmlhttprequest('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_filter_box&display='+$('forms_filter_box').style.display, true);">
@@ -83,20 +87,23 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
 
                     foreach($arrFields as $strKey => $objField)
                     {
-                        if ($objField->fields['separator'])
+                        if (!$objField->fields['option_adminonly'] || $booIsAdmin)
                         {
-                            for ($i = $objField->fields['separator_level']; $i <= $intLevel; $i++) echo "</optgroup>";
-                            $strPadding = $intLevel > 1 ? str_repeat('&nbsp;', $intLevel-1) : '';
-                            ?>
-                            <optgroup label="<?php echo $strPadding.htmlentities($objField->fields['name']); ?>">
-                            <?php
-                        }
-                        else
-                        {
-                            $booSel = (isset($arrFormFilter[$l]) && $arrFormFilter[$l]['field'] == $strKey) ? 'selected="selected"' : '';
-                            ?>
-                            <option <?php echo $booSel; ?> value="<?php echo $strKey; ?>"><?php echo htmlentities($objField->fields['name']); ?></option>
-                            <?php
+                            if ($objField->fields['separator'])
+                            {
+                                for ($i = $objField->fields['separator_level']; $i <= $intLevel; $i++) echo "</optgroup>";
+                                $strPadding = $intLevel > 1 ? str_repeat('&nbsp;', $intLevel-1) : '';
+                                ?>
+                                <optgroup label="<?php echo $strPadding.htmlentities($objField->fields['name']); ?>">
+                                <?php
+                            }
+                            else
+                            {
+                                $booSel = (isset($arrFormFilter[$l]) && $arrFormFilter[$l]['field'] == $strKey) ? 'selected="selected"' : '';
+                                ?>
+                                <option <?php echo $booSel; ?> value="<?php echo $strKey; ?>"><?php echo htmlentities($objField->fields['name']); ?></option>
+                                <?php
+                            }
                         }
                     }
 
@@ -291,7 +298,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
             <?php
             foreach ($arrTitles as $strKey => $row)
             {
-                if ($row['arrayview'])
+                if ($row['arrayview'] && (!$row['adminonly']  || $booIsAdmin))
                 {
                     $style_col = $sort_cell = '';
                     $new_option = 'ASC';
@@ -337,7 +344,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                 <?php
                 foreach ($arrTitles as $strFieldId => $row)
                 {
-                    if ($arrTitles[$strFieldId]['arrayview'])
+                    if ($row['arrayview'] && (!$row['adminonly']  || $booIsAdmin))
                     {
                         if (isset($rowData[$strFieldId]))
                         {
@@ -345,7 +352,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
 
                             if (is_numeric($strFieldId))
                             {
-                                switch($arrTitles[$strFieldId]['type'])
+                                switch($row['type'])
                                 {
 
                                     case 'file':

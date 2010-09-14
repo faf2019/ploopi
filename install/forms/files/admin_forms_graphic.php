@@ -32,6 +32,11 @@
  */
 
 /**
+ * Constantes des polices de caractère
+ */
+include_once './modules/forms/jpgraph/jpgraph_ttf.inc.php';
+
+/**
  * On commence par vérifier si l'identifiant du graphique est valide.
  * Si ok => on l'ouvre. Sinon, nouveau graphique.
  */
@@ -45,13 +50,14 @@ if (!empty($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id']) &
 else
 {
     $objGraphic->init_description();
+    $objGraphic->fields['type'] = 'line';
     $strTitle = _FORMS_GRAPHICCREATION;
 }
 
 echo $skin->open_simplebloc($strTitle);
 
 $arrParams = array();
-$arrParams[] = "op=forms_graphic_save";
+$arrParams[] = "ploopi_op=forms_graphic_save";
 $arrParams[] = "forms_id={$forms->fields['id']}";
 if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields['id']}";
 ?>
@@ -66,7 +72,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
             <p>
                 <label><?php echo _FORMS_GRAPHIC_TYPE; ?>:</label>
                 <select class="select" name="forms_graphic_type" onchange="javascript:forms_graphic_type_onchange(this);">
-                <?php 
+                <?php
                 global $forms_graphic_types;
                 foreach($forms_graphic_types as $strKey => $strValue)
                 {
@@ -85,6 +91,187 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                 <label>Afficher les données en pourcentage:</label>
                 <input type="checkbox" name="forms_graphic_percent" value="1" <?php if ($objGraphic->fields['percent']) echo 'checked="checked"'; ?> style="width:16px;" />
             </p>
+
+			<p class="ploopi_va forms_param_link" id="forms_graphic_params_link" style="display:block;">
+            	<a onclick="javascript:$('forms_graphic_params_link').style.display = 'none'; $('forms_graphic_params').style.display = 'block';" href="javascript:void(0);">
+            	<img src="./modules/forms/img/arrow_down.png" />
+            	Paramètres avancés
+            	</a>
+			</p>
+
+            <div id="forms_graphic_params" style="display:none;">
+                <fieldset>
+                    <legend>Paramètres généraux</legend>
+                    <p>
+                        <label>Police de caractère:</label>
+                        <?php
+                        $arrFonts = array(
+                            FF_VERA => 'Vera',
+                            FF_VERAMONO => 'Vera Mono',
+                            FF_VERASERIF => 'Vera Serif',
+                            FF_DV_SERIF => 'DejaVu Serif',
+                            FF_DV_SANSSERIF => 'DejaVu Sans',
+                            FF_DV_SANSSERIFMONO => 'DejaVu Sans Mono',
+                            FF_DV_SANSSERIF => 'DejaVu Sans'
+                        );
+                        ?>
+                        <select class="select" name="forms_graphic_param_font">
+                        	<?php
+                        	foreach($arrFonts as $key => $value)
+                        	{
+                        	    ?>
+                        		<option <?php if ($objGraphic->fields['param_font'] == $key) echo 'selected="selected"'; ?> value="<?php echo $key; ?>"><?php echo htmlentities($value); ?></option>
+                        		<?php
+                        	}
+                        	?>
+                        </select>
+                    </p>
+                    <p>
+                        <label>Taille du titre:</label>
+                        <input type="text" class="text" style="width:40px;margin-right:2px;" name="forms_graphic_param_font_size_title" value="<?php echo $objGraphic->fields['param_font_size_title']; ?>" />
+                    </p>
+                    <p>
+                        <label>Taille de la légende:</label>
+                        <input type="text" class="text" style="width:40px;margin-right:2px;" name="forms_graphic_param_font_size_legend" value="<?php echo $objGraphic->fields['param_font_size_legend']; ?>" />
+                    </p>
+                    <p>
+                        <label>Taille des données:</label>
+                        <input type="text" class="text" style="width:40px;margin-right:2px;" name="forms_graphic_param_font_size_data" value="<?php echo $objGraphic->fields['param_font_size_data']; ?>" />
+                    </p>
+                </fieldset>
+                <fieldset>
+                    <legend>Paramètres Courbes/Histogrammes</legend>
+                    <p>
+                        <label>Transparence du remplissage (%):</label>
+                        <select class="select" name="forms_graphic_param_fill_transparency" style="width:80px;">
+                        	<?php
+                        	for ($i=0;$i<=10;$i++)
+                        	{
+                        	    ?>
+    	                    	<option <?php if ($objGraphic->fields['param_fill_transparency'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
+    	                    	<?php
+                        	}
+                        	?>
+                        </select>
+                    </p>
+                    <p>
+                        <label>Transparence des contours (%):</label>
+                        <select class="select" name="forms_graphic_param_transparency" style="width:80px;">
+                        	<?php
+                        	for ($i=0;$i<=10;$i++)
+                        	{
+                        	    ?>
+    	                    	<option <?php if ($objGraphic->fields['param_transparency'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
+    	                    	<?php
+                        	}
+                        	?>
+                        </select>
+                    </p>
+                    <p>
+                        <label>Marges (px):<br /><em>Gauche, Droite, Haut, Bas</em></label>
+                        <input type="text" class="text" style="width:40px;margin-right:2px;" name="forms_graphic_param_margin_left" value="<?php echo $objGraphic->fields['param_margin_left']; ?>" />
+                        <input type="text" class="text" style="width:40px;margin-right:2px;" name="forms_graphic_param_margin_right" value="<?php echo $objGraphic->fields['param_margin_right']; ?>" />
+                        <input type="text" class="text" style="width:40px;margin-right:2px;" name="forms_graphic_param_margin_top" value="<?php echo $objGraphic->fields['param_margin_top']; ?>" />
+                        <input type="text" class="text" style="width:40px;margin-right:2px;" name="forms_graphic_param_margin_bottom" value="<?php echo $objGraphic->fields['param_margin_bottom']; ?>" />
+                    </p>
+                    <p>
+                        <label>Rotation des libellés (%):</label>
+                        <input type="text" class="text" style="width:40px;margin-right:2px;" name="forms_graphic_param_label_angle" value="<?php echo $objGraphic->fields['param_label_angle']; ?>" />
+                    </p>
+                </fieldset>
+                <fieldset>
+                    <legend>Paramètres Histogrammes</legend>
+                    <p>
+                        <label>Ombre portée, transparence (%):</label>
+                        <select class="select" name="forms_graphic_param_shadow_transparency" style="width:80px;">
+                        	<?php
+                        	for ($i=0;$i<=10;$i++)
+                        	{
+                        	    ?>
+    	                    	<option <?php if ($objGraphic->fields['param_shadow_transparency'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
+    	                    	<?php
+                        	}
+                        	?>
+                        </select>
+                    </p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Paramètres Secteurs/Radars</legend>
+                    <p>
+                        <label>Centre (%):<br /><em>X, Y</em></label>
+                        <select class="select" name="forms_graphic_param_center_x" style="width:80px;margin-right:2px;">
+                        	<?php
+                        	for ($i=0;$i<=10;$i++)
+                        	{
+                        	    ?>
+    	                    	<option <?php if ($objGraphic->fields['param_center_x'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
+    	                    	<?php
+                        	}
+                        	?>
+                        </select>
+                        <select class="select" name="forms_graphic_param_center_y" style="width:80px;">
+                        	<?php
+                        	for ($i=0;$i<=10;$i++)
+                        	{
+                        	    ?>
+    	                    	<option <?php if ($objGraphic->fields['param_center_y'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
+    	                    	<?php
+                        	}
+                        	?>
+                        </select>
+                    </p>
+                </fieldset>
+                <?php
+                $arrMarks = array(
+                    MARK_SQUARE => 'Carré',
+                    MARK_CIRCLE => 'Cercle vide',
+                    MARK_FILLEDCIRCLE => 'Cercle plein',
+                    MARK_UTRIANGLE => 'Triangle vers le haut',
+                    MARK_DTRIANGLE => 'Triangle vers le bas',
+                    MARK_LEFTTRIANGLE => 'Triangle vers la gauche',
+                    MARK_RIGHTTRIANGLE => 'Triangle vers la droite',
+                    MARK_DIAMOND => 'Losange',
+                    MARK_CROSS => 'Croix',
+                    MARK_X => 'Croix 2',
+                    MARK_STAR => 'Etoile',
+                    MARK_FLASH => 'Eclair',
+                );
+                ?>
+                <fieldset>
+                    <legend>Paramètres Courbes/Radars</legend>
+                    <p>
+                        <label>Type de marqueur:</label>
+                        <select class="select" name="forms_graphic_param_mark_type">
+                        	<?php
+                        	foreach($arrMarks as $key => $value)
+                        	{
+                        	    ?>
+                        		<option <?php if ($objGraphic->fields['param_mark_type'] == $key) echo 'selected="selected"'; ?> value="<?php echo $key; ?>"><?php echo htmlentities($value); ?></option>
+                        		<?php
+                        	}
+                        	?>
+                        </select>
+                    </p>
+                    <p>
+                        <label>Largeur des marqueurs (px):</label>
+                        <input type="text" class="text" style="width:40px;margin-right:2px;" name="forms_graphic_param_mark_width" value="<?php echo $objGraphic->fields['param_mark_width']; ?>" />
+                    </p>
+                    <p>
+                        <label>Transparence des marqueurs (%):</label>
+                        <select class="select" name="forms_graphic_param_mark_transparency" style="width:80px;">
+                        	<?php
+                        	for ($i=0;$i<=10;$i++)
+                        	{
+                        	    ?>
+    	                    	<option <?php if ($objGraphic->fields['param_mark_transparency'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
+    	                    	<?php
+                        	}
+                        	?>
+                        </select>
+                    </p>
+                </fieldset>
+            </div>
         </div>
     </div>
     <div style="float:left;width:49%;">
@@ -142,7 +329,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                 <p>
                     <label><?php echo _FORMS_GRAPHIC_LINE_AGGREGATION; ?>:</label>
                     <select class="select" name="forms_graphic_line_aggregation">
-                    <?php 
+                    <?php
                     global $forms_graphic_line_aggregation;
                     foreach($forms_graphic_line_aggregation as $strKey => $strValue)
                     {
@@ -158,7 +345,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     <input type="checkbox" name="forms_graphic_filled" value="1" <?php if ($objGraphic->fields['filled']) echo 'checked="checked"'; ?> style="width:16px;"/>
                 </p>
                 <?php
-                for ($intI = 1; $intI <= 5; $intI++) 
+                for ($intI = 1; $intI <= 5; $intI++)
                 {
                     $strDisplay = 'none';
                     if ($intI == 1 || !empty($objGraphic->fields["line{$intI}_field"])) $strDisplay = 'block';
@@ -186,7 +373,8 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                             <p>
                                 <label>Fitre :</label>
                                 <select class="select" style="width:20%;" name="forms_graphic_line<?php echo $intI; ?>_filter_op">
-                                    <?php 
+									<option value="">(aucun)</option>
+                                    <?php
                                     global $field_operators;
                                     foreach($field_operators as $strKey => $strValue)
                                     {
@@ -195,13 +383,13 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                          <?php
                                     }
                                     ?>
-                                </select>                            
+                                </select>
                                 <input style="width:43%;" type="text" class="text" name="forms_graphic_line<?php echo $intI; ?>_filter_value" id="forms_graphic_line<?php echo $intI; ?>_filter_value" value="<?php echo $objGraphic->fields["line{$intI}_filter_value"]; ?>">
                             </p>
                             <p>
                                 <label>Opération :</label>
                                 <select class="select" name="forms_graphic_line<?php echo $intI; ?>_operation">
-                                    <?php 
+                                    <?php
                                     global $forms_graphic_operation;
                                     foreach($forms_graphic_operation as $strKey => $strValue)
                                     {
@@ -220,18 +408,23 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                         </fieldset>
                     </div>
                     <?php
-                    
+
                     if ($strDisplay == 'none')
-                    { 
+                    {
                         ?>
-                        <div style="display:block;" id="forms_graphic_line<?php echo $intI; ?>_link"><a href="javascript:void(0);" onclick="javascript:$('forms_graphic_line<?php echo $intI; ?>_link').style.display = 'none'; $('forms_graphic_line<?php echo $intI; ?>_param').style.display = 'block';">Paramétrer <?php echo _FORMS_GRAPHIC_DATASET.' n°'.$intI; ?></a></div>
+            			<p class="ploopi_va forms_param_link" id="forms_graphic_line<?php echo $intI; ?>_link" style="display:block;">
+                        	<a href="javascript:void(0);" onclick="javascript:$('forms_graphic_line<?php echo $intI; ?>_link').style.display = 'none'; $('forms_graphic_line<?php echo $intI; ?>_param').style.display = 'block';">
+                        	<img src="./modules/forms/img/arrow_down.png" />
+                    		Paramétrer <?php echo _FORMS_GRAPHIC_DATASET.' n°'.$intI; ?>
+                    		</a>
+            			</p>
                         <?php
                     }
                 }
                 ?>
             </div>
         </div>
-    </div>    
+    </div>
 </div>
 
 <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;padding:4px;overflow:auto;text-align:right;">

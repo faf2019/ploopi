@@ -1,3 +1,21 @@
+== Module FORMS - version 3.1.0 =====================================================
+
+2010-09-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Mise en place des colonnes calculées (intégration d'un interpréteur arithmétique) : 
+** Gestion des opérateurs arithmétiques standards : addition, soustraction, multiplication, division, modulo, exposant
+** Gestion de nombreuses fonctions additionnelles : abs, sqrt, pow, min, max, cos, sin, tan, round, etc...
+** Gestion du parenthésage multi-niveau
+** Editeur de formule
+* Nombreuses corrections sur la visibilité des données selon les paramétrages
+* Possibilité de rendre une colonne uniquement visible pour le(s) administrateur(s) du module
+* Possibilité de rendre un formulaire uniquement visible pour le(s) administrateur(s) du module
+* Possibilité de prévisualiser le formulaire depuis l'interface d'administration
+* Affiche une image en cas d'erreur de rendu (au lieu d'un popup vide)
+* Possibilité de télécharger l'image du graphique depuis un lien
+* Interface avec DBREPORT : Gestion des relations entre formulaires
+* Possibilité de paramétrages avancés des graphiques (police, tailles de police, marges, transparence, etc...)
+
 == Module FORMS - version 3.0.2 =====================================================
 
 2010-09-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

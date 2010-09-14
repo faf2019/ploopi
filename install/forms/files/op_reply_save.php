@@ -7,6 +7,7 @@ ploopi_init_module('forms');
 
 include_once './modules/forms/classes/formsForm.php';
 include_once './modules/forms/classes/formsRecord.php';
+include_once './modules/forms/classes/formsArithmeticParser.php';
 
 
 $objForm = new formsForm();
@@ -55,6 +56,12 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
     $booFileToMove = false;
 
     /**
+     * Permet de stocker le contenu des variables numériques (pour les champs calculés)
+     */
+    $arrVariables = array();
+    $booCalculation = false;
+
+    /**
      * Traitement des champs et mise à jour de l'enregistrement
      */
     foreach($objForm->getFields() as $objField)
@@ -62,6 +69,9 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
         $strValue = '';
         $booFieldOk = false;
         $booError = false;
+
+        // Valeur par défaut
+        $arrVariables['C'.$objField->fields['position']] = 0;
 
         switch($objField->fields['type'])
         {
@@ -77,16 +87,21 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
                 }
             break;
 
-
             case 'autoincrement':
                 if ($objRecord->isnew()) // not in form => need to be calculated
                 {
                     $booFieldOk = true;
                     $objQuery = new ploopi_query_select();
                     $objQuery->add_select("max(`{$objField->fields['fieldname']}`) as maxinc");
-                    $objQuery->add_from($objForm->getTableName());
+                    $objQuery->add_from($objForm->getDataTableName());
                     $strValue = current($objQuery->execute()->getarray(true)) + 1;
                 }
+            break;
+
+            case 'calculation':
+                // Non traité ici
+                $booFieldOk = true;
+                $booCalculation = true;
             break;
 
             default:
@@ -116,11 +131,34 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
             break;
         }
 
+        $arrVariables['C'.$objField->fields['position']] = $strValue;
+        if (!is_numeric($arrVariables['C'.$objField->fields['position']])) $arrVariables['C'.$objField->fields['position']] = 0;
+
         if ($booFieldOk)
         {
             $objRecord->fields[$objField->fields['fieldname']] = (!(($objField->fields['type'] == 'autoincrement' || $objField->fields['type'] == 'file') && $strValue == '')) ? $strValue : '';
 
             $arrEmailContent['Contenu']["({$objField->fields['id']}) {$objField->fields['name']}"] = $objRecord->fields[$objField->fields['fieldname']];
+        }
+    }
+
+    /**
+     * Il y avait au moins un champ de type "calculation"
+     */
+
+    if ($booCalculation)
+    {
+        foreach($objForm->getFields() as $objField)
+        {
+            if ($objField->fields['type'] == 'calculation')
+            {
+                try {
+                    // Interprétation du calcul
+                    $objParser = new formsArithmeticParser($objField->fields['formula'], $arrVariables);
+                    $arrVariables['C'.$objField->fields['position']] = $objRecord->fields[$objField->fields['fieldname']] = $objParser->getVal();
+                }
+                catch(Exception $e) { }
+            }
         }
     }
 

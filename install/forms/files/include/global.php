@@ -127,7 +127,8 @@ $field_types = array(
     'tablelink' => 'Lien Formulaire',
     'file' => 'Fichier',
     'autoincrement' => 'Numéro Auto',
-    'color' => 'Palette de Couleur'
+    'color' => 'Palette de Couleur',
+    'calculation' => 'Calcul'
 );
 
 $field_formats = array(
@@ -175,8 +176,8 @@ $forms_graphic_line_aggregation = array(
 );
 
 $forms_graphic_operation = array(
-    'count' => 'Nombre',
     'avg' => 'Moyenne',
+    'count' => 'Nombre',
     'sum' => 'Somme'
 );
 

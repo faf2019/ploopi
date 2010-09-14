@@ -142,3 +142,15 @@ background-color:#f0f0f0;
 	text-decoration:none;
 	background:#ddd;
 }
+
+.forms_param_link a {
+	margin-bottom:2px;
+	border:1px solid #aaa;
+	background-color:#eee;
+	padding:2px 10px;
+	text-decoration:none;
+}
+
+.forms_param_link a:hover {
+	background-color:#fff;
+}

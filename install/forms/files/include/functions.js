@@ -23,7 +23,7 @@
 function forms_display_fieldvalues()
 {
     t = document.form_field.field_type;
-    if (t.value == 'textarea' || t.value == 'text' || t.value == 'file' || t.value == 'autoincrement' || t.value == 'tablelink') $('fieldvalues').style.display='none';
+    if (t.value == 'textarea' || t.value == 'text' || t.value == 'file' || t.value == 'autoincrement' || t.value == 'tablelink' || t.value == 'calculation') $('fieldvalues').style.display='none';
     else $('fieldvalues').style.display='block';
 
     verifcolor = (t.value == 'color');
@@ -39,7 +39,7 @@ function forms_display_fieldformats()
 function forms_display_fieldcols()
 {
     t = document.form_field.field_type;
-    if (t.value == 'textarea' || t.value == 'text' || t.value == 'color' || t.value == 'select' || t.value == 'file' || t.value == 'autoincrement'  || t.value == 'tablelink') $('fieldcols').style.display='none';
+    if (t.value == 'textarea' || t.value == 'text' || t.value == 'color' || t.value == 'select' || t.value == 'file' || t.value == 'autoincrement'  || t.value == 'tablelink' || t.value == 'calculation') $('fieldcols').style.display='none';
     else $('fieldcols').style.display='block';
 }
 
@@ -48,6 +48,13 @@ function forms_display_tablelink()
     t = document.form_field.field_type;
     if (t.value == 'tablelink') $('tablelink').style.display='block';
     else $('tablelink').style.display='none';
+}
+
+function forms_display_calculation()
+{
+    t = document.form_field.field_type;
+    if (t.value == 'calculation') $('calculation').style.display='block';
+    else $('calculation').style.display='none';
 }
 
 function forms_field_add_value(lst,val)
@@ -236,6 +243,25 @@ function forms_field_tablelink_onchange(current, fields, url)
         },
 		onFailure: function(message) { alert(message); }
     });	
-	
+}
 
+
+function forms_setcolumn(f)
+{
+    ploopi_insertatcursor($('field_formula'), 'C'+f.value);
+    f.selectedIndex = 0; 
+    $('field_formula').focus();
+}
+
+function forms_setfunction(f)
+{
+    ploopi_insertatcursor($('field_formula'), f.value+'()');
+    f.selectedIndex = 0; 
+    $('field_formula').focus();
+}
+
+function forms_setoperator(f)
+{
+    ploopi_insertatcursor($('field_formula'), f.value);
+    $('field_formula').focus();
 }

@@ -21,33 +21,32 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+include_once './include/classes/data_object_collection.php';
+include_once './modules/forms/classes/formsForm.php';
+
 echo $skin->open_simplebloc(_FORMS_LIST);
 
-$date_today = ploopi_createtimestamp();
+$intTsToday = ploopi_createtimestamp();
 
-$db->query("
-    SELECT      *
-    FROM        ploopi_mod_forms_form
-    WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
-    {$sqllimitgroup}
-    AND         (pubdate_start <= '{$date_today}' OR pubdate_start = '')
-    AND         (pubdate_end >= '{$date_today}' OR pubdate_end = '')
-");
+$objDOC = new data_object_collection('formsForm');
+$objDOC->add_where("id_module = %d", $_SESSION['ploopi']['moduleid']);
+$objDOC->add_where("(pubdate_start <= %s OR pubdate_start = '')", $intTsToday);
+$objDOC->add_where("(pubdate_end >= %s OR pubdate_end = '')", $intTsToday);
+$objDOC->add_where("id_workspace IN (%e)", array(explode(',', ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']))));
 
-
-while ($row = $db->fetchrow())
+foreach($objDOC->get_objects() as $objForm)
 {
-	$pubdate_start = ($row['pubdate_start']) ? ploopi_timestamp2local($row['pubdate_start']) : array('date' => '');
-	$pubdate_end = ($row['pubdate_end']) ? ploopi_timestamp2local($row['pubdate_end']) : array('date' => '');
-
-	?>
-	<a class="forms_public_link" href="<? echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$row['id']}"); ?>">
-	<div>
-        <h1><? echo $row['label']; ?></h1>
-        <div><? echo ploopi_nl2br($row['description']); ?></div>
-	</div>
-	</a>
-	<?
+    if (!$objForm->fields['option_adminonly'] || ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
+    {
+    	?>
+    	<a class="forms_public_link" href="<? echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}"); ?>">
+    	<div>
+            <h1><? echo htmlentities($objForm->fields['label']); ?></h1>
+            <div><? echo ploopi_nl2br(htmlentities($objForm->fields['description'])); ?></div>
+    	</div>
+    	</a>
+    	<?
+    }
 }
 ?>
 

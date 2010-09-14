@@ -42,6 +42,8 @@ include_once './include/classes/data_object.php';
  */
 include_once './modules/forms/classes/formsForm.php';
 include_once './modules/forms/classes/formsField.php';
+include_once './modules/forms/jpgraph/jpgraph.php';
+
 
 /**
  * Classe d'accès à la table ploopi_mod_forms_graphic
@@ -55,13 +57,39 @@ include_once './modules/forms/classes/formsField.php';
 
 class formsGraphic extends data_object
 {
+    private static $_arrDefaultOptions = array(
+        // GLOBAL
+    	'transparency' => '0.2',        // Transparence des courbes, contours, sauf pie/pie3d
+		'fill_transparency' => '0.5',	// Transparence des remplissages, sauf pie/pie3d
+        'font' => FF_VERA,               // FF_VERDANA, FF_VERA, FF_VERAMONO, FF_VERASERIF, FF_DV_SANSSERIF, FF_DV_SERIF, FF_DV_SANSSERIFMONO, FF_DV_SERIFCOND, FF_DV_SANSSERIFCOND
+        'font_size_title' => '15',
+        'font_size_legend' => '8',
+        'font_size_data' => '10',
+    	'margin_left' => '40',            // sauf pie/pie3d
+        'margin_right' => '20',
+        'margin_top' => '120',
+		'margin_bottom' => '60',
+        'label_angle' => '0',
+        // PIE/RADAR
+        'center_x' => '0.5',
+        'center_y' => '0.6',
+        // LINE/RADAR
+        'mark_type' => MARK_SQUARE,
+        'mark_width' => 3,               // Largeur des marqueurs
+        'mark_transparency' => '0.5',    // Transparence des marqueurs
+    	'line_weight' => '5',			 // ??
+        // BAR
+    	'shadow' => true,
+        'shadow_transparency' => '0.8',
+    );
+
 
     /**
-     *
-     * Enter description here ...
-     * @param unknown_type $intTs2
-     * @param unknown_type $intTs2
-     * @param unknown_type $strType 'h' (hours), 'd' (days), 'w' (weeks), 'm' (months)
+     * Calcule la différence entre 2 dates (version simple)
+     * @param integer $intTs2
+     * @param integer $intTs2
+     * @param string $strType 'h' (hours), 'd' (days), 'w' (weeks), 'm' (months)
+     * @return integer différence dans l'unité demandée
      */
     private static function __diffDate($intTs1, $intTs2, $strType = 'h')
     {
@@ -88,14 +116,27 @@ class formsGraphic extends data_object
     {
         if (empty($intGraphHeight)) $intGraphHeight = 450;
 
+
+        $arrOptions = array();
+
+        // Recherche des paramètres
+        foreach($this->fields as $strField => $strValue)
+        {
+            // C'est un paramètre de graphique
+            if (substr($strField, 0, 6) == 'param_')
+            {
+                $arrOptions[substr($strField, 6-strlen($strField))] = $strValue;
+            }
+        }
+
+        $arrOptions = array_merge(self::$_arrDefaultOptions, $arrOptions);
+
         $objForm = new formsForm();
 
         if (!empty($this->fields['id_form']) && $objForm->open($this->fields['id_form']))
         {
-            include_once './modules/forms/jpgraph/jpgraph.php';
-
     		// Lecture des données
-    		list($arrFormData) = $objForm->prepareData(true, true);
+    		list($arrFormData) = $objForm->prepareData(true, true, false, true);
 
     		// Lecture des champs
     		$arrFormFields = $objForm->getFields();
@@ -123,16 +164,14 @@ class formsGraphic extends data_object
                         }
                     }
 
-                    //ploopi_die($arrData);
-
                     // Création du graph
                     // On spécifie la largeur et la hauteur du graph
                     $objGraph = new PieGraph($intGraphWidth, $intGraphHeight);
 
                     $objGraph->title->Set($this->fields['label']);
-                    $objGraph->title->SetFont(FF_VERDANA, FS_NORMAL, 15);
+                    $objGraph->title->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_title']);
                     $objGraph->SetFrame(false); // optional, if you don't want a frame border
-                    $objGraph->legend->SetFont(FF_VERDANA, FS_NORMAL, 8);
+                    $objGraph->legend->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_legend']);
 
                     $objGraph->SetAntiAliasing();
 
@@ -140,7 +179,7 @@ class formsGraphic extends data_object
                     else $objPie = new PiePlot(array_values($arrData));
 
                     // Position du graphique (0.5=centré)
-                    $objPie->SetCenter(0.5, 0.62);
+                    $objPie->SetCenter($arrOptions['center_x'], $arrOptions['center_y']);
 
                     // Définition du format d'affichage
                     if ($this->fields['percent'])
@@ -152,15 +191,13 @@ class formsGraphic extends data_object
                         $objPie->value->SetFormat('%s');
                         $objPie->SetValueType(PIE_VALUE_ABS);
                     }
-                    $objPie->value->SetFont(FF_VERDANA, FS_NORMAL, 10);
+                    $objPie->value->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_data']);
 
                     $objPie->SetLegends(array_keys($arrData));
 
                     $objPie->SetSliceColors(forms_gradient($this->fields['pie_color1'], $this->fields['pie_color2'], sizeof($arrData)));
 
-
                     $objGraph->Add($objPie);
-
                 break;
 
                 // Génération des histogrammes et des courbes + cumuls
@@ -312,9 +349,27 @@ class formsGraphic extends data_object
                         break;
                     }
 
-
                     // Intervalle trop petit
-                    if ($intI <= 1) ploopi_die();
+                    if ($intI <= 1)
+                    {
+                        // Affichage d'une image d'erreur
+                        $resImg = imagecreatetruecolor ($intGraphWidth, $intGraphHeight);
+                        $white = imagecolorallocate($resImg, 255, 255, 255);
+                        $black = imagecolorallocate($resImg, 100, 100, 100);
+
+                        imagefill($resImg, 0, 0, $white);
+                        imagerectangle($resImg, 0, 0, $intGraphWidth-1, $intGraphHeight-1, $black);
+                        imagettftext($resImg, 30, 0, 20, 200, $black, "./modules/forms/fonts/verdana.ttf",  "Il n'y a pas de données à afficher");
+
+                        header("Content-Type: image/png");
+                        header('Content-Disposition: attachment; Filename="erreur.png"');
+                        header('Cache-Control: private');
+                        header('Pragma: private');
+                        header('Content-Encoding: None');
+
+                        imagepng($resImg);
+                        ploopi_die();
+                    }
 
                     // Initialisation des dataset avec 0
                     for ($intI = 1; $intI <= 5; $intI++) // Courbes
@@ -386,10 +441,7 @@ class formsGraphic extends data_object
                                     switch($this->fields['line_aggregation'])
                                     {
                                         case 'hour':
-                                            echo '<br />'.$intTsMin;
-                                            echo '<br />'.substr($arrLine[$strTimeField], 0, 10).'0000';
-
-                                            echo '<br />'.$intIndice = self::__diffDate(
+                                            $intIndice = self::__diffDate(
                                                 ploopi_timestamp2unixtimestamp($intTsMin),
                                                 ploopi_timestamp2unixtimestamp(substr($arrLine[$strTimeField], 0, 10).'0000'),
                                                 'h'
@@ -419,7 +471,7 @@ class formsGraphic extends data_object
 
                                             case 'sum':
                                             case 'avg':
-                                                $arrData[$intI][$intIndice] += floatval($arrLine[$this->fields["line{$intI}_field"]]);
+                                                $arrData[$intI][$intIndice] += floatval($arrLine[$arrFormFields[$this->fields["line{$intI}_field"]]->fields['fieldname']]);
                                                 $arrCount[$intI][$intIndice]++;
                                             break;
                                         }
@@ -428,11 +480,6 @@ class formsGraphic extends data_object
                             }
                         }
                     }
-
-
-                    //ploopi_print_r($arrLabels);
-                    //die();
-
 
                     // Post-traitement spécial pour calculer la moyenne
                     foreach($arrData as $intI => $arrDataDetail)
@@ -490,11 +537,11 @@ class formsGraphic extends data_object
                     {
                         $objGraph = new RadarGraph($intGraphWidth, $intGraphHeight, "auto");
                         $objGraph->SetScale("lin");
-                        $objGraph->SetCenter(0.4, 0.55);
+                        $objGraph->SetCenter($arrOptions['center_x'], $arrOptions['center_y']);
 
                         $objGraph->axis->title->Set($strTitleX);
-                        $objGraph->axis->title->SetFont(FF_VERDANA, FS_NORMAL, 10);
-                        $objGraph->axis->SetFont(FF_VERDANA, FS_NORMAL, 8);
+                        $objGraph->axis->title->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_data']);
+                        $objGraph->axis->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_data']);
 
                         $objGraph->grid->Show();
                         $objGraph->grid->SetColor("lightgray");
@@ -507,18 +554,18 @@ class formsGraphic extends data_object
                         $objGraph->SetScale("textlin");
 
                         $objGraph->xaxis->title->Set($strTitleX);
-                        $objGraph->xaxis->title->SetFont(FF_VERDANA, FS_NORMAL, 10);
+                        $objGraph->xaxis->title->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_data']);
 
-                        $objGraph->xaxis->SetFont(FF_VERDANA, FS_NORMAL, 8);
+                        $objGraph->xaxis->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_data']);
                         $objGraph->xaxis->SetTickLabels($arrLabels);
-                        //$objGraph->xaxis->SetLabelAngle(45);
+                        $objGraph->xaxis->SetLabelAngle($arrOptions['label_angle']);
                         $objGraph->xaxis->SetPos("min");
                         $objGraph->xaxis->SetTitleMargin(30); // Marge pour le titre
 
                         if ($this->fields['percent']) $objGraph->yaxis->title->Set('%');
-                        $objGraph->yaxis->title->SetFont(FF_VERDANA, FS_NORMAL, 10);
-                        $objGraph->yaxis->SetFont(FF_VERDANA, FS_NORMAL, 8);
-                        //$objGraph->yaxis->SetLabelAngle(45);
+                        $objGraph->yaxis->title->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_data']);
+                        $objGraph->yaxis->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_data']);
+                        $objGraph->yaxis->SetLabelAngle($arrOptions['label_angle']);
 
                     }
 
@@ -526,17 +573,22 @@ class formsGraphic extends data_object
                     //$objGraph->img->SetAntiAliasing(true);
 
                     $objGraph->title->Set($this->fields['label']);
-                    $objGraph->title->SetFont(FF_VERDANA, FS_NORMAL, 15);
+                    $objGraph->title->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_title']);
 
 					// Mise en forme de la légende
-                    $objGraph->legend->SetFont(FF_VERDANA, FS_NORMAL, 8);
+                    $objGraph->legend->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_legend']);
                     //$objGraph->legend->SetLayout(LEGEND_HOR); // Bloc de légende horizontal
                     $objGraph->legend->SetAbsPos(0, 40, "right", "top"); // Positionnement absolu de la légende
 
                     $objGraph->SetFrame(false); // Cadre
                     $objGraph->SetColor('white'); // Couleur de fond
                     $objGraph->img->SetTransparent('white');
-                    $objGraph->img->SetMargin(40, 20, 120, 60); // gauche, droite, haut, bas
+                    $objGraph->img->SetMargin(
+                        $arrOptions['margin_left'],
+                        $arrOptions['margin_right'],
+                        $arrOptions['margin_top'],
+                        $arrOptions['margin_bottom']
+                    );
 
                     $arrObjPlots = array();
 
@@ -556,14 +608,11 @@ class formsGraphic extends data_object
 
                                 // Chaque point de la courbe
                                 // Type de point
-                                $objPlots->mark->SetType(MARK_FILLEDCIRCLE);
+                                $objPlots->mark->SetType($arrOptions['mark_type']);
                                 // Couleur de remplissage
-                                $objPlots->mark->SetFillColor($strColor);
+                                $objPlots->mark->SetFillColor("{$strColor}@{$arrOptions['mark_transparency']}");
                                 // Taille
-                                $objPlots->mark->SetWidth(5);
-
-                                // E
-                                $objPlots->SetLineWeight(1);
+                                $objPlots->mark->SetWidth($arrOptions['mark_width']);
 
                             break;
 
@@ -572,7 +621,10 @@ class formsGraphic extends data_object
                                 // Création d'une série de barres
                                 $arrObjPlots[] = $objPlots = new BarPlot($arrPlots);
                                 if ($this->fields['type'] == 'bar' || $intC == sizeof($arrData)-1)
-                                $objPlots->SetShadow('gray');
+                                if ($arrOptions['shadow'])
+                                {
+                                    $objPlots->SetShadow("{$strColor}@{$arrOptions['shadow_transparency']}");
+                                }
 
                                 $intC++;
                             break;
@@ -583,31 +635,25 @@ class formsGraphic extends data_object
 
                                 // Chaque point du radar
                                 // Type de point
-                                $objPlots->mark->SetType(MARK_SQUARE);
+                                $objPlots->mark->SetType($arrOptions['mark_type']);
                                 // Couleur de remplissage
-                                $objPlots->mark->SetFillColor($strColor);
+                                $objPlots->mark->SetFillColor("{$strColor}@{$arrOptions['mark_transparency']}");
+                                // Taille
+                                $objPlots->mark->SetWidth($arrOptions['mark_width']);
 
-                                $objPlots->SetLineWeight(1);
+                                $objPlots->SetLineWeight(3);
 
                             break;
                         }
 
-                        // Valeurs: Apparence de la police
-                        /*
-                        $objPlots->value->SetFont(FF_VERDANA, FS_NORMAL, 10);
-                        $objPlots->value->SetFormat('%d');
-                        $objPlots->value->SetColor($strColor);
-                        */
 
+                        // Couleur du trait/contour
+                        $objPlots->SetColor("{$strColor}@{$arrOptions['transparency']}");
 
-                        // Couleur de la courbe
-                        $objPlots->SetColor($strColor);
+                        // Couleur de remplissage
+                        if ($this->fields['filled']) $objPlots->SetFillColor("{$strColor}@{$arrOptions['fill_transparency']}");
+                        else $objPlots->SetFillColor("{$strColor}@1");
 
-                        if ($this->fields['filled'])
-                        {
-                            // Couleur de remplissage de la courbe
-                            $objPlots->SetFillColor($strColor);
-                        }
 
                         $objField = new formsField();
                         if ($objField->open($this->fields["line{$intI}_field"]))
@@ -653,7 +699,11 @@ class formsGraphic extends data_object
 
             // Génération du graphique
             $objGraph->Stroke();
-            header('Content-disposition: inline; filename="graphique.png"');
+            header("Content-Type: image/png");
+            header('Content-Disposition: attachment; Filename="graphique.png"');
+            header('Cache-Control: private');
+            header('Pragma: private');
+            header('Content-Encoding: None');
 
         }
     }

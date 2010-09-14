@@ -39,6 +39,8 @@ include_once './include/classes/data_object.php';
 include_once './include/classes/query.php';
 
 include_once './modules/forms/classes/formsForm.php';
+include_once './modules/forms/classes/formsRecord.php';
+include_once './modules/forms/classes/formsArithmeticParser.php';
 
 /**
  * Classe d'accès à la table ploopi_mod_forms_field
@@ -55,7 +57,7 @@ class formsField extends data_object
 
     private $_strOriginalFieldName;
     private $_strOriginalType;
-
+    private $_strOriginalFormula;
 
 
     /**
@@ -81,6 +83,7 @@ class formsField extends data_object
     {
         $this->_strOriginalFieldName = '';
         $this->_strOriginalType = '';
+        $this->_strOriginalFormula = '';
 
         parent::__construct('ploopi_mod_forms_field');
     }
@@ -97,6 +100,7 @@ class formsField extends data_object
         {
             $this->_strOriginalFieldName = $this->fields['fieldname'];
             $this->_strOriginalType = $this->getSqlType();
+            $this->_strOriginalFormula = $this->fields['formula'];
         }
 
         return $booOpen;
@@ -111,48 +115,113 @@ class formsField extends data_object
     {
         global $db;
 
-        if (!$this->fields['separator'] && !$this->fields['captcha'])
-        {
-            $this->_createPhysicalName();
+        if (!$this->fields['separator'] && !$this->fields['captcha']) $this->_createPhysicalName();
 
-            if ($booUpdateTable)
-            {
-                $objForm = new formsForm();
-                if ($objForm->open($this->fields['id_form']))
-                {
-                    if ($this->isnew())
-                    {
-                        /**
-                         * Ajout du champ physique
-                         */
-                        $db->query("ALTER TABLE `".$objForm->getTableName()."` ADD `{$this->fields['fieldname']}` ".$this->getSqlType());
-                        $db->query("ALTER TABLE `".$objForm->getTableName()."` ADD INDEX (`{$this->fields['fieldname']}`)");
-                    }
-                    else
-                    {
-                        /**
-                         * Mise à jour du champ physique
-                         */
-
-                        // Lecture du type actuel du champ
-                        $strType = $this->getSqlType();
-
-                        // Modification de la structure si changement de nom ou de type
-                        if ($this->_strOriginalFieldName != $this->fields['fieldname'] || $this->_strOriginalType != $strType)
-                        {
-                            $db->query("ALTER TABLE `".$objForm->getTableName()."` CHANGE `{$this->_strOriginalFieldName}` `{$this->fields['fieldname']}` {$strType}");
-                        }
-                    }
-
-                    $objForm->updateMetabase();
-                }
-            }
-        }
+        $booIsNew = $this->isnew();
 
         /**
          * Enregistrement
          */
-        return parent::save();
+        $res = parent::save();
+
+        /**
+         * Mise à jour de la bdd
+         */
+        if ($booUpdateTable)
+        {
+            $objForm = new formsForm();
+            if ($objForm->open($this->fields['id_form']))
+            {
+                if ($booIsNew)
+                {
+                    /**
+                     * Ajout du champ physique
+                     */
+                    $db->query("ALTER TABLE `".$objForm->getDataTableName()."` ADD `{$this->fields['fieldname']}` ".$this->getSqlType());
+                    $db->query("ALTER TABLE `".$objForm->getDataTableName()."` ADD INDEX (`{$this->fields['fieldname']}`)");
+                }
+                else
+                {
+                    /**
+                     * Mise à jour du champ physique
+                     */
+
+                    // Lecture du type actuel du champ
+                    $strType = $this->getSqlType();
+
+                    // Modification de la structure si changement de nom ou de type
+                    if ($this->_strOriginalFieldName != $this->fields['fieldname'] || $this->_strOriginalType != $strType)
+                    {
+                        $db->query("ALTER TABLE `".$objForm->getDataTableName()."` CHANGE `{$this->_strOriginalFieldName}` `{$this->fields['fieldname']}` {$strType}");
+                    }
+                }
+
+                $objForm->updateMetabase();
+            }
+        }
+
+        /**
+         * Mise à jour des données de champs calculés
+         */
+
+        if ($this->fields['type'] == 'calculation' && $this->fields['formula'] != $this->_strOriginalFormula)
+        {
+            $objForm = new formsForm();
+            if ($objForm->open($this->fields['id_form']))
+            {
+                // Lecture des champs du formulaire
+                $arrObjFields = $objForm->getFields();
+
+                // Lecture des enregistrement du formulaire
+                $objQuery = new ploopi_query_select();
+                $objQuery->add_select('`#id` as id');
+                $objQuery->add_from($objForm->getDataTableName());
+
+                // Pour chaque enregistrement du formulaire
+                foreach($objQuery->execute()->getarray(true) as $intId)
+                {
+                    // Traitement de l'enregistrement
+                    $objRecord = new formsRecord($objForm);
+                    if ($objRecord->open($intId))
+                    {
+                        // Initalisation du tableau des variables
+                        $booCalculation = false;
+                        $arrVariables = array();
+                        foreach($arrObjFields as $objField)
+                        {
+                            if ($objField->fields['type'] == 'calculation') $booCalculation = true;
+
+                            $arrVariables['C'.$objField->fields['position']] = $objRecord->fields[$objField->fields['fieldname']];
+                            if (!is_numeric($arrVariables['C'.$objField->fields['position']])) $arrVariables['C'.$objField->fields['position']] = 0;
+                        }
+
+                        /**
+                         * Il y avait au moins un champ de type "calculation"
+                         */
+
+                        if ($booCalculation)
+                        {
+                            foreach($arrObjFields as $objField)
+                            {
+                                if ($objField->fields['type'] == 'calculation')
+                                {
+                                    try {
+                                        // Interprétation du calcul
+                                        $objParser = new formsArithmeticParser($objField->fields['formula'], $arrVariables);
+                                        $arrVariables['C'.$objField->fields['position']] = $objRecord->fields[$objField->fields['fieldname']] = $objParser->getVal();
+                                    }
+                                    catch(Exception $e) { }
+                                }
+                            }
+
+                            $objRecord->save();
+                        }
+                    }
+                }
+            }
+        }
+
+        return $res;
     }
 
     /**
@@ -168,7 +237,7 @@ class formsField extends data_object
          * Suppression physique
          */
         $objForm = new formsForm();
-        if ($objForm->open($this->fields['id_form'])) $db->query("ALTER TABLE `".$objForm->getTableName()."` DROP `{$this->_strOriginalFieldName}`");
+        if ($objForm->open($this->fields['id_form'])) $db->query("ALTER TABLE `".$objForm->getDataTableName()."` DROP `{$this->_strOriginalFieldName}`");
 
         /**
          * Mise à jour des position des autres champs
@@ -306,7 +375,7 @@ class formsField extends data_object
             if ($objForm->open($this->fields['id_form']))
             {
                 $objQuery = new ploopi_query_select();
-                $objQuery->add_from($objForm->getTableName());
+                $objQuery->add_from($objForm->getDataTableName());
                 $objQuery->add_select("{$strFunction}({$this->fields['fieldname']}) as v");
                 $arrRes = current($objQuery->execute()->getarray(true));
                 return empty($arrRes) ? 0 : $arrRes;
@@ -326,8 +395,9 @@ class formsField extends data_object
         if ($objForm->open($this->fields['id_form']))
         {
             $objQuery = new ploopi_query_select();
-            $objQuery->add_from($objForm->getTableName());
+            $objQuery->add_from($objForm->getDataTableName());
             $objQuery->add_select(($booDistinct ? 'DISTINCT ' : '').$this->fields['fieldname']);
+            $objQuery->add_orderby($this->fields['fieldname']);
             // Application du filtre
             if (!empty($arrParams)) foreach($arrParams as $strField => $strValue) $objQuery->add_where("{$strField} = %s", $strValue);
             return $objQuery->execute()->getarray(true);

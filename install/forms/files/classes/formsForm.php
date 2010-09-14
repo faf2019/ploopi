@@ -141,14 +141,14 @@ class formsForm extends data_object
      * Initialise le nom utilisé pour la table physique
      */
 
-    private function _setTableName()
+    private function _setDataTableName()
     {
         $this->tablename = sprintf("form_%d_%d", $this->fields['id_module'], $this->fields['id']);
     }
 
-    public function getTableName()
+    public function getDataTableName()
     {
-        $this->_setTableName();
+        $this->_setDataTableName();
         return $this->tablename;
     }
 
@@ -223,7 +223,7 @@ class formsForm extends data_object
 				break;
 			}
 
-			$arrTitles[$strKey] = array('label' => $strValue, 'exportview' => $booDisplay, 'arrayview' => $booDisplay, 'type' => '');
+			$arrTitles[$strKey] = array('label' => $strValue, 'exportview' => $booDisplay, 'arrayview' => $booDisplay, 'wceview' => false, 'adminonly' => false, 'type' => '');
 		}
 
 		foreach($this->getFields() as $strKey => $objField)
@@ -232,6 +232,8 @@ class formsForm extends data_object
 				'label' => $objField->fields['name'],
 				'exportview' => $objField->fields['option_exportview'],
 				'arrayview' => $objField->fields['option_arrayview'],
+				'wceview' => $objField->fields['option_wceview'],
+				'adminonly' => $objField->fields['option_adminonly'],
 				'type' => $objField->fields['type']
 			);
 		}
@@ -250,7 +252,7 @@ class formsForm extends data_object
     {
         $objQuery = new ploopi_query_select();
         $objQuery->add_select('count(*) as c');
-        $objQuery->add_from($this->getTableName());
+        $objQuery->add_from($this->getDataTableName());
 
         /**
          * Filtrage en fonction de la vue du module sur les espaces
@@ -274,8 +276,11 @@ class formsForm extends data_object
      * @return ploopi_query la requête préparée
      */
 
-    private function _getQuery($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false)
+    private function _getQuery($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false)
     {
+        // L'utilisateur est admin ?
+        $booIsAdmin = ploopi_isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module']);
+
         /**
          * Tableau contenant les champs du formulaire
          */
@@ -285,25 +290,43 @@ class formsForm extends data_object
          * Structure de base de la requête de consultation des données du formulaire
          */
         $objQuery = new ploopi_query_select();
-        $objQuery->add_select('rec.`#id` as `id`');
-        $objQuery->add_select("CONCAT(SUBSTRING(rec.`date_validation`, 7, 2), '/', SUBSTRING(rec.`date_validation`, 5, 2), '/', SUBSTRING(rec.`date_validation`, 1, 4)) as `date_validation`");
-        $objQuery->add_select('rec.`ip`');
 
-        $objQuery->add_from('`'.$this->getTableName().'` rec');
+        /**
+         * Attention, si booExport = true, on adapte la requête pour ne récupérer que les champs exportables (pour ne pas retraiter les données ensuite)
+         */
+
+        // Seul l'admin peut exporter le champ ID
+        if (!$booExport || ploopi_isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module'])) $objQuery->add_select('rec.`#id` as `id`');
+
+        if (!$booExport || $this->fields['option_displaydate'])
+        {
+            if ($booRawData) $objQuery->add_select('rec.`date_validation`');
+    		else $objQuery->add_select("CONCAT(SUBSTRING(rec.`date_validation`, 7, 2), '/', SUBSTRING(rec.`date_validation`, 5, 2), '/', SUBSTRING(rec.`date_validation`, 1, 4), ' ', SUBSTRING(rec.`date_validation`, 9, 2), ':', SUBSTRING(rec.`date_validation`, 11, 2), ':', SUBSTRING(rec.`date_validation`, 13, 2)) as `date_validation`");
+        }
+
+        if (!$booExport || $this->fields['option_displayip']) $objQuery->add_select('rec.`ip`');
+
+        $objQuery->add_from('`'.$this->getDataTableName().'` rec');
 
         /**
          * Construction des jointures sur les champs statiques (ip, user, etc...)
          */
-        $objQuery->add_leftjoin('ploopi_user pu ON pu.id = rec.user_id');
-        $objQuery->add_select('pu.id as `user_id`');
-        $objQuery->add_select('pu.login as `user_login`');
-        $objQuery->add_select('pu.firstname as `user_firstname`');
-        $objQuery->add_select('pu.lastname as `user_lastname`');
+        if (!$booExport || $this->fields['option_displayuser'])
+        {
+            $objQuery->add_leftjoin('ploopi_user pu ON pu.id = rec.user_id');
+            $objQuery->add_select('pu.id as `user_id`');
+            $objQuery->add_select('pu.login as `user_login`');
+            $objQuery->add_select('pu.firstname as `user_firstname`');
+            $objQuery->add_select('pu.lastname as `user_lastname`');
+        }
 
-        $objQuery->add_leftjoin('ploopi_workspace pw ON pw.id = rec.workspace_id');
-        $objQuery->add_select('pw.id as `workspace_id`');
-        $objQuery->add_select('pw.label as `workspace_label`');
-        $objQuery->add_select('pw.code as `workspace_code`');
+        if (!$booExport || $this->fields['option_displaygroup'])
+        {
+            $objQuery->add_leftjoin('ploopi_workspace pw ON pw.id = rec.workspace_id');
+            $objQuery->add_select('pw.id as `workspace_id`');
+            $objQuery->add_select('pw.label as `workspace_label`');
+            $objQuery->add_select('pw.code as `workspace_code`');
+        }
 
         /**
          * Filtrage en fonction de la vue du module sur les espaces
@@ -332,15 +355,18 @@ class formsForm extends data_object
 
         foreach($arrObjField as $objField)
         {
-            $strAlias = $booFieldNamesAsKey ? $objField->fields['fieldname'] : $objField->fields['id'];
-            // Traitement spécial des données DATE
-            // Pas l'idéal de faire ça au niveau SQL mais permet d'éviter un post traitement
-            $strSelect = $objField->fields['format'] == 'date' ? "CONCAT(SUBSTRING(rec.`{$objField->fields['fieldname']}`,7,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,5,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,1,4))" : "rec.`{$objField->fields['fieldname']}`";
+            if (!$booExport || ($objField->fields['option_exportview'] && ($booIsAdmin || !$objField->fields['option_adminonly'])))
+            {
+                $strAlias = $booFieldNamesAsKey ? $objField->fields['fieldname'] : $objField->fields['id'];
+                // Traitement spécial des données DATE
+                // Pas l'idéal de faire ça au niveau SQL mais permet d'éviter un post traitement
+                $strSelect = $objField->fields['format'] == 'date' && !$booRawData ? "CONCAT(SUBSTRING(rec.`{$objField->fields['fieldname']}`,7,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,5,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,1,4))" : "rec.`{$objField->fields['fieldname']}`";
 
-            // Ajout du select
-            $objQuery->add_select("{$strSelect} as `{$strAlias}`");
+                // Ajout du select
+                $objQuery->add_select("{$strSelect} as `{$strAlias}`");
 
-            $arrFieldsByType[$objField->fields['format']][$objField->fields['id']] = $objField->fields['id'];
+                $arrFieldsByType[$objField->fields['format']][$objField->fields['id']] = $objField->fields['id'];
+            }
         }
 
         /**
@@ -486,13 +512,13 @@ class formsForm extends data_object
      * @return array données du formulaire
      */
 
-    private function _getData($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false)
+    private function _getData($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false)
     {
         /**
          * Construction de la requête
          * @var ploopi_query
          */
-        $objQuery = $this->_getQuery($booWorkspaceFilter, $booBackupFilter, $arrFilter, $arrOrderBy, $intNumPage, $booFieldNamesAsKey);
+        $objQuery = $this->_getQuery($booWorkspaceFilter, $booBackupFilter, $arrFilter, $arrOrderBy, $intNumPage, $booFieldNamesAsKey, $booExport, $booRawData);
 
         /**
          * Requête spéciale pour compter les enregistrements (sans "limit")
@@ -517,7 +543,7 @@ class formsForm extends data_object
      * @return array
      */
 
-    public function prepareData($booUnlockPageLimit = false, $booFieldNamesAsKey = false)
+    public function prepareData($booUnlockPageLimit = false, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false)
     {
         $ploopi_op = isset($_REQUEST['ploopi_op']) ? $_REQUEST['ploopi_op'] : (isset($_REQUEST['op']) ? $_REQUEST['op'] : '');
 
@@ -543,11 +569,11 @@ class formsForm extends data_object
          * Récupération du filtre de recherche
          */
 
+        $arrFilter = array();
+        $arrFormFilter = array();
+
         if (ploopi_isactionallowed(_FORMS_ACTION_FILTER))
         {
-            $arrFilter = array();
-            $arrFormFilter = array();
-
             if ($ploopi_op != 'forms_filter') // Lecture session
             {
                 $arrFilter = ploopi_getsessionvar('filter');
@@ -580,8 +606,8 @@ class formsForm extends data_object
          * Sélection page
          */
 
-        if ($this->fields['nbline'] > 0 && !$booUnlockPageLimit) list($arrData, $intNumRows) = $this->_getData(true, true, $arrFilter, $arrOrderBy, $_SESSION['forms'][$this->fields['id']]['page'], $booFieldNamesAsKey);
-        else list($arrData, $intNumRows) = $this->_getData(true, true, $arrFilter, $arrOrderBy, 0, $booFieldNamesAsKey);
+        if ($this->fields['nbline'] > 0 && !$booUnlockPageLimit) list($arrData, $intNumRows) = $this->_getData(true, true, $arrFilter, $arrOrderBy, $_SESSION['forms'][$this->fields['id']]['page'], $booFieldNamesAsKey, $booExport, $booRawData);
+        else list($arrData, $intNumRows) = $this->_getData(true, true, $arrFilter, $arrOrderBy, 0, $booFieldNamesAsKey, $booExport, $booRawData);
 
         return array($arrData, $intNumRows, $arrFormFilter);
     }
@@ -598,10 +624,7 @@ class formsForm extends data_object
         require_once './include/classes/odf.php';
 
 		// Lecture des données
-		list($arrData) = $this->prepareData(true, true);
-
-		// Lecture des titres de colonnes
-		$arrTitles = $this->getTitles();
+		list($arrData) = $this->prepareData(true, true, true, false);
 
 		$strFormat = strtolower($strFormat);
 
@@ -631,27 +654,30 @@ class formsForm extends data_object
 		    case 'sxc':
             case 'ods':
 			case 'pdf':
-			    // Init de l'interface avec le convertisseur
-                $objOdfConverter = new odf_converter(ploopi_getparam('forms_webservice_jodconverter'));
+			    if (ploopi_getparam('forms_webservice_jodconverter') != '')
+			    {
+    			    // Init de l'interface avec le convertisseur
+                    $objOdfConverter = new odf_converter(ploopi_getparam('forms_webservice_jodconverter'));
 
-                // Détermination du type mime du format demandé
-                switch($strFormat)
-                {
-                    case 'pdf':
-                        $strOuputMime = 'application/pdf';
-                    break;
+                    // Détermination du type mime du format demandé
+                    switch($strFormat)
+                    {
+                        case 'pdf':
+                            $strOuputMime = 'application/pdf';
+                        break;
 
-                    case 'sxc':
-                        $strOuputMime = 'application/vnd.sun.xml.calc';
-                    break;
+                        case 'sxc':
+                            $strOuputMime = 'application/vnd.sun.xml.calc';
+                        break;
 
-                    case 'ods':
-                        $strOuputMime = 'application/vnd.oasis.opendocument.spreadsheet';
-                    break;
-                }
+                        case 'ods':
+                            $strOuputMime = 'application/vnd.oasis.opendocument.spreadsheet';
+                        break;
+                    }
 
-                // Génération XLS + Conversion
-                echo $objOdfConverter->convert(ploopiArray::getInstance($arrData)->toXls(true), 'application/vnd.ms-excel', $strOuputMime);
+                    // Génération XLS + Conversion
+                    echo $objOdfConverter->convert(ploopiArray::getInstance($arrData)->toXls(true), 'application/vnd.ms-excel', $strOuputMime);
+			    }
             break;
 
 			case 'xml':
@@ -684,7 +710,7 @@ class formsForm extends data_object
 	{
         global $db;
 
-        $this->_setTableName();
+        $this->_setDataTableName();
 
         /**
 		 * Suppression de la table si elle existe déjà
@@ -774,7 +800,7 @@ class formsForm extends data_object
 
     public function removeMetabase()
     {
-        $this->_setTableName();
+        $this->_setDataTableName();
 
         $intIdModType = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type'];
 
@@ -810,7 +836,7 @@ class formsForm extends data_object
 
     public function updateMetabase()
     {
-        $this->_setTableName();
+        $this->_setDataTableName();
 
         $this->removeMetabase();
 
@@ -858,7 +884,7 @@ class formsForm extends data_object
         {
             if (!in_array($objField->fields['name'], array('user_id', 'workspace_id')))
             {
-                $objField->save(false);
+                //$objField->save(false);
 
                 $objMbField = new mb_field();
                 $objMbField->fields['tablename'] = $this->tablename;
@@ -900,6 +926,36 @@ class formsForm extends data_object
                         $objMbField->fields['type'] = 'varchar(16)';
 			        break;
 
+    			    case 'tablelink':
+    			        // Ouverture du champ lié
+    			        $objLinkedField = new formsField();
+			            if ($objLinkedField->open($objField->fields['values']))
+			            {
+			                // Ouverture du formulaire lié
+			                $objLinkedForm = new formsForm();
+    			            if ($objLinkedForm->open($objLinkedField->fields['id_form']))
+    			            {
+    			                // Sauvegarde de la relation
+                                $objMbSchema = new mb_schema();
+                                if (!$objMbSchema->open($this->tablename, $objLinkedForm->getDataTableName(), $intIdModType))
+                                {
+                                    $objMbSchema->fields['tablesrc'] = $this->tablename;
+                                    $objMbSchema->fields['tabledest'] = $objLinkedForm->getDataTableName();
+                                    $objMbSchema->fields['id_module_type'] = $intIdModType;
+                                    $objMbSchema->save();
+                                }
+
+                                $objMbRelation = new mb_relation();
+                                $objMbRelation->fields['tablesrc'] = $this->tablename;
+                                $objMbRelation->fields['fieldsrc'] = $objField->fields['fieldname'];
+                                $objMbRelation->fields['tabledest'] = $objLinkedForm->getDataTableName();
+                                $objMbRelation->fields['fielddest'] = $objLinkedField->fields['fieldname'];
+                                $objMbRelation->fields['id_module_type'] = $intIdModType;
+                                $objMbRelation->save();
+    			            }
+			            }
+			        break;
+
 			        default:
                         $objMbField->fields['type'] = 'varchar(255)';
 			        break;
@@ -913,14 +969,30 @@ class formsForm extends data_object
     }
 
     /**
-     *
-     * Enter description here ...
-     * @param $intIdRecord
-     * @param $strRenderMode : 'modify', 'view', 'preview'
+     * Inclusion de la feuille de style du formulaire
      */
-    public function render($intIdRecord = null, $strRenderMode = 'modify')
+    public function includeCss()
     {
         global $template_body;
+
+        $strCssTemplate = (!empty($this->fields['model']) && file_exists("./modules/forms/templates/{$this->fields['model']}/style.css")) ? $this->fields['model'] : 'default';
+
+        $template_body->assign_block_vars('module_css', array(
+            'PATH' => "./modules/forms/templates/{$strCssTemplate}/style.css"
+        ));
+    }
+
+    /**
+     * Rendu du formulaire (front/back/preview)
+     * @param $intIdRecord
+     * @param $strRenderMode : 'modify', 'view', 'preview'
+     * @param $booIncludeCss (true/false)
+     * @param $booDisplay (true/false)
+     */
+    public function render($intIdRecord = null, $strRenderMode = 'modify', $booIncludeCss = true, $booDisplay = true)
+    {
+        // L'utilisateur est admin ?
+        $booIsAdmin = ploopi_isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module']);
 
         // Contenu du formulaire
         $arrFieldsContent = array();
@@ -934,7 +1006,9 @@ class formsForm extends data_object
                 // Enregistrement existant, on charge les données
                 foreach($this->getFields() as $objField)
                 {
-                    $arrFieldsContent[$objField->fields['id']] = explode('||', $objRecord->fields[$objField->fields['fieldname']]);
+                    $objRecord->fields[$objField->fields['fieldname']];
+
+					$arrFieldsContent[$objField->fields['id']] = explode('||', $objRecord->fields[$objField->fields['fieldname']]);
 
                     if ($objField->fields['format'] == 'date' && !empty($arrFieldsContent[$objField->fields['id']][0])) $arrFieldsContent[$objField->fields['id']][0] = current(ploopi_timestamp2local("{$arrFieldsContent[$objField->fields['id']][0]}000000"));
                 }
@@ -974,6 +1048,7 @@ class formsForm extends data_object
             }
         }
 
+        // Options du formulaire
         $arrFormOptions = array(
         	'class' => 'forms_form'
         );
@@ -1014,6 +1089,8 @@ class formsForm extends data_object
 
         }
 
+        $arrFormOptions['style'] = $this->fields['style'];
+
         // Accès en modification ?
         $booModify = $strRenderMode == 'modify' || $strRenderMode == 'frontoffice';
 
@@ -1048,220 +1125,248 @@ class formsForm extends data_object
             }
         }
 
-        // Pour chaque champs du formulaire
+		/**
+		 * Utile pour remplir les champs du formulaire en modification
+		 */
+		$arrParams = array();
+
+		// Pour chaque champs du formulaire
         foreach($this->getFields(true) as $objField)
         {
-            if ($objField->fields['separator'])
+            if (!$objField->fields['option_adminonly'] || $booIsAdmin)
             {
-                $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
-                $strDesc = $objField->fields['description'] == '' ? '' : '<p>'.ploopi_nl2br(htmlentities($objField->fields['description'])).'</p>';
+                if ($objField->fields['separator'])
+                {
+                    $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
+                    $strDesc = $objField->fields['description'] == '' ? '' : '<p>'.ploopi_nl2br(htmlentities($objField->fields['description'])).'</p>';
 
-                $objForm->addField( new form_html('<h'.$objField->fields['separator_level'].' style="'.$strStyle.$objField->fields['style'].'">'.ploopi_nl2br(htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
-            }
-            elseif($objField->fields['captcha'])
-            {
-                $objForm->addField( new form_html('<div>Les CAPTCHAs ne sont pas gérés</div>') );
-            }
-            else
-            {
-                $strFieldType = '';
-                $strDataType = 'string';
-                $intMaxLength = 255;
+                    $objForm->addField( new form_html('<h'.$objField->fields['separator_level'].' style="'.$strStyle.$objField->fields['style_form'].'">'.ploopi_nl2br(htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
+                }
+                elseif($objField->fields['captcha'])
+                {
+                    $objForm->addField( new form_html('<div>Les CAPTCHAs ne sont pas gérés</div>') );
+                }
+                else
+                {
+                    $strFieldType = '';
+                    $strDataType = 'string';
+                    $intMaxLength = 255;
 
-                $arrOptions = array(
-                    'required' => $objField->fields['option_needed'] == 1,
-                    'description' => ploopi_nl2br(htmlentities($objField->fields['description'])),
-                	'style' => $objField->fields['style'],
-                	'style_form' => empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;"
-                );
+                    $arrOptions = array(
+                        'required' => $objField->fields['option_needed'] == 1,
+                        'description' => ploopi_nl2br(htmlentities($objField->fields['description'])),
+                    	'style' => $objField->fields['style_field'],
+                    	'style_form' => (empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;") . $objField->fields['style_form'],
+    					'class_form' => 'field'
+                    );
 
-                if (!$booModify) $arrOptions['disabled'] = true;
+                    if (!$booModify) $arrOptions['disabled'] = true;
 
-                switch($objField->fields['type'])
-    			{
-    			    case 'text':
-                        switch($objField->fields['format'])
-                        {
-                            case 'integer':
-                                $strFieldType = 'input:text';
-                                $strDataType = 'int';
-                                $intMaxLength = 10;
-                            break;
+                    switch($objField->fields['type'])
+        			{
+        			    case 'text':
+                            switch($objField->fields['format'])
+                            {
+                                case 'integer':
+                                    $strFieldType = 'input:text';
+                                    $strDataType = 'int';
+                                    $intMaxLength = 10;
+                                break;
 
-                            case 'float':
-                                $strFieldType = 'input:text';
-                                $strDataType = 'float';
-                                $intMaxLength = 16;
-                            break;
+                                case 'float':
+                                    $strFieldType = 'input:text';
+                                    $strDataType = 'float';
+                                    $intMaxLength = 16;
+                                break;
 
-                            case 'date':
-                                $strFieldType = 'input:text';
-                                $strDataType = 'date';
-                                $intMaxLength = 10;
-                            break;
+                                case 'date':
+                                    $strFieldType = 'input:text';
+                                    $strDataType = 'date';
+                                    $intMaxLength = 10;
+                                break;
 
-                            case 'time':
-                                $strFieldType = 'input:text';
-                                $strDataType = 'time';
-                                $intMaxLength = 5;
-                            break;
+                                case 'time':
+                                    $strFieldType = 'input:text';
+                                    $strDataType = 'time';
+                                    $intMaxLength = 5;
+                                break;
 
-                            case 'email':
-                                $strFieldType = 'input:text';
-                                $strDataType = 'email';
-                                $intMaxLength = 255;
-                            break;
+                                case 'email':
+                                    $strFieldType = 'input:text';
+                                    $strDataType = 'email';
+                                    $intMaxLength = 255;
+                                break;
 
-                            default:
-                                $strFieldType = 'input:text';
-                                $strDataType = 'string';
-                                $intMaxLength = 255;
-                            break;
-                        }
-                    break;
+                                default:
+                                    $strFieldType = 'input:text';
+                                    $strDataType = 'string';
+                                    $intMaxLength = 255;
+                                break;
+                            }
+                        break;
 
-    			    case 'tablelink':
-    			        /**
-    			         * On ne doit afficher les données que si le lien est unique vers la table ou si c'est le premier champ lié
-    			         * (les valeurs des autres champs sont déterminées en fonction des choix déjà effectués sur les précédents champs)
-    			         */
-    			        if (isset($arrLinkedFields['fields'][$objField->fields['values']]))
-    			        {
-    			            $objLinkedField = $arrLinkedFields['fields'][$objField->fields['values']];
+        			    case 'tablelink':
+        			        /**
+    						  * On ne doit afficher les données que si le lien est unique vers la table ou si c'est le premier champ lié
+    						  * (les valeurs des autres champs sont déterminées en fonction des choix déjà effectués sur les précédents champs)
+    						  */
+    						  //ploopi_print_r($arrFieldsContent);
+    						  //ploopi_print_r($arrLinkedFields['fields']);
+        			        if (isset($arrLinkedFields['fields'][$objField->fields['values']]))
+        			        {
+        			            $objLinkedField = $arrLinkedFields['fields'][$objField->fields['values']];
 
-    			            if (current($arrLinkedFields['forms'][$objLinkedField->fields['id_form']]) == $objField->fields['values'])
-    			            {
-    			                $arrValues = array('' => '') + $objLinkedField->getValues();
+
+    								/*if (current($arrLinkedFields['forms'][$objLinkedField->fields['id_form']]) == $objField->fields['values'])
+    								{
+    									$arrValues = array('' => '') + $objLinkedField->getValues();
+    								}
+    								else $arrValues = array('' => '');*/
+
+    							// Initialisation de la liste des paramètres vers le formulaire X
+    							if (!isset($arrParams[$objLinkedField->fields['id_form']])) $arrParams[$objLinkedField->fields['id_form']] = array();
+
+    							// Lecture des valeurs du champs lié en fonction des paramètres déjà saisis
+    							$arrValues = array('' => '') + $objLinkedField->getValues($arrParams[$objLinkedField->fields['id_form']]);
+
+    							// Mise à jour des paramètres déjà saisis pour le prochain champ imbriqué dans la boucle
+    							$arrParams[$objLinkedField->fields['id_form']][$objLinkedField->fields['fieldname']] = current($arrFieldsContent[$objField->fields['id']]);
+
+        			            $arrOptions['onchange'] = "forms_field_tablelink_onchange({$objField->fields['id']}, ".json_encode(array_keys($arrLinkedFields['forms'][$objLinkedField->fields['id_form']])).",'".ploopi_urlencode('admin-light.php?ploopi_op=forms_tablelink_values')."');";
+
+                                $objForm->addField( new form_select(
+                                    $objField->fields['name'],
+                                    $arrValues,
+                                    current($arrFieldsContent[$objField->fields['id']]),
+                                    'field_'.$objField->fields['id'],
+                                    'field_'.$objField->fields['id'],
+                                    $arrOptions
+                                ));
     			            }
-    			            else $arrValues = array('' => '');
+                        break;
 
-    			            $arrOptions['onchange'] = "forms_field_tablelink_onchange({$objField->fields['id']}, ".json_encode(array_keys($arrLinkedFields['forms'][$objLinkedField->fields['id_form']])).",'".ploopi_urlencode('admin-light.php?ploopi_op=forms_tablelink_values')."');";
+        			    case 'color':
+        			        $arrValues = explode('||',$objField->fields['values']);
+        			        $arrSelectOptions = array();
+        			        $arrSelectOptions[] = new form_select_option('', '');
+        			        foreach($arrValues as $strValue) $arrSelectOptions[] = new form_select_option(' ', $strValue, null, array('style' => "background-color:{$strValue}"));
+        			        $arrOptions['onchange'] = "this.style.backgroundColor = this[this.selectedIndex].style.backgroundColor;";
 
                             $objForm->addField( new form_select(
                                 $objField->fields['name'],
-                                $arrValues,
+                                $arrSelectOptions,
                                 current($arrFieldsContent[$objField->fields['id']]),
                                 'field_'.$objField->fields['id'],
                                 'field_'.$objField->fields['id'],
                                 $arrOptions
                             ));
-			            }
-                    break;
+    			        break;
 
-    			    case 'color':
-    			        $arrValues = explode('||',$objField->fields['values']);
-    			        $arrSelectOptions = array();
-    			        $arrSelectOptions[] = new form_select_option('', '');
-    			        foreach($arrValues as $strValue) $arrSelectOptions[] = new form_select_option(' ', $strValue, null, array('style' => "background-color:{$strValue}"));
-    			        $arrOptions['onchange'] = "this.style.backgroundColor = this[this.selectedIndex].style.backgroundColor;";
+        			    case 'select':
+        			        $arrValues = explode('||',$objField->fields['values']);
+        			        $arrValues = empty($arrValues) ? array() : array_combine($arrValues, $arrValues);
 
-                        $objForm->addField( new form_select(
-                            $objField->fields['name'],
-                            $arrSelectOptions,
-                            current($arrFieldsContent[$objField->fields['id']]),
-                            'field_'.$objField->fields['id'],
-                            'field_'.$objField->fields['id'],
-                            $arrOptions
-                        ));
-			        break;
+                            $objForm->addField( new form_select(
+                                $objField->fields['name'],
+                                array('' => '') + $arrValues,
+                                current($arrFieldsContent[$objField->fields['id']]),
+                                'field_'.$objField->fields['id'],
+                                'field_'.$objField->fields['id'],
+                                $arrOptions
+                            ));
+    			        break;
 
-    			    case 'select':
-    			        $arrValues = explode('||',$objField->fields['values']);
-    			        $arrValues = empty($arrValues) ? array() : array_combine($arrValues, $arrValues);
+        			    case 'checkbox':
+        			        $arrValues = explode('||',$objField->fields['values']);
 
-                        $objForm->addField( new form_select(
-                            $objField->fields['name'],
-                            array('' => '') + $arrValues,
-                            current($arrFieldsContent[$objField->fields['id']]),
-                            'field_'.$objField->fields['id'],
-                            'field_'.$objField->fields['id'],
-                            $arrOptions
-                        ));
-			        break;
+                            $objForm->addField( new form_checkbox_list(
+                                $objField->fields['name'],
+                                array_combine($arrValues, $arrValues),
+                                $arrFieldsContent[$objField->fields['id']],
+                                'field_'.$objField->fields['id'],
+                                'field_'.$objField->fields['id'],
+                                $arrOptions
+                            ));
+    			        break;
 
-    			    case 'checkbox':
-    			        $arrValues = explode('||',$objField->fields['values']);
+        			    case 'radio':
+        			        $arrValues = explode('||',$objField->fields['values']);
+                            $objForm->addField( new form_radio_list(
+                                $objField->fields['name'],
+                                array_combine($arrValues, $arrValues),
+                                current($arrFieldsContent[$objField->fields['id']]),
+                                'field_'.$objField->fields['id'],
+                                'field_'.$objField->fields['id'],
+                                $arrOptions
+                            ));
+    			        break;
 
-                        $objForm->addField( new form_checkbox_list(
-                            $objField->fields['name'],
-                            array_combine($arrValues, $arrValues),
-                            $arrFieldsContent[$objField->fields['id']],
-                            'field_'.$objField->fields['id'],
-                            'field_'.$objField->fields['id'],
-                            $arrOptions
-                        ));
-			        break;
+        			    case 'textarea':
+                            $objForm->addField( new form_field(
+                            	'textarea',
+                                $objField->fields['name'],
+                                current($arrFieldsContent[$objField->fields['id']]),
+                                'field_'.$objField->fields['id'],
+                                'field_'.$objField->fields['id'],
+                                $arrOptions
+                            ));
+    			        break;
 
-    			    case 'radio':
-    			        $arrValues = explode('||',$objField->fields['values']);
-                        $objForm->addField( new form_radio_list(
-                            $objField->fields['name'],
-                            array_combine($arrValues, $arrValues),
-                            current($arrFieldsContent[$objField->fields['id']]),
-                            'field_'.$objField->fields['id'],
-                            'field_'.$objField->fields['id'],
-                            $arrOptions
-                        ));
-			        break;
+    			        case 'file':
+                            $objForm->addField( new form_field(
+                            	'input:file',
+                                $objField->fields['name'],
+                                current($arrFieldsContent[$objField->fields['id']]),
+                                'field_'.$objField->fields['id'],
+                                'field_'.$objField->fields['id'],
+                                $arrOptions
+                            ));
+    			        break;
 
-    			    case 'textarea':
-                        $objForm->addField( new form_field(
-                        	'textarea',
-                            $objField->fields['name'],
-                            current($arrFieldsContent[$objField->fields['id']]),
-                            'field_'.$objField->fields['id'],
-                            'field_'.$objField->fields['id'],
-                            $arrOptions
-                        ));
-			        break;
+        			    case 'autoincrement':
+                            $strFieldType = 'input:text';
+                            $strDataType = 'string';
+                            $arrOptions['disabled'] = true;
+        		        break;
 
-			        case 'file':
-                        $objForm->addField( new form_field(
-                        	'input:file',
-                            $objField->fields['name'],
-                            current($arrFieldsContent[$objField->fields['id']]),
-                            'field_'.$objField->fields['id'],
-                            'field_'.$objField->fields['id'],
-                            $arrOptions
-                        ));
-			        break;
+        			    case 'calculation':
+                            $strFieldType = 'input:text';
+                            $strDataType = 'string';
+                            $arrOptions['disabled'] = true;
+        		        break;
 
-    			    case 'autoincrement':
-                        $strFieldType = 'input:text';
-                        $strDataType = 'string';
-                        $arrOptions['disabled'] = true;
-    		        break;
+        			    case 'color':
+                            $strFieldType = 'input:text';
+                            $strDataType = 'color';
+        		        break;
 
-    			    case 'color':
-                        $strFieldType = 'input:text';
-                        $strDataType = 'color';
-    		        break;
+        		        default:
+                            $strFieldType = 'input:text';
+                            $strDataType = 'string';
+        		        break;
+        			}
 
-    		        default:
-                        $strFieldType = 'input:text';
-                        $strDataType = 'string';
-    		        break;
-    			}
+                    switch($strFieldType)
+                    {
+                        case 'input:text':
+    						if (!empty($objField->fields['maxlength'])) $intMaxLength = $objField->fields['maxlength'];
 
-                switch($strFieldType)
-                {
-                    case 'input:text':
-                        $objForm->addField( new form_field(
-                        	'input:text',
-                            htmlentities($objField->fields['name']),
-                            isset($arrFieldsContent[$objField->fields['id']]) ? current($arrFieldsContent[$objField->fields['id']]) : '',
-                            'field_'.$objField->fields['id'],
-                            'field_'.$objField->fields['id'],
-                            $arrOptions + array(
-                            	'datatype' => $strDataType,
-                            	'maxlength' => $intMaxLength,
-                            )
-                        ));
-                    break;
+                            $objForm->addField( new form_field(
+                            	'input:text',
+                                htmlentities($objField->fields['name']),
+                                isset($arrFieldsContent[$objField->fields['id']]) ? current($arrFieldsContent[$objField->fields['id']]) : '',
+                                'field_'.$objField->fields['id'],
+                                'field_'.$objField->fields['id'],
+                                $arrOptions + array(
+                                	'datatype' => $strDataType,
+                                	'maxlength' => $intMaxLength,
+                                )
+                            ));
+                        break;
+                    }
                 }
             }
         }
-
 
         switch($strRenderMode)
         {
@@ -1284,13 +1389,10 @@ class formsForm extends data_object
             break;
         }
 
-        $strCssTemplate = (!empty($this->fields['model']) && file_exists("./modules/forms/templates/{$this->fields['model']}/style.css")) ? $this->fields['model'] : 'default';
+        if ($booIncludeCss) $this->includeCss();
 
-        $template_body->assign_block_vars('module_css', array(
-            'PATH' => "./modules/forms/templates/{$strCssTemplate}/style.css"
-        ));
-
-        echo $objForm->render();
+        if ($booDisplay) echo $objForm->render();
+        else return $objForm->render();
     }
 
 
@@ -1311,6 +1413,17 @@ class formsForm extends data_object
         $sqlCaptchaInForm = $db->query($select);
 
         return ($db->numrows($sqlCaptchaInForm) > 0);
+    }
+
+    /**
+     * Indique si un formulaire est publié à l'instant précis
+     * @return boolean true si le formulaire est publié
+     */
+    public function isPublished()
+    {
+        $intTsToday = ploopi_createtimestamp();
+
+        return ($this->fields['pubdate_start'] <= $intTsToday || empty($this->fields['pubdate_start'])) && ($this->fields['pubdate_end'] >= $intTsToday || empty($this->fields['pubdate_end']));
     }
 
 }

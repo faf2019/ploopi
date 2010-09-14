@@ -32,27 +32,30 @@
  */
 
 /**
+ * Includes
+ */
+include_once './include/classes/data_object_collection.php';
+include_once './modules/forms/classes/formsForm.php';
+
+/**
  * Initialisation du module
  */
-
 ploopi_init_module('forms', false, false, false);
 
 $forms_id = isset($_GET['forms_id']) ? $_GET['forms_id'] : '';
 
-$date_today = ploopi_createtimestamp();
+$intTsToday = ploopi_createtimestamp();
 
-$forms_result = $db->query("
-    SELECT      *
-    FROM        ploopi_mod_forms_form
-    WHERE       id_module = {$menu_moduleid}
-    AND         id_workspace IN (".ploopi_viewworkspaces($menu_moduleid).")
-    AND         (pubdate_start <= '{$date_today}' OR pubdate_start = '')
-    AND         (pubdate_end >= '{$date_today}' OR pubdate_end = '')
-");
+$objDOC = new data_object_collection('formsForm');
+$objDOC->add_where("id_module = %d", $menu_moduleid);
+$objDOC->add_where("(pubdate_start <= %s OR pubdate_start = '')", $intTsToday);
+$objDOC->add_where("(pubdate_end >= %s OR pubdate_end = '')", $intTsToday);
+$objDOC->add_where("id_workspace IN (%e)", array(explode(',', ploopi_viewworkspaces($menu_moduleid))));
 
-while ($forms_fields = $db->fetchrow($forms_result))
+foreach($objDOC->get_objects() as $objForm)
 {
-    $block->addmenu($forms_fields['label'], ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=forms_viewreplies&forms_id={$forms_fields['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $forms_id == $forms_fields['id']);
+    if (!$objForm->fields['option_adminonly'] || ploopi_isactionallowed(_FORMS_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
+        $block->addmenu($objForm->fields['label'], ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=forms_viewreplies&forms_id={$objForm->fields['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $forms_id == $objForm->fields['id']);
 }
 
 $block->addmenu(_FORMS_LIST, ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && empty($forms_id));

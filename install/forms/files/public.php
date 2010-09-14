@@ -90,9 +90,17 @@ switch($op)
         $objForm = new formsForm();
 
         if (empty($_REQUEST['forms_id']) || !is_numeric($_REQUEST['forms_id']) || !$objForm->open($_REQUEST['forms_id'])) ploopi_redirect('admin.php');
-        list($arrData, $intNumRows, $arrFormFilter) = $objForm->prepareData();
 
-        include_once './modules/forms/public_forms_viewreplies.php';
+        if ($objForm->isPublished() && (!$objForm->fields['option_adminonly'] || ploopi_isactionallowed(_FORMS_ACTION_ADMIN)))
+        {
+            /**
+             * Lecture des données du formulaire
+             */
+            list($arrData, $intNumRows, $arrFormFilter) = $objForm->prepareData();
+
+            include_once './modules/forms/public_forms_viewreplies.php';
+        }
+        else ploopi_redirect('admin.php');
     break;
 
     default:

@@ -53,7 +53,7 @@ else
 echo $skin->open_simplebloc($title);
 
 $arrParams = array();
-$arrParams[] = "op=forms_captcha_save";
+$arrParams[] = "ploopi_op=forms_captcha_save";
 $arrParams[] = "forms_id={$_GET['forms_id']}";
 if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 ?>
