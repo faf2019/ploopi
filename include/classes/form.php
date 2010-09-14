@@ -457,7 +457,7 @@ class form_select extends form_field
         $strDisabled = is_null($this->_arrOptions['disabled']) || !$this->_arrOptions['disabled'] ? '' : " disabled=\"disabled\"";
 
         $strOutput .= "<select name=\"{$this->_strName}\" id=\"{$this->_strId}\" tabindex=\"{$intTabindex}\" {$strClass}{$strStyle}{$strOnchange}{$strSize}{$strMultiple}{$strReadonly}{$strDisabled} />";
-        foreach($this->_arrValues as $mixKey => $mixValue)
+        foreach($arrValues = $this->_arrValues as $mixKey => $mixValue)
         {
             if (is_object($mixValue) && $mixValue instanceof form_select_option)
             {
@@ -537,7 +537,7 @@ class form_checkbox_list extends form_field
         $strDisabled = is_null($this->_arrOptions['disabled']) || !$this->_arrOptions['disabled'] ? '' : " disabled=\"disabled\"";
 
         $intNumCheck = 0;
-        foreach($this->_arrValues as $strKey => $strValue)
+        foreach($arrValues = $this->_arrValues as $strKey => $strValue)
         {
             $strValue = htmlentities($strValue);
             $strKey = htmlentities($strKey);
@@ -610,7 +610,7 @@ class form_radio_list extends form_field
         $strDisabled = is_null($this->_arrOptions['disabled']) || !$this->_arrOptions['disabled'] ? '' : " disabled=\"disabled\"";
 
         $intNumCheck = 0;
-        foreach($this->_arrValues as $strKey => $strValue)
+        foreach($arrValues = $this->_arrValues as $strKey => $strValue)
         {
             $strValue = htmlentities($strValue);
             $strKey = htmlentities($strKey);
