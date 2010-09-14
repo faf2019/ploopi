@@ -1339,7 +1339,7 @@ float:right;
 
 #aboutmenu li div {
 width:240px;
-left: -60px;
+left: -80px;
 }
 
 #aboutmenu label {
@@ -1642,6 +1642,7 @@ border-top:1px solid #222;
 border-left:1px solid #222;
 border-right:1px solid #222;
 background-color:#f0f0f0;
+overflow:auto;
 }
 
 .simplebloc {

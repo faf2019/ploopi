@@ -51,7 +51,7 @@
     <script type="text/javascript">
     //<!--
     {ADDITIONAL_JAVASCRIPT}
-    
+
     <!-- BEGIN switch_user_logged_out -->
 	var effect = false;
 
@@ -89,9 +89,9 @@
 	    );
 	}
 
-    ploopi_window_onload_stock(function() { if ($('ploopi_login')) $('ploopi_login').focus(); } );    
+    ploopi_window_onload_stock(function() { if ($('ploopi_login')) $('ploopi_login').focus(); } );
     <!-- END switch_user_logged_out -->
-    
+
     <!-- BEGIN switch_user_logged_in -->
     function tpl_resize_content() {
         var height = document.viewport.getHeight() - $('statusbar').getHeight() - $('dock').getHeight();
@@ -114,8 +114,8 @@
         var clock = day + "/" + month + "/" + year + " " + hours + ":" + minutes;
         $('status_time').innerHTML =  clock;
         timer = setTimeout("tpl_display_time()",1000);
-    }    
-    
+    }
+
     ploopi_window_onload_stock(
         function() {
             tpl_resize_content();
@@ -125,7 +125,7 @@
         }
     );
     <!-- END switch_user_logged_in -->
-    
+
     //-->
     </script>
 
@@ -195,12 +195,12 @@
     </div>
     <div id="login_statusbar">
 		Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi {PLOOPI_VERSION} ({PLOOPI_REVISION})</a>&nbsp;&#169;&nbsp;2009&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>
-    </div>    
+    </div>
     <!-- END switch_user_logged_out -->
 
     <!-- BEGIN switch_user_logged_in -->
     <div id="dock" style="z-index:2;">
-    
+
         <!-- BEGIN switch_blockmenu -->
         <ul id="mainmenu">
             <!-- BEGIN block -->
