@@ -1,0 +1,1 @@
+ALTER TABLE `ploopi_mod_dbreport_query` ADD `ws_activated` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `standard` ;

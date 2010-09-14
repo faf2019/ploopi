@@ -1,0 +1,102 @@
+/*
+    Copyright (c) 2009 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+.dbreport_title {
+	display:block;
+	margin:0;
+	padding:2px 4px;
+	font-size:13px;
+	font-weight:bold;
+	border-bottom:1px solid #ccc;
+	background-color:#ddd;
+}
+
+.dbreport_checkboxes {
+    overflow:hidden;
+}
+
+.dbreport_checkboxes label {
+    float:right;
+    width:325px;
+    overflow:hidden;
+    text-align:left;
+}
+
+.dbreport_checkboxes input {
+    float:left;
+    width:15px;
+}
+
+.dbreport_checkboxes em {
+	margin-left:10px;
+}
+
+.dbreport_checkboxes label span {
+	display:inline;
+	float:none;
+	width:auto;
+}
+
+.dbreport_checkboxes fieldset {
+    padding:4px;
+    border:1px solid #888;
+    background-color:#f0f0f0;
+}
+
+.dbreport_checkboxes fieldset legend {
+    font-weight:bold;
+}
+
+#dbreport_query_tables {
+	overflow:auto;
+}
+
+#dbreport_query_fields {
+    border-top:1px solid #888;
+    margin-top:10px;
+}
+
+.dbreport_table {
+	border:1px solid #aaa;
+	float:left;
+	width:200px;
+	margin:10px;
+}
+
+.dbreport_table_title {
+    font-weight:bold;
+    padding:2px 4px;
+    border-bottom:1px solid #ccc;
+    background-color:#ddd;
+}
+
+.dbreport_table_fields {
+    height:150px;
+    overflow-y:scroll;
+}
+
+.dbreport_table_field {
+    padding:2px 4px;
+}
+
+.dbreport_table_field em, .dbreport_table_field span {
+    margin-left:4px;
+}

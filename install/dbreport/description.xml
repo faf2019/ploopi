@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<ploopi>
+    <moduletype>
+        <label>dbreport</label>
+        <version>1.0.5</version>
+        <author>Ovensia</author>
+        <date>20100906000000</date>
+        <description>Requêteur Base de Données</description>
+        <paramtype>
+            <name>dbreport_webservice_jodconverter</name>
+            <label>Web Service JODConverter</label>
+            <default_value></default_value>
+            <public>0</public>
+            <description/>
+        </paramtype>        
+        <paramtype>
+            <name>dbreport_cache_lifetime</name>
+            <label>Durée de vie du cache (en seconde)</label>
+            <default_value>3600</default_value>
+            <public>0</public>
+            <description/>
+        </paramtype>
+        <action>
+            <id_action>10</id_action>
+            <label>Gérer les requêtes</label>
+        </action>          
+        <action>
+            <id_action>99</id_action>
+            <label>Verrouiller les requêtes</label>
+        </action>        
+    </moduletype>
+</ploopi>

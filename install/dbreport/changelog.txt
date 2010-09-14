@@ -1,0 +1,115 @@
+== Module DBREPORT - version 1.0.5 ====================================================
+
+2010-09-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Mise à jour pour ploopi 1.7.9
+
+== Module DBREPORT - version 1.0.4 ====================================================
+
+2010-08-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Autodétection des contenus pour les champs typés en "texte" de manière générique
+
+== Module DBREPORT - version 1.0.3 ====================================================
+
+2010-06-29  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Modification du système de mise en cache des résultats de requêtes
+* API php pour exécuter une requête et récupérer le résultat dans une variable : dbreport_getdata($strWsId, $arrParams, $strFormat = 'raw')
+
+== Module DBREPORT - version 1.0.2 ====================================================
+
+2010-05-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Un gestionnaire de requête peut désormais cloner une requête verrouillée
+* Lors d'un clonage, une requête clonée perd sa propriété "verrouillée"
+
+== Module DBREPORT - version 1.0.1 ====================================================
+
+2010-04-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Réorganisation des menus dans l'interface de modification d'une requête, la fonctionnalité "Exécuter / Exporter" regroupe les différents formats et gère désormais les paramètres
+* Ajout d'une demande de confirmation avant de cloner une requête
+
+== Module DBREPORT - version 1.0.0 ====================================================
+
+2010-04-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Possibilité de cloner une requête
+* Possibilité de bloquer les modifications d'une requête
+* Ajout d'un rôle 'Gérer les requêtes' (Désormais un utilisateur sans rôle, ne peut qu'exécuter/exporter une requête)
+* Ajout d'un rôle 'Verrouiller les requêtes'
+* Nouveau format d'export expérimental : ODT (nécessite mise à jour PLOOPI)
+* Réagencement de la liste des requêtes
+
+== Module DBREPORT - version 0.9.7a ====================================================
+
+2010-03-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug sur la clause OR dans certaines situations
+
+== Module DBREPORT - version 0.9.7 ====================================================
+
+2010-03-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug sur l'application d'un filtre avec une valeur vide
+* Meilleur traitement des champs de type "date". Si la valeur est vide, la date n'est pas convertie (renvoyait un masque vide par erreur).
+
+== Module DBREPORT - version 0.9.6 ====================================================
+
+2010-01-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Mise en place effective du filtrage par IP
+
+== Module DBREPORT - version 0.9.5c ====================================================
+
+2009-12-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un problème avec les fichiers .gz
+
+== Module DBREPORT - version 0.9.5b ====================================================
+
+2009-11-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug sur la récupération des paramètres par le webservice
+ * Petite amélioration dans la liste des requêtes (affichage de l'identifiant de la ressource au niveau du webservice)
+
+== Module DBREPORT - version 0.9.5 ====================================================
+
+2009-10-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Gestion du paramétrage des relations
+ * Ajout des formats d'export PDF/ODS
+ * L'URI affichée intègre les paramètres "utilisateur" 
+ * Gestion de la mise en cache des données
+ * Ajout d'un paramètre permettant de gérer la durée de mise en cache des résultats de requête et des fichiers générés
+
+== Module DBREPORT - version 0.9.0 ====================================================
+
+2009-10-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Corrections diverses erreurs sur le moteur de génération de requête
+ * Ajout de la possibilité de modifier la valeur d'un filtre via un paramètre de l'url du webservice
+ * Détection d'erreurs lors de la préparation de la requête
+
+== Module DBREPORT - version 0.8.8b ====================================================
+
+2009-10-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug à la création d'une requête (variable non définie)
+
+== Module DBREPORT - version 0.8.8 ====================================================
+
+2009-09-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Possibilité d'activer ou non le webservice associé à une requête
+ * Finalisation de l'interface de sélection des modules (paramètres)
+ * Utilisation intégrale de la classe "ploopi_query" en remplacement de "db"
+ 
+== Module DBREPORT - version 0.8.5 ====================================================
+
+2009-09-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout du choix des modules sur lesquels porte la requête
+ * Paramétrage du webservice associé à la requête
+ * Maquette fonctionnelle du webservice
