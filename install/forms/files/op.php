@@ -53,14 +53,10 @@ switch($ploopi_op)
                 $strValue = utf8_decode($strValue);
 
                 $objField = new formsField();
-                if ($objField->open($intFieldId))
+                $objLinkedField = new formsField();
+                if ($objField->open($intFieldId) && $objLinkedField->open($objField->fields['values']))
                 {
-                    // Valeur de la table liée
-                    $objFieldValues = new formsField();
-                    if ($objFieldValues->open($intFieldId))
-                    {
-                        $arrParams[$objFieldValues->fields['fieldname']] = $strValue;
-                    }
+                    $arrParams[$objLinkedField->fields['fieldname']] = $strValue;
                 }
             }
 

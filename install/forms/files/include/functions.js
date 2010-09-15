@@ -227,7 +227,7 @@ function forms_field_tablelink_onchange(current, fields, url)
 	new Ajax.Request(url, {
         method:     'get',
         parameters: params,
-        encoding:   'iso-8859-15',
+        encoding:   'utf-8',
         onSuccess:  function(transport, json) {
             if(null == json) {
                 json = transport.responseText.evalJSON();
