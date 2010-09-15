@@ -42,11 +42,16 @@ switch($ploopi_op)
         include_once './modules/forms/classes/formsForm.php';
         include_once './modules/forms/classes/formsField.php';
 
+        //ploopi_die($_GET);
+
         if (!empty($_GET['forms_fields']) && !empty($_GET['forms_params']) && !empty($_GET['forms_requested']))
         {
             $arrParams = array();
             foreach($_GET['forms_params'] as $intFieldId => $strValue)
             {
+                // Requête Ajax en UTF8
+                $strValue = utf8_decode($strValue);
+
                 $objField = new formsField();
                 if ($objField->open($intFieldId))
                 {

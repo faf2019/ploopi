@@ -1,3 +1,9 @@
+== Module FORMS - version 3.1.5b =====================================================
+
+2010-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans les listes imbriquées. Problème de décodage des requête Ajax (UTF8 => ISO-8859-1).
+
 == Module FORMS - version 3.1.5a =====================================================
 
 2010-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
