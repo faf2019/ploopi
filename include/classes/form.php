@@ -325,7 +325,8 @@ class form_field extends form_element
             break;
 
             case 'input:file':
-                $strOutput .= "<span>{$strValue}<br /><input type=\"file\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strClass}{$strStyle}{$strDisabled}{$strReadonly} /></span>";
+                if ($strValue != '') $strValue = "{$strValue}<br />";
+                $strOutput .= "<span>{$strValue}<input type=\"file\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strClass}{$strStyle}{$strDisabled}{$strReadonly} /></span>";
             break;
 
         }
