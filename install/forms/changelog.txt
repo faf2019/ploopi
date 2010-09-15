@@ -1,3 +1,13 @@
+== Module FORMS - version 3.1.5a =====================================================
+
+2010-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans le parseur arithmétique. Ne prenait pas en compte les variables négatives
+* Correction d'un bug lors de l'affichage d'un formulaire en frontoffice (inclusion manquante)
+* Ajout de paramètres par défaut lors de la création d'un nouveau graphique
+* Correction sur la gestion de la visibilité des champs dans un formulaire
+* Correction sur la construction de la requête de récupération des données d'un formulaire (problème si espace ou utilisateur inexistant) 
+
 == Module FORMS - version 3.1.5 =====================================================
 
 2010-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

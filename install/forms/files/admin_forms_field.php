@@ -52,6 +52,7 @@ if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']) && $field->open($
 else
 {
     $field->init_description();
+    $field->fields['option_formview'] = 1;
     $field->fields['option_arrayview'] = 1;
     $field->fields['option_exportview'] = 1;
     $title = _FORMS_FIELDCREATION;

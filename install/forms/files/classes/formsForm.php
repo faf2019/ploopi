@@ -308,6 +308,7 @@ class formsForm extends data_object
             }
 
             if (!$booExport || $this->fields['option_displayip']) $objQuery->add_select('rec.`ip`');
+
         }
 
         $objQuery->add_from('`'.$this->getDataTableName().'` rec');
@@ -319,6 +320,8 @@ class formsForm extends data_object
              */
             if (!$booExport || $this->fields['option_displayuser'])
             {
+                $objQuery->add_select('rec.`user_id`');
+
                 $objQuery->add_leftjoin('ploopi_user pu ON pu.id = rec.user_id');
                 $objQuery->add_select('pu.id as `user_id`');
                 $objQuery->add_select('pu.login as `user_login`');
@@ -328,6 +331,8 @@ class formsForm extends data_object
 
             if (!$booExport || $this->fields['option_displaygroup'])
             {
+                $objQuery->add_select('rec.`workspace_id`');
+
                 $objQuery->add_leftjoin('ploopi_workspace pw ON pw.id = rec.workspace_id');
                 $objQuery->add_select('pw.id as `workspace_id`');
                 $objQuery->add_select('pw.label as `workspace_label`');
@@ -1162,7 +1167,7 @@ class formsForm extends data_object
 		// Pour chaque champs du formulaire
         foreach($this->getFields(true) as $objField)
         {
-            if (!$objField->fields['option_adminonly'] || $booIsAdmin)
+            if ($objField->fields['option_formview'] && (!$objField->fields['option_adminonly'] || $booIsAdmin))
             {
                 if ($objField->fields['separator'])
                 {

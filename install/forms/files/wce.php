@@ -53,24 +53,31 @@ if (!empty($_REQUEST['op'])) $op = $_REQUEST['op'];
 switch($op)
 {
     case 'display':
-        $forms_id  = $obj['object_id'];
-        include_once './modules/forms/wce_forms_display.php';
+        $objForm = new formsForm();
+        if ($objForm->open($obj['object_id']))
+        {
+            $objForm->render(null, 'frontoffice');
+        }
     break;
 
     case 'end':
-        $forms = new formsForm();
-        $forms->open($obj['object_id']);
-        ?>
-        <div id="forms_response"><?php echo nl2br($forms->fields['cms_response']); ?></div>
-        <?php
+        $objForm = new formsForm();
+        if ($objForm->open($obj['object_id']))
+        {
+            ?>
+            <div id="forms_response"><?php echo nl2br($objForm->fields['cms_response']); ?></div>
+            <?php
+        }
     break;
 
     case 'end_error':
-        $forms = new formsForm();
-        $forms->open($obj['object_id']);
-        ?>
-        <div id="forms_response"><?php echo _FORMS_ERROR_CAPTCHA; ?></div>
-        <?php
+        $objForm = new formsForm();
+        if ($objForm->open($obj['object_id']))
+        {
+            ?>
+        	<div id="forms_response"><?php echo _FORMS_ERROR_CAPTCHA; ?></div>
+            <?php
+        }
     break;
 
 }

@@ -212,11 +212,6 @@ class formsArithmeticParser
         $this->arrExpr = null;
         $this->strOperator = null;
 
-        if ($strExpression == '')
-        {
-            //$this->strVal = 0;
-            throw new Exception('Expression non valide');
-        }
         if (empty($strExpression))
         {
             $this->strVal = 0;

@@ -51,6 +51,25 @@ else
 {
     $objGraphic->init_description();
     $objGraphic->fields['type'] = 'line';
+
+    $objGraphic->fields['param_font'] = FF_VERA;
+    $objGraphic->fields['param_transparency'] = '0.2';
+    $objGraphic->fields['param_fill_transparency'] = '0.5';
+    $objGraphic->fields['param_margin_left'] = '40';
+    $objGraphic->fields['param_margin_right'] = '20';
+    $objGraphic->fields['param_margin_top'] = '120';
+    $objGraphic->fields['param_margin_bottom'] = '60';
+    $objGraphic->fields['param_center_x'] = '0.5';
+    $objGraphic->fields['param_center_y'] = '0.5';
+    $objGraphic->fields['param_shadow_transparency'] = '0.8';
+    $objGraphic->fields['param_label_angle'] = '0';
+    $objGraphic->fields['param_font_size_title'] = '15';
+    $objGraphic->fields['param_font_size_legend'] = '8';
+    $objGraphic->fields['param_font_size_data'] = '10';
+    $objGraphic->fields['param_mark_type'] = MARK_SQUARE;
+    $objGraphic->fields['param_mark_transparency'] = '0.3';
+    $objGraphic->fields['param_mark_width'] = '3';
+
     $strTitle = _FORMS_GRAPHICCREATION;
 }
 
