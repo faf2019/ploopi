@@ -1,3 +1,9 @@
+== Module FORMS - version 3.1.5c =====================================================
+
+2010-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans le parseur arithmétique. Ne gérait pas les fonctions imbriquées à paramètres multiples (ex: round(pow(C1, 3), 2) )
+
 == Module FORMS - version 3.1.5b =====================================================
 
 2010-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

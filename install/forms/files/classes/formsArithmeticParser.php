@@ -317,7 +317,26 @@ class formsArithmeticParser
                     }
                     else
                     {
-                        $arrStrExpr = explode(',', substr($strExpression, $first+1, $end-$first-1));
+                        // Gestion des fonctions imbriquées à paramètres multiples
+
+                        $arrStrExpr = array();
+                        $p = 0;
+                        $e = 0;
+
+                        for ($i = $first+1; $i <= $end-1; $i++)
+                        {
+                            // Parenthèse ouvrante
+                            if ($strExpression[$i] == '(') $p++;
+                            // Parenthèse fermante
+                            elseif ($strExpression[$i] == ')') $p--;
+
+                            if ($p === 0 && $strExpression[$i] == ',') $e++;
+                            else
+                            {
+                                if (!isset($arrStrExpr[$e])) $arrStrExpr[$e] = '';
+                                $arrStrExpr[$e] .= $strExpression[$i];
+                            }
+                        }
                         $this->arrExpr = array();
 
                         foreach($arrStrExpr as $strExpr) $this->arrExpr[] = new self($strExpr, $arrVars);
@@ -363,7 +382,6 @@ class formsArithmeticParser
             // Evaluation de l'expression
             eval("\$res = {$this->strFunc}(".implode(',', $v).");");
             ploopi_set_error_handler();
-
 
             if(is_null($res)) throw new Exception ("Erreur lors de l'évaluation de l'expression {$this->strFunc}(".implode(',', $v).");");
 
