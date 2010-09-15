@@ -100,6 +100,86 @@ if ($_SESSION['ploopi']['connected'])
             /**
              * CONTROLEURS ADMIN
              */
+            case 'form_import_file':
+                ploopi_init_module('forms');
+
+                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+
+                include_once './modules/forms/classes/formsForm.php';
+
+                $objForm = new formsForm();
+                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
+                {
+                    if (!empty($_FILES['forms_import_file']) && file_exists($_FILES['forms_import_file']['tmp_name']))
+                    {
+                        // On fait sauter le timeout de php car le traitement peut être long
+                        if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
+
+                        $ptrFileHandler = fopen($_FILES['forms_import_file']['tmp_name'], 'r');
+                        $arrData = array();
+                        $arrKeys = array();
+                        $intCount = 0;
+
+                        // Import CSV
+                        while (($arrLine = fgetcsv($ptrFileHandler)) !== false)
+                        {
+                            if (empty($arrKeys)) $arrKeys = $arrLine;
+                            else
+                            {
+                                /**
+                                 * On instancie l'enregistrement
+                                 * @var formsRecord
+                                 */
+                                $objRecord = new formsRecord($objForm);
+                                $objRecord->init_description();
+                                $booValid = false;
+                                foreach($arrLine as $strKey => $strValue)
+                                {
+                                    if (isset($arrKeys[$strKey]) && isset($objRecord->fields[$arrKeys[$strKey]]))
+                                    {
+                                        $booValid = true;
+                                        $objRecord->fields[$arrKeys[$strKey]] = $strValue;
+                                    }
+                                }
+
+                                if ($booValid)
+                                {
+                                    $objRecord->save();
+                                    $intCount++;
+                                }
+                            }
+                        }
+
+                        fclose($ptrFileHandler);
+
+                        ploopi_redirect("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}&ploopi_mod_msg=_FORMS_MESS_OK_8");
+                    }
+                }
+
+                ploopi_redirect('admin.php');
+            break;
+
+            case 'forms_import':
+                ploopi_init_module('forms');
+
+                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+
+                include_once './modules/forms/classes/formsForm.php';
+
+                $objForm = new formsForm();
+                if (!empty($_POST['forms_id']) && is_numeric($_POST['forms_id']) && $objForm->open($_POST['forms_id']))
+                {
+                    $objForm = new form('forms_import_form', ploopi_urlencode("admin-light.php?ploopi_op=form_import_file&forms_id={$_POST['forms_id']}"));
+                    $objForm->addField( new form_field( 'input:file', 'Fichier', '', 'forms_import_file', 'forms_import_file', array('description' => 'Format CSV') ) );
+                    $objForm->addButton( new form_button('input:button', 'Fermer', null, null, array('onclick' => "ploopi_hidepopup('forms_import');")) );
+                    $objForm->addButton( new form_button('input:submit', 'Importer', null, null, array('style' => 'margin-left:2px;')) );
+
+                    echo $skin->create_popup('Import de données CSV', $objForm->render(), 'forms_import');
+                }
+
+                ploopi_die();
+            break;
+
             case 'forms_preview':
                 ploopi_init_module('forms');
 
@@ -215,6 +295,10 @@ if ($_SESSION['ploopi']['connected'])
                 if (!isset($_POST['forms_option_displayip'])) $forms->fields['option_displayip'] = 0;
                 if (!isset($_POST['forms_cms_link'])) $forms->fields['cms_link'] = 0;
                 if (!isset($_POST['forms_option_adminonly'])) $forms->fields['option_adminonly'] = 0;
+
+                // Sécurité pour les grosses tables
+                if ($forms->fields['nbline'] > 500) $forms->fields['nbline'] = 500;
+                if ($forms->fields['nbline'] <= 0) $forms->fields['nbline'] = 100;
 
                 if (!empty($forms->fields['autobackup_date'])) $forms->fields['autobackup_date'] = ploopi_local2timestamp($forms->fields['autobackup_date']);
 

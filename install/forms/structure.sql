@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_forms_graphic` (
 
 ALTER TABLE `ploopi_mod_forms_field` CHANGE `style` `style_field` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 ALTER TABLE `ploopi_mod_forms_field` ADD `style_form` VARCHAR( 255 ) NOT NULL AFTER `style_field`;
-ALTER TABLE `ploopi_mod_forms_form` CHANGE `width` `style` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL  
+ALTER TABLE `ploopi_mod_forms_form` CHANGE `width` `style` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 UPDATE `ploopi_mod_forms_form` SET `style` = '';
 ALTER TABLE `ploopi_mod_forms_field` ADD `formula` VARCHAR( 255 ) NOT NULL AFTER `values`;
 ALTER TABLE `ploopi_mod_forms_field` ADD `option_adminonly` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `option_wceview` ;

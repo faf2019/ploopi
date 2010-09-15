@@ -93,12 +93,21 @@ switch($op)
 
         if ($objForm->isPublished() && (!$objForm->fields['option_adminonly'] || ploopi_isactionallowed(_FORMS_ACTION_ADMIN)))
         {
-            /**
-             * Lecture des données du formulaire
-             */
-            list($arrData, $intNumRows, $arrFormFilter) = $objForm->prepareData();
 
-            include_once './modules/forms/public_forms_viewreplies.php';
+            if ($op == 'forms_deletedata')
+            {
+                $objForm->deleteData();
+                ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}");
+            }
+            else
+            {
+                /**
+                 * Lecture des données du formulaire
+                 */
+                list($arrData, $intNumRows, $arrFormFilter) = $objForm->prepareData();
+
+                include_once './modules/forms/public_forms_viewreplies.php';
+            }
         }
         else ploopi_redirect('admin.php');
     break;

@@ -274,6 +274,7 @@ sort($forms_tpl);
                     ?>
 						<input type="button" class="flatbutton" value="<?php echo _FORMS_PREVIEW; ?>" onclick="javascript:ploopi_xmlhttprequest_topopup(780, event, 'forms_preview', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=forms_preview&forms_id={$forms->fields['id']}"); ?>', 'post');" />
                         <input type="button" class="flatbutton" value="<?php echo _FORMS_VIEWRESULT; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?ploopi_action=public&op=forms_viewreplies&forms_id={$forms->fields['id']}"); ?>'">
+						<input type="button" class="flatbutton" value="<?php echo _FORMS_IMPORT; ?>" onclick="javascript:ploopi_xmlhttprequest_topopup(450, event, 'forms_import', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=forms_import&forms_id={$forms->fields['id']}"); ?>', 'post');" />
                     <?php
                 }
                 ?>

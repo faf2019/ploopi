@@ -276,7 +276,7 @@ class formsForm extends data_object
      * @return ploopi_query la requête préparée
      */
 
-    private function _getQuery($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false)
+    private function _getQuery($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false, $booDelete = false)
     {
         // L'utilisateur est admin ?
         $booIsAdmin = ploopi_isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module']);
@@ -289,43 +289,50 @@ class formsForm extends data_object
         /**
          * Structure de base de la requête de consultation des données du formulaire
          */
-        $objQuery = new ploopi_query_select();
+        $objQuery = $booDelete ? new ploopi_query_delete() : new ploopi_query_select();
 
-        /**
-         * Attention, si booExport = true, on adapte la requête pour ne récupérer que les champs exportables (pour ne pas retraiter les données ensuite)
-         */
-
-        // Seul l'admin peut exporter le champ ID
-        if (!$booExport || ploopi_isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module'])) $objQuery->add_select('rec.`#id` as `id`');
-
-        if (!$booExport || $this->fields['option_displaydate'])
+        // Requête de suppression : pas besoin de sélectionner les champs
+        if (!$booDelete)
         {
-            if ($booRawData) $objQuery->add_select('rec.`date_validation`');
-    		else $objQuery->add_select("CONCAT(SUBSTRING(rec.`date_validation`, 7, 2), '/', SUBSTRING(rec.`date_validation`, 5, 2), '/', SUBSTRING(rec.`date_validation`, 1, 4), ' ', SUBSTRING(rec.`date_validation`, 9, 2), ':', SUBSTRING(rec.`date_validation`, 11, 2), ':', SUBSTRING(rec.`date_validation`, 13, 2)) as `date_validation`");
-        }
+            /**
+             * Attention, si booExport = true, on adapte la requête pour ne récupérer que les champs exportables (pour ne pas retraiter les données ensuite)
+             */
 
-        if (!$booExport || $this->fields['option_displayip']) $objQuery->add_select('rec.`ip`');
+            // Seul l'admin peut exporter le champ ID
+            if (!$booExport || ploopi_isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module'])) $objQuery->add_select('rec.`#id` as `id`');
+
+            if (!$booExport || $this->fields['option_displaydate'])
+            {
+                if ($booRawData) $objQuery->add_select('rec.`date_validation`');
+        		else $objQuery->add_select("CONCAT(SUBSTRING(rec.`date_validation`, 7, 2), '/', SUBSTRING(rec.`date_validation`, 5, 2), '/', SUBSTRING(rec.`date_validation`, 1, 4), ' ', SUBSTRING(rec.`date_validation`, 9, 2), ':', SUBSTRING(rec.`date_validation`, 11, 2), ':', SUBSTRING(rec.`date_validation`, 13, 2)) as `date_validation`");
+            }
+
+            if (!$booExport || $this->fields['option_displayip']) $objQuery->add_select('rec.`ip`');
+        }
 
         $objQuery->add_from('`'.$this->getDataTableName().'` rec');
 
-        /**
-         * Construction des jointures sur les champs statiques (ip, user, etc...)
-         */
-        if (!$booExport || $this->fields['option_displayuser'])
+        if (!$booDelete)
         {
-            $objQuery->add_leftjoin('ploopi_user pu ON pu.id = rec.user_id');
-            $objQuery->add_select('pu.id as `user_id`');
-            $objQuery->add_select('pu.login as `user_login`');
-            $objQuery->add_select('pu.firstname as `user_firstname`');
-            $objQuery->add_select('pu.lastname as `user_lastname`');
-        }
+            /**
+             * Construction des jointures sur les champs statiques (ip, user, etc...)
+             */
+            if (!$booExport || $this->fields['option_displayuser'])
+            {
+                $objQuery->add_leftjoin('ploopi_user pu ON pu.id = rec.user_id');
+                $objQuery->add_select('pu.id as `user_id`');
+                $objQuery->add_select('pu.login as `user_login`');
+                $objQuery->add_select('pu.firstname as `user_firstname`');
+                $objQuery->add_select('pu.lastname as `user_lastname`');
+            }
 
-        if (!$booExport || $this->fields['option_displaygroup'])
-        {
-            $objQuery->add_leftjoin('ploopi_workspace pw ON pw.id = rec.workspace_id');
-            $objQuery->add_select('pw.id as `workspace_id`');
-            $objQuery->add_select('pw.label as `workspace_label`');
-            $objQuery->add_select('pw.code as `workspace_code`');
+            if (!$booExport || $this->fields['option_displaygroup'])
+            {
+                $objQuery->add_leftjoin('ploopi_workspace pw ON pw.id = rec.workspace_id');
+                $objQuery->add_select('pw.id as `workspace_id`');
+                $objQuery->add_select('pw.label as `workspace_label`');
+                $objQuery->add_select('pw.code as `workspace_code`');
+            }
         }
 
         /**
@@ -348,26 +355,28 @@ class formsForm extends data_object
             }
         }
 
-        /**
-         * Répartition des champs par type (pour post-traitement)
-         */
-        $arrFieldsByType = array();
 
-        foreach($arrObjField as $objField)
+        if (!$booDelete)
         {
-            if (!$booExport || ($objField->fields['option_exportview'] && ($booIsAdmin || !$objField->fields['option_adminonly'])))
+            /**
+             * Sélection des champ
+             */
+
+            foreach($arrObjField as $objField)
             {
-                $strAlias = $booFieldNamesAsKey ? $objField->fields['fieldname'] : $objField->fields['id'];
-                // Traitement spécial des données DATE
-                // Pas l'idéal de faire ça au niveau SQL mais permet d'éviter un post traitement
-                $strSelect = $objField->fields['format'] == 'date' && !$booRawData ? "CONCAT(SUBSTRING(rec.`{$objField->fields['fieldname']}`,7,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,5,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,1,4))" : "rec.`{$objField->fields['fieldname']}`";
+                if (!$booExport || ($objField->fields['option_exportview'] && ($booIsAdmin || !$objField->fields['option_adminonly'])))
+                {
+                    $strAlias = $booFieldNamesAsKey ? $objField->fields['fieldname'] : $objField->fields['id'];
+                    // Traitement spécial des données DATE
+                    // Pas l'idéal de faire ça au niveau SQL mais permet d'éviter un post traitement
+                    $strSelect = $objField->fields['format'] == 'date' && !$booRawData ? "CONCAT(SUBSTRING(rec.`{$objField->fields['fieldname']}`,7,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,5,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,1,4))" : "rec.`{$objField->fields['fieldname']}`";
 
-                // Ajout du select
-                $objQuery->add_select("{$strSelect} as `{$strAlias}`");
-
-                $arrFieldsByType[$objField->fields['format']][$objField->fields['id']] = $objField->fields['id'];
+                    // Ajout du select
+                    $objQuery->add_select("{$strSelect} as `{$strAlias}`");
+                }
             }
         }
+        else $objQuery->add_delete('rec');
 
         /**
          * Application du filtre utilisateur
@@ -461,41 +470,47 @@ class formsForm extends data_object
             }
         }
 
-        /**
-         * Application du critère de tri
-         */
 
-        foreach($arrOrderBy as $strIdField => $strWay)
+
+        if (!$booDelete)
         {
-            if (is_numeric($strIdField)) // Filtre sur champ dynamique du formulaire
+
+            /**
+             * Application du critère de tri
+             */
+
+            foreach($arrOrderBy as $strIdField => $strWay)
             {
-                $strFieldName = "rec.`{$arrObjField[$strIdField]->fields['fieldname']}`";
-            }
-            else // Filtre sur champ statique (ip, user, etc...)
-            {
-                switch($strIdField)
+                if (is_numeric($strIdField)) // Filtre sur champ dynamique du formulaire
                 {
-                    case 'user_login': $strFieldName = 'rec.`user_login`'; break;
-                    case 'workspace_label': $strFieldName = 'rec.`workspace_label`'; break;
-                    case 'date_validation': $strFieldName = 'rec.`date_validation`'; break;
-                    case 'ip': $strFieldName = 'rec.`ip`'; break;
-                    default: $strFieldName = ''; break;
+                    $strFieldName = "rec.`{$arrObjField[$strIdField]->fields['fieldname']}`";
                 }
+                else // Filtre sur champ statique (ip, user, etc...)
+                {
+                    switch($strIdField)
+                    {
+                        case 'user_login': $strFieldName = 'rec.`user_login`'; break;
+                        case 'workspace_label': $strFieldName = 'rec.`workspace_label`'; break;
+                        case 'date_validation': $strFieldName = 'rec.`date_validation`'; break;
+                        case 'ip': $strFieldName = 'rec.`ip`'; break;
+                        default: $strFieldName = ''; break;
+                    }
+                }
+
+
+                if (in_array($strWay, array('ASC', 'DESC'))) $objQuery->add_orderby("{$strFieldName} {$strWay}");
             }
 
+            /**
+             * Application de la clause LIMIT
+             */
 
-            if (in_array($strWay, array('ASC', 'DESC'))) $objQuery->add_orderby("{$strFieldName} {$strWay}");
-        }
+            if (!empty($this->fields['nbline']) && !empty($intNumPage) && is_numeric($this->fields['nbline']) && is_numeric($intNumPage))
+            {
+                $intLimitStart = ($intNumPage-1)*$this->fields['nbline'];
 
-        /**
-         * Application de la clause LIMIT
-         */
-
-        if (!empty($this->fields['nbline']) && !empty($intNumPage) && is_numeric($this->fields['nbline']) && is_numeric($intNumPage))
-        {
-            $intLimitStart = ($intNumPage-1)*$this->fields['nbline'];
-
-            $objQuery->add_limit("{$intLimitStart}, {$this->fields['nbline']}");
+                $objQuery->add_limit("{$intLimitStart}, {$this->fields['nbline']}");
+            }
         }
 
         return $objQuery;
@@ -512,13 +527,19 @@ class formsForm extends data_object
      * @return array données du formulaire
      */
 
-    private function _getData($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false)
+    private function _getData($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false, $booDelete = false)
     {
         /**
          * Construction de la requête
          * @var ploopi_query
          */
-        $objQuery = $this->_getQuery($booWorkspaceFilter, $booBackupFilter, $arrFilter, $arrOrderBy, $intNumPage, $booFieldNamesAsKey, $booExport, $booRawData);
+        $objQuery = $this->_getQuery($booWorkspaceFilter, $booBackupFilter, $arrFilter, $arrOrderBy, $intNumPage, $booFieldNamesAsKey, $booExport, $booRawData, $booDelete);
+
+        if ($booDelete)
+        {
+            $objQuery->execute();
+            return null;
+        }
 
         /**
          * Requête spéciale pour compter les enregistrements (sans "limit")
@@ -535,6 +556,14 @@ class formsForm extends data_object
         return array($objQuery->execute()->getArray(), current($objCount->execute()->getarray(true)));
     }
 
+    public function deleteData()
+    {
+        $_SESSION['forms'][$this->fields['id']] = array();
+        ploopi_setsessionvar('filter', null);
+        ploopi_setsessionvar('formfilter', null);
+
+        $this->prepareData(false, false, false, false, true);
+    }
 
     /**
      * Prépare les données du formulaire et les retourne.
@@ -543,7 +572,7 @@ class formsForm extends data_object
      * @return array
      */
 
-    public function prepareData($booUnlockPageLimit = false, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false)
+    public function prepareData($booUnlockPageLimit = false, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false, $booDelete = false)
     {
         $ploopi_op = isset($_REQUEST['ploopi_op']) ? $_REQUEST['ploopi_op'] : (isset($_REQUEST['op']) ? $_REQUEST['op'] : '');
 
@@ -606,8 +635,8 @@ class formsForm extends data_object
          * Sélection page
          */
 
-        if ($this->fields['nbline'] > 0 && !$booUnlockPageLimit) list($arrData, $intNumRows) = $this->_getData(true, true, $arrFilter, $arrOrderBy, $_SESSION['forms'][$this->fields['id']]['page'], $booFieldNamesAsKey, $booExport, $booRawData);
-        else list($arrData, $intNumRows) = $this->_getData(true, true, $arrFilter, $arrOrderBy, 0, $booFieldNamesAsKey, $booExport, $booRawData);
+        if ($this->fields['nbline'] > 0 && !$booUnlockPageLimit) list($arrData, $intNumRows) = $this->_getData(true, true, $arrFilter, $arrOrderBy, $_SESSION['forms'][$this->fields['id']]['page'], $booFieldNamesAsKey, $booExport, $booRawData, $booDelete);
+        else list($arrData, $intNumRows) = $this->_getData(true, true, $arrFilter, $arrOrderBy, 0, $booFieldNamesAsKey, $booExport, $booRawData, $booDelete);
 
         return array($arrData, $intNumRows, $arrFormFilter);
     }

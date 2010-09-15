@@ -89,6 +89,7 @@ define ('_FORMS_NBLINE',    'Nb Ligne/Page');
 define ('_FORMS_PREVIEW',       'Aperçu');
 define ('_FORMS_VIEWRESULT',        'Basculer vers l\'interface utilisateur');
 define ('_FORMS_VIEWLIST',      'Mode Liste');
+define ('_FORMS_IMPORT',       'Import de données');
 
 define ('_FORMS_FILTER',        'Filtre');
 define ('_FORMS_EXPORT',        'Export');
@@ -179,6 +180,7 @@ define ('_FORMS_MESS_OK_4',         'Champ supprimé !');
 define ('_FORMS_MESS_OK_5',         'Graphique enregistré !');
 define ('_FORMS_MESS_OK_6',         'Graphique supprimé !');
 define ('_FORMS_MESS_OK_7',         'Champ déplacé !');
+define ('_FORMS_MESS_OK_8',         'Données importées !');
 
 define ('_FORMS_ERROR_CAPTCHA',             'Erreur de captcha !'); // Front !
 
