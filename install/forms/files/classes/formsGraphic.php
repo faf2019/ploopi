@@ -224,7 +224,7 @@ class formsGraphic extends data_object
                      */
                     $strTimeField = $this->fields['timefield'];
                     if ($strTimeField == '0') $strTimeField = 'date_validation';
-
+                    else $strTimeField = $arrFormFields[$strTimeField]->fields['fieldname'];
 
                     /**
                      * Détermination du min/max de la base de temps en fonction du jeu de données
@@ -348,7 +348,7 @@ class formsGraphic extends data_object
                             $strTitleX = 'Mois / Année';
                         break;
                     }
-
+  
                     // Intervalle trop petit
                     if ($intI <= 1)
                     {

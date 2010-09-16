@@ -374,7 +374,10 @@ class formsForm extends data_object
                     $strAlias = $booFieldNamesAsKey ? $objField->fields['fieldname'] : $objField->fields['id'];
                     // Traitement spécial des données DATE
                     // Pas l'idéal de faire ça au niveau SQL mais permet d'éviter un post traitement
-                    $strSelect = $objField->fields['format'] == 'date' && !$booRawData ? "CONCAT(SUBSTRING(rec.`{$objField->fields['fieldname']}`,7,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,5,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,1,4))" : "rec.`{$objField->fields['fieldname']}`";
+                    if ($objField->fields['format'] == 'date')
+                        $strSelect = $booRawData ? "CONCAT(rec.`{$objField->fields['fieldname']}`, '000000')" : "CONCAT(SUBSTRING(rec.`{$objField->fields['fieldname']}`,7,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,5,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,1,4))";
+                    else 
+                        $strSelect = "rec.`{$objField->fields['fieldname']}`";
 
                     // Ajout du select
                     $objQuery->add_select("{$strSelect} as `{$strAlias}`");

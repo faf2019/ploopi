@@ -1,3 +1,9 @@
+== Module FORMS - version 3.1.5e =====================================================
+
+2010-09-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug pour les graphiques dont l'échelle de temps est basée sur un champ utilisateur
+
 == Module FORMS - version 3.1.5d =====================================================
 
 2010-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
