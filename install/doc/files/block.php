@@ -106,7 +106,8 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
             if ($row['foldertype'] == 'shared') $ico .= '_shared';
             if ($row['foldertype'] == 'public') $ico .= '_public';
             if ($row['readonly']) $ico .= '_locked';
-            $block->addmenu("<p class=\"ploopi_va\"><img src=\"./modules/doc/img/{$ico}.png\" /><span>&nbsp;{$row['name']}</span></p>", ploopi_urlencode("admin.php?ploopi_moduleid=$menu_moduleid&ploopi_action=public&currentfolder={$row['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $currentfolder == $row['id']);
+            $block->addmenu("<img style=\"display:block;float:left;\" src=\"./modules/doc/img/{$ico}.png\" /><div style=\"margin-left:20px;word-wrap:break-word;\">{$row['name']}</div>", ploopi_urlencode("admin.php?ploopi_moduleid=$menu_moduleid&ploopi_action=public&currentfolder={$row['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $currentfolder == $row['id']);
+
         }
         else $block->addmenu($row['name'], ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&currentfolder={$row['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $currentfolder == $row['id']);
 

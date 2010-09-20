@@ -1,3 +1,9 @@
+== Module DOC - version 4.6.4 ====================================================
+
+2010-09-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Amélioration : mise en page du menu principal (block) avec l'affichage des icones 
+
 == Module DOC - version 4.6.3e ====================================================
 
 2010-03-30  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
