@@ -404,6 +404,8 @@ font-size:1px;
 
 .module_menu {
 display:block;
+word-wrap:break-word;
+overflow:hidden;;
 padding:2px 4px;
 border-top:1px solid #193c1c;
 color:#193c1c;
@@ -417,6 +419,8 @@ color:#ffffff;
 
 .module_menuselected {
 display:block;
+word-wrap:break-word;
+overflow:hidden;
 padding:2px 4px;
 border-top:1px solid #193c1c;
 color:#ffffff;

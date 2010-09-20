@@ -104,16 +104,17 @@
         var hours = now.getHours();
         var minutes = now.getMinutes();
         var day = now.getDate();
-        var month = now.getMonth();
+        var month = now.getMonth()+1;
         var year = now.getFullYear();
 
         minutes = ((minutes < 10) ? "0" : "") + minutes;
         day = ((day < 10) ? "0" : "") + day;
         month = ((month < 10) ? "0" : "") + month;
 
+
         var clock = day + "/" + month + "/" + year + " " + hours + ":" + minutes;
         $('status_time').innerHTML =  clock;
-        timer = setTimeout("tpl_display_time()",1000);
+        timer = setTimeout("tpl_display_time()",50000);
     }
 
     ploopi_window_onload_stock(

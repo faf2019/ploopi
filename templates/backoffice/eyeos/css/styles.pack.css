@@ -1149,6 +1149,8 @@ z-index:2;
 
 #mainmenu div.blockmenu a.blockmenu {
 display:block;
+word-wrap:break-word;
+overflow:hidden;
 color:#000;
 text-decoration:none;
 padding:6px 8px;
