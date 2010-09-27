@@ -445,7 +445,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                         ?>
                     </div>
                     <div class="system_tickets_title" id="tickets_title_<?php echo $fields['id']; ?>" <?php if (empty($fields['status'])) echo 'style="font-weight:bold;"'; ?>>
-                        <?php echo htmlentities($fields['title']); ?>
+                        <?php echo strip_tags($fields['title'], '<b><strong><i><u><span>'); ?>
                     </div>
                 </div>
             </div>
