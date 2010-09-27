@@ -196,19 +196,47 @@ class docfolder extends data_object
 
             // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
             foreach ($arrFolderList as $intObjectId)
-                $arrSubscribers += ploopi_subscription_getusers(_DOC_OBJECT_FOLDER, $intObjectId, $arrActions);
+            {
+                //$arrSubscribers +=
+                foreach(ploopi_subscription_getusers(_DOC_OBJECT_FOLDER, $intObjectId, $arrActions) as $row)
+                {
+                    if (empty($arrSubscribers[$row['id']])) // nouvel utilisateur
+                    {
+                        // recherche des groupes de l'utilisateur (pour comparer aux partages de groupes)
+                        $objUser = new user();
+                        $objUser->open_row($row);
+                        $row['groups'] = $objUser->getgroups(true);
+
+                        $arrSubscribers[$row['id']] = $row;
+                    }
+                }
+            }
 
             // Si dossier partagé, on vérifie que l'abonné est dans les partages
             if ($this->fields['foldertype'] == 'shared')
             {
-                // On récupère les utilisateurs pour lesquels le dossier est partagé
-                $arrShareUsers = ploopi_share_get(-1, _DOC_OBJECT_FOLDER, $intObjectId);
+                // On récupère les utilisateurs/groupes pour lesquels le dossier est partagé
+                $arrShares = ploopi_share_get(-1, _DOC_OBJECT_FOLDER, $intObjectId);
 
                 // Tableau résultat des utilisateurs abonnés et pour lesquels le dossier est partagé
                 $arrShareSubscribers = array();
 
-                // On ne garde que les utilisateurs pour qui le dossier est partagé
-                foreach($arrShareUsers as $u) if ($u['type_share'] == 'user' && isset($arrSubscribers[$u['id_share']])) $arrShareSubscribers[$u['id_share']] = $arrSubscribers[$u['id_share']];
+                // Pour chaque abonné on vérifie qu'il a bien accès à la ressource
+                foreach($arrSubscribers as $sub)
+                {
+                    $booFound = false;
+
+                    foreach($arrShares as $share)
+                    {
+                        // partage sur le groupe de l'abonné => ok
+                        if ($share['type_share'] == 'group' && isset($sub['groups'][$share['id_share']])) {$booFound = true; break;}
+
+                        // partage sur l'abonné => ok
+                        if ($share['type_share'] == 'user' && isset($sub[$share['id_share']])) {$booFound = true; break;}
+                    }
+
+                    if ($booFound) $arrShareSubscribers[$sub['id']] = $sub;
+                }
 
                 // On affecte les utilisateurs que l'on garde à la liste des destinataires de l'abonnement
                 $arrSubscribers = $arrShareSubscribers;

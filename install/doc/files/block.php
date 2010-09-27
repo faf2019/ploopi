@@ -56,8 +56,9 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
 
     // Module
     $arrWhere['module'] = "f.id_module = {$menu_moduleid}";
+
     // Dossier
-    $arrWhere['folder'] = "f.id_folder = 0";
+    if (!ploopi_getparam('doc_displayshortcuts', $menu_moduleid)) $arrWhere['folder'] = "f.id_folder = 0";
 
     // Utilisateur "standard"
     if (!ploopi_isadmin())
