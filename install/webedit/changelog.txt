@@ -1,6 +1,12 @@
+== Module WebEdit - version 2.3.2u ============================================
+
+2010-09-29  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Amélioration de la réécriture d'URLs pour les liens vers les documents.
+
 == Module WebEdit - version 2.3.2t ============================================
 
-2010-06-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-09-29  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction mineure lors de l'affichage d'une rubrique en lecture seule, le champ "trier les articles" générait une erreur de type "notice".
 
