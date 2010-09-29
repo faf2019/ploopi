@@ -66,7 +66,7 @@ else $intEditorHeadingId = $headingid;
  * $booHeadingEdit => le droit de modifier la rubrique ou de créer de sous-rubriques
  */
 
-$booArticleEdit = ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT); 
+$booArticleEdit = ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT);
 $booHeadingEdit = ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT);
 
 /* Si l'utilisateur ne dispose pas du rôle d'édition d'article, on vérifie qu'on ne lui a pas donné un droit local */
@@ -76,9 +76,9 @@ if (!$booArticleEdit)
     {
         if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booArticleEdit = true;
         if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booArticleEdit = true;
-        
+
         $arrEditorUsers[$value['type_validation']][] = $value['id_validation'];
-    } 
+    }
 }
 
 ?>
@@ -107,7 +107,7 @@ if (!$booArticleEdit)
         </p>
         <?php
     }
-    
+
     if ($booHeadingEdit)
     {
         ?>
@@ -126,7 +126,7 @@ if (!$booArticleEdit)
             <?php
         }
     }
-        
+
     //if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || ($booIsEditor && !$booEditorHeadingIdIsRoot)) && !($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1) )
     if ($booHeadingEdit && !($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1))
     {
@@ -271,7 +271,7 @@ if ($display_type == 'advanced')
                 }
                 else
                 {
-                    ?><span><?php echo $heading_sortmodes[$heading->fields['sortmode']]; ?></span><?php
+                    ?><span><?php echo isset($heading_sortmodes[$heading->fields['sortmode']]) ? $heading_sortmodes[$heading->fields['sortmode']] : ''; ?></span><?php
                 }
                 ?>
             </p>
@@ -325,7 +325,7 @@ if ($display_type == 'advanced')
                             if (!empty($heading->fields['linkedpage']))
                             {
                                 if(substr($heading->fields['linkedpage'],0,1) == 'h') // C'est un heading !
-                                { 
+                                {
                                     $objHeading = new webedit_heading();
                                     if ($objHeading->open(substr($heading->fields['linkedpage'],1))) $redirect_title = $objHeading->fields['label'];
                                 }
@@ -375,7 +375,7 @@ if ($display_type == 'advanced')
                                 if (!empty($heading->fields['linkedpage']))
                                 {
                                     if(substr($heading->fields['linkedpage'],0,1) == 'h') // C'est un heading !
-                                    { 
+                                    {
                                         $objHeading = new webedit_heading();
                                         if ($objHeading->open(substr($heading->fields['linkedpage'],1))) $redirect_title = $objHeading->fields['label'];
                                     }
@@ -600,11 +600,11 @@ if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur le
  * L'utilisateur connecté est-il validateur ?
  */
 $booWfVal = false;
-foreach($arrWf as $value) 
+foreach($arrWf as $value)
 {
     if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booWfVal = true;
     if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booWfVal = true;
-    
+
     $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
 }
 
@@ -740,7 +740,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                 echo ($heading->fields['private']) ? 'oui' : 'non';
             ?>
         </p>
-    
+
         <div style="clear:both;padding: 4px 0px;display:<? echo $heading->fields['private'] ? 'block' : 'none'; ?>;" id="heading_private_form">
             <p class="ploopi_checkbox" style="padding:0 0 0 2px;">
                 <label for="heading_private">Toujours visible dans le menu :</label>
@@ -762,21 +762,21 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                     if (!empty($arrSharesUsers['group']))
                     {
                         $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
-    
+
                         $db->query(
                             "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrSharesUsers['group']).") ORDER BY label"
                         );
-    
+
                         while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
                     }
                     if (!empty($arrSharesUsers['user']))
                     {
                         $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
-    
+
                         $db->query(
                             "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrSharesUsers['user']).") ORDER BY lastname, firstname"
                         );
-    
+
                         while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
                     }
                 }
