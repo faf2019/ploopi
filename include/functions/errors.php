@@ -78,7 +78,7 @@ $ploopi_errorlevel =
  * @see _PLOOPI_DISPLAY_ERRORS
  * @see _PLOOPI_ERROR_REPORTING
  */
-                            
+
 function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
 {
     global $ploopi_errors_msg;
@@ -87,7 +87,9 @@ function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
 
     global $ploopi_errortype;
     global $ploopi_errorlevel;
-    
+
+    if (error_reporting() == 0) return false;
+
     // translate error_level into "readable" array
     $bit = _PLOOPI_ERROR_REPORTING;
     $res = array();
@@ -123,7 +125,7 @@ function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
             if (!empty($arrTrace[$key]['file']) && !empty($arrTrace[$key]['line']))
             {
                 $ploopi_errors_msg .= sprintf("Fichier : %s \nLigne : %s\n", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
-                if (_PLOOPI_DISPLAY_ERRORS) 
+                if (_PLOOPI_DISPLAY_ERRORS)
                 {
                     if (php_sapi_name() != 'cli') $strErrorStack .= sprintf("<div style=\"margin-left:10px;\">at <strong>%s</strong>  <em>line %d</em></div>", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
                     else $strErrorStack .= sprintf("at %s line %d\n", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
@@ -145,7 +147,7 @@ function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
                         {$strErrorStack}
                     </div>
                 ";
-                
+
             }
             else // Affichage cli, sortie texte brut
             {
