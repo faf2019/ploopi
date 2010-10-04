@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.3.2v ============================================
+
+2010-10-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ajout d'une variable template permettant de connaitre l'URI actuel de la page consultée
+
 == Module WebEdit - version 2.3.2u ============================================
 
 2010-09-29  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
