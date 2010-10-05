@@ -19,20 +19,18 @@
   ErrorDocument 404 "The requested file favicon.ico was not found."
 </Files>
 
-<IfModule mod_php4.c>
-    AddType application/x-httpd-php .php
-
-    php_flag magic_quotes_gpc Off
-    php_flag register_globals Off
-    php_value include_path .
-</IfModule>
-
 <IfModule mod_php5.c>
     AddType application/x-httpd-php .php
 
     php_flag magic_quotes_gpc Off
     php_flag register_globals Off
     php_value include_path .
+    
+    php_value memory_limit 128M
+    php_value post_max_size 16M
+    php_value upload_max_filesize 16M
+    
+    php_value date.timezone Europe/Paris    
 </IfModule>
 
 <IfModule mod_expires.c>
