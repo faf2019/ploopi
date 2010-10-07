@@ -1,3 +1,10 @@
+== Module FORMS - version 3.1.6 =====================================================
+
+2010-10-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug d'affichage des séparateurs (ne s'affichaient pas)
+* Les liens formulaires ne sont plus limités aux formulaires de l'instance courante du module 
+
 == Module FORMS - version 3.1.5e =====================================================
 
 2010-09-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

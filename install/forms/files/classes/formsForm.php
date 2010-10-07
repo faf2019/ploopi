@@ -376,7 +376,7 @@ class formsForm extends data_object
                     // Pas l'idéal de faire ça au niveau SQL mais permet d'éviter un post traitement
                     if ($objField->fields['format'] == 'date')
                         $strSelect = $booRawData ? "CONCAT(rec.`{$objField->fields['fieldname']}`, '000000')" : "CONCAT(SUBSTRING(rec.`{$objField->fields['fieldname']}`,7,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,5,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,1,4))";
-                    else 
+                    else
                         $strSelect = "rec.`{$objField->fields['fieldname']}`";
 
                     // Ajout du select
@@ -1170,16 +1170,17 @@ class formsForm extends data_object
 		// Pour chaque champs du formulaire
         foreach($this->getFields(true) as $objField)
         {
+            if ($objField->fields['separator'])
+            {
+                $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
+                $strDesc = $objField->fields['description'] == '' ? '' : '<p>'.ploopi_nl2br(htmlentities($objField->fields['description'])).'</p>';
+
+                $objForm->addField( new form_html('<h'.$objField->fields['separator_level'].' style="'.$strStyle.$objField->fields['style_form'].'">'.ploopi_nl2br(htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
+            }
+
             if ($objField->fields['option_formview'] && (!$objField->fields['option_adminonly'] || $booIsAdmin))
             {
-                if ($objField->fields['separator'])
-                {
-                    $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
-                    $strDesc = $objField->fields['description'] == '' ? '' : '<p>'.ploopi_nl2br(htmlentities($objField->fields['description'])).'</p>';
-
-                    $objForm->addField( new form_html('<h'.$objField->fields['separator_level'].' style="'.$strStyle.$objField->fields['style_form'].'">'.ploopi_nl2br(htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
-                }
-                elseif($objField->fields['captcha'])
+                if($objField->fields['captcha'])
                 {
                     $objForm->addField( new form_html('<div>Les CAPTCHAs ne sont pas gérés</div>') );
                 }

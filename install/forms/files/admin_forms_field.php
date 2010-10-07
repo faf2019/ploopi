@@ -206,8 +206,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                                 SELECT  forms.label, field.*
                                 FROM    ploopi_mod_forms_form forms,
                                         ploopi_mod_forms_field field
-                                WHERE   forms.id_module = {$_SESSION['ploopi']['moduleid']}
-                                AND     forms.id = field.id_form
+                                WHERE   forms.id = field.id_form
                                 AND     field.separator = 0
                                 AND     field.captcha = 0
                                 ORDER BY label, position
