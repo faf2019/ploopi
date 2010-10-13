@@ -1,3 +1,12 @@
+== Module Wiki - version 1.1.0 ====================================================
+
+2010-10-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un problème avec le rendu des apostrophes
+ * Correction d'un problème avec les listes imbriquées (mise à jour de la classe "textile")
+ * Ajout du support de la colorisation de code (css, php, java, ruby, sh, sql, cpp, xml, etc.) avec numérotation de lignes
+ * Mise à jour de la sortie HTML pour impression
+
 == Module Wiki - version 1.0.1a ====================================================
 
 2010-01-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

@@ -26,13 +26,15 @@ _texte en italique_
 
 %span%
 
-@code@
+Code source : @strtr($text, array('<' => '<', '>' => '>'));@
 
-p. Paragraphe
+Acronyme : ABC(Always Be Closing)
 
-bc. Bloc
+bc. Exemple de bloc
 
-pre. Pre-formatté 
+Exemple de citation: 
+
+bq.:http://fr.wikipedia.org/wiki/w3c Le World Wide Web Consortium, abrégé W3C, est un consortium fondé en octobre 1994 pour promouvoir la compatibilité des technologies du World Wide Web telles que HTML, XHTML, XML, RDF, CSS, PNG, SVG et SOAP. Le W3C n'émet pas des normes au sens européen, mais des recommandations à valeur de standards industriels.
 
 Lien vers un "site externe":http://www.ovensia.fr
 
@@ -61,27 +63,161 @@ Lien vers une autre note de bas de page[2].
 
 Caractères spéciaux : one(TM), two(R), three(C).
 
-%{color:green}Texte% %{color:blue}en couleur%.
+p. *Paragraphe standard:* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper, libero id lobortis pharetra, est nunc volutpat ligula, eu bibendum felis velit quis urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque faucibus, augue at vestibulum bibendum, magna nisl auctor ligula, convallis facilisis nisl nisl vitae orci. Pellentesque mollis venenatis sollicitudin. Morbi gravida elit sed purus convallis ac ultrices tellus ornare. Aliquam tempor imperdiet sem, nec venenatis massa vestibulum et. Duis non nibh scelerisque augue suscipit varius id vel eros. Nunc commodo sapien et neque commodo dignissim accumsan lectus facilisis. Nam vestibulum, metus fermentum auctor porta, diam ante tempus nunc, et rutrum nunc nisl sit amet tortor. Nullam rhoncus commodo tellus eu fringilla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec cursus orci sit amet mi aliquet sit amet egestas sapien dignissim. Aliquam erat volutpat. Proin lacinia est vel enim pretium rutrum. 
 
-p{color:blue;margin:30px}. Décalage+Couleur
+p<>. *Paragraphe justifié:* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper, libero id lobortis pharetra, est nunc volutpat ligula, eu bibendum felis velit quis urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque faucibus, augue at vestibulum bibendum, magna nisl auctor ligula, convallis facilisis nisl nisl vitae orci. Pellentesque mollis venenatis sollicitudin. Morbi gravida elit sed purus convallis ac ultrices tellus ornare. Aliquam tempor imperdiet sem, nec venenatis massa vestibulum et. Duis non nibh scelerisque augue suscipit varius id vel eros. Nunc commodo sapien et neque commodo dignissim accumsan lectus facilisis. Nam vestibulum, metus fermentum auctor porta, diam ante tempus nunc, et rutrum nunc nisl sit amet tortor. Nullam rhoncus commodo tellus eu fringilla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec cursus orci sit amet mi aliquet sit amet egestas sapien dignissim. Aliquam erat volutpat. Proin lacinia est vel enim pretium rutrum. 
 
-p=. Texte centré
+p>. *Paragraphe aligné à droite:* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper, libero id lobortis pharetra, est nunc volutpat ligula, eu bibendum felis velit quis urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque faucibus, augue at vestibulum bibendum, magna nisl auctor ligula, convallis facilisis nisl nisl vitae orci. Pellentesque mollis venenatis sollicitudin. Morbi gravida elit sed purus convallis ac ultrices tellus ornare. Aliquam tempor imperdiet sem, nec venenatis massa vestibulum et. Duis non nibh scelerisque augue suscipit varius id vel eros. Nunc commodo sapien et neque commodo dignissim accumsan lectus facilisis. Nam vestibulum, metus fermentum auctor porta, diam ante tempus nunc, et rutrum nunc nisl sit amet tortor. Nullam rhoncus commodo tellus eu fringilla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec cursus orci sit amet mi aliquet sit amet egestas sapien dignissim. Aliquam erat volutpat. Proin lacinia est vel enim pretium rutrum. 
 
-p<. Texte aligné à gauche
-
-p>. Texte aligné à droite
-
-p<>. Texte justifié
+p=. *Paragraphe centré:* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper, libero id lobortis pharetra, est nunc volutpat ligula, eu bibendum felis velit quis urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque faucibus, augue at vestibulum bibendum, magna nisl auctor ligula, convallis facilisis nisl nisl vitae orci. Pellentesque mollis venenatis sollicitudin. Morbi gravida elit sed purus convallis ac ultrices tellus ornare. Aliquam tempor imperdiet sem, nec venenatis massa vestibulum et. Duis non nibh scelerisque augue suscipit varius id vel eros. Nunc commodo sapien et neque commodo dignissim accumsan lectus facilisis. Nam vestibulum, metus fermentum auctor porta, diam ante tempus nunc, et rutrum nunc nisl sit amet tortor. Nullam rhoncus commodo tellus eu fringilla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec cursus orci sit amet mi aliquet sit amet egestas sapien dignissim. Aliquam erat volutpat. Proin lacinia est vel enim pretium rutrum. 
 
 p(. Indentation à gauche de 1 élément
 
 p(((. Indentation à gauche de 3 éléments
 
+*Jouer avec les CSS :*
 
-Tableau:
+%{color:green}Texte% %{color:blue}en couleur%.
+
+p{color:blue;margin:30px}. Décalage+Couleur
+
+p{font-size:14px; line-height:25px}. *Modification de la taille de texte et de l'interligne:* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper, libero id lobortis pharetra, est nunc volutpat ligula, eu bibendum felis velit quis urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque faucibus, augue at vestibulum bibendum, magna nisl auctor ligula, convallis facilisis nisl nisl vitae orci. Pellentesque mollis venenatis sollicitudin. Morbi gravida elit sed purus convallis ac ultrices tellus ornare. Aliquam tempor imperdiet sem, nec venenatis massa vestibulum et. Duis non nibh scelerisque augue suscipit varius id vel eros. Nunc commodo sapien et neque commodo dignissim accumsan lectus facilisis. Nam vestibulum, metus fermentum auctor porta, diam ante tempus nunc, et rutrum nunc nisl sit amet tortor. Nullam rhoncus commodo tellus eu fringilla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec cursus orci sit amet mi aliquet sit amet egestas sapien dignissim. Aliquam erat volutpat. Proin lacinia est vel enim pretium rutrum. 
+
+
+*Text préformaté simple:*
+
+pre.                                Décalage avec des espaces
+
+*Text préformaté multiligne:*
+
+<pre>
+    <Directory "/usr/share/doc/">
+        Options Indexes MultiViews FollowSymLinks
+        AllowOverride None
+        Order deny,allow
+        Deny from all
+        Allow from 127.0.0.0/255.0.0.0 ::1/128
+    </Directory>
+</pre>
+
+*Text préformaté avec lignes:*
+
+<code class="">    <Directory "/usr/share/doc/">
+        Options Indexes MultiViews FollowSymLinks
+        AllowOverride None
+        Order deny,allow
+        Deny from all
+        Allow from 127.0.0.0/255.0.0.0 ::1/128
+    </Directory></code>
+
+*Exemple de code XML:*
+
+<code class="xml"><?xml version="1.0" encoding="ISO-8859-15"?>
+<ploopi>
+    <moduletype>
+        <label>bidon</label>
+        <version>0.03</version>
+        <author>Ovensia</author>
+        <date>20081120000000</date>
+        <description>Bidon</description>
+    </moduletype>
+</ploopi></code>
+
+*Exemple de code SH*
+
+<code class="sh">#!/bin/sh
+pid=`ps ax | grep ssh | grep L3390 | awk '{print $1}'`
+if [ "$pid" != '' ]; then
+    kill -9 $pid
+fi
+ssh -N -f test@test -L3390:192.168.0.252:3389
+tsclient -x /home/test/scripts/rdp.rdp
+
+# COMMENTAIRE !</code>
+
+*Exemple de code PHP*
+
+<code class="php"><?php
+/**
+ * Traitement des liens externes et ancres (href) par expression regulière
+ *
+ * @param array $arrMatches Tableau des correspondances
+ * @return string lien modifié
+ *
+ * @see wiki_render
+ */
+function wiki_links($arrMatches)
+{
+    if (sizeof($arrMatches) == 3)
+    {
+        switch($arrMatches[1][0]) // On regarde le 1er caractère du lien
+        {
+            case '#': // cas particulier : ancre
+                return '<span class="wiki_link_ext"><a title="Aller à l\'ancre « '.htmlentities(strip_tags($arrMatches[2])).' »" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_anchor.png" /></span>';
+            break;
+
+            default: // autres cas : liens externes
+                return '<span class="wiki_link_ext"><a title="Ouvrir le lien externe « '.htmlentities(strip_tags($arrMatches[1])).' »" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_ext.png" /></span>';
+            break;
+
+        }
+    }
+
+    return '';
+}
+?></code>
+
+*Exemple de code RUBY*
+
+<code class="ruby"> # Programme donnant la factorielle d un nombre
+ # Sauver ce source en fact.rb
+
+ def fact(n)
+  if n == 0
+    1
+  else
+    n * fact(n-1)
+  end
+ end
+ 
+ print fact(ARGV[0].to_i), "\n"</code>
+
+*Exemple de code JAVA*
+
+<code class="java">public class Exemple {
+        public static void main(String[] args) {
+                System.out.println("Hello world!");
+        }
+}</code>
+
+*Exemple de code CSS*
+
+<code class="css">#wiki_page table td.hl-num {
+    text-align: right;
+    border-right: 1px solid #aaa;
+    min-width:30px;
+    background-color:#d0d0d0;
+    padding-right:4px;
+    color:#888;
+}
+
+#wiki_page table td.hl-src {
+    padding-left:10px;
+    width:100%;
+}</code>
+
+*Tableau:*
 |_. nom |_. age |_. sexe |
 | joan | 24 | f |
 | john | 29 | h |
+| bella | 45 | f |
+
+Cellules jointes:
+|_. nom |_. age |_. sexe |
+|\3=. Guys|
+| john | 29 | h |
+|\3=. Girls|
+| joan | 24 | f |
 | bella | 45 | f |
 
 Bordure :
@@ -101,6 +237,9 @@ Image à droite:
 
 Image:
 !http://www.ovensia.fr/templates/frontoffice/ovensia_officiel/gfx/logo.png!
+
+Image avec texte alternatif:
+!http://www.ovensia.fr/templates/frontoffice/ovensia_officiel/gfx/logo.png(Text alternatif)!
 
 Lien sur une image :
 !http://www.ovensia.fr/templates/frontoffice/ovensia_officiel/gfx/logo.png!:http://www.ovensia.fr/

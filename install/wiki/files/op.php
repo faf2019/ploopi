@@ -60,16 +60,16 @@ if (ploopi_ismoduleallowed('wiki'))
 	            	<link rel="stylesheet" type="text/css" href="./modules/wiki/include/styles.css" />
 					<script type="text/javascript">window.print();</script>
 	            </head>
-	            <body>
-		            <div id="wiki_page_print"><? echo wiki_render($objWikiPage->fields['content']); ?></div>
+	            <body class="wiki_print">
+		            <div id="wiki_page"><? echo wiki_render($objWikiPage->fields['content']); ?></div>
 		            <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <? echo $objWikiPage->fields['revision']; ?> modifi&eacute; le <? echo implode(' à ', ploopi_timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
 	            </body>
 	            </html>
 				<?
-            } 
+            }
             ploopi_die();
     	break;
-    	
+
         case 'wiki_help':
             ob_start();
             include_once './modules/wiki/op_help.php';
@@ -108,10 +108,10 @@ if (ploopi_ismoduleallowed('wiki'))
             );
 
             ploopi_create_user_action_log(_WIKI_ACTION_PAGE_MODIFY, $objWikiPage->fields['id']);
-            
+
             ploopi_search_remove_index(_WIKI_OBJECT_PAGE, $objWikiPage->fields['id']);
             ploopi_search_create_index(_WIKI_OBJECT_PAGE, $objWikiPage->fields['id'], $objWikiPage->fields['id'], strip_tags(html_entity_decode(wiki_render($objWikiPage->fields['content']))), $objWikiPage->fields['id'], true, $objWikiPage->fields['ts_created'], $objWikiPage->fields['ts_modified']);
-            
+
             ploopi_redirect_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId));
         break;
 

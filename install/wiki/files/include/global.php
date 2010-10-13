@@ -78,7 +78,7 @@ define ('_WIKI_OBJECT_PAGE',            1);
  *
  * @param array $arrMatches Tableau des correspondances
  * @return string lien modifié
- * 
+ *
  * @see wiki_render
  */
 function wiki_internal_links($arrMatches)
@@ -86,7 +86,7 @@ function wiki_internal_links($arrMatches)
     if (!empty($arrMatches[1]))
     {
         $strPageId = ploopi_iso8859_clean(html_entity_decode(strip_tags($arrMatches[1])));
-        
+
         $objWikiPage = new wiki_page();
         if ($objWikiPage->open($strPageId))
         {
@@ -100,8 +100,8 @@ function wiki_internal_links($arrMatches)
             $strTitle = 'Créer la page &laquo; '.htmlentities($strPageId).' &raquo;';
             $strOp = 'op=wiki_page_modify&';
         }
-        
-        
+
+
         return '<span class="'.$strLinkClass.'"><a title="'.$strTitle.'" href="'.ploopi_urlencode_trusted("admin.php?{$strOp}wiki_page_id=".urlencode($strPageId)).'">'.$arrMatches[1].'</a><img src="./modules/wiki/img/ico_link.png" /></span>';
     }
 
@@ -114,7 +114,7 @@ function wiki_internal_links($arrMatches)
  *
  * @param array $arrMatches Tableau des correspondances
  * @return string lien modifié
- * 
+ *
  * @see wiki_render
  */
 function wiki_links($arrMatches)
@@ -137,12 +137,18 @@ function wiki_links($arrMatches)
     return '';
 }
 
+
+global $arrWikiSources;
+$arrWikiSources = array();
+global $source;
+$source = 0;
+
 /**
  * Rendu de la page via le moteur de rendu Textile
  *
  * @param string $strContent chaîne brute utilisant la syntaxe Wiki Textile
  * @return string contenu HTML
- * 
+ *
  * @see wiki_internal_links
  * @see wiki_links
  */
@@ -150,15 +156,65 @@ function wiki_render($strContent)
 {
     include_once './lib/textile/classTextile.php';
     $objTextile = new Textile;
-    
+
+    // Pré-traitement du formattage de code
+    // Extraction des zones à formater
+    preg_match_all('@(<code[^>]*class="([a-z0-9]*)"[^>]*>(.*?)</code>)@si', $strContent, $arrMatches);
+
+    $arrSearch = array();
+    $arrReplace = array();
+
+    foreach($arrMatches[0] as $intKey => $strRaw)
+    {
+        $arrSearch[] = $strRaw;
+        $arrReplace[] = '{{{highlight'.sizeof($arrReplace).'}}}';
+        $arrHighlight[] = wiki_highlight($arrMatches[3][$intKey], $arrMatches[2][$intKey]);
+    }
+
+    $strContent = str_replace($arrSearch, $arrReplace, $strContent);
+
+
     ploopi_unset_error_handler();
     // La classe Textile retourne des erreurs sur les images si allow_url_fopen est désactivé dans php.ini
     $strTextile = $objTextile->TextileThis($strContent);
     ploopi_set_error_handler();
-    
+
+    // Traitement des liens externes
     $strTextile = preg_replace_callback ('/<a[^>]*href="(.*)"[^>]*>(.*)<\/a>/i', 'wiki_links', $strTextile);
+    // Traitement des liens internes
     $strTextile = preg_replace_callback ('/\[\[(.*)\]\]/i', 'wiki_internal_links', $strTextile);
-    
-    return ploopi_htmlpurifier($strTextile);
+
+    // Post-traitement du formattage de code
+    $strTextile = str_replace($arrReplace, $arrHighlight, $strTextile);
+
+    return $strTextile;
+}
+
+
+/**
+ * Génère la mise en forme du code source inséré
+ * @param string $strContent contenu à mettre en forme
+ * @param string $strFormat formattage à utiliser (php, c, java, etc...)
+ */
+function wiki_highlight($strContent, $strFormat = 'php')
+{
+    $arrAllowedFormats = array('cpp', 'css', 'diff', 'html', 'java', 'sql', 'ruby', 'php', 'xml', 'sh');
+
+    $strLines = implode(range(1, count(explode("\n", $strContent))), '<br />');
+
+    if (in_array($strFormat, $arrAllowedFormats))
+    {
+        require_once "Text/Highlighter.php";
+        require_once "Text/Highlighter/Renderer/Html.php";
+        $objHL =& Text_Highlighter::factory($strFormat);
+
+        $objHL->setRenderer(new Text_Highlighter_Renderer_Html());
+
+
+        $strContent = $objHL->highlight($strContent);
+    }
+    else $strContent = '<pre>'.ploopi_nl2br(htmlentities($strContent)).'</pre>';
+
+    return "<div class=\"hl-content\"><table><tr><td class=\"hl-num\">\n$strLines\n</td><td class=\"hl-src\">\n$strContent\n</td></tr></table></div>";
 }
 ?>
