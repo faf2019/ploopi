@@ -137,12 +137,6 @@ function wiki_links($arrMatches)
     return '';
 }
 
-
-global $arrWikiSources;
-$arrWikiSources = array();
-global $source;
-$source = 0;
-
 /**
  * Rendu de la page via le moteur de rendu Textile
  *
@@ -157,12 +151,13 @@ function wiki_render($strContent)
     include_once './lib/textile/classTextile.php';
     $objTextile = new Textile;
 
-    // Pré-traitement du formattage de code
+    // Pré-traitement du formatage de code
     // Extraction des zones à formater
     preg_match_all('@(<code[^>]*class="([a-z0-9]*)"[^>]*>(.*?)</code>)@si', $strContent, $arrMatches);
 
     $arrSearch = array();
     $arrReplace = array();
+    $arrHighlight = array();
 
     foreach($arrMatches[0] as $intKey => $strRaw)
     {
@@ -172,7 +167,6 @@ function wiki_render($strContent)
     }
 
     $strContent = str_replace($arrSearch, $arrReplace, $strContent);
-
 
     ploopi_unset_error_handler();
     // La classe Textile retourne des erreurs sur les images si allow_url_fopen est désactivé dans php.ini
@@ -184,7 +178,7 @@ function wiki_render($strContent)
     // Traitement des liens internes
     $strTextile = preg_replace_callback ('/\[\[(.*)\]\]/i', 'wiki_internal_links', $strTextile);
 
-    // Post-traitement du formattage de code
+    // Post-traitement du formatage de code
     $strTextile = str_replace($arrReplace, $arrHighlight, $strTextile);
 
     return $strTextile;
