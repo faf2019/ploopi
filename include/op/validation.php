@@ -101,29 +101,31 @@ switch($ploopi_op)
 
         $id_action = (!empty($_GET['id_action']) && is_numeric($_GET['id_action'])) ? $_GET['id_action'] : -1;
 
-        // construction de la liste des espaces de travail et des groupes d'utilisateurs rattachés (pour l'utilisateur courant)
-        foreach (split(',',ploopi_viewworkspaces_inv()) as $wspid) // pour chaque espace de travail
-        {
-            if (isset($_SESSION['ploopi']['workspaces'][$wspid]))
-            {
-                $wsp = $_SESSION['ploopi']['workspaces'][$wspid];
+        // Recherche des espaces de travail qui supportent ce module, selon la vue inverse
+        $rs = $db->query("
+            SELECT  w.*
+            FROM    ploopi_workspace w,
+                    ploopi_module_workspace mw
+            WHERE   w.id = mw.id_workspace
+            AND     w.id IN (".ploopi_viewworkspaces_inv().")
+            AND     w.backoffice = 1
+            AND     mw.id_module = {$_SESSION['ploopi']['moduleid']}
+            ORDER BY w.depth, w.label
+        ");
 
-                if (isset($wsp['adminlevel']) && $wsp['backoffice'])
-                {
-                    $list['workspaces'][$wsp['id']]['label'] = $wsp['label'];
-                    $list['workspaces'][$wsp['id']]['groups'] = array();
-                    $list['workspaces'][$wsp['id']]['users'] = array();
-                    $workspace->fields['id'] = $wsp['id'];
-                    foreach ($workspace->getgroups() as $grp)
-                    {
-                        $list['workspaces'][$wsp['id']]['groups'][$grp['id']] = $grp['id'];
-                        $list['groups'][$grp['id']]['label'] = $grp['label'];
-                        $list['groups'][$grp['id']]['display'] = false;
-                        $list['groups'][$grp['id']]['users'] = array();
-                    }
-                }
+        while ($row = $db->fetchrow($rs))
+        {
+            $list['workspaces'][$row['id']]['label'] = $row['label'];
+            $list['workspaces'][$row['id']]['groups'] = array();
+            $list['workspaces'][$row['id']]['users'] = array();
+            $workspace->fields['id'] = $row['id'];
+            foreach ($workspace->getgroups() as $grp)
+            {
+                $list['workspaces'][$row['id']]['groups'][] = $grp['id'];
+                $list['groups'][$grp['id']]['label'] = $grp['label'];
             }
         }
+
 
         $cleanedfilter = $db->addslashes($_GET['ploopi_validation_userfilter']);
         $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
