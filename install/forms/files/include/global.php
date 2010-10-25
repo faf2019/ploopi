@@ -242,7 +242,7 @@ function forms_viewworkspaces($moduleid, $workspaceid, $viewmode)
         break;
 
         case 'global':
-            $workspaces = $_SESSION['ploopi']['allworkspaces'].",''";
+            $workspaces = $_SESSION['ploopi']['allworkspaces'].",0";
         break;
     }
 

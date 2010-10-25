@@ -345,7 +345,7 @@ class formsForm extends data_object
          */
         if ($booWorkspaceFilter)
         {
-            $objQuery->add_where('rec.workspace_id IN (%e)', explode(',', forms_viewworkspaces($_SESSION['ploopi']['moduleid'], $_SESSION['ploopi']['workspaceid'], $this->fields['option_view'])));
+            $objQuery->add_where('rec.workspace_id IN (%e)', array(explode(',', forms_viewworkspaces($_SESSION['ploopi']['moduleid'], $_SESSION['ploopi']['workspaceid'], $this->fields['option_view']))));
         }
 
         /**
@@ -356,7 +356,7 @@ class formsForm extends data_object
             if (empty($_SESSION['forms'][$this->fields['id']]['unlockbackup']))
             {
                 if ($this->fields['autobackup'] > 0) $objQuery->add_where('rec.date_validation >= %s', ploopi_timestamp_add(ploopi_createtimestamp(), 0, 0, 0, 0, -$this->fields['autobackup']));
-                if (!empty($this->fields['autobackup_date'])) $objQuery->add_where('AND rec.date_validation >= %s', ploopi_timestamp_add($forms->fields['autobackup_date'], 0, 0, 0, 0, 1, 0));
+                if (!empty($this->fields['autobackup_date'])) $objQuery->add_where('rec.date_validation >= %s', ploopi_timestamp_add($this->fields['autobackup_date'], 0, 0, 0, 0, 1, 0));
             }
         }
 
@@ -542,6 +542,7 @@ class formsForm extends data_object
          * @var ploopi_query
          */
         $objQuery = $this->_getQuery($booWorkspaceFilter, $booBackupFilter, $arrFilter, $arrOrderBy, $intNumPage, $booFieldNamesAsKey, $booExport, $booRawData, $booDelete);
+
 
         if ($booDelete)
         {
