@@ -1,3 +1,9 @@
+== Module FORMS - version 3.1.6c =====================================================
+
+2010-10-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans la gestion des droits de modification d'un enregistrement
+
 == Module FORMS - version 3.1.6b =====================================================
 
 2010-10-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

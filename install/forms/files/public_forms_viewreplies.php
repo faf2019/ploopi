@@ -385,8 +385,8 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                         // Droit de modif d'un enregistrement
                         if (ploopi_isadmin() || (
                                 ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY) && (
-                                    ($objForm->fields['option_modify'] == 'user' && $rowData['id_user'] == $_SESSION['ploopi']['userid']) ||
-                                    ($objForm->fields['option_modify'] == 'group' && $rowData['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  ||
+                                    ($objForm->fields['option_modify'] == 'user' && $rowData['user_id'] == $_SESSION['ploopi']['userid']) ||
+                                    ($objForm->fields['option_modify'] == 'group' && $rowData['workspace_id'] == $_SESSION['ploopi']['workspaceid'])  ||
                                     ($objForm->fields['option_modify'] == 'all')
                                 )
                             ))
@@ -398,8 +398,8 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                         // Droit de suppression d'un enregistrement
                         if (ploopi_isadmin() || (
                                 ploopi_isactionallowed(_FORMS_ACTION_DELETE) && (
-                                    ($objForm->fields['option_modify'] == 'user' && $rowData['id_user'] == $_SESSION['ploopi']['userid']) ||
-                                    ($objForm->fields['option_modify'] == 'group' && $rowData['id_workspace'] == $_SESSION['ploopi']['workspaceid'])  ||
+                                    ($objForm->fields['option_modify'] == 'user' && $rowData['user_id'] == $_SESSION['ploopi']['userid']) ||
+                                    ($objForm->fields['option_modify'] == 'group' && $rowData['workspace_id'] == $_SESSION['ploopi']['workspaceid'])  ||
                                     ($objForm->fields['option_modify'] == 'all')
                                 )
                             ))
