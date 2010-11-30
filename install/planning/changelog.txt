@@ -1,3 +1,9 @@
+== Module Planning - version 0.7.9 ====================================================
+
+2010-11-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Sauvegarde des paramètres de visualisation dans un cookie (date, format, ressources affichées, etc...)
+
 == Module Planning - version 0.7.8 ====================================================
 
 2010-05-28  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
