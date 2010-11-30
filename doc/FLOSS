@@ -34,6 +34,12 @@
   licence : LGPL
   copyright : artofsolving
 
+* JsColor
+  path : ./lib/jscolor
+  url : http://jscolor.com/
+  licence : LGPL v3
+  copyright : Jan Odvarko, http://odvarko.cz
+
 * JsToolbar
   path : ./lib/jstoolbar
   url : http://fr.dotclear.org/
