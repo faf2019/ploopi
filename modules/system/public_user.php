@@ -70,7 +70,7 @@ function user_validate(form)
 if (isset($_SESSION['system']['user_photopath'])) unset($_SESSION['system']['user_photopath']);
 
 echo $skin->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
-echo $skin->open_simplebloc(_PLOOPI_LABEL_MYPROFILE); 
+echo $skin->open_simplebloc(_PLOOPI_LABEL_MYPROFILE);
 
 /**
  * Ouverture de l'instance de l'utilisateur à modifier
@@ -316,8 +316,7 @@ if (isset($error))
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COLOR; ?>:</label>
-                        <input type="text" style="width:100px;" class="text" name="user_color" id="user_color" value="<?php echo htmlentities($user->fields['color']); ?>" tabindex="29" />
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_colorpicker_open('user_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0"></a>
+                        <input type="text" style="width:100px;cursor:pointer;" class="text color {hash:true}" name="user_color" id="user_color" value="<?php echo htmlentities($user->fields['color']); ?>" tabindex="29" readonly="readonly" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PHOTO; ?>:</label>
@@ -356,7 +355,7 @@ if (isset($error))
     <legend>Documents liés à l'utilisateur</legend>
     <?php
     ploopi_documents(
-        _SYSTEM_OBJECT_USER, 
+        _SYSTEM_OBJECT_USER,
         $user->fields['id'],
         array(
             'DOCUMENT_CREATE' => true,
@@ -364,18 +363,18 @@ if (isset($error))
             'DOCUMENT_DELETE' => true,
             'FOLDER_CREATE' => true,
             'FOLDER_MODIFY' => true,
-            'FOLDER_DELETE' => true,            
+            'FOLDER_DELETE' => true,
             'SEARCH' => false
-        ), 
+        ),
         array(
             'PHOTOS',
             'VIDEOS',
             'DOCUMENTS'
         ),
         array(
-            'ROOT_NAME' => trim("{$user->fields['lastname']} {$user->fields['firstname']}"), 
-            'ATTACHEMENT' => false, 
-            'FIELDS' => 
+            'ROOT_NAME' => trim("{$user->fields['lastname']} {$user->fields['firstname']}"),
+            'ATTACHEMENT' => false,
+            'FIELDS' =>
                 array(
                     'name',
                     'timestp_modify',
@@ -386,5 +385,5 @@ if (isset($error))
     );
     ?>
 </fieldset>
-                        
+
 <?php echo $skin->close_simplebloc(); ?>

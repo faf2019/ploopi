@@ -177,11 +177,11 @@ if (isset($_REQUEST['confirm']))
         );
 
     $booLoginWarning = false;
-    
+
     while ($row = $db->fetchrow())
     {
         if ($row['login'] == $_SESSION['system']['save_user']['user_login']) $booLoginWarning = true;
-        
+
         $objUser = new user();
         $objUser->fields['id'] = $row['id'];
 
@@ -420,7 +420,7 @@ if (isset($_REQUEST['confirm']))
                                     ploopi_unset_error_handler();
                                     $objDateTimeZone = timezone_open($value['timezone_id']);
                                     ploopi_set_error_handler();
-                                    
+
                                     if ($objDateTimeZone !== false)
                                     {
                                         $offset = timezone_offset_get($objDateTimeZone, $date);
@@ -457,8 +457,7 @@ if (isset($_REQUEST['confirm']))
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COLOR; ?>:</label>
-                        <input type="text" style="width:100px;" class="text" name="user_color" id="user_color" value="<?php echo htmlentities($user->fields['color']); ?>" tabindex="29" />
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_colorpicker_open('user_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0"></a>
+                        <input type="text" style="width:100px;cursor:pointer;" class="text color {hash:true}" name="user_color" id="user_color" value="<?php echo htmlentities($user->fields['color']); ?>" tabindex="29" readonly="readonly" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PHOTO; ?>:</label>
@@ -538,7 +537,7 @@ if (!$user->isnew())
         <legend>Documents liés à l'utilisateur</legend>
         <?php
         ploopi_documents(
-            _SYSTEM_OBJECT_USER, 
+            _SYSTEM_OBJECT_USER,
             $user->fields['id'],
             array(
                 'DOCUMENT_CREATE' => true,
@@ -546,18 +545,18 @@ if (!$user->isnew())
                 'DOCUMENT_DELETE' => true,
                 'FOLDER_CREATE' => true,
                 'FOLDER_MODIFY' => true,
-                'FOLDER_DELETE' => true, 
+                'FOLDER_DELETE' => true,
                 'SEARCH' => false
-            ), 
+            ),
             array(
                 'PHOTOS',
                 'VIDEOS',
                 'DOCUMENTS'
             ),
             array(
-                'ROOT_NAME' => trim("{$user->fields['lastname']} {$user->fields['firstname']}"), 
-                'ATTACHEMENT' => false, 
-                'FIELDS' => 
+                'ROOT_NAME' => trim("{$user->fields['lastname']} {$user->fields['firstname']}"),
+                'ATTACHEMENT' => false,
+                'FIELDS' =>
                     array(
                         'name',
                         'timestp_modify',
