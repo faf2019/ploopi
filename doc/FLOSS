@@ -52,6 +52,12 @@
   licence : CC by-nc-sa 2.0 (Attribution-Noncommercial-Share Alike 2.0 Generic)
   copyright : Longtail Video
 
+* LivePipe UI
+  path : ./lib/livepipe
+  url : http://livepipe.net/core
+  licence : MIT
+  copyright : PersonalGrid Corporation <http://personalgrid.com/>
+ 
 * PHP Universal Feed Generator
   path : ./lib/feedwriter
   url : http://www.ajaxray.com/projects/rss
