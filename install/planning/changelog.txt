@@ -1,3 +1,9 @@
+== Module Planning - version 0.7.9b ====================================================
+
+2010-11-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Ajustement sur le nom du cookie pour la gestion multi-instance
+
 == Module Planning - version 0.7.9 ====================================================
 
 2010-11-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
