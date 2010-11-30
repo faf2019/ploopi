@@ -22,7 +22,7 @@
 
 /**
  * Opérations sur les ressources
- * 
+ *
  * @package booking
  * @subpackage op
  * @copyright Ovensia
@@ -56,22 +56,22 @@ switch($_REQUEST['ploopi_op'])
     case 'booking_resource_save':
         include_once './modules/booking/classes/class_booking_resource.php';
         include_once './modules/booking/classes/class_booking_resource_workspace.php';
-        
+
         $objResource = new booking_resource();
 
         if (!empty($_GET['booking_resource_id']) && is_numeric($_GET['booking_resource_id'])) $objResource->open($_GET['booking_resource_id']);
         $objResource->setvalues($_POST, 'booking_resource_');
-        
+
         if (!isset($_POST['booking_resource_active'])) $objResource->fields['active'] = 0;
-        
+
         $intIdRes = $objResource->save();
-        
+
         // suppression des espaces déjà rattachés
         $db->query("
             DELETE FROM ploopi_mod_booking_resource_workspace
             WHERE       id_resource = {$intIdRes}
         ");
-        
+
         if (!empty($_POST['booking_resourceworkspace_id_workspace']))
         {
             foreach($_POST['booking_resourceworkspace_id_workspace'] as $intIdw)
@@ -81,9 +81,9 @@ switch($_REQUEST['ploopi_op'])
                 $ObjResourceWorkspace->fields['id_resource'] = $intIdRes;
                 $ObjResourceWorkspace->save();
             }
-        }        
-        
-        
+        }
+
+
         ploopi_redirect("admin.php?booking_tab=resource");
     break;
 
@@ -91,7 +91,7 @@ switch($_REQUEST['ploopi_op'])
     case 'booking_resource_open':
         ob_start();
         ploopi_init_module('booking');
-        
+
         include_once './modules/booking/classes/class_booking_resource.php';
 
         $objResource = new booking_resource();
@@ -145,18 +145,18 @@ switch($_REQUEST['ploopi_op'])
 
                     // Arbre complet des espaces ayant accès au module "booking"
                     $arrWorkspacesTree = booking_get_workspaces($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_workspace'], $arrResWorkspaces);
-                    
-                    echo booking_display_workspaces($arrWorkspacesTree, 'booking_resourceworkspace_id_workspace[]', $arrResWorkspaces); 
+
+                    echo booking_display_workspaces($arrWorkspacesTree, 'booking_resourceworkspace_id_workspace[]', $arrResWorkspaces);
                     ?>
-                    </div>                
+                    </div>
                 </span>
             </p>
             <p>
                 <label>Couleur planning:</label>
-                <span>            
-                    <input name="booking_resource_color" id="booking_resource_color" class="text" type="text" value="<? echo htmlentities($objResource->fields['color']); ?>" onchange="javascript:this.style.borderColor = this.value;" style="width:60px;border-width:2px;<? if (!empty($objResource->fields['color'])) echo 'border-color:'.htmlentities($objResource->fields['color']).';'; ?>"/>
-                    <a onclick="javascript:ploopi_colorpicker_open('booking_resource_color', event);" href="javascript:void(0);"><img border="0" align="top" src="./img/colorpicker/colorpicker.png" /></a>
+                <span>
+                    <input name="booking_resource_color" id="booking_resource_color" class="text" type="text" value="<? echo htmlentities($objResource->fields['color']); ?>" style="width:60px;cursor:pointer;" readonly="readonly"/>
                 </span>
+                <script type="text/javascript">new jscolor.color($('booking_resource_color'), {hash:true})</script>
             </p>
             <p onclick="javascript:ploopi_checkbox_click(event,'booking_resource_active');">
                 <label for="booking_resource_active">Actif:</label>

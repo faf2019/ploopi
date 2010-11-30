@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.1 ====================================================
+
+2010-11-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Intégration du nouveau colorpicker
+
 == Module BOOKING - version 1.0.0b ====================================================
 
 2010-05-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
