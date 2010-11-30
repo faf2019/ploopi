@@ -49,7 +49,7 @@ if (isset($ploopi_op))
 
             // Mise en cache
             $objCache = new ploopi_cache(_PLOOPI_BASEPATH.'/robots.txt', 300);
-        
+
             if (!$objCache->start())
             {
                 $arrDisallow = array(
@@ -69,18 +69,18 @@ if (isset($ploopi_op))
                     '/templates/',
                     '/tools/',
                 );
-            
+
                 foreach($arrDisallow as &$strDisallow) $strDisallow = "Disallow "._PLOOPI_SELFPATH.$strDisallow;
-                
+
                 echo "User-agent: *\nSitemap: "._PLOOPI_BASEPATH."/sitemap.xml\n".implode("\n", $arrDisallow);
-                
+
                 $objCache->end();
             }
-            
+
             header('Content-Type: text/plain');
             ploopi_die();
         break;
-            
+
         case 'ploopi_lostpassword':
         case 'ploopi_lostpassword_confirm':
 
@@ -217,41 +217,9 @@ if (isset($ploopi_op))
             else ploopi_redirect('admin.php');
         break;
 
-        case 'colorpicker_open':
-            if (!isset($_GET['colorpicker_value']) || !isset($_GET['inputfield_id'])) ploopi_die();
-
-            ob_start();
-            ?>
-            <div id="ploopi_colorpicker" style="padding:4px;">
-
-                <div id="SV" onmousedown="HSVslide('SVslide','ploopi_colorpicker',event)" title="Saturation + Value">
-                    <div id="SVslide">&nbsp;</div>
-                </div>
-
-                <form id="H" onmousedown="HSVslide('Hslide','ploopi_colorpicker',event)" title="Hue">
-                    <div id="Hslide">&nbsp;</div>
-                    <div id="Hmodel"></div>
-                </form>
-
-                <div id="colorpicker_footer">
-                    <div id="plugCUR"></div>
-                    <input type="text" class="text" id="colorpicker_inputcolor" value="<?php echo htmlentities($_GET['colorpicker_value']); ?>">
-                    <input type="button" class="button" value="fermer" onclick="javascript:ploopi_getelem('<?php echo addslashes($_GET['inputfield_id']); ?>').value = ploopi_getelem('colorpicker_inputcolor').value; ploopi_hidepopup('ploopi_popup_colorpicker');ploopi_dispatch_onchange('<?php echo $_GET['inputfield_id']; ?>');">
-                </div>
-                <div style="clear:both;">
-                </div>
-            </div>
-            <?php
-            $content = ob_get_contents();
-            ob_end_clean();
-
-            echo $skin->create_popup('Choix d\'une couleur', $content, 'ploopi_popup_colorpicker');
-            ploopi_die();
-        break;
-
         case 'calendar_open':
             ob_start();
-            
+
             $month = date('n');
             $year = date('Y');
 
@@ -327,7 +295,7 @@ if (isset($ploopi_op))
             if ($_SESSION['ploopi']['mode'] == 'backoffice' && !empty($_SESSION['ploopi']['template_path'])) $strIconsPath = $_SESSION['ploopi']['template_path'];
             else $strIconsPath = '.';
 
-            $strScript = $_SESSION['ploopi']['mode'] == 'backoffice' ? 'admin' : 'index'; 
+            $strScript = $_SESSION['ploopi']['mode'] == 'backoffice' ? 'admin' : 'index';
             ?>
             <div id="calendar">
                 <div class="calendar_row">
@@ -442,7 +410,7 @@ if (isset($ploopi_op))
             <?php
             $content = ob_get_contents();
             ob_end_clean();
-    
+
             echo $skin->create_popup("Choix d'une date", $content, 'ploopi_popup_calendar');
             ploopi_die();
         break;
@@ -465,7 +433,7 @@ if (isset($ploopi_op))
             include_once './include/classes/captcha.php';
 
             $idcaptcha = (isset($_GET['id_captcha']) && !empty($_GET['id_captcha'])) ? $_GET['id_captcha'] : '';
-            
+
             $objCaptcha = new captcha(
                 $idcaptcha,
                 array(
@@ -481,34 +449,34 @@ if (isset($ploopi_op))
                     'captchausetimer' => 4      // temps mini entre 2 refresh
                 )
             );
-            
+
             $objCaptcha->createCaptcha();
             ploopi_die();
         break;
 
         case 'ploopi_get_captcha_sound':
             include_once './include/classes/captcha.php';
-            
+
             $idcaptcha = (isset($_GET['id_captcha']) && !empty($_GET['id_captcha'])) ? $_GET['id_captcha'] : '';
-                                    
+
             $objCaptchaSound = new captcha_sound($idcaptcha);
 
             $objCaptchaSound->outputAudioFile();
             ploopi_die();
         break;
-        
+
         case 'ploopi_get_captcha_verif':
             if(!empty($_POST['value']))
             {
                 $idcaptcha = (isset($_GET['id_captcha']) && !empty($_GET['id_captcha'])) ? $_GET['id_captcha'] : '';
-                
+
                 include_once './include/classes/captcha.php';
                 $objCaptcha = new captcha($idcaptcha);
                 echo ($objCaptcha->verifCaptcha($_POST['value'])) ? 1 : 0;
             }
             else
                 echo 0;
-                
+
             ploopi_die();
         break;
     }
@@ -622,7 +590,7 @@ if (isset($ploopi_op))
 
                     WHERE   ploopi_mb_wce_object.id_module_type = ploopi_module.id_module_type
                       AND   ((ploopi_module_workspace.id_module = ploopi_module.id AND ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['workspaceid']}) OR ploopi_mb_wce_object.id_module_type = 1)
-                    ORDER BY module_label, label                      
+                    ORDER BY module_label, label
                 ";
 
                 $result_object = $db->query($select_object);
