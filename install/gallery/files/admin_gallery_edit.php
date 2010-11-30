@@ -42,15 +42,15 @@ $objGallery = new gallery();
 if(isset($_GET['id_gallery']) && is_numeric($_GET['id_gallery'])) // MODIF ADHERENT EN DRAFT
 {
     $mode = 'modif';
-    
+
     if(isset($_SESSION['ploopi']['gallery']['rep_selected'])) unset($_SESSION['ploopi']['gallery']['rep_selected']);
-    
+
     echo $skin->open_simplebloc();
-  
+
     $objGallery->open($_GET['id_gallery']);
-    
+
     $nom_tpl = $objGallery->fields['template'];
-    
+
     $arrDirSelectTmp = $objGallery->getdirectories();
     if(!empty($arrDirSelectTmp))
     {
@@ -62,17 +62,17 @@ if(isset($_GET['id_gallery']) && is_numeric($_GET['id_gallery'])) // MODIF ADHER
     }
     else
         $arrDirSelect = false;
-    
+
     $formParam = '&id_gallery='.$objGallery->fields['id'];
 }
 else // NOUVELLE GALERIE
 {
     $mode = 'new';
-    
+
     echo $skin->open_simplebloc();
-  
+
     $nom_tpl = 'gallery';
-    
+
     $objGallery->init_description();
     $arrDirSelect=false;
 
@@ -82,7 +82,7 @@ else // NOUVELLE GALERIE
 ?>
 <form name="form_modify_gallery" action="<?php echo ploopi_urlencode('admin.php?op=gallery_save'.$formParam); ?>" method="POST" enctype="multipart/form-data" onsubmit="javascript:return gallery_validate(this);">
 <div style="padding:2px;">
-    <?php echo $skin->open_simplebloc(_GALLERY_LEGEND_GALLERY); ?>            
+    <?php echo $skin->open_simplebloc(_GALLERY_LEGEND_GALLERY); ?>
         <div>
             <div class="ploopi_form">
                 <p>
@@ -122,12 +122,11 @@ else // NOUVELLE GALERIE
                             </p>
                             <p>
                                 <label style="width: 200px;"><?php echo _GALLERY_EDIT_LABEL_COLOR_THUMB; ?>:</label>
-                                <input type="text" class="text" name="gallery_thumb_color" id="gallery_thumb_color" value="<?php echo $objGallery->fields['thumb_color']; ?>" style="width: 55px; float: left;" readonly="readonly" />
-                                <a href="javascript:void(0);" style="margin-left:2px;margin-top:2px;float:left;" onclick="javascript:ploopi_colorpicker_open('gallery_thumb_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0" tabindex="<?php echo $tabIndex++; ?>"></a>
+                                <input type="text" class="text color {hash:true}" name="gallery_thumb_color" id="gallery_thumb_color" value="<?php echo $objGallery->fields['thumb_color']; ?>" style="width: 55px; float: left; cursor:pointer;" readonly="readonly" tabindex="<?php echo $tabIndex++; ?>" />
                             </p>
                             <p>
                                 <label style="width: 200px;" for="gallery_thumb_transparence"><?php echo _GALLERY_EDIT_LABEL_PNG_THUMB; ?>:</label>
-                                <input type="hidden" name="gallery_thumb_transparence" value="0" /> 
+                                <input type="hidden" name="gallery_thumb_transparence" value="0" />
                                 <input type="checkbox" class="checkbox" name="gallery_thumb_transparence" id="gallery_thumb_transparence" value="1" <?php if($objGallery->fields['thumb_transparence']) echo 'checked="checked"'; ?> tabindex="<?php echo $tabIndex++; ?>" />
                             </p>
                             <hr/>
@@ -140,12 +139,11 @@ else // NOUVELLE GALERIE
                             </p>
                             <p>
                                 <label style="width: 200px;"><?php echo _GALLERY_EDIT_LABEL_COLOR_VIEW; ?>:</label>
-                                <input type="text" class="text" name="gallery_view_color" id="gallery_view_color" value="<?php echo $objGallery->fields['view_color']; ?>" style="width: 55px; float: left;" readonly="readonly" />
-                                <a href="javascript:void(0);" style="margin-left:2px;margin-top:2px;float:left;" onclick="javascript:ploopi_colorpicker_open('gallery_view_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0" tabindex="<?php echo $tabIndex++; ?>"></a>
+                                <input type="text" class="text color {hash:true}" name="gallery_view_color" id="gallery_view_color" value="<?php echo $objGallery->fields['view_color']; ?>" style="width: 55px; float: left; cursor:pointer;" readonly="readonly" tabindex="<?php echo $tabIndex++; ?>" />
                             </p>
                             <p>
                                 <label style="width: 200px;" for="gallery_view_transparence"><?php echo _GALLERY_EDIT_LABEL_PNG_VIEW; ?>:</label>
-                                <input type="hidden" name="gallery_view_transparence" value="0" /> 
+                                <input type="hidden" name="gallery_view_transparence" value="0" />
                                 <input type="checkbox" class="checkbox" name="gallery_view_transparence" id="gallery_view_transparence" value="1" <?php if($objGallery->fields['view_transparence']) echo 'checked="checked"'; ?> tabindex="<?php echo $tabIndex++; ?>" />
                             </p>
                         </div>
@@ -153,7 +151,7 @@ else // NOUVELLE GALERIE
                             <p style="font-size: 0.8em; font-style: italic; padding: 0; margin: 0; text-align: center;">
                                 <?php echo _GALLERY_EDIT_LABEL_PNG_EXPLAIN; ?>
                             </p>
-                        
+
                     </fieldset>
                 </div>
                 <div style="margin: 0 0 5px 121px;">
@@ -165,7 +163,7 @@ else // NOUVELLE GALERIE
                             ?>
                             <br/>
                             <select class="select" name="gallery_template" id="gallery_template" style="width: 418px; clear: both;" tabindex="<?php echo $tabIndex++; ?>" onchange="javascript:$('info_gallery').innerHTML = $('gallery_hidden_'+this.value).innerHTML;">
-                            <?php 
+                            <?php
                             $note = '';
                             $htmlNoteHidden = '';
                             foreach ($arrBlockTpl as $tpl)
@@ -176,11 +174,11 @@ else // NOUVELLE GALERIE
                                 <option value="<?php echo $tpl['id']; ?>" <?php echo $select; ?>><?php echo $tpl['block'].' - '.$tpl['description']; ?></option>
                                 <?php
                                 $htmlNoteHidden .= '<div id="gallery_hidden_'.$tpl['id'].'" style="display: none;">'.nl2br($tpl['note']).'</div>';
-                            } 
+                            }
                             ?>
                             </select>
                             <div id="info_gallery" style="padding: 2px 4px; font-style: italic; font-weight: bold;"><?php echo $note; ?></div>
-                            <?php 
+                            <?php
                             echo $htmlNoteHidden;
                         }
                         else
@@ -191,7 +189,7 @@ else // NOUVELLE GALERIE
                         }
                         ?>
                     </p>
-                </div>                
+                </div>
             </div>
         </div>
     <?php echo $skin->close_simplebloc(); ?>
@@ -200,22 +198,22 @@ else // NOUVELLE GALERIE
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="<?php echo $tabIndex++; ?>">
     <?php
     if(!empty($formParam))
-    {    
+    {
         ?>
         <input type="button" class="flatbutton" style="color: #990000;font-weight:bold;" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=gallery_delete{$formParam}"); ?>','<?php echo _GALLERY_EDIT_CONFIRM_DELETE; ?>');" />
         <?php
-    } 
+    }
     ?>
-</div>            
+</div>
 <div style="clear:both; padding:2px;">
-    <?php echo $skin->open_simplebloc(_GALLERY_LEGEND_GALLERY_CONTENT); ?>            
+    <?php echo $skin->open_simplebloc(_GALLERY_LEGEND_GALLERY_CONTENT); ?>
         <div style="float:left; width:40%;">
             <div style="padding:2px;">
                 <fieldset class="fieldset">
                     <legend><?php echo _GALLERY_LEGEND_DIRECTORIES; ?>&nbsp;<a href="javascript:void(0);" onclick="javascript:gallery_show_preview_rep('all')" style="font-style: italic;" title="<?php echo _GALLERY_EDIT_LABEL_VIEW_ALL; ?>"><img src="./modules/gallery/img/view.png"></a></legend>
                     <div>
                         <?php
-                        $sqlDirectories = "SELECT * 
+                        $sqlDirectories = "SELECT *
                             FROM ploopi_mod_doc_folder
                             WHERE foldertype = 'public'
                             AND waiting_validation = '0'
@@ -229,7 +227,7 @@ else // NOUVELLE GALERIE
                             {
                                 $parent = true;
                                 $arrTmp = &$arrDir;
-                                
+
                                 foreach (explode(',',$field['parents']) as $idDir)
                                 {
                                     if(!empty($idDir))
@@ -245,10 +243,10 @@ else // NOUVELLE GALERIE
                                             if(!isset($arrTmp[$idDir]['child'])) $arrTmp[$idDir]['child'] = array();
                                             $arrTmp = &$arrTmp[$idDir]['child'];
                                         }
-                                    }    
+                                    }
                                     $parent = false;
                                 }
-        
+
                                 // On enregistrer les données dans la bonne case grace au pointeur.
                                 $arrTmp[$field['id']] = (isset($arrTmp[$field['id']]) ? $arrTmp[$field['id']] + $field : $field);
                                 $arrTmp[$field['id']]['dir_selected'] = (!empty($arrDirSelect) && in_array($field['id'],$arrDirSelect));
@@ -281,11 +279,11 @@ else // NOUVELLE GALERIE
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="<?php echo $tabIndex++; ?>">
     <?php
     if(!empty($formParam))
-    {    
+    {
         ?>
         <input type="button" class="flatbutton" style="color: #990000;font-weight:bold;" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=gallery_delete{$formParam}"); ?>','<?php echo _GALLERY_EDIT_CONFIRM_DELETE; ?>');" />
         <?php
-    } 
+    }
     ?>
 </div>
 </form>

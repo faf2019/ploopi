@@ -1,4 +1,10 @@
-== Module GALLERY - version 0.1.3a ====================================================
+== Module GALLERY - version 0.1.4 =====================================================
+
+2010-11-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Intégration du nouveau colorpicker
+ 
+ == Module GALLERY - version 0.1.3a ====================================================
 
 2010-04-23  Xavier Toussaint ~ HeXad  <xavier@hexad.fr>
 
