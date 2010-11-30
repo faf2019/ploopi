@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.3.3 ============================================
+
+2010-11-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Intégration du nouveau colorpicker
+
 == Module WebEdit - version 2.3.2r ============================================
 
 2010-06-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
