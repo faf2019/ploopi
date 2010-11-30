@@ -37,7 +37,7 @@ if((isset($_GET['newsletterToolbarNewsletter']) && $_GET['newsletterToolbarNewsl
   || (isset($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter'])
   && $_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterToolbarNewsletter'] == 'tabNewsletterNew'))
 {
-  if (!ploopi_ismoduleallowed('newsletter')) ploopi_init_module('newsletter',false,false,false);
+  if (ploopi_ismoduleallowed('newsletter')) ploopi_init_module('newsletter');
   ?>
   function newsletter_letter_validate(form, validator)
   {
@@ -95,7 +95,6 @@ if((isset($_GET['newsletterTabAdmin']) && $_GET['newsletterTabAdmin'] == 'tabNew
   ||(isset($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterTabAdmin'])
   && $_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterTabAdmin'] == 'tabNewsletterParam'))
 {
-  if (!ploopi_ismoduleallowed('newsletter')) ploopi_init_module('newsletter',false,false,false);
   ?>
   function newsletter_letter_validate_param(form)
   {
@@ -114,7 +113,6 @@ if((isset($_GET['newsletterTabAdmin']) && $_GET['newsletterTabAdmin'] == 'tabNew
 if((isset($_GET['newsletterTabAdmin']) && $_GET['newsletterTabAdmin'] == 'tabNewsletterSubscriber')
   || (isset($_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterTabAdmin']) && $_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterTabAdmin'] == 'tabNewsletterSubscriber'))
 {
-  if (!ploopi_ismoduleallowed('newsletter')) ploopi_init_module('newsletter',false,false,false);
   ?>
   function newsletter_subscrib_validate(form)
   {

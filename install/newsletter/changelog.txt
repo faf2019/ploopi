@@ -1,3 +1,9 @@
+== Module NEWSLETTER - version 1.2.8 ==================================================
+
+2010-11-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Intégration du nouveau colorpicker
+
 == Module NEWSLETTER - version 1.2.7b ==================================================
 
 2009-10-27  Xavier Toussaint ~ HeXad <xavier@hexad.fr>

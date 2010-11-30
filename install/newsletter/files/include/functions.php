@@ -45,7 +45,7 @@ function newsletter_getArrSubscriber()
             AND id_module = '{$_SESSION['ploopi']['moduleid']}'
          ";
   $result_sql = $db->query($sql);
-  $arrSubscriber = $db->getarray($result_sql);
+  $arrSubscriber = $db->getarray($result_sql, true);
 
   if(!empty($arrSubscriber)) return $arrSubscriber;
 

@@ -227,8 +227,7 @@ if (!$readonly)
         if (!$readonly)
         {
             ?>
-            <input type="text" style="width:100px;float:left;" class="text" name="newsletter_background_color" id="newsletter_background_color" value="<?php echo htmlentities($objLetter->fields['background_color']); ?>" tabindex="10" readonly="readonly"/>
-            <a href="javascript:void(0);" style="margin-left:2px;margin-top:2px;float:left;" onclick="javascript:ploopi_colorpicker_open('newsletter_background_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0"></a>
+            <input type="text" style="width:100px;float:left;cursor:pointer;" class="text color {hash:true}" name="newsletter_background_color" id="newsletter_background_color" value="<?php echo htmlentities($objLetter->fields['background_color']); ?>" tabindex="10" readonly="readonly"/>
             <img src="./modules/newsletter/img/ico_delete.png" title="Effacer" alt="Effacer" onclick="javascript:$('newsletter_background_color').value='';" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" />
             <?php
         }
@@ -241,8 +240,7 @@ if (!$readonly)
         if (!$readonly)
         {
             ?>
-            <input type="text" style="width:100px;float:left;" class="text" name="newsletter_content_color" id="newsletter_content_color" value="<?php echo htmlentities($objLetter->fields['content_color']); ?>" tabindex="10" readonly="readonly"/>
-            <a href="javascript:void(0);" style="margin-left:2px;margin-top:2px;float:left;" onclick="javascript:ploopi_colorpicker_open('newsletter_content_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0"></a>
+            <input type="text" style="width:100px;float:left;cursor:pointer;" class="text color {hash:true}" name="newsletter_content_color" id="newsletter_content_color" value="<?php echo htmlentities($objLetter->fields['content_color']); ?>" tabindex="10" readonly="readonly"/>
             <img src="./modules/newsletter/img/ico_delete.png" title="Effacer" alt="Effacer" onclick="javascript:$('newsletter_content_color').value='';" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" />
             <?php
         }
@@ -255,8 +253,7 @@ if (!$readonly)
         if (!$readonly)
         {
             ?>
-            <input type="text" style="width:100px;float:left;" class="text" name="newsletter_text_color" id="newsletter_text_color" value="<?php echo htmlentities($objLetter->fields['text_color']); ?>" tabindex="10" readonly="readonly"/>
-            <a href="javascript:void(0);" style="margin-left:2px;margin-top:2px;float:left;" onclick="javascript:ploopi_colorpicker_open('newsletter_text_color', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0"></a>
+            <input type="text" style="width:100px;float:left;cursor:pointer;" class="text color {hash:true}" name="newsletter_text_color" id="newsletter_text_color" value="<?php echo htmlentities($objLetter->fields['text_color']); ?>" tabindex="10" readonly="readonly"/>
             <img src="./modules/newsletter/img/ico_delete.png" title="Effacer" alt="Effacer" onclick="javascript:$('newsletter_text_color').value='';" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" />
             <?php
         }
