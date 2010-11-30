@@ -1,3 +1,9 @@
+== Module FORMS - version 3.1.7 =====================================================
+
+2010-11-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Intégration du nouveau colorpicker
+
 == Module FORMS - version 3.1.6c =====================================================
 
 2010-10-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

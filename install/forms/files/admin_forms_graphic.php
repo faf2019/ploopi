@@ -317,13 +317,11 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     </p>
                     <p>
                         <label>Couleur de dégradé 1:</label>
-                        <input type="text" class="text forms_noselect" name="forms_graphic_pie_color1" id="forms_graphic_pie_color1" value="<?php echo $objGraphic->fields["pie_color1"]; ?>" style="float:left;width:100px;border-bottom-color:<?php echo $objGraphic->fields["pie_color1"]; ?>;border-bottom-width:4px;background-color:#f0f0f0;cursor:pointer;" readonly="readonly" onclick="javascript:ploopi_colorpicker_open('forms_graphic_pie_color1', event);" onchange="javascript:this.style.borderBottomColor = this.value;">
-                        <a style="display:block;float:left;margin-left:4px;margin-top:2px;" href="javascript:void(0);" onclick="javascript:ploopi_colorpicker_open('forms_graphic_pie_color1', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0"></a>
+                        <input type="text" class="text forms_noselect color {hash:true}" name="forms_graphic_pie_color1" id="forms_graphic_pie_color1" value="<?php echo $objGraphic->fields["pie_color1"]; ?>" style="float:left;width:100px;cursor:pointer;" readonly="readonly">
                     </p>
                     <p>
                         <label>Couleur de dégradé 2:</label>
-                        <input type="text" class="text forms_noselect" name="forms_graphic_pie_color2" id="forms_graphic_pie_color2" value="<?php echo $objGraphic->fields["pie_color2"]; ?>" style="float:left;width:100px;border-bottom-color:<?php echo $objGraphic->fields["pie_color2"]; ?>;border-bottom-width:4px;background-color:#f0f0f0;cursor:pointer;" readonly="readonly" onclick="javascript:ploopi_colorpicker_open('forms_graphic_pie_color2', event);" onchange="javascript:this.style.borderBottomColor = this.value;">
-                        <a style="display:block;float:left;margin-left:4px;margin-top:2px;" href="javascript:void(0);" onclick="javascript:ploopi_colorpicker_open('forms_graphic_pie_color2', event);"><img src="./img/colorpicker/colorpicker.png" align="top" border="0"></a>
+                        <input type="text" class="text forms_noselect color {hash:true}" name="forms_graphic_pie_color2" id="forms_graphic_pie_color2" value="<?php echo $objGraphic->fields["pie_color2"]; ?>" style="float:left;width:100px;cursor:pointer;" readonly="readonly">
                     </p>
                 </fieldset>
             </div>
@@ -421,8 +419,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                             </p>
                             <p>
                                 <label>Couleur :</label>
-                                <input type="text" class="text forms_noselect" name="forms_graphic_line<?php echo $intI; ?>_color" id="forms_graphic_line<?php echo $intI; ?>_color" value="<?php echo $objGraphic->fields["line{$intI}_color"]; ?>" style="float:left;width:100px;border-bottom-color:<?php echo $objGraphic->fields["line{$intI}_color"]; ?>;border-bottom-width:4px;background-color:#f0f0f0;cursor:pointer;" readonly="readonly" onclick="javascript:ploopi_colorpicker_open('forms_graphic_line<?php echo $intI; ?>_color', event);" onchange="javascript:this.style.borderBottomColor = this.value;">
-                                <a style="display:block;float:left;margin-left:4px;margin-top:2px;" href="javascript:void(0);" onclick="javascript:ploopi_colorpicker_open('forms_graphic_line<?php echo $intI; ?>_color', event);"><img src="./img/colorpicker/colorpicker.png" style="display:block;"></a>
+                                <input type="text" class="text forms_noselect color" name="forms_graphic_line<?php echo $intI; ?>_color" id="forms_graphic_line<?php echo $intI; ?>_color" value="<?php echo $objGraphic->fields["line{$intI}_color"]; ?>" style="float:left;width:100px;cursor:pointer;" readonly="readonly">
                             </p>
                         </fieldset>
                     </div>
