@@ -1,3 +1,19 @@
+== Module WebEdit - version 2.4.0 ============================================
+
+2011-01-10  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Gestion des blocs de contenus dynamiques (Nouvelle rubrique "blocs")
+** Support des rédacteurs
+** Support des validateurs
+** Support des annotations
+** Support des abonnements
+
+* Gestion d'un mode de recherche avancée en frontoffice
+** Recherche par type de contenu (documents/articles)
+** Recherche par type de document (extension de fichier)
+** Recherche par date de publication (entre 2 dates)
+** Recherche par rubrique du site
+
 == Module WebEdit - version 2.3.3 ============================================
 
 2010-11-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

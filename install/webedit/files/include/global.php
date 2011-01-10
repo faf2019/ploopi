@@ -239,7 +239,7 @@ function webedit_gettreeview($arrHeadings = array(), $articles = array(), $optio
                     $link = '';
                     $onclick = "webedit_select_article_or_heading('h{$fields['id']}', '".addslashes($fields['label'])."', event)";
                 break;
-                
+
                 case 'selectlink':
                     $link = '';
                     $onclick = "ploopi_skin_treeview_shownode('h{$prefix}{$fields['id']}', '".ploopi_queryencode("ploopi_op=webedit_detail_heading&hid=h{$prefix}{$fields['id']}&option={$option}")."', 'admin-light.php')";
@@ -390,16 +390,19 @@ function webedit_getheadings($moduleid = -1)
  * @return array tableau d'articles
  */
 
-function webedit_getarticles($moduleid = -1)
+function webedit_getarticles($moduleid = -1, $booBlocs = false)
 {
     global $db;
 
+    $key = $booBlocs ? 'blocs' : 'articles';
+    $sql_filter = $booBlocs ? ' AND ad.id_heading = 0 ' : ' AND ad.id_heading > 0 ';
+
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
     $today = ploopi_createtimestamp();
+    
+    if (!isset($_SESSION['webedit'][$key])) $_SESSION['webedit'][$key] = array();
 
-    if (!isset($_SESSION['webedit']['articles'])) $_SESSION['webedit']['articles'] = array();
-
-    $_SESSION['webedit']['articles']['tree'] = array();
+    $_SESSION['webedit'][$key]['tree'] = array();
 
     $arrArticles = array();
 
@@ -428,12 +431,13 @@ function webedit_getarticles($moduleid = -1)
         ON          a.id = ad.id
 
         WHERE       ad.id_module = {$moduleid}
+        {$sql_filter}
         ORDER BY    ad.position
     ");
 
     while ($fields = $db->fetchrow($result))
     {
-        if (!isset($_SESSION['webedit']['articles']['list'][$fields['id']]) || $fields['lastupdate_timestp'] != $_SESSION['webedit']['articles']['list'][$fields['id']]['lastupdate_timestp'])
+        if (!isset($_SESSION['webedit'][$key]['list'][$fields['id']]) || $fields['lastupdate_timestp'] != $_SESSION['webedit'][$key]['list'][$fields['id']]['lastupdate_timestp'])
         {
             // nouvel article ou article modifié
             if (is_null($fields['online_id'])) $fields['new_version'] = 2;
@@ -444,16 +448,16 @@ function webedit_getarticles($moduleid = -1)
             unset($fields['content']);
             unset($fields['online_content']);
 
-            $_SESSION['webedit']['articles']['list'][$fields['id']] = $fields;
+            $_SESSION['webedit'][$key]['list'][$fields['id']] = $fields;
             $arrArticles[$fields['id']] = $fields;
         }
-        else $arrArticles[$fields['id']] = $_SESSION['webedit']['articles']['list'][$fields['id']];
+        else $arrArticles[$fields['id']] = $_SESSION['webedit'][$key]['list'][$fields['id']]; 
 
-        $_SESSION['webedit']['articles']['list'] = $arrArticles;
-        $_SESSION['webedit']['articles']['tree'][$fields['id_heading']][] = $fields['id'];
+        $_SESSION['webedit'][$key]['list'] = $arrArticles;
+        $_SESSION['webedit'][$key]['tree'][$fields['id_heading']][] = $fields['id'];
     }
 
-    return($_SESSION['webedit']['articles']);
+    return $_SESSION['webedit'][$key];
 }
 
 /**
@@ -480,21 +484,21 @@ function webedit_template_assign(&$arrHeadings, $arrShares, &$nav, $hid, $var = 
         foreach($arrHeadings['tree'][$hid] as $id)
         {
             $arrHeading = $arrHeadings['list'][$id];
-            
+
             // Visible ET (Publique OU (Privée ET (Autorisé OU Autorisé par un module OU Toujours Visible)))
             if ($arrHeading['visible'] && (!$arrHeading['private'] || ($arrHeading['private'] && (isset($arrShares[$arrHeading['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeading['herited_private']]) || $arrHeading['private_visible']))))
             {
                 $arrAccessibleHeadings[] = &$arrHeadings['list'][$id];
             }
         }
-        
+
         // On compte le nombre de boucle pour savoir si on est sur la dernière rubrique du cycle
         $intC = 1;
-        // Pour chaque rubrique fille accessible 
+        // Pour chaque rubrique fille accessible
         foreach($arrAccessibleHeadings as $arrHeading)
-        {         
+        {
             $id = $arrHeading['id'];
-            
+
             $strHtmlLabel = htmlentities($arrHeading['label']);
 
             $depth = $arrHeading['depth'] - 1;
@@ -531,7 +535,7 @@ function webedit_template_assign(&$arrHeadings, $arrShares, &$nav, $hid, $var = 
             // Si rubrique fille sélectionnée, traitements particuliers => génération de variables spéciales
             if (isset($nav[$depth]) && $nav[$depth] == $arrHeading['id'])
             {
-                // La rubrique n'a pas encore été traitée dans ce parcours (done_full) 
+                // La rubrique n'a pas encore été traitée dans ce parcours (done_full)
                 if (empty($arrHeading['done_full']))
                 {
                     $template_body->assign_block_vars('path' , array(
@@ -539,7 +543,7 @@ function webedit_template_assign(&$arrHeadings, $arrShares, &$nav, $hid, $var = 
                         'LABEL' => $strHtmlLabel,
                         'LINK' => $script
                         ));
-    
+
                     /* Déprécié : remplacé par le bloc ci-dessous */
                     $template_body->assign_var("HEADING{$depth}_TITLE",         $strHtmlLabel);
                     $template_body->assign_var("HEADING{$depth}_TITLE_RAW",     $arrHeading['label']);
@@ -549,7 +553,7 @@ function webedit_template_assign(&$arrHeadings, $arrShares, &$nav, $hid, $var = 
                     $template_body->assign_var("HEADING{$depth}_DESCRIPTION",   $arrHeading['description']);
                     $template_body->assign_var("HEADING{$depth}_FREE1",         $arrHeading['free1']);
                     $template_body->assign_var("HEADING{$depth}_FREE2",         $arrHeading['free2']);
-    
+
                     $template_body->assign_vars(
                         array(
                             'HEADING_ID' => $arrHeading['id'],
@@ -568,7 +572,7 @@ function webedit_template_assign(&$arrHeadings, $arrShares, &$nav, $hid, $var = 
                             'HEADING_FREE2' => $arrHeading['free2']
                         )
                     );
-                    
+
                     $template_body->assign_block_vars("switch_heading{$depth}" , array(
                         'DEPTH' => $depth,
                         'ID' => $arrHeading['id'],
@@ -610,12 +614,12 @@ function webedit_template_assign(&$arrHeadings, $arrShares, &$nav, $hid, $var = 
                     'FREE1' => $arrHeading['free1'],
                     'FREE2' => $arrHeading['free2']
                     ));
-                
+
                 if ($intC < sizeof($arrAccessibleHeadings)) $template_body->assign_block_vars("{$localvar}.sw_separator" , array());
-                
+
                 $arrHeadings['list'][$arrHeading['id']]['done_full'] = true;
 
-                // Parcours 1 : Génération de l'arbre complet des rubriques 
+                // Parcours 1 : Génération de l'arbre complet des rubriques
                 // Si des rubriques filles disponibles pour la rubrique courante, on fait un appel récursif
                 if (isset($arrHeadings['tree'][$arrHeading['id']]))
                 {
@@ -623,12 +627,12 @@ function webedit_template_assign(&$arrHeadings, $arrShares, &$nav, $hid, $var = 
                     webedit_template_assign($arrHeadings, &$arrShares, $nav, $arrHeading['id'], "{$localvar}.", $locallink);
                 }
             }
-            
+
             $intC++;
         }
-        
+
         // Parcours 2 : génération uniquement de la branche sélectionnée
-        // La rubrique existe et n'a pas encore été traitée dans ce parcours (done_nav) 
+        // La rubrique existe et n'a pas encore été traitée dans ce parcours (done_nav)
         if (isset($arrHeadings['list'][$hid]) && !isset($arrHeadings['list'][$hid]['done_nav']))
         {
             $arrHeadings['list'][$hid]['done_nav'] = true;
@@ -790,7 +794,7 @@ function webedit_getobjectcontent($matches)
 
                 ob_start();
                 // Module actif et disponible dans l'espace de travail
-                
+
                 if ($_SESSION['ploopi']['modules'][$obj['module_id']]['active'] && (in_array($obj['module_id'], $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']) || $obj['module_id'] == _PLOOPI_MODULE_SYSTEM))
                 {
                     if (file_exists("./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php"))
@@ -801,7 +805,7 @@ function webedit_getobjectcontent($matches)
                     else $content = "Objet WCE non trouvé";
                 }
                 else $content = "Objet WCE indisponible";
-                
+
                 ob_end_clean();
             }
         }
@@ -859,32 +863,32 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
     if (!$strReplaced = $objCache->get_var())
     {
         include_once './modules/webedit/class_article.php';
-    
+
         $arrSearch = array();
         $arrReplace = array();
         $strContent = $objArticle->fields['content'];
-    
+
         // Traitement des ancres (incompatibilité fckeditor / <base href>)
         preg_match_all('/(href=\"(#[^\"]*)\")/i', $strContent, $arrMatches);
         foreach($arrMatches[2] as $key => $strAnchor)
         {
             $arrSearch[] = $arrMatches[1][$key];
-            
+
             switch ($mode)
             {
                 case 'render':
                     $arrReplace[] = str_replace($strAnchor, "index.php?webedit_mode={$mode}&headingid={$objArticle->fields['id_heading']}&articleid={$objArticle->fields['id']}{$strAnchor}", $arrMatches[1][$key]);
                 break;
-    
+
                 default:
                     $arrParents = array();
                     if (isset($arrHeadings['list'][$objArticle->fields['id_heading']])) foreach(split(';', $arrHeadings['list'][$objArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-    
+
                     $arrReplace[] = str_replace($strAnchor, ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$objArticle->fields['id']}", webedit_getrewriterules(), $objArticle->fields['metatitle'], $arrParents).$strAnchor, $arrMatches[1][$key]);
                 break;
             }
         }
-        
+
         preg_match_all('/(index\.php[^\"]+articleid=([0-9]+)[^\"]*)/i', $strContent, $arrMatches);
         foreach($arrMatches[2] as $key => $idart)
         {
@@ -892,27 +896,27 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
             if (!empty($idart) && $objLinkArticle->open($idart)) // article trouvé
             {
                 $arrSearch[] = $arrMatches[1][$key];
-    
+
                 switch ($mode)
                 {
                     case 'render':
                         $arrReplace[] = "index.php?webedit_mode={$mode}&headingid={$objLinkArticle->fields['id_heading']}&articleid={$idart}";
                     break;
-    
+
                     default:
                         $arrParents = array();
                         if (isset($arrHeadings['list'][$objLinkArticle->fields['id_heading']])) foreach(split(';', $arrHeadings['list'][$objLinkArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-    
+
                         $arrReplace[] = ploopi_urlrewrite("index.php?headingid={$objLinkArticle->fields['id_heading']}&articleid={$idart}", webedit_getrewriterules(), $objLinkArticle->fields['metatitle'], $arrParents);
                     break;
                 }
             }
         }
-    
+
         if (ploopi_init_module('doc', false, false, false))
         {
             include_once './modules/doc/class_docfile.php';
-    
+
             // traitement des liens vers documents
             preg_match_all('/(index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32}))/i', $strContent, $arrMatches);
             foreach($arrMatches[2] as $key => $md5)
@@ -926,10 +930,10 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
                 }
             }
         }
-        
+
         $objCache->save_var($strReplaced = str_replace($arrSearch, $arrReplace, $strContent));
     }
-    
+
     return $strReplaced;
 }
 
@@ -1038,8 +1042,8 @@ function webedit_sitemap()
             $strScript = ploopi_xmlentities(_PLOOPI_BASEPATH.'/'.ploopi_urlrewrite("index.php?query_tag={$row['tag']}", webedit_getrewriterules()));
             $arrUrls[] = '<url><loc>'.$strScript.'</loc><lastmod>'.$strSiteLastMod.'</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>';
         }
-        
-        
+
+
         foreach($_SESSION['ploopi']['modules'] as $intIdModule => $arrModule)
         {
             if ($arrModule['active'] && $arrModule['moduletype'] != 'webedit')
@@ -1047,12 +1051,12 @@ function webedit_sitemap()
                 // init du module
                 ploopi_init_module($arrModule['moduletype'], false, false, false);
                 // si la fonction <module>_sitemap() existe, on l'appelle
-                if (function_exists($strFuncName = "{$arrModule['moduletype']}_sitemap")) 
+                if (function_exists($strFuncName = "{$arrModule['moduletype']}_sitemap"))
                 {
                     $arrUrls = array_merge($arrUrls, $strFuncName($intIdModule));
                 }
             }
-        }        
+        }
 
         echo '<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -1077,7 +1081,7 @@ function webedit_sitemap()
 function webedit_getshare($id_user = null, $id_module = null)
 {
     $arrShares = array();
-    
+
     if ($_SESSION['ploopi']['connected'])
     {
         if (is_null($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
@@ -1129,7 +1133,7 @@ function webedit_getrewriterules()
             '/index.php\?ploopi_op=webedit_backend&format=([a-z]*)&headingid=([0-9]*)/',
             '/index.php\?ploopi_op=webedit_backend&format=([a-z]*)/',
             '/index.php\?ploopi_op=webedit_backend&query_tag=([a-zA-Z0-9]*)&moduleid=([0-9]*)/',
-    
+
         ),
 
         'replacements' => array(
@@ -1213,31 +1217,34 @@ function webedit_disallowheading($heading = null, $id_module = null)
  */
 function webedit_isEditor($heading, $user = null, $type = 'user', $id_module = null)
 {
-    if (empty($heading) || !is_numeric($heading)) return false;
-    
+    if ((empty($heading) || !is_numeric($heading)) && $heading != 'b') return false;
+
     if (is_null($user)) $user = $_SESSION['ploopi']['userid'];
 
     $type = strtolower($type);
     $type = ($type == 'user' &&  $type == 'group') ? $type : 'user';
 
     if (is_null($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
-    
+
     // On cherche les parents de cet heading
     include_once './modules/webedit/class_heading.php';
-    
-    $objHeading = new webedit_heading();
-    if(!$objHeading->open($heading)) return false;
-    $arrHeading = explode(';',$objHeading->fields['parents']);
+
+    if ($heading != 'b')
+    {
+        $objHeading = new webedit_heading();
+        if(!$objHeading->open($heading)) return false;
+        $arrHeading = explode(';',$objHeading->fields['parents']);
+    }
     $arrHeading[] = $heading;
-    
+
     // On test si c'est un rédacteur avec le user
     $arrEditor = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $arrHeading, $id_module, $user, $type);
-    
+
     // on a verifié par le user et il n'est pas rédacteur, on va verif ses groupes
     if(empty($arrEditor) && $type == 'user')
     {
         include_once './include/classes/user.php';
-        
+
         $objUser = new user();
         $objUser->open($user);
         $arrGroups = array_keys($objUser->getgroups(true));
@@ -1245,7 +1252,7 @@ function webedit_isEditor($heading, $user = null, $type = 'user', $id_module = n
         if(!empty($arrGroups))
             $arrEditor = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $arrHeading, $id_module, $arrGroups, 'group');
     }
-    
+
     return (!empty($arrEditor));
 }
 
@@ -1263,30 +1270,30 @@ function webedit_isEditor($heading, $user = null, $type = 'user', $id_module = n
 function webedit_isValidator($heading, $user = null, $type = 'user', $id_module = null)
 {
     if (empty($heading) || !is_numeric($heading)) return false;
-    
+
     if (is_null($user)) $user = $_SESSION['ploopi']['userid'];
 
     $type = strtolower($type);
     $type = ($type == 'user' &&  $type == 'group') ? $type : 'user';
 
     if (is_null($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
-    
+
     // On cherche les parents de cet heading
     include_once './modules/webedit/class_heading.php';
-    
+
     $objHeading = new webedit_heading();
     if(!$objHeading->open($heading)) return false;
     $arrHeading = explode(';',$objHeading->fields['parents']);
     $arrHeading[] = $heading;
-    
+
     // On test si c'est un rédacteur avec le user
     $arrEditor = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $arrHeading, $id_module, $user, $type);
-    
+
     // on a verifié par le user et il n'est pas rédacteur, on va verif ses groupes
     if(empty($arrEditor) && $type == 'user')
     {
         include_once './include/classes/user.php';
-        
+
         $objUser = new user();
         $objUser->open($user);
         $arrGroups = array_keys($objUser->getgroups(true));
@@ -1294,7 +1301,7 @@ function webedit_isValidator($heading, $user = null, $type = 'user', $id_module 
         if(!empty($arrGroups))
             $arrEditor = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $arrHeading, $id_module, $arrGroups, 'group');
     }
-    
+
     return (!empty($arrEditor));
 }
 
@@ -1302,7 +1309,7 @@ function webedit_isValidator($heading, $user = null, $type = 'user', $id_module 
 /**
  * Contrôle si la redirection vers une rubrique ou un article n'est pas une boucle infinie
  *
- * @Param int $intIdHeading id_heading courant à contrôler 
+ * @Param int $intIdHeading id_heading courant à contrôler
  * @Param string $strIdRedirect id de redirection (ex: h3 => id heading = 3, 5 => id article = 5)
  * @Param array $arrHeadings tableau des heading provenant de webedit_getheadings() ou  (optionnel)
  *
@@ -1312,22 +1319,22 @@ function webedit_isValidator($heading, $user = null, $type = 'user', $id_module 
 function webedit_ctrl_infinite_loops_redirect($intIdHeading, $strIdRedirect, $arrHeadings =array())
 {
     $arrRedirect = array();
-    
+
     $arrRedirect[] = $intIdHeading = 'h'.$intIdHeading;
-    
+
     if($intIdHeading == $strIdRedirect) return true; // Boucle infinie sur lui-même !
-    
-    if(empty($arrHeadings)) $arrHeadings = webedit_getheadings(); 
+
+    if(empty($arrHeadings)) $arrHeadings = webedit_getheadings();
 
     do {
         if(substr($strIdRedirect,0,1) == 'h') // Heading
         {
             $intIdRedirect = substr($strIdRedirect,1);
-            
+
             if(isset($arrHeadings['list'][$intIdRedirect]))
             {
                 if($arrHeadings['list'][$intIdRedirect]['content_type'] != 'article_redirect') return false; //heading non redirigé donc aps de rique de boucle
-                
+
                 if(in_array($arrHeadings['list'][$intIdRedirect]['linkedpage'], $arrRedirect)) return true; // boucle !!!
                 $strIdRedirect = $arrRedirect[] = $arrHeadings['list'][$intIdRedirect]['linkedpage'];
             }
@@ -1336,10 +1343,33 @@ function webedit_ctrl_infinite_loops_redirect($intIdHeading, $strIdRedirect, $ar
         }
         else // Article (donc Impossible d'avoir une boucle...)
             return false; // pas de boucle
-        
+
     } while(!empty($strIdRedirect));
-    
+
     return false; // pas de boucle
 }
 
+/**
+ * Retourne une liste "linéaire" de rubriques à partir du tableau tree/list
+ **/
+function webedit_headinglist2template(&$arrHeadings, &$arrShares, $template_body, $intSel = 0,  $intHeadingId = 0)
+{
+    if (isset($arrHeadings['tree'][$intHeadingId]))
+    {
+        foreach($arrHeadings['tree'][$intHeadingId] as $intId)
+        {
+            if (!$arrHeadings['list'][$intId]['private'] || isset($arrShares[$arrHeadings['list'][$intId]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$intId]['herited_private']])) // Rubrique non privée ou accessible par l'utilisateur
+            {
+                $template_body->assign_block_vars('switch_advanced_search.headings', array(
+                    'ID' => $intId,
+                    'LABEL' => htmlentities($arrHeadings['list'][$intId]['label']),
+                    'DEPTH' => $arrHeadings['list'][$intId]['depth'],
+                    'SELECTED' => $intSel == $intId ? 'selected="selected"' : ''
+                ));
+
+                webedit_headinglist2template($arrHeadings, $arrShares, $template_body, $intSel, $intId);
+            }
+        }
+    }
+}
 ?>

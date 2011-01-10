@@ -115,26 +115,8 @@ class webedit_article extends data_object
 
         if (empty($this->fields['timestp'])) $this->fields['timestp'] = ploopi_createtimestamp();
 
-        // Cas particulier des liens vers des documents (+ images) DIMS
-        /*preg_match_all('/"(\.\/index-quick\.php\?dims_url=([^\"]*))"/i' , $this->fields['content'], $matches);
-
-        if (!empty($matches[2]))
-        {
-            $arrReplace = array();
-            $arrSearch = array();
-
-            foreach($matches[2] as $key => $url)
-            {
-                $arrSearch[] = $matches[1][$key];
-                $arrReplace[] = 'index-quick.php?'.str_replace('dims_op', 'ploopi_op', ploopi_base64_decode($url));
-            }
-
-            $this->fields['content'] = str_replace($arrSearch, $arrReplace, $this->fields['content']);
-        }*/
-
-        
         $this->fields['content'] = preg_replace('/<span[^>]*contenteditable="false"[^>]*>\[\[(.*)\]\]<\/span>/i', '[[$1]]', $this->fields['content']);
-        
+
         $this->fields['content_cleaned'] = $this->fields['content'];
 
         // filtre activé ?
@@ -184,7 +166,7 @@ class webedit_article extends data_object
             $db->query("DELETE FROM ploopi_mod_webedit_article_backup WHERE id_article = {$this->fields['id']}");
             // suppression des commentaires
             $db->query("DELETE FROM ploopi_mod_webedit_article_comment WHERE id_article = {$this->fields['id']}");
-            
+
             // suppression de l'index
             ploopi_search_remove_index(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id']);
         }
@@ -264,7 +246,7 @@ class webedit_article extends data_object
 
         // Recherche des liens vers des documents (du module doc)
         preg_match_all('/index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32})/i', html_entity_decode($this->fields['content']), $arrMatches);
-        
+
         if (!empty($arrMatches[1]) && file_exists('./modules/doc/class_docfile.php'))
         {
             include_once './modules/doc/class_docfile.php';
@@ -289,7 +271,7 @@ class webedit_article extends data_object
                 }
             }
         }
-        
+
         // suppression des liens article-tags existants
         $sql = "DELETE FROM ploopi_mod_webedit_article_tag WHERE id_article = {$this->fields['id']}";
         $db->query($sql);
@@ -333,10 +315,10 @@ class webedit_article extends data_object
 
         $today = ploopi_createtimestamp();
         return (
-                    ($this->fields['timestp_published'] <= $today || empty($this->fields['timestp_published'])) &&
-                    ($this->fields['timestp_unpublished'] >= $today || empty($this->fields['timestp_unpublished'])) &&
-                    $heading->open($this->fields['id_heading'])
-                );
+            ($this->fields['timestp_published'] <= $today || empty($this->fields['timestp_published'])) &&
+            ($this->fields['timestp_unpublished'] >= $today || empty($this->fields['timestp_unpublished'])) &&
+            $heading->open($this->fields['id_heading'])
+        );
     }
 
     /**

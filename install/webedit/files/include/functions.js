@@ -64,6 +64,39 @@ function webedit_article_validate(form, article_type, article_status, validator)
 }
 
 
+function webedit_bloc_validate(form, article_type, article_status, validator)
+{
+    next = true;
+
+    if (article_type == 'draft')
+    {
+        if (form.webedit_article_status.value != article_status && form.webedit_article_status.value == 'wait' && !validator)
+        {
+            // confirm sending tickets on waiting validation
+            next = confirm('Cette action va envoyer\nune demande de publication\naux validateurs de cette rubrique\n\n tes-vous certain de vouloir continuer ?');
+        }
+    }
+
+    if (next)
+    {
+        if (article_status == 'wait') return true;
+        else
+        {
+            var fck_instance = FCKeditorAPI.GetInstance('fck_webedit_article_content');
+   
+            if (ploopi_validatefield('Identifiant', form.webedit_article_title, 'string'))
+            if (fck_instance.GetData(true) == null || fck_instance.GetData(true) == '')
+            {
+                if (confirm("ATTENTION !! Cet article semble vide.\n\n Si vous l'enregistrez, vous perdrez tout son contenu\n\n tes-vous malgrÈ tout certain de vouloir enregistrer cet article ?")) return true;
+            }
+            else return true;
+        }
+    }
+
+    return false;
+}
+
+
 function webedit_article_keywordscomplete(kw)
 {
     var listekw = $('webedit_article_metakeywords').value;
@@ -76,13 +109,30 @@ function webedit_article_keywordscomplete(kw)
 }
 
 
-function webedit_backup_reload()
+function webedit_backup_reload(bloc)
+{
+    if (confirm("ATTENTION !! Cette opÈration va remplacer le contenu de l'article\n\n tes-vous certain de vouloir continuer ?"))
+    {
+        var content = ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_getbackup&backup_timestp='+$('article_backup').value+'&backup_id_article='+$('articleid').value);
+
+        var fck_instance = null;
+        
+        if (typeof(bloc) == 'undefined') bloc = false;
+        
+        if (bloc) fck_instance = FCKeditorAPI.GetInstance('fck_webedit_article_content');
+        else fck_instance = $('webedit_frame_editor').contentWindow.FCKeditorAPI.GetInstance('fck_webedit_article_content');
+        
+        fck_instance.SetData(content);
+    }
+}
+
+function webedit_bloc_backup_reload()
 {
     if (confirm("ATTENTION !! Cette opÈration va remplacer le contenu de l'article\n\n tes-vous certain de vouloir continuer ?"))
     {
         c = ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_getbackup&backup_timestp='+$('article_backup').value+'&backup_id_article='+$('articleid').value);
 
-        var fck_instance = $('webedit_frame_editor').contentWindow.FCKeditorAPI.GetInstance('fck_webedit_article_content');
+        var fck_instance = FCKeditorAPI.GetInstance('fck_webedit_article_content');
         fck_instance.SetData(c);
     }
 }

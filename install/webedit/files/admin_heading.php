@@ -86,17 +86,29 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
         <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cette rubrique" onclick="javascript:webedit_stats_open(null, <?php echo $heading->fields['id']; ?>, event);">
         <?php
     }
+    
+    if ($heading->fields['id_heading'] == 0) // racine
+    {
+        ?>
+        <img src="./modules/webedit/img/base.png">
+        <span style="font-weight:bold;">Modification de la racine &laquo; <?php echo $heading->fields['label']; ?> &raquo;</span>
+        <?
+    }
+    else
+    {
+        ?>
+        <img src="./modules/webedit/img/folder.png">
+        <span style="font-weight:bold;">Modification de la rubrique &laquo; <?php echo $heading->fields['label']; ?> &raquo;</span>
+        <?
+    }
     ?>
-
-    <img src="./modules/webedit/img/folder.png">
-    <span style="font-weight:bold;">Modification de la rubrique &laquo; <?php echo $heading->fields['label']; ?> &raquo;</span>
 </p>
 <div id="webedit_heading_toolbar">
     <?php
     if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || $booIsAllowedEdit)
     {
         ?>
-        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter un article" onclick="javascript:document.location.href='<?php echo "admin.php?op=article_addnew"; ?>';" >
+        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter un article" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=article_addnew"); ?>';" >
             <img src="./modules/webedit/img/doc_add.png">
             <span>Ajouter un article</span>
         </p>
@@ -107,7 +119,7 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
     if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
     {
         ?>
-        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une sous-rubrique" onclick="javascript:document.location.href='<?php echo "admin.php?op=heading_addnew"; ?>';" >
+        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une sous-rubrique" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=heading_addnew"); ?>';" >
             <img src="./modules/webedit/img/folder_add.png">
             <span>Ajouter une sous-rubrique</span>
         </p>
@@ -117,8 +129,8 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
     if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) && $heading->fields['depth'] == 1) // root (Interdit au rédacteur !)
     {
         ?>
-        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une racine" onclick="javascript:document.location.href='<?php echo "admin.php?op=heading_addroot"; ?>';" >
-            <img src="./modules/webedit/img/folder_add.png">
+        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une racine" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=heading_addroot"); ?>';" >
+            <img src="./modules/webedit/img/base_add.png">
             <span>Ajouter une racine</span>
         </p>
         <?php
@@ -128,7 +140,7 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
     if ((ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || ($booIsEditor && !$booEditorHeadingIdIsRoot)) && !($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1) )
     {
         ?>
-        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Supprimer cette rubrique" onclick="javascript:ploopi_confirmlink('<?php echo "admin.php?op=heading_delete"; ?>','<?php echo _PLOOPI_CONFIRM; ?>');" >
+        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Supprimer cette rubrique" onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=heading_delete"); ?>','<?php echo _PLOOPI_CONFIRM; ?>');" >
             <img src="./modules/webedit/img/folder_del.png">
             <span>Supprimer cette rubrique</span>
         </p>
@@ -814,7 +826,7 @@ if ($booIsAllowedEdit)
         if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || $booIsEditor)
         {
             ?>
-                <a style="float:right;text-decoration:none;" href="<?php echo "admin.php?op=article_addnew"; ?>">&nbsp;Ajouter un article</a>
+                <a style="float:right;text-decoration:none;" href="<?php echo ploopi_urlencode("admin.php?op=article_addnew"); ?>">&nbsp;Ajouter un article</a>
                 <img style="float:right;border:0px;" src="./modules/webedit/img/doc_add.png">
             <?php
         }
@@ -938,7 +950,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des a
 
             $subscribers_values[$c]['values']['actions'] =
                 array(
-                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonné\" alt=\"Supprimer\" onclick=\"javascript:ploopi_confirmlink('admin-light.php?ploopi_op=webedit_subscriber_delete&webedit_subscriber_email={$row['email']}&webedit_subscriber_id_heading={$row['id_heading']}','Êtes-vous certain de vouloir supprimer cet abonné ?');\" src=\"./modules/webedit/img/ico_delete.gif\"></a>",
+                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonné\" alt=\"Supprimer\" onclick=\"javascript:ploopi_confirmlink('admin-light.php?ploopi_op=webedit_subscriber_delete&webedit_subscriber_email={$row['email']}&webedit_subscriber_id_heading={$row['id_heading']}','Êtes-vous certain de vouloir supprimer cet abonné ?');\" src=\"./modules/webedit/img/ico_trash.png\"></a>",
                     'style' => 'text-align:center;'
                 );
 
