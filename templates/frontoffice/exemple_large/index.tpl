@@ -107,6 +107,7 @@
                         <form name="form_search" method="post" action="{SITE_HOME}">
                         <input type="text" alt="recherche" id="recherche_field" name="query_string" value="{PAGE_QUERYSTRING}" class="text" />
                         <input type="submit" value="go" class="button" />
+                        <a href="./recherche.html">Recherche avancée</a>
                         </form>
                     </div>
 
@@ -171,6 +172,24 @@
                           </object>
                         </div>
                     </div>
+
+                    <!-- BEGIN bloc1 -->
+                    <div class="minibloc">
+                    {bloc1.CONTENT}
+                    </div>
+                    <!-- END bloc1 -->
+                    
+                    <!-- BEGIN bloc2 -->
+                    <div class="minibloc">
+                    {bloc2.CONTENT}
+                    </div>
+                    <!-- END bloc2 -->
+
+                    <!-- BEGIN bloc3 -->
+                    <div class="minibloc">
+                    {bloc3.CONTENT}
+                    </div>
+                    <!-- END bloc3 -->
                     
                     <!-- BEGIN switch_blog -->
                         <!-- BEGIN calendar -->
@@ -213,6 +232,59 @@
                 <!-- END switch_pages -->
 
                 <div id="pagecontent">
+                    <!-- BEGIN switch_advanced_search -->
+                        <h2>Recherche avancée</h2>
+
+                        <form id="form_advanced_search" method="post" action="./recherche.html">
+
+                            <div>
+                                <label for="query_string">Mot(s) recherché(s):</label>
+                                <br /><input type="text" alt="recherche" id="search_query_string" name="query_string" value="{PAGE_QUERYSTRING}" />
+                            </div>
+
+                            <div>
+                                <label for="query_content_type">Type de contenu:</label>
+                                <br />
+                                <select id="query_content_type" name="query_content_type">
+                                    <option value="all" {PAGE_QUERYCT_ALL_SELECTED}>Tout</option>
+                                    <option value="art" {PAGE_QUERYCT_ART_SELECTED}>Articles</option>
+                                    <option value="doc" {PAGE_QUERYCT_DOC_SELECTED}>Documents</option>
+                                </select>
+                            </div>
+
+                            <div id="query_mime_type_div">
+                                <label for="query_mime_type">Type de document (extension):</label>
+                                <br /><input style="width:50px;" type="text" id="query_mime_type" name="query_mime_type" value="{PAGE_QUERYMT}" />
+                            </div>
+
+                            <script type="text/javascript">
+                                Event.observe(window, 'load', function() { $('query_mime_type_div').style.display = $('query_content_type').value == 'art' ? 'none' : 'block'; });
+                                Event.observe($('query_content_type'), 'change', function() { $('query_mime_type_div').style.display = this.value == 'art' ? 'none' : 'block'; });
+                            </script>
+
+                            <div>
+                                <label for="query_date_b">Date de publication:</label>
+                                <br /><input style="width:80px;" type="text" class="date" name="query_date_b" id="query_date_b" value="{PAGE_QUERYDATE_B}"/><a onclick="javascript:ploopi_xmlhttprequest_topopup(192, event, 'ploopi_popup_calendar', 'index-light.php?ploopi_op=calendar_open', 'selected_date='+$('query_date_b').value+'&amp;inputfield_id=query_date_b', 'POST', true);" href="javascript:void(0);"><img src="./img/calendar/calendar.gif"></a>
+                                <br /><input style="width:80px;" type="text" class="date" name="query_date_e" id="query_date_e" value="{PAGE_QUERYDATE_E}"/><a onclick="javascript:ploopi_xmlhttprequest_topopup(192, event, 'ploopi_popup_calendar', 'index-light.php?ploopi_op=calendar_open', 'selected_date='+$('query_date_e').value+'&amp;inputfield_id=query_date_e', 'POST', true);" href="javascript:void(0);"><img src="./img/calendar/calendar.gif"></a>
+                            </div>
+
+                            <div>
+                                <label for="query_heading_id">Rubrique:</label>
+                                <br />
+                                <select id="query_heading_id" name="query_heading_id">
+                                    <option value="">Toutes</option>
+                                    <!-- BEGIN headings -->
+                                    <option value="{switch_advanced_search.headings.ID}" class="search_headings_{switch_advanced_search.headings.DEPTH}" {switch_advanced_search.headings.SELECTED}>{switch_advanced_search.headings.LABEL}</option>
+                                    <!-- END headings -->
+                                </select>
+                            </div>
+
+                            <div>
+                                <button type="submit">Rechercher</button>
+                            </div>
+                        </form>
+                    <!-- END switch_advanced_search -->
+
                     <!-- BEGIN switch_search -->
                     <h2>Résultat de la recherche pour "{PAGE_QUERYSTRING}"</h2>
                     <div id="search_result">
@@ -316,9 +388,9 @@
                                         if (ploopi_validatefield('Nom', form.comment_nickname, 'string'))
                                         if (ploopi_validatefield('Email', form.comment_email, 'emptyemail'))
                                         if (ploopi_validatefield('Commentaire', form.comment_comment, 'string'))
-                                    	if (ploopi_validatefield('Code', form.captcha_code_{switch_content_page.sw_comment.IDCAPTCHA}, 'captcha', '{PAGE_URL_CONTROLCAPTCHA}', 'img_captcha_{switch_content_page.sw_comment.IDCAPTCHA}', '{PAGE_URL_UPDATECAPTCHA}'))
+                                        if (ploopi_validatefield('Code', form.captcha_code_{switch_content_page.sw_comment.IDCAPTCHA}, 'captcha', '{PAGE_URL_CONTROLCAPTCHA}', 'img_captcha_{switch_content_page.sw_comment.IDCAPTCHA}', '{PAGE_URL_UPDATECAPTCHA}'))
                                           return(true);
-                                        
+
                                         return(false);
                                     }
 
@@ -330,7 +402,7 @@
                     <!-- END switch_content_page -->
 
                     <!-- BEGIN switch_content_blog -->
-                        <!-- BEGIN article -->   
+                        <!-- BEGIN article -->
                             <span style="font-weight: bold; font-size: 18px;">{switch_content_blog.article.PAGE_TITLE}</span>
                             <!-- BEGIN switch_tags -->
                                 <p id="page_tags"><span>tags :</span>
@@ -339,7 +411,7 @@
                                     <!-- END tag -->
                                 </p>
                             <!-- END switch_tags -->
-                            <div style="clear:both;"> 
+                            <div style="clear:both;">
                             {switch_content_blog.article.PAGE_CONTENT}
                             </div>
                             <div style="clear: both; font-size: 9px; padding: 5px 20px 0 0; text-align: center;">
@@ -377,7 +449,7 @@
                             <div style="clear: both;"><hr/></div>
                             <!-- END sw_separator -->
                         <!-- END article -->
-                        
+
                         <div style="overflow: hidden; clear: both;">
                             <!-- BEGIN page_after -->
                             <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_after.URL}'; return false;" style="float: right; padding: 10px 10px 0 0;">pages suivantes&nbsp;&gt;&gt;</a>
@@ -385,7 +457,7 @@
                             <!-- BEGIN page_before -->
                             <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_before.URL}'; return false;" style="float: left; padding: 10px 0 0 0;">&lt;&lt;&nbsp;pages précédentes</a>
                             <!-- END page_before -->
-                        </div>    
+                        </div>
                     <!-- END switch_content_blog -->
 
                     <!-- BEGIN switch_content_message -->
@@ -615,7 +687,7 @@
 
         <div id="footer">
             Designed by <a href="http://andreasviklund.com">Andreas Viklund</a> & <a href="http://netlor.fr">netlor</a> // Powered by <a href="http://www.ploopi.fr">PLOOPI</a> // <a href="admin.php">Online Management</a>
-		    <br />[ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko | mem: <PLOOPI_PHP_MEMORY> ko ]
+            <br />[ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko | mem: <PLOOPI_PHP_MEMORY> ko ]
         </div>
 
     </div>

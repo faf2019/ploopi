@@ -62,7 +62,7 @@
             <!-- END heading1 -->
         <!-- END root1 -->
     </div>
-    
+
     <h3>Dernière mise à jour:</h3>
     <p>{LASTUPDATE_DATE} à {LASTUPDATE_TIME}</p>
 </div>
@@ -73,6 +73,7 @@
         <input type="text" alt="recherche" id="recherche_field" name="query_string" value="{PAGE_QUERYSTRING}" class="text" style="width:75%" />
         <input type="submit" value="go" class="button" style="width:20%" />
     </form>
+                        <a href="./recherche.html">Recherche avancée</a>
 
     <!-- BEGIN switch_subscription -->
         <h2>Abonnement</h2>
@@ -91,18 +92,18 @@
             </form>
     <!-- END switch_subscription -->
     <!-- BEGIN switch_newsletter_subscription -->
-		<div class="minibloc">
-		    <h2>Abonnement NewsLetter</h2>
-		    <!-- BEGIN switch_response -->
-		    <div style="padding-bottom:4px;"><strong>{switch_newsletter_subscription.switch_response.CONTENT}</strong></div>
-		    <!-- END switch_response -->
-		    <form method="post" action="{switch_newsletter_subscription.ACTION}">
-		        <div>
-		            <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="subscription_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" style="width:75%" />
-		            <input type="submit" title="Bouton pour valider l'inscription" class="button" value="go" style="width:20%" />
-		        </div>
-		    </form>
-		</div>
+        <div class="minibloc">
+            <h2>Abonnement NewsLetter</h2>
+            <!-- BEGIN switch_response -->
+            <div style="padding-bottom:4px;"><strong>{switch_newsletter_subscription.switch_response.CONTENT}</strong></div>
+            <!-- END switch_response -->
+            <form method="post" action="{switch_newsletter_subscription.ACTION}">
+                <div>
+                    <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="subscription_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" style="width:75%" />
+                    <input type="submit" title="Bouton pour valider l'inscription" class="button" value="go" style="width:20%" />
+                </div>
+            </form>
+        </div>
     <!-- END switch_newsletter_subscription -->
 
     <!-- BEGIN switch_pages -->
@@ -120,14 +121,35 @@
             <a href="{tagcloud.LINK}" class="{tagcloud.SELECTED}" title="Afficher les articles contenant le tag &laquo; {tagcloud.TAG} &raquo;" style="font-size:{tagcloud.SIZE}%;">{tagcloud.TAG}<sup>{tagcloud.OCCURENCE}</sup></a>
         <!-- END tagcloud -->
     </div>
+    
+    <!-- BEGIN bloc1 -->
+    <h2>Exemple de bloc1</h2>
+    <div>
+    {bloc1.CONTENT}
+    </div>
+    <!-- END bloc1 -->
+    
+    <!-- BEGIN bloc2 -->
+    <h2>Exemple de bloc2</h2>
+    <div>
+    {bloc2.CONTENT}
+    </div>
+    <!-- END bloc2 -->
 
+    <!-- BEGIN bloc3 -->
+    <h2>Exemple de bloc3</h2>
+    <div>
+    {bloc3.CONTENT}
+    </div>
+    <!-- END bloc3 -->
+                    
     <!-- BEGIN switch_blog -->
         <!-- BEGIN calendar -->
         {switch_blog.calendar.CONTENT}
         <!-- END calendar -->
         <br/>
         <!-- BEGIN archive -->
-        <ul>        
+        <ul>
             <h2>{switch_blog.archive.YEAR}</h2>
             <!-- BEGIN month -->
             <li><a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_blog.archive.month.URL}'; return false;" class="row_archives">{switch_blog.archive.month.MONTH_LETTER} ({switch_blog.archive.month.NBART})</a></li>
@@ -210,7 +232,7 @@
                         if (ploopi_validatefield('Commentaire', form.comment_comment, 'string'))
                         if (ploopi_validatefield('Code', form.captcha_code_{switch_content_page.sw_comment.IDCAPTCHA}, 'captcha', '{PAGE_URL_CONTROLCAPTCHA}', 'img_captcha_{switch_content_page.sw_comment.IDCAPTCHA}', '{PAGE_URL_UPDATECAPTCHA}'))
                           return(true);
-                        
+
                         return(false);
                     }
 
@@ -220,7 +242,7 @@
             </div>
         <!-- END sw_comment -->
     <!-- END switch_content_page -->
-    
+
     <!-- BEGIN switch_content_blog -->
         <!-- BEGIN article -->
             <h1>{switch_content_blog.article.PAGE_TITLE}</h1>
@@ -261,7 +283,7 @@
                 <div style="clear: both;"><hr/></div>
             <!-- END sw_separator -->
         <!-- END article -->
-        
+
         <div style="overflow: hidden; clear: both;">
             <!-- BEGIN page_after -->
             <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_after.URL}'; return false;" style="float: right; padding: 10px 10px 0 0;">pages suivantes&nbsp;&gt;&gt;</a>
@@ -269,7 +291,7 @@
             <!-- BEGIN page_before -->
             <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_before.URL}'; return false;" style="float: left; padding: 10px 0 0 0;">&lt;&lt;&nbsp;pages précédentes</a>
             <!-- END page_before -->
-        </div>    
+        </div>
     <!-- END switch_content_blog -->
 
     <!-- BEGIN switch_content_message -->
@@ -281,6 +303,60 @@
         <h1>Erreur {PAGE_ERROR_CODE}</h1>
         <h2>Cette page n'existe pas</h2>
     <!-- END switch_content_error -->
+
+
+    <!-- BEGIN switch_advanced_search -->
+        <h2>Recherche avancée</h2>
+
+        <form id="form_advanced_search" method="post" action="./recherche.html">
+
+            <div>
+                <label for="query_string">Mot(s) recherché(s):</label>
+                <br /><input type="text" alt="recherche" id="search_query_string" name="query_string" value="{PAGE_QUERYSTRING}" />
+            </div>
+
+            <div>
+                <label for="query_content_type">Type de contenu:</label>
+                <br />
+                <select id="query_content_type" name="query_content_type">
+                    <option value="all" {PAGE_QUERYCT_ALL_SELECTED}>Tout</option>
+                    <option value="art" {PAGE_QUERYCT_ART_SELECTED}>Articles</option>
+                    <option value="doc" {PAGE_QUERYCT_DOC_SELECTED}>Documents</option>
+                </select>
+            </div>
+
+            <div id="query_mime_type_div">
+                <label for="query_mime_type">Type de document (extension):</label>
+                <br /><input style="width:50px;" type="text" id="query_mime_type" name="query_mime_type" value="{PAGE_QUERYMT}" />
+            </div>
+
+            <script type="text/javascript">
+                Event.observe(window, 'load', function() { $('query_mime_type_div').style.display = $('query_content_type').value == 'art' ? 'none' : 'block'; });
+                Event.observe($('query_content_type'), 'change', function() { $('query_mime_type_div').style.display = this.value == 'art' ? 'none' : 'block'; });
+            </script>
+
+            <div>
+                <label for="query_date_b">Date de publication:</label>
+                <br /><input style="width:80px;" type="text" class="date" name="query_date_b" id="query_date_b" value="{PAGE_QUERYDATE_B}"/><a onclick="javascript:ploopi_xmlhttprequest_topopup(192, event, 'ploopi_popup_calendar', 'index-light.php?ploopi_op=calendar_open', 'selected_date='+$('query_date_b').value+'&amp;inputfield_id=query_date_b', 'POST', true);" href="javascript:void(0);"><img src="./img/calendar/calendar.gif"></a>
+                <br /><input style="width:80px;" type="text" class="date" name="query_date_e" id="query_date_e" value="{PAGE_QUERYDATE_E}"/><a onclick="javascript:ploopi_xmlhttprequest_topopup(192, event, 'ploopi_popup_calendar', 'index-light.php?ploopi_op=calendar_open', 'selected_date='+$('query_date_e').value+'&amp;inputfield_id=query_date_e', 'POST', true);" href="javascript:void(0);"><img src="./img/calendar/calendar.gif"></a>
+            </div>
+
+            <div>
+                <label for="query_heading_id">Rubrique:</label>
+                <br />
+                <select id="query_heading_id" name="query_heading_id">
+                    <option value="">Toutes</option>
+                    <!-- BEGIN headings -->
+                    <option value="{switch_advanced_search.headings.ID}" class="search_headings_{switch_advanced_search.headings.DEPTH}" {switch_advanced_search.headings.SELECTED}>{switch_advanced_search.headings.LABEL}</option>
+                    <!-- END headings -->
+                </select>
+            </div>
+
+            <div>
+                <button type="submit">Rechercher</button>
+            </div>
+        </form>
+    <!-- END switch_advanced_search -->
 
     <!-- BEGIN switch_search -->
         <h1>Résultat de la recherche</h1>
@@ -365,7 +441,7 @@
         </div>
     <!-- END switch_content_sitemap -->
 
-          
+
     <h3>Informations sur le site</h3>
     <p>&copy; 2008 <a href="#">{WORKSPACE_META_COPYRIGHT}</a> | Original design by <a href="http://andreasviklund.com/">Andreas Viklund</a> | Propulsé par <a href="http://www.ploopi.org" target="_blank">Ploopi</a></p>
 </div>

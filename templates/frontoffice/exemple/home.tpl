@@ -175,6 +175,24 @@
                         </div>
                     </div>
 
+                    <!-- BEGIN bloc1 -->
+                    <div class="minibloc">
+                    {bloc1.CONTENT}
+                    </div>
+                    <!-- END bloc1 -->
+                    
+                    <!-- BEGIN bloc2 -->
+                    <div class="minibloc">
+                    {bloc2.CONTENT}
+                    </div>
+                    <!-- END bloc2 -->
+
+                    <!-- BEGIN bloc3 -->
+                    <div class="minibloc">
+                    {bloc3.CONTENT}
+                    </div>
+                    <!-- END bloc3 -->
+
                     <!-- BEGIN switch_blog -->
                         <!-- BEGIN calendar -->
                         {switch_blog.calendar.CONTENT}

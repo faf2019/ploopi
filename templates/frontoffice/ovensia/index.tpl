@@ -120,7 +120,8 @@
                                     <input type="text" title="Champ de recherche" alt="Champ de recherche" class="text" name="query_string" value="{PAGE_QUERYSTRING}" onfocus="javascript:this.value='';" />
                                     <input type="submit" title="Bouton pour valider la recherche" class="button" value="go" />
                                 </div>
-                            </fieldset>
+                                <a href="./recherche.html">Recherche avancée</a>
+                           </fieldset>
                         </form>
                     </div>
 
@@ -185,9 +186,73 @@
                          </marquee>
                     </div>
 
+                    <!-- BEGIN bloc1 -->
+                    <img class="box_bg" src="{TEMPLATE_PATH}/gfx/box.png" alt="bloc1" title="bloc1" />
+                    <div class="box">
+                        <h1>Exemple de bloc1</h1>
+                        <marquee behavior="scroll" direction="up" width="100%" scrollamount="2"  scrolldelay="70" onmouseover="javascript:this.stop();" onmouseout="javascript:this.start();">
+                        {bloc1.CONTENT}
+                        </marquee>
+                    </div>
+                    <!-- END bloc1 -->
+             
+
                 </div>
 
                 <div id="page_content">
+                    <!-- BEGIN switch_advanced_search -->
+                        <h2>Recherche avancée</h2>
+
+                        <form id="form_advanced_search" method="post" action="./recherche.html">
+
+                            <div>
+                                <label for="query_string">Mot(s) recherché(s):</label>
+                                <br /><input type="text" alt="recherche" id="search_query_string" name="query_string" value="{PAGE_QUERYSTRING}" />
+                            </div>
+
+                            <div>
+                                <label for="query_content_type">Type de contenu:</label>
+                                <br />
+                                <select id="query_content_type" name="query_content_type">
+                                    <option value="all" {PAGE_QUERYCT_ALL_SELECTED}>Tout</option>
+                                    <option value="art" {PAGE_QUERYCT_ART_SELECTED}>Articles</option>
+                                    <option value="doc" {PAGE_QUERYCT_DOC_SELECTED}>Documents</option>
+                                </select>
+                            </div>
+
+                            <div id="query_mime_type_div">
+                                <label for="query_mime_type">Type de document (extension):</label>
+                                <br /><input style="width:50px;" type="text" id="query_mime_type" name="query_mime_type" value="{PAGE_QUERYMT}" />
+                            </div>
+
+                            <script type="text/javascript">
+                                Event.observe(window, 'load', function() { $('query_mime_type_div').style.display = $('query_content_type').value == 'art' ? 'none' : 'block'; });
+                                Event.observe($('query_content_type'), 'change', function() { $('query_mime_type_div').style.display = this.value == 'art' ? 'none' : 'block'; });
+                            </script>
+
+                            <div>
+                                <label for="query_date_b">Date de publication:</label>
+                                <br /><input style="width:80px;" type="text" class="date" name="query_date_b" id="query_date_b" value="{PAGE_QUERYDATE_B}"/><a onclick="javascript:ploopi_xmlhttprequest_topopup(192, event, 'ploopi_popup_calendar', 'index-light.php?ploopi_op=calendar_open', 'selected_date='+$('query_date_b').value+'&amp;inputfield_id=query_date_b', 'POST', true);" href="javascript:void(0);"><img src="./img/calendar/calendar.gif"></a>
+                                <br /><input style="width:80px;" type="text" class="date" name="query_date_e" id="query_date_e" value="{PAGE_QUERYDATE_E}"/><a onclick="javascript:ploopi_xmlhttprequest_topopup(192, event, 'ploopi_popup_calendar', 'index-light.php?ploopi_op=calendar_open', 'selected_date='+$('query_date_e').value+'&amp;inputfield_id=query_date_e', 'POST', true);" href="javascript:void(0);"><img src="./img/calendar/calendar.gif"></a>
+                            </div>
+
+                            <div>
+                                <label for="query_heading_id">Rubrique:</label>
+                                <br />
+                                <select id="query_heading_id" name="query_heading_id">
+                                    <option value="">Toutes</option>
+                                    <!-- BEGIN headings -->
+                                    <option value="{switch_advanced_search.headings.ID}" class="search_headings_{switch_advanced_search.headings.DEPTH}" {switch_advanced_search.headings.SELECTED}>{switch_advanced_search.headings.LABEL}</option>
+                                    <!-- END headings -->
+                                </select>
+                            </div>
+
+                            <div>
+                                <button type="submit">Rechercher</button>
+                            </div>
+                        </form>
+                    <!-- END switch_advanced_search -->
+
                     <!-- BEGIN switch_search -->
                     <h1>Résultat de la recherche pour "{PAGE_QUERYSTRING}"</h1>
                     <div id="search_result">
@@ -326,7 +391,7 @@
     Réalisation <a href="http://www.ovensia.fr" title="Aller sur le site ovensia.fr"><strong>Ovensia</strong></a> &#149; Template <a href="http://www.ovensia.fr" title="Aller sur le site ovensia.fr"><strong>Ovensia</strong></a> &#149; Propulsé par <strong>PLOOPI</strong>&nbsp;&nbsp;
     <div id="execinfo">
         Ce site est valide <a href="http://validator.w3.org/check?uri=referer" title="Vérifier la validité XHTML 1.0 strict"><strong>XHTML 1.0 strict</strong></a>, <a href="http://jigsaw.w3.org/css-validator/check/referer" title="Vérifier la validité CSS"><strong>CSS 2</strong></a>, <a href="http://www.ocawa.com/autotest/validate.php" title="Page testée par Ocawa, testez cette page sur le site ocawa"><strong>ADAE argent</strong> / <strong>WCAG 1.0 Niv3</strong></a>&nbsp;&nbsp;
-		<br />[ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko | mem: <PLOOPI_PHP_MEMORY> ko ]&nbsp;&nbsp;
+        <br />[ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko | mem: <PLOOPI_PHP_MEMORY> ko ]&nbsp;&nbsp;
     </div>
     </div>
 
