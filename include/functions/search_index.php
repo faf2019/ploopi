@@ -490,6 +490,8 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
         }
     }
 
+    if (empty($arrKeywords)) $arrKeywords[''] = 1;
+
     // pour chaque mot, on cherche les occurences d'éléments correspondants
     foreach($arrKeywords as $kw => $occ)
     {
@@ -535,6 +537,7 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
 
             $arrRelevance[$id]['kw'][$kw] = 1;
         }
+
 
         // recherche dans les annotation de l'utilisateur (considéré comme meta ?)
         $sql =  "
