@@ -117,8 +117,6 @@ $arrHeadings = webedit_getheadings();
 // récupération des partages (mode connecté uniquement)
 $arrShares = webedit_getshare();
 
-//ploopi_print_r($arrHeadings);
-
 if ($query_string != '') // Recherche intégrale
 {
     $headingid = $arrHeadings['tree'][0][0];
@@ -347,7 +345,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
 
     if (file_exists("./templates/frontoffice/{$template_name}/search.tpl")) $template_file = 'search.tpl';
 
-    if ($query_string != '')
+    if ($query_string != '' || true)
     {
         // Conversion des dates de recherche en timestamp
         $ts_date_b = empty($query_date_b) ? 0 : ploopi_local2timestamp($query_date_b);
@@ -372,7 +370,9 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                 "
                 SELECT      df.id_module_docfile,
                             df.md5id_docfile,
-                            a.id_heading
+                            a.id_heading,
+                            d.*
+
                 FROM        ploopi_mod_webedit_docfile df,
                             ploopi_mod_webedit_article a,
                             ploopi_mod_doc_file d
@@ -390,8 +390,6 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
 
             while ($row = $db->fetchrow())
             {
-                ploopi_print_r($row);
-                
                 if ($row['id_heading'] == 0 || !$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
                 {
                     // Recherche par rubrique, on contrôle l'id de la rubrique (et parents) du document avec la rubrique sélectionnée
@@ -478,7 +476,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
 
                 if ($objArticle->open($result['id_record']) && $objArticle->isenabled())
                 {
-                    // Controôle de la date de publication (au sens création de l'article)si renseignée dans la recherche
+                    // Contrôle de la date de publication (au sens création de l'article)si renseignée dans la recherche
                     if (($objArticle->fields['timestp'] >= $ts_date_b || empty($ts_date_b)) && ($objArticle->fields['timestp'] <= $ts_date_e || empty($ts_date_e)))
                     {
                         if (!$arrHeadings['list'][$objArticle->fields['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$objArticle->fields['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$objArticle->fields['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
@@ -508,7 +506,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                                     'TITLE_RAW' => $objArticle->fields['title'],
                                     'AUTHOR' => htmlentities($objArticle->fields['author']),
                                     'AUTHOR_RAW' => $objArticle->fields['author'],
-                                    'EXTRACT' => ploopi_highlight($cleaned_content, array_merge(array_keys($result['kw']), array_keys($result['stem']))),
+                                    'EXTRACT' => '', isset($kw['']) ? '' : ploopi_highlight($cleaned_content, array_merge(array_keys($result['kw']), array_keys($result['stem']))),
                                     'METATITLE' => htmlentities($objArticle->fields['metatitle']),
                                     'METATITLE_RAW' => $objArticle->fields['metatitle'],
                                     'METAKEYWORDS' => htmlentities($objArticle->fields['metakeywords']),

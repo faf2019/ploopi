@@ -1,3 +1,10 @@
+== Module WebEdit - version 2.4.0b ============================================
+
+2011-01-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug d'affichage lors de la recherche (affichage d'une variable pour débogage)
+* Possibilité de faire une recherche sans mot clé
+
 == Module WebEdit - version 2.4.0 ============================================
 
 2011-01-10  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
