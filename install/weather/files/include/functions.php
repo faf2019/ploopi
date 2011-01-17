@@ -33,7 +33,9 @@
 function get_city($nameCity)
 {
   if(empty($nameCity)) return 'Pas de nom de ville à rechercher.';
-
+  
+  $arrResult = array();
+  
   require_once 'HTTP/Request.php';
   require_once './include/classes/xml2array.php';
 
@@ -93,6 +95,7 @@ function get_city($nameCity)
   {
     $arrResult = sprintf("Erreur HTTP %s : %s",$res->getCode(),$res->getMessage());
   }
+  
   return $arrResult;
 }
 
