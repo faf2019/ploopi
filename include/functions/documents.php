@@ -318,7 +318,7 @@ function ploopi_documents_savefile($id_object, $id_record, $file, $filename, $id
 
         $documentsfile->setfile($file);
 
-        return $documentsfile->fields['id'];
+        return $documentsfile->save() ? null : $documentsfile->fields['id'];
     }
     else return false;
 }
