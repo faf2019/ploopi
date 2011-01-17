@@ -1,0 +1,2 @@
+ALTER TABLE `ploopi_mod_webedit_article` ADD `width` INT( 10 ) NOT NULL DEFAULT '0', ADD `height` INT( 10 ) NOT NULL DEFAULT '0';
+ALTER TABLE `ploopi_mod_webedit_article_draft` ADD `width` INT( 10 ) NOT NULL DEFAULT '0', ADD `height` INT( 10 ) NOT NULL DEFAULT '0';

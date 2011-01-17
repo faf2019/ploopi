@@ -310,6 +310,7 @@ switch($menu)
                     if (empty($_POST['articleid']) || !is_numeric($_POST['articleid']) || !$article->open($_POST['articleid']))
                     {
                         $strTypeTicket = 'new';
+                        $article->init_description();
                         $article->setuwm();
                         $article->fields['id_heading'] = 0; // Bloc
                     }
@@ -370,6 +371,8 @@ switch($menu)
                         }
                     }
 
+                    $articleid = $article->save();
+                    
                     // action "publier" et l'utilisateur est un validateur => OK
                     if (isset($_POST['publish']) && ($booWfVal || ploopi_isadmin()))
                     {
@@ -378,7 +381,6 @@ switch($menu)
                         ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_PUBLISH, $articleid);
                     }
                     
-                    $articleid = $article->save();
 
                     /* DEBUT ABONNEMENT (BACKOFFICE && FRONTOFFICE) */
 
@@ -495,6 +497,7 @@ switch($menu)
                         $strTypeTicket = 'new';
 
                         $article->setuwm();
+                        $article->init_description();
                         $select = "Select max(position) as maxpos from {$tablename} WHERE id_heading = {$headingid}";
                         $db->query($select);
                         $fields = $db->fetchrow();

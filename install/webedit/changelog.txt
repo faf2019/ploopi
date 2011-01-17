@@ -1,3 +1,11 @@
+== Module WebEdit - version 2.4.1 ============================================
+
+2011-01-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ajout des paramètres "largeur" et "hauteur" sur les blocs. Uniquement disponible pour l'administrateur "système".
+* Adaptation de l'éditeur de contenu à la largeur et la hauteur du bloc (si définies)
+* Correction d'un bug lors de la publication d'un nouveau bloc (nécessitait une 2e publication)
+
 == Module WebEdit - version 2.4.0b ============================================
 
 2011-01-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

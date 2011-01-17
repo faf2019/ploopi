@@ -213,6 +213,8 @@ class webedit_article extends data_object
             $article->fields['disabledfilter'] = $this->fields['disabledfilter'];
             $article->fields['headcontent'] = $this->fields['headcontent'];
             $article->fields['comments_allowed'] = $this->fields['comments_allowed'];
+            $article->fields['width'] = $this->fields['width'];
+            $article->fields['height'] = $this->fields['height'];
             $article->save();
 
             $this->index();

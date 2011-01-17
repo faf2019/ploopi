@@ -215,6 +215,30 @@ switch($op)
                     else echo '<span>'.htmlentities($article->fields['version'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
+                <p>
+                    <label>Largeur (px):</label>
+                    <?php
+                    if (ploopi_isadmin() && !$readonly)
+                    {
+                        ?>
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_width" value="<?php echo htmlentities($article->fields['width'], ENT_QUOTES); ?>" tabindex="6" />
+                        <?php
+                    }
+                    else echo '<span>'.htmlentities($article->fields['width'], ENT_QUOTES).'</span>';
+                    ?>
+                </p>
+                <p>
+                    <label>Hauteur (px):</label>
+                    <?php
+                    if (ploopi_isadmin() && !$readonly)
+                    {
+                        ?>
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_height" value="<?php echo htmlentities($article->fields['height'], ENT_QUOTES); ?>" tabindex="7" />
+                        <?php
+                    }
+                    else echo '<span>'.htmlentities($article->fields['height'], ENT_QUOTES).'</span>';
+                    ?>
+                </p>
                 <?php
                 if (!$readonly && $op == 'bloc_modify')
                 {
@@ -457,6 +481,7 @@ switch($op)
 </div>
 
 <div style="clear:both;">
+    <div id="xToolbar"></div>
     <?php
     if (!$readonly)
     {
@@ -464,11 +489,12 @@ switch($op)
 
         $arrConfig = array();
         $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/fckconfig_bloc.js';
-
+        $arrConfig['ToolbarLocation'] = 'Out:xToolbar';
+        
         $arrProperties = array();
         $arrProperties['ToolbarSet'] = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner' ? 'Beginner': 'Default';
 
-        ploopi_fckeditor('fck_webedit_article_content', $article->fields['content'], '100%', '500', $arrConfig, $arrProperties);
+        ploopi_fckeditor('fck_webedit_article_content', $article->fields['content'], $article->fields['width'] ? $article->fields['width'] : '100%', $article->fields['height'] ? $article->fields['height'] : '500px', $arrConfig, $arrProperties);
     }
     else
     {
