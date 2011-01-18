@@ -33,18 +33,18 @@
 $ploopi_access_script = 'index'; // index/admin/light/quick/webservice/backend
 
 if (isset($_SERVER['REDIRECT_STATUS']) && $_SERVER['REDIRECT_STATUS'] == '200')
-{ 
+{
     $booRewriteRuleFound = false;
-    
+
     // Attention ! $_SERVER['REQUEST_URI'] peut contenir une url complète avec le nom de domaine
-    $arrParsedURI = parse_url($_SERVER['REQUEST_URI']);
+    $arrParsedURI = @parse_url($_SERVER['REQUEST_URI']);
     $strRequestURI = $arrParsedURI['path'].(empty($arrParsedURI['query']) ? '' : "?{$arrParsedURI['query']}");
-    
+
     if (_PLOOPI_SELFPATH == '' || strpos($strRequestURI, _PLOOPI_SELFPATH) === 0) define('_PLOOPI_REQUEST_URI', substr($strRequestURI, strlen(_PLOOPI_SELFPATH) - strlen($strRequestURI)));
     else define('_PLOOPI_REQUEST_URI', $strRequestURI);
-    
-    $arrParsedURI = parse_url(_PLOOPI_REQUEST_URI);
-     
+
+    $arrParsedURI = @parse_url(_PLOOPI_REQUEST_URI);
+
     if (!empty($arrParsedURI['path']))
     {
         // robots.txt
@@ -91,12 +91,12 @@ if (isset($_SERVER['REDIRECT_STATUS']) && $_SERVER['REDIRECT_STATUS'] == '200')
         }
         closedir($rscFolder);
     }
-    
-    if (!$booRewriteRuleFound) 
+
+    if (!$booRewriteRuleFound)
     {
         ploopi_h404();
         ploopi_die('Page non trouvée');
-    }    
+    }
 }
 
 ?>
