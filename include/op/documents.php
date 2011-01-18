@@ -113,9 +113,9 @@ switch($ploopi_op)
             if ($documentsfile->open($_GET['documentsfile_id']))
             {
                 $attachement = true;
-    
+
                 if (isset($_GET['attachement']) && ($_GET['attachement'] == 0 || $_GET['attachement'] == 'false')) $attachement = false;
-    
+
                 if (file_exists($documentsfile->getfilepath())) ploopi_downloadfile($documentsfile->getfilepath(),$documentsfile->fields['name'], false, $attachement);
             }
         }
@@ -125,35 +125,38 @@ switch($ploopi_op)
     break;
 
     case 'documents_downloadfile_zip':
-        $zip_path = ploopi_documents_getpath()._PLOOPI_SEP.'zip';
-        if (!is_dir($zip_path)) mkdir($zip_path);
 
         if (!empty($_GET['documentsfile_id']))
         {
-            include_once './lib/pclzip/pclzip.lib.php';
             include_once './include/classes/documents.php';
 
             $documentsfile = new documentsfile();
             if ($documentsfile->open($_GET['documentsfile_id']))
             {
+
+                $tmpfoldername = md5(uniqid(rand(), true));
+                $zip_path = ploopi_documents_getpath()._PLOOPI_SEP.'zip'._PLOOPI_SEP.$tmpfoldername;
+                if (!is_dir($zip_path)) ploopi_makedir($zip_path);
+
                 if (file_exists($documentsfile->getfilepath()) && is_writeable($zip_path))
                 {
-                    // create a temporary file with the real name
-                    $tmpfilename = $zip_path._PLOOPI_SEP.$documentsfile->fields['name'];
-    
-                    copy($documentsfile->getfilepath(),$tmpfilename);
-    
-                    // create zip file
-                    $zip_filename = "archive_{$_GET['documentsfile_id']}.zip";
-                    echo $zip_filepath = $zip_path._PLOOPI_SEP.$zip_filename;
-                    $zip = new PclZip($zip_filepath);
-                    $zip->create($tmpfilename,PCLZIP_OPT_REMOVE_ALL_PATH);
-    
-                    // delete temporary file
-                    unlink($tmpfilename);
-    
-                    // download zip file
-                    ploopi_downloadfile($zip_filepath, $zip_filename, true);
+                    $zip_filename = $documentsfile->fields['name'].'.zip';
+
+                    $objZip = new ZipArchive();
+                    if ($objZip->open($zip_path._PLOOPI_SEP.$zip_filename, ZIPARCHIVE::CREATE) === TRUE)
+                    {
+                        $objZip->addFile($documentsfile->getfilepath(), '/'.$documentsfile->fields['name']);
+                        $objZip->close();
+                    }
+
+                    // Téléchargement du fichier zip
+                    ploopi_downloadfile($zip_path._PLOOPI_SEP.$zip_filename, $zip_filename, true, true, false);
+
+                    // Suppression du dossier temporaire
+                    if(isset($zip_path) && is_dir($zip_path)) ploopi_deletedir($zip_path);
+
+                    // Vidage buffer
+                    ploopi_die(null, true);
                 }
             }
         }
@@ -241,7 +244,7 @@ switch($ploopi_op)
                     <span>
                     <?php
                     include_once './lib/fckeditor/fckeditor.php' ;
-                    
+
                     $oFCKeditor = new FCKeditor('fck_documentsfolder_description') ;
 
                     $oFCKeditor->BasePath = './lib/fckeditor/';
