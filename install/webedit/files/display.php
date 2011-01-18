@@ -345,7 +345,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
 
     if (file_exists("./templates/frontoffice/{$template_name}/search.tpl")) $template_file = 'search.tpl';
 
-    if ($query_string != '' || true)
+    if ($query_string != '' || $query_date_b != '' || $query_date_e != '' || $query_content_type != '' || $query_mime_type != '' || $query_heading_id != '')
     {
         // Conversion des dates de recherche en timestamp
         $ts_date_b = empty($query_date_b) ? 0 : ploopi_local2timestamp($query_date_b);
@@ -356,7 +356,26 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
         // Recherche d'articles ?
         if ($query_content_type != 'doc')
         {
-            $arrRelevance += ploopi_search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, '', $_SESSION['ploopi']['moduleid']);
+            if ($query_heading_id != '')
+            {
+                // Liste des articles de la rubrique sélectionnée
+                $rs = $db->query("
+                    SELECT  a.id
+                    FROM    ploopi_mod_webedit_heading h1,
+                            ploopi_mod_webedit_heading h2,
+                            ploopi_mod_webedit_article a
+                    WHERE   h2.id = {$query_heading_id}
+                    AND     (h1.parents LIKE CONCAT(h2.parents, ';', h2.id, ';', '%') OR h1.id = h2.id)
+                    AND     a.id_heading = h1.id
+                ");
+
+                $arrQueryHeadingArticles = $db->getarray($rs, true);
+
+                if (!empty($arrQueryHeadingArticles)) $arrRelevance += ploopi_search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, $arrQueryHeadingArticles, $_SESSION['ploopi']['moduleid']);
+            }
+            else $arrRelevance += ploopi_search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, null, $_SESSION['ploopi']['moduleid']);
+
+            // ploopi_print_r($arrRelevance);
         }
 
         // Recherche de documents ?
