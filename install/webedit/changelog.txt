@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.3.3a ============================================
+
+2011-01-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction mineure sur la fonction webedit_getobjectcontent()
+
 == Module WebEdit - version 2.3.3 ============================================
 
 2010-11-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

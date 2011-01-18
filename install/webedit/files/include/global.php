@@ -796,7 +796,7 @@ function webedit_getobjectcontent($matches)
                     if (file_exists("./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php"))
                     {
                         include "./modules/{$obj['module_type']}/wce.php";
-                        $content .= ob_get_contents();
+                        $content = ob_get_contents();
                     }
                     else $content = "Objet WCE non trouvé";
                 }
