@@ -43,7 +43,7 @@ if (isset($_SERVER['REDIRECT_STATUS']) && $_SERVER['REDIRECT_STATUS'] == '200')
     if (_PLOOPI_SELFPATH == '' || strpos($strRequestURI, _PLOOPI_SELFPATH) === 0) define('_PLOOPI_REQUEST_URI', substr($strRequestURI, strlen(_PLOOPI_SELFPATH) - strlen($strRequestURI)));
     else define('_PLOOPI_REQUEST_URI', $strRequestURI);
     
-    $arrParsedURI = parse_url(_PLOOPI_REQUEST_URI);
+    $arrParsedURI = @parse_url(_PLOOPI_REQUEST_URI);
      
     if (!empty($arrParsedURI['path']))
     {
