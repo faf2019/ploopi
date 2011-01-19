@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.4.1d ============================================
+
+2011-01-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction sur la recherche avancée : le filtrage par type de document ne retourne plus les articles non concernés
+
 == Module WebEdit - version 2.4.1c ============================================
 
 2011-01-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

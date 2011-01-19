@@ -354,7 +354,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
         $template_body->assign_block_vars('switch_search', array());
 
         // Recherche d'articles ?
-        if ($query_content_type != 'doc')
+        if ($query_content_type != 'doc' && $query_mime_type == '')
         {
             if ($query_heading_id != '')
             {
