@@ -1178,8 +1178,7 @@ class formsForm extends data_object
 
                 $objForm->addField( new form_html('<h'.$objField->fields['separator_level'].' style="'.$strStyle.$objField->fields['style_form'].'">'.ploopi_nl2br(htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
             }
-
-            if ($objField->fields['option_formview'] && (!$objField->fields['option_adminonly'] || $booIsAdmin))
+            elseif ($objField->fields['option_formview'] && (!$objField->fields['option_adminonly'] || $booIsAdmin))
             {
                 if($objField->fields['captcha'])
                 {
