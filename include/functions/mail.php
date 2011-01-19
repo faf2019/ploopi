@@ -222,6 +222,162 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
 
 }
 
+
+/**
+ * Envoie un mail via un serveur SMTP. Gère les emetteurs multiples, les destinataires multiples, le CC multiple, le BCC multiple, le REPLYTO multiple, les pièces jointes, les messages au format HTML.
+ *
+ * @param mixed $from tableau indexé contenant les emetteurs, chaque emetteur est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+ * @param mixed $to tableau indexé contenant les destinataires, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+ * @param string $subject le sujet du message.
+ * @param string $message le contenu du message.
+ * @param array $params paramètres de connexion au serveur smtp ('host' => string, 'auth' => bool, 'username' => string, 'password' => string)
+ * @param mixed $cc tableau indexé contenant les destinataires en copie, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+ * @param mixed $bcc tableau indexé contenant les destinataires en copie cachée, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+ * @param mixed $replyto tableau indexé contenant les destinataires de la réponse, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+ * @param array $files tableau indexé de chemins vers des fichiers à joindre au message.
+ * @param boolean $html true si le message doit être envoyé au format HTML.
+ *
+ * @see ploopi_checkemail
+ * @see mail
+ */
+
+function ploopi_send_mail_smtp($from, $to, $subject, $message, $params = null, $cc = null, $bcc = null, $replyto = null, $files = null, $html = true)
+{
+    require_once 'Mail.php';
+    require_once 'Mail/mime.php';
+
+    $objMail = Mail::factory('smtp', array (
+        'host' => isset($params['host']) ? $params['host'] : 'localhost',
+        'auth' => isset($params['auth']) ? $params['auth'] : false,
+        'username' => isset($params['username']) ? $params['username'] : '',
+        'password' => isset($params['password']) ? $params['password'] : '',
+    ));
+
+    $str_to = '';
+    if (is_array($to))
+    {
+        foreach($to as $detail)
+        {
+            if (ploopi_checkemail($detail['address']))
+            {
+                if ($str_to != '') $str_to .= ', ';
+                $str_to .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
+            }
+        }
+    }
+    else
+    {
+        if (ploopi_checkemail($to)) $str_to = $to;
+    }
+
+    $str_from = '';
+    if (is_array($from))
+    {
+        foreach($from as $detail)
+        {
+            if (ploopi_checkemail($detail['address']))
+            {
+                if ($str_from != '') $str_from .= ', ';
+                $str_from .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
+            }
+        }
+    }
+    else
+    {
+        if (ploopi_checkemail($from)) $str_from = $from;
+    }
+
+    $str_cc = '';
+    if (isset($cc) && is_array($cc))
+    {
+        foreach($cc as $detail)
+        {
+            if (ploopi_checkemail($detail['address']))
+            {
+                if ($str_cc != '') $str_cc .= ', ';
+                $str_cc .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
+            }
+        }
+    }
+
+    $str_bcc = '';
+    if (isset($bcc) && is_array($bcc))
+    {
+        foreach($bcc as $detail)
+        {
+            if (ploopi_checkemail($detail['address']))
+            {
+                if ($str_bcc != '') $str_bcc .= ', ';
+                $str_bcc .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
+            }
+        }
+    }
+
+    $str_replyto = '';
+    if (is_array($replyto))
+    {
+        foreach($replyto as $detail)
+        {
+            if (ploopi_checkemail($detail['address']))
+            {
+                if ($str_replyto != '') $str_replyto .= ', ';
+                $str_replyto .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
+            }
+        }
+    }
+    else
+    {
+        if (ploopi_checkemail($replyto)) $str_replyto = $replyto;
+    }
+
+
+    if (empty($str_replyto)) $str_replyto = $str_from;
+
+
+    // Initialisation des headers
+    $arrHeaders = array();
+
+    $arrHeaders['From'] = $str_from;
+    $arrHeaders['To'] = $str_to;
+    $arrHeaders['Subject'] = mb_encode_mimeheader($subject);
+    $arrHeaders['Reply-to'] = $str_replyto;
+    $arrHeaders['Return-path'] =  $str_replyto;
+
+    if (!empty($str_cc)) $arrHeaders['Cc'] = $str_cc;
+    if (!empty($str_bcc)) $arrHeaders['Bcc'] = $str_bcc;
+
+    $arrHeaders['Date'] = date('r');
+    $arrHeaders['X-Priority'] = 1;
+    $arrHeaders['X-Sender'] = "<{$domain}>";
+    $arrHeaders['X-Mailer'] = 'PHP/Ploopi';
+
+    // Création du message
+    $objMessage = new Mail_mime();
+
+    // Intégration des pièces jointes
+    if (!empty($files))
+    {
+        foreach($files as $filename)
+        {
+            if (file_exists($filename) && is_readable($filename)) $objMessage->addAttachment($filename);
+        }
+    }
+
+    // Contenu du message
+    if ($html)
+    {
+        $objMessage->setHTMLBody('<html>'.$message.'</html>');
+        $objMessage->setTXTBody('Ce message est en HTML');
+    }
+    else $objMessage->setTXTBody(html_entity_decode(strip_tags($message)));
+
+
+    $mail = $objMail->send($str_to, $objMessage->headers($arrHeaders), $objMessage->get());
+
+    return PEAR::isError($mail);
+}
+
+
 /**
  * Génère une version HTML d'un tableau php multidimensionnel (formulaire par exemple)
  *
