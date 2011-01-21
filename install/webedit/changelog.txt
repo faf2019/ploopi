@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.4.1e ============================================
+
+2011-01-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug à l'enregistrement d'un nouvel article (l'article n'était pas associé au module et n'était pas retrouvé par la suite)
+
 == Module WebEdit - version 2.4.1d ============================================
 
 2011-01-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

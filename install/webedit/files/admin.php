@@ -496,8 +496,8 @@ switch($menu)
                     {
                         $strTypeTicket = 'new';
 
-                        $article->setuwm();
                         $article->init_description();
+                        $article->setuwm();
                         $select = "Select max(position) as maxpos from {$tablename} WHERE id_heading = {$headingid}";
                         $db->query($select);
                         $fields = $db->fetchrow();
