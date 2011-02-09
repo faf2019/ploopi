@@ -96,7 +96,7 @@ while($row = $db->fetchrow())
     $values[$c]['values']['actions']    = array('label' => $actions);
 
     $values[$c]['description'] = $row['description'];
-    $values[$c]['link'] = ploopi_urlencode("admin.php?op=modify_role&roleid={$row['id']}");
+    if ($row['id_workspace'] == $workspaceid) $values[$c]['link'] = ploopi_urlencode("admin.php?op=modify_role&roleid={$row['id']}");
     $c++;
 }
 
