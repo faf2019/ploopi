@@ -121,11 +121,11 @@ $arrOptions =
     
     <label style="margin-left:10px;">Entre le :</label>
     <input type="text" class="text" name="booking_event_from" id="booking_event_from" value="<? echo htmlentities($arrSearchPattern['booking_event_from']); ?>" style="width:70px;" />
-    <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('booking_event_from', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>
+    <?php ploopi_open_calendar('booking_event_from'); ?>
     
     <label>et le :</label>
     <input type="text" class="text" name="booking_event_to" id="booking_event_to" value="<? echo htmlentities($arrSearchPattern['booking_event_to']); ?>" style="width:70px;" />
-    <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('booking_event_to', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>
+    <?php ploopi_open_calendar('booking_event_to'); ?>
     
     <input type="submit" class="button" value="Filtrer" />
 </p>
