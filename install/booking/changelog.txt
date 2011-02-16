@@ -1,3 +1,10 @@
+== Module BOOKING - version 1.0.2a ====================================================
+
+2011-02-16  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'une erreur sur l'affichage du calendrier dans le suivi des demandes
+* Ré-intégration d'un fichier absent sur le dépôt
+
 == Module BOOKING - version 1.0.2 ====================================================
 
 2010-11-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
