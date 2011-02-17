@@ -134,11 +134,11 @@ if (ploopi_ismoduleallowed('weathertools'))
 						// on récupère le contenu du fichier
 						$strFileContent = $objRequest->getResponseBody();
 						
-						$arrStations = split("\n", $strFileContent);
+						$arrStations = preg_split("/\n/", $strFileContent);
 						
 						foreach($arrStations as $strStation)
 						{
-							$arrStationDetail = split(';', $strStation);
+							$arrStationDetail = preg_split('/;/', $strStation);
 							
 							$arrStationDetail = array_merge($arrStationDetail, array_fill(0, 14, 0));
 							

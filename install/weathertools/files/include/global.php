@@ -335,7 +335,7 @@ function weathertools_nad83_to_wgs84($nad83)
 	if ($nad83 == '') return '';
 	
 	// Extraction des composantes
-	$arrNad83 = split('-', substr($nad83, 0, -1));
+	$arrNad83 = preg_split('/-/', substr($nad83, 0, -1));
 	
 	// Conversion en wgs84
 	return ( intval($arrNad83[0], 10) + (intval($arrNad83[1], 10) * 60 + ( isset($arrNad83[2]) ?  intval($arrNad83[2], 10) : 0)) / 3600 ) * ( in_array(substr($nad83, -1), array('S', 'W')) ? -1 : 1 );
@@ -457,13 +457,13 @@ function weathertools_get_metar_file($url, $icao, $force = false)
 				$objWeatherCache->fields['zoneid'] = $icao;
 				$objWeatherCache->fields['rawcontent'] = $objRequest->getResponseBody();
 				$objWeatherCache->save();
-				return split("\n", $objWeatherCache->fields['rawcontent']);
+				return preg_split("/\n/", $objWeatherCache->fields['rawcontent']);
 			}
 		}	
 	}
 	else
 	{
-		return split("\n", $objWeatherCache->fields['rawcontent']);
+		return preg_split("/\n/", $objWeatherCache->fields['rawcontent']);
 	}
 		
 	return false;
