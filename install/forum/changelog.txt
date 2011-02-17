@@ -1,3 +1,9 @@
+== Module FORUM - version 1.0.7d ====================================================
+
+2011-02-17 ~ HeXad  <xavier@hexad.fr>
+
+ * Correction ereg/eregi/split et pointeurs en appel de fonction pour PHP 5.3.x
+
 == Module FORUM - version 1.0.7c ==================================================
 
 2009-09-14  Xavier Toussaint ~ HeXad <xavier@hexad.fr>

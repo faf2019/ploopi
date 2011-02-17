@@ -39,7 +39,7 @@
  * @param Array $arrInfo Info for "Order By" and "Limit"
  * @return Array $arrReturn with 'page' and 'id'
  */
-function forum_GetSubjectPage($intIdSubject,$arrInfo)
+function forum_GetSubjectPage($intIdSubject,&$arrInfo)
 {
   global $strForumSqlLimitGroupMess;
   global $db;
@@ -189,7 +189,7 @@ function forum_GetMessPage($intIdMess,$arrInfoGlb)
   $arrReturn['page'] = ceil($arrForumFields['intPage']/$arrInfo['limit']);
 
   // ok... now find the page of subject...
-  $arrSearchSubject = forum_GetSubjectPage($objForumMess->fields['id_subject'],&$arrInfoGlb['subject']);
+  $arrSearchSubject = forum_GetSubjectPage($objForumMess->fields['id_subject'],$arrInfoGlb['subject']);
   if($arrSearchSubject['page'] > 0)
     $arrReturn['page_subject'] = $arrSearchSubject['page'];
   else
