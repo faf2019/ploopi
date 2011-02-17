@@ -78,7 +78,7 @@ function get_city($nameCity)
 
       $objXML_R = new XMLReader();
       $objXML_R->XML($content);
-      get_part_city(&$objXML_R,&$arrResultTmp);
+      get_part_city($objXML_R,$arrResultTmp);
       if(is_array($arrResultTmp))
       {
         foreach($arrResultTmp as $data)
@@ -99,7 +99,7 @@ function get_city($nameCity)
   return $arrResult;
 }
 
-function get_part_city($objXML_R,$arrMyData)
+function get_part_city(&$objXML_R,&$arrMyData)
 {
   while($objXML_R->read())
   {
@@ -112,7 +112,7 @@ function get_part_city($objXML_R,$arrMyData)
           $node = $objXML_R->getAttribute("id");
 
           $arrMyData[$node] = $init;
-          get_part_city(&$objXML_R,&$arrMyData[$node]);
+          get_part_city($objXML_R,$arrMyData[$node]);
         }
       break;
       case XMLReader::TEXT:

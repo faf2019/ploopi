@@ -248,7 +248,7 @@ class weather extends data_object
               $this->objXML_R->XML($this->content);
 
               $this->arrData = array();
-              $this->get_part(&$this->arrData);
+              $this->get_part($this->arrData);
 
               $this->set_dateUpdate($this->arrData['cc']['lsup']);
               $this->set_textCity($this->arrData['cc']['obst']);
@@ -272,7 +272,7 @@ class weather extends data_object
         $this->objXML_R = new XMLReader();
         $this->objXML_R->XML($this->content);
         $this->arrData = array();
-        $this->get_part(&$this->arrData);
+        $this->get_part($this->arrData);
 
         $this->set_dateUpdate($this->arrData['cc']['lsup']);
         $this->set_textCity($this->arrData['cc']['obst']);
@@ -392,7 +392,7 @@ class weather extends data_object
     return $arrPrevisions;
   }
 
-  private function get_part($arrMyData)
+  private function get_part(&$arrMyData)
   {
     while($this->objXML_R->read())
     {
@@ -416,7 +416,7 @@ class weather extends data_object
               $node = str_replace('XML-NUM-','',$this->objXML_R->name).$this->objXML_R->getAttribute("d");
 
             $arrMyData[$node] = $init;
-            $this->Get_part(&$arrMyData[$node]);
+            $this->Get_part($arrMyData[$node]);
           }
         break;
         case XMLReader::TEXT:
