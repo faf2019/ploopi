@@ -531,7 +531,7 @@ function doc_gettreeview($arrFolder = array())
                 'id' => $fields['id'],
                 'label' => $fields['name'],
                 'description' => $fields['name'],
-                'parents' => split(';', $fields['parents']),
+                'parents' => preg_split('/;/', $fields['parents']),
                 'node_link' => '',
                 'node_onclick' => "ploopi_skin_treeview_shownode('{$fields['id']}', '".ploopi_queryencode("ploopi_op=doc_folder_detail&doc_folder_id={$fields['id']}")."', 'admin-light.php');",
                 'link' => ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$fields['id']}"),
@@ -576,7 +576,7 @@ function doc_getrewriterules()
  * @param int $intIdFolder Identifiant du dossier à afficher
  * @param string $strPath Chemin complet du dossier
  */
-function doc_fckexplorer_displayfolders($arrFolders, $intIdFolder = 0, $strPath = ' ')
+function doc_fckexplorer_displayfolders(&$arrFolders, $intIdFolder = 0, $strPath = ' ')
 {
     if (isset($arrFolders['tree'][$intIdFolder]))
     {
@@ -585,7 +585,7 @@ function doc_fckexplorer_displayfolders($arrFolders, $intIdFolder = 0, $strPath 
             ?>
             <option value="<?php echo $intIdChild; ?>" label="<?php echo $arrFolders['list'][$intIdChild]['name']; ?>"><?php echo htmlentities("{$strPath} / {$arrFolders['list'][$intIdChild]['name']}"); ?></option>
             <?php
-            doc_fckexplorer_displayfolders(&$arrFolders, $intIdChild, "{$strPath} / {$arrFolders['list'][$intIdChild]['name']}");
+            doc_fckexplorer_displayfolders($arrFolders, $intIdChild, "{$strPath} / {$arrFolders['list'][$intIdChild]['name']}");
         }
     }
 }

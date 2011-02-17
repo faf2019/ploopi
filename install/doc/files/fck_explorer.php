@@ -90,7 +90,7 @@ echo $skin->open_simplebloc();
         <optgroup label="<?php echo htmlentities($strModuleLabel); ?>"><?php echo htmlentities($strModuleLabel); ?></optgroup>
         <?php
         if (!$intDefaultFolder && isset($arrSubFolders['tree'][0][0])) $intDefaultFolder = $arrSubFolders['tree'][0][0];
-        doc_fckexplorer_displayfolders(&$arrSubFolders);
+        doc_fckexplorer_displayfolders($arrSubFolders);
     }
     ?>
     </select>

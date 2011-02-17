@@ -192,7 +192,7 @@ class docfolder extends data_object
         if ($this->fields['foldertype'] != 'private')
         {
             // on construit la liste des objets parents (y compris l'objet courant)
-            $arrFolderList = split(',', "{$this->fields['parents']},{$this->fields['id']}");
+            $arrFolderList = preg_split('/,/', "{$this->fields['parents']},{$this->fields['id']}");
 
             // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
             foreach ($arrFolderList as $intObjectId)

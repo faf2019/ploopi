@@ -1,3 +1,9 @@
+== Module DOC - version 4.6.4a ====================================================
+
+2011-02-17 ~ HeXad  <xavier@hexad.fr>
+
+* Correction ereg/eregi/split et pointeurs en appel de fonction pour PHP 5.3.x
+
 == Module DOC - version 4.6.4 ====================================================
 
 2010-09-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

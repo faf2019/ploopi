@@ -535,23 +535,23 @@ class docfile extends data_object
             {
                 if ($value!="")
                 {
-                    foreach(split("\n",$value) as $line)
+                    foreach(preg_split("/\n/",$value) as $line)
                     {
                         unset($meta_information);
 
                         switch($fields['ext'])
                         {
                             case 'pdf':
-                                ereg("([A-Za-z0-9_. ]*):(.*)", $value, $meta_information);
+                                preg_match("/([A-Za-z0-9_. ]*):(.*)/", $value, $meta_information);
                             break;
 
                             case 'jpg':
                             case 'jpeg':
-                                ereg("([A-Za-z0-9_. ]*) : (.*)", $value, $meta_information);
+                                preg_match("/([A-Za-z0-9_. ]*) : (.*)/", $value, $meta_information);
                             break;
 
                             default:
-                                if ($value != 'Metadata:') ereg("- ([A-Za-z0-9_. ]*): (.*)", $value, $meta_information);
+                                if ($value != 'Metadata:') preg_match("/- ([A-Za-z0-9_. ]*): (.*)/", $value, $meta_information);
                             break;
                         }
 
