@@ -524,14 +524,14 @@ function system_generate_htpasswd($login, $pass, $delete = false)
     {
         $handle = fopen('.htpasswd', 'w');
 
-        $array_content = split("\r\n", $content);
+        $array_content = preg_split("/\r\n/", $content);
 
         $array_pass = array();
         foreach($array_content as $line_content)
         {
             if (trim($line_content) != '')
             {
-                list($ht_login, $ht_pass) = split(":", $line_content);
+                list($ht_login, $ht_pass) = preg_split("/:/", $line_content);
                 $array_pass[$ht_login] = $ht_pass;
             }
         }

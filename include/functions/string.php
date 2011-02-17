@@ -433,7 +433,7 @@ function ploopi_color_hex2rgb($strHex)
 
 function ploopi_is_url($url)
 {
-    $urlregex = "^(https?)\:\/\/";
+    $urlregex = "/^(https?)\:\/\/";
 
     // USER AND PASS (optional)
     $urlregex .= "([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?";
@@ -451,9 +451,9 @@ function ploopi_is_url($url)
     $urlregex .= "(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?";
 
     // ANCHOR (optional)
-    $urlregex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?\$";
+    $urlregex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?\$/i";
 
-    return eregi($urlregex, $url) ? true : false;
+    return preg_match($urlregex, $url) ? true : false;
 }
 
 /**

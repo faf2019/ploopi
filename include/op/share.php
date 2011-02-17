@@ -100,7 +100,7 @@ switch($ploopi_op)
         if (isset($id_action) && !is_numeric($id_action)) $id_action = -1;
 
         // construction de la liste des groupes de travail et des groupes d'utilisateurs rattachés (pour l'utilisateur courant)
-        foreach (split(',',ploopi_viewworkspaces_inv()) as $grpid) // pour chaque groupe de travail
+        foreach (preg_split('/,/',ploopi_viewworkspaces_inv()) as $grpid) // pour chaque groupe de travail
         {
             if (isset($_SESSION['ploopi']['workspaces'][$grpid]))
             {

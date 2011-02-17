@@ -88,7 +88,7 @@ abstract class ploopi_sqlformat
                 case 't': // list string
                 case 'e': // list integer
                 case 'g': // list float
-                    $arrValues = is_array($mixValue) ? $mixValue : split(',', $mixValue);
+                    $arrValues = is_array($mixValue) ? $mixValue : preg_split('/,/', $mixValue);
                     $arrValues = ploopi_array_map('trim', $arrValues);
                     foreach($arrValues as &$strListValue)
                     {

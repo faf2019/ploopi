@@ -299,14 +299,14 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
 
 function ploopi_image_wordwrap($text, $width, $fontsize, $font)
 {
-    $arrTextLines = split ("\n", $text);
+    $arrTextLines = preg_split ("/\n/", $text);
     $arrLines = array();
     $intLineHeight = 0;
     $intTextWidth = 0;
 
     foreach($arrTextLines as $text)
     {
-        $arrWords = split (' ', $text);
+        $arrWords = preg_split ('/ /', $text);
         $strLine  = '';
 
         foreach ($arrWords as $strWord)

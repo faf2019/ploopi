@@ -180,7 +180,8 @@ class mimethumb
     public function setBorder($bgcolor)
     {
         // Contrôle si le format est #ad95af ou ff55bc ou transparent
-        $this->strBorderColor = (eregi('^#?[0-9a-f]{6}$',$bgcolor) || $bgcolor == 'transparent') ? $bgcolor : '';
+        //$this->strBorderColor = (eregi('^#?[0-9a-f]{6}$',$bgcolor) || $bgcolor == 'transparent') ? $bgcolor : '';
+        $this->strBorderColor = (preg_match('/^#?[0-9a-f]{6}$/i',$bgcolor) || $bgcolor == 'transparent') ? $bgcolor : '';
         // Ajoute le # si besoin
         if(substr($this->strBorderColor,0,1) != '#' && $this->strBorderColor != 'transparent') $this->strBorderColor = '#'.$this->strBorderColor;
         

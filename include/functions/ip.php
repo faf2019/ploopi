@@ -52,7 +52,7 @@ function ploopi_getip($wan_only = false)
 
     foreach($ip_list as $ip)
     {
-        if (ereg("^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$", $ip) && sprintf("%u",ip2long($ip)) != sprintf("%u",ip2long('255.255.255.255')))
+        if (preg_match("/^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/", $ip) && sprintf("%u",ip2long($ip)) != sprintf("%u",ip2long('255.255.255.255')))
         {
             if (
                     !$wan_only ||

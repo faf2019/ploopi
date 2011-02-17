@@ -127,7 +127,7 @@ else
         $module_type = new module_type();
         $module_type->open($_GET['idmoduletype']);
 
-        $critical_error = $module_type->update_description($xmlfile_desc, &$rapport);
+        $critical_error = $module_type->update_description($xmlfile_desc, $rapport);
 
         /*
         $testok = true;

@@ -234,7 +234,7 @@ if (isset($ploopi_op))
                 switch(_PLOOPI_DATEFORMAT)
                 {
                     case _PLOOPI_DATEFORMAT_US:
-                        if (ereg(_PLOOPI_DATEFORMAT_EREG_US, $_REQUEST['selected_date'], $regs))
+                        if (preg_match(_PLOOPI_DATEFORMAT_EREG_US, $_REQUEST['selected_date'], $regs))
                         {
                             $sel_day = $regs[3];
                             $sel_month = $regs[2];
@@ -246,7 +246,7 @@ if (isset($ploopi_op))
                     break;
 
                     case _PLOOPI_DATEFORMAT_FR:
-                        if (ereg(_PLOOPI_DATEFORMAT_EREG_FR, $_REQUEST['selected_date'], $regs))
+                        if (preg_match(_PLOOPI_DATEFORMAT_EREG_FR, $_REQUEST['selected_date'], $regs))
                         {
                             $sel_day = $regs[1];
                             $sel_month = $regs[2];

@@ -415,7 +415,7 @@ class module_type extends data_object
     {
     }
 
-    function update_description($xmlfile_desc, $rapport = array())
+    function update_description($xmlfile_desc, &$rapport = array())
     {
         include_once './include/classes/param.php';
         include_once './include/classes/mb.php';

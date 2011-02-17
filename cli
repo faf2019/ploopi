@@ -87,7 +87,7 @@ for ($i=1;$i<$argc;$i++)
         break;
     }
     
-    $arrArg = split('=', $argv[$i]);
+    $arrArg = preg_split('/=/', $argv[$i]);
     if (sizeof($arrArg) == 2) // argument valide
     {
         ${$arrArg[0]} = $arrArg[1];

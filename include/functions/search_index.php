@@ -183,7 +183,7 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
             fclose($handle);
         }
 
-        $_SESSION['ploopi']['commonwords'] = array_flip(split("[\n]", str_replace("\r",'',$filecontent)));
+        $_SESSION['ploopi']['commonwords'] = array_flip(preg_split("/[\n]/", str_replace("\r",'',$filecontent)));
     }
 
     if (empty($_SESSION['ploopi']['commonwords'])) $_SESSION['ploopi']['commonwords'] = array();
@@ -646,7 +646,7 @@ function ploopi_getwords($content, $usecommonwords = true, $getstem = false, $so
                 fclose($handle);
             }
 
-            $_SESSION['ploopi']['commonwords'] = array_flip(split("[\n]", str_replace("\r",'',$filecontent)));
+            $_SESSION['ploopi']['commonwords'] = array_flip(preg_split("/[\n]/", str_replace("\r",'',$filecontent)));
         }
         else $_SESSION['ploopi']['commonwords'] = array();
     }
@@ -733,7 +733,7 @@ function ploopi_highlight($content, $words, $snippet_length = 150, $snippet_num 
 
     $reg_strings = str_replace('@#@','|', $string);
     $stop_regs = "[][(){}[:blank:]=&?!&#%\$£*@+%:;,/\.'\"]";
-    $reg_strings = "({$stop_regs}{1}|^)({$reg_strings})()";
+    $reg_strings = "/({$stop_regs}{1}|^)({$reg_strings})()/i";
 
     $num_extracts = 0;
     $c = 0;
@@ -746,14 +746,14 @@ function ploopi_highlight($content, $words, $snippet_length = 150, $snippet_num 
     {
         while($num_extracts < $snippet_num && $extract_content = preg_replace("/([ ]{2,}|\n|\r|\r\n)/"," ",substr($content, $c*$snippet_length, $snippet_length)))
         {
-            if(eregi($reg_strings,$extract_content))
+            if(preg_match($reg_strings,$extract_content))
             {
-                $match_this_spot = eregi_replace($reg_strings,"\\1<\\2>\\3",$extract_content);
+                $match_this_spot = preg_replace($reg_strings,"\\1<\\2>\\3",$extract_content);
                 $first_bold_spot = strpos($match_this_spot,"<");
                 $first_bold_spot = max($first_bold_spot - round(($snippet_length/ 2),0), 0);
                 $extract_content = substr($extract_content,$first_bold_spot,$snippet_length);
 
-                $extract_content = @eregi_replace($reg_strings,"\\1<^#_>\\2</_#^>\\3",@eregi_replace($reg_strings,"\\1<^#_>\\2</_#^>\\3",$extract_content));
+                $extract_content = @preg_replace($reg_strings,"\\1<^#_>\\2</_#^>\\3",@preg_replace($reg_strings,"\\1<^#_>\\2</_#^>\\3",$extract_content));
                 $extract_content = str_replace("^#_","span class=\"$highlight_class\"",str_replace("_#^","span",$extract_content));
 
                 $extract .= " ...{$extract_content}... ";

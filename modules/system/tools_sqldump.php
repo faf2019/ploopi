@@ -70,7 +70,7 @@ function system_get_table_def($fp, $db, $table, $crlf)
             $schema_create .= " {$row['Extra']}";
         $schema_create .= ",{$crlf}";
     }
-    $schema_create = ereg_replace(",".$crlf."$", "", $schema_create);
+    $schema_create = preg_replace("/,".$crlf."$/", "", $schema_create);
     //$result = mysql_db_query($db, "SHOW KEYS FROM $table") or mysql_ploopi_die();
     $result = $db->query("SHOW KEYS FROM {$table}");
     while($row = $db->fetchrow($result))
@@ -132,7 +132,7 @@ function system_get_table_content($fp, $db, $table, $crlf)
             else
                 $schema_insert .= " '',";
         }
-        $schema_insert = ereg_replace(",$", "", $schema_insert);
+        $schema_insert = preg_replace("/,$/", "", $schema_insert);
         $schema_insert .= ")";
         fwrite ($fp, htmlspecialchars(trim($schema_insert).";{$crlf}"));
         $i++;

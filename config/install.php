@@ -765,7 +765,7 @@ if($_POST['stage']>=$stage)
   {
       include_once './config/install/install_'.$_SESSION['install']['<DB_TYPE>'].'.inc.php';
       //ALL DATABASE TESTS
-      ploopi_Test_Database(&$arrInstallInfos,$intInstallInfos,$arrInstallRequestDB);
+      ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallRequestDB);
   }
   else
   {
@@ -794,7 +794,7 @@ if($_POST['stage']>=$stage)
   {
     include_once './config/install/install_ploopi.inc.php';
     // Create Site
-    if(ploopi_create_site(&$arrInstallInfos))
+    if(ploopi_create_site($arrInstallInfos))
     {
       // End Message
       $objInstallTemplate->assign_block_vars("stage$stage",array('TEXT' => _PLOOPI_INSTALL_END_OK));

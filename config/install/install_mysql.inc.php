@@ -39,7 +39,7 @@
  * @param array $arrInstallRequestDB
  * @return true/false
  */
-function ploopi_Test_Database($arrInstallInfos,$intInstallInfos,$arrInstallRequestDB)
+function ploopi_Test_Database(&$arrInstallInfos,$intInstallInfos,$arrInstallRequestDB)
 {
   //Connect to server (Not connected to database !!!)
   try {

@@ -60,11 +60,11 @@ function ploopi_dateverify($mydate)
     switch(_PLOOPI_DATEFORMAT)
     {
         case _PLOOPI_DATEFORMAT_FR:
-            return (ereg(_PLOOPI_DATEFORMAT_EREG_FR, $mydate, $regs) !== false);
+            return (preg_match(_PLOOPI_DATEFORMAT_EREG_FR, $mydate, $regs) !== false);
         break;
 
         case _PLOOPI_DATEFORMAT_US:
-            return (ereg(_PLOOPI_DATEFORMAT_EREG_US, $mydate, $regs) !== false);
+            return (preg_match(_PLOOPI_DATEFORMAT_EREG_US, $mydate, $regs) !== false);
         break;
 
         default:
@@ -80,7 +80,7 @@ function ploopi_dateverify($mydate)
  * @return boolean true si le format de l'heure est valide
  */
 
-function ploopi_timeverify($mytime) {return (ereg(_PLOOPI_TIMEFORMAT_EREG, $mytime, $regs) !== false);}
+function ploopi_timeverify($mytime) {return (preg_match(_PLOOPI_TIMEFORMAT_EREG, $mytime, $regs) !== false);}
 
 /**
  * Renvoie le détail d'un timestamp au format MYSQL (AAAAMMJJhhmmss) sous forme d'un tableau
@@ -97,7 +97,8 @@ function ploopi_timeverify($mytime) {return (ereg(_PLOOPI_TIMEFORMAT_EREG, $myti
 
 function ploopi_gettimestampdetail($mytimestamp)
 {
-    ereg(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $mytimestamp, $regs);
+    // ereg(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $mytimestamp, $regs);
+    preg_match(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $mytimestamp, $regs);
     return $regs;
 }
 
@@ -167,7 +168,7 @@ function ploopi_timestamp2local($mytimestamp)
 
     // Exploding MySQL timestamp into human readable values
     $timestamparray = ploopi_gettimestampdetail($mytimestamp);
-
+//ploopi_print_json($timestamparray);
     $year = $timestamparray[_PLOOPI_DATE_YEAR];
     $month = $timestamparray[_PLOOPI_DATE_MONTH];
     $day = $timestamparray[_PLOOPI_DATE_DAY];
@@ -214,16 +215,16 @@ function ploopi_local2timestamp($mydate,$mytime = '00:00:00')
     // verify local format
     if (ploopi_dateverify($mydate))// && ploopi_timeverify($mytime))
     {
-        ereg(_PLOOPI_TIMEFORMAT_EREG, $mytime, $timeregs);
+        preg_match(_PLOOPI_TIMEFORMAT_EREG, $mytime, $timeregs);
         switch(_PLOOPI_DATEFORMAT)
         {
             CASE _PLOOPI_DATEFORMAT_FR:
-                ereg(_PLOOPI_DATEFORMAT_EREG_FR, $mydate, $dateregs);
+                preg_match(_PLOOPI_DATEFORMAT_EREG_FR, $mydate, $dateregs);
                 if ($dateregs[3]<100) $dateregs[3]+=2000;
                 $mydatetime = date(_PLOOPI_TIMESTAMPFORMAT_MYSQL, mktime($timeregs[1],$timeregs[2],$timeregs[3],$dateregs[2],$dateregs[1],$dateregs[3]));
             BREAK;
             CASE _PLOOPI_DATEFORMAT_US:
-                ereg(_PLOOPI_DATEFORMAT_EREG_US, $mydate, $dateregs);
+                preg_match(_PLOOPI_DATEFORMAT_EREG_US, $mydate, $dateregs);
                 if ($dateregs[1]<100) $dateregs[1]+=2000;
                 $mydatetime = date(_PLOOPI_TIMESTAMPFORMAT_MYSQL, mktime($timeregs[1],$timeregs[2],$timeregs[3],$dateregs[2],$dateregs[3],$dateregs[1]));
             BREAK;
@@ -427,7 +428,7 @@ function ploopi_tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezon
     ploopi_set_error_handler();
     
     // on parse le timestamp 'mysql' pour créer un timestamp unix
-    ereg(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $ts, $tsregs);
+    preg_match(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $ts, $tsregs);
 
     // on crée l'objet date sur le fuseau source
     date_default_timezone_set($timezone_name_src);

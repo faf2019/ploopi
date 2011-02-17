@@ -46,7 +46,7 @@ if ($dir = @opendir("./install/"))
 
     while($file = readdir($dir))
     {
-        if (is_dir("./install/{$file}") && !ereg( "([.]{1,2})", $file)) // read folders in install
+        if (is_dir("./install/{$file}") && !preg_match( "/([.]{1,2})/", $file)) // read folders in install
         {
             $descfile = "./install/{$file}/description.xml";
             if (file_exists($descfile))

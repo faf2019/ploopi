@@ -63,7 +63,7 @@ class CUpload {
   var $error        = '';
 
   function __init($_sId) {
-    list($chunk,$boundary) = split("boundary=",$_SERVER['CONTENT_TYPE']);
+    list($chunk,$boundary) = preg_split("/boundary=/",$_SERVER['CONTENT_TYPE']);
     $this->boundary     = trim($boundary);
     $this->sid          = $_sId;
     $this->postvars     = array();

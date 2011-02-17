@@ -38,7 +38,7 @@
  * @return unknown
  */
 
-function ploopi_create_site($arrInstallInfos)
+function ploopi_create_site(&$arrInstallInfos)
 {
   try {
     $objPDO = new PDO("mysql:host={$_SESSION['install']['<DB_SERVER>']}","{$_SESSION['install']['<DB_LOGIN>']}","{$_SESSION['install']['<DB_PASSWORD>']}");

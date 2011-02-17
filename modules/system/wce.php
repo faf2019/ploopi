@@ -52,31 +52,31 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     $arrFilter = array();
 
     // On ne veut pas les caractères % et | dans la recherche avec LIKE
-    $pattern = '%|_';
+    $pattern = '/%|_/';
 
     // Lecture SESSION
     if (isset($_SESSION['system']['wce_search'])) $arrFilter = $_SESSION['system']['wce_search'];
 
     // Lecture Params
-    if (isset($_POST['system_lastname']) && !ereg($pattern, $_POST['system_lastname'])) $arrFilter['system_lastname'] = $_POST['system_lastname'];
-    if (isset($_POST['system_firstname']) && !ereg($pattern, $_POST['system_firstname'])) $arrFilter['system_firstname'] = $_POST['system_firstname'];
-    if (isset($_POST['system_service']) && !ereg($pattern, $_POST['system_service'])) $arrFilter['system_service'] = $_POST['system_service'];
-    if (isset($_POST['system_phone']) && !ereg($pattern, $_POST['system_phone'])) $arrFilter['system_phone'] = $_POST['system_phone'];
-    if (isset($_POST['system_fax']) && !ereg($pattern, $_POST['system_fax'])) $arrFilter['system_fax'] = $_POST['system_fax'];
-    if (isset($_POST['system_mobile']) && !ereg($pattern, $_POST['system_mobile'])) $arrFilter['system_mobile'] = $_POST['system_mobile'];
-    if (isset($_POST['system_login']) && !ereg($pattern, $_POST['system_login'])) $arrFilter['system_login'] = $_POST['system_login'];
-    if (isset($_POST['system_email']) && !ereg($pattern, $_POST['system_email'])) $arrFilter['system_email'] = $_POST['system_email'];
-    if (isset($_POST['system_workspace']) && !ereg($pattern, $_POST['system_workspace'])) $arrFilter['system_workspace'] = $_POST['system_workspace'];
-    if (isset($_POST['system_office']) && !ereg($pattern, $_POST['system_office'])) $arrFilter['system_office'] = $_POST['system_office'];
-    if (isset($_POST['system_comments']) && !ereg($pattern, $_POST['system_comments'])) $arrFilter['system_comments'] = $_POST['system_comments'];
-    if (isset($_POST['system_function']) && !ereg($pattern, $_POST['system_function'])) $arrFilter['system_function'] = $_POST['system_function'];
-    if (isset($_POST['system_number']) && !ereg($pattern, $_POST['system_number'])) $arrFilter['system_number'] = $_POST['system_number'];
-    if (isset($_POST['system_rank']) && !ereg($pattern, $_POST['system_rank'])) $arrFilter['system_rank'] = $_POST['system_rank'];
-    if (isset($_POST['system_building']) && !ereg($pattern, $_POST['system_building'])) $arrFilter['system_building'] = $_POST['system_building'];
-    if (isset($_POST['system_floor']) && !ereg($pattern, $_POST['system_floor'])) $arrFilter['system_floor'] = $_POST['system_floor'];
-    if (isset($_POST['system_country']) && !ereg($pattern, $_POST['system_country'])) $arrFilter['system_country'] = $_POST['system_country'];
-    if (isset($_POST['system_city']) && !ereg($pattern, $_POST['system_city'])) $arrFilter['system_city'] = $_POST['system_city'];
-    if (isset($_POST['system_postalcode']) && !ereg($pattern, $_POST['system_postalcode'])) $arrFilter['system_postalcode'] = $_POST['system_postalcode'];
+    if (isset($_POST['system_lastname']) && !preg_match($pattern, $_POST['system_lastname'])) $arrFilter['system_lastname'] = $_POST['system_lastname'];
+    if (isset($_POST['system_firstname']) && !preg_match($pattern, $_POST['system_firstname'])) $arrFilter['system_firstname'] = $_POST['system_firstname'];
+    if (isset($_POST['system_service']) && !preg_match($pattern, $_POST['system_service'])) $arrFilter['system_service'] = $_POST['system_service'];
+    if (isset($_POST['system_phone']) && !preg_match($pattern, $_POST['system_phone'])) $arrFilter['system_phone'] = $_POST['system_phone'];
+    if (isset($_POST['system_fax']) && !preg_match($pattern, $_POST['system_fax'])) $arrFilter['system_fax'] = $_POST['system_fax'];
+    if (isset($_POST['system_mobile']) && !preg_match($pattern, $_POST['system_mobile'])) $arrFilter['system_mobile'] = $_POST['system_mobile'];
+    if (isset($_POST['system_login']) && !preg_match($pattern, $_POST['system_login'])) $arrFilter['system_login'] = $_POST['system_login'];
+    if (isset($_POST['system_email']) && !preg_match($pattern, $_POST['system_email'])) $arrFilter['system_email'] = $_POST['system_email'];
+    if (isset($_POST['system_workspace']) && !preg_match($pattern, $_POST['system_workspace'])) $arrFilter['system_workspace'] = $_POST['system_workspace'];
+    if (isset($_POST['system_office']) && !preg_match($pattern, $_POST['system_office'])) $arrFilter['system_office'] = $_POST['system_office'];
+    if (isset($_POST['system_comments']) && !preg_match($pattern, $_POST['system_comments'])) $arrFilter['system_comments'] = $_POST['system_comments'];
+    if (isset($_POST['system_function']) && !preg_match($pattern, $_POST['system_function'])) $arrFilter['system_function'] = $_POST['system_function'];
+    if (isset($_POST['system_number']) && !preg_match($pattern, $_POST['system_number'])) $arrFilter['system_number'] = $_POST['system_number'];
+    if (isset($_POST['system_rank']) && !preg_match($pattern, $_POST['system_rank'])) $arrFilter['system_rank'] = $_POST['system_rank'];
+    if (isset($_POST['system_building']) && !preg_match($pattern, $_POST['system_building'])) $arrFilter['system_building'] = $_POST['system_building'];
+    if (isset($_POST['system_floor']) && !preg_match($pattern, $_POST['system_floor'])) $arrFilter['system_floor'] = $_POST['system_floor'];
+    if (isset($_POST['system_country']) && !preg_match($pattern, $_POST['system_country'])) $arrFilter['system_country'] = $_POST['system_country'];
+    if (isset($_POST['system_city']) && !preg_match($pattern, $_POST['system_city'])) $arrFilter['system_city'] = $_POST['system_city'];
+    if (isset($_POST['system_postalcode']) && !preg_match($pattern, $_POST['system_postalcode'])) $arrFilter['system_postalcode'] = $_POST['system_postalcode'];
     
     // Affectation de valeurs par défaut si non défini
     if (!isset($arrFilter['system_lastname'])) $arrFilter['system_lastname'] = '';
@@ -138,7 +138,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
         else $arrWorkspace['tree'][$fields['id_workspace']][] = $fields['id'];
     }
 
-    function system_wce_buildworkspacetree($arrWorkspace, $objTplDirectory, $idsel = 0, $depth = 1)
+    function system_wce_buildworkspacetree(&$arrWorkspace, &$objTplDirectory, $idsel = 0, $depth = 1)
     {
         global $arrFilter;
 
@@ -156,13 +156,13 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                     )
                 );
 
-                system_wce_buildworkspacetree(&$arrWorkspace, &$objTplDirectory, $id, $depth+1);
+                system_wce_buildworkspacetree($arrWorkspace, $objTplDirectory, $id, $depth+1);
             }
         }
     }
 
     // Affectation de la liste des espaces de travail
-    system_wce_buildworkspacetree(&$arrWorkspace, &$objTplDirectory);
+    system_wce_buildworkspacetree($arrWorkspace, $objTplDirectory);
 
     switch($op)
     {

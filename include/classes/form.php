@@ -1357,7 +1357,8 @@ class form
      *
      * @return string code html du formulaire
      */
-    public function render()
+    // public function render()
+    public function render($intTabindexOptions = null)
     {
         $intTabindex = $this->_arrOptions['tabindex'];
 
@@ -1369,7 +1370,7 @@ class form
         foreach($this->_arrPanels as $objPanel)
         {
             // Génération des panels (+ champs)
-            if($objPanel->getNbFields()) $strOutputPanels .= $objPanel->render(&$intTabindex);
+            if($objPanel->getNbFields()) $strOutputPanels .= $objPanel->render($intTabindex);
         }
 
         $strTarget = is_null($this->_arrOptions['target']) ? '' : " target=\"{$this->_arrOptions['target']}\"";

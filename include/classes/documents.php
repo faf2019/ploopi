@@ -448,7 +448,7 @@ class documentsfolder extends data_object
     public function getlist()
     {
         $arrTree = $this->gettree();
-        return self::_getlist_rec(&$arrTree);
+        return self::_getlist_rec($arrTree);
     }
     
     
@@ -461,7 +461,7 @@ class documentsfolder extends data_object
      * @return array tableau de chemins
      */
     
-    private static function _getlist_rec($arrTree, $intIdFolder = null, $strPath = '')
+    private static function _getlist_rec(&$arrTree, $intIdFolder = null, $strPath = '')
     {
         $arrFiles = array();
         
@@ -486,7 +486,7 @@ class documentsfolder extends data_object
         {
             foreach($arrTree['tree'][$intIdFolder]['folders'] as $objFolder)
             {
-                $arrFiles = $arrFiles + self::_getlist_rec(&$arrTree, $objFolder->fields['id'], $strPath);
+                $arrFiles = $arrFiles + self::_getlist_rec($arrTree, $objFolder->fields['id'], $strPath);
             }
         }
         

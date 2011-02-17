@@ -41,18 +41,18 @@ $intMaxResponse = 500;
 $arrFilter = array();
 
 // On ne veut pas les caractères % et | dans la recherche avec LIKE
-$pattern = '%|_';
+$pattern = '/%|_/';
 
 // Lecture SESSION
 if (isset($_SESSION['system']['directoryform']) && !isset($_GET['system_filter_reset'])) $arrFilter = $_SESSION['system']['directoryform'];
 
 // Lecture Params
-if (isset($_POST['ploopi_lastname']) && !ereg($pattern, $_POST['ploopi_lastname'])) $arrFilter['ploopi_lastname'] = $_POST['ploopi_lastname'];
-if (isset($_POST['ploopi_firstname']) && !ereg($pattern, $_POST['ploopi_firstname'])) $arrFilter['ploopi_firstname'] = $_POST['ploopi_firstname'];
-if (isset($_POST['ploopi_login']) && !ereg($pattern, $_POST['ploopi_login'])) $arrFilter['ploopi_login'] = $_POST['ploopi_login'];
-if (isset($_POST['ploopi_group']) && !ereg($pattern, $_POST['ploopi_group'])) $arrFilter['ploopi_group'] = $_POST['ploopi_group'];
-if (isset($_POST['ploopi_workspace']) && !ereg($pattern, $_POST['ploopi_workspace'])) $arrFilter['ploopi_workspace'] = $_POST['ploopi_workspace'];
-if (isset($_POST['ploopi_email']) && !ereg($pattern, $_POST['ploopi_email'])) $arrFilter['ploopi_email'] = $_POST['ploopi_email'];
+if (isset($_POST['ploopi_lastname']) && !preg_match($pattern, $_POST['ploopi_lastname'])) $arrFilter['ploopi_lastname'] = $_POST['ploopi_lastname'];
+if (isset($_POST['ploopi_firstname']) && !preg_match($pattern, $_POST['ploopi_firstname'])) $arrFilter['ploopi_firstname'] = $_POST['ploopi_firstname'];
+if (isset($_POST['ploopi_login']) && !preg_match($pattern, $_POST['ploopi_login'])) $arrFilter['ploopi_login'] = $_POST['ploopi_login'];
+if (isset($_POST['ploopi_group']) && !preg_match($pattern, $_POST['ploopi_group'])) $arrFilter['ploopi_group'] = $_POST['ploopi_group'];
+if (isset($_POST['ploopi_workspace']) && !preg_match($pattern, $_POST['ploopi_workspace'])) $arrFilter['ploopi_workspace'] = $_POST['ploopi_workspace'];
+if (isset($_POST['ploopi_email']) && !preg_match($pattern, $_POST['ploopi_email'])) $arrFilter['ploopi_email'] = $_POST['ploopi_email'];
 
 // Affectation de valeurs par défaut si non défini
 if (!isset($arrFilter['ploopi_lastname'])) $arrFilter['ploopi_lastname'] = '';

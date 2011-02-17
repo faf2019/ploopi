@@ -182,9 +182,9 @@ class captcha extends ploopi_captcha
     
     // Effets supplémentaires
     
-    private $captchagaussianblur = false;   // Transforme l'image finale en brouillant: méthode Gauss (true/false)
+    private $gaussianblur = false;   // Transforme l'image finale en brouillant: méthode Gauss (true/false)
                                             // uniquement si PHP >= 5.0.0
-    private $captchagrayscal = false;       // Transforme l'image finale en dégradé de gris (true/false)
+    private $grayscal = false;       // Transforme l'image finale en dégradé de gris (true/false)
     
     // ----------------------
     // Configuration du bruit
@@ -549,7 +549,7 @@ class captcha extends ploopi_captcha
             $dh  = opendir($this->bgimg);
             
             while (false !== ($filename = readdir($dh))) 
-                if(eregi(".[gif|jpg|png]$", $filename)) $files[] = $filename;
+                if(preg_match("/.[gif|jpg|png]$/i", $filename)) $files[] = $filename;
                 
             closedir($dh);
             $this->bgimg = $this->bgimg.'/'.$files[array_rand($files,1)];

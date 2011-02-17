@@ -57,7 +57,10 @@ $ploopi_errortype =
         E_STRICT         => 'Strict Notice',
         E_RECOVERABLE_ERROR => 'Recoverable Error'
     );
-
+	
+    if(defined('E_DEPRECATED')) $ploopi_errortype[E_DEPRECATED] = 'Deprecated';
+    if(defined('E_USER_DEPRECATED')) $ploopi_errortype[E_USER_DEPRECATED] = 'User Deprecated';
+    
 $ploopi_errorlevel =
     array(
         0 => 'OK',
@@ -107,7 +110,7 @@ function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
         $ploopi_errors_nb++;
 
         if ($errno == E_ERROR || $errno == E_PARSE || $errno == E_USER_ERROR) $ploopi_errors_level = 2;
-        else if (($errno == E_WARNING || $errno == E_NOTICE || $errno == E_USER_NOTICE) && $ploopi_errors_level < 2) $ploopi_errors_level = 1;
+        else if (($errno == E_WARNING || $errno == E_NOTICE || $errno == E_USER_NOTICE || (defined('E_DEPRECATED') && $errno == E_DEPRECATED) || (defined(E_USER_DEPRECATED) && $errno == E_USER_DEPRECATED) ) && $ploopi_errors_level < 2) $ploopi_errors_level = 1;
 
         if ($ploopi_errors_msg == '') $ploopi_errors_msg  = (php_sapi_name() == 'cli' ? '' : "[{$_SERVER['HTTP_HOST']}] ")."le ".date("d-m-Y H:i:s (T)")."\n\nVersion PHP : ".PHP_VERSION."\nOS : ".PHP_OS."\n\n";
 

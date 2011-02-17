@@ -78,17 +78,17 @@ define ('_PLOOPI_DATE_SECOND',  6);
 define ('_PLOOPI_DATEFORMAT_FR',    'd/m/Y');
 define ('_PLOOPI_DATEFORMAT_US',    'Y-m-d');
 
-define ('_PLOOPI_DATEFORMAT_EREG_FR',       '([0-9]{1,2})[-,/,.]([0-9]{1,2})[-,/,.]([0-9]{2,4})');
-define ('_PLOOPI_DATEFORMAT_EREG_US',       '([0-9]{2,4})[-,/,.]([0-9]{1,2})[-,/,.]([0-9]{1,2})');
+define ('_PLOOPI_DATEFORMAT_EREG_FR',       '/([0-9]{1,2})[-,\/,.]([0-9]{1,2})[-,\/,.]([0-9]{2,4})/');
+define ('_PLOOPI_DATEFORMAT_EREG_US',       '/([0-9]{2,4})[-,\/,.]([0-9]{1,2})[-,\/,.]([0-9]{1,2})/');
 
 define ('_PLOOPI_TIMEFORMAT',           'H:i:s');
-define ('_PLOOPI_TIMEFORMAT_EREG',      '([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})');
+define ('_PLOOPI_TIMEFORMAT_EREG',      '/([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})/');
 define ('_PLOOPI_TIMEFORMATDISP',           'H:i');
-define ('_PLOOPI_TIMEFORMATDISP_EREG',      '([0-9]{1,2})[:,h]([0-9]{1,2})');
+define ('_PLOOPI_TIMEFORMATDISP_EREG',      '/([0-9]{1,2})[:,h]([0-9]{1,2})/');
 define ('_PLOOPI_DATETIMEFORMAT_MYSQL',         'Y-m-d H:i:s');
-define ('_PLOOPI_DATETIMEFORMAT_MYSQL_EREG',    '([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})');
+define ('_PLOOPI_DATETIMEFORMAT_MYSQL_EREG',    '/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})/');
 define ('_PLOOPI_TIMESTAMPFORMAT_MYSQL',        'YmdHis');
-define ('_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG',   '([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})');
+define ('_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG',   '/([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})/');
 
 // NOW YOU CAN MODIFY !
 define ('_PLOOPI_DATEFORMAT',           _PLOOPI_DATEFORMAT_FR);
