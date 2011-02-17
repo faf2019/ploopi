@@ -1,3 +1,9 @@
+== Module FORMS - version 3.1.7b ====================================================
+
+2011-02-17 ~ HeXad  <xavier@hexad.fr>
+
+* Correction ereg/eregi/split et pointeurs en appel de fonction pour PHP 5.3.x
+
 == Module FORMS - version 3.1.7a =====================================================
 
 2011-01-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

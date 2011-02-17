@@ -194,7 +194,7 @@ function forms_createphysicalname($name)
      * Conversion des caractères non alphanum , conversion en minuscule, suppression des accents, suppression des espaces inutiles
      */
 
-    $name = ereg_replace("([^[:alnum:]|_]+)", "_", ploopi_convertaccents(strtolower(trim($name))));
+    $name = preg_replace("/([^[:alnum:]|_]+)/", "_", ploopi_convertaccents(strtolower(trim($name))));
 
     /**
      * Suppression des '_' en trop
