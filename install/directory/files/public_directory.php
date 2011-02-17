@@ -536,7 +536,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                             if (isset($arrHeadings['list'][$row['id_heading']]['parents']))
                             {
-                                $arrParents = split(';', $arrHeadings['list'][$row['id_heading']]['parents']);
+                                $arrParents = preg_split('/;/', $arrHeadings['list'][$row['id_heading']]['parents']);
                                 $arrTitle  = array();
                                 foreach($arrParents as $intId)
                                     if (isset($arrHeadings['list'][$intId]))
@@ -613,7 +613,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         foreach(array(1, $intDepth, $intDepth+1) as $d)
                         {
                             $strHeadingLabel = !empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]["directory_label_depth{$d}"]) ? $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]["directory_label_depth{$d}"] : 'une/cette/rubrique';
-                            $arrHeadingLabel[$d] = split('/', $strHeadingLabel);
+                            $arrHeadingLabel[$d] = preg_split('/\//', $strHeadingLabel);
                         }
 
                         // On récupère les gestionnaires
@@ -734,7 +734,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         
                         if (!$booModify || empty($op)) // Version non modifiable
                         {
-                            $arrParents = split(';', $arrHeadings['list'][$intHeadingId]['parents']);
+                            $arrParents = preg_split('/;/', $arrHeadings['list'][$intHeadingId]['parents']);
                             $arrTitle  = array();
 
                             foreach($arrParents as $intId)
@@ -994,7 +994,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                     {
                         // récupération du libellé des rubriques de niveau 1
                         $strHeadingLabel = !empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]["directory_label_depth1"]) ? $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]["directory_label_depth1"] : 'une/cette/rubrique';
-                        $arrHeadingLabel[1] = split('/', $strHeadingLabel);
+                        $arrHeadingLabel[1] = preg_split('/\//', $strHeadingLabel);
                         ?>
                         <div class="ploopi_tabs">
                             <?php if (ploopi_isadmin()) { ?><a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <?php printf("%s %s", $arrHeadingLabel[1][0], $arrHeadingLabel[1][2]); ?></a><?php } ?>

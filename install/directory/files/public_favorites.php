@@ -150,7 +150,7 @@ foreach($result as $row)
 
                 if (isset($arrHeadings['list'][$row['id_heading']]['parents']))
                 {
-                    $arrParents = split(';', $arrHeadings['list'][$row['id_heading']]['parents']);
+                    $arrParents = preg_split('/;/', $arrHeadings['list'][$row['id_heading']]['parents']);
                     $arrTitle  = array();
                     foreach($arrParents as $intId)
                         if (isset($arrHeadings['list'][$intId]))

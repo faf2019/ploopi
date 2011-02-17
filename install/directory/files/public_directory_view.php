@@ -171,7 +171,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
         
                             if (isset($arrHeadings['list'][$usr->fields['id_heading']]['parents']))
                             {
-                                $arrParents = split(';', $arrHeadings['list'][$usr->fields['id_heading']]['parents']);
+                                $arrParents = preg_split('/;/', $arrHeadings['list'][$usr->fields['id_heading']]['parents']);
                                 $arrTitle  = array();
                                 foreach($arrParents as $intId)
                                     if (isset($arrHeadings['list'][$intId]))

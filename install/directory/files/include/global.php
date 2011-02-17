@@ -178,7 +178,7 @@ function directory_gettreeview($headings = array(), $booPopup = false)
 
     foreach($headings['list'] as $id => $fields)
     {
-        $arrParents = split(';', $fields['parents']);
+        $arrParents = preg_split('/;/', $fields['parents']);
         $icon = 'ico_heading.png';
         
         if ($booPopup)
@@ -263,7 +263,7 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
             // Récupération des rubriques du contact
             $arrContactHeadings = array();
             
-            foreach(split(';', $arrHeadings['list'][$intHeadingId]['parents']) as $intHid)
+            foreach(preg_split('/;/', $arrHeadings['list'][$intHeadingId]['parents']) as $intHid)
             {
                 if (isset($arrHeadings['list'][$intHid])) $arrContactHeadings[] = $arrHeadings['list'][$intHid]['label'];
             }

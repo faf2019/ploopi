@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.3.6g ====================================================
+
+2011-02-17 ~ HeXad  <xavier@hexad.fr>
+
+* Correction ereg/eregi/split et pointeurs en appel de fonction pour PHP 5.3.x
+
 == Module DIRECTORY - version 2.3.6f ====================================================
 
 2010-06-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

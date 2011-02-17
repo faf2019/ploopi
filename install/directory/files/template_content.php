@@ -57,7 +57,7 @@ switch($op)
         $arrFilter = array();
         
         // On ne veut pas les caractères % et | dans la recherche avec LIKE
-        $pattern = '%|_';
+        $pattern = '/%|_/';
         
         // Lecture SESSION
         if (isset($_SESSION['directory']['tpl_search'])) $arrFilter = $_SESSION['directory']['tpl_search'];
@@ -81,7 +81,7 @@ switch($op)
         foreach($arrParams as $strParam)
         {
             // Lecture Param
-            if (isset($_POST[$strParam]) && !ereg($pattern, $_POST[$strParam])) $arrFilter[$strParam] = $_POST[$strParam];
+            if (isset($_POST[$strParam]) && !preg_match($pattern, $_POST[$strParam])) $arrFilter[$strParam] = $_POST[$strParam];
             // Affectation de valeur par défaut si non défini
             if (!isset($arrFilter[$strParam])) $arrFilter[$strParam] = '';
         }
@@ -192,7 +192,7 @@ switch($op)
                 // Récupération des rubriques du contact
                 $arrContactHeadings = array();
                 
-                foreach(split(';', $arrDirectoryHeadings['list'][$row['id_heading']]['parents']) as $intIdHeading)
+                foreach(preg_split('/;/', $arrDirectoryHeadings['list'][$row['id_heading']]['parents']) as $intIdHeading)
                 {
                     if (isset($arrDirectoryHeadings['list'][$intIdHeading])) $arrContactHeadings[] = $arrDirectoryHeadings['list'][$intIdHeading]['label'];
                 }
