@@ -151,7 +151,7 @@ switch($ploopi_op)
                 $strPopupTitle = "Ajout d'un événement";
 
                 $arrDateTimeBegin['date'] = $arrDateTimeEnd['date'] = empty($_GET['planning_resource_date']) ? '' : date('d/m/Y', $_GET['planning_resource_date']);
-                $arrDateTimeBegin['time'] = $arrDateTimeEnd['time'] = split(':', '00:00');
+                $arrDateTimeBegin['time'] = $arrDateTimeEnd['time'] = preg_split('/:/', '00:00');
             break;
 
             case 'planning_event_detail_open':
@@ -165,8 +165,8 @@ switch($ploopi_op)
 
                 $arrDateTimeBegin = ploopi_timestamp2local($objEventDetail->fields['timestp_begin']);
                 $arrDateTimeEnd = ploopi_timestamp2local($objEventDetail->fields['timestp_end']);
-                $arrDateTimeBegin['time'] = split(':', $arrDateTimeBegin['time']);
-                $arrDateTimeEnd['time'] = split(':', $arrDateTimeEnd['time']);
+                $arrDateTimeBegin['time'] = preg_split('/:/', $arrDateTimeBegin['time']);
+                $arrDateTimeEnd['time'] = preg_split('/:/', $arrDateTimeEnd['time']);
 
                 $arrParams[] = "planning_event_detail_id={$_GET['planning_event_detail_id']}";
 

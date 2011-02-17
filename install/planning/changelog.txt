@@ -1,3 +1,9 @@
+== Module Planning - version 0.7.9c ====================================================
+
+2011-02-17 ~ HeXad  <xavier@hexad.fr>
+
+* Correction ereg/eregi/split et pointeurs en appel de fonction pour PHP 5.3.x
+
 == Module Planning - version 0.7.9b ====================================================
 
 2010-11-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

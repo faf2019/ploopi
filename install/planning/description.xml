@@ -4,7 +4,7 @@
         <label>planning</label>
         <version>0.7.9b</version>
         <author>Ovensia</author>
-        <date>20101130000000</date>
+        <date>20110217000000</date>
         <description>Planning partagé</description>
         <paramtype>
             <name>planning_width</name>
