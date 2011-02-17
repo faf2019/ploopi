@@ -56,7 +56,7 @@ if ($_SESSION['ploopi']['connected'])
             {
                 include_once './modules/booking/classes/class_booking_event.php';
     
-                $element_array = split(',', $_GET['booking_element_list']);
+                $element_array = preg_split('/,/', $_GET['booking_element_list']);
                 foreach($element_array as $elementid)
                 {
                     $objEvent = new booking_event();

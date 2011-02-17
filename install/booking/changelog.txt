@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.2b ====================================================
+
+2011-02-17 ~ HeXad  <xavier@hexad.fr>
+
+* Correction ereg/eregi/split et pointeurs en appel de fonction pour PHP 5.3.x
+
 == Module BOOKING - version 1.0.2a ====================================================
 
 2011-02-16  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

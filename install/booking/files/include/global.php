@@ -154,7 +154,7 @@ function booking_get_workspaces($idw = 0)
  * @return string code html de l'arbre
  */
 
-function booking_display_workspaces(&$arrWorkspaces, $fieldname, $widsel = array(), $wid = 0)
+function booking_display_workspaces(&$arrWorkspaces, $fieldname, &$widsel = array(), $wid = 0)
 {
     $treeview = '';
     
@@ -165,7 +165,7 @@ function booking_display_workspaces(&$arrWorkspaces, $fieldname, $widsel = array
             //$checked = ($widsel == $wid_child) ? 'checked' : '';
             $checked = (in_array($wid_child, $widsel)) ? 'checked' : '';
 
-            $subtree = booking_display_workspaces($arrWorkspaces, $fieldname, &$widsel, $wid_child);
+            $subtree = booking_display_workspaces($arrWorkspaces, $fieldname, $widsel, $wid_child);
             
             $has_children = !empty($arrWorkspaces['tree'][$wid_child]);
             
@@ -174,10 +174,10 @@ function booking_display_workspaces(&$arrWorkspaces, $fieldname, $widsel = array
             {
                 foreach($widsel as $wsel)
                 {
-                    $parents = split(';', $arrWorkspaces['list'][$wsel]['parents']);
+                    $parents = preg_split('/;/', $arrWorkspaces['list'][$wsel]['parents']);
                     $is_opened = $is_opened || (in_array($wid_child, $parents));
                     /*
-                    $parents = split(';', $arrWorkspaces['list'][$widsel]['parents']);
+                    $parents = preg_split('/;/', $arrWorkspaces['list'][$widsel]['parents']);
                     $is_opened = (in_array($wid_child, $parents));
                     */
                 }

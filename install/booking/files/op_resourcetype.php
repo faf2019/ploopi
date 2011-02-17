@@ -43,7 +43,7 @@ switch($_REQUEST['ploopi_op'])
         {
             include_once './modules/booking/classes/class_booking_resourcetype.php';
 
-            $element_array = split(',', $_GET['booking_element_list']);
+            $element_array = preg_split('/,/', $_GET['booking_element_list']);
             foreach($element_array as $elementid)
             {
                 $objResourceType = new booking_resourcetype();
