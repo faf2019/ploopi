@@ -256,7 +256,7 @@ function webedit_gettreeview($arrHeadings = array(), $articles = array(), $optio
                     'id' => 'h'.$prefix.$fields['id'],
                     'label' => $fields['label'],
                     'description' => $fields['description'],
-                    'parents' => split(';', $fields['parents']),
+                    'parents' => preg_split('/;/', $fields['parents']),
                     'node_link' => '',
                     'node_onclick' => "ploopi_skin_treeview_shownode('h{$prefix}{$fields['id']}', '".ploopi_queryencode("ploopi_op=webedit_detail_heading&hid=h{$prefix}{$fields['id']}&option={$option}")."', 'admin-light.php')",
                     'link' => $link,
@@ -352,7 +352,7 @@ function webedit_getheadings($moduleid = -1)
         $arrHeadings['list'][$fields['id']] = $fields;
         $arrHeadings['tree'][$fields['id_heading']][] = $fields['id'];
 
-        $parents = split(';',$arrHeadings['list'][$fields['id']]['parents']);
+        $parents = preg_split('/;/',$arrHeadings['list'][$fields['id']]['parents']);
         if (isset($parents[0])) unset($parents[0]);
         $parents[] = $fields['id'];
 
@@ -398,6 +398,7 @@ function webedit_getarticles($moduleid = -1, $booBlocs = false)
     $sql_filter = $booBlocs ? ' AND ad.id_heading = 0 ' : ' AND ad.id_heading > 0 ';
 
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
+    
     $today = ploopi_createtimestamp();
     
     if (!isset($_SESSION['webedit'][$key])) $_SESSION['webedit'][$key] = array();
@@ -471,7 +472,7 @@ function webedit_getarticles($moduleid = -1, $booBlocs = false)
  * @param string $link lien de la rubrique parent
  */
 
-function webedit_template_assign(&$arrHeadings, $arrShares, &$nav, $hid, $var = '', $link = '')
+function webedit_template_assign(&$arrHeadings, &$arrShares, &$nav, $hid, $var = '', $link = '')
 {
     global $template_body;
     global $webedit_mode;
@@ -525,7 +526,7 @@ function webedit_template_assign(&$arrHeadings, $arrShares, &$nav, $hid, $var = 
                 default:
                 case 'display';
                     $arrParents = array();
-                    foreach(split(';', $arrHeading['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                    foreach(preg_split('/;/', $arrHeading['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                     $script = ploopi_urlrewrite($script = "index.php?headingid={$arrHeading['id']}", webedit_getrewriterules(), $arrHeading['label'], $arrParents);
                 break;
             }
@@ -624,7 +625,7 @@ function webedit_template_assign(&$arrHeadings, $arrShares, &$nav, $hid, $var = 
                 if (isset($arrHeadings['tree'][$arrHeading['id']]))
                 {
                     $template_body->assign_block_vars($localvar.'.switch_submenu' , array());
-                    webedit_template_assign($arrHeadings, &$arrShares, $nav, $arrHeading['id'], "{$localvar}.", $locallink);
+                    webedit_template_assign($arrHeadings, $arrShares, $nav, $arrHeading['id'], "{$localvar}.", $locallink);
                 }
             }
 
@@ -642,7 +643,7 @@ function webedit_template_assign(&$arrHeadings, $arrShares, &$nav, $hid, $var = 
                 if ($link!='' && isset($nav[$depth])) $link .= "-$nav[$depth]";
                 elseif (isset($nav[$depth])) $link = "$nav[$depth]";
 
-                if (isset($nav[$depth]) && isset($arrHeadings['tree'][$nav[$depth]])) webedit_template_assign($arrHeadings, &$arrShares, $nav, $nav[$depth], '', $link);
+                if (isset($nav[$depth]) && isset($arrHeadings['tree'][$nav[$depth]])) webedit_template_assign($arrHeadings, $arrShares, $nav, $nav[$depth], '', $link);
             }
         }
 
@@ -661,7 +662,7 @@ function webedit_template_assign(&$arrHeadings, $arrShares, &$nav, $hid, $var = 
  * @param string $link lien de la rubrique parent
  */
 
-function webedit_template_assign_headings($arrHeadings, $arrShares, $hid, $var = 'switch_content_heading.', $prefix = 'subheading', $depth = 1, $link = '')
+function webedit_template_assign_headings(&$arrHeadings, &$arrShares, $hid, $var = 'switch_content_heading.', $prefix = 'subheading', $depth = 1, $link = '')
 {
     global $template_body;
     global $webedit_mode;
@@ -689,7 +690,7 @@ function webedit_template_assign_headings($arrHeadings, $arrShares, $hid, $var =
                 default:
                 case 'display';
                     $arrParents = array();
-                    foreach(split(';', $arrHeading['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                    foreach(preg_split('/;/', $arrHeading['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                     $script = ploopi_urlrewrite($script = "index.php?headingid={$id}", webedit_getrewriterules(), $arrHeading['label'], $arrParents);
                 break;
             }
@@ -712,7 +713,7 @@ function webedit_template_assign_headings($arrHeadings, $arrShares, $hid, $var =
                     'FREE2' => $arrHeading['free2']
                     ));
 
-                if (isset($arrHeadings['tree'][$id])) webedit_template_assign_headings(&$arrHeadings, &$arrShares, $id, "{$localvar}.", $prefix, $depth+1, $locallink);
+                if (isset($arrHeadings['tree'][$id])) webedit_template_assign_headings($arrHeadings, $arrShares, $id, "{$localvar}.", $prefix, $depth+1, $locallink);
             }
         }
     }
@@ -763,8 +764,8 @@ function webedit_getobjectcontent($matches)
 
     if (!empty($matches[1]))
     {
-        $key = split('/',$matches[1]);
-        $id_object = split(',',$key[0]);
+        $key = preg_split('/\//',$matches[1]);
+        $id_object = preg_split('/,/',$key[0]);
 
         if (sizeof($id_object) == 2 || sizeof($id_object) == 3) // normal size !
         {
@@ -882,7 +883,7 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
 
                 default:
                     $arrParents = array();
-                    if (isset($arrHeadings['list'][$objArticle->fields['id_heading']])) foreach(split(';', $arrHeadings['list'][$objArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                    if (isset($arrHeadings['list'][$objArticle->fields['id_heading']])) foreach(preg_split('/;/', $arrHeadings['list'][$objArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
 
                     $arrReplace[] = str_replace($strAnchor, ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$objArticle->fields['id']}", webedit_getrewriterules(), $objArticle->fields['metatitle'], $arrParents).$strAnchor, $arrMatches[1][$key]);
                 break;
@@ -905,7 +906,7 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
 
                     default:
                         $arrParents = array();
-                        if (isset($arrHeadings['list'][$objLinkArticle->fields['id_heading']])) foreach(split(';', $arrHeadings['list'][$objLinkArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                        if (isset($arrHeadings['list'][$objLinkArticle->fields['id_heading']])) foreach(preg_split('/;/', $arrHeadings['list'][$objLinkArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
 
                         $arrReplace[] = ploopi_urlrewrite("index.php?headingid={$objLinkArticle->fields['id_heading']}&articleid={$idart}", webedit_getrewriterules(), $objLinkArticle->fields['metatitle'], $arrParents);
                     break;
@@ -988,7 +989,7 @@ function webedit_sitemap()
             if (isset($arrHeadings['list'][$row['id_heading']]))
             {
                 $floPriority = 1 - ($arrHeadings['list'][$row['id_heading']]['depth']-1)/10;
-                foreach(split(';', $arrHeadings['list'][$row['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                foreach(preg_split('/;/', $arrHeadings['list'][$row['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
 
                 $arrHeadings['list'][$row['id_heading']]['lastmod'] = $strLastMod;
             }
@@ -1006,7 +1007,7 @@ function webedit_sitemap()
             if (isset($arrHeadings['list'][$arrHeading['id']]))
             {
                 $floPriority = 1 - ($arrHeading['depth']-1)/10;
-                foreach(split(';', $arrHeading['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                foreach(preg_split('/;/', $arrHeading['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
             }
 
             $strScript = ploopi_xmlentities(_PLOOPI_BASEPATH.'/'.ploopi_urlrewrite("index.php?headingid={$arrHeading['id']}", webedit_getrewriterules(), $arrHeading['label'], $arrParents));

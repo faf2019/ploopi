@@ -300,7 +300,7 @@ if (!is_object($skin) && !empty($_SESSION['ploopi']['frontoffice']['template_pat
 
 include_once './include/op.php';
 
-webedit_template_assign(&$arrHeadings, &$arrShares, $arrNav, 0, '', 0);
+webedit_template_assign($arrHeadings, $arrShares, $arrNav, 0, '', 0);
 
 if (!empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
 {
@@ -513,7 +513,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                                 default:
                                 case 'display';
                                     $arrParents = array();
-                                    if (isset($arrHeadings['list'][$objArticle->fields['id_heading']])) foreach(split(';', $arrHeadings['list'][$objArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                                    if (isset($arrHeadings['list'][$objArticle->fields['id_heading']])) foreach(preg_split('/;/', $arrHeadings['list'][$objArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                                     $link = ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}", webedit_getrewriterules(), $objArticle->fields['metatitle'], $arrParents);
                                 break;
                             }
@@ -612,7 +612,7 @@ elseif($query_tag != '') // recherche par tag
                 default:
                 case 'display';
                     $arrParents = array();
-                    if (isset($arrHeadings['list'][$row['id_heading']])) foreach(split(';', $arrHeadings['list'][$row['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                    if (isset($arrHeadings['list'][$row['id_heading']])) foreach(preg_split('/;/', $arrHeadings['list'][$row['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                     $link = ploopi_urlrewrite("index.php?headingid={$row['id_heading']}&articleid={$row['id']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
                 break;
             }
@@ -834,17 +834,17 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                     else
                     {
                         $arrParents = array();
-                        if (isset($arrHeadings['list'][$headingid])) foreach(split(';', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                        if (isset($arrHeadings['list'][$headingid])) foreach(preg_split('/;/', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                         $scriptUrlArticle = ploopi_urlrewrite("index.php?headingid={$headingid}&articleid={$row['id']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
                     }
 
                     $sel = '';
                     if ($articleid == $row['id']) $sel = 'selected';
 
-                    $ldate_pub = ($row['timestp_published']!='') ? ploopi_timestamp2local($row['timestp_published']) : array('date' => '');
-                    $ldate_unpub = ($row['timestp_unpublished']!='') ? ploopi_timestamp2local($row['timestp_unpublished']) : array('date' => '');
-                    $ldate_lastupdate = ($row['lastupdate_timestp']!='') ? ploopi_timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
-                    $ldate_timestp = ($row['timestp']!='') ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
+					$ldate_pub = (!empty($row['timestp_published'])) ? ploopi_timestamp2local($row['timestp_published']) : array('date' => '');
+                    $ldate_unpub = (!empty($row['timestp_unpublished'])) ? ploopi_timestamp2local($row['timestp_unpublished']) : array('date' => '');
+                    $ldate_lastupdate = (!empty($row['lastupdate_timestp'])) ? ploopi_timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
+                    $ldate_timestp = (!empty($row['timestp'])) ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
 
                     $var_tpl_page =
                         array(
@@ -1062,7 +1062,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                             {
                                 while($rowComment = $db->fetchrow($resSqlComment))
                                 {
-                                    $date_comment = ($row['timestp_published']!='') ? ploopi_timestamp2local($rowComment['timestp']) : array('date' => '', 'time' => '');
+                                    $date_comment = (!empty($row['timestp_published'])) ? ploopi_timestamp2local($rowComment['timestp']) : array('date' => '', 'time' => '');
 
                                     $nbComment++;
                                     if($nbComment <= $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nb_comm_blog'])
@@ -1120,7 +1120,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                     else
                     {
                         $arrParents = array();
-                        if (isset($arrHeadings['list'][$headingid])) foreach(split(';', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                        if (isset($arrHeadings['list'][$headingid])) foreach(preg_split('/;/', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                         $strUrl = ploopi_urlrewrite("index.php?headingid={$headingid}&numpage=".($intNumPage+1).$param,webedit_getrewriterules(),$arrHeadings['list'][$headingid]['label'], $arrParents);
                     }
 
@@ -1135,7 +1135,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                     else
                     {
                         $arrParents = array();
-                        if (isset($arrHeadings['list'][$headingid])) foreach(split(';', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                        if (isset($arrHeadings['list'][$headingid])) foreach(preg_split('/;/', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                         $strUrl = ploopi_urlrewrite("index.php?headingid={$headingid}&numpage=".($intNumPage-1).$param,webedit_getrewriterules(),$arrHeadings['list'][$headingid]['label'], $arrParents);
                     }
 
@@ -1218,13 +1218,13 @@ else // affichage standard rubrique/page
         if($arrHeadings['list'][$headingid]['content_type'] == 'headings' && empty($articleid)) // affichage rubriques
         {
            $template_body->assign_block_vars('switch_content_heading', array());
-           webedit_template_assign_headings(&$arrHeadings, &$arrShares, $headingid);
+           webedit_template_assign_headings($arrHeadings, $arrShares, $headingid);
         }
 
         if($arrHeadings['list'][$headingid]['content_type'] == 'sitemap' && empty($articleid)) // affichage plan de site
         {
            $template_body->assign_block_vars('switch_content_sitemap', array());
-           webedit_template_assign_headings(&$arrHeadings, &$arrShares, 0, 'switch_content_sitemap.', 'heading', 0);
+           webedit_template_assign_headings($arrHeadings, $arrShares, 0, 'switch_content_sitemap.', 'heading', 0);
         }
 
         // détermination du type de tri des articles
@@ -1318,7 +1318,7 @@ else // affichage standard rubrique/page
                         default:
                         case 'display';
                             $arrParents = array();
-                            if (isset($arrHeadings['list'][$headingid])) foreach(split(';', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                            if (isset($arrHeadings['list'][$headingid])) foreach(preg_split('/;/', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                             $script = ploopi_urlrewrite("index.php?headingid={$headingid}&articleid={$row['id']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
                         break;
                     }
@@ -1326,10 +1326,10 @@ else // affichage standard rubrique/page
                     $sel = '';
                     if ($articleid == $row['id']) $sel = 'selected';
 
-                    $ldate_pub = ($row['timestp_published']!='') ? ploopi_timestamp2local($row['timestp_published']) : array('date' => '');
-                    $ldate_unpub = ($row['timestp_unpublished']!='') ? ploopi_timestamp2local($row['timestp_unpublished']) : array('date' => '');
-                    $ldate_lastupdate = ($row['lastupdate_timestp']!='') ? ploopi_timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
-                    $ldate_timestp = ($row['timestp']!='') ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
+                    $ldate_pub = (!empty($row['timestp_published'])) ? ploopi_timestamp2local($row['timestp_published']) : array('date' => '');
+                    $ldate_unpub = (!empty($row['timestp_unpublished'])) ? ploopi_timestamp2local($row['timestp_unpublished']) : array('date' => '');
+                    $ldate_lastupdate = (!empty($row['lastupdate_timestp'])) ? ploopi_timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
+                    $ldate_timestp = (!empty($row['timestp'])) ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
 
                     $var_tpl_page =
                         array(
@@ -2050,7 +2050,7 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
             else
             {
                 $arrParents = array();
-                if (isset($arrHeadings['list'][$headingid])) foreach(split(';', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                if (isset($arrHeadings['list'][$headingid])) foreach(preg_split('/;/', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                 $arrParents[] = $year;
                 $arrParents[] = $month;
                 $scriptArchive = ploopi_urlrewrite("index.php?headingid={$headingid}&yearmonth={$yearmonth}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label'], $arrParents);
@@ -2115,7 +2115,7 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
         else
         {
             $arrParents = array();
-            if (isset($arrHeadings['list'][$headingid])) foreach(split(';', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+            if (isset($arrHeadings['list'][$headingid])) foreach(preg_split('/;/', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
             $arrParentsPreced = $arrParents;
             $arrParentsNext = $arrParents;
 

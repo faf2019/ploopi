@@ -152,7 +152,7 @@ switch($menu)
                     /* DEBUT ABONNEMENT */
 
                     // on construit la liste des objets parents (y compris l'objet courant)
-                    $arrHeadingList = split(';', "{$heading->fields['parents']};{$heading->fields['id']}");
+                    $arrHeadingList = preg_split('/;/', "{$heading->fields['parents']};{$heading->fields['id']}");
 
                     // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                     $arrUsers = array();
@@ -235,7 +235,7 @@ switch($menu)
                         /* DEBUT ABONNEMENT */
 
                         // on construit la liste des objets parents (y compris l'objet courant)
-                        $arrHeadingList = split(';', "{$heading->fields['parents']};{$heading->fields['id']}");
+                        $arrHeadingList = preg_split('/;/', "{$heading->fields['parents']};{$heading->fields['id']}");
 
                         // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                         $arrUsers = array();
@@ -272,7 +272,7 @@ switch($menu)
                         /* DEBUT ABONNEMENT */
 
                         // on construit la liste des objets parents (y compris l'objet courant)
-                        $arrHeadingList = split(';', "{$heading->fields['parents']};{$heading->fields['id']}");
+                        $arrHeadingList = preg_split('/;/', "{$heading->fields['parents']};{$heading->fields['id']}");
 
                         // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                         $arrUsers = array();
@@ -601,7 +601,7 @@ switch($menu)
                     /* DEBUT ABONNEMENT (BACKOFFICE && FRONTOFFICE) */
 
                     // on construit la liste des objets parents (y compris l'objet courant)
-                    $arrHeadingList = split(';', "{$objHeading->fields['parents']};{$objHeading->fields['id']}");
+                    $arrHeadingList = preg_split('/;/', "{$objHeading->fields['parents']};{$objHeading->fields['id']}");
 
                     switch($strTypeTicket)
                     {
@@ -699,7 +699,7 @@ switch($menu)
                         $objHeading->open($headingid);
 
                         // on construit la liste des objets parents (y compris l'objet courant)
-                        $arrHeadingList = split(';', "{$objHeading->fields['parents']};{$objHeading->fields['id']}");
+                        $arrHeadingList = preg_plit('/;/', "{$objHeading->fields['parents']};{$objHeading->fields['id']}");
 
                         // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                         $arrUsers = array();

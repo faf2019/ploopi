@@ -219,7 +219,7 @@ $arrHeadings = webedit_getheadings();
     while ($row = $db->fetchrow())
     {
         $arrParents = array();
-        if (isset($arrHeadings['list'][$row['id_heading']])) foreach(split(';', $arrHeadings['list'][$row['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+        if (isset($arrHeadings['list'][$row['id_heading']])) foreach(preg_split('/;/', $arrHeadings['list'][$row['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
         
         $values[$c]['values']['article'] =
             array(
@@ -312,7 +312,7 @@ $arrHeadings = webedit_getheadings();
     while ($row = $db->fetchrow())
     {
         $arrParents = array();
-        foreach(split(';', $row['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+        foreach(preg_split('/;/', $row['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
         
         $values[$c]['values']['heading'] =
             array(

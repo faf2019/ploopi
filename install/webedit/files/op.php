@@ -115,7 +115,7 @@ switch($ploopi_op)
         }
         
         $arrHeadings = webedit_getheadings();
-        if (isset($arrHeadings['list'][$_GET['headingid']])) foreach(split(';', $arrHeadings['list'][$_GET['headingid']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+        if (isset($arrHeadings['list'][$_GET['headingid']])) foreach(preg_split('/;/', $arrHeadings['list'][$_GET['headingid']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
         ploopi_redirect(ploopi_urlrewrite("index.php?headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&comment_return={$return}",webedit_getrewriterules(),$arrHeadings['list'][$_GET['headingid']]['label'], $arrParents));
     break;
 }

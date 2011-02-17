@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.4.1f ============================================
+
+2011-02-17 ~ HeXad  <xavier@hexad.fr>
+
+* Correction ereg/eregi/split et pointeurs en appel de fonction pour PHP 5.3.x
+
 == Module WebEdit - version 2.4.1e ============================================
 
 2011-01-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

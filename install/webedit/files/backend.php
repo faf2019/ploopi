@@ -237,7 +237,7 @@ switch ($strbackendtype)
                     if (empty($article['metatitle'])) $article['metatitle'] = $article['title'];
             
                     $arrParents = array();
-                    if (isset($arrHeadings['list'][$article['id_heading']])) foreach(split(';', $arrHeadings['list'][$article['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                    if (isset($arrHeadings['list'][$article['id_heading']])) foreach(preg_split('/;/', $arrHeadings['list'][$article['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
             
                     $url = ploopi_urlrewrite("index.php?headingid={$article['id_heading']}&articleid={$article['id']}", webedit_getrewriterules(), "{$article['metatitle']} {$article['metakeywords']}", $arrParents);
             
