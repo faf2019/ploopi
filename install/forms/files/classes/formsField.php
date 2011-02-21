@@ -115,7 +115,7 @@ class formsField extends data_object
     {
         global $db;
 
-        if (!$this->fields['separator'] && !$this->fields['captcha']) $this->_createPhysicalName();
+        if (empty($this->fields['separator']) && empty($this->fields['captcha'])) $this->_createPhysicalName();
 
         $booIsNew = $this->isnew();
 
@@ -127,8 +127,9 @@ class formsField extends data_object
         /**
          * Mise à jour de la bdd
          */
-        if ($booUpdateTable)
+        if ($booUpdateTable && !empty($this->fields['fieldname']))
         {
+        	
             $objForm = new formsForm();
             if ($objForm->open($this->fields['id_form']))
             {
@@ -254,7 +255,7 @@ class formsField extends data_object
      */
     private function _createPhysicalName($booFixUnicity = false)
     {
-        if ($this->fields['separator'] || $this->fields['captcha']) return null;
+		if (!empty($this->fields['separator']) || !empty($this->fields['captcha'])) return null;
 
         /**
          * Génération du nom physique
@@ -300,8 +301,8 @@ class formsField extends data_object
      */
     public function getSqlType()
     {
-        if ($this->fields['separator'] || $this->fields['captcha']) return null;
-
+		if (!empty($this->fields['separator']) || !empty($this->fields['captcha'])) return null;
+    	
         $strType = '';
 
         /**

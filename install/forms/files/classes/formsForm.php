@@ -259,7 +259,7 @@ class formsForm extends data_object
          */
         if ($booWorkspaceFilter)
         {
-            $objQuery->add_where('workspace_id IN (%e)', explode(',', forms_viewworkspaces($_SESSION['ploopi']['moduleid'], $_SESSION['ploopi']['workspaceid'], $this->fields['option_view'])));
+            $objQuery->add_where('workspace_id IN (%e)', array(explode(',', forms_viewworkspaces($_SESSION['ploopi']['moduleid'], $_SESSION['ploopi']['workspaceid'], $this->fields['option_view']))));
         }
 
         return current($objQuery->execute()->getarray(true));

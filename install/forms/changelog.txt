@@ -1,3 +1,11 @@
+== Module FORMS - version 3.1.8 =====================================================
+
+2011-02-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un problème à l'affichage du nombre d'enregistrement d'un formulaire (lié à la vue sur les données du formulaire)
+ * Corrections diverses
+ * Changement de version pour cause de divergence avec la version stable
+ 
 == Module FORMS - version 3.1.7b ====================================================
 
 2011-02-17 ~ HeXad  <xavier@hexad.fr>
