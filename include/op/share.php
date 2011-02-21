@@ -99,25 +99,28 @@ switch($ploopi_op)
 
         if (isset($id_action) && !is_numeric($id_action)) $id_action = -1;
 
-        // construction de la liste des groupes de travail et des groupes d'utilisateurs rattachés (pour l'utilisateur courant)
-        foreach (preg_split('/,/',ploopi_viewworkspaces_inv()) as $grpid) // pour chaque groupe de travail
-        {
-            if (isset($_SESSION['ploopi']['workspaces'][$grpid]))
-            {
-                $grp = $_SESSION['ploopi']['workspaces'][$grpid];
+        // Recherche des espaces de travail qui supportent ce module, selon la vue inverse
+        $rs = $db->query("
+            SELECT  w.*
+            FROM    ploopi_workspace w,
+                    ploopi_module_workspace mw
+            WHERE   w.id = mw.id_workspace
+            AND     w.id IN (".ploopi_viewworkspaces_inv().")
+            AND     w.backoffice = 1
+            AND     mw.id_module = {$_SESSION['ploopi']['moduleid']}
+            ORDER BY w.depth, w.label
+        ");
 
-                if (isset($grp['adminlevel']) && $grp['backoffice'])
-                {
-                    $list['workspaces'][$grp['id']]['label'] = $grp['label'];
-                    $list['workspaces'][$grp['id']]['groups'] = array();
-                    $list['workspaces'][$grp['id']]['users'] = array();
-                    $workspace->fields['id'] = $grp['id'];
-                    foreach ($workspace->getgroups() as $orgrp)
-                    {
-                        $list['workspaces'][$grp['id']]['groups'][] = $orgrp['id'];
-                        $list['groups'][$orgrp['id']]['label'] = $orgrp['label'];
-                    }
-                }
+        while ($row = $db->fetchrow($rs))
+        {
+            $list['workspaces'][$row['id']]['label'] = $row['label'];
+            $list['workspaces'][$row['id']]['groups'] = array();
+            $list['workspaces'][$row['id']]['users'] = array();
+            $workspace->fields['id'] = $row['id'];
+            foreach ($workspace->getgroups() as $grp)
+            {
+                $list['workspaces'][$row['id']]['groups'][] = $grp['id'];
+                $list['groups'][$grp['id']]['label'] = $grp['label'];
             }
         }
 

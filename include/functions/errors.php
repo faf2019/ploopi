@@ -41,6 +41,10 @@ $ploopi_errors_msg = '';
 $ploopi_errors_nb = 0;
 $ploopi_errors_level = 0;
 
+// Php < 5.3
+if (!defined('E_DEPRECATED')) define('E_DEPRECATED', 8192);
+if (!defined('E_USER_DEPRECATED')) define('E_USER_DEPRECATED', 16384);
+    
 $ploopi_errortype =
     array(
         E_ERROR          => 'Error',
@@ -55,12 +59,12 @@ $ploopi_errortype =
         E_USER_WARNING   => 'User Warning',
         E_USER_NOTICE    => 'User Notice',
         E_STRICT         => 'Strict Notice',
-        E_RECOVERABLE_ERROR => 'Recoverable Error'
-    );
+        E_RECOVERABLE_ERROR => 'Recoverable Error',
+        E_DEPRECATED         => 'Deprecated',
+        E_USER_DEPRECATED => 'User Deprecated'
+);
 	
-    if(defined('E_DEPRECATED')) $ploopi_errortype[E_DEPRECATED] = 'Deprecated';
-    if(defined('E_USER_DEPRECATED')) $ploopi_errortype[E_USER_DEPRECATED] = 'User Deprecated';
-    
+   
 $ploopi_errorlevel =
     array(
         0 => 'OK',
@@ -81,7 +85,7 @@ $ploopi_errorlevel =
  * @see _PLOOPI_DISPLAY_ERRORS
  * @see _PLOOPI_ERROR_REPORTING
  */
-                            
+
 function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
 {
     global $ploopi_errors_msg;
@@ -90,7 +94,9 @@ function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
 
     global $ploopi_errortype;
     global $ploopi_errorlevel;
-    
+
+    if (error_reporting() == 0) return false;
+
     // translate error_level into "readable" array
     $bit = _PLOOPI_ERROR_REPORTING;
     $res = array();
@@ -110,7 +116,7 @@ function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
         $ploopi_errors_nb++;
 
         if ($errno == E_ERROR || $errno == E_PARSE || $errno == E_USER_ERROR) $ploopi_errors_level = 2;
-        else if (($errno == E_WARNING || $errno == E_NOTICE || $errno == E_USER_NOTICE || (defined('E_DEPRECATED') && $errno == E_DEPRECATED) || (defined(E_USER_DEPRECATED) && $errno == E_USER_DEPRECATED) ) && $ploopi_errors_level < 2) $ploopi_errors_level = 1;
+        else if (($errno == E_WARNING || $errno == E_NOTICE || $errno == E_USER_NOTICE || $errno == E_DEPRECATED || $errno == E_USER_DEPRECATED) && $ploopi_errors_level < 2) $ploopi_errors_level = 1;
 
         if ($ploopi_errors_msg == '') $ploopi_errors_msg  = (php_sapi_name() == 'cli' ? '' : "[{$_SERVER['HTTP_HOST']}] ")."le ".date("d-m-Y H:i:s (T)")."\n\nVersion PHP : ".PHP_VERSION."\nOS : ".PHP_OS."\n\n";
 
@@ -126,7 +132,7 @@ function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
             if (!empty($arrTrace[$key]['file']) && !empty($arrTrace[$key]['line']))
             {
                 $ploopi_errors_msg .= sprintf("Fichier : %s \nLigne : %s\n", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
-                if (_PLOOPI_DISPLAY_ERRORS) 
+                if (_PLOOPI_DISPLAY_ERRORS)
                 {
                     if (php_sapi_name() != 'cli') $strErrorStack .= sprintf("<div style=\"margin-left:10px;\">at <strong>%s</strong>  <em>line %d</em></div>", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
                     else $strErrorStack .= sprintf("at %s line %d\n", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
@@ -148,7 +154,7 @@ function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
                         {$strErrorStack}
                     </div>
                 ";
-                
+
             }
             else // Affichage cli, sortie texte brut
             {
