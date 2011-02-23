@@ -1,3 +1,9 @@
+== Module FORMS - version 3.1.7c =====================================================
+
+2011-02-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug lors de la création d'un 3e (ou plus) champ avec homonyme.  
+
 == Module FORMS - version 3.1.7b =====================================================
 
 2011-02-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

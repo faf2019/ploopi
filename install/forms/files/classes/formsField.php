@@ -129,7 +129,7 @@ class formsField extends data_object
          */
         if ($booUpdateTable && !empty($this->fields['fieldname']))
         {
-        	
+
             $objForm = new formsForm();
             if ($objForm->open($this->fields['id_form']))
             {
@@ -249,13 +249,13 @@ class formsField extends data_object
     }
 
     /**
-	 * Génère et met à jour le nom physique du champ utilisé pour l'export physique du formulaire.
-	 * Attention, fonction récursive.
+     * Génère et met à jour le nom physique du champ utilisé pour l'export physique du formulaire.
+     * Attention, fonction récursive.
      * @param boolean $booFixUnicity permet de gérer les problèmes de doublons
      */
     private function _createPhysicalName($booFixUnicity = false)
     {
-		if (!empty($this->fields['separator']) || !empty($this->fields['captcha'])) return null;
+        if (!empty($this->fields['separator']) || !empty($this->fields['captcha'])) return null;
 
         /**
          * Génération du nom physique
@@ -274,11 +274,13 @@ class formsField extends data_object
         }
         else
         {
-            // Permet de protéger les modifications manuelle de la valeur du nom physique
-            $this->fields['fieldname'] = '_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ploopi_convertaccents(strtolower(trim($this->fields['fieldname'])))), '_');
-
             // Fix spécial doublon
             if ($booFixUnicity) $this->fields['fieldname'] = $this->fields['fieldname'].'_';
+            else
+            {
+                // Permet de protéger les modifications manuelle de la valeur du nom physique
+                $this->fields['fieldname'] = '_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ploopi_convertaccents(strtolower(trim($this->fields['fieldname'])))), '_');
+            }
         }
 
         /**
@@ -301,8 +303,8 @@ class formsField extends data_object
      */
     public function getSqlType()
     {
-		if (!empty($this->fields['separator']) || !empty($this->fields['captcha'])) return null;
-    	
+        if (!empty($this->fields['separator']) || !empty($this->fields['captcha'])) return null;
+
         $strType = '';
 
         /**
@@ -323,35 +325,35 @@ class formsField extends data_object
             break;
 
             case 'text':
-    	        switch($this->fields['format'])
-    	        {
-    	            case 'string':
-    	                $intSize = $this->fields['maxlength'];
-    	                if ($intSize <= 0 || $intSize > 255) $intSize = 255;
-    	                $strType = "VARCHAR({$intSize}) DEFAULT ''";
+                switch($this->fields['format'])
+                {
+                    case 'string':
+                        $intSize = $this->fields['maxlength'];
+                        if ($intSize <= 0 || $intSize > 255) $intSize = 255;
+                        $strType = "VARCHAR({$intSize}) DEFAULT ''";
                     break;
 
-    	            case 'integer':
-    	                $strType = "INT(10) DEFAULT 0";
+                    case 'integer':
+                        $strType = "INT(10) DEFAULT 0";
                     break;
 
-    	            case 'float':
-    	                $strType = "DOUBLE DEFAULT 0";
+                    case 'float':
+                        $strType = "DOUBLE DEFAULT 0";
                     break;
 
                     case 'date':
-    	                $strType = "INT(8) UNSIGNED DEFAULT 0";
+                        $strType = "INT(8) UNSIGNED DEFAULT 0";
                     break;
 
                     case 'time':
-    	                $strType = "VARCHAR(16) DEFAULT ''";
+                        $strType = "VARCHAR(16) DEFAULT ''";
                     break;
 
                     default:
-    	                $strType = "VARCHAR(255) DEFAULT ''";
+                        $strType = "VARCHAR(255) DEFAULT ''";
                     break;
-    	        }
-	        break;
+                }
+            break;
 
             default:
                 $strType = "VARCHAR(255) DEFAULT ''";
