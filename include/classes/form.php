@@ -606,7 +606,7 @@ class form_checkbox_list extends form_field
             $strKey = htmlentities($strKey);
 
             $strChecked = in_array($strKey, $this->arrSelected) ? ' checked="checked"' : '';
-            $strOutput .= "<input type=\"checkbox\" name=\"{$this->_strName}[]\" id=\"{$this->_strId}_{$intNumCheck}\" value=\"{$strKey}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents}><label for=\"{$this->_strId}_{$intNumCheck}\">{$strValue}</label>";
+            $strOutput .= "<span class=\"checkbutton\"><input type=\"checkbox\" name=\"{$this->_strName}[]\" id=\"{$this->_strId}_{$intNumCheck}\" value=\"{$strKey}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents}><label for=\"{$this->_strId}_{$intNumCheck}\">{$strValue}</label></span>";
 
             $intNumCheck++;
         }
@@ -677,7 +677,7 @@ class form_radio_list extends form_field
             $strKey = htmlentities($strKey);
 
             $strChecked = $strKey ==  $this->_strSelected ? ' checked="checked"' : '';
-            $strOutput .= "<input type=\"radio\" name=\"{$this->_strName}\" id=\"{$this->_strId}_{$intNumCheck}\" value=\"{$strKey}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents}><label for=\"{$this->_strId}_{$intNumCheck}\">{$strValue}</label>";
+            $strOutput .= "<span class=\"checkbutton\"><input type=\"radio\" name=\"{$this->_strName}\" id=\"{$this->_strId}_{$intNumCheck}\" value=\"{$strKey}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents}><label for=\"{$this->_strId}_{$intNumCheck}\">{$strValue}</label></span>";
 
             $intNumCheck++;
         }
