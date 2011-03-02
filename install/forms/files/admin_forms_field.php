@@ -73,22 +73,22 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
         <div class="ploopi_form" style="padding:4px;">
             <p>
                 <label><?php echo _FORMS_FIELD_POSITION; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="fieldnew_position" value="<?php echo $field->fields['position']; ?>">
+                <input type="text" class="text" style="width:30px;" name="fieldnew_position" value="<?php echo $field->fields['position']; ?>" />
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_INTERLINE; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="field_interline" value="<?php echo $field->fields['interline']; ?>">
+                <input type="text" class="text" style="width:30px;" name="field_interline" value="<?php echo $field->fields['interline']; ?>" />
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_NAME; ?>:</label>
-                <input type="text" class="text" name="field_name" value="<?php echo htmlentities($field->fields['name']); ?>">
+                <input type="text" class="text" name="field_name" value="<?php echo htmlentities($field->fields['name']); ?>" />
             </p>
             <?php
             if ($field->fields['fieldname'] == '') $field->fields['fieldname'] = forms_createphysicalname($field->fields['name']);
             ?>
             <p>
                 <label><?php echo _FORMS_FIELD_FIELDNAME; ?>:</label>
-                <input type="text" class="text" name="field_fieldname" value="<?php echo htmlentities($field->fields['fieldname']); ?>">
+                <input type="text" class="text" name="field_fieldname" value="<?php echo htmlentities($field->fields['fieldname']); ?>" maxlength="64" />
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_TYPE; ?>:</label>
@@ -108,7 +108,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_DEFAULTVALUE; ?>:</label>
-                <input type="text" class="text" size="30" name="field_defaultvalue" value="<?php echo htmlentities($field->fields['defaultvalue']); ?>">
+                <input type="text" class="text" size="30" name="field_defaultvalue" value="<?php echo htmlentities($field->fields['defaultvalue']); ?>" />
             </p>
         </div>
     </div>
@@ -131,7 +131,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                 </p>
                 <p>
                     <label><?php echo _FORMS_FIELD_MAXLENGTH; ?>:</label>
-                    <input type="text" class="text" style="width:50px;" name="field_maxlength" value="<?php echo htmlentities($field->fields['maxlength']); ?>">
+                    <input type="text" class="text" style="width:50px;" name="field_maxlength" value="<?php echo htmlentities($field->fields['maxlength']); ?>" />
                 </p>
             </div>
 
@@ -160,21 +160,21 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                             </select>
                             </td>
                             <td valign="top">
-                                <input style="width:25px;margin:5px;" type="button" class="button" value="+" onclick="javascript:forms_field_move_value(document.form_field.f_values,1)">
+                                <input style="width:25px;margin:5px;" type="button" class="button" value="+" onclick="javascript:forms_field_move_value(document.form_field.f_values,1)" />
                                 <br />
-                                <input style="width:25px;margin:5px;" type="button" class="button" value="-" onclick="javascript:forms_field_move_value(document.form_field.f_values,-1)">
+                                <input style="width:25px;margin:5px;" type="button" class="button" value="-" onclick="javascript:forms_field_move_value(document.form_field.f_values,-1)" />
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2">
-                            <input style="width:250px;margin:5px 0px 5px 0px;" name="newvalue" type="text" class="text">
+                            <input style="width:250px;margin:5px 0px 5px 0px;" name="newvalue" type="text" class="text" />
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2">
-                            <input style="width:70px;" type="button" class="button" value="<?php echo _PLOOPI_ADD; ?>" onclick="javascript:forms_field_add_value(document.form_field.f_values, document.form_field.newvalue)">
-                            <input style="width:70px;" type="button" class="button" value="<?php echo _PLOOPI_MODIFY; ?>" onclick="javascript:forms_field_modify_value(document.form_field.f_values, document.form_field.newvalue)">
-                            <input style="width:70px;" type="button" class="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:forms_field_delete_value(document.form_field.f_values)">
+                            <input style="width:70px;" type="button" class="button" value="<?php echo _PLOOPI_ADD; ?>" onclick="javascript:forms_field_add_value(document.form_field.f_values, document.form_field.newvalue)" />
+                            <input style="width:70px;" type="button" class="button" value="<?php echo _PLOOPI_MODIFY; ?>" onclick="javascript:forms_field_modify_value(document.form_field.f_values, document.form_field.newvalue)" />
+                            <input style="width:70px;" type="button" class="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:forms_field_delete_value(document.form_field.f_values)" />
                             </td>
                         </tr>
                         </table>
@@ -239,58 +239,58 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
             <div id="calculation" class="ploopi_form" style="display:none;">
                 <p>
                     <label><?php echo _FORMS_FIELD_FORMULA_EDITOR; ?>:</label>
-	            	<select class="select" onchange="javascript:forms_setcolumn(this);">
-	            	<option value="">(Choisissez un champ du formulaire)</option>
-                	<?php
-                	// Pour chaque champ du formulaire
-                	foreach($forms->getFields() as $objField)
-                	{
-                	    // On ne peut pas utiliser le champ courant dans la formule
-                	    if ($objField->fields['id'] != $field->fields['id'] && ($objField->fields['type'] == 'calculation' || in_array($objField->fields['format'], array('integer', 'float'))))
-                	    {
-                	        ?><option value="<?php echo $objField->fields['position']; ?>"><?php echo "C{$objField->fields['position']} - {$objField->fields['name']}"; ?></option><?php
-                	    }
-                	}
-                	?>
-                	</select>
-            	</p>
+                    <select class="select" onchange="javascript:forms_setcolumn(this);">
+                    <option value="">(Choisissez un champ du formulaire)</option>
+                    <?php
+                    // Pour chaque champ du formulaire
+                    foreach($forms->getFields() as $objField)
+                    {
+                        // On ne peut pas utiliser le champ courant dans la formule
+                        if ($objField->fields['id'] != $field->fields['id'] && ($objField->fields['type'] == 'calculation' || in_array($objField->fields['format'], array('integer', 'float'))))
+                        {
+                            ?><option value="<?php echo $objField->fields['position']; ?>"><?php echo "C{$objField->fields['position']} - {$objField->fields['name']}"; ?></option><?php
+                        }
+                    }
+                    ?>
+                    </select>
+                </p>
                 <p>
                     <label>&nbsp;</label>
-	            	<select class="select" onchange="javascript:forms_setfunction(this);">
-	            	<option value="">(Choisissez une fonction)</option>
-                	<?php
-                	// Pour chaque fonction
-                	foreach(formsArithmeticParser::getFunctionsDef() as $strFunction => $strDef)
-                	{
-            	        ?><option value="<?php echo $strFunction; ?>"><?php echo htmlentities($strDef); ?></option><?php
-                	}
-                	?>
-                	</select>
-            	</p>
+                    <select class="select" onchange="javascript:forms_setfunction(this);">
+                    <option value="">(Choisissez une fonction)</option>
+                    <?php
+                    // Pour chaque fonction
+                    foreach(formsArithmeticParser::getFunctionsDef() as $strFunction => $strDef)
+                    {
+                        ?><option value="<?php echo $strFunction; ?>"><?php echo htmlentities($strDef); ?></option><?php
+                    }
+                    ?>
+                    </select>
+                </p>
                 <p>
                     <label>&nbsp;</label>
-                	<?php
-                	// Pour chaque fonction
-                	foreach(formsArithmeticParser::getOperatorsDef() as $strOperator => $strDef)
-                	{
-            	        ?><input type="button" class="button" value="<?php echo $strOperator; ?>" style="width:25px;margin-right:2px;" title="<?php echo htmlentities($strDef); ?>" onclick="javascript:forms_setoperator(this);" /><?php
-                	}
-                	?><input type="button" class="button" value="(" style="width:25px;margin-right:2px;" onclick="javascript:forms_setoperator(this);" /><input type="button" class="button" value=")" style="width:25px;margin-right:2px;" onclick="javascript:forms_setoperator(this);" />
-            	</p>
+                    <?php
+                    // Pour chaque fonction
+                    foreach(formsArithmeticParser::getOperatorsDef() as $strOperator => $strDef)
+                    {
+                        ?><input type="button" class="button" value="<?php echo $strOperator; ?>" style="width:25px;margin-right:2px;" title="<?php echo htmlentities($strDef); ?>" onclick="javascript:forms_setoperator(this);" /><?php
+                    }
+                    ?><input type="button" class="button" value="(" style="width:25px;margin-right:2px;" onclick="javascript:forms_setoperator(this);" /><input type="button" class="button" value=")" style="width:25px;margin-right:2px;" onclick="javascript:forms_setoperator(this);" />
+                </p>
                 <p>
                     <label>&nbsp;</label>
-	            	<textarea class="text" name="field_formula" id="field_formula"><?php echo htmlentities($field->fields['formula']); ?></textarea>
-            	</p>
+                    <textarea class="text" name="field_formula" id="field_formula"><?php echo htmlentities($field->fields['formula']); ?></textarea>
+                </p>
             </div>
 
             <div id="fieldstyles" class="ploopi_form" style="display:block;">
                 <p>
                     <label><?php echo _FORMS_FIELD_STYLE_FORM; ?>:</label>
-                    <input type="text" class="text" name="field_style_form" value="<?php echo htmlentities($field->fields['style_form']); ?>">
+                    <input type="text" class="text" name="field_style_form" value="<?php echo htmlentities($field->fields['style_form']); ?>" />
                 </p>
                 <p>
                     <label><?php echo _FORMS_FIELD_STYLE_FIELD; ?>:</label>
-                    <input type="text" class="text" name="field_style_field" value="<?php echo htmlentities($field->fields['style_field']); ?>">
+                    <input type="text" class="text" name="field_style_field" value="<?php echo htmlentities($field->fields['style_field']); ?>" />
                 </p>
             </div>
 
@@ -298,23 +298,23 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
     </div>
 
     <p style="clear:both;padding:0 0 4px 4px;" class="ploopi_va">
-        <input type="checkbox" class="checkbox" name="field_option_formview" id="field_option_formview" value="1" <?php if ($field->fields['option_formview']) echo 'checked'; ?>>
+        <input type="checkbox" class="checkbox" name="field_option_formview" id="field_option_formview" value="1" <?php if ($field->fields['option_formview']) echo 'checked'; ?> />
         <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_formview').checked = !$('field_option_formview').checked;"><?php echo _FORMS_FIELD_FORMVIEW; ?></span>
-        <input type="checkbox" class="checkbox" name="field_option_arrayview" id="field_option_arrayview" value="1" <?php if ($field->fields['option_arrayview']) echo 'checked'; ?>>
+        <input type="checkbox" class="checkbox" name="field_option_arrayview" id="field_option_arrayview" value="1" <?php if ($field->fields['option_arrayview']) echo 'checked'; ?> />
         <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_arrayview').checked = !$('field_option_arrayview').checked;"><?php echo _FORMS_FIELD_ARRAYVIEW; ?></span>
-        <input type="checkbox" class="checkbox" name="field_option_exportview" id="field_option_exportview" value="1" <?php if ($field->fields['option_exportview']) echo 'checked'; ?>>
+        <input type="checkbox" class="checkbox" name="field_option_exportview" id="field_option_exportview" value="1" <?php if ($field->fields['option_exportview']) echo 'checked'; ?> />
         <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_exportview').checked = !$('field_option_exportview').checked;"><?php echo _FORMS_FIELD_EXPORTVIEW; ?></span>
     </p>
     <p style="clear:both;padding:0 0 4px 4px;" class="ploopi_va">
-        <input type="checkbox" class="checkbox" name="field_option_needed" id="field_option_needed" value="1" <?php if ($field->fields['option_needed']) echo 'checked'; ?>>
+        <input type="checkbox" class="checkbox" name="field_option_needed" id="field_option_needed" value="1" <?php if ($field->fields['option_needed']) echo 'checked'; ?> />
         <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_needed').checked = !$('field_option_needed').checked;"><?php echo _FORMS_FIELD_NEEDED; ?></span>
-        <input type="checkbox" class="checkbox" name="field_option_adminonly" id="field_option_adminonly" value="1" <?php if ($field->fields['option_adminonly']) echo 'checked'; ?>>
+        <input type="checkbox" class="checkbox" name="field_option_adminonly" id="field_option_adminonly" value="1" <?php if ($field->fields['option_adminonly']) echo 'checked'; ?> />
         <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_adminonly').checked = !$('field_option_adminonly').checked;"><?php echo _FORMS_FIELD_ADMINONLY; ?></span>
         <?php
         if ($forms->fields['typeform'] == 'cms')
         {
             ?>
-            <input type="checkbox" class="checkbox" name="field_option_wceview" id="field_option_wceview" value="1" <?php if ($field->fields['option_wceview']) echo 'checked'; ?>>
+            <input type="checkbox" class="checkbox" name="field_option_wceview" id="field_option_wceview" value="1" <?php if ($field->fields['option_wceview']) echo 'checked'; ?> />
             <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_wceview').checked = !$('field_option_wceview').checked;"><?php echo _FORMS_FIELD_WCEVIEW; ?></span>
             <?php
         }
@@ -324,19 +324,19 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 
 
 <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;padding:4px;overflow:auto;text-align:right;">
-    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}"); ?>'">
-    <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
+    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}"); ?>'" />
+    <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>" />
 </div>
 </form>
 
 
 <script language="javascript">
 ploopi_window_onload_stock(function() {
-	forms_display_fieldvalues();
-	forms_display_fieldformats();
-	forms_display_fieldcols();
-	forms_display_tablelink();
-	forms_display_calculation();
+    forms_display_fieldvalues();
+    forms_display_fieldformats();
+    forms_display_fieldcols();
+    forms_display_tablelink();
+    forms_display_calculation();
 });
 </script>
 
