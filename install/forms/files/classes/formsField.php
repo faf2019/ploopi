@@ -139,7 +139,8 @@ class formsField extends data_object
                      * Ajout du champ physique
                      */
                     $db->query("ALTER TABLE `".$objForm->getDataTableName()."` ADD `{$this->fields['fieldname']}` ".$this->getSqlType());
-                    $db->query("ALTER TABLE `".$objForm->getDataTableName()."` ADD INDEX (`{$this->fields['fieldname']}`)");
+                    $db->query("SHOW INDEXES FROM `".$objForm->getDataTableName()."`");
+                    if ($db->numrows() < 64) $db->query("ALTER TABLE `".$objForm->getDataTableName()."` ADD INDEX (`{$this->fields['fieldname']}`)");
                 }
                 else
                 {
@@ -253,9 +254,11 @@ class formsField extends data_object
      * Attention, fonction récursive.
      * @param boolean $booFixUnicity permet de gérer les problèmes de doublons
      */
-    private function _createPhysicalName($booFixUnicity = false)
+    private function _createPhysicalName($intCount = 0)
     {
         if (!empty($this->fields['separator']) || !empty($this->fields['captcha'])) return null;
+
+        $strFieldName = '';
 
         /**
          * Génération du nom physique
@@ -270,18 +273,13 @@ class formsField extends data_object
              * Ajout d'un préfixe obligatoire "form_"
              */
 
-            $this->fields['fieldname'] = '_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ploopi_convertaccents(strtolower(trim($this->fields['name'])))), '_');
+            $strFieldName = substr('_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ploopi_convertaccents(strtolower(trim($this->fields['name'])))), '_'), 0, 60);
         }
-        else
-        {
-            // Fix spécial doublon
-            if ($booFixUnicity) $this->fields['fieldname'] = $this->fields['fieldname'].'_';
-            else
-            {
-                // Permet de protéger les modifications manuelle de la valeur du nom physique
-                $this->fields['fieldname'] = '_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ploopi_convertaccents(strtolower(trim($this->fields['fieldname'])))), '_');
-            }
-        }
+        else $strFieldName = $strFieldName = substr('_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ploopi_convertaccents(strtolower(trim($this->fields['fieldname'])))), '_'), 0, 60);
+
+
+        // Fix spécial doublon
+        if ($intCount > 0) $strFieldName .= '_'.$intCount;
 
         /**
          * Vérification de l'unicité
@@ -291,9 +289,10 @@ class formsField extends data_object
         $objQuery->add_from('ploopi_mod_forms_field');
         if (!$this->isnew()) $objQuery->add_where('id != %d', $this->fields['id']);
         $objQuery->add_where('id_form = %d', $this->fields['id_form']);
-        $objQuery->add_where('fieldname = %s', $this->fields['fieldname']);
+        $objQuery->add_where('fieldname = %s', $strFieldName);
         /* Pas Unique => on relance */
-        if (current($objQuery->execute()->getarray(true)) > 0) $this->_createPhysicalName(true);
+        if (current($objQuery->execute()->getarray(true)) > 0) $this->_createPhysicalName($intCount+1);
+        else $this->fields['fieldname'] = $strFieldName;
     }
 
 

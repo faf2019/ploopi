@@ -1,3 +1,10 @@
+== Module FORMS - version 3.1.8c =====================================================
+
+2011-03-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug lié au nombre d'index max que peut supporter une table MyISAM. Le nombre d'index est limité à 64 par formulaire. Les champs créés au delà de cette limite ne seront plus indexés.
+ * Correction d'un bug lié à longueur max d'un intitulé de champ dans une table MyISAM. La longueur est désormais limitée à 60 caractères (+4 caractères réservés à la gestion des doublons).
+
 == Module FORMS - version 3.1.8b =====================================================
 
 2011-02-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
