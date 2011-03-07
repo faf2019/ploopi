@@ -537,8 +537,6 @@ class formsForm extends data_object
             }
         }
 
-        echo $objQuery->get_sql();
-
         return $objQuery;
     }
 
