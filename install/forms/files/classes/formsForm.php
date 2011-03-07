@@ -443,7 +443,23 @@ class formsForm extends data_object
                         case 'ip': $strFieldName = 'rec.`ip`'; break;
                         case 'date_validation':
                             $strFieldName = 'rec.`date_validation`';
-                            foreach($arrValues as $key => $value) $arrValues[$key] = ploopi_local2timestamp($value);
+                            foreach($arrValues as $key => $value)
+                            {
+                                $arrDT = explode(' ', $value);
+                                // Date et heure
+                                if (sizeof($arrDT) >= 2) $arrValues[$key] = ploopi_local2timestamp($arrDT[0], $arrDT[1]);
+                                // Date seule
+                                else
+                                {
+                                    $arrValues[$key] = ploopi_local2timestamp($arrDT[0]);
+                                    // Cas particulier: recherche exacte sur date seule
+                                    if ($row['op'] == '=')
+                                    {
+                                        $row['op'] = 'begin';
+                                        $arrValues[$key] = substr($arrValues[$key], 0, 8);
+                                    }
+                                }
+                            }
                         break;
                         default: $strFieldName = ''; break;
                     }
