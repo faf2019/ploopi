@@ -218,9 +218,6 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
          */
 
         ploopi_send_form($arrFrom, $arrTo, $arrEmailContent['Formulaire']['Titre'], $arrEmailContent);
-        ploopi_print_r($arrFrom);
-        ploopi_print_r($arrTo);
-        die();
     }
 
     if ($_SESSION['ploopi']['mode'] == 'backoffice') ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}");
