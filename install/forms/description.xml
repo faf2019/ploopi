@@ -2,7 +2,7 @@
 <ploopi>
    <moduletype>
       <label>forms</label>
-      <version>3.1.8d<version>
+      <version>3.1.8d</version>
       <author>Ovensia / HeXad</author>
       <date>20110307000000</date>
       <description>Gestion de Formulaires</description>
@@ -34,13 +34,13 @@
          <public>0</public>
          <description/>
       </paramtype>
-	  <paramtype>
-		 <name>forms_webservice_jodconverter</name>
-    	 <label>Web Service JODConverter</label>
-    	 <default_value></default_value>
-    	 <public>0</public>
-    	 <description/>
-	  </paramtype>         
+      <paramtype>
+         <name>forms_webservice_jodconverter</name>
+         <label>Web Service JODConverter</label>
+         <default_value></default_value>
+         <public>0</public>
+         <description/>
+      </paramtype>
       <action>
          <id_action>1</id_action>
          <label>Gérer les Formulaires</label>
