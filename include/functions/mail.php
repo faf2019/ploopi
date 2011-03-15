@@ -250,7 +250,7 @@ function ploopi_send_mail_smtp($from, $to, $subject, $message, $params = null, $
         'host' => isset($params['host']) ? $params['host'] : 'localhost',
         'auth' => isset($params['auth']) ? $params['auth'] : false,
         'username' => isset($params['username']) ? $params['username'] : '',
-        'password' => isset($params['username']) ? $params['username'] : '',
+        'password' => isset($params['password']) ? $params['password'] : '',
     ));
 
     $str_to = '';
@@ -386,6 +386,45 @@ function ploopi_send_mail_smtp($from, $to, $subject, $message, $params = null, $
 
     return PEAR::isError($mail);
 }
+
+/**
+ * Génère une version HTML d'un tableau php multidimensionnel (formulaire par exemple)
+ *
+ * @param array $form tableau à convertir au format HTML
+ * @return string code HTML du tableau
+ */
+
+function ploopi_form2html($form)
+{
+    $content = '';
+
+    foreach($form as $field => $value)
+    {
+        if (is_array($value))
+        {
+            $content.=  "
+                    <tr bgcolor='#ffffff'>
+                        <td align='left'><b>$field</b></td>
+                        <td align='left' valign='top'>
+                        <table cellpadding='3' cellspacing='1' bgcolor='#000000'>".ploopi_form2html($value)."</table>
+                        </td>
+                    </tr>
+                    ";
+        }
+        else
+        {
+            $content.=  "
+                    <tr bgcolor='#ffffff'>
+                        <td align='left' valign='top'><b>$field</b></td>
+                        <td align='left'>$value</td>
+                    </tr>
+                    ";
+        }
+    }
+
+    return($content);
+}
+
 /**
  * Envoie un formulaire (ou un tableau) par mail. Gère les emetteurs multiples, les destinataires multiples, le CC multiple, le BCC multiple, le REPLYTO multiple
  *
