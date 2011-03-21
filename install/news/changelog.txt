@@ -1,3 +1,9 @@
+== Module NEWS - version 2.5.2f ====================================================
+
+2012-03-21  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
+
+* Correction : Bug à l'ouverture du calendrier
+
 == Module NEWS - version 2.5.2e ====================================================
 
 2010-01-19  Xavier Toussaint ~ HeXad <xavier@hexad.fr>

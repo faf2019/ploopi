@@ -85,7 +85,7 @@ else echo $skin->open_simplebloc(str_replace("LABEL",$news->fields['title'],_NEW
             <p>
                 <label><?php echo _NEWS_LABEL_PUBLISHDATE; ?>:</label>
                 <input class="text" type="text" id="news_date_publish" name="news_date_publish" value="<?php echo $localdate['date']; ?>" style="width:100px;">
-                <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('news_date_publish', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                <?php ploopi_open_calendar('news_date_publish'); ?>
             </p>
             <p>
                 <label><?php echo _NEWS_LABEL_PUBLISHTIME; ?>:</label>

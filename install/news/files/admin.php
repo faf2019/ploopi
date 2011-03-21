@@ -44,17 +44,6 @@ $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
 switch($op)
 {
-    /*
-    case 'image_galery':
-        $explorer_type = 'image_galery';
-        include_once './modules/doc/fck_imagegalery.php';
-    break;
-
-    case 'article_selectfile':
-        include_once './modules/doc/fck_imagegalery.php';
-    break;
-    */
-
     case 'article_selectlink':
         $headings = wce_getheadings();
         $articles = wce_getarticles();
@@ -63,11 +52,11 @@ switch($op)
 
     case 'save_newscat':
         if (ploopi_isactionallowed(_NEWS_ACTION_MANAGECAT))
-        { 
+        {
             $newscat = new newscat();
             if (!empty($_POST['newscat_id']) && is_numeric($_POST['newscat_id'])) $newscat->open($_POST['newscat_id']);
             else $newscat->setuwm();
-    
+
             $newscat->setvalues($_POST,'newscat_');
             $newscat->save();
             ploopi_create_user_action_log(_NEWS_ACTION_MANAGECAT, $newscat->fields['id']);
@@ -88,24 +77,24 @@ switch($op)
 
     case 'save_news':
         if (ploopi_isactionallowed(array(_NEWS_ACTION_WRITE, _NEWS_ACTION_MODIFY)))
-        { 
+        {
             $news = new news();
             if (!empty($_POST['news_id']) && is_numeric($_POST['news_id'])) $news->open($_POST['news_id']);
             else $news->setuwm();
-    
+
             $news->setvalues($_POST,'news_');
-    
+
             if (isset($_POST['fck_news_content'])) $news->fields['content'] = $_POST['fck_news_content'];
-    
+
             if (isset($_POST['news_date_publish'])) $news->fields['date_publish'] = ploopi_local2timestamp($_POST['news_date_publish'], $_POST['newsx_time_publish']);
-    
+
             $news->save();
-    
+
             if ($news->new) ploopi_create_user_action_log(_NEWS_ACTION_WRITE, $news->fields['id']);
             else ploopi_create_user_action_log(_NEWS_ACTION_MODIFY, $news->fields['id']);
             ploopi_redirect("admin.php?newsTabItem=tabNewsModify&news_id={$news->fields['id']}");
         }
-        
+
         ploopi_redirect("admin.php");
     break;
 
@@ -132,7 +121,7 @@ switch($op)
                 $news->fields['published'] = 0;
                 $news->save();
             }
-            
+
         }
         ploopi_redirect("admin.php?newsTabItem=tabNewsModify");
     break;
