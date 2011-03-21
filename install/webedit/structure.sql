@@ -186,3 +186,6 @@ ALTER TABLE `ploopi_mod_webedit_heading` ADD `private` TINYINT( 1 ) UNSIGNED NOT
 ALTER TABLE `ploopi_mod_webedit_heading` ADD `private_visible` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `private` ;
 
 ALTER TABLE `ploopi_mod_webedit_heading` CHANGE `linkedpage` `linkedpage` VARCHAR( 10 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '0';
+
+ALTER TABLE `ploopi_mod_webedit_article` ADD `width` INT( 10 ) NOT NULL DEFAULT '0', ADD `height` INT( 10 ) NOT NULL DEFAULT '0';
+ALTER TABLE `ploopi_mod_webedit_article_draft` ADD `width` INT( 10 ) NOT NULL DEFAULT '0', ADD `height` INT( 10 ) NOT NULL DEFAULT '0';
