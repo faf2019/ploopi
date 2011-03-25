@@ -1,3 +1,9 @@
+== Module Wiki - version 1.1.0b ====================================================
+
+2011-03-25  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Corrections de compatibilité avec php5.3
+
 == Module Wiki - version 1.1.0a ====================================================
 
 2010-10-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

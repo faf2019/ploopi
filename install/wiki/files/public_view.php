@@ -327,15 +327,18 @@ echo $skin->open_simplebloc($strWikiPageId);
 
                 $strRevLink2 = "<a href=\"".ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId).$strRevision)."\"><strong>{$_POST['wiki_history_diff2']}</strong> ({$strUser}, {$strLocalDate})</a>";
 
+               	// Attention cette partie génère des DEPRECATED avec php 5.3 (pas de correctif connu au 25/03/2011)
+ 				ploopi_unset_error_handler();
                 include_once "Text/Diff.php";
                 include_once "Text/Diff/Renderer.php";
                 include_once "Text/Diff/Renderer/inline.php";
-
+ 				ploopi_set_error_handler();
+                
                 if ($strContent1 == $strContent2) $strDiff = $strContent1;
                 else
                 {
-                    $objTextDiff = &new Text_Diff(explode("\n", $strContent2), explode("\n", $strContent1));
-                    $objRenderer = &new Text_Diff_Renderer_inline();
+                    $objTextDiff = new Text_Diff(explode("\n", $strContent2), explode("\n", $strContent1));
+                    $objRenderer = new Text_Diff_Renderer_inline();
                     $strDiff = $objRenderer->render($objTextDiff);
                 }
 
