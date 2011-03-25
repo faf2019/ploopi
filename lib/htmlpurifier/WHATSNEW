@@ -1,7 +1,8 @@
-HTML Purifier 4.0 is a major feature release focused on configuration
-It deprecates the $config->set('Ns', 'Directive', $value) syntax for
-$config->set('Ns.Directive', $value); both syntaxes work but the
-former will throw errors.  There are also some new features:  robust
-support for name/id, configuration inheritance, remove nbsp in
-the RemoveEmpty autoformatter, userland configuration directives
-and configuration serialization.
+HTML Purifier 4.2.0 is a minor release that implements a number of
+feature requests accumulated over half a year.  New configuration
+options include %Core.RemoveProcessingInstructions,
+%CSS.ForbiddenProperties, %HTML.FlashAllowFullScreen and
+%Core.NormalizeNewlines.  Additionally,%URI.DisableResources is
+now functional and file: is an optionally supported URI scheme.
+There are also some minor bugfixes, usability improvements and
+documentation updates.
