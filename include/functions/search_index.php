@@ -42,6 +42,9 @@
 
 include_once './include/classes/search_index.php';
 
+if (!function_exists('stem_french')) { function stem_french($str) { return ''; } }
+
+
 /**
  * Génération d'un identifiant unique pour un enregistrement d'un objet
  *
@@ -732,7 +735,7 @@ function ploopi_highlight($content, $words, $snippet_length = 150, $snippet_num 
     $string = str_replace($arrEncoder['char'],$arrEncoder['ereg'],$string);
 
     $reg_strings = str_replace('@#@','|', $string);
-    $stop_regs = "[][(){}[:blank:]=&?!&#%\$£*@+%:;,/\.'\"]";
+    $stop_regs = "[][(){}[:blank:]=&?!&#%\$£*@+%:;,\/\.'\"]";
     $reg_strings = "/({$stop_regs}{1}|^)({$reg_strings})()/i";
 
     $num_extracts = 0;
