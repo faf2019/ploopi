@@ -49,7 +49,7 @@ abstract class form_element
         '_arrValues',
         '_strName',
         '_strId',
-    	'_arrOptions'
+        '_arrOptions'
     );
 
     private static $_arrEvents = array(
@@ -285,7 +285,7 @@ class form_field extends form_element
      */
     private static $_arrDefaultOptions = array(
         'description' => '',
-    	'style' => null,
+        'style' => null,
         'style_form' => null,
         'class' => null,
         'class_form' => null,
@@ -1283,7 +1283,7 @@ class form
         $this->_arrOptions = is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions);
 
         // Création d'un panel par défaut (utilisé si l'utilisateur n'en crée pas)
-        $this->addPanel($this->_objDefaultPanel = &new form_panel(form_panel::strDefaultPanel, null, array('style' => 'border:0;')));
+        $this->addPanel($this->_objDefaultPanel = new form_panel(form_panel::strDefaultPanel, null, array('style' => 'border:0;')));
     }
 
     /**
