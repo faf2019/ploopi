@@ -227,7 +227,7 @@ function ploopi_xmlentities($str, $utf8 = false, $extended = true)
     if ($extended) for($i=128; $i<256; $i++) $asc2uni[$utf8 ? utf8_encode(chr($i)) : chr($i)] = "&#x".dechex($i).";";
 
     $str = str_replace(array("&", ">", "<", "\"", "'", "\r"), array("&amp;", "&gt;", "&lt;", "&quot;", "&apos;", ""), $str);
-    
+
     return $extended ? $utf8 ? ploopi_strtr($str, $asc2uni) : strtr($str, $asc2uni) : $str;
 }
 
@@ -255,7 +255,7 @@ function ploopi_utf8encode($str)
  * @param boolean true si les caractères doivent être adaptés
  * @return chaîne décodée
  */
-function ploopi_iso8859_clean($str, $booTranslit = true) 
+function ploopi_iso8859_clean($str, $booTranslit = true)
 {
     $str = strtr($str, array(
        "\x80" => "&#8364;", /* EURO SIGN */
@@ -278,7 +278,7 @@ function ploopi_iso8859_clean($str, $booTranslit = true)
        "\x95" => "&#8226;", /* BULLET */
        "\x96" => "&#8211;", /* EN DASH */
        "\x97" => "&#8212;", /* EM DASH */
-    
+
        "\x98" => "&#732;",  /* SMALL TILDE */
        "\x99" => "&#8482;", /* TRADE MARK SIGN */
        "\x9a" => "&#353;",  /* LATIN SMALL LETTER S WITH CARON */
@@ -287,7 +287,7 @@ function ploopi_iso8859_clean($str, $booTranslit = true)
        "\x9e" => "&#382;",  /* LATIN SMALL LETTER Z WITH CARON */
        "\x9f" => "&#376;"   /* LATIN CAPITAL LETTER Y WITH DIAERESIS*/
     ));
-    
+
     if ($booTranslit)
         $str = strtr($str, array(
            '&#8364;' => 'Euro', /* EURO SIGN */
@@ -318,7 +318,7 @@ function ploopi_iso8859_clean($str, $booTranslit = true)
            '&#382;' => 'z',     /* LATIN SMALL LETTER Z WITH CARON */
            '&#376;' => 'Y'      /* LATIN CAPITAL LETTER Y WITH DIAERESIS*/
         ));
-        
+
     return $str;
 }
 
@@ -396,7 +396,7 @@ function ploopi_htmlpurifier($strContent, $booTrusted = false)
     $objConfig->set('Cache.SerializerPath', $strCachePath);
     $objConfig->set('Core.Encoding', 'ISO-8859-15');
     $objConfig->set('HTML.Doctype', 'XHTML 1.0 Strict');
-    
+
     if ($booTrusted)
     {
         $objConfig->set('HTML.Trusted', true);
@@ -448,7 +448,7 @@ function ploopi_is_url($url)
     $urlregex .= "(\/([a-z0-9+\$_-]\.?)+)*\/?";
 
     // GET Query (optional)
-    $urlregex .= "(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?";
+    $urlregex .= "(\?[a-z+&\$_.-][a-z0-9;:@\/&%=+\$_.-]*)?";
 
     // ANCHOR (optional)
     $urlregex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?\$/i";
@@ -463,7 +463,7 @@ function ploopi_is_url($url)
  * @return string la chaine nettoyée
  */
 
-function ploopi_clean_filename($str) 
+function ploopi_clean_filename($str)
 {
     $str = ploopi_convertaccents($str);
     $arrSearch = array ('@[ */]@i','@[^a-zA-Z0-9_-]@');
