@@ -36,18 +36,13 @@
  */
 ploopi_init_module('system');
 
-$op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
+$op = empty($_REQUEST['op']) ? (ploopi_getparam('system_submenu_display') ? 'tickets' : 'profile') : $_REQUEST['op'];
 
 switch($op)
 {
     case 'search':
     case 'search_next':
         include_once 'public_search.php';
-    break;
-
-    default:
-    case 'tickets':
-        include './modules/system/public_tickets.php';
     break;
 
     case 'annotation':
@@ -106,7 +101,7 @@ switch($op)
             rename($_SESSION['system']['user_photopath'], $user->getphotopath());
             unset($_SESSION['system']['user_photopath']);
         }
-        
+
         // Suppression photo
         if (ploopi_getsessionvar("deletephoto_{$user->fields['id']}")) $user->deletephoto();
 
@@ -116,6 +111,11 @@ switch($op)
 
     case 'profile':
         include './modules/system/public_user.php';
+    break;
+
+    default:
+    case 'tickets':
+        include './modules/system/public_tickets.php';
     break;
 }
 ?>

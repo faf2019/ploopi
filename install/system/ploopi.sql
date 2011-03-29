@@ -1373,8 +1373,8 @@ ALTER TABLE `ploopi_user_action_log` ADD INDEX ( `module_type` );
 ALTER TABLE `ploopi_user_action_log` ADD INDEX ( `module` );
 
 INSERT INTO `ploopi_mb_action` ( `id_module_type` , `id_action` , `label` , `description` , `id_workspace` , `id_object` , `role_enabled` )
-VALUES 
-('1', '39', 'Créer un Espace de Travail', NULL , '0', '0', '1'), 
+VALUES
+('1', '39', 'Créer un Espace de Travail', NULL , '0', '0', '1'),
 ('1', '40', 'Modifier un Espace de Travail', NULL , '0', '0', '1'),
 ('1', '41', 'Supprimer un Espace de Travail', NULL , '0', '0', '1'),
 ('1', '42', 'Clôner un Espace de Travail', NULL , '0', '0', '1');
@@ -1384,9 +1384,9 @@ ALTER TABLE `ploopi_mb_table` ADD PRIMARY KEY ( `name` );
 ALTER TABLE `ploopi_mb_field` DROP PRIMARY KEY;
 ALTER TABLE `ploopi_mb_field` ADD PRIMARY KEY ( `tablename` , `name` );
 
-ALTER TABLE `ploopi_mb_relation` ADD INDEX ( `tablesrc` ); 
-ALTER TABLE `ploopi_mb_relation` ADD INDEX ( `fieldsrc` ); 
-ALTER TABLE `ploopi_mb_relation` ADD INDEX ( `tabledest` ); 
+ALTER TABLE `ploopi_mb_relation` ADD INDEX ( `tablesrc` );
+ALTER TABLE `ploopi_mb_relation` ADD INDEX ( `fieldsrc` );
+ALTER TABLE `ploopi_mb_relation` ADD INDEX ( `tabledest` );
 ALTER TABLE `ploopi_mb_relation` ADD INDEX ( `fielddest` );
 ALTER TABLE `ploopi_mb_field` ADD INDEX ( `id_module_type` );
 ALTER TABLE `ploopi_mb_schema` ADD INDEX ( `tablesrc` );
@@ -1402,7 +1402,7 @@ CHANGE `city` `city` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_
 CHANGE `country` `country` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
 CHANGE `floor` `floor` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
 CHANGE `office` `office` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
-CHANGE `rank` `rank` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL; 
+CHANGE `rank` `rank` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 
 ALTER TABLE `ploopi_serializedvar` DROP PRIMARY KEY;
 ALTER TABLE `ploopi_serializedvar` ADD PRIMARY KEY ( `id` , `id_session` ) ;
@@ -1582,3 +1582,9 @@ INSERT INTO `ploopi_mb_schema` (`tablesrc`, `tabledest`, `id_module_type`) VALUE
 
 
 UPDATE `ploopi_module_type` SET `version` = '1.8.9.0', `author` = 'Ovensia', `date` = '20101214000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+
+INSERT INTO `ploopi_param_type` (`id_module_type` ,`name` ,`default_value` ,`public` ,`description` ,`label`) VALUES ('1', 'system_submenu_display', '1', '0', NULL , 'Afficher les sous-menus de (Mon Espace)');
+INSERT INTO `ploopi_param_default` (`id_module` ,`name` ,`value` ,`id_module_type`) VALUES ('1', 'system_submenu_display', '1', '1');
+INSERT INTO `ploopi_param_choice` (`id_module_type` ,`name` ,`value` ,`displayed_value`) VALUES ('1', 'system_submenu_display', '1', 'oui'), ('1', 'system_submenu_display', '0', 'non');
+
+UPDATE `ploopi_module_type` SET `version` = '1.8.9.1', `author` = 'Ovensia', `date` = '20110329000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;

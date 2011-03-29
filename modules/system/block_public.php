@@ -32,37 +32,45 @@
 
 /**
  * Initialisation du module
- */ 
+ */
 
-$op = empty($_REQUEST['op']) ? 'tickets' : $_REQUEST['op'];
+
+if (ploopi_getparam('system_submenu_display'))
+{
+    $op = empty($_REQUEST['op']) ? 'tickets' : $_REQUEST['op'];
+
+    $block->addmenu(
+        _PLOOPI_LABEL_MYTICKETS,
+        ploopi_urlencode('admin.php?op=tickets', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        $op == 'tickets'
+    );
+
+    $block->addmenu(
+        _PLOOPI_LABEL_MYANNOTATIONS,
+        ploopi_urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        $op == 'annotation'
+    );
+}
+else $op = empty($_REQUEST['op']) ? 'profile' : $_REQUEST['op'];
 
 $block->addmenu(
-    _PLOOPI_LABEL_MYTICKETS, 
-    ploopi_urlencode('admin.php?op=tickets', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-    $op == 'tickets'
-);
-
-$block->addmenu(
-    _PLOOPI_LABEL_MYANNOTATIONS, 
-    ploopi_urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-    $op == 'annotation'
-);
-
-$block->addmenu(
-    _PLOOPI_LABEL_MYPROFILE, 
+    _PLOOPI_LABEL_MYPROFILE,
     ploopi_urlencode('admin.php?op=profile', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
     $op == 'profile'
 );
 
-$block->addmenu(
-    _PLOOPI_LABEL_MYDATA, 
-    ploopi_urlencode('admin.php?op=actions', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-    $op == 'actions'
-);
+if (ploopi_getparam('system_submenu_display'))
+{
+    $block->addmenu(
+        _PLOOPI_LABEL_MYDATA,
+        ploopi_urlencode('admin.php?op=actions', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        $op == 'actions'
+    );
 
-$block->addmenu(
-    _PLOOPI_LABEL_MYPARAMS, 
-    ploopi_urlencode('admin.php?op=param', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-    $op == 'param'
-);
+    $block->addmenu(
+        _PLOOPI_LABEL_MYPARAMS,
+        ploopi_urlencode('admin.php?op=param', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        $op == 'param'
+    );
+}
 ?>
