@@ -200,13 +200,13 @@ function wiki_highlight($strContent, $strFormat = 'php')
     {
         require_once "Text/Highlighter.php";
         require_once "Text/Highlighter/Renderer/Html.php";
+
+        ploopi_unset_error_handler();
         $objHL =& Text_Highlighter::factory($strFormat);
-
         $objHL->setRenderer(new Text_Highlighter_Renderer_Html());
-
-
         $strContent = $objHL->highlight($strContent);
-    }
+        ploopi_set_error_handler();
+   }
     else $strContent = '<pre>'.ploopi_nl2br(htmlentities($strContent)).'</pre>';
 
     return "<div class=\"hl-content\"><table><tr><td class=\"hl-num\">\n$strLines\n</td><td class=\"hl-src\">\n$strContent\n</td></tr></table></div>";
