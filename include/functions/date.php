@@ -97,7 +97,6 @@ function ploopi_timeverify($mytime) {return (preg_match(_PLOOPI_TIMEFORMAT_EREG,
 
 function ploopi_gettimestampdetail($mytimestamp)
 {
-    // ereg(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $mytimestamp, $regs);
     preg_match(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $mytimestamp, $regs);
     return $regs;
 }
@@ -161,42 +160,40 @@ function ploopi_unixtimestamp2local($mytimestamp) { return(date(_PLOOPI_DATEFORM
 function ploopi_timestamp2local($mytimestamp)
 {
     // Output array declaration
-    $mydate = array();
+    $mydate = array('date' => '', 'time' => '');
 
     // Trimming
     $mytimestamp = trim($mytimestamp);
 
     // Exploding MySQL timestamp into human readable values
     $timestamparray = ploopi_gettimestampdetail($mytimestamp);
-//ploopi_print_json($timestamparray);
-    $year = $timestamparray[_PLOOPI_DATE_YEAR];
-    $month = $timestamparray[_PLOOPI_DATE_MONTH];
-    $day = $timestamparray[_PLOOPI_DATE_DAY];
-    $hour = $timestamparray[_PLOOPI_DATE_HOUR];
-    $minute = $timestamparray[_PLOOPI_DATE_MINUTE];
-    $second = $timestamparray[_PLOOPI_DATE_SECOND];
-
-    // Re-constucting date depending on the "_PLOOPI_DATEFORMAT"
-    switch (_PLOOPI_DATEFORMAT)
+    if (is_array($timestamparray) && sizeof($timestamparray) == 7)
     {
-        CASE _PLOOPI_DATEFORMAT_FR:
-        {
-            $localedate = $day . '/' .$month . '/' . $year;
-        }
-        BREAK;
+        $year = $timestamparray[_PLOOPI_DATE_YEAR];
+        $month = $timestamparray[_PLOOPI_DATE_MONTH];
+        $day = $timestamparray[_PLOOPI_DATE_DAY];
+        $hour = $timestamparray[_PLOOPI_DATE_HOUR];
+        $minute = $timestamparray[_PLOOPI_DATE_MINUTE];
+        $second = $timestamparray[_PLOOPI_DATE_SECOND];
 
-        CASE _PLOOPI_DATEFORMAT_FR:
+        // Re-constucting date depending on the "_PLOOPI_DATEFORMAT"
+        switch (_PLOOPI_DATEFORMAT)
         {
-            $localedate = $year . '/' . $month . '/' . $day;
+            case _PLOOPI_DATEFORMAT_FR:
+                $localedate = $day . '/' .$month . '/' . $year;
+            break;
+
+            case _PLOOPI_DATEFORMAT_FR:
+                $localedate = $year . '/' . $month . '/' . $day;
+            break;
         }
-        BREAK;
+
+        $localetime = $hour . ':' . $minute . ':' . $second;
+
+        // Constructing output array
+        $mydate['date'] = $localedate;
+        $mydate['time'] = $localetime;
     }
-
-    $localetime = $hour . ':' . $minute . ':' . $second;
-
-    // Constructing output array
-    $mydate['date'] = $localedate;
-    $mydate['time'] = $localetime;
 
     // returning the output array
     return $mydate;
@@ -218,16 +215,16 @@ function ploopi_local2timestamp($mydate,$mytime = '00:00:00')
         preg_match(_PLOOPI_TIMEFORMAT_EREG, $mytime, $timeregs);
         switch(_PLOOPI_DATEFORMAT)
         {
-            CASE _PLOOPI_DATEFORMAT_FR:
+            case _PLOOPI_DATEFORMAT_FR:
                 preg_match(_PLOOPI_DATEFORMAT_EREG_FR, $mydate, $dateregs);
                 if ($dateregs[3]<100) $dateregs[3]+=2000;
                 $mydatetime = date(_PLOOPI_TIMESTAMPFORMAT_MYSQL, mktime($timeregs[1],$timeregs[2],$timeregs[3],$dateregs[2],$dateregs[1],$dateregs[3]));
-            BREAK;
-            CASE _PLOOPI_DATEFORMAT_US:
+            break;
+            case _PLOOPI_DATEFORMAT_US:
                 preg_match(_PLOOPI_DATEFORMAT_EREG_US, $mydate, $dateregs);
                 if ($dateregs[1]<100) $dateregs[1]+=2000;
                 $mydatetime = date(_PLOOPI_TIMESTAMPFORMAT_MYSQL, mktime($timeregs[1],$timeregs[2],$timeregs[3],$dateregs[2],$dateregs[3],$dateregs[1]));
-            BREAK;
+            break;
         }
 
         return($mydatetime);
@@ -297,7 +294,7 @@ function ploopi_numweek2unixtimestamp($intNumWeek, $intYear)
  * Retourne un booléen indiquant si une date correspond à un jour férié
  *
  * @copyright Olravet (http://olravet.fr/)
- * 
+ *
  * @param int $timestamp date au format timestamp unix
  * @return boolean true si le jour est férié
  */
@@ -307,9 +304,9 @@ function ploopi_holiday($timestamp)
     $intDay = date("d", $timestamp);
     $intMonth = date("m", $timestamp);
     $intYear = date("Y", $timestamp);
-    
+
     $booIsHoliday = false;
-    
+
     // dates fériées fixes
     if($intDay == 1 && $intMonth == 1) $booIsHoliday = true; // 1er janvier
     elseif($intDay == 1 && $intMonth == 5) $booIsHoliday = true; // 1er mai
@@ -319,19 +316,19 @@ function ploopi_holiday($timestamp)
     elseif($intDay == 1 && $intMonth == 11) $booIsHoliday = true; // 1 novembre
     elseif($intDay == 11 && $intMonth == 11) $booIsHoliday = true; // 11 novembre
     elseif($intDay == 25 && $intMonth == 12) $booIsHoliday = true; // 25 décembre
-    
+
     // fêtes religieuses mobiles
 
     $pak = easter_date($intYear);
     $jp = date("d", $pak);
     $mp = date("m", $pak);
     if($jp == $intDay && $mp == $intMonth) { $booIsHoliday = true;} // Pâques
-    
+
     $lpk = mktime(date("H", $pak), date("i", $pak), date("s", $pak), date("m", $pak), date("d", $pak) +1, date("Y", $pak) );
     $jp = date("d", $lpk);
     $mp = date("m", $lpk);
     if($jp == $intDay && $mp == $intMonth){ $booIsHoliday = true; } // Lundi de Pâques
-    
+
     $asc = mktime(date("H", $pak), date("i", $pak), date("s", $pak), date("m", $pak), date("d", $pak) + 39, date("Y", $pak) );
     $jp = date("d", $asc);
     $mp = date("m", $asc);
@@ -341,7 +338,7 @@ function ploopi_holiday($timestamp)
     $jp = date("d", $pe);
     $mp = date("m", $pe);
     if($jp == $intDay && $mp == $intMonth) {$booIsHoliday = true;} // Pentecôte
-    
+
     $lp = mktime(date("H", $asc), date("i", $pak), date("s", $pak), date("m", $pak), date("d", $pak) + 50, date("Y", $pak) );
     $jp = date("d", $lp);
     $mp = date("m", $lp);
@@ -426,7 +423,7 @@ function ploopi_tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezon
     ploopi_unset_error_handler();
     $tz_dst = timezone_open($timezone_name_dst);
     ploopi_set_error_handler();
-    
+
     // on parse le timestamp 'mysql' pour créer un timestamp unix
     preg_match(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $ts, $tsregs);
 
@@ -443,7 +440,7 @@ function ploopi_tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezon
     {
         // changement de fuseau horaire (dest)
         date_timezone_set($date, $tz_dst);
-    
+
         // on renvoie la date formatée timestamp mysql
         return(date_format($date, _PLOOPI_TIMESTAMPFORMAT_MYSQL));
     }
@@ -480,7 +477,7 @@ function ploopi_tz_getutc($timezone_name = 'UTC')
     ploopi_unset_error_handler();
     $objDateTimeZone = timezone_open($timezone_name);
     ploopi_set_error_handler();
-    
+
     if ($objDateTimeZone !== false) return('UTC '.date_format(date_create(null, $objDateTimeZone), "P"));
     else return(false);
 }
@@ -492,11 +489,11 @@ function ploopi_tz_getutc($timezone_name = 'UTC')
  */
 function ploopi_open_calendar($strInputFieldId, $booEcho = true, $strClass = null, $strStyle = null)
 {
-    $strScript = $_SESSION['ploopi']['mode'] == 'backoffice' ? 'admin' : 'index'; 
-    
-    $strClass = $strClass == null ? '' : " class=\"{$strClass}\""; 
-    $strStyle = $strStyle == null ? '' : " style=\"{$strStyle}\""; 
-    
+    $strScript = $_SESSION['ploopi']['mode'] == 'backoffice' ? 'admin' : 'index';
+
+    $strClass = $strClass == null ? '' : " class=\"{$strClass}\"";
+    $strStyle = $strStyle == null ? '' : " style=\"{$strStyle}\"";
+
     $strEcho = "
         <a href=\"javascript:void(0);\" onclick=\"javascript:ploopi_xmlhttprequest_topopup(192, event, 'ploopi_popup_calendar', '{$strScript}-light.php?ploopi_op=calendar_open', 'selected_date='+$('{$strInputFieldId}').value+'&inputfield_id={$strInputFieldId}', 'POST', true);\" {$strClass}{$strStyle}>
         <img src=\"./img/calendar/calendar.gif\" />
