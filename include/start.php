@@ -101,6 +101,11 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
                 ploopi_logout(_PLOOPI_ERROR_LOGINEXPIRE);
             }
         }
+
+        $_SESSION['ploopi']['login'] = $fields['login'];
+        $_SESSION['ploopi']['password'] = $ploopi_password;
+        $_SESSION['ploopi']['userid'] = $fields['id'];
+        $_SESSION['ploopi']['user'] = $fields;
         ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_OK, $ploopi_login,_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
 
         ploopi_session_reset();
@@ -110,8 +115,6 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
         $_SESSION['ploopi']['password'] = $ploopi_password;
         $_SESSION['ploopi']['userid'] = $fields['id'];
         $_SESSION['ploopi']['user'] = $fields;
-
-        //$ploopi_mainmenu = _PLOOPI_MENU_WORKSPACES;
     }
     else
     {
