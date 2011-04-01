@@ -503,7 +503,7 @@ class form_select extends form_field
 
         if (!is_array($arrSelected)) { $strTmp = $arrSelected; unset($arrSelected); $arrSelected[] = $strTmp; }
 
-        parent::__construct('input:checkbox', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
+        parent::__construct('select', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
 
         $this->_arrSelected = ploopi_array_map('htmlentities', $arrSelected);
     }
