@@ -468,11 +468,11 @@ class form_select_option extends form_element
 class form_select extends form_field
 {
     /**
-     * Valeur sélectionnée dans le select
+     * Valeur(s) sélectionnée(s) dans le select
      *
      * @var string
      */
-    private $_strSelected;
+    private $_arrSelected;
 
     /**
      * Options par défaut d'un select
@@ -497,13 +497,15 @@ class form_select extends form_field
      *
      * @return form_select
      */
-    public function __construct($strLabel, $arrValues = array(), $strSelected, $strName, $strId = null, $arrOptions = null)
+    public function __construct($strLabel, $arrValues = array(), $arrSelected, $strName, $strId = null, $arrOptions = null)
     {
         if (!is_array($arrValues)) trigger_error('Ce type d\'élément attend un tableau de valeurs', E_USER_ERROR);
 
-        parent::__construct('select', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
+        if (!is_array($arrSelected)) { $strTmp = $arrSelected; unset($arrSelected); $arrSelected[] = $strTmp; }
 
-        $this->_strSelected = htmlentities($strSelected);
+        parent::__construct('input:checkbox', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
+
+        $this->_arrSelected = ploopi_array_map('htmlentities', $arrSelected);
     }
 
     /**
@@ -533,7 +535,7 @@ class form_select extends form_field
                 $mixValue = htmlentities($mixValue);
                 $mixKey = htmlentities($mixKey);
 
-                $strSelected = $this->_strSelected == $mixKey ? ' selected="selected"' : '';
+                $strSelected = in_array($mixKey, $this->_arrSelected) ? ' selected="selected"' : '';
                 $strOutput .= "<option value=\"{$mixKey}\"{$strSelected}>{$mixValue}</option>";
             }
         }
@@ -1167,7 +1169,7 @@ class form_panel
      * @param string $strFields contenu du panel
      * @return string code html
      */
-    public function render($intTabindex = null)
+    public function render(&$intTabindex = null)
     {
         $strOutputFields = '';
 
