@@ -524,9 +524,31 @@ class form_select extends form_field
         $strMultiple = $this->_arrOptions['multiple'] ? " multiple=\"multiple\"" : '';
 
         $strOutput .= "<select name=\"{$this->_strName}\" id=\"{$this->_strId}\" tabindex=\"{$intTabindex}\" {$strProperties}{$strSize}{$strMultiple}{$strEvents} />";
-        foreach($arrValues = $this->_arrValues as $mixKey => $mixValue)
+
+        $strOutput .= $this->_renderOptions($this->_arrValues);
+
+        $strOutput .= "</select>";
+
+        return $this->renderForm($strOutput);
+    }
+
+    /**
+     * Génère le rendu des valeurs (récursif)
+     * @param array tableau des valeurs
+     * @return string code html
+     */
+    private function _renderOptions($arrValues)
+    {
+        $strOutput = '';
+
+        foreach($arrValues as $mixKey => $mixValue)
         {
-            if (is_object($mixValue) && $mixValue instanceof form_select_option)
+            if (is_array($mixValue))
+            {
+                $mixKey = htmlentities($mixKey);
+                $strOutput .= "<optgroup label=\"{$mixKey}\">".$this->_renderOptions($mixValue)."</optgroup>";
+            }
+            elseif (is_object($mixValue) && $mixValue instanceof form_select_option)
             {
                 $strOutput .= $mixValue->render($intTabindex);
             }
@@ -539,9 +561,8 @@ class form_select extends form_field
                 $strOutput .= "<option value=\"{$mixKey}\"{$strSelected}>{$mixValue}</option>";
             }
         }
-        $strOutput .= "</select>";
 
-        return $this->renderForm($strOutput);
+        return $strOutput;
     }
 }
 
@@ -1436,6 +1457,8 @@ class form
         {
             if ($objField->_strName != '')
             {
+                $strFormField = $objField->_strId != '' ? "$('{$objField->_strId}')" : "form.{$objField->_strName}";
+
                 switch ($objField->_strType)
                 {
                     case 'input:text':
@@ -1443,17 +1466,17 @@ class form
                     case 'input:file':
                     case 'textarea':
                         $strFormat = ($objField->_arrOptions['required'] ? '' : 'empty').$objField->_arrOptions['datatype'];
-                        $strOutput .= "if (ploopi_validatefield('".addslashes($objField->_strLabel)."', form.{$objField->_strName}, '{$strFormat}'))";
+                        $strOutput .= "if (ploopi_validatefield('".addslashes($objField->_strLabel)."', {$strFormField}, '{$strFormat}'))";
                     break;
 
                     case 'select':
                     case 'color':
-                        if ($objField->_arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes($objField->_strLabel)."', form.{$objField->_strName}, 'selected'))";
+                        if ($objField->_arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes($objField->_strLabel)."', {$strFormField}, 'selected'))";
                     break;
 
                     case 'input:radio':
                     case 'input:checkbox':
-                        if ($objField->_arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes($objField->_strLabel)."', form.{$objField->_strName}, 'checked'))";
+                        if ($objField->_arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes($objField->_strLabel)."', {$strFormField}, 'checked'))";
                     break;
                 }
             }
