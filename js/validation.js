@@ -329,6 +329,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
     if (field_object)
     {
         field_value = field_object.value;
+        field_label = field_label.stripTags();
 
         /* Vérifie qu'un élément de liste a été sélectionné */
         if (field_type == 'selected')

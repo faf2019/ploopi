@@ -76,7 +76,6 @@ function ploopi_checkbox_click(e, inputfield_id)
         }
         else
         {
-
             var e = document.createEvent('MouseEvents');
             e.initEvent('click', false, false);
             $(inputfield_id).dispatchEvent(e);
