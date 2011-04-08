@@ -395,6 +395,8 @@ function ploopi_tz_createtimestamp($timezone_name = 'UTC')
 
 function ploopi_tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezone_name_dst = 'UTC')
 {
+    if (empty($ts)) return $ts;
+
     switch($timezone_name_src)
     {
         case 'user':
@@ -424,8 +426,9 @@ function ploopi_tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezon
     $tz_dst = timezone_open($timezone_name_dst);
     ploopi_set_error_handler();
 
+
     // on parse le timestamp 'mysql' pour créer un timestamp unix
-    preg_match(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $ts, $tsregs);
+    if (!preg_match(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $ts, $tsregs)) $tsregs = array(0,0,0,0,0,0,0);
 
     // on crée l'objet date sur le fuseau source
     date_default_timezone_set($timezone_name_src);
