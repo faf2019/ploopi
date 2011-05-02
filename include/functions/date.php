@@ -60,11 +60,11 @@ function ploopi_dateverify($mydate)
     switch(_PLOOPI_DATEFORMAT)
     {
         case _PLOOPI_DATEFORMAT_FR:
-            return (preg_match(_PLOOPI_DATEFORMAT_EREG_FR, $mydate, $regs) !== false);
+            return preg_match(_PLOOPI_DATEFORMAT_EREG_FR, $mydate, $regs) === 1;
         break;
 
         case _PLOOPI_DATEFORMAT_US:
-            return (preg_match(_PLOOPI_DATEFORMAT_EREG_US, $mydate, $regs) !== false);
+            return !preg_match(_PLOOPI_DATEFORMAT_EREG_US, $mydate, $regs) === 1;
         break;
 
         default:
@@ -80,7 +80,7 @@ function ploopi_dateverify($mydate)
  * @return boolean true si le format de l'heure est valide
  */
 
-function ploopi_timeverify($mytime) {return (preg_match(_PLOOPI_TIMEFORMAT_EREG, $mytime, $regs) !== false);}
+function ploopi_timeverify($mytime) { return preg_match(_PLOOPI_TIMEFORMAT_EREG, $mytime, $regs) === 1; }
 
 /**
  * Renvoie le détail d'un timestamp au format MYSQL (AAAAMMJJhhmmss) sous forme d'un tableau
@@ -165,6 +165,8 @@ function ploopi_timestamp2local($mytimestamp)
     // Trimming
     $mytimestamp = trim($mytimestamp);
 
+    if (empty($mytimestamp)) return $mydate;
+
     // Exploding MySQL timestamp into human readable values
     $timestamparray = ploopi_gettimestampdetail($mytimestamp);
     if (is_array($timestamparray) && sizeof($timestamparray) == 7)
@@ -207,7 +209,7 @@ function ploopi_timestamp2local($mytimestamp)
  * @return string timestamp MYSQL
  */
 
-function ploopi_local2timestamp($mydate,$mytime = '00:00:00')
+function ploopi_local2timestamp($mydate, $mytime = '00:00:00')
 {
     // verify local format
     if (ploopi_dateverify($mydate))// && ploopi_timeverify($mytime))
@@ -227,9 +229,9 @@ function ploopi_local2timestamp($mydate,$mytime = '00:00:00')
             break;
         }
 
-        return($mydatetime);
+        return $mydatetime;
     }
-    else return(false);
+    else return false;
 }
 
 /**
