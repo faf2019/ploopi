@@ -38,6 +38,7 @@ if (isset($_POST['reset'])) $pattern = '';
 else $pattern = (empty($_POST['pattern'])) ? '' : $_POST['pattern'];
 
 $arrWhere = array();
+$arrWhere[] = 'ploopi_group.system = 0';
 
 $arrCurrentGroups = array_keys($workspace->getgroups());
 
