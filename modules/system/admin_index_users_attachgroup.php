@@ -38,6 +38,7 @@ if (isset($_POST['reset'])) $pattern = '';
 else $pattern = (empty($_POST['pattern'])) ? '' : $_POST['pattern'];
 
 $arrWhere = array();
+$arrWhere[] = 'ploopi_group.system = 0';
 
 $arrCurrentGroups = array_keys($workspace->getgroups());
 
@@ -46,7 +47,7 @@ if (!ploopi_isadmin()) // filtrage des groupes visibles si l'utilisateur n'est p
     // liste des groupes (id) "rattachables" (sans filtrage)
     $grp_list = array_diff(array_keys($workspaces['list'][$workspaceid]['groups']), $arrCurrentGroups);
     $nbgroup = sizeof($grp_list);
-        
+
     if (!empty($grp_list)) $arrWhere[] = 'ploopi_group.id IN ('.implode(',',$grp_list).')';
     else $arrWhere[] = 'ploopi_group.id = 0';
 }
@@ -54,12 +55,12 @@ else
 {
     // Comptage groupes dispo pour les admins
     $sql = "SELECT count(*) as nb FROM ploopi_group";
-    if (!empty($arrCurrentGroups)) 
+    if (!empty($arrCurrentGroups))
     {
         $sql .= ' WHERE id NOT IN ('.implode(',', $arrCurrentGroups).')';
         $arrWhere[] = 'id NOT IN ('.implode(',', $arrCurrentGroups).')';
     }
-    
+
     $db->query();
     $row = $db->fetchrow();
     $nbgroup = $row['nb'];
@@ -116,7 +117,6 @@ else
 </form>
 
 <?php
-
 if ($alphaTabItem == 99) // tous ou recherche
 {
     if ($pattern != '')
