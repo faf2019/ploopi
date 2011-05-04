@@ -225,7 +225,10 @@ class ploopiArray extends ploopiFactory
 
     function toXls($booHeader = true, $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null)
     {
+        ploopi_unset_error_handler();
+        // Attention deprecated php 5.3
         require_once 'Spreadsheet/Excel/Writer.php';
+        ploopi_set_error_handler();
 
         $arrDefautOptions = array(
             'landscape' => true,
@@ -233,7 +236,7 @@ class ploopiArray extends ploopiFactory
             'fitpage_height' => false,
             'file' => null,
             'send' => false,
-        	'setborder' => false
+            'setborder' => false
         );
 
         $arrOptions = empty($arrOptions) ? $arrDefautOptions : array_merge($arrDefautOptions, $arrOptions);
@@ -329,11 +332,26 @@ class ploopiArray extends ploopiFactory
                 $intCol = 0;
                 foreach($row as $strKey => $strValue)
                 {
+                    if (empty($arrDataFormats[$strKey]['type'])) $arrDataFormats[$strKey]['type'] = 'string';
+
                     // On vérifie si un format de donné est proposé pour le champ
                     $objFormat = (!empty($arrDataFormats[$strKey]['type']) && !empty($arrFormats[$arrDataFormats[$strKey]['type']])) ? $arrFormats[$arrDataFormats[$strKey]['type']] : $objFormatDefault;
 
-                    if (empty($arrDataFormats[$strKey]['type']) || $arrDataFormats[$strKey]['type'] == 'string') $objWorkSheet->writeString($intLine, $intCol++, $strValue, $objFormat);
-                    else $objWorkSheet->write($intLine, $intCol++, $strValue, $objFormat);
+                    switch($arrDataFormats[$strKey]['type'])
+                    {
+                        case 'float':
+                        case 'float_percent':
+                        case 'float_euro':
+                        case 'integer':
+                        case 'integer_percent':
+                        case 'integer_euro':
+                            $objWorkSheet->writeNumber($intLine, $intCol++, $strValue, $objFormat);
+                        break;
+
+                        default:
+                            $objWorkSheet->writeString($intLine, $intCol++, $strValue, $objFormat);
+                        break;
+                    }
                 }
                 $intLine++;
             }

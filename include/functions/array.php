@@ -157,10 +157,13 @@ function ploopi_array2html($arrArray, $booHeader = true, $strClassName = 'ploopi
 
 function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document.xls', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null)
 {
+    ploopi_unset_error_handler();
+    // Attention deprecated php 5.3
     require_once 'Spreadsheet/Excel/Writer.php';
+    ploopi_set_error_handler();
 
     $workbook = new Spreadsheet_Excel_Writer();
-    $worksheet =& $workbook->addWorksheet();
+    $worksheet = $workbook->addWorksheet();
 
     $arrDefautOptions = array(
         'landscape' => true,
@@ -244,11 +247,26 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
             $intCol = 0;
             foreach($row as $strKey => $strValue)
             {
+                if (empty($arrDataFormats[$strKey]['type'])) $arrDataFormats[$strKey]['type'] = 'string';
+
                 // On vérifie si un format de donné est proposé pour le champ
                 $objFormat = (!empty($arrDataFormats[$strKey]['type']) && !empty($arrFormats[$arrDataFormats[$strKey]['type']])) ? $arrFormats[$arrDataFormats[$strKey]['type']] : $objFormatDefault;
 
-                if (empty($arrDataFormats[$strKey]['type']) || $arrDataFormats[$strKey]['type'] == 'string') $objWorkSheet->writeString($intLine, $intCol++, $strValue, $objFormat);
-                else $objWorkSheet->write($intLine, $intCol++, $strValue, $objFormat);
+                switch($arrDataFormats[$strKey]['type'])
+                {
+                    case 'float':
+                    case 'float_percent':
+                    case 'float_euro':
+                    case 'integer':
+                    case 'integer_percent':
+                    case 'integer_euro':
+                        $objWorkSheet->writeNumber($intLine, $intCol++, $strValue, $objFormat);
+                    break;
+
+                    default:
+                        $objWorkSheet->writeString($intLine, $intCol++, $strValue, $objFormat);
+                    break;
+                }
             }
             $intLine++;
         }
