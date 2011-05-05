@@ -134,3 +134,5 @@ ALTER TABLE `ploopi_mod_forms_graphic` ADD `param_mark_width` INT( 10 ) UNSIGNED
 
 UPDATE `ploopi_mod_forms_graphic` SET `param_font` = 18;
 UPDATE `ploopi_mod_forms_graphic` SET `param_mark_type` = 1;
+
+ALTER TABLE `ploopi_mod_forms_field` ADD `option_pagebreak` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `option_adminonly` ;

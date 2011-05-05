@@ -266,6 +266,7 @@ if ($_SESSION['ploopi']['connected'])
                         if (!isset($_POST['field_option_exportview'])) $field->fields['option_exportview'] = 0;
                         if (!isset($_POST['field_option_wceview'])) $field->fields['option_wceview'] = 0;
                         if (!isset($_POST['field_option_adminonly'])) $field->fields['option_adminonly'] = 0;
+                        if (!isset($_POST['field_option_pagebreak'])) $field->fields['option_pagebreak'] = 0;
 
                         if (!$field->fields['option_formview']) $field->fields['option_needed'] = 0;
                     }
@@ -571,8 +572,8 @@ if ($_SESSION['ploopi']['connected'])
                     $strUrl = ploopi_urlencode("admin-light.php?ploopi_op=forms_graphic_generate&forms_graphic_id={$_POST['forms_graphic_id']}&forms_graphic_width={$_POST['forms_graphic_width']}&forms_rand=".microtime());
                     ?>
                     <p class="ploopi_va" style="padding:4px;background:#eee;border-bottom:1px solid #ccc;">
-                    	<a class="forms_export_link" href="<?php echo $strUrl; ?>"><img src="./modules/forms/img/mime/png.png" /> Télécharger l'image</a>
-                	</p>
+                        <a class="forms_export_link" href="<?php echo $strUrl; ?>"><img src="./modules/forms/img/mime/png.png" /> Télécharger l'image</a>
+                    </p>
                     <img style="margin:4px;display:block;clear:both;" src="<?php echo $strUrl; ?>" />
                     <?
                 }

@@ -174,15 +174,13 @@
 .forms_form fieldset {
     clear:both;
     display:block;
-    border:solid 1px #d6d6d6;
+    border:0;
     margin:0;
     padding:0;
-    margin-bottom:20px;
 }
 
 .forms_form fieldset legend {
-    padding:0 4px;
-    font-weight:bold;
+    display:none;
 }
 
 .forms_form .buttons {

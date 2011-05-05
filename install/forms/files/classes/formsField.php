@@ -235,11 +235,14 @@ class formsField extends data_object
     {
         global $db;
 
-        /**
-         * Suppression physique
-         */
-        $objForm = new formsForm();
-        if ($objForm->open($this->fields['id_form'])) $db->query("ALTER TABLE `".$objForm->getDataTableName()."` DROP `{$this->_strOriginalFieldName}`");
+        if (!$this->fields['separator'] && !$this->fields['captcha'])
+        {
+            /**
+             * Suppression physique
+             */
+            $objForm = new formsForm();
+            if ($objForm->open($this->fields['id_form'])) $db->query("ALTER TABLE `".$objForm->getDataTableName()."` DROP `{$this->_strOriginalFieldName}`");
+        }
 
         /**
          * Mise à jour des position des autres champs

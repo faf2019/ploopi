@@ -45,8 +45,10 @@ include_once './include/classes/data_object_collection.php';
 include_once './include/classes/query.php';
 include_once './include/classes/mb.php';
 include_once './include/classes/form.php';
+include_once './include/classes/module.php';
 
 include_once './modules/forms/classes/formsField.php';
+include_once './modules/forms/classes/formsGraphic.php';
 
 /**
  * Classe d'accès à la table ploopi_mod_forms_form
@@ -74,11 +76,11 @@ class formsForm extends data_object
 
     private $_arrFieldsWithSep;
 
-	/**
-	 * Champs statiques d'un formulaire (date de validation, utilisateur, groupe, ip)
-	 */
+    /**
+     * Champs statiques d'un formulaire (date de validation, utilisateur, groupe, ip)
+     */
 
-	private static $_arrStaticFields = array();
+    private static $_arrStaticFields = array();
 
     private static function _initStaticFields()
     {
@@ -99,7 +101,7 @@ class formsForm extends data_object
      * @return array tableau contenant les champs
      */
 
-	public static function getStaticFields()
+    public static function getStaticFields()
     {
         self::_initStaticFields();
         return self::$_arrStaticFields;
@@ -138,6 +140,28 @@ class formsForm extends data_object
     }
 
     /**
+     * Supprime le formulaire
+     */
+
+    public function delete()
+    {
+        // Suppression des champs du formulaire
+        foreach($this->getFields(true) as $objField) $objField->delete();
+
+        // Suppression des graphiques du formulaire
+        foreach($this->getGraphics() as $objGraphic) $objGraphic->delete();
+
+        // Suppression de la métabase associée
+        $this->removeMetabase();
+
+        // Suppression de la représentation physique du formulaire
+        $this->_dropTable();
+
+        // Suppression de la représentation conceptuelle du formulaire
+        return parent::delete();
+    }
+
+    /**
      * Initialise le nom utilisé pour la table physique
      */
 
@@ -146,10 +170,27 @@ class formsForm extends data_object
         $this->tablename = sprintf("form_%d_%d", $this->fields['id_module'], $this->fields['id']);
     }
 
+    /**
+     * Retourne le nom utilisé pour la table physique
+     */
+
     public function getDataTableName()
     {
         $this->_setDataTableName();
         return $this->tablename;
+    }
+
+    /**
+     * Retourne la liste des graphiques
+     *
+     * @return array tableau des graphiques indexés par les identifiants
+     */
+
+    public function getGraphics()
+    {
+        $objDOC = new data_object_collection('formsGraphic');
+        $objDOC->add_where('id_form = %d', $this->fields['id']);
+        return $objDOC->get_objects(true);
     }
 
     /**
@@ -198,55 +239,55 @@ class formsForm extends data_object
 
     public function getTitles()
     {
-		// Tableau des titres de colonnes
-		$arrTitles = array();
+        // Tableau des titres de colonnes
+        $arrTitles = array();
 
-		foreach(self::$_arrStaticFields as $strKey => $strValue)
-		{
-			$booDisplay = false;
-			switch($strKey)
-			{
-				case 'date_validation':
-					$booDisplay = ($this->fields['option_displaydate']);
-				break;
+        foreach(self::$_arrStaticFields as $strKey => $strValue)
+        {
+            $booDisplay = false;
+            switch($strKey)
+            {
+                case 'date_validation':
+                    $booDisplay = ($this->fields['option_displaydate']);
+                break;
 
-				case 'user_login':
-					$booDisplay = ($this->fields['option_displayuser']);
-				break;
+                case 'user_login':
+                    $booDisplay = ($this->fields['option_displayuser']);
+                break;
 
-				case 'workspace_label':
-					$booDisplay = ($this->fields['option_displaygroup']);
-				break;
+                case 'workspace_label':
+                    $booDisplay = ($this->fields['option_displaygroup']);
+                break;
 
-				case 'ip':
-					$booDisplay = ($this->fields['option_displayip']);
-				break;
-			}
+                case 'ip':
+                    $booDisplay = ($this->fields['option_displayip']);
+                break;
+            }
 
-			$arrTitles[$strKey] = array('label' => $strValue, 'exportview' => $booDisplay, 'arrayview' => $booDisplay, 'wceview' => false, 'adminonly' => false, 'type' => '');
-		}
+            $arrTitles[$strKey] = array('label' => $strValue, 'exportview' => $booDisplay, 'arrayview' => $booDisplay, 'wceview' => false, 'adminonly' => false, 'type' => '');
+        }
 
-		foreach($this->getFields() as $strKey => $objField)
-		{
-			$arrTitles[$strKey] = array(
-				'label' => $objField->fields['name'],
-				'exportview' => $objField->fields['option_exportview'],
-				'arrayview' => $objField->fields['option_arrayview'],
-				'wceview' => $objField->fields['option_wceview'],
-				'adminonly' => $objField->fields['option_adminonly'],
-				'type' => $objField->fields['type']
-			);
-		}
+        foreach($this->getFields() as $strKey => $objField)
+        {
+            $arrTitles[$strKey] = array(
+                'label' => $objField->fields['name'],
+                'exportview' => $objField->fields['option_exportview'],
+                'arrayview' => $objField->fields['option_arrayview'],
+                'wceview' => $objField->fields['option_wceview'],
+                'adminonly' => $objField->fields['option_adminonly'],
+                'type' => $objField->fields['type']
+            );
+        }
 
-		return $arrTitles;
-	}
+        return $arrTitles;
+    }
 
 
-	/**
-	 * Retourne le nombre de lignes du formulaire en fonction de la visibilité de l'utilisateur sur les données
-	 * @param boolean $booWorkspaceFilter true si on souhaite appliquer le filtrage par espace de travail
-	 * @return int nombre de lignes du formulaire
-	 */
+    /**
+     * Retourne le nombre de lignes du formulaire en fonction de la visibilité de l'utilisateur sur les données
+     * @param boolean $booWorkspaceFilter true si on souhaite appliquer le filtrage par espace de travail
+     * @return int nombre de lignes du formulaire
+     */
 
     public function getNumRows($booWorkspaceFilter = false)
     {
@@ -304,7 +345,7 @@ class formsForm extends data_object
             if (!$booExport || $this->fields['option_displaydate'])
             {
                 if ($booRawData) $objQuery->add_select('rec.`date_validation`');
-        		else $objQuery->add_select("CONCAT(SUBSTRING(rec.`date_validation`, 7, 2), '/', SUBSTRING(rec.`date_validation`, 5, 2), '/', SUBSTRING(rec.`date_validation`, 1, 4), ' ', SUBSTRING(rec.`date_validation`, 9, 2), ':', SUBSTRING(rec.`date_validation`, 11, 2), ':', SUBSTRING(rec.`date_validation`, 13, 2)) as `date_validation`");
+                else $objQuery->add_select("CONCAT(SUBSTRING(rec.`date_validation`, 7, 2), '/', SUBSTRING(rec.`date_validation`, 5, 2), '/', SUBSTRING(rec.`date_validation`, 1, 4), ' ', SUBSTRING(rec.`date_validation`, 9, 2), ':', SUBSTRING(rec.`date_validation`, 11, 2), ':', SUBSTRING(rec.`date_validation`, 13, 2)) as `date_validation`");
             }
 
             if (!$booExport || $this->fields['option_displayip']) $objQuery->add_select('rec.`ip`');
@@ -677,40 +718,40 @@ class formsForm extends data_object
 
         require_once './include/classes/odf.php';
 
-		// Lecture des données
-		list($arrData) = $this->prepareData(true, true, true, false);
+        // Lecture des données
+        list($arrData) = $this->prepareData(true, true, true, false);
 
-		$strFormat = strtolower($strFormat);
+        $strFormat = strtolower($strFormat);
 
-		ploopi_ob_clean();
+        ploopi_ob_clean();
 
-		switch($strFormat)
-		{
-			case 'csv':
-			    // Lecture des paramètres CSV
-			    $strFormat = ploopi_getparam('forms_export_csvextension', $this->fields['id_module']);
-			    $strFieldSep = str_replace('(tab)',"\t", ploopi_getparam('forms_export_fieldseparator', $this->fields['id_module']));
-			    $strLineSep = str_replace(array('(cr)', '(lf)'), array("\r", "\n"), ploopi_getparam('forms_export_lineseparator', $this->fields['id_module']));
-			    $strTextSep = ploopi_getparam('forms_export_textseparator', $this->fields['id_module']);
+        switch($strFormat)
+        {
+            case 'csv':
+                // Lecture des paramètres CSV
+                $strFormat = ploopi_getparam('forms_export_csvextension', $this->fields['id_module']);
+                $strFieldSep = str_replace('(tab)',"\t", ploopi_getparam('forms_export_fieldseparator', $this->fields['id_module']));
+                $strLineSep = str_replace(array('(cr)', '(lf)'), array("\r", "\n"), ploopi_getparam('forms_export_lineseparator', $this->fields['id_module']));
+                $strTextSep = ploopi_getparam('forms_export_textseparator', $this->fields['id_module']);
 
-			    if (empty($strFormat)) $strFormat = 'csv';
-			    if (empty($strFieldSep)) $strFieldSep = ',';
-			    if (empty($strLineSep)) $strLineSep = "\n";
-			    if (empty($strTextSep)) $strTextSep = '"';
+                if (empty($strFormat)) $strFormat = 'csv';
+                if (empty($strFieldSep)) $strFieldSep = ',';
+                if (empty($strLineSep)) $strLineSep = "\n";
+                if (empty($strTextSep)) $strTextSep = '"';
 
-			    echo ploopiArray::getInstance($arrData)->toCsv(true, $strFieldSep, $strLineSep, $strTextSep);
-	        break;
-
-			case 'xls':
-	            echo ploopiArray::getInstance($arrData)->toXls(true);
+                echo ploopiArray::getInstance($arrData)->toCsv(true, $strFieldSep, $strLineSep, $strTextSep);
             break;
 
-		    case 'sxc':
+            case 'xls':
+                echo ploopiArray::getInstance($arrData)->toXls(true);
+            break;
+
+            case 'sxc':
             case 'ods':
-			case 'pdf':
-			    if (ploopi_getparam('forms_webservice_jodconverter') != '')
-			    {
-    			    // Init de l'interface avec le convertisseur
+            case 'pdf':
+                if (ploopi_getparam('forms_webservice_jodconverter') != '')
+                {
+                    // Init de l'interface avec le convertisseur
                     $objOdfConverter = new odf_converter(ploopi_getparam('forms_webservice_jodconverter'));
 
                     // Détermination du type mime du format demandé
@@ -731,23 +772,23 @@ class formsForm extends data_object
 
                     // Génération XLS + Conversion
                     echo $objOdfConverter->convert(ploopiArray::getInstance($arrData)->toXls(true), 'application/vnd.ms-excel', $strOuputMime);
-			    }
+                }
             break;
 
-			case 'xml':
-		        echo ploopiArray::getInstance($arrData)->toXml();
-			break;
+            case 'xml':
+                echo ploopiArray::getInstance($arrData)->toXml();
+            break;
 
-			case 'html':
-		        echo ploopiArray::getInstance($arrData)->toHtml();
-			break;
+            case 'html':
+                echo ploopiArray::getInstance($arrData)->toHtml();
+            break;
 
-			default:
-			    ploopi_die();
-		    break;
-		}
+            default:
+                ploopi_die();
+            break;
+        }
 
-		$strFileName = "export.{$strFormat}";
+        $strFileName = "export.{$strFormat}";
 
         header('Content-Type: ' . ploopi_getmimetype($strFileName));
         header('Content-Disposition: attachment; Filename="'.$strFileName.'"');
@@ -757,20 +798,35 @@ class formsForm extends data_object
         header('Content-Encoding: None');
         ploopi_die();
 
-	}
+    }
 
+    /**
+     * Suppression de la table liée au formulaire
+     */
 
-	public function generateTable()
-	{
+    private function _dropTable()
+    {
+        global $db;
+
+        $db->query("DROP TABLE IF EXISTS `".$this->getDataTableName()."`");
+    }
+
+    /**
+     * Génération de la table liée au formulaire (nouveau formulaire)
+     */
+
+    public function generateTable()
+    {
         global $db;
 
         $this->_setDataTableName();
 
         /**
-		 * Suppression de la table si elle existe déjà
-		 */
+         * Suppression de la table si elle existe déjà
+         */
 
-        $db->query("DROP TABLE IF EXISTS `{$this->tablename}`");
+        $this->_dropTable();
+
 
         /**
          * Création de la table
@@ -778,61 +834,61 @@ class formsForm extends data_object
 
         // Traitement des champs par défaut
         $arrDefaultFields = array(
-        	'#id' => 'INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY', //INT(10) DEFAULT 0',
-        	'date_validation' => 'BIGINT(14) DEFAULT 0',
-			'ip' => "VARCHAR(16) DEFAULT ''",
-			'user_id' => 'INT(10) UNSIGNED DEFAULT 0',
-			'user_login' => "VARCHAR(255) DEFAULT ''",
-			'user_firstname' => "VARCHAR(255) DEFAULT ''",
-			'user_lastname' => "VARCHAR(255) DEFAULT ''",
-			'workspace_id' => 'INT(10) UNSIGNED DEFAULT 0',
-			'workspace_label' => "VARCHAR(255) DEFAULT ''",
-			'workspace_code' => "VARCHAR(255) DEFAULT ''"
-		);
+            '#id' => 'INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY', //INT(10) DEFAULT 0',
+            'date_validation' => 'BIGINT(14) DEFAULT 0',
+            'ip' => "VARCHAR(16) DEFAULT ''",
+            'user_id' => 'INT(10) UNSIGNED DEFAULT 0',
+            'user_login' => "VARCHAR(255) DEFAULT ''",
+            'user_firstname' => "VARCHAR(255) DEFAULT ''",
+            'user_lastname' => "VARCHAR(255) DEFAULT ''",
+            'workspace_id' => 'INT(10) UNSIGNED DEFAULT 0',
+            'workspace_label' => "VARCHAR(255) DEFAULT ''",
+            'workspace_code' => "VARCHAR(255) DEFAULT ''"
+        );
 
-		$arrSqlFields = array();
-		$arrSqlIndexes = array();
+        $arrSqlFields = array();
+        $arrSqlIndexes = array();
 
-		foreach($arrDefaultFields as $strFieldName => $strType)
+        foreach($arrDefaultFields as $strFieldName => $strType)
         {
-	        /**
-	         * Ajout du champ
-	         */
+            /**
+             * Ajout du champ
+             */
             $arrSqlFields[] = "`{$strFieldName}` {$strType} ";
 
-	        /**
-	         * Ajout de l'index
-	         */
+            /**
+             * Ajout de l'index
+             */
             if ($strFieldName != '#id') $arrSqlIndexes[] = "ALTER TABLE `{$this->tablename}` ADD INDEX ( `{$strFieldName}` )";
         }
 
 
         // Traitement des champs dynamiques
         foreach($this->getFields() as $intId => $objField)
-		{
-		    /**
-		     * Création du nom physique pour le champ
-		     */
-	        $objField->save(false);
+        {
+            /**
+             * Création du nom physique pour le champ
+             */
+            $objField->save(false);
 
-	        /**
-	         * Ajout du champ
-	         */
-	        $arrSqlFields[] = "`{$objField->fields['fieldname']}` ".$objField->getSqlType();
+            /**
+             * Ajout du champ
+             */
+            $arrSqlFields[] = "`{$objField->fields['fieldname']}` ".$objField->getSqlType();
 
-	        /**
-	         * Ajout de l'index
-	         */
-	        $arrSqlIndexes[] = "ALTER TABLE `{$this->tablename}` ADD INDEX ( `{$objField->fields['fieldname']}` )";
-		}
+            /**
+             * Ajout de l'index
+             */
+            $arrSqlIndexes[] = "ALTER TABLE `{$this->tablename}` ADD INDEX ( `{$objField->fields['fieldname']}` )";
+        }
 
-		$db->query("CREATE TABLE `{$this->tablename}` (".implode(', ', $arrSqlFields).") TYPE=MyISAM;");
+        $db->query("CREATE TABLE `{$this->tablename}` (".implode(', ', $arrSqlFields).") TYPE=MyISAM;");
 
-		/**
-		 * Création des indexes
-		 */
-		foreach($arrSqlIndexes as $strSql) $db->query($strSql);
-	}
+        /**
+         * Création des indexes
+         */
+        foreach($arrSqlIndexes as $strSql) $db->query($strSql);
+    }
 
     /**
      * Crée un export physique des données du formulaire (uniquement utile pour la transition entre 2.5 et 3.0)
@@ -844,42 +900,43 @@ class formsForm extends data_object
 
         $this->generateTable();
 
-		/**
-		 * Insertion des données en injection directe
-		 */
+        /**
+         * Insertion des données en injection directe
+         */
 
-		$db->query("INSERT INTO `{$this->tablename}` ".$this->_getQuery(false, false, array(), array(), 0, true)->get_sql());
+        $db->query("INSERT INTO `{$this->tablename}` ".$this->_getQuery(false, false, array(), array(), 0, true)->get_sql());
     }
 
 
     public function removeMetabase()
     {
-        $this->_setDataTableName();
+        $objModule = new module();
+        if (!$objModule->open($this->fields['id_module'])) return;
 
-        $intIdModType = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type'];
+        $this->_setDataTableName();
 
         $objQuery = new ploopi_query_delete();
         $objQuery->add_from('ploopi_mb_schema');
         $objQuery->add_where('tablesrc = %s', $this->tablename);
-        $objQuery->add_where('id_module_type = %d', $intIdModType);
+        $objQuery->add_where('id_module_type = %d', $objModule->fields['id_module_type']);
         $objQuery->execute();
 
         $objQuery = new ploopi_query_delete();
         $objQuery->add_from('ploopi_mb_relation');
         $objQuery->add_where('tablesrc = %s', $this->tablename);
-        $objQuery->add_where('id_module_type = %d', $intIdModType);
+        $objQuery->add_where('id_module_type = %d', $objModule->fields['id_module_type']);
         $objQuery->execute();
 
         $objQuery = new ploopi_query_delete();
         $objQuery->add_from('ploopi_mb_field');
         $objQuery->add_where('tablename = %s', $this->tablename);
-        $objQuery->add_where('id_module_type = %d', $intIdModType);
+        $objQuery->add_where('id_module_type = %d', $objModule->fields['id_module_type']);
         $objQuery->execute();
 
         $objQuery = new ploopi_query_delete();
         $objQuery->add_from('ploopi_mb_table');
         $objQuery->add_where('name = %s', $this->tablename);
-        $objQuery->add_where('id_module_type = %d', $intIdModType);
+        $objQuery->add_where('id_module_type = %d', $objModule->fields['id_module_type']);
         $objQuery->execute();
 
     }
@@ -890,24 +947,27 @@ class formsForm extends data_object
 
     public function updateMetabase()
     {
+        $objModule = new module();
+        if (!$objModule->open($this->fields['id_module'])) return;
+
         $this->_setDataTableName();
 
         $this->removeMetabase();
 
-        $intIdModType = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type'];
+        $intIdModType = $_SESSION['ploopi']['modules'][$this->fields['id_module']]['id_module_type'];
 
         $objMbTable = new mb_table();
         $objMbTable->fields['name'] = $this->tablename;
         $objMbTable->fields['label'] = $this->fields['label'];
         $objMbTable->fields['visible'] = 1;
-        $objMbTable->fields['id_module_type'] = $intIdModType;
+        $objMbTable->fields['id_module_type'] = $objModule->fields['id_module_type'];
         $objMbTable->save();
 
         // Relations avec user/workspace
         $objMbSchema = new mb_schema();
         $objMbSchema->fields['tablesrc'] = $this->tablename;
         $objMbSchema->fields['tabledest'] = 'ploopi_user';
-        $objMbSchema->fields['id_module_type'] = $intIdModType;
+        $objMbSchema->fields['id_module_type'] = $objModule->fields['id_module_type'];
         $objMbSchema->save();
 
         $objMbRelation = new mb_relation();
@@ -915,13 +975,13 @@ class formsForm extends data_object
         $objMbRelation->fields['fieldsrc'] = 'user_id';
         $objMbRelation->fields['tabledest'] = 'ploopi_user';
         $objMbRelation->fields['fielddest'] = 'id';
-        $objMbRelation->fields['id_module_type'] = $intIdModType;
+        $objMbRelation->fields['id_module_type'] = $objModule->fields['id_module_type'];
         $objMbRelation->save();
 
         $objMbSchema = new mb_schema();
         $objMbSchema->fields['tablesrc'] = $this->tablename;
         $objMbSchema->fields['tabledest'] = 'ploopi_workspace';
-        $objMbSchema->fields['id_module_type'] = $intIdModType;
+        $objMbSchema->fields['id_module_type'] = $objModule->fields['id_module_type'];
         $objMbSchema->save();
 
         $objMbRelation = new mb_relation();
@@ -929,7 +989,7 @@ class formsForm extends data_object
         $objMbRelation->fields['fieldsrc'] = 'workspace_id';
         $objMbRelation->fields['tabledest'] = 'ploopi_workspace';
         $objMbRelation->fields['fielddest'] = 'id';
-        $objMbRelation->fields['id_module_type'] = $intIdModType;
+        $objMbRelation->fields['id_module_type'] = $objModule->fields['id_module_type'];
         $objMbRelation->save();
 
         $arrFields = $this->getFields();
@@ -945,9 +1005,9 @@ class formsForm extends data_object
                 $objMbField->fields['name'] = $objField->fields['fieldname'];
                 $objMbField->fields['label'] = $objField->fields['name'];
 
-    			switch($objField->fields['type'])
-    			{
-    			    case 'text':
+                switch($objField->fields['type'])
+                {
+                    case 'text':
                         switch($objField->fields['format'])
                         {
                             case 'integer':
@@ -972,24 +1032,24 @@ class formsForm extends data_object
                         }
                     break;
 
-    			    case 'autoincrement':
+                    case 'autoincrement':
                         $objMbField->fields['type'] = 'int(10)';
-			        break;
+                    break;
 
-    			    case 'color':
+                    case 'color':
                         $objMbField->fields['type'] = 'varchar(16)';
-			        break;
+                    break;
 
-    			    case 'tablelink':
-    			        // Ouverture du champ lié
-    			        $objLinkedField = new formsField();
-			            if ($objLinkedField->open($objField->fields['values']))
-			            {
-			                // Ouverture du formulaire lié
-			                $objLinkedForm = new formsForm();
-    			            if ($objLinkedForm->open($objLinkedField->fields['id_form']))
-    			            {
-    			                // Sauvegarde de la relation
+                    case 'tablelink':
+                        // Ouverture du champ lié
+                        $objLinkedField = new formsField();
+                        if ($objLinkedField->open($objField->fields['values']))
+                        {
+                            // Ouverture du formulaire lié
+                            $objLinkedForm = new formsForm();
+                            if ($objLinkedForm->open($objLinkedField->fields['id_form']))
+                            {
+                                // Sauvegarde de la relation
                                 $objMbSchema = new mb_schema();
                                 if (!$objMbSchema->open($this->tablename, $objLinkedForm->getDataTableName(), $intIdModType))
                                 {
@@ -1006,14 +1066,14 @@ class formsForm extends data_object
                                 $objMbRelation->fields['fielddest'] = $objLinkedField->fields['fieldname'];
                                 $objMbRelation->fields['id_module_type'] = $intIdModType;
                                 $objMbRelation->save();
-    			            }
-			            }
-			        break;
+                            }
+                        }
+                    break;
 
-			        default:
+                    default:
                         $objMbField->fields['type'] = 'varchar(255)';
-			        break;
-    			}
+                    break;
+                }
 
                 $objMbField->fields['visible'] = '1';
                 $objMbField->fields['id_module_type'] = $intIdModType;
@@ -1062,7 +1122,7 @@ class formsForm extends data_object
                 {
                     $objRecord->fields[$objField->fields['fieldname']];
 
-					$arrFieldsContent[$objField->fields['id']] = explode('||', $objRecord->fields[$objField->fields['fieldname']]);
+                    $arrFieldsContent[$objField->fields['id']] = explode('||', $objRecord->fields[$objField->fields['fieldname']]);
 
                     if ($objField->fields['format'] == 'date' && !empty($arrFieldsContent[$objField->fields['id']][0])) $arrFieldsContent[$objField->fields['id']][0] = current(ploopi_timestamp2local("{$arrFieldsContent[$objField->fields['id']][0]}000000"));
                 }
@@ -1104,7 +1164,7 @@ class formsForm extends data_object
 
         // Options du formulaire
         $arrFormOptions = array(
-        	'class' => 'forms_form'
+            'class' => 'forms_form'
         );
 
         switch($strRenderMode)
@@ -1150,7 +1210,7 @@ class formsForm extends data_object
 
         // Instanciation de l'objet formulaire (affichage)
         $objForm = new form(
-            'forms_form_'.$this->fields['id'],
+            $strFormId = 'forms_form_'.$this->fields['id'],
             $strUrl,
             'post',
             $arrFormOptions
@@ -1170,35 +1230,49 @@ class formsForm extends data_object
             if ($objField->fields['type'] == 'tablelink')
             {
                 // "values" contient l'id du champ lié
-	            $objLinkedField = new formsField();
-	            if ($objLinkedField->open($objField->fields['values']))
-	            {
-	                $arrLinkedFields['fields'][$objField->fields['values']] = $objLinkedField;
-	                $arrLinkedFields['forms'][$objLinkedField->fields['id_form']][(int)$objField->fields['id']] = (int)$objField->fields['values'];
-	            }
+                $objLinkedField = new formsField();
+                if ($objLinkedField->open($objField->fields['values']))
+                {
+                    $arrLinkedFields['fields'][$objField->fields['values']] = $objLinkedField;
+                    $arrLinkedFields['forms'][$objLinkedField->fields['id_form']][(int)$objField->fields['id']] = (int)$objField->fields['values'];
+                }
             }
         }
 
-		/**
-		 * Utile pour remplir les champs du formulaire en modification
-		 */
-		$arrParams = array();
+        /**
+         * Utile pour remplir les champs du formulaire en modification
+         */
+        $arrParams = array();
+        $objPanel = null;
 
-		// Pour chaque champs du formulaire
+        // Panels qui vont servir de support pour le multi-page
+        $arrPanels = array();
+
+        // Pour chaque champs du formulaire
         foreach($this->getFields(true) as $objField)
         {
+            if ($objField->fields['option_pagebreak'] || is_null($objPanel))
+            {
+                $intS = sizeof($arrPanels);
+
+                $arrPanels[] = 'panel_'.($intS+1);
+                $arrOptions = $intS ? array('style' => 'display:none;') : array();
+
+                $objForm->addPanel($objPanel = new form_panel($arrPanels[$intS], 'Page '.($intS+1), $arrOptions));
+            }
+
             if ($objField->fields['separator'])
             {
                 $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
                 $strDesc = $objField->fields['description'] == '' ? '' : '<p>'.ploopi_nl2br(htmlentities($objField->fields['description'])).'</p>';
 
-                $objForm->addField( new form_html('<h'.$objField->fields['separator_level'].' style="'.$strStyle.$objField->fields['style_form'].'">'.ploopi_nl2br(htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
+                $objPanel->addField( new form_html('<h'.$objField->fields['separator_level'].' style="'.$strStyle.$objField->fields['style_form'].'">'.ploopi_nl2br(htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
             }
             elseif ($objField->fields['option_formview'] && (!$objField->fields['option_adminonly'] || $booIsAdmin))
             {
                 if($objField->fields['captcha'])
                 {
-                    $objForm->addField( new form_html('<div>Les CAPTCHAs ne sont pas gérés</div>') );
+                    $objPanel->addField( new form_html('<div>Les CAPTCHAs ne sont pas gérés</div>') );
                 }
                 else
                 {
@@ -1209,16 +1283,16 @@ class formsForm extends data_object
                     $arrOptions = array(
                         'required' => $objField->fields['option_needed'] == 1,
                         'description' => ploopi_nl2br(htmlentities($objField->fields['description'])),
-                    	'style' => $objField->fields['style_field'],
-                    	'style_form' => (empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;") . $objField->fields['style_form'],
-    					'class_form' => 'field'
+                        'style' => $objField->fields['style_field'],
+                        'style_form' => (empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;") . $objField->fields['style_form'],
+                        'class_form' => 'field'
                     );
 
                     if (!$booModify) $arrOptions['disabled'] = true;
 
                     switch($objField->fields['type'])
-        			{
-        			    case 'text':
+                    {
+                        case 'text':
                             switch($objField->fields['format'])
                             {
                                 case 'integer':
@@ -1259,36 +1333,27 @@ class formsForm extends data_object
                             }
                         break;
 
-        			    case 'tablelink':
-        			        /**
-    						  * On ne doit afficher les données que si le lien est unique vers la table ou si c'est le premier champ lié
-    						  * (les valeurs des autres champs sont déterminées en fonction des choix déjà effectués sur les précédents champs)
-    						  */
-    						  //ploopi_print_r($arrFieldsContent);
-    						  //ploopi_print_r($arrLinkedFields['fields']);
-        			        if (isset($arrLinkedFields['fields'][$objField->fields['values']]))
-        			        {
-        			            $objLinkedField = $arrLinkedFields['fields'][$objField->fields['values']];
+                        case 'tablelink':
+                            /**
+                              * On ne doit afficher les données que si le lien est unique vers la table ou si c'est le premier champ lié
+                              * (les valeurs des autres champs sont déterminées en fonction des choix déjà effectués sur les précédents champs)
+                              */
+                            if (isset($arrLinkedFields['fields'][$objField->fields['values']]))
+                            {
+                                $objLinkedField = $arrLinkedFields['fields'][$objField->fields['values']];
 
+                                // Initialisation de la liste des paramètres vers le formulaire X
+                                if (!isset($arrParams[$objLinkedField->fields['id_form']])) $arrParams[$objLinkedField->fields['id_form']] = array();
 
-    								/*if (current($arrLinkedFields['forms'][$objLinkedField->fields['id_form']]) == $objField->fields['values'])
-    								{
-    									$arrValues = array('' => '') + $objLinkedField->getValues();
-    								}
-    								else $arrValues = array('' => '');*/
+                                // Lecture des valeurs du champs lié en fonction des paramètres déjà saisis
+                                $arrValues = array('' => '') + $objLinkedField->getValues($arrParams[$objLinkedField->fields['id_form']]);
 
-    							// Initialisation de la liste des paramètres vers le formulaire X
-    							if (!isset($arrParams[$objLinkedField->fields['id_form']])) $arrParams[$objLinkedField->fields['id_form']] = array();
+                                // Mise à jour des paramètres déjà saisis pour le prochain champ imbriqué dans la boucle
+                                $arrParams[$objLinkedField->fields['id_form']][$objLinkedField->fields['fieldname']] = current($arrFieldsContent[$objField->fields['id']]);
 
-    							// Lecture des valeurs du champs lié en fonction des paramètres déjà saisis
-    							$arrValues = array('' => '') + $objLinkedField->getValues($arrParams[$objLinkedField->fields['id_form']]);
+                                $arrOptions['onchange'] = "forms_field_tablelink_onchange({$objField->fields['id']}, ".json_encode(array_keys($arrLinkedFields['forms'][$objLinkedField->fields['id_form']])).",'".ploopi_urlencode('admin-light.php?ploopi_op=forms_tablelink_values')."');";
 
-    							// Mise à jour des paramètres déjà saisis pour le prochain champ imbriqué dans la boucle
-    							$arrParams[$objLinkedField->fields['id_form']][$objLinkedField->fields['fieldname']] = current($arrFieldsContent[$objField->fields['id']]);
-
-        			            $arrOptions['onchange'] = "forms_field_tablelink_onchange({$objField->fields['id']}, ".json_encode(array_keys($arrLinkedFields['forms'][$objLinkedField->fields['id_form']])).",'".ploopi_urlencode('admin-light.php?ploopi_op=forms_tablelink_values')."');";
-
-                                $objForm->addField( new form_select(
+                                $objPanel->addField( new form_select(
                                     $objField->fields['name'],
                                     $arrValues,
                                     current($arrFieldsContent[$objField->fields['id']]),
@@ -1296,17 +1361,17 @@ class formsForm extends data_object
                                     'field_'.$objField->fields['id'],
                                     $arrOptions
                                 ));
-    			            }
+                            }
                         break;
 
-        			    case 'color':
-        			        $arrValues = explode('||',$objField->fields['values']);
-        			        $arrSelectOptions = array();
-        			        $arrSelectOptions[] = new form_select_option('', '');
-        			        foreach($arrValues as $strValue) $arrSelectOptions[] = new form_select_option(' ', $strValue, null, array('style' => "background-color:{$strValue}"));
-        			        $arrOptions['onchange'] = "this.style.backgroundColor = this[this.selectedIndex].style.backgroundColor;";
+                        case 'color':
+                            $arrValues = explode('||',$objField->fields['values']);
+                            $arrSelectOptions = array();
+                            $arrSelectOptions[] = new form_select_option('', '');
+                            foreach($arrValues as $strValue) $arrSelectOptions[] = new form_select_option(' ', $strValue, null, array('style' => "background-color:{$strValue}"));
+                            $arrOptions['onchange'] = "this.style.backgroundColor = this[this.selectedIndex].style.backgroundColor;";
 
-                            $objForm->addField( new form_select(
+                            $objPanel->addField( new form_select(
                                 $objField->fields['name'],
                                 $arrSelectOptions,
                                 current($arrFieldsContent[$objField->fields['id']]),
@@ -1314,13 +1379,13 @@ class formsForm extends data_object
                                 'field_'.$objField->fields['id'],
                                 $arrOptions
                             ));
-    			        break;
+                        break;
 
-        			    case 'select':
-        			        $arrValues = explode('||',$objField->fields['values']);
-        			        $arrValues = empty($arrValues) ? array() : array_combine($arrValues, $arrValues);
+                        case 'select':
+                            $arrValues = explode('||',$objField->fields['values']);
+                            $arrValues = empty($arrValues) ? array() : array_combine($arrValues, $arrValues);
 
-                            $objForm->addField( new form_select(
+                            $objPanel->addField( new form_select(
                                 $objField->fields['name'],
                                 array('' => '') + $arrValues,
                                 current($arrFieldsContent[$objField->fields['id']]),
@@ -1328,12 +1393,12 @@ class formsForm extends data_object
                                 'field_'.$objField->fields['id'],
                                 $arrOptions
                             ));
-    			        break;
+                        break;
 
-        			    case 'checkbox':
-        			        $arrValues = explode('||',$objField->fields['values']);
+                        case 'checkbox':
+                            $arrValues = explode('||',$objField->fields['values']);
 
-                            $objForm->addField( new form_checkbox_list(
+                            $objPanel->addField( new form_checkbox_list(
                                 $objField->fields['name'],
                                 array_combine($arrValues, $arrValues),
                                 $arrFieldsContent[$objField->fields['id']],
@@ -1341,11 +1406,11 @@ class formsForm extends data_object
                                 'field_'.$objField->fields['id'],
                                 $arrOptions
                             ));
-    			        break;
+                        break;
 
-        			    case 'radio':
-        			        $arrValues = explode('||',$objField->fields['values']);
-                            $objForm->addField( new form_radio_list(
+                        case 'radio':
+                            $arrValues = explode('||',$objField->fields['values']);
+                            $objPanel->addField( new form_radio_list(
                                 $objField->fields['name'],
                                 array_combine($arrValues, $arrValues),
                                 current($arrFieldsContent[$objField->fields['id']]),
@@ -1353,67 +1418,67 @@ class formsForm extends data_object
                                 'field_'.$objField->fields['id'],
                                 $arrOptions
                             ));
-    			        break;
+                        break;
 
-        			    case 'textarea':
-                            $objForm->addField( new form_field(
-                            	'textarea',
+                        case 'textarea':
+                            $objPanel->addField( new form_field(
+                                'textarea',
                                 $objField->fields['name'],
                                 current($arrFieldsContent[$objField->fields['id']]),
                                 'field_'.$objField->fields['id'],
                                 'field_'.$objField->fields['id'],
                                 $arrOptions
                             ));
-    			        break;
+                        break;
 
-    			        case 'file':
-                            $objForm->addField( new form_field(
-                            	'input:file',
+                        case 'file':
+                            $objPanel->addField( new form_field(
+                                'input:file',
                                 $objField->fields['name'],
                                 current($arrFieldsContent[$objField->fields['id']]),
                                 'field_'.$objField->fields['id'],
                                 'field_'.$objField->fields['id'],
                                 $arrOptions
                             ));
-    			        break;
+                        break;
 
-        			    case 'autoincrement':
+                        case 'autoincrement':
                             $strFieldType = 'input:text';
                             $strDataType = 'string';
                             $arrOptions['disabled'] = true;
-        		        break;
+                        break;
 
-        			    case 'calculation':
+                        case 'calculation':
                             $strFieldType = 'input:text';
                             $strDataType = 'string';
                             $arrOptions['disabled'] = true;
-        		        break;
+                        break;
 
-        			    case 'color':
+                        case 'color':
                             $strFieldType = 'input:text';
                             $strDataType = 'color';
-        		        break;
+                        break;
 
-        		        default:
+                        default:
                             $strFieldType = 'input:text';
                             $strDataType = 'string';
-        		        break;
-        			}
+                        break;
+                    }
 
                     switch($strFieldType)
                     {
                         case 'input:text':
-    						if (!empty($objField->fields['maxlength'])) $intMaxLength = $objField->fields['maxlength'];
+                            if (!empty($objField->fields['maxlength'])) $intMaxLength = $objField->fields['maxlength'];
 
-                            $objForm->addField( new form_field(
-                            	'input:text',
+                            $objPanel->addField( new form_field(
+                                'input:text',
                                 htmlentities($objField->fields['name']),
                                 isset($arrFieldsContent[$objField->fields['id']]) ? current($arrFieldsContent[$objField->fields['id']]) : '',
                                 'field_'.$objField->fields['id'],
                                 'field_'.$objField->fields['id'],
                                 $arrOptions + array(
-                                	'datatype' => $strDataType,
-                                	'maxlength' => $intMaxLength,
+                                    'datatype' => $strDataType,
+                                    'maxlength' => $intMaxLength,
                                 )
                             ));
                         break;
@@ -1421,6 +1486,74 @@ class formsForm extends data_object
                 }
             }
         }
+
+        /*
+        // Traitement de l'affichage des sauts de page
+        if (false) //sizeof($arrPanels) > 1)
+        {
+            // Code HTML pour afficher les boutons de pages
+            $strPanelPages = '<div class="pages">';
+
+            // Code JS pour cacher tous les panels
+            $strJsHidePanels = '';
+
+            $button = new form_button('input:button', '>>', null, "{$strFormId}_btn_next", array('onclick' => "ploopi.{$strFormId}_nextpanel();"));
+            $strPanelPages .= $button->render(0);
+
+            // Pour chaque panel, on affiche un bouton et on prépare le code JS
+            foreach(array_reverse($arrPanels, true) as $intNum => $strPanelId)
+            {
+                $arrOptions = array(
+                    'onclick' => "ploopi.{$strFormId}_switchpanel('".($intNum+1)."');"
+                );
+
+                if ($intNum == 0) $arrOptions['class'] = 'selected';
+
+                $button = new form_button('input:button', 'Page '.($intNum+1), null, "{$strFormId}_btn_".($intNum+1), $arrOptions);
+                $strPanelPages .= $button->render(0);
+
+                $strJsHidePanels.= "$('{$strPanelId}').style.display='none'; $('{$strFormId}_btn_".($intNum+1)."').className = '';";
+            }
+
+            $button = new form_button('input:button', '<<', null, "{$strFormId}_btn_prev", array('style' => 'display:none;', 'onclick' => "ploopi.{$strFormId}_prevpanel();"));
+            $strPanelPages .= $button->render(0);
+
+            $objForm->addJs("
+                ploopi.currentpanel = 1;
+                ploopi.nbpanel = ".sizeof($arrPanels).";
+
+                ploopi.{$strFormId}_switchpanel = function(panel) {
+                    {$strJsHidePanels}
+
+                    $('{$strFormId}_btn_prev').style.display = panel>1 ? 'block' : 'none';
+                    $('{$strFormId}_btn_next').style.display = panel<this.nbpanel ? 'block' : 'none';
+
+                    $('{$strFormId}_btn_'+panel).className = 'selected';
+
+                    $('panel_'+panel).style.display='block';
+                    this.currentpanel = panel;
+                };
+
+                ploopi.{$strFormId}_nextpanel = function() {
+                    panel = parseInt(this.currentpanel, 10) + 1;
+                    if (panel > this.nbpanel) panel = this.nbpanel;
+                    this.{$strFormId}_switchpanel(panel);
+                };
+
+                ploopi.{$strFormId}_prevpanel = function() {
+                    panel = parseInt(this.currentpanel, 10) - 1;
+                    if (panel < 1) panel = 1;
+                    this.{$strFormId}_switchpanel(panel);
+                };
+
+            ");
+
+            $strPanelPages .= '</div>';
+
+            $objForm->addPanel($objPanel = new form_panel('', ''));
+            $objPanel->addField( new form_html($strPanelPages) );
+        }
+        */
 
         switch($strRenderMode)
         {
@@ -1430,8 +1563,58 @@ class formsForm extends data_object
                 {
                     $objForm->addButton( new form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$this->fields['id']}")."';")) );
                 }
-                $objForm->addButton( new form_button('input:reset', 'Réinitialiser') );
-                $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
+
+                $objForm->addButton( new form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;') ) );
+
+                if (sizeof($arrPanels) > 1)
+                {
+
+                    // Code JS pour cacher tous les panels
+                    $strJsHidePanels = '';
+
+                    // Pour chaque panel, on affiche un bouton et on prépare le code JS
+                    foreach(array_reverse($arrPanels, true) as $intNum => $strPanelId)
+                    {
+                        $strJsHidePanels.= "$('{$strPanelId}').style.display='none';";
+                    }
+
+                    $objForm->addJs("
+                        ploopi.currentpanel = 1;
+                        ploopi.nbpanel = ".sizeof($arrPanels).";
+
+                        ploopi.{$strFormId}_switchpanel = function(panel) {
+                            {$strJsHidePanels}
+
+                            $('{$strFormId}_btn_prev').style.display = panel>1 ? 'block' : 'none';
+                            $('{$strFormId}_btn_next').style.display = panel<this.nbpanel ? 'block' : 'none';
+                            $('{$strFormId}_btn_submit').style.display = panel == this.nbpanel ? 'block' : 'none';
+
+                            $('panel_'+panel).style.display='block';
+                            this.currentpanel = panel;
+                        };
+
+                        ploopi.{$strFormId}_nextpanel = function() {
+                            panel = parseInt(this.currentpanel, 10) + 1;
+                            if (panel > this.nbpanel) panel = this.nbpanel;
+                            this.{$strFormId}_switchpanel(panel);
+                        };
+
+                        ploopi.{$strFormId}_prevpanel = function() {
+                            panel = parseInt(this.currentpanel, 10) - 1;
+                            if (panel < 1) panel = 1;
+                            this.{$strFormId}_switchpanel(panel);
+                        };
+
+                    ");
+
+                    $objForm->addButton( new form_button('input:button', 'Précédent', null, "{$strFormId}_btn_prev", array('style' => 'margin-left:2px;font-weight:bold;display:none;', 'onclick' => "ploopi.{$strFormId}_prevpanel();")) );
+                    $objForm->addButton( new form_button('input:button', 'Suivant', null, "{$strFormId}_btn_next", array('style' => 'margin-left:2px;font-weight:bold;', 'onclick' => "ploopi.{$strFormId}_nextpanel();")) );
+                    $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, "{$strFormId}_btn_submit", array('style' => 'margin-left:2px;display:none;')) );
+                }
+                else
+                {
+                    $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
+                }
             break;
 
             case 'view':
@@ -1452,7 +1635,7 @@ class formsForm extends data_object
 
 
 
-	/**
+    /**
      * Recherche si le formulaire contient un captcha
      *
      * @return boolean True si form contient un captcha sinon false

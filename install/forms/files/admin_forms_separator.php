@@ -96,6 +96,10 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
             </p>
         </div>
     </div>
+    <p style="clear:both;padding:0 0 4px 4px;" class="ploopi_va">
+        <input type="checkbox" class="checkbox" name="field_option_pagebreak" id="field_option_pagebreak" value="1" <?php if ($field->fields['option_pagebreak']) echo 'checked'; ?> />
+        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_pagebreak').checked = !$('field_option_pagebreak').checked;"><?php echo _FORMS_FIELD_PAGEBREAK; ?></span>
+    </p>
 </div>
 
 <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;padding:4px;overflow:auto;text-align:right;">

@@ -1,3 +1,10 @@
+== Module FORMS - version 3.2.0 =====================================================
+
+2011-05-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Meilleure gestion des contraintes d'intégrité référentielles lors de la suppression d'un formulaire (données liées supprimées correctement)
+ * Gestion de l'affichage multi-page d'un formulaire
+
 == Module FORMS - version 3.1.8e =====================================================
 
 2011-03-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

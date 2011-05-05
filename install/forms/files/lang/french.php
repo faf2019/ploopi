@@ -66,7 +66,7 @@ define ('_FORMS_OBLIGATORY', 'Obligatoire');
 define ('_FORMS_GRAPHICLIST',     'Liste des Graphiques');
 define ('_FORMS_ADDGRAPHIC',      'Ajouter un Graphique');
 define ('_FORMS_EXPORT_TO_TABLE',    'Stockage physique pour synchro DBREPORT');
-define ('_FORMS_STYLE',       		'Style formulaire (optionnel)<br /><em>ex : width:500px; </em>');
+define ('_FORMS_STYLE',             'Style formulaire (optionnel)<br /><em>ex : width:500px; </em>');
 
 define ('_FORMS_FIELDCREATION',         'Ajout d\'un Champ');
 define ('_FORMS_SEPARATORCREATION',     'Ajout d\'un Séparateur');
@@ -108,6 +108,7 @@ define ('_FORMS_FIELD_MAXLENGTH',       'Longueur maximum (caractères)');
 define ('_FORMS_FIELD_STYLE_FORM',       'Style élément (optionnel)<br /><em>ex : color:red; </em>');
 define ('_FORMS_FIELD_STYLE_FIELD',       'Style champ (optionnel)<br /><em>ex : height:50px; </em>');
 define ('_FORMS_FIELD_NEEDED',      'Saisie Requise');
+define ('_FORMS_FIELD_PAGEBREAK',      'Saut de Page');
 define ('_FORMS_FIELD_FORMVIEW',      'Visible dans le Formulaire');
 define ('_FORMS_FIELD_EXPORTVIEW',      'Visible en Export');
 define ('_FORMS_FIELD_ARRAYVIEW',       'Visible en Liste');
@@ -132,6 +133,7 @@ define ('_FORMS_GRAPHIC_DATASET', 'Jeu de données');
 
 
 define ('_FORMS_FIELD_NEEDED_SHORT',        'Req.');
+define ('_FORMS_FIELD_PAGEBREAK_SHORT',        'Saut');
 define ('_FORMS_FIELD_FORMVIEW_SHORT',        'For.');
 define ('_FORMS_FIELD_EXPORTVIEW_SHORT',        'Exp.');
 define ('_FORMS_FIELD_ARRAYVIEW_SHORT',         'Lst.');

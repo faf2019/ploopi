@@ -36,7 +36,6 @@
  * On commence par vérifier si l'identifiant du formulaire est valide.
  * Si ok => on l'ouvre. Sinon, nouveau formulaire.
  */
-
 $booCaptchaInForm = false; // Le formulaire ne contient pas de captcha
 
 $forms = new formsForm();
@@ -54,7 +53,6 @@ else
     $forms->init_description();
     $title = _FORMS_ADD;
 }
-
 echo $skin->open_simplebloc($title);
 
 $pubdate_start = ($forms->fields['pubdate_start']) ? ploopi_timestamp2local($forms->fields['pubdate_start']) : array('date' => '');
@@ -238,12 +236,12 @@ sort($forms_tpl);
                     <p>
                         <label>Archiver les données jusqu'au :</label>
                         <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo $autobackup_date['date']; ?>">&nbsp;
-	                    <?php echo ploopi_open_calendar('forms_autobackup_date'); ?>
+                        <?php echo ploopi_open_calendar('forms_autobackup_date'); ?>
                     </p>
                     <p>
                         <label>Supprimer les données jusqu'au :</label>
                         <input type="text" class="text" style="width:70px;" id="forms_delete_date">&nbsp;
-	                    <?php echo ploopi_open_calendar('forms_delete_date'); ?>
+                        <?php echo ploopi_open_calendar('forms_delete_date'); ?>
                         <a href="javascript:void(0);" onclick="javascript:forms_deletedata('<?php echo $forms->fields['id']; ?>', event);"><img src="./modules/forms/img/ico_trash.png" /></a>
                     </p>
                     <?php
@@ -272,9 +270,9 @@ sort($forms_tpl);
                 if (!$forms->new) //désactivé
                 {
                     ?>
-						<input type="button" class="flatbutton" value="<?php echo _FORMS_PREVIEW; ?>" onclick="javascript:ploopi_xmlhttprequest_topopup(780, event, 'forms_preview', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=forms_preview&forms_id={$forms->fields['id']}"); ?>', 'post');" />
+                        <input type="button" class="flatbutton" value="<?php echo _FORMS_PREVIEW; ?>" onclick="javascript:ploopi_xmlhttprequest_topopup(780, event, 'forms_preview', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=forms_preview&forms_id={$forms->fields['id']}"); ?>', 'post');" />
                         <input type="button" class="flatbutton" value="<?php echo _FORMS_VIEWRESULT; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?ploopi_action=public&op=forms_viewreplies&forms_id={$forms->fields['id']}"); ?>'">
-						<input type="button" class="flatbutton" value="<?php echo _FORMS_IMPORT; ?>" onclick="javascript:ploopi_xmlhttprequest_topopup(450, event, 'forms_import', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=forms_import&forms_id={$forms->fields['id']}"); ?>', 'post');" />
+                        <input type="button" class="flatbutton" value="<?php echo _FORMS_IMPORT; ?>" onclick="javascript:ploopi_xmlhttprequest_topopup(450, event, 'forms_import', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=forms_import&forms_id={$forms->fields['id']}"); ?>', 'post');" />
                     <?php
                 }
                 ?>
@@ -317,7 +315,7 @@ if (!$forms->isnew())
             <?php
         break;
 
-		/*
+        /*
         case 'forms_captcha_modify':
         case 'forms_captcha_add':
             ?>
@@ -327,7 +325,7 @@ if (!$forms->isnew())
             </div>
             <?php
         break;
-		*/
+        */
 
         default:
             ?>
@@ -381,6 +379,12 @@ if (!$forms->isnew())
         'options' => array('sort' => true)
     );
 
+    $array_columns['right']['pagebreak'] = array(
+        'label' => _FORMS_FIELD_PAGEBREAK_SHORT,
+        'width' => 55,
+        'options' => array('sort' => true)
+    );
+
     $array_columns['right']['needed'] = array(
         'label' => _FORMS_FIELD_NEEDED_SHORT,
         'width' => 55,
@@ -417,13 +421,17 @@ if (!$forms->isnew())
 
         if ($row['separator'])
         {
-            $array_values[$c]['values']['name']         = array('label' =>  $row['name']);
-            $array_values[$c]['values']['type']         = array('label' =>  str_replace('<LEVEL>',$row['separator_level'],_FORMS_FIELD_SEPARATOR_DESC));
-            $array_values[$c]['values']['admin']       = array('label' =>  '&nbsp;');
-            $array_values[$c]['values']['export']       = array('label' =>  '&nbsp;');
-            $array_values[$c]['values']['array']        = array('label' =>  '&nbsp;');
-            $array_values[$c]['values']['needed']       = array('label' =>  '&nbsp;');
-            $array_values[$c]['values']['form']       = array('label' =>  '&nbsp;');
+            $array_values[$c]['values'] = array(
+                'name' => array('label' => $row['name']),
+                'type' => array('label' => str_replace('<LEVEL>',$row['separator_level'],_FORMS_FIELD_SEPARATOR_DESC)),
+                'admin' => array('label' => '&nbsp;'),
+                'export' => array('label' => '&nbsp;'),
+                'array' => array('label' => '&nbsp;'),
+                'needed' => array('label' => '&nbsp;'),
+                'pagebreak' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_pagebreak']) ? 'un' : '').'checked.gif">'),
+                'form' => array('label' => '&nbsp;')
+            );
+
             $array_values[$c]['values']['actions']      = array('label' => '
                 <a href="'.ploopi_urlencode("admin.php?ploopi_op=forms_field_moveup&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
                 <a href="'.ploopi_urlencode("admin.php?ploopi_op=forms_field_movedown&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
@@ -436,18 +444,16 @@ if (!$forms->isnew())
         }
         elseif ($row['captcha'])
         {
-            $array_values[$c]['values']['name']         = array('label' =>  $row['name']);
-            $array_values[$c]['values']['type']         = array('label' =>  'Captcha');
-            $array_values[$c]['values']['admin']       = array('label' =>  '&nbsp;');
-            $array_values[$c]['values']['export']       = array('label' =>  '&nbsp;');
-            $array_values[$c]['values']['array']        = array('label' =>  '&nbsp;');
-            $array_values[$c]['values']['needed']       = array('label' =>  '<img src="./modules/forms/img/'.((!$row['option_needed']) ? 'un' : '').'checked.gif">');
-            $array_values[$c]['values']['form']        = array('label' =>  '<img src="./modules/forms/img/checked.gif">');
-            $array_values[$c]['values']['actions']      = array('label' => '
-                <a href="'.ploopi_urlencode("admin.php?ploopi_op=forms_field_moveup&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
-                <a href="'.ploopi_urlencode("admin.php?ploopi_op=forms_field_movedown&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
-                <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=forms_field_delete&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
-            ');
+            $array_values[$c]['values'] = array(
+                'name' => array('label' =>  $row['name']),
+                'type' => array('label' =>  'Captcha'),
+                'admin' => array('label' => '&nbsp;'),
+                'export' => array('label' => '&nbsp;'),
+                'array' => array('label' => '&nbsp;'),
+                'needed' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_needed']) ? 'un' : '').'checked.gif">'),
+                'pagebreak' => array('label' => '<img src="./modules/forms/img/checked.gif">'),
+                'form' => array('label' =>  '&nbsp;'),
+            );
 
             $array_values[$c]['description'] = 'Ouvrir le Captcha "'.htmlentities($row['name']).'"';
             $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=forms_captcha_modify&forms_id={$forms->fields['id']}&field_id={$row['id']}");
@@ -455,19 +461,24 @@ if (!$forms->isnew())
         }
         else
         {
-            $array_values[$c]['values']['name']         = array('label' =>  $row['name']);
-            $array_values[$c]['values']['type']         = array('label' =>  $field_types[$row['type']].( ($row['type'] == 'text' && isset($field_formats[$row['format']])) ? " ( {$field_formats[$row['format']]} )" : ''));
-            $array_values[$c]['values']['admin']       = array('label' =>  '<img src="./modules/forms/img/'.((!$row['option_adminonly']) ? 'un' : '').'checked.gif">');
-            $array_values[$c]['values']['export']       = array('label' =>  '<img src="./modules/forms/img/'.((!$row['option_exportview']) ? 'un' : '').'checked.gif">');
-            $array_values[$c]['values']['array']        = array('label' =>  '<img src="./modules/forms/img/'.((!$row['option_arrayview']) ? 'un' : '').'checked.gif">');
-            $array_values[$c]['values']['needed']       = array('label' =>  '<img src="./modules/forms/img/'.((!$row['option_needed']) ? 'un' : '').'checked.gif">');
-            $array_values[$c]['values']['form']       = array('label' =>  '<img src="./modules/forms/img/'.((!$row['option_formview']) ? 'un' : '').'checked.gif">');
+            $array_values[$c]['values'] = array(
+                'name' => array('label' => $row['name']),
+                'type' => array('label' => $field_types[$row['type']].( ($row['type'] == 'text' && isset($field_formats[$row['format']])) ? " ( {$field_formats[$row['format']]} )" : '')),
+                'admin' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_adminonly']) ? 'un' : '').'checked.gif">'),
+                'export' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_exportview']) ? 'un' : '').'checked.gif">'),
+                'array' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_arrayview']) ? 'un' : '').'checked.gif">'),
+                'needed' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_needed']) ? 'un' : '').'checked.gif">'),
+                'pagebreak' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_pagebreak']) ? 'un' : '').'checked.gif">'),
+                'form' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_formview']) ? 'un' : '').'checked.gif">'),
+            );
+
             $array_values[$c]['description'] = 'Ouvrir le Champ "'.htmlentities($row['name']).'"';
             $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=forms_field_modify&forms_id={$forms->fields['id']}&field_id={$row['id']}")."#addform";
         }
 
-        $array_values[$c]['values']['pos']      = array('label' =>  $row['position']);
-        $array_values[$c]['values']['actions']  = array('label' => '
+
+        $array_values[$c]['values']['pos'] = array('label' =>  $row['position']);
+        $array_values[$c]['values']['actions'] = array('label' => '
             <a href="'.ploopi_urlencode("admin.php?ploopi_op=forms_field_moveup&forms_id={$forms->fields['id']}&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
             <a href="'.ploopi_urlencode("admin.php?ploopi_op=forms_field_movedown&forms_id={$forms->fields['id']}&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
             <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?ploopi_op=forms_field_delete&forms_id={$forms->fields['id']}&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
