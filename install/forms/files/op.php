@@ -252,6 +252,7 @@ if ($_SESSION['ploopi']['connected'])
                     if ($ploopi_op == 'forms_separator_save')
                     {
                         $field->fields['separator'] = 1;
+                        if (!isset($_POST['field_option_pagebreak'])) $field->fields['option_pagebreak'] = 0;
                     }
                     elseif($ploopi_op == 'forms_captcha_save')
                     {

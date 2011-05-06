@@ -1,3 +1,9 @@
+== Module FORMS - version 3.2.0a =====================================================
+
+2011-05-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Correction d'un bug empêchant de décocher la case "Saut de page" sur un séparateur
+
 == Module FORMS - version 3.2.0 =====================================================
 
 2011-05-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
