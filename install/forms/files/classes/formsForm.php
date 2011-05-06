@@ -1565,56 +1565,6 @@ class formsForm extends data_object
                 }
 
                 $objForm->addButton( new form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;') ) );
-
-                if (sizeof($arrPanels) > 1)
-                {
-
-                    // Code JS pour cacher tous les panels
-                    $strJsHidePanels = '';
-
-                    // Pour chaque panel, on affiche un bouton et on prépare le code JS
-                    foreach(array_reverse($arrPanels, true) as $intNum => $strPanelId)
-                    {
-                        $strJsHidePanels.= "$('{$strPanelId}').style.display='none';";
-                    }
-
-                    $objForm->addJs("
-                        ploopi.currentpanel = 1;
-                        ploopi.nbpanel = ".sizeof($arrPanels).";
-
-                        ploopi.{$strFormId}_switchpanel = function(panel) {
-                            {$strJsHidePanels}
-
-                            $('{$strFormId}_btn_prev').style.display = panel>1 ? 'block' : 'none';
-                            $('{$strFormId}_btn_next').style.display = panel<this.nbpanel ? 'block' : 'none';
-                            $('{$strFormId}_btn_submit').style.display = panel == this.nbpanel ? 'block' : 'none';
-
-                            $('panel_'+panel).style.display='block';
-                            this.currentpanel = panel;
-                        };
-
-                        ploopi.{$strFormId}_nextpanel = function() {
-                            panel = parseInt(this.currentpanel, 10) + 1;
-                            if (panel > this.nbpanel) panel = this.nbpanel;
-                            this.{$strFormId}_switchpanel(panel);
-                        };
-
-                        ploopi.{$strFormId}_prevpanel = function() {
-                            panel = parseInt(this.currentpanel, 10) - 1;
-                            if (panel < 1) panel = 1;
-                            this.{$strFormId}_switchpanel(panel);
-                        };
-
-                    ");
-
-                    $objForm->addButton( new form_button('input:button', 'Précédent', null, "{$strFormId}_btn_prev", array('style' => 'margin-left:2px;font-weight:bold;display:none;', 'onclick' => "ploopi.{$strFormId}_prevpanel();")) );
-                    $objForm->addButton( new form_button('input:button', 'Suivant', null, "{$strFormId}_btn_next", array('style' => 'margin-left:2px;font-weight:bold;', 'onclick' => "ploopi.{$strFormId}_nextpanel();")) );
-                    $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, "{$strFormId}_btn_submit", array('style' => 'margin-left:2px;display:none;')) );
-                }
-                else
-                {
-                    $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
-                }
             break;
 
             case 'view':
@@ -1625,6 +1575,73 @@ class formsForm extends data_object
                 $objForm->addButton( new form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ploopi_urlencode("admin.php?formsTabItem=formlist")."';")) );
             break;
         }
+
+        if (sizeof($arrPanels) > 1)
+        {
+
+            // Code JS pour cacher tous les panels
+            $strJsHidePanels = '';
+
+            // Pour chaque panel, on affiche un bouton et on prépare le code JS
+            foreach(array_reverse($arrPanels, true) as $intNum => $strPanelId)
+            {
+                $strJsHidePanels.= "$('{$strPanelId}').style.display='none';";
+            }
+
+            $objForm->addJs("
+                ploopi.currentpanel = 1;
+                ploopi.nbpanel = ".sizeof($arrPanels).";
+
+                ploopi.{$strFormId}_switchpanel = function(panel) {
+                    {$strJsHidePanels}
+
+                    $('{$strFormId}_btn_prev').style.display = panel>1 ? 'block' : 'none';
+                    $('{$strFormId}_btn_next').style.display = panel<this.nbpanel ? 'block' : 'none';
+                    if ($('{$strFormId}_btn_submit')) $('{$strFormId}_btn_submit').style.display = panel == this.nbpanel ? 'block' : 'none';
+
+                    $('panel_'+panel).style.display='block';
+                    this.currentpanel = panel;
+                };
+
+                ploopi.{$strFormId}_nextpanel = function() {
+                    panel = parseInt(this.currentpanel, 10) + 1;
+                    if (panel > this.nbpanel) panel = this.nbpanel;
+                    this.{$strFormId}_switchpanel(panel);
+                };
+
+                ploopi.{$strFormId}_prevpanel = function() {
+                    panel = parseInt(this.currentpanel, 10) - 1;
+                    if (panel < 1) panel = 1;
+                    this.{$strFormId}_switchpanel(panel);
+                };
+
+            ");
+
+            $objForm->addButton( new form_button('input:button', 'Précédent', null, "{$strFormId}_btn_prev", array('style' => 'margin-left:2px;font-weight:bold;display:none;', 'onclick' => "ploopi.{$strFormId}_prevpanel();")) );
+            $objForm->addButton( new form_button('input:button', 'Suivant', null, "{$strFormId}_btn_next", array('style' => 'margin-left:2px;font-weight:bold;', 'onclick' => "ploopi.{$strFormId}_nextpanel();")) );
+
+            switch($strRenderMode)
+            {
+                case 'modify':
+                case 'frontoffice':
+                    $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, "{$strFormId}_btn_submit", array('style' => 'margin-left:2px;display:none;')) );
+                break;
+            }
+        }
+        else
+        {
+            switch($strRenderMode)
+            {
+                case 'modify':
+                case 'frontoffice':
+                    $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
+                break;
+            }
+
+        }
+
+
+
 
         if ($booIncludeCss) $this->includeCss();
 
