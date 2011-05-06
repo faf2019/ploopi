@@ -525,7 +525,7 @@ class form_select extends form_field
 
         $strOutput .= "<select name=\"{$this->_strName}\" id=\"{$this->_strId}\" tabindex=\"{$intTabindex}\" {$strProperties}{$strSize}{$strMultiple}{$strEvents} />";
 
-        $strOutput .= $this->_renderOptions($this->_arrValues);
+        $strOutput .= $this->_renderOptions($this->_arrValues, $intTabindex);
 
         $strOutput .= "</select>";
 
@@ -537,7 +537,7 @@ class form_select extends form_field
      * @param array tableau des valeurs
      * @return string code html
      */
-    private function _renderOptions($arrValues)
+    private function _renderOptions($arrValues, $intTabindex)
     {
         $strOutput = '';
 
@@ -546,7 +546,7 @@ class form_select extends form_field
             if (is_array($mixValue))
             {
                 $mixKey = htmlentities($mixKey);
-                $strOutput .= "<optgroup label=\"{$mixKey}\">".$this->_renderOptions($mixValue)."</optgroup>";
+                //$strOutput .= "<optgroup label=\"{$mixKey}\">".$this->_renderOptions($mixValue)."</optgroup>";
             }
             elseif (is_object($mixValue) && $mixValue instanceof form_select_option)
             {
@@ -1238,6 +1238,13 @@ class form
     private $_arrButtons;
 
     /**
+     * Contenus JS additionnels du formulaire
+     *
+     * @var array
+     */
+    private $_arrJs;
+
+    /**
      * Options du formulaire
      *
      * @var array
@@ -1297,6 +1304,7 @@ class form
         // Init Panels, Boutons
         $this->_arrPanels = array();
         $this->_arrButtons = array();
+        $this->_arrJs = array();
 
         $this->_strId = $strId;
         $this->_strAction = $strAction;
@@ -1341,6 +1349,16 @@ class form
     {
         $this->_arrPanels[] = &$objPanel;
         $objPanel->setParentForm($this);
+    }
+
+    /**
+     * Ajoute un contenu JS additionnel au formulaire
+     *
+     * @param form_panel $objPanel objet form_panel
+     */
+    public function addJs($strJs)
+    {
+        $this->_arrJs[] = $strJs;
     }
 
     /**
@@ -1389,7 +1407,6 @@ class form
         // Génération des Panels
         $strOutputPanels = '';
         $booHasFile = false;
-
         foreach($this->_arrPanels as $objPanel)
         {
             // Génération des panels (+ champs)
@@ -1433,10 +1450,7 @@ class form
         $strLegend = is_null($this->_arrOptions['legend']) ? '' : "<em".(is_null($this->_arrOptions['legend_style']) ? '' : " style=\"{$this->_arrOptions['legend_style']}\"").">{$this->_arrOptions['legend']}</em>";
 
         $strOutput .= "</div><div{$strButtonStyle} class=\"buttons\">";
-        foreach(array_reverse($this->_arrButtons) as $objButton)
-        {
-            $strOutput .= $objButton->render($intTabindex++);
-        }
+        foreach(array_reverse($this->_arrButtons) as $objButton) $strOutput .= $objButton->render($intTabindex++);
 
         $strOutput .= '</div></form></div>';
 
@@ -1484,6 +1498,8 @@ class form
         }
 
         $strOutput .= "return true; return false; }";
+
+        foreach($this->_arrJs as $strJs) $strOutput .= "\n{$strJs}";
 
         return $strOutput;
     }
