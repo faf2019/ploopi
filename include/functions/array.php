@@ -71,10 +71,7 @@ function ploopi_array2xml($arrArray, $strRootName = 'data', $strDefaultTagName =
  * Retourne le contenu d'un tableau à 2 dimensions au format CSV
  *
  * @param array $arrArray tableau de données
- * @param boolean $booHeader true si la ligne d'entête doit être ajoutée (nom des colonnes)
- * @param string $strFieldSep séparateur de champs
- * @param string $strLineSep séparateur de lignes
- * @param string $strTextSep caractère d'encapsulation des contenus
+ * @param array $arrOptions options du format CSV : booHeader:true si la ligne d'entête doit être ajoutée (nom des colonnes), strFieldSep:séparateur de champs, strLineSep:séparateur de lignes, strTextSep:caractère d'encapsulation des contenus
  * @return string contenu CSV
  */
 
@@ -95,20 +92,20 @@ function ploopi_array2csv($arrArray, $arrOptions = array())
 
     if (!empty($arrArray))
     {
-        if ($booClean) $arrArray = ploopi_array_map('ploopi_iso8859_clean', $arrArray);
+        if ($arrOptions['booClean']) $arrArray = ploopi_array_map('ploopi_iso8859_clean', $arrArray);
 
         // Fonction d'échappement & formatage du contenu
-        $funcLineEchap = create_function('$value', 'return \''.$strTextSep.'\'.str_replace(\''.$strTextSep.'\', \''.$strTextSep.$strTextSep.'\', $value).\''.$strTextSep.'\';');
+        $funcLineEchap = create_function('$value', 'return \''.$arrOptions['strTextSep'].'\'.str_replace(\''.$arrOptions['strTextSep'].'\', \''.$arrOptions['strTextSep'].$arrOptions['strTextSep'].'\', $value).\''.$arrOptions['strTextSep'].'\';');
 
         // Ajout de la ligne d'entête
-        if ($booHeader) $arrCSV[] = implode($strFieldSep, ploopi_array_map($funcLineEchap, array_keys(reset($arrArray))));
+        if ($arrOptions['booHeader']) $arrCSV[] = implode($arrOptions['strFieldSep'], ploopi_array_map($funcLineEchap, array_keys(reset($arrArray))));
 
         // Traitement des contenus
-        foreach($arrArray as $row) $arrCSV[] = implode($strFieldSep, ploopi_array_map($funcLineEchap, $row));
+        foreach($arrArray as $row) $arrCSV[] = implode($arrOptions['strFieldSep'], ploopi_array_map($funcLineEchap, $row));
     }
 
     // contenu CSV
-    return implode($strLineSep, $arrCSV).$strLineSep;
+    return implode($arrOptions['strLineSep'], $arrCSV).$arrOptions['strLineSep'];
 }
 
 /**
