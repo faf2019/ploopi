@@ -1545,9 +1545,13 @@ class formsForm extends data_object
 
                 if ($intNum == 0) $arrOptions['class'] = 'selected';
 
-                $strJsHidePanels.= "$('{$strPanelId}').style.display='none'; $('{$strFormId}_btn_".($intNum+1)."').className = '';";
+                $strJsHidePanels .= "$('{$strPanelId}').style.display='none';";
 
-                $objForm->addButton( new form_button('input:button', 'Page '.($intNum+1), null, "{$strFormId}_btn_".($intNum+1), $arrOptions ) );
+                if ($this->fields['option_multidisplaypages'])
+                {
+                    $objForm->addButton( new form_button('input:button', 'Page '.($intNum+1), null, "{$strFormId}_btn_".($intNum+1), $arrOptions ) );
+                    $strJsHidePanels .= " $('{$strFormId}_btn_".($intNum+1)."').className = '';";
+                }
             }            
 
 
