@@ -247,6 +247,17 @@ sort($forms_tpl);
                     <?php
                 }
                 ?>
+                <p>
+                    <strong>Multi-page:</strong>
+                </p>
+                <p>
+                    <label style="cursor:pointer;" for="forms_option_multidisplaysave">Afficher le bouton &laquo; Enregistrer &raquo; sur toutes les pages:</label>
+                    <input type="checkbox" class="checkbox" name="forms_option_multidisplaysave" id="forms_option_multidisplaysave" value="1" <?php if ($forms->fields['option_multidisplaysave']) echo 'checked'; ?> />
+                </p>
+                <p>
+                    <label style="cursor:pointer;" for="forms_option_multidisplaypages">Afficher les numéros de pages:</label>
+                    <input type="checkbox" class="checkbox" name="forms_option_multidisplaypages" id="forms_option_multidisplaypages" value="1" <?php if ($forms->fields['option_multidisplaypages']) echo 'checked'; ?> />
+                </p>
             </div>
         </div>
 

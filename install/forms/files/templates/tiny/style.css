@@ -201,3 +201,7 @@
 .forms_form button:hover {
     background-color:#999;
 }
+
+.forms_form button.selected {
+    font-weight:bold;
+}

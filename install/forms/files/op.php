@@ -81,6 +81,47 @@ switch($ploopi_op)
     case 'forms_reply_save':
         include './modules/forms/op_reply_save.php';
     break;
+
+
+    case 'forms_print':
+        include_once './modules/forms/classes/formsForm.php';
+        $objForm = new formsForm();
+        if (!empty($_REQUEST['forms_id']) && is_numeric($_REQUEST['forms_id']) && $objForm->open($_REQUEST['forms_id']))
+        {
+            ?>
+            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+            <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+            <head>
+                <meta http-equiv="content-type" content="text/html; charset=iso-8859-15" />
+                <script type="text/javascript" src="./lib/protoaculous/protoaculous.min.js"></script>
+                <link href="./modules/forms/templates/default/style.css" rel="stylesheet" type="text/css">
+                <link href="./modules/forms/templates/default/print.css" rel="stylesheet" type="text/css">
+                </head>
+                <body>
+                    <div class="forms_form">
+                    <form id="form"></form>
+                    </div>
+                    <script type="text/javascript">
+                        $('form').innerHTML = window.opener.document.forms_form_<? echo $_REQUEST['forms_id']; ?>.innerHTML;
+                        Event.observe(window, 'load', function() {
+                            <?
+                            for ($i=1; $i<=$objForm->getNbPanels();$i++)
+                            {
+                                ?>
+                                $('panel_<? echo $i; ?>').style.display = 'block';
+                                <?
+                            }
+                            ?>
+                            window.print();
+                            window.close();
+                        });
+                    </script>
+                </body>
+            </html>
+            <?
+        }
+        ploopi_die();
+    break;
 }
 
 
@@ -298,6 +339,9 @@ if ($_SESSION['ploopi']['connected'])
                 if (!isset($_POST['forms_option_displayip'])) $forms->fields['option_displayip'] = 0;
                 if (!isset($_POST['forms_cms_link'])) $forms->fields['cms_link'] = 0;
                 if (!isset($_POST['forms_option_adminonly'])) $forms->fields['option_adminonly'] = 0;
+
+                if (!isset($_POST['forms_option_multidisplaysave'])) $forms->fields['option_multidisplaysave'] = 0;
+                if (!isset($_POST['forms_option_multidisplaypages'])) $forms->fields['option_multidisplaypages'] = 0;
 
                 // Sécurité pour les grosses tables
                 if ($forms->fields['nbline'] > 500) $forms->fields['nbline'] = 500;

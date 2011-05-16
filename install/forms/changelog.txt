@@ -1,3 +1,11 @@
+== Module FORMS - version 3.2.1 =====================================================
+
+2011-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'un bouton permettant d'imprimer le formulaire
+ * Ajout d'une option permettant de d'afficher le bouton "enregistrer" sur toutes les pages (pour affichage multipage)
+ * Ajout d'une option permettant de d'afficher un bouton pour accéder à chaque page (pour affichage multipage)
+
 == Module FORMS - version 3.2.0b =====================================================
 
 2011-05-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

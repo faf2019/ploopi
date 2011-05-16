@@ -1,0 +1,11 @@
+body { margin:0 auto; padding:0; }
+form { margin:0; padding:0; }
+
+@page { size:landscape; }
+
+a { text-decoration:none; }
+
+a img { border:0; }
+
+button { display:none; }
+
