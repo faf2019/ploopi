@@ -1433,7 +1433,7 @@ class form
          * Génération du form
          */
 
-        $strOutput .= "<div{$strClass}{$strStyle}><form id=\"{$this->_strId}\" action=\"{$this->_strAction}\" method=\"{$this->_strMethod}\"{$strOnsubmit}{$strTarget}{$strEnctype}><div {$strClassForm}{$strStyleForm}>";
+        $strOutput .= "<div{$strClass}{$strStyle}><form id=\"{$this->_strId}\" name=\"{$this->_strId}\" action=\"{$this->_strAction}\" method=\"{$this->_strMethod}\"{$strOnsubmit}{$strTarget}{$strEnctype}><div {$strClassForm}{$strStyleForm}>";
 
 
         /*
