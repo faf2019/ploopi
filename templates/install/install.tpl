@@ -8,6 +8,7 @@
 
     <title>{WORKSPACE_TITLE} - {PAGE_TITLE}</title>
 
+    <script type="text/javascript" src="../lib/protoaculous/protoaculous.min.js"></script>
     <script type="text/javascript" src="../js/functions.pack.js"></script>
     <script type="text/javascript"><!--
         //
