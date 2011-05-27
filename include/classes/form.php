@@ -1449,7 +1449,7 @@ class form
 
         $strLegend = is_null($this->_arrOptions['legend']) ? '' : "<em".(is_null($this->_arrOptions['legend_style']) ? '' : " style=\"{$this->_arrOptions['legend_style']}\"").">{$this->_arrOptions['legend']}</em>";
 
-        $strOutput .= "</div><div{$strButtonStyle} class=\"buttons\">";
+        $strOutput .= "</div><div{$strButtonStyle} class=\"buttons\">{$strLegend}";
         foreach(array_reverse($this->_arrButtons) as $objButton) $strOutput .= $objButton->render($intTabindex++);
 
         $strOutput .= '</div></form></div>';
