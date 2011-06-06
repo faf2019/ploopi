@@ -178,6 +178,7 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
 
     if ($usecommonwords && !isset($_SESSION['ploopi']['commonwords']) && file_exists(_PLOOPI_INDEXATION_COMMONWORDS_FR) )
     {
+
         $filecontent = '';
         $handle = @fopen(_PLOOPI_INDEXATION_COMMONWORDS_FR, 'r');
         if ($handle)
@@ -201,7 +202,7 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
         $kw_clean = preg_replace("/[^a-zA-Z0-9]/","",ploopi_convertaccents($kw));
 
         // on vérifie qu'il n'est pas dans la liste des mots à exclure
-        if (!isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
+        if (!$usecommonwords || !isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
         {
             // on vérifie sa taille
             $len = strlen($kw);
@@ -238,7 +239,7 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
         $kw_clean = preg_replace("/[^a-zA-Z0-9]/","",ploopi_convertaccents($kw));
 
         // on vérifie qu'il n'est pas dans la liste des mots à exclure
-        if (!isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
+        if (!$usecommonwords || !isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
         {
             // on vérifie sa taille
             $len = strlen($kw);
@@ -421,10 +422,10 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
     if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module = $_SESSION['ploopi']['moduleid'];
 
     // on récupère la liste des racines contenues dans la liste des mots clés
-    list($arrStems) = ploopi_getwords($keywords, true, true);
+    list($arrStems) = ploopi_getwords($keywords, isset($options['usecommonwords']) ? $options['usecommonwords'] : true, true);
 
     // on récupère la liste des mots contenus dans la liste des mots clés
-    list($arrKeywords) = ploopi_getwords($keywords, true, false);
+    list($arrKeywords) = ploopi_getwords($keywords, isset($options['usecommonwords']) ? $options['usecommonwords'] : true, false);
 
     $arrSearch = array();
     $arrRelevance = array();
@@ -485,15 +486,25 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
         {
             $id = ($id_module != '') ? $row['id_record'] : $row['id'];
 
-            $arrElements[$id] = $row;
-            $arrRelevance[$id]['relevance'] = $row['relevance'];
-            $arrRelevance[$id]['count'] = 1;
-            $arrRelevance[$id]['kw'] = array();
-            $arrRelevance[$id]['stem'] = array($stem => 1);
+            if (!isset($arrElements[$id]))
+            {
+                $arrElements[$id] = $row;
+                $arrRelevance[$id]['relevance'] = $row['relevance'];
+                $arrRelevance[$id]['count'] = 1;
+                $arrRelevance[$id]['kw'] = array();
+                $arrRelevance[$id]['stem'] = array();
+            }
+            else
+            {
+                $arrRelevance[$id]['relevance'] += $row['relevance'];
+                $arrRelevance[$id]['count'] ++;
+            }
+
+            $arrRelevance[$id]['stem'][$stem] = 1;
         }
     }
 
-    if (empty($arrKeywords)) $arrKeywords[''] = 1;
+    // if (empty($arrKeywords)) $arrKeywords[''] = 1;
 
     // pour chaque mot, on cherche les occurences d'éléments correspondants
     foreach($arrKeywords as $kw => $occ)
