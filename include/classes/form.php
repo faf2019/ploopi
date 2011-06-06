@@ -554,7 +554,7 @@ class form_select extends form_field
             }
             else
             {
-                $mixValue = htmlentities($mixValue);
+                $mixValue = str_replace(' ', '&nbsp;', htmlentities($mixValue));
                 $mixKey = htmlentities($mixKey);
 
                 $strSelected = in_array($mixKey, $this->_arrSelected) ? ' selected="selected"' : '';
