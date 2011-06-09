@@ -404,7 +404,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
             // LOOK FOR AUTOCONNECT MODULE
             ///////////////////////////////////////////////////////////////////////////
 
-            if (!isset($ploopi_moduleid) && $_SESSION['ploopi']['backoffice']['moduleid'] == '' && !empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['modules']))
+            if (!isset($ploopi_moduleid) && $_SESSION['ploopi']['backoffice']['moduleid'] == '')
             {
                 $arrModules = &$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['modules'];
                 $intAutoconnectModuleId = null;
@@ -412,7 +412,6 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 foreach($arrModules as $intModuleId)
                 {
                     if (is_null($intAutoconnectModuleId) && $_SESSION['ploopi']['modules'][$intModuleId]['active'] && $_SESSION['ploopi']['modules'][$intModuleId]['autoconnect']) $intAutoconnectModuleId = $intModuleId;
-
                 }
 
                 if (is_null($intAutoconnectModuleId) && ploopi_ismanager()) $intAutoconnectModuleId = _PLOOPI_MODULE_SYSTEM;
