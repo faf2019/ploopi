@@ -138,13 +138,13 @@
                         <!-- END heading1 -->
                     <!-- END root1 -->
                     </div>
-                    
+
                     <!-- BEGIN bloc1 -->
                     <div class="minibloc">
                     {bloc1.CONTENT}
                     </div>
                     <!-- END bloc1 -->
-                    
+
                     <!-- BEGIN bloc2 -->
                     <div class="minibloc">
                     {bloc2.CONTENT}
@@ -156,7 +156,7 @@
                     {bloc3.CONTENT}
                     </div>
                     <!-- END bloc3 -->
-                    
+
                     <!-- BEGIN switch_blog -->
                         <!-- BEGIN calendar -->
                         {switch_blog.calendar.CONTENT}
@@ -645,32 +645,81 @@
 
                     <!-- BEGIN switch_content_sitemap -->
                         <h2>Plan du site</h2>
+
                         <div id="sitemap">
                             <!-- BEGIN heading0 -->
-                                <a href="{switch_content_sitemap.heading0.LINK}">{switch_content_sitemap.heading0.LABEL}</a>
-                                <div class="sitemap_heading1">
-                                    <!-- BEGIN heading1 -->
-                                        <a href="{switch_content_sitemap.heading0.heading1.LINK}">{switch_content_sitemap.heading0.heading1.LABEL}</a>
-                                        <div class="sitemap_heading2">
-                                            <!-- BEGIN heading2 -->
-                                                <a href="{switch_content_sitemap.heading0.heading1.heading2.LINK}">{switch_content_sitemap.heading0.heading1.heading2.LABEL}</a>
-                                                <div class="sitemap_heading3">
-                                                <!-- BEGIN heading3 -->
-                                                    <a href="{switch_content_sitemap.heading0.heading1.heading2.heading3.LINK}">{switch_content_sitemap.heading0.heading1.heading2.heading3.LABEL}</a>
-                                                    <div class="sitemap_heading4">
-                                                    <!-- BEGIN heading4 -->
-                                                        <a href="{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LINK}">{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LABEL}</a>
-                                                    <!-- END heading4 -->
-                                                    </div>
-                                                <!-- END heading3 -->
+                                <a href="{switch_content_sitemap.heading0.LINK}">
+                                    <img src="{TEMPLATE_PATH}/gfx/ico_root.png" />
+                                    <span>{switch_content_sitemap.heading0.LABEL}</span>
+                                </a>
+                                <div>
+                                <!-- BEGIN page -->
+                                    <a href="{switch_content_sitemap.heading0.page.LINK}">
+                                        <img src="{TEMPLATE_PATH}/gfx/ico_article.png" />
+                                        <span>{switch_content_sitemap.heading0.page.LABEL}</span>
+                                    </a>
+                                <!-- END page -->
+                                <!-- BEGIN heading1 -->
+                                    <a href="{switch_content_sitemap.heading0.heading1.LINK}">
+                                        <img src="{TEMPLATE_PATH}/gfx/ico_heading.png" />
+                                        <span>{switch_content_sitemap.heading0.heading1.LABEL}</span>
+                                    </a>
+                                    <div>
+                                    <!-- BEGIN page -->
+                                        <a href="{switch_content_sitemap.heading0.heading1.page.LINK}">
+                                            <img src="{TEMPLATE_PATH}/gfx/ico_article.png" />
+                                            <span>{switch_content_sitemap.heading0.heading1.page.LABEL}</span>
+                                        </a>
+                                    <!-- END page -->
+                                    <!-- BEGIN heading2 -->
+                                        <a href="{switch_content_sitemap.heading0.heading1.heading2.LINK}">
+                                            <img src="{TEMPLATE_PATH}/gfx/ico_heading.png" />
+                                            <span>{switch_content_sitemap.heading0.heading1.heading2.LABEL}</span>
+                                        </a>
+                                        <div>
+                                        <!-- BEGIN page -->
+                                            <a href="{switch_content_sitemap.heading0.heading1.heading2.page.LINK}">
+                                                <img src="{TEMPLATE_PATH}/gfx/ico_article.png" />
+                                                <span>{switch_content_sitemap.heading0.heading1.heading2.page.LABEL}</span>
+                                            </a>
+                                        <!-- END page -->
+                                        <!-- BEGIN heading3 -->
+                                            <a href="{switch_content_sitemap.heading0.heading1.heading2.heading3.LINK}">
+                                                <img src="{TEMPLATE_PATH}/gfx/ico_heading.png" />
+                                                <span>{switch_content_sitemap.heading0.heading1.heading2.heading3.LABEL}</span>
+                                            </a>
+                                            <div>
+                                            <!-- BEGIN page -->
+                                                <a href="{switch_content_sitemap.heading0.heading1.heading2.heading3.page.LINK}">
+                                                    <img src="{TEMPLATE_PATH}/gfx/ico_article.png" />
+                                                    <span>{switch_content_sitemap.heading0.heading1.heading2.heading3.page.LABEL}</span>
+                                                </a>
+                                            <!-- END page -->
+                                            <!-- BEGIN heading4 -->
+                                                <a href="{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LINK}">
+                                                    <img src="{TEMPLATE_PATH}/gfx/ico_heading.png" />
+                                                    <span>{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.LABEL}</span>
+                                                </a>
+                                                <div>
+                                                <!-- BEGIN page -->
+                                                    <a href="{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.page.LINK}">
+                                                        <img src="{TEMPLATE_PATH}/gfx/ico_article.png" />
+                                                        <span>{switch_content_sitemap.heading0.heading1.heading2.heading3.heading4.page.LABEL}</span>
+                                                    </a>
+                                                <!-- END page -->
                                                 </div>
-                                            <!-- END heading2 -->
+                                            <!-- END heading4 -->
+                                            </div>
+                                        <!-- END heading3 -->
                                         </div>
-                                    <!-- END heading1 -->
+                                    <!-- END heading2 -->
+                                    </div>
+                                <!-- END heading1 -->
                                 </div>
                             <!-- END heading0 -->
                         </div>
                     <!-- END switch_content_sitemap -->
+
                 </div>
             </div>
         </div>
