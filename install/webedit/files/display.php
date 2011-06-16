@@ -841,7 +841,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                     $sel = '';
                     if ($articleid == $row['id']) $sel = 'selected';
 
-					$ldate_pub = (!empty($row['timestp_published'])) ? ploopi_timestamp2local($row['timestp_published']) : array('date' => '');
+                    $ldate_pub = (!empty($row['timestp_published'])) ? ploopi_timestamp2local($row['timestp_published']) : array('date' => '');
                     $ldate_unpub = (!empty($row['timestp_unpublished'])) ? ploopi_timestamp2local($row['timestp_unpublished']) : array('date' => '');
                     $ldate_lastupdate = (!empty($row['lastupdate_timestp'])) ? ploopi_timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
                     $ldate_timestp = (!empty($row['timestp'])) ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
@@ -1223,8 +1223,23 @@ else // affichage standard rubrique/page
 
         if($arrHeadings['list'][$headingid]['content_type'] == 'sitemap' && empty($articleid)) // affichage plan de site
         {
-           $template_body->assign_block_vars('switch_content_sitemap', array());
-           webedit_template_assign_headings($arrHeadings, $arrShares, 0, 'switch_content_sitemap.', 'heading', 0);
+            $template_body->assign_block_vars('switch_content_sitemap', array());
+
+
+            $db->query("
+                SELECT      id, visible, metatitle, timestp_published, timestp_unpublished, lastupdate_timestp,
+                            timestp, reference, title, content_cleaned, author, version, position, id_heading
+                FROM        ploopi_mod_webedit_article
+                WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
+                AND         (timestp_published <= {$today} OR timestp_published = 0)
+                AND         (timestp_unpublished >= {$today} OR timestp_unpublished = 0)
+                ORDER BY    id_heading, position
+            ");
+
+            $arrArticles = array();
+            while ($row = $db->fetchrow()) $arrArticles[$row['id_heading']][] = $row;
+
+            webedit_template_assign_headings($arrHeadings, $arrArticles, $arrShares, 0, 'switch_content_sitemap.', 'heading', 0);
         }
 
         // détermination du type de tri des articles

@@ -398,9 +398,9 @@ function webedit_getarticles($moduleid = -1, $booBlocs = false)
     $sql_filter = $booBlocs ? ' AND ad.id_heading = 0 ' : ' AND ad.id_heading > 0 ';
 
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
-    
+
     $today = ploopi_createtimestamp();
-    
+
     if (!isset($_SESSION['webedit'][$key])) $_SESSION['webedit'][$key] = array();
 
     $_SESSION['webedit'][$key]['tree'] = array();
@@ -452,7 +452,7 @@ function webedit_getarticles($moduleid = -1, $booBlocs = false)
             $_SESSION['webedit'][$key]['list'][$fields['id']] = $fields;
             $arrArticles[$fields['id']] = $fields;
         }
-        else $arrArticles[$fields['id']] = $_SESSION['webedit'][$key]['list'][$fields['id']]; 
+        else $arrArticles[$fields['id']] = $_SESSION['webedit'][$key]['list'][$fields['id']];
 
         $_SESSION['webedit'][$key]['list'] = $arrArticles;
         $_SESSION['webedit'][$key]['tree'][$fields['id_heading']][] = $fields['id'];
@@ -662,7 +662,7 @@ function webedit_template_assign(&$arrHeadings, &$arrShares, &$nav, $hid, $var =
  * @param string $link lien de la rubrique parent
  */
 
-function webedit_template_assign_headings(&$arrHeadings, &$arrShares, $hid, $var = 'switch_content_heading.', $prefix = 'subheading', $depth = 1, $link = '')
+function webedit_template_assign_headings(&$arrHeadings, &$arrArticles, &$arrShares, $hid, $var = 'switch_content_heading.', $prefix = 'subheading', $depth = 1, $link = '')
 {
     global $template_body;
     global $webedit_mode;
@@ -673,31 +673,32 @@ function webedit_template_assign_headings(&$arrHeadings, &$arrShares, $hid, $var
         {
             $arrHeading = $arrHeadings['list'][$id];
 
-            $localvar = "{$var}{$prefix}{$depth}";
-
-            $locallink = ($link!='') ? "{$link}-{$id}" : "{$id}";
-
-            switch($webedit_mode)
-            {
-                case 'edit';
-                    $script = "javascript:window.parent.document.location.href='admin.php?headingid={$id}';";
-                break;
-
-                case 'render';
-                    $script = "index.php?webedit_mode=render&moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$id}";
-                break;
-
-                default:
-                case 'display';
-                    $arrParents = array();
-                    foreach(preg_split('/;/', $arrHeading['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-                    $script = ploopi_urlrewrite($script = "index.php?headingid={$id}", webedit_getrewriterules(), $arrHeading['label'], $arrParents);
-                break;
-            }
-
             // Visible ET (Publique OU (Privée ET (Autorisé OU Autorisé par un module OU Toujours Visible)))
             if ($arrHeading['visible'] && (!$arrHeadings['list'][$arrHeading['id']]['private'] || ($arrHeadings['list'][$arrHeading['id']]['private'] && (isset($arrShares[$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$arrHeading['id']]['herited_private']]) || $arrHeadings['list'][$arrHeading['id']]['private_visible']))))
             {
+                $localvar = "{$var}{$prefix}{$depth}";
+
+                $locallink = ($link!='') ? "{$link}-{$id}" : "{$id}";
+
+                switch($webedit_mode)
+                {
+                    case 'edit';
+                        $script = "javascript:window.parent.document.location.href='admin.php?headingid={$id}';";
+                    break;
+
+                    case 'render';
+                        $script = "index.php?webedit_mode=render&moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$id}";
+                    break;
+
+                    default:
+                    case 'display';
+                        $arrParents = array();
+                        foreach(preg_split('/;/', $arrHeading['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                        $script = ploopi_urlrewrite($script = "index.php?headingid={$id}", webedit_getrewriterules(), $arrHeading['label'], $arrParents);
+                    break;
+                }
+
+
                 $template_body->assign_block_vars($localvar , array(
                     'DEPTH' => $depth,
                     'ID' => $arrHeading['id'],
@@ -713,7 +714,52 @@ function webedit_template_assign_headings(&$arrHeadings, &$arrShares, $hid, $var
                     'FREE2' => $arrHeading['free2']
                     ));
 
-                if (isset($arrHeadings['tree'][$id])) webedit_template_assign_headings($arrHeadings, $arrShares, $id, "{$localvar}.", $prefix, $depth+1, $locallink);
+
+                if (isset($arrArticles[$arrHeading['id']]))
+                {
+                    foreach($arrArticles[$arrHeading['id']] as $row)
+                    {
+
+                        // Bloc PAGE (boutons pour les pages)
+                        if($webedit_mode == 'render')
+                            $scriptUrlArticle = "index.php?webedit_mode=render&moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$arrHeading['id']}&articleid={$row['id']}";
+                        else
+                        {
+                            $arrParents = array();
+                            if (isset($arrHeadings['list'][$arrHeading['id']])) foreach(preg_split('/;/', $arrHeadings['list'][$arrHeading['id']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                            $scriptUrlArticle = ploopi_urlrewrite("index.php?headingid={$arrHeading['id']}&articleid={$row['id']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
+                        }
+
+                        $ldate_pub = (!empty($row['timestp_published'])) ? ploopi_timestamp2local($row['timestp_published']) : array('date' => '');
+                        $ldate_unpub = (!empty($row['timestp_unpublished'])) ? ploopi_timestamp2local($row['timestp_unpublished']) : array('date' => '');
+                        $ldate_lastupdate = (!empty($row['lastupdate_timestp'])) ? ploopi_timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
+                        $ldate_timestp = (!empty($row['timestp'])) ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
+
+                        $var_tpl_page =
+                            array(
+                                'REFERENCE'     => htmlentities($row['reference']),
+                                'LABEL'         => htmlentities($row['title']),
+                                'LABEL_RAW'     => $row['title'],
+                                'AUTHOR'        => htmlentities($row['author']),
+                                'AUTHOR_RAW'    => $row['author'],
+                                'VERSION'       => htmlentities($row['version']),
+                                'DATE'          => htmlentities($ldate_timestp['date']),
+                                'LASTUPDATE_DATE' => htmlentities($ldate_lastupdate['date']),
+                                'LASTUPDATE_TIME' => htmlentities($ldate_lastupdate['time']),
+                                'DATE_PUB'   => $ldate_pub['date'],
+                                'DATE_UNPUB' => $ldate_unpub['date'],
+                                'TIMESTP_PUB'   => $ldate_pub['date'],
+                                'TIMESTP_UNPUB' => $ldate_unpub['date'],
+                                'LINK'          => $scriptUrlArticle,
+                                'POSITION'      => $row['position'],
+                            );
+
+
+                        $template_body->assign_block_vars($localvar.".page" , $var_tpl_page);
+                    }
+                }
+
+                if (isset($arrHeadings['tree'][$id])) webedit_template_assign_headings($arrHeadings, $arrArticles, $arrShares, $id, "{$localvar}.", $prefix, $depth+1, $locallink);
             }
         }
     }
