@@ -127,7 +127,7 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     $_SESSION['documents']['rights'] = $rights;
 
     // on va chercher la racine
-    $db->query("SELECT id FROM ploopi_documents_folder WHERE id_folder = 0 and id_object = '{$_SESSION['documents']['id_object']}' and id_record = '".addslashes($_SESSION['documents']['id_record'])."'");
+    $db->query("SELECT id FROM ploopi_documents_folder WHERE id_folder = 0 AND id_object = '{$_SESSION['documents']['id_object']}' AND id_module = '{$_SESSION['documents']['id_module']}' AND id_record = '".addslashes($_SESSION['documents']['id_record'])."'");
 
     if ($row = $db->fetchrow()) $currentfolder = $row['id'];
     else // racine inexistante, il faut la créer
