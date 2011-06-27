@@ -174,7 +174,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                     <p>
                         <label>Archiver les données jusqu'au :</label>
                         <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo $autobackup_date['date']; ?>">&nbsp;
-						<?php echo ploopi_open_calendar('forms_autobackup_date'); ?>
+                        <?php echo ploopi_open_calendar('forms_autobackup_date'); ?>
                     </p>
                     <p>
                         <label>&nbsp;</label>
@@ -189,102 +189,114 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
     ?>
 
     <div id="forms_info_box">
-		<div style="float:right;margin-bottom:2px;">
-			<p class="ploopi_va">
-			<?php
-			if ($objForm->fields['nbline'] > 0 && $intNumRows > $objForm->fields['nbline'])
-			{
+        <div style="float:right;margin-bottom:2px;">
+            <p class="ploopi_va">
+            <?php
+            if ($objForm->fields['nbline'] > 0 && $intNumRows > $objForm->fields['nbline'])
+            {
                 include_once './include/functions/array.php';
                 echo '<span>Pages&nbsp;:&nbsp;</span>'.ploopi_array_getpages($intNumRows, $objForm->fields['nbline'], "admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}&page={p}", $_SESSION['forms'][$objForm->fields['id']]['page']);
-			}
+            }
 
-			if ($_SESSION['ploopi']['action'] == 'public')
-			{
-				$ct = 0;
-				if ($objForm->fields['option_onlyone'] || $objForm->fields['option_onlyoneday'])
-				{
-					$select = "select count(*) as ct from ploopi_mod_forms_reply where 1 ";
-					if ($objForm->fields['option_onlyone']) $select .= " AND id_user = {$_SESSION['ploopi']['userid']}";
-					if ($objForm->fields['option_onlyoneday']) $select .= " AND LEFT(date_validation,8) = '".substr(ploopi_createtimestamp(),0,8)."'";
-					$db->query($select);
-					if ($fields = $db->fetchrow()) $ct = $fields['ct'];
-				}
+            if ($_SESSION['ploopi']['action'] == 'public')
+            {
+                $ct = 0;
+                if ($objForm->fields['option_onlyone'] || $objForm->fields['option_onlyoneday'])
+                {
+                    $select = "select count(*) as ct from ploopi_mod_forms_reply where 1 ";
+                    if ($objForm->fields['option_onlyone']) $select .= " AND id_user = {$_SESSION['ploopi']['userid']}";
+                    if ($objForm->fields['option_onlyoneday']) $select .= " AND LEFT(date_validation,8) = '".substr(ploopi_createtimestamp(),0,8)."'";
+                    $db->query($select);
+                    if ($fields = $db->fetchrow()) $ct = $fields['ct'];
+                }
 
-				if (!$ct &&  ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY))
-				{
-					?>
-					<input type="button" class="flatbutton" style="margin-left:10px;font-weight:bold" value="Ajouter un enregistrement" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_reply_add&forms_id={$objForm->fields['id']}"); ?>'">
-					<?php
-				}
-			}
-			?>
-			</p>
-		</div>
+                if (!$ct &&  ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY))
+                {
+                    ?>
+                    <input type="button" class="flatbutton" style="margin-left:10px;font-weight:bold" value="Ajouter un enregistrement" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_reply_add&forms_id={$objForm->fields['id']}"); ?>'">
+                    <?php
+                }
+            }
+            ?>
+            </p>
+        </div>
 
         <div style="float:left;">
-			<p class="ploopi_va">
-			<span>
-				Nombre d'Enregistrements : <b><?php echo $intTotalNumRows; ?></b> - Avec le Filtre : <b><?php echo $intNumRows; ?></b>
-			</span>
-			</p>
-		</div>
+            <p class="ploopi_va">
+            <span>
+                Nombre d'Enregistrements : <b><?php echo $intTotalNumRows; ?></b> - Avec le Filtre : <b><?php echo $intNumRows; ?></b>
+            </span>
+            </p>
+        </div>
 
-    	<div style="clear:both;">
-			<p class="ploopi_va">
-        		<?php
-        		if (ploopi_isactionallowed(_FORMS_ACTION_EXPORT))
-        		{
-        			?>
-        			Export :<a class="forms_export_link" style="margin-left:10px;" title="<?php echo _FORMS_EXPORT; ?> XLS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=XLS"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/mime/xls.png">XLS</a>
-        			<?php
-        			if (ploopi_getparam('forms_webservice_jodconverter') != '')
-        			{
-        			?>
-        				<a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> ODS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=ODS"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> ODS" src="./modules/forms/img/mime/ods.png">ODS</a>
-        				<a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> PDF" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=PDF"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> PDF" src="./modules/forms/img/mime/pdf.png">PDF</a>
-        				<?php
-        			}
-        			?>
-        			<a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> CSV" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=CSV"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/mime/csv.png">CSV</a>
-        			<a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> HTML" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=HTML"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> HTML" src="./modules/forms/img/mime/html.png">HTML</a>
-        			<a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> XML" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=XML"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XML" src="./modules/forms/img/mime/xml.png">XML</a>
-        			<?php
-        		}
+        <div style="clear:both;">
+            <p class="ploopi_va">
+                <?php
+                if (ploopi_isactionallowed(_FORMS_ACTION_EXPORT))
+                {
+                    ?>
+                    Export :
+                    <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> XLS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=XLS"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/mime/xls.png">XLS</a>
+                    <?php
+                    if (ploopi_getparam('forms_webservice_jodconverter') != '')
+                    {
+                    ?>
+                        <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> ODS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=ODS"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> ODS" src="./modules/forms/img/mime/ods.png">ODS</a>
+                        <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> PDF" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=PDF"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> PDF" src="./modules/forms/img/mime/pdf.png">PDF</a>
+                        <?php
+                    }
+                    ?>
+                    <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> CSV" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=CSV"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/mime/csv.png">CSV</a>
+                    <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> HTML" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=HTML"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> HTML" src="./modules/forms/img/mime/html.png">HTML</a>
+                    <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> XML" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=XML"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XML" src="./modules/forms/img/mime/xml.png">XML</a>
+                    <?php
+                }
+                ?>
+                <span style="margin-left:10px;" >Impression :</span>
+                <a class="forms_export_link" title="Impression XLS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=XLS"); ?>"><img alt="Impression XLS" title="Impression XLS" src="./modules/forms/img/mime/xls.png">XLS</a>
+                <?php
+                if (ploopi_getparam('forms_webservice_jodconverter') != '')
+                {
+                ?>
+                    <a class="forms_export_link" title="Impression ODS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=ODS"); ?>"><img alt="Impression ODS" title="Impression ODS" src="./modules/forms/img/mime/ods.png">ODS</a>
+                    <a class="forms_export_link" title="Impression PDF" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=PDF"); ?>"><img alt="Impression PDF" title="Impression PDF" src="./modules/forms/img/mime/pdf.png">PDF</a>
+                    <?
+                }
 
-        		if (ploopi_isactionallowed(_FORMS_ACTION_GRAPHICS))
-        		{
-        			$db->query("
-        				SELECT  *
-        				FROM    ploopi_mod_forms_graphic
-        				WHERE   id_form = {$objForm->fields['id']}
-        			");
-        			if ($db->numrows())
-        			{
-        				?>
-        					<span style="margin-left:10px;">Graphique : </span>
-        					<?php
-        					?>
-        					<select class="select" onchange="javascript:if (this.value != '') {ploopi_xmlhttprequest_topopup(750, event, 'forms_popup_graphic', 'admin-light.php', 'ploopi_op=forms_graphic_display&forms_graphic_id='+this.value+'&forms_graphic_width='+$('forms_graphic_width').value, 'POST');} else {ploopi_hidepopup('forms_popup_graphic');} this.selectedIndex = 0;">
-        						<option value="">(Sélectionner un graphique)</option>
-        						<?php
-        						while ($row = $db->fetchrow())
-        						{
-        							?>
-        							<option value="<?php echo $row['id']; ?>"><?php echo htmlentities($row['label']); ?></option>
-        							<?php
-        						}
-        						?>
-        					</select>
-        					<span>Largeur (px) : </span>
-        					<input type="text" class="text" value="" size="4" maxlength="5" id="forms_graphic_width" /> (vide = auto)
-        				<?php
-        			}
-        		}
-        		?>
-			</p>
-    	</div>
+                if (ploopi_isactionallowed(_FORMS_ACTION_GRAPHICS))
+                {
+                    $db->query("
+                        SELECT  *
+                        FROM    ploopi_mod_forms_graphic
+                        WHERE   id_form = {$objForm->fields['id']}
+                    ");
+                    if ($db->numrows())
+                    {
+                        ?>
+                            <span style="margin-left:10px;">Graphique : </span>
+                            <?php
+                            ?>
+                            <select class="select" onchange="javascript:if (this.value != '') {ploopi_xmlhttprequest_topopup(750, event, 'forms_popup_graphic', 'admin-light.php', 'ploopi_op=forms_graphic_display&forms_graphic_id='+this.value+'&forms_graphic_width='+$('forms_graphic_width').value, 'POST');} else {ploopi_hidepopup('forms_popup_graphic');} this.selectedIndex = 0;">
+                                <option value="">(Sélectionner un graphique)</option>
+                                <?php
+                                while ($row = $db->fetchrow())
+                                {
+                                    ?>
+                                    <option value="<?php echo $row['id']; ?>"><?php echo htmlentities($row['label']); ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                            <span>Largeur (px) : </span>
+                            <input type="text" class="text" value="" size="4" maxlength="5" id="forms_graphic_width" /> (vide = auto)
+                        <?php
+                    }
+                }
+                ?>
+            </p>
+        </div>
 
-	</div>
+    </div>
 
 
 

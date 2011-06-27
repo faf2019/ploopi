@@ -1,3 +1,9 @@
+== Module FORMS - version 3.2.2 =====================================================
+
+2011-06-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'une fonctionnalité d'impression (export XLS natif ainsi que ODS et PDF avec JOD Converter) des données du formulaire. Légèrement différent de la fonctionnalité d'export uniquement accessible via un rôle et qui exporte tous les champs, même les champs cachés (utilisateurs, ip, etc.).
+
 == Module FORMS - version 3.2.1a =====================================================
 
 2011-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

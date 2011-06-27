@@ -347,13 +347,13 @@ class formsForm extends data_object
             // Seul l'admin peut exporter le champ ID
             if (!$booExport || ploopi_isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module'])) $objQuery->add_select('rec.`#id` as `id`');
 
-            if (!$booExport || $this->fields['option_displaydate'])
+            if ($booExport || $this->fields['option_displaydate'])
             {
                 if ($booRawData) $objQuery->add_select('rec.`date_validation`');
                 else $objQuery->add_select("CONCAT(SUBSTRING(rec.`date_validation`, 7, 2), '/', SUBSTRING(rec.`date_validation`, 5, 2), '/', SUBSTRING(rec.`date_validation`, 1, 4), ' ', SUBSTRING(rec.`date_validation`, 9, 2), ':', SUBSTRING(rec.`date_validation`, 11, 2), ':', SUBSTRING(rec.`date_validation`, 13, 2)) as `date_validation`");
             }
 
-            if (!$booExport || $this->fields['option_displayip']) $objQuery->add_select('rec.`ip`');
+            if ($booExport || $this->fields['option_displayip']) $objQuery->add_select('rec.`ip`');
 
         }
 
@@ -364,7 +364,7 @@ class formsForm extends data_object
             /**
              * Construction des jointures sur les champs statiques (ip, user, etc...)
              */
-            if (!$booExport || $this->fields['option_displayuser'])
+            if ($booExport || $this->fields['option_displayuser'])
             {
                 $objQuery->add_select('rec.`user_id`');
 
@@ -375,7 +375,7 @@ class formsForm extends data_object
                 $objQuery->add_select('pu.lastname as `user_lastname`');
             }
 
-            if (!$booExport || $this->fields['option_displaygroup'])
+            if ($booExport || $this->fields['option_displaygroup'])
             {
                 $objQuery->add_select('rec.`workspace_id`');
 
@@ -415,7 +415,7 @@ class formsForm extends data_object
 
             foreach($arrObjField as $objField)
             {
-                if (!$booExport || ($objField->fields['option_exportview'] && ($booIsAdmin || !$objField->fields['option_adminonly'])))
+                if ($booExport || ($objField->fields['option_exportview'] && ($booIsAdmin || !$objField->fields['option_adminonly'])))
                 {
                     $strAlias = $booFieldNamesAsKey ? $objField->fields['fieldname'] : $objField->fields['id'];
                     // Traitement spécial des données DATE
@@ -717,14 +717,17 @@ class formsForm extends data_object
      * @param string $strFormat format souhaité (csv, xls, xml, html)
      */
 
-    public function export($strFormat)
+    public function export($strFormat, $booExport = true)
     {
         ploopi_loadv2();
 
         require_once './include/classes/odf.php';
 
         // Lecture des données
-        list($arrData) = $this->prepareData(true, true, true, false);
+        list($arrData) = $this->prepareData(true, true, $booExport, false);
+
+        // Suppression de la colonne 'id' pour l'impression (autorisé en export)
+        if (!$booExport && !empty($arrData))  foreach(array_keys($arrData) as $strKey) unset($arrData[$strKey]['id']);
 
         $strFormat = strtolower($strFormat);
 
@@ -748,7 +751,22 @@ class formsForm extends data_object
             break;
 
             case 'xls':
-                echo ploopiArray::getInstance($arrData)->toXls(true);
+                $arrTitles = array(
+                    'id' => array('title' => 'Id'),
+                    'date_validation' => array('title' => 'Date de Validation'),
+                    'ip' => array('title' => 'Adresse IP'),
+                    'user_id' => array('title' => 'Utilisateur/Id'),
+                    'user_login' => array('title' => 'Utilisateur/Identifiant'),
+                    'user_firstname' => array('title' => 'Utilisateur/Prénom'),
+                    'user_lastname' => array('title' => 'Utilisateur/Nom'),
+                    'workspace_id' => array('title' => 'Espace de Travail/Id'),
+                    'workspace_label' => array('title' => 'Espace de Travail/Nom'),
+                    'workspace_code' => array('title' => 'Espace de Travail/Code'),
+                );
+
+                foreach($this->getFields() as $strKey => $objField) $arrTitles[$objField->fields['fieldname']] = array('title' => $objField->fields['name']);
+
+                echo ploopiArray::getInstance($arrData)->toXls(true, 'export', $arrTitles);
             break;
 
             case 'sxc':
@@ -804,6 +822,7 @@ class formsForm extends data_object
         ploopi_die();
 
     }
+
 
     /**
      * Suppression de la table liée au formulaire
@@ -1552,7 +1571,7 @@ class formsForm extends data_object
                     $objForm->addButton( new form_button('input:button', 'Page '.($intNum+1), null, "{$strFormId}_btn_".($intNum+1), $arrOptions ) );
                     $strJsHidePanels .= " $('{$strFormId}_btn_".($intNum+1)."').className = '';";
                 }
-            }            
+            }
 
 
 
@@ -1628,7 +1647,7 @@ class formsForm extends data_object
     public function getNbPanels()
     {
         $intNb = 0;
-        
+
         // Pour chaque champs du formulaire
         foreach($this->getFields(true) as $objField) if ($objField->fields['option_pagebreak'] || $intNb == 0) $intNb++;
 

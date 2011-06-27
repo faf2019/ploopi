@@ -562,10 +562,12 @@ if ($_SESSION['ploopi']['connected'])
 
             case 'forms_export':
                 ploopi_init_module('forms');
-                if (ploopi_isactionallowed(_FORMS_ACTION_EXPORT) && !empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
-                {
-                    include './modules/forms/op_export.php';
-                }
+                if (ploopi_isactionallowed(_FORMS_ACTION_EXPORT) && !empty($_GET['forms_id']) && is_numeric($_GET['forms_id'])) include './modules/forms/op_export.php';
+            break;
+
+            case 'forms_print_array':
+                ploopi_init_module('forms');
+                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id'])) include './modules/forms/op_print.php';
             break;
 
             case 'forms_delete_data':

@@ -45,7 +45,7 @@ $objForm = new formsForm();
 
 if (empty($_GET['forms_export_format']) || empty($_GET['forms_id']) || !is_numeric($_GET['forms_id']) || !$objForm->open($_GET['forms_id'])) ploopi_die();
 
-$objForm->export($_GET['forms_export_format']);
+$objForm->export($_GET['forms_export_format'], false);
 
 ploopi_die();
 ?>
