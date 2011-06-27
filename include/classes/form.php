@@ -1480,17 +1480,17 @@ class form
                     case 'input:file':
                     case 'textarea':
                         $strFormat = ($objField->_arrOptions['required'] ? '' : 'empty').$objField->_arrOptions['datatype'];
-                        $strOutput .= "if (ploopi_validatefield('".addslashes($objField->_strLabel)."', {$strFormField}, '{$strFormat}'))";
+                        $strOutput .= "if (ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
                     break;
 
                     case 'select':
                     case 'color':
-                        if ($objField->_arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes($objField->_strLabel)."', {$strFormField}, 'selected'))";
+                        if ($objField->_arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'selected'))";
                     break;
 
                     case 'input:radio':
                     case 'input:checkbox':
-                        if ($objField->_arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes($objField->_strLabel)."', {$strFormField}, 'checked'))";
+                        if ($objField->_arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'checked'))";
                     break;
                 }
             }
