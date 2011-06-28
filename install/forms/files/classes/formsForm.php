@@ -1538,7 +1538,7 @@ class formsForm extends data_object
             break;
 
             case 'preview':
-                $objForm->addButton( new form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ploopi_urlencode("admin.php?formsTabItem=formlist")."';")) );
+                $objForm->addButton( new form_button('input:button', 'Retour', null, null, array('onclick' => "ploopi_hidepopup('forms_preview');")) );
             break;
         }
 

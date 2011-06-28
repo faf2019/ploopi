@@ -1,3 +1,10 @@
+== Module FORMS - version 3.2.3 =====================================================
+
+2011-06-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout d'un texte d'explication sur le format de fichier CSV à fournir pour l'import de données
+ * Correction du bouton retour en mode "aperçu"
+
 == Module FORMS - version 3.2.2 =====================================================
 
 2011-06-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

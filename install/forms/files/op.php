@@ -211,8 +211,14 @@ if ($_SESSION['ploopi']['connected'])
                 $objForm = new formsForm();
                 if (!empty($_POST['forms_id']) && is_numeric($_POST['forms_id']) && $objForm->open($_POST['forms_id']))
                 {
+                    $arrFields = array();
+                    foreach($objForm->getFields() as $objField) $arrFields[] = $objField->fields['fieldname'];
+
                     $objForm = new form('forms_import_form', ploopi_urlencode("admin-light.php?ploopi_op=form_import_file&forms_id={$_POST['forms_id']}"));
-                    $objForm->addField( new form_field( 'input:file', 'Fichier', '', 'forms_import_file', 'forms_import_file', array('description' => 'Format CSV') ) );
+                    $objForm->addField( new form_field( 'input:file', 'Fichier:', '', 'forms_import_file', 'forms_import_file', array('description' => 'Format CSV') ) );
+                    $objForm->addField( new form_htmlfield('Séparateur de champs:', 'Virgule') );
+                    $objForm->addField( new form_htmlfield('Séparateur de texte:', 'Double-quote') );
+                    $objForm->addField( new form_htmlfield('Colonnes:', implode(', ', $arrFields)) );
                     $objForm->addButton( new form_button('input:button', 'Fermer', null, null, array('onclick' => "ploopi_hidepopup('forms_import');")) );
                     $objForm->addButton( new form_button('input:submit', 'Importer', null, null, array('style' => 'margin-left:2px;')) );
 
