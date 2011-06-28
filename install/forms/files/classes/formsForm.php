@@ -442,6 +442,11 @@ class formsForm extends data_object
                 // On stocke la valeur du filtre dans un tableau (pour traitement générique)
                 switch($row['op'])
                 {
+                    case 'in':
+                        // Découpage sur la caractère ","
+                        $arrValues = explode(',', $row['value']);
+                    break;
+
                     case 'between':
                         // Découpage sur la caractère ";"
                         $arrValues = explode(';', $row['value']);
@@ -522,6 +527,10 @@ class formsForm extends data_object
                         case '>=':
                         case '<=':
                             $objQuery->add_where("{$strFieldName} {$row['op']} %s", $arrValues[0]);
+                        break;
+
+                        case 'in':
+                            $objQuery->add_where("{$strFieldName} in (%t)", array($arrValues));
                         break;
 
                         case 'between':

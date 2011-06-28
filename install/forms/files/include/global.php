@@ -149,7 +149,8 @@ $field_operators = array(
     '<=' => '<=',
     'between' => 'Entre',
     'like' => 'Contient',
-    'begin' => 'Commence par'
+    'begin' => 'Commence par',
+    'in' => 'Dans la liste de valeurs'
 );
 
 $form_types = array(

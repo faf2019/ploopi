@@ -119,7 +119,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                         }
                         ?>
                     </select>
-                    <input type="text" value="<?php if (isset($arrFormFilter[$l])) echo htmlentities($arrFormFilter[$l]['value']); ?>" size="25" class="text" name="filter_value_<?php echo $l; ?>">
+                    <input type="text" value="<?php if (isset($arrFormFilter[$l])) echo htmlentities($arrFormFilter[$l]['value']); ?>" size="80" class="text" name="filter_value_<?php echo $l; ?>">
                 </p>
                 <?php
             }

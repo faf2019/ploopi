@@ -1,3 +1,9 @@
+== Module FORMS - version 3.2.4 =====================================================
+
+2011-06-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout de l'opérateur "IN" (Dans la liste de valeurs) pour les filtres lors de la consultation des données
+
 == Module FORMS - version 3.2.3 =====================================================
 
 2011-06-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
