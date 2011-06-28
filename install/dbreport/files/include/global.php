@@ -74,7 +74,8 @@ $arrDbReportCriteria = array(
     'like' => 'Contient',
     'begining' => 'Commence par',
     'ending' => 'Termine par',
-    'between' => 'Entre'
+    'between' => 'Entre',
+    'in' => 'Dans la liste de valeurs'
 );
 
 // Liste des fonctions proposées (MySQL)

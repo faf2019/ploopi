@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>dbreport</label>
-        <version>1.0.5</version>
+        <version>1.0.6</version>
         <author>Ovensia</author>
-        <date>20100906000000</date>
+        <date>20110628000000</date>
         <description>Requêteur Base de Données</description>
         <paramtype>
             <name>dbreport_webservice_jodconverter</name>

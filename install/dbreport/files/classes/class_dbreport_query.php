@@ -481,7 +481,12 @@ class dbreport_query extends data_object
 
                                 if (strstr($row['type'],'int')) // type int
                                 {
-                                    if ($row["type_{$strCrit}"] == 'between')
+                                    if ($row["type_{$strCrit}"] == 'in')
+                                    {
+                                        $strSqlWhere .= "IN (%e)";
+                                        foreach(explode(',', $row[$strCrit]) as $strVal) $arrWhereParams[0][] = intval($strVal, 10);
+                                    }
+                                	elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlWhere .= "BETWEEN %d AND %d";
                                         $arrWhereParams[] = intval($arrCriteria[0], 10);
@@ -491,7 +496,12 @@ class dbreport_query extends data_object
                                 }
                                 elseif (strstr($row['type'],'double') || strstr($row['type'],'float')) // type double
                                 {
-                                    if ($row["type_{$strCrit}"] == 'between')
+                                    if ($row["type_{$strCrit}"] == 'in')
+                                    {
+                                        $strSqlWhere .= "IN (%g)";
+                                        foreach(explode(',', $row[$strCrit]) as $strVal) $arrWhereParams[0][] = floatval(str_replace(array(' ',','), array('', '.'), $strVal));
+                                    }
+                                	elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlWhere .= "BETWEEN %f AND %f";
                                         $arrWhereParams[] = floatval(str_replace(array(' ',','), array('', '.'), $arrCriteria[0]));
@@ -501,7 +511,12 @@ class dbreport_query extends data_object
                                 }
                                 elseif (strstr($row['type'],'date')) // type date
                                 {
-                                    if ($row["type_{$strCrit}"] == 'between')
+                                    if ($row["type_{$strCrit}"] == 'in')
+                                    {
+                                        $strSqlWhere .= "IN (%t)";
+                                        $arrWhereParams = array(explode(',', $row[$strCrit]));
+                                    }
+                                	elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlWhere .= "BETWEEN %s AND %s";
                                         $arrWhereParams[] = ploopi_local2timestamp($arrCriteria[0]);
@@ -511,7 +526,12 @@ class dbreport_query extends data_object
                                 }
                                 else // Type char/text/enum/???
                                 {
-                                    if ($row["type_{$strCrit}"] == 'between')
+                                    if ($row["type_{$strCrit}"] == 'in')
+                                    {
+                                    	$strSqlWhere .= "IN (%t)";
+                                        $arrWhereParams = array(explode(',', $row[$strCrit]));
+                                    }
+                                	elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlWhere .= "BETWEEN %s AND %s";
                                         $arrWhereParams[] = $arrCriteria[0];
@@ -520,7 +540,7 @@ class dbreport_query extends data_object
                                     else $strValue = $row[$strCrit];
                                 }
 
-                                if ($row["type_{$strCrit}"] != 'between')
+                                if ($row["type_{$strCrit}"] != 'between' && $row["type_{$strCrit}"] != 'in')
                                 {
                                     switch($row["type_{$strCrit}"])
                                     {
@@ -567,9 +587,13 @@ class dbreport_query extends data_object
 
                                 if (strstr($row['type'],'double') || strstr($row['type'],'float') || in_array($row['operation'], array('count', 'sum', 'avg'))) // type double ou opération arithmétique
                                 {
-                                    if ($row["type_{$strCrit}"] == 'between')
+                                    if ($row["type_{$strCrit}"] == 'in')
                                     {
-                                        //$strSqlHaving .= "BETWEEN '".floatval(str_replace(array(' ',','), array('', '.'), $arrCriteria[0]))."' AND '".floatval(str_replace(array(' ',','), array('', '.'), $arrCriteria[1]))."'";
+                                        $strSqlHaving .= "IN (%g)";
+                                        foreach(explode(',', $row[$strCrit]) as $strVal) $arrHavingParams[0][] = floatval(str_replace(array(' ',','), array('', '.'), $strVal));
+                                    }
+                                	elseif ($row["type_{$strCrit}"] == 'between')
+                                    {
                                         $strSqlHaving .= "BETWEEN %f AND %f";
                                         $arrHavingParams[] = floatval(str_replace(array(' ',','), array('', '.'), $arrCriteria[0]));
                                         $arrHavingParams[] = floatval(str_replace(array(' ',','), array('', '.'), $arrCriteria[1]));
@@ -578,7 +602,12 @@ class dbreport_query extends data_object
                                 }
                                 elseif (strstr($row['type'],'int')) // type int
                                 {
-                                    if ($row["type_{$strCrit}"] == 'between')
+                                    if ($row["type_{$strCrit}"] == 'in')
+                                    {
+                                        $strSqlHaving .= "IN (%g)";
+                                        foreach(explode(',', $row[$strCrit]) as $strVal) $arrHavingParams[0][] = intval($strVal, 10);
+                                    }
+                                	elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlHaving .= "BETWEEN %d AND %d";
                                         $arrHavingParams[] = intval($arrCriteria[0], 10);
@@ -588,7 +617,12 @@ class dbreport_query extends data_object
                                 }
                                 elseif (strstr($row['type'],'date')) // type date
                                 {
-                                    if ($row["type_{$strCrit}"] == 'between')
+                                    if ($row["type_{$strCrit}"] == 'in')
+                                    {
+                                        $strSqlHaving .= "IN (%t)";
+                                        $arrHavingParams = array(explode(',', $row[$strCrit]));
+                                    }
+                                	elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlHaving .= "BETWEEN %s AND %s";
                                         $arrHavingParams[] = ploopi_local2timestamp($arrCriteria[0]);
@@ -598,7 +632,12 @@ class dbreport_query extends data_object
                                 }
                                 else // Type char/text/enum/???
                                 {
-                                    if ($row["type_{$strCrit}"] == 'between')
+                                    if ($row["type_{$strCrit}"] == 'in')
+                                    {
+                                        $strSqlHaving .= "IN (%t)";
+                                        $arrHavingParams = array(explode(',', $row[$strCrit]));
+                                    }
+                                	elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlHaving .= "BETWEEN %s AND %s";
                                         $arrHavingParams[] = $arrCriteria[0];
@@ -607,7 +646,7 @@ class dbreport_query extends data_object
                                     else $strValue = $row[$strCrit];
                                 }
 
-                                if ($row["type_{$strCrit}"] != 'between')
+                                if ($row["type_{$strCrit}"] != 'between' && $row["type_{$strCrit}"] != 'in')
                                 {
                                     switch($row["type_{$strCrit}"])
                                     {
