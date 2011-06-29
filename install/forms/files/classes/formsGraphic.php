@@ -59,16 +59,16 @@ class formsGraphic extends data_object
 {
     private static $_arrDefaultOptions = array(
         // GLOBAL
-    	'transparency' => '0.2',        // Transparence des courbes, contours, sauf pie/pie3d
-		'fill_transparency' => '0.5',	// Transparence des remplissages, sauf pie/pie3d
+        'transparency' => '0.2',        // Transparence des courbes, contours, sauf pie/pie3d
+        'fill_transparency' => '0.5',   // Transparence des remplissages, sauf pie/pie3d
         'font' => FF_VERA,               // FF_VERDANA, FF_VERA, FF_VERAMONO, FF_VERASERIF, FF_DV_SANSSERIF, FF_DV_SERIF, FF_DV_SANSSERIFMONO, FF_DV_SERIFCOND, FF_DV_SANSSERIFCOND
         'font_size_title' => '15',
         'font_size_legend' => '8',
         'font_size_data' => '10',
-    	'margin_left' => '40',            // sauf pie/pie3d
+        'margin_left' => '40',            // sauf pie/pie3d
         'margin_right' => '20',
         'margin_top' => '120',
-		'margin_bottom' => '60',
+        'margin_bottom' => '60',
         'label_angle' => '0',
         // PIE/RADAR
         'center_x' => '0.5',
@@ -77,9 +77,9 @@ class formsGraphic extends data_object
         'mark_type' => MARK_SQUARE,
         'mark_width' => 3,               // Largeur des marqueurs
         'mark_transparency' => '0.5',    // Transparence des marqueurs
-    	'line_weight' => '5',			 // ??
+        'line_weight' => '5',            // ??
         // BAR
-    	'shadow' => true,
+        'shadow' => true,
         'shadow_transparency' => '0.8',
     );
 
@@ -111,7 +111,6 @@ class formsGraphic extends data_object
 
     public function __construct() { parent::__construct('ploopi_mod_forms_graphic'); }
 
-
     public function render($intGraphWidth = null, $intGraphHeight = null)
     {
         if (empty($intGraphHeight)) $intGraphHeight = 450;
@@ -135,11 +134,11 @@ class formsGraphic extends data_object
 
         if (!empty($this->fields['id_form']) && $objForm->open($this->fields['id_form']))
         {
-    		// Lecture des données
-    		list($arrFormData) = $objForm->prepareData(true, true, false, true);
+            // Lecture des données
+            list($arrFormData) = $objForm->prepareData(true, true, false, true);
 
-    		// Lecture des champs
-    		$arrFormFields = $objForm->getFields();
+            // Lecture des champs
+            $arrFormFields = $objForm->getFields();
 
             switch($this->fields['type'])
             {
@@ -348,7 +347,7 @@ class formsGraphic extends data_object
                             $strTitleX = 'Mois / Année';
                         break;
                     }
-  
+
                     // Intervalle trop petit
                     if ($intI <= 1)
                     {
@@ -420,6 +419,14 @@ class formsGraphic extends data_object
                                                 $booFilterOk = ($strVal1 <= $strVal2);
                                             break;
 
+                                            case '<>':
+                                                $booFilterOk = ($strVal1 <> $strVal2);
+                                            break;
+
+                                            case 'in':
+                                                $booFilterOk = in_array($strVal1, explode(',', $strVal2));
+                                            break;
+
                                             case 'like':
                                                 $booFilterOk = strstr($strVal1, $strVal2);
                                             break;
@@ -457,7 +464,7 @@ class formsGraphic extends data_object
                                         break;
 
                                         case 'month':
-                                            $intIndice = 11 - (12 + date('n') - date('n', ploopi_timestamp2unixtimestamp($arrLine[$strTimeField]))) % 12;
+                                            $intIndice = 11 - (12 + date('n', ploopi_timestamp2unixtimestamp($intTsMin)) - date('n', ploopi_timestamp2unixtimestamp($arrLine[$strTimeField]))) % 12;
                                         break;
                                     }
 
@@ -575,7 +582,7 @@ class formsGraphic extends data_object
                     $objGraph->title->Set($this->fields['label']);
                     $objGraph->title->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_title']);
 
-					// Mise en forme de la légende
+                    // Mise en forme de la légende
                     $objGraph->legend->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_legend']);
                     //$objGraph->legend->SetLayout(LEGEND_HOR); // Bloc de légende horizontal
                     $objGraph->legend->SetAbsPos(0, 40, "right", "top"); // Positionnement absolu de la légende
@@ -659,7 +666,7 @@ class formsGraphic extends data_object
                         if ($objField->open($this->fields["line{$intI}_field"]))
                         {
                             $strLegend = trim($objField->fields['name']);
-                            if ($this->fields["line{$intI}_filter_value"] != '') $strLegend .= ' - '.trim($this->fields["line{$intI}_filter_value"]);
+                            if ($this->fields["line{$intI}_filter_value"] != '') $strLegend .= ' '.$this->fields["line{$intI}_filter_op"].' '.trim($this->fields["line{$intI}_filter_value"]);
 
                             if ($this->fields['percent']) $strLegend .= ' (%)';
                             elseif (isset($forms_graphic_operation[$this->fields["line{$intI}_operation"]])) $strLegend .= ' ('.$forms_graphic_operation[$this->fields["line{$intI}_operation"]].')';
@@ -667,9 +674,6 @@ class formsGraphic extends data_object
                             $objPlots->SetLegend($strLegend);
                         }
                     }
-
-
-                   //ploopi_die($arrData);
 
 
                     if (in_array($this->fields['type'], array('linec', 'barc', 'radarc')))

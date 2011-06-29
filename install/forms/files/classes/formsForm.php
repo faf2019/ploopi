@@ -526,6 +526,7 @@ class formsForm extends data_object
                         case '<':
                         case '>=':
                         case '<=':
+                        case '<>':
                             $objQuery->add_where("{$strFieldName} {$row['op']} %s", $arrValues[0]);
                         break;
 

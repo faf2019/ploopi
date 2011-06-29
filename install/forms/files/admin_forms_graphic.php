@@ -111,12 +111,12 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                 <input type="checkbox" name="forms_graphic_percent" value="1" <?php if ($objGraphic->fields['percent']) echo 'checked="checked"'; ?> style="width:16px;" />
             </p>
 
-			<p class="ploopi_va forms_param_link" id="forms_graphic_params_link" style="display:block;">
-            	<a onclick="javascript:$('forms_graphic_params_link').style.display = 'none'; $('forms_graphic_params').style.display = 'block';" href="javascript:void(0);">
-            	<img src="./modules/forms/img/arrow_down.png" />
-            	Paramètres avancés
-            	</a>
-			</p>
+            <p class="ploopi_va forms_param_link" id="forms_graphic_params_link" style="display:block;">
+                <a onclick="javascript:$('forms_graphic_params_link').style.display = 'none'; $('forms_graphic_params').style.display = 'block';" href="javascript:void(0);">
+                <img src="./modules/forms/img/arrow_down.png" />
+                Paramètres avancés
+                </a>
+            </p>
 
             <div id="forms_graphic_params" style="display:none;">
                 <fieldset>
@@ -135,14 +135,14 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                         );
                         ?>
                         <select class="select" name="forms_graphic_param_font">
-                        	<?php
-                        	foreach($arrFonts as $key => $value)
-                        	{
-                        	    ?>
-                        		<option <?php if ($objGraphic->fields['param_font'] == $key) echo 'selected="selected"'; ?> value="<?php echo $key; ?>"><?php echo htmlentities($value); ?></option>
-                        		<?php
-                        	}
-                        	?>
+                            <?php
+                            foreach($arrFonts as $key => $value)
+                            {
+                                ?>
+                                <option <?php if ($objGraphic->fields['param_font'] == $key) echo 'selected="selected"'; ?> value="<?php echo $key; ?>"><?php echo htmlentities($value); ?></option>
+                                <?php
+                            }
+                            ?>
                         </select>
                     </p>
                     <p>
@@ -163,27 +163,27 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     <p>
                         <label>Transparence du remplissage (%):</label>
                         <select class="select" name="forms_graphic_param_fill_transparency" style="width:80px;">
-                        	<?php
-                        	for ($i=0;$i<=10;$i++)
-                        	{
-                        	    ?>
-    	                    	<option <?php if ($objGraphic->fields['param_fill_transparency'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
-    	                    	<?php
-                        	}
-                        	?>
+                            <?php
+                            for ($i=0;$i<=10;$i++)
+                            {
+                                ?>
+                                <option <?php if ($objGraphic->fields['param_fill_transparency'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
+                                <?php
+                            }
+                            ?>
                         </select>
                     </p>
                     <p>
                         <label>Transparence des contours (%):</label>
                         <select class="select" name="forms_graphic_param_transparency" style="width:80px;">
-                        	<?php
-                        	for ($i=0;$i<=10;$i++)
-                        	{
-                        	    ?>
-    	                    	<option <?php if ($objGraphic->fields['param_transparency'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
-    	                    	<?php
-                        	}
-                        	?>
+                            <?php
+                            for ($i=0;$i<=10;$i++)
+                            {
+                                ?>
+                                <option <?php if ($objGraphic->fields['param_transparency'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
+                                <?php
+                            }
+                            ?>
                         </select>
                     </p>
                     <p>
@@ -203,14 +203,14 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     <p>
                         <label>Ombre portée, transparence (%):</label>
                         <select class="select" name="forms_graphic_param_shadow_transparency" style="width:80px;">
-                        	<?php
-                        	for ($i=0;$i<=10;$i++)
-                        	{
-                        	    ?>
-    	                    	<option <?php if ($objGraphic->fields['param_shadow_transparency'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
-    	                    	<?php
-                        	}
-                        	?>
+                            <?php
+                            for ($i=0;$i<=10;$i++)
+                            {
+                                ?>
+                                <option <?php if ($objGraphic->fields['param_shadow_transparency'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
+                                <?php
+                            }
+                            ?>
                         </select>
                     </p>
                 </fieldset>
@@ -220,24 +220,24 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     <p>
                         <label>Centre (%):<br /><em>X, Y</em></label>
                         <select class="select" name="forms_graphic_param_center_x" style="width:80px;margin-right:2px;">
-                        	<?php
-                        	for ($i=0;$i<=10;$i++)
-                        	{
-                        	    ?>
-    	                    	<option <?php if ($objGraphic->fields['param_center_x'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
-    	                    	<?php
-                        	}
-                        	?>
+                            <?php
+                            for ($i=0;$i<=10;$i++)
+                            {
+                                ?>
+                                <option <?php if ($objGraphic->fields['param_center_x'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
+                                <?php
+                            }
+                            ?>
                         </select>
                         <select class="select" name="forms_graphic_param_center_y" style="width:80px;">
-                        	<?php
-                        	for ($i=0;$i<=10;$i++)
-                        	{
-                        	    ?>
-    	                    	<option <?php if ($objGraphic->fields['param_center_y'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
-    	                    	<?php
-                        	}
-                        	?>
+                            <?php
+                            for ($i=0;$i<=10;$i++)
+                            {
+                                ?>
+                                <option <?php if ($objGraphic->fields['param_center_y'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
+                                <?php
+                            }
+                            ?>
                         </select>
                     </p>
                 </fieldset>
@@ -262,14 +262,14 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     <p>
                         <label>Type de marqueur:</label>
                         <select class="select" name="forms_graphic_param_mark_type">
-                        	<?php
-                        	foreach($arrMarks as $key => $value)
-                        	{
-                        	    ?>
-                        		<option <?php if ($objGraphic->fields['param_mark_type'] == $key) echo 'selected="selected"'; ?> value="<?php echo $key; ?>"><?php echo htmlentities($value); ?></option>
-                        		<?php
-                        	}
-                        	?>
+                            <?php
+                            foreach($arrMarks as $key => $value)
+                            {
+                                ?>
+                                <option <?php if ($objGraphic->fields['param_mark_type'] == $key) echo 'selected="selected"'; ?> value="<?php echo $key; ?>"><?php echo htmlentities($value); ?></option>
+                                <?php
+                            }
+                            ?>
                         </select>
                     </p>
                     <p>
@@ -279,14 +279,14 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     <p>
                         <label>Transparence des marqueurs (%):</label>
                         <select class="select" name="forms_graphic_param_mark_transparency" style="width:80px;">
-                        	<?php
-                        	for ($i=0;$i<=10;$i++)
-                        	{
-                        	    ?>
-    	                    	<option <?php if ($objGraphic->fields['param_mark_transparency'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
-    	                    	<?php
-                        	}
-                        	?>
+                            <?php
+                            for ($i=0;$i<=10;$i++)
+                            {
+                                ?>
+                                <option <?php if ($objGraphic->fields['param_mark_transparency'] == $i/10) echo 'selected="selected"'; ?> value="<?php echo $i/10; ?>"><?php echo $i*10; ?> %</option>
+                                <?php
+                            }
+                            ?>
                         </select>
                     </p>
                 </fieldset>
@@ -390,7 +390,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                             <p>
                                 <label>Fitre :</label>
                                 <select class="select" style="width:20%;" name="forms_graphic_line<?php echo $intI; ?>_filter_op">
-									<option value="">(aucun)</option>
+                                    <option value="">(aucun)</option>
                                     <?php
                                     global $field_operators;
                                     foreach($field_operators as $strKey => $strValue)
@@ -419,7 +419,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                             </p>
                             <p>
                                 <label>Couleur :</label>
-                                <input type="text" class="text forms_noselect color" name="forms_graphic_line<?php echo $intI; ?>_color" id="forms_graphic_line<?php echo $intI; ?>_color" value="<?php echo $objGraphic->fields["line{$intI}_color"]; ?>" style="float:left;width:100px;cursor:pointer;" readonly="readonly">
+                                <input type="text" class="text forms_noselect color {hash:true}" name="forms_graphic_line<?php echo $intI; ?>_color" id="forms_graphic_line<?php echo $intI; ?>_color" value="<?php echo $objGraphic->fields["line{$intI}_color"]; ?>" style="float:left;width:100px;cursor:pointer;" readonly="readonly">
                             </p>
                         </fieldset>
                     </div>
@@ -428,12 +428,12 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     if ($strDisplay == 'none')
                     {
                         ?>
-            			<p class="ploopi_va forms_param_link" id="forms_graphic_line<?php echo $intI; ?>_link" style="display:block;">
-                        	<a href="javascript:void(0);" onclick="javascript:$('forms_graphic_line<?php echo $intI; ?>_link').style.display = 'none'; $('forms_graphic_line<?php echo $intI; ?>_param').style.display = 'block';">
-                        	<img src="./modules/forms/img/arrow_down.png" />
-                    		Paramétrer <?php echo _FORMS_GRAPHIC_DATASET.' n°'.$intI; ?>
-                    		</a>
-            			</p>
+                        <p class="ploopi_va forms_param_link" id="forms_graphic_line<?php echo $intI; ?>_link" style="display:block;">
+                            <a href="javascript:void(0);" onclick="javascript:$('forms_graphic_line<?php echo $intI; ?>_link').style.display = 'none'; $('forms_graphic_line<?php echo $intI; ?>_param').style.display = 'block';">
+                            <img src="./modules/forms/img/arrow_down.png" />
+                            Paramétrer <?php echo _FORMS_GRAPHIC_DATASET.' n°'.$intI; ?>
+                            </a>
+                        </p>
                         <?php
                     }
                 }

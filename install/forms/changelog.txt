@@ -1,3 +1,11 @@
+== Module FORMS - version 3.2.5 =====================================================
+
+2011-06-29  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+ * Ajout de l'opérateur "<>" (Différent) pour les filtres lors de la consultation des données
+ * Gestion des nouveaux opérateurs sur les filtres des graphiques
+ * Corrections sur les graphiques (notamment affichage mensuel et codes couleurs sur les courbes)
+
 == Module FORMS - version 3.2.4 =====================================================
 
 2011-06-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -79,8 +87,8 @@
 
 2011-02-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug lors de la création d'un 3e (ou plus) champ avec homonyme.  
- 
+ * Correction d'un bug lors de la création d'un 3e (ou plus) champ avec homonyme.
+
 == Module FORMS - version 3.1.8 =====================================================
 
 2011-02-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -88,7 +96,7 @@
  * Correction d'un problème à l'affichage du nombre d'enregistrement d'un formulaire (lié à la vue sur les données du formulaire)
  * Corrections diverses
  * Changement de version pour cause de divergence avec la version stable
- 
+
 == Module FORMS - version 3.1.7b ====================================================
 
 2011-02-17 ~ HeXad  <xavier@hexad.fr>
@@ -125,7 +133,7 @@
 2010-10-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction d'un bug d'affichage des séparateurs (ne s'affichaient pas)
-* Les liens formulaires ne sont plus limités aux formulaires de l'instance courante du module 
+* Les liens formulaires ne sont plus limités aux formulaires de l'instance courante du module
 
 == Module FORMS - version 3.1.5e =====================================================
 
@@ -159,21 +167,21 @@
 * Correction d'un bug lors de l'affichage d'un formulaire en frontoffice (inclusion manquante)
 * Ajout de paramètres par défaut lors de la création d'un nouveau graphique
 * Correction sur la gestion de la visibilité des champs dans un formulaire
-* Correction sur la construction de la requête de récupération des données d'un formulaire (problème si espace ou utilisateur inexistant) 
+* Correction sur la construction de la requête de récupération des données d'un formulaire (problème si espace ou utilisateur inexistant)
 
 == Module FORMS - version 3.1.5 =====================================================
 
 2010-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction d'un bug sur la suppression des données filtrées (non pris en compte)
-* Ajout d'une fonctionnalité permettant d'importer des données CSV dans un formulaire (administrateurs uniquement) 
+* Ajout d'une fonctionnalité permettant d'importer des données CSV dans un formulaire (administrateurs uniquement)
 * Corrections SQL sur la mise à jour précédente
 
 == Module FORMS - version 3.1.0 =====================================================
 
 2010-09-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Mise en place des colonnes calculées (intégration d'un interpréteur arithmétique) : 
+* Mise en place des colonnes calculées (intégration d'un interpréteur arithmétique) :
 ** Gestion des opérateurs arithmétiques standards : addition, soustraction, multiplication, division, modulo, exposant
 ** Gestion de nombreuses fonctions additionnelles : abs, sqrt, pow, min, max, cos, sin, tan, round, etc...
 ** Gestion du parenthésage multi-niveau
@@ -215,7 +223,7 @@
 ** Nouveau système de navigation par pages
 
 * Interface
-** Remplacement du moteur de template par un système basé sur des feuilles de style (CSS) 
+** Remplacement du moteur de template par un système basé sur des feuilles de style (CSS)
 ** Ergonomie des formulaires nettement améliorée
 
 * Connecteurs
@@ -320,26 +328,26 @@
 2009-08-31  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Ajout du support des interlignes dans le template par défaut
- * Correction d'un bug mineur à l'affichage des champs d'un formulaire (Suppression du texte "0px") 
+ * Correction d'un bug mineur à l'affichage des champs d'un formulaire (Suppression du texte "0px")
 
 == Module FORMS - version 2.3.6 =====================================================
 
 2009-06-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Ajout d'une propriété "style" sur les champs du formulaire ainsi que sur les séparateurs
- * Impact sur le template par défaut 
+ * Impact sur le template par défaut
 
 == Module FORMS - version 2.3.5 =====================================================
 
 2009-05-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction sur la fonctionnalité d'export XLS (variables non définies) 
+ * Correction sur la fonctionnalité d'export XLS (variables non définies)
 
 == Module FORMS - version 2.3.4 =====================================================
 
 2009-04-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Mise à jour ergonomique (mise en conformité de l'ensemble des modules) 
+ * Mise à jour ergonomique (mise en conformité de l'ensemble des modules)
 
 == Module FORMS - version 2.3.2 =====================================================
 
@@ -354,12 +362,12 @@
 2009-02-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction d'un bug dans la navigation backoffice, avec le frontoffice désactivé, lors de l'intégration d'un objet WCE/WebEdit de type formulaire.
- 
+
 == Module FORMS - version 2.3 =====================================================
 
 2009-02-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug sur le type du champ 'id_workspace' de la table 'ploopi_mod_forms_reply' 
+ * Correction d'un bug sur le type du champ 'id_workspace' de la table 'ploopi_mod_forms_reply'
  * Correction de quelques bugs mineurs (variables non définies)
  * Transformation des balises <? en <?php
  * Meilleure compression des images png
@@ -368,19 +376,19 @@
 
 2009-01-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug (constante non définie) 
- 
+ * Correction d'un bug (constante non définie)
+
 == Module FORMS - version 2.23 =====================================================
 
 2009-01-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correctif sur la fonction forms_getdata(), ne prenait pas en compte les options. 
+ * Correctif sur la fonction forms_getdata(), ne prenait pas en compte les options.
 
 == Module FORMS - version 2.221 =====================================================
 
 2008-10-02  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
- * Correctif pour IE. Arrondi sur les % de largeur des colonnes. 
+ * Correctif pour IE. Arrondi sur les % de largeur des colonnes.
 
 == Module FORMS - version 2.22 =====================================================
 
@@ -393,14 +401,14 @@
 2008-09-02  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
  * Correction d'un tag SELECTED_HTML => SELECTED_XHTML
- 
+
 == Module FORMS - version 2.212 =====================================================
 
 2008-09-02  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
  * Ajout du tag pour template SELECTED_XHTML respectant XHTML Strict (retourne 'selected="selected"' ou '')
  * Ajout du tag pour template CHECKED_XHTML respectant XHTML Strict (retourne 'checked="checked"' ou '')
- 
+
 == Module FORMS - version 2.211 =====================================================
 
 2008-09-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -443,7 +451,7 @@
 2008-04-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correctif de sécurité sur op.php suite à modification sur op.php principal
- 
+
 == Module FORMS - version 2.15 =====================================================
 
 2008-04-17  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
@@ -462,7 +470,7 @@
 
  * Correction sur le fonctionnement des checkbox/radio
  * Pas de valeur par défaut dans une liste liée à un champ d'un autre formulaire
- 
+
 == Module FORMS - version 2.13 ====================================================
 
 2008-04-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
@@ -487,14 +495,14 @@
 
  * Gestion du maxlength sur les champs texte
  * Ajout du calendrier sur les champs date en frontoffice (nécessite calendar.css et calendar_ie.css)
- * Correction d'un bug affectant le numéro auto lors de la modification d'un enregistrement 
- * Correction d'un bug affectant le champ 'fichier' lors de la modification d'un enregistrement 
+ * Correction d'un bug affectant le numéro auto lors de la modification d'un enregistrement
+ * Correction d'un bug affectant le champ 'fichier' lors de la modification d'un enregistrement
  * Correction d'un bug sur l'upload de fichiers
  * Plus de couleur par défaut dans la liste
  * Plus de choix par défaut dans la liste
  * Correction de problèmes d'affichage du template backoffice sous IE
  * Gestion multicolonne des cases à cocher et boutons radio (attention, nécessaite une modification du template frontoffice)
- 
+
 == Module FORMS - version 2.0 ====================================================
 
 2008-01-09  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

@@ -147,6 +147,7 @@ $field_operators = array(
     '<' => '<',
     '>=' => '>=',
     '<=' => '<=',
+    '<>' => '<>',
     'between' => 'Entre',
     'like' => 'Contient',
     'begin' => 'Commence par',
