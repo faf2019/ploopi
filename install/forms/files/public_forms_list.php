@@ -38,14 +38,14 @@ foreach($objDOC->get_objects() as $objForm)
 {
     if (!$objForm->fields['option_adminonly'] || ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
     {
-    	?>
-    	<a class="forms_public_link" href="<? echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}"); ?>">
-    	<div>
+        ?>
+        <a class="forms_public_link" href="<? echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}"); ?>">
+        <div>
             <h1><? echo htmlentities($objForm->fields['label']); ?></h1>
             <div><? echo ploopi_nl2br(htmlentities($objForm->fields['description'])); ?></div>
-    	</div>
-    	</a>
-    	<?
+        </div>
+        </a>
+        <?
     }
 }
 ?>

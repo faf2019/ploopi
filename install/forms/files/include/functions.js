@@ -202,29 +202,29 @@ function forms_graphic_type_onchange(field)
  */
 function forms_field_tablelink_onchange(current, fields, url)
 {
-	var params = new Hash();
-	var lastparam = false;
-	var requested = '';
-	
-	fields.each(function(item) {
-		if (!lastparam)
-		{
-			params.set('forms_params['+item+']', $('field_'+item).value);
-			if (item == current) lastparam = true;
-		}
-		else 
-		{
-			// Stockage de l'item demandé
-			if (requested == '') requested = item;
-			// Vidage des sous-listes
-        	while ($('field_'+item).length > 1) $('field_'+item).remove(1);
-		}
-	});
-	
-	params.set('forms_fields', fields.join(','));
-	params.set('forms_requested', requested);
-	
-	new Ajax.Request(url, {
+    var params = new Hash();
+    var lastparam = false;
+    var requested = '';
+
+    fields.each(function(item) {
+        if (!lastparam)
+        {
+            params.set('forms_params['+item+']', $('field_'+item).value);
+            if (item == current) lastparam = true;
+        }
+        else
+        {
+            // Stockage de l'item demandé
+            if (requested == '') requested = item;
+            // Vidage des sous-listes
+            while ($('field_'+item).length > 1) $('field_'+item).remove(1);
+        }
+    });
+
+    params.set('forms_fields', fields.join(','));
+    params.set('forms_requested', requested);
+
+    new Ajax.Request(url, {
         method:     'get',
         parameters: params,
         encoding:   'utf-8',
@@ -234,29 +234,29 @@ function forms_field_tablelink_onchange(current, fields, url)
             }
 
             if (json) {
-            	json.each(function(item) {
-            		$('field_'+requested).appendChild(newOpt = document.createElement("OPTION"));
-            		newOpt.value = item;
-            		newOpt.text = item;
-            	});
+                json.each(function(item) {
+                    $('field_'+requested).appendChild(newOpt = document.createElement("OPTION"));
+                    newOpt.value = item;
+                    newOpt.text = item;
+                });
             }
         },
-		onFailure: function(message) { alert(message); }
-    });	
+        onFailure: function(message) { alert(message); }
+    });
 }
 
 
 function forms_setcolumn(f)
 {
     ploopi_insertatcursor($('field_formula'), 'C'+f.value);
-    f.selectedIndex = 0; 
+    f.selectedIndex = 0;
     $('field_formula').focus();
 }
 
 function forms_setfunction(f)
 {
     ploopi_insertatcursor($('field_formula'), f.value+'()');
-    f.selectedIndex = 0; 
+    f.selectedIndex = 0;
     $('field_formula').focus();
 }
 

@@ -117,6 +117,8 @@ class formsField extends data_object
 
         if (empty($this->fields['separator']) && empty($this->fields['captcha'])) $this->_createPhysicalName();
 
+        if ($this->fields['type'] == 'calculation') $this->fields['format'] = 'float';
+
         $booIsNew = $this->isnew();
 
         /**
@@ -324,6 +326,10 @@ class formsField extends data_object
 
             case 'textarea':
                 $strType = "LONGTEXT DEFAULT ''";
+            break;
+
+            case 'calculation':
+                $strType = "DOUBLE DEFAULT 0";
             break;
 
             case 'text':

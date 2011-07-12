@@ -98,7 +98,7 @@ class formsArithmeticParser
         '*' => true,    // multiplication
         '/' => true,    // division
         '^' => true,    // exposant
-    	'%' => true     // modulo
+        '%' => true     // modulo
     );
 
     /**
@@ -112,7 +112,7 @@ class formsArithmeticParser
         '*' => 'Multiplication',
         '/' => 'Division',
         '^' => 'Exposant',
-    	'%' => 'Modulo'
+        '%' => 'Modulo'
     );
 
 
@@ -139,8 +139,8 @@ class formsArithmeticParser
         'log10',
         'log1p',
         'log',
-        'min',
         'max',
+        'min',
         'pow',
         'rad2deg',
         'round',
@@ -148,7 +148,10 @@ class formsArithmeticParser
         'sinh',
         'sqrt',
         'tan',
-        'tanh'
+        'tanh',
+        'mktime',
+        'substr',
+        'time',
     );
 
     /**
@@ -174,8 +177,8 @@ class formsArithmeticParser
         'log10' => 'log10(x) : Logarithme en base 10',
         'log1p' => 'logip(x) : Calcule précisément log(1 + nombre)',
         'log' => 'log(x) : Logarithme naturel (népérien)',
-        'min' => 'min(x,y,z,...) : Détermine la plus petite valeur',
         'max' => 'max(x,y,z,...) : Détermine la plus grande valeur',
+        'min' => 'min(x,y,z,...) : Détermine la plus petite valeur',
         'pow' => 'pow(x,y) : Expression exponentielle',
         'rad2deg' => 'rad2deg(x) : Conversion de radians en degrés',
         'round' => 'round(x,y) Arrondi un nombre à virgule flottante',
@@ -183,7 +186,10 @@ class formsArithmeticParser
         'sinh' => 'sinh(x) : Sinus hyperbolique',
         'sqrt' => 'sqrt(x) : Racine carrée',
         'tan' => 'tan(x) : Tangente',
-        'tanh' => 'tanh(x) : Tangente hyperbolique'
+        'tanh' => 'tanh(x) : Tangente hyperbolique',
+        'mktime' => 'mktime(H, i, s, n, j, Y) : Timestamp unix',
+        'substr' => 'substr(x,y,z) : Sous-chaîne',
+        'time' => 'time() : Timestamp unix actuel',
     );
 
     /**

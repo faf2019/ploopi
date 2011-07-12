@@ -97,7 +97,7 @@ class formsGraphic extends data_object
         {
             case 'h' : return floor(($intTs2 - $intTs1)/3600); break;
             case 'd' : return floor(($intTs2 - $intTs1)/86400); break;
-            case 'm' : return 1 + (date('Y', $intTs2) - date('Y', $intTs1))*12 + (date('n', $intTs2) - date('n', $intTs1)); break;
+            case 'm' : return (date('Y', $intTs2) - date('Y', $intTs1))*12 + (date('n', $intTs2) - date('n', $intTs1)); break;
             case 'w' : return 0; break;
         }
     }
@@ -321,8 +321,8 @@ class formsGraphic extends data_object
 
                         case 'month':
                             // Définition de l'intervalle de données
-                            $intTsMin = substr($intTsMin, 0, 8).'000000';
-                            $intTsMax = substr($intTsMax, 0, 8).'235959';
+                            $intTsMin = substr($intTsMin, 0, 6).'01000000';
+                            $intTsMax = substr($intTsMax, 0, 6).'31235959';
 
                             $intTs = $intTsMin;
 
@@ -456,7 +456,11 @@ class formsGraphic extends data_object
                                         break;
 
                                         case 'day':
-                                            $intIndice = round((ploopi_timestamp2unixtimestamp(substr($arrLine[$strTimeField], 0, 8).'000000') - ploopi_timestamp2unixtimestamp($intTsMin)) / (3600*24));
+                                            $intIndice = self::__diffDate(
+                                                ploopi_timestamp2unixtimestamp($intTsMin),
+                                                ploopi_timestamp2unixtimestamp(substr($arrLine[$strTimeField], 0, 8).'000000'),
+                                                'd'
+                                            );
                                         break;
 
                                         case 'week':
@@ -464,7 +468,11 @@ class formsGraphic extends data_object
                                         break;
 
                                         case 'month':
-                                            $intIndice = 11 - (12 + date('n', ploopi_timestamp2unixtimestamp($intTsMin)) - date('n', ploopi_timestamp2unixtimestamp($arrLine[$strTimeField]))) % 12;
+                                            $intIndice = self::__diffDate(
+                                                ploopi_timestamp2unixtimestamp($intTsMin),
+                                                ploopi_timestamp2unixtimestamp(substr($arrLine[$strTimeField], 0, 6).'01000000'),
+                                                'm'
+                                            );
                                         break;
                                     }
 
@@ -703,8 +711,11 @@ class formsGraphic extends data_object
 
             // Génération du graphique
             $objGraph->Stroke();
+
+            $strDisposition = 'attachment';
+
             header("Content-Type: image/png");
-            header('Content-Disposition: attachment; Filename="graphique.png"');
+            header('Content-Disposition: '.$strDisposition.'; Filename="graphique.png"');
             header('Cache-Control: private');
             header('Pragma: private');
             header('Content-Encoding: None');

@@ -577,39 +577,22 @@ if ($_SESSION['ploopi']['connected'])
             break;
 
             case 'forms_delete_data':
-                include_once './modules/form/include/global.php';
+                ploopi_init_module('forms');
+                include_once './modules/forms/classes/formsForm.php';
 
                 if (ploopi_isactionallowed(_FORMS_ACTION_BACKUP))
                 {
                     ?>
-                    <div style="background:#f0f0f0;border-bottom:1px solid #c0c0c0;font-weight:bold;padding:2px;">Suppression des données</div>
-                    <div style="padding:2px;">
+                    <div style="background:#f0f0f0;border:1px solid #c0c0c0;padding:2px;"><strong>Suppression des données</strong>
                     <?php
-                    if (!empty($_GET['form_id']) && !empty($_GET['form_delete_date']))
+                    $objForm = new formsForm();
+                    if (!empty($_GET['form_id']) && $objForm->open($_GET['form_id']) && !empty($_GET['form_delete_date']))
                     {
-                        $form_delete_date = ploopi_local2timestamp($_GET['form_delete_date']);
-
-                        $form_delete_date = ploopi_timestamp_add($form_delete_date, 0, 0, 0, 0, 1, 0);
-
-                        $sql = "SELECT COUNT(*) as c FROM ploopi_mod_forms_reply WHERE id_form = '".$db->addslashes($_GET['form_id'])."' AND date_validation < {$form_delete_date}";
-                        $db->query($sql);
-                        $row = $db->fetchrow();
-
-                        echo "{$row['c']} enregistement(s) ont été supprimés";
-
-                        $sql =  "
-                                DELETE  r, rf
-                                FROM    ploopi_mod_forms_reply r,
-                                        ploopi_mod_forms_reply_field rf
-                                WHERE   r.id_form = '".$db->addslashes($_GET['form_id'])."'
-                                AND     r.date_validation < {$form_delete_date}
-                                AND     rf.id_reply = r.id
-                                ";
-                        $db->query($sql);
+                        $objForm->deleteToDate(ploopi_local2timestamp($_GET['form_delete_date'], '23:59:59'));
                     }
                     ?>
+                    <br /><a href="javascript:void(0);" onmouseup="javascript:ploopi_hidepopup('forms_deletedata');document.location.reload();">Fermer</a>
                     </div>
-                    <div style="background:#f0f0f0;border-top:1px solid #c0c0c0;text-align:right;padding:2px;"><a href="javascript:void(0);" onmouseup="javascript:ploopi_hidepopup('forms_deletedata');document.location.reload();">Fermer</a></div>
                     <?php
                 }
                 ploopi_die();

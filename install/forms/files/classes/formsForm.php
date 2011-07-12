@@ -344,7 +344,7 @@ class formsForm extends data_object
              * Attention, si booExport = true, on adapte la requête pour ne récupérer que les champs exportables (pour ne pas retraiter les données ensuite)
              */
 
-            // Seul l'admin peut exporter le champ ID
+            // Seul l'admin peut exporter le champ ID, par contre on en a besoin en visu
             if (!$booExport || ploopi_isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module'])) $objQuery->add_select('rec.`#id` as `id`');
 
             if ($booExport || $this->fields['option_displaydate'])
@@ -407,6 +407,7 @@ class formsForm extends data_object
         }
 
 
+
         if (!$booDelete)
         {
             /**
@@ -415,7 +416,10 @@ class formsForm extends data_object
 
             foreach($arrObjField as $objField)
             {
-                if ($booExport || ($objField->fields['option_exportview'] && ($booIsAdmin || !$objField->fields['option_adminonly'])))
+                // Choix de la colonne en fonction de critères multiples
+                // 1. Export + visibilité et droit admin
+                // 2. Affichage + visibilité
+                if (($booExport && $objField->fields['option_exportview'] && ($booIsAdmin || !$objField->fields['option_adminonly'])) || (!$booExport && $objField->fields['option_arrayview']))
                 {
                     $strAlias = $booFieldNamesAsKey ? $objField->fields['fieldname'] : $objField->fields['id'];
                     // Traitement spécial des données DATE
@@ -637,6 +641,9 @@ class formsForm extends data_object
         return array($objQuery->execute()->getArray(), current($objCount->execute()->getarray(true)));
     }
 
+    /**
+     * Suppression des données selon le filtre utilisateur
+     */
     public function deleteData()
     {
         $_SESSION['forms'][$this->fields['id']] = array();
@@ -645,6 +652,19 @@ class formsForm extends data_object
 
         $this->prepareData(false, false, false, false, true);
     }
+
+
+    /**
+     * Suppression des données plus anciennes qu'une date
+     */
+    public function deleteToDate($intTs)
+    {
+        $objQuery = new ploopi_query_delete();
+        $objQuery->add_from('`'.$this->getDataTableName().'`');
+        $objQuery->add_where('`date_validation` <= %d', $intTs);
+        $objQuery->execute();
+    }
+
 
     /**
      * Prépare les données du formulaire et les retourne.

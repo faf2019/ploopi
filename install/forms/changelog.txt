@@ -1,3 +1,13 @@
+== Module FORMS - version 3.2.5a =====================================================
+
+2011-07-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans la représentation mensuelle des graphiques
+* Correction d'un bug sur la suppression des données depuis l'interface d'administration du formulaire
+* Modification des champs affichés depuis la fonctionnalité "impression" disponible en mode "liste"
+* Ajout de quelques fonctions dans la liste des fonctions proposées par l'interpréteur arithmétique
+* Correction d'un bug à l'impression d'un formulaire (contenu sur une seule page, impression de pages blanches)
+
 == Module FORMS - version 3.2.5 =====================================================
 
 2011-06-29  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
