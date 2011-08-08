@@ -567,7 +567,7 @@ class form_select extends form_field
 }
 
 /**
- * Classe de gestion des champs de type "select" d'un formulaire
+ * Classe de gestion des champs de type "checkbox" d'un formulaire
  *
  */
 class form_checkbox_list extends form_field
@@ -1216,6 +1216,8 @@ class form_panel
 
         return $strOutput;
     }
+
+    public function getFormValidateFunc() { return $this->_objParentForm->getId().'_'.$this->getId().'_validate'; }
 }
 
 /**
@@ -1316,6 +1318,13 @@ class form
         // Création d'un panel par défaut (utilisé si l'utilisateur n'en crée pas)
         $this->addPanel($this->_objDefaultPanel = new form_panel(form_panel::strDefaultPanel, null, array('style' => 'border:0;')));
     }
+
+    /**
+     * Lecture de la propriété "id"
+     *
+     * @return string
+     */
+    public function getId() { return $this->_strId; }
 
     /**
      * Ajoute un objet de type form_field au formulaire
@@ -1465,39 +1474,69 @@ class form
      */
     private function renderJS()
     {
-        $strOutput = "ploopi.".$this->getFormValidateFunc()." = function(form) {";
+        $strOutput = '';
 
-        foreach($this->getFields() as $objField)
+        foreach($this->_arrPanels as $objPanel)
         {
-            if ($objField->_strName != '')
+            // Génération d'une fonction de validation par panel
+            $strOutput .= "\nploopi.".$objPanel->getFormValidateFunc().' = function(form) {';
+            foreach($objPanel->getFields() as $objField)
             {
-                $strFormField = $objField->_strId != '' ? "$('{$objField->_strId}')" : "form.{$objField->_strName}";
-
-                switch ($objField->_strType)
+                if ($objField->_strName != '')
                 {
-                    case 'input:text':
-                    case 'input:password':
-                    case 'input:file':
-                    case 'textarea':
-                        $strFormat = ($objField->_arrOptions['required'] ? '' : 'empty').$objField->_arrOptions['datatype'];
-                        $strOutput .= "if (ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
-                    break;
+                    $strFormField = $objField->_strId != '' ? "$('{$objField->_strId}')" : "form.{$objField->_strName}";
 
-                    case 'select':
-                    case 'color':
-                        if ($objField->_arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'selected'))";
-                    break;
+                    switch ($objField->_strType)
+                    {
+                        case 'input:text':
+                        case 'input:password':
+                        case 'input:file':
+                        case 'textarea':
+                            $strFormat = ($objField->_arrOptions['required'] ? '' : 'empty').$objField->_arrOptions['datatype'];
+                            $strOutput .= "\nif (ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
+                        break;
 
-                    case 'input:radio':
-                    case 'input:checkbox':
-                        if ($objField->_arrOptions['required']) $strOutput .= "if (ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'checked'))";
-                    break;
+                        case 'select':
+                        case 'color':
+                            if ($objField->_arrOptions['required']) $strOutput .= "\nif (ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'selected'))";
+                        break;
+
+                        case 'input:radio':
+                            if ($objField->_arrOptions['required']) $strOutput .= "\nif (ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'checked'))";
+                        break;
+
+                        case 'input:checkbox':
+                            if ($objField->_arrOptions['required'])
+                            {
+                                // Fonction manuelle de vérification qu'une case au moins est cochée (la fonction de ploopi gère la case seule)
+                                $arrChecked = array();
+                                $intNumCheck = 0;
+                                foreach($arrValues = $objField->_arrValues as $strKey => $strValue)
+                                {
+                                    $strFormField = "$('{$objField->_strId}_{$intNumCheck}')";
+                                    $arrChecked[] = "{$strFormField}.checked";
+                                    $intNumCheck++;
+                                }
+
+                                $strOutput .= "\nif (!(".implode(' || ', $arrChecked).")) {
+                                    var msg = lstmsg[14];
+                                    var reg = new RegExp(\"<FIELD_LABEL>\",\"gi\");
+                                    alert(msg.replace(reg, '".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."'));
+                                } else ";
+                            }
+                        break;
+                    }
                 }
             }
 
+            $strOutput .= "\nreturn true; return false; }";
         }
 
-        $strOutput .= "return true; return false; }";
+
+        // Génération de la fonction globale de validation pour tout le formulaire
+        $strOutput .= "\nploopi.".$this->getFormValidateFunc()." = function(form) {";
+        foreach($this->_arrPanels as $objPanel) $strOutput .= "\nif (ploopi.".$objPanel->getFormValidateFunc()."(form))";
+        $strOutput .= "\nreturn true; return false; }";
 
         foreach($this->_arrJs as $strJs) $strOutput .= "\n{$strJs}";
 
@@ -1509,6 +1548,6 @@ class form
      *
      * @return string nom de la fonction de validation
      */
-    private function getFormValidateFunc() { return "{$this->_strId}_validate"; }
+    public function getFormValidateFunc() { return "{$this->_strId}_validate"; }
 
 }

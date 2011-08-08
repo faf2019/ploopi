@@ -417,7 +417,7 @@ class odf_parser
     {
         return ploopi_xmlentities(html_entity_decode(iconv('ISO-8859-15', 'UTF-8', $value), ENT_QUOTES, 'UTF-8'), true);
     }
-    
+
     /**
      * Définit une variable template et lui affecte une valeur
      *
@@ -607,7 +607,9 @@ class odf_converter
 
     function convert($inputData, $inputType, $outputType)
     {
+        ploopi_unset_error_handler();
         require_once 'HTTP/Request.php';
+        ploopi_set_error_handler();
         $request = new HTTP_Request($this->url);
         $request->setMethod("POST");
         $request->addHeader("Content-Type", $inputType);

@@ -122,7 +122,7 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
     if (!empty($query))
     {
         //$query = str_replace('&amp;', '&', $query);
-        
+
         foreach(explode('&', $query) as $param)
         {
             $arrParam = explode('=', $param);
@@ -135,7 +135,7 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
     if (!is_null($ploopi_workspaceid)) $arrParams['ploopi_workspaceid'] = $ploopi_workspaceid;
     if (!is_null($ploopi_moduleid)) $arrParams['ploopi_moduleid'] = $ploopi_moduleid;
     if (!is_null($ploopi_action)) $arrParams['ploopi_action'] = $ploopi_action;
-    
+
     if ($addenv && isset($_SESSION['ploopi']))
     {
         // si des paramètres sont manquants, on va lire la valeur de la session
@@ -172,7 +172,7 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
 
     //$strParams = implode('&amp;', $arrParams);
     $strParams = implode('&', $arrParams);
-    
+
     if (defined('_PLOOPI_URL_ENCODE') && _PLOOPI_URL_ENCODE)
     {
         $strUrlMD5 = md5($strParams);
@@ -199,7 +199,7 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
  * @see base64_encode
  */
 
-function ploopi_base64_encode($str) { return(strtr(base64_encode($str), '+/=', '-_,')); }
+function ploopi_base64_encode($str) { return strtr(base64_encode($str), '+/=', '-_,'); }
 
 /**
  * Décode une chaîne en MIME base64 (métode url-safe base64)
@@ -210,5 +210,33 @@ function ploopi_base64_encode($str) { return(strtr(base64_encode($str), '+/=', '
  * @see base64_decode
  */
 
-function ploopi_base64_decode($str) { return(base64_decode(strtr($str, '-_,', '+/=' ))); }
+function ploopi_base64_decode($str) { return base64_decode(strtr($str, '-_,', '+/=' )); }
+
+/**
+ * Sérialise et compresse une variable
+ *
+ * @param mixed $mixVar variable à sérialiser
+ * @return string chaîne de la variable sérialisée
+ */
+
+function ploopi_serialize($mixVar) { return ploopi_base64_encode(gzcompress(serialize($mixVar), 9)); }
+
+/**
+ * Désérialise une chaîne 
+ *
+ * @param string $str chaîne à décoder
+ * @return mixed variable décodée
+ */
+
+function ploopi_unserialize($str)
+{
+    $mixVar = null;
+
+    ploopi_unset_error_handler();
+    $mixVar = unserialize(gzuncompress(ploopi_base64_decode($str)));
+    ploopi_set_error_handler();
+
+    return $mixVar;
+}
+
 ?>

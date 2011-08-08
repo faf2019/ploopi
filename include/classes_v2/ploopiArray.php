@@ -263,7 +263,7 @@ class ploopiArray extends ploopiFactory
             }
         }
 
-        $objFormatTitle = $objWorkBook->addFormat( array( 'Align' => 'center', 'Bold'  => 1, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter', 'FgColor' => 'silver'));
+        $objFormatTitle = $objWorkBook->addFormat( array( 'Align' => 'center', 'TextWrap' => 1, 'Bold'  => 1, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter', 'FgColor' => 'silver'));
         if ($arrOptions['setborder']) { $objFormatTitle->setBorder(1); $objFormatTitle->setBorderColor('black'); }
         $objFormatDefault = $objWorkBook->addFormat( array( 'TextWrap' => 1, 'Align' => 'left', 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
         if ($arrOptions['setborder']) { $objFormatDefault->setBorder(1); $objFormatDefault->setBorderColor('black'); }
@@ -345,6 +345,8 @@ class ploopiArray extends ploopiFactory
                         case 'integer':
                         case 'integer_percent':
                         case 'integer_euro':
+                        case 'date':
+                        case 'datetime':
                             $objWorkSheet->writeNumber($intLine, $intCol++, $strValue, $objFormat);
                         break;
 
