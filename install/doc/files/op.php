@@ -3,7 +3,7 @@
     Copyright (c) 2002-2007 Netlor
     Copyright (c) 2007-2009 Ovensia
     Copyright (c) 2009 HeXad
-    
+
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -69,22 +69,22 @@ if ($_SESSION['ploopi']['connected'])
                 include_once './modules/doc/public_search_result.php';
                 ploopi_die();
             break;
-            
+
             case 'doc_folder_detail':
                 if (isset($_GET['doc_folder_id']) && is_numeric($_GET['doc_folder_id']))
                 {
                     ploopi_init_module('doc');
-                    
+
                     // Récupération des dossiers visibles
                     $arrFolders = doc_getfolders();
-                    
+
                     // Récupération de la structure du treeview
                     $arrTreeview = doc_gettreeview($arrFolders);
-                    
-                    echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $currentfolder, $_GET['doc_folder_id']); 
+
+                    echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $currentfolder, $_GET['doc_folder_id']);
                 }
                 ploopi_die();
-            break;            
+            break;
 
             /**
              * Enregistrement d'un document (ou ensemble de document si ajout)
@@ -120,7 +120,7 @@ if ($_SESSION['ploopi']['connected'])
                     include './lib/cupload/Cupload.class.php';
 
                     $_sId = $_POST['sid'];
-                    $uploader = & new CUploadSentinel;
+                    $uploader = new CUploadSentinel;
                     $uploader->__init($_sId);
 
                     if (!empty($uploader->files))
@@ -145,21 +145,21 @@ if ($_SESSION['ploopi']['connected'])
                 // on recherche s'il existe des validateurs pour ce dossier
                 $arrWfUsers = array('group' => array(), 'user' => array());
                 $arrWfUsersOnly = array(); // utilisateurs uniquement (groupes compris)
-                
+
                 $objUser = new user();
                 $objUser->open($_SESSION['ploopi']['userid']);
                 $arrGroups = $objUser->getgroups(true);
-                
+
                 $booWfVal = false;
-                foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) 
+                foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value)
                 {
                     if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booWfVal = true;
                     if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booWfVal = true;
-                    
+
                     $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
-                    
+
                     if ($value['type_validation'] == 'user') $arrWfUsersOnly[] = $value['id_validation'];
-                    if ($value['type_validation'] == 'group') 
+                    if ($value['type_validation'] == 'group')
                     {
                         $objGroup = new group();
                         if ($objGroup->open($value['id_validation'])) $arrWfUsersOnly = array_merge($arrWfUsersOnly, array_keys($objGroup->getusers()));
@@ -171,13 +171,13 @@ if ($_SESSION['ploopi']['connected'])
 
                 // on crée des documents "draft" s'il existe des validateurs et que l'utilisateur courant n'en fait pas partie
                 $draft = ((!empty($arrWfUsers['user']) || !empty($arrWfUsers['group'])) && !$booWfVal);
-                
+
                 if ($newfile)
                 {
                     for ($i=0;$i<=5;$i++)
                     {
                         $arrListFic = array();
-                        
+
                         $error = true;
 
                         $tmpfile = '';
@@ -220,13 +220,13 @@ if ($_SESSION['ploopi']['connected'])
 
                             break;
                         }
-                        
+
                         if(!$error) // si pas d'erreur
                         {
                             // Ce n'est pas un fichier compressé, on enregistre le document
                             if (empty($_REQUEST["docfile_decompress_{$i}"]))
                             {
-                                $arrListFic[] = 
+                                $arrListFic[] =
                                     array(
                                         'name'        => $filename,
                                         'file'        => $filename,
@@ -242,35 +242,35 @@ if ($_SESSION['ploopi']['connected'])
                                 $tmpfoldername = md5(uniqid(rand(), true));
                                 $uncompress_path = doc_getpath()._PLOOPI_SEP.'zip'._PLOOPI_SEP.$tmpfoldername;
                                 if (!is_dir($uncompress_path)) ploopi_makedir($uncompress_path);
-                                
+
                                 if (is_writeable($uncompress_path))
                                 {
                                     switch (pathinfo($filename,PATHINFO_EXTENSION))
                                     {
                                         /*
                                         case 'gz':
-                                        //$gz = new 
+                                        //$gz = new
                                         break;
-                                        
+
                                         case 'bzip':
                                         break;
-                                        
+
                                         case 'bzip':
                                         break;
-                                        */  
+                                        */
                                         default:
                                         case 'zip':
                                             $zip = new ZipArchive;
                                             if ($zip->open($tmpfile)===true && $zip->extractTo($uncompress_path))
                                             {
-                                                for ($numFicZip=0; $numFicZip<$zip->numFiles;$numFicZip++) 
+                                                for ($numFicZip=0; $numFicZip<$zip->numFiles;$numFicZip++)
                                                 {
                                                     $arrInfoFicUnzip = $zip->statIndex($numFicZip);
                                                     if($arrInfoFicUnzip['size'])
                                                     {
                                                         $arrName = explode(_PLOOPI_SEP,$arrInfoFicUnzip['name']);
-                                                  
-                                                        $arrListFic[] = 
+
+                                                        $arrListFic[] =
                                                             array(
                                                                 'name'        => $arrName[count($arrName)-1],
                                                                 'file'        => $arrInfoFicUnzip['name'],
@@ -286,20 +286,20 @@ if ($_SESSION['ploopi']['connected'])
                                     }
                                 }
                             }
-                                
+
                             if(!empty($arrListFic))
-                            {           
+                            {
                                 foreach($arrListFic as $fic)
                                 {
                                     $docfile = ($draft) ? new docfiledraft() : new docfile();
                                     $docfile->setuwm();
-                                
+
                                     $docfile->fields['description'] = $fic['description'];
                                     $docfile->fields['readonly'] = $fic['readonly'];
-                                
+
                                     $docfile->fields['id_folder'] = $currentfolder;
                                     $docfile->fields['id_user_modify'] = $_SESSION['ploopi']['userid'];
-                                
+
                                     // si le fichier vient d'un dossier partagé, il ne faut pas le déplacer mais le copier
                                     if($fic['uncompress'])
                                     {
@@ -311,13 +311,13 @@ if ($_SESSION['ploopi']['connected'])
                                         if ($_REQUEST['doc_mode'] == 'server') $docfile->sharedfile = $tmpfile;
                                         else $docfile->tmpfile = $tmpfile;
                                     }
-                                
+
                                     $docfile->fields['name'] = $fic['name'];
                                     $docfile->fields['size'] = $fic['size'];
-                                    
+
                                     $error = $docfile->save();
-                                
-                                
+
+
                                     if (!$error)
                                     {
                                         if ($draft)
@@ -333,16 +333,16 @@ if ($_SESSION['ploopi']['connected'])
                                                 $docfile->fields['name']
                                             );
                                         }
-                                        
+
                                         if (!$draft && $currentfolder != 0)
                                         {
                                             // On va chercher les abonnés
                                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_ADDFILE, _DOC_ACTION_MODIFYFILE));
-                                    
+
                                             // on envoie le ticket de notification d'action sur l'objet
                                             if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_ADDFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet à été créé');
                                         }
-                                    
+
                                         ploopi_create_user_action_log(_DOC_ACTION_ADDFILE, $docfile->fields['id']);
                                     }
                                 }
@@ -444,7 +444,7 @@ if ($_SESSION['ploopi']['connected'])
                                 $docfile->fields['md5id'],
                                 $docfile->fields['name']
                             );
-                        }                        
+                        }
                         if (!$draft && $currentfolder != 0)
                         {
                             $docfolder = new docfolder();
@@ -521,7 +521,7 @@ if ($_SESSION['ploopi']['connected'])
                     include_once './modules/doc/class_docfile.php';
                     $docfile = new docfile();
                     $docfile->openmd5($_GET['docfile_md5id']);
-                    
+
                     if (!empty($_GET['version']))
                     {
                         include_once './modules/doc/class_docfilehistory.php';
@@ -572,29 +572,29 @@ if ($_SESSION['ploopi']['connected'])
                     {
                         // on vérifie que l'utilisateur a bien le droit de supprimer ce fichier (en fonction du statut du dossier parent)
                         $docfolder_readonly_content = false;
-    
+
                         $docfolder = new docfolder();
-    
+
                         if (!empty($docfile->fields['id_folder']))
                         {
                             $docfolder->open($docfile->fields['id_folder']);
                             $docfolder_readonly_content = ($docfolder->fields['readonly_content'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']);
                         }
-    
+
                         if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_DELETEFILE) && (!$docfolder_readonly_content || $docfile->fields['id_user'] == $_SESSION['ploopi']['userid'])))
                         {
                             $error = $docfile->delete();
-    
+
                             // on n'est pas à la racine (pas d'abonnement sur la racine)
                             if (!empty($docfile->fields['id_folder']))
                             {
                                 // On va chercher les abonnés
                                 $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFILE, _DOC_ACTION_DELETEFILE));
-    
+
                                 // on envoie le ticket de notification d'action sur l'objet
                                 if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_DELETEFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet à été supprimé');
                             }
-    
+
                             ploopi_create_user_action_log(_DOC_ACTION_DELETEFILE, $docfile->fields['id']);
                             ploopi_redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}&error={$error}");
                         }
@@ -648,10 +648,10 @@ if ($_SESSION['ploopi']['connected'])
                         if ($docfolder->open($_GET['docfolder_id']))
                         {
                             $docfolder->publish();
-    
+
                             // On va chercher les abonnés
                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFOLDER));
-    
+
                             // on envoie le ticket de notification d'action sur l'objet
                             if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été publié');
                         }
@@ -671,28 +671,28 @@ if ($_SESSION['ploopi']['connected'])
                     $docfolder = new docfolder();
                     if ($docfolder->open($_GET['docfolder_id']))
                     {
-    
+
                         $currentfolder = $docfolder->fields['id_folder'];
-    
+
                         // on vérifie que l'utilisateur a bien le droit de supprimer ce dossier (en fonction du statut du dossier et du dossier parent)
                         $docfolder_readonly_content = false;
-    
+
                         if (!empty($docfolder->fields['id_folder']))
                         {
                             $docfolder_parent = new docfolder();
                             $docfolder_parent->open($docfolder->fields['id_folder']);
                             $docfolder_readonly_content = ($docfolder_parent->fields['readonly_content'] && $docfolder_parent->fields['id_user'] != $_SESSION['ploopi']['userid']);
                         }
-    
+
                         $readonly = (($docfolder->fields['readonly'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']) || $docfolder_readonly_content);
                         if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_DELETEFOLDER) && (!$readonly) && ($docfolder->fields['nbelements'] == 0)))
                         {
                             // On va chercher les abonnés
                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_DELETEFOLDER, _DOC_ACTION_MODIFYFOLDER));
-    
+
                             // on envoie le ticket de notification d'action sur l'objet
                             if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_DELETEFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été supprimé');
-    
+
                             $docfolder->delete();
                             ploopi_create_user_action_log(_DOC_ACTION_DELETEFOLDER, $docfolder->fields['id']);
                         }
@@ -718,26 +718,26 @@ if ($_SESSION['ploopi']['connected'])
                     if ($docfolder->open($_GET['docfolder_id']))
                     {
                         $docfolder->setvalues($_POST,'docfolder_');
-                        
+
                         if (empty($_POST['docfolder_readonly'])) $docfolder->fields['readonly'] = 0;
                         if (empty($_POST['docfolder_readonly_content'])) $docfolder->fields['readonly_content'] = 0;
                         if (empty($_POST['docfolder_allow_feeds'])) $docfolder->fields['allow_feeds'] = 0;
                         $docfolder->save();
-    
+
                         // On va chercher les abonnés
                         $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFOLDER));
-    
+
                         // on envoie le ticket de notification d'action sur l'objet
                         if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été modifié');
-    
+
                         // SHARES
                         ploopi_share_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_share_folder');
                         doc_resetshare();
-    
+
                         // WORKFLOW
                         ploopi_validation_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_validation_folder');
                         doc_resetvalidation();
-                        
+
                         // LOG
                         ploopi_create_user_action_log(_DOC_ACTION_MODIFYFOLDER, $docfolder->fields['id']);
                     }
@@ -754,27 +754,27 @@ if ($_SESSION['ploopi']['connected'])
                     // on recherche s'il existe des validateurs pour ce dossier
                     $arrWfUsers = array('group' => array(), 'user' => array());
                     $arrWfUsersOnly = array(); // utilisateurs uniquement (groupes compris)
-                    
+
                     $objUser = new user();
                     $objUser->open($_SESSION['ploopi']['userid']);
                     $arrGroups = $objUser->getgroups(true);
-                    
+
                     $booWfVal = false;
-                    foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) 
+                    foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value)
                     {
                         if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booWfVal = true;
                         if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booWfVal = true;
-                        
+
                         $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
-                        
+
                         if ($value['type_validation'] == 'user') $arrWfUsersOnly[] = $value['id_validation'];
-                        if ($value['type_validation'] == 'group') 
+                        if ($value['type_validation'] == 'group')
                         {
                             $objGroup = new group();
                             if ($objGroup->open($value['id_validation'])) $arrWfUsersOnly = array_merge($arrWfUsersOnly, array_keys($objGroup->getusers()));
                         }
                     }
-                    
+
                     if ((!empty($arrWfUsers['user']) || !empty($arrWfUsers['group'])) && !$booWfVal)
                     {
                         $docfolder->fields['published'] = 0;
@@ -876,7 +876,7 @@ if ($_SESSION['ploopi']['connected'])
                             case 'doc_selectflash':
                                 $row['url'] = "index-quick.php?ploopi_op=doc_file_view&docfile_md5id={$row['md5id']}";
                             break;
-        
+
                             default:
                                 $row['url'] = "index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$row['md5id']}";
                             break;
@@ -913,7 +913,7 @@ if ($_SESSION['ploopi']['connected'])
 
         case 'doc_image_get':
             $intTimeCache = 2592000; // 30 jours
-            
+
             include_once './include/classes/data_object.php';
             include_once './include/functions/date.php';
             include_once './include/functions/filesystem.php';
@@ -921,19 +921,19 @@ if ($_SESSION['ploopi']['connected'])
             include_once './modules/doc/include/global.php';
             include_once './modules/doc/class_docfile.php';
             include_once './include/classes/cache.php';
-            
+
             ploopi_ob_clean();
-            
-            
+
+
             if ((!empty($_GET['docfile_id']) || !empty($_GET['docfile_md5id'])) && !empty($_GET['version']))
             {
                 $docfile = new docfile();
-                if(!empty($_GET['docfile_id'])) 
+                if(!empty($_GET['docfile_id']))
                     $objCache = new ploopi_cache(md5('doc_fck_'.$_GET['docfile_id'].'_'.$_GET['version']), $intTimeCache); // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
-                    
+
                 if(!empty($_GET['docfile_md5id']))
                     $objCache = new ploopi_cache(md5('doc_fck_'.$_GET['docfile_md5id'].'_'.$_GET['version']), $intTimeCache); // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
-                    
+
                 $height = (isset($_GET['height'])) ? $_GET['height'] : 0;
                 $width = (isset($_GET['width'])) ? $_GET['width'] : 0;
                 $coef = (isset($_GET['coef'])) ? $_GET['coef'] : 0;
@@ -944,19 +944,19 @@ if ($_SESSION['ploopi']['connected'])
                 if(!$objCache->start()) // si pas de cache on le crée
                 {
                     ploopi_init_module('doc', false, false, false);
-                
+
                     include_once './modules/doc/class_docfile.php';
                     include './include/classes/mimethumb.php';
-                    
+
                     $objDoc = new docfile();
                     $objThumb = new mimethumb($width,$height,$coef,'png','transparent');
-                    
+
                     if(!empty($_GET['docfile_id']) && $objDoc->open($_GET['docfile_id']))
                         $objThumb->getThumbnail($objDoc->getfilepath(),$objDoc->fields['extension']);
-                        
+
                     elseif(!empty($_GET['docfile_md5id']) && $objDoc->openmd5($_GET['docfile_md5id']))
                         $objThumb->getThumbnail($objDoc->getfilepath(),$objDoc->fields['extension']);
-                        
+
                     if(isset($objCache)) $objCache->end();
                 }
                 else
@@ -968,9 +968,9 @@ if ($_SESSION['ploopi']['connected'])
         break;
 
         case 'doc_explorer':
-            
+
             $_SESSION['ploopi']['doc'][$_SESSION['ploopi']['moduleid']]['typeshow'] = 'list';
-            
+
             ploopi_init_module('doc');
 
             include_once './modules/doc/class_docfolder.php';
@@ -987,11 +987,11 @@ if ($_SESSION['ploopi']['connected'])
             include_once './modules/doc/public_explorer.php';
             ploopi_die();
         break;
-        
+
         case 'doc_explorer_thumb':
-            
+
             $_SESSION['ploopi']['doc'][$_SESSION['ploopi']['moduleid']]['typeshow'] = 'thumb';
-            
+
             ploopi_init_module('doc');
 
             include_once './modules/doc/class_docfolder.php';
@@ -1018,28 +1018,28 @@ if ($_SESSION['ploopi']['connected'])
 switch($ploopi_op)
 {
     case 'doc_getthumbnail':
-        
+
         $intTimeCache = 2592000; // 30 jours
 
         $width = (!empty($_GET['width']) && is_numeric($_GET['width'])) ? $_GET['width'] : 111;
         $height = (!empty($_GET['height']) && is_numeric($_GET['height'])) ? $_GET['height'] : 90;
-        
+
         include_once './include/classes/cache.php';
         ploopi_ob_clean();
 
         $objCache = new ploopi_cache(md5('doc_thumb_'.$_GET['docfile_md5id'].'_'.$_GET['version']), $intTimeCache); // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
-        $objCache->set_groupe('module_doc_'.$_SESSION['ploopi']['workspaceid'].'_'.$_SESSION['ploopi']['moduleid']); 
-        
+        $objCache->set_groupe('module_doc_'.$_SESSION['ploopi']['workspaceid'].'_'.$_SESSION['ploopi']['moduleid']);
+
         if(!$objCache->start()) // si pas de cache on le crée
         {
             ploopi_init_module('doc', false, false, false);
-            
+
             include_once './modules/doc/class_docfile.php';
             include './include/classes/mimethumb.php';
-            
+
             $objDoc = new docfile();
             $objThumb = new mimethumb($width, $height, 0, 'png', 'transparent');
-            
+
             if($objDoc->openmd5($_GET['docfile_md5id']))
                 $objThumb->getThumbnail($objDoc->getfilepath(),$objDoc->fields['extension']);
             if(isset($objCache)) $objCache->end();
@@ -1049,7 +1049,7 @@ switch($ploopi_op)
             header("Content-Type: image/png");
         }
         ploopi_die();
-    break;            
+    break;
 
     case 'doc_file_view':
     case 'doc_file_download':
