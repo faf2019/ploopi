@@ -77,7 +77,7 @@ echo $skin->open_simplebloc($strTitle);
 
 $arrParams = array();
 $arrParams[] = "ploopi_op=forms_graphic_save";
-$arrParams[] = "forms_id={$forms->fields['id']}";
+$arrParams[] = "forms_id={$objForm->fields['id']}";
 if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields['id']}";
 ?>
 <form name="form_field" action="<?php echo ploopi_urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return forms_field_validate(this);">
@@ -92,8 +92,8 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                 <label><?php echo _FORMS_GRAPHIC_TYPE; ?>:</label>
                 <select class="select" name="forms_graphic_type" onchange="javascript:forms_graphic_type_onchange(this);">
                 <?php
-                global $forms_graphic_types;
-                foreach($forms_graphic_types as $strKey => $strValue)
+                global $objForm_graphic_types;
+                foreach($objForm_graphic_types as $strKey => $strValue)
                 {
                      ?>
                      <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields['type']) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($strValue); ?></option>
@@ -305,7 +305,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                             <?
                             foreach($arrFields as $intIdField => $arrField)
                             {
-                                if (!$arrField['separator'] && !$arrField['captcha'])
+                                if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'])
                                 {
                                     ?>
                                      <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["pie_field"]) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($arrField['name']); ?></option>
@@ -333,7 +333,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                         <?
                         foreach($arrFields as $intIdField => $arrField)
                         {
-                            if (!$arrField['separator'] && !$arrField['captcha'] && $arrField['type'] == 'text' && $arrField['format'] == 'date')
+                            if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'] && $arrField['type'] == 'text' && $arrField['format'] == 'date')
                             {
                                 ?>
                                  <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["timefield"]) ? 'selected="selected"' : ''; ?>>Champ "<?php echo htmlentities($arrField['name']); ?>"</option>
@@ -347,8 +347,8 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     <label><?php echo _FORMS_GRAPHIC_LINE_AGGREGATION; ?>:</label>
                     <select class="select" name="forms_graphic_line_aggregation">
                     <?php
-                    global $forms_graphic_line_aggregation;
-                    foreach($forms_graphic_line_aggregation as $strKey => $strValue)
+                    global $objForm_graphic_line_aggregation;
+                    foreach($objForm_graphic_line_aggregation as $strKey => $strValue)
                     {
                          ?>
                          <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields['line_aggregation']) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($strValue); ?></option>
@@ -377,7 +377,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                     <?
                                     foreach($arrFields as $intIdField => $arrField)
                                     {
-                                        if (!$arrField['separator'] && !$arrField['captcha'])
+                                        if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'])
                                         {
                                             ?>
                                              <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["line{$intI}_field"]) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($arrField['name']); ?></option>
@@ -388,7 +388,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                 </select>
                             </p>
                             <p>
-                                <label>Fitre :</label>
+                                <label>Filtre :</label>
                                 <select class="select" style="width:20%;" name="forms_graphic_line<?php echo $intI; ?>_filter_op">
                                     <option value="">(aucun)</option>
                                     <?php
@@ -407,8 +407,8 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                 <label>Opération :</label>
                                 <select class="select" name="forms_graphic_line<?php echo $intI; ?>_operation">
                                     <?php
-                                    global $forms_graphic_operation;
-                                    foreach($forms_graphic_operation as $strKey => $strValue)
+                                    global $objForm_graphic_operation;
+                                    foreach($objForm_graphic_operation as $strKey => $strValue)
                                     {
                                          ?>
                                          <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields["line{$intI}_operation"]) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($strValue); ?></option>
@@ -444,7 +444,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
 </div>
 
 <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;padding:4px;overflow:auto;text-align:right;">
-    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_modify&forms_id={$forms->fields['id']}"); ?>'">
+    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_modify&forms_id={$objForm->fields['id']}"); ?>'">
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>
 </form>

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2007-2011 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.

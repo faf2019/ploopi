@@ -9,7 +9,6 @@ include_once './modules/forms/classes/formsForm.php';
 include_once './modules/forms/classes/formsRecord.php';
 include_once './modules/forms/classes/formsArithmeticParser.php';
 
-
 $objForm = new formsForm();
 if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
 {
@@ -20,7 +19,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
     if ($_SESSION['ploopi']['mode'] == 'frontoffice' && $objForm->fields['typeform'] != 'cms') ploopi_redirect();
 
 
-	/**
+    /**
      * On instancie l'enregistrement
      * @var formsRecord
      */
@@ -60,18 +59,26 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
      */
     $arrVariables = array();
     $booCalculation = false;
+    $booAggregate = false;
+
+    /**
+     * Permet de stocker les groupes conditionnels utilisés
+     */
+    $arrGroups = array();
+
+    /**
+     * Les champs du formulaire
+     */
+    $arrFields = $objForm->getFields();
 
     /**
      * Traitement des champs et mise à jour de l'enregistrement
      */
-    foreach($objForm->getFields() as $objField)
+    foreach($arrFields as $objField)
     {
         $strValue = '';
         $booFieldOk = false;
         $booError = false;
-
-        // Valeur par défaut
-        $arrVariables['C'.$objField->fields['position']] = 0;
 
         switch($objField->fields['type'])
         {
@@ -102,6 +109,23 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
                 // Non traité ici
                 $booFieldOk = true;
                 $booCalculation = true;
+
+                // On va détecter si le calcul fait appel à un agrégat (dans ce cas il faut recalculer toutes les données du formulaire)
+                $objParser = new formsArithmeticParser($objField->fields['formula']);
+
+                // Extraction des variables de l'expression
+                $arrVars = $objParser->getVars();
+
+                // Pour chaque variable attendue dans l'expression
+                foreach($arrVars as $strVar)
+                {
+                    // Analyse de la variable
+                    if (preg_match('/C([0-9])+_?([A-Z]{0,3})/', $strVar, $arrMatches) > 0)
+                    {
+                        if (!empty($arrMatches[2])) $booAggregate = true;
+                    }
+                }
+
             break;
 
             default:
@@ -131,16 +155,142 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
             break;
         }
 
-        $arrVariables['C'.$objField->fields['position']] = $strValue;
-        if (!is_numeric($arrVariables['C'.$objField->fields['position']])) $arrVariables['C'.$objField->fields['position']] = 0;
+        $objRecord->fields[$objField->fields['fieldname']] = $strValue;
+
+        /*
 
         if ($booFieldOk)
         {
-            $objRecord->fields[$objField->fields['fieldname']] = (!(($objField->fields['type'] == 'autoincrement' || $objField->fields['type'] == 'file') && $strValue == '')) ? $strValue : '';
+            //$objRecord->fields[$objField->fields['fieldname']] = (!(($objField->fields['type'] == 'autoincrement' || $objField->fields['type'] == 'file') && $strValue == '')) ? $strValue : '';
 
             $arrEmailContent['Contenu']["({$objField->fields['id']}) {$objField->fields['name']}"] = $objRecord->fields[$objField->fields['fieldname']];
         }
+        **/
     }
+
+
+    /**
+     * Contrôle des champs autorisés selon les groupes conditionnels
+     */
+
+    foreach($arrFields as $objField)
+    {
+        if (!empty($objField->fields['id_group']))
+        {
+            // Groupe non chargé
+            if (!isset($arrGroups[$objField->fields['id_group']]))
+            {
+                // On va ouvrir le groupe
+                $objGroup = new formsGroup();
+                if ($objGroup->open($objField->fields['id_group']))
+                {
+                    $arrGroups[$objField->fields['id_group']] = $objGroup;
+                }
+            }
+            else $objGroup = $arrGroups[$objField->fields['id_group']];
+
+            // Groupe ok
+            if (isset($arrGroups[$objField->fields['id_group']]))
+            {
+                $arrConditions = $objGroup->getConditions();
+                // Variables utilisées dans la condition
+                $arrCondVars = array();
+
+                // On va "calculer" chaque condition
+                foreach($arrConditions as $key => $row)
+                {
+                    if (empty($row['field']) && empty($row['op'])) $arrCondVars["C{$key}"] = true;
+                    else
+                    {
+                        $booRes = false;
+
+                        // Le champ
+                        $objFieldVar = $arrFields[$row['field']];
+                        // La valeur saisie
+                        $strValue = $objRecord->fields[$arrFields[$row['field']]->fields['fieldname']];
+                        $arrValues = array();
+
+                        switch($objFieldVar->fields['type'])
+                        {
+                            case 'checkbox':
+                                $arrValues = explode('||', $strValue);
+                            break;
+
+                            default:
+                                $arrValues[] = $strValue;
+                            break;
+                        }
+
+                        foreach($arrValues as $strValue)
+                        {
+                            switch($row['op'])
+                            {
+                                case 'begin':
+                                    $booRes = $booRes || strpos($strValue, $row['value']) === 0;
+                                break;
+
+                                case 'like':
+                                    $booRes = $booRes || strpos($strValue, $row['value']) !== false;
+                                break;
+
+                                default:
+                                    switch($row['op'])
+                                    {
+                                        case '=':
+                                            $booRes = $booRes || $strValue == $row['value'];
+                                        break;
+
+                                        case '>':
+                                            $booRes = $booRes || $strValue > $row['value'];
+                                        break;
+
+                                        case '>=':
+                                            $booRes = $booRes || $strValue >= $row['value'];
+                                        break;
+
+                                        case '<':
+                                            $booRes = $booRes || $strValue < $row['value'];
+                                        break;
+
+                                        case '<=':
+                                            $booRes = $booRes || $strValue <= $row['value'];
+                                        break;
+
+                                        case '<>':
+                                            $booRes = $booRes || $strValue != $row['value'];
+                                        break;
+                                    }
+
+
+                                break;
+                            }
+                        }
+
+                        $arrCondVars["C{$key}"] = $booRes;
+                    }
+                }
+
+                // Condition valide par défaut (si erreur dans l'expression)
+                $booRes = true;
+
+                // Calcul de l'expression booléenne globale du groupe
+                try {
+                    $objParser = new formsBooleanParser($objGroup->fields['formula'], $arrCondVars);
+                    $booRes = $objParser->getVal();
+                }
+                catch (Exception $e) { }
+
+                // Condition non valide, on ne garde pas le champ
+                if (!$booRes) $objRecord->fields[$objField->fields['fieldname']] = $arrVariables['C'.$objField->fields['position']] = '';
+            }
+        }
+
+        // Mise à jour des variables pour les calculs
+        $arrVariables['C'.$objField->fields['position']] = $objRecord->fields[$objField->fields['fieldname']];
+        if (!is_numeric($arrVariables['C'.$objField->fields['position']])) $arrVariables['C'.$objField->fields['position']] = 0;
+
+    }
+
 
     /**
      * Il y avait au moins un champ de type "calculation"
@@ -148,21 +298,41 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
 
     if ($booCalculation)
     {
-        foreach($objForm->getFields() as $objField)
+        if ($booAggregate)
         {
-            if ($objField->fields['type'] == 'calculation')
+            // Pré-enregistrement (utile pour le calcul des agrégats)
+            $objRecord->save();
+
+            // Recalcul complet des données du formulaire
+            $objForm->calculate();
+
+            // Actualisation du l'enregistrement avec les données calculées
+            $objRecord->open($objRecord->fields['#id']);
+        }
+        else // Calcul standard, juste l'enregistrement à mettre à jour
+        {
+            foreach($objForm->getFields() as $objField)
             {
-                try {
-                    // Interprétation du calcul
-                    $objParser = new formsArithmeticParser($objField->fields['formula'], $arrVariables);
-                    $arrVariables['C'.$objField->fields['position']] = $objRecord->fields[$objField->fields['fieldname']] = $objParser->getVal();
+                if ($objField->fields['type'] == 'calculation')
+                {
+                    try {
+                        // Interprétation du calcul
+                        $objParser = new formsArithmeticParser($objField->fields['formula'], $arrVariables);
+                        $arrVariables['C'.$objField->fields['position']] = $objRecord->fields[$objField->fields['fieldname']] = $objParser->getVal();
+                    }
+                    catch(Exception $e) { }
                 }
-                catch(Exception $e) { }
             }
         }
     }
 
     $objRecord->save();
+
+    $strVarName = formsForm::getVarName($objForm->fields['id']);
+
+    // Sauvegarde en session
+    ploopi_setsessionvar($strVarName, null);
+    setcookie($strVarName, null, 0);
 
     /**
      * Il y avait au moins un champ de type "file"
@@ -191,6 +361,22 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
         }
     }
 
+
+    /**
+     * Construction du mail
+     */
+
+    foreach($arrFields as $objField)
+    {
+        if (!$objField->fields['option_adminonly'] || ploopi_isadmin())
+        {
+            $arrEmailContent['Contenu'][$objField->fields['name']] = $objRecord->fields[$objField->fields['fieldname']];
+        }
+    }
+
+    /**
+     * Contrôle des champs autorisés selon les groupes conditionnels
+     */
 
     $arrEmailContent['Formulaire']['Titre'] = $objForm->fields['label'];
     $arrEmailContent['Formulaire']['Date'] = $objRecord->fields['date_validation'];

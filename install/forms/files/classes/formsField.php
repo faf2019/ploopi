@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2011 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package forms
  * @subpackage field
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -86,6 +85,19 @@ class formsField extends data_object
         $this->_strOriginalFormula = '';
 
         parent::__construct('ploopi_mod_forms_field');
+
+        $this->fields['type'] = '';
+    }
+
+    /**
+     * Gère le clone
+     */
+
+    public function __clone()
+    {
+        // Personnalisation du clone
+        $this->new = true;
+        $this->fields['id'] = null;
     }
 
     /**
@@ -115,7 +127,7 @@ class formsField extends data_object
     {
         global $db;
 
-        if (empty($this->fields['separator']) && empty($this->fields['captcha'])) $this->_createPhysicalName();
+        if (empty($this->fields['separator']) && empty($this->fields['html']) && empty($this->fields['captcha'])) $this->_createPhysicalName();
 
         if ($this->fields['type'] == 'calculation') $this->fields['format'] = 'float';
 
@@ -171,58 +183,7 @@ class formsField extends data_object
         if ($this->fields['type'] == 'calculation' && $this->fields['formula'] != $this->_strOriginalFormula)
         {
             $objForm = new formsForm();
-            if ($objForm->open($this->fields['id_form']))
-            {
-                // Lecture des champs du formulaire
-                $arrObjFields = $objForm->getFields();
-
-                // Lecture des enregistrement du formulaire
-                $objQuery = new ploopi_query_select();
-                $objQuery->add_select('`#id` as id');
-                $objQuery->add_from($objForm->getDataTableName());
-
-                // Pour chaque enregistrement du formulaire
-                foreach($objQuery->execute()->getarray(true) as $intId)
-                {
-                    // Traitement de l'enregistrement
-                    $objRecord = new formsRecord($objForm);
-                    if ($objRecord->open($intId))
-                    {
-                        // Initalisation du tableau des variables
-                        $booCalculation = false;
-                        $arrVariables = array();
-                        foreach($arrObjFields as $objField)
-                        {
-                            if ($objField->fields['type'] == 'calculation') $booCalculation = true;
-
-                            $arrVariables['C'.$objField->fields['position']] = $objRecord->fields[$objField->fields['fieldname']];
-                            if (!is_numeric($arrVariables['C'.$objField->fields['position']])) $arrVariables['C'.$objField->fields['position']] = 0;
-                        }
-
-                        /**
-                         * Il y avait au moins un champ de type "calculation"
-                         */
-
-                        if ($booCalculation)
-                        {
-                            foreach($arrObjFields as $objField)
-                            {
-                                if ($objField->fields['type'] == 'calculation')
-                                {
-                                    try {
-                                        // Interprétation du calcul
-                                        $objParser = new formsArithmeticParser($objField->fields['formula'], $arrVariables);
-                                        $arrVariables['C'.$objField->fields['position']] = $objRecord->fields[$objField->fields['fieldname']] = $objParser->getVal();
-                                    }
-                                    catch(Exception $e) { }
-                                }
-                            }
-
-                            $objRecord->save();
-                        }
-                    }
-                }
-            }
+            if ($objForm->open($this->fields['id_form'])) $objForm->calculate();
         }
 
         return $res;
@@ -371,11 +332,8 @@ class formsField extends data_object
         return $strType;
     }
 
-    /**
-     * Retourne le résultat d'une fonction d'agrégat sur le champ
-     * @param string $strFunction fonction appliquée
-     * @return mixed résultat ou null
-     */
+
+    /*
     public function getAggregate($strFunction)
     {
         $strFunction = strtolower($strFunction);
@@ -395,6 +353,8 @@ class formsField extends data_object
 
         return null;
     }
+    */
+
 
     /**
      * Retourne toutes les valeurs prises par le champ
@@ -415,6 +375,60 @@ class formsField extends data_object
         }
 
         return array();
+    }
+
+    /**
+     * Retourne le résultat d'une fonction d'agrégat sur le champ
+     * @param string $strFunction fonction appliquée (CNT, SUM, MIN, MAX, AVG, AVG, STD, VAR)
+     * @return mixed résultat ou null
+     */
+    public function getAggregate($strFunction)
+    {
+        $objForm = new formsForm();
+        if ($objForm->open($this->fields['id_form']))
+        {
+            $objQuery = new ploopi_query_select();
+            $objQuery->add_from($objForm->getDataTableName());
+            switch(strtoupper($strFunction))
+            {
+                case 'CNT': // COUNT
+                    $objQuery->add_select("count(`{$this->fields['fieldname']}`)");
+                break;
+
+                case 'SUM': // SUM
+                    $objQuery->add_select("sum(`{$this->fields['fieldname']}`)");
+                break;
+
+                case 'MIN': // MIN
+                    $objQuery->add_select("min(`{$this->fields['fieldname']}`)");
+                break;
+
+                case 'MAX': // MAX
+                    $objQuery->add_select("max(`{$this->fields['fieldname']}`)");
+                break;
+
+                case 'AVG': // AVERAGE
+                    $objQuery->add_select("avg(`{$this->fields['fieldname']}`)");
+                break;
+
+                case 'STD': // STANDARD DEVIATION
+                    $objQuery->add_select("std(`{$this->fields['fieldname']}`)");
+                break;
+
+                case 'VAR': // VARIANCE
+                    $objQuery->add_select("variance(`{$this->fields['fieldname']}`)");
+                break;
+
+                default: // ERREUR
+                    return null;
+                break;
+            }
+
+            $arrRes = current($objQuery->execute()->getarray(true));
+            return empty($arrRes) ? null : $arrRes;
+        }
+
+        return null;
     }
 }
 ?>

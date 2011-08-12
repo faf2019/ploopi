@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2007-2011 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -47,6 +47,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
     include_once './modules/forms/classes/formsForm.php';
     include_once './modules/forms/classes/formsField.php';
     include_once './modules/forms/classes/formsGraphic.php';
+    include_once './modules/forms/classes/formsGroup.php';
 
     $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
@@ -76,14 +77,16 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
         case 'formlist':
             switch($op)
             {
+                case 'forms_html_add':
+                case 'forms_html_modify':
                 case 'forms_separator_add':
                 case 'forms_separator_modify':
-                case 'forms_captcha_add':
-                case 'forms_captcha_modify':
                 case 'forms_field_add':
                 case 'forms_field_modify':
                 case 'forms_graphic_add':
                 case 'forms_graphic_modify':
+                case 'forms_group_add':
+                case 'forms_group_modify':
                 case 'forms_modify':
                     include './modules/forms/admin_forms_modify.php';
                 break;

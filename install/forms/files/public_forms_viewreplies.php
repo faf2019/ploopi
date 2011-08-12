@@ -301,8 +301,8 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
 
 
 
-    <div class="viewlist">
-        <table class="viewlist">
+    <div class="forms_viewlist">
+        <table class="forms_viewlist">
         <?php
         $color = (!isset($color) || $color == $skin->values['bgline1']) ? $skin->values['bgline2'] : $skin->values['bgline1'];
         ?>
@@ -383,7 +383,11 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                         }
                         else $strValue = '';
 
-                        echo "<td class=\"data\">{$strValue}</td>";
+                        // Alignement du contenu en fonction du format des données.
+                        if ($row['format'] == 'float' || $row['format'] == 'integer') $strClass = 'data num';
+                        else $strClass = 'data';
+
+                        echo "<td class=\"{$strClass}\">{$strValue}</td>";
                     }
                 }
 

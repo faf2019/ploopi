@@ -64,7 +64,7 @@ $array_columns['right']['desc'] =
 $array_columns['actions_right']['actions'] =
     array(
         'label' => '',
-        'width' => 65
+        'width' => 85
     );
 
 
@@ -86,10 +86,9 @@ while ($fields = $db->fetchrow())
     $pubdate_end = ($fields['pubdate_end']) ? ploopi_timestamp2local($fields['pubdate_end']) : array('date' => '');
 
     $open = ploopi_urlencode("admin.php?op=forms_modify&forms_id={$fields['id']}");
+    $clone = ploopi_urlencode("admin.php?ploopi_op=forms_clone&forms_id={$fields['id']}");
     $delete = ploopi_urlencode("admin.php?ploopi_op=forms_delete&forms_id={$fields['id']}");
     $view = ploopi_urlencode("admin.php?ploopi_action=public&op=forms_viewreplies&forms_id={$fields['id']}");
-
-
 
     $array_values[$c]['values']['label']        = array('label' => $fields['label']);
     $array_values[$c]['values']['desc']         = array('label' => $fields['description']);
@@ -98,8 +97,9 @@ while ($fields = $db->fetchrow())
     $array_values[$c]['values']['date_end']     = array('label' => $pubdate_end['date']);
     $array_values[$c]['values']['actions']      = array('label' => '
         <a href="'.$open.'" title="Modifier le formulaire"><img src="./modules/forms/img/ico_modify.png" alt="Modifier le formulaire"></a>
+        <a href="javascript:void(0);" onclick="javascript:if (confirm(\'Attention cette action va cloner ce formulaire.\nÊtes vous certain de vouloir continuer ?\')) document.location.href=\''.$clone.'&data=\'+confirm(\'Copier les données ?\');" title="Cloner le formulaire"><img src="./modules/forms/img/ico_clone.png" alt="Cloner le formulaire"></a>
         <a href="'.$view.'" title="Consulter les données du formulaire"><img src="./modules/forms/img/ico_view.png" alt="Consulter les données du formulaire"></a>
-        <a href="javascript:ploopi_confirmlink(\''.$delete.'\',\'Attention cette action va supprimer définitivement le formulaire.\nÊtes vous certain de vouloir continuer ?\')"><img border="0" src="./modules/forms/img/ico_trash.png"></a>');
+        <a href="javascript:void(0);" onclick="javascript:ploopi_confirmlink(\''.$delete.'\',\'Attention cette action va supprimer définitivement le formulaire.\nÊtes vous certain de vouloir continuer ?\');"><img border="0" src="./modules/forms/img/ico_trash.png"></a>');
 
 
 //      <a href="'.admin.php.'?op=forms_generate_tables_from_list&forms_id='.$fields['id'].'" title="Générer les données physiques du formulaire""><img src="./modules/forms/img/ico_renew.png" alt="Générer les données physiques du formulaire"></a>

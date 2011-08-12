@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2007-2011 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -49,6 +49,8 @@ include_once './include/classes/module.php';
 
 include_once './modules/forms/classes/formsField.php';
 include_once './modules/forms/classes/formsGraphic.php';
+include_once './modules/forms/classes/formsGroup.php';
+include_once './modules/forms/classes/formsBooleanParser.php';
 
 /**
  * Classe d'accès à la table ploopi_mod_forms_form
@@ -102,6 +104,24 @@ class formsForm extends data_object
     }
 
     /**
+     * Traduit une date FR au format XLS
+     */
+
+    private static function _dateFrToXls($strDate)
+    {
+        $arrDate = explode(' ', $strDate);
+        $intTs = ploopi_timestamp2unixtimestamp(ploopi_local2timestamp($arrDate[0], isset($arrDate[1]) ? $arrDate[1] : '00:00:00'));
+
+        return empty($intTs) ? '' : $intTs / 86400 + 25569 + 1/12;
+    }
+
+    /**
+     * Retourne le nom de la variable pour le stockage temporaire des données (cookie/session)
+     */
+
+    public static function getVarName($intIdForm) { return sprintf("form_values_%d_%d", $intIdForm, $_SESSION['ploopi']['userid']); }
+
+    /**
      * Retourne les champs statiques du formulaire
      * @return array tableau contenant les champs
      */
@@ -124,6 +144,81 @@ class formsForm extends data_object
         self::_initStaticFields();
         $this->_arrFields = null;
         $this->_arrFieldsWithSep = null;
+    }
+
+    /**
+     * Gère le clone
+     */
+
+    public function __clone()
+    {
+        // Stock ancien ID
+        $intOldId = $this->fields['id'];
+        $strOldTableName = $this->getDataTableName();
+
+        // Personnalisation du clone
+        $this->new = true;
+        $this->fields['label'] = 'Clone de '.$this->fields['label'];
+        $this->fields['id'] = null;
+        $this->fields['viewed'] = 0;
+
+        // Enregistrement du clone pour récupérer une nouvel ID
+        $this->save();
+
+        // Correspondances de clones
+        $arrGroups = array();
+        $arrFields = array();
+
+        // Clonage des groupes
+        $objDoc = new data_object_collection('formsGroup');
+        $objDoc->add_where('id_form = %d', $intOldId);
+        foreach($objDoc->get_objects() as $obj)
+        {
+            $objClone = clone $obj;
+            $objClone->fields['id_form'] = $this->fields['id'];
+            $objClone->save();
+
+            $arrGroups[$obj->fields['id']] = $objClone;
+        }
+
+        // Clonage des champs
+        $objDoc = new data_object_collection('formsField');
+        $objDoc->add_where('id_form = %d', $intOldId);
+        foreach($objDoc->get_objects() as $obj)
+        {
+            $objClone = clone $obj;
+            $objClone->fields['id_form'] = $this->fields['id'];
+
+            // Récupération du bon groupe (le clone)
+            if (isset($arrGroups[$objClone->fields['id_group']])) $objClone->fields['id_group'] = $arrGroups[$objClone->fields['id_group']]->fields['id'];
+            $objClone->save();
+
+            $arrFields[$obj->fields['id']] = $objClone;
+        }
+
+        // Clonage des graphiques
+        $objDoc = new data_object_collection('formsGraphic');
+        $objDoc->add_where('id_form = %d', $intOldId);
+        foreach($objDoc->get_objects() as $obj)
+        {
+            $objClone = clone $obj;
+            $objClone->fields['id_form'] = $this->fields['id'];
+
+            // Récupération des bons champs (clones)
+            for ($i=1;$i<=5;$i++) if (isset($arrFields[$objClone->fields["line{$i}_field"]])) $objClone->fields["line{$i}_field"] = $arrFields[$objClone->fields["line{$i}_field"]]->fields['id'];
+
+            $objClone->save();
+        }
+
+        // Il faut impacter la composition des groupes avec les nouveaux champs
+        foreach($arrGroups as $objGroup)
+        {
+            $arrConditions = $objGroup->getConditions();
+            foreach($arrConditions as $key => $row) if (isset($arrFields[$arrConditions[$key]['field']])) $arrConditions[$key]['field'] = $arrFields[$arrConditions[$key]['field']]->fields['id'];
+
+            $objGroup->fields['conditions'] = ploopi_serialize($arrConditions);
+            $objGroup->save();
+        }
     }
 
     /**
@@ -167,6 +262,46 @@ class formsForm extends data_object
     }
 
     /**
+     * Retourne une liste d'identifiants d'espaces de travail.
+     * Application de la vue aux données d'un formulaire.
+     *
+     * @param int $moduleid identifiant du module
+     * @param int $workspaceid identifiant de l'espace de travail
+     * @param string $viewmode vue ('private, 'desc', 'asc', 'global')
+     * @return string liste d'identifiants d'espaces séparés par une virgule
+     */
+
+    public function viewWorkspaces()
+    {
+
+        switch($this->fields['option_view'])
+        {
+            default:
+            case 'private':
+                $strWorkspaces = $this->fields['id_workspace'];
+            break;
+
+            case 'desc':
+                $strWorkspaces = $_SESSION['ploopi']['workspaces'][$this->fields['id_workspace']]['list_parents'];
+                if ($strWorkspaces != '') $strWorkspaces .= ',';
+                $strWorkspaces .= $this->fields['id_workspace'];
+            break;
+
+            case 'asc':
+                $strWorkspaces = $_SESSION['ploopi']['workspaces'][$this->fields['id_workspace']]['list_children'];
+                if ($strWorkspaces!='') $strWorkspaces .= ',';
+                $strWorkspaces .= $this->fields['id_workspace'];
+            break;
+
+            case 'global':
+                $strWorkspaces = $_SESSION['ploopi']['allworkspaces'].",0";
+            break;
+        }
+
+        return $strWorkspaces;
+    }
+
+    /**
      * Initialise le nom utilisé pour la table physique
      */
 
@@ -194,6 +329,19 @@ class formsForm extends data_object
     public function getGraphics()
     {
         $objDOC = new data_object_collection('formsGraphic');
+        $objDOC->add_where('id_form = %d', $this->fields['id']);
+        return $objDOC->get_objects(true);
+    }
+
+    /**
+     * Retourne la liste des groupes
+     *
+     * @return array tableau des groupes indexés par les identifiants
+     */
+
+    public function getGroups()
+    {
+        $objDOC = new data_object_collection('formsGroup');
         $objDOC->add_where('id_form = %d', $this->fields['id']);
         return $objDOC->get_objects(true);
     }
@@ -227,6 +375,7 @@ class formsForm extends data_object
                 $objDOC = new data_object_collection('formsField');
                 $objDOC->add_where('id_form = %d', $this->fields['id']);
                 $objDOC->add_where('`separator` = 0');
+                $objDOC->add_where('`html` = 0');
                 $objDOC->add_where('`captcha` = 0');
                 $objDOC->add_orderby('position');
 
@@ -280,7 +429,8 @@ class formsForm extends data_object
                 'arrayview' => $objField->fields['option_arrayview'],
                 'wceview' => $objField->fields['option_wceview'],
                 'adminonly' => $objField->fields['option_adminonly'],
-                'type' => $objField->fields['type']
+                'type' => $objField->fields['type'],
+                'format' => $objField->fields['format']
             );
         }
 
@@ -305,7 +455,7 @@ class formsForm extends data_object
          */
         if ($booWorkspaceFilter)
         {
-            $objQuery->add_where('workspace_id IN (%e)', array(explode(',', forms_viewworkspaces($_SESSION['ploopi']['moduleid'], $_SESSION['ploopi']['workspaceid'], $this->fields['option_view']))));
+            $objQuery->add_where('workspace_id IN (%e)', array($this->viewWorkspaces()));
         }
 
         return current($objQuery->execute()->getarray(true));
@@ -391,7 +541,7 @@ class formsForm extends data_object
          */
         if ($booWorkspaceFilter)
         {
-            $objQuery->add_where('rec.workspace_id IN (%e)', array(explode(',', forms_viewworkspaces($_SESSION['ploopi']['moduleid'], $_SESSION['ploopi']['workspaceid'], $this->fields['option_view']))));
+            $objQuery->add_where('rec.workspace_id IN (%e)', array($this->viewWorkspaces()));
         }
 
         /**
@@ -781,28 +931,76 @@ class formsForm extends data_object
             break;
 
             case 'xls':
-                $arrTitles = array(
-                    'id' => array('title' => 'Id'),
-                    'date_validation' => array('title' => 'Date de Validation'),
-                    'ip' => array('title' => 'Adresse IP'),
-                    'user_id' => array('title' => 'Utilisateur/Id'),
-                    'user_login' => array('title' => 'Utilisateur/Identifiant'),
-                    'user_firstname' => array('title' => 'Utilisateur/Prénom'),
-                    'user_lastname' => array('title' => 'Utilisateur/Nom'),
-                    'workspace_id' => array('title' => 'Espace de Travail/Id'),
-                    'workspace_label' => array('title' => 'Espace de Travail/Nom'),
-                    'workspace_code' => array('title' => 'Espace de Travail/Code'),
-                );
-
-                foreach($this->getFields() as $strKey => $objField) $arrTitles[$objField->fields['fieldname']] = array('title' => $objField->fields['name']);
-
-                echo ploopiArray::getInstance($arrData)->toXls(true, 'export', $arrTitles);
-            break;
-
             case 'sxc':
             case 'ods':
             case 'pdf':
-                if (ploopi_getparam('forms_webservice_jodconverter') != '')
+                // Options d'export
+                $arrOptions = array(
+                    'landscape' => $this->fields['export_landscape'] == 1,
+                    'fitpage_width' => $this->fields['export_fitpage_width'] == 1,
+                    'fitpage_height' => $this->fields['export_fitpage_height'] == 1,
+                    'setborder' => $this->fields['export_border'] == 1
+                );
+
+                // Préparation du document XLS, colonnes statiques
+                $arrTitles = array(
+                    'id' => array('type' => 'integer', 'width' => 10),
+                    'date_validation' => array('type' => 'datetime', 'width' => 20),
+                    'ip' => array('type' => 'string', 'width' => 15),
+                    'user_id' => array('type' => 'integer', 'width' => 10),
+                    'user_login' => array('type' => 'string', 'width' => 15),
+                    'user_firstname' => array('type' => 'string', 'width' => 15),
+                    'user_lastname' => array('type' => 'string', 'width' => 15),
+                    'workspace_id' => array('type' => 'integer', 'width' => 10),
+                    'workspace_label' => array('type' => 'string', 'width' => 15),
+                    'workspace_code' => array('type' => 'string', 'width' => 15),
+                );
+
+                // Attribution des types de colonnes (colonnes dynamiques)
+                foreach($this->getFields() as $strKey => $objField)
+                {
+                    switch($objField->fields['format'])
+                    {
+                        case 'float':
+                            $strType = 'float';
+                        break;
+
+                        case 'integer':
+                            $strType = 'integer';
+                        break;
+
+                        case 'date':
+                            $strType = 'date';
+                        break;
+
+                        case 'time':
+                            $strType = 'time';
+                        break;
+
+                        default:
+                            $strType = 'string';
+                        break;
+                    }
+
+                    $arrTitles[$objField->fields['fieldname']] = array('type' => $strType, 'width' => empty($objField->fields['export_width']) ? null : $objField->fields['export_width'] );
+                }
+
+                // Attribution des libellés de colonnes (impression uniquement) (colonnes dynamiques)
+                if (!$booExport) foreach($this->getFields() as $strKey => $objField) $arrTitles[$objField->fields['fieldname']]['title'] = $objField->fields['name'];
+
+                // Traitement des dates XLS
+                $arrFields = $this->getFields();
+                foreach(array_keys($arrData) as $strKey)
+                {
+                    if (isset($arrData[$strKey]['date_validation'])) $arrData[$strKey]['date_validation'] = self::_dateFrToXls($arrData[$strKey]['date_validation']);
+                    foreach($arrFields as $objField)
+                    {
+                        if ($objField->fields['format'] == 'date') if (isset($arrData[$strKey][$objField->fields['fieldname']])) $arrData[$strKey][$objField->fields['fieldname']] = self::_dateFrToXls($arrData[$strKey][$objField->fields['fieldname']]);
+                    }
+                }
+
+                if ($strFormat == 'xls') echo ploopiArray::getInstance($arrData)->toXls(true, 'export', $arrTitles, $arrOptions);
+                elseif (ploopi_getparam('forms_webservice_jodconverter') != '')
                 {
                     // Init de l'interface avec le convertisseur
                     $objOdfConverter = new odf_converter(ploopi_getparam('forms_webservice_jodconverter'));
@@ -824,7 +1022,7 @@ class formsForm extends data_object
                     }
 
                     // Génération XLS + Conversion
-                    echo $objOdfConverter->convert(ploopiArray::getInstance($arrData)->toXls(true), 'application/vnd.ms-excel', $strOuputMime);
+                    echo $objOdfConverter->convert(ploopiArray::getInstance($arrData)->toXls(true, 'export', $arrTitles, $arrOptions), 'application/vnd.ms-excel', $strOuputMime);
                 }
             break;
 
@@ -1166,6 +1364,12 @@ class formsForm extends data_object
      */
     public function render($intIdRecord = null, $strRenderMode = 'modify', $booIncludeCss = true, $booDisplay = true)
     {
+        // Identifiant du formulaire
+        $strFormId = 'forms_form_'.$this->fields['id'];
+
+        // Panel par défaut (numéro page)
+        $intDefaultPanel = 1;
+
         // L'utilisateur est admin ?
         $booIsAdmin = ploopi_isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module']);
 
@@ -1221,11 +1425,29 @@ class formsForm extends data_object
                     break;
                 }
             }
+
+            // Lecture du cookie s'il existe
+            $strVarName = self::getVarName($this->fields['id']);
+
+            if (!empty($_COOKIE[$strVarName]))
+            {
+
+                $arrValues = array();
+
+                ploopi_unset_error_handler();
+                if (isset($_COOKIE[$strVarName])) $arrValues = ploopi_array_map('utf8_decode', json_decode(gzuncompress(ploopi_base64_decode($_COOKIE[$strVarName])), true));
+                ploopi_set_error_handler();
+
+                foreach($arrValues as $intFieldId => $strValue) if (is_numeric($intFieldId)) $arrFieldsContent[$intFieldId] = explode('||', $strValue);
+
+                if (isset($arrValues['panel'])) $intDefaultPanel = $arrValues['panel'];
+            }
         }
 
         // Options du formulaire
         $arrFormOptions = array(
-            'class' => 'forms_form'
+            'class' => 'forms_form',
+            'onsubmit' => "return ploopi.{$strFormId}_validate(this);"
         );
 
         switch($strRenderMode)
@@ -1271,7 +1493,7 @@ class formsForm extends data_object
 
         // Instanciation de l'objet formulaire (affichage)
         $objForm = new form(
-            $strFormId = 'forms_form_'.$this->fields['id'],
+            $strFormId,
             $strUrl,
             'post',
             $arrFormOptions
@@ -1309,16 +1531,21 @@ class formsForm extends data_object
         // Panels qui vont servir de support pour le multi-page
         $arrPanels = array();
 
+        // Groupes conditionnels
+        $arrGroups = array();
+
         // Pour chaque champs du formulaire
         foreach($this->getFields(true) as $objField)
         {
+            // Regroupement des champs par groupes conditionnels
+            if (!empty($objField->fields['id_group'])) $arrGroups[$objField->fields['id_group']][] = $objField->fields['id'];
+
             if ($objField->fields['option_pagebreak'] || is_null($objPanel))
             {
                 $intS = sizeof($arrPanels);
 
                 $arrPanels[] = 'panel_'.($intS+1);
                 $arrOptions = array('style' => '');
-
                 if ($objField->fields['option_pagebreak']) $arrOptions['style'] .= 'page-break-before:always;';
                 if ($intS) $arrOptions['style'] .= 'display:none;';
 
@@ -1331,6 +1558,12 @@ class formsForm extends data_object
                 $strDesc = $objField->fields['description'] == '' ? '' : '<p>'.ploopi_nl2br(htmlentities($objField->fields['description'])).'</p>';
 
                 $objPanel->addField( new form_html('<h'.$objField->fields['separator_level'].' style="'.$strStyle.$objField->fields['style_form'].'">'.ploopi_nl2br(htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
+            }
+            elseif ($objField->fields['html'])
+            {
+                $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
+
+                $objPanel->addField( new form_html('<div class="xhtml" style="'.$strStyle.'">'.$objField->fields['xhtmlcontent_cleaned'].'</div>') );
             }
             elseif ($objField->fields['option_formview'] && (!$objField->fields['option_adminonly'] || $booIsAdmin))
             {
@@ -1351,6 +1584,12 @@ class formsForm extends data_object
                         'style_form' => (empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;") . $objField->fields['style_form'],
                         'class_form' => 'field'
                     );
+
+                    // Le champ fait partie d'un groupe conditionnel ? Si oui, on ne l'affiche pas
+                    if ($objField->fields['id_group'] != 0) $arrOptions['style_form'] .= "display:none;";
+
+                    // Traitement automatique (sauvegarde des données) sur l'événement onchange
+                    $arrOptions['onchange'] = "ploopi.{$strFormId}_onchange();";
 
                     if (!$booModify) $arrOptions['disabled'] = true;
 
@@ -1415,7 +1654,7 @@ class formsForm extends data_object
                                 // Mise à jour des paramètres déjà saisis pour le prochain champ imbriqué dans la boucle
                                 $arrParams[$objLinkedField->fields['id_form']][$objLinkedField->fields['fieldname']] = current($arrFieldsContent[$objField->fields['id']]);
 
-                                $arrOptions['onchange'] = "forms_field_tablelink_onchange({$objField->fields['id']}, ".json_encode(array_keys($arrLinkedFields['forms'][$objLinkedField->fields['id_form']])).",'".ploopi_urlencode('admin-light.php?ploopi_op=forms_tablelink_values')."');";
+                                $arrOptions['onchange'] .= "forms_field_tablelink_onchange({$objField->fields['id']}, ".json_encode(array_keys($arrLinkedFields['forms'][$objLinkedField->fields['id_form']])).",'".ploopi_urlencode('admin-light.php?ploopi_op=forms_tablelink_values')."');";
 
                                 $objPanel->addField( new form_select(
                                     $objField->fields['name'],
@@ -1433,7 +1672,7 @@ class formsForm extends data_object
                             $arrSelectOptions = array();
                             $arrSelectOptions[] = new form_select_option('', '');
                             foreach($arrValues as $strValue) $arrSelectOptions[] = new form_select_option(' ', $strValue, null, array('style' => "background-color:{$strValue}"));
-                            $arrOptions['onchange'] = "this.style.backgroundColor = this[this.selectedIndex].style.backgroundColor;";
+                            $arrOptions['onchange'] .= "this.style.backgroundColor = this[this.selectedIndex].style.backgroundColor;";
 
                             $objPanel->addField( new form_select(
                                 $objField->fields['name'],
@@ -1510,12 +1749,14 @@ class formsForm extends data_object
                             $strFieldType = 'input:text';
                             $strDataType = 'string';
                             $arrOptions['disabled'] = true;
+                            $arrOptions['required'] = false;
                         break;
 
                         case 'calculation':
                             $strFieldType = 'input:text';
                             $strDataType = 'string';
                             $arrOptions['disabled'] = true;
+                            $arrOptions['required'] = false;
                         break;
 
                         case 'color':
@@ -1551,6 +1792,7 @@ class formsForm extends data_object
             }
         }
 
+
         switch($strRenderMode)
         {
             case 'modify':
@@ -1560,7 +1802,8 @@ class formsForm extends data_object
                     $objForm->addButton( new form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$this->fields['id']}")."';")) );
                 }
 
-                $objForm->addButton( new form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;') ) );
+                //$objForm->addButton( new form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;') ) );
+                $objForm->addButton( new form_button('input:button', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;', 'onclick' => "document.location.reload();")) );
             break;
 
             case 'view':
@@ -1575,11 +1818,148 @@ class formsForm extends data_object
         //$objForm->addButton( new form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi_openwin('".ploopi_urlencode("admin-light.php?op=forms_print&forms_id={$this->fields['id']}")."', 800, 600);")) );
         $objForm->addButton( new form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi_openwin('".ploopi_urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}")."', 800, 600);")) );
 
+
+
+        /**
+         * Gestion des groupes conditionnels
+         */
+
+        $strJsCond = "ploopi.{$strFormId}_checkgroup = function(g) {\nswitch(g) {";
+        $strJsGroup = '';
+
+        $arrFields = $this->getFields();
+
+        foreach($arrGroups as $intIdGroup => $rowGroup)
+        {
+            foreach($rowGroup as $intIdField)
+            {
+                $strJsGroup .= "\n$('field_{$intIdField}_form').style.display = ploopi.{$strFormId}_checkgroup({$intIdGroup}) ? 'block' : 'none';";
+            }
+
+            $strJsCond .= "\ncase {$intIdGroup}:";
+
+            $objGroup = new formsGroup();
+            $objGroup->open($intIdGroup);
+            $arrConditions = $objGroup->getConditions();
+
+            foreach($arrConditions as $key => $row)
+            {
+                if (empty($row['field']) && empty($row['op']))
+                {
+                    $strJsCond .= "\nvar C{$key} = true;";
+                }
+                else
+                {
+                    if ($row['op'] == '=') $row['op'] = '==';
+
+                    $objFieldVar = $arrFields[$row['field']];
+
+                    // Stockage des valeurs du formulaire pour les variables concernées par la condition
+                    $strJsCond .= "\nvar V{$key} = new Array();";
+                    switch($objFieldVar->fields['type'])
+                    {
+                        case 'radio':
+                            $strJsCond .= "\nfor (i=0; i<$('{$strFormId}')['field_{$row['field']}'].length;i++) if ($('{$strFormId}')['field_{$row['field']}'][i].checked) V{$key}.push($('{$strFormId}')['field_{$row['field']}'][i].value);";
+                        break;
+
+                        case 'checkbox':
+                            $strJsCond .= "\nfor (i=0; i<$('{$strFormId}')['field_{$row['field']}[]'].length;i++) if ($('{$strFormId}')['field_{$row['field']}[]'][i].checked) V{$key}.push($('{$strFormId}')['field_{$row['field']}[]'][i].value);";
+                        break;
+
+                        default:
+                            $strJsCond .= "\nV{$key}.push($('{$strFormId}').field_{$row['field']}.value);";
+                        break;
+                    }
+
+                    $strJsCond .= "\nvar C{$key} = false;";
+                    $strJsCond .= "\nfor (i=0;i<V{$key}.length;i++) {";
+
+                    switch($row['op'])
+                    {
+                        case 'begin':
+                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/".addslashes($row['value']).".*/));";
+                        break;
+
+                        case 'like':
+                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/.*".addslashes($row['value']).".*/));";
+                        break;
+
+                        default:
+                            switch($objFieldVar->fields['format'])
+                            {
+                                case 'int':
+                                    $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseInt('".addslashes($row['value'])."', 10));";
+                                break;
+
+                                case 'float':
+                                    $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseFloat('".addslashes($row['value'])."', 10));";
+                                break;
+
+                                default:
+                                    $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} '".addslashes($row['value'])."');";
+                                break;
+                            }
+                        break;
+                    }
+
+                    $strJsCond .= "}";
+                }
+            }
+
+            // Test de l'expression booléenne
+            try {
+                $objParser = new formsBooleanParser($objGroup->fields['formula']);
+                $strJsCond .= "\nreturn ".str_replace(array('&', '|'), array(' && ', ' || '), $objParser->getExpression()).';';
+            }
+            catch (Exception $e) { echo '<br /><strong>'.$e->getMessage().'</strong>'; }
+
+            $strJsCond .= "\nbreak;";
+
+
+        }
+        $strJsCond .= "\n}\n}";
+
+        $objForm->addJs("
+            ploopi.currentpanel = 1;
+            ploopi.nbpanel = ".sizeof($arrPanels).";
+
+            ploopi.{$strFormId}_quicksave = function() {
+                query = $('{$strFormId}').serialize();
+                query += (query == '' ? '' : '&')+'ploopi_xhr=1&ploopi_op=forms_quicksave&forms_form_id={$this->fields['id']}&forms_panel='+ploopi.currentpanel;
+                ploopi_xmlhttprequest('admin-light.php', query, true, false, 'POST');
+            };
+
+            {$strJsCond}
+
+            // Vérification des groupes
+            ploopi.{$strFormId}_checkgroups = function() {
+                {$strJsGroup}
+            };
+
+            // Changement de valeur dans un champ
+            ploopi.{$strFormId}_onchange = function() {
+                ploopi.{$strFormId}_checkgroups();
+            };
+
+            // Sélection du bon panel au chargement
+            Event.observe(window, 'load', function() {
+                ploopi.{$strFormId}_checkgroups();
+            });
+
+        ");
+
+
+        /**
+         * Gestion du multipage
+         */
+
         if (sizeof($arrPanels) > 1)
         {
-
             // Code JS pour cacher tous les panels
             $strJsHidePanels = '';
+
+            // Code JS du switch des fonctions de validation des panels
+            $strJsSwitch = '';
 
             $objForm->addButton( new form_button('input:button', 'Précédent', null, "{$strFormId}_btn_prev", array('style' => 'margin-left:2px;font-weight:bold;display:none;', 'onclick' => "ploopi.{$strFormId}_prevpanel();")) );
 
@@ -1587,9 +1967,10 @@ class formsForm extends data_object
             // Pour chaque panel, on affiche un bouton et on prépare le code JS
             foreach($arrPanels as $intNum => $strPanelId)
             {
+                $intId = $intNum+1;
 
                 $arrOptions = array(
-                    'onclick' => "ploopi.{$strFormId}_switchpanel('".($intNum+1)."');"
+                    'onclick' => "ploopi.{$strFormId}_switchpanel('{$intId}');"
                 );
 
                 if ($intNum == 0) $arrOptions['class'] = 'selected';
@@ -1598,20 +1979,32 @@ class formsForm extends data_object
 
                 if ($this->fields['option_multidisplaypages'])
                 {
-                    $objForm->addButton( new form_button('input:button', 'Page '.($intNum+1), null, "{$strFormId}_btn_".($intNum+1), $arrOptions ) );
-                    $strJsHidePanels .= " $('{$strFormId}_btn_".($intNum+1)."').className = '';";
+                    $objForm->addButton( new form_button('input:button', 'Page '.($intNum+1), null, "{$strFormId}_btn_{$intId}", $arrOptions ) );
+                    $strJsHidePanels .= " $('{$strFormId}_btn_{$intId}').className = '';";
                 }
+
+                $strJsSwitch .= "\ncase {$intId}: return ploopi.{$strFormId}_{$strPanelId}_validate(form); break;";
             }
-
-
 
             $objForm->addButton( new form_button('input:button', 'Suivant', null, "{$strFormId}_btn_next", array('style' => 'margin-left:2px;font-weight:bold;', 'onclick' => "ploopi.{$strFormId}_nextpanel();")) );
 
             $objForm->addJs("
-                ploopi.currentpanel = 1;
-                ploopi.nbpanel = ".sizeof($arrPanels).";
-
+                // Switch de panel avec vérification des données
                 ploopi.{$strFormId}_switchpanel = function(panel) {
+                    for (p = 1; p < panel ; p++)
+                    {
+                        if (!ploopi.{$strFormId}_validate_panel($('{$strFormId}'), p))
+                        {
+                            this.{$strFormId}_selectpanel(p);
+                            return;
+                        }
+                    }
+
+                    this.{$strFormId}_selectpanel(panel);
+                };
+
+                // Sélection d'un panel par le numéro de page + sauvegarde des données
+                ploopi.{$strFormId}_selectpanel = function(panel) {
                     {$strJsHidePanels}
 
                     $('{$strFormId}_btn_prev').style.display = panel>1 ? 'block' : 'none';
@@ -1622,23 +2015,62 @@ class formsForm extends data_object
 
                     $('panel_'+panel).style.display='block';
                     this.currentpanel = panel;
+
+                    ploopi.{$strFormId}_quicksave();
                 };
 
+                // Panel suivant
                 ploopi.{$strFormId}_nextpanel = function() {
-                    panel = parseInt(this.currentpanel, 10) + 1;
-                    if (panel > this.nbpanel) panel = this.nbpanel;
-                    this.{$strFormId}_switchpanel(panel);
+                    if (ploopi.{$strFormId}_validate_panel($('{$strFormId}'), this.currentpanel))
+                    {
+                        panel = parseInt(this.currentpanel, 10) + 1;
+                        if (panel > this.nbpanel) panel = this.nbpanel;
+                        this.{$strFormId}_selectpanel(panel);
+                    }
                 };
 
+                // Panel précédent
                 ploopi.{$strFormId}_prevpanel = function() {
                     panel = parseInt(this.currentpanel, 10) - 1;
                     if (panel < 1) panel = 1;
-                    this.{$strFormId}_switchpanel(panel);
+                    this.{$strFormId}_selectpanel(panel);
                 };
 
-            ");
+                // Validation d'un panel uniquement
+                ploopi.{$strFormId}_validate_panel = function(form, p) {
+                    switch(p)
+                    {
+                        {$strJsSwitch}
+                    }
 
+                    return true;
+                }
+
+                // Validation du formulaire (écrase la fonction d'origine de la classe form)
+                ploopi.{$strFormId}_validate = function(form) {
+                    for (p = 1; p <= ploopi.nbpanel ; p++)
+                    {
+                        if (!ploopi.{$strFormId}_validate_panel(form, p))
+                        {
+                            ploopi.{$strFormId}_switchpanel(p);
+                            return false;
+                        }
+                    }
+
+                    return true;
+                };
+
+
+                // Sélection du bon panel au chargement
+                Event.observe(window, 'load', function() {
+                    ploopi.{$strFormId}_switchpanel({$intDefaultPanel});
+                });
+
+            ");
         }
+
+
+
 
 
         switch($strRenderMode)
@@ -1655,11 +2087,6 @@ class formsForm extends data_object
                 }
             break;
         }
-
-
-
-
-
 
 
 
@@ -1683,8 +2110,6 @@ class formsForm extends data_object
 
         return $intNb;
     }
-
-
 
 
     /**
@@ -1715,5 +2140,98 @@ class formsForm extends data_object
         return ($this->fields['pubdate_start'] <= $intTsToday || empty($this->fields['pubdate_start'])) && ($this->fields['pubdate_end'] >= $intTsToday || empty($this->fields['pubdate_end']));
     }
 
+
+    /**
+     * Recalcule toutes les valeurs de champs calculés (appelé notamment lors de la modification de formule d'un champ calculé, ou lors de l'insertion d'un enregistrement contenant un champ calculé)
+     */
+
+    public function calculate()
+    {
+        set_time_limit(0);
+
+        // Lecture des champs du formulaire
+        $arrObjFields = $this->getFields();
+
+        // Tri des champs par position
+        $arrFieldsByPos = array();
+        foreach($arrObjFields as $objField) $arrFieldsByPos[$objField->fields['position']] = $objField;
+
+        // Lecture des enregistrement du formulaire
+        $objQuery = new ploopi_query_select();
+        $objQuery->add_select('`#id` as id');
+        $objQuery->add_from($this->getDataTableName());
+
+        // Variables issues d'agrégats
+        $arrStaticVariables = array();
+
+        // Pour chaque enregistrement du formulaire
+        foreach($objQuery->execute()->getarray(true) as $intId)
+        {
+            // Traitement de l'enregistrement
+            $objRecord = new formsRecord($this);
+            if ($objRecord->open($intId))
+            {
+                // Initalisation du tableau des variables
+                $booCalculation = false;
+                $arrVariables = array();
+                foreach($arrObjFields as $objField)
+                {
+                    $arrVariables['C'.$objField->fields['position']] = $objRecord->fields[$objField->fields['fieldname']];
+                    if (!is_numeric($arrVariables['C'.$objField->fields['position']])) $arrVariables['C'.$objField->fields['position']] = 0;
+
+                    if ($objField->fields['type'] == 'calculation') $booCalculation = true;
+                }
+
+                /**
+                 * Il y avait au moins un champ de type "calculation"
+                 */
+
+                if ($booCalculation)
+                {
+                    foreach($arrObjFields as $objField)
+                    {
+                        if ($objField->fields['type'] == 'calculation')
+                        {
+                            try {
+                                // Interprétation du calcul
+                                $objParser = new formsArithmeticParser($objField->fields['formula']);
+
+                                // Extraction des variables de l'expression
+                                $arrVars = $objParser->getVars();
+
+                                // Pour chaque variable attendue dans l'expression
+                                foreach($arrVars as $strVar)
+                                {
+                                    $arrVariables[$strVar] = 0;
+
+                                    if (isset($arrStaticVariables[$strVar])) $arrVariables[$strVar] = $arrStaticVariables[$strVar];
+                                    else
+                                    {
+                                        // Analyse de la variable
+                                        if (preg_match('/C([0-9])+_?([A-Z]{0,3})/', $strVar, $arrMatches) > 0)
+                                        {
+                                            // $arrMatches[1] => position du champ
+                                            // $arrMatches[2] => agrégat (optionnel)
+                                            if (!empty($arrMatches[2])) // Ca nous intéresse, il faut calculer l'agrégat
+                                            {
+                                                $arrVariables[$strVar] = $arrStaticVariables[$strVar] = $arrFieldsByPos[$arrMatches[1]]->getAggregate($arrMatches[2]);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                $objParser = new formsArithmeticParser($objField->fields['formula'], $arrVariables);
+
+                                $arrVariables['C'.$objField->fields['position']] = $objRecord->fields[$objField->fields['fieldname']] = $objParser->getVal();
+                            }
+                            catch(Exception $e) { }
+                        }
+                    }
+
+                    $objRecord->save();
+                }
+            }
+        }
+    }
 }
 ?>

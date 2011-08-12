@@ -80,12 +80,23 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                 <input type="text" class="text" style="width:30px;" name="field_interline" value="<?php echo $field->fields['interline']; ?>" />
             </p>
             <p>
+                <label><?php echo _FORMS_FIELD_GROUP; ?>:</label>
+                <select class="select" name="field_id_group">
+                    <option value="0">(Aucun)</option>
+                    <?php
+                    foreach($objForm->getGroups() as $intIdGroup => $objGroup)
+                    {
+                        ?>
+                        <option value="<? echo $intIdGroup; ?>" <? if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><? echo htmlentities($objGroup->fields['label']); ?></option>
+                        <?
+                    }
+                    ?>
+                </select>
+            </p>
+            <p>
                 <label><?php echo _FORMS_FIELD_NAME; ?>:</label>
                 <input type="text" class="text" name="field_name" value="<?php echo htmlentities($field->fields['name']); ?>" />
             </p>
-            <?php
-            if ($field->fields['fieldname'] == '') $field->fields['fieldname'] = forms_createphysicalname($field->fields['name']);
-            ?>
             <p>
                 <label><?php echo _FORMS_FIELD_FIELDNAME; ?>:</label>
                 <input type="text" class="text" name="field_fieldname" value="<?php echo htmlentities($field->fields['fieldname']); ?>" maxlength="64" />
@@ -202,6 +213,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     <label><?php echo _FORMS_FIELD_FORMFIELD; ?>:</label>
                     <select class="select" name="f_formfield" style="width:200px;">
                     <?php
+
                     $db->query( "
                                 SELECT  forms.label, field.*
                                 FROM    ploopi_mod_forms_form forms,
@@ -209,6 +221,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                                 WHERE   forms.id = field.id_form
                                 AND     field.separator = 0
                                 AND     field.captcha = 0
+                                AND     field.html = 0
                                 ORDER BY label, position
                                 ");
 
@@ -243,12 +256,23 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     <option value="">(Choisissez un champ du formulaire)</option>
                     <?php
                     // Pour chaque champ du formulaire
-                    foreach($forms->getFields() as $objField)
+                    foreach($objForm->getFields() as $objField)
                     {
                         // On ne peut pas utiliser le champ courant dans la formule
                         if ($objField->fields['id'] != $field->fields['id'] && ($objField->fields['type'] == 'calculation' || in_array($objField->fields['format'], array('integer', 'float'))))
                         {
-                            ?><option value="<?php echo $objField->fields['position']; ?>"><?php echo "C{$objField->fields['position']} - {$objField->fields['name']}"; ?></option><?php
+                            ?>
+                            <optgroup label="<?php echo "C{$objField->fields['position']} - {$objField->fields['name']}"; ?>">
+                            <option value="<?php echo $objField->fields['position']; ?>"><?php echo "Valeur"; ?></option>
+                            <option value="<?php echo $objField->fields['position']; ?>_CNT"><?php echo "Nombre"; ?></option>
+                            <option value="<?php echo $objField->fields['position']; ?>_SUM"><?php echo "Somme"; ?></option>
+                            <option value="<?php echo $objField->fields['position']; ?>_MIN"><?php echo "Min"; ?></option>
+                            <option value="<?php echo $objField->fields['position']; ?>_MAX"><?php echo "Max"; ?></option>
+                            <option value="<?php echo $objField->fields['position']; ?>_AVG"><?php echo "Moyenne"; ?></option>
+                            <option value="<?php echo $objField->fields['position']; ?>_STD"><?php echo "Ecart-type"; ?></option>
+                            <option value="<?php echo $objField->fields['position']; ?>_VAR"><?php echo "Variance"; ?></option>
+                            </optgroup>
+                            <?php
                         }
                     }
                     ?>
@@ -292,6 +316,10 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     <label><?php echo _FORMS_FIELD_STYLE_FIELD; ?>:</label>
                     <input type="text" class="text" name="field_style_field" value="<?php echo htmlentities($field->fields['style_field']); ?>" />
                 </p>
+                <p>
+                    <label><?php echo _FORMS_FIELD_EXPORT_WIDTH; ?>:</label>
+                    <input type="text" class="text" name="field_export_width" value="<?php echo htmlentities($field->fields['export_width']); ?>" />
+                </p>
             </div>
 
         </div>
@@ -318,7 +346,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
         <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_adminonly').checked = !$('field_option_adminonly').checked;"><?php echo _FORMS_FIELD_ADMINONLY; ?></span>
 
         <?php
-        if ($forms->fields['typeform'] == 'cms')
+        if ($objForm->fields['typeform'] == 'cms')
         {
             ?>
             <input type="checkbox" class="checkbox" name="field_option_wceview" id="field_option_wceview" value="1" <?php if ($field->fields['option_wceview']) echo 'checked'; ?> />

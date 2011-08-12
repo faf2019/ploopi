@@ -56,6 +56,7 @@ define ('_FORMS_MODIFICATION',  'Modification du Formulaire');
 define ('_FORMS_FIELDLIST',     'Liste des Champs');
 define ('_FORMS_ADDFIELD',      'Ajouter un Champ');
 define ('_FORMS_ADDSEPARATOR',  'Ajouter un Séparateur');
+define ('_FORMS_ADDHTML',  'Ajouter un Contenu HTML');
 define ('_FORMS_ADDCAPTCHA',  'Ajouter un Captcha');
 define ('_FORMS_LIST',      'Liste des Formulaires');
 define ('_FORMS_FILL',      'Utiliser le Formulaire');
@@ -65,18 +66,24 @@ define ('_FORMS_AUTOBACKUP', 'Archivage Automatique (En Jours)');
 define ('_FORMS_OBLIGATORY', 'Obligatoire');
 define ('_FORMS_GRAPHICLIST',     'Liste des Graphiques');
 define ('_FORMS_ADDGRAPHIC',      'Ajouter un Graphique');
+define ('_FORMS_GROUPLIST',     'Liste des Groupes Conditionnels');
+define ('_FORMS_ADDGROUP',      'Ajouter un Groupe Conditionnel');
 define ('_FORMS_EXPORT_TO_TABLE',    'Stockage physique pour synchro DBREPORT');
 define ('_FORMS_STYLE',             'Style formulaire (optionnel)<br /><em>ex : width:500px; </em>');
 
 define ('_FORMS_FIELDCREATION',         'Ajout d\'un Champ');
 define ('_FORMS_SEPARATORCREATION',     'Ajout d\'un Séparateur');
+define ('_FORMS_HTMLCREATION',     'Ajout d\'un Contenu HTML');
 define ('_FORMS_CAPTCHACREATION',     'Ajout d\'un Captcha');
 define ('_FORMS_GRAPHICCREATION',     'Ajout d\'un Graphique');
+define ('_FORMS_GROUPCREATION',     'Ajout d\'un Groupe Conditionnel');
 
 define ('_FORMS_FIELDMODIFICATION',         'Modification d\'un Champ');
 define ('_FORMS_SEPARATORMODIFICATION',     'Modification d\'un Séparateur');
+define ('_FORMS_HTMLMODIFICATION',     'Modification d\'un Contenu HTML');
 define ('_FORMS_CAPTCHAMODIFICATION',       'Modification du Captcha');
 define ('_FORMS_GRAPHICMODIFICATION',         'Modification d\'un Graphique');
+define ('_FORMS_GROUPMODIFICATION',         'Modification d\'un Groupe Conditionnel');
 
 define ('_FORMS_USER',      'Utilisateur');
 define ('_FORMS_WORKSPACE',     'Espace');
@@ -102,6 +109,7 @@ define ('_FORMS_FIELD_POSITION',        'Position');
 define ('_FORMS_FIELD_INTERLINE',       'Interligne');
 define ('_FORMS_FIELD_DESCRIPTION', 'Description');
 define ('_FORMS_FIELD_TYPE',        'Type');
+define ('_FORMS_FIELD_GROUP',        'Groupe');
 define ('_FORMS_FIELD_FORMAT',      'Format');
 define ('_FORMS_FIELD_VALUES',      'Valeurs');
 define ('_FORMS_FIELD_MAXLENGTH',       'Longueur maximum (caractères)');
@@ -117,6 +125,9 @@ define ('_FORMS_FIELD_DEFAULTVALUE',        'Valeur par Défaut');
 define ('_FORMS_FIELD_FORMFIELD',       'Formulaire / Champ');
 define ('_FORMS_FIELD_WCEVIEW',         'Visible lors d\'une intégration en objet WebEdit (frontoffice)');
 define ('_FORMS_FIELD_FORMULA_EDITOR',         'Editeur de Formule');
+define ('_FORMS_FIELD_DISABLEXHTMLFILTER',      'Désactiver le filtre XHTML');
+define ('_FORMS_FIELD_XHTMLCONTENT', 'Contenu HTML');
+define ('_FORMS_FIELD_EXPORT_WIDTH', 'Largeur export/impression<br /><em>PDF / ODS / XLS</em>');
 
 
 define ('_FORMS_FIELD_SEPARATOR_LEVEL',         'Niveau du Séparateur');
@@ -130,6 +141,11 @@ define ('_FORMS_GRAPHIC_TYPE',        'Type de graphique');
 define ('_FORMS_GRAPHIC_DESCRIPTION', 'Description');
 define ('_FORMS_GRAPHIC_LINE_AGGREGATION', 'Unité de temps');
 define ('_FORMS_GRAPHIC_DATASET', 'Jeu de données');
+
+define ('_FORMS_GROUP_LABEL',       'Intitulé');
+define ('_FORMS_GROUP_DESCRIPTION', 'Description');
+define ('_FORMS_GROUP_CONDITION', 'Condition');
+define ('_FORMS_GROUP_FORMULA', 'Expression booléenne');
 
 
 define ('_FORMS_FIELD_NEEDED_SHORT',        'Req.');

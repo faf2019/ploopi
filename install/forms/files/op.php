@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2007-2011 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -38,6 +38,36 @@
 
 switch($ploopi_op)
 {
+    // Sauvegarde rapide (et temporaire) des données du formulaire en cours de saisie
+    case 'forms_quicksave':
+        include_once './modules/forms/classes/formsForm.php';
+        if (!empty($_POST['forms_form_id']))
+        {
+            $strVarName = formsForm::getVarName($_POST['forms_form_id']);
+            // Lecture des valeurs pré-enregistrées du formulaire
+            // $arrValues = ploopi_getsessionvar($strVarName);
+
+            // Sauvegarde des nouvelles valeurs du formulaire
+            foreach($_POST as $strKey => $mixValue)
+            {
+                if (substr($strKey, 0, 6) == 'field_')
+                {
+                    if (is_array($mixValue)) $mixValue = implode('||', $mixValue);
+                    $arrValues[substr($strKey, 6)] = $mixValue;
+                }
+            }
+
+            // Sauvegarde du panel sélectionné
+            if (isset($_POST['forms_panel'])) $arrValues['panel'] = $_POST['forms_panel'];
+
+            // Sauvegarde en session
+            ploopi_setsessionvar($strVarName, $arrValues);
+            // Sauvegarde en cookie (json + gz + base64), 30 jours
+            setcookie($strVarName, ploopi_base64_encode(gzcompress(json_encode($arrValues), 9)), time()+86400*30);
+        }
+        ploopi_die();
+    break;
+
     case 'forms_tablelink_values':
         include_once './modules/forms/classes/formsForm.php';
         include_once './modules/forms/classes/formsField.php';
@@ -142,7 +172,41 @@ if ($_SESSION['ploopi']['connected'])
             /**
              * CONTROLEURS ADMIN
              */
-            case 'form_import_file':
+
+            case 'forms_clone':
+                ploopi_init_module('forms');
+
+                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+
+                include_once './include/classes/query.php';
+                include_once './modules/forms/classes/formsForm.php';
+
+                $objForm = new formsForm();
+                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
+                {
+                    // Clone le formulaire
+                    $objFormClone = clone $objForm;
+
+                    if (isset($_GET['data']) && $_GET['data'] == 'true')
+                    {
+                        // Copie les données
+                        $objQuerySel = new ploopi_query_select();
+                        $objQuerySel->add_from($objForm->getDataTableName());
+
+                        $objQuery = new ploopi_query_insert();
+                        $objQuery->set_table($objFormClone->getDataTableName());
+                        $objQuery->add_raw($objQuerySel->get_sql());
+                        $objQuery->execute();
+                    }
+
+                    // Renvoi vers le clone
+                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$objFormClone->fields['id']}");
+                }
+
+                ploopi_redirect('admin.php');
+            break;
+
+            case 'forms_import_file':
                 ploopi_init_module('forms');
 
                 if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
@@ -214,7 +278,7 @@ if ($_SESSION['ploopi']['connected'])
                     $arrFields = array();
                     foreach($objForm->getFields() as $objField) $arrFields[] = $objField->fields['fieldname'];
 
-                    $objForm = new form('forms_import_form', ploopi_urlencode("admin-light.php?ploopi_op=form_import_file&forms_id={$_POST['forms_id']}"));
+                    $objForm = new form('forms_import_form', ploopi_urlencode("admin-light.php?ploopi_op=forms_import_file&forms_id={$_POST['forms_id']}"));
                     $objForm->addField( new form_field( 'input:file', 'Fichier:', '', 'forms_import_file', 'forms_import_file', array('description' => 'Format CSV') ) );
                     $objForm->addField( new form_htmlfield('Séparateur de champs:', 'Virgule') );
                     $objForm->addField( new form_htmlfield('Séparateur de texte:', 'Double-quote') );
@@ -246,6 +310,7 @@ if ($_SESSION['ploopi']['connected'])
 
             case 'forms_field_save':
             case 'forms_separator_save':
+            case 'forms_html_save':
             case 'forms_captcha_save':
                 ploopi_init_module('forms');
 
@@ -301,10 +366,20 @@ if ($_SESSION['ploopi']['connected'])
                         $field->fields['separator'] = 1;
                         if (!isset($_POST['field_option_pagebreak'])) $field->fields['option_pagebreak'] = 0;
                     }
-                    elseif($ploopi_op == 'forms_captcha_save')
+                    if ($ploopi_op == 'forms_html_save')
                     {
-                        $field->fields['captcha'] = 1;
-                        $field->fields['option_needed'] = 1;
+                        $field->fields['html'] = 1;
+                        if (!isset($_POST['field_option_disablexhtmlfilter'])) $field->fields['option_disablexhtmlfilter'] = 0;
+                        if (!isset($_POST['field_option_pagebreak'])) $field->fields['option_pagebreak'] = 0;
+
+                        if (isset($_POST['fck_field_xhtmlcontent']))
+                        {
+                            $field->fields['xhtmlcontent'] = $_POST['fck_field_xhtmlcontent'];
+                            $field->fields['xhtmlcontent_cleaned'] = $field->fields['xhtmlcontent'];
+
+                            // filtre activé ? nettoyage contenu XHTML
+                            if (!$field->fields['option_disablexhtmlfilter']) $field->fields['xhtmlcontent_cleaned'] = ploopi_htmlpurifier($field->fields['xhtmlcontent_cleaned'], true);
+                        }
                     }
                     else
                     {
@@ -320,6 +395,7 @@ if ($_SESSION['ploopi']['connected'])
                     }
 
                     $field->save();
+
                     ploopi_redirect("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}&ploopi_mod_msg=_FORMS_MESS_OK_3");
                 }
                 else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
@@ -348,6 +424,11 @@ if ($_SESSION['ploopi']['connected'])
 
                 if (!isset($_POST['forms_option_multidisplaysave'])) $forms->fields['option_multidisplaysave'] = 0;
                 if (!isset($_POST['forms_option_multidisplaypages'])) $forms->fields['option_multidisplaypages'] = 0;
+
+                if (!isset($_POST['forms_export_landscape'])) $forms->fields['export_landscape'] = 0;
+                if (!isset($_POST['forms_export_border'])) $forms->fields['export_border'] = 0;
+                if (!isset($_POST['forms_export_fitpage_width'])) $forms->fields['export_fitpage_width'] = 0;
+                if (!isset($_POST['forms_export_fitpage_height'])) $forms->fields['export_fitpage_height'] = 0;
 
                 // Sécurité pour les grosses tables
                 if ($forms->fields['nbline'] > 500) $forms->fields['nbline'] = 500;
@@ -474,24 +555,52 @@ if ($_SESSION['ploopi']['connected'])
                 else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
             break;
 
-            /*
-            case "export":
+
+
+
+            case 'forms_group_save':
+                include_once './include/functions/crypt.php';
+
+                ploopi_init_module('forms');
+
+                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+
+                include_once './modules/forms/classes/formsGroup.php';
+
+                $objGroup = new formsGroup();
+
                 if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
                 {
-                    $forms = new formsForm();
-                    $forms->open($_GET['forms_id']);
-                    include './modules/forms/public_forms_export.php';
+                    if (!empty($_GET['forms_group_id']) && is_numeric($_GET['forms_group_id'])) $objGroup->open($_GET['forms_group_id']);
+
+                    if ($objGroup->isnew()) $objGroup->fields['id_form'] = $_GET['forms_id'];
+
+                    $objGroup->setvalues($_POST,'forms_group_');
+                    $objGroup->fields['conditions'] = isset($_POST['_forms_group_cond']) ? ploopi_serialize($_POST['_forms_group_cond']) : '';
+                    $objGroup->save();
+
+                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGroup->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_5");
+                }
+                else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
+
+                ploopi_die();
+            break;
+
+            case 'forms_group_delete':
+                ploopi_init_module('forms');
+
+                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+
+                include_once './modules/forms/classes/formsGroup.php';
+
+                $objGroup = new formsGroup();
+                if (!empty($_GET['forms_group_id']) && is_numeric($_GET['forms_group_id']) && $objGroup->open($_GET['forms_group_id']))
+                {
+                    $objGroup->delete();
+                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGroup->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_6");
                 }
                 else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
             break;
-            */
-
-
-
-
-
-
-
 
 
             case 'forms_reply_delete':
@@ -641,113 +750,4 @@ if ($_SESSION['ploopi']['connected'])
 
         }
     }
-
-    /**
-     * Autres opérations (appels externes)
-     */
-
-    /*
-    switch($ploopi_op)
-    {
-        case 'forms_download_file':
-            if (!empty($_GET['forms_fuid']) && isset($_SESSION['forms'][$_GET['forms_fuid']]))
-            {
-                $id_form = $_SESSION['forms'][$_GET['forms_fuid']]['id_form'];
-                $id_module = $_SESSION['forms'][$_GET['forms_fuid']]['id_module'];
-
-                if (!empty($_GET['record_id']) && !empty($_GET['field_id']) && is_numeric($_GET['record_id']) && is_numeric($_GET['field_id']))
-                {
-                    include_once './modules/forms/classes/formsReplyField.php';
-                    $reply_field = new formsReplyField();
-                    if ($reply_field->open($_GET['record_id'], $_GET['field_id']))
-                    {
-                        $path = _PLOOPI_PATHDATA._PLOOPI_SEP.'forms-'.$id_module._PLOOPI_SEP.$reply_field->fields['id_form']._PLOOPI_SEP.$_GET['record_id']._PLOOPI_SEP;
-                        ploopi_downloadfile("{$path}{$reply_field->fields['value']}", $reply_field->fields['value']);
-                    }
-                }
-            }
-            ploopi_die();
-        break;
-
-        case 'forms_display':
-            if (!empty($_GET['forms_fuid']) && isset($_SESSION['forms'][$_GET['forms_fuid']]))
-            {
-                ploopi_init_module('forms', false, false, false);
-                include_once './modules/forms/classes/formsForm.php';
-
-                $forms_fuid = $_GET['forms_fuid'];
-                $id_form = $_SESSION['forms'][$_GET['forms_fuid']]['id_form'];
-                $id_module = $_SESSION['forms'][$_GET['forms_fuid']]['id_module'];
-
-                include_once './modules/forms/op_preparedata.php';
-                include_once './modules/forms/op_viewlist.php';
-            }
-            ploopi_die();
-        break;
-
-        case 'forms_export':
-            if (!empty($_GET['forms_fuid']) && isset($_SESSION['forms'][$_GET['forms_fuid']]))
-            {
-                ploopi_init_module('forms', false, false, false);
-                include_once './modules/forms/classes/formsForm.php';
-
-                $forms_fuid = $_GET['forms_fuid'];
-                $id_form = $_SESSION['forms'][$_GET['forms_fuid']]['id_form'];
-                $id_module = $_SESSION['forms'][$_GET['forms_fuid']]['id_module'];
-
-                include_once './modules/forms/op_preparedata.php';
-                include_once './modules/forms/public_forms_export.php';
-            }
-            ploopi_die();
-        break;
-
-        case 'forms_openreply':
-            if (!empty($_GET['forms_fuid']) && isset($_SESSION['forms'][$_GET['forms_fuid']]))
-            {
-                ob_start();
-                ploopi_init_module('forms', false, false, false);
-                include_once './modules/forms/classes/formsForm.php';
-
-                $record_id = $_GET['forms_record_id'];
-                $id_form = $_SESSION['forms'][$_GET['forms_fuid']]['id_form'];
-                $id_module = $_SESSION['forms'][$_GET['forms_fuid']]['id_module'];
-
-                $forms = new formsForm();
-                $forms->open($id_form);
-
-                include_once './modules/forms/op_display.php';
-
-                $content = ob_get_contents();
-                ob_end_clean();
-
-                echo $skin->create_popup($forms->fields['label'], $content, 'popup_forms_openreply');
-            }
-            ploopi_die();
-        break;
-
-        case 'forms_save':
-            if (!empty($_POST['forms_fuid']) && isset($_SESSION['forms'][$_POST['forms_fuid']]))
-            {
-                ob_start();
-                ploopi_init_module('forms', false, false, false);
-                include_once './modules/forms/classes/formsForm.php';
-                include_once './modules/forms/classes/formsReply.php';
-                include_once './modules/forms/classes/formsReplyField.php';
-
-                $record_id = $_POST['forms_record_id'];
-                $id_form = $_SESSION['forms'][$_POST['forms_fuid']]['id_form'];
-                $id_module = $_SESSION['forms'][$_POST['forms_fuid']]['id_module'];
-
-                include_once './modules/forms/op_save.php';
-                ?>
-                <script type="text/javascript">
-                    window.parent.document.location.reload();
-                </script>
-                <?php
-            }
-            ploopi_die();
-        break;
-    }
-    */
 }
-?>

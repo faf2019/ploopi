@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2011 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -110,6 +110,17 @@ class formsGraphic extends data_object
      */
 
     public function __construct() { parent::__construct('ploopi_mod_forms_graphic'); }
+
+    /**
+     * Gère le clone
+     */
+
+    public function __clone()
+    {
+        // Personnalisation du clone
+        $this->new = true;
+        $this->fields['id'] = null;
+    }
 
     public function render($intGraphWidth = null, $intGraphHeight = null)
     {

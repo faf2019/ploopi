@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2011 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -22,46 +21,45 @@
 */
 
 /**
- * Interface de modification d'un séparateur
+ * Interface de modification d'un conteneur HTML
  *
  * @package forms
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
 /**
- * On commence par vérifier si l'identifiant du séparateur est valide.
- * Si ok => on l'ouvre. Sinon, nouveau séparateur.
- * Remarque : un séparateur et un champ particulier, on utilise donc la classe field.
+ * On commence par vérifier si l'identifiant du conteneur est valide.
+ * Si ok => on l'ouvre. Sinon, nouveau conteneur.
+ * Remarque : un conteneur et un champ particulier, on utilise donc la classe field.
  */
 
 $field = new formsField();
 
 if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']) && $field->open($_GET['field_id']))
 {
-    $title = _FORMS_SEPARATORMODIFICATION;
+    $title = _FORMS_HTMLMODIFICATION;
 }
 else
 {
     $field->init_description();
-    $title = _FORMS_SEPARATORCREATION;
+    $title = _FORMS_HTMLCREATION;
 }
 
 echo $skin->open_simplebloc($title);
 
 $arrParams = array();
-$arrParams[] = "ploopi_op=forms_separator_save";
+$arrParams[] = "ploopi_op=forms_html_save";
 $arrParams[] = "forms_id={$_GET['forms_id']}";
 if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 ?>
 
 <form name="form_field" action="<?php echo ploopi_urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return field_validate(this);">
 <div style="overflow:hidden">
-    <div class="ploopi_form" style="float:left;width:50%;">
+    <div class="ploopi_form">
         <div style="padding:4px;">
-
             <p>
                 <label><?php echo _FORMS_FIELD_POSITION; ?>:</label>
                 <input type="text" class="text" style="width:30px;" name="fieldnew_position" value="<?php echo $field->fields['position']; ?>">
@@ -85,28 +83,21 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                 </select>
             </p>
             <p>
-                <label><?php echo _FORMS_FIELD_SEPARATOR_LEVEL; ?>:</label>
-                <select class="select" name="field_separator_level" style="width:50px;">
-                <?php
-                for ($i=1;$i<=5;$i++)
-                {
-                    $sel = ($i == $field->fields['separator_level']) ? 'selected' : '';
-                    echo "<option value=\"{$i}\" {$sel}>{$i}</option>";
-                }
+                <label><?php echo _FORMS_FIELD_DISABLEXHTMLFILTER; ?>:</label>
+                <input type="checkbox" class="checkbox" name="field_option_disablexhtmlfilter" value="1" <?php if ($field->fields['option_disablexhtmlfilter']) echo 'checked="checked"'; ?> />
+            </p>
+            <p>
+                <label><?php echo _FORMS_FIELD_XHTMLCONTENT; ?>: </label>
+                <span>
+                <?
+                include_once './include/functions/fck.php';
+
+                $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/forms/fckeditor/fckconfig.js';
+                $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH.'/modules/forms/fckeditor/fck_editorarea.css';
+
+                ploopi_fckeditor('fck_field_xhtmlcontent', $field->fields['xhtmlcontent'], '100%', '350', $arrConfig);
                 ?>
-                </select>
-            </p>
-            <p>
-                <label><?php echo _FORMS_FIELD_NAME; ?>: </label>
-                <input type="text" class="text" size="30" name="field_name" value="<?php echo htmlentities($field->fields['name']); ?>">
-            </p>
-            <p>
-                <label><?php echo _FORMS_FIELD_DESCRIPTION; ?>: </label>
-                <textarea class="text" style="height:40px;" name="field_description"><?php echo htmlentities($field->fields['description']); ?></textarea>
-            </p>
-            <p>
-                <label><?php echo _FORMS_FIELD_STYLE_FORM; ?>:</label>
-                <input type="text" class="text" name="field_style_form" value="<?php echo htmlentities($field->fields['style_form']); ?>">
+                </span>
             </p>
         </div>
     </div>

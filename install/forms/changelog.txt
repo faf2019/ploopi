@@ -1,3 +1,24 @@
+== Module FORMS - version 3.4.9 =====================================================
+
+2011-08-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Mode "liste": alignement à droite des contenus à valeur numérique
+* Mode "liste": correction de l'impression (libellés corrects des colonnes pour les formats ODS/PDF)
+* Nouvelle option d'export pour les champs (XLS/ODS/PDF) : largeur de colonne
+* Nouvelle option d'export pour le formulaire (XLS/ODS/PDF) : pleine page, paysage/portrait,
+* Possibilité d'ajouter du contenu HTML (+ documents, + images, + vidéos) de la même manière qu'un champ
+* Validation des champs page par page
+* Renvoi à la bonne page si erreur de validation
+* Sauvegarde automatique des données à chaque changement de page en cookie (uniquement sur nouvel enregistrement)
+* Sauvegarde automatique du numéro de la page active (pour recharger le formulaire à la bonne page)
+* Correction d'un bug lors du contrôle d'un champ checkbox requis
+* Correction d'un bug si champ obligatoire + autoincrement ou calcul
+* Correction de bugs dans l'intepréteur arithmétique (traitement du cas C1/-C2)
+* Ajout d'un interpréteur algébrique de Boole
+* Gestion de groupes conditionnels (ajout/modification/suppression), conditions multiples, expressions booléennes
+* Clonage d'un formulaire (avec ou sans données)
+* Agrégats disponibles dans les calculs (nombre, somme, moyenne, min, max, écart type, variance)
+
 == Module FORMS - version 3.2.5a =====================================================
 
 2011-07-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

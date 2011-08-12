@@ -265,3 +265,23 @@ function forms_setoperator(f)
     ploopi_insertatcursor($('field_formula'), f.value);
     $('field_formula').focus();
 }
+
+
+function forms_savevalue(form_id, field_id, field_value)
+{
+    var params = new Hash();
+
+    params.set('ploopi_op', 'forms_save_value');
+    params.set('forms_form_id', form_id);
+    params.set('forms_field_id', field_id);
+    params.set('forms_field_value', field_value);
+
+    new Ajax.Request('admin-light.php', {
+        method:     'get',
+        parameters: params,
+        encoding:   'utf-8',
+        onSuccess:  function(transport, json) {
+        },
+        onFailure: function(message) { alert('error: '+message); }
+    });
+}
