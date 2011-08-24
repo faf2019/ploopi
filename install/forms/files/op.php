@@ -63,7 +63,7 @@ switch($ploopi_op)
             // Sauvegarde en session
             ploopi_setsessionvar($strVarName, $arrValues);
             // Sauvegarde en cookie (json + gz + base64), 30 jours
-            setcookie($strVarName, ploopi_base64_encode(gzcompress(json_encode($arrValues), 9)), time()+86400*30);
+            setcookie($strVarName, ploopi_base64_encode(gzcompress(json_encode(ploopi_array_map('utf8_encode', $arrValues)), 9)), time()+86400*30);
         }
         ploopi_die();
     break;
@@ -116,7 +116,7 @@ switch($ploopi_op)
     case 'forms_print':
         include_once './modules/forms/classes/formsForm.php';
         $objForm = new formsForm();
-        if (!empty($_REQUEST['forms_id']) && is_numeric($_REQUEST['forms_id']) && $objForm->open($_REQUEST['forms_id']))
+        if (!empty($_REQUEST['forms_id']) && is_numeric($_REQUEST['forms_id']) && $objForm->open($_REQUEST['forms_id']) && isset($_REQUEST['record_id']))
         {
             ?>
             <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -124,28 +124,19 @@ switch($ploopi_op)
             <head>
                 <meta http-equiv="content-type" content="text/html; charset=iso-8859-15" />
                 <script type="text/javascript" src="./lib/protoaculous/protoaculous.min.js"></script>
+                <script type="text/javascript">
+                ploopi = {};
+                Event.observe(window, 'load', function() {
+                    $('forms_form_<? echo $_REQUEST['forms_id']; ?>').innerHTML = $('forms_form_<? echo $_REQUEST['forms_id']; ?>').innerHTML.replace(/<(\/?)fieldset[^>]*>/ig, '').replace(/<legend[^>]*>.*<\/legend>/ig, '');
+                    window.print();
+                    window.close();
+                });
+                </script>
                 <link href="./modules/forms/templates/default/style.css" rel="stylesheet" type="text/css">
                 <link href="./modules/forms/templates/default/print.css" rel="stylesheet" type="text/css">
                 </head>
                 <body>
-                    <div class="forms_form">
-                    <form id="form"></form>
-                    </div>
-                    <script type="text/javascript">
-                        $('form').innerHTML = window.opener.document.forms_form_<? echo $_REQUEST['forms_id']; ?>.innerHTML;
-                        Event.observe(window, 'load', function() {
-                            <?
-                            for ($i=1; $i<=$objForm->getNbPanels();$i++)
-                            {
-                                ?>
-                                $('panel_<? echo $i; ?>').style.display = 'block';
-                                <?
-                            }
-                            ?>
-                            window.print();
-                            window.close();
-                        });
-                    </script>
+                <? $objForm->render($_REQUEST['record_id'], 'print'); ?>
                 </body>
             </html>
             <?

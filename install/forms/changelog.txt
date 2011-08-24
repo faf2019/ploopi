@@ -1,3 +1,10 @@
+== Module FORMS - version 3.4.9b =====================================================
+
+2011-08-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug lors de l'affichage des colonnes "système" en mode "liste" (format de donnée non défini)
+* Correction de plusieurs bugs lors de l'impression d'un enregistrement (mode formulaire/écran)
+
 == Module FORMS - version 3.4.9 =====================================================
 
 2011-08-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
