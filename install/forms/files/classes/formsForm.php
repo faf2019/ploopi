@@ -487,6 +487,8 @@ class formsForm extends data_object
          */
         $objQuery = $booDelete ? new ploopi_query_delete() : new ploopi_query_select();
 
+        $objQuery->add_from('`'.$this->getDataTableName().'` rec');
+
         // Requête de suppression : pas besoin de sélectionner les champs
         if (!$booDelete)
         {
@@ -503,14 +505,6 @@ class formsForm extends data_object
                 else $objQuery->add_select("CONCAT(SUBSTRING(rec.`date_validation`, 7, 2), '/', SUBSTRING(rec.`date_validation`, 5, 2), '/', SUBSTRING(rec.`date_validation`, 1, 4), ' ', SUBSTRING(rec.`date_validation`, 9, 2), ':', SUBSTRING(rec.`date_validation`, 11, 2), ':', SUBSTRING(rec.`date_validation`, 13, 2)) as `date_validation`");
             }
 
-            if ($booExport || $this->fields['option_displayip']) $objQuery->add_select('rec.`ip`');
-
-        }
-
-        $objQuery->add_from('`'.$this->getDataTableName().'` rec');
-
-        if (!$booDelete)
-        {
             /**
              * Construction des jointures sur les champs statiques (ip, user, etc...)
              */
@@ -534,7 +528,11 @@ class formsForm extends data_object
                 $objQuery->add_select('pw.label as `workspace_label`');
                 $objQuery->add_select('pw.code as `workspace_code`');
             }
+
+            if ($booExport || $this->fields['option_displayip']) $objQuery->add_select('rec.`ip`');
         }
+
+
 
         /**
          * Filtrage en fonction de la vue du module sur les espaces
@@ -907,7 +905,19 @@ class formsForm extends data_object
         list($arrData) = $this->prepareData(true, true, $booExport, false);
 
         // Suppression de la colonne 'id' pour l'impression (autorisé en export)
-        if (!$booExport && !empty($arrData))  foreach(array_keys($arrData) as $strKey) unset($arrData[$strKey]['id']);
+        if (!$booExport && !empty($arrData))
+        {
+            foreach(array_keys($arrData) as $strKey)
+            {
+                unset($arrData[$strKey]['id']);
+                unset($arrData[$strKey]['user_id']);
+                unset($arrData[$strKey]['user_firstname']);
+                unset($arrData[$strKey]['user_lastname']);
+                unset($arrData[$strKey]['workspace_id']);
+                unset($arrData[$strKey]['workspace_code']);
+            }
+        }
+
 
         $strFormat = strtolower($strFormat);
 
@@ -942,19 +952,32 @@ class formsForm extends data_object
                     'setborder' => $this->fields['export_border'] == 1
                 );
 
-                // Préparation du document XLS, colonnes statiques
-                $arrTitles = array(
-                    'id' => array('type' => 'integer', 'width' => 10),
-                    'date_validation' => array('type' => 'datetime', 'width' => 20),
-                    'ip' => array('type' => 'string', 'width' => 15),
-                    'user_id' => array('type' => 'integer', 'width' => 10),
-                    'user_login' => array('type' => 'string', 'width' => 15),
-                    'user_firstname' => array('type' => 'string', 'width' => 15),
-                    'user_lastname' => array('type' => 'string', 'width' => 15),
-                    'workspace_id' => array('type' => 'integer', 'width' => 10),
-                    'workspace_label' => array('type' => 'string', 'width' => 15),
-                    'workspace_code' => array('type' => 'string', 'width' => 15),
-                );
+                if ($booExport)
+                {
+                    // Préparation du document XLS, colonnes statiques
+                    $arrTitles = array(
+                        'id' => array('type' => 'integer', 'width' => 10),
+                        'date_validation' => array('type' => 'datetime', 'width' => 20),
+                        'ip' => array('type' => 'string', 'width' => 15),
+                        'user_id' => array('type' => 'integer', 'width' => 10),
+                        'user_login' => array('type' => 'string', 'width' => 15),
+                        'user_firstname' => array('type' => 'string', 'width' => 15),
+                        'user_lastname' => array('type' => 'string', 'width' => 15),
+                        'workspace_id' => array('type' => 'integer', 'width' => 10),
+                        'workspace_label' => array('type' => 'string', 'width' => 15),
+                        'workspace_code' => array('type' => 'string', 'width' => 15),
+                    );
+                }
+                else
+                {
+                    // Préparation du document XLS, colonnes statiques
+                    $arrTitles = array(
+                        'date_validation' => array('type' => 'datetime', 'width' => 20, 'title' => 'Date de Validation'),
+                        'ip' => array('type' => 'string', 'width' => 15, 'title' => 'Adresse IP'),
+                        'user_login' => array('type' => 'string', 'width' => 15, 'title' => 'Utilisateur'),
+                        'workspace_label' => array('type' => 'string', 'width' => 15, 'title' => 'Espace'),
+                    );
+                }
 
                 // Attribution des types de colonnes (colonnes dynamiques)
                 foreach($this->getFields() as $strKey => $objField)
