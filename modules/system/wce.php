@@ -36,6 +36,11 @@ global $template_name;
 
 $op = empty($_REQUEST['op']) ? '' : $_REQUEST['op'];
 
+// Nb lignes max par pages (sinon index)
+$intMaxLines = 25;
+// Lettre sélectionnée dans l'index
+$strIndexSel = '';
+
 /**
  * Initialisation du moteur de template.
  * Chargement du template.
@@ -67,6 +72,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     if (isset($_POST['system_login']) && !preg_match($pattern, $_POST['system_login'])) $arrFilter['system_login'] = $_POST['system_login'];
     if (isset($_POST['system_email']) && !preg_match($pattern, $_POST['system_email'])) $arrFilter['system_email'] = $_POST['system_email'];
     if (isset($_POST['system_workspace']) && !preg_match($pattern, $_POST['system_workspace'])) $arrFilter['system_workspace'] = $_POST['system_workspace'];
+    if (isset($_POST['system_user']) && !preg_match($pattern, $_POST['system_user'])) $arrFilter['system_user'] = $_POST['system_user'];
     if (isset($_POST['system_office']) && !preg_match($pattern, $_POST['system_office'])) $arrFilter['system_office'] = $_POST['system_office'];
     if (isset($_POST['system_comments']) && !preg_match($pattern, $_POST['system_comments'])) $arrFilter['system_comments'] = $_POST['system_comments'];
     if (isset($_POST['system_function']) && !preg_match($pattern, $_POST['system_function'])) $arrFilter['system_function'] = $_POST['system_function'];
@@ -77,7 +83,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     if (isset($_POST['system_country']) && !preg_match($pattern, $_POST['system_country'])) $arrFilter['system_country'] = $_POST['system_country'];
     if (isset($_POST['system_city']) && !preg_match($pattern, $_POST['system_city'])) $arrFilter['system_city'] = $_POST['system_city'];
     if (isset($_POST['system_postalcode']) && !preg_match($pattern, $_POST['system_postalcode'])) $arrFilter['system_postalcode'] = $_POST['system_postalcode'];
-    
+
     // Affectation de valeurs par défaut si non défini
     if (!isset($arrFilter['system_lastname'])) $arrFilter['system_lastname'] = '';
     if (!isset($arrFilter['system_firstname'])) $arrFilter['system_firstname'] = '';
@@ -88,6 +94,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     if (!isset($arrFilter['system_login'])) $arrFilter['system_login'] = '';
     if (!isset($arrFilter['system_email'])) $arrFilter['system_email'] = '';
     if (!isset($arrFilter['system_workspace'])) $arrFilter['system_workspace'] = '';
+    if (!isset($arrFilter['system_user'])) $arrFilter['system_user'] = '';
     if (!isset($arrFilter['system_office'])) $arrFilter['system_office'] = '';
     if (!isset($arrFilter['system_comments'])) $arrFilter['system_comments'] = '';
     if (!isset($arrFilter['system_function'])) $arrFilter['system_function'] = '';
@@ -98,7 +105,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     if (!isset($arrFilter['system_country'])) $arrFilter['system_country'] = '';
     if (!isset($arrFilter['system_city'])) $arrFilter['system_city'] = '';
     if (!isset($arrFilter['system_postalcode'])) $arrFilter['system_postalcode'] = '';
-    
+
     // Enregistrement SESSION
     $_SESSION['system']['wce_search'] = $arrFilter;
 
@@ -119,9 +126,11 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
         array(
             'SYSTEM_TROMBI_HEADINGID' => (empty($_REQUEST['headingid'])) ? '' : $_REQUEST['headingid'],
             'SYSTEM_TROMBI_ARTICLEID' => (empty($_REQUEST['articleid'])) ? '' : $_REQUEST['articleid'],
-            'SYSTEM_TROMBI_FORMACTION' => $strFormActionParams
+            'SYSTEM_TROMBI_FORMACTION' => ploopi_urlencode($strFormActionParams)
         )
     );
+
+
 
     // Construction de la liste des espace de travail
     $arrWorkspace = array('list' => array(), 'tree' => array());
@@ -138,10 +147,10 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
         else $arrWorkspace['tree'][$fields['id_workspace']][] = $fields['id'];
     }
 
-    function system_wce_buildworkspacetree(&$arrWorkspace, &$objTplDirectory, $idsel = 0, $depth = 1)
+    // Affectation de la liste des espaces de travail
+    // (Attention, fonction anonyme recursive)
+    $funcWorkspaces = function(&$arrWorkspace, &$objTplDirectory, $idsel = 0, $depth = 1)use(&$funcWorkspaces, $arrFilter)
     {
-        global $arrFilter;
-
         if (isset($arrWorkspace['tree'][$idsel]))
         {
             foreach($arrWorkspace['tree'][$idsel] as $id)
@@ -156,13 +165,45 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                     )
                 );
 
-                system_wce_buildworkspacetree($arrWorkspace, $objTplDirectory, $id, $depth+1);
+                $funcWorkspaces($arrWorkspace, $objTplDirectory, $id, $depth+1);
             }
+        }
+    };
+
+    $funcWorkspaces($arrWorkspace, $objTplDirectory);
+
+    // Construction de la liste des noms
+    $db->query("SELECT lastname, firstname FROM ploopi_user GROUP BY lastname, firstname ORDER BY lastname, firstname");
+    while ($row = $db->fetchrow())
+    {
+        $strUserName = sprintf("%s %s", $row['lastname'], $row['firstname']);
+
+        $objTplDirectory->assign_block_vars('system_trombi_user',
+            array(
+                'ID' => $strUserName,
+                'LABEL' => htmlentities($strUserName),
+                'SELECTED' => $strUserName == $arrFilter['system_user'] ? 'selected="selected"' : ''
+            )
+        );
+    }
+
+    // Construction des autres listes génériques
+    foreach(array('service', 'login', 'email', 'office', 'function', 'rank', 'building', 'floor', 'country', 'city', 'postalcode') as $strField)
+    {
+        // Construction de la liste des services
+        $db->query("SELECT `{$strField}` FROM ploopi_user WHERE `{$strField}` <> '' GROUP BY `{$strField}` ORDER BY `{$strField}`");
+        while ($row = $db->fetchrow())
+        {
+            $objTplDirectory->assign_block_vars("system_trombi_{$strField}",
+                array(
+                    'ID' => $row[$strField],
+                    'LABEL' => htmlentities($row[$strField]),
+                    'SELECTED' => $row[$strField] == $arrFilter["system_{$strField}"] ? 'selected="selected"' : ''
+                )
+            );
         }
     }
 
-    // Affectation de la liste des espaces de travail
-    system_wce_buildworkspacetree($arrWorkspace, $objTplDirectory);
 
     switch($op)
     {
@@ -199,6 +240,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
 
             if (!empty($arrFilter['system_lastname'])) $arrWhere[] = "u.lastname LIKE '".$db->addslashes($arrFilter['system_lastname'])."%'";
             if (!empty($arrFilter['system_firstname'])) $arrWhere[] = "u.firstname LIKE '".$db->addslashes($arrFilter['system_firstname'])."%'";
+            if (!empty($arrFilter['system_user'])) $arrWhere[] = "CONCAT(u.lastname, ' ', u.firstname) = '".$db->addslashes($arrFilter['system_user'])."'";
             if (!empty($arrFilter['system_service'])) $arrWhere[] = "u.service LIKE '".$db->addslashes($arrFilter['system_service'])."%'";
             if (!empty($arrFilter['system_phone'])) $arrWhere[] = "u.phone LIKE '".$db->addslashes($arrFilter['system_phone'])."%'";
             if (!empty($arrFilter['system_fax'])) $arrWhere[] = "u.fax LIKE '".$db->addslashes($arrFilter['system_fax'])."%'";
@@ -215,7 +257,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
             if (!empty($arrFilter['system_country'])) $arrWhere[] = "u.country LIKE '".$db->addslashes($arrFilter['system_country'])."%'";
             if (!empty($arrFilter['system_city'])) $arrWhere[] = "u.city LIKE '".$db->addslashes($arrFilter['system_city'])."%'";
             if (!empty($arrFilter['system_postalcode'])) $arrWhere[] = "u.postalcode LIKE '".$db->addslashes($arrFilter['system_postalcode'])."%'";
-            
+
             // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
             $ptrRs = $db->query("
                 SELECT      u.id,
@@ -250,7 +292,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                 ON          g.id = gu.id_group
 
                 WHERE       ".implode(' AND ', $arrWhere)."
-                
+
                 ORDER BY    u.lastname, u.firstname
             ");
 
@@ -403,75 +445,115 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
             }
             else
             {
+                // true si l'index est actif (si trop de réponses)
+                $booIndex = sizeof($arrUser) > $intMaxLines;
+
+                // Affichage d'un index
+                if ($booIndex)
+                {
+                    $arrIndex = array();
+                    foreach ($arrUser as $row)
+                    {
+                        $strIndex = strtoupper(substr($row['lastname'], 0, 1));
+                        if (!isset($arrIndex[$strIndex])) $arrIndex[$strIndex] = 0;
+                        $arrIndex[$strIndex]++;
+                    }
+
+                    // Lecture de l'index sélectionné ou choix par défaut du 1er élément
+                    $strIndexSel = isset($_GET['idx']) && isset($arrIndex[$_GET['idx']]) ? $_GET['idx'] : key($arrIndex);
+
+                    $arrUrlParams = array();
+
+                    $arrUrlParams[] = "op=search";
+                    if (!empty($_REQUEST['headingid'])) $arrUrlParams[] = "headingid={$_REQUEST['headingid']}";
+                    if (!empty($_REQUEST['articleid'])) $arrUrlParams[] = "articleid={$_REQUEST['articleid']}";
+                    if (!empty($_REQUEST['webedit_mode'])) $arrUrlParams[] = "webedit_mode={$_REQUEST['webedit_mode']}";
+
+                    $objTplDirectory->assign_block_vars('system_trombi_switch_result.switch_index', array());
+
+                    foreach($arrIndex as $strIndex => $intCount)
+                    {
+                        $objTplDirectory->assign_block_vars('system_trombi_switch_result.switch_index.index', array(
+                            'LETTER' => $strIndex,
+                            'COUNT' => $intCount,
+                            'SELECTED' => $strIndexSel == $strIndex ? 'selected' : '',
+                            'URL' => ploopi_urlencode('index.php?'.implode('&',$arrUrlParams+array('' => "idx={$strIndex}"))),
+                        ));
+                    }
+                }
+
                 foreach ($arrUser as $row)
                 {
-                    // Indices de tri pour le tableau
-                    $strSortLabelGroups = implode(',', $row['groups']);
-                    $strSortLabelWorkspaces = '';
-
-                    $arrAddress = array();
-
-                    if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['address']));
-                    if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($row['postalcode'].' '.$row['city'])));
-                    if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['country']));
-
-                    $objTplDirectory->assign_block_vars('system_trombi_switch_result.user',
-                        array(
-                            'ID' => $row['id'],
-                            'LASTNAME' => htmlentities($row['lastname']),
-                            'FIRSTNAME' => htmlentities($row['firstname']),
-                            'LOGIN' => htmlentities($row['login']),
-                            'EMAIL' => htmlentities($row['email']),
-                            'PHONE' => htmlentities($row['phone']),
-                            'FAX' => htmlentities($row['fax']),
-                            'MOBILE' => htmlentities($row['mobile']),
-                            'SERVICE' => htmlentities($row['service']),
-                            'WORKSPACES' => implode('<br />', $row['workspaces']),
-                            'GROUPS' => implode('<br />', $row['groups']),
-                            'ROLES' => implode('<br />', $row['roles']),
-                            'FUNCTION' => htmlentities($row['function']),
-                            'RANK' => htmlentities($row['rank']),
-                            'NUMBER' => htmlentities($row['number']),
-                            'POSTALCODE' => htmlentities($row['postalcode']),
-                            'ADDRESS' => htmlentities($row['address']),
-                            'CITY' => htmlentities($row['city']),
-                            'COUNTRY' => htmlentities($row['country']),
-                            'ADDRESS_FULL' => implode('<br />', $arrAddress),
-                            'BUILDING' => htmlentities($row['building']),
-                            'FLOOR' => htmlentities($row['floor']),
-                            'OFFICE' => htmlentities($row['office']),
-                            'COMMENTS' => ploopi_nl2br(htmlentities($row['comments'])),
-                            'PHOTOPATH' => $row['photopath']
-                        )
-                    );
-
-                    include_once './include/classes/documents.php';
-                    
-                    // Lecture du dossier racine de la mini ged associée à l'utilisateur
-                    $objRootFolder = documentsfolder::getroot(
-                        _SYSTEM_OBJECT_USER, 
-                        $row['id'],
-                        $obj['module_id']
-                    );
-                    
-                    if (!empty($objRootFolder))
+                    if (!$booIndex || strtoupper(substr($row['lastname'], 0, 1)) == $strIndexSel)
                     {
-                        $objTplDirectory->assign_block_vars('system_trombi_switch_result.user.switch_files', array());
-                        
-                        $arrFiles = $objRootFolder->getlist();
-                        
-                        foreach($arrFiles as $intIdFile => $rowFile)
+                        // Indices de tri pour le tableau
+                        $strSortLabelGroups = implode(',', $row['groups']);
+                        $strSortLabelWorkspaces = '';
+
+                        $arrAddress = array();
+
+                        if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['address']));
+                        if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($row['postalcode'].' '.$row['city'])));
+                        if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['country']));
+
+                        $objTplDirectory->assign_block_vars('system_trombi_switch_result.user',
+                            array(
+                                'ID' => $row['id'],
+                                'LASTNAME' => htmlentities($row['lastname']),
+                                'FIRSTNAME' => htmlentities($row['firstname']),
+                                'LOGIN' => htmlentities($row['login']),
+                                'EMAIL' => htmlentities($row['email']),
+                                'PHONE' => htmlentities($row['phone']),
+                                'FAX' => htmlentities($row['fax']),
+                                'MOBILE' => htmlentities($row['mobile']),
+                                'SERVICE' => htmlentities($row['service']),
+                                'WORKSPACES' => implode('<br />', $row['workspaces']),
+                                'GROUPS' => implode('<br />', $row['groups']),
+                                'ROLES' => implode('<br />', $row['roles']),
+                                'FUNCTION' => htmlentities($row['function']),
+                                'RANK' => htmlentities($row['rank']),
+                                'NUMBER' => htmlentities($row['number']),
+                                'POSTALCODE' => htmlentities($row['postalcode']),
+                                'ADDRESS' => htmlentities($row['address']),
+                                'CITY' => htmlentities($row['city']),
+                                'COUNTRY' => htmlentities($row['country']),
+                                'ADDRESS_FULL' => implode('<br />', $arrAddress),
+                                'BUILDING' => htmlentities($row['building']),
+                                'FLOOR' => htmlentities($row['floor']),
+                                'OFFICE' => htmlentities($row['office']),
+                                'COMMENTS' => ploopi_nl2br(htmlentities($row['comments'])),
+                                'PHOTOPATH' => $row['photopath']
+                            )
+                        );
+
+                        include_once './include/classes/documents.php';
+
+                        // Lecture du dossier racine de la mini ged associée à l'utilisateur
+                        $objRootFolder = documentsfolder::getroot(
+                            _SYSTEM_OBJECT_USER,
+                            $row['id'],
+                            $obj['module_id']
+                        );
+
+                        if (!empty($objRootFolder))
                         {
-                            // Découpage du chemin pour modifier le fichier
-                            $arrPath = explode('/', $rowFile['path']);
-                            $strFileName = $arrPath[sizeof($arrPath)-1];
-                            array_pop($arrPath);
-                            
-                            $objTplDirectory->assign_block_vars('system_trombi_switch_result.user.switch_files.file', array(
-                                'FILENAME' => $strFileName,
-                                'PATH' => implode(' &raquo; ', $arrPath),
-                                'URL' => $rowFile['file']->geturl()
-                            ));
+                            $objTplDirectory->assign_block_vars('system_trombi_switch_result.user.switch_files', array());
+
+                            $arrFiles = $objRootFolder->getlist();
+
+                            foreach($arrFiles as $intIdFile => $rowFile)
+                            {
+                                // Découpage du chemin pour modifier le fichier
+                                $arrPath = explode('/', $rowFile['path']);
+                                $strFileName = $arrPath[sizeof($arrPath)-1];
+                                array_pop($arrPath);
+
+                                $objTplDirectory->assign_block_vars('system_trombi_switch_result.user.switch_files.file', array(
+                                    'FILENAME' => $strFileName,
+                                    'PATH' => implode(' &raquo; ', $arrPath),
+                                    'URL' => $rowFile['file']->geturl()
+                                ));
+                            }
                         }
                     }
                 }

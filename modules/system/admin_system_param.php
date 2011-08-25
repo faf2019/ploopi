@@ -37,7 +37,7 @@
 if (!empty($_REQUEST['idmodule']) && is_numeric($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
 
 echo $skin->open_simplebloc(_SYSTEM_MODULESELECTED);
-    
+
 $arrModules = $_SESSION['ploopi']['modules'];
 usort($arrModules, create_function('$a,$b', 'return strcasecmp($a[\'label\'], $b[\'label\']);'));
 
@@ -46,7 +46,7 @@ usort($arrModules, create_function('$a,$b', 'return strcasecmp($a[\'label\'], $b
 <form id="form_modparam" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
     <select class="select" name="idmodule" onchange="javascript:$('form_modparam').submit();">
     <?php
-    
+
     foreach($arrModules as $mod)
     {
         if (empty($idmodule)) $idmodule = $mod['id'];
