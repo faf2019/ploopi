@@ -289,13 +289,15 @@ $c++;
 $testurl = 'http://www.ploopi.org';
 if ($testpear)
 {
+    ploopi_unset_error_handler();
     require_once 'HTTP/Request.php';
+    ploopi_set_error_handler();
 
     $request = new HTTP_Request($testurl);
 
     if (_PLOOPI_INTERNETPROXY_HOST != '')
     {
-        $request->setProxy( 
+        $request->setProxy(
             _PLOOPI_INTERNETPROXY_HOST,
             _PLOOPI_INTERNETPROXY_PORT,
             _PLOOPI_INTERNETPROXY_USER,
@@ -305,7 +307,7 @@ if ($testpear)
 
     $comment = 'Connexion internet ouverte.';
     $testok = true;
-    
+
     ploopi_unset_error_handler();
     $res = !PEAR::isError($request->sendRequest());
     ploopi_set_error_handler();

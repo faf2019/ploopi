@@ -97,7 +97,7 @@ function ploopi_timeverify($mytime) { return preg_match(_PLOOPI_TIMEFORMAT_EREG,
 
 function ploopi_gettimestampdetail($mytimestamp)
 {
-    preg_match(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $mytimestamp, $regs);
+    preg_match(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, sprintf("%-014s", $mytimestamp), $regs);
     return $regs;
 }
 
