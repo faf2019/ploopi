@@ -1,3 +1,9 @@
+== Module FORMS - version 3.5.0a =====================================================
+
+2011-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Modification de la visibilité des données en vue "globale"
+
 == Module FORMS - version 3.5.0 =====================================================
 
 2011-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

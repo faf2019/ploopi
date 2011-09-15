@@ -296,7 +296,7 @@ class formsForm extends data_object
             break;
 
             case 'global':
-                $strWorkspaces = $_SESSION['ploopi']['allworkspaces'].",0";
+                $strWorkspaces = '';
             break;
         }
 
@@ -457,7 +457,8 @@ class formsForm extends data_object
          */
         if ($booWorkspaceFilter)
         {
-            $objQuery->add_where('workspace_id IN (%e)', array($this->viewWorkspaces()));
+            $arrWorkspaces = $this->viewWorkspaces();
+            if (!empty($arrWorkspaces)) $objQuery->add_where('workspace_id IN (%e)', array($arrWorkspaces));
         }
 
         return current($objQuery->execute()->getarray(true));
@@ -541,7 +542,8 @@ class formsForm extends data_object
          */
         if ($booWorkspaceFilter)
         {
-            $objQuery->add_where('rec.workspace_id IN (%e)', array($this->viewWorkspaces()));
+            $arrWorkspaces = $this->viewWorkspaces();
+            if (!empty($arrWorkspaces)) $objQuery->add_where('workspace_id IN (%e)', array($arrWorkspaces));
         }
 
         /**
