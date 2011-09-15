@@ -109,7 +109,7 @@ class formsBooleanParser
                 '|',
                 '',
             ),
-            $strExpression
+            strtoupper($strExpression)
         );
 
         $this->arrValues = $arrValues;
@@ -198,6 +198,7 @@ class formsBooleanParser
                         else
                         {
                             // CAS C1! non valide
+                            if (substr($this->strExpression, 0, $i) != '') throw new Exception ('Erreur dans l\'enchainement des opérateurs...');
                             if (substr($this->strExpression, $i+1) == '') throw new Exception ('Erreur dans l\'enchainement des opérateurs...');
                         }
                     }

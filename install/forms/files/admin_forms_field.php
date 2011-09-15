@@ -73,7 +73,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
         <div class="ploopi_form" style="padding:4px;">
             <p>
                 <label><?php echo _FORMS_FIELD_POSITION; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="fieldnew_position" value="<?php echo $field->fields['position']; ?>" />
+                <input type="text" class="text" style="width:30px;" name="field_position" value="<?php echo $field->fields['position']; ?>" />
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_INTERLINE; ?>:</label>
@@ -103,7 +103,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_TYPE; ?>:</label>
-                <select class="select" name="field_type" onchange="javascript:forms_display_fieldvalues();forms_display_fieldformats();forms_display_fieldcols();forms_display_tablelink();forms_display_calculation();">
+                <select class="select" name="field_type" onchange="javascript:forms_display_fieldvalues();forms_display_fieldformats();forms_display_tablelink();forms_display_calculation();">
                 <?php
                 foreach($field_types as $key => $value)
                 {
@@ -190,21 +190,6 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                         </tr>
                         </table>
                     </span>
-                </p>
-            </div>
-
-            <div id="fieldcols" class="ploopi_form" style="display:none;">
-                <p>
-                    <label><?php echo _FORMS_FIELD_MULTICOLDISPLAY; ?>:</label>
-                    <select name="field_cols" class="select" style="width:50px;">
-                    <?php
-                    for ($i=1;$i<=5;$i++)
-                    {
-                        $sel = ($i == $field->fields['cols']) ? 'selected' : '';
-                        echo "<option value=\"{$i}\" {$sel}>{$i}</option>";
-                    }
-                    ?>
-                    </select>
                 </p>
             </div>
 
@@ -369,7 +354,6 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 ploopi_window_onload_stock(function() {
     forms_display_fieldvalues();
     forms_display_fieldformats();
-    forms_display_fieldcols();
     forms_display_tablelink();
     forms_display_calculation();
 });

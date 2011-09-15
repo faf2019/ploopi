@@ -109,6 +109,8 @@ class formsForm extends data_object
 
     private static function _dateFrToXls($strDate)
     {
+        if (empty($strDate)) return '';
+
         $arrDate = explode(' ', $strDate);
         $intTs = ploopi_timestamp2unixtimestamp(ploopi_local2timestamp($arrDate[0], isset($arrDate[1]) ? $arrDate[1] : '00:00:00'));
 
@@ -278,19 +280,19 @@ class formsForm extends data_object
         {
             default:
             case 'private':
-                $strWorkspaces = $this->fields['id_workspace'];
+                $strWorkspaces = $_SESSION['ploopi']['workspaceid'];
             break;
 
             case 'desc':
                 $strWorkspaces = $_SESSION['ploopi']['workspaces'][$this->fields['id_workspace']]['list_parents'];
                 if ($strWorkspaces != '') $strWorkspaces .= ',';
-                $strWorkspaces .= $this->fields['id_workspace'];
+                $strWorkspaces .= $_SESSION['ploopi']['workspaceid'];
             break;
 
             case 'asc':
                 $strWorkspaces = $_SESSION['ploopi']['workspaces'][$this->fields['id_workspace']]['list_children'];
                 if ($strWorkspaces!='') $strWorkspaces .= ',';
-                $strWorkspaces .= $this->fields['id_workspace'];
+                $strWorkspaces .= $_SESSION['ploopi']['workspaceid'];
             break;
 
             case 'global':
@@ -573,7 +575,7 @@ class formsForm extends data_object
                     // Traitement spécial des données DATE
                     // Pas l'idéal de faire ça au niveau SQL mais permet d'éviter un post traitement
                     if ($objField->fields['format'] == 'date')
-                        $strSelect = $booRawData ? "CONCAT(rec.`{$objField->fields['fieldname']}`, '000000')" : "CONCAT(SUBSTRING(rec.`{$objField->fields['fieldname']}`,7,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,5,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,1,4))";
+                        $strSelect = $booRawData ? "IF(rec.`{$objField->fields['fieldname']}` = 0, '', CONCAT(rec.`{$objField->fields['fieldname']}`, '000000'))" : "IF(rec.`{$objField->fields['fieldname']}` = 0, '', CONCAT(SUBSTRING(rec.`{$objField->fields['fieldname']}`,7,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,5,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,1,4)))";
                     else
                         $strSelect = "rec.`{$objField->fields['fieldname']}`";
 
@@ -1562,6 +1564,9 @@ class formsForm extends data_object
         // Groupes conditionnels
         $arrGroups = array();
 
+        // Focus sur le premier champ (on va y stocker le nom du champ)
+        $strFocus = '';
+
         // Pour chaque champs du formulaire
         foreach($this->getFields(true) as $objField)
         {
@@ -1585,13 +1590,13 @@ class formsForm extends data_object
                 $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
                 $strDesc = $objField->fields['description'] == '' ? '' : '<p>'.ploopi_nl2br(htmlentities($objField->fields['description'])).'</p>';
 
-                $objPanel->addField( new form_html('<h'.$objField->fields['separator_level'].' style="'.$strStyle.$objField->fields['style_form'].'">'.ploopi_nl2br(htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
+                $objPanel->addField( new form_html('<h'.$objField->fields['separator_level'].' id="field_'.$objField->fields['id'].'_form" style="'.$strStyle.$objField->fields['style_form'].'">'.ploopi_nl2br(htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
             }
             elseif ($objField->fields['html'])
             {
                 $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
 
-                $objPanel->addField( new form_html('<div class="xhtml" style="'.$strStyle.'">'.$objField->fields['xhtmlcontent_cleaned'].'</div>') );
+                $objPanel->addField( new form_html('<div class="xhtml" id="field_'.$objField->fields['id'].'_form" style="'.$strStyle.'">'.$objField->fields['xhtmlcontent_cleaned'].'</div>') );
             }
             elseif ($objField->fields['option_formview'] && (!$objField->fields['option_adminonly'] || $booIsAdmin))
             {
@@ -1624,6 +1629,8 @@ class formsForm extends data_object
                     switch($objField->fields['type'])
                     {
                         case 'text':
+                            if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
+
                             switch($objField->fields['format'])
                             {
                                 case 'integer':
@@ -1671,6 +1678,8 @@ class formsForm extends data_object
                               */
                             if (isset($arrLinkedFields['fields'][$objField->fields['values']]))
                             {
+                                if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
+
                                 $objLinkedField = $arrLinkedFields['fields'][$objField->fields['values']];
 
                                 // Initialisation de la liste des paramètres vers le formulaire X
@@ -1696,6 +1705,8 @@ class formsForm extends data_object
                         break;
 
                         case 'color':
+                            if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
+
                             $arrValues = explode('||',$objField->fields['values']);
                             $arrSelectOptions = array();
                             $arrSelectOptions[] = new form_select_option('', '');
@@ -1713,6 +1724,8 @@ class formsForm extends data_object
                         break;
 
                         case 'select':
+                            if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
+
                             $arrValues = explode('||',$objField->fields['values']);
                             $arrValues = empty($arrValues) ? array() : array_combine($arrValues, $arrValues);
 
@@ -1752,6 +1765,8 @@ class formsForm extends data_object
                         break;
 
                         case 'textarea':
+                            if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
+
                             $objPanel->addField( new form_field(
                                 'textarea',
                                 $objField->fields['name'],
@@ -1763,6 +1778,8 @@ class formsForm extends data_object
                         break;
 
                         case 'file':
+                            if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
+
                             $objPanel->addField( new form_field(
                                 'input:file',
                                 $objField->fields['name'],
@@ -1880,8 +1897,6 @@ class formsForm extends data_object
                     }
                     else
                     {
-                        if ($row['op'] == '=') $row['op'] = '==';
-
                         $objFieldVar = $arrFields[$row['field']];
 
                         // Stockage des valeurs du formulaire pour les variables concernées par la condition
@@ -1889,44 +1904,94 @@ class formsForm extends data_object
                         switch($objFieldVar->fields['type'])
                         {
                             case 'radio':
-                                $strJsCond .= "\nfor (i=0; i<$('{$strFormId}')['field_{$row['field']}'].length;i++) if ($('{$strFormId}')['field_{$row['field']}'][i].checked) V{$key}.push($('{$strFormId}')['field_{$row['field']}'][i].value);";
+                                $strJsCond .= "\nfor (i=0; i<$('{$strFormId}')['field_{$row['field']}'].length;i++) if ($('{$strFormId}')['field_{$row['field']}'][i].checked) V{$key}.push( forms_removeaccents($('{$strFormId}')['field_{$row['field']}'][i].value).toUpperCase() );";
                             break;
 
                             case 'checkbox':
-                                $strJsCond .= "\nfor (i=0; i<$('{$strFormId}')['field_{$row['field']}[]'].length;i++) if ($('{$strFormId}')['field_{$row['field']}[]'][i].checked) V{$key}.push($('{$strFormId}')['field_{$row['field']}[]'][i].value);";
+                                $strJsCond .= "\nfor (i=0; i<$('{$strFormId}')['field_{$row['field']}[]'].length;i++) if ($('{$strFormId}')['field_{$row['field']}[]'][i].checked) V{$key}.push( forms_removeaccents($('{$strFormId}')['field_{$row['field']}[]'][i].value).toUpperCase() );";
                             break;
 
                             default:
-                                $strJsCond .= "\nV{$key}.push($('{$strFormId}').field_{$row['field']}.value);";
+                                $strJsCond .= "\nV{$key}.push( forms_removeaccents($('{$strFormId}').field_{$row['field']}.value).toUpperCase() );";
                             break;
                         }
+
+                        $strValue = addslashes(strtoupper(ploopi_convertaccents($row['value'])));
 
                         $strJsCond .= "\nvar C{$key} = false;";
                         $strJsCond .= "\nfor (i=0;i<V{$key}.length;i++) {";
 
+
                         switch($row['op'])
                         {
+                            // Traité comme une chaîne (pas de sens en numérique)
                             case 'begin':
-                                $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/".addslashes($row['value']).".*/));";
+                                $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/".$strValue.".*/i));";
                             break;
 
+                            // Traité comme une chaîne (pas de sens en numérique)
                             case 'like':
-                                $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/.*".addslashes($row['value']).".*/));";
+                                $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/.*".$strValue.".*/i));";
                             break;
 
+                            case 'between':
+                                $arrValues = array_map('trim', explode(',', $strValue));
+                                if (sizeof($arrValues) == 2)
+                                {
+                                    switch($objFieldVar->fields['format'])
+                                    {
+                                        case 'int':
+                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= parseInt('".$arrValues[0]."', 10) && V{$key}[i] <= parseInt('".$arrValues[1]."', 10));";
+                                        break;
+
+                                        case 'float':
+                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= parseFloat('".$arrValues[0]."', 10) && V{$key}[i] <= parseFloat('".$arrValues[1]."', 10));";
+                                        break;
+
+                                        default:
+                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= '".$arrValues[0]."' && V{$key}[i] <= '".$arrValues[1]."');";
+                                        break;
+                                    }
+                                }
+                            break;
+
+                            case 'in':
+                                foreach(array_map('trim', explode(',', $strValue)) as $strValue)
+                                {
+                                    switch($objFieldVar->fields['format'])
+                                    {
+                                        case 'int':
+                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == parseInt('".$strValue."', 10));";
+                                        break;
+
+                                        case 'float':
+                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == parseFloat('".$strValue."', 10));";
+                                        break;
+
+                                        default:
+                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == '".$strValue."');";
+                                        break;
+                                    }
+                                }
+                            break;
+
+                            // Les opérateurs de base
                             default:
+                                if ($row['op'] == '=') $row['op'] = '==';
+                                if ($row['op'] == '<>') $row['op'] = '!=';
+
                                 switch($objFieldVar->fields['format'])
                                 {
                                     case 'int':
-                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseInt('".addslashes($row['value'])."', 10));";
+                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseInt('".$strValue."', 10));";
                                     break;
 
                                     case 'float':
-                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseFloat('".addslashes($row['value'])."', 10));";
+                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseFloat('".$strValue."', 10));";
                                     break;
 
                                     default:
-                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} '".addslashes($row['value'])."');";
+                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} '".$strValue."');";
                                     break;
                                 }
                             break;
@@ -1973,6 +2038,7 @@ class formsForm extends data_object
 
                 // Sélection du bon panel au chargement
                 Event.observe(window, 'load', function() {
+                    $('{$strFocus}').focus();
                     ploopi.{$strFormId}_checkgroups();
                 });
 

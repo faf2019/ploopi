@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2007-2011 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -35,11 +35,6 @@
 /**
  * Définition des constantes
  */
-
-/**
- * Action : Gérer les formulaires
- */
-define ("_FORMS_ACTION_CREATEFORM", 1);
 
 /**
  * Action : Ajouter une réponse dans un formulaire

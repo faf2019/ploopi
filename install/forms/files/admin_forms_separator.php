@@ -64,7 +64,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 
             <p>
                 <label><?php echo _FORMS_FIELD_POSITION; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="fieldnew_position" value="<?php echo $field->fields['position']; ?>">
+                <input type="text" class="text" style="width:30px;" name="field_position" value="<?php echo $field->fields['position']; ?>">
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_INTERLINE; ?>:</label>

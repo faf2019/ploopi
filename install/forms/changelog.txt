@@ -1,3 +1,18 @@
+== Module FORMS - version 3.5.0 =====================================================
+
+2011-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Groupes conditionnels : tests insensibles à la casse et aux accents
+* Groupes conditionnels : expression booléenne insensible à la casse
+* Groupes conditionnels : ajout du support de l'opérateur 'entre'
+* Groupes conditionnels : ajout du support de l'opérateur 'dans la liste de valeurs'
+* Groupes conditionnels : Correction d'un bug dans l'application de la condition d'affichage aux séparateurs et aux contenus HTML
+* Formulaire : Focus automatique sur le 1er champ accessible du formulaire
+* Admin : Modification des colonnes dans la liste des champs d'un formulaire pour affichage correct en 1024x768
+* Correction d'un bug sur la visibilité des données entre espaces de travail
+* Correction d'un bug sur l'affichage ou l'export de dates non saisies (correction ploopiArray->toXls)
+* Correction d'un bug de position (non prise en compte) lors de la création d'un champ/séparateur
+
 == Module FORMS - version 3.4.9c =====================================================
 
 2011-08-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

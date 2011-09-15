@@ -57,6 +57,7 @@ class formsField extends data_object
     private $_strOriginalFieldName;
     private $_strOriginalType;
     private $_strOriginalFormula;
+    private $_intOriginalPosition;
 
 
     /**
@@ -83,6 +84,7 @@ class formsField extends data_object
         $this->_strOriginalFieldName = '';
         $this->_strOriginalType = '';
         $this->_strOriginalFormula = '';
+        $this->_intOriginalPosition = 0;
 
         parent::__construct('ploopi_mod_forms_field');
 
@@ -107,6 +109,8 @@ class formsField extends data_object
     public function open($intId)
     {
         $booOpen = parent::open($intId);
+
+        $this->_intOriginalPosition = $this->fields['position'];
 
         if (!$this->fields['separator'] && !$this->fields['captcha'])
         {
@@ -134,9 +138,50 @@ class formsField extends data_object
         $booIsNew = $this->isnew();
 
         /**
+         * Traitement de la position
+         */
+
+        // Contrôle de validité de la position
+        if (is_numeric($this->fields['position']) && $this->fields['position'] < 1) $this->fields['position'] = 1;
+        else
+        {
+            $db->query("Select max(position) as maxpos from ploopi_mod_forms_field where id_form = {$this->fields['id_form']}");
+            $row = $db->fetchrow();
+
+            if (!is_numeric($this->fields['position']) || $this->fields['position'] > $row['maxpos']+(int)$booIsNew) $this->fields['position'] = $row['maxpos']+(int)$booIsNew;
+        }
+
+
+        if ($booIsNew)
+        {
+            // Déplacer tous les champs en dessous de la position d'insertion vers le bas
+            $db->query("UPDATE ploopi_mod_forms_field SET position=position+1 where position >= {$this->fields['position']} AND id_form = {$this->fields['id_form']}");
+        }
+        else
+        {
+            // Nouvelle position définie
+            if ($this->fields['position'] != $this->_intOriginalPosition)
+            {
+
+                if ($this->fields['position'] > $this->_intOriginalPosition)
+                {
+                    // Déplacer tous les champs entre la position d'origine et la position de destination vers le haut
+                    $db->query("UPDATE ploopi_mod_forms_field SET position=position-1 WHERE position BETWEEN ".($this->_intOriginalPosition+1)." AND {$this->fields['position']} AND id_form = {$this->fields['id_form']}");
+                }
+                else
+                {
+                    // Déplacer tous les champs entre la position de destination et la position d'origine vers le bas
+                    $db->query("UPDATE ploopi_mod_forms_field SET position=position+1 where position BETWEEN {$this->fields['position']} AND ".($this->_intOriginalPosition-1)." AND id_form = {$this->fields['id_form']}");
+                }
+            }
+        }
+
+
+        /**
          * Enregistrement
          */
         $res = parent::save();
+
 
         /**
          * Mise à jour de la bdd

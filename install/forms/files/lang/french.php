@@ -168,6 +168,8 @@ define ('_FORMS_OPTION_MODIFY_USER',        'Le propriétaire');
 define ('_FORMS_OPTION_MODIFY_GROUP',       'L\'espace');
 define ('_FORMS_OPTION_MODIFY_ALL',         'Tout le monde');
 define ('_FORMS_OPTION_ADMINONLY',      'Uniquement visible par les administrateurs');
+define ('_FORMS_OPTIONS',      'Options');
+
 
 
 define ('_FORMS_OPTION_VIEW',               'Vue sur les données');
@@ -199,6 +201,8 @@ define ('_FORMS_MESS_OK_5',         'Graphique enregistré !');
 define ('_FORMS_MESS_OK_6',         'Graphique supprimé !');
 define ('_FORMS_MESS_OK_7',         'Champ déplacé !');
 define ('_FORMS_MESS_OK_8',         'Données importées !');
+define ('_FORMS_MESS_OK_9',         'Groupe enregistré !');
+define ('_FORMS_MESS_OK_10',         'Groupe supprimé !');
 
 define ('_FORMS_ERROR_CAPTCHA',             'Erreur de captcha !'); // Front !
 

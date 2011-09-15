@@ -382,53 +382,25 @@ if (!$objForm->isnew())
         'options' => array('sort' => true)
     );
 
-    $array_columns['right']['admin'] = array(
-        'label' => _FORMS_FIELD_ADMINONLY_SHORT,
-        'width' => 55,
+    $array_columns['right']['options'] = array(
+        'label' => _FORMS_OPTIONS,
+        'width' => 160,
         'options' => array('sort' => true)
     );
 
-    $array_columns['right']['export'] = array(
-        'label' => _FORMS_FIELD_EXPORTVIEW_SHORT,
-        'width' => 55,
-        'options' => array('sort' => true)
-    );
-
-    $array_columns['right']['array'] = array(
-        'label' => _FORMS_FIELD_ARRAYVIEW_SHORT,
-        'width' => 55,
-        'options' => array('sort' => true)
-    );
-
-    $array_columns['right']['pagebreak'] = array(
-        'label' => _FORMS_FIELD_PAGEBREAK_SHORT,
-        'width' => 55,
-        'options' => array('sort' => true)
-    );
-
-    $array_columns['right']['needed'] = array(
-        'label' => _FORMS_FIELD_NEEDED_SHORT,
-        'width' => 55,
-        'options' => array('sort' => true)
-    );
-
-    $array_columns['right']['form'] = array(
-        'label' => _FORMS_FIELD_FORMVIEW_SHORT,
-        'width' => 55,
-        'options' => array('sort' => true)
-    );
-
-    $array_columns['right']['type'] = array(
-        'label' => _FORMS_FIELD_TYPE,
-        'width' => 250,
-        'options' => array('sort' => true)
-    );
 
     $array_columns['right']['group'] = array(
         'label' => _FORMS_FIELD_GROUP,
-        'width' => 150,
+        'width' => 140,
         'options' => array('sort' => true)
      );
+
+    $array_columns['right']['type'] = array(
+        'label' => _FORMS_FIELD_TYPE,
+        'width' => 240,
+        'options' => array('sort' => true)
+    );
+
 
     $array_columns['actions_right']['actions'] = array('label' => '', 'width' => 74);
 
@@ -448,16 +420,14 @@ if (!$objForm->isnew())
 
         if ($row['separator'])
         {
+            $arrOptions = array();
+            if ($row['option_pagebreak']) $arrOptions[] = 'Saut de page';
+
             $array_values[$c]['values'] = array(
                 'name' => array('label' => $row['name']),
                 'group' => array('label' => $row['g_label']),
                 'type' => array('label' => str_replace('<LEVEL>',$row['separator_level'],_FORMS_FIELD_SEPARATOR_DESC)),
-                'admin' => array('label' => '&nbsp;'),
-                'export' => array('label' => '&nbsp;'),
-                'array' => array('label' => '&nbsp;'),
-                'needed' => array('label' => '&nbsp;'),
-                'pagebreak' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_pagebreak']) ? 'un' : '').'checked.gif">'),
-                'form' => array('label' => '&nbsp;')
+                'options' => array('label' => implode(', ', $arrOptions)),
             );
 
             $array_values[$c]['values']['actions']      = array('label' => '
@@ -473,16 +443,14 @@ if (!$objForm->isnew())
         }
         elseif ($row['html'])
         {
+            $arrOptions = array();
+            if ($row['option_pagebreak']) $arrOptions[] = 'Saut de page';
+
             $array_values[$c]['values'] = array(
                 'name' => array('label' => _FORMS_FIELD_XHTMLCONTENT),
                 'group' => array('label' => $row['g_label']),
                 'type' => array('label' => _FORMS_FIELD_XHTMLCONTENT),
-                'admin' => array('label' => '&nbsp;'),
-                'export' => array('label' => '&nbsp;'),
-                'array' => array('label' => '&nbsp;'),
-                'needed' => array('label' => '&nbsp;'),
-                'pagebreak' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_pagebreak']) ? 'un' : '').'checked.gif">'),
-                'form' => array('label' => '&nbsp;')
+                'options' => array('label' => implode(', ', $arrOptions)),
             );
 
             $array_values[$c]['values']['actions']      = array('label' => '
@@ -498,16 +466,19 @@ if (!$objForm->isnew())
         }
         else
         {
+            $arrOptions = array();
+            if ($row['option_formview']) $arrOptions[] = 'Formulaire';
+            if ($row['option_arrayview']) $arrOptions[] = 'Liste';
+            if ($row['option_exportview']) $arrOptions[] = 'Export';
+            if ($row['option_needed']) $arrOptions[] = 'Requis';
+            if ($row['option_adminonly']) $arrOptions[] = 'Admin';
+            if ($row['option_pagebreak']) $arrOptions[] = 'Saut de page';
+
             $array_values[$c]['values'] = array(
                 'name' => array('label' => $row['name']),
                 'group' => array('label' => $row['g_label']),
                 'type' => array('label' => $field_types[$row['type']].( ($row['type'] == 'text' && isset($field_formats[$row['format']])) ? " ( {$field_formats[$row['format']]} )" : '')),
-                'admin' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_adminonly']) ? 'un' : '').'checked.gif">'),
-                'export' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_exportview']) ? 'un' : '').'checked.gif">'),
-                'array' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_arrayview']) ? 'un' : '').'checked.gif">'),
-                'needed' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_needed']) ? 'un' : '').'checked.gif">'),
-                'pagebreak' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_pagebreak']) ? 'un' : '').'checked.gif">'),
-                'form' => array('label' => '<img src="./modules/forms/img/'.((!$row['option_formview']) ? 'un' : '').'checked.gif">'),
+                'options' => array('label' => implode(', ', $arrOptions)),
             );
 
             $array_values[$c]['description'] = 'Ouvrir le Champ "'.htmlentities($row['name']).'"';

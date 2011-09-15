@@ -316,37 +316,9 @@ if ($_SESSION['ploopi']['connected'])
                     if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']))
                     {
                         $field->open($_GET['field_id']);
-                        if (!empty($_POST['fieldnew_position']) && is_numeric($_POST['fieldnew_position']) && $_POST['fieldnew_position'] != $field->fields['position']) // nouvelle position définie
-                        {
-                            if ($_POST['fieldnew_position'] < 1) $_POST['fieldnew_position'] = 1;
-                            else
-                            {
-                                $db->query("Select max(position) as maxpos from ploopi_mod_forms_field where id_form = {$field->fields['id_form']}");
-                                $fields = $db->fetchrow();
-                                if ($_POST['fieldnew_position'] > $fields['maxpos']) $_POST['fieldnew_position'] = $fields['maxpos'];
-                            }
-
-                            $db->query("update ploopi_mod_forms_field set position = 0 where position = {$field->fields['position']} and id_form = {$field->fields['id_form']}");
-                            if ($_POST['fieldnew_position'] > $field->fields['position'])
-                            {
-                                $db->query("update ploopi_mod_forms_field set position=position-1 where position BETWEEN ".($field->fields['position']-1)." AND {$_POST['fieldnew_position']} and id_form = {$field->fields['id_form']}");
-                            }
-                            else
-                            {
-                                $db->query("update ploopi_mod_forms_field set position=position+1 where position BETWEEN {$_POST['fieldnew_position']} AND ".($field->fields['position']-1)." and id_form = {$field->fields['id_form']}");
-                            }
-                            $db->query("update ploopi_mod_forms_field set position={$_POST['fieldnew_position']} where position=0 and id_form = {$field->fields['id_form']}");
-                            $field->fields['position'] = $_POST['fieldnew_position'];
-                        }
                     }
                     else // nouveau
                     {
-                        $select = "Select max(position) as maxpos from ploopi_mod_forms_field where id_form = {$_GET['forms_id']}";
-                        $db->query($select);
-                        $fields = $db->fetchrow();
-                        $maxpos = $fields['maxpos'];
-                        if (!is_numeric($maxpos)) $maxpos = 0;
-                        $field->fields['position'] = $maxpos+1;
                         $field->fields['id_form'] = $_GET['forms_id'];
                     }
 
@@ -570,7 +542,7 @@ if ($_SESSION['ploopi']['connected'])
                     $objGroup->fields['conditions'] = isset($_POST['_forms_group_cond']) ? ploopi_serialize($_POST['_forms_group_cond']) : '';
                     $objGroup->save();
 
-                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGroup->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_5");
+                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGroup->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_9");
                 }
                 else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
 
@@ -588,7 +560,7 @@ if ($_SESSION['ploopi']['connected'])
                 if (!empty($_GET['forms_group_id']) && is_numeric($_GET['forms_group_id']) && $objGroup->open($_GET['forms_group_id']))
                 {
                     $objGroup->delete();
-                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGroup->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_6");
+                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGroup->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_10");
                 }
                 else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
             break;

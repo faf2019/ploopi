@@ -36,13 +36,6 @@ function forms_display_fieldformats()
     else $('fieldformats').style.display='none';
 }
 
-function forms_display_fieldcols()
-{
-    t = document.form_field.field_type;
-    if (t.value == 'textarea' || t.value == 'text' || t.value == 'color' || t.value == 'select' || t.value == 'file' || t.value == 'autoincrement'  || t.value == 'tablelink' || t.value == 'calculation') $('fieldcols').style.display='none';
-    else $('fieldcols').style.display='block';
-}
-
 function forms_display_tablelink()
 {
     t = document.form_field.field_type;
@@ -285,3 +278,19 @@ function forms_savevalue(form_id, field_id, field_value)
         onFailure: function(message) { alert('error: '+message); }
     });
 }
+
+
+function forms_removeaccents(s)
+{
+    var r=s.toLowerCase();
+    r = r.replace(new RegExp("[абвгде]", 'g'),"a");
+    r = r.replace(new RegExp("ж", 'g'),"ae");
+    r = r.replace(new RegExp("з", 'g'),"c");
+    r = r.replace(new RegExp("[ийкл]", 'g'),"e");
+    r = r.replace(new RegExp("[мноп]", 'g'),"i");
+    r = r.replace(new RegExp("с", 'g'),"n");
+    r = r.replace(new RegExp("[туфхц]", 'g'),"o");
+    r = r.replace(new RegExp("[щъыь]", 'g'),"u");
+    r = r.replace(new RegExp("[эя]", 'g'),"y");
+    return r;
+};
