@@ -347,7 +347,7 @@ class ploopiArray extends ploopiFactory
                         case 'integer_euro':
                         case 'date':
                         case 'datetime':
-                            $objWorkSheet->writeNumber($intLine, $intCol++, $strValue, $objFormat);
+                            if ($strValue != '') $objWorkSheet->writeNumber($intLine, $intCol++, $strValue, $objFormat);
                         break;
 
                         default:
