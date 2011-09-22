@@ -1412,7 +1412,6 @@ class formsForm extends data_object
             $objRecord = new formsRecord($this);
             if ($objRecord->open($intIdRecord))
             {
-                ploopi_print_r($objRecord->fields);
                 // Enregistrement existant, on charge les données
                 foreach($this->getFields() as $objField)
                 {

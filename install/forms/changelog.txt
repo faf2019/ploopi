@@ -1,3 +1,9 @@
+== Module FORMS - version 3.5.0c =====================================================
+
+2011-09-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Suppression d'un print_r résiduel à l'affichage d'un enregistrement
+
 == Module FORMS - version 3.5.0b =====================================================
 
 2011-09-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
