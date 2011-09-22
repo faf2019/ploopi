@@ -327,15 +327,15 @@ class formsField extends data_object
             break;
 
             case 'color':
-                $strType = "VARCHAR(32) DEFAULT ''";
+                $strType = "VARCHAR(32) DEFAULT NULL";
             break;
 
             case 'textarea':
-                $strType = "LONGTEXT DEFAULT ''";
+                $strType = "LONGTEXT DEFAULT NULL";
             break;
 
             case 'calculation':
-                $strType = "DOUBLE DEFAULT 0";
+                $strType = "DOUBLE DEFAULT NULL";
             break;
 
             case 'text':
@@ -344,33 +344,33 @@ class formsField extends data_object
                     case 'string':
                         $intSize = $this->fields['maxlength'];
                         if ($intSize <= 0 || $intSize > 255) $intSize = 255;
-                        $strType = "VARCHAR({$intSize}) DEFAULT ''";
+                        $strType = "VARCHAR({$intSize}) DEFAULT NULL";
                     break;
 
                     case 'integer':
-                        $strType = "INT(10) DEFAULT 0";
+                        $strType = "INT(10) DEFAULT NULL";
                     break;
 
                     case 'float':
-                        $strType = "DOUBLE DEFAULT 0";
+                        $strType = "DOUBLE DEFAULT NULL";
                     break;
 
                     case 'date':
-                        $strType = "INT(8) UNSIGNED DEFAULT 0";
+                        $strType = "INT(8) UNSIGNED DEFAULT NULL";
                     break;
 
                     case 'time':
-                        $strType = "VARCHAR(16) DEFAULT ''";
+                        $strType = "VARCHAR(16) DEFAULT NULL";
                     break;
 
                     default:
-                        $strType = "VARCHAR(255) DEFAULT ''";
+                        $strType = "VARCHAR(255) DEFAULT NULL";
                     break;
                 }
             break;
 
             default:
-                $strType = "VARCHAR(255) DEFAULT ''";
+                $strType = "VARCHAR(255) DEFAULT NULL";
             break;
         }
 

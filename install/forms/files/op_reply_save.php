@@ -207,7 +207,9 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
                         // Le champ
                         $objFieldVar = $arrFields[$row['field']];
                         // La valeur saisie
-                        $strValue = $objRecord->fields[$arrFields[$row['field']]->fields['fieldname']];
+                        $strValue = strtoupper(ploopi_convertaccents($objRecord->fields[$arrFields[$row['field']]->fields['fieldname']]));
+                        $row['value'] = strtoupper(ploopi_convertaccents($row['value']));
+
                         $arrValues = array();
 
                         switch($objFieldVar->fields['type'])
@@ -325,6 +327,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
             }
         }
     }
+
 
     $objRecord->save();
 

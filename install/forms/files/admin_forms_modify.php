@@ -640,8 +640,8 @@ if (!$objForm->isnew())
     {
         $array_values[$c]['values']['label'] = array('label' =>  $row['label']);
         $array_values[$c]['values']['description'] = array('label' =>  ploopi_nl2br($row['description']));
-        $array_values[$c]['values']['type'] = array('label' => isset($objForm_graphic_types[$row['type']]) ? $objForm_graphic_types[$row['type']] : '');
-        $array_values[$c]['values']['line_aggregation'] = array('label' => isset($objForm_graphic_line_aggregation[$row['line_aggregation']]) ? $objForm_graphic_line_aggregation[$row['line_aggregation']] : '');
+        $array_values[$c]['values']['type'] = array('label' => isset($forms_graphic_types[$row['type']]) ? $forms_graphic_types[$row['type']] : '');
+        $array_values[$c]['values']['line_aggregation'] = array('label' => isset($forms_graphic_line_aggregation[$row['line_aggregation']]) ? $forms_graphic_line_aggregation[$row['line_aggregation']] : '');
         $array_values[$c]['values']['actions']  = array('label' => '
             <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin-light.php?ploopi_op=forms_graphic_delete&forms_id={$objForm->fields['id']}&forms_graphic_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
         ');

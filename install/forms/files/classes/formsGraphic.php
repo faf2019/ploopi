@@ -124,6 +124,8 @@ class formsGraphic extends data_object
 
     public function render($intGraphWidth = null, $intGraphHeight = null)
     {
+        global $forms_graphic_operation;
+
         if (empty($intGraphHeight)) $intGraphHeight = 450;
 
 
@@ -245,8 +247,11 @@ class formsGraphic extends data_object
                     $intTsMax = null;
                     foreach($arrFormData as $arrLine)
                     {
-                        if (is_null($intTsMin) || $arrLine[$strTimeField] < $intTsMin) $intTsMin = $arrLine[$strTimeField];
-                        if (is_null($intTsMax) || $arrLine[$strTimeField] > $intTsMax) $intTsMax = $arrLine[$strTimeField];
+                        if (!empty($arrLine[$strTimeField]))
+                        {
+                            if (is_null($intTsMin) || $arrLine[$strTimeField] < $intTsMin) $intTsMin = $arrLine[$strTimeField];
+                            if (is_null($intTsMax) || $arrLine[$strTimeField] > $intTsMax) $intTsMax = $arrLine[$strTimeField];
+                        }
                     }
 
                     /**
@@ -401,12 +406,12 @@ class formsGraphic extends data_object
                             foreach(array_keys($arrData) as $intI)
                             {
                                 $booFilterOk = false;
-                                if ($this->fields["line{$intI}_filter_op"] != '' && $this->fields["line{$intI}_filter_value"] != '')
+                                if ($this->fields["line{$intI}_filter"] != '' && $this->fields["line{$intI}_filter_op"] != '' && $this->fields["line{$intI}_filter_value"] != '')
                                 {
-                                    if (isset($arrFormFields[$this->fields["line{$intI}_field"]]) && isset($arrLine[$arrFormFields[$this->fields["line{$intI}_field"]]->fields['fieldname']]))
+                                    if (isset($arrFormFields[$this->fields["line{$intI}_filter"]]) && isset($arrLine[$arrFormFields[$this->fields["line{$intI}_filter"]]->fields['fieldname']]))
                                     {
-                                        $strVal1 = trim($arrLine[$arrFormFields[$this->fields["line{$intI}_field"]]->fields['fieldname']]);
-                                        $strVal2 = trim($this->fields["line{$intI}_filter_value"]);
+                                        $strVal1 = strtoupper(ploopi_convertaccents(trim($arrLine[$arrFormFields[$this->fields["line{$intI}_filter"]]->fields['fieldname']])));
+                                        $strVal2 = strtoupper(ploopi_convertaccents(trim($this->fields["line{$intI}_filter_value"])));
 
                                         switch($this->fields["line{$intI}_filter_op"])
                                         {
@@ -681,17 +686,32 @@ class formsGraphic extends data_object
                         else $objPlots->SetFillColor("{$strColor}@1");
 
 
-                        $objField = new formsField();
-                        if ($objField->open($this->fields["line{$intI}_field"]))
+                        $strLegend = $this->fields["line{$intI}_legend"];
+
+                        if ($strLegend == '')
                         {
-                            $strLegend = trim($objField->fields['name']);
-                            if ($this->fields["line{$intI}_filter_value"] != '') $strLegend .= ' '.$this->fields["line{$intI}_filter_op"].' '.trim($this->fields["line{$intI}_filter_value"]);
+                            $objField = new formsField();
+                            if ($objField->open($this->fields["line{$intI}_field"]))
+                            {
+                                $strLegend = trim($objField->fields['name']);
 
-                            if ($this->fields['percent']) $strLegend .= ' (%)';
-                            elseif (isset($forms_graphic_operation[$this->fields["line{$intI}_operation"]])) $strLegend .= ' ('.$forms_graphic_operation[$this->fields["line{$intI}_operation"]].')';
+                                if ($this->fields['percent']) $strLegend .= ' (%)';
+                                elseif (isset($forms_graphic_operation[$this->fields["line{$intI}_operation"]])) $strLegend .= ' ('.$forms_graphic_operation[$this->fields["line{$intI}_operation"]].')';
 
-                            $objPlots->SetLegend($strLegend);
+                            }
+
+                            $objField = new formsField();
+                            if ($objField->open($this->fields["line{$intI}_filter"]))
+                            {
+                                if (!empty($strLegend)) $strLegend .= ' | ';
+
+                                $strLegend .= trim($objField->fields['name']);
+                                if ($this->fields["line{$intI}_filter_value"] != '') $strLegend .= ' '.$this->fields["line{$intI}_filter_op"].' '.trim($this->fields["line{$intI}_filter_value"]);
+
+                            }
                         }
+
+                        $objPlots->SetLegend($strLegend);
                     }
 
 

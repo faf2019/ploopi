@@ -1,3 +1,16 @@
+== Module FORMS - version 3.5.0b =====================================================
+
+2011-09-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Suppression complète des données du module lors de la suppression de l'instance
+* Les valeurs par défaut des champs des tables de formulaires sont définies à NULL au lieu de 0 ou de "chaîne vide"
+* Un champ numérique non saisi ne contient plus "0" mais "null" (vide)
+* Groupes conditionnels : tests insensibles à la casse et aux accents lors de l'enregistrement de la ligne (et pas uniquement lors du contrôle JS côté client)
+* Correction sur les listes déroulantes 'Type de graphique' et 'Unité de temps'
+* Graphiques : filtres non sensibles à la casse et aux accents
+* Graphiques : différenciation entre le champ de filtre et le champ affiché pour chaque courbe
+* Graphiques : possibilité de personnaliser la légende de chaque courbe
+
 == Module FORMS - version 3.5.0a =====================================================
 
 2011-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

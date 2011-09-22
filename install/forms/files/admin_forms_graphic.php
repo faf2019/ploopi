@@ -92,8 +92,8 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                 <label><?php echo _FORMS_GRAPHIC_TYPE; ?>:</label>
                 <select class="select" name="forms_graphic_type" onchange="javascript:forms_graphic_type_onchange(this);">
                 <?php
-                global $objForm_graphic_types;
-                foreach($objForm_graphic_types as $strKey => $strValue)
+                global $forms_graphic_types;
+                foreach($forms_graphic_types as $strKey => $strValue)
                 {
                      ?>
                      <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields['type']) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($strValue); ?></option>
@@ -347,8 +347,8 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     <label><?php echo _FORMS_GRAPHIC_LINE_AGGREGATION; ?>:</label>
                     <select class="select" name="forms_graphic_line_aggregation">
                     <?php
-                    global $objForm_graphic_line_aggregation;
-                    foreach($objForm_graphic_line_aggregation as $strKey => $strValue)
+                    global $forms_graphic_line_aggregation;
+                    foreach($forms_graphic_line_aggregation as $strKey => $strValue)
                     {
                          ?>
                          <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields['line_aggregation']) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($strValue); ?></option>
@@ -371,7 +371,40 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                         <fieldset>
                             <legend><?php echo _FORMS_GRAPHIC_DATASET.' n°'.$intI; ?></legend>
                             <p>
-                                <label>Champ :</label>
+                                <label>Filtre :</label>
+                                <select class="select" name="forms_graphic_line<?php echo $intI; ?>_filter">
+                                    <option value="">(aucun)</option>
+                                    <?
+                                    foreach($arrFields as $intIdField => $arrField)
+                                    {
+                                        if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'])
+                                        {
+                                            ?>
+                                             <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["line{$intI}_filter"]) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($arrField['name']); ?></option>
+                                            <?php
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </p>
+                            <p>
+                                <label>&nbsp;</label>
+                                <select class="select" style="width:20%;" name="forms_graphic_line<?php echo $intI; ?>_filter_op">
+                                    <option value="">(aucun)</option>
+                                    <?php
+                                    global $field_operators;
+                                    foreach($field_operators as $strKey => $strValue)
+                                    {
+                                         ?>
+                                         <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields["line{$intI}_filter_op"]) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($strValue); ?></option>
+                                         <?php
+                                    }
+                                    ?>
+                                </select>
+                                <input style="width:43%;" type="text" class="text" name="forms_graphic_line<?php echo $intI; ?>_filter_value" id="forms_graphic_line<?php echo $intI; ?>_filter_value" value="<?php echo $objGraphic->fields["line{$intI}_filter_value"]; ?>">
+                            </p>
+                            <p>
+                                <label>Champ affiché :</label>
                                 <select class="select" name="forms_graphic_line<?php echo $intI; ?>_field">
                                     <option value="">(aucun)</option>
                                     <?
@@ -388,27 +421,11 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                 </select>
                             </p>
                             <p>
-                                <label>Filtre :</label>
-                                <select class="select" style="width:20%;" name="forms_graphic_line<?php echo $intI; ?>_filter_op">
-                                    <option value="">(aucun)</option>
-                                    <?php
-                                    global $field_operators;
-                                    foreach($field_operators as $strKey => $strValue)
-                                    {
-                                         ?>
-                                         <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields["line{$intI}_filter_op"]) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($strValue); ?></option>
-                                         <?php
-                                    }
-                                    ?>
-                                </select>
-                                <input style="width:43%;" type="text" class="text" name="forms_graphic_line<?php echo $intI; ?>_filter_value" id="forms_graphic_line<?php echo $intI; ?>_filter_value" value="<?php echo $objGraphic->fields["line{$intI}_filter_value"]; ?>">
-                            </p>
-                            <p>
                                 <label>Opération :</label>
                                 <select class="select" name="forms_graphic_line<?php echo $intI; ?>_operation">
                                     <?php
-                                    global $objForm_graphic_operation;
-                                    foreach($objForm_graphic_operation as $strKey => $strValue)
+                                    global $forms_graphic_operation;
+                                    foreach($forms_graphic_operation as $strKey => $strValue)
                                     {
                                          ?>
                                          <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields["line{$intI}_operation"]) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($strValue); ?></option>
@@ -419,8 +436,13 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                             </p>
                             <p>
                                 <label>Couleur :</label>
-                                <input type="text" class="text forms_noselect color {hash:true}" name="forms_graphic_line<?php echo $intI; ?>_color" id="forms_graphic_line<?php echo $intI; ?>_color" value="<?php echo $objGraphic->fields["line{$intI}_color"]; ?>" style="float:left;width:100px;cursor:pointer;" readonly="readonly">
+                                <input type="text" class="text forms_noselect color {hash:true}" name="forms_graphic_line<?php echo $intI; ?>_color" id="forms_graphic_line<?php echo $intI; ?>_color" value="<?php echo $objGraphic->fields["line{$intI}_color"]; ?>" style="float:left;width:100px;cursor:pointer;" readonly="readonly" />
                             </p>
+                            <p>
+                                <label>Légende (optionnelle) :</label>
+                                <input type="text" class="text" name="forms_graphic_line<?php echo $intI; ?>_legend" value="<?php echo $objGraphic->fields["line{$intI}_legend"]; ?>" />
+                            </p>
+
                         </fieldset>
                     </div>
                     <?php

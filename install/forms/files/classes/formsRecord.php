@@ -52,6 +52,9 @@ class formsRecord extends data_object
             $this->fields['ip'] = isset($_SESSION['ploopi']['remote_ip']) ? current($_SESSION['ploopi']['remote_ip']) : '';
         }
 
+        // Si champ vide, affectation de null (permet de ne pas imposer une valeur par défaut notamment pour les champs numériques pour lesquels une chaine vide est interprétée en 0)
+        foreach($this->fields as $strKey => $strVal) if ($strVal == '') $this->fields[$strKey] = null;
+
         return parent::save();
     }
 

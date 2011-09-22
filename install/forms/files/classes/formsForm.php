@@ -253,6 +253,9 @@ class formsForm extends data_object
         // Suppression des graphiques du formulaire
         foreach($this->getGraphics() as $objGraphic) $objGraphic->delete();
 
+        // Suppression des groupes du formulaire
+        foreach($this->getGroups() as $objGroup) $objGroup->delete();
+
         // Suppression de la métabase associée
         $this->removeMetabase();
 
@@ -1409,6 +1412,7 @@ class formsForm extends data_object
             $objRecord = new formsRecord($this);
             if ($objRecord->open($intIdRecord))
             {
+                ploopi_print_r($objRecord->fields);
                 // Enregistrement existant, on charge les données
                 foreach($this->getFields() as $objField)
                 {
@@ -1416,7 +1420,7 @@ class formsForm extends data_object
 
                     $arrFieldsContent[$objField->fields['id']] = explode('||', $objRecord->fields[$objField->fields['fieldname']]);
 
-                    if ($objField->fields['format'] == 'date' && !empty($arrFieldsContent[$objField->fields['id']][0])) $arrFieldsContent[$objField->fields['id']][0] = current(ploopi_timestamp2local("{$arrFieldsContent[$objField->fields['id']][0]}000000"));
+                    if ($objField->fields['format'] == 'date') $arrFieldsContent[$objField->fields['id']][0] = empty($arrFieldsContent[$objField->fields['id']][0]) ? '' : current(ploopi_timestamp2local("{$arrFieldsContent[$objField->fields['id']][0]}000000"));
                 }
             }
             else unset($objRecord);
@@ -1453,6 +1457,7 @@ class formsForm extends data_object
                 }
             }
         }
+
 
         // Chargement du cookie uniquement sur nouvel enregistrement ou lors de l'impression
         if (empty($objRecord) || $strRenderMode == 'print')
