@@ -1484,7 +1484,11 @@ class form
             {
                 if ($objField->_strName != '')
                 {
-                    $strFormField = $objField->_strId != '' ? "$('{$objField->_strId}')" : "form.{$objField->_strName}";
+                    //$strFormField = $objField->_strId != '' ? "$('{$objField->_strId}')" : "form.{$objField->_strName}";
+                    $strFormField = "form['{$objField->_strName}']";
+
+                    $strCond = "$('{$objField->_strId}_form').style.display == 'none' ||";
+
 
                     switch ($objField->_strType)
                     {
@@ -1493,19 +1497,21 @@ class form
                         case 'input:file':
                         case 'textarea':
                             $strFormat = ($objField->_arrOptions['required'] ? '' : 'empty').$objField->_arrOptions['datatype'];
-                            $strOutput .= "\nif (ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
+                            $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
                         break;
 
                         case 'select':
                         case 'color':
-                            if ($objField->_arrOptions['required']) $strOutput .= "\nif (ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'selected'))";
+                            if ($objField->_arrOptions['required']) $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'selected'))";
                         break;
 
                         case 'input:radio':
-                            if ($objField->_arrOptions['required']) $strOutput .= "\nif (ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'checked'))";
+                            if ($objField->_arrOptions['required']) $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'checked'))";
                         break;
 
                         case 'input:checkbox':
+                            if ($objField->_arrOptions['required']) $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', form['{$objField->_strName}[]'], 'checked'))";
+                            /*
                             if ($objField->_arrOptions['required'])
                             {
                                 // Fonction manuelle de vérification qu'une case au moins est cochée (la fonction de ploopi gère la case seule)
@@ -1523,7 +1529,7 @@ class form
                                     var reg = new RegExp(\"<FIELD_LABEL>\",\"gi\");
                                     alert(msg.replace(reg, '".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."'));
                                 } else ";
-                            }
+                            }*/
                         break;
                     }
                 }
