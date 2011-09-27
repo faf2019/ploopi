@@ -113,23 +113,6 @@ sort($objForm_tpl);
                     <textarea class="text" style="height:50px;" name="forms_description"><?php echo htmlentities($objForm->fields['description']); ?></textarea>
                 </p>
                 <p>
-                    <label><?php echo _FORMS_MODEL; ?>:<br /><em>Back/Front</em></label>
-                    <select class="select" name="forms_model">
-                    <?php
-                    foreach($objForm_tpl as $tpl_name)
-                    {
-                        ?>
-                        <option <?php if ($objForm->fields['model'] == $tpl_name) echo 'selected'; ?> value="<?php echo htmlentities($tpl_name); ?>"><?php echo htmlentities($tpl_name); ?></option>
-                        <?php
-                    }
-                    ?>
-                    </select>
-                </p>
-                <p>
-                    <label><?php echo _FORMS_STYLE; ?>:</label>
-                    <input type="text" class="text" name="forms_style" value="<?php echo htmlentities($objForm->fields['style']); ?>">
-                </p>
-                <p>
                     <label><?php echo _FORMS_TYPEFORM; ?>:</label>
                     <select class="select" name="forms_typeform" onchange="javascript:forms_changetype(this);">
                     <?php
@@ -182,13 +165,21 @@ sort($objForm_tpl);
         <div style="float:left;width:35%;">
             <div class="ploopi_form" style="padding:4px;">
                 <p>
-                    <label><?php echo _FORMS_EMAIL; ?>:</label>
-                    <input type="text" class="text" size="30" name="forms_email" value="<?php echo htmlentities($objForm->fields['email']); ?>" />
+                    <label><?php echo _FORMS_MODEL; ?>:<br /><em>Back/Front</em></label>
+                    <select class="select" name="forms_model">
+                    <?php
+                    foreach($objForm_tpl as $tpl_name)
+                    {
+                        ?>
+                        <option <?php if ($objForm->fields['model'] == $tpl_name) echo 'selected'; ?> value="<?php echo htmlentities($tpl_name); ?>"><?php echo htmlentities($tpl_name); ?></option>
+                        <?php
+                    }
+                    ?>
+                    </select>
                 </p>
-                <p style="padding-top: 0; font-size: 10px; text-align: center;"><?php echo _FORMS_EMAIL_EXPLAIN; ?></p>
                 <p>
-                    <label><?php echo _FORMS_FROM; ?>:</label>
-                    <input type="text" class="text" size="30" name="forms_email_from" value="<?php echo htmlentities($objForm->fields['email_from']); ?>" />
+                    <label><?php echo _FORMS_STYLE; ?>:</label>
+                    <input type="text" class="text" name="forms_style" value="<?php echo htmlentities($objForm->fields['style']); ?>">
                 </p>
                 <p>
                     <label><?php echo _FORMS_NBLINE; ?>:</label>
