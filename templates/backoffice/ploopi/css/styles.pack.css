@@ -2207,180 +2207,206 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     overflow:hidden;
 }
 
-.ploopi_generate_form p, 
-.ploopi_generate_form h1, 
-.ploopi_generate_form h2, 
-.ploopi_generate_form h3, 
-.ploopi_generate_form form, 
+.ploopi_generate_form p,
+.ploopi_generate_form h1,
+.ploopi_generate_form h2,
+.ploopi_generate_form h3,
+.ploopi_generate_form form,
 .ploopi_generate_form button{
-	border:0; 
-	margin:0; 
-	padding:0;
+    border:0;
+    margin:0;
+    padding:0;
 }
 
-.ploopi_generate_form h1, 
-.ploopi_generate_form h2, 
+.ploopi_generate_form h1,
+.ploopi_generate_form h2,
 .ploopi_generate_form h3{
-	clear:both;
-	display:block;
-	font-weight:bold;
-	margin-bottom:20px;
-	border-bottom:solid 1px #d6d6d6;
-	padding-bottom:10px;
+    clear:both;
+    display:block;
+    font-weight:bold;
+    margin-bottom:20px;
+    border-bottom:solid 1px #d6d6d6;
+    padding-bottom:10px;
 }
 
 .ploopi_generate_form h1 {
-	font-size:1.5em;
+    font-size:1.5em;
 }
 
 .ploopi_generate_form h2 {
-	font-size:1.3em;
+    font-size:1.3em;
 }
 
 .ploopi_generate_form h3 {
-	font-size:1.1em;
+    font-size:1.1em;
 }
 
 .ploopi_generate_form .spacer{
-	clear:both; 
-	height:1px;
+    clear:both;
+    height:1px;
 }
 
 .ploopi_generate_form .onclick,
 .ploopi_generate_form .onclick *{
-	cursor:pointer;
+    cursor:pointer;
 }
 
 .ploopi_generate_form h1 p{
-	font-size:0.9em;
-	color:#666;
-	margin-top:8px;
-	font-weight:normal;
+    font-size:0.9em;
+    color:#666;
+    margin-top:8px;
+    font-weight:normal;
 }
 
 .ploopi_generate_form label{
-	display:block;
-	text-align:right;
-	width:30%;
-	float:left;
-	clear:both;
-	padding-right:10px;
-	-moz-user-select: none;
-	-khtml-user-select: none;
-	user-select: none;		
+    display:block;
+    text-align:right;
+    width:30%;
+    float:left;
+    clear:both;
+    padding-right:10px;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
 }
 
 .ploopi_generate_form label.required{
-	background:url(../img/forms/required.png) no-repeat right top;
+    background:url(../img/forms/required.png) no-repeat right top;
 }
-	
+
 .ploopi_generate_form label span{
-	color:#666;
-	display:block;
-	font-weight:normal;
-	text-align:right;
-	width:100%;
+    color:#666;
+    display:block;
+    font-weight:normal;
+    text-align:right;
+    width:100%;
 }
 
 .ploopi_generate_form input,
 .ploopi_generate_form select,
 .ploopi_generate_form textarea{
-	float:left;
-	color: #193c1c;
-	padding: 1px;
-	border: 1px solid #606060;
-	background: #f0f0f0 url(../img/field_bg2.png) top left repeat-x;
-	width:60%;
-	margin:2px 0 5px 0;	
+    float:left;
+    color: #193c1c;
+    padding: 1px;
+    border: 1px solid #606060;
+    background: #f0f0f0 url(../img/field_bg2.png) top left repeat-x;
+    width:60%;
+    margin:2px 0 5px 0;
 }
 
 .ploopi_generate_form select{
-	border: 1px solid #606060;
-	background: #f0f0f0;
-	color: #193c1c;
-	padding: 0px;
+    border: 1px solid #606060;
+    background: #f0f0f0;
+    color: #193c1c;
+    padding: 0px;
 }
 
 .ploopi_generate_form select option, .ploopi_generate_form select optgroup {
-	background: #f8f8f8;
+    background: #f8f8f8;
 }
 
 .ploopi_generate_form input:focus,
 .ploopi_generate_form select:focus,
 .ploopi_generate_form textarea:focus{
-	border: 1px solid #000000;
-	background: #f8f8f8;
+    border: 1px solid #000000;
+    background: #f8f8f8;
 }
 
 .ploopi_generate_form input[type=password]{
-	letter-spacing:2px;
+    letter-spacing:2px;
 }
 
 .ploopi_generate_form *[disabled=disabled],
 .ploopi_generate_form *[readonly=readonly]{
-	color:#888;
+    color:#888;
 }
 
 .ploopi_generate_form span{
-	display:block;
-	float:left;
-	margin:2px 0 5px 0;
-	width:60%;
+    display:block;
+    float:left;
+    margin:2px 0 5px 0;
+    width:60%;
 }
 
 
 .ploopi_generate_form span *{
-	width:auto;
+    width:auto;
 }
 .ploopi_generate_form span label{
-	display:block;
-	float:left;
-	clear:none;
-	padding:0 6px 0 2px;
-	font-weight:normal;
-	width:auto;
-}	
+    display:block;
+    float:left;
+    clear:none;
+    padding:0 6px 0 2px;
+    font-weight:normal;
+    width:auto;
+}
 
 .ploopi_generate_form span input{
-	margin:2px 0;
-}	
+    margin:2px 0;
+}
 
 .ploopi_generate_form fieldset {
-	clear:both;
-	display:block;
+    clear:both;
+    display:block;
     margin: 0;
     padding: 0.2em;
     margin: 0.2em;
-    border:1px solid #808080;	
+    border:1px solid #808080;
 }
 
 .ploopi_generate_form fieldset legend {
-	padding:0 4px;
-	font-weight:bold;
+    padding:0 4px;
+    font-weight:bold;
 }
 
 .ploopi_generate_form .buttons {
-	clear:both;
-	margin:2px 8%;
-	overflow:auto;
+    clear:both;
+    margin:2px 8%;
+    overflow:auto;
 }
 
-.ploopi_generate_form button { 
-	float:right;
-	border: 1px solid #193c1c;
-	background:#7a8f7c url(../img/template/bouton.png) top left repeat-x;
-	color: #000000;
-	text-align:center;
-	padding:0 2px;
-	cursor: pointer;	
+.ploopi_generate_form button {
+    float:right;
+    border: 1px solid #193c1c;
+    background:#7a8f7c url(../img/template/bouton.png) top left repeat-x;
+    color: #000000;
+    text-align:center;
+    padding:0 2px;
+    cursor: pointer;
 }
 
-.ploopi_generate_form button[type=submit] { 
-	font-weight:bold;
-}	
+.ploopi_generate_form button[type=submit] {
+    font-weight:bold;
+}
 
 .ploopi_generate_form button:hover {
-	background:#aab7ab;
+    background:#aab7ab;
+}
+
+
+
+.ploopi_array {
+    border:1px solid #000;
+    border-collapse:collapse;
+}
+
+.ploopi_array td,
+.ploopi_array th {
+    padding:2px 4px;
+    border:1px solid #000;
+}
+
+.ploopi_array th {
+    font-weight:bold;
+    text-align:right;
+    background-color:#eee;
+    vertical-align:top;
+}
+
+.ploopi_array td {
+    font-weight:normal;
+    text-align:left;
+    background-color:#fff;
 }
 /*
     Copyright (c) 2007-2008 Ovensia

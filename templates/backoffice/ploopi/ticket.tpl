@@ -3,40 +3,64 @@
 <head>
 <style type="text/css">
 body, form, table, td, input, select, textarea {
-font: 12px tahoma, verdana, sans-serif;
-color: #303030;
+    font: 12px tahoma, verdana, sans-serif;
+    color: #303030;
 }
 
 body, form  {
-margin: 0;
+    margin: 0;
 }
 
 body {
-background: #f0f0f0;
-padding:10px;
+    background: #f0f0f0;
+    padding:10px;
 }
 
 a {
-text-decoration: underline;
-color: #304066;
+    text-decoration: underline;
+    color: #304066;
 }
 
 a:hover {
-text-decoration: underline;
+    text-decoration: underline;
 }
 
 #mailcontent {
-border:1px solid #c0c0c0;
-padding:4px;
-margin:12px 0;
-background-color:#fff;
+    border:1px solid #c0c0c0;
+    padding:4px;
+    margin:12px 0;
+    background-color:#fff;
 }
 
 #linkedobject {
-border:1px solid #c0c0c0;
-padding:4px;
-margin:12px 0;
-background-color:#fff0f0;
+    border:1px solid #c0c0c0;
+    padding:4px;
+    margin:12px 0;
+    background-color:#fff0f0;
+}
+
+.ploopi_array {
+    border:1px solid #000;
+    border-collapse:collapse;
+}
+
+.ploopi_array td,
+.ploopi_array th {
+    padding:2px 4px;
+    border:1px solid #000;
+}
+
+.ploopi_array th {
+    font-weight:bold;
+    text-align:right;
+    background-color:#eee;
+    vertical-align:top;
+}
+
+.ploopi_array td {
+    font-weight:normal;
+    text-align:left;
+    background-color:#fff;
 }
 
 </style>
