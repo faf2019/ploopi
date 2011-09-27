@@ -399,8 +399,11 @@ if ($_SESSION['ploopi']['connected'])
 
                 if (!empty($forms->fields['autobackup_date'])) $forms->fields['autobackup_date'] = ploopi_local2timestamp($forms->fields['autobackup_date']);
 
+
                 $forms->setuwm();
                 $forms->save();
+
+                ploopi_share_save(_FORMS_OBJECT_FORM, $forms->fields['id'], -1, 'forms_send_email');
 
                 ploopi_redirect("admin.php?formsTabItem=formlist&op=forms_modify&forms_id={$forms->fields['id']}&ploopi_mod_msg=_FORMS_MESS_OK_1");
             break;

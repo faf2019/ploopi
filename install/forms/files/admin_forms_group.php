@@ -55,7 +55,7 @@ $arrParams[] = "ploopi_op=forms_group_save";
 $arrParams[] = "forms_id={$objForm->fields['id']}";
 if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']}";
 ?>
-<form name="form_field" action="<?php echo ploopi_urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return forms_field_validate(this);">
+<form name="form_field" action="<?php echo ploopi_urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return forms_group_validate(this);">
 <div style="overflow:hidden">
     <div style="float:left;width:50%;">
         <div class="ploopi_form" style="padding:4px;">

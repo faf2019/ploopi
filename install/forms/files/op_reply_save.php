@@ -386,6 +386,29 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
     $arrEmailContent['Formulaire']['Adresse IP'] = $objRecord->fields['ip'];
     $arrEmailContent['Formulaire']['Opération'] = 'Nouvel enregistrement';
 
+
+    // On récupère les utilisateurs/groupes pour lesquels il faut envoyer un mail
+    $arrShares = ploopi_share_get(-1, _FORMS_OBJECT_FORM, $objForm->fields['id']);
+
+    $_SESSION['ploopi']['tickets']['users_selected'] = array();
+    foreach($arrShares as $row)
+    {
+        switch($row['type_share'])
+        {
+            case 'user':
+                $_SESSION['ploopi']['tickets']['users_selected'][$row['id_share']] = $row['id_share'];
+            break;
+
+            case 'group':
+                $objGroup = new group();
+                if ($objGroup->open($row['id_share'])) foreach(array_keys($objGroup->getusers()) as $id) $_SESSION['ploopi']['tickets']['users_selected'][$id] = $id;
+            break;
+        }
+    }
+
+    ploopi_tickets_send($arrEmailContent['Formulaire']['Titre'], '<table class="ploopi_array">'.ploopi_form2html($arrEmailContent).'</table>', 0, 0, _FORMS_OBJECT_FORM, $objForm->fields['id'].','.$objRecord->fields['id'], $arrEmailContent['Formulaire']['Titre']);
+
+    /*
     if ($objForm->fields['email'] != '')
     {
         $arrFrom = $arrTo = array();
@@ -402,12 +425,11 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
         $arrDest = explode(';',$strDest);
         foreach($arrDest as $strDest) $arrTo[] = array('name' => $strDest, 'address' => $strDest);
 
-        /**
-         * Envoi du formulaire par mail
-         */
+        // Envoi du formulaire par mail
 
         ploopi_send_form($arrFrom, $arrTo, $arrEmailContent['Formulaire']['Titre'], $arrEmailContent);
     }
+    */
 
     if ($_SESSION['ploopi']['mode'] == 'backoffice') ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}");
     else

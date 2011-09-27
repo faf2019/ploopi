@@ -282,6 +282,11 @@ sort($objForm_tpl);
             </div>
         </div>
 
+        <div style="clear:both;border-top:1px solid #a0a0a0;overflow:auto;">
+        <? ploopi_share_selectusers(_FORMS_OBJECT_FORM, $objForm->fields['id'], -1, 'Envoi des réponses par message à...', 'forms_send_email', './modules/forms/img/mail.png'); ?>
+        </div>
+
+
         <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;border-bottom:1px solid #a0a0a0;padding:4px;overflow:auto;">
             <div style="float:right;">
                 <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?formsTabItem=formslist"); ?>'">

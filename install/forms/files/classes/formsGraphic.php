@@ -102,6 +102,72 @@ class formsGraphic extends data_object
         }
     }
 
+    /**
+     * Calcule le dégradé par étape entre 2 couleurs
+     */
+    private static function __gradient($HexFrom, $HexTo, $ColorSteps)
+    {
+        if (substr($HexFrom, 0, 1) == '#') $HexFrom = substr($HexFrom, 1, strlen($HexFrom) - 1);
+        if (substr($HexTo, 0, 1) == '#') $HexTo = substr($HexTo, 1, strlen($HexTo) - 1);
+
+
+        $FromRGB['r'] = hexdec(substr($HexFrom, 0, 2));
+        $FromRGB['g'] = hexdec(substr($HexFrom, 2, 2));
+        $FromRGB['b'] = hexdec(substr($HexFrom, 4, 2));
+
+        $ToRGB['r'] = hexdec(substr($HexTo, 0, 2));
+        $ToRGB['g'] = hexdec(substr($HexTo, 2, 2));
+        $ToRGB['b'] = hexdec(substr($HexTo, 4, 2));
+
+        $StepRGB['r'] = ($FromRGB['r'] - $ToRGB['r']) / ($ColorSteps - 1);
+        $StepRGB['g'] = ($FromRGB['g'] - $ToRGB['g']) / ($ColorSteps - 1);
+        $StepRGB['b'] = ($FromRGB['b'] - $ToRGB['b']) / ($ColorSteps - 1);
+
+        $GradientColors = array();
+
+        for($i = 0; $i <= $ColorSteps; $i++)
+        {
+                $RGB['r'] = floor($FromRGB['r'] - ($StepRGB['r'] * $i));
+                $RGB['g'] = floor($FromRGB['g'] - ($StepRGB['g'] * $i));
+                $RGB['b'] = floor($FromRGB['b'] - ($StepRGB['b'] * $i));
+
+                $HexRGB['r'] = sprintf('%02x', ($RGB['r']));
+                $HexRGB['g'] = sprintf('%02x', ($RGB['g']));
+                $HexRGB['b'] = sprintf('%02x', ($RGB['b']));
+
+                $GradientColors[] = implode(NULL, $HexRGB);
+        }
+
+        foreach($GradientColors as &$Color) $Color = "#{$Color}";
+
+        return $GradientColors;
+    }
+
+    /**
+     * Affiche un message d'erreur graphique
+     */
+
+    private static function __renderError($strMsg, $intGraphWidth, $intGraphHeight)
+    {
+        // Affichage d'une image d'erreur
+        $resImg = imagecreatetruecolor ($intGraphWidth, $intGraphHeight);
+        $white = imagecolorallocate($resImg, 255, 255, 255);
+        $black = imagecolorallocate($resImg, 100, 100, 100);
+
+        imagefill($resImg, 0, 0, $white);
+        imagerectangle($resImg, 0, 0, $intGraphWidth-1, $intGraphHeight-1, $black);
+        imagettftext($resImg, 20, 0, 20, 200, $black, "./modules/forms/fonts/verdana.ttf",  $strMsg);
+
+        ploopi_ob_clean();
+        header('Content-Type: image/png');
+        header('Content-Disposition: attachment; Filename="erreur.png"');
+        header('Cache-Control: private');
+        header('Pragma: private');
+        header('Content-Encoding: None');
+
+        imagepng($resImg);
+        ploopi_die();
+    }
 
     /**
      * Constructeur de la classe
@@ -121,6 +187,8 @@ class formsGraphic extends data_object
         $this->new = true;
         $this->fields['id'] = null;
     }
+
+
 
     public function render($intGraphWidth = null, $intGraphHeight = null)
     {
@@ -149,6 +217,9 @@ class formsGraphic extends data_object
         {
             // Lecture des données
             list($arrFormData) = $objForm->prepareData(true, true, false, true);
+
+            // Jeu de données vide => erreur
+            if (empty($arrFormData)) self::__renderError("Il n'y a pas de données à afficher", $intGraphWidth, $intGraphHeight);
 
             // Lecture des champs
             $arrFormFields = $objForm->getFields();
@@ -207,7 +278,7 @@ class formsGraphic extends data_object
 
                     $objPie->SetLegends(array_keys($arrData));
 
-                    $objPie->SetSliceColors(forms_gradient($this->fields['pie_color1'], $this->fields['pie_color2'], sizeof($arrData)));
+                    $objPie->SetSliceColors(self::__gradient($this->fields['pie_color1'], $this->fields['pie_color2'], sizeof($arrData)));
 
                     $objGraph->Add($objPie);
                 break;
@@ -333,6 +404,13 @@ class formsGraphic extends data_object
                                 $arrTotal[$intI] = 0; // Valeur totale pour chaque indice
                             }
                             $strTitleX = 'Semaines';
+
+                            if (empty($intGraphWidth))
+                            {
+                                $intGraphWidth = $intI*30;
+                                if ($intGraphWidth < 500) $intGraphWidth = 500;
+                            }
+
                         break;
 
                         case 'month':
@@ -364,27 +442,8 @@ class formsGraphic extends data_object
                         break;
                     }
 
-                    // Intervalle trop petit
-                    if ($intI <= 1)
-                    {
-                        // Affichage d'une image d'erreur
-                        $resImg = imagecreatetruecolor ($intGraphWidth, $intGraphHeight);
-                        $white = imagecolorallocate($resImg, 255, 255, 255);
-                        $black = imagecolorallocate($resImg, 100, 100, 100);
-
-                        imagefill($resImg, 0, 0, $white);
-                        imagerectangle($resImg, 0, 0, $intGraphWidth-1, $intGraphHeight-1, $black);
-                        imagettftext($resImg, 30, 0, 20, 200, $black, "./modules/forms/fonts/verdana.ttf",  "Il n'y a pas de données à afficher");
-
-                        header("Content-Type: image/png");
-                        header('Content-Disposition: attachment; Filename="erreur.png"');
-                        header('Cache-Control: private');
-                        header('Pragma: private');
-                        header('Content-Encoding: None');
-
-                        imagepng($resImg);
-                        ploopi_die();
-                    }
+                    // Intervalle trop petit => erreur
+                    if ($intI <= 1) self::__renderError("Il n'y a pas de données à afficher", $intGraphWidth, $intGraphHeight);
 
                     // Initialisation des dataset avec 0
                     for ($intI = 1; $intI <= 5; $intI++) // Courbes
@@ -635,7 +694,6 @@ class formsGraphic extends data_object
                             case 'linec':
                                 // Création d'une série de points avec une courbe
                                 $arrObjPlots[] = $objPlots = new LinePlot($arrPlots);
-                                //ploopi_print_r($arrPlots);
 
                                 // Chaque point de la courbe
                                 // Type de point
@@ -745,7 +803,7 @@ class formsGraphic extends data_object
 
             $strDisposition = 'attachment';
 
-            header("Content-Type: image/png");
+            header('Content-Type: image/png');
             header('Content-Disposition: '.$strDisposition.'; Filename="graphique.png"');
             header('Cache-Control: private');
             header('Pragma: private');

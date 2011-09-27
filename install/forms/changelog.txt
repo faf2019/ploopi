@@ -1,3 +1,14 @@
+== Module FORMS - version 3.5.0d =====================================================
+
+2011-09-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ajout d'un contrôle sur l'intitulé lors de l'enregistrement d'un graphique
+* Ajout d'un contrôle sur l'intitulé lors de l'enregistrement d'un groupe
+* Vidage du buffer de sortie lors de l'affichage d'un message d'erreur graphique
+* Quelques améliorations dans la détection des erreurs de rendu de graphiques
+* Possibilité de définir une liste d'utilisateurs du module comme destinataires du message contenant les données du formulaire (en remplacement de la saisie manuelle d'adresses de courriel)
+ * Si ces utilisateurs disposent d'une adresse de courriel avec renvoi automatique des messages vers cette adresse, alors le formulaire est également envoyé par courriel
+
 == Module FORMS - version 3.5.0c =====================================================
 
 2011-09-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

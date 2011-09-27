@@ -39,9 +39,9 @@ if (ploopi_ismoduleallowed('forms'))
 {
     ploopi_init_module('forms', false, false, false);
     ?>
-    
+
     var verifcolor = false;
-    
+
     function forms_validate(form)
     {
         if (ploopi_validatefield('<?php echo addslashes(html_entity_decode(_FORMS_LABEL)); ?>',form.forms_label,"string"))
@@ -49,14 +49,14 @@ if (ploopi_ismoduleallowed('forms'))
         if (ploopi_validatefield('<?php echo addslashes(html_entity_decode(_FORMS_PUBDATESTART)); ?>',form.forms_pubdate_start,"emptydate"))
         if (ploopi_validatefield('<?php echo addslashes(html_entity_decode(_FORMS_PUBDATEEND)); ?>',form.forms_pubdate_end,"emptydate"))
             return(true);
-    
+
         return(false);
     }
-    
+
     function forms_field_validate(form)
     {
         form.field_values.value = '';
-    
+
         t = form.field_type;
         if (t.value == 'select' || t.value == 'radio' || t.value == 'checkbox' || t.value == 'color')
         {
@@ -67,12 +67,29 @@ if (ploopi_ismoduleallowed('forms'))
             }
         }
         else if (t.value == 'tablelink') form.field_values.value = form.f_formfield.value;
-    
+
         if (ploopi_validatefield('<?php echo _FORMS_FIELD_NAME; ?>',form.field_name,"string"))
             return(true);
-    
+
         return(false);
     }
-    <?php 
+
+    function forms_graphic_validate(form)
+    {
+        if (ploopi_validatefield('<?php echo addslashes(html_entity_decode(_FORMS_GRAPHIC_LABEL)); ?>',form.forms_graphic_label,"string"))
+            return(true);
+
+        return(false);
+    }
+
+    function forms_group_validate(form)
+    {
+        if (ploopi_validatefield('<?php echo addslashes(html_entity_decode(_FORMS_GROUP_LABEL)); ?>',form.forms_group_label,"string"))
+            return(true);
+
+        return(false);
+    }
+
+    <?php
 }
 ?>

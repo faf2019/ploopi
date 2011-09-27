@@ -72,6 +72,9 @@ define ("_FORMS_ACTION_GRAPHICS",     7);
 define ("_FORMS_ACTION_ADMIN",     99);
 
 
+// Objet Form
+define ('_FORMS_OBJECT_FORM',   1);
+
 
 /**
  * Définition des variables globales
