@@ -57,27 +57,27 @@ function ploopi_share_generateid($id_object = -1, $id_record = -1, $id_module = 
  * @param int $id_module identifiant du module
  * @param int $strTitle titre du bloc
  * @param string $strForceShareId identifiant du bloc
- * 
+ *
  * @return string identifiant du bloc
  */
 
-function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module = -1, $strTitle = null, $strForceShareId = null)
+function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module = -1, $strTitle = null, $strForceShareId = null, $strPathIcon = null)
 {
     global $db;
 
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
-    
+
     if (is_null($strTitle)) $strTitle = 'Partages';
 
     $strShareId = is_null($strForceShareId) ? ploopi_share_generateid($id_object, $id_record, $id_module) : $strForceShareId;
-    
+
     $_SESSION['ploopi']['share'][$strShareId] = array('users_selected' => array(), 'groups_selected' => array());
 
     $db->query("
-        SELECT  id_share, type_share 
-        FROM    ploopi_share 
-        WHERE   id_object = {$id_object} 
-        AND     id_record = '".addslashes($id_record)."' 
+        SELECT  id_share, type_share
+        FROM    ploopi_share
+        WHERE   id_object = {$id_object}
+        AND     id_record = '".addslashes($id_record)."'
         AND     id_module = '".addslashes($id_module)."'
     ");
 
@@ -98,7 +98,7 @@ function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module =
     ?>
     <a class="ploopi_share_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('ploopi_share_<?php echo $strShareId; ?>');">
         <p class="ploopi_va">
-            <img src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/share/share.png"; ?>">
+            <img src="<?php echo empty($strPathIcon) ? "{$_SESSION['ploopi']['template_path']}/img/share/share.png" : $strPathIcon; ?>">
             <span><? echo $strTitle; ?></span>
         </p>
     </a>
@@ -148,7 +148,7 @@ function ploopi_share_save($id_object = -1, $id_record = -1, $id_module = -1, $s
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
     $strShareId = is_null($strForceShareId) ? ploopi_share_generateid($id_object, $id_record, $id_module) : $strForceShareId;
-    
+
     $db->query("DELETE FROM ploopi_share WHERE id_object = {$id_object} AND id_record = '".addslashes($id_record)."' AND id_module = {$id_module}");
 
     if (!empty($_SESSION['ploopi']['share'][$strShareId]['users_selected']))

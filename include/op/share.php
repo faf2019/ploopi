@@ -41,7 +41,7 @@ switch($ploopi_op)
         if (isset($_GET['user_id'])) $_SESSION['ploopi']['share'][$_GET['share_id']]['users_selected'][$_GET['user_id']] = $_GET['user_id'];
         if (isset($_GET['group_id'])) $_SESSION['ploopi']['share'][$_GET['share_id']]['groups_selected'][$_GET['group_id']] = $_GET['group_id'];
 
-        if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['share'][$_GET['share_id']]['users_selected'][$_GET['remove_user_id']]); 
+        if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['share'][$_GET['share_id']]['users_selected'][$_GET['remove_user_id']]);
         if (isset($_GET['remove_group_id'])) unset($_SESSION['ploopi']['share'][$_GET['share_id']]['groups_selected'][$_GET['remove_group_id']]);
 
         foreach($_SESSION['ploopi']['share'][$_GET['share_id']]['groups_selected'] as $group_id)
@@ -85,7 +85,7 @@ switch($ploopi_op)
 
     case 'share_search_users':
         if (empty($_GET['share_id'])) ploopi_die();
-        
+
         include_once './include/classes/group.php';
         include_once './include/classes/workspace.php';
 
@@ -96,8 +96,6 @@ switch($ploopi_op)
         $list['workspaces'] = array();
         $list['groups'] = array();
         $list['users'] = array();
-
-        if (isset($id_action) && !is_numeric($id_action)) $id_action = -1;
 
         // Recherche des espaces de travail qui supportent ce module, selon la vue inverse
         $rs = $db->query("
@@ -127,7 +125,7 @@ switch($ploopi_op)
         $cleanedfilter = $db->addslashes($_GET['ploopi_share_userfilter']);
         $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
 
-        // recherche des utilisateurs "admininstrateur d'espace" ou disposant d'une action particuliere dans le module
+        // recherche des utilisateurs
         $query_u =  "
                     SELECT      distinct(u.id), u.login, u.firstname, u.lastname, wu.id_workspace
                     FROM        ploopi_user u
@@ -144,7 +142,7 @@ switch($ploopi_op)
                     ORDER BY    u.lastname, u.firstname
                     ";
 
-        // recherche des utilisateurs de groupes "admininstrateur d'espace" ou disposant d'une action particuliere dans le module
+        // recherche des utilisateurs de groupes
         $query_g =  "
                     SELECT      distinct(u.id), u.login, u.firstname, u.lastname, wg.id_group, wg.id_workspace
                     FROM        ploopi_user u

@@ -345,13 +345,13 @@ function ploopi_send_mail_smtp($from, $to, $subject, $message, $params = null, $
 
     if (!empty($str_cc)) $arrHeaders['Cc'] = $str_cc;
     if (!empty($str_bcc)) $arrHeaders['Bcc'] = $str_bcc;
-    
+
     $arrHeaders['Date'] = date('r');
     $arrHeaders['X-Priority'] = 1;
     $arrHeaders['X-Sender'] = mb_encode_mimeheader(empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST']);
     $arrHeaders['X-Mailer'] = 'PHP/Ploopi';
     $arrHeaders['Organization'] = mb_encode_mimeheader(isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : $arrHeaders['X-Sender']);
-    
+
     // Création du message
     $objMessage = new Mail_mime();
 
@@ -371,17 +371,17 @@ function ploopi_send_mail_smtp($from, $to, $subject, $message, $params = null, $
     $objMessage->setTXTBody(
         html_entity_decode(
             strip_tags(
-                str_replace('<br />', "\n", 
+                str_replace('<br />', "\n",
                     preg_replace(array(
                         '@<script[^>]*?>.*?</script>@xmsi',  // Strip out javascript
-                    	'@<style[^>]*?>.*?</style>@xmsi',    // Strip style tags properly
+                        '@<style[^>]*?>.*?</style>@xmsi',    // Strip style tags properly
                         '@<![\s\S]*?--[ \t\n\r]*>@xmsi'      // Strip multi-line comments including CDATA
                     ), '', $message)
                 )
             )
         )
     );
-    
+
     $mail = $objMail->send($str_to, $objMessage->headers($arrHeaders), $objMessage->get());
 
     return PEAR::isError($mail);
@@ -403,20 +403,18 @@ function ploopi_form2html($form)
         if (is_array($value))
         {
             $content.=  "
-                    <tr bgcolor='#ffffff'>
-                        <td align='left'><b>$field</b></td>
-                        <td align='left' valign='top'>
-                        <table cellpadding='3' cellspacing='1' bgcolor='#000000'>".ploopi_form2html($value)."</table>
-                        </td>
+                    <tr>
+                        <th>{$field}</th>
+                        <td><table>".ploopi_form2html($value)."</table></td>
                     </tr>
                     ";
         }
         else
         {
             $content.=  "
-                    <tr bgcolor='#ffffff'>
-                        <td align='left' valign='top'><b>$field</b></td>
-                        <td align='left'>$value</td>
+                    <tr>
+                        <th>{$field}</th>
+                        <td>{$value}</td>
                     </tr>
                     ";
         }
@@ -447,7 +445,7 @@ function ploopi_send_form($from, $to, $subject, $form, $cc = null, $bcc = null, 
                         <title>{$subject}</title>
                     </head>
                     <body>
-                        <table cellpadding=\"3\" cellspacing=\"1\" bgcolor=\"#000000\">
+                        <table class=\"ploopi_array\">
                             {$content}
                         </table>
                     </body>
