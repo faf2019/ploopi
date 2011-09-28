@@ -401,7 +401,9 @@ function webedit_getarticles($moduleid = -1, $booBlocs = false)
 
     $today = ploopi_createtimestamp();
 
-    if (!isset($_SESSION['webedit'][$key])) $_SESSION['webedit'][$key] = array('tree' => array(), 'list' => array());
+    if (!isset($_SESSION['webedit'][$key])) $_SESSION['webedit'][$key] = array('list' => array());
+    // Reset tree
+    $_SESSION['webedit'][$key]['tree'] = array();
 
     $arrArticles = array();
 

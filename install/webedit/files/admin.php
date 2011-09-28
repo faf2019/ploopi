@@ -92,7 +92,7 @@ switch($menu)
         $headingid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['headingid'];
         $articleid = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['articleid'];
         $display_type = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'];
-        
+
         switch($op)
         {
             // ===============
@@ -181,7 +181,7 @@ switch($menu)
                         // on envoie le ticket de notification d'action sur l'objet
                         ploopi_subscription_notify(_WEBEDIT_OBJECT_HEADING, 'b', _WEBEDIT_ACTION_CATEGORY_EDIT, 'Blocs', array_keys($arrUsers), 'Cet objet à été modifié');
                         /* FIN ABONNEMENT */
-                        
+
                         ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $headingid);
                         ploopi_validation_save(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $headingid);
                     }
@@ -218,7 +218,7 @@ switch($menu)
                         }
 
                         $heading->setvalues($_POST,'webedit_heading_');
-                        
+
                         // Contrôle si pas de boucle infinie en redirection de page/rubrique
                         if(!empty($_POST['webedit_heading_linkedpage']) && webedit_ctrl_infinite_loops_redirect($headingid,$_POST['webedit_heading_linkedpage'])) $heading->fields['linkedpage'] = 0;
 
@@ -226,7 +226,7 @@ switch($menu)
                         if (empty($_POST['webedit_heading_url_window'])) $heading->fields['url_window'] = 0;
                         if (empty($_POST['webedit_heading_private'])) $heading->fields['private'] = 0;
                         if (empty($_POST['webedit_heading_private_visible'])) $heading->fields['private_visible'] = 0;
-                        
+
                         if (empty($_POST['webedit_heading_feed_enabled'])) $heading->fields['feed_enabled'] = 0;
                         if (empty($_POST['webedit_heading_subscription_enabled'])) $heading->fields['subscription_enabled'] = 0;
 
@@ -248,9 +248,9 @@ switch($menu)
                         /* FIN ABONNEMENT */
 
                         // Enregistrement des partages si la rubrique est privée
-                        if (!$heading->fields['private']) unset($_SESSION['ploopi']['share']['users_selected']); 
+                        if (!$heading->fields['private']) unset($_SESSION['ploopi']['share']['users_selected']);
                         ploopi_share_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
-                        
+
                         ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
                         ploopi_validation_save(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $heading->fields['id']);
                     }
@@ -263,7 +263,7 @@ switch($menu)
 
             case 'heading_delete':
                 $heading = new webedit_heading();
-                
+
                 // Pour rédacteur on verif qu'on est pas à la racine du redacteur en controlant si il est bien rédacteur du heading parents (ou plus loin)
                 if ($heading->open($headingid) && (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || (webedit_isEditor($headingid) && webedit_isEditor($heading->fields['id_heading']))))
                 {
@@ -299,13 +299,13 @@ switch($menu)
             case 'bloc_save':
                 if ((ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid) || webedit_isValidator($headingid)) && $type == 'draft')
                 {
-                
+
                     $tablename = 'ploopi_mod_webedit_article_draft';
 
                     $strTypeTicket = '';
 
                     $article = new webedit_article('draft');
-                    
+
                     // nouveau bloc ?
                     if (empty($_POST['articleid']) || !is_numeric($_POST['articleid']) || !$article->open($_POST['articleid']))
                     {
@@ -350,21 +350,21 @@ switch($menu)
                     $arrWfUsersOnly = array(); // utilisateurs uniquement (groupes compris)
                     $arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
                     $intWfHeadingId = $headingid;
-                    
+
                     $objUser = new user();
                     $objUser->open($_SESSION['ploopi']['userid']);
                     $arrGroups = $objUser->getgroups(true);
-                    
+
                     $booWfVal = false;
-                    foreach($arrWf as $value) 
+                    foreach($arrWf as $value)
                     {
                         if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booWfVal = true;
                         if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booWfVal = true;
-                        
+
                         $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
-                        
+
                         if ($value['type_validation'] == 'user') $arrWfUsersOnly[] = $value['id_validation'];
-                        if ($value['type_validation'] == 'group') 
+                        if ($value['type_validation'] == 'group')
                         {
                             $objGroup = new group();
                             if ($objGroup->open($value['id_validation'])) $arrWfUsersOnly = array_merge($arrWfUsersOnly, array_keys($objGroup->getusers()));
@@ -372,7 +372,7 @@ switch($menu)
                     }
 
                     $articleid = $article->save();
-                    
+
                     // action "publier" et l'utilisateur est un validateur => OK
                     if (isset($_POST['publish']) && ($booWfVal || ploopi_isadmin()))
                     {
@@ -380,7 +380,7 @@ switch($menu)
 
                         ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_PUBLISH, $articleid);
                     }
-                    
+
 
                     /* DEBUT ABONNEMENT (BACKOFFICE && FRONTOFFICE) */
 
@@ -399,7 +399,7 @@ switch($menu)
                             $strMsg = 'Cet objet à été publié';
                             $intActionId = _WEBEDIT_ACTION_ARTICLE_PUBLISH;
                         break;
-                        
+
                         default:
                             $strMsg = 'Cet objet à été modifié';
                             $intActionId = _WEBEDIT_ACTION_ARTICLE_EDIT;
@@ -424,14 +424,14 @@ switch($menu)
 
                     if (!empty($_POST['articleid'])) ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
                     else ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
-                    
+
                     ploopi_redirect("admin.php?op=bloc_modify&articleid={$articleid}");
                 }
                 else ploopi_redirect('admin.php');
             break;
-            
+
             case 'article_save':
-            
+
                 if ((ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid) || webedit_isValidator($headingid)) && $type == 'draft')
                 {
                     $tablename = 'ploopi_mod_webedit_article_draft';
@@ -543,16 +543,16 @@ switch($menu)
                     }
                     else $article->setvalues($_POST,'webedit_article_');
 
-                    
+
                     // récupère les validateurs
                     $arrWfUsers = array('group' => array(), 'user' => array());
                     $arrWfUsersOnly = array(); // utilisateurs uniquement (groupes compris)
                     $arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
                     $intWfHeadingId = $headingid;
-                    
+
                     $objHeading = new webedit_heading();
                     $objHeading->open($headingid);
-                    
+
                     if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur les parents
                     {
                         $arrParents = explode(';', $objHeading->fields['parents']);
@@ -566,21 +566,21 @@ switch($menu)
                             }
                         }
                     }
-                    
+
                     $objUser = new user();
                     $objUser->open($_SESSION['ploopi']['userid']);
                     $arrGroups = $objUser->getgroups(true);
-                    
+
                     $booWfVal = false;
-                    foreach($arrWf as $value) 
+                    foreach($arrWf as $value)
                     {
                         if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booWfVal = true;
                         if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booWfVal = true;
-                        
+
                         $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
-                        
+
                         if ($value['type_validation'] == 'user') $arrWfUsersOnly[] = $value['id_validation'];
-                        if ($value['type_validation'] == 'group') 
+                        if ($value['type_validation'] == 'group')
                         {
                             $objGroup = new group();
                             if ($objGroup->open($value['id_validation'])) $arrWfUsersOnly = array_merge($arrWfUsersOnly, array_keys($objGroup->getusers()));
@@ -631,7 +631,7 @@ switch($menu)
                                     'name' => $_SERVER['HTTP_HOST'],
                                     'address' => (empty($_SESSION['ploopi']['user']['email'])) ? _PLOOPI_ADMINMAIL : $_SESSION['ploopi']['user']['email']
                                 );
-                                
+
                             // envoi d'un mail à chaque abonné
                             while ($row = $db->fetchrow())
                             {
@@ -653,7 +653,7 @@ switch($menu)
                                 ploopi_send_mail($from, $row['email'], $mail_title, $mail_content, null, null, null, null, false);
                             }
                         break;
-                        
+
                         default:
                             $strMsg = 'Cet objet à été modifié';
                             $intActionId = _WEBEDIT_ACTION_ARTICLE_EDIT;
@@ -699,7 +699,7 @@ switch($menu)
                         $objHeading->open($headingid);
 
                         // on construit la liste des objets parents (y compris l'objet courant)
-                        $arrHeadingList = preg_plit('/;/', "{$objHeading->fields['parents']};{$objHeading->fields['id']}");
+                        $arrHeadingList = preg_split('/;/', "{$objHeading->fields['parents']};{$objHeading->fields['id']}");
 
                         // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                         $arrUsers = array();
@@ -760,7 +760,7 @@ switch($menu)
                             ploopi_redirect('admin.php');
                         }
                     }
-                    
+
                     if ($headingid == 'b') $op = 'bloc_modify';
                 }
 
@@ -817,7 +817,7 @@ switch($menu)
                             );
 
                             $treeview['list']['r0'] = $node;
-                            $treeview['tree']['h0'][] = 'r0';   
+                            $treeview['tree']['h0'][] = 'r0';
 
                             // Ajout manu des blocs (articles déguisés) dans le menu "Blocs"
                             foreach($blocs['list'] as $article)
@@ -840,7 +840,7 @@ switch($menu)
                                     );
 
                                 $treeview['list']['a'.$article['id']] = $node;
-                                $treeview['tree']['hb'][] = 'a'.$article['id'];                            
+                                $treeview['tree']['hb'][] = 'a'.$article['id'];
                             }
 
                             $node_id = (!empty($articleid)) ? "a{$articleid}" : "h{$headingid}";
