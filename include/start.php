@@ -283,8 +283,8 @@ if ($ploopi_initsession)
             ploopi_logout(_PLOOPI_ERROR_NOWORKSPACEDEFINED);
         }
 
-        // sorting workspaces by depth
-        uksort ($_SESSION['ploopi']['workspaces'], create_function('$a,$b', 'return (sprintf("%03d_%s", intval($_SESSION[\'ploopi\'][\'workspaces\'][$b][\'depth\']), $_SESSION[\'ploopi\'][\'workspaces\'][$b][\'label\']) < sprintf("%03d_%s", intval($_SESSION[\'ploopi\'][\'workspaces\'][$a][\'depth\']), $_SESSION[\'ploopi\'][\'workspaces\'][$a][\'label\']));'));
+        // sorting workspaces by priority/label
+        uksort ($_SESSION['ploopi']['workspaces'], create_function('$a,$b', 'return (sprintf("%03d_%s", intval($_SESSION[\'ploopi\'][\'workspaces\'][$b][\'priority\']), $_SESSION[\'ploopi\'][\'workspaces\'][$b][\'label\']) < sprintf("%03d_%s", intval($_SESSION[\'ploopi\'][\'workspaces\'][$a][\'priority\']), $_SESSION[\'ploopi\'][\'workspaces\'][$a][\'label\']));'));
 
         // create a list with allowed workspaces only
         $_SESSION['ploopi']['workspaces_allowed'] = array();
@@ -572,9 +572,8 @@ if ($_SESSION['ploopi']['connected'])
 {
     // teste moduleid
     if (!$ploopi_errornum && ($_SESSION['ploopi']['moduleid']!= '' && !isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]))) $ploopi_errornum = 3;
-
     // test if module is active
-    if (!$ploopi_errornum && ($_SESSION['ploopi']['moduleid']!= '' && !$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['active'])) $ploopi_errornum = 5;
+    elseif (!$ploopi_errornum && ($_SESSION['ploopi']['moduleid']!= '' && !$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['active'])) $ploopi_errornum = 5;
 
     // test workspaceid
     if (!$ploopi_errornum && ($_SESSION['ploopi']['workspaceid']!= '' && !isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]))) $ploopi_errornum = 6;

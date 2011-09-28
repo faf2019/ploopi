@@ -298,14 +298,14 @@ $arrQueryWorkspaces = array();
 if ($_SESSION['system']['level'] == 'work')
 {
     if (!empty($arrWorkspaces[$workspaceid]['family'])) $arrQueryWorkspaces = $arrWorkspaces[$workspaceid]['family'];
-    
+
     if (!empty($arrWorkspaces[$workspaceid])) $arrQueryWorkspaces[$workspaceid] = $workspaceid;
 
     if (!empty($arrWorkspaces[$workspaceid]['groups_included'])) $arrQueryGroups = $arrWorkspaces[$workspaceid]['groups_included'];
-    
+
     // Intersection entre les groupes possibles et les groupes filtrés
     if (!empty($arrQueryGroups) && !empty($arrFilteredGroups)) $arrQueryGroups = array_intersect($arrQueryGroups, $arrFilteredGroups);
-    
+
     // Intersection entre les espaces possibles et les espaces filtrés
     if (!empty($arrQueryWorkspaces) && !empty($arrFilteredWorkspaces)) $arrQueryWorkspaces = array_intersect($arrQueryWorkspaces, $arrFilteredWorkspaces);
 }
@@ -313,7 +313,7 @@ else
 {
     //$arrQueryGroups = $arrFilteredGroups;
     $arrQueryWorkspaces = $arrFilteredWorkspaces;
-    
+
     if ($arrFilter['ploopi_workspace'] != '')
     {
         $arrQueryGroups = array();
@@ -338,7 +338,7 @@ if ($arrFilter['ploopi_workspace'] == '' && $arrFilter['ploopi_group'] == '')
         $objQuery->add_where('(wu.id_workspace IN (%e) OR gu.id_group IN (%e))', array($arrQueryWorkspaces, $arrQueryGroups));
     }
 }
-else 
+else
 {
     if ($arrFilter['ploopi_workspace'] != '' && $arrFilter['ploopi_group'] != '')
     {
@@ -439,8 +439,8 @@ if ($intNbRep > 0 && $intNbRep <= $intMaxResponse)
 
     // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
     $arrUser = $objQuery->execute()->getarray(true);
-    
-    
+
+
     // Requête permettant de connaître les groupes attachés aux utilisateurs
     $objQuery = new ploopi_query_select();
     $objQuery->add_select('gu.*');
@@ -490,7 +490,7 @@ if ($intNbRep > 0 && $intNbRep <= $intMaxResponse)
                                 $intAdminLevel = max($arrAdminLevel[$intIdWorkspace][$intIdGroupInt], $intAdminLevel);
                             }
                         }
-                        
+
                         if (!$intAdminLevel)
                         {
                             foreach($arrInt as $intIdGroup)
@@ -554,7 +554,7 @@ if ($intNbRep > 0 && $intNbRep <= $intMaxResponse)
         $objQuery->add_where('r.id_module = m.id');
         $objQuery->add_where('wgr.id_group IN (%e)', array($arrGroupsId));
         $objRs = $objQuery->execute();
-        
+
         while ($row = $objRs->fetchrow()) $arrRoles['groups'][$row['id_workspace']][$row['id_group']][$row['id']] = $row;
     }
 
@@ -570,10 +570,9 @@ if ($intNbRep > 0 && $intNbRep <= $intMaxResponse)
     $objQuery->add_where('r.id_module = m.id');
     $objQuery->add_where(' wur.id_user IN (%e)', array(array_keys($arrUser)));
     $objRs = $objQuery->execute();
-    
+
     while ($row = $objRs->fetchrow()) $arrRoles['users'][$row['id_workspace']][$row['id_user']][$row['id']] = $row;
 
-    
     foreach ($arrUser as $intUserId => $row)
     {
         // tri des groupes par nom
@@ -586,16 +585,16 @@ if ($intNbRep > 0 && $intNbRep <= $intMaxResponse)
 
         // tri des espaces par nom
         if (!empty($row['workspaces'])) asort($row['workspaces']);
-        
+
         $arrSortLabelWorkspaces = array();
-        
+
         // conversion du tableau d'espaces en un tableau de liens vers les espaces
         if (!empty($row['workspaces']))
         {
             foreach($row['workspaces'] as $intIdWorkspace => $rowWorkspace)
             {
                 $arrSortLabelWorkspaces[] = $rowWorkspace['label'];
-                
+
                 // tableau qui va contenir les rôles dont dispose l'utilisateur dans l'espace courant
                 $arrUserWspRoles = array();
                 if (isset($arrRoles['groups'][$intIdWorkspace]))
@@ -603,10 +602,10 @@ if ($intNbRep > 0 && $intNbRep <= $intMaxResponse)
                     foreach($arrRoles['groups'][$intIdWorkspace] as $intIdGrp => $arrDetail)
                     {
                         // L'utilisateur appartient au groupe (donc il a les rôles)
-                        if (in_array($intIdGrp, array_keys($row['groups'])))
+                        if (!empty($row['groups']) && in_array($intIdGrp, array_keys($row['groups'])))
                         {
                             foreach($arrDetail as $intIdRole => $arrR)
-                                $arrUserWspRoles[$intIdRole] = $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN ? 
+                                $arrUserWspRoles[$intIdRole] = $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN ?
                                     sprintf(
                                         "<a title=\"Accéder à ce rôle\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"Accéder à ce module\" href=\"%s\">%s</a><span>)</span>",
                                         ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
@@ -621,7 +620,7 @@ if ($intNbRep > 0 && $intNbRep <= $intMaxResponse)
                 if (isset($arrRoles['users'][$intIdWorkspace][$intUserId]))
                 {
                     foreach($arrRoles['users'][$intIdWorkspace][$intUserId] as $intIdRole => $arrR)
-                        $arrUserWspRoles[$intIdRole] = $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN ? 
+                        $arrUserWspRoles[$intIdRole] = $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN ?
                             sprintf(
                                     "<a title=\"Accéder à ce rôle\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"Accéder à ce module\" href=\"%s\">%s</a><span>)</span>",
                                     ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),

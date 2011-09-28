@@ -183,6 +183,7 @@ define ('_SYSTEM_LABEL_META', 'META Informations');
 define ('_SYSTEM_LABEL_USEDMODULES', 'Modules utilisés');
 
 define ('_SYSTEM_LABEL_GROUP_CODE',         'Code');
+define ('_SYSTEM_LABEL_GROUP_PRIORITY',     'Priorité');
 define ('_SYSTEM_LABEL_GROUP_NAME',         'Nom');
 define ('_SYSTEM_LABEL_GROUP_FATHER',       'Groupe Père');
 define ('_SYSTEM_LABEL_GROUP_SYSTEM',       'Système');

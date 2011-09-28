@@ -1587,4 +1587,8 @@ INSERT INTO `ploopi_param_type` (`id_module_type` ,`name` ,`default_value` ,`pub
 INSERT INTO `ploopi_param_default` (`id_module` ,`name` ,`value` ,`id_module_type`) VALUES ('1', 'system_submenu_display', '1', '1');
 INSERT INTO `ploopi_param_choice` (`id_module_type` ,`name` ,`value` ,`displayed_value`) VALUES ('1', 'system_submenu_display', '1', 'oui'), ('1', 'system_submenu_display', '0', 'non');
 
-UPDATE `ploopi_module_type` SET `version` = '1.8.9.2', `author` = 'Ovensia', `date` = '20110825000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+ALTER TABLE `ploopi_workspace` ADD `priority` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0', ADD INDEX ( `priority` );
+UPDATE `ploopi_workspace` SET priority = 1 * POW(10, depth-2);
+
+UPDATE `ploopi_module_type` SET `version` = '1.8.9.3', `author` = 'Ovensia', `date` = '20110927000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+

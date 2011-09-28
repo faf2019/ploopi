@@ -178,6 +178,10 @@ echo $skin->open_simplebloc();
                     <label><?php echo _SYSTEM_LABEL_GROUP_CODE; ?>:</label>
                     <input type="text" class="text" name="workspace_code"  value="<?php echo $workspace->fields['code']; ?>">
                 </p>
+                <p>
+                    <label><?php echo _SYSTEM_LABEL_GROUP_PRIORITY; ?>:</label>
+                    <input type="text" class="text" name="workspace_priority"  value="<?php echo $workspace->fields['priority']; ?>">
+                </p>
                 <?php
             }
             ?>

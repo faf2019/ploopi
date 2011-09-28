@@ -147,7 +147,7 @@ if ($_SESSION['ploopi']['connected'])
                     'SELECTED' => ($idmod == $_SESSION['ploopi']['moduleid']) ? 'selected' : ''
                 )
             );
-            
+
             if (!empty($mod['content']))
             {
                 $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block.switch_content',array(
@@ -167,7 +167,7 @@ if ($_SESSION['ploopi']['connected'])
                             'DESCRIPTION' => ''
                         )
                     );
-                    
+
                     if (!empty($mod['content']))
                     {
                         $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_blocksel.switch_content',array(
@@ -176,8 +176,8 @@ if ($_SESSION['ploopi']['connected'])
                         );
                     }
                 }
-                
-                
+
+
                 foreach($mod['menu'] as $menu)
                 {
                     if ($idmod == $_SESSION['ploopi']['moduleid']) // Module sélectionné
@@ -191,7 +191,7 @@ if ($_SESSION['ploopi']['connected'])
                             )
                         );
                     }
-                    
+
                     $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block.menu',array(
                             'LABEL' => $menu['label'],
                             'CLEANED_LABEL' => $menu['cleaned_label'],
@@ -204,9 +204,9 @@ if ($_SESSION['ploopi']['connected'])
             }
         }
     }
-    
+
     ob_start();
-    
+
     if (!empty($_SESSION['ploopi']['moduletype']))
     {
         if ($_SESSION['ploopi']['action'] == 'admin')
@@ -234,7 +234,7 @@ if ($_SESSION['ploopi']['connected'])
         'USER_FIRSTNAME'        => $_SESSION['ploopi']['user']['firstname'],
         'USER_LASTNAME'         => $_SESSION['ploopi']['user']['lastname'],
         'USER_EMAIL'            => $_SESSION['ploopi']['user']['email'],
-    
+
         'USER_WORKSPACE_LABEL'  => htmlentities(_PLOOPI_LABEL_MYWORKSPACE),
         'USER_WORKSPACE_URL'    => ploopi_urlencode("admin.php", _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'USER_WORKSPACE_SEL'    => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE) ? 'selected' : '',
@@ -324,7 +324,7 @@ if(isset($_GET['ploopi_mod_msg']) && defined($_GET['ploopi_mod_msg']))
         'MSG'       => constant($_GET['ploopi_mod_msg']),
         'MSG4JS'    => addslashes(constant($_GET['ploopi_mod_msg'])),
         'MSG_ID'    => uniqid('ploopi_mod_mess_'),
-        'MSG_CLASS' => 'ploopi_mod_mess_ok'  
+        'MSG_CLASS' => 'ploopi_mod_mess_ok'
         )
     );
 }

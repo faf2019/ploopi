@@ -49,8 +49,7 @@ unset($_SESSION['ploopi']['workspaces']);
 // on en profite pour appliquer l'héritage implicite des domaines pour les sous-espaces de travail
 ///////////////////////////////////////////////////////////////////////////
 
-$select = "SELECT * FROM ploopi_workspace where system = 0 order by depth";
-$db->query($select);
+$db->query("SELECT * FROM ploopi_workspace where system = 0 order by depth, label");
 
 $workspaces = array();
 

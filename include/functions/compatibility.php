@@ -3,7 +3,7 @@
  * Retro-support of get_called_class()
  * Tested and works in PHP 5.2.4
  * http://www.sol1.com.au/
- ********************************/ 
+ ********************************/
 if(!function_exists('get_called_class')) {
     function get_called_class($bt = false,$l = 1) {
         if (!$bt) $bt = debug_backtrace();
@@ -42,8 +42,23 @@ if(!function_exists('get_called_class')) {
                         return get_class($bt[$l]['object']);
                     default: return $bt[$l]['class'];
                 }
-    
+
             default: throw new Exception ("Unknown backtrace method type");
         }
     }
 }
+
+
+ if ( !function_exists('sys_get_temp_dir')) {
+    function sys_get_temp_dir() {
+        if( $temp=getenv('TMP') ) return $temp;
+        if( $temp=getenv('TEMP') ) return $temp;
+        if( $temp=getenv('TMPDIR') ) return $temp;
+        $temp=tempnam(__FILE__,'');
+        if (file_exists($temp)) {
+            unlink($temp);
+            return dirname($temp);
+        }
+        return null;
+    }
+ }
