@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.5.0 ============================================
+
+2011-10-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Possibilités d'indextion pour les objets insérés dans le contenu
+
 == Module WebEdit - version 2.4.2c ============================================
 
 2011-09-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

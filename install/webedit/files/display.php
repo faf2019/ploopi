@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2011 Ovensia
     Copyright (c) 2009-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -371,11 +371,86 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
 
                 $arrQueryHeadingArticles = $db->getarray($rs, true);
 
-                if (!empty($arrQueryHeadingArticles)) $arrRelevance += ploopi_search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, $arrQueryHeadingArticles, $_SESSION['ploopi']['moduleid']);
+                if (!empty($arrQueryHeadingArticles))
+                {
+                    foreach(ploopi_search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, $arrQueryHeadingArticles, $_SESSION['ploopi']['moduleid']) as $row)
+                    {
+                        $arrRelevance['webedit_'.$row['id_record']] = $row;
+                    }
+                }
             }
-            else $arrRelevance += ploopi_search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, null, $_SESSION['ploopi']['moduleid']);
+            else
+            {
+                foreach(ploopi_search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, null, $_SESSION['ploopi']['moduleid']) as $row)
+                {
+                    $arrRelevance['webedit_'.$row['id_record']] = $row;
+                }
+            }
 
-            // ploopi_print_r($arrRelevance);
+            /**
+             * Recherche dans les contenus d'objets intégrés dans les pages
+             */
+
+            // Recherche des objets utilisés
+            $sql =
+                "
+                SELECT      ao.*,
+                            a.id_heading
+
+                FROM        ploopi_mod_webedit_article_object ao,
+                            ploopi_mod_webedit_article a
+
+                WHERE       a.id_module = {$_SESSION['ploopi']['moduleid']}
+                AND         ao.id_article = a.id
+                ";
+            $db->query($sql);
+
+            $arrObject = array();
+
+            while ($row = $db->fetchrow())
+            {
+                if ($row['id_heading'] == 0 || !$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
+                {
+                    // Recherche par rubrique, on contrôle l'id de la rubrique (et parents) du document avec la rubrique sélectionnée
+                    if ($query_heading_id != '')
+                    {
+                        $booObjectOk = false;
+                        $intId = $row['id_heading'];
+                        while ($intId != 0 && $booObjectOk == false) {
+                            if ($intId == $query_heading_id) $booObjectOk = true;
+                            $intId = $arrHeadings['list'][$intId]['id_heading'];
+                        }
+                    }
+                    else $booObjectOk = true;
+
+                    unset($row['id_heading']);
+
+                    if ($booObjectOk) $arrObject[md5(serialize($row))] = $row;
+                }
+            }
+
+            // pour chaque objet, on récupère le résultat de la recherche
+            foreach($arrObject as $rowObject)
+            {
+                if (isset($_SESSION['ploopi']['modules'][$rowObject['id_module']]) && $_SESSION['ploopi']['modules'][$rowObject['id_module']]['active']) // Module existe et actif ?
+                {
+                    // Charge le fichier global.php du module
+                    ploopi_init_module($_SESSION['ploopi']['modules'][$rowObject['id_module']]['moduletype'], false, false, false);
+                    // Vérifie l'existence d'une fonction de recherche dans les objets
+                    $cbSearchFunc = $_SESSION['ploopi']['modules'][$rowObject['id_module']]['moduletype'].'_object_search';
+
+                    if (function_exists($cbSearchFunc))
+                    {
+                        foreach($cbSearchFunc($query_string, $rowObject) as $row)
+                        {
+                            $row['id_article'] = $rowObject['id_article'];
+                            $arrRelevance[$_SESSION['ploopi']['modules'][$rowObject['id_module']]['moduletype'].'_'.$row['id_record']] = $row;
+                        }
+                    }
+                }
+            }
+            // tri général de la recherche
+            // uasort($arrRelevance, create_function('$a,$b', 'return $b[\'relevance\'] > $a[\'relevance\'];'));
         }
 
         // Recherche de documents ?
@@ -433,23 +508,23 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                 foreach($arrModDoc as $idModDoc => $arrDoc)
                 {
                     // Filtrage par extension
-                    if ($query_mime_type != '')
+                    foreach (ploopi_search($query_string, _DOC_OBJECT_FILE, $arrDoc, $idModDoc) as $row)
                     {
-                        foreach (ploopi_search($query_string, _DOC_OBJECT_FILE, $arrDoc, $idModDoc) as $strKey => $arrRes)
+                        if ($query_mime_type != '')
                         {
-                            if (strripos(strtolower($arrRes['label']), strtolower($query_mime_type)) === strlen($arrRes['label']) - strlen($query_mime_type))
+                            if (strripos(strtolower($row['label']), strtolower($query_mime_type)) === strlen($row['label']) - strlen($query_mime_type))
                             {
-                                $arrRelevance[$strKey] = $arrRes;
+                                $arrRelevance['doc_'.$row['id_record']] = $row;
                             }
                         }
                     }
-                    else $arrRelevance += ploopi_search($query_string, _DOC_OBJECT_FILE, $arrDoc, $idModDoc);
                 }
-
-                // tri général de la recherche
-                uasort($arrRelevance, create_function('$a,$b', 'return $b[\'relevance\'] > $a[\'relevance\'];'));
             }
         }
+
+        // tri général de la recherche
+        uasort($arrRelevance, create_function('$a,$b', 'return $b[\'relevance\'] > $a[\'relevance\'];'));
+
 
         $responses = 0;
 
@@ -490,56 +565,74 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
             }
             else // c'est un article
             {
-
                 $objArticle = new webedit_article();
 
-                if ($objArticle->open($result['id_record']) && $objArticle->isenabled())
+                // Soit l'id de l'article (si objet lié) ou id de l'enregistrement
+                $idrecord = isset($result['id_article']) ? $result['id_article'] : $result['id_record'];
+
+                if ($objArticle->open($idrecord) && $objArticle->isenabled())
                 {
-                    // Contrôle de la date de publication (au sens création de l'article)si renseignée dans la recherche
+                    // Contrôle de la date de publication (au sens création de l'article) si renseignée dans la recherche
                     if (($objArticle->fields['timestp'] >= $ts_date_b || empty($ts_date_b)) && ($objArticle->fields['timestp'] <= $ts_date_e || empty($ts_date_e)))
                     {
-                        if (!$arrHeadings['list'][$objArticle->fields['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$objArticle->fields['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$objArticle->fields['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
+                        // Rubrique non privée ou accessible par l'utilisateur
+                        if (!$arrHeadings['list'][$objArticle->fields['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$objArticle->fields['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$objArticle->fields['id_heading']]['herited_private']]) || $webedit_mode == 'edit')
                         {
-                            $cleaned_content = strip_tags(html_entity_decode($objArticle->fields['content_cleaned']));
-
-                            // Gestion des url par mode de rendu
-                            switch($webedit_mode)
+                            // c'est un objet intégré dans un article
+                            if (isset($result['id_article']))
                             {
-                                case 'edit';
-                                case 'render';
-                                    $link = "index.php?webedit_mode=render&headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}";
-                                break;
 
-                                default:
-                                case 'display';
-                                    $arrParents = array();
-                                    if (isset($arrHeadings['list'][$objArticle->fields['id_heading']])) foreach(preg_split('/;/', $arrHeadings['list'][$objArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-                                    $link = ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}", webedit_getrewriterules(), $objArticle->fields['metatitle'], $arrParents);
-                                break;
+                                $cbSearchFunc = $_SESSION['ploopi']['modules'][$result['id_module']]['moduletype'].'_object_searchresult';
+
+                                if (function_exists($cbSearchFunc))
+                                {
+                                    $cbSearchFunc($template_body, $result, $objArticle, $arrHeadings);
+                                    $responses++;
+                                }
                             }
+                            else
+                            {
+                                $cleaned_content = strip_tags(html_entity_decode($objArticle->fields['content_cleaned']));
 
-                            $template_body->assign_block_vars('switch_search.result',
-                                array(
-                                    'RELEVANCE' => sprintf("%.02f", $result['relevance']),
-                                    'TITLE' => htmlentities($objArticle->fields['title']),
-                                    'TITLE_RAW' => $objArticle->fields['title'],
-                                    'AUTHOR' => htmlentities($objArticle->fields['author']),
-                                    'AUTHOR_RAW' => $objArticle->fields['author'],
-                                    'EXTRACT' => '', isset($kw['']) ? '' : ploopi_highlight($cleaned_content, array_merge(array_keys($result['kw']), array_keys($result['stem']))),
-                                    'METATITLE' => htmlentities($objArticle->fields['metatitle']),
-                                    'METATITLE_RAW' => $objArticle->fields['metatitle'],
-                                    'METAKEYWORDS' => htmlentities($objArticle->fields['metakeywords']),
-                                    'METAKEYWORDS_RAW' => $objArticle->fields['metakeywords'],
-                                    'METADESCRIPTION' => htmlentities($objArticle->fields['metadescription']),
-                                    'METADESCRIPTION_RAW' => $objArticle->fields['metadescription'],
-                                    'DATE' => ($objArticle->fields['timestp']!='') ? current(ploopi_timestamp2local($objArticle->fields['timestp'])) : '',
-                                    'SIZE' => sprintf("%.02f", strlen($cleaned_content)/1024),
-                                    'LINK' => $link,
-                                    'SHORT_LINK' => ploopi_strcut($link, 50, 'middle')
-                                )
-                            );
+                                // Gestion des url par mode de rendu
+                                switch($webedit_mode)
+                                {
+                                    case 'edit';
+                                    case 'render';
+                                        $link = "index.php?webedit_mode=render&headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}";
+                                    break;
 
-                            $responses++;
+                                    default:
+                                    case 'display';
+                                        $arrParents = array();
+                                        if (isset($arrHeadings['list'][$objArticle->fields['id_heading']])) foreach(explode(';', $arrHeadings['list'][$objArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                                        $link = ploopi_urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}", webedit_getrewriterules(), $objArticle->fields['metatitle'], $arrParents);
+                                    break;
+                                }
+
+                                $template_body->assign_block_vars('switch_search.result',
+                                    array(
+                                        'RELEVANCE' => sprintf("%.02f", $result['relevance']),
+                                        'TITLE' => htmlentities($objArticle->fields['title']),
+                                        'TITLE_RAW' => $objArticle->fields['title'],
+                                        'AUTHOR' => htmlentities($objArticle->fields['author']),
+                                        'AUTHOR_RAW' => $objArticle->fields['author'],
+                                        'EXTRACT' => isset($kw['']) ? '' : ploopi_highlight($cleaned_content, array_merge(array_keys($result['kw']), array_keys($result['stem']))),
+                                        'METATITLE' => htmlentities($objArticle->fields['metatitle']),
+                                        'METATITLE_RAW' => $objArticle->fields['metatitle'],
+                                        'METAKEYWORDS' => htmlentities($objArticle->fields['metakeywords']),
+                                        'METAKEYWORDS_RAW' => $objArticle->fields['metakeywords'],
+                                        'METADESCRIPTION' => htmlentities($objArticle->fields['metadescription']),
+                                        'METADESCRIPTION_RAW' => $objArticle->fields['metadescription'],
+                                        'DATE' => ($objArticle->fields['timestp']!='') ? current(ploopi_timestamp2local($objArticle->fields['timestp'])) : '',
+                                        'SIZE' => sprintf("%.02f", strlen($cleaned_content)/1024),
+                                        'LINK' => $link,
+                                        'SHORT_LINK' => ploopi_strcut($link, 50, 'middle')
+                                    )
+                                );
+
+                                $responses++;
+                            }
                         }
                     }
                 }

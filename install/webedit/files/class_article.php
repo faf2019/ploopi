@@ -53,6 +53,10 @@ include_once './modules/webedit/class_tag.php';
  */
 include_once './modules/webedit/class_article_tag.php';
 
+include_once './modules/webedit/class_docfile.php';
+
+include_once './modules/webedit/class_article_object.php';
+
 /**
  * Classe d'accès aux table ploopi_mod_webedit_article et ploopi_mod_webedit_article_draft
  *
@@ -243,7 +247,7 @@ class webedit_article extends data_object
     {
         global $db;
 
-        // Suppression des docs rattachés à l'article (on le récrée par la suite)
+        // Suppression des docs rattachés à l'article (on les récrée par la suite)
         $db->query("DELETE FROM ploopi_mod_webedit_docfile WHERE id_article = {$this->fields['id']}");
 
         // Recherche des liens vers des documents (du module doc)
@@ -252,7 +256,6 @@ class webedit_article extends data_object
         if (!empty($arrMatches[1]) && file_exists('./modules/doc/class_docfile.php'))
         {
             include_once './modules/doc/class_docfile.php';
-            include_once './modules/webedit/class_docfile.php';
 
             foreach($arrMatches[1] as $doc_md5id)
             {
@@ -273,6 +276,32 @@ class webedit_article extends data_object
                 }
             }
         }
+
+        // Suppression des objets rattachés à l'article (on les récrée par la suite)
+        $db->query("DELETE FROM ploopi_mod_webedit_article_object WHERE id_article = {$this->fields['id']}");
+
+        // Recherche des objets insérés
+        if (preg_match_all('@\[\[(\d+),(\d+)(,([^/]+))?/([^\]]*)\]\]@i',  html_entity_decode($this->fields['content']), $arrMatches) !== false)
+        {
+            foreach(array_keys($arrMatches[0]) as $intKey)
+            {
+                if (isset($_SESSION['ploopi']['modules'][$arrMatches[2][$intKey]])) // Module existe ?
+                {
+                    // Association des objets à l'article
+                    $objArticleObject = new webedit_article_object();
+                    if (!$objArticleObject->open($this->fields['id'], $arrMatches[1][$intKey], $_SESSION['ploopi']['modules'][$arrMatches[2][$intKey]]['id_module_type'], $arrMatches[2][$intKey], $arrMatches[4][$intKey])) 
+                    {
+                        $objArticleObject->fields['id_article'] = $this->fields['id'];
+                        $objArticleObject->fields['id_wce_object'] = $arrMatches[1][$intKey];
+                        $objArticleObject->fields['id_module_type'] = $_SESSION['ploopi']['modules'][$arrMatches[2][$intKey]]['id_module_type'];
+                        $objArticleObject->fields['id_module'] = $arrMatches[2][$intKey];
+                        $objArticleObject->fields['id_record'] = $arrMatches[4][$intKey];
+                        $objArticleObject->save();
+                    }
+                }
+            }
+        }
+        
 
         // suppression des liens article-tags existants
         $sql = "DELETE FROM ploopi_mod_webedit_article_tag WHERE id_article = {$this->fields['id']}";
