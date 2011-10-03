@@ -91,6 +91,20 @@ function ploopi_convertaccents($str)
 }
 
 /**
+ * Encode les contenus d'url selon la RFC 3986
+ * @see http://www.php.net/manual/fr/function.urlencode.php#97969
+ */
+
+function ploopi_rawurlencode($str)
+{
+    return str_replace(
+        array('%21', '%2A', '%27', '%28', '%29', '%3B', '%3A', '%40', '%26', '%3D', '%2B', '%24', '%2C', '%2F', '%3F', '%25', '%23', '%5B', '%5D'),
+        array('!', '*', "'", "(", ")", ";", ":", "@", "&", "=", "+", "$", ",", "/", "?", "%", "#", "[", "]"),
+        urlencode($str)
+    );
+}
+
+/**
  * Réécrit une chaîne destinée à être transformée en URL
  *
  * @param string $str chaîne à transformer
@@ -103,7 +117,7 @@ function ploopi_convertaccents($str)
 
 function ploopi_string2url($str)
 {
-    $str = urlencode(ploopi_convertaccents(strtolower(strtr(trim($str), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '-')))));
+    $str = ploopi_rawurlencode(ploopi_convertaccents(strtolower(strtr(trim($str), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '-')))));
     return preg_replace(array('/--+/', '/-$/'), array('-', ''), $str);
 }
 
