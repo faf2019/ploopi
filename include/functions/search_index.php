@@ -288,59 +288,62 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
     {
         // on calcule le hash md5
         $stem_value = key($words);
-        $stem_md5 = md5($stem_value);
-
-        // enregistrement de la racine si n'existe pas déjà
-        $db->query("SELECT id FROM ploopi_index_stem WHERE id = '{$stem_md5}'");
-        if (!$db->numrows())
+        if (strlen($stem_value) <= 20)
         {
-            $objStem = new index_stem();
-            $objStem->fields['id'] = $stem_md5;
-            $objStem->fields['stem'] = $stem_value;
-            $objStem->save();
-        }
+            $stem_md5 = md5($stem_value);
 
-        // enregistrement du lien racine <-> enregistrement
-        $objStemElement = new index_stem_element();
-        if (!$objStemElement->open($stem_md5, $id_element))
-        {
-            $objStemElement->fields['id_stem'] = $stem_md5;
-            $objStemElement->fields['id_element'] = $id_element;
-            $objStemElement->fields['weight'] = $stem['weight'];
-            $objStemElement->fields['ratio'] = (empty($stem['meta']) && $stem_ratio<1) ? $stem_ratio : 1;
-            $objStemElement->fields['relevance'] = (empty($stem['meta'])) ? ($stem['weight']*100)/$max_weight : 100;
-            $objStemElement->save();
-        }
-
-        foreach($stem['words'] as $kw_value => $kw)
-        {
-            $kw_weight = $kw['weight'];
-            $kw_ratio = (empty($words_overall)) ? 1 : ($kw['weight']*100 / $words_overall);
-
-            // on calcule le hash md5
-            $kw_md5 = md5($kw_value);
-
-            // enregistrement du mot clé si n'existe pas déjà
-            $db->query("SELECT id FROM ploopi_index_keyword WHERE id = '{$kw_md5}'");
+            // enregistrement de la racine si n'existe pas déjà
+            $db->query("SELECT id FROM ploopi_index_stem WHERE id = '{$stem_md5}'");
             if (!$db->numrows())
             {
-                $objKw = new index_keyword();
-                $objKw->fields['id'] = $kw_md5;
-                $objKw->fields['keyword'] = $kw_value;
-                $objKw->fields['id_stem'] = $stem_md5;
-                $objKw->save();
+                $objStem = new index_stem();
+                $objStem->fields['id'] = $stem_md5;
+                $objStem->fields['stem'] = $stem_value;
+                $objStem->save();
             }
 
-            // enregistrement du lien mot clé <-> enregistrement
-            $objKwElement = new index_keyword_element();
-            if (!$objKwElement->open($kw_md5, $id_element))
+            // enregistrement du lien racine <-> enregistrement
+            $objStemElement = new index_stem_element();
+            if (!$objStemElement->open($stem_md5, $id_element))
             {
-                $objKwElement->fields['id_keyword'] = $kw_md5;
-                $objKwElement->fields['id_element'] = $id_element;
-                $objKwElement->fields['weight'] = $kw['weight'];
-                $objKwElement->fields['ratio'] = (empty($kw['meta']) && $kw_ratio<1) ? $kw_ratio : 1;
-                $objKwElement->fields['relevance'] = (empty($kw['meta'])) ? ($kw_weight*100)/$max_weight : 100;
-                $objKwElement->save();
+                $objStemElement->fields['id_stem'] = $stem_md5;
+                $objStemElement->fields['id_element'] = $id_element;
+                $objStemElement->fields['weight'] = $stem['weight'];
+                $objStemElement->fields['ratio'] = (empty($stem['meta']) && $stem_ratio<1) ? $stem_ratio : 1;
+                $objStemElement->fields['relevance'] = (empty($stem['meta'])) ? ($stem['weight']*100)/$max_weight : 100;
+                $objStemElement->save();
+            }
+
+            foreach($stem['words'] as $kw_value => $kw)
+            {
+                $kw_weight = $kw['weight'];
+                $kw_ratio = (empty($words_overall)) ? 1 : ($kw['weight']*100 / $words_overall);
+
+                // on calcule le hash md5
+                $kw_md5 = md5($kw_value);
+
+                // enregistrement du mot clé si n'existe pas déjà
+                $db->query("SELECT id FROM ploopi_index_keyword WHERE id = '{$kw_md5}'");
+                if (!$db->numrows())
+                {
+                    $objKw = new index_keyword();
+                    $objKw->fields['id'] = $kw_md5;
+                    $objKw->fields['keyword'] = $kw_value;
+                    $objKw->fields['id_stem'] = $stem_md5;
+                    $objKw->save();
+                }
+
+                // enregistrement du lien mot clé <-> enregistrement
+                $objKwElement = new index_keyword_element();
+                if (!$objKwElement->open($kw_md5, $id_element))
+                {
+                    $objKwElement->fields['id_keyword'] = $kw_md5;
+                    $objKwElement->fields['id_element'] = $id_element;
+                    $objKwElement->fields['weight'] = $kw['weight'];
+                    $objKwElement->fields['ratio'] = (empty($kw['meta']) && $kw_ratio<1) ? $kw_ratio : 1;
+                    $objKwElement->fields['relevance'] = (empty($kw['meta'])) ? ($kw_weight*100)/$max_weight : 100;
+                    $objKwElement->save();
+                }
             }
         }
 
