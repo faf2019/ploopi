@@ -7,6 +7,13 @@
             <script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;wiki_page_id=&lt;IDRECORD&gt;</script>
         </row>
     </ploopi_mb_object>
+    <ploopi_mb_wce_object>
+        <row>
+            <id>1</id>
+            <label>Affichage Wiki</label>
+            <script>?op='display'</script>
+        </row>
+    </ploopi_mb_wce_object>
     <ploopi_mb_table>
         <row>
             <name>ploopi_mod_wiki_page</name>

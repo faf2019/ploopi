@@ -107,8 +107,8 @@ echo $skin->open_simplebloc($strWikiPageId);
                     }
                     ?>
                     <a style="cursor:not-allowed;color:#777;">
-                    	<img src="./modules/wiki/img/ico_printer.png" />Imprimer
-                	</a>
+                        <img src="./modules/wiki/img/ico_printer.png" />Imprimer
+                    </a>
                     <a style="cursor:not-allowed;color:#777;">
                         <img src="./modules/wiki/img/ico_modify.png" />Modifier
                     </a>
@@ -148,9 +148,9 @@ echo $skin->open_simplebloc($strWikiPageId);
                         <?
                     }
                     ?>
-  		            <a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<? echo ploopi_urlencode("admin-light.php?ploopi_op=wiki_page_print&wiki_page_id={$strWikiPageId}") ?>', 800, 600)">
-                    	<img src="./modules/wiki/img/ico_printer.png" />Imprimer
-                	</a>                    
+                    <a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<? echo ploopi_urlencode("admin-light.php?ploopi_op=wiki_page_print&wiki_page_id={$strWikiPageId}") ?>', 800, 600)">
+                        <img src="./modules/wiki/img/ico_printer.png" />Imprimer
+                    </a>
                     <a href="<? echo ploopi_urlencode_trusted("admin.php?op=wiki_page_modify&wiki_page_id=".urlencode($strWikiPageId)); ?>" <? if ($op == 'wiki_page_modify') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_modify.png" />Modifier
                     </a>
@@ -225,8 +225,8 @@ echo $skin->open_simplebloc($strWikiPageId);
     <div style="padding:4px 8px;background-color:#ddd;border-bottom:1px solid #ccc;">
         Pages visitées : <?php echo implode(' &raquo; ', $arrUrlHistory); ?>
     </div>
-    
-    
+
+
     <?
     switch($op)
     {
@@ -263,7 +263,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                     {
                         ?> - <a href="<? echo ploopi_urlencode_trusted("admin.php?op=wiki_page_modify&wiki_page_id=".urlencode($strWikiPageId)."&wiki_page_revision={$_GET['wiki_page_revision']}"); ?>">Revenir à cette version</a><?
                     } ?> :</div>
-                    <div id="wiki_page"><? echo wiki_render($objWikiPageHistory->fields['content']); ?></div>
+                    <div id="wiki_page" class="wiki_page"><? echo wiki_render($objWikiPageHistory->fields['content']); ?></div>
                     <?php
                 }
             }
@@ -327,13 +327,13 @@ echo $skin->open_simplebloc($strWikiPageId);
 
                 $strRevLink2 = "<a href=\"".ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId).$strRevision)."\"><strong>{$_POST['wiki_history_diff2']}</strong> ({$strUser}, {$strLocalDate})</a>";
 
-               	// Attention cette partie génère des DEPRECATED avec php 5.3 (pas de correctif connu au 25/03/2011)
- 				ploopi_unset_error_handler();
+                // Attention cette partie génère des DEPRECATED avec php 5.3 (pas de correctif connu au 25/03/2011)
+                ploopi_unset_error_handler();
                 include_once "Text/Diff.php";
                 include_once "Text/Diff/Renderer.php";
                 include_once "Text/Diff/Renderer/inline.php";
- 				ploopi_set_error_handler();
-                
+                ploopi_set_error_handler();
+
                 if ($strContent1 == $strContent2) $strDiff = $strContent1;
                 else
                 {
@@ -489,7 +489,7 @@ echo $skin->open_simplebloc($strWikiPageId);
         // consultation
         default:
             ?>
-            <div id="wiki_page"><? echo wiki_render($objWikiPage->fields['content']); ?></div>
+            <div id="wiki_page" class="wiki_page"><? echo wiki_render($objWikiPage->fields['content']); ?></div>
             <?
         break;
     }

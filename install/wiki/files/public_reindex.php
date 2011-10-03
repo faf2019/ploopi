@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2011 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,43 +21,38 @@
 */
 
 /**
- * Partie publique du module
+ * Partie publique du module permettant de réindexer les pages
  *
  * @package wiki
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * @version  $Revision$
- * @modifiedby $LastChangedBy$
- * @lastmodified $Date$
  */
 
-/**
- * Initialisation du module
- */
-
-ploopi_init_module('wiki');
-
-echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
-
-// Menu principal
-$strWikiMenu = isset($_GET['wiki_menu']) ? $_GET['wiki_menu'] : '';
-
-switch($strWikiMenu)
-{
-    case 'index_title':
-    case 'index_date':
-        include_once './modules/wiki/public_index.php';
-    break;
-
-    case 'reindex':
-        include_once './modules/wiki/public_reindex.php';
-    break;
-
-    default: // navigation
-        include_once './modules/wiki/public_view.php';
-    break;
-
-}
+echo $skin->open_simplebloc('Réindexation des pages');
 ?>
+<div id="wiki_index">
+<?
+    ploopi_init_module('cus');
+    set_time_limit(0);
+
+    include_once './include/classes/data_object_collection.php';
+    include_once './modules/wiki/classes/class_wiki_page.php';
+
+    $intI = 0;
+
+    $objCol = new data_object_collection('wiki_page');
+    $objCol->add_where('id_module = %d', $_SESSION['ploopi']['moduleid']);
+    foreach($objCol->get_objects() as $objPage)
+    {
+        $objPage->index();
+        $db->flush_log();
+        $intI++;
+    }
+
+
+    ?>
+    Résultat de l'indexation : <? echo $intI; ?> page(s) traitée(s)
+</div>
+<?php echo $skin->close_simplebloc(); ?>

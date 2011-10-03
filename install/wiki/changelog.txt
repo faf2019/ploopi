@@ -1,9 +1,21 @@
+== Module Wiki - version 1.2.0 ====================================================
+
+2011-10-03  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Possibilité d'intégrer le wiki dans un article webedit comme objet frontoffice (consultation seulement)
+ * Mise en place d'URLs réécrites pour la version frontoffice
+ * Mise à jour du moteur de rendu vers Textile 2.2
+ * Création automatique de liens sur les urls non marquées
+ * Création automatique de liens sur les adresses de courriel
+ * Indexation des pages au niveau du moteur de recherche intégral
+ * Interfaces avec le module WebEdit pour intégration des résultats de recherche en frontoffice
+
 == Module Wiki - version 1.1.0d ====================================================
 
 2011-09-27  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Corrections de compatibilité avec php5.3
- 
+
 == Module Wiki - version 1.1.0c ====================================================
 
 2011-03-29  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
@@ -42,7 +54,7 @@
 2009-10-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Correction du bug #22 : [Wiki 1.0.0b] Problèmes avec les liens sur des entités comportant des caractères spéciaux
- * Correction d'un problème avec des caractères spéciaux non reconnus à l'enregistrement d'un article 
+ * Correction d'un problème avec des caractères spéciaux non reconnus à l'enregistrement d'un article
  * Augmentation de la longueur du champ de contenu pour les pages et l'historique
 
 == Module Wiki - version 1.0.0b ====================================================

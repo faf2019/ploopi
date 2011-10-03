@@ -75,11 +75,11 @@ class wiki_page extends data_object
 
     /**
      * Ouvre une page
-     * 
+     *
      * @param string $strIdPage identifiant de la page
      * @param int $intIdModule identifiant du module (optionnel, par défaut le module courant)
-     * 
-     * @return boolean true si la page existe 
+     *
+     * @return boolean true si la page existe
      */
     public function open($strIdPage, $intIdModule = null)
     {
@@ -120,7 +120,6 @@ class wiki_page extends data_object
         }
         else
         {
-            ploopi_print_r($this->objPageHistory->fields);
             if (!is_null($this->objPageHistory)) $this->objPageHistory->save();
 
             $this->fields['ts_modified'] = ploopi_createtimestamp();
@@ -128,41 +127,43 @@ class wiki_page extends data_object
             parent::setuwm();
         }
 
+        $this->index();
+
         return parent::save();
     }
-    
+
     /**
      * Gère la redirection des liens après un renommage de page (modification de l'id)
-     * 
-     * @param string $strOldId ancien id
+     *
      * @param string $strNewId nouvel id
-     * 
+     *
      * @return boolean true si la page a pu être enregistrée
      */
-    public function redirect_links($strOldId, $strNewId)
+    public function redirectLinks($strNewId)
     {
-        $strOldId = htmlentities($strOldId);
+        $strOldId = htmlentities($this->fields['id']);
         $strNewId = htmlentities($strNewId);
         $this->fields['content'] = str_replace("[[{$strOldId}]]", "[[{$strNewId}]]", $this->fields['content']);
+        $this->index();
         return parent::save();
     }
-    
+
     /**
      * Vérouille la page et l'enregistre sans mettre à jour l'historique des modifications
-     * 
+     *
      * @param $booLock boolean true si la page doit être vérouillée
-     * 
+     *
      * @return boolean true si la page a pu être enregistrée
      */
     public function lock($booLock = true)
     {
-        $this->fields['locked'] = $booLock;      
+        $this->fields['locked'] = $booLock;
         return parent::save();
     }
 
     /**
      * Retourne l'historique des modification de la page dans un tableau
-     * 
+     *
      * @return array tableau contenant l'historique des modifications
      */
     public function getHistory()
@@ -180,38 +181,54 @@ class wiki_page extends data_object
 
         return $db->getarray();
     }
-    
+
     /**
      * Renomme une page, redirige éventuellement les liens depuis d'autres pages vers cette page
-     * 
+     *
      * @param string $strNewId nouvel identifiant de la page
      * @param boolean $booRedirectLinks true si les liens vers cette page doivent être redirigés
-     * 
+     *
      * @return boolean true si la page a pu être enregistrée
      */
     public function rename($strNewId, $booRedirectLinks)
     {
         global $db;
-        
+
+        $this->remove_index();
+
         // Renommer l'historique
         $db->query("UPDATE ploopi_mod_wiki_page_history SET id_page = '".$db->addslashes($strNewId)."' WHERE id_page = '".$db->addslashes($this->fields['id'])."' AND id_module = {$this->fields['id_module']}");
-        
+
         // Renommer les liens vers le nouvel ID (on sélectionne d'abord les pages du module)
         $rs = $db->query("SELECT id FROM ploopi_mod_wiki_page WHERE id_module = {$this->fields['id_module']}");
         while ($row = $db->fetchrow($rs))
         {
-            
+
             if ($booRedirectLinks)
             {
                 $objWikiPage = new wiki_page();
-                if ($objWikiPage->open($row['id'])) $objWikiPage->redirect_links($this->fields['id'], $strNewId);
+                if ($objWikiPage->open($row['id'])) $objWikiPage->redirectLinks($strNewId);
             }
         }
-        
+
         // Renommer la page
         $this->objPageHistory->fields['id_page'] = $this->fields['id'] = $strNewId;
-        
+
         return $this->save();
     }
-    
+
+
+    public function remove_index()
+    {
+        ploopi_search_remove_index(_WIKI_OBJECT_PAGE, $this->fields['id'], $this->fields['id_module']);
+    }
+
+    /**
+     * Ajoute la page à l'index de recherche
+     */
+    public function index()
+    {
+        $this->remove_index();
+        ploopi_search_create_index(_WIKI_OBJECT_PAGE, $this->fields['id'], $this->fields['id'], strip_tags(html_entity_decode(wiki_render($this->fields['content']))), $this->fields['id'], true, $this->fields['ts_created'], $this->fields['ts_modified']);
+    }
 }

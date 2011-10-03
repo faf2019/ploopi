@@ -21,10 +21,10 @@
 */
 
 /**
- * Partie publique du module
+ * Gestion du rewriting inverse des URL du module dbreport
  *
- * @package wiki
- * @subpackage public
+ * @package dbreport
+ * @subpackage rewrite
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
@@ -33,31 +33,15 @@
  * @lastmodified $Date$
  */
 
-/**
- * Initialisation du module
- */
-
-ploopi_init_module('wiki');
-
-echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
-
-// Menu principal
-$strWikiMenu = isset($_GET['wiki_menu']) ? $_GET['wiki_menu'] : '';
-
-switch($strWikiMenu)
+if ($booRewriteRuleFound = (strpos($arrParsedURI['path'], '/wiki') === 0))
 {
-    case 'index_title':
-    case 'index_date':
-        include_once './modules/wiki/public_index.php';
-    break;
 
-    case 'reindex':
-        include_once './modules/wiki/public_reindex.php';
-    break;
-
-    default: // navigation
-        include_once './modules/wiki/public_view.php';
-    break;
+    if ($booRewriteRuleFound = (preg_match('/wiki\/(.*)-(h([0-9]*)){0,1}(a([0-9]*)){0,1}\/(.*)\.html/', $arrParsedURI['path'], $arrMatches) == 1))
+    {
+        $_REQUEST['headingid'] = $_GET['headingid'] = $arrMatches[3];
+        $_REQUEST['articleid'] = $_GET['articleid'] = $arrMatches[5];
+        $_REQUEST['wikipageid'] = $_GET['wikipageid'] = urldecode($arrMatches[6]);
+    }
 
 }
 ?>

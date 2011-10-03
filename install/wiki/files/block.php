@@ -37,9 +37,10 @@
 ploopi_init_module('wiki', false, false, false);
 
 $strWikiMenu = isset($_GET['wiki_menu']) ? $_GET['wiki_menu'] : '';
- 
+
 $block->addmenu('Page de démarrage', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == '');
 $block->addmenu('Index par titre', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&wiki_menu=index_title"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == 'index_title');
 $block->addmenu('Index par date', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&wiki_menu=index_date"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == 'index_date');
+if (ploopi_isadmin()) $block->addmenu('<strong>Réindexer</strong>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&wiki_menu=reindex"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == 'reindex');
 ?>
 
