@@ -1308,16 +1308,8 @@ else // affichage standard rubrique/page
     }
     else
     {
-        if($arrHeadings['list'][$headingid]['content_type'] == 'headings' && empty($articleid)) // affichage rubriques
+        if(in_array($arrHeadings['list'][$headingid]['content_type'], array('headings', 'sitemap')) && empty($articleid)) // affichage rubriques ou plan de site
         {
-           $template_body->assign_block_vars('switch_content_heading', array());
-           webedit_template_assign_headings($arrHeadings, $arrShares, $headingid);
-        }
-
-        if($arrHeadings['list'][$headingid]['content_type'] == 'sitemap' && empty($articleid)) // affichage plan de site
-        {
-            $template_body->assign_block_vars('switch_content_sitemap', array());
-
 
             $db->query("
                 SELECT      id, visible, metatitle, timestp_published, timestp_unpublished, lastupdate_timestp,
@@ -1331,8 +1323,18 @@ else // affichage standard rubrique/page
 
             $arrArticles = array();
             while ($row = $db->fetchrow()) $arrArticles[$row['id_heading']][] = $row;
-
-            webedit_template_assign_headings($arrHeadings, $arrArticles, $arrShares, 0, 'switch_content_sitemap.', 'heading', 0);
+            // Affichage rubriques
+            if ($arrHeadings['list'][$headingid]['content_type'] == 'headings')
+            {
+                $template_body->assign_block_vars('switch_content_heading', array());
+                webedit_template_assign_headings($arrHeadings, $arrArticles, $arrShares, $headingid);
+            }
+            // Affichage plan de site
+            else
+            {
+                $template_body->assign_block_vars('switch_content_sitemap', array());
+                webedit_template_assign_headings($arrHeadings, $arrArticles, $arrShares, 0, 'switch_content_sitemap.', 'heading', 0);
+            }
         }
 
         // détermination du type de tri des articles
