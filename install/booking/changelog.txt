@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.3 ====================================================
+
+2011-10-14  Corinne Leclaire ~ SZSIC Metz
+
+* Ajout d'un contrôle de date lors de l'affichage du bouton de suppression d'une réservation
+
 == Module BOOKING - version 1.0.2b ====================================================
 
 2011-02-17 ~ HeXad  <xavier@hexad.fr>
