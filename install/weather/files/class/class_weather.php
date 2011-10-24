@@ -64,7 +64,7 @@ class weather extends data_object
   private $arrData = 'old';
   private $strDateUpdate = '';
   private $strTextCity = '';
-  
+
   /**
    * Contructeur de la classe
    *
@@ -75,7 +75,7 @@ class weather extends data_object
     global $db;
 
     $this->error = true;
-    
+
     parent::data_object('ploopi_mod_weather', 'id');
 
     if($moduleid > 0)
@@ -156,7 +156,7 @@ class weather extends data_object
   public function save($withUWM = false)
   {
     if($withUWM) $this->setuwm();
-    
+
     parent::save();
   }
 
@@ -191,7 +191,9 @@ class weather extends data_object
       $test = false; //($_SERVER['SERVER_ADDR'] == '127.0.0.1');
       if(!$test && (ploopi_timestamp_add($this->fields['datetime_update'], 0, 30) <= ploopi_createtimestamp() || empty($this->fields['data'])))
       {
+        ploopi_unset_error_handler();
         require_once 'HTTP/Request.php';
+        ploopi_set_error_handler();
         require_once './include/classes/xml2array.php';
 
         $arrStrFind = array('{CITY}', '{SI}', '{NBDAY}', '{PARTNER_ID}', '{PARTNER_KEY}');
