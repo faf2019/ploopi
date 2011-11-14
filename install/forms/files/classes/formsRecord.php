@@ -30,6 +30,22 @@
  * @author Stéphane Escaich
  */
 
+/**
+ * Inclusions
+ */
+
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accès à un enregistrement de formulaire
+ *
+ * @package forms
+ * @subpackage record
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
 class formsRecord extends data_object
 {
     public function __construct(&$objForm)
@@ -57,6 +73,5 @@ class formsRecord extends data_object
 
         return parent::save();
     }
-
 }
 ?>

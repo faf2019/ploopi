@@ -31,10 +31,11 @@
  */
 
 /**
- * Inclusion de la classe parent.
+ * Inclusions
  */
 
 include_once './include/classes/data_object.php';
+include_once './include/classes/data_object_collection.php';
 include_once './include/classes/query.php';
 
 include_once './modules/forms/classes/formsForm.php';
@@ -46,7 +47,7 @@ include_once './modules/forms/classes/formsArithmeticParser.php';
  *
  * @package forms
  * @subpackage field
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -71,6 +72,25 @@ class formsField extends data_object
     {
         if (empty($intModuleId)) $intModuleId = $_SESSION['ploopi']['moduleid'];
         return _PLOOPI_PATHDATA._PLOOPI_SEP.'forms-'.$intModuleId._PLOOPI_SEP.$intFormsId._PLOOPI_SEP.$intRecordId._PLOOPI_SEP.$strFileName;
+    }
+
+    /**
+     * Met à jour les formules de champs calculés lors d'un changement de position
+     */
+
+    private static function _updateFormulas($arrPositions)
+    {
+        $objCol = new data_object_collection('formsField');
+        $objCol->add_where("type = 'calculation'");
+        $objCol->add_where("formula != ''");
+        foreach($objCol->get_objects() as $objField)
+        {
+            $objField->fields['formula'] = preg_replace_callback('/C([0-9]+)/', function($arrMatches)use($arrPositions) {
+                return isset($arrPositions[$arrMatches[1]]) ? 'C'.$arrPositions[$arrMatches[1]] : $arrMatches[0];
+            }, $objField->fields['formula']);
+
+            $objField->quicksave();
+        }
     }
 
     /**
@@ -123,6 +143,24 @@ class formsField extends data_object
     }
 
     /**
+     * Ouvre un champ selon sa position
+     */
+    public function openByPos($intPos)
+    {
+        $objCol = new data_object_collection('formsField');
+        $objCol->add_where('position = %d', $intPos);
+        $objField = current($objCol->get_objects());
+        return $objField === false ? false : $this->open($objField->fields['id']);
+    }
+
+    /**
+     * Enregistre les données brutes du champ
+     *
+     * @return int identifiant du champ enregistré
+     */
+    public function quicksave() { return parent::save(); }
+
+    /**
      * Enregistre le champ
      *
      * @return int identifiant du champ enregistré
@@ -145,15 +183,21 @@ class formsField extends data_object
         if (is_numeric($this->fields['position']) && $this->fields['position'] < 1) $this->fields['position'] = 1;
         else
         {
-            $db->query("Select max(position) as maxpos from ploopi_mod_forms_field where id_form = {$this->fields['id_form']}");
+            $db->query("Select max(position) as maxpos FROM `ploopi_mod_forms_field` WHERE id_form = {$this->fields['id_form']}");
             $row = $db->fetchrow();
 
             if (!is_numeric($this->fields['position']) || $this->fields['position'] > $row['maxpos']+(int)$booIsNew) $this->fields['position'] = $row['maxpos']+(int)$booIsNew;
         }
 
+        // Positions modifiées (utile pour modification des formules des champs calculés)
+        $arrPositions = array();
 
         if ($booIsNew)
         {
+            $db->query("SELECT max(position) as maxpos FROM `ploopi_mod_forms_field` WHERE id_form = {$this->fields['id_form']}");
+            $intMax = current($db->fetchrow());
+            for ($intI = $this->fields['position']; $intI <= $intMax; $intI++) $arrPositions[$intI] = $intI+1;
+
             // Déplacer tous les champs en dessous de la position d'insertion vers le bas
             $db->query("UPDATE ploopi_mod_forms_field SET position=position+1 where position >= {$this->fields['position']} AND id_form = {$this->fields['id_form']}");
         }
@@ -162,26 +206,28 @@ class formsField extends data_object
             // Nouvelle position définie
             if ($this->fields['position'] != $this->_intOriginalPosition)
             {
+                // Il faut impacter les formules des champs calculés
+                $arrPositions[$this->_intOriginalPosition] = $this->fields['position'];
 
                 if ($this->fields['position'] > $this->_intOriginalPosition)
                 {
+                    for ($intI = $this->_intOriginalPosition+1; $intI <= $this->fields['position']; $intI++) $arrPositions[$intI] = $intI-1;
                     // Déplacer tous les champs entre la position d'origine et la position de destination vers le haut
                     $db->query("UPDATE ploopi_mod_forms_field SET position=position-1 WHERE position BETWEEN ".($this->_intOriginalPosition+1)." AND {$this->fields['position']} AND id_form = {$this->fields['id_form']}");
                 }
                 else
                 {
+                    for ($intI = $this->fields['position']; $intI <= $this->_intOriginalPosition-1; $intI++) $arrPositions[$intI] = $intI+1;
                     // Déplacer tous les champs entre la position de destination et la position d'origine vers le bas
                     $db->query("UPDATE ploopi_mod_forms_field SET position=position+1 where position BETWEEN {$this->fields['position']} AND ".($this->_intOriginalPosition-1)." AND id_form = {$this->fields['id_form']}");
                 }
             }
         }
 
-
         /**
          * Enregistrement
          */
         $res = parent::save();
-
 
         /**
          * Mise à jour de la bdd
@@ -222,6 +268,11 @@ class formsField extends data_object
         }
 
         /**
+         * Mise à jour des formules de champs calculés
+         */
+        if (!empty($arrPositions)) self::_updateFormulas($arrPositions);
+
+        /**
          * Mise à jour des données de champs calculés
          */
 
@@ -230,6 +281,7 @@ class formsField extends data_object
             $objForm = new formsForm();
             if ($objForm->open($this->fields['id_form'])) $objForm->calculate();
         }
+
 
         return $res;
     }
@@ -243,6 +295,8 @@ class formsField extends data_object
     {
         global $db;
 
+        $arrPositions = array();
+
         if (!$this->fields['separator'] && !$this->fields['captcha'])
         {
             /**
@@ -252,10 +306,20 @@ class formsField extends data_object
             if ($objForm->open($this->fields['id_form'])) $db->query("ALTER TABLE `".$objForm->getDataTableName()."` DROP `{$this->_strOriginalFieldName}`");
         }
 
+        // Il faut impacter les formules des champs calculés
+        $arrPositions[$this->fields['position']] = null;
+
+        // Autres changements de positions
+        $db->query("SELECT max(position) as m FROM `ploopi_mod_forms_field` WHERE id_form = {$this->fields['id_form']}");
+        $intMax = current($db->fetchrow());
+        for ($intI = $this->fields['position']+1; $intI <= $intMax; $intI++) $arrPositions[$intI] = $intI-1;
+
         /**
          * Mise à jour des position des autres champs
          */
         $db->query("UPDATE `ploopi_mod_forms_field` SET position = position - 1 WHERE position > {$this->fields['position']} AND id_form = {$this->fields['id_form']}");
+
+        if (!empty($arrPositions)) self::_updateFormulas($arrPositions);
 
         return parent::delete();
     }
@@ -376,30 +440,6 @@ class formsField extends data_object
 
         return $strType;
     }
-
-
-    /*
-    public function getAggregate($strFunction)
-    {
-        $strFunction = strtolower($strFunction);
-
-        if (in_array($strFunction, array('min', 'max', 'avg', 'sum', 'count')))
-        {
-            $objForm = new formsForm();
-            if ($objForm->open($this->fields['id_form']))
-            {
-                $objQuery = new ploopi_query_select();
-                $objQuery->add_from($objForm->getDataTableName());
-                $objQuery->add_select("{$strFunction}({$this->fields['fieldname']}) as v");
-                $arrRes = current($objQuery->execute()->getarray(true));
-                return empty($arrRes) ? 0 : $arrRes;
-            }
-        }
-
-        return null;
-    }
-    */
-
 
     /**
      * Retourne toutes les valeurs prises par le champ

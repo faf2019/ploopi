@@ -591,6 +591,36 @@ if ($_SESSION['ploopi']['connected'])
                         ))
                         {
                             $objRecord->delete();
+
+                            // Doit on recalculer les données (uniquement si agrégat)
+                            $booCalculation = false;
+                            $booAggregate = false;
+
+                            foreach($objForm->getFields() as $objField)
+                            {
+                                if ($objField->fields['type'] == 'calculation')
+                                {
+                                    $booCalculation = true;
+
+                                    // On va détecter si le calcul fait appel à un agrégat (dans ce cas il faut recalculer toutes les données du formulaire)
+                                    $objParser = new formsArithmeticParser($objField->fields['formula']);
+
+                                    // Extraction des variables de l'expression
+                                    $arrVars = $objParser->getVars();
+
+                                    // Pour chaque variable attendue dans l'expression
+                                    foreach($arrVars as $strVar)
+                                    {
+                                        // Analyse de la variable
+                                        if (preg_match('/C([0-9]+)_?([A-Z]{0,3})/', $strVar, $arrMatches) > 0)
+                                        {
+                                            if (!empty($arrMatches[2])) $booAggregate = true;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if ($booAggregate) $objForm->calculate();
                         }
                     }
 

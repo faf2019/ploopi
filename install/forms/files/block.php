@@ -51,6 +51,7 @@ $objDOC->add_where("id_module = %d", $menu_moduleid);
 $objDOC->add_where("(pubdate_start <= %s OR pubdate_start = '')", $intTsToday);
 $objDOC->add_where("(pubdate_end >= %s OR pubdate_end = '')", $intTsToday);
 $objDOC->add_where("id_workspace IN (%e)", array(explode(',', ploopi_viewworkspaces($menu_moduleid))));
+$objDOC->add_orderby('label');
 
 foreach($objDOC->get_objects() as $objForm)
 {

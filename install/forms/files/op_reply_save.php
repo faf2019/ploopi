@@ -120,7 +120,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
                 foreach($arrVars as $strVar)
                 {
                     // Analyse de la variable
-                    if (preg_match('/C([0-9])+_?([A-Z]{0,3})/', $strVar, $arrMatches) > 0)
+                    if (preg_match('/C([0-9]+)_?([A-Z]{0,3})/', $strVar, $arrMatches) > 0)
                     {
                         if (!empty($arrMatches[2])) $booAggregate = true;
                     }

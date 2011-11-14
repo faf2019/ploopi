@@ -51,6 +51,7 @@ include_once './modules/forms/classes/formsField.php';
 include_once './modules/forms/classes/formsGraphic.php';
 include_once './modules/forms/classes/formsGroup.php';
 include_once './modules/forms/classes/formsBooleanParser.php';
+include_once './modules/forms/classes/formsArithmeticParser.php';
 
 /**
  * Classe d'accès à la table ploopi_mod_forms_form
@@ -806,6 +807,36 @@ class formsForm extends data_object
         ploopi_setsessionvar('formfilter', null);
 
         $this->prepareData(false, false, false, false, true);
+
+        // Doit on recalculer les données ? (uniquement si agrégat)
+        $booCalculation = false;
+        $booAggregate = false;
+
+        foreach($this->getFields() as $objField)
+        {
+            if ($objField->fields['type'] == 'calculation')
+            {
+                $booCalculation = true;
+
+                // On va détecter si le calcul fait appel à un agrégat (dans ce cas il faut recalculer toutes les données du formulaire)
+                $objParser = new formsArithmeticParser($objField->fields['formula']);
+
+                // Extraction des variables de l'expression
+                $arrVars = $objParser->getVars();
+
+                // Pour chaque variable attendue dans l'expression
+                foreach($arrVars as $strVar)
+                {
+                    // Analyse de la variable
+                    if (preg_match('/C([0-9]+)_?([A-Z]{0,3})/', $strVar, $arrMatches) > 0)
+                    {
+                        if (!empty($arrMatches[2])) $booAggregate = true;
+                    }
+                }
+            }
+        }
+
+        if ($booAggregate) $this->calculate();
     }
 
 
@@ -1420,6 +1451,8 @@ class formsForm extends data_object
                     $arrFieldsContent[$objField->fields['id']] = explode('||', $objRecord->fields[$objField->fields['fieldname']]);
 
                     if ($objField->fields['format'] == 'date') $arrFieldsContent[$objField->fields['id']][0] = empty($arrFieldsContent[$objField->fields['id']][0]) ? '' : current(ploopi_timestamp2local("{$arrFieldsContent[$objField->fields['id']][0]}000000"));
+
+                    if ($objField->fields['type'] == 'calculation') $arrFieldsContent[$objField->fields['id']][0] .= " (calculé lors de l'enregistrement)";
                 }
             }
             else unset($objRecord);
@@ -1434,6 +1467,10 @@ class formsForm extends data_object
                 {
                     case 'autoincrement':
                         $arrFieldsContent[$objField->fields['id']][0] = ($objField->getAggregate('max')+1).' (à valider)';
+                    break;
+
+                    case 'calculation':
+                        $arrFieldsContent[$objField->fields['id']][0] = "(calculé lors de l'enregistrement)";
                     break;
 
                     default:
@@ -2243,7 +2280,6 @@ class formsForm extends data_object
         return ($this->fields['pubdate_start'] <= $intTsToday || empty($this->fields['pubdate_start'])) && ($this->fields['pubdate_end'] >= $intTsToday || empty($this->fields['pubdate_end']));
     }
 
-
     /**
      * Recalcule toutes les valeurs de champs calculés (appelé notamment lors de la modification de formule d'un champ calculé, ou lors de l'insertion d'un enregistrement contenant un champ calculé)
      */
@@ -2305,13 +2341,11 @@ class formsForm extends data_object
                                 // Pour chaque variable attendue dans l'expression
                                 foreach($arrVars as $strVar)
                                 {
-                                    $arrVariables[$strVar] = 0;
-
                                     if (isset($arrStaticVariables[$strVar])) $arrVariables[$strVar] = $arrStaticVariables[$strVar];
                                     else
                                     {
                                         // Analyse de la variable
-                                        if (preg_match('/C([0-9])+_?([A-Z]{0,3})/', $strVar, $arrMatches) > 0)
+                                        if (preg_match('/C([0-9]+)_?([A-Z]{0,3})/', $strVar, $arrMatches) > 0)
                                         {
                                             // $arrMatches[1] => position du champ
                                             // $arrMatches[2] => agrégat (optionnel)
