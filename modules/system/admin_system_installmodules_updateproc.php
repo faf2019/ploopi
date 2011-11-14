@@ -102,7 +102,7 @@ else
     $detail = '';
     if (file_exists($srcfiles))
     {
-        if (is_writable(realpath("./modules/")))
+        if (is_writable(realpath($destfiles)))
         {
             ploopi_copydir($srcfiles , $destfiles);
             $detail = 'Fichiers copiés';
