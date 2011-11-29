@@ -153,6 +153,7 @@ define ('_SYSTEM_LABEL_SERVERTIMEZONE', 'Synchronisé avec le fuseau horaire du s
 define ('_SYSTEM_LABEL_FUNCTION', 'Fonction');
 define ('_SYSTEM_LABEL_RANK', 'Grade/Niveau');
 define ('_SYSTEM_LABEL_SERVICE', 'Service');
+define ('_SYSTEM_LABEL_SERVICE2', 'Bureau');
 define ('_SYSTEM_LABEL_COLOR', 'Couleur');
 define ('_SYSTEM_LABEL_BUILDING', 'Bâtiment');
 define ('_SYSTEM_LABEL_FLOOR', 'Etage');

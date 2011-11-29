@@ -1590,5 +1590,9 @@ INSERT INTO `ploopi_param_choice` (`id_module_type` ,`name` ,`value` ,`displayed
 ALTER TABLE `ploopi_workspace` ADD `priority` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0', ADD INDEX ( `priority` );
 UPDATE `ploopi_workspace` SET priority = 1 * POW(10, depth-2);
 
-UPDATE `ploopi_module_type` SET `version` = '1.8.9.3', `author` = 'Ovensia', `date` = '20110927000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+INSERT INTO `ploopi_param_type` (`id_module_type`, `name`, `default_value`, `public`, `description`, `label`) VALUES (1, 'system_unoconv', '', 0, '', 'Chemin vers UNOCONV');
+INSERT INTO `ploopi_param_default` (`id_module`, `name`, `value`, `id_module_type`) VALUES (1, 'system_unoconv', '/usr/bin/unoconv', 1);
 
+ALTER TABLE `ploopi_user` ADD `service2` VARCHAR( 255 ) NOT NULL AFTER `service`;
+
+UPDATE `ploopi_module_type` SET `version` = '1.8.9.5', `author` = 'Ovensia', `date` = '20111129000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;

@@ -111,7 +111,7 @@ switch($op)
             rename($_SESSION['system']['user_photopath'], $user->getphotopath());
             unset($_SESSION['system']['user_photopath']);
         }
-        
+
         // Suppression photo
         if (ploopi_getsessionvar("deletephoto_{$user->fields['id']}")) $user->deletephoto();
 
@@ -237,10 +237,10 @@ switch($_SESSION['system']['usrTabItem'])
                     $workspace_group = new workspace_group();
                     $workspace_group->open($workspaceid,$_GET['orgid']);
                     $workspace_group->delete();
-                    
+
                     unset($_SESSION['system']['groups']);
                     unset($_SESSION['system']['workspaces']);
-                    
+
                     ploopi_redirect("admin.php?reloadsession");
                 }
                 else ploopi_redirect('admin.php');
@@ -266,7 +266,7 @@ switch($_SESSION['system']['usrTabItem'])
 
                         unset($_SESSION['system']['groups']);
                         unset($_SESSION['system']['workspaces']);
-                                                
+
                         ploopi_create_user_action_log(_SYSTEM_ACTION_ATTACHGROUP, "{$org->fields['label']} (id:{$org->fields['id']}) => {$workspace->fields['label']} (id:$workspaceid)");
                         ploopi_redirect("admin.php?reloadsession");
                     }
@@ -506,23 +506,23 @@ switch($_SESSION['system']['usrTabItem'])
                 }
                 ?>
                 <div style="padding:4px;"><input type="button" class="button" value="Retour" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?usrTabItem=tabUserImport"); ?>';" /></div>
-                <?                
+                <?
             break;
-            
+
             case 'import':
                 $_SESSION['system']['user_import_errors'] = array();
-                
+
                 if (!empty($_SESSION['system']['user_import']))
                 {
                     for ($intI = 1; $intI < count($_SESSION['system']['user_import']); $intI++)
                     {
                         $objUser = new user();
                         $objUser->init_description();
-                        
+
                         $intJ = 0;
                         foreach($_SESSION['system']['user_import'][0] as $strFieldName)
                         {
-                            if (isset($_SESSION['system']['user_import'][$intI][$intJ])) 
+                            if (isset($_SESSION['system']['user_import'][$intI][$intJ]))
                             {
                                 if ($strFieldName != 'id' && isset($objUser->fields[$strFieldName])) // le champ existe
                                 {
@@ -530,22 +530,22 @@ switch($_SESSION['system']['usrTabItem'])
                                 }
                             }
                             $intJ++;
-                        } 
-                        
+                        }
+
                         // On vérifie que le login n'existe pas déjà
                         $db->query("
                             SELECT  login
                             FROM    ploopi_user
                             WHERE   login = '".$db->addslashes($objUser->fields['login'])."'
                         ");
-                        
+
                         if (!$db->numrows()) // ok pas de login identique dans la BDD
                         {
                             $objUser->setpassword($objUser->fields['password']);
-                            
+
                             // On ajoute l'utilisateur
                             $objUser->save();
-                            
+
                             // On le rattache au groupe sélectionné
                             $objUser->attachtogroup($groupid);
                         }
@@ -553,12 +553,12 @@ switch($_SESSION['system']['usrTabItem'])
                         {
                             $_SESSION['system']['user_import_errors'][] = "Un utilisateur existe déjà avec le login '{$objUser->fields['login']}'";
                         }
-                    }                
+                    }
                 }
-    
+
                 ploopi_redirect("admin.php?usrTabItem=tabUserImport&op=end");
             break;
-            
+
             case 'preview':
                 include_once './modules/system/admin_index_users_preview.php';
             break;

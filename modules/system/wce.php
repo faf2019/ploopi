@@ -66,6 +66,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     if (isset($_POST['system_lastname']) && !preg_match($pattern, $_POST['system_lastname'])) $arrFilter['system_lastname'] = $_POST['system_lastname'];
     if (isset($_POST['system_firstname']) && !preg_match($pattern, $_POST['system_firstname'])) $arrFilter['system_firstname'] = $_POST['system_firstname'];
     if (isset($_POST['system_service']) && !preg_match($pattern, $_POST['system_service'])) $arrFilter['system_service'] = $_POST['system_service'];
+    if (isset($_POST['system_service2']) && !preg_match($pattern, $_POST['system_service2'])) $arrFilter['system_service2'] = $_POST['system_service2'];
     if (isset($_POST['system_phone']) && !preg_match($pattern, $_POST['system_phone'])) $arrFilter['system_phone'] = $_POST['system_phone'];
     if (isset($_POST['system_fax']) && !preg_match($pattern, $_POST['system_fax'])) $arrFilter['system_fax'] = $_POST['system_fax'];
     if (isset($_POST['system_mobile']) && !preg_match($pattern, $_POST['system_mobile'])) $arrFilter['system_mobile'] = $_POST['system_mobile'];
@@ -88,6 +89,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     if (!isset($arrFilter['system_lastname'])) $arrFilter['system_lastname'] = '';
     if (!isset($arrFilter['system_firstname'])) $arrFilter['system_firstname'] = '';
     if (!isset($arrFilter['system_service'])) $arrFilter['system_service'] = '';
+    if (!isset($arrFilter['system_service2'])) $arrFilter['system_service2'] = '';
     if (!isset($arrFilter['system_phone'])) $arrFilter['system_phone'] = '';
     if (!isset($arrFilter['system_fax'])) $arrFilter['system_fax'] = '';
     if (!isset($arrFilter['system_mobile'])) $arrFilter['system_mobile'] = '';
@@ -132,7 +134,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
 
 
 
-    // Construction de la liste des espace de travail
+    // Construction de la liste des espaces de travail
     $arrWorkspace = array('list' => array(), 'tree' => array());
 
     $result = $db->query("SELECT id, label, id_workspace FROM ploopi_workspace WHERE system = 0 ORDER BY depth, label");
@@ -181,14 +183,18 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
         $objTplDirectory->assign_block_vars('system_trombi_user',
             array(
                 'ID' => $strUserName,
-                'LABEL' => htmlentities($strUserName),
+                'LABEL' => htmlentities(ucfirst($strUserName)),
                 'SELECTED' => $strUserName == $arrFilter['system_user'] ? 'selected="selected"' : ''
             )
         );
     }
 
+    // Construction de la liste des données brutes pour traitement via JS
+    $rs = $db->query("SELECT service, service2, office, function, number, rank, building, floor, country, city, postalcode FROM ploopi_user");
+    $objTplDirectory->assign_var('SYSTEM_TROMBI_JSDATA', json_encode(ploopi_array_map('ploopi_utf8encode', ploopi_array_map('ucfirst', $db->getarray()))));
+
     // Construction des autres listes génériques
-    foreach(array('service', 'login', 'email', 'office', 'function', 'rank', 'building', 'floor', 'country', 'city', 'postalcode') as $strField)
+    foreach(array('service', 'service2', 'login', 'email', 'office', 'function', 'number', 'rank', 'building', 'floor', 'country', 'city', 'postalcode') as $strField)
     {
         // Construction de la liste des services
         $db->query("SELECT `{$strField}` FROM ploopi_user WHERE `{$strField}` <> '' GROUP BY `{$strField}` ORDER BY `{$strField}`");
@@ -197,7 +203,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
             $objTplDirectory->assign_block_vars("system_trombi_{$strField}",
                 array(
                     'ID' => $row[$strField],
-                    'LABEL' => htmlentities($row[$strField]),
+                    'LABEL' => htmlentities(ucfirst($row[$strField])),
                     'SELECTED' => $row[$strField] == $arrFilter["system_{$strField}"] ? 'selected="selected"' : ''
                 )
             );
@@ -215,6 +221,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                     'SYSTEM_TROMBI_LASTNAME' => htmlentities($arrFilter['system_lastname']),
                     'SYSTEM_TROMBI_FIRSTNAME' => htmlentities($arrFilter['system_firstname']),
                     'SYSTEM_TROMBI_SERVICE' => htmlentities($arrFilter['system_service']),
+                    'SYSTEM_TROMBI_SERVICE2' => htmlentities($arrFilter['system_service2']),
                     'SYSTEM_TROMBI_PHONE' => htmlentities($arrFilter['system_phone']),
                     'SYSTEM_TROMBI_FAX' => htmlentities($arrFilter['system_fax']),
                     'SYSTEM_TROMBI_MOBILE' => htmlentities($arrFilter['system_mobile']),
@@ -234,6 +241,31 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                 )
             );
 
+            $objTplDirectory->assign_vars(
+                array(
+                    'SYSTEM_TROMBI_JS_LASTNAME' => addslashes(htmlentities($arrFilter['system_lastname'])),
+                    'SYSTEM_TROMBI_JS_FIRSTNAME' => addslashes(htmlentities($arrFilter['system_firstname'])),
+                    'SYSTEM_TROMBI_JS_SERVICE' => addslashes(htmlentities($arrFilter['system_service'])),
+                    'SYSTEM_TROMBI_JS_SERVICE2' => addslashes(htmlentities($arrFilter['system_service2'])),
+                    'SYSTEM_TROMBI_JS_PHONE' => addslashes(htmlentities($arrFilter['system_phone'])),
+                    'SYSTEM_TROMBI_JS_FAX' => addslashes(htmlentities($arrFilter['system_fax'])),
+                    'SYSTEM_TROMBI_JS_MOBILE' => addslashes(htmlentities($arrFilter['system_mobile'])),
+                    'SYSTEM_TROMBI_JS_LOGIN' => addslashes(htmlentities($arrFilter['system_login'])),
+                    'SYSTEM_TROMBI_JS_EMAIL' => addslashes(htmlentities($arrFilter['system_email'])),
+                    'SYSTEM_TROMBI_JS_WORKSPACE' => addslashes($arrFilter['system_workspace']),
+                    'SYSTEM_TROMBI_JS_OFFICE' => addslashes(htmlentities($arrFilter['system_office'])),
+                    'SYSTEM_TROMBI_JS_COMMENTS' => addslashes(htmlentities($arrFilter['system_comments'])),
+                    'SYSTEM_TROMBI_JS_FUNCTION' => addslashes(htmlentities($arrFilter['system_function'])),
+                    'SYSTEM_TROMBI_JS_NUMBER' => addslashes(htmlentities($arrFilter['system_number'])),
+                    'SYSTEM_TROMBI_JS_RANK' => addslashes(htmlentities($arrFilter['system_rank'])),
+                    'SYSTEM_TROMBI_JS_BUILDING' => addslashes(htmlentities($arrFilter['system_building'])),
+                    'SYSTEM_TROMBI_JS_FLOOR' => addslashes(htmlentities($arrFilter['system_floor'])),
+                    'SYSTEM_TROMBI_JS_COUNTRY' => addslashes(htmlentities($arrFilter['system_country'])),
+                    'SYSTEM_TROMBI_JS_CITY' => addslashes(htmlentities($arrFilter['system_city'])),
+                    'SYSTEM_TROMBI_JS_POSTALCODE' => addslashes(htmlentities($arrFilter['system_postalcode']))
+                )
+            );
+
             // Construction de la requête de recherche
             $arrWhere = array();
             $arrWhere[] = '1';
@@ -242,6 +274,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
             if (!empty($arrFilter['system_firstname'])) $arrWhere[] = "u.firstname LIKE '".$db->addslashes($arrFilter['system_firstname'])."%'";
             if (!empty($arrFilter['system_user'])) $arrWhere[] = "CONCAT(u.lastname, ' ', u.firstname) = '".$db->addslashes($arrFilter['system_user'])."'";
             if (!empty($arrFilter['system_service'])) $arrWhere[] = "u.service LIKE '".$db->addslashes($arrFilter['system_service'])."%'";
+            if (!empty($arrFilter['system_service2'])) $arrWhere[] = "u.service2 LIKE '".$db->addslashes($arrFilter['system_service2'])."%'";
             if (!empty($arrFilter['system_phone'])) $arrWhere[] = "u.phone LIKE '".$db->addslashes($arrFilter['system_phone'])."%'";
             if (!empty($arrFilter['system_fax'])) $arrWhere[] = "u.fax LIKE '".$db->addslashes($arrFilter['system_fax'])."%'";
             if (!empty($arrFilter['system_mobile'])) $arrWhere[] = "u.mobile LIKE '".$db->addslashes($arrFilter['system_mobile'])."%'";
@@ -269,6 +302,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                             u.fax,
                             u.mobile,
                             u.service,
+                            u.service2,
                             u.function,
                             u.rank,
                             u.number,
@@ -507,6 +541,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                                 'FAX' => htmlentities($row['fax']),
                                 'MOBILE' => htmlentities($row['mobile']),
                                 'SERVICE' => htmlentities($row['service']),
+                                'SERVICE2' => htmlentities($row['service2']),
                                 'WORKSPACES' => implode('<br />', $row['workspaces']),
                                 'GROUPS' => implode('<br />', $row['groups']),
                                 'ROLES' => implode('<br />', $row['roles']),

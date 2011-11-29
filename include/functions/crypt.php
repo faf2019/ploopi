@@ -165,7 +165,7 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
     foreach($arrParams as $strKey => $strValue)
     {
         // urlencode les paramètres
-        if (!$trusted) $strValue = urlencode($strValue);
+        if (!$trusted) $strValue = ploopi_rawurlencode($strValue);
 
         $arrParams[$strKey] = (is_null($strValue) || $strValue == '') ? $strKey : "{$strKey}={$strValue}";
     }
@@ -179,7 +179,7 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
         if (!isset($_SESSION['ploopi']['urlencode'][$strUrlMD5]))
         {
             require_once './include/classes/cipher.php';
-            return $_SESSION['ploopi']['urlencode'][$strUrlMD5] = "ploopi_url=".urlencode(ploopi_cipher::singleton()->crypt($strParams));
+            return $_SESSION['ploopi']['urlencode'][$strUrlMD5] = "ploopi_url=".ploopi_rawurlencode(ploopi_cipher::singleton()->crypt($strParams));
         }
         else return $_SESSION['ploopi']['urlencode'][$strUrlMD5];
     }
@@ -222,7 +222,7 @@ function ploopi_base64_decode($str) { return base64_decode(strtr($str, '-_,', '+
 function ploopi_serialize($mixVar) { return ploopi_base64_encode(gzcompress(serialize($mixVar), 9)); }
 
 /**
- * Désérialise une chaîne 
+ * Désérialise une chaîne
  *
  * @param string $str chaîne à décoder
  * @return mixed variable décodée

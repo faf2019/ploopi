@@ -151,6 +151,10 @@ if (isset($error))
                         <input type="text" class="text" name="user_service"  value="<?php echo htmlentities($user->fields['service']); ?>" tabindex="4" />
                     </p>
                     <p>
+                        <label><?php echo _SYSTEM_LABEL_SERVICE2; ?>:</label>
+                        <input type="text" class="text" name="user_service2"  value="<?php echo htmlentities($user->fields['service2']); ?>" tabindex="4" />
+                    </p>
+                    <p>
                         <label><?php echo _SYSTEM_LABEL_FUNCTION; ?>:</label>
                         <input type="text" class="text" name="user_function"  value="<?php echo htmlentities($user->fields['function']); ?>" tabindex="5" />
                     </p>
