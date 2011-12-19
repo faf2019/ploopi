@@ -31,8 +31,8 @@
  * @author Stéphane Escaich
  */
 
-define ('_PLOOPI_VERSION', '1.8.9.5');
-define ('_PLOOPI_REVISION', '111129');
+define ('_PLOOPI_VERSION', '1.9.0');
+define ('_PLOOPI_REVISION', '111219');
 
 define ('_PLOOPI_MSG_DBERROR',  'Database connection error, please contact administrator');
 define ('_SYSTEM_SYSTEMADMIN',  0);
