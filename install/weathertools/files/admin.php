@@ -53,13 +53,12 @@ echo $skin->open_simplebloc();
 	}
 	else
 	{
-    	$db->query('SELECT count(*) as c FROM ploopi_mod_weathertools_station');
-    	$row = $db->getarray();
-    	if (!empty($row))
+    	$rs = $db->query('SELECT count(*) as c FROM ploopi_mod_weathertools_station');
+    	if ($db->numrows())
         {
             ?>
             <div style="padding:4px;font-weight:bold;">
-                La base de données contient <? echo $row[0]; ?> station(s).
+                La base de données contient <? echo current($db->getarray($rs, true)); ?> station(s).
             </div>
             <?
         }

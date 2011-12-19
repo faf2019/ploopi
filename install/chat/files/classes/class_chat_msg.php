@@ -36,7 +36,6 @@
 
 include_once './include/classes/data_object.php';
 
-
 /**
  * Classe d'accès à la table ploopi_mod_chat_msg
  *
@@ -48,7 +47,7 @@ include_once './include/classes/data_object.php';
  */
 
 class chat_msg extends data_object
-{   
+{
     /**
      * Constructeur de la classe
      *
@@ -59,14 +58,14 @@ class chat_msg extends data_object
     {
         parent::data_object('ploopi_mod_chat_msg');
     }
-    
+
     /**
      * Enregistrement
      *
      * @param string $content contenu du message
      * @return int identifiant du message
      */
-    
+
     function save($content)
     {
         $this->fields['content'] = $content;

@@ -65,7 +65,7 @@ echo $skin->open_simplebloc('Salle de discussion');
 </p>
 </form>
 
-<?
+<?php
 echo $skin->close_simplebloc();
 ?>
 

@@ -496,7 +496,7 @@ function weathertools_extract_metar_data($arrMetarContent)
 	
 	// Convertion des données METAR
 	$objMetar->_convertReturn(
-		&$arrData, 
+		$arrData, 
 		array(
 			'wind' => 'kmh',
 			'vis' => 'km',

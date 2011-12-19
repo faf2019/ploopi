@@ -58,34 +58,34 @@ class chat_connected extends data_object
     {
         parent::data_object('ploopi_mod_chat_connected', 'id_user', 'id_module');
     }
-    
+
     /**
      * Ouverture
      *
      * @param int $id_user identifiant de l'utilisateur (optionnel)
      * @param int $id_module identifiant du module (optionnel)
      */
-    
+
     function open($id_user = -1, $id_module = -1)
     {
         if ($id_user == -1) $id_user = $_SESSION['ploopi']['userid'];
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
-        
+
         parent::open($id_user, $id_module);
     }
-    
+
     /**
      * Enregistrement
      */
-    
+
     function save()
     {
         $this->fields['lastupdate_timestp'] = ploopi_createtimestamp();
         $this->fields['id_user'] = $_SESSION['ploopi']['userid'];
         $this->fields['id_module'] = $_SESSION['ploopi']['moduleid'];
-        
+
         if ($this->new) $this->fields['connection_timestp'] = $this->fields['lastupdate_timestp'];
-        
+
         parent::save();
     }
 }

@@ -1,3 +1,9 @@
+== Module Wheathertools - version 1.1.2b ==================================================
+
+2010-03-29  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un bug dans la partie administration (affichage du nombre de stations)
+
 == Module Wheathertools - version 1.1.2a ==================================================
 
 2011-02-17 ~ HeXad  <xavier@hexad.fr>

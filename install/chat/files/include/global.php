@@ -34,7 +34,7 @@
  * Temps en secondes au bout duquel l'utilisateur est déconnecté si on ne reçoit aucune demande
  */
 
-define('_CHAT_CONNECTION_TIMEOUT', 5); 
+define('_CHAT_CONNECTION_TIMEOUT', 5);
 
 /**
  * Mise à jour des utilisateurs connectés
@@ -44,23 +44,23 @@ define('_CHAT_CONNECTION_TIMEOUT', 5);
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  * @see chat_connected
  */
 
 function chat_connected_update()
 {
     global $db;
-    
+
     include_once './modules/chat/classes/class_chat_connected.php';
-    
+
     // calcul du timestamp de timeout
     $intTimeoutTimestp = ploopi_timestamp_add(ploopi_createtimestamp(), 0, 0, 0 - _CHAT_CONNECTION_TIMEOUT);
-    
+
     // suppression des utilisateurs qui ont une trop longue période sans activité
     $sql = "DELETE FROM ploopi_mod_chat_connected WHERE lastupdate_timestp < {$intTimeoutTimestp}";
     $db->query($sql);
-    
+
     // reférencement de l'utilisateur connecté
     $chat_connected = new chat_connected();
     $chat_connected->open();

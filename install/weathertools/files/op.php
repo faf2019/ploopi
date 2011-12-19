@@ -62,7 +62,8 @@ if (ploopi_ismoduleallowed('weathertools'))
     	    
             if(!empty($_POST['weather_urlgeoip']))
             {
-                $objRequest = new HTTP_Request($_POST['weather_urlgeoip']);
+                ploopi_unset_error_handler();
+            	$objRequest = new HTTP_Request($_POST['weather_urlgeoip']);
                 
                 if (_PLOOPI_INTERNETPROXY_HOST != '')
                 {
@@ -75,7 +76,8 @@ if (ploopi_ismoduleallowed('weathertools'))
                 }
                                     
                 $intResult = $objRequest->sendRequest();
-
+                ploopi_set_error_handler();
+                
                 if ($intResult == 1) 
                 {
                     if ($objRequest->getResponseCode() != '200' && $objRequest->getResponseCode() != '') printf("HTTP Error %s", $objRequest->getResponseCode());
@@ -88,7 +90,7 @@ if (ploopi_ismoduleallowed('weathertools'))
                         fwrite($ptrFp, $objRequest->getResponseBody());
                         fclose($ptrFp);
                         
-                        ploopi_redirect("admin.php?weather_urlstations={$_POST['weather_urlstations']}&weather_geoip_import=1");
+                        ploopi_redirect("admin.php?weather_urlgeoip={$_POST['weather_urlgeoip']}&weather_geoip_import=1");
                     }
                     ploopi_redirect("admin.php?error=".$objRequest->getResponseCode()."&weather_urlgeoip={$_POST['weather_urlgeoip']}");
                 }

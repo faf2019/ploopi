@@ -31,7 +31,7 @@
  */
 
 /**
- * On verifie qu'on est bien dans le module CHAT 
+ * On verifie qu'on est bien dans le module CHAT
  */
 
 if (ploopi_ismoduleallowed('chat'))
@@ -41,60 +41,60 @@ if (ploopi_ismoduleallowed('chat'))
         case 'chat_refresh':
             include_once './include/functions/date.php';
             ploopi_init_module('chat', false, false, false);
-            
+
             $arrData = array('connected' => array(), 'msg' => array(), 'lastmsgid' => -1);
-            
+
             // mise à jour de la liste des utilisateurs connectés
             chat_connected_update();
-            
+
             // on récupère la liste des utilisateurs connectés
             $sql =  "
-                    SELECT      cc.*, 
+                    SELECT      cc.*,
                                 u.login,
                                 u.firstname,
                                 u.lastname
-                    
+
                     FROM        ploopi_mod_chat_connected cc
-                    
+
                     INNER JOIN  ploopi_user u
                     ON          u.id = cc.id_user
-                    
+
                     WHERE       cc.id_module = {$_SESSION['ploopi']['moduleid']}
-                    
+
                     ORDER BY    cc.connection_timestp ASC
                     ";
-            
+
             $db->query($sql);
-            
+
             $arrData['connected'] = $db->getarray();
-            
+
             if (isset($_POST['chat_last_msg_id']) && is_numeric($_POST['chat_last_msg_id']) && $_POST['chat_last_msg_id'] > -1)
             {
                 // on récupère la liste des nouveaux messages
                 $sql =  "
-                        SELECT      cm.*, 
+                        SELECT      cm.*,
                                     u.login,
                                     u.firstname,
                                     u.lastname
-                        
+
                         FROM        ploopi_mod_chat_msg cm
-                        
+
                         INNER JOIN  ploopi_user u
                         ON          u.id = cm.id_user
-                        
+
                         WHERE       cm.id_module = {$_SESSION['ploopi']['moduleid']}
                         AND         cm.id > {$_POST['chat_last_msg_id']}
-                        
+
                         ORDER BY    cm.timestp ASC
                         ";
-                
+
                 $rs = $db->query($sql);
-                
+
                 $arrData['msg'] = $db->getarray($rs);
-                
+
                 // on recule d'une position sur le recordset pour récupérer le dernier id de message
                 if ($db->numrows()) $db->dataseek($rs, $db->numrows()-1);
-                
+
                 $arrData['lastmsgid'] = ($row = $db->fetchrow()) ? $row['id'] : 0;
             }
             else // on récupère juste l'id du dernier message (l'utilisateur vient de se connecter)
@@ -104,34 +104,33 @@ if (ploopi_ismoduleallowed('chat'))
                         FROM        ploopi_mod_chat_msg cm
                         WHERE       cm.id_module = {$_SESSION['ploopi']['moduleid']}
                         ";
-                
+
                 $db->query($sql);
                 $arrData['lastmsgid'] = ($row = $db->fetchrow()) ? $row['lastmsgid'] : 0;
             }
-            
-            header("Content-Type: text/x-json; charset=utf-8"); 
+
+            header("Content-Type: text/x-json; charset=utf-8");
             echo json_encode($arrData);
-            
-             
+
            ploopi_die();
         break;
-        
+
         case 'chat_msg_send':
             include_once './include/functions/date.php';
             ploopi_init_module('chat', false, false, false);
-                    
+
             include_once './modules/chat/classes/class_chat_msg.php';
-            
+
             if (!empty($_POST['chat_msg']))
             {
                 // enregistrement du message
                 $chat_msg = new chat_msg();
                 $chat_msg->save($_POST['chat_msg']);
             }
-                    
+
             ploopi_die();
         break;
     }
-    
+
 }
 ?>
