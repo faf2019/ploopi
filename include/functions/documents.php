@@ -105,6 +105,22 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     if (empty($params['DEFAULT_FOLDER'])) $params['DEFAULT_FOLDER'] = '';
     if (empty($params['LIMIT'])) $params['LIMIT'] = 0;
 
+    // permet de modifier le champ sur lequel va s'effectuer le tri du tableau
+    if (empty($params['ORDER_BY'])) $params['ORDER_BY'] = 'name';
+
+    // permet de modifier l'ordre de tri du tableau (croissant/décroissant)
+    if (empty($params['SORT'])) $params['SORT'] = 'ASC';
+
+    // permet de paramétrer le libellé et l'icone des boutons de la mini-ged
+    if (empty($params['ROOT_PLACE'])) $params['ROOT_PLACE'] = 'Aller au Dossier Racine';
+    if (empty($params['ROOT_PLACE_IMG'])) $params['ROOT_PLACE_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_home.png';
+    if (empty($params['NEW_FOLDER'])) $params['NEW_FOLDER'] = 'Créer un nouveau Dossier';
+    if (empty($params['NEW_FOLDER_IMG'])) $params['NEW_FOLDER_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_newfolder.png';
+    if (empty($params['NEW_FILE'])) $params['NEW_FILE'] = 'Créer un nouveau Fichier';
+    if (empty($params['NEW_FILE_IMG'])) $params['NEW_FILE_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_newfile.png';
+    if (empty($params['SEARCH_FILE'])) $params['SEARCH_FILE'] = 'Rechercher un Fichier';
+    if (empty($params['SEARCH_FILE_IMG'])) $params['SEARCH_FILE_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_search.png';
+
     $_SESSION['documents'] =
         array (
             'id_object'     => $id_object,
@@ -119,12 +135,22 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
             'fields'        => $params['FIELDS'],
             'fields_size'   => $params['FIELDS_SIZE'],
             'callback_func' => $params['CALLBACK_FUNC'],
-            'callback_inc' => $params['CALLBACK_INC'],
-            'default_folder' => $params['DEFAULT_FOLDER'],
-            'limit'         => $params['LIMIT']
-        );
+            'callback_inc'  => $params['CALLBACK_INC'],
+            'default_folder'=> $params['DEFAULT_FOLDER'],
+            'order_by'       => $params['ORDER_BY'],
+            'sort'          => $params['SORT'],
+            'rights'        => $rights,
+            'limit'         => $params['LIMIT'],
+            'root_place'    => $params['ROOT_PLACE'],
+            'root_place_img'  => $params['ROOT_PLACE_IMG'],
+            'new_folder'      => $params['NEW_FOLDER'],
+            'new_folder_img'  => $params['NEW_FOLDER_IMG'],
+            'new_file'      => $params['NEW_FILE'],
+            'new_file_img'  => $params['NEW_FILE_IMG'],
+            'search_file'   => $params['SEARCH_FILE'],
+            'search_file_img'  => $params['SEARCH_FILE_IMG']
 
-    $_SESSION['documents']['rights'] = $rights;
+        );
 
     // on va chercher la racine
     $db->query("SELECT id FROM ploopi_documents_folder WHERE id_folder = 0 AND id_object = '{$_SESSION['documents']['id_object']}' AND id_module = '{$_SESSION['documents']['id_module']}' AND id_record = '".addslashes($_SESSION['documents']['id_record'])."'");
@@ -347,7 +373,7 @@ function ploopi_documents_browser($currentfolder)
             if ($_SESSION['documents']['rights']['SEARCH'])
             {
                 ?>
-                <a title="Rechercher un Fichier" href="javascript:void(0);" style="float:right;"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_search.png"></a>
+                <a title="<?php echo $_SESSION['documents']['search_file']; ?>" href="javascript:void(0);" style="float:right;"><img src="<?php echo $_SESSION['documents']['search_file_img']; ?>"></a>
                 <?php
             }
 
@@ -355,17 +381,19 @@ function ploopi_documents_browser($currentfolder)
             {
                 if ($_SESSION['documents']['rights']['DOCUMENT_CREATE'])
                 {
-                    ?><a title="Créer un nouveau fichier" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfile('<?php echo $currentfolder; ?>','',event);"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_newfile.png"></a><?php
+                    ?>
+                    <a title="<?php echo $_SESSION['documents']['new_file']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfile('<?php echo $currentfolder; ?>','',event);"><img src="<?php echo $_SESSION['documents']['new_file_img']; ?>"></a>
+                    <?php
                 }
                 if ($_SESSION['documents']['rights']['FOLDER_CREATE'])
                 {
                     ?>
-                    <a title="Créer un nouveau Dossier" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfolder('<?php echo $currentfolder; ?>','',event);"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_newfolder.png"></a>
+                    <a title="<?php echo $_SESSION['documents']['new_folder']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfolder('<?php echo $currentfolder; ?>','',event);"><img src="<?php echo $_SESSION['documents']['new_folder_img']; ?>"></a>
                     <?php
                 }
             }
             ?>
-            <a title="Aller au Dossier Racine" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_browser('<?php echo $_SESSION['documents']['documents_id']; ?>', '', '<?php echo $_SESSION['documents']['mode']; ?>','',true);"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_home.png"></a>
+            <a title="<?php echo $_SESSION['documents']['root_place']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_browser('<?php echo $_SESSION['documents']['documents_id']; ?>', '', '<?php echo $_SESSION['documents']['mode']; ?>','',true);"><img src="<?php echo $_SESSION['documents']['root_place_img']; ?>"></a>
 
             <div>Emplacement :</div>
             <?php
@@ -502,7 +530,7 @@ function ploopi_documents_browser($currentfolder)
                     'timestp_modify' =>
                          array(
                             'label' => "{$ldate['date']} {$ldate['time']}",
-                            'sort_label' => '1_'.$row['timestp_modify']
+                            'sort_label' => $row['timestp_modify']
                          ),
                     'timestp_file' =>
                         array(
@@ -589,22 +617,22 @@ function ploopi_documents_browser($currentfolder)
                     'timestp_modify' =>
                          array(
                             'label' => "{$ldate['date']} {$ldate['time']}",
-                            'sort_label' => '2_'.$row['timestp_modify']
+                            'sort_label' => $row['timestp_modify']
                          ),
                     'timestp_file' =>
                         array(
                             'label' => $ldate_file['date'],
-                            'sort_label' => '2_'.$row['timestp_file']
+                            'sort_label' => $row['timestp_file']
                         ),
                     'ref' =>
                         array(
                             'label' => $row['ref'],
-                            'sort_label' => '2_'.$row['ref']
+                            'sort_label' => $row['ref']
                         ),
                     'label' =>
                         array(
                             'label' => $row['label'],
-                            'sort_label' => '2_'.$row['label']
+                            'sort_label' => $row['label']
                         ),
                     'size' =>
                         array(
@@ -639,8 +667,8 @@ function ploopi_documents_browser($currentfolder)
             'ploopi_documents',
             array(
                 'sortable' => true,
-                'orderby_default' => 'name',
-                'sort_default' => 'ASC',
+                'orderby_default' => $_SESSION['documents']['order_by'],
+                'sort_default' => $_SESSION['documents']['sort'],
                 'limit' => $_SESSION['documents']['limit']
             )
         );

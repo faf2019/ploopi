@@ -314,6 +314,8 @@ class documentsfolder extends data_object
      */
     function save()
     {
+        $this->fields['timestp_modify'] = ploopi_createtimestamp();
+
         if ($this->fields['id_folder'] != 0)
         {
             $docfolder_parent = new documentsfolder();
