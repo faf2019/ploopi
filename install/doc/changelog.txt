@@ -3,6 +3,7 @@
 2012-01-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Modification de la visualisation des documents HTML. Le contenu n'est plus interprété par le navigateur. Le code source est affiché à la place. 
+* Mise à jour de la feuille de style CSS pour le rendu des fichiers sources
 
 == Module DOC - version 4.6.4b ====================================================
 
