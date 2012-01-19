@@ -152,10 +152,11 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
 
         );
 
-    // on va chercher la racine
-    $db->query("SELECT id FROM ploopi_documents_folder WHERE id_folder = 0 AND id_object = '{$_SESSION['documents']['id_object']}' AND id_module = '{$_SESSION['documents']['id_module']}' AND id_record = '".addslashes($_SESSION['documents']['id_record'])."'");
 
-    if ($row = $db->fetchrow()) $currentfolder = $row['id'];
+    // on va chercher la racine
+    $db->query("SELECT md5id FROM ploopi_documents_folder WHERE id_folder = 0 AND id_object = '{$_SESSION['documents']['id_object']}' AND id_module = '{$_SESSION['documents']['id_module']}' AND id_record = '".addslashes($_SESSION['documents']['id_record'])."'");
+
+    if ($row = $db->fetchrow()) $currentfolder = $row['md5id'];
     else // racine inexistante, il faut la créer
     {
         $documentsfolder = new documentsfolder();
@@ -166,14 +167,15 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
         $documentsfolder->fields['id_module'] = $_SESSION['documents']['id_module'];
         $documentsfolder->fields['id_user'] = $_SESSION['documents']['id_user'];
         $documentsfolder->fields['id_workspace'] = $_SESSION['documents']['id_workspace'];
-        $currentfolder = $documentsfolder->save();
+        $id =  $documentsfolder->save();
+        $currentfolder = $documentsfolder->fields['md5id'];
 
         if (is_array($default_folders))
         {
             foreach ($default_folders as $foldername)
             {
                 $documentsfolder = new documentsfolder();
-                $documentsfolder->fields['id_folder'] = $currentfolder;
+                $documentsfolder->fields['id_folder'] = $id;
                 $documentsfolder->fields['id_object'] = $_SESSION['documents']['id_object'];
                 $documentsfolder->fields['id_record'] = $_SESSION['documents']['id_record'];
                 $documentsfolder->fields['id_module'] = $_SESSION['documents']['id_module'];
@@ -359,17 +361,11 @@ function ploopi_documents_browser($currentfolder)
 {
     global $db;
     global $skin;
-
     ?>
     <div class="documents_browser">
 
         <div class="documents_path">
             <?php
-            // voir pour une optimisation de cette partie car on ouvre un docfolder sans doute pour rien
-            $documentsfolder = new documentsfolder();
-
-            if (!empty($currentfolder)) $documentsfolder->open($currentfolder);
-
             if ($_SESSION['documents']['rights']['SEARCH'])
             {
                 ?>
@@ -381,35 +377,29 @@ function ploopi_documents_browser($currentfolder)
             {
                 if ($_SESSION['documents']['rights']['DOCUMENT_CREATE'])
                 {
-                    ?>
-                    <a title="<?php echo $_SESSION['documents']['new_file']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfile('<?php echo $currentfolder; ?>','',event);"><img src="<?php echo $_SESSION['documents']['new_file_img']; ?>"></a>
-                    <?php
+                    ?><a title="<?php echo $_SESSION['documents']['new_file']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfile('<?php echo ploopi_queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documentsfile_id="); ?>', event);"><img src="<?php echo $_SESSION['documents']['new_file_img']; ?>"></a><?php
                 }
                 if ($_SESSION['documents']['rights']['FOLDER_CREATE'])
                 {
-                    ?>
-                    <a title="<?php echo $_SESSION['documents']['new_folder']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfolder('<?php echo $currentfolder; ?>','',event);"><img src="<?php echo $_SESSION['documents']['new_folder_img']; ?>"></a>
-                    <?php
+                    ?><a title="<?php echo $_SESSION['documents']['new_folder']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfolder('<?php echo ploopi_queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documentsfolder_id="); ?>', event);"><img src="<?php echo $_SESSION['documents']['new_folder_img']; ?>"></a><?php
                 }
             }
             ?>
-            <a title="<?php echo $_SESSION['documents']['root_place']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_browser('<?php echo $_SESSION['documents']['documents_id']; ?>', '', '<?php echo $_SESSION['documents']['mode']; ?>','',true);"><img src="<?php echo $_SESSION['documents']['root_place_img']; ?>"></a>
+            <a title="<?php echo $_SESSION['documents']['root_place']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder=&mode={$_SESSION['documents']['mode']}"); ?>', '<?php echo $_SESSION['documents']['documents_id']; ?>', true);"><img src="<?php echo $_SESSION['documents']['root_place_img']; ?>"></a>
 
             <div>Emplacement :</div>
             <?php
-            if ($currentfolder != 0)
+            $documentsfolder = new documentsfolder();
+            if (!empty($currentfolder) && $documentsfolder->openmd5($currentfolder))
             {
-                $documentsfolder = new documentsfolder();
-                $documentsfolder->open($currentfolder);
-
-                $db->query("SELECT id, name, id_folder FROM ploopi_documents_folder WHERE id in ({$documentsfolder->fields['parents']},{$currentfolder}) ORDER by id");
+                $db->query("SELECT id, md5id, name, id_folder FROM ploopi_documents_folder WHERE id in ({$documentsfolder->fields['parents']},{$documentsfolder->fields['id']}) ORDER by id");
 
                 while ($row = $db->fetchrow())
                 {
                     // change root name
                     $foldername = (!$row['id_folder']) ? $_SESSION['documents']['root_name'] : $row['name'];
                     ?>
-                    <a <?php if ($currentfolder == $row['id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:ploopi_documents_browser('<?php echo $_SESSION['documents']['documents_id']; ?>', '<?php echo $row['id']; ?>', '<?php echo $_SESSION['documents']['mode']; ?>','',true);">
+                    <a <?php if ($currentfolder == $row['md5id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&mode={$_SESSION['documents']['mode']}"); ?>', '<?php echo $_SESSION['documents']['documents_id']; ?>', true);">
                         <p class="ploopi_va">
                             <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_folder.png" />
                             <span><?php echo $foldername; ?></span>
@@ -506,7 +496,7 @@ function ploopi_documents_browser($currentfolder)
                 FROM        ploopi_documents_folder f
                 LEFT JOIN   ploopi_user u
                 ON          f.id_user = u.id
-                WHERE       f.id_folder = {$currentfolder}
+                WHERE       f.id_folder = {$documentsfolder->fields['id']}
                 ";
 
         $db->query($sql);
@@ -552,8 +542,8 @@ function ploopi_documents_browser($currentfolder)
                 );
 
             $actions = '';
-            if ($_SESSION['documents']['rights']['FOLDER_DELETE']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le dossier et son contenu\')) ploopi_documents_deletefolder(\''.$currentfolder.'\',\''.$_SESSION['documents']['documents_id'].'\',\''.$row['id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
-            if ($_SESSION['documents']['rights']['FOLDER_MODIFY']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi_documents_openfolder(\''.$currentfolder.'\',\''.$row['id'].'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
+            if ($_SESSION['documents']['rights']['FOLDER_DELETE']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le dossier et son contenu\')) ploopi_documents_deletefolder(\''.ploopi_queryencode("ploopi_op=documents_deletefolder&currentfolder={$currentfolder}&documentsfolder_id={$row['md5id']}").'\',\''.$_SESSION['documents']['documents_id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
+            if ($_SESSION['documents']['rights']['FOLDER_MODIFY']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi_documents_openfolder(\''.ploopi_queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documentsfolder_id={$row['md5id']}").'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
 
             if ($actions == '') $actions = '&nbsp;';
 
@@ -564,7 +554,7 @@ function ploopi_documents_browser($currentfolder)
 
             $documents_values[$i]['description'] = '';
             $documents_values[$i]['link'] = 'javascript:void(0);';
-            $documents_values[$i]['option'] = 'onclick="javascript:ploopi_documents_browser(\''.$_SESSION['documents']['documents_id'].'\',\''.$row['id'].'\',\''.$_SESSION['documents']['mode'].'\',\'\',true);"';
+            $documents_values[$i]['option'] = 'onclick="javascript:ploopi_documents_browser(\''.ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&mode={$_SESSION['documents']['mode']}").'\',\''.$_SESSION['documents']['documents_id'].'\',true);"';
             $documents_values[$i]['style'] = '';
 
             $i++;
@@ -584,7 +574,7 @@ function ploopi_documents_browser($currentfolder)
                 LEFT JOIN   ploopi_documents_ext e
                 ON          e.ext = f.extension
 
-                WHERE       f.id_folder = {$currentfolder}
+                WHERE       f.id_folder = {$documentsfolder->fields['id']}
                 ";
 
         $db->query($sql);
@@ -600,8 +590,8 @@ function ploopi_documents_browser($currentfolder)
 
             $actions = '';
 
-            if ($_SESSION['documents']['rights']['DOCUMENT_DELETE']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le fichier\')) ploopi_documents_deletefile(\''.$currentfolder.'\',\''.$_SESSION['documents']['documents_id'].'\',\''.$row['id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
-            if ($_SESSION['documents']['rights']['DOCUMENT_MODIFY']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi_documents_openfile(\''.$currentfolder.'\',\''.$row['id'].'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
+            if ($_SESSION['documents']['rights']['DOCUMENT_DELETE']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le fichier\')) ploopi_documents_deletefile(\''.ploopi_queryencode("ploopi_op=documents_deletefile&currentfolder={$currentfolder}&documentsfile_id={$row['md5id']}").'\',\''.$_SESSION['documents']['documents_id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
+            if ($_SESSION['documents']['rights']['DOCUMENT_MODIFY']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi_documents_openfile(\''.ploopi_queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documentsfile_id={$row['md5id']}").'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
 
             $documents_values[$i]['values'] =
                 array(
@@ -643,8 +633,8 @@ function ploopi_documents_browser($currentfolder)
 
             $documents_values[$i]['values']['actions'] =
                 array(
-                    'label' => $actions.'<a title="Télécharger" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download.png" /></a>
-                                         <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=documents_downloadfile_zip&documentsfile_id={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download_zip.png" /></a>',
+                    'label' => $actions.'<a title="Télécharger" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download.png" /></a>
+                                         <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=documents_downloadfile_zip&documentsfile_id={$row['md5id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download_zip.png" /></a>',
                 );
 
             $documents_values[$i]['description'] = '';
@@ -654,7 +644,7 @@ function ploopi_documents_browser($currentfolder)
                 $documents_values[$i]['link'] = 'javascript:void(0);';
                 $documents_values[$i]['onclick'] = "javascript:ploopi_getelem('{$_SESSION['documents']['destfield']}').value='{$row['name']}';ploopi_getelem('{$_SESSION['documents']['destfield']}_id').value='{$row['id']}';ploopi_hidepopup('ploopi_documents_popup');";
             }
-            else $documents_values[$i]['link'] = ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['id']}&attachement=".$_SESSION['documents']['attachement']);
+            else $documents_values[$i]['link'] = ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}&attachement=".$_SESSION['documents']['attachement']);
 
             $documents_values[$i]['style'] = '';
 
