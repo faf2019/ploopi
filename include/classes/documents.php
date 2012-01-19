@@ -86,6 +86,23 @@ class documentsfile extends data_object
         if ($res = parent::open($id)) $this->oldname = $this->fields['name'];
         return($res);
     }
+    
+    
+    /**
+     * Ouvre un document avec son identifiant MD5
+     *
+     * @param string $md5id identifiant MD5 du document
+     * @return boolean true si le document a été ouvert
+     */
+
+    function openmd5($md5id)
+    {
+        global $db;
+
+        $db->query("SELECT id FROM ploopi_documents_file WHERE md5id = '".$db->addslashes($md5id)."'");
+        if ($fields = $db->fetchrow()) return($this->open($fields['id']));
+        else return false;
+    }    
 
     /**
      * Enregistre le document.
@@ -95,7 +112,7 @@ class documentsfile extends data_object
      */
     public function save()
     {
-        global $db;
+    	global $db;
         $error = 0;
         if (isset($this->fields['folder'])) unset($this->fields['folder']);
 
@@ -103,16 +120,20 @@ class documentsfile extends data_object
 
         if ($this->new) // insert
         {
-            if ($this->tmpfile == 'none' && $this->file == 'none') $error = _PLOOPI_ERROR_EMPTYFILE;
+        	if ($this->tmpfile == 'none' && $this->file == 'none') $error = _PLOOPI_ERROR_EMPTYFILE;
 
-            if ($this->fields['size']>_PLOOPI_MAXFILESIZE) $error = _PLOOPI_ERROR_MAXFILESIZE;
+        	if ($this->fields['size']>_PLOOPI_MAXFILESIZE) $error = _PLOOPI_ERROR_MAXFILESIZE;
 
-            if (!$error)
+        	if (!$error)
             {
                 $this->fields['extension'] = substr(strrchr($this->fields['name'], "."),1);
 
                 $id = parent::save();
-
+                
+                $this->fields['md5id'] = md5(sprintf("%s_%d", $this->fields['timestp_create'], $id));
+                
+                parent::save();
+                
                 $basepath = $this->getbasepath();
                 $filepath = $this->getfilepath();
 
@@ -306,7 +327,24 @@ class documentsfolder extends data_object
         $this->fields['timestp_modify'] = $this->fields['timestp_create'];
         $this->fields['parents']=0;
     }
+    
+    
+    /**
+     * Ouvre un dossier avec son identifiant MD5
+     *
+     * @param string $md5id identifiant MD5 du dossier
+     * @return boolean true si le dossier a été ouvert
+     */
 
+    function openmd5($md5id)
+    {
+        global $db;
+
+        $db->query("SELECT id FROM ploopi_documents_folder WHERE md5id = '".$db->addslashes($md5id)."'");
+        if ($fields = $db->fetchrow()) return($this->open($fields['id']));
+        else return false;
+    }    
+    
     /**
      * Enregistre le dossier
      *
@@ -314,18 +352,26 @@ class documentsfolder extends data_object
      */
     function save()
     {
-        if ($this->fields['id_folder'] != 0)
-        {
-            $docfolder_parent = new documentsfolder();
-            $docfolder_parent->open($this->fields['id_folder']);
-            $this->fields['parents'] = "{$docfolder_parent->fields['parents']},{$this->fields['id_folder']}";
-            $ret = parent::save();
-            $docfolder_parent->fields['nbelements'] = ploopi_documents_countelements($this->fields['id_folder']);
-            $docfolder_parent->save();
-        }
-        else $ret = parent::save();
+    	if ($this->new)
+    	{
+	        $id = parent::save();
+            $this->fields['md5id'] = md5(sprintf("%s_%d", $this->fields['timestp_create'], $id));
+	        
+	        if ($this->fields['id_folder'] != 0)
+	        {
+	            $docfolder_parent = new documentsfolder();
+	            $docfolder_parent->open($this->fields['id_folder']);
+	            $this->fields['parents'] = "{$docfolder_parent->fields['parents']},{$this->fields['id_folder']}";
+	            $docfolder_parent->fields['nbelements'] = ploopi_documents_countelements($this->fields['id_folder']);
+	            $docfolder_parent->save();
+	        }
+    		
+            parent::save();
+    	}
+    	
+        else $id= parent::save();
 
-        return ($ret);
+        return $id;
     }
 
     /**
@@ -448,7 +494,7 @@ class documentsfolder extends data_object
     public function getlist()
     {
         $arrTree = $this->gettree();
-        return self::_getlist_rec(&$arrTree);
+        return self::_getlist_rec($arrTree);
     }
     
     
@@ -461,7 +507,7 @@ class documentsfolder extends data_object
      * @return array tableau de chemins
      */
     
-    private static function _getlist_rec($arrTree, $intIdFolder = null, $strPath = '')
+    private static function _getlist_rec(&$arrTree, $intIdFolder = null, $strPath = '')
     {
         $arrFiles = array();
         
@@ -486,7 +532,7 @@ class documentsfolder extends data_object
         {
             foreach($arrTree['tree'][$intIdFolder]['folders'] as $objFolder)
             {
-                $arrFiles = $arrFiles + self::_getlist_rec(&$arrTree, $objFolder->fields['id'], $strPath);
+                $arrFiles = $arrFiles + self::_getlist_rec($arrTree, $objFolder->fields['id'], $strPath);
             }
         }
         

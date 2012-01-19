@@ -62,9 +62,9 @@ switch($ploopi_op)
 
         if (empty($currentfolder)) // on va chercher la racine
         {
-            $db->query("SELECT id FROM ploopi_documents_folder WHERE id_folder = 0 and id_object = '{$_SESSION['documents']['id_object']}' and id_record = '".$db->addslashes($_SESSION['documents']['id_record'])."'");
+            $db->query("SELECT md5id FROM ploopi_documents_folder WHERE id_folder = 0 and id_object = '{$_SESSION['documents']['id_object']}' and id_record = '".$db->addslashes($_SESSION['documents']['id_record'])."'");
 
-            if ($row = $db->fetchrow()) $currentfolder = $row['id'];
+            if ($row = $db->fetchrow()) $currentfolder = $row['md5id'];
             else // racine inexistante, il faut la créer
             {
                 $documentsfolder = new documentsfolder();
@@ -75,7 +75,8 @@ switch($ploopi_op)
                 $documentsfolder->fields['id_module'] = $_SESSION['documents']['id_module'];
                 $documentsfolder->fields['id_user'] = $_SESSION['documents']['id_user'];
                 $documentsfolder->fields['id_workspace'] = $_SESSION['documents']['id_workspace'];
-                $currentfolder = $documentsfolder->save();
+                $documentsfolder->save();
+                $currentfolder = $documentsfolder->fields['md5id'];
             }
         }
 
@@ -110,7 +111,8 @@ switch($ploopi_op)
             include_once './include/classes/documents.php';
 
             $documentsfile = new documentsfile();
-            if ($documentsfile->open($_GET['documentsfile_id']))
+
+            if ($documentsfile->openmd5($_GET['documentsfile_id']))
             {
                 $attachement = true;
 
@@ -131,7 +133,7 @@ switch($ploopi_op)
             include_once './include/classes/documents.php';
 
             $documentsfile = new documentsfile();
-            if ($documentsfile->open($_GET['documentsfile_id']))
+            if ($documentsfile->openmd5($_GET['documentsfile_id']))
             {
 
                 $tmpfoldername = md5(uniqid(rand(), true));
@@ -168,10 +170,13 @@ switch($ploopi_op)
     case 'documents_savefolder':
         include_once './include/classes/documents.php';
         $documentsfolder = new documentsfolder();
-
-        if (!empty($_POST['documentsfolder_id']))
+        $documentsfolder_parent = new documentsfolder();
+        
+        if (!isset($_GET['currentfolder']) || !$documentsfolder_parent->openmd5($_GET['currentfolder'])) ploopi_die();
+        
+        if (!empty($_GET['documentsfolder_id']))
         {
-            $documentsfolder->open($_POST['documentsfolder_id']);
+            $documentsfolder->openmd5($_GET['documentsfolder_id']);
             $documentsfolder->setvalues($_POST,'documentsfolder_');
 
             if (isset($_POST['fck_documentsfolder_description']))
@@ -185,7 +190,7 @@ switch($ploopi_op)
             if (isset($_POST['fck_documentsfolder_description']))
                 $documentsfolder->fields['description'] = $_POST['fck_documentsfolder_description'];
 
-            $documentsfolder->fields['id_folder'] = $_POST['currentfolder'];
+            $documentsfolder->fields['id_folder'] = $documentsfolder_parent->fields['id'];
             $documentsfolder->fields['id_object'] = $_SESSION['documents']['id_object'];
             $documentsfolder->fields['id_record'] = $_SESSION['documents']['id_record'];
             $documentsfolder->fields['id_module'] = $_SESSION['documents']['id_module'];
@@ -198,7 +203,7 @@ switch($ploopi_op)
         }
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<?php echo $_SESSION['documents']['documents_id']; ?>', '<?php echo $_POST['currentfolder']; ?>', '<?php echo $_SESSION['documents']['mode']; ?>');
+            window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&mode={$_SESSION['documents']['mode']}"); ?>', '<?php echo $_SESSION['documents']['documents_id']; ?>');
             window.parent.ploopi_hidepopup('ploopi_documents_openfolder_popup');
         </script>
         <?php
@@ -217,22 +222,15 @@ switch($ploopi_op)
         }
         else
         {
-            $documentsfolder->open($_GET['documentsfolder_id']);
+            $documentsfolder->openmd5($_GET['documentsfolder_id']);
             $title = "Modification du Dossier";
         }
+        
+        $url = "admin-light.php?ploopi_op=documents_savefolder&currentfolder={$_GET['currentfolder']}";
+        if (!empty($_GET['documentsfolder_id'])) $url .= "&documentsfolder_id={$_GET['documentsfolder_id']}";
+        
         ?>
-        <form id="documents_folderform" action="admin-light.php" method="post" target="documents_folderform_iframe" enctype="multipart/form-data">
-        <input type="hidden" name="ploopi_op" value="documents_savefolder">
-        <input type="hidden" name="currentfolder" value="<?php echo $_GET['currentfolder']; ?>">
-        <?php
-        if (!empty($_GET['documentsfolder_id']))
-        {
-            ?>
-            <input type="hidden" name="documentsfolder_id" value="<?php echo $_GET['documentsfolder_id']; ?>">
-            <?php
-        }
-        ?>
-
+        <form id="documents_folderform" action="<?php echo ploopi_urlencode($url); ?>" method="post" target="documents_folderform_iframe" enctype="multipart/form-data">
         <div class="ploopi_form">
             <div class="documents_formcontent">
                 <p>
@@ -283,8 +281,11 @@ switch($ploopi_op)
     case 'documents_savefile':
         include_once './include/classes/documents.php';
         $documentsfile = new documentsfile();
-
-        if (!empty($_POST['documentsfile_id'])) $documentsfile->open($_POST['documentsfile_id']);
+        $documentsfolder = new documentsfolder();
+        
+        if (!isset($_GET['currentfolder']) || !$documentsfolder->openmd5($_GET['currentfolder'])) ploopi_die();
+        
+        if (!empty($_GET['documentsfile_id'])) $documentsfile->openmd5($_GET['documentsfile_id']);
         else
         {
             $documentsfile->fields['id_object'] = $_SESSION['documents']['id_object'];
@@ -301,7 +302,7 @@ switch($ploopi_op)
 
         if (isset($documentsfile->fields['timestp_file'])) $documentsfile->fields['timestp_file'] = ploopi_local2timestamp($documentsfile->fields['timestp_file']);
 
-        $documentsfile->fields['id_folder'] = $_POST['currentfolder'];
+        $documentsfile->fields['id_folder'] = $documentsfolder->fields['id'];
 
         if (!empty($_FILES['documentsfile_file']['name']))
         {
@@ -317,7 +318,7 @@ switch($ploopi_op)
         $error = $documentsfile->save();
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<?php echo $_SESSION['documents']['documents_id']; ?>', '<?php echo $_POST['currentfolder']; ?>', '<?php echo $_SESSION['documents']['mode']; ?>');
+            window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&mode={$_SESSION['documents']['mode']}"); ?>', '<?php echo $_SESSION['documents']['documents_id']; ?>');
             window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
         </script>
         <?php
@@ -336,23 +337,17 @@ switch($ploopi_op)
         }
         else
         {
-            $documentsfile->open($_GET['documentsfile_id']);
+            $documentsfile->openmd5($_GET['documentsfile_id']);
             $title = "Modification du Fichier";
         }
 
         $ldate = ($documentsfile->fields['timestp_file']!=0 && $documentsfile->fields['timestp_file']!='') ? ploopi_timestamp2local($documentsfile->fields['timestp_file']) : array('date' => '');
+        
+        $url = "admin-light.php?ploopi_op=documents_savefile&currentfolder={$_GET['currentfolder']}";
+        if (!empty($_GET['documentsfile_id'])) $url .= "&documentsfile_id={$_GET['documentsfile_id']}";
+        
         ?>
-        <form id="documents_folderform" action="admin-light.php" method="post" target="documents_fileform_iframe" enctype="multipart/form-data" onsubmit="javascript:return ploopi_documents_validate(this)">
-        <input type="hidden" name="ploopi_op" value="documents_savefile">
-        <input type="hidden" name="currentfolder" value="<?php echo $_GET['currentfolder']; ?>">
-        <?php
-        if (!empty($_GET['documentsfile_id']))
-        {
-            ?>
-            <input type="hidden" name="documentsfile_id" value="<?php echo $_GET['documentsfile_id']; ?>">
-            <?php
-        }
-        ?>
+        <form id="documents_folderform" action="<?php echo ploopi_urlencode($url); ?>" method="post" target="documents_fileform_iframe" enctype="multipart/form-data" onsubmit="javascript:return ploopi_documents_validate(this)">
         <div class="ploopi_form">
             <div class="documents_formcontent">
                 <?php
@@ -424,7 +419,7 @@ switch($ploopi_op)
             </div>
         </div>
         </form>
-        <iframe name="documents_fileform_iframe" src="./img/blank.gif" style="display:none"></iframe>
+        <iframe name="documents_fileform_iframe" src="./img/blank.gif" style="display:none;"></iframe>
         <?php
         $content = ob_get_contents();
         ob_end_clean();
@@ -434,13 +429,14 @@ switch($ploopi_op)
     break;
 
     case 'documents_deletefile':
-        if (!empty($_GET['documentsfile_id']))
+    	if (!isset($_GET['currentfolder'])) ploopi_die();
+    	
+    	include_once './include/classes/documents.php';
+        
+        $documentsfile = new documentsfile();
+        
+    	if (!empty($_GET['documentsfile_id']) && $documentsfile->openmd5($_GET['documentsfile_id']))
         {
-            include_once './include/classes/documents.php';
-
-            $documentsfile = new documentsfile();
-            $documentsfile->open($_GET['documentsfile_id']);
-
             if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
             if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefile', $documentsfile->fields['name']);
 
@@ -451,13 +447,14 @@ switch($ploopi_op)
     break;
 
     case 'documents_deletefolder':
-        if (!empty($_GET['documentsfolder_id']))
+    	if (!isset($_GET['currentfolder'])) ploopi_die();
+    	
+    	include_once './include/classes/documents.php';
+
+        $documentsfolder = new documentsfolder();
+        
+    	if (!empty($_GET['documentsfolder_id']) && $documentsfolder->openmd5($_GET['documentsfolder_id']))
         {
-            include_once './include/classes/documents.php';
-
-            $documentsfolder = new documentsfolder();
-            $documentsfolder->open($_GET['documentsfolder_id']);
-
             if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
             if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefolder', $documentsfolder->fields['name']);
 
