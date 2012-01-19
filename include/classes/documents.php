@@ -352,17 +352,23 @@ class documentsfolder extends data_object
      */
     function save()
     {
-        if ($this->fields['id_folder'] != 0)
-        {
-            $docfolder_parent = new documentsfolder();
-            $docfolder_parent->open($this->fields['id_folder']);
-            $this->fields['parents'] = "{$docfolder_parent->fields['parents']},{$this->fields['id_folder']}";
-            $id = parent::save();
+    	if ($this->new)
+    	{
+	        $id = parent::save();
             $this->fields['md5id'] = md5(sprintf("%s_%d", $this->fields['timestp_create'], $id));
+	        
+	        if ($this->fields['id_folder'] != 0)
+	        {
+	            $docfolder_parent = new documentsfolder();
+	            $docfolder_parent->open($this->fields['id_folder']);
+	            $this->fields['parents'] = "{$docfolder_parent->fields['parents']},{$this->fields['id_folder']}";
+	            $docfolder_parent->fields['nbelements'] = ploopi_documents_countelements($this->fields['id_folder']);
+	            $docfolder_parent->save();
+	        }
+    		
             parent::save();
-            $docfolder_parent->fields['nbelements'] = ploopi_documents_countelements($this->fields['id_folder']);
-            $docfolder_parent->save();
-        }
+    	}
+    	
         else $id= parent::save();
 
         return $id;

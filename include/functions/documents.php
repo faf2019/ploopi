@@ -167,7 +167,7 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
         $documentsfolder->fields['id_module'] = $_SESSION['documents']['id_module'];
         $documentsfolder->fields['id_user'] = $_SESSION['documents']['id_user'];
         $documentsfolder->fields['id_workspace'] = $_SESSION['documents']['id_workspace'];
-        $documentsfolder->save();
+        $id =  $documentsfolder->save();
         $currentfolder = $documentsfolder->fields['md5id'];
 
         if (is_array($default_folders))
@@ -175,7 +175,7 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
             foreach ($default_folders as $foldername)
             {
                 $documentsfolder = new documentsfolder();
-                $documentsfolder->fields['id_folder'] = $currentfolder;
+                $documentsfolder->fields['id_folder'] = $id;
                 $documentsfolder->fields['id_object'] = $_SESSION['documents']['id_object'];
                 $documentsfolder->fields['id_record'] = $_SESSION['documents']['id_record'];
                 $documentsfolder->fields['id_module'] = $_SESSION['documents']['id_module'];
