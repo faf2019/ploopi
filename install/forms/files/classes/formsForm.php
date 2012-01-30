@@ -1345,6 +1345,10 @@ class formsForm extends data_object
                         }
                     break;
 
+                    case 'textarea':
+                        $objMbField->fields['type'] = 'text';
+                    break;
+
                     case 'autoincrement':
                         $objMbField->fields['type'] = 'int(10)';
                     break;
