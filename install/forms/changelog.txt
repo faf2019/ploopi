@@ -1,3 +1,9 @@
+== Module FORMS - version 3.5.0g =====================================================
+
+2012-02-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug lors de la suppression d'une instance du module
+
 == Module FORMS - version 3.5.0f =====================================================
 
 2012-01-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
