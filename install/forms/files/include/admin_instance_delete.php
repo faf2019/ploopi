@@ -36,7 +36,7 @@
 ploopi_init_module('forms', false, false, false);
 
 include_once './include/classes/data_object_collection.php';
-include_once './modules/forms/formsForm.php';
+include_once './modules/forms/classes/formsForm.php';
 
 
 $objDOC = new data_object_collection('formsForm');
