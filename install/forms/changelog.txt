@@ -1,3 +1,10 @@
+== Module FORMS - version 3.5.0h =====================================================
+
+2012-02-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug lors de la validation formulaire (admin)
+* Correction d'un bug lors de l'envoi d'une réponse de formulaire par ticket
+
 == Module FORMS - version 3.5.0g =====================================================
 
 2012-02-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

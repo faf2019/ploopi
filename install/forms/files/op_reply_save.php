@@ -406,7 +406,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
         }
     }
 
-    ploopi_tickets_send($arrEmailContent['Formulaire']['Titre'], '<table class="ploopi_array">'.ploopi_form2html($arrEmailContent).'</table>', 0, 0, _FORMS_OBJECT_FORM, $objForm->fields['id'].','.$objRecord->fields['id'], $arrEmailContent['Formulaire']['Titre']);
+    ploopi_tickets_send($arrEmailContent['Formulaire']['Titre'], '<table class="ploopi_array">'.ploopi_form2html($arrEmailContent).'</table>', 0, 0, _FORMS_OBJECT_FORM, $objForm->fields['id'].','.$objRecord->fields['#id'], $arrEmailContent['Formulaire']['Titre']);
 
     /*
     if ($objForm->fields['email'] != '')
