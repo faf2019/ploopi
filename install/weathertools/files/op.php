@@ -58,7 +58,9 @@ if (ploopi_ismoduleallowed('weathertools'))
     	    
             ploopi_init_module('weathertools', false, false, false);
 
+            ploopi_unset_error_handler();
             require_once 'HTTP/Request.php'; // PEAR
+            ploopi_set_error_handler();
     	    
             if(!empty($_POST['weather_urlgeoip']))
             {
@@ -104,7 +106,9 @@ if (ploopi_ismoduleallowed('weathertools'))
     	case 'weathertools_stations_import':
     		ploopi_init_module('weathertools', false, false, false);
 
+            ploopi_unset_error_handler();
             require_once 'HTTP/Request.php'; // PEAR
+            ploopi_set_error_handler();
 			include_once './modules/weathertools/classes/class_weathertools_station.php';
     		
     		if(!empty($_POST['weather_urlstations']))
