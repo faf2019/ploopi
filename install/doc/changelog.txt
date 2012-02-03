@@ -1,3 +1,9 @@
+== Module DOC - version 4.6.4b ====================================================
+
+2012-02-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Seuls les documents dans des dossiers publics peuvent disposer d'une URL publique 
+
 == Module DOC - version 4.6.4a ====================================================
 
 2012-01-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -1061,17 +1061,11 @@ switch($ploopi_op)
 
         ploopi_init_module('doc', false, false, false);
 
-        if (!empty($_GET['docfile_md5id']))
+        $docfile = new docfile();
+        $docfolder = new docfolder();
+        if (!empty($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']) && $docfolder->open($docfile->fields['id_folder']) && $docfolder->fields['foldertype'] == 'public' && file_exists($docfile->getfilepath()))
         {
-            $db->query("SELECT id FROM ploopi_mod_doc_file WHERE md5id = '".$db->addslashes($_GET['docfile_md5id'])."'");
-            if ($fields = $db->fetchrow())
-            {
-                $docfile = new docfile();
-                if ($docfile->open($fields['id']) && file_exists($docfile->getfilepath()))
-                {
-                    ploopi_downloadfile($docfile->getfilepath(),$docfile->fields['name'], false, $ploopi_op == 'doc_file_download');
-                }
-            }
+            ploopi_downloadfile($docfile->getfilepath(),$docfile->fields['name'], false, $ploopi_op == 'doc_file_download');
         }
 
         ploopi_die();
