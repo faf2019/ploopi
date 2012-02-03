@@ -1,3 +1,9 @@
+== Module Wheathertools - version 1.1.2c ==================================================
+
+2012-02-03  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction de bugs mineurs liés à des "deprecated" (PHP 5.3)
+
 == Module Wheathertools - version 1.1.2b ==================================================
 
 2010-03-29  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
