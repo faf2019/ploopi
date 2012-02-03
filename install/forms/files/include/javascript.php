@@ -47,7 +47,7 @@ if (ploopi_ismoduleallowed('forms'))
         if (ploopi_validatefield('<?php echo addslashes(html_entity_decode(_FORMS_LABEL)); ?>',form.forms_label,"string"))
         if (ploopi_validatefield('<?php echo addslashes(html_entity_decode(_FORMS_PUBDATESTART)); ?>',form.forms_pubdate_start,"emptydate"))
         if (ploopi_validatefield('<?php echo addslashes(html_entity_decode(_FORMS_PUBDATEEND)); ?>',form.forms_pubdate_end,"emptydate"))
-            return(false);
+            return(true);
 
         return(false);
     }
