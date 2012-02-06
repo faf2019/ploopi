@@ -276,7 +276,7 @@ class documentsfile extends data_object
      */
     public function geturl($attachement = true)
     {
-        return ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$this->fields['id']}&attachement={$attachement}");
+        return ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$this->fields['md5id']}&attachement={$attachement}");
     }
 
     /**
