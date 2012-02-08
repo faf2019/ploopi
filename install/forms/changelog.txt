@@ -1,3 +1,9 @@
+== Module FORMS - version 3.5.1c =====================================================
+
+2012-02-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans le script SQL d'install (incomplet)
+
 == Module FORMS - version 3.5.1b =====================================================
 
 2012-02-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
