@@ -155,8 +155,8 @@ ADD `export_fitpage_width` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1' AFTER `exp
 ADD `export_fitpage_height` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `export_fitpage_width` ,
 ADD `export_border` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `export_fitpage_height`;
 
-
-CREATE TABLE `ploopi_mod_forms_group` (
+DROP TABLE IF EXISTS `ploopi_mod_forms_group`;
+CREATE TABLE IF NOT EXISTS `ploopi_mod_forms_group` (
 `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `id_form` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 `label` VARCHAR( 255 ) NOT NULL
@@ -169,3 +169,16 @@ ALTER TABLE `ploopi_mod_forms_group` ADD `conditions` LONGTEXT NOT NULL ,
 ADD `formula` VARCHAR( 255 ) NOT NULL;
 
 ALTER TABLE `ploopi_mod_forms_group` ADD `description` LONGTEXT NOT NULL AFTER `label`;
+
+ALTER TABLE `ploopi_mod_forms_graphic` ADD `line1_filter` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `line5_color` ,
+ADD `line2_filter` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `line1_filter` ,
+ADD `line3_filter` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `line2_filter` ,
+ADD `line4_filter` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `line3_filter` ,
+ADD `line5_filter` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `line4_filter` ;
+
+ALTER TABLE `ploopi_mod_forms_graphic` ADD `line1_legend` VARCHAR( 255 ) NOT NULL AFTER `line5_filter_value` ,
+ADD `line2_legend` VARCHAR( 255 ) NOT NULL AFTER `line1_legend` ,
+ADD `line3_legend` VARCHAR( 255 ) NOT NULL AFTER `line2_legend` ,
+ADD `line4_legend` VARCHAR( 255 ) NOT NULL AFTER `line3_legend` ,
+ADD `line5_legend` VARCHAR( 255 ) NOT NULL AFTER `line4_legend` ;
+
