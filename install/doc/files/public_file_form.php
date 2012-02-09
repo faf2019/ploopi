@@ -235,7 +235,7 @@ else
     </div>
     
     <?php
-    if ($docfolder->fields['foldertype'] == 'public')
+    if (!empty($currentfolder) && $docfolder->fields['foldertype'] == 'public')
     {
         $strPublicUrl = _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true);
         ?>
