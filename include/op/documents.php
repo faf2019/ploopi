@@ -199,7 +199,7 @@ switch($ploopi_op)
             $documentsfolder->save();
 
             if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
-            if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefolder', $documentsfolder);
+            if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefolder', $documentsfolder->fields['name']);
         }
         ?>
         <script type="text/javascript">
@@ -315,7 +315,7 @@ switch($ploopi_op)
         $error = $documentsfile->save();
         
         if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
-        if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefile', $documentsfile);
+        if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefile', $documentsfile->fields['name']);
         ?>
         <script type="text/javascript">
             window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&mode={$_SESSION['documents']['mode']}"); ?>', '<?php echo $_SESSION['documents']['documents_id']; ?>');
