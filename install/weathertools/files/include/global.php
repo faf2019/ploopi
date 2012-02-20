@@ -70,7 +70,7 @@ function weathertools_getmap($type_map, $moduleid = null, $cache_length = 1800)
 		break;
 	}
 	
-	$strCachePath = _PLOOPI_PATHDATA._PLOOPI_SEP."weathertools-{$moduleid}"._PLOOPI_SEP."cache";
+    $strCachePath = _PLOOPI_PATHDATA._PLOOPI_SEP."weathertools-".md5($strUrl)._PLOOPI_SEP."cache";
 	$strCacheFile = $strCachePath.$type_map;
 	
 	$intFileTs = filemtime("{$strCacheFile}.raw");

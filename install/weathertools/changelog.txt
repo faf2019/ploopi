@@ -1,3 +1,9 @@
+== Module Weathertools - version 1.1.2a ====================================================
+
+2012-02-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug dans la gestion de la mise en cache des images en fonction de leur origine
+
 == Module Weathertools - version 1.1.2 ====================================================
 
 2009-07-31  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
