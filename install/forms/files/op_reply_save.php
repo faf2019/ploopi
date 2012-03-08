@@ -155,7 +155,19 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
             break;
         }
 
-        $objRecord->fields[$objField->fields['fieldname']] = $strValue;
+        switch($objField->fields['type'])
+        {
+            // Cas particulier, on n'écrase pas une valeur existante par une valeur vide
+            case 'file':
+                if (!empty($strValue)) $objRecord->fields[$objField->fields['fieldname']] = $strValue;
+            break;
+
+            // Cas général, on enregistre la nouvelle valeur
+            default:
+                $objRecord->fields[$objField->fields['fieldname']] = $strValue;
+            break;
+        }
+
 
         /*
 

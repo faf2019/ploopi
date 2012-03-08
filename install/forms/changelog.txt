@@ -1,6 +1,13 @@
+== Module FORMS - version 3.5.0j =====================================================
+
+2012-03-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug à l'impression : les champs optionnels n'aparaissaient pas
+* Correction d'un bug lors de la mise à jour d'un enregistrement contenant une pièce jointe en champ obligatoire
+
 == Module FORMS - version 3.5.0i =====================================================
 
-2012-02-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2012-02-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction d'un bug dans le script SQL d'install (incomplet)
 
