@@ -1657,8 +1657,13 @@ class formsForm extends data_object
                     $strDataType = 'string';
                     $intMaxLength = 255;
 
+                    // Requis ? car général :
+                    $booRequired = $objField->fields['option_needed'] == 1;
+                    // Exceptions :
+                    if ($objField->fields['type'] == 'file' && current($arrFieldsContent[$objField->fields['id']]) != '') $booRequired = false;
+
                     $arrOptions = array(
-                        'required' => $objField->fields['option_needed'] == 1,
+                        'required' => $booRequired,
                         'description' => ploopi_nl2br(htmlentities($objField->fields['description'])),
                         'style' => $objField->fields['style_field'],
                         'style_form' => (empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;") . $objField->fields['style_form'],
@@ -1884,352 +1889,346 @@ class formsForm extends data_object
             }
         }
 
-
-
-        // Le mode impression est plus léger (pas de JS)
-        if ($strRenderMode != 'print')
+        switch($strRenderMode)
         {
-
-            switch($strRenderMode)
-            {
-                case 'modify':
-                case 'frontoffice':
-                    if ($strRenderMode != 'frontoffice')
-                    {
-                        $objForm->addButton( new form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$this->fields['id']}")."';")) );
-                    }
-
-                    //$objForm->addButton( new form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;') ) );
-                    $objForm->addButton( new form_button('input:button', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;', 'onclick' => "document.location.reload();")) );
-                    $objForm->addButton( new form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave(); ploopi_openwin('".ploopi_urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
-                break;
-
-                case 'view':
-                    $objForm->addButton( new form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$this->fields['id']}")."';")) );
-                    $objForm->addButton( new form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave(); ploopi_openwin('".ploopi_urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
-                break;
-
-                case 'preview':
-                    $objForm->addButton( new form_button('input:button', 'Retour', null, null, array('onclick' => "ploopi_hidepopup('forms_preview');")) );
-                break;
-            }
-
-            /**
-             * Gestion des groupes conditionnels
-             */
-
-            $strJsCond = "ploopi.{$strFormId}_checkgroup = function(g) {\nswitch(g) {";
-            $strJsGroup = '';
-
-            $arrFields = $this->getFields();
-
-            foreach($arrGroups as $intIdGroup => $rowGroup)
-            {
-                foreach($rowGroup as $intIdField)
+            case 'modify':
+            case 'frontoffice':
+                if ($strRenderMode != 'frontoffice')
                 {
-                    $strJsGroup .= "\n$('field_{$intIdField}_form').style.display = ploopi.{$strFormId}_checkgroup({$intIdGroup}) ? 'block' : 'none';";
+                    $objForm->addButton( new form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$this->fields['id']}")."';")) );
                 }
 
-                $strJsCond .= "\ncase {$intIdGroup}:";
+                //$objForm->addButton( new form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;') ) );
+                $objForm->addButton( new form_button('input:button', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;', 'onclick' => "document.location.reload();")) );
+                $objForm->addButton( new form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave(); ploopi_openwin('".ploopi_urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
+            break;
 
-                $objGroup = new formsGroup();
-                $objGroup->open($intIdGroup);
-                $arrConditions = $objGroup->getConditions();
+            case 'view':
+                $objForm->addButton( new form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$this->fields['id']}")."';")) );
+                $objForm->addButton( new form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave(); ploopi_openwin('".ploopi_urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
+            break;
 
-                foreach($arrConditions as $key => $row)
+            case 'preview':
+                $objForm->addButton( new form_button('input:button', 'Retour', null, null, array('onclick' => "ploopi_hidepopup('forms_preview');")) );
+            break;
+        }
+
+        /**
+         * Gestion des groupes conditionnels
+         */
+
+        $strJsCond = "ploopi.{$strFormId}_checkgroup = function(g) {\nswitch(g) {";
+        $strJsGroup = '';
+
+        $arrFields = $this->getFields();
+
+        foreach($arrGroups as $intIdGroup => $rowGroup)
+        {
+            foreach($rowGroup as $intIdField)
+            {
+                $strJsGroup .= "\n$('field_{$intIdField}_form').style.display = ploopi.{$strFormId}_checkgroup({$intIdGroup}) ? 'block' : 'none';";
+            }
+
+            $strJsCond .= "\ncase {$intIdGroup}:";
+
+            $objGroup = new formsGroup();
+            $objGroup->open($intIdGroup);
+            $arrConditions = $objGroup->getConditions();
+
+            foreach($arrConditions as $key => $row)
+            {
+                if (empty($row['field']) && empty($row['op']))
                 {
-                    if (empty($row['field']) && empty($row['op']))
+                    $strJsCond .= "\nvar C{$key} = true;";
+                }
+                else
+                {
+                    $objFieldVar = $arrFields[$row['field']];
+
+                    // Stockage des valeurs du formulaire pour les variables concernées par la condition
+                    $strJsCond .= "\nvar V{$key} = new Array();";
+                    switch($objFieldVar->fields['type'])
                     {
-                        $strJsCond .= "\nvar C{$key} = true;";
+                        case 'radio':
+                            $strJsCond .= "\nfor (i=0; i<$('{$strFormId}')['field_{$row['field']}'].length;i++) if ($('{$strFormId}')['field_{$row['field']}'][i].checked) V{$key}.push( forms_removeaccents($('{$strFormId}')['field_{$row['field']}'][i].value).toUpperCase() );";
+                        break;
+
+                        case 'checkbox':
+                            $strJsCond .= "\nfor (i=0; i<$('{$strFormId}')['field_{$row['field']}[]'].length;i++) if ($('{$strFormId}')['field_{$row['field']}[]'][i].checked) V{$key}.push( forms_removeaccents($('{$strFormId}')['field_{$row['field']}[]'][i].value).toUpperCase() );";
+                        break;
+
+                        default:
+                            $strJsCond .= "\nV{$key}.push( forms_removeaccents($('{$strFormId}').field_{$row['field']}.value).toUpperCase() );";
+                        break;
                     }
-                    else
+
+                    $strValue = addslashes(strtoupper(ploopi_convertaccents($row['value'])));
+
+                    $strJsCond .= "\nvar C{$key} = false;";
+                    $strJsCond .= "\nfor (i=0;i<V{$key}.length;i++) {";
+
+
+                    switch($row['op'])
                     {
-                        $objFieldVar = $arrFields[$row['field']];
+                        // Traité comme une chaîne (pas de sens en numérique)
+                        case 'begin':
+                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/".$strValue.".*/i));";
+                        break;
 
-                        // Stockage des valeurs du formulaire pour les variables concernées par la condition
-                        $strJsCond .= "\nvar V{$key} = new Array();";
-                        switch($objFieldVar->fields['type'])
-                        {
-                            case 'radio':
-                                $strJsCond .= "\nfor (i=0; i<$('{$strFormId}')['field_{$row['field']}'].length;i++) if ($('{$strFormId}')['field_{$row['field']}'][i].checked) V{$key}.push( forms_removeaccents($('{$strFormId}')['field_{$row['field']}'][i].value).toUpperCase() );";
-                            break;
+                        // Traité comme une chaîne (pas de sens en numérique)
+                        case 'like':
+                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/.*".$strValue.".*/i));";
+                        break;
 
-                            case 'checkbox':
-                                $strJsCond .= "\nfor (i=0; i<$('{$strFormId}')['field_{$row['field']}[]'].length;i++) if ($('{$strFormId}')['field_{$row['field']}[]'][i].checked) V{$key}.push( forms_removeaccents($('{$strFormId}')['field_{$row['field']}[]'][i].value).toUpperCase() );";
-                            break;
-
-                            default:
-                                $strJsCond .= "\nV{$key}.push( forms_removeaccents($('{$strFormId}').field_{$row['field']}.value).toUpperCase() );";
-                            break;
-                        }
-
-                        $strValue = addslashes(strtoupper(ploopi_convertaccents($row['value'])));
-
-                        $strJsCond .= "\nvar C{$key} = false;";
-                        $strJsCond .= "\nfor (i=0;i<V{$key}.length;i++) {";
-
-
-                        switch($row['op'])
-                        {
-                            // Traité comme une chaîne (pas de sens en numérique)
-                            case 'begin':
-                                $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/".$strValue.".*/i));";
-                            break;
-
-                            // Traité comme une chaîne (pas de sens en numérique)
-                            case 'like':
-                                $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/.*".$strValue.".*/i));";
-                            break;
-
-                            case 'between':
-                                $arrValues = array_map('trim', explode(',', $strValue));
-                                if (sizeof($arrValues) == 2)
-                                {
-                                    switch($objFieldVar->fields['format'])
-                                    {
-                                        case 'int':
-                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= parseInt('".$arrValues[0]."', 10) && V{$key}[i] <= parseInt('".$arrValues[1]."', 10));";
-                                        break;
-
-                                        case 'float':
-                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= parseFloat('".$arrValues[0]."', 10) && V{$key}[i] <= parseFloat('".$arrValues[1]."', 10));";
-                                        break;
-
-                                        default:
-                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= '".$arrValues[0]."' && V{$key}[i] <= '".$arrValues[1]."');";
-                                        break;
-                                    }
-                                }
-                            break;
-
-                            case 'in':
-                                foreach(array_map('trim', explode(',', $strValue)) as $strValue)
-                                {
-                                    switch($objFieldVar->fields['format'])
-                                    {
-                                        case 'int':
-                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == parseInt('".$strValue."', 10));";
-                                        break;
-
-                                        case 'float':
-                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == parseFloat('".$strValue."', 10));";
-                                        break;
-
-                                        default:
-                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == '".$strValue."');";
-                                        break;
-                                    }
-                                }
-                            break;
-
-                            // Les opérateurs de base
-                            default:
-                                if ($row['op'] == '=') $row['op'] = '==';
-                                if ($row['op'] == '<>') $row['op'] = '!=';
-
+                        case 'between':
+                            $arrValues = array_map('trim', explode(',', $strValue));
+                            if (sizeof($arrValues) == 2)
+                            {
                                 switch($objFieldVar->fields['format'])
                                 {
                                     case 'int':
-                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseInt('".$strValue."', 10));";
+                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= parseInt('".$arrValues[0]."', 10) && V{$key}[i] <= parseInt('".$arrValues[1]."', 10));";
                                     break;
 
                                     case 'float':
-                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseFloat('".$strValue."', 10));";
+                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= parseFloat('".$arrValues[0]."', 10) && V{$key}[i] <= parseFloat('".$arrValues[1]."', 10));";
                                     break;
 
                                     default:
-                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} '".$strValue."');";
+                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= '".$arrValues[0]."' && V{$key}[i] <= '".$arrValues[1]."');";
                                     break;
                                 }
-                            break;
-                        }
+                            }
+                        break;
 
-                        $strJsCond .= "}";
+                        case 'in':
+                            foreach(array_map('trim', explode(',', $strValue)) as $strValue)
+                            {
+                                switch($objFieldVar->fields['format'])
+                                {
+                                    case 'int':
+                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == parseInt('".$strValue."', 10));";
+                                    break;
+
+                                    case 'float':
+                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == parseFloat('".$strValue."', 10));";
+                                    break;
+
+                                    default:
+                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == '".$strValue."');";
+                                    break;
+                                }
+                            }
+                        break;
+
+                        // Les opérateurs de base
+                        default:
+                            if ($row['op'] == '=') $row['op'] = '==';
+                            if ($row['op'] == '<>') $row['op'] = '!=';
+
+                            switch($objFieldVar->fields['format'])
+                            {
+                                case 'int':
+                                    $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseInt('".$strValue."', 10));";
+                                break;
+
+                                case 'float':
+                                    $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseFloat('".$strValue."', 10));";
+                                break;
+
+                                default:
+                                    $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} '".$strValue."');";
+                                break;
+                            }
+                        break;
                     }
+
+                    $strJsCond .= "}";
                 }
-
-                // Test de l'expression booléenne
-                try {
-                    $objParser = new formsBooleanParser($objGroup->fields['formula']);
-                    $strJsCond .= "\nreturn ".str_replace(array('&', '|'), array(' && ', ' || '), $objParser->getExpression()).';';
-                }
-                catch (Exception $e) { echo '<br /><strong>'.$e->getMessage().'</strong>'; }
-
-                $strJsCond .= "\nbreak;";
-
-
             }
-            $strJsCond .= "\n}\n}";
+
+            // Test de l'expression booléenne
+            try {
+                $objParser = new formsBooleanParser($objGroup->fields['formula']);
+                $strJsCond .= "\nreturn ".str_replace(array('&', '|'), array(' && ', ' || '), $objParser->getExpression()).';';
+            }
+            catch (Exception $e) { echo '<br /><strong>'.$e->getMessage().'</strong>'; }
+
+            $strJsCond .= "\nbreak;";
+
+
+        }
+        $strJsCond .= "\n}\n}";
+
+        $objForm->addJs("
+            ploopi.currentpanel = 1;
+            ploopi.nbpanel = ".sizeof($arrPanels).";
+
+            ploopi.{$strFormId}_quicksave = function() {
+                query = $('{$strFormId}').serialize();
+                query += (query == '' ? '' : '&')+'ploopi_xhr=1&ploopi_op=forms_quicksave&forms_form_id={$this->fields['id']}&forms_panel='+ploopi.currentpanel;
+                ploopi_xmlhttprequest('admin-light.php', query, false, false, 'POST');
+            };
+
+            {$strJsCond}
+
+            // Vérification des groupes
+            ploopi.{$strFormId}_checkgroups = function() {
+                {$strJsGroup}
+            };
+
+            // Changement de valeur dans un champ
+            ploopi.{$strFormId}_onchange = function() {
+                ploopi.{$strFormId}_checkgroups();
+            };
+
+            // Sélection du bon panel au chargement
+            Event.observe(window, 'load', function() {
+                $('{$strFocus}').focus();
+                ploopi.{$strFormId}_checkgroups();
+            });
+
+        ");
+
+
+        /**
+         * Gestion du multipage
+         */
+
+        if (sizeof($arrPanels) > 1)
+        {
+            // Code JS pour cacher tous les panels
+            $strJsHidePanels = '';
+
+            // Code JS du switch des fonctions de validation des panels
+            $strJsSwitch = '';
+
+            $objForm->addButton( new form_button('input:button', 'Précédent', null, "{$strFormId}_btn_prev", array('style' => 'margin-left:2px;font-weight:bold;display:none;', 'onclick' => "ploopi.{$strFormId}_prevpanel();")) );
+
+
+            // Pour chaque panel, on affiche un bouton et on prépare le code JS
+            foreach($arrPanels as $intNum => $strPanelId)
+            {
+                $intId = $intNum+1;
+
+                $arrOptions = array(
+                    'onclick' => "ploopi.{$strFormId}_switchpanel('{$intId}');"
+                );
+
+                if ($intNum == 0) $arrOptions['class'] = 'selected';
+
+                $strJsHidePanels .= "$('{$strPanelId}').style.display='none';";
+
+                if ($this->fields['option_multidisplaypages'])
+                {
+                    $objForm->addButton( new form_button('input:button', 'Page '.($intNum+1), null, "{$strFormId}_btn_{$intId}", $arrOptions ) );
+                    $strJsHidePanels .= " $('{$strFormId}_btn_{$intId}').className = '';";
+                }
+
+                $strJsSwitch .= "\ncase {$intId}: return ploopi.{$strFormId}_{$strPanelId}_validate(form); break;";
+            }
+
+            $objForm->addButton( new form_button('input:button', 'Suivant', null, "{$strFormId}_btn_next", array('style' => 'margin-left:2px;font-weight:bold;', 'onclick' => "ploopi.{$strFormId}_nextpanel();")) );
 
             $objForm->addJs("
-                ploopi.currentpanel = 1;
-                ploopi.nbpanel = ".sizeof($arrPanels).";
+                // Switch de panel avec vérification des données
+                ploopi.{$strFormId}_switchpanel = function(panel, save) {
+                    if (typeof(save) == 'undefined') save = true;
 
-                ploopi.{$strFormId}_quicksave = function() {
-                    query = $('{$strFormId}').serialize();
-                    query += (query == '' ? '' : '&')+'ploopi_xhr=1&ploopi_op=forms_quicksave&forms_form_id={$this->fields['id']}&forms_panel='+ploopi.currentpanel;
-                    ploopi_xmlhttprequest('admin-light.php', query, false, false, 'POST');
+                    for (p = 1; p < panel ; p++)
+                    {
+                        if (!ploopi.{$strFormId}_validate_panel($('{$strFormId}'), p))
+                        {
+                            this.{$strFormId}_selectpanel(p);
+                            return;
+                        }
+                    }
+
+                    this.{$strFormId}_selectpanel(panel, save);
                 };
 
-                {$strJsCond}
+                // Sélection d'un panel par le numéro de page + sauvegarde des données
+                ploopi.{$strFormId}_selectpanel = function(panel, save) {
+                    if (typeof(save) == 'undefined') save = true;
 
-                // Vérification des groupes
-                ploopi.{$strFormId}_checkgroups = function() {
-                    {$strJsGroup}
+                    {$strJsHidePanels}
+
+                    $('{$strFormId}_btn_prev').style.display = panel>1 ? 'block' : 'none';
+                    $('{$strFormId}_btn_next').style.display = panel<this.nbpanel ? 'block' : 'none';
+
+                    if ($('{$strFormId}_btn_'+panel)) $('{$strFormId}_btn_'+panel).className = 'selected';
+                    if ($('{$strFormId}_btn_submit')) $('{$strFormId}_btn_submit').style.display = panel == this.nbpanel ? 'block' : 'none';
+
+                    $('panel_'+panel).style.display='block';
+                    this.currentpanel = panel;
+
+                    if (save) ploopi.{$strFormId}_quicksave();
                 };
 
-                // Changement de valeur dans un champ
-                ploopi.{$strFormId}_onchange = function() {
-                    ploopi.{$strFormId}_checkgroups();
+                // Panel suivant
+                ploopi.{$strFormId}_nextpanel = function() {
+                    if (ploopi.{$strFormId}_validate_panel($('{$strFormId}'), this.currentpanel))
+                    {
+                        panel = parseInt(this.currentpanel, 10) + 1;
+                        if (panel > this.nbpanel) panel = this.nbpanel;
+                        this.{$strFormId}_selectpanel(panel);
+                    }
                 };
+
+                // Panel précédent
+                ploopi.{$strFormId}_prevpanel = function() {
+                    panel = parseInt(this.currentpanel, 10) - 1;
+                    if (panel < 1) panel = 1;
+                    this.{$strFormId}_selectpanel(panel);
+                };
+
+                // Validation d'un panel uniquement
+                ploopi.{$strFormId}_validate_panel = function(form, p) {
+                    switch(p)
+                    {
+                        {$strJsSwitch}
+                    }
+
+                    return true;
+                }
+
+                // Validation du formulaire (écrase la fonction d'origine de la classe form)
+                ploopi.{$strFormId}_validate = function(form) {
+                    for (p = 1; p <= ploopi.nbpanel ; p++)
+                    {
+                        if (!ploopi.{$strFormId}_validate_panel(form, p))
+                        {
+                            ploopi.{$strFormId}_switchpanel(p);
+                            return false;
+                        }
+                    }
+
+                    return true;
+                };
+
 
                 // Sélection du bon panel au chargement
                 Event.observe(window, 'load', function() {
-                    $('{$strFocus}').focus();
-                    ploopi.{$strFormId}_checkgroups();
+                    ploopi.{$strFormId}_switchpanel({$intDefaultPanel}, false);
                 });
 
             ");
+        }
 
 
-            /**
-             * Gestion du multipage
-             */
-
-            if (sizeof($arrPanels) > 1)
-            {
-                // Code JS pour cacher tous les panels
-                $strJsHidePanels = '';
-
-                // Code JS du switch des fonctions de validation des panels
-                $strJsSwitch = '';
-
-                $objForm->addButton( new form_button('input:button', 'Précédent', null, "{$strFormId}_btn_prev", array('style' => 'margin-left:2px;font-weight:bold;display:none;', 'onclick' => "ploopi.{$strFormId}_prevpanel();")) );
-
-
-                // Pour chaque panel, on affiche un bouton et on prépare le code JS
-                foreach($arrPanels as $intNum => $strPanelId)
+        switch($strRenderMode)
+        {
+            case 'modify':
+            case 'frontoffice':
+                if (sizeof($arrPanels) > 1 && !$this->fields['option_multidisplaysave'])
                 {
-                    $intId = $intNum+1;
-
-                    $arrOptions = array(
-                        'onclick' => "ploopi.{$strFormId}_switchpanel('{$intId}');"
-                    );
-
-                    if ($intNum == 0) $arrOptions['class'] = 'selected';
-
-                    $strJsHidePanels .= "$('{$strPanelId}').style.display='none';";
-
-                    if ($this->fields['option_multidisplaypages'])
-                    {
-                        $objForm->addButton( new form_button('input:button', 'Page '.($intNum+1), null, "{$strFormId}_btn_{$intId}", $arrOptions ) );
-                        $strJsHidePanels .= " $('{$strFormId}_btn_{$intId}').className = '';";
-                    }
-
-                    $strJsSwitch .= "\ncase {$intId}: return ploopi.{$strFormId}_{$strPanelId}_validate(form); break;";
+                    $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, "{$strFormId}_btn_submit", array('style' => 'margin-left:2px;display:none;')) );
                 }
-
-                $objForm->addButton( new form_button('input:button', 'Suivant', null, "{$strFormId}_btn_next", array('style' => 'margin-left:2px;font-weight:bold;', 'onclick' => "ploopi.{$strFormId}_nextpanel();")) );
-
-                $objForm->addJs("
-                    // Switch de panel avec vérification des données
-                    ploopi.{$strFormId}_switchpanel = function(panel, save) {
-                        if (typeof(save) == 'undefined') save = true;
-
-                        for (p = 1; p < panel ; p++)
-                        {
-                            if (!ploopi.{$strFormId}_validate_panel($('{$strFormId}'), p))
-                            {
-                                this.{$strFormId}_selectpanel(p);
-                                return;
-                            }
-                        }
-
-                        this.{$strFormId}_selectpanel(panel, save);
-                    };
-
-                    // Sélection d'un panel par le numéro de page + sauvegarde des données
-                    ploopi.{$strFormId}_selectpanel = function(panel, save) {
-                        if (typeof(save) == 'undefined') save = true;
-
-                        {$strJsHidePanels}
-
-                        $('{$strFormId}_btn_prev').style.display = panel>1 ? 'block' : 'none';
-                        $('{$strFormId}_btn_next').style.display = panel<this.nbpanel ? 'block' : 'none';
-
-                        if ($('{$strFormId}_btn_'+panel)) $('{$strFormId}_btn_'+panel).className = 'selected';
-                        if ($('{$strFormId}_btn_submit')) $('{$strFormId}_btn_submit').style.display = panel == this.nbpanel ? 'block' : 'none';
-
-                        $('panel_'+panel).style.display='block';
-                        this.currentpanel = panel;
-
-                        if (save) ploopi.{$strFormId}_quicksave();
-                    };
-
-                    // Panel suivant
-                    ploopi.{$strFormId}_nextpanel = function() {
-                        if (ploopi.{$strFormId}_validate_panel($('{$strFormId}'), this.currentpanel))
-                        {
-                            panel = parseInt(this.currentpanel, 10) + 1;
-                            if (panel > this.nbpanel) panel = this.nbpanel;
-                            this.{$strFormId}_selectpanel(panel);
-                        }
-                    };
-
-                    // Panel précédent
-                    ploopi.{$strFormId}_prevpanel = function() {
-                        panel = parseInt(this.currentpanel, 10) - 1;
-                        if (panel < 1) panel = 1;
-                        this.{$strFormId}_selectpanel(panel);
-                    };
-
-                    // Validation d'un panel uniquement
-                    ploopi.{$strFormId}_validate_panel = function(form, p) {
-                        switch(p)
-                        {
-                            {$strJsSwitch}
-                        }
-
-                        return true;
-                    }
-
-                    // Validation du formulaire (écrase la fonction d'origine de la classe form)
-                    ploopi.{$strFormId}_validate = function(form) {
-                        for (p = 1; p <= ploopi.nbpanel ; p++)
-                        {
-                            if (!ploopi.{$strFormId}_validate_panel(form, p))
-                            {
-                                ploopi.{$strFormId}_switchpanel(p);
-                                return false;
-                            }
-                        }
-
-                        return true;
-                    };
-
-
-                    // Sélection du bon panel au chargement
-                    Event.observe(window, 'load', function() {
-                        ploopi.{$strFormId}_switchpanel({$intDefaultPanel}, false);
-                    });
-
-                ");
-            }
-
-            switch($strRenderMode)
-            {
-                case 'modify':
-                case 'frontoffice':
-                    if (sizeof($arrPanels) > 1 && !$this->fields['option_multidisplaysave'])
-                    {
-                        $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, "{$strFormId}_btn_submit", array('style' => 'margin-left:2px;display:none;')) );
-                    }
-                    else
-                    {
-                        $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
-                    }
-                break;
-            }
+                else
+                {
+                    $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
+                }
+            break;
         }
 
 
