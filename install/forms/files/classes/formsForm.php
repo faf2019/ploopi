@@ -1503,7 +1503,7 @@ class formsForm extends data_object
         if (empty($objRecord) || $strRenderMode == 'print')
         {
             // Lecture du cookie s'il existe
-            $strVarName = self::getVarName($this->fields['id']);
+            $strVarName = self::getVarName($this->fields['id']).'_'.($strRenderMode == 'print' ? 'print' : 'save');
 
             if (!empty($_COOKIE[$strVarName]))
             {
@@ -1900,12 +1900,12 @@ class formsForm extends data_object
 
                 //$objForm->addButton( new form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;') ) );
                 $objForm->addButton( new form_button('input:button', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;', 'onclick' => "document.location.reload();")) );
-                $objForm->addButton( new form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave(); ploopi_openwin('".ploopi_urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
+                $objForm->addButton( new form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave('print'); ploopi_openwin('".ploopi_urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
             break;
 
             case 'view':
                 $objForm->addButton( new form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$this->fields['id']}")."';")) );
-                $objForm->addButton( new form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave(); ploopi_openwin('".ploopi_urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
+                $objForm->addButton( new form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave('print'); ploopi_openwin('".ploopi_urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
             break;
 
             case 'preview':
@@ -2064,9 +2064,9 @@ class formsForm extends data_object
             ploopi.currentpanel = 1;
             ploopi.nbpanel = ".sizeof($arrPanels).";
 
-            ploopi.{$strFormId}_quicksave = function() {
+            ploopi.{$strFormId}_quicksave = function(mode) {
                 query = $('{$strFormId}').serialize();
-                query += (query == '' ? '' : '&')+'ploopi_xhr=1&ploopi_op=forms_quicksave&forms_form_id={$this->fields['id']}&forms_panel='+ploopi.currentpanel;
+                query += (query == '' ? '' : '&')+'ploopi_xhr=1&ploopi_op=forms_quicksave&forms_form_id={$this->fields['id']}&forms_mode='+mode+'&forms_panel='+ploopi.currentpanel;
                 ploopi_xmlhttprequest('admin-light.php', query, false, false, 'POST');
             };
 
@@ -2162,7 +2162,7 @@ class formsForm extends data_object
                     $('panel_'+panel).style.display='block';
                     this.currentpanel = panel;
 
-                    if (save) ploopi.{$strFormId}_quicksave();
+                    if (save) ploopi.{$strFormId}_quicksave('save');
                 };
 
                 // Panel suivant

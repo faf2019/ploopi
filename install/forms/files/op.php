@@ -43,7 +43,7 @@ switch($ploopi_op)
         include_once './modules/forms/classes/formsForm.php';
         if (!empty($_POST['forms_form_id']))
         {
-            $strVarName = formsForm::getVarName($_POST['forms_form_id']);
+            $strVarName = formsForm::getVarName($_POST['forms_form_id']).'_'.(isset($_POST['forms_mode']) ? $_POST['forms_mode'] : 'save');
             // Lecture des valeurs pré-enregistrées du formulaire
             // $arrValues = ploopi_getsessionvar($strVarName);
 
