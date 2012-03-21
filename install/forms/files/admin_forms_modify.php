@@ -99,6 +99,10 @@ sort($objForm_tpl);
                     <input type="text" class="text" name="forms_label" value="<?php echo htmlentities($objForm->fields['label']); ?>" />
                 </p>
                 <p>
+                    <label>&nbsp;<?php echo _FORMS_TABLENAME; ?>:</label>
+                    <span><?php echo htmlentities($objForm->getDataTableName()); ?></span>
+                </p>
+                <p>
                     <label><?php echo _FORMS_PUBDATESTART; ?>:</label>
                     <input type="text" class="text" style="width:70px;" name="forms_pubdate_start" id="forms_pubdate_start" value="<?php echo $pubdate_start['date']; ?>">&nbsp;
                     <?php echo ploopi_open_calendar('forms_pubdate_start'); ?>

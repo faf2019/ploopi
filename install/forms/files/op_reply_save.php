@@ -400,7 +400,8 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
 
 
     // On récupère les utilisateurs/groupes pour lesquels il faut envoyer un mail
-    $arrShares = ploopi_share_get(-1, _FORMS_OBJECT_FORM, $objForm->fields['id']);
+    // Le dernier paramètre est très important depuis un appel WCE (l'id module étant déterminé par le formulaire)
+    $arrShares = ploopi_share_get(-1, _FORMS_OBJECT_FORM, $objForm->fields['id'], $objForm->fields['id_module']);
 
     $_SESSION['ploopi']['tickets']['users_selected'] = array();
     foreach($arrShares as $row)
@@ -418,7 +419,9 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
         }
     }
 
+
     ploopi_tickets_send($arrEmailContent['Formulaire']['Titre'], '<table class="ploopi_array">'.ploopi_form2html($arrEmailContent).'</table>', 0, 0, _FORMS_OBJECT_FORM, $objForm->fields['id'].','.$objRecord->fields['#id'], $arrEmailContent['Formulaire']['Titre']);
+
 
     /*
     if ($objForm->fields['email'] != '')
