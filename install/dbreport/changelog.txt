@@ -1,3 +1,9 @@
+== Module DBREPORT - version 1.0.6b ====================================================
+
+2012-03-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction liée à un problème de performance sur les grosses bases de données (transtypage à la volée mal supporté)
+
 == Module DBREPORT - version 1.0.6a ====================================================
 
 2011-08-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

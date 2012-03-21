@@ -111,19 +111,19 @@ class dbreport_query extends data_object
      */
     private static $_ERROR_PARAM    = 2;
 
-	/**
-	 * Constructeur de la classe
-	 */
-	public function __construct()
-	{
-		parent::__construct('ploopi_mod_dbreport_query');
+    /**
+     * Constructeur de la classe
+     */
+    public function __construct()
+    {
+        parent::__construct('ploopi_mod_dbreport_query');
 
-		$this->strSqlQuery = '';
-		$this->objQuery = new ploopi_query_select();
+        $this->strSqlQuery = '';
+        $this->objQuery = new ploopi_query_select();
         $this->arrResult = array();
         $this->booHasDate = false;
         $this->intErrorCode = self::$_ERROR_OK;
-	}
+    }
 
     /**
      * Enregistrement de la requête
@@ -134,25 +134,25 @@ class dbreport_query extends data_object
         return parent::save();
     }
 
-	/**
-	 * Suppression de la requête
-	 */
-	public function delete()
-	{
-	    $objQuery = new ploopi_query_select();
+    /**
+     * Suppression de la requête
+     */
+    public function delete()
+    {
+        $objQuery = new ploopi_query_select();
         $objQuery->add_from('ploopi_mod_dbreport_querytable');
         $objQuery->add_where('id_query = %d', $this->fields['id']);
         $objRs = $objQuery->execute();
 
-		while ($row = $objRs->fetchrow())
-		{
-			$objDbrQueryTable = new dbreport_querytable();
-			$objDbrQueryTable->open($row['id']);
-			$objDbrQueryTable->delete();
-		}
+        while ($row = $objRs->fetchrow())
+        {
+            $objDbrQueryTable = new dbreport_querytable();
+            $objDbrQueryTable->open($row['id']);
+            $objDbrQueryTable->delete();
+        }
 
-		parent::delete();
-	}
+        parent::delete();
+    }
 
 
     /**
@@ -218,19 +218,18 @@ class dbreport_query extends data_object
         $objQueryIns->set_table("ploopi_mod_dbreport_query_module_type");
         $objQueryIns->add_raw($objQuerySel->get_sql());
         $objQueryIns->execute();
-
     }
 
-	/**
-	 * Prépare la requête SQL
-	 *
-	 * @param array $arrParam tableau de paramètre
-	 * @return boolean true si la requête a pu être préparée
-	 */
-	public function generate($arrParam = null)
-	{
-	    ploopi_init_module('dbreport', false, false, false);
-	    global $arrDbReportOperations;
+    /**
+     * Prépare la requête SQL
+     *
+     * @param array $arrParam tableau de paramètre
+     * @return boolean true si la requête a pu être préparée
+     */
+    public function generate($arrParam = null)
+    {
+        ploopi_init_module('dbreport', false, false, false);
+        global $arrDbReportOperations;
 
         /**
          * Génération de la requête SQL
@@ -486,7 +485,7 @@ class dbreport_query extends data_object
                                         $strSqlWhere .= "IN (%e)";
                                         foreach(explode(',', $row[$strCrit]) as $strVal) $arrWhereParams[0][] = intval($strVal, 10);
                                     }
-                                	elseif ($row["type_{$strCrit}"] == 'between')
+                                    elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlWhere .= "BETWEEN %d AND %d";
                                         $arrWhereParams[] = intval($arrCriteria[0], 10);
@@ -501,7 +500,7 @@ class dbreport_query extends data_object
                                         $strSqlWhere .= "IN (%g)";
                                         foreach(explode(',', $row[$strCrit]) as $strVal) $arrWhereParams[0][] = floatval(str_replace(array(' ',','), array('', '.'), $strVal));
                                     }
-                                	elseif ($row["type_{$strCrit}"] == 'between')
+                                    elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlWhere .= "BETWEEN %f AND %f";
                                         $arrWhereParams[] = floatval(str_replace(array(' ',','), array('', '.'), $arrCriteria[0]));
@@ -516,7 +515,7 @@ class dbreport_query extends data_object
                                         $strSqlWhere .= "IN (%t)";
                                         $arrWhereParams = array(explode(',', $row[$strCrit]));
                                     }
-                                	elseif ($row["type_{$strCrit}"] == 'between')
+                                    elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlWhere .= "BETWEEN %s AND %s";
                                         $arrWhereParams[] = ploopi_local2timestamp($arrCriteria[0]);
@@ -528,10 +527,10 @@ class dbreport_query extends data_object
                                 {
                                     if ($row["type_{$strCrit}"] == 'in')
                                     {
-                                    	$strSqlWhere .= "IN (%t)";
+                                        $strSqlWhere .= "IN (%t)";
                                         $arrWhereParams = array(explode(',', $row[$strCrit]));
                                     }
-                                	elseif ($row["type_{$strCrit}"] == 'between')
+                                    elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlWhere .= "BETWEEN %s AND %s";
                                         $arrWhereParams[] = $arrCriteria[0];
@@ -560,14 +559,7 @@ class dbreport_query extends data_object
                                         break;
 
                                         default:
-                                            // Autodétection du type
-                                            // Utile lorsque un champ est défini basiquement comme une chaîne mais qu'il peut contenir d'autres types de données
-                                            $strType = '%s';
-
-                                            if ((string)intval($strValue, 10) === (string)$strValue) $strType = '%d';
-                                            elseif ((string)floatval($strValue) === (string)$strValue) $strType = '%f';
-
-                                            $strSqlWhere .= "{$row["type_{$strCrit}"]} {$strType}";
+                                            $strSqlWhere .= $row["type_{$strCrit}"].' %s';
                                             $arrWhereParams[] = $strValue;
                                         break;
                                     }
@@ -592,7 +584,7 @@ class dbreport_query extends data_object
                                         $strSqlHaving .= "IN (%g)";
                                         foreach(explode(',', $row[$strCrit]) as $strVal) $arrHavingParams[0][] = floatval(str_replace(array(' ',','), array('', '.'), $strVal));
                                     }
-                                	elseif ($row["type_{$strCrit}"] == 'between')
+                                    elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlHaving .= "BETWEEN %f AND %f";
                                         $arrHavingParams[] = floatval(str_replace(array(' ',','), array('', '.'), $arrCriteria[0]));
@@ -607,7 +599,7 @@ class dbreport_query extends data_object
                                         $strSqlHaving .= "IN (%g)";
                                         foreach(explode(',', $row[$strCrit]) as $strVal) $arrHavingParams[0][] = intval($strVal, 10);
                                     }
-                                	elseif ($row["type_{$strCrit}"] == 'between')
+                                    elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlHaving .= "BETWEEN %d AND %d";
                                         $arrHavingParams[] = intval($arrCriteria[0], 10);
@@ -622,7 +614,7 @@ class dbreport_query extends data_object
                                         $strSqlHaving .= "IN (%t)";
                                         $arrHavingParams = array(explode(',', $row[$strCrit]));
                                     }
-                                	elseif ($row["type_{$strCrit}"] == 'between')
+                                    elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlHaving .= "BETWEEN %s AND %s";
                                         $arrHavingParams[] = ploopi_local2timestamp($arrCriteria[0]);
@@ -637,7 +629,7 @@ class dbreport_query extends data_object
                                         $strSqlHaving .= "IN (%t)";
                                         $arrHavingParams = array(explode(',', $row[$strCrit]));
                                     }
-                                	elseif ($row["type_{$strCrit}"] == 'between')
+                                    elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlHaving .= "BETWEEN %s AND %s";
                                         $arrHavingParams[] = $arrCriteria[0];
@@ -666,13 +658,7 @@ class dbreport_query extends data_object
                                         break;
 
                                         default:
-                                            // Autodétection du type
-                                            $strType = '%s';
-
-                                            if (intval($strValue, 10) == $strValue) $strType = '%d';
-                                            elseif (floatval($strValue) == $strValue) $strType = '%f';
-
-                                            $strSqlHaving .= "{$row["type_{$strCrit}"]} {$strType}";
+                                            $strSqlHaving .= $row["type_{$strCrit}"].' %s';
                                             $arrHavingParams[] = $strValue;
                                         break;
                                     }
@@ -730,16 +716,16 @@ class dbreport_query extends data_object
         $this->strSqlQuery = $this->objQuery->get_sql();
 
         return true;
-	}
+    }
 
-	/**
-	 * Exécute la requête
-	 *
-	 * @param array $arrParam tableau optionnel de paramètres
-	 * @return boolean true si la requête a pu être exécutée
-	 */
-	public function exec($intCacheLifetime = 0)
-	{
+    /**
+     * Exécute la requête
+     *
+     * @param array $arrParam tableau optionnel de paramètres
+     * @return boolean true si la requête a pu être exécutée
+     */
+    public function exec($intCacheLifetime = 0)
+    {
         // Génération de la requête
         //if ($this->generate($arrParam))
         if (!empty($this->strSqlQuery))
@@ -771,31 +757,31 @@ class dbreport_query extends data_object
             return true;
         }
         else return false;
-	}
+    }
 
-	/**
-	 * Retourne l'id du cache pour la requête
-	 *
-	 * @return string id du cache
-	 */
-	public function getcacheid()
-	{
+    /**
+     * Retourne l'id du cache pour la requête
+     *
+     * @return string id du cache
+     */
+    public function getcacheid()
+    {
         return empty($this->strSqlQuery) ? false : "dbreport/query/{$this->fields['id']}/{$this->fields['timestp_update']}/".md5($this->strSqlQuery);
-	}
+    }
 
     /**
      * Retourne un tableau contenant le résultat de la requête
      *
      * @return array
      */
-	public function getresult() { return $this->arrResult; }
+    public function getresult() { return $this->arrResult; }
 
     /**
      * Retourne un tableau optimisé contenant le résultat de la requête
      *
      * @return array
      */
-	public function getresult_opt()
+    public function getresult_opt()
     {
         $arrArray = $this->getresult();
         $arrNewArray = array('titles' => array(), 'data' => array());
