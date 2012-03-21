@@ -187,7 +187,7 @@ class skin_common
         $title = $icon['title'];
 
         $strHrefTitle = htmlentities(strip_tags($title));
-        
+
         if (!empty($icon['javascript'])) $onclick = $icon['javascript'];
         elseif ($confirm) $onclick = "ploopi_confirmlink('".ploopi_urlencode($icon['url'])."','{$icon['confirm']}')";
         else $onclick = "document.location.href='".ploopi_urlencode($icon['url'])."'";
@@ -254,7 +254,7 @@ class skin_common
     {
         if (!empty($tab['width'])) $style = "style=\"width:{$tab['width']}px;\"";
         else $style = '';
-        
+
         $strHrefTitle = htmlentities(strip_tags($tab['title']));
 
         if ($sel) $res = "<a href=\"".ploopi_urlencode($tab['url'])."\" title=\"Accéder à l'onglet &laquo; {$strHrefTitle} &raquo;\"  class=\"selected\" {$style}>{$tab['title']}</a>";
@@ -280,7 +280,7 @@ class skin_common
                     <a name="anchor_'.$popupid.'"></a>
                     <div class="simplebloc_title">
                         <div class="simplebloc_titleleft">
-                            <img alt="Fermer" title="Fermer le popup" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
+                            <img alt="Fermer" title="Fermer le popup" id="close_'.$popupid.'" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
                             <div style="overflow:auto;cursor:move;" id="handle_'.$popupid.'">'.$title.'</div>
                         </div>
                     </div>
@@ -296,8 +296,8 @@ class skin_common
 
         return($res);
     }
-    
-    
+
+
     /**
      * Crée un faux popup et l'ouvre via javascript
      *
@@ -306,7 +306,7 @@ class skin_common
      * @param string $popupid id du popup (propriété html id)
      * @return string code html du popup
      */
-    
+
     function open_popup($title, $content, $popupid = 'ploopi_popup', $arrOptions = array())
     {
         $arrDefaultOptions = array(
@@ -317,9 +317,9 @@ class skin_common
             'stringJsBeforeStart' => '',
             'stringJsAfterFinish' => '',
         );
-        
+
         $arrOptions = array_merge($arrDefaultOptions, $arrOptions);
-        
+
         $strOptionAnchor = ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_focus_popup']) ? "document.location.href = '#anchor_{$popupid}';" : '';
 
         $res =  '
@@ -328,7 +328,7 @@ class skin_common
                         <a name="anchor_'.$popupid.'"></a>
                         <div class="simplebloc_title">
                             <div class="simplebloc_titleleft">
-                                <img alt="Fermer" title="Fermer le popup" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
+                                <img alt="Fermer" title="Fermer le popup" id="close_'.$popupid.'" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
                                 <div style="overflow:auto;cursor:move;" id="handle_'.$popupid.'">'.$title.'</div>
                             </div>
                         </div>
@@ -337,22 +337,20 @@ class skin_common
                     </div>
                 </div>
                 <script type="text/javascript">
-                    ploopi_window_onload_stock(
-                        function() {
-                            '.$arrOptions['stringJsBeforeStart'].'
-                            ploopi_popupize(\''.$popupid.'\', '.$arrOptions['intWidth'].', '.($arrOptions['booCentered'] ? 'true' : 'false').', '.$arrOptions['intPosx'].', '.$arrOptions['intPosy'].');
-                            new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\'});
-                            new Draggable(\''.$popupid.'\', { handle: \'handlebottom_'.$popupid.'\'});
-                            '.$arrOptions['stringJsAfterFinish'].'
-                            '.$strOptionAnchor.'
-                        }
-                    );                
-                    
+                    Event.observe(window, \'load\', function() {
+                        '.$arrOptions['stringJsBeforeStart'].'
+                        ploopi_popupize(\''.$popupid.'\', '.$arrOptions['intWidth'].', '.($arrOptions['booCentered'] ? 'true' : 'false').', '.$arrOptions['intPosx'].', '.$arrOptions['intPosy'].');
+                        new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\'});
+                        new Draggable(\''.$popupid.'\', { handle: \'handlebottom_'.$popupid.'\'});
+                        '.$arrOptions['stringJsAfterFinish'].'
+                        '.$strOptionAnchor.'
+                    });
+
                 </script>
                 ';
 
         return($res);
-    }    
+    }
 
     /**
      * Affiche un tableau avancé
@@ -388,9 +386,9 @@ class skin_common
 
     public function display_array(&$arrColumns, &$arrValues, $strArrayId = null, $arrOptions = null)
     {
-        
+
         if (empty($strArrayId)) $strArrayId = md5(uniqid(rand(), true));
-        
+
         $sort = $orderby = '';
 
         /*
@@ -401,12 +399,12 @@ class skin_common
             $sort = $_SESSION['ploopi']['arrays'][$strArrayId]['sort'];
         }
         */
-        
+
         if (empty($arrOptions['page'])) $arrOptions['page'] = 1;
         if (empty($arrOptions['limit'])) $arrOptions['limit'] = 0;
-        
+
         $array = array('columns' => &$arrColumns, 'values' => &$arrValues, 'options' => &$arrOptions, 'orderby' => &$orderby, 'sort' => &$sort);
-        
+
         if (!empty($array['options']['sortable']) && $array['options']['sortable'])
         {
             $array['sortable_columns'] = array();
@@ -447,7 +445,7 @@ class skin_common
             }
 
         }
-        
+
         $objSV = new serializedvar($strArrayId);
         $objSV->save($array);
         ?>
@@ -458,12 +456,12 @@ class skin_common
 
     }
 
-    
+
     private function array_page($strArrayId, $intPage, $strPage, $intSel = 0)
     {
         return $intSel == $intPage ? str_replace('{p}', $strPage, '<strong>{p}</strong>') : str_replace(array('{p}', '{id}'), array($strPage, $intPage), '<a href="javascript:void(0);" onclick="javascript:ploopi_skin_array_refresh(\''.$strArrayId.'\', \'\', \'{id}\');">{p}</a>');
     }
-    
+
     /**
      * Rafraichit l'affichage d'un tableau avancé
      *
@@ -475,18 +473,18 @@ class skin_common
     {
         // On récupère le tableau stocké en session (identifié par array_id)
         include_once './include/classes/serializedvar.php';
-        
+
         $objSV = new serializedvar($strArrayId);
         $array = $objSV->read();
-        
+
         // Le tableau n'existe pas, pas normal, on sort
-        if ($array == false) return;        
-        
+        if ($array == false) return;
+
         $sort_img = '';
-        
+
         // index temporaire (pour tri à l'affichage)
         $array['index'] = array();
-        
+
         // si le tableau est "triable" (option)
         if (!empty($array['options']['sortable']) && $array['options']['sortable'])
         {
@@ -517,60 +515,60 @@ class skin_common
             {
                 $label = isset($value['values'][$array['orderby']]['sort_label']) ? 'sort_label' : 'label';
                 $idx = is_numeric($value['values'][$array['orderby']][$label]) ? sprintf("%064s_%06s", $value['values'][$array['orderby']][$label], $c++) : sprintf("%s_%06s", strtoupper(ploopi_convertaccents($value['values'][$array['orderby']][$label])), $c++);
-                
+
                 $array['index'][$idx] = $key;
             }
-            
+
             if ($array['sort'] == 'ASC') ksort($array['index'], SORT_STRING);
             else krsort($array['index'], SORT_STRING);
-                        
+
             $sort_img = ($array['sort'] == 'DESC') ? "<img src=\"{$this->values['path']}/arrays/arrow_down.png\">" : "<img src=\"{$this->values['path']}/arrays/arrow_up.png\">";
-            
+
         }
         else $array['index'] = array_keys($array['values']);
-        
+
         if (!empty($intIdPage) && is_numeric($intIdPage)) $array['options']['page'] = $intIdPage;
-        
+
         $objSV->save($array);
-        
+
         // Affichage des pages (optionnel)
         if ($array['options']['limit'] > 0 && $array['options']['limit'] < sizeof($array['values']))
         {
             $intNbPages = ceil(sizeof($array['values']) / $array['options']['limit']);
-            
+
             $arrPages = array();
-            
+
             // Fleche page précédente
             if ($array['options']['page'] > 1) $arrPages[] = $this->array_page($strArrayId, $array['options']['page']-1, '&laquo;');
-            
+
             // On affiche toujours la premiere page
             $arrPages[] = $this->array_page($strArrayId, 1, 1, $array['options']['page']);
-            
+
             // Affichage "..." après première page
             if ($array['options']['page'] > 4) $arrPages[] = '...';
-            
+
             // Boucle sur les pages autour de la page sélectionnée (-2 à +2 si existe)
-            for ($i = $array['options']['page'] - 2; $i <= $array['options']['page'] + 2; $i++) 
+            for ($i = $array['options']['page'] - 2; $i <= $array['options']['page'] + 2; $i++)
             {
                 if ($i>1 && $i<$intNbPages) $arrPages[] = $this->array_page($strArrayId, $i, $i, $array['options']['page']);
             }
-            
+
             // Affichage "..." avant dernière page
             if ($array['options']['page'] < $intNbPages - 3) $arrPages[] = '...';
-            
+
             // Dernière page
             if ($intNbPages>1) $arrPages[] = $this->array_page($strArrayId, $intNbPages, $intNbPages, $array['options']['page']);
 
             // Fleche page suivante
             if ($array['options']['page'] < $intNbPages) $arrPages[] = $this->array_page($strArrayId, $array['options']['page']+1, '&raquo;');
-            
+
             ?>
             <div class="ploopi_explorer_multipage" style="border-bottom:1px solid #c0c0c0;padding:2px 4px;text-align:right;">
                 Pages : <?php echo implode(' ', $arrPages); ?>
             </div>
             <?php
         }
-        
+
 
         $i = 0;
         $w = 0;
@@ -702,30 +700,30 @@ class skin_common
                     // On se positionne sur la bonne page de données
                     reset($array['values']);
                     $intLines = $array['options']['limit'];
-                    
-                    if ($intLines > 0 && $intLines < sizeof($array['values'])) 
+
+                    if ($intLines > 0 && $intLines < sizeof($array['values']))
                     {
                         for ( $i=0 ; $i < ($array['options']['page']-1) * $intLines ; $i++) next($array['values']);
                         if ($intLines > sizeof($array['values']) - ($array['options']['page']-1) * $intLines) $intLines = sizeof($array['values']) - ($array['options']['page']-1) * $intLines;
                     }
                     else $intLines = sizeof($array['values']);
                     */
-                    
+
                     // On se positionne sur la bonne page de données
                     $intLines = $array['options']['limit'];
-                    
-                    if ($intLines > 0 && $intLines < sizeof($array['index'])) 
+
+                    if ($intLines > 0 && $intLines < sizeof($array['index']))
                     {
                         for ( $i=0 ; $i < ($array['options']['page']-1) * $intLines ; $i++) next($array['index']);
                         if ($intLines > sizeof($array['index']) - ($array['options']['page']-1) * $intLines) $intLines = sizeof($array['index']) - ($array['options']['page']-1) * $intLines;
                     }
                     else $intLines = sizeof($array['index']);
-                    
+
                     // On parcourt le nombre de ligne souhaité
                     for ($i = 0 ; $i < $intLines ; $i++)
                     {
                         $v = $array['values'][current($array['index'])];
-                        
+
                         // alternance des couleurs (une ligne sur 2) : on joue sur les css
                         $color = (empty($color) || $color == 1) ? 2 : 1;
                         ?>
@@ -741,9 +739,9 @@ class skin_common
                                     <?php
                                 }
                             }
-    
+
                             $option = (empty($v['option'])) ? '' : $v['option'];
-    
+
                             if (!empty($v['link']) || !empty($v['onclick']))
                             {
                                 $onclick = (empty($v['onclick'])) ? '' : "onclick=\"{$v['onclick']}\"";
@@ -784,18 +782,18 @@ class skin_common
                                     <?php
                                 }
                             }
-                            
+
                             if (!empty($v['link']) || !empty($v['onclick']))
                             {
                                 ?>
                                 </a>
                                 <?php
                             }
-                            
+
                             ?>
                         </div>
                         <?php
-                        
+
                         next($array['index']);
                     }
                 }
@@ -826,7 +824,7 @@ class skin_common
         // recherche du premier noeud
         if (is_null($node_id_from)) $node_id_from = key($treeview);
 
-        if (!is_null($node_id_sel) && isset($nodes[$node_id_sel])) $nodesel = $nodes[$node_id_sel]; 
+        if (!is_null($node_id_sel) && isset($nodes[$node_id_sel])) $nodesel = $nodes[$node_id_sel];
 
         // code html généré par ce niveau de boucle
         $html = '';
@@ -915,7 +913,7 @@ class skin_common
                         <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"n{$node['id']}\">{$html_children}</div>
                     </div>
                 ";
-                    
+
                 $c++;
             }
         }

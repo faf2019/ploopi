@@ -46,18 +46,18 @@ function ploopi_documents_deletefolder(query, documents_id)
 
 function ploopi_documents_browser(query, documents_id, asynchronous)
 {
-	// ploopi_documents_browser(documents_id, currentfolder, mode, orderby, asynchronous) 
+    // ploopi_documents_browser(documents_id, currentfolder, mode, orderby, asynchronous)
     //if (typeof(currentfolder) == 'undefined') currentfolder = '';
     //if (typeof(orderby) == 'undefined') orderby = '';
     //if (typeof(mode) == 'undefined') mode = '';
     // var option = (orderby != '') ? '&orderby='+orderby : '';
-	
+
     if (typeof(asynchronous) == 'undefined') asynchronous = false;
 
 
     if (asynchronous)
     {
-    	// 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_browser&mode='+mode+'&currentfolder='+currentfolder+option
+        // 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_browser&mode='+mode+'&currentfolder='+currentfolder+option
         ploopi_ajaxloader('ploopidocuments_'+documents_id);
         ploopi_xmlhttprequest_todiv('admin-light.php', query,'ploopidocuments_'+documents_id);
     }
