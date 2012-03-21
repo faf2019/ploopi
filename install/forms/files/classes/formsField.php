@@ -244,8 +244,6 @@ class formsField extends data_object
                      * Ajout du champ physique
                      */
                     $db->query("ALTER TABLE `".$objForm->getDataTableName()."` ADD `{$this->fields['fieldname']}` ".$this->getSqlType());
-                    $db->query("SHOW INDEXES FROM `".$objForm->getDataTableName()."`");
-                    if ($db->numrows() < 64) $db->query("ALTER TABLE `".$objForm->getDataTableName()."` ADD INDEX (`{$this->fields['fieldname']}`)");
                 }
                 else
                 {
@@ -259,7 +257,28 @@ class formsField extends data_object
                     // Modification de la structure si changement de nom ou de type
                     if ($this->_strOriginalFieldName != $this->fields['fieldname'] || $this->_strOriginalType != $strType)
                     {
-                        $db->query("ALTER TABLE `".$objForm->getDataTableName()."` CHANGE `{$this->_strOriginalFieldName}` `{$this->fields['fieldname']}` {$strType}");
+                        // Attention le changement de structure peut ne pas être compatible avec l'index existant.
+                        // Il faut donc supprimer l'index à chaque modification de structure, puis le recréer
+                        $db->query("SHOW INDEXES FROM `".$objForm->getDataTableName()."` WHERE Key_name = '{$this->_strOriginalFieldName}'");
+                        if ($db->numrows()) $db->query("ALTER TABLE `".$objForm->getDataTableName()."` DROP INDEX `{$this->_strOriginalFieldName}`");
+
+                        $db->query("ALTER TABLE `".$objForm->getDataTableName()."` CHANGE `{$this->_strOriginalFieldName}` `{$this->fields['fieldname']}` {$strType} ");
+                    }
+                }
+
+                $db->query("SHOW INDEXES FROM `".$objForm->getDataTableName()."`");
+                // 64 indexes max sur une table MyISAM
+                if ($db->numrows() < 64)
+                {
+                    // Type standard
+                    if (strpos($strType, 'TEXT') === false)
+                    {
+                        $db->query("ALTER TABLE `".$objForm->getDataTableName()."` ADD INDEX (`{$this->fields['fieldname']}`)");
+                    }
+                    // Type texte (longtext...)
+                    else
+                    {
+                        $db->query("ALTER TABLE `".$objForm->getDataTableName()."` ADD INDEX (`{$this->fields['fieldname']}` (32))");
                     }
                 }
 
@@ -281,7 +300,6 @@ class formsField extends data_object
             $objForm = new formsForm();
             if ($objForm->open($this->fields['id_form'])) $objForm->calculate();
         }
-
 
         return $res;
     }
