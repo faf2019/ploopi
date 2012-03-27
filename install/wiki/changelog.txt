@@ -1,4 +1,10 @@
-== Module Wiki - version 1.2.0 ====================================================
+== Module Wiki - version 1.2.0a ====================================================
+
+2012-03-27  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'une erreur lors de l'instanciation du module
+ 
+ == Module Wiki - version 1.2.0 ====================================================
 
 2011-10-03  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
 

@@ -36,6 +36,7 @@
  */
 
 include_once './modules/wiki/classes/class_wiki_page.php';
+include_once './modules/wiki/include/global.php';
 
 /**
  * On crée la page racine (root)
