@@ -152,8 +152,8 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
         {
             $email_from[0] =
                 array(
-                    'address'   => _PLOOPI_ADMINMAIL,
-                    'name'  => _PLOOPI_ADMINMAIL
+                    'address'   => trim(current(explode(',', _PLOOPI_ADMINMAIL))),
+                    'name'  => empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST']
                 );
         }
         else
@@ -170,7 +170,7 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
             {
                 $email_from[0] =
                     array(
-                        'address'   => _PLOOPI_ADMINMAIL,
+                        'address'   => trim(current(explode(',', _PLOOPI_ADMINMAIL))),
                         'name'  => "{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']}"
                     );
             }
