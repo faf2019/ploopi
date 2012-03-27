@@ -270,11 +270,6 @@ class formsForm extends data_object
     /**
      * Retourne une liste d'identifiants d'espaces de travail.
      * Application de la vue aux données d'un formulaire.
-     *
-     * @param int $moduleid identifiant du module
-     * @param int $workspaceid identifiant de l'espace de travail
-     * @param string $viewmode vue ('private, 'desc', 'asc', 'global')
-     * @return string liste d'identifiants d'espaces séparés par une virgule
      */
 
     public function viewWorkspaces()
@@ -288,13 +283,13 @@ class formsForm extends data_object
             break;
 
             case 'desc':
-                $strWorkspaces = $_SESSION['ploopi']['workspaces'][$this->fields['id_workspace']]['list_parents'];
+                $strWorkspaces = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['list_parents'];
                 if ($strWorkspaces != '') $strWorkspaces .= ',';
                 $strWorkspaces .= $_SESSION['ploopi']['workspaceid'];
             break;
 
             case 'asc':
-                $strWorkspaces = $_SESSION['ploopi']['workspaces'][$this->fields['id_workspace']]['list_children'];
+                $strWorkspaces = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['list_children'];
                 if ($strWorkspaces!='') $strWorkspaces .= ',';
                 $strWorkspaces .= $_SESSION['ploopi']['workspaceid'];
             break;
