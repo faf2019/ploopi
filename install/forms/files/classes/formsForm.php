@@ -288,13 +288,13 @@ class formsForm extends data_object
             break;
 
             case 'desc':
-                $strWorkspaces = $_SESSION['ploopi']['workspaces'][$this->fields['id_workspace']]['list_parents'];
+                $strWorkspaces = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['list_parents'];
                 if ($strWorkspaces != '') $strWorkspaces .= ',';
                 $strWorkspaces .= $_SESSION['ploopi']['workspaceid'];
             break;
 
             case 'asc':
-                $strWorkspaces = $_SESSION['ploopi']['workspaces'][$this->fields['id_workspace']]['list_children'];
+                $strWorkspaces = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['list_children'];
                 if ($strWorkspaces!='') $strWorkspaces .= ',';
                 $strWorkspaces .= $_SESSION['ploopi']['workspaceid'];
             break;

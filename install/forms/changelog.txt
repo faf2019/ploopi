@@ -1,3 +1,9 @@
+== Module FORMS - version 3.5.0m =====================================================
+
+2012-03-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction dans la gestion de la vue des données d'un formulaire
+
 == Module FORMS - version 3.5.0l =====================================================
 
 2012-03-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
