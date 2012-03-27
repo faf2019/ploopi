@@ -81,18 +81,13 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     $str_from = '';
     if (is_array($from))
     {
-        foreach($from as $detail)
-        {
-            if (ploopi_checkemail($detail['address']))
-            {
-                if ($str_from != '') $str_from .= ', ';
-                else $str_param = "-f{$detail['address']}";
-                $str_from .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
-            }
-        }
+        $detail = current($from);
+        $detail['address'] = trim(current(explode(',', $detail['address'])));
+        if (ploopi_checkemail($detail['address'])) $str_from = mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
     }
     else
     {
+        $from = trim(current(explode(',', $from)));
         if (ploopi_checkemail($from)) $str_from = $from;
     }
 
