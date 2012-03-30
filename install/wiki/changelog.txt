@@ -1,3 +1,9 @@
+== Module Wiki - version 1.2.1b ====================================================
+
+2012-03-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Amélioration de la gestion des liens (conflit url/email)
+
 == Module Wiki - version 1.2.1a ====================================================
 
 2012-03-27  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

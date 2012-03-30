@@ -148,11 +148,11 @@ function wiki_make_links($strContent)
 {
     return preg_replace(array(
              '@(^|([^\'":!<>]\s*))([hf][tps]{2,4}:\/\/[^\s<>"\'()]{4,})@mi',
-            '/(([_A-Za-z0-9-]+)(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-]+)(\\.[A-Za-z0-9-]+)*)/iex'
+            '/(^|([\s]))(([_A-Za-z0-9-]+)(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-]+)(\\.[A-Za-z0-9-]+)*)/miex'
         ),
     array(
             '$2<a href="$3">$3</a>',
-           "stripslashes((strlen('\\2')>0?'<a href=\"mailto:\\0\">\\0</a>':'\\0'))"
+           "stripslashes((strlen('\\4')>0?'\\1<a href=\"mailto:\\3\">\\3</a>':'\\1\\3'))"
     ),
     $strContent);
 }
