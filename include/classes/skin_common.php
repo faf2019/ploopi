@@ -871,7 +871,7 @@ class skin_common
                     if (!$is_node_last)
                     {
                         $type_node .= 'bottom';
-                        $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/treeview/line.png) 0 0 repeat-y;";
+                        $bg = "background-image:url({$_SESSION['ploopi']['template_path']}/img/treeview/line.png);background-repeat:repeat-y;";
                     }
 
                     $n_link = (empty($node['node_link'])) ? 'javascript:void(0);' : $node['node_link'];
@@ -894,6 +894,9 @@ class skin_common
                 // lien sur le libellé
                 $link = (empty($node['link'])) ? 'javascript:void(0);' : $node['link'];
 
+                // Classe css additionnelle
+                $class = (empty($node['class'])) ? '' : ' '.$node['class'];
+
                 // onclick sur le libellé
                 $onclick = (empty($node['onclick'])) ? '' : 'onclick="'.$node['onclick'].';"';
 
@@ -902,7 +905,7 @@ class skin_common
 
                 // génération du code html du noeud courant
                 $html .= "
-                    <div class=\"treeview_node\" id=\"treeview_node{$node['id']}\" style=\"{$bg}\">
+                    <div class=\"treeview_node{$class}\" id=\"treeview_node{$node['id']}\" style=\"{$bg}\">
                         <div>
                             {$node_link}<img src=\"{$node['icon']}\" />
                             <div style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;font-weight:{$style_sel};\">

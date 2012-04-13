@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2012 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -55,7 +55,7 @@ else
                 $intC = $workspace->countusers();
             break;
         }
-        
+
         if ($intC < 100) $alphaTabItem = 99;
     }
 }
@@ -99,6 +99,22 @@ ploopi_setsessionvar('system_alphatabitem', $alphaTabItem);
 </p>
 </form>
 
+
+<div class="ploopi_tabs">
+    <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=vcf"); ?>"><img src="./img/export/vcf.png"><span>vCard <sup>VCF</sup></span></a>
+    <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xml"); ?>"><img src="./img/export/xml.png"><span>Brut <sup>XML</sup></span></a>
+    <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=csv"); ?>"><img src="./img/export/csv.png"><span>Brut <sup>CSV</sup></span></a>
+    <?
+    if (ploopi_getparam('system_jodwebservice') != '') {
+        ?>
+        <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=pdf"); ?>"><img src="./img/export/pdf.png"><span>Adobe &trade; <sup>PDF</sup></span></a>
+        <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=ods"); ?>"><img src="./img/export/ods.png"><span>OpenOffice &trade; <sup>ODS</sup></span></a>
+        <?
+    }
+    ?>
+    <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xls"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLS</sup></span></a>
+</div>
+
 <?php
 $where = array();
 
@@ -120,59 +136,75 @@ else
 
 $where = (empty($where)) ? '' : 'WHERE '.implode(' AND ', $where);
 
+$strSql = '';
+
 switch ($_SESSION['system']['level'])
 {
     case _SYSTEM_WORKSPACES :
-        $select =   "
-                    SELECT      ploopi_user.id,
-                                ploopi_user.lastname,
-                                ploopi_user.firstname,
-                                ploopi_user.login,
-                                ploopi_user.service,
-                                ploopi_workspace.id as idref,
-                                ploopi_workspace.label as label,
-                                ploopi_workspace_user.adminlevel
+        $strSql = "
+            SELECT      ploopi_user.id,
+                        ploopi_user.lastname,
+                        ploopi_user.firstname,
+                        ploopi_user.login,
+                        ploopi_user.email,
+                        ploopi_user.service,
+                        ploopi_workspace.id as idref,
+                        ploopi_workspace.label as label,
+                        ploopi_workspace_user.adminlevel
 
-                    FROM        ploopi_user
+            FROM        ploopi_user
 
-                    INNER JOIN  ploopi_workspace_user
-                    ON          ploopi_workspace_user.id_user = ploopi_user.id
-                    AND         ploopi_workspace_user.id_workspace = {$workspaceid}
+            INNER JOIN  ploopi_workspace_user
+            ON          ploopi_workspace_user.id_user = ploopi_user.id
+            AND         ploopi_workspace_user.id_workspace = {$workspaceid}
 
-                    INNER JOIN  ploopi_workspace
-                    ON          ploopi_workspace.id = ploopi_workspace_user.id_workspace
+            INNER JOIN  ploopi_workspace
+            ON          ploopi_workspace.id = ploopi_workspace_user.id_workspace
 
-                    {$where}
-                    ";
+            {$where}
+
+            ORDER BY lastname, firstname
+        ";
     break;
 
     case _SYSTEM_GROUPS :
-        $select =   "
-                    SELECT      ploopi_user.id,
-                                ploopi_user.lastname,
-                                ploopi_user.firstname,
-                                ploopi_user.login,
-                                ploopi_user.service,
-                                ploopi_user.function,
-                                ploopi_group.id as idref,
-                                ploopi_group.label as label
+        $strSql = "
+            SELECT      ploopi_user.id,
+                        ploopi_user.lastname,
+                        ploopi_user.firstname,
+                        ploopi_user.login,
+                        ploopi_user.email,
+                        ploopi_user.service,
+                        ploopi_user.function,
+                        ploopi_group.id as idref,
+                        ploopi_group.label as label
 
-                    FROM        ploopi_user
+            FROM        ploopi_user
 
-                    INNER JOIN  ploopi_group_user
-                    ON          ploopi_group_user.id_user = ploopi_user.id
-                    AND         ploopi_group_user.id_group = {$groupid}
+            INNER JOIN  ploopi_group_user
+            ON          ploopi_group_user.id_user = ploopi_user.id
+            AND         ploopi_group_user.id_group = {$groupid}
 
-                    INNER JOIN  ploopi_group
-                    ON          ploopi_group.id = ploopi_group_user.id_group
+            INNER JOIN  ploopi_group
+            ON          ploopi_group.id = ploopi_group_user.id_group
 
-                    {$where}
-                    ";
+            {$where}
+
+            ORDER BY lastname, firstname
+        ";
     break;
 }
 
 $columns = array();
 $values = array();
+
+$columns['left']['login'] =
+    array(
+        'label' => _SYSTEM_LABEL_LOGIN,
+        'width' => 110,
+        'options' => array('sort' => true)
+    );
+
 
 $columns['auto']['name'] =
     array(
@@ -186,7 +218,7 @@ $columns['right']['service'] =
         'width' => 100,
         'options' => array('sort' => true)
     );
-    
+
 $columns['right']['origin'] =
     array(
         'label' => _SYSTEM_LABEL_ORIGIN,
@@ -202,13 +234,13 @@ if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
             'options' => array('sort' => true)
         );
 
-$columns['right']['login'] =
+$columns['right']['email'] =
     array(
-        'label' => _SYSTEM_LABEL_LOGIN,
-        'width' => 110,
+        'label' => _SYSTEM_LABEL_EMAIL,
+        'width' => 150,
         'options' => array('sort' => true)
     );
-    
+
 $columns['actions_right']['actions'] =
     array(
         'label' => '&nbsp;',
@@ -217,7 +249,10 @@ $columns['actions_right']['actions'] =
 
 $c = 0;
 
-$result = $db->query($select);
+// Sauvegarde de la dernière requête SQL pour export
+ploopi_setsessionvar('directory_sql', $strSql);
+
+$result = $db->query($strSql);
 $user = new user();
 $intNbRep = $db->numrows($result);
 
@@ -234,20 +269,22 @@ else
         $user->fields['id'] = $fields['id'];
         $groups = $user->getgroups();
         $currentgroup = current($groups);
-    
+
         $action = ' <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=detach_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_USERDETACH.'"></a>
                     <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=delete_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>
                     ';
-    
+
         $values[$c]['values']['name']       = array('label' => htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
         $values[$c]['values']['login']      = array('label' => htmlentities($fields['login']));
+        $values[$c]['values']['email']      = array('label' => '<a style="width:142px;" href="mailto;'.$fields['email'].'">'.$fields['email'].'</a>', 'sort_label' => $fields['email']);
+
         $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.htmlentities($currentgroup['label']).'</a>');
         $values[$c]['values']['service']    = array('label' => htmlentities($fields['service']));
-    
+
         switch ($_SESSION['system']['level'])
         {
             case _SYSTEM_WORKSPACES :
-    
+
                 switch($fields['adminlevel'])
                 {
                     case _PLOOPI_ID_LEVEL_USER:
@@ -263,24 +300,24 @@ else
                         $icon = 'level_systemadmin';
                     break;
                 }
-    
+
                 $values[$c]['values']['adminlevel'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png\" />", 'sort_label' => $fields['adminlevel']);
-    
+
                 if ($_SESSION['ploopi']['adminlevel'] >= $fields['adminlevel'])
                     $manage_user =  '<a href="'.ploopi_urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
                 else
                     $manage_user =  '<img src="./modules/system/img/ico_noway.gif" title="">&nbsp;&nbsp;<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png" alt="">';
-    
+
                 $values[$c]['values']['actions']        = array('label' => $manage_user);
-    
+
             break;
-    
+
             case _SYSTEM_GROUPS :
-    
+
                 $values[$c]['values']['actions']        = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action);
             break;
         }
-    
+
         $c++;
     }
 

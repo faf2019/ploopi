@@ -98,7 +98,7 @@ $columns['right']['actions']    = array('label' => _SYSTEM_LABEL_ACTIONS, 'width
 $columns['right']['date']       = array('label' => _SYSTEM_LABEL_DATE, 'width' => '80', 'options' => array('sort' => true));
 $columns['right']['version']    = array('label' => _SYSTEM_LABEL_VERSION, 'width' => '75', 'options' => array('sort' => true));
 $columns['right']['author']     = array('label' => _SYSTEM_LABEL_AUTHOR, 'width' => '130', 'options' => array('sort' => true));
-$columns['left']['mtype']       = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '80', 'options' => array('sort' => true));
+$columns['left']['mtype']       = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '130', 'options' => array('sort' => true));
 
 // get all modules installed in a table
 $select =   "
@@ -167,7 +167,7 @@ $columns['right']['action'] = array('label' => _SYSTEM_LABEL_UPDATE, 'width' => 
 $columns['right']['date'] = array('label' => _SYSTEM_LABEL_DATE, 'width' => '80', 'options' => array('sort' => true));
 $columns['right']['version'] = array('label' => _SYSTEM_LABEL_VERSION, 'width' => '75', 'options' => array('sort' => true));
 $columns['right']['author'] = array('label' => _SYSTEM_LABEL_AUTHOR, 'width' => '130', 'options' => array('sort' => true));
-$columns['left']['mtype'] = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '80', 'options' => array('sort' => true));
+$columns['left']['mtype'] = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '130', 'options' => array('sort' => true));
 
 foreach($tabmoduletype_install as $label => $fields)
 {
@@ -213,7 +213,7 @@ $columns['right']['action'] = array('label' => _SYSTEM_LABEL_INSTALL, 'width' =>
 $columns['right']['date'] = array('label' => _SYSTEM_LABEL_DATE, 'width' => '80', 'options' => array('sort' => true));;
 $columns['right']['version'] = array('label' => _SYSTEM_LABEL_VERSION, 'width' => '75', 'options' => array('sort' => true));
 $columns['right']['author'] = array('label' => _SYSTEM_LABEL_AUTHOR, 'width' => '130', 'options' => array('sort' => true));
-$columns['left']['mtype'] = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '80', 'options' => array('sort' => true));
+$columns['left']['mtype'] = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '130', 'options' => array('sort' => true));
 
 foreach($tabmoduletype_install as $label => $fields)
 {

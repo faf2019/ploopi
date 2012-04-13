@@ -1895,4 +1895,10 @@ ALTER TABLE `ploopi_documents_file` ADD `md5id` VARCHAR( 32 ) NOT NULL AFTER `id
 ALTER TABLE `ploopi_documents_folder` ADD `md5id` VARCHAR( 32 ) NOT NULL AFTER `id` , ADD INDEX ( `md5id` ); 
 UPDATE `ploopi_documents_file` SET `md5id` = MD5(CONCAT(id, '_', timestp_create));
 UPDATE `ploopi_documents_folder` SET `md5id` = MD5(CONCAT(id, '_', timestp_create));
-UPDATE `ploopi_module_type` SET `version` = '1.9.1.0', `author` = 'Ovensia', `date` = '20120112000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+
+ALTER TABLE `ploopi_user` DROP INDEX `FT`;
+ALTER TABLE `ploopi_user` ADD FULLTEXT `ft` (`lastname` ,`firstname` ,`email` ,`comments` ,`service` ,`service2` ,`function` ,`city` ,`building` ,`floor` ,`office` ,`rank`);
+
+INSERT INTO `ploopi_param_type` (`id_module_type`, `name`, `default_value`, `public`, `description`, `label`) VALUES ('1', 'system_user_required_fields', 'email,phone,service,function,city', '0', NULL, 'Champs requis dans le profil utilisateur');
+INSERT INTO `ploopi_param_default` (`id_module`, `name`, `value`, `id_module_type`) VALUES ('1', 'system_user_required_fields', 'email,phone,service,function,city', '1');
+UPDATE `ploopi_module_type` SET `version` = '1.9.1.2', `author` = 'Ovensia', `date` = '20120413000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;

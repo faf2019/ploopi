@@ -32,12 +32,574 @@
  */
 
 /**
+ * Opérations accessibles pour les utilisateurs connectés
+ */
+
+if ($_SESSION['ploopi']['connected'])
+{
+    switch($ploopi_op)
+    {
+        case 'system_update_profile_save':
+            $user = new user();
+            $user->open($_SESSION['ploopi']['userid']);
+            
+            unset($_POST['user_password']);
+            unset($_POST['user_login']);
+
+            $user->setvalues($_POST,'user_');
+            $user->save();
+
+            ob_start();
+            ?>
+            <div style="padding:10px;text-align:center;"><strong>Profil enregistré !</strong></div>
+            <?
+            $content = ob_get_contents();
+            ob_end_clean();
+
+            echo $skin->create_popup('Validation du profil utilisateur', $content, 'system_popup_update_profile');
+            
+            ?>
+            <script type="text/javascript">
+            new PeriodicalExecuter(function(pe) {
+                ploopi_hidepopup('system_popup_update_profile');
+                pe.stop();
+            }, 2);
+            </script>
+            <?
+
+            ploopi_die();
+        break;
+
+        case 'system_update_profile':
+            ploopi_init_module('system');
+
+            ob_start();
+
+            /**
+             * Ouverture de l'instance de l'utilisateur à modifier
+             */
+            $user = new user();
+            $user->open($_SESSION['ploopi']['userid']);
+
+            $arrRequiredFields = explode(',', ploopi_getparam('system_user_required_fields', _PLOOPI_MODULE_SYSTEM));
+
+            // Fonction javascript de validation du formulaire (créée en fonction des champs requis)
+            ?>
+            <script type="text/javascript">
+            system_user_validate = function (form)
+            {
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_LASTNAME; ?>", form.user_lastname, 'string'))
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FIRSTNAME; ?>", form.user_firstname, 'string'))
+
+                <? if (in_array('civility', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_CIVILITY; ?>", form.user_civility, 'select'))
+                <? } ?>
+
+                <? if (in_array('service', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_SERVICE; ?>", form.user_service, 'string'))
+                <? } ?>
+                <? if (in_array('service2', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_SERVICE2; ?>", form.user_service2, 'string'))
+                <? } ?>
+                <? if (in_array('function', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FUNCTION; ?>", form.user_function, 'string'))
+                <? } ?>
+                <? if (in_array('rank', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_RANK; ?>", form.user_rank, 'string'))
+                <? } ?>
+                <? if (in_array('number', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_NUMBER; ?>", form.user_number, 'string'))
+                <? } ?>
+
+                <? if (in_array('phone', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"phone"))
+                <? } else { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"emptyphone"))
+                <? } ?>
+                <? if (in_array('mobile', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"phone"))
+                <? } else { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"emptyphone"))
+                <? } ?>
+                <? if (in_array('fax', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"phone"))
+                <? } else { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"emptyphone"))
+                <? } ?>
+
+                <? if (in_array('email', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"email"))
+                <? } else { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"emptyemail"))
+                <? } ?>
+
+                <? if (in_array('building', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_BUILDING; ?>", form.user_building, 'string'))
+                <? } ?>
+                <? if (in_array('floor', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FLOOR; ?>", form.user_floor, 'string'))
+                <? } ?>
+                <? if (in_array('office', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_OFFICE; ?>", form.user_office, 'string'))
+                <? } ?>
+                <? if (in_array('address', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_ADDRESS; ?>", form.user_address, 'string'))
+                <? } ?>
+                <? if (in_array('postalcode', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_POSTALCODE; ?>", form.user_postalcode, 'string'))
+                <? } ?>
+                <? if (in_array('city', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_CITY; ?>", form.user_city, 'string'))
+                <? } ?>
+                <? if (in_array('country', $arrRequiredFields)) { ?>
+                if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_COUNTRY; ?>", form.user_country, 'string'))
+                <? } ?>
+
+                    return true;
+
+                return false;
+            }
+            </script>
+
+
+
+            <form name="form_modify_user" action="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=system_update_profile_save'); ?>" method="POST" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'system_popup_update_profile', system_user_validate ); return false;  ">
+            <div>
+                <div style="padding:10px;text-align:center;">
+                    Votre profil utilisateur n'est pas complet. Merci de remplir les champs marqués d'une étoile.
+                    <br /><em>Vous pouvez passer cette étape en cliquant en bas sur le bouton "Annuler".</em>
+                </div>
+                <div style="float:left;width:50%;">
+                    <div style="padding:2px;">
+                        <fieldset class="fieldset">
+                            <legend>Informations personnelles</legend>
+                            <div class="ploopi_form">
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_LASTNAME; ?> *:</label>
+                                    <input type="text" class="text" name="user_lastname"  value="<?php echo htmlentities($user->fields['lastname']); ?>" tabindex="1" />
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_FIRSTNAME; ?> *:</label>
+                                    <input type="text" class="text" name="user_firstname"  value="<?php echo htmlentities($user->fields['firstname']); ?>" tabindex="2" />
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_CIVILITY; ?><? if (in_array('civility', $arrRequiredFields)) echo ' *'; ?> :</label>
+                                    <select class="select" name="user_civility" style="width:100px;" tabindex="3">
+                                        <option value=""></option>
+                                        <?php
+                                        foreach ($ploopi_civility as $value)
+                                        {
+                                            ?>
+                                            <option value="<?php echo htmlentities($value); ?>" <?php if ($user->fields['civility'] == $value) echo 'selected'; ?>><?php echo htmlentities($value); ?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </p>
+                            </div>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend>Informations professionnelles</legend>
+                            <div class="ploopi_form">
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_SERVICE; ?><? if (in_array('service', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <input type="text" class="text" name="user_service"  value="<?php echo htmlentities($user->fields['service']); ?>" tabindex="4" />
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_SERVICE2; ?><? if (in_array('service2', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <input type="text" class="text" name="user_service2"  value="<?php echo htmlentities($user->fields['service2']); ?>" tabindex="4" />
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_FUNCTION; ?><? if (in_array('function', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <input type="text" class="text" name="user_function"  value="<?php echo htmlentities($user->fields['function']); ?>" tabindex="5" />
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_RANK; ?><? if (in_array('rank', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <input type="text" class="text" name="user_rank"  value="<?php echo htmlentities($user->fields['rank']); ?>" tabindex="6" />
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_NUMBER; ?><? if (in_array('number', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <input type="text" class="text" name="user_number"  value="<?php echo htmlentities($user->fields['number']); ?>" tabindex="7" />
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_PHONE; ?><? if (in_array('phone', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <input type="text" class="text" name="user_phone"  value="<?php echo htmlentities($user->fields['phone']); ?>" tabindex="8" />
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_MOBILE; ?><? if (in_array('mobile', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <input type="text" class="text" name="user_mobile"  value="<?php echo htmlentities($user->fields['mobile']); ?>" tabindex="9" />
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_FAX; ?><? if (in_array('fax', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <input type="text" class="text" name="user_fax"  value="<?php echo htmlentities($user->fields['fax']); ?>" tabindex="10" />
+                                </p>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div style="float:left;width:49%;">
+                    <div style="padding:2px;">
+
+                        <fieldset class="fieldset">
+                            <legend>Compte d'utilisateur</legend>
+                            <div class="ploopi_form">
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_LOGIN; ?>:</label>
+                                    <strong><?php echo $user->fields['login']; ?></strong>
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_EMAIL; ?> *:</label>
+                                    <input type="text" class="text" name="user_email"  value="<?php echo htmlentities($user->fields['email']); ?>" tabindex="25" />
+                                </p>
+                                <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_ticketsbyemail');">
+                                    <label><?php echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
+                                    <input style="width:16px;" type="checkbox" id="user_ticketsbyemail" name="user_ticketsbyemail" value="1" <?php if ($user->fields['ticketsbyemail']) echo 'checked'; ?> tabindex="26" />
+                                </p>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="fieldset">
+                            <legend>Lieu de travail</legend>
+                            <div class="ploopi_form">
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_BUILDING; ?><? if (in_array('building', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <input type="text" class="text" name="user_building"  value="<?php echo htmlentities($user->fields['building']); ?>" tabindex="11" />
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_FLOOR; ?><? if (in_array('floor', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <input type="text" class="text" name="user_floor"  value="<?php echo htmlentities($user->fields['floor']); ?>" tabindex="12" />
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_OFFICE; ?><? if (in_array('office', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <input type="text" class="text" name="user_office"  value="<?php echo htmlentities($user->fields['office']); ?>" tabindex="13" />
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_ADDRESS; ?><? if (in_array('address', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <textarea class="text" name="user_address" tabindex="14"><?php echo htmlentities($user->fields['address']); ?></textarea>
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_POSTALCODE; ?><? if (in_array('postalcode', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <input type="text" class="text" name="user_postalcode"  value="<?php echo htmlentities($user->fields['postalcode']); ?>" tabindex="15" />
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_CITY; ?><? if (in_array('city', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <input type="text" class="text" name="user_city"  value="<?php echo htmlentities($user->fields['city']); ?>" tabindex="16" />
+                                </p>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_COUNTRY; ?><? if (in_array('country', $arrRequiredFields)) echo ' *'; ?>:</label>
+                                    <input type="text" class="text" name="user_country"  value="<?php echo htmlentities($user->fields['country']); ?>"  tabindex="17" />
+                                </p>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            <div style="clear:both;text-align:right;padding:4px;">
+                <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('system_popup_update_profile');" />
+                <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" />
+            </div>
+            </form>
+
+
+
+            <?
+            $content = ob_get_contents();
+            ob_end_clean();
+
+            echo $skin->create_popup('Validation du profil utilisateur', $content, 'system_popup_update_profile');
+
+            ploopi_die();
+        break;
+    }
+
+}
+
+/**
  * Opérations accessibles pour les utilisateurs connectés dans le module système
  */
 if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOOPI_MODULE_SYSTEM)
 {
     switch($ploopi_op)
     {
+        case 'system_directory_export':
+            ploopi_init_module('system');
+
+            include_once './include/functions/array.php';
+            include_once './include/classes/odf.php';
+
+            // Type du document demandé
+            $strTypeDoc = empty($_GET['system_directory_typedoc']) ? 'xls' : strtolower($_GET['system_directory_typedoc']);
+
+            // Récupération de la requête utilisateur
+            $strSql = ploopi_getsessionvar('directory_sql');
+
+            // Préparation du jeu de données
+            $arrData = array();
+
+            if (!empty($strSql)) {
+                $res = $db->query($strSql);
+
+                while ($row = $db->fetchrow($res)) {
+
+                    // on va chercher les espaces auxquels l'utilisateur peut accéder
+                    $objUser = new user();
+                    $objUser->open($row['id']);
+                    // on met les libellés dans un tableau
+                    $arrWspList = array();
+                    foreach($objUser->getworkspaces() as $rowW) $arrWspList[sprintf("%04d%s", $rowW['depth'], $rowW['label'])] = $rowW['label'];
+                    // on trie par profondeur + libellé
+                    ksort($arrWspList);
+
+                    $rowData = array(
+                        'login' => $row['login'],
+                        'lastname' => $row['lastname'],
+                        'firstname' => $row['firstname'],
+                        'user' => trim($row['lastname'].' '.$row['firstname']),
+                        'workspaces' => implode("\n\r",$arrWspList),
+                        'service' => $row['service'],
+                        'service2' => $row['service2'],
+                        'function' => $row['function'],
+                        'rank' => $row['rank'],
+                        'number' => $row['number'],
+                        'phone' => system_directory_formatphone($row['phone']),
+                        'mobile' => system_directory_formatphone($row['mobile']),
+                        'fax' => system_directory_formatphone($row['fax']),
+                        'email' => $row['email'],
+
+                        'building' => $row['building'],
+                        'floor' => $row['floor'],
+                        'office' => $row['office'],
+                        'address' => $row['address'],
+                        'postalcode' => $row['postalcode'],
+                        'city' => $row['city'],
+                        'country' => $row['country'],
+                        'date_creation' => $row['date_creation']
+                    );
+
+                    // Traitement spécial XLS (date)
+                    if ($strTypeDoc == 'xls' || $strTypeDoc == 'ods' || $strTypeDoc == 'sxc' || $strTypeDoc == 'pdf') {
+                        $rowData['date_creation'] = ploopi_timestamp2xls($rowData['date_creation']);
+                    }
+
+                    // Traitement spécial vCard
+                    if ($strTypeDoc != 'vcf') {
+                        unset($rowData['lastname']);
+                        unset($rowData['firstname']);
+                    }
+
+                    $arrData[] = $rowData;
+
+                }
+            }
+
+            // Dossier de travail
+            $strOutputPath = _PLOOPI_PATHDATA.'/tmp/system_directory';
+            ploopi_makedir($strOutputPath);
+
+            // Nom du fichier envoyé à l'utilisateur
+            $strFileName = "utilisateurs.{$strTypeDoc}";
+
+            ploopi_ob_clean();
+
+            switch($strTypeDoc)
+            {
+
+                case 'vcf': // vCard
+
+                    foreach($arrData as $row) {
+                        echo "BEGIN:VCARD\nVERSION:3.0\nN:{$row['lastname']};{$row['firstname']}\nFN:{$row['user']}\nTEL;type=WORK,VOICE:{$row['phone']}\nTEL;type=WORK,CELL:{$row['mobile']}\nTEL;type=WORK,FAX:{$row['fax']}\nEMAIL;type=PREF,INTERNET:{$row['email']}\nEND:VCARD\n";
+                    }
+                    header('Content-Type: ' . ploopi_getmimetype($strFileName));
+                    header('Content-Disposition: attachment; Filename="'.$strFileName.'"');
+                    header('Cache-Control: private');
+                    header('Pragma: private');
+                    header('Content-Length: '.ob_get_length());
+                    header("Content-Encoding: None");
+                break;
+
+                case 'csv':
+                case 'xml':
+                case 'json':
+
+                    switch($strTypeDoc)
+                    {
+                        case 'csv':
+                            echo ploopi_array2csv($arrData);
+                        break;
+
+                        case 'xml':
+                            echo ploopi_array2xml($arrData);
+                        break;
+
+                        case 'json':
+                            echo ploopi_array2json($arrData);
+                        break;
+                    }
+
+                    header('Content-Type: ' . ploopi_getmimetype($strFileName));
+                    header('Content-Disposition: attachment; Filename="'.$strFileName.'"');
+                    header('Cache-Control: private');
+                    header('Pragma: private');
+                    header('Content-Length: '.ob_get_length());
+                    header("Content-Encoding: None");
+                break;
+
+                case 'xls':
+                case 'ods':
+                case 'sxc':
+                case 'pdf':
+
+                    // Définition du nom du fichier temporaire
+                    $strFileId = uniqid();
+                    $strOutputXls = $strOutputPath."/{$strFileId}.xls";
+
+                    // Format d'export (XLS)
+                    $arrFormats = array(
+                        'login' => array(
+                            'title' => 'Identifiant',
+                            'type' => 'string',
+                            'width' => 15
+                        ),
+                        'user' => array(
+                            'title' => 'Utilisateur',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'workspaces' => array(
+                            'title' => 'Liste des Espaces de Travail',
+                            'type' => 'string',
+                            'width' => 40
+                        ),
+                        'service' => array(
+                            'title' => 'Service',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'service2' => array(
+                            'title' => 'Bureau',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'function' => array(
+                            'title' => 'Fonction',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'rank' => array(
+                            'title' => 'Grade',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'number' => array(
+                            'title' => 'Numéro de Poste',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'phone' => array(
+                            'title' => 'Téléphone',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'mobile' => array(
+                            'title' => 'Mobile',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'fax' => array(
+                            'title' => 'Fax',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'email' => array(
+                            'title' => 'Courriel',
+                            'type' => 'string',
+                            'width' => 35
+                        ),
+                        'building' => array(
+                            'title' => 'Bâtiment',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'floor' => array(
+                            'title' => 'Etage',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'office' => array(
+                            'title' => 'Bureau',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'address' => array(
+                            'title' => 'Adresse',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'postalcode' => array(
+                            'title' => 'Code Postal',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'city' => array(
+                            'title' => 'Ville',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'country' => array(
+                            'title' => 'Pays',
+                            'type' => 'string',
+                            'width' => 20
+                        ),
+                        'date_creation' => array(
+                            'title' => 'Date de création',
+                            'type' => 'datetime',
+                            'width' => 35
+                        )
+                    );
+
+                    ploopi_array2xls($arrData, true, $strOutputXls, 'Export', $arrFormats, array('tofile' => true, 'setborder' => true));
+
+                    switch($strTypeDoc)
+                    {
+                        case 'ods':
+                        case 'sxc':
+                        case 'pdf':
+                            $objOdfConverter = new odf_converter(ploopi_getparam('system_jodwebservice'));
+
+                            $rawOuputFile = $strOutputPath."/{$strFileId}.{$strTypeDoc}";
+
+                            switch($strTypeDoc)
+                            {
+                                case 'pdf':
+                                    $strOuputMime = 'application/pdf';
+                                break;
+
+                                case 'sxc':
+                                    $strOuputMime = 'application/vnd.sun.xml.calc';
+                                break;
+
+                                case 'ods':
+                                    $strOuputMime = 'application/vnd.oasis.opendocument.spreadsheet';
+                                break;
+                            }
+
+                            file_put_contents($rawOuputFile, $objOdfConverter->convert(file_get_contents($strOutputXls), 'application/vnd.ms-excel', $strOuputMime));
+
+                        break;
+
+                        default:
+                            $rawOuputFile = $strOutputXls;
+                        break;
+                    }
+
+                    ploopi_downloadfile($rawOuputFile, $strFileName, true);
+                break;
+            }
+
+            ploopi_die();
+        break;
+
         /**
          * Opérations sur les tickets
          */
@@ -479,7 +1041,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             <?php
                             $content = ob_get_contents();
                             ob_end_clean();
-    
+
                             echo $skin->create_popup("Chargement d'une nouvelle photo", $content, 'popup_system_choose_photo');
                         }
                         ploopi_die();
@@ -494,7 +1056,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             {
                                 // reset suppression
                                 ploopi_setsessionvar("deletephoto_{$_GET['system_user_id']}", 0);
-                                
+
                                 $strTmpPath = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp';
                                 ploopi_makedir($strTmpPath);
                                 $_SESSION['system']['user_photopath'] = tempnam($strTmpPath, '');
@@ -519,7 +1081,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             ploopi_die();
                         }
                     break;
-                    
+
                     case 'system_get_photo':
                         // Envoi de la photo temporaire vers le client
                         if (!empty($_SESSION['system']['user_photopath'])) ploopi_downloadfile($_SESSION['system']['user_photopath'], 'user.png', false, false);
@@ -540,23 +1102,23 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         }
                         ploopi_redirect('admin.php?system_level=system&sysToolbarItem=directory');
                     break;
-                    
+
                     case 'system_user_import':
 
                         $_SESSION['system']['user_import'] = array();
-                        
+
                         if (!empty($_FILES['system_user_file']) && !empty($_FILES['system_user_file']['name']))
                         {
                             // Récupération & contrôle du séparateur de champs
                             $strSep = empty($_POST['system_user_sep']) ? ',' : $_POST['system_user_sep'];
                             if (!in_array($strSep, array(',', ';'))) $strSep = ',';
-                             
+
                             // Lecture du fichier si ok
                             if (file_exists($_FILES['system_user_file']['tmp_name']))
                             {
                                 $ptrHandle = fopen($_FILES['system_user_file']['tmp_name'], 'r');
-                                
-                                while (($arrLineData = fgetcsv($ptrHandle, null, $strSep)) !== FALSE) 
+
+                                while (($arrLineData = fgetcsv($ptrHandle, null, $strSep)) !== FALSE)
                                 {
                                     if (is_array($arrLineData))
                                     {
@@ -565,7 +1127,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 }
                             }
                         }
-                        
+
                         ploopi_redirect("admin.php?usrTabItem=tabUserImport&op=preview");
                     break;
                 }

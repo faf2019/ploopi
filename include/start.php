@@ -115,6 +115,18 @@ if ((!empty($ploopi_login) && !empty($ploopi_password)))
         $_SESSION['ploopi']['password'] = $ploopi_password;
         $_SESSION['ploopi']['userid'] = $fields['id'];
         $_SESSION['ploopi']['user'] = $fields;
+
+        // Vérification de la validité du profil
+        // Il faut récupérer la liste des champs à contrôler dans les paramètres du module system
+        $objParamDefault = new param_default();
+        if ($objParamDefault->open(1, 'system_user_required_fields') && !empty($objParamDefault->fields['value']))
+        {
+            foreach(explode(',', $objParamDefault->fields['value']) as $strField)
+            {
+                $strField = trim($strField);
+                if (isset($fields[$strField]) && $fields[$strField] == '') { $_SESSION['ploopi']['updateprofile'] = true; break; }
+            }
+        }
     }
     else
     {
@@ -208,6 +220,8 @@ if ($ploopi_initsession)
 
         $user = new user();
         if (!$user->open($_SESSION['ploopi']['userid'])) ploopi_logout();
+
+        $booRedirectProfile = false;
 
         $_SESSION['ploopi']['user'] = $user->fields;
 
@@ -509,13 +523,6 @@ if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language'] != 
     include_once "./lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php";
 }
 else include_once "./lang/french.php"; // default language file (french)
-
-// LANGUAGES LIST
-/**
- include_once './include/classes/param.php';
- $param_type = new param_type();
- if (!isset($_SESSION['ploopi']['languages'])) $_SESSION['ploopi']['languages'] = $param_type->getallchoices(_PLOOPI_PARAMTYPE_LANGUAGE);
-*/
 
 // View modes for modules
 $ploopi_viewmodes =

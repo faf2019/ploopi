@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2008-2012 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -91,9 +91,9 @@ $_SESSION['system']['directoryform'] = $arrFilter;
     <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi_urlencode('admin.php?sysToolbarItem=directory&system_filter_reset'); ?>';" tabindex="160" />
 </p>
 </form>
+
+
 <?php
-
-
 include_once './include/classes/query.php';
 
 // On charge un maximum de données dans des tableaux pour simplifier les recherches par la suite
@@ -360,81 +360,109 @@ else
 $objQueryCount = clone $objQuery;
 
 // On distingue la requête "Count" de la requête "Data"
-$objQuery->add_select('DISTINCT u.id, u.login, u.firstname, u.lastname, u.email');
+$objQuery->add_select('DISTINCT u.id, u.*');
+$objQuery->add_orderby('u.lastname, u.firstname');
 $objQueryCount->add_select('COUNT(DISTINCT u.id) as c');
+
+// Sauvegarde de la dernière requête SQL pour export
+ploopi_setsessionvar('directory_sql', $objQuery->get_sql());
 
 // Lecture du nombre de réponses
 $intNbRep = current($objQueryCount->execute()->fetchrow());
-
 ?>
+
 <div style="padding:4px;background-color:#e0e0e0;border-bottom:1px solid #ccc;">
     <?
     if ($_SESSION['system']['level'] == 'system')
     {
         ?>
-        <span>Vous pouvez retrouver ici l'ensemble des utilisateurs du sytème avec leur profil complet.<br />Vous ne pouvez cependant pas les gérer. Pour cela vous devez accéder à l'<a href="<?php echo ploopi_urlencode('admin.php?system_level=work'); ?>">interface d'administration des espaces de travail</a>.<br /><strong><?php echo $intNbRep; ?> utilisateur(s) trouvé(s).</strong></span>
+        <span>Vous pouvez retrouver ici l'ensemble des utilisateurs du sytème avec leur profil complet.<br />Vous ne pouvez cependant pas les gérer. Pour cela vous devez accéder à l'<a href="<?php echo ploopi_urlencode('admin.php?system_level=work'); ?>">interface d'administration des espaces de travail</a>.</span>
         <?
     }
     else
     {
         ?>
-        <span>Vous pouvez retrouver ici l'ensemble des utilisateurs de l'espace de travail et des sous-espaces.<br /><strong><?php echo $intNbRep; ?> utilisateur(s) trouvé(s).</strong></span>
+        <span>Vous pouvez retrouver ici l'ensemble des utilisateurs de l'espace de travail et des sous-espaces.</span>
         <?
     }
     ?>
     <?php
-
     if ($intNbRep > $intMaxResponse)
     {
-        ?><strong class="error">Il y a <?php echo $intNbRep ?> réponses (<?php echo $intMaxResponse; ?> max), vous devriez préciser votre recherche</strong><?php
+        ?>
+        <br /><strong class="error">Il y a <?php echo $intNbRep ?> réponses (<?php echo $intMaxResponse; ?> max), vous devriez préciser votre recherche ou exporter les données.</strong>
+        <?
+    }
+    else
+    {
+        ?>
+        <br /><strong><?php echo $intNbRep; ?> utilisateur(s) trouvé(s).</strong>
+        <?
     }
     ?>
+
+</div>
+
+
+<div class="ploopi_tabs">
+    <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=vcf"); ?>"><img src="./img/export/vcf.png"><span>vCard <sup>VCF</sup></span></a>
+    <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xml"); ?>"><img src="./img/export/xml.png"><span>Brut <sup>XML</sup></span></a>
+    <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=csv"); ?>"><img src="./img/export/csv.png"><span>Brut <sup>CSV</sup></span></a>
+    <?
+    if (ploopi_getparam('system_jodwebservice') != '') {
+        ?>
+        <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=pdf"); ?>"><img src="./img/export/pdf.png"><span>Adobe &trade; <sup>PDF</sup></span></a>
+        <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=ods"); ?>"><img src="./img/export/ods.png"><span>OpenOffice &trade; <sup>ODS</sup></span></a>
+        <?
+    }
+    ?>
+    <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xls"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLS</sup></span></a>
 </div>
 
 <?php
-if ($intNbRep > 0 && $intNbRep <= $intMaxResponse)
+if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
 {
     // Définition des colonnes du tableau (interface)
-    $arrResult =
-        array(
-            'columns' => array(),
-            'rows' => array()
-        );
+    $arrResult = array(
+        'columns' => array(),
+        'rows' => array()
+    );
 
-    $arrResult['columns']['left']['nom'] =
-        array(
-            'label' => 'Nom/prénom',
-            'width' => '200',
-            'options' => array('sort' => true)
-        );
+    $arrResult['columns']['left']['nom'] = array(
+        'label' => 'Nom/prénom',
+        'width' => '200',
+        'options' => array('sort' => true)
+    );
 
-    $arrResult['columns']['left']['login'] =
-        array(
-            'label' => 'Login',
-            'width' => '130',
-            'options' => array('sort' => true)
-        );
+    $arrResult['columns']['left']['login'] = array(
+        'label' => 'Login',
+        'width' => '130',
+        'options' => array('sort' => true)
+    );
 
-    $arrResult['columns']['left']['groups'] =
-        array(
-            'label' => 'Groupes',
-            'width' => '200',
-            'options' => array('sort' => true)
-        );
+    $arrResult['columns']['left']['email'] = array(
+        'label' => 'Courriel',
+        'width' => '150',
+        'options' => array('sort' => true)
+    );
 
-    $arrResult['columns']['auto']['workspaces'] =
-        array(
-            'label' => 'Espaces de travail / Rôles',
-            'options' => array('sort' => true)
-        );
+    $arrResult['columns']['left']['groups'] = array(
+        'label' => 'Groupes',
+        'width' => '200',
+        'options' => array('sort' => true)
+    );
+
+    $arrResult['columns']['auto']['workspaces'] = array(
+        'label' => 'Espaces de travail / Rôles',
+        'options' => array('sort' => true)
+    );
 
     if ($_SESSION['system']['level'] == 'system')
     {
-        $arrResult['columns']['actions_right']['actions'] =
-            array(
-                'label' => '&nbsp;',
-                'width' => 24
-            );
+        $arrResult['columns']['actions_right']['actions'] = array(
+            'label' => '&nbsp;',
+            'width' => 24
+        );
     }
 
     // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
@@ -649,14 +677,13 @@ if ($intNbRep > 0 && $intNbRep <= $intMaxResponse)
                     break;
                 }
 
-                $row['workspaces'][$intIdWorkspace] =
-                    sprintf(
-                        "<img src=\"%s\" /><a title=\"Accéder à cet espace\" href=\"%s\">%s</a>%s",
-                        "{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png",
-                        ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}"),
-                        htmlentities($rowWorkspace['label']),
-                        $strUserWspRoles
-                    );
+                $row['workspaces'][$intIdWorkspace] = sprintf(
+                    "<img style=\"float:left;\" src=\"%s\" /><span style=\"display:block;margin-left:20px;\"><a title=\"Accéder à cet espace\" href=\"%s\">%s</a>%s</span>",
+                    "{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png",
+                    ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}"),
+                    htmlentities($rowWorkspace['label']),
+                    $strUserWspRoles
+                );
             }
         }
 
@@ -664,12 +691,11 @@ if ($intNbRep > 0 && $intNbRep <= $intMaxResponse)
         if (!empty($row['groups']))
         {
             foreach($row['groups'] as $intId => $strLabel)
-                $row['groups'][$intId] =
-                    sprintf(
-                        "<a title=\"Accéder à ce groupe\" href=\"%s\">%s</a>",
-                        ploopi_urlencode("admin.php?system_level=work&groupid={$intId}"),
-                        htmlentities($strLabel)
-                    );
+                $row['groups'][$intId] = sprintf(
+                    "<a title=\"Accéder à ce groupe\" href=\"%s\">%s</a>",
+                    ploopi_urlencode("admin.php?system_level=work&groupid={$intId}"),
+                    htmlentities($strLabel)
+                );
         }
 
         $strUserLabel = htmlentities(sprintf("%s %s", $row['lastname'], $row['firstname']));
@@ -679,39 +705,36 @@ if ($intNbRep > 0 && $intNbRep <= $intMaxResponse)
         if (!empty($row['groups']))
         {
             reset($row['groups']);
-            $strUserLabel =
-                sprintf(
-                    "<a title=\"Accéder à cet utilisateur\" href=\"%s\">%s</a>",
-                    ploopi_urlencode("admin.php?system_level=work&groupid=".key($row['groups'])."&wspToolbarItem=tabUsers&op=modify_user&user_id={$intUserId}"),
-                    $strUserLabel
-                );
+            $strUserLabel = sprintf(
+                "<a title=\"Accéder à cet utilisateur\" href=\"%s\">%s</a>",
+                ploopi_urlencode("admin.php?system_level=work&groupid=".key($row['groups'])."&wspToolbarItem=tabUsers&op=modify_user&user_id={$intUserId}"),
+                $strUserLabel
+            );
 
-            $strUserLogin =
-                sprintf(
-                    "<a title=\"Accéder à cet utilisateur\" href=\"%s\">%s</a>",
-                    ploopi_urlencode("admin.php?system_level=work&groupid=".key($row['groups'])."&wspToolbarItem=tabUsers&op=modify_user&user_id={$intUserId}"),
-                    $strUserLogin
-                );
+            $strUserLogin = sprintf(
+                "<a title=\"Accéder à cet utilisateur\" href=\"%s\">%s</a>",
+                ploopi_urlencode("admin.php?system_level=work&groupid=".key($row['groups'])."&wspToolbarItem=tabUsers&op=modify_user&user_id={$intUserId}"),
+                $strUserLogin
+            );
 
         }
 
-        $arrResult['rows'][] =
-            array(
-                'values' =>
-                    array(
-                        'nom' => array('label' => $strUserLabel, 'sort_label' => sprintf("%s %s", $row['lastname'], $row['firstname'])),
-                        'login' => array('label' => $strUserLogin, 'sort_label' => $row['login']),
-                        'groups' => array(
-                            'label' => (empty($row['groups'])) ? '<em>Pas de groupe dans cet espace</em>'  : implode('<br />', $row['groups']),
-                            'sort_label' => $strSortLabelGroups
-                        ),
-                        'workspaces' => array(
-                            'label' => (empty($row['workspaces'])) ? '<em>Pas d\'espace</em>' : implode('<br /> ', $row['workspaces']),
-                            'sort_label' => implode(',', $arrSortLabelWorkspaces)
-                        ),
-                        'actions' => array('label' => '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?ploopi_op=system_delete_user&system_user_id={$intUserId}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>')
-                    )
-            );
+        $arrResult['rows'][] = array(
+            'values' => array(
+                'nom' => array('label' => $strUserLabel, 'sort_label' => sprintf("%s %s", $row['lastname'], $row['firstname'])),
+                'login' => array('label' => $strUserLogin, 'sort_label' => $row['login']),
+                'email' => array('label' => '<a style="width:142px;" href="mailto;'.$row['email'].'">'.$row['email'].'</a>', 'sort_label' => $row['email']),
+                'groups' => array(
+                    'label' => (empty($row['groups'])) ? '<em>Pas de groupe dans cet espace</em>'  : implode('<br />', $row['groups']),
+                    'sort_label' => $strSortLabelGroups
+                ),
+                'workspaces' => array(
+                    'label' => (empty($row['workspaces'])) ? '<em>Pas d\'espace</em>' : implode('', $row['workspaces']),
+                    'sort_label' => implode(',', $arrSortLabelWorkspaces)
+                ),
+                'actions' => array('label' => '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?ploopi_op=system_delete_user&system_user_id={$intUserId}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>')
+            )
+        );
     }
 
     $skin->display_array(

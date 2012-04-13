@@ -46,7 +46,7 @@ function ploopi_session_reset()
     $strRemoteBrowser = Net_UserAgent_Detect::getBrowserString();
     $strRemoteSystem = Net_UserAgent_Detect::getOSString();
     ploopi_set_error_handler();
-    
+
     // session_destroy();
     $_SESSION['ploopi'] = array(
         'login' => '',
@@ -55,6 +55,8 @@ function ploopi_session_reset()
         'workspaceid' => '',
         'webworkspaceid' => '',
         'adminlevel' => 0,
+
+        'updateprofile' => false,
 
         'connected' => false,
         'loginerror' => false,

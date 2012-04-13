@@ -243,26 +243,26 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
 
             $objTplDirectory->assign_vars(
                 array(
-                    'SYSTEM_TROMBI_JS_LASTNAME' => addslashes(htmlentities($arrFilter['system_lastname'])),
-                    'SYSTEM_TROMBI_JS_FIRSTNAME' => addslashes(htmlentities($arrFilter['system_firstname'])),
-                    'SYSTEM_TROMBI_JS_SERVICE' => addslashes(htmlentities($arrFilter['system_service'])),
-                    'SYSTEM_TROMBI_JS_SERVICE2' => addslashes(htmlentities($arrFilter['system_service2'])),
-                    'SYSTEM_TROMBI_JS_PHONE' => addslashes(htmlentities($arrFilter['system_phone'])),
-                    'SYSTEM_TROMBI_JS_FAX' => addslashes(htmlentities($arrFilter['system_fax'])),
-                    'SYSTEM_TROMBI_JS_MOBILE' => addslashes(htmlentities($arrFilter['system_mobile'])),
-                    'SYSTEM_TROMBI_JS_LOGIN' => addslashes(htmlentities($arrFilter['system_login'])),
-                    'SYSTEM_TROMBI_JS_EMAIL' => addslashes(htmlentities($arrFilter['system_email'])),
+                    'SYSTEM_TROMBI_JS_LASTNAME' => addslashes($arrFilter['system_lastname']),
+                    'SYSTEM_TROMBI_JS_FIRSTNAME' => addslashes($arrFilter['system_firstname']),
+                    'SYSTEM_TROMBI_JS_SERVICE' => addslashes($arrFilter['system_service']),
+                    'SYSTEM_TROMBI_JS_SERVICE2' => addslashes($arrFilter['system_service2']),
+                    'SYSTEM_TROMBI_JS_PHONE' => addslashes($arrFilter['system_phone']),
+                    'SYSTEM_TROMBI_JS_FAX' => addslashes($arrFilter['system_fax']),
+                    'SYSTEM_TROMBI_JS_MOBILE' => addslashes($arrFilter['system_mobile']),
+                    'SYSTEM_TROMBI_JS_LOGIN' => addslashes($arrFilter['system_login']),
+                    'SYSTEM_TROMBI_JS_EMAIL' => addslashes($arrFilter['system_email']),
                     'SYSTEM_TROMBI_JS_WORKSPACE' => addslashes($arrFilter['system_workspace']),
-                    'SYSTEM_TROMBI_JS_OFFICE' => addslashes(htmlentities($arrFilter['system_office'])),
-                    'SYSTEM_TROMBI_JS_COMMENTS' => addslashes(htmlentities($arrFilter['system_comments'])),
-                    'SYSTEM_TROMBI_JS_FUNCTION' => addslashes(htmlentities($arrFilter['system_function'])),
-                    'SYSTEM_TROMBI_JS_NUMBER' => addslashes(htmlentities($arrFilter['system_number'])),
-                    'SYSTEM_TROMBI_JS_RANK' => addslashes(htmlentities($arrFilter['system_rank'])),
-                    'SYSTEM_TROMBI_JS_BUILDING' => addslashes(htmlentities($arrFilter['system_building'])),
-                    'SYSTEM_TROMBI_JS_FLOOR' => addslashes(htmlentities($arrFilter['system_floor'])),
-                    'SYSTEM_TROMBI_JS_COUNTRY' => addslashes(htmlentities($arrFilter['system_country'])),
-                    'SYSTEM_TROMBI_JS_CITY' => addslashes(htmlentities($arrFilter['system_city'])),
-                    'SYSTEM_TROMBI_JS_POSTALCODE' => addslashes(htmlentities($arrFilter['system_postalcode']))
+                    'SYSTEM_TROMBI_JS_OFFICE' => addslashes($arrFilter['system_office']),
+                    'SYSTEM_TROMBI_JS_COMMENTS' => addslashes($arrFilter['system_comments']),
+                    'SYSTEM_TROMBI_JS_FUNCTION' => addslashes($arrFilter['system_function']),
+                    'SYSTEM_TROMBI_JS_NUMBER' => addslashes($arrFilter['system_number']),
+                    'SYSTEM_TROMBI_JS_RANK' => addslashes($arrFilter['system_rank']),
+                    'SYSTEM_TROMBI_JS_BUILDING' => addslashes($arrFilter['system_building']),
+                    'SYSTEM_TROMBI_JS_FLOOR' => addslashes($arrFilter['system_floor']),
+                    'SYSTEM_TROMBI_JS_COUNTRY' => addslashes($arrFilter['system_country']),
+                    'SYSTEM_TROMBI_JS_CITY' => addslashes($arrFilter['system_city']),
+                    'SYSTEM_TROMBI_JS_POSTALCODE' => addslashes($arrFilter['system_postalcode'])
                 )
             );
 

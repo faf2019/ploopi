@@ -201,6 +201,22 @@ function ploopi_timestamp2local($mytimestamp)
     return $mydate;
 }
 
+
+/**
+ * Convertit un timestamp MYSQL (AAAAMMJJhhmmss) au format XLS
+ *
+ * @param int $intTs timestamp MySQL
+ * @return int date/heure XLS
+ */
+
+function ploopi_timestamp2xls($intTs)
+{
+    $intTs = ploopi_timestamp2unixtimestamp($intTs);
+
+    return empty($intTs) ? '' : $intTs / 86400 + 25569 + 1/12;
+}
+
+
 /**
  * Convertit un date locale au format timestamp MYSQL (AAAAMMJJhhmmss)
  *
@@ -508,4 +524,5 @@ function ploopi_open_calendar($strInputFieldId, $booEcho = true, $strClass = nul
     if ($booEcho) echo $strEcho;
     else return $strEcho;
 }
+
 ?>

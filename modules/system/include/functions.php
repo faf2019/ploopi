@@ -192,7 +192,7 @@ function system_getwg()
         $_SESSION['system']['workspaces'] = $workspaces;
     }
     else $groups = $_SESSION['system']['groups'];
-    
+
     //ploopi_print_r($workspaces);
     //ploopi_print_r($groups);
 
@@ -553,7 +553,7 @@ function system_generate_htpasswd($login, $pass, $delete = false)
 function system_tickets_displayresponses($parents, $tickets, $rootid)
 {
     global $skin;
-    
+
 
     sort($parents[$rootid]);
 
@@ -651,7 +651,7 @@ function system_serverload_getcolor($min, $max, $x)
 function system_getparents($parents, $type)
 {
     global $db;
-    
+
     $parents = str_replace(';',',',$parents);
 
     $select = "SELECT * FROM ploopi_{$type} WHERE id IN ({$parents}) ORDER BY depth";
@@ -662,4 +662,23 @@ function system_getparents($parents, $type)
 
     return($groups);
 }
+
+
+/**
+ * Formatage d'un numéro de téléphone
+ *
+ * @param string $strPhone numéro de téléphone à formater
+ * @return string numéro formaté
+ */
+function system_directory_formatphone($strPhone)
+{
+    $strPhone = preg_replace('@[^0-9\+\(\)]@i', '', $strPhone);
+
+    if (preg_match('@([0-9\+\(\)]*)([1-9]{1})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})@i', $strPhone, $arrMatches) === 1) {
+        $strPhone = ($arrMatches[1] == '0' ? $arrMatches[1] : $arrMatches[1].' ').$arrMatches[2].' '.$arrMatches[3].' '.$arrMatches[4].' '.$arrMatches[5].' '.$arrMatches[6];
+    }
+
+    return $strPhone;
+}
+
 ?>

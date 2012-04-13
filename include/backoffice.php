@@ -296,26 +296,41 @@ else
 
 }
 
+/**
+ * Gestion du cas où on demande à l'utilisateur de compléter son profil
+ */
+
+if ($_SESSION['ploopi']['updateprofile']) {
+    $ploopi_additional_javascript .= "
+        Event.observe(window, 'load', function() {
+            ploopi_showpopup('', 750, null, true, 'system_popup_update_profile')
+            ploopi_xmlhttprequest_todiv('admin-light.php', '".ploopi_queryencode("ploopi_op=system_update_profile")."', 'system_popup_update_profile');
+        });
+    ";
+
+    $_SESSION['ploopi']['updateprofile'] = false;
+}
+
+
 $template_body->assign_vars(array(
-        'TEMPLATE_PATH'                 => $_SESSION['ploopi']['template_path'],
-        'TEMPLATE_NAME'                 => $_SESSION['ploopi']['template_name'],
-        'WORKSPACE_LABEL'               => $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE ? htmlentities(_PLOOPI_LABEL_MYWORKSPACE) : htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']),
-        'WORKSPACE_CODE'                => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['code']),
-        'WORKSPACE_TITLE'               => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
-        'WORKSPACE_META_DESCRIPTION'    => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_description']),
-        'WORKSPACE_META_KEYWORDS'       => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_keywords']),
-        'WORKSPACE_META_AUTHOR'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']),
-        'WORKSPACE_META_COPYRIGHT'      => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_copyright']),
-        'WORKSPACE_META_ROBOTS'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_robots']),
-        'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
-        'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
-        'ADDITIONAL_JAVASCRIPT'         => $ploopi_additional_javascript,
-        'PLOOPI_ERROR'                  => (!empty($_GET['ploopi_errorcode'])) ? $ploopi_errormsg[$_GET['ploopi_errorcode']] : '',
-        'PLOOPI_MSG'                    => (!empty($_GET['ploopi_msgcode'])) ? $ploopi_msg[$_GET['ploopi_msgcode']] : '',
-        'PLOOPI_VERSION'                => _PLOOPI_VERSION,
-        'PLOOPI_REVISION'               => _PLOOPI_REVISION
-    )
-);
+    'TEMPLATE_PATH'                 => $_SESSION['ploopi']['template_path'],
+    'TEMPLATE_NAME'                 => $_SESSION['ploopi']['template_name'],
+    'WORKSPACE_LABEL'               => $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE ? htmlentities(_PLOOPI_LABEL_MYWORKSPACE) : htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']),
+    'WORKSPACE_CODE'                => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['code']),
+    'WORKSPACE_TITLE'               => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
+    'WORKSPACE_META_DESCRIPTION'    => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_description']),
+    'WORKSPACE_META_KEYWORDS'       => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_keywords']),
+    'WORKSPACE_META_AUTHOR'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']),
+    'WORKSPACE_META_COPYRIGHT'      => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_copyright']),
+    'WORKSPACE_META_ROBOTS'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_robots']),
+    'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
+    'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
+    'ADDITIONAL_JAVASCRIPT'         => $ploopi_additional_javascript,
+    'PLOOPI_ERROR'                  => (!empty($_GET['ploopi_errorcode'])) ? $ploopi_errormsg[$_GET['ploopi_errorcode']] : '',
+    'PLOOPI_MSG'                    => (!empty($_GET['ploopi_msgcode'])) ? $ploopi_msg[$_GET['ploopi_msgcode']] : '',
+    'PLOOPI_VERSION'                => _PLOOPI_VERSION,
+    'PLOOPI_REVISION'               => _PLOOPI_REVISION
+));
 
 // Message "ok" envoyé par le module
 if(isset($_GET['ploopi_mod_msg']) && defined($_GET['ploopi_mod_msg']))
