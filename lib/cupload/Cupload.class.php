@@ -1,4 +1,4 @@
-<?
+<?php
 class CUploadSentinel {
   var $_sId = null;
   var $lockfile     = '';
@@ -11,19 +11,19 @@ class CUploadSentinel {
   var $start_time   = 0;
   var $elapsed_time = 0;
   var $error        = '';
-  
+
   function clear() {
        if(file_exists($this->lockfile)) {
             @unlink($this->lockfile);
        }
   }
-  
+
   function __init($_sId) {
     $this->lockfile = UPLOAD_PATH.$_sId.'.lock';
     if(file_exists($this->lockfile)) {
       $pf=@fopen($this->lockfile,'rb');
       if (is_resource($pf))
-      { 
+      {
         @flock($pf, LOCK_SH);
         $_status = fread($pf,4096);
         @flock($pf, LOCK_UN);
@@ -187,7 +187,7 @@ class CUpload {
               $filename = basename($filename);
 
               if(!empty($filename)) {
-                if (is_dir(UPLOAD_PATH) && is_writable(UPLOAD_PATH)) 
+                if (is_dir(UPLOAD_PATH) && is_writable(UPLOAD_PATH))
                 {
                     # create tmp file for upped file
                     $tmpname = $this->appendFile($fieldname,$filename,$filetype);
@@ -200,7 +200,7 @@ class CUpload {
                 $rc = preg_match_all("/Content-Disposition: form-data; name=\"([^\"]*)\"\r\n\r\n(.*)\r\n/i", $header, $matchesF, PREG_OFFSET_CAPTURE);
                 $fieldname = trim($matchesF[1][0][0]);
                 $fieldvalue = trim($matchesF[2][0][0]);
-                if (!empty($fieldname)) 
+                if (!empty($fieldname))
                 {
                     $this->postvars[$fieldname][] = $fieldvalue;
                 }
@@ -255,7 +255,6 @@ class CUpload {
     }
     return true;
   }
-
 
   function append_progress() {
     if(!$this->complete) {

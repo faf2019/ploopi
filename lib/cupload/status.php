@@ -26,7 +26,7 @@
 include './lib/cupload/Cupload.class.php';
 
 $_sId = $_GET['sid'];
-$uploader = & new CUploadSentinel;
+$uploader = new CUploadSentinel;
 $uploader->__init($_sId);
 if (empty($uploader->error))
 {
