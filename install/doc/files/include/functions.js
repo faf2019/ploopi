@@ -157,8 +157,8 @@ function doc_fckexplorer_set_folder(idfolder, ploopi_op)
 
 function doc_fckexplorer_selectfile(fileUrl)
 {
-	window.opener.SetUrl(fileUrl);
-	window.close() ;
+    window.opener.SetUrl(fileUrl);
+    window.close() ;
 }
 
 function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
@@ -191,7 +191,7 @@ function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
                         else if (ploopi_op == 'doc_selectflash')
                         {
                             fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:var title = ploopi_getelem(\'txtAttTitle\',opener.document); if (title) title.value=\''+ploopi_addslashes(json[i]['name'])+'\';doc_fckexplorer_selectfile(\''+json[i]['url']+'\');">'+
-                            						'<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
+                                                    '<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
                                                     '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
                                                     '<div>'+filesize+' ko</div>'+
                                                 '</a>';
@@ -199,7 +199,7 @@ function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
                         else
                         {
                             fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:var prot = ploopi_getelem(\'cmbLinkProtocol\',opener.document); if (prot) prot.value=\'\';var title = ploopi_getelem(\'txtAttTitle\',opener.document); if (title) title.value=\''+ploopi_addslashes(json[i]['name'])+'\';doc_fckexplorer_selectfile(\''+json[i]['url']+'\');">'+
-                            						'<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
+                                                    '<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
                                                     '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
                                                     '<div>'+filesize+' ko</div>'+
                                                 '</a>';
@@ -210,26 +210,4 @@ function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
             }
         }
     );
-}
-
-function doc_changeshow(currentfolder, typeshow)
-{
-	urlGet = 'admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=';
-	
-	if($('doc_infotypedisplay') == 'undefined' || $('doc_infotypedisplay').innerHTML == 'thumb')
-	{
-		// doc_type_show = 'list';
-		$('doc_type_show').src = './modules/doc/img/ico_show_list.png';
-		urlGet = urlGet+'doc_explorer';
-	}
-	else
-	{
-		// doc_type_show = 'thumb';
-		$('doc_type_show').src = './modules/doc/img/ico_show_thumb.png';
-		urlGet = urlGet+'doc_explorer_thumb';
-	}
-
-	if(typeof(currentfolder) != 'undefined') urlGet = urlGet+'&currentfolder='+currentfolder;
-
-	new Ajax.Updater('doc_explorer',urlGet);
 }

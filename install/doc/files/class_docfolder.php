@@ -36,6 +36,8 @@
  */
 
 include_once './include/classes/data_object.php';
+include_once './include/classes/data_object_collection.php';
+
 
 /**
  * Inclusion de la classe docfile.
@@ -55,19 +57,35 @@ include_once './modules/doc/class_docfile.php';
 
 class docfolder extends data_object
 {
+    private $id_folder = 0;
+    private $parents = '';
+
     /**
      * Constructeur de la classe
      *
      * @return docfolder
      */
 
-    function docfolder()
+    public function __construct()
     {
         parent::data_object('ploopi_mod_doc_folder');
         $this->fields['timestp_create'] = ploopi_createtimestamp();
         $this->fields['timestp_modify'] = $this->fields['timestp_create'];
         $this->fields['parents']=0;
     }
+
+    public function open($intId)
+    {
+        if ($res = parent::open($intId))
+        {
+            $this->id_folder = $this->fields['id_folder'];
+            $this->parents = $this->fields['parents'];
+        }
+
+        return $res;
+    }
+
+
 
     /**
      * Enregistre le dossier.
@@ -78,8 +96,10 @@ class docfolder extends data_object
      *
      * @see doc_countelements
      */
-    function save()
+    public function save()
     {
+        global $db;
+
         if ($this->fields['id_folder'] != 0)
         {
             $docfolder_parent = new docfolder();
@@ -89,9 +109,23 @@ class docfolder extends data_object
             $docfolder_parent->fields['nbelements'] = doc_countelements($this->fields['id_folder']);
             $docfolder_parent->save();
         }
-        else $ret = parent::save();
+        else
+        {
+            $this->fields['parents'] = '0';
+            $ret = parent::save();
+        }
 
-        return ($ret);
+
+        // Cas d'un changement de parent, il faut mettre à jour en cascade tous les enfants
+        if ($this->fields['id_folder'] != $this->id_folder)
+        {
+            $objCol = new data_object_collection('docfolder');
+            $objCol->add_where('parents LIKE %s', "{$this->parents},{$this->fields['id']}%");
+            foreach($objCol->get_objects() as $objChildFolder) $objChildFolder->save();
+
+        }
+
+        return $ret;
     }
 
     /**
@@ -100,7 +134,7 @@ class docfolder extends data_object
      * @return unknown
      */
 
-    function publish()
+    public function publish()
     {
         global $db;
 
@@ -121,11 +155,11 @@ class docfolder extends data_object
      * @return boolean true si me dossier est accessible par l'utilisateur connecté
      */
 
-    function isEnabled()
+    public function isEnabled()
     {
         $booFolderEnabled = false;
 
-        if ($this->fields['id_user'] == $_SESSION['ploopi']['userid'] || ploopi_isadmin()) $booFolderEnabled = true;
+        if ($this->fields['id_user'] == $_SESSION['ploopi']['userid'] || ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN)) $booFolderEnabled = true;
         else
         {
             if ($this->fields['foldertype'] == 'public' && in_array($this->fields['id_workspace'], explode(',', ploopi_viewworkspaces()))) $booFolderEnabled = true;
@@ -144,7 +178,7 @@ class docfolder extends data_object
      * Supprime le contenu (fichiers+dossier)
      */
 
-    function delete()
+    public function delete()
     {
         global $db;
 
@@ -184,7 +218,7 @@ class docfolder extends data_object
      * @return array tableau des utilisateurs abonnés
      */
 
-    function getSubscribers($arrActions)
+    public function getSubscribers($arrActions)
     {
         $arrSubscribers = array();
 

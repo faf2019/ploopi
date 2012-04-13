@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2012 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -61,22 +61,30 @@ $show_options = (
 <form action="<?php echo ploopi_urlencode('admin.php'); ?>" onsubmit="javascript:doc_search_next();return false;" method="post">
 <input type="hidden" name="op" value="search_next">
 <div class="doc_folderinfo">
-    <p style="margin:0;padding:4px 0px 4px 4px;float:left;">
-        <img src="./modules/doc/img/search.png" />
-    </p>
-    <p style="margin:0;padding:4px;float:left;">
-        <strong>Recherche</strong>
-        <br />d'un Fichier
-    </p>
-    <p style="margin:0;padding:4px;float:left;">
-        <strong>Nom / Mots Clés</strong>:
-        <br />
-        <input type="text" class="text" style="width:140px;" id="doc_search_keywords" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']); ?>" />
-        <input type="submit" class="flatbutton" value="Rechercher" />
-    </p>
-    <p style="margin:0;padding:4px;float:left;">
-        <a href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('doc_search_options');"><strong>Afficher/Cacher<br />les options supplémentaires</strong></a>
-    </p>
+    <div style="float:left;height:40px;">
+        <p style="margin:0;padding:4px 0px 4px 4px;">
+            <img src="./modules/doc/img/search.png" />
+        </p>
+    </div>
+
+    <div style="float:left;height:40px;">
+        <p style="margin:0;padding:4px;float:left;">
+            <strong>Recherche</strong>
+            <br />d'un Fichier
+        </p>
+    </div>
+
+    <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+        <p style="margin:0;padding:4px;float:left;">
+            <input type="text" class="text" style="width:140px;" id="doc_search_keywords" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']); ?>" placeholder="Fichier / Mot Clé" />
+            <input type="submit" class="flatbutton" value="Rechercher" />
+        </p>
+    </div>
+    <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+        <p style="margin:0;padding:4px;float:left;">
+            <a href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('doc_search_options');"><strong>Afficher/Cacher<br />les options supplémentaires</strong></a>
+        </p>
+    </div>
 </div>
 <div class="doc_folderinfo" style="display:<?php echo ($show_options) ? 'block' : 'none'; ?>;border-top:1px solid #c0c0c0;" id="doc_search_options">
     <p style="float:left;margin:0;padding:4px;">
@@ -84,7 +92,7 @@ $show_options = (
         <br />
         <?php
         $arrFileType = array();
-        
+
         $select = "SELECT distinct(filetype) FROM ploopi_mimetype";
         $db->query($select);
         while ($row = $db->fetchrow())
@@ -129,7 +137,7 @@ $show_options = (
 
 </form>
 <script type="text/javascript">
-$('doc_search_keywords').focus();
+Event.observe(window, 'load', function() { $('doc_search_keywords').focus(); } )
 </script>
 
 <div class="doc_explorer_main" id="doc_search_result">

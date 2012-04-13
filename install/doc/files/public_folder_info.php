@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2012 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -39,36 +39,26 @@
  * Si $currentfolder est empty (vide ou 0), c'est que l'on est dans le dossier personnel (racine)
  */
 
-$objFolder = new docfolder();
-if (empty($currentfolder) || !$objFolder->open($currentfolder) || !$objFolder->isEnabled()) $currentfolder = 0;
-
 if (!empty($currentfolder))
 {
     $style = ($objFolder->fields['published']) ? '' : 'style="background-color:#ffe0e0;"';
 
     ?>
     <div class="doc_folderinfo" <?php echo $style; ?>>
-        <?php
-        //if (ploopi_isactionallowed(_DOC_ACTION_MODIFYFOLDER) && (!$docfolder->fields['readonly'] || $_SESSION['ploopi']['userid'] == $docfolder->fields['id_user']))
-        //{
-            ?>
-            <div style="float:right;height:40px;">
-                <p style="margin:0;padding:4px 8px;">
-                    <a href="<?php echo ploopi_urlencode("admin.php?op=doc_folderform&currentfolder={$currentfolder}&addfolder=0"); ?>"><img style="border:0;" src="./modules/doc/img/edit.png" /></a>
-                </p>
-            </div>
-            <?php
-        //}
-        ?>
+        <div style="float:right;height:40px;">
+            <p style="margin:0;padding:4px 8px;">
+                <a href="<?php echo ploopi_urlencode("admin.php?op=doc_folderform&currentfolder={$currentfolder}&addfolder=0"); ?>"><img style="border:0;" src="./modules/doc/img/edit.png" /></a>
+            </p>
+        </div>
         <div style="float:left;height:40px;">
             <p style="margin:0;padding:4px 0px 4px 8px;">
-                <img src="./modules/doc/img/folder<?php if ($docfolder->fields['foldertype'] == 'shared') echo '_shared'; ?><?php if ($docfolder->fields['foldertype'] == 'public') echo '_public'; ?><?php if ($docfolder->fields['readonly']) echo '_locked'; ?>.png" />
+                <img src="./modules/doc/img/folder<?php if ($objFolder->fields['foldertype'] == 'shared') echo '_shared'; ?><?php if ($objFolder->fields['foldertype'] == 'public') echo '_public'; ?><?php if ($objFolder->fields['readonly']) echo '_locked'; ?>.png" />
             </p>
         </div>
         <div style="float:left;height:40px;">
             <p style="margin:0;padding:4px 8px;">
-                <strong><?php echo htmlentities($docfolder->fields['name']); ?></strong>
-                <br />Dossier <?php echo $foldertypes[$docfolder->fields['foldertype']]; ?><?php if ($docfolder->fields['readonly']) echo ' en lecture seule'; ?>
+                <strong><?php echo htmlentities($objFolder->fields['name']); ?></strong>
+                <br />Dossier <?php echo $foldertypes[$objFolder->fields['foldertype']]; ?><?php if ($objFolder->fields['readonly']) echo ' protégé'; ?>
             </p>
         </div>
         <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
@@ -78,7 +68,7 @@ if (!empty($currentfolder))
                 <?php
                 include_once './include/classes/user.php';
                 $user = new user();
-                if ($user->open($docfolder->fields['id_user'])) echo "{$user->fields['lastname']} {$user->fields['firstname']}";
+                if ($user->open($objFolder->fields['id_user'])) echo "{$user->fields['lastname']} {$user->fields['firstname']}";
                 else echo '<i>supprimé</i>';
                 ?>
             </p>
@@ -87,7 +77,7 @@ if (!empty($currentfolder))
         /**
          * si dossier perso
          */
-        if ($docfolder->fields['foldertype'] == 'private')
+        if ($objFolder->fields['foldertype'] == 'private')
         {
             ?>
             <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
@@ -102,7 +92,7 @@ if (!empty($currentfolder))
         /**
          * si dossier partagés, affichage des partages
          */
-        if ($docfolder->fields['foldertype'] == 'shared')
+        if ($objFolder->fields['foldertype'] == 'shared')
         {
             ?>
             <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
@@ -147,7 +137,7 @@ if (!empty($currentfolder))
         /**
          * Pour les dossiers non privés, affichage des validateurs s'ils existent
          */
-        if ($docfolder->fields['foldertype'] != 'private')
+        if ($objFolder->fields['foldertype'] != 'private')
         {
             ?>
             <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">

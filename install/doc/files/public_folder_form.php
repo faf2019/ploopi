@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2012 Ovensia
     Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -57,23 +57,12 @@ if (!$addfolder && $docfolder->open($currentfolder)) // modifying
 
     $wf_validator = in_array($docfolder->fields['id_folder'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
 
-    // on vérifie que l'utilisateur a bien le droit de modifier ce dossier (en fonction du statut du dossier et du dossier parent)
-    $docfolder_readonly_content = false;
-
-    if (!empty($docfolder->fields['id_folder']))
-    {
-        $docfolder_parent = new docfolder();
-        $docfolder_parent->open($docfolder->fields['id_folder']);
-        $docfolder_readonly_content = ($docfolder_parent->fields['readonly_content'] && $docfolder_parent->fields['id_user'] != $_SESSION['ploopi']['userid']);
-    }
-
-    $readonly = !(ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_MODIFYFOLDER) && ((!$docfolder_readonly_content && !$docfolder->fields['readonly']) || $docfolder->fields['id_user'] == $_SESSION['ploopi']['userid'])));
-    //$readonly = (($docfolder->fields['readonly'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']) || $docfolder_readonly_content || !ploopi_isactionallowed(_DOC_ACTION_MODIFYFOLDER));
+    $readonly = doc_folder_isreadonly($docfolder->fields, _DOC_ACTION_MODIFYFOLDER);
 
     if ($readonly)
     {
         ?>
-        <div class="doc_fileform_title">Consultation d'un Dossier (lecture seule)</div>
+        <div class="doc_fileform_title">Consultation d'un Dossier (modification interdite)</div>
         <?php
     }
     else
@@ -96,6 +85,7 @@ else // creating
 
     $docfolder->init_description();
     $docfolder->fields['foldertype'] = 'private';
+    $docfolder->fields['id_folder'] = $currentfolder;
     $readonly = false;
     ?>
     <div class="doc_fileform_title">Nouveau Dossier</div>
@@ -133,6 +123,32 @@ else // creating
                     ?>
                 </p>
                 <p>
+                    <label>Dossier parent:</label>
+                    <?php
+                    $strParent = '';
+                    $objDocFolderParent = new docfolder();
+                    if ($objDocFolderParent->open($docfolder->fields['id_folder'])) $strParent = $objDocFolderParent->fields['name'];
+                    elseif ($docfolder->fields['id_folder'] == 0) $strParent = 'Racine';
+
+                    if ($readonly || $addfolder)
+                    {
+                        ?>
+                        <span><a title="Aller au dossier" href="<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$docfolder->fields['id_folder']}"); ?>"><?php echo htmlentities($strParent); ?></a></span>
+                        <?php
+                    }
+                    else
+                    {
+                        ?>
+                        <input type="hidden" name="docfolder_id_folder" id="docfolder_id_folder" value="<? echo $docfolder->fields['id_folder']; ?>" />
+                        <a title="Choisir un autre dossier parent" href="javascript:void(0);" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_folderselect&doc_excludes=<? echo $currentfolder; ?>&doc_id_folder='+$('docfolder_id_folder').value, false), 300, event, 'click', 'doc_popup_folderselect');" class="ploopi_va">
+                            <span style="width:auto;" id="docfolder_id_folder_name"><?php echo htmlentities($strParent); ?></span><img style="margin-left:6px;" src="./modules/doc/img/ico_folder.png" />
+                        </a>
+                        <?php
+                    }
+                    ?>
+                </p>
+
+                <p>
                     <label>Type de Dossier:</label>
                     <?php
                     if ($readonly)
@@ -144,7 +160,7 @@ else // creating
                     else
                     {
                         ?>
-                        <select class="select" name="docfolder_foldertype" onchange="javascript:switch_foldertype(this)" tabindex="2">
+                        <select class="select" name="docfolder_foldertype" onchange="javascript:switch_foldertype(this)" tabindex="3">
                             <?php
                             foreach($foldertypes as $key => $value)
                             {
@@ -159,9 +175,10 @@ else // creating
                     ?>
                 </p>
                 <p>
-                    <label>Conteneur en Lecture seule:</label>
+                    <label>Contenu protégé:<br /><em>(Les autres utilisateurs ne peuvent pas déposer de fichier)</em></label>
                     <?php
                     if ($readonly)
+                    //if ($readonly || ($docfolder->fields['id_user'] != $_SESSION['ploopi']['userid'] && !ploopi_isadmin() && !ploopi_isactionallowed(_DOC_ACTION_ADMIN)))
                     {
                         ?>
                         <span><?php echo ($docfolder->fields['readonly']) ? 'oui' : 'non'; ?></span>
@@ -170,24 +187,7 @@ else // creating
                     else
                     {
                         ?>
-                        <input type="checkbox" name="docfolder_readonly" value="1" <?php if ($docfolder->fields['readonly']) echo 'checked'; ?> tabindex="3">
-                        <?php
-                    }
-                    ?>
-                </p>
-                <p>
-                    <label>Contenu en Lecture seule:</label>
-                    <?php
-                    if ($readonly)
-                    {
-                        ?>
-                        <span><?php echo ($docfolder->fields['readonly_content']) ? 'oui' : 'non'; ?></span>
-                        <?php
-                    }
-                    else
-                    {
-                        ?>
-                        <input type="checkbox" name="docfolder_readonly_content" value="1" <?php if ($docfolder->fields['readonly_content']) echo 'checked'; ?> tabindex="4">
+                        <input type="checkbox" name="docfolder_readonly" value="1" <?php if ($docfolder->fields['readonly']) echo 'checked'; ?> tabindex="4">
                         <?php
                     }
                     ?>
@@ -208,44 +208,48 @@ else // creating
                     else
                     {
                         ?>
-                        <textarea class="text" name="docfolder_description" tabindex="5"><?php echo htmlentities($docfolder->fields['description']); ?></textarea>
+                        <textarea class="text" name="docfolder_description" tabindex="6"><?php echo htmlentities($docfolder->fields['description']); ?></textarea>
                         <?php
                     }
                     ?>
                 </p>
                 <div id="doc_allow_feeds" style="<?php echo ($docfolder->fields['foldertype'] == 'private') ? 'display:none;' : 'display:block;'; ?>">
                     <p>
-                        <label style="width : 200px;">Activer les flux RSS/Atom:</label>
+                        <label>Activer les flux RSS/Atom:</label>
                         <?php
                         if ($readonly)
                         {
                             ?>
-                            <span><?php echo ($docfolder->fields['readonly_content']) ? 'oui' : 'non'; ?></span>
+                            <span><?php echo ($docfolder->fields['allow_feeds']) ? 'oui' : 'non'; ?></span>
                             <?php
                         }
                         else
                         {
                             ?>
-                            <input type="checkbox" name="docfolder_allow_feeds" value="1" <?php if ($docfolder->fields['allow_feeds']) echo 'checked'; ?> onchange="javascript:($('doc_feed_url').style.display == 'none') ? $('doc_feed_url').show() : $('doc_feed_url').hide();" tabindex="6">
+                            <input type="checkbox" name="docfolder_allow_feeds" value="1" <?php if ($docfolder->fields['allow_feeds']) echo 'checked'; ?> onchange="javascript:($('doc_feed_url').style.display == 'none') ? $('doc_feed_url').show() : $('doc_feed_url').hide();" tabindex="7">
                             <?php
                         }
                         ?>
                         <div id="doc_feed_url"  style="<?php echo ($docfolder->fields['allow_feeds']) ? 'display:block;' : 'display:none;'; ?>">
-                            <?php 
+                            <?php
                             if(!empty($docfolder->fields['id']))
                             {
                                 ?>
                                 <p>
                                     <label>RSS :</label>
+                                    <span>
                                     <a title="RSS - <?php echo $docfolder->fields['name']; ?>" href="<?php  echo ploopi_urlrewrite('./backend.php?format=rss&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>" type="application/rss+xml" rel="alternate">
                                         <?php echo _PLOOPI_BASEPATH.ploopi_urlrewrite('/backend.php?format=rss&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>
                                     </a>
+                                    </span>
                                 </p>
-                                <p> 
+                                <p>
                                     <label>Atom :</label>
+                                    <span>
                                     <a title="Atom - <?php echo $docfolder->fields['name']; ?>" href="<?php  echo ploopi_urlrewrite('./backend.php?format=atom&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>" type="application/atom+xml" rel="alternate">
                                         <?php echo _PLOOPI_BASEPATH.ploopi_urlrewrite('/backend.php?format=atom&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>
                                     </a>
+                                    </span>
                                 </p>
                                 <div style="text-align: center; font-size: 0.8em;">nb: les flux ne sont actifs qu'après enregistrement</div>
                                 <?php
@@ -255,7 +259,7 @@ else // creating
                                 ?>
                                 <div style="text-align: center; font-size: 0.8em;">Les flux ne seront affichés qu'après enregistrement</div>
                                 <?php
-                            } 
+                            }
                             ?>
                         </div>
                     </p>
@@ -294,7 +298,7 @@ else // creating
         if (!$readonly)
         {
             ?>
-            <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="7">
+            <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="8">
             <?php
         }
         ?>

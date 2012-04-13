@@ -342,10 +342,10 @@ a.doc_fckexplorer_file:hover {
 }
 
 div.doc_main_thumbs {
-	clear: both;
-	overflow: hidden;
-	margin: 0;
-	padding: 0;
+    clear: both;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 div.doc_thumb {
@@ -362,13 +362,58 @@ div.doc_thumb {
 }
 
 div.doc_thumb:hover {
-	background-color: #C2C2C2;
+    background-color: #C2C2C2;
 }
 
 div.doc_thumb a p {
-	clear: both;
-	padding: 0;
-	margin: 0;
-	width: 100%;
-	text-decoration: none; 
+    clear: both;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    text-decoration: none;
+}
+
+
+
+.doc_hl-content {
+    overflow-x: auto;
+    background-color: #fafafa;
+}
+
+.doc_hl-content table {
+    border-collapse: none;
+    border:0;
+    margin:0;
+    padding:0;
+}
+
+.doc_hl-content table td {
+    border: 0;
+    padding: 4px;
+    vertical-align: top;
+    font-family: monospace;
+}
+
+.doc_hl-content table td.doc_hl-num {
+    text-align: right;
+    border-right: 1px solid #aaa;
+    min-width:30px;
+    background-color:#d0d0d0;
+    color:#888;
+}
+
+.doc_hl-content table td.doc_hl-src {
+    padding-left:10px;
+    width:100%;
+}
+
+.doc_hl-content table pre {
+    padding:0;
+    margin:0;
+    border:0;
+    width:auto;
+}
+
+.doc_draft {
+    background-color:#ffe0e0;
 }

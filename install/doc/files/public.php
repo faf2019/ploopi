@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2012 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -41,9 +41,21 @@ include_once './modules/doc/class_docfile.php';
 include_once './modules/doc/class_docfolder.php';
 include_once './modules/doc/class_docfiledraft.php';
 
+// Met à jour la variable session permettant de savoir si unoconv est disponible (conversion de documents)
+if (is_null(ploopi_getsessionvar('unoconv')))
+{
+    $strUnovconvPath = ploopi_getparam('system_unoconv', _PLOOPI_MODULE_SYSTEM);
+    ploopi_setsessionvar('unoconv', $strUnovconvPath != '' && file_exists($strUnovconvPath));
+}
+
+if (ploopi_getsessionvar('unoconv') === false && is_null(ploopi_getsessionvar('jodconv')))
+{
+    $strJodConverter = ploopi_getparam('system_jodwebservice', _PLOOPI_MODULE_SYSTEM);
+    ploopi_setsessionvar('jodconv', $strJodConverter != '');
+}
+
 $op = (isset($_REQUEST['op'])) ? $_REQUEST['op'] : 'doc_browser';
 $currentfolder = (isset($_REQUEST['currentfolder'])) ? $_REQUEST['currentfolder'] : 0;
-if(!isset($_SESSION['ploopi']['doc'][$_SESSION['ploopi']['moduleid']]['typeshow'])) $_SESSION['ploopi']['doc'][$_SESSION['ploopi']['moduleid']]['typeshow'] = 'list';
 
 // Lien vers document sans folder ?
 // Cas du lien depuis le moteur de recherche global
@@ -57,7 +69,7 @@ if (!empty($_GET['docfile_md5id']) && empty($currentfolder))
 echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
 echo $skin->open_simplebloc('Explorateur de documents');
 
-if (ploopi_getparam('doc_explorer_displaytreeview')) 
+if (ploopi_getparam('doc_explorer_displaytreeview'))
 {
     ?>
     <div id="doc_main">
@@ -66,16 +78,16 @@ if (ploopi_getparam('doc_explorer_displaytreeview'))
                 <?php
                 // Récupération des dossiers visibles
                 $arrFolders = doc_getfolders();
-                
+
                 // Récupération de la structure du treeview
                 $arrTreeview = doc_gettreeview($arrFolders);
-                
-                echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $currentfolder, -1); 
+                echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $currentfolder, -1);
                 ?>
             </div>
         </div>
         <div id="doc_browser">
     <?
+
 }
 else
 {
@@ -121,33 +133,24 @@ else
                     ?>
                     <div class="doc_path">
                         <a title="Aide" href="javascript:void(0);" onclick="javascript:doc_openhelp(event);" style="float:right;"><img src="./modules/doc/img/ico_help.png" /></a>
-                        <a title="Affichage" href="javascript:void(0);" onclick="javascript:doc_changeshow(<?php if(!empty($currentfolder)) echo $currentfolder ?>);" style="float: right;"><img  id="doc_type_show" src="<?php echo (($_SESSION['ploopi']['doc'][$_SESSION['ploopi']['moduleid']]['typeshow'] == 'list') ? './modules/doc/img/ico_show_list.png' : './modules/doc/img/ico_show_thumb.png'); ?>" /></a>                        
                         <?php
-                        //$readonly = false;
                         $docfolder_readonly_content = false;
-                        $docfolder = new docfolder();
-                        if (!empty($currentfolder))
-                        {
-                            if (!$docfolder->open($currentfolder)) $currentfolder = 0;
-                            else
-                            {
-                                //$readonly = ($docfolder->fields['readonly_content'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']);
-                                $docfolder_readonly_content = ($docfolder->fields['readonly_content'] && $docfolder->fields['id_user'] != $_SESSION['ploopi']['userid']);
-                            }
-                        }
+                        $objFolder = new docfolder();
+                        $objFolder->init_description();
+                        if (empty($currentfolder) || !$objFolder->open($currentfolder) || !$objFolder->isEnabled()) $currentfolder = 0;
                         ?>
 
                         <a title="Rechercher un Fichier" href="<?php echo ploopi_urlencode("admin.php?op=doc_search&currentfolder=0"); ?>" style="float:right;"><img src="./modules/doc/img/ico_search.png"></a>
 
                         <?php
-                        if (($currentfolder || !$currentfolder && $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_rootwritable']) && (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_ADDFILE) && !$docfolder_readonly_content)))
+                        if (!doc_folder_contentisreadonly($objFolder->fields, _DOC_ACTION_ADDFILE) && ploopi_getparam('doc_rootwritable'))
                         {
                             ?>
                             <a title="Créer un nouveau fichier" href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfile.png"></a>
                             <?php
                         }
 
-                        if (ploopi_isadmin() || (ploopi_isactionallowed(_DOC_ACTION_ADDFOLDER) && !$docfolder_readonly_content))
+                        if (!doc_folder_contentisreadonly($objFolder->fields, _DOC_ACTION_ADDFOLDER))
                         {
                             ?>
                             <a title="Créer un nouveau Dossier" href="<?php echo ploopi_urlencode("admin.php?op=doc_folderform&currentfolder={$currentfolder}&addfolder=1"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfolder.png"></a>
@@ -168,13 +171,13 @@ else
                         {
                             doc_getshare();
 
-                            $db->query("SELECT id, name, foldertype, readonly, id_user FROM ploopi_mod_doc_folder WHERE id in ({$docfolder->fields['parents']},{$currentfolder}) ORDER BY id");
+                            $db->query("SELECT id, name, foldertype, readonly, id_user FROM ploopi_mod_doc_folder WHERE id in ({$objFolder->fields['parents']},{$currentfolder}) ORDER BY length(parents)");
 
                             while ($row = $db->fetchrow())
                             {
                                 $allowed = false;
 
-                                if ($row['id_user'] == $_SESSION['ploopi']['userid'] || ploopi_isadmin() || $row['foldertype'] == 'public' || ($row['foldertype'] == 'shared' && in_array($row['id'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders']))) $allowed = true;
+                                if ($row['id_user'] == $_SESSION['ploopi']['userid'] || ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN) || $row['foldertype'] == 'public' || ($row['foldertype'] == 'shared' && in_array($row['id'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders']))) $allowed = true;
 
                                 if ($allowed)
                                 {
@@ -215,6 +218,7 @@ else
 
                         case 'doc_fileform':
                             include_once './modules/doc/public_folder_info.php';
+
                             ?>
                             <div id="doc_explorer" class="doc_explorer_main">
                             <?php include_once './modules/doc/public_file_form.php'; ?>
@@ -236,12 +240,7 @@ else
                             include_once './modules/doc/public_folder_info.php';
                             ?>
                             <div id="doc_explorer" class="doc_explorer_main">
-                            <?php
-                            if($_SESSION['ploopi']['doc'][$_SESSION['ploopi']['moduleid']]['typeshow'] == 'list')
-                                include './modules/doc/public_explorer.php';
-                            else
-                                include './modules/doc/public_explorer_thumb.php';
-                            ?>
+                            <?php include './modules/doc/public_explorer.php'; ?>
                             </div>
                             <?php
                         break;
@@ -250,8 +249,8 @@ else
             }
             ?>
         </div>
-    <? 
-    if (ploopi_getparam('doc_explorer_displaytreeview')) 
+    <?
+    if (ploopi_getparam('doc_explorer_displaytreeview'))
     {
         ?>
     </div>

@@ -1,3 +1,20 @@
+== Module DOC - version 4.7.0 ====================================================
+
+2012-04-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+  /!\ Modifications importantes - Version à tester
+
+* Renommage du rôle 'Administrer' en 'Paramétrer'
+* Ajout d'un rôle 'Administrer' permettant d'accéder à tous les documents (comme l'administrateur système)
+* Possibilité de déposer un fichier compressé (ZIP) et de demander au serveur de décompresser le contenu
+* Possibilité de déplacer un dossier (+ impact sur le workflow)
+* Possibilité de déplacer un fichier (+ impact sur le workflow)
+* Possibilité de visualiser un fichier en PDF quelque soit son format bureautique ou image (via JodConverter ou UnoConv, voir les paramètres système)
+* Correction dans l'affichage des dossiers dans l'arborescence des fichiers (affichage des dossiers en cours de validation)
+* Simplification de la gestion des droits d'accès/modification aux dossiers/fichiers / Le propriétaire garde systématiquement les droits de modification/suppression sur ses données.
+* Notion de "Lecture seule" remplacée par "Protégé"
+* Suppression de la vue "miniatures"
+
 == Module DOC - version 4.6.4b ====================================================
 
 2011-08-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -14,7 +31,7 @@
 
 2010-09-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Amélioration : mise en page du menu principal (block) avec l'affichage des icones 
+ * Amélioration : mise en page du menu principal (block) avec l'affichage des icones
 
 == Module DOC - version 4.6.3e ====================================================
 
@@ -26,19 +43,19 @@
 
 2010-03-29  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
- * Correction : Les liens étaient incorrects avec un ploopi dans un sous rep. 
+ * Correction : Les liens étaient incorrects avec un ploopi dans un sous rep.
 
 == Module DOC - version 4.6.3c ====================================================
 
 2010-03-26  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
- * Correction : bug dans les flux RSS & ATOM, le lien dans l'entete du flux n'était pas renseigné correctement. 
+ * Correction : bug dans les flux RSS & ATOM, le lien dans l'entete du flux n'était pas renseigné correctement.
 
 == Module DOC - version 4.6.3b ====================================================
 
 2010-03-23  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
- * Modification : Suppression du parametre pour URL du webservice JODConverter (paramètre déplacé vers les param. "systeme") 
+ * Modification : Suppression du parametre pour URL du webservice JODConverter (paramètre déplacé vers les param. "systeme")
  * Correction : liens de telechargement généré depuis FckEditor (WebEdit) erroné suite modif pour vignette
 
 == Module DOC - version 4.6.3a ====================================================
@@ -138,7 +155,7 @@
 
  * Ajout en administration d'une fonction de nettoyage du cache des vignettes PAR ESPACE ET MODULE
 
- * Correction d'un bug : l'id cache des vignettes en brouillon était erroné 
+ * Correction d'un bug : l'id cache des vignettes en brouillon était erroné
  * Correction d'un bug : Les paramètres (ex. onglets selectionné) était en session sans differentiation d'id module
 
 == Module DOC - version 4.6.0 =====================================================
@@ -171,60 +188,60 @@
 
 2009-09-22  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
- * Ajout de la méthode getmeta() a la classe docfile 
+ * Ajout de la méthode getmeta() a la classe docfile
 
 == Module DOC - version 4.5.0f =====================================================
 
 2009-09-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug empêchant l'ouverture d'un fichier SWF en frontoffice, ajout d'un rewrite d'url pour les documents de type media (swf/img) 
+ * Correction d'un bug empêchant l'ouverture d'un fichier SWF en frontoffice, ajout d'un rewrite d'url pour les documents de type media (swf/img)
 
 == Module DOC - version 4.5.0e =====================================================
 
 2009-09-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug empêchant la prise en compte des partages/validateurs à la création d'un dossier 
- * Correction d'un bug empêchant la prise en compte des groupes de validateurs 
+ * Correction d'un bug empêchant la prise en compte des partages/validateurs à la création d'un dossier
+ * Correction d'un bug empêchant la prise en compte des groupes de validateurs
 
 == Module DOC - version 4.5.0d =====================================================
 
 2009-09-08  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
- * Correction d'un bug. Les META n'étaient pas supprimés à la suppression des fichiers. 
+ * Correction d'un bug. Les META n'étaient pas supprimés à la suppression des fichiers.
 
 == Module DOC - version 4.5.0c =====================================================
 
 2009-09-04  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
- * Correction d'une erreur. La boucle de décompression pouvait s'executer meme si le fichier transmis était erroné. 
+ * Correction d'une erreur. La boucle de décompression pouvait s'executer meme si le fichier transmis était erroné.
 
 == Module DOC - version 4.5.0b =====================================================
 
 2009-09-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout d'un paramètre permettant de désactiver le treeview dans l'explorateur de documents  
+ * Ajout d'un paramètre permettant de désactiver le treeview dans l'explorateur de documents
  * Affichage de l'url publique du fichier de manière plus visible
 
 == Module DOC - version 4.5.0 =====================================================
 
 2009-09-02  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
- * Ajout de la fonction d'upload des fichiers type zip avec décompression automatique dans le répertoire choisi  
+ * Ajout de la fonction d'upload des fichiers type zip avec décompression automatique dans le répertoire choisi
 
 == Module DOC - version 4.4.3b =====================================================
 
 2009-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'une erreur au niveau de l'explorateur de fichier pour FCK Editor : ne prenait pas en compte les fichiers créés dans des espace de travail différents de l'espace courant 
+ * Correction d'une erreur au niveau de l'explorateur de fichier pour FCK Editor : ne prenait pas en compte les fichiers créés dans des espace de travail différents de l'espace courant
 
 == Module DOC - version 4.4.3 =====================================================
 
 2009-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Gestion des partages par groupes 
- * Gestion des validateurs par groupes 
+ * Gestion des partages par groupes
+ * Gestion des validateurs par groupes
  * Correction sur des appels par référence erronés
- 
+
 == Module DOC - version 4.4.2d =====================================================
 
 2009-06-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -251,9 +268,9 @@
 
  * Déplacement de jw_player et swfobject au niveau du dossier ./lib de Ploopi
  * Modifications au niveau de l'intégration des règles de réécriture (Modification Ploopi) :
- 
+
   * Ajout d'une fonction doc_getrewriterules() qui retourne la liste des règles utilisées par le module
-  * Ajout d'un fichier ./include/rewrite.php permettant de gérer le rewriting inverse 
+  * Ajout d'un fichier ./include/rewrite.php permettant de gérer le rewriting inverse
 
 == Module DOC - version 4.4.1 =====================================================
 
@@ -261,21 +278,21 @@
 
  * Ajout d'un fichier include/rewrite.php permettant d'effectuer le rewriting inverse sur les urls de téléchargement des documents
  * Correction d'un bug à la suppression d'un dossier
- 
+
 == Module DOC - version 4.4.0b =====================================================
 
 2009-05-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction d'un bug (variable non définie) lors du téléchargement d'un document
- * Corrections visuelles sur l'interface de recherche 
+ * Corrections visuelles sur l'interface de recherche
 
 == Module DOC - version 4.4.0 =====================================================
 
 2009-04-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Ajout d'un "treeview" optionnel pour la navigation dans les dossiers
- * Mise à jour ergonomique (mise en conformité de l'ensemble des modules) 
- 
+ * Mise à jour ergonomique (mise en conformité de l'ensemble des modules)
+
 == Module DOC - version 4.3.5 =====================================================
 
 2009-04-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -287,7 +304,7 @@
 2009-03-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Meilleure vérification de l'existence des fichiers/dossiers avant l'exécution d'une action (sauvegarde/enregistrement)
- 
+
 == Module DOC - version 4.3.3 =====================================================
 
 2009-03-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -321,7 +338,7 @@
  * Ajout d'un message d'erreur lors de l'ouverture d'un fichier inexistant
  * Correction d'une erreur lors de l'indexation d'un document, ne prenait pas en compte le propriétaire du document
  * Amélioration de la réindexation complète : suppression des fichiers "fantôme"
- * Correction d'un bug dans le lien "recherche" du bloc "menu" du module  
+ * Correction d'un bug dans le lien "recherche" du bloc "menu" du module
  * Correction d'un bug de visibilité des fichiers pour un administrateur dans la recherche interne au module
 
 == Module DOC - version 4.2.0.1 =====================================================
@@ -338,7 +355,7 @@
  * Correction d'un bug à l'affichage du lien d'héritage d'un abonnement
  * Ajout d'un paramètre permettant de rendre optionnel le dépôt de documents dans la racine
  * L'administrateur système peut tout voir/modifier (y compris les documents du dossier racine)
- * Le validateur d'un dossier a les mêmes droits sur le dossier qu'un administrateur système  
+ * Le validateur d'un dossier a les mêmes droits sur le dossier qu'un administrateur système
  * Ajout d'une visionneuse de fichiers :
   * bureautiques : Adobe PDF, MS Word DOC, MS Excel XLS, MS PowerPoint PPT, OpenOffice ODT, ODS, ODP, ODG
   * multimédia : MP3, MP4, AAC, FLV (lecteur flash)
@@ -384,7 +401,7 @@
  * Meilleure gestion à l'affichage des utilisateurs ou espace de travail supprimés
  * Un abonné n'est averti d'une opération sur un élément que s'il peut accéder à cet élément (il n'est pas averti lors de la création d'un dossier privé ou qui ne lui est pas partagé)
  * Paramétrage possible des colonnes à afficher dans l'explorateur de documents et dans la recherche
- 
+
 == Module DOC - version 3.98 =====================================================
 
 2009-01-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -395,7 +412,7 @@
 
 2008-11-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Modification des liens de confirmation javascript pour IE6 
+ * Modification des liens de confirmation javascript pour IE6
  * Suppression du contrôle de taille des fichiers lors de l'utilisation du mode de fichier "serveur"
 
 == Module DOC - version 3.96 =====================================================
@@ -487,19 +504,19 @@
 
  * Correctif de sécurité sur op.php suite à modification sur op.php principal
  * Uniformisation nom/prénom, suppression de l'affichage du login
- 
+
 == Module DOC - version 3.77 ====================================================
 
 2008-04-14  Stéphane Escaich  <stephane@ovensia.fr>
 
  * Possibilité d'envoyer un ticket depuis un document (le document est alors lié au ticket)
- 
+
 == Module DOC - version 3.76 ====================================================
 
 2008-04-08  Stéphane Escaich  <stephane@ovensia.fr>
 
  * Compression des fichiers JS/CSS
- 
+
 == Module DOC - version 3.75 ====================================================
 
 2008-04-06  Stéphane Escaich  <stephane@ovensia.fr>
@@ -524,7 +541,7 @@
 2008-03-04  Stéphane Escaich  <stephane@ovensia.fr>
 
  * Ajout du sytème d'abonnement sur les actions (ajout/modif/suppression) des dossiers et des fichiers
- 
+
  == Module DOC - version 3.6 ====================================================
 
 2008-02-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

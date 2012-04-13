@@ -60,7 +60,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
     $arrWhere['folder'] = "f.id_folder = 0";
 
     // Utilisateur "standard"
-    if (!ploopi_isadmin())
+    if (!ploopi_isadmin() && !ploopi_isactionallowed(_DOC_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
     {
         // Publié (ou propriétaire)
         $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$_SESSION['ploopi']['userid']})";
@@ -138,7 +138,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_displaysearch'])
  * Menu 'Administration'
  */
 
-if (ploopi_isactionallowed(0, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
+if (ploopi_isactionallowed(_DOC_ACTION_PARAM, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
 {
     $block->addmenu('<b>'._DOC_LABEL_ADMIN.'</b>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin');
 }

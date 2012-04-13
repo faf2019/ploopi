@@ -37,7 +37,6 @@
 
 include_once './include/functions/system.php';
 $arrModules = ploopi_getmoduleid('doc', false);
-
 if (empty($arrModules))
 {
     ploopi_die('<div class="error">Module DOC absent</div>');

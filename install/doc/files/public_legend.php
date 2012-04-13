@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2012 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -40,52 +40,46 @@
 ob_start();
 ?>
 <div style="padding:4px;">
-    <p class="ploopi_va">
+    <p class="ploopi_va" style="margin:2px;">
         <img src="./modules/doc/img/ico_home.png"><span style="margin-left:4px;">Racine</span>
     </p>
-    <p class="ploopi_va">
+    <p class="ploopi_va" style="margin:2px;">
         <img src="./modules/doc/img/ico_newfolder.png"><span style="margin-left:4px;">Nouveau Dossier</span>
     </p>
-    <p class="ploopi_va">
+    <p class="ploopi_va" style="margin:2px;">
         <img src="./modules/doc/img/ico_newfile.png"><span style="margin-left:4px;">Nouveau Fichier</span>
     </p>
-    <p class="ploopi_va">
+    <p class="ploopi_va" style="margin:2px;">
         <img src="./modules/doc/img/ico_search.png"><span style="margin-left:4px;">Rechercher</span>
     </p>
-    <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_show_list.png"><span style="margin-left:4px;">Vue en liste</span>
-    </p>
-    <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_show_thumb.png"><span style="margin-left:4px;">Vue en icônes</span>
-    </p>
-    <p class="ploopi_va">
+    <p class="ploopi_va" style="margin:2px;">
         <img src="./modules/doc/img/ico_download.png"><span style="margin-left:4px;">Télécharger</span>
     </p>
-    <p class="ploopi_va">
+    <p class="ploopi_va" style="margin:2px;">
         <img src="./modules/doc/img/ico_download_zip.png"><span style="margin-left:4px;">Télécharger (ZIP)</span>
     </p>
-    <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_modify.png"><span style="margin-left:4px;">Modifier</span>
+    <p class="ploopi_va" style="margin:2px;">
+        <img src="./modules/doc/img/ico_modify.png"><span style="margin-left:4px;">Voir/Modifier</span>
     </p>
-    <p class="ploopi_va">
+    <p class="ploopi_va" style="margin:2px;">
         <img src="./modules/doc/img/ico_trash.png"><span style="margin-left:4px;">Supprimer</span>
     </p>
-    <p class="ploopi_va">
+    <p class="ploopi_va" style="margin:2px;">
         <img src="./modules/doc/img/ico_validate.png"><span style="margin-left:4px;">Valider</span>
     </p>
-    <p class="ploopi_va">
+    <p class="ploopi_va" style="margin:2px;">
         <img src="./modules/doc/img/ico_folder_public.png"><span style="margin-left:4px;">Dossier Public</span>
     </p>
-    <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_folder_public_locked.png"><span style="margin-left:4px;">Dossier Public en Lecture Seule</span>
+    <p class="ploopi_va" style="margin:2px;">
+        <img src="./modules/doc/img/ico_folder_public_locked.png"><span style="margin-left:4px;">Dossier Public protégé</span>
     </p>
-    <p class="ploopi_va">
+    <p class="ploopi_va" style="margin:2px;">
         <img src="./modules/doc/img/ico_folder_shared.png"><span style="margin-left:4px;">Dossier Partagé</span>
     </p>
-    <p class="ploopi_va">
-        <img src="./modules/doc/img/ico_folder_shared_locked.png"><span style="margin-left:4px;">Dossier Partagé en Lecture Seule</span>
+    <p class="ploopi_va" style="margin:2px;">
+        <img src="./modules/doc/img/ico_folder_shared_locked.png"><span style="margin-left:4px;">Dossier Partagé protégé</span>
     </p>
-    <p class="ploopi_va" style="background-color:#ffe0e0;padding:2px 0;margin-top:2px;">
+    <p class="ploopi_va" style="background-color:#ffe0e0;padding:2px 0;margin:2px;">
         <span style="margin-left:4px;">Dossier ou fichier à valider</span>
     </p>
 </div>

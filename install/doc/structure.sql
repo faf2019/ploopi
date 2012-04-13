@@ -155,3 +155,8 @@ INSERT INTO `ploopi_mod_doc_parser` (`id`, `label`, `path`, `extension`) VALUES
 (14, 'OpenOffice 2.0 Calc', 'bin/oo2txt.sh %f', 'ods'),
 (15, 'OpenOffice 2.0 Impress', 'bin/oo2txt.sh %f', 'odp'),
 (16, 'CSV', 'cat %f', 'csv');
+
+
+UPDATE `ploopi_mod_doc_folder` SET `readonly` = `readonly_content`;
+ALTER TABLE `ploopi_mod_doc_folder` DROP `readonly_content`;
+UPDATE `ploopi_mod_doc_file` fi, `ploopi_mod_doc_folder` fo SET fi.`readonly` = fo.`readonly` WHERE fi.`id_folder` = fo.`id`;

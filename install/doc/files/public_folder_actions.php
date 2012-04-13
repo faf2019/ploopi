@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2012 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -42,17 +42,18 @@
 ?>
 <div style="border-bottom:1px solid #c0c0c0;">
 <?php
-if ($docfolder->fields['foldertype'] != 'private')
+if ($objFolder->fields['foldertype'] != 'private')
 {
-    $arrAllowedActions = array( _DOC_ACTION_ADDFOLDER,
-                                _DOC_ACTION_ADDFILE,
-                                _DOC_ACTION_MODIFYFOLDER,
-                                _DOC_ACTION_MODIFYFILE,
-                                _DOC_ACTION_DELETEFOLDER,
-                                _DOC_ACTION_DELETEFILE
-                             );
+    $arrAllowedActions = array(
+        _DOC_ACTION_ADDFOLDER,
+        _DOC_ACTION_ADDFILE,
+        _DOC_ACTION_MODIFYFOLDER,
+        _DOC_ACTION_MODIFYFILE,
+        _DOC_ACTION_DELETEFOLDER,
+        _DOC_ACTION_DELETEFILE
+    );
 
-    $parents = explode(',', $docfolder->fields['parents']);
+    $parents = explode(',', $objFolder->fields['parents']);
     for ($i = 0; $i < sizeof($parents); $i++)
     {
         if (ploopi_subscription_subscribed(_DOC_OBJECT_FOLDER, $parents[$i]))
@@ -66,7 +67,8 @@ if ($docfolder->fields['foldertype'] != 'private')
             <?php
         }
     }
-    ploopi_subscription(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], $arrAllowedActions);
+
+    ploopi_subscription(_DOC_OBJECT_FOLDER, $objFolder->fields['id'], $arrAllowedActions);
 }
 ?>
 </div>
@@ -74,4 +76,4 @@ if ($docfolder->fields['foldertype'] != 'private')
 /**
  * Affichage du bloc d'annotations
  */
-ploopi_annotation(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], $docfolder->fields['name']); ?>
+ploopi_annotation(_DOC_OBJECT_FOLDER, $objFolder->fields['id'], $objFolder->fields['name']); ?>

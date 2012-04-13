@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>doc</label>
-        <version>4.6.4b</version>
+        <version>4.7.0</version>
         <author>Ovensia / HeXad</author>
-        <date>20110808000000</date>
+        <date>20120413000000</date>
         <description>Gestion de Documents</description>
         <paramtype>
             <name>doc_viewfoldersinblock</name>
@@ -199,7 +199,7 @@
                 <displayed_value>non</displayed_value>
             </paramchoice>
         </paramtype>
-        
+
         <action>
             <id_action>1</id_action>
             <label>Ajouter un Dossier</label>
@@ -235,8 +235,12 @@
             <label>Gérer les Validateurs</label>
         </action>
         <action>
+            <id_action>9</id_action>
+            <label>Administrer (accès à tous les documents)</label>
+        </action>
+        <action>
             <id_action>99</id_action>
-            <label>Administrer (parsers, indexation, stats)</label>
+            <label>Paramétrer (parsers, indexation, stats)</label>
         </action>
     </moduletype>
 </ploopi>

@@ -66,7 +66,7 @@ class docfile extends data_object
      *
      * @return docfile
      */
-    
+
     function docfile()
     {
         parent::data_object('ploopi_mod_doc_file');
@@ -85,12 +85,12 @@ class docfile extends data_object
     }
 
     /**
-     * Ouvre un document avec son identifiant MD5
+     * Ouvre un document
      *
      * @param unknown_type $id
      * @return unknown
      */
-    
+
     function open($id)
     {
         $res = parent::open($id);
@@ -104,7 +104,7 @@ class docfile extends data_object
      * @param string $md5id identifiant MD5 du document
      * @return boolean true si le document a été ouvert
      */
-    
+
     function openmd5($md5id)
     {
         global $db;
@@ -124,13 +124,13 @@ class docfile extends data_object
      * @see _DOC_ERROR_MAXFILESIZE
      * @see _PLOOPI_MAXFILESIZE
      */
-    
+
     function save()
     {
         global $db;
 
         $booParse = false;
-        
+
         $error = 0;
         if (isset($this->fields['folder'])) unset($this->fields['folder']);
 
@@ -303,11 +303,11 @@ class docfile extends data_object
     /**
      * Supprime le document/fichier
      */
-    
+
     function delete()
     {
         global $db;
-        
+
         $filepath = $this->getfilepath();
         if (file_exists($filepath)) @unlink($filepath);
 
@@ -323,12 +323,12 @@ class docfile extends data_object
         }
 
         ploopi_search_remove_index(_DOC_OBJECT_FILE, $this->fields['md5id']);
-        
+
         // delete existing meta for current file
         $db->query("DELETE FROM ploopi_mod_doc_meta WHERE id_file = {$this->fields['id']}");
-        
+
         parent::delete();
-        
+
         if ($this->fields['id_folder'] != 0)
         {
             $docfolder_parent = new docfolder();
@@ -339,13 +339,33 @@ class docfile extends data_object
     }
 
     /**
+     * Déplace un fichier vers un brouillon
+     */
+
+    function movetodraft()
+    {
+        // Création d'un draft à partir du fichier d'origine
+        $docfiledraft = new docfiledraft();
+
+        foreach(array('name', 'description', 'timestp_create', 'size', 'readonly', 'extension', 'id_folder', 'id_user_modify', 'id_user', 'id_workspace', 'id_module') as $key)
+            $docfiledraft->fields[$key] = $this->fields[$key];
+
+        $docfiledraft->tmpfile = $this->getfilepath();
+        $docfiledraft->save();
+
+        $this->delete();
+
+        return $docfiledraft;
+    }
+
+    /**
      * Retourne le chemin physique de stockage des documents et le crée s'il n'existe pas
      *
      * @return string chemin physique de stockage des documents
      *
      * @see doc_getpath
      */
-    
+
     function getbasepath()
     {
         $basepath = doc_getpath($this->fields['id_module'])._PLOOPI_SEP.substr($this->fields['timestp_create'],0,8);
@@ -408,7 +428,7 @@ class docfile extends data_object
     /**
      * Crée un historique à partir de ce document
      */
-    
+
     function createhistory()
     {
         include_once './modules/doc/class_docfilehistory.php';
@@ -448,7 +468,7 @@ class docfile extends data_object
 
         return array();
     }
-    
+
     /**
      * Indexe le document
      *
@@ -459,7 +479,7 @@ class docfile extends data_object
      * @see _DOC_OBJECT_FILE
      * @see ploopi_search_create_index
      */
-    
+
     function parse($debug = false)
     {
         include_once './modules/doc/class_docmeta.php';
@@ -639,5 +659,4 @@ class docfile extends data_object
 
         return($res_txt);
     }
-
 }

@@ -42,7 +42,7 @@ ploopi_init_module('doc');
  * On vérifie que l'utilisateur est administrateur du module
  */
 
-if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
+if (ploopi_isactionallowed(_DOC_ACTION_PARAM))
 {
     $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
@@ -60,16 +60,16 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
             'title' => _DOC_TAB_TITLE_INDEX,
             'url' => "admin.php?docTabItem="._DOC_TAB_INDEX
         );
-        
+
     if(_PLOOPI_USE_CACHE)
-    {        
+    {
         $tabs[_DOC_TAB_CLEAN_CACHE] =
             array(
                 'title' => _DOC_TAB_TITLE_CLEAN_CACHE,
                 'url' => "admin.php?docTabItem="._DOC_TAB_CLEAN_CACHE
             );
     }
-        
+
     $tabs[_DOC_TAB_STATS] =
         array(
             'title' => _DOC_TAB_TITLE_STATS,
@@ -132,7 +132,7 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
         case _DOC_TAB_STATS:
             include './modules/doc/admin_docparser_stats.php';
         break;
-        
+
         case _DOC_TAB_CLEAN_CACHE:
             switch($op)
             {
@@ -142,7 +142,7 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
                     $objCache->set_groupe('module_doc_'.$_SESSION['ploopi']['workspaceid'].'_'.$_SESSION['ploopi']['moduleid']);
                     $objCache->clean();
                     unset($objCache);
-                    
+
                     echo $skin->open_simplebloc(_DOC_TAB_TITLE_CLEAN_CACHE);
                     ?>
                     <div style="padding:4px;">
@@ -151,14 +151,14 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
                     <?php
                     echo $skin->close_simplebloc();
                 break;
-                    
+
                 case 'doc_clean_feeds':
                     include_once './include/classes/cache.php';
                     $objCache = new ploopi_cache(0);
                     $objCache->set_groupe('module_doc_feeds_'.$_SESSION['ploopi']['workspaceid'].'_'.$_SESSION['ploopi']['moduleid']);
                     $objCache->clean();
                     unset($objCache);
-                    
+
                     echo $skin->open_simplebloc(_DOC_TAB_TITLE_CLEAN_CACHE);
                     ?>
                     <div style="padding:4px;">
@@ -182,7 +182,7 @@ if (ploopi_isactionallowed(_DOC_ACTION_ADMIN))
                 break;
             }
             break;
-        
+
     }
 }
 ?>
