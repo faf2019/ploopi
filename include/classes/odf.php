@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2012 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -408,6 +408,7 @@ class odf_parser
 
     /**
      * Nettoie une chaîne (décode les entités html) et l'encode en UTF8
+     * + traitement des URLs
      *
      * @param string $value chaîne brute
      * @return string chaîne "nettoyée"
@@ -415,7 +416,40 @@ class odf_parser
      */
     protected static function clean_var($value)
     {
-        return ploopi_xmlentities(html_entity_decode(iconv('ISO-8859-15', 'UTF-8', $value), ENT_QUOTES, 'UTF-8'), true);
+        $res = '';
+
+        // Extraction des liens pour traitement spécifique
+        preg_match_all('@<a[^>]*href="([^"]*)"[^>]*>([^<]*)</a>@i', $value, $arrMatches, PREG_OFFSET_CAPTURE);
+
+        // Contenu sans liens,
+        if (empty($arrMatches[0])) $res = self::_clean_var($value);
+        // Contenu avec des liens
+        else
+        {
+            $prev = 0;
+            // Pour chaque lien trouvé
+            foreach($arrMatches[0] as $key => $row)
+            {
+                $res .= self::_clean_var(substr($value, $prev, $row[1]));
+                $res .= '<text:a xlink:type="simple" xlink:href="'.$arrMatches[1][$key][0].'">'.self::_clean_var($arrMatches[2][$key][0]).'</text:a>';
+            }
+
+            $res .= self::_clean_var(substr($value, strlen($row[0])+$row[1]));
+        }
+
+        return $res;
+    }
+
+    /**
+     * Nettoie une chaîne (décode les entités html) et l'encode en UTF8
+     *
+     * @param string $value chaîne brute
+     * @return string chaîne "nettoyée"
+     *
+     */
+    private static function _clean_var($value)
+    {
+        return ploopi_xmlentities(html_entity_decode(iconv('ISO-8859-15', 'UTF-8', strip_tags($value)), ENT_QUOTES, 'UTF-8'), true);
     }
 
     /**
@@ -467,9 +501,7 @@ class odf_parser
 
         foreach($block as $k => $v)
             foreach($v as $key => $value)
-            {
                 $this->blockvars[$blockname][$k]['{'.$key.'}'] = self::clean_var($value);
-            }
     }
 
     /**
