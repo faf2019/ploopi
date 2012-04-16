@@ -199,7 +199,7 @@ switch($ploopi_op)
             $documentsfolder->save();
 
             if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
-            if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefolder', $documentsfolder->fields['name']);
+            if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefolder', $documentsfolder);
         }
         ?>
         <script type="text/javascript">
@@ -312,10 +312,10 @@ switch($ploopi_op)
             $documentsfile->fields['size'] = $_FILES['documentsfile_file']['size'];
         }
 
-        if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
-        if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefile', $_FILES['documentsfile_file']['name']);
-
         $error = $documentsfile->save();
+        
+        if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
+        if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefile', $documentsfile);
         ?>
         <script type="text/javascript">
             window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&mode={$_SESSION['documents']['mode']}"); ?>', '<?php echo $_SESSION['documents']['documents_id']; ?>');
@@ -438,7 +438,7 @@ switch($ploopi_op)
     	if (!empty($_GET['documentsfile_id']) && $documentsfile->openmd5($_GET['documentsfile_id']))
         {
             if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
-            if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefile', $documentsfile->fields['name']);
+            if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefile', $documentsfile);
 
             $documentsfile->delete();
         }
@@ -456,7 +456,7 @@ switch($ploopi_op)
     	if (!empty($_GET['documentsfolder_id']) && $documentsfolder->openmd5($_GET['documentsfolder_id']))
         {
             if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
-            if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefolder', $documentsfolder->fields['name']);
+            if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefolder', $documentsfolder);
 
             $documentsfolder->delete();
         }
