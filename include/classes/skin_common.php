@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2012 Ovensia
     Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -312,6 +312,7 @@ class skin_common
         $arrDefaultOptions = array(
             'intWidth' => 200,
             'booCentered' => true,
+            'booClosable' => true,
             'intPosx' => 0,
             'intPosy' => 0,
             'stringJsBeforeStart' => '',
@@ -322,13 +323,15 @@ class skin_common
 
         $strOptionAnchor = ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_focus_popup']) ? "document.location.href = '#anchor_{$popupid}';" : '';
 
+        $strClosable = $arrOptions['booClosable'] ? '<img alt="Fermer" title="Fermer le popup" id="close_'.$popupid.'" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">' : '';
+
         $res =  '
                 <div id="'.$popupid.'" style="display:none;">
                     <div class="simplebloc" style="margin:0;">
                         <a name="anchor_'.$popupid.'"></a>
                         <div class="simplebloc_title">
                             <div class="simplebloc_titleleft">
-                                <img alt="Fermer" title="Fermer le popup" id="close_'.$popupid.'" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
+                                '.$strClosable.'
                                 <div style="overflow:auto;cursor:move;" id="handle_'.$popupid.'">'.$title.'</div>
                             </div>
                         </div>
@@ -871,7 +874,7 @@ class skin_common
                     if (!$is_node_last)
                     {
                         $type_node .= 'bottom';
-                        $bg = "background-image:url({$_SESSION['ploopi']['template_path']}/img/treeview/line.png);background-repeat:repeat-y;";
+                        $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/treeview/line.png) 0 0 repeat-y;";
                     }
 
                     $n_link = (empty($node['node_link'])) ? 'javascript:void(0);' : $node['node_link'];
@@ -894,9 +897,6 @@ class skin_common
                 // lien sur le libellé
                 $link = (empty($node['link'])) ? 'javascript:void(0);' : $node['link'];
 
-                // Classe css additionnelle
-                $class = (empty($node['class'])) ? '' : ' '.$node['class'];
-
                 // onclick sur le libellé
                 $onclick = (empty($node['onclick'])) ? '' : 'onclick="'.$node['onclick'].';"';
 
@@ -905,7 +905,7 @@ class skin_common
 
                 // génération du code html du noeud courant
                 $html .= "
-                    <div class=\"treeview_node{$class}\" id=\"treeview_node{$node['id']}\" style=\"{$bg}\">
+                    <div class=\"treeview_node\" id=\"treeview_node{$node['id']}\" style=\"{$bg}\">
                         <div>
                             {$node_link}<img src=\"{$node['icon']}\" />
                             <div style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;font-weight:{$style_sel};\">
@@ -1035,5 +1035,5 @@ class skin_common
 
         return $strContent;
     }
-    }
+}
 ?>
