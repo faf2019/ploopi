@@ -432,10 +432,8 @@ class odf_parser
             foreach($arrMatches[0] as $key => $row)
             {
                 $res .= self::_clean_var(substr($value, $prev, $row[1]));
-                $res .= '<text:a xlink:type="simple" xlink:href="http://www.google.fr?toto=tata&amp;titi=popo">'.self::_clean_var($arrMatches[2][$key][0]).'</text:a>';
+                $res .= '<text:a xlink:type="simple" xlink:href="'.$arrMatches[1][$key][0].'">'.self::_clean_var($arrMatches[2][$key][0]).'</text:a>';
             }
-
-            //http://venice/projets/ploopi_synergi/admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id=68&attachement=1&ploopi_env=1%2c2%2c2%2cpublic
 
             $res .= self::_clean_var(substr($value, strlen($row[0])+$row[1]));
         }
