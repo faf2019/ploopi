@@ -96,8 +96,9 @@ class odf_varparser
     private function tag_open($parser, $tag, $attribs)
     {
         // construction de la chaine de paramètres
+        // + un petit hack pour gérer correctement les urls
         $params = array();
-        foreach($attribs as $param => $value) $params[] = "{$param}=\"{$value}\"";
+        foreach($attribs as $param => $value) $params[] = "{$param}=\"".str_replace('&', '&amp;', $value)."\"";
         $params_str = implode(' ',$params);
 
         // on remplit la chaine XML de sortie
@@ -228,7 +229,7 @@ class odf_blockparser
             case 'table:table':
                 // on augmente de 1 la profondeur des tableaux imbriqués
                 reset($this->blocktemplates);
-                foreach($this->blocktemplates as $blockname => &$tpl) if (!$tpl['end']) $tpl['depth']++;
+                foreach($this->blocktemplates as $blockname => $tpl) if (!$tpl['end']) $this->blocktemplates[$blockname]['depth']++;
 
                 if (isset($attribs['table:name']) && isset($this->blockvars[$attribs['table:name']])) // si ce tableau correpond à un bloc
                 {
@@ -250,11 +251,11 @@ class odf_blockparser
         $keep_content = true;
 
         reset($this->blocktemplates);
-        foreach($this->blocktemplates as $blockname => &$tpl)
+        foreach($this->blocktemplates as $blockname => $tpl)
         {
             if (!$tpl['end'])
             {
-                $tpl['content'] .= ($params_str == '') ? "<{$tag}>" : "<{$tag} {$params_str}>";
+                $this->blocktemplates[$blockname]['content'] .= ($params_str == '') ? "<{$tag}>" : "<{$tag} {$params_str}>";
                 $keep_content = false;
             }
         }
@@ -431,8 +432,10 @@ class odf_parser
             foreach($arrMatches[0] as $key => $row)
             {
                 $res .= self::_clean_var(substr($value, $prev, $row[1]));
-                $res .= '<text:a xlink:type="simple" xlink:href="'.$arrMatches[1][$key][0].'">'.self::_clean_var($arrMatches[2][$key][0]).'</text:a>';
+                $res .= '<text:a xlink:type="simple" xlink:href="http://www.google.fr?toto=tata&amp;titi=popo">'.self::_clean_var($arrMatches[2][$key][0]).'</text:a>';
             }
+
+            //http://venice/projets/ploopi_synergi/admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id=68&attachement=1&ploopi_env=1%2c2%2c2%2cpublic
 
             $res .= self::_clean_var(substr($value, strlen($row[0])+$row[1]));
         }
@@ -532,6 +535,7 @@ class odf_parser
                     {
                         $varparser = new odf_varparser();
                         $varparser->parse($tpl['content'], $vars);
+                        //ploopi_print_r($varparser->get_xml());
                         $tpl_res .= $varparser->get_xml();
                     }
 
