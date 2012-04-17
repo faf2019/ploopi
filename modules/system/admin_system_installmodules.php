@@ -114,20 +114,20 @@ while ($fields = $db->fetchrow($result))
     // Recherche d'actions pour ce module
     $select = "SELECT * FROM ploopi_mb_action WHERE id_module_type = {$fields['id']}";
     $db->query($select);
-    if ($db->numrows()) $has_actions = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_green.png\" align=\"middle\">";
-    else $has_actions = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_red.png\" align=\"middle\">";
+    if ($db->numrows()) $has_actions = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
+    else $has_actions = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_off.png\" align=\"middle\">";
 
     // Recherche de métabase pour ce module
     $select = "SELECT * FROM ploopi_mb_table WHERE id_module_type = {$fields['id']}";
     $db->query($select);
-    if ($db->numrows()) $has_mb = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_green.png\" align=\"middle\">";
-    else $has_mb = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_red.png\" align=\"middle\">";
+    if ($db->numrows()) $has_mb = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
+    else $has_mb = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_off.png\" align=\"middle\">";
 
     // Recherche d'objets "WCE" (WebEdit) pour ce module
     $select = "SELECT * FROM ploopi_mb_wce_object WHERE id_module_type = {$fields['id']}";
     $db->query($select);
-    if ($db->numrows()) $has_cmsop = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_green.png\" align=\"middle\">";
-    else $has_cmsop = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_red.png\" align=\"middle\">";
+    if ($db->numrows()) $has_cmsop = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
+    else $has_cmsop = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_off.png\" align=\"middle\">";
 
     $ldate = ploopi_timestamp2local($fields['date']);
 

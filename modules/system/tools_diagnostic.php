@@ -145,8 +145,10 @@ if ($testpear)
 
     if ($testpearinfo)
     {
-        @require_once 'PEAR/Info.php';
+        ploopi_unset_error_handler();
+        require_once 'PEAR/Info.php';
         $packPEAR = new PEAR_Info(); // Class PEAR_Info for test if modules pear are installed
+        ploopi_set_error_handler();
 
         $arrPearClasses = array('Cache_Lite', 'HTTP_Request', 'XML_Feed_Parser', 'Xml_Beautifier', 'OLE', 'Spreadsheet_Excel_Writer');
 

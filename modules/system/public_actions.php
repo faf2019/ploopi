@@ -35,13 +35,13 @@
  * Création du titre de la page
  */
 echo $skin->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
-echo $skin->open_simplebloc(_PLOOPI_LABEL_MYDATA); 
+echo $skin->open_simplebloc(_PLOOPI_LABEL_MYDATA);
 ?>
 <div style="padding:4px;">
 <?php
 
-$red = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_red.png\">";
-$green = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_green.png\">";
+$red = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_off.png\" style=\"margin-right:4px;\" />";
+$green = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" style=\"margin-right:4px;\" />";
 
 $arrActions = array();
 

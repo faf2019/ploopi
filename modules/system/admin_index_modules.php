@@ -56,19 +56,19 @@ $c = 0;
 $columns['auto']['name']        = array('label' => _SYSTEM_LABEL_MODULENAME, 'options' => array('sort' => true));
 
 $columns['left']['position']    = array('label' => _SYSTEM_LABEL_MODULEPOSITION, 'width' => '75', 'options' => array('sort' => true));
-$columns['left']['type']        = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '100', 'options' => array('sort' => true));
+$columns['left']['type']        = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '150', 'options' => array('sort' => true));
 $columns['right']['actions']    = array('label' => _SYSTEM_LABEL_ACTION, 'width' => '50');
-$columns['right']['herited']    = array('label' => 'Her.', 'width' => '50', 'options' => array('sort' => true));
-$columns['right']['shared']     = array('label' => 'Par.', 'width' => '50', 'options' => array('sort' => true));
-$columns['right']['visible']     = array('label' => 'Vis.', 'width' => '50', 'options' => array('sort' => true));
-$columns['right']['active']     = array('label' => 'Act.', 'width' => '50', 'options' => array('sort' => true));
+$columns['right']['herited']    = array('label' => 'Her.', 'width' => '55', 'options' => array('sort' => true));
+$columns['right']['shared']     = array('label' => 'Par.', 'width' => '55', 'options' => array('sort' => true));
+$columns['right']['visible']     = array('label' => 'Vis.', 'width' => '55', 'options' => array('sort' => true));
+$columns['right']['active']     = array('label' => 'Act.', 'width' => '55', 'options' => array('sort' => true));
 $columns['right']['viewmode']   = array('label' => _SYSTEM_LABEL_VIEWMODE, 'width' => '80', 'options' => array('sort' => true));
 
 foreach ($ownmodules as $index => $module)
 {
-    $active = $visible = $public = $shared = $herited = '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/p_red.png">';
+    $active = $visible = $public = $shared = $herited = '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/check_off.png">';
 
-    $p_green = '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/p_green.png">';
+    $p_green = '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/check_on.png">';
 
     if ($module['active']) $active = $p_green;
     if ($module['visible']) $visible = $p_green;
