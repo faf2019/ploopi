@@ -1,6 +1,6 @@
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2012 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,8 +20,6 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-ploopi_skin_array_renderupdate_done = new Array();
-
 /**
  * Met à jour l'affichage des tableaux générés par la classe skin.
  * Il faut corriger certains problèmes liés à l'affichage ou non d'une barre de défilement vertical.
@@ -30,25 +28,25 @@ ploopi_skin_array_renderupdate_done = new Array();
 
 function ploopi_skin_array_renderupdate(array_id)
 {
+
     greater = $('ploopi_explorer_values_inner_'+array_id).offsetHeight > $('ploopi_explorer_values_outer_'+array_id).offsetHeight;
 
     if (greater)
     {
-        if (typeof(ploopi_skin_array_renderupdate_done[array_id]) == 'undefined')
+        // Récupération de la largeur de la scrollbar verticale
+        scrollbar_width = $('ploopi_explorer_values_outer_'+array_id).offsetWidth - $('ploopi_explorer_values_inner_'+array_id).offsetWidth;
+
+        // Insertion d'un bloc de la largeur de la scrollbar dans la ligne de titre
+        $('ploopi_explorer_title_'+array_id).innerHTML = '<div style=\'float:right;width:'+scrollbar_width+'px;\'>&nbsp;</div>'+$('ploopi_explorer_title_'+array_id).innerHTML;
+
+        columns = $('ploopi_explorer_main_'+array_id).getElementsByClassName('ploopi_explorer_column');
+
+        for (j=0;j<columns.length;j++)
         {
-            $('ploopi_explorer_title_'+array_id).innerHTML = '<div style=\'float:right;width:16px;\'>&nbsp;</div>'+$('ploopi_explorer_title_'+array_id).innerHTML;
-
-            columns = $('ploopi_explorer_main_'+array_id).getElementsByClassName('ploopi_explorer_column');
-            for (j=0;j<columns.length;j++)
+            if (columns[j].style.right != '')
             {
-                if (columns[j].style.right != '')
-                {
-                    diff = (Prototype.Browser.IE) ? 22 : 16;
-                    columns[j].style.right = (parseInt(columns[j].style.right)+diff)+'px';
-                }
+                columns[j].style.right = (parseInt(columns[j].style.right)+scrollbar_width)+'px';
             }
-
-            ploopi_skin_array_renderupdate_done[array_id] = true;
         }
     }
 
@@ -64,13 +62,13 @@ function ploopi_skin_array_renderupdate(array_id)
 
 function ploopi_skin_treeview_shownode(node_id, query, script)
 {
-    
+
     if (typeof(script) == 'undefined') script = 'admin-light.php';
 
     elt = $('t'+node_id);
     dest = $('n'+node_id);
     treenode = $('treeview_node'+node_id);
-    
+
     treenode.className = 'treeview_node_loading';
 
     if (elt.src.indexOf('plus')  != -1) elt.src = elt.src.replace('plus', 'minus');
@@ -93,7 +91,7 @@ function ploopi_skin_treeview_shownode(node_id, query, script)
                 }
             );
         }
-        else 
+        else
         {
             new Effect.BlindUp(
                 dest,
@@ -102,7 +100,7 @@ function ploopi_skin_treeview_shownode(node_id, query, script)
                     afterFinish: function() {treenode.className = 'treeview_node';}
                 }
             );
-        }            
+        }
     }
 }
 
