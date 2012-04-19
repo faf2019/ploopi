@@ -171,9 +171,9 @@ switch($ploopi_op)
         include_once './include/classes/documents.php';
         $documentsfolder = new documentsfolder();
         $documentsfolder_parent = new documentsfolder();
-        
+
         if (!isset($_GET['currentfolder']) || !$documentsfolder_parent->openmd5($_GET['currentfolder'])) ploopi_die();
-        
+
         if (!empty($_GET['documentsfolder_id']))
         {
             $documentsfolder->openmd5($_GET['documentsfolder_id']);
@@ -225,10 +225,10 @@ switch($ploopi_op)
             $documentsfolder->openmd5($_GET['documentsfolder_id']);
             $title = "Modification du Dossier";
         }
-        
+
         $url = "admin-light.php?ploopi_op=documents_savefolder&currentfolder={$_GET['currentfolder']}";
         if (!empty($_GET['documentsfolder_id'])) $url .= "&documentsfolder_id={$_GET['documentsfolder_id']}";
-        
+
         ?>
         <form id="documents_folderform" action="<?php echo ploopi_urlencode($url); ?>" method="post" target="documents_folderform_iframe" enctype="multipart/form-data">
         <div class="ploopi_form">
@@ -282,9 +282,9 @@ switch($ploopi_op)
         include_once './include/classes/documents.php';
         $documentsfile = new documentsfile();
         $documentsfolder = new documentsfolder();
-        
+
         if (!isset($_GET['currentfolder']) || !$documentsfolder->openmd5($_GET['currentfolder'])) ploopi_die();
-        
+
         if (!empty($_GET['documentsfile_id'])) $documentsfile->openmd5($_GET['documentsfile_id']);
         else
         {
@@ -313,7 +313,7 @@ switch($ploopi_op)
         }
 
         $error = $documentsfile->save();
-        
+
         if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
         if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefile', $documentsfile);
         ?>
@@ -342,10 +342,10 @@ switch($ploopi_op)
         }
 
         $ldate = ($documentsfile->fields['timestp_file']!=0 && $documentsfile->fields['timestp_file']!='') ? ploopi_timestamp2local($documentsfile->fields['timestp_file']) : array('date' => '');
-        
+
         $url = "admin-light.php?ploopi_op=documents_savefile&currentfolder={$_GET['currentfolder']}";
         if (!empty($_GET['documentsfile_id'])) $url .= "&documentsfile_id={$_GET['documentsfile_id']}";
-        
+
         ?>
         <form id="documents_folderform" action="<?php echo ploopi_urlencode($url); ?>" method="post" target="documents_fileform_iframe" enctype="multipart/form-data" onsubmit="javascript:return ploopi_documents_validate(this)">
         <div class="ploopi_form">
@@ -429,36 +429,36 @@ switch($ploopi_op)
     break;
 
     case 'documents_deletefile':
-    	if (!isset($_GET['currentfolder'])) ploopi_die();
-    	
-    	include_once './include/classes/documents.php';
-        
+        if (!isset($_GET['currentfolder'])) ploopi_die();
+
+        include_once './include/classes/documents.php';
+
         $documentsfile = new documentsfile();
-        
-    	if (!empty($_GET['documentsfile_id']) && $documentsfile->openmd5($_GET['documentsfile_id']))
+
+        if (!empty($_GET['documentsfile_id']) && $documentsfile->openmd5($_GET['documentsfile_id']))
         {
+            $documentsfile->delete();
+
             if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
             if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefile', $documentsfile);
-
-            $documentsfile->delete();
         }
 
         ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}");
     break;
 
     case 'documents_deletefolder':
-    	if (!isset($_GET['currentfolder'])) ploopi_die();
-    	
-    	include_once './include/classes/documents.php';
+        if (!isset($_GET['currentfolder'])) ploopi_die();
+
+        include_once './include/classes/documents.php';
 
         $documentsfolder = new documentsfolder();
-        
-    	if (!empty($_GET['documentsfolder_id']) && $documentsfolder->openmd5($_GET['documentsfolder_id']))
+
+        if (!empty($_GET['documentsfolder_id']) && $documentsfolder->openmd5($_GET['documentsfolder_id']))
         {
+            $documentsfolder->delete();
+
             if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
             if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefolder', $documentsfolder);
-
-            $documentsfolder->delete();
         }
         ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}");
     break;
