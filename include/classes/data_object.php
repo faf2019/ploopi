@@ -492,5 +492,24 @@ class data_object
         return(implode(',', $arrHash));
     }
 
+    /**
+     * Retourne la collection
+     *
+     * @return data_object_collection
+     */
+    public static function get_collection() {
+        return new data_object_collection(get_called_class());
+    }
+
+    /**
+     * Retourne la liste des objets
+
+     * @return array
+     */
+    public static function get_objects() {
+        $objCol = new data_object_collection(get_called_class());
+        return $objCol->get_objects();
+    }
+
 }
 ?>
