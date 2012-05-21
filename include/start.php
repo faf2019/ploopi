@@ -406,7 +406,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
 
             if (!isset($ploopi_moduleid) && $_SESSION['ploopi']['backoffice']['moduleid'] == '')
             {
-                $arrModules = &$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['modules'];
+                $arrModules = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['modules'];
                 $intAutoconnectModuleId = null;
 
                 foreach($arrModules as $intModuleId)
