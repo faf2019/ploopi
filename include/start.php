@@ -467,26 +467,6 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
 
     if (empty($_SESSION['ploopi']['backoffice']['workspaceid'])) $_SESSION['ploopi']['backoffice']['workspaceid'] = $_SESSION['ploopi']['hosts']['backoffice'][0];
 
-    ///////////////////////////////////////////////////////////////////////////
-    // CHOOSE TEMPLATE
-    ///////////////////////////////////////////////////////////////////////////
-
-    $default_template = '';
-    if (isset($_SESSION['ploopi']['hosts']['backoffice'][0]))
-    {
-        if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['backoffice'][0]]))
-        {
-            $default_template = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['backoffice'][0]]['template'];
-        }
-    }
-
-    if ($_SESSION['ploopi']['backoffice']['workspaceid'] != '') $_SESSION['ploopi']['template_name'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['template'];
-    elseif (!empty($default_template)) $_SESSION['ploopi']['template_name'] = $default_template;
-
-    if (empty($_SESSION['ploopi']['template_name']) || !file_exists("./templates/backoffice/{$_SESSION['ploopi']['template_name']}")) $_SESSION['ploopi']['template_name'] = _PLOOPI_DEFAULT_TEMPLATE;
-
-    $_SESSION['ploopi']['template_path'] = "./templates/backoffice/{$_SESSION['ploopi']['template_name']}";
-
     $_SESSION['ploopi']['moduleid'] = $_SESSION['ploopi']['backoffice']['moduleid'];
     $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['backoffice']['workspaceid'];
 }
@@ -495,6 +475,27 @@ else
     $_SESSION['ploopi']['moduleid'] = $_SESSION['ploopi']['frontoffice']['moduleid'];
     $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['frontoffice']['workspaceid'];
 }
+
+///////////////////////////////////////////////////////////////////////////
+// CHOOSE TEMPLATE
+///////////////////////////////////////////////////////////////////////////
+
+$default_template = '';
+if (isset($_SESSION['ploopi']['hosts']['backoffice'][0]))
+{
+    if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['backoffice'][0]]))
+    {
+        $default_template = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['backoffice'][0]]['template'];
+    }
+}
+
+if ($_SESSION['ploopi']['backoffice']['workspaceid'] != '') $_SESSION['ploopi']['template_name'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]['template'];
+elseif (!empty($default_template)) $_SESSION['ploopi']['template_name'] = $default_template;
+
+if (empty($_SESSION['ploopi']['template_name']) || !file_exists("./templates/backoffice/{$_SESSION['ploopi']['template_name']}")) $_SESSION['ploopi']['template_name'] = _PLOOPI_DEFAULT_TEMPLATE;
+
+$_SESSION['ploopi']['template_path'] = "./templates/backoffice/{$_SESSION['ploopi']['template_name']}";
+
 
 // shortcuts for admin & workspaceid
 if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['adminlevel'])) $_SESSION['ploopi']['adminlevel'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['adminlevel'];
