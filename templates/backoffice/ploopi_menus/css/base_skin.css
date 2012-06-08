@@ -530,6 +530,10 @@ div.ploopi_explorer_title {
     overflow:hidden;
 }
 
+div.ploopi_explorer_title a.ploopi_explorer_element_selected {
+    background-color:#c0c0c0;
+}
+
 div.ploopi_explorer_column {
     margin: 0;
     padding: 0;
