@@ -45,7 +45,7 @@ function system_showgroup(typetree, gid, str)
                 }
             );
         }
-        else 
+        else
         {
             new Effect.BlindUp(
                 dest,
@@ -90,7 +90,7 @@ function system_roleusers_delete(roleid, userid, type)
 {
     ploopi_ajaxloader('system_roleusers_list');
     ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers_delete_'+type+'&system_roleusers_roleid='+roleid+'&system_roleusers_'+type+'id='+userid,'system_roleusers_list');
-    alert('L\'attriution du rôle a été retirée');
+    alert('L\'attribution du rôle a été retirée');
 }
 
 /* TICKETS FUNCTIONS */

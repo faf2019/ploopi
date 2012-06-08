@@ -276,7 +276,7 @@ else
 
         $values[$c]['values']['name']       = array('label' => htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
         $values[$c]['values']['login']      = array('label' => htmlentities($fields['login']));
-        $values[$c]['values']['email']      = array('label' => '<a style="width:142px;" href="mailto;'.$fields['email'].'">'.$fields['email'].'</a>', 'sort_label' => $fields['email']);
+        $values[$c]['values']['email']      = array('label' => '<a style="width:142px;" href="mailto:'.$fields['email'].'">'.$fields['email'].'</a>', 'sort_label' => $fields['email']);
 
         $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.htmlentities($currentgroup['label']).'</a>');
         $values[$c]['values']['service']    = array('label' => htmlentities($fields['service']));

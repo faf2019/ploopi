@@ -723,7 +723,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
             'values' => array(
                 'nom' => array('label' => $strUserLabel, 'sort_label' => sprintf("%s %s", $row['lastname'], $row['firstname'])),
                 'login' => array('label' => $strUserLogin, 'sort_label' => $row['login']),
-                'email' => array('label' => '<a style="width:142px;" href="mailto;'.$row['email'].'">'.$row['email'].'</a>', 'sort_label' => $row['email']),
+                'email' => array('label' => '<a style="width:142px;" href="mailto:'.$row['email'].'">'.$row['email'].'</a>', 'sort_label' => $row['email']),
                 'groups' => array(
                     'label' => (empty($row['groups'])) ? '<em>Pas de groupe dans cet espace</em>'  : implode('<br />', $row['groups']),
                     'sort_label' => $strSortLabelGroups
