@@ -371,6 +371,7 @@ class odf_parser
     private $filename;
     private $content_xml;
     private $styles_xml;
+    private $manifest_xml;
     private $vars = array();
     private $images = array();
     private $blockvars = array();
@@ -399,6 +400,7 @@ class odf_parser
         {
             $this->content_xml = $this->zip->getFromName('content.xml');
             $this->styles_xml = $this->zip->getFromName('styles.xml');
+            $this->manifest_xml = $this->zip->getFromName('META-INF/manifest.xml');
             $this->zip->close();
         }
         else
@@ -480,13 +482,12 @@ class odf_parser
     public function set_image($key, $value, $width = '5cm', $height = '5cm')
     {
         $file = basename($value);
-        $name = strtok($file,'/.');
+        $this->images[$value] = $file;
+        $name = 'image'.sizeof($this->images);
 
         $xml = '<draw:frame draw:style-name="fr1" draw:name="'.$name.'" text:anchor-type="paragraph" svg:width="'.$width.'" svg:height="'.$height.'" draw:z-index="0"><draw:image xlink:href="Pictures/'.$file.'" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>';
 
         $this->set_var($key, $xml, false);
-
-        $this->images[$value] = $file;
     }
 
     /**
@@ -505,12 +506,60 @@ class odf_parser
                 $this->blockvars[$blockname][$k]['{'.$key.'}'] = self::clean_var($value);
     }
 
+    public function set_blockvar_advanced($blockname, $block)
+    {
+        $this->blockvars[$blockname] = array();
+
+        foreach($block as $k => $v)
+            foreach($v as $key => $row)
+            {
+                if (empty($row['type'])) $row['type'] = 'var';
+                if (empty($row['value'])) $row['value'] = '';
+
+                switch($row['type'])
+                {
+                    case 'var':
+                        $this->blockvars[$blockname][$k]['{'.$key.'}'] = self::clean_var($row['value'], !empty($row['clean']));
+                    break;
+
+                    case 'image':
+                        if (empty($row['width'])) $row['width'] = '5cm';
+                        if (empty($row['height'])) $row['height'] = '5cm';
+
+                        $file = basename($row['value']);
+                        $this->images[$row['value']] = $file;
+                        $name = 'image'.sizeof($this->images);
+
+                        $xml = '<draw:frame draw:style-name="fr1" draw:name="'.$name.'" text:anchor-type="paragraph" svg:width="'.$row['width'].'" svg:height="'.$row['height'].'" draw:z-index="0"><draw:image xlink:href="Pictures/'.$file.'" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>';
+
+
+                        $this->blockvars[$blockname][$k]['{'.$key.'}'] = $xml;
+                    break;
+                }
+            }
+    }
+
     /**
      * Parse le contenu du modèle et remplace les variables du template par leurs valeurs
      */
 
     public function parse()
     {
+        // Traitement du fichier manifest
+        if ($this->manifest_xml != NULL)
+        {
+            if ($this->images && preg_match('@<manifest:file-entry.*/>@i', $this->manifest_xml, $arrMatches, PREG_OFFSET_CAPTURE))
+            {
+                $insert = '';
+                foreach($this->images as $path => $file) {
+                    $info = @getimagesize($path);
+                    $insert .= '<manifest:file-entry manifest:media-type="'.$info['mime'].'" manifest:full-path="Pictures/'.$file.'"/>'."\r\n ";
+                }
+
+                $this->manifest_xml = substr($this->manifest_xml, 0, $arrMatches[0][1]).$insert.substr($this->manifest_xml, $arrMatches[0][1]);
+            }
+        }
+
         if ($this->content_xml != NULL || $this->styles_xml != NULL)
         {
             $blockparser = new odf_blockparser();
@@ -590,6 +639,8 @@ class odf_parser
             if (!$this->zip->addFromString('content.xml', $this->content_xml))
                 exit('Erreur lors de l\'enregistrement');
             if (!$this->zip->addFromString('styles.xml', $this->styles_xml))
+                exit('Erreur lors de l\'enregistrement');
+            if (!$this->zip->addFromString('META-INF/manifest.xml', $this->manifest_xml))
                 exit('Erreur lors de l\'enregistrement');
             $this->zip->close();
         }
