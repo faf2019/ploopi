@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.5.0b ============================================
+
+2012-08-07  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Ré-intégration de la mise à jour SQL 2.5.0
+
 == Module WebEdit - version 2.5.0a ============================================
 
 2011-10-04  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
