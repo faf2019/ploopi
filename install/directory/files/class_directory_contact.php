@@ -81,15 +81,16 @@ class directory_contact extends data_object
     public function save($booForcePos = false)
     {
         global $db;
-        
-        if (!$booForcePos)
+
+        // Recherche position max
+        if (!$booForcePos && !empty($this->fields['id_heading']))
         {
-            // Recherche position max
             $db->query("SELECT MAX(position) as pos FROM ploopi_mod_directory_contact WHERE id_heading = '{$this->fields['id_heading']}'");
+
             $intMaxPos = ($row = $db->fetchrow()) ? $row['pos'] : 0;
             if ($this->fields['position'] > $intMaxPos) $this->fields['position'] = $intMaxPos;
             if ($this->fields['position'] < 1) $this->fields['position'] = 1;
-            
+
             // Nouveau contact
             if ($this->isnew())
             {
@@ -110,7 +111,7 @@ class directory_contact extends data_object
                 }
             }
         }
-        
+
         return parent::save();
     }
     
