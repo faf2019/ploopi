@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.3.6fb ====================================================
+
+2012-09-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un warning à l'enregistrement d'un contact
+
 == Module DIRECTORY - version 2.3.6f ====================================================
 
 2010-06-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
