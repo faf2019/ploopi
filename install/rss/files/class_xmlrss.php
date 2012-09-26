@@ -34,8 +34,11 @@
  * Inclusion des dépendances PEAR
  */
 
+ploopi_unset_error_handler();
 require_once 'HTTP/Request.php';
-require_once 'XML/Feed/Parser.php';
+require_once './lib/simplepie/simplepie.inc.php';
+ploopi_set_error_handler();
+
 
 /**
  * Permet de lire le contenu d'un flux RSS à travers un proxy, puis d'en extraire le contenu.
@@ -57,11 +60,11 @@ require_once 'XML/Feed/Parser.php';
 class xmlrss
 {
     private $error;
-    
+
     private $content;
-    
+
     private $feed;
-    
+
     /**
      * Constructeur de la classe.
      * Récupère le contenu du flux (via proxy si nécessaire)
@@ -99,10 +102,10 @@ class xmlrss
             ploopi_unset_error_handler();
             $request = new HTTP_Request($url, array('timeout' => 500));
             ploopi_set_error_handler();
-            
+
             if (_PLOOPI_INTERNETPROXY_HOST != '')
             {
-                $request->setProxy( 
+                $request->setProxy(
                     _PLOOPI_INTERNETPROXY_HOST,
                     _PLOOPI_INTERNETPROXY_PORT,
                     _PLOOPI_INTERNETPROXY_USER,
@@ -113,7 +116,7 @@ class xmlrss
             ploopi_unset_error_handler();
             $res = !PEAR::isError($objReq = $request->sendRequest());
             ploopi_set_error_handler();
-            
+
             if ($res)
             {
                 if ($request->getResponseCode() != '200' && $request->getResponseCode() != '')
@@ -133,18 +136,13 @@ class xmlrss
             }
         }
     }
-    
+
     /**
      * Parse le flux.
-     *
-     * @link http://pear.php.net/package/XML_Feed_Parser
      */
 
     public function parse()
     {
-        require_once './lib/simplepie/simplepie.inc.php';
-        
-        
         $feed = new SimplePie();
         $feed->set_raw_data($this->content);
         //$feed->handle_content_type();
@@ -158,13 +156,13 @@ class xmlrss
             $this->feed['link'] = $feed->get_link();
             $this->feed['updated'] = 0;
             $this->feed['author'] = $feed->get_author();
-            
+
             foreach($feed->get_items() as $key => $item)
             {
                 $category = $item->get_category();
                 $author = $item->get_author();
-                
-                $this->feed['entries'][] = array(   
+
+                $this->feed['entries'][] = array(
                     'id' => $item->get_id(true),
                     'title' => $item->get_title(),
                     'subtitle' => $item->get_description(),
@@ -177,21 +175,21 @@ class xmlrss
             }
         }
     }
-    
+
     /**
-     * Retourne l'erreur  
+     * Retourne l'erreur
      */
     public function geterror() { return $this->error; }
 
     /**
-     * Retourne le flux parsé  
+     * Retourne le flux parsé
      */
     public function getfeed() { return $this->feed; }
 
     /**
-     * Retourne le contenu brut du flux  
+     * Retourne le contenu brut du flux
      */
     public function getcontent() { return $this->content; }
-    
+
 }
 ?>

@@ -1,3 +1,9 @@
+== Module RSS - version 2.1.1a ====================================================
+
+2012-09-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Corrections de compatibilité pour PHP 5.3.x
+
 == Module RSS - version 2.1.1 ====================================================
 
 2009-10-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
