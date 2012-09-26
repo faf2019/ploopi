@@ -41,7 +41,7 @@
  * @author Stéphane Escaich
  */
 
-class log extends data_object
+class ploopi_log extends data_object
 {
     /**
      * Constructeur de la classe
