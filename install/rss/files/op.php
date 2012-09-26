@@ -148,7 +148,7 @@ if (ploopi_ismoduleallowed('rss'))
             ?>
             <h1>Liste des Flux</h1>
             <?php
-            $skin->display_array($array_columns, $array_values, 'array_rssexplorer_feedlist', array('height' => 250, 'sortable' => true, 'orderby_default' => 'title'));
+            $skin->display_array($array_columns, $array_values, 'array_rssexplorer_feedlist', array('height' => 250, 'sortable' => true, 'orderby_default' => 'feed_title'));
             echo $skin->close_simplebloc();
 
             ploopi_die();
