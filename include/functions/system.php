@@ -194,7 +194,7 @@ function ploopi_ob_callback($buffer)
         include_once './include/functions/date.php';
         include_once './include/classes/log.php';
 
-        $log = new log();
+        $log = new ploopi_log();
 
         $log->fields['request_method'] = $_SERVER['REQUEST_METHOD'];
         $log->fields['query_string'] = $_SERVER['QUERY_STRING'];

@@ -41,20 +41,20 @@
  * @author Stéphane Escaich
  */
 
-class log extends data_object
+class ploopi_log extends data_object
 {
     /**
      * Constructeur de la classe
      *
      * @return log
      */
-    
+
     public function __construct()
     {
         parent::__construct(
             'ploopi_log'
         );
-        
+
         if (ploopi_session::get_usedb()) $this->setdb($this->getdb());
     }
 
@@ -62,7 +62,7 @@ class log extends data_object
     {
         if (ploopi_session::get_usedb()) return ploopi_session::get_db();
         else { global $db; return $db; }
-    }    
+    }
 }
 
 /**
@@ -83,7 +83,7 @@ class connecteduser extends data_object
      *
      * @return connecteduser
      */
-    
+
     public function __construct()
     {
         parent::__construct(
@@ -111,7 +111,7 @@ class user_action_log extends data_object
      *
      * @return user_action_log
      */
-    
+
     public function __construct()
     {
         parent::__construct(
@@ -120,7 +120,7 @@ class user_action_log extends data_object
             'id_action',
             'id_module_type'
         );
-        
+
         if (ploopi_session::get_usedb()) $this->setdb($this->getdb());
     }
 
@@ -128,7 +128,7 @@ class user_action_log extends data_object
     {
         if (ploopi_session::get_usedb()) return ploopi_session::get_db();
         else { global $db; return $db; }
-    }    
-    
+    }
+
 }
 ?>
