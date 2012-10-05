@@ -258,13 +258,14 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
                     case 'integer_euro':
                     case 'date':
                     case 'datetime':
-                        if ($strValue != '') $objWorkSheet->writeNumber($intLine, $intCol++, $strValue, $objFormat);
+                        if ($strValue != '') $objWorkSheet->writeNumber($intLine, $intCol, $strValue, $objFormat);
                     break;
 
                     default:
-                        $objWorkSheet->writeString($intLine, $intCol++, $strValue, $objFormat);
+                        $objWorkSheet->writeString($intLine, $intCol, $strValue, $objFormat);
                     break;
                 }
+                $intCol++;
             }
             $intLine++;
         }
