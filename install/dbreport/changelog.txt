@@ -1,3 +1,9 @@
+== Module DBREPORT - version 1.0.6d ====================================================
+
+2012-10-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug au retour de la méthode dn_report_query::exec. Le résultat n'était pas forcément un tableau.
+
 == Module DBREPORT - version 1.0.6c ====================================================
 
 2012-10-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -2,7 +2,7 @@
 <ploopi>
     <moduletype>
         <label>dbreport</label>
-        <version>1.0.6c</version>
+        <version>1.0.6d</version>
         <author>Ovensia</author>
         <date>20121012000000</date>
         <description>Requêteur Base de Données</description>

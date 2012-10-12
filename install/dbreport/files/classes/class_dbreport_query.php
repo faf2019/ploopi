@@ -754,6 +754,8 @@ class dbreport_query extends data_object
                 $objCache->save_var($this->arrResult);
             }
 
+            if (!is_array($this->arrResult)) $this->arrResult = array();
+
             return true;
         }
         else return false;
