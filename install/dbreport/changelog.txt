@@ -1,3 +1,9 @@
+== Module DBREPORT - version 1.0.6c ====================================================
+
+2012-10-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Corrections de compatibilité pour PHP 5.3.x
+
 == Module DBREPORT - version 1.0.6b ====================================================
 
 2012-03-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
