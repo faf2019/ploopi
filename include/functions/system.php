@@ -324,11 +324,14 @@ function ploopi_redirect($url, $urlencode = true, $internal = true, $refresh = 0
     if ($internal) $url = _PLOOPI_BASEPATH.'/'.$url;
     if ($urlencode) $url = $trusted ? ploopi_urlencode_trusted($url) : ploopi_urlencode($url);
 
-    if (empty($refresh) || !is_numeric($refresh)) header("Location: {$url}");
+    if (empty($refresh) || !is_numeric($refresh))
+    {
+        header("Location: {$url}");
+        ploopi_die();
+    }
     else header("Refresh: {$refresh}; url={$url}");
-
-    ploopi_die();
 }
+
 
 /**
  * Charge l'environnement du module : variables globales, constantes, fonctions.
