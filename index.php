@@ -41,6 +41,7 @@
 
 include_once './include/boot.php';
 
+define('_PLOOPI_DIRNAME',  dirname(__FILE__));
 
 switch($ploopi_access_script)
 {
