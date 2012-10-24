@@ -1,3 +1,9 @@
+== Module FORMS - version 3.5.0n =====================================================
+
+2012-12-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans la gestion du contrôle d'unicité des réponse par jour/utilisateur
+
 == Module FORMS - version 3.5.0m =====================================================
 
 2012-03-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

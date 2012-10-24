@@ -445,6 +445,26 @@ class formsForm extends data_object
 
 
     /**
+     * Retourne le nombre de lignes du formulaire en fonction du filtre saisie par jour/utilisateur
+     * @return int nombre de lignes du formulaire
+     */
+
+    public function getNumRowsOnly()
+    {
+        if (!$this->fields['option_onlyone'] && !$this->fields['option_onlyoneday']) return 0;
+
+        $objQuery = new ploopi_query_select();
+        $objQuery->add_select('count(*) as c');
+        $objQuery->add_from($this->getDataTableName());
+
+        if ($this->fields['option_onlyone']) $objQuery->add_where('user_id = %d', $_SESSION['ploopi']['userid']);
+        if ($this->fields['option_onlyoneday']) $objQuery->add_where('LEFT(date_validation,8) = %s', substr(ploopi_createtimestamp(), 0, 8));
+
+        return current($objQuery->execute()->getarray(true));
+    }
+
+
+    /**
      * Retourne le nombre de lignes du formulaire en fonction de la visibilité de l'utilisateur sur les données
      * @param boolean $booWorkspaceFilter true si on souhaite appliquer le filtrage par espace de travail
      * @return int nombre de lignes du formulaire

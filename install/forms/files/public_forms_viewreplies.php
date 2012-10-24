@@ -200,17 +200,8 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
 
             if ($_SESSION['ploopi']['action'] == 'public')
             {
-                $ct = 0;
-                if ($objForm->fields['option_onlyone'] || $objForm->fields['option_onlyoneday'])
-                {
-                    $select = "select count(*) as ct from ploopi_mod_forms_reply where 1 ";
-                    if ($objForm->fields['option_onlyone']) $select .= " AND id_user = {$_SESSION['ploopi']['userid']}";
-                    if ($objForm->fields['option_onlyoneday']) $select .= " AND LEFT(date_validation,8) = '".substr(ploopi_createtimestamp(),0,8)."'";
-                    $db->query($select);
-                    if ($fields = $db->fetchrow()) $ct = $fields['ct'];
-                }
-
-                if (!$ct &&  ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY))
+                // Recherche du nombre de lignes déjà saisies pour le jour ou l'utilisateur
+                if (!$objForm->getNumRowsOnly() &&  ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY))
                 {
                     ?>
                     <input type="button" class="flatbutton" style="margin-left:10px;font-weight:bold" value="Ajouter un enregistrement" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_reply_add&forms_id={$objForm->fields['id']}"); ?>'">
