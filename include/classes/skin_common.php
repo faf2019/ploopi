@@ -494,8 +494,17 @@ class skin_common
             // initialisation  du tri par défaut pour le tableau courant
             if (empty($array['orderby']))
             {
-                if (!empty($array['options']['orderby_default'])) $array['orderby'] = $array['options']['orderby_default'];
-                elseif (!empty($array['sortable_columns'][0])) $array['orderby'] = $array['sortable_columns'][0];
+                if (!empty($_SESSION['ploopi']['arrays'][$strArrayId]))
+                {
+                    // Lecture du tri en session
+                    $array['orderby'] = $_SESSION['ploopi']['arrays'][$strArrayId]['orderby'];
+                    $array['sort'] = $_SESSION['ploopi']['arrays'][$strArrayId]['sort'];
+                }
+
+                if (empty($array['orderby'])) {
+                    if (!empty($array['options']['orderby_default'])) $array['orderby'] = $array['options']['orderby_default'];
+                    elseif (!empty($array['sortable_columns'][0])) $array['orderby'] = $array['sortable_columns'][0];
+                }
             }
 
             if (empty($array['sort']))
@@ -524,6 +533,11 @@ class skin_common
 
             if ($array['sort'] == 'ASC') ksort($array['index'], SORT_STRING);
             else krsort($array['index'], SORT_STRING);
+            // Sauvegarde du tri en session
+            $_SESSION['ploopi']['arrays'][$strArrayId] = array(
+                'orderby' => $array['orderby'],
+                'sort' => $array['sort'],
+            );
 
             $sort_img = ($array['sort'] == 'DESC') ? "<img src=\"{$this->values['path']}/arrays/arrow_down.png\">" : "<img src=\"{$this->values['path']}/arrays/arrow_up.png\">";
 
