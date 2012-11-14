@@ -46,7 +46,7 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enabl
         ploopi_popup.setAttribute('class', 'ploopi_popup');
         ploopi_popup.setAttribute('className', 'ploopi_popup'); // IE
         ploopi_popup.setAttribute('id', id);
-        ploopi_popup.setAttribute('style', 'z-index:'+(1000+ploopi_nbpopup)+';');
+        ploopi_popup.setAttribute('style', 'z-index:'+(10000+ploopi_nbpopup)+';');
         ploopi_popup.style.display = 'none';
 
         ploopi_hooks[0].appendChild(ploopi_popup);
@@ -260,7 +260,7 @@ function ploopi_popupize(id, w, centered, pposx, pposy)
     {
         $(id).setAttribute('class', 'ploopi_popup');
         $(id).setAttribute('className', 'ploopi_popup'); // IE
-        $(id).setAttribute('style', 'display:block;z-index:'+(1000+ploopi_nbpopup)+';');
+        $(id).setAttribute('style', 'display:block;z-index:'+(10000+ploopi_nbpopup)+';');
 
         w = parseInt(w);
         if (!w) w = 200;
