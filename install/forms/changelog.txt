@@ -1,3 +1,10 @@
+== Module FORMS - version 3.5.1h =====================================================
+
+2012-11-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans le traitement des champs calculés (calculs en cascade avec prise en compte d'agrégats)
+* Correction d'un bug dans la gestion du contrôle d'unicité des réponse par jour/utilisateur
+
 == Module FORMS - version 3.5.1g =====================================================
 
 2012-03-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

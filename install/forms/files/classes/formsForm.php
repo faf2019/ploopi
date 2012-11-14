@@ -440,6 +440,26 @@ class formsForm extends data_object
 
 
     /**
+     * Retourne le nombre de lignes du formulaire en fonction du filtre saisie par jour/utilisateur
+     * @return int nombre de lignes du formulaire
+     */
+
+    public function getNumRowsOnly()
+    {
+        if (!$this->fields['option_onlyone'] && !$this->fields['option_onlyoneday']) return 0;
+
+        $objQuery = new ploopi_query_select();
+        $objQuery->add_select('count(*) as c');
+        $objQuery->add_from($this->getDataTableName());
+
+        if ($this->fields['option_onlyone']) $objQuery->add_where('user_id = %d', $_SESSION['ploopi']['userid']);
+        if ($this->fields['option_onlyoneday']) $objQuery->add_where('LEFT(date_validation,8) = %s', substr(ploopi_createtimestamp(), 0, 8));
+
+        return current($objQuery->execute()->getarray(true));
+    }
+
+
+    /**
      * Retourne le nombre de lignes du formulaire en fonction de la visibilité de l'utilisateur sur les données
      * @param boolean $booWorkspaceFilter true si on souhaite appliquer le filtrage par espace de travail
      * @return int nombre de lignes du formulaire
@@ -749,6 +769,37 @@ class formsForm extends data_object
         }
 
         return $objQuery;
+    }
+
+
+
+    /**
+     * Retourne toutes les données brutes du formulaire
+     * @return array données du formulaire
+     */
+
+    public function getRawData()
+    {
+        $arrData = array();
+
+        // Lecture des champs du formulaire
+        $arrObjFields = $this->getFields();
+
+        // Lecture des données
+        $objQuery = new ploopi_query_select();
+        $objQuery->add_from('`'.$this->getDataTableName().'` rec');
+        $objQuery->add_orderby('`#id`');
+
+        $objRs = $objQuery->execute();
+
+        while ($row = $objRs->fetchrow()) {
+
+            foreach($arrObjFields as $objField) {
+                $arrData[$row['#id']]['C'.$objField->fields['position']] = $row[$objField->fields['fieldname']];
+            }
+        }
+
+        return $arrData;
     }
 
     /**
@@ -2288,82 +2339,70 @@ class formsForm extends data_object
 
         // Lecture des champs du formulaire
         $arrObjFields = $this->getFields();
+        $arrObjFieldsCalc = $this->getFields();
 
         // Tri des champs par position
         $arrFieldsByPos = array();
         foreach($arrObjFields as $objField) $arrFieldsByPos[$objField->fields['position']] = $objField;
 
-        // Lecture des enregistrement du formulaire
-        $objQuery = new ploopi_query_select();
-        $objQuery->add_select('`#id` as id');
-        $objQuery->add_from($this->getDataTableName());
-
-        // Variables issues d'agrégats
+        // Variables issues d'agrégats (à calculer)
         $arrStaticVariables = array();
 
-        // Pour chaque enregistrement du formulaire
-        foreach($objQuery->execute()->getarray(true) as $intId)
+        // Chargement de l'ensemble des données brutes (donc non calculées) du formulaire
+        $arrData = $this->getRawData();
+
+
+        // Traitement du formulaire, colonne par colonne
+        foreach($arrObjFields as $objField)
         {
-            // Traitement de l'enregistrement
-            $objRecord = new formsRecord($this);
-            if ($objRecord->open($intId))
-            {
-                // Initalisation du tableau des variables
-                $booCalculation = false;
-                $arrVariables = array();
-                foreach($arrObjFields as $objField)
-                {
-                    $arrVariables['C'.$objField->fields['position']] = $objRecord->fields[$objField->fields['fieldname']];
-                    if (!is_numeric($arrVariables['C'.$objField->fields['position']])) $arrVariables['C'.$objField->fields['position']] = 0;
+            // On ne s'intéresse qu'aux colonnes calculées
+            if ($objField->fields['type'] == 'calculation') {
 
-                    if ($objField->fields['type'] == 'calculation') $booCalculation = true;
-                }
+                // Pour chaque ligne de données
+                foreach($arrData as $intId => $row) {
 
-                /**
-                 * Il y avait au moins un champ de type "calculation"
-                 */
+                    $arrVariables = $row;
 
-                if ($booCalculation)
-                {
-                    foreach($arrObjFields as $objField)
-                    {
-                        if ($objField->fields['type'] == 'calculation')
+                    try {
+                        // Interprétation du calcul
+                        $objParser = new formsArithmeticParser($objField->fields['formula']);
+
+                        // Extraction des variables de l'expression
+                        $arrVars = $objParser->getVars();
+
+                        // Pour chaque variable attendue dans l'expression
+                        foreach($arrVars as $strVar)
                         {
-                            try {
-                                // Interprétation du calcul
-                                $objParser = new formsArithmeticParser($objField->fields['formula']);
-
-                                // Extraction des variables de l'expression
-                                $arrVars = $objParser->getVars();
-
-                                // Pour chaque variable attendue dans l'expression
-                                foreach($arrVars as $strVar)
+                            if (isset($arrStaticVariables[$strVar])) $arrVariables[$strVar] = $arrStaticVariables[$strVar];
+                            else
+                            {
+                                // Analyse de la variable
+                                if (preg_match('/C([0-9]+)_?([A-Z]{0,3})/', $strVar, $arrMatches) > 0)
                                 {
-                                    if (isset($arrStaticVariables[$strVar])) $arrVariables[$strVar] = $arrStaticVariables[$strVar];
-                                    else
+                                    // $arrMatches[1] => position du champ
+                                    // $arrMatches[2] => agrégat (optionnel)
+                                    if (!empty($arrMatches[2])) // Ca nous intéresse, il faut calculer l'agrégat
                                     {
-                                        // Analyse de la variable
-                                        if (preg_match('/C([0-9]+)_?([A-Z]{0,3})/', $strVar, $arrMatches) > 0)
-                                        {
-                                            // $arrMatches[1] => position du champ
-                                            // $arrMatches[2] => agrégat (optionnel)
-                                            if (!empty($arrMatches[2])) // Ca nous intéresse, il faut calculer l'agrégat
-                                            {
-                                                $arrVariables[$strVar] = $arrStaticVariables[$strVar] = $arrFieldsByPos[$arrMatches[1]]->getAggregate($arrMatches[2]);
-                                            }
-                                        }
+                                        $arrVariables[$strVar] = $arrStaticVariables[$strVar] = $arrFieldsByPos[$arrMatches[1]]->getAggregate($arrMatches[2]);
                                     }
                                 }
-
-                                $objParser = new formsArithmeticParser($objField->fields['formula'], $arrVariables);
-
-                                $arrVariables['C'.$objField->fields['position']] = $objRecord->fields[$objField->fields['fieldname']] = $objParser->getVal();
                             }
-                            catch(Exception $e) { }
+                        }
+
+                        $objParser = new formsArithmeticParser($objField->fields['formula'], $arrVariables);
+
+                        // Mise à jour du tableau de données
+                        $arrData[$intId]['C'.$objField->fields['position']] = $objParser->getVal();
+
+                        // Enregistrement de la valeur modifiée en base de données (obligatoire pour le calcul des agrégats)
+                        $objRecord = new formsRecord($this);
+                        if ($objRecord->open($intId))
+                        {
+                            $objRecord->fields[$objField->fields['fieldname']] = $arrData[$intId]['C'.$objField->fields['position']];
+                            $objRecord->save();
                         }
                     }
-
-                    $objRecord->save();
+                    catch(Exception $e) { }
                 }
             }
         }
