@@ -48,6 +48,21 @@ class odf_varparser
     private $xml_data = array();
     private $parsed_data;
 
+    private static $_ploopi_styles = '
+        <style:style style:name="PLOOPI_BOLD" style:family="text">
+            <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+        </style:style>
+
+        <style:style style:name="PLOOPI_ITALIC" style:family="text">
+            <style:text-properties fo:font-style="italic" style:font-style-asian="italic" style:font-style-complex="italic"/>
+        </style:style>
+
+        <style:style style:name="PLOOPI_UNDERLINE" style:family="text">
+            <style:text-properties style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color"/>
+        </style:style>
+    ';
+
+
     /**
      * Constructeur de la classe. Crée le parser.
      *
@@ -56,7 +71,7 @@ class odf_varparser
      * @see xml_parser_create
      */
 
-    public function odf_varparser()
+    public function __construct()
     {
         $this->xml_parser = xml_parser_create('UTF-8');
 
@@ -105,6 +120,19 @@ class odf_varparser
         $this->parsed_data .= ($params_str == '') ? "<{$tag}>" : "<{$tag} {$params_str}>";
 
         $this->xmltags[] = array($tag, $params_str);
+
+        if ($tag == 'text:span')
+        {
+            echo "ici";
+        }
+
+
+        if ($tag == 'office:automatic-styles')
+        {
+            // Insertion des styles PLOOPI de base
+            $this->parsed_data .= preg_replace("/\s{2+}/", " ", preg_replace("/\r\n|\n|\r/", "", self::$_ploopi_styles));
+        }
+
     }
 
     /**
@@ -138,10 +166,9 @@ class odf_varparser
         // remplacement des variables template
         $data = str_replace(array_keys($this->vars), array_values($this->vars), ploopi_xmlentities($data, true));
 
-        // traitement des \n \r
-        $data = preg_replace("/\r\n|\n|\r/", "</{$tag[0]}><{$tag[0]} {$tag[1]}>", $data);
-        // traitement des espaces
-        $data = preg_replace_callback('/\s\s+/',create_function('$matches','if (strlen($matches[0])>1) return(\' <text:s text:c="\'.(strlen($matches[0])-1).\'"/>\'); else return(\' \');'), $data);
+        // traitement des retours chariot (CR LF), fonction de la balise contenant
+        // $data = preg_replace("/\r\n|\n|\r/", "</{$tag[0]}><{$tag[0]} {$tag[1]}>", $data);
+        $data = str_replace("[ploopi-br]", "</{$tag[0]}><{$tag[0]} {$tag[1]}>", $data);
 
         $this->parsed_data .= $data;
     }
@@ -185,7 +212,7 @@ class odf_blockparser
      * @see xml_parser_create
      */
 
-    public function odf_blockparser()
+    public function __construct()
     {
         $this->xml_parser = xml_parser_create('UTF-8');
 
@@ -354,6 +381,165 @@ class odf_blockparser
     }
 }
 
+
+
+/**
+ * Conversion de balises HTML en version ODF
+ * Pour le moment : strong, b, em, u, i
+ */
+
+class odf_html2odf
+{
+    // Contenu HTML à convertir
+    private $_html;
+    // Parser XML/HTMl
+    private $_html_parser;
+    // Résultat de la conversion
+    private $_result;
+
+    private $_stack = array();
+
+    public function __construct($html)
+    {
+        $this->_html = $html;
+        $this->_result = '';
+
+        $this->_html_parser = xml_parser_create('ISO-8859-1');
+
+        xml_set_object($this->_html_parser, $this);
+        xml_parser_set_option($this->_html_parser, XML_OPTION_CASE_FOLDING, 0);
+
+        xml_set_element_handler($this->_html_parser, "tag_open", "tag_close");
+        xml_set_character_data_handler($this->_html_parser, "cdata");
+    }
+
+    public function convert()
+    {
+        /**
+         * Attention le parser XML est bugué avec les entités html...
+         * http://drupal.org/node/384060
+         */
+
+        xml_parse($this->_html_parser, '<html>'.str_replace('&', '[ploopi-amp]', $this->_html).'</html>');
+        return $this->_result;
+    }
+
+    public function tag_open($parser, $tag, $attribs)
+    {
+        switch(strtolower($tag))
+        {
+            case 'a':
+                $content = '<text:a xlink:type="simple" xlink:href="'.$attribs['href'].'">';
+                $this->_stack[] = array('a', $content);
+                $this->_result .= $content;
+            break;
+
+            case 'strong':
+            case 'b':
+                $content = '<text:span text:style-name="PLOOPI_BOLD">';
+                $this->_stack[] = array('b', $content);
+                $this->_result .= $content;
+            break;
+
+            case 'u':
+                $content = '<text:span text:style-name="PLOOPI_UNDERLINE">';
+                $this->_stack[] = array('u', $content);
+                $this->_result .= $content;
+            break;
+
+            case 'em':
+            case 'i':
+                $content = '<text:span text:style-name="PLOOPI_ITALIC">';
+                $this->_stack[] = array('i', $content);
+                $this->_result .= $content;
+            break;
+
+            case 'br':
+                // Astuce pour traiter les retours à la ligne :
+                // Fermer tous les span/a ouverts et les réouvrir
+                foreach($this->_stack as $row) {
+                    switch($row[0]) {
+                        case 'a':
+                            $this->_result .= '</text:a>';
+                        break;
+                        default:
+                            $this->_result .= '</text:span>';
+                        break;
+                    }
+                }
+
+                $this->_result .= "[ploopi-br]"; // Ils sont traités plus tard
+
+                foreach($this->_stack as $row) $this->_result .= $row[1];
+            break;
+
+            default:
+            break;
+        }
+    }
+
+    public function tag_close($parser, $tag)
+    {
+        switch(strtolower($tag))
+        {
+            case 'a':
+                $this->_result .= '</text:a>';
+                array_pop($this->_stack);
+            break;
+
+            case 'strong':
+            case 'b':
+                $this->_result .= '</text:span>';
+                array_pop($this->_stack);
+            break;
+
+            case 'u':
+            case 'em':
+                $this->_result .= '</text:span>';
+                array_pop($this->_stack);
+            break;
+
+            case 'i':
+                $this->_result .= '</text:span>';
+                array_pop($this->_stack);
+            break;
+
+            default:
+            break;
+        }
+    }
+
+    public function cdata($parser, $data)
+    {
+        // Conversion en entités XML
+        $data = $this->_xmlize(str_replace('[ploopi-amp]', '&', $data));
+        // Traitement des espaces multiples
+        $data = preg_replace_callback('@\s{2,}@', array($this, '_replace_spaces'), $data);
+
+        $this->_result .= $data;
+    }
+
+    /**
+     * Nettoie une chaîne (décode les entités html) et l'encode en UTF8
+     *
+     * @param string $value chaîne brute
+     * @return string chaîne "nettoyée"
+     *
+     */
+
+    private function _xmlize($data)
+    {
+        return ploopi_xmlentities(html_entity_decode(iconv('ISO-8859-15', 'UTF-8', strip_tags($data)), ENT_QUOTES, 'UTF-8'), true);
+    }
+
+    private function _replace_spaces($matches)
+    {
+        return ' <text:s text:c="'.(strlen($matches[0])-1).'"/>';
+    }
+
+}
+
+
 /**
  * Classe permettant de générer un document bureautique (ODT, ODS, DOC, XLS, PDF, RTF, etc.) à partir d'un modèle OpenDocument.
  * Cette classe fonctionne comme un moteur de template.
@@ -392,7 +578,7 @@ class odf_parser
      * @return odf_parser
      */
 
-    public function odf_parser($filename)
+    public function __construct($filename)
     {
         $this->filename = $filename;
         $this->zip = new ZipArchive();
@@ -419,41 +605,12 @@ class odf_parser
      */
     protected static function clean_var($value)
     {
-        $res = '';
-
-        // Extraction des liens pour traitement spécifique
-        preg_match_all('@<a[^>]*href="([^"]*)"[^>]*>([^<]*)</a>@i', $value, $arrMatches, PREG_OFFSET_CAPTURE);
-
-        // Contenu sans liens,
-        if (empty($arrMatches[0])) $res = self::_clean_var($value);
-        // Contenu avec des liens
-        else
-        {
-            $prev = 0;
-            // Pour chaque lien trouvé
-            foreach($arrMatches[0] as $key => $row)
-            {
-                $res .= self::_clean_var(substr($value, $prev, $row[1]));
-                $res .= '<text:a xlink:type="simple" xlink:href="'.$arrMatches[1][$key][0].'">'.self::_clean_var($arrMatches[2][$key][0]).'</text:a>';
-            }
-
-            $res .= self::_clean_var(substr($value, strlen($row[0])+$row[1]));
-        }
-
-        return $res;
+        $odf_html2odf = new odf_html2odf($value);
+        return $odf_html2odf->convert();
     }
 
-    /**
-     * Nettoie une chaîne (décode les entités html) et l'encode en UTF8
-     *
-     * @param string $value chaîne brute
-     * @return string chaîne "nettoyée"
-     *
-     */
-    private static function _clean_var($value)
-    {
-        return ploopi_xmlentities(html_entity_decode(iconv('ISO-8859-15', 'UTF-8', strip_tags($value)), ENT_QUOTES, 'UTF-8'), true);
-    }
+
+
 
     /**
      * Définit une variable template et lui affecte une valeur
@@ -461,13 +618,17 @@ class odf_parser
      * @param string $key nom de la variable
      * @param string $value valeur
      * @param boolean $clean true si le contenu de la valeur doit être nettoyée
+     * @param boolean $html true si le contenu est fourni en html (attention il doit être propre)
      *
      * @see odf_parser::clean_var
      */
 
-    public function set_var($key, $value, $clean = true)
+    public function set_var($key, $value, $clean = true, $html = false)
     {
-        $this->vars['{'.$key.'}'] = ($clean) ? self::clean_var($value) : $value;
+        if (!$html) $value = ploopi_nl2br(htmlentities($value));
+        if ($clean) $value = self::clean_var($value);
+
+        $this->vars['{'.$key.'}'] = $value;
     }
 
     /**
@@ -491,26 +652,41 @@ class odf_parser
     }
 
     /**
-     * Définit une variable template de type bloc et lui affecte un tableau valeurs
+     * Définit une variable template de type bloc et lui affecte un tableau de valeurs
      *
      * @param unknown_type $blockname
      * @param unknown_type $block
      */
 
-    public function set_blockvar($blockname, $block)
+    public function set_blockvar($blockname, $block, $clean = true, $html = false)
     {
         $this->blockvars[$blockname] = array();
 
         foreach($block as $k => $v)
+        {
             foreach($v as $key => $value)
-                $this->blockvars[$blockname][$k]['{'.$key.'}'] = self::clean_var($value);
+            {
+                if (!$html) $value = ploopi_nl2br(htmlentities($value));
+                if ($clean) $value = self::clean_var($value);
+                $this->blockvars[$blockname][$k]['{'.$key.'}'] = $value;
+            }
+        }
     }
+
+    /**
+     * Définit une variable template de type bloc et lui affecte un tableau de valeurs
+     * Le tableau peut contenir des images
+     *
+     * @param unknown_type $blockname
+     * @param unknown_type $block
+     */
 
     public function set_blockvar_advanced($blockname, $block)
     {
         $this->blockvars[$blockname] = array();
 
         foreach($block as $k => $v)
+        {
             foreach($v as $key => $row)
             {
                 if (empty($row['type'])) $row['type'] = 'var';
@@ -519,7 +695,10 @@ class odf_parser
                 switch($row['type'])
                 {
                     case 'var':
-                        $this->blockvars[$blockname][$k]['{'.$key.'}'] = self::clean_var($row['value'], !empty($row['clean']));
+                        if (empty($row['html'])) $row['value'] = ploopi_nl2br(htmlentities($row['value']));
+                        if (empty($row['clean'])) $row['value'] = self::clean_var($row['value']);
+
+                        $this->blockvars[$blockname][$k]['{'.$key.'}'] = $row['value'];
                     break;
 
                     case 'image':
@@ -537,6 +716,8 @@ class odf_parser
                     break;
                 }
             }
+        }
+
     }
 
     /**
@@ -545,7 +726,7 @@ class odf_parser
 
     public function parse()
     {
-        // Traitement du fichier manifest
+        // Traitement du fichier manifest pour intégrer la description des images
         if ($this->manifest_xml != NULL)
         {
             if ($this->images && preg_match('@<manifest:file-entry.*/>@i', $this->manifest_xml, $arrMatches, PREG_OFFSET_CAPTURE))
@@ -560,6 +741,7 @@ class odf_parser
             }
         }
 
+        // Traitement des contenus XML
         if ($this->content_xml != NULL || $this->styles_xml != NULL)
         {
             $blockparser = new odf_blockparser();
@@ -676,7 +858,7 @@ class odf_converter
      * @link http://www.artofsolving.com/opensource/jodconverter
      */
 
-    function odf_converter($url)
+    function __construct($url)
     {
         $this->url = "{$url}/service";
     }
