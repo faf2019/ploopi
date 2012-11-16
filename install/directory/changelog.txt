@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.3.6i ====================================================
+
+2012-11-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug à la suppression d'un contact
+
 == Module DIRECTORY - version 2.3.6h ====================================================
 
 2012-09-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
