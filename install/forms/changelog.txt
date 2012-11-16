@@ -1,3 +1,9 @@
+== Module FORMS - version 3.5.2b =====================================================
+
+2012-11-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug lors de l'enregistrement d'une réponse, ne supprimait pas le cookie de stockage temporaire des données
+
 == Module FORMS - version 3.5.2a =====================================================
 
 2012-11-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

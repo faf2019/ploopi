@@ -343,7 +343,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
 
     $objRecord->save();
 
-    $strVarName = formsForm::getVarName($objForm->fields['id']);
+    $strVarName = formsForm::getVarName($objForm->fields['id']).'_save';
 
     // Sauvegarde en session
     ploopi_setsessionvar($strVarName, null);
