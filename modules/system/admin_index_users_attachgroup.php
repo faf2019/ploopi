@@ -171,5 +171,5 @@ while ($fields = $db->fetchrow($result))
     $c++;
 }
 
-$skin->display_array($columns, $values, 'array_grouplist', array('sortable' => true, 'orderby_default' => 'label'));
+$skin->display_array($columns, $values, 'array_grouplist_attach', array('sortable' => true, 'orderby_default' => 'label'));
 ?>
