@@ -51,15 +51,15 @@ switch ($_SESSION['system']['level'])
             if (!empty($groups['list'][$groupid]['groups'])) $arrWhere[] = '( gu.id_group IN ('.implode(',',array_keys($groups['list'][$groupid]['groups'])).'))';
             else $arrWhere[] = 'gu.id_group = 0';
         }
-        
+
         $currentusers = "
             SELECT  ploopi_group_user.id_user
 
             FROM    ploopi_group_user
-    
+
             WHERE   ploopi_group_user.id_group = {$groupid}
         ";
-                    
+
         $arrWhere[] = "u.id NOT IN ({$currentusers})";
     break;
 
@@ -70,15 +70,15 @@ switch ($_SESSION['system']['level'])
             if (!empty($workspaces['list'][$workspaceid]['groups'])) $arrWhere[] = 'gu.id_group IN ('.implode(',',array_keys($workspaces['list'][$workspaceid]['groups'])).')';
             else $arrWhere[] = "gu.id_group = 0";
         }
-        
+
         $currentusers = "
             SELECT  ploopi_workspace_user.id_user
-                    
+
             FROM    ploopi_workspace_user
-                    
+
             WHERE   ploopi_workspace_user.id_workspace = {$workspaceid}
-        ";        
-        
+        ";
+
         $arrWhere[] = "u.id NOT IN ({$currentusers})";
     break;
 }
@@ -242,44 +242,44 @@ else
 
     $columns = array();
     $values = array();
-        
+
     $columns['auto']['name'] =
         array(
             'label' => _SYSTEM_LABEL_LASTNAME.', '._SYSTEM_LABEL_FIRSTNAME,
             'options' => array('sort' => true)
         );
-    
+
     $columns['right']['service'] =
         array(
             'label' => _SYSTEM_LABEL_SERVICE,
             'width' => 100,
             'options' => array('sort' => true)
         );
-        
+
     $columns['right']['origin'] =
         array(
             'label' => _SYSTEM_LABEL_ORIGIN,
             'width' => 100,
             'options' => array('sort' => true)
         );
-    
+
     $columns['right']['login'] =
         array(
             'label' => _SYSTEM_LABEL_LOGIN,
             'width' => 110,
             'options' => array('sort' => true)
         );
-        
+
     $columns['actions_right']['actions'] =
         array(
             'label' => '&nbsp;',
             'width' => 24
-        );    
-    
+        );
+
     $c = 0;
-    
+
     $user = new user();
-    
+
     foreach($arrUsers as $fields)
     {
         $user->fields['id'] = $fields['id'];
@@ -295,15 +295,15 @@ else
             $values[$c]['values']['origin']     = array('label' => 'non rattaché', 'style' => 'font-style:italic;');
             $service = ' ';
         }
-    
+
         $values[$c]['values']['name']       = array('label' => htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
         $values[$c]['values']['login']      = array('label' => htmlentities($fields['login']));
         $values[$c]['values']['service']    = array('label' => htmlentities($service));
         $values[$c]['values']['actions']    = array('label' => '<a style="float:left;display:block;margin:2px;" href="'.ploopi_urlencode("admin.php?op=attach_user&userid={$fields['id']}&alphaTabItem={$alphaTabItem}").'"><img style="float:left;display:block;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
         $c++;
     }
-    
-    $skin->display_array($columns, $values, 'array_userlist', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 25));
+
+    $skin->display_array($columns, $values, 'array_userlist_attach', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 25));
 }
 
 if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)

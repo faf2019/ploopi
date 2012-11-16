@@ -442,8 +442,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
 
     $arrResult['columns']['left']['email'] = array(
         'label' => 'Courriel',
-        'width' => '150',
-        'options' => array('sort' => true)
+        'width' => '65'
     );
 
     $arrResult['columns']['left']['groups'] = array(
@@ -723,7 +722,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
             'values' => array(
                 'nom' => array('label' => $strUserLabel, 'sort_label' => sprintf("%s %s", $row['lastname'], $row['firstname'])),
                 'login' => array('label' => $strUserLogin, 'sort_label' => $row['login']),
-                'email' => array('label' => '<a style="width:142px;" href="mailto:'.$row['email'].'">'.$row['email'].'</a>', 'sort_label' => $row['email']),
+                'email' => array('label' => empty($row['email']) ? '' : '<a title="'.$row['email'].'" href="mailto:'.$row['email'].'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/email.gif" /></a>', 'sort_label' => $row['email']),
                 'groups' => array(
                     'label' => (empty($row['groups'])) ? '<em>Pas de groupe dans cet espace</em>'  : implode('<br />', $row['groups']),
                     'sort_label' => $strSortLabelGroups
