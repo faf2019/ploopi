@@ -104,9 +104,9 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enabl
 
            default:
            case true:
-               var coordScroll = document.viewport.getScrollOffsets();
-               var posx = parseInt(document.viewport.getWidth()/2)-parseInt(w/2)+coordScroll.left;
-               var posy = parseInt(coordScroll.top)+20;
+                var coordScroll = document.viewport.getScrollOffsets();
+                if (!posx) posx = parseInt(document.viewport.getWidth()/2)-parseInt(w/2)+coordScroll.left;
+                if (!posy) posy = parseInt(coordScroll.top)+20;
             break;
         }
     }
@@ -256,11 +256,14 @@ function ploopi_hideallpopups()
 
 function ploopi_popupize(id, w, centered, pposx, pposy)
 {
+    var ploopi_popup;
+
     if ($(id))
     {
-        $(id).setAttribute('class', 'ploopi_popup');
-        $(id).setAttribute('className', 'ploopi_popup'); // IE
-        $(id).setAttribute('style', 'display:block;z-index:'+(10000+ploopi_nbpopup)+';');
+        ploopi_popup = $(id);
+        ploopi_popup.setAttribute('class', 'ploopi_popup');
+        ploopi_popup.setAttribute('className', 'ploopi_popup'); // IE
+        ploopi_popup.setAttribute('style', 'display:block;z-index:'+(10000+ploopi_nbpopup)+';');
 
         w = parseInt(w);
         if (!w) w = 200;
@@ -268,24 +271,27 @@ function ploopi_popupize(id, w, centered, pposx, pposy)
         switch(centered)
         {
             case false:
-                pposx = parseInt(pposx);
-                pposy = parseInt(pposy);
+                posx = parseInt(pposx);
+                posy = parseInt(pposy);
             break;
 
             default:
             case true:
-                var p_width = parseInt(ploopi_hooks[0].offsetWidth);
-                var p_left = parseInt(ploopi_hooks[0].scrollLeft);
-                pposx = (p_width/2)-(w/2)+p_left;
+               var coordScroll = document.viewport.getScrollOffsets();
+               posx = parseInt(document.viewport.getWidth()/2)-parseInt(w/2)+coordScroll.left;
+               posy = parseInt(coordScroll.top)+20;
             break;
         }
 
 
-        $(id).style.left = pposx+'px';
-        $(id).style.top = pposy+'px';
+        with(ploopi_popup.style)
+        {
+            left = posx+'px';
+            top = posy+'px';
+            width = w+'px';
+        }
 
-        ploopi_hooks[0].appendChild($(id));
-
+        ploopi_hooks[0].appendChild(ploopi_popup);
     }
 }
 

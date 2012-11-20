@@ -288,8 +288,8 @@ class skin_common
                     <div class="simplebloc_footer" style="cursor:move;" id="handlebottom_'.$popupid.'"></div>
                 </div>
                 <script type="text/javascript">
-                new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\'});
-                new Draggable(\''.$popupid.'\', { handle: \'handlebottom_'.$popupid.'\'});
+                new Draggable(\''.$popupid.'\', { zindex:99999, handle: \'handle_'.$popupid.'\'});
+                new Draggable(\''.$popupid.'\', { zindex:99999, handle: \'handlebottom_'.$popupid.'\'});
                 '.$strOptionAnchor.'
                 </script>
                 ';
@@ -343,8 +343,8 @@ class skin_common
                     Event.observe(window, \'load\', function() {
                         '.$arrOptions['stringJsBeforeStart'].'
                         ploopi_popupize(\''.$popupid.'\', '.$arrOptions['intWidth'].', '.($arrOptions['booCentered'] ? 'true' : 'false').', '.$arrOptions['intPosx'].', '.$arrOptions['intPosy'].');
-                        new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\'});
-                        new Draggable(\''.$popupid.'\', { handle: \'handlebottom_'.$popupid.'\'});
+                        new Draggable(\''.$popupid.'\', { zindex:99999, handle: \'handle_'.$popupid.'\'});
+                        new Draggable(\''.$popupid.'\', { zindex:99999, handle: \'handlebottom_'.$popupid.'\'});
                         '.$arrOptions['stringJsAfterFinish'].'
                         '.$strOptionAnchor.'
                     });
