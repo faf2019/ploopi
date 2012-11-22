@@ -71,9 +71,9 @@ foreach(array('POST', 'GET') as $strGlobalVar)
 unset($strGlobalVar);
 unset($_REQUEST['ploopi_url']);
 
-$_GET = ploopi_filtervar($_GET);
+$_GET = ploopi_filtervar($_GET, null, !empty($_POST['ploopi_xhr']));;
 $_POST = ploopi_filtervar($_POST, null, !empty($_POST['ploopi_xhr']));
-$_REQUEST = ploopi_filtervar($_REQUEST);
+$_REQUEST = ploopi_filtervar($_REQUEST, null, !empty($_POST['ploopi_xhr']));
 $_COOKIE = ploopi_filtervar($_COOKIE);
 $_SERVER = ploopi_filtervar($_SERVER);
 ?>
