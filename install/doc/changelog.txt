@@ -1,3 +1,9 @@
+== Module DOC - version 4.7.0b ====================================================
+
+2012-11-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ajustement sur le patch précédent
+
 == Module DOC - version 4.7.0a ====================================================
 
 2012-11-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

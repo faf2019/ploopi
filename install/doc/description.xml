@@ -2,7 +2,7 @@
 <ploopi>
     <moduletype>
         <label>doc</label>
-        <version>4.7.0a</version>
+        <version>4.7.0b</version>
         <author>Ovensia / HeXad</author>
         <date>20121122000000</date>
         <description>Gestion de Documents</description>
